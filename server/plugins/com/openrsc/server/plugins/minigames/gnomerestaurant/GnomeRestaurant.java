@@ -21,16 +21,20 @@ import static com.openrsc.server.plugins.Functions.removeItem;
 import static com.openrsc.server.plugins.Functions.resetGnomeCooking;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
+import com.openrsc.server.external.ItemId;
+
 public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveListener, InvActionListener, InvActionExecutiveListener, DropExecutiveListener {
 
+	private static final int ALUFT_GIANNE = 536;
+	
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == Npcs.ALUFT_GIANNE;
+		return n.getID() == ALUFT_GIANNE;
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == Npcs.ALUFT_GIANNE) {
+		if (n.getID() == ALUFT_GIANNE) {
 			if (!p.getCache().hasKey("gnome_cooking")) {
 				playerTalk(p, n, "hello");
 				npcTalk(p, n, "well hello there,you hungry..",
@@ -48,7 +52,7 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 						"of course i'll have to see what you're like first",
 						"here, have a look at our menu");
 					p.message("Aluft gives you a cook book");
-					addItem(p, Items.GIANNE_COOK_BOOK, 1);
+					addItem(p, ItemId.GIANNE_COOK_BOOK.id(), 1);
 					p.getCache().set("gnome_cooking", 1);
 					npcTalk(p, n, "when you've had a look come back...",
 						"... and i'll let you prepare a few dishes");
@@ -67,11 +71,11 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 							"can you make me a cheese and tomato gnome batta");
 						npcTalk(p, n, "here's what you need");
 						message(p, 1200, "aluft gives you one tomato, some cheese...");
-						addItem(p, Items.TOMATO, 1);
-						addItem(p, Items.CHEESE, 1);
+						addItem(p, ItemId.TOMATO.id(), 1);
+						addItem(p, ItemId.CHEESE.id(), 1);
 						p.message("...some equa leaves and some plain dough");
-						addItem(p, Items.EQUA_LEAVES, 1);
-						addItem(p, Items.GIANNE_DOUGH, 1);
+						addItem(p, ItemId.EQUA_LEAVES.id(), 1);
+						addItem(p, ItemId.GIANNE_DOUGH.id(), 1);
 						p.getCache().set("gnome_cooking", 2);
 						playerTalk(p, n, "thanks");
 						npcTalk(p, n, "Let me know how you get on");
@@ -81,23 +85,23 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 						npcTalk(p, n, "call me aluft");
 						playerTalk(p, n, "ok");
 						npcTalk(p, n, "so how did you get on?");
-						if (hasItem(p, 901)) {
+						if (hasItem(p, ItemId.CHEESE_AND_TOMATO_BATTA.id())) {
 							playerTalk(p, n, "no problem, it was easy");
 							message(p, 1900, "you give aluft the gnome batta");
-							removeItem(p, 901, 1);
+							removeItem(p, ItemId.CHEESE_AND_TOMATO_BATTA.id(), 1);
 							p.message("he takes a bite");
 							npcTalk(p, n, "not bad...not bad at all",
 								"ok now for something a little harder",
 								"try and make me a choc bomb.. they're my favorite",
 								"here's what you need");
 							message(p, 1200, "aluft gives you four bars of chocolate");
-							addItem(p, 337, 4);
+							addItem(p, ItemId.CHOCOLATE_BAR.id(), 4);
 							message(p, 1200, "some equa leaves, some chocolate dust...");
-							addItem(p, 873, 1);
-							addItem(p, 772, 1);
+							addItem(p, ItemId.EQUA_LEAVES.id(), 1);
+							addItem(p, ItemId.CHOCOLATE_DUST.id(), 1);
 							p.message("...some gianne dough and some cream");
-							addItem(p, 881, 1);
-							addItem(p, 871, 2);
+							addItem(p, ItemId.GIANNE_DOUGH.id(), 1);
+							addItem(p, ItemId.CREAM.id(), 2);
 							playerTalk(p, n, "ok aluft, i'll be back soon");
 							npcTalk(p, n, "good stuff");
 							p.getCache().set("gnome_cooking", 3);
@@ -110,9 +114,9 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 					case 3:
 						playerTalk(p, n, "hi aluft");
 						npcTalk(p, n, "hello there, how did you get on");
-						if (hasItem(p, 907)) {
+						if (hasItem(p, ItemId.CHOCOLATE_BOMB.id())) {
 							playerTalk(p, n, "here you go");
-							removeItem(p, 907, 1);
+							removeItem(p, ItemId.CHOCOLATE_BOMB.id(), 1);
 							message(p, 1200, "you give aluft the choc bomb");
 							p.message("he takes a bite");
 							npcTalk(p, n, "yes, yes, yes, that's superb",
@@ -120,9 +124,9 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 							playerTalk(p, n, "i'm glad");
 							npcTalk(p, n, "ok then, now can you make me a toad batta",
 								"here's what you need");
-							addItem(p, Items.GIANNE_DOUGH, 1);
-							addItem(p, Items.EQUA_LEAVES, 1);
-							addItem(p, Items.GNOME_SPICE, 1);
+							addItem(p, ItemId.GIANNE_DOUGH.id(), 1);
+							addItem(p, ItemId.EQUA_LEAVES.id(), 1);
+							addItem(p, ItemId.GNOME_SPICE.id(), 1);
 							message(p, 1900, "mr gianne gives you some dough, some equaleaves...");
 							p.message("...and some gnome spice");
 							npcTalk(p, n, "i'm afraid all are toads legs are served fresh");
@@ -142,10 +146,10 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 						npcTalk(p, n, "aluft");
 						playerTalk(p, n, "sorry, aluft");
 						npcTalk(p, n, "so where's my toad batta?");
-						if (hasItem(p, 902)) {
+						if (hasItem(p, ItemId.TOAD_BATTA.id())) {
 							playerTalk(p, n, "here you go, easy");
 							message(p, 1900, "you give mr gianne the toad batta");
-							removeItem(p, 902, 1);
+							removeItem(p, ItemId.TOAD_BATTA.id(), 1);
 							p.message("he takes a bite");
 							npcTalk(p, n, "ooh, that's some good toad",
 								"very nice",
@@ -155,9 +159,9 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 								"you'll have to get the worms from the swamp",
 								"but here's everything else you'll need",
 								"let me know when your done");
-							addItem(p, Items.GIANNE_DOUGH, 1);
-							addItem(p, 241, 2);
-							addItem(p, Items.EQUA_LEAVES, 1);
+							addItem(p, ItemId.GIANNE_DOUGH.id(), 1);
+							addItem(p, ItemId.ONION.id(), 2);
+							addItem(p, ItemId.EQUA_LEAVES.id(), 1);
 							p.getCache().set("gnome_cooking", 5);
 						} else {
 							playerTalk(p, n, "i'm not done yet");
@@ -168,10 +172,10 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 					case 5:
 						playerTalk(p, n, "hello again aluft");
 						npcTalk(p, n, "hello traveller, how did you do?");
-						if (hasItem(p, 909)) {
+						if (hasItem(p, ItemId.WORM_HOLE.id())) {
 							playerTalk(p, n, "here, see what you think");
 							message(p, 1900, "you give mr gianne the worm hole");
-							removeItem(p, 909, 1);
+							removeItem(p, ItemId.WORM_HOLE.id(), 1);
 							p.message("he takes a bite");
 							npcTalk(p, n, "hmm, that's actually really good",
 								"how about you make me some toad crunchies for desert",
@@ -179,8 +183,8 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 							playerTalk(p, n, "toad crunchies?");
 							npcTalk(p, n, "that's right, here's all you need",
 								"except the toad");
-							addItem(p, Items.GIANNE_DOUGH, 1);
-							addItem(p, Items.EQUA_LEAVES, 1);
+							addItem(p, ItemId.GIANNE_DOUGH.id(), 1);
+							addItem(p, ItemId.EQUA_LEAVES.id(), 1);
 							p.message("mr gianne gives you some gianne dough and some equa leaves");
 							npcTalk(p, n, "let me know when your done");
 							p.getCache().set("gnome_cooking", 6);
@@ -192,12 +196,12 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 						}
 						break;
 					case 6:
-						playerTalk(p, n, "hi aluft");
+						playerTalk(p, n, "hi aluft\"");
 						npcTalk(p, n, "hello, how are you getting on?");
-						if (hasItem(p, 913)) {
+						if (hasItem(p, ItemId.TOAD_CRUNCHIES.id())) {
 							playerTalk(p, n, "here, try it");
 							message(p, 1900, "you give mr gianne the toad crunchie");
-							removeItem(p, 913, 1);
+							removeItem(p, ItemId.TOAD_CRUNCHIES.id(), 1);
 							p.message("he takes a bite");
 							npcTalk(p, n, "well for a human you certainly can cook",
 								"i'd love to have you on the team",
@@ -247,17 +251,19 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 		int job = p.getCache().getInt("gnome_restaurant_job");
 		if (job == 0) {
 			npcTalk(p, n, "hello again, are the dishes ready?");
-			if (hasItem(p, 904, 2) && hasItem(p, 902) && hasItem(p, 906)) {
+			if (hasItem(p, ItemId.WORM_BATTA.id(), 2) 
+					&& hasItem(p, ItemId.VEG_BATTA.id()) 
+					&& hasItem(p, ItemId.TOAD_BATTA.id())) {
 				playerTalk(p, n, "all done, here you go");
 				message(p, 1900, "you give aluft two worm batta's a veg batta and a toad batta");
 				p.incExp(Skills.COOKING, 425, true);
-				removeItem(p, 904, 2);
-				removeItem(p, 902, 1);
-				removeItem(p, 906, 1);
+				removeItem(p, ItemId.WORM_BATTA.id(), 2);
+				removeItem(p, ItemId.VEG_BATTA.id(), 1);
+				removeItem(p, ItemId.TOAD_BATTA.id(), 1);
 				npcTalk(p, n, "they look great, well done",
 					"here's your share of the profit");
 				p.message("mr gianne gives you 45 gold coins");
-				addItem(p, 10, 45);
+				addItem(p, ItemId.COINS.id(), 45);
 			} else {
 				playerTalk(p, n, "i'm not done yet");
 				npcTalk(p, n, "i need  two worm batta's, one toad batta",
@@ -267,17 +273,19 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 			}
 		} else if (job == 1) {
 			npcTalk(p, n, "hello again, are the dishes ready?");
-			if (hasItem(p, 907) && hasItem(p, 911, 2) && hasItem(p, 913, 2)) {
+			if (hasItem(p, ItemId.CHOCOLATE_BOMB.id()) 
+					&& hasItem(p, ItemId.CHOC_CRUNCHIES.id(), 2) 
+					&& hasItem(p, ItemId.TOAD_CRUNCHIES.id(), 2)) {
 				playerTalk(p, n, "here you go aluft");
 				message(p, 1900, "you give aluft choc bomb, two choc crunchies and two toad crunchies");
-				removeItem(p, 907, 1);
-				removeItem(p, 911, 2);
-				removeItem(p, 913, 2);
+				removeItem(p, ItemId.CHOCOLATE_BOMB.id(), 1);
+				removeItem(p, ItemId.CHOC_CRUNCHIES.id(), 2);
+				removeItem(p, ItemId.TOAD_CRUNCHIES.id(), 2);
 				p.incExp(Skills.COOKING, 675, true);
 				npcTalk(p, n, "they look great, well done",
 					"here's your share of the profit");
 				p.message("mr gianne gives you 75 gold coins");
-				addItem(p, 10, 75);
+				addItem(p, ItemId.COINS.id(), 75);
 			} else {
 				playerTalk(p, n, "i'm not done yet");
 				npcTalk(p, n, "ok, i need a choc bomb, two choc crunchies and two toad crunchies",
@@ -287,10 +295,10 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 			}
 		} else if (job == 2) {
 			npcTalk(p, n, "hello again traveller how did you do?");
-			if (hasItem(p, 911, 2)) {
+			if (hasItem(p, ItemId.CHOC_CRUNCHIES.id(), 2)) {
 				playerTalk(p, n, "all done, here you go");
 				message(p, 1900, "you give aluft the two choc crunchies");
-				removeItem(p, 911, 2);
+				removeItem(p, ItemId.CHOC_CRUNCHIES.id(), 2);
 				p.incExp(Skills.COOKING, 300, true);
 				npcTalk(p, n, "they look great, well done",
 					"here's your share of the profit");
@@ -304,16 +312,17 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 			}
 		} else if (job == 3) {
 			npcTalk(p, n, "hello again traveller how did you do?");
-			if (hasItem(p, 907) && hasItem(p, 911, 2)) {
+			if (hasItem(p, ItemId.CHOCOLATE_BOMB.id()) 
+					&& hasItem(p, ItemId.CHOC_CRUNCHIES.id(), 2)) {
 				playerTalk(p, n, "here you go aluft");
 				message(p, 1900, "you give aluft one choc bomb and two choc crunchies");
-				removeItem(p, 907, 1);
-				removeItem(p, 911, 2);
+				removeItem(p, ItemId.CHOCOLATE_BOMB.id(), 1);
+				removeItem(p, ItemId.CHOC_CRUNCHIES.id(), 2);
 				p.incExp(Skills.COOKING, 425, true);
 				npcTalk(p, n, "they look great, well done",
 					"here's your share of the profit");
 				p.message("mr gianne gives you 45 gold coins");
-				addItem(p, 10, 45);
+				addItem(p, ItemId.COINS.id(), 45);
 			} else {
 				playerTalk(p, n, "i'm not done yet");
 				npcTalk(p, n, "i need one choc bomb and two choc crunchies please");
@@ -321,16 +330,17 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 			}
 		} else if (job == 4) {
 			npcTalk(p, n, "hello again traveller how did you do?");
-			if (hasItem(p, 906, 2) && hasItem(p, 909)) {
+			if (hasItem(p, ItemId.VEG_BATTA.id(), 2) 
+					&& hasItem(p, ItemId.WORM_HOLE.id())) {
 				playerTalk(p, n, "here you go aluft");
 				message(p, 1900, "you give aluft two veg batta's and a worm hole");
-				removeItem(p, 906, 2);
-				removeItem(p, 909, 1);
+				removeItem(p, ItemId.VEG_BATTA.id(), 2);
+				removeItem(p, ItemId.WORM_HOLE.id(), 1);
 				p.incExp(Skills.COOKING, 425, true);
 				npcTalk(p, n, "they look great, well done",
 					"here's your share of the profit");
 				p.message("mr gianne gives you 45 gold coins");
-				addItem(p, 10, 45);
+				addItem(p, ItemId.COINS.id(), 45);
 			} else {
 				playerTalk(p, n, "i'm not done yet");
 				npcTalk(p, n, "ok, i need two veg batta's and one worm hole",
@@ -340,17 +350,19 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 			}
 		} else if (job == 5) {
 			npcTalk(p, n, "hello again, are the dishes ready?");
-			if (hasItem(p, 908) && hasItem(p, 910) && hasItem(p, 909)) {
+			if (hasItem(p, ItemId.VEGBALL.id()) 
+					&& hasItem(p, ItemId.TANGLED_TOADS_LEGS.id()) 
+					&& hasItem(p, ItemId.WORM_HOLE.id())) {
 				playerTalk(p, n, "all done, here you go");
 				message(p, 1900, "you give aluft one veg ball, one twisted toads legs and one worm hole");
-				removeItem(p, 908, 1);
-				removeItem(p, 910, 1);
-				removeItem(p, 909, 1);
+				removeItem(p, ItemId.VEGBALL.id(), 1);
+				removeItem(p, ItemId.TANGLED_TOADS_LEGS.id(), 1);
+				removeItem(p, ItemId.WORM_HOLE.id(), 1);
 				p.incExp(Skills.COOKING, 425, true);
 				npcTalk(p, n, "they look great, well done",
 					"here's your share of the profit");
 				p.message("mr gianne gives you 45 gold coins");
-				addItem(p, 10, 45);
+				addItem(p, ItemId.COINS.id(), 45);
 			} else {
 				playerTalk(p, n, "i'm not done yet");
 				npcTalk(p, n, "i need  one veg ball, one twisted toads legs...",
@@ -359,20 +371,69 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 			}
 		} else if (job == 6) {
 			npcTalk(p, n, "hello again traveller how did you do?");
-			if (hasItem(p, 901) && hasItem(p, 908) && hasItem(p, 912, 2)) {
-				message(p, 1900, "you give aluft one cheese and tomato batta,one vegball and two portions of worm crunchies");
-				removeItem(p, 901, 1);
-				removeItem(p, 908, 1);
-				removeItem(p, 912, 2);
-				p.incExp(Skills.COOKING, 675, true);
+			if (hasItem(p, ItemId.CHEESE_AND_TOMATO_BATTA.id()) 
+					&& hasItem(p, ItemId.VEGBALL.id()) 
+					&& hasItem(p, ItemId.WORM_CRUNCHIES.id(), 2)) {
+				message(p, 1900, "you give one cheese and tomato batta,one veg ball...",
+						"...and two portions of worm crunchies");
+				removeItem(p, ItemId.CHEESE_AND_TOMATO_BATTA.id(), 1);
+				removeItem(p, ItemId.VEGBALL.id(), 1);
+				removeItem(p, ItemId.WORM_CRUNCHIES.id(), 2);
+				p.incExp(Skills.COOKING, 550, true);
 				npcTalk(p, n, "they look great, well done",
 					"here's your share of the profit");
-				p.message("mr gianne gives you 75 gold coins");
-				addItem(p, 10, 75);
+				p.message("mr gianne gives you 60 gold coins");
+				addItem(p, ItemId.COINS.id(), 60);
 			} else {
 				playerTalk(p, n, "i'm not done yet");
 				npcTalk(p, n, "i need one cheese and tomato batta,one veg ball...",
 					"...and two portions of worm crunchies please");
+				return;
+			}
+		} else if (job == 7) {
+			// intentional glitch on minigame, see https://youtu.be/jtc97eKmFWc?t=806
+			npcTalk(p, n, "hello again, are the dishes ready?");
+			if (hasItem(p, ItemId.SPICE_CRUNCHIES.id(), 2) 
+					&& hasItem(p, ItemId.FRUIT_BATTA.id()) 
+					&& hasItem(p, ItemId.CHOCOLATE_BOMB.id())
+					&& hasItem(p, ItemId.VEGBALL.id())) {
+				playerTalk(p, n, "all done, here you go");
+				message(p, 1900, "you give aluft the tangled toads legs and two worm crunchies");
+				removeItem(p, ItemId.SPICE_CRUNCHIES.id(), 2);
+				removeItem(p, ItemId.FRUIT_BATTA.id(), 1);
+				removeItem(p, ItemId.CHOCOLATE_BOMB.id(), 1);
+				removeItem(p, ItemId.VEGBALL.id(), 1);
+				p.incExp(Skills.COOKING, 425, true);
+				npcTalk(p, n, "they look great, well done",
+					"here's your share of the profit");
+				p.message("mr gianne gives you 45 gold coins");
+				addItem(p, ItemId.COINS.id(), 45);
+			} else {
+				// dialogue recreated
+				playerTalk(p, n, "i'm not done yet");
+				npcTalk(p, n, "i need  two spice crunchies, one fruit batta...",
+					"...a choc bomb and a veg ball please");
+				return;
+			}
+		} else if (job == 8) {
+			// recreated job from message on job 7
+			// made it intentionally glitched
+			npcTalk(p, n, "hello again, are the dishes ready?");
+			if (hasItem(p, ItemId.TANGLED_TOADS_LEGS.id()) 
+					&& hasItem(p, ItemId.WORM_CRUNCHIES.id(), 2)) {
+				playerTalk(p, n, "all done, here you go");
+				message(p, 1900, "you give aluft one choc bomb and two choc crunchies");
+				removeItem(p, ItemId.TANGLED_TOADS_LEGS.id(), 1);
+				removeItem(p, ItemId.WORM_CRUNCHIES.id(), 2);
+				p.incExp(Skills.COOKING, 425, true);
+				npcTalk(p, n, "they look great, well done",
+					"here's your share of the profit");
+				p.message("mr gianne gives you 45 gold coins");
+				addItem(p, ItemId.COINS.id(), 45);
+			} else {
+				// dialogue recreated
+				playerTalk(p, n, "i'm not done yet");
+				npcTalk(p, n, "i need one tangled toads legs and two worm crunchies please");
 				return;
 			}
 		}
@@ -396,7 +457,7 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 	}
 
 	private void randomizeJob(Player p, Npc n) {
-		int randomize = DataConversions.random(0, 6);
+		int randomize = DataConversions.random(0, 8);
 		if (randomize == 0) {
 			npcTalk(p, n, "can you make me a two worm batta's, one toad batta...",
 				"...and one veg batta please");
@@ -421,6 +482,13 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 			npcTalk(p, n, "i need one cheese and tomato batta,one veg ball...",
 				"...and two portions of worm crunchies please");
 			playerTalk(p, n, "ok, i'll do my best");
+		} else if (randomize == 7) {
+			npcTalk(p, n, "can you make a two spice crunchies, one fruit batta...",
+				"...a choc bomb and a veg ball please chef");
+			playerTalk(p, n, "i'll try");
+		} else if (randomize == 8) {
+			npcTalk(p, n, "i just need one tangled toads legs and two worm crunchies please");
+			playerTalk(p, n, "ok, i'll do my best");
 		}
 		if (!p.getCache().hasKey("gnome_restaurant_job")) {
 			p.getCache().set("gnome_restaurant_job", randomize);
@@ -429,12 +497,12 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 
 	@Override
 	public boolean blockInvAction(Item item, Player p) {
-		return item.getID() == Items.GIANNE_COOK_BOOK;
+		return item.getID() == ItemId.GIANNE_COOK_BOOK.id();
 	}
 
 	@Override
 	public void onInvAction(Item item, Player p) {
-		if (item.getID() == Items.GIANNE_COOK_BOOK) {
+		if (item.getID() == ItemId.GIANNE_COOK_BOOK.id()) {
 			p.message("you open aluft's cook book");
 			p.message("inside are various gnome dishes");
 			int menu = showMenu(p,
@@ -495,24 +563,10 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 
 	@Override
 	public boolean blockDrop(Player p, Item i) {
-		if (i.getID() == Items.GIANNE_DOUGH + 9 || i.getID() == Items.GIANNE_DOUGH + 4 || i.getID() == Items.GIANNE_DOUGH + 3) {
+		if (i.getID() == ItemId.GNOMECRUNCHIE.id() || i.getID() == ItemId.GNOMEBOWL.id() || i.getID() == ItemId.GNOMEBATTA.id()) {
 			resetGnomeCooking(p);
 			return false;
 		}
 		return false;
-	}
-
-	public class Items {
-		static final int GIANNE_COOK_BOOK = 899;
-
-		static final int TOMATO = 320;
-		static final int CHEESE = 319;
-		static final int EQUA_LEAVES = 873;
-		static final int GIANNE_DOUGH = 881;
-		static final int GNOME_SPICE = 898;
-	}
-
-	private class Npcs {
-		static final int ALUFT_GIANNE = 536;
 	}
 }

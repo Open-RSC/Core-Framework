@@ -12,6 +12,8 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
+import com.openrsc.server.external.ItemId;
+
 public class GnomeCooking implements InvActionListener, InvActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
 	private boolean canCook(Item item, GameObject object) {
@@ -37,7 +39,7 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 		if (p.getInventory().remove(item) > -1) {
 			message(p, 3000, gc.messages[0]);
 			if (!burnFood(p, gc.requiredLevel, p.getSkills().getLevel(Skills.COOKING))) {
-				if (gc.cookedID == 884) {
+				if (gc.cookedID == ItemId.GNOMEBATTA.id()) {
 					// stop tomato cheese batta when doing veg batta.
 					if (p.getCache().hasKey("cheese_on_batta") && p.getCache().hasKey("tomato_on_batta") && !p.getCache().hasKey("onion_on_batta")) {
 						p.getCache().store("tomato_cheese_batta", true);
@@ -49,7 +51,7 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 						&& p.getCache().hasKey("toadlegs_on_batta")) { // Makes toad batta
 						p.message(gc.messages[1]);
 						p.incExp(Skills.COOKING, gc.experience, true);
-						addItem(p, 902, 1);
+						addItem(p, ItemId.TOAD_BATTA.id(), 1);
 						resetGnomeCooking(p);
 						return;
 					} else if (p.getCache().hasKey("gnomespice_on_worm")
@@ -71,7 +73,7 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 						p.getCache().store("batta_cooked_leaves", true);
 						p.message(gc.messages[1]);
 					}
-				} else if (gc.cookedID == 885) {
+				} else if (gc.cookedID == ItemId.GNOMEBOWL.id()) {
 					p.message(gc.messages[1]);
 					if (p.getCache().hasKey("chocolate_on_bowl") && p.getCache().getInt("chocolate_on_bowl") >= 4 && p.getCache().hasKey("leaves_on_bowl")) {
 						p.getCache().store("chocolate_bomb", true);
@@ -91,11 +93,11 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 						&& p.getCache().hasKey("dwell_on_bowl")
 						&& p.getCache().hasKey("gnomespice_on_bowl") && p.getCache().getInt("gnomespice_on_bowl") >= 2) { // tangled toads legs
 						p.incExp(Skills.COOKING, gc.experience, true);
-						addItem(p, 910, 1);
+						addItem(p, ItemId.TANGLED_TOADS_LEGS.id(), 1);
 						resetGnomeCooking(p);
 						return;
 					}
-				} else if (gc.cookedID == 900) {
+				} else if (gc.cookedID == ItemId.GNOMECRUNCHIE.id()) {
 					p.message(gc.messages[1]);
 					if (!p.getCache().hasKey("gnome_crunchie_cooked")) {
 						p.getCache().store("gnome_crunchie_cooked", true);
@@ -114,7 +116,9 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 	}
 
 	private boolean mouldDough(Item item, Player p) {
-		if (hasItem(p, 880) || hasItem(p, 882) || hasItem(p, 883) || hasItem(p, 884) || hasItem(p, 885) || hasItem(p, 900)) {
+		if (hasItem(p, ItemId.GNOMEBATTA_DOUGH.id()) || hasItem(p, ItemId.GNOMEBOWL_DOUGH.id()) 
+				|| hasItem(p, ItemId.GNOMECRUNCHIE_DOUGH.id()) || hasItem(p, ItemId.GNOMEBATTA.id()) 
+				|| hasItem(p, ItemId.GNOMEBOWL.id()) || hasItem(p, ItemId.GNOMECRUNCHIE.id())) {
 			message(p, "you need to finish, eat or drop the unfinished dish you hold");
 			p.message("before you can make another - giannes rules");
 			return false;
@@ -136,7 +140,7 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 				showBubble(p, item);
 				message(p, 3000, "you attempt to mould the dough into a gnomebatta");
 				p.message("You manage to make some gnome batta dough");
-				p.getInventory().replace(item.getID(), 880);
+				p.getInventory().replace(item.getID(), ItemId.GNOMEBATTA_DOUGH.id());
 			} else if (menu == 1) {
 				if (p.getSkills().getLevel(Skills.COOKING) < 30) {
 					p.message("you need a cooking level of 30 to mould dough bowls");
@@ -146,7 +150,7 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 				showBubble(p, item);
 				message(p, 3000, "you attempt to mould the dough into a gnome bowl");
 				p.message("You manage to make some gnome bowl dough");
-				p.getInventory().replace(item.getID(), 882);
+				p.getInventory().replace(item.getID(), ItemId.GNOMEBOWL_DOUGH.id());
 			} else if (menu == 2) {
 				if (p.getSkills().getLevel(Skills.COOKING) < 15) {
 					p.message("you need a cooking level of 15 to mould crunchies");
@@ -156,7 +160,7 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 				showBubble(p, item);
 				message(p, 3000, "you attempt to mould the dough into gnome crunchies");
 				p.message("You manage to make some gnome crunchies dough");
-				p.getInventory().replace(item.getID(), 883);
+				p.getInventory().replace(item.getID(), ItemId.GNOMECRUNCHIE_DOUGH.id());
 				if (!p.getCache().hasKey("gnomecrunchie_dough")) {
 					p.getCache().store("gnomecrunchie_dough", true);
 				}
@@ -170,14 +174,14 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 
 	@Override
 	public void onInvAction(Item item, Player p) {
-		if (item.getID() == GnomeRestaurant.Items.GIANNE_DOUGH) {
+		if (item.getID() == ItemId.GIANNE_DOUGH.id()) {
 			mouldDough(item, p);
 		}
 	}
 
 	@Override
 	public boolean blockInvAction(Item item, Player p) {
-		return item.getID() == GnomeRestaurant.Items.GIANNE_DOUGH;
+		return item.getID() == ItemId.GIANNE_DOUGH.id();
 	}
 
 	@Override
@@ -192,7 +196,7 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 
 	private boolean burnFood(Player p, int reqLvl, int myCookingLvl) {
 		int levelDiff;
-		if (p.getInventory().wielding(700))
+		if (p.getInventory().wielding(ItemId.GAUNTLETS_OF_COOKING.id()))
 			levelDiff = (myCookingLvl += 10) - reqLvl;
 		else
 			levelDiff = myCookingLvl - reqLvl;
@@ -206,27 +210,27 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 	}
 
 	enum GnomeCook {
-		GNOME_BATTA_DOUGH(880, 884, 886, 120, 1,
+		GNOME_BATTA_DOUGH(ItemId.GNOMEBATTA_DOUGH.id(), ItemId.GNOMEBATTA.id(), ItemId.BURNT_GNOMEBATTA.id(), 120, 1,
 			"You cook the gnome batta in the oven...",
 			"You remove the gnome batta from the oven",
 			"You accidentally burn the gnome batta"),
 
-		GNOME_BOWL_DOUGH(882, 885, 888, 120, 1,
+		GNOME_BOWL_DOUGH(ItemId.GNOMEBOWL_DOUGH.id(), ItemId.GNOMEBOWL.id(), ItemId.BURNT_GNOMEBOWL.id(), 120, 1,
 			"You cook the gnome bowl in the oven...",
 			"You remove the gnome bowl from the oven",
 			"You accidentally burn the gnome bbowl"),
 
-		GNOME_CRUNCHIE_DOUGH(883, 900, 887, 120, 1,
+		GNOME_CRUNCHIE_DOUGH(ItemId.GNOMECRUNCHIE_DOUGH.id(), ItemId.GNOMECRUNCHIE.id(), ItemId.BURNT_GNOMECRUNCHIE.id(), 120, 1,
 			"You cook the gnome crunchie in the oven...",
 			"You remove the gnome crunchie from the oven",
 			"You accidentally burn the gnome crunchie"),
 
-		GNOME_BATTA_ALREADY_COOKED(884, 884, 886, 120, 1,
+		GNOME_BATTA_ALREADY_COOKED(ItemId.GNOMEBATTA.id(), ItemId.GNOMEBATTA.id(), ItemId.BURNT_GNOMEBATTA.id(), 120, 1,
 			"You cook the gnome batta in the oven...",
 			"You remove the gnome batta from the oven",
 			"You accidentally burn the gnome batta"),
 
-		GNOME_BOWL_ALREADY_COOKED(885, 885, 888, 120, 1,
+		GNOME_BOWL_ALREADY_COOKED(ItemId.GNOMEBOWL.id(), ItemId.GNOMEBOWL.id(), ItemId.BURNT_GNOMEBOWL.id(), 120, 1,
 			"You cook the gnome bowl in the oven...",
 			"You remove the gnome bowl from the oven",
 			"You accidentally burn the gnome bbowl");
