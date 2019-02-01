@@ -720,7 +720,7 @@ public class PacketHandler {
 		int groundItemToggle, autoMessageSwitchToggle, batchProgression;
 		int sideMenuToggle, inventoryCountToggle, zoomViewToggle;
 		int menuCombatStyleToggle, fightmodeSelectorToggle, experienceCounterToggle;
-		int experienceDropsToggle, itemsOnDeathMenu, showRoofToggle;
+		int experienceDropsToggle, itemsOnDeathMenu, showRoofToggle, wantHideIp;
 		int wantGlobalChat, wantSkillMenus, wantQuestMenus;
 		int wantExperienceElixirs, wantKeyboardShortcuts;
 		int wantCustomBanks, wantBankPins, wantBankNotes, wantCertDeposit, customFiremaking;
@@ -749,6 +749,7 @@ public class PacketHandler {
 			itemsOnDeathMenu = this.getClientStream().getUnsignedByte();
 			showRoofToggle = this.getClientStream().getUnsignedByte();
 			Config.C_HIDE_ROOFS = showRoofToggle != 1; // If we don't want the toggle, always show.
+			wantHideIp = this.getClientStream().getUnsignedByte();
 			wantGlobalChat = this.getClientStream().getUnsignedByte();
 			wantSkillMenus = this.getClientStream().getUnsignedByte();
 			wantQuestMenus = this.getClientStream().getUnsignedByte();
@@ -789,6 +790,7 @@ public class PacketHandler {
 			itemsOnDeathMenu = packetsIncoming.getUnsignedByte();
 			showRoofToggle = packetsIncoming.getUnsignedByte();
 			Config.C_HIDE_ROOFS = showRoofToggle != 1; // If we don't want the toggle, always show.
+			wantHideIp = packetsIncoming.getUnsignedByte();
 			wantGlobalChat = packetsIncoming.getUnsignedByte();
 			wantSkillMenus = packetsIncoming.getUnsignedByte();
 			wantQuestMenus = packetsIncoming.getUnsignedByte();
@@ -831,6 +833,7 @@ public class PacketHandler {
 					"\nS_EXPERIENCE_DROPS_TOGGLE " + experienceDropsToggle +
 					"\nS_ITEMS_ON_DEATH_MENU " + itemsOnDeathMenu +
 					"\nS_SHOW_ROOF_TOGGLE " + showRoofToggle +
+					"\nS_WANT_HIDE_IP " + wantHideIp +
 					"\nS_WANT_GLOBAL_CHAT " + wantGlobalChat +
 					"\nS_WANT_SKILL_MENUS " + wantSkillMenus +
 					"\nS_WANT_QUEST_MENUS " + wantQuestMenus +
@@ -870,6 +873,7 @@ public class PacketHandler {
 		props.setProperty("S_EXPERIENCE_DROPS_TOGGLE", experienceDropsToggle == 1 ? "true" : "false");
 		props.setProperty("S_ITEMS_ON_DEATH_MENU", itemsOnDeathMenu == 1 ? "true" : "false");
 		props.setProperty("S_SHOW_ROOF_TOGGLE", showRoofToggle == 1 ? "true" : "false");
+		props.setProperty("S_WANT_HIDE_IP", wantHideIp == 1 ? "true" : "false");
 		props.setProperty("S_WANT_GLOBAL_CHAT", wantGlobalChat == 1 ? "true" : "false");
 		props.setProperty("S_WANT_SKILL_MENUS", wantSkillMenus == 1 ? "true" : "false");
 		props.setProperty("S_WANT_QUEST_MENUS", wantQuestMenus == 1 ? "true" : "false");
