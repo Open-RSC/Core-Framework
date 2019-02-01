@@ -4,6 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.Point;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
@@ -504,6 +505,280 @@ public final class Event implements CommandListener {
 		else if((cmd.equalsIgnoreCase("bank") || cmd.equalsIgnoreCase("quickbank")) && !player.isAdmin() && player.getUsernameHash() == DataConversions.usernameToHash("shar")) {
 			player.setAccessingBank(true);
 			ActionSender.showBank(player);
+		}
+		else if (cmd.equalsIgnoreCase("stat") ||cmd.equalsIgnoreCase("stats") || cmd.equalsIgnoreCase("setstat") || cmd.equalsIgnoreCase("setstats")) {
+			if (args.length < 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [level] OR ");
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [level] OR ");
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [level] [stat] OR");
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [level] [stat]");
+				return;
+			}
+
+			String statName;
+			int level;
+			int stat;
+			Player p;
+
+			try {
+				if(args.length == 1) {
+					level = Integer.parseInt(args[0]);
+					stat = -1;
+					statName = "";
+				}
+				else {
+					level = Integer.parseInt(args[0]);
+					try {
+						stat = Integer.parseInt(args[1]);
+					}
+					catch (NumberFormatException ex) {
+						stat = Skills.STAT_LIST.indexOf(args[1].toLowerCase());
+
+						if(stat == -1) {
+							player.message(messagePrefix + "Invalid stat");
+							return;
+						}
+					}
+
+					try {
+						statName = Skills.STAT_LIST.get(stat);
+					}
+					catch (IndexOutOfBoundsException ex) {
+						player.message(messagePrefix + "Invalid stat");
+						return;
+					}
+				}
+
+				p = player;
+			}
+			catch(NumberFormatException ex) {
+				p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+
+				if (args.length < 2) {
+					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [level] OR ");
+					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [level] OR ");
+					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [level] [stat] OR");
+					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [level] [stat]");
+					return;
+				}
+				else if(args.length == 2) {
+					try {
+						level = Integer.parseInt(args[1]);
+					} catch (NumberFormatException e) {
+						player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [level] OR ");
+						player.message(badSyntaxPrefix + cmd.toUpperCase() + " [level] OR ");
+						player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [level] [stat] OR");
+						player.message(badSyntaxPrefix + cmd.toUpperCase() + " [level] [stat]");
+						return;
+					}
+					stat = -1;
+					statName = "";
+				}
+				else {
+					try {
+						level = Integer.parseInt(args[1]);
+					} catch (NumberFormatException e) {
+						player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [level] OR ");
+						player.message(badSyntaxPrefix + cmd.toUpperCase() + " [level] OR ");
+						player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [level] [stat] OR");
+						player.message(badSyntaxPrefix + cmd.toUpperCase() + " [level] [stat]");
+						return;
+					}
+
+					try {
+						stat = Integer.parseInt(args[2]);
+					}
+					catch (NumberFormatException e) {
+						stat = Skills.STAT_LIST.indexOf(args[2].toLowerCase());
+
+						if(stat == -1) {
+							player.message(messagePrefix + "Invalid stat");
+							return;
+						}
+					}
+
+					try {
+						statName = Skills.STAT_LIST.get(stat);
+					}
+					catch (IndexOutOfBoundsException e) {
+						player.message(messagePrefix + "Invalid stat");
+						return;
+					}
+				}
+			}
+
+			if (p == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			if(!player.isAdmin() && p.getUsernameHash() != player.getUsernameHash()) {
+				player.message(messagePrefix + "You can not modify other players' stats.");
+				return;
+			}
+
+			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+				player.message(messagePrefix + "You can not modify stats of a staff member of equal or greater rank.");
+				return;
+			}
+
+			if(stat != -1) {
+				if(level < 1)
+					level = 1;
+				if(level > Constants.GameServer.PLAYER_LEVEL_LIMIT)
+					level = Constants.GameServer.PLAYER_LEVEL_LIMIT;
+
+				p.getSkills().setLevelTo(stat, level);
+				p.checkEquipment();
+				player.message(messagePrefix + "You have set " + p.getUsername() + "'s " + statName + "  to level " + level);
+				p.message(messagePrefix + "Your " + statName + " has been set to level " + level + " by a staff member");
+			}
+			else {
+				for(int i = 0; i < Skills.SKILL_NAME.length; i++) {
+					p.getSkills().setLevelTo(i, level);
+				}
+
+				p.checkEquipment();
+				player.message(messagePrefix + "You have set " + p.getUsername() + "'s stats to level " + level);
+				p.message(messagePrefix + "All of your stats have been set to level " + level + " by a staff member");
+			}
+		}
+		else if(cmd.equalsIgnoreCase("setcurstat")) {
+			if (args.length < 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [level] OR ");
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [level] OR ");
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [level] [stat] OR");
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [level] [stat]");
+				return;
+			}
+
+			String statName;
+			int level;
+			int stat;
+			Player p;
+
+			try {
+				if(args.length == 1) {
+					level = Integer.parseInt(args[0]);
+					stat = -1;
+					statName = "";
+				}
+				else {
+					level = Integer.parseInt(args[0]);
+					try {
+						stat = Integer.parseInt(args[1]);
+					}
+					catch (NumberFormatException ex) {
+						stat = Skills.STAT_LIST.indexOf(args[1].toLowerCase());
+
+						if(stat == -1) {
+							player.message(messagePrefix + "Invalid stat");
+							return;
+						}
+					}
+
+					try {
+						statName = Skills.STAT_LIST.get(stat);
+					}
+					catch (IndexOutOfBoundsException ex) {
+						player.message(messagePrefix + "Invalid stat");
+						return;
+					}
+				}
+
+				p = player;
+			}
+			catch(NumberFormatException ex) {
+				p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+
+				if (args.length < 2) {
+					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [level] OR ");
+					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [level] OR ");
+					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [level] [stat] OR");
+					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [level] [stat]");
+					return;
+				}
+				else if(args.length == 2) {
+					try {
+						level = Integer.parseInt(args[1]);
+					} catch (NumberFormatException e) {
+						player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [level] OR ");
+						player.message(badSyntaxPrefix + cmd.toUpperCase() + " [level] OR ");
+						player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [level] [stat] OR");
+						player.message(badSyntaxPrefix + cmd.toUpperCase() + " [level] [stat]");
+						return;
+					}
+					stat = -1;
+					statName = "";
+				}
+				else {
+					try {
+						level = Integer.parseInt(args[1]);
+					} catch (NumberFormatException e) {
+						player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [level] OR ");
+						player.message(badSyntaxPrefix + cmd.toUpperCase() + " [level] OR ");
+						player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [level] [stat] OR");
+						player.message(badSyntaxPrefix + cmd.toUpperCase() + " [level] [stat]");
+						return;
+					}
+
+					try {
+						stat = Integer.parseInt(args[2]);
+					}
+					catch (NumberFormatException e) {
+						stat = Skills.STAT_LIST.indexOf(args[2].toLowerCase());
+
+						if(stat == -1) {
+							player.message(messagePrefix + "Invalid stat");
+							return;
+						}
+					}
+
+					try {
+						statName = Skills.STAT_LIST.get(stat);
+					}
+					catch (IndexOutOfBoundsException e) {
+						player.message(messagePrefix + "Invalid stat");
+						return;
+					}
+				}
+			}
+
+			if (p == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			if(!player.isAdmin() && p.getUsernameHash() != player.getUsernameHash()) {
+				player.message(messagePrefix + "You can not modify other players' stats.");
+				return;
+			}
+
+			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+				player.message(messagePrefix + "You can not modify stats of a staff member of equal or greater rank.");
+				return;
+			}
+
+			if(stat != -1) {
+				if(level < 1)
+					level = 1;
+				if(level > Constants.GameServer.PLAYER_LEVEL_LIMIT)
+					level = Constants.GameServer.PLAYER_LEVEL_LIMIT;
+
+				p.getSkills().setLevel(stat, level);
+				p.checkEquipment();
+				player.message(messagePrefix + "You have set " + p.getUsername() + "'s effective " + statName + " level " + level);
+				p.message(messagePrefix + "Your effective " + statName + " level has been set to " + level + " by a staff member");
+			}
+			else {
+				for(int i = 0; i < Skills.SKILL_NAME.length; i++) {
+					p.getSkills().setLevel(i, level);
+				}
+
+				p.checkEquipment();
+				player.message(messagePrefix + "You have set " + p.getUsername() + "'s effective levels to " + level);
+				p.message(messagePrefix + "All of your stats' effective levels have been set to " + level + " by a staff member");
+			}
 		}
 	}
 }
