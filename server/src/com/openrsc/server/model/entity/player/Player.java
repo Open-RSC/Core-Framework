@@ -1829,15 +1829,11 @@ public final class Player extends Mob {
 			combatEvent.resetCombat();
 		}
 
-		if(!isInvisible()) {
+		if(!isInvisible() && bubble) {
 			for (Player p : getViewArea().getPlayersInView()) {
-				if (bubble) {
-					ActionSender.sendTeleBubble(p, getX(), getY(), false);
-				}
+				ActionSender.sendTeleBubble(p, getX(), getY(), false);
 			}
-			if (bubble) {
-				ActionSender.sendTeleBubble(this, getX(), getY(), false);
-			}
+			ActionSender.sendTeleBubble(this, getX(), getY(), false);
 		}
 
 		setLocation(Point.location(x, y), true);
