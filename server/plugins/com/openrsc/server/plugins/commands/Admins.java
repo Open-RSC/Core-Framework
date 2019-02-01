@@ -945,6 +945,50 @@ public final class Admins implements CommandListener {
 			player.message(messagePrefix + "You have spawned " + amount + " " + EntityHandler.getItemDef(id).getName());
 			p.message(messagePrefix + "A staff member has given you " + amount + " " + EntityHandler.getItemDef(id).getName());
 		}
+		else if (cmd.equalsIgnoreCase("bankitem") || cmd.equalsIgnoreCase("bitem") || cmd.equalsIgnoreCase("addbank")) {
+			if (args.length < 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] (amount) (player)");
+				return;
+			}
+
+			int id;
+			try {
+				id = Integer.parseInt(args[0]);
+			}
+			catch(NumberFormatException ex) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] (amount) (player)");
+				return;
+			}
+
+			if (EntityHandler.getItemDef(id) == null) {
+				player.message(messagePrefix + "Invalid item id");
+				return;
+			}
+
+			int amount;
+			if (args.length >= 2) {
+				amount = Integer.parseInt(args[1]);
+			} else {
+				amount = 1;
+			}
+
+			Player p;
+			if(args.length >= 3) {
+				p = world.getPlayer(DataConversions.usernameToHash(args[2]));
+			} else {
+				p = player;
+			}
+
+			if(p == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			p.getBank().add(new Item(id, amount));
+
+			player.message(messagePrefix + "You have spawned to bank " + amount + " " + EntityHandler.getItemDef(id).getName());
+			p.message(messagePrefix + "A staff member has added to your bank " + amount + " " + EntityHandler.getItemDef(id).getName());
+		}
 		else if (cmd.equalsIgnoreCase("info") || cmd.equalsIgnoreCase("about")) {
 			Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
 			if(p == null) {
