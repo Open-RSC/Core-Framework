@@ -9,6 +9,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 
+import static com.openrsc.server.plugins.Functions.compareItemsIds;
+
 public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutiveListener {
 	private int[] capes = {
 		ItemId.RED_CAPE.id(), ItemId.BLACK_CAPE.id(), ItemId.BLUE_CAPE.id(),
@@ -306,9 +308,5 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 			}
 		}
 		return false;
-	}
-
-	private boolean compareItemsIds(Item item1, Item item2, int idA, int idB) {
-		return item1.getID() == idA && item2.getID() == idB || item1.getID() == idB && item2.getID() == idA;
 	}
 }

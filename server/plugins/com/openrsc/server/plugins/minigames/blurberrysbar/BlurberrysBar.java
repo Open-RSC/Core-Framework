@@ -128,11 +128,25 @@ public class BlurberrysBar implements TalkToNpcListener, TalkToNpcExecutiveListe
 	}
 
 	private void randomizeJob(Player p, Npc n) {
-		int randomize = DataConversions.random(0, 6);
+		int randomize = DataConversions.random(0, 4);
 		if (randomize == 0) {
-			playerTalk(p, n, "ok then, what do you need");
 			npcTalk(p, n, "can you make me one pineapple punch, one choc saturday and one drunk dragon");
 			playerTalk(p, n, "ok then i'll be back soon");
+		} else if (randomize == 1) {
+			npcTalk(p, n, "ok, i need two wizard blizzards and an s.g.g.");
+			playerTalk(p, n, "no problem");
+		} else if (randomize == 2) {
+			npcTalk(p, n, "ok, i need one wizard blizzard,one pineapple punch, one blurberry special",
+					"and two fruit blasts");
+			playerTalk(p, n, "i'll do my best");
+		} else if (randomize == 3) {
+			//dialogue recreated
+			npcTalk(p, n, "i just need two s.g.g. and one blurberry special");
+			playerTalk(p, n, "no problem");
+		} else if (randomize == 4) {
+			//dialogue recreated
+			npcTalk(p, n, "i just need one fruit blast");
+			playerTalk(p, n, "no problem");
 		}
 		if (!p.getCache().hasKey("blurberry_job")) {
 			p.getCache().set("blurberry_job", randomize);
@@ -141,25 +155,100 @@ public class BlurberrysBar implements TalkToNpcListener, TalkToNpcExecutiveListe
 
 	private void myCurrentJob(Player p, Npc n) {
 		int job = p.getCache().getInt("blurberry_job");
+		playerTalk(p, n, "hi");
+		npcTalk(p, n, "have you made the order?");
 		if (job == 0) {
-			playerTalk(p, n, "hi");
-			npcTalk(p, n, "have you made the order?");
-			if (hasItem(p, ItemId.DRUNK_DRAGON.id())
+			if (hasItem(p, ItemId.PINEAPPLE_PUNCH.id())
 				&& hasItem(p, ItemId.CHOCOLATE_SATURDAY.id())
-				&& hasItem(p, ItemId.PINEAPPLE_PUNCH.id())) {
+				&& hasItem(p, ItemId.DRUNK_DRAGON.id())) {
 				playerTalk(p, n, "here you go, one pineapple punch, one choc saturday and one drunk dragon");
 				p.message("you give blurberry one pineapple punch, one choc saturday and one drunk dragon");
-				p.incExp(Skills.COOKING, 360, true);
-				removeItem(p, ItemId.DRUNK_DRAGON.id(), 1);
-				removeItem(p, ItemId.CHOCOLATE_SATURDAY.id(), 1);
 				removeItem(p, ItemId.PINEAPPLE_PUNCH.id(), 1);
+				removeItem(p, ItemId.CHOCOLATE_SATURDAY.id(), 1);
+				removeItem(p, ItemId.DRUNK_DRAGON.id(), 1);
+				p.incExp(Skills.COOKING, 360, true);
 				npcTalk(p, n, "that's blurberry-tastic");
 				p.message("blurberry gives you 100 gold coins");
 				addItem(p, ItemId.COINS.id(), 100);
-				npcTalk(p, n, "could you make me another order");
 			} else {
 				playerTalk(p, n, "not yet");
 				npcTalk(p, n, "ok, i need one pineapple punch, one choc saturday and one drunk dragon",
+					"let me know when you're done");
+				return;
+			}
+		} else if (job == 1) {
+			if (hasItem(p, ItemId.WIZARD_BLIZZARD.id(), 2)
+				&& hasItem(p, ItemId.SGG.id())) {
+				playerTalk(p, n, "here you go, two wizard blizzards and an s.g.g.");
+				p.message("you give blurberry two wizard blizzards and an s.g.g.");
+				removeItem(p, ItemId.WIZARD_BLIZZARD.id(), 2);
+				removeItem(p, ItemId.SGG.id(), 1);
+				p.incExp(Skills.COOKING, 360, true);
+				npcTalk(p, n, "that's excellent, here's your share of the profit");
+				p.message("blurberry gives you 150 gold coins");
+				addItem(p, ItemId.COINS.id(), 150);
+			} else {
+				playerTalk(p, n, "not yet");
+				npcTalk(p, n, "ok, i need two wizard blizzards and an s.g.g.",
+					"let me know when you're done");
+				return;
+			}
+		} else if (job == 2) {
+			//dialogue recreated
+			if (hasItem(p, ItemId.WIZARD_BLIZZARD.id())
+				&& hasItem(p, ItemId.PINEAPPLE_PUNCH.id())
+				&& hasItem(p, ItemId.BLURBERRY_SPECIAL.id())
+				&& hasItem(p, ItemId.FRUIT_BLAST.id(), 2)) {
+				playerTalk(p, n, "here you go, one wizard blizzard,one pineapple punch, one blurberry special",
+						"and two fruit blasts");
+				p.message("you give blurberry one wizard blizzard,one pineapple punch, one blurberry special");
+				p.message("and two fruit blasts");
+				removeItem(p, ItemId.WIZARD_BLIZZARD.id(), 1);
+				removeItem(p, ItemId.PINEAPPLE_PUNCH.id(), 1);
+				removeItem(p, ItemId.BLURBERRY_SPECIAL.id(), 1);
+				removeItem(p, ItemId.FRUIT_BLAST.id(), 2);
+				p.incExp(Skills.COOKING, 540, true);
+				npcTalk(p, n, "wow fantastic, here's your share of the profit");
+				p.message("blurberry gives you 179 gold coins");
+				addItem(p, ItemId.COINS.id(), 179);
+			} else {
+				playerTalk(p, n, "not yet");
+				npcTalk(p, n, "ok, i need one wizard blizzard,one pineapple punch, one blurberry special",
+					"and two fruit blasts",
+					"let me know when you're done");
+				return;
+			}
+		} else if (job == 3) {
+			//dialogue recreated
+			if (hasItem(p, ItemId.SGG.id(), 2)
+				&& hasItem(p, ItemId.BLURBERRY_SPECIAL.id())) {
+				playerTalk(p, n, "here you go, two s.g.g. and one blurberry special");
+				p.message("you give blurberry two s.g.g. and one blurberry special");
+				removeItem(p, ItemId.SGG.id(), 2);
+				removeItem(p, ItemId.BLURBERRY_SPECIAL.id(), 1);
+				p.incExp(Skills.COOKING, 360, true);
+				npcTalk(p, n, "great, here's your share of the profit");
+				p.message("blurberry gives you 120 gold coins");
+				addItem(p, ItemId.COINS.id(), 120);
+			} else {
+				playerTalk(p, n, "not yet");
+				npcTalk(p, n, "ok, i need two s.g.g. and one blurberry special",
+					"let me know when you're done");
+				return;
+			}
+		} else if (job == 4) {
+			//dialogue recreated
+			if (hasItem(p, ItemId.FRUIT_BLAST.id())) {
+				playerTalk(p, n, "here you go, one fruit blast");
+				p.message("you give blurberry one fruit blast");
+				removeItem(p, ItemId.FRUIT_BLAST.id(), 1);
+				p.incExp(Skills.COOKING, 240, true);
+				npcTalk(p, n, "that's frutty-licious");
+				p.message("blurberry gives you 10 gold coins");
+				addItem(p, ItemId.COINS.id(), 10);
+			} else {
+				playerTalk(p, n, "not yet");
+				npcTalk(p, n, "ok, i need one fruit blast",
 					"let me know when you're done");
 				return;
 			}
@@ -171,13 +260,14 @@ public class BlurberrysBar implements TalkToNpcListener, TalkToNpcExecutiveListe
 			int completedJobs = p.getCache().getInt("blurberry_jobs_completed");
 			p.getCache().set("blurberry_jobs_completed", (completedJobs + 1));
 		}
+		npcTalk(p, n, "could you make me another order");
 		int menu = showMenu(p, n,
 			"I'm quite busy myself, sorry",
 			"ok then, what do you need");
 		if (menu == 0) {
 			npcTalk(p, n, "that's ok, come back when you're free");
 		} else if (menu == 1) {
-
+			randomizeJob(p, n);
 		}
 	}
 
@@ -246,7 +336,9 @@ public class BlurberrysBar implements TalkToNpcListener, TalkToNpcExecutiveListe
 		int menu = showMenu(player, npc,
 			"no thanks i prefer to stay this side of the bar",
 			"ok then i'll give it a go");
-		if (menu == 1) {
+		if (menu == 0) {
+			// NOTHING
+		} else if (menu == 1) {
 			npcTalk(player, npc, "excellent",
 				"it's not an easy job, i'll have to test you first",
 				"i'm sure you'll be great though",
@@ -284,7 +376,6 @@ public class BlurberrysBar implements TalkToNpcListener, TalkToNpcExecutiveListe
 		playerTalk(player, npc, "here you go");
 		message(player, "you give blurberry the fruit blast");
 		removeItem(player, ItemId.FRUIT_BLAST.id(), 1);
-		player.incExp(Skills.COOKING, 160, true);
 		player.message("he takes a sip");
 		npcTalk(player, npc, "hmmm... not bad, not bad at all",
 			"now can you make me a drunk dragon",
@@ -373,7 +464,8 @@ public class BlurberrysBar implements TalkToNpcListener, TalkToNpcExecutiveListe
 		addItem(player, ItemId.EQUA_LEAVES.id(), 1);
 		addItem(player, ItemId.COCKTAIL_GLASS.id(), 1);
 		playerTalk(player, npc, "ok i'll do best");
-		npcTalk(player, npc, "I'm sure you'll make a great bar man");
+		npcTalk(player, npc, "I'm sure you'll make a great " + 
+		(player.isMale() ? "bar man" : "bartender"));
 		player.getCache().set("blurberrys_bar", 6);
 	}
 
