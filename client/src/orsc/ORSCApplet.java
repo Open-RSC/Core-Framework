@@ -53,6 +53,21 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 		}
 		return false;
 	}
+	
+	public static boolean saveHideIp(int preference) {
+		FileOutputStream fileout;
+		try {
+			fileout = new FileOutputStream(Config.F_CACHE_DIR + File.separator + "hideIp.txt");
+
+			OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+			outputWriter.write(""+preference);
+			outputWriter.close();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 
 	void addMouseClick(int button, int x, int y) {
 		try {
@@ -808,6 +823,26 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			e.printStackTrace();
 		}
 		return "";
+	}
+	
+	public int loadHideIp() {
+		try {
+
+			FileInputStream in = new FileInputStream(Config.F_CACHE_DIR + File.separator + "hideIp.txt");
+			InputStreamReader inputStreamReader = new InputStreamReader(in);
+			BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+			StringBuilder sb = new StringBuilder();
+			String line;
+			while ((line = bufferedReader.readLine()) != null) {
+				sb.append(line);
+			}
+			in.close();
+
+			return Integer.parseInt(sb.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
 	}
 
 	@Override

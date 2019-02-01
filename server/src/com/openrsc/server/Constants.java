@@ -159,6 +159,7 @@ public final class Constants {
 		public static boolean EXPERIENCE_DROPS_TOGGLE = false;
 		public static boolean ITEMS_ON_DEATH_MENU = false;
 		public static boolean SHOW_ROOF_TOGGLE = false;
+		public static boolean WANT_HIDE_IP = false;
 		public static boolean WANT_GLOBAL_CHAT = false;
 		public static boolean WANT_SKILL_MENUS = false;
 		public static boolean WANT_QUEST_MENUS = false;
@@ -253,6 +254,7 @@ public final class Constants {
 			EXPERIENCE_DROPS_TOGGLE = Boolean.parseBoolean(props.getProperty("experience_drops_toggle"));
 			ITEMS_ON_DEATH_MENU = Boolean.parseBoolean(props.getProperty("items_on_death_menu"));
 			SHOW_ROOF_TOGGLE = Boolean.parseBoolean(props.getProperty("show_roof_toggle"));
+			WANT_HIDE_IP = Boolean.parseBoolean(props.getProperty("want_hide_ip"));
 			WANT_GLOBAL_CHAT = Boolean.parseBoolean(props.getProperty("want_global_chat"));
 			WANT_SKILL_MENUS = Boolean.parseBoolean(props.getProperty("want_skill_menus"));
 			WANT_QUEST_MENUS = Boolean.parseBoolean(props.getProperty("want_quest_menus"));

@@ -87,6 +87,7 @@ public class Config {
 	public static boolean S_ITEMS_ON_DEATH_MENU = false;
 	public static boolean S_SHOW_ROOF_TOGGLE = false;
 	public static boolean S_WANT_GLOBAL_CHAT = false;
+	public static boolean S_WANT_HIDE_IP = false;
 	public static boolean S_WANT_FIXED_OVERHEAD_CHAT = false;
 	private static Properties prop = new Properties();
 

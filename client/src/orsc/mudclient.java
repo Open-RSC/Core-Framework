@@ -366,6 +366,7 @@ public final class mudclient implements Runnable {
 	private int loginScreenNumber = 0;
 	private int m_Xi;
 	private int rememberButtonIdx;
+	private int hideIpButtonIdx;
 	private int m_Zb = 0;
 	private int localPlayerServerIndex = -1;
 	private int m_Ze;
@@ -443,6 +444,7 @@ public final class mudclient implements Runnable {
 	private boolean developerMenu = false;
 	private int devMenuNpcID;
 	private boolean modMenu = false;
+	private Integer settingsHideIP = 0;
 	private int settingsBlockChat = 0;
 	private int settingsBlockDuel = 0;
 	private int settingsBlockPrivate = 0;
@@ -1417,6 +1419,7 @@ public final class mudclient implements Runnable {
 			// 200, 35);
 			//
 			//
+			
 			panelLoginWelcome.addButtonBackground(halfGameWidth() - 100, halfGameHeight() + 73 + yOffsetWelcome, 120, 35);
 			panelLoginWelcome.addButtonBackground(halfGameWidth() + 100, halfGameHeight() + 73 + yOffsetWelcome, 120, 35);
 
@@ -1466,11 +1469,33 @@ public final class mudclient implements Runnable {
 			this.panelLogin.addCenteredText(halfGameWidth() + 154, halfGameHeight() + 113, "Cancel", 4, false);
 			this.m_Xi = this.panelLogin.addButton(halfGameWidth() + 154, halfGameHeight() + 113, 120, 25);
 			this.panelLogin.setFocus(this.controlLoginUser);
-
-			if (Config.isAndroid() || Config.Remember()) {
-				this.panelLogin.addButtonBackground(halfGameWidth() + 154, halfGameHeight() + 143, 120, 25);
-				this.panelLogin.addCenteredText(halfGameWidth() + 154,halfGameHeight() + 143, "Remember", 4, false);
-				this.rememberButtonIdx = this.panelLogin.addButton(halfGameWidth() + 154, halfGameHeight() + 143, 120, 25);
+			
+			int offRememb = -1;
+			int offHide = -1;
+			int width = 120;
+			if (Config.S_WANT_HIDE_IP && (Config.isAndroid() || Config.Remember())) {
+				offRememb = 124;
+				offHide = 186;
+				width = 60;
+			}
+			else if(Config.S_WANT_HIDE_IP) {
+				offHide = 154;
+			}
+			else if(Config.isAndroid() || Config.Remember()) {
+				offRememb = 154;
+			}
+			
+			if (offRememb != -1) {
+				this.panelLogin.addButtonBackground(halfGameWidth() + offRememb, halfGameHeight() + 143, width, 25);
+				this.panelLogin.addCenteredText(halfGameWidth() + offRememb, halfGameHeight() + 143, "Save", 3, false);
+				this.rememberButtonIdx = this.panelLogin.addButton(halfGameWidth() + offRememb, halfGameHeight() + 143, width, 25);
+			}
+			if (offHide != -1) {
+				this.settingsHideIP = clientPort.loadHideIp();
+				String text = (this.settingsHideIP != 1) ? "Hide IP" : "Show IP";
+				this.panelLogin.addButtonBackground(halfGameWidth() + offHide, halfGameHeight() + 143, width, 25);
+				this.panelLogin.addCenteredText(halfGameWidth() + offHide, halfGameHeight() + 143, text, 3, false);
+				this.hideIpButtonIdx = this.panelLogin.addButton(halfGameWidth() + offHide, halfGameHeight() + 143, width, 25);
 			}
 
 			/* Registration setup */
@@ -3521,8 +3546,10 @@ public final class mudclient implements Runnable {
 					this.welcomeLastLoggedInHost = getHostnameFromIP();
 				}
 
-				this.getSurface().drawColoredStringCentered(xr + 256 - 56, "from: " + this.welcomeLastLoggedInHost, 0xFFFFFF,
-					var1 ^ -4853, 1, var3);
+				if (this.settingsHideIP != null && this.settingsHideIP != 1) {
+					this.getSurface().drawColoredStringCentered(xr + 256 - 56, "from: " + this.welcomeLastLoggedInHost, 0xFFFFFF,
+							var1 ^ -4853, 1, var3);
+				}
 				var3 += 15;
 				var3 += 15;
 			}
@@ -7054,6 +7081,7 @@ public final class mudclient implements Runnable {
 
 	private final void drawSocialSettingsOptions(int var3, short var5, int var6, int var7) {
 		this.getSurface().drawString("Privacy settings", 3 + var3, var7, 0, 1);
+		
 		var7 += 15;
 		if (this.settingsBlockChat != 0) {
 			this.getSurface().drawString("Block chat messages: @gre@<on>", 3 + var3, var7, 0xFFFFFF, 1);
@@ -7715,8 +7743,7 @@ public final class mudclient implements Runnable {
 		this.getSurface().drawString("Privacy settings. Will be applied to", 3 + var3, var7, 0, 1);
 		var7 += 15;
 		this.getSurface().drawString("all people not on your friends list", 3 + var3, var7, 0, 1);
-
-
+		
 		var7 += 15;
 		if (this.settingsBlockChat != 0) {
 			this.getSurface().drawString("Block chat messages: @gre@<on>", 3 + var3, var7, 0xFFFFFF, 1);
@@ -7808,7 +7835,7 @@ public final class mudclient implements Runnable {
 		}
 
 		var7 += 7 * 15 + 5;
-
+		
 		boolean var11 = false;
 		// Block Chat
 		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12
@@ -9226,6 +9253,20 @@ public final class mudclient implements Runnable {
 							boolean temp = ORSCApplet.saveCredentials(this.panelLogin.getControlText(this.controlLoginUser) + "," + this.panelLogin.getControlText(this.controlLoginPass));
 							if (temp)
 								this.panelLogin.setText(this.controlLoginStatus2, "@gre@Credentials Saved");
+						}
+					}
+					
+					if (Config.S_WANT_HIDE_IP) {
+						if (this.panelLogin.isClicked(this.hideIpButtonIdx)) {
+							this.settingsHideIP = 1 - this.settingsHideIP;
+							String text = (this.settingsHideIP != 1) ? "Hide IP" : "Show IP";
+							this.panelLogin.setText(this.hideIpButtonIdx - 1, text);
+							
+							boolean temp = ORSCApplet.saveHideIp(this.settingsHideIP);
+							String msg = (this.settingsHideIP != 1) ? "@red@Your IP will be shown after login"
+									: "@gre@Your IP will be hidden after login";
+							if (temp)
+								this.panelLogin.setText(this.controlLoginStatus2, msg);
 						}
 					}
 
@@ -11704,7 +11745,7 @@ public final class mudclient implements Runnable {
 	public FishingTrawlerInterface getFishingTrawlerInterface() {
 		return fishingTrawlerInterface;
 	}
-
+	
 	public void setBlockChat(int status) {
 		this.settingsBlockChat = status;
 	}
@@ -12173,7 +12214,7 @@ public final class mudclient implements Runnable {
 	public void setCombatStyle(int style) {
 		this.combatStyle = style;
 	}
-
+	
 	public void setSettingsBlockGlobal(int block) {
 		this.settingsBlockGlobal = block;
 	}
