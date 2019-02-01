@@ -1201,6 +1201,20 @@ public final class Admins implements CommandListener {
 			p.message(messagePrefix + "You have been healed by an admin");
 			player.message(messagePrefix + "Healed: " + p.getUsername());
 		}
+		else if (cmd.equalsIgnoreCase("recharge") || cmd.equalsIgnoreCase("healprayer") || cmd.equalsIgnoreCase("healp")) {
+			Player p = args.length > 0 ?
+				world.getPlayer(DataConversions.usernameToHash(args[0])) :
+				player;
+
+			if(p == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			p.getSkills().normalize(Skills.PRAYER);
+			p.message(messagePrefix + "Your prayer has been recharged by an admin");
+			player.message(messagePrefix + "Recharged: " + p.getUsername());
+		}
 		else if ((cmd.equalsIgnoreCase("hp") || cmd.equalsIgnoreCase("sethp") || cmd.equalsIgnoreCase("hits"))) {
 			if(args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (name) [hp]");
