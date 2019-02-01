@@ -1218,6 +1218,11 @@ public final class Player extends Mob {
 	}
 
 	public void incExp(int skill, int skillXP, boolean useFatigue) {
+		if(isExperienceFrozen()) {
+			ActionSender.sendMessage(this, "You can not gain experience right now!");
+			return;
+		}
+
 		if (useFatigue) {
 			if (fatigue >= this.MAX_FATIGUE) {
 				ActionSender.sendMessage(this, "@gre@You are too tired to gain experience, get some rest!");
@@ -1234,6 +1239,7 @@ public final class Player extends Mob {
 				ActionSender.sendFatigue(this);
 			}
 		}
+
 		if (getLocation().onTutorialIsland()) {
 			if (skills.getExperience(skill) + skillXP > 200) {
 				if (skill != 3) {
@@ -2075,8 +2081,8 @@ public final class Player extends Mob {
 		}
 	}
 
-	public void toggleInvisible() {
-		setCacheInvisible(!cacheIsInvisible());
+	public boolean toggleCacheInvisible() {
+		return setCacheInvisible(!cacheIsInvisible());
 	}
 
 	public boolean isInvisible(Mob m) {
@@ -2094,9 +2100,10 @@ public final class Player extends Mob {
 		return super.stateIsInvulnerable() || cacheIsInvisible();
 	}
 
-	public void setCacheInvisible(boolean invisible) {
+	public boolean setCacheInvisible(boolean invisible) {
 		getUpdateFlags().setAppearanceChanged(true);
 		this.getCache().store("invisible", invisible);
+		return invisible;
 	}
 
 	public boolean isInvulnerable(Mob m) {
@@ -2114,13 +2121,30 @@ public final class Player extends Mob {
 		return super.stateIsInvulnerable() || cacheIsInvulnerable();
 	}
 
-	public void setCacheInvulnerable(boolean invulnerable) {
+	public boolean setCacheInvulnerable(boolean invulnerable) {
 		getUpdateFlags().setAppearanceChanged(true);
 		this.getCache().store("invulnerable", invulnerable);
+		return invulnerable;
 	}
 
-	public void toggleInvulnerable() {
-		setCacheInvulnerable(!cacheIsInvulnerable());
+	public boolean toggleCacheInvulnerable() {
+		return setCacheInvulnerable(!cacheIsInvulnerable());
+	}
+
+	public boolean isExperienceFrozen() {
+		if (!getCache().hasKey("freezexp"))
+			return false;
+
+		return getCache().getBoolean("freezexp");
+	}
+
+	public boolean setFreezeXp(boolean freezeXp) {
+		this.getCache().store("freezexp", freezeXp);
+		return freezeXp;
+	}
+
+	public boolean toggleFreezeXp() {
+		return setFreezeXp(!isExperienceFrozen());
 	}
 
 	public Point summon(Point summonLocation) {

@@ -175,32 +175,96 @@ public final class Event implements CommandListener {
 				world.getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
-			if (p != null) {
-				p.toggleInvisible();
-				String invisibleText = p.stateIsInvisible() ? "invisible" : "visible";
-				player.message(messagePrefix + p.getUsername() + " is now " + invisibleText);
-				p.message(messagePrefix + "A staff member has made you " + invisibleText);
-				GameLogging.addQuery(new StaffLog(player, 14, player.getUsername() + " has made " + p.getUsername() + " " + invisibleText));
-			} else {
+			if(p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
 			}
+
+			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.isSuperMod()) {
+				player.message(messagePrefix + "You can not make other users invisible.");
+				return;
+			}
+
+			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+				player.message(messagePrefix + "You can not change the invisible state of a staff member of equal or greater rank.");
+				return;
+			}
+
+			boolean invisible;
+			boolean toggle;
+			if(args.length > 1) {
+				try {
+					invisible = DataConversions.parseBoolean(args[1]);
+					toggle = false;
+				} catch (NumberFormatException ex) {
+					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] (boolean)");
+					return;
+				}
+			} else {
+				toggle = true;
+				invisible = false;
+			}
+
+			boolean newInvisible;
+			if(toggle) {
+				newInvisible = p.toggleCacheInvisible();
+			} else {
+				newInvisible = p.setCacheInvisible(invisible);
+			}
+
+			String invisibleText = newInvisible ? "invisible" : "visible";
+			player.message(messagePrefix + p.getUsername() + " is now " + invisibleText);
+			p.message(messagePrefix + "A staff member has made you " + invisibleText);
+			GameLogging.addQuery(new StaffLog(player, 14, player.getUsername() + " has made " + p.getUsername() + " " + invisibleText));
 		}
 		else if (cmd.equalsIgnoreCase("invulnerable") || cmd.equalsIgnoreCase("invul")) {
 			Player p = args.length > 0 ?
 				world.getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
-			if (p != null) {
-				p.toggleInvulnerable();
-				String invulnerableText = p.stateIsInvulnerable() ? "invulnerable" : "vulnerable";
-				player.message(messagePrefix + p.getUsername() + " is now " + invulnerableText);
-				p.message(messagePrefix + "A staff member has made you " + invulnerableText);
-				GameLogging.addQuery(new StaffLog(player, 22, player.getUsername() + " has made " + p.getUsername() + " " + invulnerableText));
-			} else {
+			if(p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
 			}
+
+			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.isSuperMod()) {
+				player.message(messagePrefix + "You can not make other users invisible.");
+				return;
+			}
+
+			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+				player.message(messagePrefix + "You can not change the invulnerable state of a staff member of equal or greater rank.");
+				return;
+			}
+
+			boolean invulnerable;
+			boolean toggle;
+			if(args.length > 1) {
+				try {
+					invulnerable = DataConversions.parseBoolean(args[1]);
+					toggle = false;
+				} catch (NumberFormatException ex) {
+					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] (boolean)");
+					return;
+				}
+			} else {
+				toggle = true;
+				invulnerable = false;
+			}
+
+			boolean newInvulnerable;
+			if(toggle) {
+				newInvulnerable = p.toggleCacheInvulnerable();
+			} else {
+				newInvulnerable = p.setCacheInvulnerable(invulnerable);
+			}
+
+			String invulnerbleText = newInvulnerable ? "invulnerable" : "vulnerable";
+			player.message(messagePrefix + p.getUsername() + " is now " + invulnerbleText);
+			p.message(messagePrefix + "A staff member has made you " + invulnerbleText);
+			GameLogging.addQuery(new StaffLog(player, 22, player.getUsername() + " has made " + p.getUsername() + " " + invulnerbleText));
 		}
-		else if (cmd.equals("check")) {
+		else if (cmd.equalsIgnoreCase("check")) {
 			Player target = args.length > 0 ?
 				world.getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
