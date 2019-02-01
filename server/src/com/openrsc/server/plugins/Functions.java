@@ -119,6 +119,14 @@ public class Functions {
 	public static void kill(Npc mob, Player killedBy) {
 		mob.killedBy(killedBy);
 	}
+	
+	/**
+	 * Determines if the id of item1 is idA and the id of item2 is idB
+	 * and does the check the other way around as well 
+	 */
+	public static boolean compareItemsIds(Item item1, Item item2, int idA, int idB) {
+		return item1.getID() == idA && item2.getID() == idB || item1.getID() == idB && item2.getID() == idA;
+	}
 
 	/**
 	 * Returns true if you are in any stages provided.
