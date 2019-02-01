@@ -181,7 +181,7 @@ public final class Event implements CommandListener {
 				return;
 			}
 
-			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.isSuperMod()) {
+			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && !player.isSuperMod()) {
 				player.message(messagePrefix + "You can not make other users invisible.");
 				return;
 			}
@@ -228,7 +228,7 @@ public final class Event implements CommandListener {
 				return;
 			}
 
-			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.isSuperMod()) {
+			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && !player.isSuperMod()) {
 				player.message(messagePrefix + "You can not make other users invisible.");
 				return;
 			}
