@@ -38,7 +38,7 @@ public final class Moderator implements CommandListener {
 			int minutes = -1;
 			if(args.length >= 2) {
 				try {
-					minutes = Integer.parseInt(args[2]);
+					minutes = Integer.parseInt(args[1]);
 				} catch (NumberFormatException ex) {
 					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] (time in minutes, -1 or exclude for permanent)");
 					return;
