@@ -125,8 +125,8 @@ public final class SuperModerator implements CommandListener {
 			}
 		}
 		else if (cmd.equalsIgnoreCase("skull")) {
-			if(args.length == 0) {
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
+			if(args.length < 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] (boolean)");
 				return;
 			}
 
@@ -142,15 +142,28 @@ public final class SuperModerator implements CommandListener {
 				return;
 			}
 
-			String skullMessage;
-			if(p.isSkulled()) {
+			boolean skull;
+			boolean toggle;
+			if(args.length > 1) {
+				try {
+					skull = DataConversions.parseBoolean(args[1]);
+					toggle = false;
+				} catch (NumberFormatException ex) {
+					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] (boolean)");
+					return;
+				}
+			} else {
+				toggle = true;
+				skull = false;
+			}
+
+			if ((toggle && p.isSkulled()) || (!toggle && !skull)) {
 				p.removeSkull();
-				skullMessage = "removed";
-			}
-			else {
+			} else {
 				p.addSkull(1200000);
-				skullMessage = "added";
 			}
+
+			String skullMessage = p.isSkulled() ? "added" : "removed";
 			p.message(messagePrefix + "Skull has been " + skullMessage + " by an admin");
 			player.message(messagePrefix + "Skull has been " + skullMessage + ": " + p.getUsername());
 		}
@@ -195,7 +208,7 @@ public final class SuperModerator implements CommandListener {
 			player.message(messagePrefix + "You have jailed " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation);
 			p.message(messagePrefix + "You have been jailed to " + p.getLocation() + " from " + originalLocation + " by " + player.getStaffName());
 		}
-		else if (cmd.equals("release")) {
+		else if (cmd.equalsIgnoreCase("release")) {
 			Player p = args.length > 0 ?
 				world.getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
