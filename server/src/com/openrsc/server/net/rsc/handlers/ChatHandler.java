@@ -19,7 +19,7 @@ public final class ChatHandler implements PacketHandler {
 			return;
 		}
 
-		if (sender.getLocation().onTutorialIsland()) {
+		if (!sender.isStaff() && sender.getLocation().onTutorialIsland()) {
 			sender.message("Once you finish the tutorial, typing here sends messages to nearby players");
 			return;
 		}
