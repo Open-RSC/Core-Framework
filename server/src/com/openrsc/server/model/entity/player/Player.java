@@ -1456,7 +1456,8 @@ public final class Player extends Mob {
 		if (stake) {
 			getDuel().dropOnDeath();
 		} else {
-			getInventory().dropOnDeath(mob);
+			if(!isStaff())
+				getInventory().dropOnDeath(mob);
 		}
 		if (isIronMan(3)) {
 			updateHCIronman(1);
