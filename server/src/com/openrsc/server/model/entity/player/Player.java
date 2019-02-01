@@ -2076,23 +2076,25 @@ public final class Player extends Mob {
 	}
 
 	public void toggleInvisible() {
-		setInvisible(!stateIsInvisible());
+		setCacheInvisible(!cacheIsInvisible());
 	}
 
 	public boolean isInvisible(Mob m) {
 		return (stateIsInvisible() && m.isInvisibleTo(this)) && !(m instanceof Player && ((Player)m).isAdmin());
 	}
 
-	public boolean stateIsInvisible() {
-		boolean parentImpl = super.stateIsInvulnerable();
-
+	public boolean cacheIsInvisible() {
 		if (!getCache().hasKey("invisible"))
-			return parentImpl;
+			return false;
 
-		return parentImpl || getCache().getBoolean("invisible");
+		return getCache().getBoolean("invisible");
 	}
 
-	public void setInvisible(boolean invisible) {
+	public boolean stateIsInvisible() {
+		return super.stateIsInvulnerable() || cacheIsInvisible();
+	}
+
+	public void setCacheInvisible(boolean invisible) {
 		getUpdateFlags().setAppearanceChanged(true);
 		this.getCache().store("invisible", invisible);
 	}
@@ -2101,22 +2103,24 @@ public final class Player extends Mob {
 		return (stateIsInvulnerable() && m.isInvulnerableTo(this)) && !(m instanceof Player && ((Player)m).isAdmin());
 	}
 
-	public boolean stateIsInvulnerable() {
-		boolean parentImpl = super.stateIsInvulnerable();
-
+	public boolean cacheIsInvulnerable () {
 		if (!getCache().hasKey("invulnerable"))
-			return parentImpl;
+			return false;
 
-		return parentImpl || getCache().getBoolean("invulnerable");
+		return getCache().getBoolean("invulnerable");
 	}
 
-	public void setInvulnerable(boolean invulnerable) {
+	public boolean stateIsInvulnerable() {
+		return super.stateIsInvulnerable() || cacheIsInvulnerable();
+	}
+
+	public void setCacheInvulnerable(boolean invulnerable) {
 		getUpdateFlags().setAppearanceChanged(true);
 		this.getCache().store("invulnerable", invulnerable);
 	}
 
 	public void toggleInvulnerable() {
-		setInvulnerable(!stateIsInvulnerable());
+		setCacheInvulnerable(!cacheIsInvulnerable());
 	}
 
 	public Point summon(Point summonLocation) {
