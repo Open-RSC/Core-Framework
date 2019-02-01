@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.npcs.wilderness.mage_arena;
+package com.openrsc.server.plugins.minigames.mage_arena;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.content.market.Market;

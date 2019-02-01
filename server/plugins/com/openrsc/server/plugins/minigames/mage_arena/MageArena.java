@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.npcs.wilderness.mage_arena;
+package com.openrsc.server.plugins.minigames.mage_arena;
 
 import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
@@ -18,7 +18,7 @@ import com.openrsc.server.plugins.listeners.executive.*;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Mage_Arena_MiniQuest implements TalkToNpcExecutiveListener, TalkToNpcListener, PlayerKilledNpcListener,
+public class MageArena implements TalkToNpcExecutiveListener, TalkToNpcListener, PlayerKilledNpcListener,
 	PlayerKilledNpcExecutiveListener, PlayerAttackNpcExecutiveListener, PlayerDeathExecutiveListener,
 	PlayerMageNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, PickupListener,
 	PickupExecutiveListener {

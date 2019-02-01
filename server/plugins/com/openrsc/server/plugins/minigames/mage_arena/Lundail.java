@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.npcs.wilderness.mage_arena;
+package com.openrsc.server.plugins.minigames.mage_arena;
 
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
