@@ -81,13 +81,7 @@ public final class Admins implements CommandListener {
 
 	@Override
 	public void handleCommand(String cmd, String[] args, final Player player) {
-		if (cmd.equalsIgnoreCase("addbank")) {
-			for (int i = 0; i < 1290; i++) {
-				player.getBank().add(new Item(i, 1000000));
-			}
-			player.message(messagePrefix + "Added bank items.");
-		}
-		else if (cmd.equalsIgnoreCase("cleannpcs")) {
+		if (cmd.equalsIgnoreCase("cleannpcs")) {
 			Server.getServer().submitTask(new Runnable() {
 				@Override
 				public void run() {
@@ -895,7 +889,7 @@ public final class Admins implements CommandListener {
 			p.setChangingAppearance(true);
 			ActionSender.sendAppearanceScreen(p);
 		}
-		else if (cmd.equals("item")) {
+		else if (cmd.equalsIgnoreCase("item")) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] (amount) (player)");
 				return;
@@ -1168,7 +1162,7 @@ public final class Admins implements CommandListener {
 				p.message(messagePrefix + "All of your stats have been set to level " + level + " by a staff member");
 			}
 		}
-		else if ((cmd.equalsIgnoreCase("announcement") || cmd.equalsIgnoreCase("announce") || cmd.equals("anouncement") || cmd.equalsIgnoreCase("anounce"))) {
+		else if ((cmd.equalsIgnoreCase("announcement") || cmd.equalsIgnoreCase("announce") || cmd.equalsIgnoreCase("anouncement") || cmd.equalsIgnoreCase("anounce"))) {
 			int argsIndex   = 0;
 			String message  = "";
 
@@ -1217,7 +1211,7 @@ public final class Admins implements CommandListener {
 		}
 		else if (cmd.equalsIgnoreCase("hp") || cmd.equalsIgnoreCase("sethp") || cmd.equalsIgnoreCase("hits")) {
 			if(args.length < 1) {
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (name) [hp]");
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] [hp]");
 				return;
 			}
 
@@ -1258,7 +1252,7 @@ public final class Admins implements CommandListener {
 		}
 		else if (cmd.equalsIgnoreCase("prayer") || cmd.equalsIgnoreCase("setprayer")) {
 			if(args.length < 1) {
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (name) [prayer]");
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] [prayer]");
 				return;
 			}
 
