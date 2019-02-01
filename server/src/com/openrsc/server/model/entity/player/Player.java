@@ -599,7 +599,7 @@ public final class Player extends Mob {
 				return false;
 			}
 
-			if (victim.isInvulnerable()) {
+			if (victim.isInvulnerable() || victim.isInvisible()) {
 				message("You are not allowed to attack that person");
 				return false;
 			}
