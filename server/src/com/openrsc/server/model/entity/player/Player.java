@@ -599,7 +599,7 @@ public final class Player extends Mob {
 				return false;
 			}
 
-			if (victim.isInvulnerable() || victim.isInvisible()) {
+			if (victim.isInvulnerable(mob) || victim.isInvisible(mob)) {
 				message("You are not allowed to attack that person");
 				return false;
 			}
@@ -1829,9 +1829,11 @@ public final class Player extends Mob {
 			combatEvent.resetCombat();
 		}
 
-		if(!isInvisible() && bubble) {
+		if(bubble) {
 			for (Player p : getViewArea().getPlayersInView()) {
-				ActionSender.sendTeleBubble(p, getX(), getY(), false);
+				if(!isInvisible(p)) {
+					ActionSender.sendTeleBubble(p, getX(), getY(), false);
+				}
 			}
 			ActionSender.sendTeleBubble(this, getX(), getY(), false);
 		}
@@ -2074,14 +2076,20 @@ public final class Player extends Mob {
 	}
 
 	public void toggleInvisible() {
-		setInvisible(!isInvisible());
+		setInvisible(!stateIsInvisible());
 	}
 
-	public boolean isInvisible() {
-		if (!getCache().hasKey("invisible"))
-			return false;
+	public boolean isInvisible(Mob m) {
+		return (stateIsInvisible() && m.isInvisibleTo(this)) && !(m instanceof Player && ((Player)m).isAdmin());
+	}
 
-		return getCache().getBoolean("invisible");
+	public boolean stateIsInvisible() {
+		boolean parentImpl = super.stateIsInvulnerable();
+
+		if (!getCache().hasKey("invisible"))
+			return parentImpl;
+
+		return parentImpl || getCache().getBoolean("invisible");
 	}
 
 	public void setInvisible(boolean invisible) {
@@ -2089,11 +2097,17 @@ public final class Player extends Mob {
 		this.getCache().store("invisible", invisible);
 	}
 
-	public boolean isInvulnerable() {
-		if (!getCache().hasKey("invulnerable"))
-			return false;
+	public boolean isInvulnerable(Mob m) {
+		return (stateIsInvulnerable() && m.isInvulnerableTo(this)) && !(m instanceof Player && ((Player)m).isAdmin());
+	}
 
-		return getCache().getBoolean("invulnerable");
+	public boolean stateIsInvulnerable() {
+		boolean parentImpl = super.stateIsInvulnerable();
+
+		if (!getCache().hasKey("invulnerable"))
+			return parentImpl;
+
+		return parentImpl || getCache().getBoolean("invulnerable");
 	}
 
 	public void setInvulnerable(boolean invulnerable) {
@@ -2102,7 +2116,7 @@ public final class Player extends Mob {
 	}
 
 	public void toggleInvulnerable() {
-		setInvulnerable(!isInvulnerable());
+		setInvulnerable(!stateIsInvulnerable());
 	}
 
 	public Point summon(Point summonLocation) {

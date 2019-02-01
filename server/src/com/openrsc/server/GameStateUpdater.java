@@ -152,7 +152,7 @@ public final class GameStateUpdater {
 				boolean visibleConditionOverride = otherPlayer.isVisibleTo(playerToUpdate);
 
 				if (!playerToUpdate.withinRange(otherPlayer) || !otherPlayer.loggedIn() || otherPlayer.isRemoved()
-					|| otherPlayer.isTeleporting() || (otherPlayer.isInvisible() && !playerToUpdate.isAdmin())
+					|| otherPlayer.isTeleporting() || otherPlayer.isInvisible(playerToUpdate)
 					|| !visibleConditionOverride) {
 					positionBuilder.writeBits(1, 1); //Needs Update
 					positionBuilder.writeBits(1, 1); //Update Type
@@ -181,7 +181,7 @@ public final class GameStateUpdater {
 				boolean visibleConditionOverride = otherPlayer.isVisibleTo(playerToUpdate);
 				if (playerToUpdate.getLocalPlayers().contains(otherPlayer) || otherPlayer.equals(playerToUpdate)
 					|| !otherPlayer.withinRange(playerToUpdate) || !otherPlayer.loggedIn()
-					|| otherPlayer.isRemoved() || (otherPlayer.isInvisible() && !playerToUpdate.isAdmin())
+					|| otherPlayer.isRemoved() || otherPlayer.isInvisible(playerToUpdate)
 					|| !visibleConditionOverride) {
 					continue;
 				}
@@ -383,8 +383,8 @@ public final class GameStateUpdater {
 						appearancePacket.writeByte(0);
 					}
 
-					appearancePacket.writeByte(playerNeedingAppearanceUpdate.isInvisible() ? 1 : 0);
-					appearancePacket.writeByte(playerNeedingAppearanceUpdate.isInvulnerable() ? 1 : 0);
+					appearancePacket.writeByte(playerNeedingAppearanceUpdate.stateIsInvisible() ? 1 : 0);
+					appearancePacket.writeByte(playerNeedingAppearanceUpdate.stateIsInvulnerable() ? 1 : 0);
 					appearancePacket.writeByte(playerNeedingAppearanceUpdate.getGroupID());
 					appearancePacket.writeInt(playerNeedingAppearanceUpdate.getIcon());
 				}
