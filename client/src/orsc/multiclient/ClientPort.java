@@ -49,4 +49,6 @@ public interface ClientPort {
 	public void drawKeyboard();
 
 	public String loadCredentials();
+	
+	public int loadHideIp();
 }

@@ -413,6 +413,7 @@ public class ActionSender {
 		s.writeByte((byte) (Constants.GameServer.EXPERIENCE_DROPS_TOGGLE ? 1 : 0));
 		s.writeByte((byte) (Constants.GameServer.ITEMS_ON_DEATH_MENU ? 1 : 0));
 		s.writeByte((byte) (Constants.GameServer.SHOW_ROOF_TOGGLE ? 1 : 0));
+		s.writeByte((byte) (Constants.GameServer.WANT_HIDE_IP ? 1 : 0));
 		s.writeByte((byte) (Constants.GameServer.WANT_GLOBAL_CHAT ? 1 : 0));
 		s.writeByte((byte) (Constants.GameServer.WANT_SKILL_MENUS ? 1 : 0));
 		s.writeByte((byte) (Constants.GameServer.WANT_QUEST_MENUS ? 1 : 0));
