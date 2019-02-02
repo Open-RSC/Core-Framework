@@ -1860,10 +1860,19 @@ public class PacketHandler {
 					player.bubbleTimeout = 150;
 					player.bubbleItem = itemType;
 				}
-			} else if (updateType == 1 || updateType == 6) {
-				if (updateType == 1) {
+			} else if (updateType == 1 || updateType == 6 || updateType == 7) {
+				if (updateType == 1 || updateType == 7) {
 					int crownID = packetsIncoming.get32();
+					boolean muted = false, onTutorial = false;
+					if(updateType == 7) {
+						muted = packetsIncoming.getUnsignedByte() > 0;
+						onTutorial = packetsIncoming.getUnsignedByte() > 0;
+					}
 					String message = packetsIncoming.readString();
+
+					if(updateType == 7 && message.equalsIgnoreCase(""))
+						continue;
+
 					if (null != player) {
 						boolean var29 = false;
 						String displayName = StringUtil.displayNameToKey(player.accountName);
@@ -1880,9 +1889,19 @@ public class PacketHandler {
 						if (!var29) {
 							player.messageTimeout = 150;
 							player.message = message;
-							mc.showMessage(!Config.S_WANT_CUSTOM_RANK_DISPLAY, (player.clanTag != null ? "@whi@[@cla@" + player.clanTag + "@whi@]@yel@ " + player.getStaffName() : player.getStaffName()), player.message,
-								MessageType.CHAT, crownID, player.accountName);
-
+							mc.showMessage(
+								!Config.S_WANT_CUSTOM_RANK_DISPLAY,
+								(
+									((updateType == 7 && muted) ? "@whi@[MUTED]@yel@ " : "") +
+									((updateType == 7 && onTutorial) ? "@whi@[TUTORIAL]@yel@ " : "") +
+									(player.clanTag != null ? "@whi@[@cla@" + player.clanTag + "@whi@]@yel@ " : "") +
+									player.getStaffName()
+								),
+								player.message,
+								MessageType.CHAT,
+								crownID,
+								player.accountName
+							);
 						}
 					}
 				} else {
