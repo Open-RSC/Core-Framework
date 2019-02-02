@@ -48,10 +48,38 @@ public class HourlyNpcLootEvent extends HourlyEvent  {
 	}
 
 	public void action() {
-		Server.getServer().getEventHandler().add(new NpcLootEvent(location, npcId, npcAmount, itemId, itemAmount, npcLifetime));
-		if(eventMessage != null) {
+		Server.getServer().getEventHandler().add(new NpcLootEvent(getLocation(), getNpcId(), getNpcAmount(), getItemId(), getItemAmount(), getNpcLifetime()*60*1000));
+		if(getEventMessage() != null) {
 			for (Player p : World.getWorld().getPlayers())
-				ActionSender.sendMessage(p, null, 0, MessageType.QUEST, eventMessage, 0);
+				ActionSender.sendMessage(p, null, 0, MessageType.QUEST, getEventMessage(), 0);
 		}
+	}
+
+	public Point getLocation() {
+		return location;
+	}
+
+	public int getNpcId() {
+		return npcId;
+	}
+
+	public int getNpcAmount() {
+		return npcAmount;
+	}
+
+	public int getItemId() {
+		return itemId;
+	}
+
+	public int getItemAmount() {
+		return itemAmount;
+	}
+
+	public int getNpcLifetime() {
+		return npcLifetime;
+	}
+
+	public String getEventMessage() {
+		return eventMessage;
 	}
 }

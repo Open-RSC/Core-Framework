@@ -37,7 +37,7 @@ public class HolidayDropEvent extends HourlyEvent  {
 		int totalItemsDropped = 0;
 
 		// TODO: This should not require a passed in player.
-		ViewArea view = executor.getViewArea();
+		ViewArea view = getExecutor().getViewArea();
 
 		for (int y = 96; y < 870; ) { // Highest Y is 867 currently.
 			for (int x = 1; x < 770; ) { // Highest X is 766 currently.
@@ -55,7 +55,7 @@ public class HolidayDropEvent extends HourlyEvent  {
 							(traversal & 64) != 0    // water or black,  etc.
 					);
 					if (!containsObject && !isBlocking) { // Nothing in the way.
-						World.getWorld().registerItem(new GroundItem(items.get(DataConversions.random(0, items.size() - 1)), x, y, 1, null));
+						World.getWorld().registerItem(new GroundItem(getItems().get(DataConversions.random(0, getItems().size() - 1)), x, y, 1, null));
 						totalItemsDropped++;
 					}
 				}
@@ -69,12 +69,24 @@ public class HolidayDropEvent extends HourlyEvent  {
 				continue;
 			}
 
-			p.playerServerMessage(MessageType.QUEST, Constants.GameServer.MESSAGE_PREFIX + "Dropped " + totalItemsDropped + " of item IDs: " + StringUtils.join(items, ", "));
+			p.playerServerMessage(MessageType.QUEST, Constants.GameServer.MESSAGE_PREFIX + "Dropped " + totalItemsDropped + " of item IDs: " + StringUtils.join(getItems(), ", "));
 		}
 
-		if(eventMessage != null) {
+		if(getEventMessage() != null) {
 			for (Player p : World.getWorld().getPlayers())
-				ActionSender.sendMessage(p, null, 0, MessageType.QUEST, eventMessage, 0);
+				ActionSender.sendMessage(p, null, 0, MessageType.QUEST, getEventMessage(), 0);
 		}
+	}
+
+	public ArrayList<Integer> getItems() {
+		return items;
+	}
+
+	public String getEventMessage() {
+		return eventMessage;
+	}
+
+	public Player getExecutor() {
+		return executor;
 	}
 }
