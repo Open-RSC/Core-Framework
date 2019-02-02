@@ -323,14 +323,27 @@ public final class GameStateUpdater {
 				}
 				ChatMessage cm;
 				while ((cm = chatMessagesNeedingDisplayed.poll()) != null) {
+					Player sender = (Player)cm.getSender();
+
+					int chatType = sender.isMuted() || (sender.getLocation().onTutorialIsland() && !sender.isStaff()) ? 7 : (cm.getRecipient() == null ? 1 : 6);
 					appearancePacket.writeShort(cm.getSender().getIndex());
-					int chatType = cm.getRecipient() == null ? 1 : 6;
 					appearancePacket.writeByte(chatType);
-					if (chatType == 1) {
+
+					if (chatType == 1 || chatType == 7) {
 						if (cm.getSender() != null && cm.getSender() instanceof Player)
-							appearancePacket.writeInt(((Player) (cm.getSender())).getIcon());
+							appearancePacket.writeInt(sender.getIcon());
 					}
-					appearancePacket.writeString(cm.getMessageString());
+
+					if(chatType == 7) {
+						appearancePacket.writeByte(sender.isMuted() ? 1 : 0);
+						appearancePacket.writeByte(sender.getLocation().onTutorialIsland() ? 1 : 0);
+					}
+
+					if (chatType != 7 || player.isAdmin()) {
+						appearancePacket.writeString(cm.getMessageString());
+					} else {
+						appearancePacket.writeString("");
+					}
 				}
 				Damage playerNeedingHitsUpdate;
 				while ((playerNeedingHitsUpdate = playersNeedingDamageUpdate.poll()) != null) {
