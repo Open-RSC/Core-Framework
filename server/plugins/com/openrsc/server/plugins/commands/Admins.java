@@ -168,6 +168,20 @@ public final class Admins implements CommandListener {
 			player.message(messagePrefix + "Starting holiday drop!");
 			GameLogging.addQuery(new StaffLog(player, 21, messagePrefix + "Started holiday drop"));
 		}
+		else if (cmd.equalsIgnoreCase("stopholidaydrop") || cmd.equalsIgnoreCase("cancelholidaydrop")) {
+			HashMap events = Server.getServer().getEventHandler().getEvents();
+			Iterator<DelayedEvent> iterator = events.values().iterator();
+			while (iterator.hasNext()) {
+				DelayedEvent event = iterator.next();
+
+				if(!(event instanceof HolidayDropEvent)) continue;
+
+				event.stop();
+				player.message(messagePrefix + "Stopping holiday drop!");
+				GameLogging.addQuery(new StaffLog(player, 21, messagePrefix + "Stopped holiday drop"));
+				return;
+			}
+		}
 		/*else if (cmd.equalsIgnoreCase("fakecrystalchest")) {
 			String loot;
 			HashMap<String, Integer> allLoot = new HashMap<String, Integer>();
@@ -1649,6 +1663,19 @@ public final class Admins implements CommandListener {
 
 			Server.getServer().getEventHandler().add(new HourlyNpcLootEvent(hours, "Oh no! Chickens are invading Lumbridge!", player.getLocation(), 3, npcAmount, 10, itemAmount, npcLifeTime*60*1000));
 			player.message(messagePrefix + "Chicken event started.");
+		}
+		else if (cmd.equalsIgnoreCase("stopnpcevent") || cmd.equalsIgnoreCase("cancelnpcevent")) {
+			HashMap events = Server.getServer().getEventHandler().getEvents();
+			Iterator<DelayedEvent> iterator = events.values().iterator();
+			while (iterator.hasNext()) {
+				DelayedEvent event = iterator.next();
+
+				if(!(event instanceof HourlyNpcLootEvent)) continue;
+
+				event.stop();
+				player.message(messagePrefix + "Stopping hourly npc event!");
+				return;
+			}
 		}
 		else if (cmd.equalsIgnoreCase("wildrule")) {
 			if (args.length < 3) {
