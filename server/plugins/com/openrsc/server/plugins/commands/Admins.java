@@ -5,13 +5,12 @@ import com.openrsc.server.GameStateUpdater;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.SingleEvent;
-import com.openrsc.server.event.custom.HourlyEvent;
+import com.openrsc.server.event.custom.HolidayDropEvent;
 import com.openrsc.server.event.custom.HourlyNpcLootEvent;
 import com.openrsc.server.event.custom.NpcLootEvent;
 import com.openrsc.server.external.*;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
-import com.openrsc.server.model.ViewArea;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -45,8 +44,6 @@ import java.util.*;
 
 public final class Admins implements CommandListener {
 
-	private DelayedEvent holidayDropEvent;
-	private DelayedEvent globalDropEvent;
 	private int count = 0;
 
 	private Point getRandomLocation() {
@@ -156,97 +153,21 @@ public final class Admins implements CommandListener {
 				items.add(itemId);
 			}
 
-			if (holidayDropEvent != null) {
-				player.message(messagePrefix + "There is already a holiday drop running");
+			HashMap events = Server.getServer().getEventHandler().getEvents();
+			Iterator<DelayedEvent> iterator = events.values().iterator();
+			while (iterator.hasNext()) {
+				DelayedEvent event = iterator.next();
+
+				if(!(event instanceof HolidayDropEvent)) continue;
+
+				player.message(messagePrefix + "There is already a holiday drop running!");
 				return;
 			}
 
+			Server.getServer().getEventHandler().add(new HolidayDropEvent(executionCount, player, items));
 			player.message(messagePrefix + "Starting holiday drop!");
-			final Player p = player;
-			holidayDropEvent = new HourlyEvent(executionCount) {
-				@Override
-				public void action() {
-					int totalItemsDropped = 0;
-					ViewArea view = p.getViewArea(); // Has static functions for objects/ground items.
-
-					for (int y = 96; y < 870; ) { // Highest Y is 867 currently.
-						for (int x = 1; x < 770; ) { // Highest X is 766 currently.
-
-							// Check for item dropped right beside this
-							if (view.getGroundItem(Point.location(x, y - 1)) == null &&
-								view.getGroundItem(Point.location(x - 1, y - 1)) == null &&
-								view.getGroundItem(Point.location(x + 1, y - 1)) == null) {
-
-								boolean containsObject = view.getGameObject(Point.location(x, y)) != null;
-								int traversal = world.getTile(x, y).traversalMask;
-								boolean isBlocking = (
-									(traversal & 16) != 0 || // diagonal wall \
-										(traversal & 32) != 0 || // diagonal wall /
-										(traversal & 64) != 0    // water or black,  etc.
-								);
-								if (!containsObject && !isBlocking) { // Nothing in the way.
-									world.registerItem(new GroundItem(items.get(DataConversions.random(0, items.size() - 1)), x, y, 1, null));
-									totalItemsDropped++;
-								}
-							}
-							x += DataConversions.random(20, 27); // How much space between each along X axis
-						}
-						y += DataConversions.random(1, 2);
-					}
-
-					p.playerServerMessage(MessageType.QUEST, messagePrefix + "Dropped " + totalItemsDropped + " of item IDs:");
-					for (Integer z : items)
-						p.playerServerMessage(MessageType.QUEST, "" + z);
-				}
-			};
-			Server.getServer().getEventHandler().add(holidayDropEvent);
 			GameLogging.addQuery(new StaffLog(player, 21, messagePrefix + "Started holiday drop"));
 		}
-		/*else if (command.equalsIgnoreCase("globaldrop")) {
-			if (args.length != 3) {
-				player.message("globaldrop, id of item, amount to be dropped, show locations (yes/no)");
-				return;
-			}
-
-			final int itemToDrop = Integer.parseInt(args[0]);
-			final int amountToDrop = Integer.parseInt(args[1]);
-			final boolean showLoc = args[2].equalsIgnoreCase("yes") ? true : false;
-
-			if (globalDropEvent != null) {
-				player.message("There is already a world drop running");
-				return;
-			}
-			player.message("Starting global holiday drop...");
-			final Player p = player;
-			PluginHandler.getPluginHandler().getExecutor().submit(new Runnable() {
-
-				@Override
-				public void run() {
-					while (count < amountToDrop) {
-						Point location = getRandomLocation();
-						if (showLoc)
-							p.message("Dropped at: x: " + location.getX() + " y: " + location.getY());
-						// World.getWorld().getTile(location).add(new
-						// Item(itemToDrop, location));
-						world.registerItem(new GroundItem(itemToDrop, location.getX(), location.getY(), 1, null));
-						count++;
-						globalDropEvent = null;
-					}
-					count = 0;
-				}
-			});
-			world.sendWorldMessage("@gre@New global drop started! " + EntityHandler.getItemDef(itemToDrop).getName() + "'s dropped in Al-Kharid!");
-			world.sendWorldMessage("@red@Telegrab has been disabled!");
-			GameLogging.addQuery(new StaffLog(player, 21, "Started a globaldrop (id: " + itemToDrop + " amount: " + amountToDrop + ")"));
-			World.WORLD_TELEGRAB_TOGGLE = true;
-			Server.getServer().getEventHandler().add(new SingleEvent(null, 60000 * 3) {
-				public void action() {
-					world.sendWorldMessage("@yel@Global drop has ended! Happy Holiday!");
-					world.sendWorldMessage("@gre@Telegrab has been enabled!");
-					World.WORLD_TELEGRAB_TOGGLE = false;
-				}
-			});
-		}*/
 		/*else if (cmd.equalsIgnoreCase("fakecrystalchest")) {
 			String loot;
 			HashMap<String, Integer> allLoot = new HashMap<String, Integer>();
