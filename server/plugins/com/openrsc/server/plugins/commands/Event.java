@@ -161,10 +161,17 @@ public final class Event implements CommandListener {
 				teleportTo = new Point(x,y);
 			}
 
-			GameLogging.addQuery(new StaffLog(player, 15, player.getUsername() + " has teleported " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation));
+			// Same player and command usage is tpto or goto, we want to set a return point in order to use ::return later
+			if((cmd.equalsIgnoreCase("goto") || cmd.equalsIgnoreCase("tpto")) && p.getUsernameHash() == player.getUsernameHash()) {
+				p.setSummonReturnPoint();
+			}
+
 			p.teleport(teleportTo.getX(), teleportTo.getY(), true);
+
 			player.message(messagePrefix + "You have teleported " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation);
 			p.message(messagePrefix + "You have been teleported to " + p.getLocation() + " from " + originalLocation);
+
+			GameLogging.addQuery(new StaffLog(player, 15, player.getUsername() + " has teleported " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation));
 		}
 		else if (cmd.equalsIgnoreCase("blink")) {
 			player.setAttribute("blink", !player.getAttribute("blink", false));
