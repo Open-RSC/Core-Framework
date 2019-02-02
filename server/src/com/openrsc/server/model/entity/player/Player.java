@@ -923,6 +923,7 @@ public final class Player extends Mob {
 
 	public void setMuteExpires(long l) {
 		getCache().store("mute_expires", l);
+		getCache().store("global_mute", l);
 	}
 
 	public int getOption() {
