@@ -25,10 +25,22 @@ public class HourlyEvent extends DelayedEvent {
 		this.timestamp += 3600;
 		this.action();
 
-		if((this.timestamp - this.started) / 3600 >= lifeTime)
+		if(getLifeTimeLeft() > 0)
 			stop();
 	}
 
+	public long getLifeTimeLeft() {
+		return getLifeTime() - getElapsedHours();
+	}
+
+	public long getElapsedHours() {
+		return (this.timestamp - this.started) / 3600;
+	}
+
 	public void action() {
+	}
+
+	public int getLifeTime() {
+		return lifeTime;
 	}
 }

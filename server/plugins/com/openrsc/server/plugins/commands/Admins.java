@@ -182,6 +182,24 @@ public final class Admins implements CommandListener {
 				return;
 			}
 		}
+		else if (cmd.equalsIgnoreCase("getholidaydrop") || cmd.equalsIgnoreCase("checkholidaydrop")) {
+			HashMap events = Server.getServer().getEventHandler().getEvents();
+			Iterator<DelayedEvent> iterator = events.values().iterator();
+			while (iterator.hasNext()) {
+				DelayedEvent event = iterator.next();
+
+				if(!(event instanceof HolidayDropEvent)) continue;
+
+				HolidayDropEvent holidayEvent = (HolidayDropEvent)event;
+
+				player.message(messagePrefix + "There is currently an Holiday Drop Event running:");
+				player.message(messagePrefix + "Items: " + StringUtils.join(holidayEvent.getItems(), ", "));
+				player.message(messagePrefix + "Total Hours: " + holidayEvent.getLifeTime() + ", Elapsed Hours: " + holidayEvent.getElapsedHours() + ", Hours Left: " + Math.abs(holidayEvent.getLifeTimeLeft()));
+				return;
+			}
+
+			player.message(messagePrefix + "There is no running Holiday Drop Event");
+		}
 		/*else if (cmd.equalsIgnoreCase("fakecrystalchest")) {
 			String loot;
 			HashMap<String, Integer> allLoot = new HashMap<String, Integer>();
@@ -1647,7 +1665,7 @@ public final class Admins implements CommandListener {
 				}
 			}
 			else {
-				npcLifeTime = 10*60*1000;
+				npcLifeTime = 10;
 			}
 
 			HashMap events = Server.getServer().getEventHandler().getEvents();
@@ -1661,7 +1679,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			Server.getServer().getEventHandler().add(new HourlyNpcLootEvent(hours, "Oh no! Chickens are invading Lumbridge!", player.getLocation(), 3, npcAmount, 10, itemAmount, npcLifeTime*60*1000));
+			Server.getServer().getEventHandler().add(new HourlyNpcLootEvent(hours, "Oh no! Chickens are invading Lumbridge!", player.getLocation(), 3, npcAmount, 10, itemAmount, npcLifeTime));
 			player.message(messagePrefix + "Chicken event started.");
 		}
 		else if (cmd.equalsIgnoreCase("stopnpcevent") || cmd.equalsIgnoreCase("cancelnpcevent")) {
@@ -1676,6 +1694,24 @@ public final class Admins implements CommandListener {
 				player.message(messagePrefix + "Stopping hourly npc event!");
 				return;
 			}
+		}
+		else if (cmd.equalsIgnoreCase("getnpcevent") || cmd.equalsIgnoreCase("checknpcevent")) {
+			HashMap events = Server.getServer().getEventHandler().getEvents();
+			Iterator<DelayedEvent> iterator = events.values().iterator();
+			while (iterator.hasNext()) {
+				DelayedEvent event = iterator.next();
+
+				if(!(event instanceof HourlyNpcLootEvent)) continue;
+
+				HourlyNpcLootEvent lootEvent = (HourlyNpcLootEvent)event;
+
+				player.message(messagePrefix + "There is currently an Hourly Npc Loot Event running:");
+				player.message(messagePrefix + "NPC: " + lootEvent.getNpcId() + " (" + lootEvent.getNpcAmount() + ") for " + lootEvent.getNpcLifetime() + " minutes, At: " + lootEvent.getLocation());
+				player.message(messagePrefix + "Total Hours: " + lootEvent.getLifeTime() + ", Elapsed Hours: " + lootEvent.getElapsedHours() + ", Hours Left: " + Math.abs(lootEvent.getLifeTimeLeft()));
+				return;
+			}
+
+			player.message(messagePrefix + "There is no running Hourly Npc Loot Event");
 		}
 		else if (cmd.equalsIgnoreCase("wildrule")) {
 			if (args.length < 3) {
