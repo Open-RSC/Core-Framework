@@ -17,7 +17,7 @@ public class Config {
     public static final int SERVER_PORT = 43594;
     public static final int CLIENT_VERSION = 1;
     public static final int CACHE_VERSION = 2;
-    public static final int ANDROID_CLIENT_VERSION = 5;
+    public static final int ANDROID_CLIENT_VERSION = 6;
     public static final boolean MEMBERS_FEATURES = true;
     public static final boolean CUSTOM_CACHE_DIR_ENABLED = false;
     public static final boolean CACHE_APPEND_VERSION = false;
