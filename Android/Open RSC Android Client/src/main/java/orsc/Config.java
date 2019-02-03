@@ -22,8 +22,7 @@ public class Config {
     public static final int CLIENT_VERSION = 1;
     public static final int CACHE_VERSION = 2;
     public static final int ANDROID_CLIENT_VERSION = 6;
-    public static final boolean MEMBERS_FEATURES =
-            true;
+    public static final boolean MEMBERS_FEATURES = true;
     public static final boolean CUSTOM_CACHE_DIR_ENABLED = false;
     public static final boolean CACHE_APPEND_VERSION = false;
     public static final String CUSTOM_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
@@ -107,7 +106,7 @@ public class Config {
     public static boolean S_WANT_GLOBAL_CHAT = false;
     public static boolean S_WANT_HIDE_IP = false;
     public static boolean S_WANT_FIXED_OVERHEAD_CHAT = false;
-
+  
     public static void set(String key, Object value) {
         prop.setProperty(key, value.toString());
     }

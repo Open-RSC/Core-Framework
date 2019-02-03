@@ -1,5 +1,6 @@
 package orsc;
 
+import com.openrsc.client.android.GameActivity;
 import com.openrsc.client.data.DataFileDecrypter;
 import com.openrsc.client.data.DataOperations;
 import com.openrsc.client.entityhandling.EntityHandler;
@@ -24,24 +25,6 @@ import com.openrsc.interfaces.misc.QuestGuideInterface;
 import com.openrsc.interfaces.misc.SkillGuideInterface;
 import com.openrsc.interfaces.misc.TerritorySignupInterface;
 import com.openrsc.interfaces.misc.clan.Clan;
-
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import orsc.buffers.RSBufferUtils;
 import orsc.enumerations.GameMode;
@@ -72,6 +55,13 @@ import orsc.util.StringUtil;
 
 /*import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;*/
+
+import java.io.*;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.security.SecureRandom;
+import java.util.*;
+import java.util.Map.Entry;
 
 public final class mudclient implements Runnable {
 
