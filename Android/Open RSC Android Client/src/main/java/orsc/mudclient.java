@@ -1,6 +1,5 @@
 package orsc;
 
-import com.openrsc.client.android.GameActivity;
 import com.openrsc.client.data.DataFileDecrypter;
 import com.openrsc.client.data.DataOperations;
 import com.openrsc.client.entityhandling.EntityHandler;
@@ -11,11 +10,36 @@ import com.openrsc.client.entityhandling.defs.extras.AnimationDef;
 import com.openrsc.client.model.Sprite;
 import com.openrsc.interfaces.NComponent;
 import com.openrsc.interfaces.NCustomComponent;
-import com.openrsc.interfaces.misc.*;
+import com.openrsc.interfaces.misc.AuctionHouse;
+import com.openrsc.interfaces.misc.BankPinInterface;
+import com.openrsc.interfaces.misc.CustomBankInterface;
+import com.openrsc.interfaces.misc.DoSkillInterface;
+import com.openrsc.interfaces.misc.ExperienceConfigInterface;
+import com.openrsc.interfaces.misc.FishingTrawlerInterface;
+import com.openrsc.interfaces.misc.IronManInterface;
+import com.openrsc.interfaces.misc.LostOnDeathInterface;
+import com.openrsc.interfaces.misc.OnlineListInterface;
+import com.openrsc.interfaces.misc.ProgressBarInterface;
+import com.openrsc.interfaces.misc.QuestGuideInterface;
+import com.openrsc.interfaces.misc.SkillGuideInterface;
+import com.openrsc.interfaces.misc.TerritorySignupInterface;
 import com.openrsc.interfaces.misc.clan.Clan;
+
 import orsc.buffers.RSBufferUtils;
-import orsc.enumerations.*;
-import orsc.graphics.gui.*;
+import orsc.enumerations.GameMode;
+import orsc.enumerations.InputXAction;
+import orsc.enumerations.MenuItemAction;
+import orsc.enumerations.MessageTab;
+import orsc.enumerations.MessageType;
+import orsc.enumerations.ORSCharacterDirection;
+import orsc.enumerations.SocialPopupMode;
+import orsc.graphics.gui.InputXPrompt;
+import orsc.graphics.gui.KillAnnouncer;
+import orsc.graphics.gui.KillAnnouncerQueue;
+import orsc.graphics.gui.Menu;
+import orsc.graphics.gui.MessageHistory;
+import orsc.graphics.gui.Panel;
+import orsc.graphics.gui.SocialLists;
 import orsc.graphics.three.CollisionFlag;
 import orsc.graphics.three.RSModel;
 import orsc.graphics.three.Scene;
@@ -30,6 +54,7 @@ import orsc.util.StringUtil;
 
 /*import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;*/
+
 import java.io.*;
 import java.net.InetAddress;
 import java.net.NetworkInterface;

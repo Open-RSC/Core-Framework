@@ -118,7 +118,7 @@ public class CacheUpdater extends Activity {
 			}
 
 			try {
-				publishProgress("Downloading game-cache files");
+				publishProgress("Downloading game cache files");
 				/* Download new added files */
 				for (Object o : newChecksum.keySet()) {
 					if (!oldChecksum.keySet().contains(o)) {
