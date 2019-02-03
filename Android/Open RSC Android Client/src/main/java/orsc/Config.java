@@ -23,6 +23,7 @@ public class Config {
     public static final boolean CACHE_APPEND_VERSION = false;
     public static final String CUSTOM_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
     public static boolean F_ANDROID_BUILD = true; // Note: this MUST be set to true for Android or it will crash on Android!
+    public static boolean SAVE_CREDENTIALS = true;
     //public static String F_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
     public static String F_CACHE_DIR = "Cache";
 
@@ -99,7 +100,8 @@ public class Config {
     public static boolean S_ITEMS_ON_DEATH_MENU = false;
     public static boolean S_SHOW_ROOF_TOGGLE = false;
     public static boolean S_WANT_GLOBAL_CHAT = false;
-
+    public static boolean S_WANT_HIDE_IP = false;
+    public static boolean S_WANT_FIXED_OVERHEAD_CHAT = false;
     public static void set(String key, Object value) {
         prop.setProperty(key, value.toString());
     }
@@ -238,5 +240,9 @@ public class Config {
 
     public static boolean isAndroid() {
         return F_ANDROID_BUILD;
+    }
+
+    public static boolean Remember() {
+        return SAVE_CREDENTIALS;
     }
 }

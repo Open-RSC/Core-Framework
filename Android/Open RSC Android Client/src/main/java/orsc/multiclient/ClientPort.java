@@ -6,41 +6,45 @@ import java.io.ByteArrayInputStream;
 
 public interface ClientPort {
 
-	public boolean drawLoading(int i);
+	boolean drawLoading(int i);
 
-	public void showLoadingProgress(int percentage, String status);
+	void showLoadingProgress(int percentage, String status);
 
-	public void initListeners();
+	void initListeners();
 
-	public void crashed();
+	void crashed();
 
-	public void drawLoadingError();
+	void drawLoadingError();
 
-	public void drawOutOfMemoryError();
+	void drawOutOfMemoryError();
 
-	public boolean isDisplayable();
+	boolean isDisplayable();
 
-	public void drawTextBox(String line2, byte var2, String line1);
+	void drawTextBox(String line2, byte var2, String line1);
 
-	public void initGraphics();
+	void initGraphics();
 
-	public void draw();
+	void draw();
 
-	public void close();
+	void close();
 
-	public String getCacheLocation();
+	String getCacheLocation();
 
-	public void resized();
+	void resized();
 
-	public Sprite getSpriteFromByteArray(ByteArrayInputStream byteArrayInputStream);
+	Sprite getSpriteFromByteArray(ByteArrayInputStream byteArrayInputStream);
 
-	public void playSound(byte[] soundData, int offset, int dataLength);
+	void playSound(byte[] soundData, int offset, int dataLength);
 
-	public void stopSoundPlayer();
+	void stopSoundPlayer();
 
-	public void drawKeyboard();
+	void drawKeyboard();
 
-	public boolean saveCredentials(String creds);
+	boolean saveCredentials(String creds);
 
-	public String loadCredentials();
+	boolean saveHideIp(int preference);
+
+	String loadCredentials();
+
+	int loadHideIp();
 }
