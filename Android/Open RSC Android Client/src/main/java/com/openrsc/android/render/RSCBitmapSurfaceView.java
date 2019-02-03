@@ -31,7 +31,7 @@ import java.io.File;
 import orsc.Config;
 import orsc.multiclient.ClientPort;
 
-public class RSCBitmapSurfaceView extends SurfaceView implements SurfaceHolder.Callback, ClientPort {
+public abstract class RSCBitmapSurfaceView extends SurfaceView implements SurfaceHolder.Callback, ClientPort {
 
 	private final int client_width = 512;
 	private final int client_height = 334;
