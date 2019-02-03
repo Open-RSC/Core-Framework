@@ -10,14 +10,8 @@ run:
 run-game:
 	`pwd`/scripts/run.sh
 
-run-game-windows:
-	cd scripts && call START "" run.cmd
-
 hard-reset:
 	`pwd`/scripts/hard-reset.sh
-
-hard-reset-game-windows:
-	git reset HEAD --hard
 
 certbot-native:
 	`pwd`/scripts/certbot-native.sh
@@ -43,9 +37,6 @@ get-updates:
 single-player:
 	`pwd`/scripts/single-player.sh
 
-file-edits:
-	`pwd`/scripts/file-edits.sh
-
 start:
 	docker-compose up -d
 
@@ -65,22 +56,15 @@ compile:
 	sudo ant -f client/build.xml compile
 	sudo ant -f Launcher/build.xml compile
 
-compile-windows-simple:
-	ant -f server/build.xml compile_core
-	ant -f server/build.xml compile_plugins
-	ant -f client/build.xml compile
-
 import-game:
-	docker exec -i mysql mysql -uroot -proot < Databases/openrsc_game.sql
+	docker exec -i mysql mysql -uroot -proot < Databases/openrsc_game_server.sql
+	docker exec -i mysql mysql -uroot -proot < Databases/openrsc_game_players.sql
 
 import-mysql:
 	docker exec -i mysql mysql -uroot -proot < Databases/mysql.sql
 
 import-phpmyadmin:
 	docker exec -i mysql mysql -uroot -proot < Databases/phpmyadmin.sql
-
-import-game-windows:
-	docker exec -i mysql mysql -u"root" -p"root" < Databases/openrsc_game.sql
 
 clone-website:
 	@$(shell sudo rm -rf Website && git clone https://github.com/Open-RSC/Website.git)

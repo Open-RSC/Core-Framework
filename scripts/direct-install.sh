@@ -17,11 +17,9 @@ sudo rm "/etc/nginx/sites-available/default"
 sudo cat "etc/nginx/native.conf.BAK" > "/etc/nginx/sites-available/default"
 sudo systemctl restart nginx
 
-sudo mysql -u"root" -p"root" < "Databases/mysql.sql"
-sudo mysql -u"root" -p"root" < "Databases/phpmyadmin.sql"
-sudo mysql -u"root" -p"root" < "Databases/openrsc_game.sql"
+sudo mysql -u"root" -p"root" < "Databases/openrsc_game_server.sql"
+sudo mysql -u"root" -p"root" < "Databases/openrsc_game_players.sql"
 
 sudo rm /var/www/html/*.*
 make clone-website
 sudo cp -a Website/. /var/www/html/
-make file-edits
