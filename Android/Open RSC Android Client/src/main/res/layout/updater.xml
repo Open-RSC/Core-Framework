@@ -7,10 +7,10 @@
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/rs_logo" />
+        android:src="@drawable/logo" />
 
     <ImageView
         android:id="@+id/imageView1"
@@ -19,7 +19,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/bottom_image" />
+        android:src="@drawable/bottom_image"
+        android:visibility="invisible" />
 
     <Button
         android:id="@+id/launch_client"
@@ -53,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/progressBar"
         android:layout_centerHorizontal="true"
-        android:text="Checking for Application Updates"
+        android:text="Checking for game updates"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>
