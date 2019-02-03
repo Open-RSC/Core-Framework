@@ -3,14 +3,12 @@
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/commands/Moderator.java" line="167" />
     <bookmark url="file://$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/commands/Moderator.java" line="26" />
-    <bookmark url="file://$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/commands/Admins.java" line="1307" />
+    <bookmark url="file://$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/commands/Admins.java" line="1260" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aac60d61-673a-4ad4-8ee5-46e19413f987" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Open RSC.ipr" beforeDir="false" afterPath="$PROJECT_DIR$/Open RSC.ipr" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Open RSC.iws" beforeDir="false" afterPath="$PROJECT_DIR$/Open RSC.iws" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Website/inc/config.php" beforeDir="false" afterPath="$PROJECT_DIR$/Website/inc/config.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/build.xml" beforeDir="false" afterPath="$PROJECT_DIR$/server/build.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Website/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/Website/css/style.css" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -30,26 +28,7 @@
     <option name="optimizeImportsOnTheFly" value="true" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/server/build.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="527">
-              <caret line="31" column="136" selection-start-line="31" selection-start-column="136" selection-end-line="31" selection-end-column="136" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/build.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="14" column="8" selection-start-line="14" selection-start-column="8" selection-end-line="14" selection-end-column="110" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -155,10 +134,10 @@
     </treeState>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-7" />
-    <option name="y" value="2" />
-    <option name="width" value="1612" />
-    <option name="height" value="989" />
+    <option name="x" value="-6" />
+    <option name="y" value="23" />
+    <option name="width" value="1613" />
+    <option name="height" value="990" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
@@ -168,19 +147,11 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
-            <path>
-              <item name="Open RSC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Open RSC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-              <item name="build" type="462c0819:PsiDirectoryNode" />
-            </path>
             <path>
               <item name="Open RSC" type="b2602c69:ProjectViewProjectNode" />
               <item name="server" type="462c0819:PsiDirectoryNode" />
@@ -189,7 +160,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -293,19 +263,15 @@
     <option name="totallyTimeSpent" value="2209000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="32" width="3456" height="1416" extended-state="6" />
-    <editor active="true" />
+    <frame x="54" y="23" width="1626" height="1027" extended-state="0" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.48791716" visible="true" weight="0.13928151" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.48791716" visible="true" weight="0.1388889" />
       <window_info id="Structure" order="1" sideWeight="0.5120829" side_tool="true" visible="true" weight="0.13928151" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
       <window_info id="UI Designer" order="4" />
       <window_info id="Capture Tool" order="5" />
       <window_info id="Favorites" order="6" side_tool="true" />
-      <window_info anchor="bottom" id="CheckStyle" />
-      <window_info anchor="bottom" id="Gradle View" />
-      <window_info anchor="bottom" id="Tail" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.329718" />
       <window_info anchor="bottom" id="Run" order="2" />
@@ -316,9 +282,12 @@
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.50053304" side_tool="true" weight="0.32321042" />
       <window_info anchor="bottom" id="Version Control" order="9" weight="0.329718" />
-      <window_info active="true" anchor="bottom" id="Messages" order="10" sideWeight="0.49946696" visible="true" weight="0.32268122" />
+      <window_info active="true" anchor="bottom" id="Messages" order="10" sideWeight="0.49946696" visible="true" weight="0.32192513" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="12" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Gradle View" order="13" />
+      <window_info anchor="bottom" id="CheckStyle" order="14" />
+      <window_info anchor="bottom" id="Tail" order="15" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.052615844" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -408,13 +377,6 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/event/rsc/ImmediateEvent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="22" selection-start-line="4" selection-start-column="22" selection-end-line="4" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/event/rsc/SingleTickEvent.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
@@ -822,17 +784,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/build.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="14" column="8" selection-start-line="14" selection-start-column="8" selection-end-line="14" selection-end-column="110" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/server/build.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="527">
           <caret line="31" column="136" selection-start-line="31" selection-start-column="136" selection-end-line="31" selection-end-column="136" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/default.conf">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="440">
+          <caret line="64" column="40" selection-start-line="64" selection-start-column="40" selection-end-line="64" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/build.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="35" selection-start-line="18" selection-start-column="35" selection-end-line="18" selection-end-column="35" />
         </state>
       </provider>
     </entry>

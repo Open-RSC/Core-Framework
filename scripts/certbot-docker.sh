@@ -29,4 +29,3 @@ echo ""
 echo "Done!"
 echo ""
 sudo chmod 644 Website/sql/config.inc.php
-sudo chmod 644 Website/elite/board/config.php

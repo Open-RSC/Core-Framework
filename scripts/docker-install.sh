@@ -37,39 +37,6 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     sudo chown root:root /etc/docker/daemon.json
     sudo service docker restart
 
-    # Auditd security auditing
-    echo "Installing auditd for Docker security auditing"
-    echo ""
-    sudo apt-get install -y auditd
-    # 1.5  - Ensure auditing is configured for the Docker daemon
-    echo "-w /usr/bin/docker -p wa" | sudo tee -a /etc/audit/rules.d/audit.rules
-    # 1.6  - Ensure auditing is configured for Docker files and directories - /var/lib/docker
-    echo "-w /var/lib/docker -p wa" | sudo tee -a /etc/audit/rules.d/audit.rules
-    # 1.7  - Ensure auditing is configured for Docker files and directories - /etc/docker"
-    echo "-w /etc/docker -p wa" | sudo tee -a /etc/audit/rules.d/audit.rules
-    # 1.8  - Ensure auditing is configured for Docker files and directories - docker.service
-    echo "-w /lib/systemd/system/docker.service -p wa" | sudo tee -a /etc/audit/rules.d/audit.rules
-    # 1.9  - Ensure auditing is configured for Docker files and directories - docker.socket
-    echo "-w /lib/systemd/system/docker.socket -p wa" | sudo tee -a /etc/audit/rules.d/audit.rules
-    # 1.10 - Ensure auditing is configured for Docker files and directories - /etc/default/docker
-    echo "-w /etc/default/docker -p wa" | sudo tee -a /etc/audit/rules.d/audit.rules
-    # 1.11 - Ensure auditing is configured for Docker files and directories - /etc/docker/daemon.json
-    echo "-w /etc/docker/daemon.json -p wa" | sudo tee -a /etc/audit/rules.d/audit.rules
-    # 1.12 - Ensure auditing is configured for Docker files and directories - /usr/bin/docker-containerd
-    echo "-w /usr/bin/docker-containerd -p wa" | sudo tee -a /etc/audit/rules.d/audit.rules
-    # 1.13 - Ensure auditing is configured for Docker files and directories - /usr/bin/docker-runc
-    echo "-w /usr/bin/docker-runc -p wa" | sudo tee -a /etc/audit/rules.d/audit.rules
-    sudo service auditd restart
-
-    # Data-store volume (disabled due to repeat install runs causing issues)
-    #echo "Creating a Docker data-store volume"
-    #echo ""
-    #sudo mkfs -t ext4 /dev/xvdf
-    #sudo mkdir /mnt/data-store
-    #sudo mount /dev/xvdf /mnt/data-store
-    #echo "/var/lib/docker /mnt/data-store bind defaults,bind 0 0" | sudo tee -a /etc/fstab
-    #echo ""
-
     # Start Docker and pull containers
     sudo make start
 
@@ -101,10 +68,8 @@ echo "Waiting 10 seconds then importing the databases."
 echo ""
 sleep 10
 sudo chmod 644 etc/mariadb/innodb.cnf
-sudo make import-phpmyadmin
 sudo make import-game
-sudo make import-forum
 sudo make import-mysql
+sudo make import-phpmyadmin
 
 sudo make clone-website
-sudo make file-edits
