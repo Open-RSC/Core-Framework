@@ -1404,8 +1404,10 @@ public final class mudclient implements Runnable {
 
             this.panelLoginWelcome = new Panel(this.getSurface(), 50);
             byte yOffsetWelcome = 40;
+            int yOffsetLogin;
             if (Config.isAndroid())
-                yOffsetWelcome  = -125;
+                yOffsetWelcome = -125;
+                yOffsetLogin = -200;
             this.panelLoginWelcome.addCenteredText(halfGameWidth(), halfGameHeight() + 23 + yOffsetWelcome, "Welcome to " + Config.SERVER_NAME, 6, true);
             String var3 = "Join our Discord for the latest updates.";
             if (null != var3) {
@@ -1432,21 +1434,21 @@ public final class mudclient implements Runnable {
 
             this.panelLogin = new Panel(this.getSurface(), 50);
             short var5 = Config.isAndroid() ? (short) 30 : 230;
-            this.controlLoginStatus1 = this.panelLogin.addCenteredText(halfGameWidth(), halfGameHeight() + 35, "", 4, true);
-            this.controlLoginStatus2 = this.panelLogin.addCenteredText(halfGameWidth(), halfGameHeight() + 55,
+            this.controlLoginStatus1 = this.panelLogin.addCenteredText(halfGameWidth(), halfGameHeight() + 35 + yOffsetLogin, "", 4, true);
+            this.controlLoginStatus2 = this.panelLogin.addCenteredText(halfGameWidth(), halfGameHeight() + 55 + yOffsetLogin,
                     "Please enter your username and password", 4, true);
             int var6 = var5 + 28;
-            this.panelLogin.addButtonBackground(halfGameWidth() - 116, halfGameHeight() + 91, 200, 40);
-            this.panelLogin.addCenteredText(halfGameWidth() - 116, halfGameHeight() + 81, "Username:", 4, false);
-            this.controlLoginUser = this.panelLogin.addCenteredTextEntry(halfGameWidth() - 116, halfGameHeight() + 98, 200, 320, 40, 4, false, false);
+            this.panelLogin.addButtonBackground(halfGameWidth() - 116, halfGameHeight() + 91 + yOffsetLogin, 200, 40);
+            this.panelLogin.addCenteredText(halfGameWidth() - 116, halfGameHeight() + 81 + yOffsetLogin, "Username:", 4, false);
+            this.controlLoginUser = this.panelLogin.addCenteredTextEntry(halfGameWidth() - 116, halfGameHeight() + 98 + yOffsetLogin, 200, 320, 40, 4, false, false);
 
             if (var1 != 3845) {
                 this.drawNPC(51, 106, -15, -96, 26, 108, 22, -63);
             }
 
-            this.panelLogin.addButtonBackground(halfGameWidth() - 66, halfGameHeight() + 138, 200, 40);
-            this.panelLogin.addCenteredText(halfGameWidth() - 66, halfGameHeight() + 128, "Password:", 4, false);
-            this.controlLoginPass = this.panelLogin.addCenteredTextEntry(halfGameWidth() - 66, halfGameHeight() + 146, 200, 20, 40, 4, true, false);
+            this.panelLogin.addButtonBackground(halfGameWidth() - 66, halfGameHeight() + 138 + yOffsetLogin, 200, 40);
+            this.panelLogin.addCenteredText(halfGameWidth() - 66, halfGameHeight() + 128 + yOffsetLogin, "Password:", 4, false);
+            this.controlLoginPass = this.panelLogin.addCenteredTextEntry(halfGameWidth() - 66, halfGameHeight() + 146 + yOffsetLogin, 200, 20, 40, 4, true, false);
 
             if (Config.isAndroid() || Config.Remember()) {
                 String cred = clientPort.loadCredentials();
@@ -1463,12 +1465,12 @@ public final class mudclient implements Runnable {
                 }
             }
 
-            this.panelLogin.addButtonBackground(halfGameWidth() + 154, halfGameHeight() + 83, 120, 25);
-            this.panelLogin.addCenteredText(halfGameWidth() + 154, halfGameHeight() + 83, "Ok", 4, false);
-            this.m_be = this.panelLogin.addButton(halfGameWidth() + 154, halfGameHeight() + 83, 120, 25);
-            this.panelLogin.addButtonBackground(halfGameWidth() + 154, halfGameHeight() + 113, 120, 25);
-            this.panelLogin.addCenteredText(halfGameWidth() + 154, halfGameHeight() + 113, "Cancel", 4, false);
-            this.m_Xi = this.panelLogin.addButton(halfGameWidth() + 154, halfGameHeight() + 113, 120, 25);
+            this.panelLogin.addButtonBackground(halfGameWidth() + 154, halfGameHeight() + 83 + yOffsetLogin, 120, 25);
+            this.panelLogin.addCenteredText(halfGameWidth() + 154, halfGameHeight() + 83 + yOffsetLogin, "Ok", 4, false);
+            this.m_be = this.panelLogin.addButton(halfGameWidth() + 154, halfGameHeight() + 83 + yOffsetLogin, 120, 25);
+            this.panelLogin.addButtonBackground(halfGameWidth() + 154, halfGameHeight() + 113 + yOffsetLogin, 120, 25);
+            this.panelLogin.addCenteredText(halfGameWidth() + 154, halfGameHeight() + 113 + yOffsetLogin, "Cancel", 4, false);
+            this.m_Xi = this.panelLogin.addButton(halfGameWidth() + 154, halfGameHeight() + 113 + yOffsetLogin, 120, 25);
             this.panelLogin.setFocus(this.controlLoginUser);
 
             int offRememb = -1;
@@ -1487,16 +1489,16 @@ public final class mudclient implements Runnable {
             }
 
             if (offRememb != -1) {
-                this.panelLogin.addButtonBackground(halfGameWidth() + offRememb, halfGameHeight() + 143, width, 25);
-                this.panelLogin.addCenteredText(halfGameWidth() + offRememb, halfGameHeight() + 143, "Save", 3, false);
-                this.rememberButtonIdx = this.panelLogin.addButton(halfGameWidth() + offRememb, halfGameHeight() + 143, width, 25);
+                this.panelLogin.addButtonBackground(halfGameWidth() + offRememb, halfGameHeight() + 143 + yOffsetLogin, width, 25);
+                this.panelLogin.addCenteredText(halfGameWidth() + offRememb, halfGameHeight() + 143 + yOffsetLogin, "Save", 3, false);
+                this.rememberButtonIdx = this.panelLogin.addButton(halfGameWidth() + offRememb, halfGameHeight() + 143 + yOffsetLogin, width, 25);
             }
             if (offHide != -1) {
                 this.settingsHideIP = clientPort.loadHideIp();
                 String text = (this.settingsHideIP != 1) ? "Hide IP" : "Show IP";
-                this.panelLogin.addButtonBackground(halfGameWidth() + offHide, halfGameHeight() + 143, width, 25);
-                this.panelLogin.addCenteredText(halfGameWidth() + offHide, halfGameHeight() + 143, text, 3, false);
-                this.hideIpButtonIdx = this.panelLogin.addButton(halfGameWidth() + offHide, halfGameHeight() + 143, width, 25);
+                this.panelLogin.addButtonBackground(halfGameWidth() + offHide, halfGameHeight() + 143 + yOffsetLogin, width, 25);
+                this.panelLogin.addCenteredText(halfGameWidth() + offHide, halfGameHeight() + 143 + yOffsetLogin, text, 3, false);
+                this.hideIpButtonIdx = this.panelLogin.addButton(halfGameWidth() + offHide, halfGameHeight() + 143 + yOffsetLogin, width, 25);
             }
 
             /* Registration setup */
