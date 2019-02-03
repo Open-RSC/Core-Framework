@@ -2087,7 +2087,7 @@ public final class Player extends Mob {
 	}
 
 	public boolean isInvisible(Mob m) {
-		return (stateIsInvisible() && m.isInvisibleTo(this)) && !(m instanceof Player && ((Player)m).isAdmin());
+		return stateIsInvisible() && m.isInvisibleTo(this);
 	}
 
 	public boolean cacheIsInvisible() {
@@ -2108,7 +2108,7 @@ public final class Player extends Mob {
 	}
 
 	public boolean isInvulnerable(Mob m) {
-		return (stateIsInvulnerable() && m.isInvulnerableTo(this)) && !(m instanceof Player && ((Player)m).isAdmin());
+		return stateIsInvulnerable() && m.isInvulnerableTo(this);
 	}
 
 	public boolean cacheIsInvulnerable () {
