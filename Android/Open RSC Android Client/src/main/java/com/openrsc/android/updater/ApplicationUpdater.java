@@ -75,8 +75,8 @@ public class ApplicationUpdater extends Activity {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ApplicationUpdater.this);
         alertDialogBuilder.setTitle("New version available!");
         alertDialogBuilder
-                .setMessage("There's a new client update available,"
-                        + " you might not be able to play until you install it.")
+                .setMessage("There is a new app update available,"
+                        + " please go ahead and install it.")
                 .setCancelable(false).setPositiveButton("Install", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 try {
@@ -104,7 +104,7 @@ public class ApplicationUpdater extends Activity {
                     e.printStackTrace();
                 }
             }
-        }).setNegativeButton("Don't install", new DialogInterface.OnClickListener() {
+        }).setNegativeButton("Do not install", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 Intent mainIntent = new Intent(ApplicationUpdater.this, CacheUpdater.class);
                 mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -130,11 +130,11 @@ public class ApplicationUpdater extends Activity {
                 in.close();
                 if (Integer.parseInt(inputLine) != getVersion()) {
                     shouldUpdate = true;
-                    publishProgress("Newer version available!");
+                    publishProgress("New app version available!");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                publishProgress("Couldn't check for application updates");
+                publishProgress("Unable to check for app update.");
             }
             return null;
         }

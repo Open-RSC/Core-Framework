@@ -18,7 +18,8 @@ public class Config {
     public static final int CLIENT_VERSION = 1;
     public static final int CACHE_VERSION = 2;
     public static final int ANDROID_CLIENT_VERSION = 6;
-    public static final boolean MEMBERS_FEATURES = true;
+    public static final boolean MEMBERS_FEATURES =
+            true;
     public static final boolean CUSTOM_CACHE_DIR_ENABLED = false;
     public static final boolean CACHE_APPEND_VERSION = false;
     public static final String CUSTOM_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
@@ -70,14 +71,14 @@ public class Config {
     public static boolean S_WANT_CUSTOM_BANKS = false;
     public static boolean S_WANT_BANK_PINS = false;
     public static boolean S_WANT_BANK_NOTES = false;
-	public static boolean S_WANT_CERT_DEPOSIT = false;
+    public static boolean S_WANT_CERT_DEPOSIT = false;
     public static boolean S_CUSTOM_FIREMAKING = false;
     public static boolean S_WANT_DROP_X = false;
     public static boolean S_WANT_EXP_INFO = false;
     public static boolean S_WANT_WOODCUTTING_GUILD = false;
     public static boolean S_WANT_DECANTING = false;
     public static boolean S_WANT_CERTS_TO_BANK = false;
-	public static boolean S_WANT_CUSTOM_RANK_DISPLAY = false;
+    public static boolean S_WANT_CUSTOM_RANK_DISPLAY = false;
     public static boolean S_RIGHT_CLICK_BANK = false;
 
     // if you change these, and the config file,
@@ -102,6 +103,7 @@ public class Config {
     public static boolean S_WANT_GLOBAL_CHAT = false;
     public static boolean S_WANT_HIDE_IP = false;
     public static boolean S_WANT_FIXED_OVERHEAD_CHAT = false;
+
     public static void set(String key, Object value) {
         prop.setProperty(key, value.toString());
     }
