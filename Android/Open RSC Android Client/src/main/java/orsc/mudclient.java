@@ -1,5 +1,6 @@
 package orsc;
 
+import com.openrsc.client.android.GameActivity;
 import com.openrsc.client.data.DataFileDecrypter;
 import com.openrsc.client.data.DataOperations;
 import com.openrsc.client.entityhandling.EntityHandler;
@@ -12,7 +13,6 @@ import com.openrsc.interfaces.NComponent;
 import com.openrsc.interfaces.NCustomComponent;
 import com.openrsc.interfaces.misc.*;
 import com.openrsc.interfaces.misc.clan.Clan;
-
 import orsc.buffers.RSBufferUtils;
 import orsc.enumerations.*;
 import orsc.graphics.gui.*;
@@ -28,6 +28,8 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
 
+/*import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;*/
 import java.io.*;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -37,24 +39,126 @@ import java.util.Map.Entry;
 
 public final class mudclient implements Runnable {
 
-    public boolean DEBUG = false;
-
-    long lastFPSUpdate = 0;
-    int currentFPS = 0;
+    /**
+     * Newest RSC cache: SAME VALUES.
+     * <p>
+     * mudclient.spriteMedia = 2000; mudclient.spriteUtil =
+     * mudclient.spriteMedia + 100; 2100 mudclient.spriteItem = 50 +
+     * mudclient.spriteUtil; 2150 mudclient.spriteLogo = 1000 +
+     * mudclient.spriteItem; 3150 mudclient.spriteProjectile = 10 +
+     * mudclient.spriteLogo; 3160 mudclient.spriteTexture = 50 +
+     * mudclient.spriteProjectile; 3210
+     */
+    public static final int spriteMedia = 2000;
+    public static final int spriteUtil = 2100;
+    public static final int spriteItem = 2150;
+    static final int spriteLogo = 3150;
+    static final int spriteProjectile = 3160;
+    static final int spriteTexture = 3225;
     public static int FPS = 0;
-
+    public static KillAnnouncerQueue killQueue = new KillAnnouncerQueue();
     static byte[][] s_kb = new byte[250][];
     static int[] s_wb;
-
-    public Thread clientBaseThread = null;
+    private static ArrayList<String> messages = new ArrayList<String>();
+    private static int currentChat = 0;
+    public final int[] bankItemOnTab = new int[500];
+    public final int[] mouseClickX = new int[8192];
+    public final int[] mouseClickY = new int[8192];
     private final int m_S = 1000;
+    private final int[][] animDirLayer_To_CharLayer = new int[][]{{11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3, 4},
+            {11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3, 4}, {11, 3, 2, 9, 7, 1, 6, 10, 0, 5, 8, 4},
+            {3, 4, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5}, {3, 4, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5},
+            {4, 3, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5}, {11, 4, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3},
+            {11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 4, 3}};
+    private final int[] animFrameToSprite_CombatA = new int[]{0, 1, 2, 1, 0, 0, 0, 0};
+    private final int[] animFrameToSprite_CombatB = new int[]{0, 0, 0, 0, 0, 1, 2, 1};
+    private final int[] bankItemID = new int[500];
+    private final int[] bankItemSize = new int[500];
+    private final boolean cameraAutoAngleDebug = false;
+    private final int[] characterBubbleScale = new int[150];
+    private final int[] characterBubbleX = new int[150];
+    private final int[] characterBubbleY = new int[150];
+    private final int[] characterDialogHalfWidth = new int[150];
+    private final int[] characterDialogHeight = new int[150];
+    private final String[] characterDialogString = new String[150];
+    private final int[] characterDialogX = new int[150];
+    private final int[] characterDialogY = new int[150];
+    private final int[] characterHealthX = new int[150];
+    private final int[] characterHealthY = new int[150];
+    private final int[] duelItemCounts = new int[8];
+    private final int[] duelOfferItemID = new int[8];
+    private final int[] duelOfferItemSize = new int[8];
+    private final int[] duelOpponentItemCount = new int[8];
+    private final int[] duelOpponentItemCounts = new int[8];
+    private final int[] duelOpponentItemId = new int[8];
+    private final int[] duelOpponentItems = new int[8];
+    private final String[] equipmentStatNames = new String[]{"Armour", "WeaponAim", "WeaponPower", "Magic",
+            "Prayer"};
+    private final boolean[] gameObjectInstance_Arg1 = new boolean[5000];
+    private final int[] gameObjectInstanceDir = new int[5000];
+    private final int[] gameObjectInstanceID = new int[5000];
+    private final RSModel[] gameObjectInstanceModel = new RSModel[5000];
+    private final int[] gameObjectInstanceX = new int[5000];
+    private final int[] groundItemID = new int[5000];
+    private final int[] groundItemX = new int[5000];
+    private final int[] groundItemZ = new int[5000];
+    private final int[] inventoryItemEquipped = new int[35];
+    private final int[] inventoryItemID = new int[35];
+    private final int[] inventoryItemSize = new int[35];
+    private final ORSCharacter[] knownPlayers = new ORSCharacter[500];
+    private final String[] optionsMenuText = new String[20];
+    private final int[] groundItemHeight = new int[5000];
+    private final int character2Colour = 2;
+    private final RSModel[] modelCache = new RSModel[1000];
+    private final int[] newBankItems = new int[500];
+    private final int[] newBankItemsCount = new int[500];
+    private final ORSCharacter[] npcs = new ORSCharacter[500];
+    private final ORSCharacter[] npcsCache = new ORSCharacter[500];
+    private final ORSCharacter[] npcsServer = new ORSCharacter[5000];
+    private final int[] pathX = new int[8000];
+    private final int[] pathZ = new int[8000];
+    private final int[] playerClothingColors = new int[]{0xFF0000, 16744448, 16769024, 10543104, '\ue000', '\u8000',
+            '\ua080', '\ub0ff', '\u80ff', 12528, 14680288, 3158064, 6307840, 8409088, 0xFFFFFF};
+    private final int[] playerExperience = new int[18];
+    private final int[] playerHairColors = new int[]{16760880, 16752704, 8409136, 6307872, 3158064, 16736288,
+            16728064, 0xFFFFFF, '\uff00', '\uffff'};
+    private final ORSCharacter[] players = new ORSCharacter[500];
+    private final ORSCharacter[] playerServer = new ORSCharacter[4000];
+    private final int[] playerSkinColors = new int[]{15523536, 13415270, 11766848, 10056486, 9461792};
+    private final int[] playerStatBase = new int[18];
+    private final int[] playerStatEquipment = new int[5];
+    private final boolean[] prayerOn = new boolean[50];
+    private final int projectileMaxRange = 40;
+    private final int[] shopItemCount = new int[256];
+    private final int[] shopItemID = new int[256];
+    private final int[] shopItemPrice = new int[256];
+    private final String[] skillNameLong = new String[]{"Attack", "Defense", "Strength", "Hits", "Ranged", "Prayer",
+            "Magic", "Cooking", "Woodcutting", "Fletching", "Fishing", "Firemaking", "Crafting", "Smithing", "Mining",
+            "Herblaw", "Agility", "Thieving"};
+    private final String[] skillNames = new String[]{"Attack", "Defense", "Strength", "Hits", "Ranged", "Prayer",
+            "Magic", "Cooking", "Woodcut", "Fletching", "Fishing", "Firemaking", "Crafting", "Smithing", "Mining",
+            "Herblaw", "Agility", "Thieving"};
+    private final int[] teleportBubbleTime = new int[50];
+    private final int[] teleportBubbleX = new int[50];
+    private final int[] teleportBubbleZ = new int[50];
+    private final int tileSize = 128;
+    private final int[] tradeConfirmItems = new int[14];
+    private final int[] tradeConfirmItemsCount1 = new int[14];
+    private final int[] tradeItemID = new int[14];
+    private final int[] tradeItemSize = new int[14];
+    private final int[] tradeRecipientConfirmItemCount = new int[14];
+    private final int[] tradeRecipientConfirmItems = new int[14];
+    private final int[] tradeRecipientItem = new int[14];
+    private final int[] tradeRecipientItemCount = new int[14];
+    private final boolean[] wallObjectInstance_Arg1 = new boolean[500];
+    private final int[] wallObjectInstanceDir = new int[500];
+    private final int[] wallObjectInstanceID = new int[500];
+    private final RSModel[] wallObjectInstanceModel = new RSModel[500];
+    private final int[] wallObjectInstanceX = new int[500];
+    private final int[] wallObjectInstanceZ = new int[500];
+    public boolean DEBUG = false;
+    public Thread clientBaseThread = null;
     public int threadState = 0;
-    private boolean hasGameCrashed = false;
-    private int gameState = 1;
-    int m_Q = 10;
-    long[] m_F = new long[10];
-    private int m_b = 0;
-
     public String chatMessageInput = "";
     public String chatMessageInputCommit = "";
     public boolean controlPressed = false;
@@ -70,16 +174,9 @@ public final class mudclient implements Runnable {
     public boolean pageUp = false;
     public int lastMouseAction = 0;
     public int lastMouseButtonDown = 0;
-    private static ArrayList<String> messages = new ArrayList<String>();
-    private static int currentChat = 0;
-    private PrintWriter printWriter;
     public PacketHandler packetHandler;
-
     public int selectedSkill = -1;
-    private int totalAchievements = 0;
-    private int sleepModifier = 20;
     public boolean m_N = false;
-    String m_p = null;
     public int mouseX = 0;
     public int mouseY = 0;
     public int screenOffsetX;
@@ -88,12 +185,403 @@ public final class mudclient implements Runnable {
     //public int groupID = 100;
     public boolean rendering;
     private static ClientPort clientPort;
-    public static KillAnnouncerQueue killQueue = new KillAnnouncerQueue();
+    public int bankItemCount = 0;
+    public int bankItemsMax = 50;
+    public int bankPage = 0;
+    public int bankSelectedItemSlot = -1;
+    public int cameraRotation = 128;
+    public GameMode currentViewMode = GameMode.LOGIN;
+    public InputXAction inputX_Action = InputXAction.ACT_0;
+    public Menu menuCommon;
+    public int menuX = 0;
+    public int menuY = 0;
+    public int mouseButtonClick = 0;
+    public int mouseButtonItemCountIncrement = 0;
+    public int mouseClickCount = 0;
+    public int mouseClickXStep = 0;
+    public HashMap<String, File> soundCache = new HashMap<String, File>();
+    public boolean authenticSettings = !(
+            Config.isAndroid() ||
+                    Config.S_WANT_CLANS || Config.S_WANT_KILL_FEED
+                    || Config.S_FOG_TOGGLE || Config.S_GROUND_ITEM_TOGGLE
+                    || Config.S_AUTO_MESSAGE_SWITCH_TOGGLE || Config.S_BATCH_PROGRESSION
+                    || Config.S_SIDE_MENU_TOGGLE || Config.S_INVENTORY_COUNT_TOGGLE
+                    || Config.S_ZOOM_VIEW_TOGGLE || Config.S_MENU_COMBAT_STYLE_TOGGLE
+                    || Config.S_FIGHTMODE_SELECTOR_TOGGLE || Config.S_SHOW_ROOF_TOGGLE
+                    || Config.S_EXPERIENCE_COUNTER_TOGGLE || Config.S_WANT_GLOBAL_CHAT
+                    || Config.S_EXPERIENCE_DROPS_TOGGLE || Config.S_ITEMS_ON_DEATH_MENU);
+    public long totalXpGainedStartTime = 0;
+    public String[] achievementNames = new String[500];
+    public String[] achievementTitles = new String[500];
+    public String[] achievementDescs = new String[500];
+    public int[] achievementProgress = new int[500];
+    public boolean serverTypeMembers = Config.MEMBERS_FEATURES;
+    public int showUiTab = 0;
+    public boolean topMouseMenuVisible = false;
+    public boolean LAST_FRAME_SHOWING_KEYBOARD = false;
+    public int resizeWidth;
+    public int resizeHeight;
+    public Clan clan;
+    public boolean PAUSED;
+    public boolean gotInitialConfigs = false;
+    public ArrayList<String> skillGuideChosenTabs;
+    public String clanKickPlayer;
+    long lastFPSUpdate = 0;
+    int currentFPS = 0;
+    int m_Q = 10;
+    long[] m_F = new long[10];
+    String m_p = null;
+    long timePassed = 0;
+    double xpPerHour = 0;
+    private boolean hasGameCrashed = false;
+    private int gameState = 1;
+    private int m_b = 0;
+    private PrintWriter printWriter;
+    private int totalAchievements = 0;
+    private int sleepModifier = 20;
+    private int[] animFrameToSprite_Walk = new int[]{0, 1, 2, 1};
+    private int appearanceHeadGender = 1;
+    private int appearanceHeadType = 0;
+    private int autoLoginTimeout = 0;
+    private int cameraAngle = 1;
+    private int cameraAutoRotatePlayerX = 0;
+    private int cameraAutoRotatePlayerZ = 0;
+    private boolean cameraAllowPitchModification = false;
+    private int cameraPitch = 912;
+    private int cameraRotationX = 0;
+    private int cameraRotationZ = 0;
+    private int cameraZoom = 750;
+    private int characterBubbleCount = 0;
+    private int[] characterBubbleID = new int[150];
+    private int characterDialogCount = 0;
+    private int[] characterHealthBar = new int[150];
+    private int characterHealthCount = 0;
+    private String chatMessageTarget;
+    private int frameCounter = 0;
+    private int combatStyle = 0;
+    private int combatTimeout = 0;
+    private int controlButtonAppearanceHeadMinus;
+    private int controlButtonAppearanceHeadPlus;
+    private int controlLoginPass;
+    private int controlLoginStatus1;
+    private int controlLoginStatus2;
+    private int controlLoginUser;
+    private int controlMagicPanel;
+    private int controlPlayerInfoPanel;
+    private int controlQuestInfoPanel;
+    private int controlSettingPanel;
+    private int controlPlayerTaskInfoPanel;
+    private int controlSocialPanel;
+    private int controlClanPanel;
+    private int currentRegionMaxX;
+    private int currentRegionMaxZ;
+    private int currentRegionMinX;
+    private int currentRegionMinZ;
+    private int deathScreenTimeout = 0;
+    private boolean duelConfirmed = false;
+    private String duelConfirmOpponentName = "";
+    private int duelDoX_Slot;
+    private int dropInventorySlot = -1;
+    private int[] duelItems = new int[8];
+    private int duelItemsCount = 0;
+    private boolean duelOfferAccepted = false;
+    private int duelOfferItemCount = 0;
+    private boolean duelOffsetOpponentAccepted = false;
+    private int duelOffsetOpponentItemCount = 0;
+    private int duelOpponentItemsCount = 0;
+    private String duelOpponentName;
+    private int duelOptionMagic;
+    private int duelOptionPrayer;
+    private int duelOptionRetreat;
+    private int duelOptionWeapons;
+    private boolean duelSettingsMagic = false;
+    private boolean duelSettingsPrayer = false;
+    private boolean duelSettingsRetreat = false;
+    private boolean duelSettingsWeapons = false;
+    private boolean errorLoadingCoadebase = false;
+    private boolean errorLoadingData = false;
+    private boolean errorLoadingMemory = false;
+    private int[] experienceArray = new int[Config.S_PLAYER_LEVEL_LIMIT];
+    private int fatigueSleeping = 0;
+    private boolean doCameraZoom = false;
+    private int gameHeight = 334;
+    private int gameObjectInstanceCount = 0;
+    private int[] gameObjectInstanceZ = new int[5000];
+    private int gameWidth = 512;
+    private int groundItemCount = 0;
+    private boolean inputX_Focused = true;
+    private int inputX_Height = 0;
+    private String[] inputX_Lines = null;
+    private boolean inputX_OK = false;
+    private int inputX_Width = 0;
+    private boolean insideTutorial = false;
+    private int inventoryItemCount;
+    private boolean isSleeping = false;
+    private int knownPlayerCount = 0;
+    private int lastHeightOffset = -1;
+    private int lastObjectAnimationNumberFireLightningSpell = -1;
+    private int lastObjectAnimationNumberTorch = -1;
+    private int lastObjectAnimatonNumberClaw = -1;
+    private boolean loadingArea = false;
+    private ORSCharacter localPlayer = new ORSCharacter();
+    private int logoutTimeout = 0;
+    private int m_Ai;
+    private int m_be;
+    private int m_Ce = 0;
+    private int m_Cg;
+    private int m_cl = 30;
+    private int m_dk = 1;
+    private int m_ed;
+    private int m_eg = 2;
+    private int m_Eg;
+    private int m_ek;
+    private int m_Ge;
+    private int m_hh = 0;
+    private boolean runningAsApplet = true;
+    private boolean allowDebugCommands = !runningAsApplet || true;
+    private int optionsMenuCount = 0;
+    private String m_ig = "";
+    private int questPoints = 0;
+    private int m_Ji = 0;
+    private int settingTab = 0;
+    private int loginButtonExistingUser;
+    private int m_Kj;
+    private int m_ld = 2;
+    private int characterBottomColour = 14;
+    private int m_Mj;
+    private int m_nj = -1;
+    private int m_Of;
+    private int m_oj = 0;
+    private int m_Oj = 0;
+    private int m_Ok = 2;
+    private int m_qd = 9;
+    private int m_rc = 0;
+    private int m_Re;
+    private int m_rf;
+    private boolean m_ue = false;
+    private int m_Wc = 0;
+    private int m_Wg = 8;
+    private long lastWrite;
+    private int m_wk = -1;
+    private int m_Xc;
+    private int loginScreenNumber = 0;
+    private int m_Xi;
+    private int rememberButtonIdx;
+    private int hideIpButtonIdx;
+    private int m_Zb = 0;
+    private int localPlayerServerIndex = -1;
+    private int m_Ze;
+    private Menu menuDuel;
+    private boolean menuDuel_Visible = false;
+    private int menuDuelX;
+    private int menuDuelY;
+    private Menu menuTrade;
+    private boolean menuTrade_Visible = false;
+    private int menuTradeX;
+    private int menuTradeY;
+    private boolean menuVisible = false;
+    private int messageTabActivity_Chat = 0;
+    private int messageTabActivity_Game = 0;
+    private int messageTabActivity_Private = 0;
+    private int messageTabActivity_Clan = 0;
+    private int messageTabActivity_Quest = 0;
+    private MessageTab messageTabSelected = MessageTab.ALL;
+    private int midRegionBaseX;
+    private int midRegionBaseZ;
+    private int minimapRandom_1 = 0;
+    private int minimapRandom_2 = 0;
+    private int mouseButtonDownTime = 0;
+    private int mouseWalkX = 0;
+    private int mouseWalkY = 0;
+    private int newBankItemCount = 0;
+    private int npcCacheCount = 0;
+    private int npcCount = 0;
+    private int objectAnimationCount = 0;
+    private int objectAnimationNumberClaw = 0;
+    private int objectAnimationNumberFireLightningSpell = 0;
+    private int objectAnimationNumberTorch = 0;
+    private boolean optionCameraModeAuto = true;
+    private boolean optionMouseButtonOne = false;
+    private boolean optionSoundDisabled = true;
+    private boolean clanInviteBlockSetting = false;
+    private Panel panelAppearance;
+    private Panel panelLogin;
+    private Panel panelLoginWelcome;
+    private Panel panelMagic;
+    private int panelMessageChat;
+    private int panelMessageEntry;
+    private int panelMessagePrivate;
+    private int panelMessageQuest;
+    private int panelMessageClan;
+    private Panel panelMessageTabs;
+    private Panel panelPlayerInfo;
+    private Panel panelQuestInfo;
+    //private Panel panelPlayerTaskInfo;
+    private Panel panelSettings;
+    private Panel panelSocial;
+    private Panel panelClan;
+    private SocialPopupMode panelSocialPopup_Mode = SocialPopupMode.NONE;
+    private int panelSocialTab = 0;
+    private String password = "";
+    private int playerCount = 0;
+    private int playerLocalX;
+    private int playerLocalZ;
+    private int[] playerStatCurrent = new int[18];
+    private String[] messagesArray = new String[5];
+    private long[] playerStatXpGained = new long[18];
+    private long[] xpGainedStartTime = new long[18];
+    private long playerXpGainedTotal = 0;
+    private String[] questNames = new String[100];
+    private int[] questStages = new int[100];
+    private int reportAbuse_AbuseType = 0;
+    private String reportAbuse_Name = "";
+    private int reportAbuse_State = 0;
+    private int requestedPlane = -1;
+    private Scene scene;
+    private int selectedItemInventoryIndex = -1;
+    private int selectedSpell = -1;
+    private String serverMessage = "";
+    private boolean serverMessageBoxTop = false;
+    private boolean developerMenu = false;
+    private int devMenuNpcID;
+    private boolean modMenu = false;
+    private Integer settingsHideIP = 0;
+    private int settingsBlockChat = 0;
+    private int settingsBlockDuel = 0;
+    private int settingsBlockPrivate = 0;
+    private int settingsBlockTrade = 0;
+    private int shopBuyPriceMod = 0;
+    private int shopPriceMultiplier = 0;
+    private int shopSelectedItemIndex = -1;
+    private int shopSelectedItemType = -2;
+    private int shopSellPriceMod = 0;
+    private boolean showAppearanceChange = false;
+    private boolean showDialogBank = false;
+    private boolean showDialogDuel = false;
+    private boolean showDialogDuelConfirm = false;
+    private boolean showDialogMessage = false;
+    private boolean showDialogServerMessage = false;
+    private boolean showDialogShop = false;
+    private boolean showDialogTrade = false;
+    private boolean showDialogTradeConfirm = false;
+    private boolean optionsMenuShow = false;
+    private int showUiWildWarn = 0;
+    private int recentSkill = -1;
+    private String sleepingStatusText = null;
+    private boolean sleepWordDelay = true;
+    private int sleepWordDelayTimer = 0;
+    private byte[] soundData = null;
+    private int spriteCount = 0;
+    private int statFatigue = 0;
+    private MudClientGraphics surface;
+    private int systemUpdate = 0;
+    private int elixirTimer = 0;
+    private boolean inWild = false;
+    private int teleportBubbleCount = 0;
+    private int[] teleportBubbleType = new int[50];
+    private boolean tradeAccepted = false;
+    private boolean tradeConfirmAccepted = false;
+    private int tradeConfirmItemsCount = 0;
+    private int tradeDoX_Slot;
+    private int tradeItemCount = 0;
+    private boolean tradeRecipientAccepted = false;
+    private int tradeRecipientConfirmItemsCount = 0;
+    private String tradeRecipientConfirmName;
+    private int tradeRecipientItemsCount = 0;
+    private String tradeRecipientName = "";
+    private int uiTabPlayerInfoSubTab = 0;
+    private String username = "";
+    private int wallObjectInstanceCount = 0;
+    private int welcomeLastLoggedInDays = 0;
+    private String welcomeLastLoggedInHost = null;
+    private String welcomeLastLoggedInIp;
+
+    private int welcomeRecoverySetDays = 0;
+
+    private boolean welcomeScreenShown = false;
+
+    //private int welcomeUnreadMessages = 0;
+    private World world;
+    private int worldOffsetX = 0;
+    private int worldOffsetZ = 0;
+    private int prayerMenuIndex = 0;
+    private int magicMenuIndex = 0;
+    private Panel menuNewUser;
+    private int menuNewUserUsername;
+    private int menuNewUserPassword;
+    private int menuNewUserEmail;
+    private int menuNewUserStatus;
+    private int menuNewUserStatus2;
+    private int menuNewUserSubmit;
+    private int menuNewUserCancel;
+    private int loginButtonNewUser;
+    //flag consumed by bank interface to sync custom options
+    //gets unset when player logins again after welcome screen
+    private boolean initLoginCleared;
+    private int xpPerHourCount = 0;
+    private CustomBankInterface bank;
+    private int settingsBlockGlobal;
+    private int lastSelectedSpell = -1;
+    private int flag = 0;
+    private Timer tiktok = new Timer();
+    private boolean optionsMenuKeyboardInput = Config.S_WANT_KEYBOARD_SHORTCUTS ? true : false;
+    private NComponent mainComponent;
+    private OnlineListInterface onlineList;
+    private NCustomComponent experienceOverlay;
+    private ProgressBarInterface batchProgressBar;
+    private BankPinInterface bankPinInterface;
+    private FishingTrawlerInterface fishingTrawlerInterface;
+    //private AchievementGUI achievementInterface;
+    private IronManInterface ironmanInterface;
+    private AuctionHouse auctionHouse;
+    private SkillGuideInterface skillGuideInterface;
+    private QuestGuideInterface questGuideInterface;
+    private ExperienceConfigInterface experienceConfigInterface;
+    private DoSkillInterface doSkillInterface;
+    private LostOnDeathInterface lostOnDeathInterface;
+    private TerritorySignupInterface territorySignupInterface;
+    private String skillGuideChosen;
+    private String questGuideChosen;
+    private int questGuideProgress;
+    private String questGuideStartWho;
+    private String questGuideStartWhere;
+    private String[] questGuideStartWhos = {"Sir Amik Varze", "the Cook", "the Gypsy", "Doric", "the Priest", "the Bertender", "Veronica", "Wizard Mizgog", "Redbeard Frank", "Chancellor Hassan", "Romeo", "Fred the Farmer", "Reldo", "the Squire", "Morgan", "Hetty", "the Guildmaster", "a boy", "the Adventurers", "Achetties", "Kaqemeex", "King Arthur", "Thormac", "Dimintheis", "Kangai Mau", "a mountain dwarf", "Brother Omad", "Lucien", "Brother Kojo", "King Arthur", "Lady Servil", "Bolren", "Ceril Carnillean", "Councillor Halgrive", "Edmond", "Caroline", "Almera", "Elena", "Trufitus", "King Narnode Shareen", "Mosol Rei", "King Lathas", "Observatory Professor", "Irena", "Watchtower Wizard", "Captain Lawgof", "a Gaurd", "an Examiner", "Gertrude", "Sir Radimus Erkle"};
+    private String[] questGuideStartWheres = {"on the first floor of the White Knight's Castle in Falador", "on the first floor of Lumbridge Castle", "in Varrock Square", "north of Falador", "in the Lumbridge church", "inside the Rusty Anchor bar in Port Sarim", "outside of Draynor Manor", "on the top floor of the Wizard's Tower", "in Port Sarim", "inside Al-Kharid palace", "in Varrock Square", "north of Lumbridge", "in the Varrock Palace Library", "on the White Knight Castle grounds in Falador", "in Draynor Village", "in Rimmington", "inside the Champion's Guild", "in Taverly", "in the Lumbridge swamp", "outside of the Heroes' Guild north of Taverly", "at the Druid's Stone Circle in Taverly", "in Camelot", "on the top floor fo the Sorcerer's Tower south of Seer's Village", "in eastern Varrock", "in The Shrimp and Parrot pub in Brimhaven", "on either side of the White Wolf Mountain passage", "in the Monastery south of East Ardougne", "in the Flying Horse Inn on the western end of East Ardougne", "inside the Clock Tower south of East Ardougne", "in Camelot", "west of Port Khazard", "in Tree Gnome Village", "south of the Ardougne Castle", "outside of the East Ardougne church", "north of the Ardougne Castle", "east of Ardougne", "northeast of Baxtorian Falls", "north of the Ardougne Castle", "north-east of Tai Bwo Wannai", "in the Grand Tree", "outside of Shilo Village in southern Karamja", "on the ground floor of Ardougne Castle", "in the Observatory reception room west of the Tree Gnome Village", "outside the Shantay Pass in the Kharidian desert", "at the top of the Watchtower north of Yanille", "far north-east of Seer's Village", "in the Sinclair Mansion north of Camelot", "in the Exam Centre south of the Digsite", "at her house west of Varrock", "inside the Legend's Guild"};
+    private String[] questGuideRequirement;
+    private String[] questGuideReward;
+    private String[][] questGuideRequirements = {{"12 quest points"}, {"None"}, {"Ability to defeat a level 30 demon"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"A friend to assist"}, {"10 Mining", "A friend to assist"}, {"Ability to defeat a level 43 vampire"}, {"None"}, {"32 Quest Points", "33 Magic", "The ability to defeat a level 110 dragon"}, {"Ability to defeat a level 54 shapeshifter"}, {"31 Crafting", "36 Woodcutting", "Ability to defeat a level 95 monster"}, {"Completed Shield of Arrav, Dragon Slayer, Merlin's Crystal, and Lost City", "56 Quest Points", "53 Cooking", "53 Fishing", "25 Herblaw", "50 Mining"}, {"None"}, {"Ability to defeat a level 58 knight", "A friend to assist"}, {"Completed the Barbarian Bar Crawl", "31 Prayer"}, {"40 Mining", "40 Smithing", "40 Crafting", "59 Magic"}, {"21 Thieving"}, {"10 Fishing"}, {"None"}, {"42 Thieving", "35 Ranged", "Ability to defeat a level 63 monster with ranged"}, {"None"}, {"Completed Merlin's Crystal", "20 Attack", "Ability to defeat a level 146 Black Knight Titan"}, {"Ability to defeat a level 122 monster"}, {"None"}, {"None"}, {"None"}, {"None"}, {"30 Firemaking"}, {"None"}, {"Completed Plague City"}, {"Completed Druidic Ritual", "3 Herblaw"}, {"25 Agility", "Ability to defeat a level 184 monster"}, {"Completed Jungle Potion", "32 Agility", "20 Crafting", "4 Smithing", "Ability to defeat a level 83 monsters"}, {"Completed Biohazard", "25 Ranged"}, {"10 Crafting"}, {"10 Fletching", "10 Smithing", "Ability to defeat a level 47 enemy"}, {"40 Mining", "30 Agility", "15 Thieving", "14 Herblaw", "14 Magic", "Ability to defeat a level 68 ogre"}, {"None"}, {"None"}, {"Completed Druidic Ritual", "25 Thieving", "10 Agility", "10 Herblaw"}, {"None"}, {"108 Quest Points", "50 Agility", "50 Crafting", "45 Herblaw", "56 Magic", "52 Mining", "42 Prayer", "50 Smithing", "50 Strength", "50 Thieving", "50 Woodcutting", "Ability to defeat a level 172 demon"}};
+    private String[][] questGuideRewards = {{"3 Quest Points", "2500 coins"}, {"1 Quest Point", "300 Cooking experience", "Access to the Cook's range"}, {"3 Quest Points", "Silverlight"}, {"1 Quest Point", "(Lvl + 1)*75 + 100 Mining experience", "Ability to use Doric's anvils", "180 coins",}, {"1 Quest Point", "1125 Prayer experience", "Amulet of Ghostspeak"}, {"5 Quest Points", "Lvl*30 + 20 Crafting experience", "1 Gold bar"}, {"4 Quest Points", "300 coins"}, {"1 Quest Point", "875 Magic experience", "An amulet of accuracy"}, {"2 Quest Points", "450 coins", "A gold ring", "An emerald"}, {"3 Quest points", "Free passage through the Al-Kharid tollgate", "700 coins"}, {"5 Quest Points"}, {"1 Quest Point", "180 Crafting experience", "180 coins"}, {"1 Quest Point", "600 coins"}, {"1 Quest Point", "Lvl*375 + 350 Smithing experience"}, {"3 Quest Points", "4825 Attack experience"}, {"1 Quest Point", "Lvl*50 + 225 Magic experience"}, {"2 Quest Points", "Lvl*300 + 1000 Defense experience", "Lvl*300 + 1000 Strength experience", "The ability to wear a Rune plate mail body"}, {"4 Quest Points", "Lvl*125 + 200 Hits experience"}, {"3 Quest Points", "Ability to enter the city of Zanaris", "Ability to wield a Dragon sword"}, {"1 Quest Point", "Lvl*50 + 75 experience in the following skills: Attack, Defense, Hits, Strength, Cooking, Fishing, Mining, Smithing, Ranged, Firemaking, Woodcutting, and Herblaw", "Access to the Heroes' Guild", "Ability to wield the Dragon axe"}, {"4 Quest Points", "250 Herblaw experience", "Ability to use the Herblaw skill"}, {"6 Quest Points", "Excalibur"}, {"1 Quest Point", "6625 Strength experience", "Thormac will enchant your battlestaves for 40000 coins"}, {"1 Quest Point", "A pair of Steel gauntlets"}, {"1 Quest Point", "Lvl*75 + 200 Thieving experience", "5 swordfish"}, {"1 Quest Point", this.playerStatBase[10] < 24 ? "(Lvl - 10)*75 + 975 Fishing experience" : "(Lvl - 24)*75 + 2225 Fishing experience", "Access to the underground tunnel beneath White Wolf Mountain"}, {"1 Quest Point", "(Lvl + 1)*125 Woodcutting experience", "8 Law-Runes"}, {"1 Quest Point", "Lvl*250 + 500 experience in Ranged and Fletching"}, {"1 Quest Point", "500 coins"}, {"2 Quest Points", "(Lvl + 1)*300 Defense experience", "(Lvl + 1)*250 Prayer experience"}, {"2 Quest Points", "Lvl*200 + 175 experience in Attack and Thieving", "1000 coins"}, {"2 Quest Points", "Lvl*75 + 6950 Attack experience", "A Gnome amulet of protection", "Ability to use Spirit Trees"}, {"1 Quest Point", "Lvl*57 + 205 Thieving experience", "2000 coins"}, {"4 Quest Points", "3100 coins"}, {"1 Quest Point", "Lvl*75 + 175 Mining experience", "A magic scroll granting the ability to cast Ardougne teleport"}, {"1 Quest Point", "Lvl*200 + 175 Fishing experience", "1 Oyster pearls"}, {"1 Quest Point", "Lvl*225 + 250 experience in Attack and Strength", "40 Mithril seeds", "2 Diamonds", "2 Gold bars"}, {"3 Quest Points", "Lvl*50 + 500 Thieving experience", "Ability to use King Lathas' Combat Training Camp", "Ability to travel freely between eastern and western Ardougne gate"}, {"1 Quest Point", "Lvl*125 + 400 Herblaw experience"}, {"5 Quest Points", "Lvl*300 + 400 experience in Agility and Attack", "Lvl*50 + 150 Magic experience", "Access to the Grand Tree mines", "Ability to use the Spirit Trees", "Ability to use the Gnome Gliders"}, {"2 Quest Points", "(Lvl + 1)*125 Crafting experience", "Access to Shilo Village"}, {"5 Quest Points", "Lvl*50 + 500 Agility Experience", "875 Attack experience", "A Staff of Iban", "15 Death-Runes", "30 Fire-Runes"}, {"2 Quest Points", "Lvl*100 + 250 Crafting experience", "Another reward based on your constellation"}, {"2 Quest Points", "(Lvl + 1)*150 experience twice in a choice of Agility, Fletching, Thieving, Smithing", "Ability to make throwing darts", "Access to the Desert Mining Camp"}, {"4 Quest Points", "15000 Magic experience", "Ability to use the Watchtower teleport spell", "5000 coins"}, {"3 Quest Points", "Lvl*38 + 162 Crafting experience", "2000 coins"}, {"1 Quest Points", "Lvl*50 + 250 Crafting experience", "Ability to buy a dwarf cannon", "Ability to make cannon balls"}, {"2 Quest Points", "(Lvl+1)*300 Mining experience", "(Lvl+1)*125 Herblaw experience", "2 Gold bars"}, {"1 Quest Point", "Lvl*45 + 175 Cooking experience", "A Kitten", "A Chocolate cake and stew"}, {"4 Quest Points", "7650 experience in 4 of these skills of your choice: Attack, Strength, Defense, Hits, Prayer, Magic, Woodcutting, Crafting, Smithing, Herblaw, Agility, and thieving", "Access to the Legend's Guild", "Ability to wear the Dragon Square Shield and Cape of Legends", "Ability to make Oomlie meat parcels and Blessed golden bowls"}};
+    private String skillToDo;
+    private long time;
+    private long m_timer;
+    private ArrayList<XPNotification> xpNotifications = new ArrayList<XPNotification>();
+
+    public int amountToZoom = 0;
 
     public mudclient(ClientPort handler) {
-        this.clientPort = handler;
+        clientPort = handler;
         Config.F_CACHE_DIR = clientPort.getCacheLocation();
         Config.initConfig();
+    }
+
+    public static boolean isValidEmailAddress(String email) {
+        boolean stricterFilter = true;
+        String stricterFilterString = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
+        String laxString = ".+@.+\\.[A-Za-z]{2}[A-Za-z]*";
+        String emailRegex = stricterFilter ? stricterFilterString : laxString;
+        java.util.regex.Pattern p = java.util.regex.Pattern.compile(emailRegex);
+        java.util.regex.Matcher m = p.matcher(email);
+        return m.matches();
+    }
+
+    public static final String formatStackAmount(int length) {
+        if (length < 100000) {
+            return String.valueOf(length);
+        }
+        if (length < 10000000) {
+            return "@whi@" + String.valueOf(length / 1000) + "K";
+        }
+        return "@gre@" + String.valueOf(length / 1000000) + "M";
     }
 
     final void zeroMF() {
@@ -349,6 +837,10 @@ public final class mudclient implements Runnable {
                     --this.m_b;
                     var6 &= 255;
                     if (reposition()) {
+						/*if (this.currentViewMode == GameMode.LOGIN) {
+							this.createLoginPanels(3845);
+							this.renderLoginScreenViewports(-116);
+						}*/
                         continue;
                     }
                     this.draw();
@@ -387,437 +879,9 @@ public final class mudclient implements Runnable {
         gameState = 1;
     }
 
-    /**
-     * Newest RSC cache: SAME VALUES.
-     * <p>
-     * mudclient.spriteMedia = 2000; mudclient.spriteUtil =
-     * mudclient.spriteMedia + 100; 2100 mudclient.spriteItem = 50 +
-     * mudclient.spriteUtil; 2150 mudclient.spriteLogo = 1000 +
-     * mudclient.spriteItem; 3150 mudclient.spriteProjectile = 10 +
-     * mudclient.spriteLogo; 3160 mudclient.spriteTexture = 50 +
-     * mudclient.spriteProjectile; 3210
-     */
-    public static final int spriteMedia = 2000;
-    public static final int spriteUtil = 2100;
-    public static final int spriteItem = 2150;
-    static final int spriteLogo = 3150;
-    static final int spriteProjectile = 3160;
-    static final int spriteTexture = 3225;
-
-    private final int[][] animDirLayer_To_CharLayer = new int[][]{{11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3, 4},
-            {11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3, 4}, {11, 3, 2, 9, 7, 1, 6, 10, 0, 5, 8, 4},
-            {3, 4, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5}, {3, 4, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5},
-            {4, 3, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5}, {11, 4, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3},
-            {11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 4, 3}};
-    private final int[] animFrameToSprite_CombatA = new int[]{0, 1, 2, 1, 0, 0, 0, 0};
-    private final int[] animFrameToSprite_CombatB = new int[]{0, 0, 0, 0, 0, 1, 2, 1};
-    private int[] animFrameToSprite_Walk = new int[]{0, 1, 2, 1};
-    private int appearanceHeadGender = 1;
-    private int appearanceHeadType = 0;
-    private int autoLoginTimeout = 0;
-    public int bankItemCount = 0;
-    private final int[] bankItemID = new int[500];
-    private final int[] bankItemSize = new int[500];
-    public final int[] bankItemOnTab = new int[500];
-    public int bankItemsMax = 50;
-    public int bankPage = 0;
-    public int bankSelectedItemSlot = -1;
-    private int cameraAngle = 1;
-    private final boolean cameraAutoAngleDebug = false;
-    private int cameraAutoRotatePlayerX = 0;
-    private int cameraAutoRotatePlayerZ = 0;
-    public int cameraRotation = 128;
-    private boolean cameraAllowPitchModification = false;
-    private int cameraPitch = 912;
-    private int cameraRotationX = 0;
-    private int cameraRotationZ = 0;
-    private int cameraZoom = 550;
-    private int characterBubbleCount = 0;
-    private int[] characterBubbleID = new int[150];
-    private final int[] characterBubbleScale = new int[150];
-    private final int[] characterBubbleX = new int[150];
-    private final int[] characterBubbleY = new int[150];
-    private int characterDialogCount = 0;
-    private final int[] characterDialogHalfWidth = new int[150];
-    private final int[] characterDialogHeight = new int[150];
-    private final String[] characterDialogString = new String[150];
-    private final int[] characterDialogX = new int[150];
-    private final int[] characterDialogY = new int[150];
-    private int[] characterHealthBar = new int[150];
-    private int characterHealthCount = 0;
-    private final int[] characterHealthX = new int[150];
-    private final int[] characterHealthY = new int[150];
-    private String chatMessageTarget;
-    private int frameCounter = 0;
-    private int combatStyle = 0;
-    private int combatTimeout = 0;
-    private int controlButtonAppearanceHeadMinus;
-    private int controlButtonAppearanceHeadPlus;
-    private int controlLoginPass;
-    private int controlLoginStatus1;
-    private int controlLoginStatus2;
-    private int controlLoginUser;
-    private int controlMagicPanel;
-    private int controlPlayerInfoPanel;
-    private int controlQuestInfoPanel;
-    private int controlSettingPanel;
-    private int controlPlayerTaskInfoPanel;
-    private int controlSocialPanel;
-    private int controlClanPanel;
-    private int currentRegionMaxX;
-    private int currentRegionMaxZ;
-    private int currentRegionMinX;
-    private int currentRegionMinZ;
-    public GameMode currentViewMode = GameMode.LOGIN;
-    private int deathScreenTimeout = 0;
-    private boolean duelConfirmed = false;
-    private String duelConfirmOpponentName = "";
-    private int duelDoX_Slot;
-    private int dropInventorySlot = -1;
-    private final int[] duelItemCounts = new int[8];
-    private int[] duelItems = new int[8];
-    private int duelItemsCount = 0;
-    private boolean duelOfferAccepted = false;
-    private int duelOfferItemCount = 0;
-    private final int[] duelOfferItemID = new int[8];
-    private final int[] duelOfferItemSize = new int[8];
-    private boolean duelOffsetOpponentAccepted = false;
-    private int duelOffsetOpponentItemCount = 0;
-    private final int[] duelOpponentItemCount = new int[8];
-    private final int[] duelOpponentItemCounts = new int[8];
-    private final int[] duelOpponentItemId = new int[8];
-    private final int[] duelOpponentItems = new int[8];
-    private int duelOpponentItemsCount = 0;
-    private String duelOpponentName;
-    private int duelOptionMagic;
-    private int duelOptionPrayer;
-    private int duelOptionRetreat;
-    private int duelOptionWeapons;
-    private boolean duelSettingsMagic = false;
-    private boolean duelSettingsPrayer = false;
-    private boolean duelSettingsRetreat = false;
-    private boolean duelSettingsWeapons = false;
-    private final String[] equipmentStatNames = new String[]{"Armour", "WeaponAim", "WeaponPower", "Magic",
-            "Prayer"};
-    private boolean errorLoadingCoadebase = false;
-    private boolean errorLoadingData = false;
-    private boolean errorLoadingMemory = false;
-    private int[] experienceArray = new int[Config.S_PLAYER_LEVEL_LIMIT];
-    private int fatigueSleeping = 0;
-    private boolean fogOfWar = false;
-    private int gameHeight = 334;
-    private final boolean[] gameObjectInstance_Arg1 = new boolean[5000];
-    private int gameObjectInstanceCount = 0;
-    private final int[] gameObjectInstanceDir = new int[5000];
-    private final int[] gameObjectInstanceID = new int[5000];
-    private final RSModel[] gameObjectInstanceModel = new RSModel[5000];
-    private final int[] gameObjectInstanceX = new int[5000];
-    private int[] gameObjectInstanceZ = new int[5000];
-    private int gameWidth = 512;
-    private int groundItemCount = 0;
-    private final int[] groundItemID = new int[5000];
-    private final int[] groundItemX = new int[5000];
-    private final int[] groundItemZ = new int[5000];
-    public InputXAction inputX_Action = InputXAction.ACT_0;
-    private boolean inputX_Focused = true;
-    private int inputX_Height = 0;
-    private String[] inputX_Lines = null;
-    private boolean inputX_OK = false;
-    private int inputX_Width = 0;
-    private boolean insideTutorial = false;
-    private int inventoryItemCount;
-    private final int[] inventoryItemEquipped = new int[35];
-    private final int[] inventoryItemID = new int[35];
-    private final int[] inventoryItemSize = new int[35];
-    private boolean isSleeping = false;
-    private int knownPlayerCount = 0;
-    private final ORSCharacter[] knownPlayers = new ORSCharacter[500];
-    private int lastHeightOffset = -1;
-    private int lastObjectAnimationNumberFireLightningSpell = -1;
-    private int lastObjectAnimationNumberTorch = -1;
-    private int lastObjectAnimatonNumberClaw = -1;
-    private boolean loadingArea = false;
-    private ORSCharacter localPlayer = new ORSCharacter();
-    private int logoutTimeout = 0;
-    private final String[] optionsMenuText = new String[20];
-    private int m_Ai;
-    private int m_be;
-    private int m_Ce = 0;
-    private int m_Cg;
-    private int m_cl = 30;
-    private int m_dk = 1;
-    private int m_ed;
-    private int m_eg = 2;
-    private int m_Eg;
-    private int m_ek;
-    private int m_Ge;
-    private int m_hh = 0;
-    private boolean runningAsApplet = true;
-    private boolean allowDebugCommands = !runningAsApplet || true;
-    private int optionsMenuCount = 0;
-    private String m_ig = "";
-    private int questPoints = 0;
-    private int m_Ji = 0;
-    private int settingTab = 0;
-    private int m_Jj;
-    private int m_Kj;
-    private int m_ld = 2;
-    private final int[] groundItemHeight = new int[5000];
-    private int characterBottomColour = 14;
-    private int m_Mj;
-    private int m_nj = -1;
-    private int m_Of;
-    private int m_oj = 0;
-    private int m_Oj = 0;
-    private int m_Ok = 2;
-    private int m_qd = 9;
-    private int m_rc = 0;
-    private int m_Re;
-    private int m_rf;
-    private boolean m_ue = false;
-    private int m_Wc = 0;
-    private final int character2Colour = 2;
-    private int m_Wg = 8;
-    private long lastWrite;
-    private int m_wk = -1;
-    private int m_Xc;
-    private int loginScreenNumber = 0;
-    private int m_Xi;
-    private int rememberButtonIdx;
-    private int m_Zb = 0;
-    private int localPlayerServerIndex = -1;
-    private int m_Ze;
-    public Menu menuCommon;
-    private Menu menuDuel;
-    private boolean menuDuel_Visible = false;
-    private int menuDuelX;
-    private int menuDuelY;
-    private Menu menuTrade;
-    private boolean menuTrade_Visible = false;
-    private int menuTradeX;
-    private int menuTradeY;
-    private boolean menuVisible = false;
-    public int menuX = 0;
-    public int menuY = 0;
-    private int messageTabActivity_Chat = 0;
-    private int messageTabActivity_Game = 0;
-    private int messageTabActivity_Private = 0;
-    private int messageTabActivity_Clan = 0;
-    private int messageTabActivity_Quest = 0;
-    private MessageTab messageTabSelected = MessageTab.ALL;
-    private int midRegionBaseX;
-    private int midRegionBaseZ;
-    private int minimapRandom_1 = 0;
-    private int minimapRandom_2 = 0;
-    private final RSModel[] modelCache = new RSModel[1000];
-    public int mouseButtonClick = 0;
-    private int mouseButtonDownTime = 0;
-    public int mouseButtonItemCountIncrement = 0;
-    public int mouseClickCount = 0;
-    public final int[] mouseClickX = new int[8192];
-    public int mouseClickXStep = 0;
-    public final int[] mouseClickY = new int[8192];
-    private int mouseWalkX = 0;
-    private int mouseWalkY = 0;
-    private int newBankItemCount = 0;
-    private final int[] newBankItems = new int[500];
-    private final int[] newBankItemsCount = new int[500];
-    private int npcCacheCount = 0;
-    private int npcCount = 0;
-    private final ORSCharacter[] npcs = new ORSCharacter[500];
-    private final ORSCharacter[] npcsCache = new ORSCharacter[500];
-    private final ORSCharacter[] npcsServer = new ORSCharacter[5000];
-    private int objectAnimationCount = 0;
-    private int objectAnimationNumberClaw = 0;
-    private int objectAnimationNumberFireLightningSpell = 0;
-    private int objectAnimationNumberTorch = 0;
-    private boolean optionCameraModeAuto = true;
-    private boolean optionMouseButtonOne = false;
-    private boolean optionSoundDisabled = true;
-    private boolean clanInviteBlockSetting = false;
-
-    private Panel panelAppearance;
-    private Panel panelLogin;
-    private Panel panelLoginWelcome;
-    private Panel panelMagic;
-    private int panelMessageChat;
-    private int panelMessageEntry;
-    private int panelMessagePrivate;
-    private int panelMessageQuest;
-    private int panelMessageClan;
-    private Panel panelMessageTabs;
-    private Panel panelPlayerInfo;
-    private Panel panelQuestInfo;
-    //private Panel panelPlayerTaskInfo;
-    private Panel panelSettings;
-    public HashMap<String, File> soundCache = new HashMap<String, File>();
-    public boolean authenticSettings = !(
-            Config.isAndroid() ||
-                    Config.S_WANT_CLANS || Config.S_WANT_KILL_FEED
-                    || Config.S_FOG_TOGGLE || Config.S_GROUND_ITEM_TOGGLE
-                    || Config.S_AUTO_MESSAGE_SWITCH_TOGGLE || Config.S_BATCH_PROGRESSION
-                    || Config.S_SIDE_MENU_TOGGLE || Config.S_INVENTORY_COUNT_TOGGLE
-                    || Config.S_ZOOM_VIEW_TOGGLE || Config.S_MENU_COMBAT_STYLE_TOGGLE
-                    || Config.S_FIGHTMODE_SELECTOR_TOGGLE || Config.S_SHOW_ROOF_TOGGLE
-                    || Config.S_EXPERIENCE_COUNTER_TOGGLE || Config.S_WANT_GLOBAL_CHAT
-                    || Config.S_EXPERIENCE_DROPS_TOGGLE || Config.S_ITEMS_ON_DEATH_MENU);
-    private Panel panelSocial;
-    private Panel panelClan;
-    private SocialPopupMode panelSocialPopup_Mode = SocialPopupMode.NONE;
-    private int panelSocialTab = 0;
-    private String password = "";
-    private final int[] pathX = new int[8000];
-    private final int[] pathZ = new int[8000];
-    private final int[] playerClothingColors = new int[]{0xFF0000, 16744448, 16769024, 10543104, '\ue000', '\u8000',
-            '\ua080', '\ub0ff', '\u80ff', 12528, 14680288, 3158064, 6307840, 8409088, 0xFFFFFF};
-    private int playerCount = 0;
-    private final int[] playerExperience = new int[18];
-    private final int[] playerHairColors = new int[]{16760880, 16752704, 8409136, 6307872, 3158064, 16736288,
-            16728064, 0xFFFFFF, '\uff00', '\uffff'};
-    private int playerLocalX;
-    private int playerLocalZ;
-    private final ORSCharacter[] players = new ORSCharacter[500];
-    private final ORSCharacter[] playerServer = new ORSCharacter[4000];
-    private final int[] playerSkinColors = new int[]{15523536, 13415270, 11766848, 10056486, 9461792};
-    private final int[] playerStatBase = new int[18];
-    private int[] playerStatCurrent = new int[18];
-    private String[] messagesArray = new String[5];
-    private final int[] playerStatEquipment = new int[5];
-    private long[] playerStatXpGained = new long[18];
-    private long[] xpGainedStartTime = new long[18];
-    private long playerXpGainedTotal = 0;
-    public long totalXpGainedStartTime = 0;
-    private final boolean[] prayerOn = new boolean[50];
-    private final int projectileMaxRange = 40;
-    private String[] questNames = new String[100];
-    public String[] achievementNames = new String[500];
-    public String[] achievementTitles = new String[500];
-    public String[] achievementDescs = new String[500];
-    private int[] questStages = new int[100];
-    public int[] achievementProgress = new int[500];
-    private int reportAbuse_AbuseType = 0;
-    private String reportAbuse_Name = "";
-    private int reportAbuse_State = 0;
-    private int requestedPlane = -1;
-    private Scene scene;
-    private int selectedItemInventoryIndex = -1;
-    private int selectedSpell = -1;
-    private String serverMessage = "";
-    private boolean serverMessageBoxTop = false;
-    public boolean serverTypeMembers = Config.MEMBERS_FEATURES;
-    private boolean developerMenu = false;
-    private int devMenuNpcID;
-    private boolean modMenu = false;
-    private int settingsBlockChat = 0;
-    private int settingsBlockDuel = 0;
-    private int settingsBlockPrivate = 0;
-    private int settingsBlockTrade = 0;
-    private int shopBuyPriceMod = 0;
-    private final int[] shopItemCount = new int[256];
-    private final int[] shopItemID = new int[256];
-    private final int[] shopItemPrice = new int[256];
-    private int shopPriceMultiplier = 0;
-    private int shopSelectedItemIndex = -1;
-    private int shopSelectedItemType = -2;
-    private int shopSellPriceMod = 0;
-    private boolean showAppearanceChange = false;
-    private boolean showDialogBank = false;
-    private boolean showDialogDuel = false;
-    private boolean showDialogDuelConfirm = false;
-    private boolean showDialogMessage = false;
-    private boolean showDialogServerMessage = false;
-    private boolean showDialogShop = false;
-    private boolean showDialogTrade = false;
-    private boolean showDialogTradeConfirm = false;
-    private boolean optionsMenuShow = false;
-    public int showUiTab = 0;
-    private int showUiWildWarn = 0;
-    private final String[] skillNameLong = new String[]{"Attack", "Defense", "Strength", "Hits", "Ranged", "Prayer",
-            "Magic", "Cooking", "Woodcutting", "Fletching", "Fishing", "Firemaking", "Crafting", "Smithing", "Mining",
-            "Herblaw", "Agility", "Thieving"};
-    private final String[] skillNames = new String[]{"Attack", "Defense", "Strength", "Hits", "Ranged", "Prayer",
-            "Magic", "Cooking", "Woodcut", "Fletching", "Fishing", "Firemaking", "Crafting", "Smithing", "Mining",
-            "Herblaw", "Agility", "Thieving"};
-    private int recentSkill = -1;
-    private String sleepingStatusText = null;
-    private boolean sleepWordDelay = true;
-    private int sleepWordDelayTimer = 0;
-    private byte[] soundData = null;
-    private int spriteCount = 0;
-    private int statFatigue = 0;
-    private MudClientGraphics surface;
-    private int systemUpdate = 0;
-    private int elixirTimer = 0;
-    private boolean inWild = false;
-    private int teleportBubbleCount = 0;
-    private final int[] teleportBubbleTime = new int[50];
-    private int[] teleportBubbleType = new int[50];
-    private final int[] teleportBubbleX = new int[50];
-    private final int[] teleportBubbleZ = new int[50];
-    private final int tileSize = 128;
-    public boolean topMouseMenuVisible = false;
-    private boolean tradeAccepted = false;
-    private boolean tradeConfirmAccepted = false;
-    private final int[] tradeConfirmItems = new int[14];
-    private int tradeConfirmItemsCount = 0;
-    private final int[] tradeConfirmItemsCount1 = new int[14];
-    private int tradeDoX_Slot;
-    private int tradeItemCount = 0;
-    private final int[] tradeItemID = new int[14];
-    private final int[] tradeItemSize = new int[14];
-    private boolean tradeRecipientAccepted = false;
-    private final int[] tradeRecipientConfirmItemCount = new int[14];
-    private final int[] tradeRecipientConfirmItems = new int[14];
-    private int tradeRecipientConfirmItemsCount = 0;
-    private String tradeRecipientConfirmName;
-    private final int[] tradeRecipientItem = new int[14];
-    private final int[] tradeRecipientItemCount = new int[14];
-    private int tradeRecipientItemsCount = 0;
-    private String tradeRecipientName = "";
-    private int uiTabPlayerInfoSubTab = 0;
-    private String username = "";
-    private final boolean[] wallObjectInstance_Arg1 = new boolean[500];
-    private int wallObjectInstanceCount = 0;
-    private final int[] wallObjectInstanceDir = new int[500];
-    private final int[] wallObjectInstanceID = new int[500];
-    private final RSModel[] wallObjectInstanceModel = new RSModel[500];
-    private final int[] wallObjectInstanceX = new int[500];
-    private final int[] wallObjectInstanceZ = new int[500];
-    private int welcomeLastLoggedInDays = 0;
-    private String welcomeLastLoggedInHost = null;
-    private String welcomeLastLoggedInIp;
-
-    private int welcomeRecoverySetDays = 0;
-
-    private boolean welcomeScreenShown = false;
-
-    //private int welcomeUnreadMessages = 0;
-    private World world;
-
     public World getWorld() {
         return world;
     }
-
-    private int worldOffsetX = 0;
-    private int worldOffsetZ = 0;
-    private int prayerMenuIndex = 0;
-    private int magicMenuIndex = 0;
-
-    private Panel menuNewUser;
-
-    private int menuNewUserUsername;
-    private int menuNewUserPassword;
-    private int menuNewUserEmail;
-    private int menuNewUserStatus;
-    private int menuNewUserStatus2;
-    private int menuNewUserSubmit;
-    private int menuNewUserCancel;
-
-    private int loginButtonNewUser;
-
-    //flag consumed by bank interface to sync custom options
-    //gets unset when player logins again after welcome screen
-    private boolean initLoginCleared;
 
     public final void addFriend(String player) {
         try {
@@ -1054,10 +1118,14 @@ public final class mudclient implements Runnable {
                 if (modMenu) {
                     this.menuCommon.addItem_With2Strings("Summon", "@whi@" + name, player.displayName,
                             MenuItemAction.MOD_SUMMON_PLAYER, player.accountName);
+                    this.menuCommon.addItem_With2Strings("Return", "@whi@" + name, player.displayName,
+                            MenuItemAction.MOD_RETURN_PLAYER, player.accountName);
                     this.menuCommon.addItem_With2Strings("Goto", "@whi@" + name, player.displayName,
                             MenuItemAction.MOD_GOTO_PLAYER, player.accountName);
                     this.menuCommon.addItem_With2Strings("Jail", "@whi@" + name, player.displayName,
                             MenuItemAction.MOD_PUT_PLAYER_JAIL, player.accountName);
+                    this.menuCommon.addItem_With2Strings("Release", "@whi@" + name, player.displayName,
+                            MenuItemAction.MOD_RELEASE_PLAYER_JAIL, player.accountName);
                     this.menuCommon.addItem_With2Strings("Check", "@whi@" + name, player.displayName,
                             MenuItemAction.MOD_CHECK_PLAYER, player.accountName);
                     this.menuCommon.addItem_With2Strings("Kick", "@whi@" + name, player.displayName,
@@ -1335,52 +1403,52 @@ public final class mudclient implements Runnable {
         try {
 
             this.panelLoginWelcome = new Panel(this.getSurface(), 50);
-            byte var2 = 40;
+            byte yOffsetWelcome = 40;
             if (Config.isAndroid())
-                var2 = -125;
-            this.panelLoginWelcome.addCenteredText(256, 190 + var2, "Welcome to " + Config.SERVER_NAME, 6, true);
-            String var3 = null;
-            var3 = "Join our Discord for the latest updates.";
+                yOffsetWelcome  = -125;
+            this.panelLoginWelcome.addCenteredText(halfGameWidth(), halfGameHeight() + 23 + yOffsetWelcome, "Welcome to " + Config.SERVER_NAME, 6, true);
+            String var3 = "Join our Discord for the latest updates.";
             if (null != var3) {
-                this.panelLoginWelcome.addCenteredText(256, 210 + var2, var3, 1, true);
+                this.panelLoginWelcome.addCenteredText(halfGameWidth(), halfGameHeight() + 43 + yOffsetWelcome, var3, 1, true);
             }
             //
             // this.panelLoginWelcome.addButtonBackground(256, var2 + 250, 200,
             // 35);
             // this.panelLoginWelcome.addCenteredText(256, var2 + 250, "Click
             // here to login", 5, false);
-            // this.m_Jj = this.panelLoginWelcome.addButton(256, 250 + var2,
+            // loginButtonExistingUser = this.panelLoginWelcome.addButton(256, 250 + var2,
             // 200, 35);
             //
             //
-            panelLoginWelcome.addButtonBackground(156, 240 + var2, 120, 35);
-            panelLoginWelcome.addButtonBackground(356, 240 + var2, 120, 35);
 
-            panelLoginWelcome.addCenteredText(156, 240 + var2, "New User", 5, false);
-            panelLoginWelcome.addCenteredText(356, 240 + var2, "Existing User", 5, false);
+            panelLoginWelcome.addButtonBackground(halfGameWidth() - 100, halfGameHeight() + 73 + yOffsetWelcome, 120, 35);
+            panelLoginWelcome.addButtonBackground(halfGameWidth() + 100, halfGameHeight() + 73 + yOffsetWelcome, 120, 35);
 
-            loginButtonNewUser = panelLoginWelcome.addButton(156, 240 + var2, 120, 35);
-            this.m_Jj = panelLoginWelcome.addButton(356, 240 + var2, 120, 35);
+            panelLoginWelcome.addCenteredText(halfGameWidth() - 100, halfGameHeight() + 73 + yOffsetWelcome, "New User", 5, false);
+            panelLoginWelcome.addCenteredText(halfGameWidth() + 100, halfGameHeight() + 73 + yOffsetWelcome, "Existing User", 5, false);
+
+            loginButtonNewUser = panelLoginWelcome.addButton(halfGameWidth() - 100, halfGameHeight() + 73 + yOffsetWelcome, 120, 35);
+            loginButtonExistingUser = panelLoginWelcome.addButton(halfGameWidth() + 100, halfGameHeight() + 73  + yOffsetWelcome, 120, 35);
 
             this.panelLogin = new Panel(this.getSurface(), 50);
             short var5 = Config.isAndroid() ? (short) 30 : 230;
-            this.controlLoginStatus1 = this.panelLogin.addCenteredText(256, var5 - 30, "", 4, true);
-            this.controlLoginStatus2 = this.panelLogin.addCenteredText(256, var5 - 10,
+            this.controlLoginStatus1 = this.panelLogin.addCenteredText(halfGameWidth(), halfGameHeight() + 35, "", 4, true);
+            this.controlLoginStatus2 = this.panelLogin.addCenteredText(halfGameWidth(), halfGameHeight() + 55,
                     "Please enter your username and password", 4, true);
             int var6 = var5 + 28;
-            this.panelLogin.addButtonBackground(140, var6, 200, 40);
-            this.panelLogin.addCenteredText(140, var6 - 10, "Username:", 4, false);
+            this.panelLogin.addButtonBackground(halfGameWidth() - 116, halfGameHeight() + 91, 200, 40);
+            this.panelLogin.addCenteredText(halfGameWidth() - 116, halfGameHeight() + 81, "Username:", 4, false);
+            this.controlLoginUser = this.panelLogin.addCenteredTextEntry(halfGameWidth() - 116, halfGameHeight() + 98, 200, 320, 40, 4, false, false);
+
             if (var1 != 3845) {
                 this.drawNPC(51, 106, -15, -96, 26, 108, 22, -63);
             }
 
-            this.controlLoginUser = this.panelLogin.addCenteredTextEntry(140, 10 + var6, 200, 320, 40, 4, false, false);
+            this.panelLogin.addButtonBackground(halfGameWidth() - 66, halfGameHeight() + 138, 200, 40);
+            this.panelLogin.addCenteredText(halfGameWidth() - 66, halfGameHeight() + 128, "Password:", 4, false);
+            this.controlLoginPass = this.panelLogin.addCenteredTextEntry(halfGameWidth() - 66, halfGameHeight() + 146, 200, 20, 40, 4, true, false);
 
-            var6 += 47;
-            this.panelLogin.addButtonBackground(190, var6, 200, 40);
-            this.panelLogin.addCenteredText(190, var6 - 10, "Password:", 4, false);
-            this.controlLoginPass = this.panelLogin.addCenteredTextEntry(190, 10 + var6, 200, 20, 40, 4, true, false);
-            if (Config.isAndroid()) {
+            if (Config.isAndroid() || Config.Remember()) {
                 String cred = clientPort.loadCredentials();
                 if (cred != null) {
                     if (cred.length() > 0) {
@@ -1395,68 +1463,82 @@ public final class mudclient implements Runnable {
                 }
             }
 
-            var6 -= 55;
-            this.panelLogin.addButtonBackground(410, var6, 120, 25);
-            this.panelLogin.addCenteredText(410, var6, "Ok", 4, false);
-            this.m_be = this.panelLogin.addButton(410, var6, 120, 25);
-            var6 += 30;
-            this.panelLogin.addButtonBackground(410, var6, 120, 25);
-            this.panelLogin.addCenteredText(410, var6, "Cancel", 4, false);
-            this.m_Xi = this.panelLogin.addButton(410, var6, 120, 25);
+            this.panelLogin.addButtonBackground(halfGameWidth() + 154, halfGameHeight() + 83, 120, 25);
+            this.panelLogin.addCenteredText(halfGameWidth() + 154, halfGameHeight() + 83, "Ok", 4, false);
+            this.m_be = this.panelLogin.addButton(halfGameWidth() + 154, halfGameHeight() + 83, 120, 25);
+            this.panelLogin.addButtonBackground(halfGameWidth() + 154, halfGameHeight() + 113, 120, 25);
+            this.panelLogin.addCenteredText(halfGameWidth() + 154, halfGameHeight() + 113, "Cancel", 4, false);
+            this.m_Xi = this.panelLogin.addButton(halfGameWidth() + 154, halfGameHeight() + 113, 120, 25);
             this.panelLogin.setFocus(this.controlLoginUser);
-            var6 += 30;
 
-            if (Config.isAndroid()) {
-                this.panelLogin.addButtonBackground(410, var6, 120, 25);
-                this.panelLogin.addCenteredText(410, var6, "Remember", 4, false);
-                this.rememberButtonIdx = this.panelLogin.addButton(410, var6, 120, 25);
-                var6 += 30;
+            int offRememb = -1;
+            int offHide = -1;
+            int width = 120;
+            if (Config.S_WANT_HIDE_IP && (Config.isAndroid() || Config.Remember())) {
+                offRememb = 124;
+                offHide = 186;
+                width = 60;
+            }
+            else if(Config.S_WANT_HIDE_IP) {
+                offHide = 154;
+            }
+            else if(Config.isAndroid() || Config.Remember()) {
+                offRememb = 154;
+            }
+
+            if (offRememb != -1) {
+                this.panelLogin.addButtonBackground(halfGameWidth() + offRememb, halfGameHeight() + 143, width, 25);
+                this.panelLogin.addCenteredText(halfGameWidth() + offRememb, halfGameHeight() + 143, "Save", 3, false);
+                this.rememberButtonIdx = this.panelLogin.addButton(halfGameWidth() + offRememb, halfGameHeight() + 143, width, 25);
+            }
+            if (offHide != -1) {
+                this.settingsHideIP = clientPort.loadHideIp();
+                String text = (this.settingsHideIP != 1) ? "Hide IP" : "Show IP";
+                this.panelLogin.addButtonBackground(halfGameWidth() + offHide, halfGameHeight() + 143, width, 25);
+                this.panelLogin.addCenteredText(halfGameWidth() + offHide, halfGameHeight() + 143, text, 3, false);
+                this.hideIpButtonIdx = this.panelLogin.addButton(halfGameWidth() + offHide, halfGameHeight() + 143, width, 25);
             }
 
             /* Registration setup */
 
-            int i = 60;
-            byte byte0 = 110;
             menuNewUser = new Panel(getSurface(), 50);
             if (Config.isAndroid()) {
-                menuNewUser.addCenteredText(250, i - 42, "@whi@To open keyboard press the back button", 5, false);
+                menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 149, "@whi@To open keyboard press the back button", 5 ,false);
             }
-            menuNewUser.addCenteredText(250, i - 42 + 22, "@whi@Enter a username between 2 and 12 characters long", 1, false);
-            menuNewUser.addCenteredText(250, i - 42 + 33, "@red@(Only regular letters, numbers and spaces are allowed)", 0, false);
-            menuNewUser.addButtonBackground(250, i + 17, 420, 34);
-            menuNewUser.addCenteredText(250, i + 8, "Choose a Username (This is the name other users will see)", 4,
+            menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 127, "@whi@Enter a username between 2 and 12 characters long", 1, false);
+            menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() -116, "@red@(Only regular letters, numbers and spaces are allowed)", 0, false);
+            menuNewUser.addButtonBackground(halfGameWidth() - 6, halfGameHeight() - 90, 420, 34);
+            menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 99, "Choose a Username (This is the name other users will see)", 4,
                     false);
-            menuNewUserUsername = menuNewUser.addCenteredTextEntry(256, i + 25, 200, 12, 40, 4, false, false);
-            i += 62;
-            menuNewUser.addCenteredText(250, i - 19, "@whi@Password must be at least between 4 and 64 characters long", 1, false);
-            menuNewUser.addCenteredText(250, i - 19 + 11, "@red@(DO NOT use the same password that you use elsewhere. Regular letters and numbers only)", 0, false);
+            menuNewUserUsername = menuNewUser.addCenteredTextEntry(halfGameWidth() - 6, halfGameHeight() - 82, 200, 12, 40, 4, false, false);
 
-            menuNewUser.addButtonBackground(250, i + 17, 420, 34);
-            menuNewUser.addCenteredText(250, i + 8, "Choose a Password (You will require this to login)", 4, false);
-            menuNewUserPassword = menuNewUser.addCenteredTextEntry(256, i + 25, 200, 64, 40, 4, true, false);
-            i += 54;
+            menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 64, "@whi@Password must be at least between 4 and 64 characters long", 1, false);
+            menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 53, "@red@(DO NOT use the same password that you use elsewhere. Regular letters and numbers only)", 0, false);
 
-            menuNewUser.addCenteredText(250, i - 11, "@whi@It's recommended to use a valid email adress", 1, false);
-            menuNewUser.addButtonBackground(250, i + 17, 420, 34);
-            menuNewUser.addCenteredText(250, i + 8, "E-mail address", 4, false);
-            menuNewUserEmail = menuNewUser.addCenteredTextEntry(256, i + 25, 200, 40, 40, 4, false, false);
-            i += 40;
+            menuNewUser.addButtonBackground(halfGameWidth() - 6, halfGameHeight() - 28, 420, 34);
+            menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 37, "Choose a Password (You will require this to login)", 4, false);
+            menuNewUserPassword = menuNewUser.addCenteredTextEntry(halfGameWidth(), halfGameHeight() - 20, 200, 64, 40, 4, true, false);
+
+            menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 2, "@whi@It's recommended to use a valid email address", 1, false);
+            menuNewUser.addButtonBackground(halfGameWidth() - 6, halfGameHeight() + 26, 420, 34);
+            menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() + 17, "E-mail address", 4, false);
+            menuNewUserEmail = menuNewUser.addCenteredTextEntry(halfGameWidth(), halfGameHeight() + 34, 200, 40, 40, 4, false, false);
 
             // menuNewUser.addButtonBackground(250, i + 22, 420, 44);
 
-            menuNewUser.addButtonBackground(((250 - byte0) + 50) - 15, i + 17, 270, 34);
-            menuNewUserStatus = menuNewUser.addCenteredText(((250 - byte0) + 50) - 15, i + 8,
+            menuNewUser.addButtonBackground(halfGameWidth() - 81, halfGameHeight() + 66, 270, 34);
+            menuNewUserStatus = menuNewUser.addCenteredText(halfGameWidth() - 81, halfGameHeight() + 57,
                     "To create an account please enter", 4, true);
-            menuNewUserStatus2 = menuNewUser.addCenteredText(((250 - byte0) + 50) - 15, i + 25,
+            menuNewUserStatus2 = menuNewUser.addCenteredText(halfGameWidth() - 81, halfGameHeight() + 74,
                     "all the requested details", 4, true);
 
-            menuNewUser.addButtonBackground(350, i + 17, 70, 34);
-            menuNewUser.addCenteredText(350, i + 17, "Submit", 5, false);
-            menuNewUserSubmit = menuNewUser.addButton(335, i + 17, 100, 34);
+            menuNewUser.addButtonBackground(halfGameWidth() + 94, halfGameHeight() + 66, 70, 34);
+            menuNewUser.addCenteredText(halfGameWidth() + 94, halfGameHeight() + 66, "Submit", 5, false);
+            menuNewUserSubmit = menuNewUser.addButton(halfGameWidth() + 79, halfGameHeight() + 66, 100, 34);
 
-            menuNewUser.addButtonBackground(425, i + 17, 70, 34);
-            menuNewUser.addCenteredText(425, i + 17, "Cancel", 5, false);
-            menuNewUserCancel = menuNewUser.addButton(425, i + 17, 100, 34);
+            menuNewUser.addButtonBackground(halfGameWidth() + 169, halfGameHeight() + 66, 70, 34);
+            menuNewUser.addCenteredText(halfGameWidth() + 169, halfGameHeight() + 66, "Cancel", 5, false);
+            menuNewUserCancel = menuNewUser.addButton(halfGameWidth() + 169, halfGameHeight() + 66, 100, 34);
 
         } catch (RuntimeException var4) {
             throw GenUtil.makeThrowable(var4, "client.B(" + var1 + ')');
@@ -1540,20 +1622,20 @@ public final class mudclient implements Runnable {
         }
     }
 
-    public void setLocalPlayerServerIndex(int i) {
-        this.localPlayerServerIndex = i;
-    }
-
     public int getLocalPlayerServerIndex() {
         return this.localPlayerServerIndex;
     }
 
-    public void setM_rc(int i) {
-        this.m_rc = i;
+    public void setLocalPlayerServerIndex(int i) {
+        this.localPlayerServerIndex = i;
     }
 
     public int getM_rc() {
         return this.m_rc;
+    }
+
+    public void setM_rc(int i) {
+        this.m_rc = i;
     }
 
     public final ORSCharacter createPlayer(int zPosition, int serverIndex, int xPosition, int var4, ORSCharacterDirection direction) {
@@ -1971,10 +2053,10 @@ public final class mudclient implements Runnable {
 
             this.getSurface().drawSpriteClipping(spriteMedia + 22, 0, getGameHeight(), getGameWidth(), 10, 0, 0, false, 0, 1);
             if (Config.S_WANT_CLANS) {
-                this.getSurface().drawSprite(mudclient.spriteMedia + 30, (getGameWidth() / 2) - 256,
+                this.getSurface().drawSprite(mudclient.spriteMedia + 30, halfGameWidth() - 256,
                         this.getGameHeight() - 4);
             } else {
-                this.getSurface().drawSprite(mudclient.spriteMedia + 23, (getGameWidth() / 2) - 256,
+                this.getSurface().drawSprite(mudclient.spriteMedia + 23, halfGameWidth() - 256,
                         this.getGameHeight() - 4);
             }
 
@@ -1986,7 +2068,7 @@ public final class mudclient implements Runnable {
                 if (this.messageTabActivity_Game % 30 > 15) {
                     color = GenUtil.buildColor(255, 50, 50);
                 }
-                this.getSurface().drawColoredStringCentered((getGameWidth() / 2) - 200, "All messages", color, 0, 0,
+                this.getSurface().drawColoredStringCentered(halfGameWidth() - 200, "All messages", color, 0, 0,
                         6 + this.getGameHeight());
 
                 color = GenUtil.buildColor(255, 255, 255);
@@ -1996,7 +2078,7 @@ public final class mudclient implements Runnable {
                 if (this.messageTabActivity_Chat % 30 > 15) {
                     color = GenUtil.buildColor(255, 50, 50);
                 }
-                this.getSurface().drawColoredStringCentered((getGameWidth() / 2) - 100, "Chat history", color, 0, 0,
+                this.getSurface().drawColoredStringCentered(halfGameWidth() - 100, "Chat history", color, 0, 0,
                         this.getGameHeight() + 6);
 
                 color = GenUtil.buildColor(255, 255, 255);
@@ -2006,7 +2088,7 @@ public final class mudclient implements Runnable {
                 if (this.messageTabActivity_Quest % 30 > 15) {
                     color = GenUtil.buildColor(255, 50, 50);
                 }
-                this.getSurface().drawColoredStringCentered((getGameWidth() / 2), "Quest history", color, 0, 0,
+                this.getSurface().drawColoredStringCentered(halfGameWidth(), "Quest history", color, 0, 0,
                         6 + this.getGameHeight());
 
                 color = GenUtil.buildColor(255, 255, 255);
@@ -2016,7 +2098,7 @@ public final class mudclient implements Runnable {
                 if (this.messageTabActivity_Private % 30 > 15) {
                     color = GenUtil.buildColor(255, 50, 50);
                 }
-                this.getSurface().drawColoredStringCentered((getGameWidth() / 2) + 100, "Private history", color, 0, 0,
+                this.getSurface().drawColoredStringCentered(halfGameWidth() + 100, "Private history", color, 0, 0,
                         this.getGameHeight() + 6);
                 if (Config.S_WANT_CLANS) {
                     color = GenUtil.buildColor(255, 255, 255);
@@ -2026,10 +2108,10 @@ public final class mudclient implements Runnable {
                     if (this.messageTabActivity_Clan % 30 > 15) {
                         color = GenUtil.buildColor(255, 50, 50);
                     }
-                    this.getSurface().drawColoredStringCentered((getGameWidth() / 2) + 200, "Clan history", color, 0, 0, 6 + this.getGameHeight());
+                    this.getSurface().drawColoredStringCentered(halfGameWidth() + 200, "Clan history", color, 0, 0, 6 + this.getGameHeight());
                 } else {
                     color = GenUtil.buildColor(255, 255, 255);
-                    this.getSurface().drawColoredStringCentered((getGameWidth() / 2) + 200, "Report Abuse", color, 0, 0, 6 + this.getGameHeight());
+                    this.getSurface().drawColoredStringCentered(halfGameWidth() + 200, "Report Abuse", color, 0, 0, 6 + this.getGameHeight());
                 }
             }
         } catch (RuntimeException var3) {
@@ -2953,23 +3035,29 @@ public final class mudclient implements Runnable {
                         }
                         this.getSurface().drawString("1", xr + 320, 214 + yr, color2, 3);
 
-                        color2 = 0xFFFFFF;
-                        if (mouseInRow && this.mouseX > 333 + xr && this.mouseX < 345 + xr) {
-                            color2 = 0xFF0000;
+                        if (count >= 5) {
+                            color2 = 0xFFFFFF;
+                            if (mouseInRow && this.mouseX > 333 + xr && this.mouseX < 345 + xr) {
+                                color2 = 0xFF0000;
+                            }
+                            this.getSurface().drawString("5", 335 + xr, 214 + yr, color2, 3);
                         }
-                        this.getSurface().drawString("5", 335 + xr, 214 + yr, color2, 3);
 
-                        color2 = 0xFFFFFF;
-                        if (mouseInRow && 348 + xr < this.mouseX && this.mouseX < xr + 365) {
-                            color2 = 0xFF0000;
+                        if (count >= 10) {
+                            color2 = 0xFFFFFF;
+                            if (mouseInRow && 348 + xr < this.mouseX && this.mouseX < xr + 365) {
+                                color2 = 0xFF0000;
+                            }
+                            this.getSurface().drawString("10", 350 + xr, 214 + yr, color2, 3);
                         }
-                        this.getSurface().drawString("10", 350 + xr, 214 + yr, color2, 3);
 
-                        color2 = 0xFFFFFF;
-                        if (mouseInRow && this.mouseX > 368 + xr && 385 + xr > this.mouseX) {
-                            color2 = 0xFF0000;
+                        if (count >= 50) {
+                            color2 = 0xFFFFFF;
+                            if (mouseInRow && this.mouseX > 368 + xr && 385 + xr > this.mouseX) {
+                                color2 = 0xFF0000;
+                            }
+                            this.getSurface().drawString("50", xr + 370, 214 + yr, color2, 3);
                         }
-                        this.getSurface().drawString("50", xr + 370, 214 + yr, color2, 3);
 
                         color2 = 0xFFFFFF;
                         if (mouseInRow && this.mouseX > xr + 388 && this.mouseX < 400 + xr) {
@@ -2999,23 +3087,29 @@ public final class mudclient implements Runnable {
                         }
                         this.getSurface().drawString("1", xr + 320, 239 + yr, color2, 3);
 
-                        color2 = 0xFFFFFF;
-                        if (mouseInRow && xr + 333 < this.mouseX && this.mouseX < xr + 345) {
-                            color2 = 0xFF0000;
+                        if (invCount >= 5) {
+                            color2 = 0xFFFFFF;
+                            if (mouseInRow && xr + 333 < this.mouseX && this.mouseX < xr + 345) {
+                                color2 = 0xFF0000;
+                            }
+                            this.getSurface().drawString("5", 335 + xr, 239 + yr, color2, 3);
                         }
-                        this.getSurface().drawString("5", 335 + xr, 239 + yr, color2, 3);
 
-                        color2 = 0xFFFFFF;
-                        if (mouseInRow && 348 + xr < this.mouseX && 365 + xr > this.mouseX) {
-                            color2 = 0xFF0000;
+                        if (invCount >= 10) {
+                            color2 = 0xFFFFFF;
+                            if (mouseInRow && 348 + xr < this.mouseX && 365 + xr > this.mouseX) {
+                                color2 = 0xFF0000;
+                            }
+                            this.getSurface().drawString("10", xr + 350, 239 + yr, color2, 3);
                         }
-                        this.getSurface().drawString("10", xr + 350, 239 + yr, color2, 3);
 
-                        color2 = 0xFFFFFF;
-                        if (mouseInRow && this.mouseX > xr + 368 && 385 + xr > this.mouseX) {
-                            color2 = 0xFF0000;
+                        if (invCount >= 50) {
+                            color2 = 0xFFFFFF;
+                            if (mouseInRow && this.mouseX > xr + 368 && 385 + xr > this.mouseX) {
+                                color2 = 0xFF0000;
+                            }
+                            this.getSurface().drawString("50", xr + 370, 239 + yr, color2, 3);
                         }
-                        this.getSurface().drawString("50", xr + 370, 239 + yr, color2, 3);
 
                         color2 = 0xFFFFFF;
                         if (mouseInRow && this.mouseX > 388 + xr && xr + 400 > this.mouseX) {
@@ -3453,8 +3547,10 @@ public final class mudclient implements Runnable {
                     this.welcomeLastLoggedInHost = getHostnameFromIP();
                 }
 
-                this.getSurface().drawColoredStringCentered(xr + 256 - 56, "from: " + this.welcomeLastLoggedInHost, 0xFFFFFF,
-                        var1 ^ -4853, 1, var3);
+                if (this.settingsHideIP != null && this.settingsHideIP != 1) {
+                    this.getSurface().drawColoredStringCentered(xr + 256 - 56, "from: " + this.welcomeLastLoggedInHost, 0xFFFFFF,
+                            var1 ^ -4853, 1, var3);
+                }
                 var3 += 15;
                 var3 += 15;
             }
@@ -3517,50 +3613,37 @@ public final class mudclient implements Runnable {
     private void drawDialogWildWarn(int var1) {
         try {
 
-            this.getSurface().drawBox(86, 77, 340, 180, 0);
-            byte var2 = 97;
+            this.getSurface().drawBox(halfGameWidth() - 170, halfGameHeight() - 90, 340, 180, 0);
             if (var1 <= 90) {
                 this.loadGameConfig(true);
             }
-
-            this.getSurface().drawBoxBorder(86, 340, 77, 180, 0xFFFFFF);
-            this.getSurface().drawColoredStringCentered(256, "Warning! Proceed with caution", 0xFF0000, 0, 4, var2);
-            int var5 = var2 + 26;
-            this.getSurface().drawColoredStringCentered(256, "If you go much further north you will enter the",
-                    0xFFFFFF, 0, 1, var5);
-            var5 += 13;
-            this.getSurface().drawColoredStringCentered(256, "wilderness. This a very dangerous area where", 0xFFFFFF,
-                    0, 1, var5);
-            var5 += 13;
-            this.getSurface().drawColoredStringCentered(256, "other players can attack you!", 0xFFFFFF, 0, 1, var5);
-            var5 += 22;
-            this.getSurface().drawColoredStringCentered(256, "The further north you go the more dangerous it", 0xFFFFFF,
-                    0, 1, var5);
-            var5 += 13;
-            this.getSurface().drawColoredStringCentered(256, "becomes, but the more treasure you will find.", 0xFFFFFF,
-                    0, 1, var5);
-            var5 += 22;
-            this.getSurface().drawColoredStringCentered(256, "In the wilderness an indicator at the bottom-right",
-                    0xFFFFFF, 0, 1, var5);
-            var5 += 13;
-            this.getSurface().drawColoredStringCentered(256, "of the screen will show the current level of danger",
-                    0xFFFFFF, 0, 1, var5);
-            var5 += 22;
+            this.getSurface().drawBoxBorder(halfGameWidth() - 170, 340, halfGameHeight() - 90, 180, 0xFFFFFF);
+            this.getSurface().drawColoredStringCentered(halfGameWidth(), "Warning! Proceed with caution", 0xFF0000, 0, 4, halfGameHeight() - 70);
+            this.getSurface().drawColoredStringCentered(halfGameWidth(), "If you go much further north you will enter the", 0xFFFFFF, 0, 1, halfGameHeight() - 44);
+            this.getSurface().drawColoredStringCentered(halfGameWidth(), "wilderness. This a very dangerous area where", 0xFFFFFF,0, 1, halfGameHeight() - 31);
+            this.getSurface().drawColoredStringCentered(halfGameWidth(), "other players can attack you!", 0xFFFFFF, 0, 1, halfGameHeight() - 18);
+            this.getSurface().drawColoredStringCentered(halfGameWidth(), "The further north you go the more dangerous it", 0xFFFFFF, 0, 1, halfGameHeight() + 4);
+            this.getSurface().drawColoredStringCentered(halfGameWidth(), "becomes, but the more treasure you will find.", 0xFFFFFF, 0, 1, halfGameHeight() + 17);
+            this.getSurface().drawColoredStringCentered(halfGameWidth(), "In the wilderness an indicator at the bottom-right", 0xFFFFFF, 0, 1, halfGameHeight() + 39);
+            this.getSurface().drawColoredStringCentered(halfGameWidth(), "of the screen will show the current level of danger",0xFFFFFF, 0, 1, halfGameHeight() + 52);
             int var3 = 0xFFFFFF;
-            if (this.mouseY > var5 - 12 && this.mouseY <= var5 && this.mouseX > 181 && this.mouseX < 331) {
+            if (this.mouseY > halfGameHeight() + 62 && this.mouseY <= halfGameHeight() + 74 && this.mouseX > halfGameWidth() - 75 && this.mouseX < halfGameWidth() + 75) {
                 var3 = 0xFF0000;
             }
-
-            this.getSurface().drawColoredStringCentered(256, "Click here to close window", var3, 0, 1, var5);
+            this.getSurface().drawColoredStringCentered(halfGameWidth(), "Click here to close window", var3, 0, 1, halfGameHeight() + 74);
             if (this.mouseButtonClick != 0) {
-                if (var5 - 12 < this.mouseY && var5 >= this.mouseY && this.mouseX > 181 && this.mouseX < 331) {
+                if (halfGameHeight() + 62 < this.mouseY && halfGameHeight() + 74 >= this.mouseY && this.mouseX > halfGameWidth() - 75 && this.mouseX < halfGameWidth() + 75) {
                     this.showUiWildWarn = 2;
                 }
-
                 this.mouseButtonClick = 0;
-                if (this.mouseX < 86 || this.mouseX > 426 || this.mouseY < 77 || this.mouseY > 257) {
+                if (this.mouseX < halfGameWidth() - 170 || this.mouseX > halfGameWidth() + 170 || this.mouseY < halfGameHeight() - 90 || this.mouseY > halfGameHeight() + 90) {
                     this.showUiWildWarn = 2;
                 }
+            }
+
+            this.mouseButtonClick = 0;
+            if (this.mouseX < halfGameWidth() - 170 || this.mouseX > halfGameWidth() + 170 || this.mouseY < halfGameHeight() - 90 || this.mouseY > halfGameHeight() + 90) {
+                this.showUiWildWarn = 2;
             }
 
         } catch (RuntimeException var4) {
@@ -3574,8 +3657,8 @@ public final class mudclient implements Runnable {
             if (var1 == 13) {
                 if (this.deathScreenTimeout != 0) {
                     this.getSurface().fade2black(16316665);
-                    this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2, "Oh dear! You are dead...",
-                            0xFF0000, 0, 7, this.getGameHeight() / 2);
+                    this.getSurface().drawColoredStringCentered(this.halfGameWidth(), "Oh dear! You are dead...",
+                            0xFF0000, 0, 7, this.halfGameHeight());
                     this.drawChatMessageTabs(var1 - 8);
                     // this.getSurface().draw(this.graphics, this.screenOffsetX,
                     // 256, this.screenOffsetY);
@@ -3595,34 +3678,34 @@ public final class mudclient implements Runnable {
                                 (int) (334.0D * Math.random()));
                     }
                     //"*"
-                    this.getSurface().drawBox(this.getGameWidth() / 2 - 100, 160 - (Config.isAndroid() ? 80 : 0), 200, 40, 0);
+                    this.getSurface().drawBox(this.halfGameWidth() - 100, 160 - (Config.isAndroid() ? 80 : 0), 200, 40, 0);
                     if (Config.isAndroid()) {
-                        this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2,
+                        this.getSurface().drawColoredStringCentered(this.halfGameWidth(),
                                 "You are sleeping - Fatigue: " + this.fatigueSleeping + "%", 0xFFFF00, var1 - 13, 7, 31);
                     } else {
-                        this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2, "You are sleeping", 0xFFFF00,
+                        this.getSurface().drawColoredStringCentered(this.halfGameWidth(), "You are sleeping", 0xFFFF00,
                                 var1 - 13, 7, 50);
-                        this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2,
+                        this.getSurface().drawColoredStringCentered(this.halfGameWidth(),
                                 "Fatigue: " + this.fatigueSleeping + "%", 0xFFFF00, var1 - 13, 7, 90);
                     }
-                    this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2,
+                    this.getSurface().drawColoredStringCentered(this.halfGameWidth(),
                             "When you want to wake up just use your", 0xFFFFFF, 0, 5, 140 - (Config.isAndroid() ? 80 : 0));
-                    this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2,
+                    this.getSurface().drawColoredStringCentered(this.halfGameWidth(),
                             "keyboard to type the word in the box below", 0xFFFFFF, var1 ^ 13, 5, 160 - (Config.isAndroid() ? 80 : 0));
-                    this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2, this.inputTextCurrent + "*",
+                    this.getSurface().drawColoredStringCentered(this.halfGameWidth(), this.inputTextCurrent + "*",
                             '\uffff', var1 - 13, 5, 180 - (Config.isAndroid() ? 80 : 0));
                     if (null != this.sleepingStatusText) {
-                        this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2, this.sleepingStatusText,
+                        this.getSurface().drawColoredStringCentered(this.halfGameWidth(), this.sleepingStatusText,
                                 0xFF0000, 0, 5, 260 - (Config.isAndroid() ? 110 : 0));
                     } else {
-                        this.getSurface().drawSprite(mudclient.spriteLogo + 2, this.getGameWidth() / 2 - 127, 230 - (Config.isAndroid() ? 110 : 0));
+                        this.getSurface().drawSprite(mudclient.spriteLogo + 2, this.halfGameWidth() - 127, 230 - (Config.isAndroid() ? 110 : 0));
                     }
 
-                    this.getSurface().drawBoxBorder(this.getGameWidth() / 2 - 128, 257, 229 - (Config.isAndroid() ? 110 : 0), 42, 0xFFFFFF);
+                    this.getSurface().drawBoxBorder(this.halfGameWidth() - 128, 257, 229 - (Config.isAndroid() ? 110 : 0), 42, 0xFFFFFF);
                     this.drawChatMessageTabs(5);
-                    this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2, "If you can\'t read the word",
+                    this.getSurface().drawColoredStringCentered(this.halfGameWidth(), "If you can\'t read the word",
                             0xFFFFFF, var1 - 13, 1, 290 - (Config.isAndroid() ? 110 : 0));
-                    this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2,
+                    this.getSurface().drawColoredStringCentered(this.halfGameWidth(),
                             "@yel@click here@whi@ to get a different one", 0xFFFFFF, var1 ^ 13, 1, 305 - (Config.isAndroid() ? 110 : 0));
                     // this.getSurface().draw(this.graphics, this.screenOffsetX,
                     // 256, this.screenOffsetY);
@@ -3639,21 +3722,27 @@ public final class mudclient implements Runnable {
                             this.scene.removeModel(this.world.modelRoofGrid[2][centerX]);
                         }
 
-                        this.fogOfWar = false;
+                        if(!this.doCameraZoom) {
+                            amountToZoom -= 200;
+                            this.doCameraZoom = true;
+                        }
                         if (this.lastHeightOffset == 0
                                 && (world.collisionFlags[this.localPlayer.currentX / 128][this.localPlayer.currentZ
                                 / 128] & 0x80) == 0
-                                && Config.C_HIDE_ROOFS) {
+                                && !Config.C_HIDE_ROOFS) {
 
                             this.scene.addModel(this.world.modelRoofGrid[this.lastHeightOffset][centerX]);
-                            if (this.lastHeightOffset == 0 && Config.C_HIDE_ROOFS) {
+                            if (this.lastHeightOffset == 0 && !Config.C_HIDE_ROOFS) {
                                 this.scene.addModel(this.world.modelWallGrid[1][centerX]);
                                 this.scene.addModel(this.world.modelRoofGrid[1][centerX]);
                                 this.scene.addModel(this.world.modelWallGrid[2][centerX]);
                                 this.scene.addModel(this.world.modelRoofGrid[2][centerX]);
                             }
 
-                            this.fogOfWar = false;
+                            if(this.doCameraZoom) {
+                                amountToZoom += 200;
+                                this.doCameraZoom = false;
+                            }
                         }
                     }
 
@@ -3840,7 +3929,7 @@ public final class mudclient implements Runnable {
                     this.characterHealthCount = 0;
                     this.characterDialogCount = 0;
                     if (this.cameraAutoAngleDebug) {
-                        if (this.optionCameraModeAuto && !this.fogOfWar) {
+                        if (this.optionCameraModeAuto && !this.doCameraZoom) {
                             centerX = this.cameraAngle;
                             this.autoRotateCamera((byte) 22);
                             if (centerX != this.cameraAngle) {
@@ -3850,52 +3939,43 @@ public final class mudclient implements Runnable {
                         }
 
                         this.cameraRotation = this.cameraAngle * 32;
-                        if (fogOfWar) {
-                            this.scene.fogLandscapeDistance = 3000;
-                            this.scene.fogEntityDistance = 3000;
-                            this.scene.fogZFalloff = 1;
-                            this.scene.fogSmoothingStartDistance = 2800;
-                        } else {
-                            this.scene.fogZFalloff = 1;
-                            this.scene.fogLandscapeDistance = 10000;
-                            this.scene.fogEntityDistance = 10000;
-                            this.scene.fogSmoothingStartDistance = 10000;
+                        this.scene.fogLandscapeDistance = 3000;
+                        this.scene.fogEntityDistance = 3000;
+                        this.scene.fogZFalloff = 1;
+                        this.scene.fogSmoothingStartDistance = 2800;
 
-                        }
                         centerX = this.cameraAutoRotatePlayerX + this.cameraRotationX;
                         centerZ = this.cameraAutoRotatePlayerZ + this.cameraRotationZ;
                         this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ), centerZ, cameraPitch,
                                 this.cameraRotation * 4, (int) 0, 2000);
                     } else {
-                        if (this.optionCameraModeAuto && !this.fogOfWar) {
+                        if (this.optionCameraModeAuto && !this.doCameraZoom) {
                             this.autoRotateCamera((byte) 94);
                         }
                         if (Config.C_SHOW_FOG) {
                             if (!this.interlace) {
                                 this.scene.fogZFalloff = 1;
-                                this.scene.fogLandscapeDistance = 2400;
-                                this.scene.fogEntityDistance = 2400;
-                                this.scene.fogSmoothingStartDistance = 2300;
+                                this.scene.fogLandscapeDistance = gameWidth * 2 + cameraZoom * 2 - 124;
+                                this.scene.fogEntityDistance = gameWidth * 2 + cameraZoom * 2 - 124;
+                                this.scene.fogSmoothingStartDistance = gameWidth * 2 + cameraZoom * 2 - 224;
                             } else {
                                 this.scene.fogZFalloff = 1;
-                                this.scene.fogLandscapeDistance = 2200;
-                                this.scene.fogEntityDistance = 2200;
-                                this.scene.fogSmoothingStartDistance = 2100;
+                                this.scene.fogLandscapeDistance =  gameWidth * 2 + cameraZoom * 2 - 324;
+                                this.scene.fogEntityDistance =  gameWidth * 2 + cameraZoom * 2 - 324;
+                                this.scene.fogSmoothingStartDistance = gameWidth * 2 + cameraZoom * 2 - 424;
                             }
                         } else {
                             this.scene.fogZFalloff = 1;
-                            this.scene.fogLandscapeDistance = 10000;
-                            this.scene.fogEntityDistance = 10000;
-                            this.scene.fogSmoothingStartDistance = 10000;
+                            this.scene.fogLandscapeDistance = cameraZoom * 6;
+                            this.scene.fogEntityDistance = cameraZoom * 6;
+                            this.scene.fogSmoothingStartDistance = cameraZoom * 6;
                         }
 
                         centerX = this.cameraAutoRotatePlayerX + this.cameraRotationX;
                         centerZ = this.cameraAutoRotatePlayerZ + this.cameraRotationZ;
-                        float zoomMultiplier = 0;
-                        if (Config.S_ZOOM_VIEW_TOGGLE)
-                            zoomMultiplier = Config.C_ZOOM == 0 ? 0 : Config.C_ZOOM == 1 ? +200 : Config.C_ZOOM == 2 ? +400 : -200;
+
                         this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ), centerZ, cameraPitch,
-                                this.cameraRotation * 4, (int) 0, (int) (this.cameraZoom + zoomMultiplier) * 2);
+                                this.cameraRotation * 4, (int) 0, (int) this.cameraZoom * 2);
                     }
 
                     this.scene.endScene(-113);
@@ -4019,6 +4099,8 @@ public final class mudclient implements Runnable {
                         i += 14;
                         this.getSurface().drawString(
                                 "Fatigue: " + this.statFatigue + "%", 7, i, 0xffffff, 1);
+                        i +=14;
+                        this.getSurface().drawString("Camera Pitch: " + cameraPitch, 7, i, 0xffffff, 1);
                     }
 
                     if (Config.S_EXPERIENCE_COUNTER_TOGGLE && Config.C_EXPERIENCE_COUNTER == 2) {
@@ -4134,8 +4216,6 @@ public final class mudclient implements Runnable {
             throw GenUtil.makeThrowable(var14, "client.AB(" + var1 + ')');
         }
     }
-
-    public boolean LAST_FRAME_SHOWING_KEYBOARD = false;
 
     private void drawInputX() {
         try {
@@ -4447,16 +4527,17 @@ public final class mudclient implements Runnable {
             if (this.loginScreenNumber == 2) {
                 String var4 = this.panelLogin.getControlText(this.controlLoginStatus1);
                 if (null != var4 && var4.length() > 0) {
-                    this.getSurface().drawBoxAlpha(0, 185, this.getGameWidth(), 30, 0, 100);
+                    this.getSurface().drawBoxAlpha(0, halfGameHeight() + 18, this.getGameWidth(), 30, 0, 100);
                 }
 
                 this.panelLogin.drawPanel();
             }
 
-            this.getSurface().drawSprite(mudclient.spriteMedia + 22, 0, this.gameHeight);
+            this.getSurface().drawSpriteClipping(spriteMedia + 22, 0, getGameHeight(), getGameWidth(), 10, 0, 0, false, 0, 1);
             // this.getSurface().draw(this.graphics, this.screenOffsetX, 256,
             // this.screenOffsetY);
             clientPort.draw();
+
         } catch (RuntimeException var3) {
             throw GenUtil.makeThrowable(var3, "client.R(" + 2540 + ')');
         }
@@ -4469,11 +4550,7 @@ public final class mudclient implements Runnable {
                 int width = this.menuCommon.getWidth();
                 int height = this.menuCommon.getHeight();
                 boolean renderAnyway = false;
-                // Maybe my brain is fried from all the alcohol or the work-out
-                // I had today but this is the best I can do right now.
-                // This should be one line thing!!!!
-                // IF android build and hold and choose = dont close when mouse
-                // exits, else close it.
+
                 if (Config.isAndroid() && Config.C_HOLD_AND_CHOOSE) {
                     renderAnyway = true;
                 }
@@ -5262,10 +5339,6 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private int xpPerHourCount = 0;
-    long timePassed = 0;
-    double xpPerHour = 0;
-
     private final void drawExperienceCounter(int skill) {
         if (!Config.S_EXPERIENCE_COUNTER_TOGGLE) return;
         if (selectedSkill >= 0) {
@@ -5282,15 +5355,15 @@ public final class mudclient implements Runnable {
             }
 
             int stringWid = getSurface().stringWidth(3, "Total: " + totalXp);
-            int x = (getGameWidth() / 2) - (stringWid / 2) - 10;
+            int x = halfGameWidth() - (stringWid / 2) - 10;
             int width = stringWid + 6;
             this.getSurface().drawBoxAlpha(x, 0, width, 20, 0x989898, 90);
             //this.getSurface().drawBoxBorder(x, width, 0, 20, 0x000000);
 
             if (textColor == 0xFFFFFF) {
-                getSurface().drawShadowText("Total: " + totalXp, (getGameWidth() / 2) - (stringWid / 2) - 4, 15, textColor, 2, false);
+                getSurface().drawShadowText("Total: " + totalXp, halfGameWidth() - (stringWid / 2) - 4, 15, textColor, 2, false);
             } else {
-                getSurface().drawString("Total: " + totalXp, (getGameWidth() / 2) - (stringWid / 2) - 4, 15, textColor, 2);
+                getSurface().drawString("Total: " + totalXp, halfGameWidth() - (stringWid / 2) - 4, 15, textColor, 2);
             }
 
             if (Config.isAndroid() && this.mouseButtonClick == 1 && mouseX >= x && mouseX <= x + width && mouseY >= 0 && mouseY <= 20) {
@@ -5421,7 +5494,7 @@ public final class mudclient implements Runnable {
                 int boxWidth = 75;
                 int boxHeight = 50;
                 int x = getGameWidth() - boxWidth - 15;
-                int y = (getGameHeight() / 2) - boxHeight;
+                int y = halfGameHeight() - boxHeight;
 
                 getSurface().drawBoxAlpha(x, y, boxWidth, boxHeight, 0x989898, 128);
                 getSurface().drawBoxBorder(x, boxWidth, y, boxHeight, 0);
@@ -5603,14 +5676,6 @@ public final class mudclient implements Runnable {
             throw GenUtil.makeThrowable(var4, "client.DC(" + var1 + ')');
         }
     }
-
-    private CustomBankInterface bank;
-
-    private int settingsBlockGlobal;
-    private int lastSelectedSpell = -1;
-
-    public int resizeWidth;
-    public int resizeHeight;
 
     private void drawDialogBank() {
         bank.onRender();
@@ -7017,6 +7082,7 @@ public final class mudclient implements Runnable {
 
     private final void drawSocialSettingsOptions(int var3, short var5, int var6, int var7) {
         this.getSurface().drawString("Privacy settings", 3 + var3, var7, 0, 1);
+
         var7 += 15;
         if (this.settingsBlockChat != 0) {
             this.getSurface().drawString("Block chat messages: @gre@<on>", 3 + var3, var7, 0xFFFFFF, 1);
@@ -7165,12 +7231,6 @@ public final class mudclient implements Runnable {
             }
         }
 
-        // Zoom View
-        if (Config.S_ZOOM_VIEW_TOGGLE) {
-            this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                    "@whi@Zoom View - " + (Config.C_ZOOM == 0 ? "@yel@Normal" : Config.C_ZOOM == 1 ? "@ora@Far" : Config.C_ZOOM == 2 ? "@red@Super" : "@gre@Near"), 5, (String) null, (String) null);
-        }
-
         // Fog
         if (Config.S_FOG_TOGGLE) {
             if (!Config.C_SHOW_FOG) {
@@ -7186,10 +7246,10 @@ public final class mudclient implements Runnable {
         if (Config.S_SHOW_ROOF_TOGGLE) {
             if (!Config.C_HIDE_ROOFS) {
                 this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                        "@whi@Show Roof - @red@Off", 7, (String) null, (String) null);
+                        "@whi@Hide Roofs - @red@Off", 7, (String) null, (String) null);
             } else {
                 this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                        "@whi@Show Roof - @gre@On", 7, (String) null, (String) null);
+                        "@whi@Hide Roofs - @gre@On", 7, (String) null, (String) null);
             }
         }
 
@@ -7376,15 +7436,6 @@ public final class mudclient implements Runnable {
         // Experience Drops
         if (settingIndex == 4 && this.mouseButtonClick == 1 && Config.S_EXPERIENCE_DROPS_TOGGLE) {
             Config.C_EXPERIENCE_DROPS = !Config.C_EXPERIENCE_DROPS;
-            Config.saveConfiguration(false);
-        }
-
-        // Zoom View
-        if (settingIndex == 5 && this.mouseButtonClick == 1 && Config.S_ZOOM_VIEW_TOGGLE) {
-            this.cameraZoom = 750;
-            Config.C_ZOOM++;
-            if (Config.C_ZOOM == 4)
-                Config.C_ZOOM = 0;
             Config.saveConfiguration(false);
         }
 
@@ -7694,7 +7745,6 @@ public final class mudclient implements Runnable {
         var7 += 15;
         this.getSurface().drawString("all people not on your friends list", 3 + var3, var7, 0, 1);
 
-
         var7 += 15;
         if (this.settingsBlockChat != 0) {
             this.getSurface().drawString("Block chat messages: @gre@<on>", 3 + var3, var7, 0xFFFFFF, 1);
@@ -7845,9 +7895,6 @@ public final class mudclient implements Runnable {
         }
 
     }
-
-    private int flag = 0;
-    private Timer tiktok = new Timer();
 
     private boolean doubleClick() {
         if (tiktok == null) {
@@ -8220,6 +8267,12 @@ public final class mudclient implements Runnable {
     private final void fetchContainerSize() {
         try {
 
+            //getSurface().resize(this.gameWidth, this.gameHeight + 12);
+            //this.getSurface().setClip(0, this.getGameWidth(), this.getGameHeight() + 12, 0);
+            //this.scene.setMidpoints(this.halfGameHeight(), true, this.getGameWidth(), this.halfGameWidth(),
+            //	this.halfGameHeight(), this.m_qd, this.halfGameWidth());
+
+
             // Container c;
             // if (this.runningAsApplet) {
             // if (null != ClientBase.containerApplet) {
@@ -8255,8 +8308,8 @@ public final class mudclient implements Runnable {
 
         getSurface().resize(this.gameWidth, this.gameHeight + 12);
         this.getSurface().setClip(0, this.getGameWidth(), this.getGameHeight() + 12, 0);
-        this.scene.setMidpoints(this.getGameHeight() / 2, true, this.getGameWidth(), this.getGameWidth() / 2,
-                this.getGameHeight() / 2, this.m_qd, this.getGameWidth() / 2);
+        this.scene.setMidpoints(this.halfGameHeight(), true, this.getGameWidth(), this.halfGameWidth(),
+                this.halfGameHeight(), this.m_qd, this.halfGameWidth());
 
         clientPort.resized();
         int var3 = this.getSurface().width2 - 199;
@@ -8341,8 +8394,7 @@ public final class mudclient implements Runnable {
                     do {
                         this.appearanceHeadType = (EntityHandler.animationCount() + (this.appearanceHeadType - 1))
                                 % EntityHandler.animationCount();
-                    }
-                    while ((3 & EntityHandler.getAnimationDef(this.appearanceHeadType).getGenderModel()) != 1);
+                    } while ((3 & EntityHandler.getAnimationDef(this.appearanceHeadType).getGenderModel()) != 1);
                 } while ((EntityHandler.getAnimationDef(this.appearanceHeadType).getGenderModel()
                         & this.appearanceHeadGender * 4) == 0);
             }
@@ -8351,8 +8403,7 @@ public final class mudclient implements Runnable {
                 do {
                     do {
                         this.appearanceHeadType = (1 + this.appearanceHeadType) % EntityHandler.animationCount();
-                    }
-                    while (1 != (3 & EntityHandler.getAnimationDef(this.appearanceHeadType).getGenderModel()));
+                    } while (1 != (3 & EntityHandler.getAnimationDef(this.appearanceHeadType).getGenderModel()));
                 } while ((EntityHandler.getAnimationDef(this.appearanceHeadType).getGenderModel()
                         & this.appearanceHeadGender * 4) == 0);
             }
@@ -8762,25 +8813,25 @@ public final class mudclient implements Runnable {
 
                 if (!this.isSleeping) {
                     if (mouseY > (getGameHeight() - 4)) { // Chat Tab Selection
-                        if (mouseX > 15 + ((getGameWidth() / 2) - 256) && mouseX < 96 + ((getGameWidth() / 2) - 256)
+                        if (mouseX > 15 + (halfGameWidth() - 256) && mouseX < 96 + (halfGameWidth() - 256)
                                 && lastMouseButtonDown == 1)
                             this.messageTabSelected = MessageTab.ALL;
-                        if (mouseX > 110 + ((getGameWidth() / 2) - 256) && mouseX < 194 + ((getGameWidth() / 2) - 256)
+                        if (mouseX > 110 + (halfGameWidth() - 256) && mouseX < 194 + (halfGameWidth() - 256)
                                 && lastMouseButtonDown == 1) {
                             this.messageTabSelected = MessageTab.CHAT;
                             this.panelMessageTabs.controlScrollAmount[this.panelMessageChat] = 999999;
                         }
-                        if (mouseX > 215 + ((getGameWidth() / 2) - 256) && mouseX < 295 + ((getGameWidth() / 2) - 256)
+                        if (mouseX > 215 + (halfGameWidth() - 256) && mouseX < 295 + (halfGameWidth() - 256)
                                 && lastMouseButtonDown == 1) {
                             this.messageTabSelected = MessageTab.QUEST;
                             this.panelMessageTabs.controlScrollAmount[this.panelMessageQuest] = 999999;
                         }
-                        if (mouseX > 315 + ((getGameWidth() / 2) - 256) && mouseX < 395 + ((getGameWidth() / 2) - 256)
+                        if (mouseX > 315 + (halfGameWidth() - 256) && mouseX < 395 + (halfGameWidth() - 256)
                                 && lastMouseButtonDown == 1) {
                             this.messageTabSelected = MessageTab.PRIVATE;
                             this.panelMessageTabs.controlScrollAmount[this.panelMessagePrivate] = 999999;
                         }
-                        if (mouseX > 417 + ((getGameWidth() / 2) - 256) && mouseX < 497 + ((getGameWidth() / 2) - 256)
+                        if (mouseX > 417 + (halfGameWidth() - 256) && mouseX < 497 + (halfGameWidth() - 256)
                                 && lastMouseButtonDown == 1) {
                             if (Config.S_WANT_CLANS) {
                                 this.messageTabSelected = MessageTab.CLAN;
@@ -8901,7 +8952,7 @@ public final class mudclient implements Runnable {
                             if (this.keyLeft) {
                                 this.keyLeft = false;
                                 this.cameraAngle = this.cameraAngle + 1 & 7;
-                                if (!this.fogOfWar) {
+                                if (!this.doCameraZoom) {
                                     if ((1 & this.cameraAngle) == 0) {
                                         this.cameraAngle = 7 & 1 + this.cameraAngle;
                                     }
@@ -8915,7 +8966,7 @@ public final class mudclient implements Runnable {
                             if (this.keyRight) {
                                 this.keyRight = false;
                                 this.cameraAngle = 7 + this.cameraAngle & 7;
-                                if (!this.fogOfWar) {
+                                if (!this.doCameraZoom) {
                                     if ((1 & this.cameraAngle) == 0) {
                                         this.cameraAngle = this.cameraAngle + 7 & 7;
                                     }
@@ -8930,10 +8981,34 @@ public final class mudclient implements Runnable {
                         this.cameraRotation = 255 & this.cameraRotation + 2;
                     } else if (this.keyRight) {
                         this.cameraRotation = 255 & this.cameraRotation - 2;
-                    } else if (this.keyDown && this.cameraAllowPitchModification) {
-                        this.cameraPitch = (this.cameraPitch + 4) & 1023;
-                    } else if (this.keyUp && this.cameraAllowPitchModification) {
-                        this.cameraPitch = (this.cameraPitch + 1024 - 4) & 1023;
+                    } else if (this.keyDown) {
+                        if(Config.S_ZOOM_VIEW_TOGGLE || getLocalPlayer().isStaff()) {
+                            final int maxHeight = 1000 - (doCameraZoom ? 200 : 0);
+                            if (cameraZoom < maxHeight) {
+                                if (cameraZoom + 4 > maxHeight)
+                                    cameraZoom = maxHeight;
+                                else
+                                    cameraZoom += 4;
+                            }
+                        } else {
+                            if(this.cameraAllowPitchModification) {
+                                this.cameraPitch = (this.cameraPitch + 4) & 1023;
+                            }
+                        }
+                    } else if (this.keyUp) {
+                        if(Config.S_ZOOM_VIEW_TOGGLE || getLocalPlayer().isStaff()) {
+                            final int minHeight = 500 - (doCameraZoom ? 200 : 0);
+                            if (cameraZoom > minHeight) {
+                                if (cameraZoom - 4 < minHeight)
+                                    cameraZoom = minHeight;
+                                else
+                                    cameraZoom -= 4;
+                            }
+                        } else {
+                            if(this.cameraAllowPitchModification) {
+                                this.cameraPitch = (this.cameraPitch + 1024 - 4) & 1023;
+                            }
+                        }
                     } else if (this.pageDown) {
                         currentChat++;
                         if (currentChat >= messages.size()) {
@@ -8960,10 +9035,18 @@ public final class mudclient implements Runnable {
                         ++this.mouseClickXStep;
                     }
 
-                    if (this.fogOfWar && this.cameraZoom > 550) {
-                        this.cameraZoom -= 4;
-                    } else if (!this.fogOfWar && this.cameraZoom < 750) {
-                        this.cameraZoom += 4;
+					/*if (this.doCameraZoom && this.cameraZoom > 550) {
+						this.cameraZoom -= 4;
+					} else if (!this.doCameraZoom && this.cameraZoom < 750) {
+						this.cameraZoom += 4;
+					}*/
+                    if(amountToZoom > 0) {
+                        cameraZoom += 4;
+                        amountToZoom -= 4;
+                    }
+                    if(amountToZoom < 0) {
+                        cameraZoom -= 4;
+                        amountToZoom += 4;
                     }
 
                     this.scene.d(25013, 17);
@@ -9041,8 +9124,6 @@ public final class mudclient implements Runnable {
             throw GenUtil.makeThrowable(var9, "client.RD(" + "dummy" + ')');
         }
     }
-
-    private boolean optionsMenuKeyboardInput = Config.S_WANT_KEYBOARD_SHORTCUTS ? true : false;
 
     public final void handleKeyPress(byte var1, int key) {
         try {
@@ -9167,12 +9248,26 @@ public final class mudclient implements Runnable {
                     if (this.panelLogin.isClicked(this.m_Xi)) {
                         this.loginScreenNumber = 0;
                     }
-                    if (Config.isAndroid()) {
+                    if (Config.isAndroid() || Config.Remember()) {
                         if (this.panelLogin.isClicked(this.rememberButtonIdx)) {
 
                             boolean temp = clientPort.saveCredentials(this.panelLogin.getControlText(this.controlLoginUser) + "," + this.panelLogin.getControlText(this.controlLoginPass));
                             if (temp)
                                 this.panelLogin.setText(this.controlLoginStatus2, "@gre@Credentials Saved");
+                        }
+                    }
+
+                    if (Config.S_WANT_HIDE_IP) {
+                        if (this.panelLogin.isClicked(this.hideIpButtonIdx)) {
+                            this.settingsHideIP = 1 - this.settingsHideIP;
+                            String text = (this.settingsHideIP != 1) ? "Hide IP" : "Show IP";
+                            this.panelLogin.setText(this.hideIpButtonIdx - 1, text);
+
+                            boolean temp = clientPort.saveHideIp(this.settingsHideIP);
+                            String msg = (this.settingsHideIP != 1) ? "@red@Your IP will be shown after login"
+                                    : "@gre@Your IP will be hidden after login";
+                            if (temp)
+                                this.panelLogin.setText(this.controlLoginStatus2, msg);
                         }
                     }
 
@@ -9192,7 +9287,7 @@ public final class mudclient implements Runnable {
             } else {
                 this.panelLoginWelcome.handleMouse(this.mouseX, this.mouseY, this.currentMouseButtonDown,
                         this.lastMouseButtonDown);
-                if (this.panelLoginWelcome.isClicked(this.m_Jj)) {
+                if (this.panelLoginWelcome.isClicked(loginButtonExistingUser)) {
                     this.loginScreenNumber = 2;
                     this.panelLogin.setText(this.controlLoginStatus1, "");
                     this.panelLogin.setText(this.controlLoginStatus2, "Please enter your username and password");
@@ -9248,7 +9343,7 @@ public final class mudclient implements Runnable {
             return;
         }
         if (!isValidEmailAddress(email)) {
-            showLoginScreenStatus("Invalid email address", "please use a valid email adress");
+            showLoginScreenStatus("Invalid email address", "please use a valid email address");
             return;
         }
         try {
@@ -9300,7 +9395,7 @@ public final class mudclient implements Runnable {
                 return;
             }
             if (registerResponse == 6) {
-                showLoginScreenStatus("Invalid e-mail address", "please use a valid email adress");
+                showLoginScreenStatus("Invalid e-mail address", "please use a valid email address");
                 return;
             }
             if (registerResponse == 7) {
@@ -9317,16 +9412,6 @@ public final class mudclient implements Runnable {
             e.printStackTrace();
         }
 
-    }
-
-    public static boolean isValidEmailAddress(String email) {
-        boolean stricterFilter = true;
-        String stricterFilterString = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
-        String laxString = ".+@.+\\.[A-Za-z]{2}[A-Za-z]*";
-        String emailRegex = stricterFilter ? stricterFilterString : laxString;
-        java.util.regex.Pattern p = java.util.regex.Pattern.compile(emailRegex);
-        java.util.regex.Matcher m = p.matcher(email);
-        return m.matches();
     }
 
     private final void handleMenuItemClicked(boolean var1, int item) {
@@ -9754,7 +9839,7 @@ public final class mudclient implements Runnable {
                     break;
                 }
                 case DEV_ADD_NPC: {
-                    sendCommandString("cnpc " + devMenuNpcID + " " + (indexOrX + midRegionBaseX) + " "
+                    sendCommandString("cnpc " + devMenuNpcID + " 1 " + (indexOrX + midRegionBaseX) + " "
                             + (idOrZ + midRegionBaseZ) + "");
                     break;
                 }
@@ -9768,12 +9853,12 @@ public final class mudclient implements Runnable {
                     break;
                 }
                 case DEV_REMOVE_OBJECT: {
-                    sendCommandString("robject " + indexOrX + " " + (indexOrX + midRegionBaseX) + " "
+                    sendCommandString("robject " + (indexOrX + midRegionBaseX) + " "
                             + (idOrZ + midRegionBaseZ) + "");
                     break;
                 }
                 case DEV_ROTATE_OBJECT: {
-                    sendCommandString("rotateobject " + indexOrX + " " + (indexOrX + midRegionBaseX) + " "
+                    sendCommandString("rotateobject " + (indexOrX + midRegionBaseX) + " "
                             + (idOrZ + midRegionBaseZ) + "");
                     break;
                 }
@@ -9781,6 +9866,18 @@ public final class mudclient implements Runnable {
                     String playerName = var9;
                     playerName = playerName.replaceAll(" ", "_");
                     sendCommandString("summon " + playerName);
+                    break;
+                }
+                case MOD_RETURN_PLAYER: {
+                    String playerName = var9;
+                    playerName = playerName.replaceAll(" ", "_");
+                    sendCommandString("return " + playerName);
+                    break;
+                }
+                case MOD_RELEASE_PLAYER_JAIL: {
+                    String playerName = var9;
+                    playerName = playerName.replaceAll(" ", "_");
+                    sendCommandString("release " + playerName);
                     break;
                 }
                 case MOD_GOTO_PLAYER: {
@@ -9792,7 +9889,7 @@ public final class mudclient implements Runnable {
                 case MOD_PUT_PLAYER_JAIL: {
                     String playerName = var9;
                     playerName = playerName.replaceAll(" ", "_");
-                    sendCommandString("put " + playerName);
+                    sendCommandString("jail " + playerName);
                     break;
                 }
                 case MOD_KICK_PLAYER: {
@@ -9830,7 +9927,6 @@ public final class mudclient implements Runnable {
             throw GenUtil.makeThrowable(var13, "client.KA(" + var1 + ',' + item + ')');
         }
     }
-
 
     private final void handleReportAbuseClick() {
         try {
@@ -10513,6 +10609,7 @@ public final class mudclient implements Runnable {
                         int dir = this.wallObjectInstanceDir[i];
 
                         try {
+                            this.getWorld().registerObjectDir(xTile, zTile, dir);
                             this.world.applyWallToCollisionFlags(id, xTile, zTile, dir);
                             RSModel var25 = this.createWallObjectModel(xTile, zTile, id, dir, i);
                             this.wallObjectInstanceModel[i] = var25;
@@ -10572,7 +10669,6 @@ public final class mudclient implements Runnable {
             ex.printStackTrace();
         }
     }
-
 
     private final void loadTextures(byte var1) {
         clientPort.showLoadingProgress(50, "Textures");
@@ -10938,10 +11034,9 @@ public final class mudclient implements Runnable {
                 if (sound == null)
                     return;
                 try {
-                        /*Clip clip = AudioSystem.getClip();
-                        clip.open(AudioSystem.getAudioInputStream(sound));
-                        clip.start();*/
-                    return;
+                    /*Clip clip = AudioSystem.getClip();
+                    clip.open(AudioSystem.getAudioInputStream(sound));
+                    clip.start();*/
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -11021,14 +11116,25 @@ public final class mudclient implements Runnable {
         }
     }
 
+    private boolean worldComponentsLoaded = false;
+
+    private void loadWorldComponents() {
+        byte sector_h = 0; // sector h
+        byte sector_x = 50; // sector x
+        byte sector_y = 50; // sector y    (h0x50y50 - Lumbridge sector) (h0x50y39 - deep wilderness sector)
+        this.world.loadSections(sector_x * 48 + 23, (int) (sector_y * 48 + 23), sector_h);
+        this.world.addLoginScreenModels(this.modelCache);
+        this.worldComponentsLoaded = true;
+    }
+
     private void renderLoginScreenViewports(int var1) {
         try {
+
+            if (!this.worldComponentsLoaded) {
+                this.loadWorldComponents();
+            }
+
             // First view
-            byte sector_h = 0; // sector h
-            byte sector_x = 50; // sector x
-            byte sector_y = 50; // sector y    (h0x50y50 - Lumbridge sector) (h0x50y39 - deep wilderness sector)
-            this.world.loadSections(sector_x * 48 + 23, (int) (sector_y * 48 + 23), sector_h);
-            this.world.addLoginScreenModels(this.modelCache);
             short slide_x = 9728;
             short zoom_distance = 1100;
             short slide_y = 6400;
@@ -11052,15 +11158,15 @@ public final class mudclient implements Runnable {
                 this.getSurface().a(8, var9, var9, 0, 16740352, getGameWidth(), 0);
             }
 
-            this.getSurface().drawBox(0, 194, getGameWidth(), 20, 0);
+            this.getSurface().drawBox(0, halfGameHeight() + 27, getGameWidth(), 20, 0);
 
             for (var9 = 6; var9 >= 1; --var9) {
-                this.getSurface().a(8, var9, 194 - var9, 0, 16740352, getGameWidth(), 0);
+                this.getSurface().a(8, var9, halfGameHeight() + 27 - var9, 0, 16740352, getGameWidth(), 0);
             }
 
             //this.getSurface().drawSprite(mudclient.spriteMedia + 10, 30, 30); // Sprite 2010 logo
             //this.getSurface().drawColoredStringCentered(250, "Open RSC", 0xFFFFFF, 0, 7, 110); // width, title, color, crown sprite, font size, height
-            this.getSurface().storeSpriteVert(spriteLogo, 0, 0, getGameWidth(), 200);
+            this.getSurface().storeSpriteVert(spriteLogo, 0, 0, getGameWidth(), halfGameHeight() + 33);
 
             // Second view
             slide_y = 9216;
@@ -11081,15 +11187,15 @@ public final class mudclient implements Runnable {
                 this.getSurface().a(8, var9, var9, 0, 16740352, getGameWidth(), 0);
             }
 
-            this.getSurface().drawBox(0, 194, getGameWidth(), 20, 0);
+            this.getSurface().drawBox(0, halfGameHeight() + 27, getGameWidth(), 20, 0);
 
             for (var9 = 6; var9 >= 1; --var9) {
-                this.getSurface().a(8, var9, 194 - var9, 0, 16740352, getGameWidth(), 0);
+                this.getSurface().a(8, var9, halfGameHeight() + 27 - var9, 0, 16740352, getGameWidth(), 0);
             }
 
             //this.getSurface().drawSprite(mudclient.spriteMedia + 15, 30, 30); // Sprite 2010 logo
             //this.getSurface().drawColoredStringCentered(250, "Open RSC", 0xFFFFFF, 0, 7, 110); // width, title, color, crown sprite, font size, height
-            this.getSurface().storeSpriteVert(spriteLogo + 1, 0, 0, getGameWidth(), 200);
+            this.getSurface().storeSpriteVert(spriteLogo + 1, 0, 0, getGameWidth(), halfGameHeight() + 33);
 
             // Third view
             zoom_distance = 500;
@@ -11106,11 +11212,12 @@ public final class mudclient implements Runnable {
             }
 
             this.scene.fogLandscapeDistance = 10000;
-            this.scene.fogSmoothingStartDistance = 10000;
-            this.scene.fogZFalloff = 1;
             this.scene.fogEntityDistance = 10000;
+            this.scene.fogZFalloff = 1;
+            this.scene.fogSmoothingStartDistance = 10000;
             this.scene.setCamera(slide_x, -this.world.getElevation(slide_x, slide_y), slide_y, 912, rotation, (int) 0, zoom_distance * 2);
             this.scene.endScene(-111);
+
             this.getSurface().fade2black(16316665);
             this.getSurface().fade2black(16316665);
             this.getSurface().drawBox(0, 0, getGameWidth(), 6, 0);
@@ -11119,15 +11226,15 @@ public final class mudclient implements Runnable {
                 this.getSurface().a(8, var9, var9, 0, 16740352, getGameWidth(), 0);
             }
 
-            this.getSurface().drawBox(0, 194, getGameWidth(), 20, 0);
+            this.getSurface().drawBox(0, halfGameHeight() + 27, getGameWidth(), 20, 0);
 
             for (var9 = 6; var9 >= 1; --var9) {
-                this.getSurface().a(8, var9, 194, 0, 16740352, getGameWidth(), 0);
+                this.getSurface().a(8, var9, halfGameHeight() + 27, 0, 16740352, getGameWidth(), 0);
             }
 
             //this.getSurface().drawSprite(mudclient.spriteMedia + 10, 30, 30); // Sprite 2010 logo
             //this.getSurface().drawColoredStringCentered(250, "Open RSC", 0xFFFFFF, 0, 7, 110); // width, title, color, crown sprite, font size, height
-            this.getSurface().storeSpriteVert(spriteMedia + 10, 0, 0, getGameWidth(), 200);
+            this.getSurface().storeSpriteVert(spriteMedia + 10, 0, 0, getGameWidth(), halfGameHeight() + 33);
         } catch (RuntimeException var10) {
             throw GenUtil.makeThrowable(var10, "client.HC(" + var1 + ')');
         }
@@ -11273,6 +11380,7 @@ public final class mudclient implements Runnable {
                         this.packetHandler.getClientStream().newPacket(102);
                         this.packetHandler.getClientStream().finishPacket();
                         this.logoutTimeout = 1000;
+                        // this.createLoginPanels(3845);
                     }
                 } else {
                     this.showMessage(false, (String) null, "You can\'t logout during combat!", MessageType.GAME, 0,
@@ -11573,27 +11681,6 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private NComponent mainComponent;
-    private OnlineListInterface onlineList;
-    private NCustomComponent experienceOverlay;
-    private ProgressBarInterface batchProgressBar;
-    private BankPinInterface bankPinInterface;
-    private FishingTrawlerInterface fishingTrawlerInterface;
-    //private AchievementGUI achievementInterface;
-    private IronManInterface ironmanInterface;
-    private AuctionHouse auctionHouse;
-    private SkillGuideInterface skillGuideInterface;
-    private QuestGuideInterface questGuideInterface;
-    private ExperienceConfigInterface experienceConfigInterface;
-    private DoSkillInterface doSkillInterface;
-    private LostOnDeathInterface lostOnDeathInterface;
-    private TerritorySignupInterface territorySignupInterface;
-    public Clan clan;
-
-    public boolean PAUSED;
-
-    public boolean gotInitialConfigs = false;
-
     final void startGame(byte var1) {
         try {
             this.fetchContainerSize();
@@ -11676,16 +11763,12 @@ public final class mudclient implements Runnable {
         this.settingsBlockDuel = status;
     }
 
-    public void setPlayerCount(int i) {
-        this.playerCount = i;
-    }
-
     public int getPlayerCount() {
         return this.playerCount;
     }
 
-    public void setKnownPlayerCount(int i) {
-        this.knownPlayerCount = i;
+    public void setPlayerCount(int i) {
+        this.playerCount = i;
     }
 
     public ORSCharacter getKnownPlayer(int i) {
@@ -11694,6 +11777,10 @@ public final class mudclient implements Runnable {
 
     public int getKnownPlayerCount() {
         return this.knownPlayerCount;
+    }
+
+    public void setKnownPlayerCount(int i) {
+        this.knownPlayerCount = i;
     }
 
     public void setKnownPlayer(int i, ORSCharacter p) {
@@ -11736,16 +11823,12 @@ public final class mudclient implements Runnable {
         return this.tileSize;
     }
 
-    public void setGameObjectInstanceCount(int i) {
-        this.gameObjectInstanceCount = i;
-    }
-
     public int getGameObjectInstanceCount() {
         return gameObjectInstanceCount;
     }
 
-    public void setInventoryItemCount(int i) {
-        this.inventoryItemCount = i;
+    public void setGameObjectInstanceCount(int i) {
+        this.gameObjectInstanceCount = i;
     }
 
     public void setGameObjectInstanceX(int i, int n) {
@@ -11793,6 +11876,10 @@ public final class mudclient implements Runnable {
         return this.wallObjectInstanceCount;
     }
 
+    public void setWallObjectInstanceCount(int i) {
+        this.wallObjectInstanceCount = i;
+    }
+
     public void setWallObjectInstanceX(int i, int n) {
         this.wallObjectInstanceX[i] = n;
     }
@@ -11834,10 +11921,6 @@ public final class mudclient implements Runnable {
         return this.wallObjectInstanceID[i];
     }
 
-    public void setWallObjectInstanceCount(int i) {
-        this.wallObjectInstanceCount = i;
-    }
-
     public Scene getScene() {
         return this.scene;
     }
@@ -11866,20 +11949,20 @@ public final class mudclient implements Runnable {
         return this.inventoryItemSize[i];
     }
 
-    public void setNpcCount(int i) {
-        this.npcCount = i;
-    }
-
     public int getNpcCount() {
         return this.npcCount;
     }
 
-    public void setNpcCacheCount(int i) {
-        this.npcCacheCount = i;
+    public void setNpcCount(int i) {
+        this.npcCount = i;
     }
 
     public int getNpcCacheCount() {
         return this.npcCacheCount;
+    }
+
+    public void setNpcCacheCount(int i) {
+        this.npcCacheCount = i;
     }
 
     public void setNpcFromCache(int i, ORSCharacter n) {
@@ -11922,20 +12005,20 @@ public final class mudclient implements Runnable {
         this.worldOffsetX = i;
     }
 
-    public void setWorldOffsetZ(int i) {
-        this.worldOffsetZ = i;
-    }
-
     public int getWorldOffsetZ() {
         return this.worldOffsetZ;
     }
 
-    public void setRequestedPlane(int i) {
-        this.requestedPlane = i;
+    public void setWorldOffsetZ(int i) {
+        this.worldOffsetZ = i;
     }
 
     public int getRequestedPlane() {
         return this.requestedPlane;
+    }
+
+    public void setRequestedPlane(int i) {
+        this.requestedPlane = i;
     }
 
     public void set() {
@@ -11973,6 +12056,10 @@ public final class mudclient implements Runnable {
         return this.groundItemCount;
     }
 
+    public void setGroundItemCount(int i) {
+        this.groundItemCount = i;
+    }
+
     public void setGroundItemX(int i, int n) {
         this.groundItemX[i] = n;
     }
@@ -12005,10 +12092,6 @@ public final class mudclient implements Runnable {
         return this.groundItemHeight[i];
     }
 
-    public void setGroundItemCount(int i) {
-        this.groundItemCount = i;
-    }
-
     public ORSCharacter getPlayerFromServer(int i) {
         return this.playerServer[i];
     }
@@ -12021,12 +12104,12 @@ public final class mudclient implements Runnable {
         this.showDialogTrade = show;
     }
 
-    public void setTradeRecipientItemsCount(int i) {
-        this.tradeRecipientItemsCount = i;
-    }
-
     public int getTradeRecipientItemsCount() {
         return this.tradeRecipientItemsCount;
+    }
+
+    public void setTradeRecipientItemsCount(int i) {
+        this.tradeRecipientItemsCount = i;
     }
 
     public void setTradeRecipientItem(int i, int n) {
@@ -12037,13 +12120,17 @@ public final class mudclient implements Runnable {
         this.tradeRecipientItemCount[i] = n;
     }
 
+    public int getTradeItemCount() {
+        return this.tradeItemCount;
+    }
+
     public void setTradeItemCount(int i) {
         this.tradeItemCount = i;
     }
 
-    public int getTradeItemCount() {
-        return this.tradeItemCount;
-    }
+		/*public void setGroupID(int groupID) {
+			this.groupID = groupID;
+		}*/
 
     public void setTradeItemID(int i, int n) {
         this.tradeItemID[i] = n;
@@ -12073,12 +12160,12 @@ public final class mudclient implements Runnable {
         this.tradeRecipientConfirmName = n;
     }
 
-    public void setTradeRecipientConfirmItemsCount(int n) {
-        this.tradeRecipientConfirmItemsCount = n;
-    }
-
     public int getTradeRecipientConfirmItemsCount() {
         return this.tradeRecipientConfirmItemsCount;
+    }
+
+    public void setTradeRecipientConfirmItemsCount(int n) {
+        this.tradeRecipientConfirmItemsCount = n;
     }
 
     public void setTradeRecipientConfirmItems(int i, int n) {
@@ -12089,12 +12176,12 @@ public final class mudclient implements Runnable {
         this.tradeRecipientConfirmItemCount[i] = n;
     }
 
-    public void setTradeConfirmItemsCount(int i) {
-        this.tradeConfirmItemsCount = i;
-    }
-
     public int getTradeConfirmItemsCount() {
         return this.tradeConfirmItemsCount;
+    }
+
+    public void setTradeConfirmItemsCount(int i) {
+        this.tradeConfirmItemsCount = i;
     }
 
     public void setTradeConfirmItems(int i, int n) {
@@ -12112,10 +12199,6 @@ public final class mudclient implements Runnable {
     public void setShowDialogShop(boolean show) {
         this.showDialogShop = show;
     }
-
-		/*public void setGroupID(int groupID) {
-			this.groupID = groupID;
-		}*/
 
     public void setOptionCameraModeAuto(boolean auto) {
         this.optionCameraModeAuto = auto;
@@ -12161,12 +12244,12 @@ public final class mudclient implements Runnable {
         return this.bank;
     }
 
-    public void setNewBankItemCount(int i) {
-        this.newBankItemCount = i;
-    }
-
     public int getNewBankItemCount() {
         return this.newBankItemCount;
+    }
+
+    public void setNewBankItemCount(int i) {
+        this.newBankItemCount = i;
     }
 
     public void setBankItemsMax(int i) {
@@ -12181,12 +12264,12 @@ public final class mudclient implements Runnable {
         this.showDialogDuelConfirm = show;
     }
 
-    public void setDuelOffsetOpponentItemCount(int i) {
-        this.duelOffsetOpponentItemCount = i;
-    }
-
     public int getDuelOffsetOpponentItemCount() {
         return this.duelOffsetOpponentItemCount;
+    }
+
+    public void setDuelOffsetOpponentItemCount(int i) {
+        this.duelOffsetOpponentItemCount = i;
     }
 
     public void setDuelOpponentItemId(int i, int n) {
@@ -12245,12 +12328,12 @@ public final class mudclient implements Runnable {
         this.duelOpponentName = n;
     }
 
-    public void setDuelOpponentItemsCount(int n) {
-        this.duelOpponentItemsCount = n;
-    }
-
     public int getDuelOpponentItemsCount() {
         return this.duelOpponentItemsCount;
+    }
+
+    public void setDuelOpponentItemsCount(int n) {
+        this.duelOpponentItemsCount = n;
     }
 
     public void setDuelOpponentItems(int i, int n) {
@@ -12261,12 +12344,12 @@ public final class mudclient implements Runnable {
         this.duelOpponentItemCounts[i] = n;
     }
 
-    public void setDuelItemsCount(int i) {
-        this.duelItemsCount = i;
-    }
-
     public int getDuelItemsCount() {
         return this.duelItemsCount;
+    }
+
+    public void setDuelItemsCount(int i) {
+        this.duelItemsCount = i;
     }
 
     public void setDuelItems(int i, int n) {
@@ -12305,12 +12388,12 @@ public final class mudclient implements Runnable {
         return this.xpGainedStartTime[stat];
     }
 
-    public void setPlayerXpGainedTotal(long exp) {
-        this.playerXpGainedTotal = exp;
-    }
-
     public long getPlayerXpGainedTotal() {
         return this.playerXpGainedTotal;
+    }
+
+    public void setPlayerXpGainedTotal(long exp) {
+        this.playerXpGainedTotal = exp;
     }
 
     public ArrayList getXpNotifications() {
@@ -12329,6 +12412,10 @@ public final class mudclient implements Runnable {
         return this.welcomeScreenShown;
     }
 
+    public void setWelcomeScreenShown(boolean show) {
+        this.welcomeScreenShown = show;
+    }
+
     public void setWelcomeLastLoggedInIp(String i) {
         this.welcomeLastLoggedInIp = i;
     }
@@ -12345,10 +12432,6 @@ public final class mudclient implements Runnable {
         this.welcomeLastLoggedInHost = i;
     }
 
-    public void setWelcomeScreenShown(boolean show) {
-        this.welcomeScreenShown = show;
-    }
-
     public void setServerMessage(String i) {
         this.serverMessage = i;
     }
@@ -12361,12 +12444,12 @@ public final class mudclient implements Runnable {
         this.serverMessageBoxTop = boxTop;
     }
 
-    public void setIsSleeping(boolean sleeping) {
-        this.isSleeping = sleeping;
-    }
-
     public boolean getIsSleeping() {
         return this.isSleeping;
+    }
+
+    public void setIsSleeping(boolean sleeping) {
+        this.isSleeping = sleeping;
     }
 
     public void setFatigueSleeping(int fatigue) {
@@ -12375,6 +12458,12 @@ public final class mudclient implements Runnable {
 
     public int getStatFatigue() {
         return this.statFatigue;
+    }
+
+    public void setStatFatigue(int fatigue) {
+        if (DEBUG)
+            System.out.println("Fatigue: " + fatigue);
+        this.statFatigue = fatigue;
     }
 
     public void setInputTextCurrent(String s) {
@@ -12401,14 +12490,12 @@ public final class mudclient implements Runnable {
         this.elixirTimer = i;
     }
 
-    public void setStatFatigue(int fatigue) {
-        if (DEBUG)
-            System.out.println("Fatigue: " + fatigue);
-        this.statFatigue = fatigue;
-    }
-
     public int getTeleportBubbleCount() {
         return this.teleportBubbleCount;
+    }
+
+    public void setTeleportBubbleCount(int count) {
+        this.teleportBubbleCount = count;
     }
 
     public void setTeleportBubbleType(int i, int n) {
@@ -12427,10 +12514,6 @@ public final class mudclient implements Runnable {
         this.teleportBubbleZ[i] = z;
     }
 
-    public void setTeleportBubbleCount(int count) {
-        this.teleportBubbleCount = count;
-    }
-
     public void setShopSellPriceMod(int i) {
         this.shopSellPriceMod = i;
     }
@@ -12442,6 +12525,22 @@ public final class mudclient implements Runnable {
     public void setShopPriceMultiplier(int i) {
         this.shopPriceMultiplier = i;
     }
+
+//		private final void updateBankItems(int var1) {
+//			try {
+//
+//				this.bankItemCount = this.newBankItemCount;
+//
+//				int var2;
+//				for (var2 = 0; var2 < this.newBankItemCount; ++var2) {
+//					this.bankItemID[var2] = this.newBankItems[var2];
+//					this.bankItemSize[var2] = this.newBankItemsCount[var2];
+//				}
+//
+//			} catch (RuntimeException var6) {
+//				throw GenUtil.makeThrowable(var6, "client.WB(" + var1 + ')');
+//			}
+//		}
 
     public void setShopItemID(int i, int n) {
         this.shopItemID[i] = n;
@@ -12459,20 +12558,20 @@ public final class mudclient implements Runnable {
         this.shopItemPrice[i] = n;
     }
 
-    public void setShopSelectedItemIndex(int i) {
-        this.shopSelectedItemIndex = i;
-    }
-
     public int getShopSelectedItemIndex() {
         return this.shopSelectedItemIndex;
     }
 
-    public void setShopSelectedItemType(int i) {
-        this.shopSelectedItemType = i;
+    public void setShopSelectedItemIndex(int i) {
+        this.shopSelectedItemIndex = i;
     }
 
     public int getShopSelectedItemType() {
         return this.shopSelectedItemType;
+    }
+
+    public void setShopSelectedItemType(int i) {
+        this.shopSelectedItemType = i;
     }
 
     public void setPlayerStatEquipment(int i, int n) {
@@ -12675,9 +12774,9 @@ public final class mudclient implements Runnable {
                     this.loadEntities(true);
                     if (!this.errorLoadingData) {
                         this.scene = new Scene(this.getSurface(), 25000, 50000, 1000);
-                        this.scene.setMidpoints(this.getGameHeight() / 2, true, this.getGameWidth(),
-                                this.getGameWidth() / 2, this.getGameHeight() / 2, this.m_qd,
-                                this.getGameWidth() / 2);
+                        this.scene.setMidpoints(this.halfGameHeight(), true, this.getGameWidth(),
+                                this.halfGameWidth(), this.halfGameHeight(), this.m_qd,
+                                this.halfGameWidth());
                         this.scene.fogLandscapeDistance = 2400;
                         this.scene.fogEntityDistance = 2400;
                         this.scene.fogSmoothingStartDistance = 2300;
@@ -12926,22 +13025,6 @@ public final class mudclient implements Runnable {
         }
     }
 
-//		private final void updateBankItems(int var1) {
-//			try {
-//
-//				this.bankItemCount = this.newBankItemCount;
-//
-//				int var2;
-//				for (var2 = 0; var2 < this.newBankItemCount; ++var2) {
-//					this.bankItemID[var2] = this.newBankItems[var2];
-//					this.bankItemSize[var2] = this.newBankItemsCount[var2];
-//				}
-//
-//			} catch (RuntimeException var6) {
-//				throw GenUtil.makeThrowable(var6, "client.WB(" + var1 + ')');
-//			}
-//		}
-
     private final void updateObjectAnimation(byte var1, int instanceNumber, String modelFileName) {
         try {
 
@@ -13112,8 +13195,16 @@ public final class mudclient implements Runnable {
         return gameWidth;
     }
 
+    public int halfGameWidth() {
+        return gameWidth/2;
+    }
+
     public int getGameHeight() {
         return gameHeight;
+    }
+
+    public int halfGameHeight() {
+        return gameHeight/2;
     }
 
     public void setGameHeight(int gameHeight) {
@@ -13160,8 +13251,16 @@ public final class mudclient implements Runnable {
         return mouseButtonClick;
     }
 
+    public void setMouseClick(int i) {
+        this.mouseButtonClick = i;
+    }
+
     public int getMouseButtonDown() {
         return currentMouseButtonDown;
+    }
+
+    public void setMouseButtonDown(int i) {
+        this.currentMouseButtonDown = i;
     }
 
     public int getMouseButtonDownTime() {
@@ -13182,6 +13281,10 @@ public final class mudclient implements Runnable {
 
     public int getInventoryItemCount() {
         return inventoryItemCount;
+    }
+
+    public void setInventoryItemCount(int i) {
+        this.inventoryItemCount = i;
     }
 
     public int[] getInventoryItemEquipped() {
@@ -13214,24 +13317,6 @@ public final class mudclient implements Runnable {
         return toReturn;
     }
 
-    public static final String formatStackAmount(int length) {
-        if (length < 100000) {
-            return String.valueOf(length);
-        }
-        if (length < 10000000) {
-            return "@whi@" + String.valueOf(length / 1000) + "K";
-        }
-        return "@gre@" + String.valueOf(length / 1000000) + "M";
-    }
-
-    public void setMouseClick(int i) {
-        this.mouseButtonClick = i;
-    }
-
-    public void setMouseButtonDown(int i) {
-        this.currentMouseButtonDown = i;
-    }
-
     public int getLastMouseDown() {
         return lastMouseButtonDown;
     }
@@ -13255,9 +13340,6 @@ public final class mudclient implements Runnable {
     public int getGameState() {
         return gameState;
     }
-
-    private String skillGuideChosen;
-    public ArrayList<String> skillGuideChosenTabs;
 
     private void drawSkillGuide() {
         skillGuideInterface.onRender(this.getSurface());
@@ -13340,17 +13422,6 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private String questGuideChosen;
-    private int questGuideProgress;
-    private String questGuideStartWho;
-    private String questGuideStartWhere;
-    private String[] questGuideStartWhos = {"Sir Amik Varze", "the Cook", "the Gypsy", "Doric", "the Priest", "the Bertender", "Veronica", "Wizard Mizgog", "Redbeard Frank", "Chancellor Hassan", "Romeo", "Fred the Farmer", "Reldo", "the Squire", "Morgan", "Hetty", "the Guildmaster", "a boy", "the Adventurers", "Achetties", "Kaqemeex", "King Arthur", "Thormac", "Dimintheis", "Kangai Mau", "a mountain dwarf", "Brother Omad", "Lucien", "Brother Kojo", "King Arthur", "Lady Servil", "Bolren", "Ceril Carnillean", "Councillor Halgrive", "Edmond", "Caroline", "Almera", "Elena", "Trufitus", "King Narnode Shareen", "Mosol Rei", "King Lathas", "Observatory Professor", "Irena", "Watchtower Wizard", "Captain Lawgof", "a Gaurd", "an Examiner", "Gertrude", "Sir Radimus Erkle"};
-    private String[] questGuideStartWheres = {"on the first floor of the White Knight's Castle in Falador", "on the first floor of Lumbridge Castle", "in Varrock Square", "north of Falador", "in the Lumbridge church", "inside the Rusty Anchor bar in Port Sarim", "outside of Draynor Manor", "on the top floor of the Wizard's Tower", "in Port Sarim", "inside Al-Kharid palace", "in Varrock Square", "north of Lumbridge", "in the Varrock Palace Library", "on the White Knight Castle grounds in Falador", "in Draynor Village", "in Rimmington", "inside the Champion's Guild", "in Taverly", "in the Lumbridge swamp", "outside of the Heroes' Guild north of Taverly", "at the Druid's Stone Circle in Taverly", "in Camelot", "on the top floor fo the Sorcerer's Tower south of Seer's Village", "in eastern Varrock", "in The Shrimp and Parrot pub in Brimhaven", "on either side of the White Wolf Mountain passage", "in the Monastery south of East Ardougne", "in the Flying Horse Inn on the western end of East Ardougne", "inside the Clock Tower south of East Ardougne", "in Camelot", "west of Port Khazard", "in Tree Gnome Village", "south of the Ardougne Castle", "outside of the East Ardougne church", "north of the Ardougne Castle", "east of Ardougne", "northeast of Baxtorian Falls", "north of the Ardougne Castle", "north-east of Tai Bwo Wannai", "in the Grand Tree", "outside of Shilo Village in southern Karamja", "on the ground floor of Ardougne Castle", "in the Observatory reception room west of the Tree Gnome Village", "outside the Shantay Pass in the Kharidian desert", "at the top of the Watchtower north of Yanille", "far north-east of Seer's Village", "in the Sinclair Mansion north of Camelot", "in the Exam Centre south of the Digsite", "at her house west of Varrock", "inside the Legend's Guild"};
-    private String[] questGuideRequirement;
-    private String[] questGuideReward;
-    private String[][] questGuideRequirements = {{"12 quest points"}, {"None"}, {"Ability to defeat a level 30 demon"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"A friend to assist"}, {"10 Mining", "A friend to assist"}, {"Ability to defeat a level 43 vampire"}, {"None"}, {"32 Quest Points", "33 Magic", "The ability to defeat a level 110 dragon"}, {"Ability to defeat a level 54 shapeshifter"}, {"31 Crafting", "36 Woodcutting", "Ability to defeat a level 95 monster"}, {"Completed Shield of Arrav, Dragon Slayer, Merlin's Crystal, and Lost City", "56 Quest Points", "53 Cooking", "53 Fishing", "25 Herblaw", "50 Mining"}, {"None"}, {"Ability to defeat a level 58 knight", "A friend to assist"}, {"Completed the Barbarian Bar Crawl", "31 Prayer"}, {"40 Mining", "40 Smithing", "40 Crafting", "59 Magic"}, {"21 Thieving"}, {"10 Fishing"}, {"None"}, {"42 Thieving", "35 Ranged", "Ability to defeat a level 63 monster with ranged"}, {"None"}, {"Completed Merlin's Crystal", "20 Attack", "Ability to defeat a level 146 Black Knight Titan"}, {"Ability to defeat a level 122 monster"}, {"None"}, {"None"}, {"None"}, {"None"}, {"30 Firemaking"}, {"None"}, {"Completed Plague City"}, {"Completed Druidic Ritual", "3 Herblaw"}, {"25 Agility", "Ability to defeat a level 184 monster"}, {"Completed Jungle Potion", "32 Agility", "20 Crafting", "4 Smithing", "Ability to defeat a level 83 monsters"}, {"Completed Biohazard", "25 Ranged"}, {"10 Crafting"}, {"10 Fletching", "10 Smithing", "Ability to defeat a level 47 enemy"}, {"40 Mining", "30 Agility", "15 Thieving", "14 Herblaw", "14 Magic", "Ability to defeat a level 68 ogre"}, {"None"}, {"None"}, {"Completed Druidic Ritual", "25 Thieving", "10 Agility", "10 Herblaw"}, {"None"}, {"108 Quest Points", "50 Agility", "50 Crafting", "45 Herblaw", "56 Magic", "52 Mining", "42 Prayer", "50 Smithing", "50 Strength", "50 Thieving", "50 Woodcutting", "Ability to defeat a level 172 demon"}};
-    private String[][] questGuideRewards = {{"3 Quest Points", "2500 coins"}, {"1 Quest Point", "300 Cooking experience", "Access to the Cook's range"}, {"3 Quest Points", "Silverlight"}, {"1 Quest Point", "(Lvl + 1)*75 + 100 Mining experience", "Ability to use Doric's anvils", "180 coins",}, {"1 Quest Point", "1125 Prayer experience", "Amulet of Ghostspeak"}, {"5 Quest Points", "Lvl*30 + 20 Crafting experience", "1 Gold bar"}, {"4 Quest Points", "300 coins"}, {"1 Quest Point", "875 Magic experience", "An amulet of accuracy"}, {"2 Quest Points", "450 coins", "A gold ring", "An emerald"}, {"3 Quest points", "Free passage through the Al-Kharid tollgate", "700 coins"}, {"5 Quest Points"}, {"1 Quest Point", "180 Crafting experience", "180 coins"}, {"1 Quest Point", "600 coins"}, {"1 Quest Point", "Lvl*375 + 350 Smithing experience"}, {"3 Quest Points", "4825 Attack experience"}, {"1 Quest Point", "Lvl*50 + 225 Magic experience"}, {"2 Quest Points", "Lvl*300 + 1000 Defense experience", "Lvl*300 + 1000 Strength experience", "The ability to wear a Rune plate mail body"}, {"4 Quest Points", "Lvl*125 + 200 Hits experience"}, {"3 Quest Points", "Ability to enter the city of Zanaris", "Ability to wield a Dragon sword"}, {"1 Quest Point", "Lvl*50 + 75 experience in the following skills: Attack, Defense, Hits, Strength, Cooking, Fishing, Mining, Smithing, Ranged, Firemaking, Woodcutting, and Herblaw", "Access to the Heroes' Guild", "Ability to wield the Dragon axe"}, {"4 Quest Points", "250 Herblaw experience", "Ability to use the Herblaw skill"}, {"6 Quest Points", "Excalibur"}, {"1 Quest Point", "6625 Strength experience", "Thormac will enchant your battlestaves for 40000 coins"}, {"1 Quest Point", "A pair of Steel gauntlets"}, {"1 Quest Point", "Lvl*75 + 200 Thieving experience", "5 swordfish"}, {"1 Quest Point", this.playerStatBase[10] < 24 ? "(Lvl - 10)*75 + 975 Fishing experience" : "(Lvl - 24)*75 + 2225 Fishing experience", "Access to the underground tunnel beneath White Wolf Mountain"}, {"1 Quest Point", "(Lvl + 1)*125 Woodcutting experience", "8 Law-Runes"}, {"1 Quest Point", "Lvl*250 + 500 experience in Ranged and Fletching"}, {"1 Quest Point", "500 coins"}, {"2 Quest Points", "(Lvl + 1)*300 Defense experience", "(Lvl + 1)*250 Prayer experience"}, {"2 Quest Points", "Lvl*200 + 175 experience in Attack and Thieving", "1000 coins"}, {"2 Quest Points", "Lvl*75 + 6950 Attack experience", "A Gnome amulet of protection", "Ability to use Spirit Trees"}, {"1 Quest Point", "Lvl*57 + 205 Thieving experience", "2000 coins"}, {"4 Quest Points", "3100 coins"}, {"1 Quest Point", "Lvl*75 + 175 Mining experience", "A magic scroll granting the ability to cast Ardougne teleport"}, {"1 Quest Point", "Lvl*200 + 175 Fishing experience", "1 Oyster pearls"}, {"1 Quest Point", "Lvl*225 + 250 experience in Attack and Strength", "40 Mithril seeds", "2 Diamonds", "2 Gold bars"}, {"3 Quest Points", "Lvl*50 + 500 Thieving experience", "Ability to use King Lathas' Combat Training Camp", "Ability to travel freely between eastern and western Ardougne gate"}, {"1 Quest Point", "Lvl*125 + 400 Herblaw experience"}, {"5 Quest Points", "Lvl*300 + 400 experience in Agility and Attack", "Lvl*50 + 150 Magic experience", "Access to the Grand Tree mines", "Ability to use the Spirit Trees", "Ability to use the Gnome Gliders"}, {"2 Quest Points", "(Lvl + 1)*125 Crafting experience", "Access to Shilo Village"}, {"5 Quest Points", "Lvl*50 + 500 Agility Experience", "875 Attack experience", "A Staff of Iban", "15 Death-Runes", "30 Fire-Runes"}, {"2 Quest Points", "Lvl*100 + 250 Crafting experience", "Another reward based on your constellation"}, {"2 Quest Points", "(Lvl + 1)*150 experience twice in a choice of Agility, Fletching, Thieving, Smithing", "Ability to make throwing darts", "Access to the Desert Mining Camp"}, {"4 Quest Points", "15000 Magic experience", "Ability to use the Watchtower teleport spell", "5000 coins"}, {"3 Quest Points", "Lvl*38 + 162 Crafting experience", "2000 coins"}, {"1 Quest Points", "Lvl*50 + 250 Crafting experience", "Ability to buy a dwarf cannon", "Ability to make cannon balls"}, {"2 Quest Points", "(Lvl+1)*300 Mining experience", "(Lvl+1)*125 Herblaw experience", "2 Gold bars"}, {"1 Quest Point", "Lvl*45 + 175 Cooking experience", "A Kitten", "A Chocolate cake and stew"}, {"4 Quest Points", "7650 experience in 4 of these skills of your choice: Attack, Strength, Defense, Hits, Prayer, Magic, Woodcutting, Crafting, Smithing, Herblaw, Agility, and thieving", "Access to the Legend's Guild", "Ability to wear the Dragon Square Shield and Cape of Legends", "Ability to make Oomlie meat parcels and Blessed golden bowls"}};
-
     private void drawQuestGuide() {
         questGuideInterface.onRender(this.getSurface());
     }
@@ -13402,8 +13473,6 @@ public final class mudclient implements Runnable {
     public void setQuestGuideReward(int chosen) {
         this.questGuideReward = questGuideRewards[chosen];
     }
-
-    private String skillToDo;
 
     private void drawDoSkill() {
         this.doSkillInterface.onRender();
@@ -13478,13 +13547,6 @@ public final class mudclient implements Runnable {
             panelMessageTabs.scrollMethodList(panelMessagePrivate, x);
         else if (this.messageTabSelected == MessageTab.CLAN && !this.controlPressed)
             panelMessageTabs.scrollMethodList(panelMessageClan, x);
-        else if (cameraZoom >= 550 && this.controlPressed) {
-            if (cameraZoom > 2200) {
-                cameraZoom = 2200;
-                return;
-            }
-            cameraZoom += 25 * x;
-        }
     }
 
     public boolean isShowDialogBank() {
@@ -13502,36 +13564,29 @@ public final class mudclient implements Runnable {
         return input.substring(0, maxLength) + "...";
     }
 
-    private long time;
-    private long m_timer;
-
-    class XPNotification {
-        private int x, y;
-        private int amount = 0;
-        private int skill = 0;
-        private boolean levelUp;
-        private boolean isActive;
-
-        public XPNotification(int skill, int amount, boolean levelUp) {
-            this.skill = skill;
-            this.amount = amount;
-            this.levelUp = levelUp;
-            x = (int) ((getGameWidth() / 2) - 50);
-            y = (int) ((float) getGameHeight() / 4.0f + 40);
-            isActive = false;
-        }
-    }
-
-    private ArrayList<XPNotification> xpNotifications = new ArrayList<XPNotification>();
-
     public void addXpNotification(int skill, int receivedXp, boolean b) {
         XPNotification n = new XPNotification(skill, receivedXp, false);
         this.xpNotifications.add(n);
     }
 
-    public String clanKickPlayer;
-
     public void kickClanPlayer(String player) {
         this.clanKickPlayer = player;
+    }
+
+    class XPNotification {
+        protected int x, y;
+        protected int amount = 0;
+        protected int skill = 0;
+        protected boolean levelUp;
+        protected boolean isActive;
+
+        public XPNotification(int skill, int amount, boolean levelUp) {
+            this.skill = skill;
+            this.amount = amount;
+            this.levelUp = levelUp;
+            x = (int) (halfGameWidth() - 50);
+            y = (int) ((float) getGameHeight() / 4.0f + 40);
+            isActive = false;
+        }
     }
 }
