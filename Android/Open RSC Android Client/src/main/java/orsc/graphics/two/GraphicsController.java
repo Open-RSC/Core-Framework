@@ -2,10 +2,6 @@ package orsc.graphics.two;
 
 import com.openrsc.client.data.DataConversions;
 import com.openrsc.client.model.Sprite;
-import orsc.Config;
-import orsc.MiscFunctions;
-import orsc.util.FastMath;
-import orsc.util.GenUtil;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -14,6 +10,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
+import orsc.Config;
+import orsc.MiscFunctions;
+import orsc.util.FastMath;
+import orsc.util.GenUtil;
 
 public class GraphicsController {
 
