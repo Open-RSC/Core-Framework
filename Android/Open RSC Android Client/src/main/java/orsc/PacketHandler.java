@@ -23,11 +23,11 @@ import java.util.Properties;
 
 public class PacketHandler {
 
-	private Network_Socket clientStream;
 	private final RSBuffer_Bits packetsIncoming = new RSBuffer_Bits(30000);
+	private Network_Socket clientStream;
 	private mudclient mc;
 
-	public PacketHandler (mudclient mc) {
+	public PacketHandler(mudclient mc) {
 		this.mc = mc;
 	}
 
@@ -96,19 +96,19 @@ public class PacketHandler {
 			// Bank Pin Overlay
 			else if (opcode == 135) displayBankPin();
 
-			// Ironman Options
+				// Ironman Options
 			else if (opcode == 113) setIronmanOptions();
 
-			// Auction House Updates
+				// Auction House Updates
 			else if (opcode == 132) updateAuctionHouse();
 
-			// Online List
+				// Online List
 			else if (opcode == 136) refreshOnlineList();
 
-			// Fishing Trawler
+				// Fishing Trawler
 			else if (opcode == 133) fishingTrawlerUpdate();
 
-			// Clan Options
+				// Clan Options
 			else if (opcode == 112) updateClan();
 
         /*else if(opcode == 50) { // Achievements
@@ -141,34 +141,34 @@ public class PacketHandler {
 
 			else if (opcode == 131) showMessage(); // Chat Message
 
-			// Close Connection and send packet
+				// Close Connection and send packet
 			else if (opcode == 4) mc.closeConnection(true);
 
-			// No logout allowed
+				// No logout allowed
 			else if (opcode == 183) mc.cantLogout((byte) -65);
 
-			// Close Connection and do not send packet
+				// Close Connection and do not send packet
 			else if (opcode == 165) mc.closeConnection(false);
 
-			// Log In/Out Message
+				// Log In/Out Message
 			else if (opcode == 149) sendConnectionMessage();
 
-			// Name changed, but not on ignore list. (Bad packet)
+				// Name changed, but not on ignore list. (Bad packet)
 			else if (opcode == 237) ignoreListNameChangeFailure();
 
-			// Ignore List Update
+				// Ignore List Update
 			else if (opcode == 109) updateIgnoreList();
 
-			// Chat Blocking Settings
+				// Chat Blocking Settings
 			else if (opcode == 158) updateChatBlockSettings();
 
-			// Receive Private Message
+				// Receive Private Message
 			else if (opcode == 120) receivePrivateMessage();
 
-			// Send Private Message
+				// Send Private Message
 			else if (opcode == 87) sendPrivateMessage();
 
-			// Set Server Configs
+				// Set Server Configs
 			else if (opcode == 19) setServerConfiguration();
 
 			else this.handlePacket2(opcode, length);
@@ -184,175 +184,175 @@ public class PacketHandler {
 			// Show Other Players
 			if (opcode == 191) showOtherPlayers(length);
 
-			// Show Game Objects
+				// Show Game Objects
 			else if (opcode == 48) showGameObjects(length);
 
-			// Inventory items
+				// Inventory items
 			else if (opcode == 53) updateInventoryItems();
 
-			// Show Walls
+				// Show Walls
 			else if (opcode == 91) showWalls(length);
 
-			// Show NPCs
+				// Show NPCs
 			else if (opcode == 79) showNPCs(length);
 
-			// NPC Appearances
+				// NPC Appearances
 			else if (opcode == 104) updateNPCAppearances();
 
-			// Show Options Menu
+				// Show Options Menu
 			else if (opcode == 245) showOptionsMenu();
 
-			// Load Area
+				// Load Area
 			else if (opcode == 25) loadArea();
 
-			// Load Stats and Experience
+				// Load Stats and Experience
 			else if (opcode == 156) {
 				loadStats();
 				loadExperience();
 				loadQuestPoints();
 
-			// Set Death Screen Timeout
+				// Set Death Screen Timeout
 			} else if (opcode == 83) mc.setDeathScreenTimeout(250);
 
-			// Generate Object/Ground Items/Walls Counts
+				// Generate Object/Ground Items/Walls Counts
 			else if (opcode == 211) generateCounts(length);
 
-			// Appearance Change Menu
+				// Appearance Change Menu
 			else if (opcode == 59) mc.setShowAppearanceChange(true);
 
-			// Trade Request
+				// Trade Request
 			else if (opcode == 92) showTradeDialog();
 
-			// Confirm Trade
+				// Confirm Trade
 			else if (opcode == 128) setTradeConfirmed();
 
-			// Trade Recipient Accept or Decline
+				// Trade Recipient Accept or Decline
 			else if (opcode == 162) tradeRecipientDecision();
 
-			// Close Shop Dialog
+				// Close Shop Dialog
 			else if (opcode == 137) mc.setShowDialogShop(false);
 
-			// Trade Accept or Decline (Self)
+				// Trade Accept or Decline (Self)
 			else if (opcode == 15) tradeSelfDecision();
 
-			// Options Menu Settings
+				// Options Menu Settings
 			else if (opcode == 240) updateOptionsMenuSettings();
 
 			else if (opcode == 206) togglePrayer(length);
 
-			// Quest Stage Update
+				// Quest Stage Update
 			else if (opcode == 5) updateQuestStage();
 
-			// Show Bank
+				// Show Bank
 			else if (opcode == 42) showBank();
 
-			// Update Experience
+				// Update Experience
 			else if (opcode == 33) updateIndividualExperience();
 
-			// Close Duel Dialog
+				// Close Duel Dialog
 			else if (opcode == 225) closeDuelDialog();
 
-			// Confirm and Complete Trade
+				// Confirm and Complete Trade
 			else if (opcode == 20) confirmTrade();
 
-			// Show Duel Items
+				// Show Duel Items
 			else if (opcode == 6) showDuelItems();
 
-			// Toggle Duel Setting
+				// Toggle Duel Setting
 			else if (opcode == 30) toggleDuelSetting();
 
-			// Update Bank
+				// Update Bank
 			else if (opcode == 249) updateBank();
 
-			// Update Inventory
+				// Update Inventory
 			else if (opcode == 90) updateInventory();
 
-			// Experience Updates & Notification
+				// Experience Updates & Notification
 			else if (opcode == 159) updateExperience();
 
-			// Duel confirm / deny
+				// Duel confirm / deny
 			else if (opcode == 210) duelDecision();
 
-			// Show Duel Confirm Dialog
+				// Show Duel Confirm Dialog
 			else if (opcode == 172) showDuelConfirmDialog();
 
-			// Play Sound
+				// Play Sound
 			else if (opcode == 204) playSound();
 
-			// Show Log In Dialog
+				// Show Log In Dialog
 			else if (opcode == 182) showLoginDialog();
 
-			// Show Server Message Dialog
+				// Show Server Message Dialog
 			else if (opcode == 222) showServerMessageDialog();
 
-			// Show Sleep Screen
+				// Show Sleep Screen
 			else if (opcode == 117) showSleepScreen(length);
 
-			// Not Sleeping
+				// Not Sleeping
 			else if (opcode == 84) mc.setIsSleeping(false);
 
-			// Wrong Sleep Word
+				// Wrong Sleep Word
 			else if (opcode == 194) mc.setSleepingStatusText("Incorrect - Please wait...");
 
-			// System Update Timer
+				// System Update Timer
 			else if (opcode == 52) mc.setSystemUpdate(packetsIncoming.getShort() * 32);
 
-			// Elixir Timer
+				// Elixir Timer
 			else if (opcode == 54 && Config.S_WANT_EXPERIENCE_ELIXIRS)
 				mc.setElixirTimer(packetsIncoming.getShort() * 32);
 
-			// Sleeping Menu Fatigue
+				// Sleeping Menu Fatigue
 			else if (opcode == 244)
 				mc.setFatigueSleeping(packetsIncoming.getShort());
 
-			// Total Fatigue
+				// Total Fatigue
 			else if (opcode == 114)
 				mc.setStatFatigue(packetsIncoming.getShort());
 
-			// Server Message Input (Second Style)
+				// Server Message Input (Second Style)
 			else if (opcode == 89) showServerMessageDialogTwo();
 
-			// Teleport Bubbles
+				// Teleport Bubbles
 			else if (opcode == 36) drawTeleportBubbles();
 
-			// Duel Acceptance
+				// Duel Acceptance
 			else if (opcode == 253) duelOpponentDecision();
 
-			// Drop Item
+				// Drop Item
 			else if (opcode == 123) dropItem();
 
-			// Open Duel Dialog
+				// Open Duel Dialog
 			else if (opcode == 176) beginDuelOptions();
 
-			// Bank Dialog
+				// Bank Dialog
 			else if (opcode == 203) mc.setShowDialogBank(false);
 
-			// Shop Dialog
+				// Shop Dialog
 			else if (opcode == 101) showShopDialog();
 
-			// Trade Dialog Update
+				// Trade Dialog Update
 			else if (opcode == 97) updateTradeDialog();
 
-			// Equipment Stats
+				// Equipment Stats
 			else if (opcode == 153) updateEquipmentStats();
 
-			// Hide Options Menu
+				// Hide Options Menu
 			else if (opcode == 252) mc.setOptionsMenuShow(false);
 
-			// Draw Nearby Players
+				// Draw Nearby Players
 			else if (opcode == 234) drawNearbyPlayers();
 
-			// Inside Tutorial
+				// Inside Tutorial
 			else if (opcode == 111) mc.setInsideTutorial(packetsIncoming.getUnsignedByte() != 0);
 
-			// Draw Ground Items
+				// Draw Ground Items
 			else if (opcode == 99) drawGroundItems(length);
 
 			else mc.closeConnection(true);
 
 		} catch (RuntimeException var17) {
 			String var5 = "T2 - " + opcode + " - " + length + " rx:" + mc.getLocalPlayerX() + " ry:" + mc.getLocalPlayerZ()
-							+ " num3l:" + mc.getGameObjectInstanceCount() + " - ";
+					+ " num3l:" + mc.getGameObjectInstanceCount() + " - ";
 
 			for (int var6 = 0; length > var6 && var6 < 50; ++var6) {
 				var5 = var5 + packetsIncoming.getByte() + ",";
@@ -400,8 +400,8 @@ public class PacketHandler {
 		int combatModel = packetsIncoming.getByte() & 0xff;
 		int combatSprite = packetsIncoming.getByte() & 0xff;
 		com.openrsc.client.entityhandling.defs.NPCDef newNpc = new com.openrsc.client.entityhandling.defs.NPCDef(name, description, optionCommand, attack, strength, hits, defense,
-						attackable, sprites, hairColour, topColour, bottomColour, skinColour, camera1, camera2,
-						walkModel, combatModel, combatSprite, id);
+				attackable, sprites, hairColour, topColour, bottomColour, skinColour, camera1, camera2,
+				walkModel, combatModel, combatSprite, id);
 		com.openrsc.client.entityhandling.EntityHandler.npcs.set(id, newNpc);
 	}
 
@@ -483,14 +483,14 @@ public class PacketHandler {
 	}
 
 	private void fishingTrawlerUpdate() {
-		int action=packetsIncoming.getByte();
-		switch(action){
+		int action = packetsIncoming.getByte();
+		switch (action) {
 			case 0:
 				mc.getFishingTrawlerInterface().show();
 				break;
 			case 1:
-				mc.getFishingTrawlerInterface().setVariables(packetsIncoming.getShort(),packetsIncoming.getShort(),
-								packetsIncoming.getByte(),packetsIncoming.getByte()==1);
+				mc.getFishingTrawlerInterface().setVariables(packetsIncoming.getShort(), packetsIncoming.getShort(),
+						packetsIncoming.getByte(), packetsIncoming.getByte() == 1);
 				break;
 			case 2:
 				mc.getFishingTrawlerInterface().hide();
@@ -567,7 +567,7 @@ public class PacketHandler {
 			sender = packetsIncoming.readString();
 			clan = packetsIncoming.readString();
 		}
-		if((messageType & 2) != 0) {
+		if ((messageType & 2) != 0) {
 			colour = packetsIncoming.readString();
 		}
 
@@ -590,12 +590,12 @@ public class PacketHandler {
 				if (SocialLists.friendList[i].equals(currentName)) {
 					if (SocialLists.friendListArgS[i] == null && online) {
 						mc.showMessage(false, (String) null, currentName + " has logged in",
-										MessageType.FRIEND_STATUS, 0, (String) null);
+								MessageType.FRIEND_STATUS, 0, (String) null);
 					}
 
 					if (null != SocialLists.friendListArgS[i] && !online) {
 						mc.showMessage(false, (String) null, currentName + " has logged out",
-										MessageType.FRIEND_STATUS, 0, (String) null);
+								MessageType.FRIEND_STATUS, 0, (String) null);
 					}
 
 					SocialLists.friendListOld[i] = formerName;
@@ -607,12 +607,12 @@ public class PacketHandler {
 			} else if (SocialLists.friendList[i].equals(formerName)) {
 				if (SocialLists.friendListArgS[i] == null && online) {
 					mc.showMessage(false, (String) null, currentName + " has logged in",
-									MessageType.FRIEND_STATUS, 0, (String) null);
+							MessageType.FRIEND_STATUS, 0, (String) null);
 				}
 
 				if (SocialLists.friendListArgS[i] != null && !online) {
 					mc.showMessage(false, (String) null, currentName + " has logged out",
-									MessageType.FRIEND_STATUS, 0, (String) null);
+							MessageType.FRIEND_STATUS, 0, (String) null);
 				}
 
 				SocialLists.friendList[i] = currentName;
@@ -626,7 +626,7 @@ public class PacketHandler {
 
 		if (rename) {
 			System.out.println("Error: friend display name change packet received, but old name \'" + formerName
-							+ "\' is not on friend list");
+					+ "\' is not on friend list");
 			return;
 		}
 
@@ -669,7 +669,7 @@ public class PacketHandler {
 
 		if (rename) {
 			System.out.println("Error: ignore display name change packet received, but old name \'" + find
-							+ "\' is not on ignore list");
+					+ "\' is not on ignore list");
 			return;
 		}
 
@@ -704,7 +704,7 @@ public class PacketHandler {
 		int icon = packetsIncoming.get32();
 		String message = RSBufferUtils.getEncryptedString(packetsIncoming);
 		mc.showMessage(true, sender, message, MessageType.PRIVATE_RECIEVE, icon, formerName);
-  }
+	}
 
 	private void sendPrivateMessage() {
 		String var13 = packetsIncoming.readString();
@@ -720,11 +720,11 @@ public class PacketHandler {
 		int groundItemToggle, autoMessageSwitchToggle, batchProgression;
 		int sideMenuToggle, inventoryCountToggle, zoomViewToggle;
 		int menuCombatStyleToggle, fightmodeSelectorToggle, experienceCounterToggle;
-		int experienceDropsToggle, itemsOnDeathMenu, showRoofToggle;
+		int experienceDropsToggle, itemsOnDeathMenu, showRoofToggle, wantHideIp;
 		int wantGlobalChat, wantSkillMenus, wantQuestMenus;
 		int wantExperienceElixirs, wantKeyboardShortcuts;
 		int wantCustomBanks, wantBankPins, wantBankNotes, wantCertDeposit, customFiremaking;
-		int wantDropX, wantExpInfo, wantWoodcuttingGuild;
+		int wantDropX, wantExpInfo, wantWoodcuttingGuild, wantFixedOverheadChat;
 		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank;
 
 		if (!mc.gotInitialConfigs) {
@@ -749,6 +749,7 @@ public class PacketHandler {
 			itemsOnDeathMenu = this.getClientStream().getUnsignedByte();
 			showRoofToggle = this.getClientStream().getUnsignedByte();
 			Config.C_HIDE_ROOFS = showRoofToggle != 1; // If we don't want the toggle, always show.
+			wantHideIp = this.getClientStream().getUnsignedByte();
 			wantGlobalChat = this.getClientStream().getUnsignedByte();
 			wantSkillMenus = this.getClientStream().getUnsignedByte();
 			wantQuestMenus = this.getClientStream().getUnsignedByte();
@@ -766,6 +767,7 @@ public class PacketHandler {
 			wantCertsToBank = this.getClientStream().getUnsignedByte();
 			wantCustomRankDisplay = this.getClientStream().getUnsignedByte();
 			wantRightClickBank = this.getClientStream().getUnsignedByte();
+			wantFixedOverheadChat = this.getClientStream().getUnsignedByte();
 		} else {
 			serverName = packetsIncoming.readString();
 			playerLevelLimit = packetsIncoming.getUnsignedByte();
@@ -788,6 +790,7 @@ public class PacketHandler {
 			itemsOnDeathMenu = packetsIncoming.getUnsignedByte();
 			showRoofToggle = packetsIncoming.getUnsignedByte();
 			Config.C_HIDE_ROOFS = showRoofToggle != 1; // If we don't want the toggle, always show.
+			wantHideIp = packetsIncoming.getUnsignedByte();
 			wantGlobalChat = packetsIncoming.getUnsignedByte();
 			wantSkillMenus = packetsIncoming.getUnsignedByte();
 			wantQuestMenus = packetsIncoming.getUnsignedByte();
@@ -805,45 +808,48 @@ public class PacketHandler {
 			wantCertsToBank = packetsIncoming.getUnsignedByte();
 			wantCustomRankDisplay = packetsIncoming.getUnsignedByte();
 			wantRightClickBank = packetsIncoming.getUnsignedByte();
+			wantFixedOverheadChat = packetsIncoming.getUnsignedByte();
 		}
 
 		if (mc.DEBUG) {
 			System.out.println(
-				"SERVER_NAME " + serverName +
-				"\nS_PLAYER_LEVEL_LIMIT " + Integer.toString(playerLevelLimit) +
-				"\nS_SPAWN_AUCTION_NPCS " + spawnAuctionNpcs +
-				"\nS_SPAWN_IRON_MAN_NPCS " + spawnIronManNpcs +
-				"\nS_SHOW_FLOATING_NAMETAGS " + showFloatingNametags +
-				"\nS_WANT_CLANS " + wantClans +
-				"\nS_WANT_KILL_FEED " + wantKillFeed +
-				"\nS_FOG_TOGGLE " + fogToggle +
-				"\nS_GROUND_ITEM_TOGGLE " + groundItemToggle +
-				"\nS_AUTO_MESSAGE_SWITCH_TOGGLE " + autoMessageSwitchToggle +
-				"\nS_BATCH_PROGRESSION " + batchProgression +
-				"\nS_SIDE_MENU_TOGGLE " + sideMenuToggle +
-				"\nS_INVENTORY_COUNT_TOGGLE " + inventoryCountToggle +
-				"\nS_ZOOM_VIEW_TOGGLE " + zoomViewToggle +
-				"\nS_MENU_COMBAT_STYLE_TOGGLE " + menuCombatStyleToggle +
-				"\nS_FIGHTMODE_SELECTOR_TOGGLE " + fightmodeSelectorToggle +
-				"\nS_EXPERIENCE_COUNTER_TOGGLE " + experienceCounterToggle +
-				"\nS_EXPERIENCE_DROPS_TOGGLE " + experienceDropsToggle +
-				"\nS_ITEMS_ON_DEATH_MENU " + itemsOnDeathMenu +
-				"\nS_SHOW_ROOF_TOGGLE " + showRoofToggle +
-				"\nS_WANT_GLOBAL_CHAT " + wantGlobalChat +
-				"\nS_WANT_SKILL_MENUS " + wantSkillMenus +
-				"\nS_WANT_QUEST_MENUS " + wantQuestMenus +
-				"\nS_WANT_EXPERIENCE_ELIXIRS " + wantExperienceElixirs +
-				"\nS_WANT_KEYBOARD_SHORTCUTS " + wantKeyboardShortcuts +
-				"\nS_WANT_CUSTOM_BANKS " + wantCustomBanks +
-				"\nS_WANT_BANK_PINS " + wantBankPins +
-				"\nS_CUSTOM_FIREMAKING " + customFiremaking +
-				"\nS_WANT_DROP_X " + wantDropX +
-				"\nS_WANT_EXP_INFO " + wantExpInfo +
-				"\nS_WANT_WOODCUTTING_GUILD " + wantWoodcuttingGuild +
-				"\nS_WANT_DECANTING " + wantDecanting +
-				"\nS_WANT_CERTS_TO_BANK " + wantCertsToBank +
-				"\nS_WANT_CUSTOM_RANK_DISPLAY" + wantCustomRankDisplay +
-				"\nS_RIGHT_CLICK_BANK" + wantRightClickBank
+					"SERVER_NAME " + serverName +
+							"\nS_PLAYER_LEVEL_LIMIT " + Integer.toString(playerLevelLimit) +
+							"\nS_SPAWN_AUCTION_NPCS " + spawnAuctionNpcs +
+							"\nS_SPAWN_IRON_MAN_NPCS " + spawnIronManNpcs +
+							"\nS_SHOW_FLOATING_NAMETAGS " + showFloatingNametags +
+							"\nS_WANT_CLANS " + wantClans +
+							"\nS_WANT_KILL_FEED " + wantKillFeed +
+							"\nS_FOG_TOGGLE " + fogToggle +
+							"\nS_GROUND_ITEM_TOGGLE " + groundItemToggle +
+							"\nS_AUTO_MESSAGE_SWITCH_TOGGLE " + autoMessageSwitchToggle +
+							"\nS_BATCH_PROGRESSION " + batchProgression +
+							"\nS_SIDE_MENU_TOGGLE " + sideMenuToggle +
+							"\nS_INVENTORY_COUNT_TOGGLE " + inventoryCountToggle +
+							"\nS_ZOOM_VIEW_TOGGLE " + zoomViewToggle +
+							"\nS_MENU_COMBAT_STYLE_TOGGLE " + menuCombatStyleToggle +
+							"\nS_FIGHTMODE_SELECTOR_TOGGLE " + fightmodeSelectorToggle +
+							"\nS_EXPERIENCE_COUNTER_TOGGLE " + experienceCounterToggle +
+							"\nS_EXPERIENCE_DROPS_TOGGLE " + experienceDropsToggle +
+							"\nS_ITEMS_ON_DEATH_MENU " + itemsOnDeathMenu +
+							"\nS_SHOW_ROOF_TOGGLE " + showRoofToggle +
+							"\nS_WANT_HIDE_IP " + wantHideIp +
+							"\nS_WANT_GLOBAL_CHAT " + wantGlobalChat +
+							"\nS_WANT_SKILL_MENUS " + wantSkillMenus +
+							"\nS_WANT_QUEST_MENUS " + wantQuestMenus +
+							"\nS_WANT_EXPERIENCE_ELIXIRS " + wantExperienceElixirs +
+							"\nS_WANT_KEYBOARD_SHORTCUTS " + wantKeyboardShortcuts +
+							"\nS_WANT_CUSTOM_BANKS " + wantCustomBanks +
+							"\nS_WANT_BANK_PINS " + wantBankPins +
+							"\nS_CUSTOM_FIREMAKING " + customFiremaking +
+							"\nS_WANT_DROP_X " + wantDropX +
+							"\nS_WANT_EXP_INFO " + wantExpInfo +
+							"\nS_WANT_WOODCUTTING_GUILD " + wantWoodcuttingGuild +
+							"\nS_WANT_DECANTING " + wantDecanting +
+							"\nS_WANT_CERTS_TO_BANK " + wantCertsToBank +
+							"\nS_WANT_CUSTOM_RANK_DISPLAY" + wantCustomRankDisplay +
+							"\nS_RIGHT_CLICK_BANK" + wantRightClickBank +
+							"\nS_WANT_FIXED_OVERHEAD_CHAT" + wantFixedOverheadChat
 			);
 		}
 
@@ -867,6 +873,7 @@ public class PacketHandler {
 		props.setProperty("S_EXPERIENCE_DROPS_TOGGLE", experienceDropsToggle == 1 ? "true" : "false");
 		props.setProperty("S_ITEMS_ON_DEATH_MENU", itemsOnDeathMenu == 1 ? "true" : "false");
 		props.setProperty("S_SHOW_ROOF_TOGGLE", showRoofToggle == 1 ? "true" : "false");
+		props.setProperty("S_WANT_HIDE_IP", wantHideIp == 1 ? "true" : "false");
 		props.setProperty("S_WANT_GLOBAL_CHAT", wantGlobalChat == 1 ? "true" : "false");
 		props.setProperty("S_WANT_SKILL_MENUS", wantSkillMenus == 1 ? "true" : "false");
 		props.setProperty("S_WANT_QUEST_MENUS", wantQuestMenus == 1 ? "true" : "false");
@@ -884,19 +891,20 @@ public class PacketHandler {
 		props.setProperty("S_WANT_CERTS_TO_BANK", wantCertsToBank == 1 ? "true" : "false");
 		props.setProperty("S_WANT_CUSTOM_RANK_DISPLAY", wantCustomRankDisplay == 1 ? "true" : "false");
 		props.setProperty("S_RIGHT_CLICK_BANK", wantRightClickBank == 1 ? "true" : "false");
+		props.setProperty("S_WANT_FIXED_OVERHEAD_CHAT", wantFixedOverheadChat == 1 ? "true" : "false");
 
 		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(
-			Config.isAndroid() ||
-			Config.S_WANT_CLANS || Config.S_WANT_KILL_FEED
-			|| Config.S_FOG_TOGGLE || Config.S_GROUND_ITEM_TOGGLE
-			|| Config.S_AUTO_MESSAGE_SWITCH_TOGGLE || Config.S_BATCH_PROGRESSION
-			|| Config.S_SIDE_MENU_TOGGLE || Config.S_INVENTORY_COUNT_TOGGLE
-			|| Config.S_ZOOM_VIEW_TOGGLE || Config.S_MENU_COMBAT_STYLE_TOGGLE
-			|| Config.S_FIGHTMODE_SELECTOR_TOGGLE || Config.S_SHOW_ROOF_TOGGLE
-			|| Config.S_EXPERIENCE_COUNTER_TOGGLE || Config.S_WANT_GLOBAL_CHAT
-			|| Config.S_EXPERIENCE_DROPS_TOGGLE || Config.S_ITEMS_ON_DEATH_MENU);
+				Config.isAndroid() ||
+						Config.S_WANT_CLANS || Config.S_WANT_KILL_FEED
+						|| Config.S_FOG_TOGGLE || Config.S_GROUND_ITEM_TOGGLE
+						|| Config.S_AUTO_MESSAGE_SWITCH_TOGGLE || Config.S_BATCH_PROGRESSION
+						|| Config.S_SIDE_MENU_TOGGLE || Config.S_INVENTORY_COUNT_TOGGLE
+						|| Config.S_ZOOM_VIEW_TOGGLE || Config.S_MENU_COMBAT_STYLE_TOGGLE
+						|| Config.S_FIGHTMODE_SELECTOR_TOGGLE || Config.S_SHOW_ROOF_TOGGLE
+						|| Config.S_EXPERIENCE_COUNTER_TOGGLE || Config.S_WANT_GLOBAL_CHAT
+						|| Config.S_EXPERIENCE_DROPS_TOGGLE || Config.S_ITEMS_ON_DEATH_MENU);
 
 
 		if (!mc.gotInitialConfigs) {
@@ -936,9 +944,9 @@ public class PacketHandler {
 		}
 
 		mc.setLocalPlayer(
-			mc.createPlayer(currentZ, mc.getLocalPlayerServerIndex(), currentX, 1,
-					ORSCharacterDirection.lookup(direction)
-			)
+				mc.createPlayer(currentZ, mc.getLocalPlayerServerIndex(), currentX, 1,
+						ORSCharacterDirection.lookup(direction)
+				)
 		);
 
 		int dir = packetsIncoming.getBitMask(8);
@@ -974,7 +982,7 @@ public class PacketHandler {
 					if (modelIndex == 0 || modelIndex == 1 || modelIndex == 7) {
 						var16 -= tileSize;
 					}
-					playerToShow.waypointCurrent	= var33 = (1 + var33) % 10;
+					playerToShow.waypointCurrent = var33 = (1 + var33) % 10;
 					playerToShow.waypointsX[var33] = var15;
 					playerToShow.waypointsZ[var33] = var16;
 				}
@@ -1019,7 +1027,7 @@ public class PacketHandler {
 					if (mc.getGameObjectInstanceX(i) == xTile && zTile == mc.getGameObjectInstanceZ(i)) {
 						mc.getScene().removeModel(mc.getGameObjectInstanceModel(i));
 						mc.getWorld().removeGameObject_CollisonFlags(mc.getGameObjectInstanceID(i),
-										mc.getGameObjectInstanceX(i), mc.getGameObjectInstanceZ(i));
+								mc.getGameObjectInstanceX(i), mc.getGameObjectInstanceZ(i));
 					} else {
 						if (count != i) {
 							mc.setGameObjectInstanceModel(count, mc.getGameObjectInstanceModel(i));
@@ -1080,8 +1088,8 @@ public class PacketHandler {
 					if (dxTile == 0 && dzTile == 0) {
 						mc.getScene().removeModel(mc.getGameObjectInstanceModel(localIndex));
 						mc.getWorld().removeGameObject_CollisonFlags(mc.getGameObjectInstanceID(localIndex),
-										mc.getGameObjectInstanceX(localIndex),
-										mc.getGameObjectInstanceZ(localIndex));
+								mc.getGameObjectInstanceX(localIndex),
+								mc.getGameObjectInstanceZ(localIndex));
 					} else {
 						if (localIndex != id) {
 							mc.setGameObjectInstanceModel(id, mc.getGameObjectInstanceModel(localIndex));
@@ -1125,10 +1133,10 @@ public class PacketHandler {
 					if (dir == 0 && var9 == 0) {
 						mc.getScene().removeModel(mc.getWallObjectInstanceModel(wallInstance));
 						mc.getWorld().removeWallObject_CollisionFlags(true,
-										mc.getWallObjectInstanceDir(wallInstance),
-										mc.getWallObjectInstanceZ(wallInstance),
-										mc.getWallObjectInstanceX(wallInstance),
-										mc.getWallObjectInstanceID(wallInstance));
+								mc.getWallObjectInstanceDir(wallInstance),
+								mc.getWallObjectInstanceZ(wallInstance),
+								mc.getWallObjectInstanceX(wallInstance),
+								mc.getWallObjectInstanceID(wallInstance));
 					} else {
 						if (wallID != wallInstance) {
 							mc.setWallObjectInstanceModel(wallID, mc.getWallObjectInstanceModel(wallInstance));
@@ -1154,14 +1162,14 @@ public class PacketHandler {
 
 				for (int var9 = 0; var9 < mc.getWallObjectInstanceCount(); ++var9) {
 					if (mc.getWallObjectInstanceX(var9) == x
-									&& mc.getWallObjectInstanceZ(var9) == y
-									&& direction == mc.getWallObjectInstanceDir(var9)) {
+							&& mc.getWallObjectInstanceZ(var9) == y
+							&& direction == mc.getWallObjectInstanceDir(var9)) {
 						mc.getScene().removeModel(mc.getWallObjectInstanceModel(var9));
 						mc.getWorld().removeWallObject_CollisionFlags(true,
-										mc.getWallObjectInstanceDir(var9),
-										mc.getWallObjectInstanceZ(var9),
-										mc.getWallObjectInstanceX(var9),
-										mc.getWallObjectInstanceID(var9));
+								mc.getWallObjectInstanceDir(var9),
+								mc.getWallObjectInstanceZ(var9),
+								mc.getWallObjectInstanceX(var9),
+								mc.getWallObjectInstanceID(var9));
 					} else {
 						if (var9 != localIndex) {
 							mc.setWallObjectInstanceModel(localIndex, mc.getWallObjectInstanceModel(var9));
@@ -1179,7 +1187,7 @@ public class PacketHandler {
 				if (id != 60000) {
 					mc.getWorld().applyWallToCollisionFlags(id, x, y, direction);
 					RSModel model = mc.createWallObjectModel(x, y, id, direction,
-									mc.getWallObjectInstanceCount());
+							mc.getWallObjectInstanceCount());
 					mc.setWallObjectInstanceModel(mc.getWallObjectInstanceCount(), model);
 					mc.setWallObjectInstanceX(mc.getWallObjectInstanceCount(), x);
 					mc.setWallObjectInstanceZ(mc.getWallObjectInstanceCount(), y);
@@ -1215,7 +1223,7 @@ public class PacketHandler {
 						continue;
 					}
 					npc.animationNext = (nextSpriteOffset << 2)
-									+ packetsIncoming.getBitMask(2);
+							+ packetsIncoming.getBitMask(2);
 				} else {
 					var9 = packetsIncoming.getBitMask(3);
 					var10 = npc.waypointCurrent;
@@ -1283,8 +1291,8 @@ public class PacketHandler {
 					npc.message = message;
 					if (mc.getLocalPlayer().serverIndex == chatRecipient) {
 						mc.showMessage(false, (String) null,
-										com.openrsc.client.entityhandling.EntityHandler.getNpcDef(npc.npcId).getName() + ": " + npc.message,
-										MessageType.QUEST, 0, (String) null, "@yel@");
+								com.openrsc.client.entityhandling.EntityHandler.getNpcDef(npc.npcId).getName() + ": " + npc.message,
+								MessageType.QUEST, 0, (String) null, "@yel@");
 					}
 				}
 
@@ -1376,9 +1384,9 @@ public class PacketHandler {
 				if (var10 == 0 && var11 == 0) {
 					mc.getScene().removeModel(mc.getGameObjectInstanceModel(j));
 					mc.getWorld().removeGameObject_CollisonFlags(
-									mc.getGameObjectInstanceID(j),
-									mc.getGameObjectInstanceX(j),
-									mc.getGameObjectInstanceZ(j));
+							mc.getGameObjectInstanceID(j),
+							mc.getGameObjectInstanceX(j),
+							mc.getGameObjectInstanceZ(j));
 				} else {
 					if (j != count) {
 						mc.setGameObjectInstanceModel(count, mc.getGameObjectInstanceModel(j));
@@ -1402,10 +1410,10 @@ public class PacketHandler {
 				if (wallX == 0 && wallZ == 0) {
 					mc.getScene().removeModel(mc.getWallObjectInstanceModel(n));
 					mc.getWorld().removeWallObject_CollisionFlags(true,
-									mc.getWallObjectInstanceDir(n),
-									mc.getWallObjectInstanceZ(n),
-									mc.getWallObjectInstanceX(n),
-									mc.getWallObjectInstanceID(n));
+							mc.getWallObjectInstanceDir(n),
+							mc.getWallObjectInstanceZ(n),
+							mc.getWallObjectInstanceX(n),
+							mc.getWallObjectInstanceID(n));
 				} else {
 					if (n != count) {
 						mc.setWallObjectInstanceModel(count, mc.getWallObjectInstanceModel(n));
@@ -1619,11 +1627,11 @@ public class PacketHandler {
 
 		int receivedXp = mc.getPlayerExperience(skill) - oldXp;
 		receivedXp = receivedXp < 0 ? 0 : receivedXp;
-		mc.setPlayerStatXpGained(skill, (long)mc.getPlayerStatXpGained(skill) + receivedXp);
+		mc.setPlayerStatXpGained(skill, (long) mc.getPlayerStatXpGained(skill) + receivedXp);
 		if (mc.getXpGainedStartTime(skill) == 0) {
 			mc.setXpGainedStartTime(skill, System.currentTimeMillis());
 		}
-		mc.setPlayerXpGainedTotal(mc.getPlayerXpGainedTotal() + (long)receivedXp);
+		mc.setPlayerXpGainedTotal(mc.getPlayerXpGainedTotal() + (long) receivedXp);
 		if (mc.totalXpGainedStartTime == 0) {
 			mc.totalXpGainedStartTime = System.currentTimeMillis();
 		}
@@ -1687,7 +1695,7 @@ public class PacketHandler {
 		}
 	}
 
-	private void showServerMessageDialog()	{
+	private void showServerMessageDialog() {
 		mc.setServerMessage(packetsIncoming.readString());
 		mc.setShowDialogServerMessage(true);
 		mc.setServerMessageBoxTop(true);
@@ -1785,7 +1793,7 @@ public class PacketHandler {
 			int var6 = 39;
 
 			for (int inventoryIndex = 0; inventoryIndex < mc.getInventoryItemCount()
-							&& shopItemCount <= var6; ++inventoryIndex) {
+					&& shopItemCount <= var6; ++inventoryIndex) {
 				boolean var25 = false;
 
 				for (int var9 = 0; var9 < 40; ++var9) {
@@ -1809,7 +1817,7 @@ public class PacketHandler {
 		}
 
 		if (mc.getShopSelectedItemIndex() >= 0 && 40 > mc.getShopSelectedItemIndex()
-						&& mc.getShopSelectedItemType() != mc.getShopItemID(mc.getShopSelectedItemIndex())) {
+				&& mc.getShopSelectedItemType() != mc.getShopItemID(mc.getShopSelectedItemIndex())) {
 			mc.setShopSelectedItemIndex(-1);
 			mc.setShopSelectedItemType(-2);
 		}
@@ -1852,17 +1860,26 @@ public class PacketHandler {
 					player.bubbleTimeout = 150;
 					player.bubbleItem = itemType;
 				}
-			} else if (updateType == 1 || updateType == 6) {
-				if (updateType == 1) {
+			} else if (updateType == 1 || updateType == 6 || updateType == 7) {
+				if (updateType == 1 || updateType == 7) {
 					int crownID = packetsIncoming.get32();
+					boolean muted = false, onTutorial = false;
+					if(updateType == 7) {
+						muted = packetsIncoming.getUnsignedByte() > 0;
+						onTutorial = packetsIncoming.getUnsignedByte() > 0;
+					}
 					String message = packetsIncoming.readString();
-					if(null != player) {
+
+					if(updateType == 7 && message.equalsIgnoreCase(""))
+						continue;
+
+					if (null != player) {
 						boolean var29 = false;
 						String displayName = StringUtil.displayNameToKey(player.accountName);
 						if (null != displayName) {
 							for (int modelIndex = 0; modelIndex < SocialLists.ignoreListCount; ++modelIndex) {
 								if (displayName.equals(
-									StringUtil.displayNameToKey(SocialLists.ignoreList[modelIndex]))) {
+										StringUtil.displayNameToKey(SocialLists.ignoreList[modelIndex]))) {
 									var29 = true;
 									break;
 								}
@@ -1872,16 +1889,25 @@ public class PacketHandler {
 						if (!var29) {
 							player.messageTimeout = 150;
 							player.message = message;
-							mc.showMessage(!Config.S_WANT_CUSTOM_RANK_DISPLAY, (player.clanTag != null ? "@whi@[@cla@" + player.clanTag + "@whi@]@yel@ " + player.getStaffName() : player.getStaffName()), player.message,
-								MessageType.CHAT, crownID, player.accountName);
-
+							mc.showMessage(
+									!Config.S_WANT_CUSTOM_RANK_DISPLAY,
+									(
+											((updateType == 7 && muted) ? "@whi@[MUTED]@yel@ " : "") +
+													((updateType == 7 && onTutorial) ? "@whi@[TUTORIAL]@yel@ " : "") +
+													(player.clanTag != null ? "@whi@[@cla@" + player.clanTag + "@whi@]@yel@ " : "") +
+													player.getStaffName()
+									),
+									player.message,
+									MessageType.CHAT,
+									crownID,
+									player.accountName
+							);
 						}
 					}
-				}
-				else {
+				} else {
 					String message = packetsIncoming.readString();
 
-					if(null != player) {
+					if (null != player) {
 						player.message = message;
 						player.messageTimeout = 150;
 						if (mc.getLocalPlayer() == player) {
@@ -1946,7 +1972,7 @@ public class PacketHandler {
 				} else {
 					//packetsIncoming.getShort();
 
-					String playerName	= packetsIncoming.readString();
+					String playerName = packetsIncoming.readString();
 					player.displayName = player.accountName = playerName;
 					//player.displayName = packetsIncoming.readString();
 					//player.accountName = packetsIncoming.readString();
@@ -1971,10 +1997,10 @@ public class PacketHandler {
 						player.clanTag = null;
 					}
 
-					player.isInvisible		= packetsIncoming.getByte() > 0 ? true : false;
-					player.isInvulnerable	= packetsIncoming.getByte() > 0 ? true : false;
-					player.groupID			= packetsIncoming.getByte();
-					player.icon				= packetsIncoming.get32();
+					player.isInvisible = packetsIncoming.getByte() > 0 ? true : false;
+					player.isInvulnerable = packetsIncoming.getByte() > 0 ? true : false;
+					player.groupID = packetsIncoming.getByte();
+					player.icon = packetsIncoming.get32();
 				}
 			}
 		}
@@ -1993,7 +2019,7 @@ public class PacketHandler {
 
 					for (int dir = 0; dir < mc.getGroundItemCount(); ++dir) {
 						if (mc.getGroundItemX(dir) == var19 && mc.getGroundItemZ(dir) == var6
-										&& mc.getGroundItemID(dir) == groundItemID) {
+								&& mc.getGroundItemID(dir) == groundItemID) {
 							groundItemID = -123;
 						} else {
 							if (var7 != dir) {
@@ -2017,7 +2043,7 @@ public class PacketHandler {
 
 					for (int var7 = 0; mc.getGameObjectInstanceCount() > var7; ++var7) {
 						if (mc.getGameObjectInstanceX(var7) == var19
-										&& mc.getGameObjectInstanceZ(var7) == var6) {
+								&& mc.getGameObjectInstanceZ(var7) == var6) {
 							mc.setGroundItemHeight(mc.getGroundItemCount(),
 									com.openrsc.client.entityhandling.EntityHandler.getObjectDef(
 											mc.getGameObjectInstanceID(var7)).getGroundItemVar());
