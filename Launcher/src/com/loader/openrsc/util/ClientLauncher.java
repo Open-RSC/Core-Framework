@@ -49,7 +49,7 @@ public class ClientLauncher {
 	public static void startProcess() {
 		try {
 			File f = new File(Constants.CONF_DIR + File.separator + Constants.CLIENT_FILENAME);
-			ProcessBuilder pb = new ProcessBuilder(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java", "-Xms512m -Xincgc -jar", f.getAbsolutePath());
+			ProcessBuilder pb = new ProcessBuilder(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java", "-Xms512m -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseBiasedLocking -XX:NewSize=512m -jar", f.getAbsolutePath());
 			Process p = pb.start();
 			exit();
 		} catch (Exception e) {
