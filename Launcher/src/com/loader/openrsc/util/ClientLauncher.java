@@ -4,11 +4,12 @@ import com.loader.openrsc.Constants;
 import com.loader.openrsc.OpenRSC;
 import com.loader.openrsc.frame.AppFrame;
 
-import javax.swing.*;
 import java.applet.Applet;
-import java.awt.*;
+import java.awt.Dimension;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+
+import javax.swing.JFrame;
 
 public class ClientLauncher {
 	private static ClassLoader loader;
@@ -48,7 +49,7 @@ public class ClientLauncher {
 	public static void startProcess() {
 		try {
 			File f = new File(Constants.CONF_DIR + File.separator + Constants.CLIENT_FILENAME);
-			ProcessBuilder pb = new ProcessBuilder(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java", "-jar", f.getAbsolutePath());
+			ProcessBuilder pb = new ProcessBuilder(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java", "-Xms512m -Xincgc -jar", f.getAbsolutePath());
 			Process p = pb.start();
 			exit();
 		} catch (Exception e) {
