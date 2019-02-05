@@ -173,6 +173,36 @@ public final class Event implements CommandListener {
 
 			GameLogging.addQuery(new StaffLog(player, 15, player.getUsername() + " has teleported " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation));
 		}
+		else if (cmd.equalsIgnoreCase("return")) {
+			Player p = args.length > 0 ?
+				world.getPlayer(DataConversions.usernameToHash(args[0])) :
+				player;
+
+			if(p == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			if(p.getUsernameHash() != player.getUsernameHash() && !player.isMod()) {
+				player.message(messagePrefix + "You can not return other players.");
+				return;
+			}
+
+			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+				player.message(messagePrefix + "You can not return a staff member of equal or greater rank.");
+				return;
+			}
+
+			if(!p.wasSummoned()) {
+				player.message(messagePrefix + p.getUsername() + " has not been summoned.");
+				return;
+			}
+
+			Point originalLocation = p.returnFromSummon();
+			GameLogging.addQuery(new StaffLog(player, 15, player.getUsername() + " has returned " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation));
+			player.message(messagePrefix + "You have returned " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation);
+			p.message(messagePrefix + "You have been returned by " + player.getStaffName());
+		}
 		else if (cmd.equalsIgnoreCase("blink")) {
 			player.setAttribute("blink", !player.getAttribute("blink", false));
 			player.message(messagePrefix + "Your blink status is now " + player.getAttribute("blink", false));
