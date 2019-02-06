@@ -572,7 +572,7 @@ public class PacketHandler {
 		}
 
 		// Why is clan being sent into former name?
-		mc.showMessage(false, sender, message, type, crown, clan, colour);
+		mc.showMessage(true, sender, message, type, crown, clan, colour);
 	}
 
 	private void sendConnectionMessage() {
