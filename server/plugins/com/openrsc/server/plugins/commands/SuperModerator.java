@@ -7,12 +7,10 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
-import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.StaffLog;
 import com.openrsc.server.util.rsc.DataConversions;
-import com.openrsc.server.util.rsc.MessageType;
 
 public final class SuperModerator implements CommandListener {
 
@@ -166,18 +164,6 @@ public final class SuperModerator implements CommandListener {
 			String skullMessage = p.isSkulled() ? "added" : "removed";
 			p.message(messagePrefix + "Skull has been " + skullMessage + " by an admin");
 			player.message(messagePrefix + "Skull has been " + skullMessage + ": " + p.getUsername());
-		}
-		else if (cmd.equalsIgnoreCase("say")) { // SAY is not configged out for mods.
-			String newStr = "";
-
-			for (int i = 0; i < args.length; i++) {
-				newStr += args[i] + " ";
-			}
-			GameLogging.addQuery(new StaffLog(player, 13, newStr.toString()));
-			newStr = player.getStaffName() + player.getUsername() + ": @whi@" + newStr;
-			for (Player p : World.getWorld().getPlayers()) {
-				ActionSender.sendMessage(p, player, 1, MessageType.GLOBAL_CHAT, newStr, player.getIcon());
-			}
 		}
 		else if (cmd.equalsIgnoreCase("jail")) {
 			if (args.length != 1)
