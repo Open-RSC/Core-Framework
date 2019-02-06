@@ -17,7 +17,7 @@ public class Fernahei implements ShopInterface,
 
 	public static final int FERNAHEI = 616;
 
-	private final Shop shop = new Shop(true, 15000, 100, 70, 2,
+	private final Shop shop = new Shop(false, 15000, 100, 70, 2,
 		new Item(377, 5), new Item(378, 5), new Item(380, 200),
 		new Item(381, 200), new Item(358, 0), new Item(363, 0),
 		new Item(356, 0));

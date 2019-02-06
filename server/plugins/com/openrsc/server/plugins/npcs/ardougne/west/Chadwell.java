@@ -14,7 +14,7 @@ import static com.openrsc.server.plugins.Functions.showMenu;
 
 public final class Chadwell implements ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
 
-	private final Shop shop = new Shop(false, 3000, 130, 40, 3, new Item(237, 7), new Item(156, 10), new Item(357, 2), new Item(50, 2), new Item(166, 10), new Item(259, 2), new Item(168, 5), new Item(138, 10), new Item(17, 10), new Item(135, 3), new Item(132, 2), new Item(188, 2), new Item(11, 200), new Item(1263, 10));
+	private final Shop shop = new Shop(true, 3000, 130, 40, 3, new Item(237, 7), new Item(156, 10), new Item(357, 2), new Item(50, 2), new Item(166, 10), new Item(259, 2), new Item(168, 5), new Item(138, 10), new Item(17, 10), new Item(135, 3), new Item(132, 2), new Item(188, 2), new Item(11, 200), new Item(1263, 10));
 
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
