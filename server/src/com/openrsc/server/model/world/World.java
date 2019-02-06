@@ -4,6 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
+import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler.TrawlerBoat;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.external.NPCLoc;
@@ -27,6 +28,7 @@ import com.openrsc.server.sql.query.logs.LoginLog;
 import com.openrsc.server.sql.web.AvatarGenerator;
 import com.openrsc.server.util.EntityList;
 import com.openrsc.server.util.IPTracker;
+import com.openrsc.server.util.SimpleSubscriber;
 import com.openrsc.server.util.ThreadSafeIPTracker;
 import com.openrsc.server.util.rsc.CollisionFlag;
 import com.openrsc.server.util.rsc.MessageType;
@@ -35,7 +37,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
-public final class World {
+public final class World implements SimpleSubscriber<FishingTrawler> {
 
 	public static final int MAX_HEIGHT = 4032; // 3776
 	public static final int MAX_WIDTH = 1008; // 944
@@ -72,11 +74,12 @@ public final class World {
 	private final List<Shop> shops = new ArrayList<Shop>();
 	private final TileValue[][] tiles = new TileValue[MAX_WIDTH][MAX_HEIGHT];
 	public WorldLoader wl;
+	
 	/**
 	 * Double ended queue to store snapshots into
 	 */
 	private Deque<Snapshot> snapshots = new LinkedList<Snapshot>();
-	private FishingTrawler fishingTrawler;
+	private Map<TrawlerBoat, FishingTrawler> fishingTrawler = new HashMap<TrawlerBoat, FishingTrawler>();
 
 	public static IPTracker<String> getWildernessIPTracker() {
 		return wildernessIPTracker;
@@ -631,6 +634,7 @@ public final class World {
 	 * Removes a player from the server and saves their account
 	 */
 	public void unregisterPlayer(final Player player) {
+		FishingTrawler trawlerInstance = getFishingTrawler(player);
 		try {
 			ActionSender.sendLogoutRequestConfirm(player);
 			player.setLoggedIn(false);
@@ -645,9 +649,9 @@ public final class World {
 				if (Constants.GameServer.AVATAR_GENERATOR)
 					avatarGenerator.generateAvatar(player.getDatabaseID(), player.getSettings().getAppearance(), player.getWornItems());
 			}
-			/*if(getFishingTrawler().getPlayers().contains(player)) {
-				getFishingTrawler().quitPlayer(player);
-			}*/
+			if(trawlerInstance != null && trawlerInstance.getPlayers().contains(player)) {
+				trawlerInstance.disconnectPlayer(player, true);
+			}
 			if (player.getLocation().inMageArena()) {
 				player.teleport(228, 109);
 			}
@@ -685,12 +689,37 @@ public final class World {
 	public boolean withinWorld(int x, int y) {
 		return x >= 0 && x < MAX_WIDTH && y >= 0 && y < MAX_HEIGHT;
 	}
-
-	public FishingTrawler getFishingTrawler() {
-		return fishingTrawler;
+	
+	public FishingTrawler getFishingTrawler(TrawlerBoat boat) {
+		FishingTrawler trawlerInstance = fishingTrawler.get(boat);
+		if (trawlerInstance != null && !trawlerInstance.shouldRemove()) {
+			return trawlerInstance;
+		}
+		else {
+			trawlerInstance = new FishingTrawler(boat);
+			trawlerInstance.register(this);
+			fishingTrawler.put(boat, trawlerInstance);
+			Server.getServer().getEventHandler().add(trawlerInstance);
+			return trawlerInstance;
+		}
+	}
+	
+	public FishingTrawler getFishingTrawler(Player p) {
+		if (fishingTrawler.get(TrawlerBoat.EAST) != null && fishingTrawler.get(TrawlerBoat.EAST).getPlayers().contains(p)) {
+			return fishingTrawler.get(TrawlerBoat.EAST);
+		}
+		if (fishingTrawler.get(TrawlerBoat.WEST) != null && fishingTrawler.get(TrawlerBoat.WEST).getPlayers().contains(p)) {
+			return fishingTrawler.get(TrawlerBoat.WEST);
+		}
+		return null;
 	}
 
-	public void setFishingTrawler(FishingTrawler fishingTrawler) {
-		this.fishingTrawler = fishingTrawler;
+	// notified when event is stopped to deallocate reference
+	@Override
+	public void update(FishingTrawler ctx) {
+		if (ctx != null && ctx.getPlayers().size() == 0) {
+			fishingTrawler.put(ctx.getBoat(), null);
+		}
 	}
+
 }

@@ -8,18 +8,28 @@ import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.sleep;
 
+import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
+import com.openrsc.server.external.ItemId;
+
 public class BailingBucket implements InvActionExecutiveListener, InvActionListener {
 
 	@Override
 	public void onInvAction(Item item, Player player) {
 		if (player.isBusy())
 			return;
-		if (World.getWorld().getFishingTrawler().getShipAreaWater().inBounds(player.getLocation())
-			|| World.getWorld().getFishingTrawler().getShipArea().inBounds(player.getLocation())) {
+		FishingTrawler trawler = World.getWorld().getFishingTrawler(player);
+		if (trawler != null && (trawler.getShipAreaWater().inBounds(player.getLocation())
+			|| trawler.getShipArea().inBounds(player.getLocation()))) {
 			player.setBusyTimer(650);
-			player.message("you bail a little water...");
+			// 1st stage boat
+			if(player.getY() >= 741 && player.getY() <= 743) {
+				player.message("you bail a little water...");
+			}
+			else {
+				player.message("you begin to bail a bucket load of water");
+			}
 			sleep(650);
-			World.getWorld().getFishingTrawler().bailWater();
+			trawler.bailWater();
 		} else {
 			// player.message("");
 		}
@@ -27,7 +37,7 @@ public class BailingBucket implements InvActionExecutiveListener, InvActionListe
 
 	@Override
 	public boolean blockInvAction(Item item, Player player) {
-		return item.getID() == 1282;
+		return item.getID() == ItemId.BAILING_BUCKET.id();
 	}
 
 }
