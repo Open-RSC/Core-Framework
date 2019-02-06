@@ -9,6 +9,9 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
+import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
+import com.openrsc.server.external.ItemId;
+
 public class InspectNet implements ObjectActionListener, ObjectActionExecutiveListener {
 
 	@Override
@@ -20,18 +23,19 @@ public class InspectNet implements ObjectActionListener, ObjectActionExecutiveLi
 	public void onObjectAction(GameObject obj, String command, Player player) {
 
 		message(player, 1900, "you inspect the net");
+		FishingTrawler trawler = World.getWorld().getFishingTrawler(player);
 
-		if (World.getWorld().getFishingTrawler().isNetBroken()) {
-			player.message("it's beginning to rip");
-			if (!hasItem(player, 237)) {
+		if (trawler != null && trawler.isNetBroken()) {
+			player.message("it's begining to rip");
+			if (!hasItem(player, ItemId.ROPE.id())) {
 				player.message("you'll need some rope to fix it");
 				return;
 			}
 			message(player, 1900, "you attempt to fix it with your rope");
 			if (DataConversions.random(0, 1) == 0) {
 				player.message("you manage to fix the net");
-				removeItem(player, 237, 1);
-				World.getWorld().getFishingTrawler().setNetBroken(false);
+				removeItem(player, ItemId.ROPE.id(), 1);
+				trawler.setNetBroken(false);
 			} else {
 				player.message("but you fail in the harsh conditions");
 			}
