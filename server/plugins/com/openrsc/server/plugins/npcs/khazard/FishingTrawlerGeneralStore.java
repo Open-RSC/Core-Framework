@@ -15,7 +15,7 @@ import static com.openrsc.server.plugins.Functions.showMenu;
 public final class FishingTrawlerGeneralStore implements ShopInterface,
 	TalkToNpcExecutiveListener, TalkToNpcListener {
 
-	private final Shop shop = new Shop(false, 3000, 130, 40, 3,
+	private final Shop shop = new Shop(true, 3000, 130, 40, 3,
 		new Item(156, 5), new Item(135, 3), new Item(140, 2),
 		new Item(144, 2), new Item(50, 2), new Item(166, 2),
 		new Item(167, 2), new Item(168, 5), new Item(237, 30),
