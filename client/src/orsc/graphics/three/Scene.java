@@ -73,9 +73,9 @@ public final class Scene {
 	private int rot1024_off_y;
 	private int rot1024_off_z;
 	private int rot1024_vp_src;
-	private int rot1024_x;
-	private int rot1024_y;
-	private int rot1024_z;
+	private int cameraProjX;
+	private int cameraProjY;
+	private int cameraProjZ;
 
 	public Scene(GraphicsController var1, int var2, int maxPolygonCount, int var4) {
 		this.m_Ib = new int[this.m_ib][256];
@@ -124,12 +124,12 @@ public final class Scene {
 
 			this.m_Fb = new int[var4];
 			this.rot1024_off_y = 0;
-			this.rot1024_z = 0;
+			this.cameraProjZ = 0;
 			this.m_Ob = new int[var4];
-			this.rot1024_y = 0;
+			this.cameraProjY = 0;
 			this.rot1024_off_z = 0;
 			this.rot1024_off_x = 0;
-			this.rot1024_x = 0;
+			this.cameraProjX = 0;
 			this.m_Q = new int[var4];
 			this.m_gb = new int[var4];
 			this.m_a = new int[var4];
@@ -369,7 +369,7 @@ public final class Scene {
 								var26[1] = var26[2] = var5.vertexParam2[var12];
 							}
 
-							return !this.a(var25, var24, var30, var26, 1);
+							return !this.setFrustum(var25, var24, var30, var26, 1);
 						}
 					}
 				}
@@ -433,7 +433,7 @@ public final class Scene {
 		}
 	}
 
-	private final void a(int var1, byte var2) {
+	private final void setFrustum(int var1, byte var2) {
 		try {
 
 			short var3;
@@ -565,69 +565,69 @@ public final class Scene {
 		}
 	}
 
-	private final void a(int var1, int var2, int var3, boolean var4) {
+	private final void setFrustum(int x, int y, int z, boolean var4) {
 		try {
 
-			int projX = 1024 - this.rot1024_x & 1023;
-			int projY = 1023 & 1024 - this.rot1024_y;
-			int projZ = 1024 - this.rot1024_z & 1023;
+			int projX = 1024 - this.cameraProjX & 1023;
+			int projY = 1024 - this.cameraProjY & 1023;
+			int projZ = 1024 - this.cameraProjZ & 1023;
 			int var8;
 			int var9;
 			int var10;
 			if (projZ != 0) {
 				var8 = FastMath.trigTable_1024[projZ];
 				var9 = FastMath.trigTable_1024[1024 + projZ];
-				var10 = var9 * var2 + var8 * var3 >> 15;
-				var3 = var3 * var9 - var8 * var2 >> 15;
-				var2 = var10;
+				var10 = var9 * y + var8 * z >> 15;
+				z = z * var9 - var8 * y >> 15;
+				y = var10;
 			}
 
 			if (projX != 0) {
 				var9 = FastMath.trigTable_1024[1024 + projX];
 				var8 = FastMath.trigTable_1024[projX];
-				var10 = var3 * var9 - var8 * var1 >> 15;
-				var1 = var9 * var1 + var8 * var3 >> 15;
-				var3 = var10;
+				var10 = z * var9 - var8 * x >> 15;
+				x = var9 * x + var8 * z >> 15;
+				z = var10;
 			}
 
 			if (projY != 0) {
 				var8 = FastMath.trigTable_1024[projY];
 				var9 = FastMath.trigTable_1024[1024 + projY];
-				var10 = var8 * var1 + var2 * var9 >> 15;
-				var1 = var9 * var1 - var8 * var2 >> 15;
-				var2 = var10;
+				var10 = var8 * x + y * var9 >> 15;
+				x = var9 * x - var8 * y >> 15;
+				y = var10;
 			}
 
-			if (var1 > MiscFunctions.netsock_s_K) {
-				MiscFunctions.netsock_s_K = var1;
+			if (x > MiscFunctions.frustumMinX) {
+				MiscFunctions.frustumMinX = x;
 			}
 
-			if (var3 < MiscFunctions.pe_s_b) {
-				MiscFunctions.pe_s_b = var3;
+			if (z < MiscFunctions.frustumFarZ) {
+				MiscFunctions.frustumFarZ = z;
 			}
 
-			if (var2 > MiscFunctions.class13_s_b) {
-				MiscFunctions.class13_s_b = var2;
+			if (y > MiscFunctions.frustumMinY) {
+				MiscFunctions.frustumMinY = y;
 			}
 
-			if (var3 > MiscFunctions.cachingFile_s_y) {
-				MiscFunctions.cachingFile_s_y = var3;
+			if (z > MiscFunctions.frustumNearZ) {
+				MiscFunctions.frustumNearZ = z;
 			}
 
-			if (var1 < MiscFunctions.rssock_facs_j) {
-				MiscFunctions.rssock_facs_j = var1;
+			if (x < MiscFunctions.frustumMaxX) {
+				MiscFunctions.frustumMaxX = x;
 			}
 
-			if (var2 < MiscFunctions.pe_s_f) {
-				MiscFunctions.pe_s_f = var2;
+			if (y < MiscFunctions.frustumMaxY) {
+				MiscFunctions.frustumMaxY = y;
 			}
 
 		} catch (RuntimeException var11) {
-			throw GenUtil.makeThrowable(var11, "lb.JA(" + var1 + ',' + var2 + ',' + var3 + ',' + true + ')');
+			throw GenUtil.makeThrowable(var11, "lb.JA(" + x + ',' + y + ',' + z + ',' + true + ')');
 		}
 	}
 
-	public final void a(int var1, int var2, int var3, int var4) {
+	public final void setFrustum(int var1, int var2, int var3, int var4) {
 		try {
 			this.m_L = new int[var4][];
 			this.m_g = new byte[var4][];
@@ -645,7 +645,7 @@ public final class Scene {
 		}
 	}
 
-	public final void a(int var1, int var2, int var3, int var4, int var5, int var6) {
+	public final void setFrustum(int var1, int var2, int var3, int var4, int var5, int var6) {
 		try {
 			if (var4 == 0 && var6 == 0 && var1 == 0) {
 				var4 = 32;
@@ -662,7 +662,7 @@ public final class Scene {
 		}
 	}
 
-	private final void a(int var1, int var2, int var3, Polygon[] var4) {
+	private final void setFrustum(int var1, int var2, int var3, Polygon[] var4) {
 		try {
 			if (var3 >= -50) {
 				this.reduceSprites((byte) -98, (int) 32);
@@ -697,7 +697,7 @@ public final class Scene {
 						if (var10.maxP6 > var6.minP6 && var10.minP6 < var6.maxP6 && var10.maxP2 > var6.minP2
 							&& var10.minP2 < var6.maxP2 && var6.m_f != var10.m_p
 							&& !this.polygonHit2((byte) -84, var10, var6) && this.polygonHit1(var10, var6)) {
-							this.a(var7, var4, var9, (byte) 34);
+							this.setFrustum(var7, var4, var9, (byte) 34);
 							var7 = this.m_e;
 							if (var4[var9] != var10) {
 								++var9;
@@ -716,8 +716,8 @@ public final class Scene {
 		}
 	}
 
-	private final void a(int var1, int var2, int[] var3, int var4, int var5, RSModel var6, int[] var7, int[] var8,
-						 int var9, int var10, int var11) {
+	private final void setFrustum(int var1, int var2, int[] var3, int var4, int var5, RSModel var6, int[] var7, int[] var8,
+								  int var9, int var10, int var11) {
 		try {
 
 			int var12;
@@ -1346,7 +1346,7 @@ public final class Scene {
 		}
 	}
 
-	private final void a(int var1, int var2, Polygon[] var3, int var4) {
+	private final void setFrustum(int var1, int var2, Polygon[] var3, int var4) {
 		try {
 
 			if (var4 > var1) {
@@ -1374,8 +1374,8 @@ public final class Scene {
 					}
 				}
 
-				this.a(var1, -1, var3, var6);
-				this.a(var6 + 1, -1, var3, var4);
+				this.setFrustum(var1, -1, var3, var6);
+				this.setFrustum(var6 + 1, -1, var3, var4);
 			}
 
 		} catch (RuntimeException var11) {
@@ -1384,7 +1384,7 @@ public final class Scene {
 		}
 	}
 
-	private final boolean a(int var1, Polygon[] var2, int var3, byte var4) {
+	private final boolean setFrustum(int var1, Polygon[] var2, int var3, byte var4) {
 		try {
 
 
@@ -1431,7 +1431,7 @@ public final class Scene {
 					return false;
 				}
 
-				if (!this.a(var1 + 1, var2, var3, (byte) 70)) {
+				if (!this.setFrustum(var1 + 1, var2, var3, (byte) 70)) {
 					this.m_e = var1;
 					return false;
 				}
@@ -1444,7 +1444,7 @@ public final class Scene {
 		}
 	}
 
-	private final boolean a(int[] var1, int[] var2, int[] var3, int[] var4, int var5) {
+	private final boolean setFrustum(int[] var1, int[] var2, int[] var3, int[] var4, int var5) {
 		try {
 
 			int var6 = var3.length;
@@ -1846,8 +1846,8 @@ public final class Scene {
 		}
 	}
 
-	private final void a(int[] var1, RSModel model, int var3, int var4, int var5, int[] var6, int[] var7, int var8,
-						 int var9) {
+	private final void setFrustum(int[] var1, RSModel model, int var3, int var4, int var5, int[] var6, int[] var7, int var8,
+								  int var9) {
 		try {
 
 			if (var5 != -2) {
@@ -2378,7 +2378,7 @@ public final class Scene {
 							if (this.m_ec[var3] == null) {
 								this.m_ec[var3] = new int[65536];
 								this.resourceDatabase[var1] = this.m_ec[var3];
-								this.a((int) var1, (byte) 118);
+								this.setFrustum((int) var1, (byte) 118);
 								return;
 							}
 						}
@@ -2396,13 +2396,13 @@ public final class Scene {
 
 						this.resourceDatabase[var1] = this.resourceDatabase[var5];
 						this.resourceDatabase[var5] = null;
-						this.a((int) var1, (byte) 118);
+						this.setFrustum((int) var1, (byte) 118);
 					} else {
 						for (var3 = 0; this.m_i.length > var3; ++var3) {
 							if (null == this.m_i[var3]) {
 								this.m_i[var3] = new int[16384];
 								this.resourceDatabase[var1] = this.m_i[var3];
-								this.a((int) var1, (byte) 118);
+								this.setFrustum((int) var1, (byte) 118);
 								return;
 							}
 						}
@@ -2420,7 +2420,7 @@ public final class Scene {
 
 						this.resourceDatabase[var1] = this.resourceDatabase[var5];
 						this.resourceDatabase[var5] = null;
-						this.a((int) var1, (byte) 118);
+						this.setFrustum((int) var1, (byte) 118);
 					}
 
 				}
@@ -2518,7 +2518,7 @@ public final class Scene {
 				}
 
 				if (var1 != 25013) {
-					this.rot1024_z = 60;
+					this.cameraProjZ = 60;
 				}
 
 				short var9 = 4096;
@@ -2564,38 +2564,38 @@ public final class Scene {
 
 			this.m_f = this.graphics.interlace;
 			int var7 = this.m_A * this.fogLandscapeDistance >> this.rot1024_vp_src;
-			MiscFunctions.pe_s_b = 0;
-			MiscFunctions.cachingFile_s_y = 0;
-			MiscFunctions.rssock_facs_j = 0;
-			MiscFunctions.netsock_s_K = 0;
+			MiscFunctions.frustumFarZ = 0;
+			MiscFunctions.frustumNearZ = 0;
+			MiscFunctions.frustumMaxX = 0;
+			MiscFunctions.frustumMinX = 0;
 			int var8 = this.fogLandscapeDistance * this.m_wb >> this.rot1024_vp_src;
-			MiscFunctions.class13_s_b = 0;
-			MiscFunctions.pe_s_f = 0;
-			this.a(this.fogLandscapeDistance, -var7, -var8, true);
-			this.a(this.fogLandscapeDistance, -var7, var8, true);
-			this.a(this.fogLandscapeDistance, var7, -var8, true);
-			this.a(this.fogLandscapeDistance, var7, var8, true);
-			this.a(0, -this.m_A, -this.m_wb, true);
-			this.a(0, -this.m_A, this.m_wb, true);
-			this.a(0, this.m_A, -this.m_wb, true);
-			this.a(0, this.m_A, this.m_wb, true);
-			MiscFunctions.cachingFile_s_y += this.rot1024_off_y;
-			MiscFunctions.netsock_s_K += this.rot1024_off_z;
-			MiscFunctions.pe_s_b += this.rot1024_off_y;
-			MiscFunctions.pe_s_f += this.rot1024_off_x;
-			MiscFunctions.rssock_facs_j += this.rot1024_off_z;
-			MiscFunctions.class13_s_b += this.rot1024_off_x;
+			MiscFunctions.frustumMinY = 0;
+			MiscFunctions.frustumMaxY = 0;
+			this.setFrustum(this.fogLandscapeDistance, -var7, -var8, true);
+			this.setFrustum(this.fogLandscapeDistance, -var7, var8, true);
+			this.setFrustum(this.fogLandscapeDistance, var7, -var8, true);
+			this.setFrustum(this.fogLandscapeDistance, var7, var8, true);
+			this.setFrustum(0, -this.m_A, -this.m_wb, true);
+			this.setFrustum(0, -this.m_A, this.m_wb, true);
+			this.setFrustum(0, this.m_A, -this.m_wb, true);
+			this.setFrustum(0, this.m_A, this.m_wb, true);
+			MiscFunctions.frustumNearZ += this.rot1024_off_y;
+			MiscFunctions.frustumMinX += this.rot1024_off_z;
+			MiscFunctions.frustumFarZ += this.rot1024_off_y;
+			MiscFunctions.frustumMaxY += this.rot1024_off_x;
+			MiscFunctions.frustumMaxX += this.rot1024_off_z;
+			MiscFunctions.frustumMinY += this.rot1024_off_x;
 			this.models[this.modelCount] = this.m_T;
 			this.m_T.m_Yb = 2;
 
 			int var3;
 			for (var3 = 0; this.modelCount > var3; ++var3) {
 				this.models[var3].rotate1024(this.rot1024_off_y, this.rot1024_vp_src, this.rot1024_off_x, (byte) -122,
-					this.rot1024_off_z, this.rot1024_y, this.rot1024_z, this.rot1024_x, this.rot1024_zTop);
+					this.rot1024_off_z, this.cameraProjY, this.cameraProjZ, this.cameraProjX, this.rot1024_zTop);
 			}
 
 			this.models[this.modelCount].rotate1024(this.rot1024_off_y, this.rot1024_vp_src, this.rot1024_off_x,
-				(byte) -114, this.rot1024_off_z, this.rot1024_y, this.rot1024_z, this.rot1024_x, this.rot1024_zTop);
+				(byte) -114, this.rot1024_off_z, this.cameraProjY, this.cameraProjZ, this.cameraProjX, this.rot1024_zTop);
 			this.m_zb = 0;
 
 			RSModel var2;
@@ -2719,8 +2719,8 @@ public final class Scene {
 			}
 
 			if (this.m_zb != 0) {
-				this.a(0, -1, this.polygons, this.m_zb - 1);
-				this.a(this.m_zb, 100, -53, this.polygons);
+				this.setFrustum(0, -1, this.polygons, this.m_zb - 1);
+				this.setFrustum(this.m_zb, 100, -53, this.polygons);
 
 				for (var9 = 0; this.m_zb > var9; ++var9) {
 					Polygon var25 = this.polygons[var9];
@@ -2848,9 +2848,9 @@ public final class Scene {
 							}
 						}
 
-						this.a(0, var3, this.m_B, 0, 0, var2, this.m_yb, this.m_r, 0, 5960, var14);
+						this.setFrustum(0, var3, this.m_B, 0, 0, var2, this.m_yb, this.m_r, 0, 5960, var14);
 						if (this.m_Xb < this.m_Cb) {
-							this.a(this.m_Vb, var2, 1, var17, var25.m_b, this.m_J, this.m_Qb, 0, 0);
+							this.setFrustum(this.m_Vb, var2, 1, var17, var25.m_b, this.m_J, this.m_Qb, 0, 0);
 						}
 					}
 				}
@@ -2940,9 +2940,9 @@ public final class Scene {
 			xRot &= 1023;
 			yRot &= 1023;
 
-			this.rot1024_z = 1023 & 1024 - zRot;
-			this.rot1024_x = 1023 & 1024 - xRot;
-			this.rot1024_y = 1023 & 1024 - yRot;
+			this.cameraProjZ = 1024 - zRot & 1023;
+			this.cameraProjX = 1024 - xRot & 1023;
+			this.cameraProjY = 1024 - yRot & 1023;
 			int offX = 0;
 			int offY = 0;
 			int offZ = offset;

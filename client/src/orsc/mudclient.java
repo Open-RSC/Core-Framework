@@ -3921,7 +3921,7 @@ public final class mudclient implements Runnable {
 					if (this.lastHeightOffset == 3) {
 						centerX = 40 + (int) (3.0D * Math.random());
 						centerZ = (int) (7.0D * Math.random()) + 40;
-						this.scene.a(-50, centerZ, 0, -50, centerX, -10);
+						this.scene.setFrustum(-50, centerZ, 0, -50, centerX, -10);
 					}
 
 					this.characterBubbleCount = 0;
@@ -10671,7 +10671,7 @@ public final class mudclient implements Runnable {
 
 	private final void loadTextures(byte var1) {
 		clientPort.showLoadingProgress(50, "Textures");
-		this.scene.a(0, 11, 7, EntityHandler.textureCount());
+		this.scene.setFrustum(0, 11, 7, EntityHandler.textureCount());
 		for (int i = 0; i < EntityHandler.textureCount(); i++) {
 			loadSprite(spriteTexture + i, "texture", 1);
 			Sprite sprite = getSurface().sprites[spriteTexture + i];
