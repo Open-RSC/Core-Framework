@@ -8,6 +8,7 @@ import com.openrsc.server.plugins.listeners.action.CommandListener;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.StaffLog;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.MessageType;
 
 public final class Moderator implements CommandListener {
 
@@ -164,7 +165,7 @@ public final class Moderator implements CommandListener {
 			else
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] [message]");
 		}
-				else if (cmd.equalsIgnoreCase("summon")) {
+		else if (cmd.equalsIgnoreCase("summon")) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
@@ -196,6 +197,18 @@ public final class Moderator implements CommandListener {
 			GameLogging.addQuery(new StaffLog(player, 15, player.getUsername() + " has summoned " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation));
 			player.message(messagePrefix + "You have summoned " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation);
 			p.message(messagePrefix + "You have been summoned by " + player.getStaffName());
+		}
+		else if (cmd.equalsIgnoreCase("say")) { // SAY is not configged out for mods.
+			String newStr = "";
+
+			for (int i = 0; i < args.length; i++) {
+				newStr += args[i] + " ";
+			}
+			GameLogging.addQuery(new StaffLog(player, 13, newStr.toString()));
+			newStr = player.getStaffName() + ": " + newStr;
+			for (Player p : World.getWorld().getPlayers()) {
+				ActionSender.sendMessage(p, player, 1, MessageType.GLOBAL_CHAT, newStr, player.getIcon());
+			}
 		}
 	}
 }
