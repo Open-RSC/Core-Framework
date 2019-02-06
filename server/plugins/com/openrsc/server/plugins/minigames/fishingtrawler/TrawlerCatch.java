@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.minigames.fishingtrawler;
 
 import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -15,18 +16,18 @@ public class TrawlerCatch implements ObjectActionListener, ObjectActionExecutive
 
 	private static final int TRAWLER_CATCH = 1106;
 	private static final int[] JUNK_ITEMS = new int[]{
-		1155, // Old boot
-		1157, // Damaged armour
-		1158, // Damaged armour
-		1159, // Rusty sword
-		1165, // broken arrow
-		1166, // buttons
-		1167, // broken staff
-		1168, // vase
-		1169, // ceramic remains
-		1170, // Broken glass
-		1245, // Edible seaweed
-		793   // oyster
+		ItemId.OLD_BOOT.id(),
+		ItemId.DAMAGED_ARMOUR_1.id(),
+		ItemId.DAMAGED_ARMOUR_2.id(),
+		ItemId.RUSTY_SWORD.id(),
+		ItemId.BROKEN_ARROW.id(),
+		ItemId.BUTTONS.id(),
+		ItemId.BROKEN_STAFF.id(),
+		ItemId.VASE.id(),
+		ItemId.CERAMIC_REMAINS.id(),
+		ItemId.BROKEN_GLASS_DIGSITE_LVL_2.id(), // Broken glass
+		ItemId.EDIBLE_SEAWEED.id(),
+		ItemId.OYSTER.id()
 	};
 
 	private static int offsetToPercent(int levelDiff) {
@@ -42,74 +43,80 @@ public class TrawlerCatch implements ObjectActionListener, ObjectActionExecutive
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if (obj.getID() == TRAWLER_CATCH) {
 			message(p, 1900, "you search the smelly net");
-			showBubble(p, new Item(376));
+			showBubble(p, new Item(ItemId.NET.id()));
 			if (p.getCache().hasKey("fishing_trawler_reward")) {
 				p.message("you find...");
 				int fishCaught = p.getCache().getInt("fishing_trawler_reward");
+				boolean isFishRoll;
 				for (int fishGiven = 0; fishGiven < fishCaught; fishGiven++) {
-					if (catchFish(81, p.getSkills().getLevel(Skills.FISHING))) {
-						message(p, 1200, "..a manta ray!");
-						addItem(p, 1190, 1); // RAW MANTA RAY
-						p.incExp(Skills.FISHING, 460, false);
-					} else if (catchFish(79, p.getSkills().getLevel(Skills.FISHING))) {
-						message(p, 1200, "..a sea turtle!");
-						addItem(p, 1192, 1); // RAW SEA TURTLE
-						p.incExp(Skills.FISHING, 420, false);
-					} else if (catchFish(76, p.getSkills().getLevel(Skills.FISHING))) {
-						message(p, 1200, "..a shark!");
-						addItem(p, 545, 1); // RAW SHARK
-						p.incExp(Skills.FISHING, 440, false);
-					} else if (catchFish(50, p.getSkills().getLevel(Skills.FISHING))) {
-						message(p, 1200, "..a sword fish");
-						addItem(p, 369, 1); // RAW SWORDFISH
-						p.incExp(Skills.FISHING, 400, false);
-					} else if (catchFish(40, p.getSkills().getLevel(Skills.FISHING))) {
-						message(p, 1200, "..a lobster");
-						addItem(p, 372, 1); // RAW LOBSTER
-						p.incExp(Skills.FISHING, 360, false);
-					} else if (catchFish(30, p.getSkills().getLevel(Skills.FISHING))) {
-						message(p, 1200, "..some tuna");
-						addItem(p, 366, 1); // RAW TUNA
-						p.incExp(Skills.FISHING, 320, false);
-					} else if (catchFish(15, p.getSkills().getLevel(Skills.FISHING))) {
-						message(p, 1200, "..some anchovies");
-						addItem(p, 351, 1); // RAW ANCHOVIES
-						p.incExp(Skills.FISHING, 160, false);
-					} else if (catchFish(5, p.getSkills().getLevel(Skills.FISHING))) {
-						message(p, 1200, "..a sardine");
-						addItem(p, 354, 1); // RAW SARDINE
-						p.incExp(Skills.FISHING, 80, false);
-					} else if (catchFish(1, p.getSkills().getLevel(Skills.FISHING))) {
-						message(p, 1200, "..some shrimp");
-						addItem(p, 349, 1); // RAW SHRIMP
-						p.incExp(Skills.FISHING, 40, false);
-					} else {
+					isFishRoll = DataConversions.random(0,1) == 1;
+					// roll for a fish
+					if (isFishRoll) {
+						if (catchFish(81, p.getSkills().getLevel(Skills.FISHING))) {
+							message(p, 1200, "..a manta ray!");
+							addItem(p, ItemId.RAW_MANTA_RAY.id(), 1);
+							p.incExp(Skills.FISHING, 460, false);
+						} else if (catchFish(79, p.getSkills().getLevel(Skills.FISHING))) {
+							message(p, 1200, "..a sea turtle!");
+							addItem(p, ItemId.RAW_SEA_TURTLE.id(), 1);
+							p.incExp(Skills.FISHING, 380, false);
+						} else if (catchFish(76, p.getSkills().getLevel(Skills.FISHING))) {
+							message(p, 1200, "..a shark!");
+							addItem(p, ItemId.RAW_SHARK.id(), 1);
+							p.incExp(Skills.FISHING, 440, false);
+						} else if (catchFish(50, p.getSkills().getLevel(Skills.FISHING))) {
+							message(p, 1200, "..a sword fish");
+							addItem(p, ItemId.RAW_SWORDFISH.id(), 1);
+							p.incExp(Skills.FISHING, 400, false);
+						} else if (catchFish(40, p.getSkills().getLevel(Skills.FISHING))) {
+							message(p, 1200, "..a lobster");
+							addItem(p, ItemId.RAW_LOBSTER.id(), 1);
+							p.incExp(Skills.FISHING, 360, false);
+						} else if (catchFish(30, p.getSkills().getLevel(Skills.FISHING))) {
+							message(p, 1200, "..some tuna");
+							addItem(p, ItemId.RAW_TUNA.id(), 1);
+							p.incExp(Skills.FISHING, 320, false);
+						} else if (catchFish(15, p.getSkills().getLevel(Skills.FISHING))) {
+							message(p, 1200, "..some anchovies");
+							addItem(p, ItemId.RAW_ANCHOVIES.id(), 1);
+							p.incExp(Skills.FISHING, 160, false);
+						} else if (catchFish(5, p.getSkills().getLevel(Skills.FISHING))) {
+							message(p, 1200, "..a sardine");
+							addItem(p, ItemId.RAW_SARDINE.id(), 1);
+							p.incExp(Skills.FISHING, 80, false);
+						} else {
+							message(p, 1200, "..some shrimp");
+							addItem(p, ItemId.RAW_SHRIMP.id(), 1);
+							p.incExp(Skills.FISHING, 40, false);
+						}
+					}
+					 else {
 						int randomJunkItem = JUNK_ITEMS[DataConversions.random(0, JUNK_ITEMS.length - 1)];
-						if (randomJunkItem == 1245) { // Edible seaweed
+						if (randomJunkItem == ItemId.EDIBLE_SEAWEED.id()) { // Edible seaweed
 							message(p, 1200, "..some seaweed");
-							addItem(p, 1245, 1);
+							addItem(p, ItemId.EDIBLE_SEAWEED.id(), 1);
 							p.incExp(Skills.FISHING, 20, false);
-						} else if (randomJunkItem == 793) { // Oyster
+						} else if (randomJunkItem == ItemId.OYSTER.id()) { // Oyster
 							message(p, 1200, "..an oyster!");
-							addItem(p, 793, 1);
+							addItem(p, ItemId.OYSTER.id(), 1);
 							p.incExp(Skills.FISHING, 40, false);
 						} else {
 							// Broken glass, buttons, damaged armour, ceramic remains
-							if (randomJunkItem == 1170 || randomJunkItem == 1166
-								|| randomJunkItem == 1157 || randomJunkItem == 1158
-								|| randomJunkItem == 1169) {
+							if (randomJunkItem == ItemId.BROKEN_GLASS_DIGSITE_LVL_2.id() || randomJunkItem == ItemId.BUTTONS.id()
+								|| randomJunkItem == ItemId.DAMAGED_ARMOUR_1.id() || randomJunkItem == ItemId.DAMAGED_ARMOUR_2.id()
+								|| randomJunkItem == ItemId.CERAMIC_REMAINS.id()) {
 								message(p, 1200, "..some " + EntityHandler.getItemDef(randomJunkItem).getName());
 							}
 							// Old boot
-							else if (randomJunkItem == 1155) {
+							else if (randomJunkItem == ItemId.OLD_BOOT.id()) {
 								message(p, 1200, "..an " + EntityHandler.getItemDef(randomJunkItem).getName());
 							}
 							// broken arrow, broken staff, Rusty sword, vase
 							else {
 								message(p, 1200, "..a " + EntityHandler.getItemDef(randomJunkItem).getName());
 							}
-
 							addItem(p, randomJunkItem, 1);
+							p.incExp(Skills.FISHING, 5, false);
 						}
 					}
 				}
@@ -123,7 +130,7 @@ public class TrawlerCatch implements ObjectActionListener, ObjectActionExecutive
 
 	private boolean catchFish(int levelReq, int level) {
 		int levelDiff = level - levelReq;
-		if (levelDiff <= 0) {
+		if (levelDiff < 0) {
 			return false;
 		}
 		return DataConversions.percentChance(offsetToPercent(levelDiff));
