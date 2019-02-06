@@ -1015,9 +1015,9 @@ public final class RSModel {
 		try {
 
 			this.resetTransformCache((int) 7972);
-			if (this.minZ <= MiscFunctions.netsock_s_K && this.maxZ >= MiscFunctions.rssock_facs_j
-				&& this.minX <= MiscFunctions.class13_s_b && this.maxX >= MiscFunctions.pe_s_f
-				&& this.minY <= MiscFunctions.cachingFile_s_y && this.maxY >= MiscFunctions.pe_s_b) {
+			if (this.minZ <= MiscFunctions.frustumMinX && this.maxZ >= MiscFunctions.frustumMaxX
+				&& this.minX <= MiscFunctions.frustumMinY && this.maxX >= MiscFunctions.frustumMaxY
+				&& this.minY <= MiscFunctions.frustumNearZ && this.maxY >= MiscFunctions.frustumFarZ) {
 				this.m_dc = true;
 				int xy_xy = 0;
 				if (var4 > -105) {
