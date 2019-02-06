@@ -112,7 +112,37 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 				|| id == ItemId.TOAD_CRUNCHIES.id() || id == ItemId.GNOME_WAITER_TOAD_CRUNCHIES.id()) {
 				message(player, "You eat the " + item.getDef().getName().toLowerCase());
 				player.message("they're a bit chewy");
-
+			} else if (eatenByParts(item)) {
+				String itemName = item.getDef().getName().toLowerCase();
+				String message = "";
+				String needleSt = "half a";
+				String origName;
+				if (itemName.contains("pie")) {
+					if (itemName.contains(needleSt+" ")) {
+						origName = itemName.substring(7); // "half a "
+					} else if (itemName.contains(needleSt+"n ")) {
+						origName = itemName.substring(8); // "half an "
+					} else { // complete pies
+						origName = itemName;
+					}
+					
+					message = "You eat half of a" + (startsWithVowel(origName) ? "n " : " ") + origName;
+				} else if (itemName.contains("pizza")) {
+					message = "You eat half of the pizza";
+				} 
+				// cakes
+				else {
+					if (itemName.contains("slice")) {
+						message = "You eat the slice of cake";
+					} else if (itemName.contains("partial")) {
+						message = "You eat some more of the cake";
+					} else if (itemName.contains("cake")) {
+						message = "You eat part of the cake";
+					} else { // shouldn't happen
+						message = "You eat the " + itemName;
+					}
+				}
+				player.message(message);
 			} else
 				player.message("You eat the " + item.getDef().getName().toLowerCase());
 
@@ -133,6 +163,18 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 			addFoodResult(player, id);
 		}
 	}
+	
+	// cakes, pies and pizzas (except plain pizza) are eaten partially
+	private boolean eatenByParts(Item item) {
+		String itemName = item.getDef().getName().toLowerCase();
+		return itemName.contains("cake") || itemName.contains("pie")
+				|| (itemName.contains("pizza") && !itemName.contains("plain pizza"));
+	}
+	
+	private boolean startsWithVowel(String testString) {
+		String vowels = "aeiou";
+		return vowels.indexOf(Character.toLowerCase(testString.charAt(0))) != -1;
+	}
 
 	private void addFoodResult(Player player, int id) {
 
@@ -141,6 +183,9 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 
 		else if (id == ItemId.ANCHOVIE_PIZZA.id())
 			player.getInventory().add(new Item(ItemId.HALF_ANCHOVIE_PIZZA.id()));
+		
+		else if (id == ItemId.PINEAPPLE_PIZZA.id())
+			player.getInventory().add(new Item(ItemId.HALF_PINEAPPLE_PIZZA.id()));
 
 		else if (id == ItemId.CAKE.id())
 			player.getInventory().add(new Item(ItemId.PARTIAL_CAKE.id()));
