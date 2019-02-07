@@ -53,7 +53,9 @@ public class Group {
 	}
 
 	public static String getNameSprite(int groupID) {
-		if (!Constants.GameServer.WANT_CUSTOM_RANK_DISPLAY)
+		return "";
+
+		/*if (!Constants.GameServer.WANT_CUSTOM_RANK_DISPLAY)
 			return "";
 
 		switch (groupID) {
@@ -70,7 +72,7 @@ public class Group {
 			case USER:
 			default:
 				return "";
-		}
+		}*/
 	}
 
 	public static String getStaffPrefix(int groupID) {
