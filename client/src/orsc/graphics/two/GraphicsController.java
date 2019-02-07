@@ -1508,7 +1508,7 @@ public class GraphicsController {
 								&& c3 <= '9')
 								x = Integer.parseInt(str.substring(i + 1, i + 5));
 							i += 5;
-						} else if (Config.S_WANT_CUSTOM_RANK_DISPLAY && str.charAt(i) == '#' && i + 4 < str.length() && str.charAt(i + 4) == '#' && str.substring(i + 1, i + 4).equalsIgnoreCase("adm")) {
+						} else if (false && Config.S_WANT_CUSTOM_RANK_DISPLAY && str.charAt(i) == '#' && i + 4 < str.length() && str.charAt(i + 4) == '#' && str.substring(i + 1, i + 4).equalsIgnoreCase("adm")) {
 							this.drawSpriteClipping(
 								this.iconSpriteIndex,
 								x - 1,
@@ -1523,7 +1523,7 @@ public class GraphicsController {
 							);
 							x += sprites[this.iconSpriteIndex].getWidth() + 5;
 							i += 4;
-						} else if (Config.S_WANT_CUSTOM_RANK_DISPLAY && str.charAt(i) == '#' && i + 4 < str.length() && str.charAt(i + 4) == '#' && str.substring(i + 1, i + 4).equalsIgnoreCase("mod")) {
+						} else if (false && Config.S_WANT_CUSTOM_RANK_DISPLAY && str.charAt(i) == '#' && i + 4 < str.length() && str.charAt(i + 4) == '#' && str.substring(i + 1, i + 4).equalsIgnoreCase("mod")) {
 							this.drawSpriteClipping(
 								this.iconSpriteIndex,
 								x - 1,
@@ -1538,7 +1538,7 @@ public class GraphicsController {
 							);
 							x += sprites[this.iconSpriteIndex].getWidth() + 5;
 							i += 4;
-						} else if (Config.S_WANT_CUSTOM_RANK_DISPLAY && str.charAt(i) == '#' && i + 4 < str.length() && str.charAt(i + 4) == '#' && str.substring(i + 1, i + 4).equalsIgnoreCase("dev")) {
+						} else if (false && Config.S_WANT_CUSTOM_RANK_DISPLAY && str.charAt(i) == '#' && i + 4 < str.length() && str.charAt(i + 4) == '#' && str.substring(i + 1, i + 4).equalsIgnoreCase("dev")) {
 							this.drawSpriteClipping(
 								this.iconSpriteIndex,
 								x - 1,
@@ -1553,7 +1553,7 @@ public class GraphicsController {
 							);
 							x += sprites[this.iconSpriteIndex].getWidth() + 5;
 							i += 4;
-						} else if (Config.S_WANT_CUSTOM_RANK_DISPLAY && str.charAt(i) == '#' && i + 4 < str.length() && str.charAt(i + 4) == '#' && str.substring(i + 1, i + 4).equalsIgnoreCase("eve")) {
+						} else if (false && Config.S_WANT_CUSTOM_RANK_DISPLAY && str.charAt(i) == '#' && i + 4 < str.length() && str.charAt(i + 4) == '#' && str.substring(i + 1, i + 4).equalsIgnoreCase("eve")) {
 							this.drawSpriteClipping(
 								this.iconSpriteIndex,
 								x - 1,

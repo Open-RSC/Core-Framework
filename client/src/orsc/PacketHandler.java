@@ -1890,7 +1890,7 @@ public class PacketHandler {
 							player.messageTimeout = 150;
 							player.message = message;
 							mc.showMessage(
-								!Config.S_WANT_CUSTOM_RANK_DISPLAY,
+								/*!Config.S_WANT_CUSTOM_RANK_DISPLAY*/ true,
 								(
 									((updateType == 7 && muted) ? "@whi@[MUTED]@yel@ " : "") +
 									((updateType == 7 && onTutorial) ? "@whi@[TUTORIAL]@yel@ " : "") +
