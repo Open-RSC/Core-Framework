@@ -680,7 +680,7 @@ public final class Event implements CommandListener {
 				p.message(messagePrefix + "All of your stats have been set to level " + level + " by a staff member");
 			}
 		}
-		else if(cmd.equalsIgnoreCase("setcurstat")) {
+		else if(cmd.equalsIgnoreCase("currentstat") ||cmd.equalsIgnoreCase("currentstats") || cmd.equalsIgnoreCase("setcurrentstat") || cmd.equalsIgnoreCase("setcurrentstats") || cmd.equalsIgnoreCase("curstat") ||cmd.equalsIgnoreCase("curstats") || cmd.equalsIgnoreCase("setcurstat") || cmd.equalsIgnoreCase("setcurstats")) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [level] OR ");
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [level] OR ");
@@ -799,8 +799,8 @@ public final class Event implements CommandListener {
 			if(stat != -1) {
 				if(level < 1)
 					level = 1;
-				if(level > Constants.GameServer.PLAYER_LEVEL_LIMIT)
-					level = Constants.GameServer.PLAYER_LEVEL_LIMIT;
+				if(level > BYTE_MAX)
+					level = 255;
 
 				p.getSkills().setLevel(stat, level);
 				p.checkEquipment();
