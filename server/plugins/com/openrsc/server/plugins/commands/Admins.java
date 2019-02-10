@@ -380,7 +380,7 @@ public final class Admins implements CommandListener {
 			}
 			player.message(messagePrefix + "Drop tables relaoded");
 		}
-		else if (cmd.equalsIgnoreCase("gi") || cmd.equalsIgnoreCase("gitem")) {
+		else if (cmd.equalsIgnoreCase("gi") || cmd.equalsIgnoreCase("gitem") || cmd.equalsIgnoreCase("grounditem")) {
 			if (args.length < 1 || args.length == 4) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] (respawn_time) (amount) (x) (y)");
 				return;
