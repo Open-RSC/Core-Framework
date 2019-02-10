@@ -468,7 +468,7 @@ public final class Admins implements CommandListener {
 			World.getWorld().registerItem(new GroundItem(item));
 			player.message(messagePrefix + "Added ground item to database: " + EntityHandler.getItemDef(item.getId()).getName() + " with item ID " + item.getId() + " at " + itemLocation);
 		}
-		else if (cmd.equalsIgnoreCase("rgi") || cmd.equalsIgnoreCase("rgitem") || cmd.equalsIgnoreCase("rgrounditem")) {
+		else if (cmd.equalsIgnoreCase("rgi") || cmd.equalsIgnoreCase("rgitem") || cmd.equalsIgnoreCase("rgrounditem") || cmd.equalsIgnoreCase("removegi") || cmd.equalsIgnoreCase("removegitem") || cmd.equalsIgnoreCase("removegrounditem")) {
 			if(args.length == 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (x) (y)");
 				return;
@@ -762,7 +762,7 @@ public final class Admins implements CommandListener {
 			p.message(messagePrefix + "A staff member has changed your quest to completed for QuestID " + quest);
 			player.message(messagePrefix + "You have completed Quest ID " + quest + " for " + p.getUsername());
 		}
-		else if (cmd.equalsIgnoreCase("quest") || cmd.equalsIgnoreCase("checkquest")) {
+		else if (cmd.equalsIgnoreCase("quest") || cmd.equalsIgnoreCase("getquest") || cmd.equalsIgnoreCase("checkquest")) {
 			if (args.length < 2) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [questId]");
 				return;
