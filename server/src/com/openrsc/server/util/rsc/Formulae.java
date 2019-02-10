@@ -477,7 +477,7 @@ public final class Formulae {
 
 		// 100 is already guaranteed to fail
 		// 1 is already guaranteed to be successful
-		int threshold = Math.min(128, Math.max(1, skillLevel + equipmentBonus + 41 - (int)(levelReq * 1.5)));
+		int threshold = Math.min(128, Math.max(1, skillLevel + equipmentBonus + 40 - (int)(levelReq * 1.5)));
 		return roll <= threshold;
 	}
 
