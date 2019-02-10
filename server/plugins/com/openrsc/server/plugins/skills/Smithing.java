@@ -61,7 +61,7 @@ public class Smithing implements InvUseOnObjectListener,
 			return false;
 		}
 
-		int minSmithingLevel = Formulae.minSmithingLevel(item.getID());
+		int minSmithingLevel = minSmithingLevel(item.getID());
 
 		// Special Dragon Square Shield Case
 		if (minSmithingLevel < 0 && item.getID() != 1276 && item.getID() != 1277) {
@@ -180,8 +180,7 @@ public class Smithing implements InvUseOnObjectListener,
 			return;
 		}
 
-		final ItemSmithingDef def = EntityHandler.getSmithingDef(
-			(Formulae.getBarType(item.getID()) * 21) + toMake);
+		final ItemSmithingDef def = EntityHandler.getSmithingDef((getBarType(item.getID()) * 21) + toMake);
 
 		if (def == null) {
 			// No definition found
@@ -230,8 +229,7 @@ public class Smithing implements InvUseOnObjectListener,
 						player.getInventory().add(new Item(def.getItemID(), 1));
 					}
 				}
-				player.incExp(13,
-					Formulae.getSmithingExp(item.getID(), def.getRequiredBars()), true);
+				player.incExp(13, getSmithingExp(item.getID(), def.getRequiredBars()), true);
 			}
 		});
 	}
@@ -489,5 +487,51 @@ public class Smithing implements InvUseOnObjectListener,
 		}
 
 		return count;
+	}
+
+	/**
+	 * Gets the smithing exp for the given amount of the right bars
+	 */
+	public static int getSmithingExp(int barID, int barCount) {
+		int[] exps = {50, 100, 150, 200, 250, 300};
+		int type = getBarType(barID);
+		if (type < 0) {
+			return 0;
+		}
+		return (exps[type] * barCount);
+	}
+
+	/**
+	 * Gets the min level required to smith a bar
+	 */
+	public static int minSmithingLevel(int barID) {
+		int[] levels = {1, 15, 30, 50, 70, 85};
+		int type = getBarType(barID);
+		if (type < 0) {
+			return -1;
+		}
+		return levels[type];
+	}
+
+	/**
+	 * Gets the type of bar we have
+	 */
+	public static int getBarType(int barID) {
+		switch (barID) {
+			case 169:
+				return 0;
+			case 170:
+				return 1;
+			case 171:
+				return 2;
+			case 172:
+			case 173:
+				return 3;
+			case 174:
+				return 4;
+			case 408:
+				return 5;
+		}
+		return -1;
 	}
 }

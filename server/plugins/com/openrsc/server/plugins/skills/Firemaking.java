@@ -98,7 +98,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 								}
 							}
 						);
-						player.incExp(11, Formulae.firemakingExp(player.getSkills().getMaxStat(11), 25), true);
+						player.incExp(11, getExp(player.getSkills().getMaxStat(11), 25), true);
 					}
 				}
 			);
@@ -153,7 +153,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 							}
 						});
 
-					owner.incExp(11, Formulae.firemakingExp(owner.getSkills().getMaxStat(11), 25), true);
+					owner.incExp(11, getExp(owner.getSkills().getMaxStat(11), 25), true);
 					interrupt();
 
 				} else {
@@ -174,5 +174,9 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 		if (item1.getID() == TINDERBOX && inArray(item2.getID(), LOGS) || item2.getID() == TINDERBOX && inArray(item1.getID(), LOGS)) {
 			player.message("I think you should put the logs down before you light them!");
 		}
+	}
+
+	public static int getExp(int level, int baseExp) {
+		return (int) ((baseExp + (level * 1.75)) * 4);
 	}
 }

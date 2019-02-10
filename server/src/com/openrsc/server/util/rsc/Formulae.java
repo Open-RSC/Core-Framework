@@ -9,8 +9,6 @@ import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
 
-import java.util.ArrayList;
-
 import static com.openrsc.server.Constants.GameServer.PLAYER_LEVEL_LIMIT;
 
 public final class Formulae {
@@ -455,6 +453,7 @@ public final class Formulae {
 	/**
 	 * Decide if we fall off the obstacle or not
 	 */
+	// TODO: This should be moved to the appropriate plugin class.
 	public static boolean failCalculation(Player p, int skill, int reqLevel) {
 		int levelDiff = p.getSkills().getMaxStat(skill) - reqLevel;
 		if (levelDiff < 0) {
@@ -466,37 +465,20 @@ public final class Formulae {
 		return DataConversions.random(0, levelDiff + 1) != 0;
 	}
 
-	public static int firemakingExp(int level, int baseExp) {
-		return (int) ((baseExp + (level * 1.75)) * 4);
+	/**
+	 * Decide if a gathering skill operation was successful
+	 */
+	public static boolean calcGatheringSuccessful(int levelReq, int skillLevel) {
+		return calcGatheringSuccessful(levelReq, skillLevel, 0);
 	}
 
-	/**
-	 * Generates a session id
-	 */
-	public static long generateSessionKey(byte userByte) {
-		return DataConversions.getRandom().nextLong();
-	}
+	public static boolean calcGatheringSuccessful(int levelReq, int skillLevel, int equipmentBonus) {
+		int roll = DataConversions.random(1, 128);
 
-	/**
-	 * Gets the type of bar we have
-	 */
-	public static int getBarType(int barID) {
-		switch (barID) {
-			case 169:
-				return 0;
-			case 170:
-				return 1;
-			case 171:
-				return 2;
-			case 172:
-			case 173:
-				return 3;
-			case 174:
-				return 4;
-			case 408:
-				return 5;
-		}
-		return -1;
+		// 100 is already guaranteed to fail
+		// 1 is already guaranteed to be successful
+		int threshold = Math.min(128, Math.max(1, skillLevel + equipmentBonus + 41 - (int)(levelReq * 1.5)));
+		return roll <= threshold;
 	}
 
 	/**
@@ -538,47 +520,10 @@ public final class Formulae {
 	}
 
 	/**
-	 * Decide what fish, if any, we should get from the water
-	 */
-	public static ObjectFishDef getFish(int waterId, int fishingLevel, int click) {
-		ArrayList<ObjectFishDef> fish = new ArrayList<ObjectFishDef>();
-		for (ObjectFishDef def : EntityHandler.getObjectFishingDef(waterId, click).getFishDefs()) {
-			if (fishingLevel >= def.getReqLevel()) {
-				fish.add(def);
-			}
-		}
-		if (fish.size() <= 0) {
-			return null;
-		}
-		ObjectFishDef thisFish = fish.get(DataConversions.random(0, fish.size() - 1));
-		int levelDiff = fishingLevel - thisFish.getReqLevel();
-		if (levelDiff < 0) {
-			return null;
-		}
-		return DataConversions.percentChance(offsetToPercent(levelDiff)) ? thisFish : null;
-	}
-
-	/**
 	 * Chance to cut cacti is 75% success
 	 */
 	public static boolean cutCacti() { // Check is for FAIL, not SUCCESS.
 		return DataConversions.random(0, 100) > 75;
-	}
-
-	/**
-	 * Returns a gem ID
-	 */
-	public static int getGem() {
-		int rand = DataConversions.random(0, 100);
-		if (rand < 10) {
-			return 157;
-		} else if (rand < 30) {
-			return 158;
-		} else if (rand < 60) {
-			return 159;
-		} else {
-			return 160;
-		}
 	}
 
 	/**
@@ -593,44 +538,6 @@ public final class Formulae {
 	 */
 	public static int getHeight(Point location) {
 		return getHeight(location.getY());
-	}
-
-	/**
-	 * Should we get a log from the tree?
-	 */
-
-	public static boolean getLog(ObjectWoodcuttingDef def, int woodcutLevel, int axeId) {
-		int levelDiff = woodcutLevel - def.getReqLevel();
-		if (levelDiff < 0) {
-			return false;
-		}
-		switch (axeId) {
-			case 87:
-				levelDiff += 0;
-				break;
-			case 12:
-				levelDiff += 2;
-				break;
-			case 428:
-				levelDiff += 4;
-				break;
-			case 88:
-				levelDiff += 6;
-				break;
-			case 203:
-				levelDiff += 8;
-				break;
-			case 204:
-				levelDiff += 10;
-				break;
-			case 405:
-				levelDiff += 12;
-				break;
-		}
-		if (def.getReqLevel() == 1 && levelDiff >= 40) {
-			return true;
-		}
-		return DataConversions.percentChance(offsetToPercent(levelDiff));
 	}
 
 	public static String getLvlDiffColour(int lvlDiff) {
@@ -676,54 +583,6 @@ public final class Formulae {
 			}
 		}
 		return (newHeight * 944) + (currentY % 944);
-	}
-
-	/**
-	 * Should we can get an ore from the rock?
-	 */
-
-	public static boolean getOre(ObjectMiningDef def, int miningLevel, int axeId) {
-		int levelDiff = miningLevel - def.getReqLevel();
-		if (levelDiff > 50)
-			return DataConversions.random(0, 9) != 1;
-		if (levelDiff < 0) {
-			return false;
-		}
-		int bonus = 0;
-		/*
-		switch (axeId) {
-		case 156:
-			bonus = 0;
-			break;
-		case 1258:
-			bonus = 2;
-			break;
-		case 1259:
-			bonus = 6;
-			break;
-		case 1260:
-			bonus = 8;
-			break;
-		case 1261:
-			bonus = 10;
-			break;
-		case 1262:
-			bonus = 12;
-			break;
-		}*/
-		return DataConversions.percentChance(offsetToPercent(levelDiff + bonus));
-	}
-
-	/**
-	 * Gets the smithing exp for the given amount of the right bars
-	 */
-	public static int getSmithingExp(int barID, int barCount) {
-		int[] exps = {50, 100, 150, 200, 250, 300};
-		int type = getBarType(barID);
-		if (type < 0) {
-			return 0;
-		}
-		return (exps[type] * barCount);
 	}
 
 	public static boolean isP2P(boolean f2pwildy, Object... objs) {
@@ -828,18 +687,6 @@ public final class Formulae {
 		int fin = (int) ((newStrength * ((((double) weaponPower * 0.00175D) + 0.1D)) + 1.05D) * 0.95D);
 		return fin;
 
-	}
-
-	/**
-	 * Gets the min level required to smith a bar
-	 */
-	public static int minSmithingLevel(int barID) {
-		int[] levels = {1, 15, 30, 50, 70, 85};
-		int type = getBarType(barID);
-		if (type < 0) {
-			return -1;
-		}
-		return levels[type];
 	}
 
 	public static boolean objectAtFacing(Entity e, int x, int y, int dir) {

@@ -147,40 +147,6 @@ public class WoodcutJungle implements ObjectActionListener,
 		p.setBusy(false);
 	}
 
-	private boolean getLog(int reqlevel, int woodcutLevel, int axeId) {
-		int levelDiff = woodcutLevel - reqlevel;
-		if (levelDiff < 0) {
-			return false;
-		}
-		switch (axeId) {
-			case 87:
-				levelDiff += 0;
-				break;
-			case 12:
-				levelDiff += 2;
-				break;
-			case 428:
-				levelDiff += 4;
-				break;
-			case 88:
-				levelDiff += 6;
-				break;
-			case 203:
-				levelDiff += 8;
-				break;
-			case 204:
-				levelDiff += 10;
-				break;
-			case 405:
-				levelDiff += 12;
-				break;
-		}
-		if (reqlevel == 1 && levelDiff >= 40) {
-			return true;
-		}
-		return DataConversions.percentChance(Formulae.offsetToPercent(levelDiff));
-	}
-
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click, Player player) {
 		return obj.getID() == JUNGLE_VINE;
@@ -191,5 +157,43 @@ public class WoodcutJungle implements ObjectActionListener,
 		if (obj.getID() == JUNGLE_VINE) {
 			handleJungleWoodcut(obj, p);
 		}
+	}
+
+	/**
+	 * How much of a bonus does the woodcut axe give?
+	 */
+	public int calcAxeBonus(int axeId) {
+		int axeBonus = 0;
+		switch (axeId) {
+			case 87:
+				axeBonus = 0;
+				break;
+			case 12:
+				axeBonus = 1;
+				break;
+			case 88:
+				axeBonus = 2;
+				break;
+			case 428:
+				axeBonus = 3;
+				break;
+			case 203:
+				axeBonus = 4;
+				break;
+			case 204:
+				axeBonus = 8;
+				break;
+			case 405:
+				axeBonus = 16;
+				break;
+		}
+		return axeBonus;
+	}
+
+	/**
+	 * Should we get a log from the tree?
+	 */
+	private boolean getLog(int reqLevel, int woodcutLevel, int axeId) {
+		return Formulae.calcGatheringSuccessful(reqLevel, woodcutLevel, calcAxeBonus(axeId));
 	}
 }

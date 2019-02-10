@@ -4,6 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.ObjectMiningDef;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
@@ -197,9 +198,9 @@ public final class Mining implements ObjectActionListener,
 			@Override
 			public void action() {
 				final Item ore = new Item(def.getOreId());
-				if (Formulae.getOre(def, owner.getSkills().getLevel(14), axeId) && mineLvl >= def.getReqLevel()) {
-					if (DataConversions.random(0, 200) == 1) {
-						Item gem = new Item(Formulae.getGem(), 1);
+				if (getOre(def, owner.getSkills().getLevel(14), axeId) && mineLvl >= def.getReqLevel()) {
+					if (DataConversions.random(1, 200) <= (owner.getInventory().wielding(ItemId.CHARGED_DRAGONSTONE_AMULET.id()) ? 2 : 1)) {
+						Item gem = new Item(getGem(), 1);
 						owner.getInventory().add(gem);
 						owner.message("You just found a" + gem.getDef().getName().toLowerCase().replaceAll("uncut", "") + "!");
 						interrupt();
@@ -242,5 +243,53 @@ public final class Mining implements ObjectActionListener,
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
 		return (command.equals("mine") || command.equals("prospect")) && obj.getID() != 588;
+	}
+
+	/**
+	 * Returns a gem ID
+	 */
+	public static int getGem() {
+		int rand = DataConversions.random(0, 100);
+		if (rand < 10) {
+			return 157;
+		} else if (rand < 30) {
+			return 158;
+		} else if (rand < 60) {
+			return 159;
+		} else {
+			return 160;
+		}
+	}
+
+	public static int calcAxeBonus(int axeId) {
+		int bonus = 0;
+		/*switch (axeId) {
+			case 156:
+				bonus = 0;
+				break;
+			case 1258:
+				bonus = 1;
+				break;
+			case 1259:
+				bonus = 2;
+				break;
+			case 1260:
+				bonus = 4;
+				break;
+			case 1261:
+				bonus = 8;
+				break;
+			case 1262:
+				bonus = 16;
+				break;
+		}*/
+		return bonus;
+	}
+
+	/**
+	 * Should we can get an ore from the rock?
+	 */
+	public static boolean getOre(ObjectMiningDef def, int miningLevel, int axeId) {
+		return Formulae.calcGatheringSuccessful(def.getReqLevel(), miningLevel, calcAxeBonus(axeId));
 	}
 }
