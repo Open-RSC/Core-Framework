@@ -1,19 +1,30 @@
 package com.openrsc.server.model.entity.npc;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.MessageType;
 
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.npcYell;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.showBubble;
 
 public class NpcBehavior {
 
 	protected long lastMovement;
+	protected long lastTackleAttempt;
+	private static final int[] TACKLING_XP = {7, 10, 15, 20};
 
 	protected Npc npc;
 
@@ -83,6 +94,19 @@ public class NpcBehavior {
 					break;
 				}
 			}
+			if (System.currentTimeMillis() - lastTackleAttempt > 3000 &&
+					npc.getDef().getName().toLowerCase().equals("gnome baller") && !(npc.getID() == 609 || npc.getID() == 610)) {
+				for (Player p : npc.getViewArea().getPlayersInView()) {
+					int range = 1;
+					if (!p.withinRange(npc, range) || !hasItem(p, ItemId.GNOME_BALL.id())
+							|| p.getCache().hasKey("gnomeball_npc"))
+						continue; // Not in range, does not have a gnome ball or a gnome baller already has ball.
+					
+					//set tackle
+					state = State.TACKLE;
+					target = p;
+				}
+			}
 		} else if (state == State.AGGRO) {
 
 			// There should not be combat or aggro. Let's resume roaming.
@@ -143,7 +167,39 @@ public class NpcBehavior {
 				}
 			}
 
-		} else if (state == State.RETREAT) {
+		} else if (state == State.TACKLE) {
+			// There should not be tackle. Let's resume roaming.
+			if (target == null || npc.isRespawning() || npc.isRemoved() || target.isRemoved() || target.inCombat() || target.isBusy()) {
+				setRoaming();
+			}
+			// Target is not in range.
+			else if (target.getX() < (npc.getLoc().minX() - 4) || target.getX() > (npc.getLoc().maxX() + 4)
+				|| target.getY() < (npc.getLoc().minY() - 4) || target.getY() > (npc.getLoc().maxY() + 4)) {
+				setRoaming();
+			}
+			
+			if (target.isPlayer()) {
+				lastTackleAttempt = System.currentTimeMillis();
+				Player p = (Player) target;
+				showBubble(p, new Item(ItemId.GNOME_BALL.id()));
+				message(p, "the gnome trys to tackle you");
+				if (DataConversions.random(0, 1) == 0) {
+					//successful avoiding tackles gives agility xp
+					p.playerServerMessage(MessageType.QUEST, "You manage to push him away");
+					npcYell(p, npc, "grrrrr");
+					p.incExp(Skills.AGILITY, TACKLING_XP[DataConversions.random(0,3)], true);
+				} else {
+					p.playerServerMessage(MessageType.QUEST, "he takes the ball...");
+					p.playerServerMessage(MessageType.QUEST, "and pushes you to the floor");
+					removeItem(p, ItemId.GNOME_BALL.id(), 1);
+					p.damage((int)(Math.ceil(p.getSkills().getLevel(Skills.HITPOINTS)*0.05)));
+					playerTalk(p, null, "ouch");
+					npcYell(p, npc, "yeah");
+					p.getCache().set("gnomeball_npc", npc.getID());
+				}
+				tackle_retreat();
+			}
+		} else if (state == State.RETREAT || state == State.TACKLE_RETREAT) {
 			if (npc.finishedPath()) setRoaming();
 		}
 	}
@@ -158,6 +214,17 @@ public class NpcBehavior {
 		}
 		npc.setLastCombatState(CombatState.RUNNING);
 		npc.getOpponent().setLastCombatState(CombatState.WAITING);
+		npc.resetCombatEvent();
+
+		Point walkTo = Point.location(DataConversions.random(npc.getLoc().minX(), npc.getLoc().maxX()),
+			DataConversions.random(npc.getLoc().minY(), npc.getLoc().maxY()));
+		npc.walk(walkTo.getX(), walkTo.getY());
+	}
+	
+	public void tackle_retreat() {
+		state = State.TACKLE_RETREAT;
+		npc.setLastCombatState(CombatState.RUNNING);
+		target.setLastCombatState(CombatState.WAITING);
 		npc.resetCombatEvent();
 
 		Point walkTo = Point.location(DataConversions.random(npc.getLoc().minX(), npc.getLoc().maxX()),
@@ -229,6 +296,6 @@ public class NpcBehavior {
 	}
 
 	enum State {
-		ROAM, AGGRO, COMBAT, RETREAT;
+		ROAM, AGGRO, COMBAT, RETREAT, TACKLE, TACKLE_RETREAT;
 	}
 }
