@@ -468,7 +468,7 @@ public final class Admins implements CommandListener {
 			World.getWorld().registerItem(new GroundItem(item));
 			player.message(messagePrefix + "Added ground item to database: " + EntityHandler.getItemDef(item.getId()).getName() + " with item ID " + item.getId() + " at " + itemLocation);
 		}
-		else if (cmd.equalsIgnoreCase("rgi") || cmd.equalsIgnoreCase("rgitem")) {
+		else if (cmd.equalsIgnoreCase("rgi") || cmd.equalsIgnoreCase("rgitem") || cmd.equalsIgnoreCase("rgrounditem")) {
 			if(args.length == 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (x) (y)");
 				return;
