@@ -97,7 +97,7 @@ public class Woodcutting implements ObjectActionListener,
 					interrupt();
 					return;
 				}
-				if (Formulae.getLog(def, owner.getSkills().getLevel(8), axeID)) {
+				if (getLog(def.getReqLevel(), owner.getSkills().getLevel(8), axeID)) {
 					final Item log = new Item(def.getLogId());
 					if (!owner.getInventory().full())
 						owner.getInventory().add(log);
@@ -134,5 +134,46 @@ public class Woodcutting implements ObjectActionListener,
 		if (command.equals("chop") && def != null && object.getID() != 245 && object.getID() != 204) {
 			handleWoodcutting(object, owner, owner.click);
 		}
+	}
+
+	/**
+	 * How much of a bonus does the woodcut axe give?
+	 */
+	public int calcAxeBonus(int axeId) {
+		int axeBonus = 0;
+		switch (axeId) {
+			case 87:
+				axeBonus = 0;
+				break;
+			case 12:
+				axeBonus = 1;
+				break;
+			case 88:
+				axeBonus = 2;
+				break;
+			case 428:
+				axeBonus = 3;
+				break;
+			case 203:
+				axeBonus = 4;
+				break;
+			case 204:
+				axeBonus = 8;
+				break;
+			case 405:
+				axeBonus = 16;
+				break;
+		}
+		return axeBonus;
+	}
+
+	/**
+	 * Should we get a log from the tree?
+	 */
+	/**
+	 * Should we get a log from the tree?
+	 */
+	private boolean getLog(int reqLevel, int woodcutLevel, int axeId) {
+		return Formulae.calcGatheringSuccessful(reqLevel, woodcutLevel, calcAxeBonus(axeId));
 	}
 }

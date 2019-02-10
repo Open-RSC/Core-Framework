@@ -9,6 +9,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -129,11 +130,7 @@ public class TrawlerCatch implements ObjectActionListener, ObjectActionExecutive
 	}
 
 	private boolean catchFish(int levelReq, int level) {
-		int levelDiff = level - levelReq;
-		if (levelDiff < 0) {
-			return false;
-		}
-		return DataConversions.percentChance(offsetToPercent(levelDiff));
+		return Formulae.calcGatheringSuccessful(levelReq, level);
 	}
 
 }

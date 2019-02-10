@@ -33,15 +33,7 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 			return null;
 		}
 		ObjectFishDef thisFish = fish.get(DataConversions.random(0, fish.size() - 1));
-		int levelDiff = fishingLevel - thisFish.getReqLevel();
-		if (levelDiff < 0) {
-			return null;
-		}
-		return DataConversions.percentChance(offsetToPercent(levelDiff)) ? thisFish : null;
-	}
-
-	private static int offsetToPercent(int levelDiff) {
-		return levelDiff > 40 ? 60 : 20 + levelDiff;
+		return Formulae.calcGatheringSuccessful(thisFish.getReqLevel(), fishingLevel) ? thisFish : null;
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.skills;
 
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.ObjectMiningDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -9,7 +10,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -19,13 +19,25 @@ public class GemMining implements ObjectActionListener,
 
 	private static final int GEM_ROCK = 588;
 
-	private final int UNCUT_OPAL = 891;
-	private final int UNCUT_JADE = 890;
-	private final int UNCUT_RED_TOPAZ = 889;
-	private final int UNCUT_SAPPHIRE = 160;
-	private final int UNCUT_EMERALD = 159;
-	private final int UNCUT_RUBY = 158;
-	private final int UNCUT_DIAMOND = 157;
+	private static final int UNCUT_OPAL = 891;
+	private static final int UNCUT_JADE = 890;
+	private static final int UNCUT_RED_TOPAZ = 889;
+	private static final int UNCUT_SAPPHIRE = 160;
+	private static final int UNCUT_EMERALD = 159;
+	private static final int UNCUT_RUBY = 158;
+	private static final int UNCUT_DIAMOND = 157;
+
+	private static final int[] gemWeightsWithoutDragonstone = {64, 32, 16, 8, 3, 3, 2};
+	private static final int[] gemWeightsWithDragonstone = {60, 30, 15, 9, 5, 5, 4};
+	private static final int[] gemIds = {
+		UNCUT_OPAL,
+		UNCUT_JADE,
+		UNCUT_RED_TOPAZ,
+		UNCUT_SAPPHIRE,
+		UNCUT_EMERALD,
+		UNCUT_RUBY,
+		UNCUT_DIAMOND
+	};
 
 	private void handleGemRockMining(final GameObject obj, Player p, int click) {
 		if (p.isBusy()) {
@@ -98,7 +110,7 @@ public class GemMining implements ObjectActionListener,
 			@Override
 			public void action() {
 				if (getGem(p, 40, owner.getSkills().getLevel(14), axeId) && mineLvl >= 40) { // always 40 required mining.
-					Item gem = new Item(getGemFormula(), 1);
+					Item gem = new Item(getGemFormula(p.getInventory().wielding(ItemId.CHARGED_DRAGONSTONE_AMULET.id())), 1);
 					owner.message(minedString(gem.getID()));
 					owner.incExp(14, 200, true); // always 50XP
 					owner.getInventory().add(gem);
@@ -150,65 +162,42 @@ public class GemMining implements ObjectActionListener,
 		return -1;
 	}
 
-	private boolean getGem(Player p, int req, int miningLevel, int axeId) {
-		int levelDiff = miningLevel - req;
-		if (levelDiff > 50)
-			return DataConversions.random(0, 9) < 6;
-		if (levelDiff < 0) {
-			return false;
-		}
+	public static int calcAxeBonus(int axeId) {
 		int bonus = 0;
 		/*switch (axeId) {
-		case 156:
-			bonus = 0;
-			break;
-		case 1258:
-			bonus = 2;
-			break;
-		case 1259:
-			bonus = 6;
-			break;
-		case 1260:
-			bonus = 8;
-			break;
-		case 1261:
-			bonus = 10;
-			break;
-		case 1262:
-			bonus = 12;
-			break;
+			case 156:
+				bonus = 0;
+				break;
+			case 1258:
+				bonus = 1;
+				break;
+			case 1259:
+				bonus = 2;
+				break;
+			case 1260:
+				bonus = 4;
+				break;
+			case 1261:
+				bonus = 8;
+				break;
+			case 1262:
+				bonus = 16;
+				break;
 		}*/
-		if (p.getInventory().wielding(597)) { // charged dragonstone amulet bonus
-			bonus = 5; // 5%
-		}
-		return DataConversions.percentChance(offsetToPercent(levelDiff + bonus));
+		return bonus;
 	}
 
-	private int offsetToPercent(int levelDiff) {
-		return levelDiff > 40 ? 60 : 20 + levelDiff;
+	private static boolean getGem(Player p, int req, int miningLevel, int axeId) {
+		return Formulae.calcGatheringSuccessful(req, miningLevel, calcAxeBonus(axeId));
 	}
 
 	/**
 	 * Returns a gem ID
 	 */
-	private int getGemFormula() {
-		int rand = DataConversions.random(0, 100);
-		if (rand >= 0 && rand <= 50.00) {
-			return UNCUT_OPAL;
-		} else if (rand >= 50.01 && rand <= 66.75) {
-			return UNCUT_JADE;
-		} else if (rand >= 66.76 && rand <= 79.00) {
-			return UNCUT_RED_TOPAZ;
-		} else if (rand >= 79.01 && rand <= 87.50) {
-			return UNCUT_SAPPHIRE;
-		} else if (rand >= 87.51 && rand <= 95.50) {
-			return UNCUT_EMERALD;
-		} else if (rand >= 95.51 && rand <= 99.00) {
-			return UNCUT_RUBY;
-		} else if (rand >= 99.01 && rand <= 100) {
-			return UNCUT_DIAMOND;
-		}
-		return -1;
+	private int getGemFormula(boolean dragonstoneAmmy) {
+		return dragonstoneAmmy ?
+			Formulae.weightedRandomChoice(gemIds, gemWeightsWithDragonstone) :
+			Formulae.weightedRandomChoice(gemIds, gemWeightsWithoutDragonstone);
 	}
 
 	private String minedString(int gemID) {
