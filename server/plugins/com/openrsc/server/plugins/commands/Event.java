@@ -799,7 +799,7 @@ public final class Event implements CommandListener {
 			if(stat != -1) {
 				if(level < 1)
 					level = 1;
-				if(level > BYTE_MAX)
+				if(level > 255)
 					level = 255;
 
 				p.getSkills().setLevel(stat, level);
