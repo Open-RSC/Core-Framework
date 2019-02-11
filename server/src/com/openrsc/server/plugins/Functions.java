@@ -551,6 +551,20 @@ public class Functions {
 		replaceObject(obj, new GameObject(obj.getLocation(), cupboardID, obj.getDirection(), obj.getType()));
 		p.message("You open the cupboard");
 	}
+	
+	public static void closeGenericObject(GameObject obj, Player p, int objectID, String ... messages) {
+		replaceObject(obj, new GameObject(obj.getLocation(), objectID, obj.getDirection(), obj.getType()));
+		for(String message : messages) {
+			p.message(message);
+		}
+	}
+
+	public static void openGenericObject(GameObject obj, Player p, int objectID, String ... messages) {
+		replaceObject(obj, new GameObject(obj.getLocation(), objectID, obj.getDirection(), obj.getType()));
+		for(String message : messages) {
+			p.message(message);
+		}
+	}
 
 	public static int[] coordModifier(Player player, boolean up, GameObject object) {
 		if (object.getGameObjectDef().getHeight() <= 1) {
