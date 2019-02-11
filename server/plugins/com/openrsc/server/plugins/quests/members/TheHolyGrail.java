@@ -433,7 +433,7 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 				p.teleport(414, 11, false);
 			} else {
 				n.resetCombatEvent();
-				n.getSkills().setLevel(3, n.getDef().hits);
+				n.getSkills().setLevel(Skills.HITPOINTS, n.getDef().hits);
 				n.teleport(n.getLoc().startX, n.getLoc().startY);
 				p.message("Maybe you need something more to beat the titan");
 			}

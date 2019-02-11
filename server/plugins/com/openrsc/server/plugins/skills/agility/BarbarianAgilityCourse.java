@@ -65,7 +65,7 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 			case SWING:
 				p.message("you grab the rope and try and swing across");
 				sleep(1000);
-				int swingDamage = (int) Math.round((p.getSkills().getLevel(3)) * 0.15D);
+				int swingDamage = (int) Math.round((p.getSkills().getLevel(Skills.HITPOINTS)) * 0.15D);
 				if (fail) {
 					p.message("you skillfully swing across the hole");
 					movePlayer(p, 486, 559);
@@ -81,7 +81,7 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 				}
 				break;
 			case LOG:
-				int slipDamage = (int) Math.round((p.getSkills().getLevel(3)) * 0.1D);
+				int slipDamage = (int) Math.round((p.getSkills().getLevel(Skills.HITPOINTS)) * 0.1D);
 				p.message("You stand on the slippery log");
 				sleep(2000);
 				if (fail) {
@@ -111,7 +111,7 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 					p.setBusy(false);
 					return;
 				}
-				int ledgeDamage = (int) Math.round((p.getSkills().getLevel(3)) * 0.15D);
+				int ledgeDamage = (int) Math.round((p.getSkills().getLevel(Skills.HITPOINTS)) * 0.15D);
 				if (fail) {
 					movePlayer(p, 501, 1506);
 					p.message("You skillfully balance across the hole");

@@ -2,8 +2,10 @@ package com.openrsc.server.plugins.skills;
 
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.ObjectFishDef;
 import com.openrsc.server.external.ObjectFishingDef;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -58,10 +60,10 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 			return;
 		}
 		if (owner.getFatigue() >= owner.MAX_FATIGUE) {
-			owner.playerServerMessage(MessageType.QUEST, "@gre@You are too tired to catch this fish");
+			owner.message("You are too tired to catch this fish");
 			return;
 		}
-		if (owner.getSkills().getLevel(10) < def.getReqLevel()) {
+		if (owner.getSkills().getLevel(Skills.FISHING) < def.getReqLevel()) {
 			owner.playerServerMessage(MessageType.QUEST, "You need at least level " + def.getReqLevel() + " "
 				+ fishingRequirementString(object, command) + " "
 				+ (!command.contains("cage") ? "these fish"
@@ -93,7 +95,7 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 		}
 		owner.playerServerMessage(MessageType.QUEST, "You attempt to catch " + tryToCatchFishString(def));
 		showBubble(owner, new Item(netId));
-		owner.setBatchEvent(new BatchEvent(owner, 1800, Formulae.getRepeatTimes(owner, 10)) {
+		owner.setBatchEvent(new BatchEvent(owner, 1800, Formulae.getRepeatTimes(owner, Skills.FISHING)) {
 			@Override
 			public void action() {
 				showBubble(owner, new Item(netId));
@@ -111,7 +113,7 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 					return;
 				}
 				owner.playSound("fish");
-				ObjectFishDef fishDef = getFish(def, owner.getSkills().getLevel(10), click);
+				ObjectFishDef fishDef = getFish(def, owner.getSkills().getLevel(Skills.FISHING), click);
 				if (fishDef != null) {
 					if (baitId >= 0) {
 						int idx = owner.getInventory().getLastIndexById(baitId);
@@ -124,28 +126,28 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 						}
 						ActionSender.sendInventory(owner);
 					}
-					if (netId == 548) {
+					if (netId == ItemId.BIG_NET.id()) {
 						if (DataConversions.random(0, 200) == 100) {
 							owner.playerServerMessage(MessageType.QUEST, "You catch a casket");
-							owner.incExp(10, fishDef.getExp(), true);
-							addItem(owner, 549, 1);
+							owner.incExp(Skills.FISHING, fishDef.getExp(), true);
+							addItem(owner, ItemId.CASKET.id(), 1);
 						}
 						Item fish = new Item(fishDef.getId());
 						owner.getInventory().add(fish);
-						owner.playerServerMessage(MessageType.QUEST, "You catch " + (fish.getID() == 17 || fish.getID() == 622 || fish.getID() == 16 ? "some" : fish.getID() == 793 ? "an" : "a") + " "
-							+ fish.getDef().getName().toLowerCase().replace("raw ", "").replace("leather ", "") + (fish.getID() == 793 ? " shell" : ""));
-						owner.incExp(10, fishDef.getExp(), true);
+						owner.playerServerMessage(MessageType.QUEST, "You catch " + (fish.getID() == ItemId.BOOTS.id() || fish.getID() == ItemId.SEAWEED.id() || fish.getID() == ItemId.LEATHER_GLOVES.id() ? "some" : fish.getID() == ItemId.OYSTER.id() ? "an" : "a") + " "
+							+ fish.getDef().getName().toLowerCase().replace("raw ", "").replace("leather ", "") + (fish.getID() == ItemId.OYSTER.id() ? " shell" : ""));
+						owner.incExp(Skills.FISHING, fishDef.getExp(), true);
 					} else {
 						Item fish = new Item(fishDef.getId());
 						owner.getInventory().add(fish);
-						owner.playerServerMessage(MessageType.QUEST, "You catch " + (netId == 376 ? "some" : "a") + " "
-							+ fish.getDef().getName().toLowerCase().replace("raw ", "") + (fish.getID() == 349 ? "s" : "")
-							+ (fish.getID() == 545 ? "!" : ""));
-						owner.incExp(10, fishDef.getExp(), true);
+						owner.playerServerMessage(MessageType.QUEST, "You catch " + (netId == ItemId.NET.id() ? "some" : "a") + " "
+							+ fish.getDef().getName().toLowerCase().replace("raw ", "") + (fish.getID() == ItemId.RAW_SHRIMP.id() ? "s" : "")
+							+ (fish.getID() == ItemId.RAW_SHARK.id() ? "!" : ""));
+						owner.incExp(Skills.FISHING, fishDef.getExp(), true);
 					}
 				} else {
 					owner.playerServerMessage(MessageType.QUEST, "You fail to catch anything");
-					if (!owner.getInventory().hasItemId(349) && owner.getLocation().onTutorialIsland()
+					if (!owner.getInventory().hasItemId(ItemId.RAW_SHRIMP.id()) && owner.getLocation().onTutorialIsland()
 						&& owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 40) {
 						owner.message("keep trying, you'll catch something soon");
 					}
@@ -183,9 +185,9 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 
 	private String tryToCatchFishString(ObjectFishingDef def) {
 		String name = "";
-		if (def.getNetId() == 376) {
+		if (def.getNetId() == ItemId.NET.id()) {
 			name = "some fish";
-		} else if (def.getNetId() == 375) {
+		} else if (def.getNetId() == ItemId.LOBSTER_POT.id()) {
 			name = "a lobster";
 		} else {
 			name = "a fish";

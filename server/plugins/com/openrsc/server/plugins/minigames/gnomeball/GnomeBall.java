@@ -176,11 +176,11 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 	
 	private void showScoreWindow(Player p, int goalNum) {
 		String text = "@yel@goal";
-		if (goalNum > 1 && goalNum < 5) {
+		if (goalNum > 1) {
 			text += (" " + goalNum);
 		}
-		else if (goalNum == 5) {
-			text += (" 5% %Well Done% %@red@Agility Bonus");
+		if (goalNum == 5) {
+			text += ("% %Well Done% %@red@Agility Bonus");
 		}
 		ActionSender.sendBox(p, text, false);
 	}

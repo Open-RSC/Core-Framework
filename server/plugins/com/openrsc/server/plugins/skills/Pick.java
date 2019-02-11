@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.skills;
 
 import com.openrsc.server.Server;
 import com.openrsc.server.event.SingleEvent;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -23,7 +24,7 @@ public final class Pick implements ObjectActionExecutiveListener,
 	private void handleFlaxPickup(final Player owner, GameObject obj) {
 		owner.setBusyTimer(250);
 		owner.message("You uproot a flax plant");
-		addItem(owner, 675, 1);
+		addItem(owner, ItemId.FLAX.id(), 1);
 	}
 
 	@Override
@@ -32,11 +33,11 @@ public final class Pick implements ObjectActionExecutiveListener,
 		switch (object.getID()) {
 			case 72: // Wheat
 				owner.message("You get some grain");
-				owner.getInventory().add(new Item(29, 1));
+				owner.getInventory().add(new Item(ItemId.GRAIN.id(), 1));
 				break;
 			case 191: // Potatos
 				owner.message("You pick a potato");
-				owner.getInventory().add(new Item(348, 1));
+				owner.getInventory().add(new Item(ItemId.POTATO.id(), 1));
 				break;
 			case 313: // Flax
 				handleFlaxPickup(owner, object);

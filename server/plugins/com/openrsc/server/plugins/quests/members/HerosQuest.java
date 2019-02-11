@@ -356,7 +356,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 			} else {
 				p.message("Ouch that is too hot to take");
 				p.message("I need something cold to pick it up with");
-				int damage = (int) Math.round((p.getSkills().getLevel(3)) * 0.15D);
+				int damage = (int) Math.round((p.getSkills().getLevel(Skills.HITPOINTS)) * 0.15D);
 				p.damage(damage);
 				return true;
 			}

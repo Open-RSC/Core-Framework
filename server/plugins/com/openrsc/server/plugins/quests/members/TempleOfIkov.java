@@ -532,7 +532,7 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 			if (command.equals("pull")) {
 				if (!p.getCache().hasKey("ikovLever")) {
 					p.message("You have activated a trap on the lever");
-					p.damage(DataConversions.roundUp(p.getSkills().getLevel(3) / 5));
+					p.damage(DataConversions.roundUp(p.getSkills().getLevel(Skills.HITPOINTS) / 5));
 				} else {
 					message(p, "You pull the lever",
 						"You hear a clunk",
@@ -675,10 +675,10 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 		if (n.getID() == EDGE_LUCIEN) {
 			if (p.getQuestStage(this) == -1 || p.getQuestStage(this) == -2) {
 				p.message("You have already completed this quest");
-				n.getSkills().setLevel(3, n.getSkills().getMaxStat(3));
+				n.getSkills().setLevel(Skills.HITPOINTS, n.getSkills().getMaxStat(Skills.HITPOINTS));
 				return;
 			}
-			n.getSkills().setLevel(3, n.getSkills().getMaxStat(3));
+			n.getSkills().setLevel(Skills.HITPOINTS, n.getSkills().getMaxStat(Skills.HITPOINTS));
 			npcTalk(p, n, "You may have defeated me for now",
 				"But I will be back");
 			p.sendQuestComplete(Constants.Quests.TEMPLE_OF_IKOV);

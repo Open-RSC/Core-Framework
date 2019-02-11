@@ -29,7 +29,7 @@ public class MageArena implements TalkToNpcExecutiveListener, TalkToNpcListener,
 	
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
-		if (p.getSkills().getMaxStat(Skills.MAGIC) < 60) { // TODO: Enter the arena game.
+		if (getMaxLevel(p, Skills.MAGIC) < 60) { // TODO: Enter the arena game.
 			playerTalk(p, n, "hello there", "what is this place?");
 			npcTalk(p, n, "do not waste my time with trivial questions!",
 				"i am the great kolodion, master of battle magic", "i have an arena to run");

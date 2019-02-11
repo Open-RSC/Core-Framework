@@ -3043,7 +3043,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					failWindowAnaInBarrel(p, null);
 				} else {
 					message(p, "You manage to bend the bar and climb out of the window.");
-					p.incExp(2, 40, true);
+					p.incExp(Skills.STRENGTH, 40, true);
 					p.teleport(90, 802);
 					p.message("You land near some rough rocks, which you may be able to climb.");
 				}
@@ -3066,7 +3066,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					failWindowAnaInBarrel(p, null);
 				} else {
 					message(p, "You manage to bend the bar !");
-					p.incExp(2, 40, true);
+					p.incExp(Skills.STRENGTH, 40, true);
 					p.teleport(89, 802);
 					p.message("You climb back inside the cell.");
 				}

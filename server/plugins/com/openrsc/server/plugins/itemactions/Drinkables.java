@@ -539,8 +539,8 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		if (maxWithTea - player.getSkills().getLevel(Skills.ATTACK) < changeAtt) {
 			changeAtt = maxWithTea - player.getSkills().getLevel(Skills.ATTACK);
 		}
-		if (player.getSkills().getLevel(
-			Skills.ATTACK) <= (player.getSkills().getMaxStat(Skills.ATTACK) + (player.getSkills().getMaxStat(Skills.ATTACK) > 55 ? 3 : 2))) {
+		if (player.getSkills().getLevel(Skills.ATTACK) <= 
+				(player.getSkills().getMaxStat(Skills.ATTACK) + (player.getSkills().getMaxStat(Skills.ATTACK) > 55 ? 3 : 2))) {
 			player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) + changeAtt);
 		}
 	}
@@ -635,7 +635,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		showBubble(player, item);
 		sleep(1200);
 		player.message("You feel slightly dizzy.");
-		player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(0) - 4);
+		player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) - 4);
 		if (player.getSkills().getLevel(Skills.STRENGTH) <= player.getSkills().getMaxStat(Skills.STRENGTH)) {
 			player.getSkills().setLevel(Skills.STRENGTH, player.getSkills().getLevel(Skills.STRENGTH) + 2);
 		}
