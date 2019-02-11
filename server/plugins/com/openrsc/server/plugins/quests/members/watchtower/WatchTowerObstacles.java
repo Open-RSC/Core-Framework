@@ -376,7 +376,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 				p.message("The bridge has collapsed");
 				p.message("It seems this rock is placed here to jump from");
 			} else if (command.equalsIgnoreCase("jump over")) {
-				if (p.getSkills().getLevel(16) < 30) {
+				if (getCurrentLevel(p, Skills.AGILITY) < 30) {
 					p.message("You need agility level of 30 to attempt this jump");
 					return;
 				}

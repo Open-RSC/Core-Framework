@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members.watchtower;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -328,9 +329,9 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 				message(p, "You try and take the crystal but its stuck solid!",
 					"You feel magic power coursing through the crystal...",
 					"The force renews your magic level");
-				int maxMagic = p.getSkills().getMaxStat(6);
-				if (p.getSkills().getLevel(6) < maxMagic) {
-					p.getSkills().setLevel(6, maxMagic);
+				int maxMagic = getMaxLevel(p, Skills.MAGIC);
+				if (getCurrentLevel(p, Skills.MAGIC) < maxMagic) {
+					p.getSkills().setLevel(Skills.MAGIC, maxMagic);
 				}
 			} else {
 				p.message("You take the crystal");

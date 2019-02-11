@@ -16,23 +16,21 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-import java.util.Arrays;
-
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class Mining implements ObjectActionListener,
 	ObjectActionExecutiveListener {
 
-	static int[] ids;
+	/*static int[] ids;
 
 	static {
 		ids = new int[]{176, 100, 101, 102, 103, 104, 105, 106, 107, 108,
 			109, 110, 111, 112, 113, 114, 115, 195, 196, 210, 211};
 		Arrays.sort(ids);
-	}
+	}*/
 
 	public static int getAxe(Player p) {
-		int lvl = p.getSkills().getLevel(14);
+		int lvl = p.getSkills().getLevel(Skills.MINING);
 		for (int i = 0; i < Formulae.miningAxeIDs.length; i++) {
 			if (p.getInventory().countId(Formulae.miningAxeIDs[i]) > 0) {
 				if (lvl >= Formulae.miningAxeLvls[i]) {
@@ -70,7 +68,7 @@ public final class Mining implements ObjectActionListener,
 			if (hasItem(owner, getAxe(owner))) {
 				owner.setBusyTimer(1600);
 				message(owner, "you mine the rock", "and break of several large chunks");
-				addItem(owner, 986, 1);
+				addItem(owner, ItemId.ROCKS.id(), 1);
 			} else {
 				owner.message("you need a pickaxe to mine this rock");
 			}
@@ -85,18 +83,18 @@ public final class Mining implements ObjectActionListener,
 						owner.message("You need a mining level of 40 to mine this crystal out");
 						return;
 					}
-					if (hasItem(owner, 1154)) {
+					if (hasItem(owner, ItemId.POWERING_CRYSTAL4.id())) {
 						playerTalk(owner, null, "I already have this crystal",
 							"There is no benefit to getting another");
 						return;
 					}
 					owner.playSound("mine");
 					// special bronze pick bubble for rock of dalgroth - see wiki
-					showBubble(owner, new Item(156));
+					showBubble(owner, new Item(ItemId.BRONZE_PICKAXE.id()));
 					owner.message("You have a swing at the rock!");
 					message(owner, "You swing your pick at the rock...");
 					owner.message("A crack appears in the rock and you prize a crystal out");
-					addItem(owner, 1154, 1);
+					addItem(owner, ItemId.POWERING_CRYSTAL4.id(), 1);
 				} else {
 					playerTalk(owner, null, "I can't touch it...",
 						"Perhaps it is linked with the shaman some way ?");
@@ -122,30 +120,33 @@ public final class Mining implements ObjectActionListener,
 		final ObjectMiningDef def = EntityHandler.getObjectMiningDef(object.getID());
 		final int axeId = getAxe(owner);
 		int retrytimes = -1;
-		final int mineLvl = owner.getSkills().getLevel(14);
+		final int mineLvl = owner.getSkills().getLevel(Skills.MINING);
 		int reqlvl = 1;
-		switch (axeId) {
-			case 156:
+		switch (ItemId.getById(axeId)) {
+			case BRONZE_PICKAXE:
 				retrytimes = 1;
 				break;
-			case 1258:
+			case IRON_PICKAXE:
 				retrytimes = 2;
 				break;
-			case 1259:
+			case STEEL_PICKAXE:
 				retrytimes = 3;
 				reqlvl = 6;
 				break;
-			case 1260:
+			case MITHRIL_PICKAXE:
 				retrytimes = 5;
 				reqlvl = 21;
 				break;
-			case 1261:
+			case ADAMANTITE_PICKAXE:
 				retrytimes = 8;
 				reqlvl = 31;
 				break;
-			case 1262:
+			case RUNE_PICKAXE:
 				retrytimes = 12;
 				reqlvl = 41;
+				break;
+			default:
+				retrytimes = 1;
 				break;
 		}
 
@@ -192,13 +193,13 @@ public final class Mining implements ObjectActionListener,
 			return;
 		}
 		owner.playSound("mine");
-		showBubble(owner, new Item(1258));
+		showBubble(owner, new Item(ItemId.IRON_PICKAXE.id()));
 		owner.message("You swing your pick at the rock...");
 		owner.setBatchEvent(new BatchEvent(owner, 1800, 1000 + retrytimes) {
 			@Override
 			public void action() {
 				final Item ore = new Item(def.getOreId());
-				if (getOre(def, owner.getSkills().getLevel(14), axeId) && mineLvl >= def.getReqLevel()) {
+				if (getOre(def, owner.getSkills().getLevel(Skills.MINING), axeId) && mineLvl >= def.getReqLevel()) {
 					if (DataConversions.random(1, 200) <= (owner.getInventory().wielding(ItemId.CHARGED_DRAGONSTONE_AMULET.id()) ? 2 : 1)) {
 						Item gem = new Item(getGem(), 1);
 						owner.getInventory().add(gem);
@@ -207,7 +208,7 @@ public final class Mining implements ObjectActionListener,
 					} else {
 						owner.getInventory().add(ore);
 						owner.message("You manage to obtain some " + ore.getDef().getName().toLowerCase());
-						owner.incExp(14, def.getExp(), true);
+						owner.incExp(Skills.MINING, def.getExp(), true);
 						interrupt();
 						GameObject obj = owner.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 						if (obj != null && obj.getID() == object.getID()) {
@@ -232,7 +233,7 @@ public final class Mining implements ObjectActionListener,
 					}
 				}
 				if (!isCompleted()) {
-					showBubble(owner, new Item(1258));
+					showBubble(owner, new Item(ItemId.IRON_PICKAXE.id()));
 					owner.message("You swing your pick at the rock...");
 				}
 

@@ -8,6 +8,7 @@ import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemArrowHeadDef;
 import com.openrsc.server.external.ItemBowStringDef;
 import com.openrsc.server.external.ItemDartTipDef;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.ItemLogCutDef;
 import com.openrsc.server.model.MenuOptionListener;
 import com.openrsc.server.model.Skills;
@@ -23,29 +24,29 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 
 	@Override
 	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
-		if (item1.getID() == 381 && attachFeathers(player, item1, item2)) {
+		if (item1.getID() == ItemId.FEATHER.id() && attachFeathers(player, item1, item2)) {
 			return true;
-		} else if (item2.getID() == 381 && attachFeathers(player, item2, item1)) {
+		} else if (item2.getID() == ItemId.FEATHER.id() && attachFeathers(player, item2, item1)) {
 			return true;
-		} else if (item1.getID() == 676 && doBowString(player, item1, item2)) {
+		} else if (item1.getID() == ItemId.BOW_STRING.id() && doBowString(player, item1, item2)) {
 			return true;
-		} else if (item2.getID() == 676 && doBowString(player, item2, item1)) {
+		} else if (item2.getID() == ItemId.BOW_STRING.id() && doBowString(player, item2, item1)) {
 			return true;
-		} else if (item1.getID() == 637 && doArrowHeads(player, item1, item2)) {
+		} else if (item1.getID() == ItemId.HEADLESS_ARROWS.id() && doArrowHeads(player, item1, item2)) {
 			return true;
-		} else if (item2.getID() == 637 && doArrowHeads(player, item2, item1)) {
+		} else if (item2.getID() == ItemId.HEADLESS_ARROWS.id() && doArrowHeads(player, item2, item1)) {
 			return true;
-		} else if (item1.getID() == 13 && doLogCut(player, item1, item2)) {
+		} else if (item1.getID() == ItemId.KNIFE.id() && doLogCut(player, item1, item2)) {
 			return true;
-		} else if (item2.getID() == 13 && doLogCut(player, item2, item1)) {
+		} else if (item2.getID() == ItemId.KNIFE.id() && doLogCut(player, item2, item1)) {
 			return true;
-		} else if (item1.getID() == 167 && (item2.getID() == 779 || item2.getID() == 792) && doPearlCut(player, item1, item2)) {
+		} else if (item1.getID() == ItemId.CHISEL.id() && (item2.getID() == ItemId.QUEST_OYSTER_PEARLS.id() || item2.getID() == ItemId.OYSTER_PEARLS.id()) && doPearlCut(player, item1, item2)) {
 			return true;
-		} else if (item2.getID() == 167 && (item1.getID() == 779 || item1.getID() == 792) && doPearlCut(player, item2, item1)) {
+		} else if (item2.getID() == ItemId.CHISEL.id() && (item1.getID() == ItemId.QUEST_OYSTER_PEARLS.id() || item1.getID() == ItemId.OYSTER_PEARLS.id()) && doPearlCut(player, item2, item1)) {
 			return true;
-		} else if (item1.getID() == 790 && doBoltMake(player, item2, item1)) {
+		} else if (item1.getID() == ItemId.OYSTER_PEARL_BOLT_TIPS.id() && doBoltMake(player, item2, item1)) {
 			return true;
-		} else if (item2.getID() == 790 && doBoltMake(player, item1, item2)) {
+		} else if (item2.getID() == ItemId.OYSTER_PEARL_BOLT_TIPS.id() && doBoltMake(player, item1, item2)) {
 			return true;
 		}
 		return false;
@@ -72,8 +73,8 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 		final int itemID;
 		int experience = 4;
 		ItemDartTipDef tipDef = null;
-		if (item.getID() == 280) { // Arrow Shafts
-			itemID = 637; // Headless Arrows
+		if (item.getID() == ItemId.ARROW_SHAFTS.id()) {
+			itemID = ItemId.HEADLESS_ARROWS.id();
 		} else if ((tipDef = EntityHandler.getItemDartTipDef(item.getID())) != null) {
 			itemID = tipDef.getDartID(); // Dart ID
 			experience = (int) (tipDef.getExp());
@@ -97,7 +98,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 				}
 				if (owner.getInventory().remove(feathers.getID(), 1) > -1
 					&& owner.getInventory().remove(item.getID(), 1) > -1) {
-					owner.incExp(9, exp, true);
+					owner.incExp(Skills.FLETCHING, exp, true);
 					addItem(owner, itemID, 1);
 				} else {
 					interrupt();
@@ -133,7 +134,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 		player.setBatchEvent(new BatchEvent(player, 40, 1000 + amount) {
 			@Override
 			public void action() {
-				if (owner.getSkills().getLevel(9) < headDef.getReqLevel()) {
+				if (owner.getSkills().getLevel(Skills.FLETCHING) < headDef.getReqLevel()) {
 					owner.message("You need a fletching skill of "
 						+ headDef.getReqLevel() + " or above to do that");
 					interrupt();
@@ -149,7 +150,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 				}
 				if (owner.getInventory().remove(headlessArrows.getID(), 1) > -1
 					&& owner.getInventory().remove(arrowHeads.getID(), 1) > -1) {
-					owner.incExp(9, headDef.getExp(), true);
+					owner.incExp(Skills.FLETCHING, headDef.getExp(), true);
 					owner.getInventory().add(new Item(headDef.getArrowID(), 1));
 				} else {
 					interrupt();
@@ -175,7 +176,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 			.getRepeatTimes(player, Skills.FLETCHING)) {
 			@Override
 			public void action() {
-				if (owner.getSkills().getLevel(9) < stringDef.getReqLevel()) {
+				if (owner.getSkills().getLevel(Skills.FLETCHING) < stringDef.getReqLevel()) {
 					owner.message("You need a fletching skill of "
 						+ stringDef.getReqLevel() + " or above to do that");
 					interrupt();
@@ -193,7 +194,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 					&& owner.getInventory().remove(bow) > -1) {
 					owner.message("You add a string to the bow");
 					owner.getInventory().add(new Item(stringDef.getBowID(), 1));
-					owner.incExp(9, stringDef.getExp(), true);
+					owner.incExp(Skills.FLETCHING, stringDef.getExp(), true);
 				} else
 					interrupt();
 			}
@@ -207,8 +208,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 			player.sendMemberErrorMessage();
 			return true;
 		}
-		final ItemLogCutDef cutDef = EntityHandler
-			.getItemLogCutDef(log.getID());
+		final ItemLogCutDef cutDef = EntityHandler.getItemLogCutDef(log.getID());
 		if (cutDef == null) {
 			return false;
 		}
@@ -219,7 +219,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 					"Make shortbow", "Make longbow"};
 				String[] options = new String[]{"Make shortbow",
 					"Make longbow"};
-				if (log.getID() == 14) {
+				if (log.getID() == ItemId.LOGS.id()) {
 					owner.setMenuHandler(new MenuOptionListener(option) {
 						public void handleReply(final int option,
 												final String reply) {
@@ -258,7 +258,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 
 								@Override
 								public void action() {
-									if (owner.getSkills().getLevel(9) < requiredLvl) {
+									if (owner.getSkills().getLevel(Skills.FLETCHING) < requiredLvl) {
 										owner.message("You need a fletching skill of "
 											+ requiredLvl + " or above to do that");
 										interrupt();
@@ -267,7 +267,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 									if (owner.getInventory().remove(log) > -1) {
 										owner.message(cutMessages);
 										addItem(owner, itemID, amount);
-										owner.incExp(9, experience, true);
+										owner.incExp(Skills.FLETCHING, experience, true);
 									} else
 										interrupt();
 								}
@@ -308,7 +308,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 
 							@Override
 							public void action() {
-								if (owner.getSkills().getLevel(9) < requiredLvl) {
+								if (owner.getSkills().getLevel(Skills.FLETCHING) < requiredLvl) {
 									owner.message("You need a fletching skill of "
 										+ requiredLvl + " or above to do that");
 									interrupt();
@@ -317,7 +317,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 								if (owner.getInventory().remove(log) > -1) {
 									owner.message(cutMessages);
 									addItem(owner, itemID, amount);
-									owner.incExp(9, experience, true);
+									owner.incExp(Skills.FLETCHING, experience, true);
 								} else
 									interrupt();
 							}
@@ -337,9 +337,9 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 		}
 
 		int amount;
-		if (pearl.getID() == 779) { // Quest Pearl
+		if (pearl.getID() == ItemId.QUEST_OYSTER_PEARLS.id()) {
 			amount = 25;
-		} else if (pearl.getID() == 792) { // Regular Pearl
+		} else if (pearl.getID() == ItemId.OYSTER_PEARLS.id()) {
 			amount = 2;
 		} else {
 			player.message("Nothing interesting happens");
@@ -353,15 +353,15 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 			.getRepeatTimes(player, Skills.FLETCHING)) {
 			@Override
 			public void action() {
-				if (owner.getSkills().getLevel(9) < 34) {
+				if (owner.getSkills().getLevel(Skills.FLETCHING) < 34) {
 					owner.message("You need a fletching skill of 34 to do that");
 					interrupt();
 					return;
 				}
 				if (owner.getInventory().remove(pearlID, 1) > -1) {
 					owner.message("");
-					owner.incExp(9, exp, true);
-					addItem(owner, 790, amt);
+					owner.incExp(Skills.FLETCHING, exp, true);
+					addItem(owner, ItemId.OYSTER_PEARL_BOLT_TIPS.id(), amt);
 				} else interrupt();
 			}
 		});
@@ -374,7 +374,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 			return true;
 		}
 
-		if (tips.getID() != 790) { // not pearl tips
+		if (tips.getID() != ItemId.OYSTER_PEARL_BOLT_TIPS.id()) { // not pearl tips
 			player.message("Nothing interesting happens");
 			return false;
 		}
@@ -390,7 +390,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 		player.setBatchEvent(new BatchEvent(player, 40, 1000 + amount) {
 			@Override
 			public void action() {
-				if (owner.getSkills().getLevel(9) < 34) {
+				if (owner.getSkills().getLevel(Skills.FLETCHING) < 34) {
 					owner.message("You need a fletching skill of 34 to do that");
 					interrupt();
 					return;
@@ -406,8 +406,8 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 				if (owner.getInventory().remove(bolt, 1) > -1
 					&& owner.getInventory().remove(tip, 1) > -1) {
 					owner.message("");
-					owner.incExp(9, 25, true);
-					addItem(owner, 786, 1);
+					owner.incExp(Skills.FLETCHING, 25, true);
+					addItem(owner, ItemId.OYSTER_PEARL_BOLTS.id(), 1);
 				} else interrupt();
 			}
 		});

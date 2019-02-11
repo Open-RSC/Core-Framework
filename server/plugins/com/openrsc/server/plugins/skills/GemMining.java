@@ -4,6 +4,7 @@ import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.ObjectMiningDef;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -19,24 +20,16 @@ public class GemMining implements ObjectActionListener,
 
 	private static final int GEM_ROCK = 588;
 
-	private static final int UNCUT_OPAL = 891;
-	private static final int UNCUT_JADE = 890;
-	private static final int UNCUT_RED_TOPAZ = 889;
-	private static final int UNCUT_SAPPHIRE = 160;
-	private static final int UNCUT_EMERALD = 159;
-	private static final int UNCUT_RUBY = 158;
-	private static final int UNCUT_DIAMOND = 157;
-
 	private static final int[] gemWeightsWithoutDragonstone = {64, 32, 16, 8, 3, 3, 2};
 	private static final int[] gemWeightsWithDragonstone = {60, 30, 15, 9, 5, 5, 4};
 	private static final int[] gemIds = {
-		UNCUT_OPAL,
-		UNCUT_JADE,
-		UNCUT_RED_TOPAZ,
-		UNCUT_SAPPHIRE,
-		UNCUT_EMERALD,
-		UNCUT_RUBY,
-		UNCUT_DIAMOND
+		ItemId.UNCUT_OPAL.id(),
+		ItemId.UNCUT_JADE.id(),
+		ItemId.UNCUT_RED_TOPAZ.id(),
+		ItemId.UNCUT_SAPPHIRE.id(),
+		ItemId.UNCUT_EMERALD.id(),
+		ItemId.UNCUT_RUBY.id(),
+		ItemId.UNCUT_DIAMOND.id()
 	};
 
 	private void handleGemRockMining(final GameObject obj, Player p, int click) {
@@ -49,30 +42,33 @@ public class GemMining implements ObjectActionListener,
 		final ObjectMiningDef def = EntityHandler.getObjectMiningDef(obj.getID());
 		final int axeId = getAxe(p);
 		int retrytimes = -1;
-		final int mineLvl = p.getSkills().getLevel(14);
+		final int mineLvl = p.getSkills().getLevel(Skills.MINING);
 		int reqlvl = 1;
-		switch (axeId) {
-			case 156:
+		switch (ItemId.getById(axeId)) {
+			case BRONZE_PICKAXE:
 				retrytimes = 1;
 				break;
-			case 1258:
+			case IRON_PICKAXE:
 				retrytimes = 2;
 				break;
-			case 1259:
+			case STEEL_PICKAXE:
 				retrytimes = 3;
 				reqlvl = 6;
 				break;
-			case 1260:
+			case MITHRIL_PICKAXE:
 				retrytimes = 5;
 				reqlvl = 21;
 				break;
-			case 1261:
+			case ADAMANTITE_PICKAXE:
 				retrytimes = 8;
 				reqlvl = 31;
 				break;
-			case 1262:
+			case RUNE_PICKAXE:
 				retrytimes = 12;
 				reqlvl = 41;
+				break;
+			default:
+				retrytimes = 1;
 				break;
 		}
 
@@ -104,15 +100,15 @@ public class GemMining implements ObjectActionListener,
 		}
 
 		p.playSound("mine");
-		showBubble(p, new Item(1258));
+		showBubble(p, new Item(ItemId.IRON_PICKAXE.id()));
 		p.message("You have a swing at the rock!");
 		p.setBatchEvent(new BatchEvent(p, 1800, 1000 + retrytimes) {
 			@Override
 			public void action() {
-				if (getGem(p, 40, owner.getSkills().getLevel(14), axeId) && mineLvl >= 40) { // always 40 required mining.
+				if (getGem(p, 40, owner.getSkills().getLevel(Skills.MINING), axeId) && mineLvl >= 40) { // always 40 required mining.
 					Item gem = new Item(getGemFormula(p.getInventory().wielding(ItemId.CHARGED_DRAGONSTONE_AMULET.id())), 1);
 					owner.message(minedString(gem.getID()));
-					owner.incExp(14, 200, true); // always 50XP
+					owner.incExp(Skills.MINING, 200, true); // always 50XP
 					owner.getInventory().add(gem);
 					interrupt();
 					GameObject object = owner.getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
@@ -131,7 +127,7 @@ public class GemMining implements ObjectActionListener,
 					}
 				}
 				if (!isCompleted()) {
-					showBubble(owner, new Item(1258));
+					showBubble(owner, new Item(ItemId.IRON_PICKAXE.id()));
 					owner.message("You have a swing at the rock!");
 				}
 			}
@@ -151,7 +147,7 @@ public class GemMining implements ObjectActionListener,
 	}
 
 	private int getAxe(Player p) {
-		int lvl = p.getSkills().getLevel(14);
+		int lvl = p.getSkills().getLevel(Skills.MINING);
 		for (int i = 0; i < Formulae.miningAxeIDs.length; i++) {
 			if (p.getInventory().countId(Formulae.miningAxeIDs[i]) > 0) {
 				if (lvl >= Formulae.miningAxeLvls[i]) {
@@ -201,19 +197,19 @@ public class GemMining implements ObjectActionListener,
 	}
 
 	private String minedString(int gemID) {
-		if (gemID == UNCUT_OPAL) {
+		if (gemID == ItemId.UNCUT_OPAL.id()) {
 			return "You just mined an Opal!";
-		} else if (gemID == UNCUT_JADE) {
+		} else if (gemID == ItemId.UNCUT_JADE.id()) {
 			return "You just mined a piece of Jade!";
-		} else if (gemID == UNCUT_RED_TOPAZ) {
+		} else if (gemID == ItemId.UNCUT_RED_TOPAZ.id()) {
 			return "You just mined a Red Topaz!";
-		} else if (gemID == UNCUT_SAPPHIRE) {
+		} else if (gemID == ItemId.UNCUT_SAPPHIRE.id()) {
 			return "You just found a sapphire!";
-		} else if (gemID == UNCUT_EMERALD) {
+		} else if (gemID == ItemId.UNCUT_EMERALD.id()) {
 			return "You just found an emerald!";
-		} else if (gemID == UNCUT_RUBY) {
+		} else if (gemID == ItemId.UNCUT_RUBY.id()) {
 			return "You just found a ruby!";
-		} else if (gemID == UNCUT_DIAMOND) {
+		} else if (gemID == ItemId.UNCUT_DIAMOND.id()) {
 			return "You just found a diamond!";
 		}
 		return null;

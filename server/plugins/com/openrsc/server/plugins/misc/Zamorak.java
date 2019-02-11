@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.misc;
 
 import com.openrsc.server.external.ItemId;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -77,8 +78,8 @@ public class Zamorak implements TalkToNpcListener, TalkToNpcExecutiveListener, P
 		zam.getUpdateFlags().setChatMessage(new ChatMessage(zam, "A curse be upon you", owner));
 		sleep(2200);
 		owner.message("You feel slightly weakened");
-		if (owner.getSkills().getLevel(3) > 10) {
-			owner.damage((int) (owner.getSkills().getLevel(3) * 0.08D));
+		if (owner.getSkills().getLevel(Skills.HITPOINTS) > 10) {
+			owner.damage((int) (owner.getSkills().getLevel(Skills.HITPOINTS) * 0.08D));
 		} else {
 			owner.damage(1);
 		}

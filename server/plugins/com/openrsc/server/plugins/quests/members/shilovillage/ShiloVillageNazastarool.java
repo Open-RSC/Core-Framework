@@ -225,7 +225,7 @@ public class ShiloVillageNazastarool implements ObjectActionListener, ObjectActi
 			if (!p.getInventory().wielding(852)) {
 				choke(p);
 			}
-			n.getSkills().setLevel(3, n.getSkills().getMaxStat(3));
+			n.getSkills().setLevel(Skills.HITPOINTS, n.getSkills().getMaxStat(Skills.HITPOINTS));
 		}
 	}
 }

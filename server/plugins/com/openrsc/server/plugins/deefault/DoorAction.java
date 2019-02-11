@@ -342,7 +342,7 @@ public class DoorAction {
 					p.message("You fall through the bridge");
 					sleep(1000);
 					p.message("The lava singes you");
-					p.damage(DataConversions.roundUp(p.getSkills().getLevel(3) / 5));
+					p.damage(DataConversions.roundUp(p.getSkills().getLevel(Skills.HITPOINTS) / 5));
 				}
 				break;
 

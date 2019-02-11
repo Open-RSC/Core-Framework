@@ -24,6 +24,7 @@ import com.openrsc.server.plugins.menu.Option;
 
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.doGate;
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 import static com.openrsc.server.plugins.Functions.getNearestNpc;
 import static com.openrsc.server.plugins.Functions.hasItem;
 import static com.openrsc.server.plugins.Functions.incQuestReward;
@@ -1316,10 +1317,10 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 				"...you need a key");
 		}
 		if (obj.getID() == WATCH_TOWER_UP) {
-			if (p.getSkills().getLevel(16) >= 25) {
+			if (getCurrentLevel(p, Skills.AGILITY) >= 25) {
 				p.message("you jump up and grab hold of the platform");
 				p.teleport(710, 2364);
-				p.incExp(16, 30, true);
+				p.incExp(Skills.AGILITY, 30, true);
 				sleep(3000);
 				p.message("and pull yourself up");
 			} else {

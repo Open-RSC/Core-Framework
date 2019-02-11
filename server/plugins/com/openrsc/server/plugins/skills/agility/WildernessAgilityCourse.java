@@ -79,7 +79,7 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 			case WILD_ROPESWING:
 				p.message("You grab the rope and try and swing across");
 				sleep(1000);
-				int damage = (int) Math.round((p.getSkills().getLevel(3)) * 0.15D);
+				int damage = (int) Math.round((p.getSkills().getLevel(Skills.HITPOINTS)) * 0.15D);
 				if (failCourse) {
 					message(p, "You skillfully swing across the hole");
 					movePlayer(p, 292, 108);
@@ -113,14 +113,14 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 				} else {
 					p.message("You lose your footing and land in the lava");
 					movePlayer(p, 292, 104);
-					int lavaDamage = (int) Math.round((p.getSkills().getLevel(3)) * 0.21D);
+					int lavaDamage = (int) Math.round((p.getSkills().getLevel(Skills.HITPOINTS)) * 0.21D);
 					p.damage(lavaDamage);
 				}
 				break;
 			case LEDGE:
 				p.message("you stand on the ledge");
 				sleep(1000);
-				int ledgeDamage = (int) Math.round((p.getSkills().getLevel(3)) * 0.25D);
+				int ledgeDamage = (int) Math.round((p.getSkills().getLevel(Skills.HITPOINTS)) * 0.25D);
 				if (failCourse) {
 					movePlayer(p, 296, 112);
 					sleep(600);
