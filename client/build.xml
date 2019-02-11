@@ -1,5 +1,4 @@
 <project default="compile" basedir=".">
-
     <property name="src" location="src"/>
     <property name="build" location="build"/>
     <property name="jar" location="Open_RSC_Client.jar"/>

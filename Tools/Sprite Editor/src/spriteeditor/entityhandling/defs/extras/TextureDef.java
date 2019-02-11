@@ -3,30 +3,27 @@ package spriteeditor.entityhandling.defs.extras;
 /**
  * Defines a texture definition
  */
-public class TextureDef 
-{
+public class TextureDef {
 	/**
 	 * This texture's data name
 	 */
-	public String dataName;
+	private String dataName;
 	/**
 	 * This texture's animation name
 	 */
-	public String animationName;
-	
+	private String animationName;
+
 	/**
 	 * @return this texture's data name
 	 */
-	public String getDataName() 
-	{
+	public String getDataName() {
 		return dataName;
 	}
-	
+
 	/**
 	 * @return this texture's animation name
 	 */
-	public String getAnimationName() 
-	{
+	public String getAnimationName() {
 		return animationName;
 	}
 }
