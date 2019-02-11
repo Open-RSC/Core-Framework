@@ -475,9 +475,10 @@ public final class Formulae {
 	public static boolean calcGatheringSuccessful(int levelReq, int skillLevel, int equipmentBonus) {
 		int roll = DataConversions.random(1, 128);
 
-		// 100 is already guaranteed to fail
+		// 128 is already guaranteed to fail
 		// 1 is already guaranteed to be successful
-		int threshold = Math.min(128, Math.max(1, skillLevel + equipmentBonus + 40 - (int)(levelReq * 1.5)));
+		// using 127 as the min in order for threshold to not be able to hit 128 for a guaranteed chance to fail
+		int threshold = Math.min(127, Math.max(1, skillLevel + equipmentBonus + 40 - (int)(levelReq * 1.5)));
 		return roll <= threshold;
 	}
 
