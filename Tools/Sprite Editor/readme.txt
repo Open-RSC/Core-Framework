@@ -1,8 +1,8 @@
-RSCD Sprite Editor
+RSC Sprite Editor
 ===================
-============ v1.0 =
+============ v1.1 =
 
-This is a complete RSCD sprite editor. It allows the user
+This is a complete RSC sprite editor. It allows the user
 to unpack the existing original sprites, pack sprites and
 modify the sprites.
 
@@ -21,10 +21,10 @@ modify the sprites.
 # run_packer:
 -------------------------------------------------------------------
   A file chooser interface will appear, select
-  your existing Sprites.rscd package (or type in a new 
+  your existing Sprites.orsc package (or type in a new 
   file name if you're creating a brand new package), and 
   the program will import all the .spr files out of the 
-  'sprites' folder and place them inside your .rscd package, 
+  'sprites' folder and place them inside your .orsc package, 
   removing and overwriting any old sprites that have the 
   same id as the new sprite, allowing you to easily modify 
   existing sprites quickly.
@@ -32,8 +32,8 @@ modify the sprites.
 
 # run_unpacker:
 -------------------------------------------------------------------
-  This will prompt you to select a .rscd file. Select your
-  Sprites.rscd file, and the program will properly extract
+  This will prompt you to select a .orsc file. Select your
+  Sprites.orsc file, and the program will properly extract
   all your .spr and .png files into the folder called 'unpack'.
 
 

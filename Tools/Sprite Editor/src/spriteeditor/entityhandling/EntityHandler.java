@@ -1,17 +1,18 @@
 package spriteeditor.entityhandling;
 
-import spriteeditor.util.PersistenceManager;
-import spriteeditor.entityhandling.defs.*;
-import spriteeditor.entityhandling.defs.extras.*;
-
 import java.io.File;
+
+import spriteeditor.entityhandling.defs.ItemDef;
+import spriteeditor.entityhandling.defs.NPCDef;
+import spriteeditor.entityhandling.defs.extras.AnimationDef;
+import spriteeditor.entityhandling.defs.extras.TextureDef;
+import spriteeditor.util.PersistenceManager;
 
 /**
  * This class handles the loading of entities from the def files,
  * and provides methods for relaying these entities to the application.
  */
-public class EntityHandler
-{
+public class EntityHandler {
 	/**
 	 * The NPC def array
 	 */
@@ -33,101 +34,88 @@ public class EntityHandler
 	 */
 	private static int invPictureCount = 0;
 
+	static {
+		npcs = (NPCDef[]) PersistenceManager.load(new File("data", "NPCDef.xml.gz"));
+		items = (ItemDef[]) PersistenceManager.load(new File("data", "Items.xml.gz"));
+
+		for (ItemDef item : items) {
+			if (item.getSprite() + 1 > invPictureCount)
+				invPictureCount = item.getSprite() + 1;
+		}
+
+		textures = (TextureDef[]) PersistenceManager.load(new File("data", "Textures.xml.gz"));
+		animations = (AnimationDef[]) PersistenceManager.load(new File("data", "Animations.xml.gz"));
+	}
+
 	/**
 	 * @param id the array index
 	 * @return the npc def at the given array index
 	 */
-	public static NPCDef getNpcDef(int id) 
-	{
-		if(id < 0 || id >= npcs.length)
+	public static NPCDef getNpcDef(int id) {
+		if (id < 0 || id >= npcs.length)
 			return null;
-		
+
 		return npcs[id];
 	}
-	
+
 	/**
 	 * @return the count of NPCs
 	 */
-	public static int npcCount()
-	{
+	public static int npcCount() {
 		return npcs.length;
 	}
-	
+
 	/**
 	 * @param id the array index
 	 * @return the item def at the given array index
 	 */
-	public static ItemDef getItemDef(int id) 
-	{
-		if(id < 0 || id >= items.length)
+	public static ItemDef getItemDef(int id) {
+		if (id < 0 || id >= items.length)
 			return null;
-		
+
 		return items[id];
 	}
-	
+
 	/**
 	 * @return the count of inventory pics
 	 */
-	public static int invPictureCount() 
-	{
+	public static int invPictureCount() {
 		return invPictureCount;
 	}
-	
+
 	/**
 	 * @param id the array index
 	 * @return the texture def at the given array index
 	 */
-	public static TextureDef getTextureDef(int id) 
-	{
-		if(id < 0 || id >= textures.length)
+	public static TextureDef getTextureDef(int id) {
+		if (id < 0 || id >= textures.length)
 			return null;
-		
+
 		return textures[id];
 	}
-	
+
 	/**
 	 * @return the count of textures
 	 */
-	public static int textureCount() 
-	{
+	public static int textureCount() {
 		return textures.length;
 	}
-	
+
 	/**
 	 * @param id the array index
 	 * @return the animation def from the given array index
 	 */
-	public static AnimationDef getAnimationDef(int id) 
-	{
-		if(id < 0 || id >= animations.length)
+	public static AnimationDef getAnimationDef(int id) {
+		if (id < 0 || id >= animations.length)
 			return null;
-		
+
 		return animations[id];
-	}
-	
-	/**
-	 * @return the count of animations
-	 */
-	public static int animationCount() 
-	{
-		return animations.length;
 	}
 
 	/**
-	 * Loads all definition data
+	 * @return the count of animations
 	 */
-	static 
-	{
-		npcs = (NPCDef[])PersistenceManager.load(new File("data", "NPCDef.xml.gz"));
-		items = (ItemDef[])PersistenceManager.load(new File("data", "Items.xml.gz"));
-		
-		for(int id = 0; id < items.length; id++) 
-		{
-			if(items[id].getSprite() + 1 > invPictureCount)
-				invPictureCount = items[id].getSprite() + 1;
-		}
-		
-		textures = (TextureDef[])PersistenceManager.load(new File("data", "Textures.xml.gz"));
-		animations = (AnimationDef[])PersistenceManager.load(new File("data", "Animations.xml.gz"));
+	public static int animationCount() {
+		return animations.length;
 	}
 }
