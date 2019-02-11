@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -14,6 +15,7 @@ import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.*;
+import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -44,9 +46,9 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 		// 450 coins
 		// Gold ring
 		// Emerald
-		addItem(p, 283, 1);
-		addItem(p, 163, 1);
-		addItem(p, 10, 450);
+		addItem(p, ItemId.GOLD_RING.id(), 1);
+		addItem(p, ItemId.EMERALD.id(), 1);
+		addItem(p, ItemId.COINS.id(), 450);
 		p.message("Well done you have completed the pirate treasure quest");
 		incQuestReward(p, Quests.questData.get(Quests.PIRATES_TREASURE), true);
 		p.message("@gre@You haved gained 2 quest points!");
@@ -54,19 +56,15 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item,
-									   Player player) {
-		if (item.getID() == 249 && obj.getID() == 182 || item.getID() == 318
-			&& obj.getID() == 182 || obj.getID() == 187
-			&& item.getID() == 382) {
-			return true;
-		}
-		return false;
+	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
+		return item.getID() == ItemId.BANANA.id() && obj.getID() == 182
+				|| item.getID() == ItemId.KARAMJA_RUM.id() && obj.getID() == 182
+				|| item.getID() == ItemId.CHEST_KEY.id() && obj.getID() == 187;
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (item.getID() == 249 && obj.getID() == 182 && obj.getY() == 711) {
+		if (item.getID() == ItemId.BANANA.id() && obj.getID() == 182 && obj.getY() == 711) {
 			if (p.getCache().hasKey("bananas")) {
 				if (p.getCache().getInt("bananas") >= 10) {
 					p.message(
@@ -83,7 +81,7 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 			} else {
 				p.message("I have no reason to do that");
 			}
-		} else if (item.getID() == 318 && obj.getID() == 182
+		} else if (item.getID() == ItemId.KARAMJA_RUM.id() && obj.getID() == 182
 			&& p.getQuestStage(this) > 0) {
 			if (p.getCache().hasKey("bananas")) {
 				if (p.getInventory().remove(item) > -1) {
@@ -94,13 +92,13 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 					}
 				}
 			}
-		} else if (obj.getID() == 187 && item.getID() == 382) {
+		} else if (item.getID() == ItemId.CHEST_KEY.id() && obj.getID() == 187) {
 			p.message("You unlock the chest");
 			World.getWorld().replaceGameObject(obj,
 				new GameObject(obj.getLocation(), 186, obj.getDirection(),
 					obj.getType()));
 			World.getWorld().delayedSpawnObject(obj.getLoc(), 3000);
-			removeItem(p, 382, 1);
+			removeItem(p, ItemId.CHEST_KEY.id(), 1);
 			message(p, "All that is in the chest is a message");
 			message(p, "You take the message from the chest");
 			message(p, "It says dig just behind the south bench in the park");
@@ -110,13 +108,7 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 128) {
-			return true;
-		}
-		if (n.getID() == 164) {
-			return true;
-		}
-		return false;
+		return n.getID() == 128 || n.getID() == 164;
 	}
 
 	public void frankDialogue(Player p, Npc n, int cID) {
@@ -131,7 +123,6 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 						"Well I might be able to tell you where to find some.",
 						"For a price");
 					playerTalk(p, n, "What sort of price?");
-
 					npcTalk(p, n,
 						"Well for example if you can get me a bottle of rum",
 						"Not just any rum mind",
@@ -147,12 +138,12 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 			case 1:
 				npcTalk(p, n, "Arrrh Matey",
 					"Have Ye brought some rum for yer old mate Frank");
-				if (!p.getInventory().hasItemId(318)) {
+				if (!p.getInventory().hasItemId(ItemId.KARAMJA_RUM.id())) {
 					playerTalk(p, n, "No not yet");
 					return;
 				}
 				playerTalk(p, n, "Yes I've got some");
-				p.getInventory().remove(318, 1);
+				p.getInventory().remove(ItemId.KARAMJA_RUM.id(), 1);
 
 				message(p, "Frank happily takes the rum");
 				npcTalk(p,
@@ -164,7 +155,7 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 					"Hector was killed along with many of the crew",
 					"I was one of the few to escape", "And I escaped with this");
 				message(p, "Frank hands you a key");
-				addItem(p, 382, 1);
+				addItem(p, ItemId.CHEST_KEY.id(), 1);
 				p.updateQuestStage(this, 2);
 				npcTalk(p, n, "This is Hector's key",
 					"I believe it opens his chest",
@@ -183,10 +174,10 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 				playerTalk(p, n, "I seem to have lost my chest key");
 				npcTalk(p, n, "Arrr silly you", "Fortunatly I took the precaution to have another one made");
 				message(p, "Frank hands you a chest key");
-				addItem(p, 382, 1);
+				addItem(p, ItemId.CHEST_KEY.id(), 1);
 				break;
-			case -1:
 			case 3:
+			case -1:
 				npcTalk(p, n, "Arrrh Matey");
 				int menu1 = showMenu(p, n, "Arrrh",
 					"Do you want to trade?");
@@ -223,7 +214,7 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 					playerTalk(p, n, "I've filled a crate with bananas");
 					npcTalk(p, n, "Well done here is your payment");
 					p.message("Luthas hands you 30 coins");
-					p.getInventory().add(new Item(10, 30));
+					p.getInventory().add(new Item(ItemId.COINS.id(), 30));
 					if (p.getCache().hasKey("bananas")) {
 						p.getCache().remove("bananas");
 					}
@@ -317,21 +308,17 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 				p.message(s);
 				break;
 			case 185:
-				if (p.getCache().hasKey("rum_delivered")) {
-					if (p.getCache().getBoolean("rum_delivered")) {
-						message(p, "There are a lot of bananas in the crate",
+				if (p.getCache().hasKey("rum_delivered") && p.getCache().getBoolean("rum_delivered")) {
+					message(p, "There are a lot of bananas in the crate",
 							"You find your bottle of rum in amoungst the bananas");
-						p.getInventory().add(new Item(318));
-						//
-						p.getCache().remove("rum_delivered");
-					}
-				} else {
-					message(p, "Do you want to take a banana?");
-					int wantabanana = showMenu(p, "Yes", "No");
-					if (wantabanana == 0) {
-						p.getInventory().add(new Item(249));
-
-					}
+					p.getInventory().add(new Item(ItemId.KARAMJA_RUM.id()));
+					p.getCache().remove("rum_delivered");
+				}
+				message(p, "Do you want to take a banana?");
+				int wantabanana = showMenu(p, "Yes", "No");
+				if (wantabanana == 0) {
+					p.getInventory().add(new Item(ItemId.BANANA.id()));
+					p.playerServerMessage(MessageType.QUEST, "you take a banana");
 				}
 				break;
 		}
@@ -341,13 +328,13 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 	@Override
 	public boolean blockInvAction(Item item, Player p) {
 		return (p.getY() == 548 && p.getX() > 287 && p.getX() < 291)
-			&& item.getID() == 211;
+			&& item.getID() == ItemId.SPADE.id();
 	}
 
 	@Override
 	public boolean blockTeleport(Player p) {
-		if (p.getInventory().hasItemId(318) && (p.getLocation().inKaramja())) {
-			p.getInventory().remove(318);
+		if (p.getInventory().hasItemId(ItemId.KARAMJA_RUM.id()) && (p.getLocation().inKaramja())) {
+			p.getInventory().remove(ItemId.KARAMJA_RUM.id());
 		}
 		return false;
 	}
@@ -359,7 +346,7 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 		if (p.isBusy())
 			return;
 		if ((p.getY() == 548 && p.getX() >= 287 && p.getX() <= 291)
-			&& item.getID() == 211) {
+			&& item.getID() == ItemId.SPADE.id()) {
 			if (p.getX() == 290 || p.getX() == 289) {
 				Npc wyson = getNearestNpc(p, 116, 20);
 				boolean dig = false;
@@ -393,6 +380,5 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 
 	class Luthas {
 		public static final int ANNOYING = 0;
-
 	}
 }
