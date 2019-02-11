@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -100,7 +101,7 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 			case 2:
 				String[] options;
 				npcTalk(p, n, "Buy me a drrink pleassh");
-				if (!hasItem(p, 217)
+				if (!hasItem(p, ItemId.STAKE.id())
 					&& p.getQuestStage(Constants.Quests.VAMPIRE_SLAYER) != -1) {
 					options = new String[]{"No you've had enough", "Ok mate",
 						"Morgan needs your help"};
@@ -110,10 +111,10 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 				int choice = showMenu(p, n, options);
 				if (choice == 0) {
 				} else if (choice == 1) {
-					if (p.getInventory().hasItemId(193)) {
+					if (p.getInventory().hasItemId(ItemId.BEER.id())) {
 						p.message("You give a beer to Dr Harlow");
 						p.getInventory().remove(
-							p.getInventory().getLastIndexById(193));
+							p.getInventory().getLastIndexById(ItemId.BEER.id()));
 						npcTalk(p, n, "Cheersh matey");
 					} else {
 						playerTalk(p, n, "I'll just go and buy one");
@@ -128,10 +129,10 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 					int choice2 = showMenu(p, n, "Ok mate",
 						"But this is your friend Morgan we're talking about");
 					if (choice2 == 0) {
-						if (p.getInventory().hasItemId(193)) {
+						if (p.getInventory().hasItemId(ItemId.BEER.id())) {
 							p.message("You give a beer to Dr Harlow");
 							npcTalk(p, n, "Cheersh matey");
-							p.getInventory().remove(p.getInventory().getLastIndexById(193));
+							p.getInventory().remove(p.getInventory().getLastIndexById(ItemId.BEER.id()));
 							playerTalk(p, n, "So tell me how to kill vampires then");
 							npcTalk(p, n,
 								"Yesh yesh vampires I was very good at killing em once");
@@ -143,7 +144,7 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 								"Yes your killing blow must be done with a stake",
 								"I jusht happen to have one on me");
 							p.message("Dr Harlow hands you a stake");
-							p.getInventory().add(new Item(217));
+							p.getInventory().add(new Item(ItemId.STAKE.id()));
 							npcTalk(p,
 								n,
 								"You'll need a hammer to hand to drive it in properly as well",
@@ -178,53 +179,56 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player player) {
-		if (player.getQuestStage(this) == -1 && command.equals("search")
-			&& obj.getID() == 136 && obj.getY() == 3380) {
-			player.message("There's a pillow in here");
-			return;
-		} else if (obj.getID() == 141 && obj.getY() == 1562) {
-			if (!player.getInventory().hasItemId(218)) {
-				player.message("You search the cupboard");
-				player.message("You find a clove of garlic that you take");
-				player.getInventory().add(new Item(218));
+		if ((obj.getID() == 136 || obj.getID() == 135) && obj.getY() == 3380) {
+			if (command.equalsIgnoreCase("open")) {
+				openGenericObject(obj, player, 136, "You open the coffin");
+			} else if (command.equalsIgnoreCase("close")) {
+				closeGenericObject(obj, player, 135, "You close the coffin");
+			} else if (player.getQuestStage(this) == -1) { //command.equals("search") && quest complete
+				player.message("There's a pillow in here");
+				return;
 			} else {
-				player.message("You search the cupboard");
-				player.message("The cupboard is empty");
+				for (Npc npc : player.getRegion().getNpcs()) {
+					if (npc.getID() == 96 && npc.getAttribute("spawnedFor", null).equals(player)) {
+						player.message("There's nothing there.");
+						return;
+					}
+				}
+
+				final Npc n = spawnNpc(96, 206, 3381, 1000 * 60 * 5, player);
+				n.setShouldRespawn(false);
+				player.message("A vampire jumps out of the coffin");
+				return;
 			}
-			return;
-		} else if (obj.getID() == 136 && obj.getY() == 3380) {
-			for (Npc npc : player.getRegion().getNpcs()) {
-				if (npc.getID() == 96 && npc.getAttribute("spawnedFor", null).equals(player)) {
-					player.message("There's nothing there.");
-					return;
+		} else if ((obj.getID() == 141 || obj.getID() == 140) && obj.getY() == 1562) {
+			if (command.equalsIgnoreCase("open")) {
+				openCupboard(obj, player, 141);
+			} else if (command.equalsIgnoreCase("close")) {
+				closeCupboard(obj, player, 140);
+			} else {
+				if (!player.getInventory().hasItemId(ItemId.GARLIC.id())) {
+					player.message("You search the cupboard");
+					player.message("You find a clove of garlic that you take");
+					player.getInventory().add(new Item(ItemId.GARLIC.id()));
+				} else {
+					player.message("You search the cupboard");
+					player.message("The cupboard is empty");
 				}
 			}
-
-			final Npc n = spawnNpc(96, 206, 3381, 1000 * 60 * 5, player);
-			n.setShouldRespawn(false);
-			player.message("A vampire jumps out of the coffin");
 			return;
 		}
 	}
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 97 || n.getID() == 98) {
-			return true;
-		}
-		return false;
+		return n.getID() == 97 || n.getID() == 98;
 	}
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command,
 									 Player player) {
-		if (obj.getID() == 136 && obj.getY() == 3380) {
-			return true;
-		}
-		if (obj.getID() == 141 && obj.getY() == 1562) {
-			return true;
-		}
-		return false;
+		return (obj.getID() == 136 || obj.getID() == 135) && obj.getY() == 3380
+				|| (obj.getID() == 141 || obj.getID() == 140) && obj.getY() == 1562;
 	}
 
 	@Override
@@ -237,18 +241,14 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == 96) {
-			return true;
-		}
-		return false;
+		return n.getID() == 96;
 	}
 
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
 		if (n.getID() == 96) {
-			if (p.getInventory().wielding(217) == true
-				&& p.getInventory().hasItemId(168)) {
-				p.getInventory().remove(p.getInventory().getLastIndexById(217));
+			if (p.getInventory().wielding(ItemId.STAKE.id()) && p.getInventory().hasItemId(ItemId.HAMMER.id())) {
+				p.getInventory().remove(p.getInventory().getLastIndexById(ItemId.STAKE.id()));
 				p.message("You hammer the stake in to the vampires chest!");
 				n.killedBy(p);
 				n.remove();
@@ -271,8 +271,14 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
 		if (n.getID() == 96) {
-			if (p.getInventory().hasItemId(218)) {
+			if (p.getInventory().hasItemId(ItemId.GARLIC.id())) {
 				p.message("The vampire appears to weaken");
+				//if a better approx is found, replace
+				for (int i = 0; i < 3; i++) {
+					int maxStat = n.getSkills().getMaxStat(i);
+					int newStat = maxStat - (int) (maxStat * 0.1);
+					n.getSkills().setLevel(i, newStat);
+				}
 			}
 		}
 		return false;
