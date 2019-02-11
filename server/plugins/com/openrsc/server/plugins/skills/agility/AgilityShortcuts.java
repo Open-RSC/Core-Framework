@@ -458,7 +458,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 						p.message("@red@!!! You Fall !!!");
 						message(p, "You get washed up on the other side of the river...",
 							"After being nearly half drowned");
-						p.damage((int) (p.getSkills().getLevel(3) / 4) + 2);
+						p.damage((int) (p.getSkills().getLevel(Skills.HITPOINTS) / 4) + 2);
 						p.setBusy(false);
 						return;
 					}
@@ -472,7 +472,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 						p.message("@red@!!! You Fall !!!");
 						message(p, "You get washed up on the other side of the river...",
 							"After being nearly half drowned");
-						p.damage((int) (p.getSkills().getLevel(3) / 4) + 2);
+						p.damage((int) (p.getSkills().getLevel(Skills.HITPOINTS) / 4) + 2);
 						p.setBusy(false);
 						return;
 					}
@@ -488,7 +488,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 					return;
 				}
 				if (getCurrentLevel(p, Skills.AGILITY) < 18) {
-					p.message("You need an agility level of 18 to climb up the wall");
+					p.message("You need an agility level of 18 to climb the wall");
 					p.setBusy(false);
 					return;
 				}

@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.skills;
 
 import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -76,7 +77,7 @@ public class WoodcutJungle implements ObjectActionListener,
 			return;
 		}
 
-		if (!hasItem(p, 1172)) { // machete.
+		if (!hasItem(p, ItemId.MACHETTE.id())) {
 			message(p, 1900, "This jungle is very thick, you'll need a machette to cut through.");
 			return;
 		}
@@ -94,10 +95,9 @@ public class WoodcutJungle implements ObjectActionListener,
 				return;
 			}
 		} else {
-			axeId = 1172;
+			axeId = ItemId.MACHETTE.id();
 		}
 
-		boolean canCut = true;
 		p.setBusy(true);
 		showBubble(p, new Item(axeId));
 		message(p, 1300, "You swing your " + EntityHandler.getItemDef(axeId).getName().toLowerCase() + " at the " + (obj.getID() == JUNGLE_VINE ? "jungle vines" : "tree") + "...");
@@ -111,7 +111,7 @@ public class WoodcutJungle implements ObjectActionListener,
 	}
 
 	private void cutJungle(int axeId, GameObject obj, Player p, boolean force) {
-		if (force || getLog(50, p.getSkills().getLevel(8), axeId)) {
+		if (force || getLog(50, p.getSkills().getLevel(Skills.WOODCUT), axeId)) {
 			GameObject jungleObject = p.getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
 			if (jungleObject != null && jungleObject.getID() == obj.getID()) {
 				if (obj.getID() == JUNGLE_VINE) {
@@ -125,10 +125,10 @@ public class WoodcutJungle implements ObjectActionListener,
 				}
 
 				if (!force)
-					p.incExp(8, 20, true);
+					p.incExp(Skills.WOODCUT, 20, true);
 			}
 			if (DataConversions.random(0, 10) == 8) {
-				final Item log = new Item(14);
+				final Item log = new Item(ItemId.LOGS.id());
 				if (!p.getInventory().full())
 					p.getInventory().add(log);
 				else
@@ -164,27 +164,29 @@ public class WoodcutJungle implements ObjectActionListener,
 	 */
 	public int calcAxeBonus(int axeId) {
 		int axeBonus = 0;
-		switch (axeId) {
-			case 87:
+		switch (ItemId.getById(axeId)) {
+			case BRONZE_AXE:
 				axeBonus = 0;
 				break;
-			case 12:
+			case IRON_AXE:
 				axeBonus = 1;
 				break;
-			case 88:
+			case STEEL_AXE:
 				axeBonus = 2;
 				break;
-			case 428:
+			case BLACK_AXE:
 				axeBonus = 3;
 				break;
-			case 203:
+			case MITHRIL_AXE:
 				axeBonus = 4;
 				break;
-			case 204:
+			case ADAMANTITE_AXE:
 				axeBonus = 8;
 				break;
-			case 405:
+			case RUNE_AXE:
 				axeBonus = 16;
+				break;
+			default:
 				break;
 		}
 		return axeBonus;

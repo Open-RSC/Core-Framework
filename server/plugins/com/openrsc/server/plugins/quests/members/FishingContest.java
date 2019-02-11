@@ -609,7 +609,7 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 				//cases: not enough level
 				//no bait
 				//else do catch
-				if (p.getSkills().getLevel(10) < 10) {
+				if (p.getSkills().getLevel(Skills.FISHING) < 10) {
 					p.message("You need at least level 10 fishing to lure these fish");
 				} else if (!hasItem(p, 377)) {
 					// probably non-kosher
@@ -653,7 +653,7 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 				//no rod
 				//no bait
 				//else do catch
-				if (p.getSkills().getLevel(10) < 10) {
+				if (p.getSkills().getLevel(Skills.FISHING) < 10) {
 					p.message("You need at least level 10 fishing to lure these fish");
 				} else if (!hasItem(p, 377)) {
 					// probably non-kosher

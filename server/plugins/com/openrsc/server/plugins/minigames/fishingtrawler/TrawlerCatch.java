@@ -31,10 +31,6 @@ public class TrawlerCatch implements ObjectActionListener, ObjectActionExecutive
 		ItemId.OYSTER.id()
 	};
 
-	private static int offsetToPercent(int levelDiff) {
-		return levelDiff > 40 ? 60 : 20 + levelDiff;
-	}
-
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
 		return obj.getID() == TRAWLER_CATCH;

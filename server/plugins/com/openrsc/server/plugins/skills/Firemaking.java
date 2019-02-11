@@ -6,6 +6,8 @@ import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.FiremakingDef;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -27,7 +29,8 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 	/**
 	 * LOG IDs
 	 **/
-	private static int[] LOGS = {14, 632, 633, 634, 635, 636};
+	private static int[] LOGS = {ItemId.LOGS.id(), ItemId.OAK_LOGS.id(), ItemId.WILLOW_LOGS.id(), 
+			ItemId.MAPLE_LOGS.id(), ItemId.YEW_LOGS.id(), ItemId.MAGIC_LOGS.id()};
 
 	@Override
 	public boolean blockInvUseOnGroundItem(Item myItem, GroundItem item, Player player) {
@@ -37,20 +40,20 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 	@Override
 	public void onInvUseOnGroundItem(Item myItem, GroundItem item, Player player) {
 		if (Constants.GameServer.CUSTOM_FIREMAKING) {
-			switch (item.getID()) {
-				case 14:
-				case 632:
-				case 633:
-				case 634:
-				case 635:
-				case 636:
+			switch (ItemId.getById(item.getID())) {
+				case LOGS:
+				case OAK_LOGS:
+				case WILLOW_LOGS:
+				case MAPLE_LOGS:
+				case YEW_LOGS:
+				case MAGIC_LOGS:
 					handleCustomFiremaking(item, player);
 					break;
 				default:
 					player.message("Nothing interesting happens");
 			}
 		} else {
-			if (item.getID() == 14) { // Log
+			if (item.getID() == ItemId.LOGS.id()) {
 				handleFiremaking(item, player);
 			} else
 				player.message("Nothing interesting happens");
@@ -72,7 +75,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 		player.getUpdateFlags().setActionBubble(new Bubble(player, TINDERBOX));
 		player.message("You attempt to light the logs");
 
-		if (Formulae.lightLogs(player.getSkills().getLevel(11))) {
+		if (Formulae.lightLogs(player.getSkills().getLevel(Skills.FIREMAKING))) {
 
 			Server.getServer().getEventHandler().add(
 				new SingleEvent(null, 1200) {
@@ -98,7 +101,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 								}
 							}
 						);
-						player.incExp(11, getExp(player.getSkills().getMaxStat(11), 25), true);
+						player.incExp(Skills.FIREMAKING, getExp(player.getSkills().getMaxStat(Skills.FIREMAKING), 25), true);
 					}
 				}
 			);
@@ -116,7 +119,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 			return;
 		}
 
-		if (player.getSkills().getLevel(11) < def.getRequiredLevel()) {
+		if (player.getSkills().getLevel(Skills.FIREMAKING) < def.getRequiredLevel()) {
 			player.message("You need at least " + def.getRequiredLevel() + " firemaking to light these logs");
 			return;
 		}
@@ -129,10 +132,10 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 		player.getUpdateFlags().setActionBubble(new Bubble(player, TINDERBOX));
 		player.message("You attempt to light the logs");
 
-		player.setBatchEvent(new BatchEvent(player, 1200, Formulae.getRepeatTimes(player, 11)) {
+		player.setBatchEvent(new BatchEvent(player, 1200, Formulae.getRepeatTimes(player, Skills.FIREMAKING)) {
 			@Override
 			public void action() {
-				if (Formulae.lightCustomLogs(def, owner.getSkills().getLevel(11))) {
+				if (Formulae.lightCustomLogs(def, owner.getSkills().getLevel(Skills.FIREMAKING))) {
 					owner.message("The fire catches and the logs begin to burn");
 					World.getWorld().unregisterItem(gItem);
 
@@ -153,7 +156,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 							}
 						});
 
-					owner.incExp(11, getExp(owner.getSkills().getMaxStat(11), 25), true);
+					owner.incExp(Skills.FIREMAKING, getExp(owner.getSkills().getMaxStat(Skills.FIREMAKING), 25), true);
 					interrupt();
 
 				} else {

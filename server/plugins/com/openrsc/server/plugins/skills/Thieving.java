@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.skills;
 
 import com.openrsc.server.Constants.GameServer;
 import com.openrsc.server.event.custom.BatchEvent;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
@@ -32,7 +33,7 @@ public class Thieving extends Functions
 	private static final String piece_of = "piece of ";
 
 	public static boolean succeedPickLockThieving(Player player, int req_level) {
-		int level_diff = player.getSkills().getLevel(17) - req_level;
+		int level_diff = player.getSkills().getLevel(Skills.THIEVING) - req_level;
 
 		int percent = DataConversions.random(1, 100);
 		if (level_diff < 0)
@@ -41,7 +42,7 @@ public class Thieving extends Functions
 		if (level_diff > 40) {
 			level_diff = 75;
 		} else {
-			level_diff = (int) (player.getSkills().getLevel(17) * (double) 0.2D) + 50;
+			level_diff = (int) (player.getSkills().getLevel(Skills.THIEVING) * (double) 0.2D) + 50;
 		}
 		if (hasItem(player, 714, 1)) {
 			level_diff += 10;
@@ -59,7 +60,7 @@ public class Thieving extends Functions
 	 * 2) * 2)); return DataConversions.random(0, (levelDiff + 2) * 2) != 0; }
 	 */
 	private static boolean succeedThieving(Player player, int req_level) {
-		int level_diff = player.getSkills().getLevel(17) - req_level;
+		int level_diff = player.getSkills().getLevel(Skills.THIEVING) - req_level;
 
 		int percent = DataConversions.random(1, 100);
 		if (level_diff < 0)
@@ -103,7 +104,7 @@ public class Thieving extends Functions
 		if (!failNoun.endsWith("s")) {
 			failNoun += "s";
 		}
-		if (player.getSkills().getLevel(17) < stall.getRequiredLevel()) {
+		if (player.getSkills().getLevel(Skills.THIEVING) < stall.getRequiredLevel()) {
 			player.message("You are not a high enough level to steal the " + failNoun);
 			return;
 		}
@@ -156,7 +157,7 @@ public class Thieving extends Functions
 		String loot = stall.equals(Stall.GEMS_STALL) ? "gem" : selectedLoot.getDef().getName().toLowerCase();
 		player.message("You steal a " + stall.getLootPrefix() + loot);
 
-		player.incExp(17, stall.getXp(), true);
+		player.incExp(Skills.THIEVING, stall.getXp(), true);
 
 		if (stall.equals(Stall.SILK_STALL)) { // Silk
 			player.getCache().put("silkStolen", Instant.now().getEpochSecond());
@@ -189,28 +190,28 @@ public class Thieving extends Functions
 				req = 13;
 				xp = 30;
 				respawnTime = 10000;
-				loot.add(new LootItem(10, 10, 100));
+				loot.add(new LootItem(ItemId.COINS.id(), 10, 100));
 				break;
 			// Nature-rune Chest
 			case 335:
 				req = 28;
 				xp = 100;
 				respawnTime = 25000;
-				loot = getLootAsList(new LootItem(10, 3, 100), new LootItem(40, 1, 100));
+				loot = getLootAsList(new LootItem(ItemId.COINS.id(), 3, 100), new LootItem(ItemId.NATURE_RUNE.id(), 1, 100));
 				break;
 			case 336:
 				// 50gp Chest
 				req = 43;
 				xp = 500;
 				respawnTime = 100000;
-				loot.add(new LootItem(10, 50, 100));
+				loot.add(new LootItem(ItemId.COINS.id(), 50, 100));
 				break;
 			case 337:
 				// blood Chest
 				req = 59;
 				xp = 1000;
 				respawnTime = 250000;
-				loot = getLootAsList(new LootItem(10, 500, 100), new LootItem(619, 2, 100));
+				loot = getLootAsList(new LootItem(ItemId.COINS.id(), 500, 100), new LootItem(ItemId.BLOOD_RUNE.id(), 2, 100));
 				teleLoc = Point.location(614, 568);
 				break;
 			case 338:
@@ -218,15 +219,15 @@ public class Thieving extends Functions
 				req = 72;
 				xp = 2000;
 				respawnTime = 500000;
-				loot = getLootAsList(new LootItem(10, 1000, 100), new LootItem(545, 1, 100),
-					new LootItem(154, 1, 100), new LootItem(160, 1, 100));
+				loot = getLootAsList(new LootItem(ItemId.COINS.id(), 1000, 100), new LootItem(ItemId.RAW_SHARK.id(), 1, 100),
+					new LootItem(ItemId.ADAMANTITE_ORE.id(), 1, 100), new LootItem(ItemId.UNCUT_SAPPHIRE.id(), 1, 100));
 				teleLoc = Point.location(523, 606);
 				break;
 		}
 
 		player.message("You search the chest for traps");
 		sleep(1200);
-		if (player.getSkills().getLevel(17) < req) {
+		if (player.getSkills().getLevel(Skills.THIEVING) < req) {
 			player.message("You find nothing");
 			return;
 		}
@@ -249,7 +250,7 @@ public class Thieving extends Functions
 				player.getInventory().add(new Item(l.getId(), l.getAmount()));
 			}
 		}
-		player.incExp(17, xp, true);
+		player.incExp(Skills.THIEVING, xp, true);
 		message(player, "You find treasure inside!");
 		if (teleLoc != null) {
 			message(player, "suddenly a second magical trap triggers");
@@ -333,7 +334,7 @@ public class Thieving extends Functions
 		final String thievedMobSt = (thievedMobName.contains("gnome") || thievedMobName.contains("blurberry")) ? "gnome" :
 			thievedMobName.contains("watchman") ? "watchman" : thievedMobName;
 		player.playerServerMessage(MessageType.QUEST, "You attempt to pick the " + thievedMobSt + "'s pocket");
-		if (player.getSkills().getLevel(17) < pickpocket.getRequiredLevel()) {
+		if (player.getSkills().getLevel(Skills.THIEVING) < pickpocket.getRequiredLevel()) {
 			sleep(1800);
 			player.message("You need to be a level " + pickpocket.getRequiredLevel() + " thief to pick the " + thievedMobSt + "'s pocket");
 			return;
@@ -353,7 +354,7 @@ public class Thieving extends Functions
 					if (player.getFatigue() >= player.MAX_FATIGUE)
 						player.message("@gre@You are too tired to gain experience, get some rest");
 
-					player.incExp(17, pickpocket.getXp(), true);
+					player.incExp(Skills.THIEVING, pickpocket.getXp(), true);
 					Item selectedLoot = null;
 					int total = 0;
 					for (LootItem loot : lootTable) {
@@ -425,12 +426,12 @@ public class Thieving extends Functions
 					player.setBusyTimer(0);
 					return;
 				}
-				if (player.getSkills().getLevel(17) < 47) {
+				if (player.getSkills().getLevel(Skills.THIEVING) < 47) {
 					player.message("You are not a high enough level to pick this lock");
 					player.setBusyTimer(0);
 					return;
 				}
-				if (!hasItem(player, 714)) {
+				if (!hasItem(player, ItemId.LOCKPICK.id())) {
 					player.message("You need a lockpick for this lock");
 					player.setBusyTimer(0);
 					return;
@@ -442,9 +443,9 @@ public class Thieving extends Functions
 
 				message(player, "You find a treasure inside!");
 
-				player.incExp(17, 600, true);
-				addItem(player, 10, 20);
-				addItem(player, 671, 5);
+				player.incExp(Skills.THIEVING, 600, true);
+				addItem(player, ItemId.COINS.id(), 20);
+				addItem(player, ItemId.STEEL_ARROW_HEADS.id(), 5);
 
 				World.getWorld().replaceGameObject(obj,
 					new GameObject(obj.getLocation(), 340, obj.getDirection(), obj.getType()));
@@ -600,7 +601,7 @@ public class Thieving extends Functions
 				player.message("You are not a high enough level to pick this lock");
 				return;
 			}
-			if (!hasItem(player, 714) && requiresLockpick) {
+			if (!hasItem(player, ItemId.LOCKPICK.id()) && requiresLockpick) {
 				player.message("You need a lockpick for this lock");
 				return;
 			}
@@ -612,7 +613,7 @@ public class Thieving extends Functions
 					player.message("@gre@You are too tired to gain experience, get some rest");
 					return;
 				}
-				player.incExp(17, (int) exp, true);
+				player.incExp(Skills.THIEVING, (int) exp, true);
 			} else {
 				player.message("You fail to pick the lock");
 			}
@@ -638,75 +639,75 @@ public class Thieving extends Functions
 
 	enum Pickpocket {
 		MAN(1, 32, "Oi what do you think you're doing",
-			new LootItem(10, 3, 100)),
+			new LootItem(ItemId.COINS.id(), 3, 100)),
 		FARMER(10, 58, "What do you think you're doing",
-			new LootItem(10, 9, 100)),
+			new LootItem(ItemId.COINS.id(), 9, 100)),
 		WARRIOR(25, 104, "Hey what do you think you're doing",
-			new LootItem(10, 18, 100)),
+			new LootItem(ItemId.COINS.id(), 18, 100)),
 		WORKMAN(25, 0, "Hey what do you think you're doing",
-			new LootItem(10, 10, 30),
-			new LootItem(211, 1, 20),
-			new LootItem(21, 1, 18),
-			new LootItem(237, 1, 16),
-			new LootItem(1115, 1, 14),
-			new LootItem(1117, 1, 12),
-			new LootItem(16, 1, 10),
-			new LootItem(-1, 0, 8)),
+			new LootItem(ItemId.COINS.id(), 10, 30),
+			new LootItem(ItemId.SPADE.id(), 1, 20),
+			new LootItem(ItemId.BUCKET.id(), 1, 18),
+			new LootItem(ItemId.ROPE.id(), 1, 16),
+			new LootItem(ItemId.SPECIMEN_BRUSH.id(), 1, 14),
+			new LootItem(ItemId.ROCK_SAMPLE.id(), 1, 12),
+			new LootItem(ItemId.LEATHER_GLOVES.id(), 1, 10),
+			new LootItem(ItemId.NOTHING.id(), 0, 8)),
 		ROGUE(32, 146, "Hey what do you think you're doing",
-			new LootItem(10, 25, 40),
-			new LootItem(10, 40, 30),
-			new LootItem(142, 1, 10),
-			new LootItem(33, 8, 10),
-			new LootItem(714, 1, 10),
-			new LootItem(559, 1, 3)),
+			new LootItem(ItemId.COINS.id(), 25, 40),
+			new LootItem(ItemId.COINS.id(), 40, 30),
+			new LootItem(ItemId.WINE.id(), 1, 10),
+			new LootItem(ItemId.AIR_RUNE.id(), 8, 10),
+			new LootItem(ItemId.LOCKPICK.id(), 1, 10),
+			new LootItem(ItemId.POISONED_IRON_DAGGER.id(), 1, 3)),
 		GUARD(40, 187, "Err what do you think you're doing",
-			new LootItem(10, 30, 100)),
+			new LootItem(ItemId.COINS.id(), 30, 100)),
 		KNIGHT(55, 337, "Err what do you think you're doing",
-			new LootItem(10, 50, 100)),
+			new LootItem(ItemId.COINS.id(), 50, 100)),
 		YANILLE_WATCHMAN(65, 550, "Oi you nasty little thief",
-			new LootItem(10, 60, 100),
-			new LootItem(138, 1, 100)),
+			new LootItem(ItemId.COINS.id(), 60, 100),
+			new LootItem(ItemId.BREAD.id(), 1, 100)),
 		PALADIN(70, 607, "Get your hands off my valuables",
-			new LootItem(10, 80, 100),
-			new LootItem(41, 1, 100)),
+			new LootItem(ItemId.COINS.id(), 80, 100),
+			new LootItem(ItemId.CHAOS_RUNE.id(), 1, 100)),
 		GNOME_LOCAL(75, 793, "Get your hands off my valuables human",
-			new LootItem(10, 200, 22),
-			new LootItem(10, 400, 18),
-			new LootItem(152, 1, 10),
-			new LootItem(34, 1, 15),
-			new LootItem(895, 1, 15),
-			new LootItem(897, 1, 20)),
+			new LootItem(ItemId.COINS.id(), 200, 22),
+			new LootItem(ItemId.COINS.id(), 400, 18),
+			new LootItem(ItemId.GOLD.id(), 1, 10),
+			new LootItem(ItemId.EARTH_RUNE.id(), 1, 15),
+			new LootItem(ItemId.SWAMP_TOAD.id(), 1, 15),
+			new LootItem(ItemId.KING_WORM.id(), 1, 20)),
 		GNOME_CHILD(75, 793, "Get your hands off my valuables human",
-			new LootItem(10, 200, 22),
-			new LootItem(10, 400, 18),
-			new LootItem(152, 1, 10),
-			new LootItem(34, 1, 15),
-			new LootItem(895, 1, 15),
-			new LootItem(897, 1, 20)),
+			new LootItem(ItemId.COINS.id(), 200, 22),
+			new LootItem(ItemId.COINS.id(), 400, 18),
+			new LootItem(ItemId.GOLD.id(), 1, 10),
+			new LootItem(ItemId.EARTH_RUNE.id(), 1, 15),
+			new LootItem(ItemId.SWAMP_TOAD.id(), 1, 15),
+			new LootItem(ItemId.KING_WORM.id(), 1, 20)),
 		GNOME_TRAINER(75, 793, "Get your hands off my valuables human",
-			new LootItem(10, 200, 22),
-			new LootItem(10, 400, 18),
-			new LootItem(152, 1, 10),
-			new LootItem(34, 1, 15),
-			new LootItem(895, 1, 15),
-			new LootItem(897, 1, 20)),
+			new LootItem(ItemId.COINS.id(), 200, 22),
+			new LootItem(ItemId.COINS.id(), 400, 18),
+			new LootItem(ItemId.GOLD.id(), 1, 10),
+			new LootItem(ItemId.EARTH_RUNE.id(), 1, 15),
+			new LootItem(ItemId.SWAMP_TOAD.id(), 1, 15),
+			new LootItem(ItemId.KING_WORM.id(), 1, 20)),
 		BLURBERRY_BARMAN(75, 793, "Get your hands off my valuables human",
-			new LootItem(10, 200, 22),
-			new LootItem(10, 400, 18),
-			new LootItem(152, 1, 10),
-			new LootItem(34, 1, 15),
-			new LootItem(895, 1, 15),
-			new LootItem(897, 1, 20)),
+			new LootItem(ItemId.COINS.id(), 200, 22),
+			new LootItem(ItemId.COINS.id(), 400, 18),
+			new LootItem(ItemId.GOLD.id(), 1, 10),
+			new LootItem(ItemId.EARTH_RUNE.id(), 1, 15),
+			new LootItem(ItemId.SWAMP_TOAD.id(), 1, 15),
+			new LootItem(ItemId.KING_WORM.id(), 1, 20)),
 		HERO(80, 1093, "Get your hands off my valuables",
-			new LootItem(10, 100, 25),
-			new LootItem(10, 200, 15),
-			new LootItem(10, 300, 10),
-			new LootItem(612, 1, 10),
-			new LootItem(142, 1, 14),
-			new LootItem(152, 1, 5),
-			new LootItem(38, 2, 10),
-			new LootItem(619, 1, 5),
-			new LootItem(161, 1, 1));
+			new LootItem(ItemId.COINS.id(), 100, 25),
+			new LootItem(ItemId.COINS.id(), 200, 15),
+			new LootItem(ItemId.COINS.id(), 300, 10),
+			new LootItem(ItemId.FIRE_ORB.id(), 1, 10),
+			new LootItem(ItemId.WINE.id(), 1, 14),
+			new LootItem(ItemId.GOLD.id(), 1, 5),
+			new LootItem(ItemId.DEATH_RUNE.id(), 2, 10),
+			new LootItem(ItemId.BLOOD_RUNE.id(), 1, 5),
+			new LootItem(ItemId.DIAMOND.id(), 1, 1));
 
 		private final ArrayList<LootItem> lootTable;
 		private final int xp;
@@ -739,23 +740,23 @@ public class Thieving extends Functions
 
 	enum Stall {
 		TEA_STALL(780, 5, 64, 780, 5000,
-			"", new LootItem(739, 1, 100)),
+			"", new LootItem(ItemId.CUP_OF_TEA.id(), 1, 100)),
 		BAKERS_STALL(325, 5, 64, 325, 5000,
-			"", new LootItem(330, 1, 100)),
+			"", new LootItem(ItemId.CAKE.id(), 1, 100)),
 		SILK_STALL(326, 20, 96, 326, 8000,
-			piece_of, new LootItem(200, 1, 100)),
+			piece_of, new LootItem(ItemId.SILK.id(), 1, 100)),
 		FUR_STALL(327, 35, 144, 327, 15000,
-			piece_of, new LootItem(541, 1, 10),
-			new LootItem(146, 1, 100)),
+			piece_of, new LootItem(ItemId.GREY_WOLF_FUR.id(), 1, 10),
+			new LootItem(ItemId.FUR.id(), 1, 100)),
 		SILVER_STALL(328, 50, 216, 328, 30000,
-			piece_of, new LootItem(383, 1, 100)),
+			piece_of, new LootItem(ItemId.SILVER.id(), 1, 100)),
 		SPICES_STALL(329, 65, 324, 329, 80000,
-			"pot of ", new LootItem(707, 1, 100)),
+			"pot of ", new LootItem(ItemId.SPICE.id(), 1, 100)),
 		GEMS_STALL(330, 75, 640, 330, 180000,
-			"", new LootItem(160, 1, 65),
-			new LootItem(159, 1, 20),
-			new LootItem(158, 1, 10),
-			new LootItem(157, 1, 5));
+			"", new LootItem(ItemId.UNCUT_SAPPHIRE.id(), 1, 65),
+			new LootItem(ItemId.UNCUT_EMERALD.id(), 1, 20),
+			new LootItem(ItemId.UNCUT_RUBY.id(), 1, 10),
+			new LootItem(ItemId.UNCUT_DIAMOND.id(), 1, 5));
 
 		ArrayList<LootItem> lootTable;
 		private String lootPrefix;

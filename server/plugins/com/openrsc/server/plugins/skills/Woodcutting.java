@@ -3,7 +3,9 @@ package com.openrsc.server.plugins.skills;
 import com.openrsc.server.Constants;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.ObjectWoodcuttingDef;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -48,7 +50,7 @@ public class Woodcutting implements ObjectActionListener,
 			owner.message("You are too tired to cut the tree");
 			return;
 		}
-		if (owner.getSkills().getLevel(8) < def.getReqLevel()) {
+		if (owner.getSkills().getLevel(Skills.WOODCUT) < def.getReqLevel()) {
 			owner.message("You need a woodcutting level of " + def.getReqLevel() + " to axe this tree");
 			return;
 		}
@@ -64,26 +66,29 @@ public class Woodcutting implements ObjectActionListener,
 			return;
 		}
 		int batchTimes = 1;
-		switch (axeId) {
-			case 87:
+		switch (ItemId.getById(axeId)) {
+			case BRONZE_AXE:
 				batchTimes = 1;
 				break;
-			case 12:
+			case IRON_AXE:
 				batchTimes = 2;
 				break;
-			case 88:
+			case STEEL_AXE:
 				batchTimes = 3;
 				break;
-			case 428:
+			case BLACK_AXE:
 				batchTimes = 4;
 				break;
-			case 203:
+			case MITHRIL_AXE:
 				batchTimes = 5;
 				break;
-			case 204:
+			case ADAMANTITE_AXE:
 				batchTimes = 8;
-			case 405:
+			case RUNE_AXE:
 				batchTimes = 12;
+				break;
+			default:
+				batchTimes = 1;
 				break;
 		}
 
@@ -97,7 +102,7 @@ public class Woodcutting implements ObjectActionListener,
 					interrupt();
 					return;
 				}
-				if (getLog(def.getReqLevel(), owner.getSkills().getLevel(8), axeID)) {
+				if (getLog(def.getReqLevel(), owner.getSkills().getLevel(Skills.WOODCUT), axeID)) {
 					final Item log = new Item(def.getLogId());
 					if (!owner.getInventory().full())
 						owner.getInventory().add(log);
@@ -105,7 +110,7 @@ public class Woodcutting implements ObjectActionListener,
 						World.getWorld().registerItem(new GroundItem(log.getID(), owner.getX(),
 							owner.getY(), log.getAmount(), owner));
 					owner.message("You get some wood");
-					owner.incExp(8, (int) def.getExp(), true);
+					owner.incExp(Skills.WOODCUT, (int) def.getExp(), true);
 					if (DataConversions.random(1, 100) <= def.getFell()) {
 						interrupt();
 						GameObject obj = owner.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
@@ -141,35 +146,35 @@ public class Woodcutting implements ObjectActionListener,
 	 */
 	public int calcAxeBonus(int axeId) {
 		int axeBonus = 0;
-		switch (axeId) {
-			case 87:
+		switch (ItemId.getById(axeId)) {
+			case BRONZE_AXE:
 				axeBonus = 0;
 				break;
-			case 12:
+			case IRON_AXE:
 				axeBonus = 1;
 				break;
-			case 88:
+			case STEEL_AXE:
 				axeBonus = 2;
 				break;
-			case 428:
+			case BLACK_AXE:
 				axeBonus = 3;
 				break;
-			case 203:
+			case MITHRIL_AXE:
 				axeBonus = 4;
 				break;
-			case 204:
+			case ADAMANTITE_AXE:
 				axeBonus = 8;
 				break;
-			case 405:
+			case RUNE_AXE:
 				axeBonus = 16;
+				break;
+			default:
+				axeBonus = 0;
 				break;
 		}
 		return axeBonus;
 	}
 
-	/**
-	 * Should we get a log from the tree?
-	 */
 	/**
 	 * Should we get a log from the tree?
 	 */

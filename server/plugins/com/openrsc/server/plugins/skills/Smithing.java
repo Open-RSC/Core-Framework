@@ -4,6 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.ItemSmithingDef;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
@@ -39,7 +40,7 @@ public class Smithing implements InvUseOnObjectListener,
 	}
 
 	private boolean allowDorics(Player player) {
-		if (player.getQuestStage(3) > -1) {
+		if (player.getQuestStage(Quests.DORICS_QUEST) > -1) {
 			Npc doric = World.getWorld().getNpc(144, 323, 327, 487, 492,
 				true);
 			doric.getUpdateFlags().setChatMessage(new ChatMessage(doric,
@@ -56,7 +57,7 @@ public class Smithing implements InvUseOnObjectListener,
 		if (!(obj.getID() == 50 || obj.getID() == 177)) return false;
 
 		// Using hammer with anvil.
-		if (item.getID() == 168) {
+		if (item.getID() == ItemId.HAMMER.id()) {
 			player.message("To forge items use the metal you wish to work with the anvil");
 			return false;
 		}
@@ -64,19 +65,19 @@ public class Smithing implements InvUseOnObjectListener,
 		int minSmithingLevel = minSmithingLevel(item.getID());
 
 		// Special Dragon Square Shield Case
-		if (minSmithingLevel < 0 && item.getID() != 1276 && item.getID() != 1277) {
+		if (minSmithingLevel < 0 && item.getID() != ItemId.RIGHT_HALF_DRAGON_SQUARE_SHIELD.id() && item.getID() != ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id()) {
 			player.message("Nothing interesting happens");
 			return false;
 		}
 
-		if (player.getSkills().getLevel(13) < minSmithingLevel) {
+		if (player.getSkills().getLevel(Skills.SMITHING) < minSmithingLevel) {
 			player.message("You need at least level "
 				+ minSmithingLevel + " smithing to work with "
 				+ item.getDef().getName().toLowerCase().replaceAll("bar", ""));
 			return false;
 		}
 
-		if (player.getInventory().countId(168) < 1) {
+		if (player.getInventory().countId(ItemId.HAMMER.id()) < 1) {
 			player.message("You need a hammer to work the metal with.");
 			return false;
 		}
@@ -87,13 +88,13 @@ public class Smithing implements InvUseOnObjectListener,
 	private void beginSmithing(final Item item, final Player player) {
 
 		// Combining Dragon Square Shield Halves
-		if (item.getID() == 1276 || item.getID() == 1277) {
+		if (item.getID() == ItemId.RIGHT_HALF_DRAGON_SQUARE_SHIELD.id() || item.getID() == ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id()) {
 			attemptDragonSquareCombine(item, player);
 			return;
 		}
 
 		// Failure to make a gold bowl without Legend's Quest.
-		if (item.getID() == 172 && player.getQuestStage(Quests.LEGENDS_QUEST) >= 0 && player.getQuestStage(Quests.LEGENDS_QUEST) <= 2) {
+		if (item.getID() == ItemId.GOLD_BAR.id() && player.getQuestStage(Quests.LEGENDS_QUEST) >= 0 && player.getQuestStage(Quests.LEGENDS_QUEST) <= 2) {
 			player.message("You're not quite sure what to make from the gold..");
 			return;
 		}
@@ -101,7 +102,7 @@ public class Smithing implements InvUseOnObjectListener,
 		player.message("What would you like to make?");
 
 		// Gold
-		if (item.getID() == 172) {
+		if (item.getID() == ItemId.GOLD_BAR.id()) {
 			handleGoldSmithing(player);
 			return;
 		}
@@ -111,24 +112,22 @@ public class Smithing implements InvUseOnObjectListener,
 	}
 
 	private void attemptDragonSquareCombine(Item item, Player player) {
-		if (player.getSkills().getLevel(13) < 60) {
+		if (player.getSkills().getLevel(Skills.SMITHING) < 60) {
 			player.message("You need a smithing ability of at least 60 to complete this task.");
 		}
 		// non-kosher this message
-		else if (player.getInventory().countId(1276) < 1 || player.getInventory().countId(1277) < 1) {
+		else if (player.getInventory().countId(ItemId.RIGHT_HALF_DRAGON_SQUARE_SHIELD.id()) < 1
+				|| player.getInventory().countId(ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id()) < 1) {
 			player.message("You need the two shield halves to repair the shield.");
 		} else {
-			player.message("You set to work trying to fix the ancient shield.");
-			sleep(1200);
-			player.message("You hammer long and hard and use all of your skill.");
-			sleep(1200);
-			player.message("Eventually, it is ready...");
-			sleep(1200);
-			player.message("You have repaired the Dragon Square Shield.");
-			player.getInventory().remove(1276, 1);
-			player.getInventory().remove(1277, 1);
-			player.getInventory().add(new Item(1278, 1));
-			player.incExp(13, 300, true);
+			message(player, 1200, "You set to work trying to fix the ancient shield.",
+					"You hammer long and hard and use all of your skill.",
+					"Eventually, it is ready...",
+					"You have repaired the Dragon Square Shield.");
+			player.getInventory().remove(ItemId.RIGHT_HALF_DRAGON_SQUARE_SHIELD.id(), 1);
+			player.getInventory().remove(ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id(), 1);
+			player.getInventory().add(new Item(ItemId.DRAGON_SQUARE_SHIELD.id(), 1));
+			player.incExp(Skills.SMITHING, 300, true);
 		}
 	}
 
@@ -139,21 +138,21 @@ public class Smithing implements InvUseOnObjectListener,
 		}
 		if (goldOption == 0) {
 			message(player, "You hammer the metal...");
-			if (player.getInventory().countId(172) < 2) {
+			if (player.getInventory().countId(ItemId.GOLD_BAR.id()) < 2) {
 				player.message("You need two bars of gold to make this item.");
 			} else {
 				if (Formulae.failCalculation(player, Skills.SMITHING, 50)) {
 					for (int x = 0; x < 2; x++) {
-						player.getInventory().remove(172, 1);
+						player.getInventory().remove(ItemId.GOLD_BAR.id(), 1);
 					}
 					player.message("You forge a beautiful bowl made out of solid gold.");
-					player.getInventory().add(new Item(1188, 1));
-					player.incExp(13, 120, true);
+					player.getInventory().add(new Item(ItemId.GOLDEN_BOWL.id(), 1));
+					player.incExp(Skills.SMITHING, 120, true);
 				} else {
 					player.message("You make a mistake forging the bowl..");
 					player.message("You pour molten gold all over the floor..");
-					player.getInventory().remove(172, 1);
-					player.incExp(13, 4, true);
+					player.getInventory().remove(ItemId.GOLD_BAR.id(), 1);
+					player.incExp(Skills.SMITHING, 4, true);
 				}
 			}
 		}
@@ -188,7 +187,7 @@ public class Smithing implements InvUseOnObjectListener,
 			return;
 		}
 
-		if (player.getSkills().getLevel(13) < def.getRequiredLevel()) {
+		if (player.getSkills().getLevel(Skills.SMITHING) < def.getRequiredLevel()) {
 			player.message("You need to be at least level "
 				+ def.getRequiredLevel() + " smithing to do that");
 			return;
@@ -229,7 +228,7 @@ public class Smithing implements InvUseOnObjectListener,
 						player.getInventory().add(new Item(def.getItemID(), 1));
 					}
 				}
-				player.incExp(13, getSmithingExp(item.getID(), def.getRequiredBars()), true);
+				player.incExp(Skills.SMITHING, getSmithingExp(item.getID(), def.getRequiredBars()), true);
 			}
 		});
 	}
@@ -238,7 +237,7 @@ public class Smithing implements InvUseOnObjectListener,
 		int option;
 
 		// Steel Bar
-		if (item.getID() == 171) {
+		if (item.getID() == ItemId.STEEL_BAR.id()) {
 			option = showMenu(player, "Make Weapon", "Make Armour",
 				"Make Missile Heads", "Make Steel Nails", "Cancel");
 
@@ -249,7 +248,7 @@ public class Smithing implements InvUseOnObjectListener,
 		}
 
 		// Bronze Bar
-		if (item.getID() == 169) {
+		if (item.getID() == ItemId.BRONZE_BAR.id()) {
 			option = showMenu(player, "Make Weapon", "Make Armour",
 				"Make Missile Heads", "Make Craft Item", "Cancel");
 
@@ -322,12 +321,12 @@ public class Smithing implements InvUseOnObjectListener,
 		if (firstType == 3) {
 
 			// Nails
-			if (item.getID() == 171) {
+			if (item.getID() == ItemId.STEEL_BAR.id()) {
 				makeNails(item, player);
 			}
 
 			// Bronze Wire
-			else if (item.getID() == 169) {
+			else if (item.getID() == ItemId.BRONZE_BAR.id()) {
 				makeWire(item, player);
 			}
 		}
@@ -336,19 +335,19 @@ public class Smithing implements InvUseOnObjectListener,
 	}
 
 	private void makeNails(Item item, Player player) {
-		if (player.getSkills().getLevel(13) < 34) {
+		if (player.getSkills().getLevel(Skills.SMITHING) < 34) {
 			player.message("You need to be at least level 34 smithing to do that");
 			return;
 		}
-		if (player.getInventory().countId(171) < 1) {
+		if (player.getInventory().countId(ItemId.STEEL_BAR.id()) < 1) {
 			player.message("You need 1 bar of metal to make this item");
 			return;
 		}
 		showBubble(player, item);
-		player.getInventory().remove(171, 1);
+		player.getInventory().remove(ItemId.STEEL_BAR.id(), 1);
 		player.message("You hammer the metal and make some nails");
-		player.getInventory().add(new Item(419, 2));
-		player.incExp(13, 70, true);
+		player.getInventory().add(new Item(ItemId.NAILS.id(), 2));
+		player.incExp(Skills.SMITHING, 70, true);
 	}
 
 	private void makeWire(Item item, Player player) {
@@ -357,16 +356,16 @@ public class Smithing implements InvUseOnObjectListener,
 		if (player.isBusy()) {
 			return;
 		}
-		if (player.getInventory().countId(169) < 1) {
+		if (player.getInventory().countId(ItemId.BRONZE_BAR.id()) < 1) {
 			player.message("You need 1 bar of metal to make this item");
 			return;
 		}
 		if (bronzeWireOption == 0) {
 			showBubble(player, item);
-			player.getInventory().remove(169, 1);
+			player.getInventory().remove(ItemId.BRONZE_BAR.id(), 1);
 			player.message("You hammer the Bronze Bar and make some bronze wire");
-			player.getInventory().add(new Item(979, 1));
-			player.incExp(13, 50, true);
+			player.getInventory().add(new Item(ItemId.BRONZE_WIRE.id(), 1));
+			player.incExp(Skills.SMITHING, 50, true);
 		}
 	}
 
@@ -517,20 +516,22 @@ public class Smithing implements InvUseOnObjectListener,
 	 * Gets the type of bar we have
 	 */
 	public static int getBarType(int barID) {
-		switch (barID) {
-			case 169:
+		switch (ItemId.getById(barID)) {
+			case BRONZE_BAR:
 				return 0;
-			case 170:
+			case IRON_BAR:
 				return 1;
-			case 171:
+			case STEEL_BAR:
 				return 2;
-			case 172:
-			case 173:
+			case GOLD_BAR:
+			case MITHRIL_BAR:
 				return 3;
-			case 174:
+			case ADAMANTITE_BAR:
 				return 4;
-			case 408:
+			case RUNITE_BAR:
 				return 5;
+			default:
+				break;
 		}
 		return -1;
 	}

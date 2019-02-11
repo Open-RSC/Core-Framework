@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -669,7 +670,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 				}
 			}
 			if (regenerate) {
-				n.getSkills().setLevel(3, n.getDef().hits);
+				n.getSkills().setLevel(Skills.HITPOINTS, n.getDef().hits);
 				p.message("Chronozon regenerates");
 			} else {
 				if (p.getQuestStage(this) == 8) {
