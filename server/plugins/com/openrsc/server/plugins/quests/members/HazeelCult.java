@@ -1230,7 +1230,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
-		if (obj.getID() == BUTLERS_CUPBOARD) {
+		if (obj.getID() == 440 || obj.getID() == BUTLERS_CUPBOARD) {
 			return true;
 		}
 		if (obj.getID() == BASEMENT_CRATE) {
@@ -1247,40 +1247,46 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player player) {
-		if (obj.getID() == BUTLERS_CUPBOARD) {
-			message(player, "you search the cupboard");
-			if (player.getQuestStage(this) == 5 && player.getCache().hasKey("good_side")) {
-				message(player, "you find a bottle of poison",
-					"and a strange amulet",
-					"you pass your finds to ceril");
-				Npc ceril = getNearestNpc(player, CERIL, 10);
-				playerTalk(player, ceril, "look what i've found?");
-				npcTalk(player, ceril, "what's this for jones?");
-				message(player, "ceril takes the bottle");
-				npcTalk(player, ceril, "i don't believe it, it's poison");
-				Npc butler = getNearestNpc(player, BUTLER, 10);
-				npcTalk(player, butler, "mr carnillean, it's for the rats",
-					"i'm just a loyal servent");
-				npcTalk(player, ceril, "i've seen this amulet before",
-					"the thieves that broke in",
-					"one of them  was wearing exactly the same amulet",
-					"jones i don't believe it",
-					"we trusted you");
-				npcTalk(player, butler, "that's because you're an old fool ceril",
-					"I should have got rid of you and your family weeks ago");
-				message(player, "ceril calls for the guards");
-				npcTalk(player, butler, "don't worry ceril",
-					"we'll make sure you and your family pay");
-				npcTalk(player, ceril, "looks like i owe you an apology traveller");
-				playerTalk(player, ceril, "that's ok, we all make mistakes");
-				npcTalk(player, ceril, "if it wasn't for you he could have poisoned my whole family",
-					"i'm sorry for the way i spoke to you",
-					"the least i can do is give you a proper reward");
-				player.sendQuestComplete(Constants.Quests.THE_HAZEEL_CULT);
-				playerTalk(player, ceril, "thanks ceril");
-				npcTalk(player, ceril, "thankyou, you're welcome here any time traveller");
+		if (obj.getID() == 440 || obj.getID() == BUTLERS_CUPBOARD) {
+			if (command.equalsIgnoreCase("open")) {
+				openCupboard(obj, player, 441);
+			} else if (command.equalsIgnoreCase("close")) {
+				closeCupboard(obj, player, 440);
 			} else {
-				message(player, "but find nothing");
+				message(player, "you search the cupboard");
+				if (player.getQuestStage(this) == 5 && player.getCache().hasKey("good_side")) {
+					message(player, "you find a bottle of poison",
+						"and a strange amulet",
+						"you pass your finds to ceril");
+					Npc ceril = getNearestNpc(player, CERIL, 10);
+					playerTalk(player, ceril, "look what i've found?");
+					npcTalk(player, ceril, "what's this for jones?");
+					message(player, "ceril takes the bottle");
+					npcTalk(player, ceril, "i don't believe it, it's poison");
+					Npc butler = getNearestNpc(player, BUTLER, 10);
+					npcTalk(player, butler, "mr carnillean, it's for the rats",
+						"i'm just a loyal servent");
+					npcTalk(player, ceril, "i've seen this amulet before",
+						"the thieves that broke in",
+						"one of them  was wearing exactly the same amulet",
+						"jones i don't believe it",
+						"we trusted you");
+					npcTalk(player, butler, "that's because you're an old fool ceril",
+						"I should have got rid of you and your family weeks ago");
+					message(player, "ceril calls for the guards");
+					npcTalk(player, butler, "don't worry ceril",
+						"we'll make sure you and your family pay");
+					npcTalk(player, ceril, "looks like i owe you an apology traveller");
+					playerTalk(player, ceril, "that's ok, we all make mistakes");
+					npcTalk(player, ceril, "if it wasn't for you he could have poisoned my whole family",
+						"i'm sorry for the way i spoke to you",
+						"the least i can do is give you a proper reward");
+					player.sendQuestComplete(Constants.Quests.THE_HAZEEL_CULT);
+					playerTalk(player, ceril, "thanks ceril");
+					npcTalk(player, ceril, "thankyou, you're welcome here any time traveller");
+				} else {
+					message(player, "but find nothing");
+				}
 			}
 		}
 		if (obj.getID() == BASEMENT_CRATE) {
@@ -1329,6 +1335,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 		if (obj.getID() == CARNILLEAN_CHEST && item.getID() == 756) {
 			player.message("you use the key to open");
 			player.message("the chest");
+			replaceObjectDelayed(obj, 2000, 437);
 			player.message("inside the chest you find the sacred script of hazeel");
 			addItem(player, 747, 1);
 			if (player.getQuestStage(this) == 5) {

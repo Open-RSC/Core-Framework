@@ -24,12 +24,14 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.closeGenericObject;
 import static com.openrsc.server.plugins.Functions.doDoor;
 import static com.openrsc.server.plugins.Functions.getNearestNpc;
 import static com.openrsc.server.plugins.Functions.hasItem;
 import static com.openrsc.server.plugins.Functions.incQuestReward;
 import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.openGenericObject;
 import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.removeItem;
 import static com.openrsc.server.plugins.Functions.showMenu;
@@ -282,32 +284,46 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 			|| (obj.getY() == 641 && (obj.getID() == 233 || obj.getID() == 234))
 			|| obj.getID() == 227
 			|| ((obj.getY() == 3458 || obj.getY() == 3331)
-			&& obj.getID() == 228 || obj.getID() == 230);
+			&& (obj.getID() == 228 || obj.getID() == 229) || (obj.getID() == 230 || obj.getID() == 231));
 	}
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		switch (obj.getID()) {
 			case 230:
-				//kosher: could not "drop trick" easy, had to re-enter the door for another piece
-				if (!hasItem(p, 418, 1) && p.getQuestStage(Quests.DRAGON_SLAYER) == 2
-					&& p.getCache().hasKey("dwarven_unlocked")) {
-					addItem(p, 418, 1);
-					p.message("You find a piece of map in the chest");
-					p.getCache().remove("dwarven_unlocked");
+			case 231:
+				if (command.equalsIgnoreCase("open")) {
+					openGenericObject(obj, p, 230, "You open the chest");
+				} else if (command.equalsIgnoreCase("close")) {
+					closeGenericObject(obj, p, 231, "You close the chest");
 				} else {
-					p.message("You find nothing in the chest");
+					//kosher: could not "drop trick" easy, had to re-enter the door for another piece
+					if (!hasItem(p, 418, 1) && p.getQuestStage(Quests.DRAGON_SLAYER) == 2
+						&& p.getCache().hasKey("dwarven_unlocked")) {
+						addItem(p, 418, 1);
+						p.message("You find a piece of map in the chest");
+						p.getCache().remove("dwarven_unlocked");
+					} else {
+						p.message("You find nothing in the chest");
+					}
 				}
 				break;
 			case 228:
-				//kosher: could not "drop trick" easy, had to re-enter the door for another piece
-				if (!hasItem(p, 417, 1) && p.getQuestStage(Quests.DRAGON_SLAYER) == 2
-					&& p.getCache().hasKey("melzar_unlocked")) {
-					addItem(p, 417, 1);
-					p.message("You find a piece of map in the chest");
-					p.getCache().remove("melzar_unlocked");
+			case 229:
+				if (command.equalsIgnoreCase("open")) {
+					openGenericObject(obj, p, 228, "You open the chest");
+				} else if (command.equalsIgnoreCase("close")) {
+					closeGenericObject(obj, p, 229, "You close the chest");
 				} else {
-					p.message("You find nothing in the chest");
+					//kosher: could not "drop trick" easy, had to re-enter the door for another piece
+					if (!hasItem(p, 417, 1) && p.getQuestStage(Quests.DRAGON_SLAYER) == 2
+						&& p.getCache().hasKey("melzar_unlocked")) {
+						addItem(p, 417, 1);
+						p.message("You find a piece of map in the chest");
+						p.getCache().remove("melzar_unlocked");
+					} else {
+						p.message("You find nothing in the chest");
+					}
 				}
 				break;
 			//clicking boat triggers klarense if available

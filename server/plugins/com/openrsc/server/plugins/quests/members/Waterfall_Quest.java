@@ -25,12 +25,14 @@ import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveL
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.closeGenericObject;
 import static com.openrsc.server.plugins.Functions.doDoor;
 import static com.openrsc.server.plugins.Functions.doGate;
 import static com.openrsc.server.plugins.Functions.hasItem;
 import static com.openrsc.server.plugins.Functions.incQuestReward;
 import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.openGenericObject;
 import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.removeItem;
 import static com.openrsc.server.plugins.Functions.showMenu;
@@ -287,7 +289,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 	public boolean blockObjectAction(GameObject obj, String command,
 									 Player player) {
 		return obj.getID() == 492 || obj.getID() == 486 || obj.getID() == 467
-			|| obj.getID() == 507 || obj.getID() == 481
+			|| obj.getID() == 506 || obj.getID() == 507 || obj.getID() == 481
 			|| obj.getID() == 471 || obj.getID() == 479
 			|| obj.getID() == 470 || obj.getID() == 480
 			|| obj.getID() == 463 || obj.getID() == 462
@@ -385,13 +387,19 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 				"true friend of nature in life and death",
 				"may she now rest knowing",
 				"only visitors with peaceful intent can enter");
-		} else if (obj.getID() == 507) {
-			message(p, "you search the cupboard");
-			if (!hasItem(p, 805, 1)) {
-				p.message("and find a metel urn");
-				addItem(p, 805, 1);
+		} else if (obj.getID() == 506 || obj.getID() == 507) {
+			if (command.equalsIgnoreCase("open")) {
+				openGenericObject(obj, p, 507, "you open the cupboard");
+			} else if (command.equalsIgnoreCase("close")) {
+				closeGenericObject(obj, p, 506, "you shut the cupboard");
 			} else {
-				p.message("it's empty");
+				message(p, "you search the cupboard");
+				if (!hasItem(p, 805, 1)) {
+					p.message("and find a metel urn");
+					addItem(p, 805, 1);
+				} else {
+					p.message("it's empty");
+				}
 			}
 		} else if (obj.getID() == 467) {
 			message(p, "you search the coffin");

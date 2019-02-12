@@ -20,12 +20,14 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.closeGenericObject;
 import static com.openrsc.server.plugins.Functions.doDoor;
 import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 import static com.openrsc.server.plugins.Functions.hasItem;
 import static com.openrsc.server.plugins.Functions.incQuestReward;
 import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.openGenericObject;
 import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.removeItem;
 import static com.openrsc.server.plugins.Functions.showMenu;
@@ -365,10 +367,7 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 		if (obj.getID() == 331 && obj.getX() == 563 && obj.getY() == 587) {
 			return true;
 		}
-		if (obj.getID() == 333 && obj.getX() == 560 && obj.getY() == 1531) {
-			return true;
-		}
-		if (obj.getID() == 332 && obj.getX() == 560 && obj.getY() == 1531) {
+		if ((obj.getID() == 332 || obj.getID() == 333) && obj.getX() == 560 && obj.getY() == 1531) {
 			return true;
 		}
 		return false;
@@ -424,19 +423,19 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 				}
 			}
 		}
-		if (obj.getID() == 333 && obj.getX() == 560 && obj.getY() == 1531) {
-			p.message("You open the chest");
-			World.getWorld().replaceGameObject(obj,
-				new GameObject(obj.getLocation(), 332, obj.getDirection(),
-					obj.getType()));
-		}
-		if (obj.getID() == 332 && obj.getX() == 560 && obj.getY() == 1531) {
-			p.message("You search the chest");
-			if (hasItem(p, 705)) {
-				p.message("The chest is empty");
+		if ((obj.getID() == 332 || obj.getID() == 333) && obj.getX() == 560 && obj.getY() == 1531) {
+			if (command.equalsIgnoreCase("open")) {
+				openGenericObject(obj, p, 332, "You open the chest");
+			} else if (command.equalsIgnoreCase("close")) {
+				closeGenericObject(obj, p, 333, "You close the chest");
 			} else {
-				p.message("You find a tribal totem which you take");
-				addItem(p, 705, 1);
+				p.message("You search the chest");
+				if (hasItem(p, 705)) {
+					p.message("The chest is empty");
+				} else {
+					p.message("You find a tribal totem which you take");
+					addItem(p, 705, 1);
+				}
 			}
 		}
 	}

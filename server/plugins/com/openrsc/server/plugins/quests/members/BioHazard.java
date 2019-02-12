@@ -1150,7 +1150,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 		if (obj.getID() == WATCH_TOWER) {
 			return true;
 		}
-		if (obj.getID() == NURSE_SARAHS_CUPBOARD) {
+		if (obj.getID() == 509 || obj.getID() == NURSE_SARAHS_CUPBOARD) {
 			return true;
 		}
 		if (obj.getID() == GET_INTO_CRATES_GATE) {
@@ -1188,13 +1188,19 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 				}
 			}
 		}
-		if (obj.getID() == NURSE_SARAHS_CUPBOARD) {
-			p.message("you search the cupboard");
-			if ((!hasItem(p, DOCTORS_GOWN)) && (p.getQuestStage(this) == 4 || p.getQuestStage(this) == 5)) {
-				p.message("inside you find a doctor's gown");
-				addItem(p, DOCTORS_GOWN, 1);
+		if (obj.getID() == 509 || obj.getID() == NURSE_SARAHS_CUPBOARD) {
+			if (command.equalsIgnoreCase("open")) {
+				openCupboard(obj, p, 510);
+			} else if (command.equalsIgnoreCase("close")) {
+				closeCupboard(obj, p, 509);
 			} else {
-				p.message("but find nothing of interest");
+				p.message("you search the cupboard");
+				if ((!hasItem(p, DOCTORS_GOWN)) && (p.getQuestStage(this) == 4 || p.getQuestStage(this) == 5)) {
+					p.message("inside you find a doctor's gown");
+					addItem(p, DOCTORS_GOWN, 1);
+				} else {
+					p.message("but find nothing of interest");
+				}
 			}
 		}
 		if (obj.getID() == WATCH_TOWER) {
