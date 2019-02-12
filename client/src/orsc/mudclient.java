@@ -334,7 +334,7 @@ public final class mudclient implements Runnable {
 	private boolean duelSettingsPrayer = false;
 	private boolean duelSettingsRetreat = false;
 	private boolean duelSettingsWeapons = false;
-	private boolean errorLoadingCoadebase = false;
+	private boolean errorLoadingCodebase = false;
 	private boolean errorLoadingData = false;
 	private boolean errorLoadingMemory = false;
 	private int[] experienceArray = new int[Config.S_PLAYER_LEVEL_LIMIT];
@@ -381,6 +381,7 @@ public final class mudclient implements Runnable {
 	private int m_Ji = 0;
 	private int settingTab = 0;
 	private int loginButtonExistingUser;
+	private int loginButtonOptions;
 	private int m_Kj;
 	private int m_ld = 2;
 	private int characterBottomColour = 14;
@@ -443,6 +444,7 @@ public final class mudclient implements Runnable {
 	private Panel panelAppearance;
 	private Panel panelLogin;
 	private Panel panelLoginWelcome;
+	private Panel panelLoginOptions;
 	private Panel panelMagic;
 	private int panelMessageChat;
 	private int panelMessageEntry;
@@ -1443,7 +1445,7 @@ public final class mudclient implements Runnable {
 			if (Config.isAndroid())
 				yOffsetWelcome  = -125;
 
-			if (!Config.wantMembers()) { // Free version
+			if (!Config.wantMembers()) { // Free server
 				this.panelLoginWelcome.addCenteredText(halfGameWidth(), halfGameHeight() + 35 + yOffsetWelcome, "Click on an option", 5, true);
 
 				panelLoginWelcome.addButtonBackground(halfGameWidth() - 100, halfGameHeight() + 73 + yOffsetWelcome, 120, 35);
@@ -1455,23 +1457,27 @@ public final class mudclient implements Runnable {
 				loginButtonNewUser = panelLoginWelcome.addButton(halfGameWidth() - 100, halfGameHeight() + 73 + yOffsetWelcome, 120, 35);
 				loginButtonExistingUser = panelLoginWelcome.addButton(halfGameWidth() + 100, halfGameHeight() + 73  + yOffsetWelcome, 120, 35);
 			}
-			else { // Members version
+			else { // Members server
 				this.panelLoginWelcome.addCenteredText(halfGameWidth(), halfGameHeight() + 33 + yOffsetWelcome, "Welcome to " + Config.getServerName(), 4, true);
 				this.panelLoginWelcome.addCenteredText(halfGameWidth(), halfGameHeight() + 48 + yOffsetWelcome, Config.getWelcomeText(), 4, true);
 
-				panelLoginWelcome.addButtonBackground(halfGameWidth() - 100, halfGameHeight() + 83 + yOffsetWelcome, 120, 35);
-				panelLoginWelcome.addButtonBackground(halfGameWidth() + 100, halfGameHeight() + 83 + yOffsetWelcome, 120, 35);
+				panelLoginWelcome.addButtonBackground(halfGameWidth(), halfGameHeight() + 83 + yOffsetWelcome, 200,35);
+				panelLoginWelcome.addCenteredText(halfGameWidth(), halfGameHeight() + 83 + yOffsetWelcome, "Click here to login", 5, false);
+				loginButtonOptions = panelLoginWelcome.addButton(halfGameWidth(), halfGameHeight() + 83 + yOffsetWelcome,200, 35);
 
-				panelLoginWelcome.addCenteredText(halfGameWidth() - 100, halfGameHeight() + 83 + yOffsetWelcome, "New User", 5, false);
-				panelLoginWelcome.addCenteredText(halfGameWidth() + 100, halfGameHeight() + 83 + yOffsetWelcome, "Existing User", 5, false);
+				this.panelLoginOptions = new Panel(this.getSurface(), 50);
 
-				loginButtonNewUser = panelLoginWelcome.addButton(halfGameWidth() - 100, halfGameHeight() + 83 + yOffsetWelcome, 120, 35);
-				loginButtonExistingUser = panelLoginWelcome.addButton(halfGameWidth() + 100, halfGameHeight() + 83  + yOffsetWelcome, 120, 35);
+				this.panelLoginOptions.addCenteredText(halfGameWidth(), halfGameHeight() + 35 + yOffsetWelcome, "Click on an option", 5, true);
+
+				panelLoginOptions.addButtonBackground(halfGameWidth() - 100, halfGameHeight() + 83 + yOffsetWelcome, 120, 35);
+				panelLoginOptions.addButtonBackground(halfGameWidth() + 100, halfGameHeight() + 83 + yOffsetWelcome, 120, 35);
+
+				panelLoginOptions.addCenteredText(halfGameWidth() - 100, halfGameHeight() + 83 + yOffsetWelcome, "New User", 5, false);
+				panelLoginOptions.addCenteredText(halfGameWidth() + 100, halfGameHeight() + 83 + yOffsetWelcome, "Existing User", 5, false);
+
+				loginButtonNewUser = panelLoginOptions.addButton(halfGameWidth() - 100, halfGameHeight() + 83 + yOffsetWelcome, 120, 35);
+				loginButtonExistingUser = panelLoginOptions.addButton(halfGameWidth() + 100, halfGameHeight() + 83  + yOffsetWelcome, 120, 35);
 			}
-
-			/*this.panelLoginWelcome.addButtonBackground(256, var2 + 250, 200,35);
-			this.panelLoginWelcome.addCenteredText(256, var2 + 250, "Click here to login", 5, false);
-			loginButtonExistingUser = this.panelLoginWelcome.addButton(256, 250 + var2,200, 35);*/
 
 			this.panelLogin = new Panel(this.getSurface(), 50);
 			short var5 = Config.isAndroid() ? (short) 30 : 230;
@@ -1942,7 +1948,7 @@ public final class mudclient implements Runnable {
 				} else {
 					try {
 						// if (var1) {
-						// this.errorLoadingCoadebase = false;
+						// this.errorLoadingCodebase = false;
 						// }
 
 						if (null == this.getSurface()) {
@@ -4574,6 +4580,9 @@ public final class mudclient implements Runnable {
 				}
 
 				this.panelLogin.drawPanel();
+			}
+			if (this.loginScreenNumber == 3) {
+				panelLoginOptions.drawPanel();
 			}
 
 			this.getSurface().drawSpriteClipping(spriteMedia + 22, 0, getGameHeight(), getGameWidth(), 10, 0, 0, false, 0, 1);
@@ -9181,6 +9190,9 @@ public final class mudclient implements Runnable {
 				if (this.loginScreenNumber == 2 && null != this.panelLogin) {
 					this.panelLogin.keyPress(key);
 				}
+				if (this.loginScreenNumber == 3 && this.panelLoginOptions != null) {
+					this.panelLoginOptions.keyPress(key);
+				}
 			}
 
 			if (var1 > 105) {
@@ -9330,12 +9342,14 @@ public final class mudclient implements Runnable {
 			} else {
 				this.panelLoginWelcome.handleMouse(this.mouseX, this.mouseY, this.currentMouseButtonDown,
 					this.lastMouseButtonDown);
-				if (this.panelLoginWelcome.isClicked(loginButtonExistingUser)) {
+				if (this.panelLoginWelcome.isClicked(loginButtonExistingUser) || this.panelLoginOptions.isClicked(loginButtonExistingUser)) {
 					this.loginScreenNumber = 2;
 					this.panelLogin.setText(this.controlLoginStatus1, "");
 					this.panelLogin.setText(this.controlLoginStatus2, "Please enter your username and password");
 					this.panelLogin.setFocus(this.controlLoginUser);
-				} else if (panelLoginWelcome.isClicked(loginButtonNewUser)) {
+				} else if (panelLoginWelcome.isClicked(loginButtonOptions)) {
+					this.loginScreenNumber = 3;
+				} else if (panelLoginWelcome.isClicked(loginButtonNewUser) || this.panelLoginOptions.isClicked(loginButtonNewUser)) {
 					loginScreenNumber = 1;
 					this.menuNewUser.setText(this.menuNewUserStatus, "Please fill in ALL fields");
 					this.menuNewUser.setText(this.menuNewUserStatus2, "and click submit.");
@@ -12991,7 +13005,7 @@ public final class mudclient implements Runnable {
 	final void update() {
 		try {
 
-			if (!this.errorLoadingCoadebase) {
+			if (!this.errorLoadingCodebase) {
 				if (!this.errorLoadingMemory) {
 					if (!this.errorLoadingData) {
 
