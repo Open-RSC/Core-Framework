@@ -8,6 +8,7 @@ import java.util.Properties;
 
 public class Config {
 	public static final String SERVER_NAME = "Runescape";
+	public static final String SERVER_NAME_WELCOME = "Runescape Classic";
 	public static final String WELCOME_TEXT = "You need a members account to use this server";
 	public static final String SERVER_IP = "localhost";
 	public static final int SERVER_PORT = 43594;
@@ -214,6 +215,10 @@ public class Config {
 
 	public static String getServerName() {
 		return prop.getProperty("SERVER_NAME");
+	}
+
+	public static String getServerNameWelcome() {
+		return prop.getProperty("SERVER_NAME_WELCOME");
 	}
 
 	public static String getWelcomeText() {
