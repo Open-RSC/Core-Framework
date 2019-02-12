@@ -385,7 +385,7 @@ public class KnightsSword implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (obj.getID() == CUPBOARD_ID && obj.getY() == CUPBOARD_Y
+		if ((obj.getID() == CUPBOARD_ID || obj.getID() == 174) && obj.getY() == CUPBOARD_Y
 			&& obj.getX() == 318) {
 			return true;
 		}
@@ -395,23 +395,29 @@ public class KnightsSword implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		final Npc n = World.getWorld().getNpc(138, 316, 320, 2454, 2459);
-		if (obj.getID() == CUPBOARD_ID && obj.getY() == CUPBOARD_Y
+		if ((obj.getID() == CUPBOARD_ID || obj.getID() == 174) && obj.getY() == CUPBOARD_Y
 			&& obj.getX() == 318) {
-			if (n != null) {
-				if (!n.isBusy()) {
-					n.face(p);
-					p.face(n);
-					npcTalk(p, n, "Hey what are you doing?",
-						"That's my cupboard");
-					message(p,
-						"Maybe you need to get someone to distract Sir Vyvin for you");
-				} else {
-					if (hasItem(p, PICTURE_ID) || p.getQuestStage(this) < 4) {
-						p.message("There is just a load of junk in here");
-						return;
+			if (command.equalsIgnoreCase("open")) {
+				openCupboard(obj, p, CUPBOARD_ID);
+			} else if (command.equalsIgnoreCase("close")) {
+				closeCupboard(obj, p, 174);
+			} else {
+				if (n != null) {
+					if (!n.isBusy()) {
+						n.face(p);
+						p.face(n);
+						npcTalk(p, n, "Hey what are you doing?",
+							"That's my cupboard");
+						message(p,
+							"Maybe you need to get someone to distract Sir Vyvin for you");
+					} else {
+						if (hasItem(p, PICTURE_ID) || p.getQuestStage(this) < 4) {
+							p.message("There is just a load of junk in here");
+							return;
+						}
+						p.message("You find a small portrait in here which you take");
+						addItem(p, PICTURE_ID, 1);
 					}
-					p.message("You find a small portrait in here which you take");
-					addItem(p, PICTURE_ID, 1);
 				}
 			}
 		}

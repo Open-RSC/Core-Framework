@@ -80,9 +80,9 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command,
 									 Player player) {
-		if (obj.getID() == 81) {
+		if (obj.getID() == 81 || obj.getID() == 82) {
 			return true;
-		} else if (obj.getID() == 85) {
+		} else if (obj.getID() == 85 || obj.getID() == 84) {
 			return true;
 		} else if (obj.getID() == 67) {
 			return true;
@@ -104,29 +104,43 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 				}
 				break;
 			case 81:
-				if (player.getBank().contains(new Item(54))
-					|| player.getInventory().contains(new Item(54))) {
-					message(player, "You search the chest", "The chest is empty");
-					return;
-				} else if (isPhoenixGang(player)) {
-					message(player, "You search the chest",
-						"You find half a shield which you take");
-					addItem(player, 54, 1);
+			case 82:
+				if (command.equalsIgnoreCase("open")) {
+					openGenericObject(obj, player, 81, "You open the chest");
+				} else if (command.equalsIgnoreCase("close")) {
+					closeGenericObject(obj, player, 82, "You close the chest");
 				} else {
-					message(player, "You search the chest", "The chest is empty");
+					if (player.getBank().contains(new Item(54))
+							|| player.getInventory().contains(new Item(54))) {
+							message(player, "You search the chest", "The chest is empty");
+							return;
+						} else if (isPhoenixGang(player)) {
+							message(player, "You search the chest",
+								"You find half a shield which you take");
+							addItem(player, 54, 1);
+						} else {
+							message(player, "You search the chest", "The chest is empty");
+						}
 				}
 				break;
+			case 84:
 			case 85:
-				if (player.getBank().contains(new Item(53))
-					|| player.getInventory().contains(new Item(53))) {
-					message(player, "You search the cupboard", "The cupboard is empty");
-					return;
-				} else if (isBlackArmGang(player)) {
-					message(player, "You search the cupboard",
-						"You find half a shield which you take");
-					addItem(player, 53, 1);
+				if (command.equalsIgnoreCase("open")) {
+					openCupboard(obj, player, 85);
+				} else if (command.equalsIgnoreCase("close")) {
+					closeCupboard(obj, player, 84);
 				} else {
-					message(player, "You search the cupboard", "The cupboard is empty");
+					if (player.getBank().contains(new Item(53))
+						|| player.getInventory().contains(new Item(53))) {
+						message(player, "You search the cupboard", "The cupboard is empty");
+						return;
+					} else if (isBlackArmGang(player)) {
+						message(player, "You search the cupboard",
+							"You find half a shield which you take");
+						addItem(player, 53, 1);
+					} else {
+						message(player, "You search the cupboard", "The cupboard is empty");
+					}
 				}
 				break;
 		}

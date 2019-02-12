@@ -26,12 +26,16 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.closeCupboard;
+import static com.openrsc.server.plugins.Functions.closeGenericObject;
 import static com.openrsc.server.plugins.Functions.doDoor;
 import static com.openrsc.server.plugins.Functions.getNearestNpc;
 import static com.openrsc.server.plugins.Functions.hasItem;
 import static com.openrsc.server.plugins.Functions.incQuestReward;
 import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.openCupboard;
+import static com.openrsc.server.plugins.Functions.openGenericObject;
 import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.removeItem;
 import static com.openrsc.server.plugins.Functions.showBubble;
@@ -550,51 +554,59 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
-		if (obj.getID() == 263) {
-			return true;
-		}
-		if (obj.getID() == 265) {
-			return true;
-		}
-		return false;
+		return obj.getID() == 263 || obj.getID() == 264 || obj.getID() == 265 || obj.getID() == 266;
 	}
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		Npc guard = getNearestNpc(p, 258, 10);
 		Npc grip = getNearestNpc(p, 259, 15);
-		if (obj.getID() == 263) {
-			if (guard != null) {
-				npcTalk(p, guard, "I don't think Mr Grip will like you opening that up",
-					"That's his drinks cabinet");
-				int menu = showMenu(p, guard,
-					"He won't notice me having a quick look",
-					"Ok I'll leave it");
-				if (menu == 0) {
-					if (grip != null) {
-						grip.teleport(463, 673);
-						npcTalk(p, grip, "Hey what are you doing there",
-							"That's my drinks cabinet get away from it");
-					} else {
-						p.message("You find a bottle of whisky in the cupboard");
-						addItem(p, 584, 1);
+		if (obj.getID() == 263 || obj.getID() == 264) {
+			if (command.equalsIgnoreCase("open") || command.equalsIgnoreCase("search")) {
+				if (guard != null) {
+					npcTalk(p, guard, "I don't think Mr Grip will like you opening that up",
+						"That's his drinks cabinet");
+					int menu = showMenu(p, guard,
+						"He won't notice me having a quick look",
+						"Ok I'll leave it");
+					if (menu == 0) {
+						if (grip != null) {
+							grip.teleport(463, 673);
+							npcTalk(p, grip, "Hey what are you doing there",
+								"That's my drinks cabinet get away from it");
+						} else {
+							if (command.equalsIgnoreCase("open")) {
+								openCupboard(obj, p, 264);
+							} else {
+								p.message("You find a bottle of whisky in the cupboard");
+								addItem(p, 584, 1);
+							}
+						}
 					}
+				} else {
+					p.message("The guard is busy at the moment");
 				}
-			} else {
-				p.message("The guard is busy at the moment");
+			} else if (command.equalsIgnoreCase("close")) {
+				closeCupboard(obj, p, 263);
 			}
 		}
-		if (obj.getID() == 265) {
-			if (!hasItem(p, 585)) {
-				addItem(p, 585, 2);
-				message(p, "You find two candlesticks in the chest",
-					"So that will be one for you",
-					"And one to the person who killed grip for you");
-				if (p.getQuestStage(this) == 1) {
-					p.updateQuestStage(this, 2);
-				}
+		if (obj.getID() == 265 || obj.getID() == 266) {
+			if (command.equalsIgnoreCase("open")) {
+				openGenericObject(obj, p, 265, "You open the chest");
+			} else if (command.equalsIgnoreCase("close")) {
+				closeGenericObject(obj, p, 266, "You close the chest");
 			} else {
-				p.message("The chest is empty");
+				if (!hasItem(p, 585)) {
+					addItem(p, 585, 2);
+					message(p, "You find two candlesticks in the chest",
+						"So that will be one for you",
+						"And one to the person who killed grip for you");
+					if (p.getQuestStage(this) == 1) {
+						p.updateQuestStage(this, 2);
+					}
+				} else {
+					p.message("The chest is empty");
+				}
 			}
 		}
 
