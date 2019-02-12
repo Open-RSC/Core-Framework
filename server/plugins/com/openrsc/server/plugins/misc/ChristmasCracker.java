@@ -22,7 +22,7 @@ public class ChristmasCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 		ItemId.YELLOW_PARTY_HAT.id()
 	};
 
-	private static final int[] prizeWeights = {5, 5, 8, 8, 8, 8, 12, 14, 14, 18};
+	private static final int[] prizeWeights = {5, 6, 10, 11, 10, 12, 15, 17, 18, 24};
 	private static final int[] prizeIds = {
 		ItemId.LAW_RUNE.id(),
 		ItemId.BLACK_DAGGER.id(),
