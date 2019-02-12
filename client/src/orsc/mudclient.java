@@ -43,6 +43,7 @@ import java.util.Map.Entry;
 import java.util.Timer;
 import java.util.TimerTask;
 
+// Comment these out if Android client
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
@@ -595,8 +596,8 @@ public final class mudclient implements Runnable {
 	public int amountToZoom = 0;
 	private Panel panelLoginOptions;
 
-	public mudclient(ORSCApplet handler) {
-		this.clientPort = handler;
+	public mudclient(ClientPort handler) {
+		clientPort = handler;
 		Config.F_CACHE_DIR = clientPort.getCacheLocation();
 		Config.initConfig();
 	}
@@ -9294,7 +9295,10 @@ public final class mudclient implements Runnable {
 					if (Config.isAndroid() || Config.Remember()) {
 						if (this.panelLogin.isClicked(this.rememberButtonIdx)) {
 
+							// ORSCApplet is for PC client, clientPort is for Android client, comment out what doesn't work.
 							boolean temp = ORSCApplet.saveCredentials(this.panelLogin.getControlText(this.controlLoginUser) + "," + this.panelLogin.getControlText(this.controlLoginPass));
+							//boolean temp = clientPort.saveCredentials(this.panelLogin.getControlText(this.controlLoginUser) + "," + this.panelLogin.getControlText(this.controlLoginPass));
+
 							if (temp)
 								this.panelLogin.setText(this.controlLoginStatus2, "@gre@Credentials Saved");
 						}
@@ -9305,8 +9309,11 @@ public final class mudclient implements Runnable {
 							this.settingsHideIP = 1 - this.settingsHideIP;
 							String text = (this.settingsHideIP != 1) ? "Hide IP" : "Show IP";
 							this.panelLogin.setText(this.hideIpButtonIdx - 1, text);
-							
+
+							// ORSCApplet is for PC client, clientPort is for Android client, comment out what doesn't work.
 							boolean temp = ORSCApplet.saveHideIp(this.settingsHideIP);
+							//boolean temp = clientPort.saveHideIp(this.settingsHideIP);
+
 							String msg = (this.settingsHideIP != 1) ? "@red@Your IP will be shown after login"
 									: "@gre@Your IP will be hidden after login";
 							if (temp)
@@ -11077,6 +11084,7 @@ public final class mudclient implements Runnable {
 				if (sound == null)
 					return;
 				try {
+					// Comment out all of this for Android
 					Clip clip = AudioSystem.getClip();
 					clip.open(AudioSystem.getAudioInputStream(sound));
 					clip.start();

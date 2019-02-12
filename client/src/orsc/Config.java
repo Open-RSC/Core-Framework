@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Properties;
 
 public class Config {
+	private static Properties prop = new Properties();
+
 	public static final String SERVER_NAME = "Runescape";
 	public static final String SERVER_NAME_WELCOME = "Runescape Classic";
 	public static final String WELCOME_TEXT = "You need a members account to use this server";
@@ -19,9 +21,8 @@ public class Config {
 	public static final boolean CUSTOM_CACHE_DIR_ENABLED = false;
 	public static final boolean CACHE_APPEND_VERSION = false;
 	public static final String CUSTOM_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
-	public static boolean F_ANDROID_BUILD = false;
-	//public static String F_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
 	public static String F_CACHE_DIR = "";
+
 	/* Configurable: */
 	public static boolean C_EXPERIENCE_DROPS = false;
 	public static boolean C_BATCH_PROGRESS_BAR = false;
@@ -34,7 +35,13 @@ public class Config {
 	public static boolean C_KILL_FEED = false;
 	public static int C_FIGHT_MENU = 1;
 	public static boolean C_INV_COUNT = false;
+
 	/* Android: */
+	public static boolean F_ANDROID_BUILD = false; // This MUST be true if Android client
+	public static final String DL_URL = "game.openrsc.com";
+	public static final String ANDROID_DOWNLOAD_PATH = "https://" + DL_URL + "/downloads/";
+	public static final String CACHE_URL = "https://" + DL_URL + "/downloads/cache/";
+	public static final int ANDROID_CLIENT_VERSION = 6;
 	public static boolean F_SHOWING_KEYBOARD = false;
 	public static int F_LONG_PRESS_CALC;
 	public static boolean C_HOLD_AND_CHOOSE = true;
@@ -42,12 +49,14 @@ public class Config {
 	public static int C_MENU_SIZE = 6;
 	public static boolean C_SWIPE_TO_SCROLL = true;
 	public static boolean C_SWIPE_TO_ROTATE = true;
+
 	/* Experience Config Menu */
 	public static int C_EXPERIENCE_COUNTER = 1;
 	public static int C_EXPERIENCE_COUNTER_MODE = 0;
 	public static int C_EXPERIENCE_COUNTER_COLOR = 0;
 	public static int C_EXPERIENCE_DROP_SPEED = 1;
 	public static boolean C_EXPERIENCE_CONFIG_SUBMENU = false;
+
 	/* Server Defined: DOUBLE CHECK THESE ON SERVER */
 	public static int S_PLAYER_LEVEL_LIMIT = 99;
 	public static boolean S_SPAWN_AUCTION_NPCS = false;
@@ -93,7 +102,6 @@ public class Config {
 	public static boolean S_WANT_REMEMBER = false;
 	public static boolean S_WANT_FIXED_OVERHEAD_CHAT = false;
 	public static String LOGO_SPRITE_ID = "2010";
-	private static Properties prop = new Properties();
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());
@@ -101,18 +109,22 @@ public class Config {
 
 	public static void initConfig() {
 		try {
-			if (CUSTOM_CACHE_DIR_ENABLED) {
-				if (CACHE_APPEND_VERSION) {
-					F_CACHE_DIR = CUSTOM_CACHE_DIR + "_v" + CACHE_VERSION;
+			if (!F_ANDROID_BUILD) {
+				if (CUSTOM_CACHE_DIR_ENABLED) {
+					if (CACHE_APPEND_VERSION) {
+						F_CACHE_DIR = CUSTOM_CACHE_DIR + "_v" + CACHE_VERSION;
+					} else {
+						F_CACHE_DIR = CUSTOM_CACHE_DIR;
+					}
 				} else {
-					F_CACHE_DIR = CUSTOM_CACHE_DIR;
+					if (CACHE_APPEND_VERSION) {
+						F_CACHE_DIR = "Cache" + "_v" + CACHE_VERSION;
+					} else {
+						F_CACHE_DIR = "Cache";
+					}
 				}
 			} else {
-				if (CACHE_APPEND_VERSION) {
-					F_CACHE_DIR = "Cache" + "_v" + CACHE_VERSION;
-				} else {
-					F_CACHE_DIR = "Cache";
-				}
+				return;
 			}
 			File file = new File(F_CACHE_DIR + File.separator + "client.properties");
 			if (!file.exists()) {
@@ -122,6 +134,8 @@ public class Config {
 			prop.load(new FileInputStream(F_CACHE_DIR + File.separator + "client.properties"));
 			setConfigurationFromProperties();
 			saveConfiguration(false);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
