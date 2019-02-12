@@ -417,6 +417,7 @@ public class ActionSender {
 		s.writeByte((byte) (Constants.GameServer.ITEMS_ON_DEATH_MENU ? 1 : 0));
 		s.writeByte((byte) (Constants.GameServer.SHOW_ROOF_TOGGLE ? 1 : 0));
 		s.writeByte((byte) (Constants.GameServer.WANT_HIDE_IP ? 1 : 0));
+		s.writeByte((byte) (Constants.GameServer.WANT_REMEMBER ? 1 : 0));
 		s.writeByte((byte) (Constants.GameServer.WANT_GLOBAL_CHAT ? 1 : 0));
 		s.writeByte((byte) (Constants.GameServer.WANT_SKILL_MENUS ? 1 : 0));
 		s.writeByte((byte) (Constants.GameServer.WANT_QUEST_MENUS ? 1 : 0));
@@ -436,7 +437,9 @@ public class ActionSender {
 		s.writeByte((byte) (Constants.GameServer.RIGHT_CLICK_BANK ? 1 : 0));
 		s.writeByte((byte) (Constants.GameServer.FIX_OVERHEAD_CHAT ? 1 : 0));
 		s.writeString(Constants.GameServer.WELCOME_TEXT); // Welcome login screen text
-		s.writeByte((byte) (Constants.GameServer.MEMBER_WORLD ? 1 : 0));
+		s.writeByte((byte) (Constants.GameServer.MEMBER_WORLD ? 1 : 0)); // Is this a members world?
+		s.writeByte((byte) (Constants.GameServer.DISPLAY_LOGO_SPRITE ? 1 : 0)); // If logo sprite is shown on client login
+		s.writeString(Constants.GameServer.LOGO_SPRITE_ID); // Specifies which logo sprite is shown
 		return s;
 	}
 

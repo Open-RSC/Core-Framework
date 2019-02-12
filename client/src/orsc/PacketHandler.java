@@ -715,15 +715,15 @@ public class PacketHandler {
 
 	private void setServerConfiguration() {
 		Properties props = new Properties();
-		String serverName, serverNameWelcome, welcomeText;
+		String serverName, serverNameWelcome, welcomeText, logoSpriteID;
 		int playerLevelLimit, spawnAuctionNpcs, spawnIronManNpcs;
 		int showFloatingNametags, wantClans, wantKillFeed, fogToggle;
 		int groundItemToggle, autoMessageSwitchToggle, batchProgression;
 		int sideMenuToggle, inventoryCountToggle, zoomViewToggle;
 		int menuCombatStyleToggle, fightmodeSelectorToggle, experienceCounterToggle;
-		int experienceDropsToggle, itemsOnDeathMenu, showRoofToggle, wantHideIp;
+		int experienceDropsToggle, itemsOnDeathMenu, showRoofToggle, wantHideIp, wantRemember;
 		int wantGlobalChat, wantSkillMenus, wantQuestMenus;
-		int wantExperienceElixirs, wantKeyboardShortcuts, wantMembers;
+		int wantExperienceElixirs, wantKeyboardShortcuts, wantMembers, displayLogoSprite;
 		int wantCustomBanks, wantBankPins, wantBankNotes, wantCertDeposit, customFiremaking;
 		int wantDropX, wantExpInfo, wantWoodcuttingGuild, wantFixedOverheadChat;
 		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank;
@@ -752,6 +752,7 @@ public class PacketHandler {
 			showRoofToggle = this.getClientStream().getUnsignedByte();
 			Config.C_HIDE_ROOFS = showRoofToggle != 1; // If we don't want the toggle, always show.
 			wantHideIp = this.getClientStream().getUnsignedByte();
+			wantRemember = this.getClientStream().getUnsignedByte();
 			wantGlobalChat = this.getClientStream().getUnsignedByte();
 			wantSkillMenus = this.getClientStream().getUnsignedByte();
 			wantQuestMenus = this.getClientStream().getUnsignedByte();
@@ -772,6 +773,8 @@ public class PacketHandler {
 			wantFixedOverheadChat = this.getClientStream().getUnsignedByte();
 			welcomeText = this.getClientStream().readString();
 			wantMembers = this.getClientStream().getUnsignedByte();
+			displayLogoSprite = this.getClientStream().getUnsignedByte();
+			logoSpriteID = this.getClientStream().readString();
 		} else {
 			serverName = packetsIncoming.readString();
 			serverNameWelcome = packetsIncoming.readString();
@@ -796,6 +799,7 @@ public class PacketHandler {
 			showRoofToggle = packetsIncoming.getUnsignedByte();
 			Config.C_HIDE_ROOFS = showRoofToggle != 1; // If we don't want the toggle, always show.
 			wantHideIp = packetsIncoming.getUnsignedByte();
+			wantRemember = packetsIncoming.getUnsignedByte();
 			wantGlobalChat = packetsIncoming.getUnsignedByte();
 			wantSkillMenus = packetsIncoming.getUnsignedByte();
 			wantQuestMenus = packetsIncoming.getUnsignedByte();
@@ -816,13 +820,15 @@ public class PacketHandler {
 			wantFixedOverheadChat = packetsIncoming.getUnsignedByte();
 			welcomeText = packetsIncoming.readString();
 			wantMembers = packetsIncoming.getUnsignedByte();
+			displayLogoSprite = packetsIncoming.getUnsignedByte();
+			logoSpriteID = packetsIncoming.readString();
 		}
 
 		if (mc.DEBUG) {
 			System.out.println(
 				"SERVER_NAME " + serverName +
 					"\nSERVER_NAME_WELCOME " + serverNameWelcome +
-					"\nS_PLAYER_LEVEL_LIMIT " + Integer.toString(playerLevelLimit) +
+					"\nS_PLAYER_LEVEL_LIMIT " + playerLevelLimit +
 					"\nS_SPAWN_AUCTION_NPCS " + spawnAuctionNpcs +
 					"\nS_SPAWN_IRON_MAN_NPCS " + spawnIronManNpcs +
 					"\nS_SHOW_FLOATING_NAMETAGS " + showFloatingNametags +
@@ -842,6 +848,7 @@ public class PacketHandler {
 					"\nS_ITEMS_ON_DEATH_MENU " + itemsOnDeathMenu +
 					"\nS_SHOW_ROOF_TOGGLE " + showRoofToggle +
 					"\nS_WANT_HIDE_IP " + wantHideIp +
+					"\nS_WANT_REMEMBER " + wantRemember +
 					"\nS_WANT_GLOBAL_CHAT " + wantGlobalChat +
 					"\nS_WANT_SKILL_MENUS " + wantSkillMenus +
 					"\nS_WANT_QUEST_MENUS " + wantQuestMenus +
@@ -859,7 +866,9 @@ public class PacketHandler {
 					"\nS_RIGHT_CLICK_BANK" + wantRightClickBank +
 					"\nS_WANT_FIXED_OVERHEAD_CHAT" + wantFixedOverheadChat +
 					"\nWELCOME_TEXT" + welcomeText +
-					"\nMEMBERS_FEATURES" + wantMembers
+					"\nMEMBERS_FEATURES" + wantMembers +
+					"\nDISPLAY_LOGO_SPRITE" + displayLogoSprite +
+					"\nLOGO_SPRITE_ID" + logoSpriteID
 			);
 		}
 
@@ -885,6 +894,7 @@ public class PacketHandler {
 		props.setProperty("S_ITEMS_ON_DEATH_MENU", itemsOnDeathMenu == 1 ? "true" : "false");
 		props.setProperty("S_SHOW_ROOF_TOGGLE", showRoofToggle == 1 ? "true" : "false");
 		props.setProperty("S_WANT_HIDE_IP", wantHideIp == 1 ? "true" : "false");
+		props.setProperty("S_WANT_REMEMBER", wantRemember == 1 ? "true" : "false");
 		props.setProperty("S_WANT_GLOBAL_CHAT", wantGlobalChat == 1 ? "true" : "false");
 		props.setProperty("S_WANT_SKILL_MENUS", wantSkillMenus == 1 ? "true" : "false");
 		props.setProperty("S_WANT_QUEST_MENUS", wantQuestMenus == 1 ? "true" : "false");
@@ -905,6 +915,8 @@ public class PacketHandler {
 		props.setProperty("S_WANT_FIXED_OVERHEAD_CHAT", wantFixedOverheadChat == 1 ? "true" : "false");
 		props.setProperty("WELCOME_TEXT", welcomeText);
 		props.setProperty("MEMBERS_FEATURES", wantMembers == 1 ? "true" : "false");
+		props.setProperty("DISPLAY_LOGO_SPRITE", displayLogoSprite == 1 ? "true" : "false");
+		props.setProperty("LOGO_SPRITE_ID", logoSpriteID);
 
 		Config.updateServerConfiguration(props);
 

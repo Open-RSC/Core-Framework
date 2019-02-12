@@ -4548,10 +4548,10 @@ public final class mudclient implements Runnable {
 				} else if (var2 < 2048) {
 					this.getSurface().drawSprite(1 + mudclient.spriteLogo, 0, Config.isAndroid() ? 140 : 10);
 					if (var2 > 1792) {
-						this.getSurface().a(mudclient.spriteMedia + 10, 0, 0, var2 - 1792, Config.isAndroid() ? 140 : 10);
+						this.getSurface().a(mudclient.spriteMedia + 10, 0, 0, var2 - 1792, Config.isAndroid() ? 140 : 10); // Logo sprite
 					}
 				} else {
-					this.getSurface().drawSprite(mudclient.spriteMedia + 10, 0, Config.isAndroid() ? 140 : 10);
+					this.getSurface().drawSprite(mudclient.spriteMedia + 10, 0, Config.isAndroid() ? 140 : 10); // Logo sprite
 					if (var2 > 2816) {
 						this.getSurface().a(mudclient.spriteLogo, 0, 0, var2 - 2816, Config.isAndroid() ? 140 : 10);
 					}
@@ -11207,7 +11207,9 @@ public final class mudclient implements Runnable {
 				this.getSurface().a(8, var9, halfGameHeight() + 27 - var9, 0, 16740352, getGameWidth(), 0);
 			}
 
-			//this.getSurface().drawSprite(mudclient.spriteMedia + 10, 30, 30); // Sprite 2010 logo
+			if (Config.DISPLAY_LOGO_SPRITE) {
+				this.getSurface().drawSprite(Integer.parseInt(Config.getLogoSpriteId()), 15, 15);
+			}
 			//this.getSurface().drawColoredStringCentered(250, "Open RSC", 0xFFFFFF, 0, 7, 110); // width, title, color, crown sprite, font size, height
 			this.getSurface().storeSpriteVert(spriteLogo, 0, 0, getGameWidth(), halfGameHeight() + 33);
 
@@ -11236,7 +11238,9 @@ public final class mudclient implements Runnable {
 				this.getSurface().a(8, var9, halfGameHeight() + 27 - var9, 0, 16740352, getGameWidth(), 0);
 			}
 
-			//this.getSurface().drawSprite(mudclient.spriteMedia + 15, 30, 30); // Sprite 2010 logo
+			if (Config.DISPLAY_LOGO_SPRITE) {
+				this.getSurface().drawSprite(Integer.parseInt(Config.getLogoSpriteId()), 15, 15);
+			}
 			//this.getSurface().drawColoredStringCentered(250, "Open RSC", 0xFFFFFF, 0, 7, 110); // width, title, color, crown sprite, font size, height
 			this.getSurface().storeSpriteVert(spriteLogo + 1, 0, 0, getGameWidth(), halfGameHeight() + 33);
 
@@ -11275,7 +11279,9 @@ public final class mudclient implements Runnable {
 				this.getSurface().a(8, var9, halfGameHeight() + 27, 0, 16740352, getGameWidth(), 0);
 			}
 
-			//this.getSurface().drawSprite(mudclient.spriteMedia + 10, 30, 30); // Sprite 2010 logo
+			if (Config.DISPLAY_LOGO_SPRITE) {
+				this.getSurface().drawSprite(Integer.parseInt(Config.getLogoSpriteId()), 15, 15);
+			}
 			//this.getSurface().drawColoredStringCentered(250, "Open RSC", 0xFFFFFF, 0, 7, 110); // width, title, color, crown sprite, font size, height
 			this.getSurface().storeSpriteVert(spriteMedia + 10, 0, 0, getGameWidth(), halfGameHeight() + 33);
 		} catch (RuntimeException var10) {
