@@ -260,7 +260,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 		if (obj.getID() == 256 && obj.getX() == 363) {
 			return true;
 		}
-		if (obj.getID() == 259 && obj.getY() == 3328) {
+		if ((obj.getID() == 259 || obj.getID() == 258) && obj.getY() == 3328) {
 			return true;
 		}
 		return false;
@@ -297,15 +297,21 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 				doGate(p, obj);
 			}
 		}
-		if (obj.getID() == 259 && obj.getY() == 3328) {
-			if (!hasItem(p, 540)) {
-				p.message("You find a magnet in the cupboard");
-				addItem(p, 540, 1);
-				if (p.getQuestStage(this) > 0) {
-					p.getCache().store("found_magnet", true);
-				}
+		if ((obj.getID() == 259 || obj.getID() == 258) && obj.getY() == 3328) {
+			if (command.equalsIgnoreCase("open")) {
+				openCupboard(obj, p, 259);
+			} else if (command.equalsIgnoreCase("close")) {
+				closeCupboard(obj, p, 258);
 			} else {
-				p.message("You search the cupboard, but find nothing");
+				if (!hasItem(p, 540)) {
+					p.message("You find a magnet in the cupboard");
+					addItem(p, 540, 1);
+					if (p.getQuestStage(this) > 0) {
+						p.getCache().store("found_magnet", true);
+					}
+				} else {
+					p.message("You search the cupboard, but find nothing");
+				}
 			}
 		}
 

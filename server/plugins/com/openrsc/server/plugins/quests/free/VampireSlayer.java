@@ -184,21 +184,23 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 				openGenericObject(obj, player, 136, "You open the coffin");
 			} else if (command.equalsIgnoreCase("close")) {
 				closeGenericObject(obj, player, 135, "You close the coffin");
-			} else if (player.getQuestStage(this) == -1) { //command.equals("search") && quest complete
-				player.message("There's a pillow in here");
-				return;
 			} else {
-				for (Npc npc : player.getRegion().getNpcs()) {
-					if (npc.getID() == 96 && npc.getAttribute("spawnedFor", null).equals(player)) {
-						player.message("There's nothing there.");
-						return;
+				if (player.getQuestStage(this) == -1) {
+					player.message("There's a pillow in here");
+					return;
+				} else {
+					for (Npc npc : player.getRegion().getNpcs()) {
+						if (npc.getID() == 96 && npc.getAttribute("spawnedFor", null).equals(player)) {
+							player.message("There's nothing there.");
+							return;
+						}
 					}
-				}
 
-				final Npc n = spawnNpc(96, 206, 3381, 1000 * 60 * 5, player);
-				n.setShouldRespawn(false);
-				player.message("A vampire jumps out of the coffin");
-				return;
+					final Npc n = spawnNpc(96, 206, 3381, 1000 * 60 * 5, player);
+					n.setShouldRespawn(false);
+					player.message("A vampire jumps out of the coffin");
+					return;
+				}
 			}
 		} else if ((obj.getID() == 141 || obj.getID() == 140) && obj.getY() == 1562) {
 			if (command.equalsIgnoreCase("open")) {

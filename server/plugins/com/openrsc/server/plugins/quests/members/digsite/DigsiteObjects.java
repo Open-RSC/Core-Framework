@@ -5,6 +5,7 @@ import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
@@ -131,6 +132,13 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 				message(p, "You search the chest");
 				p.message("You find some unusual powder inside...");
 				addItem(p, 1171, 1);
+				World.getWorld().registerGameObject(
+						new GameObject(obj.getLocation(), TENT_LOCKED_CHEST, obj.getDirection(),
+							obj.getType()));
+			}
+			//kosher special case - chest does not close on that command, player must search the chest
+			else {
+				p.message("Nothing interesting happens");
 			}
 		}
 		if (inArray(obj.getID(), BUSH)) {

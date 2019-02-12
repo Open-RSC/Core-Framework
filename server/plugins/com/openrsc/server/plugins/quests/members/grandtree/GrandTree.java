@@ -23,6 +23,7 @@ import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
 import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.closeCupboard;
 import static com.openrsc.server.plugins.Functions.doGate;
 import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 import static com.openrsc.server.plugins.Functions.getNearestNpc;
@@ -32,8 +33,10 @@ import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.movePlayer;
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.npcYell;
+import static com.openrsc.server.plugins.Functions.openCupboard;
 import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.replaceObjectDelayed;
 import static com.openrsc.server.plugins.Functions.showMenu;
 import static com.openrsc.server.plugins.Functions.sleep;
 import static com.openrsc.server.plugins.Functions.spawnNpc;
@@ -1191,7 +1194,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (obj.getID() == GLOUGHS_CUPBOARD) {
+		if (obj.getID() == 619 || obj.getID() == GLOUGHS_CUPBOARD) {
 			return true;
 		}
 		if (obj.getID() == TREE_LADDER_UP) {
@@ -1223,14 +1226,20 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, final Player p) {
-		if (obj.getID() == GLOUGHS_CUPBOARD) {
-			message(p, "you search the cupboard");
-			if (p.getQuestStage(this) == 6) {
-				message(p, "inside you find glough's journal");
-				addItem(p, 921, 1);
-				p.updateQuestStage(this, 7);
+		if (obj.getID() == 619 || obj.getID() == GLOUGHS_CUPBOARD) {
+			if (command.equalsIgnoreCase("open")) {
+				openCupboard(obj, p, GLOUGHS_CUPBOARD);
+			} else if (command.equalsIgnoreCase("close")) {
+				closeCupboard(obj, p, 619);
 			} else {
-				message(p, "but find nothing of interest");
+				message(p, "you search the cupboard");
+				if (p.getQuestStage(this) == 6) {
+					message(p, "inside you find glough's journal");
+					addItem(p, 921, 1);
+					p.updateQuestStage(this, 7);
+				} else {
+					message(p, "but find nothing of interest");
+				}
 			}
 		}
 		if (obj.getID() == TREE_LADDER_UP) {
@@ -1506,6 +1515,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 			message(player, "the key fits the chest");
 			player.message("you open the chest");
 			player.message("and search it...");
+			replaceObjectDelayed(obj, 3000, 631);
 			message(player, "inside you find some paper work");
 			player.message("and an old gnome tongue translation book");
 			addItem(player, 926, 1);

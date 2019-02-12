@@ -873,7 +873,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 		if (obj.getID() == 457) {
 			return true;
 		}
-		if (obj.getID() == 452) {
+		if (obj.getID() == 451 || obj.getID() == 452) {
 			return true;
 		}
 		return false;
@@ -881,13 +881,19 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
-		if (obj.getID() == 452) {
-			if (p.getQuestStage(this) >= 2 || p.getQuestStage(this) == -1) {
-				if (!hasItem(p, 766)) {
-					p.message("you find a protective mask");
-					addItem(p, 766, 1);
-				} else {
-					p.message("it's an old dusty cupboard");
+		if (obj.getID() == 451 || obj.getID() == 452) {
+			if (command.equalsIgnoreCase("open")) {
+				openCupboard(obj, p, 452);
+			} else if (command.equalsIgnoreCase("close")) {
+				closeCupboard(obj, p, 451);
+			} else {
+				if (p.getQuestStage(this) >= 2 || p.getQuestStage(this) == -1) {
+					if (!hasItem(p, 766)) {
+						p.message("you find a protective mask");
+						addItem(p, 766, 1);
+					} else {
+						p.message("it's an old dusty cupboard");
+					}
 				}
 			}
 		}

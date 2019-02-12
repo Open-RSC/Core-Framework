@@ -19,11 +19,13 @@ import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveLi
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.closeCupboard;
 import static com.openrsc.server.plugins.Functions.getNearestNpc;
 import static com.openrsc.server.plugins.Functions.hasItem;
 import static com.openrsc.server.plugins.Functions.incQuestReward;
 import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.openCupboard;
 import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.removeItem;
 import static com.openrsc.server.plugins.Functions.showMenu;
@@ -440,7 +442,7 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command,
 									 Player player) {
-		if (obj.getID() == 382 && obj.getY() == 1623) {
+		if ((obj.getID() == 381 || obj.getID() == 382) && (obj.getY() == 683 || obj.getY() == 1623)) {
 			return true;
 		}
 		if (obj.getID() == 371 && (obj.getY() == 700 || obj.getY() == 707)) {
@@ -454,16 +456,22 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
-		if (obj.getID() == 382 && obj.getY() == 1623) {
-			if (!hasItem(p, 734) && !hasItem(p, 733)
-				&& p.getQuestStage(getQuestId()) >= 1) {
-				p.message("You search the cupboard...");
-				p.message("You find a khazard helmet");
-				p.message("You find a khazard chainmail");
-				addItem(p, 734, 1);
-				addItem(p, 733, 1);
+		if ((obj.getID() == 381 || obj.getID() == 382) && (obj.getY() == 683 || obj.getY() == 1623)) {
+			if (command.equalsIgnoreCase("open")) {
+				openCupboard(obj, p, 382);
+			} else if (command.equalsIgnoreCase("close")) {
+				closeCupboard(obj, p, 381);
 			} else {
-				p.message("You search the cupboard, but find nothing");
+				if (!hasItem(p, 734) && !hasItem(p, 733)
+					&& p.getQuestStage(getQuestId()) >= 1) {
+					p.message("You search the cupboard...");
+					p.message("You find a khazard helmet");
+					p.message("You find a khazard chainmail");
+					addItem(p, 734, 1);
+					addItem(p, 733, 1);
+				} else {
+					p.message("You search the cupboard, but find nothing");
+				}
 			}
 		}
 		if (obj.getID() == 371 && (obj.getY() == 700 || obj.getY() == 707)) {
