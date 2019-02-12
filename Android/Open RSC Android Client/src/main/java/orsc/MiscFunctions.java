@@ -1,55 +1,37 @@
 package orsc;
 
-import java.math.BigInteger;
-
 import orsc.util.GenUtil;
 
-public final class MiscFunctions {
-	public static byte[][] s_j = new byte[1000][];
-	public static int cachingFile_s_g = 0;
-	public static int cachingFile_s_y;
-	static int class10_s_b = 0;
-	public static int class13_s_b;
-	public static int[] class14_s_d = new int[256];
-	static byte[] class14_s_e = new byte[64];
+import java.math.BigInteger;
 
+public final class MiscFunctions {
 	public static final BigInteger RSA_MODULUS = new BigInteger(
 			"120553535534604110920450760502772983886474996352454951528826209241321739073070541065736996931396402671853619219844292625227994972012232687659966972603887946951318606732409243729781965910432692806353709960600356722700558734565129892087142295493761639344537209286019991702122529293841694419415125046632027858457");
 	public static final BigInteger RSA_EXPONENT = new BigInteger("65537");
-
-	static int class15_s_d = 0;
-
+	public static byte[][] s_j = new byte[1000][];
+	public static int cachingFile_s_g = 0;
+	public static int frustumNearZ;
+	public static int frustumMinY;
+	public static int[] class14_s_d = new int[256];
 	public static boolean drawBackgroundArrow = true;
-
-	static long[] gameModeWhat_s_h = new long[256];
-
-	static int[] gamodemode_where_s_g;
-
 	public static int[] graphics_s_Mb;
-
-	static int maxReadTries = 0;
-
 	public static int mud_s_ef = 0;
-
-	public static int netsock_s_K;
-
+	public static int frustumMinX;
 	public static int netsock_s_M = 0;
-
-	public static int pe_s_b;
-
-	public static int pe_s_f;
-
-	static byte[][] rsmodel_s_tb = new byte[50][];
-
-	public static int rssock_facs_j;
-
-	static byte[][][] s_n;
-
-	static int scanline_s_b;
-
+	public static int frustumFarZ;
+	public static int frustumMaxY;
+	public static int frustumMaxX;
 	public static int textListEntryHeightMod = 0;
-
 	public static long world_s_e = 0L;
+	static int class10_s_b = 0;
+	static byte[] class14_s_e = new byte[64];
+	static int class15_s_d = 0;
+	static long[] gameModeWhat_s_h = new long[256];
+	static int[] gamodemode_where_s_g;
+	static int maxReadTries = 0;
+	static byte[][] rsmodel_s_tb = new byte[50][];
+	static byte[][][] s_n;
+	static int scanline_s_b;
 
 	static {
 		int var0;
