@@ -122,6 +122,10 @@ public final class Constants {
 		 */
 		public static int VIEW_DISTANCE = 2;
 		/**
+		 * Sprite used for client welcome screen logo
+		 */
+		public static String LOGO_SPRITE_ID = "2010";
+		/**
 		 * NPC blocking
 		 * 0 = No NPC blocks
 		 * 1 = 2 * combat level + 1 blocks
@@ -142,6 +146,7 @@ public final class Constants {
 		public static boolean AVATAR_GENERATOR = false; // Not sent to client
 		public static boolean PLAYER_COMMANDS = false; // Not sent to client
 		public static boolean IS_DOUBLE_EXP = false;
+		public static boolean DISPLAY_LOGO_SPRITE = false;
 		public static boolean SPAWN_AUCTION_NPCS = false;
 		public static boolean SPAWN_IRON_MAN_NPCS = false;
 		public static boolean SHOW_FLOATING_NAMETAGS = false;
@@ -161,6 +166,7 @@ public final class Constants {
 		public static boolean ITEMS_ON_DEATH_MENU = false;
 		public static boolean SHOW_ROOF_TOGGLE = false;
 		public static boolean WANT_HIDE_IP = false;
+		public static boolean WANT_REMEMBER = false;
 		public static boolean WANT_GLOBAL_CHAT = false;
 		public static boolean WANT_SKILL_MENUS = false;
 		public static boolean WANT_QUEST_MENUS = false;
@@ -227,6 +233,8 @@ public final class Constants {
 			HMAC_PRIVATE_KEY = props.getProperty("HMAC_PRIVATE_KEY");
 			VIEW_DISTANCE = Integer.parseInt(props.getProperty("view_distance"));
 			AVATAR_GENERATOR = Boolean.parseBoolean(props.getProperty("avatar_generator"));
+			DISPLAY_LOGO_SPRITE = Boolean.parseBoolean(props.getProperty("display_logo_sprite"));
+			LOGO_SPRITE_ID = props.getProperty("logo_sprite_id");
 
 			// Game confs
 			WORLD_NUMBER = Integer.parseInt(props.getProperty("world_number"));
@@ -258,6 +266,7 @@ public final class Constants {
 			ITEMS_ON_DEATH_MENU = Boolean.parseBoolean(props.getProperty("items_on_death_menu"));
 			SHOW_ROOF_TOGGLE = Boolean.parseBoolean(props.getProperty("show_roof_toggle"));
 			WANT_HIDE_IP = Boolean.parseBoolean(props.getProperty("want_hide_ip"));
+			WANT_REMEMBER = Boolean.parseBoolean(props.getProperty("want_remember"));
 			WANT_GLOBAL_CHAT = Boolean.parseBoolean(props.getProperty("want_global_chat"));
 			WANT_SKILL_MENUS = Boolean.parseBoolean(props.getProperty("want_skill_menus"));
 			WANT_QUEST_MENUS = Boolean.parseBoolean(props.getProperty("want_quest_menus"));
@@ -292,7 +301,7 @@ public final class Constants {
 			STRICT_PDART_CHECK = Boolean.parseBoolean(props.getProperty("strict_pdart_check"));
 			STRICT_PKNIFE_CHECK = Boolean.parseBoolean(props.getProperty("strict_pknife_check"));
 			STRICT_PSPEAR_CHECK = Boolean.parseBoolean(props.getProperty("strict_pspear_check"));
-			
+
 			LOOSE_SHALLOW_WATER_CHECK = Boolean.parseBoolean(props.getProperty("loose_shallow_water_check"));
 
 			// Make sure config doesn't exceed max values

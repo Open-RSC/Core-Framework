@@ -15,11 +15,11 @@ public class Config {
 	public static final int CLIENT_VERSION = 1;
 	public static final int CACHE_VERSION = 2;
 	public static boolean MEMBERS_FEATURES = false;
+	public static boolean DISPLAY_LOGO_SPRITE = false;
 	public static final boolean CUSTOM_CACHE_DIR_ENABLED = false;
 	public static final boolean CACHE_APPEND_VERSION = false;
 	public static final String CUSTOM_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
 	public static boolean F_ANDROID_BUILD = false;
-	public static boolean SAVE_CREDENTIALS = true;
 	//public static String F_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
 	public static String F_CACHE_DIR = "";
 	/* Configurable: */
@@ -90,7 +90,9 @@ public class Config {
 	public static boolean S_SHOW_ROOF_TOGGLE = false;
 	public static boolean S_WANT_GLOBAL_CHAT = false;
 	public static boolean S_WANT_HIDE_IP = false;
+	public static boolean S_WANT_REMEMBER = false;
 	public static boolean S_WANT_FIXED_OVERHEAD_CHAT = false;
+	public static String LOGO_SPRITE_ID = "2010";
 	private static Properties prop = new Properties();
 
 	public static void set(String key, Object value) {
@@ -229,6 +231,10 @@ public class Config {
 		return prop.getProperty("COMMAND_PREFIX");
 	}
 
+	public static String getLogoSpriteId() {
+		return prop.getProperty("LOGO_SPRITE_ID");
+	}
+
 	public static boolean wantMembers() { return MEMBERS_FEATURES; }
 
 	public static boolean isAndroid() {
@@ -236,6 +242,6 @@ public class Config {
 	}
 
 	public static boolean Remember() {
-		return SAVE_CREDENTIALS;
+		return S_WANT_REMEMBER;
 	}
 }
