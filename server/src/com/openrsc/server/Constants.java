@@ -42,7 +42,8 @@ public final class Constants {
 		/**
 		 * the servers name
 		 */
-		public static String SERVER_NAME = "Runescape Classic";
+		public static String SERVER_NAME = "Runescape";
+		public static String SERVER_NAME_WELCOME = "Runescape Classic";
 		public static String WELCOME_TEXT = "You need a members account to use this server";
 		/**
 		 * Server prefix for messages
@@ -214,6 +215,7 @@ public final class Constants {
 			CLIENT_VERSION = Integer.parseInt(props.getProperty("client_version"));
 			SERVER_PORT = Integer.parseInt(props.getProperty("server_port"));
 			SERVER_NAME = props.getProperty("server_name");
+			SERVER_NAME_WELCOME = props.getProperty("server_name_welcome");
 			WELCOME_TEXT = props.getProperty("welcome_text");
 			SERVER_LOCATION = props.getProperty("server_location");
 			MAX_PLAYERS = Integer.parseInt(props.getProperty("maxplayers"));

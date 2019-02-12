@@ -715,7 +715,7 @@ public class PacketHandler {
 
 	private void setServerConfiguration() {
 		Properties props = new Properties();
-		String serverName, welcomeText;
+		String serverName, serverNameWelcome, welcomeText;
 		int playerLevelLimit, spawnAuctionNpcs, spawnIronManNpcs;
 		int showFloatingNametags, wantClans, wantKillFeed, fogToggle;
 		int groundItemToggle, autoMessageSwitchToggle, batchProgression;
@@ -730,6 +730,7 @@ public class PacketHandler {
 
 		if (!mc.gotInitialConfigs) {
 			serverName = this.getClientStream().readString();
+			serverNameWelcome = this.getClientStream().readString();
 			playerLevelLimit = this.getClientStream().getUnsignedByte();
 			spawnAuctionNpcs = this.getClientStream().getUnsignedByte();
 			spawnIronManNpcs = this.getClientStream().getUnsignedByte();
@@ -773,6 +774,7 @@ public class PacketHandler {
 			wantMembers = this.getClientStream().getUnsignedByte();
 		} else {
 			serverName = packetsIncoming.readString();
+			serverNameWelcome = packetsIncoming.readString();
 			playerLevelLimit = packetsIncoming.getUnsignedByte();
 			spawnAuctionNpcs = packetsIncoming.getUnsignedByte();
 			spawnIronManNpcs = packetsIncoming.getUnsignedByte();
@@ -819,6 +821,7 @@ public class PacketHandler {
 		if (mc.DEBUG) {
 			System.out.println(
 				"SERVER_NAME " + serverName +
+					"\nSERVER_NAME_WELCOME " + serverNameWelcome +
 					"\nS_PLAYER_LEVEL_LIMIT " + Integer.toString(playerLevelLimit) +
 					"\nS_SPAWN_AUCTION_NPCS " + spawnAuctionNpcs +
 					"\nS_SPAWN_IRON_MAN_NPCS " + spawnIronManNpcs +
@@ -861,6 +864,7 @@ public class PacketHandler {
 		}
 
 		props.setProperty("SERVER_NAME", serverName);
+		props.setProperty("SERVER_NAME_WELCOME", serverNameWelcome);
 		props.setProperty("S_PLAYER_LEVEL_LIMIT", Integer.toString(playerLevelLimit));
 		props.setProperty("S_SPAWN_AUCTION_NPCS", spawnAuctionNpcs == 1 ? "true" : "false");
 		props.setProperty("S_SPAWN_IRON_MAN_NPCS", spawnIronManNpcs == 1 ? "true" : "false");
