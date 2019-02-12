@@ -64,7 +64,7 @@ public abstract class Entity {
 	}
 
 	public void setLocation(Point p) {
-		/*if (this.isPlayer() && location != null) { // No need to unwield the wilderness items, that is not authentic
+		/*if (this.isPlayer() && location != null) {
 			Player pl = (Player) this;
 			if (pl != null && getX() > 0 && getY() > 0) {
 				if (!Point.inWilderness(getX(), getY()) && Point.inWilderness(p.getX(), p.getY())

@@ -7,12 +7,13 @@ import java.util.Map;
 import java.util.Properties;
 
 public class Config {
-	public static final String SERVER_NAME = "Open RSC";
+	public static final String SERVER_NAME = "Runescape";
+	public static final String WELCOME_TEXT = "You need a members account to use this server";
 	public static final String SERVER_IP = "localhost";
 	public static final int SERVER_PORT = 43594;
 	public static final int CLIENT_VERSION = 1;
 	public static final int CACHE_VERSION = 2;
-	public static final boolean MEMBERS_FEATURES = true;
+	public static boolean MEMBERS_FEATURES = false;
 	public static final boolean CUSTOM_CACHE_DIR_ENABLED = false;
 	public static final boolean CACHE_APPEND_VERSION = false;
 	public static final String CUSTOM_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
@@ -118,8 +119,6 @@ public class Config {
 			prop.load(new FileInputStream(F_CACHE_DIR + File.separator + "client.properties"));
 			setConfigurationFromProperties();
 			saveConfiguration(false);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -196,9 +195,7 @@ public class Config {
 						} else if (t == long.class) {
 							f.set(null, Long.parseLong((String) entry.getValue()));
 						}
-					} catch (IllegalAccessException e) {
-						e.printStackTrace();
-					} catch (IllegalArgumentException e) {
+					} catch (IllegalAccessException | IllegalArgumentException e) {
 						e.printStackTrace();
 					}
 					break;
@@ -219,9 +216,15 @@ public class Config {
 		return prop.getProperty("SERVER_NAME");
 	}
 
+	public static String getWelcomeText() {
+		return prop.getProperty("WELCOME_TEXT");
+	}
+
 	public static String getCommandPrefix() {
 		return prop.getProperty("COMMAND_PREFIX");
 	}
+
+	public static boolean wantMembers() { return MEMBERS_FEATURES; }
 
 	public static boolean isAndroid() {
 		return F_ANDROID_BUILD;

@@ -21,9 +21,7 @@ import com.openrsc.server.util.rsc.CaptchaGenerator;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,6 +29,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
+
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 
 /**
  * @author n0m
@@ -432,6 +434,8 @@ public class ActionSender {
 		s.writeByte((byte) (Constants.GameServer.WANT_CUSTOM_RANK_DISPLAY ? 1 : 0));
 		s.writeByte((byte) (Constants.GameServer.RIGHT_CLICK_BANK ? 1 : 0));
 		s.writeByte((byte) (Constants.GameServer.FIX_OVERHEAD_CHAT ? 1 : 0));
+		s.writeString(Constants.GameServer.WELCOME_TEXT); // Welcome login screen text
+		s.writeByte((byte) (Constants.GameServer.MEMBER_WORLD ? 1 : 0));
 		return s;
 	}
 
@@ -989,7 +993,7 @@ public class ActionSender {
 				sendInventory(p);
 				p.checkEquipment();
 
-				/*if (p.getLocation().inWilderness()) { // Not authentic
+				/*if (!Constants.GameServer.MEMBER_WORLD) {
 					p.unwieldMembersItems();
 				}*/
 
@@ -1011,7 +1015,6 @@ public class ActionSender {
 			}
 		} catch (Throwable e) {
 			LOGGER.catching(e);
-			return;
 		}
 	}
 

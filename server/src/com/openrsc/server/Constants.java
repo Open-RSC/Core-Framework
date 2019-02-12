@@ -42,15 +42,16 @@ public final class Constants {
 		/**
 		 * the servers name
 		 */
-		public static String SERVER_NAME = "Open RSC";
+		public static String SERVER_NAME = "Runescape Classic";
+		public static String WELCOME_TEXT = "You need a members account to use this server";
 		/**
 		 * Server prefix for messages
 		 */
-		public static String MESSAGE_PREFIX = "@gre@OpenRSC:@whi@ ";
+		public static String MESSAGE_PREFIX = "@gre@Runescape Classic:@whi@ ";
 		/**
 		 * whether or not this is a members world
 		 */
-		public static boolean MEMBER_WORLD = true;
+		public static boolean MEMBER_WORLD = false;
 		/**
 		 * this worlds 'number'
 		 */
@@ -137,9 +138,8 @@ public final class Constants {
 		 */
 		public static String CONFIG_DIR = "conf" + File.separator + "server";
 		public static long START_TIME = 0L;
-		public static boolean AVATAR_GENERATOR = false; // Not sent to client.
-		public static boolean PLAYER_COMMANDS = false; // This either.
-
+		public static boolean AVATAR_GENERATOR = false; // Not sent to client
+		public static boolean PLAYER_COMMANDS = false; // Not sent to client
 		public static boolean IS_DOUBLE_EXP = false;
 		public static boolean SPAWN_AUCTION_NPCS = false;
 		public static boolean SPAWN_IRON_MAN_NPCS = false;
@@ -214,6 +214,7 @@ public final class Constants {
 			CLIENT_VERSION = Integer.parseInt(props.getProperty("client_version"));
 			SERVER_PORT = Integer.parseInt(props.getProperty("server_port"));
 			SERVER_NAME = props.getProperty("server_name");
+			WELCOME_TEXT = props.getProperty("welcome_text");
 			SERVER_LOCATION = props.getProperty("server_location");
 			MAX_PLAYERS = Integer.parseInt(props.getProperty("maxplayers"));
 			MYSQL_USER = props.getProperty("mysql_user");
@@ -242,7 +243,7 @@ public final class Constants {
 			WANT_CLANS = Boolean.parseBoolean(props.getProperty("want_clans"));
 			WANT_KILL_FEED = Boolean.parseBoolean(props.getProperty("want_kill_feed"));
 			FOG_TOGGLE = Boolean.parseBoolean(props.getProperty("fog_toggle"));
-			GROUND_ITEM_TOGGLE = Boolean.parseBoolean(props.getProperty("fog_toggle"));
+			GROUND_ITEM_TOGGLE = Boolean.parseBoolean(props.getProperty("ground_item_toggle"));
 			AUTO_MESSAGE_SWITCH_TOGGLE = Boolean.parseBoolean(props.getProperty("auto_message_switch_toggle"));
 			BATCH_PROGRESSION = Boolean.parseBoolean(props.getProperty("batch_progression"));
 			SIDE_MENU_TOGGLE = Boolean.parseBoolean(props.getProperty("side_menu_toggle"));
