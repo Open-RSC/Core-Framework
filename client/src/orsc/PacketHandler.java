@@ -2,6 +2,13 @@ package orsc;
 
 import com.openrsc.client.model.Sprite;
 import com.openrsc.interfaces.misc.clan.Clan;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.Properties;
+
 import orsc.buffers.RSBufferUtils;
 import orsc.buffers.RSBuffer_Bits;
 import orsc.enumerations.MessageType;
@@ -13,12 +20,6 @@ import orsc.net.Network_Socket;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.util.Properties;
 
 
 public class PacketHandler {
@@ -714,7 +715,7 @@ public class PacketHandler {
 
 	private void setServerConfiguration() {
 		Properties props = new Properties();
-		String serverName;
+		String serverName, welcomeText;
 		int playerLevelLimit, spawnAuctionNpcs, spawnIronManNpcs;
 		int showFloatingNametags, wantClans, wantKillFeed, fogToggle;
 		int groundItemToggle, autoMessageSwitchToggle, batchProgression;
@@ -722,7 +723,7 @@ public class PacketHandler {
 		int menuCombatStyleToggle, fightmodeSelectorToggle, experienceCounterToggle;
 		int experienceDropsToggle, itemsOnDeathMenu, showRoofToggle, wantHideIp;
 		int wantGlobalChat, wantSkillMenus, wantQuestMenus;
-		int wantExperienceElixirs, wantKeyboardShortcuts;
+		int wantExperienceElixirs, wantKeyboardShortcuts, wantMembers;
 		int wantCustomBanks, wantBankPins, wantBankNotes, wantCertDeposit, customFiremaking;
 		int wantDropX, wantExpInfo, wantWoodcuttingGuild, wantFixedOverheadChat;
 		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank;
@@ -768,6 +769,8 @@ public class PacketHandler {
 			wantCustomRankDisplay = this.getClientStream().getUnsignedByte();
 			wantRightClickBank = this.getClientStream().getUnsignedByte();
 			wantFixedOverheadChat = this.getClientStream().getUnsignedByte();
+			welcomeText = this.getClientStream().readString();
+			wantMembers = this.getClientStream().getUnsignedByte();
 		} else {
 			serverName = packetsIncoming.readString();
 			playerLevelLimit = packetsIncoming.getUnsignedByte();
@@ -809,6 +812,8 @@ public class PacketHandler {
 			wantCustomRankDisplay = packetsIncoming.getUnsignedByte();
 			wantRightClickBank = packetsIncoming.getUnsignedByte();
 			wantFixedOverheadChat = packetsIncoming.getUnsignedByte();
+			welcomeText = packetsIncoming.readString();
+			wantMembers = packetsIncoming.getUnsignedByte();
 		}
 
 		if (mc.DEBUG) {
@@ -849,7 +854,9 @@ public class PacketHandler {
 					"\nS_WANT_CERTS_TO_BANK " + wantCertsToBank +
 					"\nS_WANT_CUSTOM_RANK_DISPLAY" + wantCustomRankDisplay +
 					"\nS_RIGHT_CLICK_BANK" + wantRightClickBank +
-					"\nS_WANT_FIXED_OVERHEAD_CHAT" + wantFixedOverheadChat
+					"\nS_WANT_FIXED_OVERHEAD_CHAT" + wantFixedOverheadChat +
+					"\nWELCOME_TEXT" + welcomeText +
+					"\nMEMBERS_FEATURES" + wantMembers
 			);
 		}
 
@@ -892,6 +899,8 @@ public class PacketHandler {
 		props.setProperty("S_WANT_CUSTOM_RANK_DISPLAY", wantCustomRankDisplay == 1 ? "true" : "false");
 		props.setProperty("S_RIGHT_CLICK_BANK", wantRightClickBank == 1 ? "true" : "false");
 		props.setProperty("S_WANT_FIXED_OVERHEAD_CHAT", wantFixedOverheadChat == 1 ? "true" : "false");
+		props.setProperty("WELCOME_TEXT", welcomeText);
+		props.setProperty("MEMBERS_FEATURES", wantMembers == 1 ? "true" : "false");
 
 		Config.updateServerConfiguration(props);
 
