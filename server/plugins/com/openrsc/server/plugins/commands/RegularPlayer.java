@@ -72,8 +72,8 @@ public final class RegularPlayer implements CommandListener {
 				return;
 			}
 			String message = "";
-			for (int i = 0; i < args.length; i++) {
-				message = message + args[i] + " ";
+			for (String arg : args) {
+				message = message + arg + " ";
 			}
 			player.getClan().messageChat(player, "@cya@" + player.getUsername() + ":@whi@ " + message);
 		}
@@ -146,7 +146,6 @@ public final class RegularPlayer implements CommandListener {
 					+ "@gre@Coordinates:@whi@ " + player.getLocation().toString() + " %"
 					+ "@gre@Total Time Played:@whi@ " + DataConversions.getDateFromMsec(timePlayed) + " %"
 				, true);
-			return;
 		}
 		else if (cmd.equalsIgnoreCase("event")) {
 			if (!World.EVENT) {
@@ -200,12 +199,12 @@ public final class RegularPlayer implements CommandListener {
 
 			player.getCache().store("say_delay", System.currentTimeMillis());
 
-			String newStr = "";
-			for (int i = 0; i < args.length; i++) {
-				newStr += args[i] + " ";
+			StringBuilder newStr = new StringBuilder();
+			for (String arg : args) {
+				newStr.append(arg).append(" ");
 			}
-			newStr = newStr.replace('~', ' ');
-			newStr = newStr.replace('@', ' ');
+			newStr = new StringBuilder(newStr.toString().replace('~', ' '));
+			newStr = new StringBuilder(newStr.toString().replace('@', ' '));
 			String channelPrefix = cmd.equals("g") ? "@gr2@[General] " : "@or1@[PKing] ";
 			int channel = cmd.equals("g") ? 1 : 2;
 			for (Player p : World.getWorld().getPlayers()) {
@@ -249,13 +248,12 @@ public final class RegularPlayer implements CommandListener {
 			player.message(messagePrefix + "There are " + IP_ADDRESSES.size() + " unique players online");
 		}
 		else if (cmd.equalsIgnoreCase("onlinelist")) {
-			String boxTextPlayerNames = "";
+			StringBuilder boxTextPlayerNames = new StringBuilder();
 			for (Player p : World.getWorld().getPlayers()) {
-				boxTextPlayerNames += p.getUsername() + (player.isDev() ? (" [level-" + p.getCombatLevel() + " at " + p.getLocation() + "]") : "") + "%";
+				boxTextPlayerNames.append(p.getUsername()).append(player.isDev() ? (" [level-" + p.getCombatLevel() + " at " + p.getLocation() + "]") : "").append("%");
 			}
 			ActionSender.sendBox(player, "" + "@yel@Online Players: %" + boxTextPlayerNames, true);
 
-			return;
 		}
 		else if (cmd.equalsIgnoreCase("groups") || cmd.equalsIgnoreCase("ranks")) {
 			ArrayList<String> groups = new ArrayList<>();
@@ -288,7 +286,6 @@ public final class RegularPlayer implements CommandListener {
 					+ "@whi@::time - shows the current server time %"
 					+ "@whi@::event - to enter an ongoing server event %", true
 			);
-			return;
 		}
 	}
 }
