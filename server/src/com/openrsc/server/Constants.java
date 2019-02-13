@@ -74,6 +74,10 @@ public final class Constants {
 		 */
 		public static String SERVER_LOCATION = "USA";
 		/**
+		 * The HMAC SHA512 + Salt private key.
+		 */
+		public static String HMAC_PRIVATE_KEY = "";
+		/**
 		 * the mysql database host
 		 */
 		public static String MYSQL_HOST = "localhost";
@@ -226,6 +230,7 @@ public final class Constants {
 			MYSQL_DB = props.getProperty("mysql_db");
 			MYSQL_TABLE_PREFIX = props.getProperty("mysql_table_prefix");
 			MYSQL_HOST = props.getProperty("mysql_host");
+			HMAC_PRIVATE_KEY = props.getProperty("HMAC_PRIVATE_KEY");
 			VIEW_DISTANCE = Integer.parseInt(props.getProperty("view_distance"));
 			AVATAR_GENERATOR = Boolean.parseBoolean(props.getProperty("avatar_generator"));
 			DISPLAY_LOGO_SPRITE = Boolean.parseBoolean(props.getProperty("display_logo_sprite"));
