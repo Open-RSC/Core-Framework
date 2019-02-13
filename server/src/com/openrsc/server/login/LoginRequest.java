@@ -1,6 +1,7 @@
 package com.openrsc.server.login;
 
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.net.ThrottleFilter;
 import com.openrsc.server.util.rsc.DataConversions;
 import io.netty.channel.Channel;
 
@@ -9,7 +10,7 @@ import io.netty.channel.Channel;
  *
  * @author n0m
  */
-public abstract class LoginRequest {
+public abstract class LoginRequest extends ThrottleFilter {
 
 	protected Player loadedPlayer;
 	private String ipAddress;

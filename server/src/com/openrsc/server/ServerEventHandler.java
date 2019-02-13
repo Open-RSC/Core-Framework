@@ -41,7 +41,7 @@ public final class ServerEventHandler {
 		return false;
 	}
 
-	public void doEvents() {
+	void doEvents() {
 		if (toAdd.size() > 0) {
 			for (Map.Entry<String, DelayedEvent> e : toAdd.entrySet())
 				events.put(e.getKey(), e.getValue());

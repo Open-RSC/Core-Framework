@@ -363,9 +363,8 @@ public final class Event implements CommandListener {
 				}
 				for (int i = 0; i < names.size(); i++) {
 
-					builder.append("@yel@")
-						.append((World.getWorld().getPlayer(DataConversions.usernameToHash(names.get(i))) != null
-							? "@gre@" : "@red@") + names.get(i));
+					builder.append("@yel@").append(World.getWorld().getPlayer(DataConversions.usernameToHash(names.get(i))) != null
+						? "@gre@" : "@red@").append(names.get(i));
 
 					if (i != names.size() - 1) {
 						builder.append("@whi@, ");
