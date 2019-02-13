@@ -12,7 +12,7 @@ public class Config {
     public static final String SERVER_NAME = "Runescape";
     public static final String SERVER_NAME_WELCOME = "Runescape Classic";
     public static final String WELCOME_TEXT = "You need a members account to use this server";
-    public static final String SERVER_IP = "10.0.0.9";
+    public static final String SERVER_IP = "game.openrsc.com";
     public static final int SERVER_PORT = 43594;
     public static final int CLIENT_VERSION = 1;
     public static final int CACHE_VERSION = 2;
@@ -41,7 +41,7 @@ public class Config {
     public static final String DL_URL = "https://game.openrsc.com";
     public static final String ANDROID_DOWNLOAD_PATH = DL_URL + "/downloads/";
     public static final String CACHE_URL = DL_URL + "/downloads/cache/";
-    public static final int ANDROID_CLIENT_VERSION = 6;
+    public static final int ANDROID_CLIENT_VERSION = 7;
     public static boolean F_SHOWING_KEYBOARD = false;
     public static int F_LONG_PRESS_CALC;
     public static boolean C_HOLD_AND_CHOOSE = true;

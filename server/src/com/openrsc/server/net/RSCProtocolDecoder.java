@@ -1,16 +1,18 @@
 package com.openrsc.server.net;
 
+import org.jboss.netty.channel.ChannelHandler;
+
+import java.util.List;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 
-import java.util.List;
-
 /**
  * @author Imposter
  */
-public final class RSCProtocolDecoder extends ByteToMessageDecoder {
+public final class RSCProtocolDecoder extends ByteToMessageDecoder implements ChannelHandler {
 
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf buffer, List<Object> out) throws Exception {

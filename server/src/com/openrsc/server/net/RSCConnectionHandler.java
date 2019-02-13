@@ -3,6 +3,9 @@ package com.openrsc.server.net;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.LoginPacketHandler;
+
+import org.jboss.netty.channel.ChannelHandler;
+
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -12,7 +15,7 @@ import io.netty.util.ReferenceCountUtil;
 /**
  * @author Imposter
  */
-public class RSCConnectionHandler extends ChannelInboundHandlerAdapter {
+public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implements ChannelHandler {
 	public static final AttributeKey<ConnectionAttachment> attachment = AttributeKey.valueOf("conn-attachment");
 	public LoginPacketHandler loginHandler = new LoginPacketHandler();
 
