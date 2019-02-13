@@ -43,7 +43,6 @@ import java.util.Map.Entry;
 import java.util.Timer;
 import java.util.TimerTask;
 
-// Comment these out if Android client
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
@@ -73,6 +72,8 @@ import orsc.net.Network_Socket;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
+
+// Comment these out if Android client
 
 public final class mudclient implements Runnable {
 
@@ -1442,8 +1443,11 @@ public final class mudclient implements Runnable {
 
 			this.panelLoginWelcome = new Panel(this.getSurface(), 50);
 			byte yOffsetWelcome = 40;
-			if (Config.isAndroid())
-				yOffsetWelcome  = -125;
+			int yOffsetLogin = 0;
+			if (Config.isAndroid()) {
+				yOffsetWelcome = -125;
+				yOffsetLogin = -200;
+			}
 
 			if (!Config.wantMembers()) { // Free version
 				this.panelLoginWelcome.addCenteredText(halfGameWidth(), halfGameHeight() + 35 + yOffsetWelcome, "Click on an option", 5, true);
@@ -1455,9 +1459,8 @@ public final class mudclient implements Runnable {
 				panelLoginWelcome.addCenteredText(halfGameWidth() + 100, halfGameHeight() + 73 + yOffsetWelcome, "Existing User", 5, false);
 
 				loginButtonNewUser = panelLoginWelcome.addButton(halfGameWidth() - 100, halfGameHeight() + 73 + yOffsetWelcome, 120, 35);
-				loginButtonExistingUser = panelLoginWelcome.addButton(halfGameWidth() + 100, halfGameHeight() + 73  + yOffsetWelcome, 120, 35);
-			}
-			else { // Members version
+				loginButtonExistingUser = panelLoginWelcome.addButton(halfGameWidth() + 100, halfGameHeight() + 73 + yOffsetWelcome, 120, 35);
+			} else { // Members version
 				this.panelLoginWelcome.addCenteredText(halfGameWidth(), halfGameHeight() + 33 + yOffsetWelcome, "Welcome to " + Config.getServerNameWelcome(), 4, true);
 				this.panelLoginWelcome.addCenteredText(halfGameWidth(), halfGameHeight() + 48 + yOffsetWelcome, Config.getWelcomeText(), 4, true);
 
@@ -1468,26 +1471,26 @@ public final class mudclient implements Runnable {
 				panelLoginWelcome.addCenteredText(halfGameWidth() + 100, halfGameHeight() + 83 + yOffsetWelcome, "Existing User", 5, false);
 
 				loginButtonNewUser = panelLoginWelcome.addButton(halfGameWidth() - 100, halfGameHeight() + 83 + yOffsetWelcome, 120, 35);
-				loginButtonExistingUser = panelLoginWelcome.addButton(halfGameWidth() + 100, halfGameHeight() + 83  + yOffsetWelcome, 120, 35);
+				loginButtonExistingUser = panelLoginWelcome.addButton(halfGameWidth() + 100, halfGameHeight() + 83 + yOffsetWelcome, 120, 35);
 			}
 
 			this.panelLogin = new Panel(this.getSurface(), 50);
-			short var5 = Config.isAndroid() ? (short) 30 : 230;
-			this.controlLoginStatus1 = this.panelLogin.addCenteredText(halfGameWidth(), halfGameHeight() + 35, "", 4, true);
-			this.controlLoginStatus2 = this.panelLogin.addCenteredText(halfGameWidth(), halfGameHeight() + 55,
+			short androidHeightOffset = Config.isAndroid() ? (short) 30 : 230;
+			this.controlLoginStatus1 = this.panelLogin.addCenteredText(halfGameWidth(), halfGameHeight() + 35 + yOffsetLogin, "", 4, true);
+			this.controlLoginStatus2 = this.panelLogin.addCenteredText(halfGameWidth(), halfGameHeight() + 55 + yOffsetLogin,
 				"Please enter your username and password", 4, true);
-			int var6 = var5 + 28;
-			this.panelLogin.addButtonBackground(halfGameWidth() - 116, halfGameHeight() + 91, 200, 40);
-			this.panelLogin.addCenteredText(halfGameWidth() - 116, halfGameHeight() + 81, "Username:", 4, false);
-			this.controlLoginUser = this.panelLogin.addCenteredTextEntry(halfGameWidth() - 116, halfGameHeight() + 98, 200, 320, 40, 4, false, false);
+			int var6 = androidHeightOffset + 28;
+			this.panelLogin.addButtonBackground(halfGameWidth() - 116, halfGameHeight() + 91 + yOffsetLogin, 200, 40);
+			this.panelLogin.addCenteredText(halfGameWidth() - 116, halfGameHeight() + 81 + yOffsetLogin, "Username:", 4, false);
+			this.controlLoginUser = this.panelLogin.addCenteredTextEntry(halfGameWidth() - 116, halfGameHeight() + 98 + yOffsetLogin, 200, 320, 40, 4, false, false);
 
 			if (var1 != 3845) {
 				this.drawNPC(51, 106, -15, -96, 26, 108, 22, -63);
 			}
 
-			this.panelLogin.addButtonBackground(halfGameWidth() - 66, halfGameHeight() + 138, 200, 40);
-			this.panelLogin.addCenteredText(halfGameWidth() - 66, halfGameHeight() + 128, "Password:", 4, false);
-			this.controlLoginPass = this.panelLogin.addCenteredTextEntry(halfGameWidth() - 66, halfGameHeight() + 146, 200, 20, 40, 4, true, false);
+			this.panelLogin.addButtonBackground(halfGameWidth() - 66, halfGameHeight() + 138 + yOffsetLogin, 200, 40);
+			this.panelLogin.addCenteredText(halfGameWidth() - 66, halfGameHeight() + 128 + yOffsetLogin, "Password:", 4, false);
+			this.controlLoginPass = this.panelLogin.addCenteredTextEntry(halfGameWidth() - 66, halfGameHeight() + 146 + yOffsetLogin, 200, 20, 40, 4, true, false);
 
 			if (Config.isAndroid() || Config.Remember()) {
 				String cred = clientPort.loadCredentials();
@@ -1504,14 +1507,14 @@ public final class mudclient implements Runnable {
 				}
 			}
 
-			this.panelLogin.addButtonBackground(halfGameWidth() + 154, halfGameHeight() + 83, 120, 25);
-			this.panelLogin.addCenteredText(halfGameWidth() + 154, halfGameHeight() + 83, "Ok", 4, false);
-			this.m_be = this.panelLogin.addButton(halfGameWidth() + 154, halfGameHeight() + 83, 120, 25);
-			this.panelLogin.addButtonBackground(halfGameWidth() + 154, halfGameHeight() + 113, 120, 25);
-			this.panelLogin.addCenteredText(halfGameWidth() + 154, halfGameHeight() + 113, "Cancel", 4, false);
-			this.m_Xi = this.panelLogin.addButton(halfGameWidth() + 154, halfGameHeight() + 113, 120, 25);
+			this.panelLogin.addButtonBackground(halfGameWidth() + 154, halfGameHeight() + 83 + yOffsetLogin, 120, 25);
+			this.panelLogin.addCenteredText(halfGameWidth() + 154, halfGameHeight() + 83 + yOffsetLogin, "Ok", 4, false);
+			this.m_be = this.panelLogin.addButton(halfGameWidth() + 154, halfGameHeight() + 83 + yOffsetLogin, 120, 25);
+			this.panelLogin.addButtonBackground(halfGameWidth() + 154, halfGameHeight() + 113 + yOffsetLogin, 120, 25);
+			this.panelLogin.addCenteredText(halfGameWidth() + 154, halfGameHeight() + 113 + yOffsetLogin, "Cancel", 4, false);
+			this.m_Xi = this.panelLogin.addButton(halfGameWidth() + 154, halfGameHeight() + 113 + yOffsetLogin, 120, 25);
 			this.panelLogin.setFocus(this.controlLoginUser);
-			
+
 			int offRememb = -1;
 			int offHide = -1;
 			int width = 120;
@@ -1519,35 +1522,33 @@ public final class mudclient implements Runnable {
 				offRememb = 124;
 				offHide = 186;
 				width = 60;
-			}
-			else if(Config.S_WANT_HIDE_IP) {
+			} else if (Config.S_WANT_HIDE_IP) {
 				offHide = 154;
-			}
-			else if(Config.isAndroid() || Config.Remember()) {
+			} else if (Config.isAndroid() || Config.Remember()) {
 				offRememb = 154;
 			}
-			
+
 			if (offRememb != -1) {
-				this.panelLogin.addButtonBackground(halfGameWidth() + offRememb, halfGameHeight() + 143, width, 25);
-				this.panelLogin.addCenteredText(halfGameWidth() + offRememb, halfGameHeight() + 143, "Save", 3, false);
-				this.rememberButtonIdx = this.panelLogin.addButton(halfGameWidth() + offRememb, halfGameHeight() + 143, width, 25);
+				this.panelLogin.addButtonBackground(halfGameWidth() + offRememb, halfGameHeight() + 143 + yOffsetLogin, width, 25);
+				this.panelLogin.addCenteredText(halfGameWidth() + offRememb, halfGameHeight() + 143 + yOffsetLogin, "Save", 3, false);
+				this.rememberButtonIdx = this.panelLogin.addButton(halfGameWidth() + offRememb, halfGameHeight() + 143 + yOffsetLogin, width, 25);
 			}
 			if (offHide != -1) {
 				this.settingsHideIP = clientPort.loadHideIp();
 				String text = (this.settingsHideIP != 1) ? "Hide IP" : "Show IP";
-				this.panelLogin.addButtonBackground(halfGameWidth() + offHide, halfGameHeight() + 143, width, 25);
-				this.panelLogin.addCenteredText(halfGameWidth() + offHide, halfGameHeight() + 143, text, 3, false);
-				this.hideIpButtonIdx = this.panelLogin.addButton(halfGameWidth() + offHide, halfGameHeight() + 143, width, 25);
+				this.panelLogin.addButtonBackground(halfGameWidth() + offHide, halfGameHeight() + 143 + yOffsetLogin, width, 25);
+				this.panelLogin.addCenteredText(halfGameWidth() + offHide, halfGameHeight() + 143 + yOffsetLogin, text, 3, false);
+				this.hideIpButtonIdx = this.panelLogin.addButton(halfGameWidth() + offHide, halfGameHeight() + 143 + yOffsetLogin, width, 25);
 			}
 
 			/* Registration setup */
 
 			menuNewUser = new Panel(getSurface(), 50);
 			if (Config.isAndroid()) {
-				menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 149, "@whi@To open keyboard press the back button", 5 ,false);
+				menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 149, "@whi@To open keyboard press the back button", 5, false);
 			}
 			menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 127, "@whi@Enter a username between 2 and 12 characters long", 1, false);
-			menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() -116, "@red@(Only regular letters, numbers and spaces are allowed)", 0, false);
+			menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 116, "@red@(Only regular letters, numbers and spaces are allowed)", 0, false);
 			menuNewUser.addButtonBackground(halfGameWidth() - 6, halfGameHeight() - 90, 420, 34);
 			menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 99, "Choose a Username (This is the name other users will see)", 4,
 				false);
@@ -3590,7 +3591,7 @@ public final class mudclient implements Runnable {
 
 				if (this.settingsHideIP != null && this.settingsHideIP != 1) {
 					this.getSurface().drawColoredStringCentered(xr + 256 - 56, "from: " + this.welcomeLastLoggedInHost, 0xFFFFFF,
-							var1 ^ -4853, 1, var3);
+						var1 ^ -4853, 1, var3);
 				}
 				var3 += 15;
 				var3 += 15;
@@ -3661,12 +3662,12 @@ public final class mudclient implements Runnable {
 			this.getSurface().drawBoxBorder(halfGameWidth() - 170, 340, halfGameHeight() - 90, 180, 0xFFFFFF);
 			this.getSurface().drawColoredStringCentered(halfGameWidth(), "Warning! Proceed with caution", 0xFF0000, 0, 4, halfGameHeight() - 70);
 			this.getSurface().drawColoredStringCentered(halfGameWidth(), "If you go much further north you will enter the", 0xFFFFFF, 0, 1, halfGameHeight() - 44);
-			this.getSurface().drawColoredStringCentered(halfGameWidth(), "wilderness. This a very dangerous area where", 0xFFFFFF,0, 1, halfGameHeight() - 31);
+			this.getSurface().drawColoredStringCentered(halfGameWidth(), "wilderness. This a very dangerous area where", 0xFFFFFF, 0, 1, halfGameHeight() - 31);
 			this.getSurface().drawColoredStringCentered(halfGameWidth(), "other players can attack you!", 0xFFFFFF, 0, 1, halfGameHeight() - 18);
 			this.getSurface().drawColoredStringCentered(halfGameWidth(), "The further north you go the more dangerous it", 0xFFFFFF, 0, 1, halfGameHeight() + 4);
 			this.getSurface().drawColoredStringCentered(halfGameWidth(), "becomes, but the more treasure you will find.", 0xFFFFFF, 0, 1, halfGameHeight() + 17);
 			this.getSurface().drawColoredStringCentered(halfGameWidth(), "In the wilderness an indicator at the bottom-right", 0xFFFFFF, 0, 1, halfGameHeight() + 39);
-			this.getSurface().drawColoredStringCentered(halfGameWidth(), "of the screen will show the current level of danger",0xFFFFFF, 0, 1, halfGameHeight() + 52);
+			this.getSurface().drawColoredStringCentered(halfGameWidth(), "of the screen will show the current level of danger", 0xFFFFFF, 0, 1, halfGameHeight() + 52);
 			int var3 = 0xFFFFFF;
 			if (this.mouseY > halfGameHeight() + 62 && this.mouseY <= halfGameHeight() + 74 && this.mouseX > halfGameWidth() - 75 && this.mouseX < halfGameWidth() + 75) {
 				var3 = 0xFF0000;
@@ -3763,7 +3764,7 @@ public final class mudclient implements Runnable {
 							this.scene.removeModel(this.world.modelRoofGrid[2][centerX]);
 						}
 
-						if(!this.doCameraZoom) {
+						if (!this.doCameraZoom) {
 							amountToZoom -= 200;
 							this.doCameraZoom = true;
 						}
@@ -3780,7 +3781,7 @@ public final class mudclient implements Runnable {
 								this.scene.addModel(this.world.modelRoofGrid[2][centerX]);
 							}
 
-							if(this.doCameraZoom) {
+							if (this.doCameraZoom) {
 								amountToZoom += 200;
 								this.doCameraZoom = false;
 							}
@@ -4001,8 +4002,8 @@ public final class mudclient implements Runnable {
 								this.scene.fogSmoothingStartDistance = gameWidth * 2 + cameraZoom * 2 - 224;
 							} else {
 								this.scene.fogZFalloff = 1;
-								this.scene.fogLandscapeDistance =  gameWidth * 2 + cameraZoom * 2 - 324;
-								this.scene.fogEntityDistance =  gameWidth * 2 + cameraZoom * 2 - 324;
+								this.scene.fogLandscapeDistance = gameWidth * 2 + cameraZoom * 2 - 324;
+								this.scene.fogEntityDistance = gameWidth * 2 + cameraZoom * 2 - 324;
 								this.scene.fogSmoothingStartDistance = gameWidth * 2 + cameraZoom * 2 - 424;
 							}
 						} else {
@@ -4140,7 +4141,7 @@ public final class mudclient implements Runnable {
 						i += 14;
 						this.getSurface().drawString(
 							"Fatigue: " + this.statFatigue + "%", 7, i, 0xffffff, 1);
-						i +=14;
+						i += 14;
 						this.getSurface().drawString("Camera Pitch: " + cameraPitch, 7, i, 0xffffff, 1);
 					}
 
@@ -7126,7 +7127,7 @@ public final class mudclient implements Runnable {
 
 	private final void drawSocialSettingsOptions(int var3, short var5, int var6, int var7) {
 		this.getSurface().drawString("Privacy settings", 3 + var3, var7, 0, 1);
-		
+
 		var7 += 15;
 		if (this.settingsBlockChat != 0) {
 			this.getSurface().drawString("Block chat messages: @gre@<on>", 3 + var3, var7, 0xFFFFFF, 1);
@@ -7788,7 +7789,7 @@ public final class mudclient implements Runnable {
 		this.getSurface().drawString("Privacy settings. Will be applied to", 3 + var3, var7, 0, 1);
 		var7 += 15;
 		this.getSurface().drawString("all people not on your friends list", 3 + var3, var7, 0, 1);
-		
+
 		var7 += 15;
 		if (this.settingsBlockChat != 0) {
 			this.getSurface().drawString("Block chat messages: @gre@<on>", 3 + var3, var7, 0xFFFFFF, 1);
@@ -7880,7 +7881,7 @@ public final class mudclient implements Runnable {
 		}
 
 		var7 += 7 * 15 + 5;
-		
+
 		boolean var11 = false;
 		// Block Chat
 		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12
@@ -9026,7 +9027,7 @@ public final class mudclient implements Runnable {
 					} else if (this.keyRight) {
 						this.cameraRotation = 255 & this.cameraRotation - 2;
 					} else if (this.keyDown) {
-						if(Config.S_ZOOM_VIEW_TOGGLE || getLocalPlayer().isStaff()) {
+						if (Config.S_ZOOM_VIEW_TOGGLE || getLocalPlayer().isStaff()) {
 							final int maxHeight = 1000 - (doCameraZoom ? 200 : 0);
 							if (cameraZoom < maxHeight) {
 								if (cameraZoom + 4 > maxHeight)
@@ -9035,12 +9036,12 @@ public final class mudclient implements Runnable {
 									cameraZoom += 4;
 							}
 						} else {
-							if(this.cameraAllowPitchModification) {
+							if (this.cameraAllowPitchModification) {
 								this.cameraPitch = (this.cameraPitch + 4) & 1023;
 							}
 						}
 					} else if (this.keyUp) {
-						if(Config.S_ZOOM_VIEW_TOGGLE || getLocalPlayer().isStaff()) {
+						if (Config.S_ZOOM_VIEW_TOGGLE || getLocalPlayer().isStaff()) {
 							final int minHeight = 500 - (doCameraZoom ? 200 : 0);
 							if (cameraZoom > minHeight) {
 								if (cameraZoom - 4 < minHeight)
@@ -9049,7 +9050,7 @@ public final class mudclient implements Runnable {
 									cameraZoom -= 4;
 							}
 						} else {
-							if(this.cameraAllowPitchModification) {
+							if (this.cameraAllowPitchModification) {
 								this.cameraPitch = (this.cameraPitch + 1024 - 4) & 1023;
 							}
 						}
@@ -9084,11 +9085,11 @@ public final class mudclient implements Runnable {
 					} else if (!this.doCameraZoom && this.cameraZoom < 750) {
 						this.cameraZoom += 4;
 					}*/
-					if(amountToZoom > 0) {
+					if (amountToZoom > 0) {
 						cameraZoom += 4;
 						amountToZoom -= 4;
 					}
-					if(amountToZoom < 0) {
+					if (amountToZoom < 0) {
 						cameraZoom -= 4;
 						amountToZoom += 4;
 					}
@@ -9303,7 +9304,7 @@ public final class mudclient implements Runnable {
 								this.panelLogin.setText(this.controlLoginStatus2, "@gre@Credentials Saved");
 						}
 					}
-					
+
 					if (Config.S_WANT_HIDE_IP) {
 						if (this.panelLogin.isClicked(this.hideIpButtonIdx)) {
 							this.settingsHideIP = 1 - this.settingsHideIP;
@@ -9315,7 +9316,7 @@ public final class mudclient implements Runnable {
 							//boolean temp = clientPort.saveHideIp(this.settingsHideIP);
 
 							String msg = (this.settingsHideIP != 1) ? "@red@Your IP will be shown after login"
-									: "@gre@Your IP will be hidden after login";
+								: "@gre@Your IP will be hidden after login";
 							if (temp)
 								this.panelLogin.setText(this.controlLoginStatus2, msg);
 						}
@@ -9373,11 +9374,11 @@ public final class mudclient implements Runnable {
 		pass = DataOperations.addCharacters(pass, 20);
 
 		if (user.trim().length() == 0) {
-			showLoginScreenStatus("Please fill in ALL requested", "information to continue!");
+			showLoginScreenStatus("Please fill in all requested", "information to continue!");
 			return;
 		}
 		if (user.trim().length() < 2) {
-			showLoginScreenStatus("Username must be atleast 2", "characters long!");
+			showLoginScreenStatus("Username must be at least 2", "characters long!");
 			return;
 		}
 		if (user.trim().length() > 12) {
@@ -9385,7 +9386,7 @@ public final class mudclient implements Runnable {
 			return;
 		}
 		if (pass.trim().length() < 4) {
-			showLoginScreenStatus("Password must be atleast 4", "characters long!");
+			showLoginScreenStatus("Password must be at least 4", "characters long!");
 			return;
 		}
 		if (pass.trim().length() > 16) {
@@ -11803,7 +11804,7 @@ public final class mudclient implements Runnable {
 	public FishingTrawlerInterface getFishingTrawlerInterface() {
 		return fishingTrawlerInterface;
 	}
-	
+
 	public void setBlockChat(int status) {
 		this.settingsBlockChat = status;
 	}
@@ -12272,7 +12273,7 @@ public final class mudclient implements Runnable {
 	public void setCombatStyle(int style) {
 		this.combatStyle = style;
 	}
-	
+
 	public void setSettingsBlockGlobal(int block) {
 		this.settingsBlockGlobal = block;
 	}
@@ -13253,7 +13254,7 @@ public final class mudclient implements Runnable {
 	}
 
 	public int halfGameWidth() {
-		return gameWidth/2;
+		return gameWidth / 2;
 	}
 
 	public int getGameHeight() {
@@ -13261,7 +13262,7 @@ public final class mudclient implements Runnable {
 	}
 
 	public int halfGameHeight() {
-		return gameHeight/2;
+		return gameHeight / 2;
 	}
 
 	public void setGameHeight(int gameHeight) {
