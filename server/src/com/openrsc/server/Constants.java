@@ -94,10 +94,6 @@ public final class Constants {
 		 */
 		public static String MYSQL_TABLE_PREFIX = "openrsc_";
 		/**
-		 * The HMAC SHA512 + Salt private key.
-		 */
-		public static String HMAC_PRIVATE_KEY = "";
-		/**
 		 * Player Skill Level Limit
 		 */
 		public static int PLAYER_LEVEL_LIMIT = 99;
@@ -230,7 +226,6 @@ public final class Constants {
 			MYSQL_DB = props.getProperty("mysql_db");
 			MYSQL_TABLE_PREFIX = props.getProperty("mysql_table_prefix");
 			MYSQL_HOST = props.getProperty("mysql_host");
-			HMAC_PRIVATE_KEY = props.getProperty("HMAC_PRIVATE_KEY");
 			VIEW_DISTANCE = Integer.parseInt(props.getProperty("view_distance"));
 			AVATAR_GENERATOR = Boolean.parseBoolean(props.getProperty("avatar_generator"));
 			DISPLAY_LOGO_SPRITE = Boolean.parseBoolean(props.getProperty("display_logo_sprite"));
