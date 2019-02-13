@@ -152,11 +152,11 @@ public abstract class RSCBitmapSurfaceView extends SurfaceView implements Surfac
 			canvas.drawText(state, x + 138, y + 10, paint);
 
 			if (!this.m_hb) {
-				canvas.drawText("Created by JAGeX - visit www.jagex.com", x + 138, y + 30, paint);
-				canvas.drawText("\u00a9 2001-2018 Jagex Ltd", x + 138, y + 44, paint);
+				canvas.drawText("Powered by Open RSC", x + 138, y + 30, paint);
+				canvas.drawText("We support open source", x + 138, y + 44, paint);
 			} else {
 				paint.setColor(Color.rgb(132, 132, 152));
-				canvas.drawText("\u00a9 2001-2018 Jagex Ltd", x + 138, client_height - 20, paint);
+				canvas.drawText("We support open source", x + 138, client_height - 20, paint);
 			}
 			// if (null != this.m_p) { wat
 			// paint.setColor(Color.WHITE);
