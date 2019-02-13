@@ -1,16 +1,19 @@
 package orsc;
 
-import javax.swing.*;
 import java.applet.Applet;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.io.File;
+
+import javax.swing.JFrame;
 
 public class ORSCFrame extends ORSCApplet {
 
 	private static final long serialVersionUID = 1L;
 
 	public static void main(String[] args) {
-		JFrame jframe = new JFrame(Config.SERVER_NAME);
+		JFrame jframe = new JFrame(Config.SERVER_NAME_WELCOME);
 
 		final Applet applet = new ORSCFrame();
 		applet.setPreferredSize(new Dimension(512, 334 + 12));
