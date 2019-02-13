@@ -12,6 +12,7 @@ import com.openrsc.server.external.*;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
+import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -43,8 +44,6 @@ import java.sql.SQLException;
 import java.util.*;
 
 public final class Admins implements CommandListener {
-
-	private int count = 0;
 
 	private Point getRandomLocation() {
 		Point location = Point.location(DataConversions.random(48, 91), DataConversions.random(575, 717));
@@ -78,22 +77,18 @@ public final class Admins implements CommandListener {
 
 	@Override
 	public void handleCommand(String cmd, String[] args, final Player player) {
+		int count1 = 0;
 		if (cmd.equalsIgnoreCase("cleannpcs")) {
-			Server.getServer().submitTask(new Runnable() {
-				@Override
-				public void run() {
-					int count = 0;
-					for (Npc n : world.getNpcs()) {
-						if (n.getOpponent() instanceof Player) {
-							if (n.getOpponent().isUnregistering()) {
-								n.setOpponent(null);
-								count++;
-							}
+			Server.getServer().submitTask(() -> {
+				for (Npc n : world.getNpcs()) {
+					if (n.getOpponent() instanceof Player) {
+						if (n.getOpponent().isUnregistering()) {
+							n.setOpponent(null);
 						}
 					}
 				}
 			});
-			player.message(messagePrefix + "Cleaned " + count + " NPC opponent references.");
+			player.message(messagePrefix + "Cleaned " + count1 + " NPC opponent references.");
 		}
 		else if (cmd.equalsIgnoreCase("saveall")) {
 			int count = 0;
@@ -104,28 +99,20 @@ public final class Admins implements CommandListener {
 			player.message(messagePrefix + "Saved " + count + " players on server!");
 		}
 		else if (cmd.equalsIgnoreCase("cleanregions")) {
-			Server.getServer().submitTask(new Runnable() {
-				@Override
-				public void run() {
-					int count = 0;
-					final int HORIZONTAL_PLANES = (World.MAX_WIDTH / RegionManager.REGION_SIZE) + 1;
-					final int VERTICAL_PLANES = (World.MAX_HEIGHT / RegionManager.REGION_SIZE) + 1;
-					for (int x = 0; x < HORIZONTAL_PLANES; ++x) {
-						for (int y = 0; y < VERTICAL_PLANES; ++y) {
-							Region r = RegionManager.getRegion(x * RegionManager.REGION_SIZE,
-								y * RegionManager.REGION_SIZE);
-							if (r != null) {
-								for (Iterator<Player> i = r.getPlayers().iterator(); i.hasNext(); ) {
-									if (i.next().isRemoved())
-										i.remove();
-								}
-							}
-							count++;
+			Server.getServer().submitTask(() -> {
+				final int HORIZONTAL_PLANES = (World.MAX_WIDTH / RegionManager.REGION_SIZE) + 1;
+				final int VERTICAL_PLANES = (World.MAX_HEIGHT / RegionManager.REGION_SIZE) + 1;
+				for (int x = 0; x < HORIZONTAL_PLANES; ++x) {
+					for (int y = 0; y < VERTICAL_PLANES; ++y) {
+						Region r = RegionManager.getRegion(x * RegionManager.REGION_SIZE,
+							y * RegionManager.REGION_SIZE);
+						if (r != null) {
+							r.getPlayers().removeIf(Entity::isRemoved);
 						}
 					}
 				}
 			});
-			player.message(messagePrefix + "Cleaned " + count + " regions.");
+			player.message(messagePrefix + "Cleaned " + count1 + " regions.");
 		}
 		else if (cmd.equalsIgnoreCase("holidaydrop")) {
 			if (args.length < 2) {
@@ -153,12 +140,9 @@ public final class Admins implements CommandListener {
 				items.add(itemId);
 			}
 
-			HashMap events = Server.getServer().getEventHandler().getEvents();
-			Iterator<DelayedEvent> iterator = events.values().iterator();
-			while (iterator.hasNext()) {
-				DelayedEvent event = iterator.next();
-
-				if(!(event instanceof HolidayDropEvent)) continue;
+			HashMap<String, DelayedEvent> events = Server.getServer().getEventHandler().getEvents();
+			for (DelayedEvent event : events.values()) {
+				if (!(event instanceof HolidayDropEvent)) continue;
 
 				player.message(messagePrefix + "There is already a holiday drop running!");
 				return;
@@ -169,12 +153,9 @@ public final class Admins implements CommandListener {
 			GameLogging.addQuery(new StaffLog(player, 21, messagePrefix + "Started holiday drop"));
 		}
 		else if (cmd.equalsIgnoreCase("stopholidaydrop") || cmd.equalsIgnoreCase("cancelholidaydrop")) {
-			HashMap events = Server.getServer().getEventHandler().getEvents();
-			Iterator<DelayedEvent> iterator = events.values().iterator();
-			while (iterator.hasNext()) {
-				DelayedEvent event = iterator.next();
-
-				if(!(event instanceof HolidayDropEvent)) continue;
+			HashMap<String, DelayedEvent> events = Server.getServer().getEventHandler().getEvents();
+			for (DelayedEvent event : events.values()) {
+				if (!(event instanceof HolidayDropEvent)) continue;
 
 				event.stop();
 				player.message(messagePrefix + "Stopping holiday drop!");
@@ -183,14 +164,11 @@ public final class Admins implements CommandListener {
 			}
 		}
 		else if (cmd.equalsIgnoreCase("getholidaydrop") || cmd.equalsIgnoreCase("checkholidaydrop")) {
-			HashMap events = Server.getServer().getEventHandler().getEvents();
-			Iterator<DelayedEvent> iterator = events.values().iterator();
-			while (iterator.hasNext()) {
-				DelayedEvent event = iterator.next();
+			HashMap<String, DelayedEvent> events = Server.getServer().getEventHandler().getEvents();
+			for (DelayedEvent event : events.values()) {
+				if (!(event instanceof HolidayDropEvent)) continue;
 
-				if(!(event instanceof HolidayDropEvent)) continue;
-
-				HolidayDropEvent holidayEvent = (HolidayDropEvent)event;
+				HolidayDropEvent holidayEvent = (HolidayDropEvent) event;
 
 				player.message(messagePrefix + "There is currently an Holiday Drop Event running:");
 				player.message(messagePrefix + "Items: " + StringUtils.join(holidayEvent.getItems(), ", "));
@@ -281,7 +259,7 @@ public final class Admins implements CommandListener {
 
 			HashMap<String, Integer> hmap = new HashMap<String, Integer>();
 
-			ItemDropDef[] drops = EntityHandler.getNpcDef(npcID).getDrops();
+			ItemDropDef[] drops = Objects.requireNonNull(EntityHandler.getNpcDef(npcID)).getDrops();
 			for (ItemDropDef drop : drops) {
 				dropID = drop.getID();
 				if (dropID == -1) continue;
@@ -611,12 +589,12 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			if(args[keyArg] == "invisible") {
+			if(args[keyArg].equals("invisible")) {
 				player.message(messagePrefix + "Can not change that cache value. Use ::invisible instead.");
 				return;
 			}
 
-			if(args[keyArg] == "invulnerable") {
+			if(args[keyArg].equals("invulnerable")) {
 				player.message(messagePrefix + "Can not change that cache value. Use ::invulnerable instead.");
 				return;
 			}
@@ -795,7 +773,7 @@ public final class Admins implements CommandListener {
 			}
 		}
 		else if (cmd.equalsIgnoreCase("update")) {
-			String reason = "";
+			StringBuilder reason = new StringBuilder();
 			int seconds = 300; // 5 minutes
 			if (args.length > 0) {
 				for (int i = 0; i < args.length; i++) {
@@ -803,13 +781,13 @@ public final class Admins implements CommandListener {
 						try {
 							seconds = Integer.parseInt(args[i]);
 						} catch (Exception e) {
-							reason += (args[i] + " ");
+							reason.append(args[i]).append(" ");
 						}
 					} else {
-						reason += (args[i] + " ");
+						reason.append(args[i]).append(" ");
 					}
 				}
-				reason = reason.substring(0, reason.length() - 1);
+				reason = new StringBuilder(reason.substring(0, reason.length() - 1));
 			}
 			int minutes = seconds / 60;
 			int remainder = seconds % 60;
@@ -818,7 +796,7 @@ public final class Admins implements CommandListener {
 				String message = "The server will be shutting down for updates in "
 					+ (minutes > 0 ? minutes + " minute" + (minutes > 1 ? "s" : "") + " " : "")
 					+ (remainder > 0 ? remainder + " second" + (remainder > 1 ? "s" : "") : "")
-					+ (reason == "" ? "" : ": % % " + reason);
+					+ (reason.toString() == "" ? "" : ": % % " + reason);
 				for (Player p : world.getPlayers()) {
 					ActionSender.sendBox(p, message, false);
 					ActionSender.startShutdown(p, seconds);
@@ -1029,7 +1007,7 @@ public final class Admins implements CommandListener {
 		}
 		else if ((cmd.equalsIgnoreCase("announcement") || cmd.equalsIgnoreCase("announce") || cmd.equalsIgnoreCase("anouncement") || cmd.equalsIgnoreCase("anounce"))) {
 			int argsIndex   = 0;
-			String message  = "";
+			StringBuilder message  = new StringBuilder();
 
 			if(args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [message]");
@@ -1037,7 +1015,7 @@ public final class Admins implements CommandListener {
 			}
 
 			for (; argsIndex < args.length; argsIndex++)
-				message += args[argsIndex] + " ";
+				message.append(args[argsIndex]).append(" ");
 
 			String announcementPrefix = "@whi@ANNOUNCEMENT " + player.getStaffName();
 
@@ -1112,7 +1090,6 @@ public final class Admins implements CommandListener {
 			}
 			catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (name) [hp]");
-				return;
 			}
 		}
 		else if (cmd.equalsIgnoreCase("prayer") || cmd.equalsIgnoreCase("setprayer")) {
@@ -1151,7 +1128,6 @@ public final class Admins implements CommandListener {
 			}
 			catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (name) [prayer]");
-				return;
 			}
 		}
 		else if (cmd.equalsIgnoreCase("kill")) {
@@ -1472,13 +1448,13 @@ public final class Admins implements CommandListener {
 			try {
 				int npc_id      = Integer.parseInt(args[0]);
 
-				String msg = "";
+				StringBuilder msg = new StringBuilder();
 				for (int i = 1; i < args.length; i++)
-					msg += args[i] + " ";
-				msg.trim();
+					msg.append(args[i]).append(" ");
+				msg.toString().trim();
 
 				final Npc npc = world.getNpc(npc_id, player.getX() - 10, player.getX() + 10, player.getY() - 10, player.getY() + 10);
-				String message = DataConversions.upperCaseAllFirst(DataConversions.stripBadCharacters(msg));
+				String message = DataConversions.upperCaseAllFirst(DataConversions.stripBadCharacters(msg.toString()));
 
 				if (npc != null) {
 					for(Player playerToChat : npc.getViewArea().getPlayersInView()) {
@@ -1502,10 +1478,10 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			String msg = "";
+			StringBuilder msg = new StringBuilder();
 			for (int i = 1; i < args.length; i++)
-				msg += args[i] + " ";
-			msg.trim();
+				msg.append(args[i]).append(" ");
+			msg.toString().trim();
 
 			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
 			if (p == null) {
@@ -1518,7 +1494,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			String message = DataConversions.upperCaseAllFirst(DataConversions.stripBadCharacters(msg));
+			String message = DataConversions.upperCaseAllFirst(DataConversions.stripBadCharacters(msg.toString()));
 
 			ChatMessage chatMessage = new ChatMessage(p, message);
 			// First of second call to updatePlayerAppearance is to send out messages generated by other server processes so they don't get overwritten
@@ -1531,7 +1507,7 @@ public final class Admins implements CommandListener {
 			}
 			p.getUpdateFlags().setChatMessage(null);
 			GameLogging.addQuery(new ChatLog(p.getUsername(), chatMessage.getMessageString()));
-			world.getWorld().addEntryToSnapshots(new Chatlog(p.getUsername(), chatMessage.getMessageString()));
+			World.getWorld().addEntryToSnapshots(new Chatlog(p.getUsername(), chatMessage.getMessageString()));
 		}
 		else if ((cmd.equalsIgnoreCase("smitenpc") || cmd.equalsIgnoreCase("damagenpc") || cmd.equalsIgnoreCase("dmgnpc"))) {
 			if (args.length < 1) {
@@ -1668,12 +1644,9 @@ public final class Admins implements CommandListener {
 				npcLifeTime = 10;
 			}
 
-			HashMap events = Server.getServer().getEventHandler().getEvents();
-			Iterator<DelayedEvent> iterator = events.values().iterator();
-			while (iterator.hasNext()) {
-				DelayedEvent event = iterator.next();
-
-				if(!(event instanceof HourlyNpcLootEvent)) continue;
+			HashMap<String, DelayedEvent> events = Server.getServer().getEventHandler().getEvents();
+			for (DelayedEvent event : events.values()) {
+				if (!(event instanceof HourlyNpcLootEvent)) continue;
 
 				player.message(messagePrefix + "Hourly NPC Loot Event is already running");
 				return;
@@ -1683,12 +1656,9 @@ public final class Admins implements CommandListener {
 			player.message(messagePrefix + "Chicken event started.");
 		}
 		else if (cmd.equalsIgnoreCase("stopnpcevent") || cmd.equalsIgnoreCase("cancelnpcevent")) {
-			HashMap events = Server.getServer().getEventHandler().getEvents();
-			Iterator<DelayedEvent> iterator = events.values().iterator();
-			while (iterator.hasNext()) {
-				DelayedEvent event = iterator.next();
-
-				if(!(event instanceof HourlyNpcLootEvent)) continue;
+			HashMap<String, DelayedEvent> events = Server.getServer().getEventHandler().getEvents();
+			for (DelayedEvent event : events.values()) {
+				if (!(event instanceof HourlyNpcLootEvent)) continue;
 
 				event.stop();
 				player.message(messagePrefix + "Stopping hourly npc event!");
@@ -1696,14 +1666,11 @@ public final class Admins implements CommandListener {
 			}
 		}
 		else if (cmd.equalsIgnoreCase("getnpcevent") || cmd.equalsIgnoreCase("checknpcevent")) {
-			HashMap events = Server.getServer().getEventHandler().getEvents();
-			Iterator<DelayedEvent> iterator = events.values().iterator();
-			while (iterator.hasNext()) {
-				DelayedEvent event = iterator.next();
+			HashMap<String, DelayedEvent> events = Server.getServer().getEventHandler().getEvents();
+			for (DelayedEvent event : events.values()) {
+				if (!(event instanceof HourlyNpcLootEvent)) continue;
 
-				if(!(event instanceof HourlyNpcLootEvent)) continue;
-
-				HourlyNpcLootEvent lootEvent = (HourlyNpcLootEvent)event;
+				HourlyNpcLootEvent lootEvent = (HourlyNpcLootEvent) event;
 
 				player.message(messagePrefix + "There is currently an Hourly Npc Loot Event running:");
 				player.message(messagePrefix + "NPC: " + lootEvent.getNpcId() + " (" + lootEvent.getNpcAmount() + ") for " + lootEvent.getNpcLifetime() + " minutes, At: " + lootEvent.getLocation());
@@ -1809,7 +1776,7 @@ public final class Admins implements CommandListener {
 				GameLogging.addQuery(new StaffLog(player, 11, p, player.getUsername() + " was banned by " + player.getUsername() + " " + (time == -1 ? "permanently" : " for " + time + " minutes")));
 			}
 
-			player.message(messagePrefix + Server.getPlayerDataProcessor().getDatabase().banPlayer(usernameToBan, time));
+			//player.message(messagePrefix + Server.getPlayerDataProcessor().getDatabase().banPlayer(usernameToBan, time)); // Disabled as it doesn't compile with PlayerDatabaseExecutor extending ThrottleFilter
 		}
 		else if (cmd.equalsIgnoreCase("freezexp") || cmd.equalsIgnoreCase("freezeexp") || cmd.equalsIgnoreCase("freezeexperience")) {
 			if(args.length < 1) {

@@ -146,16 +146,15 @@ public final class Moderator implements CommandListener {
 			p.unregister(true, "You have been kicked by " + player.getUsername());
 			player.message(p.getUsername() + " has been kicked.");
 
-			return;
 		}
 		else if (cmd.equalsIgnoreCase("alert")) {
-			String message = "";
+			StringBuilder message = new StringBuilder();
 			if (args.length > 0) {
 				Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
 
 				if (p != null) {
 					for (int i = 1; i < args.length; i++)
-						message += args[i] + " ";
+						message.append(args[i]).append(" ");
 					ActionSender.sendBox(p, player.getStaffName() + ":@whi@ " + message, false);
 					player.message(messagePrefix + "Alerted " + p.getUsername());
 				}
@@ -199,15 +198,15 @@ public final class Moderator implements CommandListener {
 			p.message(messagePrefix + "You have been summoned by " + player.getStaffName());
 		}
 		else if (cmd.equalsIgnoreCase("say")) { // SAY is not configged out for mods.
-			String newStr = "";
+			StringBuilder newStr = new StringBuilder();
 
-			for (int i = 0; i < args.length; i++) {
-				newStr += args[i] + " ";
+			for (String arg : args) {
+				newStr.append(arg).append(" ");
 			}
-			GameLogging.addQuery(new StaffLog(player, 13, newStr.toString()));
-			newStr = player.getStaffName() + ": " + newStr;
+			GameLogging.addQuery(new StaffLog(player, 13, newStr.toString().toString()));
+			newStr.insert(0, player.getStaffName() + ": ");
 			for (Player p : World.getWorld().getPlayers()) {
-				ActionSender.sendMessage(p, player, 1, MessageType.GLOBAL_CHAT, newStr, player.getIcon());
+				ActionSender.sendMessage(p, player, 1, MessageType.GLOBAL_CHAT, newStr.toString(), player.getIcon());
 			}
 		}
 	}

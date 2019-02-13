@@ -1525,17 +1525,14 @@ public class Functions {
 	}
 
 	public static void temporaryRemoveNpc(final Npc n) {
-		post(new Runnable() {
-			@Override
-			public void run() {
-				n.setShouldRespawn(true);
-				n.remove();
-			}
+		post(() -> {
+			n.setShouldRespawn(true);
+			n.remove();
 		});
 	}
 
 
-	static void post(Runnable r) {
+	private static void post(Runnable r) {
 		Server.getServer().getEventHandler().add(new PluginsUseThisEvent() {
 			@Override
 			public void action() {

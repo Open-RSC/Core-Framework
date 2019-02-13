@@ -39,7 +39,7 @@ public class GameTickEventHandler {
 		return false;
 	}
 
-	public void doGameEvents() {
+	void doGameEvents() {
 		if (toAdd.size() > 0) {
 			for (Map.Entry<String, GameTickEvent> e : toAdd.entrySet())
 				events.put(e.getKey(), e.getValue());

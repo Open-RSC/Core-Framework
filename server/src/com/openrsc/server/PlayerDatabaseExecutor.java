@@ -4,6 +4,7 @@ import com.openrsc.server.event.rsc.ImmediateEvent;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.login.LoginTask;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.net.ThrottleFilter;
 import com.openrsc.server.sql.DatabasePlayerLoader;
 import com.openrsc.server.util.NamedThreadFactory;
 import org.apache.logging.log4j.LogManager;
@@ -15,7 +16,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class PlayerDatabaseExecutor implements Runnable {
+public class PlayerDatabaseExecutor extends ThrottleFilter implements Runnable {
 
 	/**
 	 * The asynchronous logger.

@@ -6,14 +6,14 @@ import org.jboss.netty.channel.Channels;
 import org.jboss.netty.handler.timeout.IdleStateHandler;
 import org.jboss.netty.util.Timer;
 
-public class RSCPipelineFactory implements ChannelPipelineFactory {
+public class RSCPipelineFactory extends ThrottleFilter implements ChannelPipelineFactory {
 	
 	private IdleStateHandler idleStateHandler;
 	
 	public RSCPipelineFactory(Timer timer) {
 		this.idleStateHandler = new IdleStateHandler(timer, 15, 15, 15);
 	}
-	
+
 	public ChannelPipeline getPipeline() {
 		ChannelPipeline pipeline = Channels.pipeline();
 		pipeline.addLast("idleStateHandler", idleStateHandler);
