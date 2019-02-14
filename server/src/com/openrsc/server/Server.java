@@ -187,7 +187,7 @@ public final class Server implements Runnable {
 		return true;
 	}
 
-	public void saveAndShutdown() {
+	private void saveAndShutdown() {
 		ClanManager.saveClans();
 		for (Player p : World.getWorld().getPlayers()) {
 			p.unregister(true, "Server shutting down.");
@@ -209,7 +209,7 @@ public final class Server implements Runnable {
 		return updateEvent.timeTillNextRun();
 	}
 
-	public void unbind() {
+	private void unbind() {
 		try {
 			serverChannel.channel().disconnect();
 		} catch (Exception e) {
@@ -270,7 +270,7 @@ public final class Server implements Runnable {
 		return true;
 	}
 
-	public void saveAndRestart() {
+	private void saveAndRestart() {
 		//ClanManager.saveClans();
 		LOGGER.info("Saving players...");
 		for (Player p : World.getWorld().getPlayers()) {

@@ -1,17 +1,43 @@
 package orsc;
 
 import com.openrsc.client.model.Sprite;
+
+import java.applet.Applet;
+import java.awt.Color;
+import java.awt.Event;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.awt.image.BufferedImage;
+import java.awt.image.DirectColorModel;
+import java.awt.image.ImageConsumer;
+import java.awt.image.ImageObserver;
+import java.awt.image.ImageProducer;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+
+import javax.imageio.ImageIO;
+import javax.swing.SwingUtilities;
+
 import orsc.graphics.two.Fonts;
 import orsc.multiclient.ClientPort;
 import orsc.util.GenUtil;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.applet.Applet;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.*;
-import java.io.*;
 
 public class ORSCApplet extends Applet implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener, ComponentListener,
 	ImageObserver, ImageProducer, ClientPort {
@@ -621,7 +647,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			g.setFont(new Font("Helvetica", 1, 16));
 			g.setColor(Color.yellow);
 			byte var3 = 35;
-			g.drawString("Sorry, an error has occured whilst loading " + Config.SERVER_NAME, 30, var3);
+			g.drawString("Sorry, an error has occured whilst loading " + Config.SERVER_NAME_WELCOME, 30, var3);
 			g.setColor(Color.white);
 			int var6 = var3 + 50;
 			g.drawString("To fix this try the following (in order):", 30, var6);

@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.quests.free;
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
@@ -18,17 +19,6 @@ public class CooksAssistant implements QuestInterface, TalkToNpcListener,
 	 * Original Author: Fate 2013-09-10
 	 */
 
-	/**
-	 * Npc's associated with this quest.
-	 */
-	private static final int COOK = 7;
-	/**
-	 * Items required for the quest.
-	 */
-	private final int EGG = ItemId.EGG.id();
-	private final int FLOUR = ItemId.POT_OF_FLOUR.id();
-	private final int MILK = ItemId.MILK.id();
-
 	@Override
 	public int getQuestId() {
 		return Constants.Quests.COOKS_ASSISTANT;
@@ -37,6 +27,18 @@ public class CooksAssistant implements QuestInterface, TalkToNpcListener,
 	@Override
 	public String getQuestName() {
 		return "Cook's assistant";
+	}
+	
+	@Override
+	public boolean isMembers() {
+		return false;
+	}
+	
+	@Override
+	public void handleReward(Player player) {
+		player.message("Well done. You have completed the cook's assistant quest");
+		incQuestReward(player, Quests.questData.get(Quests.COOKS_ASSISTANT), true);
+		player.message("@gre@You haved gained 1 quest point!");
 	}
 
 	private void cookDialogue(Player p, Npc n, int cID) {
@@ -69,38 +71,38 @@ public class CooksAssistant implements QuestInterface, TalkToNpcListener,
 					break;
 				case 1:
 					npcTalk(p, n, "How are you getting on with finding the ingredients?");
-					if (p.getInventory().hasItemId(EGG)
-						&& p.getInventory().hasItemId(FLOUR)
-						&& p.getInventory().hasItemId(MILK)) {
+					if (p.getInventory().hasItemId(ItemId.EGG.id())
+						&& p.getInventory().hasItemId(ItemId.POT_OF_FLOUR.id())
+						&& p.getInventory().hasItemId(ItemId.MILK.id())) {
 						playerTalk(p, n,
 							"I now have everything you need for your cake",
 							"Milk, flour, and an egg!");
 						npcTalk(p, n, "I am saved thankyou!");
 						message(p, "You give some milk, an egg and some flour to the cook");
-						p.getInventory().remove(EGG, 1);
-						p.getInventory().remove(FLOUR, 1);
-						p.getInventory().remove(MILK, 1);
+						p.getInventory().remove(ItemId.EGG.id(), 1);
+						p.getInventory().remove(ItemId.POT_OF_FLOUR.id(), 1);
+						p.getInventory().remove(ItemId.MILK.id(), 1);
 						p.sendQuestComplete(Constants.Quests.COOKS_ASSISTANT);
 						p.updateQuestStage(getQuestId(), -1);
 
-					} else if (p.getInventory().hasItemId(EGG)
-						|| p.getInventory().hasItemId(FLOUR)
-						|| p.getInventory().hasItemId(MILK)) {
+					} else if (p.getInventory().hasItemId(ItemId.EGG.id())
+						|| p.getInventory().hasItemId(ItemId.POT_OF_FLOUR.id())
+						|| p.getInventory().hasItemId(ItemId.MILK.id())) {
 
 						playerTalk(p, n, "I have found some of the things you asked for:");
-						if (p.getInventory().hasItemId(MILK))
+						if (p.getInventory().hasItemId(ItemId.MILK.id()))
 							playerTalk(p, n, "I have some milk");
-						if (p.getInventory().hasItemId(FLOUR))
+						if (p.getInventory().hasItemId(ItemId.POT_OF_FLOUR.id()))
 							playerTalk(p, n, "I have some flour");
-						if (p.getInventory().hasItemId(EGG))
+						if (p.getInventory().hasItemId(ItemId.EGG.id()))
 							playerTalk(p, n, "I have an egg");
 
 						npcTalk(p, n, "You still need to find");
-						if (!p.getInventory().hasItemId(MILK))
+						if (!p.getInventory().hasItemId(ItemId.MILK.id()))
 							npcTalk(p, n, "Some milk");
-						if (!p.getInventory().hasItemId(FLOUR))
+						if (!p.getInventory().hasItemId(ItemId.POT_OF_FLOUR.id()))
 							npcTalk(p, n, "Some flour");
-						if (!p.getInventory().hasItemId(EGG))
+						if (!p.getInventory().hasItemId(ItemId.EGG.id()))
 							npcTalk(p, n, "An egg");
 
 						playerTalk(p, n, "OK I'll try and find that for you");
@@ -155,29 +157,14 @@ public class CooksAssistant implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
-		if (n.getID() == COOK) {
+		if (n.getID() == NpcId.COOK.id()) {
 			cookDialogue(p, n, -1);
 		}
 	}
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == COOK) {
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public void handleReward(Player player) {
-		player.message("Well done. You have completed the cook's assistant quest");
-		incQuestReward(player, Quests.questData.get(Quests.COOKS_ASSISTANT), true);
-		player.message("@gre@You haved gained 1 quest point!");
-	}
-
-	@Override
-	public boolean isMembers() {
-		return false;
+		return n.getID() == NpcId.COOK.id();
 	}
 
 	class Cook {

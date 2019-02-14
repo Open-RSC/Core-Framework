@@ -88,7 +88,7 @@ public final class GameStateUpdater {
 		}
 	}
 
-	public static void updateNpcs(Player playerToUpdate) throws Exception {
+	private static void updateNpcs(Player playerToUpdate) throws Exception {
 		com.openrsc.server.net.PacketBuilder packet = new com.openrsc.server.net.PacketBuilder();
 		packet.setID(79);
 		packet.startBitAccess();
@@ -136,7 +136,7 @@ public final class GameStateUpdater {
 		playerToUpdate.write(packet.toPacket());
 	}
 
-	public static void updatePlayers(Player playerToUpdate) throws Exception {
+	private static void updatePlayers(Player playerToUpdate) throws Exception {
 
 		com.openrsc.server.net.PacketBuilder positionBuilder = new com.openrsc.server.net.PacketBuilder();
 		positionBuilder.setID(191);
@@ -303,9 +303,9 @@ public final class GameStateUpdater {
 			projectilesNeedingDisplayed, playersNeedingDamageUpdate, playersNeedingAppearanceUpdate);
 	}
 
-	public static void issuePlayerAppearanceUpdatePacket(Player player, Queue<Bubble> bubblesNeedingDisplayed,
-														 Queue<ChatMessage> chatMessagesNeedingDisplayed, Queue<Projectile> projectilesNeedingDisplayed,
-														 Queue<Damage> playersNeedingDamageUpdate, Queue<Player> playersNeedingAppearanceUpdate) {
+	private static void issuePlayerAppearanceUpdatePacket(Player player, Queue<Bubble> bubblesNeedingDisplayed,
+														  Queue<ChatMessage> chatMessagesNeedingDisplayed, Queue<Projectile> projectilesNeedingDisplayed,
+														  Queue<Damage> playersNeedingDamageUpdate, Queue<Player> playersNeedingAppearanceUpdate) {
 		if (player.loggedIn()) {
 			int updateSize = bubblesNeedingDisplayed.size() + chatMessagesNeedingDisplayed.size()
 				+ playersNeedingDamageUpdate.size() + projectilesNeedingDisplayed.size()
@@ -407,7 +407,7 @@ public final class GameStateUpdater {
 		}
 	}
 
-	public static void updateGameObjects(Player playerToUpdate) throws Exception {
+	private static void updateGameObjects(Player playerToUpdate) throws Exception {
 		boolean changed = false;
 		PacketBuilder packet = new PacketBuilder();
 		packet.setID(48);
@@ -455,7 +455,7 @@ public final class GameStateUpdater {
 			playerToUpdate.write(packet.toPacket());
 	}
 
-	public static void updateGroundItems(Player playerToUpdate) throws Exception {
+	private static void updateGroundItems(Player playerToUpdate) throws Exception {
 		boolean changed = false;
 		PacketBuilder packet = new PacketBuilder();
 		packet.setID(99);
@@ -507,7 +507,7 @@ public final class GameStateUpdater {
 			playerToUpdate.write(packet.toPacket());
 	}
 
-	public static void updateWallObjects(Player playerToUpdate) throws Exception {
+	private static void updateWallObjects(Player playerToUpdate) throws Exception {
 		boolean changed = false;
 		PacketBuilder packet = new PacketBuilder();
 		packet.setID(91);
@@ -565,7 +565,7 @@ public final class GameStateUpdater {
 		}
 	}
 
-	public void doUpdates() throws Exception {
+	void doUpdates() throws Exception {
 		processPlayers();
 		processNpcs();
 		processMessageQueues();
@@ -585,14 +585,14 @@ public final class GameStateUpdater {
 			}*/
 	}
 
-	public void updateClients() {
+	private void updateClients() {
 		for (Player p : players) {
 			sendUpdatePackets(p);
 			p.process();
 		}
 	}
 
-	public void doCleanup() {// it can do the teleport at this time.
+	private void doCleanup() {// it can do the teleport at this time.
 		/*
 		 * Reset the update related flags and unregister npcs flagged as
 		 * unregistering
@@ -608,9 +608,7 @@ public final class GameStateUpdater {
 		 * Reset the update related flags and unregister players that are
 		 * flagged as unregistered
 		 */
-		Iterator<Player> playerListIterator = players.iterator();
-		while (playerListIterator.hasNext()) {
-			Player player = playerListIterator.next();
+		for (Player player : players) {
 			player.setTeleporting(false);
 			player.resetSpriteChanged();
 			player.getUpdateFlags().reset();
@@ -618,7 +616,7 @@ public final class GameStateUpdater {
 		}
 	}
 
-	public void executeWalkToActions() {
+	private void executeWalkToActions() {
 		for (Player p : players) {
 			if (p.getWalkToAction() != null) {
 				if (p.getWalkToAction().shouldExecute()) {

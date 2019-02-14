@@ -1,10 +1,6 @@
 package orsc;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Map;
@@ -13,24 +9,19 @@ import java.util.Properties;
 public class Config {
     private static Properties prop = new Properties();
 
-    public static final String SERVER_NAME = "Open RSC";
+    public static final String SERVER_NAME = "Runescape";
+    public static final String SERVER_NAME_WELCOME = "Runescape Classic";
+    public static final String WELCOME_TEXT = "You need a members account to use this server";
     public static final String SERVER_IP = "game.openrsc.com";
-    public static final String DL_URL = "game.openrsc.com";
-    public static final String ANDROID_DOWNLOAD_PATH = "https://" + DL_URL + "/downloads/";
-    public static final String CACHE_URL = "https://" + DL_URL + "/downloads/cache/";
     public static final int SERVER_PORT = 43594;
     public static final int CLIENT_VERSION = 1;
     public static final int CACHE_VERSION = 2;
-    public static final int ANDROID_CLIENT_VERSION = 6;
-    public static final boolean MEMBERS_FEATURES =
-            true;
+    public static boolean MEMBERS_FEATURES = false;
+    public static boolean DISPLAY_LOGO_SPRITE = false;
     public static final boolean CUSTOM_CACHE_DIR_ENABLED = false;
     public static final boolean CACHE_APPEND_VERSION = false;
     public static final String CUSTOM_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
-    public static boolean F_ANDROID_BUILD = true; // Note: this MUST be set to true for Android or it will crash on Android!
-    public static boolean SAVE_CREDENTIALS = true;
-    //public static String F_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
-    public static String F_CACHE_DIR = "Cache";
+    public static String F_CACHE_DIR = "";
 
     /* Configurable: */
     public static boolean C_EXPERIENCE_DROPS = false;
@@ -43,18 +34,21 @@ public class Config {
     public static boolean C_SIDE_MENU_OVERLAY = false;
     public static boolean C_KILL_FEED = false;
     public static int C_FIGHT_MENU = 1;
-    public static int C_ZOOM = 0;
     public static boolean C_INV_COUNT = false;
 
     /* Android: */
+    public static boolean F_ANDROID_BUILD = true; // This MUST be true if Android client
+    public static final String DL_URL = "https://game.openrsc.com";
+    public static final String ANDROID_DOWNLOAD_PATH = DL_URL + "/downloads/";
+    public static final String CACHE_URL = DL_URL + "/downloads/cache/";
+    public static final int ANDROID_CLIENT_VERSION = 7;
     public static boolean F_SHOWING_KEYBOARD = false;
     public static int F_LONG_PRESS_CALC;
     public static boolean C_HOLD_AND_CHOOSE = true;
-    public static int C_LONG_PRESS_TIMER = 200;
-    public static int C_MENU_SIZE = 1;
+    public static int C_LONG_PRESS_TIMER = 400;
+    public static int C_MENU_SIZE = 6;
     public static boolean C_SWIPE_TO_SCROLL = true;
     public static boolean C_SWIPE_TO_ROTATE = true;
-    public static boolean C_SHOW_COMMAND_BUTTONS = false;
 
     /* Experience Config Menu */
     public static int C_EXPERIENCE_COUNTER = 1;
@@ -84,7 +78,6 @@ public class Config {
     public static boolean S_WANT_CERTS_TO_BANK = false;
     public static boolean S_WANT_CUSTOM_RANK_DISPLAY = false;
     public static boolean S_RIGHT_CLICK_BANK = false;
-
     // if you change these, and the config file,
     // they will also change the options menu to
     // 2-tabs (3 on android). (Not enough room for
@@ -106,7 +99,9 @@ public class Config {
     public static boolean S_SHOW_ROOF_TOGGLE = false;
     public static boolean S_WANT_GLOBAL_CHAT = false;
     public static boolean S_WANT_HIDE_IP = false;
+    public static boolean S_WANT_REMEMBER = false;
     public static boolean S_WANT_FIXED_OVERHEAD_CHAT = false;
+    public static String LOGO_SPRITE_ID = "2010";
 
     public static void set(String key, Object value) {
         prop.setProperty(key, value.toString());
@@ -217,9 +212,7 @@ public class Config {
                         } else if (t == long.class) {
                             f.set(null, Long.parseLong((String) entry.getValue()));
                         }
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    } catch (IllegalArgumentException e) {
+                    } catch (IllegalAccessException | IllegalArgumentException e) {
                         e.printStackTrace();
                     }
                     break;
@@ -240,15 +233,29 @@ public class Config {
         return prop.getProperty("SERVER_NAME");
     }
 
+    public static String getServerNameWelcome() {
+        return prop.getProperty("SERVER_NAME_WELCOME");
+    }
+
+    public static String getWelcomeText() {
+        return prop.getProperty("WELCOME_TEXT");
+    }
+
     public static String getCommandPrefix() {
         return prop.getProperty("COMMAND_PREFIX");
     }
+
+    public static String getLogoSpriteId() {
+        return prop.getProperty("LOGO_SPRITE_ID");
+    }
+
+    public static boolean wantMembers() { return MEMBERS_FEATURES; }
 
     public static boolean isAndroid() {
         return F_ANDROID_BUILD;
     }
 
     public static boolean Remember() {
-        return SAVE_CREDENTIALS;
+        return S_WANT_REMEMBER;
     }
 }

@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
@@ -22,17 +24,29 @@ public class ImpCatcher implements QuestInterface, TalkToNpcListener,
 	public String getQuestName() {
 		return "Imp catcher";
 	}
+	
+	@Override
+	public boolean isMembers() {
+		return false;
+	}
+	
+	@Override
+	public void handleReward(Player p) {
+		p.message("Well done. You have completed the Imp catcher quest");
+		incQuestReward(p, Quests.questData.get(Quests.IMP_CATCHER), true);
+		p.message("@gre@You haved gained 1 quest point!");
+	}
 
 	/**
 	 * // COORDS FOR KARAMJA CAVE: 425, 684
 	 */
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
-		if (n.getID() == 117) {
+		if (n.getID() == NpcId.WIZARD_MIZGOG.id()) {
 			if (p.getQuestStage(this) == 1) {
 				npcTalk(p, n, "So how are you doing finding my beads?");
-				if (!hasItem(p, 231) && !hasItem(p, 232) && !hasItem(p, 233)
-					&& !hasItem(p, 234)) { // NEED TO GET INFO PROBABLY SAME
+				if (!hasItem(p, ItemId.RED_BEAD.id()) && !hasItem(p, ItemId.YELLOW_BEAD.id()) && !hasItem(p, ItemId.BLACK_BEAD.id())
+					&& !hasItem(p, ItemId.WHITE_BEAD.id())) { // NEED TO GET INFO PROBABLY SAME
 					// AS PRINCE ALI.
 					playerTalk(p, n, "I've not found any yet");
 					npcTalk(p,
@@ -42,23 +56,23 @@ public class ImpCatcher implements QuestInterface, TalkToNpcListener,
 						"Go kill some imps");
 					return;
 				}
-				if (hasItem(p, 231) && hasItem(p, 232) && hasItem(p, 233)
-					&& hasItem(p, 234)) {
+				if (hasItem(p, ItemId.RED_BEAD.id()) && hasItem(p, ItemId.YELLOW_BEAD.id()) && hasItem(p, ItemId.BLACK_BEAD.id())
+					&& hasItem(p, ItemId.WHITE_BEAD.id())) {
 					playerTalk(p, n, "I've got all four beads",
 						"It was hard work I can tell you");
 					npcTalk(p, n, "Give them here and I'll sort out a reward");
 					message(p, "You give four coloured beads to Wizard Mizgog");
-					removeItem(p, 231, 1);
-					removeItem(p, 232, 1);
-					removeItem(p, 233, 1);
-					removeItem(p, 234, 1);
+					removeItem(p, ItemId.RED_BEAD.id(), 1);
+					removeItem(p, ItemId.YELLOW_BEAD.id(), 1);
+					removeItem(p, ItemId.BLACK_BEAD.id(), 1);
+					removeItem(p, ItemId.WHITE_BEAD.id(), 1);
 					npcTalk(p, n, "Here's you're reward then",
 						"An Amulet of accuracy");
 					message(p, "The Wizard hands you an amulet");
-					addItem(p, 235, 1);
+					addItem(p, ItemId.AMULET_OF_ACCURACY.id(), 1);
 					p.sendQuestComplete(Constants.Quests.IMP_CATCHER);
-				} else if (hasItem(p, 231) || hasItem(p, 232)
-					|| hasItem(p, 233) || hasItem(p, 234)) {
+				} else if (hasItem(p, ItemId.RED_BEAD.id()) || hasItem(p, ItemId.YELLOW_BEAD.id())
+					|| hasItem(p, ItemId.BLACK_BEAD.id()) || hasItem(p, ItemId.WHITE_BEAD.id())) {
 					playerTalk(p, n, "I have found some of your beads");
 					npcTalk(p, n, "Come back when you have them all",
 						"The four colours of beads I need",
@@ -124,22 +138,6 @@ public class ImpCatcher implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 117) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.WIZARD_MIZGOG.id();
 	}
-
-	@Override
-	public void handleReward(Player p) {
-		p.message("Well done. You have completed the Imp catcher quest");
-		incQuestReward(p, Quests.questData.get(Quests.IMP_CATCHER), true);
-		p.message("@gre@You haved gained 1 quest point!");
-	}
-
-	@Override
-	public boolean isMembers() {
-		return false;
-	}
-
 }

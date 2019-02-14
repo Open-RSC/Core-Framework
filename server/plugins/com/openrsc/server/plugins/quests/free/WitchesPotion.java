@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -30,6 +32,18 @@ public class WitchesPotion implements QuestInterface, TalkToNpcListener,
 	@Override
 	public String getQuestName() {
 		return "Witch's potion";
+	}
+	
+	@Override
+	public boolean isMembers() {
+		return false;
+	}
+	
+	@Override
+	public void handleReward(Player player) {
+		player.message("Well done you have completed the witches potion quest");
+		incQuestReward(player, Quests.questData.get(Quests.WITCHS_POTION), true);
+		player.message("@gre@You haved gained 1 quest point!");
 	}
 
 	private void hettyDialogue(Player p, Npc n, int cID) {
@@ -81,17 +95,17 @@ public class WitchesPotion implements QuestInterface, TalkToNpcListener,
 					break;
 				case 1:
 					npcTalk(p, n, "So have you found the things for the potion");
-					if (p.getInventory().hasItemId(271)
-						&& p.getInventory().hasItemId(270)
-						&& p.getInventory().hasItemId(134)
-						&& p.getInventory().hasItemId(241)) {
+					if (p.getInventory().hasItemId(ItemId.RATS_TAIL.id())
+						&& p.getInventory().hasItemId(ItemId.EYE_OF_NEWT.id())
+						&& p.getInventory().hasItemId(ItemId.BURNTMEAT.id())
+						&& p.getInventory().hasItemId(ItemId.ONION.id())) {
 						playerTalk(p, n, "Yes I have everthing");
 						npcTalk(p, n, "Excellent, can I have them then?");
 						p.message("You pass the ingredients to Hetty");
-						p.getInventory().remove(271, 1);
-						p.getInventory().remove(270, 1);
-						p.getInventory().remove(134, 1);
-						p.getInventory().remove(241, 1);
+						p.getInventory().remove(ItemId.RATS_TAIL.id(), 1);
+						p.getInventory().remove(ItemId.EYE_OF_NEWT.id(), 1);
+						p.getInventory().remove(ItemId.BURNTMEAT.id(), 1);
+						p.getInventory().remove(ItemId.ONION.id(), 1);
 						message(p,
 							"Hetty put's all the ingredients in her cauldron",
 							"Hetty closes her eyes and begins to chant");
@@ -133,9 +147,9 @@ public class WitchesPotion implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
-		if (n.getID() == 148) {
+		if (n.getID() == NpcId.HETTY.id()) {
 			hettyDialogue(p, n, -1);
-		} else if (n.getID() == 29) {
+		} else if (n.getID() == NpcId.RAT_WITCHES_POTION.id()) {
 			if (p.getQuestStage(this) >= -1) {
 				p.message("Rats can't talk!");
 			}
@@ -160,49 +174,28 @@ public class WitchesPotion implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 148 || n.getID() == 29) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.HETTY.id() || n.getID() == NpcId.RAT_WITCHES_POTION.id();
 	}
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command,
 									 Player player) {
-		if (obj.getID() == 147 && command.equals("drink from")) {
-			return true;
-		}
-		return false;
+		return obj.getID() == 147 && command.equals("drink from");
 	}
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == 29) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.RAT_WITCHES_POTION.id();
 	}
 
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
 		if (p.getQuestStage(this) >= 1) {
-			World.getWorld().registerItem(new GroundItem(271, n.getX(), n.getY(), 1, p));
+			World.getWorld().registerItem(new GroundItem(ItemId.RATS_TAIL.id(), n.getX(), n.getY(), 1, p));
 			n.killedBy(p);
 		} else {
 			n.killedBy(p);
 		}
-	}
-
-	@Override
-	public void handleReward(Player player) {
-		player.message("Well done you have completed the witches potion quest");
-		incQuestReward(player, Quests.questData.get(Quests.WITCHS_POTION), true);
-		player.message("@gre@You haved gained 1 quest point!");
-	}
-
-	@Override
-	public boolean isMembers() {
-		return false;
 	}
 
 	class Hetty {

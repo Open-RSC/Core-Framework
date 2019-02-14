@@ -16,7 +16,6 @@ import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 public final class Development implements CommandListener {
@@ -393,8 +392,8 @@ public final class Development implements CommandListener {
 		else if (cmd.equals("events")) {
 			player.message("Total amount of events running: " + Server.getServer().getGameEventHandler().getEvents().size());
 			HashMap<String, Integer> events = new HashMap<String, Integer>();
-			for (Iterator<Map.Entry<String, GameTickEvent>> event = Server.getServer().getGameEventHandler().getEvents().entrySet().iterator(); event.hasNext(); ) {
-				GameTickEvent e = event.next().getValue();
+			for (Map.Entry<String, GameTickEvent> stringGameTickEventEntry : Server.getServer().getGameEventHandler().getEvents().entrySet()) {
+				GameTickEvent e = stringGameTickEventEntry.getValue();
 				String eventName = e.getClass().getName();
 				if (e.getOwner() != null && e.getOwner().isUnregistering()) {
 					if (!events.containsKey(eventName)) {
@@ -404,13 +403,13 @@ public final class Development implements CommandListener {
 					}
 				}
 			}
-			String s = "";
+			StringBuilder s = new StringBuilder();
 			for (Map.Entry<String, Integer> entry : events.entrySet()) {
 				String name = entry.getKey();
 				Integer value = entry.getValue();
-				s += name + ": " + value + "%";
+				s.append(name).append(": ").append(value).append("%");
 			}
-			ActionSender.sendBox(player, s, true);
+			ActionSender.sendBox(player, s.toString(), true);
 		}
 	}
 }
