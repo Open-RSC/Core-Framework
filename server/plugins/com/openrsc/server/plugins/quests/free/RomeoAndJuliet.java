@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -22,6 +24,18 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 	@Override
 	public String getQuestName() {
 		return "Romeo & Juliet";
+	}
+	
+	@Override
+	public boolean isMembers() {
+		return false;
+	}
+	
+	@Override
+	public void handleReward(Player player) {
+		player.message("You have completed the quest of Romeo and Juliet");
+		incQuestReward(player, Quests.questData.get(Quests.ROMEO_N_JULIET), true);
+		player.message("@gre@You haved gained 5 quest points!");
 	}
 
 	private void romeoDialogue(Player p, Npc n) {
@@ -90,7 +104,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 						"My faith in you is restored!");
 				}
 				p.message("You pass Juliet's message to Romeo");
-				p.getInventory().remove(56, 1);
+				p.getInventory().remove(ItemId.MESSAGE.id(), 1);
 				npcTalk(p, n, "Tragic news. Her father is opposing our marriage",
 					"If her father sees me, he will kill me",
 					"I dare not go near his lands",
@@ -163,7 +177,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 						playerTalk(p, n, "Certinly, I will deliver your message straight away");
 						npcTalk(p, n, "It may be our only hope");
 						p.message("Juliet gives you a message");
-						p.getInventory().add(new Item(56));
+						p.getInventory().add(new Item(ItemId.MESSAGE.id()));
 						p.getCache().set("romeo_juliet_msgs", 1);
 						p.updateQuestStage(getQuestId(), 2);
 					} else if (sub_choice == 1) {
@@ -182,7 +196,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 						playerTalk(p, n, "Certinly, I will deliver your message straight away");
 						npcTalk(p, n, "It may be our only hope");
 						p.message("Juliet gives you a message");
-						p.getInventory().add(new Item(56));
+						p.getInventory().add(new Item(ItemId.MESSAGE.id()));
 						p.getCache().set("romeo_juliet_msgs", 1);
 						p.updateQuestStage(getQuestId(), 2);
 					} else if (sub_choice == 1) {
@@ -197,7 +211,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 						"Certinly, I will deliver your message straight away");
 					npcTalk(p, n, "It may be our only hope");
 					p.message("Juliet gives you a message");
-					p.getInventory().add(new Item(56));
+					p.getInventory().add(new Item(ItemId.MESSAGE.id()));
 					p.getCache().set("romeo_juliet_msgs", 1);
 					p.updateQuestStage(getQuestId(), 2);
 				} else if (choice == 3) {
@@ -214,20 +228,20 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 					"Certinly, I will deliver your message straight away");
 				npcTalk(p, n, "It may be our only hope");
 				p.message("Juliet gives you a message");
-				p.getInventory().add(new Item(56));
+				p.getInventory().add(new Item(ItemId.MESSAGE.id()));
 				p.getCache().set("romeo_juliet_msgs", 1);
 				p.updateQuestStage(getQuestId(), 2);
 				break;
 			case 2:
 				int count = messageCount(p);
-				if (count <= 2 && hasItem(p, 56))
+				if (count <= 2 && hasItem(p, ItemId.MESSAGE.id()))
 					npcTalk(p, n, "Please, deliver the message to Romeo with all speed");
 				else {
 					if (count < 2) {
 						npcTalk(p, n, "How could you lose this most important message?",
 							"Please, take this message to him, and please don't lose it");
 						p.message("Juliet gives you another message");
-						p.getInventory().add(new Item(56));
+						p.getInventory().add(new Item(ItemId.MESSAGE.id()));
 						p.getCache().set("romeo_juliet_msgs", 2);
 					} else if (count < 3) {
 						npcTalk(p, n, "It seems I cannot trust you with a simple message",
@@ -262,7 +276,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 				playerTalk(p, n, "I have a potion from Father Lawrence",
 					"it should make you seem dead, and get you away from this place");
 				p.message("You pass the potion to Juliet");
-				p.getInventory().remove(57, 1);
+				p.getInventory().remove(ItemId.CADAVA.id(), 1);
 				npcTalk(p, n,
 					"Wonderful. I just hope Romeo can remember to get me from the Crypt",
 					"Many thanks kind friend",
@@ -343,7 +357,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 					"Remember, Cadava potion, for Father Lawrence");
 				break;
 			case 5:
-				if (hasItem(p, 56)) {
+				if (hasItem(p, ItemId.MESSAGE.id())) {
 					npcTalk(p, n, "Did you find the Apothecary?");
 					playerTalk(p, n, "I am on my way back to him with the ingredients");
 					npcTalk(p, n, "Good work. Get the potion to Juliet when you have it",
@@ -380,35 +394,17 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
-		if (n.getID() == 30) {
+		if (n.getID() == NpcId.ROMEO.id()) {
 			romeoDialogue(p, n);
-		}
-		if (n.getID() == 31) {
+		} else if (n.getID() == NpcId.JULIET.id()) {
 			julietDialogue(p, n);
-		}
-		if (n.getID() == 32) {
+		} else if (n.getID() == NpcId.FATHER_LAWRENCE.id()) {
 			lawrenceDialogue(p, n);
 		}
 	}
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 30 || n.getID() == 31 || n.getID() == 32) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.ROMEO.id() || n.getID() == NpcId.JULIET.id() || n.getID() == NpcId.FATHER_LAWRENCE.id();
 	}
-
-	@Override
-	public void handleReward(Player player) {
-		player.message("You have completed the quest of Romeo and Juliet");
-		incQuestReward(player, Quests.questData.get(Quests.ROMEO_N_JULIET), true);
-		player.message("@gre@You haved gained 5 quest points!");
-	}
-
-	@Override
-	public boolean isMembers() {
-		return false;
-	}
-
 }

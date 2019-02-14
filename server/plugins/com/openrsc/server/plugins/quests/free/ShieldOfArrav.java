@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -27,16 +29,12 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 	public static final int PHOENIX_GANG = 1;
 	public static final int BLACK_ARM_COMPLETE = -2;
 	public static final int PHOENIX_COMPLETE = -1;
-
-	public static boolean isBlackArmGang(Player p) {
-		return (p.getCache().hasKey("arrav_gang") && p.getCache().getInt("arrav_gang") == BLACK_ARM)
-			|| p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == BLACK_ARM_COMPLETE;
-	}
-
-	public static boolean isPhoenixGang(Player p) {
-		return (p.getCache().hasKey("arrav_gang") && p.getCache().getInt("arrav_gang") == PHOENIX_GANG)
-			|| p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == PHOENIX_COMPLETE;
-	}
+	
+	//84 y 85 black arm
+	private static final int PHOENIX_CHEST_OPEN = 81;
+	private static final int PHOENIX_CHEST_CLOSED = 82;
+	private static final int BARM_CUPBOARD_OPEN = 85;
+	private static final int BARM_CUPBOARD_CLOSED = 84;
 
 	@Override
 	public int getQuestId() {
@@ -47,18 +45,28 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 	public String getQuestName() {
 		return "Shield of Arrav";
 	}
-
+	
+	@Override
+	public boolean isMembers() {
+		return false;
+	}
+	
 	@Override
 	public void handleReward(Player p) {
 		p.message("Well done, you have completed the shield of Arrav quest");
 		incQuestReward(p, Quests.questData.get(Quests.SHIELD_OF_ARRAV), true);
 		p.message("@gre@You haved gained 1 quest point!");
-		addItem(p, 10, 600);
+		addItem(p, ItemId.COINS.id(), 600);
+	}
+	
+	public static boolean isBlackArmGang(Player p) {
+		return (p.getCache().hasKey("arrav_gang") && p.getCache().getInt("arrav_gang") == BLACK_ARM)
+			|| p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == BLACK_ARM_COMPLETE;
 	}
 
-	@Override
-	public boolean isMembers() {
-		return false;
+	public static boolean isPhoenixGang(Player p) {
+		return (p.getCache().hasKey("arrav_gang") && p.getCache().getInt("arrav_gang") == PHOENIX_GANG)
+			|| p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == PHOENIX_COMPLETE;
 	}
 
 	@Override
@@ -73,16 +81,15 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == QuestNpcs.KATRINE;
-
+		return n.getID() == NpcId.KATRINE.id();
 	}
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command,
 									 Player player) {
-		if (obj.getID() == 81 || obj.getID() == 82) {
+		if (obj.getID() == PHOENIX_CHEST_OPEN || obj.getID() == PHOENIX_CHEST_CLOSED) {
 			return true;
-		} else if (obj.getID() == 85 || obj.getID() == 84) {
+		} else if (obj.getID() == BARM_CUPBOARD_OPEN || obj.getID() == BARM_CUPBOARD_CLOSED) {
 			return true;
 		} else if (obj.getID() == 67) {
 			return true;
@@ -98,46 +105,46 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 					playerTalk(player, null, "Aha the shield of Arrav");
 					playerTalk(player, null, "That was what I was looking for");
 					message(player, "You take the book from the bookcase");
-					addItem(player, 30, 1);
+					addItem(player, ItemId.BOOK.id(), 1);
 				} else {
 					player.message("A large collection of books");
 				}
 				break;
-			case 81:
-			case 82:
+			case PHOENIX_CHEST_OPEN:
+			case PHOENIX_CHEST_CLOSED:
 				if (command.equalsIgnoreCase("open")) {
-					openGenericObject(obj, player, 81, "You open the chest");
+					openGenericObject(obj, player, PHOENIX_CHEST_OPEN, "You open the chest");
 				} else if (command.equalsIgnoreCase("close")) {
-					closeGenericObject(obj, player, 82, "You close the chest");
+					closeGenericObject(obj, player, PHOENIX_CHEST_CLOSED, "You close the chest");
 				} else {
-					if (player.getBank().contains(new Item(54))
-							|| player.getInventory().contains(new Item(54))) {
+					if (player.getBank().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_2.id()))
+							|| player.getInventory().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_2.id()))) {
 							message(player, "You search the chest", "The chest is empty");
 							return;
-						} else if (isPhoenixGang(player)) {
-							message(player, "You search the chest",
-								"You find half a shield which you take");
-							addItem(player, 54, 1);
-						} else {
-							message(player, "You search the chest", "The chest is empty");
-						}
+					} else if (isPhoenixGang(player)) {
+						message(player, "You search the chest",
+							"You find half a shield which you take");
+						addItem(player, ItemId.BROKEN_SHIELD_ARRAV_2.id(), 1);
+					} else {
+						message(player, "You search the chest", "The chest is empty");
+					}
 				}
 				break;
-			case 84:
-			case 85:
+			case BARM_CUPBOARD_OPEN:
+			case BARM_CUPBOARD_CLOSED:
 				if (command.equalsIgnoreCase("open")) {
-					openCupboard(obj, player, 85);
+					openCupboard(obj, player, BARM_CUPBOARD_OPEN);
 				} else if (command.equalsIgnoreCase("close")) {
-					closeCupboard(obj, player, 84);
+					closeCupboard(obj, player, BARM_CUPBOARD_CLOSED);
 				} else {
-					if (player.getBank().contains(new Item(53))
-						|| player.getInventory().contains(new Item(53))) {
+					if (player.getBank().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_1.id()))
+						|| player.getInventory().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_1.id()))) {
 						message(player, "You search the cupboard", "The cupboard is empty");
 						return;
 					} else if (isBlackArmGang(player)) {
 						message(player, "You search the cupboard",
 							"You find half a shield which you take");
-						addItem(player, 53, 1);
+						addItem(player, ItemId.BROKEN_SHIELD_ARRAV_1.id(), 1);
 					} else {
 						message(player, "You search the cupboard", "The cupboard is empty");
 					}
@@ -148,9 +155,11 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		switch (n.getID()) {
-			case QuestNpcs.KATRINE:
+		switch (NpcId.getById(n.getID())) {
+			case KATRINE:
 				katrineDialogue(p, n, -1);
+				break;
+			default:
 				break;
 		}
 	}
@@ -202,16 +211,16 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 					break;
 				case 4:
 					if (isBlackArmGang(p)) {
-						if (hasItem(p, QuestItems.PHOENIX_CROSSBOW, 2)) {
+						if (hasItem(p, ItemId.PHOENIX_CROSSBOW.id(), 2)) {
 							npcTalk(p, n, "Have you got those crossbows for me yet?");
 							playerTalk(p, n, "Yes I have");
 							p.message("You give the crossbows to katrine");
-							p.getInventory().remove(59, 2);
+							p.getInventory().remove(ItemId.PHOENIX_CROSSBOW.id(), 2);
 							npcTalk(p, n,
 								"Ok you can join our gang now",
 								"Feel free to enter any the rooms of the ganghouse");
 							p.updateQuestStage(this, 5);
-						} else if (hasItem(p, QuestItems.PHOENIX_CROSSBOW, 1)) {
+						} else if (hasItem(p, ItemId.PHOENIX_CROSSBOW.id(), 1)) {
 							npcTalk(p, n, "Have you got those crossbows for me yet?");
 							playerTalk(p, n, "I have one");
 							npcTalk(p, n, "I need two",
@@ -239,15 +248,15 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 				case -2:
 					if (isBlackArmGang(p)) {
 						if (p.getQuestStage(Constants.Quests.HEROS_QUEST) > 0) {
-							if (!hasItem(p, 586) && p.getCache().hasKey("armband")) {
+							if (!hasItem(p, ItemId.MASTER_THIEF_ARMBAND.id()) && p.getCache().hasKey("armband")) {
 								playerTalk(p, n, "I have lost my master thief armband");
 								npcTalk(p, n, "Well I have a spare", "Don't lose it again");
-								addItem(p, 586, 1);
+								addItem(p, ItemId.MASTER_THIEF_ARMBAND.id(), 1);
 								return;
 							}
 							playerTalk(p, n, "Hey");
 							npcTalk(p, n, "Hey");
-							if (hasItem(p, 585) && !p.getCache().hasKey("armband")) {
+							if (hasItem(p, ItemId.CANDLESTICK.id()) && !p.getCache().hasKey("armband")) {
 								int choice3 = showMenu(p, n,
 									"Who are all those people in there?",
 									"I have a candlestick now");
@@ -259,14 +268,14 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 								} else if (choice3 == 1) {
 									npcTalk(p, n, "Wow is it really it?");
 									p.message("Katrine takes hold of the candlestick and examines it");
-									removeItem(p, 585, 1);
+									removeItem(p, ItemId.CANDLESTICK.id(), 1);
 									npcTalk(p, n,
 										"This really is a fine bit of thievery",
 										"Thieves have been trying to get hold of this 1 for a while",
 										"You wanted to be ranked as master thief didn't you?",
 										"Well I guess this just about ranks as good enough");
 									p.message("Katrine gives you a master thief armband");
-									addItem(p, 586, 1);
+									addItem(p, ItemId.MASTER_THIEF_ARMBAND.id(), 1);
 									p.getCache().store("armband", true);
 								}
 								return;
@@ -421,13 +430,13 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 
 	@Override
 	public boolean blockInvAction(Item item, Player player) {
-		return item.getID() == QuestItems.BOOK;
+		return item.getID() == ItemId.BOOK.id();
 	}
 
 	@Override
 	public void onInvAction(Item item, Player player) {
-		switch (item.getID()) {
-			case QuestItems.BOOK:
+		switch (ItemId.getById(item.getID())) {
+			case BOOK:
 				message(player,
 					"The shield of Arrav",
 					"By A.R.Wright",
@@ -447,6 +456,8 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 					player.getCache().store("read_arrav", true);
 				}
 				break;
+			default:
+				break;
 		}
 	}
 
@@ -454,7 +465,7 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 	public void onPlayerKilledNpc(Player p, Npc n) {
 		if (p.getQuestStage(this) == 4) {
 			World.getWorld().registerItem(
-				new GroundItem(QuestItems.SCROLL, n.getX(), n.getY(), 1, p));
+				new GroundItem(ItemId.SCROLL.id(), n.getX(), n.getY(), 1, p));
 			n.killedBy(p);
 		} else {
 			n.killedBy(p);
@@ -478,7 +489,7 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 				p.message("The door won't open");
 			}
 		} else if (obj.getID() == 19 && obj.getY() == 3370) {
-			Npc man = getNearestNpc(p, 24, 20);
+			Npc man = getNearestNpc(p, NpcId.STRAVEN.id(), 20);
 			if (isPhoenixGang(p)) {
 				if (p.getQuestStage(this) >= 0 && p.getQuestStage(this) < 5) {
 					if (man != null) {
@@ -508,12 +519,11 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 			}
 		} else if (obj.getID() == 20 && obj.getY() == 532) {
 			if (p.getY() <= 531 || p.getY() >= 531) {
-				if (p.getInventory().hasItemId(48)) {
-					p.message("The door is locked");
+				p.message("The door is locked");
+				if (p.getInventory().hasItemId(ItemId.PHOENIX_GANG_WEAPON_KEY.id())) {
 					p.message("You need to use your key to open it");
 					return;
 				}
-				p.message("The door is locked");
 			}
 		}
 	}
@@ -538,16 +548,13 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 	@Override
 	public boolean blockInvUseOnWallObject(GameObject obj, Item item,
 										   Player player) {
-		if (item.getID() == QuestItems.KEY && obj.getID() == 20
-			&& obj.getY() == 532) {
-			return true;
-		}
-		return false;
+		return item.getID() == ItemId.PHOENIX_GANG_WEAPON_KEY.id() && obj.getID() == 20
+				&& obj.getY() == 532;
 	}
 
 	@Override
 	public void onInvUseOnWallObject(GameObject obj, Item item, Player player) {
-		if (item.getID() == QuestItems.KEY && obj.getID() == 20
+		if (item.getID() == ItemId.PHOENIX_GANG_WEAPON_KEY.id() && obj.getID() == 20
 			&& obj.getY() == 532) {
 			showBubble(player, item);
 			if (player.getY() <= 531) {
@@ -563,43 +570,7 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == QuestNpcs.JONNY)
-			return true;
-
-		return false;
-	}
-
-	class QuestItems {
-		public static final int BOOK = 30;// book
-		public static final int COINS = 10;// ID: 10 coins
-		public static final int KEY = 48; // ID: 48 key (phoenix gang key)
-		public static final int SCROLL = 49; // ID: 49 scroll
-		public static final int BLACKARM_BROKENSHIELD = 53;// ID: 53 broken
-		public static final int PHOENIX_BROKENSHIELD = 54; // ID: 54 broken
-		public static final int CERTIFICATE = 61;// certificate
-		public static final int FUR = 146; // ID: 146 fur
-		public static final int PHOENIX_CROSSBOW = 59;
-	}
-
-	class QuestObjects {
-		public static final int BOOKCASE = 67; // ID: 67 bookcase - coords:
-		// 132,455
-		public static final int DOOR = 19; // ID: 19 door- coords 110,3370
-		public static final int DOOR2 = 20; // ID: 20 door - coords: 103,532
-	}
-
-	class QuestNpcs {
-		public static final int RELDO = 20; // 20 Reldo- coords: 131,457
-		public static final int BARAEK = 26; // ID: 26 Baraek- coords 127,506
-		public static final int MAN = 24; // ID: 24 Man- coords: 111,3367
-		public static final int JONNY = 25; // ID: 25 Jonny the beard- coords:
-		// 123,523
-		public static final int KING = 42; // ID: 42 king- coords: 126,474
-		public static final int CURATOR = 39; // ID: 39 Curator- coords: 101,488
-		public static final int TRAMP = 28; // ID: 28 Tramp- coords 132, 527
-		public static final int THIEF = 64; // ID: 64 Thief- coords: 110,3375 (4
-		// in phoenix gang building)
-		public static final int KATRINE = 27; // ID: 27 Katrine- coords: 149,534
+		return n.getID() == NpcId.JONNY_THE_BEARD.id();
 	}
 
 	class Katrine {

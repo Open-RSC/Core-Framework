@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.quests.free;
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -25,6 +26,9 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 	TalkToNpcListener, TalkToNpcExecutiveListener, ObjectActionListener,
 	InvUseOnObjectListener, InvUseOnObjectExecutiveListener,
 	ObjectActionExecutiveListener {
+	
+	private static final int GHOST_COFFIN_OPEN = 40;
+	private static final int GHOST_COFFIN_CLOSED = 39;
 
 	@Override
 	public int getQuestId() {
@@ -35,9 +39,22 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 	public String getQuestName() {
 		return "The restless ghost";
 	}
+	
+	@Override
+	public boolean isMembers() {
+		return false;
+	}
+	
+	@Override
+	public void handleReward(Player player) {
+		player.message("You have completed the restless ghost quest");
+		incQuestReward(player, Quests.questData.get(Quests.THE_RESTLESS_GHOST), true);
+		player.message("@gre@You haved gained 1 quest point!");
+
+	}
 
 	private void ghostDialogue(Player p, Npc n, int cID) {
-		if (n.getID() == 15) {
+		if (n.getID() == NpcId.GHOST_RESTLESS.id()) {
 			if (p.getQuestStage(this) == -1) {
 				p.message("The ghost doesn't appear interested in talking");
 				return;
@@ -46,7 +63,7 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 				if (p.getQuestStage(this) == 3) {
 					playerTalk(p, n, "Hello ghost, how are you?");
 					npcTalk(p, n, "How are you doing finding my skull?");
-					if (!hasItem(p, 27)) {
+					if (!hasItem(p, ItemId.QUEST_SKULL.id())) {
 						playerTalk(p, n, "Sorry, I can't find it at the moment");
 						npcTalk(p,
 							n,
@@ -56,7 +73,7 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 							"I suppose it might take a little while to find");
 						// kosher: this condition made player need to restart skull process incl. skeleton fight
 						p.getCache().remove("tried_grab_skull");
-					} else if (hasItem(p, 27)) {
+					} else if (hasItem(p, ItemId.QUEST_SKULL.id())) {
 						playerTalk(p, n, "I have found it");
 						npcTalk(p,
 							n,
@@ -271,45 +288,40 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
-		if (n.getID() == 15) {
+		if (n.getID() == NpcId.GHOST_RESTLESS.id()) {
 			ghostDialogue(p, n, -1);
 		}
 	}
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player player) {
-		if (command.equals("open") && obj.getID() == 39) {
-			player.message("You open the coffin");
-			replaceObject(obj, new GameObject(obj.getLocation(), 40, obj.getDirection(), obj.getType()));
-			return;
-		}
-		if (command.equals("close") && obj.getID() == 40) {
-			player.message("You close the coffin");
-			replaceObject(obj, new GameObject(obj.getLocation(), 39, obj.getDirection(), obj.getType()));
-			return;
-		}
-		if (command.equals("search") && obj.getID() == 40) {
-			if (player.getQuestStage(this) > 0) {
-				player.message("There's a skeleton without a skull in here");
-			} else if (player.getQuestStage(this) == -1) {
-				player.message("Theres a nice and complete skeleton in here!");
+		if (obj.getID() == GHOST_COFFIN_OPEN || obj.getID() == GHOST_COFFIN_CLOSED) {
+			if (command.equalsIgnoreCase("open")) {
+				openGenericObject(obj, player, GHOST_COFFIN_OPEN, "You open the coffin");
+			} else if (command.equalsIgnoreCase("close")) {
+				closeGenericObject(obj, player, GHOST_COFFIN_CLOSED, "You close the coffin");
 			} else {
-				player.message("You search the coffin and find some human remains");
+				if (player.getQuestStage(this) > 0) {
+					player.message("There's a skeleton without a skull in here");
+				} else if (player.getQuestStage(this) == -1) {
+					player.message("Theres a nice and complete skeleton in here!");
+				} else {
+					player.message("You search the coffin and find some human remains");
+				}
 			}
-			return;
 		}
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
-		if (obj.getID() == 40 && player.getQuestStage(this) == 3
+		if (obj.getID() == GHOST_COFFIN_OPEN && player.getQuestStage(this) == 3
 			&& item.getID() == ItemId.QUEST_SKULL.id()) {
-			spawnNpc(15, 102, 675, 30);
+			spawnNpc(NpcId.GHOST_RESTLESS.id(), 102, 675, 30);
 			message(player, "You put the skull in the coffin");
 			removeItem(player, ItemId.QUEST_SKULL.id(), 1);
 			//on completion cache key no longer needed
 			player.getCache().remove("tried_grab_skull");
-			Npc npc = getNearestNpc(player, 15, 8);
+			Npc npc = getNearestNpc(player, NpcId.GHOST_RESTLESS.id(), 8);
 			if (npc != null) {
 				npc.remove();
 			}
@@ -322,57 +334,29 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 15) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.GHOST_RESTLESS.id();
 	}
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
 									   Player player) {
-		if (item.getID() == ItemId.QUEST_SKULL.id() && obj.getID() == 40) {
-			return true;
-		}
-		return false;
+		return item.getID() == ItemId.QUEST_SKULL.id() && obj.getID() == GHOST_COFFIN_OPEN;
 	}
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command,
 									 Player player) {
-		if (obj.getID() == 40 && (command.equals("search") || command.equals("close"))) {
-			return true;
-		}
-		if (obj.getID() == 39 && command.equals("open")) {
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public void handleReward(Player player) {
-		player.message("You have completed the restless ghost quest");
-		incQuestReward(player, Quests.questData.get(Quests.THE_RESTLESS_GHOST), true);
-		player.message("@gre@You haved gained 1 quest point!");
-
-	}
-
-	@Override
-	public boolean isMembers() {
-		return false;
+		return obj.getID() == GHOST_COFFIN_OPEN || obj.getID() == GHOST_COFFIN_CLOSED;
 	}
 
 	@Override
 	public boolean blockPickup(Player p, GroundItem i) {
-		if (i.getID() == ItemId.QUEST_SKULL.id()) {
-			return true;
-		}
-		return false;
+		return i.getID() == ItemId.QUEST_SKULL.id();
 	}
 
 	@Override
 	public void onPickup(Player p, GroundItem i) {
-		Npc skeleton = getNearestNpc(p, 50, 10);
+		Npc skeleton = getNearestNpc(p, NpcId.SKELETON_RESTLESS.id(), 10);
 		if (i.getID() == ItemId.QUEST_SKULL.id()) {
 			// spawn-place
 			if (i.getX() == 218 && i.getY() == 3521) {
@@ -386,7 +370,7 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 					if (skeleton == null) {
 						//spawn skeleton and give message
 						p.message("Out of nowhere a skeleton appears");
-						skeleton = spawnNpc(50, 217, 3520, 100);
+						skeleton = spawnNpc(NpcId.SKELETON_RESTLESS.id(), 217, 3520, 100);
 						skeleton.setChasing(p);
 					} else {
 						skeleton.setChasing(p);

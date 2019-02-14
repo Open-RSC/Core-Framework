@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -24,14 +26,28 @@ public class GoblinDiplomacy implements QuestInterface, TalkToNpcListener,
 	public String getQuestName() {
 		return "Goblin diplomacy";
 	}
+	
+	@Override
+	public boolean isMembers() {
+		return false;
+	}
+	
+	@Override
+	public void handleReward(Player player) {
+		player.message("Well done you have completed the goblin diplomacy quest");
+		player.message("@gre@You haved gained 5 quest points!");
+		incQuestReward(player, Quests.questData.get(Quests.GOBLIN_DIPLOMACY), true);
+		player.message("general wartface gives you a gold bar as thanks");
+		player.getInventory().add(new Item(ItemId.GOLD_BAR.id(), 1));
+	}
 
 	public void onTalkToNpc(Player p, final Npc n) {
-		final Npc otherGoblin = n.getID() == 151 ? World.getWorld().getNpc(152,
-			314, 330, 441, 457) : World.getWorld().getNpc(151, 321, 445,
+		final Npc otherGoblin = n.getID() == NpcId.GENERAL_WARTFACE.id() ? World.getWorld().getNpc(NpcId.GENERAL_BENTNOZE.id(),
+			314, 330, 441, 457) : World.getWorld().getNpc(NpcId.GENERAL_WARTFACE.id(), 321, 445,
 			326, 449);
-		if (n.getID() == 151 || n.getID() == 152) {
+		if (n.getID() == NpcId.GENERAL_WARTFACE.id() || n.getID() == NpcId.GENERAL_BENTNOZE.id()) {
 			if (p.getQuestStage(this) == 0) {
-				if (n.getID() == 151) {
+				if (n.getID() == NpcId.GENERAL_BENTNOZE.id()) {
 					npcTalk(p, n, "green armour best");
 					npcTalk(p, otherGoblin, "No no Red every time");
 					npcTalk(p, n, "go away human, we busy");
@@ -41,7 +57,7 @@ public class GoblinDiplomacy implements QuestInterface, TalkToNpcListener,
 					npcTalk(p, n, "go away human, we busy");
 				}
 			} else if (p.getQuestStage(this) == 1) {
-				if (n.getID() == 151) {
+				if (n.getID() == NpcId.GENERAL_BENTNOZE.id()) {
 					npcTalk(p, n, "green armour best");
 					npcTalk(p, otherGoblin, "No no Red every time");
 					npcTalk(p, n, "go away human, we busy");
@@ -82,10 +98,10 @@ public class GoblinDiplomacy implements QuestInterface, TalkToNpcListener,
 				}
 			} else if (p.getQuestStage(this) == 2) {
 				npcTalk(p, n, "Oh it you");
-				if (p.getInventory().hasItemId(274)) {
+				if (p.getInventory().hasItemId(ItemId.ORANGE_GOBLIN_ARMOUR.id())) {
 					playerTalk(p, n, "I have some orange armour");
 					message(p, "You give some goblin armour to the goblins");
-					p.getInventory().remove(274, 1);
+					p.getInventory().remove(ItemId.ORANGE_GOBLIN_ARMOUR.id(), 1);
 					npcTalk(p, n, "No I don't like that much");
 					npcTalk(p, otherGoblin, "It clashes with my skin colour");
 					npcTalk(p, n, "Try bringing us dark blue armour");
@@ -97,10 +113,10 @@ public class GoblinDiplomacy implements QuestInterface, TalkToNpcListener,
 				}
 			} else if (p.getQuestStage(this) == 3) {
 				npcTalk(p, n, "Oh it you");
-				if (p.getInventory().hasItemId(275)) {
+				if (p.getInventory().hasItemId(ItemId.BLUE_GOBLIN_ARMOUR.id())) {
 					playerTalk(p, n, "I have some dark blue armour");
 					message(p, "You give some goblin armour to the goblins");
-					p.getInventory().remove(275, 1);
+					p.getInventory().remove(ItemId.BLUE_GOBLIN_ARMOUR.id(), 1);
 					npcTalk(p, n, "Doesn't seem quite right");
 					npcTalk(p, otherGoblin, "maybe if it was a bit lighter");
 					npcTalk(p, n, "Yeah try light blue");
@@ -114,10 +130,10 @@ public class GoblinDiplomacy implements QuestInterface, TalkToNpcListener,
 					npcTalk(p, n, "Come back when you have some");
 				}
 			} else if (p.getQuestStage(this) == 4) {
-				if (p.getInventory().hasItemId(273)) {
+				if (p.getInventory().hasItemId(ItemId.GOBLIN_ARMOUR.id())) {
 					playerTalk(p, n, "Ok I've got light blue armour");
 					message(p, "You give some goblin armour to the goblins");
-					p.getInventory().remove(273, 1);
+					p.getInventory().remove(ItemId.GOBLIN_ARMOUR.id(), 1);
 					npcTalk(p, n, "That is rather nice");
 					npcTalk(p, otherGoblin,
 						"Yes I could see myself wearing somethin' like that");
@@ -140,24 +156,6 @@ public class GoblinDiplomacy implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 151 || n.getID() == 152) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.GENERAL_WARTFACE.id() || n.getID() == NpcId.GENERAL_BENTNOZE.id();
 	}
-
-	@Override
-	public void handleReward(Player player) {
-		player.message("Well done you have completed the goblin diplomacy quest");
-		player.message("@gre@You haved gained 5 quest points!");
-		incQuestReward(player, Quests.questData.get(Quests.GOBLIN_DIPLOMACY), true);
-		player.message("general wartface gives you a gold bar as thanks");
-		player.getInventory().add(new Item(172, 1));
-	}
-
-	@Override
-	public boolean isMembers() {
-		return false;
-	}
-
 }

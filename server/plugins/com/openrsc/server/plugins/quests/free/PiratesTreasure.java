@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.quests.free;
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -25,6 +26,9 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 	ObjectActionExecutiveListener, TalkToNpcExecutiveListener,
 	InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListener {
 
+	private static final int HECTORS_CHEST_OPEN = 186;
+	private static final int HECTORS_CHEST_CLOSED = 187;
+	
 	@Override
 	public int getQuestId() {
 		return Constants.Quests.PIRATES_TREASURE;
@@ -59,7 +63,7 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
 		return item.getID() == ItemId.BANANA.id() && obj.getID() == 182
 				|| item.getID() == ItemId.KARAMJA_RUM.id() && obj.getID() == 182
-				|| item.getID() == ItemId.CHEST_KEY.id() && obj.getID() == 187;
+				|| item.getID() == ItemId.CHEST_KEY.id() && obj.getID() == HECTORS_CHEST_CLOSED;
 	}
 
 	@Override
@@ -92,10 +96,10 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 					}
 				}
 			}
-		} else if (item.getID() == ItemId.CHEST_KEY.id() && obj.getID() == 187) {
+		} else if (item.getID() == ItemId.CHEST_KEY.id() && obj.getID() == HECTORS_CHEST_CLOSED) {
 			p.message("You unlock the chest");
 			World.getWorld().replaceGameObject(obj,
-				new GameObject(obj.getLocation(), 186, obj.getDirection(),
+				new GameObject(obj.getLocation(), HECTORS_CHEST_OPEN, obj.getDirection(),
 					obj.getType()));
 			World.getWorld().delayedSpawnObject(obj.getLoc(), 3000);
 			removeItem(p, ItemId.CHEST_KEY.id(), 1);
@@ -108,7 +112,7 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 128 || n.getID() == 164;
+		return n.getID() == NpcId.REDBEARD_FRANK.id() || n.getID() == NpcId.LUTHAS.id();
 	}
 
 	public void frankDialogue(Player p, Npc n, int cID) {
@@ -274,10 +278,9 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 164) {
+		if (n.getID() == NpcId.LUTHAS.id()) {
 			luthasDialogue(p, n, -1);
-		}
-		if (n.getID() == 128) {
+		} else if (n.getID() == NpcId.REDBEARD_FRANK.id()) {
 			frankDialogue(p, n, -1);
 		}
 	}
@@ -348,7 +351,7 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 		if ((p.getY() == 548 && p.getX() >= 287 && p.getX() <= 291)
 			&& item.getID() == ItemId.SPADE.id()) {
 			if (p.getX() == 290 || p.getX() == 289) {
-				Npc wyson = getNearestNpc(p, 116, 20);
+				Npc wyson = getNearestNpc(p, NpcId.WYSON_THE_GARDENER.id(), 20);
 				boolean dig = false;
 				if (wyson != null) {
 					wyson.getUpdateFlags().setChatMessage(new ChatMessage(wyson, "Hey leave off my flowers", p));
