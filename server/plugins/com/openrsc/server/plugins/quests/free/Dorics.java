@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -27,6 +29,18 @@ public class Dorics implements QuestInterface, TalkToNpcListener,
 	@Override
 	public String getQuestName() {
 		return "Doric's quest";
+	}
+	
+	@Override
+	public boolean isMembers() {
+		return false;
+	}
+	
+	@Override
+	public void handleReward(Player player) {
+		player.message("You have completed Dorics quest");
+		incQuestReward(player, Quests.questData.get(Quests.DORICS_QUEST), true);
+		player.message("@gre@You haved gained 1 quest points!");
 	}
 
 	private void doricDialogue(Player p, Npc n) {
@@ -78,23 +92,23 @@ public class Dorics implements QuestInterface, TalkToNpcListener,
 				break;
 			case 1:
 				npcTalk(p, n, "Have you got my materials yet traveller?");
-				if (p.getInventory().countId(149) >= 6
-					&& p.getInventory().countId(150) >= 4
-					&& p.getInventory().countId(151) >= 2) {
+				if (p.getInventory().countId(ItemId.CLAY.id()) >= 6
+					&& p.getInventory().countId(ItemId.COPPER_ORE.id()) >= 4
+					&& p.getInventory().countId(ItemId.IRON_ORE.id()) >= 2) {
 					playerTalk(p, n, "I have everything you need");
 					npcTalk(p, n, "Many thanks, pass them here please");
 					p.message("You hand the clay, copper and iron to Doric");
 					for (int i = 0; i < 6; i++)
-						p.getInventory().remove(149, 1);
+						p.getInventory().remove(ItemId.CLAY.id(), 1);
 					for (int i = 0; i < 4; i++)
-						p.getInventory().remove(150, 1);
+						p.getInventory().remove(ItemId.COPPER_ORE.id(), 1);
 					for (int i = 0; i < 2; i++)
-						p.getInventory().remove(151, 1);
+						p.getInventory().remove(ItemId.IRON_ORE.id(), 1);
 
 					npcTalk(p, n, "I can spare you some coins for your trouble");
 
 					p.message("Doric hands you 180 coins");
-					p.getInventory().add(new Item(10, 180));
+					p.getInventory().add(new Item(ItemId.COINS.id(), 180));
 
 					npcTalk(p, n, "Please use my anvils any time you want");
 					p.sendQuestComplete(Constants.Quests.DORICS_QUEST);
@@ -116,28 +130,13 @@ public class Dorics implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
-		if (n.getID() == 144) {
+		if (n.getID() == NpcId.DORIC.id()) {
 			doricDialogue(p, n);
 		}
 	}
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 144) {
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public void handleReward(Player player) {
-		player.message("You have completed Dorics quest");
-		incQuestReward(player, Quests.questData.get(Quests.DORICS_QUEST), true);
-		player.message("@gre@You haved gained 1 quest points!");
-	}
-
-	@Override
-	public boolean isMembers() {
-		return false;
+		return n.getID() == NpcId.DORIC.id();
 	}
 }

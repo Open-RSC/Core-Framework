@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
@@ -22,6 +24,7 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.closeGenericObject;
@@ -53,6 +56,16 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 
 	public static final int PORT_SARIM = 0;
 	public static final int CRANDOR = 1;
+	
+	private static final int DWARVEN_CHEST_OPEN = 230;
+	private static final int DWARVEN_CHEST_CLOSED = 231;
+	private static final int MELZAR_CHEST_OPEN = 228;
+	private static final int MELZAR_CHEST_CLOSED = 229;
+	private static final int LUMBRIDGE_LADY_SARIM1 = 224;
+	private static final int LUMBRIDGE_LADY_SARIM2 = 225;
+	private static final int LUMBRIDGE_LADY_CRANDOR1 = 233;
+	private static final int LUMBRIDGE_LADY_CRANDOR2 = 234;
+	private static final int BOATS_LADDER = 227;
 
 	@Override
 	public int getQuestId() {
@@ -68,10 +81,24 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 	public boolean isMembers() {
 		return false;
 	}
+	
+	@Override
+	public void handleReward(Player p) {
+		p.teleport(411, 3480, false);
+		p.message("Well done you have completed the dragon slayer quest!");
+		p.message("@gre@You haved gained 2 quest points!");
+		int[] questData = Quests.questData.get(Quests.DRAGON_SLAYER);
+		//keep order kosher
+		int[] skillIDs = {Skills.STRENGTH, Skills.DEFENSE};
+		for (int i = 0; i < skillIDs.length; i++) {
+			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
+			incQuestReward(p, questData, i == (skillIDs.length - 1));
+		}
+	}
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 187 && p.getQuestStage(this) != -1;
+		return n.getID() == NpcId.OZIACH.id() && p.getQuestStage(this) != -1;
 	}
 
 	public void oziachDialogue(Player p, Npc n, int cID) {
@@ -218,12 +245,12 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 			case Oziach.FIRST_PIECE:
 				npcTalk(p, n, "deep in a strange building known as Melzar's maze");
 				npcTalk(p, n, "Located north west of Rimmington");
-				if (!hasItem(p, 421, 1)) {
+				if (!hasItem(p, ItemId.MAZE_KEY.id(), 1)) {
 					npcTalk(p, n, "You will need this to get in");
 					npcTalk(p, n,
 						"This is the key to the front entrance to the maze");
 					message(p, "Oziach hands you a key");
-					addItem(p, 421, 1);
+					addItem(p, ItemId.MAZE_KEY.id(), 1);
 				}
 				int menu = showMenu(p, n, "Where can I get an antidragon shield?",
 					"Where is the second piece of map?",
@@ -280,27 +307,27 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command,
 									 Player player) {
-		return (obj.getY() == 643 && (obj.getID() == 224 || obj.getID() == 225))
-			|| (obj.getY() == 641 && (obj.getID() == 233 || obj.getID() == 234))
-			|| obj.getID() == 227
+		return (obj.getY() == 643 && (obj.getID() == LUMBRIDGE_LADY_SARIM1 || obj.getID() == LUMBRIDGE_LADY_SARIM2))
+			|| (obj.getY() == 641 && (obj.getID() == LUMBRIDGE_LADY_CRANDOR1 || obj.getID() == LUMBRIDGE_LADY_CRANDOR2))
+			|| obj.getID() == BOATS_LADDER
 			|| ((obj.getY() == 3458 || obj.getY() == 3331)
-			&& (obj.getID() == 228 || obj.getID() == 229) || (obj.getID() == 230 || obj.getID() == 231));
+			&& (obj.getID() == MELZAR_CHEST_OPEN || obj.getID() == MELZAR_CHEST_CLOSED) || (obj.getID() == DWARVEN_CHEST_OPEN || obj.getID() == DWARVEN_CHEST_CLOSED));
 	}
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		switch (obj.getID()) {
-			case 230:
-			case 231:
+			case DWARVEN_CHEST_OPEN:
+			case DWARVEN_CHEST_CLOSED:
 				if (command.equalsIgnoreCase("open")) {
-					openGenericObject(obj, p, 230, "You open the chest");
+					openGenericObject(obj, p, DWARVEN_CHEST_OPEN, "You open the chest");
 				} else if (command.equalsIgnoreCase("close")) {
-					closeGenericObject(obj, p, 231, "You close the chest");
+					closeGenericObject(obj, p, DWARVEN_CHEST_CLOSED, "You close the chest");
 				} else {
 					//kosher: could not "drop trick" easy, had to re-enter the door for another piece
-					if (!hasItem(p, 418, 1) && p.getQuestStage(Quests.DRAGON_SLAYER) == 2
+					if (!hasItem(p, ItemId.MAP_PIECE_3.id(), 1) && p.getQuestStage(Quests.DRAGON_SLAYER) == 2
 						&& p.getCache().hasKey("dwarven_unlocked")) {
-						addItem(p, 418, 1);
+						addItem(p, ItemId.MAP_PIECE_3.id(), 1);
 						p.message("You find a piece of map in the chest");
 						p.getCache().remove("dwarven_unlocked");
 					} else {
@@ -308,17 +335,17 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 					}
 				}
 				break;
-			case 228:
-			case 229:
+			case MELZAR_CHEST_OPEN:
+			case MELZAR_CHEST_CLOSED:
 				if (command.equalsIgnoreCase("open")) {
-					openGenericObject(obj, p, 228, "You open the chest");
+					openGenericObject(obj, p, MELZAR_CHEST_OPEN, "You open the chest");
 				} else if (command.equalsIgnoreCase("close")) {
-					closeGenericObject(obj, p, 229, "You close the chest");
+					closeGenericObject(obj, p, MELZAR_CHEST_CLOSED, "You close the chest");
 				} else {
 					//kosher: could not "drop trick" easy, had to re-enter the door for another piece
-					if (!hasItem(p, 417, 1) && p.getQuestStage(Quests.DRAGON_SLAYER) == 2
+					if (!hasItem(p, ItemId.MAP_PIECE_2.id(), 1) && p.getQuestStage(Quests.DRAGON_SLAYER) == 2
 						&& p.getCache().hasKey("melzar_unlocked")) {
-						addItem(p, 417, 1);
+						addItem(p, ItemId.MAP_PIECE_2.id(), 1);
 						p.message("You find a piece of map in the chest");
 						p.getCache().remove("melzar_unlocked");
 					} else {
@@ -327,8 +354,8 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 				}
 				break;
 			//clicking boat triggers klarense if available
-			case 224:
-			case 225:
+			case LUMBRIDGE_LADY_SARIM1:
+			case LUMBRIDGE_LADY_SARIM2:
 				if (p.getCache().hasKey("owns_ship")) {
 					//cases: a) ship not repaired and ned not hired -> teleport 259,3472 (first case when bought)
 					//or player has enabled the crandor shortcut
@@ -347,7 +374,7 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 						p.teleport(281, 3493, false);
 					}
 				} else {
-					Npc klarense = getNearestNpc(p, 193, 15);
+					Npc klarense = getNearestNpc(p, NpcId.KLARENSE.id(), 15);
 					if (klarense != null) {
 						klarense.initializeTalkScript(p);
 					} else {
@@ -355,7 +382,7 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 					}
 				}
 				break;
-			case 227:
+			case BOATS_LADDER:
 				if (p.getCache().hasKey("lumb_lady") && p.getCache().getInt("lumb_lady") == CRANDOR) {
 					p.teleport(409, 638, false);
 				} else {
@@ -363,8 +390,8 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 				}
 				p.message("You leave the ship");
 				break;
-			case 233:
-			case 234:
+			case LUMBRIDGE_LADY_CRANDOR1:
+			case LUMBRIDGE_LADY_CRANDOR2:
 				p.getCache().set("lumb_lady", CRANDOR);
 				if (p.getCache().hasKey("crandor_shortcut")) {
 					p.teleport(259, 3472, false);
@@ -377,53 +404,39 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 187) {
+		if (n.getID() == NpcId.OZIACH.id()) {
 			oziachDialogue(p, n, -1);
 		}
 	}
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == 192 && p.getQuestStage(this) >= 2) {
+		if (n.getID() == NpcId.WORMBRAIN.id() && p.getQuestStage(this) >= 2) {
 			World.getWorld().registerItem(
-				new GroundItem(416, n.getX(), n.getY(), 1, p));
+				new GroundItem(ItemId.MAP_PIECE_1.id(), n.getX(), n.getY(), 1, p));
 		}
-		if (n.getID() == 177) {
+		if (n.getID() == NpcId.RAT_WMAZEKEY.id()) {
 			World.getWorld().registerItem(
-				new GroundItem(QuestItems.RED_KEY, n.getX(), n.getY(), 1, p));
-		} else if (n.getID() == 178) {
+				new GroundItem(ItemId.RED_KEY.id(), n.getX(), n.getY(), 1, p));
+		} else if (n.getID() == NpcId.GHOST_WMAZEKEY.id()) {
 			World.getWorld().registerItem(
-				new GroundItem(QuestItems.ORANGE_KEY, n.getX(), n.getY(), 1, p));
-		} else if (n.getID() == 179) {
+				new GroundItem(ItemId.ORANGE_KEY.id(), n.getX(), n.getY(), 1, p));
+		} else if (n.getID() == NpcId.SKELETON_WMAZEKEY.id()) {
 			World.getWorld().registerItem(
-				new GroundItem(QuestItems.YELLOW_KEY, n.getX(), n.getY(), 1, p));
-		} else if (n.getID() == 180) {
+				new GroundItem(ItemId.YELLOW_KEY.id(), n.getX(), n.getY(), 1, p));
+		} else if (n.getID() == NpcId.ZOMBIE_WMAZEKEY.id()) {
 			World.getWorld().registerItem(
-				new GroundItem(QuestItems.BLUE_KEY, n.getX(), n.getY(), 1, p));
-		} else if (n.getID() == 182) {
+				new GroundItem(ItemId.BLUE_KEY.id(), n.getX(), n.getY(), 1, p));
+		} else if (n.getID() == NpcId.MELZAR_THE_MAD.id()) {
 			World.getWorld().registerItem(
-				new GroundItem(QuestItems.MAGENTA_KEY, n.getX(), n.getY(), 1, p));
-		} else if (n.getID() == 181) {
+				new GroundItem(ItemId.MAGENTA_KEY.id(), n.getX(), n.getY(), 1, p));
+		} else if (n.getID() == NpcId.LESSER_DEMON_WMAZEKEY.id()) {
 			World.getWorld().registerItem(
-				new GroundItem(QuestItems.BLACK_KEY, n.getX(), n.getY(), 1, p));
-		} else if (n.getID() == 196 && p.getQuestStage(this) == 3) {
+				new GroundItem(ItemId.BLACK_KEY.id(), n.getX(), n.getY(), 1, p));
+		} else if (n.getID() == NpcId.DRAGON.id() && p.getQuestStage(this) == 3) {
 			p.sendQuestComplete(getQuestId());
 		}
 		return false;
-	}
-
-	@Override
-	public void handleReward(Player p) {
-		p.teleport(411, 3480, false);
-		p.message("Well done you have completed the dragon slayer quest!");
-		p.message("@gre@You haved gained 2 quest points!");
-		int[] questData = Quests.questData.get(Quests.DRAGON_SLAYER);
-		//keep order kosher
-		int[] skillIDs = {Skills.STRENGTH, Skills.DEFENSE};
-		for (int i = 0; i < skillIDs.length; i++) {
-			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
-			incQuestReward(p, questData, i == (skillIDs.length - 1));
-		}
 	}
 
 	@Override
@@ -435,14 +448,15 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == 57) {
 			//special door dwarven mine
-			if (p.getX() >= 259 && hasItem(p, 268, 1) && hasItem(p, 200, 1) && hasItem(p, 375, 1) && hasItem(p, 340)) {
+			if (p.getX() >= 259 && hasItem(p, ItemId.WIZARDS_MIND_BOMB.id(), 1) && hasItem(p, ItemId.SILK.id(), 1)
+					&& hasItem(p, ItemId.LOBSTER_POT.id(), 1) && hasItem(p, ItemId.UNFIRED_BOWL.id())) {
 				Point location = Point.location(p.getX(), p.getY());
 				doDoor(obj, p);
 				if (!p.getLocation().equals(location)) {
-					removeItem(p, 268, 1);
-					removeItem(p, 200, 1);
-					removeItem(p, 375, 1);
-					removeItem(p, 340, 1);
+					removeItem(p, ItemId.WIZARDS_MIND_BOMB.id(), 1);
+					removeItem(p, ItemId.SILK.id(), 1);
+					removeItem(p, ItemId.LOBSTER_POT.id(), 1);
+					removeItem(p, ItemId.UNFIRED_BOWL.id(), 1);
 					p.getCache().store("dwarven_unlocked", true);
 				}
 			} else if (p.getX() <= 258) {
@@ -478,22 +492,19 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 
 	@Override
 	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
-		if ((item1.getID() >= 416 && item1.getID() <= 418)
-			&& (item2.getID() >= 416 && item2.getID() <= 418)) {
-			return true;
-		}
-		return false;
+		return DataConversions.inArray(new int[] {ItemId.MAP_PIECE_1.id(), ItemId.MAP_PIECE_2.id(), ItemId.MAP_PIECE_3.id()}, item1.getID())
+				&& DataConversions.inArray(new int[] {ItemId.MAP_PIECE_1.id(), ItemId.MAP_PIECE_2.id(), ItemId.MAP_PIECE_3.id()}, item2.getID());
 	}
 
 	@Override
 	public void onInvUseOnItem(Player p, Item item1, Item item2) {
-		if ((item1.getID() >= 416 && item1.getID() <= 418)
-			&& (item2.getID() >= 416 && item2.getID() <= 418)) {
-			if (hasItem(p, 416, 1) && hasItem(p, 417, 1) && hasItem(p, 418, 1)) {
-				removeItem(p, 416, 1);
-				removeItem(p, 417, 1);
-				removeItem(p, 418, 1);
-				addItem(p, 415, 1);
+		if (DataConversions.inArray(new int[] {ItemId.MAP_PIECE_1.id(), ItemId.MAP_PIECE_2.id(), ItemId.MAP_PIECE_3.id()}, item1.getID())
+				&& DataConversions.inArray(new int[] {ItemId.MAP_PIECE_1.id(), ItemId.MAP_PIECE_2.id(), ItemId.MAP_PIECE_3.id()}, item2.getID())) {
+			if (hasItem(p, ItemId.MAP_PIECE_1.id(), 1) && hasItem(p, ItemId.MAP_PIECE_2.id(), 1) && hasItem(p, ItemId.MAP_PIECE_3.id(), 1)) {
+				removeItem(p, ItemId.MAP_PIECE_1.id(), 1);
+				removeItem(p, ItemId.MAP_PIECE_2.id(), 1);
+				removeItem(p, ItemId.MAP_PIECE_3.id(), 1);
+				addItem(p, ItemId.MAP.id(), 1);
 			}
 		}
 	}
@@ -501,33 +512,30 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
 									   Player player) {
-		if (obj.getID() == 226 || obj.getID() == 232) {
-			return true;
-		}
-		return false;
+		return obj.getID() == 226 || obj.getID() == 232;
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if ((obj.getID() == 226 || obj.getID() == 232) && item.getID() == 410) {
+		if ((obj.getID() == 226 || obj.getID() == 232) && item.getID() == ItemId.PLANK.id()) {
 			if (p.getCache().hasKey("lumb_lady") && p.getCache().getInt("lumb_lady") == CRANDOR) {
 				p.message("The ship doesn't seem easily repairable at the moment");
 			} else {
 				if (p.getCache().hasKey("crandor_shortcut")) {
 					p.message("You don't need to mess about with broken ships");
 					p.message("Now you have found that secret passage from Karamja");
-				} else if (!p.getCache().hasKey("ship_repair") && hasItem(p, 419, 4)
-					&& hasItem(p, 410, 1)) {
+				} else if (!p.getCache().hasKey("ship_repair") && hasItem(p, ItemId.NAILS.id(), 4)
+					&& hasItem(p, ItemId.PLANK.id(), 1)) {
 					p.message("You hammer the plank over the hole");
 					p.message("You still need more planks to close the hole completely");
-					p.getInventory().remove(419, 4);
-					p.getInventory().remove(410, 1);
+					p.getInventory().remove(ItemId.NAILS.id(), 4);
+					p.getInventory().remove(ItemId.PLANK.id(), 1);
 					p.getCache().set("ship_repair", 1);
-				} else if (hasItem(p, 419, 4) && hasItem(p, 410, 1)) {
+				} else if (hasItem(p, ItemId.NAILS.id(), 4) && hasItem(p, ItemId.PLANK.id(), 1)) {
 					int planks_added = p.getCache().getInt("ship_repair");
 					p.message("You hammer the plank over the hole");
-					p.getInventory().remove(419, 4);
-					p.getInventory().remove(410, 1);
+					p.getInventory().remove(ItemId.NAILS.id(), 4);
+					p.getInventory().remove(ItemId.PLANK.id(), 1);
 					if (planks_added + 1 == 3) {
 						p.getCache().remove("ship_repair");
 						p.getCache().store("ship_fixed", true);
@@ -537,9 +545,9 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 						p.getCache().set("ship_repair", planks_added + 1);
 						p.message("You still need more planks to close the hole completely");
 					}
-				} else if (!hasItem(p, 419, 4)) {
+				} else if (!hasItem(p, ItemId.NAILS.id(), 4)) {
 					p.message("You need 4 steel nails to attach the plank with");
-				} else if (!hasItem(p, 168, 1)) {
+				} else if (!hasItem(p, ItemId.HAMMER.id(), 1)) {
 					p.message("You need a hammer to hammer the nails in with");
 				} else {
 					p.message("Nothing interesting happens");
@@ -550,15 +558,6 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 		else if (obj.getID() == 226 || obj.getID() == 232) {
 			p.message("Nothing interesting happens");
 		}
-	}
-
-	private class QuestItems {
-		public static final int RED_KEY = 390;
-		public static final int ORANGE_KEY = 391;
-		public static final int YELLOW_KEY = 392;
-		public static final int BLUE_KEY = 393;
-		public static final int MAGENTA_KEY = 394;
-		public static final int BLACK_KEY = 395;
 	}
 
 	class Oziach {
