@@ -25,7 +25,7 @@ public class HourlyEvent extends DelayedEvent {
 		this.timestamp += 3600;
 		this.action();
 
-		if(getLifeTimeLeft() > 0)
+		if(getLifeTimeLeft() <= 0)
 			stop();
 	}
 
