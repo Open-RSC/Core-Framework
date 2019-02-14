@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.quests.free;
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -23,6 +24,12 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 	TalkToNpcExecutiveListener, ObjectActionListener,
 	ObjectActionExecutiveListener, PlayerKilledNpcExecutiveListener,
 	PlayerKilledNpcListener, PlayerAttackNpcExecutiveListener {
+	
+	private static final int COUNT_DRAYNOR_COFFIN_OPEN = 136;
+	private static final int COUNT_DRAYNOR_COFFIN_CLOSED = 135;
+	private static final int GARLIC_CUPBOARD_OPEN = 141;
+	private static final int GARLIC_CUPBOARD_CLOSED = 140;
+	
 	@Override
 	public int getQuestId() {
 		return Constants.Quests.VAMPIRE_SLAYER;
@@ -31,6 +38,19 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 	@Override
 	public String getQuestName() {
 		return "Vampire slayer";
+	}
+	
+	@Override
+	public boolean isMembers() {
+		return false;
+	}
+	
+	@Override
+	public void handleReward(Player player) {
+		player.message("Well done you have completed the vampire slayer quest");
+		incQuestReward(player, Quests.questData.get(Quests.VAMPIRE_SLAYER), true);
+		player.message("@gre@You haved gained 3 quest points!");
+
 	}
 
 	private void morganDialogue(Player p, Npc n) {
@@ -168,52 +188,49 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
-		if (n.getID() == 97) {
+		if (n.getID() == NpcId.MORGAN.id()) {
 			morganDialogue(p, n);
-		}
-		if (n.getID() == 98) {
+		} else if (n.getID() == NpcId.DR_HARLOW.id()) {
 			harlowDialogue(p, n);
 		}
-
 	}
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player player) {
-		if ((obj.getID() == 136 || obj.getID() == 135) && obj.getY() == 3380) {
+		if ((obj.getID() == COUNT_DRAYNOR_COFFIN_OPEN || obj.getID() == COUNT_DRAYNOR_COFFIN_CLOSED) && obj.getY() == 3380) {
 			if (command.equalsIgnoreCase("open")) {
-				openGenericObject(obj, player, 136, "You open the coffin");
+				openGenericObject(obj, player, COUNT_DRAYNOR_COFFIN_OPEN, "You open the coffin");
 			} else if (command.equalsIgnoreCase("close")) {
-				closeGenericObject(obj, player, 135, "You close the coffin");
+				closeGenericObject(obj, player, COUNT_DRAYNOR_COFFIN_CLOSED, "You close the coffin");
 			} else {
 				if (player.getQuestStage(this) == -1) {
 					player.message("There's a pillow in here");
 					return;
 				} else {
 					for (Npc npc : player.getRegion().getNpcs()) {
-						if (npc.getID() == 96 && npc.getAttribute("spawnedFor", null).equals(player)) {
+						if (npc.getID() == NpcId.COUNT_DRAYNOR.id() && npc.getAttribute("spawnedFor", null).equals(player)) {
 							player.message("There's nothing there.");
 							return;
 						}
 					}
 
-					final Npc n = spawnNpc(96, 206, 3381, 1000 * 60 * 5, player);
+					final Npc n = spawnNpc(NpcId.COUNT_DRAYNOR.id(), 206, 3381, 1000 * 60 * 5, player);
 					n.setShouldRespawn(false);
 					player.message("A vampire jumps out of the coffin");
 					return;
 				}
 			}
-		} else if ((obj.getID() == 141 || obj.getID() == 140) && obj.getY() == 1562) {
+		} else if ((obj.getID() == GARLIC_CUPBOARD_OPEN || obj.getID() == GARLIC_CUPBOARD_CLOSED) && obj.getY() == 1562) {
 			if (command.equalsIgnoreCase("open")) {
-				openCupboard(obj, player, 141);
+				openCupboard(obj, player, GARLIC_CUPBOARD_OPEN);
 			} else if (command.equalsIgnoreCase("close")) {
-				closeCupboard(obj, player, 140);
+				closeCupboard(obj, player, GARLIC_CUPBOARD_CLOSED);
 			} else {
+				player.message("You search the cupboard");
 				if (!player.getInventory().hasItemId(ItemId.GARLIC.id())) {
-					player.message("You search the cupboard");
 					player.message("You find a clove of garlic that you take");
 					player.getInventory().add(new Item(ItemId.GARLIC.id()));
 				} else {
-					player.message("You search the cupboard");
 					player.message("The cupboard is empty");
 				}
 			}
@@ -223,32 +240,24 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 97 || n.getID() == 98;
+		return n.getID() == NpcId.MORGAN.id() || n.getID() == NpcId.DR_HARLOW.id();
 	}
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command,
 									 Player player) {
-		return (obj.getID() == 136 || obj.getID() == 135) && obj.getY() == 3380
-				|| (obj.getID() == 141 || obj.getID() == 140) && obj.getY() == 1562;
-	}
-
-	@Override
-	public void handleReward(Player player) {
-		player.message("Well done you have completed the vampire slayer quest");
-		incQuestReward(player, Quests.questData.get(Quests.VAMPIRE_SLAYER), true);
-		player.message("@gre@You haved gained 3 quest points!");
-
+		return (obj.getID() == COUNT_DRAYNOR_COFFIN_OPEN || obj.getID() == COUNT_DRAYNOR_COFFIN_CLOSED) && obj.getY() == 3380
+				|| (obj.getID() == GARLIC_CUPBOARD_OPEN || obj.getID() == GARLIC_CUPBOARD_CLOSED) && obj.getY() == 1562;
 	}
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		return n.getID() == 96;
+		return n.getID() == NpcId.COUNT_DRAYNOR.id();
 	}
 
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == 96) {
+		if (n.getID() == NpcId.COUNT_DRAYNOR.id()) {
 			if (p.getInventory().wielding(ItemId.STAKE.id()) && p.getInventory().hasItemId(ItemId.HAMMER.id())) {
 				p.getInventory().remove(p.getInventory().getLastIndexById(ItemId.STAKE.id()));
 				p.message("You hammer the stake in to the vampires chest!");
@@ -266,13 +275,8 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean isMembers() {
-		return false;
-	}
-
-	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
-		if (n.getID() == 96) {
+		if (n.getID() == NpcId.COUNT_DRAYNOR.id()) {
 			if (p.getInventory().hasItemId(ItemId.GARLIC.id())) {
 				p.message("The vampire appears to weaken");
 				//if a better approx is found, replace

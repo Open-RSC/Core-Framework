@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -12,6 +14,7 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -30,17 +33,17 @@ public class DemonSlayer implements QuestInterface,
 	public String getQuestName() {
 		return "Demon slayer";
 	}
+	
+	@Override
+	public boolean isMembers() {
+		return false;
+	}
 
 	@Override
 	public void handleReward(Player p) {
 		p.message("You have completed the demonslayer quest");
 		incQuestReward(p, Quests.questData.get(Quests.DEMON_SLAYER), true);
 		p.message("@gre@You haved gained 3 quest points!");
-	}
-
-	@Override
-	public boolean isMembers() {
-		return false;
 	}
 
 	@Override
@@ -62,14 +65,14 @@ public class DemonSlayer implements QuestInterface,
 				case 4:
 				case -1:
 					//even post-quest was the same thing
-					if (item.getID() == 50) {
+					if (item.getID() == ItemId.BUCKET_OF_WATER.id()) {
 						message(player,
 							"You pour the liquid down the drain");
 						message(player, "Ok I think I've washed the key down into the sewer",
 							"I'd better go down and get it before someone else finds it");
-						player.getInventory().replace(50, 21);
+						player.getInventory().replace(ItemId.BUCKET_OF_WATER.id(), ItemId.BUCKET.id());
 						World.getWorld().registerItem(
-							new GroundItem(51, 117, 3294, 1, player));
+							new GroundItem(ItemId.SILVERLIGHT_KEY_3.id(), 117, 3294, 1, player));
 					}
 					break;
 			}
@@ -78,16 +81,8 @@ public class DemonSlayer implements QuestInterface,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 14) {
-			return true;
-		}
-		if (n.getID() == 16) {
-			return true;
-		}
-		if (n.getID() == 17) {
-			return true;
-		}
-		return n.getID() == 18;
+		return DataConversions.inArray(new int[] { NpcId.GYPSY.id(), NpcId.SIR_PRYSIN.id(), 
+				NpcId.TRAIBORN_THE_WIZARD.id(), NpcId.CAPTAIN_ROVIN.id() }, n.getID());
 	}
 
 	@Override
@@ -131,19 +126,15 @@ public class DemonSlayer implements QuestInterface,
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 14) {
+		if (n.getID() == NpcId.GYPSY.id()) {
 			gypsyDialogue(p, n, -1);
-		}
-		if (n.getID() == 16) {
+		} else if (n.getID() == NpcId.SIR_PRYSIN.id()) {
 			sirPrysinDialogue(p, n, -1);
-		}
-		if (n.getID() == 17) {
+		} else if (n.getID() == NpcId.TRAIBORN_THE_WIZARD.id()) {
 			traibornTheWizDialogue(p, n, -1);
-		}
-		if (n.getID() == 18) {
+		} else if (n.getID() == NpcId.CAPTAIN_ROVIN.id()) {
 			captainRovinDialogue(p, n, -1);
 		}
-
 	}
 
 	private void captainRovinDialogue(Player p, Npc n, int cID) {
@@ -228,7 +219,7 @@ public class DemonSlayer implements QuestInterface,
 					"Which I believe you have one of the keys for");
 				npcTalk(p, n, "Yes you're right", "Here you go");
 				message(p, "Captain Rovin hands you a key");
-				addItem(p, 26, 1);
+				addItem(p, ItemId.SILVERLIGHT_KEY_2.id(), 1);
 				break;
 			case CaptainRovin.I_FORGOT:
 				npcTalk(p, n, "Well it can't be that important then");
@@ -286,7 +277,7 @@ public class DemonSlayer implements QuestInterface,
 				case 3:
 				case 4:
 					//key obtained, present in inventory
-					if (p.getInventory().hasItemId(25)) {
+					if (p.getInventory().hasItemId(ItemId.SILVERLIGHT_KEY_1.id())) {
 						npcTalk(p, n, "Ello young thingummywut");
 						int choice3 = showMenu(p, n,
 							"Whats a thingummywut?",
@@ -307,7 +298,7 @@ public class DemonSlayer implements QuestInterface,
 						p.getCache().remove("done_bone_task");
 					} else {
 						npcTalk(p, n, "How are you doing finding bones?");
-						if (p.getInventory().countId(20) <= 0) {
+						if (p.getInventory().countId(ItemId.BONES.id()) <= 0) {
 							playerTalk(p, n, "I haven't got any at the moment");
 							npcTalk(p, n, "Never mind. Keep working on it");
 							return;
@@ -320,8 +311,8 @@ public class DemonSlayer implements QuestInterface,
 						else
 							boneCount = p.getCache().getInt("traiborn_bones");
 
-						while (p.getInventory().countId(20) > 0) {
-							p.getInventory().remove(new Item(20));
+						while (p.getInventory().countId(ItemId.BONES.id()) > 0) {
+							p.getInventory().remove(new Item(ItemId.BONES.id()));
 							p.message("You give Traiborn a set of bones");
 							boneCount++;
 							sleep(600);
@@ -341,7 +332,7 @@ public class DemonSlayer implements QuestInterface,
 								"Return it now unto me");
 							message(p, "Traiborn smiles",
 								"Traiborn hands you a key");
-							p.getInventory().add(new Item(25, 1));
+							p.getInventory().add(new Item(ItemId.SILVERLIGHT_KEY_1.id(), 1));
 							p.getCache().store("done_bone_task", true);
 							playerTalk(p, n, "Thank you very much");
 							npcTalk(p, n,
@@ -357,7 +348,7 @@ public class DemonSlayer implements QuestInterface,
 				case 2:
 					npcTalk(p, n, "Ello young thingummywut");
 					int choice4;
-					if (!p.getInventory().hasItemId(25)) {
+					if (!p.getInventory().hasItemId(ItemId.SILVERLIGHT_KEY_1.id())) {
 						choice4 = showMenu(p, n,
 							"Whats a thingummywut?",
 							"Teach me to be a mighty and powerful wizard",
@@ -414,7 +405,7 @@ public class DemonSlayer implements QuestInterface,
 								message(p,
 									"Traiborn digs around in the pockets of his robes",
 									"Traiborn hands you a spinach roll");
-								addItem(p, 179, 1);
+								addItem(p, ItemId.SPINACH_ROLL.id(), 1);
 								playerTalk(p, n, "Thank you very much");
 								int choice9 = showMenu(p, n,
 									"Err I'd better be off really",
@@ -545,28 +536,28 @@ public class DemonSlayer implements QuestInterface,
 				case 3:
 				case 4:
 					//if silverlight is lost, player needs to regain keys
-					if (!p.getInventory().hasItemId(52)) {
+					if (!p.getInventory().hasItemId(ItemId.SILVERLIGHT.id())) {
 						npcTalk(p, n, "So how are you doing with getting the keys?");
-						if (p.getInventory().hasItemId(26)
-							&& p.getInventory().hasItemId(25)
-							&& p.getInventory().hasItemId(51)) {
+						if (p.getInventory().hasItemId(ItemId.SILVERLIGHT_KEY_2.id())
+							&& p.getInventory().hasItemId(ItemId.SILVERLIGHT_KEY_1.id())
+							&& p.getInventory().hasItemId(ItemId.SILVERLIGHT_KEY_3.id())) {
 							playerTalk(p, n, "I've got them all");
 							sirPrysinDialogue(p, n, SirPrysin.GOT_THEM);
 							return;
-						} else if (!p.getInventory().hasItemId(26)
-							&& !p.getInventory().hasItemId(25)
-							&& !p.getInventory().hasItemId(51)) {
+						} else if (!p.getInventory().hasItemId(ItemId.SILVERLIGHT_KEY_2.id())
+							&& !p.getInventory().hasItemId(ItemId.SILVERLIGHT_KEY_1.id())
+							&& !p.getInventory().hasItemId(ItemId.SILVERLIGHT_KEY_3.id())) {
 							playerTalk(p, n, "I've not found any of them yet");
 						} else {
 							playerTalk(p, n, "I've made a start");
 						}
-						if (p.getInventory().hasItemId(26)) {
+						if (p.getInventory().hasItemId(ItemId.SILVERLIGHT_KEY_2.id())) {
 							playerTalk(p, n, "I've got the key off Wizard Traiborn");
 						}
-						if (p.getInventory().hasItemId(25)) {
+						if (p.getInventory().hasItemId(ItemId.SILVERLIGHT_KEY_1.id())) {
 							playerTalk(p, n, "I've got the key off Captain Rovin");
 						}
-						if (p.getInventory().hasItemId(51)) {
+						if (p.getInventory().hasItemId(ItemId.SILVERLIGHT_KEY_3.id())) {
 							playerTalk(p, n,
 								"I've got the key You dropped down the drain");
 						}
@@ -613,12 +604,12 @@ public class DemonSlayer implements QuestInterface,
 			case SirPrysin.GOT_THEM:
 				npcTalk(p, n, "Excellent. Now I can give you Silverlight");
 				message(p, "You give all three keys to Sir Prysin");
-				removeItem(p, 25, 1);
-				removeItem(p, 26, 1);
-				removeItem(p, 51, 1);
+				removeItem(p, ItemId.SILVERLIGHT_KEY_1.id(), 1);
+				removeItem(p, ItemId.SILVERLIGHT_KEY_2.id(), 1);
+				removeItem(p, ItemId.SILVERLIGHT_KEY_3.id(), 1);
 				message(p, "Sir Prysin unlocks a long thin box",
 					"Prysin hands you an impressive looking sword");
-				addItem(p, 52, 1);
+				addItem(p, ItemId.SILVERLIGHT.id(), 1);
 				p.updateQuestStage(this, 4);
 				break;
 			case SirPrysin.GYPSY:
@@ -793,7 +784,7 @@ public class DemonSlayer implements QuestInterface,
 				case 3:
 				case 4:
 					npcTalk(p, n, "How goes the quest?");
-					if (!p.getInventory().hasItemId(52)) {
+					if (!p.getInventory().hasItemId(ItemId.SILVERLIGHT.id())) {
 						playerTalk(p, n,
 							"I found Sir Prysin. Unfortunately, I haven't got the sword yet");
 						playerTalk(p, n, "He's made it complicated for me!");
@@ -902,8 +893,8 @@ public class DemonSlayer implements QuestInterface,
 				playerTalk(p, n, "Err yeah whatever");
 				break;
 			case GypsyConversation.QUEST_START:// Quest Start
-				if (p.getInventory().hasItemId(10))
-					p.getInventory().remove(10, 1);
+				if (p.getInventory().hasItemId(ItemId.COINS.id()))
+					p.getInventory().remove(ItemId.COINS.id(), 1);
 				else {
 					playerTalk(p, n, "Oh dear. I don't have any money");
 					break;
@@ -1083,7 +1074,7 @@ public class DemonSlayer implements QuestInterface,
 
 	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
-		if (n.getID() == 35) {
+		if (n.getID() == NpcId.DELRITH.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 				case 1:
@@ -1092,7 +1083,7 @@ public class DemonSlayer implements QuestInterface,
 					playerTalk(p, null, "I'd rather not. He looks scary");
 					return true;
 				case 4:
-					if (!p.getInventory().wielding(52)) {
+					if (!p.getInventory().wielding(ItemId.SILVERLIGHT.id())) {
 						playerTalk(p, null, "Maybe I'd better wield silverlight first");
 						return true;
 					} else {
@@ -1147,17 +1138,17 @@ public class DemonSlayer implements QuestInterface,
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		return n.getID() == 35;
+		return n.getID() == NpcId.DELRITH.id();
 	}
 
 	@Override
 	public boolean blockPlayerRangeNpc(Player p, Npc n) {
-		return n.getID() == 35;
+		return n.getID() == NpcId.DELRITH.id();
 	}
 
 	@Override
 	public void onPlayerRangeNpc(Player p, Npc n) {
-		if (n.getID() == 35) {
+		if (n.getID() == NpcId.DELRITH.id()) {
 			p.message("You cannot attack Delrith without the silverlight sword");
 		}
 	}

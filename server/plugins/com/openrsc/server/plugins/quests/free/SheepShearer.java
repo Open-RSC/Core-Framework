@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -28,6 +30,19 @@ public class SheepShearer implements QuestInterface, TalkToNpcListener,
 	@Override
 	public String getQuestName() {
 		return "Sheep shearer";
+	}
+	
+	@Override
+	public boolean isMembers() {
+		return false;
+	}
+	
+	@Override
+	public void handleReward(Player player) {
+		player.getInventory().add(new Item(ItemId.COINS.id(), 60));
+		player.message("Well done you have completed the sheep shearer quest");
+		incQuestReward(player, Quests.questData.get(Quests.SHEEP_SHEARER), true);
+		player.message("@gre@You haved gained 1 quest point!");
 	}
 
 	private void fredDialogue(Player p, Npc n, int cID) {
@@ -104,7 +119,7 @@ public class SheepShearer implements QuestInterface, TalkToNpcListener,
 				case 1:
 					npcTalk(p, n, "How are you doing getting those balls of wool?");
 					int totalWool = 0;
-					int woolCount = p.getInventory().countId(207);
+					int woolCount = p.getInventory().countId(ItemId.BALL_OF_WOOL.id());
 					if (p.getCache().hasKey("sheep_shearer_wool_count")) {
 						totalWool = p.getCache().getInt("sheep_shearer_wool_count");
 						if (totalWool + woolCount > 20) {
@@ -129,7 +144,7 @@ public class SheepShearer implements QuestInterface, TalkToNpcListener,
 						playerTalk(p, n, "I have some");
 						npcTalk(p, n, "Give em here then");
 						for (int i = 0; i < woolCount; ++i) {
-							p.getInventory().remove(207, 1);
+							p.getInventory().remove(ItemId.BALL_OF_WOOL.id(), 1);
 							message(p, 600, "You give Fred a ball of wool");
 						}
 						if (totalWool >= 20) {
@@ -145,7 +160,7 @@ public class SheepShearer implements QuestInterface, TalkToNpcListener,
 							npcTalk(p, n, "I need more before I can pay you");
 							playerTalk(p, n, "Ok I'll work on it");
 						}
-					} else if (hasItem(p, 145)) {
+					} else if (hasItem(p, ItemId.WOOL.id())) {
 						playerTalk(p, n, "Well I've got some wool",
 							"I've not managed to make it into a ball though");
 						npcTalk(p, n, "Well go find a spinning wheel then",
@@ -183,27 +198,14 @@ public class SheepShearer implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
-		if (n.getID() == 77) {
+		if (n.getID() == NpcId.FRED_THE_FARMER.id()) {
 			fredDialogue(p, n, -1);
 		}
 	}
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 77;
-	}
-
-	@Override
-	public void handleReward(Player player) {
-		player.getInventory().add(new Item(10, 60));
-		player.message("Well done you have completed the sheep shearer quest");
-		incQuestReward(player, Quests.questData.get(Quests.SHEEP_SHEARER), true);
-		player.message("@gre@You haved gained 1 quest point!");
-	}
-
-	@Override
-	public boolean isMembers() {
-		return false;
+		return n.getID() == NpcId.FRED_THE_FARMER.id();
 	}
 
 	class Fred {
