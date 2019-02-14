@@ -7,17 +7,33 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 
 public final class Scene {
-	public int fogSmoothingStartDistance = 10;
-	public int fogZFalloff = 20;
-	private int[] m_a;
-	private int m_A;
+	public static final int TRANSPARENT = 12345678;
 	private final RSModel[] m_Ab;
 	private final int[] m_B = new int[40];
+	private final int m_db;
+	private final int polyNormalScale;
+	private final int m_ib = 50;
+	private final int[][] m_Ib;
+	private final int[] m_J = new int[40];
+	private final int[] m_qb;
+	private final int[] m_Qb = new int[40];
+	private final int[] m_r;
+	private final boolean m_Ub;
+	private final int[] m_v;
+	private final int[] m_Vb = new int[40];
+	private final int[] m_yb;
+	private final int rot1024_zTop = 5;
+	public int fogSmoothingStartDistance = 10;
+	public int fogZFalloff = 20;
+	public int fogLandscapeDistance;
+	public RSModel m_T;
+	public int fogEntityDistance;
+	private int[] m_a;
+	private int m_A;
 	private int m_cb;
 	private int m_Cb;
 	private int m_cc = 0;
 	private long[] m_D;
-	private final int m_db;
 	private GraphicsController graphics;
 	private int m_e;
 	private int m_eb;
@@ -27,42 +43,28 @@ public final class Scene {
 	private int[] m_Fb;
 	private byte[][] m_g;
 	private int[] m_gb;
-	private final int polyNormalScale;
 	private int[] m_H;
 	private int[] m_Hb;
 	private int[][] m_i;
-	private final int m_ib = 50;
-	private final int[][] m_Ib;
 	private int m_j;
-	private final int[] m_J = new int[40];
 	private int[] m_jb;
 	private boolean m_K;
 	private int[][] resourceDatabase;
 	private int[][] m_L;
-	public int fogLandscapeDistance;
 	private int m_n;
 	private int m_Nb;
 	private int[] m_ob;
 	private int[] m_Ob;
 	private int[] pixelData;
 	private int[] m_Q;
-	private final int[] m_qb;
-	private final int[] m_Qb = new int[40];
-	private final int[] m_r;
 	private boolean[] m_S;
-	public RSModel m_T;
 	private int m_u;
-	private final boolean m_Ub;
-	private final int[] m_v;
 	private int m_vb;
-	private final int[] m_Vb = new int[40];
 	private int m_wb = 192;
 	private int m_Wb;
 	private Scanline[] m_x;
-	public int fogEntityDistance;
 	private int m_Xb;
 	private Polygon[] polygons;
-	private final int[] m_yb;
 	private int m_zb;
 	private int m_Zb = 256;
 	private int modelCount;
@@ -71,12 +73,9 @@ public final class Scene {
 	private int rot1024_off_y;
 	private int rot1024_off_z;
 	private int rot1024_vp_src;
-	private int rot1024_x;
-	private int rot1024_y;
-	private int rot1024_z;
-
-	private final int rot1024_zTop = 5;
-	public static final int TRANSPARENT = 12345678;
+	private int cameraProjX;
+	private int cameraProjY;
+	private int cameraProjZ;
 
 	public Scene(GraphicsController var1, int var2, int maxPolygonCount, int var4) {
 		this.m_Ib = new int[this.m_ib][256];
@@ -125,12 +124,12 @@ public final class Scene {
 
 			this.m_Fb = new int[var4];
 			this.rot1024_off_y = 0;
-			this.rot1024_z = 0;
+			this.cameraProjZ = 0;
 			this.m_Ob = new int[var4];
-			this.rot1024_y = 0;
+			this.cameraProjY = 0;
 			this.rot1024_off_z = 0;
 			this.rot1024_off_x = 0;
-			this.rot1024_x = 0;
+			this.cameraProjX = 0;
 			this.m_Q = new int[var4];
 			this.m_gb = new int[var4];
 			this.m_a = new int[var4];
@@ -142,7 +141,7 @@ public final class Scene {
 
 	private final boolean polygonHit1(Polygon polyA, Polygon polyB) {
 		try {
-			
+
 			RSModel modelA = polyA.model;
 			RSModel modelB = polyB.model;
 			int faceA = polyA.faceID;
@@ -204,7 +203,7 @@ public final class Scene {
 
 	public final int[] getQB(byte var1) {
 		try {
-			
+
 			return this.m_qb;
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "lb.C(" + var1 + ')');
@@ -213,7 +212,7 @@ public final class Scene {
 
 	private final boolean booleanCombinatoric(boolean var2, int var3, int var4, int var5, int var6) {
 		try {
-			
+
 			if ((!var2 || var5 > var6) && var5 >= var6) {
 				if (var5 < var4)
 					return true;
@@ -244,7 +243,7 @@ public final class Scene {
 
 	private final boolean polygonHit2(byte var1, Polygon var2, Polygon var3) {
 		try {
-			
+
 			if (var3.minP6 >= var2.maxP6) {
 				return true;
 			} else {
@@ -370,7 +369,7 @@ public final class Scene {
 								var26[1] = var26[2] = var5.vertexParam2[var12];
 							}
 
-							return !this.a(var25, var24, var30, var26, 1);
+							return !this.setFrustum(var25, var24, var30, var26, 1);
 						}
 					}
 				}
@@ -383,7 +382,7 @@ public final class Scene {
 
 	private final void resetMTVertHead() {
 		try {
-			
+
 			this.m_n = 0;
 			this.m_T.resetFaceVertHead((int) 1);
 		} catch (RuntimeException var3) {
@@ -393,7 +392,7 @@ public final class Scene {
 
 	final int resourceToColor(int resource, boolean var2) {
 		try {
-			
+
 			if (resource == Scene.TRANSPARENT) {
 				return 0;
 			} else {
@@ -417,7 +416,7 @@ public final class Scene {
 
 	private final boolean booleanCombinatoric2(int var1, boolean var2, int var3, byte var4, int var5) {
 		try {
-			
+
 			return (!var2 || var3 > var1) && var3 >= var1 ? (var5 < var1 ? true : var2) : (var1 >= var5 ? !var2 : true);
 		} catch (RuntimeException var7) {
 			throw GenUtil.makeThrowable(var7, "lb.CA(" + var1 + ',' + var2 + ',' + var3 + ',' + -71 + ',' + var5 + ')');
@@ -426,7 +425,7 @@ public final class Scene {
 
 	private final int booleanCombinatoric3(int var1, boolean var2, int var3, int var4, int var5, int var6) {
 		try {
-			
+
 			return var4 == var1 ? var6 : (var5 - var6) * (var3 - var1) / (var4 - var1) + var6;
 		} catch (RuntimeException var8) {
 			throw GenUtil.makeThrowable(var8,
@@ -434,9 +433,9 @@ public final class Scene {
 		}
 	}
 
-	private final void a(int var1, byte var2) {
+	private final void setFrustum(int var1, byte var2) {
 		try {
-			
+
 			short var3;
 			if (this.m_Hb[var1] != 0) {
 				var3 = 128;
@@ -480,7 +479,7 @@ public final class Scene {
 
 	private final void computePolygon(int polyID) {
 		try {
-			
+
 			Polygon poly = this.polygons[polyID];
 			RSModel model = poly.model;
 			int face = poly.faceID;
@@ -566,73 +565,73 @@ public final class Scene {
 		}
 	}
 
-	private final void a(int var1, int var2, int var3, boolean var4) {
+	private final void setFrustum(int x, int y, int z, boolean var4) {
 		try {
-			
-			int projX = 1024 - this.rot1024_x & 1023;
-			int projY = 1023 & 1024 - this.rot1024_y;
-			int projZ = 1024 - this.rot1024_z & 1023;
+
+			int projX = 1024 - this.cameraProjX & 1023;
+			int projY = 1024 - this.cameraProjY & 1023;
+			int projZ = 1024 - this.cameraProjZ & 1023;
 			int var8;
 			int var9;
 			int var10;
 			if (projZ != 0) {
 				var8 = FastMath.trigTable_1024[projZ];
 				var9 = FastMath.trigTable_1024[1024 + projZ];
-				var10 = var9 * var2 + var8 * var3 >> 15;
-				var3 = var3 * var9 - var8 * var2 >> 15;
-				var2 = var10;
+				var10 = var9 * y + var8 * z >> 15;
+				z = z * var9 - var8 * y >> 15;
+				y = var10;
 			}
 
 			if (projX != 0) {
 				var9 = FastMath.trigTable_1024[1024 + projX];
 				var8 = FastMath.trigTable_1024[projX];
-				var10 = var3 * var9 - var8 * var1 >> 15;
-				var1 = var9 * var1 + var8 * var3 >> 15;
-				var3 = var10;
+				var10 = z * var9 - var8 * x >> 15;
+				x = var9 * x + var8 * z >> 15;
+				z = var10;
 			}
 
 			if (projY != 0) {
 				var8 = FastMath.trigTable_1024[projY];
 				var9 = FastMath.trigTable_1024[1024 + projY];
-				var10 = var8 * var1 + var2 * var9 >> 15;
-				var1 = var9 * var1 - var8 * var2 >> 15;
-				var2 = var10;
+				var10 = var8 * x + y * var9 >> 15;
+				x = var9 * x - var8 * y >> 15;
+				y = var10;
 			}
 
-			if (var1 > MiscFunctions.netsock_s_K) {
-				MiscFunctions.netsock_s_K = var1;
+			if (x > MiscFunctions.frustumMinX) {
+				MiscFunctions.frustumMinX = x;
 			}
 
-			if (var3 < MiscFunctions.pe_s_b) {
-				MiscFunctions.pe_s_b = var3;
+			if (z < MiscFunctions.frustumFarZ) {
+				MiscFunctions.frustumFarZ = z;
 			}
 
-			if (var2 > MiscFunctions.class13_s_b) {
-				MiscFunctions.class13_s_b = var2;
+			if (y > MiscFunctions.frustumMinY) {
+				MiscFunctions.frustumMinY = y;
 			}
 
-			if (var3 > MiscFunctions.cachingFile_s_y) {
-				MiscFunctions.cachingFile_s_y = var3;
+			if (z > MiscFunctions.frustumNearZ) {
+				MiscFunctions.frustumNearZ = z;
 			}
 
-			if (var1 < MiscFunctions.rssock_facs_j) {
-				MiscFunctions.rssock_facs_j = var1;
+			if (x < MiscFunctions.frustumMaxX) {
+				MiscFunctions.frustumMaxX = x;
 			}
 
-			if (var2 < MiscFunctions.pe_s_f) {
-				MiscFunctions.pe_s_f = var2;
+			if (y < MiscFunctions.frustumMaxY) {
+				MiscFunctions.frustumMaxY = y;
 			}
 
 		} catch (RuntimeException var11) {
-			throw GenUtil.makeThrowable(var11, "lb.JA(" + var1 + ',' + var2 + ',' + var3 + ',' + true + ')');
+			throw GenUtil.makeThrowable(var11, "lb.JA(" + x + ',' + y + ',' + z + ',' + true + ')');
 		}
 	}
 
-	public final void a(int var1, int var2, int var3, int var4) {
+	public final void setFrustum(int var1, int var2, int var3, int var4) {
 		try {
 			this.m_L = new int[var4][];
 			this.m_g = new byte[var4][];
-			
+
 			this.resourceDatabase = new int[var4][];
 			this.m_i = new int[var3][];
 			this.m_S = new boolean[var4];
@@ -646,13 +645,12 @@ public final class Scene {
 		}
 	}
 
-	public final void a(int var1, int var2, int var3, int var4, int var5, int var6) {
+	public final void setFrustum(int var1, int var2, int var3, int var4, int var5, int var6) {
 		try {
 			if (var4 == 0 && var6 == 0 && var1 == 0) {
 				var4 = 32;
 			}
 
-			
 
 			for (int var7 = var3; var7 < this.modelCount; ++var7) {
 				this.models[var7].setDiffuseLight(var2, var5, var6, -115, var4, var1);
@@ -664,7 +662,7 @@ public final class Scene {
 		}
 	}
 
-	private final void a(int var1, int var2, int var3, Polygon[] var4) {
+	private final void setFrustum(int var1, int var2, int var3, Polygon[] var4) {
 		try {
 			if (var3 >= -50) {
 				this.reduceSprites((byte) -98, (int) 32);
@@ -677,7 +675,7 @@ public final class Scene {
 				var4[var5].m_p = -1;
 			}
 
-			
+
 			var5 = 0;
 
 			while (true) {
@@ -699,7 +697,7 @@ public final class Scene {
 						if (var10.maxP6 > var6.minP6 && var10.minP6 < var6.maxP6 && var10.maxP2 > var6.minP2
 								&& var10.minP2 < var6.maxP2 && var6.m_f != var10.m_p
 								&& !this.polygonHit2((byte) -84, var10, var6) && this.polygonHit1(var10, var6)) {
-							this.a(var7, var4, var9, (byte) 34);
+							this.setFrustum(var7, var4, var9, (byte) 34);
 							var7 = this.m_e;
 							if (var4[var9] != var10) {
 								++var9;
@@ -718,10 +716,10 @@ public final class Scene {
 		}
 	}
 
-	private final void a(int var1, int var2, int[] var3, int var4, int var5, RSModel var6, int[] var7, int[] var8,
-			int var9, int var10, int var11) {
+	private final void setFrustum(int var1, int var2, int[] var3, int var4, int var5, RSModel var6, int[] var7, int[] var8,
+								  int var9, int var10, int var11) {
 		try {
-			
+
 			int var12;
 			int var13;
 			int var14;
@@ -1348,9 +1346,9 @@ public final class Scene {
 		}
 	}
 
-	private final void a(int var1, int var2, Polygon[] var3, int var4) {
+	private final void setFrustum(int var1, int var2, Polygon[] var3, int var4) {
 		try {
-			
+
 			if (var4 > var1) {
 				int var5 = var1 - 1;
 				int var6 = var4 + 1;
@@ -1376,8 +1374,8 @@ public final class Scene {
 					}
 				}
 
-				this.a(var1, -1, var3, var6);
-				this.a(var6 + 1, -1, var3, var4);
+				this.setFrustum(var1, -1, var3, var6);
+				this.setFrustum(var6 + 1, -1, var3, var4);
 			}
 
 		} catch (RuntimeException var11) {
@@ -1386,9 +1384,9 @@ public final class Scene {
 		}
 	}
 
-	private final boolean a(int var1, Polygon[] var2, int var3, byte var4) {
+	private final boolean setFrustum(int var1, Polygon[] var2, int var3, byte var4) {
 		try {
-			
+
 
 			while (true) {
 				Polygon var6 = var2[var1];
@@ -1433,7 +1431,7 @@ public final class Scene {
 					return false;
 				}
 
-				if (!this.a(var1 + 1, var2, var3, (byte) 70)) {
+				if (!this.setFrustum(var1 + 1, var2, var3, (byte) 70)) {
 					this.m_e = var1;
 					return false;
 				}
@@ -1446,9 +1444,9 @@ public final class Scene {
 		}
 	}
 
-	private final boolean a(int[] var1, int[] var2, int[] var3, int[] var4, int var5) {
+	private final boolean setFrustum(int[] var1, int[] var2, int[] var3, int[] var4, int var5) {
 		try {
-			
+
 			int var6 = var3.length;
 			int var7 = var1.length;
 			byte var16 = 0;
@@ -1848,10 +1846,10 @@ public final class Scene {
 		}
 	}
 
-	private final void a(int[] var1, RSModel model, int var3, int var4, int var5, int[] var6, int[] var7, int var8,
-			int var9) {
+	private final void setFrustum(int[] var1, RSModel model, int var3, int var4, int var5, int[] var6, int[] var7, int var8,
+								  int var9) {
 		try {
-			
+
 			if (var5 != -2) {
 				int var10;
 				int var11;
@@ -2321,7 +2319,7 @@ public final class Scene {
 
 	public final void addModel(RSModel mod) {
 		try {
-			
+
 			if (mod == null) {
 				System.out.println("Warning tried to add null object!");
 			}
@@ -2340,7 +2338,7 @@ public final class Scene {
 			if (var1 < 95) {
 				return (RSModel[]) null;
 			} else {
-				
+
 				return this.m_Ab;
 			}
 		} catch (RuntimeException var3) {
@@ -2350,7 +2348,7 @@ public final class Scene {
 
 	public final int b(int var1) {
 		try {
-			
+
 			if (var1 != 0) {
 				this.m_S = (boolean[]) null;
 			}
@@ -2363,7 +2361,7 @@ public final class Scene {
 
 	private final void b(int var1, boolean var2) {
 		try {
-			
+
 			if (!var2) {
 				this.m_K = false;
 			}
@@ -2380,7 +2378,7 @@ public final class Scene {
 							if (this.m_ec[var3] == null) {
 								this.m_ec[var3] = new int[65536];
 								this.resourceDatabase[var1] = this.m_ec[var3];
-								this.a((int) var1, (byte) 118);
+								this.setFrustum((int) var1, (byte) 118);
 								return;
 							}
 						}
@@ -2398,13 +2396,13 @@ public final class Scene {
 
 						this.resourceDatabase[var1] = this.resourceDatabase[var5];
 						this.resourceDatabase[var5] = null;
-						this.a((int) var1, (byte) 118);
+						this.setFrustum((int) var1, (byte) 118);
 					} else {
 						for (var3 = 0; this.m_i.length > var3; ++var3) {
 							if (null == this.m_i[var3]) {
 								this.m_i[var3] = new int[16384];
 								this.resourceDatabase[var1] = this.m_i[var3];
-								this.a((int) var1, (byte) 118);
+								this.setFrustum((int) var1, (byte) 118);
 								return;
 							}
 						}
@@ -2422,7 +2420,7 @@ public final class Scene {
 
 						this.resourceDatabase[var1] = this.resourceDatabase[var5];
 						this.resourceDatabase[var5] = null;
-						this.a((int) var1, (byte) 118);
+						this.setFrustum((int) var1, (byte) 118);
 					}
 
 				}
@@ -2434,7 +2432,7 @@ public final class Scene {
 
 	private final void b(int var1, int var2) {
 		try {
-			
+
 			Polygon var4 = this.polygons[var2];
 			RSModel var5 = var4.model;
 			int var6 = var4.faceID;
@@ -2501,7 +2499,7 @@ public final class Scene {
 
 	public final void d(int var1, int var2) {
 		try {
-			
+
 			if (null != this.resourceDatabase[var2]) {
 				int[] var3 = this.resourceDatabase[var2];
 
@@ -2520,7 +2518,7 @@ public final class Scene {
 				}
 
 				if (var1 != 25013) {
-					this.rot1024_z = 60;
+					this.cameraProjZ = 60;
 				}
 
 				short var9 = 4096;
@@ -2540,7 +2538,7 @@ public final class Scene {
 
 	public final int drawSprite(int var1, int var2, int var3, int var4, int var5, int var6, int var7, byte var8) {
 		try {
-			
+
 			this.m_gb[this.m_n] = var1;
 			this.m_Fb[this.m_n] = var4;
 			this.m_a[this.m_n] = var5;
@@ -2550,7 +2548,7 @@ public final class Scene {
 			this.m_Q[this.m_n] = 0;
 			int var9 = this.m_T.insertVertex2(false, var2, var4, var5);
 			int var10 = this.m_T.insertVertex2(false, var2, var4, var5 - var7);
-			int[] var11 = new int[] { var9, var10 };
+			int[] var11 = new int[]{var9, var10};
 			this.m_T.insertFace(2, var11, 0, 0, false);
 			this.m_T.facePickIndex[this.m_n] = var3;
 			this.m_T.m_zb[this.m_n++] = 0;
@@ -2563,41 +2561,41 @@ public final class Scene {
 
 	public final void endScene(int var1) {
 		try {
-			
+
 			this.m_f = this.graphics.interlace;
 			int var7 = this.m_A * this.fogLandscapeDistance >> this.rot1024_vp_src;
-			MiscFunctions.pe_s_b = 0;
-			MiscFunctions.cachingFile_s_y = 0;
-			MiscFunctions.rssock_facs_j = 0;
-			MiscFunctions.netsock_s_K = 0;
+			MiscFunctions.frustumFarZ = 0;
+			MiscFunctions.frustumNearZ = 0;
+			MiscFunctions.frustumMaxX = 0;
+			MiscFunctions.frustumMinX = 0;
 			int var8 = this.fogLandscapeDistance * this.m_wb >> this.rot1024_vp_src;
-			MiscFunctions.class13_s_b = 0;
-			MiscFunctions.pe_s_f = 0;
-			this.a(this.fogLandscapeDistance, -var7, -var8, true);
-			this.a(this.fogLandscapeDistance, -var7, var8, true);
-			this.a(this.fogLandscapeDistance, var7, -var8, true);
-			this.a(this.fogLandscapeDistance, var7, var8, true);
-			this.a(0, -this.m_A, -this.m_wb, true);
-			this.a(0, -this.m_A, this.m_wb, true);
-			this.a(0, this.m_A, -this.m_wb, true);
-			this.a(0, this.m_A, this.m_wb, true);
-			MiscFunctions.cachingFile_s_y += this.rot1024_off_y;
-			MiscFunctions.netsock_s_K += this.rot1024_off_z;
-			MiscFunctions.pe_s_b += this.rot1024_off_y;
-			MiscFunctions.pe_s_f += this.rot1024_off_x;
-			MiscFunctions.rssock_facs_j += this.rot1024_off_z;
-			MiscFunctions.class13_s_b += this.rot1024_off_x;
+			MiscFunctions.frustumMinY = 0;
+			MiscFunctions.frustumMaxY = 0;
+			this.setFrustum(this.fogLandscapeDistance, -var7, -var8, true);
+			this.setFrustum(this.fogLandscapeDistance, -var7, var8, true);
+			this.setFrustum(this.fogLandscapeDistance, var7, -var8, true);
+			this.setFrustum(this.fogLandscapeDistance, var7, var8, true);
+			this.setFrustum(0, -this.m_A, -this.m_wb, true);
+			this.setFrustum(0, -this.m_A, this.m_wb, true);
+			this.setFrustum(0, this.m_A, -this.m_wb, true);
+			this.setFrustum(0, this.m_A, this.m_wb, true);
+			MiscFunctions.frustumNearZ += this.rot1024_off_y;
+			MiscFunctions.frustumMinX += this.rot1024_off_z;
+			MiscFunctions.frustumFarZ += this.rot1024_off_y;
+			MiscFunctions.frustumMaxY += this.rot1024_off_x;
+			MiscFunctions.frustumMaxX += this.rot1024_off_z;
+			MiscFunctions.frustumMinY += this.rot1024_off_x;
 			this.models[this.modelCount] = this.m_T;
 			this.m_T.m_Yb = 2;
 
 			int var3;
 			for (var3 = 0; this.modelCount > var3; ++var3) {
 				this.models[var3].rotate1024(this.rot1024_off_y, this.rot1024_vp_src, this.rot1024_off_x, (byte) -122,
-						this.rot1024_off_z, this.rot1024_y, this.rot1024_z, this.rot1024_x, this.rot1024_zTop);
+						this.rot1024_off_z, this.cameraProjY, this.cameraProjZ, this.cameraProjX, this.rot1024_zTop);
 			}
 
 			this.models[this.modelCount].rotate1024(this.rot1024_off_y, this.rot1024_vp_src, this.rot1024_off_x,
-					(byte) -114, this.rot1024_off_z, this.rot1024_y, this.rot1024_z, this.rot1024_x, this.rot1024_zTop);
+					(byte) -114, this.rot1024_off_z, this.cameraProjY, this.cameraProjZ, this.cameraProjX, this.rot1024_zTop);
 			this.m_zb = 0;
 
 			RSModel var2;
@@ -2721,8 +2719,8 @@ public final class Scene {
 			}
 
 			if (this.m_zb != 0) {
-				this.a(0, -1, this.polygons, this.m_zb - 1);
-				this.a(this.m_zb, 100, -53, this.polygons);
+				this.setFrustum(0, -1, this.polygons, this.m_zb - 1);
+				this.setFrustum(this.m_zb, 100, -53, this.polygons);
 
 				for (var9 = 0; this.m_zb > var9; ++var9) {
 					Polygon var25 = this.polygons[var9];
@@ -2850,9 +2848,9 @@ public final class Scene {
 							}
 						}
 
-						this.a(0, var3, this.m_B, 0, 0, var2, this.m_yb, this.m_r, 0, 5960, var14);
+						this.setFrustum(0, var3, this.m_B, 0, 0, var2, this.m_yb, this.m_r, 0, 5960, var14);
 						if (this.m_Xb < this.m_Cb) {
-							this.a(this.m_Vb, var2, 1, var17, var25.m_b, this.m_J, this.m_Qb, 0, 0);
+							this.setFrustum(this.m_Vb, var2, 1, var17, var25.m_b, this.m_J, this.m_Qb, 0, 0);
 						}
 					}
 				}
@@ -2866,7 +2864,7 @@ public final class Scene {
 
 	public final void loadTexture(int var1, int[] var3, int var4, byte[] var5) {
 		try {
-			
+
 			this.m_g[var1] = var5;
 
 			this.m_L[var1] = var3;
@@ -2888,7 +2886,7 @@ public final class Scene {
 			}
 
 			this.m_n -= var2;
-			
+
 			this.m_T.removeFacesAndOrVerts(var2 * 2, -113, var2);
 			if (this.m_n < 0) {
 				this.m_n = 0;
@@ -2901,7 +2899,7 @@ public final class Scene {
 
 	final void removeAllGameObjects(boolean var1) {
 		try {
-			
+
 			this.resetMTVertHead();
 			if (var1) {
 				this.m_Xb = -11;
@@ -2930,7 +2928,7 @@ public final class Scene {
 				}
 			}
 
-			
+
 		} catch (RuntimeException var5) {
 			throw GenUtil.makeThrowable(var5, "lb.W(" + (var1 != null ? "{...}" : "null") + ',' + "dummy" + ')');
 		}
@@ -2941,10 +2939,10 @@ public final class Scene {
 			zRot &= 1023;
 			xRot &= 1023;
 			yRot &= 1023;
-			
-			this.rot1024_z = 1023 & 1024 - zRot;
-			this.rot1024_x = 1023 & 1024 - xRot;
-			this.rot1024_y = 1023 & 1024 - yRot;
+
+			this.cameraProjZ = 1024 - zRot & 1023;
+			this.cameraProjX = 1024 - xRot & 1023;
+			this.cameraProjY = 1024 - yRot & 1023;
 			int offX = 0;
 			int offY = 0;
 			int offZ = offset;
@@ -2991,7 +2989,7 @@ public final class Scene {
 			}
 
 			this.m_Q[var2] = var3;
-			
+
 		} catch (RuntimeException var5) {
 			throw GenUtil.makeThrowable(var5, "lb.V(" + var1 + ',' + var2 + ',' + var3 + ')');
 		}
@@ -2999,7 +2997,7 @@ public final class Scene {
 
 	public final void setDiffuseDir(int dirZ, int dirY, boolean var3, int dirX) {
 		try {
-			
+
 			if (dirX == 0 && dirY == 0 && dirZ == 0) {
 				dirX = 32;
 			}
@@ -3019,7 +3017,7 @@ public final class Scene {
 
 	public final void setFaceSpriteLocalPlayer(int var1, int var2) {
 		try {
-			
+
 			this.m_T.m_zb[var2] = 1;
 			if (var1 != '\u8000') {
 				this.m_Cb = 32;
@@ -3029,15 +3027,15 @@ public final class Scene {
 			throw GenUtil.makeThrowable(var4, "lb.S(" + var1 + ',' + var2 + ')');
 		}
 	}
-	
+
 	public int getX() {
 		return m_j + m_Zb;
 	}
-	
+
 	public int getY() {
 		return m_Wb;
 	}
-	
+
 	public final void setMidpoints(int var1, boolean var2, int var3, int var4, int var5, int var6, int var7) {
 		try {
 			this.rot1024_vp_src = var6;
@@ -3046,7 +3044,7 @@ public final class Scene {
 			this.m_Nb = var5;
 			this.m_x = new Scanline[var1 + var5];
 			this.m_wb = var1;
-			
+
 			this.m_A = var4;
 
 			for (int var8 = 0; var8 < var5 + var1; ++var8) {
@@ -3069,7 +3067,7 @@ public final class Scene {
 			this.m_j = x - this.m_Zb;
 			this.m_Wb = y;
 			this.m_cc = var1;
-			
+
 		} catch (RuntimeException var5) {
 			throw GenUtil.makeThrowable(var5, "lb.J(" + var1 + ',' + x + ',' + y + ')');
 		}

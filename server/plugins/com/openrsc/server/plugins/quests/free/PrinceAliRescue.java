@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -9,6 +11,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -17,82 +20,6 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 	InvUseOnNpcExecutiveListener, TalkToNpcListener, ObjectActionListener,
 	ObjectActionExecutiveListener, TalkToNpcExecutiveListener,
 	InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
-
-	private static final int BEER = 193;
-	private static final int BRONZE_BAR = 169;
-	private static final int BRONZE_KEY = 242;
-	/**
-	 * npcs associated with this quest
-	 */
-	private static final int LADY_KELI = 123;
-	private static final int PASTE = 240;
-	private static final int PRINT = 247;
-	/**
-	 * Items associated with this quest
-	 */
-	private static final int ROPE = 237;
-	private static final int SKIRT = 194;
-	private static final int WIG = 245;
-
-	@Override
-	public boolean blockInvUseOnNpc(final Player player, final Npc npc,
-									final Item item) {
-		if (npc.getID() == 123 && item.getID() == ROPE) {
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public boolean blockInvUseOnObject(final GameObject obj,
-									   final Item item, final Player player) {
-
-		return false;
-	}
-
-	@Override
-	public boolean blockObjectAction(final GameObject obj,
-									 final String command, final Player player) {
-		if (obj.getID() == 180) {
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public boolean blockTalkToNpc(final Player p, final Npc n) {
-		if (n.getID() == LADY_KELI) {
-			return true;
-		}
-		if (n.getID() == 119) { // HASSAN
-			return true;
-		}
-		if (n.getID() == 120) { // OSMAN
-			return true;
-		}
-		if (n.getID() == 121) { // JOE GUARD
-			return true;
-		}
-		if (n.getID() == 122) { // LEELA
-			return true;
-		}
-		if (n.getID() == 118) { // Prince Ali
-			return true;
-		}
-		if (n.getID() == 127) { // Jailguard??joe
-			return true;
-		}
-		// AGGIE -> separate file
-		// NED -> separate file
-		return false;
-	}
-
-	@Override
-	public boolean blockWallObjectAction(final GameObject obj,
-										 final Integer click, final Player player) {
-
-		return obj.getID() == 45 && obj.getY() == 640;
-	}
 
 	@Override
 	public int getQuestId() {
@@ -103,20 +30,57 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 	public String getQuestName() {
 		return "Prince Ali rescue";
 	}
+	
+	@Override
+	public boolean isMembers() {
+		return false;
+	}
 
 	@Override
 	public void handleReward(final Player p) {
 		if (p.getCache().hasKey("pre_paid")) {
 			message(p, "The chancellor pays you 620 coins");
-			addItem(p, 10, 620);
+			addItem(p, ItemId.COINS.id(), 620);
 			p.getCache().remove("pre_paid");
 		} else {
 			message(p, "The chancellor pays you 700 coins");
-			addItem(p, 10, 700);
+			addItem(p, ItemId.COINS.id(), 700);
 		}
 		p.message("You have completed the quest of the Prince of Al Kharid");
 		incQuestReward(p, Quests.questData.get(Quests.PRINCE_ALI_RESCUE), true);
 		p.message("@gre@You haved gained 3 quest points!");
+	}
+	
+	@Override
+	public boolean blockInvUseOnNpc(final Player player, final Npc npc,
+									final Item item) {
+		return npc.getID() == NpcId.LADY_KELI.id() && item.getID() == ItemId.ROPE.id();
+	}
+
+	@Override
+	public boolean blockInvUseOnObject(final GameObject obj,
+									   final Item item, final Player player) {
+		return false;
+	}
+
+	@Override
+	public boolean blockObjectAction(final GameObject obj,
+									 final String command, final Player player) {
+		return obj.getID() == 180;
+	}
+
+	@Override
+	public boolean blockTalkToNpc(final Player p, final Npc n) {
+		// AGGIE -> separate file
+		// NED -> separate file
+		return DataConversions.inArray(new int[] {NpcId.LADY_KELI.id(), NpcId.HASSAN.id(), NpcId.OSMAN.id(), 
+				NpcId.JOE.id(),  NpcId.LEELA.id(), NpcId.PRINCE_ALI.id(), NpcId.JAILGUARD.id()}, n.getID());
+	}
+
+	@Override
+	public boolean blockWallObjectAction(final GameObject obj,
+										 final Integer click, final Player player) {
+		return obj.getID() == 45 && obj.getY() == 640;
 	}
 
 	public void hassanDialogue(final Player p, final Npc n) {
@@ -140,7 +104,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 						"We manage, in our humble way. We are a wealthy town",
 						"And we have water. It cures many thirsts");
 					p.message("The chancellor hands you some water");
-					addItem(p, 50, 1);
+					addItem(p, ItemId.BUCKET_OF_WATER.id(), 1);
 				} else if (choice == 2) {
 					npcTalk(p,
 						n,
@@ -163,7 +127,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 						npcTalk(p, n, "You have proved your services useful to us",
 							"Here is 80 coins for the work you have already done");
 						message(p, "The chancellor hands you 80 coins");
-						addItem(p, 10, 80);
+						addItem(p, ItemId.COINS.id(), 80);
 						p.getCache().store("pre_paid", true);
 
 					} else {
@@ -198,11 +162,6 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 					"Please, keep in contact. Good employees are not easy to find");
 				break;
 		}
-	}
-
-	@Override
-	public boolean isMembers() {
-		return false;
 	}
 
 	private void jailGuardDialogue(final Player p, final Npc n) {
@@ -297,40 +256,40 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 		}
 		switch (cID) {
 			case Joe.BEER:
-				if (p.getInventory().countId(BEER) == 0) {
+				if (p.getInventory().countId(ItemId.BEER.id()) == 0) {
 					npcTalk(p, n,
 						"Ah, that would be lovely, just one now, just to wet my throat");
 					playerTalk(p, n,
 						"Of course, it must be tough being here without a drink", "Oh dear seems like I don't have any beer");
 
-				} else if ((p.getInventory().countId(BEER) >= 1 && p.getInventory().countId(BEER) <= 2)) {
+				} else if ((p.getInventory().countId(ItemId.BEER.id()) >= 1 && p.getInventory().countId(ItemId.BEER.id()) <= 2)) {
 					npcTalk(p, n,
 						"Ah, that would be lovely, just one now, just to wet my throat");
 					playerTalk(p, n,
 						"Of course, it must be tough being here without a drink");
 					message(p,
 						"You hand a beer to the guard, he drinks it in seconds");
-					removeItem(p, BEER, 1);
+					removeItem(p, ItemId.BEER.id(), 1);
 
 					npcTalk(p, n, "Thas was perfect, i cant thank you enough");
 					playerTalk(p, n, "How are you? still ok. Not too drunk?");
 					npcTalk(p, n, "No, I don't get drunk with only one drink",
 						"You would need a few to do that, but thanks for the beer");
-				} else if (p.getInventory().countId(BEER) >= 3) {
+				} else if (p.getInventory().countId(ItemId.BEER.id()) >= 3) {
 					npcTalk(p, n,
 						"Ah, that would be lovely, just one now, just to wet my throat");
 					playerTalk(p, n,
 						"Of course, it might be tough being here without a drink");
 					message(p,
 						"You hand a beer to the guard, he drinks it in seconds");
-					removeItem(p, BEER, 1); //takes 2 more after dialogue
+					removeItem(p, ItemId.BEER.id(), 1); //takes 2 more after dialogue
 					npcTalk(p, n, "Thas was perfect, i cant thank you enough");
 					playerTalk(p, n, "Would you care for another, my friend?");
 					npcTalk(p, n, "I better not, I don't want to be drunk on duty");
 					playerTalk(p, n,
 						"Here, just keep these for later, I hate to see a thirsty guard");
 					message(p, "You hand two more beers to the guard");
-					p.getInventory().remove(BEER, 2);
+					p.getInventory().remove(ItemId.BEER.id(), 2);
 					message(p, "he takes a sip of one, and then he drinks them both");
 					npcTalk(p,
 						n,
@@ -604,7 +563,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 					"You cannot steal the key, it is on an Adamantite chain",
 					"I cannot see the harm");
 				p.message("Keli shows you a small key on a stronglooking chain");
-				if (p.getQuestStage(this) == 2 && hasItem(p, 243)) {
+				if (p.getQuestStage(this) == 2 && hasItem(p, ItemId.SOFT_CLAY.id())) {
 					final int menu1 = showMenu(p, n,
 						"Could I touch the key for a moment please",
 						"I should not disturb someone as tough as you");
@@ -613,8 +572,8 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 						message(p,
 							"You put a piece of your soft clay in your hand",
 							"As you touch the key, you take an imprint of it");
-						removeItem(p, 243, 1);
-						addItem(p, 247, 1);
+						removeItem(p, ItemId.SOFT_CLAY.id(), 1);
+						addItem(p, ItemId.KEYPRINT.id(), 1);
 						playerTalk(p, n,
 							"Thankyou so much, you are too kind, o great Keli");
 						npcTalk(p, n,
@@ -735,18 +694,18 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 					playerTalk(p, n, "What are you waiting here for");
 					npcTalk(p, n, "That is no concern of yours, adventurer");
 					break;
-				case 2://
+				case 2:
 					if (p.getCache().hasKey("key_sent")) {
 						npcTalk(p, n,
 							"My father sent this key for you, be careful not to lose it");
 						message(p,
 							"Leela gives you a copy of the key to the princes door");
-						addItem(p, 242, 1);
+						addItem(p, ItemId.BRONZE_KEY.id(), 1);
 						p.getCache().remove("key_sent");
 						return;
 					}
-					if (hasItem(p, 237) && hasItem(p, 194) && hasItem(p, 240)
-						&& hasItem(p, 244)) {
+					if (hasItem(p, ItemId.ROPE.id()) && hasItem(p, ItemId.PINK_SKIRT.id()) && hasItem(p, ItemId.PASTE.id())
+						&& hasItem(p, ItemId.BLONDE_WIG.id())) {
 						npcTalk(p, n, "Good, you have all the basic equipment",
 							"What are your plans to stop the guard interfering?");
 						final int chose = showMenu(p, n,
@@ -763,7 +722,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 						} else if (chose == 3) {
 							leelaDialogue(p, n, Leela.BRIBE);
 						}
-						return;// need to do this quest on rsc.
+						return;
 					}
 					playerTalk(p, n, "I am here to help you free the Prince");
 					npcTalk(p, n, "Your employment is known to me.",
@@ -824,28 +783,36 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 					"It would probably take a lot of gold",
 					"Good luck with the guard. When the guard is out you can tie up Keli");
 				break;
-			case Leela.DISGUISE:// MAke it, u cant make it with the npc playa talk
+			case Leela.DISGUISE:// Make it, u cant make it with the npc playa talk
 				npcTalk(p, n,
 					"Only the lady Keli, can wander about outside the jail",
 					"The guards will shoot to kill if they see the prince out",
 					"so we need a disguise well enough to fool them at a distance");
 
-				if (!hasItem(p, WIG)) {
+				if (!hasItem(p, ItemId.BLONDE_WIG.id()) && !hasItem(p, ItemId.WOOL_WIG.id())) {
 					npcTalk(p,
 						n,
 						"You need a wig, maybe made from wool",
 						"If you find someone who can work with wool, ask them about it",
 						"Then the old witch may be able to help you dye it");
+				} 
+				//undocumented - very possibly had dialogue (recreated)
+				else if(!hasItem(p, ItemId.BLONDE_WIG.id()) && hasItem(p, ItemId.WOOL_WIG.id())) {
+					npcTalk(p,
+							n,
+							"You have got the wig, great",
+							"but you need to dye it",
+							"The old witch may be able to help you");
 				} else {
 					npcTalk(p, n, "The wig you have got, well done");
 				}
 
 				npcTalk(p,
 					n,
-					!hasItem(p, SKIRT) ? "You will need to get a pink skirt, same as Keli's"
+					!hasItem(p, ItemId.PINK_SKIRT.id()) ? "You will need to get a pink skirt, same as Keli's"
 						: "You have got the skirt, good");
 
-				if (!hasItem(p, PASTE)) {
+				if (!hasItem(p, ItemId.PASTE.id())) {
 					npcTalk(p,
 						n,
 						"we still need something to colour the Princes skin lighter",
@@ -855,11 +822,11 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 					npcTalk(p, n, "You have the skin paint, well done",
 						"I thought you would struggle to make that");
 				}
-				if (hasItem(p, WIG) && hasItem(p, SKIRT) && hasItem(p, PASTE)) {
+				if (hasItem(p, ItemId.BLONDE_WIG.id()) && hasItem(p, ItemId.PINK_SKIRT.id()) && hasItem(p, ItemId.PASTE.id())) {
 					npcTalk(p, n, "You do have everything for the disguise");
 				}
 
-				if (!hasItem(p, ROPE)) {
+				if (!hasItem(p, ItemId.ROPE.id())) {
 					npcTalk(p,
 						n,
 						"You will still need some rope to tie up Keli, of course",
@@ -920,7 +887,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 
 	@Override
 	public void onInvUseOnNpc(final Player p, final Npc npc, final Item item) {
-		if (npc.getID() == LADY_KELI && item.getID() == ROPE) {
+		if (npc.getID() == NpcId.LADY_KELI.id() && item.getID() == ItemId.ROPE.id()) {
 			if (p.getQuestStage(this) == 2) {
 				if (p.getCache().hasKey("joe_is_drunk")) {
 					npc.remove();
@@ -954,35 +921,24 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
-		if (n.getID() == LADY_KELI) {
+		//border guard in separate file
+		if (n.getID() == NpcId.LADY_KELI.id()) {
 			keliDialogue(p, n, -1);
-		}
-		/*
-		 * if(n.getID() == 161) { // BORDER GUARD 1 return true; there } //
-		 * THESE ARE IN SEPARATE FILE. if(n.getID() == 162) { // BOARDER GUARD 2
-		 * return true; }
-		 */
-		if (n.getID() == 119) { // HASSAN
-			hassanDialogue(p, n); // not sure
-		}
-		if (n.getID() == 120) { // OSMAN
+		} else if (n.getID() == NpcId.HASSAN.id()) {
+			hassanDialogue(p, n);
+		} else if (n.getID() == NpcId.OSMAN.id()) {
 			osmanDialogue(p, n, -1);
-		}
-		if (n.getID() == 121) { // JOE GUARD
+		} else if (n.getID() == NpcId.JOE.id()) {
 			joeDialogue(p, n, -1);
-		}
-		if (n.getID() == 122) { // LEELA
+		} else if (n.getID() == NpcId.LEELA.id()) {
 			leelaDialogue(p, n, -1);
-		}
-		if (n.getID() == 118) { // Prince Ali
+		} else if (n.getID() == NpcId.PRINCE_ALI.id()) {
 			princeAliDialogue(p, n, -1);
-		}
-		if (n.getID() == 127) { // Jailguard??joe
+		} else if (n.getID() == NpcId.JAILGUARD.id()) {
 			jailGuardDialogue(p, n);
 		}
 	}
 
-	// done brb
 	@Override
 	public void onWallObjectAction(final GameObject obj, final Integer click,
 								   final Player p) {
@@ -1000,7 +956,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 				return;
 			}
 			if (obj.getY() == 640) {
-				final Npc keli = getNearestNpc(p, LADY_KELI, 20);
+				final Npc keli = getNearestNpc(p, NpcId.LADY_KELI.id(), 20);
 				if (p.getX() <= 198) {
 					if (p.getQuestStage(this) == 3) {
 						p.message("I have no reason to do this");
@@ -1056,11 +1012,11 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 					}
 					break;
 				case 2:
-					if (hasItem(p, PRINT) && hasItem(p, BRONZE_BAR)) {
+					if (hasItem(p, ItemId.KEYPRINT.id()) && hasItem(p, ItemId.BRONZE_BAR.id())) {
 						npcTalk(p, n, "Well done, we can make the key now.");
 						p.message("Osman takes the Key imprint and the bronze bar");
-						removeItem(p, 247, 1);
-						removeItem(p, 169, 1);
+						removeItem(p, ItemId.KEYPRINT.id(), 1);
+						removeItem(p, ItemId.BRONZE_BAR.id(), 1);
 						p.getCache().store("key_sent", true);
 						p.getCache().store("key_made", true);
 						npcTalk(p, n, "Pick the key up from Leela.",
@@ -1161,7 +1117,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 				break;
 			case Osman.STILL_NEED:
 				npcTalk(p, n, "Let me check. You need:");
-				if (!hasItem(p, BRONZE_KEY)) {
+				if (!hasItem(p, ItemId.BRONZE_KEY.id())) {
 					npcTalk(p, n,
 						"A print of the key in soft clay, and a bronze bar");
 					npcTalk(p, n, "Then collect the key from Leela");
@@ -1170,16 +1126,16 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 				}
 				npcTalk(p,
 					n,
-					!hasItem(p, WIG) ? "You need to make a Blonde Wig somehow. Leela may help"
+					!hasItem(p, ItemId.BLONDE_WIG.id()) ? "You need to make a Blonde Wig somehow. Leela may help"
 						: "The wig you have got, well done");
-				npcTalk(p, n, !hasItem(p, SKIRT) ? "A skirt the same as Keli's,"
+				npcTalk(p, n, !hasItem(p, ItemId.PINK_SKIRT.id()) ? "A skirt the same as Keli's,"
 					: "You have the skirt, good");
 				npcTalk(p,
 					n,
-					!hasItem(p, PASTE) ? "Something to colour the Princes skin lighter"
+					!hasItem(p, ItemId.PASTE.id()) ? "Something to colour the Princes skin lighter"
 						: "You have the skin paint, well done",
 					"I thought you would struggle to make that");
-				npcTalk(p, n, !hasItem(p, ROPE) ? "Rope to tie Keli up with"
+				npcTalk(p, n, !hasItem(p, ItemId.ROPE.id()) ? "Rope to tie Keli up with"
 					: "Yes, you have the rope.");
 				npcTalk(p, n,
 					"You still need some way to stop the guard from interfering");
@@ -1194,8 +1150,8 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 	private void princeAliDialogue(final Player p, final Npc n, final int cID) {
 		switch (p.getQuestStage(this)) {
 			case 2:
-				if (!hasItem(p, 244) && !hasItem(p, 194) && !hasItem(p, 240)
-					&& !hasItem(p, 242)) {
+				if (!hasItem(p, ItemId.BLONDE_WIG.id()) && !hasItem(p, ItemId.PINK_SKIRT.id()) && !hasItem(p, ItemId.PASTE.id())
+					&& !hasItem(p, ItemId.BRONZE_KEY.id())) {
 					playerTalk(p, n, "Prince, I come to rescue you");
 					npcTalk(p, n,
 						"That is very very kind of you, how do I get out?");
@@ -1212,21 +1168,18 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 				playerTalk(p, n, "With a disguise, I have removed the Lady Keli",
 					"She is tied up, but will not stay tied up for long",
 					"Take this disguise, and this key");
-				removeItem(p, 244, 1); // blonde wig
-				removeItem(p, 194, 1); // skirt
-				removeItem(p, 240, 1); // skin paste
-				removeItem(p, 242, 1); // juust check for the items here.
+				removeItem(p, ItemId.BLONDE_WIG.id(), 1);
+				removeItem(p, ItemId.PINK_SKIRT.id(), 1);
+				removeItem(p, ItemId.PASTE.id(), 1);
+				removeItem(p, ItemId.BRONZE_KEY.id(), 1); // juust check for the items here.
 				message(p, "You hand the disguise and the key to the prince");
-				final Npc ladyAli = transform(n, 126, false);
+				final Npc ladyAli = transform(n, NpcId.PRINCE_ALI_DISGUISE.id(), false);
 				npcTalk(p, ladyAli, "Thankyou my friend, I must leave you now",
 					"My father will pay you well for this");
 				playerTalk(p, ladyAli, "Go to Leela, she is close to here");
 				ladyAli.remove();
-				p.message("The prince has escaped, well done!");
-				sleep(1000);
-				p.message("You are now a friend of Al kharid");
-				sleep(1000);
-				p.message("And may pass through the Al Kharid toll gate for free");
+				message(p, 1000, "The prince has escaped, well done!", "You are now a friend of Al kharid",
+						"And may pass through the Al Kharid toll gate for free");
 				p.updateQuestStage(this, 3);
 				break;
 		}
@@ -1273,10 +1226,6 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 		public static final int KEYMADE = 1;
 
 	}
-
-	/**
-	 * TODO: Do this quest on RSC.
-	 */
 
 	// NOTE: Lady dissapear when you tie her up, when you rescue prince he gets
 	// switched to lady. after talking she dissapear again. Then she respawns

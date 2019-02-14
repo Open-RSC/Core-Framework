@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -25,26 +27,11 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 	InvUseOnObjectExecutiveListener, WallObjectActionExecutiveListener,
 	WallObjectActionListener {
 	/**
-	 * Npc's associated with this quest.
-	 */
-	private static final int GUARD = 100;
-	private static final int WITCH = 107;
-	private static final int BLACK_KNIGHT = 108;
-	private static final int GRELDO = 109;
-	private static final int SIR_AMIK_VARZE = 110;
-	/**
 	 * GameObjects associated with this quest;
 	 */
 	private static final int LISTEN_GRILL = 148;
 	private static final int DOOR_ENTRANCE = 38;
 	private static final int HOLE = 154;
-	/**
-	 * Items associated with this quest
-	 */
-	private static final int IRON_CHAINMAIL = 7;
-	private static final int BRONZE_MEDIUM_HELMET = 104;
-	private static final int CABBAGE = 18;
-	private static final int CABBAGE2 = 228;
 
 	private static final Point DOOR_LOCATION = Point.location(271, 441);
 	private static final Point DOOR2_LOCATION = Point.location(275, 439);
@@ -59,13 +46,25 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 	public String getQuestName() {
 		return "Black knight's fortress";
 	}
+	
+	@Override
+	public boolean isMembers() {
+		return false;
+	}
+	
+	@Override
+	public void handleReward(Player p) {
+		p.message("Sir Amik hands you 2500 coins");
+		addItem(p, ItemId.COINS.id(), 2500);
+		p.message("Well done. You have completed the Black Knights Fortress quest");
+		incQuestReward(p, Quests.questData.get(Quests.BLACK_KNIGHTS_FORTRESS), true);
+		p.message("@gre@You haved gained 3 quest points!");
+	}
 
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
-		switch (n.getID()) {
-			case SIR_AMIK_VARZE:
-				handleSirAmikVarze(p, n);
-				break;
+		if (n.getID() == NpcId.SIR_AMIK_VARZE.id()) {
+			handleSirAmikVarze(p, n);
 		}
 	}
 
@@ -179,8 +178,8 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
 		switch (obj.getID()) {
 			case HOLE:
-				if (item.getID() == CABBAGE && player.getQuestStage(this) == 2) {
-					if (removeItem(player, CABBAGE, 1)) {
+				if (item.getID() == ItemId.CABBAGE.id() && player.getQuestStage(this) == 2) {
+					if (removeItem(player, ItemId.CABBAGE.id(), 1)) {
 						message(player,
 							"You drop a cabbage down the hole.",
 							"The cabbage lands in the cauldron below.",
@@ -190,7 +189,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 							"Right I think that's successfully sabotaged the secret weapon.");
 						player.updateQuestStage(this, 3);
 					}
-				} else if (item.getID() == CABBAGE2 && player.getQuestStage(this) == 2) {
+				} else if (item.getID() == ItemId.SPECIAL_DEFENSE_CABBAGE.id() && player.getQuestStage(this) == 2) {
 					message(player,
 						"This is the wrong sort of cabbage!",
 						"You are meant to be hindering the witch.",
@@ -204,37 +203,19 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == SIR_AMIK_VARZE) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.SIR_AMIK_VARZE.id();
 	}
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
 									   Player player) {
-		if (obj.getID() == HOLE) {
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public void handleReward(Player p) {
-		p.message("Sir Amik hands you 2500 coins");
-		addItem(p, 10, 2500);
-		p.message("Well done. You have completed the Black Knights Fortress quest");
-		incQuestReward(p, Quests.questData.get(Quests.BLACK_KNIGHTS_FORTRESS), true);
-		p.message("@gre@You haved gained 3 quest points!");
+		return obj.getID() == HOLE;
 	}
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command,
 									 Player player) {
-		if (obj.getID() == LISTEN_GRILL) {
-			return true;
-		}
-		return false;
+		return obj.getID() == LISTEN_GRILL;
 	}
 
 	@Override
@@ -243,9 +224,9 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 		switch (obj.getID()) {
 			case LISTEN_GRILL:
 				if (player.getQuestStage(this) == 1) {
-					Npc blackKnight = getNearestNpc(player, BLACK_KNIGHT, 20);
-					Npc witch = getNearestNpc(player, WITCH, 20);
-					Npc greldo = getNearestNpc(player, GRELDO, 20);
+					Npc blackKnight = getNearestNpc(player, NpcId.BLACK_KNIGHT_FORTRESS.id(), 20);
+					Npc witch = getNearestNpc(player, NpcId.WITCH_FORTRESS.id(), 20);
+					Npc greldo = getNearestNpc(player, NpcId.GRELDO.id(), 20);
 					if (witch == null || blackKnight == null || greldo == null) {
 						return;
 					}
@@ -295,12 +276,12 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 		switch (obj.getID()) {
 			case DOOR_ENTRANCE:
 				if (obj.getLocation().equals(DOOR_LOCATION) && player.getX() <= 270) {
-					if (player.getInventory().wielding(IRON_CHAINMAIL)
-						&& player.getInventory().wielding(BRONZE_MEDIUM_HELMET)) {
+					if (player.getInventory().wielding(ItemId.IRON_CHAIN_MAIL_BODY.id())
+						&& player.getInventory().wielding(ItemId.MEDIUM_BRONZE_HELMET.id())) {
 						doDoor(obj, player);
 						player.teleport(271, 441, false);
 					} else {
-						final Npc guard = getNearestNpc(player, GUARD, 20);
+						final Npc guard = getNearestNpc(player, NpcId.GUARD_FORTRESS.id(), 20);
 						if (guard != null) {
 							guard.resetPath();
 							guard.face(player);
@@ -343,7 +324,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 			case 40:
 				if (obj.getLocation().equals(DOOR2_LOCATION)
 					&& player.getX() <= 274) {
-					final Npc guard = getNearestNpc(player, GUARD, 20);
+					final Npc guard = getNearestNpc(player, NpcId.GUARD_FORTRESS.id(), 20);
 					if (guard != null) {
 						guard.resetPath();
 						guard.face(player);
@@ -364,10 +345,5 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 				}
 				break;
 		}
-	}
-
-	@Override
-	public boolean isMembers() {
-		return false;
 	}
 }

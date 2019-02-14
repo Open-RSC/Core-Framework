@@ -21,9 +21,7 @@ import com.openrsc.server.util.rsc.CaptchaGenerator;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,6 +29,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
+
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 
 /**
  * @author n0m
@@ -394,6 +396,7 @@ public class ActionSender {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_SERVER_CONFIGS.opcode);
 		s.writeString(Constants.GameServer.SERVER_NAME); // Server Name
+		s.writeString(Constants.GameServer.SERVER_NAME_WELCOME); // Server name on client welcome screen
 		s.writeByte((byte) Constants.GameServer.PLAYER_LEVEL_LIMIT);
 		s.writeByte((byte) (Constants.GameServer.SPAWN_AUCTION_NPCS ? 1 : 0)); // Auction NPC Spawns
 		s.writeByte((byte) (Constants.GameServer.SPAWN_IRON_MAN_NPCS ? 1 : 0)); // Iron Man NPC Spawns
@@ -414,6 +417,7 @@ public class ActionSender {
 		s.writeByte((byte) (Constants.GameServer.ITEMS_ON_DEATH_MENU ? 1 : 0));
 		s.writeByte((byte) (Constants.GameServer.SHOW_ROOF_TOGGLE ? 1 : 0));
 		s.writeByte((byte) (Constants.GameServer.WANT_HIDE_IP ? 1 : 0));
+		s.writeByte((byte) (Constants.GameServer.WANT_REMEMBER ? 1 : 0));
 		s.writeByte((byte) (Constants.GameServer.WANT_GLOBAL_CHAT ? 1 : 0));
 		s.writeByte((byte) (Constants.GameServer.WANT_SKILL_MENUS ? 1 : 0));
 		s.writeByte((byte) (Constants.GameServer.WANT_QUEST_MENUS ? 1 : 0));
@@ -432,6 +436,10 @@ public class ActionSender {
 		s.writeByte((byte) (Constants.GameServer.WANT_CUSTOM_RANK_DISPLAY ? 1 : 0));
 		s.writeByte((byte) (Constants.GameServer.RIGHT_CLICK_BANK ? 1 : 0));
 		s.writeByte((byte) (Constants.GameServer.FIX_OVERHEAD_CHAT ? 1 : 0));
+		s.writeString(Constants.GameServer.WELCOME_TEXT); // Welcome login screen text
+		s.writeByte((byte) (Constants.GameServer.MEMBER_WORLD ? 1 : 0)); // Is this a members world?
+		s.writeByte((byte) (Constants.GameServer.DISPLAY_LOGO_SPRITE ? 1 : 0)); // If logo sprite is shown on client login
+		s.writeString(Constants.GameServer.LOGO_SPRITE_ID); // Specifies which logo sprite is shown
 		return s;
 	}
 
@@ -989,7 +997,7 @@ public class ActionSender {
 				sendInventory(p);
 				p.checkEquipment();
 
-				/*if (p.getLocation().inWilderness()) { // Not authentic
+				/*if (!Constants.GameServer.MEMBER_WORLD) {
 					p.unwieldMembersItems();
 				}*/
 
@@ -1011,7 +1019,6 @@ public class ActionSender {
 			}
 		} catch (Throwable e) {
 			LOGGER.catching(e);
-			return;
 		}
 	}
 

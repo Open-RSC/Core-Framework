@@ -2,11 +2,14 @@ package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Cache;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
@@ -33,60 +36,54 @@ public class ErnestTheChicken implements QuestInterface,
 	public String getQuestName() {
 		return "Ernest the chicken";
 	}
-
-	@Override
-	public void handleReward(Player p) {
-		p.getInventory().add(new Item(10, 300));
-		p.message("Well done. You have completed the Ernest the chicken quest");
-		incQuestReward(p, Quests.questData.get(Quests.ERNEST_THE_CHICKEN), true);
-		p.message("@gre@You haved gained 4 quest points!");
-	}
-
+	
 	@Override
 	public boolean isMembers() {
 		return false;
 	}
 
 	@Override
+	public void handleReward(Player p) {
+		p.getInventory().add(new Item(ItemId.COINS.id(), 300));
+		p.message("Well done. You have completed the Ernest the chicken quest");
+		incQuestReward(p, Quests.questData.get(Quests.ERNEST_THE_CHICKEN), true);
+		p.message("@gre@You haved gained 4 quest points!");
+	}
+
+	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
 									   Player player) {
-		if (obj.getID() == QuestObjects.FOUNTAIN
-			&& item.getID() == QuestItems.POISON_FISHFOOD)
-			return true;
-		if ((obj.getID() == QuestObjects.COMPOST && item.getID() == QuestItems.SPADE))
-			return true;
-
-		return false;
+		return (obj.getID() == QuestObjects.FOUNTAIN && item.getID() == ItemId.POISONED_FISH_FOOD.id())
+				|| (obj.getID() == QuestObjects.COMPOST && item.getID() == ItemId.SPADE.id());
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == QuestObjects.FOUNTAIN
-			&& item.getID() == QuestItems.POISON_FISHFOOD) {
+		if (obj.getID() == QuestObjects.FOUNTAIN && item.getID() == ItemId.POISONED_FISH_FOOD.id()) {
 			message(p, "You pour the poisoned fish food into the fountain",
 				"You see the pirhanas eating the food",
 				"The pirhanas drop dead and float to the surface");
-			removeItem(p, QuestItems.POISON_FISHFOOD, 1);
+			removeItem(p, ItemId.POISONED_FISH_FOOD.id(), 1);
 			if (!p.getCache().hasKey("poisoned_fountain")) {
 				p.getCache().store("poisoned_fountain", true);
 			}
 		} else if (obj.getID() == QuestObjects.FOUNTAIN
-			&& item.getID() == QuestItems.FISHFOOD) {
+			&& item.getID() == ItemId.FISH_FOOD.id()) {
 			message(p, "You pour the fish food into the fountain",
 				"You see the pirhanas eating the food",
 				"The pirhanas seem hungrier than ever");
-			removeItem(p, QuestItems.FISHFOOD, 1);
+			removeItem(p, ItemId.FISH_FOOD.id(), 1);
 		}
 		//nothing happens every other item
 		else if (obj.getID() == QuestObjects.FOUNTAIN) {
 			message(p, "Nothing interesting happens");
 		}
 		if (obj.getID() == QuestObjects.COMPOST
-			&& item.getID() == QuestItems.SPADE) {
-			if (!hasItem(p, 212) && p.getQuestStage(this) > 0) {
+			&& item.getID() == ItemId.SPADE.id()) {
+			if (!hasItem(p, ItemId.CLOSET_KEY.id()) && p.getQuestStage(this) > 0) {
 				message(p, "You dig through the compost heap",
 					"You find a small key");
-				addItem(p, 212, 1);
+				addItem(p, ItemId.CLOSET_KEY.id(), 1);
 			} else {
 				message(p, "You dig through the compost heap",
 					"You find nothing of interest");
@@ -96,8 +93,7 @@ public class ErnestTheChicken implements QuestInterface,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == QuestNpcs.VERONICA
-			|| n.getID() == QuestNpcs.PROFESSOR_ODDENSTEIN;
+		return n.getID() == NpcId.VERONICA.id() || n.getID() == NpcId.PROFESSOR_ODDENSTEIN.id();
 	}
 
 	@Override
@@ -140,12 +136,12 @@ public class ErnestTheChicken implements QuestInterface,
 				break;
 			case QuestObjects.FOUNTAIN:
 				if (p.getCache().hasKey("poisoned_fountain")) {
-					if (!hasItem(p, 175, 1)) {
+					if (!hasItem(p, ItemId.PRESSURE_GAUGE.id(), 1)) {
 						playerTalk(p, null,
 							"There seems to be a pressure gauge in here",
 							"There are also some dead fish");
 						p.message("you get the pressure gauge from the fountain");
-						addItem(p, 175, 1);
+						addItem(p, ItemId.PRESSURE_GAUGE.id(), 1);
 					} else {
 						p.message("It's full of dead fish");
 					}
@@ -228,12 +224,14 @@ public class ErnestTheChicken implements QuestInterface,
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		switch (n.getID()) {
-			case QuestNpcs.VERONICA:
+		switch (NpcId.getById(n.getID())) {
+			case VERONICA:
 				veronicaDialogue(p, n, -1);
 				break;
-			case QuestNpcs.PROFESSOR_ODDENSTEIN:
+			case PROFESSOR_ODDENSTEIN:
 				oddensteinDialogue(p, n, -1);
+				break;
+			default:
 				break;
 		}
 	}
@@ -274,18 +272,18 @@ public class ErnestTheChicken implements QuestInterface,
 					npcTalk(p, n, "Have you found anything yet?");
 
 					// no items
-					if (!hasItem(p, QuestItems.RUBBER_TUBE)
-						&& !hasItem(p, QuestItems.PRESSURE_GAUGE)
-						&& !hasItem(p, QuestItems.OIL_CAN)) {
+					if (!hasItem(p, ItemId.RUBBER_TUBE.id())
+						&& !hasItem(p, ItemId.PRESSURE_GAUGE.id())
+						&& !hasItem(p, ItemId.OIL_CAN.id())) {
 						playerTalk(p, n, "I'm afraid I don't have any yet!");
 						npcTalk(p, n,
 							"I need a rubber tube, a pressure gauge and a can of oil",
 							"Then your friend can stop being a chicken");
 					}
 					// all items
-					else if (hasItem(p, QuestItems.RUBBER_TUBE)
-						&& hasItem(p, QuestItems.PRESSURE_GAUGE)
-						&& hasItem(p, QuestItems.OIL_CAN)) {
+					else if (hasItem(p, ItemId.RUBBER_TUBE.id())
+						&& hasItem(p, ItemId.PRESSURE_GAUGE.id())
+						&& hasItem(p, ItemId.OIL_CAN.id())) {
 						playerTalk(p, n, "I have everything");
 						npcTalk(p, n, "Give em here then");
 						message(p,
@@ -293,12 +291,12 @@ public class ErnestTheChicken implements QuestInterface,
 							"Oddenstein starts up the machine",
 							"The machine hums and shakes",
 							"Suddenly a ray shoots out of the machine at the chicken");
-						Npc chicken = getNearestNpc(p, 91, 20);
+						Npc chicken = getNearestNpc(p, NpcId.ERNEST_CHICKEN.id(), 20);
 						if (chicken != null) {
-							removeItem(p, QuestItems.RUBBER_TUBE, 1);
-							removeItem(p, QuestItems.PRESSURE_GAUGE, 1);
-							removeItem(p, QuestItems.OIL_CAN, 1);
-							Npc ernest = transform(chicken, 92, false);
+							removeItem(p, ItemId.RUBBER_TUBE.id(), 1);
+							removeItem(p, ItemId.PRESSURE_GAUGE.id(), 1);
+							removeItem(p, ItemId.OIL_CAN.id(), 1);
+							Npc ernest = transform(chicken, NpcId.ERNEST.id(), false);
 							npcTalk(p, ernest, "Thank you sir",
 								"It was dreadfully irritating being a chicken",
 								"How can I ever thank you?");
@@ -314,19 +312,19 @@ public class ErnestTheChicken implements QuestInterface,
 					// some items
 					else {
 						playerTalk(p, n, "I have found some of the things you need:");
-						if (p.getInventory().hasItemId(QuestItems.OIL_CAN))
+						if (p.getInventory().hasItemId(ItemId.OIL_CAN.id()))
 							playerTalk(p, n, "I have a can of oil");
-						if (p.getInventory().hasItemId(QuestItems.PRESSURE_GAUGE))
+						if (p.getInventory().hasItemId(ItemId.PRESSURE_GAUGE.id()))
 							playerTalk(p, n, "I have a pressure gauge");
-						if (p.getInventory().hasItemId(QuestItems.RUBBER_TUBE))
+						if (p.getInventory().hasItemId(ItemId.RUBBER_TUBE.id()))
 							playerTalk(p, n, "I have a rubber tube");
 
 						npcTalk(p, n, "Well that's a start", "You still need to find");
-						if (!p.getInventory().hasItemId(QuestItems.OIL_CAN))
+						if (!p.getInventory().hasItemId(ItemId.OIL_CAN.id()))
 							npcTalk(p, n, "A can of oil");
-						if (!p.getInventory().hasItemId(QuestItems.RUBBER_TUBE))
+						if (!p.getInventory().hasItemId(ItemId.RUBBER_TUBE.id()))
 							npcTalk(p, n, "A rubber tube");
-						if (!p.getInventory().hasItemId(QuestItems.PRESSURE_GAUGE))
+						if (!p.getInventory().hasItemId(ItemId.PRESSURE_GAUGE.id()))
 							npcTalk(p, n, "A Pressure Gauge");
 					}
 					break;
@@ -468,7 +466,7 @@ public class ErnestTheChicken implements QuestInterface,
 		switch (obj.getID()) {
 			case 35:
 				//only allow is player is stuck, otherwise promote using key
-				if (p.getX() == 211 && p.getY() == 545 && !hasItem(p, QuestItems.CLOSET_KEY)) {
+				if (p.getX() == 211 && p.getY() == 545 && !hasItem(p, ItemId.CLOSET_KEY.id())) {
 					doDoor(obj, p);
 					p.message("You go through the door");
 				} else {
@@ -627,17 +625,15 @@ public class ErnestTheChicken implements QuestInterface,
 
 	@Override
 	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
-		if (item1.getID() == 176 && item2.getID() == 177)
-			return true;
-		return false;
+		return Functions.compareItemsIds(item1, item2, ItemId.FISH_FOOD.id(), ItemId.POISON.id());
 	}
 
 	@Override
 	public void onInvUseOnItem(Player player, Item item1, Item item2) {
-		if (item1.getID() == 176 && item2.getID() == 177) {
-			removeItem(player, 176, 1);
-			removeItem(player, 177, 1);
-			addItem(player, 178, 1);
+		if (Functions.compareItemsIds(item1, item2, ItemId.FISH_FOOD.id(), ItemId.POISON.id())) {
+			removeItem(player, ItemId.FISH_FOOD.id(), 1);
+			removeItem(player, ItemId.POISON.id(), 1);
+			addItem(player, ItemId.POISONED_FISH_FOOD.id(), 1);
 			player.message("You poison the fish food");
 		}
 	}
@@ -645,46 +641,17 @@ public class ErnestTheChicken implements QuestInterface,
 	@Override
 	public boolean blockInvUseOnWallObject(GameObject obj, Item item,
 										   Player player) {
-		if (item.getID() == 212 && obj.getID() == 35) {
-			return true;
-		}
-		return false;
+		return item.getID() == ItemId.CLOSET_KEY.id() && obj.getID() == 35;
 	}
 
 	@Override
 	public void onInvUseOnWallObject(GameObject obj, Item item, Player player) {
-		if (item.getID() == 212 && obj.getID() == 35) {
+		if (item.getID() == ItemId.CLOSET_KEY.id() && obj.getID() == 35) {
 			doDoor(obj, player);
 			player.message("You unlock the door");
 			player.message("You go through the door");
 			showBubble(player, item);
 		}
-	}
-
-	final class QuestItems {
-		public static final int FISHFOOD = 176;// fish food-
-		public static final int POISON_FISHFOOD = 178;// poison fish food-
-		// coords: 212, 1497
-		public static final int PRESSURE_GAUGE = 175;
-		public static final int RUBBER_TUBE = 213;
-		public static final int OIL_CAN = 208;
-		public static final int CLOSET_KEY = 212;
-		public static final int BURNT_BREAD = 139;
-		public static final int TINDERBOX = 166;// ID: 166 Tinderbox - coords:
-		// 208, 2438
-		public static final int ASHES = 181;// ID: 181 ashes - coords: 212,
-		// 2441, coords: 214, 2439
-		public static final int POISON = 177; // coords 221,546
-		public static final int SPADE = 211; // coords: 197, 554
-		public static final int SHEARS = 144;// coords: 200, 551
-		public static final int BUCKET = 21;// coords: 201, 552
-	}
-
-	final class QuestNpcs {
-		public static final int ERNEST = 92;
-		public static final int CHICKEN = 91;
-		public static final int PROFESSOR_ODDENSTEIN = 38;
-		public static final int VERONICA = 36;
 	}
 
 	final class QuestObjects {

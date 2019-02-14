@@ -7,19 +7,22 @@ import java.util.Map;
 import java.util.Properties;
 
 public class Config {
-	public static final String SERVER_NAME = "Open RSC";
+	private static Properties prop = new Properties();
+
+	public static final String SERVER_NAME = "Runescape";
+	public static final String SERVER_NAME_WELCOME = "Runescape Classic";
+	public static final String WELCOME_TEXT = "You need a members account to use this server";
 	public static final String SERVER_IP = "localhost";
 	public static final int SERVER_PORT = 43594;
 	public static final int CLIENT_VERSION = 1;
 	public static final int CACHE_VERSION = 2;
-	public static final boolean MEMBERS_FEATURES = true;
+	public static boolean MEMBERS_FEATURES = false;
+	public static boolean DISPLAY_LOGO_SPRITE = false;
 	public static final boolean CUSTOM_CACHE_DIR_ENABLED = false;
 	public static final boolean CACHE_APPEND_VERSION = false;
 	public static final String CUSTOM_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
-	public static boolean F_ANDROID_BUILD = false;
-	public static boolean SAVE_CREDENTIALS = true;
-	//public static String F_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
 	public static String F_CACHE_DIR = "";
+
 	/* Configurable: */
 	public static boolean C_EXPERIENCE_DROPS = false;
 	public static boolean C_BATCH_PROGRESS_BAR = false;
@@ -32,7 +35,13 @@ public class Config {
 	public static boolean C_KILL_FEED = false;
 	public static int C_FIGHT_MENU = 1;
 	public static boolean C_INV_COUNT = false;
+
 	/* Android: */
+	public static boolean F_ANDROID_BUILD = false; // This MUST be true if Android client
+	public static final String DL_URL = "game.openrsc.com";
+	public static final String ANDROID_DOWNLOAD_PATH = "https://" + DL_URL + "/downloads/";
+	public static final String CACHE_URL = "https://" + DL_URL + "/downloads/cache/";
+	public static final int ANDROID_CLIENT_VERSION = 6;
 	public static boolean F_SHOWING_KEYBOARD = false;
 	public static int F_LONG_PRESS_CALC;
 	public static boolean C_HOLD_AND_CHOOSE = true;
@@ -40,12 +49,14 @@ public class Config {
 	public static int C_MENU_SIZE = 6;
 	public static boolean C_SWIPE_TO_SCROLL = true;
 	public static boolean C_SWIPE_TO_ROTATE = true;
+
 	/* Experience Config Menu */
 	public static int C_EXPERIENCE_COUNTER = 1;
 	public static int C_EXPERIENCE_COUNTER_MODE = 0;
 	public static int C_EXPERIENCE_COUNTER_COLOR = 0;
 	public static int C_EXPERIENCE_DROP_SPEED = 1;
 	public static boolean C_EXPERIENCE_CONFIG_SUBMENU = false;
+
 	/* Server Defined: DOUBLE CHECK THESE ON SERVER */
 	public static int S_PLAYER_LEVEL_LIMIT = 99;
 	public static boolean S_SPAWN_AUCTION_NPCS = false;
@@ -88,8 +99,9 @@ public class Config {
 	public static boolean S_SHOW_ROOF_TOGGLE = false;
 	public static boolean S_WANT_GLOBAL_CHAT = false;
 	public static boolean S_WANT_HIDE_IP = false;
+	public static boolean S_WANT_REMEMBER = false;
 	public static boolean S_WANT_FIXED_OVERHEAD_CHAT = false;
-	private static Properties prop = new Properties();
+	public static String LOGO_SPRITE_ID = "2010";
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());
@@ -97,18 +109,22 @@ public class Config {
 
 	public static void initConfig() {
 		try {
-			if (CUSTOM_CACHE_DIR_ENABLED) {
-				if (CACHE_APPEND_VERSION) {
-					F_CACHE_DIR = CUSTOM_CACHE_DIR + "_v" + CACHE_VERSION;
+			if (!F_ANDROID_BUILD) {
+				if (CUSTOM_CACHE_DIR_ENABLED) {
+					if (CACHE_APPEND_VERSION) {
+						F_CACHE_DIR = CUSTOM_CACHE_DIR + "_v" + CACHE_VERSION;
+					} else {
+						F_CACHE_DIR = CUSTOM_CACHE_DIR;
+					}
 				} else {
-					F_CACHE_DIR = CUSTOM_CACHE_DIR;
+					if (CACHE_APPEND_VERSION) {
+						F_CACHE_DIR = "Cache" + "_v" + CACHE_VERSION;
+					} else {
+						F_CACHE_DIR = "Cache";
+					}
 				}
 			} else {
-				if (CACHE_APPEND_VERSION) {
-					F_CACHE_DIR = "Cache" + "_v" + CACHE_VERSION;
-				} else {
-					F_CACHE_DIR = "Cache";
-				}
+				return;
 			}
 			File file = new File(F_CACHE_DIR + File.separator + "client.properties");
 			if (!file.exists()) {
@@ -196,9 +212,7 @@ public class Config {
 						} else if (t == long.class) {
 							f.set(null, Long.parseLong((String) entry.getValue()));
 						}
-					} catch (IllegalAccessException e) {
-						e.printStackTrace();
-					} catch (IllegalArgumentException e) {
+					} catch (IllegalAccessException | IllegalArgumentException e) {
 						e.printStackTrace();
 					}
 					break;
@@ -219,15 +233,29 @@ public class Config {
 		return prop.getProperty("SERVER_NAME");
 	}
 
+	public static String getServerNameWelcome() {
+		return prop.getProperty("SERVER_NAME_WELCOME");
+	}
+
+	public static String getWelcomeText() {
+		return prop.getProperty("WELCOME_TEXT");
+	}
+
 	public static String getCommandPrefix() {
 		return prop.getProperty("COMMAND_PREFIX");
 	}
+
+	public static String getLogoSpriteId() {
+		return prop.getProperty("LOGO_SPRITE_ID");
+	}
+
+	public static boolean wantMembers() { return MEMBERS_FEATURES; }
 
 	public static boolean isAndroid() {
 		return F_ANDROID_BUILD;
 	}
 
 	public static boolean Remember() {
-		return SAVE_CREDENTIALS;
+		return S_WANT_REMEMBER;
 	}
 }

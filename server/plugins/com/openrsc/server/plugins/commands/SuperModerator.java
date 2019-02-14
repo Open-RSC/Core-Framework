@@ -119,7 +119,6 @@ public final class SuperModerator implements CommandListener {
 			}
 			catch(NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [amount]");
-				return;
 			}
 		}
 		else if (cmd.equalsIgnoreCase("skull")) {
@@ -243,7 +242,7 @@ public final class SuperModerator implements CommandListener {
 
 			int count = 0;
 			for (Player worldPlayer : world.getPlayers()) {
-				if(worldPlayer.getCurrentIP() == p.getCurrentIP())
+				if(worldPlayer.getCurrentIP().equals(p.getCurrentIP()))
 					count++;
 			}
 

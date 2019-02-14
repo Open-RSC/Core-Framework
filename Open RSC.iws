@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/commands/Moderator.java" line="167" />
+    <bookmark url="file://$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/commands/Moderator.java" line="166" />
     <bookmark url="file://$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/commands/Moderator.java" line="26" />
-    <bookmark url="file://$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/commands/Admins.java" line="1260" />
+    <bookmark url="file://$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/commands/Admins.java" line="1236" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aac60d61-673a-4ad4-8ee5-46e19413f987" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/Open RSC.ipr" beforeDir="false" afterPath="$PROJECT_DIR$/Open RSC.ipr" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Open RSC.iws" beforeDir="false" afterPath="$PROJECT_DIR$/Open RSC.iws" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Website/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/Website/css/style.css" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -28,7 +28,7 @@
     <option name="optimizeImportsOnTheFly" value="true" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -136,8 +136,8 @@
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-6" />
     <option name="y" value="23" />
-    <option name="width" value="1613" />
-    <option name="height" value="990" />
+    <option name="width" value="1614" />
+    <option name="height" value="991" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
@@ -167,11 +167,11 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="android.sdk.path" value="$USER_HOME$/Library/Android/sdk" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1548395181690" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1550102938820" />
     <property name="editor.config.ad.shown" value="true" />
     <property name="go.gopath.indexing.explicitly.defined" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/Tools/Map Generator/build.xml" />
-    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="xpath.settings" />
@@ -263,10 +263,10 @@
     <option name="totallyTimeSpent" value="2209000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="54" y="23" width="1626" height="1027" extended-state="0" />
+    <frame x="52" y="23" width="1628" height="1027" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.48791716" visible="true" weight="0.1388889" />
-      <window_info id="Structure" order="1" sideWeight="0.5120829" side_tool="true" visible="true" weight="0.13928151" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.48661417" visible="true" weight="0.13871375" />
+      <window_info id="Structure" order="1" sideWeight="0.51338583" side_tool="true" weight="0.13871375" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
       <window_info id="UI Designer" order="4" />
@@ -282,7 +282,7 @@
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.50053304" side_tool="true" weight="0.32321042" />
       <window_info anchor="bottom" id="Version Control" order="9" weight="0.329718" />
-      <window_info active="true" anchor="bottom" id="Messages" order="10" sideWeight="0.49946696" visible="true" weight="0.32192513" />
+      <window_info anchor="bottom" id="Messages" order="10" sideWeight="0.49946696" weight="0.32085562" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="12" show_stripe_button="false" />
       <window_info anchor="bottom" id="Gradle View" order="13" />
@@ -574,21 +574,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/model/entity/player/Player.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="141">
-          <caret line="596" column="29" lean-forward="true" selection-start-line="596" selection-start-column="29" selection-end-line="596" selection-end-column="29" />
-          <folding>
-            <element signature="e#21419#21420#0" expanded="true" />
-            <element signature="e#21437#21438#0" expanded="true" />
-            <element signature="e#22712#22713#0" expanded="true" />
-            <element signature="e#22733#22734#0" expanded="true" />
-            <element signature="e#46713#46714#0" expanded="true" />
-            <element signature="e#46746#46747#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/event/custom/HourlyNpcLootEvent.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="440">
@@ -805,6 +790,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/model/entity/player/Player.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="196">
+          <caret line="70" column="23" selection-start-line="70" selection-start-column="23" selection-end-line="70" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
   </component>
   <component name="masterDetails">
     <states>
@@ -882,7 +874,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>lib3</last-edited>
+          <last-edited>2</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

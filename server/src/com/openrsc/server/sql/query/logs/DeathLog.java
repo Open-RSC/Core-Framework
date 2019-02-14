@@ -37,14 +37,14 @@ public class DeathLog extends Query {
 
 	@Override
 	public Query build() {
-		String droppedString = "";
+		StringBuilder droppedString = new StringBuilder();
 		for (Item item : droppedLoot) {
-			droppedString += "([id:" + item.getID() + "] " + item.getDef().getName() + " x " + DataConversions.numberFormat(item.getAmount()) + "),";
+			droppedString.append("([id:").append(item.getID()).append("] ").append(item.getDef().getName()).append(" x ").append(DataConversions.numberFormat(item.getAmount())).append("),");
 		}
 		if (droppedString.length() > 0)
 			droppedString.substring(0, droppedString.length() - 1);
 		else
-			droppedString = "Nothing";
+			droppedString = new StringBuilder("Nothing");
 
 		String killerName = "World";
 		if (killer != null) {

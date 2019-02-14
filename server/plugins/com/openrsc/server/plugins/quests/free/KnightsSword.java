@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -17,14 +19,9 @@ import static com.openrsc.server.plugins.Functions.*;
 public class KnightsSword implements QuestInterface, TalkToNpcListener,
 	TalkToNpcExecutiveListener, ObjectActionListener,
 	ObjectActionExecutiveListener {
-	private static final int NPC_SQUIRE = 132;
-	private static final int NPC_DWARF = 134;
-	private static final int NPC_VYVIN = 138;
-	private static final int CUPBOARD_ID = 175;
+	private static final int VYVINS_CUPBOARD_OPEN = 175;
+	private static final int VYVINS_CUPBOARD_CLOSED = 174;
 	private static final int CUPBOARD_Y = 2454;
-	private static final int BLUERITE_ORE_ID = 266;
-	private static final int SWORD_ID = 265;
-	private static final int PICTURE_ID = 264;
 
 	// Thrugo coords: 290 716
 
@@ -52,17 +49,17 @@ public class KnightsSword implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == NPC_DWARF || n.getID() == NPC_SQUIRE
-			|| n.getID() == NPC_VYVIN;
+		return n.getID() == NpcId.THURGO.id() || n.getID() == NpcId.SQUIRE.id()
+			|| n.getID() == NpcId.SIR_VYVIN.id();
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == NPC_DWARF) {
+		if (n.getID() == NpcId.THURGO.id()) {
 			dwarfDialogue(p, n);
-		} else if (n.getID() == NPC_SQUIRE) {
+		} else if (n.getID() == NpcId.SQUIRE.id()) {
 			squireDialogue(p, n, -1);
-		} else if (n.getID() == NPC_VYVIN) {
+		} else if (n.getID() == NpcId.SIR_VYVIN.id()) {
 			vyvinDialogue(p, n);
 		}
 	}
@@ -96,7 +93,7 @@ public class KnightsSword implements QuestInterface, TalkToNpcListener,
 				npcTalk(p, n, "Yeah what about it?");
 				break;
 			case 2:
-				if (!hasItem(p, 258)) {
+				if (!hasItem(p, ItemId.REDBERRY_PIE.id())) {
 					playerTalk(p, n, "Hello are you are an Imcando Dwarf?");
 					npcTalk(p, n, "Yeah what about it?");
 				} else {
@@ -141,11 +138,11 @@ public class KnightsSword implements QuestInterface, TalkToNpcListener,
 				p.updateQuestStage(this, 4);
 				break;
 			case 4:
-				if (hasItem(p, PICTURE_ID)) {
+				if (hasItem(p, ItemId.PORTRAIT.id())) {
 					playerTalk(p, n,
 						"I have found a picture of the sword I would like you to make");
 					p.message("You give the portrait to Thurgo");
-					removeItem(p, PICTURE_ID, 1);
+					removeItem(p, ItemId.PORTRAIT.id(), 1);
 					message(p, "Thurgo studies the portrait");
 					p.updateQuestStage(this, 5);
 					npcTalk(p,
@@ -172,26 +169,26 @@ public class KnightsSword implements QuestInterface, TalkToNpcListener,
 				break;
 			case 5:
 			case 6:
-				if (hasItem(p, 265)) {
+				if (hasItem(p, ItemId.FALADIAN_KNIGHTS_SWORD.id())) {
 					playerTalk(p, n,
 						"Thanks for your help in getting the sword for me");
 					npcTalk(p, n, "No worries mate");
 					return;
 				}
-				if (hasItem(p, 170, 2) && hasItem(p, BLUERITE_ORE_ID)) {
+				if (hasItem(p, ItemId.IRON_BAR.id(), 2) && hasItem(p, ItemId.BLURITE_ORE.id())) {
 					npcTalk(p, n, "How are you doing finding sword materials?");
 					playerTalk(p, n, "I have them all");
 					message(p, "You give some blurite ore and two iron bars to Thurgo");
 
-					removeItem(p, 170, 1);
-					removeItem(p, 170, 1);
-					removeItem(p, BLUERITE_ORE_ID, 1);
+					removeItem(p, ItemId.IRON_BAR.id(), 1);
+					removeItem(p, ItemId.IRON_BAR.id(), 1);
+					removeItem(p, ItemId.BLURITE_ORE.id(), 1);
 					message(p, "Thurgo starts making a sword",
 						"Thurgo hammers away",
 						"Thurgo hammers some more",
 						"Thurgo hands you a sword");
 
-					addItem(p, SWORD_ID, 1);
+					addItem(p, ItemId.FALADIAN_KNIGHTS_SWORD.id(), 1);
 					playerTalk(p, n, "Thank you very much");
 					npcTalk(p, n, "Just remember to call in with more pie some time");
 					p.updateQuestStage(this, 6);
@@ -209,12 +206,12 @@ public class KnightsSword implements QuestInterface, TalkToNpcListener,
 		message(p, "Thurgo's eyes light up");
 		npcTalk(p, n, "I'd never say no to a redberry pie");
 		npcTalk(p, n, "It's great stuff");
-		if (!hasItem(p, 258)) { //should not happen here
+		if (!hasItem(p, ItemId.REDBERRY_PIE.id())) { //should not happen here
 			playerTalk(p, n, "Well that's too bad, because I don't have any");
 			message(p, "Thurgo does not look impressed");
 		} else {
 			message(p, "You hand over the pie");
-			removeItem(p, 258, 1);
+			removeItem(p, ItemId.REDBERRY_PIE.id(), 1);
 			p.updateQuestStage(this, 3);
 			message(p, "Thurgo eats the pie", "Thurgo pats his stomach");
 			npcTalk(p, n, "By Guthix that was good pie",
@@ -272,12 +269,12 @@ public class KnightsSword implements QuestInterface, TalkToNpcListener,
 					break;
 				case 5:
 				case 6:
-					if (hasItem(p, SWORD_ID)) {
+					if (hasItem(p, ItemId.FALADIAN_KNIGHTS_SWORD.id())) {
 						playerTalk(p, n, "I have retrieved your sword for you");
 						npcTalk(p, n, "Thankyou, Thankyou",
 							"I was seriously worried I'd have to own up to Sir Vyvin");
 						p.message("You give the sword to the squire");
-						removeItem(p, SWORD_ID, 1);
+						removeItem(p, ItemId.FALADIAN_KNIGHTS_SWORD.id(), 1);
 						p.sendQuestComplete(getQuestId());
 					} else {
 						npcTalk(p, n, "So how are you doing getting a sword?");
@@ -385,22 +382,19 @@ public class KnightsSword implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if ((obj.getID() == CUPBOARD_ID || obj.getID() == 174) && obj.getY() == CUPBOARD_Y
-			&& obj.getX() == 318) {
-			return true;
-		}
-		return false;
+		return (obj.getID() == VYVINS_CUPBOARD_OPEN || obj.getID() == VYVINS_CUPBOARD_CLOSED) && obj.getY() == CUPBOARD_Y
+				&& obj.getX() == 318;
 	}
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		final Npc n = World.getWorld().getNpc(138, 316, 320, 2454, 2459);
-		if ((obj.getID() == CUPBOARD_ID || obj.getID() == 174) && obj.getY() == CUPBOARD_Y
+		if ((obj.getID() == VYVINS_CUPBOARD_OPEN || obj.getID() == VYVINS_CUPBOARD_CLOSED) && obj.getY() == CUPBOARD_Y
 			&& obj.getX() == 318) {
 			if (command.equalsIgnoreCase("open")) {
-				openCupboard(obj, p, CUPBOARD_ID);
+				openCupboard(obj, p, VYVINS_CUPBOARD_OPEN);
 			} else if (command.equalsIgnoreCase("close")) {
-				closeCupboard(obj, p, 174);
+				closeCupboard(obj, p, VYVINS_CUPBOARD_CLOSED);
 			} else {
 				if (n != null) {
 					if (!n.isBusy()) {
@@ -411,12 +405,12 @@ public class KnightsSword implements QuestInterface, TalkToNpcListener,
 						message(p,
 							"Maybe you need to get someone to distract Sir Vyvin for you");
 					} else {
-						if (hasItem(p, PICTURE_ID) || p.getQuestStage(this) < 4) {
+						if (hasItem(p, ItemId.PORTRAIT.id()) || p.getQuestStage(this) < 4) {
 							p.message("There is just a load of junk in here");
 							return;
 						}
 						p.message("You find a small portrait in here which you take");
-						addItem(p, PICTURE_ID, 1);
+						addItem(p, ItemId.PORTRAIT.id(), 1);
 					}
 				}
 			}

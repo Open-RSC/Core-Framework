@@ -39,7 +39,7 @@ public final class GameReport extends Query {
 				Chatlog cl = (Chatlog) s;
 				if ((cl.getOwner().contains(reported) || cl.getOwner().equalsIgnoreCase(reported))) {
 					if (System.currentTimeMillis() - s.getTimestamp() < 60000) {
-						chatlog.append("[" + DataConversions.timeFormat(cl.getTimestamp()) + "] " + cl.getOwner() + ": " + cl.getMessage() + "\n");
+						chatlog.append("[").append(DataConversions.timeFormat(cl.getTimestamp())).append("] ").append(cl.getOwner()).append(": ").append(cl.getMessage()).append("\n");
 					}
 				}
 			}
