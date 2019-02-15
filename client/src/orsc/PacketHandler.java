@@ -716,7 +716,7 @@ public class PacketHandler {
 	private void setServerConfiguration() {
 		Properties props = new Properties();
 		String serverName, serverNameWelcome, welcomeText;
-		int playerLevelLimit, spawnAuctionNpcs, spawnIronManNpcs, getFPS;
+		int playerLevelLimit, spawnAuctionNpcs, spawnIronManNpcs;
 		int showFloatingNametags, wantClans, wantKillFeed, fogToggle;
 		int groundItemToggle, autoMessageSwitchToggle, batchProgression;
 		int sideMenuToggle, inventoryCountToggle, zoomViewToggle;
@@ -727,7 +727,7 @@ public class PacketHandler {
 		int wantCustomBanks, wantBankPins, wantBankNotes, wantCertDeposit, customFiremaking;
 		int wantDropX, wantExpInfo, wantWoodcuttingGuild, wantFixedOverheadChat;
 		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank;
-		//int logoSpriteID;
+		//int logoSpriteID, getFPS;
 
 		if (!mc.gotInitialConfigs) {
 			serverName = this.getClientStream().readString(); // 1
@@ -776,7 +776,7 @@ public class PacketHandler {
 			wantMembers = this.getClientStream().getUnsignedByte(); // 43
 			displayLogoSprite = this.getClientStream().getUnsignedByte(); // 44
 			//logoSpriteID = this.getClientStream().getUnsignedByte(); // 45
-			getFPS = this.getClientStream().getUnsignedByte(); // 46
+			//getFPS = this.getClientStream().getUnsignedByte(); // 46
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -824,7 +824,7 @@ public class PacketHandler {
 			wantMembers = packetsIncoming.getUnsignedByte(); // 43
 			displayLogoSprite = packetsIncoming.getUnsignedByte(); // 44
 			//logoSpriteID = packetsIncoming.getUnsignedByte(); // 45
-			getFPS = packetsIncoming.getUnsignedByte(); // 46
+			//getFPS = packetsIncoming.getUnsignedByte(); // 46
 		}
 
 		if (mc.DEBUG) {
@@ -872,9 +872,9 @@ public class PacketHandler {
 					"\nS_WANT_FIXED_OVERHEAD_CHAT" + wantFixedOverheadChat + // 41
 					"\nWELCOME_TEXT" + welcomeText + // 42
 					"\nMEMBERS_FEATURES" + wantMembers + // 43
-					"\nDISPLAY_LOGO_SPRITE" + displayLogoSprite + // 44
+					"\nDISPLAY_LOGO_SPRITE" + displayLogoSprite // 44
 					//"\nLOGO_SPRITE_ID" + logoSpriteID + // 45
-					"\nC_FPS" + getFPS // 46
+					//"\nC_FPS" + getFPS // 46
 			);
 		}
 
@@ -923,7 +923,7 @@ public class PacketHandler {
 		props.setProperty("MEMBER_WORLD", wantMembers == 1 ? "true" : "false"); // 43
 		props.setProperty("DISPLAY_LOGO_SPRITE", displayLogoSprite == 1 ? "true" : "false"); // 44
 		//props.setProperty("LOGO_SPRITE_ID", Integer.toString(logoSpriteID)); // 45
-		props.setProperty("C_FPS", Integer.toString(getFPS)); // 46
+		//props.setProperty("C_FPS", Integer.toString(getFPS)); // 46
 
 		Config.updateServerConfiguration(props);
 

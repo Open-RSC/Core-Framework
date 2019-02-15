@@ -12708,8 +12708,8 @@ public final class mudclient implements Runnable {
 		System.out.println(Config.WELCOME_TEXT + " 42");
 		System.out.println(Config.MEMBER_WORLD + " 43");
 		System.out.println(Config.DISPLAY_LOGO_SPRITE + " 44");
-		System.out.println(Config.LOGO_SPRITE_ID + " 45");
-		System.out.println(Config.C_FPS + " 46");
+		//System.out.println(Config.LOGO_SPRITE_ID + " 45");
+		//System.out.println(Config.C_FPS + " 46");
 		try {
 			this.loadGameConfig(false);
 			if (!this.errorLoadingData) {
