@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
@@ -13,6 +15,7 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -30,28 +33,9 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 	 * room and rat appears on the same coord Rat is never removed untill you
 	 * use magnet room inbounds : MIN X: 356 MAX X: 357 MIN Y: 494 MAX Y: 496
 	 */
-
-	//considerations: sq/kite shields, med/large helms, plate-bodies/plate-tops/chains, legs/skirts
-	public static final int[] metal_armour = {
-		//plate bodies
-		8, 117, 118, 119, 120, 196, 401,
-		//plate tops
-		308, 309, 310, 311, 312, 313, 407,
-		//chains
-		7, 113, 114, 115, 116, 400, 431,
-		//legs
-		9, 121, 122, 123, 206, 248, 402,
-		//skirts
-		214, 215, 225, 226, 227, 406, 434,
-		//medium helmets
-		5, 104, 105, 106, 107, 399, 470, 795,
-		//large helmets
-		6, 108, 109, 110, 111, 112, 230,
-		//square shields
-		3, 124, 125, 126, 127, 403, 432, 1278,
-		//kite shields
-		2, 128, 129, 130, 131, 404, 433
-	};
+	
+	private static final int WITCHES_HOUSE_CUPBOARD_OPEN = 259;
+	private static final int WITCHES_HOUSE_CUPBOARD_CLOSED = 258;
 
 	@Override
 	public int getQuestId() {
@@ -80,15 +64,12 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 240) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.BOY.id();
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 240) {
+		if (n.getID() == NpcId.BOY.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					playerTalk(p, n, "Hello young man");
@@ -116,11 +97,11 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 				case 1:
 				case 2:
 				case 3:
-					if (hasItem(p, 539)) {
+					if (hasItem(p, ItemId.BALL.id())) {
 						playerTalk(p, n, "Hi I have got your ball back",
 							"It was harder than I thought it would be");
 						npcTalk(p, n, "Thankyou very much");
-						removeItem(p, 539, 1);
+						removeItem(p, ItemId.BALL.id(), 1);
 						if (p.getQuestStage(Constants.Quests.WITCHS_HOUSE) == 3) {
 							p.sendQuestComplete(Constants.Quests.WITCHS_HOUSE);
 						}
@@ -140,22 +121,8 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click,
 										 Player player) {
-		if (obj.getID() == 69) {
-			return true;
-		}
-		if (obj.getID() == 70 && obj.getX() == 358) {
-			return true;
-		}
-		if (obj.getID() == 71 && obj.getY() == 495) {
-			return true;
-		}
-		if (obj.getID() == 73 && obj.getX() == 351) {
-			return true;
-		}
-		if (obj.getID() == 72 && obj.getX() == 356) {
-			return true;
-		}
-		return false;
+		return obj.getID() == 69 || (obj.getID() == 70 && obj.getX() == 358) || (obj.getID() == 71 && obj.getY() == 495)
+				|| (obj.getID() == 73 && obj.getX() == 351) || (obj.getID() == 72 && obj.getX() == 356);
 	}
 
 	@Override
@@ -163,12 +130,12 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 		if (obj.getID() == 69) {
 			p.message("The door is locked");
 		}
-		if (obj.getID() == 70 && obj.getX() == 358) {
+		else if (obj.getID() == 70 && obj.getX() == 358) {
 			doDoor(obj, p);
 		}
-		if (obj.getID() == 71 && obj.getY() == 495) {
+		else if (obj.getID() == 71 && obj.getY() == 495) {
 			if (p.getCache().hasKey("witch_spawned") && p.getQuestStage(getQuestId()) == 2) {
-				Npc witch = World.getWorld().getNpcById(242);
+				Npc witch = World.getWorld().getNpcById(NpcId.NORA_T_HAG.id());
 				if (witch != null) {
 					witch.teleport(355, 494);
 
@@ -192,15 +159,15 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 			}
 		}
 
-		if (obj.getID() == 73 && obj.getX() == 351) {
-			Npc witch = World.getWorld().getNpcById(242);
+		else if (obj.getID() == 73 && obj.getX() == 351) {
+			Npc witch = World.getWorld().getNpcById(NpcId.NORA_T_HAG.id());
 			if (p.getQuestStage(this) == 3 || p.getQuestStage(getQuestId()) == -1) {
 				doDoor(obj, p);
 				return;
 			}
 			if (!p.getCache().hasKey("witch_spawned")) {
 				message(p, "As you reach out to open the door you hear footsteps inside the house", "The footsteps approach the back door");
-				spawnNpc(242, 356, 494, 60000);
+				spawnNpc(NpcId.NORA_T_HAG.id(), 356, 494, 60000);
 				p.getCache().store("witch_spawned", true);
 			} else {
 				message(p, "The shed door is locked");
@@ -218,11 +185,11 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 				p.getCache().remove("found_magnet");
 			}
 		}
-		if (obj.getID() == 72 && obj.getX() == 356) {
+		else if (obj.getID() == 72 && obj.getX() == 356) {
 			if (p.getX() <= 355) {
 				doDoor(obj, p);
 				if (p.getCache().hasKey("witch_spawned")) {
-					Npc witch = World.getWorld().getNpcById(242);
+					Npc witch = World.getWorld().getNpcById(NpcId.NORA_T_HAG.id());
 					witch.setBusy(true);
 					sleep(2000);
 					p.message("Through a crack in the door, you see a witch enter the garden");
@@ -254,29 +221,21 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command,
 									 Player player) {
-		if (obj.getID() == 255) {
-			return true;
-		}
-		if (obj.getID() == 256 && obj.getX() == 363) {
-			return true;
-		}
-		if ((obj.getID() == 259 || obj.getID() == 258) && obj.getY() == 3328) {
-			return true;
-		}
-		return false;
+		return obj.getID() == 255 || (obj.getID() == 256 && obj.getX() == 363)
+				|| ((obj.getID() == WITCHES_HOUSE_CUPBOARD_OPEN || obj.getID() == WITCHES_HOUSE_CUPBOARD_CLOSED) && obj.getY() == 3328);
 	}
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if (obj.getID() == 255) {
-			if (!hasItem(p, 538)) {
+			if (!hasItem(p, ItemId.FRONT_DOOR_KEY.id())) {
 				p.message("You find a key under the mat");
-				addItem(p, 538, 1);
+				addItem(p, ItemId.FRONT_DOOR_KEY.id(), 1);
 			} else {
 				p.message("You find nothing interesting");
 			}
 		}
-		if (obj.getID() == 256 && obj.getX() == 363) {
+		else if (obj.getID() == 256 && obj.getX() == 363) {
 			boolean shouldShock = false;
 			if (wearingMetalArmour(p)) {
 				p.message("As your metal armour touches the gate you feel a shock");
@@ -297,15 +256,15 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 				doGate(p, obj);
 			}
 		}
-		if ((obj.getID() == 259 || obj.getID() == 258) && obj.getY() == 3328) {
+		else if ((obj.getID() == WITCHES_HOUSE_CUPBOARD_OPEN || obj.getID() == WITCHES_HOUSE_CUPBOARD_CLOSED) && obj.getY() == 3328) {
 			if (command.equalsIgnoreCase("open")) {
-				openCupboard(obj, p, 259);
+				openCupboard(obj, p, WITCHES_HOUSE_CUPBOARD_OPEN);
 			} else if (command.equalsIgnoreCase("close")) {
-				closeCupboard(obj, p, 258);
+				closeCupboard(obj, p, WITCHES_HOUSE_CUPBOARD_CLOSED);
 			} else {
-				if (!hasItem(p, 540)) {
+				if (!hasItem(p, ItemId.MAGNET.id())) {
 					p.message("You find a magnet in the cupboard");
-					addItem(p, 540, 1);
+					addItem(p, ItemId.MAGNET.id(), 1);
 					if (p.getQuestStage(this) > 0) {
 						p.getCache().store("found_magnet", true);
 					}
@@ -319,36 +278,30 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockDrop(Player p, Item i) {
-		if (i.getID() == 319 && p.getLocation().inBounds(356, 357, 494, 496)) {
-			return true;
-		}
-		return false;
+		return i.getID() == ItemId.CHEESE.id() && p.getLocation().inBounds(356, 357, 494, 496);
 	}
 
 	// room inbounds : MIN X: 356 MAX X: 357 MIN Y: 494 MAX Y: 496
 	@Override
 	public void onDrop(Player p, Item i) {
-		if (i.getID() == 319 && p.getLocation().inBounds(356, 357, 494, 496)) {
+		if (i.getID() == ItemId.CHEESE.id() && p.getLocation().inBounds(356, 357, 494, 496)) {
 			if (p.getQuestStage(this) == -1) {
 				playerTalk(p, null, "I would rather eat it to be honest");
 				return;
 			}
 			message(p, "A rat appears from a hole and eats the cheese");
-			spawnNpc(241, 356, 494, 60000);
+			spawnNpc(NpcId.RAT_WITCHES_HOUSE.id(), 356, 494, 60000);
 		}
 	}
 
 	@Override
 	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
-		if (item.getID() == 540 && npc.getID() == 241) {
-			return true;
-		}
-		return false;
+		return item.getID() == ItemId.MAGNET.id() && npc.getID() == NpcId.RAT_WITCHES_HOUSE.id();
 	}
 
 	@Override
 	public void onInvUseOnNpc(Player p, Npc npc, Item item) {
-		if (item.getID() == 540 && npc.getID() == 241) {
+		if (item.getID() == ItemId.MAGNET.id() && npc.getID() == NpcId.RAT_WITCHES_HOUSE.id()) {
 			if (p.getQuestStage(this) == -1) {
 				return;
 			}
@@ -356,11 +309,11 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 				p.message("You need to get the magnet yourself to do this quest");
 			} else {
 				p.message("You put the magnet on the rat");
-				Npc rat = World.getWorld().getNpcById(241);
+				Npc rat = World.getWorld().getNpcById(NpcId.RAT_WITCHES_HOUSE.id());
 				removeNpc(rat);
 				message(p, "The rat runs back into his hole",
 					"You hear a click and whirr");
-				p.getInventory().remove(540, 1);
+				p.getInventory().remove(ItemId.MAGNET.id(), 1);
 				p.updateQuestStage(getQuestId(), 2);
 			}
 		}
@@ -369,17 +322,14 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == 244 || n.getID() == 245 || n.getID() == 246
-			|| n.getID() == 247) {
-			return true;
-		}
-		return false;
+		return DataConversions.inArray(new int[] {NpcId.SHAPESHIFTER_HUMAN.id(), NpcId.SHAPESHIFTER_SPIDER.id(),
+				NpcId.SHAPESHIFTER_BEAR.id(), NpcId.SHAPESHIFTER_WOLF.id()}, n.getID());
 	}
 
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
 		n.resetCombatEvent();
-		if (n.getID() >= 247) {
+		if (n.getID() >= NpcId.SHAPESHIFTER_WOLF.id()) {
 			n.killedBy(p);
 			p.message("You finally kill the shapeshifter once and for all");
 			if (!p.getCache().hasKey("shapeshifter")) {
@@ -396,11 +346,11 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 	}
 
 	private String npcMessage(int id) {
-		if (id == 245) {
+		if (id == NpcId.SHAPESHIFTER_SPIDER.id()) {
 			return "spider";
-		} else if (id == 246) {
+		} else if (id == NpcId.SHAPESHIFTER_BEAR.id()) {
 			return "bear";
-		} else if (id == 247) {
+		} else if (id == NpcId.SHAPESHIFTER_WOLF.id()) {
 			return "wolf";
 		}
 		return "";
@@ -408,7 +358,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
-		if (n.getID() == 244 && p.getQuestStage(getQuestId()) == -1) {
+		if (n.getID() == NpcId.SHAPESHIFTER_HUMAN.id() && p.getQuestStage(getQuestId()) == -1) {
 			p.message("I have already done that quest");
 			return true;
 		}
@@ -417,7 +367,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockPickup(Player p, GroundItem i) {
-		if (i.getID() == 539 && i.getX() == 350 && i.getY() == 491) {
+		if (i.getID() == ItemId.BALL.id() && i.getX() == 350 && i.getY() == 491) {
 			if (p.getQuestStage(getQuestId()) == -1) {
 				return true;
 			}
@@ -431,7 +381,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onPickup(Player p, GroundItem i) {
 		if (!p.getCache().hasKey("shapeshifter")) {
-			Npc shapeshifter = getNearestNpc(p, 244, 20);
+			Npc shapeshifter = getNearestNpc(p, NpcId.SHAPESHIFTER_HUMAN.id(), 20);
 			if (shapeshifter != null) {
 				shapeshifter.startCombat(p);
 			}
@@ -442,8 +392,30 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 	}
 
 	private boolean wearingInsulatingGloves(Player p) {
-		return p.getInventory().wielding(16) || p.getInventory().wielding(556);
+		return p.getInventory().wielding(ItemId.LEATHER_GLOVES.id()) || p.getInventory().wielding(ItemId.ICE_GLOVES.id());
 	}
+	
+	//considerations: sq/kite shields, med/large helms, plate-bodies/plate-tops/chains, legs/skirts
+	public static final int[] METAL_ARMOURS = {
+		//plate bodies
+		ItemId.BRONZE_PLATE_MAIL_BODY.id(), ItemId.IRON_PLATE_MAIL_BODY.id(), ItemId.STEEL_PLATE_MAIL_BODY.id(), ItemId.MITHRIL_PLATE_MAIL_BODY.id(), ItemId.ADAMANTITE_PLATE_MAIL_BODY.id(), ItemId.BLACK_PLATE_MAIL_BODY.id(), ItemId.RUNE_PLATE_MAIL_BODY.id(),
+		//plate tops
+		ItemId.BRONZE_PLATE_MAIL_TOP.id(), ItemId.IRON_PLATE_MAIL_TOP.id(), ItemId.STEEL_PLATE_MAIL_TOP.id(), ItemId.MITHRIL_PLATE_MAIL_TOP.id(), ItemId.ADAMANTITE_PLATE_MAIL_TOP.id(), ItemId.BLACK_PLATE_MAIL_TOP.id(), ItemId.RUNE_PLATE_MAIL_TOP.id(),
+		//chains
+		ItemId.BRONZE_CHAIN_MAIL_BODY.id(), ItemId.IRON_CHAIN_MAIL_BODY.id(), ItemId.STEEL_CHAIN_MAIL_BODY.id(), ItemId.MITHRIL_CHAIN_MAIL_BODY.id(), ItemId.ADAMANTITE_CHAIN_MAIL_BODY.id(), ItemId.BLACK_CHAIN_MAIL_BODY.id(), ItemId.RUNE_CHAIN_MAIL_BODY.id(),
+		//legs
+		ItemId.BRONZE_PLATE_MAIL_LEGS.id(), ItemId.IRON_PLATE_MAIL_LEGS.id(), ItemId.STEEL_PLATE_MAIL_LEGS.id(), ItemId.MITHRIL_PLATE_MAIL_LEGS.id(), ItemId.ADAMANTITE_PLATE_MAIL_LEGS.id(), ItemId.BLACK_PLATE_MAIL_LEGS.id(), ItemId.RUNE_PLATE_MAIL_LEGS.id(),
+		//skirts
+		ItemId.BRONZE_PLATED_SKIRT.id(), ItemId.IRON_PLATED_SKIRT.id(), ItemId.STEEL_PLATED_SKIRT.id(), ItemId.MITHRIL_PLATED_SKIRT.id(), ItemId.ADAMANTITE_PLATED_SKIRT.id(), ItemId.BLACK_PLATED_SKIRT.id(), ItemId.RUNE_SKIRT.id(),
+		//medium helmets
+		ItemId.MEDIUM_BRONZE_HELMET.id(), ItemId.MEDIUM_IRON_HELMET.id(), ItemId.MEDIUM_STEEL_HELMET.id(), ItemId.MEDIUM_MITHRIL_HELMET.id(), ItemId.MEDIUM_ADAMANTITE_HELMET.id(), ItemId.MEDIUM_BLACK_HELMET.id(), ItemId.MEDIUM_RUNE_HELMET.id(), ItemId.DRAGON_MEDIUM_HELMET.id(),
+		//large helmets
+		ItemId.LARGE_BRONZE_HELMET.id(), ItemId.LARGE_IRON_HELMET.id(), ItemId.LARGE_STEEL_HELMET.id(), ItemId.LARGE_MITHRIL_HELMET.id(), ItemId.LARGE_ADAMANTITE_HELMET.id(), ItemId.LARGE_BLACK_HELMET.id(), ItemId.LARGE_RUNE_HELMET.id(),
+		//square shields
+		ItemId.BRONZE_SQUARE_SHIELD.id(), ItemId.IRON_SQUARE_SHIELD.id(), ItemId.STEEL_SQUARE_SHIELD.id(), ItemId.MITHRIL_SQUARE_SHIELD.id(), ItemId.ADAMANTITE_SQUARE_SHIELD.id(), ItemId.BLACK_SQUARE_SHIELD.id(), ItemId.RUNE_SQUARE_SHIELD.id(), ItemId.DRAGON_SQUARE_SHIELD.id(),
+		//kite shields
+		ItemId.BRONZE_KITE_SHIELD.id(), ItemId.IRON_KITE_SHIELD.id(), ItemId.STEEL_KITE_SHIELD.id(), ItemId.MITHRIL_KITE_SHIELD.id(), ItemId.ADAMANTITE_KITE_SHIELD.id(), ItemId.BLACK_KITE_SHIELD.id(), ItemId.RUNE_KITE_SHIELD.id()
+	};
 
 	private boolean wearingMetalArmour(Player p) {
 		if (wearingInsulatingGloves(p)) {
@@ -451,7 +423,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 		}
 		boolean isWearingMetal = false;
 
-		for (int itemId : metal_armour) {
+		for (int itemId : METAL_ARMOURS) {
 			isWearingMetal |= p.getInventory().wielding(itemId);
 			if (isWearingMetal) break;
 		}

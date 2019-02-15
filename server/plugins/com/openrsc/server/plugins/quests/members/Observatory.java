@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -62,21 +64,12 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 654) { // ASSISTANT
-			return true;
-		}
-		if (n.getID() == 652) { // PROFFESOR
-			return true;
-		}
-		if (n.getID() == 662) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.OBSERVATORY_ASSISTANT.id() || n.getID() == NpcId.OBSERVATORY_PROFESSOR.id() || n.getID() == NpcId.PROFESSOR.id();
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 662) {
+		if (n.getID() == NpcId.PROFESSOR.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					npcTalk(p, n, "Hello friend", "This is my poorly telescope",
@@ -100,7 +93,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 					break;
 			}
 		}
-		if (n.getID() == 654) { // ASSISTANT
+		else if (n.getID() == NpcId.OBSERVATORY_ASSISTANT.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					npcTalk(p, n, "Hello wanderer",
@@ -199,7 +192,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 						"Have a drink on me!");
 					p.message("The assistant gives you some wine");
 					playerTalk(p, n, "Thanks very much");
-					addItem(p, 142, 1);
+					addItem(p, ItemId.WINE.id(), 1);
 					break;
 				case -1:
 					if (!p.getCache().hasKey("observatory_assistant_drink")) {
@@ -208,7 +201,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 							"You've made my life much easier!",
 							"Have a drink on me!");
 						p.message("The assistant gives you some wine");
-						addItem(p, 142, 1);
+						addItem(p, ItemId.WINE.id(), 1);
 						playerTalk(p, n, "Thanks very much");
 						p.getCache().store("observatory_assistant_drink", true);
 						return;
@@ -217,7 +210,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 					break;
 			}
 		}
-		if (n.getID() == 652) {
+		else if (n.getID() == NpcId.OBSERVATORY_PROFESSOR.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					npcTalk(p, n, "Hello adventurer",
@@ -285,12 +278,12 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 					int planks = showMenu(p, n, "Yes I've got them",
 						"No, sorry not yet");
 					if (planks == 0) {
-						if (p.getInventory().countId(410) >= 3) {
+						if (p.getInventory().countId(ItemId.PLANK.id()) >= 3) {
 							npcTalk(p,
 								n,
 								"Well done, I can start the tripod construction now",
 								"Now for the bronze");
-							p.getInventory().remove(410, 3);
+							p.getInventory().remove(ItemId.PLANK.id(), 3);
 
 							p.updateQuestStage(getQuestId(), 2);
 						} else {
@@ -306,10 +299,10 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 					int bronze = showMenu(p, n, "Yes I have it",
 						"I'm still looking");
 					if (bronze == 0) {
-						if (p.getInventory().countId(169) >= 1) {
+						if (p.getInventory().countId(ItemId.BRONZE_BAR.id()) >= 1) {
 							npcTalk(p, n, "Great, now all I need is the lens made",
 								"Next on the list is molten glass");
-							p.getInventory().remove(169, 1);
+							p.getInventory().remove(ItemId.BRONZE_BAR.id(), 1);
 
 							p.updateQuestStage(getQuestId(), 3);
 						} else {
@@ -325,7 +318,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 					int molten = showMenu(p, n, "Here it is!",
 						"No luck yet I'm afraid");
 					if (molten == 0) {
-						if (p.getInventory().countId(623) >= 1) {
+						if (p.getInventory().countId(ItemId.MOLTEN_GLASS.id()) >= 1) {
 							npcTalk(p,
 								n,
 								"Excellent! now all I need is to make the lens",
@@ -350,7 +343,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 					int mould = showMenu(p, n, "Yes, I've managed to find it",
 						"I haven't found it yet", "I had it then lost it");
 					if (mould == 0) {
-						if (p.getInventory().countId(1017) >= 1) {
+						if (p.getInventory().countId(ItemId.LENS_MOULD.id()) >= 1) {
 							npcTalk(p, n,
 								"At last you've brought all the items I need",
 								"To repair the telescope",
@@ -394,13 +387,13 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 					int finished = showMenu(p, n, "Yes here it is",
 						"I haven't finished it yet");
 					if (finished == 0) {
-						if (p.getInventory().countId(1018) >= 1) {
+						if (p.getInventory().countId(ItemId.LENS.id()) >= 1) {
 							npcTalk(p, n,
 								"Wonderful, at last I can fix the telescope");
-							if (hasItem(p, 1017)) {
+							if (hasItem(p, ItemId.LENS_MOULD.id())) {
 								npcTalk(p, n,
 									"I'll take back that mould for use again");
-								removeItem(p, 1017, 1);
+								removeItem(p, ItemId.LENS_MOULD.id(), 1);
 							}
 							npcTalk(p, n, "Meet me at the Observatory later...");
 							p.updateQuestStage(getQuestId(), 6);
@@ -437,31 +430,8 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command,
 									 Player player) {
-		if (obj.getID() == 928) {
-			return true;
-		}
-		if (obj.getID() == 937 || obj.getID() == 936) {
-			return true;
-		}
-		if (obj.getID() == 929 || obj.getID() == 917) {
-			return true;
-		}
-		if (obj.getID() == 930 || obj.getID() == 919) {
-			return true;
-		}
-		if (obj.getID() == 935 || obj.getID() == 934) {
-			return true;
-		}
-		if (obj.getID() == 926 && obj.getX() == 689 && obj.getY() == 3513) {
-			return true;
-		}
-		if (obj.getID() == 927) {
-			return true;
-		}
-		if (obj.getID() == 925) {
-			return true;
-		}
-		return false;
+		return DataConversions.inArray(new int[] {928, 937, 936, 929, 917, 930, 919, 935, 934, 927, 925}, obj.getID())
+				|| (obj.getID() == 926 && obj.getX() == 689 && obj.getY() == 3513);
 	}
 
 	@Override
@@ -479,7 +449,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 			}
 			if (p.getQuestStage(getQuestId()) >= 1
 				|| p.getQuestStage(getQuestId()) <= 5) {
-				Npc assistant = getNearestNpc(p, 654, 6);
+				Npc assistant = getNearestNpc(p, NpcId.OBSERVATORY_ASSISTANT.id(), 6);
 				if (assistant != null) {
 					npcTalk(p, assistant, "Take great care down there",
 						"Remember the goblins have taken over the cavern");
@@ -489,68 +459,68 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 				return;
 			}
 		}
-		if (obj.getID() == 937) {
+		else if (obj.getID() == 937) {
 			p.message("You open the chest");
 			World.getWorld().replaceGameObject(obj,
 				new GameObject(obj.getLocation(), 936, obj.getDirection(),
 					obj.getType()));
 		}
-		if (obj.getID() == 936) {
+		else if (obj.getID() == 936) {
 			p.message("You search the chest");
 			p.message("The chest contains nothing");
 			World.getWorld().replaceGameObject(obj,
 				new GameObject(obj.getLocation(), 937, obj.getDirection(),
 					obj.getType()));
 		}
-		if (obj.getID() == 929) {
+		else if (obj.getID() == 929) {
 			p.message("You open the chest");
 			World.getWorld().replaceGameObject(obj,
 				new GameObject(obj.getLocation(), 917, obj.getDirection(),
 					obj.getType()));
 		}
-		if (obj.getID() == 917) {
+		else if (obj.getID() == 917) {
 			p.message("You search the chest");
 			p.message("The chest contains a poisonous spider!");
-			Npc spider = spawnNpc(656, obj.getX(), obj.getY(), 120000);
+			Npc spider = spawnNpc(NpcId.DUNGEON_SPIDER.id(), obj.getX(), obj.getY(), 120000);
 			spider.setChasing(p);
 			World.getWorld().registerGameObject(
 				new GameObject(obj.getLocation(), 929, obj.getDirection(),
 					obj.getType()));
 		}
-		if (obj.getID() == 930) {
+		else if (obj.getID() == 930) {
 			p.message("You open the chest");
 			World.getWorld().registerGameObject(
 				new GameObject(obj.getLocation(), 919, obj.getDirection(),
 					obj.getType()));
 		}
-		if (obj.getID() == 919) { // KEY CHEST FOUND!
+		else if (obj.getID() == 919) { // KEY CHEST FOUND!
 			p.message("You search the chest");
 			p.message("You find a small key inside");
-			if (hasItem(p, 1012)) {
+			if (hasItem(p, ItemId.KEEP_KEY.id())) {
 				message(p, "You already have a keep key",
 					"Another one will have no use");
 			} else {
-				addItem(p, 1012, 1);
+				addItem(p, ItemId.KEEP_KEY.id(), 1);
 			}
 			World.getWorld().registerGameObject(
 				new GameObject(obj.getLocation(), 930, obj.getDirection(),
 					obj.getType()));
 		}
-		if (obj.getID() == 935) {
+		else if (obj.getID() == 935) {
 			p.message("You open the chest");
 			World.getWorld().registerGameObject(
 				new GameObject(obj.getLocation(), 934, obj.getDirection(),
 					obj.getType()));
 		}
-		if (obj.getID() == 934) { // POISON CURE FOUND!
+		else if (obj.getID() == 934) { // POISON CURE FOUND!
 			p.message("You search the chest");
 			p.message("The chest contains some poison cure");
-			addItem(p, 568, 1);
+			addItem(p, ItemId.ONE_CURE_POISON_POTION.id(), 1);
 			World.getWorld().registerGameObject(
 				new GameObject(obj.getLocation(), 935, obj.getDirection(),
 					obj.getType()));
 		}
-		if (obj.getID() == 926 && obj.getX() == 689 && obj.getY() == 3513) { // 690
+		else if (obj.getID() == 926 && obj.getX() == 689 && obj.getY() == 3513) { // 690
 			// 3514
 			if (p.getCache().hasKey("keep_key_gate")
 				|| p.getQuestStage(getQuestId()) == -1) {
@@ -566,18 +536,18 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 				p.message("The gate is locked");
 			}
 		}
-		if (obj.getID() == 927) {
-			if (!hasItem(p, 1017)) {
+		else if (obj.getID() == 927) {
+			if (!hasItem(p, ItemId.LENS_MOULD.id())) {
 				p.message("Underneath you find a peculiar mould");
-				addItem(p, 1017, 1);
+				addItem(p, ItemId.LENS_MOULD.id(), 1);
 			} else {
 				p.message("You already have this lens mould");
 				p.message("Another one will be of no use");
 			}
 		}
-		if (obj.getID() == 925) {
+		else if (obj.getID() == 925) {
 			if (p.getQuestStage(getQuestId()) == -1) {
-				Npc professor = getNearestNpc(p, 662, 10);
+				Npc professor = getNearestNpc(p, NpcId.PROFESSOR.id(), 10);
 				if (professor != null) {
 					p.message("You look through the telescope");
 					constellation(p, p.getQuestStage(getQuestId()));
@@ -594,7 +564,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 				}
 				return;
 			} else if (p.getQuestStage(getQuestId()) == 6) {
-				Npc professor = getNearestNpc(p, 662, 10);
+				Npc professor = getNearestNpc(p, NpcId.PROFESSOR.id(), 10);
 				if (professor != null) {
 					npcTalk(p, professor, "Well done, well done!!",
 						"Let's see what the stars have in store for us today");
@@ -653,27 +623,27 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 		} else if (selectedNumber == 1) {
 			npcTalk(p, n, "Libra the scales",
 				"The scales of justice award you with Law Runes");
-			addItem(p, 42, 3);
+			addItem(p, ItemId.LAW_RUNE.id(), 3);
 		} else if (selectedNumber == 2) {
 			npcTalk(p, n, "Gemini the twins",
 				"The double nature of Gemini awards you a two-handed weapon");
-			addItem(p, 426, 1);
+			addItem(p, ItemId.BLACK_2_HANDED_SWORD.id(), 1);
 		} else if (selectedNumber == 3) {
 			npcTalk(p, n, "Pisces the fish",
 				"The gods rain food from the sea on you");
-			addItem(p, 367, 3);
+			addItem(p, ItemId.TUNA.id(), 3);
 		} else if (selectedNumber == 4) {
 			npcTalk(p, n, "Taurus the bull",
 				"You are given the strength of a bull");
-			addItem(p, 492, 1);
+			addItem(p, ItemId.FULL_SUPER_STRENGTH_POTION.id(), 1);
 		} else if (selectedNumber == 5) {
 			npcTalk(p, n, "Aquarius the water-bearer",
 				"the Gods of water award you with water runes");
-			addItem(p, 32, 25);
+			addItem(p, ItemId.WATER_RUNE.id(), 25);
 		} else if (selectedNumber == 6) {
 			npcTalk(p, n, "Scorpio the scorpion",
 				"The scorpion gives you poison from it's sting");
-			addItem(p, 572, 1);
+			addItem(p, ItemId.WEAPON_POISON.id(), 1);
 		} else if (selectedNumber == 7) {
 			npcTalk(p, n, "Aries the ram",
 				"The ram's strength improves your attack abilities");
@@ -682,7 +652,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 		} else if (selectedNumber == 8) {
 			npcTalk(p, n, "Sagittarius the Centaur",
 				"The Gods award you a maple longbow");
-			addItem(p, 652, 1);
+			addItem(p, ItemId.MAPLE_LONGBOW.id(), 1);
 		} else if (selectedNumber == 9) {
 			npcTalk(p, n, "Leo the lion",
 				"The power of the lion has increased your hitpoints");
@@ -696,10 +666,10 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 		} else if (selectedNumber == 11) {
 			npcTalk(p, n, "Cancer the crab",
 				"The armoured crab gives you an amulet of protection");
-			addItem(p, 315, 1);
+			addItem(p, ItemId.EMERALD_AMULET_OF_PROTECTION.id(), 1);
 		}
 		// all constellations give uncut sapphire
-		addItem(p, 160, 1);
+		addItem(p, ItemId.UNCUT_SAPPHIRE.id(), 1);
 	}
 
 	private void constellation(Player p, int stage) {
@@ -748,20 +718,17 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
 									   Player player) {
-		if (obj.getID() == 926 && item.getID() == 1012) {
-			return true;
-		}
-		return false;
+		return obj.getID() == 926 && item.getID() == ItemId.KEEP_KEY.id();
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == 926 && item.getID() == 1012) {
-			Npc guard = getNearestNpc(p, 651, 5);
+		if (obj.getID() == 926 && item.getID() == ItemId.KEEP_KEY.id()) {
+			Npc guard = getNearestNpc(p, NpcId.GOBLIN_GUARD.id(), 5);
 			if (guard != null) {
 				p.message("The gate unlocks");
 				p.message("The keep key is broken - I'll discard it");
-				removeItem(p, 1012, 1);
+				removeItem(p, ItemId.KEEP_KEY.id(), 1);
 				if (!p.getCache().hasKey("keep_key_gate")) {
 					p.getCache().store("keep_key_gate", true);
 				}

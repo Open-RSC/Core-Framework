@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -49,7 +51,7 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 		p.getCache().remove("2nd_cog");
 		p.getCache().remove("3rd_cog");
 		p.getCache().remove("4th_cog");
-		addItem(p, 10, 500);
+		addItem(p, ItemId.COINS.id(), 500);
 	}
 
 	/**
@@ -58,15 +60,12 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 366) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.BROTHER_KOJO.id();
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 366) {
+		if (n.getID() == NpcId.BROTHER_KOJO.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					playerTalk(p, n, "Hello Monk");
@@ -136,23 +135,13 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 	 */
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (obj.getID() == 362 || obj.getID() == 363 || obj.getID() == 364
-			|| obj.getID() == 365) {
-			return true;
-		}
-		if (obj.getID() == 373 || obj.getID() == 374) {
-			return true;
-		}
-		if (obj.getID() == 371 && obj.getY() == 3475) {
-			return true;
-		}
-		return false;
+		return (obj.getID() == 362 || obj.getID() == 363 || obj.getID() == 364 || obj.getID() == 365)
+				|| (obj.getID() == 373 || obj.getID() == 374) || (obj.getID() == 371 && obj.getY() == 3475);
 	}
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
-		if (obj.getID() == 362 || obj.getID() == 363 || obj.getID() == 364
-			|| obj.getID() == 365) {
+		if (obj.getID() == 362 || obj.getID() == 363 || obj.getID() == 364 || obj.getID() == 365) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 				case 1:
@@ -180,7 +169,7 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 					break;
 			}
 		}
-		if (obj.getID() == 373 || obj.getID() == 374) {
+		else if (obj.getID() == 373 || obj.getID() == 374) {
 			if (closed) {
 				p.message("The gate swings open");
 				GameObject firstGate = new GameObject(
@@ -196,7 +185,7 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 						"They're becoming weak, some have collapsed",
 						"The rats are slowly dying");
 					for (Npc rats : p.getViewArea().getNpcsInView()) {
-						if (rats.getID() == 367) {
+						if (rats.getID() == NpcId.DUNGEON_RAT.id()) {
 							rats.remove();
 						}
 					}
@@ -212,7 +201,7 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 				closed = true;
 			}
 		}
-		if (obj.getID() == 371 && obj.getY() == 3475) {
+		else if (obj.getID() == 371 && obj.getY() == 3475) {
 			p.message("The gate is locked");
 			p.message("The gate will not open from here");
 		}
@@ -225,33 +214,26 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == 375 && item.getID() == 731) {
-			return true;
-		}
-		if ((obj.getID() == 364 || obj.getID() == 363 || obj.getID() == 362 || obj
-			.getID() == 365)
-			&& (item.getID() == 730 || item.getID() == 728
-			|| item.getID() == 727 || item.getID() == 729)) {
-			return true;
-		}
-		return false;
+		return (obj.getID() == 375 && item.getID() == ItemId.RAT_POISON.id()) ||
+				((obj.getID() == 364 || obj.getID() == 363 || obj.getID() == 362 || obj.getID() == 365)
+				&& (item.getID() == ItemId.LARGE_COG_PURPLE.id() || item.getID() == ItemId.LARGE_COG_BLACK.id()
+				|| item.getID() == ItemId.LARGE_COG_BLUE.id() || item.getID() == ItemId.LARGE_COG_RED.id()));
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == 375 && item.getID() == 731) {
+		if (obj.getID() == 375 && item.getID() == ItemId.RAT_POISON.id()) {
 			p.message("You pour the rat poison into the feeding trough");
-			removeItem(p, 731, 1);
+			removeItem(p, ItemId.RAT_POISON.id(), 1);
 			p.getCache().store("foodtrough", true);
 		}
 		/** TOP PURPLE POLE OTHERWISE NOT FIT MESSAGE - 1st cog **/
-		if ((obj.getID() == 364 || obj.getID() == 363 || obj.getID() == 362 || obj
-			.getID() == 365)
-			&& item.getID() == 730) {
+		else if ((obj.getID() == 364 || obj.getID() == 363 || obj.getID() == 362 || obj.getID() == 365)
+			&& item.getID() == ItemId.LARGE_COG_PURPLE.id()) {
 			if (obj.getID() == 364 && obj.getX() == 581 && obj.getY() == 2525) {
 				if (atQuestStage(p, this, 1) && !p.getCache().hasKey("1st_cog")) {
 					p.message("The cog fits perfectly");
-					removeItem(p, 730, 1);
+					removeItem(p, ItemId.LARGE_COG_PURPLE.id(), 1);
 					p.getCache().store("1st_cog", true);
 				} else if (atQuestStage(p, this, -1)
 					|| p.getCache().hasKey("1st_cog")) {
@@ -262,13 +244,12 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 			}
 		}
 		/** GROUND FLOOR BLACK POLE OTHERWISE NOT FIT MESSAGE - 2nd cog **/
-		if ((obj.getID() == 364 || obj.getID() == 363 || obj.getID() == 362 || obj
-			.getID() == 365)
-			&& item.getID() == 728) {
+		else if ((obj.getID() == 364 || obj.getID() == 363 || obj.getID() == 362 || obj.getID() == 365)
+			&& item.getID() == ItemId.LARGE_COG_BLACK.id()) {
 			if (obj.getID() == 365 && obj.getX() == 581 && obj.getY() == 639) {
 				if (atQuestStage(p, this, 1) && !p.getCache().hasKey("2nd_cog")) {
 					p.message("The cog fits perfectly");
-					removeItem(p, 728, 1);
+					removeItem(p, ItemId.LARGE_COG_BLACK.id(), 1);
 					p.getCache().store("2nd_cog", true);
 				} else if (atQuestStage(p, this, -1)
 					|| p.getCache().hasKey("2nd_cog")) {
@@ -279,13 +260,12 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 			}
 		}
 		/** BOTTOM FLOOR BLUE POLE OTHERWISE NOT FIT MESSAGE - 3rd cog **/
-		if ((obj.getID() == 364 || obj.getID() == 363 || obj.getID() == 362 || obj
-			.getID() == 365)
-			&& item.getID() == 727) {
+		else if ((obj.getID() == 364 || obj.getID() == 363 || obj.getID() == 362 || obj.getID() == 365)
+			&& item.getID() == ItemId.LARGE_COG_BLUE.id()) {
 			if (obj.getID() == 362 && obj.getX() == 580 && obj.getY() == 3470) {
 				if (atQuestStage(p, this, 1) && !p.getCache().hasKey("3rd_cog")) {
 					p.message("The cog fits perfectly");
-					removeItem(p, 727, 1);
+					removeItem(p, ItemId.LARGE_COG_BLUE.id(), 1);
 					p.getCache().store("3rd_cog", true);
 				} else if (atQuestStage(p, this, -1)
 					|| p.getCache().hasKey("3rd_cog")) {
@@ -296,13 +276,12 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 			}
 		}
 		/** SECOND FLOOR RED POLE OTHERWISE NOT FIT MESSAGE - 4th cog **/
-		if ((obj.getID() == 364 || obj.getID() == 363 || obj.getID() == 362 || obj
-			.getID() == 365)
-			&& item.getID() == 729) {
+		else if ((obj.getID() == 364 || obj.getID() == 363 || obj.getID() == 362 || obj.getID() == 365)
+			&& item.getID() == ItemId.LARGE_COG_RED.id()) {
 			if (obj.getID() == 363 && obj.getX() == 582 && obj.getY() == 1582) {
 				if (atQuestStage(p, this, 1) && !p.getCache().hasKey("4th_cog")) {
 					p.message("The cog fits perfectly");
-					removeItem(p, 729, 1);
+					removeItem(p, ItemId.LARGE_COG_RED.id(), 1);
 					p.getCache().store("4th_cog", true);
 				} else if (atQuestStage(p, this, -1)
 					|| p.getCache().hasKey("4th_cog")) {
@@ -320,13 +299,7 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 	 */
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click, Player p) {
-		if (obj.getID() == 111) {
-			return true;
-		}
-		if (obj.getID() == 22 && obj.getX() == 584 && obj.getY() == 3457) {
-			return true;
-		}
-		return false;
+		return (obj.getID() == 111) || (obj.getID() == 22 && obj.getX() == 584 && obj.getY() == 3457);
 	}
 
 	@Override
@@ -343,7 +316,7 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 				}
 			}
 		}
-		if (obj.getID() == 22 && obj.getX() == 584 && obj.getY() == 3457) {
+		else if (obj.getID() == 22 && obj.getX() == 584 && obj.getY() == 3457) {
 			p.playSound("secretdoor");
 			p.message("You just went through a secret door");
 			doDoor(obj, p, 16);
@@ -352,39 +325,36 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockInvUseOnGroundItem(Item myItem, GroundItem item, Player p) {
-		if (myItem.getID() == 50 && item.getID() == 728) {
-			return true;
-		}
-		return false;
+		return myItem.getID() == ItemId.BUCKET_OF_WATER.id() && item.getID() == ItemId.LARGE_COG_BLACK.id();
 	}
 
 	@Override
 	public void onInvUseOnGroundItem(Item myItem, GroundItem item, Player p) {
-		if (myItem.getID() == 50 && item.getID() == 728) {
+		if (myItem.getID() == ItemId.BUCKET_OF_WATER.id() && item.getID() == ItemId.LARGE_COG_BLACK.id()) {
 			message(p, "You pour water over the cog",
 				"The cog quickly cools down");
-			if (hasItem(p, 728) || hasItem(p, 730) || hasItem(p, 727)
-				|| hasItem(p, 729)) {
+			if (hasItem(p, ItemId.LARGE_COG_BLACK.id()) || hasItem(p, ItemId.LARGE_COG_PURPLE.id())
+					|| hasItem(p, ItemId.LARGE_COG_BLUE.id()) || hasItem(p, ItemId.LARGE_COG_RED.id())) {
 				p.message("You can only carry one");
 			} else {
 				p.message("You take the cog");
-				addItem(p, 728, 1);
-				removeItem(p, 50, 1);
+				addItem(p, ItemId.LARGE_COG_BLACK.id(), 1);
+				removeItem(p, ItemId.BUCKET_OF_WATER.id(), 1);
 			}
 		}
 	}
 
 	@Override
 	public boolean blockPickup(Player p, GroundItem i) {
-		if (i.getID() == 730 || i.getID() == 727 || i.getID() == 729) {
-			if (hasItem(p, 730) || hasItem(p, 728) || hasItem(p, 727)
-				|| hasItem(p, 729)) {
+		if (i.getID() == ItemId.LARGE_COG_PURPLE.id() || i.getID() == ItemId.LARGE_COG_BLUE.id() || i.getID() == ItemId.LARGE_COG_RED.id()) {
+			if (hasItem(p, ItemId.LARGE_COG_PURPLE.id()) || hasItem(p, ItemId.LARGE_COG_BLACK.id()) || hasItem(p, ItemId.LARGE_COG_BLUE.id())
+				|| hasItem(p, ItemId.LARGE_COG_RED.id())) {
 				p.message("The cogs are heavy, you can only carry one");
 				return true;
 			}
 			return false;
 		}
-		if (i.getID() == 728) {
+		else if (i.getID() == ItemId.LARGE_COG_BLACK.id()) {
 			return true;
 		}
 		return false;
@@ -392,34 +362,34 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void onPickup(Player p, GroundItem i) {
-		if (i.getID() == 728) {
-			if (p.getInventory().hasItemId(556) && p.getInventory().wielding(556)) {
+		if (i.getID() == ItemId.LARGE_COG_BLACK.id()) {
+			if (p.getInventory().hasItemId(ItemId.ICE_GLOVES.id()) && p.getInventory().wielding(ItemId.ICE_GLOVES.id())) {
 				message(p, "The ice gloves cool down the cog",
 					"You can carry it now");
-				if (hasItem(p, 728) || hasItem(p, 730) || hasItem(p, 727)
-					|| hasItem(p, 729)) {
+				if (hasItem(p, ItemId.LARGE_COG_BLACK.id()) || hasItem(p, ItemId.LARGE_COG_PURPLE.id())
+						|| hasItem(p, ItemId.LARGE_COG_BLUE.id()) || hasItem(p, ItemId.LARGE_COG_RED.id())) {
 					p.message("You can only carry one");
 				} else {
 					p.message("You take the cog");
-					addItem(p, 728, 1);
+					addItem(p, ItemId.LARGE_COG_BLACK.id(), 1);
 				}
-			} else if (hasItem(p, 50)) {
+			} else if (hasItem(p, ItemId.BUCKET_OF_WATER.id())) {
 				message(p, "You pour water over the cog",
 					"The cog quickly cools down");
-				if (hasItem(p, 728) || hasItem(p, 730) || hasItem(p, 727)
-					|| hasItem(p, 729)) {
+				if (hasItem(p, ItemId.LARGE_COG_BLACK.id()) || hasItem(p, ItemId.LARGE_COG_PURPLE.id())
+						|| hasItem(p, ItemId.LARGE_COG_BLUE.id()) || hasItem(p, ItemId.LARGE_COG_RED.id())) {
 					p.message("You can only carry one");
 				} else {
 					p.message("You take the cog");
-					addItem(p, 728, 1);
-					removeItem(p, 50, 1);
+					addItem(p, ItemId.LARGE_COG_BLACK.id(), 1);
+					removeItem(p, ItemId.BUCKET_OF_WATER.id(), 1);
 				}
 			} else {
 				message(p,
 					"The cog is red hot from the flames, too hot to carry",
 					"The cogs are heavy");
-				if (hasItem(p, 728) || hasItem(p, 730) || hasItem(p, 727)
-					|| hasItem(p, 729)) {
+				if (hasItem(p, ItemId.LARGE_COG_BLACK.id()) || hasItem(p, ItemId.LARGE_COG_PURPLE.id())
+						|| hasItem(p, ItemId.LARGE_COG_BLUE.id()) || hasItem(p, ItemId.LARGE_COG_RED.id())) {
 					p.message("You can only carry one");
 				}
 			}

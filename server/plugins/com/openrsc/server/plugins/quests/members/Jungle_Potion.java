@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -45,7 +47,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 517;
+		return n.getID() == NpcId.TRUFITUS.id();
 	}
 
 	private void trufitusDialogue(Player p, Npc n) {
@@ -100,7 +102,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 	}
 
 	private void trufitisChat(Player p, Npc n, int cID) {
-		if (n.getID() == 517) {
+		if (n.getID() == NpcId.TRUFITUS.id()) {
 			if (cID == -1) {
 				/** TRUFITUS **/
 				switch (p.getQuestStage(this)) {
@@ -177,7 +179,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 							"Of course!", "Not yet, sorry, what's the clue again?");
 						if (option == 0) {
 							playerTalk(p, n, "Of Course!");
-							if (!hasItem(p, QuestItems.Snake_Weed + 1, 1)) {
+							if (!hasItem(p, ItemId.SNAKE_WEED.id())) {
 								npcTalk(p, n, "Please don't try to deceive me!",
 									"I really need that Snake Weed if I am to make this potion");
 							} else { // DONE
@@ -186,7 +188,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 									"it is related to the palm and grows",
 									"to the East in its brother's shady profusion.");
 								p.message("You give the Snake Weed to Trufitus");
-								removeItem(p, 816, 1);
+								removeItem(p, ItemId.SNAKE_WEED.id(), 1);
 								npcTalk(p, n, "Many thanks for the 'Snake Weed'");
 								setQuestStage(p, this, 2);
 								p.getCache().store("got_ardigal", false);
@@ -210,7 +212,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 								"Of course!", "Not yet, sorry.");
 						if (o == 0) {
 							playerTalk(p, n, "Of Course!");
-							if (hasItem(p, QuestItems.Ardigal + 1, 1)) { // DONE
+							if (hasItem(p, ItemId.ARDRIGAL.id())) { // DONE
 								npcTalk(p, n,
 									"Ah, I see you have found the 'Ardrigal'",
 									"you are doing well Bwana, the next",
@@ -218,7 +220,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 									"where the ground has been blackened",
 									"by the living flame.");
 								message(p, "You give the Ardrigal to Trufitus");
-								removeItem(p, QuestItems.Ardigal + 1, 1);
+								removeItem(p, ItemId.ARDRIGAL.id(), 1);
 								setQuestStage(p, this, 3);
 								p.getCache().store("got_sito_foil", false);
 								//no longer needed
@@ -242,7 +244,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 								"Of course!", "Not yet, sorry.");
 						if (os == 0) { // DONE
 							playerTalk(p, n, "Of Course!");
-							if (hasItem(p, QuestItems.Sito_Foil + 1)) {
+							if (hasItem(p, ItemId.SITO_FOIL.id())) {
 								npcTalk(p,
 									n,
 									"Well done Bwana, just two more herbs",
@@ -250,7 +252,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 									"And it clings to rocks for it's existence",
 									"It is difficult to see, so you must search for it well.");
 								message(p, "You give the Sito Foil to Trufitus");
-								removeItem(p, QuestItems.Sito_Foil + 1, 1);
+								removeItem(p, ItemId.SITO_FOIL.id(), 1);
 								setQuestStage(p, this, 4);
 								p.getCache().store("got_volencia_moss", false);
 								//no longer needed
@@ -273,7 +275,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 								"Of course!", "Not yet, sorry.");
 						if (oo == 0) {
 							playerTalk(p, n, "Of Course!");
-							if (!hasItem(p, QuestItems.Volencia_Moss + 1)) {
+							if (!hasItem(p, ItemId.VOLENCIA_MOSS.id())) {
 								npcTalk(p,
 									n,
 									"Please don't try to deceive me!",
@@ -292,7 +294,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 									"The Northern cliffs of this land",
 									"Take care Bwana as it may be very dangerous");
 								message(p, "You give the Volencia Moss to Trufitus");
-								removeItem(p, QuestItems.Volencia_Moss + 1, 1);
+								removeItem(p, ItemId.VOLENCIA_MOSS.id(), 1);
 								setQuestStage(p, this, 5);
 								p.getCache().store("got_rogues_purse", false);
 								//no longer needed
@@ -312,7 +314,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 						int ol = showMenu(p, n, "Yes Sir, indeedy I do!",
 							"Not yet, sorry.");
 						if (ol == 0) {
-							if (!hasItem(p, QuestItems.Rogues_Purse + 1)) {
+							if (!hasItem(p, ItemId.ROGUES_PURSE.id())) {
 								npcTalk(p, n, "Please don't try to deceive me!",
 									"Rogues Purse is the last herb",
 									"for the potion and possibly the most",
@@ -328,7 +330,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 									"please excuse me while I make",
 									"the arrangements");
 								p.message("You give the Rogues Purse to Trufitus");
-								removeItem(p, QuestItems.Rogues_Purse + 1, 1);
+								removeItem(p, ItemId.ROGUES_PURSE.id(), 1);
 								p.message("Trufitus shows you some techniques in Herblaw");
 								completeQuest(p, this); // COMPLETED AND FULLY WORKING
 								//no longer needed
@@ -391,7 +393,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 							} else if (menu == 2) {
 								trufitisChat(p, n, Trufitus.WHAT_DO_YOU_KNOW_ABOUT_MOSEL_REI);
 							}
-						} else if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == 3 || p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == 4 || p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == 5) {
+						} else if (atQuestStages(p, Constants.Quests.SHILO_VILLAGE, 3, 4, 5)) {
 							playerTalk(p, n, "Greetings...");
 							npcTalk(p, n, "Greetings Bwana, you have been away!",
 								"The situation with Rashiliyia is worsening!",
@@ -919,7 +921,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 					return;
 				}
 				//no stone-plaque in bank or inventory
-				if(!p.getBank().hasItemId(958) && !p.getInventory().hasItemId(958)) {
+				if(!p.getBank().hasItemId(ItemId.STONE_PLAQUE.id()) && !p.getInventory().hasItemId(ItemId.STONE_PLAQUE.id())) {
 					npcTalk(p, n, "Look for something that can identify the place.",
 							"Leave no stone unturned.");
 				}
@@ -961,7 +963,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 517) {
+		if (n.getID() == NpcId.TRUFITUS.id()) {
 			trufitisChat(p, n, -1);
 		}
 	}
@@ -988,11 +990,11 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 				p.message("Yep, it looks like a vine...");
 				return;
 			}
-			if (!hasItem(p, QuestItems.Snake_Weed)
-				&& !hasItem(p, QuestItems.Snake_Weed + 1) && (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 6 || 
+			if (!hasItem(p, ItemId.UNIDENTIFIED_SNAKE_WEED.id())
+				&& !hasItem(p, ItemId.SNAKE_WEED.id()) && (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 6 || 
 						(!hasCacheKeySetTrue(p, "got_snake_weed") && atQuestStage(p, this, 1)) )) {
 				message(p, "Small amounts of a herb are growing near this vine");
-				createGroundItem(QuestItems.Snake_Weed, 1, obj.getX(), obj
+				createGroundItem(ItemId.UNIDENTIFIED_SNAKE_WEED.id(), 1, obj.getX(), obj
 					.getY(), p);
 				if(atQuestStage(p, this, 1)) {
 					p.getCache().store("got_snake_weed", true);
@@ -1009,10 +1011,10 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 				p.message("You find nothing of interest this time, sorry!");
 				return;
 			}
-			if (!hasItem(p, QuestItems.Ardigal) && !hasItem(p, QuestItems.Ardigal + 1) && (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 6 || 
+			if (!hasItem(p, ItemId.UNIDENTIFIED_ARDRIGAL.id()) && !hasItem(p, ItemId.ARDRIGAL.id()) && (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 6 || 
 					(!hasCacheKeySetTrue(p, "got_ardigal") && atQuestStage(p, this, 2)) )) {
 				message(p, "You find a herb plant growing at the base of the palm");
-				createGroundItem(QuestItems.Ardigal, 1, obj.getX(), obj.getY(), p);
+				createGroundItem(ItemId.UNIDENTIFIED_ARDRIGAL.id(), 1, obj.getX(), obj.getY(), p);
 				if(atQuestStage(p, this, 2)) {
 					p.getCache().store("got_ardigal", true);
 				}
@@ -1020,26 +1022,26 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 				p.message("You find nothing of interest this time, sorry!");
 			}
 		} else if (isObject(obj, QuestObjects.Sito_Scorched_Earth)) {
-			if (!hasItem(p, QuestItems.Sito_Foil)
-				&& !hasItem(p, QuestItems.Sito_Foil + 1) 
+			if (!hasItem(p, ItemId.UNIDENTIFIED_SITO_FOIL.id())
+				&& !hasItem(p, ItemId.SITO_FOIL.id()) 
 				&& !hasCacheKeySetTrue(p, "got_sito_foil")
 				&& atQuestStage(p, this, 3)) {
 				message(p,
 					"A small herb plant is growing in the scorched soil.");
-				createGroundItem(QuestItems.Sito_Foil, 1, obj.getX(), obj
+				createGroundItem(ItemId.UNIDENTIFIED_SITO_FOIL.id(), 1, obj.getX(), obj
 					.getY(), p);
 				p.getCache().store("got_sito_foil", true);
 			} else {
 				p.message("You just find scorched earth.");
 			}
 		} else if (isObject(obj, QuestObjects.Volencia_Rocks)) {
-			if (!hasItem(p, QuestItems.Volencia_Moss)
-				&& !hasItem(p, QuestItems.Volencia_Moss + 1) 
+			if (!hasItem(p, ItemId.UNIDENTIFIED_VOLENCIA_MOSS.id())
+				&& !hasItem(p, ItemId.VOLENCIA_MOSS.id()) 
 				&& !hasCacheKeySetTrue(p, "got_volencia_moss")
 				&& atQuestStage(p, this, 4)) {
 				message(p,
 					"Small amounts of herb moss are growing at the base of this rock");
-				createGroundItem(QuestItems.Volencia_Moss, 1, obj.getX(), obj
+				createGroundItem(ItemId.UNIDENTIFIED_VOLENCIA_MOSS.id(), 1, obj.getX(), obj
 					.getY(), p);
 				p.getCache().store("got_volencia_moss", true);
 			} else {
@@ -1057,13 +1059,13 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 	@Override
 	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
 		if (isObject(obj, QuestObjects.Rogues_Purse_Wall)) {
-			if (!hasItem(p, QuestItems.Rogues_Purse)
-				&& !hasItem(p, QuestItems.Rogues_Purse + 1) 
+			if (!hasItem(p, ItemId.UNIDENTIFIED_ROGUES_PURSE.id())
+				&& !hasItem(p, ItemId.ROGUES_PURSE.id()) 
 				&& !hasCacheKeySetTrue(p, "got_rogues_purse")
 				&& atQuestStage(p, this, 5)) {
 				message(p,
 					"Small amounts of herb fungus are growing at the base of this cavern wall");
-				createGroundItem(QuestItems.Rogues_Purse, 1, p.getX(),
+				createGroundItem(ItemId.UNIDENTIFIED_ROGUES_PURSE.id(), 1, p.getX(),
 					p.getY(), p);
 				p.getCache().store("got_rogues_purse", true);
 			} else
@@ -1094,14 +1096,6 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 		public static final int HELP_WITH_BERVIRIUS = 15;
 		public static final int HELP_WITH_AH_ZA_RHOON_TEMPLE = 16;
 		public static final int DIDNT_FIND_ANYTHING_IN_THE_TOMB = 17;
-	}
-
-	class QuestItems {
-		public static final int Volencia_Moss = 821;
-		public static final int Sito_Foil = 819;
-		public static final int Snake_Weed = 815;
-		public static final int Ardigal = 817;
-		public static final int Rogues_Purse = 823;
 	}
 
 	class QuestObjects {

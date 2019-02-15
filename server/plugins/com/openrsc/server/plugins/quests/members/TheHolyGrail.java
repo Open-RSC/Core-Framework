@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -22,6 +24,7 @@ import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveLi
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TeleportExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.atQuestStage;
 import static com.openrsc.server.plugins.Functions.createGroundItem;
@@ -80,37 +83,17 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 
 	/**
 	 * NPCS: #275 King Arthur - NPC HANDLED IN MERLINS CRYSTAL QUEST FILE. #287
-	 * Merlin
+	 * Merlin should be the one of library (393), maintaining the id of merlin crystal for the transition
 	 */
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 287) {
-			return true;
-		}
-		if (n.getID() == 401) {
-			return true;
-		}
-		if (n.getID() == 416) {
-			return true;
-		}
-		if (n.getID() == 414) {
-			return true;
-		}
-		if (n.getID() == 412) {
-			return true;
-		}
-		if (n.getID() == 415) {
-			return true;
-		}
-		if (n.getID() == 417) {
-			return true;
-		}
-		return false;
+		return DataConversions.inArray(new int[] {NpcId.MERLIN_CRYSTAL.id(), NpcId.MERLIN_LIBRARY.id(), NpcId.BLACK_KNIGHT_TITAN.id(), NpcId.UNHAPPY_PEASANT.id(),
+				NpcId.FISHERMAN.id(), NpcId.FISHER_KING.id(), NpcId.KING_PERCIVAL.id(), NpcId.HAPPY_PEASANT.id()}, n.getID());
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 287) {
+		if (n.getID() == NpcId.MERLIN_LIBRARY.id() || n.getID() == NpcId.MERLIN_CRYSTAL.id()) {
 			switch (p.getQuestStage(Constants.Quests.THE_HOLY_GRAIL)) {
 				case 1:
 				case 2:
@@ -157,7 +140,7 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 					break;
 			}
 		}
-		if (n.getID() == 401) {
+		else if (n.getID() == NpcId.BLACK_KNIGHT_TITAN.id()) {
 			npcTalk(p, n, "I am the black knight titan",
 				"You must pass through me before you can continue in this realm");
 			int menu = showMenu(p, n, "Ok, have at ye oh evil knight",
@@ -167,11 +150,11 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 				n.setChasing(p);
 			}
 		}
-		if (n.getID() == 416) {
+		else if (n.getID() == NpcId.UNHAPPY_PEASANT.id()) {
 			npcTalk(p, n, "Woe is me", "Our crops are all failing",
 				"How shall I feed myself this winter?");
 		}
-		if (n.getID() == 414) {
+		else if (n.getID() == NpcId.FISHERMAN.id()) {
 			npcTalk(p, n, "Hi - I don't get many visitors here");
 			int menu = showMenu(p, n, "How's the fishing?",
 				"Any idea how to get into the castle?",
@@ -187,14 +170,14 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 				playerTalk(p, n, "I didn't see any bells");
 				npcTalk(p, n, "You must be blind then",
 					"There's always bells there when I go to the castle");
-				createGroundItem(743, 1, 421, 30, p);
+				createGroundItem(ItemId.BELL.id(), 1, 421, 30, p);
 			} else if (menu == 2) {
 				npcTalk(p, n, "This place used to be very beautiful",
 					"However as our king grows old and weak",
 					"the land seems to be dying too");
 			}
 		}
-		if (n.getID() == 412) {
+		else if (n.getID() == NpcId.FISHER_KING.id()) {
 			npcTalk(p, n, "Ah you got inside at last",
 				"You spent all that time fumbling around outside",
 				"I thought you'd never make it here");
@@ -294,7 +277,7 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 				playerTalk(p, n, "I shall go and see if I can find him");
 			}
 		}
-		if (n.getID() == 415) {
+		else if (n.getID() == NpcId.KING_PERCIVAL.id()) {
 			npcTalk(p,
 				n,
 				"You missed all the excitement",
@@ -303,7 +286,7 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 				"Grass and trees were growing outside before our very eyes",
 				"Thankyou very much for showing me the way home");
 		}
-		if (n.getID() == 417) {
+		else if (n.getID() == NpcId.HAPPY_PEASANT.id()) {
 			npcTalk(p, n, "Oh happy day",
 				"suddenly our crops are growing again",
 				"It'll be a bumper harvest this year");
@@ -312,13 +295,7 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click, Player p) {
-		if (obj.getID() == 117) {
-			return true;
-		}
-		if (obj.getID() == 116) {
-			return true;
-		}
-		return false;
+		return obj.getID() == 117 || obj.getID() == 116;
 	}
 
 	@Override
@@ -333,32 +310,23 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 		if (obj.getID() == 116) {
 			p.message("You go through the door");
 			doDoor(obj, p);
-			if (p.getInventory().countId(738) != 2
+			if (p.getInventory().countId(ItemId.MAGIC_WHISTLE.id()) != 2
 				&& (p.getQuestStage(Quests.THE_HOLY_GRAIL) >= 3 || p
 				.getQuestStage(Quests.THE_HOLY_GRAIL) == -1)) {
-				createGroundItem(738, 1, 204, 2440, p);
-				createGroundItem(738, 1, 204, 2440, p);
+				createGroundItem(ItemId.MAGIC_WHISTLE.id(), 1, 204, 2440, p);
+				createGroundItem(ItemId.MAGIC_WHISTLE.id(), 1, 204, 2440, p);
 			}
 		}
 	}
 
 	@Override
 	public boolean blockInvAction(Item item, Player p) {
-		if (item.getID() == 738) {
-			return true;
-		}
-		if (item.getID() == 743) {
-			return true;
-		}
-		if (item.getID() == 745) {
-			return true;
-		}
-		return false;
+		return item.getID() == ItemId.MAGIC_WHISTLE.id() || item.getID() == ItemId.BELL.id() || item.getID() == ItemId.MAGIC_GOLDEN_FEATHER.id();
 	}
 
 	@Override
 	public void onInvAction(Item item, Player p) {
-		if (item.getID() == 738) {
+		if (item.getID() == ItemId.MAGIC_WHISTLE.id()) {
 			if (p.getLocation().inBounds(490, 652, 491, 653)) { // SQUARE PLOT
 				if (p.getQuestStage(this) == 5 || p.getQuestStage(this) == -1) {
 					p.teleport(492, 18, false);
@@ -385,14 +353,14 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 					"It will not work in this location");
 			}
 		}
-		if (item.getID() == 743) {
+		else if (item.getID() == ItemId.BELL.id()) {
 			p.message("Ting a ling a ling");
 			if (p.getLocation().inBounds(411, 27, 425, 40)) {
 				p.message("Somehow you are now inside the castle");
 				p.teleport(420, 35, false);
 			}
 		} //Prod sack = 328, 446
-		if (item.getID() == 745) {
+		else if (item.getID() == ItemId.MAGIC_GOLDEN_FEATHER.id()) {
 			int x = p.getLocation().getX();
 			int y = p.getLocation().getY();
 			int sX = 328;
@@ -417,16 +385,13 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == 401) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.BLACK_KNIGHT_TITAN.id();
 	}
 
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == 401) {
-			if (p.getInventory().wielding(606)) {
+		if (n.getID() == NpcId.BLACK_KNIGHT_TITAN.id()) {
+			if (p.getInventory().wielding(ItemId.EXCALIBUR.id())) {
 				n.killedBy(p);
 				n.resetCombatEvent();
 				p.message("Well done you have defeated the black knight titan");
@@ -447,7 +412,7 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 	 */
 	@Override
 	public void onPickup(Player p, GroundItem i) {
-		if (i.getID() == 746 && i.getX() == 418 && i.getY() == 1924) {
+		if (i.getID() == ItemId.HOLY_GRAIL.id() && i.getX() == 418 && i.getY() == 1924) {
 			message(p, "You feel that the grail shouldn't be moved",
 				"You must complete some task here before you are worthy");
 		}
@@ -455,18 +420,12 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockPickup(Player p, GroundItem i) {
-		if (i.getID() == 746 && i.getX() == 418 && i.getY() == 1924) {
-			return true;
-		}
-		return false;
+		return i.getID() == ItemId.HOLY_GRAIL.id() && i.getX() == 418 && i.getY() == 1924;
 	}
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (obj.getID() == 408) {
-			return true;
-		}
-		return false;
+		return obj.getID() == 408;
 	}
 
 	@Override
@@ -489,7 +448,7 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 			if (p.getQuestStage(this) == 4) {
 				message(p, "You hear muffled noises from the sack");
 				p.message("You open the sack");
-				Npc percival = spawnNpc(411, 328, 446, 120000);
+				Npc percival = spawnNpc(NpcId.SIR_PERCIVAL.id(), 328, 446, 120000);
 				npcTalk(p, percival, "Wow thankyou",
 					"I could hardly breathe in there");
 				int menu = showMenu(p, percival,
@@ -515,90 +474,47 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 					if (menu2 == 0) {
 						npcTalk(p, percival, "What are you talking about?",
 							"The king of where?");
-						playerTalk(
-							p,
-							percival,
-							"Your father is apparently someone called the fisher king",
-							"He is dying and wishes you to be his heir");
-						npcTalk(p, percival, "I have been told that before",
-							"I have not been able to find that castle again though");
 						playerTalk(p, percival,
-							"Well I do have the means to get us there - a magic whistle");
-						if (hasItem(p, 738)) {
-							message(p, "You give a whistle to Sir Percival",
-								"You tell sir Percival what to do with the whistle");
-							removeItem(p, 738, 1);
-							npcTalk(p, percival, "Ok I will see you there then");
-							p.updateQuestStage(this, 5);
-						} else {
-							playerTalk(p, percival,
-								"Oh dear seems like I have forgot the whistle with me");
-						}
+							"Your father is apparently someone called the fisher king");
+						beHisHeir(p, percival);
 					} else if (menu2 == 1) {
 						npcTalk(p, percival,
 							"My father? you have spoken to him recently?");
-						playerTalk(p, percival,
-							"He is dying and wishes you to be his heir");
-						npcTalk(p, percival, "I have been told that before",
-							"I have not been able to find that castle again though");
-						playerTalk(p, percival,
-							"Well I do have the means to get us there - a magic whistle");
-						if (hasItem(p, 738)) {
-							message(p, "You give a whistle to Sir Percival",
-								"You tell sir Percival what to do with the whistle");
-							removeItem(p, 738, 1);
-							npcTalk(p, percival, "Ok I will see you there then");
-							p.updateQuestStage(this, 5);
-						} else {
-							playerTalk(p, percival,
-								"Oh dear seems like I have forgot the whistle with me");
-						}
+						beHisHeir(p, percival);
 					}
 				} else if (menu == 1) {
 					npcTalk(p, percival, "What are you talking about?",
 						"The king of where?");
-					playerTalk(
-						p,
-						percival,
-						"Your father is apparently someone called the fisher king",
-						"He is dying and wishes you to be his heir");
-					npcTalk(p, percival, "I have been told that before",
-						"I have not been able to find that castle again though");
 					playerTalk(p, percival,
-						"Well I do have the means to get us there - a magic whistle");
-					if (hasItem(p, 738)) {
-						message(p, "You give a whistle to Sir Percival",
-							"You tell sir Percival what to do with the whistle");
-						removeItem(p, 738, 1);
-						npcTalk(p, percival, "Ok I will see you there then");
-						p.updateQuestStage(this, 5);
-					} else {
-						playerTalk(p, percival,
-							"Oh dear seems like I have forgot the whistle with me");
-					}
+						"Your father is apparently someone called the fisher king");
+					beHisHeir(p, percival);
 				} else if (menu == 2) {
 					npcTalk(p, percival,
 						"My father? you have spoken to him recently?");
-					playerTalk(p, percival,
-						"He is dying and wishes you to be his heir");
-					npcTalk(p, percival, "I have been told that before",
-						"I have not been able to find that castle again though");
-					playerTalk(p, percival,
-						"Well I do have the means to get us there - a magic whistle");
-					if (hasItem(p, 738)) {
-						message(p, "You give a whistle to Sir Percival",
-							"You tell sir Percival what to do with the whistle");
-						removeItem(p, 738, 1);
-						npcTalk(p, percival, "Ok I will see you there then");
-						p.updateQuestStage(this, 5);
-					} else {
-						playerTalk(p, percival,
-							"Oh dear seems like I have forgot the whistle with me");
-					}
+					beHisHeir(p, percival);
 				}
 			} else {
 				p.message("nothing interesting happens");
 			}
+		}
+	}
+	
+	private void beHisHeir(Player p, Npc percival) {
+		playerTalk(p, percival,
+				"He is dying and wishes you to be his heir");
+		npcTalk(p, percival, "I have been told that before",
+			"I have not been able to find that castle again though");
+		playerTalk(p, percival,
+			"Well I do have the means to get us there - a magic whistle");
+		if (hasItem(p, ItemId.MAGIC_WHISTLE.id())) {
+			message(p, "You give a whistle to Sir Percival",
+				"You tell sir Percival what to do with the whistle");
+			removeItem(p, ItemId.MAGIC_WHISTLE.id(), 1);
+			npcTalk(p, percival, "Ok I will see you there then");
+			p.updateQuestStage(this, 5);
+		} else {
+			playerTalk(p, percival,
+				"Oh dear seems like I have forgot the whistle with me");
 		}
 	}
 }
