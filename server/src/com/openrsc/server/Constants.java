@@ -124,7 +124,7 @@ public final class Constants {
 		/**
 		 * Sprite used for client welcome screen logo
 		 */
-		public static String LOGO_SPRITE_ID = "2010";
+		public static long LOGO_SPRITE_ID = 2010;
 		/**
 		 * NPC blocking
 		 * 0 = No NPC blocks
@@ -142,7 +142,7 @@ public final class Constants {
 		 * where the server will look for other configuration files
 		 */
 		public static String CONFIG_DIR = "conf" + File.separator + "server";
-		public static long START_TIME = 0L;
+		static long START_TIME = 0L;
 		public static boolean AVATAR_GENERATOR = false; // Not sent to client
 		public static boolean PLAYER_COMMANDS = false; // Not sent to client
 		public static boolean IS_DOUBLE_EXP = false;
@@ -198,6 +198,7 @@ public final class Constants {
 		public static boolean STRICT_PDART_CHECK = false;
 		public static boolean STRICT_PKNIFE_CHECK = false;
 		public static boolean STRICT_PSPEAR_CHECK = false;
+		public static int C_FPS = 50;
 		
 		//loosened checks
 		public static boolean LOOSE_SHALLOW_WATER_CHECK = false;
@@ -234,7 +235,8 @@ public final class Constants {
 			VIEW_DISTANCE = Integer.parseInt(props.getProperty("view_distance"));
 			AVATAR_GENERATOR = Boolean.parseBoolean(props.getProperty("avatar_generator"));
 			DISPLAY_LOGO_SPRITE = Boolean.parseBoolean(props.getProperty("display_logo_sprite"));
-			LOGO_SPRITE_ID = props.getProperty("logo_sprite_id");
+			LOGO_SPRITE_ID = Long.parseLong(props.getProperty("logo_sprite_id"));
+			C_FPS = Integer.parseInt(props.getProperty("client_fps"));
 
 			// Game confs
 			WORLD_NUMBER = Integer.parseInt(props.getProperty("world_number"));
@@ -311,11 +313,11 @@ public final class Constants {
 	}
 
 	public static final class Poison {
-		public static final int POISON_SCORPION = 271;
-		public static final int POISON_SPIDER = 292;
-		public static final int DUNGEON_SPIDER = 656;
-		public static final int TRIBESMAN = 421;
-		public static final int JUNGLE_SAVAGE = 776;
+		static final int POISON_SCORPION = 271;
+		static final int POISON_SPIDER = 292;
+		static final int DUNGEON_SPIDER = 656;
+		static final int TRIBESMAN = 421;
+		static final int JUNGLE_SAVAGE = 776;
 
 		public static final HashMap<Integer, Integer> npcData = new HashMap<Integer, Integer>() {{
 			put(POISON_SCORPION, 38);
