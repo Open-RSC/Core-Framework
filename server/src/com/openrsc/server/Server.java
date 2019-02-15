@@ -13,11 +13,7 @@ import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.util.NamedThreadFactory;
-import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.*;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,6 +22,16 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 import static org.apache.logging.log4j.util.Unbox.box;
 
@@ -73,16 +79,18 @@ public final class Server implements Runnable {
 			Constants.GameServer.initConfig("default.conf");
 		} else {
 			Constants.GameServer.initConfig(args[0]);
-			/*LOGGER.info("Server Configuration file: " + args[0]);
-			LOGGER.info("\t Game Tick Cycle: {}", box(Constants.GameServer.GAME_TICK));
-			LOGGER.info("\t Client Version: {}", box(Constants.GameServer.CLIENT_VERSION));
-			LOGGER.info("\t Server type: " + (Constants.GameServer.MEMBER_WORLD ? "MEMBER" : "FREE" + " world."));
-			LOGGER.info("\t Combat Experience Rate: {}", box(Constants.GameServer.COMBAT_EXP_RATE));
-			LOGGER.info("\t Skilling Experience Rate: {}", box(Constants.GameServer.SKILLING_EXP_RATE));
-			LOGGER.info("\t Wilderness Experience Boost: {}", box(Constants.GameServer.WILDERNESS_BOOST));
-			LOGGER.info("\t Skull Experience Boost: {}", box(Constants.GameServer.SKULL_BOOST));
-			LOGGER.info("\t Double experience: " + (Constants.GameServer.IS_DOUBLE_EXP ? "Enabled" : "Disabled"));
-			LOGGER.info("\t View Distance: {}", box(Constants.GameServer.VIEW_DISTANCE));*/
+			if (Constants.GameServer.DEBUG) {
+				LOGGER.info("Server Configuration file: " + args[0]);
+				LOGGER.info("\t Game Tick Cycle: {}", box(Constants.GameServer.GAME_TICK));
+				LOGGER.info("\t Client Version: {}", box(Constants.GameServer.CLIENT_VERSION));
+				LOGGER.info("\t Server type: " + (Constants.GameServer.MEMBER_WORLD ? "MEMBER" : "FREE" + " world."));
+				LOGGER.info("\t Combat Experience Rate: {}", box(Constants.GameServer.COMBAT_EXP_RATE));
+				LOGGER.info("\t Skilling Experience Rate: {}", box(Constants.GameServer.SKILLING_EXP_RATE));
+				LOGGER.info("\t Wilderness Experience Boost: {}", box(Constants.GameServer.WILDERNESS_BOOST));
+				LOGGER.info("\t Skull Experience Boost: {}", box(Constants.GameServer.SKULL_BOOST));
+				LOGGER.info("\t Double experience: " + (Constants.GameServer.IS_DOUBLE_EXP ? "Enabled" : "Disabled"));
+				LOGGER.info("\t View Distance: {}", box(Constants.GameServer.VIEW_DISTANCE));
+			}
 		}
 		if (server == null) {
 			server = new Server();
@@ -232,7 +240,9 @@ public final class Server implements Runnable {
 				if (timeLate >= Constants.GameServer.GAME_TICK) {
 					long ticksLate = timeLate / Constants.GameServer.GAME_TICK;
 					lastClientUpdate += ticksLate * Constants.GameServer.GAME_TICK;
-					//LOGGER.warn("Can't keep up, we are " + timeLate + "ms behind; Skipping " + ticksLate + " ticks");
+					if (Constants.GameServer.DEBUG) {
+						LOGGER.warn("Can't keep up, we are " + timeLate + "ms behind; Skipping " + ticksLate + " ticks");
+					}
 				}
 			}
 		} catch (Exception e) {
