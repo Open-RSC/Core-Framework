@@ -124,7 +124,7 @@ public final class Constants {
 		/**
 		 * Sprite used for client welcome screen logo
 		 */
-		public static long LOGO_SPRITE_ID = 2010;
+		public static int LOGO_SPRITE_ID = 2010;
 		/**
 		 * NPC blocking
 		 * 0 = No NPC blocks
@@ -235,7 +235,7 @@ public final class Constants {
 			VIEW_DISTANCE = Integer.parseInt(props.getProperty("view_distance"));
 			AVATAR_GENERATOR = Boolean.parseBoolean(props.getProperty("avatar_generator"));
 			DISPLAY_LOGO_SPRITE = Boolean.parseBoolean(props.getProperty("display_logo_sprite"));
-			LOGO_SPRITE_ID = Long.parseLong(props.getProperty("logo_sprite_id"));
+			LOGO_SPRITE_ID = Integer.parseInt(props.getProperty("logo_sprite_id"));
 			C_FPS = Integer.parseInt(props.getProperty("client_fps"));
 
 			// Game confs
