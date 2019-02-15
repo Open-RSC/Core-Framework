@@ -8,7 +8,11 @@ import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.HolidayDropEvent;
 import com.openrsc.server.event.custom.HourlyNpcLootEvent;
 import com.openrsc.server.event.custom.NpcLootEvent;
-import com.openrsc.server.external.*;
+import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.external.ItemDefinition;
+import com.openrsc.server.external.ItemDropDef;
+import com.openrsc.server.external.ItemLoc;
+import com.openrsc.server.external.NPCDef;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
@@ -26,7 +30,6 @@ import com.openrsc.server.model.world.region.Region;
 import com.openrsc.server.model.world.region.RegionManager;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.GameLogging;
@@ -36,12 +39,17 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.GoldDrops;
 import com.openrsc.server.util.rsc.MessageType;
+
 import org.apache.commons.lang.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Objects;
+import java.util.Random;
 
 public final class Admins implements CommandListener {
 
@@ -960,23 +968,6 @@ public final class Admins implements CommandListener {
 
 			ActionSender.sendBox(player, "@lre@Inventory of " + p.getUsername() + ":%"
 				+ "@whi@" + StringUtils.join(itemStrings, ", "), true);
-		}
-		else if (cmd.equalsIgnoreCase("bankpin")) {
-			Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
-			if(p == null) {
-				player.message(messagePrefix + "Invalid name or player is not online");
-				return;
-			}
-
-			String bankPin = Functions.getBankPinInput(p);
-			if (bankPin == null) {
-				player.message(messagePrefix + "Invalid bank pin");
-				return;
-			}
-
-			p.getCache().store("bank_pin", bankPin);
-			ActionSender.sendBox(p, "Your new bank pin is " + bankPin, false);
-			player.message(messagePrefix + p.getUsername() + "'s bank pin has been changed");
 		}
 		else if (cmd.equalsIgnoreCase("auction")) {
 			Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;

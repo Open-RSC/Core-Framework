@@ -53,7 +53,9 @@ public final class ORSCharacter {
 		return groupID == 8 || isAdmin();
 	}
 
-	public boolean isEvent() { return groupID == 9 || isMod() || isDev(); }
+	public boolean isEvent() {
+		return groupID == 9 || isMod() || isDev();
+	}
 
 	public boolean isOwner() {
 		return groupID == 0;
