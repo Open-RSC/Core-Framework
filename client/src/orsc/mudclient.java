@@ -77,23 +77,13 @@ import orsc.util.StringUtil;
 
 public final class mudclient implements Runnable {
 
-	/**
-	 * Newest RSC cache: SAME VALUES.
-	 * <p>
-	 * mudclient.spriteMedia = 2000; mudclient.spriteUtil =
-	 * mudclient.spriteMedia + 100; 2100 mudclient.spriteItem = 50 +
-	 * mudclient.spriteUtil; 2150 mudclient.spriteLogo = 1000 +
-	 * mudclient.spriteItem; 3150 mudclient.spriteProjectile = 10 +
-	 * mudclient.spriteLogo; 3160 mudclient.spriteTexture = 50 +
-	 * mudclient.spriteProjectile; 3210
-	 */
-	public static final int spriteMedia = 2000;
+	private static final int spriteMedia = 2000;
 	public static final int spriteUtil = 2100;
 	public static final int spriteItem = 2150;
 	static final int spriteLogo = 3150;
-	static final int spriteProjectile = 3160;
-	static final int spriteTexture = 3225;
-	public static int FPS = 0;
+	private static final int spriteProjectile = 3160;
+	private static final int spriteTexture = 3225;
+	private static int FPS = 0;
 	public static KillAnnouncerQueue killQueue = new KillAnnouncerQueue();
 	static byte[][] s_kb = new byte[250][];
 	static int[] s_wb;
@@ -101,8 +91,8 @@ public final class mudclient implements Runnable {
 	private static int currentChat = 0;
 	private static ClientPort clientPort;
 	public final int[] bankItemOnTab = new int[500];
-	public final int[] mouseClickX = new int[8192];
-	public final int[] mouseClickY = new int[8192];
+	private final int[] mouseClickX = new int[8192];
+	private final int[] mouseClickY = new int[8192];
 	private final int m_S = 1000;
 	private final int[][] animDirLayer_To_CharLayer = new int[][]{{11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3, 4},
 		{11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3, 4}, {11, 3, 2, 9, 7, 1, 6, 10, 0, 5, 8, 4},
@@ -195,7 +185,6 @@ public final class mudclient implements Runnable {
 	private final RSModel[] wallObjectInstanceModel = new RSModel[500];
 	private final int[] wallObjectInstanceX = new int[500];
 	private final int[] wallObjectInstanceZ = new int[500];
-	public boolean DEBUG = false;
 	public Thread clientBaseThread = null;
 	public int threadState = 0;
 	public String chatMessageInput = "";
@@ -223,21 +212,21 @@ public final class mudclient implements Runnable {
 	public boolean shiftPressed = false;
 	//public int groupID = 100;
 	public boolean rendering;
-	public int bankItemCount = 0;
+	private int bankItemCount = 0;
 	public int bankItemsMax = 50;
 	public int bankPage = 0;
 	public int bankSelectedItemSlot = -1;
-	public int cameraRotation = 128;
-	public GameMode currentViewMode = GameMode.LOGIN;
+	private int cameraRotation = 128;
+	private GameMode currentViewMode = GameMode.LOGIN;
 	public InputXAction inputX_Action = InputXAction.ACT_0;
-	public Menu menuCommon;
+	private Menu menuCommon;
 	public int menuX = 0;
 	public int menuY = 0;
 	public int mouseButtonClick = 0;
 	public int mouseButtonItemCountIncrement = 0;
-	public int mouseClickCount = 0;
-	public int mouseClickXStep = 0;
-	public HashMap<String, File> soundCache = new HashMap<String, File>();
+	private int mouseClickCount = 0;
+	private int mouseClickXStep = 0;
+	private HashMap<String, File> soundCache = new HashMap<String, File>();
 	public boolean authenticSettings = !(
 		Config.isAndroid() ||
 			Config.S_WANT_CLANS || Config.S_WANT_KILL_FEED
@@ -254,8 +243,8 @@ public final class mudclient implements Runnable {
 	public String[] achievementDescs = new String[500];
 	public int[] achievementProgress = new int[500];
 	public int showUiTab = 0;
-	public boolean topMouseMenuVisible = false;
-	public boolean LAST_FRAME_SHOWING_KEYBOARD = false;
+	private boolean topMouseMenuVisible = false;
+	private boolean LAST_FRAME_SHOWING_KEYBOARD = false;
 	public int resizeWidth;
 	public int resizeHeight;
 	public Clan clan;
@@ -263,13 +252,13 @@ public final class mudclient implements Runnable {
 	public boolean gotInitialConfigs = false;
 	public ArrayList<String> skillGuideChosenTabs;
 	public String clanKickPlayer;
-	long lastFPSUpdate = 0;
-	int currentFPS = 0;
-	int m_Q = 10;
-	long[] m_F = new long[10];
+	private long lastFPSUpdate = 0;
+	private int currentFPS = 0;
+	private int m_Q = 10;
+	private long[] m_F = new long[10];
 	String m_p = null;
-	long timePassed = 0;
-	double xpPerHour = 0;
+	private long timePassed = 0;
+	private double xpPerHour = 0;
 	private boolean hasGameCrashed = false;
 	private int gameState = 1;
 	private int m_b = 0;
@@ -532,11 +521,8 @@ public final class mudclient implements Runnable {
 	private int welcomeLastLoggedInDays = 0;
 	private String welcomeLastLoggedInHost = null;
 	private String welcomeLastLoggedInIp;
-
 	private int welcomeRecoverySetDays = 0;
-
 	private boolean welcomeScreenShown = false;
-
 	//private int welcomeUnreadMessages = 0;
 	private World world;
 	private int worldOffsetX = 0;
@@ -592,9 +578,19 @@ public final class mudclient implements Runnable {
 	private long time;
 	private long m_timer;
 	private ArrayList<XPNotification> xpNotifications = new ArrayList<XPNotification>();
-
-	public int amountToZoom = 0;
+	private int amountToZoom = 0;
 	private Panel panelLoginOptions;
+
+	/**
+	 * Newest RSC cache: SAME VALUES.
+	 * <p>
+	 * mudclient.spriteMedia = 2000; mudclient.spriteUtil =
+	 * mudclient.spriteMedia + 100; 2100 mudclient.spriteItem = 50 +
+	 * mudclient.spriteUtil; 2150 mudclient.spriteLogo = 1000 +
+	 * mudclient.spriteItem; 3150 mudclient.spriteProjectile = 10 +
+	 * mudclient.spriteLogo; 3160 mudclient.spriteTexture = 50 +
+	 * mudclient.spriteProjectile; 3210
+	 */
 
 	public mudclient(ClientPort handler) {
 		clientPort = handler;
@@ -602,7 +598,7 @@ public final class mudclient implements Runnable {
 		Config.initConfig();
 	}
 
-	public static boolean isValidEmailAddress(String email) {
+	private static boolean isValidEmailAddress(String email) {
 		boolean stricterFilter = true;
 		String stricterFilterString = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
 		String laxString = ".+@.+\\.[A-Za-z]{2}[A-Za-z]*";
@@ -622,7 +618,7 @@ public final class mudclient implements Runnable {
 		return "@gre@" + length / 1000000 + "M";
 	}
 
-	final void zeroMF() {
+	private final void zeroMF() {
 		try {
 			for (int i = 0; i < 10; ++i) {
 				this.m_F[i] = 0L;
@@ -795,7 +791,7 @@ public final class mudclient implements Runnable {
 		}
 	}
 
-	public final void run2() {
+	private final void run2() {
 		try {
 			try {
 				int var3 = 0;
@@ -4586,7 +4582,7 @@ public final class mudclient implements Runnable {
 		}
 	}
 
-	public final void drawMenu() {
+	private final void drawMenu() {
 		try {
 
 			if (this.mouseButtonClick == 0) {
@@ -11733,7 +11729,7 @@ public final class mudclient implements Runnable {
 		}
 	}
 
-	final void startGame(byte var1) {
+	private final void startGame(byte var1) {
 		try {
 			this.fetchContainerSize();
 			if (!clientPort.drawLoading(2)) {
@@ -12513,7 +12509,7 @@ public final class mudclient implements Runnable {
 	}
 
 	public void setStatFatigue(int fatigue) {
-		if (DEBUG)
+		if (Config.DEBUG)
 			System.out.println("Fatigue: " + fatigue);
 		this.statFatigue = fatigue;
 	}
@@ -12663,53 +12659,55 @@ public final class mudclient implements Runnable {
 
 	final void continueStartGame(byte var1) {
 		System.out.println("Got server configs!");
-		System.out.println("Debug server configs received:");
-		System.out.println(Config.SERVER_NAME + " 1");
-		System.out.println(Config.SERVER_NAME_WELCOME + " 2");
-		System.out.println(Config.S_PLAYER_LEVEL_LIMIT + " 3");
-		System.out.println(Config.S_SPAWN_AUCTION_NPCS + " 4");
-		System.out.println(Config.S_SPAWN_IRON_MAN_NPCS + " 5");
-		System.out.println(Config.S_SHOW_FLOATING_NAMETAGS + " 6");
-		System.out.println(Config.S_WANT_CLANS + " 7");
-		System.out.println(Config.S_WANT_KILL_FEED + " 8");
-		System.out.println(Config.S_FOG_TOGGLE + " 9");
-		System.out.println(Config.S_GROUND_ITEM_TOGGLE + " 10");
-		System.out.println(Config.S_AUTO_MESSAGE_SWITCH_TOGGLE + " 11");
-		System.out.println(Config.S_BATCH_PROGRESSION + " 12");
-		System.out.println(Config.S_SIDE_MENU_TOGGLE + " 13");
-		System.out.println(Config.S_INVENTORY_COUNT_TOGGLE + " 14");
-		System.out.println(Config.S_ZOOM_VIEW_TOGGLE + " 15");
-		System.out.println(Config.S_MENU_COMBAT_STYLE_TOGGLE + " 16");
-		System.out.println(Config.S_FIGHTMODE_SELECTOR_TOGGLE + " 17");
-		System.out.println(Config.S_EXPERIENCE_COUNTER_TOGGLE + " 18");
-		System.out.println(Config.S_EXPERIENCE_DROPS_TOGGLE + " 19");
-		System.out.println(Config.S_ITEMS_ON_DEATH_MENU + " 20");
-		System.out.println(Config.S_SHOW_ROOF_TOGGLE + " 21");
-		System.out.println(Config.S_WANT_HIDE_IP + " 22");
-		System.out.println(Config.S_WANT_REMEMBER + " 23");
-		System.out.println(Config.S_WANT_GLOBAL_CHAT + " 24");
-		System.out.println(Config.S_WANT_SKILL_MENUS + " 25");
-		System.out.println(Config.S_WANT_QUEST_MENUS + " 26");
-		System.out.println(Config.S_WANT_EXPERIENCE_ELIXIRS + " 27");
-		System.out.println(Config.S_WANT_KEYBOARD_SHORTCUTS + " 28");
-		System.out.println(Config.S_WANT_CUSTOM_BANKS + " 29");
-		System.out.println(Config.S_WANT_BANK_PINS + " 30");
-		System.out.println(Config.S_WANT_BANK_NOTES + " 31");
-		System.out.println(Config.S_WANT_CERT_DEPOSIT + " 32");
-		System.out.println(Config.S_CUSTOM_FIREMAKING + " 33");
-		System.out.println(Config.S_WANT_DROP_X + " 34");
-		System.out.println(Config.S_WANT_EXP_INFO + " 35");
-		System.out.println(Config.S_WANT_WOODCUTTING_GUILD + " 36");
-		System.out.println(Config.S_WANT_DECANTING + " 37");
-		System.out.println(Config.S_WANT_CERTS_TO_BANK + " 38");
-		System.out.println(Config.S_WANT_CUSTOM_RANK_DISPLAY + " 39");
-		System.out.println(Config.S_RIGHT_CLICK_BANK + " 40");
-		System.out.println(Config.S_WANT_FIXED_OVERHEAD_CHAT + " 41");
-		System.out.println(Config.WELCOME_TEXT + " 42");
-		System.out.println(Config.MEMBER_WORLD + " 43");
-		System.out.println(Config.DISPLAY_LOGO_SPRITE + " 44");
-		//System.out.println(Config.LOGO_SPRITE_ID + " 45");
-		//System.out.println(Config.C_FPS + " 46");
+		if (Config.DEBUG) {
+			System.out.println("Debug server configs received:");
+			System.out.println(Config.SERVER_NAME + " 1");
+			System.out.println(Config.SERVER_NAME_WELCOME + " 2");
+			System.out.println(Config.S_PLAYER_LEVEL_LIMIT + " 3");
+			System.out.println(Config.S_SPAWN_AUCTION_NPCS + " 4");
+			System.out.println(Config.S_SPAWN_IRON_MAN_NPCS + " 5");
+			System.out.println(Config.S_SHOW_FLOATING_NAMETAGS + " 6");
+			System.out.println(Config.S_WANT_CLANS + " 7");
+			System.out.println(Config.S_WANT_KILL_FEED + " 8");
+			System.out.println(Config.S_FOG_TOGGLE + " 9");
+			System.out.println(Config.S_GROUND_ITEM_TOGGLE + " 10");
+			System.out.println(Config.S_AUTO_MESSAGE_SWITCH_TOGGLE + " 11");
+			System.out.println(Config.S_BATCH_PROGRESSION + " 12");
+			System.out.println(Config.S_SIDE_MENU_TOGGLE + " 13");
+			System.out.println(Config.S_INVENTORY_COUNT_TOGGLE + " 14");
+			System.out.println(Config.S_ZOOM_VIEW_TOGGLE + " 15");
+			System.out.println(Config.S_MENU_COMBAT_STYLE_TOGGLE + " 16");
+			System.out.println(Config.S_FIGHTMODE_SELECTOR_TOGGLE + " 17");
+			System.out.println(Config.S_EXPERIENCE_COUNTER_TOGGLE + " 18");
+			System.out.println(Config.S_EXPERIENCE_DROPS_TOGGLE + " 19");
+			System.out.println(Config.S_ITEMS_ON_DEATH_MENU + " 20");
+			System.out.println(Config.S_SHOW_ROOF_TOGGLE + " 21");
+			System.out.println(Config.S_WANT_HIDE_IP + " 22");
+			System.out.println(Config.S_WANT_REMEMBER + " 23");
+			System.out.println(Config.S_WANT_GLOBAL_CHAT + " 24");
+			System.out.println(Config.S_WANT_SKILL_MENUS + " 25");
+			System.out.println(Config.S_WANT_QUEST_MENUS + " 26");
+			System.out.println(Config.S_WANT_EXPERIENCE_ELIXIRS + " 27");
+			System.out.println(Config.S_WANT_KEYBOARD_SHORTCUTS + " 28");
+			System.out.println(Config.S_WANT_CUSTOM_BANKS + " 29");
+			System.out.println(Config.S_WANT_BANK_PINS + " 30");
+			System.out.println(Config.S_WANT_BANK_NOTES + " 31");
+			System.out.println(Config.S_WANT_CERT_DEPOSIT + " 32");
+			System.out.println(Config.S_CUSTOM_FIREMAKING + " 33");
+			System.out.println(Config.S_WANT_DROP_X + " 34");
+			System.out.println(Config.S_WANT_EXP_INFO + " 35");
+			System.out.println(Config.S_WANT_WOODCUTTING_GUILD + " 36");
+			System.out.println(Config.S_WANT_DECANTING + " 37");
+			System.out.println(Config.S_WANT_CERTS_TO_BANK + " 38");
+			System.out.println(Config.S_WANT_CUSTOM_RANK_DISPLAY + " 39");
+			System.out.println(Config.S_RIGHT_CLICK_BANK + " 40");
+			System.out.println(Config.S_WANT_FIXED_OVERHEAD_CHAT + " 41");
+			System.out.println(Config.WELCOME_TEXT + " 42");
+			System.out.println(Config.MEMBER_WORLD + " 43");
+			System.out.println(Config.DISPLAY_LOGO_SPRITE + " 44");
+			//System.out.println(Config.LOGO_SPRITE_ID + " 45");
+			//System.out.println(Config.C_FPS + " 46");
+		}
 		try {
 			this.loadGameConfig(false);
 			if (!this.errorLoadingData) {

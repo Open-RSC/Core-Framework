@@ -11,6 +11,8 @@ import java.util.Properties;
 public final class Constants {
 
 	public static final class GameServer {
+
+		public static boolean DEBUG = true; // enables print out of the config being sent to the client
 		/**
 		 * Avatar web directory (full path required)
 		 */
@@ -199,7 +201,7 @@ public final class Constants {
 		public static boolean STRICT_PKNIFE_CHECK = false;
 		public static boolean STRICT_PSPEAR_CHECK = false;
 		//public static int C_FPS = 50;
-		
+
 		//loosened checks
 		public static boolean LOOSE_SHALLOW_WATER_CHECK = false;
 
@@ -298,7 +300,7 @@ public final class Constants {
 			VALUABLE_DROP_ITEMS = props.getProperty("valuable_drop_items");
 			START_TIME = System.currentTimeMillis();
 			NPC_BLOCKING = Integer.parseInt(props.getProperty("npc_blocking"));
-			
+
 			STRICT_CHECK_ALL = Boolean.parseBoolean(props.getProperty("strict_check_all"));
 			STRICT_PDART_CHECK = Boolean.parseBoolean(props.getProperty("strict_pdart_check"));
 			STRICT_PKNIFE_CHECK = Boolean.parseBoolean(props.getProperty("strict_pknife_check"));
