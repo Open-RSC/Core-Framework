@@ -13,18 +13,20 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
+import com.openrsc.server.external.ItemId;
+
 public final class GeneralStore implements ShopInterface,
 	TalkToNpcExecutiveListener, TalkToNpcListener {
 
-	public static Item[] shop_items = new Item[]{new Item(135, 3),
-		new Item(140, 2), new Item(144, 2), new Item(21, 2),
-		new Item(166, 2), new Item(167, 2), new Item(168, 5),
-		new Item(1263, 10)};
+	public static Item[] shop_items = new Item[]{new Item(ItemId.POT.id(), 3),
+		new Item(ItemId.JUG.id(), 2), new Item(ItemId.SHEARS.id(), 2), new Item(ItemId.BUCKET.id(), 2),
+		new Item(ItemId.TINDERBOX.id(), 2), new Item(ItemId.CHISEL.id(), 2), new Item(ItemId.HAMMER.id(), 5),
+		new Item(ItemId.SLEEPING_BAG.id(), 10)};
 
 	private final Shop baseShop = new Shop(true, 12400, 130, 40, 3, new Item(
-		135, 3), new Item(140, 2), new Item(144, 2), new Item(21,
-		2), new Item(166, 2), new Item(167, 2), new Item(168, 5),
-		new Item(1263, 10));
+		ItemId.POT.id(), 3), new Item(ItemId.JUG.id(), 2), new Item(ItemId.SHEARS.id(), 2), new Item(ItemId.BUCKET.id(),
+		2), new Item(ItemId.TINDERBOX.id(), 2), new Item(ItemId.CHISEL.id(), 2), new Item(ItemId.HAMMER.id(), 5),
+		new Item(ItemId.SLEEPING_BAG.id(), 10));
 	private Shop[] shops = null;
 
 	@Override
@@ -46,13 +48,13 @@ public final class GeneralStore implements ShopInterface,
 		if (shops == null) {
 			shops = new Shop[9];
 			shops[0] = new Shop(baseShop, "Dwarven Mine", 143);
-			shops[1] = new Shop(baseShop, "Varrock", 105, 106);
-			shops[2] = new Shop(baseShop, "Falador", 106, 106);
-			shops[3] = new Shop(baseShop, "Lumbridge", 83, 55);
-			shops[4] = new Shop(baseShop, "Rimmington", 82);
+			shops[1] = new Shop(baseShop, "Varrock", 51, 82);
+			shops[2] = new Shop(baseShop, "Falador", 105, 106);
+			shops[3] = new Shop(baseShop, "Lumbridge", 55, 83);
+			shops[4] = new Shop(baseShop, "Rimmington", 145, 146);
 			shops[5] = new Shop(baseShop, "Karamja", 168, 169);
-			shops[6] = new Shop(baseShop, "Al_Kharid", 88, 87);
-			shops[7] = new Shop(baseShop, "Edgeville", 186, 185);
+			shops[6] = new Shop(baseShop, "Al_Kharid", 87, 88);
+			shops[7] = new Shop(baseShop, "Edgeville", 185, 186);
 			shops[8] = new Shop(baseShop, "Lostcity", 222, 223);
 
 		}
