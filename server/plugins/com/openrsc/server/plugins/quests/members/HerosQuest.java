@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -24,6 +26,7 @@ import com.openrsc.server.plugins.listeners.executive.PlayerMageNpcExecutiveList
 import com.openrsc.server.plugins.listeners.executive.PlayerRangeNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.closeCupboard;
@@ -45,6 +48,11 @@ import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGan
 public class HerosQuest implements QuestInterface, TalkToNpcListener,
 	TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener, InvUseOnWallObjectListener, InvUseOnWallObjectExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, PlayerAttackNpcExecutiveListener, PlayerAttackNpcListener, PlayerRangeNpcListener, PlayerMageNpcListener, PlayerRangeNpcExecutiveListener, PlayerMageNpcExecutiveListener {
 
+	private static final int GRIPS_CUPBOARD_OPEN = 264;
+	private static final int GRIPS_CUPBOARD_CLOSED = 263;
+	private static final int CANDLESTICK_CHEST_OPEN = 265;
+	private static final int CANDLESTICK_CHEST_CLOSED = 266;
+	
 	@Override
 	public int getQuestId() {
 		return Constants.Quests.HEROS_QUEST;
@@ -59,7 +67,6 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 	public boolean isMembers() {
 		return true;
 	}
-
 
 	@Override
 	public void handleReward(Player player) {
@@ -89,19 +96,8 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 	 **/
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 253) {
-			return true;
-		}
-		if (n.getID() == 255) {
-			return true;
-		}
-		if (n.getID() == 256) {
-			return true;
-		}
-		if (n.getID() == 259) {
-			return true;
-		}
-		return false;
+		return DataConversions.inArray(new int[] {NpcId.ACHETTIES.id(), NpcId.GRUBOR.id(),
+				NpcId.TROBERT.id(), NpcId.GRIP.id()}, n.getID());
 	}
 
 	private void dutiesDialogue(Player p, Npc n) {
@@ -122,12 +118,12 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 		} else if (sub_menu2 == 1) {
 			npcTalk(p, n, "Yeah I'll give you time to settle in");
 		} else if (sub_menu2 == 2) {
-			if (!hasItem(p, 582) && p.getQuestStage(this) != -1) {
+			if (!hasItem(p, ItemId.MISCELLANEOUS_KEY.id()) && p.getQuestStage(this) != -1) {
 				npcTalk(p, n, "Hmm well you could find out what this key does",
 					"Apparantly it's to something in this building",
 					"Though I don't for the life of me know what");
 				playerTalk(p, n, "Grip hands you a key");
-				addItem(p, 582, 1);
+				addItem(p, ItemId.MISCELLANEOUS_KEY.id(), 1);
 			} else {
 				npcTalk(p, n, "Can't think of anything right now");
 			}
@@ -160,12 +156,12 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 			} else if (sub_menu2 == 1) {
 				npcTalk(p, n, "Yeah I'll give you time to settle in");
 			} else if (sub_menu2 == 2) {
-				if (!hasItem(p, 582) && p.getQuestStage(this) != -1) {
+				if (!hasItem(p, ItemId.MISCELLANEOUS_KEY.id()) && p.getQuestStage(this) != -1) {
 					npcTalk(p, n, "Hmm well you could find out what this key does",
 						"Apparantly it's to something in this building",
 						"Though I don't for the life of me know what");
 					playerTalk(p, n, "Grip hands you a key");
-					addItem(p, 582, 1);
+					addItem(p, ItemId.MISCELLANEOUS_KEY.id(), 1);
 				} else {
 					npcTalk(p, n, "Can't think of anything right now");
 				}
@@ -177,7 +173,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 259) {
+		if (n.getID() == NpcId.GRIP.id()) {
 			if (p.getCache().hasKey("talked_grip") || p.getQuestStage(this) == -1) {
 				int menu = showMenu(p, n,
 					"So can I guard the treasure room please",
@@ -200,11 +196,11 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 				"I'll get your hours of duty sorted in a bit",
 				"Oh and have you got your I.D paper",
 				"Internal security is almost as important as external security for a guard");
-			if (!hasItem(p, 573)) {
+			if (!hasItem(p, ItemId.ID_PAPER.id())) {
 				playerTalk(p, n, "Oh dear I don't have that with me any more");
 			} else {
 				p.message("You hand your I.D paper to grip");
-				removeItem(p, 573, 1);
+				removeItem(p, ItemId.ID_PAPER.id(), 1);
 				p.getCache().store("talked_grip", true);
 				int menu = showMenu(p, n,
 					"So can I guard the treasure room please",
@@ -219,19 +215,19 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 				}
 			}
 		}
-		if (n.getID() == 256) {
+		else if (n.getID() == NpcId.TROBERT.id()) {
 			if (p.getQuestStage(this) == -1) {
 				return;
 			}
 			if (p.getCache().hasKey("hq_impersonate")) {
-				if (hasItem(p, 573)) {
+				if (hasItem(p, ItemId.ID_PAPER.id())) {
 					return;
 				} else {
 					playerTalk(p, n, "I have lost Hartigen's I.D paper");
 					npcTalk(p, n, "That was careless",
 						"He had a spare fortunatley",
 						"Here it is");
-					addItem(p, 573, 1);
+					addItem(p, ItemId.ID_PAPER.id(), 1);
 					npcTalk(p, n, "Be more careful this time");
 				}
 				return;
@@ -257,7 +253,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 					"Well good luck then");
 				if (sec_menu == 0) {
 					npcTalk(p, n, "Well here's the I.d");
-					addItem(p, 573, 1);
+					addItem(p, ItemId.ID_PAPER.id(), 1);
 					p.getCache().store("hq_impersonate", true);
 					npcTalk(p, n, "Take that to the guard room at Scarface Pete's mansion");
 				}
@@ -265,11 +261,11 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 				playerTalk(p, n, "Pleased to meet you");
 			}
 		}
-		if (n.getID() == 255) {
+		else if (n.getID() == NpcId.GRUBOR.id()) {
 			playerTalk(p, n, "Hi");
 			npcTalk(p, n, "Hi, I'm a little busy right now");
 		}
-		if (n.getID() == 253) {
+		else if (n.getID() == NpcId.ACHETTIES.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					npcTalk(p, n, "Greetings welcome to the hero's guild",
@@ -281,7 +277,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 						if ((p.getQuestStage(Constants.Quests.LOST_CITY) == -1 &&
 							p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == -1 &&
 							p.getQuestStage(Constants.Quests.MERLINS_CRYSTAL) == -1 &&
-							p.getQuestStage(Constants.Quests.DRAGON_SLAYER) == -1) // probably bluffing.
+							p.getQuestStage(Constants.Quests.DRAGON_SLAYER) == -1)
 							&& p.getQuestPoints() >= 55) {
 							npcTalk(p, n, "Ok you may begin the tasks for joining the hero's guild",
 								"You need the feather of an Entrana firebird",
@@ -316,11 +312,11 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 				case 2:
 					npcTalk(p, n, "Greetings welcome to the hero's guild",
 						"How goes thy quest?");
-					if (hasItem(p, 586) && hasItem(p, 590) && hasItem(p, 557)) {
+					if (hasItem(p, ItemId.MASTER_THIEF_ARMBAND.id()) && hasItem(p, ItemId.LAVA_EEL.id()) && hasItem(p, ItemId.RED_FIREBIRD_FEATHER.id())) {
 						playerTalk(p, n, "I have all the things needed");
-						removeItem(p, 586, 1);
-						removeItem(p, 590, 1);
-						removeItem(p, 557, 1);
+						removeItem(p, ItemId.MASTER_THIEF_ARMBAND.id(), 1);
+						removeItem(p, ItemId.LAVA_EEL.id(), 1);
+						removeItem(p, ItemId.RED_FIREBIRD_FEATHER.id(), 1);
 						p.sendQuestComplete(Constants.Quests.HEROS_QUEST);
 					} else {
 						playerTalk(p, n, "It's tough, I've not done it yet");
@@ -354,8 +350,8 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockPickup(Player p, GroundItem i) {
-		if (i.getID() == 557) {
-			if (p.getInventory().wielding(556)) {
+		if (i.getID() == ItemId.RED_FIREBIRD_FEATHER.id()) {
+			if (p.getInventory().wielding(ItemId.ICE_GLOVES.id())) {
 				return false;
 			} else {
 				p.message("Ouch that is too hot to take");
@@ -370,28 +366,12 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click, Player player) {
-		if (obj.getID() == 78 && obj.getX() == 448 && obj.getY() == 682) {
-			return true;
-		}
-		if (obj.getID() == 76 && obj.getX() == 439 && obj.getY() == 694) {
-			return true;
-		}
-		if (obj.getID() == 75 && obj.getX() == 463 && obj.getY() == 681) {
-			return true;
-		}
-		if (obj.getID() == 77 && obj.getX() == 463 && obj.getY() == 676) {
-			return true;
-		}
-		if (obj.getID() == 79) {
-			return true;
-		}
-		if (obj.getID() == 80 && obj.getX() == 459 && obj.getY() == 674) {
-			return true;
-		}
-		if (obj.getID() == 81 && obj.getX() == 472 && obj.getY() == 674) {
-			return true;
-		}
-		return false;
+		return (obj.getID() == 78 && obj.getX() == 448 && obj.getY() == 682)
+				|| (obj.getID() == 76 && obj.getX() == 439 && obj.getY() == 694)
+				|| (obj.getID() == 75 && obj.getX() == 463 && obj.getY() == 681)
+				|| (obj.getID() == 77 && obj.getX() == 463 && obj.getY() == 676) || (obj.getID() == 79)
+				|| (obj.getID() == 80 && obj.getX() == 459 && obj.getY() == 674)
+				|| (obj.getID() == 81 && obj.getX() == 472 && obj.getY() == 674);
 	}
 
 	@Override
@@ -402,14 +382,14 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 				p.message("You go through the door");
 				doDoor(obj, p);
 			} else {
-				Npc alf = getNearestNpc(p, 260, 10);
+				Npc alf = getNearestNpc(p, NpcId.ALFONSE_THE_WAITER.id(), 10);
 				if (alf != null) {
 					npcTalk(p, alf, "Hey you can't go through there, that's private");
 				}
 			}
 		}
-		if (obj.getID() == 76 && obj.getX() == 439 && obj.getY() == 694) {
-			Npc grubor = getNearestNpc(p, 255, 10);
+		else if (obj.getID() == 76 && obj.getX() == 439 && obj.getY() == 694) {
+			Npc grubor = getNearestNpc(p, NpcId.GRUBOR.id(), 10);
 			if (p.getQuestStage(this) == -1) {
 				npcTalk(p, grubor, "Yes? what do you want?");
 				int mem = showMenu(p, grubor, false, //do not send over
@@ -465,8 +445,8 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 				p.message("The door won't open");
 			}
 		}
-		if (obj.getID() == 75 && obj.getX() == 463 && obj.getY() == 681) {
-			Npc garv = getNearestNpc(p, 257, 12);
+		else if (obj.getID() == 75 && obj.getX() == 463 && obj.getY() == 681) {
+			Npc garv = getNearestNpc(p, NpcId.GARV.id(), 12);
 			if (p.getCache().hasKey("garv_door") || p.getQuestStage(this) == -1) {
 				p.message("you open the door");
 				p.message("You go through the door");
@@ -478,9 +458,10 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 				if (isBlackArmGang(p)) {
 					playerTalk(p, garv, "Hi, I'm Hartigen",
 						"I've come to work here");
-					if (p.getInventory().wielding(248) && p.getInventory().wielding(230) && p.getInventory().wielding(196)) {
+					if (p.getInventory().wielding(ItemId.BLACK_PLATE_MAIL_LEGS.id())
+							&& p.getInventory().wielding(ItemId.LARGE_BLACK_HELMET.id())&& p.getInventory().wielding(ItemId.BLACK_PLATE_MAIL_BODY.id())) {
 						npcTalk(p, garv, "So have you got your i.d paper?");
-						if (hasItem(p, 573)) {
+						if (hasItem(p, ItemId.ID_PAPER.id())) {
 							npcTalk(p, garv, "You had better come in then",
 								"Grip will want to talk to you");
 							p.getCache().store("garv_door", true);
@@ -494,7 +475,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 				}
 			}
 		}
-		if (obj.getID() == 77 && obj.getX() == 463 && obj.getY() == 676) {
+		else if (obj.getID() == 77 && obj.getX() == 463 && obj.getY() == 676) {
 			if (p.getCache().hasKey("talked_grip") || p.getQuestStage(this) == -1) {
 				p.message("you open the door");
 				p.message("You go through the door");
@@ -504,46 +485,39 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 				p.message("You need to speak to grip first");
 			}
 		}
-		if (obj.getID() == 79) { // strange panel - 11
+		else if (obj.getID() == 79) { // strange panel - 11
 			p.playSound("secretdoor");
 			p.message("You just went through a secret door");
 			doDoor(obj, p, 11);
 		}
-		if (obj.getID() == 80 && obj.getX() == 459 && obj.getY() == 674) {
+		else if (obj.getID() == 80 && obj.getX() == 459 && obj.getY() == 674) {
 			p.message("The door is locked");
 			playerTalk(p, null, "This room isn't a lot of use on it's own",
 				"Maybe I can get extra help from the inside somehow",
 				"I wonder if any of the other players have found a way in");
 		}
-		if (obj.getID() == 81 && obj.getX() == 472 && obj.getY() == 674) {
+		else if (obj.getID() == 81 && obj.getX() == 472 && obj.getY() == 674) {
 			p.message("The door is locked");
 		}
 	}
 
 	@Override
 	public boolean blockInvUseOnWallObject(GameObject obj, Item item, Player player) {
-		if (obj.getID() == 80) {
-			return true;
-		}
-		if (obj.getID() == 81) {
-			return true;
-		}
-		return false;
+		return obj.getID() == 80 || obj.getID() == 81;
 	}
 
 	@Override
 	public void onInvUseOnWallObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == 80) {
-			if (item.getID() == 582) {
+			if (item.getID() == ItemId.MISCELLANEOUS_KEY.id()) {
 				showBubble(p, item);
 				p.message("You unlock the door");
 				p.message("You go through the door");
 				doDoor(obj, p);
 			}
 		}
-		if (obj.getID() == 81) {
-			if (item.getID() == 583) {
-				showBubble(p, item);
+		else if (obj.getID() == 81) {
+			if (item.getID() == ItemId.BUNCH_OF_KEYS.id()) {
 				p.message("You open the door");
 				p.message("You go through the door");
 				doDoor(obj, p);
@@ -554,14 +528,15 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
-		return obj.getID() == 263 || obj.getID() == 264 || obj.getID() == 265 || obj.getID() == 266;
+		return obj.getID() == GRIPS_CUPBOARD_OPEN || obj.getID() == GRIPS_CUPBOARD_CLOSED
+				|| obj.getID() == CANDLESTICK_CHEST_OPEN || obj.getID() == CANDLESTICK_CHEST_CLOSED;
 	}
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
-		Npc guard = getNearestNpc(p, 258, 10);
-		Npc grip = getNearestNpc(p, 259, 15);
-		if (obj.getID() == 263 || obj.getID() == 264) {
+		Npc guard = getNearestNpc(p, NpcId.GUARD_PIRATE.id(), 10);
+		Npc grip = getNearestNpc(p, NpcId.GRIP.id(), 15);
+		if (obj.getID() == GRIPS_CUPBOARD_OPEN || obj.getID() == GRIPS_CUPBOARD_CLOSED) {
 			if (command.equalsIgnoreCase("open") || command.equalsIgnoreCase("search")) {
 				if (guard != null) {
 					npcTalk(p, guard, "I don't think Mr Grip will like you opening that up",
@@ -576,10 +551,10 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 								"That's my drinks cabinet get away from it");
 						} else {
 							if (command.equalsIgnoreCase("open")) {
-								openCupboard(obj, p, 264);
+								openCupboard(obj, p, GRIPS_CUPBOARD_OPEN);
 							} else {
 								p.message("You find a bottle of whisky in the cupboard");
-								addItem(p, 584, 1);
+								addItem(p, ItemId.DRAYNOR_WHISKY.id(), 1);
 							}
 						}
 					}
@@ -587,17 +562,17 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 					p.message("The guard is busy at the moment");
 				}
 			} else if (command.equalsIgnoreCase("close")) {
-				closeCupboard(obj, p, 263);
+				closeCupboard(obj, p, GRIPS_CUPBOARD_CLOSED);
 			}
 		}
-		if (obj.getID() == 265 || obj.getID() == 266) {
+		else if (obj.getID() == CANDLESTICK_CHEST_OPEN || obj.getID() == CANDLESTICK_CHEST_CLOSED) {
 			if (command.equalsIgnoreCase("open")) {
-				openGenericObject(obj, p, 265, "You open the chest");
+				openGenericObject(obj, p, CANDLESTICK_CHEST_OPEN, "You open the chest");
 			} else if (command.equalsIgnoreCase("close")) {
-				closeGenericObject(obj, p, 266, "You close the chest");
+				closeGenericObject(obj, p, CANDLESTICK_CHEST_CLOSED, "You close the chest");
 			} else {
-				if (!hasItem(p, 585)) {
-					addItem(p, 585, 2);
+				if (!hasItem(p, ItemId.CANDLESTICK.id())) {
+					addItem(p, ItemId.CANDLESTICK.id(), 2);
 					message(p, "You find two candlesticks in the chest",
 						"So that will be one for you",
 						"And one to the person who killed grip for you");
@@ -614,31 +589,22 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
-		if (n.getID() == 259) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.GRIP.id();
 	}
 
 	@Override
 	public boolean blockPlayerMageNpc(Player p, Npc n) {
-		if (n.getID() == 259) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.GRIP.id();
 	}
 
 	@Override
 	public boolean blockPlayerRangeNpc(Player p, Npc n) {
-		if (n.getID() == 259 && !p.getLocation().inHeroQuestRangeRoom()) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.GRIP.id() && !p.getLocation().inHeroQuestRangeRoom();
 	}
 
 	@Override
 	public void onPlayerMageNpc(Player p, Npc n) {
-		if (n.getID() == 259) {
+		if (n.getID() == NpcId.GRIP.id()) {
 			if (!p.getLocation().inHeroQuestRangeRoom()) {
 				playerTalk(p, null, "I can't attack the head guard here",
 					"There are too many witnesses to see me do it",
@@ -651,7 +617,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void onPlayerRangeNpc(Player p, Npc n) {
-		if (n.getID() == 259 && !p.getLocation().inHeroQuestRangeRoom()) {
+		if (n.getID() == NpcId.GRIP.id() && !p.getLocation().inHeroQuestRangeRoom()) {
 			playerTalk(p, null, "I can't attack the head guard here",
 				"There are too many witnesses to see me do it",
 				"I'd have the whole of Brimhaven after me",
@@ -662,7 +628,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void onPlayerAttackNpc(Player p, Npc n) {
-		if (n.getID() == 259) {
+		if (n.getID() == NpcId.GRIP.id()) {
 			if (!p.getLocation().inHeroQuestRangeRoom()) {
 				playerTalk(p, null, "I can't attack the head guard here",
 					"There are too many witnesses to see me do it",

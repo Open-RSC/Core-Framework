@@ -2,10 +2,11 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
@@ -15,6 +16,7 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -24,6 +26,9 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 	ObjectActionExecutiveListener, PlayerKilledNpcListener,
 	PlayerKilledNpcExecutiveListener {
 
+	private static final int KHAZARD_CHEST_OPEN = 409;
+	private static final int KHAZARD_CHEST_CLOSED = 410;
+	
 	@Override
 	public int getQuestId() {
 		return Constants.Quests.TREE_GNOME_VILLAGE;
@@ -44,50 +49,22 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 		p.message("Well done you have completed the treequest");
 		p.message("@gre@You haved gained 2 quest points!");
 		incQuestReward(p, Quests.questData.get(Quests.TREE_GNOME_VILLAGE), true);
-		addItem(p, 744, 1);
+		addItem(p, ItemId.GNOME_EMERALD_AMULET_OF_PROTECTION.id(), 1);
 	}
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 396) {
-			return true;
-		}
-		if (n.getID() == 399) {
-			return true;
-		}
-		if (n.getID() == 397) {
-			return true;
-		}
-		if (n.getID() == 400) {
-			return true;
-		}
-		if (n.getID() == 409) {
-			return true;
-		}
-		if (n.getID() == 408) {
-			return true;
-		}
-		if (n.getID() == 406) {
-			return true;
-		}
-		if (n.getID() == 404) {
-			return true;
-		}
-		if (n.getID() == 410) {
-			return true;
-		}
-		if (n.getID() == 402) {
-			return true;
-		}
-		return false;
+		return DataConversions.inArray(new int[] {NpcId.ELKOY.id(), NpcId.LOCAL_GNOME.id(), NpcId.REMSAI.id(), NpcId.BOLREN.id(),
+				NpcId.GNOME_TROOP.id(), NpcId.COMMANDER_MONTAI.id(), NpcId.TRACKER_3.id(), NpcId.TRACKER_1.id(),
+				NpcId.KHAZARD_WARLORD.id(), NpcId.KALRON.id()}, n.getID());
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 410) {
+		if (n.getID() == NpcId.KHAZARD_WARLORD.id()) {
 			if (p.getQuestStage(getQuestId()) == 6
 				|| p.getQuestStage(getQuestId()) == -1) {
-				if (hasItem(p, 741) || p.getQuestStage(getQuestId()) == -1) {
+				if (hasItem(p, ItemId.ORBS_OF_PROTECTION.id()) || p.getQuestStage(getQuestId()) == -1) {
 					playerTalk(p, n, "i thought i killed you?");
 					npcTalk(p, n,
 						"fool.. warriors blessed by khazard don't die",
@@ -110,7 +87,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 				}
 			}
 		}
-		if (n.getID() == 404) { // TRACKER 1
+		else if (n.getID() == NpcId.TRACKER_1.id()) {
 			switch (p.getQuestStage(getQuestId())) {
 				case 0:
 				case 1:
@@ -137,7 +114,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 					playerTalk(p, n, "ok, take care");
 					break;
 				case 5:
-					if (hasItem(p, 740)) {
+					if (hasItem(p, ItemId.ORB_OF_PROTECTION.id())) {
 						playerTalk(p, n, "how are you tracker?");
 						npcTalk(p, n, "now we have the globe i'm much better",
 							"they won't stand a chance without it");
@@ -155,7 +132,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 					break;
 			}
 		}
-		if (n.getID() == 406) { // TRACKER 3
+		else if (n.getID() == NpcId.TRACKER_3.id()) {
 			switch (p.getQuestStage(getQuestId())) {
 				case 0:
 				case 1:
@@ -194,7 +171,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 					p.message("The poor gnome has gone mad");
 					break;
 				case 5:
-					if (hasItem(p, 740)) {
+					if (hasItem(p, ItemId.ORB_OF_PROTECTION.id())) {
 						playerTalk(p, n, "hello again\"");
 						npcTalk(p, n, "don't talk to me, you can't see me",
 							"no one can just the demons");
@@ -215,7 +192,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 					break;
 			}
 		}
-		if (n.getID() == 408) { //COMMANDER MONTAI
+		else if (n.getID() == NpcId.COMMANDER_MONTAI.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					playerTalk(p, n, "hello");
@@ -258,7 +235,8 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 					playerTalk(p, n, "hello");
 					npcTalk(p, n,
 						"hello again, we're still desperate for wood soldier");
-					if (removeItem(p, 14, 6)) {
+					if (hasItem(p, ItemId.LOGS.id(), 6)) {
+						p.getInventory().remove(ItemId.LOGS.id(), 6);
 						playerTalk(p, n, "i have some here");
 						p.message("you give some wood to the commander");
 						npcTalk(p,
@@ -321,7 +299,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 						"to enter the stronghold and retrieve the orb");
 					break;
 				case 5:
-					if (hasItem(p, 740)) {
+					if (hasItem(p, ItemId.ORB_OF_PROTECTION.id())) {
 						playerTalk(p, n, "i have the orb of protection");
 						npcTalk(p, n, "incredible, for a human",
 							"you really are something");
@@ -349,7 +327,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 					break;
 			}
 		}
-		if (n.getID() == 409) {
+		else if (n.getID() == NpcId.GNOME_TROOP.id()) {
 			if (p.getQuestStage(getQuestId()) == 5
 				|| p.getQuestStage(getQuestId()) == -1) {
 				playerTalk(p, n, "hi");
@@ -369,7 +347,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 				return;
 			}
 		}
-		if (n.getID() == 400) { //BOLREN
+		else if (n.getID() == NpcId.BOLREN.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					playerTalk(p, n, "hello");
@@ -449,7 +427,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 					break;
 				case 5:
 					playerTalk(p, n, "king bolren are you ok?");
-					if (hasItem(p, 740)) {
+					if (hasItem(p, ItemId.ORB_OF_PROTECTION.id())) {
 						playerTalk(p, n, "i have the orb");
 						npcTalk(p, n, "thank you traveller, but it's too late",
 							"we're all doomed", "oh my the misery, the horror");
@@ -482,7 +460,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 							p.message("A gnome guides you out of the maze");
 							p.teleport(624, 675, false);
 							p.updateQuestStage(getQuestId(), 6);
-							removeItem(p, 740, 1);
+							removeItem(p, ItemId.ORB_OF_PROTECTION.id(), 1);
 						} else if (newOrbs == 1) {
 							playerTalk(p, n, "i'm sorry but i can't help");
 							npcTalk(p, n, "i understand, this isn't your battle");
@@ -495,7 +473,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 					}
 					break;
 				case 6:
-					if (hasItem(p, 741)) {
+					if (hasItem(p, ItemId.ORBS_OF_PROTECTION.id())) {
 						playerTalk(p, n, "bolren, i have returned");
 						npcTalk(p, n, "you made it back", "do you have the orbs?");
 						playerTalk(p, n, "i have them here");
@@ -516,7 +494,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 							"They continue to chant",
 							"As the king gnome climbs the tree",
 							"placing the two Orbs at the peak of the spirit tree");
-						removeItem(p, 741, 1);
+						removeItem(p, ItemId.ORBS_OF_PROTECTION.id(), 1);
 						n.displayNpcTeleportBubble(656, 695);
 						sleep(1000);
 						n.displayNpcTeleportBubble(656, 695);
@@ -558,17 +536,17 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 				case -1:
 					playerTalk(p, n, "hello again bolren");
 					npcTalk(p, n, "well hello, it's good to see you again");
-					if (!hasItem(p, 744)) {
+					if (!hasItem(p, ItemId.GNOME_EMERALD_AMULET_OF_PROTECTION.id())) {
 						playerTalk(p, n, "i've lost my amulet");
 						npcTalk(p, n, "oh dear", "here take another");
-						addItem(p, 744, 1);
+						addItem(p, ItemId.GNOME_EMERALD_AMULET_OF_PROTECTION.id(), 1);
 					} else {
 						playerTalk(p, n, "good to see you");
 					}
 					break;
 			}
 		}
-		if (n.getID() == 397) { //REMSAI
+		else if (n.getID() == NpcId.REMSAI.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					playerTalk(p, n, "hello");
@@ -595,7 +573,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 				case 5:
 					playerTalk(p, n, "hello remsai");
 					npcTalk(p, n, "hello, did you find the orb?");
-					if (hasItem(p, 740)) {
+					if (hasItem(p, ItemId.ORB_OF_PROTECTION.id())) {
 						playerTalk(p, n, "i have it here");
 						npcTalk(p, n, "you're our saviour");
 					} else {
@@ -605,7 +583,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 					}
 					break;
 				case 6:
-					if (hasItem(p, 741)) {
+					if (hasItem(p, ItemId.ORBS_OF_PROTECTION.id())) {
 						playerTalk(p, n, "i've returned");
 						npcTalk(p, n, "you're back, well done brave adventurer",
 							"now the orbs are safe",
@@ -628,7 +606,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 					break;
 			}
 		}
-		if (n.getID() == 399) { //LOCAL GNOME
+		else if (n.getID() == NpcId.LOCAL_GNOME.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 				case 1:
@@ -668,7 +646,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 					break;
 			}
 		}
-		if (n.getID() == 396) { //ELKOY
+		else if (n.getID() == NpcId.ELKOY.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					playerTalk(p, n, "hello there");
@@ -704,7 +682,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 				case 5:
 					playerTalk(p, n, "hello elkoy");
 					npcTalk(p, n, "you're back! and the orb?");
-					if (hasItem(p, 740)) {
+					if (hasItem(p, ItemId.ORB_OF_PROTECTION.id())) {
 						playerTalk(p, n, "i have it here");
 						npcTalk(p,
 							n,
@@ -788,7 +766,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 					break;
 			}
 		}
-		if (n.getID() == 402) { //KALRON
+		else if (n.getID() == NpcId.KALRON.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 				case 1:
@@ -832,13 +810,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click,
 										 Player player) {
-		if (obj.getID() == 101 && obj.getY() == 705) {
-			return true;
-		}
-		if (obj.getID() == 101 && obj.getX() == 540 && obj.getY() == 445) {
-			return true;
-		}
-		return false;
+		return (obj.getID() == 101 && obj.getY() == 705) || (obj.getID() == 101 && obj.getX() == 540 && obj.getY() == 445);
 	}
 
 	@Override
@@ -870,28 +842,13 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command,
 									 Player player) {
-		if (obj.getID() == 392) {
-			return true;
-		}
-		if (obj.getID() == 388) {
-			return true;
-		}
-		if (obj.getID() == 393) {
-			return true;
-		}
-		if (obj.getID() == 410) {
-			return true;
-		}
-		if (obj.getID() == 409) {
-			return true;
-		}
-		return false;
+		return DataConversions.inArray(new int[] {392, 388, 393, KHAZARD_CHEST_OPEN, KHAZARD_CHEST_CLOSED}, obj.getID());
 	}
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if (obj.getID() == 392) {
-			Npc trackerTwo = getNearestNpc(p, 405, 5);
+			Npc trackerTwo = getNearestNpc(p, NpcId.TRACKER_2.id(), 5);
 			switch (p.getQuestStage(getQuestId())) {
 				case 0:
 				case 1:
@@ -920,7 +877,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 					npcTalk(p, trackerTwo, "go");
 					break;
 				case 5:
-					if (hasItem(p, 740)) {
+					if (hasItem(p, ItemId.ORB_OF_PROTECTION.id())) {
 						playerTalk(p, trackerTwo, "how are you tracker?");
 						npcTalk(p, trackerTwo, "now we have the globe 'm much better",
 							"soon my comrades will come and free me");
@@ -938,7 +895,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 					break;
 			}
 		}
-		if (obj.getID() == 388) {
+		else if (obj.getID() == 388) {
 			if (p.getQuestStage(getQuestId()) >= 5 || p.getQuestStage(getQuestId()) == -1) {
 				p.message("The ballista has been damaged, it is out of use");
 				return;
@@ -949,14 +906,14 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 				fireBallistaMenu(p, obj);
 			}
 		}
-		if (obj.getID() == 393) {
+		else if (obj.getID() == 393) {
 			if (p.getQuestStage(getQuestId()) >= 5 || p.getQuestStage(getQuestId()) == -1) {
 				message(p, "The wall is reduced to",
 					"Rubble, you manage to climb over");
 				if (p.getY() >= 633) {
 					p.teleport(659, 632, false);
 					if (!p.getCache().hasKey("over_gnomefield_wall")) {
-						Npc commander = getNearestNpc(p, 428, 12);
+						Npc commander = getNearestNpc(p, NpcId.KHAZARD_COMMANDER.id(), 12);
 						if (commander != null) {
 							npcTalk(p, commander,
 								"what?! how did you manage to get in here?");
@@ -974,26 +931,19 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 					"But not enough to climb through");
 			}
 		}
-		if (obj.getID() == 410) {
-			p.message("You open the chest");
-			World.getWorld().replaceGameObject(obj,
-				new GameObject(obj.getLocation(), 409, obj.getDirection(),
-					obj.getType()));
-		}
-		if (obj.getID() == 409) {
-			if (command.equalsIgnoreCase("search")) {
-				if (!hasItem(p, 740)) {
+		else if (obj.getID() == KHAZARD_CHEST_OPEN || obj.getID() == KHAZARD_CHEST_CLOSED) {
+			if (command.equalsIgnoreCase("open")) {
+				openGenericObject(obj, p, KHAZARD_CHEST_OPEN, "You open the chest");
+			} else if (command.equalsIgnoreCase("close")) {
+				closeGenericObject(obj, p, KHAZARD_CHEST_OPEN, "You close the chest");
+			} else {
+				if (!hasItem(p, ItemId.ORB_OF_PROTECTION.id())) {
 					p.message("You search the chest");
 					p.message("And find the orb of protection");
-					addItem(p, 740, 1);
+					addItem(p, ItemId.ORB_OF_PROTECTION.id(), 1);
 				} else {
 					p.message("You search the chest, but find nothing");
 				}
-			} else if (command.equalsIgnoreCase("close")) {
-				p.message("You close the chest");
-				World.getWorld().replaceGameObject(obj,
-					new GameObject(obj.getLocation(), 410, obj
-						.getDirection(), obj.getType()));
 			}
 		}
 	}
@@ -1040,15 +990,12 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == 410) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.KHAZARD_WARLORD.id();
 	}
 
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == 410) {
+		if (n.getID() == NpcId.KHAZARD_WARLORD.id()) {
 			n.resetCombatEvent();
 			n.killedBy(p);
 			if (p.getQuestStage(getQuestId()) == 6) {
@@ -1056,9 +1003,9 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 					"As he falls to the ground...",
 					"A ghostly vapour floats upwards from his battle worn armour",
 					"Out of sight, you hear a shrill scream in the still air of the valley");
-				if (!hasItem(p, 741)) {
+				if (!hasItem(p, ItemId.ORBS_OF_PROTECTION.id())) {
 					p.message("You search his satchel and find the orbs of protection");
-					addItem(p, 741, 1);
+					addItem(p, ItemId.ORBS_OF_PROTECTION.id(), 1);
 					if (!p.getCache().hasKey("looted_orbs_protect")) {
 						p.getCache().store("looted_orbs_protect", true);
 					}

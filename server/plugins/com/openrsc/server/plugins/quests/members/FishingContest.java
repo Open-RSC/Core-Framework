@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -37,6 +39,36 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 	InvUseOnObjectExecutiveListener, InvUseOnNpcListener,
 	InvUseOnNpcExecutiveListener {
 
+	@Override
+	public int getQuestId() {
+		return Constants.Quests.FISHING_CONTEST;
+	}
+
+	@Override
+	public String getQuestName() {
+		return "Fishing contest (members)";
+	}
+	
+	@Override
+	public boolean isMembers() {
+		return true;
+	}
+	
+	@Override
+	public void handleReward(final Player p) {
+		p.updateQuestStage(Constants.Quests.FISHING_CONTEST, -1);
+		p.message("Well done you have completed the fishing competition quest");
+		p.message("@gre@You haved gained 1 quest point!");
+		int[] questData = Quests.questData.get(Quests.FISHING_CONTEST);
+		if (p.getSkills().getMaxStat(Skills.FISHING) <= 23) {
+			questData[Quests.MAPIDX_BASE] = 900;
+			incQuestReward(p, questData, true);
+		} else if (p.getSkills().getMaxStat(Skills.FISHING) >= 24) {
+			questData[Quests.MAPIDX_BASE] = 1700;
+			incQuestReward(p, questData, true);
+		}
+	}
+	
 	private void addCatchCache(final Player p, int catchId) {
 		String catchString = "";
 		if (p.getCache().hasKey("contest_catches")) {
@@ -54,64 +86,26 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockInvUseOnObject(final GameObject obj,
 									   final Item item, final Player player) {
-		if (obj.getID() == 355) {
-			return true;
-		}
-		if (obj.getID() == 350) {
-			return true;
-		}
-		return false;
+		return obj.getID() == 355 || obj.getID() == 350;
 	}
 
 	@Override
 	public boolean blockObjectAction(final GameObject obj,
 									 final String command, final Player player) {
-		if (obj.getID() == 358) {
-			return true;
-		}
-		if (obj.getID() == 352 || obj.getID() == 351) {
-			return true;
-		}
-		if (obj.getID() == 359) {
-			return true;
-		}
-		// big dave's spot
-		if (obj.getID() == 353) {
-			return true;
-		}
-		// joshua's spot
-		if (obj.getID() == 354) {
-			return true;
-		}
-		return false;
+		//353 - big dave's spot, 354 - joshua's spot
+		return obj.getID() == 358 || obj.getID() == 352 || obj.getID() == 351
+				|| obj.getID() == 359 || obj.getID() == 353 || obj.getID() == 354;
 	}
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
-		if (n.getID() == 355) {
-			return true;
-		}
-		if (n.getID() == 347) {
-			return true;
-		}
-		if (n.getID() == 346) {
-			return true;
-		}
-		if (n.getID() == 345) {
-			return true;
-		}
 		// joshua and big dave were not interested in talking directly
-		if (n.getID() == 354) {
-			return false;
-		}
-		if (n.getID() == 353) {
-			return false;
-		}
-		return false;
+		return DataConversions.inArray(new int[] {NpcId.MOUNTAIN_DWARF.id(), NpcId.BONZO.id(), NpcId.SINISTER_STRANGER.id(),
+				NpcId.GRANDPA_JACK.id(), NpcId.JOSHUA.id(), NpcId.BIG_DAVE.id()}, n.getID());
 	}
 
 	private void bonzoDialogue(final Player p, final Npc n, final boolean isDirectTalk) {
-		Npc sinister = getNearestNpc(p, 346, 10);
+		Npc sinister = getNearestNpc(p, NpcId.SINISTER_STRANGER.id(), 10);
 		switch (p.getQuestStage(this)) {
 			// quest completed
 			case -1:
@@ -133,7 +127,7 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 					}
 
 					for (String aCatch : catches) {
-						hasCarp |= (Integer.valueOf(aCatch) == 717 && hasItem(p, 717));
+						hasCarp |= (Integer.valueOf(aCatch) == ItemId.RAW_GIANT_CARP.id() && hasItem(p, ItemId.RAW_GIANT_CARP.id()));
 					}
 
 					npcTalk(p, n, "so how are you doing so far?");
@@ -160,7 +154,7 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 					return;
 				} else {
 					// with trophy does not allow to enter competition
-					if (hasItem(p, 720)) {
+					if (hasItem(p, ItemId.HEMENSTER_FISHING_TROPHY.id())) {
 						npcTalk(p, n, "Hello champ",
 							"So any hints on how to fish so well");
 						playerTalk(p, n, "I think I'll keep them to myself");
@@ -180,9 +174,9 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 						"No thanks, I'll just watch the fun");
 					if (first == 0) {
 						npcTalk(p, n, "Marvelous");
-						if (p.getInventory().countId(10) >= 5) {
+						if (p.getInventory().countId(ItemId.COINS.id()) >= 5) {
 							p.message("You pay bonzo 5 coins");
-							removeItem(p, 10, 5);
+							removeItem(p, ItemId.COINS.id(), 5);
 							npcTalk(p, n, "Ok we've got all the fishermen",
 								"It's time to roll",
 								"Ok nearly everyone is in there place already",
@@ -225,7 +219,7 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 			"Lets see who caught the biggest fish");
 		message(p, "You hand over your catch");
 		for (String aCatch : catches) {
-			hadCarp |= (Integer.valueOf(aCatch) == 717 && hasItem(p, 717));
+			hadCarp |= (Integer.valueOf(aCatch) == ItemId.RAW_GIANT_CARP.id() && hasItem(p, ItemId.RAW_GIANT_CARP.id()));
 			removeItem(p, Integer.valueOf(aCatch), 1);
 		}
 		p.getCache().remove("contest_catches");
@@ -238,7 +232,7 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 				"Has caught the biggest carp",
 				"I've seen since Grandpa Jack used to compete");
 			p.message("you are given the Hemenster fishing trophy");
-			addItem(p, 720, 1);
+			addItem(p, ItemId.HEMENSTER_FISHING_TROPHY.id(), 1);
 			p.updateQuestStage(getQuestId(), 3);
 		}
 		// select another one from chance
@@ -255,16 +249,6 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 				npcTalk(p, n, "the surprising Joshua");
 			}
 		}
-	}
-
-	@Override
-	public int getQuestId() {
-		return Constants.Quests.FISHING_CONTEST;
-	}
-
-	@Override
-	public String getQuestName() {
-		return "Fishing contest (members)";
 	}
 
 	private void grandpaJackDialogue(final Player p, final Npc n) {
@@ -352,26 +336,6 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 		}
 	}
 
-	@Override
-	public void handleReward(final Player p) {
-		p.updateQuestStage(Constants.Quests.FISHING_CONTEST, -1);
-		p.message("Well done you have completed the fishing competition quest");
-		p.message("@gre@You haved gained 1 quest point!");
-		int[] questData = Quests.questData.get(Quests.FISHING_CONTEST);
-		if (p.getSkills().getMaxStat(Skills.FISHING) <= 23) {
-			questData[Quests.MAPIDX_BASE] = 900;
-			incQuestReward(p, questData, true);
-		} else if (p.getSkills().getMaxStat(Skills.FISHING) >= 24) {
-			questData[Quests.MAPIDX_BASE] = 1700;
-			incQuestReward(p, questData, true);
-		}
-	}
-
-	@Override
-	public boolean isMembers() {
-		return true;
-	}
-
 	private void joshuaDialogue(final Player p, final Npc n) {
 		npcTalk(p, n, "This is my fishing spot", "Ya don't wanna be fishing 'ere mate",
 			"Cos I'll break your knuckles");
@@ -448,7 +412,7 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 											n,
 											"Okay I entrust you with our competition pass",
 											"go to Hemenster and do us proud");
-										addItem(p, 719, 1);
+										addItem(p, ItemId.FISHING_COMPETITION_PASS.id(), 1);
 										p.updateQuestStage(getQuestId(), 1);
 									} else if (six == 1) {
 										playerTalk(p, n, "I'm not much of a fisherman either");
@@ -478,7 +442,7 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 			case 1:
 			case 2:
 				npcTalk(p, n, "Have you won yet?");
-				if (!hasItemAtAll(p, 719)) {
+				if (!hasItemAtAll(p, ItemId.FISHING_COMPETITION_PASS.id())) {
 					//do not send over
 					final int opts = showMenu(p, n, false,
 						"No I need another competition pass",
@@ -487,7 +451,7 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 						playerTalk(p, n, "I need another competition pass");
 						npcTalk(p, n, "Hmm its a good job they sent us spares",
 							"there you go");
-						addItem(p, 719, 1);
+						addItem(p, ItemId.FISHING_COMPETITION_PASS.id(), 1);
 					} else if (opts == 1) {
 						playerTalk(p, n, "No it takes preparation to win fishing competitions");
 						npcTalk(p, n, "Maybe that's where we are going wrong when we try fishing");
@@ -501,10 +465,10 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 				npcTalk(p, n, "Have you won yet?");
 				playerTalk(p, n, "Yes I have");
 				npcTalk(p, n, "Well done, so where is the trophy?");
-				if (hasItem(p, 720)) {
+				if (hasItem(p, ItemId.HEMENSTER_FISHING_TROPHY.id())) {
 					playerTalk(p, n, "I have it right here");
 					message(p, "you give the trophy to the dwarf");
-					removeItem(p, 720, 1);
+					removeItem(p, ItemId.HEMENSTER_FISHING_TROPHY.id(), 1);
 					npcTalk(p, n, "Okay we will let you in now");
 					p.sendQuestComplete(Quests.FISHING_CONTEST);
 				} else {
@@ -522,18 +486,18 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 	public void onInvUseOnObject(final GameObject obj, final Item item,
 								 final Player player) {
 
-		if (obj.getID() == 355 && item.getID() == 211) { // teleport coords:
+		if (obj.getID() == 355 && item.getID() == ItemId.SPADE.id()) { // teleport coords:
 			// 567, 451
 			message(player, "you dig in amoungst the vines",
 				"You find a red vine worm");
-			addItem(player, 715, 1);
+			addItem(player, ItemId.RED_VINE_WORMS.id(), 1);
 		}
-		if (obj.getID() == 350 && item.getID() == 218) {
+		else if (obj.getID() == 350 && item.getID() == ItemId.GARLIC.id()) {
 			//stashing garlics in pipes should not check if other
 			//garlics have been stashed
 			if (!player.getCache().hasKey("paid_contest_fee")) {
 				message(player, "You stash the garlic in the pipe");
-				player.getInventory().remove(218, 1);
+				player.getInventory().remove(ItemId.GARLIC.id(), 1);
 				if (!player.getCache().hasKey("garlic_activated")) {
 					player.getCache().store("garlic_activated", true);
 				}
@@ -548,13 +512,13 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 							   final Player p) {
 
 		if (obj.getID() == 358) {
-			Npc bonzo = getNearestNpc(p, 347, 15);
-			Npc morris = getNearestNpc(p, 349, 15);
+			Npc bonzo = getNearestNpc(p, NpcId.BONZO.id(), 15);
+			Npc morris = getNearestNpc(p, NpcId.MORRIS.id(), 15);
 			if (p.getX() <= 564) {
 
 				if (morris != null) {
 					npcTalk(p, morris, "competition pass please");
-					if (hasItem(p, 719)) {
+					if (hasItem(p, ItemId.FISHING_COMPETITION_PASS.id())) {
 						message(p, "You show Morris your pass");
 						npcTalk(p, morris, "Move on through");
 						doGate(p, obj, 357);
@@ -595,10 +559,10 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 				}
 			}
 		}
-		Npc sinister = getNearestNpc(p, 346, 10);
-		Npc bonzo = getNearestNpc(p, 347, 15);
+		Npc sinister = getNearestNpc(p, NpcId.SINISTER_STRANGER.id(), 10);
+		Npc bonzo = getNearestNpc(p, NpcId.BONZO.id(), 15);
 		if (obj.getID() == 351) {
-			if (hasItem(p, 720)) {
+			if (hasItem(p, ItemId.HEMENSTER_FISHING_TROPHY.id())) {
 				p.message("you have already won the fishing competition");
 				return;
 			} else if (bonzo != null && !p.getCache().hasKey("paid_contest_fee")) {
@@ -611,23 +575,23 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 				//else do catch
 				if (p.getSkills().getLevel(Skills.FISHING) < 10) {
 					p.message("You need at least level 10 fishing to lure these fish");
-				} else if (!hasItem(p, 377)) {
+				} else if (!hasItem(p, ItemId.FISHING_ROD.id())) {
 					// probably non-kosher
 					p.message("I don't have the equipment to catch a fish");
-				} else if (!hasItem(p, 380) && !hasItem(p, 715)) {
+				} else if (!hasItem(p, ItemId.FISHING_BAIT.id()) && !hasItem(p, ItemId.RED_VINE_WORMS.id())) {
 					p.message("you have no bait to catch fish here");
 				}
 				// fishing using worm gives raw sardine
-				else if (hasItem(p, 715)) {
+				else if (hasItem(p, ItemId.RED_VINE_WORMS.id())) {
 					p.message("You catch a sardine");
-					p.getInventory().add(new Item(354));
-					p.getInventory().remove(715, 1);
-					addCatchCache(p, 354);
-				} else if (hasItem(p, 380)) {
+					p.getInventory().add(new Item(ItemId.RAW_SARDINE.id()));
+					p.getInventory().remove(ItemId.RED_VINE_WORMS.id(), 1);
+					addCatchCache(p, ItemId.RAW_SARDINE.id());
+				} else if (hasItem(p, ItemId.FISHING_BAIT.id())) {
 					p.message("You catch some shrimps");
-					p.getInventory().add(new Item(349));
-					p.getInventory().remove(380, 1);
-					addCatchCache(p, 349);
+					p.getInventory().add(new Item(ItemId.RAW_SHRIMP.id()));
+					p.getInventory().remove(ItemId.FISHING_BAIT.id(), 1);
+					addCatchCache(p, ItemId.RAW_SHRIMP.id());
 				}
 
 				if (p.getCache().hasKey("contest_catches")) {
@@ -640,8 +604,8 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 				npcTalk(p, sinister, "I think you will find that is my spot");
 			}
 		}
-		if (obj.getID() == 352) {
-			if (hasItem(p, 720)) {
+		else if (obj.getID() == 352) {
+			if (hasItem(p, ItemId.HEMENSTER_FISHING_TROPHY.id())) {
 				p.message("you have already won the fishing competition");
 				return;
 			} else if (bonzo != null && !p.getCache().hasKey("paid_contest_fee")) {
@@ -655,23 +619,23 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 				//else do catch
 				if (p.getSkills().getLevel(Skills.FISHING) < 10) {
 					p.message("You need at least level 10 fishing to lure these fish");
-				} else if (!hasItem(p, 377)) {
+				} else if (!hasItem(p, ItemId.FISHING_ROD.id())) {
 					// probably non-kosher
 					p.message("I don't have the equipment to catch a fish");
-				} else if (!hasItem(p, 380) && !hasItem(p, 715)) {
+				} else if (!hasItem(p, ItemId.FISHING_BAIT.id()) && !hasItem(p, ItemId.RED_VINE_WORMS.id())) {
 					p.message("you have no bait to catch fish here");
 				}
 				// fishing using worm gives raw carp
-				else if (hasItem(p, 715)) {
+				else if (hasItem(p, ItemId.RED_VINE_WORMS.id())) {
 					p.message("You catch a giant carp");
-					p.getInventory().add(new Item(717));
-					p.getInventory().remove(715, 1);
-					addCatchCache(p, 717);
-				} else if (hasItem(p, 380)) {
+					p.getInventory().add(new Item(ItemId.RAW_GIANT_CARP.id()));
+					p.getInventory().remove(ItemId.RED_VINE_WORMS.id(), 1);
+					addCatchCache(p, ItemId.RAW_GIANT_CARP.id());
+				} else if (hasItem(p, ItemId.FISHING_BAIT.id())) {
 					p.message("You catch a sardine");
-					p.getInventory().add(new Item(354));
-					p.getInventory().remove(380, 1);
-					addCatchCache(p, 354);
+					p.getInventory().add(new Item(ItemId.RAW_SARDINE.id()));
+					p.getInventory().remove(ItemId.FISHING_BAIT.id(), 1);
+					addCatchCache(p, ItemId.RAW_SARDINE.id());
 				}
 
 				if (p.getCache().hasKey("contest_catches")) {
@@ -687,15 +651,15 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 					"I like to savour the aroma coming from these pipes");
 			}
 		}
-		if (obj.getID() == 353) {
-			Npc dave = getNearestNpc(p, 353, 10);
+		else if (obj.getID() == 353) {
+			Npc dave = getNearestNpc(p, NpcId.BIG_DAVE.id(), 10);
 			bigDaveDialogue(p, dave);
 		}
-		if (obj.getID() == 354) {
-			Npc joshua = getNearestNpc(p, 354, 10);
+		else if (obj.getID() == 354) {
+			Npc joshua = getNearestNpc(p, NpcId.JOSHUA.id(), 10);
 			joshuaDialogue(p, joshua);
 		}
-		if (obj.getID() == 359) {
+		else if (obj.getID() == 359) {
 			if (p.getQuestStage(getQuestId()) == -1) {
 				p.message("You go down the stairs");
 				if (obj.getX() == 426 && obj.getY() == 458) {
@@ -705,7 +669,7 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 				}
 			} else {
 				// from player's position
-				Npc dwarf = getNearestNpc(p, 355, 25);
+				Npc dwarf = getNearestNpc(p, NpcId.MOUNTAIN_DWARF.id(), 25);
 				//final Npc dwarf = World.getWorld().getNpc(355, 375, 395, 445,
 				//		475);
 				if (dwarf != null) {
@@ -717,17 +681,17 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
-		if (n.getID() == 355) { // MOUNTAIN DWARF
+		if (n.getID() == NpcId.MOUNTAIN_DWARF.id()) {
 			mountainDwarfDialogue(p, n);
 		}
-		if (n.getID() == 347) { // BONZO
+		else if (n.getID() == NpcId.BONZO.id()) {
 			bonzoDialogue(p, n, true);
 		}
-		if (n.getID() == 346) {
-			sinisterDialogue(p, n, -1); // SINISTER
+		else if (n.getID() == NpcId.SINISTER_STRANGER.id()) {
+			sinisterDialogue(p, n, -1);
 		}
-		if (n.getID() == 345) {
-			grandpaJackDialogue(p, n); // GRANDPA
+		else if (n.getID() == NpcId.GRANDPA_JACK.id()) {
+			grandpaJackDialogue(p, n);
 		}
 	}
 
@@ -813,15 +777,12 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockInvUseOnNpc(Player p, Npc n, Item i) {
 		//garlic on sinister stranger
-		if (n.getID() == 346 && i.getID() == 218) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.SINISTER_STRANGER.id() && i.getID() == ItemId.GARLIC.id();
 	}
 
 	@Override
 	public void onInvUseOnNpc(Player p, Npc n, Item i) {
-		if (n.getID() == 346 && i.getID() == 218) {
+		if (n.getID() == NpcId.SINISTER_STRANGER.id() && i.getID() == ItemId.GARLIC.id()) {
 			npcTalk(p, n, "urrggh get zat horrible ving avay from me",
 				"How do people like to eat that stuff",
 				"I can't stand even to be near it for ten seconds");

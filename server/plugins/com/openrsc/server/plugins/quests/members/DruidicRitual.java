@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -46,13 +48,7 @@ public class DruidicRitual implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 204) {
-			return true;
-		}
-		if (n.getID() == 205) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.KAQEMEEX.id() || n.getID() == NpcId.SANFEW.id();
 	}
 
 	private void kaqemeexDialogue(Player p, Npc n, int cID) {
@@ -185,10 +181,10 @@ public class DruidicRitual implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 204) {
-			kaqemeexDialogue(p, n, -1); // kaqemeex
+		if (n.getID() == NpcId.KAQEMEEX.id()) {
+			kaqemeexDialogue(p, n, -1);
 		}
-		if (n.getID() == 205) {
+		else if (n.getID() == NpcId.SANFEW.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					npcTalk(p, n, "What can I do for you young 'un?");
@@ -238,14 +234,14 @@ public class DruidicRitual implements QuestInterface, TalkToNpcListener,
 					break;
 				case 2:
 					npcTalk(p, n, "Have you got what I need yet?");
-					if (hasItem(p, 508) && hasItem(p, 505) && hasItem(p, 506)
-						&& hasItem(p, 507)) {
+					if (hasItem(p, ItemId.ENCHANTED_CHICKEN_MEAT.id()) && hasItem(p, ItemId.ENCHANTED_BEAR_MEAT.id())
+							&& hasItem(p, ItemId.ENCHANTED_RAT_MEAT.id()) && hasItem(p, ItemId.ENCHANTED_BEEF.id())) {
 						playerTalk(p, n, "Yes I have everything");
 						message(p, "You give the meats to Sanfew");
-						removeItem(p, 508, 1);
-						removeItem(p, 505, 1);
-						removeItem(p, 506, 1);
-						removeItem(p, 507, 1);
+						removeItem(p, ItemId.ENCHANTED_CHICKEN_MEAT.id(), 1);
+						removeItem(p, ItemId.ENCHANTED_BEAR_MEAT.id(), 1);
+						removeItem(p, ItemId.ENCHANTED_RAT_MEAT.id(), 1);
+						removeItem(p, ItemId.ENCHANTED_BEEF.id(), 1);
 						npcTalk(p,
 							n,
 							"thank you, that has brought us much closer to reclaiming our stone circle",
@@ -301,19 +297,13 @@ public class DruidicRitual implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click,
 										 Player player) {
-		if (obj.getID() == 63 && obj.getY() == 3332) {
-			return true;
-		}
-		if (obj.getID() == 64 && (obj.getY() == 3336 || obj.getY() == 3332)) {
-			return true;
-		}
-		return false;
+		return (obj.getID() == 63 && obj.getY() == 3332) || (obj.getID() == 64 && (obj.getY() == 3336 || obj.getY() == 3332));
 	}
 
 	@Override
 	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == 63 && obj.getY() == 3332) {
-			Npc suit = World.getWorld().getNpc(206, 374, 374, 3330, 3334);
+			Npc suit = World.getWorld().getNpc(NpcId.SUIT_OF_ARMOUR.id(), 374, 374, 3330, 3334);
 			if (suit != null && !(p.getX() <= 373)) {
 				p.message("Suddenly the suit of armour comes to life!");
 				suit.setChasing(p);
@@ -321,7 +311,7 @@ public class DruidicRitual implements QuestInterface, TalkToNpcListener,
 				doDoor(obj, p);
 			}
 		}
-		if (obj.getID() == 64 && (obj.getY() == 3336 || obj.getY() == 3332)) {
+		else if (obj.getID() == 64 && (obj.getY() == 3336 || obj.getY() == 3332)) {
 			doDoor(obj, p);
 		}
 	}
@@ -329,42 +319,39 @@ public class DruidicRitual implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
 									   Player player) {
-		if (obj.getID() == 236
-			&& (item.getID() == 133 || item.getID() == 503
-			|| item.getID() == 504 || item.getID() == 502)) {
-			return true;
-		}
-		return false;
+		return obj.getID() == 236 &&
+				(item.getID() == ItemId.RAW_CHICKEN.id() || item.getID() == ItemId.RAW_RAT_MEAT.id()
+				|| item.getID() == ItemId.RAW_BEEF.id() || item.getID() == ItemId.RAW_BEAR_MEAT.id());
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == 236
-			&& (item.getID() == 133 || item.getID() == 503
-			|| item.getID() == 504 || item.getID() == 502)) {
-			if (item.getID() == 133) {
+		if (obj.getID() == 236 &&
+				(item.getID() == ItemId.RAW_CHICKEN.id() || item.getID() == ItemId.RAW_RAT_MEAT.id()
+				|| item.getID() == ItemId.RAW_BEEF.id() || item.getID() == ItemId.RAW_BEAR_MEAT.id())) {
+			if (item.getID() == ItemId.RAW_CHICKEN.id()) {
 				message(p, "You dip the chicken in the cauldron");
-				p.getInventory().remove(133, 1);
+				p.getInventory().remove(ItemId.RAW_CHICKEN.id(), 1);
 
-				addItem(p, 508, 1);
+				addItem(p, ItemId.ENCHANTED_CHICKEN_MEAT.id(), 1);
 			}
-			if (item.getID() == 502) {
+			else if (item.getID() == ItemId.RAW_BEAR_MEAT.id()) {
 				message(p, "You dip the bear meat in the cauldron");
-				p.getInventory().remove(502, 1);
+				p.getInventory().remove(ItemId.RAW_BEAR_MEAT.id(), 1);
 
-				addItem(p, 505, 1);
+				addItem(p, ItemId.ENCHANTED_BEAR_MEAT.id(), 1);
 			}
-			if (item.getID() == 503) {
+			else if (item.getID() == ItemId.RAW_RAT_MEAT.id()) {
 				message(p, "You dip the rat meat in the cauldron");
-				p.getInventory().remove(503, 1);
+				p.getInventory().remove(ItemId.RAW_RAT_MEAT.id(), 1);
 
-				addItem(p, 506, 1);
+				addItem(p, ItemId.ENCHANTED_RAT_MEAT.id(), 1);
 			}
-			if (item.getID() == 504) {
+			else if (item.getID() == ItemId.RAW_BEEF.id()) {
 				message(p, "You dip the beef in the cauldron");
-				p.getInventory().remove(504, 1);
+				p.getInventory().remove(ItemId.RAW_BEEF.id(), 1);
 
-				addItem(p, 507, 1);
+				addItem(p, ItemId.ENCHANTED_BEEF.id(), 1);
 			}
 		}
 	}

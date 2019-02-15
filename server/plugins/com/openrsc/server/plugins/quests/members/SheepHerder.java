@@ -4,6 +4,8 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.RestartableDelayedEvent;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -30,18 +32,6 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 	ObjectActionExecutiveListener, InvUseOnNpcListener,
 	InvUseOnNpcExecutiveListener, InvUseOnObjectListener,
 	InvUseOnObjectExecutiveListener {
-
-	private static final int HALGRIVE = 436;
-	private static final int FARMER_BRUMTY = 434;
-	private static final int PLAGUE_SHEEP_1ST = 430;
-	private static final int PLAGUE_SHEEP_2ND = 431;
-	private static final int PLAGUE_SHEEP_3RD = 432;
-	private static final int PLAGUE_SHEEP_4TH = 433;
-
-	private static final int POISON = 759;
-	private static final int CATTLE_PROD = 757;
-	private static final int PROTECTIVE_JACKET = 760;
-	private static final int PROTECTIVE_TROUSERS = 761;
 
 	private static final int GATE = 443;
 	private static final int CATTLE_FURNACE = 444;
@@ -72,18 +62,12 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == HALGRIVE) {
-			return true;
-		}
-		if (n.getID() == FARMER_BRUMTY) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.COUNCILLOR_HALGRIVE.id() || n.getID() == NpcId.FARMER_BRUMTY.id();
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == FARMER_BRUMTY) {
+		if (n.getID() ==  NpcId.FARMER_BRUMTY.id()) {
 			switch (p.getQuestStage(this)) {
 				case 2:
 					playerTalk(p, n, "hello");
@@ -101,7 +85,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 					break;
 			}
 		}
-		if (n.getID() == HALGRIVE) {
+		else if (n.getID() == NpcId.COUNCILLOR_HALGRIVE.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					playerTalk(p, n, "how are you?");
@@ -140,7 +124,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 								"take this poisoned animal feed",
 								"give it to the four sheep and they'll peacefully fall asleep");
 							message(p, "The councillor gives you some sheep poison");
-							addItem(p, POISON, 1);
+							addItem(p, ItemId.POISONED_ANIMAL_FEED.id(), 1);
 							p.updateQuestStage(getQuestId(), 1);
 						} else if (menu2 == 1) {
 							playerTalk(p, n, "that's not a job for me");
@@ -154,10 +138,10 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 					npcTalk(p, n,
 						"please find those four sheep as soon as you can",
 						"every second counts");
-					if (!hasItem(p, POISON)) {
+					if (!hasItem(p, ItemId.POISONED_ANIMAL_FEED.id())) {
 						playerTalk(p, n, "Some more sheep poison might be useful");
 						message(p, "The councillor gives you some more sheep poison");
-						addItem(p, POISON, 1);
+						addItem(p, ItemId.POISONED_ANIMAL_FEED.id(), 1);
 					}
 					break;
 				case 2:
@@ -177,7 +161,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 						p.getCache().remove("plagueremain3th");
 						p.getCache().remove("plagueremain4th");
 						p.sendQuestComplete(Constants.Quests.SHEEP_HERDER);
-						addItem(p, 10, 3100);
+						addItem(p, ItemId.COINS.id(), 3100);
 						npcTalk(p, n, "here take one hundred coins to cover the price of your protective clothing");
 						message(p, "halgrive gives you 100 coins");
 						npcTalk(p, n, "and another three thousand for your efforts");
@@ -187,10 +171,10 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 						npcTalk(p, n, "not quite's not good enough",
 							"all four sheep must be captured, slain and their remains burnt");
 						playerTalk(p, n, "ok i'll get to it");
-						if (!hasItem(p, POISON)) {
+						if (!hasItem(p, ItemId.POISONED_ANIMAL_FEED.id())) {
 							playerTalk(p, n, "Some more sheep poison might be useful");
 							p.message("The councillor gives you some more sheep poison");
-							addItem(p, POISON, 1);
+							addItem(p, ItemId.POISONED_ANIMAL_FEED.id(), 1);
 						}
 					}
 					break;
@@ -208,17 +192,14 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command,
 									 Player player) {
-		if (obj.getID() == GATE) {
-			return true;
-		}
-		return false;
+		return obj.getID() == GATE;
 	}
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if (obj.getID() == GATE) {
-			if (p.getInventory().wielding(PROTECTIVE_JACKET)
-				&& p.getInventory().wielding(PROTECTIVE_TROUSERS)) {
+			if (p.getInventory().wielding(ItemId.PROTECTIVE_JACKET.id())
+				&& p.getInventory().wielding(ItemId.PROTECTIVE_TROUSERS.id())) {
 				openGatey(obj, p);
 				if (p.getX() <= 588) {
 					p.teleport(589, 541, false);
@@ -249,20 +230,17 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
-		if (npc.getID() == PLAGUE_SHEEP_1ST || npc.getID() == PLAGUE_SHEEP_2ND || npc.getID() == PLAGUE_SHEEP_3RD
-			|| npc.getID() == PLAGUE_SHEEP_4TH) {
-			return true;
-		}
-		return false;
+		return DataConversions.inArray(new int[] {NpcId.FIRST_PLAGUE_SHEEP.id(), NpcId.SECOND_PLAGUE_SHEEP.id(),
+				NpcId.THIRD_PLAGUE_SHEEP.id(), NpcId.FOURTH_PLAGUE_SHEEP.id()}, npc.getID());
 	}
 
 	@Override
 	public void onInvUseOnNpc(Player p, final Npc plagueSheep, Item item) {
-		if (plagueSheep.getID() == PLAGUE_SHEEP_1ST || plagueSheep.getID() == PLAGUE_SHEEP_2ND
-			|| plagueSheep.getID() == PLAGUE_SHEEP_3RD || plagueSheep.getID() == PLAGUE_SHEEP_4TH) {
-			if (item.getID() == CATTLE_PROD) {
-				if ((p.getInventory().wielding(PROTECTIVE_TROUSERS) && p.getInventory()
-					.wielding(PROTECTIVE_JACKET))
+		if (plagueSheep.getID() == NpcId.FIRST_PLAGUE_SHEEP.id() || plagueSheep.getID() == NpcId.SECOND_PLAGUE_SHEEP.id()
+			|| plagueSheep.getID() == NpcId.THIRD_PLAGUE_SHEEP.id() || plagueSheep.getID() == NpcId.FOURTH_PLAGUE_SHEEP.id()) {
+			if (item.getID() == ItemId.CATTLE_PROD.id()) {
+				if ((p.getInventory().wielding(ItemId.PROTECTIVE_TROUSERS.id()) && p.getInventory()
+					.wielding(ItemId.PROTECTIVE_JACKET.id()))
 					&& p.getQuestStage(getQuestId()) != -1) {
 					if (plagueSheep.getLocation().inBounds(589, 543, 592, 548)) {
 						p.message("The sheep is already in the pen");
@@ -297,8 +275,8 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 						npcEvent.reset();
 					}
 
-					switch (plagueSheep.getID()) {
-						case PLAGUE_SHEEP_1ST:
+					switch (NpcId.getById(plagueSheep.getID())) {
+						case FIRST_PLAGUE_SHEEP:
 							if (p.getY() >= 563) {
 								teleport(plagueSheep, 580, 558);
 							} else if (p.getY() >= 559) {
@@ -315,7 +293,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 							p.message("the sheep runs to the north");
 							sheepYell(p);
 							break;
-						case PLAGUE_SHEEP_2ND:
+						case SECOND_PLAGUE_SHEEP:
 							if (p.getY() >= 563) {
 								teleport(plagueSheep, 580, 558);
 								walkMob(plagueSheep, new Point(580, 561));
@@ -338,7 +316,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 							p.message("the sheep runs to the north");
 							sheepYell(p);
 							break;
-						case PLAGUE_SHEEP_3RD:
+						case THIRD_PLAGUE_SHEEP:
 							if (plagueSheep.getX() > 618) {
 								p.message("the sheep runs to the east");
 								teleport(plagueSheep, 614, 531);
@@ -366,7 +344,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 							}
 							sheepYell(p);
 							break;
-						case PLAGUE_SHEEP_4TH:
+						case FOURTH_PLAGUE_SHEEP:
 							if (plagueSheep.getX() == 603
 								&& plagueSheep.getY() < 589) {
 								p.message("the sheep runs to the south");
@@ -418,6 +396,8 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 							}
 							sheepYell(p);
 							break;
+						default:
+							break;
 
 					}
 				} else {
@@ -425,30 +405,30 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 						"you better not touch it");
 				}
 			}
-			if (item.getID() == POISON) {
+			else if (item.getID() == ItemId.POISONED_ANIMAL_FEED.id()) {
 				if (plagueSheep.getLocation().inBounds(589, 543, 592, 548)) {
-					if (plagueSheep.getID() == PLAGUE_SHEEP_1ST) {
+					if (plagueSheep.getID() == NpcId.FIRST_PLAGUE_SHEEP.id()) {
 						if (p.getCache().hasKey("plagueremain1st")) {
 							message(p,
 								"You have already disposed of this sheep",
 								"Find a different sheep");
 							return;
 						}
-					} else if (plagueSheep.getID() == PLAGUE_SHEEP_2ND) {
+					} else if (plagueSheep.getID() == NpcId.SECOND_PLAGUE_SHEEP.id()) {
 						if (p.getCache().hasKey("plagueremain2nd")) {
 							message(p,
 								"You have already disposed of this sheep",
 								"Find a different sheep");
 							return;
 						}
-					} else if (plagueSheep.getID() == PLAGUE_SHEEP_3RD) {
+					} else if (plagueSheep.getID() == NpcId.THIRD_PLAGUE_SHEEP.id()) {
 						if (p.getCache().hasKey("plagueremain3th")) {
 							message(p,
 								"You have already disposed of this sheep",
 								"Find a different sheep");
 							return;
 						}
-					} else if (plagueSheep.getID() == PLAGUE_SHEEP_4TH) {
+					} else if (plagueSheep.getID() == NpcId.FOURTH_PLAGUE_SHEEP.id()) {
 						if (p.getCache().hasKey("plagueremain4th")) {
 							message(p,
 								"You have already disposed of this sheep",
@@ -470,45 +450,43 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
 									   Player player) {
-		if (obj.getID() == CATTLE_FURNACE) {
-			return true;
-		}
-		return false;
+		return obj.getID() == CATTLE_FURNACE;
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == CATTLE_FURNACE) {
-			if (DataConversions.inArray(new int[]{758, 762, 763, 764}, item.getID())) {
+			if (DataConversions.inArray(new int[]{ItemId.PLAGUED_SHEEP_REMAINS_1.id(), ItemId.PLAGUED_SHEEP_REMAINS_2.id(),
+					ItemId.PLAGUED_SHEEP_REMAINS_3.id(), ItemId.PLAGUED_SHEEP_REMAINS_4.id()}, item.getID())) {
 				if (p.getQuestStage(this) != -1) {
-					if (item.getID() == 758) {
+					if (item.getID() == ItemId.PLAGUED_SHEEP_REMAINS_1.id()) {
 						if (!p.getCache().hasKey("plagueremain1st")) {
 							p.getCache().store("plagueremain1st", true);
-							removeItem(p, 758, 1);
+							removeItem(p, ItemId.PLAGUED_SHEEP_REMAINS_1.id(), 1);
 						} else {
 							message(p, "You need to kill this sheep yourself");
 							return;
 						}
-					} else if (item.getID() == 762) {
+					} else if (item.getID() == ItemId.PLAGUED_SHEEP_REMAINS_2.id()) {
 						if (!p.getCache().hasKey("plagueremain2nd")) {
 							p.getCache().store("plagueremain2nd", true);
-							removeItem(p, 762, 1);
+							removeItem(p, ItemId.PLAGUED_SHEEP_REMAINS_2.id(), 1);
 						} else {
 							message(p, "You need to kill this sheep yourself");
 							return;
 						}
-					} else if (item.getID() == 763) {
+					} else if (item.getID() == ItemId.PLAGUED_SHEEP_REMAINS_3.id()) {
 						if (!p.getCache().hasKey("plagueremain3th")) {
 							p.getCache().store("plagueremain3th", true);
-							removeItem(p, 763, 1);
+							removeItem(p, ItemId.PLAGUED_SHEEP_REMAINS_3.id(), 1);
 						} else {
 							message(p, "You need to kill this sheep yourself");
 							return;
 						}
-					} else if (item.getID() == 764) {
+					} else if (item.getID() == ItemId.PLAGUED_SHEEP_REMAINS_4.id()) {
 						if (!p.getCache().hasKey("plagueremain4th")) {
 							p.getCache().store("plagueremain4th", true);
-							removeItem(p, 764, 1);
+							removeItem(p, ItemId.PLAGUED_SHEEP_REMAINS_4.id(), 1);
 						} else {
 							message(p, "You need to kill this sheep yourself");
 							return;

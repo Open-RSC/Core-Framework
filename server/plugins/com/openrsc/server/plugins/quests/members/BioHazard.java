@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -11,6 +13,7 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -28,48 +31,18 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 
 	// OBJECTS
 	private static final int ELENAS_DOOR = 152;
-	private static final int JERICOS_CUPBOARD_ONE = 71;
-	private static final int JERICOS_CUPBOARD_TWO = 500;
+	private static final int JERICOS_CUPBOARD_ONE_OPEN = 71;
+	private static final int JERICOS_CUPBOARD_ONE_CLOSED = 56;
+	private static final int JERICOS_CUPBOARD_TWO_OPEN = 500;
+	private static final int JERICOS_CUPBOARD_TWO_CLOSED = 499;
 	private static final int WATCH_TOWER = 494;
 	private static final int VISUAL_ROPELADDER = 498;
 	private static final int COOKING_POT = 502;
-	private static final int NURSE_SARAHS_CUPBOARD = 510;
+	private static final int NURSE_SARAHS_CUPBOARD_OPEN = 510;
+	private static final int NURSE_SARAHS_CUPBOARD_CLOSED = 510;
 	private static final int GET_INTO_CRATES_GATE = 504;
 	private static final int DISTILLATOR_CRATE = 505;
 	private static final int OTHER_CRATE = 290;
-
-	// ITEMS
-	private static final int BIRD_FEED = 800;
-	private static final int ROTTEN_APPLE = 801;
-	private static final int DOCTORS_GOWN = 802;
-	private static final int BRONZE_KEY = 803;
-	private static final int DISTILLATOR = 804;
-	private static final int LIQUID_HONEY = 809;
-	private static final int ETHENEA = 810;
-	private static final int SULPHURIC_BROLINE = 811;
-	private static final int PLAGUE_SAMPLE = 812;
-	private static final int TOUCH_PAPER = 813;
-	private static final int PRIEST_GOWN = 808;
-	private static final int PRIEST_ROBE = 807;
-
-	// NPCS
-	private static final int ELENA = 483;
-	private static final int OMART = 484;
-	private static final int JERICO = 486;
-	private static final int KILRON = 487;
-	private static final int GUIDORS_WIFE = 488;
-	private static final int GUIDOR = 508;
-	private static final int NURSE_SARAH = 500;
-	private static final int MOURNER_HAS_KEY = 495;
-	private static final int CHEMIST = 504;
-	private static final int CHANCY = 505;
-	private static final int HOPS = 506;
-	private static final int DEVINCI = 507;
-	private static final int SECOND_CHANCY = 509;
-	private static final int SECOND_HOPS = 510;
-	private static final int SECOND_DEVINCI = 511;
-	private static final int KING_LATHAS = 512;
-
 
 	@Override
 	public int getQuestId() {
@@ -95,39 +68,14 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == ELENA) {
-			return true;
-		}
-		if (n.getID() == OMART) {
-			return true;
-		}
-		if (n.getID() == JERICO) {
-			return true;
-		}
-		if (n.getID() == KILRON) {
-			return true;
-		}
-		if (n.getID() == NURSE_SARAH) {
-			return true;
-		}
-		if (n.getID() == CHEMIST || n.getID() == CHANCY || n.getID() == HOPS || n.getID() == DEVINCI) {
-			return true;
-		}
-		if (n.getID() == KING_LATHAS) {
-			return true;
-		}
-		if (n.getID() == SECOND_CHANCY || n.getID() == SECOND_HOPS || n.getID() == SECOND_DEVINCI) {
-			return true;
-		}
-		if (n.getID() == GUIDORS_WIFE || n.getID() == GUIDOR) {
-			return true;
-		}
-		return false;
+		return DataConversions.inArray(new int[] {NpcId.ELENA_HOUSE.id(), NpcId.OMART.id(), NpcId.JERICO.id(), NpcId.KILRON.id(), NpcId.NURSE_SARAH.id(),
+				NpcId.CHEMIST.id(), NpcId.CHANCY.id(), NpcId.HOPS.id(), NpcId.DEVINCI.id(), NpcId.KING_LATHAS.id(), NpcId.CHANCY_BAR.id(),
+				NpcId.HOPS_BAR.id(), NpcId.DEVINCI_BAR.id(), NpcId.GUIDORS_WIFE.id(), NpcId.GUIDOR.id()}, n.getID());
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == ELENA) {
+		if (n.getID() == NpcId.ELENA_HOUSE.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					playerTalk(p, n, "good to see you, elena");
@@ -187,11 +135,11 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 					break;
 				case 5:
 					npcTalk(p, n, "so, have you managed to retrieve my distillator?");
-					if (hasItem(p, DISTILLATOR)) {
+					if (hasItem(p, ItemId.DISTILLATOR.id())) {
 						npcTalk(p, n, "You have - that's great!",
 							"Now can you pass me those refraction agents please?");
 						message(p, "You hand Elena the distillator and an assortment of vials");
-						removeItem(p, DISTILLATOR, 1);
+						removeItem(p, ItemId.DISTILLATOR.id(), 1);
 						playerTalk(p, n, "These look pretty fancy");
 						npcTalk(p, n, "Well, yes and no. The liquid honey isn't worth so much",
 							"But the others are- especially this colourless ethenea",
@@ -202,10 +150,10 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 							"You'll need to go and see my old mentor Guidor. He lives in Varrock",
 							"Take these vials and this sample to him");
 						message(p, "elena gives you three vials and a sample in a tin container");
-						addItem(p, LIQUID_HONEY, 1);
-						addItem(p, ETHENEA, 1);
-						addItem(p, SULPHURIC_BROLINE, 1);
-						addItem(p, PLAGUE_SAMPLE, 1);
+						addItem(p, ItemId.LIQUID_HONEY.id(), 1);
+						addItem(p, ItemId.ETHENEA.id(), 1);
+						addItem(p, ItemId.SULPHURIC_BROLINE.id(), 1);
+						addItem(p, ItemId.PLAGUE_SAMPLE.id(), 1);
 						npcTalk(p, n, "But first you'll need some more touch-paper. Go and see the chemist in Rimmington",
 							"Just don't get into any fights, and be careful who you speak to",
 							"Those vials are fragile, and plague carriers don't tend to be too popular");
@@ -231,10 +179,10 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 						playerTalk(p, n, "I'm afraid I've you lost some of the stuff that you gave me");
 						npcTalk(p, n, "That's alright, I've got plenty");
 						message(p, "Elena replaces your items");
-						p.getInventory().replace(LIQUID_HONEY, LIQUID_HONEY);
-						p.getInventory().replace(ETHENEA, ETHENEA);
-						p.getInventory().replace(SULPHURIC_BROLINE, SULPHURIC_BROLINE);
-						p.getInventory().replace(PLAGUE_SAMPLE, PLAGUE_SAMPLE);
+						p.getInventory().replace(ItemId.LIQUID_HONEY.id(), ItemId.LIQUID_HONEY.id());
+						p.getInventory().replace(ItemId.ETHENEA.id(), ItemId.ETHENEA.id());
+						p.getInventory().replace(ItemId.SULPHURIC_BROLINE.id(), ItemId.SULPHURIC_BROLINE.id());
+						p.getInventory().replace(ItemId.PLAGUE_SAMPLE.id(), ItemId.PLAGUE_SAMPLE.id());
 						npcTalk(p, n, "OK so that's the colourless ethenea...",
 							"Some highly toxic sulphuric broline...",
 							"And some bog-standard liquid honey...");
@@ -273,7 +221,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 					break;
 			}
 		}
-		if (n.getID() == OMART) {
+		else if (n.getID() == NpcId.OMART.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 				case 1:
@@ -341,7 +289,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 					break;
 			}
 		}
-		if (n.getID() == JERICO) {
+		else if (n.getID() == NpcId.JERICO.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					playerTalk(p, n, "hello");
@@ -393,7 +341,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 					break;
 			}
 		}
-		if (n.getID() == KILRON) {
+		else if (n.getID() == NpcId.KILRON.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 				case 1:
@@ -426,7 +374,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 					break;
 			}
 		}
-		if (n.getID() == NURSE_SARAH) {
+		else if (n.getID() == NpcId.NURSE_SARAH.id()) {
 			switch (p.getQuestStage(this)) {
 				case 4:
 				case 5:
@@ -452,7 +400,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 					break;
 			}
 		}
-		if (n.getID() == SECOND_HOPS) { // DONE
+		else if (n.getID() == NpcId.HOPS_BAR.id()) {
 			if (p.getQuestStage(this) == 7) {
 				if (p.getCache().hasKey("wrong_vial_hops")) {
 					playerTalk(p, n, "Hello. How was your journey?");
@@ -471,7 +419,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 						"Besides, the smell kind of put me off ",
 						"Here's your vial anyway");
 					p.message("He gives you the vial of sulphuric broline");
-					addItem(p, SULPHURIC_BROLINE, 1);
+					addItem(p, ItemId.SULPHURIC_BROLINE.id(), 1);
 					playerTalk(p, n, "Thanks. I'll leave you to your drink now");
 					p.getCache().remove("vial_hops");
 				}
@@ -479,7 +427,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 				p.message("Hops doesn't feel like talking");
 			}
 		}
-		if (n.getID() == SECOND_DEVINCI) {
+		else if (n.getID() == NpcId.DEVINCI_BAR.id()) {
 			if (p.getQuestStage(this) == 7) {
 				if (p.getCache().hasKey("wrong_vial_vinci")) {
 					npcTalk(p, n, "Hello again",
@@ -520,7 +468,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 					playerTalk(p, n, "Well, it's always sunny in Runescape, as they say");
 					npcTalk(p, n, "OK. Here it is");
 					message(p, "He gives you the vial of ethenea");
-					addItem(p, ETHENEA, 1);
+					addItem(p, ItemId.ETHENEA.id(), 1);
 					playerTalk(p, n, "Thanks. You've been a big help");
 					p.getCache().remove("vial_vinci");
 				}
@@ -529,7 +477,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 
 			}
 		}
-		if (n.getID() == SECOND_CHANCY) {
+		else if (n.getID() == NpcId.CHANCY_BAR.id()) {
 			if (p.getQuestStage(this) == 7) {
 				if (p.getCache().hasKey("wrong_vial_chancy")) {
 					playerTalk(p, n, "Hi.Thanks for doing that");
@@ -556,7 +504,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 					playerTalk(p, n, "Hi.Thanks for doing that");
 					npcTalk(p, n, "No problem");
 					p.message("He gives you the vial of liquid honey");
-					addItem(p, LIQUID_HONEY, 1);
+					addItem(p, ItemId.LIQUID_HONEY.id(), 1);
 					npcTalk(p, n, "Next time give me something more valuable",
 						"I couldn't get anything for this on the blackmarket");
 					playerTalk(p, n, "That was the idea");
@@ -567,7 +515,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 
 			}
 		}
-		if (n.getID() == HOPS) {
+		else if (n.getID() == NpcId.HOPS.id()) {
 			if (p.getQuestStage(this) == 7) {
 				if (p.getCache().hasKey("vial_hops") || p.getCache().hasKey("wrong_vial_hops")) {
 					npcTalk(p, n, "I suppose I'd better get going",
@@ -583,10 +531,10 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 					"You give him the vial of liquid honey",
 					"You give him the vial of sulphuric broline");
 				if (menu == 0) {
-					if (hasItem(p, ETHENEA)) {
+					if (hasItem(p, ItemId.ETHENEA.id())) {
 						if (!p.getCache().hasKey("wrong_vial_hops")) {
 							p.getCache().store("wrong_vial_hops", true);
-							removeItem(p, ETHENEA, 1);
+							removeItem(p, ItemId.ETHENEA.id(), 1);
 							p.message("You give him the vial of ethenea");
 							playerTalk(p, n, "OK. I'll see you in Varrock");
 							npcTalk(p, n, "Sure. I'm a regular at the The dancing donkey inn as it happens");
@@ -595,10 +543,10 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 						p.message("You have no ethenea to give");
 					}
 				} else if (menu == 1) {
-					if (hasItem(p, LIQUID_HONEY)) {
+					if (hasItem(p, ItemId.LIQUID_HONEY.id())) {
 						if (!p.getCache().hasKey("wrong_vial_hops")) {
 							p.getCache().store("wrong_vial_hops", true);
-							removeItem(p, LIQUID_HONEY, 1);
+							removeItem(p, ItemId.LIQUID_HONEY.id(), 1);
 							p.message("You give him the vial of liquid honey");
 							playerTalk(p, n, "OK. I'll see you in Varrock");
 							npcTalk(p, n, "Sure. I'm a regular at the The dancing donkey inn as it happens");
@@ -607,10 +555,10 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 						p.message("You have no liquid honey to give");
 					}
 				} else if (menu == 2) {
-					if (hasItem(p, SULPHURIC_BROLINE)) {
+					if (hasItem(p, ItemId.SULPHURIC_BROLINE.id())) {
 						if (!p.getCache().hasKey("vial_hops")) {
 							p.getCache().store("vial_hops", true);
-							removeItem(p, SULPHURIC_BROLINE, 1);
+							removeItem(p, ItemId.SULPHURIC_BROLINE.id(), 1);
 							p.message("You give him the vial of sulphuric broline");
 							playerTalk(p, n, "OK. I'll see you in Varrock");
 							npcTalk(p, n, "Sure. I'm a regular at the The dancing donkey inn as it happens");
@@ -623,7 +571,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 				p.message("He is not in a fit state to talk");
 			}
 		}
-		if (n.getID() == CHANCY) {
+		else if (n.getID() == NpcId.CHANCY.id()) {
 			if (p.getQuestStage(this) == 7) {
 				if (p.getCache().hasKey("vial_chancy") || p.getCache().hasKey("wrong_vial_chancy")) {
 					npcTalk(p, n, "look, I've got your vial, but I'm not taking two",
@@ -639,10 +587,10 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 					"You give him the vial of liquid honey",
 					"You give him the vial of sulphuric broline");
 				if (menu == 0) {
-					if (hasItem(p, ETHENEA)) {
+					if (hasItem(p, ItemId.ETHENEA.id())) {
 						if (!p.getCache().hasKey("wrong_vial_chancy")) {
 							p.getCache().store("wrong_vial_chancy", true);
-							removeItem(p, ETHENEA, 1);
+							removeItem(p, ItemId.ETHENEA.id(), 1);
 							message(p, "You give him the vial of ethenea");
 							playerTalk(p, n, "Right.I'll see you later in the dancing donkey inn");
 							npcTalk(p, n, "Be lucky");
@@ -651,10 +599,10 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 						p.message("You can't give him what you don't have");
 					}
 				} else if (menu == 1) {
-					if (hasItem(p, LIQUID_HONEY)) {
+					if (hasItem(p, ItemId.LIQUID_HONEY.id())) {
 						if (!p.getCache().hasKey("vial_chancy")) {
 							p.getCache().store("vial_chancy", true);
-							removeItem(p, LIQUID_HONEY, 1);
+							removeItem(p, ItemId.LIQUID_HONEY.id(), 1);
 							message(p, "You give him the vial of liquid honey");
 							playerTalk(p, n, "Right.I'll see you later in the dancing donkey inn");
 							npcTalk(p, n, "Be lucky");
@@ -663,10 +611,10 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 						p.message("You can't give him what you don't have");
 					}
 				} else if (menu == 2) {
-					if (hasItem(p, SULPHURIC_BROLINE)) {
+					if (hasItem(p, ItemId.SULPHURIC_BROLINE.id())) {
 						if (!p.getCache().hasKey("wrong_vial_chancy")) {
 							p.getCache().store("wrong_vial_chancy", true);
-							removeItem(p, SULPHURIC_BROLINE, 1);
+							removeItem(p, ItemId.SULPHURIC_BROLINE.id(), 1);
 							message(p, "You give him the vial of sulphuric broline");
 							playerTalk(p, n, "Right.I'll see you later in the dancing donkey inn");
 							npcTalk(p, n, "Be lucky");
@@ -679,22 +627,23 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 				p.message("Chancy doesn't feel like talking");
 			}
 		}
-		if (n.getID() == CHEMIST) {
+		else if (n.getID() == NpcId.CHEMIST.id()) {
 			if (p.getQuestStage(this) == 7) {
 				playerTalk(p, n, "hello again");
 				npcTalk(p, n, "oh hello, do you need more touch paper?");
-				if (!hasItem(p, TOUCH_PAPER)) {
+				if (!hasItem(p, ItemId.TOUCH_PAPER.id())) {
 					playerTalk(p, n, "yes please");
 					npcTalk(p, n, "ok there you go");
 					p.message("the chemist gives you some touch paper");
-					addItem(p, TOUCH_PAPER, 1);
+					addItem(p, ItemId.TOUCH_PAPER.id(), 1);
 				} else {
 					playerTalk(p, n, "no i just wanted to say hello");
 					npcTalk(p, n, "oh, ok then ... hello");
 					playerTalk(p, n, "hi");
 				}
 				return;
-			} else if (hasItem(p, PLAGUE_SAMPLE) && hasItem(p, LIQUID_HONEY) && hasItem(p, SULPHURIC_BROLINE) && hasItem(p, ETHENEA) && p.getQuestStage(this) == 6) {
+			} else if (hasItem(p, ItemId.PLAGUE_SAMPLE.id()) && hasItem(p, ItemId.LIQUID_HONEY.id())
+					&& hasItem(p, ItemId.SULPHURIC_BROLINE.id()) && hasItem(p, ItemId.ETHENEA.id()) && p.getQuestStage(this) == 6) {
 				npcTalk(p, n, "Sorry, I'm afraid we're just closing now, you'll have to come back another time");
 				int menu = showMenu(p, n, "This can't wait,I'm carrying a plague sample that desperately needs analysis",
 					"It's OK I'm Elena's friend");
@@ -702,7 +651,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 					npcTalk(p, n, "You idiot! A plague sample should be confined to a lab",
 						"I'm taking it off you- I'm afraid it's the only responsible thing to do");
 					p.message("He takes the plague sample from you");
-					removeItem(p, PLAGUE_SAMPLE, 1);
+					removeItem(p, ItemId.PLAGUE_SAMPLE.id(), 1);
 				} else if (menu == 1) {
 					npcTalk(p, n, "Oh, well that's different then. Must be pretty important to come all this way",
 						"How's everyone doing there anyway? Wasn't there was some plague scare");
@@ -713,7 +662,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 						npcTalk(p, n, "You idiot! A plague sample should be confined to a lab",
 							"I'm taking it off you- I'm afraid it's the only responsible thing to do");
 						p.message("He takes the plague sample from you");
-						removeItem(p, PLAGUE_SAMPLE, 1);
+						removeItem(p, ItemId.PLAGUE_SAMPLE.id(), 1);
 					} else if (lastMenu == 1) {
 						npcTalk(p, n, "Guidor? This one's on me then- the poor guy. Sorry about the interrogation",
 							"It's just that there's been rumours of a man travelling with a plague on him",
@@ -730,7 +679,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 							"You'd better hurry if you want to see Guidor",
 							"He won't be around for much longer");
 						p.message("He gives you the touch paper");
-						addItem(p, TOUCH_PAPER, 1);
+						addItem(p, ItemId.TOUCH_PAPER.id(), 1);
 						p.updateQuestStage(this, 7);
 
 					}
@@ -739,7 +688,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 				p.message("The chemist is busy at the moment");
 			}
 		}
-		if (n.getID() == DEVINCI) {
+		else if (n.getID() == NpcId.DEVINCI.id()) {
 			if (p.getQuestStage(this) == 7) {
 				if (p.getCache().hasKey("vial_vinci") || p.getCache().hasKey("wrong_vial_vinci")) {
 					npcTalk(p, n, "Oh, it's you again",
@@ -757,23 +706,22 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 					"You give him the vial of liquid honey",
 					"You give him the vial of sulphuric broline");
 				if (menu == 0) {
-					if (hasItem(p, ETHENEA)) {
+					if (hasItem(p, ItemId.ETHENEA.id())) {
 						if (!p.getCache().hasKey("vial_vinci")) {
 							p.getCache().store("vial_vinci", true);
-							removeItem(p, ETHENEA, 1);
+							removeItem(p, ItemId.ETHENEA.id(), 1);
 							message(p, "You give him the vial of ethenea");
 							npcTalk(p, n, "OK. We're meeting at the dancing donkey in Varrock right?");
 							playerTalk(p, n, "That's right.");
-
 						}
 					} else {
 						p.message("You can't give him what you don't have");
 					}
 				} else if (menu == 1) {
-					if (hasItem(p, LIQUID_HONEY)) {
+					if (hasItem(p, ItemId.LIQUID_HONEY.id())) {
 						if (!p.getCache().hasKey("wrong_vial_vinci")) {
 							p.getCache().store("wrong_vial_vinci", true);
-							removeItem(p, LIQUID_HONEY, 1);
+							removeItem(p, ItemId.LIQUID_HONEY.id(), 1);
 							message(p, "You give him the vial of liquid honey");
 							npcTalk(p, n, "OK. We're meeting at the dancing donkey in Varrock right?");
 							playerTalk(p, n, "That's right.");
@@ -782,10 +730,10 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 						p.message("You can't give him what you don't have");
 					}
 				} else if (menu == 2) {
-					if (hasItem(p, SULPHURIC_BROLINE)) {
+					if (hasItem(p, ItemId.SULPHURIC_BROLINE.id())) {
 						if (!p.getCache().hasKey("wrong_vial_vinci")) {
 							p.getCache().store("wrong_vial_vinci", true);
-							removeItem(p, SULPHURIC_BROLINE, 1);
+							removeItem(p, ItemId.SULPHURIC_BROLINE.id(), 1);
 							message(p, "You give him the vial of sulphuric broline");
 							npcTalk(p, n, "OK. We're meeting at the dancing donkey in Varrock right?");
 							playerTalk(p, n, "That's right.");
@@ -798,7 +746,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 				p.message("Devinci does not feel sufficiently moved to talk");
 			}
 		}
-		if (n.getID() == KING_LATHAS) {
+		else if (n.getID() == NpcId.KING_LATHAS.id()) {
 			/** START UNDERGROUND PASS QUEST!!! **/
 			if (p.getQuestStage(this) == -1) {
 				switch (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS)) {
@@ -904,7 +852,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 					npcTalk(p, n, "How could I not do?",
 						"He was my brother");
 					p.message("king lathas gives you a magic amulet");
-					addItem(p, 826, 1);
+					addItem(p, ItemId.KING_LATHAS_AMULET.id(), 1);
 					p.sendQuestComplete(Constants.Quests.BIOHAZARD);
 				} else if (menu == 1) {
 					npcTalk(p, n, "No time is ever wasted- thanks for all you've done");
@@ -913,7 +861,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 			}
 			p.message("the king is too busy to talk");
 		}
-		if (n.getID() == GUIDORS_WIFE) {
+		else if (n.getID() == NpcId.GUIDORS_WIFE.id()) {
 			if (p.getQuestStage(this) == 9 || p.getQuestStage(this) == -1) {
 				playerTalk(p, n, "hello");
 				npcTalk(p, n, "oh hello, i can't chat now",
@@ -929,7 +877,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 				return;
 			}
 			if (p.getQuestStage(this) == 7) {
-				if (p.getInventory().wielding(PRIEST_ROBE) && p.getInventory().wielding(PRIEST_GOWN)) {
+				if (p.getInventory().wielding(ItemId.PRIEST_ROBE.id()) && p.getInventory().wielding(ItemId.PRIEST_GOWN.id())) {
 					npcTalk(p, n, "Father, thank heavens you're here. My husband is very ill",
 						"Perhaps you could go and perform his final ceremony");
 					playerTalk(p, n, "I'll see what I can do");
@@ -948,7 +896,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 				}
 			}
 		}
-		if (n.getID() == GUIDOR) {
+		else if (n.getID() == NpcId.GUIDOR.id()) {
 			if (p.getQuestStage(this) == 8 || p.getQuestStage(this) == 9 || p.getQuestStage(this) == -1) {
 				playerTalk(p, n, "hello again guidor");
 				npcTalk(p, n, "well hello traveller",
@@ -975,24 +923,25 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 				int menu2 = showMenu(p, n,
 					"No! Well, yes... but not exactly. It's contained in a sealed unit from elena",
 					"I've been sent by your old pupil Elena, she's trying to halt the virus");
-				if (menu2 == 0) {
+				//both lead to the EXACT same dialogue
+				if (menu2 == 0 || menu2 == 1) {
 					npcTalk(p, n, "Elena eh?");
 					playerTalk(p, n, "Yes. She wants you to analyse it",
 						"You might be the only one that can help");
 					npcTalk(p, n, "Right then. Sounds like we'd better get to work!");
-					if (hasItem(p, PLAGUE_SAMPLE)) {
+					if (hasItem(p, ItemId.PLAGUE_SAMPLE.id())) {
 						playerTalk(p, n, "I have the plague sample");
 						npcTalk(p, n, "Now I'll be needing some liquid honey,some sulphuric broline,and then...");
 						playerTalk(p, n, "...some ethenea?");
 						npcTalk(p, n, "Indeed!");
-						if (hasItem(p, ETHENEA) && hasItem(p, SULPHURIC_BROLINE) && hasItem(p, LIQUID_HONEY)) {
-							if (hasItem(p, TOUCH_PAPER)) {
+						if (hasItem(p, ItemId.ETHENEA.id()) && hasItem(p, ItemId.SULPHURIC_BROLINE.id()) && hasItem(p, ItemId.LIQUID_HONEY.id())) {
+							if (hasItem(p, ItemId.TOUCH_PAPER.id())) {
 								p.message("You give him the vials and the touch paper");
-								removeItem(p, TOUCH_PAPER, 1);
-								removeItem(p, PLAGUE_SAMPLE, 1);
-								removeItem(p, ETHENEA, 1);
-								removeItem(p, LIQUID_HONEY, 1);
-								removeItem(p, SULPHURIC_BROLINE, 1);
+								removeItem(p, ItemId.TOUCH_PAPER.id(), 1);
+								removeItem(p, ItemId.PLAGUE_SAMPLE.id(), 1);
+								removeItem(p, ItemId.ETHENEA.id(), 1);
+								removeItem(p, ItemId.LIQUID_HONEY.id(), 1);
+								removeItem(p, ItemId.SULPHURIC_BROLINE.id(), 1);
 								npcTalk(p, n, "Now I'll just apply these to the sample and...",
 									"I don't get it...the touch paper has remained the same");
 								p.updateQuestStage(this, 8);
@@ -1023,67 +972,6 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 							} else {
 								npcTalk(p, n, "Oh. You don't have any touch-paper",
 									"And so I won't be able to help you after all");
-
-							}
-						} else {
-							npcTalk(p, n, "Look,I need all three reagents to test the plague sample",
-								"Come back when you've got them");
-						}
-					} else {
-						npcTalk(p, n, "Seems like you don't actually HAVE the plague sample",
-							"It's a long way to come empty-handed...",
-							"And quite a long way back too");
-						return;
-					}
-				} else if (menu2 == 1) {
-					npcTalk(p, n, "Elena eh?");
-					playerTalk(p, n, "Yes. She wants you to analyse it",
-						"You might be the only one that can help");
-					npcTalk(p, n, "Right then. Sounds like we'd better get to work!");
-					if (hasItem(p, PLAGUE_SAMPLE)) {
-						playerTalk(p, n, "I have the plague sample");
-						npcTalk(p, n, "Now I'll be needing some liquid honey,some sulphuric broline,and then...");
-						playerTalk(p, n, "...some ethenea?");
-						npcTalk(p, n, "Indeed!");
-						if (hasItem(p, ETHENEA) && hasItem(p, SULPHURIC_BROLINE) && hasItem(p, LIQUID_HONEY)) {
-							if (hasItem(p, TOUCH_PAPER)) {
-								p.message("You give him the vials and the touch paper");
-								removeItem(p, TOUCH_PAPER, 1);
-								removeItem(p, PLAGUE_SAMPLE, 1);
-								removeItem(p, ETHENEA, 1);
-								removeItem(p, LIQUID_HONEY, 1);
-								removeItem(p, SULPHURIC_BROLINE, 1);
-								npcTalk(p, n, "Now I'll just apply these to the sample and...",
-									"I don't get it...the touch paper has remained the same");
-								p.updateQuestStage(this, 8);
-								int menu3 = showMenu(p, n,
-									"That's why Elena wanted you to do it- because she wasn't sure what was happening",
-									"So what does that mean exactly?");
-								if (menu3 == 0) {
-									npcTalk(p, n, "Well that's just it. Nothing has happened",
-										"I don't know what this sample is, but it certainly isn't toxic");
-									playerTalk(p, n, "So what about the plague?");
-									npcTalk(p, n, "Don't you understand, there is no plague!",
-										"I'm very sorry, I can see that you've worked hard for this...",
-										"...but it seems that someone has been lying to you",
-										"The only question is...",
-										"...why?");
-								} else if (menu3 == 1) {
-									playerTalk(p, n, "That's why Elena wanted you to do it- because she wasn't sure what was happening");
-									npcTalk(p, n, "Well that's just it. Nothing has happened",
-										"I don't know what this sample is, but it certainly isn't toxic");
-									playerTalk(p, n, "So what about the plague?");
-									npcTalk(p, n, "Don't you understand, there is no plague!",
-										"I'm very sorry, I can see that you've worked hard for this...",
-										"...but it seems that someone has been lying to you",
-										"The only question is...",
-										"...why?");
-								}
-
-							} else {
-								npcTalk(p, n, "Oh. You don't have any touch-paper",
-									"And so I won't be able to help you after all");
-
 							}
 						} else {
 							npcTalk(p, n, "Look,I need all three reagents to test the plague sample",
@@ -1124,10 +1012,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click, Player p) {
-		if (obj.getID() == ELENAS_DOOR) {
-			return true;
-		}
-		return false;
+		return obj.getID() == ELENAS_DOOR;
 	}
 
 	@Override
@@ -1144,68 +1029,54 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (obj.getID() == JERICOS_CUPBOARD_ONE || obj.getID() == JERICOS_CUPBOARD_TWO || obj.getID() == 499 || obj.getID() == 56) {
-			return true;
-		}
-		if (obj.getID() == WATCH_TOWER) {
-			return true;
-		}
-		if (obj.getID() == 509 || obj.getID() == NURSE_SARAHS_CUPBOARD) {
-			return true;
-		}
-		if (obj.getID() == GET_INTO_CRATES_GATE) {
-			return true;
-		}
-		if (obj.getID() == DISTILLATOR_CRATE || obj.getID() == OTHER_CRATE) {
-			return true;
-		}
-		return false;
+		return DataConversions.inArray(new int[] {JERICOS_CUPBOARD_ONE_OPEN, JERICOS_CUPBOARD_ONE_CLOSED, JERICOS_CUPBOARD_TWO_OPEN, JERICOS_CUPBOARD_TWO_CLOSED,
+				WATCH_TOWER, NURSE_SARAHS_CUPBOARD_OPEN, NURSE_SARAHS_CUPBOARD_CLOSED, GET_INTO_CRATES_GATE, DISTILLATOR_CRATE, OTHER_CRATE}, obj.getID());
 	}
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
-		if (obj.getID() == JERICOS_CUPBOARD_ONE || obj.getID() == 56) {
+		if (obj.getID() == JERICOS_CUPBOARD_ONE_OPEN || obj.getID() == JERICOS_CUPBOARD_ONE_CLOSED) {
 			if (command.equalsIgnoreCase("open")) {
-				openCupboard(obj, p, 71);
+				openCupboard(obj, p, JERICOS_CUPBOARD_ONE_OPEN);
 			} else if (command.equalsIgnoreCase("close")) {
-				closeCupboard(obj, p, 56);
+				closeCupboard(obj, p, JERICOS_CUPBOARD_ONE_CLOSED);
 			} else {
 				p.message("You search the cupboard, but find nothing");
 			}
 		}
-		if (obj.getID() == JERICOS_CUPBOARD_TWO || obj.getID() == 499) {
+		else if (obj.getID() == JERICOS_CUPBOARD_TWO_OPEN || obj.getID() == JERICOS_CUPBOARD_TWO_CLOSED) {
 			if (command.equalsIgnoreCase("open")) {
-				openCupboard(obj, p, 500);
+				openCupboard(obj, p, JERICOS_CUPBOARD_TWO_OPEN);
 			} else if (command.equalsIgnoreCase("close")) {
-				closeCupboard(obj, p, 499);
+				closeCupboard(obj, p, JERICOS_CUPBOARD_TWO_CLOSED);
 			} else {
 				p.message("you search the cupboard");
-				if (!hasItem(p, BIRD_FEED)) {
+				if (!hasItem(p, ItemId.BIRD_FEED.id())) {
 					p.message("and find some pigeon feed");
-					addItem(p, BIRD_FEED, 1);
+					addItem(p, ItemId.BIRD_FEED.id(), 1);
 				} else {
 					p.message("but find nothing of interest");
 				}
 			}
 		}
-		if (obj.getID() == 509 || obj.getID() == NURSE_SARAHS_CUPBOARD) {
+		else if (obj.getID() == NURSE_SARAHS_CUPBOARD_OPEN || obj.getID() == NURSE_SARAHS_CUPBOARD_CLOSED) {
 			if (command.equalsIgnoreCase("open")) {
-				openCupboard(obj, p, 510);
+				openCupboard(obj, p, NURSE_SARAHS_CUPBOARD_OPEN);
 			} else if (command.equalsIgnoreCase("close")) {
-				closeCupboard(obj, p, 509);
+				closeCupboard(obj, p, NURSE_SARAHS_CUPBOARD_CLOSED);
 			} else {
 				p.message("you search the cupboard");
-				if ((!hasItem(p, DOCTORS_GOWN)) && (p.getQuestStage(this) == 4 || p.getQuestStage(this) == 5)) {
+				if ((!hasItem(p, ItemId.DOCTORS_GOWN.id())) && (p.getQuestStage(this) == 4 || p.getQuestStage(this) == 5)) {
 					p.message("inside you find a doctor's gown");
-					addItem(p, DOCTORS_GOWN, 1);
+					addItem(p, ItemId.DOCTORS_GOWN.id(), 1);
 				} else {
 					p.message("but find nothing of interest");
 				}
 			}
 		}
-		if (obj.getID() == WATCH_TOWER) {
+		else if (obj.getID() == WATCH_TOWER) {
 			if (command.equalsIgnoreCase("approach")) {
-				Npc mournerGuard = getNearestNpc(p, 491, 15);
+				Npc mournerGuard = getNearestNpc(p, NpcId.MOURNER_BYENTRANCE2.id(), 15);
 				if (mournerGuard != null) {
 					npcTalk(p, mournerGuard, "keep away civilian");
 					playerTalk(p, mournerGuard, "what's it to you?");
@@ -1213,7 +1084,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 				}
 			}
 		}
-		if (obj.getID() == GET_INTO_CRATES_GATE) {
+		else if (obj.getID() == GET_INTO_CRATES_GATE) {
 			if (p.getX() <= 630) {
 				doGate(p, obj);
 				p.message("you open the gate and pass through");
@@ -1222,12 +1093,12 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 				p.message("you need a key");
 			}
 		}
-		if (obj.getID() == DISTILLATOR_CRATE || obj.getID() == OTHER_CRATE) {
+		else if (obj.getID() == DISTILLATOR_CRATE || obj.getID() == OTHER_CRATE) {
 			if (obj.getID() == DISTILLATOR_CRATE) {
 				message(p, "you search the crate");
-				if (!hasItem(p, DISTILLATOR)) {
+				if (!hasItem(p, ItemId.DISTILLATOR.id())) {
 					message(p, "and find elena's distillator");
-					addItem(p, DISTILLATOR, 1);
+					addItem(p, ItemId.DISTILLATOR.id(), 1);
 					if (p.getCache().hasKey("rotten_apples")) {
 						p.getCache().remove("rotten_apples");
 						p.updateQuestStage(this, 5);
@@ -1243,25 +1114,18 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (item.getID() == BIRD_FEED && obj.getID() == WATCH_TOWER) {
-			return true;
-		}
-		if (item.getID() == ROTTEN_APPLE && obj.getID() == COOKING_POT) {
-			return true;
-		}
-		if (item.getID() == BRONZE_KEY && obj.getID() == GET_INTO_CRATES_GATE) {
-			return true;
-		}
-		return false;
+		return (item.getID() == ItemId.BIRD_FEED.id() && obj.getID() == WATCH_TOWER)
+				|| (item.getID() == ItemId.ROTTEN_APPLES.id() && obj.getID() == COOKING_POT)
+				|| (item.getID() == ItemId.BIOHAZARD_BRONZE_KEY.id() && obj.getID() == GET_INTO_CRATES_GATE);
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (item.getID() == BIRD_FEED && obj.getID() == WATCH_TOWER) {
+		if (item.getID() == ItemId.BIRD_FEED.id() && obj.getID() == WATCH_TOWER) {
 			if (p.getQuestStage(this) == 2) {
 				message(p, "you throw a hand full of seeds onto the watch tower",
 					"the mourners do not seem to notice");
-				removeItem(p, BIRD_FEED, 1);
+				removeItem(p, ItemId.BIRD_FEED.id(), 1);
 				if (!p.getCache().hasKey("bird_feed")) {
 					p.getCache().store("bird_feed", true);
 				}
@@ -1269,7 +1133,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 				p.message("nothing interesting happens");
 			}
 		}
-		if (item.getID() == ROTTEN_APPLE && obj.getID() == COOKING_POT) {
+		else if (item.getID() == ItemId.ROTTEN_APPLES.id() && obj.getID() == COOKING_POT) {
 			if (p.getQuestStage(this) == 4 || p.getQuestStage(this) == 5) {
 				message(p, "you place the rotten apples in the pot",
 					"they quickly dissolve into the stew",
@@ -1277,14 +1141,14 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 				if (!p.getCache().hasKey("rotten_apples")) {
 					p.getCache().store("rotten_apples", true);
 				}
-				removeItem(p, ROTTEN_APPLE, 1);
+				removeItem(p, ItemId.ROTTEN_APPLES.id(), 1);
 				return;
 			}
 			message(p, "you place the rotten apples in the pot",
 				"that wasn't very nice");
-			removeItem(p, ROTTEN_APPLE, 1);
+			removeItem(p, ItemId.ROTTEN_APPLES.id(), 1);
 		}
-		if (item.getID() == BRONZE_KEY && obj.getID() == GET_INTO_CRATES_GATE) {
+		else if (item.getID() == ItemId.BIOHAZARD_BRONZE_KEY.id() && obj.getID() == GET_INTO_CRATES_GATE) {
 			message(p, "the key fits the gate");
 			p.message("you open it and pass through");
 			doGate(p, obj);
@@ -1293,18 +1157,15 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == MOURNER_HAS_KEY) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.MOURNER_ILL.id();
 	}
 
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == MOURNER_HAS_KEY) {
-			if (!hasItem(p, 803)) {
+		if (n.getID() == NpcId.MOURNER_ILL.id()) {
+			if (!hasItem(p, ItemId.BIOHAZARD_BRONZE_KEY.id())) {
 				message(p, "you search the mourner");
-				addItem(p, 803, 1);
+				addItem(p, ItemId.BIOHAZARD_BRONZE_KEY.id(), 1);
 				if (n != null) {
 					n.getBehavior().retreat();
 					message(p, 0, "and find a key");

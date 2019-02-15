@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -57,18 +59,12 @@ public class DwarfCannon
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 771) {
-			return true;
-		}
-		if (n.getID() == 770) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.DWARF_COMMANDER.id() || n.getID() == NpcId.DWARF_CANNON_ENGINEER.id();
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 770) {
+		if (n.getID() == NpcId.DWARF_CANNON_ENGINEER.id()) {
 			switch (p.getQuestStage(this)) {
 				case 5:
 					playerTalk(p, n, "hello there");
@@ -81,24 +77,24 @@ public class DwarfCannon
 					playerTalk(p, n, "that's great, thanks");
 					npcTalk(p, n, "thank you adventurer, the dwarf black guard will remember this");
 					message(p, "the Cannon engineer gives you some notes and a mould");
-					addItem(p, 1056, 1);
-					addItem(p, 1057, 1);
+					addItem(p, ItemId.NULODIONS_NOTES.id(), 1);
+					addItem(p, ItemId.CANNON_AMMO_MOULD.id(), 1);
 					p.getCache().store("spoken_nulodion", true);
 					p.updateQuestStage(getQuestId(), 6);
 					break;
 				case 6:
 					playerTalk(p, n, "hello again");
-					if (!hasItem(p, 1056)) {
+					if (!hasItem(p, ItemId.NULODIONS_NOTES.id())) {
 						playerTalk(p, n, "i've lost the notes");
 						npcTalk(p, n, "here take these");
 						message(p, "the Cannon engineer gives you some more notes");
-						addItem(p, 1056, 1);
+						addItem(p, ItemId.NULODIONS_NOTES.id(), 1);
 					}
-					if (!hasItem(p, 1057)) {
+					if (!hasItem(p, ItemId.CANNON_AMMO_MOULD.id())) {
 						playerTalk(p, n, "i've lost the cannon ball mould");
 						npcTalk(p, n, "deary me, you are trouble", "here take this one");
 						playerTalk(p, n, "the Cannon engineer gives you another mould");
-						addItem(p, 1057, 1);
+						addItem(p, ItemId.CANNON_AMMO_MOULD.id(), 1);
 					}
 					npcTalk(p, n, "so has the commander figured out how to work the cannon?");
 					playerTalk(p, n, "not yet, but i'm sure he will");
@@ -125,24 +121,25 @@ public class DwarfCannon
 						if (cannon == 0) {
 							npcTalk(p, n, "ok then, but keep it quiet..");
 							npcTalk(p, n, "this thing's top secret");
-							if (hasItem(p, 1032) || hasItem(p, 1033) || hasItem(p, 1034) || hasItem(p, 1035)
+							if (hasItem(p, ItemId.DWARF_CANNON_BASE.id()) || hasItem(p, ItemId.DWARF_CANNON_STAND.id())
+									|| hasItem(p, ItemId.DWARF_CANNON_BARRELS.id()) || hasItem(p, ItemId.DWARF_CANNON_FURNACE.id())
 								|| p.getCache().hasKey("has_cannon")) {
 								npcTalk(p, n, "wait a moment, our records show you already own some cannon equipment",
 									"i'm afraid you can only have one set at a time");
 								return;
 							}
-							if (p.getInventory().countId(10) >= 750000) {
+							if (p.getInventory().countId(ItemId.COINS.id()) >= 750000) {
 								message(p, "you give the Cannon engineer 750 000 coins");
-								p.getInventory().remove(10, 750000);
+								p.getInventory().remove(ItemId.COINS.id(), 750000);
 
 								message(p, "he gives you the four parts that make the cannon");
-								addItem(p, 1032, 1);
-								addItem(p, 1033, 1);
-								addItem(p, 1034, 1);
-								addItem(p, 1035, 1);
+								addItem(p, ItemId.DWARF_CANNON_BASE.id(), 1);
+								addItem(p, ItemId.DWARF_CANNON_STAND.id(), 1);
+								addItem(p, ItemId.DWARF_CANNON_BARRELS.id(), 1);
+								addItem(p, ItemId.DWARF_CANNON_FURNACE.id(), 1);
 								message(p, "a ammo mould and an instruction manual");
-								addItem(p, 1057, 1);
-								addItem(p, 1073, 1);
+								addItem(p, ItemId.CANNON_AMMO_MOULD.id(), 1);
+								addItem(p, ItemId.INSTRUCTION_MANUAL.id(), 1);
 								npcTalk(p, n, "there you go, you be carefull with that thing");
 								playerTalk(p, n, "will do, take care mate");
 								npcTalk(p, n, "take care adventurer");
@@ -172,8 +169,6 @@ public class DwarfCannon
 							"the cannon automatically targets monsters close by",
 							"you just have to make the ammo and let rip");
 					} else if (completeMenu == 3) {
-
-
 						if (p.getCache().hasKey("cannon_stage") && p.getCache().hasKey("cannon_x")
 							&& p.getCache().hasKey("cannon_y")) {
 							npcTalk(p, n, "that's unfortunate...but don't worry, i can sort you out");
@@ -192,22 +187,22 @@ public class DwarfCannon
 
 								switch (cannonStage) {
 									case 1:
-										p.getInventory().add(new Item(1032));
+										p.getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id()));
 										break;
 									case 2:
-										p.getInventory().add(new Item(1032));
-										p.getInventory().add(new Item(1033));
+										p.getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id()));
+										p.getInventory().add(new Item(ItemId.DWARF_CANNON_STAND.id()));
 										break;
 									case 3:
-										p.getInventory().add(new Item(1032));
-										p.getInventory().add(new Item(1033));
-										p.getInventory().add(new Item(1034));
+										p.getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id()));
+										p.getInventory().add(new Item(ItemId.DWARF_CANNON_STAND.id()));
+										p.getInventory().add(new Item(ItemId.DWARF_CANNON_BARRELS.id()));
 										break;
 									case 4:
-										p.getInventory().add(new Item(1032));
-										p.getInventory().add(new Item(1033));
-										p.getInventory().add(new Item(1034));
-										p.getInventory().add(new Item(1035));
+										p.getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id()));
+										p.getInventory().add(new Item(ItemId.DWARF_CANNON_STAND.id()));
+										p.getInventory().add(new Item(ItemId.DWARF_CANNON_BARRELS.id()));
+										p.getInventory().add(new Item(ItemId.DWARF_CANNON_FURNACE.id()));
 										break;
 								}
 								p.getCache().remove("cannon_stage");
@@ -227,7 +222,7 @@ public class DwarfCannon
 					break;
 			}
 		}
-		if (n.getID() == 771) {
+		else if (n.getID() == NpcId.DWARF_COMMANDER.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					playerTalk(p, n, "hello");
@@ -246,7 +241,7 @@ public class DwarfCannon
 							"could you please replace them with these new ones");
 						playerTalk(p, n, "sounds easy enough");
 						message(p, "the Dwarf commander gives you six railings");
-						addItem(p, 1042, 6);
+						addItem(p, ItemId.RAILING_DWARF_CANNON.id(), 6);
 						npcTalk(p, n, "let me know once you've fixed the railings");
 						playerTalk(p, n, "ok , commander");
 						p.updateQuestStage(getQuestId(), 1);
@@ -277,11 +272,11 @@ public class DwarfCannon
 					} else {
 						npcTalk(p, n, "the goblins are still getting in", "so there must still be some broken railings");
 						playerTalk(p, n, "don't worry, i'll find them soon enough");
-						if (!hasItem(p, 1042)) {
+						if (!hasItem(p, ItemId.RAILING_DWARF_CANNON.id())) {
 							playerTalk(p, n, "but i'm out of railings");
 							npcTalk(p, n, "ok, we've got plenty");
 							message(p, "the Dwarf commander gives you another railing");
-							addItem(p, 1042, 1);
+							addItem(p, ItemId.RAILING_DWARF_CANNON.id(), 1);
 						}
 					}
 					break;
@@ -292,7 +287,7 @@ public class DwarfCannon
 						npcTalk(p, n, "have you been to the watch tower yet?");
 						playerTalk(p, n, "yes, i went up but there was no one");
 						npcTalk(p, n, "that's strange, gilob never leaves his post");
-						if (hasItem(p, 1046)) {
+						if (hasItem(p, ItemId.DWARF_REMAINS.id())) {
 							playerTalk(p, n, "i may have some bad news for you commander");
 							message(p, "you show the Dwarf commander the remains");
 							npcTalk(p, n, "what's this?, oh no , it can't be!");
@@ -302,7 +297,7 @@ public class DwarfCannon
 							npcTalk(p, n, "please traveller, seek out the goblins base..", "...and return the lad to us",
 								"they must sleep somewhere!");
 							playerTalk(p, n, "ok, i'll see if i can find their hide out");
-							removeItem(p, 1046, 1);
+							removeItem(p, ItemId.DWARF_REMAINS.id(), 1);
 							p.updateQuestStage(getQuestId(), 3);
 							p.getCache().remove("grabed_dwarf_remains");
 						} else {
@@ -333,7 +328,7 @@ public class DwarfCannon
 						if (gobMenu == 0) {
 							npcTalk(p, n, "that's great,you'll need this");
 							message(p, "the Dwarf commander gives you a tool kit");
-							addItem(p, 1055, 1);
+							addItem(p, ItemId.TOOL_KIT.id(), 1);
 							npcTalk(p, n, "let me know how you get on");
 							p.updateQuestStage(getQuestId(), 4);
 							p.getCache().remove("savedlollk");
@@ -384,22 +379,23 @@ public class DwarfCannon
 					playerTalk(p, n, "it's not an easy job, but i'm getting there");
 					npcTalk(p, n, "good stuff, let me know if you have any luck",
 						"if we manage to get that thing working...", "those goblins will be know trouble at all");
-					if (!hasItem(p, 1055)) {
+					if (!hasItem(p, ItemId.TOOL_KIT.id())) {
 						playerTalk(p, n, "i'm afraid i lost the tool kit");
 						npcTalk(p, n, "that was silly, never mind, here you go");
 						message(p, "the Dwarf commander gives you another tool kit");
-						addItem(p, 1055, 1);
+						addItem(p, ItemId.TOOL_KIT.id(), 1);
 					}
 					break;
 				case 5:
 				case 6:
-					if (p.getCache().hasKey("spoken_nulodion") && hasItem(p, 1056) && hasItem(p, 1057)) {
+					if (p.getCache().hasKey("spoken_nulodion") && hasItem(p, ItemId.NULODIONS_NOTES.id())
+							&& hasItem(p, ItemId.CANNON_AMMO_MOULD.id())) {
 						playerTalk(p, n, "hi");
 						npcTalk(p, n, "hello traveller, any word from the Cannon engineer?");
 						playerTalk(p, n, "yes, i have spoken to him", "he gave me these to give to you");
 						message(p, "you hand the Dwarf commander the mould and the notes");
-						removeItem(p, 1056, 1);
-						removeItem(p, 1057, 1);
+						removeItem(p, ItemId.NULODIONS_NOTES.id(), 1);
+						removeItem(p, ItemId.CANNON_AMMO_MOULD.id(), 1);
 						npcTalk(p, n, "aah, of course, we make the ammo",
 							"this is great, now we will be able to defend ourselves", "i don't know how to thank you");
 						playerTalk(p, n, "you could give me a cannon");
@@ -441,18 +437,8 @@ public class DwarfCannon
 
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click, Player player) {
-		if (obj.getID() == 181 || obj.getID() == 182 || obj.getID() == 183 || obj.getID() == 184 || obj.getID() == 185
-			|| obj.getID() == 186) {
-			return true;
-		}
-		if (obj.getID() == 194) {
-			return true;
-		}
-		if (obj.getID() == 197 && obj.getX() == 278) {
-			return true;
-		}
-
-		return false;
+		return (obj.getID() == 181 || obj.getID() == 182 || obj.getID() == 183 || obj.getID() == 184 || obj.getID() == 185 || obj.getID() == 186)
+				|| obj.getID() == 194 || (obj.getID() == 197 && obj.getX() == 278);
 	}
 
 	private void rail(Player p, GameObject obj) {
@@ -461,11 +447,10 @@ public class DwarfCannon
 		if (railMenu == 0) {
 			if (failToReplace()) {
 				message(p, "you attempt to replace the missing railing", "but you fail and cut yourself trying");
-				int dmg = DataConversions.random(2, 3);
-				p.damage(dmg);
+				p.damage(DataConversions.random(2, 3));
 			} else {
 				message(p, "you attempt to replace the missing railing", "you replace the railing with no problems");
-				p.getInventory().remove(1042, 1);
+				p.getInventory().remove(ItemId.RAILING_DWARF_CANNON.id(), 1);
 
 				if (obj.getID() == 181) {
 					p.getCache().store("railone", true);
@@ -491,58 +476,57 @@ public class DwarfCannon
 		if (obj.getID() == 193) {
 			message(p, "you search the railing", "but find nothing of interest");
 		}
-		if (obj.getID() == 181 && p.getQuestStage(getQuestId()) == 1) {
+		else if (obj.getID() == 181 && p.getQuestStage(getQuestId()) == 1) {
 			if (p.getCache().hasKey("railone")) {
 				p.message("you have already fixed this railing");
 				return;
 			}
 			rail(p, obj);
 		}
-		if (obj.getID() == 182 && p.getQuestStage(getQuestId()) == 1) {
+		else if (obj.getID() == 182 && p.getQuestStage(getQuestId()) == 1) {
 			if (p.getCache().hasKey("railtwo")) {
 				p.message("you have already fixed this railing");
 				return;
 			}
 			rail(p, obj);
 		}
-		if (obj.getID() == 183 && p.getQuestStage(getQuestId()) == 1) {
+		else if (obj.getID() == 183 && p.getQuestStage(getQuestId()) == 1) {
 			if (p.getCache().hasKey("railthree")) {
 				p.message("you have already fixed this railing");
 				return;
 			}
 			rail(p, obj);
 		}
-		if (obj.getID() == 184 && p.getQuestStage(getQuestId()) == 1) {
+		else if (obj.getID() == 184 && p.getQuestStage(getQuestId()) == 1) {
 			if (p.getCache().hasKey("railfour")) {
 				p.message("you have already fixed this railing");
 				return;
 			}
 			rail(p, obj);
 		}
-		if (obj.getID() == 185 && p.getQuestStage(getQuestId()) == 1) {
+		else if (obj.getID() == 185 && p.getQuestStage(getQuestId()) == 1) {
 			if (p.getCache().hasKey("railfive")) {
 				p.message("you have already fixed this railing");
 				return;
 			}
 			rail(p, obj);
 		}
-		if (obj.getID() == 186 && p.getQuestStage(getQuestId()) == 1) {
+		else if (obj.getID() == 186 && p.getQuestStage(getQuestId()) == 1) {
 			if (p.getCache().hasKey("railsix")) {
 				p.message("you have already fixed this railing");
 				return;
 			}
 			rail(p, obj);
 		}
-		if (obj.getID() == 194) {
+		else if (obj.getID() == 194) {
 			if (p.getQuestStage(getQuestId()) == 4) {
 				doDoor(obj, p);
 			} else {
 				p.message("the door is locked");
 			}
 		}
-		if (obj.getID() == 197 && obj.getX() == 278) {
-			if (p.getQuestStage(getQuestId()) == 5 || p.getQuestStage(getQuestId()) == 6
-				|| p.getQuestStage(getQuestId()) == -1) {
+		else if (obj.getID() == 197 && obj.getX() == 278) {
+			if (atQuestStages(p, getQuestId(), 5, 6, -1)) {
 				p.message("you go through the door");
 				doDoor(obj, p);
 			} else {
@@ -553,42 +537,17 @@ public class DwarfCannon
 	}
 
 	private boolean failToReplace() {
-		int poisonChance = DataConversions.random(0, 100);
-		if (poisonChance > 75) {
-			return true;
-		}
-		return false;
+		return DataConversions.random(0, 100) > 75;
 	}
 
 	private boolean failToMultiCannon() {
-		int poisonChance = DataConversions.random(0, 100);
-		if (poisonChance > 60) {
-			return true;
-		}
-		return false;
+		return DataConversions.random(0, 100) > 60;
 	}
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
-		if (obj.getID() == 982 && obj.getY() == 523) {
-			return true;
-		}
-		if (obj.getID() == 981 || obj.getID() == 985) { // LadderS FIX(n0m)
-			return true;
-		}
-		if (obj.getID() == 994) {// Fixed final part(n0m)
-			return true;
-		}
-		if (obj.getID() == 983) {
-			return true;
-		}
-		if (obj.getID() == 986) { //crates containing nothing
-			return true;
-		}
-		if (obj.getID() == 987) { //crate of lollk
-			return true;
-		}
-		return false;
+		return (obj.getID() == 982 && obj.getY() == 523) || (obj.getID() == 981 || obj.getID() == 985) || obj.getID() == 994 || obj.getID() == 983
+				|| obj.getID() == 986 || obj.getID() == 987;
 	}
 
 	@Override
@@ -603,25 +562,19 @@ public class DwarfCannon
 		} else if (obj.getID() == 985) {
 			player.message("you climb down the ladder");
 			player.teleport(616, 493, false);
-		}
-		if (obj.getID() == 982 && obj.getY() == 523) {
+		} else if (obj.getID() == 982 && obj.getY() == 523) {
 			message(player, "you cautiously enter the cave");
 			player.teleport(578, 3356, false);
-
-		}
-		if (obj.getID() == 983) {
+		} else if (obj.getID() == 983) {
 			message(player, "you climb the mudpile");
 			player.teleport(578, 521, false);
-
-		}
-		if (obj.getID() == 986) {
+		} else if (obj.getID() == 986) {
 			message(player, "you search the crate", "but it's empty");
-		}
-		if (obj.getID() == 987) {
+		} else if (obj.getID() == 987) {
 			// only allow at quest stage and before being rescued
 			if (player.getQuestStage(this) == 3 && !player.getCache().hasKey("savedlollk")) {
 				message(player, "you search the crate", "inside you see a dwarf child tied up", "you untie the child");
-				Npc lollk = spawnNpc(695, 619, 3314, 60000);
+				Npc lollk = spawnNpc(NpcId.LOLLK.id(), 619, 3314, 60000);
 				lollk.face(player);
 				player.face(lollk);
 				npcTalk(player, lollk, "thank the heavens, you saved me", "i thought i'd be goblin lunch for sure");
@@ -635,8 +588,7 @@ public class DwarfCannon
 			} else {
 				message(player, "you search the crate", "but it's empty");
 			}
-		}
-		if (obj.getID() == 994) {
+		} else if (obj.getID() == 994) {
 			if (player.getCache().hasKey("cannon_complete")) {
 				player.message("It's a strange dwarf contraption");
 				return;
@@ -667,7 +619,7 @@ public class DwarfCannon
 						return;
 					}
 					message(player, "you use your tool kit and attempt to fix the pipe");
-					showBubble(player, new Item(1055));
+					showBubble(player, new Item(ItemId.TOOL_KIT.id()));
 					if (failToMultiCannon()) {
 						message(player, "it's too hard, you fail to fix it", "maybe you should try again");
 					} else {
@@ -680,7 +632,7 @@ public class DwarfCannon
 						return;
 					}
 					message(player, "you use your tool kit and attempt to fix the barrel");
-					showBubble(player, new Item(1055));
+					showBubble(player, new Item(ItemId.TOOL_KIT.id()));
 					if (failToMultiCannon()) {
 						message(player, "it's too hard, you fail to fix it", "maybe you should try again");
 					} else {
@@ -693,7 +645,7 @@ public class DwarfCannon
 						return;
 					}
 					message(player, "you use your tool kit and attempt to fix the axle");
-					showBubble(player, new Item(1055));
+					showBubble(player, new Item(ItemId.TOOL_KIT.id()));
 					if (failToMultiCannon()) {
 						message(player, "it's too hard, you fail to fix it", "maybe you should try again");
 					} else {
@@ -706,7 +658,7 @@ public class DwarfCannon
 						return;
 					}
 					message(player, "you use your tool kit and attempt to fix the shaft");
-					showBubble(player, new Item(1055));
+					showBubble(player, new Item(ItemId.TOOL_KIT.id()));
 					if (failToMultiCannon()) {
 						message(player, "it's too hard, you fail to fix it", "maybe you should try again");
 					} else {
@@ -723,16 +675,13 @@ public class DwarfCannon
 
 	@Override
 	public boolean blockPickup(Player p, GroundItem i) {
-		if (i.getID() == 1046) {
-			return true;
-		}
-		return false;
+		return i.getID() == ItemId.DWARF_REMAINS.id();
 	}
 
 	@Override
 	public void onPickup(Player p, GroundItem i) {
-		if (i.getID() == 1046) {
-			if(hasItem(p, 1046)) {
+		if (i.getID() == ItemId.DWARF_REMAINS.id()) {
+			if(hasItem(p, ItemId.DWARF_REMAINS.id())) {
 				p.message("carrying one 'dwarfs remains' is bad enough");
 				return;
 			}
@@ -740,7 +689,7 @@ public class DwarfCannon
 				p.getCache().store("grabed_dwarf_remains", true);
 			}
 			World.getWorld().unregisterItem(i);
-			addItem(p, 1046, 1);
+			addItem(p, ItemId.DWARF_REMAINS.id(), 1);
 		}
 	}
 

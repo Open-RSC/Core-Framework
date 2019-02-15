@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -21,6 +23,29 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 	WallObjectActionExecutiveListener, InvUseOnNpcListener,
 	InvUseOnNpcExecutiveListener, PlayerKilledNpcListener,
 	PlayerKilledNpcExecutiveListener {
+	
+	@Override
+	public int getQuestId() {
+		return Constants.Quests.FAMILY_CREST;
+	}
+
+	@Override
+	public String getQuestName() {
+		return "Family crest (members)";
+	}
+
+	@Override
+	public boolean isMembers() {
+		return true;
+	}
+
+	@Override
+	public void handleReward(Player player) {
+		incQuestReward(player, Quests.questData.get(Quests.FAMILY_CREST), true);
+		player.message("@gre@You haved gained 1 quest point!");
+		player.message("Well done you have completed the family crest quest");
+	}
+	
 	/**
 	 * NPCS: #309 - Dimintheis - quest starter #310 - Chef - 1st son in catherby
 	 * #307 - man in alkharid #314 - wizard 3rd son.
@@ -84,17 +109,18 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 				case 7:
 				case 8:
 					boolean gave_crest = false;
-					if (hasItem(p, 694, 1)) {
+					if (hasItem(p, ItemId.FAMILY_CREST.id(), 1)) {
 						playerTalk(p, n, "I have retrieved your crest");
 						p.message("You give the crest to Dimintheis");
-						removeItem(p, 694, 1);
+						removeItem(p, ItemId.FAMILY_CREST.id(), 1);
 						gave_crest = true;
-					} else if (hasItem(p, 695) && hasItem(p, 696) && hasItem(p, 697)) {
+					} else if (hasItem(p, ItemId.CREST_FRAGMENT_ONE.id()) && hasItem(p, ItemId.CREST_FRAGMENT_TWO.id())
+							&& hasItem(p, ItemId.CREST_FRAGMENT_THREE.id())) {
 						playerTalk(p, n, "I have retrieved your crest");
 						p.message("You give the parts of the crest to Dimintheis");
-						removeItem(p, 695, 1);
-						removeItem(p, 696, 1);
-						removeItem(p, 697, 1);
+						removeItem(p, ItemId.CREST_FRAGMENT_ONE.id(), 1);
+						removeItem(p, ItemId.CREST_FRAGMENT_TWO.id(), 1);
+						removeItem(p, ItemId.CREST_FRAGMENT_THREE.id(), 1);
 						gave_crest = true;
 					}
 					if (gave_crest) {
@@ -111,7 +137,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 							"I suppose these gauntlets would make a good reward",
 							"If you die you will always retain these gauntlets");
 						p.message("Dimintheis gives you a pair of gauntlets");
-						addItem(p, 698, 1);
+						addItem(p, ItemId.STEEL_GAUNTLETS.id(), 1);
 						npcTalk(p,
 							n,
 							"These gautlets can be granted extra powers",
@@ -165,53 +191,21 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public int getQuestId() {
-		return Constants.Quests.FAMILY_CREST;
-	}
-
-	@Override
-	public String getQuestName() {
-		return "Family crest (members)";
-	}
-
-	@Override
-	public boolean isMembers() {
-		return true;
-	}
-
-	@Override
-	public void handleReward(Player player) {
-		incQuestReward(player, Quests.questData.get(Quests.FAMILY_CREST), true);
-		player.message("@gre@You haved gained 1 quest point!");
-		player.message("Well done you have completed the family crest quest");
-	}
-
-	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 309) {
-			return true;
-		}
-		if (n.getID() == 307) {
-			return true;
-		}
-		if (n.getID() == 314) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.DIMINTHEIS.id() || n.getID() == NpcId.AVAN.id() || n.getID() == NpcId.JOHNATHON.id();
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 309) {
+		if (n.getID() == NpcId.DIMINTHEIS.id()) {
 			dimintheisDialogue(p, n, -1);
 		}
-		//avan
-		else if (n.getID() == 307) {
+		else if (n.getID() == NpcId.AVAN.id()) {
 			switch (p.getQuestStage(this)) {
 				case -1:
 					npcTalk(p, n, "I have heard word from my father",
 						"Thankyou for helping to restore our family honour");
-					if (hasItem(p, 698)) {
+					if (hasItem(p, ItemId.STEEL_GAUNTLETS.id())) {
 						playerTalk(p, n,
 							"Your father said that you could improve these Gauntlets in some way for me");
 						npcTalk(p,
@@ -227,7 +221,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 							message(p, "Avan takes out a little hammer",
 								"He starts pounding on the gauntlets",
 								"Avan hands the gauntlets to you");
-							p.getInventory().replace(698, 699);
+							p.getInventory().replace(ItemId.STEEL_GAUNTLETS.id(), ItemId.GAUNTLETS_OF_GOLDSMITHING.id());
 
 						} else if (menu == 1) {
 							npcTalk(p, n,
@@ -285,13 +279,13 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 					break;
 				case 6:
 					npcTalk(p, n, "So how are you doing getting the jewellry?");
-					if (hasItem(p, 692) && hasItem(p, 693)) {
+					if (hasItem(p, ItemId.RUBY_RING_FAMILYCREST.id()) && hasItem(p, ItemId.RUBY_NECKLACE_FAMILYCREST.id())) {
 						playerTalk(p, n, "I have it");
 						npcTalk(p, n, "These are brilliant");
 						p.message("You exchange the jewellry for a piece of crest");
-						removeItem(p, 692, 1);
-						removeItem(p, 693, 1);
-						addItem(p, 696, 1);
+						removeItem(p, ItemId.RUBY_RING_FAMILYCREST.id(), 1);
+						removeItem(p, ItemId.RUBY_NECKLACE_FAMILYCREST.id(), 1);
+						addItem(p, ItemId.CREST_FRAGMENT_TWO.id(), 1);
 						npcTalk(p,
 							n,
 							"These are a fine piece of work",
@@ -324,7 +318,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 					break;
 				case 8:
 					npcTalk(p, n, "How are you doing getting the rest of the crest?");
-					if (!hasItem(p, 696)) {
+					if (!hasItem(p, ItemId.CREST_FRAGMENT_TWO.id())) {
 						int menu2 = showMenu(p, n,
 							"I am still working on it",
 							"I have lost the piece you gave me");
@@ -332,7 +326,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 							npcTalk(p, n, "Well good luck in your quest");
 						} else if (menu2 == 1) {
 							npcTalk(p, n, "Ah well here is another one");
-							addItem(p, 696, 1);
+							addItem(p, ItemId.CREST_FRAGMENT_TWO.id(), 1);
 						}
 					} else {
 						playerTalk(p, n, "I am still working on it");
@@ -341,8 +335,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 					break;
 			}
 		}
-		//johnathon
-		else if (n.getID() == 314) {
+		else if (n.getID() == NpcId.JOHNATHON.id()) {
 			if (p.getQuestStage(this) >= 0 && p.getQuestStage(this) < 7) {
 				npcTalk(p, n, "I am so very tired, leave me to rest");
 			} else if (p.getQuestStage(this) == 7) {
@@ -368,7 +361,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 				}
 			} else if (p.getQuestStage(this) == -1) {
 				npcTalk(p, n, "Hello again");
-				if (hasItem(p, 698)) {
+				if (hasItem(p, ItemId.STEEL_GAUNTLETS.id())) {
 					playerTalk(p, n,
 						"Your father tells me, you can improve these gauntlets a bit");
 					npcTalk(p,
@@ -382,7 +375,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 					if (menu == 0) {
 						message(p, "Johnathon waves his staff",
 							"The gauntlets sparkle and shimmer");
-						p.getInventory().replace(698, 701);
+						p.getInventory().replace(ItemId.STEEL_GAUNTLETS.id(), ItemId.GAUNTLETS_OF_CHAOS.id());
 						//ActionSender.sendInventory(p);
 					} else if (menu == 0) {
 						npcTalk(p, n,
@@ -405,11 +398,8 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click, Player p) {
-		if ((obj.getID() == 88 && obj.getX() == 509 && obj.getY() == 3441) || (obj.getID() == 90 && obj.getX() == 512 && obj.getY() == 3441) || obj.getID() == 91
-			|| obj.getID() == 92) {
-			return true;
-		}
-		return false;
+		return (obj.getID() == 88 && obj.getX() == 509 && obj.getY() == 3441) || (obj.getID() == 90 && obj.getX() == 512 && obj.getY() == 3441)
+				|| obj.getID() == 91 || obj.getID() == 92;
 	}
 
 	@Override
@@ -505,10 +495,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (obj.getID() == 316 || obj.getID() == 317 || obj.getID() == 318) {
-			return true;
-		}
-		return false;
+		return obj.getID() == 316 || obj.getID() == 317 || obj.getID() == 318;
 	}
 
 	@Override
@@ -562,18 +549,15 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
-		if (npc.getID() == 314 && item.getID() == 566) {
-			return true;
-		}
-		return false;
+		return npc.getID() == NpcId.JOHNATHON.id() && item.getID() == ItemId.FULL_CURE_POISON_POTION.id();
 	}
 
 	@Override
 	public void onInvUseOnNpc(Player p, Npc n, Item item) {
-		if (n.getID() == 314 && item.getID() == 566) {
+		if (n.getID() == NpcId.JOHNATHON.id() && item.getID() == ItemId.FULL_CURE_POISON_POTION.id()) {
 			if (p.getQuestStage(this) == 7) {
 				message(p, "You feed your potion to Johnathon");
-				removeItem(p, 566, 1);
+				removeItem(p, ItemId.FULL_CURE_POISON_POTION.id(), 1);
 				p.updateQuestStage(this, 8);
 				npcTalk(p, n, "Wow I'm feeling a lot better now",
 					"Thankyou, what can I do for you?");
@@ -645,10 +629,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == 315) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.CHRONOZON.id();
 	}
 
 	/**
@@ -659,7 +640,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == 315) {
+		if (n.getID() == NpcId.CHRONOZON.id()) {
 			String[] elementals = new String[]{"wind", "water", "earth",
 				"fire"};
 			boolean regenerate = false;
@@ -675,7 +656,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 			} else {
 				if (p.getQuestStage(this) == 8) {
 					World.getWorld().registerItem(
-						new GroundItem(697, n.getX(), n.getY(), 1, p));
+						new GroundItem(ItemId.CREST_FRAGMENT_THREE.id(), n.getX(), n.getY(), 1, p));
 				}
 				n.killedBy(p);
 				n.remove();

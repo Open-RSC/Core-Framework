@@ -2,11 +2,14 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
@@ -19,6 +22,7 @@ import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveLi
 import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.atQuestStage;
@@ -60,10 +64,6 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 	/* Objects */
 	final int LEPROCHAUN_TREE = 237, ENTRANA_LADDER = 244, DRAMEN_TREE = 245,
 		MAGIC_DOOR = 65, ZANARIS_DOOR = 66;
-	/* Npcs */
-	final int ADVENTURER_CLERIC = 207, ADVENTURER_WIZARD = 208,
-		ADVENTURER_WARRIOR = 209, ADVENTURER_ARCHER = 210,
-		LEPRECHAUN = 211, MONK_OF_ENTRANA = 213, TREE_SPIRIT = 216;
 
 	/**
 	 * Quest stage 1: Talked to adventurer Quest stage 2: Talked to leprechaun
@@ -103,7 +103,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		switch (obj.getID()) {
 			case 244:
-				Npc monk = getNearestNpc(p, MONK_OF_ENTRANA, 10);
+				Npc monk = getNearestNpc(p, NpcId.MONK_OF_ENTRANA_ENTRANA.id(), 10);
 				if (monk != null)
 					monk.initializeTalkScript(p);
 				break;
@@ -112,9 +112,9 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 					p.message("There is nothing in this tree");
 				} else if (getQuestStage(p, this) >= 1
 					&& getQuestStage(p, this) <= 3) {
-					Npc leprechaun = getNearestNpc(p, 211, 15);
+					Npc leprechaun = getNearestNpc(p, NpcId.LEPRECHAUN.id(), 15);
 					if (leprechaun == null) {
-						leprechaun = spawnNpc(211, p.getX(), p.getY() + 1, 60000 * 3);
+						leprechaun = spawnNpc(NpcId.LEPRECHAUN.id(), p.getX(), p.getY() + 1, 60000 * 3);
 						leprechaun.initializeTalkScript(p);
 					}
 				} else {
@@ -140,11 +140,11 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 					 */
 					if (atQuestStages(p, this, 4, -1)) {
 						message(p, "You cut a branch from the Dramen tree");
-						addItem(p, 510, 1);
+						addItem(p, ItemId.DRAMEN_BRANCH.id(), 1);
 						return;
 					}
-					if (isNpcNearby(p, 216)) {
-						Npc spawnedTreeSpirit = getNearestNpc(p, 216, 15);
+					if (isNpcNearby(p, NpcId.TREE_SPIRIT.id())) {
+						Npc spawnedTreeSpirit = getNearestNpc(p, NpcId.TREE_SPIRIT.id(), 15);
 						/*
 						 * Check if the spawned tree spirit contains spawnedFor
 						 * attribute
@@ -162,7 +162,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 							}
 						}
 					}
-					Npc treeSpirit = spawnNpc(216, p.getX() + 1, p.getY() + 1,
+					Npc treeSpirit = spawnNpc(NpcId.TREE_SPIRIT.id(), p.getX() + 1, p.getY() + 1,
 						300000, p);
 					if (treeSpirit == null) {
 						return;
@@ -181,15 +181,13 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		/* Another new method I made, really useful. */
-		return inArray(n.getID(), ADVENTURER_ARCHER, ADVENTURER_CLERIC,
-			ADVENTURER_WARRIOR, ADVENTURER_WIZARD, LEPRECHAUN,
-			MONK_OF_ENTRANA);
+		return DataConversions.inArray(new int[] {NpcId.ADVENTURER_ARCHER.id(), NpcId.ADVENTURER_CLERIC.id(), NpcId.ADVENTURER_WARRIOR.id(),
+				NpcId.ADVENTURER_WIZARD.id(), NpcId.LEPRECHAUN.id(), NpcId.MONK_OF_ENTRANA_ENTRANA.id()}, n.getID());
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == LEPRECHAUN) {
+		if (n.getID() == NpcId.LEPRECHAUN.id()) {
 			if (atQuestStage(p, this, 0)) {
 				npcTalk(p, n, "Ay you big elephant", "You have caught me",
 					"What would you be wanting with old Shamus then?");
@@ -251,8 +249,8 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 				}
 			}
 		}
-		if (inArray(n.getID(), ADVENTURER_ARCHER, ADVENTURER_CLERIC,
-			ADVENTURER_WARRIOR, ADVENTURER_WIZARD)) {
+		else if (DataConversions.inArray(new int[] {NpcId.ADVENTURER_ARCHER.id(), NpcId.ADVENTURER_CLERIC.id(),
+				NpcId.ADVENTURER_WARRIOR.id(), NpcId.ADVENTURER_WIZARD.id()}, n.getID())) {
 			if (atQuestStage(p, this, 0)) {
 				npcTalk(p, n, "hello traveller");
 				int option = showMenu(p, n, false, //do not send over
@@ -330,7 +328,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 					"Where is Zanaris?");
 				playerTalk(p, n, "I think I will keep that to myself");
 			}
-		} else if (n.getID() == MONK_OF_ENTRANA) {
+		} else if (n.getID() == NpcId.MONK_OF_ENTRANA_ENTRANA.id()) {
 			npcTalk(p, n, "Be careful going in there",
 				"You are unarmed, and there is much evilness lurking down there",
 				"The evilness seems to block off our contact with our gods",
@@ -396,7 +394,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
-		if (n.getID() == 216) {
+		if (n.getID() == NpcId.TREE_SPIRIT.id()) {
 			if (n.getAttribute("spawnedFor", null) != null) {
 				if (!n.getAttribute("spawnedFor").equals(p)) {
 					p.message("That npc is not after you.");
@@ -409,7 +407,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		return n.getID() == TREE_SPIRIT;
+		return n.getID() == NpcId.TREE_SPIRIT.id();
 	}
 
 	@Override
@@ -422,22 +420,21 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
-		return item1.getID() == 13 && item2.getID() == 510
-			|| item1.getID() == 510 && item2.getID() == 13;
+		return Functions.compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.DRAMEN_BRANCH.id());
 	}
 
 	@Override
 	public void onInvUseOnItem(Player p, Item item1, Item item2) {
-		if (hasItem(p, 510, 1)) {
+		if (hasItem(p, ItemId.DRAMEN_BRANCH.id(), 1)) {
 			if (getCurrentLevel(p, Skills.CRAFTING) < 31) {
 				message(p,
 					"You are not a high enough crafting level to craft this staff",
 					"You need a crafting level of 31");
 				return;
 			}
-			removeItem(p, 510, 1);
+			removeItem(p, ItemId.DRAMEN_BRANCH.id(), 1);
 			message(p, "you carve the branch into a staff");
-			addItem(p, 509, 1);
+			addItem(p, ItemId.DRAMEN_STAFF.id(), 1);
 		}
 	}
 
@@ -454,7 +451,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 			sleep(500);
 			p.message("you go through the door and find yourself somewhere else");
 		} else if (obj.getID() == ZANARIS_DOOR) {
-			if (isWielding(p, 509) && atQuestStages(p, this, 4, -1)) {
+			if (isWielding(p, ItemId.DRAMEN_STAFF.id()) && atQuestStages(p, this, 4, -1)) {
 				p.setBusy(true);
 				message(p, "The world starts to shimmer",
 					"You find yourself in different surroundings");
