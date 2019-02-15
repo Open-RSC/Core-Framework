@@ -198,7 +198,7 @@ public final class Constants {
 		public static boolean STRICT_PDART_CHECK = false;
 		public static boolean STRICT_PKNIFE_CHECK = false;
 		public static boolean STRICT_PSPEAR_CHECK = false;
-		public static int C_FPS = 50;
+		//public static int C_FPS = 50;
 		
 		//loosened checks
 		public static boolean LOOSE_SHALLOW_WATER_CHECK = false;
@@ -236,7 +236,7 @@ public final class Constants {
 			AVATAR_GENERATOR = Boolean.parseBoolean(props.getProperty("avatar_generator"));
 			DISPLAY_LOGO_SPRITE = Boolean.parseBoolean(props.getProperty("display_logo_sprite"));
 			//LOGO_SPRITE_ID = Integer.parseInt(props.getProperty("logo_sprite_id"));
-			C_FPS = Integer.parseInt(props.getProperty("client_fps"));
+			//C_FPS = Integer.parseInt(props.getProperty("client_fps"));
 
 			// Game confs
 			WORLD_NUMBER = Integer.parseInt(props.getProperty("world_number"));
