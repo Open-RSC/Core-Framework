@@ -487,7 +487,7 @@ public class ActionSender {
 		s.writeByte((byte) (Constants.GameServer.MEMBER_WORLD ? 1 : 0)); // 43
 		s.writeByte((byte) (Constants.GameServer.DISPLAY_LOGO_SPRITE ? 1 : 0)); // 44
 		//s.writeByte((byte) Constants.GameServer.LOGO_SPRITE_ID); // 45
-		s.writeByte((byte) Constants.GameServer.C_FPS); // 46
+		//s.writeByte((byte) Constants.GameServer.C_FPS); // 46
 		return s;
 	}
 
