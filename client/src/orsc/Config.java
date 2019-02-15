@@ -13,47 +13,47 @@ import java.util.Properties;
 public class Config {
 	private static Properties prop = new Properties();
 
-	public static boolean DEBUG = true; // enables print out of the config being sent to the client
+	public static boolean DEBUG = false; // enables print out of the config being sent to the client
 	public static String SERVER_NAME = "Runescape";
 	public static String SERVER_NAME_WELCOME = "Runescape Classic";
 	public static String WELCOME_TEXT = "You need a members account to use this server";
-	public static final String SERVER_IP = "localhost";
-	public static final int SERVER_PORT = 43594;
+	static final String SERVER_IP = "localhost";
+	static final int SERVER_PORT = 43594;
 	public static final int CLIENT_VERSION = 1;
-	public static final int CACHE_VERSION = 2;
+	private static final int CACHE_VERSION = 2;
 	public static boolean MEMBER_WORLD = false;
 	public static boolean DISPLAY_LOGO_SPRITE = false;
-	public static final boolean CUSTOM_CACHE_DIR_ENABLED = false;
-	public static final boolean CACHE_APPEND_VERSION = false;
-	public static final String CUSTOM_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
+	private static final boolean CUSTOM_CACHE_DIR_ENABLED = false;
+	private static final boolean CACHE_APPEND_VERSION = false;
+	private static final String CUSTOM_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
 	public static String F_CACHE_DIR = "";
 
 	/* Configurable: */
 	public static boolean C_EXPERIENCE_DROPS = false;
 	public static boolean C_BATCH_PROGRESS_BAR = false;
 	public static boolean C_HIDE_ROOFS = false;
-	public static boolean C_SHOW_FOG = true;
-	public static int C_SHOW_GROUND_ITEMS = 0;
-	public static boolean C_MESSAGE_TAB_SWITCH = false;
-	public static boolean C_NAME_CLAN_TAG_OVERLAY = false;
+	static boolean C_SHOW_FOG = true;
+	static int C_SHOW_GROUND_ITEMS = 0;
+	static boolean C_MESSAGE_TAB_SWITCH = false;
+	static boolean C_NAME_CLAN_TAG_OVERLAY = false;
 	public static boolean C_SIDE_MENU_OVERLAY = false;
-	public static boolean C_KILL_FEED = false;
-	public static int C_FIGHT_MENU = 1;
-	public static boolean C_INV_COUNT = false;
+	static boolean C_KILL_FEED = false;
+	static int C_FIGHT_MENU = 1;
+	static boolean C_INV_COUNT = false;
 
 	/* Android: */
-	public static boolean F_ANDROID_BUILD = false; // This MUST be true if Android client
-	public static final String DL_URL = "game.openrsc.com";
+	private static boolean F_ANDROID_BUILD = false; // This MUST be true if Android client
+	private static final String DL_URL = "game.openrsc.com";
 	public static final String ANDROID_DOWNLOAD_PATH = "https://" + DL_URL + "/downloads/";
 	public static final String CACHE_URL = "https://" + DL_URL + "/downloads/cache/";
 	public static final int ANDROID_CLIENT_VERSION = 6;
-	public static boolean F_SHOWING_KEYBOARD = false;
-	public static int F_LONG_PRESS_CALC;
-	public static boolean C_HOLD_AND_CHOOSE = true;
-	public static int C_LONG_PRESS_TIMER = 400;
+	static boolean F_SHOWING_KEYBOARD = false;
+	static int F_LONG_PRESS_CALC;
+	static boolean C_HOLD_AND_CHOOSE = true;
+	static int C_LONG_PRESS_TIMER = 400;
 	public static int C_MENU_SIZE = 6;
-	public static boolean C_SWIPE_TO_SCROLL = true;
-	public static boolean C_SWIPE_TO_ROTATE = true;
+	static boolean C_SWIPE_TO_SCROLL = true;
+	static boolean C_SWIPE_TO_ROTATE = true;
 
 	/* Experience Config Menu */
 	public static int C_EXPERIENCE_COUNTER = 1;
@@ -113,7 +113,7 @@ public class Config {
 		prop.setProperty(key, value.toString());
 	}
 
-	public static void initConfig() {
+	static void initConfig() {
 		try {
 			if (!F_ANDROID_BUILD) {
 				if (CUSTOM_CACHE_DIR_ENABLED) {
@@ -147,7 +147,7 @@ public class Config {
 		}
 	}
 
-	public static void saveConfigProperties() {
+	private static void saveConfigProperties() {
 		try {
 			File file = new File(F_CACHE_DIR + File.separator + "client.properties");
 			if (file.exists()) {
@@ -166,7 +166,7 @@ public class Config {
 	 *
 	 * @param force
 	 */
-	public static void saveConfiguration(boolean force) {
+	static void saveConfiguration(boolean force) {
 		Field[] fields = Config.class.getDeclaredFields();
 		for (Field f : fields) {
 			if (f.getName().startsWith("F_"))
@@ -198,7 +198,7 @@ public class Config {
 		saveConfigProperties();
 	}
 
-	public static void setConfigurationFromProperties() {
+	private static void setConfigurationFromProperties() {
 		Field[] fields = Config.class.getDeclaredFields();
 		for (Map.Entry<Object, Object> entry : prop.entrySet()) {
 			for (Field f : fields) {
@@ -228,7 +228,7 @@ public class Config {
 
 	}
 
-	public final static void updateServerConfiguration(Properties newConfig) {
+	final static void updateServerConfiguration(Properties newConfig) {
 		for (Map.Entry<Object, Object> p : newConfig.entrySet()) {
 			prop.setProperty(String.valueOf(p.getKey()), String.valueOf(p.getValue()));
 		}
@@ -243,7 +243,7 @@ public class Config {
 		return prop.getProperty("SERVER_NAME_WELCOME");
 	}
 
-	public static String getWelcomeText() {
+	static String getWelcomeText() {
 		return prop.getProperty("WELCOME_TEXT");
 	}
 
@@ -251,7 +251,7 @@ public class Config {
 		return prop.getProperty("COMMAND_PREFIX");
 	}
 
-	public static int getLogoSpriteId() {
+	static int getLogoSpriteId() {
 		return LOGO_SPRITE_ID;
 	}
 
@@ -267,7 +267,7 @@ public class Config {
 		return F_ANDROID_BUILD;
 	}
 
-	public static boolean Remember() {
+	static boolean Remember() {
 		return S_WANT_REMEMBER;
 	}
 }

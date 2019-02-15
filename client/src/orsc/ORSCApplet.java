@@ -647,7 +647,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			g.setFont(new Font("Helvetica", 1, 16));
 			g.setColor(Color.yellow);
 			byte var3 = 35;
-			g.drawString("Sorry, an error has occured whilst loading " + Config.SERVER_NAME_WELCOME, 30, var3);
+			g.drawString("Sorry, an error has occured whilst loading " + Config.getServerNameWelcome(), 30, var3);
 			g.setColor(Color.white);
 			int var6 = var3 + 50;
 			g.drawString("To fix this try the following (in order):", 30, var6);
@@ -678,7 +678,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			g.drawString("Error - out of memory!", 50, 50);
 			g.drawString("Close ALL unnecessary programs", 50, 100);
 			g.drawString("and windows before loading the game", 50, 150);
-			g.drawString(Config.SERVER_NAME + " needs about 48meg of spare RAM", 50, 200);
+			g.drawString(Config.getServerName() + " needs about 48meg of spare RAM", 50, 200);
 		}
 	}
 

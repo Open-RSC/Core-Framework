@@ -12,7 +12,7 @@ public final class Constants {
 
 	public static final class GameServer {
 
-		public static boolean DEBUG = true; // enables print out of the config being sent to the client
+		public static boolean DEBUG = false; // enables print out of the config being sent to the client
 		/**
 		 * Avatar web directory (full path required)
 		 */
@@ -58,7 +58,7 @@ public final class Constants {
 		/**
 		 * this worlds 'number'
 		 */
-		public static int WORLD_NUMBER = 2;
+		static int WORLD_NUMBER = 2;
 		/**
 		 * the client version needed for login
 		 */
@@ -66,19 +66,19 @@ public final class Constants {
 		/**
 		 * the maximum allowed players to connect
 		 */
-		public static int MAX_PLAYERS = 100;
+		static int MAX_PLAYERS = 100;
 		/**
 		 * the port the server is hosted on
 		 */
-		public static int SERVER_PORT = 43594;
+		static int SERVER_PORT = 43594;
 		/**
 		 * where the server is hosted (i.e. USA, Holland, etc.)
 		 */
-		public static String SERVER_LOCATION = "USA";
+		static String SERVER_LOCATION = "USA";
 		/**
 		 * The HMAC SHA512 + Salt private key.
 		 */
-		public static String HMAC_PRIVATE_KEY = "";
+		static String HMAC_PRIVATE_KEY = "";
 		/**
 		 * the mysql database host
 		 */
@@ -210,9 +210,9 @@ public final class Constants {
 		 * @throws IOException
 		 * Config file for server configurations.
 		 */
-		public static Properties props = new Properties();
+		static Properties props = new Properties();
 
-		public static void initConfig(String defaultFile) throws IOException {
+		static void initConfig(String defaultFile) throws IOException {
 			try { // Always try to load local.conf first
 				props.loadFromXML(new FileInputStream("local.conf"));
 			} catch (Exception e) { // Otherwise default to default.conf

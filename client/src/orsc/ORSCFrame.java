@@ -13,7 +13,7 @@ public class ORSCFrame extends ORSCApplet {
 	private static final long serialVersionUID = 1L;
 
 	public static void main(String[] args) {
-		JFrame jframe = new JFrame(Config.SERVER_NAME_WELCOME);
+		JFrame jframe = new JFrame(Config.getServerNameWelcome());
 
 		final Applet applet = new ORSCFrame();
 		applet.setPreferredSize(new Dimension(512, 334 + 12));
