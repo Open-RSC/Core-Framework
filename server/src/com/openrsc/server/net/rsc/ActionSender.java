@@ -429,7 +429,7 @@ public class ActionSender {
 		LOGGER.info(Constants.GameServer.WELCOME_TEXT + " 42");
 		LOGGER.info(Constants.GameServer.MEMBER_WORLD + " 43");
 		LOGGER.info(Constants.GameServer.DISPLAY_LOGO_SPRITE + " 44");
-		LOGGER.info(Constants.GameServer.LOGO_SPRITE_ID + " 45");
+		//LOGGER.info(Constants.GameServer.LOGO_SPRITE_ID + " 45");
 		LOGGER.info(Constants.GameServer.C_FPS + " 46");
 		channel.close();
 	}
@@ -486,7 +486,7 @@ public class ActionSender {
 		s.writeString(Constants.GameServer.WELCOME_TEXT); // 42
 		s.writeByte((byte) (Constants.GameServer.MEMBER_WORLD ? 1 : 0)); // 43
 		s.writeByte((byte) (Constants.GameServer.DISPLAY_LOGO_SPRITE ? 1 : 0)); // 44
-		s.writeByte((byte) Constants.GameServer.LOGO_SPRITE_ID); // 45
+		//s.writeByte((byte) Constants.GameServer.LOGO_SPRITE_ID); // 45
 		s.writeByte((byte) Constants.GameServer.C_FPS); // 46
 		return s;
 	}
