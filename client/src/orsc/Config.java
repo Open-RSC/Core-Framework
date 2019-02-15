@@ -1,6 +1,10 @@
 package orsc;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Map;
@@ -16,7 +20,7 @@ public class Config {
 	public static final int SERVER_PORT = 43594;
 	public static final int CLIENT_VERSION = 1;
 	public static final int CACHE_VERSION = 2;
-	public static boolean MEMBERS_FEATURES = false;
+	public static boolean MEMBER_WORLD = false;
 	public static boolean DISPLAY_LOGO_SPRITE = false;
 	public static final boolean CUSTOM_CACHE_DIR_ENABLED = false;
 	public static final boolean CACHE_APPEND_VERSION = false;
@@ -101,7 +105,8 @@ public class Config {
 	public static boolean S_WANT_HIDE_IP = false;
 	public static boolean S_WANT_REMEMBER = false;
 	public static boolean S_WANT_FIXED_OVERHEAD_CHAT = false;
-	public static String LOGO_SPRITE_ID = "2010";
+	public static long LOGO_SPRITE_ID = 2010;
+	public static int C_FPS = 50;
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());
@@ -245,11 +250,17 @@ public class Config {
 		return prop.getProperty("COMMAND_PREFIX");
 	}
 
-	public static String getLogoSpriteId() {
-		return prop.getProperty("LOGO_SPRITE_ID");
+	public static long getLogoSpriteId() {
+		return LOGO_SPRITE_ID;
 	}
 
-	public static boolean wantMembers() { return MEMBERS_FEATURES; }
+	public static int getFPS() {
+		return C_FPS;
+	}
+
+	public static boolean wantMembers() {
+		return MEMBER_WORLD;
+	}
 
 	public static boolean isAndroid() {
 		return F_ANDROID_BUILD;

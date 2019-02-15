@@ -384,62 +384,110 @@ public class ActionSender {
 		ConnectionAttachment attachment = new ConnectionAttachment();
 		channel.attr(RSCConnectionHandler.attachment).set(attachment);
 		channel.writeAndFlush(s.toPacket());
+		LOGGER.info("Debug server configs being sent:");
+		LOGGER.info(Constants.GameServer.SERVER_NAME + " 1");
+		LOGGER.info(Constants.GameServer.SERVER_NAME_WELCOME + " 2");
+		LOGGER.info(Constants.GameServer.PLAYER_LEVEL_LIMIT + " 3");
+		LOGGER.info(Constants.GameServer.SPAWN_AUCTION_NPCS + " 4");
+		LOGGER.info(Constants.GameServer.SPAWN_IRON_MAN_NPCS + " 5");
+		LOGGER.info(Constants.GameServer.SHOW_FLOATING_NAMETAGS + " 6");
+		LOGGER.info(Constants.GameServer.WANT_CLANS + " 7");
+		LOGGER.info(Constants.GameServer.WANT_KILL_FEED + " 8");
+		LOGGER.info(Constants.GameServer.FOG_TOGGLE + " 9");
+		LOGGER.info(Constants.GameServer.GROUND_ITEM_TOGGLE + " 10");
+		LOGGER.info(Constants.GameServer.AUTO_MESSAGE_SWITCH_TOGGLE + " 11");
+		LOGGER.info(Constants.GameServer.BATCH_PROGRESSION + " 12");
+		LOGGER.info(Constants.GameServer.SIDE_MENU_TOGGLE + " 13");
+		LOGGER.info(Constants.GameServer.INVENTORY_COUNT_TOGGLE + " 14");
+		LOGGER.info(Constants.GameServer.ZOOM_VIEW_TOGGLE + " 15");
+		LOGGER.info(Constants.GameServer.MENU_COMBAT_STYLE_TOGGLE + " 16");
+		LOGGER.info(Constants.GameServer.FIGHTMODE_SELECTOR_TOGGLE + " 17");
+		LOGGER.info(Constants.GameServer.EXPERIENCE_COUNTER_TOGGLE + " 18");
+		LOGGER.info(Constants.GameServer.EXPERIENCE_DROPS_TOGGLE + " 19");
+		LOGGER.info(Constants.GameServer.ITEMS_ON_DEATH_MENU + " 20");
+		LOGGER.info(Constants.GameServer.SHOW_ROOF_TOGGLE + " 21");
+		LOGGER.info(Constants.GameServer.WANT_HIDE_IP + " 22");
+		LOGGER.info(Constants.GameServer.WANT_REMEMBER + " 23");
+		LOGGER.info(Constants.GameServer.WANT_GLOBAL_CHAT + " 24");
+		LOGGER.info(Constants.GameServer.WANT_SKILL_MENUS + " 25");
+		LOGGER.info(Constants.GameServer.WANT_QUEST_MENUS + " 26");
+		LOGGER.info(Constants.GameServer.WANT_EXPERIENCE_ELIXIRS + " 27");
+		LOGGER.info(Constants.GameServer.WANT_KEYBOARD_SHORTCUTS + " 28");
+		LOGGER.info(Constants.GameServer.WANT_CUSTOM_BANKS + " 29");
+		LOGGER.info(Constants.GameServer.WANT_BANK_PINS + " 30");
+		LOGGER.info(Constants.GameServer.WANT_BANK_NOTES + " 31");
+		LOGGER.info(Constants.GameServer.WANT_CERT_DEPOSIT + " 32");
+		LOGGER.info(Constants.GameServer.CUSTOM_FIREMAKING + " 33");
+		LOGGER.info(Constants.GameServer.WANT_DROP_X + " 34");
+		LOGGER.info(Constants.GameServer.WANT_EXP_INFO + " 35");
+		LOGGER.info(Constants.GameServer.WANT_WOODCUTTING_GUILD + " 36");
+		LOGGER.info(Constants.GameServer.WANT_DECANTING + " 37");
+		LOGGER.info(Constants.GameServer.WANT_CERTS_TO_BANK + " 38");
+		LOGGER.info(Constants.GameServer.WANT_CUSTOM_RANK_DISPLAY + " 39");
+		LOGGER.info(Constants.GameServer.RIGHT_CLICK_BANK + " 40");
+		LOGGER.info(Constants.GameServer.FIX_OVERHEAD_CHAT + " 41");
+		LOGGER.info(Constants.GameServer.WELCOME_TEXT + " 42");
+		LOGGER.info(Constants.GameServer.MEMBER_WORLD + " 43");
+		LOGGER.info(Constants.GameServer.DISPLAY_LOGO_SPRITE + " 44");
+		LOGGER.info(Constants.GameServer.LOGO_SPRITE_ID + " 45");
+		LOGGER.info(Constants.GameServer.C_FPS + " 46");
 		channel.close();
 	}
 
-	public static void sendServerConfigs(Player player) {
+	static void sendServerConfigs(Player player) {
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs();
 		player.write(s.toPacket());
 	}
 
-	public static com.openrsc.server.net.PacketBuilder prepareServerConfigs() {
+	private static com.openrsc.server.net.PacketBuilder prepareServerConfigs() {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_SERVER_CONFIGS.opcode);
-		s.writeString(Constants.GameServer.SERVER_NAME); // Server Name
-		s.writeString(Constants.GameServer.SERVER_NAME_WELCOME); // Server name on client welcome screen
-		s.writeByte((byte) Constants.GameServer.PLAYER_LEVEL_LIMIT);
-		s.writeByte((byte) (Constants.GameServer.SPAWN_AUCTION_NPCS ? 1 : 0)); // Auction NPC Spawns
-		s.writeByte((byte) (Constants.GameServer.SPAWN_IRON_MAN_NPCS ? 1 : 0)); // Iron Man NPC Spawns
-		s.writeByte((byte) (Constants.GameServer.SHOW_FLOATING_NAMETAGS ? 1 : 0)); // Floating Names
-		s.writeByte((byte) (Constants.GameServer.WANT_CLANS ? 1 : 0)); // Clan Toggle
-		s.writeByte((byte) (Constants.GameServer.WANT_KILL_FEED ? 1 : 0)); // Kill Feed
-		s.writeByte((byte) (Constants.GameServer.FOG_TOGGLE ? 1 : 0)); // Fog Toggle
-		s.writeByte((byte) (Constants.GameServer.GROUND_ITEM_TOGGLE ? 1 : 0)); // Ground Item Toggle
-		s.writeByte((byte) (Constants.GameServer.AUTO_MESSAGE_SWITCH_TOGGLE ? 1 : 0)); // Auto Message Switch Toggle
-		s.writeByte((byte) (Constants.GameServer.BATCH_PROGRESSION ? 1 : 0)); // Batch Progression
-		s.writeByte((byte) (Constants.GameServer.SIDE_MENU_TOGGLE ? 1 : 0)); // Side Menu Toggle
-		s.writeByte((byte) (Constants.GameServer.INVENTORY_COUNT_TOGGLE ? 1 : 0)); // Inventory Count Toggle
-		s.writeByte((byte) (Constants.GameServer.ZOOM_VIEW_TOGGLE ? 1 : 0)); // Zoom View Toggle
-		s.writeByte((byte) (Constants.GameServer.MENU_COMBAT_STYLE_TOGGLE ? 1 : 0)); // Menu Combat Style Toggle
-		s.writeByte((byte) (Constants.GameServer.FIGHTMODE_SELECTOR_TOGGLE ? 1 : 0)); // Fightmode Selector Toggle
-		s.writeByte((byte) (Constants.GameServer.EXPERIENCE_COUNTER_TOGGLE ? 1 : 0));
-		s.writeByte((byte) (Constants.GameServer.EXPERIENCE_DROPS_TOGGLE ? 1 : 0));
-		s.writeByte((byte) (Constants.GameServer.ITEMS_ON_DEATH_MENU ? 1 : 0));
-		s.writeByte((byte) (Constants.GameServer.SHOW_ROOF_TOGGLE ? 1 : 0));
-		s.writeByte((byte) (Constants.GameServer.WANT_HIDE_IP ? 1 : 0));
-		s.writeByte((byte) (Constants.GameServer.WANT_REMEMBER ? 1 : 0));
-		s.writeByte((byte) (Constants.GameServer.WANT_GLOBAL_CHAT ? 1 : 0));
-		s.writeByte((byte) (Constants.GameServer.WANT_SKILL_MENUS ? 1 : 0));
-		s.writeByte((byte) (Constants.GameServer.WANT_QUEST_MENUS ? 1 : 0));
-		s.writeByte((byte) (Constants.GameServer.WANT_EXPERIENCE_ELIXIRS ? 1 : 0));
-		s.writeByte((byte) (Constants.GameServer.WANT_KEYBOARD_SHORTCUTS ? 1 : 0));
-		s.writeByte((byte) (Constants.GameServer.WANT_CUSTOM_BANKS ? 1 : 0));
-		s.writeByte((byte) (Constants.GameServer.WANT_BANK_PINS ? 1 : 0));
-		s.writeByte((byte) (Constants.GameServer.WANT_BANK_NOTES ? 1 : 0));
-		s.writeByte((byte) (Constants.GameServer.WANT_CERT_DEPOSIT ? 1 : 0));
-		s.writeByte((byte) (Constants.GameServer.CUSTOM_FIREMAKING ? 1 : 0));
-		s.writeByte((byte) (Constants.GameServer.WANT_DROP_X ? 1 : 0));
-		s.writeByte((byte) (Constants.GameServer.WANT_EXP_INFO ? 1 : 0));
-		s.writeByte((byte) (Constants.GameServer.WANT_WOODCUTTING_GUILD ? 1 : 0));
-		s.writeByte((byte) (Constants.GameServer.WANT_DECANTING ? 1 : 0));
-		s.writeByte((byte) (Constants.GameServer.WANT_CERTS_TO_BANK ? 1 : 0));
-		s.writeByte((byte) (Constants.GameServer.WANT_CUSTOM_RANK_DISPLAY ? 1 : 0));
-		s.writeByte((byte) (Constants.GameServer.RIGHT_CLICK_BANK ? 1 : 0));
-		s.writeByte((byte) (Constants.GameServer.FIX_OVERHEAD_CHAT ? 1 : 0));
-		s.writeString(Constants.GameServer.WELCOME_TEXT); // Welcome login screen text
-		s.writeByte((byte) (Constants.GameServer.MEMBER_WORLD ? 1 : 0)); // Is this a members world?
-		s.writeByte((byte) (Constants.GameServer.DISPLAY_LOGO_SPRITE ? 1 : 0)); // If logo sprite is shown on client login
-		s.writeString(Constants.GameServer.LOGO_SPRITE_ID); // Specifies which logo sprite is shown
+		s.writeString(Constants.GameServer.SERVER_NAME); // 1
+		s.writeString(Constants.GameServer.SERVER_NAME_WELCOME); // 2
+		s.writeByte((byte) Constants.GameServer.PLAYER_LEVEL_LIMIT); // 3
+		s.writeByte((byte) (Constants.GameServer.SPAWN_AUCTION_NPCS ? 1 : 0)); // 4
+		s.writeByte((byte) (Constants.GameServer.SPAWN_IRON_MAN_NPCS ? 1 : 0)); // 5
+		s.writeByte((byte) (Constants.GameServer.SHOW_FLOATING_NAMETAGS ? 1 : 0)); // 6
+		s.writeByte((byte) (Constants.GameServer.WANT_CLANS ? 1 : 0)); // 7
+		s.writeByte((byte) (Constants.GameServer.WANT_KILL_FEED ? 1 : 0)); // 8
+		s.writeByte((byte) (Constants.GameServer.FOG_TOGGLE ? 1 : 0)); // 9
+		s.writeByte((byte) (Constants.GameServer.GROUND_ITEM_TOGGLE ? 1 : 0)); // 10
+		s.writeByte((byte) (Constants.GameServer.AUTO_MESSAGE_SWITCH_TOGGLE ? 1 : 0)); // 11
+		s.writeByte((byte) (Constants.GameServer.BATCH_PROGRESSION ? 1 : 0)); // 12
+		s.writeByte((byte) (Constants.GameServer.SIDE_MENU_TOGGLE ? 1 : 0)); // 13
+		s.writeByte((byte) (Constants.GameServer.INVENTORY_COUNT_TOGGLE ? 1 : 0)); // 14
+		s.writeByte((byte) (Constants.GameServer.ZOOM_VIEW_TOGGLE ? 1 : 0)); // 15
+		s.writeByte((byte) (Constants.GameServer.MENU_COMBAT_STYLE_TOGGLE ? 1 : 0)); // 16
+		s.writeByte((byte) (Constants.GameServer.FIGHTMODE_SELECTOR_TOGGLE ? 1 : 0)); // 17
+		s.writeByte((byte) (Constants.GameServer.EXPERIENCE_COUNTER_TOGGLE ? 1 : 0)); // 18
+		s.writeByte((byte) (Constants.GameServer.EXPERIENCE_DROPS_TOGGLE ? 1 : 0)); // 19
+		s.writeByte((byte) (Constants.GameServer.ITEMS_ON_DEATH_MENU ? 1 : 0)); // 20
+		s.writeByte((byte) (Constants.GameServer.SHOW_ROOF_TOGGLE ? 1 : 0)); // 21
+		s.writeByte((byte) (Constants.GameServer.WANT_HIDE_IP ? 1 : 0)); // 22
+		s.writeByte((byte) (Constants.GameServer.WANT_REMEMBER ? 1 : 0)); // 23
+		s.writeByte((byte) (Constants.GameServer.WANT_GLOBAL_CHAT ? 1 : 0)); // 24
+		s.writeByte((byte) (Constants.GameServer.WANT_SKILL_MENUS ? 1 : 0)); // 25
+		s.writeByte((byte) (Constants.GameServer.WANT_QUEST_MENUS ? 1 : 0)); // 26
+		s.writeByte((byte) (Constants.GameServer.WANT_EXPERIENCE_ELIXIRS ? 1 : 0)); // 27
+		s.writeByte((byte) (Constants.GameServer.WANT_KEYBOARD_SHORTCUTS ? 1 : 0)); // 28
+		s.writeByte((byte) (Constants.GameServer.WANT_CUSTOM_BANKS ? 1 : 0)); // 29
+		s.writeByte((byte) (Constants.GameServer.WANT_BANK_PINS ? 1 : 0)); // 30
+		s.writeByte((byte) (Constants.GameServer.WANT_BANK_NOTES ? 1 : 0)); // 31
+		s.writeByte((byte) (Constants.GameServer.WANT_CERT_DEPOSIT ? 1 : 0)); // 32
+		s.writeByte((byte) (Constants.GameServer.CUSTOM_FIREMAKING ? 1 : 0)); // 33
+		s.writeByte((byte) (Constants.GameServer.WANT_DROP_X ? 1 : 0)); // 34
+		s.writeByte((byte) (Constants.GameServer.WANT_EXP_INFO ? 1 : 0)); // 35
+		s.writeByte((byte) (Constants.GameServer.WANT_WOODCUTTING_GUILD ? 1 : 0)); // 36
+		s.writeByte((byte) (Constants.GameServer.WANT_DECANTING ? 1 : 0)); // 37
+		s.writeByte((byte) (Constants.GameServer.WANT_CERTS_TO_BANK ? 1 : 0)); // 38
+		s.writeByte((byte) (Constants.GameServer.WANT_CUSTOM_RANK_DISPLAY ? 1 : 0)); // 39
+		s.writeByte((byte) (Constants.GameServer.RIGHT_CLICK_BANK ? 1 : 0)); // 40
+		s.writeByte((byte) (Constants.GameServer.FIX_OVERHEAD_CHAT ? 1 : 0)); // 41
+		s.writeString(Constants.GameServer.WELCOME_TEXT); // 42
+		s.writeByte((byte) (Constants.GameServer.MEMBER_WORLD ? 1 : 0)); // 43
+		s.writeByte((byte) (Constants.GameServer.DISPLAY_LOGO_SPRITE ? 1 : 0)); // 44
+		s.writeByte((byte) Constants.GameServer.LOGO_SPRITE_ID); // 45
+		s.writeByte((byte) Constants.GameServer.C_FPS); // 46
 		return s;
 	}
 
@@ -490,7 +538,7 @@ public class ActionSender {
 	/**
 	 * Displays the login box and last IP and login date
 	 */
-	public static void sendLoginBox(Player player) {
+	private static void sendLoginBox(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_WELCOME_INFO.opcode);
 		s.writeString(player.getLastIP());
@@ -522,7 +570,7 @@ public class ActionSender {
 	/**
 	 * Sends quest names and stages
 	 */
-	public static void sendQuestInfo(Player player) {
+	private static void sendQuestInfo(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		List<QuestInterface> quests = World.getWorld().getQuests();
 		s.setID(Opcode.SEND_QUESTS.opcode);
@@ -601,7 +649,7 @@ public class ActionSender {
 		player.write(s.toPacket());
 	}
 
-	public static void sendPrivacySettings(Player player) {
+	private static void sendPrivacySettings(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_PRIVACY_SETTINGS.opcode);
 		s.writeByte(
@@ -946,7 +994,7 @@ public class ActionSender {
 		player.write(pb.toPacket());
 	}
 
-	public static void sendLogin(Player p) {
+	static void sendLogin(Player p) {
 		try {
 			if (World.getWorld().registerPlayer(p)) {
 
