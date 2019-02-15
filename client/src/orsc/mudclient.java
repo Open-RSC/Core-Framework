@@ -3564,7 +3564,7 @@ public final class mudclient implements Runnable {
 			int var3 = yr;
 			this.getSurface().drawBoxBorder(xr, 400, yr, var2, 0xFFFFFF);
 			var3 += 20;
-			this.getSurface().drawColoredStringCentered(xr + 256 - 56, "Welcome to " + Config.SERVER_NAME + " " + this.localPlayer.accountName,
+			this.getSurface().drawColoredStringCentered(xr + 256 - 56, "Welcome to " + Config.getServerName() + " " + this.localPlayer.accountName,
 				0xFFFF00, 0, 4, var3);
 			var3 += 30;
 			String var4;
