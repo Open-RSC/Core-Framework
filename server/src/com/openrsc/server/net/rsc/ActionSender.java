@@ -380,10 +380,6 @@ public class ActionSender {
 
 	public static void sendInitialServerConfigs(Channel channel) throws Exception {
 		LOGGER.info("Sending initial configs to: " + channel.remoteAddress());
-		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs();
-		ConnectionAttachment attachment = new ConnectionAttachment();
-		channel.attr(RSCConnectionHandler.attachment).set(attachment);
-		channel.writeAndFlush(s.toPacket());
 		LOGGER.info("Debug server configs being sent:");
 		LOGGER.info(Constants.GameServer.SERVER_NAME + " 1");
 		LOGGER.info(Constants.GameServer.SERVER_NAME_WELCOME + " 2");
@@ -430,7 +426,11 @@ public class ActionSender {
 		LOGGER.info(Constants.GameServer.MEMBER_WORLD + " 43");
 		LOGGER.info(Constants.GameServer.DISPLAY_LOGO_SPRITE + " 44");
 		//LOGGER.info(Constants.GameServer.LOGO_SPRITE_ID + " 45");
-		LOGGER.info(Constants.GameServer.C_FPS + " 46");
+		//LOGGER.info(Constants.GameServer.C_FPS + " 46");
+		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs();
+		ConnectionAttachment attachment = new ConnectionAttachment();
+		channel.attr(RSCConnectionHandler.attachment).set(attachment);
+		channel.writeAndFlush(s.toPacket());
 		channel.close();
 	}
 
