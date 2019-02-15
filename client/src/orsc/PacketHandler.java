@@ -727,7 +727,7 @@ public class PacketHandler {
 		int wantCustomBanks, wantBankPins, wantBankNotes, wantCertDeposit, customFiremaking;
 		int wantDropX, wantExpInfo, wantWoodcuttingGuild, wantFixedOverheadChat;
 		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank;
-		long logoSpriteID;
+		//int logoSpriteID;
 
 		if (!mc.gotInitialConfigs) {
 			serverName = this.getClientStream().readString(); // 1
@@ -775,7 +775,7 @@ public class PacketHandler {
 			welcomeText = this.getClientStream().readString(); // 42
 			wantMembers = this.getClientStream().getUnsignedByte(); // 43
 			displayLogoSprite = this.getClientStream().getUnsignedByte(); // 44
-			logoSpriteID = this.getClientStream().getUnsignedByte(); // 45
+			//logoSpriteID = this.getClientStream().getUnsignedByte(); // 45
 			getFPS = this.getClientStream().getUnsignedByte(); // 46
 		} else {
 			serverName = packetsIncoming.readString(); // 1
@@ -823,7 +823,7 @@ public class PacketHandler {
 			welcomeText = packetsIncoming.readString(); // 42
 			wantMembers = packetsIncoming.getUnsignedByte(); // 43
 			displayLogoSprite = packetsIncoming.getUnsignedByte(); // 44
-			logoSpriteID = packetsIncoming.getUnsignedByte(); // 45
+			//logoSpriteID = packetsIncoming.getUnsignedByte(); // 45
 			getFPS = packetsIncoming.getUnsignedByte(); // 46
 		}
 
@@ -873,7 +873,7 @@ public class PacketHandler {
 					"\nWELCOME_TEXT" + welcomeText + // 42
 					"\nMEMBERS_FEATURES" + wantMembers + // 43
 					"\nDISPLAY_LOGO_SPRITE" + displayLogoSprite + // 44
-					"\nLOGO_SPRITE_ID" + logoSpriteID + // 45
+					//"\nLOGO_SPRITE_ID" + logoSpriteID + // 45
 					"\nC_FPS" + getFPS // 46
 			);
 		}
@@ -922,7 +922,7 @@ public class PacketHandler {
 		props.setProperty("WELCOME_TEXT", welcomeText); // 42
 		props.setProperty("MEMBER_WORLD", wantMembers == 1 ? "true" : "false"); // 43
 		props.setProperty("DISPLAY_LOGO_SPRITE", displayLogoSprite == 1 ? "true" : "false"); // 44
-		props.setProperty("LOGO_SPRITE_ID", Long.toString(logoSpriteID)); // 45
+		//props.setProperty("LOGO_SPRITE_ID", Integer.toString(logoSpriteID)); // 45
 		props.setProperty("C_FPS", Integer.toString(getFPS)); // 46
 
 		Config.updateServerConfiguration(props);
