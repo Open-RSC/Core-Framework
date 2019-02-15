@@ -45,7 +45,12 @@
                 <pathelement path="${java.class.path}/"/>
             </classpath>
         </javac>
-        <jar basedir="${build}" destfile="${jar}"/>
+        <jar basedir="${build}" destfile="${jar}">
+            <zipgroupfileset dir="lib" includes="*.jar" />
+            <manifest>
+                <attribute name="Main-Class" value="com.openrsc.server.Server"/>
+            </manifest>
+        </jar>
         <delete dir="${build}"/>
     </target>
 
