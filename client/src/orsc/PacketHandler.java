@@ -73,7 +73,7 @@ public class PacketHandler {
 
 	private void handlePacket1(int opcode, int length) {
 		try {
-			if (mc.DEBUG)
+			if (Config.DEBUG)
 				System.out.println("Opcode: " + opcode + " Length: " + length);
 
 			// Unhandled Opcodes Received...
@@ -827,7 +827,7 @@ public class PacketHandler {
 			//getFPS = packetsIncoming.getUnsignedByte(); // 46
 		}
 
-		if (mc.DEBUG) {
+		if (Config.DEBUG) {
 			System.out.println(
 				"SERVER_NAME " + serverName + // 1
 					"\nSERVER_NAME_WELCOME " + serverNameWelcome + // 2
