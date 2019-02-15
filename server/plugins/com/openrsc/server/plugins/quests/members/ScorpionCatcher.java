@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -27,18 +29,8 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 	InvUseOnNpcExecutiveListener, InvUseOnWallObjectListener,
 	InvUseOnWallObjectExecutiveListener, WallObjectActionListener,
 	WallObjectActionExecutiveListener {
-
-	private static final int NONE = 678;
-	private static final int ONE = 679; // (Taverly)
-	private static final int TWO = 686; // (Barbarian)
-	private static final int THREE = 687; // (Monastery)
-	private static final int ONE_AND_TWO = 680;
-	private static final int ONE_AND_THREE = 688;
-	private static final int TWO_AND_THREE = 689;
-	private static final int ONE_TWO_AND_THREE = 681;
-	private static int THORMAC = 300;
-	private static int SEER = 301;
-	private static int VELRAK_THE_EXPLORER = 272;
+	
+	// items 679 (scorpion1 taverly), 686 (scorpion2 barbarian), 687 (scorpion3 monastery)
 
 	@Override
 	public int getQuestId() {
@@ -64,16 +56,7 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == THORMAC) {
-			return true;
-		}
-		if (n.getID() == SEER) {
-			return true;
-		}
-		if (n.getID() == VELRAK_THE_EXPLORER) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.THORMAC_THE_SORCEROR.id() || n.getID() == NpcId.SEER.id() || n.getID() == NpcId.VELRAK_THE_EXPLORER.id();
 	}
 
 	private void seerDialogue(Player p, Npc n, int cID) {
@@ -102,11 +85,11 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 				case 2:
 
 					// Still needs first scorpion
-					if (!hasItem(p, ONE) &&
-						!hasItem(p, ONE_AND_TWO) &&
-						!hasItem(p, ONE_TWO_AND_THREE) &&
-						!hasItem(p, ONE_AND_THREE)) {
-						if (!hasItem(p, NONE)) {
+					if (!hasItem(p, ItemId.SCORPION_CAGE_ONE.id()) &&
+						!hasItem(p, ItemId.SCORPION_CAGE_ONE_TWO.id()) &&
+						!hasItem(p, ItemId.SCORPION_CAGE_ONE_TWO_THREE.id()) &&
+						!hasItem(p, ItemId.SCORPION_CAGE_ONE_THREE.id())) {
+						if (!hasItem(p, ItemId.SCORPION_CAGE_NONE.id())) {
 							playerTalk(p, n, "I need to locate some scorpions");
 							seerDialogue(p, n, SEER_NPC.LOCATE_SCORPIONS);
 						} else {
@@ -128,10 +111,10 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 					}
 
 					// Still needs second scorpion
-					else if (!hasItem(p, TWO) &&
-						!hasItem(p, ONE_AND_TWO) &&
-						!hasItem(p, TWO_AND_THREE) &&
-						!hasItem(p, ONE_TWO_AND_THREE)) {
+					else if (!hasItem(p, ItemId.SCORPION_CAGE_TWO.id()) &&
+						!hasItem(p, ItemId.SCORPION_CAGE_ONE_TWO.id()) &&
+						!hasItem(p, ItemId.SCORPION_CAGE_TWO_THREE.id()) &&
+						!hasItem(p, ItemId.SCORPION_CAGE_ONE_TWO_THREE.id())) {
 						playerTalk(p, n, "Hi I have retrieved the scorpion from near the spiders");
 						npcTalk(p, n, "Well I've checked my looking glass",
 							"There seems to be a kharid scorpion in a village full of  axe wielding warriors",
@@ -140,10 +123,10 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 					}
 
 					// Still needs third scorpion
-					else if (!hasItem(p, THREE) &&
-						!hasItem(p, ONE_AND_THREE) &&
-						!hasItem(p, TWO_AND_THREE) &&
-						!hasItem(p, ONE_TWO_AND_THREE)) {
+					else if (!hasItem(p, ItemId.SCORPION_CAGE_THREE.id()) &&
+						!hasItem(p, ItemId.SCORPION_CAGE_ONE_THREE.id()) &&
+						!hasItem(p, ItemId.SCORPION_CAGE_TWO_THREE.id()) &&
+						!hasItem(p, ItemId.SCORPION_CAGE_ONE_TWO_THREE.id())) {
 						npcTalk(p, n, "Many greetings");
 						playerTalk(p, n, "I have retrieved a second scorpion");
 						npcTalk(p, n,
@@ -192,7 +175,7 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 
 	public void velrakDialogue(Player p, Npc n, int choice) {
 		if (choice == -1) {
-			if (hasItem(p, 596)) {
+			if (hasItem(p, ItemId.DUSTY_KEY.id())) {
 				playerTalk(p, n, "Are you still here?");
 				npcTalk(p, n, "Yes, I'm still plucking up courage",
 					"To run out past those black knights");
@@ -220,7 +203,7 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 			if (choice == 0) {
 				message(p,
 					"Velrak reaches inside his boot and passes you a key");
-				addItem(p, 596, 1);
+				addItem(p, ItemId.DUSTY_KEY.id(), 1);
 			}
 
 		} else if (choice == 1) {
@@ -245,21 +228,21 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 				case 1:
 				case 2:
 					npcTalk(p, n, "How goes your quest?");
-					if (!hasItem(p, NONE) && !hasItem(p, ONE_TWO_AND_THREE)) { // No empty cage, no full cage
+					if (!hasItem(p, ItemId.SCORPION_CAGE_NONE.id()) && !hasItem(p, ItemId.SCORPION_CAGE_ONE_TWO_THREE.id())) { // No empty cage, no full cage
 						int menu = showMenu(p, n,
 							"I've lost my cage",
 							"I've not caught all the scorpions yet");
 						if (menu == 0) {
 							npcTalk(p, n, "Ok here is another cage",
 								"You're almost as bad at loosing things as me");
-							addItem(p, NONE, 1);
+							addItem(p, ItemId.SCORPION_CAGE_NONE.id(), 1);
 						} else if (menu == 1) {
 							npcTalk(p, n, "Well remember, go speak to the seers north of here if you need any help");
 						}
-					} else if (hasItem(p, ONE_TWO_AND_THREE)) { // full cage
+					} else if (hasItem(p, ItemId.SCORPION_CAGE_ONE_TWO_THREE.id())) { // full cage
 						playerTalk(p, n, "I have retrieved all your scorpions");
 						npcTalk(p, n, "aha my little scorpions home at last");
-						removeItem(p, ONE_TWO_AND_THREE, 1);
+						removeItem(p, ItemId.SCORPION_CAGE_ONE_TWO_THREE.id(), 1);
 						p.sendQuestComplete(Constants.Quests.SCORPION_CATCHER);
 					} else {
 						playerTalk(p, n, "I've not caught all the scorpions yet");
@@ -279,55 +262,55 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 							"battlestaff of air", "battlestaff of earth",
 							"I won't bother yet actually");
 						if (five == 0) {
-							if (!hasItem(p, 615)) {
+							if (!hasItem(p, ItemId.BATTLESTAFF_OF_FIRE.id())) {
 								playerTalk(p, n, "I don't have a battlestaff of fire yet though");
 								return;
 							}
-							if (!hasItem(p, 10, 40000)) {
+							if (!hasItem(p, ItemId.COINS.id(), 40000)) {
 								playerTalk(p, n, "I'll just get the money for you");
 								return;
 							}
-							if (removeItem(p, new Item(10, 40000), new Item(615, 1))) {
-								addItem(p, 682, 1);
+							if (removeItem(p, new Item(ItemId.COINS.id(), 40000), new Item(ItemId.BATTLESTAFF_OF_FIRE.id(), 1))) {
+								addItem(p, ItemId.ENCHANTED_BATTLESTAFF_OF_FIRE.id(), 1);
 								p.message("Thormac enchants your staff");
 							}
 						} else if (five == 1) {
-							if (!hasItem(p, 616)) {
+							if (!hasItem(p, ItemId.BATTLESTAFF_OF_WATER.id())) {
 								playerTalk(p, n, "I don't have a battlestaff of water yet though");
 								return;
 							}
-							if (!hasItem(p, 10, 40000)) {
+							if (!hasItem(p, ItemId.COINS.id(), 40000)) {
 								playerTalk(p, n, "I'll just get the money for you");
 								return;
 							}
-							if (removeItem(p, new Item(10, 40000), new Item(616, 1))) {
-								addItem(p, 683, 1);
+							if (removeItem(p, new Item(ItemId.COINS.id(), 40000), new Item(ItemId.BATTLESTAFF_OF_WATER.id(), 1))) {
+								addItem(p, ItemId.ENCHANTED_BATTLESTAFF_OF_WATER.id(), 1);
 								p.message("Thormac enchants your staff");
 							}
 						} else if (five == 2) {
-							if (!hasItem(p, 617)) {
+							if (!hasItem(p, ItemId.BATTLESTAFF_OF_AIR.id())) {
 								playerTalk(p, n, "I don't have a battlestaff of air yet though");
 								return;
 							}
-							if (!hasItem(p, 10, 40000)) {
+							if (!hasItem(p, ItemId.COINS.id(), 40000)) {
 								playerTalk(p, n, "I'll just get the money for you");
 								return;
 							}
-							if (removeItem(p, new Item(10, 40000), new Item(617, 1))) {
-								addItem(p, 684, 1);
+							if (removeItem(p, new Item(ItemId.COINS.id(), 40000), new Item(ItemId.BATTLESTAFF_OF_AIR.id(), 1))) {
+								addItem(p, ItemId.ENCHANTED_BATTLESTAFF_OF_AIR.id(), 1);
 								p.message("Thormac enchants your staff");
 							}
 						} else if (five == 3) {
-							if (!hasItem(p, 618)) {
+							if (!hasItem(p, ItemId.BATTLESTAFF_OF_EARTH.id())) {
 								playerTalk(p, n, "I don't have a battlestaff of earth yet though");
 								return;
 							}
-							if (!hasItem(p, 10, 40000)) {
+							if (!hasItem(p, ItemId.COINS.id(), 40000)) {
 								playerTalk(p, n, "I'll just get the money for you");
 								return;
 							}
-							if (removeItem(p, new Item(10, 40000), new Item(618, 1))) {
-								addItem(p, 685, 1);
+							if (removeItem(p, new Item(ItemId.COINS.id(), 40000), new Item(ItemId.BATTLESTAFF_OF_EARTH.id(), 1))) {
+								addItem(p, ItemId.ENCHANTED_BATTLESTAFF_OF_EARTH.id(), 1);
 								p.message("Thormac enchants your staff");
 							}
 						}
@@ -359,7 +342,7 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 		else if (choice == 1) {
 			npcTalk(p, n, "Well I have a scorpion cage here",
 				"Which you can use to catch them in");
-			addItem(p, NONE, 1);
+			addItem(p, ItemId.SCORPION_CAGE_NONE.id(), 1);
 			message(p, "Thormac gives you a cage");
 			npcTalk(p, n,
 				"If you go up to the village of seers to the north of here",
@@ -392,13 +375,13 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == SEER) {
+		if (n.getID() == NpcId.SEER.id()) {
 			seerDialogue(p, n, -1);
 		}
-		if (n.getID() == VELRAK_THE_EXPLORER) {
+		else if (n.getID() == NpcId.VELRAK_THE_EXPLORER.id()) {
 			velrakDialogue(p, n, -1);
 		}
-		if (n.getID() == THORMAC) {
+		else if (n.getID() == NpcId.THORMAC_THE_SORCEROR.id()) {
 			thormacDialogue(p, n, -1);
 		}
 	}
@@ -408,19 +391,19 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 		int cageId = i.getID();
 		if (player.getInventory().countId(cageId) <= 0) return false;
 
-		if (n.getID() == 302 && // First Scorpion (Taverly)
-			cageId != ONE && cageId != ONE_AND_TWO &&
-			cageId != ONE_AND_THREE && cageId != ONE_TWO_AND_THREE
+		if (n.getID() == NpcId.KHARID_SCORPION_TAVERLEY.id() && // First Scorpion (Taverly)
+			cageId != ItemId.SCORPION_CAGE_ONE.id() && cageId != ItemId.SCORPION_CAGE_ONE_TWO.id() &&
+			cageId != ItemId.SCORPION_CAGE_ONE_TWO_THREE.id() && cageId != ItemId.SCORPION_CAGE_ONE_TWO_THREE.id()
 		) {
 			return true;
-		} else if (n.getID() == 303 && // Second Scorpion (Barbarian)
-			cageId != TWO && cageId != ONE_AND_TWO &&
-			cageId != TWO_AND_THREE && cageId != ONE_TWO_AND_THREE
+		} else if (n.getID() == NpcId.KHARID_SCORPION_BARBARIAN.id() && // Second Scorpion (Barbarian)
+			cageId != ItemId.SCORPION_CAGE_TWO.id() && cageId != ItemId.SCORPION_CAGE_ONE_TWO.id() &&
+			cageId != ItemId.SCORPION_CAGE_TWO_THREE.id() && cageId != ItemId.SCORPION_CAGE_ONE_TWO_THREE.id()
 		) {
 			return true;
-		} else if (n.getID() == 304 && // Third Scorpion (Monastery)
-			cageId != THREE && cageId != ONE_AND_THREE &&
-			cageId != TWO_AND_THREE && cageId != ONE_TWO_AND_THREE
+		} else if (n.getID() == NpcId.KHARID_SCORPION_MONASTERY.id() && // Third Scorpion (Monastery)
+			cageId != ItemId.SCORPION_CAGE_THREE.id() && cageId != ItemId.SCORPION_CAGE_ONE_TWO_THREE.id() &&
+			cageId != ItemId.SCORPION_CAGE_TWO_THREE.id() && cageId != ItemId.SCORPION_CAGE_ONE_TWO_THREE.id()
 		) {
 			return true;
 		}
@@ -433,7 +416,8 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 		if (p.getQuestStage(this) == 2) {
 
 			List<Integer> cages = new ArrayList<Integer>(Arrays.asList(
-				NONE, ONE, TWO, THREE, ONE_AND_TWO, ONE_AND_THREE, TWO_AND_THREE
+				ItemId.SCORPION_CAGE_NONE.id(), ItemId.SCORPION_CAGE_ONE.id(), ItemId.SCORPION_CAGE_TWO.id(), ItemId.SCORPION_CAGE_THREE.id(),
+				ItemId.SCORPION_CAGE_ONE_TWO.id(), ItemId.SCORPION_CAGE_ONE_THREE.id(), ItemId.SCORPION_CAGE_TWO_THREE.id()
 			));
 
 			int itemId = i.getID();
@@ -443,71 +427,77 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 				return;
 			}
 
-			int toRemove = -1;
-			int toAdd = -1;
+			int toRemove = ItemId.NOTHING.id();
+			int toAdd = ItemId.NOTHING.id();
 
 			// Taverly scorpion
-			if (n.getID() == 302) {
-				switch (itemId) {
-					case NONE:
+			if (n.getID() == NpcId.KHARID_SCORPION_TAVERLEY.id()) {
+				switch (ItemId.getById(itemId)) {
+					case SCORPION_CAGE_NONE:
 						toRemove = itemId;
-						toAdd = ONE;
+						toAdd = ItemId.SCORPION_CAGE_ONE.id();
 						break;
-					case TWO:
+					case SCORPION_CAGE_TWO:
 						toRemove = itemId;
-						toAdd = ONE_AND_TWO;
+						toAdd = ItemId.SCORPION_CAGE_ONE_TWO.id();
 						break;
-					case THREE:
+					case SCORPION_CAGE_THREE:
 						toRemove = itemId;
-						toAdd = ONE_AND_THREE;
+						toAdd = ItemId.SCORPION_CAGE_ONE_THREE.id();
 						break;
-					case TWO_AND_THREE:
+					case SCORPION_CAGE_TWO_THREE:
 						toRemove = itemId;
-						toAdd = ONE_TWO_AND_THREE;
+						toAdd = ItemId.SCORPION_CAGE_ONE_TWO_THREE.id();
+						break;
+					default:
 						break;
 				}
 			}
 
 			// Barbarian scorpion
-			else if (n.getID() == 303) {
-				switch (itemId) {
-					case NONE:
+			else if (n.getID() == NpcId.KHARID_SCORPION_BARBARIAN.id()) {
+				switch (ItemId.getById(itemId)) {
+					case SCORPION_CAGE_NONE:
 						toRemove = itemId;
-						toAdd = TWO;
+						toAdd = ItemId.SCORPION_CAGE_TWO.id();
 						break;
-					case ONE:
+					case SCORPION_CAGE_ONE:
 						toRemove = itemId;
-						toAdd = ONE_AND_TWO;
+						toAdd = ItemId.SCORPION_CAGE_ONE_TWO.id();
 						break;
-					case THREE:
+					case SCORPION_CAGE_THREE:
 						toRemove = itemId;
-						toAdd = TWO_AND_THREE;
+						toAdd = ItemId.SCORPION_CAGE_TWO_THREE.id();
 						break;
-					case ONE_AND_THREE:
+					case SCORPION_CAGE_ONE_THREE:
 						toRemove = itemId;
-						toAdd = ONE_TWO_AND_THREE;
+						toAdd = ItemId.SCORPION_CAGE_ONE_TWO_THREE.id();
+						break;
+					default:
 						break;
 				}
 			}
 
 			// Monastery scorpion
-			else if (n.getID() == 304) {
-				switch (itemId) {
-					case NONE:
+			else if (n.getID() == NpcId.KHARID_SCORPION_MONASTERY.id()) {
+				switch (ItemId.getById(itemId)) {
+					case SCORPION_CAGE_NONE:
 						toRemove = itemId;
-						toAdd = THREE;
+						toAdd = ItemId.SCORPION_CAGE_THREE.id();
 						break;
-					case ONE:
+					case SCORPION_CAGE_ONE:
 						toRemove = itemId;
-						toAdd = ONE_AND_THREE;
+						toAdd = ItemId.SCORPION_CAGE_ONE_THREE.id();
 						break;
-					case TWO:
+					case SCORPION_CAGE_TWO:
 						toRemove = itemId;
-						toAdd = TWO_AND_THREE;
+						toAdd = ItemId.SCORPION_CAGE_TWO_THREE.id();
 						break;
-					case ONE_AND_TWO:
+					case SCORPION_CAGE_ONE_TWO:
 						toRemove = itemId;
-						toAdd = ONE_TWO_AND_THREE;
+						toAdd = ItemId.SCORPION_CAGE_ONE_TWO_THREE.id();
+						break;
+					default:
 						break;
 				}
 			}
@@ -524,16 +514,9 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockInvUseOnWallObject(GameObject obj, Item item,
 										   Player player) {
-		if (obj.getID() == 83 && obj.getY() == 3428 && item.getID() == 595) {
-			return true;
-		}
-		if (obj.getID() == 83 && obj.getY() == 3425 && item.getID() == 595) {
-			return true;
-		}
-		if (obj.getID() == 84 && obj.getY() == 3353 && item.getID() == 596) {
-			return true;
-		}
-		return false;
+		return (obj.getID() == 83 && obj.getY() == 3428 && item.getID() == ItemId.JAIL_KEYS.id())
+				|| (obj.getID() == 83 && obj.getY() == 3425 && item.getID() == ItemId.JAIL_KEYS.id())
+				|| (obj.getID() == 84 && obj.getY() == 3353 && item.getID() == ItemId.DUSTY_KEY.id());
 	}
 
 	@Override
@@ -541,7 +524,7 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 		/*
 		 * Velrak cell door
 		 */
-		if (obj.getID() == 83 && obj.getY() == 3428 && item.getID() == 595) {
+		if (obj.getID() == 83 && obj.getY() == 3428 && item.getID() == ItemId.JAIL_KEYS.id()) {
 			showBubble(player, item);
 			doDoor(obj, player);
 		}
@@ -549,14 +532,14 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 		 * Below door infront of Velrak cell has nothing todo with quest or
 		 * anything important at all - replicated it anyway.
 		 */
-		if (obj.getID() == 83 && obj.getY() == 3425 && item.getID() == 595) {
+		if (obj.getID() == 83 && obj.getY() == 3425 && item.getID() == ItemId.JAIL_KEYS.id()) {
 			showBubble(player, item);
 			doDoor(obj, player);
 		}
 		/*
 		 * Dusty key door into blue dragons lair in Taverly dungeon
 		 */
-		if (obj.getID() == 84 && obj.getY() == 3353 && item.getID() == 596) {
+		if (obj.getID() == 84 && obj.getY() == 3353 && item.getID() == ItemId.DUSTY_KEY.id()) {
 			showBubble(player, item);
 			doDoor(obj, player);
 		}
@@ -565,10 +548,7 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click,
 										 Player player) {
-		if (obj.getID() == 87 && obj.getY() == 3353) {
-			return true;
-		}
-		return false;
+		return obj.getID() == 87 && obj.getY() == 3353;
 	}
 
 	@Override

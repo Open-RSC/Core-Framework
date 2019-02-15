@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -16,35 +18,60 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveLis
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
-	private static final int CERIL = 418;
-	private static final int BUTLER = 419;
-	private static final int LADY_HENRYETA = 422;
-	private static final int PHILIPE = 423;
-	private static final int CARNILLEAN_GUARD = 420;
-	private static final int CLIVET = 424;
-	private static final int CLAUS = 429;
-	private static final int CULT_MEMBER = 425;
-	private static final int ALOMONE = 427;
-	private static final int LORD_HAZEEL = 426;
-
-	private static final int BUTLERS_CUPBOARD = 441;
+	private static final int BUTLERS_CUPBOARD_OPEN = 441;
+	private static final int BUTLERS_CUPBOARD_CLOSED = 440;
 	private static final int BASEMENT_CRATE = 439;
 	private static final int TOP_LEVEL_BOOKCASE = 436;
-	private static final int CARNILLEAN_CHEST = 438;
+	private static final int CARNILLEAN_CHEST_OPEN = 437;
+	private static final int CARNILLEAN_CHEST_CLOSED = 438;
 
 	@Override
+	public int getQuestId() {
+		return Constants.Quests.THE_HAZEEL_CULT;
+	}
+
+	@Override
+	public String getQuestName() {
+		return "The Hazeel Cult (members)";
+	}
+
+	@Override
+	public boolean isMembers() {
+		return true;
+	}
+
+	@Override
+	public void handleReward(Player p) {
+		if (p.getCache().hasKey("good_side")) {
+			p.message("Well done you have completed the Hazeel cult quest");
+			incQuestReward(p, Quests.questData.get(Quests.THE_HAZEEL_CULT), true);
+			p.message("@gre@You haved gained 1 quest point!");
+			p.message("ceril gives you 2000 gold coins");
+			addItem(p, ItemId.COINS.id(), 2000);
+		} else if (p.getCache().hasKey("evil_side")) {
+			p.message("Hazeel gives you some coins");
+			addItem(p, ItemId.COINS.id(), 2000);
+			incQuestReward(p, Quests.questData.get(Quests.THE_HAZEEL_CULT), true);
+			p.message("@gre@You haved gained 1 quest point!");
+			p.message("you have completed the hazeel cult quest");
+		}
+	}
+	
+	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == CLAUS || n.getID() == CERIL || n.getID() == BUTLER || n.getID() == LADY_HENRYETA || n.getID() == PHILIPE || n.getID() == CARNILLEAN_GUARD || n.getID() == CLIVET || n.getID() == CULT_MEMBER || n.getID() == ALOMONE;
+		return DataConversions.inArray(new int[] {NpcId.CLAUS.id(), NpcId.CERIL.id(), NpcId.BUTLER.id(), NpcId.HENRYETA.id(), NpcId.PHILIPE.id(),
+				NpcId.CARNILLEAN_GUARD.id(), NpcId.CLIVET.id(), NpcId.CULT_MEMBER.id(), NpcId.ALOMONE.id()}, n.getID());
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == CERIL) {
+		if (n.getID() == NpcId.CERIL.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					playerTalk(p, n, "hello there");
@@ -130,12 +157,12 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 					break;
 				case 4:
 					if (p.getCache().hasKey("good_side")) {
-						if (hasItem(p, 755)) {
+						if (hasItem(p, ItemId.CARNILLEAN_ARMOUR.id())) {
 							playerTalk(p, n, "ceril, how are you?",
 								"Look, I've found the armour");
 							npcTalk(p, n, "well done i must say i am impressed");
 							message(p, "you give ceril the family armour");
-							removeItem(p, 755, 1);
+							removeItem(p, ItemId.CARNILLEAN_ARMOUR.id(), 1);
 							npcTalk(p, n, "before we send you on your way",
 								"i'll get our butler jones",
 								"to whip you up some of his special broth");
@@ -147,7 +174,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 							message(p, "you follow ceril up to butler Jones' room");
 							p.teleport(613, 1562);
 							message(p, "ceril speaks briefly with Jones");
-							Npc ceril = getNearestNpc(p, CERIL, 10);
+							Npc ceril = getNearestNpc(p, NpcId.CERIL.id(), 10);
 							npcTalk(p, ceril, "Well, he assures me that he's a loyal hard working man",
 								"I cannot fathom, why you would believe he is a spy");
 							playerTalk(p, ceril, "surely you won't take his word for it?");
@@ -155,7 +182,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 								"it is only fair that Jones shall recieve your reward",
 								"you shall recieve payment more suited to your low life personality");
 							message(p, "ceril gives you 5 gold coins");
-							addItem(p, 10, 5);
+							addItem(p, ItemId.COINS.id(), 5);
 							message(p, "ceril gives jones 695 gold coins");
 							npcTalk(p, ceril, "now take it and leave");
 							message(p, "butler Jones has a slight grin",
@@ -222,7 +249,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 					break;
 			}
 		}
-		if (n.getID() == BUTLER) {
+		else if (n.getID() == NpcId.BUTLER.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 				case 2:
@@ -327,7 +354,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 				case 6:
 					playerTalk(p, n, "hello jones");
 					npcTalk(p, n, "have you managed to find the script?");
-					if (hasItem(p, 747)) {
+					if (hasItem(p, ItemId.SCRIPT_OF_HAZEEL.id())) {
 						playerTalk(p, n, "I have it here");
 						npcTalk(p, n, "incredible, we owe you a lot",
 							"you better get it back to our hideout as quick as you can",
@@ -359,8 +386,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 					break;
 			}
 		}
-		/** She is of no use in the quest, even though shes a hazeel cult NPC on RSC wiki. **/
-		if (n.getID() == LADY_HENRYETA) {
+		else if (n.getID() == NpcId.HENRYETA.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 				case 1:
@@ -439,7 +465,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 					break;
 			}
 		}
-		if (n.getID() == PHILIPE) {
+		else if (n.getID() == NpcId.PHILIPE.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 				case 1:
@@ -542,7 +568,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 					break;
 			}
 		}
-		if (n.getID() == CLAUS) {
+		else if (n.getID() == NpcId.CLAUS.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 				case 1:
@@ -613,7 +639,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 					break;
 			}
 		}
-		if (n.getID() == CARNILLEAN_GUARD) {
+		else if (n.getID() == NpcId.CARNILLEAN_GUARD.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 				case 1:
@@ -688,7 +714,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 					break;
 			}
 		}
-		if (n.getID() == CLIVET) {
+		else if (n.getID() == NpcId.CLIVET.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					playerTalk(p, n, "hello there");
@@ -770,7 +796,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 									"but i guessed you were of stronger character",
 									"here take this poison, pour it into one of their meals",
 									"once the deed is done return here");
-								addItem(p, 177, 1);
+								addItem(p, ItemId.POISON.id(), 1);
 								p.updateQuestStage(this, 3);
 								p.getCache().store("evil_side", true);
 							}
@@ -845,7 +871,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 									"but i guessed you were of stronger character",
 									"here take this poison, pour it into one of their meals",
 									"once the deed is done return here");
-								addItem(p, 177, 1);
+								addItem(p, ItemId.POISON.id(), 1);
 								p.updateQuestStage(this, 3);
 								p.getCache().store("evil_side", true);
 							}
@@ -877,7 +903,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 							"hazeel will punish you for your interference");
 						return;
 					} else if (p.getCache().hasKey("evil_side")) {
-						if (!hasItem(p, 753)) {
+						if (!hasItem(p, ItemId.MARK_OF_HAZEEL.id())) {
 							playerTalk(p, n, "hello",
 								"I poured the poison into the carnillean's meal as requested");
 							npcTalk(p, n, "yes we have people on the inside who informed me of your deed",
@@ -885,7 +911,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 							playerTalk(p, n, "ok, so what's next?");
 							npcTalk(p, n, "first you must wear the sign of hazeel");
 							message(p, "clivet hands you a small metal amulet");
-							addItem(p, 753, 1);
+							addItem(p, ItemId.MARK_OF_HAZEEL.id(), 1);
 							npcTalk(p, n, "the amulet is proof to other cult members that you're one of us",
 								"it is also the key to finding the cult hideout");
 							playerTalk(p, n, "in what way?");
@@ -920,7 +946,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 				case 6:
 					playerTalk(p, n, "hello again");
 					npcTalk(p, n, "have you managed to find the script of hazeel?");
-					if (hasItem(p, 747)) {
+					if (hasItem(p, ItemId.SCRIPT_OF_HAZEEL.id())) {
 						playerTalk(p, n, "yes, i found it in the house");
 						npcTalk(p, n, "amazing, the last piece",
 							"now the time has come to change history and avenge lord hazeel",
@@ -944,7 +970,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 					break;
 			}
 		}
-		if (n.getID() == CULT_MEMBER) {
+		else if (n.getID() == NpcId.CULT_MEMBER.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 				case 1:
@@ -1024,7 +1050,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 					break;
 			}
 		}
-		if (n.getID() == ALOMONE) {
+		else if (n.getID() == NpcId.ALOMONE.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 				case 1:
@@ -1032,7 +1058,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 					playerTalk(p, n, "hello");
 					npcTalk(p, n, "what, an intruder",
 						"kill him");
-					Npc cults = getNearestNpc(p, CULT_MEMBER, 20);
+					Npc cults = getNearestNpc(p, NpcId.CULT_MEMBER.id(), 20);
 					cults.setChasing(p);
 					break;
 				case 3:
@@ -1091,11 +1117,11 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 					/** COMPLETE EVIL SIDE **/
 					playerTalk(p, n, "hello");
 					npcTalk(p, n, "Do you have the sacred script of hazeel?");
-					if (hasItem(p, 747)) {
+					if (hasItem(p, ItemId.SCRIPT_OF_HAZEEL.id())) {
 						playerTalk(p, n, "yes I have it here");
 						npcTalk(p, n, "finally our lord hazeel can return");
 						message(p, "alomone takes the hazeel script");
-						removeItem(p, 747, 1);
+						removeItem(p, ItemId.SCRIPT_OF_HAZEEL.id(), 1);
 						npcTalk(p, n, "with these words our lord will return and save us all",
 							"come with me adventurer and let the ceromony begin");
 						p.teleport(580, 3419);
@@ -1109,7 +1135,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 							"the room is silent",
 							"suddenly a shrill scream comes from the coffin of hazeel",
 							"A shadowy figure appears");
-						Npc lord_hazeel = spawnNpc(LORD_HAZEEL, 580, 3420, 60000 * 2);
+						Npc lord_hazeel = spawnNpc(NpcId.LORD_HAZEEL.id(), 580, 3420, 60000 * 2);
 						ActionSender.sendTeleBubble(p, 580,
 							3420, true);
 						for (Player pe : p.getViewArea().getPlayersInView()) {
@@ -1168,56 +1194,21 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 	}
 
 	@Override
-	public int getQuestId() {
-		return Constants.Quests.THE_HAZEEL_CULT;
-	}
-
-	@Override
-	public String getQuestName() {
-		return "The Hazeel Cult (members)";
-	}
-
-	@Override
-	public boolean isMembers() {
-		return true;
-	}
-
-	@Override
-	public void handleReward(Player p) {
-		if (p.getCache().hasKey("good_side")) {
-			p.message("Well done you have completed the Hazeel cult quest");
-			incQuestReward(p, Quests.questData.get(Quests.THE_HAZEEL_CULT), true);
-			p.message("@gre@You haved gained 1 quest point!");
-			p.message("ceril gives you 2000 gold coins");
-			addItem(p, 10, 2000);
-		} else if (p.getCache().hasKey("evil_side")) {
-			p.message("Hazeel gives you some coins");
-			addItem(p, 10, 2000);
-			incQuestReward(p, Quests.questData.get(Quests.THE_HAZEEL_CULT), true);
-			p.message("@gre@You haved gained 1 quest point!");
-			p.message("you have completed the hazeel cult quest");
-		}
-	}
-
-	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == ALOMONE) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.ALOMONE.id();
 	}
 
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == ALOMONE) {
+		if (n.getID() == NpcId.ALOMONE.id()) {
 			if (p.getCache().hasKey("good_side")) {
 				n.killedBy(p);
-				if (!hasItem(p, 755)) {
+				if (!hasItem(p, ItemId.CARNILLEAN_ARMOUR.id())) {
 					message(p, "you have killed alomone",
 						"lying behind his corpse",
 						"you see the carnillean family armour",
 						"you place it in your bag");
-					addItem(p, 755, 1);
+					addItem(p, ItemId.CARNILLEAN_ARMOUR.id(), 1);
 					if (p.getQuestStage(this) == 3) {
 						p.updateQuestStage(this, 4);
 					}
@@ -1230,40 +1221,29 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
-		if (obj.getID() == 440 || obj.getID() == BUTLERS_CUPBOARD) {
-			return true;
-		}
-		if (obj.getID() == BASEMENT_CRATE) {
-			return true;
-		}
-		if (obj.getID() == TOP_LEVEL_BOOKCASE) {
-			return true;
-		}
-		if (obj.getID() == CARNILLEAN_CHEST) {
-			return true;
-		}
-		return false;
+		return DataConversions.inArray(new int[] {BUTLERS_CUPBOARD_OPEN, BUTLERS_CUPBOARD_CLOSED, BASEMENT_CRATE,
+				TOP_LEVEL_BOOKCASE, CARNILLEAN_CHEST_CLOSED}, obj.getID());
 	}
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player player) {
-		if (obj.getID() == 440 || obj.getID() == BUTLERS_CUPBOARD) {
+		if (obj.getID() == BUTLERS_CUPBOARD_OPEN || obj.getID() == BUTLERS_CUPBOARD_CLOSED) {
 			if (command.equalsIgnoreCase("open")) {
-				openCupboard(obj, player, 441);
+				openCupboard(obj, player, BUTLERS_CUPBOARD_OPEN);
 			} else if (command.equalsIgnoreCase("close")) {
-				closeCupboard(obj, player, 440);
+				closeCupboard(obj, player, BUTLERS_CUPBOARD_CLOSED);
 			} else {
 				message(player, "you search the cupboard");
 				if (player.getQuestStage(this) == 5 && player.getCache().hasKey("good_side")) {
 					message(player, "you find a bottle of poison",
 						"and a strange amulet",
 						"you pass your finds to ceril");
-					Npc ceril = getNearestNpc(player, CERIL, 10);
+					Npc ceril = getNearestNpc(player, NpcId.CERIL.id(), 10);
 					playerTalk(player, ceril, "look what i've found?");
 					npcTalk(player, ceril, "what's this for jones?");
 					message(player, "ceril takes the bottle");
 					npcTalk(player, ceril, "i don't believe it, it's poison");
-					Npc butler = getNearestNpc(player, BUTLER, 10);
+					Npc butler = getNearestNpc(player, NpcId.BUTLER.id(), 10);
 					npcTalk(player, butler, "mr carnillean, it's for the rats",
 						"i'm just a loyal servent");
 					npcTalk(player, ceril, "i've seen this amulet before",
@@ -1289,13 +1269,13 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 				}
 			}
 		}
-		if (obj.getID() == BASEMENT_CRATE) {
+		else if (obj.getID() == BASEMENT_CRATE) {
 			message(player, "you search the crate");
 			if (player.getQuestStage(this) == 5 && player.getCache().hasKey("evil_side")) {
-				if (!hasItem(player, 756)) {
+				if (!hasItem(player, ItemId.CARNILLEAN_KEY.id())) {
 					player.message("under the food packages");
 					player.message("you find an old rusty key");
-					addItem(player, 756, 1);
+					addItem(player, ItemId.CARNILLEAN_KEY.id(), 1);
 				} else {
 					player.message("but find nothing");
 				}
@@ -1303,7 +1283,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 				player.message("but find nothing");
 			}
 		}
-		if (obj.getID() == TOP_LEVEL_BOOKCASE) {
+		else if (obj.getID() == TOP_LEVEL_BOOKCASE) {
 			message(player, "you search the book case");
 			if (player.getQuestStage(this) == 5 && player.getCache().hasKey("evil_side")) {
 				message(player, "as you pull out one of the books",
@@ -1317,27 +1297,24 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 				player.message("but find nothing interesting");
 			}
 		}
-		if (obj.getID() == CARNILLEAN_CHEST) {
+		else if (obj.getID() == CARNILLEAN_CHEST_CLOSED) {
 			player.message("the chest is locked");
 		}
 	}
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		if (obj.getID() == CARNILLEAN_CHEST && item.getID() == 756) {
-			return true;
-		}
-		return false;
+		return obj.getID() == CARNILLEAN_CHEST_CLOSED && item.getID() == ItemId.CARNILLEAN_KEY.id();
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
-		if (obj.getID() == CARNILLEAN_CHEST && item.getID() == 756) {
+		if (obj.getID() == CARNILLEAN_CHEST_CLOSED && item.getID() == ItemId.CARNILLEAN_KEY.id()) {
 			player.message("you use the key to open");
 			player.message("the chest");
-			replaceObjectDelayed(obj, 2000, 437);
+			replaceObjectDelayed(obj, CARNILLEAN_CHEST_OPEN, 437);
 			player.message("inside the chest you find the sacred script of hazeel");
-			addItem(player, 747, 1);
+			addItem(player, ItemId.SCRIPT_OF_HAZEEL.id(), 1);
 			if (player.getQuestStage(this) == 5) {
 				player.updateQuestStage(this, 6);
 			}

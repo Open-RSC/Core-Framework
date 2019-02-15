@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -62,7 +64,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if (obj.getID() == 292 || obj.getID() == 293) {
-			Npc arhein = getNearestNpc(p, 280, 10);
+			Npc arhein = getNearestNpc(p, NpcId.ARHEIN.id(), 10);
 			if (arhein != null) {
 				npcTalk(p, arhein, "Oi get away from there!");
 			} else {
@@ -84,7 +86,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 			int opt = showMenu(p, "Yes", "No");
 			if (opt == 0) {
 				p.message("you take a bucket.");
-				addItem(p, 21, 1);
+				addItem(p, ItemId.BUCKET.id(), 1);
 			}
 		} else if (obj.getID() == 296) {
 			message(p,
@@ -107,7 +109,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 			n.getCombatEvent().resetCombat();
 		}
 		n.getSkills().setLevel(Skills.HITPOINTS, 5);
-		Npc leFaye = spawnNpc(281, 461, 2407, 60000);
+		Npc leFaye = spawnNpc(NpcId.MORGAN_LE_FAYE.id(), 461, 2407, 60000);
 		sleep(500);
 		npcTalk(p, leFaye, "Please spare my son");
 		int option = showMenu(p, n, "Tell me how to untrap Merlin and I might",
@@ -166,37 +168,37 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
 									   Player player) {
-		return obj.getID() == 294 || obj.getID() == 287 && item.getID() == 606;
+		return obj.getID() == 294 || obj.getID() == 287 && item.getID() == ItemId.EXCALIBUR.id();
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == 294) {
-			if (item.getID() == 603) {
+			if (item.getID() == ItemId.INSECT_REPELLANT.id()) {
 				message(p, "you squirt insect repellant on the beehive",
 					"You see bees leaving the hive");
 				if (!p.getCache().hasKey("squirt")) {
 					p.getCache().store("squirt", true);
 				}
-			} else if (item.getID() == 21) {
+			} else if (item.getID() == ItemId.BUCKET.id()) {
 				message(p, "You try to get some wax from the beehive");
 				if (p.getCache().hasKey("squirt")) {
 					message(p, "You get some wax from the hive",
 						"The bees fly back to the hive as the repellant wears off");
-					removeItem(p, 21, 1);
-					addItem(p, 605, 1);
+					removeItem(p, ItemId.BUCKET.id(), 1);
+					addItem(p, ItemId.WAX_BUCKET.id(), 1);
 					p.getCache().remove("squirt");
 				} else {
 					p.message("Suddenly bees fly out of the hive and sting you");
 					p.damage(2);
 				}
 			}
-		} else if (obj.getID() == 287 && item.getID() == 606) {
+		} else if (obj.getID() == 287 && item.getID() == ItemId.EXCALIBUR.id()) {
 			if (p.getQuestStage(this) == 4) {
 				message(p, "The crystal shatters");
 				World.getWorld().unregisterGameObject(obj);
 				World.getWorld().delayedSpawnObject(obj.getLoc(), 30000);
-				Npc merlin = getNearestNpc(p, 287, 5);
+				Npc merlin = getNearestNpc(p, NpcId.MERLIN_CRYSTAL.id(), 5);
 				npcTalk(p, merlin, "Thankyou thankyou",
 					"It's not fun being trapped in a giant crystal",
 					"Go speak to King Arthur, I'm sure he'll reward you");
@@ -222,9 +224,9 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 				doDoor(obj, p);
 				return;
 			} else {
-				Npc beggar = getNearestNpc(p, 286, 5);
+				Npc beggar = getNearestNpc(p, NpcId.BEGGAR.id(), 5);
 				if (beggar == null) {
-					beggar = spawnNpc(286, 276, 631, 60000, p);
+					beggar = spawnNpc(NpcId.BEGGAR.id(), 276, 631, 60000, p);
 				}
 				sleep(600);
 				if (beggar != null) {
@@ -233,22 +235,22 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 					int opt = showMenu(p, beggar, "Yes certainly",
 						"No I don't have any bread with me");
 					if (opt == 0) {
-						if (!p.getInventory().hasItemId(138)) {
+						if (!p.getInventory().hasItemId(ItemId.BREAD.id())) {
 							playerTalk(p, beggar,
 								"Except that I don't have any bread at the moment");
 							npcTalk(p, beggar,
 								"Well if you get some you know where to come");
 							doDoor(obj, p);
-						} else if (p.getInventory().hasItemId(138)) {
+						} else if (p.getInventory().hasItemId(ItemId.BREAD.id())) {
 							message(p, "You give the bread to the beggar");
-							removeItem(p, 138, 1);
+							removeItem(p, ItemId.BREAD.id(), 1);
 							npcTalk(p, beggar, "Thankyou very much");
 							if (p.getCache().hasKey("lady_test")) {
 								p.message("The beggar has turned into the lady of the lake!");
-								Npc lady = transform(beggar, 284, false);
+								Npc lady = transform(beggar, NpcId.LADY_GROUND.id(), false);
 								npcTalk(p, lady, "Well done you have passed my test",
 									"Here is Excalibur, guard it well");
-								addItem(p, 606, 1);
+								addItem(p, ItemId.EXCALIBUR.id(), 1);
 								if (p.getCache().hasKey("lady_test")) {
 									p.getCache().remove("lady_test");
 								}
@@ -269,14 +271,14 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockDrop(Player p, Item i) {
-		return p.getX() == 448 && p.getY() == 435 && i.getID() == 604
-			&& p.getCache().hasKey("magic_words") && hasItem(p, 602);
+		return p.getX() == 448 && p.getY() == 435 && i.getID() == ItemId.BAT_BONES.id()
+			&& p.getCache().hasKey("magic_words") && hasItem(p, ItemId.LIT_BLACK_CANDLE.id());
 	}
 
 	@Override
 	public void onDrop(Player p, Item i) {
 		p.getInventory().remove(i);
-		Npc n = spawnNpc(288, p.getX(), p.getY(), 300000);
+		Npc n = spawnNpc(NpcId.THRANTAX.id(), p.getX(), p.getY(), 300000);
 		n.displayNpcTeleportBubble(n.getX(), n.getY());
 		p.message("Suddenly a demon appears");
 		playerTalk(p, null, "Now what were those magic words?");
@@ -306,25 +308,23 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if ((n.getID() == 275 && !p.getLocation().inVarrock()) || n.getID() == 274 || n.getID() == 273) {
-			return true;
-		}
-		return false;
+		return (n.getID() == NpcId.KING_ARTHUR.id() && !p.getLocation().inVarrock())
+				|| n.getID() == NpcId.SIR_GAWAIN.id() || n.getID() == NpcId.SIR_LANCELOT.id();
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 275 && !p.getLocation().inVarrock()) {
+		if (n.getID() == NpcId.KING_ARTHUR.id() && !p.getLocation().inVarrock()) {
 			switch (p.getQuestStage(Constants.Quests.THE_HOLY_GRAIL)) {
 				case 1:
 				case 2:
 				case 3:
 				case 5:
 					npcTalk(p, n, "How goes thy quest?");
-					if (hasItem(p, 746)) {
+					if (hasItem(p, ItemId.HOLY_GRAIL.id())) {
 						playerTalk(p, n, "I have retrieved the grail");
 						npcTalk(p, n, "wow incredible you truly are a splendid knight");
-						removeItem(p, 746, 1);
+						removeItem(p, ItemId.HOLY_GRAIL.id(), 1);
 						p.sendQuestComplete(Constants.Quests.THE_HOLY_GRAIL);
 					} else {
 						playerTalk(p, n, "I am making progress",
@@ -350,9 +350,9 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 						"they certainly point somewhere",
 						"just blowing gently on them",
 						"Will make them show the way to go");
-					if (!hasItem(p, 745)) {
+					if (!hasItem(p, ItemId.MAGIC_GOLDEN_FEATHER.id())) {
 						p.message("King arthur gives you a feather");
-						addItem(p, 745, 1);
+						addItem(p, ItemId.MAGIC_GOLDEN_FEATHER.id(), 1);
 					}
 					return;
 				case -1:
@@ -447,7 +447,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 					break;
 			}
 		}
-		if (n.getID() == 274) {
+		else if (n.getID() == NpcId.SIR_GAWAIN.id()) {
 			if (p.getCache().hasKey("talked_to_gawain")) {
 				npcTalk(p, n, "Good day to you sir");
 				int option = showMenu(
@@ -533,7 +533,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 					break;
 			}
 		}
-		if (n.getID() == 273) {
+		else if (n.getID() == NpcId.SIR_LANCELOT.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 				case 1:

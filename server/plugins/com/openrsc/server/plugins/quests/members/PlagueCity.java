@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -14,6 +16,7 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -23,6 +26,9 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 	ObjectActionExecutiveListener {
 
 	private int BUCKETS_USED = 0;
+	
+	private static final int ALRENAS_CUPBOARD_OPEN = 452;
+	private static final int ALRENAS_CUPBOARD_CLOSED = 451;
 
 	@Override
 	public int getQuestId() {
@@ -48,34 +54,14 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 437) {
-			return true;
-		}
-		if (n.getID() == 450) {
-			return true;
-		}
-		if (n.getID() == 443) {
-			return true;
-		}
-		if (n.getID() == 446 || n.getID() == 447 ||
-			n.getID() == 448 || n.getID() == 449) {
-			return true;
-		}
-		if (n.getID() == 452) {
-			return true;
-		}
-		if (n.getID() == 454) {
-			return true;
-		}
-		if (n.getID() == 465) {
-			return true;
-		}
-		return false;
+		return DataConversions.inArray(new int[] {NpcId.EDMOND.id(), NpcId.ALRENA.id(), NpcId.JETHICK.id(),
+				NpcId.TED_REHNISON.id(), NpcId.MARTHA_REHNISON.id(), NpcId.MILLI_REHNISON.id(), NpcId.BILLY_REHNISON.id(),
+				NpcId.CLERK.id(), NpcId.BRAVEK.id(), NpcId.ELENA.id()}, n.getID());
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 465) {
+		if (n.getID() == NpcId.ELENA.id()) {
 			if (p.getQuestStage(this) >= 11 || p.getQuestStage(this) == -1) {
 				p.message("You have already rescued Elena");
 				return;
@@ -91,7 +77,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 				"I'll make sure he adequately rewards you");
 			p.updateQuestStage(getQuestId(), 11);
 		}
-		if (n.getID() == 454) {
+		else if (n.getID() == NpcId.BRAVEK.id()) {
 			switch (p.getQuestStage(this)) {
 				case 8:
 					npcTalk(p, n, "My head hurts", "I'll speak to you another day");
@@ -127,7 +113,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 									"ouch - thinking not clever",
 									"Ah here, she did scribble it down for me");
 								p.message("Bravek hands you a tatty piece of paper");
-								addItem(p, 781, 1);
+								addItem(p, ItemId.SCRUFFY_NOTE.id(), 1);
 								p.updateQuestStage(getQuestId(), 9);
 							} else if (menu3 == 2) {
 								npcTalk(p,
@@ -141,7 +127,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 								"ouch - thinking not clever",
 								"Ah here, she did scribble it down for me");
 							p.message("Bravek hands you a tatty piece of paper");
-							addItem(p, 781, 1);
+							addItem(p, ItemId.SCRUFFY_NOTE.id(), 1);
 							p.updateQuestStage(getQuestId(), 9);
 						}
 					} else if (menu == 1) {
@@ -152,11 +138,11 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 					npcTalk(p, n, "uurgh",
 						"My head still hurts too much to think straight",
 						"Oh for one of Trudi's hangover cures");
-					if (hasItem(p, 771)) {
+					if (hasItem(p, ItemId.HANGOVER_CURE.id())) {
 						playerTalk(p, n, "Try this");
 						message(p, "You give Bravek the hangover cure",
 							"Bravek gulps down the foul looking liquid");
-						removeItem(p, 771, 1);
+						removeItem(p, ItemId.HANGOVER_CURE.id(), 1);
 						npcTalk(p,
 							n,
 							"grruurgh",
@@ -176,7 +162,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 				case 11:
 				case -1:
 					npcTalk(p, n, "thanks again for the hangover cure");
-					if (hasItem(p, 775) || p.getQuestStage(getQuestId()) == 11
+					if (hasItem(p, ItemId.WARRANT.id()) || p.getQuestStage(getQuestId()) == 11
 						|| p.getQuestStage(getQuestId()) == -1) {
 						playerTalk(p, n, "Not a problem, happy to help out");
 						npcTalk(p, n, "I'm just having a little bit of whisky",
@@ -193,7 +179,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 					}
 					break;
 			}
-		} else if (n.getID() == 452) {
+		} else if (n.getID() == NpcId.CLERK.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 				case 1:
@@ -265,7 +251,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 										"and is being held in a plague house");
 									npcTalk(p, n, "I'll see what I can do I suppose",
 										"Mr Bravek there's a man here who really needs to speak to you");
-									Npc bravek = getNearestNpc(p, 454, 15);
+									Npc bravek = getNearestNpc(p, NpcId.BRAVEK.id(), 15);
 									npcTalk(p, bravek, "I suppose they can come in then",
 										"If they keep it short");
 									p.message("You go into the office");
@@ -279,7 +265,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 								"and is being held in a plague house");
 							npcTalk(p, n, "I'll see what I can do I suppose",
 								"Mr Bravek there's a man here who really needs to speak to you");
-							Npc bravek = getNearestNpc(p, 454, 15);
+							Npc bravek = getNearestNpc(p, NpcId.BRAVEK.id(), 15);
 							npcTalk(p, bravek, "I suppose they can come in then",
 								"If they keep it short");
 							p.message("You go into the office");
@@ -298,7 +284,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 								"and is being held in a plague house");
 							npcTalk(p, n, "I'll see what I can do I suppose",
 								"Mr Bravek there's a man here who really needs to speak to you");
-							Npc bravek = getNearestNpc(p, 454, 15);
+							Npc bravek = getNearestNpc(p, NpcId.BRAVEK.id(), 15);
 							npcTalk(p, bravek, "I suppose they can come in then",
 								"If they keep it short");
 							p.message("You go into the office");
@@ -311,9 +297,9 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 					}
 					break;
 			}
-		} else if (n.getID() == 448) {
+		} else if (n.getID() == NpcId.BILLY_REHNISON.id()) {
 			p.message("Billy is not interested in talking");
-		} else if (n.getID() == 449) {
+		} else if (n.getID() == NpcId.MILLI_REHNISON.id()) {
 			switch (p.getQuestStage(this)) {
 				case 6:
 					playerTalk(p, n, "Hello",
@@ -345,7 +331,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 					playerTalk(p, n, "Maybe");
 					break;
 			}
-		} else if (n.getID() == 446 || n.getID() == 447) {
+		} else if (n.getID() == NpcId.TED_REHNISON.id() || n.getID() == NpcId.MARTHA_REHNISON.id()) {
 			switch (p.getQuestStage(this)) {
 				case 6:
 					playerTalk(p, n,
@@ -371,7 +357,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 					npcTalk(p, n, "That's good to hear she helped us a lot");
 					break;
 			}
-		} else if (n.getID() == 443) {
+		} else if (n.getID() == NpcId.JETHICK.id()) {
 			switch (p.getQuestStage(this)) {
 				case 5:
 					npcTalk(p, n, "Hello I don't recognise you",
@@ -387,7 +373,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 							"Any particular woman you have in mind?");
 						playerTalk(p, n, "Yes a lady called Elena");
 						npcTalk(p, n, "What does she look like?");
-						if (hasItem(p, 767)) {
+						if (hasItem(p, ItemId.PICTURE.id())) {
 							p.message("You show the picture to Jethick");
 							npcTalk(p,
 								n,
@@ -396,7 +382,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 								"I think she is staying over with the Rehnison family",
 								"They live in the small timbered building at the far north side of town",
 								"I've not seen her around here in a while mind you");
-							if (!hasItem(p, 768)) {
+							if (!hasItem(p, ItemId.PLAGUE_CITY_BOOK.id())) {
 								npcTalk(p,
 									n,
 									"I don't suppose you could run me a little errand?",
@@ -404,7 +390,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 									"I borrowed this book from them",
 									"can you return it?");
 								p.message("Jethick gives you a book");
-								addItem(p, 768, 1);
+								addItem(p, ItemId.PLAGUE_CITY_BOOK.id(), 1);
 							}
 						} else {
 							playerTalk(p, n, "Um brown hair, in her twenties");
@@ -432,7 +418,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 						"We don't get many newcomers around here");
 					break;
 			}
-		} else if (n.getID() == 450) {
+		} else if (n.getID() == NpcId.ALRENA.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					playerTalk(p, n, "hello madam");
@@ -447,13 +433,13 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 					npcTalk(p, n, "yes he told me",
 						"I've begun making your special gas mask",
 						"but i need some dwellberries to finish it");
-					if (hasItem(p, 765)) {
+					if (hasItem(p, ItemId.DWELLBERRIES.id())) {
 						playerTalk(p, n, "yes I've got some here");
 						message(p, "you give the dwellberries to alrena",
 							"alrena crushes the berries into a smooth paste",
 							"she then smears the paste over a strange mask");
-						p.getInventory().remove(765, 1);
-						addItem(p, 766, 1);
+						p.getInventory().remove(ItemId.DWELLBERRIES.id(), 1);
+						addItem(p, ItemId.GASMASK.id(), 1);
 
 						npcTalk(p,
 							n,
@@ -526,7 +512,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 						"I can't thank you enough");
 					break;
 			}
-		} else if (n.getID() == 437) {
+		} else if (n.getID() == NpcId.EDMOND.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					playerTalk(p, n, "hello old man");
@@ -611,7 +597,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 				case 1:
 					playerTalk(p, n, "hello Edmond");
 					npcTalk(p, n, "have you got the dwellberries?");
-					if (hasItem(p, 765)) {
+					if (hasItem(p, ItemId.DWELLBERRIES.id())) {
 						playerTalk(p, n, "yes i have some here");
 						npcTalk(p, n, "take them to my wife alrena");
 					} else {
@@ -677,22 +663,22 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 					npcTalk(p, n, "What can I give you as a reward I wonder?",
 						"Here take this magic scroll",
 						"I have little use for it, but it may help you");
-					addItem(p, 752, 1);
+					addItem(p, ItemId.MAGIC_SCROLL.id(), 1);
 					p.message("This story is to be continued");
 					break;
 				case -1:
-					if (p.getBank().hasItemId(752) || p.getInventory().hasItemId(752) || p.getCache().hasKey("ardougne_scroll")) {
+					if (p.getBank().hasItemId(ItemId.MAGIC_SCROLL.id()) || p.getInventory().hasItemId(ItemId.MAGIC_SCROLL.id()) || p.getCache().hasKey("ardougne_scroll")) {
 						npcTalk(p, n, "Ah hello again",
 							"And thank you again");
 						playerTalk(p, n, "No problem");
-					} else if (!p.getBank().hasItemId(752) && !p.getInventory().hasItemId(752) && !p.getCache().hasKey("ardougne_scroll")) {
+					} else if (!p.getBank().hasItemId(ItemId.MAGIC_SCROLL.id()) && !p.getInventory().hasItemId(ItemId.MAGIC_SCROLL.id()) && !p.getCache().hasKey("ardougne_scroll")) {
 						int noScroll = showMenu(p, n, false, //do not send over
 							"Do you have any more of those scrolls?",
 							"no problem");
 						if (noScroll == 0) {
 							playerTalk(p, n, "Do you have any more of those scrolls?");
 							npcTalk(p, n, "yes here you go");
-							addItem(p, 752, 1);
+							addItem(p, ItemId.MAGIC_SCROLL.id(), 1);
 						} else {
 							playerTalk(p, n, "No problem");
 						}
@@ -750,7 +736,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 						"They do go a bit far sometimes",
 						"I've heard of Elena, she has helped us a lot",
 						"Ok I'll give you this warrant to enter the house");
-					addItem(p, 775, 1);
+					addItem(p, ItemId.WARRANT.id(), 1);
 				}
 			} else if (last2 == 1) {
 				playerTalk(
@@ -764,7 +750,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 					"They do go a bit far sometimes",
 					"I've heard of Elena, she has helped us a lot",
 					"Ok I'll give you this warrant to enter the house");
-				addItem(p, 775, 1);
+				addItem(p, ItemId.WARRANT.id(), 1);
 			}
 		} else if (finale == 2) {
 			playerTalk(
@@ -779,29 +765,20 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 				"They do go a bit far sometimes",
 				"I've heard of Elena, she has helped us a lot",
 				"Ok I'll give you this warrant to enter the house");
-			addItem(p, 775, 1);
+			addItem(p, ItemId.WARRANT.id(), 1);
 		}
 	}
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
 									   Player player) {
-		if (obj.getID() == 447) {
-			return true;
-		}
-		if (obj.getID() == 449) {
-			return true;
-		}
-		if (obj.getID() == 457 && item.getID() == 780) {
-			return true;
-		}
-		return false;
+		return obj.getID() == 447 || obj.getID() == 449 || (obj.getID() == 457 && item.getID() == ItemId.LITTLE_KEY.id());
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == 447) {
-			if (item.getID() == 50) {
+			if (item.getID() == ItemId.BUCKET_OF_WATER.id()) {
 				if (p.getQuestStage(getQuestId()) == 2) {
 					if (BUCKETS_USED >= 3) {
 						message(p, "you poor the water onto the soil",
@@ -814,13 +791,13 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 						message(p, "you poor the water onto the soil",
 							"the soil softens slightly");
 					}
-					p.getInventory().replace(50, 21);
+					p.getInventory().replace(ItemId.BUCKET_OF_WATER.id(), ItemId.BUCKET.id());
 					BUCKETS_USED++;
 				} else {
 					p.message("You see no reason to do that at the moment");
 				}
 			}
-			if (item.getID() == 211) {
+			if (item.getID() == ItemId.SPADE.id()) {
 				if (p.getCache().hasKey("soil_soften") || p.getQuestStage(getQuestId()) >= 3
 					|| p.getQuestStage(getQuestId()) == -1) {
 					message(p, "you dig deep into the soft soil",
@@ -839,8 +816,8 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 				}
 			}
 		}
-		if (obj.getID() == 449) {
-			if (item.getID() == 237) {
+		else if (obj.getID() == 449) {
+			if (item.getID() == ItemId.ROPE.id()) {
 				if (p.getQuestStage(this) >= 4 || p.getQuestStage(getQuestId()) == -1) {
 					p.message("nothing interesting happens");
 					return;
@@ -852,7 +829,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 				}
 			}
 		}
-		if (obj.getID() == 457 && item.getID() == 780) {
+		else if (obj.getID() == 457 && item.getID() == ItemId.LITTLE_KEY.id()) {
 			p.message("you go through the gate");
 			doGate(p, obj, 181);
 		}
@@ -861,47 +838,32 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command,
 									 Player player) {
-		if (obj.getID() == 448) {
-			return true;
-		}
-		if (obj.getID() == 449) {
-			return true;
-		}
-		if (obj.getID() == 456) {
-			return true;
-		}
-		if (obj.getID() == 457) {
-			return true;
-		}
-		if (obj.getID() == 451 || obj.getID() == 452) {
-			return true;
-		}
-		return false;
+		return DataConversions.inArray(new int[] {448, 449, 456, 457, ALRENAS_CUPBOARD_OPEN, ALRENAS_CUPBOARD_CLOSED}, obj.getID());
 	}
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
-		if (obj.getID() == 451 || obj.getID() == 452) {
+		if (obj.getID() == ALRENAS_CUPBOARD_OPEN || obj.getID() == ALRENAS_CUPBOARD_CLOSED) {
 			if (command.equalsIgnoreCase("open")) {
-				openCupboard(obj, p, 452);
+				openCupboard(obj, p, ALRENAS_CUPBOARD_OPEN);
 			} else if (command.equalsIgnoreCase("close")) {
-				closeCupboard(obj, p, 451);
+				closeCupboard(obj, p, ALRENAS_CUPBOARD_CLOSED);
 			} else {
 				if (p.getQuestStage(this) >= 2 || p.getQuestStage(this) == -1) {
-					if (!hasItem(p, 766)) {
+					if (!hasItem(p, ItemId.GASMASK.id())) {
 						p.message("you find a protective mask");
-						addItem(p, 766, 1);
+						addItem(p, ItemId.GASMASK.id(), 1);
 					} else {
 						p.message("it's an old dusty cupboard");
 					}
 				}
 			}
 		}
-		if (obj.getID() == 448) {
+		else if (obj.getID() == 448) {
 			p.message("you climb up the mud pile");
 			p.teleport(620, 578, false);
 		}
-		if (obj.getID() == 449) {
+		else if (obj.getID() == 449) {
 			//gasmask no longer needed only if plague city and biohazard are done
 			if (p.getQuestStage(this) == -1 && p.getQuestStage(Constants.Quests.BIOHAZARD) == -1) {
 				p.message("you climb through the sewer pipe");
@@ -909,7 +871,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 				return;
 			}
 			if (p.getQuestStage(getQuestId()) >= 5 || p.getQuestStage(getQuestId()) == -1) {
-				if (p.getInventory().wielding(766)) {
+				if (p.getInventory().wielding(ItemId.GASMASK.id())) {
 					p.message("you climb through the sewer pipe");
 					p.teleport(632, 589, false);
 				} else {
@@ -921,19 +883,19 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 			p.message("the grill is too secure");
 			p.message("you can't pull it off alone");
 		}
-		if (obj.getID() == 456) {
+		else if (obj.getID() == 456) {
 			if (p.getQuestStage(this) >= 11 || p.getQuestStage(this) == -1) {
 				p.message("the barrel is empty");
 				return;
 			}
-			if (!hasItem(p, 780)) {
+			if (!hasItem(p, ItemId.LITTLE_KEY.id())) {
 				p.message("You find a small key in the barrel");
-				addItem(p, 780, 1);
+				addItem(p, ItemId.LITTLE_KEY.id(), 1);
 			} else {
 				p.message("the barrel is empty");
 			}
 		}
-		if (obj.getID() == 457) {
+		else if (obj.getID() == 457) {
 			if (p.getQuestStage(this) >= 11 || p.getQuestStage(this) == -1) {
 				p.message("you go through the gate");
 				doGate(p, obj, 181);
@@ -947,11 +909,11 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 				p.message("you go through the gate");
 				p.teleport(637, 3447, false);
 			} else {
-				if (hasItem(p, 780)) {
+				if (hasItem(p, ItemId.LITTLE_KEY.id())) {
 					p.message("The gate is locked");
 					p.message("Why don't you use your key on the gate?");
 				} else {
-					Npc elena = getNearestNpc(p, 465, 10);
+					Npc elena = getNearestNpc(p, NpcId.ELENA.id(), 10);
 					if (elena != null) {
 						npcTalk(p, elena, "Hey get me out of here please");
 						playerTalk(p, elena, "I would do but I don't have a key");

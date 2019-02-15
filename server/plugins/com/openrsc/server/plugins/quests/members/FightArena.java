@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -17,6 +19,7 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveLis
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.closeCupboard;
@@ -38,6 +41,9 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 	InvUseOnObjectExecutiveListener, PlayerKilledNpcListener,
 	PlayerKilledNpcExecutiveListener {
 
+	private static final int GUARDS_CUPBOARD_OPEN = 382;
+	private static final int GUARDS_CUPBOARD_CLOSED = 381;
+	
 	@Override
 	public int getQuestId() {
 		return Constants.Quests.FIGHT_ARENA;
@@ -73,68 +79,34 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 372) {
-			return true;
-		}
-		if (n.getID() == 381) {
-			return true;
-		}
-		if (n.getID() == 374) {
-			return true;
-		}
-		if (n.getID() == 373) {
-			return true;
-		}
-		if (n.getID() == 376) {
-			return true;
-		}
-		if (n.getID() == 377) {
-			return true;
-		}
-		if (n.getID() == 387) {
-			return true;
-		}
-		return false;
+		return DataConversions.inArray(new int[] {NpcId.LADY_SERVIL.id(), NpcId.LOCAL.id(), NpcId.GUARD_KHAZARD_BRIBABLE.id(), NpcId.GUARD_KHAZARD_BYPRISONER.id(),
+				NpcId.GUARD_KHAZARD_MACE.id(), NpcId.JEREMY_SERVIL.id(), NpcId.HENGRAD.id()}, n.getID());
 	}
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == 384 || n.getID() == 388 || n.getID() == 383) { // general
-			// khazard
-			// 383,
-			// justin
-			// servil
-			// 378,
-			// 386
-			// scorp,
-			// 388
-			// bouncer
-			return true;
-		}
-		if (n.getID() == 386) {
-			return true;
-		}
-		return false;
+		return DataConversions.inArray(new int[] {NpcId.KHAZARD_SCORPION.id(), NpcId.KHAZARD_OGRE.id(),
+				NpcId.BOUNCER.id(), NpcId.GENERAL_KHAZARD.id()}, n.getID());
 	}
 
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
 		n.killedBy(p);
 		n.remove();
-		if (n.getID() == 384) {
+		if (n.getID() ==  NpcId.KHAZARD_OGRE.id()) {
 			if (!p.getCache().hasKey("killed_ogre")) {
 				p.getCache().store("killed_ogre", true);
 			}
 			p.message("You kill the ogre");
 			message(p, "Jeremy's father survives");
-			Npc justin = getNearestNpc(p, 378, 15);
+			Npc justin = getNearestNpc(p, NpcId.JUSTIN_SERVIL.id(), 15);
 			if (justin != null) {
 				npcTalk(p, justin, "You saved my life and my son's",
 					"I am eternally in your debt brave traveller");
 			}
-			spawnNpc(383, 613, 708, 60000);
+			spawnNpc(NpcId.GENERAL_KHAZARD.id(), 613, 708, 60000);
 			sleep(1000);
-			Npc general = getNearestNpc(p, 383, 8);
+			Npc general = getNearestNpc(p, NpcId.GENERAL_KHAZARD.id(), 8);
 			if (general != null) {
 				npcTalk(p,
 					general,
@@ -154,11 +126,11 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 				p.teleport(609, 715, false);
 			}
 		}
-		if (n.getID() == 386) {
+		else if (n.getID() == NpcId.KHAZARD_SCORPION.id()) {
 			p.message("You defeat the scorpion");
-			spawnNpc(383, 613, 708, 30000);
+			spawnNpc(NpcId.GENERAL_KHAZARD.id(), 613, 708, 30000);
 			sleep(1000);
-			Npc generalAgain = getNearestNpc(p, 383, 15);
+			Npc generalAgain = getNearestNpc(p, NpcId.GENERAL_KHAZARD.id(), 15);
 			if (generalAgain != null) {
 				npcTalk(p, generalAgain, "Not bad, not bad at all",
 					"I think you need a tougher challenge",
@@ -166,18 +138,18 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 			}
 			message(p, "From above you hear a voice...",
 				"Ladies and gentlemen!", "Todays second round");
-			spawnNpc(388, 613, 708, 240000);
+			spawnNpc(NpcId.BOUNCER.id(), 613, 708, 240000);
 			p.message("between the Outsider and bouncer");
-			Npc bouncer = World.getWorld().getNpcById(388);
+			Npc bouncer = World.getWorld().getNpcById(NpcId.BOUNCER.id());
 			if (bouncer != null) {
 				bouncer.setChasing(p);
 			}
 		}
-		if (n.getID() == 388) {
+		else if (n.getID() == NpcId.BOUNCER.id()) {
 			p.message("You defeat bouncer");
-			spawnNpc(383, 613, 708, 60000 * 2);
+			spawnNpc(NpcId.GENERAL_KHAZARD.id(), 613, 708, 60000 * 2);
 			sleep(1000);
-			Npc generalAgainAgain = getNearestNpc(p, 383, 15);
+			Npc generalAgainAgain = getNearestNpc(p, NpcId.GENERAL_KHAZARD.id(), 15);
 			if (generalAgainAgain != null) {
 				npcTalk(p, generalAgainAgain, "nooooo! bouncer, how dare you?",
 					"you've taken the life of my only friend!");
@@ -191,7 +163,7 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 			}
 			p.updateQuestStage(getQuestId(), 3);
 		}
-		if (n.getID() == 383) {
+		else if (n.getID() == NpcId.GENERAL_KHAZARD.id()) {
 			p.message("You kill general khazard");
 			p.message("but he shall return");
 		}
@@ -199,7 +171,7 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 387) {
+		if (n.getID() == NpcId.HENGRAD.id()) {
 			if (p.getQuestStage(getQuestId()) == 2
 				&& p.getCache().hasKey("killed_ogre")) {
 				playerTalk(p, n, "Are you ok stranger?");
@@ -226,14 +198,14 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 					"Ladies and gentlemen!",
 					"Todays first fight between the outsider",
 					"And everyone's favorite scorpion has begun");
-				spawnNpc(386, 613, 708, 120000);
-				Npc scorp = World.getWorld().getNpcById(386);
+				spawnNpc(NpcId.KHAZARD_SCORPION.id(), 613, 708, 120000);
+				Npc scorp = World.getWorld().getNpcById(NpcId.KHAZARD_SCORPION.id());
 				if (scorp != null) {
 					scorp.setChasing(p);
 				}
 			}
 		}
-		if (n.getID() == 377) {
+		else if (n.getID() == NpcId.JEREMY_SERVIL.id()) {
 			if ((p.getQuestStage(getQuestId()) >= 3)
 				|| p.getQuestStage(getQuestId()) == -1) {
 				p.message("You need to kill the creatures in the arena");
@@ -247,10 +219,10 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 				message(p, "You see Jeremy's father Justin",
 					"Trying to escape an ogre");
 				npcTalk(p, n, "Please help him!");
-				spawnNpc(384, 613, 708, 60000 * 2);
+				spawnNpc(NpcId.KHAZARD_OGRE.id(), 613, 708, 60000 * 2);
 			}
 		}
-		if (n.getID() == 376) {
+		else if (n.getID() == NpcId.GUARD_KHAZARD_MACE.id()) {
 			if (p.getQuestStage(getQuestId()) == 3
 				|| p.getQuestStage(getQuestId()) == -1) {
 				playerTalk(p, n, "hello");
@@ -260,8 +232,8 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 				return;
 			}
 			playerTalk(p, n, "hello");
-			if (p.getInventory().wielding(733)
-				&& p.getInventory().wielding(734)) {
+			if (p.getInventory().wielding(ItemId.KHAZARD_HELMET.id())
+				&& p.getInventory().wielding(ItemId.KHAZARD_CHAINMAIL.id())) {
 				npcTalk(p, n, "can i help you stranger?",
 					"oh.. you're a guard as well", "that's ok then",
 					"we don't like outsiders around here");
@@ -270,10 +242,10 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 				n.setChasing(p);
 			}
 		}
-		if (n.getID() == 373) {
+		else if (n.getID() == NpcId.GUARD_KHAZARD_BYPRISONER.id()) {
 			if (p.getQuestStage(getQuestId()) >= 2) {
-				if (p.getInventory().wielding(733)
-					&& p.getInventory().wielding(734)) {
+				if (p.getInventory().wielding(ItemId.KHAZARD_HELMET.id())
+					&& p.getInventory().wielding(ItemId.KHAZARD_CHAINMAIL.id())) {
 					playerTalk(p, n, "hello");
 					npcTalk(p, n, "hello, hope you're keeping busy?");
 					playerTalk(p, n, "of course");
@@ -295,15 +267,14 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 				"you got that, newbie?");
 			playerTalk(p, n, "undead, maniac, master, got it - loud and clear");
 		}
-		if (n.getID() == 374) {
+		else if (n.getID() == NpcId.GUARD_KHAZARD_BRIBABLE.id()) {
 			if (p.getQuestStage(getQuestId()) == 3
 				|| p.getQuestStage(getQuestId()) == -1) {
-				if (p.getInventory().wielding(733)
-					&& p.getInventory().wielding(734)) {
+				if (p.getInventory().wielding(ItemId.KHAZARD_HELMET.id())
+					&& p.getInventory().wielding(ItemId.KHAZARD_CHAINMAIL.id())) {
 					playerTalk(p, n, "hello");
 					npcTalk(p, n, "less chat and more work",
 						"i can't stand lazy guards");
-
 				} else {
 					npcTalk(p, n, "this area is restricted, leave now",
 						"OUT and don't come back!");
@@ -324,12 +295,12 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 					"bored, bored, bored",
 					"you would think the slaves would be more entertaining",
 					"selfish.. the lot of 'em");
-				if (hasItem(p, 735)) {
+				if (hasItem(p, ItemId.KHALI_BREW.id())) {
 					playerTalk(p, n, "do you still fancy a drink?");
 					npcTalk(p, n,
 						"I really shouldn't... ok then, just the one",
 						"this stuff looks good");
-					removeItem(p, 735, 1);
+					removeItem(p, ItemId.KHALI_BREW.id(), 1);
 					message(p, "the guard takes a mouthful of drink");
 					npcTalk(p, n, "blimey this stuff is pretty good",
 						"it's not too strong is it?");
@@ -349,7 +320,7 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 					npcTalk(p, n, "zzzzz zzzzz zzzzz");
 					message(p, "the guard is asleep");
 					p.getCache().store("guard_sleeping", true);
-					addItem(p, 736, 1);
+					addItem(p, ItemId.KHAZARD_CELL_KEYS.id(), 1);
 				}
 				return;
 			}
@@ -361,7 +332,7 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 				"now i just want a decent drink",
 				"mind you, too much khali brew and i'll fall asleep");
 		}
-		if (n.getID() == 381) {
+		else if (n.getID() == NpcId.LOCAL.id()) {
 			if (p.getQuestStage(getQuestId()) == -1) {
 				playerTalk(p, n, "hello");
 				npcTalk(p, n, "please, i haven't done anything");
@@ -381,7 +352,7 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 				"i heard the servil family are fighting soon",
 				"should be very entertaining");
 		}
-		if (n.getID() == 372) {
+		else if (n.getID() == NpcId.LADY_SERVIL.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					playerTalk(p, n, "hi there, looks like you're in some trouble");
@@ -440,49 +411,40 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command,
-									 Player player) {
-		if ((obj.getID() == 381 || obj.getID() == 382) && (obj.getY() == 683 || obj.getY() == 1623)) {
-			return true;
-		}
-		if (obj.getID() == 371 && (obj.getY() == 700 || obj.getY() == 707)) {
-			return true;
-		}
-		if (obj.getID() == 371 && obj.getY() == 716) {
-			return true;
-		}
-		return false;
+	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+		return (obj.getID() == GUARDS_CUPBOARD_OPEN || obj.getID() == GUARDS_CUPBOARD_CLOSED) && (obj.getY() == 683 || obj.getY() == 1623)
+				|| (obj.getID() == 371 && (obj.getY() == 700 || obj.getY() == 707)) || (obj.getID() == 371 && obj.getY() == 716);
 	}
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
-		if ((obj.getID() == 381 || obj.getID() == 382) && (obj.getY() == 683 || obj.getY() == 1623)) {
+		if ((obj.getID() == GUARDS_CUPBOARD_OPEN || obj.getID() == GUARDS_CUPBOARD_CLOSED) && (obj.getY() == 683 || obj.getY() == 1623)) {
 			if (command.equalsIgnoreCase("open")) {
-				openCupboard(obj, p, 382);
+				openCupboard(obj, p, GUARDS_CUPBOARD_OPEN);
 			} else if (command.equalsIgnoreCase("close")) {
-				closeCupboard(obj, p, 381);
+				closeCupboard(obj, p, GUARDS_CUPBOARD_CLOSED);
 			} else {
-				if (!hasItem(p, 734) && !hasItem(p, 733)
+				if (!hasItem(p, ItemId.KHAZARD_CHAINMAIL.id()) && !hasItem(p, ItemId.KHAZARD_HELMET.id())
 					&& p.getQuestStage(getQuestId()) >= 1) {
 					p.message("You search the cupboard...");
 					p.message("You find a khazard helmet");
 					p.message("You find a khazard chainmail");
-					addItem(p, 734, 1);
-					addItem(p, 733, 1);
+					addItem(p, ItemId.KHAZARD_CHAINMAIL.id(), 1);
+					addItem(p, ItemId.KHAZARD_HELMET.id(), 1);
 				} else {
 					p.message("You search the cupboard, but find nothing");
 				}
 			}
 		}
-		if (obj.getID() == 371 && (obj.getY() == 700 || obj.getY() == 707)) {
-			Npc joe = getNearestNpc(p, 379, 5);
+		else if (obj.getID() == 371 && (obj.getY() == 700 || obj.getY() == 707)) {
+			Npc joe = getNearestNpc(p, NpcId.FIGHTSLAVE_JOE.id(), 5);
 
 			if (joe != null) {
 				playerTalk(p, joe, "are you ok?");
 				npcTalk(p, joe, "spare me your fake pity",
 					"I spit on Khazard's grave and all who do his bidding");
 			}
-			Npc kelvin = getNearestNpc(p, 380, 5);
+			Npc kelvin = getNearestNpc(p, NpcId.FIGHTSLAVE_KELVIN.id(), 5);
 			if (kelvin != null) {
 				playerTalk(p, kelvin, "hello there");
 				npcTalk(p, kelvin, "get away, get away",
@@ -490,17 +452,17 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 					"and i'll have all your heads!");
 			}
 		}
-		if (obj.getID() == 371 && obj.getY() == 716) {
+		else if (obj.getID() == 371 && obj.getY() == 716) {
 			if (p.getCache().hasKey("freed_servil")
 				|| p.getQuestStage(getQuestId()) == 3
 				|| p.getQuestStage(getQuestId()) == -1) {
 				p.message("You have already freed jeremy");
 				return;
 			}
-			Npc servil = getNearestNpc(p, 377, 5);
-			Npc guard = getNearestNpc(p, 373, 5);
+			Npc servil = getNearestNpc(p, NpcId.JEREMY_SERVIL.id(), 5);
+			Npc guard = getNearestNpc(p, NpcId.GUARD_KHAZARD_BYPRISONER.id(), 5);
 			if (servil != null && guard != null) {
-				if (p.getCache().hasKey("guard_sleeping") && hasItem(p, 736)) {
+				if (p.getCache().hasKey("guard_sleeping") && hasItem(p, ItemId.KHAZARD_CELL_KEYS.id())) {
 					playerTalk(p, servil, "Jeremy, look, I have the cell keys");
 					npcTalk(p, servil, "Wow! Please help me");
 					playerTalk(p, servil, "ok, keep quiet");
@@ -541,15 +503,12 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
 									   Player player) {
-		if (obj.getID() == 371 && obj.getY() == 716 && item.getID() == 736) {
-			return true;
-		}
-		return false;
+		return obj.getID() == 371 && obj.getY() == 716 && item.getID() == ItemId.KHAZARD_CELL_KEYS.id();
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == 371 && obj.getY() == 716 && item.getID() == 736) {
+		if (obj.getID() == 371 && obj.getY() == 716 && item.getID() == ItemId.KHAZARD_CELL_KEYS.id()) {
 			p.message("To unlock the gate, left click on it");
 		}
 	}

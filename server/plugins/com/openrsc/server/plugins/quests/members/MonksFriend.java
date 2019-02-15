@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -41,18 +43,12 @@ public class MonksFriend implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 357) { /* Brother Cedric */
-			return true;
-		}
-		if (n.getID() == 350) { /* Brother Omad */
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.BROTHER_CEDRIC.id() || n.getID() == NpcId.BROTHER_OMAD.id();
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 350) { /* Brother Omad */
+		if (n.getID() == NpcId.BROTHER_OMAD.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					playerTalk(p, n, "hello there");
@@ -97,7 +93,7 @@ public class MonksFriend implements QuestInterface, TalkToNpcListener,
 					playerTalk(p, n, "Hello ");
 					npcTalk(p, n, "...yawn...oh, hello again...yawn..",
 						"..please tell me you have the blanket");
-					if (removeItem(p, 716, 1)) {
+					if (removeItem(p, ItemId.BLANKET.id(), 1)) {
 						playerTalk(p, n,
 							"Yes I returned it from the clutches of the evil thieves");
 						npcTalk(p, n, "Really, that's excellent, well done",
@@ -165,14 +161,14 @@ public class MonksFriend implements QuestInterface, TalkToNpcListener,
 					p.sendQuestComplete(Constants.Quests.MONKS_FRIEND);
 					npcTalk(p, n, "I have little to repay you with",
 						"but please, take these runestones");
-					addItem(p, 42, 8);
+					addItem(p, ItemId.LAW_RUNE.id(), 8);
 					break;
 				case -1:
 					npcTalk(p, n, "Dum dee do la la", "Hiccup", "That's good wine");
 					break;
 			}
 		}
-		if (n.getID() == 357) { /* Brother Cedric */
+		else if (n.getID() == NpcId.BROTHER_CEDRIC.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 				case 1:
@@ -209,7 +205,7 @@ public class MonksFriend implements QuestInterface, TalkToNpcListener,
 						"No, not really");
 					if (cartMenu == 0) {
 						npcTalk(p, n, "i need some wood");
-						if (removeItem(p, 14, 1)) {
+						if (removeItem(p, ItemId.LOGS.id(), 1)) {
 							playerTalk(p, n, "here you go..", "I've got some wood");
 							npcTalk(p, n, "well done, now i'll fix this cart",
 								"you head back to Brother Omad",
@@ -236,16 +232,13 @@ public class MonksFriend implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
-		if (npc.getID() == 357) {
-			return true;
-		}
-		return false;
+		return npc.getID() == NpcId.BROTHER_CEDRIC.id();
 	}
 
 	@Override
 	public void onInvUseOnNpc(Player player, Npc npc, Item item) {
-		if (npc.getID() == 357) {
-			if (player.getQuestStage(getQuestId()) == 4 && item.getID() == 50) {
+		if (npc.getID() == NpcId.BROTHER_CEDRIC.id()) {
+			if (player.getQuestStage(getQuestId()) == 4 && item.getID() == ItemId.BUCKET_OF_WATER.id()) {
 				showBubble(player, item);
 				playerTalk(player, npc, "Cedric, here, drink some water");
 				npcTalk(player, npc, "oh yes, my head's starting to spin",
@@ -266,7 +259,7 @@ public class MonksFriend implements QuestInterface, TalkToNpcListener,
 						"..more wine. It help's me think.");
 				} else if (waterMenu == 1) {
 					npcTalk(player, npc, "i need some wood");
-					if (removeItem(player, 14, 1)) {
+					if (removeItem(player, ItemId.LOGS.id(), 1)) {
 						playerTalk(player, npc, "here you go..",
 							"I've got some wood");
 						npcTalk(player, npc,

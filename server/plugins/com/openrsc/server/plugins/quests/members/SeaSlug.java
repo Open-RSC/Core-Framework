@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -16,6 +18,7 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -48,39 +51,14 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 455) { /* Caroline */
-			return true;
-		}
-		if (n.getID() == 456 || n.getID() == 457 || n.getID() == 458) { /*
-		 * Holgart
-		 * one
-		 * two
-		 * three
-		 */
-			return true;
-		}
-		if (n.getID() == 461) { /* kennith */
-			return true;
-		}
-		if (n.getID() == 459) { /* kent */
-			return true;
-		}
-		if (n.getID() == 462 || n.getID() == 463 || n.getID() == 460) { /*
-		 * Npcs
-		 * on
-		 * fishing
-		 * platform
-		 * and
-		 * Kennith
-		 */
-			return true;
-		}
-		return false;
+		return DataConversions.inArray(new int[] {NpcId.CAROLINE.id(), NpcId.HOLGART_LAND.id(), NpcId.HOLGART_PLATFORM.id(), NpcId.HOLGART_ISLAND.id(),
+				NpcId.KENNITH.id(), NpcId.KENT.id(), NpcId.PLATFORM_FISHERMAN_GOLDEN.id(), NpcId.PLATFORM_FISHERMAN_PURPLE.id(),
+				NpcId.PLATFORM_FISHERMAN_GRAY.id(), NpcId.BAILEY.id()}, n.getID());
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 459) {
+		if (n.getID() == NpcId.KENT.id()) {
 			switch (p.getQuestStage(this)) {
 				case 4:
 					npcTalk(p, n, "oh thank Saradomin",
@@ -114,7 +92,7 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 					break;
 			}
 		}
-		if (n.getID() == 461) {
+		else if (n.getID() == NpcId.KENNITH.id()) {
 			switch (p.getQuestStage(this)) {
 				case 3:
 					playerTalk(p, n, "are you okay young one?");
@@ -163,7 +141,7 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 					message(p, "He doesn't seem interested in talking");
 			}
 		}
-		if (n.getID() == 460) {
+		else if (n.getID() == NpcId.BAILEY.id()) {
 			switch (p.getQuestStage(this)) {
 				case 3:
 				case 4:
@@ -197,10 +175,10 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 							"i need to get kennith of this platform but i can't get past the fishermen");
 						npcTalk(p, n, "the sea slugs are scared of heat",
 							"i figured that out when i tried to cook them");
-						if (!hasItem(p, 773)) {
+						if (!hasItem(p, ItemId.UNLIT_TORCH.id())) {
 							npcTalk(p, n, "here");
 							message(p, "bailey gives you a torch");
-							addItem(p, 773, 1);
+							addItem(p, ItemId.UNLIT_TORCH.id(), 1);
 							npcTalk(p,
 								n,
 								"i doubt the fishermen will come near you if you can get this torch to light",
@@ -211,19 +189,19 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 								"i better figure a way to light this torch");
 						}
 					} else {
-						if (hasItem(p, 774)) {
+						if (hasItem(p, ItemId.LIT_TORCH.id())) {
 							playerTalk(p, n, "i've managed to light the torch");
 							npcTalk(p, n, "well done traveler",
 								"you better get kennith out of here soon",
 								"the fishermen are becoming stranger by the minute",
 								"and they keep pulling up those blasted sea slugs");
-						} else if (hasItem(p, 773)) {
+						} else if (hasItem(p, ItemId.UNLIT_TORCH.id())) {
 							//nothing
 						} else {
 							playerTalk(p, n, "i've managed to lose my torch");
 							npcTalk(p, n, "that was silly, fortunately i have another",
 								"here, take it");
-							addItem(p, 773, 1);
+							addItem(p, ItemId.UNLIT_TORCH.id(), 1);
 						}
 					}
 					break;
@@ -249,7 +227,7 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 					break;
 			}
 		}
-		if (n.getID() == 463) {
+		else if (n.getID() == NpcId.PLATFORM_FISHERMAN_PURPLE.id() || n.getID() == NpcId.PLATFORM_FISHERMAN_GRAY.id()) {
 			playerTalk(p, n, "hello there");
 			p.message("his eyes are fixated");
 			p.message("starring at the sea");
@@ -261,7 +239,7 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 				"deep deep under the blue");
 			playerTalk(p, n, "ermm..i'll leave you to it then");
 		}
-		if (n.getID() == 462) {
+		else if (n.getID() == NpcId.PLATFORM_FISHERMAN_GOLDEN.id()) {
 			playerTalk(p, n, "hello");
 			p.message("his eyes are fixated");
 			p.message("starring at the sea");
@@ -270,7 +248,7 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 			npcTalk(p, n, "you'll all end up in the blue",
 				"deep deep under the blue");
 		}
-		if (n.getID() == 455) { /* Caroline */
+		else if (n.getID() == NpcId.CAROLINE.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					playerTalk(p, n, "hello there");
@@ -336,7 +314,7 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 					p.sendQuestComplete(Constants.Quests.SEA_SLUG);
 					playerTalk(p, n, "thanks");
 					npcTalk(p, n, "thank you", "take care of yourself adventurer");
-					addItem(p, 779, 1);
+					addItem(p, ItemId.QUEST_OYSTER_PEARLS.id(), 1);
 					break;
 				case -1:
 					playerTalk(p, n, "hello again");
@@ -346,7 +324,7 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 					break;
 			}
 		}
-		if (n.getID() == 456 || n.getID() == 457 || n.getID() == 458) { /* Holgart */
+		else if (n.getID() == NpcId.HOLGART_LAND.id() || n.getID() == NpcId.HOLGART_PLATFORM.id() || n.getID() == NpcId.HOLGART_ISLAND.id()) { /* Holgart */
 			switch (p.getQuestStage(this)) {
 				case 0:
 					playerTalk(p, n, "hello there");
@@ -379,7 +357,7 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 					playerTalk(p, n, "hello holgart");
 					npcTalk(p, n, "hello m'hearty",
 						"did you manage to make some swamp paste?");
-					if (removeItem(p, 785, 1)) {
+					if (removeItem(p, ItemId.SWAMP_PASTE.id(), 1)) {
 						playerTalk(p, n, "yes i have some here");
 						p.message("you give holgart the swamp paste");
 						npcTalk(p, n, "superb, this looks great");
@@ -595,23 +573,20 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 	}
 
 	public void checkTorchCrossing(Player p) {
-		if (hasItem(p, 774)) {
-			p.getInventory().replace(774, 773);
+		if (hasItem(p, ItemId.LIT_TORCH.id())) {
+			p.getInventory().replace(ItemId.LIT_TORCH.id(), ItemId.UNLIT_TORCH.id());
 			message(p, "your torch goes out on the crossing");
 		}
 	}
 
 	@Override
 	public boolean blockPickup(Player p, GroundItem i) {
-		if (i.getID() == 769) {
-			return true;
-		}
-		return false;
+		return i.getID() == ItemId.SEASLUG.id();
 	}
 
 	@Override
 	public void onPickup(Player p, GroundItem i) {
-		if (i.getID() == 769) {
+		if (i.getID() == ItemId.SEASLUG.id()) {
 			int damage = p.getRandom().nextInt(8) + 1;
 			p.message("you pick up the seaslug");
 			p.message("it sinks its teeth deep into you hand");
@@ -623,13 +598,7 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (obj.getID() == 458) {
-			return true;
-		}
-		if (obj.getID() == 453) {
-			return true;
-		}
-		return false;
+		return obj.getID() == 458 || obj.getID() == 453;
 	}
 
 	@Override
@@ -641,7 +610,7 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 				return;
 			}
 			if (p.getQuestStage(getQuestId()) >= 5) {
-				if (!hasItem(p, 774)) {
+				if (!hasItem(p, ItemId.LIT_TORCH.id())) {
 					int damage = p.getRandom().nextInt(1) + 7;
 					p.message("You attempt to climb up the ladder");
 					p.message("the fishermen approach you");
@@ -655,7 +624,7 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 				}
 			}
 		}
-		if (obj.getID() == 453) {
+		else if (obj.getID() == 453) {
 			if (p.getQuestStage(getQuestId()) == 5) {
 				message(p, "you rotate the crane around", "to the far platform");
 				GameObject firstRotation = new GameObject(obj.getLocation(),
@@ -691,10 +660,7 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click,
 										 Player player) {
-		if (obj.getID() == 124) {
-			return true;
-		}
-		return false;
+		return obj.getID() == 124;
 	}
 
 	@Override

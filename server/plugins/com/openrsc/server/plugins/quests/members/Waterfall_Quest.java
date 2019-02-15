@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
@@ -45,6 +47,9 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 	WallObjectActionExecutiveListener, InvUseOnWallObjectListener,
 	InvUseOnWallObjectExecutiveListener {
 
+	private static final int BAXTORIAN_CUPBOARD_OPEN = 507;
+	private static final int BAXTORIAN_CUPBOARD_CLOSED = 506;
+	
 	@Override
 	public int getQuestId() {
 		return Quests.WATERFALL_QUEST;
@@ -71,9 +76,9 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 				}
 			}
 		}
-		addItem(p, 796, 40);
-		addItem(p, 172, 2);
-		addItem(p, 161, 2);
+		addItem(p, ItemId.MITHRIL_SEED.id(), 40);
+		addItem(p, ItemId.GOLD_BAR.id(), 2);
+		addItem(p, ItemId.DIAMOND.id(), 2);
 		int[] questData = Quests.questData.get(Quests.WATERFALL_QUEST);
 		//keep order kosher
 		int[] skillIDs = {Skills.STRENGTH, Skills.ATTACK};
@@ -85,7 +90,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 470) {
+		if (n.getID() == NpcId.ALMERA.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					playerTalk(p, n, "hello madam");
@@ -155,7 +160,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 					playerTalk(p, n, "thanks almera");
 					break;
 			}
-		} else if (n.getID() == 471) {
+		} else if (n.getID() == NpcId.HUDON.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					playerTalk(p, n, "hello there");
@@ -211,7 +216,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 					npcTalk(p, n, "hmmmm");
 					break;
 			}
-		} else if (n.getID() == 481) {
+		} else if (n.getID() == NpcId.GERALD.id()) {
 			if (p.getQuestStage(this) == 0) {
 				playerTalk(p, n, "hello there");
 				npcTalk(p, n, "good day to you traveller",
@@ -228,14 +233,14 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 				npcTalk(p, n, "adventurers pass through here every week",
 					"they never find anything though");
 			}
-		} else if (n.getID() == 472) {
+		} else if (n.getID() == NpcId.HADLEY.id()) {
 			if (p.getQuestStage(this) == 0 || p.getQuestStage(this) == 1) {
 				hadleyAltDialogue(p, n, HADLEY.ALL);
 			} else {
 				hadleyMainDialogue(p, n, HADLEY.ALL);
 			}
-		} else if (n.getID() == 475) {
-			if (!hasItem(p, 787, 1)) {
+		} else if (n.getID() == NpcId.GOLRIE.id()) {
+			if (!hasItem(p, ItemId.GLARIALS_PEBBLE.id(), 1)) {
 				playerTalk(p, n, "is your name golrie?");
 				npcTalk(p, n, "that's me",
 					"i've been stuck in here for weeks",
@@ -245,11 +250,11 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 				npcTalk(p, n, "no, of course not");
 				message(p, "mixed with the junk on the floor",
 					"you find glarials pebble");
-				addItem(p, 787, 1);
+				addItem(p, ItemId.GLARIALS_PEBBLE.id(), 1);
 				playerTalk(p, n, "could i take this old pebble?");
 				npcTalk(p, n, "oh that, yes have it",
 					"it's just some old elven junk i believe");
-				removeItem(p, 789, 1);
+				removeItem(p, ItemId.LARGE_KEY.id(), 1);
 				message(p, "you give golrie the key");
 				npcTalk(p, n, "well thanks again for the key",
 					"i think i'll wait in here until those goblins get bored and leave");
@@ -266,7 +271,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 					"my grandad gave me all sorts of old junk");
 				playerTalk(p, n, "do you mind if i have a look?");
 				npcTalk(p, n, "no, of course not");
-				removeItem(p, 789, 1);
+				removeItem(p, ItemId.LARGE_KEY.id(), 1);
 				message(p, "you find nothing of interest",
 					"you give golrie the key");
 				npcTalk(p, n, "thanks a lot for the key traveller",
@@ -281,19 +286,14 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 470 || n.getID() == 471 || n.getID() == 472 || n.getID() == 481
-			|| n.getID() == 475;
+		return DataConversions.inArray(new int[] {NpcId.ALMERA.id(), NpcId.HUDON.id(),
+				NpcId.HADLEY.id(), NpcId.GERALD.id(), NpcId.GOLRIE.id()}, n.getID());
 	}
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command,
 									 Player player) {
-		return obj.getID() == 492 || obj.getID() == 486 || obj.getID() == 467
-			|| obj.getID() == 506 || obj.getID() == 507 || obj.getID() == 481
-			|| obj.getID() == 471 || obj.getID() == 479
-			|| obj.getID() == 470 || obj.getID() == 480
-			|| obj.getID() == 463 || obj.getID() == 462
-			|| obj.getID() == 482 || obj.getID() == 464;
+		return DataConversions.inArray(new int[] {492, 486, 467, BAXTORIAN_CUPBOARD_OPEN, BAXTORIAN_CUPBOARD_CLOSED, 481, 471, 479, 470, 480, 463, 462, 482, 464}, obj.getID());
 	}
 
 	@Override
@@ -303,7 +303,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 				"the raft is pulled down stream by strong currents",
 				"you crash into a small land mound");
 			p.teleport(662, 463, false);
-			Npc hudon = World.getWorld().getNpc(471, 0, 2000, 0, 2000);
+			Npc hudon = World.getWorld().getNpc(NpcId.HUDON.id(), 0, 2000, 0, 2000);
 			if (hudon != null && p.getQuestStage(this) == 1) {
 				playerTalk(p, hudon, "hello son, are you okay?");
 				npcTalk(p, hudon, "it looks like you need the help");
@@ -334,21 +334,21 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 			}
 		} else if (obj.getID() == 470) {
 			message(p, "you search the bookcase");
-			if (!p.getInventory().hasItemId(788)) {
+			if (!p.getInventory().hasItemId(ItemId.BOOK_ON_BAXTORIAN.id())) {
 				message(p, "and find a book named 'book on baxtorian'");
-				addItem(p, 788, 1);
+				addItem(p, ItemId.BOOK_ON_BAXTORIAN.id(), 1);
 			} else
 				message(p, "but find nothing of interest");
 		} else if (obj.getID() == 481) {
 			message(p, "you search the crate");
-			if (!p.getInventory().hasItemId(789)) {
+			if (!p.getInventory().hasItemId(ItemId.LARGE_KEY.id())) {
 				message(p, "and find a large key");
-				addItem(p, 789, 1);
+				addItem(p, ItemId.LARGE_KEY.id(), 1);
 			} else {
 				p.message("but find nothing");
 			}
 		} else if (obj.getID() == 480) {
-			Npc n = World.getWorld().getNpc(475, 663, 668, 3520, 3529);
+			Npc n = World.getWorld().getNpc(NpcId.GOLRIE.id(), 663, 668, 3520, 3529);
 			if (p.getQuestStage(this) == 0) {
 				npcTalk(p, n, "what are you doing down here",
 					"leave before you get yourself into trouble");
@@ -368,7 +368,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 						"i locked myself in here for protection",
 						"but i've left the key somewhere",
 						"and now i'm stuck");
-					if (!p.getInventory().hasItemId(789)) {
+					if (!p.getInventory().hasItemId(ItemId.LARGE_KEY.id())) {
 						playerTalk(p, n, "okay, i'll have a look for a key");
 					} else {
 						playerTalk(p, n, "i found a key");
@@ -387,33 +387,33 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 				"true friend of nature in life and death",
 				"may she now rest knowing",
 				"only visitors with peaceful intent can enter");
-		} else if (obj.getID() == 506 || obj.getID() == 507) {
+		} else if (obj.getID() == BAXTORIAN_CUPBOARD_OPEN || obj.getID() == BAXTORIAN_CUPBOARD_CLOSED) {
 			if (command.equalsIgnoreCase("open")) {
-				openGenericObject(obj, p, 507, "you open the cupboard");
+				openGenericObject(obj, p, BAXTORIAN_CUPBOARD_OPEN, "you open the cupboard");
 			} else if (command.equalsIgnoreCase("close")) {
-				closeGenericObject(obj, p, 506, "you shut the cupboard");
+				closeGenericObject(obj, p, BAXTORIAN_CUPBOARD_CLOSED, "you shut the cupboard");
 			} else {
 				message(p, "you search the cupboard");
-				if (!hasItem(p, 805, 1)) {
+				if (!hasItem(p, ItemId.GLARIALS_URN.id(), 1)) {
 					p.message("and find a metel urn");
-					addItem(p, 805, 1);
+					addItem(p, ItemId.GLARIALS_URN.id(), 1);
 				} else {
 					p.message("it's empty");
 				}
 			}
 		} else if (obj.getID() == 467) {
 			message(p, "you search the coffin");
-			if (!hasItem(p, 782)) {
+			if (!hasItem(p, ItemId.GLARIALS_AMULET.id())) {
 				message(p, "inside you find a small amulet",
 					"you take the amulet and close the coffin");
-				addItem(p, 782, 1);
+				addItem(p, ItemId.GLARIALS_AMULET.id(), 1);
 			} else {
 				message(p, "it's empty");
 			}
 		} else if (obj.getID() == 471) {
 			message(p, "the doors begin to open");
 
-			if (p.getInventory().wielding(782)) {
+			if (p.getInventory().wielding(ItemId.GLARIALS_AMULET.id())) {
 				doGate(p, obj, 63);
 				message(p, "You go through the door");
 			} else {
@@ -426,9 +426,9 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 			}
 		} else if (obj.getID() == 492) {
 			message(p, "you search the crate");
-			if (!p.getInventory().hasItemId(797)) {
+			if (!p.getInventory().hasItemId(ItemId.AN_OLD_KEY.id())) {
 				message(p, "you find an old key");
-				addItem(p, 797, 1);
+				addItem(p, ItemId.AN_OLD_KEY.id(), 1);
 			} else {
 				p.message("it is empty");
 			}
@@ -640,26 +640,25 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
 									   Player player) {
-		return (item.getID() == 789 && obj.getID() == 480)
-			|| item.getID() == 797
-			&& obj.getID() == 135
+		return (item.getID() == ItemId.LARGE_KEY.id() && obj.getID() == 480)
+			|| item.getID() == ItemId.AN_OLD_KEY.id() && obj.getID() == 135
 			|| (obj.getID() == 462 || obj.getID() == 463
 			|| obj.getID() == 462 || obj.getID() == 482)
-			&& item.getID() == 237
-			|| (obj.getID() == 479 && item.getID() == 787)
-			|| ((obj.getID() >= 473 && obj.getID() <= 478) && (item.getID() >= 32 && item
-			.getID() <= 34)) || obj.getID() == 483
-			&& item.getID() == 782
-			|| (obj.getID() == 485 && item.getID() == 805);
+			&& item.getID() == ItemId.ROPE.id()
+			|| (obj.getID() == 479 && item.getID() == ItemId.GLARIALS_PEBBLE.id())
+			|| ((obj.getID() >= 473 && obj.getID() <= 478)
+			&& (item.getID() == ItemId.WATER_RUNE.id() || item.getID() == ItemId.AIR_RUNE.id() || item.getID() == ItemId.EARTH_RUNE.id()))
+			|| obj.getID() == 483 && item.getID() == ItemId.GLARIALS_AMULET.id()
+			|| (obj.getID() == 485 && item.getID() == ItemId.GLARIALS_URN.id());
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == 480 && item.getID() == 789) {
-			if (hasItem(p, 789, 1)) {
+		if (obj.getID() == 480 && item.getID() == ItemId.LARGE_KEY.id()) {
+			if (hasItem(p, ItemId.LARGE_KEY.id(), 1)) {
 				doGate(p, obj);
 			}
-		} else if (obj.getID() == 479 && item.getID() == 787) {
+		} else if (obj.getID() == 479 && item.getID() == ItemId.GLARIALS_PEBBLE.id()) {
 			message(p, "you place the pebble in the gravestones small indent",
 				"it fits perfectly");
 			if (CANT_GO(p)) {
@@ -677,7 +676,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 			}
 		} else if (obj.getID() == 462 || obj.getID() == 463
 			|| obj.getID() == 462 || obj.getID() == 482
-			&& item.getID() == 237) {
+			&& item.getID() == ItemId.ROPE.id()) {
 			message(p, "you tie one end of the rope around the tree",
 				"you tie the other end into a loop",
 				"and throw it towards the other dead tree");
@@ -696,10 +695,10 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 					"under the waterfall there is a secret passage");
 				p.teleport(659, 3305, false);
 			}
-		} else if (obj.getID() == 135 && item.getID() == 797) {
+		} else if (obj.getID() == 135 && item.getID() == ItemId.AN_OLD_KEY.id()) {
 			doDoor(obj, p);
 		} else if ((obj.getID() >= 473 && obj.getID() <= 478)
-			&& (item.getID() >= 32 && item.getID() <= 34)) {
+			&& (item.getID() == ItemId.WATER_RUNE.id() || item.getID() == ItemId.AIR_RUNE.id() || item.getID() == ItemId.EARTH_RUNE.id())) {
 			if (!p.getCache().hasKey(
 				"waterfall_" + obj.getID() + "_" + item.getID())) {
 				p.message("you place the "
@@ -714,7 +713,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 				p.message("you have already placed " + article(item.getDef().getName()) + item.getDef().getName()
 					+ " here");
 			}
-		} else if (obj.getID() == 483 && item.getID() == 782) {
+		} else if (obj.getID() == 483 && item.getID() == ItemId.GLARIALS_AMULET.id()) {
 			boolean flag = false;
 			for (int i = 473; i < 478; i++) {
 				for (int y = 32; i < 34; i++) {
@@ -732,13 +731,13 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 					"the ground raises up before you");
 				p.teleport(647, 3267, false);
 			}
-		} else if (obj.getID() == 485 && item.getID() == 805) {
+		} else if (obj.getID() == 485 && item.getID() == ItemId.GLARIALS_URN.id()) {
 			message(p, "you carefully poor the ashes in the chalice",
 				"as you remove the baxtorian treasure",
 				"the chalice remains standing",
 				"inside you find a mithril case", "containing 40 seeds",
 				"two diamond's and two gold bars");
-			removeItem(p, 805, 1);
+			removeItem(p, ItemId.GLARIALS_URN.id(), 1);
 			p.sendQuestComplete(getQuestId());
 		}
 	}
@@ -754,25 +753,25 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockInvAction(Item item, Player player) {
-		return item.getID() == 788 || item.getID() == 796;
+		return item.getID() == ItemId.BOOK_ON_BAXTORIAN.id() || item.getID() == ItemId.MITHRIL_SEED.id();
 	}
 
 	@Override
 	public void onInvAction(Item i, Player p) {
-		if (i.getID() == 796) {
+		if (i.getID() == ItemId.MITHRIL_SEED.id()) {
 			message(p, "you open the small mithril case");
 			if (p.getViewArea().getGameObject(p.getLocation()) != null) {
 				p.message("you can't plant a tree here");
 				return;
 			}
-			removeItem(p, 796, 1);
+			removeItem(p, ItemId.MITHRIL_SEED.id(), 1);
 			message(p, "and drop a seed by your feet");
 			GameObject object = new GameObject(Point.location(p.getX(), p.getY()), 490, 0, 0);
 			World.getWorld().registerGameObject(object);
 			World.getWorld().delayedRemoveObject(object, 60000);
 			p.message("a tree magically sprouts around you");
 		}
-		if (i.getID() == 788) {
+		else if (i.getID() == ItemId.BOOK_ON_BAXTORIAN.id()) {
 			message(p, "the book is old with many pages missing",
 				"a few are translated from elven into common tongue");
 			if (p.getQuestStage(this) == 2) {
@@ -851,12 +850,12 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockInvUseOnWallObject(GameObject obj, Item item,
 										   Player player) {
-		return obj.getID() == 135 && item.getID() == 797;
+		return obj.getID() == 135 && item.getID() == ItemId.AN_OLD_KEY.id();
 	}
 
 	@Override
 	public void onInvUseOnWallObject(GameObject obj, Item item, Player player) {
-		if (obj.getID() == 135 && item.getID() == 797) {
+		if (obj.getID() == 135 && item.getID() == ItemId.AN_OLD_KEY.id()) {
 			message(player, "you open the door with the key");
 			doDoor(obj, player);
 			message(player, "You go through the door");
@@ -868,7 +867,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 			String name = item.getDef().getName().toLowerCase();
 			if (name.contains("dagger") || name.contains("scimitar")
 				|| name.contains("bow") || name.contains("mail")
-				|| name.contains("plated") || item.getID() == 406
+				|| name.contains("plated") || item.getID() == ItemId.RUNE_SKIRT.id()
 				|| name.contains("shield") || (name.contains("sword")
 				&& !name.equalsIgnoreCase("Swordfish") && !name.equalsIgnoreCase("Burnt Swordfish") && !name.equalsIgnoreCase("Raw Swordfish"))
 				|| name.contains("mace") || name.contains("helmet")

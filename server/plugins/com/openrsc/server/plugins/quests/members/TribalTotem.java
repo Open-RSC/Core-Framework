@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
@@ -18,6 +20,7 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveLis
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.closeGenericObject;
@@ -41,6 +44,8 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 	boolean firstOpt = false;
 	boolean secondOpt = false;
 	boolean thirdOpt = false;
+	private static final int HANDELMORT_CHEST_OPEN = 332;
+	private static final int HANDELMORT_CHEST_CLOSED = 333;
 
 	@Override
 	public int getQuestId() {
@@ -66,24 +71,13 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 332) {
-			return true;
-		}
-		if (n.getID() == 335) {
-			return true;
-		}
-		if (n.getID() == 333) {
-			return true;
-		}
-		if (n.getID() == 334) {
-			return true;
-		}
-		return false;
+		return DataConversions.inArray(new int[] {NpcId.KANGAI_MAU.id(), NpcId.HORACIO.id(),
+				NpcId.WIZARD_CROMPERTY.id(), NpcId.RPDT_EMPLOYEE.id()}, n.getID());
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 332) {
+		if (n.getID() == NpcId.KANGAI_MAU.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					npcTalk(p, n, "Hello I Kangai Mau", "Of the Rantuki tribe");
@@ -189,14 +183,14 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 				case 1:
 				case 2:
 					npcTalk(p, n, "Have you got our totem back?");
-					if (p.getInventory().countId(705) >= 1) {
+					if (p.getInventory().countId(ItemId.TRIBAL_TOTEM.id()) >= 1) {
 						playerTalk(p, n, "Yes I have");
 						npcTalk(p, n, "Thank you brave adventurer");
 						p.sendQuestComplete(Constants.Quests.TRIBAL_TOTEM);
 						npcTalk(p, n, "Here have some freshly cooked Karamja fish",
 							"Caught specially by our people");
-						removeItem(p, 705, 1);
-						addItem(p, 370, 5);
+						removeItem(p, ItemId.TRIBAL_TOTEM.id(), 1);
+						addItem(p, ItemId.BURNT_SWORDFISH.id(), 5);
 					} else {
 						playerTalk(p, n, "No it's not that easy");
 						npcTalk(p, n, "Bah, you no good");
@@ -207,7 +201,7 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 					break;
 			}
 		}
-		if (n.getID() == 335) {
+		else if (n.getID() == NpcId.HORACIO.id()) {
 			npcTalk(p, n, "It's a fine day to be out in the garden isn't it?");
 			int menu = showMenu(p, n, false, //do not send over
 				"Yes, it's very nice", "So who are you?");
@@ -242,7 +236,7 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 				}
 			}
 		}
-		if (n.getID() == 333) {
+		else if (n.getID() == NpcId.WIZARD_CROMPERTY.id()) {
 			npcTalk(p, n, "Hello there", "My name is Cromperty",
 				"I am a wizard and an inventor");
 			int menu = showMenu(p, n, "Two jobs, thats got to be tough",
@@ -259,7 +253,7 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 				inventedDialogue(p, n);
 			}
 		}
-		if (n.getID() == 334) {
+		else if (n.getID() == NpcId.RPDT_EMPLOYEE.id()) {
 			npcTalk(p, n, "Welcome to RPDT");
 			if (p.getCache().hasKey("label") && p.getQuestStage(this) == 1) {
 				int menu = showMenu(p, n,
@@ -352,25 +346,12 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command,
 									 Player player) {
-		if (obj.getID() == 290 && obj.getX() == 557 && obj.getY() == 615) {
-			return true;
-		}
-		if (obj.getID() == 290 && obj.getX() == 557 && obj.getY() == 614) {
-			return true;
-		}
-		if (obj.getID() == 329 && obj.getX() == 559 && obj.getY() == 617) {
-			return true;
-		}
-		if (obj.getID() == 328 && obj.getX() == 558 && obj.getY() == 617) {
-			return true;
-		}
-		if (obj.getID() == 331 && obj.getX() == 563 && obj.getY() == 587) {
-			return true;
-		}
-		if ((obj.getID() == 332 || obj.getID() == 333) && obj.getX() == 560 && obj.getY() == 1531) {
-			return true;
-		}
-		return false;
+		return (obj.getID() == 290 && obj.getX() == 557 && obj.getY() == 615)
+				|| (obj.getID() == 290 && obj.getX() == 557 && obj.getY() == 614)
+				|| (obj.getID() == 329 && obj.getX() == 559 && obj.getY() == 617)
+				|| (obj.getID() == 328 && obj.getX() == 558 && obj.getY() == 617)
+				|| (obj.getID() == 331 && obj.getX() == 563 && obj.getY() == 587)
+				|| ((obj.getID() == 332 || obj.getID() == 333) && obj.getX() == 560 && obj.getY() == 1531);
 	}
 
 	@Override
@@ -379,17 +360,17 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 			|| obj.getID() == 290 && obj.getX() == 557 && obj.getY() == 614) {
 			p.message("The crate is empty");
 		}
-		if (obj.getID() == 329 && obj.getX() == 559 && obj.getY() == 617) {
+		else if (obj.getID() == 329 && obj.getX() == 559 && obj.getY() == 617) {
 			message(p, "There is a label on this crate", "It says",
 				"to Lord Handelmort", "Handelmort Mansion", "Ardougne");
-			if (hasItem(p, 704) || p.getCache().hasKey("label")) {
+			if (hasItem(p, ItemId.ADDRESS_LABEL.id()) || p.getCache().hasKey("label")) {
 				message(p, "It doesn't seem possible to open the crate");
 			} else {
 				message(p, "You take the label");
-				addItem(p, 704, 1);
+				addItem(p, ItemId.ADDRESS_LABEL.id(), 1);
 			}
 		}
-		if (obj.getID() == 328 && obj.getX() == 558 && obj.getY() == 617) {
+		else if (obj.getID() == 328 && obj.getX() == 558 && obj.getY() == 617) {
 			if (p.getCache().hasKey("label")) {
 				message(p, "There is a label on this crate", "It says",
 					"to Lord Handelmort", "Handelmort Mansion", "Ardougne");
@@ -399,7 +380,7 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 				"To the wizard's tower in Misthalin",
 				"It doesn't seem possible to open the crate");
 		}
-		if (obj.getID() == 331 && obj.getX() == 563 && obj.getY() == 587) {
+		else if (obj.getID() == 331 && obj.getX() == 563 && obj.getY() == 587) {
 			if (command.equalsIgnoreCase("Search for traps")) {
 				if (getCurrentLevel(p, Skills.THIEVING) < 21) {
 					message(p, "You don't find anything interesting");
@@ -423,18 +404,18 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 				}
 			}
 		}
-		if ((obj.getID() == 332 || obj.getID() == 333) && obj.getX() == 560 && obj.getY() == 1531) {
+		else if ((obj.getID() == HANDELMORT_CHEST_OPEN || obj.getID() == HANDELMORT_CHEST_CLOSED) && obj.getX() == 560 && obj.getY() == 1531) {
 			if (command.equalsIgnoreCase("open")) {
-				openGenericObject(obj, p, 332, "You open the chest");
+				openGenericObject(obj, p, HANDELMORT_CHEST_OPEN, "You open the chest");
 			} else if (command.equalsIgnoreCase("close")) {
-				closeGenericObject(obj, p, 333, "You close the chest");
+				closeGenericObject(obj, p, HANDELMORT_CHEST_CLOSED, "You close the chest");
 			} else {
 				p.message("You search the chest");
-				if (hasItem(p, 705)) {
+				if (hasItem(p, ItemId.TRIBAL_TOTEM.id())) {
 					p.message("The chest is empty");
 				} else {
 					p.message("You find a tribal totem which you take");
-					addItem(p, 705, 1);
+					addItem(p, ItemId.TRIBAL_TOTEM.id(), 1);
 				}
 			}
 		}
@@ -443,21 +424,18 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
 									   Player player) {
-		if (obj.getID() == 328 && item.getID() == 704) {
-			return true;
-		}
-		return false;
+		return obj.getID() == 328 && item.getID() == ItemId.ADDRESS_LABEL.id();
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == 328 && item.getID() == 704) {
+		if (obj.getID() == 328 && item.getID() == ItemId.ADDRESS_LABEL.id()) {
 			if (p.getQuestStage(this) == -1) {
 				p.message("You've already done this!");
 			} else {
 				p.message("You stick the label on the crate");
 				playerTalk(p, null, "Now I just need someone to deliver it for me");
-				removeItem(p, 704, 1);
+				removeItem(p, ItemId.ADDRESS_LABEL.id(), 1);
 				p.getCache().store("label", true);
 			}
 		}
@@ -467,10 +445,7 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click,
 										 Player player) {
-		if (obj.getID() == 98 && obj.getX() == 561 && obj.getY() == 586) {
-			return true;
-		}
-		return false;
+		return obj.getID() == 98 && obj.getX() == 561 && obj.getY() == 586;
 	}
 
 	@Override
