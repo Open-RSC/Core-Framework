@@ -105,7 +105,7 @@ public class Config {
 	public static boolean S_WANT_HIDE_IP = false;
 	public static boolean S_WANT_REMEMBER = false;
 	public static boolean S_WANT_FIXED_OVERHEAD_CHAT = false;
-	public static long LOGO_SPRITE_ID = 2010;
+	public static int LOGO_SPRITE_ID = 2010;
 	public static int C_FPS = 50;
 
 	public static void set(String key, Object value) {
@@ -250,7 +250,7 @@ public class Config {
 		return prop.getProperty("COMMAND_PREFIX");
 	}
 
-	public static long getLogoSpriteId() {
+	public static int getLogoSpriteId() {
 		return LOGO_SPRITE_ID;
 	}
 
