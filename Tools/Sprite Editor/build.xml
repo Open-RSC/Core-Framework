@@ -18,7 +18,11 @@
             </classpath>
             <compilerarg line="-Xlint:unchecked" />
         </javac>
-        <jar basedir="${build}" destfile="${jar}" />
+        <jar basedir="${build}" destfile="${jar}">
+            <manifest>
+                <attribute name="Main-Class" value="spriteeditor.SpriteEditor"/>
+            </manifest>
+        </jar>
         <delete dir="${build}" />
     </target>
 
