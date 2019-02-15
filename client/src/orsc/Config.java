@@ -14,8 +14,8 @@ public class Config {
 	private static Properties prop = new Properties();
 
 	public static final String SERVER_NAME = "Runescape";
-	public static final String SERVER_NAME_WELCOME = "Runescape Classic";
-	public static final String WELCOME_TEXT = "You need a members account to use this server";
+	public static String SERVER_NAME_WELCOME = "Runescape Classic";
+	public static String WELCOME_TEXT = "You need a members account to use this server";
 	public static final String SERVER_IP = "localhost";
 	public static final int SERVER_PORT = 43594;
 	public static final int CLIENT_VERSION = 1;
