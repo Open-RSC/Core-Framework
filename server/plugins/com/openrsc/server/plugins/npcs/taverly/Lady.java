@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.npcs.taverly;
 
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -15,7 +16,7 @@ public class Lady implements TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Good day to you " + p.isMale() != null ? "sir" : "madam");
+		npcTalk(p, n, "Good day to you " + (p.isMale() ? "sir" : "madam"));
 		Menu defaultMenu = new Menu();
 		defaultMenu.addOption(new Option("Who are you?") {
 			@Override
@@ -52,7 +53,7 @@ public class Lady implements TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 283;
+		return n.getID() == NpcId.LADY_LAKE.id();
 	}
 
 }

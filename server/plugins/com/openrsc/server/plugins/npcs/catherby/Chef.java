@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.npcs.catherby;
 
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -18,7 +20,7 @@ public class Chef implements TalkToNpcExecutiveListener, TalkToNpcListener {
 			case -1:
 				npcTalk(p, n, "I hear you have brought the completed crest to my father",
 					"Impressive work I must say");
-				if (hasItem(p, 698)) {
+				if (hasItem(p, ItemId.STEEL_GAUNTLETS.id())) {
 					playerTalk(p, n, "My Father says you can improve these gauntlets for me");
 					npcTalk(p, n, "Yes that is true",
 						"I can change them to gauntlets of cooking",
@@ -30,7 +32,7 @@ public class Chef implements TalkToNpcExecutiveListener, TalkToNpcListener {
 						message(p, "Caleb holds the gauntlets and closes his eyes",
 							"Caleb concentrates",
 							"Caleb hands the gauntlets to you");
-						p.getInventory().replace(698, 700);
+						p.getInventory().replace(ItemId.STEEL_GAUNTLETS.id(), ItemId.GAUNTLETS_OF_COOKING.id());
 					} else if (menu == 1) {
 						npcTalk(p, n, "Ok suit yourself");
 					}
@@ -58,19 +60,20 @@ public class Chef implements TalkToNpcExecutiveListener, TalkToNpcListener {
 				break;
 			case 2:
 				npcTalk(p, n, "How is the fish collecting going?");
-				if (!hasItem(p, 370) && !hasItem(p, 555) && !hasItem(p, 367) && !hasItem(p, 357) && !hasItem(p, 350)) {
+				if (!hasItem(p, ItemId.SWORDFISH.id()) && !hasItem(p, ItemId.BASS.id()) && !hasItem(p, ItemId.TUNA.id())
+						&& !hasItem(p, ItemId.SALMON.id()) && !hasItem(p, ItemId.SHRIMP.id())) {
 					playerTalk(p, n, "I haven't got all the fish yet");
 					npcTalk(p, n, "Remember I want cooked swordfish, bass, tuna, salmon and shrimp");
 				} else {
 					playerTalk(p, n, "Yes i have all of that now");
 					message(p, "You give all of the fish to Caleb");
-					removeItem(p, 370, 1);
-					removeItem(p, 555, 1);
-					removeItem(p, 367, 1);
-					removeItem(p, 357, 1);
-					removeItem(p, 350, 1);
+					removeItem(p, ItemId.SWORDFISH.id(), 1);
+					removeItem(p, ItemId.BASS.id(), 1);
+					removeItem(p, ItemId.TUNA.id(), 1);
+					removeItem(p, ItemId.SALMON.id(), 1);
+					removeItem(p, ItemId.SHRIMP.id(), 1);
 					p.message("Caleb gives you his piece of the crest");
-					addItem(p, 695, 1);
+					addItem(p, ItemId.CREST_FRAGMENT_ONE.id(), 1);
 					p.getCache().store("skipped_menu", true);
 					p.updateQuestStage(Quests.FAMILY_CREST, 3);
 					int m = showMenu(p, n,
@@ -128,7 +131,7 @@ public class Chef implements TalkToNpcExecutiveListener, TalkToNpcListener {
 			case 7:
 			case 8:
 				npcTalk(p, n, "How are you doing getting the rest of the crest?");
-				if (!hasItem(p, 695)) {
+				if (!hasItem(p, ItemId.CREST_FRAGMENT_ONE.id())) {
 					int menu = showMenu(p, n,
 						"I am still working on it",
 						"I have lost the piece you gave me");
@@ -136,7 +139,7 @@ public class Chef implements TalkToNpcExecutiveListener, TalkToNpcListener {
 						npcTalk(p, n, "Well good luck in your quest");
 					} else if (menu == 1) {
 						npcTalk(p, n, "Ah well here is another one");
-						addItem(p, 695, 1);
+						addItem(p, ItemId.CREST_FRAGMENT_ONE.id(), 1);
 					}
 				} else {
 					playerTalk(p, n, "I am still working on it");
@@ -203,7 +206,7 @@ public class Chef implements TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 310;
+		return n.getID() == NpcId.CHEF.id();
 	}
 
 }

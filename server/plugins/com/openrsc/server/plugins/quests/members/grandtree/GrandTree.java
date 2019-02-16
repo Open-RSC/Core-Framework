@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.members.grandtree;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -21,6 +23,7 @@ import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveLi
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.closeCupboard;
@@ -47,43 +50,20 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 	 * Hazelmere coords: 535, 754       *
 	 * King narnode coords: 416, 165    *
 	 ***********************************/
+	//the CAGE (prison) on top of the grand tree has open option but has no effect
 
-	private static final int KING_NARNODE_SHAREEN = 541;
-	private static final int KING_NARNODE_SHAREEN_UNDERGROUND = 545;
-
-	private static final int HAZELMERE = 546;
-
-	private static final int GLOUGH = 547;
-
-	private static final int GLOUGHS_CUPBOARD = 620;
-	private static final int GLOUGH_CHEST = 632;
+	private static final int GLOUGHS_CUPBOARD_OPEN = 620;
+	private static final int GLOUGHS_CUPBOARD_CLOSED = 619;
+	private static final int GLOUGH_CHEST_OPEN = 631;
+	private static final int GLOUGH_CHEST_CLOSED = 632;
 
 	private static final int TREE_LADDER_UP = 585;
-
 	private static final int TREE_LADDER_DOWN = 586;
-
-	private static final int CHARLIE = 550;
-
-	public static final int CAGE = 617;
-
-	private static final int GNOME_GUARD = 551;
-
 	private static final int SHIPYARD_GATE = 624;
-
-	private static final int SHIPYARD_WORKER_WHITE = 558;
-	private static final int SHIPYARD_WORKER_BLACK = 559;
-	private static final int SHIPYARD_FOREMAN = 560;
-	private static final int SHIPYARD_HUT_FOREMAN = 561;
-
-	private static final int FEMI = 563;
-	private static final int FEMI_INSIDE_STRONGHOLD = 564;
-	private static final int ANITA = 565;
 
 	private static final int WATCH_TOWER_UP = 635;
 	private static final int WATCH_TOWER_DOWN = 646;
 	private static final int WATCH_TOWER_STONE_STAND = 634;
-
-	private static final int BLACK_DEMON = 568;
 
 	private static final int ROOT_ONE = 609;
 	private static final int ROOT_TWO = 610;
@@ -127,12 +107,14 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == KING_NARNODE_SHAREEN || n.getID() == KING_NARNODE_SHAREEN_UNDERGROUND || n.getID() == HAZELMERE || n.getID() == GLOUGH || n.getID() == CHARLIE || n.getID() == SHIPYARD_WORKER_WHITE || n.getID() == SHIPYARD_WORKER_BLACK || n.getID() == SHIPYARD_FOREMAN || n.getID() == SHIPYARD_HUT_FOREMAN || n.getID() == FEMI || n.getID() == FEMI_INSIDE_STRONGHOLD || n.getID() == ANITA;
+		return DataConversions.inArray(new int[] {NpcId.KING_NARNODE_SHAREEN.id(), NpcId.KING_NARNODE_SHAREEN_UNDERGROUND.id(),
+				NpcId.HAZELMERE.id(), NpcId.GLOUGH.id(), NpcId.CHARLIE.id(), NpcId.SHIPYARD_WORKER_WHITE.id(), NpcId.SHIPYARD_WORKER_BLACK.id(),
+				NpcId.SHIPYARD_FOREMAN.id(), NpcId.SHIPYARD_FOREMAN_HUT.id(), NpcId.FEMI.id(), NpcId.FEMI_STRONGHOLD.id(), NpcId.ANITA.id()}, n.getID());
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == KING_NARNODE_SHAREEN) {
+		if (n.getID() == NpcId.KING_NARNODE_SHAREEN.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					playerTalk(p, n, "hello there");
@@ -152,7 +134,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 							"the tile slides away, revealing a small tunnel",
 							"you follow king shareem down");
 						movePlayer(p, 703, 3284);
-						n = getNearestNpc(p, KING_NARNODE_SHAREEN_UNDERGROUND, 15);
+						n = getNearestNpc(p, NpcId.KING_NARNODE_SHAREEN_UNDERGROUND.id(), 15);
 						if (n != null) {
 							playerTalk(p, n, "so what is this place?");
 							npcTalk(p, n, "these my friend, are the foundations of the stronghold");
@@ -194,8 +176,8 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 									"you'll find his dwellings high upon a towering hill..",
 									"..on a island south of the khazard fight arena");
 								p.message("king shareem gives you a book and a bark sample");
-								addItem(p, 918, 1);
-								addItem(p, 919, 1);
+								addItem(p, ItemId.TREE_GNOME_TRANSLATION.id(), 1);
+								addItem(p, ItemId.BARK_SAMPLE.id(), 1);
 								npcTalk(p, n, "i'll show you the way back up");
 								p.message("you follow king shareem up the ladder");
 								movePlayer(p, 415, 163);
@@ -212,19 +194,19 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 					npcTalk(p, n, "traveller, you've returned",
 						"any word from hazelmere?");
 					playerTalk(p, n, "not yet i'm afraid");
-					if (!hasItem(p, 918) || !hasItem(p, 919)) {
-						if (!hasItem(p, 919)) {
+					if (!hasItem(p, ItemId.TREE_GNOME_TRANSLATION.id()) || !hasItem(p, ItemId.BARK_SAMPLE.id())) {
+						if (!hasItem(p, ItemId.BARK_SAMPLE.id())) {
 							playerTalk(p, n, "but i've lost the bark sample");
 							npcTalk(p, n, "here take another and try to hang on to it");
 							p.message("king shareem gives you another bark sample");
-							addItem(p, 919, 1);
+							addItem(p, ItemId.BARK_SAMPLE.id(), 1);
 						}
-						if (!hasItem(p, 918)) {
+						if (!hasItem(p, ItemId.TREE_GNOME_TRANSLATION.id())) {
 							playerTalk(p, n, "but i've lost the book you gave me");
 							npcTalk(p, n, "don't worry i have more",
 								"here you go");
 							p.message("king shareem gives you a translation book");
-							addItem(p, 918, 1);
+							addItem(p, ItemId.TREE_GNOME_TRANSLATION.id(), 1);
 						}
 					} else {
 						npcTalk(p, n, "hazalmere lives on a island just south of the fight arena",
@@ -263,19 +245,19 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 							}
 						}
 					} else if (menu == 1) {
-						if (!hasItem(p, 918) || !hasItem(p, 919)) {
-							if (!hasItem(p, 919)) {
+						if (!hasItem(p, ItemId.TREE_GNOME_TRANSLATION.id()) || !hasItem(p, ItemId.BARK_SAMPLE.id())) {
+							if (!hasItem(p, ItemId.BARK_SAMPLE.id())) {
 								playerTalk(p, n, "but i've lost the bark sample");
 								npcTalk(p, n, "here take another and try to hang on to it");
 								p.message("king shareem gives you another bark sample");
-								addItem(p, 919, 1);
+								addItem(p, ItemId.BARK_SAMPLE.id(), 1);
 							}
-							if (!hasItem(p, 918)) {
+							if (!hasItem(p, ItemId.TREE_GNOME_TRANSLATION.id())) {
 								playerTalk(p, n, "but i've lost the book you gave me");
 								npcTalk(p, n, "don't worry i have more",
 									"here you go");
 								p.message("king shareem gives you a translation book");
-								addItem(p, 918, 1);
+								addItem(p, ItemId.TREE_GNOME_TRANSLATION.id(), 1);
 							}
 						}
 						npcTalk(p, n, "time is of the essence adventurer");
@@ -376,7 +358,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 				case 12:
 					playerTalk(p, n, "look, i found this at glough's home");
 					message(p, "you give the king the strategic notes");
-					removeItem(p, 926, 1);
+					removeItem(p, ItemId.GLOUGHS_NOTES.id(), 1);
 					npcTalk(p, n, "hmmm, these are interesting",
 						"but it's not proof, any one could have made these",
 						"traveller, i understand your concern",
@@ -384,10 +366,10 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 						"but they found nothing suspicious",
 						"just these old pebbles");
 					message(p, "narnode gives you four old pebbles");
-					addItem(p, 929, 1);
-					addItem(p, 928, 1);
-					addItem(p, 930, 1);
-					addItem(p, 927, 1);
+					addItem(p, ItemId.PEBBLE_3.id(), 1);
+					addItem(p, ItemId.PEBBLE_2.id(), 1);
+					addItem(p, ItemId.PEBBLE_4.id(), 1);
+					addItem(p, ItemId.PEBBLE_1.id(), 1);
 					npcTalk(p, n, "on the other hand, if glough's right about the humans",
 						"we will need an army of gnomes to protect ourselves",
 						"so i've decided to allow glough to raise a mighty gnome army",
@@ -398,7 +380,8 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 				case 13:
 					playerTalk(p, n, "hello again narnode");
 					npcTalk(p, n, "please traveller, take my advice and leave");
-					if (!hasItem(p, 929) || !hasItem(p, 928) || !hasItem(p, 930) || !hasItem(p, 927)) {
+					if (!hasItem(p, ItemId.PEBBLE_3.id()) || !hasItem(p, ItemId.PEBBLE_2.id())
+							|| !hasItem(p, ItemId.PEBBLE_4.id()) || !hasItem(p, ItemId.PEBBLE_1.id())) {
 						playerTalk(p, n, "have you any more of those pebbles");
 						npcTalk(p, n, "well, yes as it goes, why?");
 						playerTalk(p, n, "i lost some");
@@ -416,19 +399,20 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 						if (p.getCache().hasKey("pebble_4")) {
 							p.getCache().remove("pebble_4");
 						}
-						if (!hasItem(p, 929)) {
-							addItem(p, 929, 1);
+						if (!hasItem(p, ItemId.PEBBLE_3.id())) {
+							addItem(p, ItemId.PEBBLE_3.id(), 1);
 						}
-						if (!hasItem(p, 928)) {
-							addItem(p, 928, 1);
+						if (!hasItem(p, ItemId.PEBBLE_2.id())) {
+							addItem(p, ItemId.PEBBLE_2.id(), 1);
 						}
-						if (!hasItem(p, 930)) {
-							addItem(p, 930, 1);
+						if (!hasItem(p, ItemId.PEBBLE_4.id())) {
+							addItem(p, ItemId.PEBBLE_4.id(), 1);
 						}
-						if (!hasItem(p, 927)) {
-							addItem(p, 927, 1);
+						if (!hasItem(p, ItemId.PEBBLE_1.id())) {
+							addItem(p, ItemId.PEBBLE_1.id(), 1);
 						}
-					} else if (hasItem(p, 929) && hasItem(p, 928) && hasItem(p, 930) && hasItem(p, 927)) {
+					} else if (hasItem(p, ItemId.PEBBLE_3.id()) && hasItem(p, ItemId.PEBBLE_2.id())
+							&& hasItem(p, ItemId.PEBBLE_4.id()) && hasItem(p, ItemId.PEBBLE_1.id())) {
 						npcTalk(p, n, "it's not safe for you here");
 					}
 					break;
@@ -450,8 +434,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 					break;
 			}
 		}
-
-		if (n.getID() == HAZELMERE) {
+		else if (n.getID() == NpcId.HAZELMERE.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					message(p, "the mage mumbles in an ancient tounge",
@@ -459,9 +442,9 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 					break;
 				case 1:
 					playerTalk(p, n, "hello");
-					if (hasItem(p, 919)) {
+					if (hasItem(p, ItemId.BARK_SAMPLE.id())) {
 						message(p, "you give the mage the bark sample");
-						removeItem(p, 919, 1);
+						removeItem(p, ItemId.BARK_SAMPLE.id(), 1);
 						message(p, "the mage speaks in a strange ancient tongue",
 							"he says....");
 						strangeTranslationBox(p);
@@ -497,8 +480,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 					break;
 			}
 		}
-
-		if (n.getID() == GLOUGH) {
+		else if (n.getID() == NpcId.GLOUGH.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 				case 1:
@@ -550,7 +532,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 						"guards...guards");
 					p.message("gnome guards hurry up the ladder");
 					// 418, 2992
-					Npc gnome_guard = spawnNpc(GNOME_GUARD, 714, 1421, 12000);
+					Npc gnome_guard = spawnNpc(NpcId.GNOME_GUARD_PRISON.id(), 714, 1421, 12000);
 					npcTalk(p, n, "take him away");
 					p.face(gnome_guard);
 					gnome_guard.face(p);
@@ -562,7 +544,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 					message(p, "the gnome guards take you to the top of the grand tree");
 					p.teleport(419, 2992);
 					sleep(5000);
-					Npc jailCharlie = getNearestNpc(p, CHARLIE, 5);
+					Npc jailCharlie = getNearestNpc(p, NpcId.CHARLIE.id(), 5);
 					npcTalk(p, jailCharlie, "so, they've got you as well");
 					playerTalk(p, jailCharlie, "it's glough, he's trying to cover something up");
 					npcTalk(p, jailCharlie, "i shouldn't tell you this adventurer",
@@ -580,7 +562,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 						"the sea men use the pass word ka-lu-min");
 					playerTalk(p, jailCharlie, "thanks charlie");
 					sleep(5000);
-					Npc narnode = spawnNpc(KING_NARNODE_SHAREEN, 419, 2993, 36000);
+					Npc narnode = spawnNpc(NpcId.KING_NARNODE_SHAREEN.id(), 419, 2993, 36000);
 					npcTalk(p, narnode, "adventurer please accept my apologies",
 						"glough had no right to arrest you",
 						"i just think he's scared of humans",
@@ -625,9 +607,21 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 					break;
 			}
 		}
-
-		if (n.getID() == CHARLIE) {
+		else if (n.getID() == NpcId.CHARLIE.id()) {
 			switch (p.getQuestStage(this)) {
+				case 0:
+				case 1:
+				case 2:
+				case 3:
+				case 4:
+				case 12:
+				case 13:
+				case 14:
+				case 15:
+				case 16:
+				case -1:
+					p.message("the prisoner is in no mood to talk");
+					break;
 				case 5:
 					playerTalk(p, n, "tell me,why would you want to kill the grand tree?");
 					npcTalk(p, n, "what do you mean?");
@@ -681,19 +675,10 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 						p.updateQuestStage(this, 11);
 					}
 					break;
-				case 12:
-				case 13:
-				case 14:
-				case 15:
-				case 16:
-				case -1:
-					p.message("the prisoner is in no mood to talk");
-					break;
 			}
 		}
-
-		if (n.getID() == SHIPYARD_WORKER_WHITE || n.getID() == SHIPYARD_WORKER_BLACK) {
-			int selected = p.getRandom().nextInt(13);
+		else if (n.getID() == NpcId.SHIPYARD_WORKER_WHITE.id() || n.getID() == NpcId.SHIPYARD_WORKER_BLACK.id()) {
+			int selected = p.getRandom().nextInt(14);
 			playerTalk(p, n, "hello");
 			if (selected == 0) {
 				npcTalk(p, n, "ouch");
@@ -760,7 +745,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 				npcTalk(p, n, "oh, i'm sorry, i didn't realise");
 			}
 		}
-		if (n.getID() == SHIPYARD_FOREMAN) {
+		else if (n.getID() == NpcId.SHIPYARD_FOREMAN.id()) {
 			if (p.getQuestStage(this) >= 10) {
 				p.message("the forman is too busy to talk");
 				return;
@@ -774,7 +759,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 			p.teleport(408, 753);
 			if (p.getQuestStage(this) == 8) {
 				p.message("you follow the foreman into the wooden hut");
-				Npc HUT_FOREMAN = getNearestNpc(p, 561, 4);
+				Npc HUT_FOREMAN = getNearestNpc(p, NpcId.SHIPYARD_FOREMAN_HUT.id(), 4);
 				npcTalk(p, HUT_FOREMAN, "so tell me again why you're here");
 				playerTalk(p, HUT_FOREMAN, "erm...glough sent me?");
 				npcTalk(p, HUT_FOREMAN, "ok and how is glough..still with his wife?");
@@ -843,12 +828,12 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 					}
 				}
 			} else if (p.getQuestStage(this) == 9) {
-				Npc HUT_FOREMAN = getNearestNpc(p, 561, 4);
+				Npc HUT_FOREMAN = getNearestNpc(p, NpcId.SHIPYARD_FOREMAN_HUT.id(), 4);
 				npcYell(p, n, "die imposter");
 				HUT_FOREMAN.setChasing(p);
 			}
 		}
-		if (n.getID() == SHIPYARD_HUT_FOREMAN) {
+		else if (n.getID() == NpcId.SHIPYARD_FOREMAN_HUT.id()) {
 			if (p.getQuestStage(this) == 10) {
 				p.message("the forman is too busy to talk");
 				return;
@@ -856,7 +841,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 			npcYell(p, n, "die imposter");
 			n.setChasing(p);
 		}
-		if (n.getID() == FEMI) {
+		else if (n.getID() == NpcId.FEMI.id()) {
 			switch (p.getQuestStage(this)) {
 				case 10:
 					playerTalk(p, n, "i can't believe they won't let me in");
@@ -875,7 +860,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 						"...and drags the cart to the gate",
 						"femi pulls you into the stronghold");
 					p.teleport(708, 510);
-					Npc femi = getNearestNpc(p, 564, 2);
+					Npc femi = getNearestNpc(p, NpcId.FEMI_STRONGHOLD.id(), 2);
 					npcTalk(p, femi, "ok traveller, you'd better get going");
 					playerTalk(p, femi, "thanks again femi");
 					npcTalk(p, femi, "that's ok, all the best");
@@ -885,10 +870,10 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 					break;
 			}
 		}
-		if (n.getID() == FEMI_INSIDE_STRONGHOLD) {
+		else if (n.getID() == NpcId.FEMI_STRONGHOLD.id()) {
 			p.message("the little gnome is too busy to talk");
 		}
-		if (n.getID() == ANITA) {
+		else if (n.getID() == NpcId.ANITA.id()) {
 			switch (p.getQuestStage(this)) {
 				case 11:
 					playerTalk(p, n, "hello there");
@@ -901,7 +886,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 					npcTalk(p, n, "give this key to glough",
 						"he left it here last night");
 					message(p, "anita gives you a key");
-					addItem(p, 925, 1);
+					addItem(p, ItemId.GLOUGHS_KEY.id(), 1);
 					npcTalk(p, n, "thanks a lot");
 					playerTalk(p, n, "no, thankyou");
 					break;
@@ -910,7 +895,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 					break;
 			}
 		}
-		if (n.getID() == KING_NARNODE_SHAREEN_UNDERGROUND) { // FINALE COMPLETION
+		else if (n.getID() == NpcId.KING_NARNODE_SHAREEN_UNDERGROUND.id()) { // FINALE COMPLETION
 			switch (p.getQuestStage(this)) {
 				case 15:
 					npcTalk(p, n, "traveller you're wounded, what happened?");
@@ -943,11 +928,11 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 				case 16:
 					npcTalk(p, n, "traveller, have you managed to find the rock",
 						"i think there's only one");
-					if (hasItem(p, 931)) {
+					if (hasItem(p, ItemId.DACONIA_ROCK.id())) {
 						playerTalk(p, n, "is this it?");
 						npcTalk(p, n, "yes, excellent, well done");
 						message(p, "you give king shareem the daconia rock");
-						removeItem(p, 931, 1);
+						removeItem(p, ItemId.DACONIA_ROCK.id(), 1);
 						npcTalk(p, n, "it's incredible, the tree's health is improving already",
 							"i don't what to say, we owe you so much",
 							"to think glough had me fooled all along");
@@ -1194,67 +1179,41 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (obj.getID() == 619 || obj.getID() == GLOUGHS_CUPBOARD) {
-			return true;
-		}
-		if (obj.getID() == TREE_LADDER_UP) {
-			return true;
-		}
-		if (obj.getID() == TREE_LADDER_DOWN) {
-			return true;
-		}
-		if (obj.getID() == SHIPYARD_GATE) {
-			return true;
-		}
-		if (obj.getID() == GLOUGH_CHEST) {
-			return true;
-		}
-		if (obj.getID() == WATCH_TOWER_UP) {
-			return true;
-		}
-		if (obj.getID() == WATCH_TOWER_DOWN) {
-			return true;
-		}
-		if (obj.getID() == WATCH_TOWER_STONE_STAND) {
-			return true;
-		}
-		if (obj.getID() == ROOT_ONE || obj.getID() == ROOT_TWO || obj.getID() == ROOT_THREE || obj.getID() == PUSH_ROOT || obj.getID() == PUSH_ROOT_BACK) {
-			return true;
-		}
-		return false;
+		return DataConversions.inArray(new int[] {GLOUGHS_CUPBOARD_OPEN, GLOUGHS_CUPBOARD_CLOSED, TREE_LADDER_UP, TREE_LADDER_DOWN, SHIPYARD_GATE,
+				GLOUGH_CHEST_CLOSED, WATCH_TOWER_UP, WATCH_TOWER_DOWN, WATCH_TOWER_STONE_STAND, ROOT_ONE, ROOT_TWO, ROOT_THREE, PUSH_ROOT, PUSH_ROOT_BACK}, obj.getID());
 	}
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, final Player p) {
-		if (obj.getID() == 619 || obj.getID() == GLOUGHS_CUPBOARD) {
+		if (obj.getID() == GLOUGHS_CUPBOARD_OPEN || obj.getID() == GLOUGHS_CUPBOARD_CLOSED) {
 			if (command.equalsIgnoreCase("open")) {
-				openCupboard(obj, p, GLOUGHS_CUPBOARD);
+				openCupboard(obj, p, GLOUGHS_CUPBOARD_OPEN);
 			} else if (command.equalsIgnoreCase("close")) {
-				closeCupboard(obj, p, 619);
+				closeCupboard(obj, p, GLOUGHS_CUPBOARD_CLOSED);
 			} else {
 				message(p, "you search the cupboard");
 				if (p.getQuestStage(this) == 6) {
 					message(p, "inside you find glough's journal");
-					addItem(p, 921, 1);
+					addItem(p, ItemId.GLOUGHS_JOURNAL.id(), 1);
 					p.updateQuestStage(this, 7);
 				} else {
 					message(p, "but find nothing of interest");
 				}
 			}
 		}
-		if (obj.getID() == TREE_LADDER_UP) {
+		else if (obj.getID() == TREE_LADDER_UP) {
 			p.message("you climb up the ladder");
 			p.teleport(417, 2994, false);
 		}
-		if (obj.getID() == TREE_LADDER_DOWN) {
+		else if (obj.getID() == TREE_LADDER_DOWN) {
 			p.message("you climb down the ladder");
 			p.teleport(415, 2051, false);
 		}
-		if (obj.getID() == SHIPYARD_GATE) {
+		else if (obj.getID() == SHIPYARD_GATE) {
 			if (p.getY() >= 762) {
 				if (p.getQuestStage(this) >= 8 && p.getQuestStage(this) <= 9) {
 					message(p, "the gate is locked");
-					final Npc worker = getNearestNpc(p, 557, 5);
+					final Npc worker = getNearestNpc(p, NpcId.SHIPYARD_WORKER_ENTRANCE.id(), 5);
 					//Continue
 					if (worker != null) {
 						npcTalk(p, worker, "hey you, what are you up to?");
@@ -1321,11 +1280,11 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 				p.teleport(401, 763);
 			}
 		}
-		if (obj.getID() == GLOUGH_CHEST) {
+		else if (obj.getID() == GLOUGH_CHEST_CLOSED) {
 			message(p, "the chest is locked...",
 				"...you need a key");
 		}
-		if (obj.getID() == WATCH_TOWER_UP) {
+		else if (obj.getID() == WATCH_TOWER_UP) {
 			if (getCurrentLevel(p, Skills.AGILITY) >= 25) {
 				p.message("you jump up and grab hold of the platform");
 				p.teleport(710, 2364);
@@ -1336,14 +1295,14 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 				p.message("You need an agility level of 25 to climb up the platform");
 			}
 		}
-		if (obj.getID() == WATCH_TOWER_DOWN) {
+		else if (obj.getID() == WATCH_TOWER_DOWN) {
 			message(p, "you climb down the tower");
 			p.teleport(712, 1420);
 			message(p, "and drop to the platform below");
 		}
 		// 711  3306 me.
 		// 709 3306 glough.
-		if (obj.getID() == WATCH_TOWER_STONE_STAND) {
+		else if (obj.getID() == WATCH_TOWER_STONE_STAND) {
 			if (p.getQuestStage(this) == 15 || p.getQuestStage(this) == 16 || p.getQuestStage(this) == -1) {
 				message(p, "you squeeze down the inner of the tree trunk",
 					"you drop out of the bottom onto a mud floor");
@@ -1377,7 +1336,8 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 					p.teleport(711, 3306);
 					message(p, "around you, you can see piles of strange looking rocks",
 						"you here the sound of small footsteps coming from the darkness");
-					Npc n = spawnNpc(GLOUGH, 709, 3306, 60000 * 10);
+					//glough despawns in 1 minute
+					Npc n = spawnNpc(NpcId.GLOUGH_UNDERGROUND.id(), 709, 3306, 60000);
 					npcTalk(p, n, "you really are becoming a headache",
 						"well, at least now you can die knowing you were right",
 						"it will save me having to hunt you down",
@@ -1393,7 +1353,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 						"fool.....meet my little friend");
 					message(p, "from the darkness you hear a deep growl",
 						"and the sound of heavy footsteps");
-					Npc demon = spawnNpc(BLACK_DEMON, 707, 3306, 60000 * 10);
+					Npc demon = spawnNpc(NpcId.BLACK_DEMON_GRANDTREE.id(), 707, 3306, 60000 * 10);
 					if (demon != null) {
 						npcYell(p, demon, "grrrrr");
 						demon.setChasing(p);
@@ -1407,13 +1367,13 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 
 			}
 		}
-		if (obj.getID() == ROOT_ONE || obj.getID() == ROOT_TWO || obj.getID() == ROOT_THREE) {
+		else if (obj.getID() == ROOT_ONE || obj.getID() == ROOT_TWO || obj.getID() == ROOT_THREE) {
 			message(p, "you search the root...");
 			if (obj.getID() == ROOT_THREE) {
 				if (p.getQuestStage(this) == 16) {
-					if (!hasItem(p, 931)) {
+					if (!hasItem(p, ItemId.DACONIA_ROCK.id())) {
 						message(p, "and find a small glowing rock");
-						addItem(p, 931, 1);
+						addItem(p, ItemId.DACONIA_ROCK.id(), 1);
 					} else {
 						message(p, "but find nothing");
 					}
@@ -1424,7 +1384,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 				message(p, "...but find nothing");
 			}
 		}
-		if (obj.getID() == PUSH_ROOT || obj.getID() == PUSH_ROOT_BACK) { // ACCESS TO GNOME MINE
+		else if (obj.getID() == PUSH_ROOT || obj.getID() == PUSH_ROOT_BACK) { // ACCESS TO GNOME MINE
 			message(p, "you push the roots");
 			if (p.getQuestStage(this) == -1) {
 				message(p, "they wrap around your arms");
@@ -1442,55 +1402,43 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 
 	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
-		if (n.getID() == CHARLIE) {
-			return true;
-		}
-		if (n.getID() == SHIPYARD_HUT_FOREMAN && p.getQuestStage(this) == 10) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.CHARLIE.id() || (n.getID() == NpcId.SHIPYARD_FOREMAN_HUT.id() && p.getQuestStage(this) == 10);
 	}
 
 	@Override
 	public void onPlayerAttackNpc(Player p, Npc affectedmob) {
-		if (affectedmob.getID() == CHARLIE) {
+		if (affectedmob.getID() == NpcId.CHARLIE.id()) {
 			p.message("you can't attack through the bars");
 		}
-		if (affectedmob.getID() == SHIPYARD_HUT_FOREMAN && p.getQuestStage(this) == 10) {
+		else if (affectedmob.getID() == NpcId.SHIPYARD_FOREMAN_HUT.id() && p.getQuestStage(this) == 10) {
 			p.message("the forman is too busy to talk");
 		}
 	}
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == SHIPYARD_HUT_FOREMAN) {
-			return true;
-		}
-		if (n.getID() == BLACK_DEMON) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.SHIPYARD_FOREMAN_HUT.id() || n.getID() == NpcId.BLACK_DEMON_GRANDTREE.id();
 	}
 
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == SHIPYARD_HUT_FOREMAN) {
+		if (n.getID() == NpcId.SHIPYARD_FOREMAN_HUT.id()) {
 			if (p.getQuestStage(this) == 9) {
-				n.killedBy(n);
+				n.killedBy(p);
 				message(p, "you kill the foreman",
 					"inside his pocket you find an invoice..",
 					"it seems to be an order for timber");
-				addItem(p, 922, 1);
+				addItem(p, ItemId.INVOICE.id(), 1);
 				p.updateQuestStage(this, 10);
 			}
 		}
-		if (n.getID() == BLACK_DEMON) {
+		else if (n.getID() == NpcId.BLACK_DEMON_GRANDTREE.id()) {
 			if (p.getQuestStage(this) == 14) {
-				n.killedBy(n);
+				n.killedBy(p);
 				message(p, "the beast slumps to the floor",
 					"glough has fled");
 				p.updateQuestStage(this, 15);
-				Npc fleeGlough = getNearestNpc(p, GLOUGH, 15);
+				Npc fleeGlough = getNearestNpc(p, NpcId.GLOUGH_UNDERGROUND.id(), 15);
 				if (fleeGlough != null) {
 					fleeGlough.remove();
 				}
@@ -1500,32 +1448,29 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		if (obj.getID() == GLOUGH_CHEST && item.getID() == QuestItems.GLOUGH_CHEST_KEY) {
-			return true;
-		}
-		if (obj.getID() == WATCH_TOWER_STONE_STAND && item.getID() == 929 || item.getID() == 928 || item.getID() == 930 || item.getID() == 927) {
-			return true;
-		}
-		return false;
+		return (obj.getID() == GLOUGH_CHEST_CLOSED && item.getID() == ItemId.GLOUGHS_KEY.id())
+				|| (obj.getID() == WATCH_TOWER_STONE_STAND && (item.getID() == ItemId.PEBBLE_3.id()
+				|| item.getID() == ItemId.PEBBLE_2.id() || item.getID() == ItemId.PEBBLE_4.id() || item.getID() == ItemId.PEBBLE_1.id()));
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
-		if (obj.getID() == GLOUGH_CHEST && item.getID() == QuestItems.GLOUGH_CHEST_KEY) {
+		if (obj.getID() == GLOUGH_CHEST_CLOSED && item.getID() == ItemId.GLOUGHS_KEY.id()) {
 			message(player, "the key fits the chest");
 			player.message("you open the chest");
 			player.message("and search it...");
-			replaceObjectDelayed(obj, 3000, 631);
+			replaceObjectDelayed(obj, 3000, GLOUGH_CHEST_OPEN);
 			message(player, "inside you find some paper work");
 			player.message("and an old gnome tongue translation book");
-			addItem(player, 926, 1);
-			addItem(player, 918, 1);
+			addItem(player, ItemId.GLOUGHS_NOTES.id(), 1);
+			addItem(player, ItemId.TREE_GNOME_TRANSLATION.id(), 1);
 			if (player.getQuestStage(this) == 11) {
 				player.updateQuestStage(this, 12);
 			}
 			message(player, "you close the chest");
 		}
-		if (obj.getID() == WATCH_TOWER_STONE_STAND && item.getID() == 929 || item.getID() == 928 || item.getID() == 930 || item.getID() == 927) {
+		else if (obj.getID() == WATCH_TOWER_STONE_STAND && (item.getID() == ItemId.PEBBLE_3.id()
+				|| item.getID() == ItemId.PEBBLE_2.id() || item.getID() == ItemId.PEBBLE_4.id() || item.getID() == ItemId.PEBBLE_1.id())) {
 			message(player, "on top are four pebble size indents",
 				"they span from left to right",
 				"you place the pebble...");
@@ -1533,7 +1478,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 			if (menu == 0) {
 				message(player, "you place the pebble in the indent", "it crumbles into dust");
 				removeItem(player, item.getID(), 1);
-				if (item.getID() == 927) { // HO
+				if (item.getID() == ItemId.PEBBLE_1.id()) { // HO
 					if (!player.getCache().hasKey("pebble_1")) {
 						player.getCache().store("pebble_1", true);
 					}
@@ -1541,7 +1486,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 			} else if (menu == 1) {
 				message(player, "you place the pebble in the indent", "it crumbles into dust");
 				removeItem(player, item.getID(), 1);
-				if (item.getID() == 928) { // NI
+				if (item.getID() == ItemId.PEBBLE_2.id()) { // NI
 					if (!player.getCache().hasKey("pebble_2")) {
 						player.getCache().store("pebble_2", true);
 					}
@@ -1549,7 +1494,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 			} else if (menu == 2) {
 				message(player, "you place the pebble in the indent", "it crumbles into dust");
 				removeItem(player, item.getID(), 1);
-				if (item.getID() == 929) { // :::
+				if (item.getID() == ItemId.PEBBLE_3.id()) { // :::
 					if (!player.getCache().hasKey("pebble_3")) {
 						player.getCache().store("pebble_3", true);
 					}
@@ -1557,17 +1502,12 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 			} else if (menu == 3) {
 				message(player, "you place the pebble in the indent", "it crumbles into dust");
 				removeItem(player, item.getID(), 1);
-				if (item.getID() == 930) { // HA
+				if (item.getID() == ItemId.PEBBLE_4.id()) { // HA
 					if (!player.getCache().hasKey("pebble_4")) {
 						player.getCache().store("pebble_4", true);
 					}
 				}
 			}
 		}
-	}
-
-	class QuestItems {
-		public static final int SHIPYARD_INVOICE = 922;
-		static final int GLOUGH_CHEST_KEY = 925;
 	}
 }

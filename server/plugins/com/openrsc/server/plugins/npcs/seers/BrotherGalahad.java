@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.npcs.seers;
 
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -21,7 +23,7 @@ public class BrotherGalahad implements TalkToNpcExecutiveListener, TalkToNpcList
 				"That's something I was never able to do",
 				"Half a moment your cup of tea is ready");
 			p.message("Sir Galahad gives you a cup of tea");
-			addItem(p, 739, 1);
+			addItem(p, ItemId.CUP_OF_TEA.id(), 1);
 			return;
 		}
 		npcTalk(p, n, "Welcome to my home",
@@ -34,7 +36,7 @@ public class BrotherGalahad implements TalkToNpcExecutiveListener, TalkToNpcList
 			"Are you any relation to Sir Galahad?",
 			"do you get lonely here on your own?"
 		};
-		if (p.getQuestStage(Quests.THE_HOLY_GRAIL) >= 3 && !hasItem(p, 742)) {
+		if (p.getQuestStage(Quests.THE_HOLY_GRAIL) >= 3 && !hasItem(p, ItemId.HOLY_TABLE_NAPKIN.id())) {
 			menuOps = new String[]{
 				"Are you any relation to Sir Galahad?",
 				"I'm on a quest to find the holy grail",
@@ -58,7 +60,7 @@ public class BrotherGalahad implements TalkToNpcExecutiveListener, TalkToNpcList
 				"I prefer to be known as brother rather than sir now",
 				"Half a moment your cup of tea is ready");
 			p.message("Sir Galahad give you a cup of tea");
-			addItem(p, 739, 1);
+			addItem(p, ItemId.CUP_OF_TEA.id(), 1);
 		}
 		//I'm on a quest to find the holy grail
 		else if (menu == 1 && menuOps.length > 2) {
@@ -94,7 +96,7 @@ public class BrotherGalahad implements TalkToNpcExecutiveListener, TalkToNpcList
 				"Most the religious men around here are worshippers od Saradomin",
 				"Half a moment your cup of tea is ready");
 			p.message("Sir Galahad give you a cup of tea");
-			addItem(p, 739, 1);
+			addItem(p, ItemId.CUP_OF_TEA.id(), 1);
 		}
 		//I seek an item from the realm of the fisher king
 		else if (menu == 3) {
@@ -104,7 +106,7 @@ public class BrotherGalahad implements TalkToNpcExecutiveListener, TalkToNpcList
 			playerTalk(p, n, "I don't suppose I could borrow that?",
 				"it could come in useful on my quest");
 			p.message("Galahad reluctantly passes you a small cloth");
-			addItem(p, 742, 1);
+			addItem(p, ItemId.HOLY_TABLE_NAPKIN.id(), 1);
 		}
 	}
 
@@ -138,11 +140,11 @@ public class BrotherGalahad implements TalkToNpcExecutiveListener, TalkToNpcList
 			"And that includes me",
 			"leaving was tough for me",
 			"I took this small cloth from the table as a keepsake");
-		if (!hasItem(p, 742, 1) && p.getQuestStage(Quests.THE_HOLY_GRAIL) >= 3) {
+		if (!hasItem(p, ItemId.HOLY_TABLE_NAPKIN.id(), 1) && p.getQuestStage(Quests.THE_HOLY_GRAIL) >= 3) {
 			playerTalk(p, n, "I don't suppose I could borrow that?",
 				"it could come in useful on my quest");
 			p.message("Galahad reluctantly passes you a small cloth");
-			addItem(p, 742, 1);
+			addItem(p, ItemId.HOLY_TABLE_NAPKIN.id(), 1);
 		}
 	}
 
@@ -151,7 +153,7 @@ public class BrotherGalahad implements TalkToNpcExecutiveListener, TalkToNpcList
 			"Because it seemed to be needed in the grail castle",
 			"Half a moment your cup of tea is ready");
 		p.message("Sir Galahad give you a cup of tea");
-		addItem(p, 739, 1);
+		addItem(p, ItemId.CUP_OF_TEA.id(), 1);
 	}
 
 	private void TALKING_ABOUT(Player p, Npc n) {
@@ -181,7 +183,7 @@ public class BrotherGalahad implements TalkToNpcExecutiveListener, TalkToNpcList
 	private void BETTER_BE_GOING(Player p, Npc n) {
 		npcTalk(p, n, "Half a moment your cup of tea is ready");
 		p.message("Sir Galahad gives you a cup of tea");
-		addItem(p, 739, 1);
+		addItem(p, ItemId.CUP_OF_TEA.id(), 1);
 		npcTalk(p, n, "If you do come across any particularily difficult obstacles on your quest",
 			"Do not hesitate to ask my advice",
 			"I know more about the realm of the grail than many",
@@ -190,7 +192,7 @@ public class BrotherGalahad implements TalkToNpcExecutiveListener, TalkToNpcList
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 403;
+		return n.getID() == NpcId.BROTHER_GALAHAD.id();
 	}
 
 }

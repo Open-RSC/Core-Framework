@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members.digsite;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -18,7 +19,6 @@ import static com.openrsc.server.plugins.Functions.closeCupboard;
 import static com.openrsc.server.plugins.Functions.hasItem;
 import static com.openrsc.server.plugins.Functions.inArray;
 import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.openCupboard;
 import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.removeItem;
@@ -29,78 +29,35 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 
 	private static final int[] SIGNPOST = {1060, 1061, 1062, 1063};
 	/* Objects */
-	private static int HOUSE_EAST_CHEST_CLOSED = 1104;
-	private static int HOUSE_EAST_CHEST_OPEN = 1105;
-	private static int HOUSE_BOOKCASE = 1090;
-	private static int HOUSE_EAST_CUPBOARD_CLOSED = 1074;
-	private static int HOUSE_EAST_CUPBOARD_OPEN = 1078;
-	private static int HOUSE_WEST_CHESTS_CLOSED = 18;
-	private static int HOUSE_WEST_CHESTS_OPEN = 17;
-	private static int[] SACKS = {1075, 1076};
-	private static int[] BUSH = {1072, 1073};
+	private static final int HOUSE_EAST_CHEST_OPEN = 1105;
+	private static final int HOUSE_EAST_CHEST_CLOSED = 1104;
+	private static final int HOUSE_EAST_CUPBOARD_OPEN = 1078;
+	private static final int HOUSE_EAST_CUPBOARD_CLOSED = 1074;
+	private static final int HOUSE_WEST_CHESTS_OPEN = 17;
+	private static final int HOUSE_WEST_CHESTS_CLOSED = 18;
+	private static final int TENT_CHEST_OPEN = 1084;
+	private static final int TENT_CHEST_LOCKED = 1085;
+	private static final int HOUSE_BOOKCASE = 1090;
+	private static final int[] SACKS = {1075, 1076};
+	private static final int[] BUSH = {1072, 1073};
 
-	private static int[] BURIED_SKELETON = {1057, 1049};
+	private static final int[] BURIED_SKELETON = {1057, 1049};
 
-	private static int TENT_LOCKED_CHEST = 1085;
-	private static int TENT_OPEN_CHEST = 1084;
-	private static int SPECIMEN_TRAY = 1052;
+	private static final int SPECIMEN_TRAY = 1052;
 
-	private static int CLIMB_UP_ROPE_SMALL_CAVE = 1097;
-	private static int CLIMB_UP_ROPE_BIG_CAVE = 1098;
+	private static final int CLIMB_UP_ROPE_SMALL_CAVE = 1097;
+	private static final int CLIMB_UP_ROPE_BIG_CAVE = 1098;
 
-	private static int BRICK = 1096;
-	private static int X_BARREL = 1082;
-	private static int X_BARREL_OPEN = 1083;
-
-	/* Items */
-	private static int CRACKED_ROCK_SAMPLE = 1150;
-	private static int BOOK_OF_EXPERIMENTAL_CHEMISTRY = 1141;
-	private static int ROCK_PICK = 1114;
-	private static int SPECIMEN_JAR = 1116;
-	private static int ROCK_SAMPLE = 1149;
-
-	/* NPCS */
-	public static int WORKMAN = 722;
+	private static final int BRICK = 1096;
+	private static final int X_BARREL = 1082;
+	private static final int X_BARREL_OPEN = 1083;
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (obj.getID() == HOUSE_EAST_CHEST_CLOSED || obj.getID() == HOUSE_EAST_CHEST_OPEN) {
-			return true;
-		}
-		if (obj.getID() == HOUSE_BOOKCASE) {
-			return true;
-		}
-		if (obj.getID() == HOUSE_EAST_CUPBOARD_CLOSED || obj.getID() == HOUSE_EAST_CUPBOARD_OPEN) {
-			return true;
-		}
-		if (obj.getID() == HOUSE_WEST_CHESTS_CLOSED || obj.getID() == HOUSE_WEST_CHESTS_OPEN) {
-			return true;
-		}
-		if (inArray(obj.getID(), SIGNPOST)) {
-			return true;
-		}
-		if (inArray(obj.getID(), SACKS)) {
-			return true;
-		}
-		if (inArray(obj.getID(), BURIED_SKELETON)) {
-			return true;
-		}
-		if (obj.getID() == TENT_LOCKED_CHEST || obj.getID() == TENT_OPEN_CHEST) {
-			return true;
-		}
-		if (obj.getID() == SPECIMEN_TRAY) {
-			return true;
-		}
-		if (inArray(obj.getID(), BUSH)) {
-			return true;
-		}
-		if (obj.getID() == CLIMB_UP_ROPE_SMALL_CAVE || obj.getID() == CLIMB_UP_ROPE_BIG_CAVE) {
-			return true;
-		}
-		if (obj.getID() == BRICK || obj.getID() == X_BARREL_OPEN) {
-			return true;
-		}
-		return false;
+		return DataConversions.inArray(new int[] {HOUSE_EAST_CHEST_OPEN, HOUSE_EAST_CHEST_CLOSED, HOUSE_EAST_CUPBOARD_OPEN, HOUSE_EAST_CUPBOARD_CLOSED,
+				HOUSE_WEST_CHESTS_OPEN, HOUSE_WEST_CHESTS_CLOSED, TENT_CHEST_OPEN, TENT_CHEST_LOCKED, HOUSE_BOOKCASE, SPECIMEN_TRAY,
+				CLIMB_UP_ROPE_SMALL_CAVE, CLIMB_UP_ROPE_BIG_CAVE, BRICK, X_BARREL_OPEN}, obj.getID()) || inArray(obj.getID(), SIGNPOST)
+				|| inArray(obj.getID(), SACKS) || inArray(obj.getID(), BURIED_SKELETON) || inArray(obj.getID(), BUSH);
 	}
 
 	@Override
@@ -111,12 +68,12 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 			playerTalk(p, null, "I can't pick this up with my bare hands!",
 				"I'll need something to put it in");
 		}
-		if (obj.getID() == BRICK) {
+		else if (obj.getID() == BRICK) {
 			playerTalk(p, null, "Hmmm, There's a room past these bricks",
 				"If I could move them out of the way",
 				"Then I could find out what's inside...");
 		}
-		if (obj.getID() == CLIMB_UP_ROPE_SMALL_CAVE || obj.getID() == CLIMB_UP_ROPE_BIG_CAVE) {
+		else if (obj.getID() == CLIMB_UP_ROPE_SMALL_CAVE || obj.getID() == CLIMB_UP_ROPE_BIG_CAVE) {
 			p.message("You climb the ladder");
 			if (obj.getID() == CLIMB_UP_ROPE_BIG_CAVE) {
 				p.teleport(25, 515);
@@ -124,16 +81,16 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 				p.teleport(14, 506);
 			}
 		}
-		if (obj.getID() == TENT_LOCKED_CHEST) {
+		else if (obj.getID() == TENT_CHEST_LOCKED) {
 			p.message("The chest is locked");
 		}
-		if (obj.getID() == TENT_OPEN_CHEST) {
+		else if (obj.getID() == TENT_CHEST_OPEN) {
 			if (command.equalsIgnoreCase("Search")) {
 				message(p, "You search the chest");
 				p.message("You find some unusual powder inside...");
-				addItem(p, 1171, 1);
+				addItem(p, ItemId.UNIDENTIFIED_POWDER.id(), 1);
 				World.getWorld().registerGameObject(
-						new GameObject(obj.getLocation(), TENT_LOCKED_CHEST, obj.getDirection(),
+						new GameObject(obj.getLocation(), TENT_CHEST_LOCKED, obj.getDirection(),
 							obj.getType()));
 			}
 			//kosher special case - chest does not close on that command, player must search the chest
@@ -141,28 +98,28 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 				p.message("Nothing interesting happens");
 			}
 		}
-		if (inArray(obj.getID(), BUSH)) {
+		else if (inArray(obj.getID(), BUSH)) {
 			p.message("You search the bush");
 			if (obj.getID() == BUSH[1]) {
 				playerTalk(p, null, "Hey, something has been dropped here...");
 				p.message("You find a rock sample!");
-				addItem(p, ROCK_SAMPLE, 1);
+				addItem(p, ItemId.ROCK_SAMPLE_PURPLE.id(), 1);
 			} else {
 				p.playerServerMessage(MessageType.QUEST, "You find nothing of interest");
 			}
 		}
-		if (obj.getID() == SPECIMEN_TRAY) {
-			int[] TRAY_ITEMS = {-1, 20, 1150, 28, 1165, 778, 1169, 10, 983};
+		else if (obj.getID() == SPECIMEN_TRAY) {
+			int[] TRAY_ITEMS = {ItemId.NOTHING.id(), ItemId.BONES.id(), ItemId.CRACKED_ROCK_SAMPLE.id(), ItemId.IRON_DAGGER.id(), ItemId.BROKEN_ARROW.id(), ItemId.BROKEN_GLASS.id(), ItemId.CERAMIC_REMAINS.id(), ItemId.COINS.id(), ItemId.A_LUMP_OF_CHARCOAL.id()};
 			p.incExp(Skills.MINING, 4, true);
 			message(p, "You sift through the earth in the tray");
 			int randomize = DataConversions.random(0, (TRAY_ITEMS.length - 1));
 			int chosenItem = TRAY_ITEMS[randomize];
 			DigsiteDigAreas.doDigsiteItemMessages(p, chosenItem);
-			if (chosenItem != -1) {
+			if (chosenItem != ItemId.NOTHING.id()) {
 				addItem(p, chosenItem, 1);
 			}
 		}
-		if (inArray(obj.getID(), SIGNPOST)) {
+		else if (inArray(obj.getID(), SIGNPOST)) {
 			if (obj.getID() == SIGNPOST[0]) {
 				p.message("This site is for training purposes only");
 			} else if (obj.getID() == SIGNPOST[1]) {
@@ -173,52 +130,52 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 				p.message("Level 3 digs only");
 			}
 		}
-		if (inArray(obj.getID(), SACKS)) {
+		else if (inArray(obj.getID(), SACKS)) {
 			p.playerServerMessage(MessageType.QUEST, "You search the sacks");
-			if (obj.getID() == SACKS[0] || hasItem(p, SPECIMEN_JAR)) {
+			if (obj.getID() == SACKS[0] || hasItem(p, ItemId.SPECIMEN_JAR.id())) {
 				p.playerServerMessage(MessageType.QUEST, "You find nothing of interest");
-			} else if (obj.getID() == SACKS[1] && !hasItem(p, SPECIMEN_JAR)) {
+			} else if (obj.getID() == SACKS[1] && !hasItem(p, ItemId.SPECIMEN_JAR.id())) {
 				playerTalk(p, null, "Hey there's something under here");
 				p.message("You find a specimen jar!");
-				addItem(p, SPECIMEN_JAR, 1);
+				addItem(p, ItemId.SPECIMEN_JAR.id(), 1);
 			}
 		}
-		if (inArray(obj.getID(), BURIED_SKELETON)) {
+		else if (inArray(obj.getID(), BURIED_SKELETON)) {
 			p.message("You search the skeleton");
 			p.message("You find nothing of interest");
 		}
-		if (obj.getID() == HOUSE_EAST_CHEST_CLOSED) {
+		else if (obj.getID() == HOUSE_EAST_CHEST_CLOSED) {
 			p.message("You open the chest");
 			replaceObject(obj, new GameObject(obj.getLocation(), HOUSE_EAST_CHEST_OPEN, obj.getDirection(), obj.getType()));
 		}
-		if (obj.getID() == HOUSE_EAST_CHEST_OPEN) {
+		else if (obj.getID() == HOUSE_EAST_CHEST_OPEN) {
 			if (command.equalsIgnoreCase("Search")) {
 				p.message("You search the chest");
 				p.message("You find a rock sample");
-				addItem(p, CRACKED_ROCK_SAMPLE, 1);
+				addItem(p, ItemId.CRACKED_ROCK_SAMPLE.id(), 1);
 				replaceObject(obj, new GameObject(obj.getLocation(), HOUSE_EAST_CHEST_CLOSED, obj.getDirection(), obj.getType()));
 			}
 		}
-		if (obj.getID() == HOUSE_BOOKCASE) {
+		else if (obj.getID() == HOUSE_BOOKCASE) {
 			p.message("You search through the bookcase");
 			p.message("You find a book on chemicals");
-			addItem(p, BOOK_OF_EXPERIMENTAL_CHEMISTRY, 1);
+			addItem(p, ItemId.BOOK_OF_EXPERIMENTAL_CHEMISTRY.id(), 1);
 		}
-		if (obj.getID() == HOUSE_EAST_CUPBOARD_CLOSED) {
-			openCupboard(obj, p, 1078);
+		else if (obj.getID() == HOUSE_EAST_CUPBOARD_CLOSED) {
+			openCupboard(obj, p, HOUSE_EAST_CUPBOARD_OPEN);
 		}
-		if (obj.getID() == HOUSE_EAST_CUPBOARD_OPEN) {
+		else if (obj.getID() == HOUSE_EAST_CUPBOARD_OPEN) {
 			if (command.equalsIgnoreCase("search")) {
-				if (!hasItem(p, ROCK_PICK)) {
+				if (!hasItem(p, ItemId.ROCK_PICK.id())) {
 					p.message("You find a rock pick");
-					addItem(p, ROCK_PICK, 1);
+					addItem(p, ItemId.ROCK_PICK.id(), 1);
 				} else {
 					p.message("You find nothing of interest");
 				}
-				closeCupboard(obj, p, 1074);
+				closeCupboard(obj, p, HOUSE_EAST_CUPBOARD_CLOSED);
 			}
 		}
-		if (obj.getID() == HOUSE_WEST_CHESTS_CLOSED || obj.getID() == HOUSE_WEST_CHESTS_OPEN) {
+		else if (obj.getID() == HOUSE_WEST_CHESTS_OPEN || obj.getID() == HOUSE_WEST_CHESTS_CLOSED) {
 			if (command.equalsIgnoreCase("Open")) {
 				p.message("You open the chest");
 				replaceObject(obj, new GameObject(obj.getLocation(), HOUSE_WEST_CHESTS_OPEN, obj.getDirection(), obj.getType()));
@@ -233,46 +190,38 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == TENT_LOCKED_CHEST && item.getID() == 1164) {
-			return true;
-		}
-		if (obj.getID() == X_BARREL || obj.getID() == X_BARREL_OPEN) {
-			return true;
-		}
-		if (obj.getID() == BRICK) {
-			return true;
-		}
-		return false;
+		return (obj.getID() == TENT_CHEST_LOCKED && item.getID() == ItemId.DIGSITE_CHEST_KEY.id()) || obj.getID() == X_BARREL
+				|| obj.getID() == X_BARREL_OPEN || obj.getID() == BRICK;
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == TENT_LOCKED_CHEST && item.getID() == 1164) {
-			replaceObject(obj, new GameObject(obj.getLocation(), TENT_OPEN_CHEST, obj.getDirection(), obj.getType()));
+		if (obj.getID() == TENT_CHEST_LOCKED && item.getID() == ItemId.DIGSITE_CHEST_KEY.id()) {
+			replaceObject(obj, new GameObject(obj.getLocation(), TENT_CHEST_OPEN, obj.getDirection(), obj.getType()));
 			p.message("you use the key in the chest");
 			p.message("you open the chest");
-			removeItem(p, 1164, 1);
+			removeItem(p, ItemId.DIGSITE_CHEST_KEY.id(), 1);
 			playerTalk(p, null, "Oops I dropped the key",
 				"Never mind it's open now...");
 		}
-		if (obj.getID() == X_BARREL) {
-			switch (item.getID()) {
-				case 156: // bronze pickaxe
+		else if (obj.getID() == X_BARREL) {
+			switch (ItemId.getById(item.getID())) {
+				case BRONZE_PICKAXE:
 					playerTalk(p, null, "I better not - it might break it to pieces!");
 					break;
-				case 1114: // rock pick
+				case ROCK_PICK:
 					playerTalk(p, null, "The rockpick is too fat to fit in the gap...");
 					break;
-				case 211: // spade
+				case SPADE:
 					playerTalk(p, null, "The spade is far too big to fit");
 					break;
-				case 28: // iron dagger
+				case IRON_DAGGER:
 					playerTalk(p, null, "The dagger's blade might break, I need something stronger");
 					break;
-				case 1165: // broken arrows
+				case BROKEN_ARROW:
 					playerTalk(p, null, "It nearly fits, just a little too thin");
 					break;
-				case 1145: // trowel
+				case TROWEL:
 					replaceObject(obj, new GameObject(obj.getLocation(), X_BARREL_OPEN, obj.getDirection(), obj.getType()));
 					playerTalk(p, null, "Great, it's opened it!");
 					break;
@@ -281,22 +230,22 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 					break;
 			}
 		}
-		if (obj.getID() == X_BARREL_OPEN) {
-			switch (item.getID()) {
-				case 1111: // empty panning tray
+		else if (obj.getID() == X_BARREL_OPEN) {
+			switch (ItemId.getById(item.getID())) {
+				case PANNING_TRAY:
 					playerTalk(p, null, "Not the best idea i've had...",
 						"It's likely to spill everywhere in that!");
 					break;
-				case 1116: // sample jar
+				case SPECIMEN_JAR:
 					playerTalk(p, null, "Perhaps not, it might contaminate the samples");
 					break;
-				case 140: // jug
+				case JUG:
 					playerTalk(p, null, "I had better not, someone might want to drink from this!");
 					break;
-				case 465: // empty vial
+				case EMPTY_VIAL:
 					p.message("You fill the vial with the liquid");
 					p.message("You close the barrel");
-					p.getInventory().replace(465, 1232);
+					p.getInventory().replace(ItemId.EMPTY_VIAL.id(), ItemId.UNIDENTIFIED_LIQUID.id());
 					replaceObject(obj, new GameObject(obj.getLocation(), X_BARREL, obj.getDirection(), obj.getType()));
 					playerTalk(p, null, "I'm not sure what this stuff is",
 						"I had better be very careful with it",
@@ -307,17 +256,17 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 					break;
 			}
 		}
-		if (obj.getID() == BRICK) {
-			switch (item.getID()) {
-				case 1176: // explosive compound
+		else if (obj.getID() == BRICK) {
+			switch (ItemId.getById(item.getID())) {
+				case EXPLOSIVE_COMPOUND:
 					p.message("You pour the compound over the bricks");
-					removeItem(p, 1176, 1);
+					removeItem(p, ItemId.EXPLOSIVE_COMPOUND.id(), 1);
 					playerTalk(p, null, "I need some way to ignite this compound...");
 					if (!p.getCache().hasKey("brick_ignite")) {
 						p.getCache().store("brick_ignite", true);
 					}
 					break;
-				case 166: // tinder box
+				case TINDERBOX:
 					if (p.getCache().hasKey("brick_ignite")) {
 						p.message("You strike the tinderbox");
 						p.message("Fizz...");
@@ -333,7 +282,7 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 							"...What's that noise I can hear ?",
 							"...Sounds like bones moving or something");
 					} else {
-						npcTalk(p, null, "Now what am I trying to achieve here ?");
+						playerTalk(p, null, "Now what am I trying to achieve here ?");
 					}
 					break;
 				default:

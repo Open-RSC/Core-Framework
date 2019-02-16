@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.npcs.entrana;
 
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -18,7 +19,7 @@ public class HighPriestOfEntrana implements TalkToNpcExecutiveListener, TalkToNp
 				npcTalk(p, n, "The object of which you speak did once pass through holy entrana",
 					"I know not where it is now",
 					"Nor do I really care");
-				n = getNearestNpc(p, 394, 20);
+				n = getNearestNpc(p, NpcId.CRONE.id(), 20);
 				npcTalk(p, n, "Wait!",
 					"Did you say the grail?",
 					"You are a grail knight yes?",
@@ -104,14 +105,14 @@ public class HighPriestOfEntrana implements TalkToNpcExecutiveListener, TalkToNp
 
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
-		if (n.getID() == 395) {
+		if (n.getID() == NpcId.HIGH_PRIEST_OF_ENTRANA.id()) {
 			entranaPriestDialogue(p, n, -1);
 		}
 	}
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 395;
+		return n.getID() == NpcId.HIGH_PRIEST_OF_ENTRANA.id();
 	}
 
 	class EntranaPriest {

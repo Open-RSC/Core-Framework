@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.mechanism;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
@@ -22,15 +23,6 @@ import static com.openrsc.server.plugins.Functions.sleep;
 public class UndergroundPassMechanismMap1 implements InvUseOnItemListener, InvUseOnItemExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
 	/**
-	 * ITEM IDs
-	 **/
-	private static int DAMP_CLOTH = 989;
-	private static int ARROW = 984;
-	private static int LIT_ARROW = 985;
-	private static int ROPE = 237;
-	private static int ROCKS = 986;
-
-	/**
 	 * OBJECT IDs
 	 **/
 	private static int OLD_BRIDGE = 726;
@@ -41,51 +33,44 @@ public class UndergroundPassMechanismMap1 implements InvUseOnItemListener, InvUs
 
 	@Override
 	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
-		String itemArrow = item2.getDef().getName().toLowerCase();
-		if (item1.getID() == DAMP_CLOTH && itemArrow.contains("arrows")) {
-			return true;
-		}
-		return false;
+		String itemArrow1 = item1.getDef().getName().toLowerCase();
+		String itemArrow2 = item2.getDef().getName().toLowerCase();
+		return (item1.getID() == ItemId.DAMP_CLOTH.id() && itemArrow2.contains("arrows"))
+				|| (itemArrow1.contains("arrows") && item2.getID() == ItemId.DAMP_CLOTH.id());
 	}
 
 	@Override
 	public void onInvUseOnItem(Player player, Item item1, Item item2) {
-		String itemArrow = item2.getDef().getName().toLowerCase();
-		if (item1.getID() == DAMP_CLOTH && itemArrow.contains("arrows")) {
+		String itemArrow1 = item1.getDef().getName().toLowerCase();
+		String itemArrow2 = item2.getDef().getName().toLowerCase();
+		if ((item1.getID() == ItemId.DAMP_CLOTH.id() && itemArrow2.contains("arrows"))
+				|| (itemArrow1.contains("arrows") && item2.getID() == ItemId.DAMP_CLOTH.id())) {
+			int idArrow = itemArrow2.contains("arrows") ? item2.getID() : item1.getID();
 			player.message("you wrap the damp cloth around the arrow head");
-			removeItem(player, DAMP_CLOTH, 1);
-			removeItem(player, item2.getID(), 1);
-			addItem(player, ARROW, 1);
+			removeItem(player, ItemId.DAMP_CLOTH.id(), 1);
+			removeItem(player, idArrow, 1);
+			addItem(player, ItemId.ARROW.id(), 1);
 		}
 	}
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		if (item.getID() == ARROW && obj.getID() == 97 && obj.getX() == 701 && obj.getY() == 3420) {
-			return true;
-		}
-		if (item.getID() == LIT_ARROW && obj.getID() == OLD_BRIDGE) {
-			return true;
-		}
-		if (item.getID() == ROPE && (obj.getID() == STALACTITE_1 || obj.getID() == STALACTITE_2 || obj.getID() == STALACTITE_2 + 1)) {
-			return true;
-		}
-		if (item.getID() == ROCKS && obj.getID() == SWAMP_CROSS) {
-			return true;
-		}
-		return false;
+		return (item.getID() == ItemId.ARROW.id() && obj.getID() == 97 && obj.getX() == 701 && obj.getY() == 3420)
+				|| (item.getID() == ItemId.LIT_ARROW.id() && obj.getID() == OLD_BRIDGE)
+				|| (item.getID() == ItemId.ROPE.id() && (obj.getID() == STALACTITE_1 || obj.getID() == STALACTITE_2 || obj.getID() == STALACTITE_2 + 1))
+				|| (item.getID() == ItemId.ROCKS.id() && obj.getID() == SWAMP_CROSS);
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
-		if (item.getID() == ARROW && obj.getID() == 97 && obj.getX() == 701 && obj.getY() == 3420) {
+		if (item.getID() == ItemId.ARROW.id() && obj.getID() == 97 && obj.getX() == 701 && obj.getY() == 3420) {
 			player.message("you light the cloth wrapped arrow head");
-			removeItem(player, ARROW, 1);
-			addItem(player, LIT_ARROW, 1);
+			removeItem(player, ItemId.ARROW.id(), 1);
+			addItem(player, ItemId.LIT_ARROW.id(), 1);
 		}
-		if (item.getID() == LIT_ARROW && obj.getID() == OLD_BRIDGE) {
+		else if (item.getID() == ItemId.LIT_ARROW.id() && obj.getID() == OLD_BRIDGE) {
 			if (hasABow(player)) {
-				removeItem(player, LIT_ARROW, 1);
+				removeItem(player, ItemId.LIT_ARROW.id(), 1);
 				if ((getCurrentLevel(player, Skills.RANGED) < 25) || (player.getY() != 3417 && player.getX() < 701)) {
 					message(player, "you fire the lit arrow at the bridge",
 						"it burns out and has little effect");
@@ -116,7 +101,7 @@ public class UndergroundPassMechanismMap1 implements InvUseOnItemListener, InvUs
 				player.message("first you'll need a bow");
 			}
 		}
-		if (item.getID() == ROPE && (obj.getID() == STALACTITE_1 || obj.getID() == STALACTITE_2 || obj.getID() == STALACTITE_2 + 1)) {
+		else if (item.getID() == ItemId.ROPE.id() && (obj.getID() == STALACTITE_1 || obj.getID() == STALACTITE_2 || obj.getID() == STALACTITE_2 + 1)) {
 			message(player, "you lasso the rope around the stalactite",
 				"and pull yourself up");
 			if (obj.getID() == STALACTITE_1) {
@@ -128,10 +113,10 @@ public class UndergroundPassMechanismMap1 implements InvUseOnItemListener, InvUs
 			}
 			player.message("you climb from stalactite to stalactite and over the rocks");
 		}
-		if (item.getID() == ROCKS && obj.getID() == SWAMP_CROSS) {
+		else if (item.getID() == ItemId.ROCKS.id() && obj.getID() == SWAMP_CROSS) {
 			message(player, "you throw the rocks onto the swamp");
 			player.message("and carefully tread from one to another");
-			removeItem(player, ROCKS, 1);
+			removeItem(player, ItemId.ROCKS.id(), 1);
 			GameObject object = new GameObject(Point.location(697, 3441), 774, 2, 0);
 			World.getWorld().registerGameObject(object);
 			World.getWorld().delayedRemoveObject(object, 10000);

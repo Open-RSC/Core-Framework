@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -27,24 +29,22 @@ import static com.openrsc.server.plugins.Functions.transform;
 
 public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerNpcRunListener, PlayerNpcRunExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener, PlayerAttackNpcExecutiveListener {
 
-	static final int NEZIKCHENED = 769;
-
 	/**
 	 * @param p public method to use for third fight summons and nezichened
 	 */
 	private static void summonViyeldiCompanions(Player p) {
 		Npc COMPANION = null;
 		if (p.getCache().hasKey("viyeldi_companions") && p.getCache().getInt("viyeldi_companions") == 1) {
-			COMPANION = spawnNpc(663, p.getX(), p.getY(), 60000 * 15, p);
+			COMPANION = spawnNpc(NpcId.SAN_TOJALON.id(), p.getX(), p.getY(), 60000 * 15, p);
 		}
 		if (p.getCache().hasKey("viyeldi_companions") && p.getCache().getInt("viyeldi_companions") == 2) {
-			COMPANION = spawnNpc(761, p.getX(), p.getY(), 60000 * 15, p);
+			COMPANION = spawnNpc(NpcId.IRVIG_SENAY.id(), p.getX(), p.getY(), 60000 * 15, p);
 		}
 		if (p.getCache().hasKey("viyeldi_companions") && p.getCache().getInt("viyeldi_companions") == 3) {
-			COMPANION = spawnNpc(762, p.getX(), p.getY(), 60000 * 15, p);
+			COMPANION = spawnNpc(NpcId.RANALPH_DEVERE.id(), p.getX(), p.getY(), 60000 * 15, p);
 		}
 		if (p.getCache().hasKey("viyeldi_companions") && p.getCache().getInt("viyeldi_companions") == 4) {
-			COMPANION = spawnNpc(NEZIKCHENED, p.getX(), p.getY(), 60000 * 15, p);
+			COMPANION = spawnNpc(NpcId.NEZIKCHENED.id(), p.getX(), p.getY(), 60000 * 15, p);
 		}
 		if (COMPANION != null) {
 			npcTalk(p, COMPANION, "Corrupted are we now that Viyeldi is slain..");
@@ -54,7 +54,7 @@ public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerMag
 	}
 
 	public static void demonFight(Player p) {
-		Npc third_nezikchened = spawnNpc(769, p.getX(), p.getY(), 60000 * 15, p);
+		Npc third_nezikchened = spawnNpc(NpcId.NEZIKCHENED.id(), p.getX(), p.getY(), 60000 * 15, p);
 		if (third_nezikchened != null) {
 			sleep(600);
 			npcTalk(p, third_nezikchened, "Now you try to defile my sanctuary...I will teach thee!");
@@ -84,12 +84,12 @@ public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerMag
 
 	@Override
 	public boolean blockPlayerMageNpc(Player p, Npc n) {
-		return n.getID() == NEZIKCHENED && n.getAttribute("spawnedFor", null) != null && !n.getAttribute("spawnedFor").equals(p);
+		return n.getID() == NpcId.NEZIKCHENED.id() && n.getAttribute("spawnedFor", null) != null && !n.getAttribute("spawnedFor").equals(p);
 	}
 
 	@Override
 	public void onPlayerMageNpc(Player p, Npc n) {
-		if (n.getID() == NEZIKCHENED && n.getAttribute("spawnedFor", null) != null && !n.getAttribute("spawnedFor").equals(p)) {
+		if (n.getID() == NpcId.NEZIKCHENED.id() && n.getAttribute("spawnedFor", null) != null && !n.getAttribute("spawnedFor").equals(p)) {
 			p.message("Your attack passes through");
 			n.remove();
 		}
@@ -97,12 +97,12 @@ public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerMag
 
 	@Override
 	public boolean blockPlayerNpcRun(Player p, Npc n) {
-		return n.getID() == NEZIKCHENED;
+		return n.getID() == NpcId.NEZIKCHENED.id();
 	}
 
 	@Override
 	public void onPlayerNpcRun(Player p, Npc n) {
-		if (n.getID() == NEZIKCHENED) {
+		if (n.getID() == NpcId.NEZIKCHENED.id()) {
 			switch (p.getQuestStage(Constants.Quests.LEGENDS_QUEST)) {
 				case 3:
 					npcTalk(p, n, "Run like the coward you are, I will return stronger than before.");
@@ -118,7 +118,7 @@ public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerMag
 					sleep(1900);
 					n.getUpdateFlags().setChatMessage(new ChatMessage(n, "The next time you come, I will be ready for you!", p));
 					sleep(1900);
-					n = transform(n, 740, true);
+					n = transform(n, NpcId.ECHNED_ZEKIN.id(), true);
 					if (n != null)
 						sleep(1300);
 					n.remove();
@@ -135,12 +135,12 @@ public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerMag
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		return n.getID() == NEZIKCHENED;
+		return n.getID() == NpcId.NEZIKCHENED.id();
 	}
 
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == NEZIKCHENED) {
+		if (n.getID() == NpcId.NEZIKCHENED.id()) {
 			switch (p.getQuestStage(Constants.Quests.LEGENDS_QUEST)) {
 				case 3: // FIRST FIGHT.
 					p.setBusy(true);
@@ -159,7 +159,7 @@ public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerMag
 						p.updateQuestStage(Constants.Quests.LEGENDS_QUEST, 4);
 					}
 					p.setBusy(false);
-					Npc ungadulu = getNearestNpc(p, LegendsQuestUngadulu.UNGADULU, 8);
+					Npc ungadulu = getNearestNpc(p, NpcId.UNGADULU.id(), 8);
 					if (ungadulu != null) {
 						ungadulu.initializeTalkScript(p);
 					}
@@ -191,7 +191,7 @@ public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerMag
 					}
 					message(p, 1300, "You deliver the final killing blow to the foul demon.",
 						"The Demon crumbles into a pile of ash.");
-					createGroundItem(181, 1, p.getX(), p.getY(), p);
+					createGroundItem(ItemId.ASHES.id(), 1, p.getX(), p.getY(), p);
 					message(p, 1300, "@yel@Nezikchened: Arrrghhhh.",
 						"@yel@Nezikchened: I am beaten by a mere mortal.",
 						"@yel@Nezikchened: I will revenge myself upon you...");
@@ -204,12 +204,12 @@ public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerMag
 
 	@Override
 	public boolean blockPlayerRangeNpc(Player p, Npc n) {
-		return n.getID() == NEZIKCHENED && n.getAttribute("spawnedFor", null) != null && !n.getAttribute("spawnedFor").equals(p);
+		return n.getID() == NpcId.NEZIKCHENED.id() && n.getAttribute("spawnedFor", null) != null && !n.getAttribute("spawnedFor").equals(p);
 	}
 
 	@Override
 	public void onPlayerRangeNpc(Player p, Npc n) {
-		if (n.getID() == NEZIKCHENED && n.getAttribute("spawnedFor", null) != null && !n.getAttribute("spawnedFor").equals(p)) {
+		if (n.getID() == NpcId.NEZIKCHENED.id() && n.getAttribute("spawnedFor", null) != null && !n.getAttribute("spawnedFor").equals(p)) {
 			p.message("Your attack passes through");
 			n.remove();
 		}
@@ -217,7 +217,7 @@ public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerMag
 
 	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
-		if (n.getID() == NEZIKCHENED) {
+		if (n.getID() == NpcId.NEZIKCHENED.id()) {
 			if ((n.getAttribute("spawnedFor", null) != null && !n.getAttribute("spawnedFor").equals(p)) || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) != 7 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) != 3) {
 				message(p, 1300, "Your attack glides straight through the Demon.");
 				message(p, 600, "as if it wasn't really there.");

@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.members.undergroundpass.npcs;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -11,6 +13,7 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.inArray;
 import static com.openrsc.server.plugins.Functions.incQuestReward;
 import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.npcTalk;
@@ -19,19 +22,39 @@ import static com.openrsc.server.plugins.Functions.showMenu;
 
 public class UndergroundPassKoftik implements QuestInterface, TalkToNpcListener,
 	TalkToNpcExecutiveListener {
-
-	/** Quest Npcs **/
 	/**
 	 * Note: King Lathas (Quest starer) is located in the Biohazard quest template
 	 **/
-	public static int KOFTIK = 626;
-	private static int KOFTIK_FIRE_CAMP = 627;
-	private static int KOFTIK_MAP_2 = 628;
-	private static int KOFTIK_MAP_2_BOULDER = 629;
-	public static int KOFTIK_LAST_MAP = 650;
-	private static int KOFTIK_AFTER_IBAN = 659;
+	
+	@Override
+	public int getQuestId() {
+		return Constants.Quests.UNDERGROUND_PASS;
+	}
 
-	private static int DAMP_CLOTH = 989;
+	@Override
+	public String getQuestName() {
+		return "Underground pass (members)";
+	}
+
+	@Override
+	public boolean isMembers() {
+		return true;
+	}
+
+	@Override
+	public void handleReward(Player p) {
+		p.message("@gre@You haved gained 5 quest points!");
+		int[] questData = Quests.questData.get(Quests.UNDERGROUND_PASS);
+		//keep order kosher
+		int[] skillIDs = {Skills.AGILITY, Skills.ATTACK};
+		for (int i = 0; i < skillIDs.length; i++) {
+			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
+			incQuestReward(p, questData, i == (skillIDs.length - 1));
+		}
+		p.message("you have completed the underground pass quest");
+		p.getCache().set("Iban blast_casts", 25);
+		p.getCache().remove("advised_koftik");
+	}
 
 	/**
 	 * fast dialogues
@@ -67,43 +90,13 @@ public class UndergroundPassKoftik implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public int getQuestId() {
-		return Constants.Quests.UNDERGROUND_PASS;
-	}
-
-	@Override
-	public String getQuestName() {
-		return "Underground pass (members)";
-	}
-
-	@Override
-	public boolean isMembers() {
-		return true;
-	}
-
-	@Override
-	public void handleReward(Player p) {
-		p.message("@gre@You haved gained 5 quest points!");
-		int[] questData = Quests.questData.get(Quests.UNDERGROUND_PASS);
-		//keep order kosher
-		int[] skillIDs = {Skills.AGILITY, Skills.ATTACK};
-		for (int i = 0; i < skillIDs.length; i++) {
-			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
-			incQuestReward(p, questData, i == (skillIDs.length - 1));
-		}
-		p.message("you have completed the underground pass quest");
-		p.getCache().set("Iban blast_casts", 25);
-		p.getCache().remove("advised_koftik");
-	}
-
-	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == KOFTIK || n.getID() == KOFTIK_FIRE_CAMP || n.getID() == KOFTIK_MAP_2 || n.getID() == KOFTIK_MAP_2_BOULDER || n.getID() == KOFTIK_LAST_MAP || n.getID() == KOFTIK_AFTER_IBAN;
+		return inArray(n.getID(), NpcId.KOFTIK_ARDOUGNE.id(), NpcId.KOFTIK_CAVE1.id(), NpcId.KOFTIK_CAVE2.id(), NpcId.KOFTIK_CAVE3.id(), NpcId.KOFTIK_CAVE4.id(), NpcId.KOFTIK_RECOVERED.id());
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == KOFTIK) {
+		if (n.getID() == NpcId.KOFTIK_ARDOUGNE.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					p.message("koftik doesn't seem interested in talking");
@@ -158,17 +151,17 @@ public class UndergroundPassKoftik implements QuestInterface, TalkToNpcListener,
 					break;
 			}
 		}
-		if (n.getID() == KOFTIK_FIRE_CAMP) {
+		else if (n.getID() == NpcId.KOFTIK_CAVE1.id()) {
 			switch (p.getQuestStage(this)) {
 				case 2:
 					playerTalk(p, n, "koftik, how can we cross the bridge?");
 					npcTalk(p, n, "i'm not sure, seems as if others were here before us though");
-					if (!hasItem(p, DAMP_CLOTH)) {
+					if (!hasItem(p, ItemId.DAMP_CLOTH.id())) {
 						npcTalk(p, n, "i found this cloth amongst the charred remains of arrows");
 						playerTalk(p, n, "charred arrows?");
 						npcTalk(p, n, "they must have been trying to burn something");
 						playerTalk(p, n, "or someone!");
-						addItem(p, DAMP_CLOTH, 1);
+						addItem(p, ItemId.DAMP_CLOTH.id(), 1);
 					}
 					playerTalk(p, n, "interesting, we better keep our eyes open");
 					npcTalk(p, n, "There also seems to the remains of a diary");
@@ -197,22 +190,22 @@ public class UndergroundPassKoftik implements QuestInterface, TalkToNpcListener,
 				case 7:
 				case -1:
 					playerTalk(p, n, "hi koftik");
-					if (!hasItem(p, DAMP_CLOTH)) {
-						addItem(p, DAMP_CLOTH, 1);
+					if (!hasItem(p, ItemId.DAMP_CLOTH.id())) {
+						addItem(p, ItemId.DAMP_CLOTH.id(), 1);
 						p.message("koftik gives you a damp cloth");
 					}
 					break;
 				case 8:
 					playerTalk(p, n, "thanks for getting me out koftik");
 					npcTalk(p, n, "always a pleasure squire");
-					if (!hasItem(p, DAMP_CLOTH)) {
-						addItem(p, DAMP_CLOTH, 1);
+					if (!hasItem(p, ItemId.DAMP_CLOTH.id())) {
+						addItem(p, ItemId.DAMP_CLOTH.id(), 1);
 						p.message("koftik gives you a damp cloth");
 					}
 					break;
 			}
 		}
-		if (n.getID() == KOFTIK_MAP_2) {
+		else if (n.getID() == NpcId.KOFTIK_CAVE2.id()) {
 			switch (p.getQuestStage(this)) {
 				case 3:
 				case 4:
@@ -246,7 +239,7 @@ public class UndergroundPassKoftik implements QuestInterface, TalkToNpcListener,
 					break;
 			}
 		}
-		if (n.getID() == KOFTIK_MAP_2_BOULDER) {
+		else if (n.getID() == NpcId.KOFTIK_CAVE3.id()) {
 			switch (p.getQuestStage(this)) {
 				case 3:
 				case 4:
@@ -287,10 +280,10 @@ public class UndergroundPassKoftik implements QuestInterface, TalkToNpcListener,
 					break;
 			}
 		}
-		if (n.getID() == KOFTIK_LAST_MAP) {
+		else if (n.getID() == NpcId.KOFTIK_CAVE4.id()) {
 			p.message("The Koftik does not appear interested in talking");
 		}
-		if (n.getID() == KOFTIK_AFTER_IBAN) {
+		else if (n.getID() == NpcId.KOFTIK_RECOVERED.id()) {
 			switch (p.getQuestStage(this)) {
 				case 8:
 					npcTalk(p, n, "traveller, where am i?, i can't remeber a thing");

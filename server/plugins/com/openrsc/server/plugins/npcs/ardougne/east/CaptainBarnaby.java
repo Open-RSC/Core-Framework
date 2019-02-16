@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.npcs.ardougne.east;
 
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -14,7 +15,6 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public final class CaptainBarnaby implements ObjectActionListener,
 	ObjectActionExecutiveListener, TalkToNpcExecutiveListener, TalkToNpcListener {
-	public static final int BARNABY = 316;
 
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
@@ -56,7 +56,7 @@ public final class CaptainBarnaby implements ObjectActionListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 316;
+		return n.getID() == NpcId.CAPTAIN_BARNABY.id();
 	}
 
 
@@ -68,7 +68,7 @@ public final class CaptainBarnaby implements ObjectActionListener,
 					return;
 				}
 
-				Npc captain = getNearestNpc(p, BARNABY, 5);
+				Npc captain = getNearestNpc(p, NpcId.CAPTAIN_BARNABY.id(), 5);
 				if (captain != null) {
 					captain.initializeTalkScript(p);
 				} else {

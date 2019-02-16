@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.npcs.lumbridge;
 
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -34,7 +36,7 @@ public class Priest implements TalkToNpcExecutiveListener, TalkToNpcListener {
 				npcTalk(p, n, "I always wondered what that amulet was",
 					"Well I hope it's useful. Tell me if you get rid of the ghost");
 			} else if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == 3
-				&& !hasItem(p, 27)) {
+				&& !hasItem(p, ItemId.QUEST_SKULL.id())) {
 				playerTalk(
 					p,
 					n,
@@ -45,7 +47,7 @@ public class Priest implements TalkToNpcExecutiveListener, TalkToNpcListener {
 				playerTalk(p, n, "Yes I think a warlock has stolen it");
 				npcTalk(p, n, "I hate warlocks", "Ah well good luck");
 			} else if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == 3
-				&& hasItem(p, 27)) {
+				&& hasItem(p, ItemId.QUEST_SKULL.id())) {
 				playerTalk(p, n, "I've finally found the ghost's skull");
 				npcTalk(p, n,
 					"Great. Put it in the ghost's coffin and see what happens!");
@@ -139,6 +141,6 @@ public class Priest implements TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 9;
+		return n.getID() == NpcId.PRIEST.id();
 	}
 }

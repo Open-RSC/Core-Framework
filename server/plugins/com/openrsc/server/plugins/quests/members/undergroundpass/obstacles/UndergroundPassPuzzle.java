@@ -25,19 +25,8 @@ public class UndergroundPassPuzzle implements ObjectActionListener, ObjectAction
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (inArray(obj.getID(), WORKING_GRILLS)) {
-			return true;
-		}
-		if (obj.getID() == FAIL_GRILL) {
-			return true;
-		}
-		if (obj.getID() == WALK_HERE_ROCK_EAST || obj.getID() == WALK_HERE_ROCK_WEST) {
-			return true;
-		}
-		if (obj.getID() == LEVER) {
-			return true;
-		}
-		return false;
+		return inArray(obj.getID(), WORKING_GRILLS) || obj.getID() == FAIL_GRILL || obj.getID() == WALK_HERE_ROCK_EAST
+				|| obj.getID() == WALK_HERE_ROCK_WEST || obj.getID() == LEVER;
 	}
 
 	@Override
@@ -45,16 +34,16 @@ public class UndergroundPassPuzzle implements ObjectActionListener, ObjectAction
 		if (inArray(obj.getID(), WORKING_GRILLS)) {
 			moveForward(p, obj);
 		}
-		if (obj.getID() == FAIL_GRILL) {
+		else if (obj.getID() == FAIL_GRILL) {
 			trap(p, obj);
 		}
-		if (obj.getID() == WALK_HERE_ROCK_EAST) {
+		else if (obj.getID() == WALK_HERE_ROCK_EAST) {
 			p.teleport(679, 3447);
 		}
-		if (obj.getID() == WALK_HERE_ROCK_WEST) {
+		else if (obj.getID() == WALK_HERE_ROCK_WEST) {
 			p.walkToEntity(689, 3452);
 		}
-		if (obj.getID() == LEVER) {
+		else if (obj.getID() == LEVER) {
 			message(p, "you pull on the lever",
 				"you hear a loud mechanical churning");
 			GameObject cage_closed = new GameObject(Point.location(690, 3449), CAGE, 6, 0);

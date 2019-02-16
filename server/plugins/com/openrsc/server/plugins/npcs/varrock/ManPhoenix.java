@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.npcs.varrock;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -17,7 +19,7 @@ public class ManPhoenix implements TalkToNpcExecutiveListener,
 
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
-		Npc man = getNearestNpc(p, 24, 20);
+		Npc man = getNearestNpc(p, NpcId.STRAVEN.id(), 20);
 		if (isBlackArmGang(p)) {
 			if (man != null) {
 				npcTalk(p, man, "hey get away from there",
@@ -25,22 +27,22 @@ public class ManPhoenix implements TalkToNpcExecutiveListener,
 				man.setChasing(p);
 			}
 		} else if (p.getQuestStage(Quests.HEROS_QUEST) >= 1 && isPhoenixGang(p)) {
-			if (!hasItem(p, 586) && p.getCache().hasKey("armband")) {
+			if (!hasItem(p, ItemId.MASTER_THIEF_ARMBAND.id()) && p.getCache().hasKey("armband")) {
 				playerTalk(p, n, "I have lost my master thief armband");
 				npcTalk(p, n, "You need to be more careful", "Ah well", "Have this spare");
-				addItem(p, 586, 1);
+				addItem(p, ItemId.MASTER_THIEF_ARMBAND.id(), 1);
 				return;
-			} else if (hasItem(p, 585) && !p.getCache().hasKey("armband")) {
+			} else if (hasItem(p, ItemId.CANDLESTICK.id()) && !p.getCache().hasKey("armband")) {
 				playerTalk(p, n, "I have retrieved a candlestick");
 				npcTalk(p, n, "Hmm not a bad job",
 					"Let's see it, make sure it's genuine");
 				p.message("You hand Straven the candlestick");
-				removeItem(p, 585, 1);
+				removeItem(p, ItemId.CANDLESTICK.id(), 1);
 				playerTalk(p, n, "So is this enough to get me a master thieves armband?");
 				npcTalk(p, n, "Hmm I dunno",
 					"I suppose I'm in a generous mood today");
 				p.message("Straven hands you a master thief armband");
-				addItem(p, 586, 1);
+				addItem(p, ItemId.MASTER_THIEF_ARMBAND.id(), 1);
 				p.getCache().store("armband", true);
 				return;
 			}
@@ -55,29 +57,29 @@ public class ManPhoenix implements TalkToNpcExecutiveListener,
 				"Use the secret word gherkin to show you're one of us");
 			p.getCache().store("pheonix_mission", true);
 			p.getCache().store("pheonix_alf", true);
-		} else if (!hasItem(p, 48) && p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5 && isPhoenixGang(p)) {
+		} else if (!hasItem(p, ItemId.PHOENIX_GANG_WEAPON_KEY.id()) && p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5 && isPhoenixGang(p)) {
 			npcTalk(p, n, "Greetings fellow gang member");
 			playerTalk(p, n, "I have lost the key you gave me");
 			npcTalk(p, n, "You need to be more careful",
 				"We don't want that key falling into the wrong hands",
 				"Ah well",
 				"Have this spare");
-			addItem(p, 48, 1);
+			addItem(p, ItemId.PHOENIX_GANG_WEAPON_KEY.id(), 1);
 			message(p, "Straven hands you a key");
 		} else if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 4 && isPhoenixGang(p)) {
 			npcTalk(p, n, "Hows your little mission going?");
-			if (p.getInventory().hasItemId(49)) {
+			if (p.getInventory().hasItemId(ItemId.SCROLL.id())) {
 				playerTalk(p, n, "I have the intelligence report");
 				npcTalk(p, n, "Lets see it then");
 				message(p, "You hand over the report");
-				removeItem(p, 49, 1);
+				removeItem(p, ItemId.SCROLL.id(), 1);
 				npcTalk(p, n, "Yes this is very good",
 					"Ok you can join the phoenix gang",
 					"I am Straven, one of the gang leaders");
 				playerTalk(p, n, "Nice to meet you");
 				npcTalk(p, n, "Here is a key");
 				message(p, "Straven hands you a key");
-				addItem(p, 48, 1);
+				addItem(p, ItemId.PHOENIX_GANG_WEAPON_KEY.id(), 1);
 				npcTalk(p, n, "It will let you enter our weapon supply area",
 					"Round the front of this building");
 				p.updateQuestStage(Quests.SHIELD_OF_ARRAV, 5);
@@ -223,6 +225,6 @@ public class ManPhoenix implements TalkToNpcExecutiveListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 24;
+		return n.getID() == NpcId.STRAVEN.id();
 	}
 }

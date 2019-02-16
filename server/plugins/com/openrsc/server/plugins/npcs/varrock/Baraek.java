@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -16,7 +18,7 @@ public final class Baraek implements TalkToNpcExecutiveListener,
 	public void onTalkToNpc(final Player p, final Npc n) {
 		int menu;
 		boolean bargained = false;
-		boolean hasFur = p.getInventory().hasItemId(146);
+		boolean hasFur = p.getInventory().hasItemId(ItemId.FUR.id());
 		if (p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == 2 && hasFur) {
 			menu = showMenu(p, n, false, //do not send over 
 				"Can you tell me where I can find the phoenix gang?",
@@ -57,10 +59,10 @@ public final class Baraek implements TalkToNpcExecutiveListener,
 				"No I don't like things like bribery",
 				"Yes I'd like to be 20 gold coins richer too");
 			if (sub_menu == 0) {
-				if (!hasItem(p, 10, 20)) {
+				if (!hasItem(p, ItemId.COINS.id(), 20)) {
 					playerTalk(p, n, "Oops. I don't have 20 coins. Silly me.");
 				} else {
-					removeItem(p, 10, 20);
+					removeItem(p, ItemId.COINS.id(), 20);
 					npcTalk(p, n,
 						"Cheers",
 						"Ok to get to the gang hideout",
@@ -88,15 +90,15 @@ public final class Baraek implements TalkToNpcExecutiveListener,
 				"Yeah, okay here you go",
 				"20 gold coins thats an outrage");
 			if (opts == 0) {
-				if (!hasItem(p, 10, 20)) {
+				if (!hasItem(p, ItemId.COINS.id(), 20)) {
 					playerTalk(p, n, "Oh dear I don't seem to have enough money");
 					npcTalk(p, n, "Well, okay I'll go down to 18 coins");
 					bargained = true;
 				} else {
 					playerTalk(p, n, "Yeah okay here you go");
-					p.getInventory().remove(10, 20);
+					p.getInventory().remove(ItemId.COINS.id(), 20);
 					p.message("You buy a fur from Baraek");
-					p.getInventory().add(new Item(146));
+					p.getInventory().add(new Item(ItemId.FUR.id()));
 				}
 			} else if (opts == 1) {
 				playerTalk(p, n, "20 gold coins that's an outrage");
@@ -117,8 +119,8 @@ public final class Baraek implements TalkToNpcExecutiveListener,
 			if (opts == 0) {
 				message(p, "You give Baraek a fur",
 					"And he gives you twelve coins");
-				removeItem(p, 146, 1);
-				addItem(p, 10, 12);
+				removeItem(p, ItemId.FUR.id(), 1);
+				addItem(p, ItemId.COINS.id(), 12);
 			} else if (opts == 1) {
 				npcTalk(p, n, "Oh ok", "Didn't want it anyway");
 			}
@@ -128,15 +130,15 @@ public final class Baraek implements TalkToNpcExecutiveListener,
 			int sub_opts = showMenu(p, n, false, //do not send over 
 				"Okay here you go", "No thanks I'll leave it");
 			if (sub_opts == 0) {
-				if (!hasItem(p, 10, 18)) {
+				if (!hasItem(p, ItemId.COINS.id(), 18)) {
 					playerTalk(p, n, "Oh dear I don't seem to have enough money");
 					npcTalk(p, n, "Well I can't go any cheaper than that mate",
 						"I have a family to feed");
 				} else {
 					playerTalk(p, n, "Okay here you go");
-					p.getInventory().remove(10, 18);
+					p.getInventory().remove(ItemId.COINS.id(), 18);
 					p.message("You buy a fur from Baraek");
-					p.getInventory().add(new Item(146));
+					p.getInventory().add(new Item(ItemId.FUR.id()));
 				}
 			} else if (sub_opts == 1) {
 				playerTalk(p, n, "No thanks, I'll leave it");
@@ -147,7 +149,7 @@ public final class Baraek implements TalkToNpcExecutiveListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 26;
+		return n.getID() == NpcId.BARAEK.id();
 	}
 
 }

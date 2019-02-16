@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.quests.members.watchtower;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -24,45 +26,24 @@ import static com.openrsc.server.plugins.Functions.*;
  */
 public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObjectExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener, PickupListener, PickupExecutiveListener {
 
-	private static final int OGRE_RELIC_PART_1 = 1050;
-	private static final int OGRE_RELIC_PART_2 = 1049;
-	private static final int OGRE_RELIC_PART_3 = 1048;
-	private static final int OGRE_RELIC_COMPLETE = 1044;
-	private static final int POWERING_CRYSTAL1 = 1037;
-	private static final int POWERING_CRYSTAL2 = 1152;
-	private static final int POWERING_CRYSTAL3 = 1153;
-	private static final int POWERING_CRYSTAL4 = 1154;
-	private static final int VIAL_OF_WATER = 464;
-	private static final int DEATH_RUNE = 38;
-	private static final int SKAVID_MAP = 1045;
-	private static final int NIGHTSHADE = 1086;
-	private static final int SHAMAN_ROBE = 1087;
-	private static final int OGRE_POTION = 1053;
-	private static final int MAGIC_OGRE_POTION = 1054;
-	private static int TOBAN_CHEST = 978;
-	private static int KEY = 1047;
-	private static int STOLEN_GOLD = 1040;
-	private static int WATCHTOWER_WIZARD = 672;
-	private static int OGRE_GUARD = 684;
+	private static final int TOBAN_CHEST_OPEN = 979;
+	private static final int TOBAN_CHEST_CLOSED = 978;
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == TOBAN_CHEST && item.getID() == KEY) {
-			return true;
-		}
-		return false;
+		return obj.getID() == TOBAN_CHEST_CLOSED && item.getID() == ItemId.KEY.id();
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == TOBAN_CHEST && item.getID() == KEY) {
-			openChest(obj, 2000, 979);
-			if (hasItem(p, STOLEN_GOLD)) {
+		if (obj.getID() == TOBAN_CHEST_CLOSED && item.getID() == ItemId.KEY.id()) {
+			openChest(obj, 2000, TOBAN_CHEST_OPEN);
+			if (hasItem(p, ItemId.STOLEN_GOLD.id())) {
 				message(p, "You have already got the stolen gold");
 			} else {
 				p.message("You find a stash of gold inside");
 				message(p, "You take the gold");
-				addItem(p, STOLEN_GOLD, 1);
+				addItem(p, ItemId.STOLEN_GOLD.id(), 1);
 			}
 			p.message("The chest springs shut");
 		}
@@ -70,15 +51,14 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 
 	@Override
 	public boolean blockInvUseOnItem(Player p, Item item1, Item item2) {
-		if ((item1.getID() == OGRE_RELIC_PART_1 || item1.getID() == OGRE_RELIC_PART_2 || item1.getID() == OGRE_RELIC_PART_3) && (item2.getID() == OGRE_RELIC_PART_1 || item2.getID() == OGRE_RELIC_PART_2 || item2.getID() == OGRE_RELIC_PART_3)) {
-			return true;
-		}
-		return false;
+		return (item1.getID() == ItemId.OGRE_RELIC_PART_BODY.id() || item1.getID() == ItemId.OGRE_RELIC_PART_BASE.id() || item1.getID() == ItemId.OGRE_RELIC_PART_HEAD.id()) &&
+				(item2.getID() == ItemId.OGRE_RELIC_PART_BODY.id() || item2.getID() == ItemId.OGRE_RELIC_PART_BASE.id() || item2.getID() == ItemId.OGRE_RELIC_PART_HEAD.id());
 	}
 
 	@Override
 	public void onInvUseOnItem(Player p, Item item1, Item item2) {
-		if ((item1.getID() == OGRE_RELIC_PART_1 || item1.getID() == OGRE_RELIC_PART_2 || item1.getID() == OGRE_RELIC_PART_3) && (item2.getID() == OGRE_RELIC_PART_1 || item2.getID() == OGRE_RELIC_PART_2 || item2.getID() == OGRE_RELIC_PART_3)) {
+		if ((item1.getID() == ItemId.OGRE_RELIC_PART_BODY.id() || item1.getID() == ItemId.OGRE_RELIC_PART_BASE.id() || item1.getID() == ItemId.OGRE_RELIC_PART_HEAD.id()) &&
+				(item2.getID() == ItemId.OGRE_RELIC_PART_BODY.id() || item2.getID() == ItemId.OGRE_RELIC_PART_BASE.id() || item2.getID() == ItemId.OGRE_RELIC_PART_HEAD.id())) {
 			p.message("I think these fit together, but I can't seem to make it fit");
 			p.message("I am going to need someone with more experience to help me with this");
 		}
@@ -86,16 +66,8 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 
 	@Override
 	public boolean blockInvUseOnNpc(Player p, Npc npc, Item item) {
-		if (npc.getID() == WATCHTOWER_WIZARD) {
-			return true;
-		}
-		if (npc.getID() == WatchTowerDialogues.CITY_GUARD && item.getID() == DEATH_RUNE) {
-			return true;
-		}
-		if (npc.getID() == OGRE_GUARD && item.getID() == NIGHTSHADE) {
-			return true;
-		}
-		return false;
+		return npc.getID() == NpcId.WATCHTOWER_WIZARD.id() || (npc.getID() == NpcId.CITY_GUARD.id() && item.getID() == ItemId.DEATH_RUNE.id())
+				|| (npc.getID() == NpcId.OGRE_GUARD_CAVE_ENTRANCE.id() && item.getID() == ItemId.NIGHTSHADE.id());
 	}
 
 	private void lastCrystalChat(Player p, Npc n) {
@@ -113,12 +85,12 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 
 	@Override
 	public void onInvUseOnNpc(Player p, Npc npc, Item item) {
-		if (npc.getID() == WATCHTOWER_WIZARD) {
+		if (npc.getID() == NpcId.WATCHTOWER_WIZARD.id()) {
 			if (p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
 				p.message("The wizard has no need for more evidence");
 				return;
 			}
-			switch (item.getID()) {
+			switch (ItemId.getById(item.getID())) {
 				case POWERING_CRYSTAL1:
 					if (p.getQuestStage(Constants.Quests.WATCHTOWER) == 10) {
 						npcTalk(p, npc, "More crystals ?",
@@ -130,7 +102,7 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 						"That's a crystal found!",
 						"You are clever",
 						"Hold onto it until you have all four...");
-					if (hasItem(p, 1154)) {
+					if (hasItem(p, ItemId.POWERING_CRYSTAL4.id())) {
 						lastCrystalChat(p, npc);
 					} else {
 						npcTalk(p, npc, "Keep searching for the others",
@@ -148,7 +120,7 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 					npcTalk(p, npc, "Superb!",
 						"Keep up the good work",
 						"Hold onto it until you have all four...");
-					if (hasItem(p, 1154)) {
+					if (hasItem(p, ItemId.POWERING_CRYSTAL4.id())) {
 						lastCrystalChat(p, npc);
 					} else {
 						npcTalk(p, npc, "Keep searching for the others",
@@ -166,7 +138,7 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 					npcTalk(p, npc, "I must say i'm impressed",
 						"May Saradomin speed you in finding them all",
 						"Hold onto it until you have all four...");
-					if (hasItem(p, 1154)) {
+					if (hasItem(p, ItemId.POWERING_CRYSTAL4.id())) {
 						lastCrystalChat(p, npc);
 					} else {
 						npcTalk(p, npc, "Keep searching for the others",
@@ -182,10 +154,10 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 					}
 					lastCrystalChat(p, npc);
 					break;
-				case OGRE_RELIC_PART_1:
+				case OGRE_RELIC_PART_BODY:
 					playerTalk(p, npc, "I had this given to me");
 					if (!p.getCache().hasKey("wizard_relic_part_1")) {
-						removeItem(p, OGRE_RELIC_PART_1, 1);
+						removeItem(p, ItemId.OGRE_RELIC_PART_BODY.id(), 1);
 						npcTalk(p, npc, "It's part of an ogre relic");
 						p.getCache().store("wizard_relic_part_1", true);
 						relicParts(p, npc);
@@ -193,10 +165,10 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 						npcTalk(p, npc, "I already have that part...");
 					}
 					break;
-				case OGRE_RELIC_PART_2:
+				case OGRE_RELIC_PART_BASE:
 					playerTalk(p, npc, "I got given this by an ogre");
 					if (!p.getCache().hasKey("wizard_relic_part_2")) {
-						removeItem(p, OGRE_RELIC_PART_2, 1);
+						removeItem(p, ItemId.OGRE_RELIC_PART_BASE.id(), 1);
 						npcTalk(p, npc, "Good good,a part of an ogre relic");
 						p.getCache().store("wizard_relic_part_2", true);
 						relicParts(p, npc);
@@ -204,10 +176,10 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 						npcTalk(p, npc, "I already have that part...");
 					}
 					break;
-				case OGRE_RELIC_PART_3:
+				case OGRE_RELIC_PART_HEAD:
 					playerTalk(p, npc, "An ogre gave me this");
 					if (!p.getCache().hasKey("wizard_relic_part_3")) {
-						removeItem(p, OGRE_RELIC_PART_3, 1);
+						removeItem(p, ItemId.OGRE_RELIC_PART_HEAD.id(), 1);
 						npcTalk(p, npc, "Ah, it's part of an old ogre statue");
 						p.getCache().store("wizard_relic_part_3", true);
 						relicParts(p, npc);
@@ -215,13 +187,13 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 						npcTalk(p, npc, "I already have that part...");
 					}
 					break;
-				case OGRE_RELIC_COMPLETE:
+				case OGRE_RELIC:
 					playerTalk(p, npc, "What is this ?");
 					npcTalk(p, npc, "It is the ogre statue I finished for you...");
 					break;
-				case VIAL_OF_WATER:
+				case VIAL:
 					npcTalk(p, npc, "Oh lovely, fresh water...thanks!");
-					p.getInventory().replace(VIAL_OF_WATER, 465);
+					p.getInventory().replace(ItemId.VIAL.id(), ItemId.EMPTY_VIAL.id());
 					break;
 				case SKAVID_MAP:
 					p.message("You give the map to the wizard");
@@ -233,8 +205,8 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 					playerTalk(p, npc, "Yes I have made the potion");
 					npcTalk(p, npc, "That's great news, let me infuse it with magic...");
 					p.message("The wizard mutters strange words over the liquid");
-					removeItem(p, 1053, 1);
-					addItem(p, 1054, 1);
+					removeItem(p, ItemId.OGRE_POTION.id(), 1);
+					addItem(p, ItemId.MAGIC_OGRE_POTION.id(), 1);
 					npcTalk(p, npc, "Here it is, a dangerous substance",
 						"I must remind you that this potion can only be used",
 						"If your magic ability is high enough");
@@ -251,12 +223,12 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 					break;
 			}
 		}
-		if (npc.getID() == WatchTowerDialogues.CITY_GUARD && item.getID() == DEATH_RUNE) {
+		else if (npc.getID() == NpcId.CITY_GUARD.id() && item.getID() == ItemId.DEATH_RUNE.id()) {
 			if (p.getCache().hasKey("city_guard_riddle") || p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
 				p.message("The guard is not listening to you");
 			} else {
-				removeItem(p, 38, 1);
-				addItem(p, WatchTowerDialogues.SKAVID_MAP, 1);
+				removeItem(p, ItemId.DEATH_RUNE.id(), 1);
+				addItem(p, ItemId.SKAVID_MAP.id(), 1);
 				if (p.getQuestStage(Constants.Quests.WATCHTOWER) == 3) {
 					p.updateQuestStage(Constants.Quests.WATCHTOWER, 4);
 				}
@@ -268,12 +240,12 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 				p.message("The guard gives you a map");
 			}
 		}
-		if (npc.getID() == OGRE_GUARD && item.getID() == NIGHTSHADE) {
+		else if (npc.getID() == NpcId.OGRE_GUARD_CAVE_ENTRANCE.id() && item.getID() == ItemId.NIGHTSHADE.id()) {
 			if (p.getQuestStage(Constants.Quests.WATCHTOWER) < 5) {
 				p.message("The guard is occupied at the moment");
 			} else {
 				p.playerServerMessage(MessageType.QUEST, "You give the guard some nightshade");
-				removeItem(p, NIGHTSHADE, 1);
+				removeItem(p, ItemId.NIGHTSHADE.id(), 1);
 				npcTalk(p, npc, "What is this!!!",
 					"Arrrrgh! I cannot stand this plant!",
 					"Ahhh, it burns! it burns!!!");
@@ -292,7 +264,7 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 				"Well, if you ever wanted to make friends with an ogre",
 				"Then this is the item to have!");
 			p.message("The wizard gives you a complete statue");
-			addItem(p, OGRE_RELIC_COMPLETE, 1);
+			addItem(p, ItemId.OGRE_RELIC.id(), 1);
 			if (p.getQuestStage(Constants.Quests.WATCHTOWER) == 2) {
 				p.updateQuestStage(Constants.Quests.WATCHTOWER, 3);
 			}
@@ -305,26 +277,22 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 
 	@Override
 	public boolean blockPickup(Player p, GroundItem i) {
-		if (i.getID() == SHAMAN_ROBE) {
-			return true;
-		}
-		if (i.getID() == 1037 || i.getID() == 1152 || i.getID() == 1154 || i.getID() == 1153) {
-			return true;
-		}
-		return false;
+		return inArray(i.getID(), ItemId.SHAMAN_ROBE.id(), ItemId.POWERING_CRYSTAL1.id(), ItemId.POWERING_CRYSTAL2.id(),
+				ItemId.POWERING_CRYSTAL3.id(), ItemId.POWERING_CRYSTAL4.id());
 	}
 
 	@Override
 	public void onPickup(Player p, GroundItem i) {
-		if (i.getID() == SHAMAN_ROBE) {
+		if (i.getID() == ItemId.SHAMAN_ROBE.id()) {
 			p.message("You take the robe");
-			addItem(p, SHAMAN_ROBE, 1);
+			addItem(p, ItemId.SHAMAN_ROBE.id(), 1);
 			i.remove();
 			if (p.getQuestStage(Constants.Quests.WATCHTOWER) == 5) {
 				p.updateQuestStage(Constants.Quests.WATCHTOWER, 6);
 			}
 		}
-		if (i.getID() == 1037 || i.getID() == 1152 || i.getID() == 1154 || i.getID() == 1153) {
+		else if (i.getID() == ItemId.POWERING_CRYSTAL1.id() || i.getID() == ItemId.POWERING_CRYSTAL2.id()
+				|| i.getID() == ItemId.POWERING_CRYSTAL3.id() || i.getID() == ItemId.POWERING_CRYSTAL4.id()) {
 			if (p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
 				message(p, "You try and take the crystal but its stuck solid!",
 					"You feel magic power coursing through the crystal...",

@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.npcs;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -18,15 +20,10 @@ import static com.openrsc.server.plugins.Functions.removeItem;
 public class UndergroundPassIban implements InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
 	private static int PIT_OF_THE_DAMNED = 913;
-	private static int IBAN = 649;
-	private static int IBAN_DOLL = 1004;
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == PIT_OF_THE_DAMNED && item.getID() == IBAN_DOLL) {
-			return true;
-		}
-		return false;
+		return obj.getID() == PIT_OF_THE_DAMNED && item.getID() == ItemId.A_DOLL_OF_IBAN.id();
 	}
 
 	@Override
@@ -42,14 +39,14 @@ public class UndergroundPassIban implements InvUseOnObjectListener, InvUseOnObje
 				&& p.getCache().hasKey("cons_on_doll")
 				&& p.getCache().hasKey("ash_on_doll")
 				&& p.getCache().hasKey("shadow_on_doll")) {
-				Npc iban = getNearestNpc(p, IBAN, 10);
+				Npc iban = getNearestNpc(p, NpcId.IBAN.id(), 10);
 				if (iban == null) {
 					p.message("iban is still not here");
 					return;
 				}
 				else {
 					message(p, "you throw the doll of iban into the pit");
-					removeItem(p, new Item(IBAN_DOLL, 1));
+					removeItem(p, new Item(ItemId.A_DOLL_OF_IBAN.id(), 1));
 					defeated = true;
 					p.setAttribute("iban_bubble_show", true);
 					npcTalk(p, iban, "what's happening?, it's dark here...so dark",
@@ -68,9 +65,9 @@ public class UndergroundPassIban implements InvUseOnObjectListener, InvUseOnObje
 						message(p, "...as the ground begins to shake",
 							"the temple walls begin to collapse in",
 							"and you're thrown from the temple platform");
-						addItem(p, 1000, 1);
-						addItem(p, 38, 150);
-						addItem(p, 31, 300);
+						addItem(p, ItemId.STAFF_OF_IBAN.id(), 1);
+						addItem(p, ItemId.DEATH_RUNE.id(), 15);
+						addItem(p, ItemId.FIRE_RUNE.id(), 30);
 						p.teleport(687, 3485);
 
 						/*player may teleport out after defeating iban

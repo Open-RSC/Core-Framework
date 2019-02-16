@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -22,9 +24,6 @@ import static com.openrsc.server.plugins.Functions.removeItem;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcListener, TalkToNpcExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
-
-	private static final int SIR_RADIMUS_ERKLE_HOUSE = 735;
-	private static final int SIR_RADIMUS_ERKLE_GUILD = 785;
 
 	@Override
 	public int getQuestId() {
@@ -64,27 +63,21 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == SIR_RADIMUS_ERKLE_HOUSE) {
-			return true;
-		}
-		if (n.getID() == SIR_RADIMUS_ERKLE_GUILD) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.SIR_RADIMUS_ERKLE_HOUSE.id() || n.getID() == NpcId.SIR_RADIMUS_ERKLE_GUILD.id();
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == SIR_RADIMUS_ERKLE_HOUSE) {
+		if (n.getID() == NpcId.SIR_RADIMUS_ERKLE_HOUSE.id()) {
 			radimusInHouseDialogue(p, n, -1);
 		}
-		if (n.getID() == SIR_RADIMUS_ERKLE_GUILD) {
+		else if (n.getID() == NpcId.SIR_RADIMUS_ERKLE_GUILD.id()) {
 			radimusInGuildDialogue(p, n, -1);
 		}
 	}
 
 	private void radimusInGuildDialogue(Player p, Npc n, int cID) {
-		if (n.getID() == SIR_RADIMUS_ERKLE_GUILD) {
+		if (n.getID() == NpcId.SIR_RADIMUS_ERKLE_GUILD.id()) {
 			if (cID == -1) {
 				switch (p.getQuestStage(Constants.Quests.LEGENDS_QUEST)) {
 					case 11:
@@ -231,7 +224,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 	}
 
 	private void radimusInHouseDialogue(Player p, Npc n, int cID) {
-		if (n.getID() == SIR_RADIMUS_ERKLE_HOUSE) {
+		if (n.getID() == NpcId.SIR_RADIMUS_ERKLE_HOUSE.id()) {
 			if (cID == -1) {
 				switch (p.getQuestStage(Constants.Quests.LEGENDS_QUEST)) {
 					case 0:
@@ -264,7 +257,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 					case 9:
 					case 10:
 						npcTalk(p, n, "Hello there, how is the quest going?");
-						if (hasItem(p, 1163) || hasItem(p, 1233)) {
+						if (hasItem(p, ItemId.RADIMUS_SCROLLS.id()) || hasItem(p, ItemId.RADIMUS_SCROLLS_COMPLETE.id())) {
 							radimusInHouseDialogue(p, n, RadimusInHouse.SAME_MENU_HAS_SCROLLS);
 						} else {
 							radimusInHouseDialogue(p, n, RadimusInHouse.SAME_MENU_NO_SCROLLS);
@@ -300,7 +293,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 						npcTalk(p, n, "Excellent!",
 							"Ok, you'll need this starting map of the Kharazi Jungle.");
 						p.message("Grand Vizier Erkle gives you some notes and a map.");
-						addItem(p, 1163, 1);
+						addItem(p, ItemId.RADIMUS_SCROLLS.id(), 1);
 						npcTalk(p, n, "Complete this map when you get to the Kharazi Jungle.",
 							"It's towards the southern most part of Karamja.",
 							"You'll need additional papyrus and charcoal to complete the map.",
@@ -385,7 +378,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 							"Bring back a tribal gift from the natives",
 							"so that we can display it in the Legends Guild.",
 							"I hope that answers your question!");
-					if (hasItem(p, 1163) || hasItem(p, 1233)) {
+					if (hasItem(p, ItemId.RADIMUS_SCROLLS.id()) || hasItem(p, ItemId.RADIMUS_SCROLLS_COMPLETE.id())) {
 						radimusInHouseDialogue(p, n, RadimusInHouse.SAME_MENU_HAS_SCROLLS);
 					} else {
 						radimusInHouseDialogue(p, n, RadimusInHouse.SAME_MENU_NO_SCROLLS);
@@ -393,7 +386,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 					break;
 				case RadimusInHouse.ANOTHER_MACHETE:
 					npcTalk(p, n, "Well, just get another one from the cupboard.");
-					if (hasItem(p, 1163) || hasItem(p, 1233)) {
+					if (hasItem(p, ItemId.RADIMUS_SCROLLS.id()) || hasItem(p, ItemId.RADIMUS_SCROLLS_COMPLETE.id())) {
 						radimusInHouseDialogue(p, n, RadimusInHouse.SAME_MENU_HAS_SCROLLS);
 					} else {
 						radimusInHouseDialogue(p, n, RadimusInHouse.SAME_MENU_NO_SCROLLS);
@@ -405,7 +398,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 					message(p, 1200, "Sir Radimus mutters under his breath.");
 					npcTalk(p, n, "It's hardly legendary if you fail a quest",
 						"because you can't find some charcoal!");
-					if (hasItem(p, 1163) || hasItem(p, 1233)) {
+					if (hasItem(p, ItemId.RADIMUS_SCROLLS.id()) || hasItem(p, ItemId.RADIMUS_SCROLLS_COMPLETE.id())) {
 						radimusInHouseDialogue(p, n, RadimusInHouse.SAME_MENU_HAS_SCROLLS);
 					} else {
 						radimusInHouseDialogue(p, n, RadimusInHouse.SAME_MENU_NO_SCROLLS);
@@ -417,7 +410,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 					message(p, 1200, "Sir Radimus mutters under his breath.");
 					npcTalk(p, n, "It's hardly legendary if you fail a quest",
 						"because you can't find some papyrus!");
-					if (hasItem(p, 1163) || hasItem(p, 1233)) {
+					if (hasItem(p, ItemId.RADIMUS_SCROLLS.id()) || hasItem(p, ItemId.RADIMUS_SCROLLS_COMPLETE.id())) {
 						radimusInHouseDialogue(p, n, RadimusInHouse.SAME_MENU_HAS_SCROLLS);
 					} else {
 						radimusInHouseDialogue(p, n, RadimusInHouse.SAME_MENU_NO_SCROLLS);
@@ -434,15 +427,15 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 				case RadimusInHouse.LOST_KHARAZI_JUNGLE_MAP:
 					npcTalk(p, n, "That is awful, well, luckily I have a copy here.",
 						"But I need to charge you a copy fee of 30 gold pieces.");
-					if (hasItem(p, 10, 30)) {
+					if (hasItem(p, ItemId.COINS.id(), 30)) {
 						npcTalk(p, n, "Do you agree to pay?");
 						int pay = showMenu(p, n,
 							"Yes, I'll pay for it.",
 							"No, I won't pay for it.");
 						if (pay == 0) {
 							p.message("You hand over 30 gold coins.");
-							removeItem(p, 10, 30);
-							addItem(p, 1163, 1);
+							removeItem(p, ItemId.COINS.id(), 30);
+							addItem(p, ItemId.RADIMUS_SCROLLS.id(), 1);
 							npcTalk(p, n, "Ok, please don't lose this one..");
 						} else if (pay == 1) {
 							npcTalk(p, n, "Well, that's your decision, of course... ",
@@ -461,25 +454,20 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 
 	@Override
 	public boolean blockInvUseOnNpc(Player p, Npc n, Item item) {
-		if (n.getID() == SIR_RADIMUS_ERKLE_HOUSE && item.getID() == 1233) { // the complete map.
-			return true;
-		}
-		if (n.getID() == SIR_RADIMUS_ERKLE_HOUSE && item.getID() == 1265) { // the glided totem.
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.SIR_RADIMUS_ERKLE_HOUSE.id() && (item.getID() == ItemId.RADIMUS_SCROLLS_COMPLETE.id()
+				|| item.getID() == ItemId.GILDED_TOTEM_POLE.id() || item.getID() == ItemId.TOTEM_POLE.id());
 	}
 
 	@Override
 	public void onInvUseOnNpc(Player p, Npc n, Item item) {
-		if (n.getID() == SIR_RADIMUS_ERKLE_HOUSE && item.getID() == 1265) { // the glided totem.
+		if (n.getID() == NpcId.SIR_RADIMUS_ERKLE_HOUSE.id() && item.getID() == ItemId.GILDED_TOTEM_POLE.id()) {
 			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 11) {
 				npcTalk(p, n, "Go through to the main Legends Guild and I will join you.");
 				return;
 			}
 			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 10) {
 				npcTalk(p, n, (p.isMale() ? "Sir" : "Madam") + ", this is truly amazing...");
-				if (!hasItem(p, 1233)) {
+				if (!hasItem(p, ItemId.RADIMUS_SCROLLS_COMPLETE.id())) {
 					npcTalk(p, n, "However, I need you to complete the map of the ,",
 						"Kharazi Jungle before your quest is complete.");
 				} else {
@@ -500,7 +488,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 				p.message("You have not completed this quest - submitting bug abuse.");
 			}
 		}
-		if (n.getID() == SIR_RADIMUS_ERKLE_HOUSE && item.getID() == 1183) { // regular totem
+		else if (n.getID() == NpcId.SIR_RADIMUS_ERKLE_HOUSE.id() && item.getID() == ItemId.TOTEM_POLE.id()) {
 			npcTalk(p, n, "Hmmm, well, it is very impressive.",
 					"Especially since it looks very heavy...",
 					"However, it lacks a certain authenticity,",
@@ -510,7 +498,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 					"to put on display in the Legends Guild main hall.",
 					"Do you think you could get something more authentic ?");
 		}
-		if (n.getID() == SIR_RADIMUS_ERKLE_HOUSE && item.getID() == 1233) { // the complete map.
+		else if (n.getID() == NpcId.SIR_RADIMUS_ERKLE_HOUSE.id() && item.getID() == ItemId.RADIMUS_SCROLLS_COMPLETE.id()) {
 			npcTalk(p, n, "Well done " + (p.isMale() ? "Sir" : "Madam") + ", very well done...",
 				"However, you'll probably need it while you search",
 				"for natives of the Kharazi tribe in the Kharazi jungle.",

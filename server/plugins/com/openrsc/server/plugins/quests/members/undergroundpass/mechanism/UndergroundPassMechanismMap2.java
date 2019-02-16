@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.mechanism;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -13,16 +14,9 @@ import static com.openrsc.server.plugins.Functions.*;
 public class UndergroundPassMechanismMap2 implements InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
 	/**
-	 * ITEM IDs
-	 **/
-	private static int ROPE = 237;
-	private static int PLANK = 410;
-	private static int RAILING = 995;
-
-	/**
 	 * ITEMS_TO_FLAMES: Unicorn horn, coat of arms red and blue.
 	 **/
-	private static int[] ITEMS_TO_FLAMES = {997, 998, 999};
+	private static int[] ITEMS_TO_FLAMES = {ItemId.UNDERGROUND_PASS_UNICORN_HORN.id(), ItemId.COAT_OF_ARMS_RED.id(), ItemId.COAT_OF_ARMS_BLUE.id()};
 
 	/**
 	 * OBJECT IDs
@@ -31,27 +25,16 @@ public class UndergroundPassMechanismMap2 implements InvUseOnObjectListener, Inv
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == UndergroundPassObstaclesMap2.WALL_GRILL_EAST && item.getID() == ROPE) {
-			return true;
-		}
-		if (obj.getID() == UndergroundPassObstaclesMap2.PASSAGE && item.getID() == PLANK) {
-			return true;
-		}
-		if (obj.getID() == BOULDER && item.getID() == RAILING) {
-			return true;
-		}
-		if (obj.getID() == UndergroundPassObstaclesMap2.FLAMES_OF_ZAMORAK && inArray(item.getID(), ITEMS_TO_FLAMES)) {
-			return true;
-		}
-		if (obj.getID() == UndergroundPassObstaclesMap2.FLAMES_OF_ZAMORAK && item.getID() == 1000) {
-			return true;
-		}
-		return false;
+		return (obj.getID() == UndergroundPassObstaclesMap2.WALL_GRILL_EAST && item.getID() == ItemId.ROPE.id())
+				|| (obj.getID() == UndergroundPassObstaclesMap2.PASSAGE && item.getID() == ItemId.PLANK.id())
+				|| (obj.getID() == BOULDER && item.getID() == ItemId.RAILING.id())
+				|| (obj.getID() == UndergroundPassObstaclesMap2.FLAMES_OF_ZAMORAK && inArray(item.getID(), ITEMS_TO_FLAMES))
+				|| (obj.getID() == UndergroundPassObstaclesMap2.FLAMES_OF_ZAMORAK && item.getID() == ItemId.STAFF_OF_IBAN.id());
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == UndergroundPassObstaclesMap2.WALL_GRILL_EAST && item.getID() == ROPE) {
+		if (obj.getID() == UndergroundPassObstaclesMap2.WALL_GRILL_EAST && item.getID() == ItemId.ROPE.id()) {
 			if (p.getX() == 763 && p.getY() == 3463) {
 				p.message("you can't reach the grill from here");
 			} else {
@@ -62,10 +45,10 @@ public class UndergroundPassMechanismMap2 implements InvUseOnObjectListener, Inv
 				}
 			}
 		}
-		if (item.getID() == PLANK && obj.getID() == UndergroundPassObstaclesMap2.PASSAGE) {
+		else if (item.getID() == ItemId.PLANK.id() && obj.getID() == UndergroundPassObstaclesMap2.PASSAGE) {
 			p.message("you carefully place the planks over the pressure triggers");
 			p.message("you walk across the wooden planks");
-			removeItem(p, PLANK, 1);
+			removeItem(p, ItemId.PLANK.id(), 1);
 			p.teleport(735, 3489);
 			sleep(850);
 			if (obj.getX() == 737) {
@@ -74,7 +57,7 @@ public class UndergroundPassMechanismMap2 implements InvUseOnObjectListener, Inv
 				p.teleport(738, 3489);
 			}
 		}
-		if (obj.getID() == BOULDER && item.getID() == RAILING) {
+		else if (obj.getID() == BOULDER && item.getID() == ItemId.RAILING.id()) {
 			message(p, "you use the pole as leverage...",
 				"..and tip the bolder onto its side");
 			removeObject(obj);
@@ -84,17 +67,17 @@ public class UndergroundPassMechanismMap2 implements InvUseOnObjectListener, Inv
 				p.updateQuestStage(Constants.Quests.UNDERGROUND_PASS, 4);
 			}
 		}
-		if (obj.getID() == UndergroundPassObstaclesMap2.FLAMES_OF_ZAMORAK && inArray(item.getID(), ITEMS_TO_FLAMES)) {
+		else if (obj.getID() == UndergroundPassObstaclesMap2.FLAMES_OF_ZAMORAK && inArray(item.getID(), ITEMS_TO_FLAMES)) {
 			message(p, "you throw the " + item.getDef().getName().toLowerCase() + " into the flames");
 			if (!atQuestStages(p, Constants.Quests.UNDERGROUND_PASS, 7, 8, -1)) {
-				if (!p.getCache().hasKey("flames_of_zamorak1") && item.getID() == 997) {
+				if (!p.getCache().hasKey("flames_of_zamorak1") && item.getID() == ItemId.UNDERGROUND_PASS_UNICORN_HORN.id()) {
 					p.getCache().store("flames_of_zamorak1", true);
 				}
-				if (!p.getCache().hasKey("flames_of_zamorak2") && item.getID() == 998) {
+				if (!p.getCache().hasKey("flames_of_zamorak2") && item.getID() == ItemId.COAT_OF_ARMS_RED.id()) {
 					p.getCache().store("flames_of_zamorak2", true);
 				}
 				int stage = 0;
-				if (item.getID() == 999) {
+				if (item.getID() == ItemId.COAT_OF_ARMS_BLUE.id()) {
 					if (!p.getCache().hasKey("flames_of_zamorak3")) {
 						p.getCache().set("flames_of_zamorak3", 1);
 					} else {
@@ -107,7 +90,7 @@ public class UndergroundPassMechanismMap2 implements InvUseOnObjectListener, Inv
 			removeItem(p, item.getID(), 1);
 			p.message("you hear a howl in the distance");
 		}
-		if (obj.getID() == UndergroundPassObstaclesMap2.FLAMES_OF_ZAMORAK && item.getID() == 1000) {
+		else if (obj.getID() == UndergroundPassObstaclesMap2.FLAMES_OF_ZAMORAK && item.getID() == ItemId.STAFF_OF_IBAN.id()) {
 			message(p, "you hold the staff above the well");
 			displayTeleportBubble(p, p.getX(), p.getY(), true);
 			p.message("and feel the power of zamorak flow through you");

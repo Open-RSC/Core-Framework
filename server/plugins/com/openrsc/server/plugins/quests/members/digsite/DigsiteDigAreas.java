@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.quests.members.digsite;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -32,135 +34,107 @@ import static com.openrsc.server.plugins.Functions.spawnNpc;
  */
 public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener, InvActionListener, InvActionExecutiveListener {
 
-	private static final int TROWEL = 1145;
-	private static final int ROCK_PICK = 1114;
-	private static final int SPADE = 211;
-	private static final int PANNING_TRAY = 1111;
 	private static int[] SOIL = {1065, 1066, 1067};
 	private static int ROCK = 1059;
-	private static int WORKMAN = 722;
 
-	private int[] TRAINING_AREA_ITEMS = {-1, -2, 1168, 1165, 10, 1150, 983};
+	private int[] TRAINING_AREA_ITEMS = {ItemId.NOTHING.id(), ItemId.NOTHING_INTEREST.id(), ItemId.VASE.id(), ItemId.BROKEN_ARROW.id(), ItemId.COINS.id(), ItemId.CRACKED_ROCK_SAMPLE.id(), ItemId.A_LUMP_OF_CHARCOAL.id()};
 
-	private int[] DIGSITE_LEVEL1_ITEMS = {-1, 20, 894, 1155, 1162, 778, 150, 801, 1166, 1159, 1168};
+	private int[] DIGSITE_LEVEL1_ITEMS = {ItemId.NOTHING.id(), ItemId.BONES.id(), ItemId.OPAL.id(), ItemId.OLD_BOOT.id(), ItemId.OLD_TOOTH.id(), ItemId.BROKEN_GLASS.id(), ItemId.COPPER_ORE.id(), ItemId.ROTTEN_APPLES.id(), ItemId.BUTTONS.id(), ItemId.RUSTY_SWORD.id(), ItemId.VASE.id()};
 
-	private int[] DIGSITE_LEVEL2_ITEMS = {-1, 20, 516, 135, 149, 1170, 271, 1167, 1158, 140, 1155};
+	private int[] DIGSITE_LEVEL2_ITEMS = {ItemId.NOTHING.id(), ItemId.BONES.id(), ItemId.PURPLEDYE.id(), ItemId.POT.id(), ItemId.CLAY.id(), ItemId.BROKEN_GLASS_DIGSITE_LVL_2.id(), ItemId.RATS_TAIL.id(), ItemId.BROKEN_STAFF.id(), ItemId.DAMAGED_ARMOUR_2.id(), ItemId.JUG.id(), ItemId.OLD_BOOT.id()};
 
-	private int[] DIGSITE_LEVEL3_ITEMS = {-1, 20, 1157, 1167, 1175, 1165, 827, 251, 1166, 1162, 10, 39, 149, 1075, 470, 1169, 1151, 1155, 516};
+	private int[] DIGSITE_LEVEL3_ITEMS = {ItemId.NOTHING.id(), ItemId.BONES.id(), ItemId.DAMAGED_ARMOUR_1.id(), ItemId.BROKEN_STAFF.id(), ItemId.TALISMAN_OF_ZAROS.id(), ItemId.BROKEN_ARROW.id(), ItemId.BRONZE_SPEAR.id(), ItemId.PIE_DISH.id(), ItemId.BUTTONS.id(), ItemId.OLD_TOOTH.id(), ItemId.COINS.id(), ItemId.NEEDLE.id(), ItemId.CLAY.id(), ItemId.IRON_THROWING_KNIFE.id(), ItemId.MEDIUM_BLACK_HELMET.id(), ItemId.CERAMIC_REMAINS.id(), ItemId.BELT_BUCKLE.id(), ItemId.OLD_BOOT.id(), ItemId.PURPLEDYE.id()};
 
 	private static boolean getLevel3Digsite(Player p) {
-		if (p.getLocation().inBounds(10, 495, 14, 499)) { // Top North DONE.
-			return true;
-		}
-		if (p.getLocation().inBounds(23, 518, 28, 524)) { // WEST MIDDLE AREA DONE
-			return true;
-		}
-		return false;
+		// Top North DONE. + WEST MIDDLE AREA DONE
+		return p.getLocation().inBounds(10, 495, 14, 499) || p.getLocation().inBounds(23, 518, 28, 524);
 	}
 
 	static void doDigsiteItemMessages(Player p, int item) {
-		if (item == -1) {
+		if (item == ItemId.NOTHING.id()) {
 			p.message("You find nothing");
-		} else if (item == -2) {
+		} else if (item == ItemId.NOTHING_INTEREST.id()) {
 			p.message("You find nothing of interest");
-		} else if (item == 20) {
+		} else if (item == ItemId.BONES.id()) {
 			p.message("You find some bones");
-		} else if (item == 516) {
+		} else if (item == ItemId.PURPLEDYE.id()) {
 			p.message("You find some purple dye");
-		} else if (item == 135) {
+		} else if (item == ItemId.POT.id()) {
 			p.message("You find an old pot");
-		} else if (item == 149) {
+		} else if (item == ItemId.CLAY.id()) {
 			p.message("You find some clay");
-		} else if (item == 1170 || item == 778) {
+		} else if (item == ItemId.BROKEN_GLASS.id() || item == ItemId.BROKEN_GLASS_DIGSITE_LVL_2.id()) {
 			p.message("You find some broken glass");
-		} else if (item == 271) {
+		} else if (item == ItemId.RATS_TAIL.id()) {
 			p.message("You find a rat's tail");
-		} else if (item == 1167) {
+		} else if (item == ItemId.BROKEN_STAFF.id()) {
 			p.message("You find a broken staff");
-		} else if (item == 1158 || item == 1157) {
+		} else if (item == ItemId.DAMAGED_ARMOUR_1.id() || item == ItemId.DAMAGED_ARMOUR_2.id()) {
 			p.message("You find some old armour");
-		} else if (item == 140) {
+		} else if (item == ItemId.JUG.id()) {
 			p.message("You find an old jug");
-		} else if (item == 1155) {
+		} else if (item == ItemId.OLD_BOOT.id()) {
 			p.message("You find an old boot");
-		} else if (item == 1168) {
+		} else if (item == ItemId.VASE.id()) {
 			p.message("You find an old vase");
-		} else if (item == 10) {
+		} else if (item == ItemId.COINS.id()) {
 			if (getLevel3Digsite(p)) {
 				p.message("You find some coins");
 			} else {
 				p.message("You find a coin");
 			}
-		} else if (item == 1150) {
+		} else if (item == ItemId.CRACKED_ROCK_SAMPLE.id()) {
 			p.message("You find a broken rock sample");
-		} else if (item == 983) {
+		} else if (item == ItemId.A_LUMP_OF_CHARCOAL.id()) {
 			p.message("You find some charcoal");
-		} else if (item == 1165) {
+		} else if (item == ItemId.BROKEN_ARROW.id()) {
 			p.message("You find a broken arrow");
-		} else if (item == 894) {
+		} else if (item == ItemId.OPAL.id()) {
 			p.message("You find an opal");
-		} else if (item == 1162) {
+		} else if (item == ItemId.OLD_TOOTH.id()) {
 			p.message("You find an old tooth");
-		} else if (item == 150) {
+		} else if (item == ItemId.COPPER_ORE.id()) {
 			p.message("You find some copper ore");
-		} else if (item == 801) {
+		} else if (item == ItemId.ROTTEN_APPLES.id()) {
 			p.message("You find a rotten apple");
-		} else if (item == 1166) {
+		} else if (item == ItemId.BUTTONS.id()) {
 			p.message("You find some buttons");
-		} else if (item == 1159) {
+		} else if (item == ItemId.RUSTY_SWORD.id()) {
 			p.message("You find a rusty sword");
-		} else if (item == 1175) {
+		} else if (item == ItemId.TALISMAN_OF_ZAROS.id()) {
 			p.message("You find a strange talisman");
-		} else if (item == 827) {
+		} else if (item == ItemId.BRONZE_SPEAR.id()) {
 			p.message("You find a bronze spear");
-		} else if (item == 251) {
+		} else if (item == ItemId.PIE_DISH.id()) {
 			p.message("You find a pie dish");
-		} else if (item == 39) {
+		} else if (item == ItemId.NEEDLE.id()) {
 			p.message("You find a needle");
-		} else if (item == 1075) {
+		} else if (item == ItemId.IRON_THROWING_KNIFE.id()) {
 			p.message("You find a throwing knife");
-		} else if (item == 470) {
+		} else if (item == ItemId.MEDIUM_BLACK_HELMET.id()) {
 			p.message("You find an black helmet");
-		} else if (item == 1169) {
+		} else if (item == ItemId.CERAMIC_REMAINS.id()) {
 			p.message("You find some old pottery");
-		} else if (item == 1151) {
+		} else if (item == ItemId.BELT_BUCKLE.id()) {
 			p.message("You find a belt buckle");
-		} else if (item == 28) {
+		} else if (item == ItemId.IRON_DAGGER.id()) {
 			p.message("You find a dagger");
 		}
 	}
 
 	private boolean getTrainingAreas(Player p) {
-		if (p.getLocation().inBounds(13, 526, 17, 529)) { // EAST DONE
-			return true;
-		}
-		if (p.getLocation().inBounds(24, 526, 27, 529)) { // WEST DONE
-			return true;
-		}
-		return false;
+		// EAST DONE + WEST DONE
+		return p.getLocation().inBounds(13, 526, 17, 529) || p.getLocation().inBounds(24, 526, 27, 529);
 	}
 
 	private boolean getLevel2Digsite(Player p) {
-		if (p.getLocation().inBounds(24, 514, 26, 516)) { // WEST MIDDLE SMALL WINCH AREA DONE
-			return true;
-		}
-		if (p.getLocation().inBounds(14, 506, 15, 509)) { // EAST NORTH DONE
-			return true;
-		}
-		if (p.getLocation().inBounds(20, 505, 27, 509)) { // WEST NORTH DONE
-			return true;
-		}
-		return false;
+		// WEST MIDDLE SMALL WINCH AREA DONE + EAST NORTH DONE + WEST NORTH DONE
+		return p.getLocation().inBounds(24, 514, 26, 516) || p.getLocation().inBounds(14, 506, 15, 509) || p.getLocation().inBounds(20, 505, 27, 509);
 	}
 
 	private boolean getLevel1Digsite(Player p) {
-		if (p.getLocation().inBounds(19, 516, 21, 526)) { // MIDDLE DONE
-			return true;
-		}
-		if (p.getLocation().inBounds(13, 516, 17, 524)) { // EAST MIDDLE DONE
-			return true;
-		}
-		return false;
+		// MIDDLE DONE + EAST MIDDLE DONE
+		return p.getLocation().inBounds(19, 516, 21, 526) || p.getLocation().inBounds(13, 516, 17, 524);
 	}
 
 	private boolean getDigsite(Player p) {
@@ -168,17 +142,17 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 	}
 
 	private void doSpade(Player p, Item item, GameObject obj) {
-		Npc workmanCheck = getNearestNpc(p, WORKMAN, 15);
+		Npc workmanCheck = getNearestNpc(p, NpcId.WORKMAN.id(), 15);
 		if (workmanCheck != null) {
-			Npc workman = spawnNpc(WORKMAN, p.getX(), p.getY(), 30000);
-			if (item.getID() == SPADE && item.getDef().getCommand().equalsIgnoreCase("Dig") && obj == null) {
+			Npc workman = spawnNpc(NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
+			if (item.getID() == ItemId.SPADE.id() && item.getDef().getCommand().equalsIgnoreCase("Dig") && obj == null) {
 				if (workman != null) {
 					npcTalk(p, workman, "Oi! what do you think you are doing ?");
 					npcWalkFromPlayer(p, workman);
 					npcTalk(p, workman, "Don't you realize there are fragile specimens around here ?");
 					workman.remove();
 				}
-			} else if (item.getID() == SPADE && inArray(obj.getID(), SOIL) && obj != null) {
+			} else if (item.getID() == ItemId.SPADE.id() && inArray(obj.getID(), SOIL) && obj != null) {
 				if (workman != null) {
 					npcTalk(p, workman, "Oi! dont use that spade!");
 					npcWalkFromPlayer(p, workman);
@@ -190,9 +164,9 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 	}
 
 	private void rockPickOnSite(Player p, Item item, GameObject obj) {
-		if (item.getID() == ROCK_PICK && inArray(obj.getID(), SOIL)) {
+		if (item.getID() == ItemId.ROCK_PICK.id() && inArray(obj.getID(), SOIL)) {
 			if (!getLevel2Digsite(p)) {
-				Npc workman = spawnNpc(WORKMAN, p.getX(), p.getY(), 30000);
+				Npc workman = spawnNpc(NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
 				if (workman != null) {
 					npcTalk(p, workman, "No no, rockpicks should only be used");
 					npcWalkFromPlayer(p, workman);
@@ -202,7 +176,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 				return;
 			}
 			if (p.getQuestStage(Constants.Quests.DIGSITE) < 4 && getLevel2Digsite(p)) {
-				Npc workman = spawnNpc(WORKMAN, p.getX(), p.getY(), 30000);
+				Npc workman = spawnNpc(NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
 				if (workman != null) {
 					npcTalk(p, workman, "Sorry, you haven't passed level 2 earth sciences exam");
 					npcWalkFromPlayer(p, workman);
@@ -217,7 +191,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					p.message("You are too tired to do any more digging");
 					return;
 				}
-				showBubble(p, new Item(ROCK_PICK));
+				showBubble(p, new Item(ItemId.ROCK_PICK.id()));
 				p.incExp(Skills.MINING, 70, true);
 				message(p, "You dig through the earth");
 				sleep(1500);
@@ -232,9 +206,9 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 	}
 
 	private void trowelOnSite(Player p, Item item, GameObject obj) {
-		if (item.getID() == TROWEL && inArray(obj.getID(), SOIL)) {
+		if (item.getID() == ItemId.TROWEL.id() && inArray(obj.getID(), SOIL)) {
 			if (getTrainingAreas(p)) {
-				showBubble(p, new Item(TROWEL));
+				showBubble(p, new Item(ItemId.TROWEL.id()));
 				p.incExp(Skills.MINING, 50, true);
 				message(p, "You dig with the trowel...");
 				sleep(1500);
@@ -246,14 +220,14 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 				}
 			}
 			if (getLevel1Digsite(p)) {
-				if (!p.getInventory().wielding(16)
-					&& !p.getInventory().wielding(556)
-					&& !p.getInventory().wielding(1006)
-					&& !p.getInventory().wielding(698)
-					&& !p.getInventory().wielding(701)
-					&& !p.getInventory().wielding(700)
-					&& !p.getInventory().wielding(699)) {
-					Npc workman = spawnNpc(WORKMAN, p.getX(), p.getY(), 30000);
+				if (!p.getInventory().wielding(ItemId.LEATHER_GLOVES.id())
+					&& !p.getInventory().wielding(ItemId.ICE_GLOVES.id())
+					&& !p.getInventory().wielding(ItemId.KLANKS_GAUNTLETS.id())
+					&& !p.getInventory().wielding(ItemId.STEEL_GAUNTLETS.id())
+					&& !p.getInventory().wielding(ItemId.GAUNTLETS_OF_CHAOS.id())
+					&& !p.getInventory().wielding(ItemId.GAUNTLETS_OF_COOKING.id())
+					&& !p.getInventory().wielding(ItemId.GAUNTLETS_OF_GOLDSMITHING.id())) {
+					Npc workman = spawnNpc(NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
 					if (workman != null) {
 						npcTalk(p, workman, "Hey, where are your gloves ?");
 						npcWalkFromPlayer(p, workman);
@@ -263,8 +237,8 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					}
 					return;
 				}
-				if (!p.getInventory().wielding(17)) {
-					Npc workman = spawnNpc(WORKMAN, p.getX(), p.getY(), 30000);
+				if (!p.getInventory().wielding(ItemId.BOOTS.id())) {
+					Npc workman = spawnNpc(NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
 					if (workman != null) {
 						npcTalk(p, workman, "Oi, no boots!");
 						npcWalkFromPlayer(p, workman);
@@ -277,7 +251,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					p.message("You are too tired to do any more digging");
 					return;
 				}
-				showBubble(p, new Item(TROWEL));
+				showBubble(p, new Item(ItemId.TROWEL.id()));
 				p.incExp(Skills.MINING, 60, true);
 				message(p, "You dig through the earth");
 				sleep(1500);
@@ -289,7 +263,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 				}
 			}
 			if (getLevel2Digsite(p)) {
-				Npc workman = spawnNpc(WORKMAN, p.getX(), p.getY(), 30000);
+				Npc workman = spawnNpc(NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
 				if (workman != null) {
 					npcTalk(p, workman, "Sorry, you must use a rockpick");
 					npcWalkFromPlayer(p, workman);
@@ -300,8 +274,8 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 				}
 			}
 			if (getLevel3Digsite(p)) {
-				if (!hasItem(p, 1116)) { // HAS SPECIMEN JAR
-					Npc workman = spawnNpc(WORKMAN, p.getX(), p.getY(), 30000);
+				if (!hasItem(p, ItemId.SPECIMEN_JAR.id())) { // HAS SPECIMEN JAR
+					Npc workman = spawnNpc(NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
 					if (workman != null) {
 						npcTalk(p, workman, "Ahem! I don't see your sample jar");
 						npcWalkFromPlayer(p, workman);
@@ -313,8 +287,8 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					}
 					return;
 				}
-				if (!hasItem(p, 1115)) { // HAS SPECIMEN BRUSH
-					Npc workman = spawnNpc(WORKMAN, p.getX(), p.getY(), 30000);
+				if (!hasItem(p, ItemId.SPECIMEN_BRUSH.id())) { // HAS SPECIMEN BRUSH
+					Npc workman = spawnNpc(NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
 					if (workman != null) {
 						npcTalk(p, workman, "Wait just a minute!");
 						npcWalkFromPlayer(p, workman);
@@ -328,7 +302,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					return;
 				}
 				if (p.getQuestStage(Constants.Quests.DIGSITE) < 5) {
-					Npc workman = spawnNpc(WORKMAN, p.getX(), p.getY(), 30000);
+					Npc workman = spawnNpc(NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
 					if (workman != null) {
 						npcTalk(p, workman, "Sorry, you haven't passed level 3 earth sciences exam");
 						npcWalkFromPlayer(p, workman);
@@ -337,7 +311,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					}
 					return;
 				}
-				showBubble(p, new Item(TROWEL));
+				showBubble(p, new Item(ItemId.TROWEL.id()));
 				p.incExp(Skills.MINING, 80, true);
 				message(p, "You dig through the earth");
 				sleep(1500);
@@ -345,8 +319,8 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 				int selectedItem = DIGSITE_LEVEL3_ITEMS[randomize];
 				doDigsiteItemMessages(p, selectedItem);
 				if (selectedItem != -1) {
-					if (selectedItem == 10) {
-						addItem(p, 10, (DataConversions.random(0, 1) == 1 ? 5 : 10));
+					if (selectedItem == ItemId.COINS.id()) {
+						addItem(p, ItemId.COINS.id(), (DataConversions.random(0, 1) == 1 ? 5 : 10));
 					} else {
 						addItem(p, selectedItem, 1);
 					}
@@ -357,19 +331,13 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (inArray(obj.getID(), SOIL)) {
-			return true;
-		}
-		if (obj.getID() == ROCK && item.getID() == ROCK_PICK) {
-			return true;
-		}
-		return false;
+		return inArray(obj.getID(), SOIL) || (obj.getID() == ROCK && item.getID() == ItemId.ROCK_PICK.id());
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (inArray(obj.getID(), SOIL)) {
-			switch (item.getID()) {
+			switch (ItemId.getById(item.getID())) {
 				case TROWEL:
 					trowelOnSite(p, item, obj);
 					break;
@@ -387,10 +355,10 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					break;
 			}
 		}
-		if (obj.getID() == ROCK && item.getID() == ROCK_PICK) {
+		if (obj.getID() == ROCK && item.getID() == ItemId.ROCK_PICK.id()) {
 			p.message("You chip at the rock with the rockpick");
 			p.message("You take the pieces of cracked rock");
-			addItem(p, 1150, 1);
+			addItem(p, ItemId.CRACKED_ROCK_SAMPLE.id(), 1);
 		}
 	}
 
@@ -410,12 +378,12 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 
 	@Override
 	public boolean blockInvAction(Item item, Player p) {
-		return item.getID() == SPADE && getDigsite(p);
+		return item.getID() == ItemId.SPADE.id() && getDigsite(p);
 	}
 
 	@Override
 	public void onInvAction(Item item, Player p) {
-		if (item.getID() == SPADE && getDigsite(p)) {
+		if (item.getID() == ItemId.SPADE.id() && getDigsite(p)) {
 			doSpade(p, item, null);
 		}
 	}

@@ -1,12 +1,15 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.mechanism;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
@@ -27,35 +30,23 @@ import static com.openrsc.server.plugins.Functions.spawnNpc;
 
 public class LegendsQuestInvAction implements InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener {
 
-	public static final int SCRIBBLED_NOTES = 1241;
-	public static final int SCRAWLED_NOTES = 1242;
-	public static final int SCRATCHED_NOTES = 1243;
-	private static final int ROUGH_SKETCH_OF_A_BOWL = 1246;
-	public static final int SHAMANS_TOME = 1244;
-	public static final int BOOKING_OF_BINDING = 1238;
-	public static final int YOMMI_TREE_SEED = 1182;
-	public static final int GERMINATED_YOMMI_TREE_SEED = 1254;
-	public static final int A_RED_CRYSTAL = 1222;
-	private static final int HOLY_FORCE_SPELL = 1257;
-	private static final int GILDED_TOTEM_POLE = 1265;
-
 	@Override
 	public boolean blockInvAction(Item item, Player p) {
 		return inArray(item.getID(),
-			SCRIBBLED_NOTES, SCRAWLED_NOTES, SCRATCHED_NOTES,
-			ROUGH_SKETCH_OF_A_BOWL, SHAMANS_TOME, BOOKING_OF_BINDING,
-			YOMMI_TREE_SEED, GERMINATED_YOMMI_TREE_SEED,
-			A_RED_CRYSTAL, HOLY_FORCE_SPELL, GILDED_TOTEM_POLE);
+			ItemId.SCRIBBLED_NOTES.id(), ItemId.SCRAWLED_NOTES.id(), ItemId.SCATCHED_NOTES.id(),
+			ItemId.ROUGH_SKETCH_OF_A_BOWL.id(), ItemId.SHAMANS_TOME.id(), ItemId.BOOKING_OF_BINDING.id(),
+			ItemId.YOMMI_TREE_SEED.id(), ItemId.GERMINATED_YOMMI_TREE_SEED.id(),
+			ItemId.A_RED_CRYSTAL.id(), ItemId.HOLY_FORCE_SPELL.id(), ItemId.GILDED_TOTEM_POLE.id());
 	}
 
 	@Override
 	public void onInvAction(Item item, Player p) {
-		if (item.getID() == GILDED_TOTEM_POLE) {
+		if (item.getID() == ItemId.GILDED_TOTEM_POLE.id()) {
 			message(p, 1300, "This totem pole is utterly awe inspiring.",
 				"Perhaps you should show it to Radimus Erkle...");
 		}
-		if (item.getID() == HOLY_FORCE_SPELL) {
-			Npc n = getNearestNpc(p, 740, 5);
+		else if (item.getID() == ItemId.HOLY_FORCE_SPELL.id()) {
+			Npc n = getNearestNpc(p, NpcId.ECHNED_ZEKIN.id(), 5);
 			if (n != null && p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 7) {
 				message(p, "You thrust the Holy Force spell in front of the spirit.");
 				message(p, n, 1300, "A bright, holy light streams out from the paper spell.");
@@ -70,7 +61,7 @@ public class LegendsQuestInvAction implements InvActionListener, InvActionExecut
 				int formerNpcY = n.getY();
 				if (n != null)
 					n.remove();
-				Npc second_nezikchened = spawnNpc(769, formerNpcX, formerNpcY, 60000 * 15, p);
+				Npc second_nezikchened = spawnNpc(NpcId.NEZIKCHENED.id(), formerNpcX, formerNpcY, 60000 * 15, p);
 				if (second_nezikchened != null) {
 					message(p, second_nezikchened, 600, "The spell seems to weaken the Demon.");
 					second_nezikchened.getSkills().setLevel(Skills.DEFENSE, n.getSkills().getLevel(Skills.DEFENSE) - 5);
@@ -105,18 +96,18 @@ public class LegendsQuestInvAction implements InvActionListener, InvActionExecut
 				message(p, 600, "There is no suitable candidate to cast this spell on.");
 			}
 		}
-		if (item.getID() == A_RED_CRYSTAL) {
+		else if (item.getID() == ItemId.A_RED_CRYSTAL.id()) {
 			message(p, 1300, "As the crystal touches your hands a voice inside of your head says..",
 				"@gre@Voice in head: Bring life to the dragons eye.");
 		}
-		if (item.getID() == GERMINATED_YOMMI_TREE_SEED) {
+		else if (item.getID() == ItemId.GERMINATED_YOMMI_TREE_SEED.id()) {
 			message(p, 1300, "These seeds have been germinated in pure water...");
 			p.message("They can be planted in fertile soil now...");
 		}
-		if (item.getID() == YOMMI_TREE_SEED) {
+		else if (item.getID() == ItemId.YOMMI_TREE_SEED.id()) {
 			p.message("These seeds need to be germinated in pure water...");
 		}
-		if (item.getID() == BOOKING_OF_BINDING) {
+		else if (item.getID() == ItemId.BOOKING_OF_BINDING.id()) {
 			p.message("You read the Book of Binding...");
 			int page = showMenu(p,
 				"Arcana..",
@@ -139,7 +130,7 @@ public class LegendsQuestInvAction implements InvActionListener, InvActionExecut
 				int opt = showMenu(p,
 					"Yes, I'll try.",
 					"No, I don't think I'll bother.");
-				//authentic, didn't matter option choosed
+				//authentic, didn't matter option chosen
 				if (opt == 0 || opt == 1) 
 				{
 					if (getCurrentLevel(p, Skills.PRAYER) < 10) {
@@ -150,31 +141,31 @@ public class LegendsQuestInvAction implements InvActionListener, InvActionExecut
 						p.message("You need at least ten magic points to cast this spell.");
 						return;
 					}
-					if (hasItem(p, 465)) {
+					if (hasItem(p, ItemId.EMPTY_VIAL.id())) {
 						message(p, "The spell is cast perfectly..",
 								"You enchant one of the empty vials.");
-						p.getInventory().replace(465, 1240);
+						p.getInventory().replace(ItemId.EMPTY_VIAL.id(), ItemId.ENCHANTED_VIAL.id());
 					} else {
 						p.message("This spell looks as if it needs some other components.");
 					}
 				}
 			}
 		}
-		if (inArray(item.getID(), SCRIBBLED_NOTES, SCRAWLED_NOTES, SCRATCHED_NOTES)) {
+		else if (inArray(item.getID(), ItemId.SCRIBBLED_NOTES.id(), ItemId.SCRAWLED_NOTES.id(), ItemId.SCATCHED_NOTES.id())) {
 			p.message("You try your best to decode the writing, this is what you make out.");
-			if (item.getID() == SCRIBBLED_NOTES) {
+			if (item.getID() == ItemId.SCRIBBLED_NOTES.id()) {
 				ActionSender.sendBox(p, "Daily notes of Ungadulu...% % Day 1...% % I have prepared the incantations and will invoke the spirits of my ancestors and pay them hommage. Though I feel a strange presence in these caves, it is with the heart of the lion that I fight my fears and mark the magical pentagram. % % Day 2... % % What have I done? My spirit is overthrown by a feeling of fear and evil, I am not myself these days and feel helpless and weak. % % From my teachings...                                                               ", true);
-			} else if (item.getID() == SCRAWLED_NOTES) {
+			} else if (item.getID() == ItemId.SCRAWLED_NOTES.id()) {
 				ActionSender.sendBox(p, "I fear that the spirit of an ancient one resides within me and uses me...I am too weak to cast the curse myself and fight the beast within.% % Day 3....% %...my last hope is that someone will read this and aid me...I am undone and I fear....", true);
-			} else if (item.getID() == SCRATCHED_NOTES) {
+			} else if (item.getID() == ItemId.SCATCHED_NOTES.id()) {
 				ActionSender.sendBox(p, "Day 4 ...% % These days come so fleetingly, I have no idea how long I have been here now...% % Day 5... % %A wizened charm will release me, but never magic that would would harm...", true);
 			}
 		}
-		if (item.getID() == ROUGH_SKETCH_OF_A_BOWL) {
+		else if (item.getID() == ItemId.ROUGH_SKETCH_OF_A_BOWL.id()) {
 			message(p, 1300, "You look at the rough sketch that Gujuo gave you.");
 			p.message("It looks like a picture of a bowl...");
 		}
-		if (item.getID() == SHAMANS_TOME) {
+		else if (item.getID() == ItemId.SHAMANS_TOME.id()) {
 			message(p, 1300, "You read the ancient shamans tome.");
 			message(p, 3800, "It is written in a strange sort of language but you manage a rough translation.");
 			ActionSender.sendBox(p, "% % ...scattered are my hopes that I will ever be released from this flaming Octagram, it is the only thing which will contain this beast within.% %Although it's grip over me is weakened with magic, it is hopeless to know if a saviour would guess this. % % I am doomed...", true);
@@ -183,18 +174,18 @@ public class LegendsQuestInvAction implements InvActionListener, InvActionExecut
 
 	@Override
 	public boolean blockInvUseOnItem(Player p, Item item1, Item item2) {
-		return item1.getID() == YOMMI_TREE_SEED && item2.getID() == 1267 || item1.getID() == 1267 && item2.getID() == YOMMI_TREE_SEED;
+		return Functions.compareItemsIds(item1, item2, ItemId.YOMMI_TREE_SEED.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id());
 	}
 
 	@Override
 	public void onInvUseOnItem(Player p, Item item1, Item item2) {
-		if (item1.getID() == YOMMI_TREE_SEED && item2.getID() == 1267 || item1.getID() == 1267 && item2.getID() == YOMMI_TREE_SEED) {
-			for (int i = 0; i < p.getInventory().countId(YOMMI_TREE_SEED); i++) {
-				removeItem(p, YOMMI_TREE_SEED, 1);
-				addItem(p, GERMINATED_YOMMI_TREE_SEED, 1);
+		if (Functions.compareItemsIds(item1, item2, ItemId.YOMMI_TREE_SEED.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id())) {
+			for (int i = 0; i < p.getInventory().countId(ItemId.YOMMI_TREE_SEED.id()); i++) {
+				removeItem(p, ItemId.YOMMI_TREE_SEED.id(), 1);
+				addItem(p, ItemId.GERMINATED_YOMMI_TREE_SEED.id(), 1);
 			}
 			p.message("You place the seeds in the pure sacred water...");
-			p.getInventory().replace(1267, 1266);
+			p.getInventory().replace(ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.BLESSED_GOLDEN_BOWL.id());
 			message(p, 1300, "The pure water in the golden bowl has run out...");
 			p.message("You start to see little shoots growing on the seeds.");
 			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 4) {

@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.npcs.portsarim;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -15,17 +17,17 @@ import static com.openrsc.server.plugins.Functions.*;
 public final class GerrantsFishingGear implements
 	ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
 
-	private final Shop shop = new Shop(false, 12000, 100, 70, 3, new Item(376,
-		5), new Item(377, 5), new Item(378, 5), new Item(379, 2),
-		new Item(375, 2), new Item(380, 200), new Item(381, 200),
-		new Item(349, 30), new Item(354, 0), new Item(361, 0),
-		new Item(351, 0), new Item(358, 0), new Item(363, 0),
-		new Item(356, 0), new Item(366, 0), new Item(372, 0),
-		new Item(369, 0));
+	private final Shop shop = new Shop(false, 12000, 100, 70, 3, new Item(ItemId.NET.id(),
+		5), new Item(ItemId.FISHING_ROD.id(), 5), new Item(ItemId.FLY_FISHING_ROD.id(), 5), new Item(ItemId.HARPOON.id(), 2),
+		new Item(ItemId.LOBSTER_POT.id(), 2), new Item(ItemId.FISHING_BAIT.id(), 200), new Item(ItemId.FEATHER.id(), 200),
+		new Item(ItemId.RAW_SHRIMP.id(), 30), new Item(ItemId.RAW_SARDINE.id(), 0), new Item(ItemId.RAW_HERRING.id(), 0),
+		new Item(ItemId.RAW_ANCHOVIES.id(), 0), new Item(ItemId.RAW_TROUT.id(), 0), new Item(ItemId.RAW_PIKE.id(), 0),
+		new Item(ItemId.RAW_SALMON.id(), 0), new Item(ItemId.RAW_TUNA.id(), 0), new Item(ItemId.RAW_LOBSTER.id(), 0),
+		new Item(ItemId.RAW_SWORDFISH.id(), 0));
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
-		return n.getID() == 167;
+		return n.getID() == NpcId.GERRANT.id();
 	}
 
 	@Override
@@ -67,13 +69,13 @@ public final class GerrantsFishingGear implements
 				"The method for this would be take an ordinary fishing rod",
 				"And cover it with fire proof blamish oil");
 			// check no Blaimish snail slime, oil and rod to re-issue
-			if (!hasItem(p, 587) && !hasItem(p, 588) && !hasItem(p, 589)) {
+			if (!hasItem(p, ItemId.BLAMISH_SNAIL_SLIME.id()) && !hasItem(p, ItemId.BLAMISH_OIL.id()) && !hasItem(p, ItemId.OILY_FISHING_ROD.id())) {
 				npcTalk(p, n, "Now I may have a jar of Blamish snail slime",
 					"I wonder where I put it");
 				p.message("Gerrant searches about a bit");
 				npcTalk(p, n, "Aha here it is");
 				p.message("Gerrant passes you a small jar");
-				addItem(p, 587, 1);
+				addItem(p, ItemId.BLAMISH_SNAIL_SLIME.id(), 1);
 				npcTalk(p, n,
 					"You'll need to mix this with some of the Harralander herb and water");
 			}

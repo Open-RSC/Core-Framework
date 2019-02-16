@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.npcs;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -27,25 +29,9 @@ public class UndergroundPassKardiaTheWitch implements ObjectActionListener, Obje
 	private static int WITCH_DOOR = 173;
 	private static int WITCH_CHEST = 885;
 
-	/**
-	 * ITEM IDs
-	 **/
-	private static int CAT = 1003;
-
-	/**
-	 * NPC IDs
-	 **/
-	private static int KARDIA_THE_WITCH = 643;
-
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click, Player player) {
-		if (obj.getID() == WITCH_RAILING) {
-			return true;
-		}
-		if (obj.getID() == WITCH_DOOR) {
-			return true;
-		}
-		return false;
+		return obj.getID() == WITCH_RAILING || obj.getID() == WITCH_DOOR;
 	}
 
 	@Override
@@ -54,7 +40,7 @@ public class UndergroundPassKardiaTheWitch implements ObjectActionListener, Obje
 			message(p, "inside you see Kardia the witch");
 			p.message("her appearence make's you feel quite ill");
 		}
-		if (obj.getID() == WITCH_DOOR) {
+		else if (obj.getID() == WITCH_DOOR) {
 			if (click == 0) {
 				if (p.getCache().hasKey("kardia_cat")) {
 					p.message("you open the door");
@@ -62,7 +48,7 @@ public class UndergroundPassKardiaTheWitch implements ObjectActionListener, Obje
 					message(p, "and walk through");
 					p.message("the witch is busy talking to the cat");
 				} else {
-					Npc witch = getNearestNpc(p, KARDIA_THE_WITCH, 5);
+					Npc witch = getNearestNpc(p, NpcId.KARDIA_THE_WITCH.id(), 5);
 					p.message("you reach to open the door");
 					npcTalk(p, witch, "get away...far away from here");
 					sleep(1000);
@@ -72,9 +58,9 @@ public class UndergroundPassKardiaTheWitch implements ObjectActionListener, Obje
 					npcTalk(p, witch, "haa haa.. die mortal");
 				}
 			} else if (click == 1) {
-				if (hasItem(p, CAT) && !p.getCache().hasKey("kardia_cat")) {
+				if (hasItem(p, ItemId.KARDIA_CAT.id()) && !p.getCache().hasKey("kardia_cat")) {
 					message(p, "you place the cat by the door");
-					removeItem(p, CAT, 1);
+					removeItem(p, ItemId.KARDIA_CAT.id(), 1);
 					p.teleport(776, 3535);
 					message(p, "you knock on the door and hide around the corner");
 					p.message("the witch takes the cat inside");
@@ -94,15 +80,12 @@ public class UndergroundPassKardiaTheWitch implements ObjectActionListener, Obje
 
 	@Override
 	public boolean blockPickup(Player p, GroundItem i) {
-		if (i.getID() == CAT && hasItem(p, CAT)) {
-			return true;
-		}
-		return false;
+		return i.getID() == ItemId.KARDIA_CAT.id() && hasItem(p, ItemId.KARDIA_CAT.id());
 	}
 
 	@Override
 	public void onPickup(Player p, GroundItem i) {
-		if (i.getID() == CAT && hasItem(p, CAT)) {
+		if (i.getID() == ItemId.KARDIA_CAT.id() && hasItem(p, ItemId.KARDIA_CAT.id())) {
 			message(p, "it's not very nice to squeeze one cat into a satchel");
 			p.message("...two's just plain cruel!");
 		}
@@ -110,18 +93,15 @@ public class UndergroundPassKardiaTheWitch implements ObjectActionListener, Obje
 
 	@Override
 	public boolean blockInvUseOnWallObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == WITCH_DOOR && item.getID() == CAT) {
-			return true;
-		}
-		return false;
+		return obj.getID() == WITCH_DOOR && item.getID() == ItemId.KARDIA_CAT.id();
 	}
 
 	@Override
 	public void onInvUseOnWallObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == WITCH_DOOR && item.getID() == CAT) {
+		if (obj.getID() == WITCH_DOOR && item.getID() == ItemId.KARDIA_CAT.id()) {
 			if (!p.getCache().hasKey("kardia_cat")) {
 				message(p, "you place the cat by the door");
-				removeItem(p, CAT, 1);
+				removeItem(p, ItemId.KARDIA_CAT.id(), 1);
 				p.teleport(776, 3535);
 				message(p, "you knock on the door and hide around the corner");
 				p.message("the witch takes the cat inside");
@@ -137,10 +117,7 @@ public class UndergroundPassKardiaTheWitch implements ObjectActionListener, Obje
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (obj.getID() == WITCH_CHEST) {
-			return true;
-		}
-		return false;
+		return obj.getID() == WITCH_CHEST;
 	}
 
 	@Override
@@ -150,10 +127,10 @@ public class UndergroundPassKardiaTheWitch implements ObjectActionListener, Obje
 			if (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == 6 && !p.getCache().hasKey("doll_of_iban")) {
 				p.message("..inside you find a book a wooden doll..");
 				p.message("...and two potions");
-				addItem(p, 1004, 1);
-				addItem(p, 1005, 1);
-				addItem(p, 486, 1);
-				addItem(p, 466, 1);
+				addItem(p, ItemId.A_DOLL_OF_IBAN.id(), 1);
+				addItem(p, ItemId.OLD_JOURNAL.id(), 1);
+				addItem(p, ItemId.FULL_SUPER_ATTACK_POTION.id(), 1);
+				addItem(p, ItemId.FULL_STAT_RESTORATION_POTION.id(), 1);
 				if (!p.getCache().hasKey("doll_of_iban")) {
 					p.getCache().store("doll_of_iban", true);
 				}

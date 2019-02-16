@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.npcs.falador;
 
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -12,7 +14,7 @@ public class WysonTheGardener implements TalkToNpcListener, TalkToNpcExecutiveLi
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 116;
+		return n.getID() == NpcId.WYSON_THE_GARDENER.id();
 	}
 
 	@Override
@@ -58,18 +60,18 @@ public class WysonTheGardener implements TalkToNpcListener, TalkToNpcExecutiveLi
 					"I used to have plenty but someone kept stealing them off me");
 			} else if (sub_option == 2) {
 				npcTalk(p, n, "Mmmm Ok that sounds fair.");
-				if (removeItem(p, 10, 15)) {
-					addItem(p, 281, 1);
+				if (removeItem(p, ItemId.COINS.id(), 15)) {
+					addItem(p, ItemId.WOAD_LEAF.id(), 1);
 					p.message("You give wyson 15 coins");
 					p.message("Wyson the gardener gives you some woad leaves");
 				} else
 					playerTalk(p, n, "I dont have enough coins to buy the leaves. I'll come back later");
 			} else if (sub_option == 3) {
 				npcTalk(p, n, "Ok that's more than fair.");
-				if (removeItem(p, 10, 20)) {
+				if (removeItem(p, ItemId.COINS.id(), 20)) {
 					p.message("You give wyson 20 coins");
 					p.message("Wyson the gardener gives you some woad leaves");
-					addItem(p, 281, 2);
+					addItem(p, ItemId.WOAD_LEAF.id(), 2);
 					npcTalk(p, n, "Here have some more you're a generous person");
 					p.message("Wyson the gardener gives you some more leaves");
 				} else

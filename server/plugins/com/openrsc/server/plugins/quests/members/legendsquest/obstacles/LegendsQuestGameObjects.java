@@ -4,6 +4,8 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
@@ -17,19 +19,14 @@ import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.quests.members.legendsquest.mechanism.LegendsQuestInvAction;
-import com.openrsc.server.plugins.quests.members.legendsquest.npcs.LegendsQuestEchnedZekin;
-import com.openrsc.server.plugins.quests.members.legendsquest.npcs.LegendsQuestGujuo;
-import com.openrsc.server.plugins.quests.members.legendsquest.npcs.LegendsQuestIrvigSenay;
 import com.openrsc.server.plugins.quests.members.legendsquest.npcs.LegendsQuestNezikchened;
-import com.openrsc.server.plugins.quests.members.legendsquest.npcs.LegendsQuestRanalphDevere;
-import com.openrsc.server.plugins.quests.members.legendsquest.npcs.LegendsQuestSanTojalon;
 import com.openrsc.server.plugins.skills.Mining;
 import com.openrsc.server.plugins.skills.Thieving;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.atQuestStages;
 import static com.openrsc.server.plugins.Functions.createGroundItemDelayedRemove;
 import static com.openrsc.server.plugins.Functions.delayedSpawnObject;
 import static com.openrsc.server.plugins.Functions.displayTeleportBubble;
@@ -76,7 +73,6 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 	private static final int ECHNED_ZEKIN_ROCK = 1116;
 	private static final int FERTILE_EARTH = 1113;
 
-
 	private static final int[] SMASH_BOULDERS = {1117, 1184, 1185};
 	private static final int BABY_YOMMI_TREE = 1112;
 	private static final int YOMMI_TREE = 1107;
@@ -91,19 +87,11 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (inArray(obj.getID(), GRAND_VIZIERS_DESK, LEGENDS_CUPBOARD, TOTEM_POLE, ROCK, TALL_REEDS,
-			SHALLOW_WATER, CAVE_ENTRANCE_LEAVE_DUNGEON, CRATE, TABLE, BOOKCASE, CAVE_ENTRANCE_FROM_BOULDERS, CRUDE_DESK,
-			CAVE_ANCIENT_WOODEN_DOORS, HEAVY_METAL_GATE, HALF_BURIED_REMAINS, CARVED_ROCK, WOODEN_BEAM, WOODEN_BEAM + 1, ROPE_UP,
-			RED_EYE_ROCK, ANCIENT_LAVA_FURNACE, CAVERNOUS_OPENING, ECHNED_ZEKIN_ROCK, CRAFTED_TOTEM_POLE, TOTEM_POLE + 1)) {
-			return true;
-		}
-		if (inArray(obj.getID(), SMASH_BOULDERS)) {
-			return true;
-		}
-		if (obj.getID() == CRUDE_BED && command.equalsIgnoreCase("search")) {
-			return true;
-		}
-		return false;
+		return inArray(obj.getID(), GRAND_VIZIERS_DESK, LEGENDS_CUPBOARD, TOTEM_POLE, ROCK, TALL_REEDS,
+				SHALLOW_WATER, CAVE_ENTRANCE_LEAVE_DUNGEON, CRATE, TABLE, BOOKCASE, CAVE_ENTRANCE_FROM_BOULDERS, CRUDE_DESK,
+				CAVE_ANCIENT_WOODEN_DOORS, HEAVY_METAL_GATE, HALF_BURIED_REMAINS, CARVED_ROCK, WOODEN_BEAM, WOODEN_BEAM + 1, ROPE_UP,
+				RED_EYE_ROCK, ANCIENT_LAVA_FURNACE, CAVERNOUS_OPENING, ECHNED_ZEKIN_ROCK, CRAFTED_TOTEM_POLE, TOTEM_POLE + 1)
+				|| inArray(obj.getID(), SMASH_BOULDERS) || (obj.getID() == CRUDE_BED && command.equalsIgnoreCase("search"));
 	}
 
 	@Override
@@ -116,11 +104,11 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				return;
 			}
 			p.setBusy(true);
-			Npc echned = getNearestNpc(p, LegendsQuestEchnedZekin.ECHNED_ZEKIN, 2);
+			Npc echned = getNearestNpc(p, NpcId.ECHNED_ZEKIN.id(), 2);
 			if (echned == null) {
 				message(p, 1300, "A thick, green mist seems to emanate from the water...",
 					"It slowly congeals into the shape of a body...");
-				echned = spawnNpcWithRadius(p, LegendsQuestEchnedZekin.ECHNED_ZEKIN, p.getX(), p.getY(), 0, 60000 * 3);
+				echned = spawnNpcWithRadius(p, NpcId.ECHNED_ZEKIN.id(), p.getX(), p.getY(), 0, 60000 * 3);
 				if (echned != null) {
 					p.setBusyTimer(3000);
 					sleep(1300);
@@ -133,7 +121,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				echned.initializeTalkScript(p);
 			}
 		}
-		if (obj.getID() == CAVERNOUS_OPENING) {
+		else if (obj.getID() == CAVERNOUS_OPENING) {
 			if (command.equalsIgnoreCase("enter")) {
 				if (p.getY() >= 3733) {
 					p.message("You enter the dark cave...");
@@ -160,7 +148,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				}
 			}
 		}
-		if (obj.getID() == ANCIENT_LAVA_FURNACE) {
+		else if (obj.getID() == ANCIENT_LAVA_FURNACE) {
 			if (command.equalsIgnoreCase("look")) {
 				message(p, 600, "This is an ancient looking furnace.");
 			} else if (command.equalsIgnoreCase("search")) {
@@ -170,14 +158,14 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				message(p, 600, "to fuse things together at very high temperatures...");
 			}
 		}
-		if (obj.getID() == RED_EYE_ROCK) {
+		else if (obj.getID() == RED_EYE_ROCK) {
 			message(p, 600, "These rocks look somehow manufactured..");
 		}
-		if (obj.getID() == ROPE_UP) {
+		else if (obj.getID() == ROPE_UP) {
 			p.message("You climb the rope back out again.");
 			p.teleport(471, 3707);
 		}
-		if (obj.getID() == WOODEN_BEAM + 1) {
+		else if (obj.getID() == WOODEN_BEAM + 1) {
 			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 9 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
 				message(p, 1300, "The rope snaps as you're about to climb down it.",
 					"Perhaps you need a new rope.");
@@ -212,7 +200,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				p.message("You decide not to go down the rope.");
 			}
 		}
-		if (obj.getID() == WOODEN_BEAM) {
+		else if (obj.getID() == WOODEN_BEAM) {
 			p.message("You search the wooden beam...");
 			if (p.getCache().hasKey("legends_wooden_beam")) {
 				p.message("You search the wooden beam and find the rope you attached.");
@@ -222,7 +210,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				p.message("Perhaps if you had a rope, it might be more functional.");
 			}
 		}
-		if (obj.getID() == CARVED_ROCK) {
+		else if (obj.getID() == CARVED_ROCK) {
 			message(p, 1300, "You see a delicate inscription on the rock, it says,");
 			message(p, 1900, "@gre@'Once there were crystals to make the pool shine,'");
 			message(p, 0, "@gre@'Ordered in stature to retrieve what's mine.'");
@@ -269,10 +257,10 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 						"And then fades again...");
 			}
 		}
-		if (obj.getID() == HALF_BURIED_REMAINS) {
+		else if (obj.getID() == HALF_BURIED_REMAINS) {
 			message(p, "It looks as if some poor unfortunate soul died here.");
 		}
-		if (obj.getID() == HEAVY_METAL_GATE) {
+		else if (obj.getID() == HEAVY_METAL_GATE) {
 			if (command.equalsIgnoreCase("look")) {
 				message(p, 1300, "This huge metal gate bars the way further...",
 					"There is an intense and unpleasant feeling from this place.");
@@ -316,7 +304,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				}
 			}
 		}
-		if (inArray(obj.getID(), SMASH_BOULDERS)) {
+		else if (inArray(obj.getID(), SMASH_BOULDERS)) {
 			if (hasItem(p, Mining.getAxe(p))) {
 				if (getCurrentLevel(p, Skills.MINING) < 52) {
 					p.message("You need a mining ability of at least 52 to affect these boulders.");
@@ -350,7 +338,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				message(p, "You'll need a pickaxe to smash your way through these boulders.");
 			}
 		}
-		if (obj.getID() == CAVE_ANCIENT_WOODEN_DOORS) {
+		else if (obj.getID() == CAVE_ANCIENT_WOODEN_DOORS) {
 			if (command.equalsIgnoreCase("open")) {
 				if (p.getY() >= 3703) {
 					message(p, 1300, "You push the doors open and walk through.");
@@ -404,17 +392,17 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				}
 			}
 		}
-		if (obj.getID() == CRUDE_DESK) {
-			if (hasItem(p, LegendsQuestInvAction.SHAMANS_TOME)) {
+		else if (obj.getID() == CRUDE_DESK) {
+			if (hasItem(p, ItemId.SHAMANS_TOME.id())) {
 				message(p, 1300, "You search the desk ...");
 				p.message("...but find nothing.");
 			} else {
 				message(p, 2500, "You search the desk ...");
-				addItem(p, LegendsQuestInvAction.SHAMANS_TOME, 1);
+				addItem(p, ItemId.SHAMANS_TOME.id(), 1);
 				p.message("You find a book...it looks like an ancient tome...");
 			}
 		}
-		if (obj.getID() == BOOKCASE) {
+		else if (obj.getID() == BOOKCASE) {
 			message(p, 1300, "You search the bookcase...",
 				"And find a large gaping hole at the back.");
 			p.message("Would you like to climb through the hole?");
@@ -430,38 +418,38 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				p.message("You decide to stay where you are.");
 			}
 		}
-		if (obj.getID() == TABLE) {
+		else if (obj.getID() == TABLE) {
 			p.message("You start searching the table...");
-			if (hasItem(p, LegendsQuestInvAction.SCRAWLED_NOTES)) {
+			if (hasItem(p, ItemId.SCRAWLED_NOTES.id())) {
 				p.message("You cannot find anything else in here.");
 			} else {
 				sleep(1300);
-				addItem(p, LegendsQuestInvAction.SCRAWLED_NOTES, 1);
+				addItem(p, ItemId.SCRAWLED_NOTES.id(), 1);
 				message(p, 1300, "You find a scrap of paper with nonesense written on it.");
 			}
 		}
-		if (obj.getID() == CRUDE_BED && command.equalsIgnoreCase("search")) {
+		else if (obj.getID() == CRUDE_BED && command.equalsIgnoreCase("search")) {
 			p.message("You search the flea infested rags..");
-			if (hasItem(p, LegendsQuestInvAction.SCRATCHED_NOTES)) {
+			if (hasItem(p, ItemId.SCATCHED_NOTES.id())) {
 				p.message("You cannot find anything else in here.");
 			} else {
 				sleep(1300);
-				addItem(p, LegendsQuestInvAction.SCRATCHED_NOTES, 1);
+				addItem(p, ItemId.SCATCHED_NOTES.id(), 1);
 				message(p, 1300, "You find a scrap of paper with spidery writing on it.");
 			}
 		}
-		if (obj.getID() == CRATE) {
+		else if (obj.getID() == CRATE) {
 			p.message("You search the crate.");
-			if (hasItem(p, LegendsQuestInvAction.SCRIBBLED_NOTES)) {
+			if (hasItem(p, ItemId.SCRIBBLED_NOTES.id())) {
 				p.message("You cannot find anything else in here.");
 			} else {
 				sleep(1300);
-				addItem(p, LegendsQuestInvAction.SCRIBBLED_NOTES, 1);
+				addItem(p, ItemId.SCRIBBLED_NOTES.id(), 1);
 				message(p, 1300, "After some time you find a scrumpled up piece of paper.");
 				p.message("It looks like rubbish...");
 			}
 		}
-		if (obj.getID() == CAVE_ENTRANCE_FROM_BOULDERS) {
+		else if (obj.getID() == CAVE_ENTRANCE_FROM_BOULDERS) {
 			message(p, 1300, "You see a small cave entrance.",
 				"Would you like to climb into it?");
 			int menu = showMenu(p,
@@ -474,11 +462,11 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				p.message("You decide against climbing into the small, uncomfortable looking tunnel.");
 			}
 		}
-		if (obj.getID() == CAVE_ENTRANCE_LEAVE_DUNGEON) {
+		else if (obj.getID() == CAVE_ENTRANCE_LEAVE_DUNGEON) {
 			message(p, 1300, "You crawl back out from the cavern...");
 			p.teleport(452, 874);
 		}
-		if (obj.getID() == SHALLOW_WATER) {
+		else if (obj.getID() == SHALLOW_WATER) {
 			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 8 && p.getY() >= 3723 && p.getY() <= 3740) {
 				p.message("A magical looking pool.");
 				return;
@@ -489,12 +477,12 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 			}
 			message(p, 0, "A bubbling brook with effervescent water...");
 		}
-		if (obj.getID() == TALL_REEDS) {
+		else if (obj.getID() == TALL_REEDS) {
 			message(p, 1300, "These tall reeds look nice and long, ");
 			message(p, 1300, "with a long tube for a stem.");
 			message(p, 0, "They reach all the way down to the water.");
 		}
-		if (obj.getID() == ROCK) {
+		else if (obj.getID() == ROCK) {
 			if (p.getCache().hasKey("legends_cavern") || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 2 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
 				if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 1) {
 					message(p, 1200, "You see nothing significant...",
@@ -539,7 +527,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				p.message("You see nothing significant.");
 			}
 		}
-		if (obj.getID() == TOTEM_POLE) { // BLACK
+		else if (obj.getID() == TOTEM_POLE) { // BLACK
 			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 10 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
 				replaceObjectDelayed(obj, 10000, 1170);
 				message(p, 1300, "This totem pole is truly awe inspiring.",
@@ -557,7 +545,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				"You don't like to look at it for too long.");
 
 		}
-		if (obj.getID() == TOTEM_POLE + 1) { // RED
+		else if (obj.getID() == TOTEM_POLE + 1) { // RED
 			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 10 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
 				message(p, 1300, "This totem pole is truly awe inspiring.",
 					"It depicts powerful Karamja jungle animals.",
@@ -575,9 +563,9 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				"You don't like to look at it for too long.");
 
 		}
-		if (obj.getID() == GRAND_VIZIERS_DESK) {
+		else if (obj.getID() == GRAND_VIZIERS_DESK) {
 			p.message("You rap loudly on the desk.");
-			Npc radimus = getNearestNpc(p, 735, 6);
+			Npc radimus = getNearestNpc(p, NpcId.SIR_RADIMUS_ERKLE_HOUSE.id(), 6);
 			if (radimus != null) {
 				radimus.teleport(517, 545);
 				npcWalkFromPlayer(p, radimus);
@@ -586,24 +574,24 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				p.message("Sir Radimus Erkle is currently busy at the moment.");
 			}
 		}
-		if (obj.getID() == LEGENDS_CUPBOARD) {
+		else if (obj.getID() == LEGENDS_CUPBOARD) {
 			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 1 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
-				if (hasItem(p, 1172)) {
+				if (hasItem(p, ItemId.MACHETTE.id())) {
 					p.message("The cupboard is empty.");
 				} else {
 					message(p, 1200, "You open the cupboard and find a machette.",
 						"You take it out and add it to your inventory.");
-					addItem(p, 1172, 1);
+					addItem(p, ItemId.MACHETTE.id(), 1);
 				}
 			} else {
 				p.message("@gre@Sir Radimus Erkle: You're not authorised to open that cupboard.");
 			}
 		}
-		if (obj.getID() == CRAFTED_TOTEM_POLE) {
+		else if (obj.getID() == CRAFTED_TOTEM_POLE) {
 			if (obj.getOwner().equals(p.getUsername())) {
 				message(p, 1300, "This totem pole looks very heavy...");
 				replaceObject(obj, new GameObject(obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
-				addItem(p, 1183, 1);
+				addItem(p, ItemId.TOTEM_POLE.id(), 1);
 				p.message("Carrying this totem pole saps your strength...");
 				p.getSkills().setLevel(Skills.STRENGTH, (int) (p.getSkills().getLevel(Skills.STRENGTH) * 0.9));
 			} else {
@@ -614,60 +602,22 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (item.getID() == 1172 && obj.getID() == TALL_REEDS) {
-			return true;
-		}
-		if (item.getID() == 1249 && obj.getID() == SHALLOW_WATER) {
-			return true;
-		}
-		if (item.getID() == 1266 && obj.getID() == SHALLOW_WATER) {
-			return true;
-		}
-		if (obj.getID() == CARVED_ROCK) {
-			return true;
-		}
-		if (obj.getID() == WOODEN_BEAM && item.getID() == 237) {
-			return true;
-		}
-		if (obj.getID() == ANCIENT_LAVA_FURNACE) {
-			return true;
-		}
-		if (obj.getID() == RED_EYE_ROCK && item.getID() == LegendsQuestInvAction.A_RED_CRYSTAL) {
-			return true;
-		}
-		if (obj.getID() == CAVERNOUS_OPENING && item.getID() == LegendsQuestInvAction.A_RED_CRYSTAL + 9) {
-			return true;
-		}
-		if (obj.getID() == FERTILE_EARTH && item.getID() == LegendsQuestInvAction.YOMMI_TREE_SEED) {
-			return true;
-		}
-		if (obj.getID() == FERTILE_EARTH && item.getID() == LegendsQuestInvAction.GERMINATED_YOMMI_TREE_SEED) {
-			return true;
-		}
-		if ((obj.getID() == DEAD_YOMMI_TREE || obj.getID() == ROTTEN_YOMMI_TREE) && item.getID() == 405) {
-			return true;
-		}
-		if (obj.getID() == YOMMI_TREE && item.getID() == 1267) {
-			return true;
-		}
-		if (obj.getID() == GROWN_YOMMI_TREE && item.getID() == 405) {
-			return true;
-		}
-		if (obj.getID() == CHOPPED_YOMMI_TREE && item.getID() == 405) {
-			return true;
-		}
-		if (obj.getID() == TRIMMED_YOMMI_TREE && item.getID() == 405) {
-			return true;
-		}
-		if (obj.getID() == TOTEM_POLE && item.getID() == 1183) {
-			return true;
-		}
-		return false;
+		return (item.getID() == ItemId.MACHETTE.id() && obj.getID() == TALL_REEDS)
+				|| (item.getID() == ItemId.CUT_REED_PLANT.id() && obj.getID() == SHALLOW_WATER)
+				|| (item.getID() == ItemId.BLESSED_GOLDEN_BOWL.id() && obj.getID() == SHALLOW_WATER)
+				|| obj.getID() == CARVED_ROCK || (obj.getID() == WOODEN_BEAM && item.getID() == ItemId.ROPE.id())
+				|| obj.getID() == ANCIENT_LAVA_FURNACE || (obj.getID() == RED_EYE_ROCK && item.getID() == ItemId.A_RED_CRYSTAL.id())
+				|| (obj.getID() == CAVERNOUS_OPENING && item.getID() == ItemId.A_GLOWING_RED_CRYSTAL.id())
+				|| (obj.getID() == FERTILE_EARTH && item.getID() == ItemId.YOMMI_TREE_SEED.id())
+				|| (obj.getID() == FERTILE_EARTH && item.getID() == ItemId.GERMINATED_YOMMI_TREE_SEED.id())
+				|| (obj.getID() == YOMMI_TREE && item.getID() == ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id())
+				|| (inArray(obj.getID(), DEAD_YOMMI_TREE, ROTTEN_YOMMI_TREE, GROWN_YOMMI_TREE, CHOPPED_YOMMI_TREE, TRIMMED_YOMMI_TREE) && item.getID() == ItemId.RUNE_AXE.id())
+				|| (obj.getID() == TOTEM_POLE && item.getID() == ItemId.TOTEM_POLE.id());
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == TOTEM_POLE && item.getID() == 1183) {
+		if (obj.getID() == TOTEM_POLE && item.getID() == ItemId.TOTEM_POLE.id()) {
 			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 10 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
 				message(p, "You have already replaced the evil totem pole with your own.",
 						"You feel a great sense of accomplishment");
@@ -687,7 +637,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				LegendsQuestNezikchened.demonFight(p);
 			}
 		}
-		if (obj.getID() == TRIMMED_YOMMI_TREE && item.getID() == 405) {
+		else if (obj.getID() == TRIMMED_YOMMI_TREE && item.getID() == ItemId.RUNE_AXE.id()) {
 			if (obj.getOwner().equals(p.getUsername())) {
 				int objectX = obj.getX();
 				int objectY = obj.getY();
@@ -705,7 +655,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				p.message("This is not your Yommi Tree.");
 			}
 		}
-		if (obj.getID() == CHOPPED_YOMMI_TREE && item.getID() == 405) {
+		else if (obj.getID() == CHOPPED_YOMMI_TREE && item.getID() == ItemId.RUNE_AXE.id()) {
 			if (obj.getOwner().equals(p.getUsername())) {
 				int objectX = obj.getX();
 				int objectY = obj.getY();
@@ -724,7 +674,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				p.message("This is not your Yommi Tree.");
 			}
 		}
-		if (obj.getID() == GROWN_YOMMI_TREE && item.getID() == 405) {
+		else if (obj.getID() == GROWN_YOMMI_TREE && item.getID() == ItemId.RUNE_AXE.id()) {
 			if (obj.getOwner().equals(p.getUsername())) {
 				int objectX = obj.getX();
 				int objectY = obj.getY();
@@ -744,16 +694,16 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				p.message("This is not your Yommi Tree.");
 			}
 		}
-		if ((obj.getID() == DEAD_YOMMI_TREE || obj.getID() == ROTTEN_YOMMI_TREE) && item.getID() == 405) {
+		else if ((obj.getID() == DEAD_YOMMI_TREE || obj.getID() == ROTTEN_YOMMI_TREE) && item.getID() == ItemId.RUNE_AXE.id()) {
 			message(p, 0, "You chop the dead Yommi Tree down.");
 			message(p, 1300, "You gain some logs..");
 			replaceObject(obj, new GameObject(obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
-			addItem(p, 14, 1);
+			addItem(p, ItemId.LOGS.id(), 1);
 		}
-		if (obj.getID() == YOMMI_TREE && item.getID() == 1267) {
+		else if (obj.getID() == YOMMI_TREE && item.getID() == ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id()) {
 			int objectX = obj.getX();
 			int objectY = obj.getY();
-			p.getInventory().replace(1267, 1266);
+			p.getInventory().replace(ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.BLESSED_GOLDEN_BOWL.id());
 			displayTeleportBubble(p, obj.getX(), obj.getY(), true);
 			message(p, 1300, "You water the Yommi tree from the golden bowl...",
 				"It grows at a remarkable rate.");
@@ -773,17 +723,17 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 			message(p, 1300, "Soon the tree stops growing...",
 				"It looks tall enough now to make a good totem pole.");
 		}
-		if (obj.getID() == FERTILE_EARTH && item.getID() == LegendsQuestInvAction.YOMMI_TREE_SEED) {
+		else if (obj.getID() == FERTILE_EARTH && item.getID() == ItemId.YOMMI_TREE_SEED.id()) {
 			p.message("These seeds need to be germinated in pure water before they");
 			p.message("can be planted in the fertile soil.");
 		}
-		if (obj.getID() == FERTILE_EARTH && item.getID() == LegendsQuestInvAction.GERMINATED_YOMMI_TREE_SEED) {
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) != 8 || !hasItem(p, 1267)) {
+		else if (obj.getID() == FERTILE_EARTH && item.getID() == ItemId.GERMINATED_YOMMI_TREE_SEED.id()) {
+			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) != 8 || !hasItem(p, ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id())) {
 				p.message("You'll need some sacred water to feed ");
 				p.message("the tree when it starts growing.");
 				return;
 			}
-			if (!hasItem(p, 405)) {
+			if (!hasItem(p, ItemId.RUNE_AXE.id())) {
 				p.message("You'll need a very tough, very sharp axe to");
 				p.message("fell the tree once it is grown.");
 				return;
@@ -799,7 +749,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 			}
 			// 1112, 1107
 			// 1172
-			removeItem(p, LegendsQuestInvAction.GERMINATED_YOMMI_TREE_SEED, 1);
+			removeItem(p, ItemId.GERMINATED_YOMMI_TREE_SEED.id(), 1);
 			if (DataConversions.random(0, 1) != 1) {
 				int objectX = obj.getX();
 				int objectY = obj.getY();
@@ -825,7 +775,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				p.message("You planted the seed incorrectly, it withers and dies.");
 			}
 		}
-		if (obj.getID() == CAVERNOUS_OPENING && item.getID() == LegendsQuestInvAction.A_RED_CRYSTAL + 9) {
+		else if (obj.getID() == CAVERNOUS_OPENING && item.getID() == ItemId.A_GLOWING_RED_CRYSTAL.id()) {
 			message(p, 1300, "You carefully place the glowing heart shaped crystal into ",
 				"the depression, it slots in perfectly and glows even brighter.",
 				"You hear a snapping sound coming from in front of the cave.");
@@ -834,17 +784,17 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				p.getCache().store("cavernous_opening", true);
 			}
 		}
-		if (obj.getID() == RED_EYE_ROCK && item.getID() == LegendsQuestInvAction.A_RED_CRYSTAL) {
+		else if (obj.getID() == RED_EYE_ROCK && item.getID() == ItemId.A_RED_CRYSTAL.id()) {
 			message(p, 1300, "You carefully place the Dragon Crystal on the rock.",
 				"The rocks seem to vibrate and hum and the crystal starts to glow.");
 			p.message("The vibration in the area diminishes, but the crystal continues to glow.");
-			p.getInventory().replace(LegendsQuestInvAction.A_RED_CRYSTAL, LegendsQuestInvAction.A_RED_CRYSTAL + 9);
+			p.getInventory().replace(ItemId.A_RED_CRYSTAL.id(), ItemId.A_GLOWING_RED_CRYSTAL.id());
 		}
-		if (obj.getID() == ANCIENT_LAVA_FURNACE) {
-			switch (item.getID()) {
-				case LegendsQuestSanTojalon.A_CHUNK_OF_CRYSTAL:
-				case LegendsQuestIrvigSenay.A_LUMP_OF_CRYSTAL:
-				case LegendsQuestRanalphDevere.A_HUNK_OF_CRYSTAL:
+		else if (obj.getID() == ANCIENT_LAVA_FURNACE) {
+			switch (ItemId.getById(item.getID())) {
+				case A_CHUNK_OF_CRYSTAL:
+				case A_LUMP_OF_CRYSTAL:
+				case A_HUNK_OF_CRYSTAL:
 					if (getCurrentLevel(p, Skills.CRAFTING) < 50) {
 						//message possibly non kosher
 						p.message("You need a crafting ability of at least 50 to perform this task.");
@@ -867,7 +817,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 						p.getCache().remove("a_chunk_of_crystal");
 						p.getCache().remove("a_lump_of_crystal");
 						p.getCache().remove("a_hunk_of_crystal");
-						addItem(p, LegendsQuestInvAction.A_RED_CRYSTAL, 1);
+						addItem(p, ItemId.A_RED_CRYSTAL.id(), 1);
 					} else {
 						message(p, 1300, "The compartment in the furnace isn't full yet.");
 						message(p, 600, "It looks like you need more pieces of crystal.");
@@ -878,38 +828,38 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					break;
 			}
 		}
-		if (obj.getID() == WOODEN_BEAM && item.getID() == 237) {
+		else if (obj.getID() == WOODEN_BEAM && item.getID() == ItemId.ROPE.id()) {
 			p.message("You throw one end of the rope around the beam.");
-			removeItem(p, 237, 1);
+			removeItem(p, ItemId.ROPE.id(), 1);
 			replaceObjectDelayed(obj, 5000, WOODEN_BEAM + 1);
 			if (!p.getCache().hasKey("legends_wooden_beam")) {
 				p.getCache().store("legends_wooden_beam", true);
 			}
 		}
-		if (obj.getID() == CARVED_ROCK) {
-			switch (item.getID()) {
-				case CarvedRockItems.SAPPHIRE:
-				case CarvedRockItems.EMERALD:
-				case CarvedRockItems.RUBY:
-				case CarvedRockItems.DIAMOND:
-				case CarvedRockItems.OPAL:
-				case CarvedRockItems.JADE:
-				case CarvedRockItems.RED_TOPAZ:
+		else if (obj.getID() == CARVED_ROCK) {
+			switch (ItemId.getById(item.getID())) {
+				case SAPPHIRE:
+				case EMERALD:
+				case RUBY:
+				case DIAMOND:
+				case OPAL:
+				case JADE:
+				case RED_TOPAZ:
 					int attachmentMode = -1;
 					boolean alreadyAttached = false;
-					if (item.getID() == CarvedRockItems.OPAL && obj.getX() == 471 && obj.getY() == 3722) { // OPAL ROCK
+					if (item.getID() == ItemId.OPAL.id() && obj.getX() == 471 && obj.getY() == 3722) { // OPAL ROCK
 						attachmentMode = 1;
-					} else if (item.getID() == CarvedRockItems.EMERALD && obj.getX() == 474 && obj.getY() == 3730) { // EMERALD ROCK
+					} else if (item.getID() == ItemId.EMERALD.id() && obj.getX() == 474 && obj.getY() == 3730) { // EMERALD ROCK
 						attachmentMode = 2;
-					} else if (item.getID() == CarvedRockItems.RUBY && obj.getX() == 471 && obj.getY() == 3734) { // RUBY ROCK
+					} else if (item.getID() == ItemId.RUBY.id() && obj.getX() == 471 && obj.getY() == 3734) { // RUBY ROCK
 						attachmentMode = 3;
-					} else if (item.getID() == CarvedRockItems.DIAMOND && obj.getX() == 466 && obj.getY() == 3739) { // DIAMOND ROCK
+					} else if (item.getID() == ItemId.DIAMOND.id() && obj.getX() == 466 && obj.getY() == 3739) { // DIAMOND ROCK
 						attachmentMode = 4;
-					} else if (item.getID() == CarvedRockItems.SAPPHIRE && obj.getX() == 460 && obj.getY() == 3737) { // SAPPHIRE ROCK
+					} else if (item.getID() == ItemId.SAPPHIRE.id() && obj.getX() == 460 && obj.getY() == 3737) { // SAPPHIRE ROCK
 						attachmentMode = 5;
-					} else if (item.getID() == CarvedRockItems.RED_TOPAZ && obj.getX() == 464 && obj.getY() == 3730) { // RED TOPAZ ROCK
+					} else if (item.getID() == ItemId.RED_TOPAZ.id() && obj.getX() == 464 && obj.getY() == 3730) { // RED TOPAZ ROCK
 						attachmentMode = 6;
-					} else if (item.getID() == CarvedRockItems.JADE && obj.getX() == 469 && obj.getY() == 3728) { // JADE ROCK
+					} else if (item.getID() == ItemId.JADE.id() && obj.getX() == 469 && obj.getY() == 3728) { // JADE ROCK
 						attachmentMode = 7;
 					}
 					if (p.getCache().hasKey("legends_attach_" + attachmentMode)) {
@@ -922,7 +872,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 						message(p, 1300, "A barely visible " + item.getDef().getName() + " becomes clear again, spinning above the rock.");
 						p.message("And then fades again...");
 					} else {
-						if (attachmentMode != -1 && !hasItem(p, 1238)) {
+						if (attachmentMode != -1 && !hasItem(p, ItemId.BOOKING_OF_BINDING.id())) {
 							removeItem(p, item.getID(), 1);
 							p.message("You carefully move the gem closer to the rock.");
 							p.message("The " + item.getDef().getName() + " glows and starts spinning as it hovers above the rock.");
@@ -943,7 +893,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 									"And you see a strange book appear where the light is focused.",
 									"You pick the book up and place it in your inventory.",
 									"All the crystals disapear...and the light fades...");
-								addItem(p, 1238, 1);
+								addItem(p, ItemId.BOOKING_OF_BINDING.id(), 1);
 								for (int i = 0; i < 8; i++) {
 									if (p.getCache().hasKey("legends_attach_" + i)) {
 										p.getCache().remove("legends_attach_" + i);
@@ -961,22 +911,22 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					break;
 			}
 		}
-		if (item.getID() == 1172 && obj.getID() == TALL_REEDS) {
-			addItem(p, 1249, 1);
+		else if (item.getID() == ItemId.MACHETTE.id() && obj.getID() == TALL_REEDS) {
+			addItem(p, ItemId.CUT_REED_PLANT.id(), 1);
 			message(p, 1300, "You use your machette to cut down a tall reed.",
 				"You cut it into a length of pipe.");
 		}
-		if (item.getID() == 1266) {
+		else if (item.getID() == ItemId.BLESSED_GOLDEN_BOWL.id()) {
 			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 8 && p.getY() >= 3723 && p.getY() <= 3740) {
 				p.message("You fill the bowl up with water..");
-				p.getInventory().replace(1266, 1267);
+				p.getInventory().replace(ItemId.BLESSED_GOLDEN_BOWL.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id());
 				return;
 			}
 			message(p, 1300, "The water is awkward to get to...",
 				"The gap to the water is too narrow.");
 		}
-		if (item.getID() == 1249 && obj.getID() == SHALLOW_WATER) {
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 5 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 6 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 7) {
+		else if (item.getID() == ItemId.CUT_REED_PLANT.id() && obj.getID() == SHALLOW_WATER) {
+			if (atQuestStages(p, Constants.Quests.LEGENDS_QUEST, 5, 6, 7)) {
 				message(p, 1300, "It looks as if this pool has dried up...",
 					"A thick black sludge has replaced the sparkling pure water...",
 					"There is a disgusting stench of death that emanates from this area...",
@@ -1003,21 +953,21 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					break;
 				}
 			}
-			if (emptyID != -1) {
+			if (emptyID != ItemId.NOTHING.id()) {
 				message(p, 1300, "You use the cut reed plant to syphon some water from the pool.");
-				if (emptyID == 1188) {
+				if (emptyID == ItemId.GOLDEN_BOWL.id()) {
 					message(p, 1300, "into your gold bowl.");
-					p.getInventory().replace(1188, 1189);
+					p.getInventory().replace(ItemId.GOLDEN_BOWL.id(), ItemId.GOLDEN_BOWL_WITH_PURE_WATER.id());
 					message(p, 1300, "The water doesn't seem to sparkle as much as it did in the pool.");
-				} else if (emptyID == 1266) {
+				} else if (emptyID == ItemId.BLESSED_GOLDEN_BOWL.id()) {
 					message(p, 1300, "into your blessed gold bowl.");
-					p.getInventory().replace(1266, 1267);
+					p.getInventory().replace(ItemId.BLESSED_GOLDEN_BOWL.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id());
 					message(p, 1300, "The water seems to bubble and sparkle as if alive.");
 				} else {
 					message(p, 1300, "You put some water in the " + EntityHandler.getItemDef(emptyID).getName().toLowerCase() + ".");
 					p.getInventory().replace(emptyID, refilledID);
 				}
-				removeItem(p, 1249, 1);
+				removeItem(p, ItemId.CUT_REED_PLANT.id(), 1);
 				message(p, 0, "The cut reed is soaked through with water and is now all soggy.");
 			} else {
 				message(p, 1300, "You start to syphon some water up the tube...");
@@ -1027,19 +977,19 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 	}
 
 	private void replaceTotemPole(Player p, GameObject obj, boolean calledGujuo) {
-		if (hasItem(p, 1183)) {
+		if (hasItem(p, ItemId.TOTEM_POLE.id())) {
 			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 9) {
 				p.updateQuestStage(Constants.Quests.LEGENDS_QUEST, 10);
 			}
 			replaceObjectDelayed(obj, 10000, 1170);
-			removeItem(p, 1183, 1);
+			removeItem(p, ItemId.TOTEM_POLE.id(), 1);
 			message(p, "You remove the evil totem pole.",
 				"And replace it with the one you carved yourself.",
 				"As you do so, you feel a lightness in the air,");
 			p.message("almost as if the Kharazi jungle were sighing.");
 			p.message("Perhaps Gujuo would like to see the totem pole.");
 			if (calledGujuo) {
-				Npc gujuo = spawnNpc(LegendsQuestGujuo.GUJUO, p.getX(), p.getY(), 60000 * 3);
+				Npc gujuo = spawnNpc(NpcId.GUJUO.id(), p.getX(), p.getY(), 60000 * 3);
 				if (gujuo != null) {
 					gujuo.initializeTalkScript(p);
 				}
@@ -1047,15 +997,5 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 		} else {
 			p.message("I shall replace it with the Totem pole");
 		}
-	}
-
-	class CarvedRockItems {
-		static final int SAPPHIRE = 164;
-		static final int EMERALD = 163;
-		static final int RUBY = 162;
-		static final int DIAMOND = 161;
-		static final int OPAL = 894;
-		static final int JADE = 893;
-		static final int RED_TOPAZ = 892;
 	}
 }

@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.npcs.lumbridge;
 
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -154,7 +155,7 @@ public class Urhney implements TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 10;
+		return n.getID() == NpcId.URHNEY.id();
 	}
 
 }

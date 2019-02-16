@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.obstacles;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -20,6 +22,7 @@ import static com.openrsc.server.plugins.Functions.doWallMovePlayer;
 import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 import static com.openrsc.server.plugins.Functions.getNearestNpc;
 import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.inArray;
 import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.removeItem;
@@ -44,19 +47,7 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click, Player player) {
-		if (obj.getID() == FLAME_WALL) {
-			return true;
-		}
-		if (obj.getID() == RUT) {
-			return true;
-		}
-		if (obj.getID() == ANCIENT_WALL) {
-			return true;
-		}
-		if (obj.getID() == RUINED_WALL) {
-			return true;
-		}
-		return false;
+		return inArray(obj.getID(), FLAME_WALL, RUT, ANCIENT_WALL, RUINED_WALL);
 	}
 
 	@Override
@@ -108,7 +99,7 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 				}
 			}
 		}
-		if (obj.getID() == RUINED_WALL) {
+		else if (obj.getID() == RUINED_WALL) {
 			if (getCurrentLevel(p, Skills.AGILITY) < 50) {
 				p.message("You need an agility level of 50 to jump this wall");
 				p.setBusy(false);
@@ -131,8 +122,8 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 				p.teleport(455, 3729);
 			}
 		}
-		if (obj.getID() == FLAME_WALL) {
-			if (hasItem(p, 1250)) {
+		else if (obj.getID() == FLAME_WALL) {
+			if (hasItem(p, ItemId.MAGICAL_FIRE_PASS.id())) {
 				doWallMovePlayer(obj, p, 210, 5000, false);
 				p.message("You feel completely fine to walk through these flames..");
 				return;
@@ -193,17 +184,17 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 									}
 									p.teleport(455, 3702);
 								} else if (leave == 1) {
-									Npc ungadulu = getNearestNpc(p, LegendsQuestUngadulu.UNGADULU, 8);
+									Npc ungadulu = getNearestNpc(p, NpcId.UNGADULU.id(), 8);
 									if (ungadulu == null) {
-										spawnNpc(LegendsQuestUngadulu.UNGADULU, 453, 3707);
+										spawnNpc(NpcId.UNGADULU.id(), 453, 3707);
 									}
 									LegendsQuestUngadulu.ungaduluWallDialogue(p, ungadulu, -1);
 								}
 							} else {
 								message(p, 1300, "You see a white clad figure in the midst of the flames...");
-								Npc ungadulu = getNearestNpc(p, LegendsQuestUngadulu.UNGADULU, 8);
+								Npc ungadulu = getNearestNpc(p, NpcId.UNGADULU.id(), 8);
 								if (ungadulu == null) {
-									spawnNpc(LegendsQuestUngadulu.UNGADULU, 453, 3707);
+									spawnNpc(NpcId.UNGADULU.id(), 453, 3707);
 								}
 								LegendsQuestUngadulu.ungaduluWallDialogue(p, ungadulu, -1);
 							}
@@ -219,20 +210,14 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 
 	@Override
 	public boolean blockInvUseOnWallObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == FLAME_WALL) {
-			return true;
-		}
-		if (obj.getID() == ANCIENT_WALL) {
-			return true;
-		}
-		return false;
+		return obj.getID() == FLAME_WALL || obj.getID() == ANCIENT_WALL;
 	}
 
 	@Override
 	public void onInvUseOnWallObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == FLAME_WALL) {
-			switch (item.getID()) {
-				case 1267:
+			switch (ItemId.getById(item.getID())) {
+				case BLESSED_GOLDEN_BOWL_WITH_PURE_WATER:
 					p.message("You splash some pure water on the flames");
 					if (!p.getCache().hasKey("douse_flames")) {
 						p.getCache().set("douse_flames", 1);
@@ -242,17 +227,17 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 						if (pourCount >= 4) {
 							p.getCache().remove("douse_flames");
 							p.message("The pure water in the golden bowl has run out...");
-							p.getInventory().replace(item.getID(), 1266);
+							p.getInventory().replace(item.getID(), ItemId.BLESSED_GOLDEN_BOWL.id());
 						}
 					}
 					p.message("You quickly walk over the doused flames.");
 					doWallMovePlayer(obj, p, 206, 5000, true);
 					break;
-				case 50:
-				case 141:
-				case 342:
-				case 464:
-				case 1189:
+				case BUCKET_OF_WATER:
+				case JUG_OF_WATER:
+				case BOWL_OF_WATER:
+				case VIAL:
+				case GOLDEN_BOWL_WITH_PURE_WATER:
 					message(p, 1300, "The water seems to evaporate in a cloud of steam",
 						"before it gets anywhere near the flames.");
 					break;
@@ -261,29 +246,29 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 					break;
 			}
 		}
-		if (obj.getID() == ANCIENT_WALL) {
-			switch (item.getID()) {
-				case 33: // AIR RUNE
-				case 31: // FIRE RUNE
-				case 619: // BLOOD RUNE
-				case 32: // WATER RUNE
-				case 46: // COSMIC RUNE
-				case 40: // NATURE RUNE
-				case 38: // DEATH RUNE
-				case 36: // BODY RUNE
-				case 37: // LIFE RUNE
-				case 41: // CHAOS RUNE
+		else if (obj.getID() == ANCIENT_WALL) {
+			switch (ItemId.getById(item.getID())) {
+				case AIR_RUNE:
+				case FIRE_RUNE:
+				case BLOOD_RUNE:
+				case WATER_RUNE:
+				case COSMIC_RUNE:
+				case NATURE_RUNE:
+				case DEATH_RUNE:
+				case BODY_RUNE:
+				case LIFE_RUNE:
+				case CHAOS_RUNE:
 					if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
 						ancientDoorWalkThrough(p, obj);
 					} else {
 						runesFail(p, item);
 					}
 					break;
-				case 825: /** SOUL RUNE **/
+				case SOUL_RUNE:
 					if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
 						ancientDoorWalkThrough(p, obj);
 					} else if (!p.getCache().hasKey("ancient_wall_runes")) {
-						removeItem(p, 825, 1);
+						removeItem(p, ItemId.SOUL_RUNE.id(), 1);
 						message(p, 1300, "You slide the Soul-Rune into the first depression...",
 							"It glows slightly and merges with the wall.",
 							"The letter 'S' appears where the Soul-Rune merged with the door.");
@@ -292,11 +277,11 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 						runesFail(p, item);
 					}
 					break;
-				case 35: /** MIND RUNE **/
+				case MIND_RUNE:
 					if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
 						ancientDoorWalkThrough(p, obj);
 					} else if (p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 1) {
-						removeItem(p, 35, 1);
+						removeItem(p, ItemId.MIND_RUNE.id(), 1);
 						message(p, 1300, "You slide the Mind-Rune into the second slot depression...",
 							"It glows slightly and merges with the wall.",
 							"The letter 'M' appears where the Mind-Rune merged with the door.");
@@ -305,11 +290,11 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 						runesFail(p, item);
 					}
 					break;
-				case 34: /** EARTH RUNE **/
+				case EARTH_RUNE:
 					if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
 						ancientDoorWalkThrough(p, obj);
 					} else if (p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 2) {
-						removeItem(p, 34, 1);
+						removeItem(p, ItemId.EARTH_RUNE.id(), 1);
 						message(p, 1300, "You slide the Earth-Rune into the third depression...",
 							"It glows slightly and merges with the wall.",
 							"The letter 'E' appears where the Earth-Rune merged with the door.");
@@ -318,12 +303,12 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 						runesFail(p, item);
 					}
 					break;
-				case 42: /** LAW RUNE **/
+				case LAW_RUNE:
 					if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
 						ancientDoorWalkThrough(p, obj);
 					} else if (p.getCache().hasKey("ancient_wall_runes") && (p.getCache().getInt("ancient_wall_runes") == 3 || p.getCache().getInt("ancient_wall_runes") == 4)) {
 						int getRuneCount = p.getCache().getInt("ancient_wall_runes");
-						removeItem(p, 42, 1);
+						removeItem(p, ItemId.LAW_RUNE.id(), 1);
 						if (getRuneCount == 4) {
 							p.getCache().put("ancient_wall_runes", 5);
 							message(p, 1300, "You slide the Law-Rune into the fifth depression...",

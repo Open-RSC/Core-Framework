@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.quests.members.watchtower;
 
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.PlayerAttackNpcListener;
@@ -18,33 +20,29 @@ import static com.openrsc.server.plugins.Functions.*;
 public class WatchTowerGorad implements TalkToNpcListener,
 	TalkToNpcExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener {
 
-	private static int OGRE_TOOTH = 1043;
-
-	private static int GORAD = 683;
-
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		return n.getID() == GORAD;
+		return n.getID() == NpcId.GORAD.id();
 	}
 
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == GORAD) {
+		if (n.getID() == NpcId.GORAD.id()) {
 			n.killedBy(p);
 			p.message("Gorad has gone");
 			p.message("He's dropped a tooth, I'll keep that!");
-			addItem(p, OGRE_TOOTH, 1);
+			addItem(p, ItemId.OGRE_TOOTH.id(), 1);
 		}
 	}
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == GORAD;
+		return n.getID() == NpcId.GORAD.id();
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == GORAD) {
+		if (n.getID() == NpcId.GORAD.id()) {
 			if (p.getCache().hasKey("ogre_grew")) {
 				playerTalk(p, n, "I've come to knock your teeth out!");
 				npcTalk(p, n, "How dare you utter that foul language in my prescence!",
@@ -74,12 +72,12 @@ public class WatchTowerGorad implements TalkToNpcListener,
 
 	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
-		return n.getID() == GORAD;
+		return n.getID() == NpcId.GORAD.id();
 	}
 
 	@Override
 	public void onPlayerAttackNpc(Player p, Npc affectedmob) {
-		if (affectedmob.getID() == GORAD) {
+		if (affectedmob.getID() == NpcId.GORAD.id()) {
 			npcTalk(p, affectedmob, "Ho Ho! why would I want to fight a worm ?",
 				"Get lost!");
 		}

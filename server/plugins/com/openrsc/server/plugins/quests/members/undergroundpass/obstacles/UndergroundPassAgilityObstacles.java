@@ -3,13 +3,13 @@ package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.custom.UndergroundPassMessages;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.quests.members.undergroundpass.npcs.UndergroundPassKoftik;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -25,19 +25,8 @@ public class UndergroundPassAgilityObstacles implements ObjectActionListener, Ob
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (inArray(obj.getID(), LEDGES)) {
-			return true;
-		}
-		if (inArray(obj.getID(), STONE_JUMP_BRIDGES)) {
-			return true;
-		}
-		if (inArray(obj.getID(), STONE_REMAINING_BRIDGES)) {
-			return true;
-		}
-		if (obj.getID() == FIRST_REMAINING_BRIDGE || obj.getID() == NORTH_STONE_STEP || obj.getID() == SOUTH_STONE_STEP) {
-			return true;
-		}
-		return false;
+		return inArray(obj.getID(), LEDGES) || inArray(obj.getID(), STONE_JUMP_BRIDGES) || inArray(obj.getID(), STONE_REMAINING_BRIDGES)
+				|| obj.getID() == FIRST_REMAINING_BRIDGE || obj.getID() == NORTH_STONE_STEP || obj.getID() == SOUTH_STONE_STEP;
 	}
 
 	@Override
@@ -72,7 +61,7 @@ public class UndergroundPassAgilityObstacles implements ObjectActionListener, Ob
 				playerTalk(p, null, "aargh");
 			}
 		}
-		if (obj.getID() == NORTH_STONE_STEP) {
+		else if (obj.getID() == NORTH_STONE_STEP) {
 			if (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == 4) {
 				failBlackAreaObstacle(p, obj); // fail directly, to get stage 5.
 			} else {
@@ -81,12 +70,12 @@ public class UndergroundPassAgilityObstacles implements ObjectActionListener, Ob
 
 			}
 		}
-		if (obj.getID() == SOUTH_STONE_STEP) {
+		else if (obj.getID() == SOUTH_STONE_STEP) {
 			message(p, "you walk down the steps",
 				"they lead to a ladder, you climb down");
 			p.teleport(739, 667);
 		}
-		if (obj.getID() == FIRST_REMAINING_BRIDGE) {
+		else if (obj.getID() == FIRST_REMAINING_BRIDGE) {
 			message(p, "you attempt to walk over the remaining bridge..");
 			if (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == 4) {
 				failBlackAreaObstacle(p, obj); // fail directly, to get stage 5.
@@ -103,7 +92,7 @@ public class UndergroundPassAgilityObstacles implements ObjectActionListener, Ob
 				}
 			}
 		}
-		if (inArray(obj.getID(), STONE_REMAINING_BRIDGES) || inArray(obj.getID(), STONE_JUMP_BRIDGES)) {
+		else if (inArray(obj.getID(), STONE_REMAINING_BRIDGES) || inArray(obj.getID(), STONE_JUMP_BRIDGES)) {
 			if (inArray(obj.getID(), STONE_JUMP_BRIDGES)) {
 				message(p, "you attempt to jump across the gap..");
 			} else {
@@ -154,7 +143,7 @@ public class UndergroundPassAgilityObstacles implements ObjectActionListener, Ob
 				p.updateQuestStage(Constants.Quests.UNDERGROUND_PASS, 5);
 			}
 			//only on "first-time" fail at stages 5, 8
-			Npc koftik = getNearestNpc(p, UndergroundPassKoftik.KOFTIK_LAST_MAP, 10);
+			Npc koftik = getNearestNpc(p, NpcId.KOFTIK_RECOVERED.id(), 10);
 			if (koftik != null &&
 					(!p.getCache().hasKey("advised_koftik") || !p.getCache().getBoolean("advised_koftik")) ) {
 				npcTalk(p, koftik, "traveller is that you?.. my friend on a mission");

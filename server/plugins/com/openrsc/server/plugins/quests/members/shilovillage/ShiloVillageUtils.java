@@ -1,12 +1,15 @@
 package com.openrsc.server.plugins.quests.members.shilovillage;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.DropListener;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
@@ -89,7 +92,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 		if (p.getLocation().inBounds(445, 749, 449, 753)) {
 			message(p, "You hear an unearthly moaning sound as you see",
 				"an apparition materialises right in front of you.");
-			Npc zadimus = spawnNpc(589, p.getX(), p.getY(), 60000);
+			Npc zadimus = spawnNpc(NpcId.ZADIMUS.id(), p.getX(), p.getY(), 60000);
 			sleep(500);
 			if (zadimus != null) {
 				npcTalk(p, zadimus, "You have released me from my torture, and now I shall aid you");
@@ -104,7 +107,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				message(p, "You see the ground in front of you shake ",
 					"as a shard of bone forces its way to the surface.");
 				p.message("You take the bone shard and place it in your inventory.");
-				p.getInventory().replace(ShiloVillageObjects.ZADIMUS_CORPSE, 974);
+				p.getInventory().replace(ItemId.ZADIMUS_CORPSE.id(), ItemId.BONE_SHARD.id());
 				p.setQuestStage(Constants.Quests.SHILO_VILLAGE, 4);
 			}
 		} else {
@@ -116,49 +119,15 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 
 	@Override
 	public boolean blockDrop(Player p, Item i) {
-		if (i.getID() == ShiloVillageObjects.STONE_PLAQUE) {
-			return true;
-		}
-		if (i.getID() == ShiloVillageObjects.CRUMPLED_SCROLL) {
-			return true;
-		}
-		if (i.getID() == ShiloVillageObjects.ZADIMUS_CORPSE) {
-			return true;
-		}
-		if (i.getID() == ShiloVillageObjects.TATTERED_SCROLL) {
-			return true;
-		}
-		if (i.getID() == 835) { // Bone key
-			return true;
-		}
-		if (i.getID() == 974) { // Bone shard
-			return true;
-		}
-		if (i.getID() == 973) { // sword pommel
-			return true;
-		}
-		if (i.getID() == 972) { // locating crystal
-			return true;
-		}
-		if (i.getID() == 961) { // tomb notes
-			return true;
-		}
-		if (i.getID() == 976) { // bone beads
-			return true;
-		}
-		if (i.getID() == 852) { // beads of the dead - amulet
-			return true;
-		}
-		if (i.getID() == 977) { // rashiliyia corpse
-			return true;
-		}
-		return false;
+		return inArray(i.getID(), ItemId.STONE_PLAQUE.id(), ItemId.CRUMPLED_SCROLL.id(), ItemId.TATTERED_SCROLL.id(), ItemId.ZADIMUS_CORPSE.id(),
+				ItemId.BONE_KEY.id(), ItemId.BONE_BEADS.id(), ItemId.BONE_SHARD.id(), ItemId.LOCATING_CRYSTAL.id(), ItemId.BERVIRIUS_TOMB_NOTES.id(),
+				ItemId.SWORD_POMMEL.id(), ItemId.RASHILIYA_CORPSE.id(), ItemId.BEADS_OF_THE_DEAD.id());
 	}
 
 	//533
 	@Override
 	public void onDrop(Player p, Item i) {
-		if (i.getID() == 977) { // rashiliyia corpse
+		if (i.getID() == ItemId.RASHILIYA_CORPSE.id()) {
 			message(p, "The remains of Rashiliyia look quite delicate.",
 				"You sense that a spirit needs to be put to rest.");
 			p.message("Are you sure that you want to drop the remains ?");
@@ -175,10 +144,10 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				if (p.getCache().hasKey("dolmen_ghost")) {
 					p.getCache().remove("dolmen_ghost");
 				}
-				removeItem(p, 977, 1);
+				removeItem(p, ItemId.RASHILIYA_CORPSE.id(), 1);
 				message(p, "You drop Rashiliyias remains on the ground.",
 					"The bones turn to dust and forms into the shape of a human figure.");
-				Npc rash = spawnNpc(533, p.getX(), p.getY(), 30000);
+				Npc rash = spawnNpc(NpcId.RASHILIYIA.id(), p.getX(), p.getY(), 30000);
 				message(p, "The figure turns to you and you hear a cackling, croaky voice on the air.");
 				if (rash != null) {
 					npcTalk(p, rash, "Many thanks for releasing me!",
@@ -190,7 +159,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				p.message("You decide to keep hold of Rashiliyias remains.");
 			}
 		}
-		if (i.getID() == 852) { // beads of the dead - amulet
+		else if (i.getID() == ItemId.BEADS_OF_THE_DEAD.id()) {
 			message(p, "Are you sure you want to drop the Beads of the Dead?");
 			p.message("It looks very rare and unique.");
 			int menu = showMenu(p,
@@ -200,25 +169,25 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				message(p, "As the necklace hits the floor, it disintigrates",
 					"into a puff of white powder.");
 				p.message("and you start to wonder if it ever really existed?");
-				removeItem(p, 852, 1);
+				removeItem(p, ItemId.BEADS_OF_THE_DEAD.id(), 1);
 			} else if (menu == 1) {
 				p.message("You decide not to drop the Beads of the Dead.");
 			}
 		}
-		if (i.getID() == 976) { // bone beads
+		else if (i.getID() == ItemId.BONE_BEADS.id()) {
 			message(p, "As the beads hit the floor, they disintegrate into");
 			p.message("puffs of white powder.");
-			removeItem(p, 976, 1);
+			removeItem(p, ItemId.BONE_BEADS.id(), 1);
 		}
-		if (i.getID() == 961) { // tomb notes
+		else if (i.getID() == ItemId.BERVIRIUS_TOMB_NOTES.id()) {
 			p.message("As you drop the delicate scrolls onto the floor, they");
 			p.message("disintegrate immediately.");
 			if (!p.getCache().hasKey("dropped_writing")) {
 				p.getCache().store("dropped_writing", true);
 			}
-			removeItem(p, 961, 1);
+			removeItem(p, ItemId.BERVIRIUS_TOMB_NOTES.id(), 1);
 		}
-		if (i.getID() == 972) { // locating crystal
+		else if (i.getID() == ItemId.LOCATING_CRYSTAL.id()) {
 			p.message("Are you sure you want to drop this crystal?");
 			p.message("It looks very delicate and it may break.");
 			int menu = showMenu(p,
@@ -228,30 +197,30 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				message(p, "As you drop the cystal, it hits a rock and explodes.");
 				p.message("You are lascerated by shards of glass.");
 				p.damage(10);
-				removeItem(p, 972, 1);
+				removeItem(p, ItemId.LOCATING_CRYSTAL.id(), 1);
 			} else if (menu == 1) {
 				p.message("You decide to keep the Locating Crystal ");
 				p.message("tucked into your inventory safe and sound.");
 			}
 		}
-		if (i.getID() == 973) { // sword pommel
+		else if (i.getID() == ItemId.SWORD_POMMEL.id()) {
 			message(p, "You drop the sword pommel on the floor.");
 			p.message("It turns to dust as soon as it hits the ground.");
-			removeItem(p, 973, 1);
+			removeItem(p, ItemId.SWORD_POMMEL.id(), 1);
 		}
-		if (i.getID() == 835) { // Bone key
+		else if (i.getID() == ItemId.BONE_KEY.id()) {
 			p.message("This looks quite valuable.");
 			p.message("As you go to throw the item away");
 			p.message("Zadimus' words come to you again.");
 			p.message("@yel@'I am the key, but only kin may approach her'");
 		}
-		if (i.getID() == 974) { // Bone shard
+		else if (i.getID() == ItemId.BONE_SHARD.id()) {
 			p.message("You cannot bring yourself to drop this item.");
 			p.message("You remember the words that Zadimus said when he appeared");
 			p.message("in front of you.");
 			p.message("@yel@'I am the key, but only kin may approach her.");
 		}
-		if (i.getID() == ShiloVillageObjects.CRUMPLED_SCROLL) {
+		else if (i.getID() == ItemId.CRUMPLED_SCROLL.id()) {
 			p.message("This looks quite important, are you sure you want to drop it?");
 			int menu = showMenu(p,
 				"Yes, I'm sure.",
@@ -259,15 +228,12 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 			if (menu == 0) {
 				p.message("As you drop the item, it gets carried off by the wind.");
 				p.message("never to be seen again.");
-				removeItem(p, ShiloVillageObjects.CRUMPLED_SCROLL, 1);
+				removeItem(p, ItemId.CRUMPLED_SCROLL.id(), 1);
 			} else if (menu == 1) {
 				p.message("You decide against throwing the item away.");
 			}
 		}
-		if (i.getID() == ShiloVillageObjects.ZADIMUS_CORPSE) {
-			dropZadimusCorpse(p);
-		}
-		if (i.getID() == ShiloVillageObjects.TATTERED_SCROLL) {
+		else if (i.getID() == ItemId.TATTERED_SCROLL.id()) {
 			p.message("This looks quite important, are you sure you want to drop it?");
 			int menu = showMenu(p,
 				"Yes, I'm sure.",
@@ -276,12 +242,15 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				p.message("You decide to throw the item away.");
 				p.message("As you drop the item, it falls down a narrow crevice.");
 				p.message("never to be seen again.");
-				removeItem(p, ShiloVillageObjects.TATTERED_SCROLL, 1);
+				removeItem(p, ItemId.TATTERED_SCROLL.id(), 1);
 			} else if (menu == 1) {
 				p.message("You decide against throwing the item away.");
 			}
 		}
-		if (i.getID() == ShiloVillageObjects.STONE_PLAQUE) {
+		else if (i.getID() == ItemId.ZADIMUS_CORPSE.id()) {
+			dropZadimusCorpse(p);
+		}
+		else if (i.getID() == ItemId.STONE_PLAQUE.id()) {
 			p.message("This looks quite important, are you sure you want to drop it?");
 			int menu = showMenu(p,
 				"Yes, I'm sure.",
@@ -289,7 +258,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 			if (menu == 0) {
 				p.message("As you drop the item, it bounces into a stream.");
 				p.message("never to be seen again.");
-				removeItem(p, ShiloVillageObjects.STONE_PLAQUE, 1);
+				removeItem(p, ItemId.STONE_PLAQUE.id(), 1);
 			} else if (menu == 1) {
 				p.message("You decide against throwing the item away.");
 			}
@@ -298,45 +267,19 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 
 	@Override
 	public boolean blockInvAction(Item item, Player p) {
-		if (item.getID() == ShiloVillageObjects.ZADIMUS_CORPSE) {
-			return true;
-		}
-		if (item.getID() == ShiloVillageObjects.CRUMPLED_SCROLL) {
-			return true;
-		}
-		if (item.getID() == ShiloVillageObjects.TATTERED_SCROLL) {
-			return true;
-		}
-		if (item.getID() == ShiloVillageObjects.STONE_PLAQUE) {
-			return true;
-		}
-		if (item.getID() == 974) { // Bone shard
-			return true;
-		}
-		if (item.getID() == 961) { // read tomb notes
-			return true;
-		}
-		if (item.getID() == 972) { // activate crystal
-			return true;
-		}
-		if (item.getID() == 835) { // bone key
-			return true;
-		}
-		if (item.getID() == 977) { // rash corpse
-			return true;
-		}
-		return false;
+		return inArray(item.getID(), ItemId.ZADIMUS_CORPSE.id(), ItemId.CRUMPLED_SCROLL.id(), ItemId.TATTERED_SCROLL.id(), ItemId.STONE_PLAQUE.id(),
+				ItemId.BONE_SHARD.id(), ItemId.BERVIRIUS_TOMB_NOTES.id(), ItemId.LOCATING_CRYSTAL.id(), ItemId.BONE_KEY.id(), ItemId.RASHILIYA_CORPSE.id());
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p) {
-		if (item.getID() == 977) {
+	public void onInvAction(Item item, Player p) { // bury corpse
+		if (item.getID() == ItemId.RASHILIYA_CORPSE.id()) {
 			p.message("Nothing interesting happens");
 		}
-		if (item.getID() == 835) { // bone key
+		else if (item.getID() == ItemId.BONE_KEY.id()) { // bone key
 			p.message("The key is intricately carved out of bone.");
 		}
-		if (item.getID() == 972) { // activate crystal
+		else if (item.getID() == ItemId.LOCATING_CRYSTAL.id()) { // activate crystal
 			message(p, "You feel the crystal trying to draw upon your spiritual energy.");
 			p.message("Do you want to let it.");
 			int menu = showMenu(p,
@@ -371,7 +314,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				p.message("You decide not to allow the crystal to draw spiritual energy from your body.");
 			}
 		}
-		if (item.getID() == 961) { // read tomb notes
+		else if (item.getID() == ItemId.BERVIRIUS_TOMB_NOTES.id()) { // read tomb notes
 			p.setBusy(true);
 			p.message("This scroll is a collection of writings..");
 			sleep(1200);
@@ -397,14 +340,14 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 					+ "expended upon it, this can be very draining on the body...", false);
 			}
 		}
-		if (item.getID() == 974) { // Bone shard
+		else if (item.getID() == ItemId.BONE_SHARD.id()) {
 			p.message("The words of Zadimus come back to you.");
 			p.message("@yel@'I am the key, but only kin may approach her.'");
 		}
-		if (item.getID() == ShiloVillageObjects.ZADIMUS_CORPSE) {
+		else if (item.getID() == ItemId.ZADIMUS_CORPSE.id()) {
 			dropZadimusCorpse(p);
 		}
-		if (item.getID() == ShiloVillageObjects.CRUMPLED_SCROLL) {
+		else if (item.getID() == ItemId.CRUMPLED_SCROLL.id()) {
 			message(p, "This looks like part of a scroll about Rashiliyia",
 				"Would you like to read it?");
 			int menu = showMenu(p,
@@ -420,7 +363,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				p.message("You decide to leave the scroll well alone.");
 			}
 		}
-		if (item.getID() == ShiloVillageObjects.TATTERED_SCROLL) {
+		else if (item.getID() == ItemId.TATTERED_SCROLL.id()) {
 			message(p, "This looks like part of a scroll about someone called Berverius..");
 			p.message("Would you like to read it?");
 			int menu = showMenu(p,
@@ -441,7 +384,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				p.message("You decide not to open the scroll but instead put it carefully back into your inventory.");
 			}
 		}
-		if (item.getID() == ShiloVillageObjects.STONE_PLAQUE) {
+		else if (item.getID() == ItemId.STONE_PLAQUE.id()) {
 			message(p, "The markings are very intricate. It's a very strange language.",
 					"The meaning of it evades you though.");
 		}
@@ -449,34 +392,25 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 
 	@Override
 	public boolean blockInvUseOnItem(Player p, Item item1, Item item2) {
-		//chisel and plommen sword
-		if (item1.getID() == 167 && item2.getID() == 973 || item1.getID() == 973 && item2.getID() == 167) {
-			return true;
-		}
-		//bone beads and bronze wire TODO
-		if (item1.getID() == 976 && item2.getID() == 979 || item1.getID() == 979 && item2.getID() == 976) {
-			return true;
-		}
-		//chisel and bone shard
-		if (item1.getID() == 167 && item2.getID() == 974 || item1.getID() == 974 && item2.getID() == 167) {
-			return true;
-		}
-		return false;
+		//chisel and pommel sword / bone beads and wire / chisel and bone shard
+		return Functions.compareItemsIds(item1, item2, ItemId.CHISEL.id(), ItemId.SWORD_POMMEL.id())
+				|| Functions.compareItemsIds(item1, item2, ItemId.BONE_BEADS.id(), ItemId.BRONZE_WIRE.id())
+				|| Functions.compareItemsIds(item1, item2, ItemId.CHISEL.id(), ItemId.BONE_SHARD.id());
 	}
 
 	@Override
 	public void onInvUseOnItem(Player p, Item item1, Item item2) {
-		if (item1.getID() == 976 && item2.getID() == 979 || item1.getID() == 979 && item2.getID() == 976) {
+		if (Functions.compareItemsIds(item1, item2, ItemId.BONE_BEADS.id(), ItemId.BRONZE_WIRE.id())) {
 			if (getCurrentLevel(p, Skills.CRAFTING) < 20) {
 				p.message("You need a level of 20 Crafting to craft this.");
 				return;
 			}
 			message(p, "You successfully craft the beads and Bronze Wire ");
 			p.message("into a necklace which you name, 'Beads of the dead'");
-			removeItem(p, 979, 1);
-			p.getInventory().replace(976, 852);
+			removeItem(p, ItemId.BRONZE_WIRE.id(), 1);
+			p.getInventory().replace(ItemId.BONE_BEADS.id(), ItemId.BEADS_OF_THE_DEAD.id());
 		}
-		if (item1.getID() == 167 && item2.getID() == 974 || item1.getID() == 974 && item2.getID() == 167) {
+		else if (Functions.compareItemsIds(item1, item2, ItemId.CHISEL.id(), ItemId.BONE_SHARD.id())) {
 			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
 				p.message("You're not quite sure what to make with this.");
 				return;
@@ -489,14 +423,14 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				message(p, "Remembering Zadimus' words and the strange bone lock,",
 					"you start to craft the bone.");
 				p.message("You succesfully make a key out of the bone shard.");
-				p.getInventory().replace(974, 835);
+				p.getInventory().replace(ItemId.BONE_SHARD.id(), ItemId.BONE_KEY.id());
 				p.incExp(Skills.CRAFTING, 35, true);
 			} else {
 				message(p, "You're not quite sure what to make with this.");
 				p.message("Perhaps it will come to you as you discover more about Rashiliyia?");
 			}
 		}
-		if (item1.getID() == 167 && item2.getID() == 973 || item1.getID() == 973 && item2.getID() == 167) {
+		else if (Functions.compareItemsIds(item1, item2, ItemId.CHISEL.id(), ItemId.SWORD_POMMEL.id())) {
 			if (getCurrentLevel(p, Skills.CRAFTING) < 20) {
 				p.message("You need a level of 20 Crafting to craft this.");
 				return;
@@ -505,24 +439,21 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				"You successfully craft some of the ivory into beads.");
 			p.message("They may look good as part of a necklace.");
 			p.incExp(Skills.CRAFTING, 35, true);
-			p.getInventory().replace(973, 976);
+			p.getInventory().replace(ItemId.SWORD_POMMEL.id(), ItemId.BONE_BEADS.id());
 		}
 	}
 
 	@Override
 	public boolean blockPickup(Player p, GroundItem i) {
-		if (i.getID() == 10 && i.getX() == 358 && i.getY() == 3626) {
-			return true;
-		}
-		return false;
+		return i.getID() == ItemId.COINS.id() && i.getX() == 358 && i.getY() == 3626;
 	}
 
 	@Override
 	public void onPickup(Player p, GroundItem i) {
-		if (i.getID() == 10 && i.getX() == 358 && i.getY() == 3626) {
+		if (i.getID() == ItemId.COINS.id() && i.getX() == 358 && i.getY() == 3626) {
 			if (p.getCache().hasKey("coins_shilo_cave")) {
 				i.remove();
-				addItem(p, 10, 10);
+				addItem(p, ItemId.COINS.id(), 10);
 				p.message("The coins turn to dust in your hand...");
 			} else {
 				message(p, "As soon as you touch the coins...",
