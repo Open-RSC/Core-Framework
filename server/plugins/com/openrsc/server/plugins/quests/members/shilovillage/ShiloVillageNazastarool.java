@@ -15,13 +15,12 @@ import com.openrsc.server.plugins.listeners.executive.PlayerNpcRunExecutiveListe
 
 import static com.openrsc.server.plugins.Functions.*;
 
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
+
 public class ShiloVillageNazastarool implements ObjectActionListener, ObjectActionExecutiveListener,
 	PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, PlayerNpcRunListener, PlayerNpcRunExecutiveListener,
 	PlayerMageNpcListener, PlayerMageNpcExecutiveListener {
-
-	private static final int Nazastarool_Zombie = 613;
-	private static final int Nazastarool_Skeleton = 614;
-	private static final int Nazastarool_Ghost = 615;
 
 	private static final int TOMB_DOLMEN_Nazastarool = 724;
 
@@ -36,10 +35,10 @@ public class ShiloVillageNazastarool implements ObjectActionListener, ObjectActi
 			if (p.getCache().hasKey("dolmen_zombie")
 				&& p.getCache().hasKey("dolmen_skeleton")
 				&& p.getCache().hasKey("dolmen_ghost")) {
-				if (!p.getInventory().wielding(852)) {
+				if (!p.getInventory().wielding(ItemId.BEADS_OF_THE_DEAD.id())) {
 					choke(p);
 				}
-				if (hasItem(p, 977)) {
+				if (hasItem(p, ItemId.RASHILIYA_CORPSE.id())) {
 					p.message("You find nothing new on the Dolmen.");
 					return;
 				}
@@ -49,14 +48,14 @@ public class ShiloVillageNazastarool implements ObjectActionListener, ObjectActi
 				int menu = showMenu(p, "Yes, I'll take the remains.", "No, I'll leave them where they are.");
 				if (menu == 0) {
 					p.message("You carefully place the remains in your inventory.");
-					addItem(p, 977, 1);
+					addItem(p, ItemId.RASHILIYA_CORPSE.id(), 1);
 				} else if (menu == 1) {
 					p.message("You decide to leave the remains where they are.");
 				}
 				return;
 			}
 			p.setBusy(true);
-			if (!p.getInventory().wielding(852)) {
+			if (!p.getInventory().wielding(ItemId.BEADS_OF_THE_DEAD.id())) {
 				choke(p);
 			}
 			p.message("You touch the Dolmen, and the ground starts to shake.");
@@ -66,21 +65,21 @@ public class ShiloVillageNazastarool implements ObjectActionListener, ObjectActi
 			p.message("you step away from the Dolmen in anticipation...");
 			sleep(1000);
 			p.teleport(380, 3625);
-			if (!p.getInventory().wielding(852)) {
+			if (!p.getInventory().wielding(ItemId.BEADS_OF_THE_DEAD.id())) {
 				choke(p);
 			}
 			if (!p.getCache().hasKey("dolmen_zombie")) {
-				spawnAndMoveAway(p, Nazastarool_Zombie);
+				spawnAndMoveAway(p, NpcId.NAZASTAROOL_ZOMBIE.id());
 				p.setBusy(false);
 				return;
 			}
 			if (!p.getCache().hasKey("dolmen_skeleton")) {
-				spawnAndMoveAway(p, Nazastarool_Skeleton);
+				spawnAndMoveAway(p, NpcId.NAZASTAROOL_SKELETON.id());
 				p.setBusy(false);
 				return;
 			}
 			if (!p.getCache().hasKey("dolmen_ghost")) {
-				spawnAndMoveAway(p, Nazastarool_Ghost);
+				spawnAndMoveAway(p, NpcId.NAZASTAROOL_GHOST.id());
 				p.setBusy(false);
 				return;
 			}
@@ -96,13 +95,13 @@ public class ShiloVillageNazastarool implements ObjectActionListener, ObjectActi
 		p.setBusy(true);
 		p.teleport(379, 3626);
 		n.teleport(378, 3622);
-		if (n.getID() == Nazastarool_Zombie) {
+		if (n.getID() == NpcId.NAZASTAROOL_ZOMBIE.id()) {
 			npcTalk(p, n, "Leave then, and let Rashiliyia rest in peace!",
 				"Do not return here or your life will be forfeit!");
-		} else if (n.getID() == Nazastarool_Skeleton) {
+		} else if (n.getID() == NpcId.NAZASTAROOL_SKELETON.id()) {
 			npcTalk(p, n, "Leave now mortal, sweet Rashiliyia will rest!",
 				"Your life will be forfeit if you return!");
-		} else if (n.getID() == Nazastarool_Ghost) {
+		} else if (n.getID() == NpcId.NAZASTAROOL_GHOST.id()) {
 			npcTalk(p, n, "Run infidel and never polute the tomb of Rashiliyia again!",
 				"A grisly death is what you will meet should you return.");
 		}
@@ -115,11 +114,11 @@ public class ShiloVillageNazastarool implements ObjectActionListener, ObjectActi
 		Npc npc = spawnNpc(npcID, 380, 3625, 60000 * 5);
 		sleep(1000);
 		npc.teleport(381, 3625);
-		if (npc.getID() == Nazastarool_Zombie) {
+		if (npc.getID() == NpcId.NAZASTAROOL_ZOMBIE.id()) {
 			zombieShout(p, npc);
-		} else if (npc.getID() == Nazastarool_Skeleton) {
+		} else if (npc.getID() == NpcId.NAZASTAROOL_SKELETON.id()) {
 			skeletonShout(p, npc);
-		} else if (npc.getID() == Nazastarool_Ghost) {
+		} else if (npc.getID() == NpcId.NAZASTAROOL_GHOST.id()) {
 			ghostShout(p, npc);
 		}
 		npc.startCombat(p);
@@ -143,21 +142,12 @@ public class ShiloVillageNazastarool implements ObjectActionListener, ObjectActi
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == Nazastarool_Zombie) {
-			return true;
-		}
-		if (n.getID() == Nazastarool_Skeleton) {
-			return true;
-		}
-		if (n.getID() == Nazastarool_Ghost) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.NAZASTAROOL_ZOMBIE.id() || n.getID() == NpcId.NAZASTAROOL_SKELETON.id() || n.getID() == NpcId.NAZASTAROOL_GHOST.id();
 	}
 
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == Nazastarool_Zombie) {
+		if (n.getID() ==  NpcId.NAZASTAROOL_ZOMBIE.id()) {
 			n.remove();
 			p.setBusy(true);
 			if (!p.getCache().hasKey("dolmen_zombie")) {
@@ -169,10 +159,10 @@ public class ShiloVillageNazastarool implements ObjectActionListener, ObjectActi
 			sleep(1200);
 			p.message("soon they reform into a grisly giant skeleton.  ");
 			sleep(1000);
-			spawnAndMoveAway(p, Nazastarool_Skeleton);
+			spawnAndMoveAway(p, NpcId.NAZASTAROOL_SKELETON.id());
 			p.setBusy(false);
 		}
-		if (n.getID() == Nazastarool_Skeleton) {
+		if (n.getID() == NpcId.NAZASTAROOL_SKELETON.id()) {
 			n.remove();
 			p.setBusy(true);
 			if (!p.getCache().hasKey("dolmen_skeleton")) {
@@ -184,10 +174,10 @@ public class ShiloVillageNazastarool implements ObjectActionListener, ObjectActi
 			sleep(1200);
 			p.message("bones and you soon face the vengeful ghost of Nazastarool ");
 			sleep(1000);
-			spawnAndMoveAway(p, Nazastarool_Ghost);
+			spawnAndMoveAway(p, NpcId.NAZASTAROOL_GHOST.id());
 			p.setBusy(false);
 		}
-		if (n.getID() == Nazastarool_Ghost) {
+		if (n.getID() == NpcId.NAZASTAROOL_GHOST.id()) {
 			n.remove();
 			p.setBusy(true);
 			if (!p.getCache().hasKey("dolmen_ghost")) {
@@ -204,25 +194,25 @@ public class ShiloVillageNazastarool implements ObjectActionListener, ObjectActi
 
 	@Override
 	public boolean blockPlayerNpcRun(Player p, Npc n) {
-		return n.getID() == Nazastarool_Zombie || n.getID() == Nazastarool_Skeleton || n.getID() == Nazastarool_Ghost;
+		return n.getID() == NpcId.NAZASTAROOL_ZOMBIE.id() || n.getID() == NpcId.NAZASTAROOL_SKELETON.id() || n.getID() == NpcId.NAZASTAROOL_GHOST.id();
 	}
 
 	@Override
 	public void onPlayerNpcRun(Player p, Npc n) {
-		if (n.getID() == Nazastarool_Zombie || n.getID() == Nazastarool_Skeleton || n.getID() == Nazastarool_Ghost) {
+		if (n.getID() == NpcId.NAZASTAROOL_ZOMBIE.id() || n.getID() == NpcId.NAZASTAROOL_SKELETON.id() || n.getID() == NpcId.NAZASTAROOL_GHOST.id()) {
 			runFromNazastarool(p, n);
 		}
 	}
 
 	@Override
 	public boolean blockPlayerMageNpc(Player p, Npc n) {
-		return (n.getID() == Nazastarool_Zombie || n.getID() == Nazastarool_Skeleton || n.getID() == Nazastarool_Ghost);
+		return n.getID() == NpcId.NAZASTAROOL_ZOMBIE.id() || n.getID() == NpcId.NAZASTAROOL_SKELETON.id() || n.getID() == NpcId.NAZASTAROOL_GHOST.id();
 	}
 
 	@Override
 	public void onPlayerMageNpc(Player p, Npc n) {
-		if ((n.getID() == Nazastarool_Zombie || n.getID() == Nazastarool_Skeleton || n.getID() == Nazastarool_Ghost)) {
-			if (!p.getInventory().wielding(852)) {
+		if (n.getID() == NpcId.NAZASTAROOL_ZOMBIE.id() || n.getID() == NpcId.NAZASTAROOL_SKELETON.id() || n.getID() == NpcId.NAZASTAROOL_GHOST.id()) {
+			if (!p.getInventory().wielding(ItemId.BEADS_OF_THE_DEAD.id())) {
 				choke(p);
 			}
 			n.getSkills().setLevel(Skills.HITPOINTS, n.getSkills().getMaxStat(Skills.HITPOINTS));

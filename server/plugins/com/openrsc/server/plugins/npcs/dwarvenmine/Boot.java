@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.npcs.dwarvenmine;
 
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -47,7 +48,7 @@ public class Boot implements TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 313;
+		return n.getID() == NpcId.BOOT_THE_DWARF.id();
 	}
 
 }

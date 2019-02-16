@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
@@ -18,14 +19,6 @@ import static com.openrsc.server.plugins.Functions.*;
 public class UndergroundPassDungeonFloor implements ObjectActionListener, ObjectActionExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
 	/**
-	 * ITEM IDs
-	 **/
-	public static int EMPTY_BUCKET = 21;
-	public static int DWARF_BREW = 1001;
-	public static int TINDER_BOX = 166;
-	public static int IBANS_ASHES = 1002;
-
-	/**
 	 * OBJECT IDs
 	 **/
 	public static int SPIDER_NEST_RAILING = 171;
@@ -36,19 +29,7 @@ public class UndergroundPassDungeonFloor implements ObjectActionListener, Object
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (obj.getID() == LADDER) {
-			return true;
-		}
-		if (obj.getID() == TOMB_OF_IBAN) {
-			return true;
-		}
-		if (obj.getID() == DWARF_BARREL) {
-			return true;
-		}
-		if (obj.getID() == PILE_OF_MUD) {
-			return true;
-		}
-		return false;
+		return obj.getID() == LADDER || obj.getID() == TOMB_OF_IBAN || obj.getID() == DWARF_BARREL || obj.getID() == PILE_OF_MUD;
 	}
 
 	@Override
@@ -58,7 +39,7 @@ public class UndergroundPassDungeonFloor implements ObjectActionListener, Object
 			p.message("it leads to some stairs, you walk up...");
 			p.teleport(782, 3549);
 		}
-		if (obj.getID() == TOMB_OF_IBAN) {
+		else if (obj.getID() == TOMB_OF_IBAN) {
 			message(p, "you try to open the door of the tomb");
 			p.message("but the door refuses to open");
 			message(p, "you hear a noise from below");
@@ -70,15 +51,15 @@ public class UndergroundPassDungeonFloor implements ObjectActionListener, Object
 			sleep(1000);
 			removeObject(claws_of_iban);
 		}
-		if (obj.getID() == DWARF_BARREL) {
-			if (!hasItem(p, EMPTY_BUCKET)) {
+		else if (obj.getID() == DWARF_BARREL) {
+			if (!hasItem(p, ItemId.BUCKET.id())) {
 				p.message("you need a bucket first");
 			} else {
 				p.message("you poor some of the strong brew into your bucket");
-				p.getInventory().replace(EMPTY_BUCKET, DWARF_BREW);
+				p.getInventory().replace(ItemId.BUCKET.id(), ItemId.DWARF_BREW.id());
 			}
 		}
-		if (obj.getID() == PILE_OF_MUD) {
+		else if (obj.getID() == PILE_OF_MUD) {
 			message(p, "you climb the pile of mud");
 			p.message("it leads to an old stair way");
 			p.teleport(773, 3417);
@@ -87,30 +68,24 @@ public class UndergroundPassDungeonFloor implements ObjectActionListener, Object
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == TOMB_OF_IBAN && item.getID() == DWARF_BREW) {
-			return true;
-		}
-		if (obj.getID() == TOMB_OF_IBAN && item.getID() == TINDER_BOX) {
-			return true;
-		}
-		return false;
+		return obj.getID() == TOMB_OF_IBAN && (item.getID() == ItemId.DWARF_BREW.id() || item.getID() == ItemId.TINDERBOX.id());
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == TOMB_OF_IBAN && item.getID() == DWARF_BREW) {
+		if (obj.getID() == TOMB_OF_IBAN && item.getID() == ItemId.DWARF_BREW.id()) {
 			if (p.getCache().hasKey("doll_of_iban") && p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == 6) {
 				p.message("you pour the strong alcohol over the tomb");
 				if (!p.getCache().hasKey("brew_on_tomb") && !p.getCache().hasKey("ash_on_doll")) {
 					p.getCache().store("brew_on_tomb", true);
 				}
-				p.getInventory().replace(DWARF_BREW, EMPTY_BUCKET);
+				p.getInventory().replace(ItemId.DWARF_BREW.id(), ItemId.BUCKET.id());
 			} else {
 				message(p, "you consider pouring the brew over the grave");
 				p.message("but it seems such a waste");
 			}
 		}
-		if (obj.getID() == TOMB_OF_IBAN && item.getID() == TINDER_BOX) {
+		else if (obj.getID() == TOMB_OF_IBAN && item.getID() == ItemId.TINDERBOX.id()) {
 			message(p, "you try to set alight to the tomb");
 			if (p.getCache().hasKey("brew_on_tomb") && !p.getCache().hasKey("ash_on_doll")) {
 				message(p, "it bursts into flames");
@@ -118,9 +93,9 @@ public class UndergroundPassDungeonFloor implements ObjectActionListener, Object
 					.getType()));
 				delayedSpawnObject(obj.getLoc(), 10000);
 				message(p, "you search through the remains");
-				if (!hasItem(p, IBANS_ASHES)) {
+				if (!hasItem(p, ItemId.IBANS_ASHES.id())) {
 					p.message("and find the ashes of ibans corpse");
-					createGroundItem(IBANS_ASHES, 1, 726, 654, p);
+					createGroundItem(ItemId.IBANS_ASHES.id(), 1, 726, 654, p);
 				} else {
 					p.message("but find nothing");
 				}
@@ -133,10 +108,7 @@ public class UndergroundPassDungeonFloor implements ObjectActionListener, Object
 
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click, Player player) {
-		if (obj.getID() == SPIDER_NEST_RAILING) {
-			return true;
-		}
-		return false;
+		return obj.getID() == SPIDER_NEST_RAILING;
 	}
 
 	@Override

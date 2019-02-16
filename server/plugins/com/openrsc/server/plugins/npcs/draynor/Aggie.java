@@ -1,9 +1,10 @@
 package com.openrsc.server.plugins.npcs.draynor;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
@@ -24,8 +25,6 @@ public final class Aggie implements TalkToNpcListener,
 	private static final int DYES = 9;
 	private static final int MAKEME = 10;
 	private static final int HAPPY = 11;
-
-	public World world = World.getWorld();
 
 	@Override
 	public void onTalkToNpc(Player player, final Npc npc) {
@@ -92,8 +91,8 @@ public final class Aggie implements TalkToNpcListener,
 				}
 				break;
 			case Aggie.SKIN_PASTE:
-				if (hasItem(p, 181) && hasItem(p, 136) && hasItem(p, 50)
-					&& hasItem(p, 236)) {
+				if (hasItem(p, ItemId.ASHES.id()) && hasItem(p, ItemId.POT_OF_FLOUR.id()) && hasItem(p, ItemId.BUCKET_OF_WATER.id())
+					&& hasItem(p, ItemId.REDBERRIES.id())) {
 					npcTalk(p, n,
 						"Yes I can, you have the ingredients for it already");
 					npcTalk(p, n, "Would you like me to mix you some?");
@@ -107,14 +106,14 @@ public final class Aggie implements TalkToNpcListener,
 						message(p,
 							"You hand ash, flour, water and redberries to Aggie",
 							"She tips it into a cauldron and mutters some words");
-						removeItem(p, 181, 1);
-						removeItem(p, 136, 1);
-						removeItem(p, 50, 1);
-						removeItem(p, 236, 1);
+						removeItem(p, ItemId.ASHES.id(), 1);
+						removeItem(p, ItemId.POT_OF_FLOUR.id(), 1);
+						removeItem(p, ItemId.BUCKET_OF_WATER.id(), 1);
+						removeItem(p, ItemId.REDBERRIES.id(), 1);
 						npcTalk(p, n,
 							"Tourniquet, Fenderbaum, Tottenham, MonsterMunch, MarbleArch");
 						message(p, "Aggie hands you the skin paste");
-						addItem(p, 240, 1);
+						addItem(p, ItemId.PASTE.id(), 1);
 						npcTalk(p, n, "There you go dearie, your skin potion",
 							"That will make you look good at the Varrock dances");
 					} else if (menu == 1) {
@@ -144,10 +143,10 @@ public final class Aggie implements TalkToNpcListener,
 				break;
 			case Aggie.MADWITCH:
 				npcTalk(p, n, "Oh, you like to call a witch names, do you?");
-				if (hasItem(p, 10, 20)) {
+				if (hasItem(p, ItemId.COINS.id(), 20)) {
 					message(p,
 						"Aggie waves her hands about, and you seem to be 20 coins poorer");
-					removeItem(p, 10, 20);
+					removeItem(p, ItemId.COINS.id(), 20);
 					npcTalk(p, n,
 						"Thats a fine for insulting a witch, you should learn some respect");
 				} else {
@@ -187,17 +186,17 @@ public final class Aggie implements TalkToNpcListener,
 					"I don't think I have all the ingredients yet",
 					"I can do without dye at that price");
 				if (menu4 == 0) {
-					if (!hasItem(p, 241, 2)) {
+					if (!hasItem(p, ItemId.ONION.id(), 2)) {
 						message(p, "You don't have enough onions to make the yellow dye!");
-					} else if (!hasItem(p, 10, 5)) {
+					} else if (!hasItem(p, ItemId.COINS.id(), 5)) {
 						message(p, "You don't have enough coins to pay for the dye!");
 					} else {
 						playerTalk(p, n, "Okay, make me some yellow dye please");
 						message(p, "You hand the onions and payment to Aggie");
-						p.getInventory().remove(241, 2);
-						removeItem(p, 10, 5);
+						p.getInventory().remove(ItemId.ONION.id(), 2);
+						removeItem(p, ItemId.COINS.id(), 5);
 						message(p, "she takes a yellow bottle from nowhere and hands it to you");
-						addItem(p, 239, 1);
+						addItem(p, ItemId.YELLOWDYE.id(), 1);
 					}
 				} else if (menu4 == 1) {
 					playerTalk(p, n, "I don't think I have all the ingredients yet");
@@ -214,17 +213,17 @@ public final class Aggie implements TalkToNpcListener,
 					"I don't think I have all the ingredients yet",
 					"I can do without dye at that price");
 				if (menu3 == 0) {
-					if (!hasItem(p, 236, 3)) {
+					if (!hasItem(p, ItemId.REDBERRIES.id(), 3)) {
 						message(p, "You don't have enough berries to make the red dye!");
-					} else if (!hasItem(p, 10, 5)) {
+					} else if (!hasItem(p, ItemId.COINS.id(), 5)) {
 						message(p, "You don't have enough coins to pay for the dye!");
 					} else {
 						playerTalk(p, n, "Okay, make me some red dye please");
 						message(p, "You hand the berries and payment to Aggie");
-						p.getInventory().remove(236, 3);
-						removeItem(p, 10, 5);
+						p.getInventory().remove(ItemId.REDBERRIES.id(), 3);
+						removeItem(p, ItemId.COINS.id(), 5);
 						message(p, "she takes a red bottle from nowhere and hands it to you");
-						addItem(p, 238, 1);
+						addItem(p, ItemId.REDDYE.id(), 1);
 					}
 				} else if (menu3 == 1) {
 					playerTalk(p, n, "I don't think I have all the ingredients yet");
@@ -241,18 +240,18 @@ public final class Aggie implements TalkToNpcListener,
 					"I don't think I have all the ingredients yet",
 					"I can do without dye at that price");
 				if (menu6 == 0) {
-					if (!hasItem(p, 281, 2)) {
+					if (!hasItem(p, ItemId.WOAD_LEAF.id(), 2)) {
 						message(p, "You don't have enough woad leaves to make the blue dye!");
-					} else if (!hasItem(p, 10, 5)) {
+					} else if (!hasItem(p, ItemId.COINS.id(), 5)) {
 						message(p, "You don't have enough coins to pay for the dye!");
 					} else {
 						playerTalk(p, n, "Okay, make me some blue dye please");
 						message(p, "You hand the woad leaves and payment to Aggie");
-						p.getInventory().remove(281, 2);
-						removeItem(p, 10, 5);
+						p.getInventory().remove(ItemId.WOAD_LEAF.id(), 2);
+						removeItem(p, ItemId.COINS.id(), 5);
 						message(p,
 							"she takes a blue bottle from nowhere and hands it to you");
-						addItem(p, 272, 1);
+						addItem(p, ItemId.BLUEDYE.id(), 1);
 					}
 				} else if (menu6 == 1) {
 					playerTalk(p, n, "I don't think I have all the ingredients yet");
@@ -286,6 +285,6 @@ public final class Aggie implements TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 125;
+		return n.getID() == NpcId.AGGIE.id();
 	}
 }

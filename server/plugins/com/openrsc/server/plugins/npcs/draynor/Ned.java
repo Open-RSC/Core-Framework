@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.npcs.draynor;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -14,7 +16,7 @@ public final class Ned implements TalkToNpcExecutiveListener, TalkToNpcListener 
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
-		return n.getID() == 124;
+		return n.getID() == NpcId.NED.id();
 	}
 
 	@Override
@@ -95,7 +97,7 @@ public final class Ned implements TalkToNpcExecutiveListener, TalkToNpcListener 
 				"I strands them together I does, makes em strong"
 			);
 			int choice;
-			if (!hasItem(p, 207, 4)) {
+			if (!hasItem(p, ItemId.BALL_OF_WOOL.id(), 4)) {
 				choice = showMenu(p, n, false, //do not send over
 					"Okay, please sell me some Rope",
 					"Thats a little more than I want to pay",
@@ -109,14 +111,14 @@ public final class Ned implements TalkToNpcExecutiveListener, TalkToNpcListener 
 				);
 			}
 			if (choice == 0) {
-				if (p.getInventory().countId(10) <= 15) {
+				if (p.getInventory().countId(ItemId.COINS.id()) <= 15) {
 					p.message("You Don't have enough coins to buy any rope!");
 				} else {
 					playerTalk(p, n, "Okay, please sell me some Rope");
 					p.message("You hand Ned 15 coins");
 					npcTalk(p, n, "There you go, finest rope in Runescape");
-					p.getInventory().add(new Item(237, 1));
-					p.getInventory().remove(10, 15);
+					p.getInventory().add(new Item(ItemId.ROPE.id(), 1));
+					p.getInventory().remove(ItemId.COINS.id(), 15);
 					p.message("Ned gives you a coil of rope");
 				}
 			} else if (choice == 1) {
@@ -125,15 +127,15 @@ public final class Ned implements TalkToNpcExecutiveListener, TalkToNpcListener 
 					"An old sailor needs money for a little drop o rum."
 				);
 			} else if (choice == 2) {
-				if (!hasItem(p, 207, 4)) {
+				if (!hasItem(p, ItemId.BALL_OF_WOOL.id(), 4)) {
 					playerTalk(p, n, "I will go and get some wool");
 					npcTalk(p, n, "Aye, you do that",
 						"Remember, it takes 4 balls of wool to make strong rope");
 				} else {
 					playerTalk(p, n, "I have some balls of wool. could you make me some Rope?");
 					npcTalk(p, n, "Sure I can.");
-					p.getInventory().add(new Item(237, 1));
-					p.getInventory().remove(207, 4);
+					p.getInventory().add(new Item(ItemId.ROPE.id(), 1));
+					p.getInventory().remove(ItemId.BALL_OF_WOOL.id(), 4);
 				}
 			}
 		} else if (option == 2) { // Prince Ali's Rescue
@@ -150,7 +152,7 @@ public final class Ned implements TalkToNpcExecutiveListener, TalkToNpcListener 
 					"yes, I think I could do something",
 					"Give me 3 balls of wool and I might be able to do it"
 				);
-				if (p.getInventory().countId(207) >= 3) {
+				if (p.getInventory().countId(ItemId.BALL_OF_WOOL.id()) >= 3) {
 					int choice = showMenu(p, n,
 						"I have that now. Please, make me a wig",
 						"I will come back when I need you to make me one"
@@ -160,10 +162,10 @@ public final class Ned implements TalkToNpcExecutiveListener, TalkToNpcListener 
 						message(p, "You hand Ned 3 balls of wool",
 							"Ned works with the wool. His hands move with a speed you couldn't imagine"
 						);
-						p.getInventory().remove(207, 3);
+						p.getInventory().remove(ItemId.BALL_OF_WOOL.id(), 3);
 						npcTalk(p, n, "Here you go, hows that for a quick effort? Not bad I think!");
 						p.message("Ned gives you a pretty good wig");
-						addItem(p, 245, 1);
+						addItem(p, ItemId.WOOL_WIG.id(), 1);
 						playerTalk(p, n, "Thanks Ned, theres more to you than meets the eye");
 					} else if (choice == 1) {
 						npcTalk(p, n, "Well, it sounds like a challenge",

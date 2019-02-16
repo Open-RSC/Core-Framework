@@ -11,14 +11,11 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class UndergroundPassWell implements ObjectActionListener, ObjectActionExecutiveListener {
 
-	public static int WELL = 814;
+	public static final int WELL = 814;
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (obj.getID() == WELL) {
-			return true;
-		}
-		return false;
+		return obj.getID() == WELL;
 	}
 
 	@Override

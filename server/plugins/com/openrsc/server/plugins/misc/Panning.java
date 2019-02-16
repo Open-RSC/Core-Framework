@@ -174,7 +174,7 @@ public class Panning implements ObjectActionListener, ObjectActionExecutiveListe
 				int[] randomCoins = {1, 2, 5, 10};
 				addAmount = randomCoins[DataConversions.random(0, (randomCoins.length - 1))];
 			} else if (randomNumber < 80) { // 10%
-				addItem = ItemId.ORANGE_ROCK_SAMPLE.id();
+				addItem = ItemId.ROCK_SAMPLE_ORANGE.id();
 			} else if (randomNumber < 90) { // 10%
 				addItem = ItemId.GOLD_NUGGETS.id();
 			} else if (randomNumber < 100) { // 10%
@@ -184,7 +184,7 @@ public class Panning implements ObjectActionListener, ObjectActionExecutiveListe
 			if (addItem != -1) {
 				if (addItem == ItemId.COINS.id()) {
 					p.playerServerMessage(MessageType.QUEST, "You find some coins within the mud");
-				} else if (addItem == ItemId.ORANGE_ROCK_SAMPLE.id()) {
+				} else if (addItem == ItemId.ROCK_SAMPLE_ORANGE.id()) {
 					p.playerServerMessage(MessageType.QUEST, "You find a rock sample covered in mud");
 				} else if (addItem == ItemId.UNCUT_OPAL.id() || addItem == ItemId.UNCUT_JADE.id() || addItem == ItemId.UNCUT_SAPPHIRE.id()) {
 					p.playerServerMessage(MessageType.QUEST, "You find a gem within the mud!");

@@ -1,28 +1,27 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.npcs;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
 import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.inArray;
 
 public class UndergroundPassDemons implements PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener {
 
-	private static int[] DEMONS = {645, 646, 647};
-	public static int AMULET_OF_OTHAINIAN = 1009;
-	public static int AMULET_OF_DOOMION = 1010;
-	public static int AMULET_OF_HOLTHION = 1011;
-
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		return inArray(n.getID(), DEMONS);
+		return inArray(n.getID(), NpcId.OTHAINIAN.id(), NpcId.DOOMION.id(), NpcId.HOLTHION.id());
 	}
 
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
-		if (inArray(n.getID(), DEMONS)) {
+		if (inArray(n.getID(), NpcId.OTHAINIAN.id(), NpcId.DOOMION.id(), NpcId.HOLTHION.id())) {
 			n.killedBy(p);
 			if (!p.getCache().hasKey("doll_of_iban") && p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) != 6) {
 				p.message("the demon slumps to the floor");
@@ -39,11 +38,11 @@ public class UndergroundPassDemons implements PlayerKilledNpcListener, PlayerKil
 	}
 
 	private void teleportPlayer(Player p, Npc n) {
-		if (n.getID() == DEMONS[0]) {
+		if (n.getID() == NpcId.OTHAINIAN.id()) {
 			p.teleport(796, 3541);
-		} else if (n.getID() == DEMONS[1]) {
+		} else if (n.getID() == NpcId.DOOMION.id()) {
 			p.teleport(807, 3541);
-		} else if (n.getID() == DEMONS[2]) {
+		} else if (n.getID() == NpcId.HOLTHION.id()) {
 			p.teleport(807, 3528);
 		}
 	}

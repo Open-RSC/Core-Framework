@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.quests.members.touristtrap;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -38,6 +40,7 @@ import static com.openrsc.server.plugins.Functions.doGate;
 import static com.openrsc.server.plugins.Functions.doTentDoor;
 import static com.openrsc.server.plugins.Functions.getNearestNpc;
 import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.inArray;
 import static com.openrsc.server.plugins.Functions.incQuestReward;
 import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.npcTalk;
@@ -54,34 +57,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 	 * Player isWielding
 	 **/
 	private static final int[] restricted = {0, 1, 3, 4, 5, 6, 7, 9};
-	public static final int[] allow = {1019, 1020, 1021, 1022, 1023};
-	/**
-	 * Quest Items
-	 **/
-	private static int WROUGHT_KEY = 1097;
-	private static int METAL_KEY = 1021;
-	private static int CELL_DOOR_KEY = 1098;
-	private static int BEDOBIN_COPY_KEY = 1059;
-	private static int TECHNICAL_PLANS = 1060;
-	private static int PINE_APPLE = 1058;
-	/**
-	 * Quest Npcs
-	 **/
-	private static int IRENA = 538;
-	private static int MERCENARY = 668;
-	private static int MERCENARY_INSIDE = 670;
-	private static int MERCENARY_CAPTAIN = 669;
-	public static int CART_DRIVER = 711;
-	private static int MINING_SLAVE = 671;
-	private static int DRAFT_MERCENARY_GUARD = 710;
-	public static int ROWDY_MERCENARY = 716;
-	private static int BEDABIN_NOMAD = 701;
-	private static int BEDABIN_NOMAD_GUARD = 703;
-	private static int AL_SHABIM = 700;
-	private static int CAPTAIN_SIAD = 702;
-	private static int CAVE_2_MERCENARY = 690;
-	private static int CAVE_JAIL_MERCENARY = 692;
-	private static int CAVE_ANA = 554;
+	public static final int[] allow = {ItemId.DESERT_ROBE.id(), ItemId.DESERT_SHIRT.id(), ItemId.METAL_KEY.id(), ItemId.SLAVES_ROBE_BOTTOM.id(), ItemId.SLAVES_ROBE_TOP.id()};
 	/**
 	 * Quest Objects
 	 **/
@@ -91,7 +67,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 	private static int WINDOW = 178;
 	private static int ROCK_1 = 953;
 	private static int WOODEN_DOORS = 958;
-	private static int DESK = 1023;
+	private static int DESK = ItemId.SLAVES_ROBE_TOP.id();
 	private static int BOOKCASE = 1004;
 	private static int CAPTAINS_CHEST = 1005;
 	/**
@@ -139,34 +115,18 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == IRENA) {
-			return true;
-		}
-		if (n.getID() == MERCENARY || n.getID() == MERCENARY_CAPTAIN || n.getID() == MERCENARY_INSIDE || n.getID() == CAPTAIN_SIAD) {
-			return true;
-		}
-		if (n.getID() == MINING_SLAVE) {
-			return true;
-		}
-		if (n.getID() == BEDABIN_NOMAD || n.getID() == BEDABIN_NOMAD_GUARD || n.getID() == AL_SHABIM) {
-			return true;
-		}
-		if (n.getID() == CAVE_2_MERCENARY || n.getID() == CAVE_ANA) {
-			return true;
-		}
-		return false;
+		return inArray(n.getID(), NpcId.IRENA.id(), NpcId.MERCENARY.id(), NpcId.MERCENARY_CAPTAIN.id(), NpcId.MERCENARY_ESCAPEGATES.id(),
+				NpcId.CAPTAIN_SIAD.id(), NpcId.MINING_SLAVE.id(), NpcId.BEDABIN_NOMAD.id(), NpcId.BEDABIN_NOMAD_GUARD.id(),
+				NpcId.AL_SHABIM.id(), NpcId.MERCENARY_LIFTPLATFORM.id(), NpcId.ANA.id());
 	}
 
 	@Override
 	public boolean blockIndirectTalkToNpc(Player p, Npc n) {
-		if (n.getID() == AL_SHABIM) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.AL_SHABIM.id();
 	}
 
 	private void irenaDialogue(Player p, Npc n, int cID) {
-		if (n.getID() == IRENA) {
+		if (n.getID() == NpcId.IRENA.id()) {
 			if (cID == -1) {
 				switch (p.getQuestStage(this)) {
 					case 0:
@@ -222,7 +182,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 							"*Sob*");
 						break;
 					case 9:
-						if (!hasItem(p, 1039)) {
+						if (!hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
 							npcTalk(p, n, "Please bring my daughter back to me.",
 								"She is most likely lost in the Desert somewhere.",
 								"I miss her so much....",
@@ -231,9 +191,9 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 						} else {
 							npcTalk(p, n, "Hey, great you've found Ana!");
 							message(p, "You show Irena the barrel with Ana in it.");
-							removeItem(p, 1039, 1);
+							removeItem(p, ItemId.ANA_IN_A_BARREL.id(), 1);
 							p.updateQuestStage(this, 10);
-							Npc Ana = spawnNpc(CAVE_ANA, p.getX(), p.getY(), 60000);
+							Npc Ana = spawnNpc(NpcId.ANA.id(), p.getX(), p.getY(), 60000);
 							Ana.teleport(p.getX(), p.getY() + 1);
 							if (Ana != null) {
 								sleep(650);
@@ -244,7 +204,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 									"Pop by again sometime, I'm sure we'll have a barrel of laughs!",
 									"Oh! I nearly forgot, here's a key I found in the tunnels.",
 									"It might be of some use to you, not sure what it opens.");
-								addItem(p, WROUGHT_KEY, 1);
+								addItem(p, ItemId.WROUGHT_IRON_KEY.id(), 1);
 								message(p, "Ana spots Irena and waves...");
 								npcTalk(p, Ana, "Hi Mum!",
 									"Sorry, I have to go now!");
@@ -446,11 +406,11 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 	}
 
 	private void mercenaryDialogue(Player p, Npc n, int cID) {
-		if (n.getID() == MERCENARY) {
+		if (n.getID() == NpcId.MERCENARY.id()) {
 			if (cID == -1) {
 				switch (p.getQuestStage(this)) {
 					case 0:
-						if (hasItem(p, METAL_KEY)) {
+						if (hasItem(p, ItemId.METAL_KEY.id())) {
 							npcTalk(p, n, "Move along now...we've had enough of your sort!");
 							return;
 						}
@@ -469,7 +429,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					case 3:
 					case 4:
 					case 5:
-						if (hasItem(p, METAL_KEY) || p.getLocation().inTouristTrapCave()) {
+						if (hasItem(p, ItemId.METAL_KEY.id()) || p.getLocation().inTouristTrapCave()) {
 							npcTalk(p, n, "Move along now...we've had enough of your sort!");
 							return;
 						}
@@ -489,8 +449,8 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 									"You can whistle for you money, I'll take you all on.");
 								if (opts == 0) {
 									playerTalk(p, n, "Yeah, ok, I'll give you 20 gold.");
-									if (hasItem(p, 10, 20)) {
-										removeItem(p, 10, 20);
+									if (hasItem(p, ItemId.COINS.id(), 20)) {
+										removeItem(p, ItemId.COINS.id(), 20);
 										npcTalk(p, n, "Good! Seeya, we have some cleaning to do.");
 										completed = true;
 									} else {
@@ -501,8 +461,8 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 									}
 								} else if (opts == 1) {
 									playerTalk(p, n, "I'll give you 15, that's all you're gettin'");
-									if (hasItem(p, 10, 15)) {
-										removeItem(p, 10, 15);
+									if (hasItem(p, ItemId.COINS.id(), 15)) {
+										removeItem(p, ItemId.COINS.id(), 15);
 										npcTalk(p, n, "Ok, we'll take fifteen, you push a hard bargain!");
 										completed = true;
 									} else {
@@ -529,22 +489,22 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 									case 5:
 										npcTalk(p, n, "Five gold for cleaning up the mess.",
 											"You have won 1 Gold piece!");
-										addItem(p, 10, 1);
+										addItem(p, ItemId.COINS.id(), 1);
 										break;
 									case 10:
 										npcTalk(p, n, "10 gold for cleaning up the mess.",
 											"You have won 2 Gold pieces!");
-										addItem(p, 10, 2);
+										addItem(p, ItemId.COINS.id(), 2);
 										break;
 									case 15:
 										npcTalk(p, n, "15 gold for cleaning up the mess.",
 											"You have won 4 Gold pieces!");
-										addItem(p, 10, 4);
+										addItem(p, ItemId.COINS.id(), 4);
 										break;
 									case 20:
 										npcTalk(p, n, "20 gold for cleaning up the mess.",
 											"You have won 10 Gold pieces!");
-										addItem(p, 10, 10);
+										addItem(p, ItemId.COINS.id(), 10);
 										break;
 								}
 								npcTalk(p, n, "Well done..!", "Ha, ha, ha ha!");
@@ -595,10 +555,10 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					npcTalk(p, n, "Let's see how good you are with desert survival techniques!");
 					message(p, "You're bundled into the back of a cart and blindfolded...");
 					message(p, "Sometime later you wake up in the desert.");
-					if (hasItem(p, 342)) {
+					if (hasItem(p, ItemId.BOWL_OF_WATER.id())) {
 						npcTalk(p, n, "You won't be needing that water any more!");
 						message(p, "The guards throw your water away...");
-						removeItem(p, 342, 1);
+						removeItem(p, ItemId.BOWL_OF_WATER.id(), 1);
 					}
 					p.teleport(121, 803);
 					message(p, "The guards move off in the cart leaving you stranded in the desert.");
@@ -610,9 +570,9 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 						"Ok, thanks.");
 					if (menu == 0) {
 						npcTalk(p, n, "It certainly will!");
-						if (hasItem(p, 10, 5)) {
+						if (hasItem(p, ItemId.COINS.id(), 5)) {
 							p.message("The guard takes the five gold coins.");
-							removeItem(p, 10, 5);
+							removeItem(p, ItemId.COINS.id(), 5);
 							npcTalk(p, n, "Now then, what did you want to know?");
 							int secondMenu = showMenu(p, n,
 								"What is this place?",
@@ -751,10 +711,10 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 										betAmount = 20;
 										recvAmount = 30;
 									}
-									if (hasItem(p, 10, betAmount)) {
+									if (hasItem(p, ItemId.COINS.id(), betAmount)) {
 										npcTalk(p, n, "Great, I'll take that bet.");
 										p.message("You hand over " + betAmount + " gold coins.");
-										removeItem(p, 10, betAmount);
+										removeItem(p, ItemId.COINS.id(), betAmount);
 										npcTalk(p, n, "Ok, if you win, you'll get " + recvAmount + "gold back.");
 										p.getCache().set("mercenary_bet", betAmount);
 									}
@@ -785,10 +745,10 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 						npcTalk(p, n, "Yeah, whatever!");
 					} else if (chopMenu == 1) {
 						playerTalk(p, n, "Perhaps these five gold coins will sweeten your mood?");
-						if (hasItem(p, 10, 5)) {
+						if (hasItem(p, ItemId.COINS.id(), 5)) {
 							npcTalk(p, n, "Well, it certainly will help...");
 							p.message("The guard takes the five gold coins.");
-							removeItem(p, 10, 5);
+							removeItem(p, ItemId.COINS.id(), 5);
 							npcTalk(p, n, "Now then, what did you want to know?");
 							int knowMenu = showMenu(p, n,
 								"What is this place?",
@@ -830,9 +790,9 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 						"Ok, thanks.");
 					if (altMenu == 0) {
 						npcTalk(p, n, "Hmm, it might help!");
-						if (hasItem(p, 10, 5)) {
+						if (hasItem(p, ItemId.COINS.id(), 5)) {
 							p.message("The guards takes the five gold coins.");
-							removeItem(p, 10, 5);
+							removeItem(p, ItemId.COINS.id(), 5);
 							npcTalk(p, n, "Now then, what did you want to know?");
 							int anaMenu = showMenu(p, n,
 								"I'm looking for a woman called Ana, have you seen her?",
@@ -871,7 +831,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 	}
 
 	private void mercenaryCaptainDialogue(Player p, Npc n, int cID) {
-		if (n.getID() == MERCENARY_CAPTAIN) {
+		if (n.getID() == NpcId.MERCENARY_CAPTAIN.id()) {
 			if (cID == -1) {
 				switch (p.getQuestStage(this)) {
 					case 0:
@@ -886,7 +846,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					case 9:
 					case 10:
 					case -1:
-						if (hasItem(p, METAL_KEY)) {
+						if (hasItem(p, ItemId.METAL_KEY.id())) {
 							npcTalk(p, n, "Move along now...we've had enough of your sort!");
 							return;
 						}
@@ -1043,7 +1003,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 	}
 
 	private void slaveDialogue(Player p, Npc n, int cID) {
-		if (n.getID() == MINING_SLAVE) {
+		if (n.getID() == NpcId.MINING_SLAVE.id()) {
 			if (cID == -1) {
 				switch (p.getQuestStage(this)) {
 					case 0:
@@ -1086,16 +1046,16 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 						break;
 					case 3:
 						npcTalk(p, n, "Do you have the Desert Clothes yet?");
-						if (hasItem(p, 1019) && hasItem(p, 1020) && hasItem(p, 990)) {
+						if (hasItem(p, ItemId.DESERT_ROBE.id()) && hasItem(p, ItemId.DESERT_SHIRT.id()) && hasItem(p, ItemId.DESERT_BOOTS.id())) {
 							npcTalk(p, n, "Great! You have the Desert Clothes!");
 							message(p, "The slave starts getting undressed right in front of you.");
 							npcTalk(p, n, "Ok, here's the clothes, I won't need them anymore.");
 							message(p, "The slave gives you his dirty, flea infested robe.",
 								"The slave gives you his muddy, sweat soaked shirt.");
-							p.getInventory().replace(1019, 1022);
-							p.getInventory().replace(1020, 1023);
-							removeItem(p, 990, 1);
-							Npc newSlave = spawnNpc(737, n.getX(), n.getY(), 30000);
+							p.getInventory().replace(ItemId.DESERT_ROBE.id(), ItemId.SLAVES_ROBE_BOTTOM.id());
+							p.getInventory().replace(ItemId.DESERT_SHIRT.id(), ItemId.SLAVES_ROBE_TOP.id());
+							removeItem(p, ItemId.DESERT_BOOTS.id(), 1);
+							Npc newSlave = spawnNpc(NpcId.ESCAPING_MINING_SLAVE.id(), n.getX(), n.getY(), 30000);
 							n.remove();
 							sleep(1000);
 							npcTalk(p, newSlave, "Right, I'm off! Good luck!");
@@ -1115,18 +1075,18 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					case -1:
 						if (p.getLocation().inTouristTrapCave()) {
 							npcTalk(p, n, "Can't you see I'm busy?");
-							if (!p.getInventory().wielding(1022) && !p.getInventory().wielding(1023) && p.getQuestStage(this) != -1) {
+							if (!p.getInventory().wielding(ItemId.SLAVES_ROBE_BOTTOM.id()) && !p.getInventory().wielding(ItemId.SLAVES_ROBE_TOP.id()) && p.getQuestStage(this) != -1) {
 								p.message("A guard notices you and starts running after you.");
-								Npc npcN = getNearestNpc(p, MERCENARY, 10);
+								Npc npcN = getNearestNpc(p, NpcId.MERCENARY.id(), 10);
 								if (npcN == null) {
-									npcN = spawnNpc(MERCENARY, p.getX(), p.getY(), 60000);
+									npcN = spawnNpc(NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
 									sleep(1000);
 								}
 								npcTalk(p, npcN, "Hey! You're no slave!");
 								npcN.startCombat(p);
 								message(p, "The Guards search you!");
-								if (hasItem(p, CELL_DOOR_KEY)) {
-									removeItem(p, CELL_DOOR_KEY, 1);
+								if (hasItem(p, ItemId.CELL_DOOR_KEY.id())) {
+									removeItem(p, ItemId.CELL_DOOR_KEY.id(), 1);
 								}
 								message(p, "Some guards rush to help their comrade.",
 									"You are roughed up a bit by the guards as you're manhandlded into a cell.");
@@ -1137,7 +1097,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 									p.teleport(89, 801);
 								}
 							}
-						} else if (hasItem(p, 1022) && hasItem(p, 1023)) {
+						} else if (hasItem(p, ItemId.SLAVES_ROBE_BOTTOM.id()) && hasItem(p, ItemId.SLAVES_ROBE_TOP.id())) {
 							npcTalk(p, n, "Not much to do here but mine all day long.");
 						} else {
 							npcTalk(p, n, "Oh bother, I was caught by the guards again...",
@@ -1148,16 +1108,16 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 								"Yes, I'll trade.",
 								"No thanks...");
 							if (trade == 0) {
-								if (hasItem(p, 1019) && hasItem(p, 1020) && hasItem(p, 990)) {
+								if (hasItem(p, ItemId.DESERT_ROBE.id()) && hasItem(p, ItemId.DESERT_SHIRT.id()) && hasItem(p, ItemId.DESERT_BOOTS.id())) {
 									npcTalk(p, n, "Great! You have the Desert Clothes!");
 									message(p, "The slave starts getting undressed right in front of you.");
 									npcTalk(p, n, "Ok, here's the clothes, I won't need them anymore.");
 									message(p, "The slave gives you his dirty, flea infested robe.",
 										"The slave gives you his muddy, sweat soaked shirt.");
-									p.getInventory().replace(1019, 1022);
-									p.getInventory().replace(1020, 1023);
-									removeItem(p, 990, 1);
-									spawnNpc(737, n.getX(), n.getY(), 30000);
+									p.getInventory().replace(ItemId.DESERT_ROBE.id(), ItemId.SLAVES_ROBE_BOTTOM.id());
+									p.getInventory().replace(ItemId.DESERT_SHIRT.id(), ItemId.SLAVES_ROBE_TOP.id());
+									removeItem(p, ItemId.DESERT_BOOTS.id(), 1);
+									spawnNpc(NpcId.ESCAPING_MINING_SLAVE.id(), n.getX(), n.getY(), 30000);
 									n.remove();
 								} else {
 									npcTalk(p, n, "I need a desert shirt, robe and boots if you want these clothes off me.");
@@ -1277,7 +1237,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 							//failed attempt 2
 							if (attempt2 == 0) {
 								message(p, "You fail!");
-								Npc mercenary = getNearestNpc(p, MERCENARY, 15);
+								Npc mercenary = getNearestNpc(p, NpcId.MERCENARY.id(), 15);
 								if (mercenary != null) {
 									message(p, "A nearby guard spots you!");
 									npcTalk(p, n, "Oh oh!");
@@ -1315,10 +1275,10 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 	}
 
 	private void mercenaryInsideDialogue(Player p, Npc n, int cID) {
-		if (n.getID() == MERCENARY_INSIDE) {
+		if (n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()) {
 			if (cID == -1) {
 				if (p.getLocation().inTouristTrapCave()) {
-					if (!p.getInventory().wielding(1022) && !p.getInventory().wielding(1023)) {
+					if (!p.getInventory().wielding(ItemId.SLAVES_ROBE_BOTTOM.id()) && !p.getInventory().wielding(ItemId.SLAVES_ROBE_TOP.id())) {
 						p.message("This guard looks as if he's been down here a while.");
 						npcTalk(p, n, "Hey, you're no slave!",
 							"What are you doing down here?");
@@ -1418,7 +1378,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 	}
 
 	private void bedabinNomadDialogue(Player p, Npc n, int cID) {
-		if (n.getID() == BEDABIN_NOMAD) {
+		if (n.getID() == NpcId.BEDABIN_NOMAD.id()) {
 			if (cID == -1) {
 				npcTalk(p, n, "Hello Effendi!",
 					"How can I help you?");
@@ -1447,12 +1407,12 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			}
 			switch (cID) {
 				case BedabinNomad.BUCKETOFWATER:
-					if (hasItem(p, 10, 20)) {
+					if (hasItem(p, ItemId.COINS.id(), 20)) {
 						message(p, "You hand over 20 gold pieces.");
-						removeItem(p, 10, 20);
+						removeItem(p, ItemId.COINS.id(), 20);
 						npcTalk(p, n, "Very well Effendi!");
 						message(p, "You recieve a bucket of water.");
-						addItem(p, 50, 1);
+						addItem(p, ItemId.BUCKET_OF_WATER.id(), 1);
 					} else {
 						message(p, "Sorry Effendi, you don't seem to have the money.");
 					}
@@ -1477,12 +1437,12 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 
 					break;
 				case BedabinNomad.FULLWATERSKIN:
-					if (hasItem(p, 10, 25)) {
+					if (hasItem(p, ItemId.COINS.id(), 25)) {
 						message(p, "You hand over 25 gold pieces.");
-						removeItem(p, 10, 25);
+						removeItem(p, ItemId.COINS.id(), 25);
 						npcTalk(p, n, "Very well Effendi!");
 						message(p, "You recieve a full waterskin.");
-						addItem(p, 1016, 1);
+						addItem(p, ItemId.FULL_WATER_SKIN.id(), 1);
 					} else {
 						message(p, "Sorry Effendi, you don't seem to have the money.");
 					}
@@ -1506,12 +1466,12 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					}
 					break;
 				case BedabinNomad.JUGOFWATER:
-					if (hasItem(p, 10, 5)) {
+					if (hasItem(p, ItemId.COINS.id(), 5)) {
 						message(p, "You hand over 5 gold pieces.");
-						removeItem(p, 10, 5);
+						removeItem(p, ItemId.COINS.id(), 5);
 						npcTalk(p, n, "Very well Effendi!");
 						message(p, "You recieve a jug full or water.");
-						addItem(p, 141, 1);
+						addItem(p, ItemId.JUG_OF_WATER.id(), 1);
 					} else {
 						message(p, "Sorry Effendi, you don't seem to have the money.");
 					}
@@ -1579,7 +1539,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 	}
 
 	private void alShabimDialogue(Player p, Npc n, int cID) {
-		if (n.getID() == AL_SHABIM) {
+		if (n.getID() == NpcId.AL_SHABIM.id()) {
 			if (cID == -1) {
 				switch (p.getQuestStage(this)) {
 					case 0:
@@ -1624,7 +1584,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 									"Here is a copy of the key that should give you access to the chest.",
 									"Bring us back the plans inside the chest, they should be sealed.",
 									"All haste to you Effendi!");
-								addItem(p, BEDOBIN_COPY_KEY, 1);
+								addItem(p, ItemId.BEDOBIN_COPY_KEY.id(), 1);
 								p.updateQuestStage(this, 6);
 							} else if (opt == 1) {
 								npcTalk(p, n, "Very well Effendi!");
@@ -1636,11 +1596,11 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					case 6:
 					case 7:
 						npcTalk(p, n, "Hello Effendi!");
-						if (hasItem(p, 1014)) {
+						if (hasItem(p, ItemId.PROTOTYPE_THROWING_DART.id())) {
 							alShabimDialogue(p, n, AlShabim.MADE_WEAPON);
-						} else if (hasItem(p, TECHNICAL_PLANS) && !hasItem(p, 1014)) {
+						} else if (hasItem(p, ItemId.TECHNICAL_PLANS.id()) && !hasItem(p, ItemId.PROTOTYPE_THROWING_DART.id())) {
 							alShabimDialogue(p, n, AlShabim.HAVE_PLANS);
-						} else if (hasItem(p, BEDOBIN_COPY_KEY) && !hasItem(p, TECHNICAL_PLANS)) {
+						} else if (hasItem(p, ItemId.BEDOBIN_COPY_KEY.id()) && !hasItem(p, ItemId.TECHNICAL_PLANS.id())) {
 							npcTalk(p, n, "How are things going Effendi?");
 							int dede = showMenu(p, n,
 								"Very well thanks!",
@@ -1665,7 +1625,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 								npcTalk(p, n, "How very careless of you!",
 									"Here is another key, don't lose it this time !");
 								p.message("Al Shabim gives you another key.");
-								addItem(p, BEDOBIN_COPY_KEY, 1);
+								addItem(p, ItemId.BEDOBIN_COPY_KEY.id(), 1);
 							} else if (kaka == 1) {
 								alShabimDialogue(p, n, AlShabim.WHATISTHISPLACE);
 							} else if (kaka == 2) {
@@ -1677,15 +1637,15 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					case 9:
 					case 10:
 					case -1:
-						if (hasItem(p, 1014)) {
+						if (hasItem(p, ItemId.PROTOTYPE_THROWING_DART.id())) {
 							npcTalk(p, n, "Hello Effendi!",
 								"Wonderful, I see you have made the new weapon!",
 								"Where did you get this from Effendi!",
 								"I'll have to confiscate this for your own safety!");
-							removeItem(p, 1014, 1);
+							removeItem(p, ItemId.PROTOTYPE_THROWING_DART.id(), 1);
 							return;
 						}
-						if (hasItem(p, TECHNICAL_PLANS)) {
+						if (hasItem(p, ItemId.TECHNICAL_PLANS.id())) {
 							npcTalk(p, n, "Hello Effendi!");
 							alShabimDialogue(p, n, AlShabim.HAVE_PLANS);
 							return;
@@ -1693,7 +1653,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 						if (p.getQuestStage(this) == 8) {
 							npcTalk(p, n, "Hello Effendi!",
 								"Many thanks with your help previously Effendi!");
-							if (hasItem(p, PINE_APPLE)) {
+							if (hasItem(p, ItemId.TENTI_PINEAPPLE.id())) {
 								int mopt = showMenu(p, n,
 									"What is this place?",
 									"Goodbye!");
@@ -1709,7 +1669,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 								if (mopt == 0) {
 									npcTalk(p, n, "Here is another pineapple, try not to lose this one.");
 									p.message("Al Shabim gives you another pineapple.");
-									addItem(p, PINE_APPLE, 1);
+									addItem(p, ItemId.TENTI_PINEAPPLE.id(), 1);
 								} else if (mopt == 1) {
 									alShabimDialogue(p, n, AlShabim.WHATISTHISPLACE);
 								}
@@ -1762,7 +1722,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 						"Yes, I'm very interested.",
 						"No, sorry.");
 					if (tati == 0) {
-						if (hasItem(p, 169) && hasItem(p, 381, 10)) {
+						if (hasItem(p, ItemId.BRONZE_BAR.id()) && hasItem(p, ItemId.FEATHER.id(), 10)) {
 							npcTalk(p, n, "Aha! I see you have the items we need!",
 								"Are you still willing to help make the weapon?");
 							int make = showMenu(p, n,
@@ -1797,24 +1757,24 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				case AlShabim.MADE_WEAPON:
 					npcTalk(p, n, "Wonderful, I see you have made the new weapon!");
 					message(p, "You show Al Shabim the prototype dart.");
-					removeItem(p, 1014, 1);
+					removeItem(p, ItemId.PROTOTYPE_THROWING_DART.id(), 1);
 					npcTalk(p, n, "This is truly fantastic Effendi!");
-					if (hasItem(p, TECHNICAL_PLANS)) {
+					if (hasItem(p, ItemId.TECHNICAL_PLANS.id())) {
 						npcTalk(p, n, "We will take the technical plans for the weapon as well.");
-						removeItem(p, TECHNICAL_PLANS, 1);
+						removeItem(p, ItemId.TECHNICAL_PLANS.id(), 1);
 						message(p, "You hand over the technical plans for the weapon.");
 					}
 					npcTalk(p, n, "We are forever grateful for this gift.",
 						"My advisors have discovered some secrets which we will share with you.");
 					message(p, "Al Shabim's advisors show you some advanced techniques for making the new weapon.");
 					npcTalk(p, n, "Oh, and here is your pineapple!");
-					addItem(p, PINE_APPLE, 1);
+					addItem(p, ItemId.TENTI_PINEAPPLE.id(), 1);
 					npcTalk(p, n, "Please accept this selection of six bronze throwing darts",
 						"as a token of our appreciation.");
-					addItem(p, 1013, 6);
-					if (hasItem(p, BEDOBIN_COPY_KEY)) {
+					addItem(p, ItemId.BRONZE_THROWING_DART.id(), 6);
+					if (hasItem(p, ItemId.BEDOBIN_COPY_KEY.id())) {
 						npcTalk(p, n, "I'll take that key off your hands as well effendi!");
-						removeItem(p, BEDOBIN_COPY_KEY, 1);
+						removeItem(p, ItemId.BEDOBIN_COPY_KEY.id(), 1);
 						npcTalk(p, n, "Many thanks!");
 					}
 					p.message("");
@@ -1829,7 +1789,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 
 	private void captainSiadDialogue(Player p, Npc n, int cID, GameObject obj) {
 		// USED FOR CHEST AND TALK-TO
-		if (n.getID() == CAPTAIN_SIAD) {
+		if (n.getID() == NpcId.CAPTAIN_SIAD.id()) {
 			if (cID == -1) {
 				switch (p.getQuestStage(this)) {
 					case 0:
@@ -1849,7 +1809,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 						} else {
 							message(p, "The captain looks up from his work as you address him.");
 						}
-						if (hasItem(p, TECHNICAL_PLANS) || p.getQuestStage(this) >= 8 || p.getQuestStage(this) == -1) {
+						if (hasItem(p, ItemId.TECHNICAL_PLANS.id()) || p.getQuestStage(this) >= 8 || p.getQuestStage(this) == -1) {
 							npcTalk(p, n, "I don't have time to talk to you.",
 								"Move along please!");
 							return;
@@ -1910,9 +1870,9 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					break;
 				case Siad.PUNISHED:
 					message(p, "The Guards search you!");
-					if (hasItem(p, METAL_KEY)) {
+					if (hasItem(p, ItemId.METAL_KEY.id())) {
 						p.message("The guards find the main gate key and remove it!");
-						removeItem(p, METAL_KEY, 1);
+						removeItem(p, ItemId.METAL_KEY.id(), 1);
 					}
 					message(p, "Some guards rush to help the captain.",
 						"You are roughed up a bit by the guards as you're manhandlded into a cell.");
@@ -2133,18 +2093,18 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				p.message("This slave does not appear interested in talking to you.");
 				return;
 			}
-			if (!p.getInventory().wielding(1022) && !p.getInventory().wielding(1023) && p.getQuestStage(this) != -1) {
+			if (!p.getInventory().wielding(ItemId.SLAVES_ROBE_BOTTOM.id()) && !p.getInventory().wielding(ItemId.SLAVES_ROBE_TOP.id()) && p.getQuestStage(this) != -1) {
 				p.message("A guard notices you and starts running after you.");
-				Npc npcN = getNearestNpc(p, MERCENARY, 10);
+				Npc npcN = getNearestNpc(p, NpcId.MERCENARY.id(), 10);
 				if (npcN == null) {
-					npcN = spawnNpc(MERCENARY, p.getX(), p.getY(), 60000);
+					npcN = spawnNpc(NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
 					sleep(1000);
 				}
 				npcTalk(p, npcN, "Hey! You're no slave!");
 				npcN.startCombat(p);
 				message(p, "The Guards search you!");
-				if (hasItem(p, CELL_DOOR_KEY)) {
-					removeItem(p, CELL_DOOR_KEY, 1);
+				if (hasItem(p, ItemId.CELL_DOOR_KEY.id())) {
+					removeItem(p, ItemId.CELL_DOOR_KEY.id(), 1);
 				}
 				message(p, "Some guards rush to help their comrade.",
 					"You are roughed up a bit by the guards as you're manhandlded into a cell.");
@@ -2312,12 +2272,12 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					"It's a trade secret!");
 				if (gosh == 0) {
 					playerTalk(p, n, "I used a key.");
-					Npc guard = spawnNpc(MERCENARY, p.getX(), p.getY(), 60000);
+					Npc guard = spawnNpc(NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
 					if (guard != null) {
 						npcTalk(p, guard, "I heard that! So you used a key did you?! ");
-						if (hasItem(p, METAL_KEY)) {
+						if (hasItem(p, ItemId.METAL_KEY.id())) {
 							npcTalk(p, guard, "Right, we'll have that key off you!");
-							removeItem(p, METAL_KEY, 1);
+							removeItem(p, ItemId.METAL_KEY.id(), 1);
 						}
 						npcTalk(p, guard, "Guards! Guards!");
 						guard.startCombat(p);
@@ -2335,7 +2295,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				}
 				break;
 			case Ana.GUARDSRUBBISH:
-				Npc guard = spawnNpc(MERCENARY, p.getX(), p.getY(), 60000);
+				Npc guard = spawnNpc(NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
 				if (guard != null) {
 					npcTalk(p, guard, "I heard that! So you managed to sneak in did you!",
 						"Guards! Guards!");
@@ -2354,25 +2314,25 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == IRENA) {
+		if (n.getID() == NpcId.IRENA.id()) {
 			irenaDialogue(p, n, -1);
 		}
-		if (n.getID() == MERCENARY) {
+		else if (n.getID() == NpcId.MERCENARY.id()) {
 			mercenaryDialogue(p, n, -1);
 		}
-		if (n.getID() == MERCENARY_CAPTAIN) {
+		else if (n.getID() == NpcId.MERCENARY_CAPTAIN.id()) {
 			mercenaryCaptainDialogue(p, n, -1);
 		}
-		if (n.getID() == MERCENARY_INSIDE) {
+		else if (n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()) {
 			mercenaryInsideDialogue(p, n, -1);
 		}
-		if (n.getID() == MINING_SLAVE) {
+		else if (n.getID() == NpcId.MINING_SLAVE.id()) {
 			slaveDialogue(p, n, -1);
 		}
-		if (n.getID() == BEDABIN_NOMAD) {
+		else if (n.getID() == NpcId.BEDABIN_NOMAD.id()) {
 			bedabinNomadDialogue(p, n, -1);
 		}
-		if (n.getID() == BEDABIN_NOMAD_GUARD) {
+		else if (n.getID() == NpcId.BEDABIN_NOMAD_GUARD.id()) {
 			switch (p.getQuestStage(this)) {
 				case 8:
 				case 9:
@@ -2380,9 +2340,9 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				case -1:
 					npcTalk(p, n, "Sorry, but you can't use the tent without permission.",
 						"But thanks for your help to the Bedabin people.");
-					if (hasItem(p, TECHNICAL_PLANS)) {
+					if (hasItem(p, ItemId.TECHNICAL_PLANS.id())) {
 						npcTalk(p, n, "And we'll take those plans off your hands as well!");
-						removeItem(p, TECHNICAL_PLANS, 1);
+						removeItem(p, ItemId.TECHNICAL_PLANS.id(), 1);
 					}
 					break;
 				default:
@@ -2391,13 +2351,13 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					break;
 			}
 		}
-		if (n.getID() == AL_SHABIM) {
+		else if (n.getID() == NpcId.AL_SHABIM.id()) {
 			alShabimDialogue(p, n, -1);
 		}
-		if (n.getID() == CAPTAIN_SIAD) {
+		else if (n.getID() == NpcId.CAPTAIN_SIAD.id()) {
 			captainSiadDialogue(p, n, -1, null);
 		}
-		if (n.getID() == CAVE_2_MERCENARY) {
+		else if (n.getID() == NpcId.MERCENARY_LIFTPLATFORM.id()) {
 			if (p.getQuestStage(this) == -1) {
 				npcTalk(p, n, "Move along please, don't want any trouble today!");
 				return;
@@ -2418,14 +2378,14 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				p.teleport(76, 3625);
 			}
 		}
-		if (n.getID() == CAVE_ANA) {
+		else if (n.getID() == NpcId.ANA.id()) {
 			anaDialogue(p, n, -1);
 		}
 	}
 
 	@Override
 	public void onIndirectTalkToNpc(Player p, final Npc n) {
-		if (n.getID() == AL_SHABIM) {
+		if (n.getID() == NpcId.AL_SHABIM.id()) {
 			if (p.getQuestStage(this) == 6 || p.getQuestStage(this) == 7) {
 				alShabimDialogue(p, n, AlShabim.HAVE_PLANS);
 			} else if (p.getQuestStage(this) > 7 || p.getQuestStage(this) == -1) {
@@ -2438,35 +2398,23 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (obj.getID() == IRON_GATE) {
-			return true;
-		}
-		if (obj.getID() == ROCK_1) {
-			return true;
-		}
-		if (obj.getID() == WOODEN_DOORS || obj.getID() == DESK || obj.getID() == BOOKCASE || obj.getID() == CAPTAINS_CHEST) {
-			return true;
-		}
-		if (obj.getID() == STONE_GATE && p.getY() >= 735) {
-			return true;
-		}
-		return false;
+		return inArray(obj.getID(), IRON_GATE, ROCK_1, WOODEN_DOORS, DESK, BOOKCASE, CAPTAINS_CHEST) || (obj.getID() == STONE_GATE && p.getY() >= 735);
 	}
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if (obj.getID() == STONE_GATE && p.getY() >= 735) {
 			if (command.equals("go through")) {
-				if (!hasItem(p, 1039)) {
+				if (!hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
 					p.message("you go through the gate");
 					p.teleport(62, 732);
 				} else {
 					if (p.getQuestStage(this) == 9) {
 						message(p, "Ana looks out of the barrel...");
 						message(p, "@gre@Ana: Hey great, we're at the Shantay Pass!");
-						removeItem(p, 1039, 1);
+						removeItem(p, ItemId.ANA_IN_A_BARREL.id(), 1);
 						p.updateQuestStage(this, 10);
-						Npc Ana = spawnNpc(CAVE_ANA, p.getX(), p.getY(), 60000);
+						Npc Ana = spawnNpc(NpcId.ANA.id(), p.getX(), p.getY(), 60000);
 						Ana.teleport(p.getX(), p.getY() + 1);
 						if (Ana != null) {
 							sleep(650);
@@ -2475,20 +2423,20 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 								"Pop by again sometime, I'm sure we'll have a barrel of laughs!",
 								"Oh! I nearly forgot, here's a key I found in the tunnels.",
 								"It might be of some use to you, not sure what it opens.");
-							addItem(p, WROUGHT_KEY, 1);
+							addItem(p, ItemId.WROUGHT_IRON_KEY.id(), 1);
 							message(p, "Ana spots Irena and waves...");
 							npcTalk(p, Ana, "Hi Mum!",
 								"Sorry, I have to go now!");
 							Ana.remove();
 						}
-						Npc Irena = getNearestNpc(p, IRENA, 15);
+						Npc Irena = getNearestNpc(p, NpcId.IRENA.id(), 15);
 						npcTalk(p, Irena, "Hi Ana!");
 						rewardMenu(p, Irena, true);
 						p.getCache().remove("tried_ana_barrel");
 					}
 					//should not have an ana in barrel in other stages
 					else {
-						removeItem(p, 1039, 1);
+						removeItem(p, ItemId.ANA_IN_A_BARREL.id(), 1);
 					}
 				}
 			} else if (command.equals("look")) {
@@ -2501,12 +2449,12 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					"Despite this warning lots of people seem to pass through the gate.");
 			}
 		}
-		if (obj.getID() == IRON_GATE) {
+		else if (obj.getID() == IRON_GATE) {
 			if (command.equals("open")) {
-				if (hasItem(p, 1039)) {
+				if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
 					failEscapeAnaInBarrel(p, null);
 					return;
-				} else if (!hasItem(p, METAL_KEY)) {
+				} else if (!hasItem(p, ItemId.METAL_KEY.id())) {
 					p.message("This gate is locked, you'll need a key to open it.");
 				} else {
 					message(p, "You use the metal key to unlock the gates.",
@@ -2515,7 +2463,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					p.message("The gate swings open.");
 					sleep(1000);
 					p.message("The gates close behind you.");
-					Npc n = getNearestNpc(p, MERCENARY_INSIDE, 15);
+					Npc n = getNearestNpc(p, NpcId.MERCENARY_ESCAPEGATES.id(), 15);
 					if (n != null) {
 						if (p.getQuestStage(this) == -1) { // no dialogue after quest on just opening gates
 							// todo change the coords going in and going out.
@@ -2555,7 +2503,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					"But you might be able to sneak past them if you try to blend in.");
 			}
 		}
-		if (obj.getID() == ROCK_1) {
+		else if (obj.getID() == ROCK_1) {
 			p.message("You start climbing the rocky elevation.");
 			if (!succeedRate(p)) {
 				p.message("You slip a little and tumble the rest of the way down the slope.");
@@ -2563,11 +2511,11 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			}
 			p.teleport(93, 799);
 		}
-		if (obj.getID() == WOODEN_DOORS) {
+		else if (obj.getID() == WOODEN_DOORS) {
 			if (command.equals("open")) {
 				message(p, "You push the door.");
 				playerTalk(p, null, "Ugh!");
-				if (p.getInventory().wielding(1022) && p.getInventory().wielding(1023)) {
+				if (p.getInventory().wielding(ItemId.SLAVES_ROBE_BOTTOM.id()) && p.getInventory().wielding(ItemId.SLAVES_ROBE_TOP.id())) {
 					message(p, "The door opens with some effort ");
 					if (obj.getX() == 81 && obj.getY() == 3633) {
 						p.teleport(82, 802);
@@ -2578,7 +2526,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 						"The associated smells of a hundred sweaty miners greets your nostrils.",
 						"And your ears ring with the 'CLANG CLANG CLANG' as metal hits rock.");
 				} else {
-					Npc n = spawnNpc(DRAFT_MERCENARY_GUARD, p.getX(), p.getY(), 60000);
+					Npc n = spawnNpc(NpcId.DRAFT_MERCENARY_GUARD.id(), p.getX(), p.getY(), 60000);
 					sleep(1000);
 					npcTalk(p, n, "Oi You!");
 					message(p, "A guard notices you and approaches...");
@@ -2590,9 +2538,9 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 						return;
 					}
 					message(p, "The Guards search you!");
-					if (hasItem(p, METAL_KEY)) {
+					if (hasItem(p, ItemId.METAL_KEY.id())) {
 						p.message("The guards find the main gate key and remove it!");
-						removeItem(p, METAL_KEY, 1);
+						removeItem(p, ItemId.METAL_KEY.id(), 1);
 					}
 					message(p, "More guards rush to catch you.",
 						"You are roughed up a bit by the guards as you're manhandlded to a cell.");
@@ -2611,28 +2559,28 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				}
 			}
 		}
-		if (obj.getID() == DESK) {
+		else if (obj.getID() == DESK) {
 			message(p, "You search the captains desk while he's not looking.");
-			if (hasItem(p, CELL_DOOR_KEY) && hasItem(p, METAL_KEY) &&
-				((p.getQuestStage(this) >= 0 && p.getQuestStage(this) <= 9) ? true : hasItem(p, WROUGHT_KEY))) {
+			if (hasItem(p, ItemId.CELL_DOOR_KEY.id()) && hasItem(p, ItemId.METAL_KEY.id()) &&
+				((p.getQuestStage(this) >= 0 && p.getQuestStage(this) <= 9) ? true : hasItem(p, ItemId.WROUGHT_IRON_KEY.id()))) {
 				message(p, "...but you find nothing of interest.");
 				return;
 			}
-			if (!hasItem(p, CELL_DOOR_KEY)) {
+			if (!hasItem(p, ItemId.CELL_DOOR_KEY.id())) {
 				message(p, "You find a cell door key.");
-				addItem(p, CELL_DOOR_KEY, 1);
+				addItem(p, ItemId.CELL_DOOR_KEY.id(), 1);
 			}
-			if (!hasItem(p, METAL_KEY)) {
+			if (!hasItem(p, ItemId.METAL_KEY.id())) {
 				message(p, "You find a large metalic key.");
-				addItem(p, METAL_KEY, 1);
+				addItem(p, ItemId.METAL_KEY.id(), 1);
 			}
 			//only after player has past to stage of wrought iron key
-			if (!(p.getQuestStage(this) >= 0 && p.getQuestStage(this) <= 9) && !hasItem(p, WROUGHT_KEY)) {
+			if (!(p.getQuestStage(this) >= 0 && p.getQuestStage(this) <= 9) && !hasItem(p, ItemId.WROUGHT_IRON_KEY.id())) {
 				message(p, "You find a large wrought iron key.");
-				addItem(p, WROUGHT_KEY, 1);
+				addItem(p, ItemId.WROUGHT_IRON_KEY.id(), 1);
 			}
 		}
-		if (obj.getID() == BOOKCASE) {
+		else if (obj.getID() == BOOKCASE) {
 			if (command.equals("search")) {
 				p.message("You notice several books on the subject of Sailing.");
 				if (!p.getCache().hasKey("sailing")) {
@@ -2642,14 +2590,14 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				p.message("The captain seems to collect lots of books!");
 			}
 		}
-		if (obj.getID() == CAPTAINS_CHEST) {
+		else if (obj.getID() == CAPTAINS_CHEST) {
 			if (p.getCache().hasKey("tourist_chest") || p.getQuestStage(this) == -1) {
-				if (hasItem(p, BEDOBIN_COPY_KEY)) {
-					if (!hasItem(p, TECHNICAL_PLANS)) {
+				if (hasItem(p, ItemId.BEDOBIN_COPY_KEY.id())) {
+					if (!hasItem(p, ItemId.TECHNICAL_PLANS.id())) {
 						message(p, "While the Captain's distracted, you quickly unlock the chest.",
 							"You use the Bedobin Copy Key to open the chest.",
 							"You open the chest and take out the plans.");
-						addItem(p, TECHNICAL_PLANS, 1);
+						addItem(p, ItemId.TECHNICAL_PLANS.id(), 1);
 					} else {
 						p.message("The chest is empty.");
 					}
@@ -2669,9 +2617,9 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					p.message("This chest needs a key!");
 				}
 			} else {
-				Npc n = getNearestNpc(p, CAPTAIN_SIAD, 5);
+				Npc n = getNearestNpc(p, NpcId.CAPTAIN_SIAD.id(), 5);
 				if (n == null) {
-					n = spawnNpc(CAPTAIN_SIAD, p.getX(), p.getY(), 60000);
+					n = spawnNpc(NpcId.CAPTAIN_SIAD.id(), p.getX(), p.getY(), 60000);
 					n.teleport(86, 1745);
 					sleep(1000);
 				}
@@ -2682,12 +2630,12 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 
 	@Override
 	public boolean blockNpcCommand(Npc n, String command, Player p) {
-		return n.getID() == MERCENARY_CAPTAIN && command.equalsIgnoreCase("watch");
+		return n.getID() == NpcId.MERCENARY_CAPTAIN.id() && command.equalsIgnoreCase("watch");
 	}
 
 	@Override
 	public void onNpcCommand(Npc n, String command, Player p) {
-		if (n.getID() == MERCENARY_CAPTAIN && command.equalsIgnoreCase("watch")) {
+		if (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && command.equalsIgnoreCase("watch")) {
 			message(p, "You watch the Mercenary Captain for some time.",
 				"He has a large metal key attached to his belt.",
 				"You notice that he usually gets his men to do his dirty work.");
@@ -2696,19 +2644,19 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		return n.getID() == MERCENARY_CAPTAIN;
+		return n.getID() == NpcId.MERCENARY_CAPTAIN.id();
 	}
 
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == MERCENARY_CAPTAIN) {
+		if (n.getID() == NpcId.MERCENARY_CAPTAIN.id()) {
 			p.message("You kill the captain!");
 			if (p.getQuestStage(this) == 1 && !p.getCache().hasKey("first_kill_captn")) {
 				p.getCache().store("first_kill_captn", true);
 			}
 			n.killedBy(p);
-			if (!hasItem(p, METAL_KEY)) {
-				addItem(p, METAL_KEY, 1);
+			if (!hasItem(p, ItemId.METAL_KEY.id())) {
+				addItem(p, ItemId.METAL_KEY.id(), 1);
 				message(p, "The mercenary captain drops a metal key on the floor.",
 					"You quickly grab the key and add it to your inventory.");
 			}
@@ -2717,13 +2665,8 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 
 	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
-		if (n.getID() == MERCENARY || n.getID() == MERCENARY_INSIDE) {
-			return true;
-		}
-		if (n.getID() == MERCENARY_CAPTAIN && p.getInventory().countId(METAL_KEY) < 1) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
+				|| (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && p.getInventory().countId(ItemId.METAL_KEY.id()) < 1);
 	}
 
 	@Override
@@ -2733,13 +2676,8 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 
 	@Override
 	public boolean blockPlayerRangeNpc(Player p, Npc n) {
-		if (n.getID() == MERCENARY || n.getID() == MERCENARY_INSIDE) {
-			return true;
-		}
-		if (n.getID() == MERCENARY_CAPTAIN && p.getInventory().countId(METAL_KEY) < 1) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
+				|| (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && p.getInventory().countId(ItemId.METAL_KEY.id()) < 1);
 	}
 
 	@Override
@@ -2749,13 +2687,8 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 
 	@Override
 	public boolean blockPlayerMageNpc(Player p, Npc n) {
-		if (n.getID() == MERCENARY || n.getID() == MERCENARY_INSIDE) {
-			return true;
-		}
-		if (n.getID() == MERCENARY_CAPTAIN && p.getInventory().countId(METAL_KEY) < 1) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
+				|| (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && p.getInventory().countId(ItemId.METAL_KEY.id()) < 1);
 	}
 
 	@Override
@@ -2764,7 +2697,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 	}
 
 	private void tryToAttackMercenarys(Player p, Npc affectedmob) {
-		if (affectedmob.getID() == MERCENARY_CAPTAIN || affectedmob.getID() == MERCENARY || affectedmob.getID() == MERCENARY_INSIDE) {
+		if (affectedmob.getID() == NpcId.MERCENARY_CAPTAIN.id() || affectedmob.getID() == NpcId.MERCENARY.id() || affectedmob.getID() == NpcId.MERCENARY_ESCAPEGATES.id()) {
 			p.message("This guard looks fearsome and very aggressive.");
 			p.message("Are you sure you want to attack him?");
 			int menu = showMenu(p,
@@ -2773,11 +2706,11 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			if (menu == 0) {
 				p.message("You decide to attack the guard.");
 				npcTalk(p, affectedmob, "Guards! Guards!");
-				if (affectedmob.getID() == MERCENARY_CAPTAIN) {
-					affectedmob = getNearestNpc(p, MERCENARY, 10);
+				if (affectedmob.getID() == NpcId.MERCENARY_CAPTAIN.id()) {
+					affectedmob = getNearestNpc(p, NpcId.MERCENARY.id(), 10);
 				}
 				affectedmob.startCombat(p);
-				if (affectedmob.getID() == MERCENARY_INSIDE) {
+				if (affectedmob.getID() == NpcId.MERCENARY_ESCAPEGATES.id()) {
 					p.message("More guards rush to catch you.");
 					message(p, "You are roughed up a bit by the guards as you're manhandlded to a cell.");
 					npcTalk(p, affectedmob, "Into the cell you go! I hope this teaches you a lesson.");
@@ -2788,10 +2721,10 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					npcTalk(p, affectedmob, "Let's see how good you are with desert survival techniques!");
 					message(p, "You're bundled into the back of a cart and blindfolded...",
 						"Sometime later you wake up in the desert.");
-					if (hasItem(p, 342)) {
+					if (hasItem(p, ItemId.BOWL_OF_WATER.id())) {
 						npcTalk(p, affectedmob, "You won't be needing that water any more!");
 						message(p, "The guards throw your water away...");
-						removeItem(p, 342, 1);
+						removeItem(p, ItemId.BOWL_OF_WATER.id(), 1);
 					}
 					message(p, "The guards move off in the cart leaving you stranded in the desert.");
 					p.teleport(121, 743);
@@ -2803,7 +2736,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 	}
 
 	private void captainWantToThrowPlayer(Player p, Npc n) {
-		n = getNearestNpc(p, MERCENARY, 10);
+		n = getNearestNpc(p, NpcId.MERCENARY.id(), 10);
 		if (n != null) {
 			int punishment = DataConversions.random(0, 3);
 			if (punishment == 0) {
@@ -2855,17 +2788,17 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 	}
 
 	private void failEscapeAnaInBarrel(Player p, Npc n) {
-		if (hasItem(p, 1039)) {
-			n = spawnNpc(MERCENARY, p.getX(), p.getY(), 60000);
+		if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
+			n = spawnNpc(NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
 			sleep(650);
 			npcTalk(p, n, "Hey, where d'ya think you're going with that barrel?",
 				"You should know that they go out on the cart!",
 				"We'd better check this out!");
 			p.message("The guards prize the lid off the barrel.");
-			removeItem(p, 1039, 1);
+			removeItem(p, ItemId.ANA_IN_A_BARREL.id(), 1);
 			npcTalk(p, n, "Blimey! It's a jail break!",
 				"They're making a break for it!");
-			Npc ana = spawnNpc(CAVE_ANA, p.getX(), p.getY(), 30000);
+			Npc ana = spawnNpc(NpcId.ANA.id(), p.getX(), p.getY(), 30000);
 			sleep(650);
 			npcTalk(p, ana, "I could have told you we wouldn't get away with it!",
 				"Now look at the mess you've caused!");
@@ -2890,7 +2823,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 	}
 
 	private void failWindowAnaInBarrel(Player p, Npc n) {
-		if (hasItem(p, 1039)) {
+		if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
 			message(p, "You focus all of your strength on the bar. Your muscles ripple!",
 				"You manage to bend the bars on the window .",
 				"You'll never get Ana in the Barrel through the window.",
@@ -2902,23 +2835,10 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click, Player p) {
-		if (obj.getID() == JAIL_DOOR && obj.getX() == 88 && obj.getY() == 801) {
-			return true;
-		}
-		if (obj.getID() == WINDOW && obj.getX() == 90 && obj.getY() == 802) {
-			return true;
-		}
-		if (obj.getID() == TENT_DOOR_1 || obj.getID() == TENT_DOOR_2) {
-			return true;
-		}
-		if (obj.getID() == CAVE_JAIL_DOOR) {
-			return true;
-		}
-		if (obj.getID() == STURDY_IRON_GATE) {
-			return true;
-
-		}
-		return false;
+		return (obj.getID() == JAIL_DOOR && obj.getX() == 88 && obj.getY() == 801)
+				|| (obj.getID() == WINDOW && (obj.getX() == 90 || obj.getX() == 89) && obj.getY() == 802)
+				|| obj.getID() == TENT_DOOR_1 || obj.getID() == TENT_DOOR_2
+				|| obj.getID() == CAVE_JAIL_DOOR || obj.getID() == STURDY_IRON_GATE;
 	}
 
 	@Override
@@ -2938,8 +2858,8 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					"Maybe they'll let you out soon?");
 			}
 		}
-		if (obj.getID() == JAIL_DOOR && obj.getX() == 88 && obj.getY() == 801) {
-			if (hasItem(p, CELL_DOOR_KEY)) {
+		else if (obj.getID() == JAIL_DOOR && obj.getX() == 88 && obj.getY() == 801) {
+			if (hasItem(p, ItemId.CELL_DOOR_KEY.id())) {
 				p.message("You unlock the door and walk through.");
 				doDoor(obj, p);
 			} else {
@@ -2947,13 +2867,13 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					"And you don't seem to have one that fits.");
 			}
 		}
-		if (obj.getID() == TENT_DOOR_1) {
+		else if (obj.getID() == TENT_DOOR_1) {
 			if (p.getY() <= 793) {
 				p.teleport(171, 795);
 			} else {
-				Npc n = getNearestNpc(p, BEDABIN_NOMAD_GUARD, 5);
+				Npc n = getNearestNpc(p, NpcId.BEDABIN_NOMAD_GUARD.id(), 5);
 				if (n == null) {
-					n = spawnNpc(BEDABIN_NOMAD_GUARD, p.getX(), p.getY(), 60000);
+					n = spawnNpc(NpcId.BEDABIN_NOMAD_GUARD.id(), p.getX(), p.getY(), 60000);
 					sleep(650);
 				}
 				n.teleport(170, 794);
@@ -2964,9 +2884,9 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					case -1:
 						npcTalk(p, n, "Sorry, but you can't use the tent without permission.",
 							"But thanks for your help to the Bedabin people.");
-						if (hasItem(p, TECHNICAL_PLANS)) {
+						if (hasItem(p, ItemId.TECHNICAL_PLANS.id())) {
 							npcTalk(p, n, "And we'll take those plans off your hands as well!");
-							removeItem(p, TECHNICAL_PLANS, 1);
+							removeItem(p, ItemId.TECHNICAL_PLANS.id(), 1);
 						}
 						break;
 					default:
@@ -2976,7 +2896,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				}
 			}
 		}
-		if (obj.getID() == TENT_DOOR_2) {
+		else if (obj.getID() == TENT_DOOR_2) {
 			/*if(p.getY() >= 805) {
 				p.teleport(169, 804);
 			} else {
@@ -2984,11 +2904,11 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			}*/
 			doTentDoor(obj, p);
 		}
-		if (obj.getID() == CAVE_JAIL_DOOR) {
-			Npc n = getNearestNpc(p, CAVE_JAIL_MERCENARY, 5);
+		else if (obj.getID() == CAVE_JAIL_DOOR) {
+			Npc n = getNearestNpc(p, NpcId.MERCENARY_JAILDOOR.id(), 5);
 			if (n != null) {
 				if (p.getX() >= 72) {
-					if (!hasItem(p, 986, 15)) {
+					if (!hasItem(p, ItemId.ROCKS.id(), 15)) {
 						npcTalk(p, n, "Hey, move away from the gate.",
 							"If you wanna get out, you're gonna have to mine for it.",
 							"You're gonna have to bring me 15 loads of rocks - in one go!",
@@ -2996,7 +2916,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 							"You can go back and work with the other slaves then!");
 					} else {
 						playerTalk(p, n, "Hey, I have your rocks here, let me out.");
-						removeItem(p, 986, 15);
+						removeItem(p, ItemId.ROCKS.id(), 15);
 						npcTalk(p, n, "Ok, ok, come on out.");
 						p.teleport(71, 3626);
 						p.message("The guard unlocks the gate and lets you out.");
@@ -3007,9 +2927,9 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				}
 			}
 		}
-		if (obj.getID() == STURDY_IRON_GATE) {
+		else if (obj.getID() == STURDY_IRON_GATE) {
 			if (p.getY() >= 3617) {
-				if (hasItem(p, WROUGHT_KEY)) {
+				if (hasItem(p, ItemId.WROUGHT_IRON_KEY.id())) {
 					p.message("You use the wrought iron key to unlock the gate.");
 					p.teleport(p.getX(), p.getY() - 1);
 				} else {
@@ -3039,7 +2959,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 						"Maybe they'll let you out soon?");
 				}
 			} else { //success-cell
-				if (hasItem(p, 1039)) {
+				if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
 					failWindowAnaInBarrel(p, null);
 				} else {
 					message(p, "You manage to bend the bar and climb out of the window.");
@@ -3062,7 +2982,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 						"Maybe they'll let you out soon?");
 				}
 			} else { //success-hill
-				if (hasItem(p, 1039)) { //from the hill outside the window (fail-safe)
+				if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) { //from the hill outside the window (fail-safe)
 					failWindowAnaInBarrel(p, null);
 				} else {
 					message(p, "You manage to bend the bar !");
@@ -3120,18 +3040,18 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 
 	@Override
 	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
-		return item.getID() == 1014 && npc.getID() == AL_SHABIM;
+		return item.getID() == ItemId.PROTOTYPE_THROWING_DART.id() && npc.getID() == NpcId.AL_SHABIM.id();
 	}
 
 	@Override
 	public void onInvUseOnNpc(Player player, Npc npc, Item item) {
-		if (npc.getID() == AL_SHABIM && hasItem(player, 1014)) {
+		if (npc.getID() == NpcId.AL_SHABIM.id() && hasItem(player, ItemId.PROTOTYPE_THROWING_DART.id())) {
 			if (player.getQuestStage(this) == 7) {
 				alShabimDialogue(player, npc, AlShabim.MADE_WEAPON);
 			} else if (player.getQuestStage(this) > 7 || player.getQuestStage(this) == -1) {
 				npcTalk(player, npc, "Where did you get this from Effendi!",
 					"I'll have to confiscate this for your own safety!");
-				removeItem(player, 1014, 1);
+				removeItem(player, ItemId.PROTOTYPE_THROWING_DART.id(), 1);
 			}
 		}
 	}

@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.quests.members.digsite;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -10,30 +12,22 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
-	private static final int EXAMINER = 723;
-
-	public static int UNSTAMPED_LETTER = 1147;
-	public static int STAMPED_LETTER = 1146;
-	private static int TROWEL = 1145;
-	public static int LEVEL_1_CERTIFICATE = 1142;
-	public static int LEVEL_2_CERTIFICATE = 1143;
-	public static int LEVEL_3_CERTIFICATE = 1144;
 	private int CORRECT_ANSWERS = 0;
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == EXAMINER;
+		return n.getID() == NpcId.EXAMINER.id();
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == EXAMINER) {
+		if (n.getID() == NpcId.EXAMINER.id()) {
 			digsiteExaminerDialogue(p, n, -1);
 		}
 	}
 
 	private void digsiteExaminerDialogue(Player p, Npc n, int cID) {
-		if (n.getID() == EXAMINER) {
+		if (n.getID() == NpcId.EXAMINER.id()) {
 			if (cID == -1) {
 				switch (p.getQuestStage(Constants.Quests.DIGSITE)) {
 					case -1:
@@ -46,11 +40,11 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 							"Thanks!",
 							"I have lost my trowel!");
 						if (finalMenu == 1) {
-							if (hasItem(p, TROWEL)) {
+							if (hasItem(p, ItemId.TROWEL.id())) {
 								npcTalk(p, n, "Really ?",
 									"Look in your backpack and make sure first");
 							} else {
-								addItem(p, TROWEL, 1);
+								addItem(p, ItemId.TROWEL.id(), 1);
 								npcTalk(p, n, "Deary me.. that was a good one as well",
 									"It's a good job I have another",
 									"Here you go");
@@ -75,7 +69,7 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 							npcTalk(p, n, "You can if you get this letter of recommendation stamped",
 								"By the curator of varrock museum");
 							playerTalk(p, n, "Oh right, I'll see what I can do");
-							addItem(p, UNSTAMPED_LETTER, 1);
+							addItem(p, ItemId.UNSTAMPED_LETTER_OF_RECOMMENDATION.id(), 1);
 							p.updateQuestStage(Constants.Quests.DIGSITE, 1);
 						} else if (menu == 1) {
 							npcTalk(p, n, "You could gain much with an understanding of the world below");
@@ -84,9 +78,9 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 					case 1:
 						playerTalk(p, n, "Hello");
 						npcTalk(p, n, "Hello again");
-						if (hasItem(p, STAMPED_LETTER)) {
+						if (hasItem(p, ItemId.STAMPED_LETTER_OF_RECOMMENDATION.id())) {
 							playerTalk(p, n, "Here is the stamped letter you asked for");
-							removeItem(p, STAMPED_LETTER, 1);
+							removeItem(p, ItemId.STAMPED_LETTER_OF_RECOMMENDATION.id(), 1);
 							p.updateQuestStage(Constants.Quests.DIGSITE, 2);
 							npcTalk(p, n, "Good good, we will begin the exam...");
 							digsiteExaminerDialogue(p, n, ExaminerNPC.START_EXAM_AND_MENU_ONE);
@@ -96,13 +90,13 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 								"I have lost the letter you gave me",
 								"All right I'll try and get it");
 							if (opt == 0) {
-								if (hasItem(p, UNSTAMPED_LETTER)) {
+								if (hasItem(p, ItemId.UNSTAMPED_LETTER_OF_RECOMMENDATION.id())) {
 									npcTalk(p, n, "Oh now come on",
 										"You have it with you!");
 								} else {
 									npcTalk(p, n, "That was foolish!",
 										"Take this one and keep it safe this time...");
-									addItem(p, UNSTAMPED_LETTER, 1);
+									addItem(p, ItemId.UNSTAMPED_LETTER_OF_RECOMMENDATION.id(), 1);
 								}
 							} else if (opt == 1) {
 								npcTalk(p, n, "I am sure you wont get any problems");
@@ -141,11 +135,11 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 						} else if (opt3 == 2) {
 							npcTalk(p, n, "Oh, no problem at all");
 						} else if (opt3 == 3) {
-							if (hasItem(p, TROWEL)) {
+							if (hasItem(p, ItemId.TROWEL.id())) {
 								npcTalk(p, n, "Really ?",
 									"Look in your backpack and make sure first");
 							} else {
-								addItem(p, TROWEL, 1);
+								addItem(p, ItemId.TROWEL.id(), 1);
 								npcTalk(p, n, "Deary me.. that was a good one as well",
 									"It's a good job I have another",
 									"Here you go");
@@ -169,11 +163,11 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 						} else if (opt4 == 2) {
 							npcTalk(p, n, "Oh, no problem at all");
 						} else if (opt4 == 3) {
-							if (hasItem(p, TROWEL)) {
+							if (hasItem(p, ItemId.TROWEL.id())) {
 								npcTalk(p, n, "Really ?",
 									"Look in your backpack and make sure first");
 							} else {
-								addItem(p, TROWEL, 1);
+								addItem(p, ItemId.TROWEL.id(), 1);
 								npcTalk(p, n, "Deary me.. that was a good one as well",
 									"It's a good job I have another",
 									"Here you go");
@@ -191,11 +185,11 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 							"Thanks!",
 							"I have lost my trowel!");
 						if (opt5 == 1) {
-							if (hasItem(p, TROWEL)) {
+							if (hasItem(p, ItemId.TROWEL.id())) {
 								npcTalk(p, n, "Really ?",
 									"Look in your backpack and make sure first");
 							} else {
-								addItem(p, TROWEL, 1);
+								addItem(p, ItemId.TROWEL.id(), 1);
 								npcTalk(p, n, "Deary me.. that was a good one as well",
 									"It's a good job I have another",
 									"Here you go");
@@ -322,8 +316,8 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 							"You also get a decent trowel to dig with");
 						npcTalk(p, n, "Here you go...");
 						p.message("The examiner hands you a trowel");
-						addItem(p, TROWEL, 1);
-						addItem(p, LEVEL_1_CERTIFICATE, 1);
+						addItem(p, ItemId.TROWEL.id(), 1);
+						addItem(p, ItemId.LEVEL_1_CERTIFICATE.id(), 1);
 						p.setQuestStage(Constants.Quests.DIGSITE, 3);
 						/* Remove the caches from students, and begin stage 3 + caches. */
 						p.getCache().remove("student_orange_c");
@@ -454,7 +448,7 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 						playerTalk(p, n, "Great, I'm getting good at this");
 						npcTalk(p, n, "You have now passed the Earth sciences level 2 intermediate exam",
 							"Here is your certificate");
-						addItem(p, LEVEL_2_CERTIFICATE, 1);
+						addItem(p, ItemId.LEVEL_2_CERTIFICATE.id(), 1);
 						p.setQuestStage(Constants.Quests.DIGSITE, 4);
 						/* Remove caches from exam 2 by students npcs */
 						p.getCache().remove("student_orange_exam2");
@@ -585,7 +579,7 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 						playerTalk(p, n, "Hooray!");
 						npcTalk(p, n, "Congratulations, You have now passed the Earth sciences level 3 advanced exam",
 							"Here is your level 3 certificate");
-						addItem(p, LEVEL_3_CERTIFICATE, 1);
+						addItem(p, ItemId.LEVEL_3_CERTIFICATE.id(), 1);
 						playerTalk(p, n, "I can dig wherever I want now...");
 						/* Remove caches from exam 3 by students npcs */
 						p.getCache().remove("student_orange_exam3");

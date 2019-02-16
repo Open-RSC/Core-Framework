@@ -8,14 +8,15 @@ import com.openrsc.server.Server;
 import com.openrsc.server.event.RestartableDelayedEvent;
 import com.openrsc.server.event.rsc.impl.CustomProjectileEvent;
 import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
-import com.openrsc.server.plugins.quests.members.legendsquest.npcs.LegendsQuestUngadulu;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
@@ -28,13 +29,9 @@ public class LegendsQuestHolyWater implements InvActionListener, InvActionExecut
 
 	private static final HashMap<Player, RestartableDelayedEvent> playerEventMap = new HashMap<Player, RestartableDelayedEvent>();
 	
-	public boolean compareItemsIds(Item item1, Item item2, int idA, int idB) {
-		return item1.getID() == idA && item2.getID() == idB || item1.getID() == idB && item2.getID() == idA;
-	}
-	
 	@Override
 	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
-		return compareItemsIds(item1, item2, ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.ENCHANTED_VIAL.id());
+		return Functions.compareItemsIds(item1, item2, ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.ENCHANTED_VIAL.id());
 	}
 
 	@Override
@@ -70,7 +67,7 @@ public class LegendsQuestHolyWater implements InvActionListener, InvActionExecut
 			player.message("You need to equip this item to throw it.");
 		}
 		else {
-			Npc ungadulu = getNearestNpc(player, LegendsQuestUngadulu.UNGADULU, 4);
+			Npc ungadulu = getNearestNpc(player, NpcId.UNGADULU.id(), 4);
 			if (ungadulu == null || player.getQuestStage(Constants.Quests.LEGENDS_QUEST) > 3) {
 				player.message("You see no one suitable to throw it at.");
 			}
@@ -116,9 +113,9 @@ public class LegendsQuestHolyWater implements InvActionListener, InvActionExecut
 				} else {
 					playerEvent.reset();
 				}
-				ungadulu = transform(ungadulu, LegendsQuestUngadulu.EVIL_UNGADULU, true);
+				ungadulu = transform(ungadulu, NpcId.EVIL_UNGADULU.id(), true);
 				npcTalk(player, ungadulu, "Vile serpent...you will pay for that...");
-				ungadulu = transform(ungadulu, LegendsQuestUngadulu.UNGADULU, true);
+				ungadulu = transform(ungadulu, NpcId.UNGADULU.id(), true);
 				npcTalk(player, ungadulu, "What...what happened...why am I all wet?");
 			}
 		}

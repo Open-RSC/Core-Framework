@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.npcs.edgeville;
 
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -15,12 +17,12 @@ import static com.openrsc.server.plugins.Functions.*;
 public class OziachsRunePlateShop implements ShopInterface,
 	TalkToNpcListener, TalkToNpcExecutiveListener {
 
-	private final Shop shop = new Shop(false, 30000, 100, 60, 2, new Item(401,
+	private final Shop shop = new Shop(false, 30000, 100, 60, 2, new Item(ItemId.RUNE_PLATE_MAIL_BODY.id(),
 		1));
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
-		return n.getID() == 187 && p.getQuestStage(Quests.DRAGON_SLAYER) == -1;
+		return n.getID() == NpcId.OZIACH.id() && p.getQuestStage(Quests.DRAGON_SLAYER) == -1;
 	}
 
 	@Override

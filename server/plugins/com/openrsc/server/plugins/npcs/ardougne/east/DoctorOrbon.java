@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.npcs.ardougne.east;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -13,15 +15,12 @@ public class DoctorOrbon implements TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 435) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.DOCTOR_ORBON.id();
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 435) {
+		if (n.getID() == NpcId.DOCTOR_ORBON.id()) {
 			if (p.getQuestStage(Constants.Quests.SHEEP_HERDER) == -1) {
 				npcTalk(p,
 					n,
@@ -36,7 +35,7 @@ public class DoctorOrbon implements TalkToNpcListener,
 				playerTalk(p, n, "not yet");
 				npcTalk(p, n, "you must hurry",
 					"they could have the whole town infected in days");
-				if (!hasItem(p, 761) || !hasItem(p, 760)) {
+				if (!hasItem(p, ItemId.PROTECTIVE_TROUSERS.id()) || !hasItem(p, ItemId.PROTECTIVE_JACKET.id())) {
 					npcTalk(p,
 						n,
 						"I see you don't have your protective clothing with you",
@@ -47,11 +46,11 @@ public class DoctorOrbon implements TalkToNpcListener,
 					if (moreMenu == 0) {
 						// NOTHING
 					} else if (moreMenu == 1) {
-						if (removeItem(p, 10, 100)) {
+						if (removeItem(p, ItemId.COINS.id(), 100)) {
 							message(p, "you give doctor orbon 100 coins",
 								"doctor orbon gives you a protective suit");
-							addItem(p, 761, 1);
-							addItem(p, 760, 1);
+							addItem(p, ItemId.PROTECTIVE_TROUSERS.id(), 1);
+							addItem(p, ItemId.PROTECTIVE_JACKET.id(), 1);
 							npcTalk(p, n,
 								"these will keep you safe from the plague");
 						} else {
@@ -80,11 +79,11 @@ public class DoctorOrbon implements TalkToNpcListener,
 				if (menu == 0) {
 					// NOTHING
 				} else if (menu == 1) {
-					if (removeItem(p, 10, 100)) {
+					if (removeItem(p, ItemId.COINS.id(), 100)) {
 						message(p, "you give doctor orbon 100 coins",
 							"doctor orbon gives you a protective suit");
-						addItem(p, 761, 1);
-						addItem(p, 760, 1);
+						addItem(p, ItemId.PROTECTIVE_TROUSERS.id(), 1);
+						addItem(p, ItemId.PROTECTIVE_JACKET.id(), 1);
 						npcTalk(p, n,
 							"these will keep you safe from the plague");
 						p.updateQuestStage(Constants.Quests.SHEEP_HERDER, 2);

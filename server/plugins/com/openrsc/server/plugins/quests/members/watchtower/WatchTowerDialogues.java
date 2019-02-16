@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.quests.members.watchtower;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
@@ -21,46 +22,6 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 	 * Ogre Og = Want coins.
 	 * Ogre Grew = Want Tooth.
 	 * **/
-
-
-	/**
-	 * NPC IDs
-	 **/
-	private static int WATCHTOWER_WIZARD = 672;
-	private static int GREW = 681;
-	private static int OG = 680;
-	private static int TOBAN = 682;
-	private static int OGRE_CITIZEN = 704;
-	private static int ATTACKABLE_GEM_TRADER = 689;
-	private static int OGRE_ENCLAVE_GUARDS = 684;
-	private static int OGRE_TRADER_ROCK_CAKE = 688;
-	static int CITY_GUARD = 691;
-
-	//LAST SKAVID FOR LEARNED LANGUAGE
-	private static int SKAVID_679 = 679;
-
-	// SKAVID FOR STARTING LANGUAGE
-	private static int SKAVID_678 = 678;
-
-	private static int SKAVID_696 = 696;
-	private static int SKAVID_707 = 707;
-	private static int SKAVID_708 = 708;
-	private static int SKAVID_709 = 709;
-
-	/**
-	 * ITEM IDs
-	 **/
-	static int KEY = 1047;
-	private static int DRAGON_BONE = 814;
-	private static int OGRE_RELIC_PART = 1050;
-	private static int OGRE_RELIC_PART_2 = 1049;
-	private static int OGRE_RELIC_PART_3 = 1048;
-	private static int OGRE_RELIC_COMPLETE = 1044;
-	private static int OGRE_TOOTH = 1043;
-	private static int POWERING_CRYSTAL1 = 1037;
-	private static int POWERING_CRYSTAL2 = 1152;
-	private static int STOLEN_GOLD = 1040;
-	static int SKAVID_MAP = 1045;
 
 	@Override
 	public int getQuestId() {
@@ -84,34 +45,24 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == WATCHTOWER_WIZARD) {
-			return true;
-		}
-		if (n.getID() == GREW || n.getID() == OG || n.getID() == TOBAN) {
-			return true;
-		}
-		if (n.getID() == OGRE_CITIZEN || n.getID() == ATTACKABLE_GEM_TRADER || n.getID() == OGRE_ENCLAVE_GUARDS || n.getID() == OGRE_TRADER_ROCK_CAKE || n.getID() == CITY_GUARD) {
-			return true;
-		}
-		if (n.getID() == SKAVID_679 || n.getID() == SKAVID_696 || n.getID() == SKAVID_707 || n.getID() == SKAVID_708 || n.getID() == SKAVID_709 || n.getID() == SKAVID_678) {
-			return true;
-		}
-		return false;
+		return inArray(n.getID(), NpcId.WATCHTOWER_WIZARD.id(), NpcId.GREW.id(), NpcId.OG.id(), NpcId.TOBAN.id(), NpcId.OGRE_CITIZEN.id(),
+				NpcId.OGRE_TRADER_FOOD.id(), NpcId.OGRE_GUARD_CAVE_ENTRANCE.id(), NpcId.OGRE_TRADER_ROCKCAKE.id(), NpcId.CITY_GUARD.id(),
+				NpcId.SKAVID_FINALQUIZ.id(), NpcId.SKAVID_IG.id(), NpcId.SKAVID_AR.id(), NpcId.SKAVID_CUR.id(), NpcId.SKAVID_NOD.id(), NpcId.SKAVID_INITIAL.id());
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == SKAVID_679) {
+		if (n.getID() == NpcId.SKAVID_FINALQUIZ.id()) {
 			if (p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
 				npcTalk(p, n, "What, you gots the crystal...");
 				int lastMenu = showMenu(p, n, "But I've lost it!", "Oh okay then");
 				if (lastMenu == 0) {
-					if (hasItem(p, POWERING_CRYSTAL2) || p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
+					if (hasItem(p, ItemId.POWERING_CRYSTAL2.id()) || p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
 						npcTalk(p, n, "I have no more for you!");
 					} else {
 						npcTalk(p, n, "All right, take this one then...");
 						p.message("The skavid gives you a crystal");
-						addItem(p, POWERING_CRYSTAL2, 1);
+						addItem(p, ItemId.POWERING_CRYSTAL2.id(), 1);
 					}
 				} else if (lastMenu == 1) {
 					npcTalk(p, n, "I'll be on my way then");
@@ -143,7 +94,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 						npcTalk(p, n, "Heh-heh! So you speak a little skavid eh?",
 							"I'm impressed, here take this prize...");
 						p.message("The skavid gives you a large crystal");
-						addItem(p, POWERING_CRYSTAL2, 1);
+						addItem(p, ItemId.POWERING_CRYSTAL2.id(), 1);
 						if (p.getCache().hasKey("language_cur")
 							&& p.getCache().hasKey("language_ar")
 							&& p.getCache().hasKey("language_ig")
@@ -170,29 +121,29 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 				p.message("It seems you haven't learned enough of thier language yet...");
 			}
 		}
-		if (inArray(n.getID(), SKAVID_696, SKAVID_707, SKAVID_708, SKAVID_709)) {
-			if (n.getID() == SKAVID_696) {
+		else if (inArray(n.getID(), NpcId.SKAVID_IG.id(), NpcId.SKAVID_AR.id(), NpcId.SKAVID_CUR.id(), NpcId.SKAVID_NOD.id())) {
+			if (n.getID() == NpcId.SKAVID_IG.id()) {
 				if (p.getCache().hasKey("language_ig") || p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
 					npcTalk(p, n, "Bidith Ig...");
 					p.message("You have already talked to this skavid");
 					return;
 				}
 				npcTalk(p, n, "Cur bidith...");
-			} else if (n.getID() == SKAVID_707) {
+			} else if (n.getID() == NpcId.SKAVID_AR.id()) {
 				if (p.getCache().hasKey("language_ar") || p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
 					npcTalk(p, n, "Ar cur...");
 					p.message("You have already talked to this skavid");
 					return;
 				}
 				npcTalk(p, n, "Gor cur...");
-			} else if (n.getID() == SKAVID_708) {
+			} else if (n.getID() == NpcId.SKAVID_CUR.id()) {
 				if (p.getCache().hasKey("language_cur") || p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
 					npcTalk(p, n, "Cur tanath...");
 					p.message("You have already talked to this skavid");
 					return;
 				}
 				npcTalk(p, n, "Bidith tanath...");
-			} else if (n.getID() == SKAVID_709) {
+			} else if (n.getID() == NpcId.SKAVID_NOD.id()) {
 				if (p.getCache().hasKey("language_nod") || p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
 					npcTalk(p, n, "Gor nod...");
 					p.message("You have already talked to this skavid");
@@ -205,28 +156,28 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 				boolean correctWord = false;
 				int learnMenu = showMenu(p, n, "Cur", "Ar", "Ig", "Nod", "Gor");
 				if (learnMenu == 0) {
-					if (n.getID() == SKAVID_708) {
+					if (n.getID() == NpcId.SKAVID_CUR.id()) {
 						npcTalk(p, n, "Cur",
 							"Cur tanath");
 						p.getCache().store("language_cur", true);
 						correctWord = true;
 					}
 				} else if (learnMenu == 1) {
-					if (n.getID() == SKAVID_707) {
+					if (n.getID() == NpcId.SKAVID_AR.id()) {
 						npcTalk(p, n, "Ar",
 							"Ar cur");
 						p.getCache().store("language_ar", true);
 						correctWord = true;
 					}
 				} else if (learnMenu == 2) {
-					if (n.getID() == SKAVID_696) {
+					if (n.getID() == NpcId.SKAVID_IG.id()) {
 						npcTalk(p, n, "Ig",
 							"Bidith Ig");
 						p.getCache().store("language_ig", true);
 						correctWord = true;
 					}
 				} else if (learnMenu == 3) {
-					if (n.getID() == SKAVID_709) {
+					if (n.getID() == NpcId.SKAVID_NOD.id()) {
 						npcTalk(p, n, "Nod",
 							"Gor nod");
 						p.getCache().store("language_nod", true);
@@ -249,7 +200,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 			}
 		}
 
-		if (n.getID() == SKAVID_678) {
+		else if (n.getID() == NpcId.SKAVID_INITIAL.id()) {
 			if (p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
 				npcTalk(p, n, "Ah master...",
 					"You did well to master our language...");
@@ -307,17 +258,17 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 			}
 		}
 
-		if (n.getID() == WATCHTOWER_WIZARD) {
+		else if (n.getID() == NpcId.WATCHTOWER_WIZARD.id()) {
 			watchtowerWizardDialogue(p, n, -1);
 		}
-		if (n.getID() == OGRE_CITIZEN) {
+		else if (n.getID() == NpcId.OGRE_CITIZEN.id()) {
 			npcTalk(p, n, "Uh ? what are you doing here ?");
 		}
-		if (n.getID() == ATTACKABLE_GEM_TRADER) {
+		else if (n.getID() == NpcId.OGRE_TRADER_FOOD.id()) {
 			npcTalk(p, n, "Grrr, little animal.. I shall destroy you!");
 			n.startCombat(p);
 		}
-		if (n.getID() == OGRE_ENCLAVE_GUARDS) {
+		else if (n.getID() == NpcId.OGRE_GUARD_CAVE_ENTRANCE.id()) {
 			if (p.getQuestStage(Constants.Quests.WATCHTOWER) != -1) {
 				npcTalk(p, n, "What do you want ?");
 				int menu = showMenu(p, n,
@@ -335,12 +286,12 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 				p.message("The guard is occupied at the moment");
 			}
 		}
-		if (n.getID() == OGRE_TRADER_ROCK_CAKE) {
+		else if (n.getID() == NpcId.OGRE_TRADER_ROCKCAKE.id()) {
 			npcTalk(p, n, "Arr, small thing wants my food does it ?",
 				"I'll teach you to deal with ogres!");
 			n.startCombat(p);
 		}
-		if (n.getID() == CITY_GUARD) {
+		else if (n.getID() == NpcId.CITY_GUARD.id()) {
 			if (p.getCache().hasKey("city_guard_riddle")) {
 				npcTalk(p, n, "What is it ?");
 				int menu = showMenu(p, n,
@@ -359,12 +310,12 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 							"Get lost!");
 					}
 				} else if (menu == 1) {
-					if (hasItem(p, SKAVID_MAP)) {
+					if (hasItem(p, ItemId.SKAVID_MAP.id())) {
 						npcTalk(p, n, "Are you blind ? what is that you are carrying ?");
 						playerTalk(p, n, "Oh, that map....");
 					} else {
 						npcTalk(p, n, "What's the point ? take this copy and bother me no more!");
-						addItem(p, SKAVID_MAP, 1);
+						addItem(p, ItemId.SKAVID_MAP.id(), 1);
 					}
 				}
 			} else {
@@ -396,7 +347,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 				}
 			}
 		}
-		if (n.getID() == GREW) {
+		else if (n.getID() == NpcId.GREW.id()) {
 			switch (p.getQuestStage(this)) {
 				case -1:
 					p.message("The ogre is not interested in you anymore");
@@ -422,18 +373,18 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 						if (menu == 0) {
 							npcTalk(p, n, "I have nothing left for you but the cooking pot!");
 						} else if (menu == 1) {
-							if (!hasItem(p, OGRE_RELIC_PART_2)) {
+							if (!hasItem(p, ItemId.OGRE_RELIC_PART_BASE.id())) {
 								npcTalk(p, n, "Stupid morsel, I have another",
 									"Take it and go now before I lose my temper");
-								addItem(p, OGRE_RELIC_PART_2, 1);
+								addItem(p, ItemId.OGRE_RELIC_PART_BASE.id(), 1);
 							} else {
 								npcTalk(p, n, "You lie to me morsel!");
 							}
 						} else if (menu == 2) {
-							if (!hasItem(p, POWERING_CRYSTAL1)) {
+							if (!hasItem(p, ItemId.POWERING_CRYSTAL1.id())) {
 								npcTalk(p, n, "I suppose you want another ?",
 									"I suppose just this once I could give you my copy...");
-								addItem(p, POWERING_CRYSTAL1, 1);
+								addItem(p, ItemId.POWERING_CRYSTAL1.id(), 1);
 							} else {
 								npcTalk(p, n, "How dare you lie to me Morsel!",
 									"I will finish you now!");
@@ -443,20 +394,20 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 						if (p.getCache().hasKey("ogre_grew")) {
 							npcTalk(p, n, "The morsel is back",
 								"Does it have our tooth for us ?");
-							if (hasItem(p, OGRE_TOOTH)) {
+							if (hasItem(p, ItemId.OGRE_TOOTH.id())) {
 								playerTalk(p, n, "I have it");
 								npcTalk(p, n, "It's got it, good good",
 									"That should annoy gorad wonderfully",
 									"Heheheheh!");
-								removeItem(p, OGRE_TOOTH, 1);
+								removeItem(p, ItemId.OGRE_TOOTH.id(), 1);
 								npcTalk(p, n, "Heres a token of my gratitude");
-								addItem(p, OGRE_RELIC_PART_2, 1);
+								addItem(p, ItemId.OGRE_RELIC_PART_BASE.id(), 1);
 								npcTalk(p, n, "Some old gem I stole from Gorad...",
 									"And an old part of a statue",
 									"Heheheheh!");
 								p.message("The ogre hands you a large crystal");
 								p.message("The ogre gives you part of a statue");
-								addItem(p, POWERING_CRYSTAL1, 1);
+								addItem(p, ItemId.POWERING_CRYSTAL1.id(), 1);
 								p.getCache().remove("ogre_grew");
 								p.getCache().store("ogre_grew_p1", true);
 							} else {
@@ -491,7 +442,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 					break;
 			}
 		}
-		if (n.getID() == OG) {
+		else if (n.getID() == NpcId.OG.id()) {
 			switch (p.getQuestStage(this)) {
 				case -1:
 					p.message("The ogre is not interested in you anymore");
@@ -516,10 +467,10 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 						if (menu == 0) {
 							npcTalk(p, n, "No, I have no more tasks for you, now go away");
 						} else if (menu == 1) {
-							if (!hasItem(p, OGRE_RELIC_PART_3)) {
+							if (!hasItem(p, ItemId.OGRE_RELIC_PART_HEAD.id())) {
 								npcTalk(p, n, "Grrr, why do I bother ?",
 									"It's a good job I have another part!");
-								addItem(p, OGRE_RELIC_PART_3, 1);
+								addItem(p, ItemId.OGRE_RELIC_PART_HEAD.id(), 1);
 							} else {
 								npcTalk(p, n, "Are you blind! I can see you have it even from here!");
 							}
@@ -532,13 +483,13 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 								"I haven't got it yet",
 								"I have lost the key!");
 							if (subMenu == 0) {
-								if (hasItem(p, STOLEN_GOLD, 1)) {
+								if (hasItem(p, ItemId.STOLEN_GOLD.id(), 1)) {
 									npcTalk(p, n, "Well well, the little rat has got it!",
 										"take this to show the little rat is a friend to the ogres",
 										"Hahahahaha!");
-									removeItem(p, STOLEN_GOLD, 1);
+									removeItem(p, ItemId.STOLEN_GOLD.id(), 1);
 									p.message("The ogre gives you part of a horrible statue");
-									addItem(p, OGRE_RELIC_PART_3, 1);
+									addItem(p, ItemId.OGRE_RELIC_PART_HEAD.id(), 1);
 									p.getCache().remove("ogre_og");
 									/** Very strange setup of quest tbh, but that's what it is **/
 									p.getCache().store("ogre_relic_part_3", true);
@@ -551,12 +502,12 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 								npcTalk(p, n, "Don't come back until you have it",
 									"Unless you want to be on tonight's menu!");
 							} else if (subMenu == 2) {
-								if (hasItem(p, KEY)) {
+								if (hasItem(p, ItemId.KEY.id())) {
 									npcTalk(p, n, "Oh yeah! what's that then ?");
 									p.message("It seems you still have the key...");
 								} else {
 									npcTalk(p, n, "Idiot! take another and don't lose it!");
-									addItem(p, KEY, 1);
+									addItem(p, ItemId.KEY.id(), 1);
 								}
 							}
 						} else {
@@ -575,7 +526,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 									"Here is a key to the chest it's in",
 									"If you bring it here",
 									"I may reward you...");
-								addItem(p, KEY, 1);
+								addItem(p, ItemId.KEY.id(), 1);
 								p.getCache().store("ogre_og", true);
 							} else if (menu == 1) {
 								npcTalk(p, n, "Kill me eh ?",
@@ -588,7 +539,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 					break;
 			}
 		}
-		if (n.getID() == TOBAN) {
+		else if (n.getID() == NpcId.TOBAN.id()) {
 			switch (p.getQuestStage(this)) {
 				case -1:
 					p.message("The ogre is not interested in you anymore");
@@ -614,10 +565,10 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 							npcTalk(p, n, "Have you arrived for dinner ?",
 								"Ha ha ha! begone small thing!");
 						} else if (subMenu == 1) {
-							if (!hasItem(p, OGRE_RELIC_PART)) {
+							if (!hasItem(p, ItemId.OGRE_RELIC_PART_BODY.id())) {
 								npcTalk(p, n, "Small thing, how could you be so careless ?",
 									"Here, take this one");
-								addItem(p, OGRE_RELIC_PART, 1);
+								addItem(p, ItemId.OGRE_RELIC_PART_BODY.id(), 1);
 							} else {
 								npcTalk(p, n, "Small thing, you lie to me!",
 									"I always says that small things are big trouble...");
@@ -627,13 +578,13 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 						if (p.getCache().hasKey("ogre_toban")) {
 							npcTalk(p, n, "Ha ha ha! small thing returns",
 								"Did you bring the dragon bone ?");
-							if (hasItem(p, DRAGON_BONE)) {
+							if (hasItem(p, ItemId.DRAGON_BONES.id())) {
 								playerTalk(p, n, "When I say I will get something I get it!");
-								removeItem(p, DRAGON_BONE, 1);
+								removeItem(p, ItemId.DRAGON_BONES.id(), 1);
 								npcTalk(p, n, "Ha ha ha! small thing has done it",
 									"Toban is glad, take this...");
 								p.message("The ogre gives you part of a statue");
-								addItem(p, OGRE_RELIC_PART, 1);
+								addItem(p, ItemId.OGRE_RELIC_PART_BODY.id(), 1);
 								p.getCache().remove("ogre_toban");
 								p.getCache().store("ogre_relic_part_1", true);
 							} else {
@@ -677,7 +628,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 	}
 
 	private void watchtowerWizardDialogue(Player p, Npc n, int cID) {
-		if (n.getID() == WATCHTOWER_WIZARD) {
+		if (n.getID() == NpcId.WATCHTOWER_WIZARD.id()) {
 			if (cID == -1) {
 				switch (p.getQuestStage(this)) {
 					case -1:
@@ -692,10 +643,10 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 								"I lost the scroll you gave me",
 								"That's okay");
 							if (finish == 0) {
-								if (!p.getBank().hasItemId(1181) && !p.getInventory().hasItemId(1181)) {
+								if (!p.getBank().hasItemId(ItemId.SPELL_SCROLL.id()) && !p.getInventory().hasItemId(ItemId.SPELL_SCROLL.id())) {
 									npcTalk(p, n, "Never mind, have another...");
-									addItem(p, 1181, 1);
-								} else if (p.getBank().hasItemId(1181)) {
+									addItem(p, ItemId.SPELL_SCROLL.id(), 1);
+								} else if (p.getBank().hasItemId(ItemId.SPELL_SCROLL.id())) {
 									//maybe non-kosher message though it was also bank restricted
 									npcTalk(p, n, "Ho ho ho! a comedian to the finish!",
 										"There it is, in your bank!");
@@ -775,9 +726,9 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 					case 1:
 						npcTalk(p, n, "Hello again",
 							"Did you find anything of interest ?");
-						if (hasItem(p, WatchTowerObstacles.FINGERNAILS)) {
+						if (hasItem(p, ItemId.FINGERNAILS.id())) {
 							playerTalk(p, n, "Have a look at these");
-							removeItem(p, WatchTowerObstacles.FINGERNAILS, 1);
+							removeItem(p, ItemId.FINGERNAILS.id(), 1);
 							npcTalk(p, n, "Interesting, very interesting",
 								"Long nails...grey in colour",
 								"Well chewed...",
@@ -848,7 +799,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 							"What you need is some form of proof of friendship",
 							"Something to trick them into believing you are their friend",
 							"...Which shouldn't be too hard considering their intelligence!");
-						if (!hasItem(p, OGRE_RELIC_COMPLETE)) {
+						if (!hasItem(p, ItemId.OGRE_RELIC.id())) {
 							int lostRelicMenu = showMenu(p, n,
 								"I have lost the relic you gave me",
 								"I will find my way in, no problem");
@@ -856,7 +807,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 								npcTalk(p, n, "What! lost the relic ? How careless!",
 									"It's a good job I copied that design then...",
 									"You can take this copy instead, its just as good");
-								addItem(p, OGRE_RELIC_COMPLETE, 1);
+								addItem(p, ItemId.OGRE_RELIC.id(), 1);
 							} else if (lostRelicMenu == 1) {
 								npcTalk(p, n, "Yes, I'm sure you will...good luck");
 							}
@@ -927,12 +878,12 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 						break;
 					case 7:
 						npcTalk(p, n, "Any more news ?");
-						if (hasItem(p, 1053)) {
+						if (hasItem(p, ItemId.OGRE_POTION.id())) {
 							playerTalk(p, n, "Yes I have made the potion");
 							npcTalk(p, n, "That's great news, let me infuse it with magic...");
 							p.message("The wizard mutters strange words over the liquid");
-							removeItem(p, 1053, 1);
-							addItem(p, 1054, 1);
+							removeItem(p, ItemId.OGRE_POTION.id(), 1);
+							addItem(p, ItemId.MAGIC_OGRE_POTION.id(), 1);
 							if (p.getQuestStage(Constants.Quests.WATCHTOWER) == 7) {
 								p.updateQuestStage(Constants.Quests.WATCHTOWER, 8);
 							}
@@ -1019,9 +970,9 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 	}
 
 	private void ogreSpawnAndAttack(Player p, Npc n) {
-		spawnNpc(706, p.getX(), p.getY(), 60000 * 3);
+		spawnNpc(NpcId.OGRE_GENERAL.id(), p.getX(), p.getY(), 60000 * 3);
 		sleep(1600);
-		Npc ogre = getNearestNpc(p, 706, 4);
+		Npc ogre = getNearestNpc(p, NpcId.OGRE_GENERAL.id(), 4);
 		if (ogre != null) {
 			ogre.startCombat(p);
 		}

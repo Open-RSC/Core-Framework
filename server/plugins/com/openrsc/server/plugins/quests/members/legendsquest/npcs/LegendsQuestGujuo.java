@@ -3,12 +3,13 @@ package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.SingleEvent;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.quests.members.legendsquest.mechanism.LegendsQuestInvAction;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
@@ -25,10 +26,8 @@ import static com.openrsc.server.plugins.Functions.sleep;
 
 public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
-	public static final int GUJUO = 764;
-
 	private void GujuoDialogue(Player p, Npc n, int cID) {
-		if (n.getID() == GUJUO) {
+		if (n.getID() == NpcId.GUJUO.id()) {
 			if (cID == -1) {
 				switch (p.getQuestStage(Constants.Quests.LEGENDS_QUEST)) {
 					case 1:
@@ -66,7 +65,7 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 						}
 						break;
 					case 3:
-						if (hasItem(p, 1188) || hasItem(p, 1189)) { // GOLDEN BOWL
+						if (hasItem(p, ItemId.GOLDEN_BOWL.id()) || hasItem(p, ItemId.GOLDEN_BOWL_WITH_PURE_WATER.id())) { // GOLDEN BOWL
 							n.setBusy(true);
 							npcTalk(p, n, "Greetings Bwana.",
 								"Ah I see you have the golden bowl !",
@@ -188,8 +187,8 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 							npcTalk(p, n, "Please accept this as a token of our appreciation.",
 								"Please, now consider yourself a friend of my people.",
 								"And visit us anytime.");
-							if (hasItem(p, LegendsQuestInvAction.GERMINATED_YOMMI_TREE_SEED)) {
-								removeItem(p, LegendsQuestInvAction.GERMINATED_YOMMI_TREE_SEED, p.getInventory().countId(LegendsQuestInvAction.GERMINATED_YOMMI_TREE_SEED));
+							if (hasItem(p, ItemId.GERMINATED_YOMMI_TREE_SEED.id())) {
+								removeItem(p, ItemId.GERMINATED_YOMMI_TREE_SEED.id(), p.getInventory().countId(ItemId.GERMINATED_YOMMI_TREE_SEED.id()));
 								npcTalk(p, n, "I'll take those Germinated Yommi tree seeds to Ungadulu,",
 									"I'm sure he'll apreciate them.");
 							}
@@ -200,7 +199,7 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 								"The Kharazi jungle is especially beautifull today isn't it?",
 								"My village people pass on their thanks to you.");
 						String[] menuOpts;
-						if (hasItem(p, 1265) || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
+						if (hasItem(p, ItemId.GILDED_TOTEM_POLE.id()) || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
 							menuOpts = new String[]{ "Do you have any news?",
 									"Where are all your people.",
 									"Ok thanks for your help."};
@@ -222,12 +221,12 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 									"Your story has been woven into the fabric of our society.",
 									"And we all sing your many praises Bwana.");
 						} else if (last == 2 || last == 3) {
-							if (last == 2 && !hasItem(p, 1265) && menuOpts.length == 4) {
+							if (last == 2 && !hasItem(p, ItemId.GILDED_TOTEM_POLE.id()) && menuOpts.length == 4) {
 								npcTalk(p, n, "Well, that wasn't very nice of you.",
 										"It took us a long time to make that Totem pole.",
 										"Luckily, I made another one at the same time.");
 								p.message("Gujuo hands over another totem pole.");
-								addItem(p, 1265, 1);
+								addItem(p, ItemId.GILDED_TOTEM_POLE.id(), 1);
 							} else {
 								GujuoDialogue(p, n, Gujuo.OK_THANKS_FOR_YOUR_HELP);
 							}
@@ -573,7 +572,7 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 					}
 					break;
 				case Gujuo.I_HAVE_THE_YOMMI_TREE_SEEDS:
-					if (hasItem(p, 1182)) {
+					if (hasItem(p, ItemId.YOMMI_TREE_SEED.id())) {
 						npcTalk(p, n, "That's great Bwana. Now you just need to germinate ",
 							"the seeds and then plant them in some fertile soil.",
 							"I'm sure that Ungadulu has explained all this to you already.");
@@ -833,10 +832,10 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 				case Gujuo.WHAT_KIND_OF_A_VESSEL:
 					npcTalk(p, n, "A vessel made of sun metal, but it can be of any shape.",
 						"However, it must be blessed.");
-					if (!hasItem(p, 1246)) {
+					if (!hasItem(p, ItemId.ROUGH_SKETCH_OF_A_BOWL.id())) {
 						message(p, 1300, "Gujuo takes out a small scroll and some charcoal and draws a rough sketch.",
 							"When he has finished, he gives the sketch to you.");
-						addItem(p, 1246, 1);
+						addItem(p, ItemId.ROUGH_SKETCH_OF_A_BOWL.id(), 1);
 						npcTalk(p, n, "Here, have this as an example...I pray that it will help you.");
 					} else {
 						npcTalk(p, n, "Similar to the picture I have already given you.");
@@ -946,10 +945,10 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 						if (Formulae.failCalculation(p, Skills.PRAYER, 42)) {
 							message(p, 1300, "A totally peacefull aura surrounds you and you ",
 								"bring down the blessings of your god on the bowl.");
-							if (hasItem(p, 1188)) {
-								p.getInventory().replace(1188, 1266);
-							} else if (hasItem(p, 1189)) {
-								p.getInventory().replace(1189, 1267);
+							if (hasItem(p, ItemId.GOLDEN_BOWL.id())) {
+								p.getInventory().replace(ItemId.GOLDEN_BOWL.id(), ItemId.BLESSED_GOLDEN_BOWL.id());
+							} else if (hasItem(p, ItemId.GOLDEN_BOWL_WITH_PURE_WATER.id())) {
+								p.getInventory().replace(ItemId.GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id());
 							}
 							GujuoDialogue(p, n, Gujuo.HOW_GOES_YOUR_QUEST_TO_RELEASE_UNGADULU);
 						} else {
@@ -1001,15 +1000,12 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == GUJUO) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.GUJUO.id();
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == GUJUO) {
+		if (n.getID() == NpcId.GUJUO.id()) {
 			GujuoDialogue(p, n, -1);
 		}
 	}

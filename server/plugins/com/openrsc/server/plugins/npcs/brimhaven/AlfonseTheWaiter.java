@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.npcs.brimhaven;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -15,11 +17,12 @@ import static com.openrsc.server.plugins.Functions.*;
 public class AlfonseTheWaiter implements ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 10000, 110, 75, 2,
-		new Item(362, 5), new Item(551, 5), new Item(367, 5), new Item(373, 3), new Item(370, 2));
+		new Item(ItemId.HERRING.id(), 5), new Item(ItemId.COD.id(), 5),
+		new Item(ItemId.TUNA.id(), 5), new Item(ItemId.LOBSTER.id(), 3), new Item(ItemId.SWORDFISH.id(), 2));
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 260) {
+		if (n.getID() == NpcId.ALFONSE_THE_WAITER.id()) {
 			npcTalk(p, n, "Welcome to the shrimp and parrot",
 				"Would you like to order sir?");
 			int menu;
@@ -48,10 +51,7 @@ public class AlfonseTheWaiter implements ShopInterface, TalkToNpcExecutiveListen
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 260) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.ALFONSE_THE_WAITER.id();
 	}
 
 	@Override

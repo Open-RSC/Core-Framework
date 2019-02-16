@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.npcs.shop;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -16,8 +18,8 @@ import static com.openrsc.server.plugins.Functions.showMenu;
 public final class SiegfriedErkel implements ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 60000, 150, 50, 2,
-		new Item(796, 6), new Item(596, 5), new Item(52, 4),
-		new Item(421, 3), new Item(1276, 1), new Item(1288, 3));
+		new Item(ItemId.MITHRIL_SEED.id(), 6), new Item(ItemId.DUSTY_KEY.id(), 5), new Item(ItemId.SILVERLIGHT.id(), 4),
+		new Item(ItemId.MAZE_KEY.id(), 3), new Item(ItemId.RIGHT_HALF_DRAGON_SQUARE_SHIELD.id(), 1), new Item(ItemId.CAPE_OF_LEGENDS.id(), 3));
 
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
@@ -43,7 +45,7 @@ public final class SiegfriedErkel implements ShopInterface, TalkToNpcExecutiveLi
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 779;
+		return n.getID() == NpcId.SIEGFRIED_ERKLE.id();
 	}
 
 	@Override

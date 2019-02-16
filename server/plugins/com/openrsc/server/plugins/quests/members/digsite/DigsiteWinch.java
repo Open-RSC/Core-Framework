@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.quests.members.digsite;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -22,7 +24,7 @@ import static com.openrsc.server.plugins.Functions.spawnNpc;
 
 public class DigsiteWinch implements ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
-	private static int[] WINCH = {1095, 1053};
+	private static final int[] WINCH = {1095, 1053};
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
@@ -63,10 +65,9 @@ public class DigsiteWinch implements ObjectActionListener, ObjectActionExecutive
 							p.playerServerMessage(MessageType.QUEST, "You find yourself in a cavern...");
 						}
 
-
 					}
 
-					if (obj.getID() == WINCH[1]) {
+					else if (obj.getID() == WINCH[1]) {
 						if (!p.getCache().hasKey("digsite_winshaft")) {
 							this.handleCantUseWinch(p, obj);
 						} else if (!p.getCache().hasKey("winch_rope_2")) {
@@ -96,18 +97,18 @@ public class DigsiteWinch implements ObjectActionListener, ObjectActionExecutive
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		return inArray(obj.getID(), WINCH) && item.getID() == 237;
+		return inArray(obj.getID(), WINCH) && item.getID() == ItemId.ROPE.id();
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (inArray(obj.getID(), WINCH) && item.getID() == 237) {
+		if (inArray(obj.getID(), WINCH) && item.getID() == ItemId.ROPE.id()) {
 			if (obj.getID() == WINCH[0]) {
 				if (p.getCache().hasKey("digsite_winshaft")) {
 					if (!p.getCache().hasKey("winch_rope_1")) {
 						p.message("You tie the rope to the bucket");
 						p.getCache().store("winch_rope_1", true);
-						p.getInventory().remove(237, 1);
+						p.getInventory().remove(ItemId.ROPE.id(), 1);
 					} else {
 						p.message("There is already a rope tied to this bucket");
 					}
@@ -115,12 +116,12 @@ public class DigsiteWinch implements ObjectActionListener, ObjectActionExecutive
 					playerTalk(p, null, "Err... I have no idea why I am doing this !");
 				}
 			}
-			if (obj.getID() == WINCH[1]) {
+			else if (obj.getID() == WINCH[1]) {
 				if (p.getCache().hasKey("digsite_winshaft")) {
 					if (!p.getCache().hasKey("winch_rope_2")) {
 						p.message("You tie the rope to the bucket");
 						p.getCache().store("winch_rope_2", true);
-						p.getInventory().remove(237, 1);
+						p.getInventory().remove(ItemId.ROPE.id(), 1);
 					} else {
 						p.message("There is already a rope tied to this bucket");
 					}
@@ -134,9 +135,9 @@ public class DigsiteWinch implements ObjectActionListener, ObjectActionExecutive
 	private void handleCantUseWinch(Player p, GameObject obj) {
 		boolean workmanWasSpawned;
 
-		Npc workman = getNearestNpc(p, 722, 5);
+		Npc workman = getNearestNpc(p, NpcId.WORKMAN.id(), 5);
 		if (workman == null) {
-			workman = spawnNpc(722, p.getX(), p.getY(), 60000);
+			workman = spawnNpc(NpcId.WORKMAN.id(), p.getX(), p.getY(), 60000);
 			workmanWasSpawned = true;
 		} else {
 			workmanWasSpawned = false;

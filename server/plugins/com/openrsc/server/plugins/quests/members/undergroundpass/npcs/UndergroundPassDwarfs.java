@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.npcs;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -11,21 +13,14 @@ import static com.openrsc.server.plugins.Functions.*;
 public class UndergroundPassDwarfs implements TalkToNpcListener,
 	TalkToNpcExecutiveListener {
 
-	private static int KAMEN = 657;
-	private static int NILOOF = 642;
-	private static int KLANK = 648;
-
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == KAMEN || n.getID() == NILOOF || n.getID() == KLANK) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.KAMEN.id() || n.getID() == NpcId.NILOOF.id() || n.getID() == NpcId.KLANK.id();
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == KAMEN) {
+		if (n.getID() == NpcId.KAMEN.id()) {
 			switch (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS)) {
 				case 5:
 				case 6:
@@ -59,7 +54,7 @@ public class UndergroundPassDwarfs implements TalkToNpcListener,
 					break;
 			}
 		}
-		if (n.getID() == NILOOF) {
+		else if (n.getID() == NpcId.NILOOF.id()) {
 			switch (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS)) {
 				case 5:
 					npcTalk(p, n, "back away..back away..wait..",
@@ -84,9 +79,9 @@ public class UndergroundPassDwarfs implements TalkToNpcListener,
 						"she lives on the platforms above, we dare not go there",
 						"here, take some food to aid your journey");
 					p.message("Niloof give you some food");
-					addItem(p, 259, 2);
-					addItem(p, 907, 1);
-					addItem(p, 326, 1);
+					addItem(p, ItemId.MEAT_PIE.id(), 2);
+					addItem(p, ItemId.CHOCOLATE_BOMB.id(), 1);
+					addItem(p, ItemId.MEAT_PIZZA.id(), 1);
 					playerTalk(p, n, "thanks niloof, take care");
 					npcTalk(p, n, "you too");
 					p.updateQuestStage(Constants.Quests.UNDERGROUND_PASS, 6);
@@ -95,16 +90,16 @@ public class UndergroundPassDwarfs implements TalkToNpcListener,
 					if (p.getCache().hasKey("doll_of_iban")) {
 						playerTalk(p, n, "niloof, i found the witch's house");
 						npcTalk(p, n, "and...?");
-						if (hasItem(p, 1004) && !hasItem(p, 1005)) {
+						if (hasItem(p, ItemId.A_DOLL_OF_IBAN.id()) && !hasItem(p, ItemId.OLD_JOURNAL.id())) {
 							npcTalk(p, n, "i found this old book",
 								"i'm not sure if it's of any use to you traveller");
-							addItem(p, 1005, 1);
+							addItem(p, ItemId.OLD_JOURNAL.id(), 1);
 							return;
-						} else if (!hasItem(p, 1004)) {
+						} else if (!hasItem(p, ItemId.A_DOLL_OF_IBAN.id())) {
 							playerTalk(p, n, "i found a strange doll and a book",
 									"but i've lost the doll");
 							npcTalk(p, n, "well it's a good job i found it");
-							addItem(p, 1004, 1);
+							addItem(p, ItemId.A_DOLL_OF_IBAN.id(), 1);
 							npcTalk(p, n, "the witches rag doll, this here be black magic traveller",
 									"mixed with the right ingredients the doll can inflict serious harm",
 									"these four elements of being are guarded somewhere in this cave",
@@ -112,10 +107,10 @@ public class UndergroundPassDwarfs implements TalkToNpcListener,
 									"if you can retrieve these,combined with the doll...",
 									"you will be able destroy iban...",
 									"and ressurect the 'well of voyage'");
-							if (!hasItem(p, 1005)) {
+							if (!hasItem(p, ItemId.OLD_JOURNAL.id())) {
 								npcTalk(p, n, "i found this old book",
 										"i'm not sure if it's of any use to you traveller");
-								addItem(p, 1005, 1);
+								addItem(p, ItemId.OLD_JOURNAL.id(), 1);
 							}
 							return;
 						}
@@ -144,12 +139,12 @@ public class UndergroundPassDwarfs implements TalkToNpcListener,
 					npcTalk(p, n, "traveller, thank the stars you're still around",
 							"i thought your time had come");
 					playerTalk(p, n, "i've still a few years in me yet");
-					if (!hasItem(p, 1004)) {
+					if (!hasItem(p, ItemId.A_DOLL_OF_IBAN.id())) {
 						npcTalk(p, n, "i found something i think you need traveller");
 						playerTalk(p, n, "the doll?");
 						npcTalk(p, n, "i found it while slaying some of the souless, here");
 						p.message("niloof gives you the doll of iban");
-						addItem(p, 1004, 1);
+						addItem(p, ItemId.A_DOLL_OF_IBAN.id(), 1);
 					}
 					playerTalk(p, n, "it's about time i delt with iban");
 					npcTalk(p, n, "good luck to you, you'll need it",
@@ -162,7 +157,7 @@ public class UndergroundPassDwarfs implements TalkToNpcListener,
 					break;
 			}
 		}
-		if (n.getID() == KLANK) {
+		else if (n.getID() == NpcId.KLANK.id()) {
 			switch (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS)) {
 				case 5:
 				case 6:
@@ -175,9 +170,9 @@ public class UndergroundPassDwarfs implements TalkToNpcListener,
 							"from the teeth of the souless, their bite is vicous",
 							"i haven't seen a another pair which can with stand their jaws");
 						p.message("klank gives you a pair of gaunlets");
-						addItem(p, 1006, 1);
+						addItem(p, ItemId.KLANKS_GAUNTLETS.id(), 1);
 						p.message("and a tinderbox");
-						addItem(p, 166, 1);
+						addItem(p, ItemId.TINDERBOX.id(), 1);
 						playerTalk(p, n, "thanks klank");
 						npcTalk(p, n, "good luck traveller, give iban a slap for me");
 					} else {
@@ -204,14 +199,14 @@ public class UndergroundPassDwarfs implements TalkToNpcListener,
 								"eventually they all fall to his control",
 								"here take this, i don't need it");
 							p.message("klank gives you a tinderbox");
-							addItem(p, 166, 1);
+							addItem(p, ItemId.TINDERBOX.id(), 1);
 						} else if (menu == 1) {
 							playerTalk(p, n, "no wonder they're breath was soo bad");
 							npcTalk(p, n, "you think this is funny.. eh");
 							playerTalk(p, n, "not really, just trying to lighten up the conversation");
 							npcTalk(p, n, "here take this, i don't need it");
 							p.message("klank gives you a tinderbox");
-							addItem(p, 166, 1);
+							addItem(p, ItemId.TINDERBOX.id(), 1);
 						}
 					}
 					break;
@@ -235,11 +230,11 @@ public class UndergroundPassDwarfs implements TalkToNpcListener,
 						if (menu2 == 0) {
 							npcTalk(p, n, "we don't joke down here, friend");
 						} else if (menu2 == 1) {
-							if (hasItem(p, 10, 5000)) {
+							if (hasItem(p, ItemId.COINS.id(), 5000)) {
 								p.message("you give klank 5000 coins...");
-								removeItem(p, 10, 5000);
+								removeItem(p, ItemId.COINS.id(), 5000);
 								p.message("...and klank gives you a pair of guanletts");
-								addItem(p, 1006, 1);
+								addItem(p, ItemId.KLANKS_GAUNTLETS.id(), 1);
 								npcTalk(p, n, "there you go..i hope they help");
 								playerTalk(p, n, "i'll see you around klank");
 							} else {
