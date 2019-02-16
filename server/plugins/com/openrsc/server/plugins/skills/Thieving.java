@@ -650,7 +650,7 @@ public class Thieving extends Functions
 			new LootItem(ItemId.BUCKET.id(), 1, 18),
 			new LootItem(ItemId.ROPE.id(), 1, 16),
 			new LootItem(ItemId.SPECIMEN_BRUSH.id(), 1, 14),
-			new LootItem(ItemId.ROCK_SAMPLE.id(), 1, 12),
+			new LootItem(ItemId.ROCK_SAMPLE_GREEN.id(), 1, 12),
 			new LootItem(ItemId.LEATHER_GLOVES.id(), 1, 10),
 			new LootItem(ItemId.NOTHING.id(), 0, 8)),
 		ROGUE(32, 146, "Hey what do you think you're doing",

@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -15,13 +16,6 @@ import com.openrsc.server.util.rsc.DataConversions;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class UndergroundPassObstaclesMap2 implements ObjectActionListener, ObjectActionExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener {
-
-	/**
-	 * ITEM IDs
-	 **/
-	public static int SALMON = 357;
-	public static int MEAT_PIE = 259;
-	public static int UNICORN_HORN = 997;
 
 	/**
 	 * OBJECT IDs
@@ -43,34 +37,10 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (inArray(obj.getID(), PILE_OF_MUD_MAP_LEVEL_2)) {
-			return true;
-		}
-		if (obj.getID() == CRATE) {
-			return true;
-		}
-		if (inArray(obj.getID(), DUG_UP_SOIL)) {
-			return true;
-		}
-		if (obj.getID() == LEDGE) {
-			return true;
-		}
-		if (obj.getID() == WALL_GRILL_EAST || obj.getID() == WALL_GRILL_WEST) {
-			return true;
-		}
-		if (inArray(obj.getID(), ROCKS) || obj.getID() == HIJACK_ROCK) {
-			return true;
-		}
-		if (obj.getID() == PASSAGE) {
-			return true;
-		}
-		if (obj.getID() == CAGE_REMAINS) {
-			return true;
-		}
-		if (obj.getID() == GATE_OF_IBAN || obj.getID() == FLAMES_OF_ZAMORAK || obj.getID() == GATE_OF_ZAMORAK) {
-			return true;
-		}
-		return false;
+		return inArray(obj.getID(), PILE_OF_MUD_MAP_LEVEL_2) || obj.getID() == CRATE || inArray(obj.getID(), DUG_UP_SOIL)
+				|| obj.getID() == LEDGE || obj.getID() == WALL_GRILL_EAST || obj.getID() == WALL_GRILL_WEST
+				|| inArray(obj.getID(), ROCKS) || obj.getID() == HIJACK_ROCK || obj.getID() == PASSAGE || obj.getID() == CAGE_REMAINS
+				|| obj.getID() == GATE_OF_IBAN || obj.getID() == FLAMES_OF_ZAMORAK || obj.getID() == GATE_OF_ZAMORAK;
 	}
 	// 753, 3475
 
@@ -83,39 +53,39 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 				p.teleport(727, 3448);
 				p.message("..ending at the well entrance");
 			}
-			if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_2[1]) {
+			else if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_2[1]) {
 				message(p, "you climb the pile of mud");
 				p.teleport(753, 3481);
 			}
-			if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_2[2]) {
+			else if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_2[2]) {
 				message(p, "you climb the pile of mud");
 				p.teleport(753, 3475);
 			}
-			if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_2[3]) {
+			else if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_2[3]) {
 				message(p, "you climb the pile of mud");
 				p.teleport(743, 3483);
 			}
-			if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_2[4]) {
+			else if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_2[4]) {
 				message(p, "you climb the pile of mud");
 				p.teleport(740, 3476);
 			}
-			if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_2[5]) {
+			else if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_2[5]) {
 				message(p, "you climb the pile of mud");
 				p.teleport(735, 3478);
 			}
 		}
-		if (obj.getID() == CRATE) {
+		else if (obj.getID() == CRATE) {
 			message(p, "you search the crate");
 			if (!p.getCache().hasKey("crate_food")) {
 				p.message("inside you find some food");
-				addItem(p, SALMON, 2);
-				addItem(p, MEAT_PIE, 2);
+				addItem(p, ItemId.SALMON.id(), 2);
+				addItem(p, ItemId.MEAT_PIE.id(), 2);
 				p.getCache().store("crate_food", true);
 			} else {
 				p.message("but you find nothing");
 			}
 		}
-		if (inArray(obj.getID(), DUG_UP_SOIL)) {
+		else if (inArray(obj.getID(), DUG_UP_SOIL)) {
 			message(p, "under the soil is a tunnel");
 			p.message("would you like to enter?");
 			int menu = showMenu(p,
@@ -129,7 +99,7 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 				p.message("and crawl into a small dark passage");
 			}
 		}
-		if (obj.getID() == LEDGE) {
+		else if (obj.getID() == LEDGE) {
 			if (command.equalsIgnoreCase("climb up")) {
 				p.message("you climb the ledge");
 				if (DataConversions.getRandom().nextInt(10) <= 1) {
@@ -149,7 +119,7 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 				playerTalk(p, null, "ooof");
 			}
 		}
-		if (obj.getID() == WALL_GRILL_EAST) {
+		else if (obj.getID() == WALL_GRILL_EAST) {
 			if (!p.getCache().hasKey("rope_wall_grill")) {
 				message(p, "the wall grill is too high");
 				p.message("you can't quite reach");
@@ -159,11 +129,11 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 				p.teleport(762, 3472);
 			}
 		}
-		if (obj.getID() == WALL_GRILL_WEST) {
+		else if (obj.getID() == WALL_GRILL_WEST) {
 			message(p, "you climb across the grill to the otherside");
 			p.teleport(766, 3463);
 		}
-		if (inArray(obj.getID(), ROCKS)) {
+		else if (inArray(obj.getID(), ROCKS)) {
 			switch (obj.getID()) {
 				case 859:
 				case 858:
@@ -186,7 +156,7 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 					break;
 			}
 		}
-		if (obj.getID() == HIJACK_ROCK) {
+		else if (obj.getID() == HIJACK_ROCK) {
 			p.setBusyTimer(650);
 			p.message("you climb onto the rock");
 			if (DataConversions.getRandom().nextInt(5) == 4) {
@@ -203,7 +173,7 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 				p.message("and step down the other side");
 			}
 		}
-		if (obj.getID() == PASSAGE) {
+		else if (obj.getID() == PASSAGE) {
 			message(p, "you walk down the passage way");
 			p.message("you step on a pressure trigger");
 			p.message("it's a trap");
@@ -219,21 +189,21 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 			p.damage((int) (getCurrentLevel(p, Skills.HITPOINTS) / 5) + 5);
 			playerTalk(p, null, "aaarghh");
 		}
-		if (obj.getID() == CAGE_REMAINS) {
+		else if (obj.getID() == CAGE_REMAINS) {
 			if (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) >= 5 || p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == -1) {
 				message(p, "you search the cage remains");
 				p.message("nothing remains");
 				return;
 			}
-			if (!hasItem(p, UNICORN_HORN)) {
+			if (!hasItem(p, ItemId.UNDERGROUND_PASS_UNICORN_HORN.id())) {
 				sleep(1600);
 				p.message("all that remains is a damaged horn");
-				addItem(p, UNICORN_HORN, 1);
+				addItem(p, ItemId.UNDERGROUND_PASS_UNICORN_HORN.id(), 1);
 			} else {
 				p.message("nothing remains");
 			}
 		}
-		if (obj.getID() == GATE_OF_IBAN) {
+		else if (obj.getID() == GATE_OF_IBAN) {
 			p.message("you pull on the great door");
 			if ((p.getCache().hasKey("flames_of_zamorak1") && p.getCache().hasKey("flames_of_zamorak2") && (p.getCache().hasKey("flames_of_zamorak3") && p.getCache().getInt("flames_of_zamorak3") >= 2)) || atQuestStages(p, Constants.Quests.UNDERGROUND_PASS, 7, 8, -1)) {
 				message(p, "from behind the door you hear cry's and moans");
@@ -249,7 +219,7 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 				p.message("the door refuses to open");
 			}
 		}
-		if (obj.getID() == GATE_OF_ZAMORAK) {
+		else if (obj.getID() == GATE_OF_ZAMORAK) {
 			replaceObject(obj, new GameObject(obj.getLocation(), 723, obj.getDirection(), obj
 				.getType()));
 			delayedSpawnObject(obj.getLoc(), 3000);
@@ -258,7 +228,7 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 			p.teleport(763, 3417);
 			p.message("and walk through");
 		}
-		if (obj.getID() == FLAMES_OF_ZAMORAK) {
+		else if (obj.getID() == FLAMES_OF_ZAMORAK) {
 			message(p, "you search the stone structure");
 			p.message("on the side you find an old inscription");
 			p.message("it reads...");
@@ -268,10 +238,7 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click, Player p) {
-		if (inArray(obj.getID(), RAILINGS)) {
-			return true;
-		}
-		return false;
+		return inArray(obj.getID(), RAILINGS);
 	}
 
 	@Override
@@ -309,9 +276,9 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 			} else if (click == 1) {
 				if (obj.getID() == 168) {
 					message(p, "you search the cage");
-					if (!hasItem(p, 995)) {
+					if (!hasItem(p, ItemId.RAILING.id())) {
 						p.message("you find a loose railing lying on the floor");
-						addItem(p, 995, 1);
+						addItem(p, ItemId.RAILING.id(), 1);
 					} else
 						p.message("but you find nothing");
 					return;

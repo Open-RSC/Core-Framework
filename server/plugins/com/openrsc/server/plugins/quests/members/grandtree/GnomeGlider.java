@@ -1,40 +1,33 @@
 package com.openrsc.server.plugins.quests.members.grandtree;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public class GnomeGlider implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
-	private static final int GNOME_PILOT = 552;
-
-	private static final int GNOME_PILOT_TWO = 556;
-
-	private static final int GNOME_PILOT_KARAMJA = 569;
-	private static final int GNOME_PILOT_VARROCK = 570;
-	private static final int GNOME_PILOT_ALKHARID = 571;
-	private static final int GNOME_PILOT_WHITEMOUNTAIN = 572;
-
-
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == GNOME_PILOT || n.getID() == GNOME_PILOT_KARAMJA || n.getID() == GNOME_PILOT_ALKHARID || n.getID() == GNOME_PILOT_WHITEMOUNTAIN || n.getID() == GNOME_PILOT_VARROCK;
+		return DataConversions.inArray(new int[] {NpcId.GNOME_PILOT_GRANDTREE.id(), NpcId.GNOME_PILOT_KARAMJA_BROKEN.id(),
+				NpcId.GNOME_PILOT_KARAMJA.id(), NpcId.GNOME_PILOT_VARROCK.id(), NpcId.GNOME_PILOT_ALKHARID.id(), NpcId.GNOME_PILOT_WHITEMOUNTAIN.id()}, n.getID());
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == GNOME_PILOT_VARROCK) {
+		if (n.getID() == NpcId.GNOME_PILOT_VARROCK.id()) {
 			playerTalk(p, n, "hello again");
 			npcTalk(p, n, "well hello adventurer",
 				"as you can see we crashed on impact",
 				"i don't think it'll fly again",
 				"sorry but you'll have to walk");
 		}
-		if (n.getID() == GNOME_PILOT_KARAMJA || n.getID() == GNOME_PILOT_ALKHARID || n.getID() == GNOME_PILOT_WHITEMOUNTAIN) {
+		else if (n.getID() == NpcId.GNOME_PILOT_KARAMJA.id() || n.getID() == NpcId.GNOME_PILOT_ALKHARID.id() || n.getID() == NpcId.GNOME_PILOT_WHITEMOUNTAIN.id()) {
 			if (p.getQuestStage(Constants.Quests.GRAND_TREE) == -1) {
 				playerTalk(p, n, "hello again");
 				npcTalk(p, n, "well hello adventurer");
@@ -56,7 +49,7 @@ public class GnomeGlider implements TalkToNpcListener, TalkToNpcExecutiveListene
 			playerTalk(p, n, "hello");
 			npcTalk(p, n, "hello traveller");
 		}
-		if (n.getID() == GNOME_PILOT) {
+		else if (n.getID() == NpcId.GNOME_PILOT_GRANDTREE.id()) {
 			playerTalk(p, n, "hello");
 			if (p.getQuestStage(Constants.Quests.GRAND_TREE) == -1) {
 				npcTalk(p, n, "well hello again traveller");
@@ -137,7 +130,7 @@ public class GnomeGlider implements TalkToNpcListener, TalkToNpcExecutiveListene
 					playerTalk(p, n, "whhaaaaaaaaaagghhh");
 					p.teleport(425, 764);
 					playerTalk(p, n, "ouch");
-					Npc GNOME_PILOT = getNearestNpc(p, GNOME_PILOT_TWO, 5);
+					Npc GNOME_PILOT = getNearestNpc(p, NpcId.GNOME_PILOT_KARAMJA_BROKEN.id(), 5);
 					npcTalk(p, GNOME_PILOT, "ouch");
 					p.message("you crash in south karamja");
 					npcTalk(p, GNOME_PILOT, "sorry about that, are you ok");
@@ -147,7 +140,7 @@ public class GnomeGlider implements TalkToNpcListener, TalkToNpcExecutiveListene
 						"i hope you find what you came for adventurer");
 					playerTalk(p, GNOME_PILOT, "me too, take care little man");
 					npcTalk(p, GNOME_PILOT, "traveller watch out");
-					Npc JOGRE = getNearestNpc(p, 523, 15);
+					Npc JOGRE = getNearestNpc(p, NpcId.JOGRE.id(), 15);
 					if (JOGRE != null) {
 						npcTalk(p, JOGRE, "grrrrr");
 						JOGRE.setChasing(p);
@@ -158,6 +151,9 @@ public class GnomeGlider implements TalkToNpcListener, TalkToNpcExecutiveListene
 				return;
 			}
 			npcTalk(p, n, "hello traveller");
+		}
+		else if (n.getID() == NpcId.GNOME_PILOT_KARAMJA_BROKEN.id()) {
+			p.message("The Gnome pilot does not appear interested in talking");
 		}
 	}
 }

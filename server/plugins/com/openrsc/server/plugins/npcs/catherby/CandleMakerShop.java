@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.npcs.catherby;
 
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -17,12 +19,11 @@ import static com.openrsc.server.plugins.Functions.*;
 public class CandleMakerShop implements ShopInterface,
 	TalkToNpcListener, TalkToNpcExecutiveListener {
 
-	private static final int CANDLEMAKER = 282;
-	private final Shop shop = new Shop(false, 1000, 100, 80, 2, new Item(599, 10));
+	private final Shop shop = new Shop(false, 1000, 100, 80, 2, new Item(ItemId.UNLIT_CANDLE.id(), 10));
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
-		return n.getID() == CANDLEMAKER;
+		return n.getID() == NpcId.CANDLEMAKER.id();
 	}
 
 	@Override
@@ -39,11 +40,11 @@ public class CandleMakerShop implements ShopInterface,
 	public void onTalkToNpc(final Player p, final Npc n) {
 		if (p.getCache().hasKey("candlemaker")) {
 			npcTalk(p, n, "Have you got any wax yet?");
-			if (p.getInventory().hasItemId(605)) {
+			if (p.getInventory().hasItemId(ItemId.WAX_BUCKET.id())) {
 				playerTalk(p, n, "Yes I have some now");
-				removeItem(p, 605, 1);
+				removeItem(p, ItemId.WAX_BUCKET.id(), 1);
 				p.message("You exchange the wax with the candle maker for a black candle");
-				addItem(p, 600, 1);
+				addItem(p, ItemId.UNLIT_BLACK_CANDLE.id(), 1);
 				p.getCache().remove("candlemaker");
 			} else {
 				//NOTHING HAPPENS

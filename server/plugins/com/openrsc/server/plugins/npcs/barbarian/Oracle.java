@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.npcs.barbarian;
 
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -43,6 +44,6 @@ public final class Oracle implements TalkToNpcExecutiveListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getDef().getName().equals("Oracle");
+		return n.getID() == NpcId.ORACLE.id();
 	}
 }

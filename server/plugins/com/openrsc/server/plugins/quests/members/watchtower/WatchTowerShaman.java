@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.quests.members.watchtower;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -17,20 +19,14 @@ import static com.openrsc.server.plugins.Functions.*;
  */
 public class WatchTowerShaman implements TalkToNpcListener, TalkToNpcExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
 
-	public static int OGRE_SHAMAN = 673;
-	public static int MAGIC_OGRE_POTION = 1054;
-
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == OGRE_SHAMAN) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.OGRE_SHAMAN.id();
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == OGRE_SHAMAN) {
+		if (n.getID() == NpcId.OGRE_SHAMAN.id()) {
 			npcTalk(p, n, "Grr! how dare you talk to us",
 				"We will destroy you!");
 			p.message("A magic blast comes from the shaman");
@@ -42,15 +38,12 @@ public class WatchTowerShaman implements TalkToNpcListener, TalkToNpcExecutiveLi
 
 	@Override
 	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
-		if (npc.getID() == OGRE_SHAMAN && item.getID() == MAGIC_OGRE_POTION) {
-			return true;
-		}
-		return false;
+		return npc.getID() == NpcId.OGRE_SHAMAN.id() && item.getID() == ItemId.MAGIC_OGRE_POTION.id();
 	}
 
 	@Override
 	public void onInvUseOnNpc(Player p, Npc n, Item item) {
-		if (n.getID() == OGRE_SHAMAN && item.getID() == MAGIC_OGRE_POTION) {
+		if (n.getID() == NpcId.OGRE_SHAMAN.id() && item.getID() == ItemId.MAGIC_OGRE_POTION.id()) {
 			p.setBusy(true);
 			if (getCurrentLevel(p, Skills.MAGIC) < 14) {
 				p.message("You need a level of 14 magic first");
@@ -79,9 +72,9 @@ public class WatchTowerShaman implements TalkToNpcListener, TalkToNpcExecutiveLi
 					p.message("The shaman dissolves before your eyes!");
 					p.message("A crystal drops from the hand of the dissappearing ogre!");
 					p.message("You snatch it up quickly");
-					removeItem(p, 1054, 1);
-					addItem(p, 465, 1);
-					addItem(p, 1153, 1);
+					removeItem(p, ItemId.MAGIC_OGRE_POTION.id(), 1);
+					addItem(p, ItemId.EMPTY_VIAL.id(), 1);
+					addItem(p, ItemId.POWERING_CRYSTAL3.id(), 1);
 					if (p.getQuestStage(Constants.Quests.WATCHTOWER) == 8) {
 						p.updateQuestStage(Constants.Quests.WATCHTOWER, 9);
 					}

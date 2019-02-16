@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.npcs.portsarim;
 
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -61,17 +63,17 @@ public final class NedInShip implements TalkToNpcExecutiveListener,
 				if (opt == 0) {
 					npcTalk(p, n, "Ok show me the map and we'll set sail now");
 					boolean gave_map = false;
-					if (hasItem(p, 415, 1)) {
+					if (hasItem(p, ItemId.MAP.id(), 1)) {
 						message(p, "You give the map to ned");
 						playerTalk(p, n, "Here it is");
-						removeItem(p, 415, 1);
+						removeItem(p, ItemId.MAP.id(), 1);
 						gave_map = true;
-					} else if (hasItem(p, 416, 1) && hasItem(p, 417, 1) && hasItem(p, 418, 1)) {
+					} else if (hasItem(p, ItemId.MAP_PIECE_1.id(), 1) && hasItem(p, ItemId.MAP_PIECE_2.id(), 1) && hasItem(p, ItemId.MAP_PIECE_3.id(), 1)) {
 						message(p, "You give the parts of the map to ned");
 						playerTalk(p, n, "Here it is");
-						removeItem(p, 416, 1);
-						removeItem(p, 417, 1);
-						removeItem(p, 418, 1);
+						removeItem(p, ItemId.MAP_PIECE_1.id(), 1);
+						removeItem(p, ItemId.MAP_PIECE_2.id(), 1);
+						removeItem(p, ItemId.MAP_PIECE_3.id(), 1);
 						gave_map = true;
 					}
 					if (gave_map) {
@@ -108,6 +110,6 @@ public final class NedInShip implements TalkToNpcExecutiveListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 194;
+		return n.getID() == NpcId.NED_BOAT.id();
 	}
 }

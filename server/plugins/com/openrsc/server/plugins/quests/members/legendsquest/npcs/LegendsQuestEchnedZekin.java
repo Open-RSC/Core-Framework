@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -20,19 +22,14 @@ import static com.openrsc.server.plugins.Functions.spawnNpc;
 
 public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
-	public static final int ECHNED_ZEKIN = 740;
-
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == ECHNED_ZEKIN) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.ECHNED_ZEKIN.id();
 	}
 
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
-		if (n.getID() == ECHNED_ZEKIN) {
+		if (n.getID() == NpcId.ECHNED_ZEKIN.id()) {
 			echnedDialogue(p, n, -1);
 		}
 	}
@@ -59,7 +56,7 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 		int formerNpcY = n.getY();
 		if (n != null)
 			n.remove();
-		Npc second_nezikchened = spawnNpc(769, formerNpcX, formerNpcY, 60000 * 15, p);
+		Npc second_nezikchened = spawnNpc(NpcId.NEZIKCHENED.id(), formerNpcX, formerNpcY, 60000 * 15, p);
 		if (second_nezikchened != null) {
 			if (useHolySpell) {
 				holyForceSpell(p, second_nezikchened);
@@ -94,7 +91,7 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 	}
 
 	private void echnedDialogue(Player p, Npc n, int cID) {
-		if (n.getID() == ECHNED_ZEKIN) {
+		if (n.getID() == NpcId.ECHNED_ZEKIN.id()) {
 			if (cID == -1) {
 				switch (p.getQuestStage(Constants.Quests.LEGENDS_QUEST)) {
 					case 7:
@@ -102,10 +99,10 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 						 * HAS HOLY FORCE SPELL.
 						 */
 						if (p.getCache().hasKey("gave_glowing_dagger")) {
-							neziAttack(p, n, hasItem(p, 1257));
+							neziAttack(p, n, hasItem(p, ItemId.HOLY_FORCE_SPELL.id()));
 							return;
 						}
-						if (hasItem(p, 1257)) {
+						if (hasItem(p, ItemId.HOLY_FORCE_SPELL.id())) {
 							npcTalk(p, n, "Something seems different about you...",
 								"Your sense of purpose seems not bent to my will...",
 								"Give me the dagger that you used to slay Viyeldi or taste my wrath!");
@@ -127,10 +124,10 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 						/**
 						 * HAS DARK GLOWING DAGGER - KILLED VIYELDI
 						 */
-						else if (hasItem(p, 1256) && !hasItem(p, 1257)) {
+						else if (hasItem(p, ItemId.GLOWING_DARK_DAGGER.id()) && !hasItem(p, ItemId.HOLY_FORCE_SPELL.id())) {
 							npcTalk(p, n, "Aha, I see you have completed your task. ",
 								"I'll take that dagger from you now.");
-							removeItem(p, 1256, 1);
+							removeItem(p, ItemId.GLOWING_DARK_DAGGER.id(), 1);
 							if (!p.getCache().hasKey("gave_glowing_dagger")) {
 								p.getCache().store("gave_glowing_dagger", true);
 							}
@@ -144,7 +141,7 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 							int formerNpcY = n.getY();
 							if (n != null)
 								n.remove();
-							Npc second_nezikchened = spawnNpc(769, formerNpcX, formerNpcY, 60000 * 15, p);
+							Npc second_nezikchened = spawnNpc(NpcId.NEZIKCHENED.id(), formerNpcX, formerNpcY, 60000 * 15, p);
 							if (second_nezikchened != null) {
 								sleep(600);
 								second_nezikchened.startCombat(p);
@@ -155,7 +152,7 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 						/**
 						 * HAS THE DARK DAGGER
 						 */
-						else if (hasItem(p, 1255) && !hasItem(p, 1256) && !hasItem(p, 1257)) {
+						else if (hasItem(p, ItemId.DARK_DAGGER.id()) && !hasItem(p, ItemId.GLOWING_DARK_DAGGER.id()) && !hasItem(p, ItemId.HOLY_FORCE_SPELL.id())) {
 							message(p, "The shapeless entity of Echned Zekin appears in front of you.");
 							npcTalk(p, n, "Why do you return when your task is still incomplete?");
 							message(p, "There is an undercurrent of anger in his voice.");
@@ -312,14 +309,14 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 					npcTalk(p, n, "You would release me from my torment and the source would",
 						"be available to you.",
 						"However, you must realise that this will be no easy task.");
-					if (!hasItem(p, 1255)) {
+					if (!hasItem(p, ItemId.DARK_DAGGER.id())) {
 						npcTalk(p, n, "I will furnish you with a weapon which will help you",
 							"to achieve your aims...",
 							"Here, take this...");
 						p.message("The spiritless body waves an arm and in front of you appears");
 						p.message("a dark black dagger made of pure obsidian.");
 						npcTalk(p, n, "To complete this task you must use this weapon on Viyeldi.");
-						addItem(p, 1255, 1);
+						addItem(p, ItemId.DARK_DAGGER.id(), 1);
 						p.message("You take the dagger and place it in your inventory.");
 						if (!p.getCache().hasKey("met_spirit")) {
 							p.getCache().store("met_spirit", true);

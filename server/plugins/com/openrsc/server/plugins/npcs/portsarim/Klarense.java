@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.npcs.portsarim;
 
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -86,11 +88,11 @@ public class Klarense implements TalkToNpcExecutiveListener, TalkToNpcListener {
 				"I'm not paying that much for a broken boat"
 			});
 			if (choice == 0) {
-				if (p.getInventory().countId(10) >= 2000) {
+				if (p.getInventory().countId(ItemId.COINS.id()) >= 2000) {
 					npcTalk(p, n,
 						"Ok she's all yours");
 					p.getCache().store("owns_ship", true);
-					p.getInventory().remove(10, 2000);
+					p.getInventory().remove(ItemId.COINS.id(), 2000);
 				} else {
 					playerTalk(p, n, "Except I don't have that much money on me");
 				}
@@ -102,7 +104,7 @@ public class Klarense implements TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getDef().getName().equals("Klarense");
+		return n.getID() == NpcId.KLARENSE.id();
 	}
 
 }

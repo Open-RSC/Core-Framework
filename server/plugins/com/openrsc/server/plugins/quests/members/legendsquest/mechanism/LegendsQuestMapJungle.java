@@ -14,6 +14,8 @@ import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.removeItem;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
+import com.openrsc.server.external.ItemId;
+
 public class LegendsQuestMapJungle implements InvActionListener, InvActionExecutiveListener {
 
 	/**
@@ -29,9 +31,6 @@ public class LegendsQuestMapJungle implements InvActionListener, InvActionExecut
 	 * SIDE NOTE: There are 5 entrances (Very Deep east & Deep east, Very Deep west & Deep west, One Centered in middle).
 	 */
 
-	private static final int RADIMUS_SCROLLS = 1163;
-	private static final int RADIMUS_SCROLLS_COMPLETE = 1233;
-
 	private boolean JUNGLE_WEST_AREA(Player p) {
 		return p.getLocation().inBounds(432, 872, 477, 909);
 	}
@@ -46,7 +45,7 @@ public class LegendsQuestMapJungle implements InvActionListener, InvActionExecut
 
 	@Override
 	public void onInvAction(Item item, Player p) {
-		if (item.getID() == RADIMUS_SCROLLS_COMPLETE) {
+		if (item.getID() == ItemId.RADIMUS_SCROLLS_COMPLETE.id()) {
 			p.message("The map of Kharazi Jungle is complete, Sir Radimus will be pleased.");
 			int menu = showMenu(p, "Read Mission Briefing", "Close");
 			if (menu == 0) {
@@ -55,7 +54,7 @@ public class LegendsQuestMapJungle implements InvActionListener, InvActionExecut
 				p.message("You put the scrolls away.");
 			}
 		}
-		if (item.getID() == RADIMUS_SCROLLS) {
+		else if (item.getID() == ItemId.RADIMUS_SCROLLS.id()) {
 			boolean canMap = true;
 			p.message("You open and start to read the scrolls that Radimus gave you.");
 			int menu = showMenu(p,
@@ -94,13 +93,13 @@ public class LegendsQuestMapJungle implements InvActionListener, InvActionExecut
 					checkMapComplete(p);
 					return;
 				}
-				if (!hasItem(p, 982) && !hasItem(p, 983)) { // no charcoal or papyrus
+				if (!hasItem(p, ItemId.PAPYRUS.id()) && !hasItem(p, ItemId.A_LUMP_OF_CHARCOAL.id())) { // no charcoal or papyrus
 					message(p, 1200, "You'll need some papyrus and charcoal to complete this map.");
 					canMap = false;
-				} else if (hasItem(p, 982) && !hasItem(p, 983)) { // has papyrus but no charcoal
+				} else if (hasItem(p, ItemId.PAPYRUS.id()) && !hasItem(p, ItemId.A_LUMP_OF_CHARCOAL.id())) { // has papyrus but no charcoal
 					message(p, 1200, "You'll need some charcoal to complete this map.");
 					canMap = false;
-				} else if (!hasItem(p, 982) && hasItem(p, 983)) { // has charcoal but no papyrus
+				} else if (!hasItem(p, ItemId.PAPYRUS.id()) && hasItem(p, ItemId.A_LUMP_OF_CHARCOAL.id())) { // has charcoal but no papyrus
 					message(p, 1200, "You'll need some additional Papyrus to complete this map.");
 					canMap = false;
 				}
@@ -145,7 +144,7 @@ public class LegendsQuestMapJungle implements InvActionListener, InvActionExecut
 	private void mapArea(Player p) {
 		int random = DataConversions.random(0, 100);
 		if (random <= 29) { // 30% succeed.
-			removeItem(p, 982, 1);
+			removeItem(p, ItemId.PAPYRUS.id(), 1);
 			message(p, 1200, "You neatly add a new section to your map.");
 			if (JUNGLE_WEST_AREA(p)) {
 				if (!p.getCache().hasKey("JUNGLE_WEST")) {
@@ -166,7 +165,7 @@ public class LegendsQuestMapJungle implements InvActionListener, InvActionExecut
 				message(p, 1200, "Well done !",
 					"You have completed mapping the Kharazai jungle on the southern end of Karamja,");
 				message(p, 1900, "Grand Vizier Erkle will be pleased.");
-				p.getInventory().replace(1163, 1233); // switch map to complete map.
+				p.getInventory().replace(ItemId.RADIMUS_SCROLLS.id(), ItemId.RADIMUS_SCROLLS_COMPLETE.id()); // switch map to complete map.
 				checkMapComplete(p);
 				p.getCache().remove("JUNGLE_EAST");
 				p.getCache().remove("JUNGLE_MIDDLE");
@@ -177,14 +176,14 @@ public class LegendsQuestMapJungle implements InvActionListener, InvActionExecut
 			}
 		} else if (random <= 50) { // 20 % fail both.
 			p.message("You fall over, landing on your charcoal and papyrus, destroying them both.");
-			removeItem(p, 982, 1);
-			removeItem(p, 983, 1);
+			removeItem(p, ItemId.PAPYRUS.id(), 1);
+			removeItem(p, ItemId.A_LUMP_OF_CHARCOAL.id(), 1);
 		} else if (random <= 70) { // 20% to fail papyrus
 			p.message("You make a mess of the map, the paper is totally ruined.");
-			removeItem(p, 982, 1);
+			removeItem(p, ItemId.PAPYRUS.id(), 1);
 		} else if (random <= 90) { // 20% to fail charcoal
 			p.message("You snap your stick of charcoal.");
-			removeItem(p, 983, 1);
+			removeItem(p, ItemId.A_LUMP_OF_CHARCOAL.id(), 1);
 		} else if (random <= 100) { // 10% to fail and save papyrus
 			p.message("You make a mess of the map, but are able to rescue the paper.");
 		}
@@ -192,12 +191,6 @@ public class LegendsQuestMapJungle implements InvActionListener, InvActionExecut
 
 	@Override
 	public boolean blockInvAction(Item item, Player p) {
-		if (item.getID() == RADIMUS_SCROLLS) {
-			return true;
-		}
-		if (item.getID() == RADIMUS_SCROLLS_COMPLETE) {
-			return true;
-		}
-		return false;
+		return item.getID() == ItemId.RADIMUS_SCROLLS.id() || item.getID() == ItemId.RADIMUS_SCROLLS_COMPLETE.id();
 	}
 }

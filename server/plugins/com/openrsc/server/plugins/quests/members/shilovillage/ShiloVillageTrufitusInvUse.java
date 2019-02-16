@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.quests.members.shilovillage;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -11,38 +13,10 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
 
-	private static final int TRUFITUS = 517;
-
 	@Override
 	public boolean blockInvUseOnNpc(Player p, Npc n, Item item) {
-		if (n.getID() == TRUFITUS && item.getID() == ShiloVillageObjects.STONE_PLAQUE) {
-			return true;
-		}
-		if (n.getID() == TRUFITUS && item.getID() == ShiloVillageObjects.CRUMPLED_SCROLL) {
-			return true;
-		}
-		if (n.getID() == TRUFITUS && item.getID() == ShiloVillageObjects.TATTERED_SCROLL) {
-			return true;
-		}
-		if (n.getID() == TRUFITUS && item.getID() == ShiloVillageObjects.ZADIMUS_CORPSE) {
-			return true;
-		}
-		if (n.getID() == TRUFITUS && item.getID() == 974) { // bone shard
-			return true;
-		}
-		if (n.getID() == TRUFITUS && item.getID() == 972) { // loc crystal
-			return true;
-		}
-		if (n.getID() == TRUFITUS && item.getID() == 961) { // zadi corpse
-			return true;
-		}
-		if (n.getID() == TRUFITUS && item.getID() == 973) { // sword pommel
-			return true;
-		}
-		if (n.getID() == TRUFITUS && item.getID() == 977) { // rash corpse
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.TRUFITUS.id() && (inArray(item.getID(), ItemId.STONE_PLAQUE.id(), ItemId.CRUMPLED_SCROLL.id(), ItemId.TATTERED_SCROLL.id(), ItemId.ZADIMUS_CORPSE.id(),
+				ItemId.BONE_SHARD.id(), ItemId.LOCATING_CRYSTAL.id(), ItemId.BERVIRIUS_TOMB_NOTES.id(), ItemId.SWORD_POMMEL.id(), ItemId.RASHILIYA_CORPSE.id()));
 	}
 
 	private void corpseBuriedChat(Player p, Npc n) {
@@ -137,7 +111,7 @@ public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOn
 
 	@Override
 	public void onInvUseOnNpc(Player p, Npc n, Item item) {
-		if (n.getID() == TRUFITUS && item.getID() == 977) { // rash corpse.
+		if (n.getID() == NpcId.TRUFITUS.id() && item.getID() == ItemId.RASHILIYA_CORPSE.id()) {
 			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
 				playerTalk(p, n, "Have a look at this.");
 				npcTalk(p, n, "Hmmm, I'm not sure you will get much use out of this.",
@@ -158,7 +132,7 @@ public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOn
 				offMyHandsChat(p, n);
 			}
 		}
-		if (n.getID() == TRUFITUS && item.getID() == 973) {
+		else if (n.getID() == NpcId.TRUFITUS.id() && item.getID() == ItemId.SWORD_POMMEL.id()) {
 			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
 				playerTalk(p, n, "Have a look at this.");
 				npcTalk(p, n, "Hmmm, I'm not sure you will get much use out of this.",
@@ -182,7 +156,7 @@ public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOn
 				putOnNecklaceChat(p, n);
 			}
 		}
-		if (n.getID() == TRUFITUS && item.getID() == 961) {
+		else if (n.getID() == NpcId.TRUFITUS.id() && item.getID() == ItemId.BERVIRIUS_TOMB_NOTES.id()) {
 			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
 				playerTalk(p, n, "Have a look at this.");
 				npcTalk(p, n, "Hmmm, I'm not sure you will get much use out of this.",
@@ -199,7 +173,7 @@ public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOn
 				p.updateQuestStage(Constants.Quests.SHILO_VILLAGE, 7);
 			}
 		}
-		if (n.getID() == TRUFITUS && item.getID() == 972) {
+		else if (n.getID() == NpcId.TRUFITUS.id() && item.getID() == ItemId.LOCATING_CRYSTAL.id()) {
 			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
 				playerTalk(p, n, "Have a look at this.");
 				npcTalk(p, n, "Hmmm, I'm not sure you will get much use out of this.",
@@ -214,7 +188,7 @@ public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOn
 				"Simply activate it when you think you are near, and it should ",
 				"glow different colours to show how near you are.");
 		}
-		if (n.getID() == TRUFITUS && item.getID() == 974) { // bone shard
+		else if (n.getID() == NpcId.TRUFITUS.id() && item.getID() == ItemId.BONE_SHARD.id()) {
 			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
 				playerTalk(p, n, "Have a look at this.");
 				npcTalk(p, n, "Hmmm, I'm not sure you will get much use out of this.",
@@ -243,7 +217,7 @@ public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOn
 				}
 			}
 		}
-		if (n.getID() == TRUFITUS && item.getID() == ShiloVillageObjects.CRUMPLED_SCROLL) { // TODO CACHE?
+		else if (n.getID() == NpcId.TRUFITUS.id() && item.getID() == ItemId.CRUMPLED_SCROLL.id()) {
 			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
 				playerTalk(p, n, "Have a look at this.");
 				npcTalk(p, n, "Hmmm, I'm not sure you will get much use out of this.",
@@ -268,7 +242,7 @@ public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOn
 				npcTalk(p, n, "It may be possible to make a ward like that?",
 					"But what is the best thing to make it from?");
 				// having zadimus corpse prolly
-				if(hasItem(p, ShiloVillageObjects.ZADIMUS_CORPSE)) {
+				if(hasItem(p, ItemId.ZADIMUS_CORPSE.id())) {
 					npcTalk(p, n, "Now...what was it that Zadimus said...");
 				} else {
 					npcTalk(p, n, "Perhaps you'll get some clues from other items?");
@@ -277,7 +251,7 @@ public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOn
 				npcTalk(p, n, "You're quite welcome Bwana.");
 			}
 		}
-		if (n.getID() == TRUFITUS && item.getID() == ShiloVillageObjects.TATTERED_SCROLL) {
+		else if (n.getID() == NpcId.TRUFITUS.id() && item.getID() == ItemId.TATTERED_SCROLL.id()) {
 			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
 				playerTalk(p, n, "Have a look at this.");
 				npcTalk(p, n, "Hmmm, I'm not sure you will get much use out of this.",
@@ -291,7 +265,7 @@ public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOn
 				"Perhaps Bervirius' tomb is still accessible?");
 			p.message("Trufitus hands the Tattered scroll back to you.");
 		}
-		if (n.getID() == TRUFITUS && item.getID() == ShiloVillageObjects.ZADIMUS_CORPSE) {
+		else if (n.getID() == NpcId.TRUFITUS.id() && item.getID() == ItemId.ZADIMUS_CORPSE.id()) {
 			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
 				playerTalk(p, n, "Have a look at this.");
 				npcTalk(p, n, "Hmmm, I'm not sure you will get much use out of this.",
@@ -319,7 +293,7 @@ public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOn
 					"turn me into a minion of Rashiliyia.");
 			}
 		}
-		if (n.getID() == TRUFITUS && item.getID() == ShiloVillageObjects.STONE_PLAQUE) {
+		else if (n.getID() == NpcId.TRUFITUS.id() && item.getID() == ItemId.STONE_PLAQUE.id()) {
 			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
 				playerTalk(p, n, "Have a look at this.");
 				npcTalk(p, n, "Hmmm, I'm not sure you will get much use out of this.",

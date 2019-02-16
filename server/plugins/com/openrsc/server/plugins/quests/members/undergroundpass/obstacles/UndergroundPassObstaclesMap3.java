@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GameObject;
@@ -27,32 +28,16 @@ import static com.openrsc.server.plugins.Functions.sleep;
 public class UndergroundPassObstaclesMap3 implements ObjectActionListener, ObjectActionExecutiveListener {
 
 	/**
-	 * ITEM IDs
-	 **/
-	public static int IBANS_CONSCIENCE = 1008;
-	public static int KLANKS = 1006;
-	public static int DEMONS_CHEST = 912;
-	public static int ROBE_OF_ZAMORAK_TOP = 702;
-	public static int ROBE_OF_ZAMORAK_BOTTOM = 703;
-
-	/**
 	 * OBJECT IDs
 	 **/
 	public static int[] CAGES = {888, 887};
 	public static int ZAMORAKIAN_TEMPLE_DOOR = 869;
+	public static final int DEMONS_CHEST_OPEN = 911;
+	public static final int DEMONS_CHEST_CLOSED = 912;
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (inArray(obj.getID(), CAGES)) {
-			return true;
-		}
-		if (obj.getID() == DEMONS_CHEST) {
-			return true;
-		}
-		if (obj.getID() == ZAMORAKIAN_TEMPLE_DOOR) {
-			return true;
-		}
-		return false;
+		return inArray(obj.getID(), CAGES) || obj.getID() == DEMONS_CHEST_CLOSED || obj.getID() == ZAMORAKIAN_TEMPLE_DOOR;
 	}
 
 	@Override
@@ -65,32 +50,32 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 				message(p, "you search through the bottom of the cage");
 				if (!p.getCache().hasKey("cons_on_doll")) {
 					p.message("but the souless bieng bites into your arm");
-					if (p.getInventory().wielding(KLANKS)) {
+					if (p.getInventory().wielding(ItemId.KLANKS_GAUNTLETS.id())) {
 						p.message("klanks gaunlett protects you");
 					} else {
 						p.damage(((int) getCurrentLevel(p, Skills.HITPOINTS) / 10) + 5);
 						playerTalk(p, null, "aaarrgghh");
 					}
 				}
-				if (!hasItem(p, IBANS_CONSCIENCE) && !p.getCache().hasKey("cons_on_doll")) {
+				if (!hasItem(p, ItemId.IBANS_CONSCIENCE.id()) && !p.getCache().hasKey("cons_on_doll")) {
 					p.message("you find the remains of a dove");
-					addItem(p, IBANS_CONSCIENCE, 1);
+					addItem(p, ItemId.IBANS_CONSCIENCE.id(), 1);
 				} else {
 					//kosher was separated lol
-					if (p.getInventory().wielding(KLANKS)) {
+					if (p.getInventory().wielding(ItemId.KLANKS_GAUNTLETS.id())) {
 						p.message("but you find find nothing");
 					} else {
 						p.message("you find nothing");
 					}
 				}
 			}
-			if (obj.getID() == CAGES[0]) {
+			else if (obj.getID() == CAGES[0]) {
 				p.message("the man seems to be entranced");
 				message(p, "the cage is locked");
 				sleep(1600);
 				message(p, "you search through the bottom of the cage");
 				p.message("but the souless bieng bites into your arm");
-				if (p.getInventory().wielding(KLANKS)) {
+				if (p.getInventory().wielding(ItemId.KLANKS_GAUNTLETS.id())) {
 					p.message("klanks gaunlett protects you");
 					p.message("but you find find nothing");
 				} else {
@@ -100,32 +85,32 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 				}
 			}
 		}
-		if (obj.getID() == DEMONS_CHEST) {
+		else if (obj.getID() == DEMONS_CHEST_CLOSED) {
 			message(p, "you attempt to open the chest");
-			if (hasItem(p, 1009) && hasItem(p, 1010) && hasItem(p, 1011) && !p.getCache().hasKey("shadow_on_doll")) {
+			if (hasItem(p, ItemId.AMULET_OF_OTHAINIAN.id()) && hasItem(p, ItemId.AMULET_OF_DOOMION.id()) && hasItem(p, ItemId.AMULET_OF_HOLTHION.id()) && !p.getCache().hasKey("shadow_on_doll")) {
 				message(p, "the three amulets glow red in your satchel");
-				removeItem(p, 1009, 1);
-				removeItem(p, 1010, 1);
-				removeItem(p, 1011, 1);
+				removeItem(p, ItemId.AMULET_OF_OTHAINIAN.id(), 1);
+				removeItem(p, ItemId.AMULET_OF_DOOMION.id(), 1);
+				removeItem(p, ItemId.AMULET_OF_HOLTHION.id(), 1);
 				p.message("you place them on the chest and the chest opens");
-				replaceObject(obj, new GameObject(obj.getLocation(), 911, obj.getDirection(), obj.getType()));
+				replaceObject(obj, new GameObject(obj.getLocation(), DEMONS_CHEST_OPEN, obj.getDirection(), obj.getType()));
 				delayedSpawnObject(obj.getLoc(), 2000);
 				sleep(1000);
 				p.message("inside you find a strange dark liquid");
-				addItem(p, 1007, 1);
+				addItem(p, ItemId.IBANS_SHADOW.id(), 1);
 			} else {
 				p.message("but it's magically sealed");
 			}
 		}
-		if (obj.getID() == ZAMORAKIAN_TEMPLE_DOOR) {
+		else if (obj.getID() == ZAMORAKIAN_TEMPLE_DOOR) {
 			if (p.getX() <= 792) {
 				if (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == -1) {
 					message(p, "the temple is in ruins...");
 					p.message("...you cannot enter");
 					return;
 				}
-				if (p.getInventory().wielding(ROBE_OF_ZAMORAK_TOP)
-					&& p.getInventory().wielding(ROBE_OF_ZAMORAK_BOTTOM)) {
+				if (p.getInventory().wielding(ItemId.ROBE_OF_ZAMORAK_TOP.id())
+					&& p.getInventory().wielding(ItemId.ROBE_OF_ZAMORAK_BOTTOM.id())) {
 					replaceObject(obj, new GameObject(obj.getLocation(), 914, obj.getDirection(), obj.getType()));
 					delayedSpawnObject(obj.getLoc(), 3000);
 					p.teleport(792, 3469);

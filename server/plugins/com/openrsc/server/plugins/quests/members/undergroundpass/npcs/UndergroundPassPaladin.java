@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.npcs;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
@@ -13,15 +15,9 @@ import static com.openrsc.server.plugins.Functions.*;
 public class UndergroundPassPaladin implements TalkToNpcListener,
 	TalkToNpcExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener {
 
-	private static int COAT_OF_ARMS_RED = 998;
-	private static int COAT_OF_ARMS_BLUE = 999;
-
-	private static int PALADIN_BEARD = 632;
-	private static int PALADIN = 633;
-
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == PALADIN_BEARD;
+		return n.getID() == NpcId.PALADIN_UNDERGROUND_BEARD.id();
 	}
 
 	@Override
@@ -32,11 +28,11 @@ public class UndergroundPassPaladin implements TalkToNpcListener,
 				if (!p.getCache().hasKey("paladin_food")) {
 					npcTalk(p, n, "you've done well to get this far traveller, here eat");
 					p.message("the paladin gives you some food");
-					addItem(p, 259, 2);
-					addItem(p, 138, 1);
-					addItem(p, 346, 1);
-					addItem(p, 475, 1);
-					addItem(p, 484, 1);
+					addItem(p, ItemId.MEAT_PIE.id(), 2);
+					addItem(p, ItemId.STEW.id(), 1);
+					addItem(p, ItemId.BREAD.id(), 2);
+					addItem(p, ItemId.TWO_ATTACK_POTION.id(), 1);
+					addItem(p, ItemId.TWO_RESTORE_PRAYER_POTION.id(), 1);
 					p.getCache().store("paladin_food", true);
 					playerTalk(p, n, "thanks");
 				}
@@ -62,28 +58,28 @@ public class UndergroundPassPaladin implements TalkToNpcListener,
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		return n.getID() == PALADIN_BEARD || n.getID() == PALADIN;
+		return n.getID() == NpcId.PALADIN_UNDERGROUND_BEARD.id() || n.getID() == NpcId.PALADIN_UNDERGROUND.id();
 	}
 
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == PALADIN_BEARD) {
+		if (n.getID() == NpcId.PALADIN_UNDERGROUND_BEARD.id()) {
 			n.killedBy(p);
 			message(p, "the paladin slumps to the floor",
 				"you search his body");
-			if (!hasItem(p, COAT_OF_ARMS_RED)) {
-				addItem(p, COAT_OF_ARMS_RED, 1);
+			if (!hasItem(p, ItemId.COAT_OF_ARMS_RED.id())) {
+				addItem(p, ItemId.COAT_OF_ARMS_RED.id(), 1);
 				p.message("and find a paladin coat of arms");
 			} else {
 				p.message("but find nothing");
 			}
 		}
-		if (n.getID() == PALADIN) {
+		else if (n.getID() == NpcId.PALADIN_UNDERGROUND.id()) {
 			n.killedBy(p);
 			message(p, "the paladin slumps to the floor",
 				"you search his body");
-			if (!hasItem(p, COAT_OF_ARMS_BLUE, 2)) {
-				addItem(p, COAT_OF_ARMS_BLUE, 1);
+			if (!hasItem(p, ItemId.COAT_OF_ARMS_BLUE.id(), 2)) {
+				addItem(p, ItemId.COAT_OF_ARMS_BLUE.id(), 1);
 				p.message("and find a paladin coat of arms");
 			} else {
 				p.message("but find nothing");

@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members.shilovillage;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -19,18 +20,18 @@ public class ShiloVillageMosolRei implements TalkToNpcListener, TalkToNpcExecuti
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == ShiloNpcs.MOSEL_REI;
+		return n.getID() == NpcId.MOSOL.id();
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == ShiloNpcs.MOSEL_REI) {
+		if (n.getID() == NpcId.MOSOL.id()) {
 			moselReiDialogue(p, n, -1);
 		}
 	}
 
 	private void moselReiDialogue(Player p, Npc n, int cID) {
-		if (n.getID() == ShiloNpcs.MOSEL_REI) {
+		if (n.getID() == NpcId.MOSOL.id()) {
 			if (cID == -1) {
 				switch (p.getQuestStage(Constants.Quests.SHILO_VILLAGE)) {
 					case -1:
@@ -186,10 +187,6 @@ public class ShiloVillageMosolRei implements TalkToNpcListener, TalkToNpcExecuti
 					break;
 			}
 		}
-	}
-
-	public class ShiloNpcs {
-		static final int MOSEL_REI = 539;
 	}
 
 	class MoselRei {

@@ -5,33 +5,31 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.DropListener;
 import com.openrsc.server.plugins.listeners.executive.DropExecutiveListener;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class DigsiteMiscs implements DropListener, DropExecutiveListener {
+import com.openrsc.server.external.ItemId;
 
-	private static int UNINDENTIFIED_LIQUID = 1232;
-	private static int MIXED_CHEMICALS = 1178;
-	private static int MIXED_CHEMICALS2 = 1180;
-	private static int NITROGLYCERIN = 1161;
-	private static int EXPLOSIVE_COMPOUND = 1176;
+public class DigsiteMiscs implements DropListener, DropExecutiveListener {
 
 	@Override
 	public boolean blockDrop(Player p, Item i) {
-		return i.getID() == UNINDENTIFIED_LIQUID || i.getID() == NITROGLYCERIN || i.getID() == MIXED_CHEMICALS || i.getID() == MIXED_CHEMICALS2 || i.getID() == EXPLOSIVE_COMPOUND;
+		return DataConversions.inArray(new int[] {ItemId.UNIDENTIFIED_LIQUID.id(), ItemId.NITROGLYCERIN.id(),
+				ItemId.MIXED_CHEMICALS_1.id(), ItemId.MIXED_CHEMICALS_2.id(), ItemId.EXPLOSIVE_COMPOUND.id()}, i.getID());
 	}
 
 	@Override
 	public void onDrop(Player p, Item i) {
-		if (i.getID() == UNINDENTIFIED_LIQUID) {
+		if (i.getID() == ItemId.UNIDENTIFIED_LIQUID.id()) {
 			p.message("bang!");
-			removeItem(p, UNINDENTIFIED_LIQUID, 1);
+			removeItem(p, ItemId.UNIDENTIFIED_LIQUID.id(), 1);
 			p.damage((int) (getCurrentLevel(p, Skills.HITPOINTS) * 0.3D + 5));
 			playerTalk(p, null, "Ow!");
 			p.message("The liquid exploded!");
 			p.message("You were injured by the burning liquid");
 		}
-		if (i.getID() == MIXED_CHEMICALS || i.getID() == MIXED_CHEMICALS2) {
+		else if (i.getID() == ItemId.MIXED_CHEMICALS_1.id() || i.getID() == ItemId.MIXED_CHEMICALS_2.id()) {
 			p.message("bang!");
 			removeItem(p, i.getID(), 1);
 			p.damage((int) (getCurrentLevel(p, Skills.HITPOINTS) / 2 + 6));
@@ -39,17 +37,17 @@ public class DigsiteMiscs implements DropListener, DropExecutiveListener {
 			p.message("The chemicals exploded!");
 			p.message("You were injured by the exploding liquid");
 		}
-		if (i.getID() == NITROGLYCERIN) {
+		else if (i.getID() == ItemId.NITROGLYCERIN.id()) {
 			p.message("bang!");
-			removeItem(p, NITROGLYCERIN, 1);
+			removeItem(p, ItemId.NITROGLYCERIN.id(), 1);
 			p.damage((int) (getCurrentLevel(p, Skills.HITPOINTS) / 2 - 3));
 			playerTalk(p, null, "Ow!");
 			p.message("The nitroglycerin exploded!");
 			p.message("You were injured by the exploding liquid");
 		}
-		if (i.getID() == EXPLOSIVE_COMPOUND) {
+		else if (i.getID() == ItemId.EXPLOSIVE_COMPOUND.id()) {
 			message(p, "bang!");
-			removeItem(p, EXPLOSIVE_COMPOUND, 1);
+			removeItem(p, ItemId.EXPLOSIVE_COMPOUND.id(), 1);
 			p.damage(61);
 			playerTalk(p, null, "Ow!");
 			p.message("The compound exploded!");

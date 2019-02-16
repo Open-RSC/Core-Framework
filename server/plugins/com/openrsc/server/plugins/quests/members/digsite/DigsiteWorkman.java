@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.quests.members.digsite;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -13,23 +15,14 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class DigsiteWorkman implements TalkToNpcListener, TalkToNpcExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
 
-	private static final int WORKMAN = 722;
-	private static final int WORKMAN_SMALL_CAVE = 738;
-
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == WORKMAN) {
-			return true;
-		}
-		if (n.getID() == WORKMAN_SMALL_CAVE) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.WORKMAN.id() || n.getID() == NpcId.WORKMAN_UNDERGROUND.id();
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == WORKMAN) {
+		if (n.getID() == NpcId.WORKMAN.id()) {
 			switch (p.getQuestStage(Constants.Quests.DIGSITE)) {
 				case -1:
 					playerTalk(p, n, "Hello there");
@@ -72,7 +65,7 @@ public class DigsiteWorkman implements TalkToNpcListener, TalkToNpcExecutiveList
 					break;
 			}
 		}
-		if (n.getID() == WORKMAN_SMALL_CAVE) {
+		else if (n.getID() == NpcId.WORKMAN_UNDERGROUND.id()) {
 			playerTalk(p, n, "Hello");
 			npcTalk(p, n, "Well well...",
 				"I have a visitor",
@@ -121,7 +114,7 @@ public class DigsiteWorkman implements TalkToNpcListener, TalkToNpcExecutiveList
 										"Can I buy it from you ?",
 										"Hey that's my key!");
 									if (opt6 == 0) {
-										addItem(p, 1164, 1);
+										addItem(p, ItemId.DIGSITE_CHEST_KEY.id(), 1);
 										npcTalk(p, n, "All right, all right!",
 											"Stop begging I can't stand it.",
 											"Here's the key...take care of it");
@@ -171,18 +164,18 @@ public class DigsiteWorkman implements TalkToNpcListener, TalkToNpcExecutiveList
 
 	@Override
 	public boolean blockInvUseOnNpc(Player p, Npc n, Item item) {
-		return n.getID() == WORKMAN && item.getID() == 1173;
+		return n.getID() == NpcId.WORKMAN.id() && item.getID() == ItemId.DIGSITE_SCROLL.id();
 	}
 
 	@Override
 	public void onInvUseOnNpc(Player p, Npc n, Item item) {
-		if (n.getID() == WORKMAN && item.getID() == 1173) {
+		if (n.getID() == NpcId.WORKMAN.id() && item.getID() == ItemId.DIGSITE_SCROLL.id()) {
 			playerTalk(p, n, "Here, have a look at this...");
 			npcTalk(p, n, "I give permission...blah de blah etc....",
 				"Okay that's all in order, you may use the mineshafts now",
 				"I'll hang onto this scroll shall I ?");
 			playerTalk(p, n, "Thanks");
-			removeItem(p, 1173, 1);
+			removeItem(p, ItemId.DIGSITE_SCROLL.id(), 1);
 			if (!p.getCache().hasKey("digsite_winshaft") && p.getQuestStage(Constants.Quests.DIGSITE) == 5) {
 				p.getCache().store("digsite_winshaft", true);
 			}

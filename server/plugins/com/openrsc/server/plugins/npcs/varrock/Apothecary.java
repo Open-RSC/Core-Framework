@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.npcs.varrock;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.event.custom.BatchEvent;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -27,17 +29,17 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 			p.updateQuestStage(Constants.Quests.ROMEO_N_JULIET, 5);
 			return;
 		} else if (p.getQuestStage(Constants.Quests.ROMEO_N_JULIET) == 5) {
-			if (!p.getInventory().hasItemId(55)) {
+			if (!p.getInventory().hasItemId(ItemId.CADAVABERRIES.id())) {
 				npcTalk(p, n, "Keep searching for the berries",
 					"They are needed for the potion");
 			} else {
 				npcTalk(p, n, "Well done. You have the berries");
 				message(p, "You hand over the berries");
-				p.getInventory().remove(55, 1);
+				p.getInventory().remove(ItemId.CADAVABERRIES.id(), 1);
 				p.message("Which the apothecary shakes up in vial of strange liquid");
 				npcTalk(p, n, "Here is what you need");
 				p.message("The apothecary gives you a Cadava potion");
-				p.getInventory().add(new Item(57));
+				p.getInventory().add(new Item(ItemId.CADAVA.id()));
 				p.updateQuestStage(Constants.Quests.ROMEO_N_JULIET, 6);
 			}
 			return;
@@ -55,9 +57,9 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 				"Do you have any experience elixir?");
 
 		if (option == 0) {
-			if (hasItem(p, 10, 5)
-				&& hasItem(p, 220, 1)
-				&& hasItem(p, 219, 1)) {
+			if (hasItem(p, ItemId.COINS.id(), 5)
+				&& hasItem(p, ItemId.LIMPWURT_ROOT.id(), 1)
+				&& hasItem(p, ItemId.RED_SPIDERS_EGGS.id(), 1)) {
 				playerTalk(p, n, "I have the root and spiders eggs needed to make it",
 					"Well give me them and 5 gold and I'll make you your potion");
 				int sub_option = showMenu(p, n, "Yes ok", "No thanks");
@@ -65,22 +67,23 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 					p.setBatchEvent(new BatchEvent(p, 600, 14) {
 						@Override
 						public void action() {
-							if (p.getInventory().countId(10) < 5) {
+							if (p.getInventory().countId(ItemId.COINS.id()) < 5) {
 								p.message("You don't have enough coins");
 								interrupt();
 								return;
 							}
-							if (p.getInventory().countId(220) < 1 || p.getInventory().countId(219) < 1) {
+							if (p.getInventory().countId(ItemId.LIMPWURT_ROOT.id()) < 1
+									|| p.getInventory().countId(ItemId.RED_SPIDERS_EGGS.id()) < 1) {
 								p.message("You don't have all the ingredients");
 								interrupt();
 								return;
 							}
-							removeItem(p, 10, 5);
-							removeItem(p, 220, 1);
-							removeItem(p, 219, 1);
+							removeItem(p, ItemId.COINS.id(), 5);
+							removeItem(p, ItemId.LIMPWURT_ROOT.id(), 1);
+							removeItem(p, ItemId.RED_SPIDERS_EGGS.id(), 1);
 							p.message("The Apothecary brews you a potion");
 							p.message("The Apothecary gives you a strength potion");
-							addItem(p, 221, 1);
+							addItem(p, ItemId.FULL_STRENGTH_POTION.id(), 1);
 						}
 					});
 				}
@@ -98,15 +101,15 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 		} else if (option == 1) {
 			npcTalk(p, n, "I do indeed. I gave it to my mother. That's why I now live alone");
 		} else if (option == 2) {
-			if (hasItem(p, 58)) {
+			if (hasItem(p, ItemId.POTION.id())) {
 				npcTalk(p, n, "Only that spot cream. Hope you enjoy it",
 					"Yes, ok. Try this potion");
-				addItem(p, 58, 1);
+				addItem(p, ItemId.POTION.id(), 1);
 			} else {
 				int chance = DataConversions.random(0, 2);
 				if (chance < 2) {
 					npcTalk(p, n, "Yes, ok. Try this potion");
-					addItem(p, 58, 1);
+					addItem(p, ItemId.POTION.id(), 1);
 				} else {
 					npcTalk(p, n, "Sorry, charity is not my strongest point");
 				}
@@ -130,10 +133,10 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 					p.message("You need to wait: " + DataConversions.getDateFromMsec(time * 1000));
 					return;
 				}
-				if (hasItem(p, 10, 5000)) {
+				if (hasItem(p, ItemId.COINS.id(), 5000)) {
 					playerTalk(p, n, "I have the 5,000 gold with me");
 					p.message("you give Apothecary 5,000 gold");
-					removeItem(p, 10, 5000);
+					removeItem(p, ItemId.COINS.id(), 5000);
 					message(p, "Apothecary: starts brewing and fixes to a elixir");
 					p.message("Apothecary gives you a mysterious experience elixir.");
 					addItem(p, 2106, 1);
@@ -148,6 +151,6 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 33;
+		return n.getID() == NpcId.APOTHECARY.id();
 	}
 }

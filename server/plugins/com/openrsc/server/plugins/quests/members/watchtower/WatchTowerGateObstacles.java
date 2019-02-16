@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.quests.members.watchtower;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -17,10 +19,7 @@ public class WatchTowerGateObstacles implements ObjectActionListener, ObjectActi
 
 	private static int NORTH_WEST_GATE = 989;
 	private static int EAST_SOUTH_GATE = 988;
-	private static int OGRE_RELIC_COMPLETE = 1044;
 	private static int OGRE_ELCLAVE_GATE = 1068;
-
-	private static int GOLD_BAR = 172;
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
@@ -33,8 +32,8 @@ public class WatchTowerGateObstacles implements ObjectActionListener, ObjectActi
 			p.playerServerMessage(MessageType.QUEST, "The gate is locked tight");
 			p.message("I'll have to find another way out...");
 		}
-		if (obj.getID() == EAST_SOUTH_GATE) {
-			Npc ogre_guard = getNearestNpc(p, 675, 5);
+		else if (obj.getID() == EAST_SOUTH_GATE) {
+			Npc ogre_guard = getNearestNpc(p, NpcId.OGRE_GUARD_EASTGATE.id(), 5);
 			if (p.getY() >= 794) {
 				p.teleport(630, 792);
 			} else {
@@ -47,9 +46,9 @@ public class WatchTowerGateObstacles implements ObjectActionListener, ObjectActi
 					} else if (p.getCache().hasKey("get_gold_ogre")) {
 						if (ogre_guard != null) {
 							npcTalk(p, ogre_guard, "Creature, did you bring me the gold ?");
-							if (hasItem(p, GOLD_BAR)) {
+							if (hasItem(p, ItemId.GOLD_BAR.id())) {
 								playerTalk(p, ogre_guard, "Here it is");
-								removeItem(p, GOLD_BAR, 1);
+								removeItem(p, ItemId.GOLD_BAR.id(), 1);
 								npcTalk(p, ogre_guard, "It's brought it!",
 									"On your way");
 								p.getCache().remove("get_gold_ogre");
@@ -82,8 +81,8 @@ public class WatchTowerGateObstacles implements ObjectActionListener, ObjectActi
 				}
 			}
 		}
-		if (obj.getID() == NORTH_WEST_GATE) {
-			Npc ogre_guard = getNearestNpc(p, 676, 5);
+		else if (obj.getID() == NORTH_WEST_GATE) {
+			Npc ogre_guard = getNearestNpc(p, NpcId.OGRE_GUARD_WESTGATE.id(), 5);
 			if (p.getX() >= 666) {
 				p.teleport(665, 773);
 			} else {
@@ -97,7 +96,7 @@ public class WatchTowerGateObstacles implements ObjectActionListener, ObjectActi
 					} else if (p.getCache().hasKey("get_ogre_companionship")) {
 						if (ogre_guard != null) {
 							npcTalk(p, ogre_guard, "Well, what proof of friendship did you bring ?");
-							if (hasItem(p, OGRE_RELIC_COMPLETE)) {
+							if (hasItem(p, ItemId.OGRE_RELIC.id())) {
 								playerTalk(p, ogre_guard, "I have a relic from a chieftan");
 								npcTalk(p, ogre_guard, "It's got the statue of Dalgroth",
 									"Welcome to Gu'Tanoth",

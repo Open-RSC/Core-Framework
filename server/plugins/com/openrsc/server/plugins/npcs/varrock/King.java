@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -13,12 +15,12 @@ public class King implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 42;
+		return n.getID() == NpcId.KING.id();
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (hasItem(p, 53) && hasItem(p, 54)) {
+		if (hasItem(p, ItemId.BROKEN_SHIELD_ARRAV_1.id()) && hasItem(p, ItemId.BROKEN_SHIELD_ARRAV_1.id())) {
 			playerTalk(p, n, "Your majesty",
 				"I have recovered the shield of Arrav",
 				"I would like to claim the reward");
@@ -29,7 +31,7 @@ public class King implements TalkToNpcListener, TalkToNpcExecutiveListener {
 				"By the curator at the museum",
 				"And I will grant you your reward");
 			return;
-		} else if (hasItem(p, 61)) {
+		} else if (hasItem(p, ItemId.CERTIFICATE.id())) {
 			playerTalk(p, n, "Your majesty", "I have come to claim the reward",
 				"For the return of the shield of Arrav");
 			if (p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == 5) {
@@ -41,7 +43,7 @@ public class King implements TalkToNpcListener, TalkToNpcExecutiveListener {
 					"So that would come to 600 gold coins");
 				message(p, "You hand over a certificate",
 					"The king gives you 600 coins");
-				removeItem(p, 61, 1);
+				removeItem(p, ItemId.CERTIFICATE.id(), 1);
 				p.sendQuestComplete(Constants.Quests.SHIELD_OF_ARRAV);
 				if (isBlackArmGang(p))
 					p.updateQuestStage(Constants.Quests.SHIELD_OF_ARRAV, -2);

@@ -2,11 +2,14 @@ package com.openrsc.server.plugins.quests.members.touristtrap;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.DropListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
@@ -27,6 +30,7 @@ import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 import static com.openrsc.server.plugins.Functions.getMaxLevel;
 import static com.openrsc.server.plugins.Functions.getNearestNpc;
 import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.inArray;
 import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.playerTalk;
@@ -37,29 +41,21 @@ import static com.openrsc.server.plugins.Functions.spawnNpc;
 
 public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener, TalkToNpcExecutiveListener {
 
-	private static int MERCENARY = 668;
-	private static int TECHNICAL_PLANS = 1060;
-	private static int BEDABIN_NOMAD_GUARD = 703;
-	private static int AL_SHABIM = 700;
-	private static int MERCENARY_INSIDE = 670;
-	private static int PINE_APPLE = 1058;
 	private static int MINING_CAVE = 963;
 	private static int MINING_CART = 976;
 	private static int MINING_CAVE_BACK = 964;
 	private static int TRACK = 974;
 	private static int MINING_BARREL = 967;
 	private static int LIFT_PLATFORM = 977;
-	private static int ANA = 554;
 	private static int LIFT_UP = 966;
 	private static int MINING_CART_ABOVE = 1025;
-	private static int CART_DRIVER = 711;
 	private static int DISTURBED_SAND1 = 944;
 	private static int DISTURBED_SAND2 = 945;
 
 	@Override
 	public void onUnWield(Player player, Item item) {
-		if ((item.getID() == 1022 || item.getID() == 1023) && (player.getLocation().inTouristTrapCave()) && player.getQuestStage(Constants.Quests.TOURIST_TRAP) != -1) {
-			Npc n = getNearestNpc(player, MERCENARY, 5);
+		if ((item.getID() == ItemId.SLAVES_ROBE_BOTTOM.id() || item.getID() == ItemId.SLAVES_ROBE_TOP.id()) && (player.getLocation().inTouristTrapCave()) && player.getQuestStage(Constants.Quests.TOURIST_TRAP) != -1) {
+			Npc n = getNearestNpc(player, NpcId.MERCENARY.id(), 5);
 			if (n != null) {
 				n.teleport(player.getX(), player.getY());
 				player.teleport(player.getX(), player.getY());
@@ -69,7 +65,7 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 				n.startCombat(player);
 			} else {
 				player.teleport(player.getX(), player.getY());
-				Npc newNpc = spawnNpc(MERCENARY, player.getX(), player.getY(), 30000);
+				Npc newNpc = spawnNpc(NpcId.MERCENARY.id(), player.getX(), player.getY(), 30000);
 				sleep(650);
 				npcTalk(player, newNpc, "Oi! What are you doing down here?",
 					"You're no slave!");
@@ -80,24 +76,15 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 
 	@Override
 	public boolean blockInvUseOnNpc(Player p, Npc npc, Item item) {
-		if (item.getID() == TECHNICAL_PLANS && npc.getID() == BEDABIN_NOMAD_GUARD) {
-			return true;
-		}
-		if (item.getID() == TECHNICAL_PLANS && npc.getID() == AL_SHABIM) {
-			return true;
-		}
-		if (item.getID() == PINE_APPLE && npc.getID() == MERCENARY_INSIDE) {
-			return true;
-		}
-		if (item.getID() == 1038 && npc.getID() == ANA) {
-			return true;
-		}
-		return false;
+		return (item.getID() == ItemId.TECHNICAL_PLANS.id() && npc.getID() == NpcId.BEDABIN_NOMAD_GUARD.id())
+				|| (item.getID() == ItemId.TECHNICAL_PLANS.id() && npc.getID() == NpcId.AL_SHABIM.id())
+				|| (item.getID() == ItemId.TENTI_PINEAPPLE.id() && npc.getID() == NpcId.MERCENARY_ESCAPEGATES.id())
+				|| (item.getID() == ItemId.MINING_BARREL.id() && npc.getID() == NpcId.ANA.id());
 	}
 
 	@Override
 	public void onInvUseOnNpc(Player p, Npc npc, Item item) {
-		if (item.getID() == TECHNICAL_PLANS && npc.getID() == BEDABIN_NOMAD_GUARD) {
+		if (item.getID() == ItemId.TECHNICAL_PLANS.id() && npc.getID() == NpcId.BEDABIN_NOMAD_GUARD.id()) {
 			if (p.getQuestStage(Constants.Quests.TOURIST_TRAP) > 7
 				|| p.getQuestStage(Constants.Quests.TOURIST_TRAP) == -1) {
 				npcTalk(p, npc, "Sorry, but you can't use the tent without permission.",
@@ -112,11 +99,11 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 					"I'm sure he'll be pleased to see them.");
 			}
 		}
-		if (item.getID() == TECHNICAL_PLANS && npc.getID() == AL_SHABIM) {
+		else if (item.getID() == ItemId.TECHNICAL_PLANS.id() && npc.getID() == NpcId.AL_SHABIM.id()) {
 			npc.initializeIndirectTalkScript(p);
 		}
-		if (item.getID() == PINE_APPLE && npc.getID() == MERCENARY_INSIDE) {
-			removeItem(p, PINE_APPLE, 1);
+		else if (item.getID() == ItemId.TENTI_PINEAPPLE.id() && npc.getID() == NpcId.MERCENARY_ESCAPEGATES.id()) {
+			removeItem(p, ItemId.TENTI_PINEAPPLE.id(), 1);
 			npcTalk(p, npc, "Great! Just what I've been looking for!",
 				"Mmmmmmm, delicious!!",
 				"Oh, this is soo nice!",
@@ -126,13 +113,13 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 				p.updateQuestStage(Constants.Quests.TOURIST_TRAP, 9);
 			}
 		}
-		if (item.getID() == 1038 && npc.getID() == ANA) {
+		else if (item.getID() == ItemId.MINING_BARREL.id() && npc.getID() == NpcId.ANA.id()) {
 			if (p.getQuestStage(Constants.Quests.TOURIST_TRAP) == -1) {
 				p.message("You have already completed this quest.");
 				npcTalk(p, npc, "I think you might have me confused with someone else.");
 				return;
 			}
-			if (!hasItem(p, 1039)) {
+			if (!hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
 				boolean isFirstTime = !p.getCache().hasKey("tried_ana_barrel");
 				if (p.getCache().hasKey("ana_lift") || p.getCache().hasKey("ana_cart")
 					|| p.getCache().hasKey("ana_in_cart")) {
@@ -152,7 +139,7 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 				playerTalk(p, npc, "Shush...It's for your own good!");
 				message(p, "You manage to squeeze Ana into the barrel,",
 					"despite her many complaints.");
-				p.getInventory().replace(1038, 1039);
+				p.getInventory().replace(ItemId.MINING_BARREL.id(), ItemId.ANA_IN_A_BARREL.id());
 				if (npc != null) {
 					npc.remove();
 				}
@@ -167,7 +154,7 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 
 	private void makeDartTip(Player p, GameObject obj) {
 		if (obj.getID() == 1006) {
-			if (!hasItem(p, TECHNICAL_PLANS)) {
+			if (!hasItem(p, ItemId.TECHNICAL_PLANS.id())) {
 				message(p, "This anvil is experimental...",
 					"You need detailed plans of the item you want to make in order to use it.");
 				return;
@@ -179,19 +166,19 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 					p.message("You need level 20 smithing to make the dart tip.");
 					return;
 				}
-				if (!hasItem(p, 168)) {
+				if (!hasItem(p, ItemId.HAMMER.id())) {
 					p.message("You need a hammer to work anything on the anvil.");
 					return;
 				}
 				message(p, "You begin experimenting in forging the weapon...",
 					"You follow the plans carefully.",
 					"And after a long time of careful work.");
-				removeItem(p, 169, 1);
+				removeItem(p, ItemId.BRONZE_BAR.id(), 1);
 				if (succeedRate(p)) {
 					message(p, "You finally manage to forge a sharp, pointed...",
 						"... dart tip...");
-					if (!hasItem(p, 1071)) {
-						addItem(p, 1071, 1);
+					if (!hasItem(p, ItemId.PROTOTYPE_DART_TIP.id())) {
+						addItem(p, ItemId.PROTOTYPE_DART_TIP.id(), 1);
 					}
 					message(p, "You study the technical plans even more...",
 						"You need to attach feathers to the tip to complete the weapon.");
@@ -205,8 +192,8 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 	}
 
 	private void attachFeathersToPrototype(Player p, Item i, Item i2) {
-		if (i.getID() == 381 && i2.getID() == 1071 || i.getID() == 1071 && i2.getID() == 381) {
-			if (!hasItem(p, 381, 10)) {
+		if (Functions.compareItemsIds(i, i2, ItemId.FEATHER.id(), ItemId.PROTOTYPE_DART_TIP.id())) {
+			if (!hasItem(p, ItemId.FEATHER.id(), 10)) {
 				p.message("You need 10 feathers to attach the feathers to the dart tip.");
 				return;
 			}
@@ -216,10 +203,10 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 			}
 			message(p, "You try to attach feathers to the bronze dart tip.",
 				"Following the plans is tricky, but you persevere.");
-			removeItem(p, 381, 10);
+			removeItem(p, ItemId.FEATHER.id(), 10);
 			if (succeedRate(p)) {
 				message(p, "You succesfully attach the feathers to the dart tip.");
-				p.getInventory().replace(1071, 1014);
+				p.getInventory().replace(ItemId.PROTOTYPE_DART_TIP.id(), ItemId.PROTOTYPE_THROWING_DART.id());
 				//kosher: dependent on fletching level!
 				p.incExp(Skills.FLETCHING, getMaxLevel(p, Skills.FLETCHING) * 50, true);
 			} else {
@@ -240,25 +227,8 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (obj.getID() == DISTURBED_SAND1 || obj.getID() == DISTURBED_SAND2) {
-			return true;
-		}
-		if (obj.getID() == 1006) {
-			return true;
-		}
-		if (obj.getID() == MINING_CAVE || obj.getID() == MINING_CAVE_BACK) {
-			return true;
-		}
-		if (obj.getID() == MINING_CART || obj.getID() == MINING_BARREL) {
-			return true;
-		}
-		if (obj.getID() == TRACK || obj.getID() == LIFT_PLATFORM) {
-			return true;
-		}
-		if (obj.getID() == LIFT_UP || obj.getID() == MINING_CART_ABOVE) {
-			return true;
-		}
-		return false;
+		return inArray(obj.getID(), DISTURBED_SAND1, DISTURBED_SAND2, 1006, MINING_CAVE, MINING_CAVE_BACK, MINING_CART,
+				MINING_BARREL, TRACK, LIFT_PLATFORM, LIFT_UP, MINING_CART_ABOVE);
 	}
 
 	@Override
@@ -284,7 +254,7 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 			}
 		}
 		//closest to camp
-		if (obj.getID() == DISTURBED_SAND2) {
+		else if (obj.getID() == DISTURBED_SAND2) {
 			if (command.equals("look")) {
 				if (p.getQuestStage(Quests.TOURIST_TRAP) <= 0) {
 					message(p, "You just see some footsteps in the sand.");
@@ -304,11 +274,11 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 				}
 			}
 		}
-		if (obj.getID() == 1006) {
+		else if (obj.getID() == 1006) {
 			makeDartTip(p, obj);
 		}
-		if (obj.getID() == MINING_CAVE_BACK) {
-			if (hasItem(p, 1039)) {
+		else if (obj.getID() == MINING_CAVE_BACK) {
+			if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
 				failCaveAnaInBarrel(p, null);
 				return;
 			}
@@ -316,9 +286,9 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 			p.message("And emerge in a different part of this huge underground complex.");
 			p.teleport(84, 3640);
 		}
-		if (obj.getID() == MINING_CAVE) {
-			Npc n = getNearestNpc(p, MERCENARY_INSIDE, 10);
-			if (!p.getInventory().wielding(1022) && !p.getInventory().wielding(1023) && p.getQuestStage(Constants.Quests.TOURIST_TRAP) != -1) {
+		else if (obj.getID() == MINING_CAVE) {
+			Npc n = getNearestNpc(p, NpcId.MERCENARY_ESCAPEGATES.id(), 10);
+			if (!p.getInventory().wielding(ItemId.SLAVES_ROBE_BOTTOM.id()) && !p.getInventory().wielding(ItemId.SLAVES_ROBE_TOP.id()) && p.getQuestStage(Constants.Quests.TOURIST_TRAP) != -1) {
 				p.message("This guard looks as if he's been down here a while.");
 				npcTalk(p, n, "Hey, you're no slave!");
 				npcTalk(p, n, "What are you doing down here?");
@@ -340,7 +310,7 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 				npcTalk(p, n, "Hey you, move away from there!");
 			}
 		}
-		if (obj.getID() == MINING_CART) {
+		else if (obj.getID() == MINING_CART) {
 			if (command.equals("look")) {
 				if (obj.getX() == 62 && obj.getY() == 3639) {
 					p.message("This cart is being unloaded into this section of the mine.");
@@ -351,7 +321,7 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 				}
 			} else if (command.equals("search")) {
 				p.message("You search the mine cart.");
-				if (hasItem(p, 1039)) {
+				if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
 					p.message("There isn't enough space for both you and Ana in the cart.");
 					return;
 				}
@@ -376,34 +346,34 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 				}
 			}
 		}
-		if (obj.getID() == TRACK) {
+		else if (obj.getID() == TRACK) {
 			p.message("You see that this track is too dangerous to cross.");
 			p.message("High speed carts are crossing the track most of the time.");
 		}
-		if (obj.getID() == MINING_BARREL) {
+		else if (obj.getID() == MINING_BARREL) {
 			if (p.getCache().hasKey("ana_is_up")) {
-				if (hasItem(p, 1038)) {
+				if (hasItem(p, ItemId.MINING_BARREL.id())) {
 					p.message("You can only manage one of these at a time.");
 					return;
 				}
 				message(p, "You find the barrel with ana in it.",
 					"@gre@Ana: Let me out of here, I feel sick!");
-				addItem(p, 1039, 1);
+				addItem(p, ItemId.ANA_IN_A_BARREL.id(), 1);
 				p.getCache().remove("ana_is_up");
 				return;
 			}
 			if (p.getCache().hasKey("ana_cart")) {
-				if (hasItem(p, 1038)) {
+				if (hasItem(p, ItemId.MINING_BARREL.id())) {
 					p.message("You can only manage one of these at a time.");
 					return;
 				}
 				p.message("You search the barrels and find the one with Ana in it.");
 				p.message("@gre@Ana: Let me out!");
-				addItem(p, 1039, 1);
+				addItem(p, ItemId.ANA_IN_A_BARREL.id(), 1);
 				p.getCache().remove("ana_cart");
 				return;
 			}
-			if (hasItem(p, 1039)) {
+			if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
 				p.message("You cannot carry another barrel while you're carrying Ana.");
 				return;
 			}
@@ -414,20 +384,20 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 			p.message("Would you like to take one?");
 			int menu = showMenu(p, "Yeah, cool!", "No thanks.");
 			if (menu == 0) {
-				if (hasItem(p, 1038)) {
+				if (hasItem(p, ItemId.MINING_BARREL.id())) {
 					p.message("You can only manage one of these at a time.");
 				} else {
 					p.message("You take the barrel, it's not that heavy, just awkward.");
-					addItem(p, 1038, 1);
+					addItem(p, ItemId.MINING_BARREL.id(), 1);
 				}
 			} else if (menu == 1) {
 				p.message("You decide not to take the barrel.");
 			}
 		}
-		if (obj.getID() == LIFT_PLATFORM) {
-			Npc n = getNearestNpc(p, 690, 5);
+		else if (obj.getID() == LIFT_PLATFORM) {
+			Npc n = getNearestNpc(p, NpcId.MERCENARY_LIFTPLATFORM.id(), 5);
 			if (n != null) {
-				if (hasItem(p, 1039)) {
+				if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
 					anaToLift(p, n);
 					return;
 				}
@@ -442,7 +412,7 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 				}
 			}
 		}
-		if (obj.getID() == LIFT_UP) {
+		else if (obj.getID() == LIFT_UP) {
 			p.message("You pull on the winch");
 			if (p.getCache().hasKey("ana_lift")) {
 				message(p, "You see a barrel coming to the surface.",
@@ -457,9 +427,9 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 				p.message("You pull on the winch and a heavy barrel filled with stone comes to the surface.");
 			}
 		}
-		if (obj.getID() == MINING_CART_ABOVE) {
+		else if (obj.getID() == MINING_CART_ABOVE) {
 			p.message("You search the mine cart.");
-			if (hasItem(p, 1039)) {
+			if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
 				message(p, "There should be enough space for Ana (in the barrel) to go on here.");
 			}
 			if (p.getCache().hasKey("ana_in_cart")) {
@@ -484,12 +454,12 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 						"You jump off the cart taking Ana with you.");
 					p.teleport(106, 806);
 					p.getCache().remove("rescue");
-					addItem(p, 1039, 1);
+					addItem(p, ItemId.ANA_IN_A_BARREL.id(), 1);
 				}
 			} else if (menu == 1) {
 				p.message("You decide not to get onto the cart.");
 			} else if (menu == 2) {
-				Npc cartDriver = getNearestNpc(p, CART_DRIVER, 10);
+				Npc cartDriver = getNearestNpc(p, NpcId.MINING_CART_DRIVER.id(), 10);
 				if (cartDriver != null) {
 					npcTalk(p, cartDriver, "Ahem.");
 					if (p.getCache().hasKey("rescue")) {
@@ -500,7 +470,7 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 						getOutWithAnaInCart(p, cartDriver, -1);
 						return;
 					}
-					if (hasItem(p, 1039)) {
+					if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
 						npcTalk(p, cartDriver, "What're you doing carrying that big barrel around?",
 							"Put it in the back of the cart like all the others!");
 						return;
@@ -719,9 +689,9 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 									if (menu6 == 0) {
 										playerTalk(p, n, "A hundred it is.");
 										npcTalk(p, n, "Great!");
-										if (hasItem(p, 10, 100)) {
+										if (hasItem(p, ItemId.COINS.id(), 100)) {
 											npcTalk(p, n, "Ok, get in the back of the cart then!");
-											removeItem(p, 10, 100);
+											removeItem(p, ItemId.COINS.id(), 100);
 											if (p.getCache().hasKey("ana_in_cart")) {
 												p.getCache().remove("ana_in_cart");
 												p.getCache().store("rescue", true);
@@ -788,9 +758,9 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 		npcTalk(p, n, "Guards! Guards!");
 		if (succeed == 0) {
 			message(p, "Some guards notice you and come over.");
-			Npc mercenary = getNearestNpc(p, MERCENARY, 15);
+			Npc mercenary = getNearestNpc(p, NpcId.MERCENARY.id(), 15);
 			if (mercenary != null) {
-				mercenary = spawnNpc(MERCENARY, p.getX(), p.getY(), 60000);
+				mercenary = spawnNpc(NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
 				sleep(1000);
 			}
 			npcTalk(p, mercenary, "Oi, what are you two doing?");
@@ -835,19 +805,19 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 	}
 
 	private void failCaveAnaInBarrel(Player p, Npc n) {
-		if (hasItem(p, 1039)) {
-			n = spawnNpc(MERCENARY, p.getX(), p.getY(), 60000);
+		if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
+			n = spawnNpc(NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
 			sleep(650);
 			npcTalk(p, n, "Hey, where d'ya think you're going with that Barrel?");
 			p.message("A guard comes over and takes the barrel off you.");
-			removeItem(p, 1039, 1);
+			removeItem(p, ItemId.ANA_IN_A_BARREL.id(), 1);
 			npcTalk(p, n, "'Cor! This barrel is really heavy!",
 				"Have you been mining lead?",
 				"Har, har har!");
 			message(p, "@gre@Ana: How rude! Why I ought to teach you a lesson.");
 			npcTalk(p, n, "What was that!");
 			p.message("The guards kick the barrel open.!");
-			Npc ana = spawnNpc(ANA, p.getX(), p.getY(), 30000);
+			Npc ana = spawnNpc(NpcId.ANA.id(), p.getX(), p.getY(), 30000);
 			sleep(650);
 			npcTalk(p, ana, "How dare you say that I'm as heavy as lead?");
 			p.message("The guards drag Ana of and then throw you into a cell.");
@@ -888,7 +858,7 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 				p.message("The guard places the barrel carefully on the lift platform.");
 				npcTalk(p, n, "Oh, there's no one operating the lift up top, hope this barrel isn't urgent?",
 					"You'd better get back to work!");
-				removeItem(p, 1039, 1);
+				removeItem(p, ItemId.ANA_IN_A_BARREL.id(), 1);
 				if (!p.getCache().hasKey("ana_lift")) {
 					p.getCache().store("ana_lift", true);
 				}
@@ -903,54 +873,45 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == 1006 && item.getID() == 169) {
-			return true;
-		}
-		if (obj.getID() == MINING_CART && item.getID() == 1039) {
-			return true;
-		}
-		if (obj.getID() == LIFT_PLATFORM && item.getID() == 1039) {
-			return true;
-		}
-		if (obj.getID() == MINING_CART_ABOVE && item.getID() == 1039) {
-			return true;
-		}
-		return false;
+		return (obj.getID() == 1006 && item.getID() == ItemId.BRONZE_BAR.id())
+				|| (obj.getID() == MINING_CART && item.getID() == ItemId.ANA_IN_A_BARREL.id())
+				|| (obj.getID() == LIFT_PLATFORM && item.getID() == ItemId.ANA_IN_A_BARREL.id())
+				|| (obj.getID() == MINING_CART_ABOVE && item.getID() == ItemId.ANA_IN_A_BARREL.id());
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == 1006 && item.getID() == 169) {
-			if (hasItem(p, 1071)) {
+		if (obj.getID() == 1006 && item.getID() == ItemId.BRONZE_BAR.id()) {
+			if (hasItem(p, ItemId.PROTOTYPE_DART_TIP.id())) {
 				p.message("You have already made the prototype dart tip.");
 				p.message("You don't need to make another one.");
-			} else if (hasItem(p, 1014)) {
+			} else if (hasItem(p, ItemId.PROTOTYPE_THROWING_DART.id())) {
 				p.message("You have already made the prototype dart.");
 				p.message("You don't need to make another one.");
 			} else {
 				makeDartTip(p, obj);
 			}
 		}
-		if (obj.getID() == MINING_CART && item.getID() == 1039) {
+		else if (obj.getID() == MINING_CART && item.getID() == ItemId.ANA_IN_A_BARREL.id()) {
 			message(p, "You carefully place Ana in the barrel into the mine cart.",
 				"Soon the cart moves out of sight and then it returns.");
-			removeItem(p, 1039, 1);
+			removeItem(p, ItemId.ANA_IN_A_BARREL.id(), 1);
 			if (!p.getCache().hasKey("ana_cart")) {
 				p.getCache().store("ana_cart", true);
 			}
 		}
-		if (obj.getID() == LIFT_PLATFORM && item.getID() == 1039) {
-			Npc n = getNearestNpc(p, 690, 5);
+		else if (obj.getID() == LIFT_PLATFORM && item.getID() == ItemId.ANA_IN_A_BARREL.id()) {
+			Npc n = getNearestNpc(p, NpcId.MERCENARY_LIFTPLATFORM.id(), 5);
 			if (n != null) {
 				anaToLift(p, n);
 			}
 		}
-		if (obj.getID() == MINING_CART_ABOVE && item.getID() == 1039) {
+		else if (obj.getID() == MINING_CART_ABOVE && item.getID() == ItemId.ANA_IN_A_BARREL.id()) {
 			message(p, "You place Ana (In the barrel) carefully on the cart.",
 				"This was the last barrel to go on the cart,",
 				"but the cart driver doesn't seem to be in any rush to get going.",
 				"And the desert heat will soon get to Ana.");
-			removeItem(p, 1039, 1);
+			removeItem(p, ItemId.ANA_IN_A_BARREL.id(), 1);
 			if (!p.getCache().hasKey("ana_in_cart")) {
 				p.getCache().store("ana_in_cart", true);
 			}
@@ -959,32 +920,26 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 
 	@Override
 	public boolean blockInvUseOnItem(Player p, Item item1, Item item2) {
-		if (item1.getID() == 381 && item2.getID() == 1071 || item1.getID() == 1071 && item2.getID() == 381) {
-			return true;
-		}
-		return false;
+		return Functions.compareItemsIds(item1, item2, ItemId.FEATHER.id(), ItemId.PROTOTYPE_DART_TIP.id());
 	}
 
 	@Override
 	public void onInvUseOnItem(Player p, Item item1, Item item2) {
-		if (item1.getID() == 381 && item2.getID() == 1071 || item1.getID() == 1071 && item2.getID() == 381) {
+		if (Functions.compareItemsIds(item1, item2, ItemId.FEATHER.id(), ItemId.PROTOTYPE_DART_TIP.id())) {
 			attachFeathersToPrototype(p, item1, item2);
 		}
 	}
 
 	@Override
 	public boolean blockDrop(Player p, Item i) {
-		if (i.getID() == 1039) {
-			return true;
-		}
-		return false;
+		return i.getID() == ItemId.ANA_IN_A_BARREL.id();
 	}
 
 	@Override
 	public void onDrop(Player p, Item i) {
-		if (i.getID() == 1039) {
+		if (i.getID() == ItemId.ANA_IN_A_BARREL.id()) {
 			if (p.getQuestStage(Constants.Quests.TOURIST_TRAP) == -1) {
-				removeItem(p, 1039, 1);
+				removeItem(p, ItemId.ANA_IN_A_BARREL.id(), 1);
 				return;
 			}
 			p.message("Are you sure you want to drop this?");
@@ -1005,14 +960,14 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 					diffX = -8;
 				}
 				message(p, "You drop the barrel to the floor and Ana gets out.");
-				removeItem(p, 1039, 1);
-				Npc Ana = spawnNpc(ANA, p.getX(), p.getY(), 20000);
+				removeItem(p, ItemId.ANA_IN_A_BARREL.id(), 1);
+				Npc Ana = spawnNpc(NpcId.ANA.id(), p.getX(), p.getY(), 20000);
 				sleep(650);
 				npcTalk(p, Ana, "How dare you put me in that barrel you barbarian!");
 				message(p, "Ana's outburst attracts the guards, they come running over.");
-				Npc guard = getNearestNpc(p, MERCENARY, 15);
+				Npc guard = getNearestNpc(p, NpcId.MERCENARY.id(), 15);
 				if (guard == null || guard.inCombat()) {
-					guard = spawnNpc(MERCENARY, p.getX() + diffX, p.getY(), 30000);
+					guard = spawnNpc(NpcId.MERCENARY.id(), p.getX() + diffX, p.getY(), 30000);
 				}
 				sleep(650);
 				npcTalk(p, guard, "Hey! What's going on here then?");
@@ -1033,16 +988,13 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == CART_DRIVER) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.MINING_CART_DRIVER.id();
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == CART_DRIVER) {
-			if (n.getID() == CART_DRIVER) {
+		if (n.getID() == NpcId.MINING_CART_DRIVER.id()) {
+			if (n.getID() == NpcId.MINING_CART_DRIVER.id()) {
 				if (p.getQuestStage(Constants.Quests.TOURIST_TRAP) == -1) {
 					npcTalk(p, n, "Don't trouble me, can't you see I'm busy?");
 					return;
@@ -1055,7 +1007,7 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 					getOutWithAnaInCart(p, n, -1);
 					return;
 				}
-				if (hasItem(p, 1039)) {
+				if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
 					npcTalk(p, n, "What're you doing carrying that big barrel around?",
 						"Put it in the back of the cart like all the others!");
 					return;

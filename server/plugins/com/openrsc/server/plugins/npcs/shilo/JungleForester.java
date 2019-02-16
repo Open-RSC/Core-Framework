@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.npcs.shilo;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -17,16 +19,14 @@ public class JungleForester implements TalkToNpcListener, TalkToNpcExecutiveList
 	 * JungleForesterNPC class is for not started Legends quest.
 	 */
 
-	public static int JUNGLE_FORESTER = 765;
-
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == JUNGLE_FORESTER;
+		return n.getID() == NpcId.JUNGLE_FORESTER.id();
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == JUNGLE_FORESTER) {
+		if (n.getID() == NpcId.JUNGLE_FORESTER.id()) {
 			switch (p.getQuestStage(Constants.Quests.LEGENDS_QUEST)) {
 				case 0:
 					defaultJungleForesterDialogue(p, n, -1);
@@ -50,7 +50,7 @@ public class JungleForester implements TalkToNpcListener, TalkToNpcExecutiveList
 	}
 
 	private void LegendsQuest_jungleForesterDialogue(Player p, Npc n, int cID) {
-		if (n.getID() == JUNGLE_FORESTER) {
+		if (n.getID() == NpcId.JUNGLE_FORESTER.id()) {
 			if (cID == -1) {
 				switch (p.getQuestStage(Constants.Quests.LEGENDS_QUEST)) {
 					case 1:
@@ -183,7 +183,7 @@ public class JungleForester implements TalkToNpcListener, TalkToNpcExecutiveList
 					message(p, 1200, "He takes out a strange looking object and hands it to you.");
 					npcTalk(p, n, "Here, I won't be needing this any longer, and it may help you.",
 						"Whenever I've used it before, it attracted the attention of jungle natives.");
-					addItem(p, 1177, 1);
+					addItem(p, ItemId.BULL_ROARER.id(), 1);
 					break;
 				case JungleForesterNPC_LegendsQuest.OK_THANKS:
 					npcTalk(p, n, "You're welcome!",
@@ -194,7 +194,7 @@ public class JungleForester implements TalkToNpcListener, TalkToNpcExecutiveList
 	}
 
 	private void defaultJungleForesterDialogue(Player p, Npc n, int cID) {
-		if (n.getID() == JUNGLE_FORESTER) {
+		if (n.getID() == NpcId.JUNGLE_FORESTER.id()) {
 			if (cID == -1) {
 				npcTalk(p, n, "Hello friend, you're a long way from civilisation!");
 				int menu = showMenu(p, n,
@@ -287,14 +287,14 @@ public class JungleForester implements TalkToNpcListener, TalkToNpcExecutiveList
 
 	@Override
 	public boolean blockInvUseOnNpc(Player p, Npc n, Item item) {
-		return n.getID() == JUNGLE_FORESTER && item.getID() == 1233; // the complete map.
+		return n.getID() == NpcId.JUNGLE_FORESTER.id() && item.getID() == ItemId.RADIMUS_SCROLLS_COMPLETE.id(); // the complete map.
 	}
 
 	@Override
 	public void onInvUseOnNpc(Player p, Npc n, Item item) {
-		if (n.getID() == JUNGLE_FORESTER && item.getID() == 1233) { // the complete map.
+		if (n.getID() == NpcId.JUNGLE_FORESTER.id() && item.getID() == ItemId.RADIMUS_SCROLLS_COMPLETE.id()) { // the complete map.
 			p.message("You show the completed map of Kharazi Jungle to the Forester.");
-			if (hasItem(p, 1177)) { // if already have the bull roarer
+			if (hasItem(p, ItemId.BULL_ROARER.id())) { // if already have the bull roarer
 				npcTalk(p, n, "It's a great map, thanks for letting me take a copy!",
 					"It has helped me out a number of times now.");
 				return;

@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -20,11 +21,10 @@ import static com.openrsc.server.plugins.Functions.showMenu;
 
 public class LegendsQuestGuildGuard implements TalkToNpcListener, TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener {
 
-	private static final int LEGENDS_GUILD_GUARD = 736;
 	private static final int MITHRIL_GATES = 1079;
 
 	private void legendsGuardDialogue(Player p, Npc n, int cID) {
-		if (n.getID() == LEGENDS_GUILD_GUARD) {
+		if (n.getID() == NpcId.LEGENDS_GUILD_GUARD.id()) {
 			if (cID == -1) {
 				switch (p.getQuestStage(Constants.Quests.LEGENDS_QUEST)) {
 					case 0: /* Not started Legends Quest */
@@ -219,12 +219,12 @@ public class LegendsQuestGuildGuard implements TalkToNpcListener, TalkToNpcExecu
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == LEGENDS_GUILD_GUARD;
+		return n.getID() == NpcId.LEGENDS_GUILD_GUARD.id();
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == LEGENDS_GUILD_GUARD) {
+		if (n.getID() == NpcId.LEGENDS_GUILD_GUARD.id()) {
 			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 0) {
 				message(p, 1200, "You approach a nearby guard...");
 			}
@@ -246,7 +246,7 @@ public class LegendsQuestGuildGuard implements TalkToNpcListener, TalkToNpcExecu
 					p.teleport(513, 552);
 					return;
 				}
-				Npc legends_guard = getNearestNpc(p, LEGENDS_GUILD_GUARD, 5);
+				Npc legends_guard = getNearestNpc(p, NpcId.LEGENDS_GUILD_GUARD.id(), 5);
 				switch (p.getQuestStage(Constants.Quests.LEGENDS_QUEST)) {
 					case 0:
 						if (legends_guard != null) {

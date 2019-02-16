@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.npcs.portsarim;
 
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -14,7 +16,7 @@ public class Bartender implements TalkToNpcExecutiveListener, TalkToNpcListener 
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 150;
+		return n.getID() == NpcId.BARTENDER_PORTSARIM.id();
 	}
 	
 	@Override
@@ -24,11 +26,11 @@ public class Bartender implements TalkToNpcExecutiveListener, TalkToNpcListener 
 			@Override
 			public void action() {
 				npcTalk(p, n, "Sure that will be 2 gold coins please");
-				if (hasItem(p, 10, 2)) {
+				if (hasItem(p, ItemId.COINS.id(), 2)) {
 					playerTalk(p, n, "Ok here you go thanks");
-					p.getInventory().remove(10, 2);
+					p.getInventory().remove(ItemId.COINS.id(), 2);
 					p.message("you buy a pint of beer");
-					addItem(p, 193, 1);
+					addItem(p, ItemId.COINS.id(), 1);
 				} else {
 					p.message("You dont have enough coins for the beer");
 				}
@@ -75,8 +77,8 @@ public class Bartender implements TalkToNpcExecutiveListener, TalkToNpcListener 
 						"Just give me whatever drink I need to drink here");
 					npcTalk(p, n,
 						"Ok one black skull ale coming up, 8 coins please");
-					if (hasItem(p, 10, 8)) {
-						p.getInventory().remove(10, 8);
+					if (hasItem(p, ItemId.COINS.id(), 8)) {
+						p.getInventory().remove(ItemId.COINS.id(), 8);
 						message(p, "You buy a black skull ale",
 							"You drink your black skull ale",
 							"Your vision blurs",

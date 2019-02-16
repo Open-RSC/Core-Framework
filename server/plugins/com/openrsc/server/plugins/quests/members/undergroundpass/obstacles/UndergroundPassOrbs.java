@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
@@ -20,13 +21,6 @@ import static com.openrsc.server.plugins.Functions.*;
 public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PickupExecutiveListener {
 
 	/**
-	 * ITEM IDs
-	 **/
-	public static int PLANK = 410;
-	public static int[] ORBS = {991, 992, 993, 994};
-	public static int ROPE = 237;
-
-	/**
 	 * North Passage obstacles
 	 **/
 	public static int[] NORTH_PASSAGE = {825, 828, 829};
@@ -39,19 +33,9 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
-		if (inArray(obj.getID(), NORTH_PASSAGE)) {
-			return true;
-		}
-		if (inArray(obj.getID(), WEST_PASSAGE)) {
-			return true;
-		}
-		if (obj.getID() == SOUTH_WEST_PASSAGE || obj.getID() == SOUTH_WEST_PASSAGE_CLIMB_UP || obj.getID() == SOUTH_WEST_PASSAGE_CLIMB_UP_ROPE) {
-			return true;
-		}
-		if (obj.getID() == SOUTH_WEST_STALAGMITE) {
-			return true;
-		}
-		return false;
+		return inArray(obj.getID(), NORTH_PASSAGE) || inArray(obj.getID(), WEST_PASSAGE) || obj.getID() == SOUTH_WEST_PASSAGE
+				|| obj.getID() == SOUTH_WEST_PASSAGE_CLIMB_UP || obj.getID() == SOUTH_WEST_PASSAGE_CLIMB_UP_ROPE
+				|| obj.getID() == SOUTH_WEST_STALAGMITE; 
 	}
 
 	@Override
@@ -80,7 +64,7 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 					"you may be able to wedge it open with something?");
 			}
 		}
-		if (inArray(obj.getID(), WEST_PASSAGE)) {
+		else if (inArray(obj.getID(), WEST_PASSAGE)) {
 			if (cmd.equalsIgnoreCase("clear")) {
 				p.message("you move the rocks from your path");
 				if (obj.getX() == p.getX() - 1) {
@@ -119,7 +103,7 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 				}
 			}
 		}
-		if (obj.getID() == SOUTH_WEST_PASSAGE) {
+		else if (obj.getID() == SOUTH_WEST_PASSAGE) {
 			p.teleport(742, 3453);
 			sleep(1000);
 			message(p, "you walk down the passage way",
@@ -135,7 +119,7 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 				playerTalk(p, null, "aaarrrgh");
 			}
 		}
-		if (obj.getID() == SOUTH_WEST_PASSAGE_CLIMB_UP) {
+		else if (obj.getID() == SOUTH_WEST_PASSAGE_CLIMB_UP) {
 			message(p, "you begin to climb up the grill");
 			if (DataConversions.getRandom().nextInt(10) <= 2) { // fail
 				message(p, "but you fall back to the floor");
@@ -148,7 +132,7 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 				p.message("as the passage raises back to it's original position");
 			}
 		}
-		if (obj.getID() == SOUTH_WEST_PASSAGE_CLIMB_UP_ROPE) {
+		else if (obj.getID() == SOUTH_WEST_PASSAGE_CLIMB_UP_ROPE) {
 			p.message("you pull your self up the rope");
 			message(p, "and climb back into the cavern");
 			sleep(600);
@@ -156,11 +140,11 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 			message(p, "as you pull yourself up you hear a mechanical churning");
 			p.message("as the passage raises back to it's original position");
 		}
-		if (obj.getID() == SOUTH_WEST_STALAGMITE) {
+		else if (obj.getID() == SOUTH_WEST_STALAGMITE) {
 			message(p, "you search the stalagmite");
 			if (p.getCache().hasKey("stalagmite")) {
 				p.message("you untie your rope and place it in your satchel");
-				addItem(p, ROPE, 1);
+				addItem(p, ItemId.ROPE.id(), 1);
 				p.getCache().remove("stalagmite");
 			} else {
 				p.message("but find nothing");
@@ -170,24 +154,18 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		if (item.getID() == PLANK && (obj.getID() == NORTH_PASSAGE[0] || obj.getID() == NORTH_PASSAGE[2])) {
-			return true;
-		}
-		if (item.getID() == ROPE && obj.getID() == SOUTH_WEST_STALAGMITE) {
-			return true;
-		}
-		if (inArray(item.getID(), ORBS) && obj.getID() == FURNACE) {
-			return true;
-		}
-		return false;
+		return (item.getID() == ItemId.PLANK.id() && (obj.getID() == NORTH_PASSAGE[0] || obj.getID() == NORTH_PASSAGE[2]))
+				|| (item.getID() == ItemId.ROPE.id() && obj.getID() == SOUTH_WEST_STALAGMITE)
+				|| (inArray(item.getID(), ItemId.ORB_OF_LIGHT_WHITE.id(), ItemId.ORB_OF_LIGHT_BLUE.id(),
+						ItemId.ORB_OF_LIGHT_PINK.id(), ItemId.ORB_OF_LIGHT_YELLOW.id()) && obj.getID() == FURNACE);
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
-		if (item.getID() == PLANK && (obj.getID() == NORTH_PASSAGE[0] || obj.getID() == NORTH_PASSAGE[2])) {
+		if (item.getID() == ItemId.PLANK.id() && (obj.getID() == NORTH_PASSAGE[0] || obj.getID() == NORTH_PASSAGE[2])) {
 			player.message("you carefully place the planks over the pressure triggers");
 			player.message("you walk across the wooden planks");
-			removeItem(player, 410, 1);
+			removeItem(player, ItemId.PLANK.id(), 1);
 			GameObject object = new GameObject(Point.location(728, 3435), 827, 0, 0);
 			World.getWorld().registerGameObject(object);
 			World.getWorld().delayedRemoveObject(object, 3000);
@@ -199,33 +177,34 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 				player.teleport(728, 3441);
 			}
 		}
-		if (item.getID() == ROPE && obj.getID() == SOUTH_WEST_STALAGMITE) {
+		else if (item.getID() == ItemId.ROPE.id() && obj.getID() == SOUTH_WEST_STALAGMITE) {
 			message(player, "you tie one end of the rope to the stalagmite",
 				"and the other around your waist");
-			removeItem(player, ROPE, 1);
+			removeItem(player, ItemId.ROPE.id(), 1);
 			if (!player.getCache().hasKey("stalagmite")) {
 				player.getCache().store("stalagmite", true);
 			}
 		}
-		if (inArray(item.getID(), ORBS) && obj.getID() == FURNACE) {
+		else if (inArray(item.getID(), ItemId.ORB_OF_LIGHT_WHITE.id(), ItemId.ORB_OF_LIGHT_BLUE.id(),
+				ItemId.ORB_OF_LIGHT_PINK.id(), ItemId.ORB_OF_LIGHT_YELLOW.id()) && obj.getID() == FURNACE) {
 			player.message("you throw the glowing orb into the furnace");
 			message(player, "its light quickly dims and then dies");
 			player.message("you feel a cold shudder run down your spine");
 			removeItem(player, item.getID(), 1);
 			if (!atQuestStages(player, Constants.Quests.UNDERGROUND_PASS, 7, 8, -1)) {
-				if (item.getID() == ORBS[0]) {
+				if (item.getID() == ItemId.ORB_OF_LIGHT_WHITE.id()) {
 					if (!player.getCache().hasKey("orb_of_light1")) {
 						player.getCache().store("orb_of_light1", true);
 					}
-				} else if (item.getID() == ORBS[1]) {
+				} else if (item.getID() == ItemId.ORB_OF_LIGHT_BLUE.id()) {
 					if (!player.getCache().hasKey("orb_of_light2")) {
 						player.getCache().store("orb_of_light2", true);
 					}
-				} else if (item.getID() == ORBS[2]) {
+				} else if (item.getID() == ItemId.ORB_OF_LIGHT_PINK.id()) {
 					if (!player.getCache().hasKey("orb_of_light3")) {
 						player.getCache().store("orb_of_light3", true);
 					}
-				} else if (item.getID() == ORBS[3]) {
+				} else if (item.getID() == ItemId.ORB_OF_LIGHT_YELLOW.id()) {
 					if (!player.getCache().hasKey("orb_of_light4")) {
 						player.getCache().store("orb_of_light4", true);
 					}
@@ -236,29 +215,29 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 
 	@Override
 	public boolean blockPickup(Player p, GroundItem i) {
-		if (i.getID() == ORBS[0]) {
-			if (hasItem(p, ORBS[0])) {
+		if (i.getID() == ItemId.ORB_OF_LIGHT_WHITE.id()) {
+			if (hasItem(p, ItemId.ORB_OF_LIGHT_WHITE.id())) {
 				p.message("you are already carrying this orb");
 				return true;
 			}
 			return false;
 		}
-		if (i.getID() == ORBS[1]) {
-			if (hasItem(p, ORBS[1])) {
+		else if (i.getID() == ItemId.ORB_OF_LIGHT_BLUE.id()) {
+			if (hasItem(p, ItemId.ORB_OF_LIGHT_BLUE.id())) {
 				p.message("you are already carrying this orb");
 				return true;
 			}
 			return false;
 		}
-		if (i.getID() == ORBS[2]) {
-			if (hasItem(p, ORBS[2])) {
+		else if (i.getID() == ItemId.ORB_OF_LIGHT_PINK.id()) {
+			if (hasItem(p, ItemId.ORB_OF_LIGHT_PINK.id())) {
 				p.message("you are already carrying this orb");
 				return true;
 			}
 			return false;
 		}
-		if (i.getID() == ORBS[3]) {
-			if (hasItem(p, ORBS[3])) {
+		else if (i.getID() == ItemId.ORB_OF_LIGHT_YELLOW.id()) {
+			if (hasItem(p, ItemId.ORB_OF_LIGHT_YELLOW.id())) {
 				p.message("you are already carrying this orb");
 				return true;
 			}

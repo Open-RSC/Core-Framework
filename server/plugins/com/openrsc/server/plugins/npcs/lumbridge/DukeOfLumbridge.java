@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.npcs.lumbridge;
 
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -36,13 +38,13 @@ public final class DukeOfLumbridge implements TalkToNpcExecutiveListener,
 
 	public void handleResponse(Player p, Npc n, int option) {
 		if (option == 0) { // Dragon Slayer
-			if (!hasItem(p, 420, 1)) {
+			if (!hasItem(p, ItemId.ANTI_DRAGON_BREATH_SHIELD.id(), 1)) {
 				npcTalk(p, n, "A knight going on a dragon quest hmm?",
 					"A most worthy cause",
 					"Guard this well my friend"
 				);
 				message(p, "The duke hands you a shield");
-				addItem(p, 420, 1);
+				addItem(p, ItemId.ANTI_DRAGON_BREATH_SHIELD.id(), 1);
 			}
 		} else if (option == 1)
 			npcTalk(p, n, "All is well for me");
@@ -54,7 +56,7 @@ public final class DukeOfLumbridge implements TalkToNpcExecutiveListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 198;
+		return n.getID() == NpcId.DUKE_OF_LUMBRIDGE.id();
 	}
 
 }

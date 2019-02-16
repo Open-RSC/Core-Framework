@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GameObject;
@@ -55,43 +56,12 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String cmd, Player p) {
-		if (obj.getID() == UNDERGROUND_CAVE || obj.getID() == CRUMBLED_ROCK) {
-			return true;
-		}
-		if (inArray(obj.getID(), READ_ROCKS)) {
-			return true;
-		}
-		if (inArray(obj.getID(), MAIN_ROCKS)) {
-			return true;
-		}
-		if (inArray(obj.getID(), MAIN_LEDGE)) {
-			return true;
-		}
-		if (obj.getID() == FIRST_SWAMP) {
-			return true;
-		}
-		if (inArray(obj.getID(), FAIL_SWAMP_ROCKS)) {
-			return true;
-		}
-		if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_1) {
-			return true;
-		}
-		if (obj.getID() == LEVER) {
-			return true;
-		}
-		if (obj.getID() == BLESSED_SPIDER_SWAMP_OBJ) {
-			return true;
-		}
-		if (obj.getID() == CLEAR_ROCKS) {
-			return true;
-		}
-		if (obj.getID() == DROP_DOWN_LEDGE) {
-			return true;
-		}
-		if (inArray(obj.getID(), SPEAR_ROCKS)) {
-			return true;
-		}
-		return false;
+		return obj.getID() == UNDERGROUND_CAVE || obj.getID() == CRUMBLED_ROCK
+				|| inArray(obj.getID(), READ_ROCKS) || inArray(obj.getID(), MAIN_ROCKS)
+				|| inArray(obj.getID(), MAIN_LEDGE) || obj.getID() == FIRST_SWAMP
+				|| inArray(obj.getID(), FAIL_SWAMP_ROCKS) || obj.getID() == PILE_OF_MUD_MAP_LEVEL_1
+				|| obj.getID() == LEVER || obj.getID() == BLESSED_SPIDER_SWAMP_OBJ
+				|| obj.getID() == CLEAR_ROCKS || obj.getID() == DROP_DOWN_LEDGE || inArray(obj.getID(), SPEAR_ROCKS);
 	}
 
 	@Override
@@ -108,7 +78,7 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 					}
 					break;
 				case 1:
-					Npc koftik = getNearestNpc(p, UndergroundPassKoftik.KOFTIK, 10);
+					Npc koftik = getNearestNpc(p, NpcId.KOFTIK_ARDOUGNE.id(), 10);
 					if (koftik != null) {
 						UndergroundPassKoftik.koftikEnterCaveDialogue(p, koftik);
 					}
@@ -126,11 +96,11 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 					break;
 			}
 		}
-		if (obj.getID() == CRUMBLED_ROCK) {
+		else if (obj.getID() == CRUMBLED_ROCK) {
 			message(p, "you climb the rock pile");
 			p.teleport(713, 581);
 		}
-		if (inArray(obj.getID(), READ_ROCKS)) {
+		else if (inArray(obj.getID(), READ_ROCKS)) {
 			message(p, "the writing seems to have been scracthed...",
 				"..into the rock with bare hands, it reads..");
 			if (obj.getID() == 832) {
@@ -149,10 +119,10 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 				ActionSender.sendBox(p, "@red@Leave this battered corpse be% %@red@For now he lives as spirit alone% %@red@Let his flesh rest and become one with the earth% %@red@As it is the soil that shall rise to protect him% %@red@Only as flesh becomes dust, as wood becomes ash...% %@red@..will Iban's corpse embrace nature and finally rest", true);
 			}
 		}
-		if (inArray(obj.getID(), MAIN_ROCKS)) {
+		else if (inArray(obj.getID(), MAIN_ROCKS)) {
 			doRock(obj, p, (int) (getCurrentLevel(p, Skills.HITPOINTS) / 42) + 1, true, -1);
 		}
-		if (obj.getID() == FIRST_SWAMP) {
+		else if (obj.getID() == FIRST_SWAMP) {
 			message(p, "you try to cross but you're unable to",
 				"the swamp seems to cling to your legs");
 			p.message("you slowly feel yourself being dragged below");
@@ -179,19 +149,19 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 			message(p, "you tumble deep into the cravass",
 				"and land battered and bruised at the base");
 		}
-		if (inArray(obj.getID(), FAIL_SWAMP_ROCKS)) {
+		else if (inArray(obj.getID(), FAIL_SWAMP_ROCKS)) {
 			doRock(obj, p, (int) (getCurrentLevel(p, Skills.HITPOINTS) / 42) + 1, true, -1);
 		}
-		if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_1) {
+		else if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_1) {
 			message(p, "you climb up the mud pile");
 			p.teleport(685, 3420);
 			message(p, "it leads into darkness, the stench is almost unbearable",
 				"you surface by the swamp, covered in muck");
 		}
-		if (inArray(obj.getID(), MAIN_LEDGE)) {
+		else if (inArray(obj.getID(), MAIN_LEDGE)) {
 			doLedge(obj, p, (int) (getCurrentLevel(p, Skills.HITPOINTS) / 42) + 1);
 		}
-		if (obj.getID() == LEVER) {
+		else if (obj.getID() == LEVER) {
 			message(p, "you pull back on the old lever",
 				"the bridge slowly lowers");
 			GameObject bridge_open = new GameObject(Point.location(704, 3417), 727, 2, 0);
@@ -205,11 +175,11 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 			p.teleport(703, 3420);
 			p.message("you cross the bridge");
 		}
-		if (obj.getID() == BLESSED_SPIDER_SWAMP_OBJ) {
+		else if (obj.getID() == BLESSED_SPIDER_SWAMP_OBJ) {
 			message(p, "you step in rancid swamp",
 				"it clings to your feet, you cannot cross");
 		}
-		if (obj.getID() == CLEAR_ROCKS) {
+		else if (obj.getID() == CLEAR_ROCKS) {
 			if (p.getX() == 695 && (p.getY() == 3436 || p.getY() == 3435)) {
 				p.teleport(695, 3435);
 				return;
@@ -224,7 +194,7 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 			playerTalk(p, null, "aaarrghhh");
 			message(p, "You've triggered a trap");
 		}
-		if (inArray(obj.getID(), SPEAR_ROCKS)) {
+		else if (inArray(obj.getID(), SPEAR_ROCKS)) {
 			if (cmd.equalsIgnoreCase("step over")) {
 				message(p, "you step over the rock");
 				p.message("you feel a thread tug at your boot");
@@ -267,7 +237,7 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 				}
 			}
 		}
-		if (obj.getID() == DROP_DOWN_LEDGE) {
+		else if (obj.getID() == DROP_DOWN_LEDGE) {
 			p.message("you drop down to the cave floor");
 			p.teleport(706, 3439);
 		}

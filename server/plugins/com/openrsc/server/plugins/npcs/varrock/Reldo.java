@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.npcs.varrock;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -15,7 +16,7 @@ public final class Reldo implements TalkToNpcListener,
 	TalkToNpcExecutiveListener {
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 20;
+		return n.getID() == NpcId.RELDO.id();
 	}
 
 	/**

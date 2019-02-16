@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.npcs.portsarim;
 
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -42,7 +44,7 @@ public final class PortSarimSailor implements ObjectActionExecutiveListener, Obj
 			npcTalk(p, n, "No I need to stay alive",
 				"I have a wife and family to support");
 		} else if (option == 1) {
-			if (p.getInventory().remove(10, 30) > -1) {
+			if (p.getInventory().remove(ItemId.COINS.id(), 30) > -1) {
 				message(p, "You pay 30 gold", "You board the ship");
 				p.teleport(324, 713, false);
 				sleep(1000);
@@ -56,12 +58,12 @@ public final class PortSarimSailor implements ObjectActionExecutiveListener, Obj
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 166 || n.getID() == 171 || n.getID() == 170;
+		return n.getID() == NpcId.CAPTAIN_TOBIAS.id() || n.getID() == NpcId.SEAMAN_THRESNOR.id() || n.getID() == NpcId.SEAMAN_LORRIS.id();
 	}
 
 	@Override
 	public void onObjectAction(GameObject arg0, String arg1, Player p) {
-		Npc sailor = getNearestNpc(p, 166, 5);
+		Npc sailor = getNearestNpc(p, NpcId.CAPTAIN_TOBIAS.id(), 5);
 		if (sailor != null) {
 			sailor.initializeTalkScript(p);
 		} else {
