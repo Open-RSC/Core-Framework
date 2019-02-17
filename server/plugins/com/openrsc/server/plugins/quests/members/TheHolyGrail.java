@@ -82,18 +82,18 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 	}
 
 	/**
-	 * NPCS: #275 King Arthur - NPC HANDLED IN MERLINS CRYSTAL QUEST FILE. #287
-	 * Merlin should be the one of library (393), maintaining the id of merlin crystal for the transition
+	 * NPCS: #275 King Arthur - NPC HANDLED IN MERLINS CRYSTAL QUEST FILE. #287 is Merlin trapped
+	 * Merlin should be the one of library (393)
 	 */
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return DataConversions.inArray(new int[] {NpcId.MERLIN_CRYSTAL.id(), NpcId.MERLIN_LIBRARY.id(), NpcId.BLACK_KNIGHT_TITAN.id(), NpcId.UNHAPPY_PEASANT.id(),
+		return DataConversions.inArray(new int[] {NpcId.MERLIN_LIBRARY.id(), NpcId.BLACK_KNIGHT_TITAN.id(), NpcId.UNHAPPY_PEASANT.id(),
 				NpcId.FISHERMAN.id(), NpcId.FISHER_KING.id(), NpcId.KING_PERCIVAL.id(), NpcId.HAPPY_PEASANT.id()}, n.getID());
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == NpcId.MERLIN_LIBRARY.id() || n.getID() == NpcId.MERLIN_CRYSTAL.id()) {
+		if (n.getID() == NpcId.MERLIN_LIBRARY.id()) {
 			switch (p.getQuestStage(Constants.Quests.THE_HOLY_GRAIL)) {
 				case 1:
 				case 2:
