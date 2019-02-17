@@ -217,6 +217,18 @@ public class Point {
 	public boolean isInSeersPartyHallDownstairs() {
 		return inBounds(490, 464, 500, 471);
 	}
+	
+	public boolean isInFisherKingRealm() {
+		return inBounds(388, 4, 427, 40) || inBounds(484, 4, 523, 40)
+				|| inBounds(411, 976, 519, 984)
+				|| inBounds(411, 1920, 518, 1925)
+				|| inBounds(511, 976, 519, 984)
+				|| inBounds(511, 1920, 518, 1925);
+	}
+	
+	public boolean isInsideGrandTreeGround() {
+		return inBounds(410, 158, 422, 170);
+	}
 
 	public int wildernessLevel() {
 		int wild = 2203 - (y + (1776 - (944 * Formulae.getHeight(this))));
