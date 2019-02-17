@@ -58,7 +58,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 		return (obj.getID() == 292 || obj.getID() == 293)
 			|| obj.getID() == 291
 			|| (obj.getID() == 296 && obj.getY() == 366 && command
-			.equalsIgnoreCase("search"));
+			.equalsIgnoreCase("search")) || obj.getID() == 295;
 	}
 
 	@Override
@@ -94,6 +94,23 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 				"It reads Snarthon Candtrick Termanto");
 			if (!p.getCache().hasKey("magic_words")) {
 				p.getCache().store("magic_words", true);
+			}
+		} else if (obj.getID() == 295) {
+			p.teleport(p.getX(), p.getY()+944);
+			p.message("You climb up the ladder");
+			if (p.getQuestStage(this) != 3 && !p.getCache().hasKey("lady_test")) {
+				return;
+			}
+			sleep(600);
+			Npc lady = getNearestNpc(p, NpcId.LADY_UPSTAIRS.id(), 5);
+			if (lady == null) {
+				lady = spawnNpc(NpcId.LADY_UPSTAIRS.id(), p.getX()-1, p.getY()-1, 60000, p);
+			}
+			sleep(600);
+			if (lady != null) {
+				playerTalk(p, lady, "Hello I am here, can I have Excalibur yet?");
+				npcTalk(p, lady, "I don't think you are worthy enough",
+					"Come back when you are a better person");
 			}
 		}
 	}
