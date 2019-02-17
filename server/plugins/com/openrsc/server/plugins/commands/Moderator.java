@@ -209,5 +209,17 @@ public final class Moderator implements CommandListener {
 				ActionSender.sendMessage(p, player, 1, MessageType.GLOBAL_CHAT, newStr.toString(), player.getIcon());
 			}
 		}
+		else if (cmd.equalsIgnoreCase("announcement") || cmd.equalsIgnoreCase("announce") || cmd.equalsIgnoreCase("anouncement") || cmd.equalsIgnoreCase("anounce")) {
+			StringBuilder newStr = new StringBuilder();
+
+			for (String arg : args) {
+				newStr.append(arg).append(" ");
+			}
+			GameLogging.addQuery(new StaffLog(player, 13, newStr.toString().toString()));
+			newStr.insert(0, player.getStaffName() + ": ");
+			for (Player p : World.getWorld().getPlayers()) {
+				ActionSender.sendMessage(p, player, 1, MessageType.GLOBAL_CHAT, "ANNOUNCEMENT: " + newStr.toString(), player.getIcon());
+			}
+		}
 	}
 }
