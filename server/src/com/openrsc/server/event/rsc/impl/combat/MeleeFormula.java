@@ -8,7 +8,7 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Random;
 
-public class MeleeFormula {
+class MeleeFormula {
 	/**
 	 * Gets a gaussian distributed randomized value between 0 and the
 	 * {@code maximum} value. <br>
@@ -19,13 +19,13 @@ public class MeleeFormula {
 	 * @param maximum      The maximum value.
 	 * @return The randomized value.
 	 */
-	public static double getGaussian(double meanModifier, Random r,
-									 int maximum) {
+	private static double getGaussian(double meanModifier, Random r,
+									  int maximum) {
 		return getGaussian(meanModifier, r, (double) maximum);
 	}
 
-	public static double getGaussian(double meanModifier, Random r,
-									 double maximum) {
+	private static double getGaussian(double meanModifier, Random r,
+									  double maximum) {
 		double mean = maximum * meanModifier;
 		double deviation = mean * 1.79;
 		double value = 0;
@@ -42,7 +42,7 @@ public class MeleeFormula {
 	 * @param victim The mob being attacked.
 	 * @return The amount to hit.
 	 */
-	public static final int getDamage(Mob source, Mob victim) {
+	static int getDamage(Mob source, Mob victim) {
 		return getDamage(source, victim, 1.0, 1.0, 1.0);
 	}
 
@@ -56,9 +56,9 @@ public class MeleeFormula {
 	 * @param defenceMultiplier  The amount to increase the defence with.
 	 * @return The amount to hit.
 	 */
-	public static int getDamage(Mob source, Mob victim,
-								double accuracyMultiplier, double hitMultiplier,
-								double defenceMultiplier) {
+	private static int getDamage(Mob source, Mob victim,
+								 double accuracyMultiplier, double hitMultiplier,
+								 double defenceMultiplier) {
 		double acc = getMeleeAccuracy(source);
 		double def = getMeleeDefence(victim);
 		int maxHit = getMeleeDamage(source, hitMultiplier);
@@ -88,9 +88,8 @@ public class MeleeFormula {
 		int strengthLevel = (int) (source.getSkills().getLevel(Skills.STRENGTH) * prayerBonus) + styleBonus + 8;
 
 		double bonusMultiplier = (source.getWeaponPowerPoints() + 64) / 640.0D;
-		int maxHit = (int) ((strengthLevel * bonusMultiplier) + 0.5D);
 
-		return maxHit;
+		return (int) ((strengthLevel * bonusMultiplier) + 0.5D);
 	}
 
 
@@ -124,7 +123,7 @@ public class MeleeFormula {
 		return (attackLevel * bonusMultiplier);
 	}
 
-	public static int styleBonus(Mob mob, int skill) {
+	private static int styleBonus(Mob mob, int skill) {
 		if (mob.isNpc())
 			return 0;
 

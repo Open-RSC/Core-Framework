@@ -14,14 +14,10 @@ public class ElvargPrayerDrain implements OnCombatStartScript {
 	public boolean shouldExecute(Mob attacker, Mob defender) {
 		if (attacker.isNpc()) {
 			Npc attackerNpc = ((Npc) attacker);
-			if (attackerNpc.getID() == 196) {
-				return true;
-			}
+			return attackerNpc.getID() == 196;
 		} else if (defender.isNpc()) {
 			Npc defenderNpc = ((Npc) defender);
-			if (defenderNpc.getID() == 196) {
-				return true;
-			}
+			return defenderNpc.getID() == 196;
 		}
 		return false;
 	}

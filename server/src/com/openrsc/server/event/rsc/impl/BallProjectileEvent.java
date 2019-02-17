@@ -4,7 +4,7 @@ import com.openrsc.server.model.entity.Mob;
 
 public abstract class BallProjectileEvent extends BenignProjectileEvent {
 
-	public BallProjectileEvent(Mob caster, Mob opponent, int type) {
+	protected BallProjectileEvent(Mob caster, Mob opponent, int type) {
 		super(caster, opponent, 0, type);
 	}
 

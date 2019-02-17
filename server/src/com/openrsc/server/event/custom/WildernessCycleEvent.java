@@ -58,8 +58,7 @@ public class WildernessCycleEvent extends DelayedEvent {
 
 				@Override
 				public PreparedStatement prepareStatement(Connection connection) throws SQLException {
-					PreparedStatement statement = connection.prepareStatement(query);
-					return statement;
+					return connection.prepareStatement(query);
 				}
 			});
 

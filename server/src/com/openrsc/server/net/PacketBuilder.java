@@ -13,7 +13,7 @@ public class PacketBuilder {
 	/**
 	 * Bit mask array.
 	 */
-	public static final int[] BIT_MASK_OUT = new int[32];
+	private static final int[] BIT_MASK_OUT = new int[32];
 
 	/**
 	 * Creates the bit mask array.
@@ -27,12 +27,12 @@ public class PacketBuilder {
 	/**
 	 * The opcode.
 	 */
-	protected int opcode;
+	private int opcode;
 
 	/**
 	 * The payload.
 	 */
-	protected ByteBuf payload = Unpooled.buffer();
+	private ByteBuf payload = Unpooled.buffer();
 
 	/**
 	 * The current bit position.

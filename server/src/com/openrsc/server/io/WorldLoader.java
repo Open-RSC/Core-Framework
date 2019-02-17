@@ -1,5 +1,6 @@
 package com.openrsc.server.io;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.TileValue;
@@ -14,7 +15,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class WorldLoader {
-	public static final int[] ALLOWED_WALL_ID_TYPES = {5, 6, 14, 42, 128, 229, 230};
+	private static final int[] ALLOWED_WALL_ID_TYPES = {5, 6, 14, 42, 128, 229, 230};
 	/**
 	 * The asynchronous logger.
 	 */
@@ -22,8 +23,8 @@ public class WorldLoader {
 	private ZipFile tileArchive;
 
 	private static boolean projectileClipAllowed(int wallID) {
-		for (int i = 0; i < ALLOWED_WALL_ID_TYPES.length; i++) {
-			if (ALLOWED_WALL_ID_TYPES[i] == wallID) {
+		for (int allowedWallIdType : ALLOWED_WALL_ID_TYPES) {
+			if (allowedWallIdType == wallID) {
 				return true;
 			}
 		}
@@ -132,7 +133,6 @@ public class WorldLoader {
 					world.getTile(bx, by).projectileAllowed = true;
 			}
 		}
-		/** end **/
 		return true;
 
 	}
@@ -140,7 +140,11 @@ public class WorldLoader {
 	public void loadWorld(World world) {
 		final long start = System.currentTimeMillis();
 		try {
-			tileArchive = new ZipFile(new File("./conf/server/data/P2PLandscape.rscd"));
+			if (Constants.GameServer.MEMBER_WORLD) {
+				tileArchive = new ZipFile(new File("./conf/server/data/P2PLandscape.rscd")); // Members landscape
+			} else {
+				tileArchive = new ZipFile(new File("./conf/server/data/F2PLandscape.rscd")); // Free landscape
+			}
 		} catch (Exception e) {
 			LOGGER.catching(e);
 		}

@@ -10,36 +10,36 @@ public class Tile {
 	/**
 	 * The ID of any diagonal walls on this tile
 	 */
-	public int diagonalWalls = 0;
+	int diagonalWalls = 0;
 	/**
 	 * The elevation of this tile
 	 */
-	public byte groundElevation = 0;
+	byte groundElevation = 0;
 	/**
 	 * The overlay texture ID
 	 */
-	public byte groundOverlay = 0;
+	byte groundOverlay = 0;
 	/**
 	 * The texture ID of this tile
 	 */
-	public byte groundTexture = 0;
+	private byte groundTexture = 0;
 	/**
 	 * The texture ID of any horizontal wall on this tile
 	 */
-	public byte horizontalWall = 0;
+	byte horizontalWall = 0;
 	/**
 	 * The texture ID of the roof of this tile
 	 */
-	public byte roofTexture = 0;
+	private byte roofTexture = 0;
 	/**
 	 * The texture ID of any vertical wall on this tile
 	 */
-	public byte verticalWall = 0;
+	byte verticalWall = 0;
 
 	/**
 	 * Create a new tile from raw data packed into the given ByteBuffer
 	 */
-	public static Tile unpack(ByteBuffer in) throws IOException {
+	static Tile unpack(ByteBuffer in) throws IOException {
 		if (in.remaining() < 10) {
 			throw new IOException("Provided buffer too short");
 		}
@@ -59,7 +59,7 @@ public class Tile {
 	/**
 	 * Writes the Tile raw data into a ByteBuffer
 	 */
-	public ByteBuffer pack() throws IOException {
+	ByteBuffer pack() throws IOException {
 		ByteBuffer out = ByteBuffer.allocate(10);
 
 		out.put(groundElevation);

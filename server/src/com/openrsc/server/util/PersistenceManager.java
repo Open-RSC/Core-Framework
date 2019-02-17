@@ -38,7 +38,7 @@ public final class PersistenceManager {
 		return null;
 	}
 
-	public static void setupAliases() {
+	private static void setupAliases() {
 		try {
 			Properties aliases = new Properties();
 			FileInputStream fis = new FileInputStream(new File(Constants.GameServer.CONFIG_DIR, "aliases.xml"));

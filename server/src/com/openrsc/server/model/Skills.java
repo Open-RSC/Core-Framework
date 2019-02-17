@@ -13,8 +13,8 @@ import static com.openrsc.server.Constants.GameServer.PLAYER_LEVEL_LIMIT;
 
 public class Skills {
 
-	public static final int SKILL_COUNT = 18;
-	public static final int MAXIMUM_EXP = 2000000000;
+	private static final int SKILL_COUNT = 18;
+	private static final int MAXIMUM_EXP = 2000000000;
 	public static final String[] SKILL_NAME = {"attack", "defense", "strength", "hits", "ranged", "prayer", "magic",
 		"cooking", "woodcut", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblaw",
 		"agility", "thieving"};
@@ -24,7 +24,7 @@ public class Skills {
 	public static final ArrayList<String> STAT_LIST = new ArrayList<String>(){{ for(int i = 0; i < SKILL_NAME.length; i++) { add(SKILL_NAME[i]); } }};
 	// Global Experience Calculations (Some NPCs have levels > PLAYER_LEVEL_LIMIT)
 	private static final int GLOBAL_LEVEL_LIMIT = 1000;
-	public static int[] experienceArray;
+	private static int[] experienceArray;
 
 	static {
 		int i = 0;
@@ -56,7 +56,7 @@ public class Skills {
 		exps[3] = 4616;
 	}
 
-	public static int getLevelForExperience(int experience, int limit) {
+	private static int getLevelForExperience(int experience, int limit) {
 		for (int level = 0; level < limit - 1; level++) {
 			if (experience >= experienceArray[level])
 				continue;
@@ -65,7 +65,7 @@ public class Skills {
 		return limit;
 	}
 
-	public static int experienceForLevel(int level) {
+	private static int experienceForLevel(int level) {
 		int lvlArrayIndex = level - 2;
 		if (lvlArrayIndex == -1)
 			return 0;
@@ -193,7 +193,7 @@ public class Skills {
 		sendUpdate(skill);
 	}
 
-	public void sendUpdate(int skill) {
+	private void sendUpdate(int skill) {
 		if (mob.isPlayer()) {
 			Player player = (Player) mob;
 			ActionSender.sendStat(player, skill);
@@ -221,7 +221,7 @@ public class Skills {
 		normalize(skill, true);
 	}
 
-	public void normalize(int skill, boolean sendUpdate) {
+	private void normalize(int skill, boolean sendUpdate) {
 		levels[skill] = getMaxStat(skill);
 		if(sendUpdate)
 			sendUpdate(skill);
@@ -231,7 +231,7 @@ public class Skills {
 		normalize(true);
 	}
 
-	public void normalize(boolean sendUpdate) {
+	private void normalize(boolean sendUpdate) {
 		for (int i = 0; i < Skills.SKILL_NAME.length; i++) {
 			normalize(i, false);
 		}

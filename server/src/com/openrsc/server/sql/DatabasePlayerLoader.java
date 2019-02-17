@@ -314,7 +314,7 @@ public class DatabasePlayerLoader {
 		updateIntsLongs(Statements.duelBlock, new int[]{on}, new long[]{user});
 	}
 
-	public void addNpcKill(int player, int npc) {
+	private void addNpcKill(int player, int npc) {
 		try {
 			// Find an existing entry for this NPC/Player combo
 			PreparedStatement statementSelect = DatabaseConnection.getDatabase().prepareStatement(
@@ -363,18 +363,18 @@ public class DatabasePlayerLoader {
 		}
 	}
 
-	public boolean playerExists(int user) {
+	private boolean playerExists(int user) {
 		return hasNextFromInt(Statements.basicInfo, user);
 	}
 
-	public void setGameSettings(boolean settings[], int user) {
+	private void setGameSettings(boolean settings[], int user) {
 		for (int i = 0; i < settings.length; i++) {
 			conn.executeUpdate("UPDATE `" + Statements.PREFIX + "players` SET " + gameSettings[i] + "="
 				+ (settings[i] ? 1 : 0) + " WHERE id='" + user + "'");
 		}
 	}
 
-	public void setPrivacySettings(boolean settings[], int user) {
+	private void setPrivacySettings(boolean settings[], int user) {
 		for (int i = 0; i < settings.length; i++) {
 			conn.executeUpdate("UPDATE `" + Statements.PREFIX + "players` SET " + privacySettings[i] + "="
 				+ (settings[i] ? 1 : 0) + " WHERE id='" + user + "'");
@@ -757,7 +757,7 @@ public class DatabasePlayerLoader {
 		return (byte) LoginResponse.LOGIN_SUCCESSFUL;
 	}
 
-	public class Statements {
+	private class Statements {
 		private static final String PREFIX = "openrsc_";
 
 		//private static final String unreadMessages = "SELECT COUNT(*) FROM `messages` WHERE showed=0 AND show_message=1 AND owner=?";

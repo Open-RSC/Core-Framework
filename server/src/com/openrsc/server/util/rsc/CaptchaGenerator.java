@@ -65,7 +65,7 @@ public class CaptchaGenerator {
 	/**
 	 * Loads fonts from a folder to a font array
 	 */
-	public static void loadFonts() {
+	private static void loadFonts() {
 		words.clear();
 		try (final BufferedReader br = new BufferedReader(new FileReader(
 			new File(System.getProperty("user.dir") + File.separator + "conf" + File.separator + "server" + File.separator + "words.list")))) {

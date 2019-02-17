@@ -2,14 +2,16 @@ package com.openrsc.server.util.rsc;
 
 import com.openrsc.server.model.Point;
 import com.openrsc.server.net.Packet;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
@@ -18,9 +20,6 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Random;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 
 
 public final class DataConversions {
@@ -86,16 +85,15 @@ public final class DataConversions {
 				}
 			}
 		}
-		String diff = Integer.toString(dd) + " days " + Integer.toString(hh) + " hours " + Integer.toString(mm)
+		return Integer.toString(dd) + " days " + Integer.toString(hh) + " hours " + Integer.toString(mm)
 			+ " minutes " + Integer.toString(ss) + " seconds";
-		return diff;
 
 	}
 
 	/**
 	 * returns the md5 hash of a string
 	 */
-	public static String md5(String s) {
+	private static String md5(String s) {
 		synchronized (md5) {
 			md5.reset();
 			md5.update(s.getBytes());
@@ -111,7 +109,7 @@ public final class DataConversions {
 		}
 	}
 
-	public static String sha512(String s) {
+	private static String sha512(String s) {
 		synchronized (sha512) {
 			sha512.reset();
 			sha512.update(s.getBytes());
@@ -135,47 +133,47 @@ public final class DataConversions {
 		return DataConversions.sha512(salt + DataConversions.md5(password));
 	}
 
-	public static String toHex(byte[] bytes) {
+	private static String toHex(byte[] bytes) {
 		// change below to lower or uppercase X to control case of output
 		return String.format("%0" + (bytes.length << 1) + "x", new BigInteger(1, bytes));
 	}
 
 	public static String formatString(String str, int length) {
-		String s = "";
+		StringBuilder s = new StringBuilder();
 		for (int i = 0; i < length; i++)
 			if (i >= str.length()) {
-				s += " ";
+				s.append(" ");
 			} else {
 				char c = str.charAt(i);
 				if (c >= 'a' && c <= 'z') {
-					s += c;
+					s.append(c);
 				} else {
 					if (c >= 'A' && c <= 'Z') {
-						s += c;
+						s.append(c);
 					} else if (Arrays.binarySearch(special_characters, c) != -1) {
-						s += c;
+						s.append(c);
 					} else {
 						if (c >= '0' && c <= '9') {
-							s += c;
+							s.append(c);
 						} else {
-							s += '_';
+							s.append('_');
 						}
 					}
 				}
 			}
-		return s;
+		return s.toString();
 	}
 
 	public static String stripBadCharacters(String value) {
-		String s = "";
+		StringBuilder s = new StringBuilder();
 		for (int i = 0; i < value.length(); i++) {
 			if (getCharCode(value.charAt(i)) > 0) {
-				s += value.charAt(i);
+				s.append(value.charAt(i));
 			} else {
-				s += " ";
+				s.append(" ");
 			}
 		}
-		return s;
+		return s.toString();
 	}
 
 	public static String upperCaseAllFirst(String value) {
@@ -189,19 +187,19 @@ public final class DataConversions {
 
 		Character[] array = value.chars().mapToObj(c -> (char)c).toArray(Character[]::new);
 
-		String s = "";
+		StringBuilder s = new StringBuilder();
 		int i = 0;
 		while (array[i].equals(" ") || !Character.isLetter(array[i])) { // Skip spaces and non-letters.
-			s += String.valueOf(array[i]);
+			s.append(String.valueOf(array[i]));
 			i++;
-			if (s.length() == array.length) return s;
+			if (s.length() == array.length) return s.toString();
 		}
 
 		// Uppercase first letter.
 		if (!Character.isUpperCase(array[i]))
-			s += String.valueOf(Character.toUpperCase(array[i]));
+			s.append(String.valueOf(Character.toUpperCase(array[i])));
 		else
-			s += String.valueOf(array[i]);
+			s.append(String.valueOf(array[i]));
 
 		i++;
 
@@ -218,13 +216,13 @@ public final class DataConversions {
 						|| c.equals('#') || c.equals('@') || c.equals('-'))
 					&& Character.isUpperCase(array[i]))
 				) {
-				s += String.valueOf(Character.toUpperCase(array[i]));
+				s.append(String.valueOf(Character.toUpperCase(array[i])));
 			} else {
-				s += String.valueOf(Character.toLowerCase(array[i]));
+				s.append(String.valueOf(Character.toLowerCase(array[i])));
 			}
 		}
 
-		return s;
+		return s.toString();
 	}
 
 	/**
@@ -306,14 +304,13 @@ public final class DataConversions {
 			byte[] dest = new byte[count];
 			encryption.decryptString(srct, dest, 0, 0, -1, count);
 
-			String str = getStringFromBytes(dest, 0, count);
-			return str;
+			return getStringFromBytes(dest, 0, count);
 		} catch (Exception var6) {
 			return "Cabbage";
 		}
 	}
 
-	static String getStringFromBytes(byte[] src, int offset, int count) {
+	private static String getStringFromBytes(byte[] src, int offset, int count) {
 		char[] dest = new char[count];
 		int dh = 0;
 
@@ -412,22 +409,22 @@ public final class DataConversions {
 	public static String hashToUsername(long l) {
 		if (l < 0L)
 			return "invalid_name";
-		String s = "";
+		StringBuilder s = new StringBuilder();
 		while (l != 0L) {
 			int i = (int) (l % 37L);
 			l /= 37L;
 			if (i == 0)
-				s = " " + s;
+				s.insert(0, " ");
 			else if (i < 27) {
 				if (l % 37L == 0L)
-					s = (char) ((i + 65) - 1) + s;
+					s.insert(0, (char) ((i + 65) - 1));
 				else
-					s = (char) ((i + 97) - 1) + s;
+					s.insert(0, (char) ((i + 97) - 1));
 			} else {
-				s = (char) ((i + 48) - 27) + s;
+				s.insert(0, (char) ((i + 48) - 27));
 			}
 		}
-		return s;
+		return s.toString();
 	}
 
 	/**
@@ -464,17 +461,17 @@ public final class DataConversions {
 	}
 
 	public static String IPToString(long ip) {
-		String result = "0.0.0.0";
+		StringBuilder result = new StringBuilder("0.0.0.0");
 		for (int x = 0; x < 4; x++) {
 			int octet = (int) (ip / Math.pow(256, 3 - x));
 			ip -= octet * Math.pow(256, 3 - x);
 			if (x == 0) {
-				result = String.valueOf(octet);
+				result = new StringBuilder(String.valueOf(octet));
 			} else {
-				result += ("." + octet);
+				result.append(".").append(octet);
 			}
 		}
-		return result;
+		return result.toString();
 	}
 
 	/**
@@ -509,7 +506,7 @@ public final class DataConversions {
 	 * returns a random number within the given bounds, but allows for certain
 	 * values to be weighted
 	 */
-	public static int randomWeighted(int low, int dip, int peak, int max) {
+	static int randomWeighted(int low, int dip, int peak, int max) {
 		int total = 0;
 		int probability = 100;
 		int[] probArray = new int[max + 1];
@@ -534,7 +531,7 @@ public final class DataConversions {
 
 	public static double round(double value, int decimalPlace) {
 		BigDecimal bd = new BigDecimal(value);
-		bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+		bd = bd.setScale(decimalPlace, RoundingMode.HALF_UP);
 		return (bd.doubleValue());
 	}
 
@@ -546,7 +543,7 @@ public final class DataConversions {
 	 * Returns a ByteBuffer containing everything available from the given
 	 * InputStream
 	 */
-	public static final ByteBuffer streamToBuffer(BufferedInputStream in) throws IOException {
+	public static ByteBuffer streamToBuffer(BufferedInputStream in) throws IOException {
 		byte[] buffer = new byte[in.available()];
 		in.read(buffer, 0, buffer.length);
 		return ByteBuffer.wrap(buffer);
@@ -606,20 +603,20 @@ public final class DataConversions {
 	 */
 	public static long usernameToHash(String s) {
 		s = s.toLowerCase();
-		String s1 = "";
+		StringBuilder s1 = new StringBuilder();
 		for (int i = 0; i < s.length(); i++) {
 			char c = s.charAt(i);
 			if (c >= 'a' && c <= 'z')
-				s1 = s1 + c;
+				s1.append(c);
 			else if (c >= '0' && c <= '9')
-				s1 = s1 + c;
+				s1.append(c);
 			else
-				s1 = s1 + ' ';
+				s1.append(' ');
 		}
 
-		s1 = s1.trim();
+		s1 = new StringBuilder(s1.toString().trim());
 		if (s1.length() > 12)
-			s1 = s1.substring(0, 12);
+			s1 = new StringBuilder(s1.substring(0, 12));
 		long l = 0L;
 		for (int j = 0; j < s1.length(); j++) {
 			char c1 = s1.charAt(j);
@@ -632,7 +629,7 @@ public final class DataConversions {
 		return l;
 	}
 
-	public static final byte[] stringToBytes(CharSequence str) {
+	public static byte[] stringToBytes(CharSequence str) {
 		int len = str.length();
 		byte[] out = new byte[len];
 
@@ -759,8 +756,7 @@ public final class DataConversions {
 
 	public static String numberFormat(int i) {
 		NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
-		String number = numberFormat.format(i);
-		return number;
+		return numberFormat.format(i);
 	}
 
 	public static boolean parseBoolean(String str) throws NumberFormatException {

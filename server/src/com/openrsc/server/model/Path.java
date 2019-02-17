@@ -7,7 +7,7 @@ import java.util.LinkedList;
 
 public class Path {
 
-	public static final int MAXIMUM_SIZE = 50;
+	private static final int MAXIMUM_SIZE = 50;
 	private Deque<Point> waypoints = new LinkedList<Point>();
 	private PathType pathType;
 	private Mob mob;
@@ -130,11 +130,11 @@ public class Path {
 		return waypoints.isEmpty();
 	}
 
-	public Point poll() {
+	Point poll() {
 		return waypoints.poll();
 	}
 
-	public Point getLastPoint() {
+	Point getLastPoint() {
 		return waypoints.getLast();
 	}
 
@@ -146,7 +146,7 @@ public class Path {
 		return pathType;
 	}
 
-	public void setPathType(PathType pathType) {
+	private void setPathType(PathType pathType) {
 		this.pathType = pathType;
 	}
 

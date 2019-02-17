@@ -84,7 +84,6 @@ public class ThrowingEvent extends GameTickEvent {
 				getPlayerOwner().message("I can't get close enough");
 				getPlayerOwner().resetRange();
 				stop();
-				return;
 			}
 		} else {
 			getPlayerOwner().resetPath();

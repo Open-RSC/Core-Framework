@@ -23,7 +23,7 @@ import com.openrsc.server.util.rsc.Formulae;
  */
 public class CombatEvent extends GameTickEvent {
 
-	protected final Mob attackerMob, defenderMob;
+	private final Mob attackerMob, defenderMob;
 	private int roundNumber = 0;
 
 	public CombatEvent(Mob attacker, Mob defender) {
@@ -33,7 +33,7 @@ public class CombatEvent extends GameTickEvent {
 		CombatScriptLoader.checkAndExecuteOnStartCombatScript(attacker, defender);
 	}
 
-	protected static void onDeath(Mob killed, Mob killer) {
+	private static void onDeath(Mob killed, Mob killer) {
 		if (killer.isPlayer() && killed.isNpc()) {
 			if (PluginHandler.getPluginHandler().blockDefaultAction("PlayerKilledNpc",
 				new Object[]{((Player) killer), ((Npc) killed)})) {
@@ -96,7 +96,7 @@ public class CombatEvent extends GameTickEvent {
 		}
 	}
 
-	public void inflictDamage(final Mob hitter, final Mob target, int damage) {
+	private void inflictDamage(final Mob hitter, final Mob target, int damage) {
 		hitter.incHitsMade();
 		if (hitter.isNpc() && target.isPlayer()) {
 			Player targetPlayer = (Player) target;

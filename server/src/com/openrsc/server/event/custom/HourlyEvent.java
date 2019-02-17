@@ -9,7 +9,7 @@ public class HourlyEvent extends DelayedEvent {
 	private long timestamp;
 
 	/* Runs every hour, on the hour. */
-	public HourlyEvent(int lifeTime) {
+	HourlyEvent(int lifeTime) {
 		super(null, 1000);
 		this.lifeTime = lifeTime; // How many hours it will run for.
 		this.timestamp = (System.currentTimeMillis() / 1000);

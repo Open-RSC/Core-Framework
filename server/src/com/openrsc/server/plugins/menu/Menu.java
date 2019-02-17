@@ -64,11 +64,8 @@ public class Menu {
 		player.setMenu(this);
 		ActionSender.sendMenu(player, option);
 		long start = System.currentTimeMillis();
-		while (true) {
-			if (System.currentTimeMillis() - start > 19500
-				|| player.getMenu() == null) {
-				break;
-			}
+		while (System.currentTimeMillis() - start <= 19500
+			&& player.getMenu() != null) {
 			if (player.getInteractingNpc() != null)
 				player.getInteractingNpc().setBusyTimer(3000);
 			Functions.sleep(100);

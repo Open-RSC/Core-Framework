@@ -4,7 +4,7 @@ import com.openrsc.server.model.entity.Mob;
 
 public abstract class ImmediateEvent extends GameTickEvent {
 
-	public ImmediateEvent() {
+	protected ImmediateEvent() {
 		super(null, 0);
 		setImmediate(true);
 	}

@@ -91,7 +91,7 @@ public class PVPCombatFormula {
 		return 0;
 	}
 
-	public static double styleBonus(Mob mob, int skill) {
+	private static double styleBonus(Mob mob, int skill) {
 		int style = mob.getCombatStyle();
 		if (style == 0) {
 			return 1;
@@ -128,7 +128,6 @@ public class PVPCombatFormula {
 		double strengthLevel = (strength * prayerBonus) + bonus;
 
 		double bonusMultiplier = ((double) weaponPower) * 0.00175D + 0.1;
-		double maxHit = ((strengthLevel * bonusMultiplier) + 1.05);
-		return maxHit;
+		return ((strengthLevel * bonusMultiplier) + 1.05);
 	}
 }

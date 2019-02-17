@@ -4,7 +4,7 @@ import com.openrsc.server.model.entity.player.Player;
 
 public abstract class ShortEvent extends SingleEvent {
 
-	public ShortEvent(Player owner) {
+	protected ShortEvent(Player owner) {
 		super(owner, 1200);
 	}
 

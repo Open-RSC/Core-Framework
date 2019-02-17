@@ -6,7 +6,7 @@ import com.openrsc.server.model.entity.player.Player;
 
 public abstract class CustomProjectileEvent extends ProjectileEvent {
 
-	public CustomProjectileEvent(Mob caster, Mob opponent, int type) {
+	protected CustomProjectileEvent(Mob caster, Mob opponent, int type) {
 		super(caster, opponent, 0, type);
 	}
 

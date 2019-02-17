@@ -15,7 +15,7 @@ public abstract class MenuOptionListener {
 	/**
 	 * Creates a new MenuHandler with the given options
 	 */
-	public MenuOptionListener(String[] options) {
+	protected MenuOptionListener(String[] options) {
 		this.options = options;
 	}
 

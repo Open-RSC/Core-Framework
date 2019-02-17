@@ -15,10 +15,10 @@ import com.openrsc.server.plugins.PluginHandler;
  */
 public class ProjectileEvent extends SingleTickEvent {
 
-	protected Mob caster, opponent;
+	Mob caster, opponent;
 	protected int damage;
 	protected int type;
-	protected boolean canceled;
+	boolean canceled;
 
 	public ProjectileEvent(Mob caster, Mob opponent, int damage, int type) {
 		super(caster, 1);
@@ -46,7 +46,7 @@ public class ProjectileEvent extends SingleTickEvent {
 		}
 	}
 
-	protected void sendProjectile(Mob caster, Mob opponent) {
+	private void sendProjectile(Mob caster, Mob opponent) {
 		Projectile projectile = new Projectile(caster, opponent, type);
 		caster.getUpdateFlags().setProjectile(projectile);
 	}
