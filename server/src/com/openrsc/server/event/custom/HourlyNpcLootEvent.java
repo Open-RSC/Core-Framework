@@ -71,7 +71,7 @@ public class HourlyNpcLootEvent extends HourlyEvent  {
 		return itemId;
 	}
 
-	public int getItemAmount() {
+	private int getItemAmount() {
 		return itemAmount;
 	}
 
@@ -79,7 +79,7 @@ public class HourlyNpcLootEvent extends HourlyEvent  {
 		return npcLifetime;
 	}
 
-	public String getEventMessage() {
+	private String getEventMessage() {
 		return eventMessage;
 	}
 }

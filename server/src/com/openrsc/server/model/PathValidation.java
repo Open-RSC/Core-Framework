@@ -169,7 +169,7 @@ public class PathValidation {
 		return isBlocking(t.traversalMask, (byte) bit, isCurrentTile);
 	}
 
-	public static boolean isBlocking(int objectValue, byte bit, boolean isCurrentTile) {
+	static boolean isBlocking(int objectValue, byte bit, boolean isCurrentTile) {
 		if ((objectValue & bit) != 0) { // There is a wall in the way
 			return true;
 		}
@@ -179,16 +179,14 @@ public class PathValidation {
 		if (!isCurrentTile && (objectValue & CollisionFlag.FULL_BLOCK_B) != 0) { // There is a diagonal wall here: /
 			return true;
 		}
-		if (!isCurrentTile && (objectValue & CollisionFlag.FULL_BLOCK_C) != 0) { // This tile is unwalkable
-			return true;
-		}
+		// This tile is unwalkable
+		return !isCurrentTile && (objectValue & CollisionFlag.FULL_BLOCK_C) != 0;
 		/*if (!isCurrentTile && (objectValue & CollisionFlag.OBJECT) != 0) { // Object?
 			return true;
 		}*/
-		return false;
 	}
 
-	public static boolean checkDiagonalPassThroughCollisions(Point curPoint, Point nextPoint) {
+	static boolean checkDiagonalPassThroughCollisions(Point curPoint, Point nextPoint) {
 
 		int x = curPoint.getX();
 		int y = curPoint.getY();
@@ -261,9 +259,7 @@ public class PathValidation {
 			// Wall on northeast tile, south side
 			mask = World.getWorld().getTile(x - 1, y - 1).traversalMask;
 			blocking = (mask & CollisionFlag.WALL_SOUTH) != 0;
-			if (blocking) {
-				return true;
-			}
+			return blocking;
 
 		}
 
@@ -314,9 +310,7 @@ public class PathValidation {
 			// Wall on northwest tile, south side
 			mask = World.getWorld().getTile(x + 1, y - 1).traversalMask;
 			blocking = (mask & CollisionFlag.WALL_SOUTH) != 0;
-			if (blocking) {
-				return true;
-			}
+			return blocking;
 
 		}
 
@@ -367,9 +361,7 @@ public class PathValidation {
 			// Wall on southeast tile, north side
 			mask = World.getWorld().getTile(x - 1, y + 1).traversalMask;
 			blocking = (mask & CollisionFlag.WALL_NORTH) != 0;
-			if (blocking) {
-				return true;
-			}
+			return blocking;
 
 		}
 
@@ -421,9 +413,7 @@ public class PathValidation {
 			// Wall on southwest tile, north side
 			mask = World.getWorld().getTile(x + 1, y + 1).traversalMask;
 			blocking = (mask & CollisionFlag.WALL_NORTH) != 0;
-			if (blocking) {
-				return true;
-			}
+			return blocking;
 
 		}
 

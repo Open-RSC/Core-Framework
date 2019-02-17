@@ -29,11 +29,11 @@ public class ThrottleFilter extends SimpleChannelUpstreamHandler {
 	/**
 	 * Holds host address and it's connection attempt times
 	 */
-	private static HashMap<String, ArrayList<Long>> connectionAttempts = new HashMap<String, ArrayList<Long>>();
+	private static final HashMap<String, ArrayList<Long>> connectionAttempts = new HashMap<String, ArrayList<Long>>();
 	/**
 	 * Holds host address and it's packet send times
 	 */
-	private ArrayList<Long> packets = new ArrayList<Long>();
+	private final ArrayList<Long> packets = new ArrayList<Long>();
 
 	public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e)
 			throws Exception {
@@ -72,14 +72,14 @@ public class ThrottleFilter extends SimpleChannelUpstreamHandler {
 		final int countPPS = getPPS();
 		if (countPPS > MAX_PACKETS_PER_SECOND) {
 			Player p = null;
-			LogManager.getLogger().info((p == null ? ""  : p.getUsername()) + " - " + hostAddress + " filtered for reaching the PPS limit: " + countPPS);
+			LogManager.getLogger().info("" + " - " + hostAddress + " filtered for reaching the PPS limit: " + countPPS);
 			ctx.getChannel().close();
 		} else {
 			super.messageReceived(ctx, e);
 		}
 	}
 
-	public int getPPS() {
+	private int getPPS() {
 		int packetsPerSecond = 0;
 		long now = System.currentTimeMillis();
 		synchronized (packets) {
@@ -95,7 +95,7 @@ public class ThrottleFilter extends SimpleChannelUpstreamHandler {
 		}
 		return packetsPerSecond;
 	}
-	public static int getCPS(String address) {
+	private static int getCPS(String address) {
 		int connectionsPerSecond = 0;
 		long now = System.currentTimeMillis();
 		

@@ -55,7 +55,6 @@ public class FireCannonEvent extends GameTickEvent {
 		if (!getPlayerOwner().getInventory().hasItemId(1041)) {
 			getPlayerOwner().message("you're out of ammo");
 			getPlayerOwner().resetCannonEvent();
-			return;
 		}
 	}
 

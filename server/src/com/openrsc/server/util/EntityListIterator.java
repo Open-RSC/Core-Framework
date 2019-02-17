@@ -9,13 +9,13 @@ public final class EntityListIterator<E extends Entity> implements Iterator<E> {
 
 	private int curIndex = 0;
 
-	private Object[] entities;
+	private final Object[] entities;
 
 	private EntityList<E> entityList;
 
-	private int[] indicies;
+	private final int[] indicies;
 
-	public EntityListIterator(Object[] entities, Set<Integer> indicies, EntityList<E> entityList) {
+	EntityListIterator(Object[] entities, Set<Integer> indicies, EntityList<E> entityList) {
 		this.entities = entities;
 		synchronized (indicies) {
 			this.indicies = new int[indicies.size()];

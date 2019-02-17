@@ -7,12 +7,12 @@ import com.openrsc.server.model.entity.update.Projectile;
 
 public class BenignProjectileEvent extends SingleTickEvent {
 
-	protected Mob caster, opponent;
+	private Mob caster, opponent;
 	protected int damage;
 	protected int type;
-	protected boolean canceled;
+	boolean canceled;
 
-	public BenignProjectileEvent(Mob caster, Mob opponent, int damage, int type) {
+	BenignProjectileEvent(Mob caster, Mob opponent, int damage, int type) {
 		super(caster, 1);
 		this.caster = caster;
 		this.opponent = opponent;
@@ -25,7 +25,7 @@ public class BenignProjectileEvent extends SingleTickEvent {
 		sendProjectile(caster, opponent);
 	}
 
-	protected void sendProjectile(Mob caster, Mob opponent) {
+	private void sendProjectile(Mob caster, Mob opponent) {
 		Projectile projectile = new Projectile(caster, opponent, type);
 		caster.getUpdateFlags().setProjectile(projectile);
 	}

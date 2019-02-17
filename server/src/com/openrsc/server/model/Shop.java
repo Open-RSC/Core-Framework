@@ -149,7 +149,7 @@ public final class Shop {
 		}
 	}
 
-	public void updatePlayers() {
+	private void updatePlayers() {
 		synchronized (players) {
 			for (Player player : players) {
 				ActionSender.showShop(player, this);
@@ -229,11 +229,11 @@ public final class Shop {
 		return priceModifier;
 	}
 
-	public int getStockOffset(int itemID, int totalRemoved) {
+	private int getStockOffset(int itemID, int totalRemoved) {
 		int baseStock = 1;
-		for (int is = 0; is < items.length; is++) {
-			if (items[is].getID() == itemID) {
-				baseStock = items[is].getAmount() + 1;
+		for (Item item : items) {
+			if (item.getID() == itemID) {
+				baseStock = item.getAmount() + 1;
 			}
 		}
 		int offset = (int) priceModifier * (baseStock - (getItemCount(itemID) + totalRemoved));
@@ -244,11 +244,11 @@ public final class Shop {
 		return offset;
 	}
 
-	public int getStockBuyOffset(int itemID, int totalRemoved) {
+	private int getStockBuyOffset(int itemID, int totalRemoved) {
 		int baseStock = 0;
-		for (int is = 0; is < items.length; is++) {
-			if (items[is].getID() == itemID) {
-				baseStock = items[is].getAmount();
+		for (Item item : items) {
+			if (item.getID() == itemID) {
+				baseStock = item.getAmount();
 			}
 		}
 		int offset = (int) priceModifier * (baseStock - (getItemCount(itemID) - totalRemoved));
@@ -261,9 +261,9 @@ public final class Shop {
 
 
 	public int getStock(int itemID) {
-		for (int is = 0; is < items.length; is++) {
-			if (items[is].getID() == itemID) {
-				return items[is].getAmount();
+		for (Item item : items) {
+			if (item.getID() == itemID) {
+				return item.getAmount();
 			}
 		}
 		return 0;

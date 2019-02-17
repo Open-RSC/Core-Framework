@@ -14,8 +14,7 @@ public class NpcPoisonPlayerScript implements CombatScript {
 	@Override
 	public void executeScript(Mob attacker, Mob victim) {
 
-		victim.poisonDamage = Constants.Poison.npcData.containsKey(attacker.getID()) ?
-			Constants.Poison.npcData.get(attacker.getID()) : 38;
+		victim.poisonDamage = Constants.Poison.npcData.getOrDefault(attacker.getID(), 38);
 		victim.startPoisonEvent();
 	}
 

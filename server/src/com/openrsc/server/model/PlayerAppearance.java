@@ -5,7 +5,7 @@ import com.openrsc.server.util.rsc.Formulae;
 
 public class PlayerAppearance {
 
-	public boolean hideTrousers;
+	private boolean hideTrousers;
 	private int body;
 	private byte hairColour;
 	private int head;
@@ -72,11 +72,8 @@ public class PlayerAppearance {
 			|| skinColour < 0) {
 			return false;
 		}
-		if (hairColour > 9 || topColour > 14 || trouserColour > 14
-			|| skinColour > 4) {
-			return false;
-		}
-		return true;
+		return hairColour <= 9 && topColour <= 14 && trouserColour <= 14
+			&& skinColour <= 4;
 	}
 
 	public int getHead() {

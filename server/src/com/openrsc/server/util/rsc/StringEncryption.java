@@ -7,7 +7,7 @@ public final class StringEncryption {
 	private byte[] m_i;
 	private int[] m_j;
 
-	public StringEncryption(byte[] var1) {
+	StringEncryption(byte[] var1) {
 		int var2 = var1.length;
 		this.m_g = new int[var2];
 		this.m_i = var1;
@@ -71,9 +71,7 @@ public final class StringEncryption {
 					if (this.m_j.length <= var10) {
 						int[] var13 = new int[this.m_j.length * 2];
 
-						for (int var14 = 0; var14 < this.m_j.length; ++var14) {
-							var13[var14] = this.m_j[var14];
-						}
+						if (this.m_j.length >= 0) System.arraycopy(this.m_j, 0, var13, 0, this.m_j.length);
 
 						this.m_j = var13;
 					}
@@ -90,7 +88,7 @@ public final class StringEncryption {
 		}
 	}
 
-	public static byte[] asByte(int... is) {
+	static byte[] asByte(int... is) {
 		byte[] res = new byte[is.length];
 		for (int i = 0; i < res.length; i++)
 			res[i] = (byte) is[i];

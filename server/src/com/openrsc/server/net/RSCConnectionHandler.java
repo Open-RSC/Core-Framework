@@ -17,7 +17,7 @@ import io.netty.util.ReferenceCountUtil;
  */
 public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implements ChannelHandler {
 	public static final AttributeKey<ConnectionAttachment> attachment = AttributeKey.valueOf("conn-attachment");
-	public LoginPacketHandler loginHandler = new LoginPacketHandler();
+	private LoginPacketHandler loginHandler = new LoginPacketHandler();
 
 	@Override
 	public void channelInactive(final ChannelHandlerContext ctx) throws Exception {

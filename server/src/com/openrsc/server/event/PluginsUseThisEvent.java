@@ -2,7 +2,7 @@ package com.openrsc.server.event;
 
 public abstract class PluginsUseThisEvent extends DelayedEvent {
 
-	public PluginsUseThisEvent() {
+	protected PluginsUseThisEvent() {
 		super(null, 0);
 	}
 

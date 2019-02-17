@@ -46,7 +46,7 @@ public abstract class BatchEvent extends DelayedEvent {
 		matchRunning = false;
 	}
 
-	public int getRepeatFor() {
+	protected int getRepeatFor() {
 		return repeatFor;
 	}
 
