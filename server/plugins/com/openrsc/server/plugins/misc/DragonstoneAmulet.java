@@ -39,7 +39,9 @@ public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveL
 			//	p.message("You need to stay out of combat for 10 seconds before using a teleport.");
 			//	return;
 			//}
-			if (p.getLocation().wildernessLevel() >= 30 || (p.getLocation().inModRoom() && !p.isAdmin())) {
+			if (p.getLocation().wildernessLevel() >= 30 || p.getLocation().isInFisherKingRealm()
+					|| p.getLocation().isInsideGrandTreeGround()
+					|| (p.getLocation().inModRoom() && !p.isAdmin())) {
 				p.message("A mysterious force blocks your teleport!");
 				p.message("You can't use this teleport after level 30 wilderness");
 				return;
