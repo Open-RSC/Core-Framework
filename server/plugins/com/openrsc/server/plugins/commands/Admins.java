@@ -996,24 +996,6 @@ public final class Admins implements CommandListener {
 					+ "@whi@" + StringUtils.join(itemStrings, ", "), true);
 			}
 		}
-		else if ((cmd.equalsIgnoreCase("announcement") || cmd.equalsIgnoreCase("announce") || cmd.equalsIgnoreCase("anouncement") || cmd.equalsIgnoreCase("anounce"))) {
-			int argsIndex   = 0;
-			StringBuilder message  = new StringBuilder();
-
-			if(args.length < 1) {
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [message]");
-				return;
-			}
-
-			for (; argsIndex < args.length; argsIndex++)
-				message.append(args[argsIndex]).append(" ");
-
-			String announcementPrefix = "@whi@ANNOUNCEMENT " + player.getStaffName();
-
-			for(Player p : world.getPlayers()) {
-				ActionSender.sendMessage(p, player, 1, MessageType.CHAT, announcementPrefix + ": @whi@ " + message, player.getIcon());
-			}
-		}
 		else if (cmd.equalsIgnoreCase("heal")) {
 			Player p = args.length > 0 ?
 				world.getPlayer(DataConversions.usernameToHash(args[0])) :
