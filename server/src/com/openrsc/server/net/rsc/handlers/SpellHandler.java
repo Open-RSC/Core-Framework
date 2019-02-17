@@ -1069,7 +1069,9 @@ public class SpellHandler implements PacketHandler {
 	}
 
 	private void handleTeleport(Player player, SpellDef spell, int id) {
-		if (player.getLocation().wildernessLevel() >= 20) {
+		if (player.getLocation().wildernessLevel() >= 20 || player.getLocation().isInFisherKingRealm()
+				|| player.getLocation().isInsideGrandTreeGround()
+				|| (player.getLocation().inModRoom() && !player.isAdmin())) {
 			player.message("A mysterious force blocks your teleport spell!");
 			player.message("You can't use teleport after level 20 wilderness");
 			return;

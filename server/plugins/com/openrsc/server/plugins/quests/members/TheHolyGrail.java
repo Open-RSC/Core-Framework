@@ -22,7 +22,6 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TeleportExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -45,7 +44,7 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 	WallObjectActionExecutiveListener, InvActionListener,
 	InvActionExecutiveListener, PlayerKilledNpcExecutiveListener,
 	PlayerKilledNpcListener, PickupListener, PickupExecutiveListener,
-	ObjectActionListener, ObjectActionExecutiveListener, TeleportExecutiveListener {
+	ObjectActionListener, ObjectActionExecutiveListener {
 	/**
 	 * @author Davve
 	 */
@@ -426,20 +425,6 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
 		return obj.getID() == 408;
-	}
-
-	@Override
-	public boolean blockTeleport(Player p) {
-		if ((p.getLocation().inBounds(388, 4, 427, 40) || p.getLocation().inBounds(484, 4, 523, 40)
-			|| p.getLocation().inBounds(411, 976, 519, 984)
-			|| p.getLocation().inBounds(411, 1920, 518, 1925)
-			|| p.getLocation().inBounds(511, 976, 519, 984)
-			|| p.getLocation().inBounds(511, 1920, 518, 1925)) && !p.isEvent()) {
-			message(p, "A mysterious force blocks your teleport spell!",
-				"You can't use teleport after level 20 wilderness");
-			return true;
-		}
-		return false;
 	}
 
 	@Override
