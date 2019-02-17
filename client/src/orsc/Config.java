@@ -41,18 +41,18 @@ public class Config {
 	static boolean C_INV_COUNT = false;
 
 	/* Android: */
-	private static boolean F_ANDROID_BUILD = false; // This MUST be true if Android client
-	private static final String DL_URL = "game.openrsc.com";
+	public static boolean F_ANDROID_BUILD = false; // This MUST be true if Android client
+	public static final String DL_URL = "game.openrsc.com";
 	public static final String ANDROID_DOWNLOAD_PATH = "https://" + DL_URL + "/downloads/";
 	public static final String CACHE_URL = "https://" + DL_URL + "/downloads/cache/";
 	public static final int ANDROID_CLIENT_VERSION = 6;
-	static boolean F_SHOWING_KEYBOARD = false;
-	static int F_LONG_PRESS_CALC;
-	static boolean C_HOLD_AND_CHOOSE = true;
-	static int C_LONG_PRESS_TIMER = 400;
+	public static boolean F_SHOWING_KEYBOARD = false;
+	public static int F_LONG_PRESS_CALC;
+	public static boolean C_HOLD_AND_CHOOSE = true;
+	public static int C_LONG_PRESS_TIMER = 400;
 	public static int C_MENU_SIZE = 6;
-	static boolean C_SWIPE_TO_SCROLL = true;
-	static boolean C_SWIPE_TO_ROTATE = true;
+	public static boolean C_SWIPE_TO_SCROLL = true;
+	public static boolean C_SWIPE_TO_ROTATE = true;
 
 	/* Experience Config Menu */
 	public static int C_EXPERIENCE_COUNTER = 1;
