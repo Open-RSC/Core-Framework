@@ -10,11 +10,57 @@ import com.openrsc.client.entityhandling.defs.extras.AnimationDef;
 import com.openrsc.client.model.Sprite;
 import com.openrsc.interfaces.NComponent;
 import com.openrsc.interfaces.NCustomComponent;
-import com.openrsc.interfaces.misc.*;
+import com.openrsc.interfaces.misc.AuctionHouse;
+import com.openrsc.interfaces.misc.BankPinInterface;
+import com.openrsc.interfaces.misc.CustomBankInterface;
+import com.openrsc.interfaces.misc.DoSkillInterface;
+import com.openrsc.interfaces.misc.ExperienceConfigInterface;
+import com.openrsc.interfaces.misc.FishingTrawlerInterface;
+import com.openrsc.interfaces.misc.IronManInterface;
+import com.openrsc.interfaces.misc.LostOnDeathInterface;
+import com.openrsc.interfaces.misc.OnlineListInterface;
+import com.openrsc.interfaces.misc.ProgressBarInterface;
+import com.openrsc.interfaces.misc.QuestGuideInterface;
+import com.openrsc.interfaces.misc.SkillGuideInterface;
+import com.openrsc.interfaces.misc.TerritorySignupInterface;
 import com.openrsc.interfaces.misc.clan.Clan;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+
 import orsc.buffers.RSBufferUtils;
-import orsc.enumerations.*;
-import orsc.graphics.gui.*;
+import orsc.enumerations.GameMode;
+import orsc.enumerations.InputXAction;
+import orsc.enumerations.MenuItemAction;
+import orsc.enumerations.MessageTab;
+import orsc.enumerations.MessageType;
+import orsc.enumerations.ORSCharacterDirection;
+import orsc.enumerations.SocialPopupMode;
+import orsc.graphics.gui.InputXPrompt;
+import orsc.graphics.gui.KillAnnouncer;
+import orsc.graphics.gui.KillAnnouncerQueue;
+import orsc.graphics.gui.Menu;
+import orsc.graphics.gui.MessageHistory;
+import orsc.graphics.gui.Panel;
+import orsc.graphics.gui.SocialLists;
 import orsc.graphics.three.CollisionFlag;
 import orsc.graphics.three.RSModel;
 import orsc.graphics.three.Scene;
@@ -26,15 +72,6 @@ import orsc.net.Network_Socket;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
-
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import java.io.*;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.security.SecureRandom;
-import java.util.*;
-import java.util.Map.Entry;
 
 // Comment these out if Android client
 
@@ -179,10 +216,10 @@ public final class mudclient implements Runnable {
 	public int bankItemsMax = 50;
 	public int bankPage = 0;
 	public int bankSelectedItemSlot = -1;
-	private int cameraRotation = 128;
+	public int cameraRotation = 128;
 	private GameMode currentViewMode = GameMode.LOGIN;
 	public InputXAction inputX_Action = InputXAction.ACT_0;
-	private Menu menuCommon;
+	public Menu menuCommon;
 	public int menuX = 0;
 	public int menuY = 0;
 	public int mouseButtonClick = 0;
@@ -206,7 +243,7 @@ public final class mudclient implements Runnable {
 	public String[] achievementDescs = new String[500];
 	public int[] achievementProgress = new int[500];
 	public int showUiTab = 0;
-	private boolean topMouseMenuVisible = false;
+	public boolean topMouseMenuVisible = false;
 	private boolean LAST_FRAME_SHOWING_KEYBOARD = false;
 	public int resizeWidth;
 	public int resizeHeight;

@@ -10,58 +10,11 @@ import com.openrsc.client.entityhandling.defs.extras.AnimationDef;
 import com.openrsc.client.model.Sprite;
 import com.openrsc.interfaces.NComponent;
 import com.openrsc.interfaces.NCustomComponent;
-import com.openrsc.interfaces.misc.AuctionHouse;
-import com.openrsc.interfaces.misc.BankPinInterface;
-import com.openrsc.interfaces.misc.CustomBankInterface;
-import com.openrsc.interfaces.misc.DoSkillInterface;
-import com.openrsc.interfaces.misc.ExperienceConfigInterface;
-import com.openrsc.interfaces.misc.FishingTrawlerInterface;
-import com.openrsc.interfaces.misc.IronManInterface;
-import com.openrsc.interfaces.misc.LostOnDeathInterface;
-import com.openrsc.interfaces.misc.OnlineListInterface;
-import com.openrsc.interfaces.misc.ProgressBarInterface;
-import com.openrsc.interfaces.misc.QuestGuideInterface;
-import com.openrsc.interfaces.misc.SkillGuideInterface;
-import com.openrsc.interfaces.misc.TerritorySignupInterface;
+import com.openrsc.interfaces.misc.*;
 import com.openrsc.interfaces.misc.clan.Clan;
-
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
-import java.util.Timer;
-import java.util.TimerTask;
-
-// Comment these out if Android client
-/*import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;*/
-
 import orsc.buffers.RSBufferUtils;
-import orsc.enumerations.GameMode;
-import orsc.enumerations.InputXAction;
-import orsc.enumerations.MenuItemAction;
-import orsc.enumerations.MessageTab;
-import orsc.enumerations.MessageType;
-import orsc.enumerations.ORSCharacterDirection;
-import orsc.enumerations.SocialPopupMode;
-import orsc.graphics.gui.InputXPrompt;
-import orsc.graphics.gui.KillAnnouncer;
-import orsc.graphics.gui.KillAnnouncerQueue;
-import orsc.graphics.gui.Menu;
-import orsc.graphics.gui.MessageHistory;
-import orsc.graphics.gui.Panel;
-import orsc.graphics.gui.SocialLists;
+import orsc.enumerations.*;
+import orsc.graphics.gui.*;
 import orsc.graphics.three.CollisionFlag;
 import orsc.graphics.three.RSModel;
 import orsc.graphics.three.Scene;
@@ -74,25 +27,26 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
 
+//import javax.sound.sampled.AudioSystem;
+//import javax.sound.sampled.Clip;
+import java.io.*;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.security.SecureRandom;
+import java.util.*;
+import java.util.Map.Entry;
+
+// Comment these out if Android client
+
 public final class mudclient implements Runnable {
 
-    /**
-     * Newest RSC cache: SAME VALUES.
-     * <p>
-     * mudclient.spriteMedia = 2000; mudclient.spriteUtil =
-     * mudclient.spriteMedia + 100; 2100 mudclient.spriteItem = 50 +
-     * mudclient.spriteUtil; 2150 mudclient.spriteLogo = 1000 +
-     * mudclient.spriteItem; 3150 mudclient.spriteProjectile = 10 +
-     * mudclient.spriteLogo; 3160 mudclient.spriteTexture = 50 +
-     * mudclient.spriteProjectile; 3210
-     */
-    public static final int spriteMedia = 2000;
+    private static final int spriteMedia = 2000;
     public static final int spriteUtil = 2100;
     public static final int spriteItem = 2150;
     static final int spriteLogo = 3150;
-    static final int spriteProjectile = 3160;
-    static final int spriteTexture = 3225;
-    public static int FPS = 0;
+    private static final int spriteProjectile = 3160;
+    private static final int spriteTexture = 3225;
+    private static int FPS = 0;
     public static KillAnnouncerQueue killQueue = new KillAnnouncerQueue();
     static byte[][] s_kb = new byte[250][];
     static int[] s_wb;
@@ -100,8 +54,8 @@ public final class mudclient implements Runnable {
     private static int currentChat = 0;
     private static ClientPort clientPort;
     public final int[] bankItemOnTab = new int[500];
-    public final int[] mouseClickX = new int[8192];
-    public final int[] mouseClickY = new int[8192];
+    private final int[] mouseClickX = new int[8192];
+    private final int[] mouseClickY = new int[8192];
     private final int m_S = 1000;
     private final int[][] animDirLayer_To_CharLayer = new int[][]{{11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3, 4},
             {11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3, 4}, {11, 3, 2, 9, 7, 1, 6, 10, 0, 5, 8, 4},
@@ -194,7 +148,6 @@ public final class mudclient implements Runnable {
     private final RSModel[] wallObjectInstanceModel = new RSModel[500];
     private final int[] wallObjectInstanceX = new int[500];
     private final int[] wallObjectInstanceZ = new int[500];
-    public boolean DEBUG = false;
     public Thread clientBaseThread = null;
     public int threadState = 0;
     public String chatMessageInput = "";
@@ -222,21 +175,21 @@ public final class mudclient implements Runnable {
     public boolean shiftPressed = false;
     //public int groupID = 100;
     public boolean rendering;
-    public int bankItemCount = 0;
+    private int bankItemCount = 0;
     public int bankItemsMax = 50;
     public int bankPage = 0;
     public int bankSelectedItemSlot = -1;
     public int cameraRotation = 128;
-    public GameMode currentViewMode = GameMode.LOGIN;
+    private GameMode currentViewMode = GameMode.LOGIN;
     public InputXAction inputX_Action = InputXAction.ACT_0;
     public Menu menuCommon;
     public int menuX = 0;
     public int menuY = 0;
     public int mouseButtonClick = 0;
     public int mouseButtonItemCountIncrement = 0;
-    public int mouseClickCount = 0;
-    public int mouseClickXStep = 0;
-    public HashMap<String, File> soundCache = new HashMap<String, File>();
+    private int mouseClickCount = 0;
+    private int mouseClickXStep = 0;
+    private HashMap<String, File> soundCache = new HashMap<String, File>();
     public boolean authenticSettings = !(
             Config.isAndroid() ||
                     Config.S_WANT_CLANS || Config.S_WANT_KILL_FEED
@@ -252,10 +205,9 @@ public final class mudclient implements Runnable {
     public String[] achievementTitles = new String[500];
     public String[] achievementDescs = new String[500];
     public int[] achievementProgress = new int[500];
-    public boolean serverTypeMembers = Config.MEMBERS_FEATURES;
     public int showUiTab = 0;
     public boolean topMouseMenuVisible = false;
-    public boolean LAST_FRAME_SHOWING_KEYBOARD = false;
+    private boolean LAST_FRAME_SHOWING_KEYBOARD = false;
     public int resizeWidth;
     public int resizeHeight;
     public Clan clan;
@@ -263,13 +215,13 @@ public final class mudclient implements Runnable {
     public boolean gotInitialConfigs = false;
     public ArrayList<String> skillGuideChosenTabs;
     public String clanKickPlayer;
-    long lastFPSUpdate = 0;
-    int currentFPS = 0;
-    int m_Q = 10;
-    long[] m_F = new long[10];
+    private long lastFPSUpdate = 0;
+    private int currentFPS = 0;
+    private int m_Q = 10;
+    private long[] m_F = new long[10];
     String m_p = null;
-    long timePassed = 0;
-    double xpPerHour = 0;
+    private long timePassed = 0;
+    private double xpPerHour = 0;
     private boolean hasGameCrashed = false;
     private int gameState = 1;
     private int m_b = 0;
@@ -532,11 +484,8 @@ public final class mudclient implements Runnable {
     private int welcomeLastLoggedInDays = 0;
     private String welcomeLastLoggedInHost = null;
     private String welcomeLastLoggedInIp;
-
     private int welcomeRecoverySetDays = 0;
-
     private boolean welcomeScreenShown = false;
-
     //private int welcomeUnreadMessages = 0;
     private World world;
     private int worldOffsetX = 0;
@@ -561,7 +510,7 @@ public final class mudclient implements Runnable {
     private int lastSelectedSpell = -1;
     private int flag = 0;
     private Timer tiktok = new Timer();
-    private boolean optionsMenuKeyboardInput = Config.S_WANT_KEYBOARD_SHORTCUTS ? true : false;
+    private boolean optionsMenuKeyboardInput = Config.S_WANT_KEYBOARD_SHORTCUTS;
     private NComponent mainComponent;
     private OnlineListInterface onlineList;
     private NCustomComponent experienceOverlay;
@@ -592,9 +541,19 @@ public final class mudclient implements Runnable {
     private long time;
     private long m_timer;
     private ArrayList<XPNotification> xpNotifications = new ArrayList<XPNotification>();
-
-    public int amountToZoom = 0;
+    private int amountToZoom = 0;
     private Panel panelLoginOptions;
+
+    /**
+     * Newest RSC cache: SAME VALUES.
+     * <p>
+     * mudclient.spriteMedia = 2000; mudclient.spriteUtil =
+     * mudclient.spriteMedia + 100; 2100 mudclient.spriteItem = 50 +
+     * mudclient.spriteUtil; 2150 mudclient.spriteLogo = 1000 +
+     * mudclient.spriteItem; 3150 mudclient.spriteProjectile = 10 +
+     * mudclient.spriteLogo; 3160 mudclient.spriteTexture = 50 +
+     * mudclient.spriteProjectile; 3210
+     */
 
     public mudclient(ClientPort handler) {
         clientPort = handler;
@@ -602,7 +561,7 @@ public final class mudclient implements Runnable {
         Config.initConfig();
     }
 
-    public static boolean isValidEmailAddress(String email) {
+    private static boolean isValidEmailAddress(String email) {
         boolean stricterFilter = true;
         String stricterFilterString = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
         String laxString = ".+@.+\\.[A-Za-z]{2}[A-Za-z]*";
@@ -617,12 +576,12 @@ public final class mudclient implements Runnable {
             return String.valueOf(length);
         }
         if (length < 10000000) {
-            return "@whi@" + String.valueOf(length / 1000) + "K";
+            return "@whi@" + length / 1000 + "K";
         }
-        return "@gre@" + String.valueOf(length / 1000000) + "M";
+        return "@gre@" + length / 1000000 + "M";
     }
 
-    final void zeroMF() {
+    private void zeroMF() {
         try {
             for (int i = 0; i < 10; ++i) {
                 this.m_F[i] = 0L;
@@ -634,7 +593,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void setFPS(int var1, byte var2) {
+    private void setFPS(int var1, byte var2) {
         try {
 
             this.sleepModifier = 1000 / var1;
@@ -795,7 +754,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    public final void run2() {
+    private void run2() {
         try {
             try {
                 int var3 = 0;
@@ -925,7 +884,7 @@ public final class mudclient implements Runnable {
         try {
 
             if (200 <= SocialLists.friendListCount) {
-                this.showMessage(false, (String) null, "Friend list is full", MessageType.GAME, 0, (String) null
+                this.showMessage(false, null, "Friend list is full", MessageType.GAME, 0, null
                 );
             } else {
                 String var3 = StringUtil.displayNameToKey(player);
@@ -933,32 +892,32 @@ public final class mudclient implements Runnable {
                     int var4;
                     for (var4 = 0; var4 < SocialLists.friendListCount; ++var4) {
                         if (var3.equals(StringUtil.displayNameToKey(SocialLists.friendList[var4]))) {
-                            this.showMessage(false, (String) null, player + " is already on your friend list.",
-                                    MessageType.GAME, 0, (String) null);
+                            this.showMessage(false, null, player + " is already on your friend list.",
+                                    MessageType.GAME, 0, null);
                             return;
                         }
 
                         if (SocialLists.friendListOld[var4] != null
                                 && var3.equals(StringUtil.displayNameToKey(SocialLists.friendListOld[var4]))) {
-                            this.showMessage(false, (String) null, player + " is already on your friend list.",
-                                    MessageType.GAME, 0, (String) null);
+                            this.showMessage(false, null, player + " is already on your friend list.",
+                                    MessageType.GAME, 0, null);
                             return;
                         }
                     }
 
                     for (var4 = 0; var4 < SocialLists.ignoreListCount; ++var4) {
                         if (var3.equals(StringUtil.displayNameToKey(SocialLists.ignoreListArg0[var4]))) {
-                            this.showMessage(false, (String) null,
+                            this.showMessage(false, null,
                                     "Please remove " + player + " from your ignore list first.", MessageType.GAME, 0,
-                                    (String) null);
+                                    null);
                             return;
                         }
 
                         if (null != SocialLists.ignoreListArg1[var4]
                                 && var3.equals(StringUtil.displayNameToKey(SocialLists.ignoreListArg1[var4]))) {
-                            this.showMessage(false, (String) null,
+                            this.showMessage(false, null,
                                     "Please remove " + player + " from your ignore list first.", MessageType.GAME, 0,
-                                    (String) null);
+                                    null);
                             return;
                         }
                     }
@@ -968,8 +927,8 @@ public final class mudclient implements Runnable {
                         this.packetHandler.getClientStream().writeBuffer1.putString(player);
                         this.packetHandler.getClientStream().finishPacket();
                     } else {
-                        this.showMessage(false, (String) null, "You can\'t add yourself to your own friend list.",
-                                MessageType.GAME, 0, (String) null);
+                        this.showMessage(false, null, "You can\'t add yourself to your own friend list.",
+                                MessageType.GAME, 0, null);
                     }
                 }
             }
@@ -982,7 +941,7 @@ public final class mudclient implements Runnable {
         try {
 
             if (SocialLists.ignoreListCount >= 100) {
-                this.showMessage(false, (String) null, "Ignore list full", MessageType.GAME, 0, (String) null
+                this.showMessage(false, null, "Ignore list full", MessageType.GAME, 0, null
                 );
             } else {
                 String var3 = StringUtil.displayNameToKey(player);
@@ -990,32 +949,32 @@ public final class mudclient implements Runnable {
                     int var4;
                     for (var4 = 0; var4 < SocialLists.ignoreListCount; ++var4) {
                         if (var3.equals(StringUtil.displayNameToKey(SocialLists.ignoreListArg0[var4]))) {
-                            this.showMessage(false, (String) null, player + " is already on your ignore list",
-                                    MessageType.GAME, 0, (String) null);
+                            this.showMessage(false, null, player + " is already on your ignore list",
+                                    MessageType.GAME, 0, null);
                             return;
                         }
 
                         if (SocialLists.ignoreListArg1[var4] != null
                                 && var3.equals(StringUtil.displayNameToKey(SocialLists.ignoreListArg1[var4]))) {
-                            this.showMessage(false, (String) null, player + " is already on your ignore list",
-                                    MessageType.GAME, 0, (String) null);
+                            this.showMessage(false, null, player + " is already on your ignore list",
+                                    MessageType.GAME, 0, null);
                             return;
                         }
                     }
 
                     for (var4 = 0; var4 < SocialLists.friendListCount; ++var4) {
                         if (var3.equals(StringUtil.displayNameToKey(SocialLists.friendList[var4]))) {
-                            this.showMessage(false, (String) null,
+                            this.showMessage(false, null,
                                     "Please remove " + player + " from your friends list first", MessageType.GAME, 0,
-                                    (String) null);
+                                    null);
                             return;
                         }
 
                         if (SocialLists.friendListOld[var4] != null
                                 && var3.equals(StringUtil.displayNameToKey(SocialLists.friendListOld[var4]))) {
-                            this.showMessage(false, (String) null,
+                            this.showMessage(false, null,
                                     "Please remove " + player + " from your friends list first", MessageType.GAME, 0,
-                                    (String) null);
+                                    null);
                             return;
                         }
                     }
@@ -1025,8 +984,8 @@ public final class mudclient implements Runnable {
                         this.packetHandler.getClientStream().writeBuffer1.putString(player);
                         this.packetHandler.getClientStream().finishPacket();
                     } else {
-                        this.showMessage(false, (String) null, "You can\'t add yourself to your ignore list",
-                                MessageType.GAME, 0, (String) null);
+                        this.showMessage(false, null, "You can\'t add yourself to your ignore list",
+                                MessageType.GAME, 0, null);
                     }
                 }
             }
@@ -1179,10 +1138,10 @@ public final class mudclient implements Runnable {
     private void autoRotateCamera(byte var1) {
         try {
 
-            if ((this.cameraAngle & 1) != 1 || !this.cameraColliding((int) this.cameraAngle)) {
-                if ((1 & this.cameraAngle) == 0 && this.cameraColliding((int) this.cameraAngle)) {
+            if ((this.cameraAngle & 1) != 1 || !this.cameraColliding(this.cameraAngle)) {
+                if ((1 & this.cameraAngle) == 0 && this.cameraColliding(this.cameraAngle)) {
                     if (!this.cameraColliding(1 + this.cameraAngle & 7)) {
-                        if (this.cameraColliding((int) (7 & 7 + this.cameraAngle))) {
+                        if (this.cameraColliding((7 & 7 + this.cameraAngle))) {
                             this.cameraAngle = 7 & 7 + this.cameraAngle;
                         }
                     } else {
@@ -1194,7 +1153,7 @@ public final class mudclient implements Runnable {
                     int var3 = 0;
                     if (var1 > 7) {
                         while (var3 < 7) {
-                            if (this.cameraColliding((int) (7 & 8 + this.cameraAngle + var2[var3]))) {
+                            if (this.cameraColliding((7 & 8 + this.cameraAngle + var2[var3]))) {
                                 this.cameraAngle = 7 & this.cameraAngle + var2[var3] + 8;
                                 break;
                             }
@@ -1202,8 +1161,8 @@ public final class mudclient implements Runnable {
                             ++var3;
                         }
 
-                        if ((1 & this.cameraAngle) == 0 && this.cameraColliding((int) this.cameraAngle)) {
-                            if (this.cameraColliding((int) (7 & 1 + this.cameraAngle))) {
+                        if ((1 & this.cameraAngle) == 0 && this.cameraColliding(this.cameraAngle)) {
+                            if (this.cameraColliding((7 & 1 + this.cameraAngle))) {
                                 this.cameraAngle = 1 + this.cameraAngle & 7;
                             } else if (this.cameraColliding(7 + this.cameraAngle & 7)) {
                                 this.cameraAngle = 7 & 7 + this.cameraAngle;
@@ -1291,8 +1250,8 @@ public final class mudclient implements Runnable {
 
             this.logoutTimeout = 0;
 
-            this.showMessage(false, (String) null, "Sorry, you can\'t logout at the moment", MessageType.GAME, 0,
-                    (String) null, "@cya@");
+            this.showMessage(false, null, "Sorry, you can\'t logout at the moment", MessageType.GAME, 0,
+                    null, "@cya@");
         } catch (RuntimeException var3) {
             throw GenUtil.makeThrowable(var3, "client.CB(" + var1 + ')');
         }
@@ -1354,7 +1313,6 @@ public final class mudclient implements Runnable {
                     this.packetHandler.getClientStream().newPacket(31);
                     this.packetHandler.getClientStream().finishPacketAndFlush();
                 } catch (IOException var4) {
-                    ;
                 }
             }
 
@@ -1380,14 +1338,14 @@ public final class mudclient implements Runnable {
             this.panelAppearance.addCenteredText(var6 + 55, 110 + var7, "Back", 3, true);
             var7 += 145;
             byte var4 = 54;
-            this.panelAppearance.addDecoratedBox((int) (var6 - var4), var7, 53, 41);
+            this.panelAppearance.addDecoratedBox((var6 - var4), var7, 53, 41);
             this.panelAppearance.addCenteredText(var6 - var4, var7 - 8, "Head", 1, true);
             this.panelAppearance.addCenteredText(var6 - var4, var7 + 8, "Type", 1, true);
             this.panelAppearance.addSprite(var6 - var4 - 40, var7, mudclient.spriteUtil + 7);
             this.controlButtonAppearanceHeadMinus = this.panelAppearance.addButton(-40 - var4 + var6, var7, 20, 20);
             this.panelAppearance.addSprite(var6 - var4 + 40, var7, 6 + mudclient.spriteUtil);
             this.controlButtonAppearanceHeadPlus = this.panelAppearance.addButton(var6 + (40 - var4), var7, 20, 20);
-            this.panelAppearance.addDecoratedBox((int) (var6 + var4), var7, 53, 41);
+            this.panelAppearance.addDecoratedBox((var6 + var4), var7, 53, 41);
             this.panelAppearance.addCenteredText(var6 + var4, var7 - 8, "Hair", 1, true);
             this.panelAppearance.addCenteredText(var4 + var6, 8 + var7, "Color", 1, true);
             this.panelAppearance.addSprite(var4 + (var6 - 40), var7, 7 + mudclient.spriteUtil);
@@ -1395,13 +1353,13 @@ public final class mudclient implements Runnable {
             this.panelAppearance.addSprite(40 + var4 + var6, var7, 6 + mudclient.spriteUtil);
             this.m_ed = this.panelAppearance.addButton(40 + var4 + var6, var7, 20, 20);
             var7 += 50;
-            this.panelAppearance.addDecoratedBox((int) (var6 - var4), var7, 53, 41);
+            this.panelAppearance.addDecoratedBox((var6 - var4), var7, 53, 41);
             this.panelAppearance.addCenteredText(var6 - var4, var7, "Gender", 1, true);
             this.panelAppearance.addSprite(var6 - var4 - 40, var7, mudclient.spriteUtil + 7);
             this.m_Ge = this.panelAppearance.addButton(var6 - 40 - var4, var7, 20, 20);
             this.panelAppearance.addSprite(40 - var4 + var6, var7, mudclient.spriteUtil + 6);
             this.m_Of = this.panelAppearance.addButton(40 + (var6 - var4), var7, 20, 20);
-            this.panelAppearance.addDecoratedBox((int) (var4 + var6), var7, 53, 41);
+            this.panelAppearance.addDecoratedBox((var4 + var6), var7, 53, 41);
             this.panelAppearance.addCenteredText(var4 + var6, var7 - 8, "Top", 1, true);
             this.panelAppearance.addCenteredText(var4 + var6, 8 + var7, "Color", 1, true);
             this.panelAppearance.addSprite(var6 + (var4 - 40), var7, 7 + mudclient.spriteUtil);
@@ -1413,14 +1371,14 @@ public final class mudclient implements Runnable {
                 this.renderLoginScreenViewports(-127);
             }
 
-            this.panelAppearance.addDecoratedBox((int) (var6 - var4), var7, 53, 41);
+            this.panelAppearance.addDecoratedBox((var6 - var4), var7, 53, 41);
             this.panelAppearance.addCenteredText(var6 - var4, var7 - 8, "Skin", 1, true);
             this.panelAppearance.addCenteredText(var6 - var4, var7 + 8, "Color", 1, true);
             this.panelAppearance.addSprite(var6 - 40 - var4, var7, 7 + mudclient.spriteUtil);
             this.m_Ze = this.panelAppearance.addButton(var6 - var4 - 40, var7, 20, 20);
             this.panelAppearance.addSprite(var6 - var4 + 40, var7, mudclient.spriteUtil + 6);
             this.m_Mj = this.panelAppearance.addButton(var6 + (40 - var4), var7, 20, 20);
-            this.panelAppearance.addDecoratedBox((int) (var4 + var6), var7, 53, 41);
+            this.panelAppearance.addDecoratedBox((var4 + var6), var7, 53, 41);
             this.panelAppearance.addCenteredText(var4 + var6, var7 - 8, "Bottom", 1, true);
             this.panelAppearance.addCenteredText(var4 + var6, var7 + 8, "Color", 1, true);
             this.panelAppearance.addSprite(var4 - 40 + var6, var7, mudclient.spriteUtil + 7);
@@ -1553,17 +1511,28 @@ public final class mudclient implements Runnable {
                     false);
             menuNewUserUsername = menuNewUser.addCenteredTextEntry(halfGameWidth() - 6, halfGameHeight() - 82, 200, 12, 40, 4, false, false);
 
-            menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 64, "@whi@Password must be at least between 4 and 64 characters long", 1, false);
-            menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 53, "@red@(DO NOT use the same password that you use elsewhere. Regular letters and numbers only)", 0, false);
+            if (!Config.wantEmail()) { // moves the password box down a bit for a clean look
+                menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 38, "@whi@Password must be at least between 4 and 64 characters long", 1, false);
+                menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 27, "@red@(DO NOT use the same password that you use elsewhere. Regular letters and numbers only)", 0, false);
 
-            menuNewUser.addButtonBackground(halfGameWidth() - 6, halfGameHeight() - 28, 420, 34);
-            menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 37, "Choose a Password (You will require this to login)", 4, false);
-            menuNewUserPassword = menuNewUser.addCenteredTextEntry(halfGameWidth(), halfGameHeight() - 20, 200, 64, 40, 4, true, false);
+                menuNewUser.addButtonBackground(halfGameWidth() - 6, halfGameHeight() - 1, 420, 34);
+                menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 6, "Choose a Password (You will require this to login)", 4, false);
+                menuNewUserPassword = menuNewUser.addCenteredTextEntry(halfGameWidth(), halfGameHeight() + 7, 200, 64, 40, 4, true, false);
+            } else { // leaves space for the email box below
+                menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 64, "@whi@Password must be at least between 4 and 64 characters long", 1, false);
+                menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 53, "@red@(DO NOT use the same password that you use elsewhere. Regular letters and numbers only)", 0, false);
 
-            menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 2, "@whi@It's recommended to use a valid email address", 1, false);
-            menuNewUser.addButtonBackground(halfGameWidth() - 6, halfGameHeight() + 26, 420, 34);
-            menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() + 17, "E-mail address", 4, false);
-            menuNewUserEmail = menuNewUser.addCenteredTextEntry(halfGameWidth(), halfGameHeight() + 34, 200, 40, 40, 4, false, false);
+                menuNewUser.addButtonBackground(halfGameWidth() - 6, halfGameHeight() - 28, 420, 34);
+                menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 37, "Choose a Password (You will require this to login)", 4, false);
+                menuNewUserPassword = menuNewUser.addCenteredTextEntry(halfGameWidth(), halfGameHeight() - 20, 200, 64, 40, 4, true, false);
+            }
+
+            if (Config.wantEmail()) {
+                menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 2, "@whi@It's recommended to use a valid email address", 1, false);
+                menuNewUser.addButtonBackground(halfGameWidth() - 6, halfGameHeight() + 26, 420, 34);
+                menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() + 17, "E-mail address", 4, false);
+                menuNewUserEmail = menuNewUser.addCenteredTextEntry(halfGameWidth(), halfGameHeight() + 34, 200, 40, 40, 4, false, false);
+            }
 
             // menuNewUser.addButtonBackground(250, i + 22, 420, 44);
 
@@ -1738,7 +1707,7 @@ public final class mudclient implements Runnable {
                 int var3;
                 // Limit menu items to 20
                 for (var3 = var2; var3 > 20; --var3) {
-                    this.menuCommon.removeItem((int) (var3 - 1));
+                    this.menuCommon.removeItem((var3 - 1));
                 }
 
                 int var4;
@@ -1803,7 +1772,7 @@ public final class mudclient implements Runnable {
                     var4 = -1;
 
                     for (var5 = 0; var5 < var3; ++var5) {
-                        String var6 = this.menuCommon.getItemActor((int) var5);
+                        String var6 = this.menuCommon.getItemActor(var5);
                         if (null != var6 && var6.length() > 0) {
                             var4 = var5;
                             break;
@@ -1814,11 +1783,11 @@ public final class mudclient implements Runnable {
                     if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell >= 0) && var3 == 1) {
                         var11 = "Choose a target";
                     } else if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell >= 0) && var3 > 1) {
-                        var11 = "@whi@" + this.menuCommon.getItemLabel((int) 0) + " "
-                                + this.menuCommon.getItemActor((int) 0);
+                        var11 = "@whi@" + this.menuCommon.getItemLabel(0) + " "
+                                + this.menuCommon.getItemActor(0);
                     } else if (var4 != -1) {
-                        var11 = this.menuCommon.getItemActor((int) var4) + ": @whi@"
-                                + this.menuCommon.getItemLabel((int) 0);
+                        var11 = this.menuCommon.getItemActor(var4) + ": @whi@"
+                                + this.menuCommon.getItemLabel(0);
                     }
 
                     if (var3 == 2 && null != var11) {
@@ -1841,7 +1810,7 @@ public final class mudclient implements Runnable {
                             this.packetHandler.getClientStream().writeBuffer1.putShort(this.m_Cg);
                             this.packetHandler.getClientStream().finishPacket();
                         } else {
-                            this.handleMenuItemClicked(false, (int) 0);
+                            this.handleMenuItemClicked(false, 0);
                         }
 
                         this.mouseButtonClick = 0;
@@ -1936,7 +1905,7 @@ public final class mudclient implements Runnable {
             if (!this.errorLoadingData) {
                 if (this.errorLoadingMemory) {
                     clientPort.drawOutOfMemoryError();
-                    this.setFPS((int) 1, (byte) 106);
+                    this.setFPS(1, (byte) 106);
                 } else {
                     try {
                         // if (var1) {
@@ -1954,7 +1923,7 @@ public final class mudclient implements Runnable {
 
                         if (this.currentViewMode == GameMode.GAME) {
                             this.getSurface().loggedIn = true;
-                            this.drawGame((int) 13);
+                            this.drawGame(13);
                         }
                     } catch (OutOfMemoryError var4) {
                         var4.printStackTrace();
@@ -1964,7 +1933,7 @@ public final class mudclient implements Runnable {
                 }
             } else {
                 clientPort.drawLoadingError();
-                this.setFPS((int) 1, (byte) 106);
+                this.setFPS(1, (byte) 106);
             }
         } catch (RuntimeException var5) {
             throw GenUtil.makeThrowable(var5, "client.JD()");
@@ -2218,7 +2187,7 @@ public final class mudclient implements Runnable {
             if (clickedIndex >= 0) {
                 this.mouseButtonClick = 0;
                 this.menuDuel_Visible = false;
-                MenuItemAction act = this.menuDuel.getItemAction((int) clickedIndex);
+                MenuItemAction act = this.menuDuel.getItemAction(clickedIndex);
                 int itemID = this.menuDuel.getItemIndexOrX(clickedIndex);
                 int firstItemIndex = -1;
                 int itemCount = 0;
@@ -2287,14 +2256,14 @@ public final class mudclient implements Runnable {
                         if (mouseX_Local > 216 && mouseY_Local > 30 && mouseX_Local < 462 && mouseY_Local < 235) {
                             int slot = (mouseX_Local - 217) / 49 + (mouseY_Local - 31) / 34 * 5;
                             if (slot >= 0 && this.inventoryItemCount > slot) {
-                                this.duelStakeItem((int) -1, slot);
+                                this.duelStakeItem(-1, slot);
                             }
                         }
 
                         if (mouseX_Local > 8 && mouseY_Local > 30 && mouseX_Local < 205 && mouseY_Local < 129) {
                             int slot = (mouseX_Local - 9) / 49 + (mouseY_Local - 31) / 34 * 4;
                             if (slot >= 0 && slot < this.duelOfferItemCount) {
-                                this.duelRemoveItem((int) slot, (int) -1);
+                                this.duelRemoveItem(slot, -1);
                             }
                         }
 
@@ -2960,7 +2929,7 @@ public final class mudclient implements Runnable {
                             }
                         }
 
-                        int invCount = this.getInventoryCount((int) id);
+                        int invCount = this.getInventoryCount(id);
                         if (invCount > 0 && mly >= 229 && mly <= 240) {
                             byte btnCount = 0;
                             if (mlx > 318 && mlx < 330) {
@@ -3014,7 +2983,7 @@ public final class mudclient implements Runnable {
 
             this.getSurface().drawString("Shops stock in green", 2 + xr, 24 + yr, '\uff00', 1);
             this.getSurface().drawString("Number you own in blue", xr + 135, yr + 24, '\uffff', 1);
-            this.getSurface().drawString("Your money: " + this.getInventoryCount((int) 10) + "gp",
+            this.getSurface().drawString("Your money: " + this.getInventoryCount(10) + "gp",
                     280 + xr, 24 + yr, 0xFFFF00, 1);
             {
                 int slot = 0;
@@ -3043,7 +3012,7 @@ public final class mudclient implements Runnable {
                             }
 
                             this.getSurface().drawString("" + this.shopItemCount[slot], 1 + sx, 10 + sy, '\uff00', 1);
-                            this.getSurface().b(47 + sx, "" + this.getInventoryCount((int) this.shopItemID[slot]),
+                            this.getSurface().b(47 + sx, "" + this.getInventoryCount(this.shopItemID[slot]),
                                     10 + sy, '\uffff', -80, 1);
                         }
 
@@ -3107,7 +3076,7 @@ public final class mudclient implements Runnable {
                         this.getSurface().drawString("X", 390 + xr, 214 + yr, color2, 3);
                     }
 
-                    int invCount = this.getInventoryCount((int) id);
+                    int invCount = this.getInventoryCount(id);
                     if (invCount <= 0) {
                         this.getSurface().drawColoredStringCentered(xr + 204,
                                 "You do not have any of this item to sell", 0xFFFF00, 0, 3, 239 + yr);
@@ -3190,7 +3159,7 @@ public final class mudclient implements Runnable {
                             if (mouseLX > 216 && mouseLY > 30 && mouseLX < 462 && mouseLY < 235) {
                                 int slot = (mouseLY - 31) / 34 * 5 + (mouseLX - 217) / 49;
                                 if (slot >= 0 && slot < this.inventoryItemCount) {
-                                    this.tradeOffer((int) -1, (int) slot);
+                                    this.tradeOffer(-1, slot);
                                 }
                             }
 
@@ -3346,7 +3315,7 @@ public final class mudclient implements Runnable {
             } else {
                 this.menuTrade_Visible = false;
                 this.mouseButtonClick = 0;
-                MenuItemAction act = this.menuTrade.getItemAction((int) clickOp);
+                MenuItemAction act = this.menuTrade.getItemAction(clickOp);
                 int itemID = this.menuTrade.getItemIndexOrX(clickOp);
                 int firstSlot = -1;
                 int itemCount = 0;
@@ -3383,7 +3352,7 @@ public final class mudclient implements Runnable {
                 }
 
                 if (firstSlot >= 0) {
-                    int modCount = this.menuTrade.getItemIdOrZ((int) clickOp);
+                    int modCount = this.menuTrade.getItemIdOrZ(clickOp);
                     if (modCount == -2) {
                         this.tradeDoX_Slot = firstSlot;
                         if (act == MenuItemAction.TRADE_OFFER) {
@@ -3569,7 +3538,7 @@ public final class mudclient implements Runnable {
             int var3 = yr;
             this.getSurface().drawBoxBorder(xr, 400, yr, var2, 0xFFFFFF);
             var3 += 20;
-            this.getSurface().drawColoredStringCentered(xr + 256 - 56, "Welcome to " + Config.SERVER_NAME + " " + this.localPlayer.accountName,
+            this.getSurface().drawColoredStringCentered(xr + 256 - 56, "Welcome to " + Config.getServerName() + " " + this.localPlayer.accountName,
                     0xFFFF00, 0, 4, var3);
             var3 += 30;
             String var4;
@@ -3845,7 +3814,7 @@ public final class mudclient implements Runnable {
                         }
                     }
 
-                    this.scene.reduceSprites((byte) 67, (int) this.spriteCount);
+                    this.scene.reduceSprites((byte) 67, this.spriteCount);
                     this.spriteCount = 0;
 
                     for (centerX = 0; this.playerCount > centerX; ++centerX) {
@@ -3988,7 +3957,7 @@ public final class mudclient implements Runnable {
                         centerX = this.cameraAutoRotatePlayerX + this.cameraRotationX;
                         centerZ = this.cameraAutoRotatePlayerZ + this.cameraRotationZ;
                         this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ), centerZ, cameraPitch,
-                                this.cameraRotation * 4, (int) 0, 2000);
+                                this.cameraRotation * 4, 0, 2000);
                     } else {
                         if (this.optionCameraModeAuto && !this.doCameraZoom) {
                             this.autoRotateCamera((byte) 94);
@@ -4016,7 +3985,7 @@ public final class mudclient implements Runnable {
                         centerZ = this.cameraAutoRotatePlayerZ + this.cameraRotationZ;
 
                         this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ), centerZ, cameraPitch,
-                                this.cameraRotation * 4, (int) 0, (int) this.cameraZoom * 2);
+                                this.cameraRotation * 4, 0, this.cameraZoom * 2);
                     }
 
                     this.scene.endScene(-113);
@@ -4232,13 +4201,13 @@ public final class mudclient implements Runnable {
                     this.panelMessageTabs.hide(this.panelMessagePrivate);
                     this.panelMessageTabs.hide(this.panelMessageClan);
                     if (this.messageTabSelected == MessageTab.CHAT) {
-                        this.panelMessageTabs.show((int) this.panelMessageChat);
+                        this.panelMessageTabs.show(this.panelMessageChat);
                     } else if (this.messageTabSelected == MessageTab.QUEST) {
-                        this.panelMessageTabs.show((int) this.panelMessageQuest);
+                        this.panelMessageTabs.show(this.panelMessageQuest);
                     } else if (this.messageTabSelected == MessageTab.PRIVATE) {
-                        this.panelMessageTabs.show((int) this.panelMessagePrivate);
+                        this.panelMessageTabs.show(this.panelMessagePrivate);
                     } else if (this.messageTabSelected == MessageTab.CLAN) {
-                        this.panelMessageTabs.show((int) this.panelMessageClan);
+                        this.panelMessageTabs.show(this.panelMessageClan);
                     }
 
                     MiscFunctions.textListEntryHeightMod = 2;
@@ -4331,21 +4300,21 @@ public final class mudclient implements Runnable {
                 if (this.inputX_Action == InputXAction.TRADE_OFFER) {
                     try {
                         if (str.length() > 10) {
-                            str = str.substring(str.length() - 10, str.length());
+                            str = str.substring(str.length() - 10);
                         }
                         int var4 = Integer.MAX_VALUE;
                         long intOverflowCheck = Long.parseLong(str);
                         if (intOverflowCheck < Integer.MAX_VALUE) {
                             var4 = Integer.parseInt(str);
                         }
-                        this.tradeOffer(var4, (int) this.tradeDoX_Slot);
+                        this.tradeOffer(var4, this.tradeDoX_Slot);
                     } catch (NumberFormatException var16) {
                         System.out.println("Trade offer X number format exception: " + var16);
                     }
                 } else if (this.inputX_Action == InputXAction.TRADE_REMOVE) {
                     try {
                         if (str.length() > 10) {
-                            str = str.substring(str.length() - 10, str.length());
+                            str = str.substring(str.length() - 10);
                         }
                         int var4 = Integer.MAX_VALUE;
                         long intOverflowCheck = Long.parseLong(str);
@@ -4360,7 +4329,7 @@ public final class mudclient implements Runnable {
                     try {
                         if (this.bank.selectedBankSlot >= 0) {
                             if (str.length() > 10) {
-                                str = str.substring(str.length() - 10, str.length());
+                                str = str.substring(str.length() - 10);
                             }
                             int var4 = Integer.MAX_VALUE;
                             long intOverflowCheck = Long.parseLong(str);
@@ -4377,7 +4346,7 @@ public final class mudclient implements Runnable {
                     try {
                         if (this.bank.selectedBankSlot >= 0) {
                             if (str.length() > 10) {
-                                str = str.substring(str.length() - 10, str.length());
+                                str = str.substring(str.length() - 10);
                             }
                             int var4 = Integer.MAX_VALUE;
                             long intOverflowCheck = Long.parseLong(str);
@@ -4394,7 +4363,7 @@ public final class mudclient implements Runnable {
                         int id = this.shopItemID[this.shopSelectedItemIndex];
                         if (id != -1) {
                             if (str.length() > 10) {
-                                str = str.substring(str.length() - 10, str.length());
+                                str = str.substring(str.length() - 10);
                             }
                             int var4 = Integer.MAX_VALUE;
                             long intOverflowCheck = Long.parseLong(str);
@@ -4416,7 +4385,7 @@ public final class mudclient implements Runnable {
                         int id = this.shopItemID[this.shopSelectedItemIndex];
                         if (id != -1) {
                             if (str.length() > 10) {
-                                str = str.substring(str.length() - 10, str.length());
+                                str = str.substring(str.length() - 10);
                             }
                             int var4 = Integer.MAX_VALUE;
                             long intOverflowCheck = Long.parseLong(str);
@@ -4436,7 +4405,7 @@ public final class mudclient implements Runnable {
                 } else if (this.inputX_Action == InputXAction.DUEL_STAKE) {
                     try {
                         if (str.length() > 10) {
-                            str = str.substring(str.length() - 10, str.length());
+                            str = str.substring(str.length() - 10);
                         }
                         int var4 = Integer.MAX_VALUE;
                         long intOverflowCheck = Long.parseLong(str);
@@ -4450,7 +4419,7 @@ public final class mudclient implements Runnable {
                 } else if (this.inputX_Action == InputXAction.DUEL_REMOVE) {
                     try {
                         if (str.length() > 10) {
-                            str = str.substring(str.length() - 10, str.length());
+                            str = str.substring(str.length() - 10);
                         }
                         int var4 = Integer.MAX_VALUE;
                         long intOverflowCheck = Long.parseLong(str);
@@ -4467,7 +4436,7 @@ public final class mudclient implements Runnable {
                 } else if (this.inputX_Action == InputXAction.DROP_X) {
                     try {
                         if (str.length() > 10) {
-                            str = str.substring(str.length() - 10, str.length());
+                            str = str.substring(str.length() - 10);
                         }
                         int var4 = Integer.MAX_VALUE;
                         long intOverflowCheck = Long.parseLong(str);
@@ -4532,7 +4501,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void drawLogin() {
+    private void drawLogin() {
         try {
             this.getSurface().interlace = false;
             this.welcomeScreenShown = false;
@@ -4540,21 +4509,21 @@ public final class mudclient implements Runnable {
             this.getSurface().blackScreen(true);
 
             if (this.loginScreenNumber == 0 || this.loginScreenNumber == 2 || this.loginScreenNumber == 3) {
-                int width = this.frameCounter * 2 % 3072;
-                if (width < 1024) {
+                int var2 = this.frameCounter * 2 % 3072;
+                if (var2 < 1024) {
                     this.getSurface().drawSprite(mudclient.spriteLogo, 0, Config.isAndroid() ? 140 : 10);
-                    if (width > 768) {
-                        this.getSurface().a(1 + mudclient.spriteLogo, 0, 0, width - 768, Config.isAndroid() ? 140 : 10);
+                    if (var2 > 768) {
+                        this.getSurface().a(1 + mudclient.spriteLogo, 0, 0, var2 - 768, Config.isAndroid() ? 140 : 10);
                     }
-                } else if (width < 2048) {
+                } else if (var2 < 2048) {
                     this.getSurface().drawSprite(1 + mudclient.spriteLogo, 0, Config.isAndroid() ? 140 : 10);
-                    if (width > 1792) {
-                        this.getSurface().a(mudclient.spriteMedia + 10, 0, 0, width - 1792, Config.isAndroid() ? 140 : 10); // Logo sprite
+                    if (var2 > 1792) {
+                        this.getSurface().a(mudclient.spriteMedia + 10, 0, 0, var2 - 1792, Config.isAndroid() ? 140 : 10); // Logo sprite
                     }
                 } else {
                     this.getSurface().drawSprite(mudclient.spriteMedia + 10, 0, Config.isAndroid() ? 140 : 10); // Logo sprite
-                    if (width > 2816) {
-                        this.getSurface().a(mudclient.spriteLogo, 0, 0, width - 2816, Config.isAndroid() ? 140 : 10);
+                    if (var2 > 2816) {
+                        this.getSurface().a(mudclient.spriteLogo, 0, 0, var2 - 2816, Config.isAndroid() ? 140 : 10);
                     }
                 }
             }
@@ -4587,7 +4556,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    public final void drawMenu() {
+    private void drawMenu() {
         try {
 
             if (this.mouseButtonClick == 0) {
@@ -4623,7 +4592,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final boolean drawMenuMessage(String otherAccountName, int var2, String otherDisplayName) {
+    private boolean drawMenuMessage(String otherAccountName, int var2, String otherDisplayName) {
         try {
             if (inWild) {
                 return false;
@@ -4682,7 +4651,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void drawMinimapEntity(int val, int x, byte var3, int y) {
+    private void drawMinimapEntity(int val, int x, byte var3, int y) {
         try {
             this.getSurface().setPixel(x, y, val);
 
@@ -5070,7 +5039,7 @@ public final class mudclient implements Runnable {
 
     }
 
-    private final void drawPopupReport(boolean var1) {
+    private void drawPopupReport(boolean var1) {
         try {
 
             if (this.inputTextFinal.length() > 0) {
@@ -5158,7 +5127,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void drawPopupSocial() {
+    private void drawPopupSocial() {
         try {
 
             int x = 106;
@@ -5284,7 +5253,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void drawTextBox(String line2, byte var2, String line1) {
+    private void drawTextBox(String line2, byte var2, String line1) {
         try {
 
             if (var2 == -64) {
@@ -5296,7 +5265,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void drawTradeConfirmDialog(int var1) {
+    private void drawTradeConfirmDialog(int var1) {
         try {
 
             byte var2 = 22;
@@ -5383,7 +5352,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void drawExperienceCounter(int skill) {
+    private void drawExperienceCounter(int skill) {
         if (!Config.S_EXPERIENCE_COUNTER_TOGGLE) return;
         if (selectedSkill >= 0) {
             skill = selectedSkill;
@@ -5518,12 +5487,12 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void drawExperienceConfig() {
+    private void drawExperienceConfig() {
         if (!Config.S_EXPERIENCE_COUNTER_TOGGLE) return;
         experienceConfigInterface.onRender(this.getSurface());
     }
 
-    private final void drawUi(int var1) {
+    private void drawUi(int var1) {
         try {
 
             boolean var2 = false;
@@ -5726,7 +5695,7 @@ public final class mudclient implements Runnable {
     }
 
     /* Game Screen Right Click Menu Definitions */
-    private final void drawUiTab0(int var1) {
+    private void drawUiTab0(int var1) {
         try {
             if (this.messageTabSelected == MessageTab.CHAT && this.panelMessageTabs.isClicked(this.panelMessageChat)
                     || this.messageTabSelected == MessageTab.QUEST
@@ -5772,7 +5741,7 @@ public final class mudclient implements Runnable {
                                 && this.getGameHeight() - i * 12 - 18 > this.mouseY
                                 && (this.mouseButtonClick == 2
                                 || this.optionMouseButtonOne && this.mouseButtonClick == 1)
-                                && this.drawMenuMessage(MessageHistory.messageHistoryClan[i], (int) 127,
+                                && this.drawMenuMessage(MessageHistory.messageHistoryClan[i], 127,
                                 MessageHistory.messageHistorySender[i])) {
                             return;
                         }
@@ -5791,7 +5760,7 @@ public final class mudclient implements Runnable {
             }
 
             int var2 = -1;
-            int var3 = this.scene.b((int) 0);
+            int var3 = this.scene.b(0);
             RSModel[] var18 = this.scene.b((byte) 124);
             int[] var19 = this.scene.getQB((byte) 104);
             if (var1 != 2) {
@@ -6070,7 +6039,7 @@ public final class mudclient implements Runnable {
                                 }
                             }
                         } else {
-                            this.addPlayerToMenu((int) var9);
+                            this.addPlayerToMenu(var9);
                         }
                     }
                 }
@@ -6117,7 +6086,7 @@ public final class mudclient implements Runnable {
     }
 
     /* Inventory Right Click Menu Definitions */
-    private final void drawUiTab1(int var1, boolean var2) {
+    private void drawUiTab1(int var1, boolean var2) {
         try {
             if (var1 != -15252) {
                 this.packetHandler.handlePacket2(-79, -83);
@@ -6228,7 +6197,7 @@ public final class mudclient implements Runnable {
     }
 
     /* Social Tab */
-    private final void drawUiTab5(boolean var1, boolean var2) {
+    private void drawUiTab5(boolean var1, boolean var2) {
         try {
             int var3 = this.getSurface().width2 - 199;
             byte var4 = 36;
@@ -6318,7 +6287,7 @@ public final class mudclient implements Runnable {
 
                     this.panelSocial.setListEntry(this.controlSocialPanel, index,
                             colorKey + var11 + "~" + (getGameWidth() - 73) + "~" + "@whi@Remove         WWWWWWWWWW", 0,
-                            (String) null, (String) null);
+                            null, null);
                 }
                 this.panelSocial.drawPanel();
             }
@@ -6337,7 +6306,7 @@ public final class mudclient implements Runnable {
 
                     this.panelSocial.setListEntry(this.controlSocialPanel, index,
                             "@yel@" + colorKey + "~" + (getGameWidth() - 73) + "~" + "@whi@Remove         WWWWWWWWWW",
-                            0, (String) null, (String) null);
+                            0, null, null);
                 }
 
                 this.panelSocial.drawPanel();
@@ -6372,7 +6341,7 @@ public final class mudclient implements Runnable {
                             ++var12;
                         }
                         this.panelClan.setListEntry(this.controlClanPanel, index, (clan.clanRank[index] == 0 ? "     " : "") + colorKey + clanIsh + "          ", (clan.clanRank[index] == 1 ? 3 : clan.clanRank[index] == 2 ? 4 : 0),
-                                (String) null, (String) null);
+                                null, null);
                     }
                     if (this.mouseX > var3 + 20 && this.mouseX < var3 + 94 && this.mouseY > var6 + (var4 + 26)
                             && this.mouseY < var6 + var4 + 60) {
@@ -6443,7 +6412,7 @@ public final class mudclient implements Runnable {
             this.m_wk = -1;
             int var17;
             if (this.panelSocialTab == 0) {
-                index = this.panelSocial.getControlSelectedListIndex((int) this.controlSocialPanel);
+                index = this.panelSocial.getControlSelectedListIndex(this.controlSocialPanel);
                 if (index >= 0 && this.mouseX < maxWidth) {
                     if (this.mouseX > minWidth) {
                         this.m_wk = -(index + 2);
@@ -6466,7 +6435,7 @@ public final class mudclient implements Runnable {
             }
 
             if (this.panelSocialTab == 2) {
-                index = this.panelSocial.getControlSelectedListIndex((int) this.controlSocialPanel);
+                index = this.panelSocial.getControlSelectedListIndex(this.controlSocialPanel);
                 if (index >= 0 && this.mouseX < maxWidth) {
                     if (this.mouseX <= minWidth) {
                         this.m_nj = index;
@@ -6534,7 +6503,7 @@ public final class mudclient implements Runnable {
                     this.panelSocial.handleMouse(var3 - 199 + this.getSurface().width2, var15 + 36,
                             this.currentMouseButtonDown, this.lastMouseButtonDown);
                     if (this.mouseButtonClick >= 1 && this.panelSocialTab == 0) {
-                        index = this.panelSocial.getControlSelectedListIndex((int) this.controlSocialPanel);
+                        index = this.panelSocial.getControlSelectedListIndex(this.controlSocialPanel);
                         if (index >= 0 && this.mouseX < maxWidth) {
                             if (this.mouseX > minWidth) { // Remove Friend
                                 this.removeFriend(SocialLists.friendList[index], (byte) 69);
@@ -6548,7 +6517,7 @@ public final class mudclient implements Runnable {
                     }
 
                     if (this.mouseButtonClick == 1 && this.panelSocialTab == 2) {
-                        index = this.panelSocial.getControlSelectedListIndex((int) this.controlSocialPanel);
+                        index = this.panelSocial.getControlSelectedListIndex(this.controlSocialPanel);
                         if (index >= 0 && this.mouseX < maxWidth && this.mouseX > minWidth) {
                             this.removeIgnore(SocialLists.ignoreList[index]); // Remove Ignore
                         }
@@ -6576,7 +6545,7 @@ public final class mudclient implements Runnable {
                     this.panelClan.handleMouse(var3 - 199 + this.getSurface().width2, var15 + 36,
                             this.currentMouseButtonDown, this.lastMouseButtonDown);
                     if (this.mouseButtonClick >= 1 && this.panelSocialTab == 1) {
-                        index = this.panelClan.getControlSelectedListIndex((int) this.controlClanPanel);
+                        index = this.panelClan.getControlSelectedListIndex(this.controlClanPanel);
                         if (index >= 0 && this.mouseX < maxWidth) {
                             if (mouseButtonClick == 2) {
                                 if (StringUtil.displayNameToKey(clan.username[index]).equals(StringUtil.displayNameToKey(this.localPlayer.accountName))) {
@@ -6609,7 +6578,6 @@ public final class mudclient implements Runnable {
                                             MenuItemAction.CHAT_ADD_FRIEND, clan.username[index]);
 
                                 }
-                                return;
                             }
                         }
                     }
@@ -6620,7 +6588,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void drawUiTabMagic(boolean var1, byte var2) {
+    private void drawUiTabMagic(boolean var1, byte var2) {
         try {
             int var3 = this.getSurface().width2 - 199;
             byte var4 = 36;
@@ -6676,11 +6644,11 @@ public final class mudclient implements Runnable {
                                 .setListEntry(this.controlMagicPanel, var9++,
                                         var11 + "Level " + EntityHandler.getSpellDef(var10).getReqLevel() + ": "
                                                 + EntityHandler.getSpellDef(var10).getName(),
-                                        0, (String) null, (String) null);
+                                        0, null, null);
                     }
 
                     this.panelMagic.drawPanel();
-                    var10 = this.panelMagic.getControlSelectedListIndex((int) this.controlMagicPanel);
+                    var10 = this.panelMagic.getControlSelectedListIndex(this.controlMagicPanel);
                     if (var10 != -1) {
                         this.getSurface().drawString(
                                 "Level " + EntityHandler.getSpellDef(var10).getReqLevel() + ": "
@@ -6694,7 +6662,7 @@ public final class mudclient implements Runnable {
                             this.getSurface().drawSprite(
                                     EntityHandler.getItemDef(var12).getSprite() + mudclient.spriteItem,
                                     2 + var3 + var18 * 44, var4 + 150);
-                            var13 = this.getInventoryCount((int) var12);
+                            var13 = this.getInventoryCount(var12);
                             int var14 = e.getValue();
                             String var15 = "@red@";
                             if (this.hasRunes(var12, var14)) {
@@ -6727,7 +6695,7 @@ public final class mudclient implements Runnable {
                                 .setListEntry(this.controlMagicPanel, var9++,
                                         var11 + "Level " + EntityHandler.getPrayerDef(var10).getReqLevel() + ": "
                                                 + EntityHandler.getPrayerDef(var10).getName(),
-                                        0, (String) null, (String) null);
+                                        0, null, null);
                     }
 
                     this.panelMagic.drawPanel();
@@ -6772,17 +6740,17 @@ public final class mudclient implements Runnable {
                             if (var9 != -1) {
                                 var10 = this.playerStatCurrent[6];
                                 if (var10 < EntityHandler.getSpellDef(var9).getReqLevel()) {
-                                    this.showMessage(false, (String) null,
+                                    this.showMessage(false, null,
                                             "Your magic ability is not high enough for this spell", MessageType.GAME, 0,
-                                            (String) null);
+                                            null);
                                 } else {
                                     int k3 = 0;
                                     for (Entry<Integer, Integer> e : EntityHandler.getSpellDef(var9)
                                             .getRunesRequired()) {
                                         if (!hasRunes(e.getKey(), e.getValue())) {
-                                            this.showMessage(false, (String) null,
+                                            this.showMessage(false, null,
                                                     "You don\'t have all the reagents you need for this spell",
-                                                    MessageType.GAME, 0, (String) null);
+                                                    MessageType.GAME, 0, null);
                                             k3 = -1;
                                             break;
                                         }
@@ -6801,29 +6769,29 @@ public final class mudclient implements Runnable {
                         }
 
                         if (this.mouseButtonClick == 1 && this.m_Ji == 1) {
-                            var9 = this.panelMagic.getControlSelectedListIndex((int) this.controlMagicPanel);
+                            var9 = this.panelMagic.getControlSelectedListIndex(this.controlMagicPanel);
                             if (var9 != -1) {
                                 var10 = this.playerStatBase[5];
                                 if (var10 < EntityHandler.getPrayerDef(var9).getReqLevel()) {
-                                    this.showMessage(false, (String) null,
+                                    this.showMessage(false, null,
                                             "Your prayer ability is not high enough for this prayer", MessageType.GAME,
-                                            0, (String) null);
+                                            0, null);
                                 } else if (this.playerStatCurrent[5] == 0) {
-                                    this.showMessage(false, (String) null,
+                                    this.showMessage(false, null,
                                             "You have run out of prayer points. Return to a church to recharge",
-                                            MessageType.GAME, 0, (String) null);
+                                            MessageType.GAME, 0, null);
                                 } else if (!this.prayerOn[var9]) {
                                     this.packetHandler.getClientStream().newPacket(60);
                                     this.packetHandler.getClientStream().writeBuffer1.putByte(var9);
                                     this.packetHandler.getClientStream().finishPacket();
                                     this.prayerOn[var9] = true;
-                                    this.playSoundFile((String) "prayeron");
+                                    this.playSoundFile("prayeron");
                                 } else {
                                     this.packetHandler.getClientStream().newPacket(254);
                                     this.packetHandler.getClientStream().writeBuffer1.putByte(var9);
                                     this.packetHandler.getClientStream().finishPacket();
                                     this.prayerOn[var9] = false;
-                                    this.playSoundFile((String) "prayeroff");
+                                    this.playSoundFile("prayeroff");
                                 }
                             }
                         }
@@ -6838,7 +6806,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void drawUiTabMinimap(boolean var1, byte var2) {
+    private void drawUiTabMinimap(boolean var1, byte var2) {
         try {
             int var3 = this.getSurface().width2 - 199;
             short var4 = 156;
@@ -6848,7 +6816,7 @@ public final class mudclient implements Runnable {
             this.getSurface().drawBox(var3, 36, var4, var5, 0);
             this.getSurface().setClip(var3, var4 + var3, 36 + var5, 36);
             if (var2 <= 119) {
-                this.characterHealthBar = (int[]) null;
+                this.characterHealthBar = null;
             }
 
             int var6 = 192 + this.minimapRandom_2;
@@ -6942,7 +6910,7 @@ public final class mudclient implements Runnable {
                     mX = var12 + this.localPlayer.currentX;
                     mZ = this.localPlayer.currentZ - mZ;
                     if (this.mouseButtonClick == 1) {
-                        this.walkToActionSource(this.playerLocalX, this.playerLocalZ, mX / 128, (int) (mZ / 128),
+                        this.walkToActionSource(this.playerLocalX, this.playerLocalZ, mX / 128, (mZ / 128),
                                 false);
                     }
                     this.mouseButtonClick = 0;
@@ -6955,7 +6923,7 @@ public final class mudclient implements Runnable {
     }
 
     /* Settings Menu */
-    private final void drawUiTabOptions(int var1, boolean mustTrackMouse) {
+    private void drawUiTabOptions(int var1, boolean mustTrackMouse) {
         try {
             int var3 = this.getSurface().width2 - 199;
             this.getSurface().drawSprite(mudclient.spriteMedia + 6, var3 - 49, 3);
@@ -7078,7 +7046,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void drawAndroidSettingsBox(int var3, byte var4, short var5, int unchosenColor, int chosenColor) {
+    private void drawAndroidSettingsBox(int var3, byte var4, short var5, int unchosenColor, int chosenColor) {
         if (this.settingTab == 0) {
             this.getSurface().drawBoxAlpha(var3, 36, var5, 25, GenUtil.buildColor(181, 181, 181), 160);
             this.getSurface().drawBoxAlpha(var3, 61, var5, 105, GenUtil.buildColor(201, 201, 201), 160);
@@ -7105,7 +7073,7 @@ public final class mudclient implements Runnable {
         this.getSurface().drawColoredStringCentered(var3 + var5 / 4 + 2 * var5 / 3 - 15, "Android", 0, 0, 4, 16 + var4 - 25);
     }
 
-    private final void drawCustomSettingsBox(int var3, byte var4, short var5, int chosenColor, int unchosenColor) {
+    private void drawCustomSettingsBox(int var3, byte var4, short var5, int chosenColor, int unchosenColor) {
         if (this.settingTab == 0) {
             this.getSurface().drawBoxAlpha(var3, var4 - 25, var5 / 2, 24, chosenColor, 128);
             this.getSurface().drawBoxAlpha(var5 / 2 + var3, var4 - 25, var5 / 2, 24, unchosenColor, 128);
@@ -7124,7 +7092,7 @@ public final class mudclient implements Runnable {
         this.getSurface().drawBoxAlpha(var3, 261, var5, 40, GenUtil.buildColor(201, 201, 201), 160);
     }
 
-    private final void drawSocialSettingsOptions(int var3, short var5, int var6, int var7) {
+    private void drawSocialSettingsOptions(int var3, short var5, int var6, int var7) {
         this.getSurface().drawString("Privacy settings", 3 + var3, var7, 0, 1);
 
         var7 += 15;
@@ -7221,7 +7189,7 @@ public final class mudclient implements Runnable {
         this.getSurface().drawString("Click here to logout", var3 + 3, var7, var8, 1);
     }
 
-    private final void drawGeneralSettingsOptions(int var3, short var5, int var6, int var7) {
+    private void drawGeneralSettingsOptions(int var3, short var5, int var6, int var7) {
         this.panelSettings.clearList(this.controlSettingPanel);
         int index = 0;
         this.getSurface().drawString("Game options", 3 + var3, var7, 0, 1);
@@ -7229,38 +7197,38 @@ public final class mudclient implements Runnable {
         // Camera angle mode
         if (this.optionCameraModeAuto) {
             this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                    "@whi@Camera angle mode - @gre@Auto", 0, (String) null, (String) null);
+                    "@whi@Camera angle mode - @gre@Auto", 0, null, null);
         } else {
             this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                    "@whi@Camera angle mode - @red@Manual", 0, (String) null, (String) null);
+                    "@whi@Camera angle mode - @red@Manual", 0, null, null);
         }
 
         // Mouse Buttons
         if (this.optionMouseButtonOne) {
             this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                    "@whi@Mouse buttons - @red@One", 1, (String) null, (String) null);
+                    "@whi@Mouse buttons - @red@One", 1, null, null);
         } else {
             this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                    "@whi@Mouse buttons - @gre@Two", 1, (String) null, (String) null);
+                    "@whi@Mouse buttons - @gre@Two", 1, null, null);
         }
 
         // Sound Effects
         if (this.optionSoundDisabled) {
             this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                    "@whi@Sound effects - @red@off", 2, (String) null, (String) null);
+                    "@whi@Sound effects - @red@off", 2, null, null);
         } else {
             this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                    "@whi@Sound effects - @gre@on", 2, (String) null, (String) null);
+                    "@whi@Sound effects - @gre@on", 2, null, null);
         }
 
         // Batch Progress Bar
         if (Config.S_BATCH_PROGRESSION) {
             if (!Config.C_BATCH_PROGRESS_BAR) {
                 this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                        "@whi@Batch Progress Bar - @red@Off", 3, (String) null, (String) null);
+                        "@whi@Batch Progress Bar - @red@Off", 3, null, null);
             } else {
                 this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                        "@whi@Batch Progress Bar - @gre@On", 3, (String) null, (String) null);
+                        "@whi@Batch Progress Bar - @gre@On", 3, null, null);
             }
         }
 
@@ -7268,10 +7236,10 @@ public final class mudclient implements Runnable {
         if (Config.S_EXPERIENCE_DROPS_TOGGLE) {
             if (!Config.C_EXPERIENCE_DROPS) {
                 this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                        "@whi@Experience Drops - @red@Off", 4, (String) null, (String) null);
+                        "@whi@Experience Drops - @red@Off", 4, null, null);
             } else {
                 this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                        "@whi@Experience Drops - @gre@On", 4, (String) null, (String) null);
+                        "@whi@Experience Drops - @gre@On", 4, null, null);
             }
         }
 
@@ -7279,10 +7247,10 @@ public final class mudclient implements Runnable {
         if (Config.S_FOG_TOGGLE) {
             if (!Config.C_SHOW_FOG) {
                 this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                        "@whi@Fog - @red@Off", 6, (String) null, (String) null);
+                        "@whi@Fog - @red@Off", 6, null, null);
             } else {
                 this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                        "@whi@Fog - @gre@On", 6, (String) null, (String) null);
+                        "@whi@Fog - @gre@On", 6, null, null);
             }
         }
 
@@ -7290,10 +7258,10 @@ public final class mudclient implements Runnable {
         if (Config.S_SHOW_ROOF_TOGGLE) {
             if (!Config.C_HIDE_ROOFS) {
                 this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                        "@whi@Hide Roofs - @red@Off", 7, (String) null, (String) null);
+                        "@whi@Hide Roofs - @red@Off", 7, null, null);
             } else {
                 this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                        "@whi@Hide Roofs - @gre@On", 7, (String) null, (String) null);
+                        "@whi@Hide Roofs - @gre@On", 7, null, null);
             }
         }
 
@@ -7302,17 +7270,17 @@ public final class mudclient implements Runnable {
             this.panelSettings.setListEntry(this.controlSettingPanel, index++,
                     "@whi@Ground Items - " + (Config.C_SHOW_GROUND_ITEMS == 0 ? "@gre@Show ALL"
                             : Config.C_SHOW_GROUND_ITEMS == 1 ? "@red@Hide ALL"
-                            : Config.C_SHOW_GROUND_ITEMS == 2 ? "@gr1@Only Bones" : "@ora@No Bones"), 8, (String) null, (String) null);
+                            : Config.C_SHOW_GROUND_ITEMS == 2 ? "@gr1@Only Bones" : "@ora@No Bones"), 8, null, null);
         }
 
         // Auto Message Switch
         if (Config.S_AUTO_MESSAGE_SWITCH_TOGGLE) {
             if (!Config.C_MESSAGE_TAB_SWITCH) {
                 this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                        "@whi@Auto Message Switch - @red@Off", 9, (String) null, (String) null);
+                        "@whi@Auto Message Switch - @red@Off", 9, null, null);
             } else {
                 this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                        "@whi@Auto Message Switch - @gre@On", 9, (String) null, (String) null);
+                        "@whi@Auto Message Switch - @gre@On", 9, null, null);
             }
         }
 
@@ -7320,10 +7288,10 @@ public final class mudclient implements Runnable {
         if (Config.S_SIDE_MENU_TOGGLE) {
             if (!Config.C_SIDE_MENU_OVERLAY) {
                 this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                        "@whi@Side Menu - @red@Off", 10, (String) null, (String) null);
+                        "@whi@Side Menu - @red@Off", 10, null, null);
             } else {
                 this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                        "@whi@Side Menu - @gre@On", 10, (String) null, (String) null);
+                        "@whi@Side Menu - @gre@On", 10, null, null);
             }
         }
 
@@ -7331,37 +7299,37 @@ public final class mudclient implements Runnable {
         if (Config.S_WANT_KILL_FEED) {
             if (!Config.C_KILL_FEED) {
                 this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                        "@whi@Kill Feed - @red@Off", 11, (String) null, (String) null);
+                        "@whi@Kill Feed - @red@Off", 11, null, null);
             } else {
                 this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                        "@whi@Kill Feed - @gre@On", 11, (String) null, (String) null);
+                        "@whi@Kill Feed - @gre@On", 11, null, null);
             }
         }
 
         // Combat Style
         if (Config.S_MENU_COMBAT_STYLE_TOGGLE)
-            this.panelSettings.setListEntry(this.controlSettingPanel, index++, "@whi@Combat Style - " + (this.combatStyle == 0 ? "@yel@Controlled" : this.combatStyle == 1 ? "@red@Aggressive" : this.combatStyle == 2 ? "@ora@Accurate" : "@gre@Defensive"), 12, (String) null, (String) null);
+            this.panelSettings.setListEntry(this.controlSettingPanel, index++, "@whi@Combat Style - " + (this.combatStyle == 0 ? "@yel@Controlled" : this.combatStyle == 1 ? "@red@Aggressive" : this.combatStyle == 2 ? "@ora@Accurate" : "@gre@Defensive"), 12, null, null);
 
         // Fightmode Selector
         if (Config.S_FIGHTMODE_SELECTOR_TOGGLE)
             this.panelSettings.setListEntry(this.controlSettingPanel, index++,
                     "@whi@Fightmode Selector - " + (Config.C_FIGHT_MENU == 0 ? "@red@Never"
-                            : Config.C_FIGHT_MENU == 1 ? "@yel@In Combat" : "@gre@Always"), 13, (String) null, (String) null);
+                            : Config.C_FIGHT_MENU == 1 ? "@yel@In Combat" : "@gre@Always"), 13, null, null);
 
         // Experience Counter
         if (Config.S_EXPERIENCE_COUNTER_TOGGLE)
             this.panelSettings.setListEntry(this.controlSettingPanel, index++,
                     "@whi@Experience Counter - " + (Config.C_EXPERIENCE_COUNTER == 0 ? "@red@Never"
-                            : Config.C_EXPERIENCE_COUNTER == 1 ? "@yel@Recent" : "@gre@Always"), 14, (String) null, (String) null);
+                            : Config.C_EXPERIENCE_COUNTER == 1 ? "@yel@Recent" : "@gre@Always"), 14, null, null);
 
         // Inventory Count
         if (Config.S_INVENTORY_COUNT_TOGGLE) {
             if (!Config.C_INV_COUNT) {
                 this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                        "@whi@Inventory Count - @red@Off", 15, (String) null, (String) null);
+                        "@whi@Inventory Count - @red@Off", 15, null, null);
             } else {
                 this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                        "@whi@Inventory Count - @gre@On", 15, (String) null, (String) null);
+                        "@whi@Inventory Count - @gre@On", 15, null, null);
             }
         }
 
@@ -7387,38 +7355,38 @@ public final class mudclient implements Runnable {
 
     }
 
-    private final void drawAndroidSettingsOptions(int var3, short var5, int var6, int var7) {
+    private void drawAndroidSettingsOptions(int var3, short var5, int var6, int var7) {
         this.panelSettings.clearList(this.controlSettingPanel);
         int index = 0;
         this.getSurface().drawString("Android options", 3 + var3, var7, 0, 1);
         this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                "@whi@Hold-time for Menu - @gre@" + Config.C_LONG_PRESS_TIMER + "ms", 0, (String) null, (String) null);
+                "@whi@Hold-time for Menu - @gre@" + Config.C_LONG_PRESS_TIMER + "ms", 0, null, null);
 
         this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                "@whi@Menu Size - @lre@Font " + (Config.C_MENU_SIZE), 1, (String) null, (String) null);
+                "@whi@Menu Size - @lre@Font " + (Config.C_MENU_SIZE), 1, null, null);
 
         if (!Config.C_HOLD_AND_CHOOSE) {
             this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                    "@whi@Hold and Choose - @red@Off", 2, (String) null, (String) null);
+                    "@whi@Hold and Choose - @red@Off", 2, null, null);
         } else {
             this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                    "@whi@Hold and Choose - @gre@On", 2, (String) null, (String) null);
+                    "@whi@Hold and Choose - @gre@On", 2, null, null);
         }
 
         if (!Config.C_SWIPE_TO_SCROLL) {
             this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                    "@whi@Swipe to Scroll - @red@Off", 3, (String) null, (String) null);
+                    "@whi@Swipe to Scroll - @red@Off", 3, null, null);
         } else {
             this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                    "@whi@Swipe to Scroll - @gre@On", 3, (String) null, (String) null);
+                    "@whi@Swipe to Scroll - @gre@On", 3, null, null);
         }
 
         if (!Config.C_SWIPE_TO_ROTATE) {
             this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                    "@whi@Swipe to Rotate - @red@Off", 4, (String) null, (String) null);
+                    "@whi@Swipe to Rotate - @red@Off", 4, null, null);
         } else {
             this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                    "@whi@Swipe to Rotate - @gre@On", 4, (String) null, (String) null);
+                    "@whi@Swipe to Rotate - @gre@On", 4, null, null);
         }
 
         var7 += 195;
@@ -7433,7 +7401,7 @@ public final class mudclient implements Runnable {
         this.panelSettings.drawPanel();
     }
 
-    private final void handleGeneralSettingsClicks(short var5, int var6, int var7) {
+    private void handleGeneralSettingsClicks(short var5, int var6, int var7) {
         int settingIndex = -1;
         int checkPosition = this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel);
         if (checkPosition >= 0)
@@ -7581,7 +7549,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void handleSocialSettingsClicks(short var5, int var6, int var7) {
+    private void handleSocialSettingsClicks(short var5, int var6, int var7) {
         boolean var11 = false;
 
         var7 += 24;
@@ -7697,7 +7665,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void handleAndroidSettingsClicks(short var5, int var6, int var7) {
+    private void handleAndroidSettingsClicks(short var5, int var6, int var7) {
         int checkPosition = this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel);
         int settingIndex = checkPosition;
 
@@ -7742,7 +7710,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void drawAuthenticSettingsOptions(int var3, byte var4, short var5, int var6, int var7, int chosenColor, int unchosenColor) {
+    private void drawAuthenticSettingsOptions(int var3, byte var4, short var5, int var6, int var7, int chosenColor, int unchosenColor) {
         int index = 0;
         this.getSurface().drawString("Game options - click to toggle", 3 + var3, var7, 0, 1);
 
@@ -7840,7 +7808,7 @@ public final class mudclient implements Runnable {
         this.getSurface().drawString("Click here to logout", var3 + 3, var7, var8, 1);
     }
 
-    private final void handleAuthenticSettingsClicks(short var5, int var6, int var7) {
+    private void handleAuthenticSettingsClicks(short var5, int var6, int var7) {
 
         var7 += 15;
 
@@ -7968,7 +7936,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void drawUiTabPlayerInfo(boolean var1, int var2) {
+    private void drawUiTabPlayerInfo(boolean var1, int var2) {
         try {
 
             int x = this.surface.width2 - 199;
@@ -8116,13 +8084,13 @@ public final class mudclient implements Runnable {
                 this.panelQuestInfo.clearList(this.controlQuestInfoPanel);
                 int index = 0, questNum = 0;
                 this.panelQuestInfo.setListEntry(this.controlQuestInfoPanel, index++,
-                        "@whi@Quest-list (green=completed)", 0, (String) null, (String) null);
+                        "@whi@Quest-list (green=completed)", 0, null, null);
                 for (questNum = 0; questNum < 50; ++questNum) {
                     if (this.questNames[questNum] != null) {
                         this.panelQuestInfo.setListEntry(this.controlQuestInfoPanel, index++,
                                 (questStages[questNum] < 0 ? "@gre@" : "@red@")//questStages[questNum] > 0 ? "@yel@" : "@gre@")
                                         + this.questNames[questNum],
-                                0, (String) null, (String) null);
+                                0, null, null);
                     }
                 }
 
@@ -8170,7 +8138,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void duelRemoveItem(int itemIndex, int removeCount) {
+    private void duelRemoveItem(int itemIndex, int removeCount) {
         try {
 
             int itemID = this.duelOfferItemID[itemIndex];
@@ -8219,7 +8187,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void duelStakeItem(int andStakeCount, int andStakeInvIndex) {
+    private void duelStakeItem(int andStakeCount, int andStakeInvIndex) {
         try {
 
             boolean andStakeSuccess = false;
@@ -8258,8 +8226,8 @@ public final class mudclient implements Runnable {
 
             if (EntityHandler.getItemDef(andStakeInvID).quest && !localPlayer.isAdmin()) {
                 andStakeSuccess = true;
-                this.showMessage(false, (String) null, "This object cannot be added to a duel offer", MessageType.GAME,
-                        0, (String) null);
+                this.showMessage(false, null, "This object cannot be added to a duel offer", MessageType.GAME,
+                        0, null);
             }
 
             if (!andStakeSuccess) {
@@ -8308,7 +8276,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void fetchContainerSize() {
+    private void fetchContainerSize() {
         try {
 
             //getSurface().resize(this.gameWidth, this.gameHeight + 12);
@@ -8396,7 +8364,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final ORSCharacter getServerNPC(int serverIndex) {
+    private ORSCharacter getServerNPC(int serverIndex) {
         try {
 
 
@@ -8412,7 +8380,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final ORSCharacter getServerPlayer(int serverIndex) {
+    private ORSCharacter getServerPlayer(int serverIndex) {
         try {
 
 
@@ -8428,7 +8396,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void handleAppearancePanelControls(int var1) {
+    private void handleAppearancePanelControls(int var1) {
         try {
             this.panelAppearance.handleMouse(this.mouseX, this.mouseY, this.currentMouseButtonDown,
                     this.lastMouseButtonDown);
@@ -8438,8 +8406,7 @@ public final class mudclient implements Runnable {
                     do {
                         this.appearanceHeadType = (EntityHandler.animationCount() + (this.appearanceHeadType - 1))
                                 % EntityHandler.animationCount();
-                    }
-                    while ((3 & EntityHandler.getAnimationDef(this.appearanceHeadType).getGenderModel()) != 1);
+                    } while ((3 & EntityHandler.getAnimationDef(this.appearanceHeadType).getGenderModel()) != 1);
                 } while ((EntityHandler.getAnimationDef(this.appearanceHeadType).getGenderModel()
                         & this.appearanceHeadGender * 4) == 0);
             }
@@ -8448,8 +8415,7 @@ public final class mudclient implements Runnable {
                 do {
                     do {
                         this.appearanceHeadType = (1 + this.appearanceHeadType) % EntityHandler.animationCount();
-                    }
-                    while (1 != (3 & EntityHandler.getAnimationDef(this.appearanceHeadType).getGenderModel()));
+                    } while (1 != (3 & EntityHandler.getAnimationDef(this.appearanceHeadType).getGenderModel()));
                 } while ((EntityHandler.getAnimationDef(this.appearanceHeadType).getGenderModel()
                         & this.appearanceHeadGender * 4) == 0);
             }
@@ -8468,7 +8434,6 @@ public final class mudclient implements Runnable {
                         || (EntityHandler.getAnimationDef(this.appearanceHeadType).getGenderModel()
                         & this.appearanceHeadGender * 4) == 0; this.appearanceHeadType = (1
                         + this.appearanceHeadType) % EntityHandler.animationCount()) {
-                    ;
                 }
 
                 while ((3 & EntityHandler.getAnimationDef(this.m_dk).getGenderModel()) != 2
@@ -8528,7 +8493,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void handleGameInput() {
+    private void handleGameInput() {
         try {
 
             if (this.systemUpdate > 1) {
@@ -8661,15 +8626,15 @@ public final class mudclient implements Runnable {
                     if (this.deathScreenTimeout > 0) {
                         --this.deathScreenTimeout;
                         if (this.deathScreenTimeout == 0) {
-                            this.showMessage(false, (String) null,
+                            this.showMessage(false, null,
                                     "You have been granted another life. Be more careful this time!", MessageType.GAME,
-                                    0, (String) null);
+                                    0, null);
                         }
 
                         if (this.deathScreenTimeout == 0) {
-                            this.showMessage(false, (String) null,
+                            this.showMessage(false, null,
                                     "You retain your skills. Your objects land where you died", MessageType.GAME, 0,
-                                    (String) null);
+                                    null);
                         }
                     }
                 }
@@ -9245,7 +9210,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void handleLoginScreenInput(int var1) {
+    private void handleLoginScreenInput(int var1) {
         try {
             if (var1 != 2) {
                 this.optionsMenuShow = true;
@@ -9269,24 +9234,36 @@ public final class mudclient implements Runnable {
                     if (menuNewUser.isClicked(menuNewUserCancel))
                         loginScreenNumber = 0;
                     if (menuNewUser.isClicked(menuNewUserSubmit)) {
-                        if (menuNewUser.getControlText(menuNewUserUsername) != null
-                                && menuNewUser.getControlText(menuNewUserUsername).length() == 0
-                                || menuNewUser.getControlText(menuNewUserPassword) != null
-                                && menuNewUser.getControlText(menuNewUserPassword).length() == 0
-                                || menuNewUser.getControlText(menuNewUserEmail) != null
-                                && menuNewUser.getControlText(menuNewUserEmail).length() == 0) {
-                            menuNewUser.setText(menuNewUserStatus, "Please fill in ALL requested");
-                            menuNewUser.setText(menuNewUserStatus2, "information to continue!");
-                            return;
+                        if (Config.wantEmail()) {
+                            if (menuNewUser.getControlText(menuNewUserUsername) != null
+                                    && menuNewUser.getControlText(menuNewUserUsername).length() == 0
+                                    || menuNewUser.getControlText(menuNewUserPassword) != null
+                                    && menuNewUser.getControlText(menuNewUserPassword).length() == 0
+                                    || menuNewUser.getControlText(menuNewUserEmail) != null
+                                    && menuNewUser.getControlText(menuNewUserEmail).length() == 0) {
+                                menuNewUser.setText(menuNewUserStatus, "Please fill in all requested");
+                                menuNewUser.setText(menuNewUserStatus2, "information to continue!");
+                                return;
+                            }
+                        } else {
+                            if (menuNewUser.getControlText(menuNewUserUsername) != null
+                                    && menuNewUser.getControlText(menuNewUserUsername).length() == 0
+                                    || menuNewUser.getControlText(menuNewUserPassword) != null
+                                    && menuNewUser.getControlText(menuNewUserPassword).length() == 0) {
+                                menuNewUser.setText(menuNewUserStatus, "Please fill in all requested");
+                                menuNewUser.setText(menuNewUserStatus2, "information to continue!");
+                                return;
+                            }
                         }
+
                         menuNewUser.setText(menuNewUserStatus, "Please wait...");
                         menuNewUser.setText(menuNewUserStatus2, "Creating new account");
 
                         String username = menuNewUser.getControlText(menuNewUserUsername);
                         String password = menuNewUser.getControlText(menuNewUserPassword);
                         String email = menuNewUser.getControlText(menuNewUserEmail);
+
                         sendRegister(username, password, email);
-                        return;
                     }
                 } else if (this.loginScreenNumber == 2) {
                     this.panelLogin.handleMouse(this.mouseX, this.mouseY, this.currentMouseButtonDown,
@@ -9346,7 +9323,7 @@ public final class mudclient implements Runnable {
                     this.panelLogin.setFocus(this.controlLoginUser);
                 } else if (panelLoginWelcome.isClicked(loginButtonNewUser)) {
                     loginScreenNumber = 1;
-                    this.menuNewUser.setText(this.menuNewUserStatus, "Please fill in ALL fields");
+                    this.menuNewUser.setText(this.menuNewUserStatus, "Please fill in all fields");
                     this.menuNewUser.setText(this.menuNewUserStatus2, "and click submit.");
                     menuNewUser.setFocus(menuNewUserUsername);
                 }
@@ -9363,7 +9340,6 @@ public final class mudclient implements Runnable {
             try {
                 GenUtil.sleepShadow(2000L);
             } catch (Exception var14) {
-                ;
             }
             this.showLoginScreenStatus("Sorry! The server is currently full.", "Please try again later");
         }
@@ -9396,7 +9372,6 @@ public final class mudclient implements Runnable {
         }
         if (!isValidEmailAddress(email)) {
             showLoginScreenStatus("Invalid email address", "please use a valid email address");
-            return;
         }
         try {
             this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(Config.SERVER_PORT, Config.SERVER_IP), this.packetHandler));
@@ -9405,7 +9380,9 @@ public final class mudclient implements Runnable {
             this.packetHandler.getClientStream().newPacket(78);
             this.packetHandler.getClientStream().writeBuffer1.putString(user);
             this.packetHandler.getClientStream().writeBuffer1.putString(pass);
-            this.packetHandler.getClientStream().writeBuffer1.putString(email);
+            if (Config.wantEmail()) {
+                this.packetHandler.getClientStream().writeBuffer1.putString(email);
+            }
             this.packetHandler.getClientStream().finishPacketAndFlush();
 
             int registerResponse = this.packetHandler.getClientStream().read();
@@ -9414,11 +9391,7 @@ public final class mudclient implements Runnable {
             if (registerResponse == 0) {
                 panelLogin.setText(controlLoginUser, username.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ").trim());
                 panelLogin.setText(controlLoginPass, password);
-                // menuNewUser.setText
-                // menuNewUser.setText(menuNewUserUsername, "");
-                // menuNewUser.setText(menuNewUserPassword, "");
-                // menuNewUser.setText(menuNewUserEmail, "");
-                // login(-12, user, pass, false);
+
                 showLoginScreenStatus("Account created", "you can now login with your user");
                 return;
             }
@@ -9442,20 +9415,12 @@ public final class mudclient implements Runnable {
                 showLoginScreenStatus("You have registered recently", "to prevent flooding, wait an hour.");
                 return;
             }
-            if (registerResponse == 5) {
-                showLoginScreenStatus("Error while registering", "please try again.");
-                return;
-            }
             if (registerResponse == 6) {
                 showLoginScreenStatus("Invalid e-mail address", "please use a valid email address");
                 return;
             }
             if (registerResponse == 7) {
                 showLoginScreenStatus("Username must be 2-12", "characters long!");
-                return;
-            }
-            if (registerResponse == 6) {
-                showLoginScreenStatus("Password is too long, please use", "password with length of 4-16");
                 return;
             }
             showLoginScreenStatus("Error unable to login.", "Unrecognised response code");
@@ -9466,13 +9431,13 @@ public final class mudclient implements Runnable {
 
     }
 
-    private final void handleMenuItemClicked(boolean var1, int item) {
+    private void handleMenuItemClicked(boolean var1, int item) {
         try {
 
-            MenuItemAction var3 = this.menuCommon.getItemAction((int) item);
+            MenuItemAction var3 = this.menuCommon.getItemAction(item);
             int indexOrX = this.menuCommon.getItemIndexOrX(item);
-            int idOrZ = this.menuCommon.getItemIdOrZ((int) item);
-            int dir = this.menuCommon.getItemDirection((int) item);
+            int idOrZ = this.menuCommon.getItemIdOrZ(item);
+            int dir = this.menuCommon.getItemDirection(item);
             int tileID = this.menuCommon.getItemTileID(item);
             int var8 = this.menuCommon.getItemParam_l(item);
             String var9 = this.menuCommon.getItemStringB(item);
@@ -9516,8 +9481,8 @@ public final class mudclient implements Runnable {
                     break;
                 }
                 case GROUND_ITEM_EXAMINE: {
-                    this.showMessage(false, (String) null, EntityHandler.getItemDef(indexOrX).getDescription(),
-                            MessageType.GAME, 0, (String) null);
+                    this.showMessage(false, null, EntityHandler.getItemDef(indexOrX).getDescription(),
+                            MessageType.GAME, 0, null);
                     break;
                 }
                 case ITEM_EXAMINE: {
@@ -9527,8 +9492,8 @@ public final class mudclient implements Runnable {
                     //					+ EntityHandler.getItemDef(indexOrX).getDescription(),
                     //					MessageType.GAME, 0, (String) null, (String) null);
                     //} else {
-                    this.showMessage(false, (String) null, EntityHandler.getItemDef(indexOrX).getDescription(),
-                            MessageType.GAME, 0, (String) null);
+                    this.showMessage(false, null, EntityHandler.getItemDef(indexOrX).getDescription(),
+                            MessageType.GAME, 0, null);
                     //}
                     break;
                 }
@@ -9574,8 +9539,8 @@ public final class mudclient implements Runnable {
                     break;
                 }
                 case WALL_EXAMINE: {
-                    this.showMessage(false, (String) null, EntityHandler.getDoorDef(indexOrX).getDescription(),
-                            MessageType.GAME, 0, (String) null);
+                    this.showMessage(false, null, EntityHandler.getDoorDef(indexOrX).getDescription(),
+                            MessageType.GAME, 0, null);
                     break;
                 }
                 case OBJECT_CAST_SPELL: {
@@ -9616,8 +9581,8 @@ public final class mudclient implements Runnable {
                     break;
                 }
                 case OBJECT_EXAMINE: {
-                    this.showMessage(false, (String) null, EntityHandler.getObjectDef(indexOrX).getDescription(),
-                            MessageType.GAME, 0, (String) null);
+                    this.showMessage(false, null, EntityHandler.getObjectDef(indexOrX).getDescription(),
+                            MessageType.GAME, 0, null);
                     break;
                 }
                 case ITEM_CAST_SPELL: {
@@ -9675,9 +9640,9 @@ public final class mudclient implements Runnable {
                     if (!Config.isAndroid())
                         this.showUiTab = 0;
                     this.selectedItemInventoryIndex = -1;
-                    this.showMessage(false, (String) null,
+                    this.showMessage(false, null,
                             "Dropping " + EntityHandler.getItemDef(this.inventoryItemID[indexOrX]).getName(),
-                            MessageType.INVENTORY, 0, (String) null);
+                            MessageType.INVENTORY, 0, null);
                     break;
                 }
                 case ITEM_DROP_X: {
@@ -9692,7 +9657,7 @@ public final class mudclient implements Runnable {
                     }
                     cTileX = (character.currentX - 64) / this.tileSize;
                     cTileZ = (character.currentZ - 64) / this.tileSize;
-                    this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, (int) cTileZ, true);
+                    this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, cTileZ, true);
                     this.packetHandler.getClientStream().newPacket(50);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
@@ -9708,7 +9673,7 @@ public final class mudclient implements Runnable {
                     }
                     cTileX = (character.currentX - 64) / this.tileSize;
                     cTileZ = (character.currentZ - 64) / this.tileSize;
-                    this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, (int) cTileZ, true);
+                    this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, cTileZ, true);
                     this.packetHandler.getClientStream().newPacket(135);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ);
@@ -9723,7 +9688,7 @@ public final class mudclient implements Runnable {
                     }
                     cTileX = (character.currentX - 64) / this.tileSize;
                     cTileZ = (character.currentZ - 64) / this.tileSize;
-                    this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, (int) cTileZ, true);
+                    this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, cTileZ, true);
                     this.packetHandler.getClientStream().newPacket(153);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
                     this.packetHandler.getClientStream().finishPacket();
@@ -9736,7 +9701,7 @@ public final class mudclient implements Runnable {
                     }
                     cTileX = (character.currentX - 64) / this.tileSize;
                     cTileZ = (character.currentZ - 64) / this.tileSize;
-                    this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, (int) cTileZ, true);
+                    this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, cTileZ, true);
                     this.packetHandler.getClientStream().newPacket(202);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
                     this.packetHandler.getClientStream().finishPacket();
@@ -9749,7 +9714,7 @@ public final class mudclient implements Runnable {
                     }
                     cTileX = (character.currentX - 64) / this.tileSize;
                     cTileZ = (character.currentZ - 64) / this.tileSize;
-                    this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, (int) cTileZ, true);
+                    this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, cTileZ, true);
                     this.packetHandler.getClientStream().newPacket(203);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
                     this.packetHandler.getClientStream().finishPacket();
@@ -9763,15 +9728,15 @@ public final class mudclient implements Runnable {
                     }
                     cTileX = (character.currentX - 64) / this.tileSize;
                     cTileZ = (character.currentZ - 64) / this.tileSize;
-                    this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, (int) cTileZ, true);
+                    this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, cTileZ, true);
                     this.packetHandler.getClientStream().newPacket(190);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
                     this.packetHandler.getClientStream().finishPacket();
                     break;
                 }
                 case NPC_EXAMINE: {
-                    this.showMessage(false, (String) null, EntityHandler.getNpcDef(indexOrX).getDescription(),
-                            MessageType.GAME, 0, (String) null);
+                    this.showMessage(false, null, EntityHandler.getNpcDef(indexOrX).getDescription(),
+                            MessageType.GAME, 0, null);
                     break;
                 }
                 case PLAYER_CAST_SPELL: {
@@ -9781,7 +9746,7 @@ public final class mudclient implements Runnable {
                     }
                     cTileX = (character.currentX - 64) / this.tileSize;
                     cTileZ = (character.currentZ - 64) / this.tileSize;
-                    this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, (int) cTileZ, true);
+                    this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, cTileZ, true);
                     this.packetHandler.getClientStream().newPacket(229);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
@@ -9797,7 +9762,7 @@ public final class mudclient implements Runnable {
                     }
                     cTileX = (character.currentX - 64) / this.tileSize;
                     cTileZ = (character.currentZ - 64) / this.tileSize;
-                    this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, (int) cTileZ, true);
+                    this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, cTileZ, true);
                     this.packetHandler.getClientStream().newPacket(113);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ);
@@ -9813,7 +9778,7 @@ public final class mudclient implements Runnable {
                     }
                     cTileX = (character.currentX - 64) / this.tileSize;
                     cTileZ = (character.currentZ - 64) / this.tileSize;
-                    this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, (int) cTileZ, true);
+                    this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, cTileZ, true);
                     this.packetHandler.getClientStream().newPacket(171);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
                     this.packetHandler.getClientStream().finishPacket();
@@ -9861,7 +9826,7 @@ public final class mudclient implements Runnable {
                     break;
                 }
                 case LANDSCAPE_CAST_SPELL: {
-                    this.walkToActionSource(this.playerLocalX, this.playerLocalZ, indexOrX, (int) idOrZ, true);
+                    this.walkToActionSource(this.playerLocalX, this.playerLocalZ, indexOrX, idOrZ, true);
                     this.packetHandler.getClientStream().newPacket(158);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(dir);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX + this.midRegionBaseX);
@@ -9872,7 +9837,7 @@ public final class mudclient implements Runnable {
                     break;
                 }
                 case LANDSCAPE_WALK_HERE: {
-                    this.walkToActionSource(this.playerLocalX, this.playerLocalZ, indexOrX, (int) idOrZ, false);
+                    this.walkToActionSource(this.playerLocalX, this.playerLocalZ, indexOrX, idOrZ, false);
                     if (this.mouseClickXStep == -24) {
                         this.mouseClickXStep = 24;
                     }
@@ -9980,7 +9945,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void handleReportAbuseClick() {
+    private void handleReportAbuseClick() {
         try {
             this.reportAbuse_AbuseType = 0;
 
@@ -10291,7 +10256,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void handleTabUIClick() {
+    private void handleTabUIClick() {
         try {
             if (this.showUiTab == 0 && this.mouseX >= this.getSurface().width2 - 35 && this.mouseY >= 3
                     && this.mouseX < this.getSurface().width2 - 3 && this.mouseY < 35) {
@@ -10380,7 +10345,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final boolean hasRunes(int rune, int count) {
+    private boolean hasRunes(int rune, int count) {
         try {
 
             if (rune == 31) {// fire
@@ -10396,13 +10361,13 @@ public final class mudclient implements Runnable {
                 if (this.isEquipped(103) || this.isEquipped(618) || this.isEquipped(685))
                     return true;
             }
-            return this.getInventoryCount((int) rune) >= count;
+            return this.getInventoryCount(rune) >= count;
         } catch (RuntimeException var5) {
             throw GenUtil.makeThrowable(var5, "client.OA(" + "dummy" + ',' + count + ',' + rune + ')');
         }
     }
 
-    private final boolean isEquipped(int id) {
+    private boolean isEquipped(int id) {
         try {
 
 
@@ -10417,7 +10382,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void jumpToLogin() {
+    private void jumpToLogin() {
         try {
             this.logoutTimeout = 0;
             this.loginScreenNumber = 0;
@@ -10450,12 +10415,12 @@ public final class mudclient implements Runnable {
                 return theUID;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace(); // Localhost often causes an error to be printed, not important to see
         }
         return 0L;
     }
 
-    public String getMacAddress() {
+    private String getMacAddress() {
         try {
             InetAddress a = InetAddress.getLocalHost();
             NetworkInterface n = NetworkInterface.getByInetAddress(a);
@@ -10471,7 +10436,7 @@ public final class mudclient implements Runnable {
         return "failed";
     }
 
-    private final void loadEntities(boolean var1) {
+    private void loadEntities(boolean var1) {
         clientPort.showLoadingProgress(30, "people and monsters");
         int animationNumber = 0;
         label0:
@@ -10502,16 +10467,16 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void loadGameConfig(boolean var1) {
+    private void loadGameConfig(boolean var1) {
         try {
             clientPort.showLoadingProgress(1, "Loading Configuration");
-            EntityHandler.load(this.serverTypeMembers);
+            EntityHandler.load(Config.MEMBER_WORLD);
         } catch (RuntimeException var3) {
             throw GenUtil.makeThrowable(var3, "client.CE(" + var1 + ')');
         }
     }
 
-    private final void loadMedia(byte var1) {
+    private void loadMedia(byte var1) {
         clientPort.showLoadingProgress(20, "2d graphics");
         loadSprite(spriteMedia, "media", 1);
         loadSprite(spriteMedia + 1, "media", 6);
@@ -10552,7 +10517,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void loadModels(boolean var1) {
+    private void loadModels(boolean var1) {
         byte[] models = unpackData("models.orsc", "3d models", 60);
 
         String[] modelNames = {"torcha2", "torcha3", "torcha4", "skulltorcha2", "skulltorcha3", "skulltorcha4",
@@ -10707,7 +10672,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void loadSounds() {
+    private void loadSounds() {
         try {
             File folder = new File(Config.F_CACHE_DIR + System.getProperty("file.separator"));
             File[] listOfFiles = folder.listFiles();
@@ -10722,7 +10687,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void loadTextures(byte var1) {
+    private void loadTextures(byte var1) {
         clientPort.showLoadingProgress(50, "Textures");
         this.scene.setFrustum(0, 11, 7, EntityHandler.textureCount());
         for (int i = 0; i < EntityHandler.textureCount(); i++) {
@@ -10730,7 +10695,7 @@ public final class mudclient implements Runnable {
             Sprite sprite = getSurface().sprites[spriteTexture + i];
             int length = sprite.getWidth() * sprite.getHeight();
             int[] pixels = sprite.getPixels();
-            int ai1[] = new int[32768];
+            int[] ai1 = new int[32768];
             for (int k = 0; k < length; k++) {
                 ai1[((pixels[k] & 0xf80000) >> 9) + ((pixels[k] & 0xf800) >> 6) + ((pixels[k] & 0xf8) >> 3)]++;
             }
@@ -10792,7 +10757,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void loadSprite(int id, String packageName, int amount) {
+    private void loadSprite(int id, String packageName, int amount) {
         for (int i = id; i < id + amount; i++) {
             if (!getSurface().loadSprite(i, packageName)) {
                 errorLoadingData = true;
@@ -10801,7 +10766,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void login(int var1, String pass, String user, boolean reconnecting) {
+    private void login(int var1, String pass, String user, boolean reconnecting) {
         try {
 
             this.m_Zb = 0;
@@ -10811,7 +10776,6 @@ public final class mudclient implements Runnable {
                 try {
                     GenUtil.sleepShadow(2000L);
                 } catch (Exception var14) {
-                    ;
                 }
 
                 this.showLoginScreenStatus("Sorry! The server is currently full.", "Please try again later");
@@ -10890,7 +10854,7 @@ public final class mudclient implements Runnable {
                             this.m_Ce = var11 & 3;
                             this.autoLoginTimeout = 0;
                             this.m_Oj = (var11 & 63) >> 2;
-                            this.resetGame((int) -109);
+                            this.resetGame(-109);
                             return;
                         }
 
@@ -11039,7 +11003,6 @@ public final class mudclient implements Runnable {
                             try {
                                 GenUtil.sleepShadow(5000L);
                             } catch (Exception var12) {
-                                ;
                             }
 
                             --this.autoLoginTimeout;
@@ -11058,7 +11021,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void lostConnection(int var1) {
+    private void lostConnection(int var1) {
         try {
 
             this.systemUpdate = 0;
@@ -11087,9 +11050,9 @@ public final class mudclient implements Runnable {
                     return;
                 try {
                     // Comment out all of this for Android
-                    /*Clip clip = AudioSystem.getClip();
-                    clip.open(AudioSystem.getAudioInputStream(sound));
-                    clip.start();*/
+                    //Clip clip = AudioSystem.getClip();
+                    //clip.open(AudioSystem.getAudioInputStream(sound));
+                    //clip.start();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -11100,7 +11063,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void putStringPair(String str1, String str2) {
+    private void putStringPair(String str1, String str2) {
         try {
             this.packetHandler.getClientStream().newPacket(218);
             this.packetHandler.getClientStream().writeBuffer1.putString(str1);
@@ -11112,7 +11075,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void removeFriend(String var1, byte var2) {
+    private void removeFriend(String var1, byte var2) {
         try {
             String var3 = StringUtil.displayNameToKey(var1);
             if (var3 != null) {
@@ -11140,7 +11103,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void removeIgnore(String name) {
+    private void removeIgnore(String name) {
         try {
 
             String findKey = StringUtil.displayNameToKey(name);
@@ -11175,7 +11138,7 @@ public final class mudclient implements Runnable {
         byte sector_h = 0; // sector h
         byte sector_x = 50; // sector x
         byte sector_y = 50; // sector y    (h0x50y50 - Lumbridge sector) (h0x50y39 - deep wilderness sector)
-        this.world.loadSections(sector_x * 48 + 23, (int) (sector_y * 48 + 23), sector_h);
+        this.world.loadSections(sector_x * 48 + 23, (sector_y * 48 + 23), sector_h);
         this.world.addLoginScreenModels(this.modelCache);
         this.worldComponentsLoaded = true;
     }
@@ -11196,10 +11159,10 @@ public final class mudclient implements Runnable {
             short rotation = 888;
             this.scene.fogZFalloff = 1;
             this.scene.fogSmoothingStartDistance = 10000;
-            this.scene.setCamera(slide_x, -this.world.getElevation(slide_x, slide_y), slide_y, 912, rotation, (int) 0, zoom_distance * 2);
+            this.scene.setCamera(slide_x, -this.world.getElevation(slide_x, slide_y), slide_y, 912, rotation, 0, zoom_distance * 2);
             this.scene.endScene(-124);
             if (var1 >= -48) {
-                this.localPlayer = (ORSCharacter) null;
+                this.localPlayer = null;
             }
 
             this.getSurface().fade2black(16316665);
@@ -11218,7 +11181,7 @@ public final class mudclient implements Runnable {
             }
 
             if (Config.DISPLAY_LOGO_SPRITE) {
-                this.getSurface().drawSprite(Integer.parseInt(Config.getLogoSpriteId()), 15, 15);
+                this.getSurface().drawSprite((int) Config.getcLogoSpriteId(), 15, 15);
             }
             //this.getSurface().drawColoredStringCentered(250, "Open RSC", 0xFFFFFF, 0, 7, 110); // width, title, color, crown sprite, font size, height
             this.getSurface().storeSpriteVert(spriteLogo, 0, 0, getGameWidth(), halfGameHeight() + 33);
@@ -11232,7 +11195,7 @@ public final class mudclient implements Runnable {
             this.scene.fogZFalloff = 1;
             this.scene.fogSmoothingStartDistance = 10000;
             this.scene.fogEntityDistance = 10000;
-            this.scene.setCamera(slide_x, -this.world.getElevation(slide_x, slide_y), slide_y, 912, rotation, (int) 0, zoom_distance * 2);
+            this.scene.setCamera(slide_x, -this.world.getElevation(slide_x, slide_y), slide_y, 912, rotation, 0, zoom_distance * 2);
             this.scene.endScene(-114);
             this.getSurface().fade2black(16316665);
             this.getSurface().fade2black(16316665);
@@ -11249,7 +11212,7 @@ public final class mudclient implements Runnable {
             }
 
             if (Config.DISPLAY_LOGO_SPRITE) {
-                this.getSurface().drawSprite(Integer.parseInt(Config.getLogoSpriteId()), 15, 15);
+                this.getSurface().drawSprite((int) Config.getcLogoSpriteId(), 15, 15);
             }
             //this.getSurface().drawColoredStringCentered(250, "Open RSC", 0xFFFFFF, 0, 7, 110); // width, title, color, crown sprite, font size, height
             this.getSurface().storeSpriteVert(spriteLogo + 1, 0, 0, getGameWidth(), halfGameHeight() + 33);
@@ -11272,7 +11235,7 @@ public final class mudclient implements Runnable {
             this.scene.fogEntityDistance = 10000;
             this.scene.fogZFalloff = 1;
             this.scene.fogSmoothingStartDistance = 10000;
-            this.scene.setCamera(slide_x, -this.world.getElevation(slide_x, slide_y), slide_y, 912, rotation, (int) 0, zoom_distance * 2);
+            this.scene.setCamera(slide_x, -this.world.getElevation(slide_x, slide_y), slide_y, 912, rotation, 0, zoom_distance * 2);
             this.scene.endScene(-111);
 
             this.getSurface().fade2black(16316665);
@@ -11290,7 +11253,7 @@ public final class mudclient implements Runnable {
             }
 
             if (Config.DISPLAY_LOGO_SPRITE) {
-                this.getSurface().drawSprite(Integer.parseInt(Config.getLogoSpriteId()), 15, 15);
+                this.getSurface().drawSprite((int) Config.getcLogoSpriteId(), 15, 15);
             }
             //this.getSurface().drawColoredStringCentered(250, "Open RSC", 0xFFFFFF, 0, 7, 110); // width, title, color, crown sprite, font size, height
             this.getSurface().storeSpriteVert(spriteMedia + 10, 0, 0, getGameWidth(), halfGameHeight() + 33);
@@ -11323,7 +11286,7 @@ public final class mudclient implements Runnable {
             for (i = 0; i < this.gameObjectInstanceCount; ++i) {
                 this.scene.removeModel(this.gameObjectInstanceModel[i]);
                 this.world.removeGameObject_CollisonFlags(this.gameObjectInstanceID[i],
-                        (int) this.gameObjectInstanceX[i], (int) this.gameObjectInstanceZ[i]);
+                        this.gameObjectInstanceX[i], this.gameObjectInstanceZ[i]);
             }
 
             for (i = 0; i < this.wallObjectInstanceCount; ++i) {
@@ -11394,7 +11357,7 @@ public final class mudclient implements Runnable {
             this.playerCount = 0;
             this.loginScreenNumber = 0;
             if (var1 != -88) {
-                this.teleportBubbleType = (int[]) null;
+                this.teleportBubbleType = null;
             }
 
             this.currentViewMode = GameMode.LOGIN;
@@ -11408,7 +11371,7 @@ public final class mudclient implements Runnable {
     // This seems to be having trouble. The decryption function is known to work
     // and the encryption function is the mirror of it. Thus the problem is
     // confusing.
-    private final void sendChatMessage(String var1) {
+    private void sendChatMessage(String var1) {
         try {
             this.packetHandler.getClientStream().newPacket(216);
             RSBufferUtils.putEncryptedString(this.packetHandler.getClientStream().writeBuffer1, var1);
@@ -11428,13 +11391,13 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void sendLogout(int var1) {
+    private void sendLogout(int var1) {
         try {
             if (this.currentViewMode != GameMode.LOGIN) {
                 if (this.combatTimeout <= 450) {
                     if (var1 < this.combatTimeout) {
-                        this.showMessage(false, (String) null, "You can\'t logout for 10 seconds after combat",
-                                MessageType.GAME, 0, (String) null, "@cya@");
+                        this.showMessage(false, null, "You can\'t logout for 10 seconds after combat",
+                                MessageType.GAME, 0, null, "@cya@");
                     } else {
                         this.packetHandler.getClientStream().newPacket(102);
                         this.packetHandler.getClientStream().finishPacket();
@@ -11442,8 +11405,8 @@ public final class mudclient implements Runnable {
                         // this.createLoginPanels(3845);
                     }
                 } else {
-                    this.showMessage(false, (String) null, "You can\'t logout during combat!", MessageType.GAME, 0,
-                            (String) null, "@cya@");
+                    this.showMessage(false, null, "You can\'t logout during combat!", MessageType.GAME, 0,
+                            null, "@cya@");
                 }
             }
         } catch (RuntimeException var3) {
@@ -11451,8 +11414,8 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final boolean sendWalkToGroundItem(int startX, int startZ, int x1, int x2, int z1, int z2, boolean var4,
-                                               boolean var9) {
+    private boolean sendWalkToGroundItem(int startX, int startZ, int x1, int x2, int z1, int z2, boolean var4,
+                                         boolean var9) {
         try {
 
             int var10 = this.world.findPath(this.pathX, this.pathZ, startX, startZ, x1, x2, z1, z2, var4);
@@ -11492,7 +11455,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void setEGTo77() {
+    private void setEGTo77() {
         try {
 
             this.m_eg = 77;
@@ -11502,7 +11465,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void showItemModX(InputXAction action, String[] lines, boolean var4, String defaultText) {
+    private void showItemModX(InputXAction action, String[] lines, boolean var4, String defaultText) {
         try {
             this.inputX_Lines = lines;
             this.inputX_Width = 400;
@@ -11539,7 +11502,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void showLoginScreenStatus(String a, String b) {
+    private void showLoginScreenStatus(String a, String b) {
         try {
 
             if (this.loginScreenNumber == 2) {
@@ -11568,7 +11531,7 @@ public final class mudclient implements Runnable {
     }
 
     public final void showMessage(boolean crownEnabled, String sender, String message, MessageType type, int crownID, String formerName) {
-        showMessage(crownEnabled, sender, message, type, crownID, formerName, (String) null);
+        showMessage(crownEnabled, sender, message, type, crownID, formerName, null);
     }
 
     public final void showMessage(boolean crownEnabled, String sender, String message, MessageType type, int crownID,
@@ -11659,10 +11622,10 @@ public final class mudclient implements Runnable {
             if (type == MessageType.QUEST) {
                 if (this.panelMessageTabs.controlScrollAmount[this.panelMessageQuest] != this.panelMessageTabs.controlListCurrentSize[this.panelMessageQuest]
                         - 4) {
-                    this.panelMessageTabs.addToList(msg, false, 0, (String) null, (String) null,
+                    this.panelMessageTabs.addToList(msg, false, 0, null, null,
                             this.panelMessageQuest);
                 } else {
-                    this.panelMessageTabs.addToList(msg, true, 0, (String) null, (String) null, this.panelMessageQuest);
+                    this.panelMessageTabs.addToList(msg, true, 0, null, null, this.panelMessageQuest);
                 }
             }
             if (type == MessageType.GLOBAL_CHAT) {
@@ -11740,7 +11703,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    final void startGame(byte var1) {
+    private void startGame(byte var1) {
         try {
             this.fetchContainerSize();
             if (!clientPort.drawLoading(2)) {
@@ -12520,7 +12483,7 @@ public final class mudclient implements Runnable {
     }
 
     public void setStatFatigue(int fatigue) {
-        if (DEBUG)
+        if (Config.DEBUG)
             System.out.println("Fatigue: " + fatigue);
         this.statFatigue = fatigue;
     }
@@ -12534,7 +12497,7 @@ public final class mudclient implements Runnable {
     }
 
     public Sprite makeSleepSprite(ByteArrayInputStream x) {
-        return this.clientPort.getSpriteFromByteArray(x);
+        return clientPort.getSpriteFromByteArray(x);
     }
 
     public void setSleepingStatusText(String s) {
@@ -12651,11 +12614,11 @@ public final class mudclient implements Runnable {
             int experienceFactor = 1 + i;
             int experienceIncrease = (int) (300D * Math.pow(2.0D, experienceFactor / 7D) + experienceFactor);
             experience += experienceIncrease;
-            this.experienceArray[i] = (int) ((experience & 0xffffffc) / 4);
+            this.experienceArray[i] = (experience & 0xffffffc) / 4;
         }
     }
 
-    final void getServerConfig() {
+    private void getServerConfig() {
         try {
             this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(Config.SERVER_PORT, Config.SERVER_IP), this.packetHandler));
             this.packetHandler.getClientStream().newPacket(19);
@@ -12670,19 +12633,60 @@ public final class mudclient implements Runnable {
 
     final void continueStartGame(byte var1) {
         System.out.println("Got server configs!");
+        if (Config.DEBUG) {
+            System.out.println("Debug server configs received:");
+            System.out.println(Config.SERVER_NAME + " 1");
+            System.out.println(Config.SERVER_NAME_WELCOME + " 2");
+            System.out.println(Config.S_PLAYER_LEVEL_LIMIT + " 3");
+            System.out.println(Config.S_SPAWN_AUCTION_NPCS + " 4");
+            System.out.println(Config.S_SPAWN_IRON_MAN_NPCS + " 5");
+            System.out.println(Config.S_SHOW_FLOATING_NAMETAGS + " 6");
+            System.out.println(Config.S_WANT_CLANS + " 7");
+            System.out.println(Config.S_WANT_KILL_FEED + " 8");
+            System.out.println(Config.S_FOG_TOGGLE + " 9");
+            System.out.println(Config.S_GROUND_ITEM_TOGGLE + " 10");
+            System.out.println(Config.S_AUTO_MESSAGE_SWITCH_TOGGLE + " 11");
+            System.out.println(Config.S_BATCH_PROGRESSION + " 12");
+            System.out.println(Config.S_SIDE_MENU_TOGGLE + " 13");
+            System.out.println(Config.S_INVENTORY_COUNT_TOGGLE + " 14");
+            System.out.println(Config.S_ZOOM_VIEW_TOGGLE + " 15");
+            System.out.println(Config.S_MENU_COMBAT_STYLE_TOGGLE + " 16");
+            System.out.println(Config.S_FIGHTMODE_SELECTOR_TOGGLE + " 17");
+            System.out.println(Config.S_EXPERIENCE_COUNTER_TOGGLE + " 18");
+            System.out.println(Config.S_EXPERIENCE_DROPS_TOGGLE + " 19");
+            System.out.println(Config.S_ITEMS_ON_DEATH_MENU + " 20");
+            System.out.println(Config.S_SHOW_ROOF_TOGGLE + " 21");
+            System.out.println(Config.S_WANT_HIDE_IP + " 22");
+            System.out.println(Config.S_WANT_REMEMBER + " 23");
+            System.out.println(Config.S_WANT_GLOBAL_CHAT + " 24");
+            System.out.println(Config.S_WANT_SKILL_MENUS + " 25");
+            System.out.println(Config.S_WANT_QUEST_MENUS + " 26");
+            System.out.println(Config.S_WANT_EXPERIENCE_ELIXIRS + " 27");
+            System.out.println(Config.S_WANT_KEYBOARD_SHORTCUTS + " 28");
+            System.out.println(Config.S_WANT_CUSTOM_BANKS + " 29");
+            System.out.println(Config.S_WANT_BANK_PINS + " 30");
+            System.out.println(Config.S_WANT_BANK_NOTES + " 31");
+            System.out.println(Config.S_WANT_CERT_DEPOSIT + " 32");
+            System.out.println(Config.S_CUSTOM_FIREMAKING + " 33");
+            System.out.println(Config.S_WANT_DROP_X + " 34");
+            System.out.println(Config.S_WANT_EXP_INFO + " 35");
+            System.out.println(Config.S_WANT_WOODCUTTING_GUILD + " 36");
+            System.out.println(Config.S_WANT_DECANTING + " 37");
+            System.out.println(Config.S_WANT_CERTS_TO_BANK + " 38");
+            System.out.println(Config.S_WANT_CUSTOM_RANK_DISPLAY + " 39");
+            System.out.println(Config.S_RIGHT_CLICK_BANK + " 40");
+            System.out.println(Config.S_WANT_FIXED_OVERHEAD_CHAT + " 41");
+            System.out.println(Config.WELCOME_TEXT + " 42");
+            System.out.println(Config.MEMBER_WORLD + " 43");
+            System.out.println(Config.DISPLAY_LOGO_SPRITE + " 44");
+            //System.out.println(Config.C_LOGO_SPRITE_ID + " 45");
+            //System.out.println(Config.C_FPS + " 46");
+        }
         try {
             this.loadGameConfig(false);
             if (!this.errorLoadingData) {
-                // mudclient.spriteMedia = 2000;
-                // mudclient.spriteUtil = mudclient.spriteMedia + 100;
-                // mudclient.spriteItem = 50 + mudclient.spriteUtil;
-                // mudclient.spriteLogo = 1000 + mudclient.spriteItem;
-                // mudclient.spriteProjectile = 10 + mudclient.spriteLogo;
-                // mudclient.spriteTexture = 50 +
-                // mudclient.spriteProjectile;
 
-                // this.graphics = this.getGraphics();
-                this.setFPS((int) 50, (byte) 107);
+                this.setFPS(Config.getFPS(), (byte) 107); // Client FPS
                 this.setSurface(new MudClientGraphics(this.getGameWidth(), this.getGameHeight() + 12, 4501));
 
                 clientPort.initGraphics();
@@ -12727,8 +12731,7 @@ public final class mudclient implements Runnable {
                         @Override
                         public void render() {
                             if (Config.C_EXPERIENCE_DROPS) {
-                                long new_time = System.currentTimeMillis();
-                                time = new_time;
+                                time = System.currentTimeMillis();
                                 for (Iterator<XPNotification> iterator = xpNotifications.iterator(); iterator.hasNext(); ) {
                                     XPNotification xpdrop = iterator.next();
                                     if (!xpdrop.isActive) {
@@ -12761,18 +12764,18 @@ public final class mudclient implements Runnable {
                                     if (!xpdrop.levelUp) {
                                         if (textColor == 0xFFFFFF) {
                                             graphics().drawShadowText("+" + xpdrop.amount + " " + getSkillNames()[xpdrop.skill] + " exp", xpdrop.x,
-                                                    (int) xpdrop.y, textColor, 2, false);
+                                                    xpdrop.y, textColor, 2, false);
                                         } else {
                                             graphics().drawString("+" + xpdrop.amount + " " + getSkillNames()[xpdrop.skill] + " exp", xpdrop.x,
-                                                    (int) xpdrop.y, textColor, 2);
+                                                    xpdrop.y, textColor, 2);
                                         }
                                     } else {
                                         if (textColor == 0xFFFFFF) {
                                             graphics().drawShadowText("+1 " + getSkillNames()[xpdrop.skill] + " level", xpdrop.x,
-                                                    (int) xpdrop.y, textColor, 2, false);
+                                                    xpdrop.y, textColor, 2, false);
                                         } else {
                                             graphics().drawString("+1 " + getSkillNames()[xpdrop.skill] + " level", xpdrop.x,
-                                                    (int) xpdrop.y, textColor, 2);
+                                                    xpdrop.y, textColor, 2);
                                         }
                                     }
 
@@ -12852,7 +12855,7 @@ public final class mudclient implements Runnable {
                                     if (!this.errorLoadingData) {
                                         clientPort.showLoadingProgress(100, "Starting game...");
                                         this.createMessageTabPanel(56);
-                                        this.createLoginPanels((int) 3845);
+                                        this.createLoginPanels(3845);
                                         this.createAppearancePanel(var1 ^ 24649);
                                         this.resetLoginScreenVariables((byte) -88);
                                         this.renderLoginScreenViewports(-116);
@@ -12868,7 +12871,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void tradeOffer(int count, int slot) {
+    private void tradeOffer(int count, int slot) {
         try {
 
             boolean offerSuccess = false;
@@ -12899,15 +12902,15 @@ public final class mudclient implements Runnable {
                 }
             }
 
-            int invAvailable = this.getInventoryCount((int) id);
+            int invAvailable = this.getInventoryCount(id);
             if (invAvailable <= offered) {
                 offerSuccess = true;
             }
 
             if (EntityHandler.getItemDef(id).quest && !localPlayer.isAdmin()) {
                 offerSuccess = true;
-                this.showMessage(false, (String) null, "This object cannot be traded with other players",
-                        MessageType.GAME, 0, (String) null);
+                this.showMessage(false, null, "This object cannot be traded with other players",
+                        MessageType.GAME, 0, null);
             }
 
             if (!offerSuccess) {
@@ -12953,7 +12956,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void tradeRemove(int var1, byte var2, int var3) {
+    private void tradeRemove(int var1, byte var2, int var3) {
         try {
 
             int var4 = this.tradeItemID[var3];
@@ -13084,7 +13087,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void updateObjectAnimation(byte var1, int instanceNumber, String modelFileName) {
+    private void updateObjectAnimation(byte var1, int instanceNumber, String modelFileName) {
         try {
 
             int tileX = this.gameObjectInstanceX[instanceNumber];
@@ -13112,7 +13115,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void walkToActionSource(int startX, int startZ, int destX, int destZ, boolean var5) {
+    private void walkToActionSource(int startX, int startZ, int destX, int destZ, boolean var5) {
         try {
 
             this.walkToArea(startX, startZ, destX, destZ, destX, destZ, false, var5);
@@ -13122,14 +13125,14 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final boolean walkToArea(int startX, int startZ, int x1, int z1, int x2, int z2, boolean reachBorder,
-                                     boolean var2) {
+    private void walkToArea(int startX, int startZ, int x1, int z1, int x2, int z2, boolean reachBorder,
+                            boolean var2) {
         try {
 
             int count = this.world.findPath(this.pathX, this.pathZ, startX, startZ, x1, x2, z1, z2, reachBorder);
             if (count == -1) {
                 if (!var2) {
-                    return false;
+                    return;
                 }
 
                 count = 1;
@@ -13162,14 +13165,13 @@ public final class mudclient implements Runnable {
             this.mouseWalkY = this.mouseY;
             this.mouseWalkX = this.mouseX;
             this.mouseClickXStep = -24;
-            return true;
         } catch (RuntimeException var13) {
             throw GenUtil.makeThrowable(var13, "client.DD(" + x1 + ',' + var2 + ',' + startX + ',' + z1 + ',' + startZ
                     + ',' + x2 + ',' + reachBorder + ',' + z2 + ',' + "dummy" + ')');
         }
     }
 
-    private final void walkToGroundItem(int startX, int startZ, int destX, int destZ, boolean var5) {
+    private void walkToGroundItem(int startX, int startZ, int destX, int destZ, boolean var5) {
         try {
 
             if (!this.sendWalkToGroundItem(startX, startZ, destX, destX, destZ, destZ, false, var5)) {
@@ -13181,7 +13183,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void walkToObject(int destX, int destZ, int dir, int var1, int objectID) {
+    private void walkToObject(int destX, int destZ, int dir, int var1, int objectID) {
         try {
 
             int worldWidth;
@@ -13227,7 +13229,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private final void walkToWall(int x, int z, int dir) {
+    private void walkToWall(int x, int z, int dir) {
         try {
 
             if (dir == 0) {
@@ -13254,7 +13256,7 @@ public final class mudclient implements Runnable {
         return gameWidth;
     }
 
-    public int halfGameWidth() {
+    private int halfGameWidth() {
         return gameWidth / 2;
     }
 
@@ -13262,7 +13264,7 @@ public final class mudclient implements Runnable {
         return gameHeight;
     }
 
-    public int halfGameHeight() {
+    private int halfGameHeight() {
         return gameHeight / 2;
     }
 
@@ -13270,7 +13272,7 @@ public final class mudclient implements Runnable {
         this.gameHeight = gameHeight;
     }
 
-    public int[][] getAnimDirLayer_To_CharLayer() {
+    private int[][] getAnimDirLayer_To_CharLayer() {
         return animDirLayer_To_CharLayer;
     }
 
@@ -13278,15 +13280,15 @@ public final class mudclient implements Runnable {
         return playerStatCurrent[skill];
     }
 
-    public int[] getPlayerHairColors() {
+    private int[] getPlayerHairColors() {
         return playerHairColors;
     }
 
-    public int[] getPlayerClothingColors() {
+    private int[] getPlayerClothingColors() {
         return playerClothingColors;
     }
 
-    public int[] getPlayerSkinColors() {
+    private int[] getPlayerSkinColors() {
         return playerSkinColors;
     }
 
@@ -13380,7 +13382,7 @@ public final class mudclient implements Runnable {
         return lastMouseButtonDown;
     }
 
-    public String[] getSkillNames() {
+    private String[] getSkillNames() {
         return skillNames;
     }
 
@@ -13408,7 +13410,7 @@ public final class mudclient implements Runnable {
         return skillGuideChosen;
     }
 
-    public void setSkillGuideChosen(String skillGuideChosen) {
+    private void setSkillGuideChosen(String skillGuideChosen) {
         this.skillGuideChosen = skillGuideChosen;
         skillGuideChosenTabs = new ArrayList<String>();
         if (skillGuideChosen.equalsIgnoreCase("Attack")) {
@@ -13489,7 +13491,7 @@ public final class mudclient implements Runnable {
         return questGuideChosen;
     }
 
-    public void setQuestGuideChosen(String questGuideChosen) {
+    private void setQuestGuideChosen(String questGuideChosen) {
         this.questGuideChosen = questGuideChosen;
     }
 
@@ -13497,7 +13499,7 @@ public final class mudclient implements Runnable {
         return questGuideProgress;
     }
 
-    public void setQuestGuideProgress(int questGuideProgress) {
+    private void setQuestGuideProgress(int questGuideProgress) {
         this.questGuideProgress = questGuideProgress;
     }
 
@@ -13505,7 +13507,7 @@ public final class mudclient implements Runnable {
         return questGuideStartWho;
     }
 
-    public void setQuestGuideStartWho(int chosen) {
+    private void setQuestGuideStartWho(int chosen) {
         this.questGuideStartWho = questGuideStartWhos[chosen];
     }
 
@@ -13513,7 +13515,7 @@ public final class mudclient implements Runnable {
         return questGuideStartWhere;
     }
 
-    public void setQuestGuideStartWhere(int chosen) {
+    private void setQuestGuideStartWhere(int chosen) {
         this.questGuideStartWhere = questGuideStartWheres[chosen];
     }
 
@@ -13521,7 +13523,7 @@ public final class mudclient implements Runnable {
         return questGuideRequirement;
     }
 
-    public void setQuestGuideRequirement(int chosen) {
+    private void setQuestGuideRequirement(int chosen) {
         this.questGuideRequirement = questGuideRequirements[chosen];
     }
 
@@ -13529,7 +13531,7 @@ public final class mudclient implements Runnable {
         return questGuideReward;
     }
 
-    public void setQuestGuideReward(int chosen) {
+    private void setQuestGuideReward(int chosen) {
         this.questGuideReward = questGuideRewards[chosen];
     }
 
@@ -13608,7 +13610,7 @@ public final class mudclient implements Runnable {
             panelMessageTabs.scrollMethodList(panelMessageClan, x);
     }
 
-    public boolean isShowDialogBank() {
+    private boolean isShowDialogBank() {
         return showDialogBank;
     }
 
@@ -13628,7 +13630,7 @@ public final class mudclient implements Runnable {
         this.xpNotifications.add(n);
     }
 
-    public void kickClanPlayer(String player) {
+    private void kickClanPlayer(String player) {
         this.clanKickPlayer = player;
     }
 
@@ -13636,14 +13638,14 @@ public final class mudclient implements Runnable {
         protected int x, y;
         protected int amount = 0;
         protected int skill = 0;
-        protected boolean levelUp;
-        protected boolean isActive;
+        boolean levelUp;
+        boolean isActive;
 
-        public XPNotification(int skill, int amount, boolean levelUp) {
+        XPNotification(int skill, int amount, boolean levelUp) {
             this.skill = skill;
             this.amount = amount;
             this.levelUp = levelUp;
-            x = (int) (halfGameWidth() - 50);
+            x = halfGameWidth() - 50;
             y = (int) ((float) getGameHeight() / 4.0f + 40);
             isActive = false;
         }

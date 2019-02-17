@@ -2,13 +2,6 @@ package orsc;
 
 import com.openrsc.client.model.Sprite;
 import com.openrsc.interfaces.misc.clan.Clan;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.util.Properties;
-
 import orsc.buffers.RSBufferUtils;
 import orsc.buffers.RSBuffer_Bits;
 import orsc.enumerations.MessageType;
@@ -20,6 +13,12 @@ import orsc.net.Network_Socket;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.Properties;
 
 
 public class PacketHandler {
@@ -73,8 +72,9 @@ public class PacketHandler {
 
 	private void handlePacket1(int opcode, int length) {
 		try {
-			if (mc.DEBUG)
+			if (Config.DEBUG) {
 				System.out.println("Opcode: " + opcode + " Length: " + length);
+			}
 
 			// Unhandled Opcodes Received...
 			/*if (opcode == 9 || opcode == 34 || opcode == 16
@@ -715,7 +715,7 @@ public class PacketHandler {
 
 	private void setServerConfiguration() {
 		Properties props = new Properties();
-		String serverName, serverNameWelcome, welcomeText, logoSpriteID;
+		String serverName, serverNameWelcome, welcomeText;
 		int playerLevelLimit, spawnAuctionNpcs, spawnIronManNpcs;
 		int showFloatingNametags, wantClans, wantKillFeed, fogToggle;
 		int groundItemToggle, autoMessageSwitchToggle, batchProgression;
@@ -727,196 +727,211 @@ public class PacketHandler {
 		int wantCustomBanks, wantBankPins, wantBankNotes, wantCertDeposit, customFiremaking;
 		int wantDropX, wantExpInfo, wantWoodcuttingGuild, wantFixedOverheadChat;
 		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank;
+		int logoSpriteID, getFPS, wantEmail, wantRegistrationLimit;
 
 		if (!mc.gotInitialConfigs) {
-			serverName = this.getClientStream().readString();
-			serverNameWelcome = this.getClientStream().readString();
-			playerLevelLimit = this.getClientStream().getUnsignedByte();
-			spawnAuctionNpcs = this.getClientStream().getUnsignedByte();
-			spawnIronManNpcs = this.getClientStream().getUnsignedByte();
-			showFloatingNametags = this.getClientStream().getUnsignedByte();
-			wantClans = this.getClientStream().getUnsignedByte();
-			wantKillFeed = this.getClientStream().getUnsignedByte();
-			fogToggle = this.getClientStream().getUnsignedByte();
-			groundItemToggle = this.getClientStream().getUnsignedByte();
-			autoMessageSwitchToggle = this.getClientStream().getUnsignedByte();
-			batchProgression = this.getClientStream().getUnsignedByte();
-			sideMenuToggle = this.getClientStream().getUnsignedByte();
-			inventoryCountToggle = this.getClientStream().getUnsignedByte();
-			zoomViewToggle = this.getClientStream().getUnsignedByte();
-			menuCombatStyleToggle = this.getClientStream().getUnsignedByte();
-			fightmodeSelectorToggle = this.getClientStream().getUnsignedByte();
-			experienceCounterToggle = this.getClientStream().getUnsignedByte();
-			experienceDropsToggle = this.getClientStream().getUnsignedByte();
-			itemsOnDeathMenu = this.getClientStream().getUnsignedByte();
-			showRoofToggle = this.getClientStream().getUnsignedByte();
-			Config.C_HIDE_ROOFS = showRoofToggle != 1; // If we don't want the toggle, always show.
-			wantHideIp = this.getClientStream().getUnsignedByte();
-			wantRemember = this.getClientStream().getUnsignedByte();
-			wantGlobalChat = this.getClientStream().getUnsignedByte();
-			wantSkillMenus = this.getClientStream().getUnsignedByte();
-			wantQuestMenus = this.getClientStream().getUnsignedByte();
-			wantExperienceElixirs = this.getClientStream().getUnsignedByte();
-			wantKeyboardShortcuts = this.getClientStream().getUnsignedByte();
-			wantCustomBanks = this.getClientStream().getUnsignedByte();
-			wantBankPins = this.getClientStream().getUnsignedByte();
-			wantBankNotes = this.getClientStream().getUnsignedByte();
-			wantCertDeposit = this.getClientStream().getUnsignedByte();
-			customFiremaking = this.getClientStream().getUnsignedByte();
-			wantDropX = this.getClientStream().getUnsignedByte();
-			wantExpInfo = this.getClientStream().getUnsignedByte();
-			wantWoodcuttingGuild = this.getClientStream().getUnsignedByte();
-			wantDecanting = this.getClientStream().getUnsignedByte();
-			wantCertsToBank = this.getClientStream().getUnsignedByte();
-			wantCustomRankDisplay = this.getClientStream().getUnsignedByte();
-			wantRightClickBank = this.getClientStream().getUnsignedByte();
-			wantFixedOverheadChat = this.getClientStream().getUnsignedByte();
-			welcomeText = this.getClientStream().readString();
-			wantMembers = this.getClientStream().getUnsignedByte();
-			displayLogoSprite = this.getClientStream().getUnsignedByte();
-			logoSpriteID = this.getClientStream().readString();
+			serverName = this.getClientStream().readString(); // 1
+			serverNameWelcome = this.getClientStream().readString(); // 2
+			playerLevelLimit = this.getClientStream().getUnsignedByte(); // 3
+			spawnAuctionNpcs = this.getClientStream().getUnsignedByte(); // 4
+			spawnIronManNpcs = this.getClientStream().getUnsignedByte(); // 5
+			showFloatingNametags = this.getClientStream().getUnsignedByte(); // 6
+			wantClans = this.getClientStream().getUnsignedByte(); // 7
+			wantKillFeed = this.getClientStream().getUnsignedByte(); // 8
+			fogToggle = this.getClientStream().getUnsignedByte(); // 9
+			groundItemToggle = this.getClientStream().getUnsignedByte(); // 10
+			autoMessageSwitchToggle = this.getClientStream().getUnsignedByte(); // 11
+			batchProgression = this.getClientStream().getUnsignedByte(); // 12
+			sideMenuToggle = this.getClientStream().getUnsignedByte(); // 13
+			inventoryCountToggle = this.getClientStream().getUnsignedByte(); // 14
+			zoomViewToggle = this.getClientStream().getUnsignedByte(); // 15
+			menuCombatStyleToggle = this.getClientStream().getUnsignedByte(); // 16
+			fightmodeSelectorToggle = this.getClientStream().getUnsignedByte(); // 17
+			experienceCounterToggle = this.getClientStream().getUnsignedByte(); // 18
+			experienceDropsToggle = this.getClientStream().getUnsignedByte(); // 19
+			itemsOnDeathMenu = this.getClientStream().getUnsignedByte(); // 20
+			showRoofToggle = this.getClientStream().getUnsignedByte(); // 21
+			Config.C_HIDE_ROOFS = showRoofToggle != 1; // If we don't want the toggle, always show. (entry does not count in sent config)
+			wantHideIp = this.getClientStream().getUnsignedByte(); // 22
+			wantRemember = this.getClientStream().getUnsignedByte(); // 23
+			wantGlobalChat = this.getClientStream().getUnsignedByte(); // 24
+			wantSkillMenus = this.getClientStream().getUnsignedByte(); // 25
+			wantQuestMenus = this.getClientStream().getUnsignedByte(); // 26
+			wantExperienceElixirs = this.getClientStream().getUnsignedByte(); // 27
+			wantKeyboardShortcuts = this.getClientStream().getUnsignedByte(); // 28
+			wantCustomBanks = this.getClientStream().getUnsignedByte(); // 29
+			wantBankPins = this.getClientStream().getUnsignedByte(); // 30
+			wantBankNotes = this.getClientStream().getUnsignedByte(); // 31
+			wantCertDeposit = this.getClientStream().getUnsignedByte(); // 32
+			customFiremaking = this.getClientStream().getUnsignedByte(); // 33
+			wantDropX = this.getClientStream().getUnsignedByte(); // 34
+			wantExpInfo = this.getClientStream().getUnsignedByte(); // 35
+			wantWoodcuttingGuild = this.getClientStream().getUnsignedByte(); // 36
+			wantDecanting = this.getClientStream().getUnsignedByte(); // 37
+			wantCertsToBank = this.getClientStream().getUnsignedByte(); // 38
+			wantCustomRankDisplay = this.getClientStream().getUnsignedByte(); // 39
+			wantRightClickBank = this.getClientStream().getUnsignedByte(); // 40
+			wantFixedOverheadChat = this.getClientStream().getUnsignedByte(); // 41
+			welcomeText = this.getClientStream().readString(); // 42
+			wantMembers = this.getClientStream().getUnsignedByte(); // 43
+			displayLogoSprite = this.getClientStream().getUnsignedByte(); // 44
+			//logoSpriteID = this.getClientStream().getUnsignedByte(); // 45
+			//getFPS = this.getClientStream().getUnsignedByte(); // 46
+			wantEmail = this.getClientStream().getUnsignedByte(); // 47
+			wantRegistrationLimit = this.getClientStream().getUnsignedByte(); // 48
 		} else {
-			serverName = packetsIncoming.readString();
-			serverNameWelcome = packetsIncoming.readString();
-			playerLevelLimit = packetsIncoming.getUnsignedByte();
-			spawnAuctionNpcs = packetsIncoming.getUnsignedByte();
-			spawnIronManNpcs = packetsIncoming.getUnsignedByte();
-			showFloatingNametags = packetsIncoming.getUnsignedByte();
-			wantClans = packetsIncoming.getUnsignedByte();
-			wantKillFeed = packetsIncoming.getUnsignedByte();
-			fogToggle = packetsIncoming.getUnsignedByte();
-			groundItemToggle = packetsIncoming.getUnsignedByte();
-			autoMessageSwitchToggle = packetsIncoming.getUnsignedByte();
-			batchProgression = packetsIncoming.getUnsignedByte();
-			sideMenuToggle = packetsIncoming.getUnsignedByte();
-			inventoryCountToggle = packetsIncoming.getUnsignedByte();
-			zoomViewToggle = packetsIncoming.getUnsignedByte();
-			menuCombatStyleToggle = packetsIncoming.getUnsignedByte();
-			fightmodeSelectorToggle = packetsIncoming.getUnsignedByte();
-			experienceCounterToggle = packetsIncoming.getUnsignedByte();
-			experienceDropsToggle = packetsIncoming.getUnsignedByte();
-			itemsOnDeathMenu = packetsIncoming.getUnsignedByte();
-			showRoofToggle = packetsIncoming.getUnsignedByte();
-			Config.C_HIDE_ROOFS = showRoofToggle != 1; // If we don't want the toggle, always show.
-			wantHideIp = packetsIncoming.getUnsignedByte();
-			wantRemember = packetsIncoming.getUnsignedByte();
-			wantGlobalChat = packetsIncoming.getUnsignedByte();
-			wantSkillMenus = packetsIncoming.getUnsignedByte();
-			wantQuestMenus = packetsIncoming.getUnsignedByte();
-			wantExperienceElixirs = packetsIncoming.getUnsignedByte();
-			wantKeyboardShortcuts = packetsIncoming.getUnsignedByte();
-			wantCustomBanks = packetsIncoming.getUnsignedByte();
-			wantBankPins = packetsIncoming.getUnsignedByte();
-			wantBankNotes = packetsIncoming.getUnsignedByte();
-			wantCertDeposit = packetsIncoming.getUnsignedByte();
-			customFiremaking = packetsIncoming.getUnsignedByte();
-			wantDropX = packetsIncoming.getUnsignedByte();
-			wantExpInfo = packetsIncoming.getUnsignedByte();
-			wantWoodcuttingGuild = packetsIncoming.getUnsignedByte();
-			wantDecanting = packetsIncoming.getUnsignedByte();
-			wantCertsToBank = packetsIncoming.getUnsignedByte();
-			wantCustomRankDisplay = packetsIncoming.getUnsignedByte();
-			wantRightClickBank = packetsIncoming.getUnsignedByte();
-			wantFixedOverheadChat = packetsIncoming.getUnsignedByte();
-			welcomeText = packetsIncoming.readString();
-			wantMembers = packetsIncoming.getUnsignedByte();
-			displayLogoSprite = packetsIncoming.getUnsignedByte();
-			logoSpriteID = packetsIncoming.readString();
+			serverName = packetsIncoming.readString(); // 1
+			serverNameWelcome = packetsIncoming.readString(); // 2
+			playerLevelLimit = packetsIncoming.getUnsignedByte(); // 3
+			spawnAuctionNpcs = packetsIncoming.getUnsignedByte(); // 4
+			spawnIronManNpcs = packetsIncoming.getUnsignedByte(); // 5
+			showFloatingNametags = packetsIncoming.getUnsignedByte(); // 6
+			wantClans = packetsIncoming.getUnsignedByte(); // 7
+			wantKillFeed = packetsIncoming.getUnsignedByte(); // 8
+			fogToggle = packetsIncoming.getUnsignedByte(); // 9
+			groundItemToggle = packetsIncoming.getUnsignedByte(); // 10
+			autoMessageSwitchToggle = packetsIncoming.getUnsignedByte(); // 11
+			batchProgression = packetsIncoming.getUnsignedByte(); // 12
+			sideMenuToggle = packetsIncoming.getUnsignedByte(); // 13
+			inventoryCountToggle = packetsIncoming.getUnsignedByte(); // 14
+			zoomViewToggle = packetsIncoming.getUnsignedByte(); // 15
+			menuCombatStyleToggle = packetsIncoming.getUnsignedByte(); // 16
+			fightmodeSelectorToggle = packetsIncoming.getUnsignedByte(); // 17
+			experienceCounterToggle = packetsIncoming.getUnsignedByte(); // 18
+			experienceDropsToggle = packetsIncoming.getUnsignedByte(); // 19
+			itemsOnDeathMenu = packetsIncoming.getUnsignedByte(); // 20
+			showRoofToggle = packetsIncoming.getUnsignedByte(); // 21
+			Config.C_HIDE_ROOFS = showRoofToggle != 1; // If we don't want the toggle, always show. (entry does not count in sent config)
+			wantHideIp = packetsIncoming.getUnsignedByte(); // 22
+			wantRemember = packetsIncoming.getUnsignedByte(); // 23
+			wantGlobalChat = packetsIncoming.getUnsignedByte(); // 24
+			wantSkillMenus = packetsIncoming.getUnsignedByte(); // 25
+			wantQuestMenus = packetsIncoming.getUnsignedByte(); // 26
+			wantExperienceElixirs = packetsIncoming.getUnsignedByte(); // 27
+			wantKeyboardShortcuts = packetsIncoming.getUnsignedByte(); // 28
+			wantCustomBanks = packetsIncoming.getUnsignedByte(); // 29
+			wantBankPins = packetsIncoming.getUnsignedByte(); // 30
+			wantBankNotes = packetsIncoming.getUnsignedByte(); // 31
+			wantCertDeposit = packetsIncoming.getUnsignedByte(); // 32
+			customFiremaking = packetsIncoming.getUnsignedByte(); // 33
+			wantDropX = packetsIncoming.getUnsignedByte(); // 34
+			wantExpInfo = packetsIncoming.getUnsignedByte(); // 35
+			wantWoodcuttingGuild = packetsIncoming.getUnsignedByte(); // 36
+			wantDecanting = packetsIncoming.getUnsignedByte(); // 37
+			wantCertsToBank = packetsIncoming.getUnsignedByte(); // 38
+			wantCustomRankDisplay = packetsIncoming.getUnsignedByte(); // 39
+			wantRightClickBank = packetsIncoming.getUnsignedByte(); // 40
+			wantFixedOverheadChat = packetsIncoming.getUnsignedByte(); // 41
+			welcomeText = packetsIncoming.readString(); // 42
+			wantMembers = packetsIncoming.getUnsignedByte(); // 43
+			displayLogoSprite = packetsIncoming.getUnsignedByte(); // 44
+			//logoSpriteID = packetsIncoming.getUnsignedByte(); // 45
+			//getFPS = packetsIncoming.getUnsignedByte(); // 46
+			wantEmail = packetsIncoming.getUnsignedByte(); // 47
+			wantRegistrationLimit = packetsIncoming.getUnsignedByte(); // 48
 		}
 
-		if (mc.DEBUG) {
+		if (Config.DEBUG) {
 			System.out.println(
-					"SERVER_NAME " + serverName +
-							"\nSERVER_NAME_WELCOME " + serverNameWelcome +
-							"\nS_PLAYER_LEVEL_LIMIT " + playerLevelLimit +
-							"\nS_SPAWN_AUCTION_NPCS " + spawnAuctionNpcs +
-							"\nS_SPAWN_IRON_MAN_NPCS " + spawnIronManNpcs +
-							"\nS_SHOW_FLOATING_NAMETAGS " + showFloatingNametags +
-							"\nS_WANT_CLANS " + wantClans +
-							"\nS_WANT_KILL_FEED " + wantKillFeed +
-							"\nS_FOG_TOGGLE " + fogToggle +
-							"\nS_GROUND_ITEM_TOGGLE " + groundItemToggle +
-							"\nS_AUTO_MESSAGE_SWITCH_TOGGLE " + autoMessageSwitchToggle +
-							"\nS_BATCH_PROGRESSION " + batchProgression +
-							"\nS_SIDE_MENU_TOGGLE " + sideMenuToggle +
-							"\nS_INVENTORY_COUNT_TOGGLE " + inventoryCountToggle +
-							"\nS_ZOOM_VIEW_TOGGLE " + zoomViewToggle +
-							"\nS_MENU_COMBAT_STYLE_TOGGLE " + menuCombatStyleToggle +
-							"\nS_FIGHTMODE_SELECTOR_TOGGLE " + fightmodeSelectorToggle +
-							"\nS_EXPERIENCE_COUNTER_TOGGLE " + experienceCounterToggle +
-							"\nS_EXPERIENCE_DROPS_TOGGLE " + experienceDropsToggle +
-							"\nS_ITEMS_ON_DEATH_MENU " + itemsOnDeathMenu +
-							"\nS_SHOW_ROOF_TOGGLE " + showRoofToggle +
-							"\nS_WANT_HIDE_IP " + wantHideIp +
-							"\nS_WANT_REMEMBER " + wantRemember +
-							"\nS_WANT_GLOBAL_CHAT " + wantGlobalChat +
-							"\nS_WANT_SKILL_MENUS " + wantSkillMenus +
-							"\nS_WANT_QUEST_MENUS " + wantQuestMenus +
-							"\nS_WANT_EXPERIENCE_ELIXIRS " + wantExperienceElixirs +
-							"\nS_WANT_KEYBOARD_SHORTCUTS " + wantKeyboardShortcuts +
-							"\nS_WANT_CUSTOM_BANKS " + wantCustomBanks +
-							"\nS_WANT_BANK_PINS " + wantBankPins +
-							"\nS_CUSTOM_FIREMAKING " + customFiremaking +
-							"\nS_WANT_DROP_X " + wantDropX +
-							"\nS_WANT_EXP_INFO " + wantExpInfo +
-							"\nS_WANT_WOODCUTTING_GUILD " + wantWoodcuttingGuild +
-							"\nS_WANT_DECANTING " + wantDecanting +
-							"\nS_WANT_CERTS_TO_BANK " + wantCertsToBank +
-							"\nS_WANT_CUSTOM_RANK_DISPLAY" + wantCustomRankDisplay +
-							"\nS_RIGHT_CLICK_BANK" + wantRightClickBank +
-							"\nS_WANT_FIXED_OVERHEAD_CHAT" + wantFixedOverheadChat +
-							"\nWELCOME_TEXT" + welcomeText +
-							"\nMEMBERS_FEATURES" + wantMembers +
-							"\nDISPLAY_LOGO_SPRITE" + displayLogoSprite +
-							"\nLOGO_SPRITE_ID" + logoSpriteID
+					"SERVER_NAME " + serverName + // 1
+							"\nSERVER_NAME_WELCOME " + serverNameWelcome + // 2
+							"\nS_PLAYER_LEVEL_LIMIT " + playerLevelLimit + // 3
+							"\nS_SPAWN_AUCTION_NPCS " + spawnAuctionNpcs + // 4
+							"\nS_SPAWN_IRON_MAN_NPCS " + spawnIronManNpcs + // 5
+							"\nS_SHOW_FLOATING_NAMETAGS " + showFloatingNametags + // 6
+							"\nS_WANT_CLANS " + wantClans + // 7
+							"\nS_WANT_KILL_FEED " + wantKillFeed + // 8
+							"\nS_FOG_TOGGLE " + fogToggle + // 9
+							"\nS_GROUND_ITEM_TOGGLE " + groundItemToggle + // 10
+							"\nS_AUTO_MESSAGE_SWITCH_TOGGLE " + autoMessageSwitchToggle + // 11
+							"\nS_BATCH_PROGRESSION " + batchProgression + // 12
+							"\nS_SIDE_MENU_TOGGLE " + sideMenuToggle + // 13
+							"\nS_INVENTORY_COUNT_TOGGLE " + inventoryCountToggle + // 14
+							"\nS_ZOOM_VIEW_TOGGLE " + zoomViewToggle + // 15
+							"\nS_MENU_COMBAT_STYLE_TOGGLE " + menuCombatStyleToggle + // 16
+							"\nS_FIGHTMODE_SELECTOR_TOGGLE " + fightmodeSelectorToggle + // 17
+							"\nS_EXPERIENCE_COUNTER_TOGGLE " + experienceCounterToggle + // 18
+							"\nS_EXPERIENCE_DROPS_TOGGLE " + experienceDropsToggle + // 19
+							"\nS_ITEMS_ON_DEATH_MENU " + itemsOnDeathMenu + // 20
+							"\nS_SHOW_ROOF_TOGGLE " + showRoofToggle + // 21
+							"\nS_WANT_HIDE_IP " + wantHideIp + // 22
+							"\nS_WANT_REMEMBER " + wantRemember + // 23
+							"\nS_WANT_GLOBAL_CHAT " + wantGlobalChat + // 24
+							"\nS_WANT_SKILL_MENUS " + wantSkillMenus + // 25
+							"\nS_WANT_QUEST_MENUS " + wantQuestMenus + // 26
+							"\nS_WANT_EXPERIENCE_ELIXIRS " + wantExperienceElixirs + // 27
+							"\nS_WANT_KEYBOARD_SHORTCUTS " + wantKeyboardShortcuts + // 28
+							"\nS_WANT_CUSTOM_BANKS " + wantCustomBanks + // 29
+							"\nS_WANT_BANK_PINS " + wantBankPins + // 30
+							"\nS_WANT_BANK_NOTES " + wantBankNotes + // 31
+							"\nS_WANT_CERT_DEPOSIT " + wantCertDeposit + // 32
+							"\nS_CUSTOM_FIREMAKING " + customFiremaking + // 33
+							"\nS_WANT_DROP_X " + wantDropX + // 34
+							"\nS_WANT_EXP_INFO " + wantExpInfo + // 35
+							"\nS_WANT_WOODCUTTING_GUILD " + wantWoodcuttingGuild + // 36
+							"\nS_WANT_DECANTING " + wantDecanting + // 37
+							"\nS_WANT_CERTS_TO_BANK " + wantCertsToBank + // 38
+							"\nS_WANT_CUSTOM_RANK_DISPLAY" + wantCustomRankDisplay + // 39
+							"\nS_RIGHT_CLICK_BANK" + wantRightClickBank + // 40
+							"\nS_WANT_FIXED_OVERHEAD_CHAT" + wantFixedOverheadChat + // 41
+							"\nWELCOME_TEXT" + welcomeText + // 42
+							"\nMEMBERS_FEATURES" + wantMembers + // 43
+							"\nDISPLAY_LOGO_SPRITE" + displayLogoSprite + // 44
+							//"\nC_LOGO_SPRITE_ID" + logoSpriteID + // 45
+							//"\nC_FPS" + getFPS + // 46
+							"\nC_WANT_EMAIL" + wantEmail + // 47
+							"\nS_WANT_REGISTRATION_LIMIT" + wantRegistrationLimit //48
 			);
 		}
 
-		props.setProperty("SERVER_NAME", serverName);
-		props.setProperty("SERVER_NAME_WELCOME", serverNameWelcome);
-		props.setProperty("S_PLAYER_LEVEL_LIMIT", Integer.toString(playerLevelLimit));
-		props.setProperty("S_SPAWN_AUCTION_NPCS", spawnAuctionNpcs == 1 ? "true" : "false");
-		props.setProperty("S_SPAWN_IRON_MAN_NPCS", spawnIronManNpcs == 1 ? "true" : "false");
-		props.setProperty("S_SHOW_FLOATING_NAMETAGS", showFloatingNametags == 1 ? "true" : "false");
-		props.setProperty("S_WANT_CLANS", wantClans == 1 ? "true" : "false");
-		props.setProperty("S_WANT_KILL_FEED", wantKillFeed == 1 ? "true" : "false");
-		props.setProperty("S_FOG_TOGGLE", fogToggle == 1 ? "true" : "false");
-		props.setProperty("S_GROUND_ITEM_TOGGLE", groundItemToggle == 1 ? "true" : "false");
-		props.setProperty("S_AUTO_MESSAGE_SWITCH_TOGGLE", autoMessageSwitchToggle == 1 ? "true" : "false");
-		props.setProperty("S_BATCH_PROGRESSION", batchProgression == 1 ? "true" : "false");
-		props.setProperty("S_SIDE_MENU_TOGGLE", sideMenuToggle == 1 ? "true" : "false");
-		props.setProperty("S_INVENTORY_COUNT_TOGGLE", inventoryCountToggle == 1 ? "true" : "false");
-		props.setProperty("S_ZOOM_VIEW_TOGGLE", zoomViewToggle == 1 ? "true" : "false");
-		props.setProperty("S_MENU_COMBAT_STYLE_TOGGLE", menuCombatStyleToggle == 1 ? "true" : "false");
-		props.setProperty("S_FIGHTMODE_SELECTOR_TOGGLE", fightmodeSelectorToggle == 1 ? "true" : "false");
-		props.setProperty("S_EXPERIENCE_COUNTER_TOGGLE", experienceCounterToggle == 1 ? "true" : "false");
-		props.setProperty("S_EXPERIENCE_DROPS_TOGGLE", experienceDropsToggle == 1 ? "true" : "false");
-		props.setProperty("S_ITEMS_ON_DEATH_MENU", itemsOnDeathMenu == 1 ? "true" : "false");
-		props.setProperty("S_SHOW_ROOF_TOGGLE", showRoofToggle == 1 ? "true" : "false");
-		props.setProperty("S_WANT_HIDE_IP", wantHideIp == 1 ? "true" : "false");
-		props.setProperty("S_WANT_REMEMBER", wantRemember == 1 ? "true" : "false");
-		props.setProperty("S_WANT_GLOBAL_CHAT", wantGlobalChat == 1 ? "true" : "false");
-		props.setProperty("S_WANT_SKILL_MENUS", wantSkillMenus == 1 ? "true" : "false");
-		props.setProperty("S_WANT_QUEST_MENUS", wantQuestMenus == 1 ? "true" : "false");
-		props.setProperty("S_WANT_EXPERIENCE_ELIXIRS", wantExperienceElixirs == 1 ? "true" : "false");
-		props.setProperty("S_WANT_KEYBOARD_SHORTCUTS", wantKeyboardShortcuts == 1 ? "true" : "false");
-		props.setProperty("S_WANT_CUSTOM_BANKS", wantCustomBanks == 1 ? "true" : "false");
-		props.setProperty("S_WANT_BANK_PINS", wantBankPins == 1 ? "true" : "false");
-		props.setProperty("S_WANT_BANK_NOTES", wantBankNotes == 1 ? "true" : "false");
-		props.setProperty("S_WANT_CERT_DEPOSIT", wantCertDeposit == 1 ? "true" : "false");
-		props.setProperty("S_CUSTOM_FIREMAKING", customFiremaking == 1 ? "true" : "false");
-		props.setProperty("S_WANT_DROP_X", wantDropX == 1 ? "true" : "false");
-		props.setProperty("S_WANT_EXP_INFO", wantExpInfo == 1 ? "true" : "false");
-		props.setProperty("S_WANT_WOODCUTTING_GUILD", wantWoodcuttingGuild == 1 ? "true" : "false");
-		props.setProperty("S_WANT_DECANTING", wantDecanting == 1 ? "true" : "false");
-		props.setProperty("S_WANT_CERTS_TO_BANK", wantCertsToBank == 1 ? "true" : "false");
-		props.setProperty("S_WANT_CUSTOM_RANK_DISPLAY", wantCustomRankDisplay == 1 ? "true" : "false");
-		props.setProperty("S_RIGHT_CLICK_BANK", wantRightClickBank == 1 ? "true" : "false");
-		props.setProperty("S_WANT_FIXED_OVERHEAD_CHAT", wantFixedOverheadChat == 1 ? "true" : "false");
-		props.setProperty("WELCOME_TEXT", welcomeText);
-		props.setProperty("MEMBERS_FEATURES", wantMembers == 1 ? "true" : "false");
-		props.setProperty("DISPLAY_LOGO_SPRITE", displayLogoSprite == 1 ? "true" : "false");
-		props.setProperty("LOGO_SPRITE_ID", logoSpriteID);
+		props.setProperty("SERVER_NAME", serverName); // 1
+		props.setProperty("SERVER_NAME_WELCOME", serverNameWelcome); // 2
+		props.setProperty("S_PLAYER_LEVEL_LIMIT", Integer.toString(playerLevelLimit)); // 3
+		props.setProperty("S_SPAWN_AUCTION_NPCS", spawnAuctionNpcs == 1 ? "true" : "false"); // 4
+		props.setProperty("S_SPAWN_IRON_MAN_NPCS", spawnIronManNpcs == 1 ? "true" : "false"); // 5
+		props.setProperty("S_SHOW_FLOATING_NAMETAGS", showFloatingNametags == 1 ? "true" : "false"); // 6
+		props.setProperty("S_WANT_CLANS", wantClans == 1 ? "true" : "false"); // 7
+		props.setProperty("S_WANT_KILL_FEED", wantKillFeed == 1 ? "true" : "false"); // 8
+		props.setProperty("S_FOG_TOGGLE", fogToggle == 1 ? "true" : "false"); // 9
+		props.setProperty("S_GROUND_ITEM_TOGGLE", groundItemToggle == 1 ? "true" : "false"); // 10
+		props.setProperty("S_AUTO_MESSAGE_SWITCH_TOGGLE", autoMessageSwitchToggle == 1 ? "true" : "false"); // 11
+		props.setProperty("S_BATCH_PROGRESSION", batchProgression == 1 ? "true" : "false"); // 12
+		props.setProperty("S_SIDE_MENU_TOGGLE", sideMenuToggle == 1 ? "true" : "false"); // 13
+		props.setProperty("S_INVENTORY_COUNT_TOGGLE", inventoryCountToggle == 1 ? "true" : "false"); // 14
+		props.setProperty("S_ZOOM_VIEW_TOGGLE", zoomViewToggle == 1 ? "true" : "false"); // 15
+		props.setProperty("S_MENU_COMBAT_STYLE_TOGGLE", menuCombatStyleToggle == 1 ? "true" : "false"); // 16
+		props.setProperty("S_FIGHTMODE_SELECTOR_TOGGLE", fightmodeSelectorToggle == 1 ? "true" : "false"); // 17
+		props.setProperty("S_EXPERIENCE_COUNTER_TOGGLE", experienceCounterToggle == 1 ? "true" : "false"); // 18
+		props.setProperty("S_EXPERIENCE_DROPS_TOGGLE", experienceDropsToggle == 1 ? "true" : "false"); // 19
+		props.setProperty("S_ITEMS_ON_DEATH_MENU", itemsOnDeathMenu == 1 ? "true" : "false"); // 20
+		props.setProperty("S_SHOW_ROOF_TOGGLE", showRoofToggle == 1 ? "true" : "false"); // 21
+		props.setProperty("S_WANT_HIDE_IP", wantHideIp == 1 ? "true" : "false"); // 22
+		props.setProperty("S_WANT_REMEMBER", wantRemember == 1 ? "true" : "false"); // 23
+		props.setProperty("S_WANT_GLOBAL_CHAT", wantGlobalChat == 1 ? "true" : "false"); // 24
+		props.setProperty("S_WANT_SKILL_MENUS", wantSkillMenus == 1 ? "true" : "false"); // 25
+		props.setProperty("S_WANT_QUEST_MENUS", wantQuestMenus == 1 ? "true" : "false"); // 26
+		props.setProperty("S_WANT_EXPERIENCE_ELIXIRS", wantExperienceElixirs == 1 ? "true" : "false"); // 27
+		props.setProperty("S_WANT_KEYBOARD_SHORTCUTS", wantKeyboardShortcuts == 1 ? "true" : "false"); // 28
+		props.setProperty("S_WANT_CUSTOM_BANKS", wantCustomBanks == 1 ? "true" : "false"); // 29
+		props.setProperty("S_WANT_BANK_PINS", wantBankPins == 1 ? "true" : "false"); // 30
+		props.setProperty("S_WANT_BANK_NOTES", wantBankNotes == 1 ? "true" : "false"); // 31
+		props.setProperty("S_WANT_CERT_DEPOSIT", wantCertDeposit == 1 ? "true" : "false"); // 32
+		props.setProperty("S_CUSTOM_FIREMAKING", customFiremaking == 1 ? "true" : "false"); // 33
+		props.setProperty("S_WANT_DROP_X", wantDropX == 1 ? "true" : "false"); // 34
+		props.setProperty("S_WANT_EXP_INFO", wantExpInfo == 1 ? "true" : "false"); // 35
+		props.setProperty("S_WANT_WOODCUTTING_GUILD", wantWoodcuttingGuild == 1 ? "true" : "false"); // 36
+		props.setProperty("S_WANT_DECANTING", wantDecanting == 1 ? "true" : "false"); // 37
+		props.setProperty("S_WANT_CERTS_TO_BANK", wantCertsToBank == 1 ? "true" : "false"); // 38
+		props.setProperty("S_WANT_CUSTOM_RANK_DISPLAY", wantCustomRankDisplay == 1 ? "true" : "false"); // 39
+		props.setProperty("S_RIGHT_CLICK_BANK", wantRightClickBank == 1 ? "true" : "false"); // 40
+		props.setProperty("S_WANT_FIXED_OVERHEAD_CHAT", wantFixedOverheadChat == 1 ? "true" : "false"); // 41
+		props.setProperty("WELCOME_TEXT", welcomeText); // 42
+		props.setProperty("MEMBER_WORLD", wantMembers == 1 ? "true" : "false"); // 43
+		props.setProperty("DISPLAY_LOGO_SPRITE", displayLogoSprite == 1 ? "true" : "false"); // 44
+		//props.setProperty("C_LOGO_SPRITE_ID", Integer.toString(logoSpriteID)); // 45
+		//props.setProperty("C_FPS", Integer.toString(getFPS)); // 46
+		props.setProperty("C_WANT_EMAIL", wantEmail == 1 ? "true" : "false"); // 47
+		props.setProperty("S_WANT_REGISTRATION_LIMIT", wantRegistrationLimit == 1 ? "true" : "false"); // 48
 
 		Config.updateServerConfiguration(props);
 
@@ -1889,13 +1904,13 @@ public class PacketHandler {
 				if (updateType == 1 || updateType == 7) {
 					int crownID = packetsIncoming.get32();
 					boolean muted = false, onTutorial = false;
-					if(updateType == 7) {
+					if (updateType == 7) {
 						muted = packetsIncoming.getUnsignedByte() > 0;
 						onTutorial = packetsIncoming.getUnsignedByte() > 0;
 					}
 					String message = packetsIncoming.readString();
 
-					if(updateType == 7 && message.equalsIgnoreCase(""))
+					if (updateType == 7 && message.equalsIgnoreCase(""))
 						continue;
 
 					if (null != player) {
