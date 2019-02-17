@@ -2,7 +2,6 @@ package orsc;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -106,8 +105,10 @@ public class Config {
 	public static boolean S_WANT_HIDE_IP = false;
 	public static boolean S_WANT_REMEMBER = false;
 	public static boolean S_WANT_FIXED_OVERHEAD_CHAT = false;
-	public static int LOGO_SPRITE_ID = 2010;
+	public static int C_LOGO_SPRITE_ID = 2010;
 	public static int C_FPS = 50;
+	public static boolean C_WANT_EMAIL = false;
+	public static boolean S_WANT_REGISTRATION_LIMIT = false;
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());
@@ -140,8 +141,6 @@ public class Config {
 			prop.load(new FileInputStream(F_CACHE_DIR + File.separator + "client.properties"));
 			setConfigurationFromProperties();
 			saveConfiguration(false);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -154,8 +153,6 @@ public class Config {
 				file.delete();
 			}
 			prop.store(new FileOutputStream(F_CACHE_DIR + File.separator + "client.properties"), null);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -228,7 +225,7 @@ public class Config {
 
 	}
 
-	final static void updateServerConfiguration(Properties newConfig) {
+	static void updateServerConfiguration(Properties newConfig) {
 		for (Map.Entry<Object, Object> p : newConfig.entrySet()) {
 			prop.setProperty(String.valueOf(p.getKey()), String.valueOf(p.getValue()));
 		}
@@ -251,8 +248,8 @@ public class Config {
 		return prop.getProperty("COMMAND_PREFIX");
 	}
 
-	static int getLogoSpriteId() {
-		return LOGO_SPRITE_ID;
+	static int getcLogoSpriteId() {
+		return C_LOGO_SPRITE_ID;
 	}
 
 	public static int getFPS() {
@@ -269,5 +266,9 @@ public class Config {
 
 	static boolean Remember() {
 		return S_WANT_REMEMBER;
+	}
+
+	static boolean wantEmail() {
+		return C_WANT_EMAIL;
 	}
 }
