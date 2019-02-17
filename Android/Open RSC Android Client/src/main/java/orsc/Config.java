@@ -16,7 +16,7 @@ public class Config {
     public static String SERVER_NAME = "Runescape";
     public static String SERVER_NAME_WELCOME = "Runescape Classic";
     public static String WELCOME_TEXT = "You need a members account to use this server";
-    static final String SERVER_IP = "10.0.0.9";
+    static final String SERVER_IP = "game.openrsc.com";
     static final int SERVER_PORT = 43594;
     public static final int CLIENT_VERSION = 1;
     private static final int CACHE_VERSION = 2;
