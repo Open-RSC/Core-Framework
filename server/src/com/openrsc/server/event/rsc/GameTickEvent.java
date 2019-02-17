@@ -52,7 +52,7 @@ public abstract class GameTickEvent {
 		return delayTicks;
 	}
 
-	public void setDelayTicks(int delayTicks) {
+	protected void setDelayTicks(int delayTicks) {
 		this.delayTicks = delayTicks;
 	}
 
@@ -64,7 +64,7 @@ public abstract class GameTickEvent {
 		this.immediate = b;
 	}
 
-	public Player getPlayerOwner() {
+	protected Player getPlayerOwner() {
 		return owner != null && owner.isPlayer() ? (Player) owner : null;
 	}
 

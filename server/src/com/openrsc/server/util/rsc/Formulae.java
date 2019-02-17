@@ -18,23 +18,23 @@ public final class Formulae {
 	public static final int[] boltIDs = {786, 592, 190};
 	public static final int[] bowIDs = {188, 189, 648, 649, 650, 651, 652, 653, 654, 655, 656, 657};
 	public static final int[] headSprites = {1, 4, 6, 7, 8};
-	public static final int[] herbDropIDs = {165, 435, 436, 437, 438, 439, 440, 441, 442, 443};
-	public static final int[] herbDropWeights = {89, 55, 34, 21, 13, 8, 5, 3, 2, 1};
+	private static final int[] herbDropIDs = {165, 435, 436, 437, 438, 439, 440, 441, 442, 443};
+	private static final int[] herbDropWeights = {89, 55, 34, 21, 13, 8, 5, 3, 2, 1};
 	public static final int[] miningAxeIDs = {1262, 1261, 1260, 1259, 1258, 156};
 	public static final int[] miningAxeLvls = {41, 31, 21, 6, 1, 1};
-	public static final int[] gemDropIDs = {160, 159, 158, 157};
-	public static final int[] gemDropWeights = {100, 70, 45, 15};
+	private static final int[] gemDropIDs = {160, 159, 158, 157};
+	private static final int[] gemDropWeights = {100, 70, 45, 15};
 	public static final int[] throwingIDs = {1075, 1076, 1077, 1078, 1079, 1080, 1081, 1013, 1015,
 		1122, 1123, 1124, 1125, 1126, 1127, 1128, 1129, 1130, 1131, 1132, 1133, 1134, 1070, 1069,
 		1068, 1024, 827, 1088, 1089, 1090, 1091, 1092, 1135, 1136, 1137, 1138, 1139, 1140};
 	/**
 	 * Cubic P2P boundaries. MinX, MinY - MaxX, MaxY
 	 */
-	public static final java.awt.Point[][] F2PWILD_LOCS = {
+	private static final java.awt.Point[][] F2PWILD_LOCS = {
 		{new java.awt.Point(48, 96), new java.awt.Point(335, 142)},
 		{new java.awt.Point(144, 190), new java.awt.Point(576, 622)}};
 	// 622, 144, 576, 190
-	public static final java.awt.Point[][] P2P_LOCS = {{new java.awt.Point(436, 432), new java.awt.Point(719, 906)},
+	private static final java.awt.Point[][] P2P_LOCS = {{new java.awt.Point(436, 432), new java.awt.Point(719, 906)},
 		{new java.awt.Point(48, 96), new java.awt.Point(335, 142)},
 		{new java.awt.Point(343, 567), new java.awt.Point(457, 432)},
 		{new java.awt.Point(203, 3206), new java.awt.Point(233, 3265)},
@@ -44,16 +44,16 @@ public final class Formulae {
 	// trawler: 297, 720
 	public static final int[] woodcuttingAxeIDs = {405, 204, 203, 428, 88, 12, 87};
 	public static final int[] xbowIDs = {59, 60};
-	public final static int[] IRON = {6, 5, 7, 8, 2, 3, 9, 28, 1075, 1, 71, 83, 77, 12, 1258, 89, 0, 670, 1063};
-	public final static int[] RUNE = {112, 399, 400, 401, 404, 403, 402, 396, 1080, 397, 75, 398, 81, 405, 1262, 93,
+	private final static int[] IRON = {6, 5, 7, 8, 2, 3, 9, 28, 1075, 1, 71, 83, 77, 12, 1258, 89, 0, 670, 1063};
+	private final static int[] RUNE = {112, 399, 400, 401, 404, 403, 402, 396, 1080, 397, 75, 398, 81, 405, 1262, 93,
 		98, 674, 1067};
-	public final static int[] ADDY = {111, 107, 116, 120, 131, 127, 123, 65, 1079, 69, 74, 86, 80, 204, 1261, 92, 97,
+	private final static int[] ADDY = {111, 107, 116, 120, 131, 127, 123, 65, 1079, 69, 74, 86, 80, 204, 1261, 92, 97,
 		673, 1066};
-	public final static int[] MITH = {110, 106, 115, 119, 130, 126, 122, 64, 1078, 68, 73, 85, 79, 203, 1260, 91, 96,
+	private final static int[] MITH = {110, 106, 115, 119, 130, 126, 122, 64, 1078, 68, 73, 85, 79, 203, 1260, 91, 96,
 		672, 1065};
-	public final static int[] STEEL = {109, 105, 114, 118, 129, 125, 121, 63, 1077, 67, 72, 84, 78, 88, 1259, 90, 95,
+	private final static int[] STEEL = {109, 105, 114, 118, 129, 125, 121, 63, 1077, 67, 72, 84, 78, 88, 1259, 90, 95,
 		671, 1064};
-	public final static int[] BRONZE = {108, 104, 113, 117, 128, 124, 206, 62, 1076, 66, 70, 82, 76, 87, 156, 87, 205,
+	private final static int[] BRONZE = {108, 104, 113, 117, 128, 124, 206, 62, 1076, 66, 70, 82, 76, 87, 156, 87, 205,
 		669, 1062};
 
 	/**
@@ -105,7 +105,7 @@ public final class Formulae {
 	 * Adds the prayers together to calculate what perecntage the stat should be
 	 * increased
 	 */
-	public static double addPrayers(boolean first, boolean second, boolean third) {
+	private static double addPrayers(boolean first, boolean second, boolean third) {
 		if (third) {
 			return 1.15D;
 		}
@@ -344,10 +344,9 @@ public final class Formulae {
 	 */
 	public static int calcSpellHit(int spellStr, int magicEquip) {
 		int mageRatio = (int) (45D + (double) magicEquip);
-		int max = spellStr;
 		int peak = (int) (((double) spellStr / 100D) * (double) mageRatio);
 		int dip = (int) ((peak / 3D) * 2D);
-		return DataConversions.randomWeighted(0, dip, peak, max);
+		return DataConversions.randomWeighted(0, dip, peak, spellStr);
 	}
 
 	/**
@@ -375,7 +374,7 @@ public final class Formulae {
 		return DataConversions.random(0, (levelDiff + 2) * 2) != 0;
 	}
 
-	public static int getBowBonus(Player player) {
+	private static int getBowBonus(Player player) {
 		switch (player.getRangeEquip()) {
 			case 59: /* Phoenix Crossbow */
 				return 10;
@@ -530,7 +529,7 @@ public final class Formulae {
 	/**
 	 * Check what height we are currently at on the map
 	 */
-	public static int getHeight(int y) {
+	private static int getHeight(int y) {
 		return (int) (y / 944);
 	}
 
@@ -611,19 +610,19 @@ public final class Formulae {
 		if (x == -1)
 			return false;
 		if (!f2pwildy) {
-			for (int i = 0; i < P2P_LOCS.length; i++) {
+			for (java.awt.Point[] p2pLoc : P2P_LOCS) {
 				for (int ele = 0; ele < 4; ele++) {
-					if (x >= P2P_LOCS[i][0].getX() && x <= P2P_LOCS[i][1].getX()
-						&& y >= P2P_LOCS[i][0].getY() + ((ele) * 944) && y <= P2P_LOCS[i][1].getY() + ((ele) * 944))
+					if (x >= p2pLoc[0].getX() && x <= p2pLoc[1].getX()
+						&& y >= p2pLoc[0].getY() + ((ele) * 944) && y <= p2pLoc[1].getY() + ((ele) * 944))
 						return true;
 				}
 			}
 		} else {
-			for (int i = 0; i < F2PWILD_LOCS.length; i++) {
+			for (java.awt.Point[] f2pwildLoc : F2PWILD_LOCS) {
 				for (int ele = 0; ele < 4; ele++) {
-					if (x >= F2PWILD_LOCS[i][0].getX() && x <= F2PWILD_LOCS[i][1].getX()
-						&& y >= F2PWILD_LOCS[i][0].getY() + ((ele) * 944)
-						&& y <= F2PWILD_LOCS[i][1].getY() + ((ele) * 944))
+					if (x >= f2pwildLoc[0].getX() && x <= f2pwildLoc[1].getX()
+						&& y >= f2pwildLoc[0].getY() + ((ele) * 944)
+						&& y <= f2pwildLoc[1].getY() + ((ele) * 944))
 						return true;
 				}
 			}
@@ -632,19 +631,19 @@ public final class Formulae {
 	}
 
 	public static boolean isF2PLocation(Point location) {
-		for (int i = 0; i < P2P_LOCS.length; i++) {
+		for (java.awt.Point[] p2pLoc : P2P_LOCS) {
 			for (int ele = 0; ele < 4; ele++) {
-				if (location.getX() >= P2P_LOCS[i][0].getX() && location.getX() <= P2P_LOCS[i][1].getX()
-					&& location.getY() >= P2P_LOCS[i][0].getY() + ((ele) * 944)
-					&& location.getY() <= P2P_LOCS[i][1].getY() + ((ele) * 944))
+				if (location.getX() >= p2pLoc[0].getX() && location.getX() <= p2pLoc[1].getX()
+					&& location.getY() >= p2pLoc[0].getY() + ((ele) * 944)
+					&& location.getY() <= p2pLoc[1].getY() + ((ele) * 944))
 					return false;
 			}
 		}
-		for (int i = 0; i < F2PWILD_LOCS.length; i++) {
+		for (java.awt.Point[] f2pwildLoc : F2PWILD_LOCS) {
 			for (int ele = 0; ele < 4; ele++) {
-				if (location.getX() >= F2PWILD_LOCS[i][0].getX() && location.getX() <= F2PWILD_LOCS[i][1].getX()
-					&& location.getY() >= F2PWILD_LOCS[i][0].getY() + ((ele) * 944)
-					&& location.getY() <= F2PWILD_LOCS[i][1].getY() + ((ele) * 944)) {
+				if (location.getX() >= f2pwildLoc[0].getX() && location.getX() <= f2pwildLoc[1].getX()
+					&& location.getY() >= f2pwildLoc[0].getY() + ((ele) * 944)
+					&& location.getY() <= f2pwildLoc[1].getY() + ((ele) * 944)) {
 					return true;
 				}
 			}
@@ -685,8 +684,7 @@ public final class Formulae {
 							 int bonus) {
 		double newStrength = (double) ((strength * addPrayers(burst, superhuman, ultimate)) + bonus);
 
-		int fin = (int) ((newStrength * ((((double) weaponPower * 0.00175D) + 0.1D)) + 1.05D) * 0.95D);
-		return fin;
+		return (int) ((newStrength * ((((double) weaponPower * 0.00175D) + 0.1D)) + 1.05D) * 0.95D);
 
 	}
 
@@ -758,9 +756,7 @@ public final class Formulae {
 		else if (maxStat <= PLAYER_LEVEL_LIMIT)
 			regular = 11;*/
 
-		int regular = (maxStat / 10) + 1 + (maxStat == PLAYER_LEVEL_LIMIT ? 1 : 0);
-
-		return regular;
+		return (maxStat / 10) + 1 + (maxStat == PLAYER_LEVEL_LIMIT ? 1 : 0);
 	}
 
 	public static int getSpellMaxHit(SpellDef spell) {
@@ -780,7 +776,7 @@ public final class Formulae {
 		return weightedRandomChoice(list, weights, 0);
 	}
 
-	public static int weightedRandomChoice(int[] list, int[] weights, int defaultReturn) {
+	private static int weightedRandomChoice(int[] list, int[] weights, int defaultReturn) {
 		int total = 0;
 		for (int x : weights)
 			total += x;

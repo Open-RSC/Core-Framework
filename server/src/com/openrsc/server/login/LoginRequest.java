@@ -21,7 +21,7 @@ public abstract class LoginRequest extends ThrottleFilter {
 	private int clientVersion;
 
 
-	public LoginRequest(String username, String password, int clientVersion, Channel channel) {
+	protected LoginRequest(String username, String password, int clientVersion, Channel channel) {
 		this.setUsername(username);
 		this.setPassword(password);
 		this.setIpAddress(channel.remoteAddress().toString());
@@ -34,7 +34,7 @@ public abstract class LoginRequest extends ThrottleFilter {
 		return ipAddress;
 	}
 
-	public void setIpAddress(String ipAddress) {
+	private void setIpAddress(String ipAddress) {
 		this.ipAddress = ipAddress;
 	}
 
@@ -50,7 +50,7 @@ public abstract class LoginRequest extends ThrottleFilter {
 		return password;
 	}
 
-	public void setPassword(String password) {
+	private void setPassword(String password) {
 		this.password = password;
 	}
 
@@ -58,7 +58,7 @@ public abstract class LoginRequest extends ThrottleFilter {
 		return usernameHash;
 	}
 
-	public void setUsernameHash(long usernameHash) {
+	private void setUsernameHash(long usernameHash) {
 		this.usernameHash = usernameHash;
 	}
 
@@ -74,7 +74,7 @@ public abstract class LoginRequest extends ThrottleFilter {
 		return clientVersion;
 	}
 
-	public void setClientVersion(int clientVersion) {
+	private void setClientVersion(int clientVersion) {
 		this.clientVersion = clientVersion;
 	}
 

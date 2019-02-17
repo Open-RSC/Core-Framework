@@ -19,7 +19,7 @@
                 <pathelement location="${lib}/disruptor-3.3.5.jar"/>
                 <pathelement location="${lib}/commons-lang-2.6.jar"/>
             </classpath>
-            <compilerarg line="-Xlint:unchecked"/>
+            <compilerarg line="-Xlint:deprecation"/>
         </javac>
         <jar basedir="buildplugins" destfile="plugins.jar"/>
         <delete dir="buildplugins"/>
@@ -44,6 +44,7 @@
                 <pathelement location="${lib}/*"/>
                 <pathelement path="${java.class.path}/"/>
             </classpath>
+            <compilerarg line="-Xlint:deprecation"/>
         </javac>
         <jar basedir="${build}" destfile="${jar}">
             <zipgroupfileset dir="lib" includes="*.jar" />

@@ -23,7 +23,7 @@ import com.openrsc.server.util.rsc.Formulae;
  */
 public class RangeEvent extends GameTickEvent {
 
-	public int[][] allowedArrows = {{189, 11, 638, 639}, // Shortbow
+	private int[][] allowedArrows = {{189, 11, 638, 639}, // Shortbow
 		{188, 11, 574, 638, 639}, // Longbow
 		{649, 11, 574, 638, 639}, // Oak Shortbow
 		{648, 11, 574, 638, 639, 640, 641}, // Oak Longbow
@@ -81,7 +81,6 @@ public class RangeEvent extends GameTickEvent {
 				getPlayerOwner().message("I can't get close enough");
 				getPlayerOwner().resetRange();
 				stop();
-				return;
 			}
 		} else {
 			getPlayerOwner().resetPath();
@@ -134,7 +133,7 @@ public class RangeEvent extends GameTickEvent {
 						}
 
 					}
-					if (arrowID != 11 && arrowID != 190) {
+					//if (arrowID != 11 && arrowID != 190) {
 						/*if (!getPlayerOwner().getLocation().isMembersWild()) {
 							getPlayerOwner().message("Members content can only be used in wild levels: "
 									+ World.membersWildStart + " - " + World.membersWildMax);
@@ -143,7 +142,7 @@ public class RangeEvent extends GameTickEvent {
 							stop();
 							return;
 						}*/
-					}
+					//}
 
 					int newAmount = arrow.getAmount() - 1;
 					if (!xbow && arrowID > 0) {

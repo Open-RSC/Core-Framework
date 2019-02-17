@@ -73,7 +73,7 @@ public class StatRestorationEvent extends GameTickEvent {
 	 * @param skill
 	 * @return true if action done, false if skill is already normal
 	 */
-	public void normalizeLevel(int skill) {
+	private void normalizeLevel(int skill) {
 		int cur = owner.getSkills().getLevel(skill);
 		int norm = owner.getSkills().getMaxStat(skill);
 
@@ -87,7 +87,7 @@ public class StatRestorationEvent extends GameTickEvent {
 			restoringStats.put(skill, 0);
 	}
 
-	public void checkAndStartRestoration(int id) {
+	private void checkAndStartRestoration(int id) {
 		int curStat = owner.getSkills().getLevel(id);
 		int maxStat = owner.getSkills().getMaxStat(id);
 		if (restoringStats.containsKey(id)) {

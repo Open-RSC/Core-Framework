@@ -6,11 +6,11 @@ import java.util.*;
 
 public final class EntityList<T extends Entity> extends AbstractCollection<T> {
 
-	public static final int DEFAULT_CAPACITY = 2000;
-	protected final Set<Integer> indicies = Collections
+	private static final int DEFAULT_CAPACITY = 2000;
+	private final Set<Integer> indicies = Collections
 		.synchronizedSet(new HashSet<Integer>());
-	protected int capacity;
-	protected Object[] entities;
+	private int capacity;
+	private Object[] entities;
 	private int curIndex = 0;
 
 	public EntityList() {
@@ -48,14 +48,14 @@ public final class EntityList<T extends Entity> extends AbstractCollection<T> {
 		return (T) entities[index];
 	}
 
-	public void increaseIndex() {
+	private void increaseIndex() {
 		curIndex++;
 		if (curIndex >= capacity) {
 			curIndex = 0;
 		}
 	}
 
-	public int indexOf(T entity) {
+	private int indexOf(T entity) {
 		for (int index : indicies) {
 			if (entities[index].equals(entity)) {
 				return index;

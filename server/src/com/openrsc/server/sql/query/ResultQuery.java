@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 public abstract class ResultQuery extends Query {
 
-	public ResultQuery(String query) {
+	protected ResultQuery(String query) {
 		super(query);
 	}
 

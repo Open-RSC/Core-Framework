@@ -14,14 +14,10 @@ public class KingBlackDragonPrayerDrain implements OnCombatStartScript {
 	public boolean shouldExecute(Mob attacker, Mob defender) {
 		if (attacker.isNpc()) {
 			Npc attackerNpc = ((Npc) attacker);
-			if (attackerNpc.getID() == 477) {
-				return true;
-			}
+			return attackerNpc.getID() == 477;
 		} else if (defender.isNpc()) {
 			Npc defenderNpc = ((Npc) defender);
-			if (defenderNpc.getID() == 477) {
-				return true;
-			}
+			return defenderNpc.getID() == 477;
 		}
 		return false;
 	}

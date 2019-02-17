@@ -52,7 +52,7 @@ public class PrayerDrainEvent extends GameTickEvent {
 			if (getPlayerOwner().getPrayers().isPrayerActivated(x) && !activePrayers.containsKey(prayer)) {
 				activePrayers.put(prayer, System.currentTimeMillis());
 			} else if (!getPlayerOwner().getPrayers().isPrayerActivated(x) && activePrayers.containsKey(prayer)) {
-				double timePrayerUsed = System.currentTimeMillis() - activePrayers.get(prayer).longValue();
+				double timePrayerUsed = System.currentTimeMillis() - activePrayers.get(prayer);
 				double drainDelay = (180000 / (prayer.getDrainRate() * (1 + getPlayerOwner().getPrayerPoints() / 30.0)));
 				partialPoints += timePrayerUsed / drainDelay;
 				activePrayers.remove(prayer);

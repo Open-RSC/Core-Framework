@@ -41,11 +41,6 @@ public final class ISAACCipher {
 	private static final int SIZE = 1 << LOG_SIZE;
 
 	/**
-	 * A mask for pseudorandom lookup.
-	 */
-	private static int MASK = SIZE - 1 << 2;
-
-	/**
 	 * The accumulator.
 	 */
 	private int a;
@@ -92,9 +87,7 @@ public final class ISAACCipher {
 	public ISAACCipher(int[] seed) {
 		mem = new int[SIZE];
 		rsl = new int[SIZE];
-		for (int i = 0; i < seed.length; ++i) {
-			rsl[i] = seed[i];
-		}
+		if (seed.length >= 0) System.arraycopy(seed, 0, rsl, 0, seed.length);
 		init(true);
 	}
 
@@ -236,6 +229,10 @@ public final class ISAACCipher {
 		int i, j, x, y;
 
 		b += ++c;
+		/**
+		 * A mask for pseudorandom lookup.
+		 */
+		int MASK = SIZE - 1 << 2;
 		for (i = 0, j = SIZE / 2; i < SIZE / 2; ) {
 			x = mem[i];
 			a ^= a << 13;

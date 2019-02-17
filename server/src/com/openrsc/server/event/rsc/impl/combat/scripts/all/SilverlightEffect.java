@@ -25,10 +25,8 @@ public class SilverlightEffect implements OnCombatStartScript {
 		if (victim.isPlayer() && attacker.isNpc()) {
 			Npc attackerNpc = (Npc) attacker;
 			Player playerVictim = (Player) victim;
-			if ( (attackerNpc.getDef().getName().toLowerCase().contains("demon") 
-					|| DataConversions.inArray(otherDemonIDs, attackerNpc.getID())) && playerVictim.getInventory().wielding(52) ) {
-				return true;
-			}
+			return (attackerNpc.getDef().getName().toLowerCase().contains("demon")
+				|| DataConversions.inArray(otherDemonIDs, attackerNpc.getID())) && playerVictim.getInventory().wielding(52);
 		}
 		return false;
 	}

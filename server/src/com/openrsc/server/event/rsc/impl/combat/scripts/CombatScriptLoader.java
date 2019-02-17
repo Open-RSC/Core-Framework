@@ -5,6 +5,7 @@ import com.openrsc.server.plugins.PluginHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,9 +23,9 @@ public class CombatScriptLoader {
 
 	private static final Map<String, OnCombatStartScript> combatStartScripts = new HashMap<String, OnCombatStartScript>();
 
-	public static void loadCombatScripts() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+	private static void loadCombatScripts() throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		for (Class<?> c : PluginHandler.loadClasses("com.openrsc.server.event.rsc.impl.combat.scripts.all")) {
-			Object classInstance = c.newInstance();
+			Object classInstance = c.getConstructor().newInstance();
 			if (classInstance instanceof CombatScript) {
 				CombatScript script = (CombatScript) classInstance;
 				combatScripts.put(classInstance.getClass().getName(), script);
@@ -61,6 +62,8 @@ public class CombatScriptLoader {
 			loadCombatScripts();
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
 			LOGGER.catching(e);
+		} catch (NoSuchMethodException | InvocationTargetException e) {
+			e.printStackTrace();
 		}
 	}
 }

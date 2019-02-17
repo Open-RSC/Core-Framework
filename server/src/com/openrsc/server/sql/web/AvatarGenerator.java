@@ -345,7 +345,7 @@ public final class AvatarGenerator {
 		private final int[] pixels;
 
 		/// Sole Constructor
-		public AvatarTransaction(int playerID, PlayerAppearance appearance, int[] wornItems) throws IOException {
+		AvatarTransaction(int playerID, PlayerAppearance appearance, int[] wornItems) throws IOException {
 			this.appearance = appearance;
 			this.wornItems = wornItems;
 			this.pixels = new int[AVATAR_WIDTH * AVATAR_HEIGHT];
@@ -383,7 +383,7 @@ public final class AvatarGenerator {
 		}
 
 		/// A helper function for rendering
-		public void spriteClip4(int i, int j, int k, int l, int i1, int overlay, int k1, int l1, boolean flag) {
+		void spriteClip4(int i, int j, int k, int l, int i1, int overlay, int k1, int l1, boolean flag) {
 			if (overlay == 0) {
 				overlay = 0xffffff;
 			}
@@ -448,7 +448,6 @@ public final class AvatarGenerator {
 				return;
 			}
 			spritePlotTransparent(pixels, sprites[i1].getPixels(), 0, (sprites[i1].getWidth() << 16) - k2 - 1, l2, j4, k, l, -j3, k3, i2, overlay, k1, i3, l3, i5);
-			return;
 		}
 
 		/// A helper function for rendering
@@ -546,7 +545,7 @@ public final class AvatarGenerator {
 		}
 
 		/// A helper function for rendering
-		private final void drawPlayer(int x, int y, int scaleX, int scaleY, int unknown) {
+		private void drawPlayer(int x, int y, int scaleX, int scaleY, int unknown) {
 			for (int k2 = 0; k2 < 12; k2++) {
 				int l2 = npcAnimationArray[0][k2];
 				int animationIndex = wornItems[l2] - 1;
@@ -583,13 +582,13 @@ public final class AvatarGenerator {
 			private int something1;
 			private int something2;
 
-			public Sprite(int[] pixels, int width, int height) {
+			Sprite(int[] pixels, int width, int height) {
 				this.pixels = pixels;
 				this.width = width;
 				this.height = height;
 			}
 
-			public static Sprite unpack(ByteBuffer in)
+			static Sprite unpack(ByteBuffer in)
 				throws
 				IOException {
 				if (in.remaining() < 25) {
@@ -621,31 +620,31 @@ public final class AvatarGenerator {
 				return sprite;
 			}
 
-			public int getSomething1() {
+			int getSomething1() {
 				return something1;
 			}
 
-			public int getSomething2() {
+			int getSomething2() {
 				return something2;
 			}
 
-			public boolean requiresShift() {
+			boolean requiresShift() {
 				return requiresShift;
 			}
 
-			public int getXShift() {
+			int getXShift() {
 				return xShift;
 			}
 
-			public int getYShift() {
+			int getYShift() {
 				return yShift;
 			}
 
-			public int[] getPixels() {
+			int[] getPixels() {
 				return pixels;
 			}
 
-			public int getWidth() {
+			int getWidth() {
 				return width;
 			}
 
@@ -657,12 +656,12 @@ public final class AvatarGenerator {
 		/// A helper class for describing animation offsets
 		private final static class AnimationDef {
 			public String name;
-			public int charColour;
-			public boolean hasA;
-			public boolean hasF;
+			int charColour;
+			boolean hasA;
+			boolean hasF;
 			public int number;
 
-			public AnimationDef(String name, int charColour, int genderModel, boolean hasA, boolean hasF, int number) {
+			AnimationDef(String name, int charColour, int genderModel, boolean hasA, boolean hasF, int number) {
 				this.name = name;
 				this.charColour = charColour;
 				this.hasA = hasA;
@@ -674,15 +673,15 @@ public final class AvatarGenerator {
 				return name;
 			}
 
-			public int getCharColour() {
+			int getCharColour() {
 				return charColour;
 			}
 
-			public boolean hasA() {
+			boolean hasA() {
 				return hasA;
 			}
 
-			public boolean hasF() {
+			boolean hasF() {
 				return hasF;
 			}
 

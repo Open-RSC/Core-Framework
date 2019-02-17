@@ -28,7 +28,7 @@ public class StatefulEntityCollection<T extends Entity> {
 		this(true);
 	}
 
-	public StatefulEntityCollection(boolean retainOrder) {
+	private StatefulEntityCollection(boolean retainOrder) {
 		knownEntities = retainOrder ? new LinkedHashSet<>() : new HashSet<>();
 		entitiesToRemove = retainOrder ? new LinkedHashSet<>() : new HashSet<>();
 		newEntities = retainOrder ? new LinkedHashSet<>() : new HashSet<>();

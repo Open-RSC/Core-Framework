@@ -39,8 +39,8 @@ public final class PluginHandler {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	public static PluginHandler pluginHandler = null;
-	public static boolean reloading;
+	private static PluginHandler pluginHandler = null;
+	private static boolean reloading;
 	private Object defaultHandler = null;
 	private URLClassLoader urlClassLoader;
 	private Map<String, Set<Object>> actionPlugins = new HashMap<String, Set<Object>>();
@@ -326,7 +326,7 @@ public final class PluginHandler {
 				if (!interfce.isAssignableFrom(plugin)) {
 					continue;
 				}
-				Object instance = plugin.newInstance();
+				Object instance = plugin.getConstructor().newInstance();
 				if (loadedPlugins.containsKey(instance.getClass().getName())) {
 					instance = loadedPlugins.get(instance.getClass().getName());
 				} else {

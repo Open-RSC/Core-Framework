@@ -11,7 +11,7 @@ public abstract class DelayedEvent {
 	protected int delay = 600;
 	protected Player owner;
 	protected boolean matchRunning = true;
-	protected boolean gameEvent;
+	private boolean gameEvent;
 	private long lastRun = System.currentTimeMillis();
 
 	public DelayedEvent(Player owner, int delay) {
@@ -31,7 +31,7 @@ public abstract class DelayedEvent {
 		this.delay = delay;
 	}
 
-	public Object getIdentifier() {
+	private Object getIdentifier() {
 		return null;
 	}
 

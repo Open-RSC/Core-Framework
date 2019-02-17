@@ -115,7 +115,7 @@ public class PacketHandlerLookup {
 	private static void bind(int opcode, Class<?> clazz) {
 		Object clazzObject;
 		try {
-			clazzObject = clazz.newInstance();
+			clazzObject = clazz.getConstructor().newInstance();
 			if (clazzObject instanceof PacketHandler) {
 				PacketHandler packetHandler = (PacketHandler) clazzObject;
 				packetHandlers.put(opcode, packetHandler);
