@@ -46,7 +46,7 @@ public class Config {
     public static final String DL_URL = "game.openrsc.com";
     public static final String ANDROID_DOWNLOAD_PATH = "https://" + DL_URL + "/downloads/";
     public static final String CACHE_URL = "https://" + DL_URL + "/downloads/cache/";
-    public static final int ANDROID_CLIENT_VERSION = 7;
+    public static final int ANDROID_CLIENT_VERSION = 8;
     public static boolean F_SHOWING_KEYBOARD = false;
     public static int F_LONG_PRESS_CALC;
     public static boolean C_HOLD_AND_CHOOSE = true;
