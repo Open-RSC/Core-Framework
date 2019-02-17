@@ -430,11 +430,11 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockTeleport(Player p) {
-		if (p.getLocation().inBounds(388, 4, 427, 40) || p.getLocation().inBounds(484, 4, 523, 40)
+		if ((p.getLocation().inBounds(388, 4, 427, 40) || p.getLocation().inBounds(484, 4, 523, 40)
 			|| p.getLocation().inBounds(411, 976, 519, 984)
 			|| p.getLocation().inBounds(411, 1920, 518, 1925)
 			|| p.getLocation().inBounds(511, 976, 519, 984)
-			|| p.getLocation().inBounds(511, 1920, 518, 1925)) {
+			|| p.getLocation().inBounds(511, 1920, 518, 1925)) && !p.isEvent()) {
 			message(p, "A mysterious force blocks your teleport spell!",
 				"You can't use teleport after level 20 wilderness");
 			return true;
