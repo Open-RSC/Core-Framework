@@ -340,6 +340,7 @@ public final class Player extends Mob {
 	private int databaseID;
 	private Clan clan;
 	private ClanInvite activeClanInvitation;
+
 	/**
 	 * Constructs a new Player instance from LoginRequest
 	 *
@@ -718,11 +719,11 @@ public final class Player extends Mob {
 				Optional<Integer> optionalSkillIndex = Optional.empty();
 				boolean unWield = false;
 				boolean bypass = !Constants.GameServer.STRICT_CHECK_ALL &&
-						(itemLower.startsWith("poisoned") && 
-							(itemLower.endsWith("throwing dart") && !Constants.GameServer.STRICT_PDART_CHECK) ||
-							(itemLower.endsWith("throwing knife") && !Constants.GameServer.STRICT_PKNIFE_CHECK) || 
-							(itemLower.endsWith("spear") && !Constants.GameServer.STRICT_PSPEAR_CHECK)
-						);
+					(itemLower.startsWith("poisoned") &&
+						(itemLower.endsWith("throwing dart") && !Constants.GameServer.STRICT_PDART_CHECK) ||
+						(itemLower.endsWith("throwing knife") && !Constants.GameServer.STRICT_PKNIFE_CHECK) ||
+						(itemLower.endsWith("spear") && !Constants.GameServer.STRICT_PSPEAR_CHECK)
+					);
 				if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
 					optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
 					optionalSkillIndex = Optional.of(Skills.ATTACK);
@@ -737,7 +738,7 @@ public final class Player extends Mob {
 					optionalLevel = Optional.of(requiredLevel);
 					optionalSkillIndex = Optional.of(Skills.ATTACK);
 				}
-				
+
 				if (getSkills().getMaxStat(requiredSkillIndex) < requiredLevel) {
 					if (!bypass) {
 						message("You are not a high enough level to use this item");
@@ -750,9 +751,9 @@ public final class Player extends Mob {
 						message("You are not a high enough level to use this item");
 						message("You need to have a " + Skills.SKILL_NAME[optionalSkillIndex.get()] + " level of " + optionalLevel.get());
 						unWield = true;
-					}	
+					}
 				}
-				
+
 				if (unWield) {
 					item.setWielded(false);
 					updateWornItems(item.getDef().getWieldPosition(),
@@ -1236,7 +1237,7 @@ public final class Player extends Mob {
 	}
 
 	public void incExp(int skill, int skillXP, boolean useFatigue) {
-		if(isExperienceFrozen()) {
+		if (isExperienceFrozen()) {
 			ActionSender.sendMessage(this, "You can not gain experience right now!");
 			return;
 		}
@@ -1480,7 +1481,7 @@ public final class Player extends Mob {
 		if (stake) {
 			getDuel().dropOnDeath();
 		} else {
-			if(!isStaff())
+			if (!isStaff())
 				getInventory().dropOnDeath(mob);
 		}
 		if (isIronMan(3)) {
@@ -1541,9 +1542,11 @@ public final class Player extends Mob {
 
 	public void addToPacketQueue(Packet e) {
 		ping();
-		synchronized (incomingPacketLock) {
-			if (!incomingPackets.containsKey(e.getID()))
-				incomingPackets.put(e.getID(), e);
+		if (incomingPackets.size() <= Constants.GameServer.PACKET_LIMIT) {
+			synchronized (incomingPacketLock) {
+				if (!incomingPackets.containsKey(e.getID()))
+					incomingPackets.put(e.getID(), e);
+			}
 		}
 	}
 
@@ -1853,9 +1856,9 @@ public final class Player extends Mob {
 			combatEvent.resetCombat();
 		}
 
-		if(bubble) {
+		if (bubble) {
 			for (Player p : getViewArea().getPlayersInView()) {
-				if(!isInvisible(p)) {
+				if (!isInvisible(p)) {
 					ActionSender.sendTeleBubble(p, getX(), getY(), false);
 				}
 			}
@@ -2128,7 +2131,7 @@ public final class Player extends Mob {
 		return stateIsInvulnerable() && m.isInvulnerableTo(this);
 	}
 
-	public boolean cacheIsInvulnerable () {
+	public boolean cacheIsInvulnerable() {
 		if (!getCache().hasKey("invulnerable"))
 			return false;
 
@@ -2177,7 +2180,7 @@ public final class Player extends Mob {
 	}
 
 	public void setSummonReturnPoint() {
-		if(wasSummoned())
+		if (wasSummoned())
 			return;
 
 		getCache().set("return_x", getX());
@@ -2192,21 +2195,21 @@ public final class Player extends Mob {
 	}
 
 	public int getSummonReturnX() {
-		if(!getCache().hasKey("return_x"))
+		if (!getCache().hasKey("return_x"))
 			return -1;
 
 		return getCache().getInt("return_x");
 	}
 
 	public int getSummonReturnY() {
-		if(!getCache().hasKey("return_y"))
+		if (!getCache().hasKey("return_y"))
 			return -1;
 
 		return getCache().getInt("return_y");
 	}
 
 	public Point returnFromSummon() {
-		if(!wasSummoned())
+		if (!wasSummoned())
 			return null;
 
 		Point originalLocation = getLocation();
@@ -2229,12 +2232,12 @@ public final class Player extends Mob {
 	public Point jail() {
 		Point originalLocation = getLocation();
 		setJailReturnPoint();
-		teleport(75,1641, true);
+		teleport(75, 1641, true);
 		return originalLocation;
 	}
 
 	public void setJailReturnPoint() {
-		if(isJailed())
+		if (isJailed())
 			return;
 
 		getCache().set("jail_return_x", getX());
@@ -2249,21 +2252,21 @@ public final class Player extends Mob {
 	}
 
 	public int getJailReturnX() {
-		if(!getCache().hasKey("jail_return_x"))
+		if (!getCache().hasKey("jail_return_x"))
 			return -1;
 
 		return getCache().getInt("jail_return_x");
 	}
 
 	public int getJailReturnY() {
-		if(!getCache().hasKey("jail_return_y"))
+		if (!getCache().hasKey("jail_return_y"))
 			return -1;
 
 		return getCache().getInt("jail_return_y");
 	}
 
 	public Point releaseFromJail() {
-		if(!isJailed())
+		if (!isJailed())
 			return null;
 
 		Point originalLocation = getLocation();
