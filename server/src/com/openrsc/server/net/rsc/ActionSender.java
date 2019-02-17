@@ -21,7 +21,9 @@ import com.openrsc.server.util.rsc.CaptchaGenerator;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
-
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,10 +31,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
-
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
 
 /**
  * @author n0m
@@ -427,7 +425,9 @@ public class ActionSender {
 			LOGGER.info(Constants.GameServer.MEMBER_WORLD + " 43");
 			LOGGER.info(Constants.GameServer.DISPLAY_LOGO_SPRITE + " 44");
 			//LOGGER.info(Constants.GameServer.LOGO_SPRITE_ID + " 45");
-			//LOGGER.info(Constants.GameServer.C_FPS + " 46");
+			//LOGGER.info(Constants.GameServer.FPS + " 46");
+			LOGGER.info(Constants.GameServer.WANT_EMAIL + " 47");
+			LOGGER.info(Constants.GameServer.WANT_REGISTRATION_LIMIT + " 48");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs();
 		ConnectionAttachment attachment = new ConnectionAttachment();
@@ -489,7 +489,9 @@ public class ActionSender {
 		s.writeByte((byte) (Constants.GameServer.MEMBER_WORLD ? 1 : 0)); // 43
 		s.writeByte((byte) (Constants.GameServer.DISPLAY_LOGO_SPRITE ? 1 : 0)); // 44
 		//s.writeByte((byte) Constants.GameServer.LOGO_SPRITE_ID); // 45
-		//s.writeByte((byte) Constants.GameServer.C_FPS); // 46
+		//s.writeByte((byte) Constants.GameServer.FPS); // 46
+		s.writeByte((byte) (Constants.GameServer.WANT_EMAIL ? 1 : 0)); // 47
+		s.writeByte((byte) (Constants.GameServer.WANT_REGISTRATION_LIMIT ? 1 : 0)); // 48
 		return s;
 	}
 
@@ -1023,7 +1025,7 @@ public class ActionSender {
 
 				sendWakeUp(p, false, true);
 				sendLoginBox(p);
-				sendMessage(p, null, 0, MessageType.QUEST, Constants.GameServer.MOTD, 0);
+				sendMessage(p, null, 0, MessageType.QUEST, "Welcome to " + Constants.GameServer.SERVER_NAME + "!", 0);
 				//sendMessage(p, null, 0, MessageType.QUEST, "For guides and tips - please visit http://runescapeclassic.wikia.com", 0);
 				if (p.isMuted()) {
 					sendMessage(p, "You are muted for "

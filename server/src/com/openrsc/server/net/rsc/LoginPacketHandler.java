@@ -32,7 +32,7 @@ public class LoginPacketHandler {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	public static boolean isValidEmailAddress(String email) {
+	private static boolean isValidEmailAddress(String email) {
 		boolean stricterFilter = true;
 		String stricterFilterString = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
 		String laxString = ".+@.+\\.[A-Za-z]{2}[A-Za-z]*";
@@ -133,20 +133,26 @@ public class LoginPacketHandler {
 					return;
 				}
 
-				if (!isValidEmailAddress(email)) {
-					channel.writeAndFlush(new PacketBuilder().writeByte((byte) 6).toPacket());
-					channel.close();
-					return;
+				if (Constants.GameServer.WANT_EMAIL) {
+					if (!isValidEmailAddress(email)) {
+						channel.writeAndFlush(new PacketBuilder().writeByte((byte) 6).toPacket());
+						channel.close();
+						return;
+					}
 				}
 
+
 				ResultSet set = DatabaseConnection.getDatabase().executeQuery("SELECT 1 FROM " + Constants.GameServer.MYSQL_TABLE_PREFIX + "players WHERE creation_ip='" + IP
-					+ "' AND creation_date>'" + ((System.currentTimeMillis() / 1000) - 3600) + "'");
-				if (set.next()) {
-					set.close();
-					LOGGER.info(IP + " - Registration failed: Registered recently.");
-					channel.writeAndFlush(new PacketBuilder().writeByte((byte) 5).toPacket());
-					channel.close();
-					return;
+					+ "' AND creation_date>'" + ((System.currentTimeMillis() / 1000) - 3600) + "'"); // Checks to see if the player has been registered by the same IP address in the past 1 hour
+
+				if (Constants.GameServer.WANT_REGISTRATION_LIMIT) {
+					if (set.next()) {
+						set.close();
+						LOGGER.info(IP + " - Registration failed: Registered recently.");
+						channel.writeAndFlush(new PacketBuilder().writeByte((byte) 5).toPacket());
+						channel.close();
+						return;
+					}
 				}
 
 				set = DatabaseConnection.getDatabase().executeQuery("SELECT 1 FROM " + Constants.GameServer.MYSQL_TABLE_PREFIX + "players WHERE `username`='" + user + "'");
