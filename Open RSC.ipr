@@ -224,6 +224,7 @@
         <root url="jar://$PROJECT_DIR$/server/lib/commons-lang-2.6.jar!/" />
         <root url="jar://$PROJECT_DIR$/server/lib/netty-all-4.1.33.Final.jar!/" />
         <root url="jar://$PROJECT_DIR$/server/lib/netty-3.4.6.final.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/guava-25.0-jre.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
@@ -275,27 +276,17 @@
       <SOURCES />
     </library>
     <library name="openrsc_wiki.sql">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/Website/wiki/openrsc_wiki.sql.zip!/" />
-      </CLASSES>
+      <CLASSES />
       <JAVADOC />
       <SOURCES />
     </library>
     <library name="release">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/release/2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/release/3.jar!/" />
-        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/release/4.jar!/" />
-        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/release/1.jar!/" />
-        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/release/0.jar!/" />
-      </CLASSES>
+      <CLASSES />
       <JAVADOC />
       <SOURCES />
     </library>
     <library name="RSC_Map_Generator">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/Tools/RSC Map Generator/dist/RSC_Map_Generator.jar!/" />
-      </CLASSES>
+      <CLASSES />
       <JAVADOC />
       <SOURCES />
     </library>
@@ -315,20 +306,7 @@
       <SOURCES />
     </library>
     <library name="zip">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/Website/wiki/tests/phpunit/data/zip/trail.zip!/" />
-        <root url="jar://$PROJECT_DIR$/Website/wiki/tests/phpunit/data/zip/cd-gap.zip!/" />
-        <root url="jar://$PROJECT_DIR$/Website/wiki/tests/phpunit/data/zip/wrong-cd-start-disk.zip!/" />
-        <root url="jar://$PROJECT_DIR$/Website/wiki/tests/phpunit/data/zip/split.zip!/" />
-        <root url="jar://$PROJECT_DIR$/Website/wiki/tests/phpunit/data/zip/class-trailing-slash.zip!/" />
-        <root url="jar://$PROJECT_DIR$/Website/wiki/tests/phpunit/data/zip/nosig.zip!/" />
-        <root url="jar://$PROJECT_DIR$/Website/wiki/tests/phpunit/data/zip/class.zip!/" />
-        <root url="jar://$PROJECT_DIR$/Website/wiki/tests/phpunit/data/zip/class-trailing-null.zip!/" />
-        <root url="jar://$PROJECT_DIR$/Website/wiki/tests/phpunit/data/zip/empty.zip!/" />
-        <root url="jar://$PROJECT_DIR$/Website/wiki/tests/phpunit/data/zip/cd-truncated.zip!/" />
-        <root url="jar://$PROJECT_DIR$/Website/wiki/tests/phpunit/data/zip/wrong-central-entry-sig.zip!/" />
-        <root url="jar://$PROJECT_DIR$/Website/wiki/tests/phpunit/data/zip/looks-like-zip64.zip!/" />
-      </CLASSES>
+      <CLASSES />
       <JAVADOC />
       <SOURCES />
     </library>

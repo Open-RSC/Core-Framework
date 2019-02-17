@@ -199,9 +199,11 @@ public final class Constants {
 		//public static int FPS = 50;
 		public static boolean WANT_EMAIL = false;
 		public static boolean WANT_REGISTRATION_LIMIT = false;
-
 		//loosened checks
 		public static boolean LOOSE_SHALLOW_WATER_CHECK = false;
+		public static int PACKET_LIMIT = 30;
+		public static int CONNECTION_LIMIT = 10;
+		public static int CONNECTION_TIMEOUT = 15;
 
 		/**
 		 * @param file
@@ -308,6 +310,10 @@ public final class Constants {
 
 			WANT_EMAIL = Boolean.parseBoolean(props.getProperty("want_email"));
 			WANT_REGISTRATION_LIMIT = Boolean.parseBoolean(props.getProperty("want_registration_limit"));
+
+			PACKET_LIMIT = Integer.parseInt(props.getProperty("packet_limit"));
+			CONNECTION_LIMIT = Integer.parseInt(props.getProperty("connection_limit"));
+			CONNECTION_TIMEOUT = Integer.parseInt(props.getProperty("connection_timeout"));
 
 			// Make sure config doesn't exceed max values
 			if (VIEW_DISTANCE > 4)
