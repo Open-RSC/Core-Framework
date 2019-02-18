@@ -138,7 +138,7 @@ public final class Moderator implements CommandListener {
 			}
 
 			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
-				player.message(messagePrefix + "You can not mute a staff member of equal or greater rank.");
+				player.message(messagePrefix + "You can not kick a staff member of equal or greater rank.");
 				return;
 			}
 
