@@ -173,8 +173,8 @@ public final class RegularPlayer implements CommandListener {
 			if (player.getLocation().inWilderness()) {
 				player.message(messagePrefix + "Please move out of wilderness first");
 				return;
-			} else if (player.getLocation().inModRoom()) {
-				player.message(messagePrefix + "You can't participate to events from here..");
+			} else if (player.isJailed()) {
+				player.message(messagePrefix + "You can't participate in events while you are jailed.");
 				return;
 			}
 			if (player.getCombatLevel() > World.EVENT_COMBAT_MAX || player.getCombatLevel() < World.EVENT_COMBAT_MIN) {
