@@ -42,7 +42,7 @@ public final class RegularPlayer implements CommandListener {
 			}
 		}
 		else if (cmd.equalsIgnoreCase("bankpin")) {
-			Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
+			Player p = args.length > 0 && player.isAdmin() ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
 			if(p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
@@ -55,7 +55,7 @@ public final class RegularPlayer implements CommandListener {
 			}
 
 			p.getCache().store("bank_pin", bankPin);
-			ActionSender.sendBox(p, "Your new bank pin is " + bankPin, false);
+			ActionSender.sendBox(p, messagePrefix + "Your new bank pin is " + bankPin, false);
 			player.message(messagePrefix + p.getUsername() + "'s bank pin has been changed");
 		}
 		else if (cmd.equalsIgnoreCase("wilderness")) {
