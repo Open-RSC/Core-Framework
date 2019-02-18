@@ -138,7 +138,7 @@ public final class RegularPlayer implements CommandListener {
 			String playerToKick = args[0].replace("_", " ");
 			long kickedHash	= DataConversions.usernameToHash(args[0]);
 			Player kicked = World.getWorld().getPlayer(kickedHash);
-			if (!player.getClan().isAllowed(0, player)) {
+			if (!player.getClan().isAllowed(3, player)) {
 				player.message(messagePrefix + "You are not allowed to kick that player.");
 				return;
 			}
