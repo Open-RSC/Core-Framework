@@ -87,7 +87,7 @@ public final class SuperModerator implements CommandListener {
 		}
 		else if (cmd.equalsIgnoreCase("fatigue")) {
 			if(args.length < 1) {
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [amount]");
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] (percentage)");
 				return;
 			}
 
