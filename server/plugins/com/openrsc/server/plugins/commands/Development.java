@@ -34,7 +34,7 @@ public final class Development implements CommandListener {
 	 */
 	@Override
 	public void handleCommand(String cmd, String[] args, Player player) {
-		if (cmd.equalsIgnoreCase("radiusnpc") || cmd.equalsIgnoreCase("cnpc")|| cmd.equalsIgnoreCase("cpc")) {
+		if (cmd.equalsIgnoreCase("radiusnpc") || cmd.equalsIgnoreCase("createnpc") || cmd.equalsIgnoreCase("cnpc")|| cmd.equalsIgnoreCase("cpc")) {
 			if (args.length < 2 || args.length == 3) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] [radius] (x) (y)");
 				return;
@@ -95,7 +95,7 @@ public final class Development implements CommandListener {
 				+ "', '" + n.getLoc().startX() + "', '" + n.getLoc().minX() + "', '" + n.getLoc().maxX() + "','"
 				+ n.getLoc().startY() + "','" + n.getLoc().minY() + "','" + n.getLoc().maxY() + "')");
 		}
-		else if (cmd.equalsIgnoreCase("rpc") || cmd.equalsIgnoreCase("rnpc")) {
+		else if (cmd.equalsIgnoreCase("rpc") || cmd.equalsIgnoreCase("rnpc") || cmd.equalsIgnoreCase("removenpc")){
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_instance_id]");
 				return;
@@ -126,7 +126,7 @@ public final class Development implements CommandListener {
 					+ "' AND maxY = '" + npc.getLoc().maxY + "'");
 			World.getWorld().unregisterNpc(npc);
 		}
-		else if (cmd.equalsIgnoreCase("robject")) {
+		else if (cmd.equalsIgnoreCase("removeobject") || cmd.equalsIgnoreCase("robject")) {
 			if(args.length == 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (x) (y)");
 				return;
@@ -179,7 +179,7 @@ public final class Development implements CommandListener {
 					+ "' AND `type` = '" + object.getType() + "'");
 			World.getWorld().unregisterGameObject(object);
 		}
-		else if (cmd.equalsIgnoreCase("aobject")) {
+		else if (cmd.equalsIgnoreCase("createobject") || cmd.equalsIgnoreCase("cobject") || cmd.equalsIgnoreCase("addobject") || cmd.equalsIgnoreCase("aobject")) {
 			if (args.length < 1 || args.length == 2) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] (x) (y)");
 				return;
@@ -337,7 +337,7 @@ public final class Development implements CommandListener {
 					return;
 				}
 			} else {
-				debugPlayers = false;
+				debugPlayers = true;
 			}
 
 			boolean debugNpcs ;
@@ -349,7 +349,7 @@ public final class Development implements CommandListener {
 					return;
 				}
 			} else {
-				debugNpcs = false;
+				debugNpcs = true;
 			}
 
 			boolean debugItems ;
@@ -361,7 +361,7 @@ public final class Development implements CommandListener {
 					return;
 				}
 			} else {
-				debugItems = false;
+				debugItems = true;
 			}
 
 			boolean debugObjects ;
@@ -373,7 +373,7 @@ public final class Development implements CommandListener {
 					return;
 				}
 			} else {
-				debugObjects = false;
+				debugObjects = true;
 			}
 
 			ActionSender.sendBox(player, player.getRegion().toString(debugPlayers, debugNpcs, debugItems, debugObjects)
