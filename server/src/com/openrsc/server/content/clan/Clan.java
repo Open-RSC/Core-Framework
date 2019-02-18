@@ -212,7 +212,7 @@ public class Clan {
 				return true;
 			} else if (clanSetting[setting] == 1 && p.getClan().getPlayer(p.getUsername()).getRank().equals(ClanRank.LEADER)) {
 				return true;
-			} else if (clanSetting[setting] == 2 && (p.getClan().getPlayer(p.getUsername()).getRank().equals(ClanRank.LEADER) || p.getClan().getPlayer(p.getUsername()).getRank().equals(ClanRank.GENERAL))) {
+			} else if ((clanSetting[setting] == 2 ||clanSetting[setting] == 3) && (p.getClan().getPlayer(p.getUsername()).getRank().equals(ClanRank.LEADER) || p.getClan().getPlayer(p.getUsername()).getRank().equals(ClanRank.GENERAL))) {
 				return true;
 			}
 		}
