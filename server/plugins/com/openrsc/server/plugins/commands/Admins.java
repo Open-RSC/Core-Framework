@@ -8,11 +8,7 @@ import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.HolidayDropEvent;
 import com.openrsc.server.event.custom.HourlyNpcLootEvent;
 import com.openrsc.server.event.custom.NpcLootEvent;
-import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.external.ItemDefinition;
-import com.openrsc.server.external.ItemDropDef;
-import com.openrsc.server.external.ItemLoc;
-import com.openrsc.server.external.NPCDef;
+import com.openrsc.server.external.*;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
@@ -38,18 +34,12 @@ import com.openrsc.server.sql.query.logs.StaffLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.GoldDrops;
-import com.openrsc.server.util.rsc.MessageType;
-
 import org.apache.commons.lang.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 public final class Admins implements CommandListener {
 
@@ -1025,7 +1015,7 @@ public final class Admins implements CommandListener {
 			p.message(messagePrefix + "Your prayer has been recharged by an admin");
 			player.message(messagePrefix + "Recharged: " + p.getUsername());
 		}
-		else if (cmd.equalsIgnoreCase("hp") || cmd.equalsIgnoreCase("sethp") || cmd.equalsIgnoreCase("hits")) {
+		else if (cmd.equalsIgnoreCase("hp") || cmd.equalsIgnoreCase("sethp") || cmd.equalsIgnoreCase("hits") || cmd.equalsIgnoreCase("sethits")) {
 			if(args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] [hp]");
 				return;
