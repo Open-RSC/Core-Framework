@@ -224,7 +224,7 @@ public final class RegularPlayer implements CommandListener {
 			newStr = new StringBuilder(newStr.toString().replace('~', ' '));
 			newStr = new StringBuilder(newStr.toString().replace('@', ' '));
 			String channelPrefix = cmd.equals("g") ? "@gr2@[General] " : "@or1@[PKing] ";
-			int channel = cmd.equals("g") ? 1 : 2;
+			int channel = cmd.equalsIgnoreCase("g") ? 1 : 2;
 			for (Player p : World.getWorld().getPlayers()) {
 				if (p.getSocial().isIgnoring(player.getUsernameHash()))
 					continue;
