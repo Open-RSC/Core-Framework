@@ -40,7 +40,6 @@ public final class SuperModerator implements CommandListener {
 				return;
 			}
 
-
 			int radius = -1;
 			if(args.length >= 3) {
 				try {
@@ -86,10 +85,8 @@ public final class SuperModerator implements CommandListener {
 
 			player.message(messagePrefix + "You have spawned " + EntityHandler.getNpcDef(id).getName() + ", radius: " + radius + " for " + time + " minutes");
 		}
-		else if (cmd.equalsIgnoreCase("fatigue"))
-		{
-			if(args.length < 1)
-			{
+		else if (cmd.equalsIgnoreCase("fatigue")) {
+			if(args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [amount]");
 				return;
 			}
@@ -165,8 +162,7 @@ public final class SuperModerator implements CommandListener {
 			player.message(messagePrefix + "Skull has been " + skullMessage + ": " + p.getUsername());
 		}
 		else if (cmd.equalsIgnoreCase("jail")) {
-			if (args.length != 1)
-			{
+			if (args.length != 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
 			}
