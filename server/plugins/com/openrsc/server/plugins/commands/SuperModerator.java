@@ -103,20 +103,26 @@ public final class SuperModerator implements CommandListener {
 				return;
 			}
 
+			int fatigue;
 			try {
-				int fatigue = args.length > 1 ? Integer.parseInt(args[1]) : 100;
-				if(fatigue < 0)
-					fatigue = 0;
-				if(fatigue > 100)
-					fatigue = 100;
-				p.setFatigue(fatigue * 750);
-
-				player.message(messagePrefix + p.getUsername() + "'s fatigue has been set to " + ((p.getFatigue() / 25) * 100 / 750) + "%");
-				GameLogging.addQuery(new StaffLog(player, 12, p, p.getUsername() + "'s fatigue percentage was set to " + fatigue + "% by " + player.getUsername()));
+				fatigue = args.length > 1 ? Integer.parseInt(args[1]) : 100;
 			}
 			catch(NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [amount]");
+				return;
 			}
+
+			if(fatigue < 0)
+				fatigue = 0;
+			if(fatigue > 100)
+				fatigue = 100;
+			p.setFatigue(fatigue * 750);
+
+			if(p.getUsernameHash() != player.getUsernameHash()) {
+				p.message(messagePrefix + "Your fatigue has been set to " + ((p.getFatigue() / 25) * 100 / 750) + "% by an admin");
+			}
+			player.message(messagePrefix + p.getUsername() + "'s fatigue has been set to " + ((p.getFatigue() / 25) * 100 / 750) + "%");
+			GameLogging.addQuery(new StaffLog(player, 12, p, p.getUsername() + "'s fatigue percentage was set to " + fatigue + "% by " + player.getUsername()));
 		}
 		else if (cmd.equalsIgnoreCase("skull")) {
 			if(args.length < 1) {
@@ -158,8 +164,10 @@ public final class SuperModerator implements CommandListener {
 			}
 
 			String skullMessage = p.isSkulled() ? "added" : "removed";
-			p.message(messagePrefix + "Skull has been " + skullMessage + " by an admin");
-			player.message(messagePrefix + "Skull has been " + skullMessage + ": " + p.getUsername());
+			if(p.getUsernameHash() != player.getUsernameHash()) {
+				p.message(messagePrefix + "PK skull has been " + skullMessage + " by an admin");
+			}
+			player.message(messagePrefix + "PK skull has been " + skullMessage + ": " + p.getUsername());
 		}
 		else if (cmd.equalsIgnoreCase("jail")) {
 			if (args.length != 1) {
@@ -187,7 +195,9 @@ public final class SuperModerator implements CommandListener {
 			Point originalLocation = p.jail();
 			GameLogging.addQuery(new StaffLog(player, 5, player.getUsername() + " has summoned " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation));
 			player.message(messagePrefix + "You have jailed " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation);
-			p.message(messagePrefix + "You have been jailed to " + p.getLocation() + " from " + originalLocation + " by " + player.getStaffName());
+			if(p.getUsernameHash() != player.getUsernameHash()) {
+				p.message(messagePrefix + "You have been jailed to " + p.getLocation() + " from " + originalLocation + " by " + player.getStaffName());
+			}
 		}
 		else if (cmd.equalsIgnoreCase("release")) {
 			Player p = args.length > 0 ?
@@ -212,7 +222,9 @@ public final class SuperModerator implements CommandListener {
 			Point originalLocation = p.releaseFromJail();
 			GameLogging.addQuery(new StaffLog(player, 5, player.getUsername() + " has returned " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation));
 			player.message(messagePrefix + "You have released " + p.getUsername() + " from jail to " + p.getLocation() + " from " + originalLocation);
-			p.message(messagePrefix + "You have been released from jail to " + p.getLocation() + " from " + originalLocation + " by " + player.getStaffName());
+			if(p.getUsernameHash() != player.getUsernameHash()) {
+				p.message(messagePrefix + "You have been released from jail to " + p.getLocation() + " from " + originalLocation + " by " + player.getStaffName());
+			}
 		}
 		else if (cmd.equalsIgnoreCase("ip")) {
 			Player p = args.length > 0 ?

@@ -379,7 +379,7 @@ public final class Development implements CommandListener {
 			ActionSender.sendBox(player, player.getRegion().toString(debugPlayers, debugNpcs, debugItems, debugObjects)
 				.replaceAll("\n", "%"), true);
 		}
-		else if ((cmd.equalsIgnoreCase("coords"))) {
+		else if (cmd.equalsIgnoreCase("coords")) {
 			Player p = args.length > 0 ?
 				world.getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
@@ -389,7 +389,7 @@ public final class Development implements CommandListener {
 			else
 				player.message(messagePrefix + "Invalid name or player is not online");
 		}
-		else if (cmd.equals("events")) {
+		else if (cmd.equalsIgnoreCase("events")) {
 			player.message("Total amount of events running: " + Server.getServer().getGameEventHandler().getEvents().size());
 			HashMap<String, Integer> events = new HashMap<String, Integer>();
 			for (Map.Entry<String, GameTickEvent> stringGameTickEventEntry : Server.getServer().getGameEventHandler().getEvents().entrySet()) {

@@ -704,7 +704,9 @@ public final class Admins implements CommandListener {
 			}
 
 			p.updateQuestStage(quest, stage);
-			p.message(messagePrefix + "A staff member has changed your quest stage for QuestID " + quest + " to stage " + stage);
+			if(p.getUsernameHash() != player.getUsernameHash()) {
+				p.message(messagePrefix + "A staff member has changed your quest stage for QuestID " + quest + " to stage " + stage);
+			}
 			player.message(messagePrefix + "You have changed " + p.getUsername() + "'s QuestID: " + quest + " to Stage: " + stage + ".");
 		}
 		else if (cmd.equalsIgnoreCase("questcomplete") || cmd.equalsIgnoreCase("questcom")) {
@@ -734,8 +736,10 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			player.sendQuestComplete(quest);
-			p.message(messagePrefix + "A staff member has changed your quest to completed for QuestID " + quest);
+			p.sendQuestComplete(quest);
+			if(p.getUsernameHash() != player.getUsernameHash()) {
+				p.message(messagePrefix + "A staff member has changed your quest to completed for QuestID " + quest);
+			}
 			player.message(messagePrefix + "You have completed Quest ID " + quest + " for " + p.getUsername());
 		}
 		else if (cmd.equalsIgnoreCase("quest") || cmd.equalsIgnoreCase("getquest") || cmd.equalsIgnoreCase("checkquest")) {
@@ -808,13 +812,15 @@ public final class Admins implements CommandListener {
 				world.getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
-			if(p == null) {
+			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
 			player.message(messagePrefix + p.getUsername() + " has been sent the change appearance screen");
-			p.message(messagePrefix + "A staff member has sent you the change appearance screen");
+			if (p.getUsernameHash() != player.getUsernameHash()) {
+				p.message(messagePrefix + "A staff member has sent you the change appearance screen");
+			}
 			p.setChangingAppearance(true);
 			ActionSender.sendAppearanceScreen(p);
 		}
@@ -871,8 +877,10 @@ public final class Admins implements CommandListener {
 				}
 			}
 
-			player.message(messagePrefix + "You have spawned " + amount + " " + EntityHandler.getItemDef(id).getName());
-			p.message(messagePrefix + "A staff member has given you " + amount + " " + EntityHandler.getItemDef(id).getName());
+			player.message(messagePrefix + "You have spawned " + amount + " " + EntityHandler.getItemDef(id).getName() + " to " + p.getUsername());
+			if(p.getUsernameHash() != player.getUsernameHash()) {
+				p.message(messagePrefix + "A staff member has given you " + amount + " " + EntityHandler.getItemDef(id).getName());
+			}
 		}
 		else if (cmd.equalsIgnoreCase("bankitem") || cmd.equalsIgnoreCase("bitem") || cmd.equalsIgnoreCase("addbank")) {
 			if (args.length < 1) {
@@ -915,8 +923,10 @@ public final class Admins implements CommandListener {
 
 			p.getBank().add(new Item(id, amount));
 
-			player.message(messagePrefix + "You have spawned to bank " + amount + " " + EntityHandler.getItemDef(id).getName());
-			p.message(messagePrefix + "A staff member has added to your bank " + amount + " " + EntityHandler.getItemDef(id).getName());
+			player.message(messagePrefix + "You have spawned to bank " + amount + " " + EntityHandler.getItemDef(id).getName() + " to " + p.getUsername());
+			if(p.getUsernameHash() != player.getUsernameHash()) {
+				p.message(messagePrefix + "A staff member has added to your bank " + amount + " " + EntityHandler.getItemDef(id).getName());
+			}
 		}
 		else if (cmd.equalsIgnoreCase("info") || cmd.equalsIgnoreCase("about")) {
 			Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
@@ -998,7 +1008,9 @@ public final class Admins implements CommandListener {
 
 			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(Skills.HITPOINTS) - p.getSkills().getMaxStat(Skills.HITPOINTS)));
 			p.getSkills().normalize(Skills.HITPOINTS);
-			p.message(messagePrefix + "You have been healed by an admin");
+			if(p.getUsernameHash() != player.getUsernameHash()) {
+				p.message(messagePrefix + "You have been healed by an admin");
+			}
 			player.message(messagePrefix + "Healed: " + p.getUsername());
 		}
 		else if (cmd.equalsIgnoreCase("recharge") || cmd.equalsIgnoreCase("healprayer") || cmd.equalsIgnoreCase("healp")) {
@@ -1012,7 +1024,9 @@ public final class Admins implements CommandListener {
 			}
 
 			p.getSkills().normalize(Skills.PRAYER);
-			p.message(messagePrefix + "Your prayer has been recharged by an admin");
+			if(p.getUsernameHash() != player.getUsernameHash()) {
+				p.message(messagePrefix + "Your prayer has been recharged by an admin");
+			}
 			player.message(messagePrefix + "Recharged: " + p.getUsername());
 		}
 		else if (cmd.equalsIgnoreCase("hp") || cmd.equalsIgnoreCase("sethp") || cmd.equalsIgnoreCase("hits") || cmd.equalsIgnoreCase("sethits")) {
@@ -1035,25 +1049,29 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
+			int newHits;
 			try {
-				int newHits = Integer.parseInt(args[args.length > 1 ? 1 : 0]);
-
-				if(newHits > p.getSkills().getMaxStat(Skills.HITPOINTS))
-					newHits = p.getSkills().getMaxStat(Skills.HITPOINTS);
-				if(newHits < 0)
-					newHits = 0;
-
-				p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(Skills.HITPOINTS) - newHits));
-				p.getSkills().setLevel(Skills.HITPOINTS, newHits);
-				if (p.getSkills().getLevel(Skills.HITPOINTS) <= 0)
-					p.killedBy(player);
-
-				p.message(messagePrefix + "Your hits have been set to " + newHits + " by an admin");
-				player.message(messagePrefix + "Set " + p.getUsername() + "'s hits to " + newHits);
+				newHits = Integer.parseInt(args[args.length > 1 ? 1 : 0]);
 			}
 			catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (name) [hp]");
+				return;
 			}
+
+			if(newHits > p.getSkills().getMaxStat(Skills.HITPOINTS))
+				newHits = p.getSkills().getMaxStat(Skills.HITPOINTS);
+			if(newHits < 0)
+				newHits = 0;
+
+			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(Skills.HITPOINTS) - newHits));
+			p.getSkills().setLevel(Skills.HITPOINTS, newHits);
+			if (p.getSkills().getLevel(Skills.HITPOINTS) <= 0)
+				p.killedBy(player);
+
+			if(p.getUsernameHash() != player.getUsernameHash()) {
+				p.message(messagePrefix + "Your hits have been set to " + newHits + " by an admin");
+			}
+			player.message(messagePrefix + "Set " + p.getUsername() + "'s hits to " + newHits);
 		}
 		else if (cmd.equalsIgnoreCase("prayer") || cmd.equalsIgnoreCase("setprayer")) {
 			if(args.length < 1) {
@@ -1075,23 +1093,27 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
+			int newPrayer;
 			try {
-				int newPrayer = Integer.parseInt(args[args.length > 1 ? 1 : 0]);
-
-				if(newPrayer > p.getSkills().getMaxStat(Skills.HITPOINTS))
-					newPrayer = p.getSkills().getMaxStat(Skills.HITPOINTS);
-				if(newPrayer < 0)
-					newPrayer = 0;
-
-				p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(Skills.HITPOINTS) - newPrayer));
-				p.getSkills().setLevel(Skills.HITPOINTS, newPrayer);
-
-				p.message(messagePrefix + "Your prayer has been set to " + newPrayer + " by an admin");
-				player.message(messagePrefix + "Set " + p.getUsername() + "'s prayer to " + newPrayer);
+				newPrayer = Integer.parseInt(args[args.length > 1 ? 1 : 0]);
 			}
 			catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (name) [prayer]");
+				return;
 			}
+
+			if(newPrayer > p.getSkills().getMaxStat(Skills.HITPOINTS))
+				newPrayer = p.getSkills().getMaxStat(Skills.HITPOINTS);
+			if(newPrayer < 0)
+				newPrayer = 0;
+
+			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(Skills.HITPOINTS) - newPrayer));
+			p.getSkills().setLevel(Skills.HITPOINTS, newPrayer);
+
+			if(p.getUsernameHash() != player.getUsernameHash()) {
+				p.message(messagePrefix + "Your prayer has been set to " + newPrayer + " by an admin");
+			}
+			player.message(messagePrefix + "Set " + p.getUsername() + "'s prayer to " + newPrayer);
 		}
 		else if (cmd.equalsIgnoreCase("kill")) {
 			if (args.length < 1) {
@@ -1114,7 +1136,9 @@ public final class Admins implements CommandListener {
 			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(Skills.HITPOINTS)));
 			p.getSkills().setLevel(Skills.HITPOINTS, 0);
 			p.killedBy(player);
-			p.message(messagePrefix + "You have been killed by an admin");
+			if(p.getUsernameHash() != player.getUsernameHash()) {
+				p.message(messagePrefix + "You have been killed by an admin");
+			}
 			player.message(messagePrefix + "Killed " + p.getUsername());
 		}
 		else if ((cmd.equalsIgnoreCase("damage") || cmd.equalsIgnoreCase("dmg"))) {
@@ -1149,7 +1173,9 @@ public final class Admins implements CommandListener {
 			if (p.getSkills().getLevel(Skills.HITPOINTS) <= 0)
 				p.killedBy(player);
 
-			p.message(messagePrefix + "You have been taken " + damage + " damage from an admin");
+			if(p.getUsernameHash() != player.getUsernameHash()) {
+				p.message(messagePrefix + "You have been taken " + damage + " damage from an admin");
+			}
 			player.message(messagePrefix + "Damaged " + p.getUsername() + " " + damage + " hits");
 		}
 		else if (cmd.equalsIgnoreCase("wipeinventory") || cmd.equalsIgnoreCase("wipeinv")) {
@@ -1179,7 +1205,9 @@ public final class Admins implements CommandListener {
 				p.getInventory().remove(i);
 			}
 
-			p.message(messagePrefix + "Your inventory has been wiped by an admin");
+			if(p.getUsernameHash() != player.getUsernameHash()) {
+				p.message(messagePrefix + "Your inventory has been wiped by an admin");
+			}
 			player.message(messagePrefix + "Wiped inventory of " + p.getUsername());
 		}
 		else if (cmd.equalsIgnoreCase("wipebank")) {
@@ -1201,7 +1229,9 @@ public final class Admins implements CommandListener {
 			}
 
 			p.getBank().getItems().clear();
-			p.message(messagePrefix + "Your bank has been wiped by an admin");
+			if(p.getUsernameHash() != player.getUsernameHash()) {
+				p.message(messagePrefix + "Your bank has been wiped by an admin");
+			}
 			player.message(messagePrefix + "Wiped bank of " + p.getUsername());
 		}
 		else if(cmd.equalsIgnoreCase("massitem")) {
@@ -1739,7 +1769,7 @@ public final class Admins implements CommandListener {
 				GameLogging.addQuery(new StaffLog(player, 11, p, player.getUsername() + " was banned by " + player.getUsername() + " " + (time == -1 ? "permanently" : " for " + time + " minutes")));
 			}
 
-			//player.message(messagePrefix + Server.getPlayerDataProcessor().getDatabase().banPlayer(usernameToBan, time)); // Disabled as it doesn't compile with PlayerDatabaseExecutor extending ThrottleFilter
+			player.message(messagePrefix + Server.getPlayerDataProcessor().getDatabase().banPlayer(usernameToBan, time)); // Disabled as it doesn't compile with PlayerDatabaseExecutor extending ThrottleFilter
 		}
 		else if (cmd.equalsIgnoreCase("freezexp") || cmd.equalsIgnoreCase("freezeexp") || cmd.equalsIgnoreCase("freezeexperience")) {
 			if(args.length < 1) {
@@ -1782,7 +1812,9 @@ public final class Admins implements CommandListener {
 			}
 
 			String freezeMessage = newFreezeXp ? "frozen" : "unfrozen";
-			p.message(messagePrefix + "Your experience has been " + freezeMessage + " by an admin");
+			if(p.getUsernameHash() != player.getUsernameHash()) {
+				p.message(messagePrefix + "Your experience has been " + freezeMessage + " by an admin");
+			}
 			player.message(messagePrefix + "Experience has been " + freezeMessage + ": " + p.getUsername());
 		}
 	}
