@@ -169,7 +169,9 @@ public final class Event implements CommandListener {
 			p.teleport(teleportTo.getX(), teleportTo.getY(), true);
 
 			player.message(messagePrefix + "You have teleported " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation);
-			p.message(messagePrefix + "You have been teleported to " + p.getLocation() + " from " + originalLocation);
+			if(p.getUsernameHash() != player.getUsernameHash()) {
+				p.message(messagePrefix + "You have been teleported to " + p.getLocation() + " from " + originalLocation);
+			}
 
 			GameLogging.addQuery(new StaffLog(player, 15, player.getUsername() + " has teleported " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation));
 		}
@@ -201,7 +203,9 @@ public final class Event implements CommandListener {
 			Point originalLocation = p.returnFromSummon();
 			GameLogging.addQuery(new StaffLog(player, 15, player.getUsername() + " has returned " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation));
 			player.message(messagePrefix + "You have returned " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation);
-			p.message(messagePrefix + "You have been returned by " + player.getStaffName());
+			if(p.getUsernameHash() != player.getUsernameHash()) {
+				p.message(messagePrefix + "You have been returned by " + player.getStaffName());
+			}
 		}
 		else if (cmd.equalsIgnoreCase("blink")) {
 			player.setAttribute("blink", !player.getAttribute("blink", false));
@@ -252,7 +256,9 @@ public final class Event implements CommandListener {
 
 			String invisibleText = newInvisible ? "invisible" : "visible";
 			player.message(messagePrefix + p.getUsername() + " is now " + invisibleText);
-			p.message(messagePrefix + "A staff member has made you " + invisibleText);
+			if(p.getUsernameHash() != player.getUsernameHash()) {
+				p.message(messagePrefix + "A staff member has made you " + invisibleText);
+			}
 			GameLogging.addQuery(new StaffLog(player, 14, player.getUsername() + " has made " + p.getUsername() + " " + invisibleText));
 		}
 		else if (cmd.equalsIgnoreCase("invulnerable") || cmd.equalsIgnoreCase("invul")) {
@@ -299,7 +305,9 @@ public final class Event implements CommandListener {
 
 			String invulnerbleText = newInvulnerable ? "invulnerable" : "vulnerable";
 			player.message(messagePrefix + p.getUsername() + " is now " + invulnerbleText);
-			p.message(messagePrefix + "A staff member has made you " + invulnerbleText);
+			if(p.getUsernameHash() != player.getUsernameHash()) {
+				p.message(messagePrefix + "A staff member has made you " + invulnerbleText);
+			}
 			GameLogging.addQuery(new StaffLog(player, 22, player.getUsername() + " has made " + p.getUsername() + " " + invulnerbleText));
 		}
 		else if (cmd.equalsIgnoreCase("check")) {
@@ -532,7 +540,9 @@ public final class Event implements CommandListener {
 				}
 
 				p.setGroupID(newGroup);
-				p.message(messagePrefix + player.getStaffName() + "@whi@ has set your group to " + Group.getStaffPrefix(newGroup) + newGroupName + (p.isDev() ? " (" + newGroup + ")" : ""));
+				if(p.getUsernameHash() != player.getUsernameHash()) {
+					p.message(messagePrefix + player.getStaffName() + "@whi@ has set your group to " + Group.getStaffPrefix(newGroup) + newGroupName + (p.isDev() ? " (" + newGroup + ")" : ""));
+				}
 				player.message(messagePrefix + "Set " + p.getStaffName() + "@whi@ to group " + Group.getStaffPrefix(newGroup) + newGroupName + (player.isDev() ? " (" + newGroup + ")" : ""));
 
 				GameLogging.addQuery(new StaffLog(player, 23, player.getUsername() + " has changed " + p.getUsername() + "'s group to " + newGroupName + " from " + oldGroupName));
@@ -667,7 +677,9 @@ public final class Event implements CommandListener {
 				p.getSkills().setLevelTo(stat, level);
 				p.checkEquipment();
 				player.message(messagePrefix + "You have set " + p.getUsername() + "'s " + statName + "  to level " + level);
-				p.message(messagePrefix + "Your " + statName + " has been set to level " + level + " by a staff member");
+				if(p.getUsernameHash() != player.getUsernameHash()) {
+					p.message(messagePrefix + "Your " + statName + " has been set to level " + level + " by a staff member");
+				}
 			}
 			else {
 				for(int i = 0; i < Skills.SKILL_NAME.length; i++) {
@@ -676,7 +688,9 @@ public final class Event implements CommandListener {
 
 				p.checkEquipment();
 				player.message(messagePrefix + "You have set " + p.getUsername() + "'s stats to level " + level);
-				p.message(messagePrefix + "All of your stats have been set to level " + level + " by a staff member");
+				if(p.getUsernameHash() != player.getUsernameHash()) {
+					p.message(messagePrefix + "All of your stats have been set to level " + level + " by a staff member");
+				}
 			}
 		}
 		else if(cmd.equalsIgnoreCase("currentstat") ||cmd.equalsIgnoreCase("currentstats") || cmd.equalsIgnoreCase("setcurrentstat") || cmd.equalsIgnoreCase("setcurrentstats") || cmd.equalsIgnoreCase("curstat") ||cmd.equalsIgnoreCase("curstats") || cmd.equalsIgnoreCase("setcurstat") || cmd.equalsIgnoreCase("setcurstats")) {
@@ -804,7 +818,9 @@ public final class Event implements CommandListener {
 				p.getSkills().setLevel(stat, level);
 				p.checkEquipment();
 				player.message(messagePrefix + "You have set " + p.getUsername() + "'s effective " + statName + " level " + level);
-				p.message(messagePrefix + "Your effective " + statName + " level has been set to " + level + " by a staff member");
+				if(p.getUsernameHash() != player.getUsernameHash()) {
+					p.message(messagePrefix + "Your effective " + statName + " level has been set to " + level + " by a staff member");
+				}
 			}
 			else {
 				for(int i = 0; i < Skills.SKILL_NAME.length; i++) {
@@ -813,7 +829,9 @@ public final class Event implements CommandListener {
 
 				p.checkEquipment();
 				player.message(messagePrefix + "You have set " + p.getUsername() + "'s effective levels to " + level);
-				p.message(messagePrefix + "All of your stats' effective levels have been set to " + level + " by a staff member");
+				if(p.getUsernameHash() != player.getUsernameHash()) {
+					p.message(messagePrefix + "All of your stats' effective levels have been set to " + level + " by a staff member");
+				}
 			}
 		}
 	}

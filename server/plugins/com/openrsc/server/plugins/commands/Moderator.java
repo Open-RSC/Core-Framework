@@ -60,7 +60,9 @@ public final class Moderator implements CommandListener {
 					return;
 				}
 				player.message(messagePrefix + "You have given " + p.getUsername() + " a permanent mute from ::g chat.");
-				p.message(messagePrefix + "You have received a permanent mute from (::g) chat.");
+				if(p.getUsernameHash() != player.getUsernameHash()) {
+					p.message(messagePrefix + "You have received a permanent mute from (::g) chat.");
+				}
 				p.getCache().store("global_mute", -1);
 			} else {
 				if(!player.isSuperMod() && minutes > 120) {
@@ -68,7 +70,9 @@ public final class Moderator implements CommandListener {
 					return;
 				}
 				player.message(messagePrefix + "You have given " + p.getUsername() + " a " + minutes + " minute mute from ::g chat.");
-				p.message(messagePrefix + "You have received a " + minutes + " minute mute in (::g) chat.");
+				if(p.getUsernameHash() != player.getUsernameHash()) {
+					p.message(messagePrefix + "You have received a " + minutes + " minute mute in (::g) chat.");
+				}
 				p.getCache().store("global_mute", (System.currentTimeMillis() + (minutes * 60000)));
 			}
 			GameLogging.addQuery(new StaffLog(player, 0, p, p.getUsername() + " was given a " + (minutes == -1 ? "permanent mute" : " temporary mute for " + minutes + " minutes in (::g) chat.")));
@@ -110,7 +114,9 @@ public final class Moderator implements CommandListener {
 					return;
 				}
 				player.message("You have given " + p.getUsername() + " a permanent mute.");
-				p.message("You have received a permanent mute. Appeal on forums if you wish.");
+				if(p.getUsernameHash() != player.getUsernameHash()) {
+					p.message("You have received a permanent mute. Appeal is available on Discord.");
+				}
 				p.setMuteExpires(-1);
 			} else {
 				if(!player.isSuperMod() && minutes > 120) {
@@ -118,7 +124,9 @@ public final class Moderator implements CommandListener {
 					return;
 				}
 				player.message("You have given " + p.getUsername() + " a " + minutes + " minute mute.");
-				p.message("You have received a " + minutes + " minute mute. Appeal on forums if you wish.");
+				if(p.getUsernameHash() != player.getUsernameHash()) {
+					p.message("You have received a " + minutes + " minute mute. Appeal is available on Discord.");
+				}
 				p.setMuteExpires((System.currentTimeMillis() + (minutes * 60000)));
 			}
 			GameLogging.addQuery(new StaffLog(player, 0, p, p.getUsername() + " was given a " + (minutes == -1 ? "permanent mute" : " temporary mute for " + minutes + " minutes")));
@@ -145,7 +153,6 @@ public final class Moderator implements CommandListener {
 			GameLogging.addQuery(new StaffLog(player, 6, p, p.getUsername() + " has been kicked by " + player.getUsername()));
 			p.unregister(true, "You have been kicked by " + player.getUsername());
 			player.message(p.getUsername() + " has been kicked.");
-
 		}
 		else if (cmd.equalsIgnoreCase("alert")) {
 			StringBuilder message = new StringBuilder();
@@ -195,7 +202,9 @@ public final class Moderator implements CommandListener {
 			Point originalLocation = p.summon(player);
 			GameLogging.addQuery(new StaffLog(player, 15, player.getUsername() + " has summoned " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation));
 			player.message(messagePrefix + "You have summoned " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation);
-			p.message(messagePrefix + "You have been summoned by " + player.getStaffName());
+			if(p.getUsernameHash() != player.getUsernameHash()) {
+				p.message(messagePrefix + "You have been summoned by " + player.getStaffName());
+			}
 		}
 		else if (cmd.equalsIgnoreCase("say")) { // SAY is not configged out for mods.
 			StringBuilder newStr = new StringBuilder();
