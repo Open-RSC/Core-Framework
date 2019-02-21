@@ -60,6 +60,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 	private static final int TREE_LADDER_UP = 585;
 	private static final int TREE_LADDER_DOWN = 586;
 	private static final int SHIPYARD_GATE = 624;
+	private static final int STRONGHOLD_GATE = 626;
 
 	private static final int WATCH_TOWER_UP = 635;
 	private static final int WATCH_TOWER_DOWN = 646;
@@ -182,6 +183,8 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 								p.message("you follow king shareem up the ladder");
 								movePlayer(p, 415, 163);
 								p.updateQuestStage(this, 1);
+								//no longer needed
+								p.getCache().remove("helped_femi");
 							}
 						}
 					} else if (option == 1) {
@@ -1179,7 +1182,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		return DataConversions.inArray(new int[] {GLOUGHS_CUPBOARD_OPEN, GLOUGHS_CUPBOARD_CLOSED, TREE_LADDER_UP, TREE_LADDER_DOWN, SHIPYARD_GATE,
+		return DataConversions.inArray(new int[] {GLOUGHS_CUPBOARD_OPEN, GLOUGHS_CUPBOARD_CLOSED, TREE_LADDER_UP, TREE_LADDER_DOWN, SHIPYARD_GATE, STRONGHOLD_GATE,
 				GLOUGH_CHEST_CLOSED, WATCH_TOWER_UP, WATCH_TOWER_DOWN, WATCH_TOWER_STONE_STAND, ROOT_ONE, ROOT_TWO, ROOT_THREE, PUSH_ROOT, PUSH_ROOT_BACK}, obj.getID());
 	}
 
@@ -1278,6 +1281,41 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 				p.message("and walk through");
 				doGate(p, obj, 623);
 				p.teleport(401, 763);
+			}
+		}
+		else if (obj.getID() == STRONGHOLD_GATE) {
+			if (p.getY() <= 531 || p.getQuestStage(this) != 0) {
+				doGate(p, obj, 181);
+			}
+			else {
+				if(p.getCache().hasKey("helped_femi")) {
+					doGate(p, obj, 181);
+				}
+				else {
+					Npc femi = getNearestNpc(p, NpcId.FEMI.id(), 10);
+					if (femi != null) {
+						npcTalk(p, femi, "hello there");
+						playerTalk(p, femi, "hi");
+						npcTalk(p, femi, "could you help me lift this barrel",
+								"it's really heavy");
+						int menu = showMenu(p, femi, "sorry i'm a bit busy", "ok then");
+						if (menu == 0) {
+							npcTalk(p, femi, "oh, ok, i'll do it myself");
+							p.getCache().store("helped_femi", false);
+							doGate(p, obj, 181);
+						}
+						else if (menu == 1) {
+							npcTalk(p, femi, "thanks traveller");
+							message(p, "you help the gnome lift the barrel",
+									"it's very heavy and quite hard work");
+							npcTalk(p, femi, "thanks again friend");
+							p.getCache().store("helped_femi", true);
+							doGate(p, obj, 181);
+						}
+					} else {
+						p.message("the little gnome is busy at the moment");
+					}
+				}
 			}
 		}
 		else if (obj.getID() == GLOUGH_CHEST_CLOSED) {
@@ -1510,4 +1548,5 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 			}
 		}
 	}
+
 }
