@@ -1302,7 +1302,6 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 						if (menu == 0) {
 							npcTalk(p, femi, "oh, ok, i'll do it myself");
 							p.getCache().store("helped_femi", false);
-							doGate(p, obj, 181);
 						}
 						else if (menu == 1) {
 							npcTalk(p, femi, "thanks traveller");
@@ -1310,7 +1309,6 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 									"it's very heavy and quite hard work");
 							npcTalk(p, femi, "thanks again friend");
 							p.getCache().store("helped_femi", true);
-							doGate(p, obj, 181);
 						}
 					} else {
 						p.message("the little gnome is busy at the moment");

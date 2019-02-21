@@ -819,23 +819,9 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 			p.message("You push your way through the fence");
 			doDoor(obj, p, 16);
 		}
-		/** FISHING CONTEST (SINCE ITS THE SAME WALL OBJECT I HANDLE IT HERE) **/
-		if (obj.getID() == 101 && obj.getX() == 540 && obj.getY() == 445) {
-			if (obj.getX() != 540 || obj.getY() != 445) {
-				return;
-			}
-			if (p.getQuestStage(Constants.Quests.FISHING_CONTEST) >= 1 || p.getQuestStage(Constants.Quests.PLAGUE_CITY) >= 1) {
-				p.message(
-					"You push your way through the fence");
-				if (p.getX() >= 540) {
-					p.teleport(539, 445, false);
-				} else {
-					p.teleport(540, 445, false);
-				}
-
-			} else {
-				p.message("You can't seem to get through");
-			}
+		else if (obj.getID() == 101 && obj.getX() == 540 && obj.getY() == 445) {
+			p.message("You push your way through the fence");
+			doDoor(obj, p, 16);
 		}
 	}
 
