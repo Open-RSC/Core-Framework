@@ -9,6 +9,10 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 
 import static com.openrsc.server.plugins.Functions.*;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.openrsc.server.external.NpcId;
 
 public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExecutiveListener {
@@ -21,7 +25,9 @@ public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExe
 	private static final int SECOND_NET = 653;
 	private static final int PIPE = 654;
 
-	private static int[] obstacleOrder = {BALANCE_LOG, NET, WATCH_TOWER, ROPE_SWING, LANDING, SECOND_NET, PIPE};
+	//private static int[] obstacleOrder = {BALANCE_LOG, NET, WATCH_TOWER, ROPE_SWING, LANDING, SECOND_NET, PIPE};
+	private static Set<Integer> obstacles = new HashSet<Integer>(Arrays.asList(BALANCE_LOG, NET, WATCH_TOWER, ROPE_SWING, LANDING, SECOND_NET));
+	private static Integer lastObstacle = PIPE;
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
@@ -30,6 +36,10 @@ public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExe
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
+		if (p.getFatigue() >= p.MAX_FATIGUE && !inArray(obj.getID(), WATCH_TOWER, ROPE_SWING, LANDING)) {
+			p.message("you are too tired to train");
+			return;
+		}
 		Npc gnomeTrainer;
 		p.setBusy(true);
 		switch (obj.getID()) {
@@ -43,7 +53,7 @@ public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExe
 				break;
 			case NET:
 				gnomeTrainer = getNearestNpc(p, NpcId.GNOME_TRAINER_STARTINGNET.id(), 10);
-				if (gnomeTrainer != null) {
+				if (gnomeTrainer != null && !AgilityUtils.hasDoneObstacle(p, NET, obstacles)) {
 					npcTalk(p, gnomeTrainer, "move it, move it, move it");
 				}
 				p.message("you climb the net");
@@ -54,7 +64,7 @@ public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExe
 
 			case WATCH_TOWER:
 				gnomeTrainer = getNearestNpc(p, NpcId.GNOME_TRAINER_PLATFORM.id(), 10);
-				if (gnomeTrainer != null) {
+				if (gnomeTrainer != null && !AgilityUtils.hasDoneObstacle(p, WATCH_TOWER, obstacles)) {
 					npcTalk(p, gnomeTrainer, "that's it, straight up, no messing around");
 				}
 				p.message("you pull yourself up the tree");
@@ -80,7 +90,7 @@ public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExe
 				break;
 			case SECOND_NET:
 				gnomeTrainer = getNearestNpc(p, NpcId.GNOME_TRAINER_ENDINGNET.id(), 10);
-				if (gnomeTrainer != null) {
+				if (gnomeTrainer != null && !AgilityUtils.hasDoneObstacle(p, SECOND_NET, obstacles)) {
 					npcTalk(p, gnomeTrainer, "my granny can move faster than you");
 				}
 				p.message("you take a few steps back");
@@ -96,13 +106,13 @@ public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExe
 				message(p, "you squeeze into the pipe", "and shuffle down into it");
 				movePlayer(p, 683, 494);
 				gnomeTrainer = getNearestNpc(p, NpcId.GNOME_TRAINER_ENTRANCE.id(), 10);
-				if (gnomeTrainer != null) {
+				if (gnomeTrainer != null && !AgilityUtils.hasDoneObstacle(p, PIPE, obstacles)) {
 					npcTalk(p, gnomeTrainer, "that's the way, well done");
 				}
 				break;
 		}
 		p.incExp(Skills.AGILITY, 30, true);
-		AgilityUtils.setNextObstacle(p, obj.getID(), obstacleOrder, 140);
+		AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 150);
 		p.setBusy(false);
 	}
 }
