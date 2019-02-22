@@ -5,6 +5,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.DropExecutiveListener;
@@ -21,20 +22,40 @@ import static com.openrsc.server.plugins.Functions.removeItem;
 import static com.openrsc.server.plugins.Functions.resetGnomeCooking;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 
-public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveListener, InvActionListener, InvActionExecutiveListener, DropExecutiveListener {
+public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, TalkToNpcExecutiveListener, InvActionListener, InvActionExecutiveListener, DropExecutiveListener {
 
-	private static final int ALUFT_GIANNE = 536;
+	@Override
+	public int getMiniGameId() {
+		return Constants.Minigames.GNOME_RESTAURANT;
+	}
+
+	@Override
+	public String getMiniGameName() {
+		return "Gnome Restaurant (members)";
+	}
+
+	@Override
+	public boolean isMembers() {
+		return true;
+	}
+
+	@Override
+	public void handleReward(Player p) {
+		//mini-game complete handled already
+	}
 	
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == ALUFT_GIANNE;
+		return n.getID() == NpcId.ALUFT_GIANNE.id();
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == ALUFT_GIANNE) {
+		if (n.getID() == NpcId.ALUFT_GIANNE.id()) {
 			if (!p.getCache().hasKey("gnome_cooking")) {
 				playerTalk(p, n, "hello");
 				npcTalk(p, n, "well hello there,you hungry..",
