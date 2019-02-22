@@ -57,7 +57,14 @@ public class NpcBehavior {
 				if (!npc.isBusy() && rand == 1 && !npc.isRemoved()) {
 					int newX = DataConversions.random(npc.getLoc().minX(), npc.getLoc().maxX());
 					int newY = DataConversions.random(npc.getLoc().minY(), npc.getLoc().maxY());
-					npc.walk(newX, newY);
+					if (!grandTreeGnome(npc)) {
+						npc.walk(newX, newY);
+					}
+					else {
+						Point p = walkablePoint(npc, Point.location(npc.getLoc().minX(), npc.getLoc().minY()),
+								Point.location(npc.getLoc().maxX(), npc.getLoc().maxY()));
+						npc.walk(p.getX(), p.getY());
+					}
 				}
 			}
 			if (System.currentTimeMillis() - npc.getCombatTimer() > 3000
@@ -249,6 +256,23 @@ public class NpcBehavior {
 		return closeEnough && shouldAttack
 			&& (p instanceof Player && (!((Player)p).isInvulnerable(npc) && !((Player)p).isInvisible(npc)))
 			&& !outOfBounds && !playerOccupied && !playerCombatTimeout;
+	}
+	
+	private boolean grandTreeGnome(Npc npc) {
+		String npcName = npc.getDef().getName();
+		return npcName.equalsIgnoreCase("gnome child") || npcName.equalsIgnoreCase("gnome local");
+	}
+	
+	private Point walkablePoint(Npc npc, Point minP, Point maxP) {
+		int currX = npc.getX();
+		int currY = npc.getY();
+		int radius = 8;
+		int newX = DataConversions.random(Math.max(minP.getX(),currX-radius), Math.min(maxP.getX(),currX+radius));
+		int newY = DataConversions.random(Math.max(minP.getY(),currY-radius), Math.min(maxP.getY(),currY+radius));
+		if (Point.location(newX, newY).inBounds(680, 491, 696, 511)) {
+			return Point.location(currX, currY);
+		}
+		return Point.location(newX, newY);
 	}
 
 	public State getBehaviorState() {

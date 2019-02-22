@@ -9,6 +9,8 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 
 import static com.openrsc.server.plugins.Functions.*;
 
+import com.openrsc.server.external.NpcId;
+
 public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExecutiveListener {
 
 	private static final int BALANCE_LOG = 655;
@@ -28,11 +30,11 @@ public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExe
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
-		Npc gnomeTrainer = getNearestNpc(p, 578, 10);
+		Npc gnomeTrainer;
 		p.setBusy(true);
 		switch (obj.getID()) {
 			case BALANCE_LOG:
-				p.message("You stand on slippery log");
+				p.message("you stand on the slippery log");
 				for (int y = 494; y < 500; y++) {
 					movePlayer(p, 692, y);
 					sleep(650);
@@ -40,45 +42,48 @@ public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExe
 				p.message("and walk across");
 				break;
 			case NET:
+				gnomeTrainer = getNearestNpc(p, NpcId.GNOME_TRAINER_STARTINGNET.id(), 10);
 				if (gnomeTrainer != null) {
-					npcYell(p, gnomeTrainer, "Move it, move it, move it");
+					npcTalk(p, gnomeTrainer, "move it, move it, move it");
 				}
-				p.message("You climb the net");
+				p.message("you climb the net");
 				sleep(2000);
 				movePlayer(p, 692, 1448);
 				p.message("and pull yourself onto the platform");
 				break;
 
 			case WATCH_TOWER:
+				gnomeTrainer = getNearestNpc(p, NpcId.GNOME_TRAINER_PLATFORM.id(), 10);
 				if (gnomeTrainer != null) {
-					npcYell(p, gnomeTrainer, "that's it, straight up, no messing around");
+					npcTalk(p, gnomeTrainer, "that's it, straight up, no messing around");
 				}
-				p.message("You pull yourself up the tree");
+				p.message("you pull yourself up the tree");
 				sleep(1000);
 				movePlayer(p, 693, 2394);
 				p.message("to the platform above");
 				break;
 
 			case ROPE_SWING:
-				p.message("You reach out and grab the rope swing");
+				p.message("you reach out and grab the rope swing");
 				sleep(1000);
-				p.message("You hold on tight");
+				p.message("you hold on tight");
 				sleep(2000);
 				movePlayer(p, 685, 2396);
-				p.message("and swing to the opposite platform");
+				p.message("and swing to the oppisite platform");
 				break;
 			case LANDING:
-				p.message("You hang down from the tower");
+				p.message("you hang down from the tower");
 				sleep(1000);
 				movePlayer(p, 683, 506);
 				p.message("and drop to the floor");
 				playerTalk(p, null, "ooof");
 				break;
 			case SECOND_NET:
+				gnomeTrainer = getNearestNpc(p, NpcId.GNOME_TRAINER_ENDINGNET.id(), 10);
 				if (gnomeTrainer != null) {
-					npcYell(p, gnomeTrainer, "my granny can move faster than you");
+					npcTalk(p, gnomeTrainer, "my granny can move faster than you");
 				}
-				p.message("You take a few steps back");
+				p.message("you take a few steps back");
 				int initialY = p.getY();
 				movePlayer(p, p.getX(), initialY + 2);
 				sleep(650);
@@ -88,10 +93,11 @@ public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExe
 				movePlayer(p, p.getX(), initialY - 2);
 				break;
 			case PIPE:
-				message(p, "You squeeze through the pipe", "and shuffle down into it");
+				message(p, "you squeeze into the pipe", "and shuffle down into it");
 				movePlayer(p, 683, 494);
+				gnomeTrainer = getNearestNpc(p, NpcId.GNOME_TRAINER_ENTRANCE.id(), 10);
 				if (gnomeTrainer != null) {
-					npcYell(p, gnomeTrainer, "that's the way, well done");
+					npcTalk(p, gnomeTrainer, "that's the way, well done");
 				}
 				break;
 		}
