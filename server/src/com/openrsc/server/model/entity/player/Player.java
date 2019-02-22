@@ -1730,9 +1730,15 @@ public final class Player extends Mob {
 			ActionSender.sendStats(this);
 			GameLogging.addQuery(new LiveFeedLog(this,
 				"just completed <strong><font color=#00FF00>" + world.getQuest(questId).getQuestName()
-					+ "</font></strong> quest! He now has <strong><font color=#E1E100>" + this.getQuestPoints()
+					+ "</font></strong> quest! They now have <strong><font color=#E1E100>" + this.getQuestPoints()
 					+ "</font></strong> quest points"));
 		}
+	}
+	
+	public void sendMiniGameComplete(int miniGameId, Optional<String> message) {
+		world.getMiniGame(miniGameId).handleReward(this);
+		GameLogging.addQuery(new LiveFeedLog(this, "just completed <strong><font color=#00FF00>" + world.getMiniGame(miniGameId).getMiniGameName()
+				+ "</font></strong> minigame! " + (message.isPresent() ? message.get() : "")));
 	}
 
 	public void setAccessingBank(boolean b) {

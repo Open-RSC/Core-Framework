@@ -11,6 +11,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnPlayerListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
@@ -32,11 +33,33 @@ import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.removeItem;
 import static com.openrsc.server.plugins.Functions.showBubble;
 
-public class GnomeBall implements InvUseOnPlayerListener, InvUseOnPlayerExecutiveListener, PickupListener, PickupExecutiveListener,
+import com.openrsc.server.Constants;
+
+public class GnomeBall implements MiniGameInterface, InvUseOnPlayerListener, InvUseOnPlayerExecutiveListener, PickupListener, PickupExecutiveListener,
 InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener {
 		
 	private static final int[][] SCORES_XP = {{20, 30, 35, 40, 220} , {40, 50, 60, 70, 220}};
 
+	@Override
+	public int getMiniGameId() {
+		return Constants.Minigames.GNOME_BALL;
+	}
+
+	@Override
+	public String getMiniGameName() {
+		return "Gnome Ball (members)";
+	}
+
+	@Override
+	public boolean isMembers() {
+		return true;
+	}
+
+	@Override
+	public void handleReward(Player p) {
+		//mini-game complete handled already
+	}
+	
 	@Override
 	public void onInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
 		if (item.getID() == ItemId.GNOME_BALL.id()) {

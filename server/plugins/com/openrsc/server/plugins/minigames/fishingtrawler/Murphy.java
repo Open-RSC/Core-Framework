@@ -4,6 +4,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.menu.Menu;
@@ -12,10 +13,12 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler.TrawlerBoat;
+import com.openrsc.server.external.NpcId;
 
-public class Murphy implements TalkToNpcListener, TalkToNpcExecutiveListener {
+public class Murphy implements MiniGameInterface, TalkToNpcListener, TalkToNpcExecutiveListener {
 
 	/**
 	 * IMPORTANT NOTES:
@@ -27,15 +30,35 @@ public class Murphy implements TalkToNpcListener, TalkToNpcExecutiveListener {
 	 * (SHARED) FAIL - AFTER GO UNDER WEST AND/OR QUIT MINI-GAME: 302, 759 GO
 	 * BACK FROM FAIL LOCATION: 550, 711
 	 */
+	
+	@Override
+	public int getMiniGameId() {
+		return Constants.Minigames.FISHING_TRAWLER;
+	}
+
+	@Override
+	public String getMiniGameName() {
+		return "Fishing Trawler (members)";
+	}
+
+	@Override
+	public boolean isMembers() {
+		return true;
+	}
+
+	@Override
+	public void handleReward(Player p) {
+		//mini-game complete handled already
+	}
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 733 || n.getID() == 734 || n.getID() == 739;
+		return n.getID() == NpcId.MURPHY_LAND.id() || n.getID() == NpcId.MURPHY_BOAT.id() || n.getID() == NpcId.MURPHY_UNRELEASED.id();
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 733) { // Murphy on land
+		if (n.getID() == NpcId.MURPHY_LAND.id()) { // Murphy on land
 			if (p.isIronMan(1) || p.isIronMan(2) || p.isIronMan(3)) {
 				p.message("As an Iron Man, you cannot use the Trawler.");
 				return;
@@ -64,9 +87,9 @@ public class Murphy implements TalkToNpcListener, TalkToNpcExecutiveListener {
 					letsGo(p, n);
 				}
 			}
-		} else if (n.getID() == 734) { // Murphy on the boat.
+		} else if (n.getID() == NpcId.MURPHY_BOAT.id()) { // Murphy on the boat.
 			onship(n, p);
-		} else if (n.getID() == 739) { // Another murphy potentially non existent
+		} else if (n.getID() == NpcId.MURPHY_UNRELEASED.id()) { // Another murphy potentially non existent
 		}
 	}
 

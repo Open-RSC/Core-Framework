@@ -12,12 +12,13 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.*;
 
 import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 
 public class Chamber_Guardian implements ShopInterface, TalkToNpcExecutiveListener,
 	TalkToNpcListener {
 
 	private final Shop shop = new Shop(true, 60000 * 5, 100, 60, 2,
-		new Item(1216, 5), new Item(1218, 5), new Item(1217, 5));
+		new Item(ItemId.STAFF_OF_ZAMORAK.id(), 5), new Item(ItemId.STAFF_OF_SARADOMIN.id(), 5), new Item(ItemId.STAFF_OF_GUTHIX.id(), 5));
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
@@ -79,7 +80,7 @@ public class Chamber_Guardian implements ShopInterface, TalkToNpcExecutiveListen
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 784;
+		return n.getID() == NpcId.CHAMBER_GUARDIAN.id();
 	}
 
 	@Override

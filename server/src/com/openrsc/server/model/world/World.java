@@ -20,6 +20,7 @@ import com.openrsc.server.model.snapshot.Snapshot;
 import com.openrsc.server.model.world.region.RegionManager;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.WorldPopulation;
@@ -70,6 +71,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	private final EntityList<Npc> npcs = new EntityList<Npc>(4000);
 	private final EntityList<Player> players = new EntityList<Player>(2000);
 	private final List<QuestInterface> quests = new LinkedList<QuestInterface>();
+	private final List<MiniGameInterface> minigames = new LinkedList<MiniGameInterface>();
 	private final List<Shop> shopData = new ArrayList<Shop>();
 	private final List<Shop> shops = new ArrayList<Shop>();
 	private final TileValue[][] tiles = new TileValue[MAX_WIDTH][MAX_HEIGHT];
@@ -274,9 +276,29 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		}
 		throw new IllegalArgumentException("No quest found");
 	}
+	
+	/**
+	 * Finds a specific miniquest/minigame by ID
+	 *
+	 * @param q
+	 * @return
+	 * @throws IllegalArgumentException when a quest by that ID isn't found
+	 */
+	public MiniGameInterface getMiniGame(int m) throws IllegalArgumentException {
+		for (MiniGameInterface minigame : this.getMiniGames()) {
+			if (minigame.getMiniGameId() == m) {
+				return minigame;
+			}
+		}
+		throw new IllegalArgumentException("No mini-game found");
+	}
 
 	public List<QuestInterface> getQuests() {
 		return quests;
+	}
+	
+	public List<MiniGameInterface> getMiniGames() {
+		return minigames;
 	}
 
 	public List<Shop> getShops() {
@@ -511,6 +533,20 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		}
 		quests.add(quest);
 	}
+	
+	public void registerMiniGame(MiniGameInterface minigame) {
+		if (minigame.getMiniGameName() == null) {
+			throw new IllegalArgumentException("Minigame name cannot be null");
+		} else if (minigame.getMiniGameName().length() > 40) {
+			throw new IllegalArgumentException("Minigame name cannot be longer then 40 characters");
+		}
+		for (MiniGameInterface m : minigames) {
+			if (m.getMiniGameId() == minigame.getMiniGameId()) {
+				throw new IllegalArgumentException("MiniGame ID must be unique");
+			}
+		}
+		minigames.add(minigame);
+	}
 
 	public void registerShop(Shop shop) {
 		shops.add(shop);
@@ -680,6 +716,12 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	public void unregisterQuest(QuestInterface quest) {
 		if (quests.contains(quest)) {
 			quests.remove(quest);
+		}
+	}
+	
+	public void unregisterMiniGame(MiniGameInterface minigame) {
+		if (minigames.contains(minigame)) {
+			minigames.remove(minigame);
 		}
 	}
 

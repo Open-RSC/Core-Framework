@@ -11,14 +11,18 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
+
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
+
 import static com.openrsc.server.plugins.Functions.playerTalk;
 
 public final class Lundail implements ShopInterface,
 	TalkToNpcExecutiveListener, TalkToNpcListener {
 
-	private final Shop shop = new Shop(false, 6000, 190, 60, 10, new Item(33,
-		100), new Item(31, 100), new Item(32, 100), new Item(34,
-		100), new Item(35, 100), new Item(36, 100));
+	private final Shop shop = new Shop(false, 6000, 190, 60, 10, new Item(ItemId.AIR_RUNE.id(),
+		100), new Item(ItemId.FIRE_RUNE.id(), 100), new Item(ItemId.WATER_RUNE.id(), 100), new Item(ItemId.EARTH_RUNE.id(),
+		100), new Item(ItemId.MIND_RUNE.id(), 100), new Item(ItemId.BODY_RUNE.id(), 100));
 
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
@@ -50,7 +54,7 @@ public final class Lundail implements ShopInterface,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 793;
+		return n.getID() == NpcId.LUNDAIL.id();
 	}
 
 	@Override

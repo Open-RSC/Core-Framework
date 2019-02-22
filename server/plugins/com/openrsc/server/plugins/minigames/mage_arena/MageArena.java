@@ -4,6 +4,7 @@ import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.impl.ObjectRemover;
 import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -13,12 +14,17 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class MageArena implements TalkToNpcExecutiveListener, TalkToNpcListener, PlayerKilledNpcListener,
+import java.util.Optional;
+
+import com.openrsc.server.Constants;
+
+public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener, TalkToNpcListener, PlayerKilledNpcListener,
 	PlayerKilledNpcExecutiveListener, PlayerAttackNpcExecutiveListener, PlayerDeathExecutiveListener,
 	PlayerMageNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, PickupListener,
 	PickupExecutiveListener {
@@ -26,6 +32,26 @@ public class MageArena implements TalkToNpcExecutiveListener, TalkToNpcListener,
 	public static final int SARADOMIN_STONE = 1152;
 	public static final int GUTHIX_STONE = 1153;
 	public static final int ZAMORAK_STONE = 1154;
+	
+	@Override
+	public int getMiniGameId() {
+		return Constants.Minigames.MAGE_ARENA;
+	}
+
+	@Override
+	public String getMiniGameName() {
+		return "Mage Arena (members)";
+	}
+
+	@Override
+	public boolean isMembers() {
+		return true;
+	}
+
+	@Override
+	public void handleReward(Player p) {
+		//mini-quest complete handled already
+	}
 	
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
@@ -170,7 +196,7 @@ public class MageArena implements TalkToNpcExecutiveListener, TalkToNpcListener,
 				setCurrentLevel(p, Skills.STRENGTH, 0);
 
 				startKolodionEvent(p);
-				spawnKolodion(p, 713);
+				spawnKolodion(p, NpcId.KOLODION_HUMAN.id());
 				sleep(650);
 			} else if (choice == 1) {
 				npcTalk(p, n, "your loss");
@@ -199,9 +225,9 @@ public class MageArena implements TalkToNpcExecutiveListener, TalkToNpcListener,
 					owner.getSkills().setLevel(Skills.ATTACK, 0);
 					owner.getSkills().setLevel(Skills.STRENGTH, 0);
 				}
-				Npc Guthix = getNearestNpc(p, 789, 2);
-				Npc Zamorak = getNearestNpc(p, 790, 2);
-				Npc Saradomin = getNearestNpc(p, 791, 2);
+				Npc Guthix = getNearestNpc(p, NpcId.BATTLE_MAGE_GUTHIX.id(), 2);
+				Npc Zamorak = getNearestNpc(p, NpcId.BATTLE_MAGE_ZAMAROK.id(), 2);
+				Npc Saradomin = getNearestNpc(p, NpcId.BATTLE_MAGE_SARADOMIN.id(), 2);
 				String[] randomMessage = {"@yel@zamorak mage: feel the wrath of zamarok", "@yel@Saradomin mage: feel the wrath of Saradomin", "@yel@guthix mage: feel the wrath of guthix"};
 				if (Guthix != null && Guthix.withinRange(owner, 1)) {
 					godSpellObject(owner, 33);
@@ -308,7 +334,7 @@ public class MageArena implements TalkToNpcExecutiveListener, TalkToNpcListener,
 	public void spawnKolodion(Player player, int id) {
 		player.setAttribute("spawned_kolodion", spawnNpc(id, 227, 130, 300000, player));
 		player.getCache().set("kolodion_stage", id);
-		player.message("kolodion blasts you " + (id == 713 ? "with his staff" : "again"));
+		player.message("kolodion blasts you " + (id == NpcId.KOLODION_HUMAN.id() ? "with his staff" : "again"));
 		player.damage(random(7, 15));
 		startKolodionEvent(player);
 		ActionSender.sendTeleBubble(player, player.getX(), player.getY(), true);
@@ -332,43 +358,45 @@ public class MageArena implements TalkToNpcExecutiveListener, TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 712;
+		return n.getID() == NpcId.KOLODION.id();
 	}
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		return n.getID() >= 757 && n.getID() <= 760 || n.getID() == 713;
+		return inArray(n.getID(), NpcId.KOLODION_HUMAN.id(), NpcId.KOLODION_OGRE.id(), NpcId.KOLODION_SPIDER.id(),
+				NpcId.KOLODION_SOULESS.id(), NpcId.KOLODION_DEMON.id());
 	}
 
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() >= 757 && n.getID() <= 760 || n.getID() == 713) {
+		if (inArray(n.getID(), NpcId.KOLODION_HUMAN.id(), NpcId.KOLODION_OGRE.id(), NpcId.KOLODION_SPIDER.id(),
+				NpcId.KOLODION_SOULESS.id(), NpcId.KOLODION_DEMON.id())) {
 			n.remove();
 
-			if (n.getID() == 713) {
+			if (n.getID() == NpcId.KOLODION_HUMAN.id()) {
 				message(p, "kolodion slumps to the floor..");
 				message(p, "..his body begins to grow and he changes form", "He becomes an intimidating ogre");
-				spawnKolodion(p, 757);
-			} else if (n.getID() == 757) {
+				spawnKolodion(p, NpcId.KOLODION_OGRE.id());
+			} else if (n.getID() == NpcId.KOLODION_OGRE.id()) {
 				message(p, "kolodion slumps to the floor once more..",
 					"..but again his body begins to grow and he changes form", "He becomes an enormous spider");
-				spawnKolodion(p, n.getID() + 1);
-			} else if (n.getID() == 758) {
+				spawnKolodion(p, NpcId.KOLODION_SPIDER.id());
+			} else if (n.getID() == NpcId.KOLODION_SPIDER.id()) {
 				message(p, "kolodion again slumps to the floor..",
 					"..but again his body begins to grow as he changes form", "He becomes an ethereal being");
-				spawnKolodion(p, n.getID() + 1);
-			} else if (n.getID() == 759) {
+				spawnKolodion(p, NpcId.KOLODION_SOULESS.id());
+			} else if (n.getID() == NpcId.KOLODION_SOULESS.id()) {
 				message(p, "kolodion again slumps to the floor..motionless",
 					"..but again his body begins to grow as he changes form", "...larger this time",
 					"He becomes a vicious demon");
-				spawnKolodion(p, n.getID() + 1);
-			} else if (n.getID() == 760) {
+				spawnKolodion(p, NpcId.KOLODION_DEMON.id());
+			} else if (n.getID() == NpcId.KOLODION_DEMON.id()) {
 				message(p, "kolodion again slumps to the floor..motionless", "..he slowly rises to his feet in his true form");
 				message(p, "@yel@Kolodion: \"well done young adventurer\"",
 					"@yel@Kolodion: \"you truly are a worthy battle mage\"");
 				p.message("kolodion teleports you to his cave");
 				p.teleport(446, 3370);
-				Npc kolodion = getNearestNpc(p, 712, 5);
+				Npc kolodion = getNearestNpc(p, NpcId.KOLODION.id(), 5);
 				if (kolodion == null) {
 					p.message("kolodion is currently busy");
 					return;
@@ -393,7 +421,8 @@ public class MageArena implements TalkToNpcExecutiveListener, TalkToNpcListener,
 
 	@Override
 	public boolean blockPlayerMageNpc(final Player p, final Npc n) {
-		if (n.getID() >= 757 && n.getID() <= 760 || n.getID() == 713) {
+		if (inArray(n.getID(), NpcId.KOLODION_HUMAN.id(), NpcId.KOLODION_OGRE.id(), NpcId.KOLODION_SPIDER.id(),
+				NpcId.KOLODION_SOULESS.id(), NpcId.KOLODION_DEMON.id())) {
 			if (!n.getAttribute("spawnedFor", null).equals(p)) {
 				p.message("that mage is busy.");
 				return true;
@@ -435,6 +464,7 @@ public class MageArena implements TalkToNpcExecutiveListener, TalkToNpcListener,
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player player) {
+		boolean firstTimeEnchant = false;
 		if (obj.getID() == 1019 || obj.getID() == 1020) {
 			player.message("you open the gate ...");
 			player.message("... and walk through");
@@ -480,6 +510,7 @@ public class MageArena implements TalkToNpcExecutiveListener, TalkToNpcListener,
 				ActionSender.sendTeleBubble(player, player.getX(), player.getY(), true);
 				addItem(player, ItemId.SARADOMIN_CAPE.id(), 1);
 				player.getCache().set("mage_arena", 3);
+				firstTimeEnchant = true;
 			}
 		} else if (obj.getID() == GUTHIX_STONE) {
 			if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") >= 3) {
@@ -499,6 +530,7 @@ public class MageArena implements TalkToNpcExecutiveListener, TalkToNpcListener,
 				ActionSender.sendTeleBubble(player, player.getX(), player.getY(), true);
 				addItem(player, ItemId.GUTHIX_CAPE.id(), 1);
 				player.getCache().set("mage_arena", 3);
+				firstTimeEnchant = true;
 			}
 		} else if (obj.getID() == ZAMORAK_STONE) {
 			if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") >= 3) {
@@ -518,7 +550,12 @@ public class MageArena implements TalkToNpcExecutiveListener, TalkToNpcListener,
 				ActionSender.sendTeleBubble(player, player.getX(), player.getY(), true);
 				addItem(player, ItemId.ZAMORAK_CAPE.id(), 1);
 				player.getCache().set("mage_arena", 3);
+				firstTimeEnchant = true;
 			}
+		}
+		
+		if (firstTimeEnchant) {
+			player.sendMiniGameComplete(this.getMiniGameId(), Optional.empty());
 		}
 	}
 
@@ -540,7 +577,8 @@ public class MageArena implements TalkToNpcExecutiveListener, TalkToNpcListener,
 
 	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
-		if (n.getID() >= 757 && n.getID() <= 760 || n.getID() == 713) {
+		if (inArray(n.getID(), NpcId.KOLODION_HUMAN.id(), NpcId.KOLODION_OGRE.id(), NpcId.KOLODION_SPIDER.id(),
+				NpcId.KOLODION_SOULESS.id(), NpcId.KOLODION_DEMON.id())) {
 			if (!n.getAttribute("spawnedFor", null).equals(p)) {
 				p.message("that mage is busy.");
 				return true;
