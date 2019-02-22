@@ -15,20 +15,27 @@ import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.random;
 import static com.openrsc.server.plugins.Functions.sleep;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 public class BarbarianAgilityCourse implements WallObjectActionListener,
 	WallObjectActionExecutiveListener, ObjectActionListener,
 	ObjectActionExecutiveListener {
 
-	private static final int LOW_WALL = 164;
-	private static final int LOW_WALL2 = 163;
+	private static final int LOW_WALL = 163;
+	private static final int LOW_WALL2 = 164;
 	private static final int LEDGE = 678;
 	private static final int NET = 677;
 	private static final int LOG = 676;
 	private static final int PIPE = 671;
 	private static final int BACK_PIPE = 672;
 	private static final int SWING = 675;
-	private static final int[] obstacleOrder = {675, 676, 677, 678, 163, 164};
 	private static final int HANDHOLDS = 679;
+	
+	//private static final int[] obstacleOrder = {SWING, LOG, NET, LEDGE, LOW_WALL, LOW_WALL2};
+	private static Set<Integer> obstacles = new HashSet<Integer>(Arrays.asList(SWING, LOG, NET, LEDGE, LOW_WALL));
+	private static Integer lastObstacle = LOW_WALL2;
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
@@ -37,52 +44,56 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
+		if (obj.getID() == BACK_PIPE || obj.getID() == PIPE) {
+			if (getCurrentLevel(p, Skills.AGILITY) < 35) {
+				p.message("You need an agility level of 35 to attempt to squeeze through the pipe");
+				p.setBusy(false);
+				return;
+			}
+			if (p.getFatigue() >= p.MAX_FATIGUE) {
+				p.message("You are too tired to squeeze through the pipe");
+				p.setBusy(false);
+				return;
+			}
+
+			p.message("You squeeze through the pipe");
+			sleep(1000);
+			if (p.getY() <= 551) {
+				movePlayer(p, 487, 554);
+			} else {
+				movePlayer(p, 487, 551);
+			}
+			p.incExp(Skills.AGILITY, 20, true);
+			return;
+		}
+		if (p.getFatigue() >= p.MAX_FATIGUE && !inArray(obj.getID(), SWING, LOG, NET)) {
+			p.message("you are too tired to train");
+			return;
+		}
 		p.setBusy(true);
 		boolean fail = succeed(p);
 		switch (obj.getID()) {
-			case BACK_PIPE:
-			case PIPE:
-				if (getCurrentLevel(p, Skills.AGILITY) < 35) {
-					p.message("You need an agility level of 35 to attempt to squeeze through the pipe");
-					p.setBusy(false);
-					return;
-				}
-				if (p.getFatigue() >= 69750) {
-					p.message("You are too tired to squeeze through the pipe");
-					p.setBusy(false);
-					return;
-				}
-
-				p.message("You squeeze through the pipe");
-				sleep(1000);
-				if (p.getY() <= 551) {
-					movePlayer(p, 487, 554);
-				} else {
-					movePlayer(p, 487, 551);
-				}
-				p.incExp(Skills.AGILITY, 20, true);
-				break;
 			case SWING:
-				p.message("you grab the rope and try and swing across");
+				p.message("You grab the rope and try and swing across");
 				sleep(1000);
 				int swingDamage = (int) Math.round((p.getSkills().getLevel(Skills.HITPOINTS)) * 0.15D);
 				if (fail) {
-					p.message("you skillfully swing across the hole");
+					p.message("You skillfully swing across the hole");
 					movePlayer(p, 486, 559);
 					p.incExp(Skills.AGILITY, 80, true);
-					AgilityUtils.setNextObstacle(p, obj.getID(), obstacleOrder, 300);
+					AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 300);
 				} else {
 					p.message("Your hands slip and you fall to the level below");
 					sleep(1000);
 					movePlayer(p, 486, 3389);
-					p.message("you land painfully on the spikes");
+					p.message("You land painfully on the spikes");
 					p.damage(swingDamage);
 					playerTalk(p, null, "ouch");
 				}
 				break;
 			case LOG:
 				int slipDamage = (int) Math.round((p.getSkills().getLevel(Skills.HITPOINTS)) * 0.1D);
-				p.message("You stand on the slippery log");
+				p.message("you stand on the slippery log");
 				sleep(2000);
 				if (fail) {
 					movePlayer(p, 489, 563);
@@ -92,9 +103,9 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 					p.message("and walk across");
 					movePlayer(p, 492, 563);
 					p.incExp(Skills.AGILITY, 50, true);
-					AgilityUtils.setNextObstacle(p, obj.getID(), obstacleOrder, 300);
+					AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 300);
 				} else {
-					p.message("You lose your footing and land in the water");
+					p.message("Your lose your footing and land in the water");
 					movePlayer(p, 490, 561);
 					p.message("Something in the water bites you");
 					p.damage(slipDamage);
@@ -104,19 +115,21 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 				p.message("You climb up the netting");
 				movePlayer(p, 496, 1507);
 				p.incExp(Skills.AGILITY, 50, true);
-				AgilityUtils.setNextObstacle(p, obj.getID(), obstacleOrder, 300);
+				AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 300);
 				break;
 			case LEDGE:
 				if (obj.getX() != 498) {
 					p.setBusy(false);
 					return;
 				}
+				p.message("You put your foot on the ledge and try to edge across");
+				sleep(1000);
 				int ledgeDamage = (int) Math.round((p.getSkills().getLevel(Skills.HITPOINTS)) * 0.15D);
 				if (fail) {
 					movePlayer(p, 501, 1506);
 					p.message("You skillfully balance across the hole");
 					p.incExp(Skills.AGILITY, 80, true);
-					AgilityUtils.setNextObstacle(p, obj.getID(), obstacleOrder, 300);
+					AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 300);
 				} else {
 					p.message("you lose your footing and fall to the level below");
 					movePlayer(p, 499, 563);
@@ -130,7 +143,6 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 				p.message("You climb up the wall");
 				movePlayer(p, 497, 555);
 				p.incExp(Skills.AGILITY, 20, true);
-				AgilityUtils.setNextObstacle(p, obj.getID(), obstacleOrder, 300);
 				break;
 		}
 
@@ -144,6 +156,10 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 
 	@Override
 	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+		if (p.getFatigue() >= p.MAX_FATIGUE && !inArray(obj.getID(), LOW_WALL, LOW_WALL2)) {
+			p.message("you are too tired to train");
+			return;
+		}
 		p.setBusy(true);
 		switch (obj.getID()) {
 			case LOW_WALL:
@@ -160,7 +176,7 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 				break;
 		}
 		p.incExp(Skills.AGILITY, 20, true);
-		AgilityUtils.setNextObstacle(p, obj.getID(), obstacleOrder, 300);
+		AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 300);
 		p.setBusy(false);
 	}
 
