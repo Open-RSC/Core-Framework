@@ -1,11 +1,13 @@
 package com.openrsc.server.plugins.minigames.blurberrysbar;
 
 import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.DropExecutiveListener;
@@ -22,18 +24,38 @@ import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.removeItem;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
-public class BlurberrysBar implements TalkToNpcListener, TalkToNpcExecutiveListener, InvActionListener, InvActionExecutiveListener, DropExecutiveListener {
+import com.openrsc.server.Constants;
 
-	private static final int BLURBERRY = 534;
+public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, TalkToNpcExecutiveListener, InvActionListener, InvActionExecutiveListener, DropExecutiveListener {
 
 	@Override
+	public int getMiniGameId() {
+		return Constants.Minigames.BLURBERRYS_BAR;
+	}
+
+	@Override
+	public String getMiniGameName() {
+		return "Blurberry's Bar (members)";
+	}
+
+	@Override
+	public boolean isMembers() {
+		return true;
+	}
+
+	@Override
+	public void handleReward(Player p) {
+		//mini-game complete handled already
+	}
+	
+	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == BLURBERRY;
+		return n.getID() == NpcId.BLURBERRY.id();
 	}
 
 	@Override
 	public void onTalkToNpc(Player player, Npc npc) {
-		if (npc.getID() == BLURBERRY) {
+		if (npc.getID() == NpcId.BLURBERRY.id()) {
 			if (!player.getCache().hasKey("blurberrys_bar")) {
 				startBlurberrysBar(player, npc);
 			} else {

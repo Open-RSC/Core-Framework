@@ -1,10 +1,12 @@
 package com.openrsc.server.plugins.minigames.barcrawl;
 
 import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
+import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
@@ -12,10 +14,34 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class AlfredGrimhandBarCrawl implements TalkToNpcListener,
+import java.util.Optional;
+
+import com.openrsc.server.Constants;
+
+public class AlfredGrimhandBarCrawl implements MiniGameInterface, TalkToNpcListener,
 	TalkToNpcExecutiveListener, ObjectActionListener,
 	ObjectActionExecutiveListener {
+	
+	@Override
+	public int getMiniGameId() {
+		return Constants.Minigames.ALFRED_GRIMHANDS_BARCRAWL;
+	}
 
+	@Override
+	public String getMiniGameName() {
+		return "Alfred Grimhand's Barcrawl (members)";
+	}
+
+	@Override
+	public boolean isMembers() {
+		return true;
+	}
+
+	@Override
+	public void handleReward(Player p) {
+		//mini-quest complete handled already
+	}
+	
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
 		return obj.getID() == 311 && obj.getX() == 494;
@@ -23,7 +49,7 @@ public class AlfredGrimhandBarCrawl implements TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
-		return n.getID() == 305;
+		return n.getID() == NpcId.BARBARIAN_GUARD.id();
 	}
 
 	@Override
@@ -33,7 +59,7 @@ public class AlfredGrimhandBarCrawl implements TalkToNpcListener,
 				doGate(p, obj);
 				return;
 			}
-			Npc barbarian = World.getWorld().getNpc(305, 494, 500, 538, 550);
+			Npc barbarian = World.getWorld().getNpc(NpcId.BARBARIAN_GUARD.id(), 494, 500, 538, 550);
 			if (barbarian != null) {
 				barbarian.initializeTalkScript(p);
 			}
@@ -42,7 +68,7 @@ public class AlfredGrimhandBarCrawl implements TalkToNpcListener,
 
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
-		if (n.getID() == 305) {
+		if (n.getID() == NpcId.BARBARIAN_GUARD.id()) {
 			if (p.getCache().hasKey("barcrawl_completed")) {
 				npcTalk(p, n, "Ello friend");
 				return;
@@ -93,6 +119,7 @@ public class AlfredGrimhandBarCrawl implements TalkToNpcListener,
 					p.getCache().remove("barfour");
 					p.getCache().remove("barfive");
 					p.getCache().remove("barsix");
+					p.sendMiniGameComplete(this.getMiniGameId(), Optional.empty());
 				} else {
 					playerTalk(p, n, "I haven't finished it yet");
 					npcTalk(p, n,
