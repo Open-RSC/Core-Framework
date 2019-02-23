@@ -691,6 +691,10 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 			if (player.getLocation().inMageArena()) {
 				player.teleport(228, 109);
 			}
+			// store kitten growth progress
+			player.getCache().set("kitten_events", player.getAttribute("kitten_events", 0));
+			player.getCache().set("kitten_hunger", player.getAttribute("kitten_hunger", 0));
+			player.getCache().set("kitten_loneliness", player.getAttribute("kitten_loneliness", 0));
 			player.save();
 			player.remove();
 			players.remove(player);
