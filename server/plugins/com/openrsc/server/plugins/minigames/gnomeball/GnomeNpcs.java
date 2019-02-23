@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.minigames.gnomeball;
 
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.inArray;
 import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.playerTalk;
@@ -203,10 +204,19 @@ TalkToNpcListener, TalkToNpcExecutiveListener, NpcCommandListener, NpcCommandExe
 					addItem(p, ItemId.GNOME_BALL.id(), 1);
 				}
 			} else {
-				if (!p.getCache().hasKey("gnomeball_npc") && !hasItem(p, ItemId.GNOME_BALL.id())) {
-					npcTalk(p, n, "ready ...  go");
-					message(p, 1200, "the ref throws the ball into the air", "you jump up and catch it");
-					addItem(p, ItemId.GNOME_BALL.id(), 1);
+				// player does not have ball
+				if (!hasItem(p, ItemId.GNOME_BALL.id())) {
+					loadIfNotMemory(p, "gnomeball_npc");
+					// and neither does a gnome baller
+					if (inArray(p.getSyncAttribute("gnomeball_npc", -1), 0)) {
+						p.setSyncAttribute("throwing_ball_game", false);
+						npcTalk(p, n, "ready ...  go");
+						message(p, 1200, "the ref throws the ball into the air", "you jump up and catch it");
+						addItem(p, ItemId.GNOME_BALL.id(), 1);
+					}
+					else {
+						npcTalk(p, n, "the ball's still in play");
+					}
 				} else {
 					npcTalk(p, n, "the ball's still in play");
 				}
@@ -217,6 +227,15 @@ TalkToNpcListener, TalkToNpcExecutiveListener, NpcCommandListener, NpcCommandExe
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE2XP_OUTER, n.getID())
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE1XP_INNER, n.getID())) {
 			tackleGnomeBaller(p, n);
+		}
+	}
+	
+	private void loadIfNotMemory(Player p, String cacheName) {
+		//load from player cache if not present in memory
+		if((p.getSyncAttribute(cacheName, -1) == -1) && p.getCache().hasKey(cacheName)) {
+			p.setSyncAttribute(cacheName, p.getCache().getInt(cacheName));
+		} else if (p.getSyncAttribute(cacheName, -1) == -1) {
+			p.setSyncAttribute(cacheName, 0);
 		}
 	}
 
@@ -232,6 +251,7 @@ TalkToNpcListener, TalkToNpcExecutiveListener, NpcCommandListener, NpcCommandExe
 					p.message("you need the ball first");
 				}
 				else {
+					p.setSyncAttribute("throwing_ball_game", true);
 					Server.getServer().getGameEventHandler().add(new BallProjectileEvent(p, n, 3) {
 						@Override
 						public void doSpell() {
@@ -243,6 +263,7 @@ TalkToNpcListener, TalkToNpcExecutiveListener, NpcCommandListener, NpcCommandExe
 					sleep(5000);
 					p.message("the gnome throws you a long ball");
 					addItem(p, ItemId.GNOME_BALL.id(), 1);
+					p.setSyncAttribute("throwing_ball_game", false);
 				}
 			}
 			else if (command.equals("pass to")) {
@@ -261,7 +282,9 @@ TalkToNpcListener, TalkToNpcExecutiveListener, NpcCommandListener, NpcCommandExe
 	}
 	
 	private void tackleGnomeBaller(Player p, Npc n) {
-		if (!p.getCache().hasKey("gnomeball_npc")) {
+		loadIfNotMemory(p, "gnomeball_npc");
+		// and neither does a gnome baller
+		if (p.getSyncAttribute("gnomeball_npc", -1) == 0 || n.getID() != p.getSyncAttribute("gnomeball_npc", -1)) {
 			p.message("the gnome isn't carrying the ball");
 		}
 		else {
@@ -274,7 +297,7 @@ TalkToNpcListener, TalkToNpcExecutiveListener, NpcCommandListener, NpcCommandExe
 				npcTalk(p, n, "grrrr");
 				addItem(p, ItemId.GNOME_BALL.id(), 1);
 				p.incExp(Skills.AGILITY, TACKLING_XP[DataConversions.random(0,1)], true);
-				p.getCache().remove("gnomeball_npc");
+				p.setSyncAttribute("gnomeball_npc", 0);
 			} else {
 				p.playerServerMessage(MessageType.QUEST, "You're pushed away by the gnome");
 				playerTalk(p, n, "ouch");

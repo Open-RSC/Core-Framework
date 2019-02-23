@@ -13,7 +13,7 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.inArray;
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.npcYell;
 import static com.openrsc.server.plugins.Functions.playerTalk;
@@ -106,7 +106,7 @@ public class NpcBehavior {
 				for (Player p : npc.getViewArea().getPlayersInView()) {
 					int range = 1;
 					if (!p.withinRange(npc, range) || !hasItem(p, ItemId.GNOME_BALL.id())
-							|| p.getCache().hasKey("gnomeball_npc"))
+							|| !inArray(p.getSyncAttribute("gnomeball_npc", -1), -1, 0))
 						continue; // Not in range, does not have a gnome ball or a gnome baller already has ball.
 					
 					//set tackle
@@ -186,28 +186,39 @@ public class NpcBehavior {
 			}
 			
 			if (target.isPlayer()) {
-				lastTackleAttempt = System.currentTimeMillis();
-				Player p = (Player) target;
-				showBubble(p, new Item(ItemId.GNOME_BALL.id()));
-				message(p, "the gnome trys to tackle you");
-				if (DataConversions.random(0, 1) == 0) {
-					//successful avoiding tackles gives agility xp
-					p.playerServerMessage(MessageType.QUEST, "You manage to push him away");
-					npcYell(p, npc, "grrrrr");
-					p.incExp(Skills.AGILITY, TACKLING_XP[DataConversions.random(0,3)], true);
-				} else {
-					p.playerServerMessage(MessageType.QUEST, "he takes the ball...");
-					p.playerServerMessage(MessageType.QUEST, "and pushes you to the floor");
-					removeItem(p, ItemId.GNOME_BALL.id(), 1);
-					p.damage((int)(Math.ceil(p.getSkills().getLevel(Skills.HITPOINTS)*0.05)));
-					playerTalk(p, null, "ouch");
-					npcYell(p, npc, "yeah");
-					p.getCache().set("gnomeball_npc", npc.getID());
-				}
+				attemptTackle(npc, (Player) target);
 				tackle_retreat();
 			}
 		} else if (state == State.RETREAT || state == State.TACKLE_RETREAT) {
 			if (npc.finishedPath()) setRoaming();
+		}
+	}
+	
+	public synchronized void attemptTackle(Npc n, Player p) {
+		int otherNpcId = p.getSyncAttribute("gnomeball_npc", -1);
+		if ((!inArray(otherNpcId, -1, 0) && npc.getID() != otherNpcId) || p.getSyncAttribute("throwing_ball_game", false)) {
+			return;
+		}
+		lastTackleAttempt = System.currentTimeMillis();
+		showBubble(p, new Item(ItemId.GNOME_BALL.id()));
+		p.message("the gnome trys to tackle you");
+		if (DataConversions.random(0, 1) == 0) {
+			//successful avoiding tackles gives agility xp
+			p.playerServerMessage(MessageType.QUEST, "You manage to push him away");
+			npcYell(p, npc, "grrrrr");
+			p.incExp(Skills.AGILITY, TACKLING_XP[DataConversions.random(0,3)], true);
+		} else {
+			if (!inArray(p.getSyncAttribute("gnomeball_npc", -1), -1, 0) || p.getSyncAttribute("throwing_ball_game", false)) {
+				// some other gnome beat here or player is shooting at goal
+				return;
+			}
+			p.setSyncAttribute("gnomeball_npc", npc.getID());
+			removeItem(p, ItemId.GNOME_BALL.id(), 1);
+			p.playerServerMessage(MessageType.QUEST, "he takes the ball...");
+			p.playerServerMessage(MessageType.QUEST, "and pushes you to the floor");
+			p.damage((int)(Math.ceil(p.getSkills().getLevel(Skills.HITPOINTS)*0.05)));
+			playerTalk(p, null, "ouch");
+			npcYell(p, npc, "yeah");
 		}
 	}
 
