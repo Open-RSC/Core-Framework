@@ -330,6 +330,12 @@ public final class Player extends Mob {
 	private int actionsMouseStill = 0;
 	private long lastMouseMoved = 0;
 	private Map<Integer, Integer> achievements = new ConcurrentHashMap<>();
+	// activity indicator for kitten to cat growth
+	// 100 trigger up a Kitten to cat event
+	// 1 walked step is +1 activity, 1 5-min warn to move is +25 activity
+	public final int KITTEN_ACTIVITY_THRESHOLD = 25;
+	private int activity = 0;
+	
 	/**
 	 * KILLS N DEATHS
 	 **/
@@ -1280,6 +1286,18 @@ public final class Player extends Mob {
 
 	public void incrementSleepTries() {
 		incorrectSleepTries++;
+	}
+	
+	public void incrementActivity(int amount) {
+		activity += amount;
+		if (activity >= KITTEN_ACTIVITY_THRESHOLD) {
+			activity -= KITTEN_ACTIVITY_THRESHOLD;
+			PluginHandler.getPluginHandler().blockDefaultAction("CatGrowth", new Object[]{this});
+		}
+	}
+	
+	public void singleIncrementActivity() {
+		incrementActivity(1);
 	}
 
 	public int getGroupID() {

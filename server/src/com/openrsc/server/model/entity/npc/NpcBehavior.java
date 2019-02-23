@@ -57,7 +57,7 @@ public class NpcBehavior {
 				if (!npc.isBusy() && rand == 1 && !npc.isRemoved()) {
 					int newX = DataConversions.random(npc.getLoc().minX(), npc.getLoc().maxX());
 					int newY = DataConversions.random(npc.getLoc().minY(), npc.getLoc().maxY());
-					if (!grandTreeGnome(npc)) {
+					if (!grandTreeGnome(npc) || npc.getLocation().equals(new Point(0,0))) {
 						npc.walk(newX, newY);
 					}
 					else {
