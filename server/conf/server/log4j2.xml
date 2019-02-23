@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 
 <Configuration status="WARN" target="SYSTEM_ERR">
+
     <Appenders>
-        <Console name="console" target="SYSTEM_OUT">
-            <PatternLayout pattern="[%d{dd MMM yyyy HH:mm:ss}] [%t] [%logger{36}] %level: %msg%n"/>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{YYYY-MM-dd HH:mm:ss} [%t] %-5p %c{1}:%L - %msg%n" />
         </Console>
-        <File name="main" fileName="logs/gameserver.log">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-        </File>
+
+        <RollingFile name="RollingFile" filename="logs/gameserver.log"
+            filepattern="logs/%d{YYYYMMddHHmmss}-gameserver.log">
+            <PatternLayout pattern="%d{YYYY-MM-dd HH:mm:ss} [%t] %-5p %c{1}:%L - %msg%n" />
+            <Policies>
+                <SizeBasedTriggeringPolicy size="3 MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="4" />
+        </RollingFile>
     </Appenders>
+
     <Loggers>
-        <Root level="INFO"> <!-- Set to ALL for debug purposes -->
-            <AppenderRef ref="console"/>
-            <AppenderRef ref="main" level="error"/>
+        <Root level="info">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="RollingFile" />
         </Root>
     </Loggers>
+
 </Configuration>
