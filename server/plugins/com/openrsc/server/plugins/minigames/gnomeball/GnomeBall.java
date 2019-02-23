@@ -108,6 +108,7 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 				gnome_team.initializeIndirectTalkScript(player);
 			}
 		} else if (playerZone == Zone.ZONE_1XP_OUTER || playerZone == Zone.ZONE_1XP_INNER) {
+			player.setSyncAttribute("throwing_ball_game", true);
 			Npc goalie = getNearestNpc(player, GnomeNpcs.GOALIE, 15);
 			player.setBusyTimer(600);
 			Server.getServer().getGameEventHandler().add(new BallProjectileEvent(player, goalie, 3) {
@@ -136,6 +137,7 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 				}
 			});
 		} else if (playerZone == Zone.ZONE_2XP_OUTER || playerZone == Zone.ZONE_2XP_INNER) {
+			player.setSyncAttribute("throwing_ball_game", true);
 			Npc goalie = getNearestNpc(player, GnomeNpcs.GOALIE, 15);
 			player.setBusyTimer(600);
 			Server.getServer().getGameEventHandler().add(new BallProjectileEvent(player, goalie, 3) {
@@ -186,15 +188,25 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 		}
 	}
 	
+	private void loadIfNotMemory(Player p, String cacheName) {
+		//load from player cache if not present in memory
+		if((p.getSyncAttribute(cacheName, -1) == -1) && p.getCache().hasKey(cacheName)) {
+			p.setSyncAttribute(cacheName, p.getCache().getInt(cacheName));
+		} else if (p.getSyncAttribute(cacheName, -1) == -1) {
+			p.setSyncAttribute(cacheName, 0);
+		}
+	}
+	
 	private void handleScore(Player p, int score_zone) {
-		int prev_goalCount = p.getCache().hasKey("gnomeball_goals") ? p.getCache().getInt("gnomeball_goals") : 0;
+		loadIfNotMemory(p, "gnomeball_goals");
+		int prev_goalCount = p.getAttribute("gnomeball_goals", 0);
 		p.incExp(Skills.RANGED, SCORES_XP[score_zone][prev_goalCount], true);
 		p.incExp(Skills.AGILITY, SCORES_XP[score_zone][prev_goalCount], true);
 		showScoreWindow(p, prev_goalCount+1);
 		if (prev_goalCount+1 == 5) {
 			ActionSender.sendTeleBubble(p, p.getX(), p.getY(), true);
 		}
-		p.getCache().set("gnomeball_goals", (prev_goalCount+1)%5);
+		p.setAttribute("gnomeball_goals", (prev_goalCount+1)%5);
 	}
 	
 	private void showScoreWindow(Player p, int goalNum) {
