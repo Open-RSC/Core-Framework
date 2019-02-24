@@ -70,7 +70,7 @@ public class WalkingQueue {
 		else {
 			Player p = (Player) mob;
 			p.setLocation(Point.location(destX, destY));
-			p.singleIncrementActivity();
+			p.stepIncrementActivity();
 		}
 
 	}
