@@ -1,1 +1,0 @@
-It's RSC in html5
