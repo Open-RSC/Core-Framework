@@ -68,6 +68,7 @@ public final class GameStateUpdater {
 			return;
 		}
 		if (curTime - player.getLastSaveTime() >= (autoSave) && player.loggedIn()) {
+			player.timeIncrementActivity();
 			player.save();
 			player.setLastSaveTime(curTime);
 		}
@@ -84,7 +85,6 @@ public final class GameStateUpdater {
 			}
 			player.message("@cya@You have been standing here for " + (timeoutLimit / 60000)
 				+ " mins! Please move to a new area");
-			player.incrementActivity(25);
 			player.setWarnedToMove(true);
 		}
 	}
