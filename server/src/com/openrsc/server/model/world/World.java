@@ -696,8 +696,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 			player.getCache().set("kitten_hunger", player.getAttribute("kitten_hunger", 0));
 			player.getCache().set("kitten_loneliness", player.getAttribute("kitten_loneliness", 0));
 			// any gnome ball progress
-			player.getCache().set("gnomeball_goals", player.getAttribute("gnomeball_goals", 0));
-			player.getCache().set("gnomeball_npc", player.getAttribute("gnomeball_npc", 0));
+			player.getCache().set("gnomeball_goals", player.getSyncAttribute("gnomeball_goals", 0));
+			player.getCache().set("gnomeball_npc", player.getSyncAttribute("gnomeball_npc", 0));
 			player.save();
 			player.remove();
 			players.remove(player);
