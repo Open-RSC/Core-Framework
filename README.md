@@ -1,5 +1,4 @@
 # Open RSC
-###### [![Build Status](https://travis-ci.org/Open-RSC/Game.svg?branch=2.0.0)](https://travis-ci.org/Open-RSC/Game)
 
 # Table of contents <a name="top"></a>
 1. [Project Information](#general)
