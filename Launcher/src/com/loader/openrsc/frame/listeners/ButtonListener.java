@@ -1,6 +1,5 @@
 package com.loader.openrsc.frame.listeners;
 
-import com.loader.openrsc.Constants;
 import com.loader.openrsc.frame.AppFrame;
 import com.loader.openrsc.util.ClientLauncher;
 import com.loader.openrsc.util.Utils;
@@ -14,8 +13,8 @@ public class ButtonListener implements ActionListener {
 	public void actionPerformed(final ActionEvent event) {
 		final String action = event.getActionCommand().toLowerCase();
 		switch (action) {
-			case "forum": {
-				Utils.openWebpage(Constants.BASE_URL + "board");
+			case "website": {
+				Utils.openWebpage("https://openrsc.com");
 				return;
 			}
 			case "bug reports": {
@@ -30,8 +29,8 @@ public class ButtonListener implements ActionListener {
 				Utils.openWebpage("https://discord.gg/94vVKND");
 				return;
 			}
-			case "github": {
-				Utils.openWebpage("https://github.com/Open-RSC/Game");
+			case "source code": {
+				Utils.openWebpage("https://gitlab.openrsc.com/Open-RSC/Game");
 				return;
 			}
 			case "minimize": {

@@ -30,13 +30,13 @@ public class StatusChecker implements Runnable {
 
 			try {
 				Thread.sleep(15000L);
-			} catch (Exception e) {
+			} catch (Exception ignored) {
 
 			}
 		}
 	}
 
-	public boolean isOnline() {
+	private boolean isOnline() {
 		try (Socket s = new Socket(this.serverIp, this.port)) {
 			return true;
 		} catch (IOException ex) {

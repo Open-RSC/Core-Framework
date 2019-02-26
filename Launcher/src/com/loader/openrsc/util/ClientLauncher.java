@@ -28,8 +28,8 @@ public class ClientLauncher {
 		SecurityException {
 
 		startProcess();
-		final Applet applet = Applet.class.cast(mainClass.getConstructor()
-			.newInstance());
+		final Applet applet = (Applet) mainClass.getConstructor()
+			.newInstance();
 		AppFrame.get().dispose();
 		JFrame gameFrame = new JFrame(Constants.GAME_NAME);
 		gameFrame.setMinimumSize(new Dimension(512 + 16, 334 + 49));
@@ -42,14 +42,15 @@ public class ClientLauncher {
 		gameFrame.setVisible(true);
 	}
 
-	public static void exit() {
+	private static void exit() {
 		System.exit(0);
 	}
 
-	public static void startProcess() {
+	private static void startProcess() {
 		try {
 			File f = new File(Constants.CONF_DIR + File.separator + Constants.CLIENT_FILENAME);
-			ProcessBuilder pb = new ProcessBuilder(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java", "-Xms512m", "-jar", f.getAbsolutePath());
+			ProcessBuilder pb;
+			pb = new ProcessBuilder(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java", "-Xms312m", "-jar", f.getAbsolutePath());
 			Process p = pb.start();
 			exit();
 		} catch (Exception e) {

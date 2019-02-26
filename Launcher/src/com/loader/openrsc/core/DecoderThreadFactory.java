@@ -14,7 +14,7 @@ public class DecoderThreadFactory implements ThreadFactory {
 	private final AtomicInteger threadNumber;
 	private final String namePrefix;
 
-	public DecoderThreadFactory() {
+	DecoderThreadFactory() {
 		this.threadNumber = new AtomicInteger(1);
 		final SecurityManager s = System.getSecurityManager();
 		this.group = ((s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup());

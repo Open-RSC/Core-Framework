@@ -18,7 +18,7 @@ public class FastThreadFactory implements ThreadFactory {
 		this.threadNumber = new AtomicInteger(1);
 		final SecurityManager s = System.getSecurityManager();
 		this.group = ((s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup());
-		this.namePrefix = "Fast Pool-" + FastThreadFactory.poolNumber.getAndIncrement() + "-thread-";
+		this.namePrefix = "Fast Pool-" + poolNumber.getAndIncrement() + "-thread-";
 	}
 
 	@Override

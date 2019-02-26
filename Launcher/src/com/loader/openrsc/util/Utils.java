@@ -1,7 +1,9 @@
 package com.loader.openrsc.util;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Desktop;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
@@ -9,8 +11,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+import javax.swing.ImageIcon;
+
 public class Utils {
-	public static DateFormat df;
+	private static DateFormat df;
 	private static long timeCorrection;
 	private static long lastTimeUpdate;
 
@@ -22,9 +26,7 @@ public class Utils {
 			font = font.deriveFont(type, size);
 			return font;
 		} catch (FontFormatException | IOException ex2) {
-			final Exception ex = null;
-			final Exception e = ex;
-			e.printStackTrace();
+			((Exception) null).printStackTrace();
 			return null;
 		}
 	}
