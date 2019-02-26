@@ -90,7 +90,7 @@ public class AppFrame extends JFrame {
 	}
 
 	public void setDownloadProgress(String f, float percent) {
-		(this.progress = new JProgressBar(0, 100)).setBounds(27, 530, 640, 18);
+		(this.progress = new JProgressBar(0, 100)).setBounds(27, 530, 508, 18);
 		if (percent >= 90) this.progress.setForeground(new Color(0, 153, 0));
 		else if (percent >= 80 && percent < 90) this.progress.setForeground(new Color(91, 153, 0));
 		else if (percent >= 70 && percent < 80) this.progress.setForeground(new Color(130, 153, 0));
