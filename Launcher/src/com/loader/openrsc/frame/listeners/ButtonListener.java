@@ -29,10 +29,6 @@ public class ButtonListener implements ActionListener {
 				Utils.openWebpage("https://discord.gg/94vVKND");
 				return;
 			}
-			case "source code": {
-				Utils.openWebpage("https://gitlab.openrsc.com/Open-RSC/Game");
-				return;
-			}
 			case "minimize": {
 				AppFrame.get().setState(1);
 				return;

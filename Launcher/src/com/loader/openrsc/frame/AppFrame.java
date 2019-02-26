@@ -23,7 +23,6 @@ public class AppFrame extends JFrame {
 	private LaunchButton launch;
 	private JProgressBar progress;
 	private JLabel status;
-	private JLabel postedDate;
 	private JLabel checkLabel;
 
 	public AppFrame() {
@@ -41,19 +40,21 @@ public class AppFrame extends JFrame {
 
 	public void build() {
 		Random rand = new Random();
-		int value = rand.nextInt(5);
+		int value = rand.nextInt(6);
 		if (value == 0) {
-			(this.bg = new JLabel(Utils.getImage("background.png"))).setBounds(0, 0, 980, 560);
+			(this.bg = new JLabel(Utils.getImage("background.png"))).setBounds(0, 0, 800, 560);
 		} else if (value == 1) {
-			(this.bg = new JLabel(Utils.getImage("background2.png"))).setBounds(0, 0, 980, 560);
+			(this.bg = new JLabel(Utils.getImage("background2.png"))).setBounds(0, 0, 800, 560);
 		} else if (value == 2) {
-			(this.bg = new JLabel(Utils.getImage("background3.png"))).setBounds(0, 0, 980, 560);
+			(this.bg = new JLabel(Utils.getImage("background3.png"))).setBounds(0, 0, 800, 560);
 		} else if (value == 3) {
-			(this.bg = new JLabel(Utils.getImage("background4.png"))).setBounds(0, 0, 980, 560);
+			(this.bg = new JLabel(Utils.getImage("background4.png"))).setBounds(0, 0, 800, 560);
 		} else if (value == 4) {
-			(this.bg = new JLabel(Utils.getImage("background5.png"))).setBounds(0, 0, 980, 560);
-		} else {
-			(this.bg = new JLabel(Utils.getImage("background6.png"))).setBounds(0, 0, 980, 560);
+			(this.bg = new JLabel(Utils.getImage("background5.png"))).setBounds(0, 0, 800, 560);
+		} else if (value == 5) {
+			(this.bg = new JLabel(Utils.getImage("background6.png"))).setBounds(0, 0, 800, 560);
+		} else if (value == 6) {
+			(this.bg = new JLabel(Utils.getImage("background7.png"))).setBounds(0, 0, 800, 560);
 		}
 
 		this.add(this.bg);
@@ -80,7 +81,7 @@ public class AppFrame extends JFrame {
 		(this.status = new JLabel("Server Status: ---")).setForeground(Color.WHITE);
 		this.status.setFont(Utils.getFont("Exo-Regular.otf", 0, 12.0f));
 		this.status.setHorizontalAlignment(4);
-		this.status.setBounds(625, 74, 315, 19);
+		this.status.setBounds(445, 74, 315, 19);
 		this.bg.add(this.status);
 	}
 
@@ -89,7 +90,7 @@ public class AppFrame extends JFrame {
 	}
 
 	public void setDownloadProgress(String f, float percent) {
-		(this.progress = new JProgressBar(0, 100)).setBounds(27, 530, 640, 18);
+		(this.progress = new JProgressBar(0, 100)).setBounds(27, 530, 508, 18);
 		if (percent >= 90) this.progress.setForeground(new Color(0, 153, 0));
 		else if (percent >= 80 && percent < 90) this.progress.setForeground(new Color(91, 153, 0));
 		else if (percent >= 70 && percent < 80) this.progress.setForeground(new Color(130, 153, 0));
@@ -115,11 +116,10 @@ public class AppFrame extends JFrame {
 		this.bg.add(new LinkButton("Bug Reports", new Rectangle(158, 480, 119, 40)));
 		this.bg.add(new LinkButton("Report Bots", new Rectangle(288, 480, 119, 40)));
 		this.bg.add(new LinkButton("Discord", new Rectangle(418, 480, 119, 40)));
-		this.bg.add(new LinkButton("Source Code", new Rectangle(548, 480, 119, 40)));
-		(this.launch = new LaunchButton()).setBounds(797, 481, 174, 69);
+		(this.launch = new LaunchButton()).setBounds(617, 481, 174, 69);
 		this.bg.add(this.launch);
-		this.bg.add(new ControlButton(2, 958, 8, 10, 11));
-		this.bg.add(new ControlButton(1, 940, 8, 10, 11));
+		this.bg.add(new ControlButton(2, 778, 8, 10, 11)); // Exit
+		this.bg.add(new ControlButton(1, 760, 8, 10, 11)); // Minimize
 	}
 
 	public JProgressBar getProgress() {

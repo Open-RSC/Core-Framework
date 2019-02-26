@@ -10,8 +10,6 @@ import javax.swing.JComponent;
 import javax.swing.JProgressBar;
 import javax.swing.plaf.ProgressBarUI;
 
-import static java.lang.Math.max;
-
 public class CustomBarUI extends ProgressBarUI {
 	private static final int MINIMUM_BORDER_THICKNESS = 0;
 	private static final int MAXIMUM_BORDER_THICKNESS = 10;
@@ -40,7 +38,7 @@ public class CustomBarUI extends ProgressBarUI {
 	}
 
 	private void setBorderThickness() {
-		this.borderThickness = max(0, Math.min(10, 0));
+		this.borderThickness = Math.max(0, Math.min(10, 0));
 	}
 
 	@Override
