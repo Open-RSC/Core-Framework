@@ -80,7 +80,7 @@ public class AppFrame extends JFrame {
 		(this.status = new JLabel("Server Status: ---")).setForeground(Color.WHITE);
 		this.status.setFont(Utils.getFont("Exo-Regular.otf", 0, 12.0f));
 		this.status.setHorizontalAlignment(4);
-		this.status.setBounds(625, 74, 315, 19);
+		this.status.setBounds(445, 74, 315, 19);
 		this.bg.add(this.status);
 	}
 
@@ -115,11 +115,10 @@ public class AppFrame extends JFrame {
 		this.bg.add(new LinkButton("Bug Reports", new Rectangle(158, 480, 119, 40)));
 		this.bg.add(new LinkButton("Report Bots", new Rectangle(288, 480, 119, 40)));
 		this.bg.add(new LinkButton("Discord", new Rectangle(418, 480, 119, 40)));
-		this.bg.add(new LinkButton("Source Code", new Rectangle(548, 480, 119, 40)));
-		(this.launch = new LaunchButton()).setBounds(797, 481, 174, 69);
+		(this.launch = new LaunchButton()).setBounds(617, 481, 174, 69);
 		this.bg.add(this.launch);
-		this.bg.add(new ControlButton(2, 958, 8, 10, 11));
-		this.bg.add(new ControlButton(1, 940, 8, 10, 11));
+		this.bg.add(new ControlButton(2, 778, 8, 10, 11)); // Exit
+		this.bg.add(new ControlButton(1, 760, 8, 10, 11)); // Minimize
 	}
 
 	public JProgressBar getProgress() {
