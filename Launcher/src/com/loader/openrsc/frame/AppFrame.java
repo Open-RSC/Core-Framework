@@ -7,15 +7,18 @@ import com.loader.openrsc.frame.elements.LinkButton;
 import com.loader.openrsc.frame.listeners.PositionListener;
 import com.loader.openrsc.util.Utils;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.util.Random;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JProgressBar;
 
 @SuppressWarnings("serial")
 public class AppFrame extends JFrame {
-	public static AppFrame instance;
-	private JLabel text;
-	private JLabel subText;
+	private static AppFrame instance;
 	private JLabel bg;
 	private LaunchButton launch;
 	private JProgressBar progress;
@@ -24,7 +27,7 @@ public class AppFrame extends JFrame {
 	private JLabel checkLabel;
 
 	public AppFrame() {
-		this.setPreferredSize(new Dimension(980, 560));
+		this.setPreferredSize(new Dimension(800, 560));
 		this.setUndecorated(true);
 		this.setTitle(Constants.GAME_NAME);
 		this.setIconImage(Utils.getImage("icon.png").getImage());
@@ -64,14 +67,16 @@ public class AppFrame extends JFrame {
 	}
 
 	private void addLogo() {
-		(this.text = new JLabel(Constants.GAME_NAME.toUpperCase())).setBounds(30, 24, 100, 15);
-		this.text.setForeground(new Color(255, 223, 0));
-		this.text.setFont(Utils.getFont("Exo-Regular.otf", 1, 14.0f));
-		this.bg.add(this.text);
-		(this.subText = new JLabel("Game Launcher v." + String.format("%8.6f", Constants.VERSION_NUMBER))).setBounds(30, 35, 210, 15);
-		this.subText.setForeground(new Color(200, 200, 200));
-		this.subText.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
-		this.bg.add(this.subText);
+		JLabel text;
+		(text = new JLabel(Constants.GAME_NAME.toUpperCase())).setBounds(30, 24, 100, 15);
+		text.setForeground(new Color(255, 223, 0));
+		text.setFont(Utils.getFont("Exo-Regular.otf", 1, 14.0f));
+		this.bg.add(text);
+		JLabel subText;
+		(subText = new JLabel("Game Launcher v." + String.format("%8.6f", Constants.VERSION_NUMBER))).setBounds(30, 35, 210, 15);
+		subText.setForeground(new Color(200, 200, 200));
+		subText.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
+		this.bg.add(subText);
 		(this.status = new JLabel("Server Status: ---")).setForeground(Color.WHITE);
 		this.status.setFont(Utils.getFont("Exo-Regular.otf", 0, 12.0f));
 		this.status.setHorizontalAlignment(4);
@@ -106,11 +111,11 @@ public class AppFrame extends JFrame {
 	}
 
 	private void addButtons() {
-		this.bg.add(new LinkButton("Forum", new Rectangle(27, 480, 119, 40)));
+		this.bg.add(new LinkButton("Website", new Rectangle(27, 480, 119, 40)));
 		this.bg.add(new LinkButton("Bug Reports", new Rectangle(158, 480, 119, 40)));
 		this.bg.add(new LinkButton("Report Bots", new Rectangle(288, 480, 119, 40)));
 		this.bg.add(new LinkButton("Discord", new Rectangle(418, 480, 119, 40)));
-		this.bg.add(new LinkButton("GitHub", new Rectangle(548, 480, 119, 40)));
+		this.bg.add(new LinkButton("Source Code", new Rectangle(548, 480, 119, 40)));
 		(this.launch = new LaunchButton()).setBounds(797, 481, 174, 69);
 		this.bg.add(this.launch);
 		this.bg.add(new ControlButton(2, 958, 8, 10, 11));

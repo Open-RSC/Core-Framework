@@ -4,19 +4,25 @@ import com.loader.openrsc.Constants;
 import com.loader.openrsc.OpenRSC;
 import com.loader.openrsc.frame.AppFrame;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.MessageDigest;
-import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Observable;
 import java.util.Properties;
 import java.util.Set;
 
 public class Downloader extends Observable {
-	private final String nicename[] = {"Client", "Library", "Landscape",
+	private final String[] nicename = new String[]{"Client", "Library", "Landscape",
 		"Graphics", "3D Models",
 		"Game Sound", "Game Sound", "Game Sound", "Game Sound",
 		"Game Sound", "Game Sound", "Game Sound", "Game Sound",
@@ -28,7 +34,8 @@ public class Downloader extends Observable {
 		"Game Sound", "Game Sound", "Game Sound", "Game Sound",
 		"Game Sound", "Game Sound", "Game Sound", "Game Sound",
 		"Game Sound", "Game Sound"};
-	private final String normalName[] = {"Open_RSC_Client.jar", "library.orsc", "Landscape.orsc",
+
+	private final String[] normalName = new String[]{"Open_RSC_Client.jar", "library.orsc", "Landscape.orsc",
 		"Sprites.orsc", "models.orsc",
 		"advance.wav", "anvil.wav", "chisel.wav", "click.wav",
 		"closedoor.wav", "coins.wav", "takeobject.wav", "victory.wav",
@@ -41,7 +48,11 @@ public class Downloader extends Observable {
 		"prayeroff.wav", "prayeron.wav", "prospect.wav", "shoot.wav",
 		"retreat.wav", "secretdoor.wav"};
 
-	public static byte[] createChecksum(File file) throws Exception {
+	public Downloader() {
+
+	}
+
+	private static byte[] createChecksum(File file) throws Exception {
 		InputStream fis = new FileInputStream(file);
 
 		byte[] buffer = new byte[1024];
@@ -61,17 +72,17 @@ public class Downloader extends Observable {
 
 	// see this How-to for a faster way to convert
 	// a byte array to a HEX string
-	public static String getMD5Checksum(File file) throws Exception {
+	private static String getMD5Checksum(File file) throws Exception {
 		byte[] b = createChecksum(file);
-		String result = "";
+		StringBuilder result = new StringBuilder();
 
-		for (int i = 0; i < b.length; i++) {
-			result += Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1);
+		for (byte b1 : b) {
+			result.append(Integer.toString((b1 & 0xff) + 0x100, 16).substring(1));
 		}
-		return result;
+		return result.toString();
 	}
 
-	public static boolean checkVersionNumber() {
+	private static boolean checkVersionNumber() {
 		try {
 			Double currentVersion = 0.0;
 			URL updateURL =
@@ -93,7 +104,7 @@ public class Downloader extends Observable {
 
 			// Close connection
 			in.close();
-			return currentVersion == Constants.VERSION_NUMBER;
+			return currentVersion.equals(Constants.VERSION_NUMBER);
 		} catch (Exception e) {
 			return false;
 		}
@@ -126,14 +137,17 @@ public class Downloader extends Observable {
 		deleteNonExistant(old.keySet(), new1.keySet());
 		updateIfNeeded(old.entrySet(), new1.entrySet());
 		downloadNew(old.keySet(), new1.keySet());
-		while (!verifyDownloads(new1.entrySet())) ; //Verify and re-download until its all good.
+		while (true) {
+			if (verifyDownloads(new1.entrySet())) break;
+			//Verify and re-download until its all good.
+		}
 	}
 
-	public boolean updateJar() {
+	public void updateJar() {
 		boolean success = true;
 		try {
 			if (checkVersionNumber()) // Check if version is the same
-				return false; // and return false if it is.
+				return; // and return false if it is.
 
 
 			URL url = new URL(Constants.UPDATE_JAR_URL);
@@ -166,7 +180,6 @@ public class Downloader extends Observable {
 			success = false;
 		}
 
-		return success;
 	}
 
 	private boolean verifyDownloads(Set<Entry<Object, Object>> set) {
@@ -195,6 +208,7 @@ public class Downloader extends Observable {
 				OpenRSC.getPopup().setMessage("" + e);
 			}
 
+			assert downloadedFileHash != null;
 			if (!downloadedFileHash.equalsIgnoreCase(hash)) {
 				OpenRSC.getPopup().setMessage(downloadedFile.getName() + " hash:" + downloadedFileHash + " doesn't match MD5: " + hash + " re-downloading");
 				load(fileName, true);
@@ -206,7 +220,7 @@ public class Downloader extends Observable {
 		return verified;
 	}
 
-	public String getNiceName(String s) {
+	private String getNiceName(String s) {
 		for (int i = 0; i < normalName.length; i++) {
 			if (normalName[i].equalsIgnoreCase(s)) {
 				return nicename[i];
@@ -215,11 +229,11 @@ public class Downloader extends Observable {
 		return "File";
 	}
 
-	public File load(String filename) {
+	private File load(String filename) {
 		return load(filename, false);
 	}
 
-	public File load(String filename, boolean b) {
+	private File load(String filename, boolean b) {
 		File f = new File(Constants.CONF_DIR + File.separator + filename);
 		if (!f.exists() || b) {
 			f.delete();
@@ -246,9 +260,7 @@ public class Downloader extends Observable {
 	private void updateIfNeeded(Set<Entry<Object, Object>> entrySet,
 								Set<Entry<Object, Object>> entrySet2) {
 		for (Entry<Object, Object> e : entrySet) {
-			Iterator<Entry<Object, Object>> itr = entrySet2.iterator();
-			while (itr.hasNext()) {
-				Entry<Object, Object> e1 = itr.next();
+			for (Entry<Object, Object> e1 : entrySet2) {
 				if (e1.getKey().equals(e.getKey()) && !e1.getValue().equals(e.getValue())) {
 					update((String) e.getKey());
 				}
@@ -282,32 +294,34 @@ public class Downloader extends Observable {
 		}
 	}
 
-	public void download(File f, String string) throws Exception {
+	private void download(File f, String string) throws Exception {
 
 		AppFrame.get().getLaunch().setEnabled(false);
 		URL url = new URL(Constants.CACHE_URL + f.getName());
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		BufferedInputStream in = new BufferedInputStream(connection.getInputStream());
 		FileOutputStream fos = new FileOutputStream(Constants.CONF_DIR + File.separator + f.getName());
-		BufferedOutputStream bout = new BufferedOutputStream(fos, 1024);
 		try {
-			int filesize = connection.getContentLength();
-			float totalDataRead = 0;
+			try (BufferedInputStream in = new BufferedInputStream(connection.getInputStream())) {
+				try {
+					try (BufferedOutputStream bout = new BufferedOutputStream(fos, 1024)) {
+						int filesize = connection.getContentLength();
+						float totalDataRead = 0;
 
-			byte[] data = new byte[4096];
-			int i = 0;
-			while ((i = in.read(data, 0, 4096)) >= 0) {
-				totalDataRead = totalDataRead + i;
-				bout.write(data, 0, i);
-				float Percent = (totalDataRead * 100) / filesize;
-				AppFrame.get().setDownloadProgress(string, Percent);
+						byte[] data = new byte[4096];
+						int i = 0;
+						while ((i = in.read(data, 0, 4096)) >= 0) {
+							totalDataRead = totalDataRead + i;
+							bout.write(data, 0, i);
+							float Percent = (totalDataRead * 100) / filesize;
+							AppFrame.get().setDownloadProgress(string, Percent);
+						}
+					}
+				} finally {
+					fos.close();
+				}
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
-		} finally {
-			bout.close();
-			in.close();
-			fos.close();
 		}
 	}
 }

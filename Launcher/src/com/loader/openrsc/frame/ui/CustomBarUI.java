@@ -2,9 +2,15 @@ package com.loader.openrsc.frame.ui;
 
 import com.loader.openrsc.util.Utils;
 
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+
+import javax.swing.JComponent;
+import javax.swing.JProgressBar;
 import javax.swing.plaf.ProgressBarUI;
-import java.awt.*;
+
+import static java.lang.Math.max;
 
 public class CustomBarUI extends ProgressBarUI {
 	private static final int MINIMUM_BORDER_THICKNESS = 0;
@@ -18,23 +24,23 @@ public class CustomBarUI extends ProgressBarUI {
 		this.setBarColor(new Color(20, 20, 20));
 		this.setBackgroundColor(new Color(50, 50, 50));
 		this.setBorderColor(new Color(50, 50, 50));
-		this.setBorderThickness(0);
+		this.setBorderThickness();
 	}
 
-	public void setBackgroundColor(final Color backgroundColor) {
+	private void setBackgroundColor(final Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
 	}
 
-	public void setBorderColor(final Color borderColor) {
+	private void setBorderColor(final Color borderColor) {
 		this.borderColor = borderColor;
 	}
 
-	public void setBarColor(final Color barColor) {
+	private void setBarColor(final Color barColor) {
 		this.barColor = barColor;
 	}
 
-	public void setBorderThickness(final int thickness) {
-		this.borderThickness = Math.max(0, Math.min(10, thickness));
+	private void setBorderThickness() {
+		this.borderThickness = max(0, Math.min(10, 0));
 	}
 
 	@Override
