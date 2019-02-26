@@ -48,7 +48,7 @@ public class CustomBarUI extends ProgressBarUI {
 
 	@Override
 	public void update(final Graphics g, final JComponent component) {
-		final int WIDTH = (component.getWidth() - 150);
+		final int WIDTH = (component.getWidth() - 235);
 		final int HEIGHT = component.getHeight();
 		g.setColor(this.borderColor);
 		g.fillRect(0, 0, WIDTH, this.borderThickness);
