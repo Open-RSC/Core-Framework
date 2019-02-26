@@ -28,4 +28,3 @@ sudo certbot certonly \
 echo ""
 echo "Done!"
 echo ""
-sudo chmod 644 Website/sql/config.inc.php
