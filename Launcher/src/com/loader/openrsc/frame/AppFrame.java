@@ -23,7 +23,6 @@ public class AppFrame extends JFrame {
 	private LaunchButton launch;
 	private JProgressBar progress;
 	private JLabel status;
-	private JLabel postedDate;
 	private JLabel checkLabel;
 
 	public AppFrame() {
