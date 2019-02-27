@@ -7,12 +7,12 @@ public class Sector {
 	/**
 	 * The width of a sector
 	 */
-	public static final short WIDTH = 48;
+	private static final short WIDTH = 48;
 
 	/**
 	 * The height of a sector
 	 */
-	public static final short HEIGHT = 48;
+	private static final short HEIGHT = 48;
 
 	/**
 	 * An array containing all the tiles within this Sector
@@ -56,7 +56,7 @@ public class Sector {
 	/**
 	 * Sets the Tile at the given index
 	 */
-	public void setTile(int i, Tile t) {
+	private void setTile(int i, Tile t) {
 		tiles[i] = t;
 	}
 
@@ -80,8 +80,8 @@ public class Sector {
 	public ByteBuffer pack() throws IOException {
 		ByteBuffer out = ByteBuffer.allocate(10 * tiles.length);
 
-		for (int i = 0; i < tiles.length; i++) {
-			out.put(tiles[i].pack());
+		for (Tile tile : tiles) {
+			out.put(tile.pack());
 		}
 
 		out.flip();

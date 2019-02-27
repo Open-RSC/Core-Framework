@@ -7,7 +7,7 @@ public class ItemDef extends EntityDef {
 	public boolean stackable;
 	public boolean wieldable;
 	public int wearableID;
-	public int pictureMask;
+	private int pictureMask;
 	public boolean quest;
 	public boolean membersItem;
 
@@ -93,7 +93,7 @@ public class ItemDef extends EntityDef {
 		return isNotedFormOf;
 	}
 
-	public void setNotedFormOf(int notedFormOf) {
+	private void setNotedFormOf(int notedFormOf) {
 		this.isNotedFormOf = notedFormOf;
 	}
 

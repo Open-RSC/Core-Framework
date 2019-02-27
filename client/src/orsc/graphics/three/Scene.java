@@ -7,7 +7,7 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 
 public final class Scene {
-	public static final int TRANSPARENT = 12345678;
+	static final int TRANSPARENT = 12345678;
 	private final RSModel[] m_Ab;
 	private final int[] m_B = new int[40];
 	private final int m_db;
@@ -135,11 +135,11 @@ public final class Scene {
 			this.m_a = new int[var4];
 		} catch (RuntimeException var6) {
 			throw GenUtil.makeThrowable(var6,
-				"lb.<init>(" + (var1 != null ? "{...}" : "null") + ',' + var2 + ',' + maxPolygonCount + ',' + var4 + ')');
+				"lb.<init>(" + "{...}" + ',' + var2 + ',' + maxPolygonCount + ',' + var4 + ')');
 		}
 	}
 
-	private final boolean polygonHit1(Polygon polyA, Polygon polyB) {
+	private boolean polygonHit1(Polygon polyA, Polygon polyB) {
 		try {
 
 			RSModel modelA = polyA.model;
@@ -210,7 +210,7 @@ public final class Scene {
 		}
 	}
 
-	private final boolean booleanCombinatoric(boolean var2, int var3, int var4, int var5, int var6) {
+	private boolean booleanCombinatoric(boolean var2, int var3, int var4, int var5, int var6) {
 		try {
 
 			if ((!var2 || var5 > var6) && var5 >= var6) {
@@ -241,7 +241,7 @@ public final class Scene {
 		}
 	}
 
-	private final boolean polygonHit2(byte var1, Polygon var2, Polygon var3) {
+	private boolean polygonHit2(byte var1, Polygon var2, Polygon var3) {
 		try {
 
 			if (var3.minP6 >= var2.maxP6) {
@@ -375,12 +375,11 @@ public final class Scene {
 				}
 			}
 		} catch (RuntimeException var29) {
-			throw GenUtil.makeThrowable(var29, "lb.F(" + var1 + ',' + (var2 != null ? "{...}" : "null") + ','
-				+ (var3 != null ? "{...}" : "null") + ')');
+			throw GenUtil.makeThrowable(var29, "lb.F(" + var1 + ',' + (var2 != null ? "{...}" : "null") + ',' + "{...}" + ')');
 		}
 	}
 
-	private final void resetMTVertHead() {
+	private void resetMTVertHead() {
 		try {
 
 			this.m_n = 0;
@@ -399,14 +398,12 @@ public final class Scene {
 				this.b(resource, var2);
 				if (resource >= 0) {
 					return this.resourceDatabase[resource][0];
-				} else if (resource < 0) {
+				} else {
 					resource = -(resource + 1);
 					int var3 = (resource & 0x7C00) >> 10;
 					int var4 = (0x3E0 & resource) >> 5;
 					int var5 = 0x1F & resource;
 					return (var5 << 3) + (var4 << 11) + (var3 << 19);
-				} else {
-					return 0;
 				}
 			}
 		} catch (RuntimeException var6) {
@@ -414,7 +411,7 @@ public final class Scene {
 		}
 	}
 
-	private final boolean booleanCombinatoric2(int var1, boolean var2, int var3, byte var4, int var5) {
+	private boolean booleanCombinatoric2(int var1, boolean var2, int var3, byte var4, int var5) {
 		try {
 
 			return (!var2 || var3 > var1) && var3 >= var1 ? (var5 < var1 ? true : var2) : (var1 >= var5 ? !var2 : true);
@@ -423,7 +420,7 @@ public final class Scene {
 		}
 	}
 
-	private final int booleanCombinatoric3(int var1, boolean var2, int var3, int var4, int var5, int var6) {
+	private int booleanCombinatoric3(int var1, boolean var2, int var3, int var4, int var5, int var6) {
 		try {
 
 			return var4 == var1 ? var6 : (var5 - var6) * (var3 - var1) / (var4 - var1) + var6;
@@ -433,7 +430,7 @@ public final class Scene {
 		}
 	}
 
-	private final void setFrustum(int var1, byte var2) {
+	private void setFrustum(int var1, byte var2) {
 		try {
 
 			short var3;
@@ -477,7 +474,7 @@ public final class Scene {
 		}
 	}
 
-	private final void computePolygon(int polyID) {
+	private void computePolygon(int polyID) {
 		try {
 
 			Polygon poly = this.polygons[polyID];
@@ -565,7 +562,7 @@ public final class Scene {
 		}
 	}
 
-	private final void setFrustum(int x, int y, int z, boolean var4) {
+	private void setFrustum(int x, int y, int z, boolean var4) {
 		try {
 
 			int projX = 1024 - this.cameraProjX & 1023;
@@ -662,7 +659,7 @@ public final class Scene {
 		}
 	}
 
-	private final void setFrustum(int var1, int var2, int var3, Polygon[] var4) {
+	private void setFrustum(int var1, int var2, int var3, Polygon[] var4) {
 		try {
 			if (var3 >= -50) {
 				this.reduceSprites((byte) -98, (int) 32);
@@ -716,8 +713,8 @@ public final class Scene {
 		}
 	}
 
-	private final void setFrustum(int var1, int var2, int[] var3, int var4, int var5, RSModel var6, int[] var7, int[] var8,
-								  int var9, int var10, int var11) {
+	private void setFrustum(int var1, int var2, int[] var3, int var4, int var5, RSModel var6, int[] var7, int[] var8,
+							int var9, int var10, int var11) {
 		try {
 
 			int var12;
@@ -1340,13 +1337,11 @@ public final class Scene {
 			}
 		} catch (RuntimeException var51) {
 			throw GenUtil.makeThrowable(var51,
-				"lb.R(" + var1 + ',' + var2 + ',' + (var3 != null ? "{...}" : "null") + ',' + var4 + ',' + var5
-					+ ',' + (var6 != null ? "{...}" : "null") + ',' + (var7 != null ? "{...}" : "null") + ','
-					+ (var8 != null ? "{...}" : "null") + ',' + var9 + ',' + var10 + ',' + var11 + ')');
+				"lb.R(" + var1 + ',' + var2 + ',' + (var3 != null ? "{...}" : "null") + ',' + var4 + ',' + var5 + ',' + (var6 != null ? "{...}" : "null") + ',' + "{...}" + ',' + (var8 != null ? "{...}" : "null") + ',' + var9 + ',' + var10 + ',' + var11 + ')');
 		}
 	}
 
-	private final void setFrustum(int var1, int var2, Polygon[] var3, int var4) {
+	private void setFrustum(int var1, int var2, Polygon[] var3, int var4) {
 		try {
 
 			if (var4 > var1) {
@@ -1380,11 +1375,11 @@ public final class Scene {
 
 		} catch (RuntimeException var11) {
 			throw GenUtil.makeThrowable(var11,
-				"lb.AA(" + var1 + ',' + -1 + ',' + (var3 != null ? "{...}" : "null") + ',' + var4 + ')');
+				"lb.AA(" + var1 + ',' + -1 + ',' + "{...}" + ',' + var4 + ')');
 		}
 	}
 
-	private final boolean setFrustum(int var1, Polygon[] var2, int var3, byte var4) {
+	private boolean setFrustum(int var1, Polygon[] var2, int var3, byte var4) {
 		try {
 
 
@@ -1440,11 +1435,11 @@ public final class Scene {
 			}
 		} catch (RuntimeException var10) {
 			throw GenUtil.makeThrowable(var10,
-				"lb.FA(" + var1 + ',' + (var2 != null ? "{...}" : "null") + ',' + var3 + ',' + var4 + ')');
+				"lb.FA(" + var1 + ',' + "{...}" + ',' + var3 + ',' + var4 + ')');
 		}
 	}
 
-	private final boolean setFrustum(int[] var1, int[] var2, int[] var3, int[] var4, int var5) {
+	private boolean setFrustum(int[] var1, int[] var2, int[] var3, int[] var4, int var5) {
 		try {
 
 			int var6 = var3.length;
@@ -1840,14 +1835,12 @@ public final class Scene {
 			}
 		} catch (RuntimeException var23) {
 			throw GenUtil.makeThrowable(var23,
-				"lb.B(" + (var1 != null ? "{...}" : "null") + ',' + (var2 != null ? "{...}" : "null") + ','
-					+ (var3 != null ? "{...}" : "null") + ',' + (var4 != null ? "{...}" : "null") + ',' + var5
-					+ ')');
+				"lb.B(" + (var1 != null ? "{...}" : "null") + ',' + (var2 != null ? "{...}" : "null") + ',' + (var3 != null ? "{...}" : "null") + ',' + "{...}" + ',' + var5 + ')');
 		}
 	}
 
-	private final void setFrustum(int[] var1, RSModel model, int var3, int var4, int var5, int[] var6, int[] var7, int var8,
-								  int var9) {
+	private void setFrustum(int[] var1, RSModel model, int var3, int var4, int var5, int[] var6, int[] var7, int var8,
+							int var9) {
 		try {
 
 			if (var5 != -2) {
@@ -2329,7 +2322,7 @@ public final class Scene {
 			}
 
 		} catch (RuntimeException var4) {
-			throw GenUtil.makeThrowable(var4, "lb.NA(" + (mod != null ? "{...}" : "null") + ',' + 118 + ')');
+			throw GenUtil.makeThrowable(var4, "lb.NA(" + "null" + ',' + 118 + ')');
 		}
 	}
 
@@ -2359,7 +2352,7 @@ public final class Scene {
 		}
 	}
 
-	private final void b(int var1, boolean var2) {
+	private void b(int var1, boolean var2) {
 		try {
 
 			if (!var2) {
@@ -2430,7 +2423,7 @@ public final class Scene {
 		}
 	}
 
-	private final void b(int var1, int var2) {
+	private void b(int var1, int var2) {
 		try {
 
 			Polygon var4 = this.polygons[var2];

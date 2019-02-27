@@ -45,7 +45,7 @@ public class Tile {
 	/**
 	 * Create a new tile from raw data packed into the given ByteBuffer
 	 */
-	public static Tile unpack(ByteBuffer in) throws IOException {
+	static Tile unpack(ByteBuffer in) throws IOException {
 		if (in.remaining() < 10) {
 			throw new IOException("Provided buffer too short");
 		}

@@ -6,10 +6,10 @@ import java.util.Set;
 
 public class SpellDef extends EntityDef {
 
-	public int reqLevel;
+	private int reqLevel;
 	public int type;
-	public int runeCount;
-	public HashMap<Integer, Integer> requiredRunes;
+	private int runeCount;
+	private HashMap<Integer, Integer> requiredRunes;
 
 	public SpellDef(String name, String description, int level, int type, int runeCount, HashMap<Integer, Integer> requiredRunes) {
 		super(name, description);

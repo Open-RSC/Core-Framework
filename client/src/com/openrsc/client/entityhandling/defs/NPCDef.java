@@ -1,7 +1,7 @@
 package com.openrsc.client.entityhandling.defs;
 
 public class NPCDef extends EntityDef {
-	public String command1, command2;
+	private String command1, command2;
 	public int[] sprites;
 	public int hairColour;
 	public int topColour;
