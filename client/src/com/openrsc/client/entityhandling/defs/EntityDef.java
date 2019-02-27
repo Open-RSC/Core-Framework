@@ -5,13 +5,13 @@ public abstract class EntityDef {
 	public String description;
 	public int id;
 
-	public EntityDef(String name, String description, int id) {
+	EntityDef(String name, String description, int id) {
 		this.name = name;
 		this.description = description;
 		this.id = id;
 	}
 
-	public EntityDef(String name, String description) {
+	EntityDef(String name, String description) {
 		this.name = name;
 		this.description = description;
 	}

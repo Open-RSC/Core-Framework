@@ -16,7 +16,7 @@ public final class BufferStack {
 		}
 	}
 
-	static final void insertAfter(RSBuffer_Base insert, byte var1, RSBuffer_Base after) {
+	static void insertAfter(RSBuffer_Base insert, byte var1, RSBuffer_Base after) {
 		try {
 			if (null != insert.next) {
 				insert.removeThisBufferFromChain();
@@ -26,8 +26,7 @@ public final class BufferStack {
 			insert.next.previous = insert;
 			insert.previous.next = insert;
 		} catch (RuntimeException var4) {
-			throw GenUtil.makeThrowable(var4, "ac.B(" + (insert != null ? "{...}" : "null") + ',' + "dummy" + ','
-				+ (after != null ? "{...}" : "null") + ')');
+			throw GenUtil.makeThrowable(var4, "ac.B(" + "{...}" + ',' + "dummy" + ',' + (after != null ? "{...}" : "null") + ')');
 		}
 	}
 
@@ -44,7 +43,7 @@ public final class BufferStack {
 			of.previous.next = of;
 
 		} catch (RuntimeException var4) {
-			throw GenUtil.makeThrowable(var4, "db.C(" + (of != null ? "{...}" : "null") + ',' + false + ')');
+			throw GenUtil.makeThrowable(var4, "db.C(" + "{...}" + ',' + ')');
 		}
 	}
 

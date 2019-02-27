@@ -166,8 +166,8 @@ public class Sprite {
 		out.putInt(something1);
 		out.putInt(something2);
 
-		for (int c = 0; c < pixels.length; c++) {
-			out.putInt(pixels[c]);
+		for (int pixel : pixels) {
+			out.putInt(pixel);
 		}
 
 		out.flip();

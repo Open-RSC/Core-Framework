@@ -349,7 +349,7 @@ public final class Panel {
 		}
 	}
 
-	private final int buildColor(int r, int g, int b) {
+	private int buildColor(int r, int g, int b) {
 		try {
 
 			return GenUtil.buildColor(r, g, b);
@@ -626,7 +626,7 @@ public final class Panel {
 		}
 	}
 
-	private final void renderButtonBackground(int x, int y, int width, int height) {
+	private void renderButtonBackground(int x, int y, int width, int height) {
 		try {
 			this.graphics.setClip(x, x + width, y + height, y);
 
@@ -657,7 +657,7 @@ public final class Panel {
 		}
 	}
 
-	private final void renderCenteredList(int controlIndex, int x, int y, int font, String[] entries) {
+	private void renderCenteredList(int controlIndex, int x, int y, int font, String[] entries) {
 		try {
 
 			int count = entries.length;
@@ -704,7 +704,7 @@ public final class Panel {
 		}
 	}
 
-	private final void renderDecoratedBox(int x, int y, int width, int height) {
+	private void renderDecoratedBox(int x, int y, int width, int height) {
 		try {
 			this.graphics.drawBox(x, y, width, height, 0);
 
@@ -720,7 +720,7 @@ public final class Panel {
 		}
 	}
 
-	private final void renderHorizLine(int x, int y, int width, int color) {
+	private void renderHorizLine(int x, int y, int width, int color) {
 		try {
 
 			this.graphics.drawLineHoriz(x, y, width, color);
@@ -729,7 +729,7 @@ public final class Panel {
 		}
 	}
 
-	private final void renderHorizontalList(int controlIndex, int x, int y, int font, String[] entiresString) {
+	private void renderHorizontalList(int controlIndex, int x, int y, int font, String[] entiresString) {
 		try {
 
 			int totalWidth = 0;
@@ -785,7 +785,7 @@ public final class Panel {
 		}
 	}
 
-	private final void renderScrollbar(int x, int y, int width, int height, int barDragSize, int barDragPos) {
+	private void renderScrollbar(int x, int y, int width, int height, int barDragSize, int barDragPos) {
 		try {
 
 			int barX = x + width - 12;
@@ -805,8 +805,8 @@ public final class Panel {
 	}
 
 
-	private final void renderScrollingList(int controlIndex, int x, int y, int width, int height, int font,
-										   int entryCount, String[] entriesString, int[] entriesCrowns, int scroll) {
+	private void renderScrollingList(int controlIndex, int x, int y, int width, int height, int font,
+									 int entryCount, String[] entriesString, int[] entriesCrowns, int scroll) {
 		try {
 
 			int maxLines = height / this.graphics.fontHeight(font);
@@ -910,8 +910,8 @@ public final class Panel {
 		}
 	}
 
-	private final void renderScrollingList3(int controlIndex, int x, int y, int width, int height, int font,
-											int entryCount, String[] entriesString, int[] entriesInt, int scroll, int spaceHeight, int spaceHeightText) {
+	private void renderScrollingList3(int controlIndex, int x, int y, int width, int height, int font,
+									  int entryCount, String[] entriesString, int[] entriesInt, int scroll, int spaceHeight, int spaceHeightText) {
 		try {
 
 			int maxLines = (height - (spaceHeightText + spaceHeight)) / this.graphics.fontHeight(font);
@@ -1015,8 +1015,8 @@ public final class Panel {
 		}
 	}
 
-	private final void renderScrollingList2(int controlIndex, int x, int y, int width, int height, int font,
-											int entryCount, String[] entriesString, int[] entriesInt, int scroll) {
+	private void renderScrollingList2(int controlIndex, int x, int y, int width, int height, int font,
+									  int entryCount, String[] entriesString, int[] entriesInt, int scroll) {
 		try {
 
 			int var12 = height / this.graphics.fontHeight(font);
@@ -1106,7 +1106,7 @@ public final class Panel {
 		}
 	}
 
-	private final void renderSprite(int x, int y, int spriteID) {
+	private void renderSprite(int x, int y, int spriteID) {
 		try {
 			this.graphics.drawSprite(spriteID, x, y);
 
@@ -1115,7 +1115,7 @@ public final class Panel {
 		}
 	}
 
-	private final void renderString(int control, int x, int y, int font, int spriteHeader, String str) {
+	private void renderString(int control, int x, int y, int font, int spriteHeader, String str) {
 		try {
 
 			int color;
@@ -1131,7 +1131,7 @@ public final class Panel {
 		}
 	}
 
-	private final void renderText(int control, int x, int y, int font, String str, int spriteHeader) {
+	private void renderText(int control, int x, int y, int font, String str, int spriteHeader) {
 		try {
 
 			int yReal = y + this.graphics.fontHeight(font) / 3;
@@ -1142,7 +1142,7 @@ public final class Panel {
 		}
 	}
 
-	private final void renderTextEntry(int controlIndex, int x, int y, int width, int height, int font, String text) {
+	private void renderTextEntry(int controlIndex, int x, int y, int width, int height, int font, String text) {
 		try {
 
 			if (this.controlFlag[controlIndex]) {
@@ -1180,7 +1180,7 @@ public final class Panel {
 		}
 	}
 
-	private final void renderToggleButton(int controlIndex, int x, int y, int width, int height) {
+	private void renderToggleButton(int controlIndex, int x, int y, int width, int height) {
 		try {
 			this.graphics.drawBox(x, y, width, height, 16777215);
 
@@ -1284,7 +1284,6 @@ public final class Panel {
 				else
 					controlScrollAmount[handle] += i;
 		}
-		return;
 	}
 
 	public void scrollMethodCustomList(int handle, int i, int cDifference) {
@@ -1302,7 +1301,6 @@ public final class Panel {
 				else
 					controlScrollAmount[handle] += i;
 		}
-		return;
 	}
 
 	public void reposition(int id, int x, int y, int w, int h) {

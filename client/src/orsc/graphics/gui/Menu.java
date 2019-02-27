@@ -62,8 +62,8 @@ public final class Menu {
 		}
 	}
 
-	private final void addItem(int id_or_z, String label, int dir, int var4, String actor, int index_or_x,
-							   String dropped2, MenuItemAction actionID, int tile_id, String dropped, String strB) {
+	private void addItem(int id_or_z, String label, int dir, int var4, String actor, int index_or_x,
+						 String dropped2, MenuItemAction actionID, int tile_id, String dropped, String strB) {
 		try {
 			if (this.menuItems.length == this.itemCount) {
 				MenuItem[] src = this.menuItems;
@@ -148,7 +148,7 @@ public final class Menu {
 		}
 	}
 
-	private final void calculateMenuWidth() {
+	private void calculateMenuWidth() {
 		try {
 
 			int lineHeight = this.surf.fontHeight(this.font) + 1;
@@ -296,7 +296,7 @@ public final class Menu {
 		}
 	}
 
-	private final int process(int mouseY, int mouseX, int menuY, int menuX, int var5, boolean draw) {
+	private int process(int mouseY, int mouseX, int menuY, int menuX, int var5, boolean draw) {
 		try {
 
 			if (this.menuWidth != 0 && this.menuHeight != 0) {

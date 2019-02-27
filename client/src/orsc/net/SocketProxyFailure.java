@@ -2,7 +2,7 @@ package orsc.net;
 
 import java.io.IOException;
 
-public final class SocketProxyFailure extends IOException {
+final class SocketProxyFailure extends IOException {
 	/**
 	 *
 	 */

@@ -3,12 +3,12 @@ package orsc.buffers;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
 
-public final class StringEncryption {
+final class StringEncryption {
 	private int[] m_g;
 	private byte[] m_i;
 	private int[] m_j;
 
-	public StringEncryption(byte[] var1) {
+	StringEncryption(byte[] var1) {
 		try {
 			int var2 = var1.length;
 			this.m_g = new int[var2];
@@ -73,9 +73,7 @@ public final class StringEncryption {
 						if (this.m_j.length <= var10) {
 							int[] var13 = new int[this.m_j.length * 2];
 
-							for (int var14 = 0; var14 < this.m_j.length; ++var14) {
-								var13[var14] = this.m_j[var14];
-							}
+							System.arraycopy(this.m_j, 0, var13, 0, this.m_j.length);
 
 							this.m_j = var13;
 						}
@@ -92,11 +90,11 @@ public final class StringEncryption {
 			}
 
 		} catch (RuntimeException var15) {
-			throw GenUtil.makeThrowable(var15, "aa.<init>(" + (var1 != null ? "{...}" : "null") + ')');
+			throw GenUtil.makeThrowable(var15, "aa.<init>(" + "{...}" + ')');
 		}
 	}
 
-	public static byte[] asByte(int... is) {
+	static byte[] asByte(int... is) {
 		byte[] res = new byte[is.length];
 		for (int i = 0; i < res.length; i++)
 			res[i] = (byte) is[i];

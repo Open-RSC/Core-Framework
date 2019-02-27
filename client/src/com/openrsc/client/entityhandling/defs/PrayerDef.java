@@ -2,8 +2,8 @@ package com.openrsc.client.entityhandling.defs;
 
 public class PrayerDef extends EntityDef {
 
-	public int reqLevel;
-	public int drainRate;
+	private int reqLevel;
+	private int drainRate;
 
 	public PrayerDef(int level, int drainRate, String name, String description) {
 		super(name, description);

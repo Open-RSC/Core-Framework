@@ -6,7 +6,7 @@ public class FastMath {
 		33554431, 67108863, 134217727, 268435455, 536870911, 1073741823, Integer.MAX_VALUE, -1};
 	public static int[] trigTable256 = new int[512];
 	public static int[] trigTable1024 = new int[2048];
-	public static int[] trigTable_256 = new int[512];
+	private static int[] trigTable_256 = new int[512];
 	public static int[] trigTable_1024 = new int[2048];
 
 	static {
@@ -47,7 +47,7 @@ public class FastMath {
 		}
 	}
 
-	public static final int byteToUByte(byte val) {
+	public static int byteToUByte(byte val) {
 		try {
 			return val & 255;
 		} catch (RuntimeException var3) {
@@ -59,7 +59,7 @@ public class FastMath {
 	 * Returns 1 if var0 is a power of two. Otherwise returns the closest power
 	 * of two.
 	 */
-	public static final int nearestPowerOfTwo(int var0, byte var1) {
+	public static int nearestPowerOfTwo(int var0, byte var1) {
 		try {
 			var0 = (0x55555555 & var0 >>> 1) + (0x55555555 & var0);
 			var0 = ((var0 & -858993460) >>> 2) + (0x33333333 & var0);
@@ -72,7 +72,7 @@ public class FastMath {
 		}
 	}
 
-	public static final int nextPowerOfTwo(int n) {
+	public static int nextPowerOfTwo(int n) {
 		try {
 			--n;
 			n |= n >>> 1;

@@ -2,7 +2,7 @@ package orsc.buffers;
 
 import orsc.util.GenUtil;
 
-public class RSBuffer_Base {
+class RSBuffer_Base {
 	RSBuffer_Base previous;
 	RSBuffer_Base next;
 

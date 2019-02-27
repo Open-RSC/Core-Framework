@@ -2,8 +2,8 @@ package orsc.graphics.two;
 
 public class Fonts {
 
-	public static byte[][] fontData = new byte[50][];
-	public static int[] inputFilterCharFontAddr;
+	static byte[][] fontData = new byte[50][];
+	static int[] inputFilterCharFontAddr;
 	public static String inputFilterChars;
 	static boolean[] fontAntiAliased = new boolean[]{false, false, false, false, false, false, false, false, false,
 		false, false, false};

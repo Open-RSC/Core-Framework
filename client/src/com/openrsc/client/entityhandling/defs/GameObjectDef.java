@@ -1,13 +1,13 @@
 package com.openrsc.client.entityhandling.defs;
 
 public class GameObjectDef extends EntityDef {
-	public String command1;
-	public String command2;
+	private String command1;
+	private String command2;
 	public int type;
 	public int width;
 	public int height;
-	public int groundItemVar;
-	public String objectModel;
+	private int groundItemVar;
+	private String objectModel;
 	public int modelID;
 
 	public GameObjectDef(String name, String description, String command1, String command2, int type, int width, int height, int groundItemVar, String objectModel, int id) {

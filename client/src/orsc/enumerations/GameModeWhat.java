@@ -14,12 +14,11 @@ public enum GameModeWhat {
 		}
 	}
 
-	public static final GameModeWhat lookupModeWhat(int val) {
+	public static GameModeWhat lookupModeWhat(int val) {
 		try {
 			GameModeWhat[] var2 = gameModesWhat();
 
-			for (int var3 = 0; var2.length > var3; ++var3) {
-				GameModeWhat var4 = var2[var3];
+			for (GameModeWhat var4 : var2) {
 				if (var4.val == val) {
 					return var4;
 				}
@@ -31,7 +30,7 @@ public enum GameModeWhat {
 		}
 	}
 
-	public static final GameModeWhat[] gameModesWhat() {
+	public static GameModeWhat[] gameModesWhat() {
 		try {
 			return new GameModeWhat[]{GameModeWhat.LIVE, GameModeWhat.RC, GameModeWhat.WIP};
 		} catch (RuntimeException var2) {

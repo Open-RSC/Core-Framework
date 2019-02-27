@@ -30,18 +30,18 @@ public final class ORSCharacter {
 	public int projectileRange = 0;
 	public int serverIndex;
 	public int skullVisible = 0;
-	public int stepFrame;
+	int stepFrame;
 	public int waypointCurrent;
 	public int[] waypointsX = new int[10];
 	public int[] waypointsZ = new int[10];
 	public String clanTag;
 	public boolean isInvisible = false;
 	public boolean isInvulnerable = false;
-	public int icon = 0;
+	int icon = 0;
 	public int groupID = Group.DEFAULT_GROUP;
 	ORSCharacterDirection direction = ORSCharacterDirection.NORTH;
 
-	public boolean isSuperMod() {
+	private boolean isSuperMod() {
 		return groupID == 2 || isAdmin();
 	}
 
@@ -53,7 +53,7 @@ public final class ORSCharacter {
 		return groupID == 8 || isAdmin();
 	}
 
-	public boolean isEvent() {
+	private boolean isEvent() {
 		return groupID == 9 || isMod() || isDev();
 	}
 
@@ -61,7 +61,7 @@ public final class ORSCharacter {
 		return groupID == 0;
 	}
 
-	public boolean isAdmin() {
+	boolean isAdmin() {
 		return groupID == 1 || isOwner();
 	}
 

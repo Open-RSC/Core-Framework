@@ -1,15 +1,15 @@
 package orsc.net;
 
-import orsc.util.GenUtil;
-
 import java.io.IOException;
 import java.net.Socket;
+
+import orsc.util.GenUtil;
 
 public abstract class RSSocketFactory_Base {
 	String socketHost;
 	int socketPort;
 
-	public static final RSSocketFactory_Base createRSSocketConnection(String host, int port) {
+	public static RSSocketFactory_Base createRSSocketConnection(String host, int port) {
 		try {
 			RSSocketFactory var3 = new RSSocketFactory();
 			var3.socketHost = host;

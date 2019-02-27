@@ -1,9 +1,9 @@
 package orsc.net;
 
+import java.io.IOException;
+
 import orsc.buffers.RSBuffer_Bits;
 import orsc.util.GenUtil;
-
-import java.io.IOException;
 
 class Network_Base {
 
@@ -17,7 +17,7 @@ class Network_Base {
 	private int readyPackets = 0;
 	private int packetStart = 0;
 
-	protected Network_Base() {
+	Network_Base() {
 		try {
 			this.writeBuffer1 = new RSBuffer_Bits(this.writeBufferSize);
 			this.writeBuffer1.packetEnd = 3;
@@ -83,7 +83,7 @@ class Network_Base {
 		}
 	}
 
-	private final int readIncomingPacket(byte[] data) {
+	private int readIncomingPacket(byte[] data) {
 		try {
 			try {
 				++this.packetReadAttempts;
@@ -124,7 +124,7 @@ class Network_Base {
 		}
 	}
 
-	private final void read(byte[] data, int count) throws IOException {
+	private void read(byte[] data, int count) throws IOException {
 		try {
 			this.read(data, 0, count);
 		} catch (RuntimeException var5) {
@@ -165,7 +165,7 @@ class Network_Base {
 			data.packetEnd = 0;
 			return this.readIncomingPacket(data.dataBuffer);
 		} catch (RuntimeException var4) {
-			throw GenUtil.makeThrowable(var4, "b.Q(" + "dummy" + ',' + (data != null ? "{...}" : "null") + ')');
+			throw GenUtil.makeThrowable(var4, "b.Q(" + "dummy" + ',' + "{...}" + ')');
 		}
 	}
 
