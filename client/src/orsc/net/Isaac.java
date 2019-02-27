@@ -17,13 +17,11 @@ public final class Isaac {
 			this.rsl = new int[256];
 			this.mem = new int[256];
 
-			for (int i = 0; i < seed.length; ++i) {
-				this.rsl[i] = seed[i];
-			}
+			System.arraycopy(seed, 0, this.rsl, 0, seed.length);
 
 			this.init();
 		} catch (RuntimeException var3) {
-			throw GenUtil.makeThrowable(var3, "o.<init>(" + (seed != null ? "{...}" : "null") + ')');
+			throw GenUtil.makeThrowable(var3, "o.<init>(" + "{...}" + ')');
 		}
 	}
 
@@ -40,7 +38,7 @@ public final class Isaac {
 		}
 	}
 
-	private final void generate() {
+	private void generate() {
 		try {
 			this.m_d += ++this.m_f;
 
@@ -52,7 +50,7 @@ public final class Isaac {
 				} else if (var5 != 1) {
 					if (var5 == 2) {
 						this.m_m ^= this.m_m << 2;
-					} else if (var5 == 3) {
+					} else {
 						this.m_m ^= this.m_m >>> 16;
 					}
 				} else {
@@ -70,7 +68,7 @@ public final class Isaac {
 		}
 	}
 
-	private final void init() {
+	private void init() {
 		try {
 			int c = GOLDEN;
 			int a = GOLDEN;

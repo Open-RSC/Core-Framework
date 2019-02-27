@@ -4,7 +4,7 @@ import orsc.mudclient;
 
 public abstract class NCustomComponent extends NComponent {
 
-	public NCustomComponent(mudclient client) {
+	protected NCustomComponent(mudclient client) {
 		super(client);
 	}
 

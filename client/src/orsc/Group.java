@@ -5,18 +5,18 @@ import java.util.HashMap;
 /**
  * @author Kenix
  */
-public class Group {
-	public static final int OWNER = 0;
-	public static final int ADMIN = 1;
-	public static final int SUPER_MOD = 2;
-	public static final int MOD = 3;
-	public static final int DEV = 8;
-	public static final int EVENT = 9;
-	public static final int USER = 10;
+class Group {
+	private static final int OWNER = 0;
+	private static final int ADMIN = 1;
+	private static final int SUPER_MOD = 2;
+	private static final int MOD = 3;
+	private static final int DEV = 8;
+	private static final int EVENT = 9;
+	private static final int USER = 10;
 
-	public static final int DEFAULT_GROUP = Group.USER;
+	static final int DEFAULT_GROUP = Group.USER;
 
-	public static final HashMap<Integer, String> GROUP_NAMES = new HashMap<Integer, String>();
+	private static final HashMap<Integer, String> GROUP_NAMES = new HashMap<Integer, String>();
 
 	static {
 		GROUP_NAMES.put(OWNER, "Owner");
@@ -28,7 +28,7 @@ public class Group {
 		GROUP_NAMES.put(USER, "User");
 	}
 
-	public static String getNameColour(int groupID) {
+	private static String getNameColour(int groupID) {
 		if (!Config.S_WANT_CUSTOM_RANK_DISPLAY)
 			return "";
 
@@ -50,7 +50,7 @@ public class Group {
 		}
 	}
 
-	public static String getNameSprite(int groupID) {
+	private static String getNameSprite(int groupID) {
 		return "";
 
 		/*if (!Config.S_WANT_CUSTOM_RANK_DISPLAY)
@@ -73,7 +73,7 @@ public class Group {
 		}*/
 	}
 
-	public static String getStaffPrefix(int groupID) {
+	static String getStaffPrefix(int groupID) {
 		return getNameSprite(groupID) + getNameColour(groupID);
 	}
 }

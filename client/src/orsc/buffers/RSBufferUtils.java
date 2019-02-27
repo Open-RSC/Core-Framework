@@ -6,7 +6,7 @@ import orsc.util.StringUtil;
 
 public class RSBufferUtils {
 
-	public static StringEncryption stringEncryption;
+	private static StringEncryption stringEncryption;
 	public static StringEncryption encryption = new StringEncryption(StringEncryption.asByte(22, 22, 22, 22, 22, 22, 21, 22,
 		22, 20, 22, 22, 22, 21, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 3, 8, 22,
 		16, 22, 16, 17, 7, 13, 13, 13, 16, 7, 10, 6, 16, 10, 11, 12, 12, 12, 12, 13, 13, 14, 14, 11, 14, 19, 15, 17,
@@ -17,7 +17,7 @@ public class RSBufferUtils {
 		22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
 		22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
 		22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 21, 22, 21, 22, 22, 22, 21, 22, 22));
-	static int[] menu_crcTable = new int[256];
+	private static int[] menu_crcTable = new int[256];
 
 	static {
 		for (int i = 0; i < 256; ++i) {
@@ -36,7 +36,7 @@ public class RSBufferUtils {
 
 	}
 
-	public static final int computeCRC(byte[] data, int count) {
+	public static int computeCRC(byte[] data, int count) {
 		try {
 
 			return RSBufferUtils.computeCRC(count, -49, data, 0);
@@ -46,7 +46,7 @@ public class RSBufferUtils {
 		}
 	}
 
-	public static final int computeCRC(int right, int var1, byte[] data, int left) {
+	static int computeCRC(int right, int var1, byte[] data, int left) {
 		try {
 
 			int crc = -1;
@@ -61,7 +61,7 @@ public class RSBufferUtils {
 		}
 	}
 
-	public static final int get16(int offset, byte[] data) {
+	public static int get16(int offset, byte[] data) {
 		try {
 
 			return (data[1 + offset] & 255) + ((255 & data[offset]) << 8);
@@ -71,7 +71,7 @@ public class RSBufferUtils {
 		}
 	}
 
-	public static final int get32(int offset, byte[] data) {
+	public static int get32(int offset, byte[] data) {
 		try {
 
 			return (data[offset + 3] & 255) + (data[offset + 2] << 8 & 0xFF00) + ((255 & data[offset]) << 24)
@@ -82,7 +82,7 @@ public class RSBufferUtils {
 		}
 	}
 
-	public static final String getEncryptedString(RSBuffer buffer) {
+	public static String getEncryptedString(RSBuffer buffer) {
 		try {
 
 			return getEncryptedString(buffer, 32767);
@@ -91,7 +91,7 @@ public class RSBufferUtils {
 		}
 	}
 
-	public static final String getEncryptedString(RSBuffer src, int limit) {
+	private static String getEncryptedString(RSBuffer src, int limit) {
 		try {
 
 			try {
@@ -113,7 +113,7 @@ public class RSBufferUtils {
 		}
 	}
 
-	public static final String getStringFromBytes(byte[] src, int offset, int count) {
+	private static String getStringFromBytes(byte[] src, int offset, int count) {
 		try {
 
 			char[] dest = new char[count];
@@ -139,7 +139,7 @@ public class RSBufferUtils {
 		}
 	}
 
-	public static final int putEncryptedString(RSBuffer dest, String src) {
+	public static void putEncryptedString(RSBuffer dest, String src) {
 		try {
 
 			int oldHead = dest.packetEnd;
@@ -147,14 +147,12 @@ public class RSBufferUtils {
 			dest.putSmart08_16(data.length);
 			dest.packetEnd += RSBufferUtils.stringEncryption.encryptString(data.length, dest.dataBuffer,
 				dest.packetEnd, data, 0, 119);
-			return dest.packetEnd - oldHead;
 		} catch (RuntimeException var5) {
-			throw GenUtil.makeThrowable(var5, "u.B(" + "dummy" + ',' + (dest != null ? "{...}" : "null") + ','
-				+ (src != null ? "{...}" : "null") + ')');
+			throw GenUtil.makeThrowable(var5, "u.B(" + "dummy" + ',' + "{...}" + ',' + (src != null ? "{...}" : "null") + ')');
 		}
 	}
 
-	static final int putStringIntoBytes(CharSequence str, int strLeft, int strRight, byte[] dest, int destOffset) {
+	static int putStringIntoBytes(CharSequence str, int strLeft, int strRight, byte[] dest, int destOffset) {
 		try {
 
 			int count = strRight - strLeft;
@@ -258,7 +256,7 @@ public class RSBufferUtils {
 		}
 	}
 
-	public static final int readShort(byte[] data, int var1, int index) {
+	public static int readShort(byte[] data, int var1, int index) {
 		try {
 
 			int val = FastMath.byteToUByte(data[index]) * 256 + FastMath.byteToUByte(data[1 + index]);
@@ -269,11 +267,11 @@ public class RSBufferUtils {
 			return val;
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4,
-				"w.B(" + (data != null ? "{...}" : "null") + ',' + -1 + ',' + index + ')');
+				"w.B(" + "{...}" + ',' + -1 + ',' + index + ')');
 		}
 	}
 
-	public static final byte[] stringToBytes(CharSequence str) {
+	private static byte[] stringToBytes(CharSequence str) {
 		try {
 
 			int len = str.length();
@@ -382,7 +380,7 @@ public class RSBufferUtils {
 		}
 	}
 
-	public static final void setStringEncryptor(StringEncryption var0) {
+	public static void setStringEncryptor(StringEncryption var0) {
 		try {
 			RSBufferUtils.stringEncryption = var0;
 

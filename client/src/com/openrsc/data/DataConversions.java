@@ -8,7 +8,7 @@ import java.util.Random;
 public final class DataConversions {
 
 	private static Random rand = new Random();
-	private static char characters[] = {' ', 'e', 't', 'a', 'o', 'i', 'h',
+	private static char[] characters = {' ', 'e', 't', 'a', 'o', 'i', 'h',
 		'n', 's', 'r', 'd', 'l', 'u', 'm', 'w', 'c', 'y', 'f', 'g', 'p',
 		'b', 'v', 'k', 'x', 'j', 'q', 'z', '0', '1', '2', '3', '4', '5',
 		'6', '7', '8', '9', ' ', '!', '?', '.', ',', ':', ';', '(', ')',
@@ -20,7 +20,7 @@ public final class DataConversions {
 	 * Returns a ByteBuffer containing everything available from the given
 	 * InputStream
 	 */
-	public static final ByteBuffer streamToBuffer(BufferedInputStream in)
+	public static ByteBuffer streamToBuffer(BufferedInputStream in)
 		throws IOException {
 		byte[] buffer = new byte[in.available()];
 		in.read(buffer, 0, buffer.length);
@@ -32,8 +32,8 @@ public final class DataConversions {
 	 */
 	public static int average(int[] values) {
 		int total = 0;
-		for (int c = 0; c < values.length; c++) {
-			total += values[c];
+		for (int value : values) {
+			total += value;
 		}
 		return (int) (total / values.length);
 	}
@@ -149,8 +149,8 @@ public final class DataConversions {
 	 * Checks if the given int is in the array
 	 */
 	public static boolean inArray(int[] haystack, int needle) {
-		for (int c = 0; c < haystack.length; c++) {
-			if (needle == haystack[c]) {
+		for (int i : haystack) {
+			if (needle == i) {
 				return true;
 			}
 		}

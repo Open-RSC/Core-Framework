@@ -1,17 +1,16 @@
 package com.openrsc.interfaces;
 
-import orsc.graphics.two.GraphicsController;
-import orsc.mudclient;
-
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import orsc.graphics.two.GraphicsController;
+import orsc.mudclient;
 
 public class NComponent {
 
 	public int x;
 	public int y;
-	public boolean showCrown = false;
-	public boolean secondaryWindow = false;
+	private boolean showCrown = false;
 	public int crown = 0;
 	private GraphicsController client;
 	private NComponent parent;
@@ -108,11 +107,11 @@ public class NComponent {
 		this.drawCircle = draw;
 	}
 
-	public void setDrawBorder(boolean draw) {
+	private void setDrawBorder(boolean draw) {
 		this.drawBorder = draw;
 	}
 
-	public void setDrawHorizLine(boolean draw) {
+	private void setDrawHorizLine(boolean draw) {
 		this.drawHorizLine = draw;
 	}
 
@@ -150,18 +149,16 @@ public class NComponent {
 		return this;
 	}
 
-	public NComponent setFontColor(int fontColor, int fontColorHovered) {
+	public void setFontColor(int fontColor, int fontColorHovered) {
 		this.fontColor = fontColor;
 		this.fontColorHovered = fontColorHovered;
 
-		return this;
 	}
 
-	public NComponent setBorderColors(int borderColor, int borderColorHovered) {
+	public void setBorderColors(int borderColor, int borderColorHovered) {
 		this.borderColor = borderColor;
 		this.borderColorHovered = borderColorHovered;
 		setDrawBorder(true);
-		return this;
 	}
 
 	public NComponent setHorizLine(int horizWidth, int horizColor) {
@@ -268,16 +265,14 @@ public class NComponent {
 
 		if (getInputListener() != null) {
 			if (mouseCursorOnComponent(clickX, clickY) && mButtonDown >= 1) {
-				if (getInputListener().onMouseDown(clickX, clickY, mButtonDown, mButtonClick)) {
-					return true;
-				}
+				return getInputListener().onMouseDown(clickX, clickY, mButtonDown, mButtonClick);
 			}
 		}
 
 		return false;
 	}
 
-	public boolean checkMouseMove(int mouseX, int mouseY) {
+	private boolean checkMouseMove(int mouseX, int mouseY) {
 		if (!visible) {
 			return false;
 		}
@@ -309,11 +304,8 @@ public class NComponent {
 		subComponents.remove(n);
 	}
 
-	public boolean mouseCursorOnComponent(int clickX, int clickY) {
-		if (clickX >= getX() && clickY >= getY() && clickX <= getX() + width && clickY <= getY() + height) {
-			return true;
-		}
-		return false;
+	boolean mouseCursorOnComponent(int clickX, int clickY) {
+		return clickX >= getX() && clickY >= getY() && clickX <= getX() + width && clickY <= getY() + height;
 	}
 
 	public boolean isVisible() {
@@ -328,7 +320,7 @@ public class NComponent {
 		return client;
 	}
 
-	public void setRenderer(GraphicsController renderer) {
+	private void setRenderer(GraphicsController renderer) {
 		this.client = renderer;
 	}
 
@@ -348,7 +340,7 @@ public class NComponent {
 
 	}
 
-	public NComponent getParent() {
+	NComponent getParent() {
 		return parent;
 	}
 
@@ -356,14 +348,12 @@ public class NComponent {
 		this.parent = nComponent;
 	}
 
-	public boolean isHovered() {
-		if (secondaryWindow)
-			return isHovered;
-		else
-			return false;
+	private boolean isHovered() {
+		boolean secondaryWindow = false;
+		return false;
 	}
 
-	public void setHovered(boolean isHovered) {
+	private void setHovered(boolean isHovered) {
 		this.isHovered = isHovered;
 	}
 
@@ -424,14 +414,12 @@ public class NComponent {
 			}
 		}
 		if (getInputListener() != null) {
-			if (getInputListener().onCharTyped((char) key, key)) {
-				return true;
-			}
+			return getInputListener().onCharTyped((char) key, key);
 		}
 		return false;
 	}
 
-	public InputListener getInputListener() {
+	private InputListener getInputListener() {
 		return inputListener;
 	}
 

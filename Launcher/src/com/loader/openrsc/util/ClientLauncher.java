@@ -49,8 +49,7 @@ public class ClientLauncher {
 	private static void startProcess() {
 		try {
 			File f = new File(Constants.CONF_DIR + File.separator + Constants.CLIENT_FILENAME);
-			ProcessBuilder pb;
-			pb = new ProcessBuilder(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java", "-Xms312m", "-jar", f.getAbsolutePath());
+			ProcessBuilder pb = new ProcessBuilder(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java", "-Xms312m", "-Dsun.java2d.opengl=true", "-jar", f.getAbsolutePath());
 			Process p = pb.start();
 			exit();
 		} catch (Exception e) {

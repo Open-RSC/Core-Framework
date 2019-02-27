@@ -50,12 +50,12 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	private final boolean m_hb = false;
 	protected int resizeWidth;
 	protected int resizeHeight;
-	Font createdbyFont = new Font("Helvetica", 1, 13);
-	Font copyrightFont2 = new Font("Helvetica", 0, 12);
-	Font loadingFont = new Font("TimesRoman", 0, 15);
-	Graphics loadingGraphics;
-	Image loadingLogo;
-	String loadingState = "Loading";
+	private Font createdbyFont = new Font("Helvetica", 1, 13);
+	private Font copyrightFont2 = new Font("Helvetica", 0, 12);
+	private Font loadingFont = new Font("TimesRoman", 0, 15);
+	private Graphics loadingGraphics;
+	private Image loadingLogo;
+	private String loadingState = "Loading";
 	boolean m_N = false;
 	String m_p = null;
 	private int loadingPercent = 0;
@@ -103,7 +103,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 		}
 	}
 
-	final void drawCenteredString(Font var1, String str, int y, boolean var4, int x, Graphics g) {
+	private void drawCenteredString(Font var1, String str, int y, boolean var4, int x, Graphics g) {
 		try {
 
 			FontMetrics metrics = getFontMetrics(var1);
@@ -140,7 +140,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 		return super.isDisplayable();
 	}
 
-	private final void drawLoadingScreen(String state, int percent, int var3) {
+	private void drawLoadingScreen(String state, int percent, int var3) {
 		try {
 			try {
 				int x = (this.width - 281) / 2;
@@ -544,7 +544,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 		// Leaving this blank
 	}
 
-	final void startApplet(int width, int height, int clientversion, int var4) {
+	private void startApplet(int width, int height, int clientversion, int var4) {
 		try {
 
 			System.out.println("Started applet");
@@ -716,7 +716,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 		}
 	}
 
-	private final synchronized void commitToImage(boolean var1) {
+	private synchronized void commitToImage(boolean var1) {
 		try {
 
 			if (null != this.imageProducer) {

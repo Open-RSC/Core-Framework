@@ -1,9 +1,9 @@
 package orsc.buffers;
 
+import java.math.BigInteger;
+
 import orsc.MiscFunctions;
 import orsc.util.GenUtil;
-
-import java.math.BigInteger;
 
 public class RSBuffer extends RSBuffer_Base {
 	public byte[] dataBuffer;
@@ -46,7 +46,7 @@ public class RSBuffer extends RSBuffer_Base {
 
 	public void putLong(long l) {
 		putInt((int) (l >> 32));
-		putInt((int) (l & -1L));
+		putInt((int) (l));
 	}
 
 	public final void put24(int val) {
@@ -72,27 +72,27 @@ public class RSBuffer extends RSBuffer_Base {
 		}
 	}
 
-	private final void readBytes(int offset, int count, byte[] out) {
+	private void readBytes(int count, byte[] out) {
 		try {
-			for (int i = offset; i < count + offset; ++i) {
+			for (int i = 0; i < count; ++i) {
 				out[i] = this.dataBuffer[this.packetEnd++];
 			}
 
 		} catch (RuntimeException var6) {
 			throw GenUtil.makeThrowable(var6,
-				"tb.N(" + "dummy" + ',' + offset + ',' + count + ',' + (out != null ? "{...}" : "null") + ')');
+				"tb.N(" + "dummy" + ',' + 0 + ',' + count + ',' + (out != null ? "{...}" : "null") + ')');
 		}
 	}
 
-	public final void writeBytes(byte[] src, int offset, int count) {
+	private void writeBytes(byte[] src, int count) {
 		try {
-			for (int i = offset; i < count + offset; ++i) {
+			for (int i = 0; i < count; ++i) {
 				this.dataBuffer[this.packetEnd++] = src[i];
 			}
 
 		} catch (RuntimeException var6) {
 			throw GenUtil.makeThrowable(var6,
-				"tb.AA(" + offset + ',' + -123 + ',' + count + ',' + (src != null ? "{...}" : "null") + ')');
+				"tb.AA(" + 0 + ',' + -123 + ',' + count + ',' + (src != null ? "{...}" : "null") + ')');
 		}
 	}
 
@@ -197,7 +197,7 @@ public class RSBuffer extends RSBuffer_Base {
 		}
 	}
 
-	public final int getSmart08_16() {
+	final int getSmart08_16() {
 		try {
 
 			int var2 = 255 & this.dataBuffer[this.packetEnd];
@@ -232,7 +232,7 @@ public class RSBuffer extends RSBuffer_Base {
 		}
 	}
 
-	public final void putSmart08_16(int val) {
+	final void putSmart08_16(int val) {
 		try {
 
 			if (val >= 0 && val < 128) {
@@ -303,9 +303,8 @@ public class RSBuffer extends RSBuffer_Base {
 
 			byte[] bites = new byte[this.packetEnd];
 
-			for (int i = ignore; this.packetEnd > i; ++i) {
-				bites[i] = this.dataBuffer[i];
-			}
+			if (this.packetEnd - ignore >= 0)
+				System.arraycopy(this.dataBuffer, ignore, bites, ignore, this.packetEnd - ignore);
 
 			return bites;
 		} catch (RuntimeException var4) {
@@ -321,13 +320,13 @@ public class RSBuffer extends RSBuffer_Base {
 
 			byte[] encodedBuffer = new byte[pointerPosition];
 
-			this.readBytes(0, pointerPosition, encodedBuffer);
+			this.readBytes(pointerPosition, encodedBuffer);
 			BigInteger var7 = new BigInteger(encodedBuffer);
 			BigInteger var8 = var7.modPow(var3, var1);
 			byte[] var9 = var8.toByteArray();
 			this.packetEnd = 0;
 			this.putShort(var9.length);
-			this.writeBytes(var9, 0, var9.length);
+			this.writeBytes(var9, var9.length);
 		} catch (RuntimeException var10) {
 			throw GenUtil.makeThrowable(var10,
 				"tb.V(" + (var1 != null ? "{...}" : "null") + ',' + (var3 != null ? "{...}" : "null") + ')');

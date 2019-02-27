@@ -26,6 +26,7 @@
 
     <target name="runclient">
         <java classname="orsc.ORSCFrame" fork="true">
+            <jvmarg line="-Xms312m -Dsun.java2d.opengl=true"/>
             <classpath>
                 <pathelement path="${jar}/"/>
             </classpath>

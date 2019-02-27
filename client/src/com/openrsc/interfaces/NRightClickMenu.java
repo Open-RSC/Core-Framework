@@ -43,7 +43,7 @@ public class NRightClickMenu extends NComponent {
 		});
 	}
 
-	protected boolean isSubMenu() {
+	private boolean isSubMenu() {
 		return getParent() instanceof NRightClickMenu;
 	}
 

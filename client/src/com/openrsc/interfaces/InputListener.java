@@ -2,7 +2,7 @@ package com.openrsc.interfaces;
 
 public abstract class InputListener {
 
-	public boolean onCharTyped(char c, int key) {
+	boolean onCharTyped(char c, int key) {
 		return false;
 	}
 
