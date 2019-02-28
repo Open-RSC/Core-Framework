@@ -59,7 +59,7 @@ public abstract class Mob extends Entity {
 	/**
 	 * Time in MS when we are freed from the 'busy' mode.
 	 */
-	protected long busyTimer;
+	protected volatile long busyTimer;
 	/**
 	 * The combat event instance.
 	 */
@@ -92,7 +92,7 @@ public abstract class Mob extends Entity {
 	/**
 	 * Who they are in combat with
 	 */
-	private Mob combatWith = null;
+	private volatile Mob combatWith = null;
 	/**
 	 * Event to handle following
 	 */
@@ -557,54 +557,57 @@ public abstract class Mob extends Entity {
 
 	public void startCombat(Mob victim) {
 
-		if (this.isPlayer()) {
-			((Player) this).resetAll();
-			((Player) this).setStatus(Action.FIGHTING_MOB);
-		}
-
-		resetPath();
-		victim.resetPath();
-
-		int victimSprite = this.isNpc() && victim.isPlayer() ? 9 : 8;
-		int ourSprite = this.isNpc() && victim.isPlayer() ? 8 : 9;
-
-		if (this.isNpc() && victim.isNpc()) {
-			victimSprite = 8;
-			ourSprite = 9;
-		}
-
-		victim.setBusy(true);
-		victim.setSprite(victimSprite);
-		victim.setOpponent(this);
-		victim.setCombatTimer();
-
-		if (victim.isPlayer()) {
-			Player playerVictim = (Player) victim;
+		synchronized(victim) {
 			if (this.isPlayer()) {
-				((Player) this).setSkulledOn(playerVictim);
+				((Player) this).resetAll();
+				((Player) this).setStatus(Action.FIGHTING_MOB);
 			}
-			playerVictim.resetAll();
-			playerVictim.setStatus(Action.FIGHTING_MOB);
-			ActionSender.sendSound(playerVictim, "underattack");
-			playerVictim.message("You are under attack!");
 
-			if (playerVictim.isSleeping()) {
-				ActionSender.sendWakeUp(playerVictim, false, false);
-				ActionSender.sendFatigue(playerVictim);
+			resetPath();
+			victim.resetPath();
+
+			int victimSprite = this.isNpc() && victim.isPlayer() ? 9 : 8;
+			int ourSprite = this.isNpc() && victim.isPlayer() ? 8 : 9;
+
+			if (this.isNpc() && victim.isNpc()) {
+				victimSprite = 8;
+				ourSprite = 9;
 			}
+
+			victim.setBusy(true);
+			victim.notifyAll();
+			victim.setSprite(victimSprite);
+			victim.setOpponent(this);
+			victim.setCombatTimer();
+
+			if (victim.isPlayer()) {
+				Player playerVictim = (Player) victim;
+				if (this.isPlayer()) {
+					((Player) this).setSkulledOn(playerVictim);
+				}
+				playerVictim.resetAll();
+				playerVictim.setStatus(Action.FIGHTING_MOB);
+				ActionSender.sendSound(playerVictim, "underattack");
+				playerVictim.message("You are under attack!");
+
+				if (playerVictim.isSleeping()) {
+					ActionSender.sendWakeUp(playerVictim, false, false);
+					ActionSender.sendFatigue(playerVictim);
+				}
+			}
+
+			setLocation(victim.getLocation(), true);
+			victim.setTeleporting(true);
+
+			setBusy(true);
+			setSprite(ourSprite);
+			setOpponent(victim);
+			setCombatTimer();
+
+			combatEvent = new CombatEvent(this, victim);
+			victim.setCombatEvent(combatEvent);
+			Server.getServer().getGameEventHandler().add(combatEvent);
 		}
-
-		setLocation(victim.getLocation(), true);
-		victim.setTeleporting(true);
-
-		setBusy(true);
-		setSprite(ourSprite);
-		setOpponent(victim);
-		setCombatTimer();
-
-		combatEvent = new CombatEvent(this, victim);
-		victim.setCombatEvent(combatEvent);
-		Server.getServer().getGameEventHandler().add(combatEvent);
 	}
 
 	public void startPoisonEvent() {
