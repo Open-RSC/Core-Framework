@@ -7,6 +7,8 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 
+import com.openrsc.server.external.NpcId;
+
 public class HeadChef implements TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	@Override
@@ -18,7 +20,7 @@ public class HeadChef implements TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 133;
+		return n.getID() == NpcId.HEAD_CHEF.id();
 	}
 
 }

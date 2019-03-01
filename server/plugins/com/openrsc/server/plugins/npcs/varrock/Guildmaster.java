@@ -28,12 +28,12 @@ public class Guildmaster implements TalkToNpcListener,
 			public void action() {
 				npcTalk(p,
 					n,
-					" This is the champions' guild",
-					" Only Adventurers who have proved themselves worthy",
-					" by gaining influence from quests are allowed in here",
-					" As the number of quests in the world rises",
-					" So will the requirements to get in here",
-					" But so will the rewards");
+					"This is the champions' guild",
+					"Only Adventurers who have proved themselves worthy",
+					"by  gaining influence from quests are allowed in here",
+					"As the number of quests in the world rises",
+					"So will the requirements to get in here",
+					"But so will the rewards");
 			}
 		});
 		defaultMenu.addOption(new Option(
@@ -44,7 +44,7 @@ public class Guildmaster implements TalkToNpcListener,
 					n,
 					"I have a friend called Oziach who lives by the cliffs",
 					"He has a supply of rune plate mail",
-					"He may sell you some if you're lucky, he can be little strange sometimes though");
+					"He may sell you some if you're lucky, he can be a little strange sometimes though");
 				if (p.getQuestStage(Constants.Quests.DRAGON_SLAYER) == 0) {
 					p.updateQuestStage(Quests.DRAGON_SLAYER, 1);
 				}

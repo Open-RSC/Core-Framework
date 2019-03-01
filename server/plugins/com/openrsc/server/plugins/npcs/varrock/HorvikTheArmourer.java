@@ -12,17 +12,20 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
+
 public final class HorvikTheArmourer implements
 	ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
 
-	private final Shop shop = new Shop(false, 30000, 100, 60, 2, new Item(113,
-		5), new Item(7, 3), new Item(114, 3), new Item(115, 1),
-		new Item(117, 3), new Item(8, 1), new Item(118, 1),
-		new Item(196, 1), new Item(119, 1), new Item(9, 1));
+	private final Shop shop = new Shop(false, 30000, 100, 60, 2, new Item(ItemId.BRONZE_CHAIN_MAIL_BODY.id(),
+		5), new Item(ItemId.IRON_CHAIN_MAIL_BODY.id(), 3), new Item(ItemId.STEEL_CHAIN_MAIL_BODY.id(), 3), new Item(ItemId.MITHRIL_CHAIN_MAIL_BODY.id(), 1),
+		new Item(ItemId.BRONZE_PLATE_MAIL_BODY.id(), 3), new Item(ItemId.IRON_PLATE_MAIL_BODY.id(), 1), new Item(ItemId.STEEL_PLATE_MAIL_BODY.id(), 1),
+		new Item(ItemId.BLACK_PLATE_MAIL_BODY.id(), 1), new Item(ItemId.MITHRIL_PLATE_MAIL_BODY.id(), 1), new Item(ItemId.IRON_PLATE_MAIL_LEGS.id(), 1));
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
-		return n.getID() == 48;
+		return n.getID() == NpcId.HORVIK_THE_ARMOURER.id();
 	}
 
 	@Override

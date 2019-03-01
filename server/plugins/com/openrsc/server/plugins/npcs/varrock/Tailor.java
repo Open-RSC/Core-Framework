@@ -11,20 +11,23 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.*;
 
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
+
 public final class Tailor implements ShopInterface,
 	TalkToNpcExecutiveListener, TalkToNpcListener {
 
-	private final Shop shop = new Shop(false, 30000, 130, 40, 2, new Item(192,
-		0), new Item(185, 3), new Item(512, 1), new Item(541, 3),
-		new Item(146, 3), new Item(39, 3), new Item(43, 100),
-		new Item(16, 10), new Item(17, 10), new Item(807, 3),
-		new Item(808, 3), new Item(191, 1), new Item(194, 5),
-		new Item(195, 3), new Item(187, 2), new Item(183, 4),
-		new Item(609, 3));
+	private final Shop shop = new Shop(false, 30000, 130, 40, 2, new Item(ItemId.CHEFS_HAT.id(),
+		0), new Item(ItemId.BLUE_WIZARDSHAT.id(), 3), new Item(ItemId.YELLOW_CAPE.id(), 1), new Item(ItemId.GREY_WOLF_FUR.id(), 3),
+		new Item(ItemId.FUR.id(), 3), new Item(ItemId.NEEDLE.id(), 3), new Item(ItemId.THREAD.id(), 100),
+		new Item(ItemId.LEATHER_GLOVES.id(), 10), new Item(ItemId.BOOTS.id(), 10), new Item(ItemId.PRIEST_ROBE.id(), 3),
+		new Item(ItemId.PRIEST_GOWN.id(), 3), new Item(ItemId.BROWN_APRON.id(), 1), new Item(ItemId.PINK_SKIRT.id(), 5),
+		new Item(ItemId.BLACK_SKIRT.id(), 3), new Item(ItemId.BLUE_SKIRT.id(), 2), new Item(ItemId.RED_CAPE.id(), 4),
+		new Item(ItemId.EYE_PATCH.id(), 3));
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
-		return n.getID() == 501;
+		return n.getID() == NpcId.TAILOR.id();
 	}
 
 	@Override
@@ -42,9 +45,13 @@ public final class Tailor implements ShopInterface,
 		npcTalk(p, n, "Now you look like someone who goes to a lot of fancy dress parties");
 		playerTalk(p, n, "Errr... what are you saying exactly?");
 		npcTalk(p, n, "I'm just saying that perhaps you would like to peruse my selection of garments");
-		int opt = showMenu(p, n, "I think I might leave the perusing for now thanks",
+		int opt = showMenu(p, n, false, //do not send over
+			"I think I might just leave the perusing for now thanks",
 			"OK,lets see what you've got then");
-		if (opt == 1) {
+		if (opt == 0) {
+			playerTalk(p, n, "I think I might just leave the perusing for now thanks");
+		} else if (opt == 1) {
+			playerTalk(p, n, "OK,let's see what you've got then");
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);
 		}

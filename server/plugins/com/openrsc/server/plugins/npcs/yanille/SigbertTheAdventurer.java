@@ -8,16 +8,18 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
+import com.openrsc.server.external.NpcId;
+
 public class SigbertTheAdventurer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 573;
+		return n.getID() == NpcId.SIGBERT_THE_ADVENTURER.id();
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 573) {
+		if (n.getID() == NpcId.SIGBERT_THE_ADVENTURER.id()) {
 			npcTalk(p, n, "I'd be very careful going up there friend");
 			int menu = showMenu(p, n,
 				"Why what's up there?",

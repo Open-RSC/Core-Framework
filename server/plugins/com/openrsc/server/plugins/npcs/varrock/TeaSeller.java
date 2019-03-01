@@ -16,21 +16,24 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
+
 public final class TeaSeller implements ShopInterface,
 	TalkToNpcExecutiveListener, TalkToNpcListener, PickupExecutiveListener,
 	PickupListener {
 
-	private final Shop shop = new Shop(false, 30000, 100, 60, 2, new Item(739,
+	private final Shop shop = new Shop(false, 30000, 100, 60, 2, new Item(ItemId.CUP_OF_TEA.id(),
 		20));
 
 	@Override
 	public boolean blockPickup(final Player p, final GroundItem i) {
-		return i.getID() == 1285;
+		return i.getID() == ItemId.DISPLAY_TEA.id();
 	}
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
-		return n.getID() == 780;
+		return n.getID() == NpcId.TEA_SELLER.id();
 	}
 
 	@Override
@@ -45,14 +48,14 @@ public final class TeaSeller implements ShopInterface,
 
 	@Override
 	public void onPickup(final Player p, final GroundItem i) {
-		if (i.getID() == 1285) {
-			final Npc n = World.getWorld().getNpcById(780);
+		if (i.getID() == ItemId.DISPLAY_TEA.id()) {
+			final Npc n = World.getWorld().getNpcById(NpcId.TEA_SELLER.id());
 			if (n == null) {
 				return;
 			}
 			n.face(p);
-			npcTalk(p, n, "hey ! get your hands off that tea !",
-				"that's for display purposes only",
+			npcTalk(p, n, "Hey ! get your hands off that tea !",
+				"That's for display purposes only",
 				"Im not running a charity here !");
 		}
 	}
@@ -63,7 +66,7 @@ public final class TeaSeller implements ShopInterface,
 			"Are you in need of refreshment ?");
 
 		final String[] options = new String[]{"Yes please", "No thanks",
-			"What are you selling?"};
+			"What are you selling ?"};
 		int option = showMenu(p, n, options);
 		switch (option) {
 			case 0:
@@ -71,7 +74,7 @@ public final class TeaSeller implements ShopInterface,
 				ActionSender.showShop(p, shop);
 				break;
 			case 1:
-				npcTalk(p, n, "Well if you're sure",
+				npcTalk(p, n, "Well, if you're sure",
 					"You know where to come if you do !");
 				break;
 			case 2:
