@@ -28,7 +28,7 @@ services:
             - "./etc/php/php.ini:/usr/local/etc/php/conf.d/php.ini"
             - "./Website:/var/www/html"
         environment:
-            - XDEBUG=true
+            - XDEBUG=false
 
     mysqldb:
         image: mariadb:latest
