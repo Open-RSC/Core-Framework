@@ -665,15 +665,12 @@ public class DoorAction {
 				if (obj.getX() != 199 || obj.getY() != 551) {
 					return;
 				}
-				if (p.getY() >= 551) {
-					doDoor(obj, p);
-				} else {
-					p.message("The door is locked shut");
-				}
+				doDoor(obj, p);
+				p.message("You go through the door");
 				break;
 
 			case 30: // Locked Doors
-				p.message("The door is locked shut");
+				p.message("The door is locked");
 				break;
 
 			case 44: // champs guild door

@@ -204,6 +204,10 @@ public final class Constants {
 		public static int PACKET_LIMIT = 30;
 		public static int CONNECTION_LIMIT = 10;
 		public static int CONNECTION_TIMEOUT = 15;
+		//quest-minigame related
+		public static boolean WANT_GIANNE_BADGE = false;
+		public static boolean WANT_BLURBERRY_BADGE = false;
+		public static boolean WANT_BARTER_WORMBRAINS = false;
 
 		/**
 		 * @param file
@@ -314,6 +318,10 @@ public final class Constants {
 			PACKET_LIMIT = Integer.parseInt(props.getProperty("packet_limit"));
 			CONNECTION_LIMIT = Integer.parseInt(props.getProperty("connection_limit"));
 			CONNECTION_TIMEOUT = Integer.parseInt(props.getProperty("connection_timeout"));
+			
+			WANT_GIANNE_BADGE = Boolean.parseBoolean(props.getProperty("want_gianne_badge"));
+			WANT_BLURBERRY_BADGE = Boolean.parseBoolean(props.getProperty("want_blurberry_badge"));
+			WANT_BARTER_WORMBRAINS = Boolean.parseBoolean(props.getProperty("want_barter_wormbrains"));
 
 			// Make sure config doesn't exceed max values
 			if (VIEW_DISTANCE > 4)
