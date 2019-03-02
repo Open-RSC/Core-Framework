@@ -1289,19 +1289,17 @@ public class Functions {
 				post(new Runnable() {
 					@Override
 					public void run() {
-						synchronized(player) {
-							if (!player.inCombat()) {
-								if (npc != null) {
-									npc.resetPath();
-									npc.setBusyTimer(2500);
-									npc.face(player);
-									player.face(npc);
-								}
-								player.setBusyTimer(2500);
-								player.resetPath();
+						if (!player.inCombat()) {
+							if (npc != null) {
+								npc.resetPath();
+								npc.setBusyTimer(2500);
+								npc.face(player);
+								player.face(npc);
 							}
-							player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, (npc == null ? player : npc)));
+							player.setBusyTimer(2500);
+							player.resetPath();
 						}
+						player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, (npc == null ? player : npc)));
 					}
 				});
 			}
@@ -1412,7 +1410,7 @@ public class Functions {
 			});
 			ActionSender.sendMenu(player, options);
 
-			while (true && !player.isBusy()) {
+			while (!player.isBusy()) {
 				if (player.getOption() != -1) {
 					if (npc != null && options[player.getOption()] != null) {
 						npc.setBusy(false);
