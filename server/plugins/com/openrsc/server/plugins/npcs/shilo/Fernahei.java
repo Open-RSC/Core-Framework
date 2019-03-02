@@ -12,19 +12,20 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
+
 public class Fernahei implements ShopInterface,
 	TalkToNpcExecutiveListener, TalkToNpcListener {
 
-	public static final int FERNAHEI = 616;
-
 	private final Shop shop = new Shop(false, 15000, 100, 70, 2,
-		new Item(377, 5), new Item(378, 5), new Item(380, 200),
-		new Item(381, 200), new Item(358, 0), new Item(363, 0),
-		new Item(356, 0));
+		new Item(ItemId.FISHING_ROD.id(), 5), new Item(ItemId.FLY_FISHING_ROD.id(), 5), new Item(ItemId.FISHING_BAIT.id(), 200),
+		new Item(ItemId.FEATHER.id(), 200), new Item(ItemId.RAW_TROUT.id(), 0), new Item(ItemId.RAW_PIKE.id(), 0),
+		new Item(ItemId.RAW_SALMON.id(), 0));
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == FERNAHEI) {
+		if (n.getID() == NpcId.FERNAHEI.id()) {
 			npcTalk(p, n, "Welcome to Fernahei's Fishing Shop Bwana!",
 				"Would you like to see my items?");
 			int menu = showMenu(p, n,
@@ -41,10 +42,7 @@ public class Fernahei implements ShopInterface,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == FERNAHEI) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.FERNAHEI.id();
 	}
 
 	@Override

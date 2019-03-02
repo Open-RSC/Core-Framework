@@ -10,17 +10,16 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.*;
 
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
+
 public class CartDriver implements TalkToNpcListener, TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener {
 
-	public static final int CART_DRIVER = 619;
 	public static final int TRAVEL_CART = 768;
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == CART_DRIVER) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.CART_DRIVER_SHILO.id();
 	}
 
 	private void cartRide(Player p, Npc n) {
@@ -31,10 +30,10 @@ public class CartDriver implements TalkToNpcListener, TalkToNpcExecutiveListener
 			"No thanks.");
 		if (menu == 0) {
 			playerTalk(p, n, "Yes please, I'd like to go to Brimhaven!");
-			if (hasItem(p, 10, 500)) {
+			if (hasItem(p, ItemId.COINS.id(), 500)) {
 				npcTalk(p, n, "Great!",
 					"Just hop into the cart then and we'll go!");
-				removeItem(p, 10, 500);
+				removeItem(p, ItemId.COINS.id(), 500);
 				message(p, 1000, "You Hop into the cart and the driver urges the horses on.");
 				p.teleport(468, 662);
 				message(p, 1200, "You take a taxing journey through the jungle to Brimhaven.");
@@ -52,7 +51,7 @@ public class CartDriver implements TalkToNpcListener, TalkToNpcExecutiveListener
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == CART_DRIVER) {
+		if (n.getID() == NpcId.CART_DRIVER_SHILO.id()) {
 			playerTalk(p, n, "Hello!");
 			npcTalk(p, n, "Hello Bwana!");
 			cartRide(p, n);
@@ -61,10 +60,7 @@ public class CartDriver implements TalkToNpcListener, TalkToNpcExecutiveListener
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (obj.getID() == TRAVEL_CART) {
-			return true;
-		}
-		return false;
+		return obj.getID() == TRAVEL_CART;
 	}
 
 	@Override
@@ -72,7 +68,7 @@ public class CartDriver implements TalkToNpcListener, TalkToNpcExecutiveListener
 		if (obj.getID() == TRAVEL_CART) {
 			if (command.equalsIgnoreCase("Board")) {
 				p.message("This looks like a sturdy travelling cart.");
-				Npc driver = getNearestNpc(p, CART_DRIVER, 10);
+				Npc driver = getNearestNpc(p, NpcId.CART_DRIVER_SHILO.id(), 10);
 				if (driver != null) {
 					driver.teleport(p.getX(), p.getY());
 					sleep(600); // 1 tick.

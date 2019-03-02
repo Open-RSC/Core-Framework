@@ -7,13 +7,14 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Serevel implements TalkToNpcExecutiveListener, TalkToNpcListener {
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 
-	public static final int SEREVEL = 623;
+public class Serevel implements TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == SEREVEL) {
+		if (n.getID() == NpcId.SEREVEL.id()) {
 			playerTalk(p, n, "Hello");
 			npcTalk(p, n, "Hello Bwana.",
 				"Are you interested in buying a ticket for the 'Lady of the Waves'?",
@@ -25,10 +26,10 @@ public class Serevel implements TalkToNpcExecutiveListener, TalkToNpcListener {
 				"Yes, that sounds great!",
 				"No thanks.");
 			if (menu == 0) {
-				if (hasItem(p, 10, 100)) {
-					removeItem(p, 10, 100);
+				if (hasItem(p, ItemId.COINS.id(), 100)) {
+					removeItem(p, ItemId.COINS.id(), 100);
 					npcTalk(p, n, "Great, nice doing business with you.");
-					addItem(p, 988, 1);
+					addItem(p, ItemId.SHIP_TICKET.id(), 1);
 				} else {
 					npcTalk(p, n, "Sorry Bwana, you don't have enough money.",
 						"Come back when you have 100 Gold Pieces.");
@@ -41,10 +42,7 @@ public class Serevel implements TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == SEREVEL) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.SEREVEL.id();
 	}
 
 }

@@ -14,18 +14,21 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.*;
 
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
+
 public final class ThessaliasClothes implements PickupListener, PickupExecutiveListener,
 	ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
 
-	private final Shop shop = new Shop(false, 30000, 100, 55, 3, new Item(182,
-		3), new Item(15, 12), new Item(16, 10), new Item(17, 10),
-		new Item(191, 1), new Item(194, 5), new Item(195, 3),
-		new Item(187, 2), new Item(183, 4), new Item(200, 5),
-		new Item(807, 3), new Item(808, 3));
+	private final Shop shop = new Shop(false, 30000, 100, 55, 3, new Item(ItemId.WHITE_APRON.id(),
+		3), new Item(ItemId.LEATHER_ARMOUR.id(), 12), new Item(ItemId.LEATHER_GLOVES.id(), 10), new Item(ItemId.BOOTS.id(), 10),
+		new Item(ItemId.BROWN_APRON.id(), 1), new Item(ItemId.PINK_SKIRT.id(), 5), new Item(ItemId.BLACK_SKIRT.id(), 3),
+		new Item(ItemId.BLUE_SKIRT.id(), 2), new Item(ItemId.RED_CAPE.id(), 4), new Item(ItemId.SILK.id(), 5),
+		new Item(ItemId.PRIEST_ROBE.id(), 3), new Item(ItemId.PRIEST_GOWN.id(), 3));
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
-		return n.getID() == 59;
+		return n.getID() == NpcId.THESSALIA.id();
 	}
 
 	@Override
@@ -96,11 +99,11 @@ public final class ThessaliasClothes implements PickupListener, PickupExecutiveL
 			if (item == 1) {
 				npcTalk(p, n, "Ohh you poor dear, I have some more here");
 				p.message("Thessalia gives you some new bunny ears");
-				addItem(p, 1156, 1);
+				addItem(p, ItemId.BUNNY_EARS.id(), 1);
 			} else if (item == 2) {
 				npcTalk(p, n, "Ohh you poor dear, I have another here");
 				p.message("Thessalia gives you a new scythe");
-				addItem(p, 1289, 1);
+				addItem(p, ItemId.SCYTHE.id(), 1);
 			}
 
 		} else {
@@ -113,9 +116,9 @@ public final class ThessaliasClothes implements PickupListener, PickupExecutiveL
 
 	@Override
 	public void onPickup(Player p, GroundItem i) {
-		if (i.getID() == 1156) {
+		if (i.getID() == ItemId.BUNNY_EARS.id()) {
 			if(!p.isAdmin()) {
-				if (p.getInventory().hasItemId(1156) || p.getBank().countId(1156) > 0) {
+				if (p.getInventory().hasItemId(ItemId.BUNNY_EARS.id()) || p.getBank().countId(ItemId.BUNNY_EARS.id()) > 0) {
 					p.message("You don't need another set of bunny ears");
 					p.message("You only have one head");
 					return;
@@ -125,9 +128,9 @@ public final class ThessaliasClothes implements PickupListener, PickupExecutiveL
 				p.getCache().put("bunny_ears", 1);
 			}
 		}
-		else if (i.getID() == 1289) {
+		else if (i.getID() == ItemId.SCYTHE.id()) {
 			if(!p.isAdmin()) {
-				if (p.getInventory().hasItemId(1289) || p.getBank().countId(1289) > 0) {
+				if (p.getInventory().hasItemId(ItemId.SCYTHE.id()) || p.getBank().countId(ItemId.SCYTHE.id()) > 0) {
 					p.message("You don't need another scythe");
 					p.message("You already have one");
 					return;
@@ -143,6 +146,6 @@ public final class ThessaliasClothes implements PickupListener, PickupExecutiveL
 
 	@Override
 	public boolean blockPickup(Player p, GroundItem i) {
-		return i.getID() == 1156 || i.getID() == 1289;
+		return i.getID() == ItemId.BUNNY_EARS.id() || i.getID() == ItemId.SCYTHE.id();
 	}
 }

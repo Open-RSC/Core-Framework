@@ -13,21 +13,23 @@ import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 
 public final class ZaffsStaffs implements ShopInterface,
 	TalkToNpcExecutiveListener, TalkToNpcListener {
 	
 	private final Shop shop = (Constants.GameServer.MEMBER_WORLD) ? 
-			new Shop(false, 30000, 100, 55, 2, new Item(614, 5), 
-					new Item(100, 5), new Item(198, 5), new Item(101, 2),
-					new Item(102, 2), new Item(103, 2), new Item(197, 2)) :
+			new Shop(false, 30000, 100, 55, 2, new Item(ItemId.BATTLESTAFF.id(), 5), 
+					new Item(ItemId.STAFF.id(), 5), new Item(ItemId.MAGIC_STAFF.id(), 5), new Item(ItemId.STAFF_OF_AIR.id(), 2),
+					new Item(ItemId.STAFF_OF_WATER.id(), 2), new Item(ItemId.STAFF_OF_EARTH.id(), 2), new Item(ItemId.STAFF_OF_FIRE.id(), 2)) :
 			new Shop(false, 30000, 100, 55, 2, 
-					new Item(100, 5), new Item(198, 5), new Item(101, 2),
-					new Item(102, 2), new Item(103, 2), new Item(197, 2));
+					new Item(ItemId.STAFF.id(), 5), new Item(ItemId.MAGIC_STAFF.id(), 5), new Item(ItemId.STAFF_OF_AIR.id(), 2),
+					new Item(ItemId.STAFF_OF_WATER.id(), 2), new Item(ItemId.STAFF_OF_EARTH.id(), 2), new Item(ItemId.STAFF_OF_FIRE.id(), 2));
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
-		return n.getID() == 69;
+		return n.getID() == NpcId.ZAFF.id();
 	}
 
 	@Override

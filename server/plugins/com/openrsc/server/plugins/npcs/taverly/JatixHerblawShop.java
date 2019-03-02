@@ -12,16 +12,18 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
+
 public class JatixHerblawShop implements ShopInterface,
 	TalkToNpcListener, TalkToNpcExecutiveListener {
 
-	private final int JATIX = 230;
 	private final Shop shop = new Shop(false, 10000, 100, 70, 2,
-		new Item(465, 50), new Item(468, 3), new Item(270, 50));
+		new Item(ItemId.EMPTY_VIAL.id(), 50), new Item(ItemId.PESTLE_AND_MORTAR.id(), 3), new Item(ItemId.EYE_OF_NEWT.id(), 50));
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
-		return n.getID() == JATIX;
+		return n.getID() == NpcId.JATIX.id();
 	}
 
 	@Override

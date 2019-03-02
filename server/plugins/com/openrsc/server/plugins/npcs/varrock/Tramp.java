@@ -9,13 +9,12 @@ import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isPhoenixGang;
 
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
+
 public class Tramp implements TalkToNpcExecutiveListener, TalkToNpcListener {
 	public boolean blockTalkToNpc(final Player player, final Npc npc) {
-		switch (npc.getID()) {
-			case 28:
-				return true;
-		}
-		return false;
+		return npc.getID() == NpcId.TRAMP.id();
 	}
 
 	@Override
@@ -30,7 +29,7 @@ public class Tramp implements TalkToNpcExecutiveListener, TalkToNpcListener {
 		} else if (menu == 1) {
 			npcTalk(p, n, "You startin?");
 		} else if (menu == 2) {
-			removeItem(p, 10, 1);
+			removeItem(p, ItemId.COINS.id(), 1);
 			npcTalk(p, n, "Thankyou, thats great");
 			int sub_menu = showMenu(p, n, "No problem",
 				"So don't I get some sort of quest hint or something now");

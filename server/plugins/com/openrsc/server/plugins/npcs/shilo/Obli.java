@@ -12,24 +12,25 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
+
 public class Obli implements ShopInterface,
 	TalkToNpcExecutiveListener, TalkToNpcListener {
 
-	public static final int OBLI = 620;
-
 	private final Shop shop = new Shop(true, 15000, 150, 50, 2,
-		new Item(166, 2), new Item(465, 20), new Item(468, 3),
-		new Item(135, 3), new Item(87, 3), new Item(156, 2),
-		new Item(12, 5), new Item(15, 12), new Item(16, 10),
-		new Item(17, 10), new Item(132, 2), new Item(138, 10),
-		new Item(169, 10), new Item(211, 10), new Item(599, 10),
-		new Item(773, 10), new Item(167, 10), new Item(168, 10),
-		new Item(982, 50), new Item(983, 50), new Item(1263, 10),
-		new Item(1172, 50));
+		new Item(ItemId.TINDERBOX.id(), 2), new Item(ItemId.EMPTY_VIAL.id(), 20), new Item(ItemId.PESTLE_AND_MORTAR.id(), 3),
+		new Item(ItemId.POT.id(), 3), new Item(ItemId.BRONZE_AXE.id(), 3), new Item(ItemId.BRONZE_PICKAXE.id(), 2),
+		new Item(ItemId.IRON_AXE.id(), 5), new Item(ItemId.LEATHER_ARMOUR.id(), 12), new Item(ItemId.LEATHER_GLOVES.id(), 10),
+		new Item(ItemId.BOOTS.id(), 10), new Item(ItemId.COOKEDMEAT.id(), 2), new Item(ItemId.BREAD.id(), 10),
+		new Item(ItemId.BRONZE_BAR.id(), 10), new Item(ItemId.SPADE.id(), 10), new Item(ItemId.UNLIT_CANDLE.id(), 10),
+		new Item(ItemId.UNLIT_TORCH.id(), 10), new Item(ItemId.CHISEL.id(), 10), new Item(ItemId.HAMMER.id(), 10),
+		new Item(ItemId.PAPYRUS.id(), 50), new Item(ItemId.A_LUMP_OF_CHARCOAL.id(), 50), new Item(ItemId.SLEEPING_BAG.id(), 10),
+		new Item(ItemId.MACHETTE.id(), 50));
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == OBLI) {
+		if (n.getID() == NpcId.OBLI.id()) {
 			npcTalk(p, n, "Welcome to Obli's General Store Bwana!",
 				"Would you like to see my items?");
 			int menu = showMenu(p, n,
@@ -46,10 +47,7 @@ public class Obli implements ShopInterface,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == OBLI) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.OBLI.id();
 	}
 
 	@Override

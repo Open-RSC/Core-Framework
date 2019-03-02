@@ -30,7 +30,7 @@ public class Lady implements TalkToNpcExecutiveListener, TalkToNpcListener {
 				// NOTHING HAPPENS
 			}
 		});
-		if (p.getQuestStage(Quests.MERLINS_CRYSTAL) == 3 || p.getQuestStage(Quests.MERLINS_CRYSTAL) == -1) {
+		if (p.getQuestStage(Quests.MERLINS_CRYSTAL) >= 3 || p.getQuestStage(Quests.MERLINS_CRYSTAL) == -1) {
 			defaultMenu.addOption(new Option("I seek the sword Exalibur") {
 				@Override
 				public void action() {
