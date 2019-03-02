@@ -1,6 +1,5 @@
 package com.openrsc.server.net.rsc;
 
-import com.openrsc.server.Constants;
 import com.openrsc.server.GameStateUpdater;
 import com.openrsc.server.Server;
 import com.openrsc.server.content.clan.Clan;
@@ -31,8 +30,57 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
+
+import static com.openrsc.server.Constants.GameServer.AUTO_MESSAGE_SWITCH_TOGGLE;
+import static com.openrsc.server.Constants.GameServer.BATCH_PROGRESSION;
+import static com.openrsc.server.Constants.GameServer.CUSTOM_FIREMAKING;
+import static com.openrsc.server.Constants.GameServer.DEBUG;
+import static com.openrsc.server.Constants.GameServer.DISPLAY_LOGO_SPRITE;
+import static com.openrsc.server.Constants.GameServer.EXPERIENCE_COUNTER_TOGGLE;
+import static com.openrsc.server.Constants.GameServer.EXPERIENCE_DROPS_TOGGLE;
+import static com.openrsc.server.Constants.GameServer.FIGHTMODE_SELECTOR_TOGGLE;
+import static com.openrsc.server.Constants.GameServer.FIX_OVERHEAD_CHAT;
+import static com.openrsc.server.Constants.GameServer.FOG_TOGGLE;
+import static com.openrsc.server.Constants.GameServer.FPS;
+import static com.openrsc.server.Constants.GameServer.GROUND_ITEM_TOGGLE;
+import static com.openrsc.server.Constants.GameServer.INVENTORY_COUNT_TOGGLE;
+import static com.openrsc.server.Constants.GameServer.ITEMS_ON_DEATH_MENU;
+import static com.openrsc.server.Constants.GameServer.LOGO_SPRITE_ID;
+import static com.openrsc.server.Constants.GameServer.MEMBER_WORLD;
+import static com.openrsc.server.Constants.GameServer.MENU_COMBAT_STYLE_TOGGLE;
+import static com.openrsc.server.Constants.GameServer.PLAYER_LEVEL_LIMIT;
+import static com.openrsc.server.Constants.GameServer.RIGHT_CLICK_BANK;
+import static com.openrsc.server.Constants.GameServer.SERVER_NAME;
+import static com.openrsc.server.Constants.GameServer.SERVER_NAME_WELCOME;
+import static com.openrsc.server.Constants.GameServer.SHOW_FLOATING_NAMETAGS;
+import static com.openrsc.server.Constants.GameServer.SHOW_ROOF_TOGGLE;
+import static com.openrsc.server.Constants.GameServer.SIDE_MENU_TOGGLE;
+import static com.openrsc.server.Constants.GameServer.SPAWN_AUCTION_NPCS;
+import static com.openrsc.server.Constants.GameServer.SPAWN_IRON_MAN_NPCS;
+import static com.openrsc.server.Constants.GameServer.WANT_BANK_NOTES;
+import static com.openrsc.server.Constants.GameServer.WANT_BANK_PINS;
+import static com.openrsc.server.Constants.GameServer.WANT_CERTS_TO_BANK;
+import static com.openrsc.server.Constants.GameServer.WANT_CERT_DEPOSIT;
+import static com.openrsc.server.Constants.GameServer.WANT_CLANS;
+import static com.openrsc.server.Constants.GameServer.WANT_CUSTOM_BANKS;
+import static com.openrsc.server.Constants.GameServer.WANT_CUSTOM_RANK_DISPLAY;
+import static com.openrsc.server.Constants.GameServer.WANT_DECANTING;
+import static com.openrsc.server.Constants.GameServer.WANT_DROP_X;
+import static com.openrsc.server.Constants.GameServer.WANT_EMAIL;
+import static com.openrsc.server.Constants.GameServer.WANT_EXPERIENCE_ELIXIRS;
+import static com.openrsc.server.Constants.GameServer.WANT_EXP_INFO;
+import static com.openrsc.server.Constants.GameServer.WANT_GLOBAL_CHAT;
+import static com.openrsc.server.Constants.GameServer.WANT_HIDE_IP;
+import static com.openrsc.server.Constants.GameServer.WANT_KEYBOARD_SHORTCUTS;
+import static com.openrsc.server.Constants.GameServer.WANT_KILL_FEED;
+import static com.openrsc.server.Constants.GameServer.WANT_QUEST_MENUS;
+import static com.openrsc.server.Constants.GameServer.WANT_REGISTRATION_LIMIT;
+import static com.openrsc.server.Constants.GameServer.WANT_REMEMBER;
+import static com.openrsc.server.Constants.GameServer.WANT_SKILL_MENUS;
+import static com.openrsc.server.Constants.GameServer.WANT_WOODCUTTING_GUILD;
+import static com.openrsc.server.Constants.GameServer.WELCOME_TEXT;
+import static com.openrsc.server.Constants.GameServer.ZOOM_VIEW_TOGGLE;
 
 /**
  * @author n0m
@@ -113,7 +161,7 @@ public class ActionSender {
 	 *
 	 * @param player
 	 */
-	public static void sendCombatStyle(Player player) {
+	private static void sendCombatStyle(Player player) {
 		// com.rscr.server.net.PacketBuilder s = new
 		// com.rscr.server.net.PacketBuilder();
 		// s.setID(129);
@@ -381,56 +429,56 @@ public class ActionSender {
 
 	public static void sendInitialServerConfigs(Channel channel) throws Exception {
 		LOGGER.info("Sending initial configs to: " + channel.remoteAddress());
-		if (Constants.GameServer.DEBUG) {
+		if (DEBUG) {
 			LOGGER.info("Debug server configs being sent:");
-			LOGGER.info(Constants.GameServer.SERVER_NAME + " 1");
-			LOGGER.info(Constants.GameServer.SERVER_NAME_WELCOME + " 2");
-			LOGGER.info(Constants.GameServer.PLAYER_LEVEL_LIMIT + " 3");
-			LOGGER.info(Constants.GameServer.SPAWN_AUCTION_NPCS + " 4");
-			LOGGER.info(Constants.GameServer.SPAWN_IRON_MAN_NPCS + " 5");
-			LOGGER.info(Constants.GameServer.SHOW_FLOATING_NAMETAGS + " 6");
-			LOGGER.info(Constants.GameServer.WANT_CLANS + " 7");
-			LOGGER.info(Constants.GameServer.WANT_KILL_FEED + " 8");
-			LOGGER.info(Constants.GameServer.FOG_TOGGLE + " 9");
-			LOGGER.info(Constants.GameServer.GROUND_ITEM_TOGGLE + " 10");
-			LOGGER.info(Constants.GameServer.AUTO_MESSAGE_SWITCH_TOGGLE + " 11");
-			LOGGER.info(Constants.GameServer.BATCH_PROGRESSION + " 12");
-			LOGGER.info(Constants.GameServer.SIDE_MENU_TOGGLE + " 13");
-			LOGGER.info(Constants.GameServer.INVENTORY_COUNT_TOGGLE + " 14");
-			LOGGER.info(Constants.GameServer.ZOOM_VIEW_TOGGLE + " 15");
-			LOGGER.info(Constants.GameServer.MENU_COMBAT_STYLE_TOGGLE + " 16");
-			LOGGER.info(Constants.GameServer.FIGHTMODE_SELECTOR_TOGGLE + " 17");
-			LOGGER.info(Constants.GameServer.EXPERIENCE_COUNTER_TOGGLE + " 18");
-			LOGGER.info(Constants.GameServer.EXPERIENCE_DROPS_TOGGLE + " 19");
-			LOGGER.info(Constants.GameServer.ITEMS_ON_DEATH_MENU + " 20");
-			LOGGER.info(Constants.GameServer.SHOW_ROOF_TOGGLE + " 21");
-			LOGGER.info(Constants.GameServer.WANT_HIDE_IP + " 22");
-			LOGGER.info(Constants.GameServer.WANT_REMEMBER + " 23");
-			LOGGER.info(Constants.GameServer.WANT_GLOBAL_CHAT + " 24");
-			LOGGER.info(Constants.GameServer.WANT_SKILL_MENUS + " 25");
-			LOGGER.info(Constants.GameServer.WANT_QUEST_MENUS + " 26");
-			LOGGER.info(Constants.GameServer.WANT_EXPERIENCE_ELIXIRS + " 27");
-			LOGGER.info(Constants.GameServer.WANT_KEYBOARD_SHORTCUTS + " 28");
-			LOGGER.info(Constants.GameServer.WANT_CUSTOM_BANKS + " 29");
-			LOGGER.info(Constants.GameServer.WANT_BANK_PINS + " 30");
-			LOGGER.info(Constants.GameServer.WANT_BANK_NOTES + " 31");
-			LOGGER.info(Constants.GameServer.WANT_CERT_DEPOSIT + " 32");
-			LOGGER.info(Constants.GameServer.CUSTOM_FIREMAKING + " 33");
-			LOGGER.info(Constants.GameServer.WANT_DROP_X + " 34");
-			LOGGER.info(Constants.GameServer.WANT_EXP_INFO + " 35");
-			LOGGER.info(Constants.GameServer.WANT_WOODCUTTING_GUILD + " 36");
-			LOGGER.info(Constants.GameServer.WANT_DECANTING + " 37");
-			LOGGER.info(Constants.GameServer.WANT_CERTS_TO_BANK + " 38");
-			LOGGER.info(Constants.GameServer.WANT_CUSTOM_RANK_DISPLAY + " 39");
-			LOGGER.info(Constants.GameServer.RIGHT_CLICK_BANK + " 40");
-			LOGGER.info(Constants.GameServer.FIX_OVERHEAD_CHAT + " 41");
-			LOGGER.info(Constants.GameServer.WELCOME_TEXT + " 42");
-			LOGGER.info(Constants.GameServer.MEMBER_WORLD + " 43");
-			LOGGER.info(Constants.GameServer.DISPLAY_LOGO_SPRITE + " 44");
-			//LOGGER.info(Constants.GameServer.LOGO_SPRITE_ID + " 45");
-			//LOGGER.info(Constants.GameServer.FPS + " 46");
-			LOGGER.info(Constants.GameServer.WANT_EMAIL + " 47");
-			LOGGER.info(Constants.GameServer.WANT_REGISTRATION_LIMIT + " 48");
+			LOGGER.info(SERVER_NAME + " 1");
+			LOGGER.info(SERVER_NAME_WELCOME + " 2");
+			LOGGER.info(PLAYER_LEVEL_LIMIT + " 3");
+			LOGGER.info(SPAWN_AUCTION_NPCS + " 4");
+			LOGGER.info(SPAWN_IRON_MAN_NPCS + " 5");
+			LOGGER.info(SHOW_FLOATING_NAMETAGS + " 6");
+			LOGGER.info(WANT_CLANS + " 7");
+			LOGGER.info(WANT_KILL_FEED + " 8");
+			LOGGER.info(FOG_TOGGLE + " 9");
+			LOGGER.info(GROUND_ITEM_TOGGLE + " 10");
+			LOGGER.info(AUTO_MESSAGE_SWITCH_TOGGLE + " 11");
+			LOGGER.info(BATCH_PROGRESSION + " 12");
+			LOGGER.info(SIDE_MENU_TOGGLE + " 13");
+			LOGGER.info(INVENTORY_COUNT_TOGGLE + " 14");
+			LOGGER.info(ZOOM_VIEW_TOGGLE + " 15");
+			LOGGER.info(MENU_COMBAT_STYLE_TOGGLE + " 16");
+			LOGGER.info(FIGHTMODE_SELECTOR_TOGGLE + " 17");
+			LOGGER.info(EXPERIENCE_COUNTER_TOGGLE + " 18");
+			LOGGER.info(EXPERIENCE_DROPS_TOGGLE + " 19");
+			LOGGER.info(ITEMS_ON_DEATH_MENU + " 20");
+			LOGGER.info(SHOW_ROOF_TOGGLE + " 21");
+			LOGGER.info(WANT_HIDE_IP + " 22");
+			LOGGER.info(WANT_REMEMBER + " 23");
+			LOGGER.info(WANT_GLOBAL_CHAT + " 24");
+			LOGGER.info(WANT_SKILL_MENUS + " 25");
+			LOGGER.info(WANT_QUEST_MENUS + " 26");
+			LOGGER.info(WANT_EXPERIENCE_ELIXIRS + " 27");
+			LOGGER.info(WANT_KEYBOARD_SHORTCUTS + " 28");
+			LOGGER.info(WANT_CUSTOM_BANKS + " 29");
+			LOGGER.info(WANT_BANK_PINS + " 30");
+			LOGGER.info(WANT_BANK_NOTES + " 31");
+			LOGGER.info(WANT_CERT_DEPOSIT + " 32");
+			LOGGER.info(CUSTOM_FIREMAKING + " 33");
+			LOGGER.info(WANT_DROP_X + " 34");
+			LOGGER.info(WANT_EXP_INFO + " 35");
+			LOGGER.info(WANT_WOODCUTTING_GUILD + " 36");
+			LOGGER.info(WANT_DECANTING + " 37");
+			LOGGER.info(WANT_CERTS_TO_BANK + " 38");
+			LOGGER.info(WANT_CUSTOM_RANK_DISPLAY + " 39");
+			LOGGER.info(RIGHT_CLICK_BANK + " 40");
+			LOGGER.info(FIX_OVERHEAD_CHAT + " 41");
+			LOGGER.info(WELCOME_TEXT + " 42");
+			LOGGER.info(MEMBER_WORLD + " 43");
+			LOGGER.info(DISPLAY_LOGO_SPRITE + " 44");
+			LOGGER.info(LOGO_SPRITE_ID + " 45");
+			LOGGER.info(FPS + " 46");
+			LOGGER.info(WANT_EMAIL + " 47");
+			LOGGER.info(WANT_REGISTRATION_LIMIT + " 48");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs();
 		ConnectionAttachment attachment = new ConnectionAttachment();
@@ -447,54 +495,54 @@ public class ActionSender {
 	private static com.openrsc.server.net.PacketBuilder prepareServerConfigs() {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_SERVER_CONFIGS.opcode);
-		s.writeString(Constants.GameServer.SERVER_NAME); // 1
-		s.writeString(Constants.GameServer.SERVER_NAME_WELCOME); // 2
-		s.writeByte((byte) Constants.GameServer.PLAYER_LEVEL_LIMIT); // 3
-		s.writeByte((byte) (Constants.GameServer.SPAWN_AUCTION_NPCS ? 1 : 0)); // 4
-		s.writeByte((byte) (Constants.GameServer.SPAWN_IRON_MAN_NPCS ? 1 : 0)); // 5
-		s.writeByte((byte) (Constants.GameServer.SHOW_FLOATING_NAMETAGS ? 1 : 0)); // 6
-		s.writeByte((byte) (Constants.GameServer.WANT_CLANS ? 1 : 0)); // 7
-		s.writeByte((byte) (Constants.GameServer.WANT_KILL_FEED ? 1 : 0)); // 8
-		s.writeByte((byte) (Constants.GameServer.FOG_TOGGLE ? 1 : 0)); // 9
-		s.writeByte((byte) (Constants.GameServer.GROUND_ITEM_TOGGLE ? 1 : 0)); // 10
-		s.writeByte((byte) (Constants.GameServer.AUTO_MESSAGE_SWITCH_TOGGLE ? 1 : 0)); // 11
-		s.writeByte((byte) (Constants.GameServer.BATCH_PROGRESSION ? 1 : 0)); // 12
-		s.writeByte((byte) (Constants.GameServer.SIDE_MENU_TOGGLE ? 1 : 0)); // 13
-		s.writeByte((byte) (Constants.GameServer.INVENTORY_COUNT_TOGGLE ? 1 : 0)); // 14
-		s.writeByte((byte) (Constants.GameServer.ZOOM_VIEW_TOGGLE ? 1 : 0)); // 15
-		s.writeByte((byte) (Constants.GameServer.MENU_COMBAT_STYLE_TOGGLE ? 1 : 0)); // 16
-		s.writeByte((byte) (Constants.GameServer.FIGHTMODE_SELECTOR_TOGGLE ? 1 : 0)); // 17
-		s.writeByte((byte) (Constants.GameServer.EXPERIENCE_COUNTER_TOGGLE ? 1 : 0)); // 18
-		s.writeByte((byte) (Constants.GameServer.EXPERIENCE_DROPS_TOGGLE ? 1 : 0)); // 19
-		s.writeByte((byte) (Constants.GameServer.ITEMS_ON_DEATH_MENU ? 1 : 0)); // 20
-		s.writeByte((byte) (Constants.GameServer.SHOW_ROOF_TOGGLE ? 1 : 0)); // 21
-		s.writeByte((byte) (Constants.GameServer.WANT_HIDE_IP ? 1 : 0)); // 22
-		s.writeByte((byte) (Constants.GameServer.WANT_REMEMBER ? 1 : 0)); // 23
-		s.writeByte((byte) (Constants.GameServer.WANT_GLOBAL_CHAT ? 1 : 0)); // 24
-		s.writeByte((byte) (Constants.GameServer.WANT_SKILL_MENUS ? 1 : 0)); // 25
-		s.writeByte((byte) (Constants.GameServer.WANT_QUEST_MENUS ? 1 : 0)); // 26
-		s.writeByte((byte) (Constants.GameServer.WANT_EXPERIENCE_ELIXIRS ? 1 : 0)); // 27
-		s.writeByte((byte) (Constants.GameServer.WANT_KEYBOARD_SHORTCUTS ? 1 : 0)); // 28
-		s.writeByte((byte) (Constants.GameServer.WANT_CUSTOM_BANKS ? 1 : 0)); // 29
-		s.writeByte((byte) (Constants.GameServer.WANT_BANK_PINS ? 1 : 0)); // 30
-		s.writeByte((byte) (Constants.GameServer.WANT_BANK_NOTES ? 1 : 0)); // 31
-		s.writeByte((byte) (Constants.GameServer.WANT_CERT_DEPOSIT ? 1 : 0)); // 32
-		s.writeByte((byte) (Constants.GameServer.CUSTOM_FIREMAKING ? 1 : 0)); // 33
-		s.writeByte((byte) (Constants.GameServer.WANT_DROP_X ? 1 : 0)); // 34
-		s.writeByte((byte) (Constants.GameServer.WANT_EXP_INFO ? 1 : 0)); // 35
-		s.writeByte((byte) (Constants.GameServer.WANT_WOODCUTTING_GUILD ? 1 : 0)); // 36
-		s.writeByte((byte) (Constants.GameServer.WANT_DECANTING ? 1 : 0)); // 37
-		s.writeByte((byte) (Constants.GameServer.WANT_CERTS_TO_BANK ? 1 : 0)); // 38
-		s.writeByte((byte) (Constants.GameServer.WANT_CUSTOM_RANK_DISPLAY ? 1 : 0)); // 39
-		s.writeByte((byte) (Constants.GameServer.RIGHT_CLICK_BANK ? 1 : 0)); // 40
-		s.writeByte((byte) (Constants.GameServer.FIX_OVERHEAD_CHAT ? 1 : 0)); // 41
-		s.writeString(Constants.GameServer.WELCOME_TEXT); // 42
-		s.writeByte((byte) (Constants.GameServer.MEMBER_WORLD ? 1 : 0)); // 43
-		s.writeByte((byte) (Constants.GameServer.DISPLAY_LOGO_SPRITE ? 1 : 0)); // 44
-		//s.writeByte((byte) Constants.GameServer.LOGO_SPRITE_ID); // 45
-		//s.writeByte((byte) Constants.GameServer.FPS); // 46
-		s.writeByte((byte) (Constants.GameServer.WANT_EMAIL ? 1 : 0)); // 47
-		s.writeByte((byte) (Constants.GameServer.WANT_REGISTRATION_LIMIT ? 1 : 0)); // 48
+		s.writeString(SERVER_NAME); // 1
+		s.writeString(SERVER_NAME_WELCOME); // 2
+		s.writeByte((byte) PLAYER_LEVEL_LIMIT); // 3
+		s.writeByte((byte) (SPAWN_AUCTION_NPCS ? 1 : 0)); // 4
+		s.writeByte((byte) (SPAWN_IRON_MAN_NPCS ? 1 : 0)); // 5
+		s.writeByte((byte) (SHOW_FLOATING_NAMETAGS ? 1 : 0)); // 6
+		s.writeByte((byte) (WANT_CLANS ? 1 : 0)); // 7
+		s.writeByte((byte) (WANT_KILL_FEED ? 1 : 0)); // 8
+		s.writeByte((byte) (FOG_TOGGLE ? 1 : 0)); // 9
+		s.writeByte((byte) (GROUND_ITEM_TOGGLE ? 1 : 0)); // 10
+		s.writeByte((byte) (AUTO_MESSAGE_SWITCH_TOGGLE ? 1 : 0)); // 11
+		s.writeByte((byte) (BATCH_PROGRESSION ? 1 : 0)); // 12
+		s.writeByte((byte) (SIDE_MENU_TOGGLE ? 1 : 0)); // 13
+		s.writeByte((byte) (INVENTORY_COUNT_TOGGLE ? 1 : 0)); // 14
+		s.writeByte((byte) (ZOOM_VIEW_TOGGLE ? 1 : 0)); // 15
+		s.writeByte((byte) (MENU_COMBAT_STYLE_TOGGLE ? 1 : 0)); // 16
+		s.writeByte((byte) (FIGHTMODE_SELECTOR_TOGGLE ? 1 : 0)); // 17
+		s.writeByte((byte) (EXPERIENCE_COUNTER_TOGGLE ? 1 : 0)); // 18
+		s.writeByte((byte) (EXPERIENCE_DROPS_TOGGLE ? 1 : 0)); // 19
+		s.writeByte((byte) (ITEMS_ON_DEATH_MENU ? 1 : 0)); // 20
+		s.writeByte((byte) (SHOW_ROOF_TOGGLE ? 1 : 0)); // 21
+		s.writeByte((byte) (WANT_HIDE_IP ? 1 : 0)); // 22
+		s.writeByte((byte) (WANT_REMEMBER ? 1 : 0)); // 23
+		s.writeByte((byte) (WANT_GLOBAL_CHAT ? 1 : 0)); // 24
+		s.writeByte((byte) (WANT_SKILL_MENUS ? 1 : 0)); // 25
+		s.writeByte((byte) (WANT_QUEST_MENUS ? 1 : 0)); // 26
+		s.writeByte((byte) (WANT_EXPERIENCE_ELIXIRS ? 1 : 0)); // 27
+		s.writeByte((byte) (WANT_KEYBOARD_SHORTCUTS ? 1 : 0)); // 28
+		s.writeByte((byte) (WANT_CUSTOM_BANKS ? 1 : 0)); // 29
+		s.writeByte((byte) (WANT_BANK_PINS ? 1 : 0)); // 30
+		s.writeByte((byte) (WANT_BANK_NOTES ? 1 : 0)); // 31
+		s.writeByte((byte) (WANT_CERT_DEPOSIT ? 1 : 0)); // 32
+		s.writeByte((byte) (CUSTOM_FIREMAKING ? 1 : 0)); // 33
+		s.writeByte((byte) (WANT_DROP_X ? 1 : 0)); // 34
+		s.writeByte((byte) (WANT_EXP_INFO ? 1 : 0)); // 35
+		s.writeByte((byte) (WANT_WOODCUTTING_GUILD ? 1 : 0)); // 36
+		s.writeByte((byte) (WANT_DECANTING ? 1 : 0)); // 37
+		s.writeByte((byte) (WANT_CERTS_TO_BANK ? 1 : 0)); // 38
+		s.writeByte((byte) (WANT_CUSTOM_RANK_DISPLAY ? 1 : 0)); // 39
+		s.writeByte((byte) (RIGHT_CLICK_BANK ? 1 : 0)); // 40
+		s.writeByte((byte) (FIX_OVERHEAD_CHAT ? 1 : 0)); // 41
+		s.writeString(WELCOME_TEXT); // 42
+		s.writeByte((byte) (MEMBER_WORLD ? 1 : 0)); // 43
+		s.writeByte((byte) (DISPLAY_LOGO_SPRITE ? 1 : 0)); // 44
+		s.writeString(LOGO_SPRITE_ID); // 45
+		s.writeByte((byte) FPS); // 46
+		s.writeByte((byte) (WANT_EMAIL ? 1 : 0)); // 47
+		s.writeByte((byte) (WANT_REGISTRATION_LIMIT ? 1 : 0)); // 48
 		return s;
 	}
 
@@ -566,12 +614,7 @@ public class ActionSender {
 	public static void sendLogoutRequestConfirm(final Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_LOGOUT_REQUEST_CONFIRM.opcode);
-		player.getChannel().writeAndFlush(s.toPacket()).addListener(new ChannelFutureListener() {
-			@Override
-			public void operationComplete(ChannelFuture arg0) throws Exception {
-				arg0.channel().close();
-			}
-		});
+		player.getChannel().writeAndFlush(s.toPacket()).addListener((ChannelFutureListener) arg0 -> arg0.channel().close());
 	}
 
 	/**
@@ -717,7 +760,7 @@ public class ActionSender {
 		s.writeByte((byte) stat);
 		s.writeByte((byte) player.getSkills().getLevel(stat));
 		s.writeByte((byte) player.getSkills().getMaxStat(stat));
-		s.writeInt((int) player.getSkills().getExperience(stat));
+		s.writeInt(player.getSkills().getExperience(stat));
 
 		player.write(s.toPacket());
 	}
@@ -726,7 +769,7 @@ public class ActionSender {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_EXPERIENCE.opcode);
 		s.writeByte((byte) stat);
-		s.writeInt((int) p.getSkills().getExperience(stat));
+		s.writeInt(p.getSkills().getExperience(stat));
 		p.write(s.toPacket());
 	}
 
@@ -741,7 +784,7 @@ public class ActionSender {
 		for (int lvl : player.getSkills().getMaxStats())
 			s.writeByte((byte) lvl);
 		for (int exp : player.getSkills().getExperiences())
-			s.writeInt((int) exp);
+			s.writeInt(exp);
 
 		s.writeByte(player.getQuestPoints());
 		player.write(s.toPacket());
@@ -934,7 +977,7 @@ public class ActionSender {
 	 * Sends the elixir timer
 	 */
 	public static void sendElixirTimer(Player player, int seconds) {
-		if (!Constants.GameServer.WANT_EXPERIENCE_ELIXIRS) return;
+		if (!WANT_EXPERIENCE_ELIXIRS) return;
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_ELIXIR.opcode);
 		s.writeShort((int) (((double) seconds / 32D) * 50));
@@ -1010,7 +1053,7 @@ public class ActionSender {
 
 				int timeTillShutdown = Server.getServer().timeTillShutdown();
 				if (timeTillShutdown > -1)
-					startShutdown(p, (int) (timeTillShutdown / 1000));
+					startShutdown(p, (timeTillShutdown / 1000));
 
 				int elixir = p.getElixir();
 				if (elixir > -1)
@@ -1028,7 +1071,7 @@ public class ActionSender {
 
 				sendWakeUp(p, false, true);
 				sendLoginBox(p);
-				sendMessage(p, null, 0, MessageType.QUEST, "Welcome to " + Constants.GameServer.SERVER_NAME + "!", 0);
+				sendMessage(p, null, 0, MessageType.QUEST, "Welcome to " + SERVER_NAME + "!", 0);
 				//sendMessage(p, null, 0, MessageType.QUEST, "For guides and tips - please visit http://runescapeclassic.wikia.com", 0);
 				if (p.isMuted()) {
 					sendMessage(p, "You are muted for "
@@ -1057,7 +1100,7 @@ public class ActionSender {
 				}*/
 
 				if (!p.getLocation().inWilderness()) {
-					if (Constants.GameServer.SPAWN_AUCTION_NPCS) {
+					if (SPAWN_AUCTION_NPCS) {
 						Market.getInstance().addCollectableItemsNotificationTask(p);
 					}
 				}
@@ -1115,7 +1158,7 @@ public class ActionSender {
 	}
 
 	public static void sendKillUpdate(Player player, long killedHash, long killerHash, int type) {
-		if (!Constants.GameServer.WANT_KILL_FEED) return;
+		if (!WANT_KILL_FEED) return;
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_KILL_ANNOUNCEMENT.opcode);
 		pb.writeString(DataConversions.hashToUsername(killedHash));
 		pb.writeString(DataConversions.hashToUsername(killerHash));
@@ -1296,7 +1339,7 @@ public class ActionSender {
 
 		private int opcode;
 
-		private Opcode(int i) {
+		Opcode(int i) {
 			this.opcode = i;
 		}
 	}

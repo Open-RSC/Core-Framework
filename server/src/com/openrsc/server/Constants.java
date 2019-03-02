@@ -126,7 +126,7 @@ public final class Constants {
 		/**
 		 * Sprite used for client welcome screen logo
 		 */
-		//public static int LOGO_SPRITE_ID = 2010;
+		public static String LOGO_SPRITE_ID = "2010";
 		/**
 		 * NPC blocking
 		 * 0 = No NPC blocks
@@ -196,7 +196,7 @@ public final class Constants {
 		public static boolean STRICT_PDART_CHECK = false;
 		public static boolean STRICT_PKNIFE_CHECK = false;
 		public static boolean STRICT_PSPEAR_CHECK = false;
-		//public static int FPS = 50;
+		public static int FPS = 50;
 		public static boolean WANT_EMAIL = false;
 		public static boolean WANT_REGISTRATION_LIMIT = false;
 		//loosened checks
@@ -241,8 +241,8 @@ public final class Constants {
 			VIEW_DISTANCE = Integer.parseInt(props.getProperty("view_distance"));
 			AVATAR_GENERATOR = Boolean.parseBoolean(props.getProperty("avatar_generator"));
 			DISPLAY_LOGO_SPRITE = Boolean.parseBoolean(props.getProperty("display_logo_sprite"));
-			//LOGO_SPRITE_ID = Integer.parseInt(props.getProperty("logo_sprite_id"));
-			//FPS = Integer.parseInt(props.getProperty("client_fps"));
+			LOGO_SPRITE_ID = props.getProperty("logo_sprite_id");
+			FPS = Integer.parseInt(props.getProperty("client_fps"));
 
 			// Game confs
 			WORLD_NUMBER = Integer.parseInt(props.getProperty("world_number"));
