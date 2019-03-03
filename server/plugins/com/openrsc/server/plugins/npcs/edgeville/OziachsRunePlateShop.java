@@ -39,8 +39,7 @@ public class OziachsRunePlateShop implements ShopInterface,
 	public void onTalkToNpc(final Player p, final Npc n) {
 		playerTalk(p, n, "I have slain the dragon");
 		npcTalk(p, n, "Well done");
-		final int option = showMenu(p, n, new String[]{
-			"Can I buy a rune plate mail body now please?", "Thank you"});
+		final int option = showMenu(p, n, "Can I buy a rune plate mail body now please?", "Thank you");
 		if (option == 0) {
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);

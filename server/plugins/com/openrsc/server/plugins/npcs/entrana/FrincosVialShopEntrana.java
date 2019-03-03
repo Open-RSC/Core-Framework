@@ -12,11 +12,14 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
+
 public class FrincosVialShopEntrana implements ShopInterface,
 	TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 3000, 100, 70, 2,
-		new Item(465, 50), new Item(468, 3), new Item(270, 50));
+		new Item(ItemId.EMPTY_VIAL.id(), 50), new Item(ItemId.PESTLE_AND_MORTAR.id(), 3), new Item(ItemId.EYE_OF_NEWT.id(), 50));
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
@@ -33,7 +36,7 @@ public class FrincosVialShopEntrana implements ShopInterface,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 297;
+		return n.getID() == NpcId.FRINCOS.id();
 	}
 
 	@Override

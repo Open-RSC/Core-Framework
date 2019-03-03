@@ -9,6 +9,9 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.*;
 
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
+
 public class MakeOverMage implements TalkToNpcListener,
 	TalkToNpcExecutiveListener {
 	/**
@@ -24,10 +27,10 @@ public class MakeOverMage implements TalkToNpcListener,
 		int opt = showMenu(p, n, "I'm happy with how I look thank you",
 			"Yes change my looks please");
 		if (opt == 1) {
-			if (!hasItem(p, 10, 3000)) {
+			if (!hasItem(p, ItemId.COINS.id(), 3000)) {
 				playerTalk(p, n, "I'll just go get the cash");
 			} else {
-				removeItem(p, 10, 3000);
+				removeItem(p, ItemId.COINS.id(), 3000);
 				p.setChangingAppearance(true);
 				ActionSender.sendAppearanceScreen(p);
 			}
@@ -36,7 +39,7 @@ public class MakeOverMage implements TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 339;
+		return n.getID() == NpcId.MAKE_OVER_MAGE.id();
 	}
 
 }
