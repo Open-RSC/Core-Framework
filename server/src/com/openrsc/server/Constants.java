@@ -178,6 +178,7 @@ public final class Constants {
 		public static boolean WANT_DROP_X = false;
 		public static boolean WANT_EXP_INFO = false;
 		public static boolean WANT_WOODCUTTING_GUILD = false;
+		public static boolean WANT_MISSING_GUILD_GREETINGS = false;
 		public static boolean WANT_DECANTING = false;
 		public static boolean WANT_CERTS_TO_BANK = false;
 		public static boolean NPC_KILL_MESSAGES = false;
@@ -289,6 +290,7 @@ public final class Constants {
 			WANT_DROP_X = Boolean.parseBoolean(props.getProperty("want_drop_x"));
 			WANT_EXP_INFO = Boolean.parseBoolean(props.getProperty("want_exp_info"));
 			WANT_WOODCUTTING_GUILD = Boolean.parseBoolean(props.getProperty("want_woodcutting_guild"));
+			WANT_MISSING_GUILD_GREETINGS = Boolean.parseBoolean(props.getProperty("want_missing_guild_greetings"));
 			WANT_DECANTING = Boolean.parseBoolean(props.getProperty("want_decanting"));
 			WANT_CERTS_TO_BANK = Boolean.parseBoolean(props.getProperty("want_certs_to_bank"));
 			WANT_CUSTOM_RANK_DISPLAY = Boolean.parseBoolean(props.getProperty("want_custom_rank_display"));

@@ -11,19 +11,20 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.*;
 
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
+
 public final class HudoGlenfadGroceries implements ShopInterface,
 	TalkToNpcExecutiveListener, TalkToNpcListener {
 
-	public static int HUDO_GLENFAD = 537;
-
 	private final Shop shop = new Shop(false, 30000, 100, 55, 1,
-		new Item(881, 8), new Item(873, 5), new Item(136, 5),
-		new Item(898, 5), new Item(241, 5), new Item(348, 3),
-		new Item(18, 3), new Item(320, 5), new Item(319, 5),
-		new Item(863, 5), new Item(857, 5), new Item(855, 5),
-		new Item(861, 5), new Item(765, 3), new Item(834, 5),
-		new Item(337, 8), new Item(772, 5), new Item(871, 5),
-		new Item(22, 5), new Item(13, 5), new Item(899, 5));
+		new Item(ItemId.GIANNE_DOUGH.id(), 8), new Item(ItemId.EQUA_LEAVES.id(), 5), new Item(ItemId.POT_OF_FLOUR.id(), 5),
+		new Item(ItemId.GNOME_SPICE.id(), 5), new Item(ItemId.ONION.id(), 5), new Item(ItemId.POTATO.id(), 3),
+		new Item(ItemId.CABBAGE.id(), 3), new Item(ItemId.TOMATO.id(), 5), new Item(ItemId.CHEESE.id(), 5),
+		new Item(ItemId.LIME.id(), 5), new Item(ItemId.ORANGE.id(), 5), new Item(ItemId.LEMON.id(), 5),
+		new Item(ItemId.FRESH_PINEAPPLE.id(), 5), new Item(ItemId.DWELLBERRIES.id(), 3), new Item(ItemId.COCKTAIL_SHAKER.id(), 5),
+		new Item(ItemId.CHOCOLATE_BAR.id(), 8), new Item(ItemId.CHOCOLATE_DUST.id(), 5), new Item(ItemId.CREAM.id(), 5),
+		new Item(ItemId.MILK.id(), 5), new Item(ItemId.KNIFE.id(), 5), new Item(ItemId.GIANNE_COOK_BOOK.id(), 5));
 
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
@@ -47,7 +48,7 @@ public final class HudoGlenfadGroceries implements ShopInterface,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == HUDO_GLENFAD;
+		return n.getID() == NpcId.HUDO_GLENFAD.id();
 	}
 
 	@Override

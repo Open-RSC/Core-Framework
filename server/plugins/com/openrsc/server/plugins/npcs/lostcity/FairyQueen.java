@@ -7,20 +7,19 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.*;
 
+import com.openrsc.server.external.NpcId;
+
 public class FairyQueen implements TalkToNpcListener,
 	TalkToNpcExecutiveListener {
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 392) {
-			return true;
-		}
-		return false;
+		return n.getID() == NpcId.FAIRY_QUEEN.id();
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 392) {
+		if (n.getID() == NpcId.FAIRY_QUEEN.id()) {
 			int menu = showMenu(p, n, "How do crops and such survive down here?",
 				"What's so good about this place?");
 			if (menu == 0) {

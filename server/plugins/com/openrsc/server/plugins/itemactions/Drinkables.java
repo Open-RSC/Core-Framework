@@ -41,15 +41,15 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 			|| id == ItemId.ODD_LOOKING_COCKTAIL.id()) {
 			handleCocktail(player, item);
 
-		} else if (id == ItemId.FRUIT_BLAST.id() || id == ItemId.BLURBERRY_FRUIT_BLAST.id()
-			|| id == ItemId.PINEAPPLE_PUNCH.id() || id == ItemId.BLURBERRY_PINEAPPLE_PUNCH.id()) {
+		} else if (id == ItemId.FRUIT_BLAST.id() || id == ItemId.BLURBERRY_BARMAN_FRUIT_BLAST.id()
+			|| id == ItemId.PINEAPPLE_PUNCH.id() || id == ItemId.BLURBERRY_BARMAN_PINEAPPLE_PUNCH.id()) {
 			handleFruitCocktail(player, item);
 
-		} else if (id == ItemId.BLURBERRY_SPECIAL.id() || id == ItemId.BLURBERRY_BLURBERRY_SPECIAL.id()
-			|| id == ItemId.WIZARD_BLIZZARD.id() || id == ItemId.BLURBERRY_WIZARD_BLIZZARD.id()
-			|| id == ItemId.SGG.id() || id == ItemId.BLURBERRY_SGG.id()
-			|| id == ItemId.CHOCOLATE_SATURDAY.id() || id == ItemId.BLURBERRY_CHOCOLATE_SATURDAY.id()
-			|| id == ItemId.DRUNK_DRAGON.id() || id == ItemId.BLURBERRY_DRUNK_DRAGON.id()) {
+		} else if (id == ItemId.BLURBERRY_SPECIAL.id() || id == ItemId.BLURBERRY_BARMAN_BLURBERRY_SPECIAL.id()
+			|| id == ItemId.WIZARD_BLIZZARD.id() || id == ItemId.BLURBERRY_BARMAN_WIZARD_BLIZZARD.id()
+			|| id == ItemId.SGG.id() || id == ItemId.BLURBERRY_BARMAN_SGG.id()
+			|| id == ItemId.CHOCOLATE_SATURDAY.id() || id == ItemId.BLURBERRY_BARMAN_CHOCOLATE_SATURDAY.id()
+			|| id == ItemId.DRUNK_DRAGON.id() || id == ItemId.BLURBERRY_BARMAN_DRUNK_DRAGON.id()) {
 			handleSpecialCocktail(player, item);
 
 		} else if (id == ItemId.BAD_WINE.id())

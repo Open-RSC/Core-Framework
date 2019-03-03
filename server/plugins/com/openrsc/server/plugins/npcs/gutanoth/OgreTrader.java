@@ -12,22 +12,25 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
+
 public class OgreTrader implements ShopInterface, TalkToNpcListener,
 	TalkToNpcExecutiveListener {
 
 	private final Shop shop = new Shop(false, 15000, 130, 40, 3,
-		new Item(135, 3),
-		new Item(140, 2),
-		new Item(144, 2),
-		new Item(21, 2),
-		new Item(166, 2),
-		new Item(167, 2),
-		new Item(168, 5),
-		new Item(1263, 10));
+		new Item(ItemId.POT.id(), 3),
+		new Item(ItemId.JUG.id(), 2),
+		new Item(ItemId.KNIFE.id(), 2),
+		new Item(ItemId.BUCKET.id(), 2),
+		new Item(ItemId.TINDERBOX.id(), 2),
+		new Item(ItemId.CHISEL.id(), 2),
+		new Item(ItemId.HAMMER.id(), 5),
+		new Item(ItemId.SLEEPING_BAG.id(), 10));
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 687;
+		return n.getID() == NpcId.OGRE_TRADER_GENSTORE.id();
 	}
 
 	@Override

@@ -7,25 +7,20 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Gnomes implements TalkToNpcListener, TalkToNpcExecutiveListener {
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 
-	public static final int GNOME_LOCAL_RED = 592;
-	public static final int GNOME_LOCAL_PURPLE = 593;
-	public static final int GNOME_CHILD_GREEN_PURPLE = 591;
-	public static final int GNOME_CHILD_PURPLE_MEGENTA = 586;
-	public static final int GNOME_CHILD_TURQUOISE_MEGENTA = 585;
+public class Gnomes implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == GNOME_LOCAL_RED || n.getID() == GNOME_LOCAL_PURPLE || n.getID() == GNOME_CHILD_GREEN_PURPLE || n.getID() == GNOME_CHILD_PURPLE_MEGENTA || n.getID() == GNOME_CHILD_TURQUOISE_MEGENTA) {
-			return true;
-		}
-		return false;
+		return inArray(n.getID(), NpcId.GNOME_LOCAL_RED.id(), NpcId.GNOME_LOCAL_PURPLE.id(), NpcId.GNOME_CHILD_GREEN_PURPLE.id(),
+				NpcId.GNOME_CHILD_PURPLE_PINK.id(), NpcId.GNOME_CHILD_PINK_GREEN.id(), NpcId.GNOME_CHILD_CREAM_PURPLE.id());
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == GNOME_LOCAL_RED) {
+		if (n.getID() == NpcId.GNOME_LOCAL_RED.id()) {
 			playerTalk(p, n, "hello");
 			int chatRandom = p.getRandom().nextInt(4);
 			switch (chatRandom) {
@@ -53,8 +48,7 @@ public class Gnomes implements TalkToNpcListener, TalkToNpcExecutiveListener {
 					break;
 			}
 		}
-		if (n.getID() == GNOME_LOCAL_PURPLE) {
-
+		else if (n.getID() == NpcId.GNOME_LOCAL_PURPLE.id()) {
 			playerTalk(p, n, "hello");
 			int chatRandom = p.getRandom().nextInt(4);
 			switch (chatRandom) {
@@ -65,7 +59,7 @@ public class Gnomes implements TalkToNpcListener, TalkToNpcExecutiveListener {
 					npcTalk(p, n, "here get this worm down you",
 						"it'll do you the world of good");
 					p.message("the gnome gives you a worm");
-					addItem(p, 897, 1);
+					addItem(p, ItemId.KING_WORM.id(), 1);
 					playerTalk(p, n, "thanks!");
 					break;
 				case 1:
@@ -84,7 +78,7 @@ public class Gnomes implements TalkToNpcListener, TalkToNpcExecutiveListener {
 				// case 3 nothing but hello.
 			}
 		}
-		if (n.getID() == GNOME_CHILD_GREEN_PURPLE) {
+		else if (n.getID() == NpcId.GNOME_CHILD_GREEN_PURPLE.id() || n.getID() == NpcId.GNOME_CHILD_CREAM_PURPLE.id()) {
 			playerTalk(p, n, "hi there");
 			int chatRandom = p.getRandom().nextInt(6);
 			switch (chatRandom) {
@@ -111,7 +105,7 @@ public class Gnomes implements TalkToNpcListener, TalkToNpcExecutiveListener {
 					npcTalk(p, n, "hello, would you like a worm?");
 					playerTalk(p, n, "erm ok");
 					p.message("the gnome gives you a worm");
-					addItem(p, 897, 1);
+					addItem(p, ItemId.KING_WORM.id(), 1);
 					playerTalk(p, n, "thanks");
 					npcTalk(p, n, "in the gnome village those who are needy..",
 						"recieve what they need, and those who are able..",
@@ -126,7 +120,7 @@ public class Gnomes implements TalkToNpcListener, TalkToNpcExecutiveListener {
 					break;
 			}
 		}
-		if (n.getID() == GNOME_CHILD_PURPLE_MEGENTA) {
+		else if (n.getID() == NpcId.GNOME_CHILD_PURPLE_PINK.id()) {
 			playerTalk(p, n, "hello little man");
 			int chatRandom = p.getRandom().nextInt(9);
 			switch (chatRandom) {
@@ -152,7 +146,7 @@ public class Gnomes implements TalkToNpcListener, TalkToNpcExecutiveListener {
 					npcTalk(p, n, "hello, would you like a worm?");
 					playerTalk(p, n, "erm ok");
 					p.message("the gnome gives you a worm");
-					addItem(p, 897, 1);
+					addItem(p, ItemId.KING_WORM.id(), 1);
 					playerTalk(p, n, "thanks");
 					npcTalk(p, n, "in the gnome village those who are needy..",
 						"recieve what they need, and those who are able..",
@@ -187,7 +181,7 @@ public class Gnomes implements TalkToNpcListener, TalkToNpcExecutiveListener {
 					break;
 			}
 		}
-		if (n.getID() == GNOME_CHILD_TURQUOISE_MEGENTA) {
+		else if (n.getID() == NpcId.GNOME_CHILD_PINK_GREEN.id()) {
 			playerTalk(p, n, "hello");
 			int chatRandom = p.getRandom().nextInt(7);
 			switch (chatRandom) {

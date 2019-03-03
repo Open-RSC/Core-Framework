@@ -12,20 +12,20 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
+
 public final class CraftingEquipmentShops implements ShopInterface,
 	TalkToNpcExecutiveListener, TalkToNpcListener {
 
-	public static final int ROMMIK = 156;
-	public static final int DOMMIK = 173;
-
 	private final Shop shop = new Shop(false, 5000, 100, 65, 2,
-		new Item(167, 2), new Item(293, 4), new Item(295, 2),
-		new Item(294, 2), new Item(39, 3), new Item(43, 100),
-		new Item(386, 3));
+		new Item(ItemId.CHISEL.id(), 2), new Item(ItemId.RING_MOULD.id(), 4), new Item(ItemId.NECKLACE_MOULD.id(), 2),
+		new Item(ItemId.AMULET_MOULD.id(), 2), new Item(ItemId.NEEDLE.id(), 3), new Item(ItemId.THREAD.id(), 100),
+		new Item(ItemId.HOLY_SYMBOL_MOULD.id(), 3));
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
-		return n.getID() == ROMMIK || n.getID() == DOMMIK;
+		return n.getID() == NpcId.ROMMIK.id() || n.getID() == NpcId.DOMMIK.id();
 	}
 
 	@Override
@@ -41,7 +41,6 @@ public final class CraftingEquipmentShops implements ShopInterface,
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
 		npcTalk(p, n, "Would you like to buy some crafting equipment");
-
 		int option = showMenu(p, n, "No I've got all the crafting equipment I need", "Let's see what you've got then");
 		if (option == 0) {
 			npcTalk(p, n, "Ok fair well on your travels");

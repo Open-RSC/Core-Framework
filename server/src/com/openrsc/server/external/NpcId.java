@@ -9,7 +9,7 @@ public enum NpcId {
 	 * Others are attackable monsters and don't have particular behavior
 	 */
 	
-	NOTHING(-1),
+	NOBODY(-1),
 	UNICORN(0),
 	BOB(1),
 	SHEEP(2),
@@ -538,7 +538,7 @@ public enum NpcId {
 	//OGRE(525),
 	//GUARD(526),
 	//GUARD(527),
-	//SHOP_KEEPER(528),
+	SHOP_KEEPER_TRAINING_CAMP(528),
 	BARTENDER_YANILLE(529),
 	FRENITA(530),
 	OGRE_CHIEFTAN(531),
@@ -593,17 +593,17 @@ public enum NpcId {
 	BLURBERRY_BARMAN(580),
 	GNOME_WAITER(581),
 	GNOME_GUARD_GRANDTREE(582),
-	//GNOME_CHILD(583),
+	GNOME_CHILD_CREAM_PURPLE(583),
 	EARTH_WARRIOR(584),
-	//GNOME_CHILD(585),
-	//GNOME_CHILD(586),
+	GNOME_CHILD_PINK_GREEN(585),
+	GNOME_CHILD_PURPLE_PINK(586),
 	GULLUCK(587),
 	GUNNJORN(588),
 	ZADIMUS(589),
 	BRIMSTAIL(590),
-	//GNOME_CHILD(591),
-	//GNOME_LOCAL(592),
-	//GNOME_LOCAL(593),
+	GNOME_CHILD_GREEN_PURPLE(591),
+	GNOME_LOCAL_RED(592),
+	GNOME_LOCAL_PURPLE(593),
 	//MOSS_GIANT(594),
 	GNOME_BALLER_2XP_OUTER1(595),
 	GOALIE(596),
@@ -816,7 +816,7 @@ public enum NpcId {
 	}
 
 	public static NpcId getById(Integer id) {
-		return byId.getOrDefault(id, NpcId.NOTHING);
+		return byId.getOrDefault(id, NpcId.NOBODY);
 	}
 
 	/**
