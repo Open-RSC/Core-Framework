@@ -12,17 +12,20 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
+
 public final class PeksaHelmets implements ShopInterface,
 	TalkToNpcExecutiveListener, TalkToNpcListener {
 
-	private final Shop shop = new Shop(false, 25000, 100, 60, 1, new Item(104,
-		5), new Item(5, 3), new Item(105, 3), new Item(106, 1),
-		new Item(107, 1), new Item(108, 4), new Item(6, 3),
-		new Item(109, 2), new Item(110, 1), new Item(111, 1));
+	private final Shop shop = new Shop(false, 25000, 100, 60, 1, new Item(ItemId.MEDIUM_BRONZE_HELMET.id(),
+		5), new Item(ItemId.MEDIUM_IRON_HELMET.id(), 3), new Item(ItemId.MEDIUM_STEEL_HELMET.id(), 3), new Item(ItemId.MEDIUM_MITHRIL_HELMET.id(), 1),
+		new Item(ItemId.MEDIUM_ADAMANTITE_HELMET.id(), 1), new Item(ItemId.LARGE_BRONZE_HELMET.id(), 4), new Item(ItemId.LARGE_IRON_HELMET.id(), 3),
+		new Item(ItemId.LARGE_STEEL_HELMET.id(), 2), new Item(ItemId.LARGE_MITHRIL_HELMET.id(), 1), new Item(ItemId.LARGE_ADAMANTITE_HELMET.id(), 1));
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
-		return n.getID() == 75;
+		return n.getID() == NpcId.PEKSA.id();
 	}
 
 	@Override

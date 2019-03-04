@@ -12,9 +12,13 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
+
 public class DavonShop implements ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
 
-	private final Shop shop = new Shop(false, 900000000, 120, 90, 2, new Item(44, 0), new Item(314, 1), new Item(315, 0), new Item(316, 0), new Item(317, 0));
+	private final Shop shop = new Shop(false, 900000000, 120, 90, 2, new Item(ItemId.UNSTRUNG_HOLY_SYMBOL_OF_SARADOMIN.id(), 0),
+			new Item(ItemId.SAPPHIRE_AMULET_OF_MAGIC.id(), 1), new Item(ItemId.EMERALD_AMULET_OF_PROTECTION.id(), 0), new Item(ItemId.RUBY_AMULET_OF_STRENGTH.id(), 0), new Item(ItemId.DIAMOND_AMULET_OF_POWER.id(), 0));
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
@@ -34,7 +38,7 @@ public class DavonShop implements ShopInterface, TalkToNpcExecutiveListener, Tal
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 278;
+		return n.getID() == NpcId.DAVON.id();
 	}
 
 	@Override

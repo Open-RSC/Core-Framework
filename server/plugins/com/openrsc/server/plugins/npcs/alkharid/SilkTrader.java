@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.npcs.alkharid;
 
 import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -8,19 +9,33 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.*;
 
+import com.openrsc.server.Constants.Quests;
+
 public class SilkTrader implements TalkToNpcListener,
 	TalkToNpcExecutiveListener {
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 71;
+		return n.getID() == NpcId.SILK_TRADER.id();
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
+		final String[] options;
 		npcTalk(p, n, "Do you want to buy any fine silks?");
-		int option1 = showMenu(p, n, "How much are they?",
-			"No. Silk doesn't suit me");
+		if (p.getQuestStage(Quests.FAMILY_CREST) <= 2 || p.getQuestStage(Quests.FAMILY_CREST) >= 5) {
+			options = new String[]{
+				"How much are they?",
+				"No. Silk doesn't suit me"
+			};
+		} else {
+			options = new String[]{
+				"How much are they?",
+				"No. Silk doesn't suit me",
+				"I'm in search of a man named adam fitzharmon"
+			};
+		}
+		int option1 = showMenu(p, n, options);
 		if (option1 == 0) {
 			npcTalk(p, n, "3 Coins");
 
@@ -54,6 +69,10 @@ public class SilkTrader implements TalkToNpcListener,
 					playerTalk(p, n, "Oh dear. I don't have enough money");
 				}
 			}
+		} else if (option1 == 2) {
+			npcTalk(p, n, "I haven't seen him",
+					"I'm sure if he's been to Al Kharid recently",
+					"Someone around here will have seen him though");
 		}
 	}
 }

@@ -1,5 +1,7 @@
 package com.openrsc.server.plugins.npcs.ardougne.east;
 
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -15,8 +17,8 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class SilverMerchant implements ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
 
-	private final Shop shop = new Shop(false, 60000 * 2, 100, 70, 2, new Item(44,
-		2), new Item(383, 1), new Item(384, 1));
+	private final Shop shop = new Shop(false, 60000 * 2, 100, 70, 2, new Item(ItemId.UNSTRUNG_HOLY_SYMBOL_OF_SARADOMIN.id(),
+		2), new Item(ItemId.SILVER.id(), 1), new Item(ItemId.SILVER_BAR.id(), 1));
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
@@ -25,11 +27,11 @@ public class SilverMerchant implements ShopInterface, TalkToNpcExecutiveListener
 				"That you have just stolen from me",
 				"guards guards");
 
-			Npc attacker = getNearestNpc(p, 323, 5); // Paladin first
+			Npc attacker = getNearestNpc(p, NpcId.PALADIN.id(), 5); // Paladin first
 			if (attacker == null)
-				attacker = getNearestNpc(p, 322, 5); // Knight second
+				attacker = getNearestNpc(p, NpcId.KNIGHT.id(), 5); // Knight second
 			if (attacker == null)
-				attacker = getNearestNpc(p, 321, 5); // Guard third
+				attacker = getNearestNpc(p, NpcId.GUARD_ARDOUGNE.id(), 5); // Guard third
 
 			if (attacker != null)
 				attacker.setChasing(p);
@@ -48,7 +50,7 @@ public class SilverMerchant implements ShopInterface, TalkToNpcExecutiveListener
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 328;
+		return n.getID() == NpcId.SILVER_MERCHANT.id();
 	}
 
 	@Override

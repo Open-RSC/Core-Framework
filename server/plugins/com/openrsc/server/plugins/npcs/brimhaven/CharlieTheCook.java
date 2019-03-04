@@ -1,24 +1,20 @@
 package com.openrsc.server.plugins.npcs.brimhaven;
 
-import com.openrsc.server.model.Shop;
-import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
-public class CharlieTheCook implements ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
+import com.openrsc.server.external.NpcId;
 
-	private final Shop shop = new Shop(false, 10000, 110, 75, 2,
-		new Item(362, 5), new Item(551, 5), new Item(367, 5), new Item(373, 3), new Item(370, 2));
+public class CharlieTheCook implements TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 261) {
+		if (n.getID() == NpcId.CHARLIE_THE_COOK.id()) {
 			npcTalk(p, n, "Hey what are you doing round here");
 			int menu = showMenu(p, n,
 				"I'm looking for a gherkin",
@@ -60,20 +56,7 @@ public class CharlieTheCook implements ShopInterface, TalkToNpcExecutiveListener
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 261) {
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public Shop[] getShops() {
-		return new Shop[]{shop};
-	}
-
-	@Override
-	public boolean isMembers() {
-		return true;
+		return n.getID() == NpcId.CHARLIE_THE_COOK.id();
 	}
 
 }

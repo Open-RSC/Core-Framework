@@ -14,15 +14,15 @@ import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isPhoenixGang;
 
+import com.openrsc.server.external.NpcId;
+
 
 public class WeaponMaster implements TalkToNpcListener, TalkToNpcExecutiveListener,
 	PickupExecutiveListener, PickupListener, PlayerAttackNpcExecutiveListener, PlayerAttackNpcListener {
 
-	public static final int WEAPONMASTER = 37;
-
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return (n.getID() == WEAPONMASTER);
+		return n.getID() == NpcId.WEAPONSMASTER.id();
 	}
 
 	@Override
@@ -37,37 +37,24 @@ public class WeaponMaster implements TalkToNpcListener, TalkToNpcExecutiveListen
 
 	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
-		return (n.getID() == WEAPONMASTER);
+		return n.getID() == NpcId.WEAPONSMASTER.id();
 	}
 
 	@Override
 	public boolean blockPickup(Player p, GroundItem i) {
-		if ((i.getX() == 107 || i.getX() == 105) && i.getY() == 1476) {
-			Npc weaponMaster = getNearestNpc(p, WEAPONMASTER, 20);
-			if (weaponMaster != null) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-		return false;
+		return (i.getX() == 107 || i.getX() == 105) && i.getY() == 1476 && getNearestNpc(p, NpcId.WEAPONSMASTER.id(), 20) != null;
 	}
 
 	@Override
 	public void onPickup(Player p, GroundItem i) {
 		if ((i.getX() == 107 || i.getX() == 105) && i.getY() == 1476) {
-			if (!p.getCache().hasKey("arrav_gang") || isBlackArmGang(p)) {
-				Npc weaponMaster = getNearestNpc(p, WEAPONMASTER, 20);
-				if (weaponMaster != null) {
-					npcTalk(p, weaponMaster, "Hey Thief!");
-					weaponMaster.setChasing(p);
-				}
-			} else if (isPhoenixGang(p)) {
-				Npc weaponMaster = getNearestNpc(p, WEAPONMASTER, 20);
-				if (weaponMaster != null) {
-					npcTalk(p, weaponMaster, "Hey, that's Straven's",
+			Npc weaponMaster = getNearestNpc(p, NpcId.WEAPONSMASTER.id(), 20);
+			if (weaponMaster != null && (!p.getCache().hasKey("arrav_gang") || isBlackArmGang(p))) {
+				npcTalk(p, weaponMaster, "Hey Thief!");
+				weaponMaster.setChasing(p);
+			} else if (weaponMaster != null && isPhoenixGang(p)) {
+				npcTalk(p, weaponMaster, "Hey, that's Straven's",
 						"He won't like you messing with that");
-				}
 			}
 		}
 	}

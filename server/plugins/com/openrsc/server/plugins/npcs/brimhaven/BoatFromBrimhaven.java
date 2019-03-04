@@ -13,11 +13,12 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.*;
 
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
+
 public class BoatFromBrimhaven implements TalkToNpcExecutiveListener,
 	TalkToNpcListener, IndirectTalkToNpcExecutiveListener, IndirectTalkToNpcListener,
 	ObjectActionListener, ObjectActionExecutiveListener {
-
-	public static final int OFFICER = 317;
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
@@ -40,10 +41,10 @@ public class BoatFromBrimhaven implements TalkToNpcExecutiveListener,
 			npcTalk(p, n,
 				"Because Asgarnia has banned the import of intoxicating spirits");
 		} else if (sub_opt == 1) {
-			if (hasItem(p, 318, 1)) {
+			if (hasItem(p, ItemId.KARAMJA_RUM.id(), 1)) {
 				npcTalk(p, n, "Aha trying to smuggle rum are we?");
 				message(p, "The customs official confiscates your rum");
-				removeItem(p, 318, 1);
+				removeItem(p, ItemId.KARAMJA_RUM.id(), 1);
 			} else {
 				npcTalk(p,
 					n,
@@ -51,7 +52,7 @@ public class BoatFromBrimhaven implements TalkToNpcExecutiveListener,
 					"Now you need to pay a boarding charge of 30 gold");
 				int pay_opt = showMenu(p, n, false, "Ok", "Oh, I'll not bother then");
 				if (pay_opt == 0) {
-					if (removeItem(p, 10, 30)) {
+					if (removeItem(p, ItemId.COINS.id(), 30)) {
 						playerTalk(p, n, "Ok");
 						message(p, "You pay 30 gold", "You board the ship");
 						movePlayer(p, 538, 617, true);
@@ -76,7 +77,7 @@ public class BoatFromBrimhaven implements TalkToNpcExecutiveListener,
 				if (p.getX() < 467 || p.getX() > 468) {
 					return;
 				}
-				Npc official = getNearestNpc(p, OFFICER, 5);
+				Npc official = getNearestNpc(p, NpcId.CUSTOMS_OFFICIAL.id(), 5);
 				if (official != null) {
 					official.initializeIndirectTalkScript(p);
 				} else {
@@ -88,12 +89,12 @@ public class BoatFromBrimhaven implements TalkToNpcExecutiveListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 317;
+		return n.getID() == NpcId.CUSTOMS_OFFICIAL.id();
 	}
 
 	@Override
 	public boolean blockIndirectTalkToNpc(Player p, Npc n) {
-		return n.getID() == 317;
+		return n.getID() == NpcId.CUSTOMS_OFFICIAL.id();
 	}
 
 	@Override

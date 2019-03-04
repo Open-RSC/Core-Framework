@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.npcs.alkharid;
 
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -16,8 +17,6 @@ import static com.openrsc.server.plugins.Functions.*;
 public final class GemTrader implements ShopInterface,
 	TalkToNpcExecutiveListener, TalkToNpcListener {
 
-	public static final int npcid = 308;
-
 	private final Shop shop = new Shop(false, 60000 * 10, 100, 70, 3,
 		new Item(ItemId.UNCUT_SAPPHIRE.id(), 1),
 		new Item(ItemId.UNCUT_EMERALD.id(), 1),
@@ -31,7 +30,7 @@ public final class GemTrader implements ShopInterface,
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
-		return n.getID() == npcid;
+		return n.getID() == NpcId.GEM_TRADER.id();
 	}
 
 	@Override
@@ -46,7 +45,7 @@ public final class GemTrader implements ShopInterface,
 
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
-		if (n.getID() == npcid) {
+		if (n.getID() == NpcId.GEM_TRADER.id()) {
 			npcTalk(p, n, "good day to you " + ((p.isMale()) ? "sir"
 				: "madam"), "Would you be interested in buying some gems?");
 

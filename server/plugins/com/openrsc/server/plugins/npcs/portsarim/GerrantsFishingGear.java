@@ -54,11 +54,15 @@ public final class GerrantsFishingGear implements
 			options = new String[]{"Let's see what you've got then",
 				"Sorry, I'm not interested"};
 		}
-		int option = showMenu(p, n, options);
+		int option = showMenu(p, n, false, options);
 		if (option == 0) {
+			playerTalk(p, n, "Let's see what you've got then");
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);
+		} else if (option == 1) {
+			playerTalk(p, n, "Sorry,I'm not interested");
 		} else if (option == 2) {
+			playerTalk(p, n, "I want to find out how to catch a lava eel");
 			npcTalk(p,
 				n,
 				"Lava eels eh?",

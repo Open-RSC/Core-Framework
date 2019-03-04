@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.npcs.ardougne.east;
 
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
@@ -43,7 +44,7 @@ public final class CaptainBarnaby implements ObjectActionListener,
 			npcTalk(p, n, "No I need to stay alive",
 				"I have a wife and family to support");
 		} else if (option == 1) {
-			if (p.getInventory().remove(10, 30) > -1) {
+			if (p.getInventory().remove(ItemId.COINS.id(), 30) > -1) {
 				message(p, "You pay 30 gold", "You board the ship");
 				p.teleport(467, 651, false);
 				sleep(1000);

@@ -9,11 +9,13 @@ import com.openrsc.server.util.rsc.DataConversions;
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.playerTalk;
 
+import com.openrsc.server.external.NpcId;
+
 public class Barbarians implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 76 || n.getID() == 78;
+		return n.getID() == NpcId.BARBARIAN.id() || n.getID() == NpcId.GUNTHOR_THE_BRAVE.id();
 	}
 
 	@Override
@@ -35,7 +37,7 @@ public class Barbarians implements TalkToNpcListener, TalkToNpcExecutiveListener
 		} else if (randomDiag == 4) {
 			p.message("The barbarian grunts");
 		} else if (randomDiag == 5) {
-			p.message("Ello");
+			npcTalk(p, n, "Good day, my dear fellow");
 		} else if (randomDiag == 6) {
 			npcTalk(p, n, "ug");
 		} else if (randomDiag == 7) {
@@ -46,7 +48,7 @@ public class Barbarians implements TalkToNpcListener, TalkToNpcExecutiveListener
 		} else if (randomDiag == 9) {
 			p.message("The barbarian ignores you");
 		} else if (randomDiag == 10) {
-			p.message("Grr");
+			npcTalk(p, n, "Grr");
 		}
 	}
 }

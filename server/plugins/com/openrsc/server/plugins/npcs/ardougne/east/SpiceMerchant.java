@@ -1,5 +1,7 @@
 package com.openrsc.server.plugins.npcs.ardougne.east;
 
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -15,7 +17,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class SpiceMerchant implements ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
 
-	private final Shop shop = new Shop(false, 15000, 100, 70, 2, new Item(707, 1));
+	private final Shop shop = new Shop(false, 15000, 100, 70, 2, new Item(ItemId.SPICE.id(), 1));
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
@@ -24,13 +26,13 @@ public class SpiceMerchant implements ShopInterface, TalkToNpcExecutiveListener,
 				"That you have just stolen from me",
 				"guards guards");
 
-			Npc attacker = getNearestNpc(p, 324, 5); // Hero first
+			Npc attacker = getNearestNpc(p, NpcId.HERO.id(), 5); // Hero first
 			if (attacker == null)
-				attacker = getNearestNpc(p, 323, 5); // Paladin second
+				attacker = getNearestNpc(p, NpcId.PALADIN.id(), 5); // Paladin second
 			if (attacker == null)
-				attacker = getNearestNpc(p, 322, 5); // Knight third
+				attacker = getNearestNpc(p, NpcId.KNIGHT.id(), 5); // Knight third
 			if (attacker == null)
-				attacker = getNearestNpc(p, 321, 5); // Guard fourth
+				attacker = getNearestNpc(p, NpcId.GUARD_ARDOUGNE.id(), 5); // Guard fourth
 
 			if (attacker != null)
 				attacker.setChasing(p);
@@ -38,10 +40,14 @@ public class SpiceMerchant implements ShopInterface, TalkToNpcExecutiveListener,
 		} else {
 			npcTalk(p, n, "Get your exotic spices here",
 				"rare very valuable spices here");
-			int menu = showMenu(p, n, "Lets have a look then", "No thank you I'm not interested");
+			//from wiki
+			int menu = showMenu(p, n, false, "Lets have a look them then", "No thank you I'm not interested");
 			if (menu == 0) {
+				playerTalk(p, n, "Lets have a look then");
 				p.setAccessingShop(shop);
 				ActionSender.showShop(p, shop);
+			} else if (menu == 1) {
+				playerTalk(p, n, "No thank you");
 			}
 		}
 	}
@@ -51,7 +57,7 @@ public class SpiceMerchant implements ShopInterface, TalkToNpcExecutiveListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 329;
+		return n.getID() == NpcId.SPICE_MERCHANT.id();
 	}
 
 	@Override

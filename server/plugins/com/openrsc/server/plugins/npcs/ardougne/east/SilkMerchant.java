@@ -1,5 +1,7 @@
 package com.openrsc.server.plugins.npcs.ardougne.east;
 
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -18,42 +20,46 @@ public class SilkMerchant implements TalkToNpcExecutiveListener, TalkToNpcListen
 				"That you have just stolen from me",
 				"guards guards");
 
-			Npc attacker = getNearestNpc(p, 321, 5); // Guard
+			Npc attacker = getNearestNpc(p, NpcId.GUARD_ARDOUGNE.id(), 5); // Guard
 
 			if (attacker != null)
 				attacker.setChasing(p);
 
-		} else if (hasItem(p, 200)) {
+		} else if (hasItem(p, ItemId.SILK.id())) {
 			playerTalk(p, n, "Hello I have some fine silk from Al Kharid to sell to you");
-			npcTalk(p, n, "Ah I may be interested in that",
+			npcTalk(p, n, "Ah I may be intersted in that",
 				"What sort of price were you looking at per piece of silk?");
 			int menu = showMenu(p, n, "20 coins", "80 coins", "120 coins", "200 coins");
 			if (menu == 0) {
 				npcTalk(p, n, "Ok that suits me");
-				removeItem(p, 200, 1);
-				addItem(p, 10, 20);
+				removeItem(p, ItemId.SILK.id(), 1);
+				addItem(p, ItemId.COINS.id(), 20);
 			} else if (menu == 1) {
 				npcTalk(p, n, "80 coins that's a bit steep", "How about 40 coins");
 				int reply2 = showMenu(p, n, "Ok 40 sounds good", "50 and that's my final price", "No that is not enough");
 				if (reply2 == 0) {
-					removeItem(p, 200, 1);
-					addItem(p, 10, 40);
+					removeItem(p, ItemId.SILK.id(), 1);
+					addItem(p, ItemId.COINS.id(), 40);
 				} else if (reply2 == 1) {
 					npcTalk(p, n, "Done");
-					removeItem(p, 200, 1);
-					addItem(p, 10, 50);
+					removeItem(p, ItemId.SILK.id(), 1);
+					addItem(p, ItemId.COINS.id(), 50);
 				}
 			} else if (menu == 2) {
 				npcTalk(p, n, "You'll never get that much for it",
 					"I'll be generous and give you 50 for it");
-				int reply = showMenu(p, n, "Ok I guess 50 will do", "I'll give it you for 60", "No that is not enough");
+				int reply = showMenu(p, n, false, "Ok I guess 50 will do", "I'll give it to you for 60", "No that is not enough");
 				if (reply == 0) {
-					removeItem(p, 200, 1);
-					addItem(p, 10, 50);
+					playerTalk(p, n, "Ok I guess 50 will do");
+					removeItem(p, ItemId.SILK.id(), 1);
+					addItem(p, ItemId.COINS.id(), 50);
 				} else if (reply == 1) {
+					playerTalk(p, n, "I'll give it you for 60");
 					npcTalk(p, n, "You drive a hard bargain", "but I guess that will have to do");
-					removeItem(p, 200, 1);
-					addItem(p, 10, 60);
+					removeItem(p, ItemId.SILK.id(), 1);
+					addItem(p, ItemId.COINS.id(), 60);
+				} else if (reply == 2) {
+					playerTalk(p, n, "No that is not enough");
 				}
 			} else if (menu == 3) {
 				npcTalk(p, n, "Don't be ridiculous that is far to much",
@@ -70,6 +76,6 @@ public class SilkMerchant implements TalkToNpcExecutiveListener, TalkToNpcListen
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 326;
+		return n.getID() == NpcId.SILK_MERCHANT.id();
 	}
 }
