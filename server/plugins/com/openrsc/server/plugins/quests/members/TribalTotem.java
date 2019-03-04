@@ -190,7 +190,7 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 						npcTalk(p, n, "Here have some freshly cooked Karamja fish",
 							"Caught specially by our people");
 						removeItem(p, ItemId.TRIBAL_TOTEM.id(), 1);
-						addItem(p, ItemId.BURNT_SWORDFISH.id(), 5);
+						addItem(p, ItemId.SWORDFISH.id(), 5);
 					} else {
 						playerTalk(p, n, "No it's not that easy");
 						npcTalk(p, n, "Bah, you no good");
