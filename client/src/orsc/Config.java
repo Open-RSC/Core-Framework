@@ -108,6 +108,7 @@ public class Config {
 	public static boolean S_WANT_FIXED_OVERHEAD_CHAT = false;
 	public static String C_LOGO_SPRITE_ID = "2010";
 	public static int C_FPS = 50;
+	public static boolean C_WANT_EMAIL = false;
 	public static boolean S_WANT_REGISTRATION_LIMIT = false;
 
 	public static void set(String key, Object value) {
@@ -269,6 +270,6 @@ public class Config {
 	}
 
 	static boolean wantEmail() {
-		return false;
+		return C_WANT_EMAIL;
 	}
 }
