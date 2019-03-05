@@ -175,9 +175,9 @@ public class ActionSender {
 	 * @param player
 	 */
 	public static void sendDied(Player player) {
+		hideBank(player);
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_DEATH.opcode);
-		s.setID(Opcode.SEND_BANK_CLOSE.opcode);
 		player.write(s.toPacket());
 	}
 

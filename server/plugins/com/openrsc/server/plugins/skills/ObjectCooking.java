@@ -81,9 +81,9 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 				p.message("nothing interesting happens");
 			}
 		} else if (item.getID() == ItemId.UNCOOKED_SWAMP_PASTE.id()) {
-			cookMethod(p, ItemId.UNCOOKED_SWAMP_PASTE.id(), ItemId.SWAMP_PASTE.id(), "you warm the paste over the fire", "it thickens into a sticky goo");
+			cookMethod(p, ItemId.UNCOOKED_SWAMP_PASTE.id(), ItemId.SWAMP_PASTE.id(), false, "you warm the paste over the fire", "it thickens into a sticky goo");
 		} else if (item.getID() == ItemId.SEAWEED.id()) { // Seaweed (Glass)
-			cookMethod(p, ItemId.SEAWEED.id(), ItemId.SODA_ASH.id(), "You put the seaweed on the "
+			cookMethod(p, ItemId.SEAWEED.id(), ItemId.SODA_ASH.id(), true, "You put the seaweed on the "
 				+ object.getGameObjectDef().getName().toLowerCase(), "The seaweed burns to ashes");
 		} else {
 			final ItemCookingDef cookingDef = item.getCookingDef();
@@ -166,9 +166,10 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 		return cookingDef != null && Arrays.binarySearch(ids, obj.getID()) >= 0;
 	}
 
-	private void cookMethod(Player p, int itemID, int product, String... messages) {
+	private void cookMethod(Player p, int itemID, int product, boolean hasBubble, String... messages) {
 		if (hasItem(p, itemID, 1)) {
-			showBubble(p, new Item(itemID));
+			if (hasBubble)
+				showBubble(p, new Item(itemID));
 			p.playSound("cooking");
 			message(p, messages);
 			removeItem(p, itemID, 1);

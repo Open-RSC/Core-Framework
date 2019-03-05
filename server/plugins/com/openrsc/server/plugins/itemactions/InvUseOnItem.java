@@ -10,6 +10,7 @@ import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.compareItemsIds;
+import static com.openrsc.server.plugins.Functions.hasItem;
 
 public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutiveListener {
 	private int[] capes = {
@@ -41,9 +42,9 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 			}
 		}
 
-		else if (compareItemsIds(item1, item2, ItemId.FLOUR.id(), ItemId.SWAMP_TAR.id())) {
-			if (player.getInventory().remove(new Item(ItemId.FLOUR.id())) > -1
-					&& player.getInventory().remove(new Item(ItemId.SWAMP_TAR.id())) > -1) {
+		else if (compareItemsIds(item1, item2, ItemId.POT_OF_FLOUR.id(), ItemId.SWAMP_TAR.id())) {
+			if (hasItem(player, ItemId.POT_OF_FLOUR.id()) && player.getInventory().remove(new Item(ItemId.SWAMP_TAR.id())) > -1) {
+				player.getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
 				player.message("you mix the flour with the swamp tar");
 				player.message("it mixes into a paste");
 				player.getInventory().add(new Item(ItemId.UNCOOKED_SWAMP_PASTE.id()));
