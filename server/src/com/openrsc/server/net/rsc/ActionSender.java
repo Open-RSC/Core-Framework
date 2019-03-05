@@ -60,7 +60,7 @@ import static com.openrsc.server.Constants.GameServer.SPAWN_AUCTION_NPCS;
 import static com.openrsc.server.Constants.GameServer.SPAWN_IRON_MAN_NPCS;
 import static com.openrsc.server.Constants.GameServer.WANT_BANK_NOTES;
 import static com.openrsc.server.Constants.GameServer.WANT_BANK_PINS;
-import static com.openrsc.server.Constants.GameServer.WANT_CERTS_TO_BANK;
+import static com.openrsc.server.Constants.GameServer.WANT_CERTER_BANK_EXCHANGE;
 import static com.openrsc.server.Constants.GameServer.WANT_CERT_DEPOSIT;
 import static com.openrsc.server.Constants.GameServer.WANT_CLANS;
 import static com.openrsc.server.Constants.GameServer.WANT_CUSTOM_BANKS;
@@ -468,7 +468,7 @@ public class ActionSender {
 			LOGGER.info(WANT_EXP_INFO + " 35");
 			LOGGER.info(WANT_WOODCUTTING_GUILD + " 36");
 			LOGGER.info(WANT_DECANTING + " 37");
-			LOGGER.info(WANT_CERTS_TO_BANK + " 38");
+			LOGGER.info(WANT_CERTER_BANK_EXCHANGE + " 38");
 			LOGGER.info(WANT_CUSTOM_RANK_DISPLAY + " 39");
 			LOGGER.info(RIGHT_CLICK_BANK + " 40");
 			LOGGER.info(FIX_OVERHEAD_CHAT + " 41");
@@ -532,7 +532,7 @@ public class ActionSender {
 		s.writeByte((byte) (WANT_EXP_INFO ? 1 : 0)); // 35
 		s.writeByte((byte) (WANT_WOODCUTTING_GUILD ? 1 : 0)); // 36
 		s.writeByte((byte) (WANT_DECANTING ? 1 : 0)); // 37
-		s.writeByte((byte) (WANT_CERTS_TO_BANK ? 1 : 0)); // 38
+		s.writeByte((byte) (WANT_CERTER_BANK_EXCHANGE ? 1 : 0)); // 38
 		s.writeByte((byte) (WANT_CUSTOM_RANK_DISPLAY ? 1 : 0)); // 39
 		s.writeByte((byte) (RIGHT_CLICK_BANK ? 1 : 0)); // 40
 		s.writeByte((byte) (FIX_OVERHEAD_CHAT ? 1 : 0)); // 41
