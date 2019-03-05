@@ -2,6 +2,13 @@ package orsc;
 
 import com.openrsc.client.model.Sprite;
 import com.openrsc.interfaces.misc.clan.Clan;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.Properties;
+
 import orsc.buffers.RSBufferUtils;
 import orsc.buffers.RSBuffer_Bits;
 import orsc.enumerations.MessageType;
@@ -13,12 +20,6 @@ import orsc.net.Network_Socket;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.util.Properties;
 
 
 public class PacketHandler {
@@ -727,7 +728,8 @@ public class PacketHandler {
 		int wantCustomBanks, wantBankPins, wantBankNotes, wantCertDeposit, customFiremaking;
 		int wantDropX, wantExpInfo, wantWoodcuttingGuild, wantFixedOverheadChat;
 		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank;
-		int logoSpriteID, getFPS, wantEmail, wantRegistrationLimit;
+		int getFPS, wantEmail, wantRegistrationLimit;
+		String logoSpriteID;
 
 		if (!mc.gotInitialConfigs) {
 			serverName = this.getClientStream().readString(); // 1
@@ -775,8 +777,8 @@ public class PacketHandler {
 			welcomeText = this.getClientStream().readString(); // 42
 			wantMembers = this.getClientStream().getUnsignedByte(); // 43
 			displayLogoSprite = this.getClientStream().getUnsignedByte(); // 44
-			//logoSpriteID = this.getClientStream().getUnsignedByte(); // 45
-			//getFPS = this.getClientStream().getUnsignedByte(); // 46
+			logoSpriteID = this.getClientStream().readString(); // 45
+			getFPS = this.getClientStream().getUnsignedByte(); // 46
 			wantEmail = this.getClientStream().getUnsignedByte(); // 47
 			wantRegistrationLimit = this.getClientStream().getUnsignedByte(); // 48
 		} else {
@@ -825,8 +827,8 @@ public class PacketHandler {
 			welcomeText = packetsIncoming.readString(); // 42
 			wantMembers = packetsIncoming.getUnsignedByte(); // 43
 			displayLogoSprite = packetsIncoming.getUnsignedByte(); // 44
-			//logoSpriteID = packetsIncoming.getUnsignedByte(); // 45
-			//getFPS = packetsIncoming.getUnsignedByte(); // 46
+			logoSpriteID = packetsIncoming.readString(); // 45
+			getFPS = packetsIncoming.getUnsignedByte(); // 46
 			wantEmail = packetsIncoming.getUnsignedByte(); // 47
 			wantRegistrationLimit = packetsIncoming.getUnsignedByte(); // 48
 		}
@@ -877,8 +879,8 @@ public class PacketHandler {
 							"\nWELCOME_TEXT" + welcomeText + // 42
 							"\nMEMBERS_FEATURES" + wantMembers + // 43
 							"\nDISPLAY_LOGO_SPRITE" + displayLogoSprite + // 44
-							//"\nC_LOGO_SPRITE_ID" + logoSpriteID + // 45
-							//"\nC_FPS" + getFPS + // 46
+							"\nC_LOGO_SPRITE_ID" + logoSpriteID + // 45
+							"\nC_FPS" + getFPS + // 46
 							"\nC_WANT_EMAIL" + wantEmail + // 47
 							"\nS_WANT_REGISTRATION_LIMIT" + wantRegistrationLimit //48
 			);
@@ -928,8 +930,8 @@ public class PacketHandler {
 		props.setProperty("WELCOME_TEXT", welcomeText); // 42
 		props.setProperty("MEMBER_WORLD", wantMembers == 1 ? "true" : "false"); // 43
 		props.setProperty("DISPLAY_LOGO_SPRITE", displayLogoSprite == 1 ? "true" : "false"); // 44
-		//props.setProperty("C_LOGO_SPRITE_ID", Integer.toString(logoSpriteID)); // 45
-		//props.setProperty("C_FPS", Integer.toString(getFPS)); // 46
+		props.setProperty("C_LOGO_SPRITE_ID", logoSpriteID); // 45
+		props.setProperty("C_FPS", Integer.toString(getFPS)); // 46
 		props.setProperty("C_WANT_EMAIL", wantEmail == 1 ? "true" : "false"); // 47
 		props.setProperty("S_WANT_REGISTRATION_LIMIT", wantRegistrationLimit == 1 ? "true" : "false"); // 48
 

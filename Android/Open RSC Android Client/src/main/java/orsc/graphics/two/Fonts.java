@@ -2,12 +2,12 @@ package orsc.graphics.two;
 
 public class Fonts {
 
-	static boolean[] fontAntiAliased = new boolean[] { false, false, false, false, false, false, false, false, false,
-			false, false, false };
-	public static byte[][] fontData = new byte[50][];
-	private static int tmpFontDataHead = 0;
-	public static int[] inputFilterCharFontAddr;
+	static byte[][] fontData = new byte[50][];
+	static int[] inputFilterCharFontAddr;
 	public static String inputFilterChars;
+	static boolean[] fontAntiAliased = new boolean[]{false, false, false, false, false, false, false, false, false,
+			false, false, false};
+	private static int tmpFontDataHead = 0;
 
 	static {
 		Fonts.inputFilterChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"\u00a3$%^&*()-_=+[{]};:\'@#~,<.>/?\\| ";

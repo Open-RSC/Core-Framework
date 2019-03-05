@@ -2,15 +2,15 @@ package com.openrsc.client.entityhandling.defs;
 
 public class TileDef {
     public int colour;
-    public int tileValue;
-    public int objectType;
+    private int tileValue;
+    private int objectType;
 
-	public TileDef(int colour, int tileValue, int objectType) {
-		this.colour = colour;
-		this.tileValue = tileValue;
-		this.objectType = objectType;
-	}
-	
+    public TileDef(int colour, int tileValue, int objectType) {
+        this.colour = colour;
+        this.tileValue = tileValue;
+        this.objectType = objectType;
+    }
+
     public int getColour() {
         return colour;
     }

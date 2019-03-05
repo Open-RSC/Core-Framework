@@ -1,20 +1,20 @@
 package orsc.graphics.three;
 
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import orsc.MiscFunctions;
 import orsc.buffers.RSBufferUtils;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
 
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 public final class RSModel {
 	private final int m_Vb = 12345678;
-	public int[] faceDiffuseLight;
-	public int faceHead;
-	public int[] faceIndexCount;
-	public int[][] faceIndices;
+	int[] faceDiffuseLight;
+	int faceHead;
+	int[] faceIndexCount;
+	int[][] faceIndices;
 	public int key = -1;
 	public boolean m_cb = false;
 	public int[] facePickIndex;
@@ -311,7 +311,7 @@ public final class RSModel {
 		}
 	}
 
-	private final void addModels(int offset, RSModel[] models, boolean var3, int modelCount) {
+	private void addModels(int offset, RSModel[] models, boolean var3, int modelCount) {
 		try {
 
 			int faceCount = 0;
@@ -396,7 +396,7 @@ public final class RSModel {
 	/**
 	 * 0-255 -> 0-1
 	 */
-	private final void applyRotMatrix(int xToZ, int zToY, int yToX, int yToZ, int zToX, int xToY, byte var7) {
+	private void applyRotMatrix(int xToZ, int zToY, int yToX, int yToZ, int zToX, int xToY, byte var7) {
 		try {
 
 
@@ -427,7 +427,7 @@ public final class RSModel {
 		}
 	}
 
-	private final void calculateBoundingBoxes(int var1) {
+	private void calculateBoundingBoxes(int var1) {
 		try {
 
 			this.minX = 999999;
@@ -525,7 +525,7 @@ public final class RSModel {
 		}
 	}
 
-	private final void clearRotDataAndParams26(byte var1) {
+	private void clearRotDataAndParams26(byte var1) {
 		try {
 			if (var1 < 49) {
 				this.setDiffuseLight(40, 102, 104, 108, -20, -89);
@@ -556,7 +556,7 @@ public final class RSModel {
 		}
 	}
 
-	private final void commitTransform(byte var1) {
+	private void commitTransform(byte var1) {
 		try {
 			this.resetTransformCache((int) 7972);
 
@@ -588,7 +588,7 @@ public final class RSModel {
 		}
 	}
 
-	private final void computeAppliedTransform() {
+	private void computeAppliedTransform() {
 		try {
 
 			if (this.rotM_yToX == 256 && this.rotM_yToZ == 256 && this.rotM_zToX == 256 && this.rotM_zToY == 256
@@ -614,7 +614,7 @@ public final class RSModel {
 		}
 	}
 
-	private final void computeDiffuse(int var1) {
+	private void computeDiffuse(int var1) {
 		try {
 
 			if (!this.dontComputeDiffuse) {
@@ -669,7 +669,7 @@ public final class RSModel {
 		}
 	}
 
-	private final void computeNormals(byte var1) {
+	private void computeNormals(byte var1) {
 		try {
 
 			if (!this.dontComputeDiffuse || !this.m_c) {
@@ -717,7 +717,7 @@ public final class RSModel {
 		}
 	}
 
-	private final void copyFaceTo(int[] faceVert, RSModel dest, int faceVertCount, int srcFaceID, int var5) {
+	private void copyFaceTo(int[] faceVert, RSModel dest, int faceVertCount, int srcFaceID, int var5) {
 		try {
 
 			int[] nVerts = new int[faceVertCount];
@@ -765,7 +765,7 @@ public final class RSModel {
 			this.computeAppliedTransform();
 			this.m_Yb = 1;
 		} catch (RuntimeException var4) {
-			throw GenUtil.makeThrowable(var4, "ca.AA(" + (model != null ? "{...}" : "null") + ',' + var2 + ')');
+			throw GenUtil.makeThrowable(var4, "ca.AA(" + "{...}" + ',' + var2 + ')');
 		}
 	}
 
@@ -835,7 +835,7 @@ public final class RSModel {
 		}
 	}
 
-	private final int getFaceParam1(byte var1, byte[] data) {
+	private int getFaceParam1(byte var1, byte[] data) {
 		try {
 
 
@@ -951,7 +951,7 @@ public final class RSModel {
 		}
 	}
 
-	private final void resetTransformCache(int var1) {
+	private void resetTransformCache(int var1) {
 		try {
 			if (var1 != 7972) {
 				this.translate2(120, 57, 20);
@@ -1094,7 +1094,7 @@ public final class RSModel {
 		}
 	}
 
-	private final void rotate256(int var1, int rotX, int rotZ, int rotY) {
+	private void rotate256(int var1, int rotX, int rotZ, int rotY) {
 		try {
 
 			if (var1 >= -14) {
@@ -1136,7 +1136,7 @@ public final class RSModel {
 	/**
 	 * 0-255 -> 0-1
 	 */
-	private final void scale(int xScale, int var2, int zScale, int yScale) {
+	private void scale(int xScale, int var2, int zScale, int yScale) {
 		try {
 
 			if (var2 != -27483) {
@@ -1222,7 +1222,7 @@ public final class RSModel {
 		}
 	}
 
-	private final void setFaceVertexCount(int faceCount, int vertexCount, int var3) {
+	private void setFaceVertexCount(int faceCount, int vertexCount, int var3) {
 		try {
 			if (!this.m_db) {
 				this.m_zb = new byte[faceCount];
@@ -1339,7 +1339,7 @@ public final class RSModel {
 		}
 	}
 
-	private final void translate(int vOff, int yt, int zt, int xt) {
+	private void translate(int vOff, int yt, int zt, int xt) {
 		try {
 
 

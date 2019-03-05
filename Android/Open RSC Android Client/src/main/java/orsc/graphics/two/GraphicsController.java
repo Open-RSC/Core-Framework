@@ -69,7 +69,7 @@ public class GraphicsController {
 		}
 	}
 
-	public static final void a(int var0, int[] var1, int var2, int[] var3, int var4, int var5, int var6, int var7) {
+	public static void a(int var0, int[] var1, int var2, int[] var3, int var4, int var5, int var6, int var7) {
 		try {
 
 			if (var2 < 0) {
@@ -134,7 +134,7 @@ public class GraphicsController {
 		this.width2 = width;
 	}
 
-	private final void plotCharacter(boolean antiAliased, byte[] fontData, int x, int color, int indexAddr, int y) {
+	private void plotCharacter(boolean antiAliased, byte[] fontData, int x, int color, int indexAddr, int y) {
 		try {
 
 			int width = fontData[indexAddr + 3];
@@ -506,8 +506,8 @@ public class GraphicsController {
 		}
 	}
 
-	private final void a(int var1, int var2, int var3, int var4, int var5, int[] var6, int var7, int[] letterPlotTable,
-						 int var9, int var10, boolean var11, int var12, int var13, int var14, int var15) {
+	private void a(int var1, int var2, int var3, int var4, int var5, int[] var6, int var7, int[] letterPlotTable,
+				   int var9, int var10, boolean var11, int var12, int var13, int var14, int var15) {
 		try {
 
 			int var16 = (var14 & 16736117) >> 16;
@@ -570,8 +570,8 @@ public class GraphicsController {
 	 * @param srcStepY (source y per output pixel) << 17
 	 * @param destHead starting pixel address in pixelData
 	 */
-	private final void plot_horiz_line(int negCount, int srcWidth, int[] dest, int srcStepX, int srcHeadY, int srcHeadX,
-									   int[] src, int srcStepY, int destHead) {
+	private void plot_horiz_line(int negCount, int srcWidth, int[] dest, int srcStepX, int srcHeadY, int srcHeadX,
+								 int[] src, int srcStepY, int destHead) {
 		try {
 			for (int i = negCount; i < 0; ++i) {
 				dest[destHead++] = src[(srcHeadY >> 17) * srcWidth + (srcHeadX >> 17)];
@@ -587,8 +587,8 @@ public class GraphicsController {
 		}
 	}
 
-	private final void a(int var1, int var2, int var3, int[] var4, int var5, int var6, int var7, int[] var8, int var9,
-						 int var10, int var11, int var12) {
+	private void a(int var1, int var2, int var3, int[] var4, int var5, int var6, int var7, int[] var8, int var9,
+				   int var10, int var11, int var12) {
 		try {
 
 			int var13 = 256 - var6;
@@ -632,8 +632,8 @@ public class GraphicsController {
 	 * @param srcStepY (source y per output pixel) << 17
 	 * @param destHead starting pixel address in pixelData
 	 */
-	private final void plot_trans_horiz_line(int srcStepY, int negCount, int srcHeadX, int[] src, int[] var5,
-											 int srcHeadY, int destHead, int srcWidth, int srcStepX) {
+	private void plot_trans_horiz_line(int srcStepY, int negCount, int srcHeadX, int[] src, int[] var5,
+									   int srcHeadY, int destHead, int srcWidth, int srcStepX) {
 		try {
 
 			int i = negCount;
@@ -659,7 +659,7 @@ public class GraphicsController {
 		}
 	}
 
-	private final void a(int var1, int var2, String var3, int var4, int var5, int var6, int var7) {
+	private void a(int var1, int var2, String var3, int var4, int var5, int var6, int var7) {
 		try {
 			this.drawColoredString(var1 - this.stringWidth(var6, var3), var2, var3, var6, var4, var7);
 
@@ -673,8 +673,8 @@ public class GraphicsController {
 		}
 	}
 
-	private final void a(int var1, int[] var2, int var3, int var4, int var5, int var6, byte var7, int var8, int[] var9,
-						 int var10, int var11) {
+	private void a(int var1, int[] var2, int var3, int var4, int var5, int var6, byte var7, int var8, int[] var9,
+				   int var10, int var11) {
 		try {
 
 			if (var7 <= 122) {
@@ -854,9 +854,9 @@ public class GraphicsController {
 	 * @param destRowStride Pixels to skip between rows of output
 	 * @param dest          Destination pixel data
 	 */
-	private final void plot_scale_black_mask(int[] src, int heightStep, int scaleX, int dummy1, int srcStartY,
-											 int[] dest, byte dummy2, int scaleY, int destHeight, int srcStartX, int destRowStride, int destWidth,
-											 int srcWidth, int destHead) {
+	private void plot_scale_black_mask(int[] src, int heightStep, int scaleX, int dummy1, int srcStartY,
+									   int[] dest, byte dummy2, int scaleY, int destHeight, int srcStartX, int destRowStride, int destWidth,
+									   int srcWidth, int destHead) {
 		try {
 
 
@@ -913,10 +913,10 @@ public class GraphicsController {
 	 * imgID + ',' + -342059728 + ')'); } }
 	 */
 
-	private final void plot_trans_scale_with_2_masks(int[] dest, int[] src, int destColumnCount,
-													 int destColumnSkewPerRow, int destFirstColumn, int dummy1, int dummy2, int mask2, int scaleY, int scaleX,
-													 int srcStartX, int skipEveryOther, int srcStartY, int srcWidth, int mask1, int destHeight,
-													 int destRowHead) {
+	private void plot_trans_scale_with_2_masks(int[] dest, int[] src, int destColumnCount,
+											   int destColumnSkewPerRow, int destFirstColumn, int dummy1, int dummy2, int mask2, int scaleY, int scaleX,
+											   int srcStartX, int skipEveryOther, int srcStartY, int srcWidth, int mask1, int destHeight,
+											   int destRowHead) {
 		plot_trans_scale_with_2_masks(dest, src, destColumnCount, destColumnSkewPerRow, destFirstColumn, dummy1, dummy2, mask2, scaleY, scaleX, srcStartX, skipEveryOther, srcStartY, srcWidth, mask1, destHeight, destRowHead, 0xFFFFFFFF);
 	}
 
@@ -943,10 +943,10 @@ public class GraphicsController {
 	 * @param destHeight           destination row count
 	 * @param colourTransform      The colour and opacity with which to shade this sprite a uniform colour
 	 */
-	private final void plot_trans_scale_with_2_masks(int[] dest, int[] src, int destColumnCount,
-													 int destColumnSkewPerRow, int destFirstColumn, int dummy1, int spritePixel, int mask2, int scaleY, int scaleX,
-													 int srcStartX, int skipEveryOther, int srcStartY, int srcWidth, int mask1, int destHeight,
-													 int destRowHead, int colourTransform) {
+	private void plot_trans_scale_with_2_masks(int[] dest, int[] src, int destColumnCount,
+											   int destColumnSkewPerRow, int destFirstColumn, int dummy1, int spritePixel, int mask2, int scaleY, int scaleX,
+											   int srcStartX, int skipEveryOther, int srcStartY, int srcWidth, int mask1, int destHeight,
+											   int destRowHead, int colourTransform) {
 		try {
 
 			int mask1R = mask1 >> 16 & 0xFF;
@@ -1180,7 +1180,7 @@ public class GraphicsController {
 		}
 	}
 
-	private final int c(int var1, int var2) {
+	private int c(int var1, int var2) {
 		try {
 
 			if (var2 != 0) {
@@ -1509,7 +1509,7 @@ public class GraphicsController {
 									&& c3 <= '9')
 								x = Integer.parseInt(str.substring(i + 1, i + 5));
 							i += 5;
-						} else if (Config.S_WANT_CUSTOM_RANK_DISPLAY && str.charAt(i) == '#' && i + 4 < str.length() && str.charAt(i + 4) == '#' && str.substring(i + 1, i + 4).equalsIgnoreCase("adm")) {
+						} else if (false && Config.S_WANT_CUSTOM_RANK_DISPLAY && str.charAt(i) == '#' && i + 4 < str.length() && str.charAt(i + 4) == '#' && str.substring(i + 1, i + 4).equalsIgnoreCase("adm")) {
 							this.drawSpriteClipping(
 									this.iconSpriteIndex,
 									x - 1,
@@ -1524,7 +1524,7 @@ public class GraphicsController {
 							);
 							x += sprites[this.iconSpriteIndex].getWidth() + 5;
 							i += 4;
-						} else if (Config.S_WANT_CUSTOM_RANK_DISPLAY && str.charAt(i) == '#' && i + 4 < str.length() && str.charAt(i + 4) == '#' && str.substring(i + 1, i + 4).equalsIgnoreCase("mod")) {
+						} else if (false && Config.S_WANT_CUSTOM_RANK_DISPLAY && str.charAt(i) == '#' && i + 4 < str.length() && str.charAt(i + 4) == '#' && str.substring(i + 1, i + 4).equalsIgnoreCase("mod")) {
 							this.drawSpriteClipping(
 									this.iconSpriteIndex,
 									x - 1,
@@ -1539,7 +1539,7 @@ public class GraphicsController {
 							);
 							x += sprites[this.iconSpriteIndex].getWidth() + 5;
 							i += 4;
-						} else if (Config.S_WANT_CUSTOM_RANK_DISPLAY && str.charAt(i) == '#' && i + 4 < str.length() && str.charAt(i + 4) == '#' && str.substring(i + 1, i + 4).equalsIgnoreCase("dev")) {
+						} else if (false && Config.S_WANT_CUSTOM_RANK_DISPLAY && str.charAt(i) == '#' && i + 4 < str.length() && str.charAt(i + 4) == '#' && str.substring(i + 1, i + 4).equalsIgnoreCase("dev")) {
 							this.drawSpriteClipping(
 									this.iconSpriteIndex,
 									x - 1,
@@ -1554,7 +1554,7 @@ public class GraphicsController {
 							);
 							x += sprites[this.iconSpriteIndex].getWidth() + 5;
 							i += 4;
-						} else if (Config.S_WANT_CUSTOM_RANK_DISPLAY && str.charAt(i) == '#' && i + 4 < str.length() && str.charAt(i + 4) == '#' && str.substring(i + 1, i + 4).equalsIgnoreCase("eve")) {
+						} else if (false && Config.S_WANT_CUSTOM_RANK_DISPLAY && str.charAt(i) == '#' && i + 4 < str.length() && str.charAt(i + 4) == '#' && str.substring(i + 1, i + 4).equalsIgnoreCase("eve")) {
 							this.drawSpriteClipping(
 									this.iconSpriteIndex,
 									x - 1,
@@ -1608,7 +1608,7 @@ public class GraphicsController {
 
 	}
 
-	private final void drawColoredStringCentered(int color, int font, int spriteHeader, String str, int x, int y) {
+	private void drawColoredStringCentered(int color, int font, int spriteHeader, String str, int x, int y) {
 		try {
 			this.drawColoredString(x - this.stringWidth(font, str) / 2, y, str, font, color, spriteHeader);
 
@@ -2261,8 +2261,8 @@ public class GraphicsController {
 		}
 	}
 
-	private final void plotLetter(int color, int[] dest, int destHead, int rowStride, int height, int width,
-								  int srcHead, byte[] src, int srcStride) {
+	private void plotLetter(int color, int[] dest, int destHead, int rowStride, int height, int width,
+							int srcHead, byte[] src, int srcStride) {
 		try {
 
 
@@ -2323,8 +2323,8 @@ public class GraphicsController {
 		}
 	}
 
-	private final void plotLetterAntialiased(byte[] src, int color, int width, int destHead, int height, int srcStride,
-											 int rowStride, int[] dest, int srcHead) {
+	private void plotLetterAntialiased(byte[] src, int color, int width, int destHead, int height, int srcStride,
+									   int rowStride, int[] dest, int srcHead) {
 		try {
 
 			for (int i = -height; i < 0; ++i) {
@@ -2564,9 +2564,9 @@ public class GraphicsController {
 	 * @param alpha         Alpha value [0-256]
 	 * @param dest          Destination pixel data
 	 */
-	private final void plot_tran_scale(int heightStep, int srcStartY, int destWidth, byte dummy1, int scaleY,
-									   int spriteWidth, int scaleX, int height, int destHead, int[] src, int dummy2, int srcStartX,
-									   int destRowStride, int alpha, int[] dest) {
+	private void plot_tran_scale(int heightStep, int srcStartY, int destWidth, byte dummy1, int scaleY,
+								 int spriteWidth, int scaleX, int height, int destHead, int[] src, int dummy2, int srcStartX,
+								 int destRowStride, int alpha, int[] dest) {
 		try {
 
 			int alphaInverse = 256 - alpha;
@@ -2611,9 +2611,9 @@ public class GraphicsController {
 		}
 	}
 
-	private final void plot_tran_scale_with_mask(int dummy2, int[] src, int scaleY, int dummy1, int srcStartY,
-												 int srcStartX, int destColumnCount, int[] dest, int destHeight, int destColumnSkewPerRow, int destRowHead,
-												 int scaleX, int destFirstColumn, int srcWidth, int skipEveryOther, int background) {
+	private void plot_tran_scale_with_mask(int dummy2, int[] src, int scaleY, int dummy1, int srcStartY,
+										   int srcStartX, int destColumnCount, int[] dest, int destHeight, int destColumnSkewPerRow, int destRowHead,
+										   int scaleX, int destFirstColumn, int srcWidth, int skipEveryOther, int background) {
 		plot_tran_scale_with_mask(dummy2, src, scaleY, dummy1, srcStartY, srcStartX, destColumnCount, dest, destHeight, destColumnSkewPerRow, destRowHead, scaleX, destFirstColumn, srcWidth, skipEveryOther, background, 0xFFFFFFFF);
 	}
 
@@ -2638,9 +2638,9 @@ public class GraphicsController {
 	 *                             (dest = background * source)
 	 * @param colourTransform      The colour and opacity with which to shade this sprite a uniform colour
 	 */
-	private final void plot_tran_scale_with_mask(int dummy2, int[] src, int scaleY, int dummy1, int srcStartY,
-												 int srcStartX, int destColumnCount, int[] dest, int destHeight, int destColumnSkewPerRow, int destRowHead,
-												 int scaleX, int destFirstColumn, int srcWidth, int skipEveryOther, int spritePixel, int colourTransform) {
+	private void plot_tran_scale_with_mask(int dummy2, int[] src, int scaleY, int dummy1, int srcStartY,
+										   int srcStartX, int destColumnCount, int[] dest, int destHeight, int destColumnSkewPerRow, int destRowHead,
+										   int scaleX, int destFirstColumn, int srcWidth, int skipEveryOther, int spritePixel, int colourTransform) {
 		try {
 
 			int spritePixelR = spritePixel >> 16 & 0xFF;

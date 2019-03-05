@@ -7,12 +7,12 @@ public class Sector {
 	/**
 	 * The width of a sector
 	 */
-	public static final short WIDTH = 48;
+	private static final short WIDTH = 48;
 
 	/**
 	 * The height of a sector
 	 */
-	public static final short HEIGHT = 48;
+	private static final short HEIGHT = 48;
 
 	/**
 	 * An array containing all the tiles within this Sector
@@ -30,6 +30,23 @@ public class Sector {
 	}
 
 	/**
+	 * Create a new Sector from raw data packed into the given ByteBuffer
+	 */
+	public static Sector unpack(ByteBuffer in) throws IOException {
+		int length = Sector.WIDTH * Sector.HEIGHT;
+		if (in.remaining() < (10 * length)) {
+			throw new IOException("Provided buffer too short");
+		}
+		Sector sector = new Sector();
+
+		for (int i = 0; i < length; i++) {
+			sector.setTile(i, Tile.unpack(in));
+		}
+
+		return sector;
+	}
+
+	/**
 	 * Sets the the Tile at the given coords
 	 */
 	public void setTile(int x, int y, Tile t) {
@@ -39,7 +56,7 @@ public class Sector {
 	/**
 	 * Sets the Tile at the given index
 	 */
-	public void setTile(int i, Tile t) {
+	private void setTile(int i, Tile t) {
 		tiles[i] = t;
 	}
 
@@ -63,28 +80,11 @@ public class Sector {
 	public ByteBuffer pack() throws IOException {
 		ByteBuffer out = ByteBuffer.allocate(10 * tiles.length);
 
-		for (int i = 0; i < tiles.length; i++) {
-			out.put(tiles[i].pack());
+		for (Tile tile : tiles) {
+			out.put(tile.pack());
 		}
 
 		out.flip();
 		return out;
-	}
-
-	/**
-	 * Create a new Sector from raw data packed into the given ByteBuffer
-	 */
-	public static Sector unpack(ByteBuffer in) throws IOException {
-		int length = Sector.WIDTH * Sector.HEIGHT;
-		if (in.remaining() < (10 * length)) {
-			throw new IOException("Provided buffer too short");
-		}
-		Sector sector = new Sector();
-
-		for (int i = 0; i < length; i++) {
-			sector.setTile(i, Tile.unpack(in));
-		}
-
-		return sector;
 	}
 }

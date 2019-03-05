@@ -3,9 +3,9 @@ package orsc.util.bzip;
 import orsc.MiscFunctions;
 
 public final class BZLib {
-	private static BZState sharedBlock = new BZState();
+	private static final BZState sharedBlock = new BZState();
 
-	private static final void decompress(BZState state) {
+	private static void decompress(BZState state) {
 		int var22 = 0;
 		int[] var23 = null;
 		int[] var24 = null;
@@ -49,11 +49,7 @@ public final class BZLib {
 				int var35;
 				for (var35 = 0; var35 < 16; ++var35) {
 					var1 = getBit(state);
-					if (var1 == 1) {
-						state.inUse_16[var35] = true;
-					} else {
-						state.inUse_16[var35] = false;
-					}
+					state.inUse_16[var35] = var1 == 1;
 				}
 
 				for (var35 = 0; var35 < 256; ++var35) {
@@ -174,15 +170,13 @@ public final class BZLib {
 
 				int var46 = 0;
 				byte var53;
-				if (var43 == 0) {
-					++var42;
-					var43 = 50;
-					var53 = state.selector[var42];
-					var22 = state.minLens[var53];
-					var23 = state.limit[var53];
-					var25 = state.perm[var53];
-					var24 = state.base[var53];
-				}
+				++var42;
+				var43 = 50;
+				var53 = state.selector[var42];
+				var22 = state.minLens[var53];
+				var23 = state.limit[var53];
+				var25 = state.perm[var53];
+				var24 = state.base[var53];
 
 				int var44 = var43 - 1;
 				int var50 = var22;
@@ -279,8 +273,8 @@ public final class BZLib {
 
 							do {
 								if (var45 == 0) {
-									var47 += var48 * 1;
-								} else if (var45 == 1) {
+									var47 += var48;
+								} else {
 									var47 += var48 * 2;
 								}
 
@@ -356,15 +350,15 @@ public final class BZLib {
 		}
 	}
 
-	private static final byte getUChar(BZState var0) {
+	private static byte getUChar(BZState var0) {
 		return (byte) getBits(8, var0);
 	}
 
-	private static final byte getBit(BZState var0) {
+	private static byte getBit(BZState var0) {
 		return (byte) getBits(1, var0);
 	}
 
-	private static final void makeMaps(BZState var0) {
+	private static void makeMaps(BZState var0) {
 		var0.nInUse = 0;
 
 		for (int var1 = 0; var1 < 256; ++var1) {
@@ -376,8 +370,8 @@ public final class BZLib {
 
 	}
 
-	private static final void createDecodeTables(int[] limit, int[] base, int[] perm, byte[] length, int minLen,
-			int maxLen, int alphaSize) {
+	private static void createDecodeTables(int[] limit, int[] base, int[] perm, byte[] length, int minLen,
+										   int maxLen, int alphaSize) {
 		int var7 = 0;
 
 		int var8;
@@ -420,7 +414,7 @@ public final class BZLib {
 
 	}
 
-	public static final int decompress(byte[] output, int outSize, byte[] input, int compressedSize, int inOffset) {
+	public static int decompress(byte[] output, int outSize, byte[] input, int compressedSize, int inOffset) {
 		synchronized (sharedBlock) {
 			sharedBlock.input = input;
 			sharedBlock.nextIn = inOffset;
@@ -439,7 +433,7 @@ public final class BZLib {
 		}
 	}
 
-	private static final void nextHeader(BZState state) {
+	private static void nextHeader(BZState state) {
 		byte csNextOutCh = state.stateOutCh;
 		int cStateOutLen = state.stateOutLen;
 		int cNblockUsed = state.nblockUsed;
@@ -451,7 +445,8 @@ public final class BZLib {
 		int var10 = state.decompressedSize;
 		int sSaveNblockPP = state.saveNblock + 1;
 
-		label63: while (true) {
+		label63:
+		while (true) {
 			if (cStateOutLen > 0) {
 				while (true) {
 					if (var10 == 0) {
@@ -459,10 +454,6 @@ public final class BZLib {
 					}
 
 					if (cStateOutLen == 1) {
-						if (var10 == 0) {
-							cStateOutLen = 1;
-							break label63;
-						}
 
 						output[csNextOut] = csNextOutCh;
 						++csNextOut;
@@ -545,7 +536,7 @@ public final class BZLib {
 		}
 
 		int var13 = state.m_G;
-		state.m_G += var10 - var10;
+		state.m_G += 0;
 		if (state.m_G < var13) {
 			;
 		}
@@ -561,7 +552,7 @@ public final class BZLib {
 		state.decompressedSize = var10;
 	}
 
-	private static final int getBits(int bits, BZState state) {
+	private static int getBits(int bits, BZState state) {
 		while (state.bsLive < bits) {
 			state.bsBuff = state.bsBuff << 8 | state.input[state.nextIn] & 255;
 			state.bsLive += 8;

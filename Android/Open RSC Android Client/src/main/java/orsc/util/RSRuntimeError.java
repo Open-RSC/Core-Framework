@@ -8,12 +8,8 @@ public final class RSRuntimeError extends RuntimeException {
 	public Throwable error;
 	public String message;
 
-	public RSRuntimeError(Throwable error, String message) {
-		try {
-			this.error = error;
-			this.message = message;
-		} catch (RuntimeException var4) {
-			throw var4;
-		}
+	RSRuntimeError(Throwable error, String message) {
+		this.error = error;
+		this.message = message;
 	}
 }

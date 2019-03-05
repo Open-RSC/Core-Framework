@@ -6,16 +6,25 @@ import orsc.buffers.RSBuffer_Bits;
 import orsc.util.GenUtil;
 
 class Network_Base {
-	
+
+	private final int writeBufferSize = 5000;
+	public int m_d = 0;
+	public RSBuffer_Bits writeBuffer1;
 	String errorCode = "";
+	boolean errorHappened = false;
 	private int packetReadAttempts = 0;
 	private int incomingPacketLength = 0;
-	public int m_d = 0;
 	private int readyPackets = 0;
-	private final int writeBufferSize = 5000;
 	private int packetStart = 0;
-	boolean errorHappened = false;
-	public RSBuffer_Bits writeBuffer1;
+
+	Network_Base() {
+		try {
+			this.writeBuffer1 = new RSBuffer_Bits(this.writeBufferSize);
+			this.writeBuffer1.packetEnd = 3;
+		} catch (RuntimeException var2) {
+			throw GenUtil.makeThrowable(var2, "b.<init>()");
+		}
+	}
 
 	public final void flush(int minReady, boolean var2) throws IOException {
 		try {
@@ -74,7 +83,7 @@ class Network_Base {
 		}
 	}
 
-	private final int readIncomingPacket(byte[] data) {
+	private int readIncomingPacket(byte[] data) {
 		try {
 			try {
 				++this.packetReadAttempts;
@@ -115,7 +124,7 @@ class Network_Base {
 		}
 	}
 
-	private final void read(byte[] data, int count) throws IOException {
+	private void read(byte[] data, int count) throws IOException {
 		try {
 			this.read(data, 0, count);
 		} catch (RuntimeException var5) {
@@ -156,7 +165,7 @@ class Network_Base {
 			data.packetEnd = 0;
 			return this.readIncomingPacket(data.dataBuffer);
 		} catch (RuntimeException var4) {
-			throw GenUtil.makeThrowable(var4, "b.Q(" + "dummy" + ',' + (data != null ? "{...}" : "null") + ')');
+			throw GenUtil.makeThrowable(var4, "b.Q(" + "dummy" + ',' + "{...}" + ')');
 		}
 	}
 
@@ -178,23 +187,14 @@ class Network_Base {
 	public final void finishPacket() {
 		try {
 			int packetLen = this.writeBuffer1.packetEnd - this.packetStart - 2;
-			
+
 			this.writeBuffer1.dataBuffer[this.packetStart] = (byte) (packetLen >> 8);
 			this.writeBuffer1.dataBuffer[this.packetStart + 1] = (byte) packetLen;
-			
-			
+
+
 			this.packetStart = this.writeBuffer1.packetEnd;
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "b.L(" + "dummy" + ')');
-		}
-	}
-
-	protected Network_Base() {
-		try {
-			this.writeBuffer1 = new RSBuffer_Bits(this.writeBufferSize);
-			this.writeBuffer1.packetEnd = 3;
-		} catch (RuntimeException var2) {
-			throw GenUtil.makeThrowable(var2, "b.<init>()");
 		}
 	}
 }

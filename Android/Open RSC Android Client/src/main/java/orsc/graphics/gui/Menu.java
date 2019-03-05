@@ -43,7 +43,7 @@ public final class Menu {
 	public final void addCharacterItem(int index, MenuItemAction actionID, String label, String actor) {
 		try {
 			this.addItem(0, label, 0, 0, actor, index, (String) null, actionID, 0, (String) null, (String) null);
-			
+
 		} catch (RuntimeException var7) {
 			throw GenUtil.makeThrowable(var7, "wb.DA(" + index + ',' + actionID + ',' + false + ','
 					+ (label != null ? "{...}" : "null") + ',' + (actor != null ? "{...}" : "null") + ')');
@@ -51,9 +51,9 @@ public final class Menu {
 	}
 
 	public final void addCharacterItem_WithID(int targetPlayer, String actor, MenuItemAction actionID, String label,
-			int selectedIndex) {
+											  int selectedIndex) {
 		try {
-			
+
 			this.addItem(selectedIndex, label, 0, 0, actor, targetPlayer, (String) null, actionID, 0, (String) null,
 					(String) null);
 		} catch (RuntimeException var8) {
@@ -62,8 +62,8 @@ public final class Menu {
 		}
 	}
 
-	private final void addItem(int id_or_z, String label, int dir, int var4, String actor, int index_or_x,
-			String dropped2, MenuItemAction actionID, int tile_id, String dropped, String strB) {
+	private void addItem(int id_or_z, String label, int dir, int var4, String actor, int index_or_x,
+						 String dropped2, MenuItemAction actionID, int tile_id, String dropped, String strB) {
 		try {
 			if (this.menuItems.length == this.itemCount) {
 				MenuItem[] src = this.menuItems;
@@ -78,7 +78,7 @@ public final class Menu {
 				}
 			}
 
-			
+
 			this.menuItems[this.itemCount++].set(label, var4, index_or_x, id_or_z, tile_id, dropped2, 100, actionID,
 					actor, dropped, dir, strB);
 			this.calculateMenuWidth();
@@ -92,7 +92,7 @@ public final class Menu {
 
 	public final void addItem(MenuItemAction action, String actor, String label) {
 		try {
-			
+
 			this.addItem(0, label, 0, 0, actor, 0, (String) null, action, 0, (String) null, (String) null);
 		} catch (RuntimeException var6) {
 			throw GenUtil.makeThrowable(var6, "wb.V(" + action + ',' + (actor != null ? "{...}" : "null") + ','
@@ -101,10 +101,10 @@ public final class Menu {
 	}
 
 	public final void addItem_With2Strings(String label, String actor, String dropped, MenuItemAction actionID,
-			String strB) {
+										   String strB) {
 		try {
 			this.addItem(0, label, 0, 0, actor, 0, (String) null, actionID, 0, dropped, strB);
-			
+
 		} catch (RuntimeException var8) {
 			throw GenUtil.makeThrowable(var8,
 					"wb.E(" + (label != null ? "{...}" : "null") + ',' + (actor != null ? "{...}" : "null") + ','
@@ -115,7 +115,7 @@ public final class Menu {
 
 	public final void addTileItem(int x, byte var2, MenuItemAction actID, String label, String actor, int dir, int z) {
 		try {
-			
+
 			this.addItem(z, label, dir, 0, actor, x, (String) null, actID, 0, (String) null, (String) null);
 		} catch (RuntimeException var9) {
 			throw GenUtil.makeThrowable(var9,
@@ -125,9 +125,9 @@ public final class Menu {
 	}
 
 	public final void addTileItem_WithID(MenuItemAction actID, int z, int dir, int x, int id, String actor,
-			String name) {
+										 String name) {
 		try {
-			
+
 			this.addItem(z, name, dir, 0, actor, x, (String) null, actID, id, (String) null, (String) null);
 		} catch (RuntimeException var10) {
 			throw GenUtil.makeThrowable(var10, "wb.B(" + actID + ',' + z + ',' + dir + ',' + x + ',' + "dummy" + ','
@@ -136,9 +136,9 @@ public final class Menu {
 	}
 
 	public final void addUseOnObject(int var1, String label, int var3, int var4, int var5, MenuItemAction actID,
-			int var7, String actor, int var9) {
+									 int var7, String actor, int var9) {
 		try {
-			
+
 			this.addItem(var1, label, var7, var4, actor, var9, (String) null, actID, var5, (String) null,
 					(String) null);
 		} catch (RuntimeException var11) {
@@ -148,9 +148,9 @@ public final class Menu {
 		}
 	}
 
-	private final void calculateMenuWidth() {
+	private void calculateMenuWidth() {
 		try {
-			
+
 			int lineHeight = this.surf.fontHeight(this.font) + 1;
 			if (null == this.menuTitle) {
 				this.menuHeight = 0;
@@ -159,7 +159,7 @@ public final class Menu {
 				this.menuHeight = lineHeight;
 				this.menuWidth = 5 + this.surf.stringWidth(this.font, this.menuTitle);
 			}
-			
+
 			for (int i = 0; this.itemCount > i; ++i) {
 				this.menuHeight += lineHeight;
 				int lineWidth = 5
@@ -176,7 +176,7 @@ public final class Menu {
 
 	public final int getHeight() {
 		try {
-			
+
 			return this.menuHeight;
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "wb.T(" + "dummy" + ')');
@@ -185,7 +185,7 @@ public final class Menu {
 
 	public final MenuItemAction getItemAction(int item) {
 		try {
-			
+
 			return this.menuItems[item].actionID;
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "wb.M(" + "dummy" + ',' + item + ')');
@@ -194,7 +194,7 @@ public final class Menu {
 
 	public final String getItemActor(int item) {
 		try {
-			
+
 			return this.menuItems[item].actor;
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "wb.O(" + "dummy" + ',' + item + ')');
@@ -203,7 +203,7 @@ public final class Menu {
 
 	public final int getItemCount(int var1) {
 		try {
-			
+
 			if (var1 != -27153) {
 				this.calculateMenuWidth();
 			}
@@ -216,7 +216,7 @@ public final class Menu {
 
 	public final int getItemDirection(int item) {
 		try {
-			
+
 			return this.menuItems[item].dir;
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "wb.H(" + item + ',' + "dummy" + ')');
@@ -225,7 +225,7 @@ public final class Menu {
 
 	public final int getItemIdOrZ(int var2) {
 		try {
-			
+
 			return this.menuItems[var2].id_or_z;
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "wb.K(" + 97 + ',' + var2 + ')');
@@ -234,7 +234,7 @@ public final class Menu {
 
 	public final int getItemIndexOrX(int item) {
 		try {
-			
+
 			return this.menuItems[item].index_or_x;
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "wb.C(" + true + ',' + item + ')');
@@ -243,7 +243,7 @@ public final class Menu {
 
 	public final String getItemLabel(int var1) {
 		try {
-			
+
 			return this.menuItems[var1].label;
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "wb.A(" + var1 + ',' + "dummy" + ')');
@@ -252,7 +252,7 @@ public final class Menu {
 
 	public final int getItemParam_l(int item) {
 		try {
-			
+
 			return this.menuItems[item].m_l;
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "wb.Q(" + "dummy" + ',' + item + ')');
@@ -261,7 +261,7 @@ public final class Menu {
 
 	public final String getItemStringB(int item) {
 		try {
-			
+
 			return this.menuItems[item].strB;
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "wb.CA(" + item + ',' + "dummy" + ')');
@@ -270,7 +270,7 @@ public final class Menu {
 
 	public final int getItemTileID(int item) {
 		try {
-			
+
 			return this.menuItems[item].tile_id;
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "wb.L(" + item + ',' + "dummy" + ')');
@@ -279,7 +279,7 @@ public final class Menu {
 
 	public final int getWidth() {
 		try {
-			
+
 			return this.menuWidth;
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "wb.BA(" + "dummy" + ')');
@@ -288,7 +288,7 @@ public final class Menu {
 
 	public final int handleClick(int mouseX, int menuX, int menuY, int mouseY) {
 		try {
-			
+
 			return this.process(mouseY, mouseX, menuY, menuX, -3, false);
 		} catch (RuntimeException var7) {
 			throw GenUtil.makeThrowable(var7,
@@ -296,9 +296,9 @@ public final class Menu {
 		}
 	}
 
-	private final int process(int mouseY, int mouseX, int menuY, int menuX, int var5, boolean draw) {
+	private int process(int mouseY, int mouseX, int menuY, int menuX, int var5, boolean draw) {
 		try {
-			
+
 			if (this.menuWidth != 0 && this.menuHeight != 0) {
 				if (draw) {
 					this.surf.drawBoxAlpha(menuX, menuY, this.menuWidth, this.menuHeight, 13684944, 160);
@@ -360,7 +360,7 @@ public final class Menu {
 
 	public final void recalculateSize(int var1) {
 		try {
-			
+
 			this.itemCount = var1;
 			this.calculateMenuWidth();
 		} catch (RuntimeException var3) {
@@ -370,7 +370,7 @@ public final class Menu {
 
 	public final void removeItem(int item) {
 		try {
-			
+
 			if (item >= 0 && this.itemCount > item) {
 				MenuItem removed = this.menuItems[item];
 
@@ -388,7 +388,7 @@ public final class Menu {
 
 	public final int render(int menuY, int menuX, int mouseY, byte var4, int mouseX) {
 		try {
-			
+
 			return this.process(mouseY, mouseX, menuY, menuX, -66, true);
 		} catch (RuntimeException var7) {
 			throw GenUtil.makeThrowable(var7,
@@ -398,7 +398,7 @@ public final class Menu {
 
 	public final void sort() {
 		try {
-			
+
 			if (this.itemCount != 0) {
 				int[] priority = new int[this.itemCount];
 				MenuItem[] src = new MenuItem[this.itemCount];

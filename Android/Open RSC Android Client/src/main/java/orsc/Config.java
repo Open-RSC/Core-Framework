@@ -43,12 +43,12 @@ public class Config {
     /* Android: */
     // Avoid changing public to private in this section despite IDE suggestion as this would break Android Studio's build
     public static boolean F_ANDROID_BUILD = true; // This MUST be true if Android client or it will crash on launch
-    public static final String DL_URL = "game.openrsc.com";
+    private static final String DL_URL = "game.openrsc.com";
     public static final String ANDROID_DOWNLOAD_PATH = "https://" + DL_URL + "/downloads/";
     public static final String CACHE_URL = "https://" + DL_URL + "/downloads/cache/";
-    public static final int ANDROID_CLIENT_VERSION = 8;
+    public static final int ANDROID_CLIENT_VERSION = 9;
     public static boolean F_SHOWING_KEYBOARD = false;
-    public static int F_LONG_PRESS_CALC;
+    static int F_LONG_PRESS_CALC;
     public static boolean C_HOLD_AND_CHOOSE = true;
     public static int C_LONG_PRESS_TIMER = 400;
     public static int C_MENU_SIZE = 6;
@@ -106,7 +106,7 @@ public class Config {
     public static boolean S_WANT_HIDE_IP = false;
     public static boolean S_WANT_REMEMBER = false;
     public static boolean S_WANT_FIXED_OVERHEAD_CHAT = false;
-    public static int C_LOGO_SPRITE_ID = 2010;
+    public static String C_LOGO_SPRITE_ID = "2010";
     public static int C_FPS = 50;
     public static boolean C_WANT_EMAIL = false;
     public static boolean S_WANT_REGISTRATION_LIMIT = false;
@@ -249,7 +249,7 @@ public class Config {
         return prop.getProperty("COMMAND_PREFIX");
     }
 
-    static int getcLogoSpriteId() {
+    static String getcLogoSpriteId() {
         return C_LOGO_SPRITE_ID;
     }
 

@@ -1,20 +1,12 @@
 package com.openrsc.client.entityhandling;
 
-import com.openrsc.client.entityhandling.defs.DoorDef;
-import com.openrsc.client.entityhandling.defs.ElevationDef;
-import com.openrsc.client.entityhandling.defs.GameObjectDef;
-import com.openrsc.client.entityhandling.defs.ItemDef;
-import com.openrsc.client.entityhandling.defs.NPCDef;
-import com.openrsc.client.entityhandling.defs.PrayerDef;
-import com.openrsc.client.entityhandling.defs.SpellDef;
-import com.openrsc.client.entityhandling.defs.TileDef;
+import com.openrsc.client.entityhandling.defs.*;
 import com.openrsc.client.entityhandling.defs.extras.AnimationDef;
 import com.openrsc.client.entityhandling.defs.extras.TextureDef;
+import orsc.Config;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-
-import orsc.Config;
 
 public class EntityHandler {
 
@@ -6307,22 +6299,22 @@ public class EntityHandler {
 		loadElevationDefinitions();
 		loadGameObjectDefinitionsA();
 		loadGameObjectDefinitionsB();
-		for (int id = 0; id < items.size(); id++) {
-			if (items.get(id).getSprite() + 1 > invPictureCount) {
-				invPictureCount = items.get(id).getSprite() + 1;
+		for (ItemDef item : items) {
+			if (item.getSprite() + 1 > invPictureCount) {
+				invPictureCount = item.getSprite() + 1;
 			}
-			if (items.get(id).membersItem == true && !loadMembers) {
-				items.get(id).name = "Members object";
-				items.get(id).description = "You need to be a member to use this object";
-				items.get(id).basePrice = 0;
-				items.get(id).command = "";
-				items.get(id).wieldable = false;
-				items.get(id).wearableID = 0;
-				items.get(id).quest = true;
+			if (item.membersItem && !loadMembers) {
+				item.name = "Members object";
+				item.description = "You need to be a member to use this object";
+				item.basePrice = 0;
+				item.command = "";
+				item.wieldable = false;
+				item.wearableID = 0;
+				item.quest = true;
 			}
 		}
-		for (int id = 0; id < objects.size(); id++) {
-			objects.get(id).modelID = storeModel(objects.get(id)
+		for (GameObjectDef object : objects) {
+			object.modelID = storeModel(object
 					.getObjectModel());
 		}
 

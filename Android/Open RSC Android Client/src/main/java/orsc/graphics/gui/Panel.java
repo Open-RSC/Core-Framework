@@ -9,6 +9,8 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 
 public final class Panel {
+	public int[] controlListCurrentSize;
+	public int[] controlScrollAmount;
 	private int button1HeldTicks = 0;
 	private int colorA;
 	private int colorB;
@@ -20,7 +22,6 @@ public final class Panel {
 	private int colorH;
 	private int colorI;
 	private int colorJ;
-	
 	private int colorK;
 	private int colorL;
 	private int[] controlArgInt;
@@ -31,13 +32,11 @@ public final class Panel {
 	private int[] controlHeight;
 	private int[] controlSpaceHeight;
 	private int[] controlSpaceTextHeight;
-	public int[] controlListCurrentSize;
 	private int[][] controlListEntryCrown;
 	private String[][] controlListEntryString;
 	private String[][] controlListEntryString2;
 	private String[][] controlListEntryString3;
 	private int[] controlMaxSize;
-	public int[] controlScrollAmount;
 	private int[] controlSelectedListIndex;
 	private String[] controlText;
 	private PanelControlType[] controlType;
@@ -103,7 +102,7 @@ public final class Panel {
 	public final int addButton(int x, int y, int width, int height) {
 		try {
 			this.controlType[this.controlCount] = PanelControlType.BUTTON;
-			
+
 			this.controlVisible[this.controlCount] = true;
 			this.controlClicked[this.controlCount] = false;
 			this.controlX[this.controlCount] = x - width / 2;
@@ -118,7 +117,7 @@ public final class Panel {
 
 	public final int addButtonBackground(int x, int y, int width, int height) {
 		try {
-			
+
 			this.controlType[this.controlCount] = PanelControlType.BUTTON_BACKGROUND;
 			this.controlVisible[this.controlCount] = true;
 			this.controlClicked[this.controlCount] = false;
@@ -135,7 +134,7 @@ public final class Panel {
 	public final int addCenteredText(int x, int y, String text, int font, boolean useAltColour) {
 		try {
 			this.controlType[this.controlCount] = PanelControlType.CENTERED_TEXT;
-			
+
 			this.controlVisible[this.controlCount] = true;
 			this.controlClicked[this.controlCount] = false;
 			this.controlArgInt[this.controlCount] = font;
@@ -151,10 +150,10 @@ public final class Panel {
 	}
 
 	public final int addCenteredTextEntry(int x, int y, int width, int maxSize, int height, int font, boolean maskText,
-			boolean useAltColor) {
+										  boolean useAltColor) {
 		try {
 			this.controlType[this.controlCount] = PanelControlType.CENTERED_TEXT_ENTRY;
-			
+
 			this.controlVisible[this.controlCount] = true;
 			this.controlFlag[this.controlCount] = maskText;
 			this.controlClicked[this.controlCount] = false;
@@ -175,7 +174,7 @@ public final class Panel {
 
 	public final int addDecoratedBox(int x, int y, int width, int height) {
 		try {
-			
+
 			this.controlType[this.controlCount] = PanelControlType.DECORATED_BOX;
 			this.controlVisible[this.controlCount] = true;
 			this.controlClicked[this.controlCount] = false;
@@ -190,9 +189,9 @@ public final class Panel {
 	}
 
 	public final int addLeftTextEntry(int x, int y, int width, int height, int font, int maxSize, boolean maskText,
-			boolean useAltColor) {
+									  boolean useAltColor) {
 		try {
-			
+
 			this.controlType[this.controlCount] = PanelControlType.LEFT_TEXT_ENTRY;
 			this.controlVisible[this.controlCount] = true;
 			this.controlFlag[this.controlCount] = maskText;
@@ -211,12 +210,12 @@ public final class Panel {
 					+ ',' + y + ',' + "dummy" + ',' + width + ',' + useAltColor + ')');
 		}
 	}
-	
+
 	public final int addScrollingList3(int x, int y, int width, int height, int listSize, int font,
-			boolean useAltColor, int spaceHeight, int spaceTextHeight) {
+									   boolean useAltColor, int spaceHeight, int spaceTextHeight) {
 		try {
 			this.controlType[this.controlCount] = PanelControlType.SCROLLING_LIST3;
-			
+
 			this.controlVisible[this.controlCount] = true;
 			this.controlClicked[this.controlCount] = false;
 			this.controlArgInt[this.controlCount] = font;
@@ -244,10 +243,10 @@ public final class Panel {
 	}
 
 	public final int addScrollingList(int x, int y, int width, int height, int listSize, int font,
-			boolean useAltColor) {
+									  boolean useAltColor) {
 		try {
 			this.controlType[this.controlCount] = PanelControlType.SCROLLING_LIST;
-			
+
 			this.controlVisible[this.controlCount] = true;
 			this.controlClicked[this.controlCount] = false;
 			this.controlArgInt[this.controlCount] = font;
@@ -274,7 +273,7 @@ public final class Panel {
 
 	public final int addScrollingList2(int x, int y, int width, int height, int maxSize, int font, boolean altColor) {
 		try {
-			
+
 			this.controlType[this.controlCount] = PanelControlType.SCROLLING_LIST_2;
 			this.controlVisible[this.controlCount] = true;
 			this.controlClicked[this.controlCount] = false;
@@ -300,7 +299,7 @@ public final class Panel {
 
 	public final int addSprite(int x, int y, int spriteID) {
 		try {
-			
+
 			int width = this.graphics.sprites[spriteID].getWidth();
 			int height = this.graphics.sprites[spriteID].getHeight();
 			this.controlType[this.controlCount] = PanelControlType.SPRITE;
@@ -319,7 +318,7 @@ public final class Panel {
 
 	public final void addToList(String str, boolean scrollToEnd, int crownId, String str3, String str2, int control) {
 		try {
-			
+
 			int size = this.controlListCurrentSize[control]++;
 			if (size >= this.controlMaxSize[control]) {
 				--this.controlListCurrentSize[control];
@@ -350,9 +349,9 @@ public final class Panel {
 		}
 	}
 
-	private final int buildColor(int r, int g, int b) {
+	private int buildColor(int r, int g, int b) {
 		try {
-			
+
 			return GenUtil.buildColor(r, g, b);
 		} catch (RuntimeException var6) {
 			throw GenUtil.makeThrowable(var6, "qa.QA(" + b + ',' + g + ',' + r + ',' + "dummy" + ')');
@@ -362,7 +361,7 @@ public final class Panel {
 	public final void clearList(int control) {
 		try {
 			this.controlListCurrentSize[control] = 0;
-			
+
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "qa.P(" + "dummy" + ',' + control + ')');
 		}
@@ -370,72 +369,72 @@ public final class Panel {
 
 	public final void drawPanel() {
 		try {
-			
+
 			for (int i = 0; i < this.controlCount; ++i) {
 				if (this.controlVisible[i]) {
 					switch (this.controlType[i]) {
-					case CENTERED_TEXT:
-						this.renderText(i,
-								this.controlX[i]
-										- this.graphics.stringWidth(this.controlArgInt[i], this.controlText[i]) / 2,
-								this.controlY[i], this.controlArgInt[i], this.controlText[i], 0);
-						break;
-					case BUTTON_BACKGROUND:
-						this.renderButtonBackground(this.controlX[i], this.controlY[i], this.controlWidth[i],
-								this.controlHeight[i]);
-						break;
-					case CENTERED_LIST:
-						this.renderCenteredList(i, this.controlX[i], this.controlY[i], this.controlArgInt[i],
-								this.controlListEntryString[i]);
-						break;
-					case SCROLLING_LIST:
-						this.renderScrollingList(i, this.controlX[i], this.controlY[i], this.controlWidth[i],
-								this.controlHeight[i], this.controlArgInt[i], this.controlListCurrentSize[i],
-								this.controlListEntryString[i], this.controlListEntryCrown[i],
-								this.controlScrollAmount[i]);
-						break;
-					case TOGGLE_BUTTON:
-						this.renderToggleButton(i, this.controlX[i], this.controlY[i], this.controlWidth[i],
-								this.controlHeight[i]);
-						break;
-					case SPRITE:
-						this.renderSprite(this.controlX[i], this.controlY[i], this.controlArgInt[i]);
-						break;
-					case DECORATED_BOX:
-						this.renderDecoratedBox(this.controlX[i], this.controlY[i], this.controlWidth[i],
-								this.controlHeight[i]);
-						break;
-					case HORIZONTAL_LIST:
-						this.renderHorizontalList(i, this.controlX[i], this.controlY[i], this.controlArgInt[i],
-								this.controlListEntryString[i]);
-						break;
-					case LEFT_TEXT_ENTRY:
-					case CENTERED_TEXT_ENTRY:
-						this.renderTextEntry(i, this.controlX[i], this.controlY[i], this.controlWidth[i],
-								this.controlHeight[i], this.controlArgInt[i], this.controlText[i]);
-						break;
-					case SCROLLING_LIST_2:
-						this.renderScrollingList2(i, this.controlX[i], this.controlY[i], this.controlWidth[i],
-								this.controlHeight[i], this.controlArgInt[i], this.controlListCurrentSize[i],
-								this.controlListEntryString[i], this.controlListEntryCrown[i],
-								this.controlScrollAmount[i]);
-						break;
-					case SCROLLING_LIST3:
-						this.renderScrollingList3(i, this.controlX[i], this.controlY[i], this.controlWidth[i],
-								this.controlHeight[i], this.controlArgInt[i], this.controlListCurrentSize[i],
-								this.controlListEntryString[i], this.controlListEntryCrown[i],
-								this.controlScrollAmount[i], this.controlSpaceHeight[i], this.controlSpaceTextHeight[i]);
-						break;
-					case HORIZ_LINE:
-						this.renderHorizLine(this.controlX[i], this.controlY[i], (int) this.controlWidth[i], 0);
-						break;
-					case LEFT_TEXT:
-						this.renderText(i, this.controlX[i], this.controlY[i], this.controlArgInt[i],
-								this.controlText[i], 0);
-						break;
-					default:
-						// System.err.println("Bad control type " +
-						// this.controlType[i]);
+						case CENTERED_TEXT:
+							this.renderText(i,
+									this.controlX[i]
+											- this.graphics.stringWidth(this.controlArgInt[i], this.controlText[i]) / 2,
+									this.controlY[i], this.controlArgInt[i], this.controlText[i], 0);
+							break;
+						case BUTTON_BACKGROUND:
+							this.renderButtonBackground(this.controlX[i], this.controlY[i], this.controlWidth[i],
+									this.controlHeight[i]);
+							break;
+						case CENTERED_LIST:
+							this.renderCenteredList(i, this.controlX[i], this.controlY[i], this.controlArgInt[i],
+									this.controlListEntryString[i]);
+							break;
+						case SCROLLING_LIST:
+							this.renderScrollingList(i, this.controlX[i], this.controlY[i], this.controlWidth[i],
+									this.controlHeight[i], this.controlArgInt[i], this.controlListCurrentSize[i],
+									this.controlListEntryString[i], this.controlListEntryCrown[i],
+									this.controlScrollAmount[i]);
+							break;
+						case TOGGLE_BUTTON:
+							this.renderToggleButton(i, this.controlX[i], this.controlY[i], this.controlWidth[i],
+									this.controlHeight[i]);
+							break;
+						case SPRITE:
+							this.renderSprite(this.controlX[i], this.controlY[i], this.controlArgInt[i]);
+							break;
+						case DECORATED_BOX:
+							this.renderDecoratedBox(this.controlX[i], this.controlY[i], this.controlWidth[i],
+									this.controlHeight[i]);
+							break;
+						case HORIZONTAL_LIST:
+							this.renderHorizontalList(i, this.controlX[i], this.controlY[i], this.controlArgInt[i],
+									this.controlListEntryString[i]);
+							break;
+						case LEFT_TEXT_ENTRY:
+						case CENTERED_TEXT_ENTRY:
+							this.renderTextEntry(i, this.controlX[i], this.controlY[i], this.controlWidth[i],
+									this.controlHeight[i], this.controlArgInt[i], this.controlText[i]);
+							break;
+						case SCROLLING_LIST_2:
+							this.renderScrollingList2(i, this.controlX[i], this.controlY[i], this.controlWidth[i],
+									this.controlHeight[i], this.controlArgInt[i], this.controlListCurrentSize[i],
+									this.controlListEntryString[i], this.controlListEntryCrown[i],
+									this.controlScrollAmount[i]);
+							break;
+						case SCROLLING_LIST3:
+							this.renderScrollingList3(i, this.controlX[i], this.controlY[i], this.controlWidth[i],
+									this.controlHeight[i], this.controlArgInt[i], this.controlListCurrentSize[i],
+									this.controlListEntryString[i], this.controlListEntryCrown[i],
+									this.controlScrollAmount[i], this.controlSpaceHeight[i], this.controlSpaceTextHeight[i]);
+							break;
+						case HORIZ_LINE:
+							this.renderHorizLine(this.controlX[i], this.controlY[i], (int) this.controlWidth[i], 0);
+							break;
+						case LEFT_TEXT:
+							this.renderText(i, this.controlX[i], this.controlY[i], this.controlArgInt[i],
+									this.controlText[i], 0);
+							break;
+						default:
+							// System.err.println("Bad control type " +
+							// this.controlType[i]);
 					}
 				}
 			}
@@ -448,7 +447,7 @@ public final class Panel {
 
 	public final int getControlClickedListIndex(int control) {
 		try {
-			
+
 			return this.controlClickedListIndex[control];
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "qa.CA(" + "dummy" + ',' + control + ')');
@@ -457,7 +456,7 @@ public final class Panel {
 
 	public final String getControlListString2(int control, int index) {
 		try {
-			
+
 			return this.controlListEntryString2[control][index];
 		} catch (RuntimeException var5) {
 			throw GenUtil.makeThrowable(var5, "qa.T(" + index + ',' + "dummy" + ',' + control + ')');
@@ -466,7 +465,7 @@ public final class Panel {
 
 	public final String getControlListString3(int control, int entry) {
 		try {
-			
+
 			return this.controlListEntryString3[control][entry];
 		} catch (RuntimeException var5) {
 			throw GenUtil.makeThrowable(var5, "qa.I(" + entry + ',' + "dummy" + ',' + control + ')');
@@ -475,7 +474,7 @@ public final class Panel {
 
 	public final int getControlSelectedListIndex(int controlID) {
 		try {
-			
+
 			return this.controlSelectedListIndex[controlID];
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "qa.C(" + controlID + ',' + "dummy" + ')');
@@ -493,7 +492,7 @@ public final class Panel {
 
 	public final String getControlText(int controlID) {
 		try {
-			
+
 			return null == this.controlText[controlID] ? "null" : this.controlText[controlID];
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "qa.BA(" + controlID + ',' + "dummy" + ')');
@@ -518,7 +517,7 @@ public final class Panel {
 			}
 
 			this.currentMouseButtonDown = currentMouseButtonDown;
-			
+
 			if (lastMouseButtonDown == 1) {
 				for (int i = 0; i < this.controlCount; ++i) {
 					if (this.controlVisible[i] && this.controlType[i] == PanelControlType.BUTTON
@@ -526,7 +525,7 @@ public final class Panel {
 							&& this.controlWidth[i] + this.controlX[i] >= this.currMouseX
 							&& this.currMouseY <= this.controlHeight[i] + this.controlY[i]) {
 						this.controlClicked[i] = true;
-						
+
 
 					}
 
@@ -557,7 +556,7 @@ public final class Panel {
 
 				this.button1HeldTicks -= 5;
 			}
-			
+
 		} catch (RuntimeException var7) {
 			throw GenUtil.makeThrowable(var7, "qa.O(" + currentMouseButtonDown + ',' + mouseY + ',' + "dummy" + ','
 					+ lastMouseButtonDown + ',' + mouseX + ')');
@@ -567,7 +566,7 @@ public final class Panel {
 	public final void hide(int control) {
 		try {
 			this.controlVisible[control] = false;
-			
+
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "qa.EA(" + "dummy" + ',' + control + ')');
 		}
@@ -575,7 +574,7 @@ public final class Panel {
 
 	public final boolean isClicked(int control) {
 		try {
-			
+
 			if (this.controlVisible[control] && this.controlClicked[control]) {
 				this.controlClicked[control] = false;
 				return true;
@@ -589,7 +588,7 @@ public final class Panel {
 
 	public final void keyPress(int key) {
 		try {
-			
+
 			if (key != 0) {
 				if (this.focusControlIndex != -1 && null != this.controlText[this.focusControlIndex]
 						&& this.controlVisible[this.focusControlIndex]) {
@@ -627,10 +626,10 @@ public final class Panel {
 		}
 	}
 
-	private final void renderButtonBackground(int x, int y, int width, int height) {
+	private void renderButtonBackground(int x, int y, int width, int height) {
 		try {
 			this.graphics.setClip(x, x + width, y + height, y);
-			
+
 			this.graphics.drawVerticalGradient(x, y, width, height, this.colorI, this.colorL);
 			if (MiscFunctions.drawBackgroundArrow) {
 				for (int xi = x - (y & 63); xi < width + x; xi += 128) {
@@ -658,9 +657,9 @@ public final class Panel {
 		}
 	}
 
-	private final void renderCenteredList(int controlIndex, int x, int y, int font, String[] entries) {
+	private void renderCenteredList(int controlIndex, int x, int y, int font, String[] entries) {
 		try {
-			
+
 			int count = entries.length;
 			int lineY = y - (count - 1) * this.graphics.fontHeight(font) / 2;
 
@@ -705,10 +704,10 @@ public final class Panel {
 		}
 	}
 
-	private final void renderDecoratedBox(int x, int y, int width, int height) {
+	private void renderDecoratedBox(int x, int y, int width, int height) {
 		try {
 			this.graphics.drawBox(x, y, width, height, 0);
-			
+
 			this.graphics.drawBoxBorder(x, width, y, height, this.colorF);
 			this.graphics.drawBoxBorder(1 + x, width - 2, 1 + y, height - 2, this.colorG);
 			this.graphics.drawBoxBorder(x + 2, width - 4, 2 + y, height - 4, this.colorH);
@@ -721,18 +720,18 @@ public final class Panel {
 		}
 	}
 
-	private final void renderHorizLine(int x, int y, int width, int color) {
+	private void renderHorizLine(int x, int y, int width, int color) {
 		try {
-			
+
 			this.graphics.drawLineHoriz(x, y, width, color);
 		} catch (RuntimeException var6) {
 			throw GenUtil.makeThrowable(var6, "qa.RA(" + y + ',' + color + ',' + x + ',' + width + ')');
 		}
 	}
 
-	private final void renderHorizontalList(int controlIndex, int x, int y, int font, String[] entiresString) {
+	private void renderHorizontalList(int controlIndex, int x, int y, int font, String[] entiresString) {
 		try {
-			
+
 			int totalWidth = 0;
 			int var8 = entiresString.length;
 			int lineX;
@@ -786,9 +785,9 @@ public final class Panel {
 		}
 	}
 
-	private final void renderScrollbar(int x, int y, int width, int height, int barDragSize, int barDragPos) {
+	private void renderScrollbar(int x, int y, int width, int height, int barDragSize, int barDragPos) {
 		try {
-			
+
 			int barX = x + width - 12;
 			this.graphics.drawBoxBorder(barX, 12, y, height, 0);
 			this.graphics.drawSprite(0 + mudclient.spriteUtil, 1 + barX, y + 1);
@@ -804,12 +803,12 @@ public final class Panel {
 					+ height + ',' + y + ',' + "dummy" + ')');
 		}
 	}
-	
 
-	private final void renderScrollingList(int controlIndex, int x, int y, int width, int height, int font,
-			int entryCount, String[] entriesString, int[] entriesCrowns, int scroll) {
+
+	private void renderScrollingList(int controlIndex, int x, int y, int width, int height, int font,
+									 int entryCount, String[] entriesString, int[] entriesCrowns, int scroll) {
 		try {
-			
+
 			int maxLines = height / this.graphics.fontHeight(font);
 			if (entryCount <= maxLines) {
 				scroll = 0;
@@ -838,8 +837,8 @@ public final class Panel {
 
 				if (this.currentMouseButtonDown == 1
 						&& (this.currMouseX >= scrollBarStartX && 12 + scrollBarStartX >= this.currMouseX
-								|| this.currMouseX >= scrollBarStartX - 12 && scrollBarStartX + 24 >= this.currMouseX
-										&& this.isScrolling[controlIndex])) {
+						|| this.currMouseX >= scrollBarStartX - 12 && scrollBarStartX + 24 >= this.currMouseX
+						&& this.isScrolling[controlIndex])) {
 					if (this.currMouseY > 12 + y && y - (12 - height) > this.currMouseY) {
 						this.isScrolling[controlIndex] = true;
 						int var16 = this.currMouseY - 12 - (y + barDraggerSize / 2);
@@ -910,10 +909,11 @@ public final class Panel {
 							+ ',' + "dummy" + ',' + scroll + ',' + width + ')');
 		}
 	}
-	private final void renderScrollingList3(int controlIndex, int x, int y, int width, int height, int font,
-			int entryCount, String[] entriesString, int[] entriesInt, int scroll, int spaceHeight, int spaceHeightText) {
+
+	private void renderScrollingList3(int controlIndex, int x, int y, int width, int height, int font,
+									  int entryCount, String[] entriesString, int[] entriesInt, int scroll, int spaceHeight, int spaceHeightText) {
 		try {
-			
+
 			int maxLines = (height - (spaceHeightText + spaceHeight)) / this.graphics.fontHeight(font);
 			if (entryCount <= maxLines) {
 				scroll = 0;
@@ -942,8 +942,8 @@ public final class Panel {
 
 				if (this.currentMouseButtonDown == 1
 						&& (this.currMouseX >= scrollBarStartX && 12 + scrollBarStartX >= this.currMouseX
-								|| this.currMouseX >= scrollBarStartX - 12 && scrollBarStartX + 24 >= this.currMouseX
-										&& this.isScrolling[controlIndex])) {
+						|| this.currMouseX >= scrollBarStartX - 12 && scrollBarStartX + 24 >= this.currMouseX
+						&& this.isScrolling[controlIndex])) {
 					if (this.currMouseY > 12 + y + (spaceHeightText + spaceHeight) && y - (12 - height - (spaceHeightText + spaceHeight)) > this.currMouseY) {
 						this.isScrolling[controlIndex] = true;
 						int var16 = this.currMouseY - 12 - (spaceHeightText + spaceHeight) - (y + barDraggerSize / 2);
@@ -962,7 +962,7 @@ public final class Panel {
 					this.isScrolling[controlIndex] = false;
 				}
 
-				barDraggerY = (height - barDraggerSize - 27 ) * scroll / (entryCount - maxLines);
+				barDraggerY = (height - barDraggerSize - 27) * scroll / (entryCount - maxLines);
 				this.renderScrollbar(x, y, width, height, barDraggerSize, barDraggerY);
 			}
 			int lineY;
@@ -1015,10 +1015,10 @@ public final class Panel {
 		}
 	}
 
-	private final void renderScrollingList2(int controlIndex, int x, int y, int width, int height, int font,
-			int entryCount, String[] entriesString, int[] entriesInt, int scroll) {
+	private void renderScrollingList2(int controlIndex, int x, int y, int width, int height, int font,
+									  int entryCount, String[] entriesString, int[] entriesInt, int scroll) {
 		try {
-			
+
 			int var12 = height / this.graphics.fontHeight(font);
 			if (scroll > entryCount - var12) {
 				scroll = entryCount - var12;
@@ -1055,7 +1055,7 @@ public final class Panel {
 
 				if (this.currentMouseButtonDown == 1
 						&& (this.currMouseX >= var13 && this.currMouseX <= var13 + 12 || this.currMouseX >= var13 - 12
-								&& 24 + var13 >= this.currMouseX && this.isScrolling[controlIndex])) {
+						&& 24 + var13 >= this.currMouseX && this.isScrolling[controlIndex])) {
 					if (this.currMouseY > 12 + y && this.currMouseY < y + height - 12) {
 						this.isScrolling[controlIndex] = true;
 						int var16 = this.currMouseY - var14 / 2 - y - 12;
@@ -1106,18 +1106,18 @@ public final class Panel {
 		}
 	}
 
-	private final void renderSprite(int x, int y, int spriteID) {
+	private void renderSprite(int x, int y, int spriteID) {
 		try {
 			this.graphics.drawSprite(spriteID, x, y);
-			
+
 		} catch (RuntimeException var6) {
 			throw GenUtil.makeThrowable(var6, "qa.LA(" + "dummy" + ',' + y + ',' + x + ',' + spriteID + ')');
 		}
 	}
 
-	private final void renderString(int control, int x, int y, int font, int spriteHeader, String str) {
+	private void renderString(int control, int x, int y, int font, int spriteHeader, String str) {
 		try {
-			
+
 			int color;
 			if (!this.controlUseAlternativeColour[control]) {
 				color = 0;
@@ -1131,9 +1131,9 @@ public final class Panel {
 		}
 	}
 
-	private final void renderText(int control, int x, int y, int font, String str, int spriteHeader) {
+	private void renderText(int control, int x, int y, int font, String str, int spriteHeader) {
 		try {
-			
+
 			int yReal = y + this.graphics.fontHeight(font) / 3;
 			this.renderString(control, x, yReal, font, spriteHeader, str);
 		} catch (RuntimeException var9) {
@@ -1142,9 +1142,9 @@ public final class Panel {
 		}
 	}
 
-	private final void renderTextEntry(int controlIndex, int x, int y, int width, int height, int font, String text) {
+	private void renderTextEntry(int controlIndex, int x, int y, int width, int height, int font, String text) {
 		try {
-			
+
 			if (this.controlFlag[controlIndex]) {
 				int len = text.length();
 				text = "";
@@ -1180,10 +1180,10 @@ public final class Panel {
 		}
 	}
 
-	private final void renderToggleButton(int controlIndex, int x, int y, int width, int height) {
+	private void renderToggleButton(int controlIndex, int x, int y, int width, int height) {
 		try {
 			this.graphics.drawBox(x, y, width, height, 16777215);
-			
+
 			this.graphics.drawLineHoriz(x, y, width, this.colorI);
 			this.graphics.drawLineVert(x, y, this.colorI, height);
 			this.graphics.drawLineHoriz(x, height + y - 1, width, this.colorL);
@@ -1202,22 +1202,23 @@ public final class Panel {
 
 	public final void resetList(int control) {
 		try {
-			
+
 			this.controlScrollAmount[control] = 0;
 			this.controlSelectedListIndex[control] = -1;
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "qa.N(" + control + ',' + "dummy" + ')');
 		}
 	}
+
 	public final void resetListToIndex(int control, int base) {
 		this.controlScrollAmount[control] = base;
-		this.controlSelectedListIndex[control] = -1; 
+		this.controlSelectedListIndex[control] = -1;
 	}
 
 	public final void setFocus(int control) {
 		try {
 			this.focusControlIndex = control;
-			
+
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "qa.OA(" + control + ',' + "dummy" + ')');
 		}
@@ -1229,7 +1230,7 @@ public final class Panel {
 
 	public final void setListEntry(int controlID, int entryID, String str, int crownId, String str2, String str3) {
 		try {
-			
+
 			this.controlListEntryString[controlID][entryID] = str;
 			this.controlListEntryCrown[controlID][entryID] = crownId;
 			this.controlListEntryString2[controlID][entryID] = str2;
@@ -1248,7 +1249,7 @@ public final class Panel {
 	public final void setText(int control, String str) {
 		try {
 			this.controlText[control] = str;
-			
+
 		} catch (RuntimeException var5) {
 			throw GenUtil.makeThrowable(var5,
 					"qa.MA(" + control + ',' + (str != null ? "{...}" : "null") + ',' + "dummy" + ')');
@@ -1257,7 +1258,7 @@ public final class Panel {
 
 	public final void show(int control) {
 		try {
-			
+
 			this.controlVisible[control] = true;
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "qa.NA(" + control + ',' + "dummy" + ')');
@@ -1267,40 +1268,39 @@ public final class Panel {
 	public int getScrollPosition(int index) {
 		return controlScrollAmount[index];
 	}
-	
+
 	public void scrollMethodList(int handle, int i) {
 		int limit = controlListCurrentSize[handle] - (controlHeight[handle] / graphics.fontHeight(controlArgInt[handle]));
 		int diff = Math.abs(limit - controlScrollAmount[handle]);
-		if(controlScrollAmount[handle] <= limit) {
+		if (controlScrollAmount[handle] <= limit) {
 			if (i > 0)
-				if(diff < i)
+				if (diff < i)
 					controlScrollAmount[handle] += diff;
 				else
 					controlScrollAmount[handle] += i;
-			else if(i < 0 && controlScrollAmount[handle] > 0)
+			else if (i < 0 && controlScrollAmount[handle] > 0)
 				if (controlScrollAmount[handle] < -i)
 					controlScrollAmount[handle] -= controlScrollAmount[handle];
 				else
 					controlScrollAmount[handle] += i;
 		}
-		return;
 	}
+
 	public void scrollMethodCustomList(int handle, int i, int cDifference) {
 		int limit = controlListCurrentSize[handle] - (controlHeight[handle] / graphics.fontHeight(controlArgInt[handle])) + cDifference;
 		int diff = Math.abs(limit - controlScrollAmount[handle]);
-		if(controlScrollAmount[handle] <= limit) {
-		if (i > 0)
-			if(diff < i)
-				controlScrollAmount[handle] += diff;
-			else
-				controlScrollAmount[handle] += i;
-		else if(i < 0 && controlScrollAmount[handle] > 0)
-			if (controlScrollAmount[handle] < -i)
-				controlScrollAmount[handle] -= controlScrollAmount[handle];
-			else
-				controlScrollAmount[handle] += i;
+		if (controlScrollAmount[handle] <= limit) {
+			if (i > 0)
+				if (diff < i)
+					controlScrollAmount[handle] += diff;
+				else
+					controlScrollAmount[handle] += i;
+			else if (i < 0 && controlScrollAmount[handle] > 0)
+				if (controlScrollAmount[handle] < -i)
+					controlScrollAmount[handle] -= controlScrollAmount[handle];
+				else
+					controlScrollAmount[handle] += i;
 		}
-		return;
 	}
 
 	public void reposition(int id, int x, int y, int w, int h) {

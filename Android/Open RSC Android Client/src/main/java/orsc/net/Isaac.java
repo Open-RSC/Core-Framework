@@ -4,12 +4,26 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 
 public final class Isaac {
+	private static final int GOLDEN = -1640531527;
 	private int gen;
 	private int m_d;
 	private int[] mem;
 	private int[] rsl;
 	private int m_m;
 	private int m_f;
+
+	Isaac(int[] seed) {
+		try {
+			this.rsl = new int[256];
+			this.mem = new int[256];
+
+			System.arraycopy(seed, 0, this.rsl, 0, seed.length);
+
+			this.init();
+		} catch (RuntimeException var3) {
+			throw GenUtil.makeThrowable(var3, "o.<init>(" + "{...}" + ')');
+		}
+	}
 
 	public final int next() {
 		try {
@@ -24,7 +38,7 @@ public final class Isaac {
 		}
 	}
 
-	private final void generate() {
+	private void generate() {
 		try {
 			this.m_d += ++this.m_f;
 
@@ -36,7 +50,7 @@ public final class Isaac {
 				} else if (var5 != 1) {
 					if (var5 == 2) {
 						this.m_m ^= this.m_m << 2;
-					} else if (var5 == 3) {
+					} else {
 						this.m_m ^= this.m_m >>> 16;
 					}
 				} else {
@@ -54,9 +68,7 @@ public final class Isaac {
 		}
 	}
 
-	private static final int GOLDEN = -1640531527;
-
-	private final void init() {
+	private void init() {
 		try {
 			int c = GOLDEN;
 			int a = GOLDEN;
@@ -185,21 +197,6 @@ public final class Isaac {
 			this.gen = 256;
 		} catch (RuntimeException var11) {
 			throw GenUtil.makeThrowable(var11, "o.E(" + -2 + ')');
-		}
-	}
-
-	Isaac(int[] seed) {
-		try {
-			this.rsl = new int[256];
-			this.mem = new int[256];
-
-			for (int i = 0; i < seed.length; ++i) {
-				this.rsl[i] = seed[i];
-			}
-
-			this.init();
-		} catch (RuntimeException var3) {
-			throw GenUtil.makeThrowable(var3, "o.<init>(" + (seed != null ? "{...}" : "null") + ')');
 		}
 	}
 }

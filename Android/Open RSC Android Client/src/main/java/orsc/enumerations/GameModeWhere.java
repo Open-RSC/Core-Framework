@@ -11,16 +11,18 @@ public enum GameModeWhere {
 	OFFICE_RC("WTRC", "office", "_rc", 1),
 	LIVE("LIVE", "", "", 0);
 
-	@Override
-	public final String toString() {
+	public final int val;
+
+	private GameModeWhere(String var1, String var2, String var3, int val) {
 		try {
-			throw new IllegalStateException();
-		} catch (RuntimeException var2) {
-			throw GenUtil.makeThrowable(var2, "v.toString()");
+			this.val = val;
+		} catch (RuntimeException var6) {
+			throw GenUtil.makeThrowable(var6, "v.<init>(" + (var1 != null ? "{...}" : "null") + ','
+					+ (var2 != null ? "{...}" : "null") + ',' + (var3 != null ? "{...}" : "null") + ',' + val + ')');
 		}
 	}
 
-	public static final boolean validGameModeWhere(GameModeWhere mode) {
+	public static boolean validGameModeWhere(GameModeWhere mode) {
 		try {
 			return OFFICE_RC == mode || OFFICE_QA == mode || OFFICE_WIP == mode
 					|| mode == OFFICE_WTI || OFFICE_BETA == mode;
@@ -29,22 +31,21 @@ public enum GameModeWhere {
 		}
 	}
 
-	public static final GameModeWhere[] gameModesWhere() {
+	public static GameModeWhere[] gameModesWhere() {
 		try {
-			return new GameModeWhere[] { GameModeWhere.LIVE, GameModeWhere.OFFICE_RC,
+			return new GameModeWhere[]{GameModeWhere.LIVE, GameModeWhere.OFFICE_RC,
 					GameModeWhere.OFFICE_QA, GameModeWhere.OFFICE_WIP, GameModeWhere.LOCAL,
-					GameModeWhere.OFFICE_WTI, GameModeWhere.OFFICE_BETA };
+					GameModeWhere.OFFICE_WTI, GameModeWhere.OFFICE_BETA};
 		} catch (RuntimeException var2) {
 			throw GenUtil.makeThrowable(var2, "i.C(" + "dummy" + ')');
 		}
 	}
 
-	public static final GameModeWhere lookupModeWhere(int val) {
+	public static GameModeWhere lookupModeWhere(int val) {
 		try {
 			GameModeWhere[] var2 = GameModeWhere.gameModesWhere();
 
-			for (int i = 0; i < var2.length; ++i) {
-				GameModeWhere var4 = var2[i];
+			for (GameModeWhere var4 : var2) {
 				if (val == var4.val) {
 					return var4;
 				}
@@ -56,14 +57,12 @@ public enum GameModeWhere {
 		}
 	}
 
-	public final int val;
-
-	private GameModeWhere(String var1, String var2, String var3, int val) {
+	@Override
+	public final String toString() {
 		try {
-			this.val = val;
-		} catch (RuntimeException var6) {
-			throw GenUtil.makeThrowable(var6, "v.<init>(" + (var1 != null ? "{...}" : "null") + ','
-					+ (var2 != null ? "{...}" : "null") + ',' + (var3 != null ? "{...}" : "null") + ',' + val + ')');
+			throw new IllegalStateException();
+		} catch (RuntimeException var2) {
+			throw GenUtil.makeThrowable(var2, "v.toString()");
 		}
 	}
 }

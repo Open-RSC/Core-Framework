@@ -1,19 +1,14 @@
 package orsc.util;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.EOFException;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 
 public class GenUtil {
-	static long lastTimeCall;
-	public static URL streamChooserContext = null;
-	static long timeOverflow;
+	private static URL streamChooserContext = null;
+	private static long lastTimeCall;
+	private static long timeOverflow;
 
-	public static final InputStream chooseStreamFor(String file) throws IOException {
+	public static InputStream chooseStreamFor(String file) throws IOException {
 		try {
 			InputStream stream;
 			if (null != GenUtil.streamChooserContext) {
@@ -28,7 +23,7 @@ public class GenUtil {
 		}
 	}
 
-	public static final int colorToResource(int r, int g, int b) {
+	public static int colorToResource(int r, int g, int b) {
 		try {
 			b >>= 3;
 			r >>= 3;
@@ -39,7 +34,7 @@ public class GenUtil {
 		}
 	}
 
-	public static final synchronized long currentTimeMillis() {
+	public static synchronized long currentTimeMillis() {
 		try {
 			long time = System.currentTimeMillis();
 			if (GenUtil.lastTimeCall > time) {
@@ -53,7 +48,7 @@ public class GenUtil {
 		}
 	}
 
-	public static final String ipToString(int ip) {
+	public static String ipToString(int ip) {
 		try {
 			return (ip >> 24 & 255) + "." + (255 & ip >> 16) + "." + (ip >> 8 & 255) + "." + (ip & 255);
 		} catch (RuntimeException var3) {
@@ -62,7 +57,7 @@ public class GenUtil {
 	}
 
 
-	public static final RSRuntimeError makeThrowable(Throwable error, String msg) {
+	public static RSRuntimeError makeThrowable(Throwable error, String msg) {
 		try {
 			RSRuntimeError var2;
 			if (error instanceof RSRuntimeError) {
@@ -80,24 +75,25 @@ public class GenUtil {
 		}
 	}
 
-	static final void printMultiLineError(String err) {
+	static void printMultiLineError(String err) {
 		try {
 			System.out.println("Error: " + StringUtil.stringFindReplace(true, "\n", "%0a", err));
 		} catch (RuntimeException var3) {
 			throw var3;
 		}
 	}
+
 	/**
 	 * @see chooseStreamFor
 	 */
-	public static final void readFileFully(String file, byte[] dest, int limit) throws IOException {
+	public static void readFileFully(String file, byte[] dest, int limit) throws IOException {
 		try {
 			InputStream var4 = chooseStreamFor(file);
 			DataInputStream stream = new DataInputStream(var4);
 
 			try {
 				stream.readFully(dest, 0, limit);
-			} catch (EOFException var6) {
+			} catch (EOFException ignored) {
 				;
 			}
 
@@ -108,11 +104,11 @@ public class GenUtil {
 		}
 	}
 
-	public static final void sleep(long time) {
+	public static void sleep(long time) {
 		try {
 			try {
 				Thread.sleep(time);
-			} catch (InterruptedException var4) {
+			} catch (InterruptedException ignored) {
 				;
 			}
 		} catch (RuntimeException var5) {
@@ -120,7 +116,7 @@ public class GenUtil {
 		}
 	}
 
-	public static final void sleepShadow(long time) {
+	public static void sleepShadow(long time) {
 		try {
 			if (0L < time) {
 				if (time % 10L == 0L) {
@@ -136,7 +132,7 @@ public class GenUtil {
 		}
 	}
 
-	public static final int buildColor(int r, int g, int b) {
+	public static int buildColor(int r, int g, int b) {
 		try {
 			return (r << 16) + (g << 8) + b;
 		} catch (RuntimeException var5) {
@@ -144,8 +140,8 @@ public class GenUtil {
 		}
 	}
 
-	public static final int computeItemCost(int basePrice, int shopItemPrice, int shopBuyPriceMod, int var3,
-											boolean var4, int var5, int count, int shopPriceMultiplier) {
+	public static int computeItemCost(int basePrice, int shopItemPrice, int shopBuyPriceMod, int var3,
+									  boolean var4, int var5, int count, int shopPriceMultiplier) {
 		try {
 			int cost = 0;
 

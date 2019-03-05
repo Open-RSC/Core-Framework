@@ -8,84 +8,45 @@ import orsc.mudclient;
 
 public class NComponent {
 
-	private GraphicsController client;
-
-	private NComponent parent;
-
 	public int x;
-
 	public int y;
-
+	private boolean showCrown = false;
+	public int crown = 0;
+	private GraphicsController client;
+	private NComponent parent;
 	private int width;
-
 	private int height;
-
 	private String text;
-
 	private int backgroundColor;
 	private int backgroundColorHovered;
-
 	private int fontColor;
 	private int fontColorHovered;
-
 	private int borderColor;
 	private int borderColorHovered;
-	
 	private int horizWidth;
 	private int horizColor;
-
 	private ArrayList<NComponent> subComponents = new ArrayList<NComponent>();
-
 	private InputListener inputListener;
-
 	private int textFontSize;
 	private boolean textCentered = false;
 	private boolean textKeepWidth = false;
-
 	private boolean isHovered;
-
 	private int backgroundOpacity;
-
 	private boolean visible = true;
 	private boolean movable = false;
-
 	private boolean drawSprite;
-
 	private int spriteID;
 	private int spriteWidth;
 	private int spriteHeight;
 	private int spriteOverlay;
-
 	private boolean drawHorizLine;
 	private boolean drawBorder;
 	private boolean drawBox;
-
 	private boolean drawCircle;
 	private int circleRadius;
-
 	private HashMap<String, Object> attributes = new HashMap<String, Object>();
-
 	private mudclient graphics;
-
 	private boolean overlay;
-
-	@SuppressWarnings("unchecked")
-	public <T> T getAttribute(String string) {
-		return (T) attributes.get(string);
-	}
-
-	@SuppressWarnings("unchecked")
-	public <T> T getAttribute(String string, T fail) {
-		T object = (T) attributes.get(string);
-		if (object != null) {
-			return object;
-		}
-		return fail;
-	}
-
-	public void setAttribute(String string, Object object) {
-		attributes.put(string, object);
-	}
 
 	public NComponent(mudclient client, int x, int y, int width, int height) {
 		this.setRenderer(client.getSurface());
@@ -104,6 +65,24 @@ public class NComponent {
 	public NComponent(mudclient client) {
 		this.setRenderer(client.getSurface());
 		this.setClient(client);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> T getAttribute(String string) {
+		return (T) attributes.get(string);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> T getAttribute(String string, T fail) {
+		T object = (T) attributes.get(string);
+		if (object != null) {
+			return object;
+		}
+		return fail;
+	}
+
+	public void setAttribute(String string, Object object) {
+		attributes.put(string, object);
 	}
 
 	public NComponent setSize(int width, int height) {
@@ -128,17 +107,18 @@ public class NComponent {
 		this.drawCircle = draw;
 	}
 
-	public void setDrawBorder(boolean draw) {
+	private void setDrawBorder(boolean draw) {
 		this.drawBorder = draw;
 	}
-	public void setDrawHorizLine(boolean draw) {
+
+	private void setDrawHorizLine(boolean draw) {
 		this.drawHorizLine = draw;
 	}
 
 	public void setDrawSprite(boolean draw) {
 		drawSprite = false;
 	}
-	public boolean showCrown = false;
+
 	public void setCrownDisplay(boolean crown) {
 		this.showCrown = crown;
 	}
@@ -146,11 +126,6 @@ public class NComponent {
 	public NComponent setLocation(int x, int y) {
 		this.x = x;
 		this.y = y;
-		return this;
-	}
-
-	public NComponent setText(String text) {
-		this.text = text;
 		return this;
 	}
 
@@ -174,18 +149,16 @@ public class NComponent {
 		return this;
 	}
 
-	public NComponent setFontColor(int fontColor, int fontColorHovered) {
+	public void setFontColor(int fontColor, int fontColorHovered) {
 		this.fontColor = fontColor;
 		this.fontColorHovered = fontColorHovered;
 
-		return this;
 	}
 
-	public NComponent setBorderColors(int borderColor, int borderColorHovered) {
+	public void setBorderColors(int borderColor, int borderColorHovered) {
 		this.borderColor = borderColor;
 		this.borderColorHovered = borderColorHovered;
 		setDrawBorder(true);
-		return this;
 	}
 
 	public NComponent setHorizLine(int horizWidth, int horizColor) {
@@ -213,7 +186,7 @@ public class NComponent {
 			graphics().drawSpriteClipping(spriteID, drawX, drawY, spriteWidth, spriteHeight, spriteOverlay, 0, false, 0,
 					1);
 		}
-		if(drawHorizLine) {
+		if (drawHorizLine) {
 			graphics().drawLineHoriz(drawX, drawY, horizWidth, horizColor);
 		}
 		if (getText() != null) {
@@ -223,7 +196,7 @@ public class NComponent {
 				drawX = drawX + (getWidth() / 2);
 				graphics().drawColoredStringCentered(drawX, text, isHovered() ? fontColorHovered : fontColor, showCrown ? crown : 0,
 						textFontSize, fixedY);
-			} else if(textKeepWidth){
+			} else if (textKeepWidth) {
 				graphics().drawWrappedCenteredString(text, drawX, fixedY, width, textFontSize,
 						fontColor, true);
 			} else {
@@ -265,8 +238,16 @@ public class NComponent {
 		return width;
 	}
 
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
 	public int getHeight() {
 		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
 	}
 
 	public boolean checkMouseInput(int clickX, int clickY, int mButtonDown, int mButtonClick) {
@@ -284,16 +265,14 @@ public class NComponent {
 
 		if (getInputListener() != null) {
 			if (mouseCursorOnComponent(clickX, clickY) && mButtonDown >= 1) {
-				if (getInputListener().onMouseDown(clickX, clickY, mButtonDown, mButtonClick)) {
-					return true;
-				}
+				return getInputListener().onMouseDown(clickX, clickY, mButtonDown, mButtonClick);
 			}
 		}
 
 		return false;
 	}
 
-	public boolean checkMouseMove(int mouseX, int mouseY) {
+	private boolean checkMouseMove(int mouseX, int mouseY) {
 		if (!visible) {
 			return false;
 		}
@@ -321,38 +300,27 @@ public class NComponent {
 		subComponents.add(n);
 	}
 
-	private void setParent(NComponent nComponent) {
-		this.parent = nComponent;
-	}
-
 	public void removeComponent(NComponent n) {
 		subComponents.remove(n);
 	}
 
-	public void setVisible(boolean visible) {
-		this.visible = visible;
-	}
-
-	public boolean mouseCursorOnComponent(int clickX, int clickY) {
-		if (clickX >= getX() && clickY >= getY() && clickX <= getX() + width && clickY <= getY() + height) {
-			return true;
-		}
-		return false;
-	}
-
-	public void setInputListener(InputListener inputListener2) {
-		this.inputListener = inputListener2;
+	boolean mouseCursorOnComponent(int clickX, int clickY) {
+		return clickX >= getX() && clickY >= getY() && clickX <= getX() + width && clickY <= getY() + height;
 	}
 
 	public boolean isVisible() {
 		return visible;
 	}
 
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+
 	public GraphicsController graphics() {
 		return client;
 	}
 
-	public void setRenderer(GraphicsController renderer) {
+	private void setRenderer(GraphicsController renderer) {
 		this.client = renderer;
 	}
 
@@ -372,20 +340,20 @@ public class NComponent {
 
 	}
 
-	public NComponent getParent() {
+	NComponent getParent() {
 		return parent;
 	}
-	
-	public boolean secondaryWindow = false;
 
-	public boolean isHovered() {
-		if(secondaryWindow)
-			return isHovered;
-		else 
-			return false;
+	private void setParent(NComponent nComponent) {
+		this.parent = nComponent;
 	}
 
-	public void setHovered(boolean isHovered) {
+	private boolean isHovered() {
+		boolean secondaryWindow = false;
+		return false;
+	}
+
+	private void setHovered(boolean isHovered) {
 		this.isHovered = isHovered;
 	}
 
@@ -393,26 +361,23 @@ public class NComponent {
 		return text;
 	}
 
+	public NComponent setText(String text) {
+		this.text = text;
+		return this;
+	}
+
 	public boolean isTextCentered() {
 		return textCentered;
-	}
-	
-	public boolean isTextKeepWidth() {
-		return textKeepWidth;
-	}
-
-	public void setWidth(int width) {
-		this.width = width;
-	}
-
-	public void setHeight(int height) {
-		this.height = height;
 	}
 
 	public void setTextCentered(boolean textCentered) {
 		this.textCentered = textCentered;
 	}
-	
+
+	public boolean isTextKeepWidth() {
+		return textKeepWidth;
+	}
+
 	public void setTextKeepWidth(boolean textKeepIn) {
 		this.textKeepWidth = textKeepIn;
 	}
@@ -443,23 +408,25 @@ public class NComponent {
 	}
 
 	public boolean checkKeyPress(int key) {
-		for(NComponent component : subComponents()) {
-			if(component.isVisible() && component.checkKeyPress(key)) {
+		for (NComponent component : subComponents()) {
+			if (component.isVisible() && component.checkKeyPress(key)) {
 				return true;
 			}
 		}
 		if (getInputListener() != null) {
-			if(getInputListener().onCharTyped((char) key, key)) {
-				return true;
-			}
+			return getInputListener().onCharTyped((char) key, key);
 		}
 		return false;
 	}
 
-	public InputListener getInputListener() {
+	private InputListener getInputListener() {
 		return inputListener;
 	}
-	public int crown = 0;
+
+	public void setInputListener(InputListener inputListener2) {
+		this.inputListener = inputListener2;
+	}
+
 	public void setCrown(int crownID) {
 		this.crown = crownID;
 	}

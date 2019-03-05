@@ -7,7 +7,7 @@ public class ItemDef extends EntityDef {
 	public boolean stackable;
 	public boolean wieldable;
 	public int wearableID;
-	public int pictureMask;
+	private int pictureMask;
 	public boolean quest;
 	public boolean membersItem;
 
@@ -15,7 +15,7 @@ public class ItemDef extends EntityDef {
 	private int notedFormID = -1;
 
 	public ItemDef(String name, String description, String command, int basePrice, int sprite, boolean stackable,
-			boolean wieldable, int wearableID, int pictureMask, boolean membersItem, boolean quest, int id) {
+				   boolean wieldable, int wearableID, int pictureMask, boolean membersItem, boolean quest, int id) {
 		super(name, description, id);
 		this.command = command;
 		this.basePrice = basePrice;
@@ -30,8 +30,8 @@ public class ItemDef extends EntityDef {
 	}
 
 	public ItemDef(String name, String description, String command, int basePrice, int sprite, boolean stackable,
-			boolean wieldable, int wearableID, int pictureMask, boolean membersItem, boolean quest, int notedForm, int notedFormOf,
-			int id) {
+				   boolean wieldable, int wearableID, int pictureMask, boolean membersItem, boolean quest, int notedForm, int notedFormOf,
+				   int id) {
 		super(name, description, id);
 		this.command = command;
 		this.basePrice = basePrice;
@@ -93,15 +93,15 @@ public class ItemDef extends EntityDef {
 		return isNotedFormOf;
 	}
 
-	public void setNotedFormOf(int notedFormOf) {
+	private void setNotedFormOf(int notedFormOf) {
 		this.isNotedFormOf = notedFormOf;
-	}
-
-	public void setNotedForm(int id) {
-		this.notedFormID = id;
 	}
 
 	public int getNotedForm() {
 		return notedFormID;
+	}
+
+	public void setNotedForm(int id) {
+		this.notedFormID = id;
 	}
 }

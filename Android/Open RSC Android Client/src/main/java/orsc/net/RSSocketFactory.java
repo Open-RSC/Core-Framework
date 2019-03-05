@@ -1,4 +1,5 @@
 package orsc.net;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,6 +19,8 @@ import java.util.List;
 
 import orsc.util.GenUtil;
 
+import static java.lang.Integer.valueOf;
+
 final class RSSocketFactory extends RSSocketFactory_Base {
 	private ProxySelector proxySelector;
 
@@ -29,7 +32,7 @@ final class RSSocketFactory extends RSSocketFactory_Base {
 		}
 	}
 
-	private final Socket openConnect(int tunnelIP, int vsar2, String contentQuery, String tunnelHost) throws IOException {
+	private Socket openConnect(int tunnelIP, int vsar2, String contentQuery, String tunnelHost) throws IOException {
 		try {
 			Socket sock = new Socket(tunnelHost, tunnelIP);
 			sock.setSoTimeout(10000);
@@ -102,11 +105,9 @@ final class RSSocketFactory extends RSSocketFactory_Base {
 			}
 
 			primary.addAll(secondary);
-			Proxy[] var6 = primary.toArray(new Proxy[primary.size()]);
+			Proxy[] var6 = primary.toArray(new Proxy[0]);
 			SocketProxyFailure var7 = null;
-			Proxy[] var8 = var6;
-			for (int var9 = 0; var9 < var8.length; ++var9) {
-				Object var10 = var8[var9];
+			for (Object var10 : var6) {
 				Proxy var11 = (Proxy) var10;
 
 				try {
@@ -116,8 +117,7 @@ final class RSSocketFactory extends RSSocketFactory_Base {
 					}
 				} catch (SocketProxyFailure var13) {
 					var7 = var13;
-				} catch (IOException var14) {
-					;
+				} catch (IOException ignored) {
 				}
 			}
 
@@ -131,7 +131,7 @@ final class RSSocketFactory extends RSSocketFactory_Base {
 		}
 	}
 
-	private final Socket open(Proxy proxy) throws IOException {
+	private Socket open(Proxy proxy) throws IOException {
 		try {
 			if (proxy.type() != Type.DIRECT) {
 				SocketAddress var3 = proxy.address();
@@ -143,27 +143,26 @@ final class RSSocketFactory extends RSSocketFactory_Base {
 						try {
 							Class<?> var6 = Class.forName("sun.net.www.protocol.http.AuthenticationInfo");
 							Method var7 = var6.getDeclaredMethod("getProxyAuth",
-									new Class[] { String.class, Integer.TYPE });
+									String.class, Integer.TYPE);
 							var7.setAccessible(true);
-							Object var8 = var7.invoke((Object) null,
-									new Object[] { var4.getHostName(), new Integer(var4.getPort()) });
+							Object var8 = var7.invoke(null,
+									var4.getHostName(), valueOf(var4.getPort()));
 							if (null != var8) {
-								Method var9 = var6.getDeclaredMethod("supportsPreemptiveAuthorization", new Class[0]);
+								Method var9 = var6.getDeclaredMethod("supportsPreemptiveAuthorization");
 								var9.setAccessible(true);
-								if (((Boolean) var9.invoke(var8, new Object[0])).booleanValue()) {
-									Method var10 = var6.getDeclaredMethod("getHeaderName", new Class[0]);
+								if ((Boolean) var9.invoke(var8, new Object[0])) {
+									Method var10 = var6.getDeclaredMethod("getHeaderName");
 									var10.setAccessible(true);
 									Method var11 = var6.getDeclaredMethod("getHeaderValue",
-											new Class[] { URL.class, String.class });
+											URL.class, String.class);
 									var11.setAccessible(true);
 									String var12 = (String) var10.invoke(var8, new Object[0]);
 									String var13 = (String) var11.invoke(var8,
-											new Object[] { new URL("https://" + this.socketHost + "/"), "https" });
+											new Object[]{new URL("https://" + this.socketHost + "/"), "https"});
 									var16 = var12 + ": " + var13;
 								}
 							}
-						} catch (Exception var14) {
-							;
+						} catch (Exception ignored) {
 						}
 
 						return this.openConnect(var4.getPort(), 1514, var16, var4.getHostName());

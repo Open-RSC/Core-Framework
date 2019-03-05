@@ -43,6 +43,26 @@ public class Tile {
 	public byte groundOverlay = 0;
 
 	/**
+	 * Create a new tile from raw data packed into the given ByteBuffer
+	 */
+	static Tile unpack(ByteBuffer in) throws IOException {
+		if (in.remaining() < 10) {
+			throw new IOException("Provided buffer too short");
+		}
+		Tile tile = new Tile();
+
+		tile.groundElevation = in.get();
+		tile.groundTexture = in.get();
+		tile.groundOverlay = in.get();
+		tile.roofTexture = in.get();
+		tile.horizontalWall = in.get();
+		tile.verticalWall = in.get();
+		tile.diagonalWalls = in.getInt();
+
+		return tile;
+	}
+
+	/**
 	 * Writes the Tile raw data into a ByteBuffer
 	 */
 	public ByteBuffer pack() throws IOException {
@@ -59,25 +79,5 @@ public class Tile {
 
 		out.flip();
 		return out;
-	}
-
-	/**
-	 * Create a new tile from raw data packed into the given ByteBuffer
-	 */
-	public static Tile unpack(ByteBuffer in) throws IOException {
-		if (in.remaining() < 10) {
-			throw new IOException("Provided buffer too short");
-		}
-		Tile tile = new Tile();
-
-		tile.groundElevation = in.get();
-		tile.groundTexture = in.get();
-		tile.groundOverlay = in.get();
-		tile.roofTexture = in.get();
-		tile.horizontalWall = in.get();
-		tile.verticalWall = in.get();
-		tile.diagonalWalls = in.getInt();
-
-		return tile;
 	}
 }

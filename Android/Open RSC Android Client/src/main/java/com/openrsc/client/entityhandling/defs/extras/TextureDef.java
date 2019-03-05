@@ -1,14 +1,14 @@
 package com.openrsc.client.entityhandling.defs.extras;
 
 public class TextureDef {
-    public String dataName;
-    public String animationName;
+    private String dataName;
+    private String animationName;
 
-	public TextureDef(String dataName, String animationName) {
-		this.dataName = dataName;
-		this.animationName = animationName;
-	}
-	
+    public TextureDef(String dataName, String animationName) {
+        this.dataName = dataName;
+        this.animationName = animationName;
+    }
+
     public String getDataName() {
         return dataName;
     }
