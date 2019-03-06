@@ -599,6 +599,9 @@ public abstract class Mob extends Entity {
 					ActionSender.sendWakeUp(playerVictim, false, false);
 					ActionSender.sendFatigue(playerVictim);
 				}
+			} else {
+				Player attacker = (Player)this;
+				attacker.releaseUnderAttack();
 			}
 
 			setLocation(victim.getLocation(), true);
