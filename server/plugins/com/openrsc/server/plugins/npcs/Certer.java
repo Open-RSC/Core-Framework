@@ -44,10 +44,14 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 		
 		// First Certer Menu
 		int firstType = firstMenu(certerDef, ending, p, n);
-		if (firstType < 0) return;
-		
-		if (p.isBusy()) {
-			return;
+		switch(firstType) {
+			case 0:
+				playerTalk(p, n, "I have some certificates to trade in");
+				break;
+			case 1:
+				playerTalk(p, n, "I have some " + certerDef.getType() + ending + " to trade in");
+				break;
+			//case 2 handled separately
 		}
 		
 		int secondType = -1;
@@ -56,11 +60,6 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 		if (firstType != 2) {
 			// Second Certer Menu
 			secondType = secondMenu(certerDef, ending, p, n, firstType);
-			if (secondType < 0) return;
-			
-			if (p.isBusy()) {
-				return;
-			}
 		}
 		
 		// Final Certer Menu
@@ -78,7 +77,7 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 	}
 	
 	private int firstMenu(CerterDef certerDef, String ending, Player p, Npc n) {
-		return showMenu(p, "I have some certificates to trade in",
+		return showMenu(p, n, false, "I have some certificates to trade in",
 				"I have some " + certerDef.getType() + ending + " to trade in",
 				"What is a " + certerDef.getType() + " exchange stall?");	
 	}
@@ -91,10 +90,10 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 		switch(option) {
 			case 0:
 				p.message("what sort of certificate do you wish to trade in?");
-				return showMenu(p, names);
+				return showMenu(p, n, false, names);
 			case 1:
 				p.message("what sort of " + certerDef.getType() + ending + " do you wish to trade in?");
-				return showMenu(p, names);
+				return showMenu(p, n, false, names);
 			default:
 				return -1;
 		}
@@ -105,10 +104,10 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 		p.message("How many certificates do you wish to trade in?");
 		int certAmount;
 		if (Constants.GameServer.WANT_CERTER_BANK_EXCHANGE) {
-			certAmount = showMenu(p, "One", "two", "Three", "four",
+			certAmount = showMenu(p, n, false, "One", "two", "Three", "four",
 				"five", "All to bank");
 		} else {
-			certAmount = showMenu(p, "One", "two", "Three", "four", "five");
+			certAmount = showMenu(p, n, false, "One", "two", "Three", "four", "five");
 		}
 		int certID = certerDef.getCertID(index);
 		if (certID < 0) {
@@ -157,10 +156,10 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 			+ " do you wish to trade in?");
 		int certAmount;
 		if (Constants.GameServer.WANT_CERTER_BANK_EXCHANGE) {
-			certAmount = showMenu(p, "five", "ten", "Fifteen", "Twenty", "Twentyfive",
+			certAmount = showMenu(p, n, false, "five", "ten", "Fifteen", "Twenty", "Twentyfive",
 					"All from bank");
 		} else {
-			certAmount = showMenu(p, "five", "ten", "Fifteen", "Twenty", "Twentyfive");
+			certAmount = showMenu(p, n, false, "five", "ten", "Fifteen", "Twenty", "Twentyfive");
 		}
 		int certID = certerDef.getCertID(index);
 		if (certID < 0) {

@@ -66,6 +66,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.netty.channel.Channel;
@@ -291,6 +292,7 @@ public final class Player extends Mob {
 	private Social social;
 	private Duel duel;
 	private DelayedEvent unregisterEvent;
+	
 	/**
 	 * Restricts P2P stuff in F2P wilderness.
 	 */
@@ -1914,6 +1916,18 @@ public final class Player extends Mob {
 
 		super.setLocation(p, teleported);
 
+	}
+	
+	public void produceUnderAttack() {
+		World.getWorld().produceUnderAttack(this);
+	}
+	
+	public boolean checkUnderAttack() {
+		return World.getWorld().checkUnderAttack(this);
+	}
+	
+	public void releaseUnderAttack() {
+		World.getWorld().releaseUnderAttack(this);
 	}
 
 	@Override

@@ -1289,10 +1289,13 @@ public class Functions {
 				post(new Runnable() {
 					@Override
 					public void run() {
-						if (!player.inCombat()) {
+						if (npc != null) {
+							npc.resetPath();
+							npc.setBusyTimer(2500);
+						}
+						if (!player.inCombat() || npc == null 
+								|| (player.inCombat() && npc.getOpponent().getUUID().equals(player.getUUID()))) {
 							if (npc != null) {
-								npc.resetPath();
-								npc.setBusyTimer(2500);
 								npc.face(player);
 								player.face(npc);
 							}
@@ -1410,7 +1413,7 @@ public class Functions {
 			});
 			ActionSender.sendMenu(player, options);
 
-			while (!player.isBusy()) {
+			while (!player.checkUnderAttack()) {
 				if (player.getOption() != -1) {
 					if (npc != null && options[player.getOption()] != null) {
 						npc.setBusy(false);
@@ -1427,16 +1430,10 @@ public class Functions {
 					}
 					return -1;
 				}
-				try {
-					player.wait(1);
-				} catch (InterruptedException e) {
-					LOGGER.catching(e);
-					if (npc != null) {
-						npc.setBusy(false);
-					}
-					return -1;
-				}
+				sleep(1);
 			}
+			player.releaseUnderAttack();
+			player.notify();
 			//player got busy (combat), free npc if any
 			if (npc != null) {
 				npc.setBusy(false);

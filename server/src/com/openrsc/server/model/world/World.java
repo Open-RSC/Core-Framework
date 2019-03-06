@@ -77,6 +77,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	private final TileValue[][] tiles = new TileValue[MAX_WIDTH][MAX_HEIGHT];
 	public WorldLoader wl;
 	
+	private Map<Player, Boolean> underAttackMap = new HashMap<Player, Boolean>();
+	
 	/**
 	 * Double ended queue to store snapshots into
 	 */
@@ -769,6 +771,18 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		if (ctx != null && ctx.getPlayers().size() == 0) {
 			fishingTrawler.put(ctx.getBoat(), null);
 		}
+	}
+	
+	public void produceUnderAttack(Player p) {
+		underAttackMap.put(p, true);
+	}
+	
+	public boolean checkUnderAttack(Player p) {
+		return underAttackMap.getOrDefault(p, false);
+	}
+	
+	public void releaseUnderAttack(Player p) {
+		underAttackMap.put(p, false);
 	}
 
 }

@@ -20,6 +20,7 @@ import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.util.rsc.CollisionFlag;
 import com.openrsc.server.util.rsc.Formulae;
 
@@ -561,7 +562,11 @@ public abstract class Mob extends Entity {
 			if (this.isPlayer()) {
 				((Player) this).resetAll();
 				((Player) this).setStatus(Action.FIGHTING_MOB);
+				((Player) this).produceUnderAttack();
+			} else {
+				((Player) victim).produceUnderAttack();
 			}
+			Functions.sleep(1);
 
 			resetPath();
 			victim.resetPath();
@@ -575,7 +580,6 @@ public abstract class Mob extends Entity {
 			}
 
 			victim.setBusy(true);
-			victim.notifyAll();
 			victim.setSprite(victimSprite);
 			victim.setOpponent(this);
 			victim.setCombatTimer();
@@ -589,6 +593,7 @@ public abstract class Mob extends Entity {
 				playerVictim.setStatus(Action.FIGHTING_MOB);
 				ActionSender.sendSound(playerVictim, "underattack");
 				playerVictim.message("You are under attack!");
+				playerVictim.releaseUnderAttack();
 
 				if (playerVictim.isSleeping()) {
 					ActionSender.sendWakeUp(playerVictim, false, false);
