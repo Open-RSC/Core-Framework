@@ -1293,8 +1293,7 @@ public class Functions {
 							npc.resetPath();
 							npc.setBusyTimer(2500);
 						}
-						if (!player.inCombat() || npc == null 
-								|| (player.inCombat() && npc.getOpponent().getUUID().equals(player.getUUID()))) {
+						if (!player.inCombat()) {
 							if (npc != null) {
 								npc.face(player);
 								player.face(npc);
