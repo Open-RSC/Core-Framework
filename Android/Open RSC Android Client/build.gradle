@@ -1,17 +1,22 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
+    signingConfigs {
+    }
+    compileSdkVersion 28
     buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.openrsc.client"
         minSdkVersion 11
-        targetSdkVersion 25
+        targetSdkVersion 26
     }
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
+            debuggable false
+            jniDebuggable false
+            renderscriptDebuggable false
         }
     }
     productFlavors {
