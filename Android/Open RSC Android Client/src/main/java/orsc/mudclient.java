@@ -75,6 +75,8 @@ import orsc.util.StringUtil;
 
 import static orsc.Config.*;
 
+// Comment these out if Android client
+
 public final class mudclient implements Runnable {
 
     private static final int spriteMedia = 2000;
@@ -233,7 +235,7 @@ public final class mudclient implements Runnable {
                     || S_FOG_TOGGLE || S_GROUND_ITEM_TOGGLE
                     || S_AUTO_MESSAGE_SWITCH_TOGGLE || S_BATCH_PROGRESSION
                     || S_SIDE_MENU_TOGGLE || S_INVENTORY_COUNT_TOGGLE
-                    || S_ZOOM_VIEW_TOGGLE || S_MENU_COMBAT_STYLE_TOGGLE
+                    || S_MENU_COMBAT_STYLE_TOGGLE
                     || S_FIGHTMODE_SELECTOR_TOGGLE || S_SHOW_ROOF_TOGGLE
                     || S_EXPERIENCE_COUNTER_TOGGLE || S_WANT_GLOBAL_CHAT
                     || S_EXPERIENCE_DROPS_TOGGLE || S_ITEMS_ON_DEATH_MENU);
@@ -324,7 +326,6 @@ public final class mudclient implements Runnable {
     private boolean duelSettingsPrayer = false;
     private boolean duelSettingsRetreat = false;
     private boolean duelSettingsWeapons = false;
-    private boolean errorLoadingCoadebase = false;
     private boolean errorLoadingData = false;
     private boolean errorLoadingMemory = false;
     private int[] experienceArray = new int[S_PLAYER_LEVEL_LIMIT];
@@ -608,7 +609,7 @@ public final class mudclient implements Runnable {
         return m.matches();
     }
 
-    public static final String formatStackAmount(int length) {
+    public static String formatStackAmount(int length) {
         if (length < 100000) {
             return String.valueOf(length);
         }
@@ -643,7 +644,7 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private void errorGameCrash(String desc) {
+    private void errorGameCrash() {
         try {
 
             if (!this.hasGameCrashed) {
@@ -652,7 +653,7 @@ public final class mudclient implements Runnable {
             }
         } catch (RuntimeException var6) {
             var6.printStackTrace();
-            throw GenUtil.makeThrowable(var6, "e.KE(" + ("crash" != null ? "{...}" : "null") + ',' + "dummy" + ')');
+            throw GenUtil.makeThrowable(var6, "e.KE(" + "{...}" + ',' + "dummy" + ')');
         }
     }
 
@@ -783,7 +784,7 @@ public final class mudclient implements Runnable {
 
             } catch (Exception var10) {
                 var10.printStackTrace();
-                this.errorGameCrash("crash");
+                this.errorGameCrash();
             }
 
         } catch (RuntimeException var11) {
@@ -871,10 +872,10 @@ public final class mudclient implements Runnable {
                     --this.m_b;
                     var6 &= 255;
                     if (reposition()) {
-						/*if (this.currentViewMode == GameMode.LOGIN) {
-							this.createLoginPanels(3845);
-							this.renderLoginScreenViewports(-116);
-						}*/
+                        if (this.currentViewMode == GameMode.LOGIN) {
+                            this.createLoginPanels(3845);
+                            //this.renderLoginScreenViewports(-116);
+                        }
                         continue;
                     }
                     this.draw();
@@ -896,7 +897,7 @@ public final class mudclient implements Runnable {
                 this.clientBaseThread = null;
             } catch (Exception var10) {
                 var10.printStackTrace();
-                this.errorGameCrash("crash");
+                this.errorGameCrash();
             }
 
         } catch (RuntimeException var11) {
@@ -7703,10 +7704,8 @@ public final class mudclient implements Runnable {
     }
 
     private void handleAndroidSettingsClicks(short var5, int var6, int var7) {
-        int checkPosition = this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel);
-        int settingIndex = checkPosition;
 
-        if (settingIndex == 0 && this.mouseButtonClick == 1) {
+        if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 0 && this.mouseButtonClick == 1) {
             F_LONG_PRESS_CALC = C_LONG_PRESS_TIMER / 50;
             if (++F_LONG_PRESS_CALC >= 13) {
                 F_LONG_PRESS_CALC = 1;
@@ -7715,7 +7714,7 @@ public final class mudclient implements Runnable {
             saveConfiguration(false);
         }
 
-        if (settingIndex == 1 && this.mouseButtonClick == 1) {
+        if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 1 && this.mouseButtonClick == 1) {
             C_MENU_SIZE++;
             if (C_MENU_SIZE == 8)
                 C_MENU_SIZE = 1;
@@ -7725,17 +7724,17 @@ public final class mudclient implements Runnable {
             }
         }
 
-        if (settingIndex == 2 && this.mouseButtonClick == 1) {
+        if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 2 && this.mouseButtonClick == 1) {
             C_HOLD_AND_CHOOSE = !C_HOLD_AND_CHOOSE;
             saveConfiguration(false);
         }
 
-        if (settingIndex == 3 && this.mouseButtonClick == 1) {
+        if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 3 && this.mouseButtonClick == 1) {
             C_SWIPE_TO_SCROLL = !C_SWIPE_TO_SCROLL;
             saveConfiguration(false);
         }
 
-        if (settingIndex == 4 && this.mouseButtonClick == 1) {
+        if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 4 && this.mouseButtonClick == 1) {
             C_SWIPE_TO_ROTATE = !C_SWIPE_TO_ROTATE;
             saveConfiguration(false);
         }
@@ -13041,7 +13040,8 @@ public final class mudclient implements Runnable {
     final void update() {
         try {
 
-            if (!this.errorLoadingCoadebase) {
+            boolean errorLoadingCoadebase = false;
+            if (!errorLoadingCoadebase) {
                 if (!this.errorLoadingMemory) {
                     if (!this.errorLoadingData) {
 
@@ -13596,9 +13596,6 @@ public final class mudclient implements Runnable {
             if (uiTabPlayerInfoSubTab == 1) {
                 panelQuestInfo.scrollMethodList(controlQuestInfoPanel, x);
             }
-				/*else if(uiTabPlayerInfoSubTab == 2) {
-					panelPlayerTaskInfo.scrollMethodList(controlPlayerTaskInfoPanel, x);
-				}*/
         } else if (showUiTab == 6) { // Settings wrench menu
             panelSettings.scrollMethodCustomList(controlSettingPanel, x, 1);
         } else if (showUiTab == 4) // Magic and prayer book list.
