@@ -30,7 +30,7 @@ public class Bartender implements TalkToNpcExecutiveListener, TalkToNpcListener 
 					playerTalk(p, n, "Ok here you go thanks");
 					p.getInventory().remove(ItemId.COINS.id(), 2);
 					p.message("you buy a pint of beer");
-					addItem(p, ItemId.COINS.id(), 1);
+					addItem(p, ItemId.BEER.id(), 1);
 				} else {
 					p.message("You dont have enough coins for the beer");
 				}
