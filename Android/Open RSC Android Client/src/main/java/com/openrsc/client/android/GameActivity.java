@@ -247,8 +247,7 @@ public class GameActivity extends Activity implements ClientPort {
             in.close();
 
             return sb.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
         return "";
     }
@@ -267,8 +266,7 @@ public class GameActivity extends Activity implements ClientPort {
             in.close();
 
             return Integer.parseInt(sb.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
         return 0;
     }
