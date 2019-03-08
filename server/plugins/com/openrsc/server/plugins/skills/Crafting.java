@@ -499,8 +499,8 @@ public class Crafting implements InvUseOnItemListener,
 		if (jugID == -1) { // This shouldn't happen
 			return false;
 		}
-		// Clay
-		if (item.getID() == ItemId.CLAY.id()) {
+		// Clay and water is not bowl of water
+		if (item.getID() == ItemId.CLAY.id() && water.getID() != ItemId.BOWL_OF_WATER.id()) {
 			if (player.getInventory().remove(water) > -1
 				&& player.getInventory().remove(item) > -1) {
 				message(player, 1200, "You mix the clay and water");
@@ -532,9 +532,9 @@ public class Crafting implements InvUseOnItemListener,
 			return true;
 		} else if (item2.getID() == ItemId.BALL_OF_WOOL.id()) {
 			return true;
-		} else if ((item1.getID() == ItemId.BUCKET_OF_WATER.id() || item1.getID() == ItemId.JUG_OF_WATER.id() || item1.getID() == ItemId.BOWL_OF_WATER.id()) && item2.getID() == ItemId.CLAY.id()) {
+		} else if ((item1.getID() == ItemId.BUCKET_OF_WATER.id() || item1.getID() == ItemId.JUG_OF_WATER.id()) && item2.getID() == ItemId.CLAY.id()) {
 			return true;
-		} else if ((item2.getID() == ItemId.BUCKET_OF_WATER.id() || item2.getID() == ItemId.JUG_OF_WATER.id() || item2.getID() == ItemId.BOWL_OF_WATER.id()) && item1.getID() == ItemId.CLAY.id()) {
+		} else if ((item2.getID() == ItemId.BUCKET_OF_WATER.id() || item2.getID() == ItemId.JUG_OF_WATER.id()) && item1.getID() == ItemId.CLAY.id()) {
 			return true;
 		} else
 			return item1.getID() == ItemId.MOLTEN_GLASS.id() && item2.getID() == ItemId.LENS_MOULD.id() || item1.getID() == ItemId.LENS_MOULD.id() && item2.getID() == ItemId.MOLTEN_GLASS.id();
