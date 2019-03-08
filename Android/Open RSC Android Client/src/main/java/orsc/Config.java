@@ -39,6 +39,7 @@ public class Config {
     static boolean C_KILL_FEED = false;
     static int C_FIGHT_MENU = 1;
     static boolean C_INV_COUNT = false;
+    public static int C_ZOOM;
 
     /* Android: */
     // Avoid changing public to private in this section despite IDE suggestion as this would break Android Studio's build
@@ -50,10 +51,11 @@ public class Config {
     public static boolean F_SHOWING_KEYBOARD = false;
     static int F_LONG_PRESS_CALC;
     public static boolean C_HOLD_AND_CHOOSE = true;
-    public static int C_LONG_PRESS_TIMER = 400;
-    public static int C_MENU_SIZE = 6;
+    public static int C_LONG_PRESS_TIMER = 250; // default hold timer in ms
+    public static int C_MENU_SIZE = 3; // default font choice
     public static boolean C_SWIPE_TO_SCROLL = true;
     public static boolean C_SWIPE_TO_ROTATE = true;
+    public static boolean C_VOLUME_TO_ROTATE = false;
 
     /* Experience Config Menu */
     public static int C_EXPERIENCE_COUNTER = 1;
