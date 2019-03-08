@@ -419,16 +419,16 @@ public class ActionSender {
 		s.writeByte((byte) (player.getSettings().getGameSetting(1) ? 1: 0)); // Mouse buttons 1
 		s.writeByte((byte) (player.getSettings().getGameSetting(2) ? 1: 0)); // Sound Effects 2
 		s.writeByte((byte) player.getCombatStyle());
-		// show roof 5
-		// fog 6
+		// show roof 5?
+		// fog 6?
 		s.writeByte(player.getGlobalBlock()); // 9
 		s.writeByte((byte) (player.getClanInviteSetting() ? 1 : 0)); // 11
 		s.writeByte((byte) (player.getVolumeToRotate() ? 1 : 0)); // 16
-		/*s.writeByte((byte) (player.getSwipeToRotate() ? 1 : 0));
-		s.writeByte((byte) (player.getSwipeToScroll() ? 1 : 0));
-		s.writeByte(player.getLongPressDelay());
-		s.writeByte(player.getFontSize());
-		s.writeByte((byte) (player.getHoldAndChoose() ? 1 : 0));*/
+		s.writeByte((byte) (player.getSwipeToRotate() ? 1 : 0)); // 17
+		s.writeByte((byte) (player.getSwipeToScroll() ? 1 : 0)); // 18
+		s.writeByte(player.getLongPressDelay()); // 19
+		s.writeByte(player.getFontSize()); // 20
+		s.writeByte((byte) (player.getHoldAndChoose() ? 1 : 0)); // 21
 		player.write(s.toPacket());
 	}
 

@@ -3702,6 +3702,10 @@ public final class mudclient implements Runnable {
     private void drawGame(int var1) {
         try {
 
+            if (isAndroid()) {
+                this.menuCommon.font = C_MENU_SIZE;
+            }
+
             if (var1 == 13) {
                 if (this.deathScreenTimeout != 0) {
                     this.getSurface().fade2black(16316665);
@@ -4606,21 +4610,14 @@ public final class mudclient implements Runnable {
             if (this.mouseButtonClick == 0) {
                 int width = this.menuCommon.getWidth();
                 int height = this.menuCommon.getHeight();
-                boolean renderAnyway = false;
 
-                if (isAndroid() && C_HOLD_AND_CHOOSE) {
-                    renderAnyway = true;
-                }
-                if (renderAnyway) {
+                if (this.menuX - 10 <= this.mouseX && this.menuY - 10 <= this.mouseY
+                        && width + this.menuX + 10 >= this.mouseX && this.mouseY <= 10 + this.menuY + height) {
                     this.menuCommon.render(this.menuY, this.menuX, this.mouseY, (byte) -12, this.mouseX);
                 } else {
-                    if (this.menuX - 10 <= this.mouseX && this.menuY - 10 <= this.mouseY
-                            && width + this.menuX + 10 >= this.mouseX && this.mouseY <= 10 + this.menuY + height) {
-                        this.menuCommon.render(this.menuY, this.menuX, this.mouseY, (byte) -12, this.mouseX);
-                    } else {
-                        this.topMouseMenuVisible = false;
-                    }
+                    this.topMouseMenuVisible = false;
                 }
+
 
             } else {
                 int var2 = this.menuCommon.handleClick(this.mouseX, this.menuX, this.menuY, this.mouseY);
@@ -7433,13 +7430,12 @@ public final class mudclient implements Runnable {
                     "@whi@Swipe to Rotate - @gre@On", 4, null, null);
         }
 
-        if (C_VOLUME_TO_ROTATE) {
-            this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                    "@whi@Volume buttons to Rotate - @gre@On", 5, null, null);
-            index++;
-        } else {
+        if (!C_VOLUME_TO_ROTATE) {
             this.panelSettings.setListEntry(this.controlSettingPanel, index++,
                     "@whi@Volume buttons to Rotate - @red@Off", 5, null, null);
+        } else {
+            this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+                    "@whi@Volume buttons to Rotate - @gre@On", 5, null, null);
         }
 
         y += 195;
@@ -7727,6 +7723,10 @@ public final class mudclient implements Runnable {
             }
             C_LONG_PRESS_TIMER = F_LONG_PRESS_CALC * 50;
             saveConfiguration(true);
+            this.packetHandler.getClientStream().newPacket(111);
+            this.packetHandler.getClientStream().writeBuffer1.putByte(21);
+            this.packetHandler.getClientStream().writeBuffer1.putByte(C_LONG_PRESS_TIMER);
+            this.packetHandler.getClientStream().finishPacket();
         }
 
         if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 1 && this.mouseButtonClick == 1) {
@@ -7737,27 +7737,42 @@ public final class mudclient implements Runnable {
             if (isAndroid()) {
                 this.menuCommon.font = C_MENU_SIZE;
             }
+            this.packetHandler.getClientStream().newPacket(111);
+            this.packetHandler.getClientStream().writeBuffer1.putByte(20);
+            this.packetHandler.getClientStream().writeBuffer1.putByte(C_MENU_SIZE);
+            this.packetHandler.getClientStream().finishPacket();
         }
 
         if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 2 && this.mouseButtonClick == 1) {
             C_HOLD_AND_CHOOSE = !C_HOLD_AND_CHOOSE;
             saveConfiguration(true);
+            this.packetHandler.getClientStream().newPacket(111);
+            this.packetHandler.getClientStream().writeBuffer1.putByte(21);
+            this.packetHandler.getClientStream().writeBuffer1.putByte(C_HOLD_AND_CHOOSE ? 1 : 0);
+            this.packetHandler.getClientStream().finishPacket();
         }
 
         if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 3 && this.mouseButtonClick == 1) {
             C_SWIPE_TO_SCROLL = !C_SWIPE_TO_SCROLL;
             saveConfiguration(true);
+            this.packetHandler.getClientStream().newPacket(111);
+            this.packetHandler.getClientStream().writeBuffer1.putByte(18);
+            this.packetHandler.getClientStream().writeBuffer1.putByte(C_SWIPE_TO_SCROLL ? 1 : 0);
+            this.packetHandler.getClientStream().finishPacket();
         }
 
         if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 4 && this.mouseButtonClick == 1) {
             C_SWIPE_TO_ROTATE = !C_SWIPE_TO_ROTATE;
             saveConfiguration(true);
+            this.packetHandler.getClientStream().newPacket(111);
+            this.packetHandler.getClientStream().writeBuffer1.putByte(17);
+            this.packetHandler.getClientStream().writeBuffer1.putByte(C_SWIPE_TO_ROTATE ? 1 : 0);
+            this.packetHandler.getClientStream().finishPacket();
         }
 
         if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 5 && this.mouseButtonClick == 1) {
             C_VOLUME_TO_ROTATE = !C_VOLUME_TO_ROTATE;
             saveConfiguration(true);
-
             this.packetHandler.getClientStream().newPacket(111);
             this.packetHandler.getClientStream().writeBuffer1.putByte(16);
             this.packetHandler.getClientStream().writeBuffer1.putByte(C_VOLUME_TO_ROTATE ? 1 : 0);
@@ -8467,7 +8482,8 @@ public final class mudclient implements Runnable {
                     do {
                         this.appearanceHeadType = (EntityHandler.animationCount() + (this.appearanceHeadType - 1))
                                 % EntityHandler.animationCount();
-                    } while ((3 & EntityHandler.getAnimationDef(this.appearanceHeadType).getGenderModel()) != 1);
+                    }
+                    while ((3 & EntityHandler.getAnimationDef(this.appearanceHeadType).getGenderModel()) != 1);
                 } while ((EntityHandler.getAnimationDef(this.appearanceHeadType).getGenderModel()
                         & this.appearanceHeadGender * 4) == 0);
             }
@@ -8476,7 +8492,8 @@ public final class mudclient implements Runnable {
                 do {
                     do {
                         this.appearanceHeadType = (1 + this.appearanceHeadType) % EntityHandler.animationCount();
-                    } while (1 != (3 & EntityHandler.getAnimationDef(this.appearanceHeadType).getGenderModel()));
+                    }
+                    while (1 != (3 & EntityHandler.getAnimationDef(this.appearanceHeadType).getGenderModel()));
                 } while ((EntityHandler.getAnimationDef(this.appearanceHeadType).getGenderModel()
                         & this.appearanceHeadGender * 4) == 0);
             }
@@ -11248,7 +11265,8 @@ public final class mudclient implements Runnable {
                 this.getSurface().a(8, var9, halfGameHeight() + 27 - var9, 0, 16740352, getGameWidth(), 0);
             }
 
-            if (DISPLAY_LOGO_SPRITE) this.getSurface().drawSprite(Integer.parseInt(getcLogoSpriteId()), 15, 15);
+            if (DISPLAY_LOGO_SPRITE)
+                this.getSurface().drawSprite(Integer.parseInt(getcLogoSpriteId()), 15, 15);
             //this.getSurface().drawColoredStringCentered(250, "Open RSC", 0xFFFFFF, 0, 7, 110); // width, title, color, crown sprite, font size, height
             this.getSurface().storeSpriteVert(spriteLogo, 0, 0, getGameWidth(), halfGameHeight() + 33);
 
@@ -11277,7 +11295,8 @@ public final class mudclient implements Runnable {
                 this.getSurface().a(8, var9, halfGameHeight() + 27 - var9, 0, 16740352, getGameWidth(), 0);
             }
 
-            if (DISPLAY_LOGO_SPRITE) this.getSurface().drawSprite(Integer.parseInt(getcLogoSpriteId()), 15, 15);
+            if (DISPLAY_LOGO_SPRITE)
+                this.getSurface().drawSprite(Integer.parseInt(getcLogoSpriteId()), 15, 15);
             //this.getSurface().drawColoredStringCentered(250, "Open RSC", 0xFFFFFF, 0, 7, 110); // width, title, color, crown sprite, font size, height
             this.getSurface().storeSpriteVert(spriteLogo + 1, 0, 0, getGameWidth(), halfGameHeight() + 33);
 
@@ -11316,7 +11335,8 @@ public final class mudclient implements Runnable {
                 this.getSurface().a(8, var9, halfGameHeight() + 27, 0, 16740352, getGameWidth(), 0);
             }
 
-            if (DISPLAY_LOGO_SPRITE) this.getSurface().drawSprite(Integer.parseInt(getcLogoSpriteId()), 15, 15);
+            if (DISPLAY_LOGO_SPRITE)
+                this.getSurface().drawSprite(Integer.parseInt(getcLogoSpriteId()), 15, 15);
             //this.getSurface().drawColoredStringCentered(250, "Open RSC", 0xFFFFFF, 0, 7, 110); // width, title, color, crown sprite, font size, height
             this.getSurface().storeSpriteVert(spriteMedia + 10, 0, 0, getGameWidth(), halfGameHeight() + 33);
         } catch (RuntimeException var10) {

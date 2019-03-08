@@ -2394,28 +2394,4 @@ public final class Player extends Mob {
 
 		return true;
 	}
-
-	public void setVolumeToRotate(Boolean setting_volume_rotate) {
-		this.getCache().store("setting_volume_rotate", true);
-	}
-
-	public void setSwipeToRotate(Boolean setting_swipe_rotate) {
-		this.getCache().store("setting_swipe_rotate", true);
-	}
-
-	public void setSwipeToScroll(Boolean setting_swipe_scroll) {
-		this.getCache().store("setting_swipe_scroll", true);
-	}
-
-	public void setLongPressDelay(int setting_press_delay) {
-		this.getCache().store("setting_press_delay", true);
-	}
-
-	public void setFontSize(int setting_font_size) {
-		this.getCache().store("setting_font_size", true);
-	}
-
-	public void setHoldAndChoose(Boolean setting_hold_choose) {
-		this.getCache().store("setting_hold_choose", true);
-	}
 }
