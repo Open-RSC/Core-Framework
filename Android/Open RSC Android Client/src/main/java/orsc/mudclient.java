@@ -581,6 +581,12 @@ public final class mudclient implements Runnable {
     private ArrayList<XPNotification> xpNotifications = new ArrayList<XPNotification>();
     private int amountToZoom = 0;
     private Panel panelLoginOptions;
+    private boolean settingsVolumeToRotate;
+    private boolean settingsSwipeToRotate;
+    private boolean settingsSwipeToScroll;
+    private int settingsLongPressDelay;
+    private int settingsFontSize;
+    private boolean settingsHoldAndChoose;
 
     /**
      * Newest RSC cache: SAME VALUES.
@@ -7755,7 +7761,13 @@ public final class mudclient implements Runnable {
 
         if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 5 && this.mouseButtonClick == 1) {
             C_VOLUME_TO_ROTATE = !C_VOLUME_TO_ROTATE;
-            saveConfiguration(false);
+            saveConfiguration(true);
+
+            this.settingsVolumeToRotate = !this.settingsVolumeToRotate;
+            this.packetHandler.getClientStream().newPacket(111);
+            this.packetHandler.getClientStream().writeBuffer1.putByte(12);
+            this.packetHandler.getClientStream().writeBuffer1.putByte(this.settingsVolumeToRotate ? 1 : 0);
+            this.packetHandler.getClientStream().finishPacket();
         }
 
         var7 += 195;
@@ -13686,6 +13698,30 @@ public final class mudclient implements Runnable {
 
     private void kickClanPlayer(String player) {
         this.clanKickPlayer = player;
+    }
+
+    public void setVolumeToRotate(boolean block) {
+        this.settingsVolumeToRotate = block;
+    }
+
+    public void setSwipeToRotate(boolean block) {
+        this.settingsSwipeToRotate = block;
+    }
+
+    public void setSwipeToScroll(boolean block) {
+        this.settingsSwipeToScroll = block;
+    }
+
+    public void setLongPressDelay(int block) {
+        this.settingsLongPressDelay = block;
+    }
+
+    public void setFontSize(int block) {
+        this.settingsFontSize = block;
+    }
+
+    public void setHoldAndChoose(boolean block) {
+        this.settingsHoldAndChoose = block;
     }
 
     class XPNotification {

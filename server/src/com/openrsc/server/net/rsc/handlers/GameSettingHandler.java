@@ -13,7 +13,7 @@ public final class GameSettingHandler implements PacketHandler {
 	public void handlePacket(Packet p, Player player) throws Exception {
 
 		int idx = (int) p.readByte();
-		if (idx < 0 || idx > 11) {
+		if (idx < 0 || idx > 18) {
 			player.setSuspiciousPlayer(true);
 			return;
 		}
@@ -35,7 +35,19 @@ public final class GameSettingHandler implements PacketHandler {
 				player.getCache().store("p_xp_notifications_enabled", p.readByte() == 1);
 			} else if (idx == 11) {
 				player.getCache().store("p_block_invites", p.readByte() == 1);
-			}
+			} else if (idx == 12) {
+				player.getCache().store("setting_volume_rotate", p.readByte() == 1);
+			}/* else if (idx == 13) {
+				player.getCache().store("setting_swipe_rotate", p.readByte() == 1);
+			} else if (idx == 14) {
+				player.getCache().store("setting_swipe_scroll", p.readByte() == 1);
+			} else if (idx == 15) {
+				player.getCache().set("setting_press_delay", p.readByte());
+			} else if (idx == 16) {
+				player.getCache().set("setting_font_size", p.readByte());
+			} else if (idx == 17) {
+				player.getCache().store("setting_hold_choose", p.readByte() == 1);
+			}*/
 			return;
 		}
 

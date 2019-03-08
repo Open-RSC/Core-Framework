@@ -424,6 +424,12 @@ public class ActionSender {
 		s.writeByte((byte) player.getCombatStyle());
 		s.writeByte(player.getGlobalBlock());
 		s.writeByte((byte) (player.getClanInviteSetting() ? 1 : 0));
+		s.writeByte((byte) (player.getVolumeToRotate() ? 1 : 0));
+		/*s.writeByte((byte) (player.getSwipeToRotate() ? 1 : 0));
+		s.writeByte((byte) (player.getSwipeToScroll() ? 1 : 0));
+		s.writeByte(player.getLongPressDelay());
+		s.writeByte(player.getFontSize());
+		s.writeByte((byte) (player.getHoldAndChoose() ? 1 : 0));*/
 		player.write(s.toPacket());
 	}
 
@@ -1079,7 +1085,7 @@ public class ActionSender {
 				}
 
 				if (p.getLocation().inTutorialLanding()) {
-					sendBox(p, "@gre@Welcome to the RuneScape tutorial.% %Most actions are performed with the mouse. To walk around left click on the ground where you want to walk. To interact with something, first move your mouse pointer over it. Then left click or right click to perform different actions% %Try left clicking on one of the guides to talk to her. She will tell you more about how to play", true);
+					sendBox(p, "@gre@Welcome to the " + SERVER_NAME + " tutorial.% %Most actions are performed with the mouse. To walk around left click on the ground where you want to walk. To interact with something, first move your mouse pointer over it. Then left click or right click to perform different actions% %Try left clicking on one of the guides to talk to her. She will tell you more about how to play", true);
 				}
 
 				sendGameSettings(p);

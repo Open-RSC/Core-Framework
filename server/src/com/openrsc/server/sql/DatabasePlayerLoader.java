@@ -115,6 +115,13 @@ public class DatabasePlayerLoader {
 
 			s.getCache().store("last_spell_cast", s.getCastTimer());
 
+			s.getCache().store("setting_volume_rotate", s.getVolumeToRotate());
+			/*s.getCache().store("setting_swipe_rotate", s.getSwipeToRotate());
+			s.getCache().store("setting_swipe_scroll", s.getSwipeToScroll());
+			s.getCache().store("setting_press_delay", s.getLongPressDelay());
+			s.getCache().store("setting_font_size", s.getFontSize());
+			s.getCache().store("setting_hold_choose", s.getHoldAndChoose());*/
+
 			updateLongs(Statements.save_DeleteCache, s.getDatabaseID());
 			if (s.getCache().getCacheMap().size() > 0) {
 				statement = conn.prepareStatement(
@@ -381,10 +388,10 @@ public class DatabasePlayerLoader {
 		}
 	}
 
-	public void setTeleportStones(int stones, int user) {
+	/*public void setTeleportStones(int stones, int user) {
 		conn.executeUpdate("UPDATE `users` SET teleport_stone="
 			+ stones + " WHERE id='" + user + "'");
-	}
+	}*/
 
 	public Player loadPlayer(LoginRequest rq) {
 		Player save = new Player(rq);
@@ -435,6 +442,17 @@ public class DatabasePlayerLoader {
 			long charged = result.getInt("charged");
 			if (charged > 0) {
 				save.addCharge(charged);
+			}
+
+			try {
+				save.getCache().getBoolean("setting_volume_rotate");
+				save.getCache().getBoolean("setting_swipe_rotate");
+				save.getCache().getBoolean("setting_swipe_scroll");
+				save.getCache().getInt("setting_press_delay");
+				save.getCache().getInt("setting_font_size");
+				save.getCache().getBoolean("setting_hold_choose");
+			}
+			catch (Throwable ignored) {
 			}
 
 			save.getSkills().loadExp(fetchExperience(save.getDatabaseID()));
@@ -505,6 +523,17 @@ public class DatabasePlayerLoader {
 			}
 			catch (Throwable t) {
 				save.setCastTimer();
+			}
+
+			try {
+				save.setVolumeToRotate(save.getCache().getBoolean("setting_volume_rotate"));
+				/*save.setSwipeToRotate(save.getCache().getBoolean("setting_swipe_rotate"));
+				save.setSwipeToScroll(save.getCache().getBoolean("setting_swipe_scroll"));
+				save.setLongPressDelay(save.getCache().getInt("setting_press_delay"));
+				save.setFontSize(save.getCache().getInt("setting_font_size"));
+				save.setHoldAndChoose(save.getCache().getBoolean("setting_hold_choose"));*/
+			}
+			catch (Throwable ignored) {
 			}
 
 			result = resultSetFromInteger(Statements.npcKillSelectAll, save.getDatabaseID());

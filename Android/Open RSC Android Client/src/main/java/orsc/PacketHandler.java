@@ -1519,6 +1519,12 @@ public class PacketHandler {
 		mc.setCombatStyle(packetsIncoming.getUnsignedByte());
 		mc.setSettingsBlockGlobal(packetsIncoming.getUnsignedByte());
 		mc.setClanInviteBlockSetting(packetsIncoming.getUnsignedByte() == 1);
+		mc.setVolumeToRotate(packetsIncoming.getUnsignedByte() == 1);
+		/*mc.setSwipeToRotate(packetsIncoming.getUnsignedByte() == 1);
+		mc.setSwipeToScroll(packetsIncoming.getUnsignedByte() == 1);
+		mc.setLongPressDelay(packetsIncoming.getUnsignedByte());
+		mc.setFontSize(packetsIncoming.getUnsignedByte());
+		mc.setHoldAndChoose(packetsIncoming.getUnsignedByte() == 1);*/
 	}
 
 	private void togglePrayer(int length) {

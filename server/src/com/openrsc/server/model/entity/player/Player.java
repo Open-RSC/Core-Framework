@@ -66,7 +66,6 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.netty.channel.Channel;
@@ -2025,6 +2024,48 @@ public final class Player extends Mob {
 		return 1;
 	}
 
+	public Boolean getVolumeToRotate() {
+		if (getCache().hasKey("setting_volume_rotate")) {
+			return getCache().getBoolean("setting_volume_rotate");
+		}
+		return true;
+	}
+
+	public Boolean getSwipeToRotate() {
+		if (getCache().hasKey("setting_swipe_rotate")) {
+			return getCache().getBoolean("setting_swipe_rotate");
+		}
+		return true;
+	}
+
+	public Boolean getSwipeToScroll() {
+		if (getCache().hasKey("setting_swipe_scroll")) {
+			return getCache().getBoolean("setting_swipe_scroll");
+		}
+		return true;
+	}
+
+	public int getLongPressDelay() {
+		if (getCache().hasKey("setting_press_delay")) {
+			return getCache().getInt("setting_press_delay");
+		}
+		return 250;
+	}
+
+	public int getFontSize() {
+		if (getCache().hasKey("setting_font_size")) {
+			return getCache().getInt("setting_font_size");
+		}
+		return 3;
+	}
+
+	public Boolean getHoldAndChoose() {
+		if (getCache().hasKey("setting_hold_choose")) {
+			return getCache().getBoolean("setting_hold_choose");
+		}
+		return true;
+	}
+
 	public boolean getClanInviteSetting() {
 		if (getCache().hasKey("p_block_invites")) {
 			return getCache().getBoolean("p_block_invites");
@@ -2038,13 +2079,6 @@ public final class Player extends Mob {
 
 	public boolean isNpc() {
 		return false;
-	}
-
-	public boolean holdNChoose() {
-		if (getCache().hasKey("setting_android_holdnchoose")) {
-			return getCache().getBoolean("setting_android_holdnchoose");
-		}
-		return true;
 	}
 
 	public PlayerSettings getSettings() {
@@ -2359,5 +2393,29 @@ public final class Player extends Mob {
 			+ item.getAmount() + " at " + this.getLocation().toString()));
 
 		return true;
+	}
+
+	public void setVolumeToRotate(Boolean setting_volume_rotate) {
+		this.getCache().store("setting_volume_rotate", true);
+	}
+
+	public void setSwipeToRotate(Boolean setting_swipe_rotate) {
+		this.getCache().store("setting_swipe_rotate", true);
+	}
+
+	public void setSwipeToScroll(Boolean setting_swipe_scroll) {
+		this.getCache().store("setting_swipe_scroll", true);
+	}
+
+	public void setLongPressDelay(int setting_press_delay) {
+		this.getCache().store("setting_press_delay", true);
+	}
+
+	public void setFontSize(int setting_font_size) {
+		this.getCache().store("setting_font_size", true);
+	}
+
+	public void setHoldAndChoose(Boolean setting_hold_choose) {
+		this.getCache().store("setting_hold_choose", true);
 	}
 }
