@@ -107,7 +107,7 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
 
 	@Override
 	public boolean onKey(View v, int keyCode, KeyEvent event) {
-		if (mudclient.showUiTab == 0 && Config.C_VOLUME_TO_ROTATE) {
+		if (Config.C_VOLUME_TO_ROTATE) {
 			if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
 				mudclient.keyLeft = event.getAction() == KeyEvent.ACTION_DOWN;
 				return true;
