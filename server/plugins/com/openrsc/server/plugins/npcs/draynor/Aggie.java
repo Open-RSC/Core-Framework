@@ -91,7 +91,8 @@ public final class Aggie implements TalkToNpcListener,
 				}
 				break;
 			case Aggie.SKIN_PASTE:
-				if (hasItem(p, ItemId.ASHES.id()) && hasItem(p, ItemId.POT_OF_FLOUR.id()) && hasItem(p, ItemId.BUCKET_OF_WATER.id())
+				if (hasItem(p, ItemId.ASHES.id()) && hasItem(p, ItemId.POT_OF_FLOUR.id())
+					&& (hasItem(p, ItemId.BUCKET_OF_WATER.id()) || hasItem(p, ItemId.JUG_OF_WATER.id()))
 					&& hasItem(p, ItemId.REDBERRIES.id())) {
 					npcTalk(p, n,
 						"Yes I can, you have the ingredients for it already");
@@ -108,7 +109,8 @@ public final class Aggie implements TalkToNpcListener,
 							"She tips it into a cauldron and mutters some words");
 						removeItem(p, ItemId.ASHES.id(), 1);
 						removeItem(p, ItemId.POT_OF_FLOUR.id(), 1);
-						removeItem(p, ItemId.BUCKET_OF_WATER.id(), 1);
+						if (!removeItem(p, ItemId.BUCKET_OF_WATER.id(), 1))
+							removeItem(p, ItemId.JUG_OF_WATER.id(), 1);
 						removeItem(p, ItemId.REDBERRIES.id(), 1);
 						npcTalk(p, n,
 							"Tourniquet, Fenderbaum, Tottenham, MonsterMunch, MarbleArch");
@@ -149,6 +151,11 @@ public final class Aggie implements TalkToNpcListener,
 					removeItem(p, ItemId.COINS.id(), 20);
 					npcTalk(p, n,
 						"Thats a fine for insulting a witch, you should learn some respect");
+				} else if (hasItem(p, ItemId.POT_OF_FLOUR.id())) {
+					message(p, "Aggie waves her hands near you, and you seem to have lost some flour");
+					removeItem(p, ItemId.POT_OF_FLOUR.id(), 1);
+					npcTalk(p, n, "Thankyou for your kind present of flour",
+						"I am sure you never meant to insult me");
 				} else {
 					npcTalk(p, n,
 						"You should be careful about insulting a Witch",

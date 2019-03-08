@@ -31,7 +31,7 @@ public class SpinningWheel implements InvUseOnObjectListener,
 		if (item.getID() == ItemId.WOOL.id()) {
 			produceID = ItemId.BALL_OF_WOOL.id();
 			requiredLevel = 1;
-			experience = 12;
+			experience = 10;
 		}
 
 		else if (item.getID() == ItemId.FLAX.id()) {
