@@ -3996,6 +3996,12 @@ public final class mudclient implements Runnable {
                         centerZ = this.cameraAutoRotatePlayerZ + this.cameraRotationZ;
                         this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ), centerZ, cameraPitch,
                                 this.cameraRotation * 4, 0, 2000);
+                        float zoomMultiplier = 0;
+                        if (Config.S_ZOOM_VIEW_TOGGLE)
+                            zoomMultiplier = Config.C_ZOOM == 0 ? 0 : Config.C_ZOOM == 1 ? +200 : Config.C_ZOOM == 2 ? +400 : -200;
+                        this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ), centerZ, cameraPitch,
+                                this.cameraRotation * 4, (int) 0, (int) (this.cameraZoom + zoomMultiplier) * 2);
+
                     } else {
                         if (this.optionCameraModeAuto && !this.doCameraZoom) {
                             this.autoRotateCamera((byte) 94);
@@ -7130,107 +7136,107 @@ public final class mudclient implements Runnable {
         this.getSurface().drawBoxAlpha(var3, 261, var5, 40, GenUtil.buildColor(201, 201, 201), 160);
     }
 
-    private void drawSocialSettingsOptions(int var3, short var5, int var6, int var7) {
-        this.getSurface().drawString("Privacy settings", 3 + var3, var7, 0, 1);
+    private void drawSocialSettingsOptions(int baseX, short boxWidth, int x, int y) {
+        this.getSurface().drawString("Privacy settings", 3 + baseX, y, 0, 1);
 
-        var7 += 15;
+        y += 15;
         if (this.settingsBlockChat != 0) {
-            this.getSurface().drawString("Block chat messages: @gre@<on>", 3 + var3, var7, 0xFFFFFF, 1);
+            this.getSurface().drawString("Block chat messages: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
         } else {
-            this.getSurface().drawString("Block chat messages: @red@<off>", 3 + var3, var7, 0xFFFFFF, 1);
+            this.getSurface().drawString("Block chat messages: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
         }
 
-        var7 += 15;
+        y += 15;
         if (this.settingsBlockPrivate == 0) {
-            this.getSurface().drawString("Block private messages: @red@<off>", 3 + var3, var7, 0xFFFFFF, 1);
+            this.getSurface().drawString("Block private messages: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
         } else {
-            this.getSurface().drawString("Block private messages: @gre@<on>", var3 + 3, var7, 0xFFFFFF, 1);
+            this.getSurface().drawString("Block private messages: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
         }
 
-        var7 += 15;
+        y += 15;
 
         if (S_WANT_GLOBAL_CHAT) {
             if (this.settingsBlockGlobal == 1) {
-                this.getSurface().drawString("Block global messages: @red@None", 3 + var3, var7, 0xFFFFFF, 1);
+                this.getSurface().drawString("Block global messages: @red@None", 3 + baseX, y, 0xFFFFFF, 1);
             } else if (this.settingsBlockGlobal == 2) {
-                this.getSurface().drawString("Block global messages: @gre@All", var3 + 3, var7, 0xFFFFFF, 1);
+                this.getSurface().drawString("Block global messages: @gre@All", baseX + 3, y, 0xFFFFFF, 1);
             } else if (this.settingsBlockGlobal == 3) {
-                this.getSurface().drawString("Block global messages: @or1@Pking", var3 + 3, var7, 0xFFFFFF, 1);
+                this.getSurface().drawString("Block global messages: @or1@Pking", baseX + 3, y, 0xFFFFFF, 1);
             } else if (this.settingsBlockGlobal == 4) {
-                this.getSurface().drawString("Block global messages: @gr1@General", var3 + 3, var7, 0xFFFFFF, 1);
+                this.getSurface().drawString("Block global messages: @gr1@General", baseX + 3, y, 0xFFFFFF, 1);
             }
-            var7 += 15;
+            y += 15;
         }
 
         if (this.settingsBlockTrade != 0) {
-            this.getSurface().drawString("Block trade requests: @gre@<on>", var3 + 3, var7, 0xFFFFFF, 1);
+            this.getSurface().drawString("Block trade requests: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
         } else {
-            this.getSurface().drawString("Block trade requests: @red@<off>", 3 + var3, var7, 0xFFFFFF, 1);
+            this.getSurface().drawString("Block trade requests: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
         }
 
-        var7 += 15;
+        y += 15;
         if (this.settingsBlockDuel != 0) {
-            this.getSurface().drawString("Block duel requests: @gre@<on>", var3 + 3, var7, 0xFFFFFF, 1);
+            this.getSurface().drawString("Block duel requests: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
         } else {
-            this.getSurface().drawString("Block duel requests: @red@<off>", 3 + var3, var7, 0xFFFFFF, 1);
+            this.getSurface().drawString("Block duel requests: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
         }
 
         if (S_WANT_CLANS) {
-            var7 += 20;
-            this.getSurface().drawString("Clan settings", var3 + 3, var7, 0, 1);
+            y += 20;
+            this.getSurface().drawString("Clan settings", baseX + 3, y, 0, 1);
         }
         if (S_SHOW_FLOATING_NAMETAGS) {
-            var7 += 15;
+            y += 15;
             if (!C_NAME_CLAN_TAG_OVERLAY) {
-                this.getSurface().drawString("Name and Clan Tag - @red@<off>", var6, var7, 0xFFFFFF, 1);
+                this.getSurface().drawString("Name and Clan Tag - @red@<off>", x, y, 0xFFFFFF, 1);
             } else {
-                this.getSurface().drawString("Name and Clan Tag - @gre@<on>", var6, var7, 0xFFFFFF, 1);
+                this.getSurface().drawString("Name and Clan Tag - @gre@<on>", x, y, 0xFFFFFF, 1);
             }
         }
 
-        int var8;
+        int logoutColor;
         if (S_WANT_CLANS) {
-            var7 += 15;
+            y += 15;
             if (!this.clanInviteBlockSetting) {
-                this.getSurface().drawString("Clan Invitation - @gre@Receive", var6, var7, 0xFFFFFF, 1);
+                this.getSurface().drawString("Clan Invitation - @gre@Receive", x, y, 0xFFFFFF, 1);
             } else {
-                this.getSurface().drawString("Clan Invitation - @red@Block", var6, var7, 0xFFFFFF, 1);
+                this.getSurface().drawString("Clan Invitation - @red@Block", x, y, 0xFFFFFF, 1);
             }
 
-            var7 += 20;
-            var8 = 0xFF0000;
-            if (var6 < this.mouseX && this.mouseX < var6 + var5 && var7 - 12 < this.mouseY
-                    && this.mouseY < 4 + var7) {
-                var8 = 0xFFFF00;
+            y += 20;
+            logoutColor = 0xFF0000;
+            if (x < this.mouseX && this.mouseX < x + boxWidth && y - 12 < this.mouseY
+                    && this.mouseY < 4 + y) {
+                logoutColor = 0xFFFF00;
             }
-            this.getSurface().drawString("Report Abuse", var6, var7, var8, 1);
+            this.getSurface().drawString("Report Abuse", x, y, logoutColor, 1);
         }
 
         if (this.insideTutorial) {
-            var7 = 256;
-            var8 = 0xFFFFFF;
-            if (var6 < this.mouseX && this.mouseX < var6 + var5 && var7 - 12 < this.mouseY
-                    && this.mouseY < 4 + var7) {
-                var8 = 0xFFFF00;
+            y = 256;
+            logoutColor = 0xFFFFFF;
+            if (x < this.mouseX && this.mouseX < x + boxWidth && y - 12 < this.mouseY
+                    && this.mouseY < 4 + y) {
+                logoutColor = 0xFFFF00;
             }
-            this.getSurface().drawString("Skip the tutorial", var6, var7, var8, 1);
+            this.getSurface().drawString("Skip the tutorial", x, y, logoutColor, 1);
         }
 
-        var7 = 275;
-        this.getSurface().drawString("Always logout when you finish", var6, var7, 0, 1);
-        var8 = 0xFFFFFF;
-        var7 += 15;
-        if (var6 < this.mouseX && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY && this.mouseY < 4 + var7) {
-            var8 = 0xFFFF00;
+        y = 275;
+        this.getSurface().drawString("Always logout when you finish", x, y, 0, 1);
+        logoutColor = 0xFFFFFF;
+        y += 15;
+        if (x < this.mouseX && x + boxWidth > this.mouseX && y - 12 < this.mouseY && this.mouseY < 4 + y) {
+            logoutColor = 0xFFFF00;
         }
 
-        this.getSurface().drawString("Click here to logout", var3 + 3, var7, var8, 1);
+        this.getSurface().drawString("Click here to logout", baseX + 3, y, logoutColor, 1);
     }
 
-    private void drawGeneralSettingsOptions(int var3, short var5, int var6, int var7) {
+    private void drawGeneralSettingsOptions(int baseX, short boxWidth, int x, int y) {
         this.panelSettings.clearList(this.controlSettingPanel);
         int index = 0;
-        this.getSurface().drawString("Game options", 3 + var3, var7, 0, 1);
+        this.getSurface().drawString("Game options", 3 + baseX, y, 0, 1);
 
         // Camera angle mode
         if (this.optionCameraModeAuto) {
@@ -7371,32 +7377,32 @@ public final class mudclient implements Runnable {
             }
         }
 
-        var7 = 275;
+        y = 275;
 
         if (S_ITEMS_ON_DEATH_MENU) {
             int onDeathColor = 0xFFFFFF;
-            if (var6 < this.mouseX && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY && this.mouseY < 4 + var7) {
+            if (x < this.mouseX && x + boxWidth > this.mouseX && y - 12 < this.mouseY && this.mouseY < 4 + y) {
                 onDeathColor = 0xFFFF00;
             }
-            this.getSurface().drawString("Items on death", var3 + 3, var7, onDeathColor, 1);
+            this.getSurface().drawString("Items on death", baseX + 3, y, onDeathColor, 1);
         } else
-            this.getSurface().drawString("Always logout when you finish", var6, var7, 0, 1);
+            this.getSurface().drawString("Always logout when you finish", x, y, 0, 1);
 
-        int var8 = 0xFFFFFF;
-        var7 += 15;
-        if (var6 < this.mouseX && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY && this.mouseY < 4 + var7) {
-            var8 = 0xFFFF00;
+        int logoutColor = 0xFFFFFF;
+        y += 15;
+        if (x < this.mouseX && x + boxWidth > this.mouseX && y - 12 < this.mouseY && this.mouseY < 4 + y) {
+            logoutColor = 0xFFFF00;
         }
-        this.getSurface().drawString("Click here to logout", var3 + 3, var7, var8, 1);
+        this.getSurface().drawString("Click here to logout", baseX + 3, y, logoutColor, 1);
 
         this.panelSettings.drawPanel();
 
     }
 
-    private void drawAndroidSettingsOptions(int var3, short var5, int var6, int var7) {
+    private void drawAndroidSettingsOptions(int baseX, short boxWidth, int x, int y) {
         this.panelSettings.clearList(this.controlSettingPanel);
         int index = 0;
-        this.getSurface().drawString("Android options", 3 + var3, var7, 0, 1);
+        this.getSurface().drawString("Android options", 3 + baseX, y, 0, 1);
         this.panelSettings.setListEntry(this.controlSettingPanel, index++,
                 "@whi@Hold-time for Menu - @gre@" + C_LONG_PRESS_TIMER + "ms", 0, null, null);
 
@@ -7427,14 +7433,22 @@ public final class mudclient implements Runnable {
                     "@whi@Swipe to Rotate - @gre@On", 4, null, null);
         }
 
-        var7 += 195;
-        this.getSurface().drawString("Always logout when you finish", var6, var7, 0, 1);
-        int var8 = 0xFFFFFF;
-        var7 += 15;
-        if (var6 < this.mouseX && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY && this.mouseY < 4 + var7) {
-            var8 = 0xFFFF00;
+        if (!C_VOLUME_TO_ROTATE) {
+            this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+                    "@whi@Volume buttons to Rotate - @red@Off", 5, null, null);
+        } else {
+            this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+                    "@whi@Volume buttons to Rotate - @gre@On", 5, null, null);
         }
-        this.getSurface().drawString("Click here to logout", var3 + 3, var7, var8, 1);
+
+        y += 195;
+        this.getSurface().drawString("Always logout when you finish", x, y, 0, 1);
+        int logoutColor = 0xFFFFFF;
+        y += 15;
+        if (x < this.mouseX && x + boxWidth > this.mouseX && y - 12 < this.mouseY && this.mouseY < 4 + y) {
+            logoutColor = 0xFFFF00;
+        }
+        this.getSurface().drawString("Click here to logout", baseX + 3, y, logoutColor, 1);
 
         this.panelSettings.drawPanel();
     }
@@ -7739,6 +7753,11 @@ public final class mudclient implements Runnable {
             saveConfiguration(false);
         }
 
+        if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 5 && this.mouseButtonClick == 1) {
+            C_VOLUME_TO_ROTATE = !C_VOLUME_TO_ROTATE;
+            saveConfiguration(false);
+        }
+
         var7 += 195;
         if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
                 && this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
@@ -7746,102 +7765,102 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private void drawAuthenticSettingsOptions(int var3, byte var4, short var5, int var6, int var7, int chosenColor, int unchosenColor) {
+    private void drawAuthenticSettingsOptions(int baseX, byte var4, short boxWidth, int x, int y, int chosenColor, int unchosenColor) {
         int index = 0;
-        this.getSurface().drawString("Game options - click to toggle", 3 + var3, var7, 0, 1);
+        this.getSurface().drawString("Game options - click to toggle", 3 + baseX, y, 0, 1);
 
-        var7 += 15;
+        y += 15;
 
         // Camera angle mode
         if (this.optionCameraModeAuto) {
-            this.getSurface().drawString("@whi@Camera angle mode - @gre@Auto", 3 + var3, var7, 0, 1);
+            this.getSurface().drawString("@whi@Camera angle mode - @gre@Auto", 3 + baseX, y, 0, 1);
         } else {
-            this.getSurface().drawString("@whi@Camera angle mode - @red@Manual", 3 + var3, var7, 0, 1);
+            this.getSurface().drawString("@whi@Camera angle mode - @red@Manual", 3 + baseX, y, 0, 1);
         }
 
-        var7 += 15;
+        y += 15;
 
         // Mouse Buttons
         if (this.optionMouseButtonOne) {
-            this.getSurface().drawString("@whi@Mouse buttons - @red@One", 3 + var3, var7, 0, 1);
+            this.getSurface().drawString("@whi@Mouse buttons - @red@One", 3 + baseX, y, 0, 1);
         } else {
-            this.getSurface().drawString("@whi@Mouse buttons - @gre@Two", 3 + var3, var7, 0, 1);
+            this.getSurface().drawString("@whi@Mouse buttons - @gre@Two", 3 + baseX, y, 0, 1);
         }
 
-        var7 += 15;
+        y += 15;
 
         // Sound Effects
         if (this.optionSoundDisabled) {
-            this.getSurface().drawString("@whi@Sound effects - @red@off", 3 + var3, var7, 0, 1);
+            this.getSurface().drawString("@whi@Sound effects - @red@off", 3 + baseX, y, 0, 1);
         } else {
-            this.getSurface().drawString("@whi@Sound effects - @gre@on", 3 + var3, var7, 0, 1);
+            this.getSurface().drawString("@whi@Sound effects - @gre@on", 3 + baseX, y, 0, 1);
         }
 
-        var7 += 15;
+        y += 15;
 
-        this.getSurface().drawString("To change you contact details,", 3 + var3, var7, 0xFFFFFF, 0);
-        var7 += 15;
-        this.getSurface().drawString("password, recovery questions, etc..", 3 + var3, var7, 0xFFFFFF, 0);
-        var7 += 15;
-        this.getSurface().drawString("please contact the administrators of", 3 + var3, var7, 0xFFFFFF, 0);
-        var7 += 15;
-        this.getSurface().drawString("the server you are playing.", 3 + var3, var7, 0xFFFFFF, 0);
+        this.getSurface().drawString("To change you contact details,", 3 + baseX, y, 0xFFFFFF, 0);
+        y += 15;
+        this.getSurface().drawString("password, recovery questions, etc..", 3 + baseX, y, 0xFFFFFF, 0);
+        y += 15;
+        this.getSurface().drawString("please contact the administrators of", 3 + baseX, y, 0xFFFFFF, 0);
+        y += 15;
+        this.getSurface().drawString("the server you are playing.", 3 + baseX, y, 0xFFFFFF, 0);
 
-        var7 += 20;
+        y += 20;
 
-        this.getSurface().drawString("Privacy settings. Will be applied to", 3 + var3, var7, 0, 1);
-        var7 += 15;
-        this.getSurface().drawString("all people not on your friends list", 3 + var3, var7, 0, 1);
+        this.getSurface().drawString("Privacy settings. Will be applied to", 3 + baseX, y, 0, 1);
+        y += 15;
+        this.getSurface().drawString("all people not on your friends list", 3 + baseX, y, 0, 1);
 
-        var7 += 15;
+        y += 15;
         if (this.settingsBlockChat != 0) {
-            this.getSurface().drawString("Block chat messages: @gre@<on>", 3 + var3, var7, 0xFFFFFF, 1);
+            this.getSurface().drawString("Block chat messages: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
         } else {
-            this.getSurface().drawString("Block chat messages: @red@<off>", 3 + var3, var7, 0xFFFFFF, 1);
+            this.getSurface().drawString("Block chat messages: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
         }
 
-        var7 += 15;
+        y += 15;
         if (this.settingsBlockPrivate == 0) {
-            this.getSurface().drawString("Block private messages: @red@<off>", 3 + var3, var7, 0xFFFFFF, 1);
+            this.getSurface().drawString("Block private messages: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
         } else {
-            this.getSurface().drawString("Block private messages: @gre@<on>", var3 + 3, var7, 0xFFFFFF, 1);
+            this.getSurface().drawString("Block private messages: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
         }
 
-        var7 += 15;
+        y += 15;
         if (this.settingsBlockTrade != 0) {
-            this.getSurface().drawString("Block trade requests: @gre@<on>", var3 + 3, var7, 0xFFFFFF, 1);
+            this.getSurface().drawString("Block trade requests: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
         } else {
-            this.getSurface().drawString("Block trade requests: @red@<off>", 3 + var3, var7, 0xFFFFFF, 1);
+            this.getSurface().drawString("Block trade requests: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
         }
 
-        var7 += 15;
+        y += 15;
         if (this.settingsBlockDuel != 0) {
-            this.getSurface().drawString("Block duel requests: @gre@<on>", var3 + 3, var7, 0xFFFFFF, 1);
+            this.getSurface().drawString("Block duel requests: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
         } else {
-            this.getSurface().drawString("Block duel requests: @red@<off>", 3 + var3, var7, 0xFFFFFF, 1);
+            this.getSurface().drawString("Block duel requests: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
         }
 
-        int var8 = 0xFFFFFF;
+        int logoutColor = 0xFFFFFF;
         if (this.insideTutorial) {
-            var7 += 20;
-            if (var6 < this.mouseX && this.mouseX < var6 + var5 && var7 - 12 < this.mouseY
-                    && this.mouseY < 4 + var7) {
-                var8 = 0xFFFF00;
+            y += 20;
+            if (x < this.mouseX && this.mouseX < x + boxWidth && y - 12 < this.mouseY
+                    && this.mouseY < 4 + y) {
+                logoutColor = 0xFFFF00;
             }
-            this.getSurface().drawString("Skip the tutorial", var6, var7, var8, 1);
+            this.getSurface().drawString("Skip the tutorial", x, y, logoutColor, 1);
         }
 
-        var7 += 20;
+        y += 20;
 
-        this.getSurface().drawString("Always logout when you finish", var6, var7, 0, 1);
+        this.getSurface().drawString("Always logout when you finish", x, y, 0, 1);
 
 
-        var7 += 15;
-        var8 = 0xFFFFFF;
-        if (var6 < this.mouseX && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY && this.mouseY < 4 + var7) {
-            var8 = 0xFFFF00;
+        y += 15;
+        logoutColor = 0xFFFFFF;
+        if (x < this.mouseX && x + boxWidth > this.mouseX && y - 12 < this.mouseY && this.mouseY < 4 + y) {
+            logoutColor = 0xFFFF00;
         }
-        this.getSurface().drawString("Click here to logout", var3 + 3, var7, var8, 1);
+        this.getSurface().drawString("Click here to logout", baseX + 3, y, logoutColor, 1);
     }
 
     private void handleAuthenticSettingsClicks(short var5, int var6, int var7) {
@@ -7996,7 +8015,7 @@ public final class mudclient implements Runnable {
             this.surface.drawBoxAlpha(x + width / 2, y, width / 2, 24, var8, 128);
             this.surface.drawBoxAlpha(x, 24 + y, width, height - 12, GenUtil.buildColor(220, 220, 220), 128);
             this.surface.drawLineHoriz(x, y + 24, width, 0);
-            this.surface.drawLineVert(x + width / 2, 0 + y, 0, 24);
+            this.surface.drawLineVert(x + width / 2, y, 0, 24);
             this.surface.drawColoredStringCentered(x + width / 4, "Stats", 0, 0, 4, y + 16);
             this.surface.drawColoredStringCentered(x + width / 4 + width / 2, "Quests", 0, 0, 4, y + 16);
             int heightMargin;
@@ -10456,7 +10475,7 @@ public final class mudclient implements Runnable {
         return 0L;
     }
 
-    private String getMacAddress() {
+    /*private String getMacAddress() {
         try {
             InetAddress a = InetAddress.getLocalHost();
             NetworkInterface n = NetworkInterface.getByInetAddress(a);
@@ -10470,7 +10489,7 @@ public final class mudclient implements Runnable {
             e.printStackTrace();
         }
         return "failed";
-    }
+    }*/
 
     private void loadEntities(boolean var1) {
         clientPort.showLoadingProgress(30, "people and monsters");
@@ -10718,6 +10737,7 @@ public final class mudclient implements Runnable {
                     soundCache.put(listOfFiles[i].getName().toLowerCase(), listOfFiles[i]);
                 }
 
+            soundData = unpackData("sounds.mem", "Sound effects", 90);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -10854,7 +10874,7 @@ public final class mudclient implements Runnable {
                         this.packetHandler.getClientStream().writeBuffer1.putString(DataOperations.addCharacters(password, 20));
 
                         this.packetHandler.getClientStream().writeBuffer1.putLong(getUID());
-                        this.packetHandler.getClientStream().writeBuffer1.putString(getMacAddress());
+                        //this.packetHandler.getClientStream().writeBuffer1.putString(getMacAddress());
                         /*
                          * RSBuffer rsaBuffer = new RSBuffer(500);
                          * rsaBuffer.putByte(10);
@@ -11085,10 +11105,16 @@ public final class mudclient implements Runnable {
                 if (sound == null)
                     return;
                 try {
-                    // Comment out all of this for Android
+                    // PC sound code:
                     //Clip clip = AudioSystem.getClip();
                     //clip.open(AudioSystem.getAudioInputStream(sound));
                     //clip.start();
+
+                    // Android sound code:
+                    int dataLength = DataOperations.getDataFileLength(key + ".pcm", soundData);
+                    int offset = DataOperations.getDataFileOffset(key + ".pcm", soundData);
+                    clientPort.playSound(soundData, offset, dataLength);
+
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }

@@ -10,7 +10,9 @@ import android.graphics.Paint.Align;
 import android.graphics.PorterDuff.Mode;
 import android.media.AudioFormat;
 import android.media.AudioManager;
+import android.media.AudioRecord;
 import android.media.AudioTrack;
+import android.media.MediaRecorder;
 import android.os.Build.VERSION;
 import android.support.annotation.NonNull;
 import android.text.InputType;
@@ -331,27 +333,9 @@ public abstract class RSCBitmapSurfaceView extends SurfaceView implements Surfac
 	private AudioTrack audioTrack;
 	@Override
 	public void playSound(byte[] soundData, int offset, int dataLength) {
-			/*int bufferSize = AudioTrack.getMinBufferSize(22050, AudioFormat.CHANNEL_OUT_DEFAULT,
-					AudioFormat.ENCODING_PCM_8BIT);*/
-			if(VERSION.SDK_INT < 24) {
-				if(audioTrack != null) {
-					audioTrack.release();
-					audioTrack = null;
-				}
-				
-				audioTrack = new AudioTrack(
-						AudioManager.STREAM_MUSIC,
-						8000,
-						AudioFormat.CHANNEL_OUT_MONO,
-						AudioFormat.ENCODING_PCM_8BIT,
-						dataLength,
-						AudioTrack.MODE_STREAM);
-				audioTrack.write(soundData, offset, dataLength);
-				audioTrack.play();
-	
-				
-				audioTrack.stop();
-			}
+		int bufferSize = AudioTrack.getMinBufferSize(16000,
+				AudioFormat.CHANNEL_IN_STEREO,
+				AudioFormat.ENCODING_PCM_16BIT);
 	}
 
 	@Override
