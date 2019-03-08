@@ -1,0 +1,26 @@
+Guide for implementing cron jobs in Ubuntu to perform automatic tasks. The following is for automated
+game database backups that occur daily at 2am and 2pm.
+
+
+sudo su (become root)
+
+crontab -e (will prompt for editor choice, I like nano so I pick 1)
+
+Paste the following at the bottom:
+
+0 2 * * * make -C /home/YOUR_USER/Game backup
+0 14 * * * make -C /home/YOUR_USER/Game backup
+
+(Save and exit (ctrl+x and y)
+
+Make sure you have edited "/home/YOUR_USER/Game/.env" with the database (openrsc_game) as well as your
+created MariaDB SQL user and password. The make command refers to a Makefile in the Game directory that
+reads environment variables from the hidden .env file in the Game directory.
+
+Verify by changing the 0 2 or 0 14 parts of one of the lines to * * so the crontab will occur every minute.
+If successful, a zip file should appear in the "/home/YOUR_USER/Game/data" directory. Example:
+
+root@MariaDB:/home/wolf/Game/data# ls -ls
+total 15020
+15016 -rw-r--r-- 1 root root 15373449 Mar  7 22:11 20190307-2211-EST.zip
+    4 drwxrwxrwx 3 root root     4096 Mar  2 11:35 db
