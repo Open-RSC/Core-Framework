@@ -581,12 +581,6 @@ public final class mudclient implements Runnable {
     private ArrayList<XPNotification> xpNotifications = new ArrayList<XPNotification>();
     private int amountToZoom = 0;
     private Panel panelLoginOptions;
-    private boolean settingsVolumeToRotate;
-    private boolean settingsSwipeToRotate;
-    private boolean settingsSwipeToScroll;
-    private int settingsLongPressDelay;
-    private int settingsFontSize;
-    private boolean settingsHoldAndChoose;
 
     /**
      * Newest RSC cache: SAME VALUES.
@@ -7244,7 +7238,7 @@ public final class mudclient implements Runnable {
         int index = 0;
         this.getSurface().drawString("Game options", 3 + baseX, y, 0, 1);
 
-        // Camera angle mode
+        // Camera angle mode 1
         if (this.optionCameraModeAuto) {
             this.panelSettings.setListEntry(this.controlSettingPanel, index++,
                     "@whi@Camera angle mode - @gre@Auto", 0, null, null);
@@ -7253,7 +7247,7 @@ public final class mudclient implements Runnable {
                     "@whi@Camera angle mode - @red@Manual", 0, null, null);
         }
 
-        // Mouse Buttons
+        // Mouse Buttons 2
         if (this.optionMouseButtonOne) {
             this.panelSettings.setListEntry(this.controlSettingPanel, index++,
                     "@whi@Mouse buttons - @red@One", 1, null, null);
@@ -7439,12 +7433,13 @@ public final class mudclient implements Runnable {
                     "@whi@Swipe to Rotate - @gre@On", 4, null, null);
         }
 
-        if (!C_VOLUME_TO_ROTATE) {
-            this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                    "@whi@Volume buttons to Rotate - @red@Off", 5, null, null);
-        } else {
+        if (C_VOLUME_TO_ROTATE) {
             this.panelSettings.setListEntry(this.controlSettingPanel, index++,
                     "@whi@Volume buttons to Rotate - @gre@On", 5, null, null);
+            index++;
+        } else {
+            this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+                    "@whi@Volume buttons to Rotate - @red@Off", 5, null, null);
         }
 
         y += 195;
@@ -7499,34 +7494,34 @@ public final class mudclient implements Runnable {
         if (S_BATCH_PROGRESSION) {
             if (settingIndex == 3 && this.mouseButtonClick == 1) {
                 C_BATCH_PROGRESS_BAR = !C_BATCH_PROGRESS_BAR;
-                saveConfiguration(false);
+                saveConfiguration(true);
             }
         }
 
         // Experience Drops
         if (settingIndex == 4 && this.mouseButtonClick == 1 && S_EXPERIENCE_DROPS_TOGGLE) {
             C_EXPERIENCE_DROPS = !C_EXPERIENCE_DROPS;
-            saveConfiguration(false);
+            saveConfiguration(true);
         }
 
-        // Fog
+        // Fog - byte index 6
         if (settingIndex == 6 && this.mouseButtonClick == 1 && S_FOG_TOGGLE) {
             C_SHOW_FOG = !C_SHOW_FOG;
             this.packetHandler.getClientStream().newPacket(111);
             this.packetHandler.getClientStream().writeBuffer1.putByte(6);
             this.packetHandler.getClientStream().writeBuffer1.putByte(C_SHOW_FOG ? 1 : 0);
             this.packetHandler.getClientStream().finishPacket();
-            saveConfiguration(false);
+            saveConfiguration(true);
         }
 
-        // Show Roof
+        // Show Roof - byte index 5
         if (settingIndex == 7 && this.mouseButtonClick == 1 && S_SHOW_ROOF_TOGGLE) {
             C_HIDE_ROOFS = !C_HIDE_ROOFS;
             this.packetHandler.getClientStream().newPacket(111);
             this.packetHandler.getClientStream().writeBuffer1.putByte(5);
             this.packetHandler.getClientStream().writeBuffer1.putByte(C_HIDE_ROOFS ? 1 : 0);
             this.packetHandler.getClientStream().finishPacket();
-            saveConfiguration(false);
+            saveConfiguration(true);
         }
 
         // Show Ground Items
@@ -7534,25 +7529,25 @@ public final class mudclient implements Runnable {
             C_SHOW_GROUND_ITEMS++;
             if (C_SHOW_GROUND_ITEMS == 4)
                 C_SHOW_GROUND_ITEMS = 0;
-            saveConfiguration(false);
+            saveConfiguration(true);
         }
 
         // Auto Message Tab Switch
         if (settingIndex == 9 && this.mouseButtonClick == 1 && S_AUTO_MESSAGE_SWITCH_TOGGLE) {
             C_MESSAGE_TAB_SWITCH = !C_MESSAGE_TAB_SWITCH;
-            saveConfiguration(false);
+            saveConfiguration(true);
         }
 
         // Side Menu
         if (settingIndex == 10 && this.mouseButtonClick == 1 && S_SIDE_MENU_TOGGLE) {
             C_SIDE_MENU_OVERLAY = !C_SIDE_MENU_OVERLAY;
-            saveConfiguration(false);
+            saveConfiguration(true);
         }
 
         // Kill Feed
         if (settingIndex == 11 && this.mouseButtonClick == 1 && S_WANT_KILL_FEED) {
             C_KILL_FEED = !C_KILL_FEED;
-            saveConfiguration(false);
+            saveConfiguration(true);
         }
 
         // Combat Style
@@ -7571,7 +7566,7 @@ public final class mudclient implements Runnable {
             C_FIGHT_MENU++;
             if (C_FIGHT_MENU == 3)
                 C_FIGHT_MENU = 0;
-            saveConfiguration(false);
+            saveConfiguration(true);
         }
 
         // Experience Counter
@@ -7579,13 +7574,13 @@ public final class mudclient implements Runnable {
             C_EXPERIENCE_COUNTER++;
             if (C_EXPERIENCE_COUNTER == 3)
                 C_EXPERIENCE_COUNTER = 0;
-            saveConfiguration(false);
+            saveConfiguration(true);
         }
 
         // Inventory Count
         if (settingIndex == 15 && this.mouseButtonClick == 1 && S_INVENTORY_COUNT_TOGGLE) {
             C_INV_COUNT = !C_INV_COUNT;
-            saveConfiguration(false);
+            saveConfiguration(true);
         }
 
         var7 += 184;
@@ -7677,13 +7672,13 @@ public final class mudclient implements Runnable {
             if (this.mouseX > var6 && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY
                     && 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
                 C_NAME_CLAN_TAG_OVERLAY = !C_NAME_CLAN_TAG_OVERLAY;
-                saveConfiguration(false);
+                saveConfiguration(true);
             }
 
         }
 
         if (S_WANT_CLANS) {
-            // Clan Invite Blocking
+            // Clan Invite Blocking - byte index 11
             var7 += 15;
             if (this.mouseX > var6 && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY
                     && 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
@@ -7731,14 +7726,14 @@ public final class mudclient implements Runnable {
                 F_LONG_PRESS_CALC = 1;
             }
             C_LONG_PRESS_TIMER = F_LONG_PRESS_CALC * 50;
-            saveConfiguration(false);
+            saveConfiguration(true);
         }
 
         if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 1 && this.mouseButtonClick == 1) {
             C_MENU_SIZE++;
             if (C_MENU_SIZE == 8)
                 C_MENU_SIZE = 1;
-            saveConfiguration(false);
+            saveConfiguration(true);
             if (isAndroid()) {
                 this.menuCommon.font = C_MENU_SIZE;
             }
@@ -7746,27 +7741,26 @@ public final class mudclient implements Runnable {
 
         if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 2 && this.mouseButtonClick == 1) {
             C_HOLD_AND_CHOOSE = !C_HOLD_AND_CHOOSE;
-            saveConfiguration(false);
+            saveConfiguration(true);
         }
 
         if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 3 && this.mouseButtonClick == 1) {
             C_SWIPE_TO_SCROLL = !C_SWIPE_TO_SCROLL;
-            saveConfiguration(false);
+            saveConfiguration(true);
         }
 
         if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 4 && this.mouseButtonClick == 1) {
             C_SWIPE_TO_ROTATE = !C_SWIPE_TO_ROTATE;
-            saveConfiguration(false);
+            saveConfiguration(true);
         }
 
         if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 5 && this.mouseButtonClick == 1) {
             C_VOLUME_TO_ROTATE = !C_VOLUME_TO_ROTATE;
             saveConfiguration(true);
 
-            this.settingsVolumeToRotate = !this.settingsVolumeToRotate;
             this.packetHandler.getClientStream().newPacket(111);
-            this.packetHandler.getClientStream().writeBuffer1.putByte(12);
-            this.packetHandler.getClientStream().writeBuffer1.putByte(this.settingsVolumeToRotate ? 1 : 0);
+            this.packetHandler.getClientStream().writeBuffer1.putByte(16);
+            this.packetHandler.getClientStream().writeBuffer1.putByte(C_VOLUME_TO_ROTATE ? 1 : 0);
             this.packetHandler.getClientStream().finishPacket();
         }
 
@@ -7783,7 +7777,7 @@ public final class mudclient implements Runnable {
 
         y += 15;
 
-        // Camera angle mode
+        // Camera angle mode - byte index 0
         if (this.optionCameraModeAuto) {
             this.getSurface().drawString("@whi@Camera angle mode - @gre@Auto", 3 + baseX, y, 0, 1);
         } else {
@@ -7792,7 +7786,7 @@ public final class mudclient implements Runnable {
 
         y += 15;
 
-        // Mouse Buttons
+        // Mouse Buttons - byte index 1
         if (this.optionMouseButtonOne) {
             this.getSurface().drawString("@whi@Mouse buttons - @red@One", 3 + baseX, y, 0, 1);
         } else {
@@ -7801,7 +7795,7 @@ public final class mudclient implements Runnable {
 
         y += 15;
 
-        // Sound Effects
+        // Sound Effects - byte index 2
         if (this.optionSoundDisabled) {
             this.getSurface().drawString("@whi@Sound effects - @red@off", 3 + baseX, y, 0, 1);
         } else {
@@ -7879,7 +7873,7 @@ public final class mudclient implements Runnable {
 
         var7 += 15;
 
-        // Camera Mode
+        // Camera Mode - byte index 0
         if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12
                 && 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
             this.optionCameraModeAuto = !this.optionCameraModeAuto;
@@ -7891,7 +7885,7 @@ public final class mudclient implements Runnable {
 
         var7 += 15;
 
-        // One or Two Mouse Button(s)
+        // One or Two Mouse Button(s) - byte index 1
         if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12
                 && 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
             this.optionMouseButtonOne = !this.optionMouseButtonOne;
@@ -7904,7 +7898,7 @@ public final class mudclient implements Runnable {
 
         var7 += 15;
 
-        // Sound On/Off
+        // Sound On/Off - byte index 2
         if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12
                 && 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
             this.optionSoundDisabled = !this.optionSoundDisabled;
@@ -12747,8 +12741,8 @@ public final class mudclient implements Runnable {
             System.out.println(WELCOME_TEXT + " 42");
             System.out.println(MEMBER_WORLD + " 43");
             System.out.println(DISPLAY_LOGO_SPRITE + " 44");
-            //System.out.println(Config.C_LOGO_SPRITE_ID + " 45");
-            //System.out.println(Config.C_FPS + " 46");
+            System.out.println(Config.C_LOGO_SPRITE_ID + " 45");
+            System.out.println(Config.C_FPS + " 46");
         }
         try {
             this.loadGameConfig(false);
@@ -13700,28 +13694,28 @@ public final class mudclient implements Runnable {
         this.clanKickPlayer = player;
     }
 
-    public void setVolumeToRotate(boolean block) {
-        this.settingsVolumeToRotate = block;
+    public void setVolumeToRotate(boolean b) {
+        Config.C_VOLUME_TO_ROTATE = b;
     }
 
-    public void setSwipeToRotate(boolean block) {
-        this.settingsSwipeToRotate = block;
+    public void setSwipeToRotate(boolean b) {
+        Config.C_SWIPE_TO_ROTATE = b;
     }
 
-    public void setSwipeToScroll(boolean block) {
-        this.settingsSwipeToScroll = block;
+    public void setSwipeToScroll(boolean b) {
+        Config.C_SWIPE_TO_SCROLL = b;
     }
 
-    public void setLongPressDelay(int block) {
-        this.settingsLongPressDelay = block;
+    public void setLongPressDelay(int i) {
+        Config.C_LONG_PRESS_TIMER = i;
     }
 
-    public void setFontSize(int block) {
-        this.settingsFontSize = block;
+    public void setFontSize(int i) {
+        Config.C_MENU_SIZE = i;
     }
 
-    public void setHoldAndChoose(boolean block) {
-        this.settingsHoldAndChoose = block;
+    public void setHoldAndChoose(boolean b) {
+        Config.C_HOLD_AND_CHOOSE = b;
     }
 
     class XPNotification {

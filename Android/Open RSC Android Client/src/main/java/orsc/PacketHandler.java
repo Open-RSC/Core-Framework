@@ -1513,18 +1513,19 @@ public class PacketHandler {
 
 	private void updateOptionsMenuSettings() {
 		//mc.setGroupID(packetsIncoming.getByte());
-		mc.setOptionCameraModeAuto(packetsIncoming.getUnsignedByte() == 1);
-		mc.setOptionMouseButtonOne(packetsIncoming.getUnsignedByte() == 1);
-		mc.setOptionSoundDisabled(packetsIncoming.getUnsignedByte() == 1);
-		mc.setCombatStyle(packetsIncoming.getUnsignedByte());
-		mc.setSettingsBlockGlobal(packetsIncoming.getUnsignedByte());
-		mc.setClanInviteBlockSetting(packetsIncoming.getUnsignedByte() == 1);
-		mc.setVolumeToRotate(packetsIncoming.getUnsignedByte() == 1);
-		/*mc.setSwipeToRotate(packetsIncoming.getUnsignedByte() == 1);
-		mc.setSwipeToScroll(packetsIncoming.getUnsignedByte() == 1);
-		mc.setLongPressDelay(packetsIncoming.getUnsignedByte());
-		mc.setFontSize(packetsIncoming.getUnsignedByte());
-		mc.setHoldAndChoose(packetsIncoming.getUnsignedByte() == 1);*/
+		mc.setOptionCameraModeAuto(packetsIncoming.getUnsignedByte() == 1); // byte index 0
+ 		mc.setOptionMouseButtonOne(packetsIncoming.getUnsignedByte() == 1); // 1
+		mc.setOptionSoundDisabled(packetsIncoming.getUnsignedByte() == 1); // 2
+		mc.setCombatStyle(packetsIncoming.getUnsignedByte()); // ?
+		mc.setSettingsBlockGlobal(packetsIncoming.getUnsignedByte()); // 9
+		mc.setClanInviteBlockSetting(packetsIncoming.getUnsignedByte() == 1); // 11
+		mc.setVolumeToRotate(packetsIncoming.getUnsignedByte() == 1); // 16
+		/*mc.setSwipeToRotate(packetsIncoming.getUnsignedByte() == 1); // 13
+		mc.setSwipeToScroll(packetsIncoming.getUnsignedByte() == 1); // 14
+		mc.setLongPressDelay(packetsIncoming.getUnsignedByte()); // 15
+		mc.setFontSize(packetsIncoming.getUnsignedByte()); // 16
+		mc.setHoldAndChoose(packetsIncoming.getUnsignedByte() == 1); // 17
+		*/
 	}
 
 	private void togglePrayer(int length) {

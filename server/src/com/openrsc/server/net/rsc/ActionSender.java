@@ -415,16 +415,15 @@ public class ActionSender {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_GAME_SETTINGS.opcode);
 		//s.writeByte((byte) player.getGroupID());
-		s.writeByte((byte) (player.getSettings().getGameSetting(0) ? 1
-			: 0)); /* Camera Auto Angle */
-		s.writeByte((byte) (player.getSettings().getGameSetting(1) ? 1
-			: 0)); /* Mouse buttons */
-		s.writeByte((byte) (player.getSettings().getGameSetting(2) ? 1
-			: 0)); /* Sound Effects */
+		s.writeByte((byte) (player.getSettings().getGameSetting(0) ? 1: 0)); // Camera Auto Angle 0
+		s.writeByte((byte) (player.getSettings().getGameSetting(1) ? 1: 0)); // Mouse buttons 1
+		s.writeByte((byte) (player.getSettings().getGameSetting(2) ? 1: 0)); // Sound Effects 2
 		s.writeByte((byte) player.getCombatStyle());
-		s.writeByte(player.getGlobalBlock());
-		s.writeByte((byte) (player.getClanInviteSetting() ? 1 : 0));
-		s.writeByte((byte) (player.getVolumeToRotate() ? 1 : 0));
+		// show roof 5
+		// fog 6
+		s.writeByte(player.getGlobalBlock()); // 9
+		s.writeByte((byte) (player.getClanInviteSetting() ? 1 : 0)); // 11
+		s.writeByte((byte) (player.getVolumeToRotate() ? 1 : 0)); // 16
 		/*s.writeByte((byte) (player.getSwipeToRotate() ? 1 : 0));
 		s.writeByte((byte) (player.getSwipeToScroll() ? 1 : 0));
 		s.writeByte(player.getLongPressDelay());
