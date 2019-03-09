@@ -74,8 +74,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			outputWriter.write(creds);
 			outputWriter.close();
 			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ignored) {
 		}
 		return false;
 	}
@@ -89,8 +88,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			outputWriter.write(""+preference);
 			outputWriter.close();
 			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ignored) {
 		}
 		return false;
 	}
