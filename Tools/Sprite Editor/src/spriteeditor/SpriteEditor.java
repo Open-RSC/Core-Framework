@@ -14,7 +14,6 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.TreeMap;
 
-import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
@@ -22,6 +21,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -51,7 +51,7 @@ public class SpriteEditor extends JFrame implements ActionListener {
 	/**
 	 * The component to render to
 	 */
-	private final Component paper = new JApplet();
+	private final Component paper = new JTextArea();
 	/**
 	 * The sprite drawing object
 	 */

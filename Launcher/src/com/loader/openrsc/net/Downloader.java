@@ -17,36 +17,35 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.util.Map.Entry;
-import java.util.Observable;
 import java.util.Properties;
 import java.util.Set;
 
-public class Downloader extends Observable {
-	private final String[] nicename = new String[]{"Client", "Library", "Landscape",
-		"Graphics", "3D Models",
-		"Game Sound", "Game Sound", "Game Sound", "Game Sound",
-		"Game Sound", "Game Sound", "Game Sound", "Game Sound",
-		"Game Sound", "Game Sound", "Game Sound", "Game Sound",
-		"Game Sound", "Game Sound", "Game Sound", "Game Sound",
-		"Game Sound", "Game Sound", "Game Sound", "Game Sound",
-		"Game Sound", "Game Sound", "Game Sound", "Game Sound",
-		"Game Sound", "Game Sound", "Game Sound", "Game Sound",
-		"Game Sound", "Game Sound", "Game Sound", "Game Sound",
-		"Game Sound", "Game Sound", "Game Sound", "Game Sound",
-		"Game Sound", "Game Sound"};
+public class Downloader {
+	private final String[] nicename = new String[]{"Client", "Library", "Landscape", // 3
+		"Graphics", "3D Models", // 2
+		"Game Sound", "Game Sound", "Game Sound", "Game Sound", // 4
+		"Game Sound", "Game Sound", "Game Sound", "Game Sound", // 4
+		"Game Sound", "Game Sound", "Game Sound", "Game Sound", // 4
+		"Game Sound", "Game Sound", "Game Sound", "Game Sound", // 4
+		"Game Sound", "Game Sound", "Game Sound", "Game Sound", // 4
+		"Game Sound", "Game Sound", "Game Sound", // 3
+		"Game Sound", "Game Sound", "Game Sound", "Game Sound", // 4
+		"Game Sound", "Game Sound", "Game Sound", "Game Sound", // 4
+		"Game Sound", "Game Sound", "Game Sound", "Game Sound", // 4
+		"Game Sound", "Game Sound", "Game Sound"}; // 3
 
-	private final String[] normalName = new String[]{"Open_RSC_Client.jar", "library.orsc", "Landscape.orsc",
-		"Sprites.orsc", "models.orsc",
-		"advance.wav", "anvil.wav", "chisel.wav", "click.wav",
-		"closedoor.wav", "coins.wav", "takeobject.wav", "victory.wav",
-		"combat1a.wav", "combat1b.wav", "combat2a.wav", "combat2b.wav",
-		"combat3a.wav", "combat3b.wav", "cooking.wav", "death.wav",
-		"dropobject.wav", "eat.wav", "filljug.wav", "fish.wav",
-		"foundgem.wav", "recharge.wav", "underattack.wav",
-		"mechanical.wav", "mine.wav", "mix.wav", "spellok.wav",
-		"opendoor.wav", "out_of_ammo.wav", "potato.wav", "spellfail.wav",
-		"prayeroff.wav", "prayeron.wav", "prospect.wav", "shoot.wav",
-		"retreat.wav", "secretdoor.wav"};
+	private final String[] normalName = new String[]{"Open_RSC_Client.jar", "library.orsc", "Landscape.orsc", //3
+		"Sprites.orsc", "models.orsc", // 2
+		"advance.wav", "anvil.wav", "chisel.wav", "click.wav", // 4
+		"closedoor.wav", "coins.wav", "takeobject.wav", "victory.wav", // 4
+		"combat1a.wav", "combat1b.wav", "combat2a.wav", "combat2b.wav", // 4
+		"combat3a.wav", "combat3b.wav", "cooking.wav", "death.wav", // 4
+		"dropobject.wav", "eat.wav", "filljug.wav", "fish.wav", // 4
+		"foundgem.wav", "recharge.wav", "underattack.wav", // 3
+		"mechanical.wav", "mine.wav", "mix.wav", "spellok.wav", // 4
+		"opendoor.wav", "out_of_ammo.wav", "potato.wav", "spellfail.wav", // 4
+		"prayeroff.wav", "prayeron.wav", "prospect.wav", "shoot.wav", // 4
+		"retreat.wav", "secretdoor.wav", "sounds.mem"}; // 3
 
 	public Downloader() {
 
@@ -70,8 +69,6 @@ public class Downloader extends Observable {
 		return complete.digest();
 	}
 
-	// see this How-to for a faster way to convert
-	// a byte array to a HEX string
 	private static String getMD5Checksum(File file) throws Exception {
 		byte[] b = createChecksum(file);
 		StringBuilder result = new StringBuilder();
@@ -189,16 +186,16 @@ public class Downloader extends Observable {
 			System.out.println("---------------------------------------");
 			String fileName = (String) entry.getKey();
 			String hash = (String) entry.getValue();
-			//AppFrame.get().setDownloadProgress("Verifying file: " + getNiceName(fileName), 95);
+			AppFrame.get().setDownloadProgress("Verifying file: " + getNiceName(fileName), 95);
 
 			System.out.println(fileName + ": " + hash);
 			File downloadedFile = new File(Constants.CONF_DIR + File.separator + File.separator + fileName);
 
-			/*if(!downloadedFile.exists()) {
+			if(!downloadedFile.exists()) {
 				System.out.println("Updating file: " + fileName);
 				update(fileName);
 				verified = false;
-			}*/
+			}
 
 			String downloadedFileHash = null;
 			try {

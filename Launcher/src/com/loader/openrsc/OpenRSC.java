@@ -5,12 +5,14 @@ import com.loader.openrsc.frame.popup.PopupFrame;
 import com.loader.openrsc.frame.threads.StatusChecker;
 import com.loader.openrsc.net.Downloader;
 
+import java.io.IOException;
+
 import javax.swing.*;
 
 public class OpenRSC {
 	private static PopupFrame popup;
 
-	public static void main(final String[] args) {
+	public static void main(final String[] args) throws IOException {
 		try {
 			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 		} catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {

@@ -163,55 +163,6 @@
     <mapping directory="$PROJECT_DIR$/Website" vcs="Git" />
   </component>
   <component name="libraryTable">
-    <library name="2">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/Tools/Area Editor/textures/ground/2.zip!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
-    <library name="gradle-wrapper">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/server/gradle/wrapper/gradle-wrapper.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
-    <library name="gradle-wrapper1">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/gradle/wrapper/gradle-wrapper.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
-    <library name="gradle-wrapper2">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/Android/gradle/wrapper/gradle-wrapper.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
-    <library name="instant-run">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/incremental-runtime-classes/debug/instant-run.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
-    <library name="instant-run-bootstrap">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
-    <library name="Landscape_Editor">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/Tools/2D Landscape Editor/Landscape_Editor.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
     <library name="lib">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/server/lib/log4j-core-2.8.jar!/" />
@@ -254,45 +205,9 @@
       <SOURCES />
       <jarDirectory url="file://$PROJECT_DIR$/Tools/Sprite Editor/lib" recursive="false" />
     </library>
-    <library name="MapEditor">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/Tools/3D Landscape Editor/MapEditor.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
     <library name="Open_RSC_Client">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/client/Open_RSC_Client.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
-    <library name="OpenRSC">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/Launcher/OpenRSC.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
-    <library name="openrsc_wiki.sql">
-      <CLASSES />
-      <JAVADOC />
-      <SOURCES />
-    </library>
-    <library name="release">
-      <CLASSES />
-      <JAVADOC />
-      <SOURCES />
-    </library>
-    <library name="RSC_Map_Generator">
-      <CLASSES />
-      <JAVADOC />
-      <SOURCES />
-    </library>
-    <library name="RSCArchiver">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/Tools/RSC Archiver/RSCArchiver.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
@@ -302,11 +217,6 @@
         <root url="jar://$PROJECT_DIR$/server/core.jar!/" />
         <root url="jar://$PROJECT_DIR$/server/plugins.jar!/" />
       </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
-    <library name="zip">
-      <CLASSES />
       <JAVADOC />
       <SOURCES />
     </library>

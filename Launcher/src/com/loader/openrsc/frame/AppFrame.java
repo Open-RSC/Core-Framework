@@ -10,11 +10,14 @@ import com.loader.openrsc.util.Utils;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
+//import java.awt.Taskbar;
 import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
+
+;
 
 @SuppressWarnings("serial")
 public class AppFrame extends JFrame {
@@ -30,6 +33,7 @@ public class AppFrame extends JFrame {
 		this.setUndecorated(true);
 		this.setTitle(Constants.GAME_NAME);
 		this.setIconImage(Utils.getImage("icon.png").getImage());
+		//Taskbar.getTaskbar().setIconImage(Utils.getImage("icon.png").getImage());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		AppFrame.instance = this;
 	}
@@ -114,7 +118,7 @@ public class AppFrame extends JFrame {
 	private void addButtons() {
 		this.bg.add(new LinkButton("Website", new Rectangle(27, 480, 119, 40)));
 		this.bg.add(new LinkButton("Bug Reports", new Rectangle(158, 480, 119, 40)));
-		this.bg.add(new LinkButton("Report Bots", new Rectangle(288, 480, 119, 40)));
+		this.bg.add(new LinkButton("Bot Reports", new Rectangle(288, 480, 119, 40)));
 		this.bg.add(new LinkButton("Discord", new Rectangle(418, 480, 119, 40)));
 		(this.launch = new LaunchButton()).setBounds(617, 481, 174, 69);
 		this.bg.add(this.launch);

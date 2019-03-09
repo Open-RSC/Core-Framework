@@ -21,7 +21,7 @@ public class ButtonListener implements ActionListener {
 				Utils.openWebpage("https://goo.gl/forms/nnhSln7S81l4I26t2");
 				return;
 			}
-			case "report bots": {
+			case "bot reports": {
 				Utils.openWebpage("https://goo.gl/forms/AkBzpOzgAmzWiZ8H2");
 				return;
 			}

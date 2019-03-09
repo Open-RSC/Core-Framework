@@ -19,6 +19,7 @@
             <classpath>
                 <pathelement path="${java.class.path}/"/>
             </classpath>
+            <compilerarg line="-Xlint:deprecation"/>
         </javac>
         <jar basedir="${build}" destfile="${jar}">
             <manifest>

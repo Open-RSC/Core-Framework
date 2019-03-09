@@ -4,7 +4,6 @@ import com.loader.openrsc.Constants;
 import com.loader.openrsc.OpenRSC;
 import com.loader.openrsc.frame.AppFrame;
 
-import java.applet.Applet;
 import java.awt.Dimension;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -28,7 +27,7 @@ public class ClientLauncher {
 		SecurityException {
 
 		startProcess();
-		final Applet applet = (Applet) mainClass.getConstructor()
+		final JFrame applet = (JFrame) mainClass.getConstructor()
 			.newInstance();
 		AppFrame.get().dispose();
 		JFrame gameFrame = new JFrame(Constants.GAME_NAME);
@@ -36,8 +35,6 @@ public class ClientLauncher {
 		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		gameFrame.getContentPane().add(applet);
 		gameFrame.setAlwaysOnTop(false);
-		applet.init();
-		applet.start();
 		gameFrame.pack();
 		gameFrame.setVisible(true);
 	}
