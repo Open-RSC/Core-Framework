@@ -4165,7 +4165,7 @@ public final class mudclient implements Runnable {
                         this.drawExperienceCounter(recentSkill);
                     }
 
-                    if (isAndroid()) {
+                    /*if (isAndroid()) { // on screen buttons for various player chat commands
                         if (F_SHOWING_KEYBOARD) {
                             int uiX = 5;
                             int uiY = 5;
@@ -4216,7 +4216,7 @@ public final class mudclient implements Runnable {
 
 
                         }
-                    }
+                    }*/
 
                     if (isAndroid()) {
                         if (F_SHOWING_KEYBOARD) {
