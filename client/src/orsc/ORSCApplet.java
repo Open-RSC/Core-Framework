@@ -24,13 +24,7 @@ import java.awt.image.DirectColorModel;
 import java.awt.image.ImageConsumer;
 import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 
 import javax.imageio.ImageIO;
 import javax.swing.SwingUtilities;
@@ -64,34 +58,6 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	private DirectColorModel imageModel;
 	private Image backingImage;
 	private ImageConsumer imageProducer;
-
-	public static boolean saveCredentials(String creds) {
-		FileOutputStream fileout;
-		try {
-			fileout = new FileOutputStream(Config.F_CACHE_DIR + File.separator + "credentials.txt");
-
-			OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-			outputWriter.write(creds);
-			outputWriter.close();
-			return true;
-		} catch (Exception ignored) {
-		}
-		return false;
-	}
-	
-	public static boolean saveHideIp(int preference) {
-		FileOutputStream fileout;
-		try {
-			fileout = new FileOutputStream(Config.F_CACHE_DIR + File.separator + "hideIp.txt");
-
-			OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-			outputWriter.write(""+preference);
-			outputWriter.close();
-			return true;
-		} catch (Exception ignored) {
-		}
-		return false;
-	}
 
 	void addMouseClick(int button, int x, int y) {
 		try {
@@ -827,44 +793,6 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	public void drawKeyboard() {
 		// TODO Auto-generated method stub
 
-	}
-
-	public String loadCredentials() {
-		try {
-
-			FileInputStream in = new FileInputStream(Config.F_CACHE_DIR + File.separator + "credentials.txt");
-			InputStreamReader inputStreamReader = new InputStreamReader(in);
-			BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-			StringBuilder sb = new StringBuilder();
-			String line;
-			while ((line = bufferedReader.readLine()) != null) {
-				sb.append(line);
-			}
-			in.close();
-
-			return sb.toString();
-		} catch (Exception ignored) {
-		}
-		return "";
-	}
-	
-	public int loadHideIp() {
-		try {
-
-			FileInputStream in = new FileInputStream(Config.F_CACHE_DIR + File.separator + "hideIp.txt");
-			InputStreamReader inputStreamReader = new InputStreamReader(in);
-			BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-			StringBuilder sb = new StringBuilder();
-			String line;
-			while ((line = bufferedReader.readLine()) != null) {
-				sb.append(line);
-			}
-			in.close();
-
-			return Integer.parseInt(sb.toString());
-		} catch (Exception ignored) {
-		}
-		return 0;
 	}
 
 	@Override

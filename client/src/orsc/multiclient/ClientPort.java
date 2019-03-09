@@ -2,53 +2,115 @@ package orsc.multiclient;
 
 import com.openrsc.client.model.Sprite;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+
+import orsc.Config;
 
 public interface ClientPort {
 
-	static boolean saveCredentials() {
-		return saveCredentials();
-	}
+	boolean drawLoading(int i);
 
-	public static boolean saveCredentials(String creds) {
+	void showLoadingProgress(int percentage, String status);
+
+	void initListeners();
+
+	void crashed();
+
+	void drawLoadingError();
+
+	void drawOutOfMemoryError();
+
+	boolean isDisplayable();
+
+	void drawTextBox(String line2, byte var2, String line1);
+
+	void initGraphics();
+
+	void draw();
+
+	void close();
+
+	String getCacheLocation();
+
+	void resized();
+
+	Sprite getSpriteFromByteArray(ByteArrayInputStream byteArrayInputStream);
+
+	void playSound(byte[] soundData, int offset, int dataLength);
+
+	void stopSoundPlayer();
+
+	void drawKeyboard();
+
+	static boolean saveHideIp(int preference) {
+		FileOutputStream fileout;
+		try {
+			fileout = new FileOutputStream(Config.F_CACHE_DIR + File.separator + "hideIp.txt");
+
+			OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+			outputWriter.write("" + preference);
+			outputWriter.close();
+			return true;
+		} catch (Exception ignored) {
+		}
 		return false;
 	}
 
-	public boolean drawLoading(int i);
+	static Integer loadHideIp() {
+		try {
 
-	public void showLoadingProgress(int percentage, String status);
+			FileInputStream in = new FileInputStream(Config.F_CACHE_DIR + File.separator + "hideIp.txt");
+			InputStreamReader inputStreamReader = new InputStreamReader(in);
+			BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+			StringBuilder sb = new StringBuilder();
+			String line;
+			while ((line = bufferedReader.readLine()) != null) {
+				sb.append(line);
+			}
+			in.close();
 
-	public void initListeners();
+			return Integer.parseInt(sb.toString());
+		} catch (Exception ignored) {
+		}
+		return Integer.parseInt("");
+	}
 
-	public void crashed();
+	static boolean saveCredentials(String creds) {
+		FileOutputStream fileout;
+		try {
+			fileout = new FileOutputStream(Config.F_CACHE_DIR + File.separator + "credentials.txt");
 
-	public void drawLoadingError();
+			OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+			outputWriter.write(creds);
+			outputWriter.close();
+			return true;
+		} catch (Exception ignored) {
+		}
+		return false;
+	}
 
-	public void drawOutOfMemoryError();
+	static String loadCredentials() {
+		try {
 
-	public boolean isDisplayable();
+			FileInputStream in = new FileInputStream(Config.F_CACHE_DIR + File.separator + "credentials.txt");
+			InputStreamReader inputStreamReader = new InputStreamReader(in);
+			BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+			StringBuilder sb = new StringBuilder();
+			String line;
+			while ((line = bufferedReader.readLine()) != null) {
+				sb.append(line);
+			}
+			in.close();
 
-	public void drawTextBox(String line2, byte var2, String line1);
-
-	public void initGraphics();
-
-	public void draw();
-
-	public void close();
-
-	public String getCacheLocation();
-
-	public void resized();
-
-	public Sprite getSpriteFromByteArray(ByteArrayInputStream byteArrayInputStream);
-
-	public void playSound(byte[] soundData, int offset, int dataLength);
-
-	public void stopSoundPlayer();
-
-	public void drawKeyboard();
-
-	public String loadCredentials();
-	
-	public int loadHideIp();
+			return sb.toString();
+		} catch (Exception ignored) {
+		}
+		return "";
+	}
 }

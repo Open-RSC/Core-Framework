@@ -154,6 +154,7 @@ import static orsc.Config.isAndroid;
 import static orsc.Config.saveConfiguration;
 import static orsc.Config.wantEmail;
 import static orsc.Config.wantMembers;
+import static orsc.multiclient.ClientPort.saveHideIp;
 
 public final class mudclient implements Runnable {
 
@@ -1565,17 +1566,15 @@ public final class mudclient implements Runnable {
 			this.panelLogin.addCenteredText(halfGameWidth() - 66, halfGameHeight() + 128 + yOffsetLogin, "Password:", 4, false);
 			this.controlLoginPass = this.panelLogin.addCenteredTextEntry(halfGameWidth() - 66, halfGameHeight() + 146 + yOffsetLogin, 200, 20, 40, 4, true, false);
 
-			if (isAndroid() || Remember()) {
-				String cred = clientPort.loadCredentials();
-				if (cred != null) {
-					if (cred.length() > 0) {
-						String[] split = cred.split(",");
-						if (split.length == 2) {
-							String user = split[0];
-							String pass = split[1];
-							this.panelLogin.setText(this.controlLoginUser, user);
-							this.panelLogin.setText(this.controlLoginPass, pass);
-						}
+			if (Remember()) {
+				String cred = ClientPort.loadCredentials();
+				if (cred.length() > 0) {
+					String[] split = cred.split(",");
+					if (split.length == 2) {
+						String user = split[0];
+						String pass = split[1];
+						this.panelLogin.setText(this.controlLoginUser, user);
+						this.panelLogin.setText(this.controlLoginPass, pass);
 					}
 				}
 			}
@@ -1591,13 +1590,13 @@ public final class mudclient implements Runnable {
 			int offRememb = -1;
 			int offHide = -1;
 			int width = 120;
-			if (S_WANT_HIDE_IP && (isAndroid() || Remember())) {
+			if (S_WANT_HIDE_IP && (Remember())) {
 				offRememb = 124;
 				offHide = 186;
 				width = 60;
 			} else if (S_WANT_HIDE_IP) {
 				offHide = 154;
-			} else if (isAndroid() || Remember()) {
+			} else if (Remember()) {
 				offRememb = 154;
 			}
 
@@ -1607,7 +1606,7 @@ public final class mudclient implements Runnable {
 				this.rememberButtonIdx = this.panelLogin.addButton(halfGameWidth() + offRememb, halfGameHeight() + 143 + yOffsetLogin, width, 25);
 			}
 			if (offHide != -1) {
-				this.settingsHideIP = clientPort.loadHideIp();
+				this.settingsHideIP = ClientPort.loadHideIp();
 				String text = (this.settingsHideIP != 1) ? "Hide IP" : "Show IP";
 				this.panelLogin.addButtonBackground(halfGameWidth() + offHide, halfGameHeight() + 143 + yOffsetLogin, width, 25);
 				this.panelLogin.addCenteredText(halfGameWidth() + offHide, halfGameHeight() + 143 + yOffsetLogin, text, 3, false);
@@ -9462,9 +9461,7 @@ public final class mudclient implements Runnable {
 					if (isAndroid() || Remember()) {
 						if (this.panelLogin.isClicked(this.rememberButtonIdx)) {
 
-							// ORSCApplet is for PC client, clientPort is for Android client, comment out what doesn't work.
-							boolean temp = ORSCApplet.saveCredentials(this.panelLogin.getControlText(this.controlLoginUser) + "," + this.panelLogin.getControlText(this.controlLoginPass));
-							//boolean temp = clientPort.saveCredentials(this.panelLogin.getControlText(this.controlLoginUser) + "," + this.panelLogin.getControlText(this.controlLoginPass));
+							boolean temp = ClientPort.saveCredentials(this.panelLogin.getControlText(this.controlLoginUser) + "," + this.panelLogin.getControlText(this.controlLoginPass));
 
 							if (temp)
 								this.panelLogin.setText(this.controlLoginStatus2, "@gre@Credentials Saved");
@@ -9477,9 +9474,7 @@ public final class mudclient implements Runnable {
 							String text = (this.settingsHideIP != 1) ? "Hide IP" : "Show IP";
 							this.panelLogin.setText(this.hideIpButtonIdx - 1, text);
 
-							// ORSCApplet is for PC client, clientPort is for Android client, comment out what doesn't work.
-							boolean temp = ORSCApplet.saveHideIp(this.settingsHideIP);
-							//boolean temp = clientPort.saveHideIp(this.settingsHideIP);
+							boolean temp = saveHideIp(this.settingsHideIP);
 
 							String msg = (this.settingsHideIP != 1) ? "@red@Your IP will be shown after login"
 								: "@gre@Your IP will be hidden after login";

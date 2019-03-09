@@ -34,12 +34,9 @@ public class GameActivity extends Activity implements ClientPort {
         super.onCreate(savedInstanceState);
 
         gameView = new RSCBitmapSurfaceView(this) {
-            @Override
             public boolean saveHideIp(int preference) {
                 return false;
             }
-
-            @Override
             public int loadHideIp() {
                 return 0;
             }
@@ -197,77 +194,5 @@ public class GameActivity extends Activity implements ClientPort {
         if (imm.isAcceptingText()) { // REMOVE?
             Config.F_SHOWING_KEYBOARD = true;
         }
-    }
-
-    @Override
-    public boolean saveCredentials(String creds) {
-        FileOutputStream fileout;
-        try {
-            fileout = openFileOutput("credentials.txt", MODE_PRIVATE);
-
-            OutputStreamWriter outputWriter=new OutputStreamWriter(fileout);
-            outputWriter.write(creds);
-            outputWriter.close();
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-
-    }
-
-    @Override
-    public boolean saveHideIp(int preference) {
-        FileOutputStream fileout;
-        try {
-            fileout = openFileOutput("hideIp.txt", MODE_PRIVATE);
-
-            OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-            outputWriter.write(""+preference);
-            outputWriter.close();
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    @Override
-    public String loadCredentials() {
-        try {
-
-            FileInputStream in = openFileInput("credentials.txt");
-            InputStreamReader inputStreamReader = new InputStreamReader(in);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                sb.append(line);
-            }
-            in.close();
-
-            return sb.toString();
-        } catch (Exception ignored) {
-        }
-        return "";
-    }
-
-    public int loadHideIp() {
-        try {
-
-            FileInputStream in = openFileInput("hideIp.txt");
-            InputStreamReader inputStreamReader = new InputStreamReader(in);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                sb.append(line);
-            }
-            in.close();
-
-            return Integer.parseInt(sb.toString());
-        } catch (Exception ignored) {
-        }
-        return 0;
     }
 }

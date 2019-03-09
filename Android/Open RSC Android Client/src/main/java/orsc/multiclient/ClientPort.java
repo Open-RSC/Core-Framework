@@ -2,7 +2,15 @@ package orsc.multiclient;
 
 import com.openrsc.client.model.Sprite;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+
+import orsc.Config;
 
 public interface ClientPort {
 
@@ -40,11 +48,69 @@ public interface ClientPort {
 
 	void drawKeyboard();
 
-	boolean saveCredentials(String creds);
+	static boolean saveHideIp(int preference) {
+		FileOutputStream fileout;
+		try {
+			fileout = new FileOutputStream(Config.F_CACHE_DIR + File.separator + "hideIp.txt");
 
-	boolean saveHideIp(int preference);
+			OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+			outputWriter.write("" + preference);
+			outputWriter.close();
+			return true;
+		} catch (Exception ignored) {
+		}
+		return false;
+	}
 
-	String loadCredentials();
+	static Integer loadHideIp() {
+		try {
 
-	int loadHideIp();
+			FileInputStream in = new FileInputStream(Config.F_CACHE_DIR + File.separator + "hideIp.txt");
+			InputStreamReader inputStreamReader = new InputStreamReader(in);
+			BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+			StringBuilder sb = new StringBuilder();
+			String line;
+			while ((line = bufferedReader.readLine()) != null) {
+				sb.append(line);
+			}
+			in.close();
+
+			return Integer.parseInt(sb.toString());
+		} catch (Exception ignored) {
+		}
+		return Integer.parseInt("");
+	}
+
+	static boolean saveCredentials(String creds) {
+		FileOutputStream fileout;
+		try {
+			fileout = new FileOutputStream(Config.F_CACHE_DIR + File.separator + "credentials.txt");
+
+			OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+			outputWriter.write(creds);
+			outputWriter.close();
+			return true;
+		} catch (Exception ignored) {
+		}
+		return false;
+	}
+
+	static String loadCredentials() {
+		try {
+
+			FileInputStream in = new FileInputStream(Config.F_CACHE_DIR + File.separator + "credentials.txt");
+			InputStreamReader inputStreamReader = new InputStreamReader(in);
+			BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+			StringBuilder sb = new StringBuilder();
+			String line;
+			while ((line = bufferedReader.readLine()) != null) {
+				sb.append(line);
+			}
+			in.close();
+
+			return sb.toString();
+		} catch (Exception ignored) {
+		}
+		return "";
+	}
 }

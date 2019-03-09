@@ -33,8 +33,6 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,7 +71,90 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
 
-import static orsc.Config.*;
+import static orsc.Config.CLIENT_VERSION;
+import static orsc.Config.C_BATCH_PROGRESS_BAR;
+import static orsc.Config.C_EXPERIENCE_CONFIG_SUBMENU;
+import static orsc.Config.C_EXPERIENCE_COUNTER;
+import static orsc.Config.C_EXPERIENCE_COUNTER_COLOR;
+import static orsc.Config.C_EXPERIENCE_COUNTER_MODE;
+import static orsc.Config.C_EXPERIENCE_DROPS;
+import static orsc.Config.C_EXPERIENCE_DROP_SPEED;
+import static orsc.Config.C_FIGHT_MENU;
+import static orsc.Config.C_HIDE_ROOFS;
+import static orsc.Config.C_HOLD_AND_CHOOSE;
+import static orsc.Config.C_INV_COUNT;
+import static orsc.Config.C_KILL_FEED;
+import static orsc.Config.C_LONG_PRESS_TIMER;
+import static orsc.Config.C_MENU_SIZE;
+import static orsc.Config.C_MESSAGE_TAB_SWITCH;
+import static orsc.Config.C_NAME_CLAN_TAG_OVERLAY;
+import static orsc.Config.C_SHOW_FOG;
+import static orsc.Config.C_SHOW_GROUND_ITEMS;
+import static orsc.Config.C_SIDE_MENU_OVERLAY;
+import static orsc.Config.C_SWIPE_TO_ROTATE;
+import static orsc.Config.C_SWIPE_TO_SCROLL;
+import static orsc.Config.C_VOLUME_TO_ROTATE;
+import static orsc.Config.DEBUG;
+import static orsc.Config.DISPLAY_LOGO_SPRITE;
+import static orsc.Config.F_CACHE_DIR;
+import static orsc.Config.F_SHOWING_KEYBOARD;
+import static orsc.Config.MEMBER_WORLD;
+import static orsc.Config.Remember;
+import static orsc.Config.SERVER_IP;
+import static orsc.Config.SERVER_NAME;
+import static orsc.Config.SERVER_NAME_WELCOME;
+import static orsc.Config.SERVER_PORT;
+import static orsc.Config.S_AUTO_MESSAGE_SWITCH_TOGGLE;
+import static orsc.Config.S_BATCH_PROGRESSION;
+import static orsc.Config.S_CUSTOM_FIREMAKING;
+import static orsc.Config.S_EXPERIENCE_COUNTER_TOGGLE;
+import static orsc.Config.S_EXPERIENCE_DROPS_TOGGLE;
+import static orsc.Config.S_FIGHTMODE_SELECTOR_TOGGLE;
+import static orsc.Config.S_FOG_TOGGLE;
+import static orsc.Config.S_GROUND_ITEM_TOGGLE;
+import static orsc.Config.S_INVENTORY_COUNT_TOGGLE;
+import static orsc.Config.S_ITEMS_ON_DEATH_MENU;
+import static orsc.Config.S_MENU_COMBAT_STYLE_TOGGLE;
+import static orsc.Config.S_PLAYER_LEVEL_LIMIT;
+import static orsc.Config.S_RIGHT_CLICK_BANK;
+import static orsc.Config.S_SHOW_FLOATING_NAMETAGS;
+import static orsc.Config.S_SHOW_ROOF_TOGGLE;
+import static orsc.Config.S_SIDE_MENU_TOGGLE;
+import static orsc.Config.S_SPAWN_AUCTION_NPCS;
+import static orsc.Config.S_SPAWN_IRON_MAN_NPCS;
+import static orsc.Config.S_WANT_BANK_NOTES;
+import static orsc.Config.S_WANT_BANK_PINS;
+import static orsc.Config.S_WANT_CERTS_TO_BANK;
+import static orsc.Config.S_WANT_CERT_DEPOSIT;
+import static orsc.Config.S_WANT_CLANS;
+import static orsc.Config.S_WANT_CUSTOM_BANKS;
+import static orsc.Config.S_WANT_CUSTOM_RANK_DISPLAY;
+import static orsc.Config.S_WANT_DECANTING;
+import static orsc.Config.S_WANT_DROP_X;
+import static orsc.Config.S_WANT_EXPERIENCE_ELIXIRS;
+import static orsc.Config.S_WANT_EXP_INFO;
+import static orsc.Config.S_WANT_FIXED_OVERHEAD_CHAT;
+import static orsc.Config.S_WANT_GLOBAL_CHAT;
+import static orsc.Config.S_WANT_HIDE_IP;
+import static orsc.Config.S_WANT_KEYBOARD_SHORTCUTS;
+import static orsc.Config.S_WANT_KILL_FEED;
+import static orsc.Config.S_WANT_QUEST_MENUS;
+import static orsc.Config.S_WANT_REMEMBER;
+import static orsc.Config.S_WANT_SKILL_MENUS;
+import static orsc.Config.S_WANT_WOODCUTTING_GUILD;
+import static orsc.Config.S_ZOOM_VIEW_TOGGLE;
+import static orsc.Config.WELCOME_TEXT;
+import static orsc.Config.getFPS;
+import static orsc.Config.getServerName;
+import static orsc.Config.getServerNameWelcome;
+import static orsc.Config.getWelcomeText;
+import static orsc.Config.getcLogoSpriteId;
+import static orsc.Config.initConfig;
+import static orsc.Config.isAndroid;
+import static orsc.Config.saveConfiguration;
+import static orsc.Config.wantEmail;
+import static orsc.Config.wantMembers;
+import static orsc.multiclient.ClientPort.saveHideIp;
 
 public final class mudclient implements Runnable {
 
@@ -1485,17 +1566,15 @@ public final class mudclient implements Runnable {
             this.panelLogin.addCenteredText(halfGameWidth() - 66, halfGameHeight() + 128 + yOffsetLogin, "Password:", 4, false);
             this.controlLoginPass = this.panelLogin.addCenteredTextEntry(halfGameWidth() - 66, halfGameHeight() + 146 + yOffsetLogin, 200, 20, 40, 4, true, false);
 
-            if (isAndroid() || Remember()) {
-                String cred = clientPort.loadCredentials();
-                if (cred != null) {
-                    if (cred.length() > 0) {
-                        String[] split = cred.split(",");
-                        if (split.length == 2) {
-                            String user = split[0];
-                            String pass = split[1];
-                            this.panelLogin.setText(this.controlLoginUser, user);
-                            this.panelLogin.setText(this.controlLoginPass, pass);
-                        }
+            if (Remember()) {
+                String cred = ClientPort.loadCredentials();
+                if (cred.length() > 0) {
+                    String[] split = cred.split(",");
+                    if (split.length == 2) {
+                        String user = split[0];
+                        String pass = split[1];
+                        this.panelLogin.setText(this.controlLoginUser, user);
+                        this.panelLogin.setText(this.controlLoginPass, pass);
                     }
                 }
             }
@@ -1511,13 +1590,13 @@ public final class mudclient implements Runnable {
             int offRememb = -1;
             int offHide = -1;
             int width = 120;
-            if (S_WANT_HIDE_IP && (isAndroid() || Remember())) {
+            if (S_WANT_HIDE_IP && (Remember())) {
                 offRememb = 124;
                 offHide = 186;
                 width = 60;
             } else if (S_WANT_HIDE_IP) {
                 offHide = 154;
-            } else if (isAndroid() || Remember()) {
+            } else if (Remember()) {
                 offRememb = 154;
             }
 
@@ -1527,7 +1606,7 @@ public final class mudclient implements Runnable {
                 this.rememberButtonIdx = this.panelLogin.addButton(halfGameWidth() + offRememb, halfGameHeight() + 143 + yOffsetLogin, width, 25);
             }
             if (offHide != -1) {
-                this.settingsHideIP = clientPort.loadHideIp();
+                this.settingsHideIP = ClientPort.loadHideIp();
                 String text = (this.settingsHideIP != 1) ? "Hide IP" : "Show IP";
                 this.panelLogin.addButtonBackground(halfGameWidth() + offHide, halfGameHeight() + 143 + yOffsetLogin, width, 25);
                 this.panelLogin.addCenteredText(halfGameWidth() + offHide, halfGameHeight() + 143 + yOffsetLogin, text, 3, false);
@@ -9382,9 +9461,7 @@ public final class mudclient implements Runnable {
                     if (isAndroid() || Remember()) {
                         if (this.panelLogin.isClicked(this.rememberButtonIdx)) {
 
-                            // ORSCApplet is for PC client, clientPort is for Android client, comment out what doesn't work.
-                            //boolean temp = ORSCApplet.saveCredentials(this.panelLogin.getControlText(this.controlLoginUser) + "," + this.panelLogin.getControlText(this.controlLoginPass));
-                            boolean temp = clientPort.saveCredentials(this.panelLogin.getControlText(this.controlLoginUser) + "," + this.panelLogin.getControlText(this.controlLoginPass));
+                            boolean temp = ClientPort.saveCredentials(this.panelLogin.getControlText(this.controlLoginUser) + "," + this.panelLogin.getControlText(this.controlLoginPass));
 
                             if (temp)
                                 this.panelLogin.setText(this.controlLoginStatus2, "@gre@Credentials Saved");
@@ -9397,9 +9474,7 @@ public final class mudclient implements Runnable {
                             String text = (this.settingsHideIP != 1) ? "Hide IP" : "Show IP";
                             this.panelLogin.setText(this.hideIpButtonIdx - 1, text);
 
-                            // ORSCApplet is for PC client, clientPort is for Android client, comment out what doesn't work.
-                            //boolean temp = ORSCApplet.saveHideIp(this.settingsHideIP);
-                            boolean temp = clientPort.saveHideIp(this.settingsHideIP);
+                            boolean temp = saveHideIp(this.settingsHideIP);
 
                             String msg = (this.settingsHideIP != 1) ? "@red@Your IP will be shown after login"
                                     : "@gre@Your IP will be hidden after login";
@@ -11164,9 +11239,9 @@ public final class mudclient implements Runnable {
                     //clip.start();
 
                     // Android sound code:
-                    int dataLength = DataOperations.getDataFileLength(key + ".pcm", soundData);
-                    int offset = DataOperations.getDataFileOffset(key + ".pcm", soundData);
-                    clientPort.playSound(soundData, offset, dataLength);
+                    //int dataLength = DataOperations.getDataFileLength(key + ".pcm", soundData);
+                    //int offset = DataOperations.getDataFileOffset(key + ".pcm", soundData);
+                    //clientPort.playSound(soundData, offset, dataLength);
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
