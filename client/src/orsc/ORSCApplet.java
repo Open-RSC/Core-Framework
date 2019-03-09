@@ -843,8 +843,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			in.close();
 
 			return sb.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ignored) {
 		}
 		return "";
 	}
@@ -863,8 +862,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			in.close();
 
 			return Integer.parseInt(sb.toString());
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ignored) {
 		}
 		return 0;
 	}

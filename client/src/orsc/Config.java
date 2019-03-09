@@ -18,7 +18,7 @@ public class Config {
 	public static String WELCOME_TEXT = "You need a members account to use this server";
 	static final String SERVER_IP = "localhost";
 	static final int SERVER_PORT = 43594;
-	public static final int CLIENT_VERSION = 1;
+	public static final int CLIENT_VERSION = 2;
 	private static final int CACHE_VERSION = 2;
 	public static boolean MEMBER_WORLD = false;
 	public static boolean DISPLAY_LOGO_SPRITE = false;
@@ -39,21 +39,22 @@ public class Config {
 	static boolean C_KILL_FEED = false;
 	static int C_FIGHT_MENU = 1;
 	static boolean C_INV_COUNT = false;
+	public static int C_ZOOM;
 
 	/* Android: */
 	// Avoid changing public to private in this section despite IDE suggestion as this would break Android Studio's build
-	private static boolean F_ANDROID_BUILD = false; // This MUST be true if Android client or it will crash on launch
+	public static boolean F_ANDROID_BUILD = false; // This MUST be true if Android client or it will crash on launch
 	private static final String DL_URL = "game.openrsc.com";
 	public static final String ANDROID_DOWNLOAD_PATH = "https://" + DL_URL + "/downloads/";
 	public static final String CACHE_URL = "https://" + DL_URL + "/downloads/cache/";
-	public static final int ANDROID_CLIENT_VERSION = 8;
-	static boolean F_SHOWING_KEYBOARD = false;
-	static int F_LONG_PRESS_CALC;
-	static boolean C_HOLD_AND_CHOOSE = true;
-	static int C_LONG_PRESS_TIMER = 400;
-	public static int C_MENU_SIZE = 6;
-	static boolean C_SWIPE_TO_SCROLL = true;
-	static boolean C_SWIPE_TO_ROTATE = true;
+	public static final int ANDROID_CLIENT_VERSION = 11; // Important! Depends on web server android_version.txt to check for an updated version
+	public static boolean F_SHOWING_KEYBOARD = false;
+	public static boolean C_HOLD_AND_CHOOSE = true;
+	public static int C_LONG_PRESS_TIMER = 5; // default hold timer setting
+	public static int C_MENU_SIZE = 3; // default font choice
+	public static boolean C_SWIPE_TO_SCROLL = true;
+	public static boolean C_SWIPE_TO_ROTATE = true;
+	public static boolean C_VOLUME_TO_ROTATE = false;
 
 	/* Experience Config Menu */
 	public static int C_EXPERIENCE_COUNTER = 1;
