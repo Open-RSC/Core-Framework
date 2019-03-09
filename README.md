@@ -19,7 +19,7 @@ The first priority of our development is ensuring the authentic content found in
 ## How to Install<a name="install"></a>
 <b>Windows Single Player:</b>
 
-<a href="https://github.com/Open-RSC/Single-Player">Check out the dedicated single player verison of Open RSC for Windows!</a>
+<a href="https://gitlab.openrsc.com/open-rsc/Single-Player">Check out the dedicated single player verison of Open RSC for Windows!</a>
 
 <b>Developers on Windows / Linux / Mac:</b>
 
