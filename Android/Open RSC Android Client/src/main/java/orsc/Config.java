@@ -49,9 +49,8 @@ public class Config {
     public static final String CACHE_URL = "https://" + DL_URL + "/downloads/cache/";
     public static final int ANDROID_CLIENT_VERSION = 10; // Important! Depends on web server android_version.txt to check for an updated version
     public static boolean F_SHOWING_KEYBOARD = false;
-    static int F_LONG_PRESS_CALC;
     public static boolean C_HOLD_AND_CHOOSE = true;
-    public static int C_LONG_PRESS_TIMER = 250; // default hold timer in ms
+    public static int C_LONG_PRESS_TIMER = 5; // default hold timer setting
     public static int C_MENU_SIZE = 3; // default font choice
     public static boolean C_SWIPE_TO_SCROLL = true;
     public static boolean C_SWIPE_TO_ROTATE = true;

@@ -75,8 +75,6 @@ import orsc.util.StringUtil;
 
 import static orsc.Config.*;
 
-// Comment these out if Android client
-
 public final class mudclient implements Runnable {
 
     private static final int spriteMedia = 2000;
@@ -274,11 +272,11 @@ public final class mudclient implements Runnable {
     private int cameraAngle = 1;
     private int cameraAutoRotatePlayerX = 0;
     private int cameraAutoRotatePlayerZ = 0;
-    private boolean cameraAllowPitchModification = false;
-    private int cameraPitch = 912;
+    public boolean cameraAllowPitchModification = false;
+    public int cameraPitch = 912;
     private int cameraRotationX = 0;
     private int cameraRotationZ = 0;
-    private int cameraZoom = 750;
+    public int cameraZoom = 750;
     private int characterBubbleCount = 0;
     private int[] characterBubbleID = new int[150];
     private int characterDialogCount = 0;
@@ -330,7 +328,7 @@ public final class mudclient implements Runnable {
     private boolean errorLoadingMemory = false;
     private int[] experienceArray = new int[S_PLAYER_LEVEL_LIMIT];
     private int fatigueSleeping = 0;
-    private boolean doCameraZoom = false;
+    public boolean doCameraZoom = false;
     private int gameHeight = 334;
     private int gameObjectInstanceCount = 0;
     private int[] gameObjectInstanceZ = new int[5000];
@@ -3704,6 +3702,8 @@ public final class mudclient implements Runnable {
 
             if (isAndroid()) {
                 this.menuCommon.font = C_MENU_SIZE;
+
+
             }
 
             if (var1 == 13) {
@@ -7400,11 +7400,46 @@ public final class mudclient implements Runnable {
         this.panelSettings.clearList(this.controlSettingPanel);
         int index = 0;
         this.getSurface().drawString("Android options", 3 + baseX, y, 0, 1);
-        this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                "@whi@Hold-time for Menu - @gre@" + C_LONG_PRESS_TIMER + "ms", 0, null, null);
 
-        this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                "@whi@Menu Size - @lre@Font " + (C_MENU_SIZE), 1, null, null);
+        // Color changing long press timer option
+        if (C_LONG_PRESS_TIMER < 3) { // 1-2
+            this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+                    "@whi@Hold-time for Menu - @red@" + (C_LONG_PRESS_TIMER), 0, null, null);
+        }
+        if (C_LONG_PRESS_TIMER > 2 && C_LONG_PRESS_TIMER < 5) { // 3-4
+            this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+                    "@whi@Hold-time for Menu - @lre@" + (C_LONG_PRESS_TIMER), 0, null, null);
+        }
+        if (C_LONG_PRESS_TIMER > 4 && C_LONG_PRESS_TIMER < 9) { // 5-8
+            this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+                    "@whi@Hold-time for Menu - @gre@" + (C_LONG_PRESS_TIMER), 0, null, null);
+        }
+        if (C_LONG_PRESS_TIMER > 8 && C_LONG_PRESS_TIMER < 11) { // 9-10
+            this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+                    "@whi@Hold-time for Menu - @lre@" + (C_LONG_PRESS_TIMER), 0, null, null);
+        }
+        if (C_LONG_PRESS_TIMER > 10) { // 11
+            this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+                    "@whi@Hold-time for Menu - @red@" + (C_LONG_PRESS_TIMER), 0, null, null);
+        }
+
+        // Color changing font size option
+        if (C_MENU_SIZE < 3) { // 1-2
+            this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+                    "@whi@Font Size - @lre@" + (C_MENU_SIZE), 1, null, null);
+        }
+        if (C_MENU_SIZE > 2 && C_MENU_SIZE < 5) { // 3-4
+            this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+                    "@whi@Font Size - @gre@" + (C_MENU_SIZE), 1, null, null);
+        }
+        if (C_MENU_SIZE > 4 && C_MENU_SIZE < 7) { // 5-6
+            this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+                    "@whi@Font Size - @lre@" + (C_MENU_SIZE), 1, null, null);
+        }
+        if (C_MENU_SIZE == 7) { // 7
+            this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+                    "@whi@Font Size - @red@" + (C_MENU_SIZE), 1, null, null);
+        }
 
         if (!C_HOLD_AND_CHOOSE) {
             this.panelSettings.setListEntry(this.controlSettingPanel, index++,
@@ -7438,7 +7473,7 @@ public final class mudclient implements Runnable {
                     "@whi@Volume buttons to Rotate - @gre@On", 5, null, null);
         }
 
-        y += 195;
+        y += 199;
         this.getSurface().drawString("Always logout when you finish", x, y, 0, 1);
         int logoutColor = 0xFFFFFF;
         y += 15;
@@ -7474,7 +7509,6 @@ public final class mudclient implements Runnable {
             this.packetHandler.getClientStream().writeBuffer1.putByte(1);
             this.packetHandler.getClientStream().writeBuffer1.putByte(this.optionMouseButtonOne ? 1 : 0);
             this.packetHandler.getClientStream().finishPacket();
-
         }
 
         // Sound On/Off
@@ -7638,7 +7672,6 @@ public final class mudclient implements Runnable {
             var7 += 15;
         }
 
-
         // Block Trade
         if (this.mouseX > var6 && this.mouseX < var6 + var5 && var7 - 12 < this.mouseY
                 && this.mouseY < 4 + var7 && this.mouseButtonClick == 1) {
@@ -7670,7 +7703,6 @@ public final class mudclient implements Runnable {
                 C_NAME_CLAN_TAG_OVERLAY = !C_NAME_CLAN_TAG_OVERLAY;
                 saveConfiguration(true);
             }
-
         }
 
         if (S_WANT_CLANS) {
@@ -7717,14 +7749,12 @@ public final class mudclient implements Runnable {
     private void handleAndroidSettingsClicks(short var5, int var6, int var7) {
 
         if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 0 && this.mouseButtonClick == 1) {
-            F_LONG_PRESS_CALC = C_LONG_PRESS_TIMER / 50;
-            if (++F_LONG_PRESS_CALC >= 13) {
-                F_LONG_PRESS_CALC = 1;
-            }
-            C_LONG_PRESS_TIMER = F_LONG_PRESS_CALC * 50;
+            C_LONG_PRESS_TIMER++;
+            if (C_LONG_PRESS_TIMER == 13)
+                C_LONG_PRESS_TIMER = 1;
             saveConfiguration(true);
             this.packetHandler.getClientStream().newPacket(111);
-            this.packetHandler.getClientStream().writeBuffer1.putByte(21);
+            this.packetHandler.getClientStream().writeBuffer1.putByte(19);
             this.packetHandler.getClientStream().writeBuffer1.putByte(C_LONG_PRESS_TIMER);
             this.packetHandler.getClientStream().finishPacket();
         }
@@ -7779,7 +7809,7 @@ public final class mudclient implements Runnable {
             this.packetHandler.getClientStream().finishPacket();
         }
 
-        var7 += 195;
+        var7 += 223;
         if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
                 && this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
             this.sendLogout(0);

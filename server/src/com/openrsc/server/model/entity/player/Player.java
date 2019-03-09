@@ -2028,7 +2028,7 @@ public final class Player extends Mob {
 		if (getCache().hasKey("setting_volume_rotate")) {
 			return getCache().getBoolean("setting_volume_rotate");
 		}
-		return true;
+		return false;
 	}
 
 	public Boolean getSwipeToRotate() {
@@ -2049,7 +2049,7 @@ public final class Player extends Mob {
 		if (getCache().hasKey("setting_press_delay")) {
 			return getCache().getInt("setting_press_delay");
 		}
-		return 250;
+		return 5;
 	}
 
 	public int getFontSize() {

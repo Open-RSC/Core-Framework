@@ -212,7 +212,7 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
                                         mudclient.lastMouseButtonDown = mudclient.currentMouseButtonDown = 2;
                                     }
                                 }
-                            }, Config.C_LONG_PRESS_TIMER);
+                            }, Config.C_LONG_PRESS_TIMER * 50);
                         }
                         break;
                     case MotionEvent.ACTION_MOVE:
