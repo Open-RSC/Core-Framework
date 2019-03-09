@@ -13,6 +13,7 @@ public class Config {
 	private static Properties prop = new Properties();
 
 	public static boolean DEBUG = false; // enables print out of the config being sent to the client
+	public static String WINDOW_TITLE = "Open RSC"; // Only set here due to config not set by server fast enough at load time
 	public static String SERVER_NAME = "Runescape";
 	public static String SERVER_NAME_WELCOME = "Runescape Classic";
 	public static String WELCOME_TEXT = "You need a members account to use this server";

@@ -10,13 +10,13 @@ import com.loader.openrsc.util.Utils;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
-//import java.awt.Taskbar;
 import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 
+//import java.awt.Taskbar;
 ;
 
 @SuppressWarnings("serial")

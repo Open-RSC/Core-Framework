@@ -10,6 +10,9 @@
         <delete file="${jar}"/>
         <delete dir="${build}"/>
         <mkdir dir="${build}"/>
+        <copy todir="${build}/res">
+            <fileset dir="src/res"/>
+        </copy>
         <javac srcdir="${src}" destdir="${build}" debug="on" target="${javac.target}" source="${javac.source}"
                includeantruntime="false">
             <classpath>
