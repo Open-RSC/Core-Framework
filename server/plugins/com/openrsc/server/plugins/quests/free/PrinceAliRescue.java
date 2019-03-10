@@ -695,7 +695,6 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 							"Leela gives you a copy of the key to the princes door");
 						addItem(p, ItemId.BRONZE_KEY.id(), 1);
 						p.getCache().remove("key_sent");
-						return;
 					}
 					if (hasItem(p, ItemId.ROPE.id()) && hasItem(p, ItemId.PINK_SKIRT.id()) && hasItem(p, ItemId.PASTE.id())
 						&& hasItem(p, ItemId.BLONDE_WIG.id())) {
@@ -720,11 +719,20 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 					playerTalk(p, n, "I am here to help you free the Prince");
 					npcTalk(p, n, "Your employment is known to me.",
 						"Now, do you know all that we need to make the break?");
-					final int choice = showMenu(p, n,
-						"I must make a disguise. What do you suggest?",
-						"I need to get the key made",
-						"What can i do with the guards?",
-						"I will go and get the rest of the escape equipment");
+					String[] choices = new String[] { "I must make a disguise. What do you suggest?",
+							"I need to get the key made",
+							"What can i do with the guards?",
+							"I will go and get the rest of the escape equipment" };
+					if (hasItem(p, ItemId.BRONZE_KEY.id())) {
+						choices = new String[] { "I must make a disguise. What do you suggest?",
+								"What can i do with the guards?",
+								"I will go and get the rest of the escape equipment" };
+					}
+					int choice = showMenu(p, n, choices);
+					if (hasItem(p, ItemId.BRONZE_KEY.id()) && choice > 0) {
+						//skip option of key made
+						choice++;
+					}
 					if (choice == 0) {
 						leelaDialogue(p, n, Leela.DISGUISE);
 					} else if (choice == 1) {
@@ -824,10 +832,17 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 
 				}
 
-				final int choice = showMenu(p, n,
-					"I need to get the key made",
-					"What can i do with the guards?",
-					"I will go and get the rest of the escape equipment");
+				String[] choices = new String[] { "I need to get the key made",
+						"What can i do with the guards?",
+						"I will go and get the rest of the escape equipment" };
+				if (hasItem(p, ItemId.BRONZE_KEY.id())) {
+					choices = new String[] { "What can i do with the guards?",
+							"I will go and get the rest of the escape equipment" };
+				}
+				int choice = showMenu(p, n, choices);
+				if (hasItem(p, ItemId.BRONZE_KEY.id()) && choice >= 0) {
+					choice++;
+				}
 				if (choice == 0) {
 					leelaDialogue(p, n, Leela.KEYMADE);
 				} else if (choice == 1) {
@@ -854,10 +869,17 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 					"The only guard who will be a problem will be the one at the door",
 					"He is talkative, try to find a weakness in him",
 					"We can discuss this more when you have the rest of the escape kit");
-				final int choice2 = showMenu(p, n,
-					"I must make a disguise. What do you suggest?",
-					"I need to get the key made",
-					"I will go and get the rest of the escape equipment");
+				String[] choices2 = new String[] { "I must make a disguise. What do you suggest?",
+						"I need to get the key made",
+						"I will go and get the rest of the escape equipment" };
+				if (hasItem(p, ItemId.BRONZE_KEY.id())) {
+					choices2 = new String[] { "I must make a disguise. What do you suggest?",
+							"I will go and get the rest of the escape equipment" };
+				}
+				int choice2 = showMenu(p, n, choices2);
+				if (hasItem(p, ItemId.BRONZE_KEY.id()) && choice2 > 0) {
+					choice2++;
+				}
 				if (choice2 == 0) {
 					leelaDialogue(p, n, Leela.DISGUISE);
 				} else if (choice2 == 1) {
