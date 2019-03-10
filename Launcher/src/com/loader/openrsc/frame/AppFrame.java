@@ -27,6 +27,9 @@ public class AppFrame extends JFrame {
 	private JProgressBar progress;
 	private JLabel status;
 	private JLabel checkLabel;
+	private JLabel online;
+	private JLabel logins48;
+	private JLabel registrationstoday;
 
 	public AppFrame() {
 		this.setPreferredSize(new Dimension(800, 560));
@@ -82,11 +85,34 @@ public class AppFrame extends JFrame {
 		subText.setForeground(new Color(200, 200, 200));
 		subText.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
 		this.bg.add(subText);
+
+		// Server status check
 		(this.status = new JLabel("Server Status: ---")).setForeground(Color.WHITE);
 		this.status.setFont(Utils.getFont("Exo-Regular.otf", 0, 12.0f));
 		this.status.setHorizontalAlignment(4);
-		this.status.setBounds(445, 74, 315, 19);
+		this.status.setBounds(445, 71, 327, 19);
 		this.bg.add(this.status);
+
+		// Online player count
+		(this.online = new JLabel("Players Online: ---")).setForeground(Color.WHITE);
+		this.online.setFont(Utils.getFont("Exo-Regular.otf", 0, 12.0f));
+		this.online.setHorizontalAlignment(4);
+		this.online.setBounds(445, 91, 327, 19);
+		this.bg.add(this.online);
+
+		// Logged in the last 48 hours
+		(this.logins48 = new JLabel("Online Last 48 Hours: ---")).setForeground(Color.WHITE);
+		this.logins48.setFont(Utils.getFont("Exo-Regular.otf", 0, 12.0f));
+		this.logins48.setHorizontalAlignment(4);
+		this.logins48.setBounds(445, 111, 327, 19);
+		this.bg.add(this.logins48);
+
+		// Registrations today
+		(this.registrationstoday = new JLabel("Registrations Today: ---")).setForeground(Color.WHITE);
+		this.registrationstoday.setFont(Utils.getFont("Exo-Regular.otf", 0, 12.0f));
+		this.registrationstoday.setHorizontalAlignment(4);
+		this.registrationstoday.setBounds(445, 131, 327, 19);
+		this.bg.add(this.registrationstoday);
 	}
 
 	public JLabel getCheckLabel() {
@@ -136,5 +162,17 @@ public class AppFrame extends JFrame {
 
 	public JLabel getStatus() {
 		return this.status;
+	}
+
+	public JLabel getOnline() {
+		return this.online;
+	}
+
+	public JLabel getLogins48() {
+		return this.logins48;
+	}
+
+	public JLabel getRegistrationsToday() {
+		return this.registrationstoday;
 	}
 }

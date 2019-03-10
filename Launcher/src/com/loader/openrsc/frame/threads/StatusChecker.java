@@ -24,6 +24,14 @@ public class StatusChecker implements Runnable {
 				String color = isOnline ? "#00FF00" : "#FF0000";
 
 				AppFrame.get().getStatus().setText("<html>Server Status: <span style='color:" + color + ";'>" + text + "</span></html>");
+
+				/*JEditorPane website = new JEditorPane("https://openrsc.com");
+				website.setEditable(false);
+				JFrame frame = new JFrame("Open RSC Website");
+				frame.add(new JScrollPane(website));
+				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				frame.setSize(800, 600);
+				frame.setVisible(true);*/
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}

@@ -3,11 +3,13 @@ package com.loader.openrsc;
 import com.loader.openrsc.frame.AppFrame;
 import com.loader.openrsc.frame.popup.PopupFrame;
 import com.loader.openrsc.frame.threads.StatusChecker;
+import com.loader.openrsc.frame.threads.WorldPopulation;
 import com.loader.openrsc.net.Downloader;
 
 import java.io.IOException;
 
-import javax.swing.*;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 public class OpenRSC {
 	private static PopupFrame popup;
@@ -25,6 +27,7 @@ public class OpenRSC {
 		frame.build();
 		OpenRSC.popup = new PopupFrame();
 		new Thread(new StatusChecker(Constants.SERVER_DOMAIN, Constants.SERVER_PORT)).start();
+		new Thread(new WorldPopulation()).start();
 		updater.init();
 		updater.doneLoading();
 	}
