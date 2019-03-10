@@ -13,7 +13,7 @@ public class Config {
 	private static Properties prop = new Properties();
 
 	public static boolean DEBUG = false; // enables print out of the config being sent to the client
-	public static String WINDOW_TITLE = "Open RSC"; // Only set here due to config not set by server fast enough at load time
+	static String WINDOW_TITLE = "Open RSC"; // Only set here due to config not set by server fast enough at load time
 	public static String SERVER_NAME = "Runescape";
 	public static String SERVER_NAME_WELCOME = "Runescape Classic";
 	public static String WELCOME_TEXT = "You need a members account to use this server";
@@ -43,7 +43,6 @@ public class Config {
 	public static int C_ZOOM;
 
 	/* Android: */
-	// Avoid changing public to private in this section despite IDE suggestion as this would break Android Studio's build
 	public static boolean F_ANDROID_BUILD = false; // This MUST be true if Android client or it will crash on launch
 	private static final String DL_URL = "game.openrsc.com";
 	public static final String ANDROID_DOWNLOAD_PATH = "https://" + DL_URL + "/downloads/";
