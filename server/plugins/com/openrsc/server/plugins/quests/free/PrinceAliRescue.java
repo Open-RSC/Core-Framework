@@ -210,8 +210,6 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 						npcTalk(p, n,
 							"Thatsh a funny joke. You are lucky i am shober",
 							"Go in peace, friend");
-						// p.getCache().remove("joe_is_drunk"); no need to remove it
-						// when first talking
 						return;
 					}
 					npcTalk(p, n, "Hi, I'm Joe, door guard for Lady Keli");
@@ -688,6 +686,14 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 					npcTalk(p, n, "That is no concern of yours, adventurer");
 					break;
 				case 2:
+					//based on behavior on osrs - most likely this was identical in rsc
+					if(p.getCache().hasKey("joe_is_drunk")) {
+						npcTalk(p, n, "Great! The guard is now harmless",
+								"Now you just need to use the rope on Keli to remove her",
+								"Then you can go in and give everything to the prince");
+						return;
+					}
+					
 					if (p.getCache().hasKey("key_sent")) {
 						npcTalk(p, n,
 							"My father sent this key for you, be careful not to lose it");
@@ -743,6 +749,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 						leelaDialogue(p, n, Leela.ESCAPE);
 					}
 					break;
+				case 3:
 				case -1:
 					npcTalk(p,
 						n,
