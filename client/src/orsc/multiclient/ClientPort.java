@@ -62,7 +62,7 @@ public interface ClientPort {
 		return false;
 	}
 
-	static Integer loadHideIp() {
+	static String loadHideIp() {
 		try {
 
 			FileInputStream in = new FileInputStream(Config.F_CACHE_DIR + File.separator + "hideIp.txt");
@@ -75,10 +75,10 @@ public interface ClientPort {
 			}
 			in.close();
 
-			return Integer.parseInt(sb.toString());
+			return sb.toString();
 		} catch (Exception ignored) {
 		}
-		return Integer.parseInt("");
+		return "";
 	}
 
 	static boolean saveCredentials(String creds) {

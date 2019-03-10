@@ -1606,7 +1606,7 @@ public final class mudclient implements Runnable {
 				this.rememberButtonIdx = this.panelLogin.addButton(halfGameWidth() + offRememb, halfGameHeight() + 143 + yOffsetLogin, width, 25);
 			}
 			if (offHide != -1) {
-				this.settingsHideIP = ClientPort.loadHideIp();
+				this.settingsHideIP = Integer.valueOf(ClientPort.loadHideIp());
 				String text = (this.settingsHideIP != 1) ? "Hide IP" : "Show IP";
 				this.panelLogin.addButtonBackground(halfGameWidth() + offHide, halfGameHeight() + 143 + yOffsetLogin, width, 25);
 				this.panelLogin.addCenteredText(halfGameWidth() + offHide, halfGameHeight() + 143 + yOffsetLogin, text, 3, false);
