@@ -14,6 +14,7 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 import static com.openrsc.server.plugins.Functions.getNearestNpc;
+import static com.openrsc.server.plugins.Functions.inArray;
 import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.playerTalk;
@@ -132,12 +133,13 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 				owner.teleport(617, 3479);
 				owner.message("it leads downwards to the sewer");
 				break;
+			case 241:
 			case 242:
 			case 243:
 				message(owner, "You board the ship");
 				owner.teleport(263, 660, false);
 				sleep(2200);
-				owner.message("The ship arrives at Port Sarim.");
+				owner.message("The ship arrives at Port Sarim");
 				break;
 		}
 
@@ -180,7 +182,7 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 		if (obj.getID() == 613 || obj.getID() == 643) {
 			return true;
 		}
-		if (obj.getID() == 202 || obj.getID() == 203 || obj.getID() == 243)
+		if (obj.getID() == 202 || obj.getID() == 203 || inArray(obj.getID(), 241, 242, 243))
 			return true;
 		if (obj.getLocation().getX() == 94 && obj.getLocation().getY() == 521
 			&& obj.getID() == 60) {
