@@ -17,9 +17,8 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class PrinceAliRescue implements QuestInterface, WallObjectActionListener,
 	WallObjectActionExecutiveListener, InvUseOnNpcListener,
-	InvUseOnNpcExecutiveListener, TalkToNpcListener, ObjectActionListener,
-	ObjectActionExecutiveListener, TalkToNpcExecutiveListener,
-	InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
+	InvUseOnNpcExecutiveListener, TalkToNpcListener, TalkToNpcExecutiveListener,
+	InvUseOnWallObjectListener, InvUseOnWallObjectExecutiveListener {
 
 	@Override
 	public int getQuestId() {
@@ -58,15 +57,9 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(final GameObject obj,
+	public boolean blockInvUseOnWallObject(final GameObject obj,
 									   final Item item, final Player player) {
-		return false;
-	}
-
-	@Override
-	public boolean blockObjectAction(final GameObject obj,
-									 final String command, final Player player) {
-		return obj.getID() == 180;
+		return obj.getID() == 45 && obj.getY() == 640 && item.getID() == ItemId.BRONZE_KEY.id();
 	}
 
 	@Override
@@ -789,21 +782,15 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 					"The guards will shoot to kill if they see the prince out",
 					"so we need a disguise well enough to fool them at a distance");
 
-				if (!hasItem(p, ItemId.BLONDE_WIG.id()) && !hasItem(p, ItemId.WOOL_WIG.id())) {
+				//note: not known if there was a check for regular wig, yet osrs-rs2 didn't feature one
+				if (!hasItem(p, ItemId.BLONDE_WIG.id())) {
 					npcTalk(p,
 						n,
 						"You need a wig, maybe made from wool",
 						"If you find someone who can work with wool, ask them about it",
 						"Then the old witch may be able to help you dye it");
 				} 
-				//undocumented - very possibly had dialogue (recreated)
-				else if(!hasItem(p, ItemId.BLONDE_WIG.id()) && hasItem(p, ItemId.WOOL_WIG.id())) {
-					npcTalk(p,
-							n,
-							"You have got the wig, great",
-							"but you need to dye it",
-							"The old witch may be able to help you");
-				} else {
+				else {
 					npcTalk(p, n, "The wig you have got, well done");
 				}
 
@@ -888,34 +875,46 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 	@Override
 	public void onInvUseOnNpc(final Player p, final Npc npc, final Item item) {
 		if (npc.getID() == NpcId.LADY_KELI.id() && item.getID() == ItemId.ROPE.id()) {
-			if (p.getQuestStage(this) == 2) {
-				if (p.getCache().hasKey("joe_is_drunk")) {
-					npc.remove();
-					p.message("You overpower Keli, tie her up, and put her in a cupboard");
-				} else {
-					p.message("You cannot tie Keli up until you have all equipment and disabled the guard");
-				}
-			} else {
-				p.message("I have no reason to do that.");
+			if (p.getCache().hasKey("joe_is_drunk") && p.getQuestStage(this) == 2) {
+				npc.remove();
+				p.message("You overpower Keli, tie her up, and put her in a cupboard");
+			}
+			else if (p.getCache().hasKey("joe_is_drunk")) {
+				p.message("You have rescued the prince already, you cannot use the same plan again");
+			}
+			else {
+				p.message("You cannot tie Keli up until you have all equipment and disabled the guard");
 			}
 		}
 	}
 
 	@Override
-	public void onInvUseOnObject(final GameObject obj, final Item item,
+	public void onInvUseOnWallObject(final GameObject obj, final Item item,
 								 final Player player) {
-
-	}
-
-	@Override
-	public void onObjectAction(final GameObject obj, final String command,
-							   final Player p) {
-		switch (obj.getID()) {// Yeh this is good.
-			case 180: // Al-Kharid Gate
-				// is aggie and ned done? only ned and i dont know if it will work
-				// check it.
-				p.message("You need to talk to the border guard");
-				break;
+		if (obj.getID() == 45 && item.getID() == ItemId.BRONZE_KEY.id()) {
+			if (obj.getY() == 640) {
+				final Npc keli = getNearestNpc(player, NpcId.LADY_KELI.id(), 20);
+				if (player.getX() <= 198) {
+					if (keli != null) {
+						player.message("You'd better get rid of Lady Keli before trying to go through there");
+						return;
+					}
+					else {
+						if (player.getQuestStage(this) == 2) {
+							player.message("You unlock the door");
+							player.message("You go through the door");
+							doDoor(obj, player);
+						}
+						else {
+							player.message("I have no reason to do this");
+						}
+					}
+				}
+				else {
+					player.message("You go through the door");
+					doDoor(obj, player);
+				}
+			}
 		}
 	}
 
@@ -943,31 +942,22 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 	public void onWallObjectAction(final GameObject obj, final Integer click,
 								   final Player p) {
 		if (obj.getID() == 45) {
-			if (p.getQuestStage(this) < 2) {
-				p.message("I have no reason to do this");
-				return;
-			}
-			if (p.getQuestStage(this) == -1) {
-				p.message("the door is locked");
-				return;
-			}
-			if (!p.getCache().hasKey("joe_is_drunk")) {
-				p.message("You must disable the guard and tie up Keli first");
-				return;
-			}
 			if (obj.getY() == 640) {
 				final Npc keli = getNearestNpc(p, NpcId.LADY_KELI.id(), 20);
 				if (p.getX() <= 198) {
-					if (p.getQuestStage(this) == 3) {
-						p.message("I have no reason to do this");
+					if (keli != null) {
+						p.message("You'd better get rid of Lady Keli before trying to go through there");
 						return;
 					}
-					if (keli != null) {
-						p.message("You must disable the guard and tie up Keli first");
-						return;
+					p.message("The door is locked");
+					if (hasItem(p, ItemId.BRONZE_KEY.id())) {
+						p.message("Maybe you should try using your key on it");
 					}
 				}
-				doDoor(obj, p);
+				else {
+					p.message("You go through the door");
+					doDoor(obj, p);
+				}
 			}
 		}
 	}
@@ -1150,28 +1140,20 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 	private void princeAliDialogue(final Player p, final Npc n, final int cID) {
 		switch (p.getQuestStage(this)) {
 			case 2:
-				if (!hasItem(p, ItemId.BLONDE_WIG.id()) && !hasItem(p, ItemId.PINK_SKIRT.id()) && !hasItem(p, ItemId.PASTE.id())
-					&& !hasItem(p, ItemId.BRONZE_KEY.id())) {
-					playerTalk(p, n, "Prince, I come to rescue you");
-					npcTalk(p, n,
-						"That is very very kind of you, how do I get out?");
-					playerTalk(p, n,
-						"With a disguise, I have removed the Lady Keli",
-						"She is tied up, but will not stay tied up for long");
-					npcTalk(p, n,
-						"You don't seem to have all i need to escape yet",
-						"I dare not risk death to these people");
-					return;
-				}
 				playerTalk(p, n, "Prince, I come to rescue you");
 				npcTalk(p, n, "That is very very kind of you, how do I get out?");
 				playerTalk(p, n, "With a disguise, I have removed the Lady Keli",
-					"She is tied up, but will not stay tied up for long",
-					"Take this disguise, and this key");
+					"She is tied up, but will not stay tied up for long");
+				if (!hasItem(p, ItemId.BLONDE_WIG.id()) || !hasItem(p, ItemId.PINK_SKIRT.id()) || !hasItem(p, ItemId.PASTE.id())
+					|| !hasItem(p, ItemId.BRONZE_KEY.id())) {
+					//from behavior on osrs just returns, no evidence rsc had otherwise behavior
+					return;
+				}
+				playerTalk(p, n, "Take this disguise, and this key");
 				removeItem(p, ItemId.BLONDE_WIG.id(), 1);
 				removeItem(p, ItemId.PINK_SKIRT.id(), 1);
 				removeItem(p, ItemId.PASTE.id(), 1);
-				removeItem(p, ItemId.BRONZE_KEY.id(), 1); // juust check for the items here.
+				removeItem(p, ItemId.BRONZE_KEY.id(), 1);
 				message(p, "You hand the disguise and the key to the prince");
 				final Npc ladyAli = transform(n, NpcId.PRINCE_ALI_DISGUISE.id(), false);
 				npcTalk(p, ladyAli, "Thankyou my friend, I must leave you now",
@@ -1181,6 +1163,12 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 				message(p, 1000, "The prince has escaped, well done!", "You are now a friend of Al kharid",
 						"And may pass through the Al Kharid toll gate for free");
 				p.updateQuestStage(this, 3);
+				break;
+			case 3:
+			case -1:
+				npcTalk(p, n, "I owe you my life for that escape",
+						"You cannot help me this time, they know who you are",
+						"Go in peace, friend of Al Kharid");
 				break;
 		}
 	}
