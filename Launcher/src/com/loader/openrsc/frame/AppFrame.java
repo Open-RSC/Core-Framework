@@ -86,32 +86,32 @@ public class AppFrame extends JFrame {
 		subText.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
 		this.bg.add(subText);
 
-		// Server status check
+		// Server status check - spaced 16px apart
 		(this.status = new JLabel("Server Status: ---")).setForeground(Color.WHITE);
 		this.status.setFont(Utils.getFont("Exo-Regular.otf", 0, 12.0f));
 		this.status.setHorizontalAlignment(4);
-		this.status.setBounds(445, 71, 327, 19);
+		this.status.setBounds(441, 77, 327, 19);
 		this.bg.add(this.status);
 
-		// Online player count
+		// Online player count - spaced 16px apart
 		(this.online = new JLabel("Players Online: ---")).setForeground(Color.WHITE);
 		this.online.setFont(Utils.getFont("Exo-Regular.otf", 0, 12.0f));
 		this.online.setHorizontalAlignment(4);
-		this.online.setBounds(445, 91, 327, 19);
+		this.online.setBounds(441, 93, 327, 19);
 		this.bg.add(this.online);
 
-		// Logged in the last 48 hours
+		// Logged in the last 48 hours - spaced 16px apart
 		(this.logins48 = new JLabel("Online Last 48 Hours: ---")).setForeground(Color.WHITE);
 		this.logins48.setFont(Utils.getFont("Exo-Regular.otf", 0, 12.0f));
 		this.logins48.setHorizontalAlignment(4);
-		this.logins48.setBounds(445, 111, 327, 19);
+		this.logins48.setBounds(441, 109, 327, 19);
 		this.bg.add(this.logins48);
 
-		// Registrations today
+		// Registrations today - spaced 16px apart
 		(this.registrationstoday = new JLabel("Registrations Today: ---")).setForeground(Color.WHITE);
 		this.registrationstoday.setFont(Utils.getFont("Exo-Regular.otf", 0, 12.0f));
 		this.registrationstoday.setHorizontalAlignment(4);
-		this.registrationstoday.setBounds(445, 131, 327, 19);
+		this.registrationstoday.setBounds(441, 125, 327, 19);
 		this.bg.add(this.registrationstoday);
 	}
 
