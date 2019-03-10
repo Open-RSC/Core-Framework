@@ -54,7 +54,7 @@ public interface ClientPort {
 			fileout = new FileOutputStream(Config.F_CACHE_DIR + File.separator + "hideIp.txt");
 
 			OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-			outputWriter.write("" + preference);
+			outputWriter.write(preference);
 			outputWriter.close();
 			return true;
 		} catch (Exception ignored) {
@@ -62,7 +62,7 @@ public interface ClientPort {
 		return false;
 	}
 
-	static String loadHideIp() {
+	static Integer loadHideIp() {
 		try {
 
 			FileInputStream in = new FileInputStream(Config.F_CACHE_DIR + File.separator + "hideIp.txt");
@@ -75,10 +75,10 @@ public interface ClientPort {
 			}
 			in.close();
 
-			return sb.toString();
+			return Integer.parseInt(sb.toString());
 		} catch (Exception ignored) {
 		}
-		return "";
+		return 0;
 	}
 
 	static boolean saveCredentials(String creds) {

@@ -14,103 +14,103 @@ import orsc.Config;
 
 public interface ClientPort {
 
-	boolean drawLoading(int i);
+    boolean drawLoading(int i);
 
-	void showLoadingProgress(int percentage, String status);
+    void showLoadingProgress(int percentage, String status);
 
-	void initListeners();
+    void initListeners();
 
-	void crashed();
+    void crashed();
 
-	void drawLoadingError();
+    void drawLoadingError();
 
-	void drawOutOfMemoryError();
+    void drawOutOfMemoryError();
 
-	boolean isDisplayable();
+    boolean isDisplayable();
 
-	void drawTextBox(String line2, byte var2, String line1);
+    void drawTextBox(String line2, byte var2, String line1);
 
-	void initGraphics();
+    void initGraphics();
 
-	void draw();
+    void draw();
 
-	void close();
+    void close();
 
-	String getCacheLocation();
+    String getCacheLocation();
 
-	void resized();
+    void resized();
 
-	Sprite getSpriteFromByteArray(ByteArrayInputStream byteArrayInputStream);
+    Sprite getSpriteFromByteArray(ByteArrayInputStream byteArrayInputStream);
 
-	void playSound(byte[] soundData, int offset, int dataLength);
+    void playSound(byte[] soundData, int offset, int dataLength);
 
-	void stopSoundPlayer();
+    void stopSoundPlayer();
 
-	void drawKeyboard();
+    void drawKeyboard();
 
-	static boolean saveHideIp(int preference) {
-		FileOutputStream fileout;
-		try {
-			fileout = new FileOutputStream(Config.F_CACHE_DIR + File.separator + "hideIp.txt");
+    static boolean saveHideIp(int preference) {
+        FileOutputStream fileout;
+        try {
+            fileout = new FileOutputStream(Config.F_CACHE_DIR + File.separator + "hideIp.txt");
 
-			OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-			outputWriter.write("" + preference);
-			outputWriter.close();
-			return true;
-		} catch (Exception ignored) {
-		}
-		return false;
-	}
+            OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+            outputWriter.write(preference);
+            outputWriter.close();
+            return true;
+        } catch (Exception ignored) {
+        }
+        return false;
+    }
 
-	static Integer loadHideIp() {
-		try {
+    static Integer loadHideIp() {
+        try {
 
-			FileInputStream in = new FileInputStream(Config.F_CACHE_DIR + File.separator + "hideIp.txt");
-			InputStreamReader inputStreamReader = new InputStreamReader(in);
-			BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-			StringBuilder sb = new StringBuilder();
-			String line;
-			while ((line = bufferedReader.readLine()) != null) {
-				sb.append(line);
-			}
-			in.close();
+            FileInputStream in = new FileInputStream(Config.F_CACHE_DIR + File.separator + "hideIp.txt");
+            InputStreamReader inputStreamReader = new InputStreamReader(in);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+            }
+            in.close();
 
-			return Integer.parseInt(sb.toString());
-		} catch (Exception ignored) {
-		}
-		return Integer.parseInt("");
-	}
+            return Integer.parseInt(sb.toString());
+        } catch (Exception ignored) {
+        }
+        return 0;
+    }
 
-	static boolean saveCredentials(String creds) {
-		FileOutputStream fileout;
-		try {
-			fileout = new FileOutputStream(Config.F_CACHE_DIR + File.separator + "credentials.txt");
+    static boolean saveCredentials(String creds) {
+        FileOutputStream fileout;
+        try {
+            fileout = new FileOutputStream(Config.F_CACHE_DIR + File.separator + "credentials.txt");
 
-			OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-			outputWriter.write(creds);
-			outputWriter.close();
-			return true;
-		} catch (Exception ignored) {
-		}
-		return false;
-	}
+            OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+            outputWriter.write(creds);
+            outputWriter.close();
+            return true;
+        } catch (Exception ignored) {
+        }
+        return false;
+    }
 
-	static String loadCredentials() {
-		try {
+    static String loadCredentials() {
+        try {
 
-			FileInputStream in = new FileInputStream(Config.F_CACHE_DIR + File.separator + "credentials.txt");
-			InputStreamReader inputStreamReader = new InputStreamReader(in);
-			BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-			StringBuilder sb = new StringBuilder();
-			String line;
-			while ((line = bufferedReader.readLine()) != null) {
-				sb.append(line);
-			}
-			in.close();
+            FileInputStream in = new FileInputStream(Config.F_CACHE_DIR + File.separator + "credentials.txt");
+            InputStreamReader inputStreamReader = new InputStreamReader(in);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+            }
+            in.close();
 
-			return sb.toString();
-		} catch (Exception ignored) {
-		}
-		return "";
-	}
+            return sb.toString();
+        } catch (Exception ignored) {
+        }
+        return "";
+    }
 }
