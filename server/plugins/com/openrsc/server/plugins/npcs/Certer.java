@@ -109,6 +109,8 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 		} else {
 			certAmount = showMenu(p, n, false, "One", "two", "Three", "four", "five");
 		}
+		if (certAmount < 0)
+			return;
 		int certID = certerDef.getCertID(index);
 		if (certID < 0) {
 			return;
@@ -161,6 +163,8 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 		} else {
 			certAmount = showMenu(p, n, false, "five", "ten", "Fifteen", "Twenty", "Twentyfive");
 		}
+		if (certAmount < 0)
+			return;
 		int certID = certerDef.getCertID(index);
 		if (certID < 0) {
 			return;
