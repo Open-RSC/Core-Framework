@@ -1,5 +1,6 @@
 package com.loader.openrsc.frame.threads;
 
+import com.loader.openrsc.Constants;
 import com.loader.openrsc.frame.AppFrame;
 
 import org.jsoup.Jsoup;
@@ -12,7 +13,7 @@ public class WorldPopulation implements Runnable {
 	@Override
 	public void run() {
 		try {
-			Document document = Jsoup.connect("https://openrsc.com/stats").get();
+			Document document = Jsoup.connect(Constants.WORLD_STATS_URL).get();
 
 			Elements linkOnline = document.select("a[href$=\"online\"]");
 			for (Element online : linkOnline) {

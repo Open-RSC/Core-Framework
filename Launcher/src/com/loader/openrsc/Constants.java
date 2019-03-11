@@ -4,7 +4,8 @@ public class Constants {
 
 	// Basic information
 	public static final String GAME_NAME = "Open RSC";
-	static final String SERVER_DOMAIN = "game.openrsc.com"; // Only used for the server status display
+	public static final String WORLD_STATS_URL = "https://openrsc.com/stats"; // Used for the world statistics
+	static final String SERVER_DOMAIN = "game.openrsc.com"; // Used for the server status display
 	static final int SERVER_PORT = 43594;
 
 	// Cache
