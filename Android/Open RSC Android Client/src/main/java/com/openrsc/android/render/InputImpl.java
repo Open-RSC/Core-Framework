@@ -69,7 +69,7 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
         if (mudclient.topMouseMenuVisible) {
-            return false;
+            return true;
         }
 
         if (distanceY > 1)
@@ -83,11 +83,13 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
         boolean isScroll = scrollDist > rotateDist;
         lastScrollOrRotate = System.currentTimeMillis();
 
-        if (isScroll && Config.C_SWIPE_TO_SCROLL || isScroll && Config.S_ZOOM_VIEW_TOGGLE) {
-            mudclient.runScroll((int) distanceY);
-
+        if (mudclient.showUiTab == 0 && Config.S_ZOOM_VIEW_TOGGLE) {
             mudclient.cameraZoom -= 10 * -distanceY;
             //mudclient.cameraPitch = (mudclient.cameraPitch + 1024 - 4) & 1023;
+        }
+
+        if (isScroll && Config.C_SWIPE_TO_SCROLL) {
+            mudclient.runScroll((int) distanceY);
             return true;
         } else {
             if (mudclient.showUiTab == 0 && Config.C_SWIPE_TO_ROTATE) {
