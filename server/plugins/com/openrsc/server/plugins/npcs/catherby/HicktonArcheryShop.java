@@ -1,5 +1,7 @@
 package com.openrsc.server.plugins.npcs.catherby;
 
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -13,13 +15,10 @@ import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-
 public class HicktonArcheryShop implements ShopInterface,
 	TalkToNpcListener, TalkToNpcExecutiveListener {
 
-	private final Shop shop = new Shop(false, 1000, 100, 80, 1,
+	private final Shop shop = new Shop(false, 10000, 100, 80, 1,
 		new Item(ItemId.CROSSBOW_BOLTS.id(), 200), new Item(ItemId.BRONZE_ARROWS.id(), 200), new Item(ItemId.IRON_ARROWS.id(), 200),
 		new Item(ItemId.STEEL_ARROWS.id(), 0), new Item(ItemId.MITHRIL_ARROWS.id(), 0), new Item(ItemId.ADAMANTITE_ARROWS.id(), 0),
 		new Item(ItemId.RUNE_ARROWS.id(), 0), new Item(ItemId.BRONZE_ARROW_HEADS.id(), 200), new Item(ItemId.IRON_ARROW_HEADS.id(), 180),
