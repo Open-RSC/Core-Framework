@@ -429,6 +429,7 @@ public class ActionSender {
 		s.writeByte(player.getLongPressDelay()); // 19
 		s.writeByte(player.getFontSize()); // 20
 		s.writeByte((byte) (player.getHoldAndChoose() ? 1 : 0)); // 21
+		s.writeByte((byte) (player.getSwipeToZoom() ? 1 : 0)); // 22
 		player.write(s.toPacket());
 	}
 

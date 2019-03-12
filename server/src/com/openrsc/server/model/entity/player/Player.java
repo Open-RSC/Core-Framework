@@ -2045,6 +2045,13 @@ public final class Player extends Mob {
 		return true;
 	}
 
+	public Boolean getSwipeToZoom() {
+		if (getCache().hasKey("setting_swipe_zoom")) {
+			return getCache().getBoolean("setting_swipe_zoom");
+		}
+		return true;
+	}
+
 	public int getLongPressDelay() {
 		if (getCache().hasKey("setting_press_delay")) {
 			return getCache().getInt("setting_press_delay");

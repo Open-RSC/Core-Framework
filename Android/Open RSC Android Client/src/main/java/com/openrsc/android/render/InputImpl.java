@@ -83,8 +83,11 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
         boolean isScroll = scrollDist > rotateDist;
         lastScrollOrRotate = System.currentTimeMillis();
 
-        if (mudclient.showUiTab == 0 && Config.S_ZOOM_VIEW_TOGGLE) {
-            mudclient.cameraZoom -= 10 * -distanceY;
+        if (mudclient.showUiTab == 0 && Config.S_ZOOM_VIEW_TOGGLE && Config.C_SWIPE_TO_ZOOM) {
+            final int maxHeight = 1000;
+            if (mudclient.cameraZoom < maxHeight - (10 * -distanceY)) {
+                mudclient.cameraZoom += 10 * -distanceY;
+            }
             //mudclient.cameraPitch = (mudclient.cameraPitch + 1024 - 4) & 1023;
         }
 

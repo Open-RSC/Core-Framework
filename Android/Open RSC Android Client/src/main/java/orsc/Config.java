@@ -54,6 +54,7 @@ public class Config {
     public static int C_MENU_SIZE = 3; // default font choice
     public static boolean C_SWIPE_TO_SCROLL = true;
     public static boolean C_SWIPE_TO_ROTATE = true;
+    public static boolean C_SWIPE_TO_ZOOM = true;
     public static boolean C_VOLUME_TO_ROTATE = false;
 
     /* Experience Config Menu */

@@ -93,6 +93,7 @@ import static orsc.Config.C_SHOW_GROUND_ITEMS;
 import static orsc.Config.C_SIDE_MENU_OVERLAY;
 import static orsc.Config.C_SWIPE_TO_ROTATE;
 import static orsc.Config.C_SWIPE_TO_SCROLL;
+import static orsc.Config.C_SWIPE_TO_ZOOM;
 import static orsc.Config.C_VOLUME_TO_ROTATE;
 import static orsc.Config.DEBUG;
 import static orsc.Config.DISPLAY_LOGO_SPRITE;
@@ -7536,20 +7537,28 @@ public final class mudclient implements Runnable {
                     "@whi@Swipe to Scroll - @gre@On", 3, null, null);
         }
 
-        if (!C_SWIPE_TO_ROTATE) {
+        if (!C_SWIPE_TO_ZOOM) {
             this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                    "@whi@Swipe to Rotate - @red@Off", 4, null, null);
+                    "@whi@Swipe to Zoom - @red@Off", 4, null, null);
         } else {
             this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                    "@whi@Swipe to Rotate - @gre@On", 4, null, null);
+                    "@whi@Swipe to Zoom - @gre@On", 4, null, null);
+        }
+
+        if (!C_SWIPE_TO_ROTATE) {
+            this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+                    "@whi@Swipe to Rotate - @red@Off", 5, null, null);
+        } else {
+            this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+                    "@whi@Swipe to Rotate - @gre@On", 5, null, null);
         }
 
         if (!C_VOLUME_TO_ROTATE) {
             this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                    "@whi@Volume buttons to Rotate - @red@Off", 5, null, null);
+                    "@whi@Volume buttons to Rotate - @red@Off", 6, null, null);
         } else {
             this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-                    "@whi@Volume buttons to Rotate - @gre@On", 5, null, null);
+                    "@whi@Volume buttons to Rotate - @gre@On", 6, null, null);
         }
 
         y += 199;
@@ -7871,6 +7880,15 @@ public final class mudclient implements Runnable {
         }
 
         if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 4 && this.mouseButtonClick == 1) {
+            C_SWIPE_TO_ZOOM = !C_SWIPE_TO_ZOOM;
+            saveConfiguration(true);
+            this.packetHandler.getClientStream().newPacket(111);
+            this.packetHandler.getClientStream().writeBuffer1.putByte(22);
+            this.packetHandler.getClientStream().writeBuffer1.putByte(C_SWIPE_TO_ZOOM ? 1 : 0);
+            this.packetHandler.getClientStream().finishPacket();
+        }
+
+        if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 5 && this.mouseButtonClick == 1) {
             C_SWIPE_TO_ROTATE = !C_SWIPE_TO_ROTATE;
             saveConfiguration(true);
             this.packetHandler.getClientStream().newPacket(111);
@@ -7879,7 +7897,7 @@ public final class mudclient implements Runnable {
             this.packetHandler.getClientStream().finishPacket();
         }
 
-        if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 5 && this.mouseButtonClick == 1) {
+        if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 6 && this.mouseButtonClick == 1) {
             C_VOLUME_TO_ROTATE = !C_VOLUME_TO_ROTATE;
             saveConfiguration(true);
             this.packetHandler.getClientStream().newPacket(111);
@@ -13827,8 +13845,13 @@ public final class mudclient implements Runnable {
         Config.C_SWIPE_TO_ROTATE = b;
     }
 
-    public void setSwipeToScroll(boolean b) {
+    public void setSwipeToScroll
+            (boolean b) {
         Config.C_SWIPE_TO_SCROLL = b;
+    }
+
+    public void setSwipeToZoom(boolean b) {
+        Config.C_SWIPE_TO_ZOOM = b;
     }
 
     public void setLongPressDelay(int i) {
