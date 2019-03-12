@@ -56,6 +56,7 @@ public class Config {
     public static boolean C_SWIPE_TO_ROTATE = true;
     public static boolean C_SWIPE_TO_ZOOM = true;
     public static boolean C_VOLUME_TO_ROTATE = false;
+    public static int C_LAST_ZOOM = 75;
 
     /* Experience Config Menu */
     public static int C_EXPERIENCE_COUNTER = 1;

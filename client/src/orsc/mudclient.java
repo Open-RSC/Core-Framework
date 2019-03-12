@@ -84,6 +84,7 @@ import static orsc.Config.C_HIDE_ROOFS;
 import static orsc.Config.C_HOLD_AND_CHOOSE;
 import static orsc.Config.C_INV_COUNT;
 import static orsc.Config.C_KILL_FEED;
+import static orsc.Config.C_LAST_ZOOM;
 import static orsc.Config.C_LONG_PRESS_TIMER;
 import static orsc.Config.C_MENU_SIZE;
 import static orsc.Config.C_MESSAGE_TAB_SWITCH;
@@ -93,6 +94,7 @@ import static orsc.Config.C_SHOW_GROUND_ITEMS;
 import static orsc.Config.C_SIDE_MENU_OVERLAY;
 import static orsc.Config.C_SWIPE_TO_ROTATE;
 import static orsc.Config.C_SWIPE_TO_SCROLL;
+import static orsc.Config.C_SWIPE_TO_ZOOM;
 import static orsc.Config.C_VOLUME_TO_ROTATE;
 import static orsc.Config.DEBUG;
 import static orsc.Config.DISPLAY_LOGO_SPRITE;
@@ -3853,10 +3855,14 @@ public final class mudclient implements Runnable {
 							this.scene.removeModel(this.world.modelRoofGrid[2][centerX]);
 						}
 
-						if (!this.doCameraZoom) {
+						/*if (!this.doCameraZoom) {
 							amountToZoom -= 200;
 							this.doCameraZoom = true;
-						}
+						}*/
+
+						// Sets camera zoom distance based on last saved value in the player cache
+						cameraZoom = Config.C_LAST_ZOOM * 10;
+
 						if (this.lastHeightOffset == 0
 							&& (world.collisionFlags[this.localPlayer.currentX / 128][this.localPlayer.currentZ
 							/ 128] & 0x80) == 0
@@ -7536,20 +7542,28 @@ public final class mudclient implements Runnable {
 				"@whi@Swipe to Scroll - @gre@On", 3, null, null);
 		}
 
-		if (!C_SWIPE_TO_ROTATE) {
+		if (!C_SWIPE_TO_ZOOM) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Swipe to Rotate - @red@Off", 4, null, null);
+				"@whi@Swipe to Zoom - @red@Off", 4, null, null);
 		} else {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Swipe to Rotate - @gre@On", 4, null, null);
+				"@whi@Swipe to Zoom - @gre@On", 4, null, null);
+		}
+
+		if (!C_SWIPE_TO_ROTATE) {
+			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+				"@whi@Swipe to Rotate - @red@Off", 5, null, null);
+		} else {
+			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+				"@whi@Swipe to Rotate - @gre@On", 5, null, null);
 		}
 
 		if (!C_VOLUME_TO_ROTATE) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Volume buttons to Rotate - @red@Off", 5, null, null);
+				"@whi@Volume buttons to Rotate - @red@Off", 6, null, null);
 		} else {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Volume buttons to Rotate - @gre@On", 5, null, null);
+				"@whi@Volume buttons to Rotate - @gre@On", 6, null, null);
 		}
 
 		y += 199;
@@ -7871,6 +7885,15 @@ public final class mudclient implements Runnable {
 		}
 
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 4 && this.mouseButtonClick == 1) {
+			C_SWIPE_TO_ZOOM = !C_SWIPE_TO_ZOOM;
+			saveConfiguration(true);
+			this.packetHandler.getClientStream().newPacket(111);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(22);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(C_SWIPE_TO_ZOOM ? 1 : 0);
+			this.packetHandler.getClientStream().finishPacket();
+		}
+
+		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 5 && this.mouseButtonClick == 1) {
 			C_SWIPE_TO_ROTATE = !C_SWIPE_TO_ROTATE;
 			saveConfiguration(true);
 			this.packetHandler.getClientStream().newPacket(111);
@@ -7879,7 +7902,7 @@ public final class mudclient implements Runnable {
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
-		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 5 && this.mouseButtonClick == 1) {
+		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 6 && this.mouseButtonClick == 1) {
 			C_VOLUME_TO_ROTATE = !C_VOLUME_TO_ROTATE;
 			saveConfiguration(true);
 			this.packetHandler.getClientStream().newPacket(111);
@@ -9188,6 +9211,7 @@ public final class mudclient implements Runnable {
 								else
 									cameraZoom += 4;
 							}
+							saveZoomDistance();
 						} else {
 							if (this.cameraAllowPitchModification) {
 								this.cameraPitch = (this.cameraPitch + 4) & 1023;
@@ -9202,6 +9226,7 @@ public final class mudclient implements Runnable {
 								else
 									cameraZoom -= 4;
 							}
+							saveZoomDistance();
 						} else {
 							if (this.cameraAllowPitchModification) {
 								this.cameraPitch = (this.cameraPitch + 1024 - 4) & 1023;
@@ -9233,18 +9258,15 @@ public final class mudclient implements Runnable {
 						++this.mouseClickXStep;
 					}
 
-					/*if (this.doCameraZoom && this.cameraZoom > 550) {
-						this.cameraZoom -= 4;
-					} else if (!this.doCameraZoom && this.cameraZoom < 750) {
-						this.cameraZoom += 4;
-					}*/
 					if (amountToZoom > 0) {
 						cameraZoom += 4;
 						amountToZoom -= 4;
+						saveZoomDistance();
 					}
 					if (amountToZoom < 0) {
 						cameraZoom -= 4;
 						amountToZoom += 4;
+						saveZoomDistance();
 					}
 
 					this.scene.d(25013, 17);
@@ -9321,6 +9343,17 @@ public final class mudclient implements Runnable {
 		} catch (RuntimeException var9) {
 			throw GenUtil.makeThrowable(var9, "client.RD(" + "dummy" + ')');
 		}
+	}
+
+	public void saveZoomDistance() {
+		// Saves last zoom distance
+		C_LAST_ZOOM = this.cameraZoom / 10;
+		int lastCameraZoom = this.cameraZoom / 10;
+		this.packetHandler.getClientStream().newPacket(111);
+		this.packetHandler.getClientStream().writeBuffer1.putByte(23);
+		this.packetHandler.getClientStream().writeBuffer1.putByte(lastCameraZoom);
+		this.packetHandler.getClientStream().finishPacket();
+		System.out.println(cameraZoom);
 	}
 
 	public final void handleKeyPress(byte var1, int key) {
@@ -13827,12 +13860,21 @@ public final class mudclient implements Runnable {
 		Config.C_SWIPE_TO_ROTATE = b;
 	}
 
-	public void setSwipeToScroll(boolean b) {
+	public void setSwipeToScroll
+		(boolean b) {
 		Config.C_SWIPE_TO_SCROLL = b;
+	}
+
+	public void setSwipeToZoom(boolean b) {
+		Config.C_SWIPE_TO_ZOOM = b;
 	}
 
 	public void setLongPressDelay(int i) {
 		Config.C_LONG_PRESS_TIMER = i;
+	}
+
+	public void setLastZoom(int i) {
+		Config.C_LAST_ZOOM = i;
 	}
 
 	public void setFontSize(int i) {

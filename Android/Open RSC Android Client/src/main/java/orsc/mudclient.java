@@ -84,6 +84,7 @@ import static orsc.Config.C_HIDE_ROOFS;
 import static orsc.Config.C_HOLD_AND_CHOOSE;
 import static orsc.Config.C_INV_COUNT;
 import static orsc.Config.C_KILL_FEED;
+import static orsc.Config.C_LAST_ZOOM;
 import static orsc.Config.C_LONG_PRESS_TIMER;
 import static orsc.Config.C_MENU_SIZE;
 import static orsc.Config.C_MESSAGE_TAB_SWITCH;
@@ -3854,10 +3855,14 @@ public final class mudclient implements Runnable {
                             this.scene.removeModel(this.world.modelRoofGrid[2][centerX]);
                         }
 
-                        if (!this.doCameraZoom) {
-                            amountToZoom -= 200;
-                            this.doCameraZoom = true;
-                        }
+						/*if (!this.doCameraZoom) {
+							amountToZoom -= 200;
+							this.doCameraZoom = true;
+						}*/
+
+                        // Sets camera zoom distance based on last saved value in the player cache
+                        cameraZoom = Config.C_LAST_ZOOM * 10;
+
                         if (this.lastHeightOffset == 0
                                 && (world.collisionFlags[this.localPlayer.currentX / 128][this.localPlayer.currentZ
                                 / 128] & 0x80) == 0
@@ -9206,6 +9211,7 @@ public final class mudclient implements Runnable {
                                 else
                                     cameraZoom += 4;
                             }
+                            saveZoomDistance();
                         } else {
                             if (this.cameraAllowPitchModification) {
                                 this.cameraPitch = (this.cameraPitch + 4) & 1023;
@@ -9220,6 +9226,7 @@ public final class mudclient implements Runnable {
                                 else
                                     cameraZoom -= 4;
                             }
+                            saveZoomDistance();
                         } else {
                             if (this.cameraAllowPitchModification) {
                                 this.cameraPitch = (this.cameraPitch + 1024 - 4) & 1023;
@@ -9251,18 +9258,15 @@ public final class mudclient implements Runnable {
                         ++this.mouseClickXStep;
                     }
 
-					/*if (this.doCameraZoom && this.cameraZoom > 550) {
-						this.cameraZoom -= 4;
-					} else if (!this.doCameraZoom && this.cameraZoom < 750) {
-						this.cameraZoom += 4;
-					}*/
-                    if (amountToZoom > 0) {
+					if (amountToZoom > 0) {
                         cameraZoom += 4;
                         amountToZoom -= 4;
+                        saveZoomDistance();
                     }
                     if (amountToZoom < 0) {
                         cameraZoom -= 4;
                         amountToZoom += 4;
+                        saveZoomDistance();
                     }
 
                     this.scene.d(25013, 17);
@@ -9339,6 +9343,17 @@ public final class mudclient implements Runnable {
         } catch (RuntimeException var9) {
             throw GenUtil.makeThrowable(var9, "client.RD(" + "dummy" + ')');
         }
+    }
+
+    public void saveZoomDistance() {
+        // Saves last zoom distance
+        C_LAST_ZOOM = this.cameraZoom / 10;
+        int lastCameraZoom = this.cameraZoom / 10;
+        this.packetHandler.getClientStream().newPacket(111);
+        this.packetHandler.getClientStream().writeBuffer1.putByte(23);
+        this.packetHandler.getClientStream().writeBuffer1.putByte(lastCameraZoom);
+        this.packetHandler.getClientStream().finishPacket();
+        System.out.println(cameraZoom);
     }
 
     public final void handleKeyPress(byte var1, int key) {
@@ -13856,6 +13871,10 @@ public final class mudclient implements Runnable {
 
     public void setLongPressDelay(int i) {
         Config.C_LONG_PRESS_TIMER = i;
+    }
+
+    public void setLastZoom(int i) {
+        Config.C_LAST_ZOOM = i;
     }
 
     public void setFontSize(int i) {

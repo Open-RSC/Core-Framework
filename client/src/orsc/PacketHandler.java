@@ -1525,6 +1525,8 @@ public class PacketHandler {
 		mc.setLongPressDelay(packetsIncoming.getUnsignedByte()); // 19
 		mc.setFontSize(packetsIncoming.getUnsignedByte()); // 20
 		mc.setHoldAndChoose(packetsIncoming.getUnsignedByte() == 1); // 21
+		mc.setSwipeToZoom(packetsIncoming.getUnsignedByte() == 1); // 22
+		mc.setLastZoom(packetsIncoming.getUnsignedByte()); // 23
 	}
 
 	private void togglePrayer(int length) {

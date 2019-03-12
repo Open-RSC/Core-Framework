@@ -13,7 +13,7 @@ public final class GameSettingHandler implements PacketHandler {
 	public void handlePacket(Packet p, Player player) throws Exception {
 
 		int idx = (int) p.readByte();
-		if (idx < 0 || idx > 22) {
+		if (idx < 0 || idx > 23) {
 			player.setSuspiciousPlayer(true);
 			return;
 		}
@@ -49,6 +49,8 @@ public final class GameSettingHandler implements PacketHandler {
 				player.getCache().store("setting_hold_choose", p.readByte() == 1);
 			} else if (idx == 22) {
 				player.getCache().store("setting_swipe_zoom", p.readByte() == 1);
+			} else if (idx == 23) {
+				player.getCache().set("setting_last_zoom", p.readByte());
 			}
 			return;
 		}

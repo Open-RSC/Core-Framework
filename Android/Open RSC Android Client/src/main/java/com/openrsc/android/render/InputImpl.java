@@ -13,6 +13,7 @@ import orsc.Config;
 import orsc.graphics.two.Fonts;
 import orsc.mudclient;
 
+import static orsc.Config.C_LAST_ZOOM;
 import static orsc.Config.S_ZOOM_VIEW_TOGGLE;
 
 public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListener {
@@ -85,8 +86,12 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
 
         if (mudclient.showUiTab == 0 && Config.S_ZOOM_VIEW_TOGGLE && Config.C_SWIPE_TO_ZOOM) {
             final int maxHeight = 1000;
-            if (mudclient.cameraZoom < maxHeight - (10 * -distanceY)) {
+            final int minHeight = 500;
+            if ((mudclient.cameraZoom < maxHeight - (10 * -distanceY)) && (mudclient.cameraZoom > minHeight + (10 * distanceY))) {
                 mudclient.cameraZoom += 10 * -distanceY;
+                C_LAST_ZOOM = mudclient.cameraZoom / 10;
+
+                mudclient.saveZoomDistance();
             }
             //mudclient.cameraPitch = (mudclient.cameraPitch + 1024 - 4) & 1023;
         }
