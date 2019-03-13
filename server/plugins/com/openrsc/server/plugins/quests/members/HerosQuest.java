@@ -275,7 +275,8 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 						"Good for the foremost hero's of the land");
 					if (opt == 0) {
 						if ((p.getQuestStage(Constants.Quests.LOST_CITY) == -1 &&
-							p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == -1 &&
+							(p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == -1 ||
+								p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == -2 ) &&
 							p.getQuestStage(Constants.Quests.MERLINS_CRYSTAL) == -1 &&
 							p.getQuestStage(Constants.Quests.DRAGON_SLAYER) == -1)
 							&& p.getQuestPoints() >= 55) {
