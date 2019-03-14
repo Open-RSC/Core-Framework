@@ -9204,13 +9204,14 @@ public final class mudclient implements Runnable {
                         this.cameraRotation = 255 & this.cameraRotation - 2;
                     } else if (this.keyDown) {
                         if (S_ZOOM_VIEW_TOGGLE || getLocalPlayer().isStaff()) {
-                            final int maxHeight = 1000 - (doCameraZoom ? 200 : 0);
+                            final int maxHeight = 1000;
                             if (cameraZoom < maxHeight) {
                                 if (cameraZoom + 4 > maxHeight)
                                     cameraZoom = maxHeight;
                                 else
-                                    cameraZoom += 4;
+                                    cameraZoom += 10;
                             }
+                            C_LAST_ZOOM = this.cameraZoom / 10;
                             saveZoomDistance();
                         } else {
                             if (this.cameraAllowPitchModification) {
@@ -9219,13 +9220,14 @@ public final class mudclient implements Runnable {
                         }
                     } else if (this.keyUp) {
                         if (S_ZOOM_VIEW_TOGGLE || getLocalPlayer().isStaff()) {
-                            final int minHeight = 500 - (doCameraZoom ? 200 : 0);
+                            final int minHeight = 500;
                             if (cameraZoom > minHeight) {
                                 if (cameraZoom - 4 < minHeight)
                                     cameraZoom = minHeight;
                                 else
-                                    cameraZoom -= 4;
+                                    cameraZoom -= 10;
                             }
+                            C_LAST_ZOOM = this.cameraZoom / 10;
                             saveZoomDistance();
                         } else {
                             if (this.cameraAllowPitchModification) {
@@ -9261,12 +9263,10 @@ public final class mudclient implements Runnable {
 					if (amountToZoom > 0) {
                         cameraZoom += 4;
                         amountToZoom -= 4;
-                        saveZoomDistance();
                     }
                     if (amountToZoom < 0) {
                         cameraZoom -= 4;
                         amountToZoom += 4;
-                        saveZoomDistance();
                     }
 
                     this.scene.d(25013, 17);
@@ -9347,7 +9347,6 @@ public final class mudclient implements Runnable {
 
     public void saveZoomDistance() {
         // Saves last zoom distance
-        C_LAST_ZOOM = this.cameraZoom / 10;
         int lastCameraZoom = this.cameraZoom / 10;
         this.packetHandler.getClientStream().newPacket(111);
         this.packetHandler.getClientStream().writeBuffer1.putByte(23);
