@@ -67,7 +67,8 @@ public class BankInterface {
 		  mouseOverBankPageText = 1;
 		if (mouseOverBankPageText > 2 && currentBankIDs.size() <= 144)
 		  mouseOverBankPageText = 2;
-		if (mc.getMouseClick() == 1 || (mc.getMouseButtonDown() == 1 && mc.getMouseButtonDownTime() > 20)) {
+		if (mc.getMouseClick() == 1 || ((mc.getMouseButtonDown() == 1 && mc.getMouseButtonDownTime() > 320 && Config.isAndroid()) ||
+				(mc.getMouseButtonDown() == 1 && mc.getMouseButtonDownTime() > 20 && !Config.isAndroid()))) {
 			int selectedX = currMouseX - (mc.getGameWidth() / 2 - width / 2);
 			int selectedY = currMouseY - (mc.getGameHeight() / 2 - height / 2 + 20);
 			if (selectedX >= 0 && selectedY >= 16 && selectedX < 408 && selectedY < 280) {
@@ -164,7 +165,7 @@ public class BankInterface {
 		}
 
 		// Non incremental Withdraw or deposit
-		else if (mc.getMouseButtonDownTime() < 50) {
+		else if ((mc.getMouseButtonDownTime() < 350 && Config.isAndroid()) || (mc.getMouseButtonDownTime() < 50 && !Config.isAndroid()) ) {
 			if ((amount >= 5 || Config.S_WANT_BANK_NOTES) && currMouseX >= selectedX + 250 && currMouseY >=  selectedY + 240
 					&& currMouseX < selectedX + 280 && currMouseY <= selectedY + 251) {
 				if (Config.S_WANT_BANK_NOTES) {

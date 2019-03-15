@@ -57,8 +57,7 @@ public interface ClientPort {
             outputWriter.write(""+preference);
             outputWriter.close();
             return true;
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
         return false;
     }
@@ -77,8 +76,7 @@ public interface ClientPort {
             in.close();
 
             return Integer.parseInt(sb.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
         return 0;
     }
