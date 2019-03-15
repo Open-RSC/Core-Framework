@@ -91,7 +91,7 @@ public final class Aggie implements TalkToNpcListener,
 				}
 				break;
 			case Aggie.SKIN_PASTE:
-				if (hasItem(p, ItemId.ASHES.id()) && hasItem(p, ItemId.POT_OF_FLOUR.id())
+				if (hasItem(p, ItemId.ASHES.id()) && (hasItem(p, ItemId.POT_OF_FLOUR.id()) || hasItem(p, ItemId.FLOUR.id()))
 					&& (hasItem(p, ItemId.BUCKET_OF_WATER.id()) || hasItem(p, ItemId.JUG_OF_WATER.id()))
 					&& hasItem(p, ItemId.REDBERRIES.id())) {
 					npcTalk(p, n,
@@ -108,7 +108,8 @@ public final class Aggie implements TalkToNpcListener,
 							"You hand ash, flour, water and redberries to Aggie",
 							"She tips it into a cauldron and mutters some words");
 						removeItem(p, ItemId.ASHES.id(), 1);
-						removeItem(p, ItemId.POT_OF_FLOUR.id(), 1);
+						if (!removeItem(p, ItemId.POT_OF_FLOUR.id(), 1))
+							removeItem(p, ItemId.FLOUR.id(), 1);
 						if (!removeItem(p, ItemId.BUCKET_OF_WATER.id(), 1))
 							removeItem(p, ItemId.JUG_OF_WATER.id(), 1);
 						removeItem(p, ItemId.REDBERRIES.id(), 1);
