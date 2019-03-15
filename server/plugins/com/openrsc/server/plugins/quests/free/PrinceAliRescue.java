@@ -686,23 +686,22 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 					npcTalk(p, n, "That is no concern of yours, adventurer");
 					break;
 				case 2:
-					//based on behavior on osrs - most likely this was identical in rsc
-					if(p.getCache().hasKey("joe_is_drunk")) {
+					if((p.getCache().hasKey("joe_is_drunk")) && hasItem(p, ItemId.BRONZE_KEY.id())) {
 						npcTalk(p, n, "Great! The guard is now harmless",
 								"Now you just need to use the rope on Keli to remove her",
 								"Then you can go in and give everything to the prince");
 						return;
 					}
-					
-					if (p.getCache().hasKey("key_sent")) {
+					if ((p.getCache().hasKey("key_sent")) && !hasItem(p, ItemId.BRONZE_KEY.id())) {
 						npcTalk(p, n,
 							"My father sent this key for you, be careful not to lose it");
 						message(p,
 							"Leela gives you a copy of the key to the princes door");
 						addItem(p, ItemId.BRONZE_KEY.id(), 1);
 						p.getCache().remove("key_sent");
+						return;
 					}
-					if (hasItem(p, ItemId.ROPE.id()) && hasItem(p, ItemId.PINK_SKIRT.id()) && hasItem(p, ItemId.PASTE.id())
+					if ((!p.getCache().hasKey("joe_is_drunk")) && hasItem(p, ItemId.ROPE.id()) && hasItem(p, ItemId.PINK_SKIRT.id()) && hasItem(p, ItemId.PASTE.id())
 						&& hasItem(p, ItemId.BLONDE_WIG.id())) {
 						npcTalk(p, n, "Good, you have all the basic equipment",
 							"What are your plans to stop the guard interfering?");
@@ -1044,7 +1043,6 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 							"Thankyou, I will try to find the other items",
 							"Can you tell me what I still need to get?");
 						if (wutwut == 0) {
-
 						} else if (wutwut == 1) {
 							osmanDialogue(p, n, Osman.STILL_NEED);
 						}
