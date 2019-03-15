@@ -437,14 +437,22 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			if (mudclient.showUiTab == 0 && (S_ZOOM_VIEW_TOGGLE || mudclient.getLocalPlayer().isStaff())) {
 				final int maxHeight = 1000;
 				final int minHeight = 500;
-				if (mudclient.cameraZoom > minHeight && mudclient.cameraZoom < maxHeight) {
-					if (mudclient.cameraZoom - 10 < minHeight && mudclient.cameraZoom + 10 > maxHeight)
-						mudclient.cameraZoom = mudclient.cameraZoom + e.getWheelRotation();
-					else
-						mudclient.cameraZoom = mudclient.cameraZoom - e.getWheelRotation();
+				if (mudclient.cameraZoom <= minHeight) {
+					mudclient.cameraZoom = mudclient.cameraZoom + 20;
+					C_LAST_ZOOM = mudclient.cameraZoom / 10;
+					mudclient.saveZoomDistance();
 				}
-				C_LAST_ZOOM = mudclient.cameraZoom / 10;
-				mudclient.saveZoomDistance();
+				if (mudclient.cameraZoom >= maxHeight) {
+					mudclient.cameraZoom = mudclient.cameraZoom - 20;
+					C_LAST_ZOOM = mudclient.cameraZoom / 10;
+					mudclient.saveZoomDistance();
+				}
+				if (mudclient.cameraZoom > minHeight && mudclient.cameraZoom < maxHeight) {
+					mudclient.cameraZoom = mudclient.cameraZoom + e.getWheelRotation();
+					C_LAST_ZOOM = mudclient.cameraZoom / 10;
+					mudclient.saveZoomDistance();
+				}
+
 			}
 	}
 
