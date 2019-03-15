@@ -67,7 +67,7 @@ public class BankInterface {
 		  mouseOverBankPageText = 1;
 		if (mouseOverBankPageText > 2 && currentBankIDs.size() <= 144)
 		  mouseOverBankPageText = 2;
-		if (mc.getMouseClick() == 1 || ((mc.getMouseButtonDown() == 1 && mc.getMouseButtonDownTime() > 320 && Config.isAndroid()) ||
+		if (mc.getMouseClick() == 1 || ((mc.getMouseButtonDown() == 1 && mc.getMouseButtonDownTime() > 99999 && Config.isAndroid()) ||
 				(mc.getMouseButtonDown() == 1 && mc.getMouseButtonDownTime() > 20 && !Config.isAndroid()))) {
 			int selectedX = currMouseX - (mc.getGameWidth() / 2 - width / 2);
 			int selectedY = currMouseY - (mc.getGameHeight() / 2 - height / 2 + 20);
