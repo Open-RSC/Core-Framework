@@ -9352,7 +9352,7 @@ public final class mudclient implements Runnable {
         this.packetHandler.getClientStream().writeBuffer1.putByte(23);
         this.packetHandler.getClientStream().writeBuffer1.putByte(lastCameraZoom);
         this.packetHandler.getClientStream().finishPacket();
-        System.out.println(cameraZoom);
+        //System.out.println(cameraZoom);
     }
 
     public final void handleKeyPress(byte var1, int key) {
