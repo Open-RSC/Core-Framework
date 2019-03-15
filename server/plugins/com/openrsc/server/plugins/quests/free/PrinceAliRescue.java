@@ -76,7 +76,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 		return obj.getID() == 45 && obj.getY() == 640;
 	}
 
-	public void hassanDialogue(final Player p, final Npc n) {
+	private void hassanDialogue(final Player p, final Npc n) {
 		switch (p.getQuestStage(this)) {
 			case 0:
 				npcTalk(p, n,
@@ -177,7 +177,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 		}
 	}
 
-	public void joeDialogue(final Player p, final Npc n, final int cID) {
+	private void joeDialogue(final Player p, final Npc n, final int cID) {
 		if (cID == -1) {
 			switch (p.getQuestStage(this)) {
 				case 0:
@@ -403,7 +403,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 		}
 	}
 
-	public void keliDialogue(final Player p, final Npc n, final int cID) {
+	private void keliDialogue(final Player p, final Npc n, final int cID) {
 		if (cID == -1) {
 			switch (p.getQuestStage(this)) {
 				case 0:
@@ -677,7 +677,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 		}
 	}
 
-	public void leelaDialogue(final Player p, final Npc n, final int cID) {
+	private void leelaDialogue(final Player p, final Npc n, final int cID) {
 		if (cID == -1) {
 			switch (p.getQuestStage(this)) {
 				case 0:
@@ -990,7 +990,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 		}
 	}
 
-	public void osmanDialogue(final Player p, final Npc n, final int cID) {
+	private void osmanDialogue(final Player p, final Npc n, final int cID) {
 		if (cID == -1) {
 			switch (p.getQuestStage(this)) {
 				case 0:
@@ -1202,43 +1202,43 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 
 	class Joe {
 
-		public static final int BEER = 6;
-		public static final int BETTERLEAVE = 3;
-		public static final int BOY = 2;
-		public static final int BUYWITH = 4;
-		public static final int CHILL = 0;
-		public static final int LIFE = 1;
-		public static final int MOREMONEY = 5;
+		static final int BEER = 6;
+		static final int BETTERLEAVE = 3;
+		static final int BOY = 2;
+		static final int BUYWITH = 4;
+		static final int CHILL = 0;
+		static final int LIFE = 1;
+		static final int MOREMONEY = 5;
 
 	}
 
 	class Keli {
-		public static final int BESURE = 9;
-		public static final int FAMOUS = 0;
-		public static final int GREAT = 10;
-		public static final int KATRINE = 1;
-		public static final int KEYPLEASE = 14;
-		public static final int KILLPEOPLE = 5;
-		public static final int NEVERHEARD = 7;
-		public static final int NOBELL = 12;
-		public static final int NOT_DISTURB = 2;
-		public static final int OFCOURSE = 13;
-		public static final int PLAN = 3;
-		public static final int SECRETS = 11;
-		public static final int SKILLFUL = 8;
-		public static final int TRAINED = 4;
+		static final int BESURE = 9;
+		static final int FAMOUS = 0;
+		static final int GREAT = 10;
+		static final int KATRINE = 1;
+		static final int KEYPLEASE = 14;
+		static final int KILLPEOPLE = 5;
+		static final int NEVERHEARD = 7;
+		static final int NOBELL = 12;
+		static final int NOT_DISTURB = 2;
+		static final int OFCOURSE = 13;
+		static final int PLAN = 3;
+		static final int SECRETS = 11;
+		static final int SKILLFUL = 8;
+		static final int TRAINED = 4;
 	}
 
 	class Leela {
 
-		public static final int ATTACK_HIM = 6;
-		public static final int BRIBE = 5;
-		public static final int DISGUISE = 0;
-		public static final int DRUNK = 4;
-		public static final int ESCAPE = 3;
-		public static final int GUARDS = 2;
-		public static final int HAVENT_SPOKE = 7;
-		public static final int KEYMADE = 1;
+		static final int ATTACK_HIM = 6;
+		static final int BRIBE = 5;
+		static final int DISGUISE = 0;
+		static final int DRUNK = 4;
+		static final int ESCAPE = 3;
+		static final int GUARDS = 2;
+		static final int HAVENT_SPOKE = 7;
+		static final int KEYMADE = 1;
 
 	}
 
@@ -1247,11 +1247,11 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 	// with joe the guard
 
 	class Osman {
-		public static final int BETTER_FIND = 3;
-		public static final int FINAL = 2;
-		public static final int FIRST = 0;
-		public static final int SECOND = 1;
-		public static final int STILL_NEED = 4;
+		static final int BETTER_FIND = 3;
+		static final int FINAL = 2;
+		static final int FIRST = 0;
+		static final int SECOND = 1;
+		static final int STILL_NEED = 4;
 	}
 
 }
