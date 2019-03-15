@@ -208,9 +208,9 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Android/Open RSC Android Client/Android Client.iml" filepath="$PROJECT_DIR$/Android/Open RSC Android Client/Android Client.iml" />
       <module fileurl="file://$PROJECT_DIR$/Android/Game.Android.iml" filepath="$PROJECT_DIR$/Android/Game.Android.iml" />
       <module fileurl="file://$PROJECT_DIR$/Launcher/Launcher.iml" filepath="$PROJECT_DIR$/Launcher/Launcher.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Android/Open RSC Android Client/Open RSC Android Client.iml" filepath="$PROJECT_DIR$/Android/Open RSC Android Client/Open RSC Android Client.iml" />
       <module fileurl="file://$PROJECT_DIR$/client/PC Client.iml" filepath="$PROJECT_DIR$/client/PC Client.iml" />
       <module fileurl="file://$PROJECT_DIR$/server/Server.iml" filepath="$PROJECT_DIR$/server/Server.iml" />
       <module fileurl="file://$PROJECT_DIR$/Tools/Sprite Editor/Sprite Editor.iml" filepath="$PROJECT_DIR$/Tools/Sprite Editor/Sprite Editor.iml" />
@@ -237,7 +237,6 @@
     </library>
     <library name="Gradle: com.android.support:support-compat-25.3.1">
       <CLASSES>
-        <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/support-compat-25.3.1.aar/1fb2ba92e9bcb98901a737b9ee2c1924/res" />
         <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/support-compat-25.3.1.aar/1fb2ba92e9bcb98901a737b9ee2c1924/jars/classes.jar!/" />
       </CLASSES>
       <JAVADOC />
@@ -248,7 +247,6 @@
     <library name="Gradle: com.android.support:support-core-ui-25.3.1">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/support-core-ui-25.3.1.aar/26fc6425c60bd5beda837656d18b5ece/jars/classes.jar!/" />
-        <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/support-core-ui-25.3.1.aar/26fc6425c60bd5beda837656d18b5ece/res" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
@@ -258,7 +256,6 @@
     <library name="Gradle: com.android.support:support-core-utils-25.3.1">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/support-core-utils-25.3.1.aar/0acd186850d158e8d0925d0c2186372f/jars/classes.jar!/" />
-        <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/support-core-utils-25.3.1.aar/0acd186850d158e8d0925d0c2186372f/res" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
@@ -267,7 +264,6 @@
     </library>
     <library name="Gradle: com.android.support:support-fragment-25.3.1">
       <CLASSES>
-        <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/support-fragment-25.3.1.aar/33d314ed5cdc31174e9dcf2d0c562672/res" />
         <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/support-fragment-25.3.1.aar/33d314ed5cdc31174e9dcf2d0c562672/jars/classes.jar!/" />
       </CLASSES>
       <JAVADOC />
@@ -278,7 +274,6 @@
     <library name="Gradle: com.android.support:support-media-compat-25.3.1">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/support-media-compat-25.3.1.aar/67f9e27440f0a7146a896eabb77c9f63/jars/classes.jar!/" />
-        <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/support-media-compat-25.3.1.aar/67f9e27440f0a7146a896eabb77c9f63/res" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
@@ -287,7 +282,6 @@
     </library>
     <library name="Gradle: com.android.support:support-v4-25.3.1">
       <CLASSES>
-        <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/support-v4-25.3.1.aar/36312c893ab5ae8abbab9157e909c61e/res" />
         <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/support-v4-25.3.1.aar/36312c893ab5ae8abbab9157e909c61e/jars/classes.jar!/" />
       </CLASSES>
       <JAVADOC />

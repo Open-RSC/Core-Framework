@@ -12,22 +12,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aac60d61-673a-4ad4-8ee5-46e19413f987" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Android/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/Android/.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android/.idea/caches/gradle_models.ser" beforeDir="false" afterPath="$PROJECT_DIR$/Android/.idea/caches/gradle_models.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_compat_25_3_1_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_compat_25_3_1_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_core_ui_25_3_1_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_core_ui_25_3_1_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_core_utils_25_3_1_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_core_utils_25_3_1_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_fragment_25_3_1_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_fragment_25_3_1_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_media_compat_25_3_1_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_media_compat_25_3_1_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_v4_25_3_1_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_v4_25_3_1_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android/Open RSC Android Client/Open RSC Android Client.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Android/Open RSC Android Client/Android Client.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Android/Open RSC Android Client/Android Client.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/BankInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/BankInterface.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/Config.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/mudclient.java" beforeDir="false" afterPath="$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/mudclient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Open RSC.ipr" beforeDir="false" afterPath="$PROJECT_DIR$/Open RSC.ipr" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Open RSC.iws" beforeDir="false" afterPath="$PROJECT_DIR$/Open RSC.iws" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/Cache/uid.dat" beforeDir="false" afterPath="$PROJECT_DIR$/client/Cache/uid.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/Client.iml" beforeDir="false" afterPath="$PROJECT_DIR$/client/PC Client.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/BankInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/BankInterface.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -79,7 +70,26 @@
     <favorites_list name="Open RSC" />
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/BankInterface.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="362">
+              <caret line="81" column="35" selection-end-line="672" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/BankInterface.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="533">
+              <caret line="672" lean-forward="true" selection-start-line="672" selection-end-line="672" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -135,13 +145,17 @@
       <dir>$PROJECT_DIR$/server</dir>
     </dirStrings>
   </component>
+  <component name="GenerateSignedApkSettings">
+    <option name="KEY_STORE_PATH" value="$USER_HOME$/ORSC_Android_Key" />
+    <option name="KEY_ALIAS" value="key0" />
+    <option name="REMEMBER_PASSWORDS" value="true" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/server/src/com/openrsc/server/util/EntityList.java" />
         <option value="$PROJECT_DIR$/server/src/com/openrsc/server/model/entity/npc/Npc.java" />
         <option value="$PROJECT_DIR$/server/src/com/openrsc/server/event/custom/NpcLootEvent.java" />
         <option value="$PROJECT_DIR$/server/src/com/openrsc/server/model/entity/npc/NpcBehavior.java" />
@@ -182,16 +196,17 @@
         <option value="$PROJECT_DIR$/client/src/orsc/PacketHandler.java" />
         <option value="$PROJECT_DIR$/client/src/orsc/Config.java" />
         <option value="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/HerosQuest.java" />
-        <option value="$PROJECT_DIR$/client/src/orsc/mudclient.java" />
         <option value="$PROJECT_DIR$/client/src/orsc/ORSCApplet.java" />
         <option value="$PROJECT_DIR$/server/openrsc.conf" />
         <option value="$PROJECT_DIR$/server/local.conf" />
         <option value="$PROJECT_DIR$/client/src/orsc/multiclient/ClientPort.java" />
-        <option value="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/BankInterface.java" />
         <option value="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/npcs/draynor/Aggie.java" />
         <option value="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/free/PrinceAliRescue.java" />
         <option value="$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/Config.java" />
         <option value="$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/mudclient.java" />
+        <option value="$PROJECT_DIR$/client/src/orsc/mudclient.java" />
+        <option value="$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/BankInterface.java" />
+        <option value="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/BankInterface.java" />
       </list>
     </option>
   </component>
@@ -221,69 +236,67 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="Open RSC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Open RSC Android Client" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="client" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Open RSC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Open RSC Android Client" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="client" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Open RSC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Open RSC Android Client" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="client" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="openrsc" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Open RSC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Open RSC Android Client" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="client" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="openrsc" type="462c0819:PsiDirectoryNode" />
+              <item name="interfaces" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Open RSC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Open RSC Android Client" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="client" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="orsc" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Open RSC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Open RSC Android Client" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="orsc" type="462c0819:PsiDirectoryNode" />
-              <item name="multiclient" type="462c0819:PsiDirectoryNode" />
+              <item name="openrsc" type="462c0819:PsiDirectoryNode" />
+              <item name="interfaces" type="462c0819:PsiDirectoryNode" />
+              <item name="misc" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="AndroidView" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="ExportApk.ApkPath" value="$PROJECT_DIR$/Android/Open RSC Android Client" />
+    <property name="ExportApk.BuildType" value="release" />
+    <property name="ExportApk.Flavors" value="" />
+    <property name="ExportApk.SignV1" value="true" />
+    <property name="ExportApk.SignV2" value="true" />
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://E:/GitHub/Kenix3/Game/server/src/com/openrsc/server/plugins/listeners/action/CommandListener.java" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="android.project.structure.last.selected" value="Open RSC Android Client" />
+    <property name="android.project.structure.proportion" value="0.15" />
     <property name="android.sdk.path" value="$USER_HOME$/Library/Android/sdk" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1552687621069" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1552693144743" />
     <property name="device.picker.selection" value="Pixel_2_API_28" />
     <property name="editor.config.ad.shown" value="true" />
     <property name="external.system.task.project.file.to.start" value="$PROJECT_DIR$/iOS/Open RSC Android Client" />
     <property name="go.gopath.indexing.explicitly.defined" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/Tools/Map Generator/build.xml" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
@@ -317,7 +330,7 @@
       </method>
     </configuration>
     <configuration name="Android Client" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
-      <module name="Android Client" />
+      <module name="Open RSC Android Client" />
       <option name="DEPLOY" value="true" />
       <option name="ARTIFACT_NAME" value="" />
       <option name="PM_INSTALL_OPTIONS" value="" />
@@ -439,6 +452,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="52" y="23" width="1628" height="1027" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49213836" visible="true" weight="0.2112232" />
       <window_info id="Structure" order="1" sideWeight="0.51338583" side_tool="true" weight="0.13871375" />
@@ -451,13 +465,13 @@
       <window_info id="Captures" order="8" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.329718" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32834226" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49873897" weight="0.32869378" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Terminal" order="7" />
-      <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.50126106" side_tool="true" weight="0.31764707" />
+      <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.50126106" side_tool="true" weight="0.32834226" />
       <window_info anchor="bottom" id="Version Control" order="9" weight="0.329718" />
       <window_info anchor="bottom" id="Messages" order="10" sideWeight="0.49873897" weight="0.31336898" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
@@ -465,11 +479,10 @@
       <window_info anchor="bottom" id="Gradle View" order="13" />
       <window_info anchor="bottom" id="CheckStyle" order="14" />
       <window_info anchor="bottom" id="Tail" order="15" />
-      <window_info anchor="bottom" id="Build" order="16" weight="0.32869378" />
+      <window_info anchor="bottom" id="Build" order="16" visible="true" weight="0.32834226" />
       <window_info anchor="bottom" id="Android Profiler" order="17" />
       <window_info anchor="bottom" id="Multi-OS Engine" order="18" weight="0.32941177" />
       <window_info anchor="bottom" id="Logcat" order="19" />
-      <window_info anchor="right" id="Snyk" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.20554855" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -485,6 +498,7 @@
       <window_info anchor="right" id="Codota" order="12" weight="0.3297604" />
       <window_info anchor="right" id="Device File Explorer" order="13" side_tool="true" />
       <window_info anchor="right" id="Gradle" order="14" weight="0.3297604" />
+      <window_info anchor="right" id="Snyk" order="15" side_tool="true" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -562,24 +576,6 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/server/build.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" column="12" selection-start-line="21" selection-start-column="12" selection-end-line="21" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Tools/Sprite Editor/src/spriteeditor/SpriteEditor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="202">
-          <caret line="53" column="49" selection-start-line="53" selection-start-column="40" selection-end-line="53" selection-end-column="49" />
-          <folding>
-            <element signature="e#3161#3261#0" expanded="true" />
-            <element signature="e#3260#3261#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Tools/Sprite Editor/src/spriteeditor/SpriteUnpacker.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="267">
@@ -818,13 +814,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/BankInterface.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="458">
-          <caret line="667" column="19" selection-start-line="667" selection-start-column="19" selection-end-line="667" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/server/local.conf">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="561">
@@ -860,16 +849,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="450">
           <caret line="75" column="23" selection-start-line="75" selection-start-column="23" selection-end-line="75" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/orsc/mudclient.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="9223" column="4" selection-start-line="9223" selection-start-column="4" selection-end-line="9223" selection-end-column="4" />
-          <folding>
-            <element signature="e#14527#14541#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -913,17 +892,25 @@
     <entry file="file://$PROJECT_DIR$/Android/Open RSC Android Client/lint.xml">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/ios/src/main/java/ios/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="12" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/ios/src/main/java/ios/Main.java" />
     <entry file="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/multiclient/ClientPort.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-332">
           <caret line="63" lean-forward="true" selection-start-line="63" selection-end-line="63" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/Config.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="24" column="23" selection-start-line="24" selection-start-column="23" selection-end-line="24" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/InputListener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="22" selection-start-line="2" selection-start-column="22" selection-end-line="2" selection-end-column="22" />
         </state>
       </provider>
     </entry>
@@ -934,10 +921,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/Config.java">
+    <entry file="file://$PROJECT_DIR$/client/src/orsc/mudclient.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="24" column="23" selection-start-line="24" selection-start-column="23" selection-end-line="24" selection-end-column="23" />
+        <state relative-caret-position="124">
+          <caret line="9343" column="26" selection-start-line="9343" selection-start-column="26" selection-end-line="9343" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/BankInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="362">
+          <caret line="81" column="35" selection-end-line="672" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/BankInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="533">
+          <caret line="672" lean-forward="true" selection-start-line="672" selection-end-line="672" />
         </state>
       </provider>
     </entry>
@@ -997,7 +998,7 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>PC Client</last-edited>
+          <last-edited>Android Client</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -1022,7 +1023,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>Open_RSC_Client</last-edited>
+          <last-edited>Gradle: com.android.support:support-v4-25.3.1</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
