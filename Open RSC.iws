@@ -20,20 +20,14 @@
       <change beforePath="$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_fragment_25_3_1_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_fragment_25_3_1_aar.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_media_compat_25_3_1_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_media_compat_25_3_1_aar.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_v4_25_3_1_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_v4_25_3_1_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Android/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android/Android.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Android/Android.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Android/Open RSC Android Client/Open RSC Android Client.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Android/Open RSC Android Client/Android Client.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/Config.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Launcher/build.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/build.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/OpenRSC.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/OpenRSC.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/AppFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/AppFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/listeners/ButtonListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/listeners/ButtonListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/net/Downloader.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/net/Downloader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/util/ClientLauncher.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/util/ClientLauncher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/mudclient.java" beforeDir="false" afterPath="$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/mudclient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Open RSC.ipr" beforeDir="false" afterPath="$PROJECT_DIR$/Open RSC.ipr" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Open RSC.iws" beforeDir="false" afterPath="$PROJECT_DIR$/Open RSC.iws" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/Sprite Editor/src/spriteeditor/SpriteEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/Sprite Editor/src/spriteeditor/SpriteEditor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/Cache/uid.dat" beforeDir="false" afterPath="$PROJECT_DIR$/client/Cache/uid.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/Client.iml" beforeDir="false" afterPath="$PROJECT_DIR$/client/PC Client.iml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -52,119 +46,40 @@
   <component name="CodeInsightWorkspaceSettings">
     <option name="optimizeImportsOnTheFly" value="true" />
   </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$/Android">
+      <ProjectState />
+    </projectState>
+    <projectState path="$PROJECT_DIR$/Android/Open RSC Android Client">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$/iOS">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$/iOS/Open RSC Android Client">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$/Android/Open RSC Android Client">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
   <component name="FavoritesManager">
     <favorites_list name="Open RSC" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Launcher/src/com/loader/openrsc/net/Downloader.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="22" column="24" selection-start-line="22" selection-start-column="24" selection-end-line="22" selection-end-column="24" />
-              <folding>
-                <element signature="e#7097#7098#0" expanded="true" />
-                <element signature="e#7132#7133#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/server/build.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="21" column="12" selection-start-line="21" selection-start-column="12" selection-end-line="21" selection-end-column="52" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Launcher/build.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="21" column="52" selection-start-line="21" selection-start-column="52" selection-end-line="21" selection-end-column="52" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/AppFrame.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="26" column="34" lean-forward="true" selection-start-line="26" selection-start-column="34" selection-end-line="26" selection-end-column="34" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#526#553#0" expanded="true" />
-                <element signature="e#5151#5152#0" expanded="true" />
-                <element signature="e#5176#5177#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Launcher/src/com/loader/openrsc/Constants.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="5" column="52" selection-start-line="5" selection-start-column="52" selection-end-line="5" selection-end-column="52" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Tools/Sprite Editor/src/spriteeditor/SpriteEditor.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="202">
-              <caret line="53" column="49" selection-start-line="53" selection-start-column="40" selection-end-line="53" selection-end-column="49" />
-              <folding>
-                <element signature="e#3161#3261#0" expanded="true" />
-                <element signature="e#3260#3261#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Tools/Sprite Editor/src/spriteeditor/SpritePacker.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="215">
-              <caret line="142" column="38" selection-start-line="142" selection-start-column="38" selection-end-line="142" selection-end-column="38" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Tools/Sprite Editor/src/spriteeditor/SpriteLoader.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="211">
-              <caret line="216" column="27" selection-start-line="216" selection-start-column="27" selection-end-line="216" selection-end-column="27" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Launcher/src/com/loader/openrsc/util/ClientLauncher.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="375">
-              <caret line="27" selection-start-line="27" selection-end-line="27" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Launcher/src/com/loader/openrsc/OpenRSC.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="24" column="22" selection-start-line="24" selection-start-column="22" selection-end-line="24" selection-end-column="22" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -175,47 +90,49 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>press</find>
-      <find>longpressd</find>
-      <find>longpress</find>
-      <find>last_death</find>
-      <find>SEND_GAME_SETTINGS</find>
-      <find>0x7f</find>
-      <find>0x7F</find>
-      <find>7f</find>
-      <find>unsignedbyte</find>
-      <find>setting_press_delay</find>
-      <find>credentials.txt</find>
-      <find>RSCBitmapSurfaceView.java</find>
-      <find>audio</find>
-      <find>version</find>
-      <find>comment out</find>
-      <find>settingsRe</find>
-      <find>saveHideIp</find>
-      <find>hide</find>
-      <find>saveCredentials</find>
-      <find>ip</find>
-      <find>load</find>
-      <find>hideip</find>
-      <find>loadHideIp</find>
-      <find>remember</find>
-      <find>HideIp</find>
-      <find>bot reports</find>
-      <find>report bots</find>
-      <find>main</find>
-      <find>import com.apple.eawt.Application;</find>
-      <find>appl</find>
+      <find>shield</find>
+      <find>vk_down</find>
+      <find>runScroll</find>
+      <find>keyDown</find>
+      <find>camerazoom</find>
+      <find>keydown</find>
+      <find>InputEvent</find>
+      <find>shift</find>
+      <find>shiftPressed</find>
+      <find>right click</find>
+      <find>itemid</find>
+      <find>npcid</find>
+      <find>Leela</find>
+      <find>ashes</find>
+      <find>water</find>
+      <find>flour</find>
+      <find>rescue</find>
+      <find>osman</find>
+      <find>wutwut</find>
+      <find>drunk</find>
+      <find>joe_is_drunk</find>
+      <find>key_sent</find>
+      <find>leela</find>
+      <find>getSwipeToScroll</find>
+      <find>redber</find>
+      <find>keyup</find>
+      <find>zoom</find>
+      <find>out</find>
+      <find>system.out</find>
+      <find>saveZoomDistance</find>
     </findStrings>
     <replaceStrings>
       <replace />
     </replaceStrings>
     <dirStrings>
+      <dir>$PROJECT_DIR$/Launcher/src</dir>
       <dir>$PROJECT_DIR$/server/src/com/openrsc/server</dir>
+      <dir>$PROJECT_DIR$/client/src</dir>
       <dir>$PROJECT_DIR$/client</dir>
+      <dir>$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/npcs</dir>
+      <dir>$PROJECT_DIR$/server/plugins</dir>
       <dir>$PROJECT_DIR$/server/src</dir>
       <dir>$PROJECT_DIR$/server</dir>
-      <dir>$PROJECT_DIR$/client/src</dir>
-      <dir>$PROJECT_DIR$/Launcher/src</dir>
     </dirStrings>
   </component>
   <component name="Git.Settings">
@@ -224,13 +141,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/server/src/com/openrsc/server/event/rsc/impl/combat/HourlyNpcLootEvent.java" />
-        <option value="$PROJECT_DIR$/client/src/orsc/graphics/two/GraphicsController.java" />
-        <option value="$PROJECT_DIR$/server/src/com/openrsc/server/model/action/WalkToMobAction.java" />
-        <option value="$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/handlers/AttackHandler.java" />
-        <option value="$PROJECT_DIR$/server/src/com/openrsc/server/event/rsc/impl/combat/NpcLootEvent.java" />
-        <option value="$PROJECT_DIR$/server/src/com/openrsc/server/plugins/PluginHandler.java" />
-        <option value="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/commands/NpcLootEvent.java" />
         <option value="$PROJECT_DIR$/server/src/com/openrsc/server/util/EntityList.java" />
         <option value="$PROJECT_DIR$/server/src/com/openrsc/server/model/entity/npc/Npc.java" />
         <option value="$PROJECT_DIR$/server/src/com/openrsc/server/event/custom/NpcLootEvent.java" />
@@ -253,18 +163,8 @@
         <option value="$PROJECT_DIR$/crontab-guide.txt" />
         <option value="$PROJECT_DIR$/server/src/com/openrsc/server/model/Cache.java" />
         <option value="$PROJECT_DIR$/server/src/com/openrsc/server/sql/DatabasePlayerLoader.java" />
-        <option value="$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/ActionSender.java" />
-        <option value="$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/handlers/GameSettingHandler.java" />
-        <option value="$PROJECT_DIR$/server/src/com/openrsc/server/model/entity/player/Player.java" />
-        <option value="$PROJECT_DIR$/client/src/orsc/Config.java" />
-        <option value="$PROJECT_DIR$/client/src/orsc/PacketHandler.java" />
-        <option value="$PROJECT_DIR$/server/local.conf" />
         <option value="$PROJECT_DIR$/server/default.conf" />
-        <option value="$PROJECT_DIR$/server/openrsc.conf" />
         <option value="$PROJECT_DIR$/client/src/orsc/ORSCFrame.java" />
-        <option value="$PROJECT_DIR$/client/src/orsc/ORSCApplet.java" />
-        <option value="$PROJECT_DIR$/client/src/orsc/multiclient/ClientPort.java" />
-        <option value="$PROJECT_DIR$/client/src/orsc/mudclient.java" />
         <option value="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/listeners/ButtonListener.java" />
         <option value="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/Game.java" />
         <option value="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/OpenRSC.java" />
@@ -275,6 +175,23 @@
         <option value="$PROJECT_DIR$/Launcher/build.xml" />
         <option value="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/util/ClientLauncher.java" />
         <option value="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/AppFrame.java" />
+        <option value="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/npcs/catherby/HicktonArcheryShop.java" />
+        <option value="$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/handlers/GameSettingHandler.java" />
+        <option value="$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/ActionSender.java" />
+        <option value="$PROJECT_DIR$/server/src/com/openrsc/server/model/entity/player/Player.java" />
+        <option value="$PROJECT_DIR$/client/src/orsc/PacketHandler.java" />
+        <option value="$PROJECT_DIR$/client/src/orsc/Config.java" />
+        <option value="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/HerosQuest.java" />
+        <option value="$PROJECT_DIR$/client/src/orsc/mudclient.java" />
+        <option value="$PROJECT_DIR$/client/src/orsc/ORSCApplet.java" />
+        <option value="$PROJECT_DIR$/server/openrsc.conf" />
+        <option value="$PROJECT_DIR$/server/local.conf" />
+        <option value="$PROJECT_DIR$/client/src/orsc/multiclient/ClientPort.java" />
+        <option value="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/BankInterface.java" />
+        <option value="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/npcs/draynor/Aggie.java" />
+        <option value="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/free/PrinceAliRescue.java" />
+        <option value="$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/Config.java" />
+        <option value="$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/mudclient.java" />
       </list>
     </option>
   </component>
@@ -290,7 +207,7 @@
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds">
     <option name="x" value="52" />
     <option name="y" value="23" />
     <option name="width" value="1628" />
@@ -304,30 +221,55 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="Open RSC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Launcher" type="462c0819:PsiDirectoryNode" />
+              <item name="Open RSC Android Client" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
             </path>
             <path>
               <item name="Open RSC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Launcher" type="462c0819:PsiDirectoryNode" />
+              <item name="Open RSC Android Client" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Open RSC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Launcher" type="462c0819:PsiDirectoryNode" />
+              <item name="Open RSC Android Client" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="openrsc" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Open RSC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Open RSC Android Client" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Open RSC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Open RSC Android Client" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="orsc" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Open RSC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Open RSC Android Client" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="orsc" type="462c0819:PsiDirectoryNode" />
+              <item name="multiclient" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -335,14 +277,16 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="android.sdk.path" value="$USER_HOME$/Library/Android/sdk" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1552168903887" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1552687621069" />
+    <property name="device.picker.selection" value="Pixel_2_API_28" />
     <property name="editor.config.ad.shown" value="true" />
+    <property name="external.system.task.project.file.to.start" value="$PROJECT_DIR$/iOS/Open RSC Android Client" />
     <property name="go.gopath.indexing.explicitly.defined" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/Tools/Map Generator/build.xml" />
-    <property name="project.structure.last.edited" value="Problems" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="project.propCompiler" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -364,20 +308,79 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Ant Target.Launcher">
-    <configuration name="Client" type="AntRunConfiguration">
-      <antsettings antfile="file://$PROJECT_DIR$/client/build.xml" target="compile-and-run" />
+  <component name="RunManager" selected="Android App.Android Client">
+    <configuration default="true" type="AndroidJUnit">
+      <option name="TEST_OBJECT" value="class" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Launcher" type="AntRunConfiguration">
+    <configuration name="Android Client" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
+      <module name="Android Client" />
+      <option name="DEPLOY" value="true" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
+      <option name="FORCE_STOP_RUNNING_APP" value="true" />
+      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="DEBUGGER_TYPE" value="Java" />
+      <Java />
+      <Profilers>
+        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" />
+      </method>
+    </configuration>
+    <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android App">
+      <module name="Android Client" />
+      <option name="DEPLOY" value="true" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
+      <option name="FORCE_STOP_RUNNING_APP" value="true" />
+      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="DEBUGGER_TYPE" value="Java" />
+      <Java />
+      <Profilers>
+        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" />
+      </method>
+    </configuration>
+    <configuration name="Game Launcher" type="AntRunConfiguration">
       <antsettings antfile="file://$PROJECT_DIR$/Launcher/build.xml" target="compile-and-run" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Server" type="AntRunConfiguration">
+    <configuration name="PC Client" type="AntRunConfiguration">
+      <antsettings antfile="file://$PROJECT_DIR$/client/build.xml" target="compile-and-run" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Run Server" type="AntRunConfiguration">
       <antsettings antfile="file://$PROJECT_DIR$/server/build.xml" target="compile-and-run" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -402,9 +405,10 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Ant Target.Client" />
-      <item itemvalue="Ant Target.Launcher" />
-      <item itemvalue="Ant Target.Server" />
+      <item itemvalue="Android App.Android Client" />
+      <item itemvalue="Ant Target.PC Client" />
+      <item itemvalue="Ant Target.Game Launcher" />
+      <item itemvalue="Ant Target.Run Server" />
       <item itemvalue="Ant Target.Sprite Editor" />
       <item itemvalue="Ant Target.Sprite Packer" />
       <item itemvalue="Ant Target.Sprite Unpacker" />
@@ -434,33 +438,38 @@
     <option name="totallyTimeSpent" value="2209000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="52" y="24" width="1628" height="1027" extended-state="6" />
-    <editor active="true" />
+    <frame x="52" y="23" width="1628" height="1027" extended-state="0" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49213836" visible="true" weight="0.13808323" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49213836" visible="true" weight="0.2112232" />
       <window_info id="Structure" order="1" sideWeight="0.51338583" side_tool="true" weight="0.13871375" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
       <window_info id="UI Designer" order="4" />
       <window_info id="Capture Tool" order="5" />
       <window_info id="Favorites" order="6" sideWeight="0.5078616" side_tool="true" weight="0.13808323" />
+      <window_info id="Build Variants" order="7" side_tool="true" />
+      <window_info id="Captures" order="8" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.329718" />
-      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32834226" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Terminal" order="7" />
-      <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.50053304" side_tool="true" weight="0.32321042" />
+      <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.50126106" side_tool="true" weight="0.31764707" />
       <window_info anchor="bottom" id="Version Control" order="9" weight="0.329718" />
-      <window_info active="true" anchor="bottom" id="Messages" order="10" sideWeight="0.49946696" visible="true" weight="0.31764707" />
+      <window_info anchor="bottom" id="Messages" order="10" sideWeight="0.49873897" weight="0.31336898" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="12" show_stripe_button="false" />
       <window_info anchor="bottom" id="Gradle View" order="13" />
       <window_info anchor="bottom" id="CheckStyle" order="14" />
       <window_info anchor="bottom" id="Tail" order="15" />
-      <window_info anchor="right" id="Codota" weight="0.3297604" />
+      <window_info anchor="bottom" id="Build" order="16" weight="0.32869378" />
+      <window_info anchor="bottom" id="Android Profiler" order="17" />
+      <window_info anchor="bottom" id="Multi-OS Engine" order="18" weight="0.32941177" />
+      <window_info anchor="bottom" id="Logcat" order="19" />
+      <window_info anchor="right" id="Snyk" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.20554855" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -473,6 +482,9 @@
       <window_info anchor="right" id="SciView" order="9" />
       <window_info anchor="right" id="Maven" order="10" />
       <window_info anchor="right" id="Fabric" order="11" weight="0.32996845" />
+      <window_info anchor="right" id="Codota" order="12" weight="0.3297604" />
+      <window_info anchor="right" id="Device File Explorer" order="13" side_tool="true" />
+      <window_info anchor="right" id="Gradle" order="14" weight="0.3297604" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -533,7 +545,6 @@
         <filter targetName="runclient" isVisible="false" />
         <filter targetName="compile-and-run" isVisible="false" />
       </targetFilters>
-      <treeView value="false" />
       <expanded value="true" />
     </buildFile>
     <buildFile url="file://$PROJECT_DIR$/Tools/Sprite Editor/build.xml">
@@ -551,366 +562,10 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/deefault/Default.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="544">
-          <caret line="37" column="32" selection-start-line="37" selection-start-column="32" selection-end-line="37" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/event/SingleEvent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" column="11" selection-start-line="11" selection-start-column="11" selection-end-line="11" selection-end-column="11" />
-          <folding>
-            <element signature="e#253#254#0" expanded="true" />
-            <element signature="e#279#280#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/model/Point.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="565">
-          <caret line="215" column="19" selection-start-line="215" selection-start-column="19" selection-end-line="215" selection-end-column="19" />
-          <folding>
-            <element signature="e#4952#4953#0" expanded="true" />
-            <element signature="e#5028#5029#0" expanded="true" />
-            <element signature="e#5076#5077#0" expanded="true" />
-            <element signature="e#5120#5121#0" expanded="true" />
-            <element signature="e#5170#5171#0" expanded="true" />
-            <element signature="e#5212#5213#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/commands/Admins.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="1734" column="21" selection-start-line="1734" selection-start-column="21" selection-end-line="1734" selection-end-column="21" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/itemactions/SeersPartyChest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="43" selection-start-line="43" selection-end-line="43" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/commands/Development.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2737">
-          <caret line="180" column="53" selection-start-line="180" selection-end-line="181" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/commands/Moderator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1598">
-          <caret line="102" selection-start-line="102" selection-end-line="107" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/build.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="35" selection-start-line="18" selection-start-column="35" selection-end-line="18" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/handlers/Ping.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/net/RSCChannelHandler.java" />
-    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/util/rsc/LoginResponse.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="45" selection-start-line="10" selection-start-column="22" selection-end-line="10" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/net/ConnectionAttachment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/net/RSCProtocolDecoder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="14" column="19" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/Constants.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="309">
-          <caret line="210" column="31" selection-start-line="210" selection-start-column="31" selection-end-line="210" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/net/RSCPipelineFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="27" column="5" selection-start-line="27" selection-start-column="5" selection-end-line="27" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/net/RSCConnectionHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="46" column="27" selection-start-line="46" selection-start-column="27" selection-end-line="46" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/net/RSCChannelFilter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="24" column="29" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="29" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/crontab-guide.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Makefile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="446">
-          <caret line="88" column="51" selection-start-line="88" selection-start-column="51" selection-end-line="88" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/commands/RegularPlayer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="203">
-          <caret line="230" column="22" selection-start-line="230" selection-start-column="22" selection-end-line="230" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/handlers/PrivacySettingHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/OpcodeIn.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1170">
-          <caret line="78" column="31" lean-forward="true" selection-start-line="78" selection-start-column="31" selection-end-line="78" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/model/Cache.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="559">
-          <caret line="175" selection-start-line="175" selection-end-line="175" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/minigames/kittencare/KittenState.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="116">
-          <caret line="35" column="12" lean-forward="true" selection-start-line="35" selection-start-column="12" selection-end-line="35" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/sql/DatabasePlayerLoader.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-24">
-          <caret line="457" column="74" selection-start-line="457" selection-start-column="74" selection-end-line="457" selection-end-column="74" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#12643#12644#0" expanded="true" />
-            <element signature="e#12699#12700#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/model/entity/player/Player.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="696">
-          <caret line="2061" column="39" selection-start-line="2061" selection-start-column="39" selection-end-line="2061" selection-end-column="39" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#22441#22442#0" expanded="true" />
-            <element signature="e#22456#22457#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/handlers/GameSettingHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="573">
-          <caret line="43" column="35" selection-start-line="43" selection-start-column="35" selection-end-line="43" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/ActionSender.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="215">
-          <caret line="444" column="40" selection-start-line="444" selection-start-column="39" selection-end-line="444" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/net/Packet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="120" column="7" selection-start-line="120" selection-start-column="7" selection-end-line="120" selection-end-column="7" />
-          <folding>
-            <element signature="e#1464#1465#0" expanded="true" />
-            <element signature="e#1503#1504#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/orsc/mudclient.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" column="29" lean-forward="true" selection-start-line="20" selection-start-column="29" selection-end-line="20" selection-end-column="29" />
-          <folding>
-            <element signature="e#470201#470202#0" expanded="true" />
-            <element signature="e#470231#470232#0" expanded="true" />
-            <element signature="e#475507#475508#0" expanded="true" />
-            <element signature="e#475550#475551#0" expanded="true" />
-            <element signature="e#475602#475603#0" expanded="true" />
-            <element signature="e#475639#475640#0" expanded="true" />
-            <element signature="e#476439#476440#0" expanded="true" />
-            <element signature="e#476476#476477#0" expanded="true" />
-            <element signature="e#478531#478532#0" expanded="true" />
-            <element signature="e#478568#478569#0" expanded="true" />
-            <element signature="e#507051#507052#0" expanded="true" />
-            <element signature="e#507078#507079#0" expanded="true" />
-            <element signature="e#507389#507390#0" expanded="true" />
-            <element signature="e#507419#507420#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/orsc/Config.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="29" column="23" selection-start-line="29" selection-start-column="23" selection-end-line="29" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/orsc/multiclient/ClientPort.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="116" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/local.conf">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="21" column="31" selection-start-line="21" selection-start-column="31" selection-end-line="21" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/default.conf">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" column="31" selection-start-line="21" selection-start-column="31" selection-end-line="21" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/openrsc.conf">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="35" column="31" selection-start-line="35" selection-start-column="31" selection-end-line="35" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/orsc/ORSCFrame.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="32" column="14" selection-start-line="32" selection-start-column="14" selection-end-line="32" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/orsc/ORSCApplet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="292">
-          <caret line="795" column="5" selection-start-line="795" selection-start-column="5" selection-end-line="795" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/orsc/PacketHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="560">
-          <caret line="2130" selection-start-line="2130" selection-end-line="2130" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/listeners/ButtonListener.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="23" column="18" selection-start-line="23" selection-start-column="18" selection-end-line="23" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/Game.java">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Tools/Sprite Editor/src/spriteeditor/SpritePacker.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="215">
-          <caret line="142" column="38" selection-start-line="142" selection-start-column="38" selection-end-line="142" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Tools/Sprite Editor/src/spriteeditor/SpriteLoader.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="211">
-          <caret line="216" column="27" selection-start-line="216" selection-start-column="27" selection-end-line="216" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Launcher/src/com/loader/openrsc/net/Downloader.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="22" column="24" selection-start-line="22" selection-start-column="24" selection-end-line="22" selection-end-column="24" />
-          <folding>
-            <element signature="e#7097#7098#0" expanded="true" />
-            <element signature="e#7132#7133#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/server/build.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="315">
           <caret line="21" column="12" selection-start-line="21" selection-start-column="12" selection-end-line="21" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Launcher/build.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" column="52" selection-start-line="21" selection-start-column="52" selection-end-line="21" selection-end-column="52" />
         </state>
       </provider>
     </entry>
@@ -932,13 +587,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Launcher/src/com/loader/openrsc/OpenRSC.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="24" column="22" selection-start-line="24" selection-start-column="22" selection-end-line="24" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Launcher/src/com/loader/openrsc/util/ClientLauncher.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="375">
@@ -951,24 +599,351 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Launcher/src/com/loader/openrsc/Constants.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="52" selection-start-line="5" selection-start-column="52" selection-end-line="5" selection-end-column="52" />
+        <state relative-caret-position="180">
+          <caret line="12" column="35" selection-start-line="12" selection-start-column="35" selection-end-line="12" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Launcher/build.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="385">
+          <caret line="35" column="51" selection-start-line="35" selection-start-column="44" selection-end-line="35" selection-end-column="51" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/AppFrame.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="26" column="34" lean-forward="true" selection-start-line="26" selection-start-column="34" selection-end-line="26" selection-end-column="34" />
+        <state relative-caret-position="679">
+          <caret line="109" column="50" selection-start-line="109" selection-start-column="50" selection-end-line="109" selection-end-column="50" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#526#553#0" expanded="true" />
-            <element signature="e#5151#5152#0" expanded="true" />
-            <element signature="e#5176#5177#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Launcher/src/com/loader/openrsc/net/Downloader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="159">
+          <caret line="190" column="108" selection-start-line="190" selection-start-column="108" selection-end-line="190" selection-end-column="108" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/threads/WorldPopulation.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="197">
+          <caret line="15" column="70" selection-start-line="15" selection-start-column="70" selection-end-line="15" selection-end-column="70" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Launcher/src/com/loader/openrsc/OpenRSC.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="16" column="59" lean-forward="true" selection-start-line="16" selection-start-column="59" selection-end-line="16" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/npcs/grandtree/HeckelFunchGroceries.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="16" column="19" selection-start-line="16" selection-start-column="19" selection-end-line="16" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/util/rsc/Formulae.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="471">
+          <caret line="815" selection-start-line="815" selection-end-line="815" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/npcs/varrock/LowesArchery.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="40" column="13" selection-start-line="40" selection-start-column="13" selection-end-line="40" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/npcs/grandtree/Gulluck.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="19" column="99" selection-start-line="19" selection-start-column="4" selection-end-line="19" selection-end-column="99" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/npcs/wilderness/banditcamp/Noterazzo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="19" column="50" selection-start-line="19" selection-start-column="45" selection-end-line="19" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/misc/CrystalChest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="471">
+          <caret line="99" column="5" selection-start-line="40" selection-start-column="4" selection-end-line="99" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/npcs/catherby/HicktonArcheryShop.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="20" column="4" selection-start-line="20" selection-start-column="4" selection-end-line="20" selection-end-column="64" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/ant_launcher.sh">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/net/PacketBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="272" column="35" lean-forward="true" selection-start-line="272" selection-start-column="35" selection-end-line="272" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/net/Packet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-269">
+          <caret line="120" column="7" selection-start-line="120" selection-start-column="7" selection-end-line="120" selection-end-column="7" />
+          <folding>
+            <element signature="e#1464#1465#0" expanded="true" />
+            <element signature="e#1503#1504#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/login/LoginRequest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-219">
+          <caret line="12" column="22" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/login/LoginTask.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/LoginPacketHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2439">
+          <caret line="27" column="13" selection-start-line="27" selection-start-column="13" selection-end-line="27" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/PacketHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="8" column="17" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/PacketHandlerLookup.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/src/orsc/Config.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="245">
+          <caret line="42" selection-start-line="42" selection-end-line="42" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/model/entity/player/Player.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="215">
+          <caret line="2054" column="32" selection-start-line="2054" selection-start-column="18" selection-end-line="2054" selection-end-column="32" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#22441#22442#0" expanded="true" />
+            <element signature="e#22456#22457#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/src/orsc/PacketHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="561">
+          <caret line="2132" selection-start-line="2132" selection-end-line="2132" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/handlers/GameSettingHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="52" column="48" selection-start-line="52" selection-start-column="48" selection-end-line="52" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/LostCity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1652">
+          <caret line="63" column="17" lean-forward="true" selection-start-line="63" selection-start-column="17" selection-end-line="63" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/free/ShieldOfArrav.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="36" column="55" selection-start-line="27" selection-start-column="4" selection-end-line="36" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/Constants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="372" column="38" selection-start-line="372" selection-start-column="32" selection-end-line="372" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/HerosQuest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="303">
+          <caret line="280" column="54" lean-forward="true" selection-start-line="280" selection-start-column="54" selection-end-line="280" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/free/PrinceAliRescue.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="384">
+          <caret line="1251" column="27" selection-start-line="1251" selection-start-column="27" selection-end-line="1251" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/BankInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="458">
+          <caret line="667" column="19" selection-start-line="667" selection-start-column="19" selection-end-line="667" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/local.conf">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="561">
+          <caret line="117" selection-start-line="117" selection-end-line="117" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/ActionSender.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="292">
+          <caret line="434" column="5" selection-start-line="434" selection-start-column="5" selection-end-line="434" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/npcs/draynor/Aggie.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3399">
+          <caret line="36" column="66" selection-start-line="36" selection-start-column="60" selection-end-line="36" selection-end-column="66" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/external/ItemId.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="244" column="10" selection-start-line="244" selection-start-column="4" selection-end-line="244" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/src/orsc/multiclient/ClientPort.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="75" column="23" selection-start-line="75" selection-start-column="23" selection-end-line="75" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/src/orsc/mudclient.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="9223" column="4" selection-start-line="9223" selection-start-column="4" selection-end-line="9223" selection-end-column="4" />
+          <folding>
+            <element signature="e#14527#14541#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/openrsc.conf">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1245">
+          <caret line="83" selection-end-line="117" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/src/orsc/ORSCApplet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="302">
+          <caret line="445" column="67" selection-start-line="445" selection-start-column="67" selection-end-line="445" selection-end-column="67" />
+          <folding>
+            <element signature="e#13619#13620#0" expanded="true" />
+            <element signature="e#20941#20942#0" expanded="true" />
+            <element signature="e#21449#21450#0" expanded="true" />
+            <element signature="e#21704#21705#0" expanded="true" />
+            <element signature="e#21752#21753#0" expanded="true" />
+            <element signature="e#21827#21828#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Android/Open RSC Android Client/gradlew">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2067" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Android/Open RSC Android Client/build.gradle">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Android/Open RSC Android Client/gradle/wrapper/gradle-wrapper.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Android/Open RSC Android Client/lint.xml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ios/src/main/java/ios/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="12" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/multiclient/ClientPort.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-332">
+          <caret line="63" lean-forward="true" selection-start-line="63" selection-end-line="63" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/mudclient.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="394">
+          <caret line="9361" column="28" selection-start-line="9361" selection-start-column="28" selection-end-line="9361" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/Config.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="24" column="23" selection-start-line="24" selection-start-column="23" selection-end-line="24" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="gradleExecuteTaskHistory">
+    <option value="$PROJECT_DIR$/Android/Open RSC Android Client" />
   </component>
   <component name="masterDetails">
     <states>
@@ -987,7 +962,7 @@
       </state>
       <state key="FacetStructureConfigurable.UI">
         <settings>
-          <last-edited>No facets are configured</last-edited>
+          <last-edited>Android</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -1022,7 +997,7 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>Launcher</last-edited>
+          <last-edited>PC Client</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -1047,7 +1022,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>gradle-wrapper</last-edited>
+          <last-edited>Open_RSC_Client</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
