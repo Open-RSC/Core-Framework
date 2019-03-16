@@ -2,14 +2,13 @@ package com.openrsc.interfaces.misc;
 
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
-
-import java.util.ArrayList;
-
 import orsc.Config;
 import orsc.enumerations.InputXAction;
 import orsc.graphics.gui.InputXPrompt;
 import orsc.graphics.gui.Panel;
 import orsc.mudclient;
+
+import java.util.ArrayList;
 
 public class BankInterface {
 	public static mudclient mc;
@@ -165,7 +164,7 @@ public class BankInterface {
 		}
 
 		// Non incremental Withdraw or deposit
-		else if ((mc.getMouseButtonDownTime() < 350 && Config.isAndroid()) || (mc.getMouseButtonDownTime() < 50 && !Config.isAndroid()) ) {
+		else if ((mc.getMouseButtonDownTime() < 99999 && Config.isAndroid()) || (mc.getMouseButtonDownTime() < 50 && !Config.isAndroid()) ) {
 			if ((amount >= 5 || Config.S_WANT_BANK_NOTES) && currMouseX >= selectedX + 250 && currMouseY >=  selectedY + 240
 					&& currMouseX < selectedX + 280 && currMouseY <= selectedY + 251) {
 				if (Config.S_WANT_BANK_NOTES) {
