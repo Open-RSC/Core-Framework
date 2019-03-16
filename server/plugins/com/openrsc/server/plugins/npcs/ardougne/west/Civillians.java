@@ -19,6 +19,10 @@ public class Civillians implements TalkToNpcExecutiveListener, TalkToNpcListener
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		boolean hasCat = p.getInventory().hasItemId(ItemId.CAT.id());
+		boolean hasKitten = p.getInventory().hasItemId(ItemId.KITTEN.id());
+		boolean hasKardiasCat = p.getInventory().hasItemId(ItemId.KARDIA_CAT.id());
+		boolean hasGertrudesCat = p.getInventory().hasItemId(ItemId.GERTRUDES_CAT.id());
+		boolean hasAnyCat = hasCat || hasKitten || hasKardiasCat || hasGertrudesCat;
 		switch(NpcId.getById(n.getID())) {
 		case CIVILLIAN_APRON:
 			playerTalk(p, n, "hi");
@@ -29,10 +33,13 @@ public class Civillians implements TalkToNpcExecutiveListener, TalkToNpcListener
 			playerTalk(p, n, "you must waste alot of time");
 			npcTalk(p, n, "yep, but what can you do?",
 					"it's not like there's many cats around here");
-			if (!hasCat) {
+			if (!hasAnyCat) {
 				playerTalk(p, n, "no you're right, you don't see many around");
 			} else {
-				civilianWantCatDialogue(p, n);
+				if (hasCat) civilianWantCatDialogue(p, n);
+				else if (hasKitten) civilianShowKittenDialogue(p, n);
+				else if (hasKardiasCat) civilianShowKardiasCatDialogue(p, n);
+				else if (hasGertrudesCat) civilianShowGertrudesCatDialogue(p, n);
 			}
 			break;
 		case CIVILLIAN_ATTACKABLE:
@@ -41,10 +48,13 @@ public class Civillians implements TalkToNpcExecutiveListener, TalkToNpcListener
 			playerTalk(p, n, "busy day?");
 			npcTalk(p, n, "oh, it's those bleeding mice, they're everywhere",
 					"what i really need is a cat, but they're hard to come by nowadays");
-			if (!hasCat) {
+			if (!hasAnyCat) {
 				playerTalk(p, n, "no, you're right, you don't see many around");
 			} else {
-				civilianWantCatDialogue(p, n);
+				if (hasCat) civilianWantCatDialogue(p, n);
+				else if (hasKitten) civilianShowKittenDialogue(p, n);
+				else if (hasKardiasCat) civilianShowKardiasCatDialogue(p, n);
+				else if (hasGertrudesCat) civilianShowGertrudesCatDialogue(p, n);
 			}
 			break;
 		case CIVILLIAN_PICKPOCKET:
@@ -53,10 +63,13 @@ public class Civillians implements TalkToNpcExecutiveListener, TalkToNpcListener
 			playerTalk(p, n, "what are you doing?");
 			npcTalk(p, n, "i need to kill these blasted mice",
 					"they're all over the place, i need a cat");
-			if (!hasCat) {
+			if (!hasAnyCat) {
 				playerTalk(p, n, "no you're right, you don't see many around");
 			} else {
-				civilianWantCatDialogue(p, n);
+				if (hasCat) civilianWantCatDialogue(p, n);
+				else if (hasKitten) civilianShowKittenDialogue(p, n);
+				else if (hasKardiasCat) civilianShowKardiasCatDialogue(p, n);
+				else if (hasGertrudesCat) civilianShowGertrudesCatDialogue(p, n);
 			}
 			break;
 		default:
@@ -91,6 +104,31 @@ public class Civillians implements TalkToNpcExecutiveListener, TalkToNpcListener
 		} else if (menu == 1) {
 			// nothing
 		}
+	}
+	
+	private void civilianShowKittenDialogue(Player p, Npc n) {
+		int menu = showMenu(p, n, "i have a kitten that i could sell", "nope, they're not easy to get hold of");
+		if (menu == 0) {
+			npcTalk(p, n, "really, lets have a look");
+			p.message("you reveal the kitten in your satchel");
+			npcTalk(p, n, "hah, that little thing won't catch any mice",
+					"i need a fully grown cat");
+		} else if (menu == 1) {
+			// nothing
+		}
+	}
+	
+	private void civilianShowKardiasCatDialogue(Player p, Npc n) {
+		playerTalk(p, n, "i have a cat..look");
+		npcTalk(p, n, "hmmm..doesn't look like it's seen daylight in years",
+				"that's not going to catch any mice");
+	}
+	
+	//no known method to obtain gertrudes cat
+	private void civilianShowGertrudesCatDialogue(Player p, Npc n) {
+		playerTalk(p, n, "i have a cat..look");
+		npcTalk(p, n, "hmmm..doesn't look like it belongs to you",
+				"i cannot buy it");
 	}
 
 	@Override

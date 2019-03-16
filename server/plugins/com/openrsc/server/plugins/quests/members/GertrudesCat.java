@@ -371,6 +371,18 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void onInvUseOnGroundItem(Item myItem, GroundItem item, Player p) {
+		if (p.getQuestStage(getQuestId()) != 2) {
+			if (myItem.getID() == ItemId.MILK.id() && item.getID() == ItemId.GERTRUDES_CAT.id()) {
+				p.message("the cat doesn't seem to be thirsty");
+			}
+			else if (myItem.getID() == ItemId.SEASONED_SARDINE.id() && item.getID() == ItemId.GERTRUDES_CAT.id()) {
+				p.message("the cat doesn't seem to be hungry");
+			}
+			else if (myItem.getID() == ItemId.KITTENS.id() && item.getID() == ItemId.GERTRUDES_CAT.id()) {
+				p.message("the cat doesn't seem to be lonely");
+			}
+			return;
+		}
 		if (myItem.getID() == ItemId.MILK.id() && item.getID() == ItemId.GERTRUDES_CAT.id()) {
 			message(p, "you give the cat some milk", "she really enjoys it",
 				"but she now seems to be hungry");

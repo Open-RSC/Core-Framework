@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.skills;
 import com.openrsc.server.Constants.GameServer;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
@@ -313,6 +314,8 @@ public class Thieving extends Functions
 					return false;
 				}
 				return true;
+			} else if (n.getID() == NpcId.CIVILLIAN_PICKPOCKET.id()) {
+				p.message("Nothing interesting happens");
 			} else {
 				p.message("You can't pickpocket that person, it has not been implemented yet");
 			}
