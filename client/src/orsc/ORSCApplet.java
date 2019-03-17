@@ -1,37 +1,17 @@
 package orsc;
 
 import com.openrsc.client.model.Sprite;
-
-import java.applet.Applet;
-import java.awt.Color;
-import java.awt.Event;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-import java.awt.image.BufferedImage;
-import java.awt.image.DirectColorModel;
-import java.awt.image.ImageConsumer;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
-import java.io.ByteArrayInputStream;
-
-import javax.imageio.ImageIO;
-import javax.swing.SwingUtilities;
-
 import orsc.graphics.two.Fonts;
 import orsc.multiclient.ClientPort;
 import orsc.util.GenUtil;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.applet.Applet;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.*;
+import java.io.ByteArrayInputStream;
 
 import static orsc.Config.C_LAST_ZOOM;
 import static orsc.Config.S_ZOOM_VIEW_TOGGLE;
@@ -430,44 +410,42 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	}
 
 	@Override
-	public final void mouseWheelMoved(MouseWheelEvent e) {
+	public final synchronized void mouseWheelMoved(MouseWheelEvent e) {
 		updateControlShiftState((InputEvent) e);
 		mudclient.runScroll(e.getWheelRotation());
-
-			if (mudclient.showUiTab == 0 && (S_ZOOM_VIEW_TOGGLE || mudclient.getLocalPlayer().isStaff())) {
-				final int maxHeight = 1000;
-				final int minHeight = 500;
-				if (mudclient.cameraZoom <= minHeight) {
-					mudclient.cameraZoom = mudclient.cameraZoom + 20;
+		if (mudclient.showUiTab == 0 && (S_ZOOM_VIEW_TOGGLE || mudclient.getLocalPlayer().isStaff())) {
+			final int maxHeight = 1000;
+			final int minHeight = 500;
+			final int zoomIncrement = 20;
+			e.consume();
+			if (e.getWheelRotation() == +1) {// Out
+				if (mudclient.cameraZoom <= maxHeight) { //1 Recommended Value
+					mudclient.cameraZoom += zoomIncrement; //This is how much it decrements.
 					C_LAST_ZOOM = mudclient.cameraZoom / 10;
 					mudclient.saveZoomDistance();
+				} else {
+					return;
 				}
-				if (mudclient.cameraZoom >= maxHeight) {
-					mudclient.cameraZoom = mudclient.cameraZoom - 20;
-					C_LAST_ZOOM = mudclient.cameraZoom / 10;
-					mudclient.saveZoomDistance();
-				}
-				if (mudclient.cameraZoom > minHeight && mudclient.cameraZoom < maxHeight) {
-					mudclient.cameraZoom = mudclient.cameraZoom + e.getWheelRotation();
-					C_LAST_ZOOM = mudclient.cameraZoom / 10;
-					mudclient.saveZoomDistance();
-				}
-
 			}
+			if (e.getWheelRotation() == -1) {// In
+				if (mudclient.cameraZoom >= minHeight) { //1 Recommended Value
+					mudclient.cameraZoom -= zoomIncrement; //This is how much it decrements.
+					C_LAST_ZOOM = mudclient.cameraZoom / 10;
+					mudclient.saveZoomDistance();
+				}
+			}
+		}
 	}
 
 	@Override
 	public final void paint(Graphics var1) {
 		try {
-
-
 			if (mudclient != null) {
 				mudclient.rendering = true;
 				if (mudclient.getGameState() == 2 && this.loadingLogo != null) {
 					this.drawLoadingScreen(this.loadingState, this.loadingPercent, 126);
 				}
 			}
-
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "e.paint(" + (var1 != null ? "{...}" : "null") + ')');
 		}
@@ -479,8 +457,6 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 	public final void showLoadingProgress(int percent, String state) {
 		try {
-
-
 			try {
 				int x = (this.width - 281) / 2;
 				x += 2;
@@ -493,7 +469,6 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 				if (this.m_hb) {
 					this.loadingGraphics.setColor(new Color(220, 0, 0));
 				}
-
 				this.loadingGraphics.fillRect(x, y, progress, 20);
 				this.loadingGraphics.setColor(Color.black);
 				this.loadingGraphics.fillRect(progress + x, y, 277 - progress, 20);
@@ -501,12 +476,9 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 				if (this.m_hb) {
 					this.loadingGraphics.setColor(new Color(255, 255, 255));
 				}
-
 				this.drawCenteredString(this.loadingFont, state, 10 + y, true, 138 + x, this.loadingGraphics);
-			} catch (Exception var7) {
-				;
+			} catch (Exception ignored) {
 			}
-
 		} catch (RuntimeException var8) {
 			throw GenUtil.makeThrowable(var8, "e.EE(" + percent + ',' + (state != null ? "{...}" : "null") + ')');
 		}
@@ -534,11 +506,9 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 	private void startApplet(int width, int height, int clientversion, int var4) {
 		try {
-
 			System.out.println("Started applet");
 			this.width = width;
 			this.height = height;
-
 			mudclient.startMainThread();
 		} catch (RuntimeException var12) {
 			throw GenUtil.makeThrowable(var12, "e.OE(" + height + ',' + clientversion + ',' + var4 + ',' + width + ')');
@@ -548,8 +518,6 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	@Override
 	public final void stop() {
 		try {
-
-
 			try {
 				mudclient.clientBaseThread.join();
 			} catch (InterruptedException e) {
@@ -557,7 +525,6 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			} finally {
 				System.exit(0);
 			}
-
 		} catch (RuntimeException var2) {
 			throw GenUtil.makeThrowable(var2, "e.stop()");
 		}
@@ -566,7 +533,6 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	@Override
 	public final void update(Graphics var1) {
 		try {
-
 			this.paint(var1);
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "e.update(" + (var1 != null ? "{...}" : "null") + ')');
@@ -575,7 +541,6 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 	private void updateControlShiftState(InputEvent var1) {
 		try {
-
 			int mod = var1.getModifiers();
 			if (mudclient == null)
 				return;
@@ -588,7 +553,6 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 	public final void start() {
 		try {
-
 			if (mudclient.threadState >= 0) {
 				mudclient.threadState = 0;
 			}
