@@ -305,14 +305,16 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 		else if (obj.getID() == ROTTEN_GALLOWS) {
 			if (command.equalsIgnoreCase("Look")) {
 				message(p, "You take a look at the Gallows.",
-					"The gallows look pretty eerie.",
-					"A grisly sight meets your eyes. A human corpse hangs from the noose.");
-				if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == 3) {
-					p.message("His hands have been tied behind his back.");
+					"The gallows look pretty eerie.");
+				if (hasItem(p, ItemId.ZADIMUS_CORPSE.id()) || p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
+					message(p, "An empty noose swings eerily in the half light of the tomb.");
+				} else {
+					message(p, "A grisly sight meets your eyes. A human corpse hangs from the noose.",
+							"His hands have been tied behind his back.");
 				}
 			} else if (command.equalsIgnoreCase("Search")) {
 				message(p, "You search the gallows.");
-				if (hasItem(p, ItemId.ZADIMUS_CORPSE.id()) || p.getQuestStage(Constants.Quests.SHILO_VILLAGE) >= 4) {
+				if (hasItem(p, ItemId.ZADIMUS_CORPSE.id()) || p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
 					p.message("The gallows look pretty eerie. You search but find nothing.");
 				} else {
 					message(p, "You find a human corpse hanging in the noose.",

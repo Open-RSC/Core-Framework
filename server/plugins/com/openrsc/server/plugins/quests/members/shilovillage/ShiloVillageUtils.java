@@ -108,7 +108,9 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 					"as a shard of bone forces its way to the surface.");
 				p.message("You take the bone shard and place it in your inventory.");
 				p.getInventory().replace(ItemId.ZADIMUS_CORPSE.id(), ItemId.BONE_SHARD.id());
-				p.setQuestStage(Constants.Quests.SHILO_VILLAGE, 4);
+				if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == 3) {
+					p.setQuestStage(Constants.Quests.SHILO_VILLAGE, 4);
+				}
 			}
 		} else {
 			message(p, "You hear a ghostly wailing sound coming from the corpse",
