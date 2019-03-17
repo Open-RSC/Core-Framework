@@ -14,6 +14,7 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
+import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -65,7 +66,10 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if (obj.getID() == 292 || obj.getID() == 293) {
 			Npc arhein = getNearestNpc(p, NpcId.ARHEIN.id(), 10);
-			if (arhein != null) {
+			if (p.getQuestStage(this) >= 0 && p.getQuestStage(this) < 2) {
+				p.playerServerMessage(MessageType.QUEST, "I have no reason to do that");
+			}
+			else if (arhein != null) {
 				npcTalk(p, arhein, "Oi get away from there!");
 			} else {
 				p.teleport(456, 3352, false);
@@ -117,7 +121,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		return n.getID() == 276 && p.getQuestStage(this) == 2;
+		return n.getID() == NpcId.SIR_MORDRED.id() && p.getQuestStage(this) == 2;
 	}
 
 	@Override

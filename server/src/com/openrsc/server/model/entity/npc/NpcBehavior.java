@@ -164,7 +164,7 @@ public class NpcBehavior {
 			} else if (!npc.inCombat()) {
 				if ((npc.getDef().isAggressive() &&
 					lastTarget != null &&
-					lastTarget.getCombatLevel() <= ((npc.getNPCCombatLevel() * 2) + 1)
+					lastTarget.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1)
 				) || npc.getLocation().inWilderness()) {
 					state = State.AGGRO;
 					if (lastTarget != null)
@@ -259,7 +259,7 @@ public class NpcBehavior {
 			- p.getCombatTimer() < (p.getCombatState() == CombatState.RUNNING
 			|| p.getCombatState() == CombatState.WAITING ? 3000 : 1500);
 
-		boolean shouldAttack = p.getCombatLevel() <= ((npc.getNPCCombatLevel() * 2) + 1)
+		boolean shouldAttack = p.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1)
 			|| npc.getLocation().inWilderness();
 
 		boolean closeEnough = npc.canReach(p);
