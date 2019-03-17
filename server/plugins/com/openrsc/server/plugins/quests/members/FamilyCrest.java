@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.Gauntlets;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
@@ -138,6 +139,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 							"If you die you will always retain these gauntlets");
 						p.message("Dimintheis gives you a pair of gauntlets");
 						addItem(p, ItemId.STEEL_GAUNTLETS.id(), 1);
+						p.getCache().set("famcrest_gauntlets", Gauntlets.STEEL.id());
 						npcTalk(p,
 							n,
 							"These gautlets can be granted extra powers",
@@ -222,7 +224,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 								"He starts pounding on the gauntlets",
 								"Avan hands the gauntlets to you");
 							p.getInventory().replace(ItemId.STEEL_GAUNTLETS.id(), ItemId.GAUNTLETS_OF_GOLDSMITHING.id());
-
+							p.getCache().set("famcrest_gauntlets", Gauntlets.GOLDSMITHING.id());
 						} else if (menu == 1) {
 							npcTalk(p, n,
 								"Ok if you insist on getting help from the likes of them");
@@ -376,7 +378,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 						message(p, "Johnathon waves his staff",
 							"The gauntlets sparkle and shimmer");
 						p.getInventory().replace(ItemId.STEEL_GAUNTLETS.id(), ItemId.GAUNTLETS_OF_CHAOS.id());
-						//ActionSender.sendInventory(p);
+						p.getCache().set("famcrest_gauntlets", Gauntlets.CHAOS.id());
 					} else if (menu == 0) {
 						npcTalk(p, n,
 							"Boring crafting and cooking enhacements knowing them");

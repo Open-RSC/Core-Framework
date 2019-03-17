@@ -2,6 +2,7 @@ package com.openrsc.server.model.container;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.content.achievement.AchievementSystem;
+import com.openrsc.server.external.Gauntlets;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GroundItem;
@@ -541,9 +542,6 @@ public class Inventory {
 		DeathLog log = new DeathLog(player, opponent, false);
 		for (; iterator.hasNext(); ) {
 			Item item = iterator.next();
-			if (item.getID() >= ItemId.STEEL_GAUNTLETS.id() && item.getID() <= ItemId.GAUNTLETS_OF_CHAOS.id()) {
-				continue;
-			}
 			if (item.isWielded()) {
 				player.updateWornItems(item.getDef().getWieldPosition(),
 					player.getSettings().getAppearance().getSprite(item.getDef().getWieldPosition()));
@@ -562,6 +560,31 @@ public class Inventory {
 				}
 				world.registerItem(groundItem, 644000); // 10m 44s
 			}
+		}
+		//check for fam crest gloves in bank, if not present there give player
+		int fam_gloves;
+		Gauntlets enchantment;
+		try {
+			enchantment = Gauntlets.getById(player.getCache().getInt("famcrest_gauntlets"));
+		} catch (Exception e) {
+			enchantment = Gauntlets.STEEL;
+		}
+		switch(enchantment) {
+			case GOLDSMITHING:
+				fam_gloves = ItemId.GAUNTLETS_OF_GOLDSMITHING.id();
+				break;
+			case COOKING:
+				fam_gloves = ItemId.GAUNTLETS_OF_COOKING.id();
+				break;
+			case CHAOS:
+				fam_gloves = ItemId.GAUNTLETS_OF_CHAOS.id();
+				break;
+			default:
+				fam_gloves = ItemId.STEEL_GAUNTLETS.id();
+				break;
+		}
+		if (player.getQuestStage(Constants.Quests.FAMILY_CREST) == -1 && !player.getBank().hasItemId(fam_gloves)) {
+			player.getInventory().add(new Item(fam_gloves, 1));
 		}
 		log.build();
 		GameLogging.addQuery(log);

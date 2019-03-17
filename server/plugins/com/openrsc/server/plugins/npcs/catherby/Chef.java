@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.npcs.catherby;
 
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.Gauntlets;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -33,6 +34,7 @@ public class Chef implements TalkToNpcExecutiveListener, TalkToNpcListener {
 							"Caleb concentrates",
 							"Caleb hands the gauntlets to you");
 						p.getInventory().replace(ItemId.STEEL_GAUNTLETS.id(), ItemId.GAUNTLETS_OF_COOKING.id());
+						p.getCache().set("famcrest_gauntlets", Gauntlets.COOKING.id());
 					} else if (menu == 1) {
 						npcTalk(p, n, "Ok suit yourself");
 					}
