@@ -12,6 +12,7 @@ import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.quests.members.FamilyCrest.getGauntletEnchantment;
 
 public class Chef implements TalkToNpcExecutiveListener, TalkToNpcListener {
 
@@ -21,7 +22,7 @@ public class Chef implements TalkToNpcExecutiveListener, TalkToNpcListener {
 			case -1:
 				npcTalk(p, n, "I hear you have brought the completed crest to my father",
 					"Impressive work I must say");
-				if (hasItem(p, ItemId.STEEL_GAUNTLETS.id())) {
+				if (hasItem(p, ItemId.STEEL_GAUNTLETS.id()) && getGauntletEnchantment(p) == Gauntlets.STEEL.id()) {
 					playerTalk(p, n, "My Father says you can improve these gauntlets for me");
 					npcTalk(p, n, "Yes that is true",
 						"I can change them to gauntlets of cooking",

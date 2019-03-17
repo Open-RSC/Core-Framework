@@ -207,7 +207,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 				case -1:
 					npcTalk(p, n, "I have heard word from my father",
 						"Thankyou for helping to restore our family honour");
-					if (hasItem(p, ItemId.STEEL_GAUNTLETS.id())) {
+					if (hasItem(p, ItemId.STEEL_GAUNTLETS.id()) && getGauntletEnchantment(p) == Gauntlets.STEEL.id()) {
 						playerTalk(p, n,
 							"Your father said that you could improve these Gauntlets in some way for me");
 						npcTalk(p,
@@ -363,7 +363,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 				}
 			} else if (p.getQuestStage(this) == -1) {
 				npcTalk(p, n, "Hello again");
-				if (hasItem(p, ItemId.STEEL_GAUNTLETS.id())) {
+				if (hasItem(p, ItemId.STEEL_GAUNTLETS.id()) && getGauntletEnchantment(p) == Gauntlets.STEEL.id()) {
 					playerTalk(p, n,
 						"Your father tells me, you can improve these gauntlets a bit");
 					npcTalk(p,
@@ -387,6 +387,14 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 					npcTalk(p, n, "My family now considers you a hero");
 				}
 			}
+		}
+	}
+	
+	public static int getGauntletEnchantment(Player p) {
+		try {
+			return p.getCache().getInt("famcrest_gauntlets");
+		} catch (Exception e) {
+			return Gauntlets.STEEL.id();
 		}
 	}
 
