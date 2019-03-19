@@ -1,5 +1,6 @@
 package com.openrsc.android.updater;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -78,7 +79,8 @@ public class ApplicationUpdater extends Activity {
                 .setMessage("There is a new app update available,"
                         + " please go ahead and install it.")
                 .setCancelable(false).setPositiveButton("Install", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
+            @SuppressLint({"SetWorldReadable", "SetTextI18n"})
+			public void onClick(DialogInterface dialog, int id) {
                 try {
                     if(Build.VERSION.SDK_INT>=24){
                         try{
@@ -116,7 +118,8 @@ public class ApplicationUpdater extends Activity {
         alertDialog.show();
     }
 
-    class CheckVersionTask extends AsyncTask<String, String, String> {
+    @SuppressLint("StaticFieldLeak")
+	class CheckVersionTask extends AsyncTask<String, String, String> {
 
         private boolean shouldUpdate = false;
 
