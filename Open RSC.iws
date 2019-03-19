@@ -12,13 +12,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aac60d61-673a-4ad4-8ee5-46e19413f987" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Android/Open RSC Android Client/Android Client.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/BankInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/BankInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/Config.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Open RSC.ipr" beforeDir="false" afterPath="$PROJECT_DIR$/Open RSC.ipr" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Open RSC.iws" beforeDir="false" afterPath="$PROJECT_DIR$/Open RSC.iws" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/Cache/uid.dat" beforeDir="false" afterPath="$PROJECT_DIR$/client/Cache/uid.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/BankInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/BankInterface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/PC Client.iml" beforeDir="false" afterPath="$PROJECT_DIR$/client/Client.iml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -70,26 +66,7 @@
     <favorites_list name="Open RSC" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/BankInterface.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="362">
-              <caret line="81" column="35" selection-end-line="672" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/BankInterface.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="533">
-              <caret line="672" lean-forward="true" selection-start-line="672" selection-end-line="672" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -236,45 +213,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="Open RSC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Open RSC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Open RSC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="openrsc" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Open RSC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="openrsc" type="462c0819:PsiDirectoryNode" />
-              <item name="interfaces" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Open RSC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="openrsc" type="462c0819:PsiDirectoryNode" />
-              <item name="interfaces" type="462c0819:PsiDirectoryNode" />
-              <item name="misc" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
       <pane id="Scope" />
-      <pane id="AndroidView" />
+      <pane id="ProjectPane" />
       <pane id="PackagesPane" />
     </panes>
   </component>
@@ -290,13 +230,13 @@
     <property name="android.project.structure.proportion" value="0.15" />
     <property name="android.sdk.path" value="$USER_HOME$/Library/Android/sdk" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1552693144743" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1553027355330" />
     <property name="device.picker.selection" value="Pixel_2_API_28" />
     <property name="editor.config.ad.shown" value="true" />
     <property name="external.system.task.project.file.to.start" value="$PROJECT_DIR$/iOS/Open RSC Android Client" />
     <property name="go.gopath.indexing.explicitly.defined" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/Tools/Map Generator/build.xml" />
-    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="project.structure.last.edited" value="Problems" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
@@ -321,38 +261,12 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Android App.Android Client">
+  <component name="RunManager" selected="Ant Target.Run Server">
     <configuration default="true" type="AndroidJUnit">
       <option name="TEST_OBJECT" value="class" />
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
       <method v="2">
         <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Android Client" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
-      <module name="Open RSC Android Client" />
-      <option name="DEPLOY" value="true" />
-      <option name="ARTIFACT_NAME" value="" />
-      <option name="PM_INSTALL_OPTIONS" value="" />
-      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
-      <option name="MODE" value="default_activity" />
-      <option name="CLEAR_LOGCAT" value="false" />
-      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
-      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
-      <option name="FORCE_STOP_RUNNING_APP" value="true" />
-      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
-      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
-      <option name="PREFERRED_AVD" value="" />
-      <option name="DEBUGGER_TYPE" value="Java" />
-      <Java />
-      <Profilers>
-        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
-      </Profilers>
-      <option name="DEEP_LINK" value="" />
-      <option name="ACTIVITY_CLASS" value="" />
-      <method v="2">
-        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" />
       </method>
     </configuration>
     <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android App">
@@ -418,7 +332,6 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Android App.Android Client" />
       <item itemvalue="Ant Target.PC Client" />
       <item itemvalue="Ant Target.Game Launcher" />
       <item itemvalue="Ant Target.Run Server" />
@@ -452,9 +365,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="52" y="23" width="1628" height="1027" extended-state="0" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49213836" visible="true" weight="0.2112232" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49213836" visible="true" weight="0.2112232" />
       <window_info id="Structure" order="1" sideWeight="0.51338583" side_tool="true" weight="0.13871375" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -928,17 +840,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/BankInterface.java">
+    <entry file="file://$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/BankInterface.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="362">
-          <caret line="81" column="35" selection-end-line="672" />
+        <state relative-caret-position="798">
+          <caret line="671" selection-start-line="671" selection-end-line="671" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/BankInterface.java">
+    <entry file="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/BankInterface.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="533">
-          <caret line="672" lean-forward="true" selection-start-line="672" selection-end-line="672" />
+        <state relative-caret-position="362">
+          <caret line="81" column="35" selection-end-line="671" />
         </state>
       </provider>
     </entry>
@@ -963,7 +875,7 @@
       </state>
       <state key="FacetStructureConfigurable.UI">
         <settings>
-          <last-edited>Android</last-edited>
+          <last-edited>No facets are configured</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -998,7 +910,7 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>Android Client</last-edited>
+          <last-edited>Client</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
