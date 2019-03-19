@@ -4,6 +4,8 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.TelePoint;
 import com.openrsc.server.model.entity.GameObject;
@@ -90,13 +92,13 @@ public class Ladders {
 				displayTeleportBubble(player, player.getX(), player.getY(), false);
 			}
 		} else if (obj.getID() == 776) {
-			if (hasItem(player, 987)) {
+			if (hasItem(player, ItemId.PARAMAYA_REST_TICKET.id())) {
 				player.message("The barman takes your ticket and allows you up to");
 				player.message("the dormitory.");
 				player.teleport(395, 2713);
 				player.message("You climb up the ladder");
 			} else {
-				Npc kaleb = getNearestNpc(player, 621, 10);
+				Npc kaleb = getNearestNpc(player, NpcId.KALEB.id(), 10);
 				if (kaleb != null) {
 					player.message("You need a ticket to access the dormitory");
 					npcTalk(player, kaleb, "You can buy a ticket to the dormitory from me.",
@@ -108,19 +110,21 @@ public class Ladders {
 		} else if (obj.getID() == 198 && obj.getX() == 251 && obj.getY() == 468) { // Prayer
 			// Guild
 			// Ladder
-			if (getCurrentLevel(player, Skills.PRAYER) < 31 || !player.getCache().hasKey("prayer_guild")) {
+			if (!player.getCache().hasKey("prayer_guild")) {
 				player.setBusy(true);
-				Npc abbot = World.getWorld().getNpc(174, 249, 252, 458, 468);
+				Npc abbot = World.getWorld().getNpc(NpcId.ABBOT_LANGLEY.id(), 249, 252, 458, 468);
 				if (abbot != null) {
 					npcTalk(player, abbot, "Only members of our order can go up there");
-					int op = showMenu(player, abbot, "Well can I join your order?",
-						"Oh Sorry");
+					int op = showMenu(player, abbot, false, "Well can i join your order?",
+						"Oh sorry");
 					if (op == 0) {
+						playerTalk(player, abbot, "Well can I join your order?");
 						if (getCurrentLevel(player, Skills.PRAYER) >= 31) {
 							npcTalk(player, abbot, "Ok I see you are someone suitable for our order",
 								"You may join");
 							player.getCache().set("prayer_guild", 1);
 							player.teleport(251, 1411, false);
+							player.message("You climb up the ladder");
 						} else {
 							npcTalk(player, abbot, "No I feel you are not devout enough");
 							Server.getServer().getEventHandler().add(
@@ -133,19 +137,25 @@ public class Ladders {
 								}
 							);
 						}
+					} else if (op == 1) {
+						playerTalk(player, abbot, "Oh Sorry");
 					}
+				} else {
+					player.message("Abbot Langley is busy at the moment.");
 				}
-			} else
+			} else {
 				player.teleport(251, 1411, false);
+				player.message("You climb up the ladder");
+			}
 		} else if (obj.getID() == 223 && obj.getX() == 274 && obj.getY() == 566) { // Mining
 			// Guild
 			// Ladder
 			if (getCurrentLevel(player, Skills.MINING) < 60) {
 				player.setBusy(true);
-				Npc dwarf = World.getWorld().getNpc(191, 272, 277, 563, 567);
+				Npc dwarf = World.getWorld().getNpc(NpcId.DWARF_MINING_GUILD.id(), 272, 277, 563, 567);
 				if (dwarf != null) {
 					npcYell(player, dwarf,
-						"Hello only the top miners are allowed in here");
+						"Sorry only the top miners are allowed in there");
 				}
 				Server.getServer().getEventHandler().add(
 					new ShortEvent(player) {
@@ -159,7 +169,7 @@ public class Ladders {
 				player.teleport(274, 3397, false);
 			}
 		} else if (obj.getID() == 342 && obj.getX() == 611 && obj.getY() == 601) {
-			Npc paladinGuard = getNearestNpc(player, 323, 4);
+			Npc paladinGuard = getNearestNpc(player, NpcId.PALADIN.id(), 4);
 			if (paladinGuard != null) {
 				npcYell(player, paladinGuard, "Stop right there");
 				paladinGuard.setChasing(player);
@@ -174,7 +184,7 @@ public class Ladders {
 						+ obj.getGameObjectDef().getName().toLowerCase());
 			}
 		} else if (obj.getID() == 249 && obj.getX() == 98 && obj.getY() == 3537) { // lost city (Zanaris) ladder
-			Npc ladderAttendant = World.getWorld().getNpc(229, 99, 99, 3537, 3537);
+			Npc ladderAttendant = World.getWorld().getNpc(NpcId.FAIRY_LADDER_ATTENDANT.id(), 99, 99, 3537, 3537);
 			if (ladderAttendant != null) {
 				npcTalk(player, ladderAttendant, "This ladder leaves Zanaris",
 					"It leads to near Al Kharid in your mortal realm",

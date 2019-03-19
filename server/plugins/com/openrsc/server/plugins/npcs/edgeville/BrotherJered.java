@@ -29,14 +29,14 @@ public class BrotherJered implements TalkToNpcExecutiveListener,
 						"Yes Please", "No thankyou");
 				if (sub_option == 0) {
 					removeItem(p, ItemId.UNBLESSED_HOLY_SYMBOL.id(), 1);
-					npcTalk(p, n, "Yes Please");
+					playerTalk(p, n, "Yes Please");
 					message(p, "You give Jered the symbol",
 							"Jered closes his eyes and places his hand on the symbol",
 							"He softly chants",
 							"Jered passes you the holy symbol");
 					addItem(p, ItemId.HOLY_SYMBOL_OF_SARADOMIN.id(), 1);
 				} else if (sub_option == 1) {
-					npcTalk(p, n, "No Thankyou");
+					playerTalk(p, n, "No Thankyou");
 				}
 			} else if (hasItem(p, ItemId.UNSTRUNG_HOLY_SYMBOL_OF_SARADOMIN.id())) {
 				npcTalk(p, n, "Well if you put a string on that holy symbol",
