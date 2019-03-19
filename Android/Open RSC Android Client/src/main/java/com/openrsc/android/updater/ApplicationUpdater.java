@@ -41,21 +41,18 @@ public class ApplicationUpdater extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.applicationupdater);
 
-        progressBar = (TextProgressBar) findViewById(R.id.progressBar1);
+        progressBar = findViewById(R.id.progressBar1);
         progressBar.setTextSize(18);
         progressBar.setIndeterminate(false);
-        tv1 = (TextView) findViewById(R.id.textView1);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    new CheckVersionTask().execute().get();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(ApplicationUpdater.this, "Unable to check for updates", Toast.LENGTH_LONG).show();
-                }
-            }
-        }, 1000);
+        tv1 = findViewById(R.id.textView1);
+        new Handler().postDelayed(() -> {
+			try {
+				new CheckVersionTask().execute().get();
+			} catch (Exception e) {
+				e.printStackTrace();
+				Toast.makeText(ApplicationUpdater.this, "Unable to check for updates", Toast.LENGTH_LONG).show();
+			}
+		}, 1000);
 
     }
 
@@ -72,41 +69,39 @@ public class ApplicationUpdater extends Activity {
         return -1;
     }
 
-    public void showUpdateDialog() {
+    @SuppressLint({"SetTextI18n", "SetWorldReadable"})
+	public void showUpdateDialog() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ApplicationUpdater.this);
         alertDialogBuilder.setTitle("New version available!");
         alertDialogBuilder
                 .setMessage("There is a new app update available,"
                         + " please go ahead and install it.")
-                .setCancelable(false).setPositiveButton("Install", new DialogInterface.OnClickListener() {
-            @SuppressLint({"SetWorldReadable", "SetTextI18n"})
-			public void onClick(DialogInterface dialog, int id) {
-                try {
-                    if(Build.VERSION.SDK_INT>=24){
-                        try{
-                            Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
-                            m.invoke(null);
-                        }catch(Exception e){
-                            e.printStackTrace();
-                        }
-                    }
-                    tv1.setText("Downloading update...");
-                    new DownloadApplication().execute().get();
+                .setCancelable(false).setPositiveButton("Install", (dialog, id) -> {
+					try {
+						if(Build.VERSION.SDK_INT>=24){
+							try{
+								Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
+								m.invoke(null);
+							}catch(Exception e){
+								e.printStackTrace();
+							}
+						}
+						tv1.setText("Downloading update...");
+						new DownloadApplication().execute().get();
 
-                    File downloadedFile = new File(getFilesDir() + File.separator + "openrsc.apk");
-                    downloadedFile.setReadable(true, false);
+						File downloadedFile = new File(getFilesDir() + File.separator + "openrsc.apk");
+						downloadedFile.setReadable(true, false);
 
-                    Uri fileLoc = Uri.fromFile(downloadedFile);
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.setDataAndType(fileLoc, "application/vnd.android.package-archive");
-                    startActivity(intent);
-                    finish();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).setNegativeButton("Do not install", new DialogInterface.OnClickListener() {
+						Uri fileLoc = Uri.fromFile(downloadedFile);
+						Intent intent = new Intent(Intent.ACTION_VIEW);
+						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+						intent.setDataAndType(fileLoc, "application/vnd.android.package-archive");
+						startActivity(intent);
+						finish();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}).setNegativeButton("Do not install", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 Intent mainIntent = new Intent(ApplicationUpdater.this, CacheUpdater.class);
                 mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -161,33 +156,31 @@ public class ApplicationUpdater extends Activity {
         }
     }
 
-    class DownloadApplication extends AsyncTask<String, String, String> {
+    @SuppressLint("StaticFieldLeak")
+	class DownloadApplication extends AsyncTask<String, String, String> {
 
         @Override
         protected String doInBackground(String... aurl) {
 
-            HttpURLConnection connection = null;
+            HttpURLConnection connection;
             try {
                 connection = (HttpURLConnection) new URL(Config.ANDROID_DOWNLOAD_PATH + "openrsc.apk").openConnection();
                 connection.connect();
 
                 int fileLength = connection.getContentLength();
-                FileOutputStream fos = openFileOutput("openrsc.apk", Context.MODE_PRIVATE);
-                try {
-                    InputStream in = connection.getInputStream();
-                    byte[] buffer = new byte[4096];
-                    long total = 0;
-                    int len = 0;
-                    while ((len = in.read(buffer)) > 0) {
-                        total += len;
-                        fos.write(buffer, 0, len);
-                        if (fileLength > 0)
-                            publishProgress("Downloading update...", "" + (int) ((total * 100) / fileLength));
-                    }
-                    fos.flush();
-                } finally {
-                    fos.close();
-                }
+				try (FileOutputStream fos = openFileOutput("openrsc.apk", Context.MODE_PRIVATE)) {
+					InputStream in = connection.getInputStream();
+					byte[] buffer = new byte[4096];
+					long total = 0;
+					int len;
+					while ((len = in.read(buffer)) > 0) {
+						total += len;
+						fos.write(buffer, 0, len);
+						if (fileLength > 0)
+							publishProgress("Downloading update...", "" + (int) ((total * 100) / fileLength));
+					}
+					fos.flush();
+				}
             } catch (Exception e) {
                 e.printStackTrace();
             }
