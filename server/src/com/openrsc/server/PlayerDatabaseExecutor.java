@@ -4,6 +4,7 @@ import com.openrsc.server.event.rsc.ImmediateEvent;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.login.LoginTask;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.ThrottleFilter;
 import com.openrsc.server.sql.DatabasePlayerLoader;
 import com.openrsc.server.util.NamedThreadFactory;
@@ -29,6 +30,8 @@ public class PlayerDatabaseExecutor extends ThrottleFilter implements Runnable {
 
 	private Queue<Player> saveRequests = new ConcurrentLinkedQueue<Player>();
 
+	private Queue<Player> removeRequests = new ConcurrentLinkedQueue<Player>();
+
 	private DatabasePlayerLoader database = new DatabasePlayerLoader();
 
 	@Override
@@ -52,10 +55,18 @@ public class PlayerDatabaseExecutor extends ThrottleFilter implements Runnable {
 				}
 				//LOGGER.info("Processed login request for " + loginRequest.getUsername() + " response: " + loginResponse);
 			}
+
 			Player playerToSave = null;
 			while ((playerToSave = saveRequests.poll()) != null) {
 				getDatabase().savePlayer(playerToSave);
 				//LOGGER.info("Saved player " + playerToSave.getUsername() + "");
+			}
+
+			Player playerToRemove = null;
+			while ((playerToRemove = removeRequests.poll()) != null) {
+				playerToRemove.remove();
+				World.getWorld().getPlayers().remove(playerToRemove);
+				//LOGGER.info("Removed player " + playerToSave.getUsername() + "");
 			}
 		} catch (Throwable e) {
 			LOGGER.catching(e);
@@ -75,6 +86,10 @@ public class PlayerDatabaseExecutor extends ThrottleFilter implements Runnable {
 
 	public void addSaveRequest(Player player) {
 		saveRequests.add(player);
+	}
+
+	public void addRemoveRequest(Player player) {
+		removeRequests.add(player);
 	}
 
 	public void start() {
