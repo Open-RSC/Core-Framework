@@ -48,7 +48,7 @@ public class ClientLauncher {
 			File f = new File(Constants.CONF_DIR + File.separator + Constants.CLIENT_FILENAME);
 			ProcessBuilder pb = new ProcessBuilder(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java", "-Xms312m", "-jar", f.getAbsolutePath());
 			Process p = pb.start();
-			exit();
+			//exit(); // No need to close on successful launch, some players may want multiple clients open at once.
 		} catch (Exception e) {
 			OpenRSC.getPopup().setMessage("Client failed to launch. Please try again or notify staff.");
 			OpenRSC.getPopup().showFrame();
