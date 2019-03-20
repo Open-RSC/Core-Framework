@@ -149,11 +149,11 @@ public class WitchesPotion implements QuestInterface, TalkToNpcListener,
 	public void onTalkToNpc(Player p, final Npc n) {
 		if (n.getID() == NpcId.HETTY.id()) {
 			hettyDialogue(p, n, -1);
-		} else if (n.getID() == NpcId.RAT_WITCHES_POTION.id()) {
+		} /*else if (n.getID() == NpcId.RAT_WITCHES_POTION.id()) { // This is not proven to be authentic, the earliest reference for this is Moparscape Classic Punkrocker's quest version from July 2009
 			if (p.getQuestStage(this) >= -1) {
 				p.message("Rats can't talk!");
 			}
-		}
+		}*/
 	}
 
 	@Override
@@ -167,7 +167,6 @@ public class WitchesPotion implements QuestInterface, TalkToNpcListener,
 				message(player, "You drink from the cauldron",
 					"You feel yourself imbued with power");
 				player.sendQuestComplete(Constants.Quests.WITCHS_POTION);
-				return;
 			}
 		}
 	}
