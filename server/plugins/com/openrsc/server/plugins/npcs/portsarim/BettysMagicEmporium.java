@@ -1,5 +1,7 @@
 package com.openrsc.server.plugins.npcs.portsarim;
 
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -12,13 +14,10 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-
 public final class BettysMagicEmporium implements
 	ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
 
-	private final Shop shop = new Shop(false, 5000, 100, 75, 2, new Item(ItemId.FIRE_RUNE.id(),
+	private final Shop shop = new Shop(false, 6000, 100, 75, 2, new Item(ItemId.FIRE_RUNE.id(),
 		30), new Item(ItemId.WATER_RUNE.id(), 30), new Item(ItemId.AIR_RUNE.id(), 30), new Item(ItemId.EARTH_RUNE.id(),
 		30), new Item(ItemId.MIND_RUNE.id(), 30), new Item(ItemId.BODY_RUNE.id(), 30), new Item(ItemId.EYE_OF_NEWT.id(),
 		30), new Item(ItemId.BLUE_WIZARDSHAT.id(), 1), new Item(ItemId.BLACK_WIZARDSHAT.id(), 1));
