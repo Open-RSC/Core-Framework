@@ -1,5 +1,6 @@
 package com.openrsc.android.updater;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -32,48 +33,39 @@ public class CacheUpdater extends Activity {
 	private TextProgressBar progressBar;
 
 	private TextView tv1;
-	private Button launchButton;
 	private boolean completed = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.updater);
-		progressBar = (TextProgressBar) findViewById(R.id.progressBar);
+		progressBar = findViewById(R.id.progressBar);
 		progressBar.setTextSize(18);
 		progressBar.setIndeterminate(false);
 		progressBar.setMax(100);
 
-		launchButton = (Button) findViewById(R.id.launch_client);
-		launchButton.setVisibility(View.GONE); // temp
-		launchButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				if (completed) {
-					Intent mainIntent = new Intent(CacheUpdater.this, GameActivity.class);
-					mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-					startActivity(mainIntent);
-					finish();
-				}
+		Button launchButton = findViewById(R.id.launch_client);
+		launchButton.setVisibility(View.GONE);
+		launchButton.setOnClickListener(v -> {
+			if (completed) {
+				Intent mainIntent = new Intent(CacheUpdater.this, GameActivity.class);
+				mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+				startActivity(mainIntent);
+				finish();
 			}
 		});
 		//Start Game
-		tv1 = (TextView) findViewById(R.id.textView1);
+		tv1 = findViewById(R.id.textView1);
 		setStatus("Checking for game-cache updates...");
 		Handler handler = new Handler();
-		handler.post(new Runnable() {
-			@Override
-			public void run() {
-				new UpdateTask().execute();
-
-
-			}
-		});
+		handler.post(() -> new UpdateTask().execute());
 	}
 
 	public void setStatus(String s) {
 		tv1.setText(s);
 	}
 
+	@SuppressLint("StaticFieldLeak")
 	class UpdateTask extends AsyncTask<String, String, String> {
 
 		private Properties oldChecksum;
@@ -102,9 +94,7 @@ public class CacheUpdater extends Activity {
 			try {
 				/* Update cache file */
 				for (Entry<Object, Object> e : oldChecksum.entrySet()) {
-					Iterator<Entry<Object, Object>> itr = newChecksum.entrySet().iterator();
-					while (itr.hasNext()) {
-						Entry<Object, Object> e1 = itr.next();
+					for (Entry<Object, Object> e1 : newChecksum.entrySet()) {
 						if (e1.getKey().equals(e.getKey()) && !e1.getValue().equals(e.getValue())) {
 							deleteFile((String) e.getKey());
 							downloadFile((String) e.getKey());
@@ -185,8 +175,7 @@ public class CacheUpdater extends Activity {
 				connection.connect();
 				publishProgress("Downloading " + getNiceName(filename));
 				int fileLength = connection.getContentLength();
-				FileOutputStream fos = openFileOutput(filename, Context.MODE_PRIVATE);
-				try {
+				try (FileOutputStream fos = openFileOutput(filename, Context.MODE_PRIVATE)) {
 					InputStream in = connection.getInputStream();
 					byte[] buffer = new byte[1024];
 					int total = 0;
@@ -200,8 +189,6 @@ public class CacheUpdater extends Activity {
 						fos.write(buffer, 0, len);
 					}
 					fos.flush();
-				} finally {
-					fos.close();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -225,12 +212,12 @@ public class CacheUpdater extends Activity {
 			fis.close();
 
 			byte[] b = complete.digest();
-			String result = "";
+			StringBuilder result = new StringBuilder();
 
-			for (int i = 0; i < b.length; i++) {
-				result += Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1);
+			for (byte aB : b) {
+				result.append(Integer.toString((aB & 0xff) + 0x100, 16).substring(1));
 			}
-			return result;
+			return result.toString();
 		}
 
 		boolean verifyFile(String filename, String checksum) {

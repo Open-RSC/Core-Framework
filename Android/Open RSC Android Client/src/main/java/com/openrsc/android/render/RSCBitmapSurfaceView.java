@@ -90,11 +90,11 @@ public abstract class RSCBitmapSurfaceView extends SurfaceView implements Surfac
 				@Override
 				public void run() {
 					InputMethodManager imm = (InputMethodManager) gameActivity
-							.getSystemService(Context.INPUT_METHOD_SERVICE);
+						.getSystemService(Context.INPUT_METHOD_SERVICE);
 					imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 					if (imm.isAcceptingText()) { // REMOVE?
 						Config.F_SHOWING_KEYBOARD = !Config.F_SHOWING_KEYBOARD;
-				    } 
+					}
 				}
 			});
 		}
@@ -129,9 +129,7 @@ public abstract class RSCBitmapSurfaceView extends SurfaceView implements Surfac
 			// }
 
 			x += 2;
-			// this.loadingPercent = percent;
 			y += 90;
-			// this.loadingState = state;
 
 			paint.setColor(Color.rgb(132, 132, 132));
 			if (this.m_hb) {
@@ -160,19 +158,8 @@ public abstract class RSCBitmapSurfaceView extends SurfaceView implements Surfac
 				paint.setColor(Color.rgb(132, 132, 152));
 				canvas.drawText("We support open source", x + 138, client_height - 20, paint);
 			}
-			// if (null != this.m_p) { wat
-			// paint.setColor(Color.WHITE);
-			// canvas.drawText("\u00a9 2001-2015 Jagex Ltd", x + 138, height
-			// - 20, paint);
-			////
-			//// this.loadingGraphics.setColor(Color.white);
-			////
-			//// this.drawCenteredString(this.copyrightFont, this.m_p, y -
-			// 120, true, x + 138, this.loadingGraphics);
-			// }
 		} catch (Exception var6) {
 			var6.printStackTrace();
-
 		}
 	}
 
@@ -182,16 +169,11 @@ public abstract class RSCBitmapSurfaceView extends SurfaceView implements Surfac
 		int x = (this.client_width - 281) / 2;
 		x += 2;
 		int y = (this.client_height - 148) / 2;
-		// this.loadingState = status;
-		// this.loadingPercent = percentage;
 		y += 90;
 		int progress = percentage * 277 / 100;
 
 		Canvas canvas = new Canvas(currentFrame);
-		// canvas.drawColor(0, Mode.CLEAR);
-
 		Paint paint = new Paint();
-
 		paint.setColor(Color.rgb(132, 132, 132));
 		if (this.m_hb) {
 			paint.setColor(Color.rgb(220, 0, 0));
@@ -211,7 +193,6 @@ public abstract class RSCBitmapSurfaceView extends SurfaceView implements Surfac
 
 		paint.setTextAlign(Align.CENTER);
 		canvas.drawText(status, x + 138, y + 10, paint);
-		// drawLoadingScreen(status, percentage, 123);
 	}
 
 	@Override
@@ -242,7 +223,6 @@ public abstract class RSCBitmapSurfaceView extends SurfaceView implements Surfac
 	@Override
 	public void drawTextBox(String line2, byte var2, String line1) {
 		Canvas canvas = new Canvas(currentFrame);
-		// canvas.drawColor(0, Mode.CLEAR);
 
 		Paint paint = new Paint();
 
@@ -267,28 +247,27 @@ public abstract class RSCBitmapSurfaceView extends SurfaceView implements Surfac
 
 	@Override
 	public void initGraphics() {
-
 	}
 
 	@Override
 	public void draw() {
 		if (gameActivity.getMudclient() != null) {
 			currentFrame.setPixels(gameActivity.getMudclient().getSurface().pixelData, 0,
-					gameActivity.getMudclient().getGameWidth(), 0, 0, gameActivity.getMudclient().getGameWidth(),
-					gameActivity.getMudclient().getGameHeight() + 12);
+				gameActivity.getMudclient().getGameWidth(), 0, 0, gameActivity.getMudclient().getGameWidth(),
+				gameActivity.getMudclient().getGameHeight() + 12);
 			postInvalidate();
 		}
 	}
 
 	private void doDraw(Canvas c) {
-		if(gameActivity.getMudclient() == null) {
+		if (gameActivity.getMudclient() == null) {
 			return;
 		}
 		c.drawRGB(0, 0, 0);
 		int resizedWidth = c.getWidth();
 		int resizedHeight = c.getHeight();
 		c.scale(((float) resizedWidth / (float) gameActivity.getMudclient().getGameWidth()),
-				((float) resizedHeight / (float) (gameActivity.getMudclient().getGameHeight() + 12)));
+			((float) resizedHeight / (float) (gameActivity.getMudclient().getGameHeight() + 12)));
 		c.drawBitmap(currentFrame, 0, 0, bitmapPaint);
 	}
 
@@ -330,31 +309,28 @@ public abstract class RSCBitmapSurfaceView extends SurfaceView implements Surfac
 		sprite.setSomething(width, height);
 		return sprite;
 	}
+
 	private AudioTrack audioTrack;
+
 	@Override
 	public void playSound(byte[] soundData, int offset, int dataLength) {
 		int bufferSize = AudioTrack.getMinBufferSize(16000,
-				AudioFormat.CHANNEL_IN_STEREO,
-				AudioFormat.ENCODING_PCM_16BIT);
+			AudioFormat.CHANNEL_IN_STEREO,
+			AudioFormat.ENCODING_PCM_16BIT);
 	}
 
 	@Override
-	public void stopSoundPlayer() {}
-
-	public void drawKeyboard() {
-		
+	public void stopSoundPlayer() {
 	}
 
+	public void drawKeyboard() {
+	}
 
 	public boolean saveCredentials(String creds) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
-
 	public String loadCredentials() {
-		// TODO Auto-generated method stub
 		return null;
 	}
-
 }
