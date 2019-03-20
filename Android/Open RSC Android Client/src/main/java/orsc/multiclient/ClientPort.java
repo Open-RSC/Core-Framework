@@ -97,7 +97,6 @@ public interface ClientPort {
 
     static String loadCredentials() {
         try {
-
             FileInputStream in = new FileInputStream(Config.F_CACHE_DIR + File.separator + "credentials.txt");
             InputStreamReader inputStreamReader = new InputStreamReader(in);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
@@ -112,5 +111,42 @@ public interface ClientPort {
         } catch (Exception ignored) {
         }
         return "";
+    }
+
+    static String loadIP() {
+        try {
+            FileInputStream in = new FileInputStream(Config.F_CACHE_DIR + File.separator + "ip.txt");
+            InputStreamReader inputStreamReader = new InputStreamReader(in);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+            }
+            in.close();
+
+            return sb.toString();
+        } catch (Exception ignored) {
+        }
+        return "";
+    }
+
+    static int loadPort() {
+        try {
+
+            FileInputStream in = new FileInputStream(Config.F_CACHE_DIR + File.separator + "port.txt");
+            InputStreamReader inputStreamReader = new InputStreamReader(in);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+            }
+            in.close();
+
+            return Integer.parseInt(sb.toString());
+        } catch (Exception ignored) {
+        }
+        return 0;
     }
 }

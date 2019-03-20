@@ -9589,7 +9589,15 @@ public final class mudclient implements Runnable {
 			showLoginScreenStatus("Invalid email address", "please use a valid email address");
 		}
 		try {
-			this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(SERVER_PORT, SERVER_IP), this.packetHandler));
+			if (!isAndroid()) {
+				String ip = ClientPort.loadIP();
+				int port = ClientPort.loadPort();
+				if (ip == null) ip = SERVER_IP;
+				if (port == 0) port = SERVER_PORT;
+				this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
+			} else {
+				this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(SERVER_PORT, SERVER_IP), this.packetHandler));
+			}
 			this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
 
 			this.packetHandler.getClientStream().newPacket(78);
@@ -11014,7 +11022,15 @@ public final class mudclient implements Runnable {
 								"Connection lost! Please wait...");
 						}
 
-						this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(SERVER_PORT, SERVER_IP), this.packetHandler));
+						if (!isAndroid()) {
+							String ip = ClientPort.loadIP();
+							int port = ClientPort.loadPort();
+							if (ip == null) ip = SERVER_IP;
+							if (port == 0) port = SERVER_PORT;
+							this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
+						} else {
+							this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(SERVER_PORT, SERVER_IP), this.packetHandler));
+						}
 						this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
 
 						Math.random();
@@ -12839,7 +12855,15 @@ public final class mudclient implements Runnable {
 
 	private void getServerConfig() {
 		try {
-			this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(SERVER_PORT, SERVER_IP), this.packetHandler));
+			if (!isAndroid()) {
+				String ip = ClientPort.loadIP();
+				int port = ClientPort.loadPort();
+				if (ip == null) ip = SERVER_IP;
+				if (port == 0) port = SERVER_PORT;
+				this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
+			} else {
+				this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(SERVER_PORT, SERVER_IP), this.packetHandler));
+			}
 			this.packetHandler.getClientStream().newPacket(19);
 			this.packetHandler.getClientStream().finishPacketAndFlush();
 			this.packetHandler.getClientStream().getUnsignedByte();
