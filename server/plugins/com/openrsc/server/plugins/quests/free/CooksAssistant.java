@@ -97,7 +97,8 @@ public class CooksAssistant implements QuestInterface, TalkToNpcListener,
 						if (p.getInventory().hasItemId(ItemId.EGG.id()))
 							playerTalk(p, n, "I have an egg");
 
-						npcTalk(p, n, "You still need to find");
+						npcTalk(p, n, "Great, but can you get the other ingredients as well?",
+								"You still need to find");
 						if (!p.getInventory().hasItemId(ItemId.MILK.id()))
 							npcTalk(p, n, "Some milk");
 						if (!p.getInventory().hasItemId(ItemId.POT_OF_FLOUR.id()))
