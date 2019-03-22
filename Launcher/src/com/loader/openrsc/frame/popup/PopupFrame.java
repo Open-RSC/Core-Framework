@@ -4,10 +4,17 @@ import com.loader.openrsc.frame.AppFrame;
 import com.loader.openrsc.frame.elements.ControlButton;
 import com.loader.openrsc.util.Utils;
 
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
-import java.awt.*;
-import java.awt.event.*;
 
 public class PopupFrame
 	extends JFrame {
@@ -20,7 +27,7 @@ public class PopupFrame
 		build();
 	}
 
-	static /* synthetic */ void access$0(PopupFrame popupFrame, Point point) {
+	static void access$0(PopupFrame popupFrame, Point point) {
 		popupFrame.initialClick = point;
 	}
 
@@ -29,7 +36,7 @@ public class PopupFrame
 	}
 
 	private void build() {
-		setDefaultCloseOperation(2);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setUndecorated(true);
 		setPreferredSize(new Dimension(300, 150));
 		setLayout(null);
@@ -49,12 +56,7 @@ public class PopupFrame
 		close.setText("Close");
 		close.setFocusable(false);
 		close.setForeground(Color.WHITE);
-		close.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				setVisible(false);
-			}
-
-		});
+		close.addActionListener(arg0 -> setVisible(false));
 		add(close);
 		addMouseListener();
 		pack();
@@ -71,7 +73,6 @@ public class PopupFrame
 				initialClick = e.getPoint();
 				getComponentAt(initialClick);
 			}
-
 		});
 		addMouseMotionListener(new MouseMotionAdapter() {
 			public void mouseDragged(MouseEvent e) {
@@ -92,6 +93,5 @@ public class PopupFrame
 			}
 		});
 	}
-
 }
 

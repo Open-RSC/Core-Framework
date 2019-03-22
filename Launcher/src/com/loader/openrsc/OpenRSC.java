@@ -3,10 +3,8 @@ package com.loader.openrsc;
 import com.loader.openrsc.frame.AppFrame;
 import com.loader.openrsc.frame.popup.PopupFrame;
 import com.loader.openrsc.frame.threads.StatusChecker;
-import com.loader.openrsc.frame.threads.WorldPopulation;
+import com.loader.openrsc.frame.threads.Statistics;
 import com.loader.openrsc.net.Downloader;
-
-import java.io.IOException;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -14,7 +12,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class OpenRSC {
 	private static PopupFrame popup;
 
-	public static void main(final String[] args) throws IOException {
+	public static void main(final String[] args) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 		} catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
@@ -26,8 +24,16 @@ public class OpenRSC {
 		final AppFrame frame = new AppFrame();
 		frame.build();
 		OpenRSC.popup = new PopupFrame();
-		new Thread(new StatusChecker(Constants.SERVER_DOMAIN, Constants.SERVER_PORT)).start();
-		new Thread(new WorldPopulation()).start();
+
+		// ORSC server status checker
+		new Thread(new StatusChecker(Constants.ORSC_SERVER_DOMAIN, Constants.ORSC_SERVER_PORT)).start();
+
+		// RSCC server status checker
+		new Thread(new StatusChecker(Constants.RSCC_SERVER_DOMAIN, Constants.RSCC_SERVER_PORT)).start();
+
+		// All game statistics via jsoup web scraper
+		new Thread(new Statistics()).start();
+
 		updater.init();
 		updater.doneLoading();
 	}

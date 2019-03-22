@@ -29,8 +29,8 @@ public class PositionListener implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mousePressed(final MouseEvent e) {
-		PositionListener.initialClick = e.getPoint();
-		this.frame.getComponentAt(PositionListener.initialClick);
+		initialClick = e.getPoint();
+		this.frame.getComponentAt(initialClick);
 	}
 
 	@Override
@@ -39,13 +39,13 @@ public class PositionListener implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mouseDragged(final MouseEvent e) {
-		final int iX = PositionListener.initialClick.x;
-		final int iY = PositionListener.initialClick.y;
+		final int iX = initialClick.x;
+		final int iY = initialClick.y;
 		if (iX >= 0 && iX <= this.frame.getWidth() && iY >= 0 && iY <= 70) {
 			final int thisX = this.frame.getLocation().x;
 			final int thisY = this.frame.getLocation().y;
-			final int xMoved = thisX + e.getX() - (thisX + PositionListener.initialClick.x);
-			final int yMoved = thisY + e.getY() - (thisY + PositionListener.initialClick.y);
+			final int xMoved = (thisX + e.getX()) - (thisX + initialClick.x);
+			final int yMoved = (thisY + e.getY()) - (thisY + initialClick.y);
 			final int X = thisX + xMoved;
 			final int Y = thisY + yMoved;
 			this.frame.setLocation(X, Y);

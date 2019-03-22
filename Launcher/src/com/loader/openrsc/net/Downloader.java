@@ -145,8 +145,7 @@ public class Downloader {
 		try {
 			if (checkVersionNumber()) // Check if version is the same
 				return; // and return false if it is.
-
-
+			
 			URL url = new URL(Constants.UPDATE_JAR_URL);
 
 			// Open connection

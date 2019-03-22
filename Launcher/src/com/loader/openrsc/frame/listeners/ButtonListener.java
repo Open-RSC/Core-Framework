@@ -13,8 +13,8 @@ public class ButtonListener implements ActionListener {
 	public void actionPerformed(final ActionEvent event) {
 		final String action = event.getActionCommand().toLowerCase();
 		switch (action) {
-			case "website": {
-				Utils.openWebpage("https://openrsc.com");
+			case "rsc wiki": {
+				Utils.openWebpage("https://classic.runescape.wiki");
 				return;
 			}
 			case "bug reports": {

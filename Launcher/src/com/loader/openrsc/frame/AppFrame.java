@@ -16,10 +16,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 
-//import java.awt.Taskbar;
-;
+import static javax.swing.SwingConstants.LEFT;
 
-@SuppressWarnings("serial")
 public class AppFrame extends JFrame {
 	private static AppFrame instance;
 	private JLabel bg;
@@ -32,11 +30,10 @@ public class AppFrame extends JFrame {
 	private JLabel registrationstoday;
 
 	public AppFrame() {
-		this.setPreferredSize(new Dimension(800, 560));
+		this.setPreferredSize(new Dimension(795, 555));
 		this.setUndecorated(true);
-		this.setTitle(Constants.GAME_NAME);
+		this.setTitle(Constants.ORSC_GAME_NAME);
 		this.setIconImage(Utils.getImage("icon.png").getImage());
-		//Taskbar.getTaskbar().setIconImage(Utils.getImage("icon.png").getImage());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		AppFrame.instance = this;
 	}
@@ -65,7 +62,7 @@ public class AppFrame extends JFrame {
 		}
 
 		this.add(this.bg);
-		this.addLogo();
+		this.addGameSelection();
 		this.addButtons();
 		this.addMouseListener(new PositionListener(this));
 		this.addMouseMotionListener(new PositionListener(this));
@@ -74,45 +71,44 @@ public class AppFrame extends JFrame {
 		this.setVisible(true);
 	}
 
-	private void addLogo() {
+	private void addGameSelection() {
+		// Title
 		JLabel text;
-		(text = new JLabel(Constants.GAME_NAME.toUpperCase())).setBounds(30, 24, 100, 15);
-		text.setForeground(new Color(255, 223, 0));
-		text.setFont(Utils.getFont("Exo-Regular.otf", 1, 14.0f));
+		(text = new JLabel(Constants.Title)).setBounds(170, 19, 600, 45);
+		text.setForeground(new Color(255, 255, 255, 220));
+		text.setFont(Utils.getFont("Exo-Regular.otf", 1, 38.0f));
 		this.bg.add(text);
+
+		// Version
 		JLabel subText;
-		(subText = new JLabel("Game Launcher v." + String.format("%8.6f", Constants.VERSION_NUMBER))).setBounds(30, 35, 210, 15);
-		subText.setForeground(new Color(200, 200, 200));
-		subText.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
+		(subText = new JLabel("Version " + String.format("%8.6f", Constants.VERSION_NUMBER))).setBounds(662, 57, 170, 15);
+		subText.setForeground(new Color(255, 255, 255, 220));
+		subText.setFont(Utils.getFont("Exo-Regular.otf", 1, 10.0f));
 		this.bg.add(subText);
 
-		// Server status check - spaced 16px apart
+		/*
+		 * ORSC
+		 */
+		// Server status check - spaced 12px apart
 		(this.status = new JLabel("Server Status: ---")).setForeground(Color.WHITE);
-		this.status.setFont(Utils.getFont("Exo-Regular.otf", 0, 12.0f));
-		this.status.setHorizontalAlignment(4);
-		this.status.setBounds(441, 77, 327, 19);
+		this.status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
+		this.status.setHorizontalAlignment(LEFT);
+		this.status.setBounds(230, 160, 327, 15);
 		this.bg.add(this.status);
 
 		// Online player count - spaced 16px apart
 		(this.online = new JLabel("Players Online: ---")).setForeground(Color.WHITE);
-		this.online.setFont(Utils.getFont("Exo-Regular.otf", 0, 12.0f));
-		this.online.setHorizontalAlignment(4);
-		this.online.setBounds(441, 93, 327, 19);
+		this.online.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
+		this.online.setHorizontalAlignment(LEFT);
+		this.online.setBounds(230, 172, 327, 15);
 		this.bg.add(this.online);
 
 		// Logged in the last 48 hours - spaced 16px apart
 		(this.logins48 = new JLabel("Online Last 48 Hours: ---")).setForeground(Color.WHITE);
-		this.logins48.setFont(Utils.getFont("Exo-Regular.otf", 0, 12.0f));
-		this.logins48.setHorizontalAlignment(4);
-		this.logins48.setBounds(441, 109, 327, 19);
+		this.logins48.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
+		this.logins48.setHorizontalAlignment(LEFT);
+		this.logins48.setBounds(230, 184, 327, 15);
 		this.bg.add(this.logins48);
-
-		// Registrations today - spaced 16px apart
-		(this.registrationstoday = new JLabel("Registrations Today: ---")).setForeground(Color.WHITE);
-		this.registrationstoday.setFont(Utils.getFont("Exo-Regular.otf", 0, 12.0f));
-		this.registrationstoday.setHorizontalAlignment(4);
-		this.registrationstoday.setBounds(441, 125, 327, 19);
-		this.bg.add(this.registrationstoday);
 	}
 
 	public JLabel getCheckLabel() {
@@ -142,7 +138,7 @@ public class AppFrame extends JFrame {
 	}
 
 	private void addButtons() {
-		this.bg.add(new LinkButton("Website", new Rectangle(27, 480, 119, 40)));
+		this.bg.add(new LinkButton("RSC Wiki", new Rectangle(27, 480, 119, 40)));
 		this.bg.add(new LinkButton("Bug Reports", new Rectangle(158, 480, 119, 40)));
 		this.bg.add(new LinkButton("Bot Reports", new Rectangle(288, 480, 119, 40)));
 		this.bg.add(new LinkButton("Discord", new Rectangle(418, 480, 119, 40)));
@@ -170,9 +166,5 @@ public class AppFrame extends JFrame {
 
 	public JLabel getLogins48() {
 		return this.logins48;
-	}
-
-	public JLabel getRegistrationsToday() {
-		return this.registrationstoday;
 	}
 }
