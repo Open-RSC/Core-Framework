@@ -28,15 +28,11 @@ public class AppFrame extends JFrame {
 	private JLabel orsc_status;
 	private JLabel orsc_online;
 	private JLabel orsc_logins48;
-	int orsc_x = 220;
-	int orsc_y = 135;
 
 	// RSCC section
 	private JLabel rscc_status;
 	private JLabel rscc_online;
 	private JLabel rscc_logins48;
-	int rscc_x = 220;
-	int rscc_y = 180;
 
 	public AppFrame() {
 		this.setPreferredSize(new Dimension(795, 555));
@@ -101,6 +97,8 @@ public class AppFrame extends JFrame {
 		// Server status check - spaced 12px apart
 		(this.orsc_status = new JLabel("Server Status: checking...")).setForeground(Color.WHITE);
 		this.orsc_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
+		int orsc_x = 220;
+		int orsc_y = 135;
 		this.orsc_status.setBounds(orsc_x, orsc_y, 327, 15);
 		this.bg.add(this.orsc_status);
 
@@ -122,6 +120,8 @@ public class AppFrame extends JFrame {
 		// Server status check - spaced 12px apart
 		(this.rscc_status = new JLabel("Server Status: checking...")).setForeground(Color.WHITE);
 		this.rscc_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
+		int rscc_x = 220;
+		int rscc_y = 180;
 		this.rscc_status.setBounds(rscc_x, rscc_y, 327, 15);
 		this.bg.add(this.rscc_status);
 
@@ -180,8 +180,12 @@ public class AppFrame extends JFrame {
 		this.bg.add(new ControlButton(2, 773, 8, 10, 11)); // Exit button +18px x
 
 		// Radio buttons
-		this.bg.add(new RadioButton("Open RSC", new Rectangle(80, orsc_y, 119, 40)));
-		this.bg.add(new RadioButton("RSC Cabbage", new Rectangle(80, rscc_y, 119, 40)));
+		int orsc_radio_x = 90;
+		int orsc_radio_y = 135;
+		int rscc_radio_x = 90;
+		int rscc_radio_y = 180;
+		this.bg.add(new RadioButton("Open RSC", new Rectangle(orsc_radio_x, orsc_radio_y, 119, 40)));
+		this.bg.add(new RadioButton("RSC Cabbage", new Rectangle(rscc_radio_x, rscc_radio_y, 119, 40)));
 	}
 
 	public JProgressBar getProgress() {
