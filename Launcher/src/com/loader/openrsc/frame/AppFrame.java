@@ -94,6 +94,13 @@ public class AppFrame extends JFrame {
 		subText.setFont(Utils.getFont("Exo-Regular.otf", 1, 10.0f));
 		this.bg.add(subText);
 
+		// Single player note
+		JLabel noteText;
+		(noteText = new JLabel("*Requires first starting the single slayer server")).setBounds(80, 450, 260, 15);
+		noteText.setForeground(new Color(255, 255, 255, 220));
+		noteText.setFont(Utils.getFont("Exo-Regular.otf", 1, 10.0f));
+		this.bg.add(noteText);
+
 		/*
 		 * Open RSC section
 		 */
@@ -199,9 +206,9 @@ public class AppFrame extends JFrame {
 		int rscc_radio_y = 204;
 		int local_radio_x = 70;
 		int local_radio_y = 261;
-		this.bg.add(new RadioButton(" Open RSC", new Rectangle(orsc_radio_x, orsc_radio_y, 140, 40)));
-		this.bg.add(new RadioButton(" RSC Cabbage", new Rectangle(rscc_radio_x, rscc_radio_y, 140, 40)));
-		this.bg.add(new RadioButton(" Single Player", new Rectangle(local_radio_x, local_radio_y, 140, 40)));
+		this.bg.add(new RadioButton("Open RSC", new Rectangle(orsc_radio_x, orsc_radio_y, 140, 40)));
+		this.bg.add(new RadioButton("RSC Cabbage", new Rectangle(rscc_radio_x, rscc_radio_y, 140, 40)));
+		this.bg.add(new RadioButton("Single Player*", new Rectangle(local_radio_x, local_radio_y, 140, 40)));
 	}
 
 	public JProgressBar getProgress() {
