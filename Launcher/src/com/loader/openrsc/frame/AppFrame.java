@@ -1,10 +1,10 @@
 package com.loader.openrsc.frame;
 
 import com.loader.openrsc.Constants;
-import com.loader.openrsc.frame.elements.CheckboxButton;
 import com.loader.openrsc.frame.elements.ControlButton;
 import com.loader.openrsc.frame.elements.LaunchButton;
 import com.loader.openrsc.frame.elements.LinkButton;
+import com.loader.openrsc.frame.elements.RadioButton;
 import com.loader.openrsc.frame.listeners.PositionListener;
 import com.loader.openrsc.util.Utils;
 
@@ -199,9 +199,9 @@ public class AppFrame extends JFrame {
 		int rscc_radio_y = 204;
 		int local_radio_x = 70;
 		int local_radio_y = 261;
-		this.bg.add(new CheckboxButton(" Open RSC", new Rectangle(orsc_radio_x, orsc_radio_y, 140, 40)));
-		this.bg.add(new CheckboxButton(" RSC Cabbage", new Rectangle(rscc_radio_x, rscc_radio_y, 140, 40)));
-		this.bg.add(new CheckboxButton(" Single Player", new Rectangle(local_radio_x, local_radio_y, 140, 40)));
+		this.bg.add(new RadioButton(" Open RSC", new Rectangle(orsc_radio_x, orsc_radio_y, 140, 40)));
+		this.bg.add(new RadioButton(" RSC Cabbage", new Rectangle(rscc_radio_x, rscc_radio_y, 140, 40)));
+		this.bg.add(new RadioButton(" Single Player", new Rectangle(local_radio_x, local_radio_y, 140, 40)));
 	}
 
 	public JProgressBar getProgress() {
