@@ -23,11 +23,17 @@ public class AppFrame extends JFrame {
 	private JLabel bg;
 	private LaunchButton launch;
 	private JProgressBar progress;
-	private JLabel status;
 	private JLabel checkLabel;
-	private JLabel online;
-	private JLabel logins48;
-	private JLabel registrationstoday;
+
+	// ORSC section
+	private JLabel orsc_status;
+	private JLabel orsc_online;
+	private JLabel orsc_logins48;
+
+	// RSCC section
+	private JLabel rscc_status;
+	private JLabel rscc_online;
+	private JLabel rscc_logins48;
 
 	public AppFrame() {
 		this.setPreferredSize(new Dimension(795, 555));
@@ -81,7 +87,7 @@ public class AppFrame extends JFrame {
 
 		// Version
 		JLabel subText;
-		(subText = new JLabel("Version " + String.format("%8.6f", Constants.VERSION_NUMBER))).setBounds(662, 57, 170, 15);
+		(subText = new JLabel("Version " + String.format("%8.6f", Constants.VERSION_NUMBER))).setBounds(662, 56, 170, 15);
 		subText.setForeground(new Color(255, 255, 255, 220));
 		subText.setFont(Utils.getFont("Exo-Regular.otf", 1, 10.0f));
 		this.bg.add(subText);
@@ -89,26 +95,50 @@ public class AppFrame extends JFrame {
 		/*
 		 * ORSC
 		 */
-		// Server status check - spaced 12px apart
-		(this.status = new JLabel("Server Status: ---")).setForeground(Color.WHITE);
-		this.status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.status.setHorizontalAlignment(LEFT);
-		this.status.setBounds(230, 160, 327, 15);
-		this.bg.add(this.status);
+		// Server orsc_status check - spaced 12px apart
+		(this.orsc_status = new JLabel("Server Status: checking...")).setForeground(Color.WHITE);
+		this.orsc_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
+		this.orsc_status.setHorizontalAlignment(LEFT);
+		this.orsc_status.setBounds(230, 160, 327, 15);
+		this.bg.add(this.orsc_status);
 
 		// Online player count - spaced 16px apart
-		(this.online = new JLabel("Players Online: ---")).setForeground(Color.WHITE);
-		this.online.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.online.setHorizontalAlignment(LEFT);
-		this.online.setBounds(230, 172, 327, 15);
-		this.bg.add(this.online);
+		(this.orsc_online = new JLabel("Players Online: checking...")).setForeground(Color.WHITE);
+		this.orsc_online.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
+		this.orsc_online.setHorizontalAlignment(LEFT);
+		this.orsc_online.setBounds(230, 172, 327, 15);
+		this.bg.add(this.orsc_online);
 
 		// Logged in the last 48 hours - spaced 16px apart
-		(this.logins48 = new JLabel("Online Last 48 Hours: ---")).setForeground(Color.WHITE);
-		this.logins48.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.logins48.setHorizontalAlignment(LEFT);
-		this.logins48.setBounds(230, 184, 327, 15);
-		this.bg.add(this.logins48);
+		(this.orsc_logins48 = new JLabel("Online Last 48 Hours: checking...")).setForeground(Color.WHITE);
+		this.orsc_logins48.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
+		this.orsc_logins48.setHorizontalAlignment(LEFT);
+		this.orsc_logins48.setBounds(230, 184, 327, 15);
+		this.bg.add(this.orsc_logins48);
+
+		/*
+		 * RSCC
+		 */
+		// Server status check - spaced 12px apart
+		(this.rscc_status = new JLabel("Server Status: checking...")).setForeground(Color.WHITE);
+		this.rscc_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
+		this.rscc_status.setHorizontalAlignment(LEFT);
+		this.rscc_status.setBounds(230, 208, 327, 15);
+		this.bg.add(this.rscc_status);
+
+		// Online player count - spaced 16px apart
+		(this.rscc_online = new JLabel("Players Online: checking...")).setForeground(Color.WHITE);
+		this.rscc_online.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
+		this.rscc_online.setHorizontalAlignment(LEFT);
+		this.rscc_online.setBounds(230, 220, 327, 15);
+		this.bg.add(this.rscc_online);
+
+		// Logged in the last 48 hours - spaced 16px apart
+		(this.rscc_logins48 = new JLabel("Online Last 48 Hours: checking...")).setForeground(Color.WHITE);
+		this.rscc_logins48.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
+		this.rscc_logins48.setHorizontalAlignment(LEFT);
+		this.rscc_logins48.setBounds(230, 232, 327, 15);
+		this.bg.add(this.rscc_logins48);
 	}
 
 	public JLabel getCheckLabel() {
@@ -144,8 +174,8 @@ public class AppFrame extends JFrame {
 		this.bg.add(new LinkButton("Discord", new Rectangle(418, 480, 119, 40)));
 		(this.launch = new LaunchButton()).setBounds(617, 481, 174, 69);
 		this.bg.add(this.launch);
-		this.bg.add(new ControlButton(2, 778, 8, 10, 11)); // Exit
-		this.bg.add(new ControlButton(1, 760, 8, 10, 11)); // Minimize
+		this.bg.add(new ControlButton(1, 755, 8, 10, 11)); // Minimize button
+		this.bg.add(new ControlButton(2, 773, 8, 10, 11)); // Exit button +18px x
 	}
 
 	public JProgressBar getProgress() {
@@ -156,15 +186,29 @@ public class AppFrame extends JFrame {
 		return this.launch;
 	}
 
-	public JLabel getStatus() {
-		return this.status;
+	// ORSC section
+	public JLabel getorscStatus() {
+		return this.orsc_status;
 	}
 
-	public JLabel getOnline() {
-		return this.online;
+	public JLabel getorscOnline() {
+		return this.orsc_online;
 	}
 
-	public JLabel getLogins48() {
-		return this.logins48;
+	public JLabel getorscLogins48() {
+		return this.orsc_logins48;
+	}
+
+	// RSCC section
+	public JLabel getrsccStatus() {
+		return this.rscc_status;
+	}
+
+	public JLabel getrsccOnline() {
+		return this.rscc_online;
+	}
+
+	public JLabel getrsccLogins48() {
+		return this.rscc_logins48;
 	}
 }

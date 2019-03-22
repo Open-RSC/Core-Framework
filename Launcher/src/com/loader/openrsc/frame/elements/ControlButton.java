@@ -9,8 +9,8 @@ public class ControlButton extends JButton {
 	public ControlButton(final int buttonType, final int x, final int y, final int width, final int height) {
 		final String image = (buttonType == 1) ? "minimize" : "close";
 		if (buttonType != 3) {
-			this.setIcon(Utils.getImage(String.valueOf(image) + ".png"));
-			this.setRolloverIcon(Utils.getImage(String.valueOf(image) + "_hover.png"));
+			this.setIcon(Utils.getImage(image + ".png"));
+			this.setRolloverIcon(Utils.getImage(image + "_hover.png"));
 		}
 		this.setBorderPainted(false);
 		this.setContentAreaFilled(false);

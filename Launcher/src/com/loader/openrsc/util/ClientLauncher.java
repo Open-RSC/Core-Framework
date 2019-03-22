@@ -1,7 +1,7 @@
 package com.loader.openrsc.util;
 
 import com.loader.openrsc.Constants;
-import com.loader.openrsc.OpenRSC;
+import com.loader.openrsc.Launcher;
 import com.loader.openrsc.frame.AppFrame;
 
 import java.awt.Dimension;
@@ -50,8 +50,8 @@ public class ClientLauncher {
 			pb.start();
 			//exit(); // No need to close on successful launch, some players may want multiple clients open at once.
 		} catch (Exception e) {
-			OpenRSC.getPopup().setMessage("Client failed to launch. Please try again or notify staff.");
-			OpenRSC.getPopup().showFrame();
+			Launcher.getPopup().setMessage("Client failed to launch. Please try again or notify staff.");
+			Launcher.getPopup().showFrame();
 			e.printStackTrace();
 		}
 	}

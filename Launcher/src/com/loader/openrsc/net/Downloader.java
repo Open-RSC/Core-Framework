@@ -1,7 +1,7 @@
 package com.loader.openrsc.net;
 
 import com.loader.openrsc.Constants;
-import com.loader.openrsc.OpenRSC;
+import com.loader.openrsc.Launcher;
 import com.loader.openrsc.frame.AppFrame;
 
 import java.io.BufferedInputStream;
@@ -145,7 +145,7 @@ public class Downloader {
 		try {
 			if (checkVersionNumber()) // Check if version is the same
 				return; // and return false if it is.
-			
+
 			URL url = new URL(Constants.UPDATE_JAR_URL);
 
 			// Open connection
@@ -194,12 +194,12 @@ public class Downloader {
 				downloadedFileHash = getMD5Checksum(downloadedFile).toLowerCase();
 			} catch (Exception e) {
 				e.printStackTrace();
-				OpenRSC.getPopup().setMessage("" + e);
+				Launcher.getPopup().setMessage("" + e);
 			}
 
 			assert downloadedFileHash != null;
 			if (!downloadedFileHash.equalsIgnoreCase(hash)) {
-				OpenRSC.getPopup().setMessage(downloadedFile.getName() + " hash:" + downloadedFileHash + " doesn't match MD5: " + hash + " re-downloading");
+				Launcher.getPopup().setMessage(downloadedFile.getName() + " hash:" + downloadedFileHash + " doesn't match MD5: " + hash + " re-downloading");
 				load(fileName, true);
 				verified = false;
 			}
