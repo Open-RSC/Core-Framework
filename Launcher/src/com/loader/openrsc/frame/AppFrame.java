@@ -28,11 +28,15 @@ public class AppFrame extends JFrame {
 	private JLabel orsc_status;
 	private JLabel orsc_online;
 	private JLabel orsc_logins48;
+	int orsc_x = 220;
+	int orsc_y = 135;
 
 	// RSCC section
 	private JLabel rscc_status;
 	private JLabel rscc_online;
 	private JLabel rscc_logins48;
+	int rscc_x = 220;
+	int rscc_y = 180;
 
 	public AppFrame() {
 		this.setPreferredSize(new Dimension(795, 555));
@@ -77,14 +81,14 @@ public class AppFrame extends JFrame {
 	}
 
 	private void addGameSelection() {
-		// Title
+		// Header text
 		JLabel text;
-		(text = new JLabel(Constants.Title)).setBounds(170, 19, 600, 45);
+		(text = new JLabel(Constants.Title)).setBounds(250, 19, 600, 45);
 		text.setForeground(new Color(255, 255, 255, 220));
-		text.setFont(Utils.getFont("Exo-Regular.otf", 1, 38.0f));
+		text.setFont(Utils.getFont("Exo-Regular.otf", 1, 24.0f));
 		this.bg.add(text);
 
-		// Version
+		// Version text
 		JLabel subText;
 		(subText = new JLabel("Version " + String.format("%8.6f", Constants.VERSION_NUMBER))).setBounds(662, 56, 170, 15);
 		subText.setForeground(new Color(255, 255, 255, 220));
@@ -97,19 +101,19 @@ public class AppFrame extends JFrame {
 		// Server status check - spaced 12px apart
 		(this.orsc_status = new JLabel("Server Status: checking...")).setForeground(Color.WHITE);
 		this.orsc_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.orsc_status.setBounds(220, 160, 327, 15);
+		this.orsc_status.setBounds(orsc_x, orsc_y, 327, 15);
 		this.bg.add(this.orsc_status);
 
 		// Online player count - spaced 16px apart
 		(this.orsc_online = new JLabel("Players Online: checking...")).setForeground(Color.WHITE);
 		this.orsc_online.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.orsc_online.setBounds(220, 172, 327, 15);
+		this.orsc_online.setBounds(orsc_x, orsc_y + 12, 327, 15);
 		this.bg.add(this.orsc_online);
 
 		// Logged in the last 48 hours - spaced 16px apart
 		(this.orsc_logins48 = new JLabel("Online Last 48 Hours: checking...")).setForeground(Color.WHITE);
 		this.orsc_logins48.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.orsc_logins48.setBounds(220, 184, 327, 15);
+		this.orsc_logins48.setBounds(orsc_x, orsc_y + 24, 327, 15);
 		this.bg.add(this.orsc_logins48);
 
 		/*
@@ -118,19 +122,19 @@ public class AppFrame extends JFrame {
 		// Server status check - spaced 12px apart
 		(this.rscc_status = new JLabel("Server Status: checking...")).setForeground(Color.WHITE);
 		this.rscc_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.rscc_status.setBounds(220, 208, 327, 15);
+		this.rscc_status.setBounds(rscc_x, rscc_y, 327, 15);
 		this.bg.add(this.rscc_status);
 
 		// Online player count - spaced 16px apart
 		(this.rscc_online = new JLabel("Players Online: checking...")).setForeground(Color.WHITE);
 		this.rscc_online.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.rscc_online.setBounds(220, 220, 327, 15);
+		this.rscc_online.setBounds(rscc_x, rscc_y + 12, 327, 15);
 		this.bg.add(this.rscc_online);
 
 		// Logged in the last 48 hours - spaced 16px apart
 		(this.rscc_logins48 = new JLabel("Online Last 48 Hours: checking...")).setForeground(Color.WHITE);
 		this.rscc_logins48.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.rscc_logins48.setBounds(220, 232, 327, 15);
+		this.rscc_logins48.setBounds(rscc_x, rscc_y + 24, 327, 15);
 		this.bg.add(this.rscc_logins48);
 	}
 
@@ -161,16 +165,23 @@ public class AppFrame extends JFrame {
 	}
 
 	private void addButtons() {
+		// Link buttons
 		this.bg.add(new LinkButton("RSC Wiki", new Rectangle(27, 480, 119, 40)));
 		this.bg.add(new LinkButton("Bug Reports", new Rectangle(158, 480, 119, 40)));
 		this.bg.add(new LinkButton("Bot Reports", new Rectangle(288, 480, 119, 40)));
 		this.bg.add(new LinkButton("Discord", new Rectangle(418, 480, 119, 40)));
+
+		// Launch button
 		(this.launch = new LaunchButton()).setBounds(617, 477, 174, 69);
 		this.bg.add(this.launch);
+
+		// Control buttons
 		this.bg.add(new ControlButton(1, 755, 8, 10, 11)); // Minimize button
 		this.bg.add(new ControlButton(2, 773, 8, 10, 11)); // Exit button +18px x
-		this.bg.add(new RadioButton("Open RSC", new Rectangle(80, 160, 119, 40)));
-		this.bg.add(new RadioButton("RSC Cabbage", new Rectangle(80, 208, 119, 40)));
+
+		// Radio buttons
+		this.bg.add(new RadioButton("Open RSC", new Rectangle(80, orsc_y, 119, 40)));
+		this.bg.add(new RadioButton("RSC Cabbage", new Rectangle(80, rscc_y, 119, 40)));
 	}
 
 	public JProgressBar getProgress() {
