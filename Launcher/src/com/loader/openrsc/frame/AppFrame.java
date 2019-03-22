@@ -16,8 +16,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 
-import static javax.swing.SwingConstants.LEFT;
-
 public class AppFrame extends JFrame {
 	private static AppFrame instance;
 	private JLabel bg;
@@ -93,50 +91,45 @@ public class AppFrame extends JFrame {
 		this.bg.add(subText);
 
 		/*
-		 * ORSC
+		 * Open RSC section
 		 */
-		// Server orsc_status check - spaced 12px apart
+		// Server status check - spaced 12px apart
+		//this.orsc_status.setHorizontalAlignment(RIGHT);
 		(this.orsc_status = new JLabel("Server Status: checking...")).setForeground(Color.WHITE);
 		this.orsc_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.orsc_status.setHorizontalAlignment(LEFT);
 		this.orsc_status.setBounds(230, 160, 327, 15);
 		this.bg.add(this.orsc_status);
 
 		// Online player count - spaced 16px apart
 		(this.orsc_online = new JLabel("Players Online: checking...")).setForeground(Color.WHITE);
 		this.orsc_online.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.orsc_online.setHorizontalAlignment(LEFT);
 		this.orsc_online.setBounds(230, 172, 327, 15);
 		this.bg.add(this.orsc_online);
 
 		// Logged in the last 48 hours - spaced 16px apart
 		(this.orsc_logins48 = new JLabel("Online Last 48 Hours: checking...")).setForeground(Color.WHITE);
 		this.orsc_logins48.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.orsc_logins48.setHorizontalAlignment(LEFT);
 		this.orsc_logins48.setBounds(230, 184, 327, 15);
 		this.bg.add(this.orsc_logins48);
 
 		/*
-		 * RSCC
+		 * RSC Cabbage section
 		 */
 		// Server status check - spaced 12px apart
 		(this.rscc_status = new JLabel("Server Status: checking...")).setForeground(Color.WHITE);
 		this.rscc_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.rscc_status.setHorizontalAlignment(LEFT);
 		this.rscc_status.setBounds(230, 208, 327, 15);
 		this.bg.add(this.rscc_status);
 
 		// Online player count - spaced 16px apart
 		(this.rscc_online = new JLabel("Players Online: checking...")).setForeground(Color.WHITE);
 		this.rscc_online.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.rscc_online.setHorizontalAlignment(LEFT);
 		this.rscc_online.setBounds(230, 220, 327, 15);
 		this.bg.add(this.rscc_online);
 
 		// Logged in the last 48 hours - spaced 16px apart
 		(this.rscc_logins48 = new JLabel("Online Last 48 Hours: checking...")).setForeground(Color.WHITE);
 		this.rscc_logins48.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.rscc_logins48.setHorizontalAlignment(LEFT);
 		this.rscc_logins48.setBounds(230, 232, 327, 15);
 		this.bg.add(this.rscc_logins48);
 	}
