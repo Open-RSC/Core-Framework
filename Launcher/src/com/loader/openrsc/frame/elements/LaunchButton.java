@@ -17,7 +17,7 @@ public class LaunchButton extends JButton implements MouseListener {
 	private static final long serialVersionUID = -3245141651685683983L;
 
 	public LaunchButton() {
-		super("");
+		super("Start Game");
 		this.setIcon(Utils.getImage("launch.png"));
 		this.setRolloverIcon(Utils.getImage("launch_hover.png"));
 		this.setHorizontalTextPosition(0);

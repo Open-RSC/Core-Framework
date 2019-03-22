@@ -97,19 +97,19 @@ public class AppFrame extends JFrame {
 		// Server status check - spaced 12px apart
 		(this.orsc_status = new JLabel("Server Status: checking...")).setForeground(Color.WHITE);
 		this.orsc_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.orsc_status.setBounds(230, 160, 327, 15);
+		this.orsc_status.setBounds(220, 160, 327, 15);
 		this.bg.add(this.orsc_status);
 
 		// Online player count - spaced 16px apart
 		(this.orsc_online = new JLabel("Players Online: checking...")).setForeground(Color.WHITE);
 		this.orsc_online.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.orsc_online.setBounds(230, 172, 327, 15);
+		this.orsc_online.setBounds(220, 172, 327, 15);
 		this.bg.add(this.orsc_online);
 
 		// Logged in the last 48 hours - spaced 16px apart
 		(this.orsc_logins48 = new JLabel("Online Last 48 Hours: checking...")).setForeground(Color.WHITE);
 		this.orsc_logins48.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.orsc_logins48.setBounds(230, 184, 327, 15);
+		this.orsc_logins48.setBounds(220, 184, 327, 15);
 		this.bg.add(this.orsc_logins48);
 
 		/*
@@ -118,19 +118,19 @@ public class AppFrame extends JFrame {
 		// Server status check - spaced 12px apart
 		(this.rscc_status = new JLabel("Server Status: checking...")).setForeground(Color.WHITE);
 		this.rscc_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.rscc_status.setBounds(230, 208, 327, 15);
+		this.rscc_status.setBounds(220, 208, 327, 15);
 		this.bg.add(this.rscc_status);
 
 		// Online player count - spaced 16px apart
 		(this.rscc_online = new JLabel("Players Online: checking...")).setForeground(Color.WHITE);
 		this.rscc_online.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.rscc_online.setBounds(230, 220, 327, 15);
+		this.rscc_online.setBounds(220, 220, 327, 15);
 		this.bg.add(this.rscc_online);
 
 		// Logged in the last 48 hours - spaced 16px apart
 		(this.rscc_logins48 = new JLabel("Online Last 48 Hours: checking...")).setForeground(Color.WHITE);
 		this.rscc_logins48.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.rscc_logins48.setBounds(230, 232, 327, 15);
+		this.rscc_logins48.setBounds(220, 232, 327, 15);
 		this.bg.add(this.rscc_logins48);
 	}
 
@@ -165,7 +165,7 @@ public class AppFrame extends JFrame {
 		this.bg.add(new LinkButton("Bug Reports", new Rectangle(158, 480, 119, 40)));
 		this.bg.add(new LinkButton("Bot Reports", new Rectangle(288, 480, 119, 40)));
 		this.bg.add(new LinkButton("Discord", new Rectangle(418, 480, 119, 40)));
-		(this.launch = new LaunchButton()).setBounds(617, 481, 174, 69);
+		(this.launch = new LaunchButton()).setBounds(617, 477, 174, 69);
 		this.bg.add(this.launch);
 		this.bg.add(new ControlButton(1, 755, 8, 10, 11)); // Minimize button
 		this.bg.add(new ControlButton(2, 773, 8, 10, 11)); // Exit button +18px x
