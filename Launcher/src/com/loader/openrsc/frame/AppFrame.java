@@ -1,10 +1,10 @@
 package com.loader.openrsc.frame;
 
 import com.loader.openrsc.Constants;
+import com.loader.openrsc.frame.elements.CheckboxButton;
 import com.loader.openrsc.frame.elements.ControlButton;
 import com.loader.openrsc.frame.elements.LaunchButton;
 import com.loader.openrsc.frame.elements.LinkButton;
-import com.loader.openrsc.frame.elements.RadioButton;
 import com.loader.openrsc.frame.listeners.PositionListener;
 import com.loader.openrsc.util.Utils;
 
@@ -33,6 +33,9 @@ public class AppFrame extends JFrame {
 	private JLabel rscc_status;
 	private JLabel rscc_online;
 	private JLabel rscc_logins48;
+
+	// Localhost section
+	private JLabel local_status;
 
 	public AppFrame() {
 		this.setPreferredSize(new Dimension(795, 555));
@@ -98,7 +101,7 @@ public class AppFrame extends JFrame {
 		(this.orsc_status = new JLabel("Server Status: checking...")).setForeground(Color.WHITE);
 		this.orsc_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
 		int orsc_x = 220;
-		int orsc_y = 135;
+		int orsc_y = 147;
 		this.orsc_status.setBounds(orsc_x, orsc_y, 327, 15);
 		this.bg.add(this.orsc_status);
 
@@ -121,7 +124,7 @@ public class AppFrame extends JFrame {
 		(this.rscc_status = new JLabel("Server Status: checking...")).setForeground(Color.WHITE);
 		this.rscc_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
 		int rscc_x = 220;
-		int rscc_y = 180;
+		int rscc_y = 204;
 		this.rscc_status.setBounds(rscc_x, rscc_y, 327, 15);
 		this.bg.add(this.rscc_status);
 
@@ -136,6 +139,16 @@ public class AppFrame extends JFrame {
 		this.rscc_logins48.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
 		this.rscc_logins48.setBounds(rscc_x, rscc_y + 24, 327, 15);
 		this.bg.add(this.rscc_logins48);
+
+		/*
+		 * Localhost section
+		 */
+		(this.local_status = new JLabel("Server Status: checking...")).setForeground(Color.WHITE);
+		this.local_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
+		int local_x = 220;
+		int local_y = 261;
+		this.local_status.setBounds(local_x, local_y + 12, 327, 15);
+		this.bg.add(this.local_status);
 	}
 
 	public JLabel getCheckLabel() {
@@ -180,12 +193,15 @@ public class AppFrame extends JFrame {
 		this.bg.add(new ControlButton(2, 773, 8, 10, 11)); // Exit button +18px x
 
 		// Radio buttons
-		int orsc_radio_x = 90;
-		int orsc_radio_y = 135;
-		int rscc_radio_x = 90;
-		int rscc_radio_y = 180;
-		this.bg.add(new RadioButton("Open RSC", new Rectangle(orsc_radio_x, orsc_radio_y, 119, 40)));
-		this.bg.add(new RadioButton("RSC Cabbage", new Rectangle(rscc_radio_x, rscc_radio_y, 119, 40)));
+		int orsc_radio_x = 70;
+		int orsc_radio_y = 147;
+		int rscc_radio_x = 70;
+		int rscc_radio_y = 204;
+		int local_radio_x = 70;
+		int local_radio_y = 261;
+		this.bg.add(new CheckboxButton(" Open RSC", new Rectangle(orsc_radio_x, orsc_radio_y, 140, 40)));
+		this.bg.add(new CheckboxButton(" RSC Cabbage", new Rectangle(rscc_radio_x, rscc_radio_y, 140, 40)));
+		this.bg.add(new CheckboxButton(" Single Player", new Rectangle(local_radio_x, local_radio_y, 140, 40)));
 	}
 
 	public JProgressBar getProgress() {
@@ -220,5 +236,10 @@ public class AppFrame extends JFrame {
 
 	public JLabel getrsccLogins48() {
 		return this.rscc_logins48;
+	}
+
+	// Localhost section
+	public JLabel getlocalStatus() {
+		return this.local_status;
 	}
 }

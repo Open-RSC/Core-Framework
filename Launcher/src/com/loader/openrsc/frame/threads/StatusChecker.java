@@ -48,6 +48,20 @@ public class StatusChecker implements Runnable {
 			} catch (Exception ignored) {
 			}
 		}
+		if (game.equals("local")) {
+			try {
+				boolean isOnline = isOnline();
+				String text = isOnline ? "Online" : "Offline";
+				String color = isOnline ? "#00FF00" : "#FF0000";
+				AppFrame.get().getlocalStatus().setText("<html>Server Status: <span style='color:" + color + ";'>" + text + "</span></html>");
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+			try {
+				Thread.sleep(15000L);
+			} catch (Exception ignored) {
+			}
+		}
 		//}
 	}
 

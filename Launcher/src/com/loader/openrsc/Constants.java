@@ -14,6 +14,10 @@ public class Constants {
 	static final String RSCC_SERVER_DOMAIN = "cabbage.openrsc.com"; // Used for the server status display
 	static final int RSCC_SERVER_PORT = 43594;
 
+	// Localhost
+	static final String LOCALHOST_SERVER_DOMAIN = "localhost"; // Used for the server status display
+	static final int LOCALHOST_SERVER_PORT = 43594;
+
 	// Launcher + Cache
 	public static final String Title = "Open RSC Game Launcher";
 	public static final String BASE_URL = "https://game.openrsc.com/"; // Cache and client jar download locations depend on this
