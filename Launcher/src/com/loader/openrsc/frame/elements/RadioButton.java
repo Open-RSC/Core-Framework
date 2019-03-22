@@ -5,23 +5,20 @@ import com.loader.openrsc.util.Utils;
 
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.JButton;
+import javax.swing.JRadioButton;
 
-public class NavButton extends JButton implements MouseListener {
-	public NavButton(final String text, final Rectangle bounds) {
-		super(text.toUpperCase());
+public class RadioButton extends JRadioButton implements MouseListener {
+	public RadioButton(final String text, final Rectangle bounds) {
+		super(text);
 		this.setContentAreaFilled(false);
 		this.setBorderPainted(false);
 		this.setForeground(Color.WHITE);
-		this.setHorizontalTextPosition(0);
-		this.setFont(Utils.getFont("Exo-Regular.otf", 0, 10.0f));
+		this.setFont(Utils.getFont("Exo-Regular.otf", 0, 14.0f));
 		this.addMouseListener(this);
-		this.setMargin(new Insets(0, 0, 0, 0));
 		this.setFocusable(false);
 		this.setBounds(bounds);
 		this.addActionListener(new ButtonListener());

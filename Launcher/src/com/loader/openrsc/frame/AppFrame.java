@@ -4,6 +4,7 @@ import com.loader.openrsc.Constants;
 import com.loader.openrsc.frame.elements.ControlButton;
 import com.loader.openrsc.frame.elements.LaunchButton;
 import com.loader.openrsc.frame.elements.LinkButton;
+import com.loader.openrsc.frame.elements.RadioButton;
 import com.loader.openrsc.frame.listeners.PositionListener;
 import com.loader.openrsc.util.Utils;
 
@@ -94,7 +95,6 @@ public class AppFrame extends JFrame {
 		 * Open RSC section
 		 */
 		// Server status check - spaced 12px apart
-		//this.orsc_status.setHorizontalAlignment(RIGHT);
 		(this.orsc_status = new JLabel("Server Status: checking...")).setForeground(Color.WHITE);
 		this.orsc_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
 		this.orsc_status.setBounds(230, 160, 327, 15);
@@ -169,6 +169,8 @@ public class AppFrame extends JFrame {
 		this.bg.add(this.launch);
 		this.bg.add(new ControlButton(1, 755, 8, 10, 11)); // Minimize button
 		this.bg.add(new ControlButton(2, 773, 8, 10, 11)); // Exit button +18px x
+		this.bg.add(new RadioButton("Open RSC", new Rectangle(80, 160, 119, 40)));
+		this.bg.add(new RadioButton("RSC Cabbage", new Rectangle(80, 208, 119, 40)));
 	}
 
 	public JProgressBar getProgress() {
