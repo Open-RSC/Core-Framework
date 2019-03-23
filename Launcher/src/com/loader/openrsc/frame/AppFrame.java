@@ -93,7 +93,7 @@ public class AppFrame extends JFrame {
 
 		// Version text
 		JLabel subText;
-		(subText = new JLabel("Version " + String.format("%8.6f", Constants.VERSION_NUMBER))).setBounds(662, 54, 170, 15);
+		(subText = new JLabel("Version " + String.format("%8.6f", Constants.VERSION_NUMBER))).setBounds(650, 54, 170, 15);
 		subText.setForeground(new Color(255, 255, 255, 220));
 		subText.setFont(Utils.getFont("Exo-Regular.otf", 1, 10.0f));
 		this.bg.add(subText);

@@ -17,6 +17,8 @@ public class RadioButton extends JRadioButton implements MouseListener {
 		this.setContentAreaFilled(false);
 		this.setBorderPainted(false);
 		this.setForeground(Color.WHITE);
+		this.setIcon(Utils.getImage("toggle-off.png"));
+		this.setSelectedIcon(Utils.getImage("toggle-on.png"));
 		this.setFont(Utils.getFont("Exo-Regular.otf", 0, 14.0f));
 		this.addMouseListener(this);
 		this.setFocusable(false);
