@@ -13,6 +13,7 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.Random;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
@@ -198,21 +199,21 @@ public class AppFrame extends JFrame {
 	}
 
 	private void addButtons() {
-		// Link buttons
+		// Link button section
 		this.bg.add(new LinkButton(Constants.BUTTON1, new Rectangle(27, 480, 119, 40)));
 		this.bg.add(new LinkButton(Constants.BUTTON2, new Rectangle(158, 480, 119, 40)));
 		this.bg.add(new LinkButton(Constants.BUTTON3, new Rectangle(288, 480, 119, 40)));
 		this.bg.add(new LinkButton(Constants.BUTTON4, new Rectangle(418, 480, 119, 40)));
 
-		// Launch button
+		// Launch button section
 		(this.launch = new LaunchButton()).setBounds(617, 477, 174, 69);
 		this.bg.add(this.launch);
 
-		// Control buttons
+		// Control button section
 		this.bg.add(new ControlButton(1, 755, 8, 10, 11)); // Minimize button
 		this.bg.add(new ControlButton(2, 773, 8, 10, 11)); // Exit button +18px x
 
-		// Radio buttons
+		// Radio button section
 		int orsc_radio_x = 70;
 		int orsc_radio_y = 147;
 		int rscc_radio_x = 70;
@@ -221,10 +222,24 @@ public class AppFrame extends JFrame {
 		int dev_radio_y = 249;
 		int local_radio_x = 70;
 		int local_radio_y = 288;
-		this.bg.add(new RadioButton(Constants.ORSC_GAME_NAME, new Rectangle(orsc_radio_x, orsc_radio_y, 140, 40)));
-		this.bg.add(new RadioButton(Constants.RSCC_GAME_NAME, new Rectangle(rscc_radio_x, rscc_radio_y, 140, 40)));
-		this.bg.add(new RadioButton(Constants.DEV_GAME_NAME, new Rectangle(dev_radio_x, dev_radio_y, 140, 40)));
-		this.bg.add(new RadioButton(Constants.LOCALHOST_GAME_NAME, new Rectangle(local_radio_x, local_radio_y, 140, 40)));
+
+		ButtonGroup group = new ButtonGroup();
+		RadioButton orscRadioButton = new RadioButton(Constants.ORSC_GAME_NAME, new Rectangle(orsc_radio_x, orsc_radio_y, 140, 40));
+		RadioButton rsccRadioButton = new RadioButton(Constants.RSCC_GAME_NAME, new Rectangle(rscc_radio_x, rscc_radio_y, 140, 40));
+		RadioButton devRadioButton = new RadioButton(Constants.DEV_GAME_NAME, new Rectangle(dev_radio_x, dev_radio_y, 140, 40));
+		RadioButton localRadioButton = new RadioButton(Constants.LOCALHOST_GAME_NAME, new Rectangle(local_radio_x, local_radio_y, 140, 40));
+
+		orscRadioButton.setSelected(true); // First radio button is selected by default as launcher will overwrite "Cache/ip.txt" anyway at launch
+
+		group.add(orscRadioButton);
+		group.add(rsccRadioButton);
+		group.add(devRadioButton);
+		group.add(localRadioButton);
+
+		this.bg.add(orscRadioButton);
+		this.bg.add(rsccRadioButton);
+		this.bg.add(devRadioButton);
+		this.bg.add(localRadioButton);
 	}
 
 	public JProgressBar getProgress() {
