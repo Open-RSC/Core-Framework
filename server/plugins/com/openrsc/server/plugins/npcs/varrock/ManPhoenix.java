@@ -57,7 +57,9 @@ public class ManPhoenix implements TalkToNpcExecutiveListener,
 				"Use the secret word gherkin to show you're one of us");
 			p.getCache().store("pheonix_mission", true);
 			p.getCache().store("pheonix_alf", true);
-		} else if (!hasItem(p, ItemId.PHOENIX_GANG_WEAPON_KEY.id()) && p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5 && isPhoenixGang(p)) {
+		} else if (!p.getBank().hasItemId(ItemId.PHOENIX_GANG_WEAPON_KEY.id()) && !hasItem(p, ItemId.PHOENIX_GANG_WEAPON_KEY.id()) &&
+				(p.getQuestStage(Quests.SHIELD_OF_ARRAV) >= 5 || p.getQuestStage(Quests.SHIELD_OF_ARRAV) < 0)
+				&& isPhoenixGang(p)) {
 			npcTalk(p, n, "Greetings fellow gang member");
 			playerTalk(p, n, "I have lost the key you gave me");
 			npcTalk(p, n, "You need to be more careful",
