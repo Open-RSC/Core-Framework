@@ -68,7 +68,7 @@ public class ButtonListener implements ActionListener {
 				}
 				return;
 			}
-			case "single player*": {
+			case "single player": {
 				String ip = "localhost";
 				FileOutputStream fileout;
 				try {

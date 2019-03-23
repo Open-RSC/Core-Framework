@@ -20,7 +20,7 @@ public class Constants {
 	static final int DEV_SERVER_PORT = 43594;
 
 	// Localhost
-	public static final String LOCALHOST_GAME_NAME = "Single Player*";
+	public static final String LOCALHOST_GAME_NAME = "Single Player";
 	static final String LOCALHOST_SERVER_DOMAIN = "localhost"; // Used for the server status display
 	static final int LOCALHOST_SERVER_PORT = 43594;
 

@@ -76,6 +76,7 @@ public class AppFrame extends JFrame {
 		this.add(this.bg);
 		this.addGameSelection();
 		this.addButtons();
+		this.addGameDescriptions();
 		this.addMouseListener(new PositionListener(this));
 		this.addMouseMotionListener(new PositionListener(this));
 		this.pack();
@@ -98,15 +99,8 @@ public class AppFrame extends JFrame {
 		subText.setFont(Utils.getFont("Exo-Regular.otf", 1, 10.0f));
 		this.bg.add(subText);
 
-		// Single player note
-		JLabel noteText;
-		(noteText = new JLabel("*Requires first starting the single slayer server")).setBounds(80, 450, 260, 15);
-		noteText.setForeground(new Color(255, 255, 255, 220));
-		noteText.setFont(Utils.getFont("Exo-Regular.otf", 1, 10.0f));
-		this.bg.add(noteText);
-
 		/*
-		 * Open RSC section
+		 * Open RSC
 		 */
 		// Server status check - spaced 12px apart
 		(this.orsc_status = new JLabel(Constants.ORSC_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
@@ -129,7 +123,7 @@ public class AppFrame extends JFrame {
 		this.bg.add(this.orsc_logins48);
 
 		/*
-		 * RSC Cabbage section
+		 * RSC Cabbage
 		 */
 		// Server status check - spaced 12px apart
 		(this.rscc_status = new JLabel(Constants.RSCC_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
@@ -152,7 +146,7 @@ public class AppFrame extends JFrame {
 		this.bg.add(this.rscc_logins48);
 
 		/*
-		 * Dev World section
+		 * Dev World
 		 */
 		(this.dev_status = new JLabel(Constants.DEV_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
 		this.dev_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
@@ -162,7 +156,7 @@ public class AppFrame extends JFrame {
 		this.bg.add(this.dev_status);
 
 		/*
-		 * Localhost section
+		 * Localhost
 		 */
 		(this.local_status = new JLabel(Constants.LOCALHOST_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
 		this.local_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
@@ -214,14 +208,14 @@ public class AppFrame extends JFrame {
 		this.bg.add(new ControlButton(2, 773, 8, 10, 11)); // Exit button +18px x
 
 		// Radio button section
-		int orsc_radio_x = 70;
+		int orsc_radio_x = 30;
 		int orsc_radio_y = 147;
-		int rscc_radio_x = 70;
-		int rscc_radio_y = 204;
-		int dev_radio_x = 70;
-		int dev_radio_y = 249;
-		int local_radio_x = 70;
-		int local_radio_y = 288;
+		int rscc_radio_x = orsc_radio_x;
+		int rscc_radio_y = orsc_radio_y + 28;
+		int dev_radio_x = orsc_radio_x;
+		int dev_radio_y = orsc_radio_y + 56;
+		int local_radio_x = orsc_radio_x;
+		int local_radio_y = orsc_radio_y + 84;
 
 		ButtonGroup group = new ButtonGroup();
 		RadioButton orscRadioButton = new RadioButton(Constants.ORSC_GAME_NAME, new Rectangle(orsc_radio_x, orsc_radio_y, 140, 40));
@@ -240,6 +234,45 @@ public class AppFrame extends JFrame {
 		this.bg.add(rsccRadioButton);
 		this.bg.add(devRadioButton);
 		this.bg.add(localRadioButton);
+	}
+
+	private void addGameDescriptions() {
+		int orsc_x = 143;
+		int orsc_y = 159;
+		int rscc_x = 165;
+		int rscc_y = 188;
+		int dev_x = 150;
+		int dev_y = 215;
+		int local_x = 165;
+		int local_y = 242;
+
+		// Open RSC
+		JLabel orscDescription;
+		(orscDescription = new JLabel("-> 1x xp rate, bank notes, quick banking, near-authentic")).setBounds(orsc_x, orsc_y, 600, 15);
+		orscDescription.setForeground(new Color(255, 255, 255, 220));
+		orscDescription.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
+		this.bg.add(orscDescription);
+
+		// RSC Cabbage
+		JLabel rsccDescription;
+		(rsccDescription = new JLabel("-> 5x xp rate, auction house, batched skills, many new features")).setBounds(rscc_x, rscc_y, 600, 15);
+		rsccDescription.setForeground(new Color(255, 255, 255, 220));
+		rsccDescription.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
+		this.bg.add(rsccDescription);
+
+		// Dev World
+		JLabel devDescription;
+		(devDescription = new JLabel("-> experimental world for testing the latest code")).setBounds(dev_x, dev_y, 600, 15);
+		devDescription.setForeground(new Color(255, 255, 255, 220));
+		devDescription.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
+		this.bg.add(devDescription);
+
+		// Single Player
+		JLabel localhostDescription;
+		(localhostDescription = new JLabel("-> requires first starting the single slayer server")).setBounds(local_x, local_y, 600, 15);
+		localhostDescription.setForeground(new Color(255, 255, 255, 220));
+		localhostDescription.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
+		this.bg.add(localhostDescription);
 	}
 
 	public JProgressBar getProgress() {
