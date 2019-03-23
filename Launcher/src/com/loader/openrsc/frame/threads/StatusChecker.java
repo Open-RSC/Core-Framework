@@ -19,27 +19,40 @@ public class StatusChecker implements Runnable {
 
 	@Override
 	public void run() {
-		//while (true) { // Why should this be an infinite loop to check server status?
-			if (game.equals("orsc")) {
-				try {
-					boolean isOnline = isOnline();
-					String text = isOnline ? "Online" : "Offline";
-					String color = isOnline ? "#00FF00" : "#FF0000";
-					AppFrame.get().getorscStatus().setText("<html>Server Status: <span style='color:" + color + ";'>" + text + "</span></html>");
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-				try {
-					Thread.sleep(15000L);
-				} catch (Exception ignored) {
-				}
+		if (game.equals("orsc")) {
+			try {
+				boolean isOnline = isOnline();
+				String text = isOnline ? "Online" : "Offline";
+				String color = isOnline ? "#00FF00" : "#FF0000";
+				AppFrame.get().getorscStatus().setText("<html>Open RSC: <span style='color:" + color + ";'>" + text + "</span></html>");
+			} catch (Exception e1) {
+				e1.printStackTrace();
 			}
+			try {
+				Thread.sleep(15000L);
+			} catch (Exception ignored) {
+			}
+		}
 		if (game.equals("rscc")) {
 			try {
 				boolean isOnline = isOnline();
 				String text = isOnline ? "Online" : "Offline";
 				String color = isOnline ? "#00FF00" : "#FF0000";
-				AppFrame.get().getrsccStatus().setText("<html>Server Status: <span style='color:" + color + ";'>" + text + "</span></html>");
+				AppFrame.get().getrsccStatus().setText("<html>RSC Cabbage: <span style='color:" + color + ";'>" + text + "</span></html>");
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+			try {
+				Thread.sleep(15000L);
+			} catch (Exception ignored) {
+			}
+		}
+		if (game.equals("dev")) {
+			try {
+				boolean isOnline = isOnline();
+				String text = isOnline ? "Online" : "Offline";
+				String color = isOnline ? "#00FF00" : "#FF0000";
+				AppFrame.get().getdevStatus().setText("<html>Dev World: <span style='color:" + color + ";'>" + text + "</span></html>");
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -53,7 +66,7 @@ public class StatusChecker implements Runnable {
 				boolean isOnline = isOnline();
 				String text = isOnline ? "Online" : "Offline";
 				String color = isOnline ? "#00FF00" : "#FF0000";
-				AppFrame.get().getlocalStatus().setText("<html>Server Status: <span style='color:" + color + ";'>" + text + "</span></html>");
+				AppFrame.get().getlocalStatus().setText("<html>Single Player: <span style='color:" + color + ";'>" + text + "</span></html>");
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -62,22 +75,6 @@ public class StatusChecker implements Runnable {
 			} catch (Exception ignored) {
 			}
 		}
-
-		if (game.equals("dev")) {
-			try {
-				boolean isOnline = isOnline();
-				String text = isOnline ? "Online" : "Offline";
-				String color = isOnline ? "#00FF00" : "#FF0000";
-				AppFrame.get().getdevStatus().setText("<html>Server Status: <span style='color:" + color + ";'>" + text + "</span></html>");
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-			try {
-				Thread.sleep(15000L);
-			} catch (Exception ignored) {
-			}
-		}
-		//}
 	}
 
 	private boolean isOnline() {

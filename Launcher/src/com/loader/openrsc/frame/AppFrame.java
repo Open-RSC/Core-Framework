@@ -109,65 +109,65 @@ public class AppFrame extends JFrame {
 		 * Open RSC section
 		 */
 		// Server status check - spaced 12px apart
-		(this.orsc_status = new JLabel("Server Status: checking...")).setForeground(Color.WHITE);
+		(this.orsc_status = new JLabel(Constants.ORSC_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
 		this.orsc_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		int orsc_x = 220;
-		int orsc_y = 147;
+		int orsc_x = 630;
+		int orsc_y = 140;
 		this.orsc_status.setBounds(orsc_x, orsc_y, 327, 15);
 		this.bg.add(this.orsc_status);
 
 		// Online player count - spaced 16px apart
-		(this.orsc_online = new JLabel("Players Online: checking...")).setForeground(Color.WHITE);
+		(this.orsc_online = new JLabel("Players Online: N/A")).setForeground(Color.WHITE);
 		this.orsc_online.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.orsc_online.setBounds(orsc_x, orsc_y + 12, 327, 15);
+		this.orsc_online.setBounds(orsc_x, orsc_y + 13, 327, 15);
 		this.bg.add(this.orsc_online);
 
 		// Logged in the last 48 hours - spaced 16px apart
-		(this.orsc_logins48 = new JLabel("Online Last 48 Hours: checking...")).setForeground(Color.WHITE);
+		(this.orsc_logins48 = new JLabel("Online Last 48 Hours: N/A")).setForeground(Color.WHITE);
 		this.orsc_logins48.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.orsc_logins48.setBounds(orsc_x, orsc_y + 24, 327, 15);
+		this.orsc_logins48.setBounds(orsc_x, orsc_y + 26, 327, 15);
 		this.bg.add(this.orsc_logins48);
 
 		/*
 		 * RSC Cabbage section
 		 */
 		// Server status check - spaced 12px apart
-		(this.rscc_status = new JLabel("Server Status: checking...")).setForeground(Color.WHITE);
+		(this.rscc_status = new JLabel(Constants.RSCC_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
 		this.rscc_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		int rscc_x = 220;
-		int rscc_y = 204;
+		int rscc_x = 630;
+		int rscc_y = 192;
 		this.rscc_status.setBounds(rscc_x, rscc_y, 327, 15);
 		this.bg.add(this.rscc_status);
 
 		// Online player count - spaced 16px apart
-		(this.rscc_online = new JLabel("Players Online: checking...")).setForeground(Color.WHITE);
+		(this.rscc_online = new JLabel("Players Online: N/A")).setForeground(Color.WHITE);
 		this.rscc_online.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.rscc_online.setBounds(rscc_x, rscc_y + 12, 327, 15);
+		this.rscc_online.setBounds(rscc_x, rscc_y + 13, 327, 15);
 		this.bg.add(this.rscc_online);
 
 		// Logged in the last 48 hours - spaced 16px apart
-		(this.rscc_logins48 = new JLabel("Online Last 48 Hours: checking...")).setForeground(Color.WHITE);
+		(this.rscc_logins48 = new JLabel("Online Last 48 Hours: N/A")).setForeground(Color.WHITE);
 		this.rscc_logins48.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.rscc_logins48.setBounds(rscc_x, rscc_y + 24, 327, 15);
+		this.rscc_logins48.setBounds(rscc_x, rscc_y + 26, 327, 15);
 		this.bg.add(this.rscc_logins48);
 
 		/*
 		 * Dev World section
 		 */
-		(this.dev_status = new JLabel("Server Status: checking...")).setForeground(Color.WHITE);
+		(this.dev_status = new JLabel(Constants.DEV_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
 		this.dev_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		int dev_x = 220;
-		int dev_y = 249;
+		int dev_x = 630;
+		int dev_y = 231;
 		this.dev_status.setBounds(dev_x, dev_y + 12, 327, 15);
 		this.bg.add(this.dev_status);
 
 		/*
 		 * Localhost section
 		 */
-		(this.local_status = new JLabel("Server Status: checking...")).setForeground(Color.WHITE);
+		(this.local_status = new JLabel(Constants.LOCALHOST_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
 		this.local_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		int local_x = 220;
-		int local_y = 288;
+		int local_x = 630;
+		int local_y = 257;
 		this.local_status.setBounds(local_x, local_y + 12, 327, 15);
 		this.bg.add(this.local_status);
 	}
