@@ -22,8 +22,7 @@ public class Statistics implements Runnable {
 			for (Element getorscLogins48 : document.select("a[href$=\"logins48\"]")) {
 				AppFrame.get().getorscLogins48().setText("<html>Online Last 48 Hours: <span style='color:00FF00;'>" + getorscLogins48.text() + "</span></html>");
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ignored) {
 		}
 
 		// RSCC
@@ -37,8 +36,7 @@ public class Statistics implements Runnable {
 			for (Element getrsccLogins48 : document.select("a[href$=\"logins48\"]")) {
 				AppFrame.get().getrsccLogins48().setText("<html>Online Last 48 Hours: <span style='color:00FF00;'>" + getrsccLogins48.text() + "</span></html>");
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ignored) {
 		}
 	}
 }
