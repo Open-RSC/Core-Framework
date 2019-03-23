@@ -6,6 +6,9 @@ import com.loader.openrsc.util.Utils;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
 
 public class ButtonListener implements ActionListener {
@@ -27,6 +30,54 @@ public class ButtonListener implements ActionListener {
 			}
 			case "discord": {
 				Utils.openWebpage("https://discord.gg/94vVKND");
+				return;
+			}
+			case "open rsc": {
+				String ip = "game.openrsc.com";
+					FileOutputStream fileout;
+					try {
+						fileout = new FileOutputStream("Cache" + File.separator + "ip.txt");
+						OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+						outputWriter.write(ip);
+						outputWriter.close();
+					} catch (Exception ignored) {
+					}
+				return;
+			}
+			case "rsc cabbage": {
+				String ip = "cabbage.openrsc.com";
+				FileOutputStream fileout;
+				try {
+					fileout = new FileOutputStream("Cache" + File.separator + "ip.txt");
+					OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+					outputWriter.write(ip);
+					outputWriter.close();
+				} catch (Exception ignored) {
+				}
+				return;
+			}
+			case "dev world": {
+				String ip = "dev.openrsc.com";
+				FileOutputStream fileout;
+				try {
+					fileout = new FileOutputStream("Cache" + File.separator + "ip.txt");
+					OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+					outputWriter.write(ip);
+					outputWriter.close();
+				} catch (Exception ignored) {
+				}
+				return;
+			}
+			case "single player*": {
+				String ip = "localhost";
+				FileOutputStream fileout;
+				try {
+					fileout = new FileOutputStream("Cache" + File.separator + "ip.txt");
+					OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+					outputWriter.write(ip);
+					outputWriter.close();
+				} catch (Exception ignored) {
+				}
 				return;
 			}
 			case "minimize": {
