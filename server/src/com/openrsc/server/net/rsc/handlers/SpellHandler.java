@@ -7,7 +7,9 @@ import com.openrsc.server.event.rsc.impl.CustomProjectileEvent;
 import com.openrsc.server.event.rsc.impl.ObjectRemover;
 import com.openrsc.server.event.rsc.impl.ProjectileEvent;
 import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.ItemSmeltingDef;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.external.ReqOreDef;
 import com.openrsc.server.external.SpellDef;
 import com.openrsc.server.model.PathValidation;
@@ -42,6 +44,7 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
 
 public class SpellHandler implements PacketHandler {
 	/**
@@ -51,10 +54,10 @@ public class SpellHandler implements PacketHandler {
 	private static TreeMap<Integer, Item[]> staffs = new TreeMap<Integer, Item[]>();
 
 	static {
-		staffs.put(31, new Item[]{new Item(197), new Item(615), new Item(682)}); // Fire-Rune
-		staffs.put(32, new Item[]{new Item(102), new Item(616), new Item(683)}); // Water-Rune
-		staffs.put(33, new Item[]{new Item(101), new Item(617), new Item(684)}); // Air-Rune
-		staffs.put(34, new Item[]{new Item(103), new Item(618), new Item(685)}); // Earth-Rune
+		staffs.put(ItemId.FIRE_RUNE.id(), new Item[]{new Item(ItemId.STAFF_OF_FIRE.id()), new Item(ItemId.BATTLESTAFF_OF_FIRE.id()), new Item(ItemId.ENCHANTED_BATTLESTAFF_OF_FIRE.id())}); // Fire-Rune
+		staffs.put(ItemId.WATER_RUNE.id(), new Item[]{new Item(ItemId.STAFF_OF_WATER.id()), new Item(ItemId.BATTLESTAFF_OF_WATER.id()), new Item(ItemId.ENCHANTED_BATTLESTAFF_OF_WATER.id())}); // Water-Rune
+		staffs.put(ItemId.AIR_RUNE.id(), new Item[]{new Item(ItemId.STAFF_OF_AIR.id()), new Item(ItemId.BATTLESTAFF_OF_AIR.id()), new Item(ItemId.ENCHANTED_BATTLESTAFF_OF_AIR.id())}); // Air-Rune
+		staffs.put(ItemId.EARTH_RUNE.id(), new Item[]{new Item(ItemId.STAFF_OF_EARTH.id()), new Item(ItemId.BATTLESTAFF_OF_EARTH.id()), new Item(ItemId.ENCHANTED_BATTLESTAFF_OF_EARTH.id())}); // Earth-Rune
 	}
 
 	private static boolean canCast(Player player) {
@@ -151,13 +154,13 @@ public class SpellHandler implements PacketHandler {
 		// GenericLog(player.getUsername() + " tried to cast spell 49 at " +
 		// player.getLocation()));
 
-		if (player.getSkills().getLevel(6) < spell.getReqLevel()) {
+		if (player.getSkills().getLevel(Skills.MAGIC) < spell.getReqLevel()) {
 			player.setSuspiciousPlayer(true);
 			player.message("Your magic ability is not high enough for this spell.");
 			player.resetPath();
 			return;
 		}
-		if (!Formulae.castSpell(spell, player.getSkills().getLevel(6), player.getMagicPoints())) {
+		if (!Formulae.castSpell(spell, player.getSkills().getLevel(Skills.MAGIC), player.getMagicPoints())) {
 			player.message("The spell fails! You may try again in 20 seconds");
 			player.playSound("spellfail");
 			player.setSpellFail();
@@ -213,25 +216,28 @@ public class SpellHandler implements PacketHandler {
 					player.resetPath();
 					return;
 				}
-				if (affectedNpc.getID() == 35) {
+				if (affectedNpc.getID() == NpcId.DELRITH.id()) {
 					player.message("Delrith can not be attacked without the Silverlight sword");
 					return;
 				}
 
-				if (affectedNpc.getID() == 364 && (player.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -1
+				if (affectedNpc.getID() == NpcId.LUCIEN_EDGE.id() && (player.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -1
 					|| player.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -2)) {
 					player.message("You have already completed this quest");
 					return;
 				}
-				if (affectedNpc.getID() == 364 && !player.getInventory().wielding(726)) {
-					player.message("You decide you don't want to attack Lucien really, He is your friend");
+				if (affectedNpc.getID() == NpcId.LUCIEN_EDGE.id() && !player.getInventory().wielding(ItemId.PENDANT_OF_ARMADYL.id())) {
+					npcTalk(player, affectedNpc, "I'm sure you don't want to attack me really",
+							"I am your friend");
+					message(player, "You decide you don't want to attack Lucien really",
+							"He is your friend");
 					return;
 				}
 
 				if (player.withinRange(affectedNpc, 4)) {
 					player.resetPath();
 				}
-				if (affectedNpc.getID() == 315) {
+				if (affectedNpc.getID() == NpcId.CHRONOZON.id()) {
 					/** FAMILY CREST CHRONOZ **/
 					if (spell.getName().contains("blast")) {
 						String elementalType = spell.getName().split(" ")[0].toLowerCase();
@@ -285,38 +291,38 @@ public class SpellHandler implements PacketHandler {
 				return;
 			}
 
-			int chargedOrb = -1;
+			int chargedOrb = ItemId.NOTHING.id();
 			switch (idx) {
 				case 40:
 					if (gameObject.getID() == 303) {
-						chargedOrb = 626;
+						chargedOrb = ItemId.AIR_ORB.id();
 					} else {
 						player.message("This spell can only be used on air obelisks");
 					}
 					break;
 				case 29:
 					if (gameObject.getID() == 300) {
-						chargedOrb = 613;
+						chargedOrb = ItemId.WATER_ORB.id();
 					} else {
 						player.message("This spell can only be used on water obelisks");
 					}
 					break;
 				case 36:
 					if (gameObject.getID() == 304) {
-						chargedOrb = 627;
+						chargedOrb = ItemId.EARTH_ORB.id();
 					} else {
 						player.message("This spell can only be used on earth obelisks");
 					}
 					break;
 				case 38:
 					if (gameObject.getID() == 301) {
-						chargedOrb = 612;
+						chargedOrb = ItemId.FIRE_ORB.id();
 					} else {
 						player.message("This spell can only be used on fire obelisks");
 					}
 					break;
 			}
-			if (chargedOrb == -1) {
+			if (chargedOrb == ItemId.NOTHING.id()) {
 				return;
 			}
 
@@ -327,7 +333,7 @@ public class SpellHandler implements PacketHandler {
 			player.lastCast = System.currentTimeMillis();
 			player.playSound("spellok");
 			player.message("You succesfully charge the orb");
-			player.incExp(6, spell.getExp(), true);
+			player.incExp(Skills.MAGIC, spell.getExp(), true);
 			player.setCastTimer();
 		} else if (pID == CAST_ON_GROUNDITEM) { // Cast on ground items
 			if (player.getDuel().isDuelActive()) {
@@ -354,7 +360,7 @@ public class SpellHandler implements PacketHandler {
 	private void finalizeSpellNoMessage(Player player, SpellDef spell) {
 		player.lastCast = System.currentTimeMillis();
 		player.playSound("spellok");
-		player.incExp(6, spell.getExp(), true);
+		player.incExp(Skills.MAGIC, spell.getExp(), true);
 		player.setCastTimer();
 	}
 
@@ -362,7 +368,7 @@ public class SpellHandler implements PacketHandler {
 		player.lastCast = System.currentTimeMillis();
 		player.playSound("spellok");
 		player.message("Cast spell successfully");
-		player.incExp(6, spell.getExp(), true);
+		player.incExp(Skills.MAGIC, spell.getExp(), true);
 		player.setCastTimer();
 	}
 
@@ -434,7 +440,7 @@ public class SpellHandler implements PacketHandler {
 				int boneCount = 0;
 				while (inventory.hasNext()) {
 					Item i = inventory.next();
-					if (i.getID() == 20) {
+					if (i.getID() == ItemId.BONES.id()) {
 						inventory.remove();
 						boneCount++;
 					}
@@ -444,7 +450,7 @@ public class SpellHandler implements PacketHandler {
 					return;
 				}
 				for (int i = 0; i < boneCount; i++) {
-					player.getInventory().add(new Item(249));
+					player.getInventory().add(new Item(ItemId.BANANA.id()));
 				}
 				finalizeSpell(player, spell);
 				break;
@@ -484,23 +490,23 @@ public class SpellHandler implements PacketHandler {
 	private void handleItemCast(Player player, SpellDef spell, int id, Item affectedItem) {
 		switch (id) {
 			case 3: // Enchant lvl-1 Sapphire amulet
-				if (affectedItem.getID() == 302) {
+				if (affectedItem.getID() == ItemId.SAPPHIRE_AMULET.id()) {
 					if (!checkAndRemoveRunes(player, spell)) {
 						return;
 					}
 					player.getInventory().remove(affectedItem);
-					player.getInventory().add(new Item(314));
+					player.getInventory().add(new Item(ItemId.SAPPHIRE_AMULET_OF_MAGIC.id()));
 					finalizeSpell(player, spell);
 				} else {
 					player.message("This spell can only be used on unenchanted sapphire amulets");
 				}
 				break;
 			case 10: // Low level alchemy
-				if (affectedItem.getID() == 10) {
+				if (affectedItem.getID() == ItemId.COINS.id()) {
 					player.message("That's already made of gold!");
 					return;
 				}
-				if (affectedItem.getDef().getOriginalItemID() != -1) {
+				if (affectedItem.getDef().getOriginalItemID() != ItemId.NOTHING.id()) {
 					player.message("You can't alch noted items");
 					return;
 				}
@@ -508,25 +514,25 @@ public class SpellHandler implements PacketHandler {
 					return;
 				}
 				// ana in barrel kept but xp allowed
-				if (affectedItem.getID() == 1039) {
+				if (affectedItem.getID() == ItemId.ANA_IN_A_BARREL.id()) {
 					player.message("@gre@Ana: Don't you start casting spells on me!");
 					finalizeSpellNoMessage(player, spell);
 				} else {
 					if (player.getInventory().remove(affectedItem.getID(), 1) > -1) {
 						int value = (int) (affectedItem.getDef().getDefaultPrice() * 0.4D);
-						player.getInventory().add(new Item(10, value)); // 40%
+						player.getInventory().add(new Item(ItemId.COINS.id(), value)); // 40%
 					}
 					finalizeSpell(player, spell);
 				}
 
 				break;
 			case 13: // Enchant lvl-2 emerald amulet
-				if (affectedItem.getID() == 303) {
+				if (affectedItem.getID() == ItemId.EMERALD_AMULET.id()) {
 					if (!checkAndRemoveRunes(player, spell)) {
 						return;
 					}
 					player.getInventory().remove(affectedItem);
-					player.getInventory().add(new Item(315));
+					player.getInventory().add(new Item(ItemId.EMERALD_AMULET_OF_PROTECTION.id()));
 					finalizeSpell(player, spell);
 				} else {
 					player.message("This spell can only be used on unenchanted emerald amulets");
@@ -534,18 +540,18 @@ public class SpellHandler implements PacketHandler {
 				break;
 			case 21: // Superheat item
 				ItemSmeltingDef smeltingDef = affectedItem.getSmeltingDef();
-				if (smeltingDef == null || affectedItem.getID() == 155) {
+				if (smeltingDef == null || affectedItem.getID() == ItemId.COAL.id()) {
 					player.message("This spell can only be used on ore");
 					return;
 				}
 				for (ReqOreDef reqOre : smeltingDef.getReqOres()) {
 					if (player.getInventory().countId(reqOre.getId()) < reqOre.getAmount()) {
-						if (affectedItem.getID() == 151) {
+						if (affectedItem.getID() == ItemId.IRON_ORE.id()) {
 							smeltingDef = EntityHandler.getItemSmeltingDef(9999);
 							break;
 						}
-						if (affectedItem.getID() == 202 || affectedItem.getID() == 150) {
-							player.message("You also need some " + (affectedItem.getID() == 202 ? "copper" : "tin")
+						if (affectedItem.getID() == ItemId.TIN_ORE.id() || affectedItem.getID() == ItemId.COPPER_ORE.id()) {
+							player.message("You also need some " + (affectedItem.getID() == ItemId.TIN_ORE.id() ? "copper" : "tin")
 								+ " to make bronze");
 							return;
 						}
@@ -556,7 +562,7 @@ public class SpellHandler implements PacketHandler {
 					}
 				}
 
-				if (player.getSkills().getLevel(13) < smeltingDef.getReqLevel()) {
+				if (player.getSkills().getLevel(Skills.SMITHING) < smeltingDef.getReqLevel()) {
 					player.message("You need to be at least level-" + smeltingDef.getReqLevel() + " smithing to smelt "
 						+ EntityHandler.getItemDef(smeltingDef.barId).getName().toLowerCase().replaceAll("bar", ""));
 					return;
@@ -573,28 +579,28 @@ public class SpellHandler implements PacketHandler {
 					}
 					player.message("You make a bar of " + bar.getDef().getName().replace("bar", "").toLowerCase());
 					player.getInventory().add(bar);
-					player.incExp(13, smeltingDef.getExp(), true);
+					player.incExp(Skills.SMITHING, smeltingDef.getExp(), true);
 				}
 				finalizeSpell(player, spell);
 				break;
 			case 24: // Enchant lvl-3 ruby amulet
-				if (affectedItem.getID() == 304) {
+				if (affectedItem.getID() == ItemId.RUBY_AMULET.id()) {
 					if (!checkAndRemoveRunes(player, spell)) {
 						return;
 					}
 					player.getInventory().remove(affectedItem);
-					player.getInventory().add(new Item(316));
+					player.getInventory().add(new Item(ItemId.RUBY_AMULET_OF_STRENGTH.id()));
 					finalizeSpell(player, spell);
 				} else {
 					player.message("This spell can only be used on unenchanted ruby amulets");
 				}
 				break;
 			case 28: // High level alchemy
-				if (affectedItem.getID() == 10) {
+				if (affectedItem.getID() == ItemId.COINS.id()) {
 					player.message("That's already made of gold!");
 					return;
 				}
-				if (affectedItem.getDef().getOriginalItemID() != -1) {
+				if (affectedItem.getDef().getOriginalItemID() != ItemId.NOTHING.id()) {
 					player.message("You can't alch noted items");
 					return;
 				}
@@ -602,36 +608,36 @@ public class SpellHandler implements PacketHandler {
 					return;
 				}
 				// ana in barrel kept but xp allowed
-				if (affectedItem.getID() == 1039) {
+				if (affectedItem.getID() == ItemId.ANA_IN_A_BARREL.id()) {
 					player.message("@gre@Ana: Don't you start casting spells on me!");
 					finalizeSpellNoMessage(player, spell);
 				} else {
 					if (player.getInventory().remove(affectedItem.getID(), 1) > -1) {
 						int value = (int) (affectedItem.getDef().getDefaultPrice() * 0.6D);
-						player.getInventory().add(new Item(10, value)); // 60%
+						player.getInventory().add(new Item(ItemId.COINS.id(), value)); // 60%
 					}
 					finalizeSpell(player, spell);
 				}
 				break;
 			case 30: // Enchant lvl-4 diamond amulet
-				if (affectedItem.getID() == 305) {
+				if (affectedItem.getID() == ItemId.DIAMOND_AMULET.id()) {
 					if (!checkAndRemoveRunes(player, spell)) {
 						return;
 					}
 					player.getInventory().remove(affectedItem);
-					player.getInventory().add(new Item(317));
+					player.getInventory().add(new Item(ItemId.DIAMOND_AMULET_OF_POWER.id()));
 					finalizeSpell(player, spell);
 				} else {
 					player.message("This spell can only be used on unenchanted diamond amulets");
 				}
 				break;
 			case 42: // Enchant lvl-5 dragonstone amulet
-				if (affectedItem.getID() == 610) {
+				if (affectedItem.getID() == ItemId.UNENCHANTED_DRAGONSTONE_AMULET.id()) {
 					if (!checkAndRemoveRunes(player, spell)) {
 						return;
 					}
 					player.getInventory().remove(affectedItem);
-					player.getInventory().add(new Item(522));
+					player.getInventory().add(new Item(ItemId.DRAGONSTONE_AMULET.id()));
 					finalizeSpell(player, spell);
 				} else {
 					player.message("This spell can only be used on unenchanted dragonstone amulets");
@@ -666,35 +672,35 @@ public class SpellHandler implements PacketHandler {
 						// same case with ana
 						int[] ungrabbableArr = {
 							//scythe
-							1289,
+							ItemId.SCYTHE.id(),
 							//bunny ears
-							1156,
+							ItemId.BUNNY_EARS.id(),
 							//orbs
-							991, 992, 993, 994,
+							ItemId.ORB_OF_LIGHT_WHITE.id(), ItemId.ORB_OF_LIGHT_BLUE.id(), ItemId.ORB_OF_LIGHT_PINK.id(), ItemId.ORB_OF_LIGHT_YELLOW.id(),
 							//cat (underground pass)
-							1003,
+							ItemId.KARDIA_CAT.id(),
 							//god capes
-							1213, 1214, 1215,
+							ItemId.ZAMORAK_CAPE.id(), ItemId.SARADOMIN_CAPE.id(), ItemId.GUTHIX_CAPE.id(),
 							//holy grail
-							746,
+							ItemId.HOLY_GRAIL.id(),
 							//large cogs
-							727, 728, 729, 730,
+							ItemId.LARGE_COG_BLUE.id(), ItemId.LARGE_COG_BLACK.id(), ItemId.LARGE_COG_RED.id(), ItemId.LARGE_COG_PURPLE.id(),
 							//staff of armadyl,
-							725,
+							ItemId.STAFF_OF_ARMADYL.id(),
 							//ice arrows
-							723,
+							ItemId.ICE_ARROWS.id(),
 							//Firebird Feather
-							557,
+							ItemId.RED_FIREBIRD_FEATHER.id(),
 							//Ball of Witch's House
-							539,
+							ItemId.BALL.id(),
 							//skull of restless ghost
-							27
+							ItemId.QUEST_SKULL.id()
 						};
 						List<Integer> ungrabbables = new ArrayList<Integer>();
 						for (int item : ungrabbableArr) {
 							ungrabbables.add(item);
 						}
-						if (affectedItem.getID() == 980) {
+						if (affectedItem.getID() == ItemId.PRESENT.id()) {
 							return;
 						} else if (ungrabbables.contains(affectedItem.getID())) { // list of ungrabbable items sharing this message
 							player.message("I can't use telekinetic grab on this object");
@@ -709,20 +715,20 @@ public class SpellHandler implements PacketHandler {
 							player.message("You can't cast this spell within the vicinity of the party hall");
 							return;
 						}
-						if (affectedItem.getID() == 1264) {
+						if (affectedItem.getID() == ItemId.A_BLUE_WIZARDS_HAT.id()) {
 							player.message("The spell fizzles as the magical hat resists your spell.");
 							return;
 						}
-						if (affectedItem.getID() == 1093) {
+						if (affectedItem.getID() == ItemId.GERTRUDES_CAT.id()) {
 							player.message("I can't use telekinetic grab on the cat");
 							return;
 						}
-						if (affectedItem.getID() == 1039) {
+						if (affectedItem.getID() == ItemId.ANA_IN_A_BARREL.id()) {
 							player.message("I can't use telekinetic grab on Ana");
 							return;
 						}
 						//coin respawn in Rashiliyia's Tomb can't be telegrabbed
-						if (affectedItem.getID() == 10 && affectedItem.getLocation().equals(new Point(358, 3626))) {
+						if (affectedItem.getID() == ItemId.COINS.id() && affectedItem.getLocation().equals(new Point(358, 3626))) {
 							player.message("The coins turn to dust in your inventory...");
 							return;
 						}
@@ -816,10 +822,10 @@ public class SpellHandler implements PacketHandler {
 				}
 				if (affectedMob.isNpc()) {
 					Npc n = (Npc) affectedMob;
-					if (n.getID() == 196) {
+					if (n.getID() == NpcId.DRAGON.id()) {
 						player.message("The dragon breathes fire at you");
 						int maxHit = 65;
-						if (player.getInventory().wielding(420)) {
+						if (player.getInventory().wielding(ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
 							maxHit = 10;
 							player.message("Your shield prevents some of the damage from the flames");
 						}
@@ -916,7 +922,7 @@ public class SpellHandler implements PacketHandler {
 							player.message("you need to complete underground pass quest to cast this spell");
 							return;
 						}
-						if (!player.getInventory().wielding(1000)) {
+						if (!player.getInventory().wielding(ItemId.STAFF_OF_IBAN.id())) {
 							player.message("you need the staff of iban to cast this spell");
 							return;
 						}
@@ -939,15 +945,15 @@ public class SpellHandler implements PacketHandler {
 					case 33: // Guthix cast
 					case 34:
 					case 35:
-						if (!player.getInventory().wielding(1217) && spellID == 33) {
+						if (!player.getInventory().wielding(ItemId.STAFF_OF_GUTHIX.id()) && spellID == 33) {
 							player.message("you must weild the staff of guthix to cast this spell");
 							return;
 						}
-						if (!player.getInventory().wielding(1218) && spellID == 34) {
+						if (!player.getInventory().wielding(ItemId.STAFF_OF_SARADOMIN.id()) && spellID == 34) {
 							player.message("you must weild the staff of saradomin to cast this spell");
 							return;
 						}
-						if (!player.getInventory().wielding(1216) && spellID == 35) {
+						if (!player.getInventory().wielding(ItemId.STAFF_OF_ZAMORAK.id()) && spellID == 35) {
 							player.message("you must weild the staff of zamorak to cast this spell");
 							return;
 						}
@@ -1005,7 +1011,7 @@ public class SpellHandler implements PacketHandler {
 							return;
 						}
 						/** SALARIN THE TWISTED - STRIKE SPELLS **/
-						if (affectedMob.getID() == 567 && (spell.getName().equals("Wind strike")
+						if (affectedMob.getID() == NpcId.SALARIN_THE_TWISTED.id() && (spell.getName().equals("Wind strike")
 							|| spell.getName().equals("Water strike") || spell.getName().equals("Earth strike")
 							|| spell.getName().equals("Fire strike"))) {
 							int firstDamage = 0;
@@ -1054,7 +1060,7 @@ public class SpellHandler implements PacketHandler {
 						}
 
 						if (player.getMagicPoints() > 30
-							|| (player.getInventory().wielding(701) && spell.getName().contains("bolt")))
+							|| (player.getInventory().wielding(ItemId.GAUNTLETS_OF_CHAOS.id()) && spell.getName().contains("bolt")))
 							max += 1;
 
 						int damage = Formulae.calcSpellHit(max, player.getMagicPoints());
@@ -1080,7 +1086,7 @@ public class SpellHandler implements PacketHandler {
 		//	player.message("You need to stay out of combat for 10 seconds before using a teleport.");
 		//	return;
 		//}
-		if (player.getInventory().countId(1039) > 0) {
+		if (player.getInventory().countId(ItemId.ANA_IN_A_BARREL.id()) > 0) {
 			message(player, "You can't teleport while holding Ana,",
 				"It's just too difficult to concentrate.");
 			return;
@@ -1102,15 +1108,15 @@ public class SpellHandler implements PacketHandler {
 			return;
 		}
 		if (player.getLocation().inKaramja() || player.getLocation().inBrimhaven()) {
-			while (player.getInventory().countId(318) > 0) {
-				player.getInventory().remove(new Item(318));
+			while (player.getInventory().countId(ItemId.KARAMJA_RUM.id()) > 0) {
+				player.getInventory().remove(new Item(ItemId.KARAMJA_RUM.id()));
 			}
 		}
-		if (player.getInventory().hasItemId(812)) {
+		if (player.getInventory().hasItemId(ItemId.PLAGUE_SAMPLE.id())) {
 			player.message("the plague sample is too delicate...");
 			player.message("it disintegrates in the crossing");
-			while (player.getInventory().countId(812) > 0) {
-				player.getInventory().remove(new Item(812));
+			while (player.getInventory().countId(ItemId.PLAGUE_SAMPLE.id()) > 0) {
+				player.getInventory().remove(new Item(ItemId.PLAGUE_SAMPLE.id()));
 			}
 		}
 		switch (id) {
