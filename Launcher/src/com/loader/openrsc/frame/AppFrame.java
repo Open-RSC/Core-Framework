@@ -199,10 +199,10 @@ public class AppFrame extends JFrame {
 
 	private void addButtons() {
 		// Link buttons
-		this.bg.add(new LinkButton("RSC Wiki", new Rectangle(27, 480, 119, 40)));
-		this.bg.add(new LinkButton("Bug Reports", new Rectangle(158, 480, 119, 40)));
-		this.bg.add(new LinkButton("Bot Reports", new Rectangle(288, 480, 119, 40)));
-		this.bg.add(new LinkButton("Discord", new Rectangle(418, 480, 119, 40)));
+		this.bg.add(new LinkButton(Constants.BUTTON1, new Rectangle(27, 480, 119, 40)));
+		this.bg.add(new LinkButton(Constants.BUTTON2, new Rectangle(158, 480, 119, 40)));
+		this.bg.add(new LinkButton(Constants.BUTTON3, new Rectangle(288, 480, 119, 40)));
+		this.bg.add(new LinkButton(Constants.BUTTON4, new Rectangle(418, 480, 119, 40)));
 
 		// Launch button
 		(this.launch = new LaunchButton()).setBounds(617, 477, 174, 69);
@@ -221,10 +221,10 @@ public class AppFrame extends JFrame {
 		int dev_radio_y = 249;
 		int local_radio_x = 70;
 		int local_radio_y = 288;
-		this.bg.add(new RadioButton("Open RSC", new Rectangle(orsc_radio_x, orsc_radio_y, 140, 40)));
-		this.bg.add(new RadioButton("RSC Cabbage", new Rectangle(rscc_radio_x, rscc_radio_y, 140, 40)));
-		this.bg.add(new RadioButton("Dev World", new Rectangle(dev_radio_x, dev_radio_y, 140, 40)));
-		this.bg.add(new RadioButton("Single Player*", new Rectangle(local_radio_x, local_radio_y, 140, 40)));
+		this.bg.add(new RadioButton(Constants.ORSC_GAME_NAME, new Rectangle(orsc_radio_x, orsc_radio_y, 140, 40)));
+		this.bg.add(new RadioButton(Constants.RSCC_GAME_NAME, new Rectangle(rscc_radio_x, rscc_radio_y, 140, 40)));
+		this.bg.add(new RadioButton(Constants.DEV_GAME_NAME, new Rectangle(dev_radio_x, dev_radio_y, 140, 40)));
+		this.bg.add(new RadioButton(Constants.LOCALHOST_GAME_NAME, new Rectangle(local_radio_x, local_radio_y, 140, 40)));
 	}
 
 	public JProgressBar getProgress() {
