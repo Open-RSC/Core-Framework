@@ -2,13 +2,13 @@ package com.loader.openrsc;
 
 public class Constants {
 
-	// ORSC
+	// Open RSC
 	public static final String ORSC_GAME_NAME = "Open RSC";
 	public static final String ORSC_WORLD_STATS_URL = "https://openrsc.com/stats"; // Used for the world statistics
 	static final String ORSC_SERVER_DOMAIN = "game.openrsc.com"; // Used for the server status display
 	static final int ORSC_SERVER_PORT = 43594;
 
-	// RSCC
+	// RSC Cabbage
 	public static final String RSCC_GAME_NAME = "RSC Cabbage";
 	public static final String RSCC_WORLD_STATS_URL = "https://cabbage.openrsc.com/stats"; // Used for the world statistics
 	static final String RSCC_SERVER_DOMAIN = "cabbage.openrsc.com"; // Used for the server status display
@@ -17,6 +17,10 @@ public class Constants {
 	// Localhost
 	static final String LOCALHOST_SERVER_DOMAIN = "localhost"; // Used for the server status display
 	static final int LOCALHOST_SERVER_PORT = 43594;
+
+	// Dev World
+	static final String DEV_SERVER_DOMAIN = "dev.openrsc.com"; // Used for the server status display
+	static final int DEV_SERVER_PORT = 43594;
 
 	// Launcher + Cache
 	public static final String Title = "Open RSC Game Launcher";

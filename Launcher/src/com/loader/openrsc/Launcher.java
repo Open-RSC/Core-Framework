@@ -27,6 +27,7 @@ public class Launcher {
 		String orsc = "orsc";
 		String rscc = "rscc";
 		String local = "local";
+		String dev = "dev";
 
 		// ORSC server status checker
 		new Thread(new StatusChecker(Constants.ORSC_SERVER_DOMAIN, orsc, Constants.ORSC_SERVER_PORT)).start();
@@ -36,6 +37,9 @@ public class Launcher {
 
 		// Localhost server status checker
 		new Thread(new StatusChecker(Constants.LOCALHOST_SERVER_DOMAIN, local, Constants.LOCALHOST_SERVER_PORT)).start();
+
+		// Dev World server status checker
+		new Thread(new StatusChecker(Constants.DEV_SERVER_DOMAIN, dev, Constants.DEV_SERVER_PORT)).start();
 
 		// All game statistics via jsoup web scraper
 		new Thread(new Statistics()).start();

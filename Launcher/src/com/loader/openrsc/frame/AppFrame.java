@@ -37,6 +37,9 @@ public class AppFrame extends JFrame {
 	// Localhost section
 	private JLabel local_status;
 
+	// Dev World section
+	private JLabel dev_status;
+
 	public AppFrame() {
 		this.setPreferredSize(new Dimension(795, 555));
 		this.setUndecorated(true);
@@ -89,7 +92,7 @@ public class AppFrame extends JFrame {
 
 		// Version text
 		JLabel subText;
-		(subText = new JLabel("Version " + String.format("%8.6f", Constants.VERSION_NUMBER))).setBounds(662, 56, 170, 15);
+		(subText = new JLabel("Version " + String.format("%8.6f", Constants.VERSION_NUMBER))).setBounds(662, 54, 170, 15);
 		subText.setForeground(new Color(255, 255, 255, 220));
 		subText.setFont(Utils.getFont("Exo-Regular.otf", 1, 10.0f));
 		this.bg.add(subText);
@@ -148,12 +151,22 @@ public class AppFrame extends JFrame {
 		this.bg.add(this.rscc_logins48);
 
 		/*
+		 * Dev World section
+		 */
+		(this.dev_status = new JLabel("Server Status: checking...")).setForeground(Color.WHITE);
+		this.dev_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
+		int dev_x = 220;
+		int dev_y = 249;
+		this.dev_status.setBounds(dev_x, dev_y + 12, 327, 15);
+		this.bg.add(this.dev_status);
+
+		/*
 		 * Localhost section
 		 */
 		(this.local_status = new JLabel("Server Status: checking...")).setForeground(Color.WHITE);
 		this.local_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
 		int local_x = 220;
-		int local_y = 261;
+		int local_y = 288;
 		this.local_status.setBounds(local_x, local_y + 12, 327, 15);
 		this.bg.add(this.local_status);
 	}
@@ -204,10 +217,13 @@ public class AppFrame extends JFrame {
 		int orsc_radio_y = 147;
 		int rscc_radio_x = 70;
 		int rscc_radio_y = 204;
+		int dev_radio_x = 70;
+		int dev_radio_y = 249;
 		int local_radio_x = 70;
-		int local_radio_y = 261;
+		int local_radio_y = 288;
 		this.bg.add(new RadioButton("Open RSC", new Rectangle(orsc_radio_x, orsc_radio_y, 140, 40)));
 		this.bg.add(new RadioButton("RSC Cabbage", new Rectangle(rscc_radio_x, rscc_radio_y, 140, 40)));
+		this.bg.add(new RadioButton("Dev World", new Rectangle(dev_radio_x, dev_radio_y, 140, 40)));
 		this.bg.add(new RadioButton("Single Player*", new Rectangle(local_radio_x, local_radio_y, 140, 40)));
 	}
 
@@ -248,5 +264,10 @@ public class AppFrame extends JFrame {
 	// Localhost section
 	public JLabel getlocalStatus() {
 		return this.local_status;
+	}
+
+	// Dev World section
+	public JLabel getdevStatus() {
+		return this.dev_status;
 	}
 }
