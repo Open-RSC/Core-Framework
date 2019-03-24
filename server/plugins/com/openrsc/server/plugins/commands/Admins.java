@@ -354,7 +354,7 @@ public final class Admins implements CommandListener {
 			} catch (SQLException e) {
 				System.out.println(e);
 			}
-			player.message(messagePrefix + "Drop tables relaoded");
+			player.message(messagePrefix + "Drop tables reloaded");
 		}
 		else if (cmd.equalsIgnoreCase("gi") || cmd.equalsIgnoreCase("gitem") || cmd.equalsIgnoreCase("grounditem")) {
 			if (args.length < 1 || args.length == 4) {

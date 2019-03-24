@@ -8,19 +8,9 @@ import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanInvite;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.event.rsc.impl.FireCannonEvent;
-import com.openrsc.server.event.rsc.impl.PoisonEvent;
-import com.openrsc.server.event.rsc.impl.PrayerDrainEvent;
-import com.openrsc.server.event.rsc.impl.ProjectileEvent;
-import com.openrsc.server.event.rsc.impl.RangeEvent;
-import com.openrsc.server.event.rsc.impl.ThrowingEvent;
+import com.openrsc.server.event.rsc.impl.*;
 import com.openrsc.server.login.LoginRequest;
-import com.openrsc.server.model.Cache;
-import com.openrsc.server.model.MenuOptionListener;
-import com.openrsc.server.model.Point;
-import com.openrsc.server.model.PrivateMessage;
-import com.openrsc.server.model.Shop;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.*;
 import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.Inventory;
@@ -48,27 +38,15 @@ import com.openrsc.server.sql.query.logs.LiveFeedLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
-
+import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.ListIterator;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
-
-import io.netty.channel.Channel;
 
 /**
  * A single player.
@@ -2194,6 +2172,7 @@ public final class Player extends Mob {
 		} else {
 			getKillCache().set(n_id, 1);
 		}
+		kills = getKillCache().getInt(n_id);
 		if (sendUpdate) {
 			message("Your " + n.getDef().getName() + " kill count is: @red@" + kills + "@whi@.");
 		}

@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.commands;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.content.clan.ClanInvite;
+import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.snapshot.Chatlog;
@@ -9,12 +10,16 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
+import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.ChatLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 import org.apache.commons.lang.StringUtils;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -283,6 +288,26 @@ public final class RegularPlayer implements CommandListener {
 		}
 		else if (cmd.equalsIgnoreCase("time") || cmd.equalsIgnoreCase("date") || cmd.equalsIgnoreCase("datetime")) {
 			player.message(messagePrefix + " the current time/date is:@gre@ " + new java.util.Date().toString());
+		}
+		else if (Constants.GameServer.NPC_KILL_LIST && cmd.equalsIgnoreCase("kills")) {
+			String kills = "NPC Kill List for " + player.getUsername() + " % %";
+			try {
+				PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement(
+				"SELECT * FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "npckills` WHERE playerID = ? ORDER BY killCount DESC LIMIT 16");
+				statement.setInt(1, player.getDatabaseID());
+				ResultSet result = statement.executeQuery();
+				Npc n = new Npc();
+				while (result.next()) {
+					int npcID = result.getInt("npcID");
+					n.setID(npcID);
+					int killCount = result.getInt("killCount");
+					kills += "NPC: " + n.getDef().getName() + " - Kill Count: " + killCount + "%";
+				}
+				result.close();
+				ActionSender.sendBox(player, kills, true);
+			} catch (SQLException e) {
+				System.out.println(e);
+			}
 		}
 		else if (cmd.equalsIgnoreCase("commands")) {
 			ActionSender.sendBox(player, ""

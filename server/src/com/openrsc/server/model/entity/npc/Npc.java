@@ -82,7 +82,9 @@ public class Npc extends Mob {
 	public Npc(int id, int startX, int startY, int minX, int maxX, int minY, int maxY) {
 		this(new NPCLoc(id, startX, startY, minX, maxX, minY, maxY));
 	}
-
+	public Npc() {
+        //Default constructor for NPC, this is useful for finding the name of an NPC without having to spawn an NPC.
+	}
 	public Npc(NPCLoc loc) {
 		for (int i : Constants.GameServer.UNDEAD_NPCS) {
 			if (loc.getId() == i) {
