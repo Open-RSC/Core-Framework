@@ -8,15 +8,9 @@ import com.loader.openrsc.frame.elements.RadioButton;
 import com.loader.openrsc.frame.listeners.PositionListener;
 import com.loader.openrsc.util.Utils;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Rectangle;
+import javax.swing.*;
+import java.awt.*;
 import java.util.Random;
-
-import javax.swing.ButtonGroup;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JProgressBar;
 
 public class AppFrame extends JFrame {
 	private static AppFrame instance;
@@ -248,30 +242,30 @@ public class AppFrame extends JFrame {
 
 		// Open RSC
 		JLabel orscDescription;
-		(orscDescription = new JLabel("-> 1x xp rate, bank notes, quick banking, near-authentic")).setBounds(orsc_x, orsc_y, 600, 15);
+		(orscDescription = new JLabel("-> 1x xp rate, bank notes, quick banking, near-authentic")).setBounds(orsc_x, orsc_y, 600, 18);
 		orscDescription.setForeground(new Color(255, 255, 255, 220));
-		orscDescription.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
+		orscDescription.setFont(Utils.getFont("Exo-Regular.otf", 0, 13.0f));
 		this.bg.add(orscDescription);
 
 		// RSC Cabbage
 		JLabel rsccDescription;
-		(rsccDescription = new JLabel("-> 5x xp rate, auction house, batched skills, many new features")).setBounds(rscc_x, rscc_y, 600, 15);
+		(rsccDescription = new JLabel("-> 5x xp rate, auction house, batched skills, many new features")).setBounds(rscc_x, rscc_y, 600, 18);
 		rsccDescription.setForeground(new Color(255, 255, 255, 220));
-		rsccDescription.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
+		rsccDescription.setFont(Utils.getFont("Exo-Regular.otf", 0, 13.0f));
 		this.bg.add(rsccDescription);
 
 		// Dev World
 		JLabel devDescription;
-		(devDescription = new JLabel("-> experimental world for testing the latest code")).setBounds(dev_x, dev_y, 600, 15);
+		(devDescription = new JLabel("-> experimental world for testing the latest code")).setBounds(dev_x, dev_y, 600, 18);
 		devDescription.setForeground(new Color(255, 255, 255, 220));
-		devDescription.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
+		devDescription.setFont(Utils.getFont("Exo-Regular.otf", 0, 13.0f));
 		this.bg.add(devDescription);
 
 		// Single Player
 		JLabel localhostDescription;
-		(localhostDescription = new JLabel("-> requires first starting the single slayer server")).setBounds(local_x, local_y, 600, 15);
+		(localhostDescription = new JLabel("-> requires first starting the single slayer server")).setBounds(local_x, local_y, 600, 18);
 		localhostDescription.setForeground(new Color(255, 255, 255, 220));
-		localhostDescription.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
+		localhostDescription.setFont(Utils.getFont("Exo-Regular.otf", 0, 13.0f));
 		this.bg.add(localhostDescription);
 	}
 
