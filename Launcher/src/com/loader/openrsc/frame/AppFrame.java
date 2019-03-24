@@ -8,9 +8,15 @@ import com.loader.openrsc.frame.elements.RadioButton;
 import com.loader.openrsc.frame.listeners.PositionListener;
 import com.loader.openrsc.util.Utils;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.util.Random;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JProgressBar;
 
 public class AppFrame extends JFrame {
 	private static AppFrame instance;
@@ -263,7 +269,7 @@ public class AppFrame extends JFrame {
 
 		// Single Player
 		JLabel localhostDescription;
-		(localhostDescription = new JLabel("-> requires first starting the single slayer server")).setBounds(local_x, local_y, 600, 18);
+		(localhostDescription = new JLabel("-> requires first starting the single player server")).setBounds(local_x, local_y, 600, 18);
 		localhostDescription.setForeground(new Color(255, 255, 255, 220));
 		localhostDescription.setFont(Utils.getFont("Exo-Regular.otf", 0, 13.0f));
 		this.bg.add(localhostDescription);
