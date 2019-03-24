@@ -50,7 +50,7 @@ public class Npc extends Mob {
 	/**
 	 * The location of this npc
 	 */
-	protected NPCLoc loc;
+	private NPCLoc loc;
 	private int armourPoints = 1;
 	/**
 	 * Holds players that did damage with combat
@@ -98,7 +98,8 @@ public class Npc extends Mob {
 		}
 		def = EntityHandler.getNpcDef(loc.getId());
 		if (def == null) {
-			throw new NullPointerException("Npc definition is null - " + loc.getId());
+			throw new NullPointerException("NPC definition is invalid for NPC ID: " + loc.getId() + ", coordinates: " + "("
+				+ loc.startX() + ", " + loc.startY() + ")");
 		}
 
 		this.npcBehavior = new NpcBehavior(this);
@@ -111,8 +112,8 @@ public class Npc extends Mob {
 		getSkills().setLevelTo(Skills.STRENGTH, def.getStr());
 		getSkills().setLevelTo(Skills.HITPOINTS, def.getHits());
 
-		/**
-		 * Unique ID for event tracking.
+		/*
+		  Unique ID for event tracking.
 		 */
 		setUUID(UUID.randomUUID().toString());
 
@@ -183,7 +184,7 @@ public class Npc extends Mob {
 	 * @param p
 	 * @return
 	 */
-	public int getCombatDamageDoneBy(Player p) {
+	private int getCombatDamageDoneBy(Player p) {
 		if (p == null) {
 			return 0;
 		}
@@ -199,7 +200,7 @@ public class Npc extends Mob {
 	 *
 	 * @return
 	 */
-	public ArrayList<Integer> getCombatDamagers() {
+	private ArrayList<Integer> getCombatDamagers() {
 		return new ArrayList<Integer>(combatDamagers.keySet());
 	}
 
@@ -221,7 +222,7 @@ public class Npc extends Mob {
 	 * @param p
 	 * @return
 	 */
-	public int getMageDamageDoneBy(Player p) {
+	private int getMageDamageDoneBy(Player p) {
 		if (p == null || !mageDamagers.containsKey(p.getDatabaseID())) {
 			return 0;
 		}
@@ -234,7 +235,7 @@ public class Npc extends Mob {
 	 *
 	 * @return
 	 */
-	public ArrayList<Integer> getMageDamagers() {
+	private ArrayList<Integer> getMageDamagers() {
 		return new ArrayList<Integer>(mageDamagers.keySet());
 	}
 
@@ -244,7 +245,7 @@ public class Npc extends Mob {
 	 * @param p
 	 * @return
 	 */
-	public int getRangeDamageDoneBy(Player p) {
+	private int getRangeDamageDoneBy(Player p) {
 		if (p == null || !rangeDamagers.containsKey(p.getDatabaseID())) {
 			return 0;
 		}
@@ -257,7 +258,7 @@ public class Npc extends Mob {
 	 *
 	 * @return
 	 */
-	public ArrayList<Integer> getRangeDamagers() {
+	private ArrayList<Integer> getRangeDamagers() {
 		return new ArrayList<Integer>(rangeDamagers.keySet());
 	}
 
@@ -275,7 +276,7 @@ public class Npc extends Mob {
 	 * @param attacker the person that "finished off" the npc
 	 * @return the player who did the most damage / should get the loot
 	 */
-	public Player handleLootAndXpDistribution(Player attacker) {
+	private Player handleLootAndXpDistribution(Player attacker) {
 
 		Player playerWithMostDamage = attacker;
 		int currentHighestDamage = 0;
@@ -535,7 +536,7 @@ public class Npc extends Mob {
 		}
 	}
 
-	public void startRespawning() {
+	private void startRespawning() {
 
 	}
 
@@ -600,11 +601,11 @@ public class Npc extends Mob {
 		return true;
 	}
 
-	public boolean isRespawning() {
+	boolean isRespawning() {
 		return isRespawning;
 	}
 
-	public void setRespawning(boolean isRespawning) {
+	private void setRespawning(boolean isRespawning) {
 		this.isRespawning = isRespawning;
 	}
 
