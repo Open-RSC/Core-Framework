@@ -76,7 +76,7 @@ public class Inventory {
 			}
 
 			if (this.full()) {
-				//player.message("Your Inventory is full, the " + itemToAdd.getDef().getName() + " drops to the ground!");
+				player.message("Your Inventory is full, the " + itemToAdd.getDef().getName() + " drops to the ground!");
 				world.registerItem(
 					new GroundItem(itemToAdd.getID(), player.getX(), player.getY(), itemToAdd.getAmount(), player),
 					94000);
@@ -88,7 +88,6 @@ public class Inventory {
 			if (sendInventory)
 				ActionSender.sendInventoryUpdateItem(player, list.size() - 1);
 		}
-		return;
 	}
 
 	public boolean canHold(Item item) {
@@ -394,12 +393,12 @@ public class Inventory {
 		Optional<Integer> optionalSkillIndex = Optional.empty();
 		boolean ableToWield = true;
 		boolean bypass = !Constants.GameServer.STRICT_CHECK_ALL &&
-				(itemLower.startsWith("poisoned") && 
+				(itemLower.startsWith("poisoned") &&
 					(itemLower.endsWith("throwing dart") && !Constants.GameServer.STRICT_PDART_CHECK) ||
-					(itemLower.endsWith("throwing knife") && !Constants.GameServer.STRICT_PKNIFE_CHECK) || 
+					(itemLower.endsWith("throwing knife") && !Constants.GameServer.STRICT_PKNIFE_CHECK) ||
 					(itemLower.endsWith("spear") && !Constants.GameServer.STRICT_PSPEAR_CHECK)
 				);
-		
+
 		if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
 			optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
 			optionalSkillIndex = Optional.of(Skills.ATTACK);
@@ -414,7 +413,7 @@ public class Inventory {
 			optionalLevel = Optional.of(requiredLevel);
 			optionalSkillIndex = Optional.of(Skills.ATTACK);
 		}
-		
+
 		if (player.getSkills().getMaxStat(requiredSkillIndex) < requiredLevel) {
 			if (!bypass) {
 				player.message("You are not a high enough level to use this item");
@@ -427,7 +426,7 @@ public class Inventory {
 				player.message("You are not a high enough level to use this item");
 				player.message("You need to have a " + Skills.SKILL_NAME[optionalSkillIndex.get()] + " level of " + optionalLevel.get());
 				ableToWield = false;
-			}	
+			}
 		}
 		if (item.getDef().isFemaleOnly() && player.isMale()) {
 			player.message("It doesn't fit!");

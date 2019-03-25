@@ -139,8 +139,6 @@ public final class ItemDropHandler implements PacketHandler {
 				ActionSender.sendSound(owner, "dropobject");
 				if (PluginHandler.getPluginHandler().blockDefaultAction("Drop", new Object[]{player, item})) {
 					stop();
-					//TODO I GUESS???? if plugins allow to drop aswell and not completely stop?
-					//Not sure though - handle it all via plugins for specific blockAction.
 					player.setStatus(Action.IDLE);
 					return;
 				}

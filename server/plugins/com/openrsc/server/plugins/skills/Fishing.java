@@ -63,9 +63,6 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 			owner.message("You are too tired to catch this fish");
 			return;
 		}
-		if (owner.getInventory().full()) {
-			return;
-		}
 		if (owner.getSkills().getLevel(Skills.FISHING) < def.getReqLevel()) {
 			owner.playerServerMessage(MessageType.QUEST, "You need at least level " + def.getReqLevel() + " "
 				+ fishingRequirementString(object, command) + " "

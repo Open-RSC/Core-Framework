@@ -3,7 +3,6 @@ package com.openrsc.server.event.custom;
 import com.openrsc.server.Constants;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.net.rsc.ActionSender;
 
 public abstract class BatchEvent extends DelayedEvent {
@@ -33,10 +32,11 @@ public abstract class BatchEvent extends DelayedEvent {
 			}
 			if (owner.getInventory().full()) {
 				interrupt();
+				if (Constants.GameServer.BATCH_PROGRESSION) owner.message("Your Inventory is too full to continue.");
 			}
 			if (owner.hasMoved()) { // If the player walks away, stop batching
-				this.stop();
-				owner.setStatus(Action.IDLE);
+				//this.stop();
+				//owner.setStatus(Action.IDLE);
 				interrupt();
 			}
 		}
