@@ -210,23 +210,22 @@ public class AppFrame extends JFrame {
 
 		int friend_button_x = 75;
 		int friend_button_y = 400;
-		int x_increase = 145;
+		this.bg.add(new LinkText("RSC Dawn", new Rectangle(friend_button_x, friend_button_y, 135, 20)));
+		this.bg.add(new LinkText("RSC Revolution", new Rectangle(friend_button_x + 135, friend_button_y, 135, 20)));
+		this.bg.add(new LinkText("RSC Emulation", new Rectangle(friend_button_x + (145 * 2), friend_button_y, 135, 20)));
 
 		JLabel spacer1;
-		(spacer1 = new JLabel("|")).setBounds(friend_button_x + 130, 400, 10, 20);
-		spacer1.setForeground(new Color(255, 255, 255, 220));
+		(spacer1 = new JLabel("|")).setBounds(friend_button_x + 126, 400, 10, 20);
+		spacer1.setForeground(new Color(255, 0, 0, 220));
 		spacer1.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
 		this.bg.add(spacer1);
 
 		JLabel spacer2;
-		(spacer2 = new JLabel("|")).setBounds(friend_button_x + 285, 400, 10, 20);
-		spacer2.setForeground(new Color(255, 255, 255, 220));
+		(spacer2 = new JLabel("|")).setBounds(friend_button_x + 280, 400, 10, 20);
+		spacer2.setForeground(new Color(255, 0, 0, 220));
 		spacer2.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
 		this.bg.add(spacer2);
 
-		this.bg.add(new LinkText("RSC Dawn", new Rectangle(friend_button_x, friend_button_y, 135, 20)));
-		this.bg.add(new LinkText("RSC Revolution", new Rectangle(friend_button_x + x_increase, friend_button_y, 135, 20)));
-		this.bg.add(new LinkText("RSC Emulation", new Rectangle(friend_button_x + (x_increase * 2), friend_button_y, 135, 20)));
 
 		// Launch button section
 		(this.launch = new LaunchButton()).setBounds(617, 477, 174, 69);
