@@ -107,7 +107,7 @@ public class AppFrame extends JFrame {
 		(this.orsc_status = new JLabel(Constants.ORSC_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
 		this.orsc_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
 		int orsc_x = 630;
-		int orsc_y = 140;
+		int orsc_y = 142;
 		this.orsc_status.setBounds(orsc_x, orsc_y, 327, 15);
 		this.bg.add(this.orsc_status);
 
@@ -130,7 +130,7 @@ public class AppFrame extends JFrame {
 		(this.rscc_status = new JLabel(Constants.RSCC_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
 		this.rscc_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
 		int rscc_x = 630;
-		int rscc_y = 192;
+		int rscc_y = orsc_y + 52; // 192
 		this.rscc_status.setBounds(rscc_x, rscc_y, 327, 15);
 		this.bg.add(this.rscc_status);
 
@@ -152,7 +152,7 @@ public class AppFrame extends JFrame {
 		(this.dev_status = new JLabel(Constants.DEV_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
 		this.dev_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
 		int dev_x = 630;
-		int dev_y = 231;
+		int dev_y = rscc_y + 39; // 231
 		this.dev_status.setBounds(dev_x, dev_y + 12, 327, 15);
 		this.bg.add(this.dev_status);
 
@@ -162,7 +162,7 @@ public class AppFrame extends JFrame {
 		(this.local_status = new JLabel(Constants.LOCALHOST_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
 		this.local_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
 		int local_x = 630;
-		int local_y = 257;
+		int local_y = dev_y + 26; // 257
 		this.local_status.setBounds(local_x, local_y + 12, 327, 15);
 		this.bg.add(this.local_status);
 	}
@@ -238,7 +238,7 @@ public class AppFrame extends JFrame {
 
 		// Radio button section
 		int orsc_radio_x = 30;
-		int orsc_radio_y = 147;
+		int orsc_radio_y = 142;
 		int rscc_radio_x = orsc_radio_x;
 		int rscc_radio_y = orsc_radio_y + 28;
 		int dev_radio_x = orsc_radio_x;
@@ -267,13 +267,13 @@ public class AppFrame extends JFrame {
 
 	private void addGameDescriptions() {
 		int orsc_x = 143;
-		int orsc_y = 159;
+		int orsc_y = 152;
 		int rscc_x = 165;
-		int rscc_y = 188;
+		int rscc_y = orsc_y + 29; // 188
 		int dev_x = 150;
-		int dev_y = 215;
+		int dev_y = rscc_y + 27; // 215
 		int local_x = 165;
-		int local_y = 242;
+		int local_y = dev_y + 29; // 242
 
 		// Open RSC
 		JLabel orscDescription;
