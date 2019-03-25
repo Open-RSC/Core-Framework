@@ -3,12 +3,13 @@ package com.openrsc.server.event.custom;
 import com.openrsc.server.Constants;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.states.Action;
 import com.openrsc.server.net.rsc.ActionSender;
 
 public abstract class BatchEvent extends DelayedEvent {
 
-	private int repeatFor;
-	private int repeated;
+	private long repeatFor;
+	private long repeated;
 
 	public BatchEvent(Player owner, int delay, int repeatFor) {
 		super(owner, delay);
@@ -22,12 +23,20 @@ public abstract class BatchEvent extends DelayedEvent {
 	@Override
 	public void run() {
 		if (repeated < getRepeatFor()) {
-			owner.setBusyTimer(delay + 200);
+			//owner.setBusyTimer(delay + 200); // This was locking the player until all batching completed
 			action();
 			repeated++;
 			if (repeated < getRepeatFor()) {
 				ActionSender.sendProgress(owner, repeated);
 			} else {
+				interrupt();
+			}
+			if (owner.getInventory().full()) {
+				interrupt();
+			}
+			if (owner.hasMoved()) { // If the player walks away, stop batching
+				this.stop();
+				owner.setStatus(Action.IDLE);
 				interrupt();
 			}
 		}
@@ -46,7 +55,7 @@ public abstract class BatchEvent extends DelayedEvent {
 		matchRunning = false;
 	}
 
-	protected int getRepeatFor() {
+	protected long getRepeatFor() {
 		return repeatFor;
 	}
 

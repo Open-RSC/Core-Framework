@@ -109,7 +109,7 @@ public class Inventory {
 		}
 	}
 
-	public int countId(int id) {
+	public int countId(long id) {
 		synchronized (list) {
 			int temp = 0;
 			for (Item i : list) {
