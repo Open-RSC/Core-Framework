@@ -431,10 +431,10 @@ public final class Formulae {
 	}
 
 	/**
-	 * Should the web be cut?
+	 * Should the web be cut? ~50%
 	 */
 	public static boolean cutWeb() {
-		return DataConversions.random(0, 4) != 0;
+		return DataConversions.random(0, 4) <= 1;
 	}
 
 	public static boolean doorAtFacing(Entity e, int x, int y, int dir) {
