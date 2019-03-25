@@ -80,6 +80,18 @@ public class ButtonListener implements ActionListener {
 				}
 				return;
 			}
+			case "rsc emulation": {
+				Utils.openWebpage("https://www.rscemulation.net");
+				return;
+			}
+			case "rsc revolution": {
+				Utils.openWebpage("https://www.rscrevolution.com");
+				return;
+			}
+			case "rsc dawn": {
+				Utils.openWebpage("https://www.rscdawn.com");
+				return;
+			}
 			case "minimize": {
 				AppFrame.get().setState(1);
 				return;

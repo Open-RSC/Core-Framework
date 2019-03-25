@@ -4,6 +4,7 @@ import com.loader.openrsc.Constants;
 import com.loader.openrsc.frame.elements.ControlButton;
 import com.loader.openrsc.frame.elements.LaunchButton;
 import com.loader.openrsc.frame.elements.LinkButton;
+import com.loader.openrsc.frame.elements.LinkText;
 import com.loader.openrsc.frame.elements.RadioButton;
 import com.loader.openrsc.frame.listeners.PositionListener;
 import com.loader.openrsc.util.Utils;
@@ -194,10 +195,38 @@ public class AppFrame extends JFrame {
 
 	private void addButtons() {
 		// Link button section
-		this.bg.add(new LinkButton(Constants.BUTTON1, new Rectangle(27, 480, 119, 40)));
-		this.bg.add(new LinkButton(Constants.BUTTON2, new Rectangle(158, 480, 119, 40)));
-		this.bg.add(new LinkButton(Constants.BUTTON3, new Rectangle(288, 480, 119, 40)));
-		this.bg.add(new LinkButton(Constants.BUTTON4, new Rectangle(418, 480, 119, 40)));
+		int link_button_x = 28;
+		int link_button_y = 480;
+		this.bg.add(new LinkButton(Constants.BUTTON1, new Rectangle(link_button_x, link_button_y, 119, 40)));
+		this.bg.add(new LinkButton(Constants.BUTTON2, new Rectangle(link_button_x + 130, link_button_y, 119, 40)));
+		this.bg.add(new LinkButton(Constants.BUTTON3, new Rectangle(link_button_x + 260, link_button_y, 119, 40)));
+		this.bg.add(new LinkButton(Constants.BUTTON4, new Rectangle(link_button_x + 390, link_button_y, 119, 40)));
+
+		JLabel friends;
+		(friends = new JLabel("Great 3rd party RSC private servers to also check out:")).setBounds(90, 375, 600, 25);
+		friends.setForeground(new Color(255, 255, 255, 220));
+		friends.setFont(Utils.getFont("Exo-Regular.otf", 1, 16.0f));
+		this.bg.add(friends);
+
+		int friend_button_x = 75;
+		int friend_button_y = 400;
+		int x_increase = 145;
+
+		JLabel spacer1;
+		(spacer1 = new JLabel("|")).setBounds(friend_button_x + 130, 400, 10, 20);
+		spacer1.setForeground(new Color(255, 255, 255, 220));
+		spacer1.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
+		this.bg.add(spacer1);
+
+		JLabel spacer2;
+		(spacer2 = new JLabel("|")).setBounds(friend_button_x + 285, 400, 10, 20);
+		spacer2.setForeground(new Color(255, 255, 255, 220));
+		spacer2.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
+		this.bg.add(spacer2);
+
+		this.bg.add(new LinkText("RSC Dawn", new Rectangle(friend_button_x, friend_button_y, 135, 20)));
+		this.bg.add(new LinkText("RSC Revolution", new Rectangle(friend_button_x + x_increase, friend_button_y, 135, 20)));
+		this.bg.add(new LinkText("RSC Emulation", new Rectangle(friend_button_x + (x_increase * 2), friend_button_y, 135, 20)));
 
 		// Launch button section
 		(this.launch = new LaunchButton()).setBounds(617, 477, 174, 69);
