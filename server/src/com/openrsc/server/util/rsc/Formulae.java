@@ -760,7 +760,7 @@ public final class Formulae {
 			regular = 11;*/
 		//return (maxStat / 10) + 1 + (maxStat == PLAYER_LEVEL_LIMIT ? 1 : 0);
 
-		return 30; // Just fill that inventory
+		return 1000; // Total attempts made before stopping. Inventory will fill up, fatigue will reach 100, or player will walk away to interrupt
 	}
 
 	public static int getSpellMaxHit(SpellDef spell) {
