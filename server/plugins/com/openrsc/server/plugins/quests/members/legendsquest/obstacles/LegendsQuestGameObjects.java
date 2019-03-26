@@ -97,7 +97,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if (obj.getID() == ECHNED_ZEKIN_ROCK) {
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 8) {
+			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 8 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 9) {
 				message(p, 1300, "The rock moves quite easily.");
 				p.message("And the spirit of Echned Zekin seems to have disapeared.");
 				replaceObjectDelayed(obj, 10000, SHALLOW_WATER);
@@ -120,6 +120,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 			if (echned != null) {
 				echned.initializeTalkScript(p);
 			}
+			p.setBusy(false);
 		}
 		else if (obj.getID() == CAVERNOUS_OPENING) {
 			if (command.equalsIgnoreCase("enter")) {
