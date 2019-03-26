@@ -52,7 +52,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 				"already_cast_holy_spell", "ran_from_2nd_nezi", "legends_choose_reward",
 				"legends_reward_claimed", "ancient_wall_runes", "gave_glowing_dagger",
 				"met_spirit", "cavernous_opening", "viyeldi_companions", "killed_viyeldi",
-				"legends_wooden_beam", "rewarded_totem", "holy_water_neiz", 
+				"legends_wooden_beam", "rewarded_totem", "holy_water_neiz", "crafted_totem_pole", 
 			};
 		for (String s : caches) {
 			if (p.getCache().hasKey(s)) {

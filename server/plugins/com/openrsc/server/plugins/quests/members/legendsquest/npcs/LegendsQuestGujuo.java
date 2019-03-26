@@ -151,6 +151,7 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 						}
 						break;
 					case 8:
+					case 9:
 						npcTalk(p, n, "Hello Bwana, I am very pleased to see you again.",
 							"Things seem much happier now in the Kharazi Jungle.",
 							"I suspect that it is down to your good doings !");
@@ -169,11 +170,10 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 							GujuoDialogue(p, n, Gujuo.OK_THANKS_FOR_YOUR_HELP);
 						}
 						break;
-					case 9:
 					case 10:
 					case 11:
 					case -1:
-						if (!p.getCache().hasKey("rewarded_totem") && p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 9) {
+						if (!p.getCache().hasKey("rewarded_totem") && p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 10) {
 							n.resetPath();
 							sleep(650);
 							npcWalkFromPlayer(p, n);
@@ -182,7 +182,7 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 								"My people are so pleased with your heroic efforts.",
 								"Your strength and ability as a warrior are Legendary.");
 							message(p, n, 1300, "Gujuo offers you an awe inspiring jungle crafted Totem Pole.");
-							addItem(p, 1265, 1);
+							addItem(p, ItemId.GILDED_TOTEM_POLE.id(), 1);
 							p.getCache().store("rewarded_totem", true);
 							npcTalk(p, n, "Please accept this as a token of our appreciation.",
 								"Please, now consider yourself a friend of my people.",

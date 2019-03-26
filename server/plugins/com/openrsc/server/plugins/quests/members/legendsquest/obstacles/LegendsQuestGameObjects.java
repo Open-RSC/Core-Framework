@@ -593,6 +593,9 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				message(p, 1300, "This totem pole looks very heavy...");
 				replaceObject(obj, new GameObject(obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
 				addItem(p, ItemId.TOTEM_POLE.id(), 1);
+				if (!p.getCache().hasKey("crafted_totem_pole")) {
+					p.getCache().store("crafted_totem_pole", true);
+				}
 				p.message("Carrying this totem pole saps your strength...");
 				p.getSkills().setLevel(Skills.STRENGTH, (int) (p.getSkills().getLevel(Skills.STRENGTH) * 0.9));
 			} else {
