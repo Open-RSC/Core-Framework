@@ -8,6 +8,8 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.playerTalk;
 
+import com.openrsc.server.external.NpcId;
+
 public class FinancialAdvisor implements TalkToNpcExecutiveListener, TalkToNpcListener {
 	/**
 	 * @author Davve
@@ -16,10 +18,6 @@ public class FinancialAdvisor implements TalkToNpcExecutiveListener, TalkToNpcLi
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 40) {
-			npcTalk(p, n, "Please proceed through the next door");
-			return;
-		}
 		npcTalk(p, n, "Hello there",
 			"I'm your designated financial advisor");
 		playerTalk(p, n, "That's good because I don't have any money at the moment",
@@ -40,12 +38,13 @@ public class FinancialAdvisor implements TalkToNpcExecutiveListener, TalkToNpcLi
 			"Sometimes you will find items lying around",
 			"Selling these to the shops makes some money too",
 			"Now continue through the next door");
-		p.getCache().set("tutorial", 40);
+		if (p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") < 40)
+			p.getCache().set("tutorial", 40);
 	}
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 480;
+		return n.getID() == NpcId.FINANCIAL_ADVISOR.id();
 	}
 
 }

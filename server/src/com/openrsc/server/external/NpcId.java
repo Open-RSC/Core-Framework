@@ -13,7 +13,7 @@ public enum NpcId {
 	UNICORN(0),
 	BOB(1),
 	SHEEP(2),
-	//CHICKEN(3),
+	CHICKEN(3),
 	//GOBLIN(4),
 	HANS(5),
 	//COW(6),

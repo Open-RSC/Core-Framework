@@ -121,6 +121,7 @@ public final class Mining implements ObjectActionListener,
 		final int axeId = getAxe(owner);
 		int retrytimes = -1;
 		final int mineLvl = owner.getSkills().getLevel(Skills.MINING);
+		final int mineXP = owner.getSkills().getExperience(Skills.MINING);
 		int reqlvl = 1;
 		switch (ItemId.getById(axeId)) {
 			case BRONZE_PICKAXE:
@@ -150,7 +151,7 @@ public final class Mining implements ObjectActionListener,
 				break;
 		}
 
-		if (owner.click == 0 && (def == null || def.getRespawnTime() < 1 || (def.getOreId() == 315 && owner.getQuestStage(Quests.FAMILY_CREST) < 6))) {
+		if (owner.click == 0 && (def == null || (def.getRespawnTime() < 1 && object.getID() != 496) || (def.getOreId() == 315 && owner.getQuestStage(Quests.FAMILY_CREST) < 6))) {
 			if (axeId < 0 || reqlvl > mineLvl) {
 				message(owner, "You need a pickaxe to mine this rock",
 					"You do not have a pickaxe which you have the mining level to use");
@@ -167,21 +168,21 @@ public final class Mining implements ObjectActionListener,
 			owner.setBusyTimer(1800);
 			owner.message("You examine the rock for ores...");
 			sleep(1800);
-			if (def == null || def.getRespawnTime() < 1) {
-				owner.message("There is currently no ore available in this rock");
-				return;
+			if (object.getID() == 496) {
+				// Tutorial Island rock handler
+				message(owner, "This rock contains " + new Item(def.getOreId()).getDef().getName(),
+						"Sometimes you won't find the ore but trying again may find it",
+						"If a rock contains a high level ore",
+						"You will not find it until you increase your mining level");
+				if (owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 49)
+					owner.getCache().set("tutorial", 50);
+			} else {
+				if (def == null || def.getRespawnTime() < 1) {
+					owner.message("There is currently no ore available in this rock");
+				} else {
+					owner.message("This rock contains " + new Item(def.getOreId()).getDef().getName());
+				}
 			}
-			owner.message("This rock contains " + new Item(def.getOreId()).getDef().getName());
-			if (owner.getLocation().onTutorialIsland()
-				&& owner.getCache().hasKey("tutorial")
-				&& owner.getCache().getInt("tutorial") == 45) {
-				message(owner,
-					"Sometimes you won't find the ore but trying again may find it",
-					"If a rock contains a high level ore",
-					"You will not find it until you increase your mining level");
-				owner.getCache().set("tutorial", 50);
-			}
-			return;
 		}
 		if (axeId < 0 || reqlvl > mineLvl) {
 			message(owner, "You need a pickaxe to mine this rock",
@@ -190,6 +191,10 @@ public final class Mining implements ObjectActionListener,
 		}
 		if (owner.getFatigue() >= owner.MAX_FATIGUE) {
 			owner.message("You are too tired to mine this rock");
+			return;
+		}
+		if (object.getID() == 496 && mineXP >= 210) {
+			owner.message("Thats enough mining for now");
 			return;
 		}
 		owner.playSound("mine");
@@ -211,16 +216,16 @@ public final class Mining implements ObjectActionListener,
 						owner.incExp(Skills.MINING, def.getExp(), true);
 						interrupt();
 						GameObject obj = owner.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
-						if (obj != null && obj.getID() == object.getID()) {
+						if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
 							GameObject newObject = new GameObject(object.getLocation(), 98, object.getDirection(), object.getType());
 							World.getWorld().replaceGameObject(object, newObject);
 							World.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
 						}
+						if (object.getID() == 496 && owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 51)
+							owner.getCache().set("tutorial", 52);
 					}
 				} else {
-					if (owner.getLocation().onTutorialIsland()
-						&& owner.getCache().hasKey("tutorial")
-						&& owner.getCache().getInt("tutorial") == 50) {
+					if (object.getID() == 496) {
 						owner.message("You fail to make any real impact on the rock");
 					} else {
 						owner.message("You only succeed in scratching the rock");

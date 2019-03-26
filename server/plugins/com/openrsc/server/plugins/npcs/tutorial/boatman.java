@@ -8,6 +8,8 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.*;
 
+import com.openrsc.server.external.NpcId;
+
 public class boatman implements TalkToNpcExecutiveListener, TalkToNpcListener {
 	/**
 	 * @author Davve
@@ -38,7 +40,7 @@ public class boatman implements TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 497;
+		return n.getID() == NpcId.BOATMAN.id();
 	}
 
 }

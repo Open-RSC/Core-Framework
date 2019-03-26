@@ -95,35 +95,35 @@ public class DoorAction {
 				&& p.getCache().getInt("tutorial") >= 10) {
 				doDoor(obj, p);
 			} else {
-				p.message("You should speak to the guide before going through this door");
+				p.message("You should speak to a guide before going through this door");
 			}
 		} else if (obj.getID() == 76 && obj.getX() == 224 && obj.getY() == 737) {
 			if (p.getCache().hasKey("tutorial")
 				&& p.getCache().getInt("tutorial") >= 15) {
 				doDoor(obj, p);
 			} else {
-				p.message("You should speak to the controls guide before going through this door");
+				p.message("Speak to the controls guide before going through this door");
 			}
 		} else if (obj.getID() == 77 && obj.getX() == 220 && obj.getY() == 727) {
 			if (p.getCache().hasKey("tutorial")
 				&& p.getCache().getInt("tutorial") >= 25) {
 				doDoor(obj, p);
 			} else {
-				p.message("You should speak to the combat instructor before going through this door");
+				p.message("Speak to the combat instructor before going through this door");
 			}
 		} else if (obj.getID() == 78 && obj.getX() == 212 && obj.getY() == 729) {
 			if (p.getCache().hasKey("tutorial")
 				&& p.getCache().getInt("tutorial") >= 35) {
 				doDoor(obj, p);
 			} else {
-				p.message("You should speak to the cooking instructor before going through this door");
+				p.message("You should speak to a cooking instructor before going through this door");
 			}
 		} else if (obj.getID() == 80 && obj.getX() == 206 && obj.getY() == 730) {
 			if (p.getCache().hasKey("tutorial")
 				&& p.getCache().getInt("tutorial") >= 40) {
 				doDoor(obj, p);
 			} else {
-				p.message("You should speak to the financial advisor before going through this door");
+				p.message("You should speak to a finance advisor before going through this door");
 			}
 		} else if (obj.getID() == 81 && obj.getX() == 201 && obj.getY() == 734) {
 			if (p.getCache().hasKey("tutorial")
@@ -144,7 +144,7 @@ public class DoorAction {
 				&& p.getCache().getInt("tutorial") >= 60) {
 				doDoor(obj, p);
 			} else {
-				p.message("You should speak to the bank assistant before going through this door");
+				p.message("You should speak to a bank assistant before going through this door");
 			}
 		} else if (obj.getID() == 84 && obj.getX() == 209 && obj.getY() == 754) {
 			if (p.getCache().hasKey("tutorial")
@@ -165,14 +165,14 @@ public class DoorAction {
 				&& p.getCache().getInt("tutorial") >= 80) {
 				doDoor(obj, p);
 			} else {
-				p.message("You should speak to the magic instructor before going through this door");
+				p.message("You should speak to a magic instructor before going through this door");
 			}
 		} else if (obj.getID() == 89 && obj.getX() == 226 && obj.getY() == 760) {
 			if (p.getCache().hasKey("tutorial")
 				&& p.getCache().getInt("tutorial") >= 90) {
 				doDoor(obj, p);
 			} else {
-				p.message("You should speak to the fatigue expert before going through this door");
+				p.message("You should speak to a fatigue expert before going through this door");
 			}
 		} else if (obj.getID() == 90 && obj.getX() == 230 && obj.getY() == 759) {
 			if (p.getCache().hasKey("tutorial")
