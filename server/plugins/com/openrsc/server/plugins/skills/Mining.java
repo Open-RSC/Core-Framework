@@ -183,6 +183,7 @@ public final class Mining implements ObjectActionListener,
 					owner.message("This rock contains " + new Item(def.getOreId()).getDef().getName());
 				}
 			}
+			return;
 		}
 		if (axeId < 0 || reqlvl > mineLvl) {
 			message(owner, "You need a pickaxe to mine this rock",
