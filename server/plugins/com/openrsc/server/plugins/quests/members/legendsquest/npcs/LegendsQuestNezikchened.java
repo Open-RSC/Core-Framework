@@ -17,6 +17,7 @@ import com.openrsc.server.plugins.listeners.executive.PlayerMageNpcExecutiveList
 import com.openrsc.server.plugins.listeners.executive.PlayerNpcRunExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.PlayerRangeNpcExecutiveListener;
 
+import static com.openrsc.server.plugins.Functions.atQuestStages;
 import static com.openrsc.server.plugins.Functions.createGroundItem;
 import static com.openrsc.server.plugins.Functions.getNearestNpc;
 import static com.openrsc.server.plugins.Functions.message;
@@ -141,63 +142,66 @@ public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerMag
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.NEZIKCHENED.id()) {
-			switch (p.getQuestStage(Constants.Quests.LEGENDS_QUEST)) {
-				case 3: // FIRST FIGHT.
-					p.setBusy(true);
-					n.getUpdateFlags().setChatMessage(new ChatMessage(n, "Ha ha ha...I shall return for you when the time is right.", p));
-					sleep(1900);
-					npcWalkFromPlayer(p, n);
-					message(p, 600, "Your opponent is retreating");
+			// FIRST FIGHT.
+			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 3 && p.getLocation().isInsideFlameWall()) {
+				p.setBusy(true);
+				n.getUpdateFlags().setChatMessage(new ChatMessage(n, "Ha ha ha...I shall return for you when the time is right.", p));
+				sleep(1900);
+				npcWalkFromPlayer(p, n);
+				message(p, 600, "Your opponent is retreating");
+				if (n != null) {
 					n.remove();
-					message(p, 1300, "The demon starts an incantation...",
-						"@yel@Nezikchened : But I will leave you with a taste of my power...",
-						"As he finishes the incantation a powerful bolt of energy strikes you.");
-					p.damage(7);
-					message(p, 1300, "@yel@Nezikchened : Haha hah ha ha ha ha....",
-						"The demon explodes in a powerful burst of flame that scorches you.");
-					if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 3) {
-						p.updateQuestStage(Constants.Quests.LEGENDS_QUEST, 4);
-					}
-					p.setBusy(false);
-					Npc ungadulu = getNearestNpc(p, NpcId.UNGADULU.id(), 8);
-					if (ungadulu != null) {
-						ungadulu.initializeTalkScript(p);
-					}
-					break;
-				case 7:
-					p.setBusy(true);
-					if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 7) {
-						p.updateQuestStage(Constants.Quests.LEGENDS_QUEST, 8);
-					}
-					npcTalk(p, n, "Arrrgghhhhh, foul Vacu!");
-					n.resetCombatEvent();
-					message(p, "Your opponent is retreating");
-					npcTalk(p, n, "You would bite the hand that feeds you!",
-						"Very well, I will ready myself for our next encounter...");
-					message(p, 1300, "The Demon seems very angry now...",
-						"You deliver a final devastating blow to the demon, ",
-						"and it's unearthly frame crumbles into dust.");
-					if (n != null) {
-						n.remove();
-					}
-					p.setBusy(false);
-					break;
-				case 8:
-					if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 8) {
-						p.updateQuestStage(Constants.Quests.LEGENDS_QUEST, 9);
-					}
-					if (n != null) {
-						n.remove();
-					}
-					message(p, 1300, "You deliver the final killing blow to the foul demon.",
-						"The Demon crumbles into a pile of ash.");
-					createGroundItem(ItemId.ASHES.id(), 1, p.getX(), p.getY(), p);
-					message(p, 1300, "@yel@Nezikchened: Arrrghhhh.",
-						"@yel@Nezikchened: I am beaten by a mere mortal.",
-						"@yel@Nezikchened: I will revenge myself upon you...");
-					playerTalk(p, null, "Yeah, yeah, yeah ! ",
-						"Heard it all before !");
-					break;
+				}
+				message(p, 1300, "The demon starts an incantation...",
+					"@yel@Nezikchened : But I will leave you with a taste of my power...",
+					"As he finishes the incantation a powerful bolt of energy strikes you.");
+				p.damage(7);
+				message(p, 1300, "@yel@Nezikchened : Haha hah ha ha ha ha....",
+					"The demon explodes in a powerful burst of flame that scorches you.");
+				p.updateQuestStage(Constants.Quests.LEGENDS_QUEST, 4);
+				p.setBusy(false);
+				Npc ungadulu = getNearestNpc(p, NpcId.UNGADULU.id(), 8);
+				if (ungadulu != null) {
+					ungadulu.initializeTalkScript(p);
+				}
+			}
+			// SECOND FIGHT.
+			else if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 7 && p.getLocation().isAroundBoulderRock()) {
+				p.setBusy(true);
+				p.updateQuestStage(Constants.Quests.LEGENDS_QUEST, 8);
+				npcTalk(p, n, "Arrrgghhhhh, foul Vacu!");
+				n.resetCombatEvent();
+				message(p, "Your opponent is retreating");
+				npcTalk(p, n, "You would bite the hand that feeds you!",
+					"Very well, I will ready myself for our next encounter...");
+				message(p, 1300, "The Demon seems very angry now...",
+					"You deliver a final devastating blow to the demon, ",
+					"and it's unearthly frame crumbles into dust.");
+				if (n != null) {
+					n.remove();
+				}
+				p.setBusy(false);
+			}
+			// THIRD FIGHT.
+			else if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 8 && p.getLocation().isAroundTotemPole()) {
+				p.updateQuestStage(Constants.Quests.LEGENDS_QUEST, 9);
+				if (n != null) {
+					n.remove();
+				}
+				message(p, 1300, "You deliver the final killing blow to the foul demon.",
+					"The Demon crumbles into a pile of ash.");
+				createGroundItem(ItemId.ASHES.id(), 1, p.getX(), p.getY(), p);
+				message(p, 1300, "@yel@Nezikchened: Arrrghhhh.",
+					"@yel@Nezikchened: I am beaten by a mere mortal.",
+					"@yel@Nezikchened: I will revenge myself upon you...");
+				playerTalk(p, null, "Yeah, yeah, yeah ! ",
+					"Heard it all before !");
+			}
+			// ??
+			else {
+				if (n != null) {
+					n.remove();
+				}
 			}
 		}
 	}
@@ -218,7 +222,7 @@ public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerMag
 	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.NEZIKCHENED.id()) {
-			if ((n.getAttribute("spawnedFor", null) != null && !n.getAttribute("spawnedFor").equals(p)) || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) != 7 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) != 3) {
+			if ((n.getAttribute("spawnedFor", null) != null && !n.getAttribute("spawnedFor").equals(p)) || !atQuestStages(p, Constants.Quests.LEGENDS_QUEST, 3, 7, 8)) {
 				message(p, 1300, "Your attack glides straight through the Demon.");
 				message(p, 600, "as if it wasn't really there.");
 				if (n != null)
