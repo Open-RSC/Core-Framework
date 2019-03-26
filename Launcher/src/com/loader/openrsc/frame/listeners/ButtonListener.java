@@ -1,14 +1,13 @@
 package com.loader.openrsc.frame.listeners;
 
+import com.loader.openrsc.Constants;
 import com.loader.openrsc.frame.AppFrame;
 import com.loader.openrsc.util.ClientLauncher;
 import com.loader.openrsc.util.Utils;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 
 public class ButtonListener implements ActionListener {
@@ -98,6 +97,10 @@ public class ButtonListener implements ActionListener {
 			}
 			case "launch": {
 				try {
+					// Deletes the client.properties file that may persist unwanted settings between different gamess
+					File f = new File(Constants.CONF_DIR + File.separator + "client.properties");
+					f.delete();
+
 					ClientLauncher.launchClient();
 				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 					e.printStackTrace();

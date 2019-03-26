@@ -1,23 +1,13 @@
 package com.loader.openrsc.frame;
 
 import com.loader.openrsc.Constants;
-import com.loader.openrsc.frame.elements.ControlButton;
-import com.loader.openrsc.frame.elements.LaunchButton;
-import com.loader.openrsc.frame.elements.LinkButton;
-import com.loader.openrsc.frame.elements.LinkText;
-import com.loader.openrsc.frame.elements.RadioButton;
+import com.loader.openrsc.frame.elements.*;
 import com.loader.openrsc.frame.listeners.PositionListener;
 import com.loader.openrsc.util.Utils;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Rectangle;
+import javax.swing.*;
+import java.awt.*;
 import java.util.Random;
-
-import javax.swing.ButtonGroup;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JProgressBar;
 
 public class AppFrame extends JFrame {
 	private static AppFrame instance;
@@ -203,25 +193,25 @@ public class AppFrame extends JFrame {
 		this.bg.add(new LinkButton(Constants.BUTTON4, new Rectangle(link_button_x + 390, link_button_y, 119, 40)));
 
 		JLabel friends;
-		(friends = new JLabel("Great 3rd party RSC private servers to also check out:")).setBounds(90, 375, 600, 25);
+		(friends = new JLabel("Great 3rd party RSC private servers to also check out:")).setBounds(70, 375, 600, 25);
 		friends.setForeground(new Color(255, 255, 255, 220));
-		friends.setFont(Utils.getFont("Exo-Regular.otf", 1, 16.0f));
+		friends.setFont(Utils.getFont("Exo-Regular.otf", 1, 17.0f));
 		this.bg.add(friends);
 
-		int friend_button_x = 75;
-		int friend_button_y = 400;
-		this.bg.add(new LinkText("RSC Dawn", new Rectangle(friend_button_x, friend_button_y, 135, 20)));
-		this.bg.add(new LinkText("RSC Revolution", new Rectangle(friend_button_x + 135, friend_button_y, 135, 20)));
-		this.bg.add(new LinkText("RSC Emulation", new Rectangle(friend_button_x + (145 * 2), friend_button_y, 135, 20)));
+		int friend_link_x = 75;
+		int friend_link_y = 400;
+		this.bg.add(new LinkText("RSC Dawn", new Rectangle(friend_link_x, friend_link_y, 140, 20)));
+		this.bg.add(new LinkText("RSC Revolution", new Rectangle(friend_link_x + 140, friend_link_y, 150, 20)));
+		this.bg.add(new LinkText("RSC Emulation", new Rectangle(friend_link_x + (150 * 2), friend_link_y, 150, 20)));
 
 		JLabel spacer1;
-		(spacer1 = new JLabel("|")).setBounds(friend_button_x + 126, 400, 10, 20);
+		(spacer1 = new JLabel("|")).setBounds(friend_link_x + 132, 400, 10, 20);
 		spacer1.setForeground(new Color(255, 0, 0, 220));
 		spacer1.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
 		this.bg.add(spacer1);
 
 		JLabel spacer2;
-		(spacer2 = new JLabel("|")).setBounds(friend_button_x + 280, 400, 10, 20);
+		(spacer2 = new JLabel("|")).setBounds(friend_link_x + 295, 400, 10, 20);
 		spacer2.setForeground(new Color(255, 0, 0, 220));
 		spacer2.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
 		this.bg.add(spacer2);
@@ -238,18 +228,15 @@ public class AppFrame extends JFrame {
 		// Radio button section
 		int orsc_radio_x = 30;
 		int orsc_radio_y = 142;
-		int rscc_radio_x = orsc_radio_x;
 		int rscc_radio_y = orsc_radio_y + 28;
-		int dev_radio_x = orsc_radio_x;
 		int dev_radio_y = orsc_radio_y + 56;
-		int local_radio_x = orsc_radio_x;
 		int local_radio_y = orsc_radio_y + 84;
 
 		ButtonGroup group = new ButtonGroup();
 		RadioButton orscRadioButton = new RadioButton(Constants.ORSC_GAME_NAME, new Rectangle(orsc_radio_x, orsc_radio_y, 140, 40));
-		RadioButton rsccRadioButton = new RadioButton(Constants.RSCC_GAME_NAME, new Rectangle(rscc_radio_x, rscc_radio_y, 140, 40));
-		RadioButton devRadioButton = new RadioButton(Constants.DEV_GAME_NAME, new Rectangle(dev_radio_x, dev_radio_y, 140, 40));
-		RadioButton localRadioButton = new RadioButton(Constants.LOCALHOST_GAME_NAME, new Rectangle(local_radio_x, local_radio_y, 140, 40));
+		RadioButton rsccRadioButton = new RadioButton(Constants.RSCC_GAME_NAME, new Rectangle(orsc_radio_x, rscc_radio_y, 140, 40));
+		RadioButton devRadioButton = new RadioButton(Constants.DEV_GAME_NAME, new Rectangle(orsc_radio_x, dev_radio_y, 140, 40));
+		RadioButton localRadioButton = new RadioButton(Constants.LOCALHOST_GAME_NAME, new Rectangle(orsc_radio_x, local_radio_y, 140, 40));
 
 		orscRadioButton.setSelected(true); // First radio button is selected by default as launcher will overwrite "Cache/ip.txt" anyway at launch
 

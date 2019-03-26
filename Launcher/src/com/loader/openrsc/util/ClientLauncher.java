@@ -4,11 +4,10 @@ import com.loader.openrsc.Constants;
 import com.loader.openrsc.Launcher;
 import com.loader.openrsc.frame.AppFrame;
 
-import java.awt.Dimension;
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-
-import javax.swing.JFrame;
 
 public class ClientLauncher {
 	private static ClassLoader loader;
