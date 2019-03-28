@@ -121,6 +121,10 @@ public class Point {
 	public boolean inTutorialLanding() {
 		return inBounds(214, 739, 221, 747);
 	}
+	
+	public boolean aroundTutorialRatZone() {
+		return inBounds(226, 728, 234, 738);
+	}
 
 	public boolean inModRoom() {
 		return inBounds(64, 1639, 80, 1643);

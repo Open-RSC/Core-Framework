@@ -90,7 +90,7 @@ public class CombatInstructor implements TalkToNpcExecutiveListener, TalkToNpcLi
 	
 	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
-		if (!p.getCache().hasKey("tutorial"))
+		if (!p.getCache().hasKey("tutorial") || !p.getLocation().aroundTutorialRatZone())
 			return false;
 		if (n.getID() == NpcId.CHICKEN.id())
 			return false;
