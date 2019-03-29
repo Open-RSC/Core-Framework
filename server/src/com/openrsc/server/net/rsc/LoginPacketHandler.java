@@ -13,14 +13,16 @@ import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.LoginResponse;
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.Channel;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
 
 /**
  * @author n0m
@@ -143,7 +145,7 @@ public class LoginPacketHandler {
 
 
 				ResultSet set = DatabaseConnection.getDatabase().executeQuery("SELECT 1 FROM " + Constants.GameServer.MYSQL_TABLE_PREFIX + "players WHERE creation_ip='" + IP
-					+ "' AND creation_date>'" + ((System.currentTimeMillis() / 1000) - 3600) + "'"); // Checks to see if the player has been registered by the same IP address in the past 1 hour
+					+ "' AND creation_date>'" + ((System.currentTimeMillis() / 1000) - 60) + "'"); // Checks to see if the player has been registered by the same IP address in the past 1 minute
 
 				if (Constants.GameServer.WANT_REGISTRATION_LIMIT) {
 					if (set.next()) {
