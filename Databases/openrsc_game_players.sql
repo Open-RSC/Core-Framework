@@ -271,7 +271,7 @@ DROP TABLE IF EXISTS `openrsc_logins`;
 CREATE TABLE IF NOT EXISTS `openrsc_logins` (
   `playerID` int(10) UNSIGNED NOT NULL,
   `time` int(5) UNSIGNED NOT NULL,
-  `ip` varchar(15) NOT NULL DEFAULT '0.0.0.0',
+  `ip` varchar(255) NOT NULL DEFAULT '0.0.0.0',
   `dbid` int(10) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`dbid`),
   KEY `ip` (`ip`)
@@ -340,9 +340,9 @@ CREATE TABLE IF NOT EXISTS `openrsc_players` (
   `skulled` int(10) UNSIGNED DEFAULT 0,
   `charged` int(10) UNSIGNED DEFAULT 0,
   `creation_date` int(10) UNSIGNED NOT NULL DEFAULT 0,
-  `creation_ip` varchar(15) NOT NULL DEFAULT '0.0.0.0',
+  `creation_ip` varchar(255) NOT NULL DEFAULT '0.0.0.0',
   `login_date` int(10) UNSIGNED DEFAULT 0,
-  `login_ip` varchar(15) DEFAULT '0.0.0.0',
+  `login_ip` varchar(255) DEFAULT '0.0.0.0',
   `banned` varchar(255) NOT NULL DEFAULT '0',
   `offences` int(11) NOT NULL DEFAULT 0,
   `muted` varchar(255) NOT NULL DEFAULT '0',
