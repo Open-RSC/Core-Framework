@@ -304,6 +304,8 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 				&& atQuestStage(p, Constants.Quests.MERLINS_CRYSTAL, -1)
 				|| p.getQuestStage(this) == -1) {
 				doDoor(obj, p);
+			} else {
+				p.message("The door won't open");
 			}
 		}
 		if (obj.getID() == 116) {
