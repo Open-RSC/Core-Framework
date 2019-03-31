@@ -460,7 +460,7 @@ public final class Player extends Mob {
 	}
 
 	public void write(Packet o) {
-		if (channel.isOpen() && isLoggedIn()) {
+		if (channel != null && channel.isOpen() && isLoggedIn()) {
 			synchronized (outgoingPacketsLock) {
 				outgoingPackets.add(o);
 			}
