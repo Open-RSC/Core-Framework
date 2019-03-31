@@ -1,42 +1,42 @@
 package com.loader.openrsc.frame;
 
 import com.loader.openrsc.Constants;
-import com.loader.openrsc.frame.elements.ControlButton;
-import com.loader.openrsc.frame.elements.LaunchButton;
-import com.loader.openrsc.frame.elements.LinkButton;
+import com.loader.openrsc.frame.elements.*;
 import com.loader.openrsc.frame.listeners.PositionListener;
 import com.loader.openrsc.util.Utils;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Rectangle;
+import javax.swing.*;
+import java.awt.*;
 import java.util.Random;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JProgressBar;
-
-//import java.awt.Taskbar;
-;
-
-@SuppressWarnings("serial")
 public class AppFrame extends JFrame {
 	private static AppFrame instance;
 	private JLabel bg;
 	private LaunchButton launch;
 	private JProgressBar progress;
-	private JLabel status;
 	private JLabel checkLabel;
-	private JLabel online;
-	private JLabel logins48;
-	private JLabel registrationstoday;
+
+	// ORSC section
+	private JLabel orsc_status;
+	private JLabel orsc_online;
+	private JLabel orsc_logins48;
+
+	// RSCC section
+	private JLabel rscc_status;
+	private JLabel rscc_online;
+	private JLabel rscc_logins48;
+
+	// Localhost section
+	private JLabel local_status;
+
+	// Dev World section
+	private JLabel dev_status;
 
 	public AppFrame() {
-		this.setPreferredSize(new Dimension(800, 560));
+		this.setPreferredSize(new Dimension(795, 555));
 		this.setUndecorated(true);
-		this.setTitle(Constants.GAME_NAME);
+		this.setTitle(Constants.ORSC_GAME_NAME);
 		this.setIconImage(Utils.getImage("icon.png").getImage());
-		//Taskbar.getTaskbar().setIconImage(Utils.getImage("icon.png").getImage());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		AppFrame.instance = this;
 	}
@@ -65,8 +65,9 @@ public class AppFrame extends JFrame {
 		}
 
 		this.add(this.bg);
-		this.addLogo();
+		this.addGameSelection();
 		this.addButtons();
+		this.addGameDescriptions();
 		this.addMouseListener(new PositionListener(this));
 		this.addMouseMotionListener(new PositionListener(this));
 		this.pack();
@@ -74,45 +75,86 @@ public class AppFrame extends JFrame {
 		this.setVisible(true);
 	}
 
-	private void addLogo() {
+	private void addGameSelection() {
+		// Header text
 		JLabel text;
-		(text = new JLabel(Constants.GAME_NAME.toUpperCase())).setBounds(30, 24, 100, 15);
-		text.setForeground(new Color(255, 223, 0));
-		text.setFont(Utils.getFont("Exo-Regular.otf", 1, 14.0f));
+		(text = new JLabel(Constants.Title)).setBounds(250, 19, 600, 45);
+		text.setForeground(new Color(255, 255, 255, 220));
+		text.setFont(Utils.getFont("Exo-Regular.otf", 1, 24.0f));
 		this.bg.add(text);
+
+		// Version text
 		JLabel subText;
-		(subText = new JLabel("Game Launcher v." + String.format("%8.6f", Constants.VERSION_NUMBER))).setBounds(30, 35, 210, 15);
-		subText.setForeground(new Color(200, 200, 200));
-		subText.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
+		(subText = new JLabel("Version " + String.format("%8.6f", Constants.VERSION_NUMBER))).setBounds(650, 54, 170, 15);
+		subText.setForeground(new Color(255, 255, 255, 220));
+		subText.setFont(Utils.getFont("Exo-Regular.otf", 1, 10.0f));
 		this.bg.add(subText);
 
-		// Server status check - spaced 16px apart
-		(this.status = new JLabel("Server Status: ---")).setForeground(Color.WHITE);
-		this.status.setFont(Utils.getFont("Exo-Regular.otf", 0, 12.0f));
-		this.status.setHorizontalAlignment(4);
-		this.status.setBounds(441, 77, 327, 19);
-		this.bg.add(this.status);
+		/*
+		 * Open RSC
+		 */
+		// Server status check - spaced 12px apart
+		(this.orsc_status = new JLabel(Constants.ORSC_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
+		this.orsc_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
+		int orsc_x = 630;
+		int orsc_y = 142;
+		this.orsc_status.setBounds(orsc_x, orsc_y, 327, 15);
+		this.bg.add(this.orsc_status);
 
 		// Online player count - spaced 16px apart
-		(this.online = new JLabel("Players Online: ---")).setForeground(Color.WHITE);
-		this.online.setFont(Utils.getFont("Exo-Regular.otf", 0, 12.0f));
-		this.online.setHorizontalAlignment(4);
-		this.online.setBounds(441, 93, 327, 19);
-		this.bg.add(this.online);
+		(this.orsc_online = new JLabel("Players Online: N/A")).setForeground(Color.WHITE);
+		this.orsc_online.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
+		this.orsc_online.setBounds(orsc_x, orsc_y + 13, 327, 15);
+		this.bg.add(this.orsc_online);
 
 		// Logged in the last 48 hours - spaced 16px apart
-		(this.logins48 = new JLabel("Online Last 48 Hours: ---")).setForeground(Color.WHITE);
-		this.logins48.setFont(Utils.getFont("Exo-Regular.otf", 0, 12.0f));
-		this.logins48.setHorizontalAlignment(4);
-		this.logins48.setBounds(441, 109, 327, 19);
-		this.bg.add(this.logins48);
+		(this.orsc_logins48 = new JLabel("Online Last 48 Hours: N/A")).setForeground(Color.WHITE);
+		this.orsc_logins48.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
+		this.orsc_logins48.setBounds(orsc_x, orsc_y + 26, 327, 15);
+		this.bg.add(this.orsc_logins48);
 
-		// Registrations today - spaced 16px apart
-		(this.registrationstoday = new JLabel("Registrations Today: ---")).setForeground(Color.WHITE);
-		this.registrationstoday.setFont(Utils.getFont("Exo-Regular.otf", 0, 12.0f));
-		this.registrationstoday.setHorizontalAlignment(4);
-		this.registrationstoday.setBounds(441, 125, 327, 19);
-		this.bg.add(this.registrationstoday);
+		/*
+		 * RSC Cabbage
+		 */
+		// Server status check - spaced 12px apart
+		(this.rscc_status = new JLabel(Constants.RSCC_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
+		this.rscc_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
+		int rscc_x = 630;
+		int rscc_y = orsc_y + 52; // 192
+		this.rscc_status.setBounds(rscc_x, rscc_y, 327, 15);
+		this.bg.add(this.rscc_status);
+
+		// Online player count - spaced 16px apart
+		(this.rscc_online = new JLabel("Players Online: N/A")).setForeground(Color.WHITE);
+		this.rscc_online.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
+		this.rscc_online.setBounds(rscc_x, rscc_y + 13, 327, 15);
+		this.bg.add(this.rscc_online);
+
+		// Logged in the last 48 hours - spaced 16px apart
+		(this.rscc_logins48 = new JLabel("Online Last 48 Hours: N/A")).setForeground(Color.WHITE);
+		this.rscc_logins48.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
+		this.rscc_logins48.setBounds(rscc_x, rscc_y + 26, 327, 15);
+		this.bg.add(this.rscc_logins48);
+
+		/*
+		 * Dev World
+		 */
+		(this.dev_status = new JLabel(Constants.DEV_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
+		this.dev_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
+		int dev_x = 630;
+		int dev_y = rscc_y + 39; // 231
+		this.dev_status.setBounds(dev_x, dev_y + 12, 327, 15);
+		this.bg.add(this.dev_status);
+
+		/*
+		 * Localhost
+		 */
+		(this.local_status = new JLabel(Constants.LOCALHOST_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
+		this.local_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
+		int local_x = 630;
+		int local_y = dev_y + 26; // 257
+		this.local_status.setBounds(local_x, local_y + 12, 327, 15);
+		this.bg.add(this.local_status);
 	}
 
 	public JLabel getCheckLabel() {
@@ -142,14 +184,110 @@ public class AppFrame extends JFrame {
 	}
 
 	private void addButtons() {
-		this.bg.add(new LinkButton("Website", new Rectangle(27, 480, 119, 40)));
-		this.bg.add(new LinkButton("Bug Reports", new Rectangle(158, 480, 119, 40)));
-		this.bg.add(new LinkButton("Bot Reports", new Rectangle(288, 480, 119, 40)));
-		this.bg.add(new LinkButton("Discord", new Rectangle(418, 480, 119, 40)));
-		(this.launch = new LaunchButton()).setBounds(617, 481, 174, 69);
+		// Link button section
+		int link_button_x = 28;
+		int link_button_y = 480;
+		this.bg.add(new LinkButton(Constants.BUTTON1, new Rectangle(link_button_x, link_button_y, 119, 40)));
+		this.bg.add(new LinkButton(Constants.BUTTON2, new Rectangle(link_button_x + 130, link_button_y, 119, 40)));
+		this.bg.add(new LinkButton(Constants.BUTTON3, new Rectangle(link_button_x + 260, link_button_y, 119, 40)));
+		this.bg.add(new LinkButton(Constants.BUTTON4, new Rectangle(link_button_x + 390, link_button_y, 119, 40)));
+
+		JLabel friends;
+		(friends = new JLabel("Great 3rd party RSC private servers to also check out:")).setBounds(70, 375, 600, 25);
+		friends.setForeground(new Color(255, 255, 255, 220));
+		friends.setFont(Utils.getFont("Exo-Regular.otf", 1, 17.0f));
+		this.bg.add(friends);
+
+		int friend_link_x = 75;
+		int friend_link_y = 400;
+		this.bg.add(new LinkText("RSC Dawn", new Rectangle(friend_link_x, friend_link_y, 140, 20)));
+		this.bg.add(new LinkText("RSC Revolution", new Rectangle(friend_link_x + 140, friend_link_y, 150, 20)));
+		this.bg.add(new LinkText("RSC Emulation", new Rectangle(friend_link_x + (150 * 2), friend_link_y, 150, 20)));
+
+		JLabel spacer1;
+		(spacer1 = new JLabel("|")).setBounds(friend_link_x + 132, 400, 10, 20);
+		spacer1.setForeground(new Color(255, 0, 0, 220));
+		spacer1.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
+		this.bg.add(spacer1);
+
+		JLabel spacer2;
+		(spacer2 = new JLabel("|")).setBounds(friend_link_x + 295, 400, 10, 20);
+		spacer2.setForeground(new Color(255, 0, 0, 220));
+		spacer2.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
+		this.bg.add(spacer2);
+
+
+		// Launch button section
+		(this.launch = new LaunchButton()).setBounds(617, 477, 174, 69);
 		this.bg.add(this.launch);
-		this.bg.add(new ControlButton(2, 778, 8, 10, 11)); // Exit
-		this.bg.add(new ControlButton(1, 760, 8, 10, 11)); // Minimize
+
+		// Control button section
+		this.bg.add(new ControlButton(1, 755, 8, 10, 11)); // Minimize button
+		this.bg.add(new ControlButton(2, 773, 8, 10, 11)); // Exit button +18px x
+
+		// Radio button section
+		int orsc_radio_x = 30;
+		int orsc_radio_y = 142;
+		int rscc_radio_y = orsc_radio_y + 28;
+		int dev_radio_y = orsc_radio_y + 56;
+		int local_radio_y = orsc_radio_y + 84;
+
+		ButtonGroup group = new ButtonGroup();
+		RadioButton orscRadioButton = new RadioButton(Constants.ORSC_GAME_NAME, new Rectangle(orsc_radio_x, orsc_radio_y, 140, 40));
+		RadioButton rsccRadioButton = new RadioButton(Constants.RSCC_GAME_NAME, new Rectangle(orsc_radio_x, rscc_radio_y, 140, 40));
+		RadioButton devRadioButton = new RadioButton(Constants.DEV_GAME_NAME, new Rectangle(orsc_radio_x, dev_radio_y, 140, 40));
+		RadioButton localRadioButton = new RadioButton(Constants.LOCALHOST_GAME_NAME, new Rectangle(orsc_radio_x, local_radio_y, 140, 40));
+
+		orscRadioButton.setSelected(true); // First radio button is selected by default as launcher will overwrite "Cache/ip.txt" anyway at launch
+
+		group.add(orscRadioButton);
+		group.add(rsccRadioButton);
+		group.add(devRadioButton);
+		group.add(localRadioButton);
+
+		this.bg.add(orscRadioButton);
+		this.bg.add(rsccRadioButton);
+		this.bg.add(devRadioButton);
+		this.bg.add(localRadioButton);
+	}
+
+	private void addGameDescriptions() {
+		int orsc_x = 143;
+		int orsc_y = 152;
+		int rscc_x = 165;
+		int rscc_y = orsc_y + 29; // 188
+		int dev_x = 150;
+		int dev_y = rscc_y + 27; // 215
+		int local_x = 165;
+		int local_y = dev_y + 29; // 242
+
+		// Open RSC
+		JLabel orscDescription;
+		(orscDescription = new JLabel("-> 1x xp rate, bank notes, quick banking, near-authentic")).setBounds(orsc_x, orsc_y, 600, 18);
+		orscDescription.setForeground(new Color(255, 255, 255, 220));
+		orscDescription.setFont(Utils.getFont("Exo-Regular.otf", 0, 13.0f));
+		this.bg.add(orscDescription);
+
+		// RSC Cabbage
+		JLabel rsccDescription;
+		(rsccDescription = new JLabel("[ALPHA TEST] -> 5x xp rate, auction house, batched skills, and more")).setBounds(rscc_x, rscc_y, 600, 18);
+		rsccDescription.setForeground(new Color(255, 255, 255, 220));
+		rsccDescription.setFont(Utils.getFont("Exo-Regular.otf", 0, 13.0f));
+		this.bg.add(rsccDescription);
+
+		// Dev World
+		JLabel devDescription;
+		(devDescription = new JLabel("-> experimental world for testing the latest code")).setBounds(dev_x, dev_y, 600, 18);
+		devDescription.setForeground(new Color(255, 255, 255, 220));
+		devDescription.setFont(Utils.getFont("Exo-Regular.otf", 0, 13.0f));
+		this.bg.add(devDescription);
+
+		// Single Player
+		JLabel localhostDescription;
+		(localhostDescription = new JLabel("-> requires first starting the single player server")).setBounds(local_x, local_y, 600, 18);
+		localhostDescription.setForeground(new Color(255, 255, 255, 220));
+		localhostDescription.setFont(Utils.getFont("Exo-Regular.otf", 0, 13.0f));
+		this.bg.add(localhostDescription);
 	}
 
 	public JProgressBar getProgress() {
@@ -160,19 +298,39 @@ public class AppFrame extends JFrame {
 		return this.launch;
 	}
 
-	public JLabel getStatus() {
-		return this.status;
+	// ORSC section
+	public JLabel getorscStatus() {
+		return this.orsc_status;
 	}
 
-	public JLabel getOnline() {
-		return this.online;
+	public JLabel getorscOnline() {
+		return this.orsc_online;
 	}
 
-	public JLabel getLogins48() {
-		return this.logins48;
+	public JLabel getorscLogins48() {
+		return this.orsc_logins48;
 	}
 
-	public JLabel getRegistrationsToday() {
-		return this.registrationstoday;
+	// RSCC section
+	public JLabel getrsccStatus() {
+		return this.rscc_status;
+	}
+
+	public JLabel getrsccOnline() {
+		return this.rscc_online;
+	}
+
+	public JLabel getrsccLogins48() {
+		return this.rscc_logins48;
+	}
+
+	// Localhost section
+	public JLabel getlocalStatus() {
+		return this.local_status;
+	}
+
+	// Dev World section
+	public JLabel getdevStatus() {
+		return this.dev_status;
 	}
 }

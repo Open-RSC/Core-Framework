@@ -25,7 +25,7 @@
         </javac>
         <jar basedir="${build}" destfile="${jar}">
             <manifest>
-                <attribute name="Main-Class" value="com.loader.openrsc.OpenRSC"/>
+                <attribute name="Main-Class" value="com.loader.openrsc.Launcher"/>
             </manifest>
             <zipfileset src="${lib}/jsoup-1.11.3.jar"
                 excludes="META-INF/*.SF" />
@@ -33,7 +33,7 @@
     </target>
 
     <target name="runlauncher">
-        <java classname="com.loader.openrsc.OpenRSC" fork="true">
+        <java classname="com.loader.openrsc.Launcher" fork="true">
             <classpath>
                 <pathelement path="${jar}/"/>
             </classpath>

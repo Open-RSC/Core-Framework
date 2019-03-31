@@ -193,8 +193,8 @@ public class Thieving extends Functions
 				respawnTime = 10000;
 				loot.add(new LootItem(ItemId.COINS.id(), 10, 100));
 				break;
-			// Nature-rune Chest
 			case 335:
+				// Nature-rune Chest
 				req = 28;
 				xp = 100;
 				respawnTime = 25000;
@@ -238,12 +238,13 @@ public class Thieving extends Functions
 		}
 
 		player.message("You find a trap on the chest");
+		GameObject tempChest = new GameObject(obj.getLocation(), 340, obj.getDirection(), obj.getType());
+		replaceObject(obj, tempChest);
 		sleep(1200);
 		player.message("You disable the trap");
 
-		replaceObjectDelayed(obj, respawnTime, 339);
-
 		message(player, "You open the chest");
+		openChest(tempChest);
 		int random = DataConversions.random(1, 100);
 		Collections.sort(loot);
 		for (LootItem l : loot) {
@@ -253,6 +254,7 @@ public class Thieving extends Functions
 		}
 		player.incExp(Skills.THIEVING, xp, true);
 		message(player, "You find treasure inside!");
+		replaceObjectDelayed(obj, respawnTime, 340);
 		if (teleLoc != null) {
 			message(player, "suddenly a second magical trap triggers");
 			player.teleport(teleLoc.getX(), teleLoc.getY(), true);

@@ -112,10 +112,17 @@ public class Woodcutting implements ObjectActionListener,
 					owner.message("You get some wood");
 					owner.incExp(Skills.WOODCUT, (int) def.getExp(), true);
 					if (DataConversions.random(1, 100) <= def.getFell()) {
+						int stumpId;
+						if (def.getLogId() == ItemId.LOGS.id() || def.getLogId() == ItemId.MAGIC_LOGS.id()) {
+							stumpId = 4; //narrow tree stump
+						} else {
+							stumpId = 314; //bigger tree stump
+						}
+						
 						interrupt();
 						GameObject obj = owner.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 						if (obj != null && obj.getID() == object.getID()) {
-							World.getWorld().replaceGameObject(object, new GameObject(object.getLocation(), 4, object.getDirection(), object.getType()));
+							World.getWorld().replaceGameObject(object, new GameObject(object.getLocation(), stumpId, object.getDirection(), object.getType()));
 							World.getWorld().delayedSpawnObject(object.getLoc(), def
 								.getRespawnTime() * 1000);
 						}

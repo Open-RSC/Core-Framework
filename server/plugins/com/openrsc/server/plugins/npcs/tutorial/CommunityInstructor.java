@@ -8,6 +8,8 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
+import com.openrsc.server.external.NpcId;
+
 public class CommunityInstructor implements TalkToNpcExecutiveListener, TalkToNpcListener {
 	/**
 	 * @author Davve
@@ -26,7 +28,6 @@ public class CommunityInstructor implements TalkToNpcExecutiveListener, TalkToNp
 		}
 	}
 
-
 	private void communicateDialogue(Player p, Npc n) {
 		npcTalk(p, n, "typing in the game window will bring up chat",
 			"Which players in the nearby area will be able to see",
@@ -42,7 +43,7 @@ public class CommunityInstructor implements TalkToNpcExecutiveListener, TalkToNp
 			behaviourDialogue(p, n);
 		} else if (menu2 == 1) {
 			npcTalk(p, n, "Good luck");
-			if (p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") != 100) {
+			if (p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") < 100) {
 				p.getCache().set("tutorial", 100);
 			}
 		}
@@ -61,16 +62,15 @@ public class CommunityInstructor implements TalkToNpcExecutiveListener, TalkToNp
 			communicateDialogue(p, n);
 		} else if (menu3 == 1) {
 			npcTalk(p, n, "Good luck");
-			if (p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") != 100) {
+			if (p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") < 100) {
 				p.getCache().set("tutorial", 100);
 			}
 		}
 	}
 
-
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 496;
+		return n.getID() == NpcId.COMMUNITY_INSTRUCTOR.id();
 	}
 
 }

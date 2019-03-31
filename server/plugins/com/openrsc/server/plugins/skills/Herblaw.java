@@ -108,6 +108,10 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 				player.message("You need to have a herblaw level of 10 or over to mix this liquid");
 				return;
 			}
+			if (player.getQuestStage(Constants.Quests.DRUIDIC_RITUAL) != -1) {
+				player.message("You need to complete Druidic ritual quest first");
+				return;
+			}
 			player.incExp(Skills.HERBLAW, 20, true);
 			player.playerServerMessage(MessageType.QUEST, "You mix the nitrate powder into the liquid");
 			player.message("It has produced a foul mixture");
@@ -120,6 +124,10 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 				player.message("You need to have a herblaw level of 10 or over to mix this liquid");
 				return;
 			}
+			if (player.getQuestStage(Constants.Quests.DRUIDIC_RITUAL) != -1) {
+				player.message("You need to complete Druidic ritual quest first");
+				return;
+			}
 			player.incExp(Skills.HERBLAW, 25, true);
 			player.playerServerMessage(MessageType.QUEST, "You mix the charcoal into the liquid");
 			player.message("It has produced an even fouler mixture");
@@ -130,6 +138,10 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 				|| usedWith.getID() == ItemId.MIXED_CHEMICALS_2.id() && item.getID() == ItemId.ARCENIA_ROOT.id()) {
 			if (player.getSkills().getLevel(Skills.HERBLAW) < 10) {
 				player.message("You need to have a herblaw level of 10 or over to mix this liquid");
+				return;
+			}
+			if (player.getQuestStage(Constants.Quests.DRUIDIC_RITUAL) != -1) {
+				player.message("You need to complete Druidic ritual quest first");
 				return;
 			}
 			player.incExp(Skills.HERBLAW, 30, true);
@@ -145,6 +157,10 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 				player.message("You need a level of 25 herblaw to mix this potion");
 				return;
 			}
+			if (player.getQuestStage(Constants.Quests.DRUIDIC_RITUAL) != -1) {
+				player.message("You need to complete Druidic ritual quest first");
+				return;
+			}
 			player.incExp(Skills.HERBLAW, 320, true);
 			player.message("You mix the slime into your potion");
 			player.getInventory().remove(ItemId.UNFINISHED_HARRALANDER_POTION.id(), 1);
@@ -153,6 +169,10 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 				|| usedWith.getID() == ItemId.ARDRIGAL.id() && item.getID() == ItemId.SNAKES_WEED_SOLUTION.id()) {
 			if (player.getSkills().getLevel(Skills.HERBLAW) < 45) {
 				player.message("You need to have a herblaw level of 45 or over to mix this potion");
+				return;
+			}
+			if (player.getQuestStage(Constants.Quests.DRUIDIC_RITUAL) != -1) {
+				player.message("You need to complete Druidic ritual quest first");
 				return;
 			}
 			//player needs to have learned secret from gujuo
@@ -169,6 +189,10 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 				|| usedWith.getID() == ItemId.SNAKE_WEED.id() && item.getID() == ItemId.ARDRIGAL_SOLUTION.id()) {
 			if (player.getSkills().getLevel(Skills.HERBLAW) < 45) {
 				player.message("You need to have a herblaw level of 45 or over to mix this potion");
+				return;
+			}
+			if (player.getQuestStage(Constants.Quests.DRUIDIC_RITUAL) != -1) {
+				player.message("You need to complete Druidic ritual quest first");
 				return;
 			}
 			//player needs to have learned secret from gujuo
@@ -274,6 +298,10 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 					interrupt();
 					return;
 				}
+				if (player.getQuestStage(Constants.Quests.DRUIDIC_RITUAL) != -1) {
+					player.message("You need to complete Druidic ritual quest first");
+					return;
+				}
 				if (owner.getInventory().hasItemId(vial.getID())
 					&& owner.getInventory().hasItemId(herb.getID())) {
 					owner.getInventory().remove(vial.getID(), 1);
@@ -323,6 +351,10 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 					interrupt();
 					return;
 				}
+				if (player.getQuestStage(Constants.Quests.DRUIDIC_RITUAL) != -1) {
+					player.message("You need to complete Druidic ritual quest first");
+					return;
+				}
 				if (owner.getInventory().hasItemId(second.getID())
 					&& owner.getInventory().hasItemId(unfinished.getID())) {
 					if (bubbleItem.get() != null) {
@@ -364,6 +396,10 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			|| unfinishedPot.getID() == ItemId.GROUND_BAT_BONES.id() && ingredient.getID() == ItemId.UNFINISHED_OGRE_POTION.id()) {
 			if (p.getSkills().getLevel(Skills.HERBLAW) < 14) {
 				p.message("You need to have a herblaw level of 14 or over to mix this liquid");
+				return false;
+			}
+			if (p.getQuestStage(Constants.Quests.DRUIDIC_RITUAL) != -1) {
+				p.message("You need to complete Druidic ritual quest first");
 				return false;
 			}
 			if (p.getQuestStage(Quests.WATCHTOWER) >= 0 && p.getQuestStage(Quests.WATCHTOWER) < 6) {

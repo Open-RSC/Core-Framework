@@ -8,38 +8,71 @@ import java.net.Socket;
 public class StatusChecker implements Runnable {
 
 	private String serverIp;
+	private String game;
 	private int port;
 
-	public StatusChecker(String ip, int port) {
+	public StatusChecker(String ip, String game, int port) {
 		this.serverIp = ip;
+		this.game = game;
 		this.port = port;
 	}
 
 	@Override
 	public void run() {
-		while (true) {
+		if (game.equals("orsc")) {
 			try {
 				boolean isOnline = isOnline();
 				String text = isOnline ? "Online" : "Offline";
 				String color = isOnline ? "#00FF00" : "#FF0000";
-
-				AppFrame.get().getStatus().setText("<html>Server Status: <span style='color:" + color + ";'>" + text + "</span></html>");
-
-				/*JEditorPane website = new JEditorPane("https://openrsc.com");
-				website.setEditable(false);
-				JFrame frame = new JFrame("Open RSC Website");
-				frame.add(new JScrollPane(website));
-				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.setSize(800, 600);
-				frame.setVisible(true);*/
+				AppFrame.get().getorscStatus().setText("<html>Open RSC: <span style='color:" + color + ";'>" + text + "</span></html>");
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
-
 			try {
 				Thread.sleep(15000L);
 			} catch (Exception ignored) {
-
+			}
+		}
+		if (game.equals("rscc")) {
+			try {
+				boolean isOnline = isOnline();
+				String text = isOnline ? "Online" : "Offline";
+				String color = isOnline ? "#00FF00" : "#FF0000";
+				AppFrame.get().getrsccStatus().setText("<html>RSC Cabbage: <span style='color:" + color + ";'>" + text + "</span></html>");
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+			try {
+				Thread.sleep(15000L);
+			} catch (Exception ignored) {
+			}
+		}
+		if (game.equals("dev")) {
+			try {
+				boolean isOnline = isOnline();
+				String text = isOnline ? "Online" : "Offline";
+				String color = isOnline ? "#00FF00" : "#FF0000";
+				AppFrame.get().getdevStatus().setText("<html>Dev World: <span style='color:" + color + ";'>" + text + "</span></html>");
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+			try {
+				Thread.sleep(15000L);
+			} catch (Exception ignored) {
+			}
+		}
+		if (game.equals("local")) {
+			try {
+				boolean isOnline = isOnline();
+				String text = isOnline ? "Online" : "Offline";
+				String color = isOnline ? "#00FF00" : "#FF0000";
+				AppFrame.get().getlocalStatus().setText("<html>Single Player: <span style='color:" + color + ";'>" + text + "</span></html>");
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+			try {
+				Thread.sleep(15000L);
+			} catch (Exception ignored) {
 			}
 		}
 	}

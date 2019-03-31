@@ -75,6 +75,11 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 	@Override
 	public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable e) throws Exception {
 		System.out.println("Exception caught in thread!\n" + e);
+
+		for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
+			System.out.println(ste);
+		}
+
 		if (ctx.channel().isActive())
 			ctx.channel().close();
 	}

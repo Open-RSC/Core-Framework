@@ -47,7 +47,7 @@ public class GoblinDiplomacy implements QuestInterface, TalkToNpcListener,
 			326, 449);
 		if (n.getID() == NpcId.GENERAL_WARTFACE.id() || n.getID() == NpcId.GENERAL_BENTNOZE.id()) {
 			if (p.getQuestStage(this) == 0) {
-				if (n.getID() == NpcId.GENERAL_BENTNOZE.id()) {
+				if (n.getID() == NpcId.GENERAL_WARTFACE.id()) {
 					npcTalk(p, n, "green armour best");
 					npcTalk(p, otherGoblin, "No no Red every time");
 					npcTalk(p, n, "go away human, we busy");
@@ -57,7 +57,7 @@ public class GoblinDiplomacy implements QuestInterface, TalkToNpcListener,
 					npcTalk(p, n, "go away human, we busy");
 				}
 			} else if (p.getQuestStage(this) == 1) {
-				if (n.getID() == NpcId.GENERAL_BENTNOZE.id()) {
+				if (n.getID() == NpcId.GENERAL_WARTFACE.id()) {
 					npcTalk(p, n, "green armour best");
 					npcTalk(p, otherGoblin, "No no Red every time");
 					npcTalk(p, n, "go away human, we busy");

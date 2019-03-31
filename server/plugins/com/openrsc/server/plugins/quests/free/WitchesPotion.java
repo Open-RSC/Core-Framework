@@ -173,7 +173,7 @@ public class WitchesPotion implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == NpcId.HETTY.id() || n.getID() == NpcId.RAT_WITCHES_POTION.id();
+		return n.getID() == NpcId.HETTY.id() /*|| n.getID() == NpcId.RAT_WITCHES_POTION.id()*/;
 	}
 
 	@Override

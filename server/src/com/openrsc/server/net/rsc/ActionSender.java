@@ -1021,7 +1021,7 @@ public class ActionSender {
 		player.write(s.toPacket());
 	}
 
-	public static void sendProgress(Player player, int repeated) {
+	public static void sendProgress(Player player, long repeated) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_AUCTION_PROGRESS.opcode);
 		s.writeByte(0); // interface ID

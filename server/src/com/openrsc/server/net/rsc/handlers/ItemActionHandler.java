@@ -4,6 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.MiniEvent;
 import com.openrsc.server.external.ItemId;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
@@ -82,16 +83,16 @@ public class ItemActionHandler implements PacketHandler {
 						owner.getInventory().remove(item);
 						switch (ItemId.getById(item.getID())) {
 							case BONES:
-								owner.incExp(5, 15, true); // 3.75
+								owner.incExp(Skills.PRAYER, 15, true); // 3.75
 								break;
 							case BAT_BONES:
-								owner.incExp(5, 18, true); // 4.5
+								owner.incExp(Skills.PRAYER, 18, true); // 4.5
 								break;
 							case BIG_BONES:
-								owner.incExp(5, 50, true); // 12.5
+								owner.incExp(Skills.PRAYER, 50, true); // 12.5
 								break;
 							case DRAGON_BONES:
-								owner.incExp(5, 240, true); // 60
+								owner.incExp(Skills.PRAYER, 240, true); // 60
 								break;
 //							case 2256: // Soul of Greatwood NOT INCLUDED
 //								owner.incExp(5, 800 * 4, true); // 800
@@ -121,7 +122,31 @@ public class ItemActionHandler implements PacketHandler {
 				case BURNTPIE:
 					if (item.getDef().getCommand().equalsIgnoreCase("empty dish")) {
 						player.message("you remove the burnt pie from the pie dish");
-						player.getInventory().replace(item.getID(), 251);
+						player.getInventory().replace(item.getID(), ItemId.PIE_DISH.id());
+					}
+					break;
+				case BURNT_STEW:
+					if (item.getDef().getCommand().equalsIgnoreCase("empty")) {
+						player.message("you remove the burnt stew from the bowl");
+						player.getInventory().replace(item.getID(), ItemId.BOWL.id());
+					}
+					break;
+				case BURNT_CURRY:
+					if (item.getDef().getCommand().equalsIgnoreCase("empty")) {
+						player.message("you remove the burnt curry from the bowl");
+						player.getInventory().replace(item.getID(), ItemId.BOWL.id());
+					}
+					break;
+				case BLESSED_GOLDEN_BOWL_WITH_PLAIN_WATER:
+					if (item.getDef().getCommand().equalsIgnoreCase("empty")) {
+						player.message("You empty the plain water out of the Blessed Golden Bowl.");
+						player.getInventory().replace(item.getID(), ItemId.BLESSED_GOLDEN_BOWL.id());
+					}
+					break;
+				case GOLDEN_BOWL_WITH_PLAIN_WATER:
+					if (item.getDef().getCommand().equalsIgnoreCase("empty")) {
+						player.message("You empty the plain water out of the Golden Bowl.");
+						player.getInventory().replace(item.getID(), ItemId.GOLDEN_BOWL.id());
 					}
 					break;
 				case SPADE:

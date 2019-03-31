@@ -1056,6 +1056,10 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 					npcTalk(p, n,
 						"You can pick up your payment from the chancellor");
 					break;
+				case -1:
+					npcTalk(p, n, "Well done. A great rescue", 
+							"I will remember you if I have anything dangerous to do");
+					break;
 			}
 			return;
 		}

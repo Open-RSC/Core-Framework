@@ -2183,6 +2183,7 @@ public final class Player extends Mob {
 		} else {
 			getKillCache().set(n_id, 1);
 		}
+		kills = getKillCache().getInt(n_id);
 		if (sendUpdate) {
 			message("Your " + n.getDef().getName() + " kill count is: @red@" + kills + "@whi@.");
 		}

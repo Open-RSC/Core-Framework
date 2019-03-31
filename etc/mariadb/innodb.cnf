@@ -2,5 +2,7 @@
 innodb_flush_method=littlesync
 innodb_use_native_aio=OFF
 log_bin=ON
+max_binlog_size = 100M
+expire_logs_days = 3
 innodb_data_file_path = ibdata1:10M:autoextend
 max_allowed_packet = 1024M

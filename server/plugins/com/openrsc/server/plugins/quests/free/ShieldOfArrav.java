@@ -6,10 +6,8 @@ import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
-import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
@@ -463,13 +461,7 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
-		if (p.getQuestStage(this) == 4) {
-			World.getWorld().registerItem(
-				new GroundItem(ItemId.SCROLL.id(), n.getX(), n.getY(), 1, p));
-			n.killedBy(p);
-		} else {
-			n.killedBy(p);
-		}
+		n.killedBy(p);
 	}
 
 	@Override

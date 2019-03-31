@@ -15,9 +15,9 @@ import static com.openrsc.server.plugins.Functions.*;
 public class IronMan implements TalkToNpcExecutiveListener,
 	TalkToNpcListener, NpcCommandListener, NpcCommandExecutiveListener {
 
-	public static int IRON_MAN = 799;
-	public static int ULTIMATE_IRON_MAN = 800;
-	public static int HARDCORE_IRON_MAN = 801;
+	private static int IRON_MAN = 799;
+	private static int ULTIMATE_IRON_MAN = 800;
+	private static int HARDCORE_IRON_MAN = 801;
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
@@ -131,18 +131,12 @@ public class IronMan implements TalkToNpcExecutiveListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == IRON_MAN || n.getID() == ULTIMATE_IRON_MAN || n.getID() == HARDCORE_IRON_MAN) {
-			return true;
-		}
-		return false;
+		return n.getID() == IRON_MAN || n.getID() == ULTIMATE_IRON_MAN || n.getID() == HARDCORE_IRON_MAN;
 	}
 
 	@Override
 	public boolean blockNpcCommand(Npc n, String command, Player p) {
-		if (n.getID() == IRON_MAN || n.getID() == ULTIMATE_IRON_MAN || n.getID() == HARDCORE_IRON_MAN && command.equalsIgnoreCase("Armour")) {
-			return true;
-		}
-		return false;
+		return n.getID() == IRON_MAN || n.getID() == ULTIMATE_IRON_MAN || n.getID() == HARDCORE_IRON_MAN && command.equalsIgnoreCase("Armour");
 	}
 
 	@Override
@@ -156,7 +150,6 @@ public class IronMan implements TalkToNpcExecutiveListener,
 	private void armourOption(Player p, Npc n) {
 		if ((!p.isIronMan(1)) && (!p.isIronMan(2) && (!p.isIronMan(3)))) {
 			npcTalk(p, n, "You're not an Iron Man.", "Our armour is only for them.");
-			return;
 		} else {
 			if (p.getLocation().onTutorialIsland()) {
 				npcTalk(p, n, "We'll give you your armour once you're off this island.",

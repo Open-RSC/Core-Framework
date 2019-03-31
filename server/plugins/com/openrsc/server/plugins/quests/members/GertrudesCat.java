@@ -175,7 +175,7 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 				case -1:
 					playerTalk(p, n, "hello again gertrude");
 					npcTalk(p, n, "well hello adventurer, how are you?");
-					if (hasItem(p, ItemId.KITTEN.id())) {
+					if (hasItem(p, ItemId.KITTEN.id()) || p.getBank().hasItemId(ItemId.KITTEN.id())) {
 						playerTalk(p, n, "pretty good thanks, yourself?");
 						npcTalk(p, n,
 							"same old, running after shilob most of the time");

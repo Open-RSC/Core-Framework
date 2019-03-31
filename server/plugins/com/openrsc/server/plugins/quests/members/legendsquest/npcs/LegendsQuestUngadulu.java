@@ -146,24 +146,73 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 						}
 						break;
 					case 8:
-						message(p, n, 1300, "You approach Ungadulu...");
-						npcTalk(p, n, "Blessings on you Bwana.",
-							"Did you use the spell and kill the spirit?",
-							"Do you have the sacred water yet?");
-						message(p, n, 1300, "The Shaman looks so excited about seeing you that he is about to burst.");
-						int f_menu = showMenu(p, n,
-							"Yes, I've killed the Spirit.",
-							"Yes, I've got the water.",
-							"I need more Yommi tree seeds.");
-						if (f_menu == 0) {
-							ungaduluTalkToDialogue(p, n, Ungadulu.I_HAVE_KILLED_THE_SPIRIT);
-						} else if (f_menu == 1) {
-							ungaduluTalkToDialogue(p, n, Ungadulu.I_HAVE_GOT_THE_WATER);
-						} else if (f_menu == 2) {
-							ungaduluTalkToDialogue(p, n, Ungadulu.I_NEED_MORE_YOMMI_TREE_SEEDS);
+						if (!p.getCache().hasKey("crafted_totem_pole")) {
+							message(p, n, 1300, "You approach Ungadulu...");
+							npcTalk(p, n, "Blessings on you Bwana.",
+								"Did you use the spell and kill the spirit?",
+								"Do you have the sacred water yet?");
+							message(p, n, 1300, "The Shaman looks so excited about seeing you that he is about to burst.");
+							int f_menu = showMenu(p, n,
+								"Yes, I've killed the Spirit.",
+								"Yes, I've got the water.",
+								"I need more Yommi tree seeds.");
+							if (f_menu == 0) {
+								ungaduluTalkToDialogue(p, n, Ungadulu.I_HAVE_KILLED_THE_SPIRIT);
+							} else if (f_menu == 1) {
+								ungaduluTalkToDialogue(p, n, Ungadulu.I_HAVE_GOT_THE_WATER);
+							} else if (f_menu == 2) {
+								ungaduluTalkToDialogue(p, n, Ungadulu.I_NEED_MORE_YOMMI_TREE_SEEDS);
+							}
+							break;
+						} else {
+							//per-wiki
+							if (!hasItem(p, ItemId.TOTEM_POLE.id()) && !hasItem(p, ItemId.YOMMI_TREE_SEED.id())) {
+								npcTalk(p, n, "I see you have no totem pole, or Yommi tree seeds, is everything Ok?");
+								int menuopts = showMenu(p, n, "Yes, everything's fine.", "I need more Yommi tree seeds.");
+								if (menuopts == 0) {
+									npcTalk(p, n, "Your Legendary exploits are travelling the whole jungle.",
+											"How goes your quest to grow the sacred Yommi tree ?");
+									int submenu = showMenu(p, n, "I've already made the totem pole.",
+											"I'm not sure what to do with the Totem pole.", "Ok, thanks...");
+									if (submenu == 0) {
+										ungaduluTalkToDialogue(p, n, Ungadulu.MADE_TOTEM_POLE);
+									} else if (submenu == 1) {
+										ungaduluTalkToDialogue(p, n, Ungadulu.WHAT_DO_TOTEM_POLE);
+									} else if (submenu == 2) {
+										ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
+									}
+								} else if (menuopts == 1) {
+									ungaduluTalkToDialogue(p, n, Ungadulu.I_NEED_MORE_YOMMI_TREE_SEEDS);
+								}
+							} else {
+								npcTalk(p, n, "Your Legendary exploits are travelling the whole jungle.",
+										"How goes your quest to grow the sacred Yommi tree ?");
+								int submenu = showMenu(p, n, "I've already made the totem pole.",
+										"I'm not sure what to do with the Totem pole.", "Ok, thanks...");
+								if (submenu == 0) {
+									ungaduluTalkToDialogue(p, n, Ungadulu.MADE_TOTEM_POLE);
+								} else if (submenu == 1) {
+									ungaduluTalkToDialogue(p, n, Ungadulu.WHAT_DO_TOTEM_POLE);
+								} else if (submenu == 2) {
+									ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
+								}
+							}
 						}
 						break;
 					case 9:
+						//per wiki
+						npcTalk(p, n, "Your Legendary exploits are travelling the whole jungle.",
+								"How goes your quest to grow the sacred Yommi tree ?");
+						int newMenu10 = showMenu(p, n, "I've killed Nezikchened the Demon again.",
+								"I've replaced the evil Totem pole.", "Ok, thanks...");
+						if (newMenu10 == 0) {
+							ungaduluTalkToDialogue(p, n, Ungadulu.KILLED_DEMON_AGAIN);
+						} else if (newMenu10 == 1) {
+							ungaduluTalkToDialogue(p, n, Ungadulu.REPLACED_EVIL_TOTEM);
+						} else if (newMenu10 == 2) {
+							ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
+						}
+						break;
 					case 10:
 					case 11:
 					case -1:
@@ -564,6 +613,51 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 						ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
 					}
 					break;
+				case Ungadulu.MADE_TOTEM_POLE:
+					npcTalk(p, n, "This is great news Bwana, you've done really well.",
+							"Perhaps we can start to rally our people together now.",
+							"And live once again without fear in the jungle.");
+					int otheropts = showMenu(p, n, "I'm not sure what to do with the Totem pole.", "Ok, thanks...");
+					if (otheropts == 0) {
+						ungaduluTalkToDialogue(p, n, Ungadulu.WHAT_DO_TOTEM_POLE);
+					} else if (otheropts == 1) {
+						ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
+					}
+					break;
+				case Ungadulu.WHAT_DO_TOTEM_POLE:
+					npcTalk(p, n, "Well, Bwana, you can simply replace the corrupted totem",
+							"pole with the good one you have created.",
+							"This will make my people very happy.");
+					int otheropts2 = showMenu(p, n, "I've already made the totem pole.", "Ok, thanks...");
+					if (otheropts2 == 0) {
+						ungaduluTalkToDialogue(p, n, Ungadulu.MADE_TOTEM_POLE);
+					} else if (otheropts2 == 1) {
+						ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
+					}
+					break;
+				case Ungadulu.KILLED_DEMON_AGAIN:
+					npcTalk(p, n, "If you have killed him for the third time,",
+							"then you have banished him from our world completely.",
+							"This is indeed a legendary accomplishment Bwana,",
+							"you should feel proud.");
+					int other = showMenu(p, n, "I've replaced the evil Totem pole.", "Ok, thanks...");
+					if (other == 0) {
+						ungaduluTalkToDialogue(p, n, Ungadulu.REPLACED_EVIL_TOTEM);
+					} else if (other == 1) {
+						ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
+					}
+					break;
+				case Ungadulu.REPLACED_EVIL_TOTEM:
+					npcTalk(p, n, "Many thanks Bwana, my people are truly grateful.",
+							"Have you seen Gujuo, I am sure that he may have something",
+							"for you as a token of our appreciation.");
+					int other2 = showMenu(p, n, "I've killed Nezikchened the Demon again.", "Ok, thanks...");
+					if (other2 == 0) {
+						ungaduluTalkToDialogue(p, n, Ungadulu.KILLED_DEMON_AGAIN);
+					} else if (other2 == 1) {
+						ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
+					}
+					break;
 			}
 		}
 	}
@@ -908,6 +1002,10 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 		static final int I_HAVE_GOT_THE_WATER = 20;
 		static final int WHAT_DO_I_DO_NOW = 21;
 		static final int OK_THANKS = 22;
-
+		static final int MADE_TOTEM_POLE = 23;
+		static final int WHAT_DO_TOTEM_POLE = 24;
+		static final int KILLED_DEMON_AGAIN = 25;
+		static final int REPLACED_EVIL_TOTEM = 26;
+		
 	}
 }

@@ -19,6 +19,7 @@ import com.openrsc.server.util.rsc.MessageType;
 import java.util.ArrayList;
 
 import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.showBubble;
 
 public class Fishing implements ObjectActionListener, ObjectActionExecutiveListener {
@@ -61,6 +62,11 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 		}
 		if (owner.getFatigue() >= owner.MAX_FATIGUE) {
 			owner.message("You are too tired to catch this fish");
+			return;
+		}
+		if (object.getID() == 493 && owner.getSkills().getExperience(Skills.FISHING) >= 200) {
+			message(owner, "that's enough fishing for now",
+					"go through the next door to continue the tutorial");
 			return;
 		}
 		if (owner.getSkills().getLevel(Skills.FISHING) < def.getReqLevel()) {
@@ -144,11 +150,12 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 							+ fish.getDef().getName().toLowerCase().replace("raw ", "") + (fish.getID() == ItemId.RAW_SHRIMP.id() ? "s" : "")
 							+ (fish.getID() == ItemId.RAW_SHARK.id() ? "!" : ""));
 						owner.incExp(Skills.FISHING, fishDef.getExp(), true);
+						if (object.getID() == 493 && owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 41)
+							owner.getCache().set("tutorial", 42);
 					}
 				} else {
 					owner.playerServerMessage(MessageType.QUEST, "You fail to catch anything");
-					if (!owner.getInventory().hasItemId(ItemId.RAW_SHRIMP.id()) && owner.getLocation().onTutorialIsland()
-						&& owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 40) {
+					if (object.getID() == 493 && owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 41) {
 						owner.message("keep trying, you'll catch something soon");
 					}
 				}

@@ -7,6 +7,7 @@ import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.removeItem;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -22,7 +23,9 @@ public class Civillians implements TalkToNpcExecutiveListener, TalkToNpcListener
 		boolean hasKitten = p.getInventory().hasItemId(ItemId.KITTEN.id());
 		boolean hasKardiasCat = p.getInventory().hasItemId(ItemId.KARDIA_CAT.id());
 		boolean hasGertrudesCat = p.getInventory().hasItemId(ItemId.GERTRUDES_CAT.id());
-		boolean hasAnyCat = hasCat || hasKitten || hasKardiasCat || hasGertrudesCat;
+		boolean hasFluffsKittens = p.getInventory().hasItemId(ItemId.KITTENS.id());
+		boolean hasAnyCat = hasCat || hasKitten || hasKardiasCat || hasGertrudesCat 
+				|| (hasFluffsKittens && Constants.GameServer.WANT_SHOW_KITTENS_CIVILLIAN);
 		switch(NpcId.getById(n.getID())) {
 		case CIVILLIAN_APRON:
 			playerTalk(p, n, "hi");
@@ -40,6 +43,8 @@ public class Civillians implements TalkToNpcExecutiveListener, TalkToNpcListener
 				else if (hasKitten) civilianShowKittenDialogue(p, n);
 				else if (hasKardiasCat) civilianShowKardiasCatDialogue(p, n);
 				else if (hasGertrudesCat) civilianShowGertrudesCatDialogue(p, n);
+				else if (hasFluffsKittens && Constants.GameServer.WANT_SHOW_KITTENS_CIVILLIAN)
+					civilianShowFluffsKittensDialogue(p, n);
 			}
 			break;
 		case CIVILLIAN_ATTACKABLE:
@@ -55,6 +60,8 @@ public class Civillians implements TalkToNpcExecutiveListener, TalkToNpcListener
 				else if (hasKitten) civilianShowKittenDialogue(p, n);
 				else if (hasKardiasCat) civilianShowKardiasCatDialogue(p, n);
 				else if (hasGertrudesCat) civilianShowGertrudesCatDialogue(p, n);
+				else if (hasFluffsKittens && Constants.GameServer.WANT_SHOW_KITTENS_CIVILLIAN)
+					civilianShowFluffsKittensDialogue(p, n);
 			}
 			break;
 		case CIVILLIAN_PICKPOCKET:
@@ -70,6 +77,8 @@ public class Civillians implements TalkToNpcExecutiveListener, TalkToNpcListener
 				else if (hasKitten) civilianShowKittenDialogue(p, n);
 				else if (hasKardiasCat) civilianShowKardiasCatDialogue(p, n);
 				else if (hasGertrudesCat) civilianShowGertrudesCatDialogue(p, n);
+				else if (hasFluffsKittens && Constants.GameServer.WANT_SHOW_KITTENS_CIVILLIAN)
+					civilianShowFluffsKittensDialogue(p, n);
 			}
 			break;
 		default:
@@ -129,6 +138,14 @@ public class Civillians implements TalkToNpcExecutiveListener, TalkToNpcListener
 		playerTalk(p, n, "i have a cat..look");
 		npcTalk(p, n, "hmmm..doesn't look like it belongs to you",
 				"i cannot buy it");
+	}
+	
+	//very likely did not trigger something, it does not appear to trigger dialogue in OSRS
+	//and kardias cat is wikified to have dialogue in OSRS
+	private void civilianShowFluffsKittensDialogue(Player p, Npc n) {
+		playerTalk(p, n, "i have some kittens..look");
+		npcTalk(p, n, "hmmm..doesn't look like they are happy",
+				"better return them where they were");
 	}
 
 	@Override

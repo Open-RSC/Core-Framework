@@ -147,7 +147,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 							@Override
 							public void action() {
 								if (fire != null) {
-									World.getWorld().registerItem(new GroundItem(181,
+									World.getWorld().registerItem(new GroundItem(ItemId.ASHES.id(),
 										fire.getX(),
 										fire.getY(),
 										1, null));

@@ -1,6 +1,11 @@
 package com.openrsc.server.util.rsc;
 
-import com.openrsc.server.external.*;
+import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.external.FiremakingDef;
+import com.openrsc.server.external.GameObjectLoc;
+import com.openrsc.server.external.ItemLoc;
+import com.openrsc.server.external.NPCLoc;
+import com.openrsc.server.external.SpellDef;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.Entity;
@@ -8,8 +13,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
-
-import static com.openrsc.server.Constants.GameServer.PLAYER_LEVEL_LIMIT;
 
 public final class Formulae {
 
@@ -431,10 +434,10 @@ public final class Formulae {
 	}
 
 	/**
-	 * Should the web be cut?
+	 * Should the web be cut? ~50%
 	 */
 	public static boolean cutWeb() {
-		return DataConversions.random(0, 4) != 0;
+		return DataConversions.random(0, 4) <= 1;
 	}
 
 	public static boolean doorAtFacing(Entity e, int x, int y, int dir) {
@@ -733,7 +736,7 @@ public final class Formulae {
 	}
 
 	public static int getRepeatTimes(Player p, int skill) {
-		int maxStat = p.getSkills().getMaxStat(skill);
+		//int maxStat = p.getSkills().getMaxStat(skill); // Number of time repeats is based on your highest level using this method
 		/*int regular = 0;
 		if (maxStat <= 10)
 			regular = 2;
@@ -755,8 +758,9 @@ public final class Formulae {
 			regular = 10;
 		else if (maxStat <= PLAYER_LEVEL_LIMIT)
 			regular = 11;*/
+		//return (maxStat / 10) + 1 + (maxStat == PLAYER_LEVEL_LIMIT ? 1 : 0);
 
-		return (maxStat / 10) + 1 + (maxStat == PLAYER_LEVEL_LIMIT ? 1 : 0);
+		return 1000; // Total attempts made before stopping. Inventory will fill up, fatigue will reach 100, or player will walk away to interrupt
 	}
 
 	public static int getSpellMaxHit(SpellDef spell) {
@@ -764,7 +768,7 @@ public final class Formulae {
 		description = description.replaceAll("\\D+", "");
 		try {
 			return Integer.parseInt(description);
-		} catch (Exception e) {
+		} catch (Exception ignored) {
 		}
 		return 1;
 	}

@@ -121,6 +121,10 @@ public class Point {
 	public boolean inTutorialLanding() {
 		return inBounds(214, 739, 221, 747);
 	}
+	
+	public boolean aroundTutorialRatZone() {
+		return inBounds(226, 728, 234, 738);
+	}
 
 	public boolean inModRoom() {
 		return inBounds(64, 1639, 80, 1643);
@@ -292,6 +296,18 @@ public class Point {
 
 	public boolean inTouristTrapCave3() {
 		return inBounds(49, 3600, 95, 3647);
+	}
+	
+	public boolean isInsideFlameWall() {
+		return inBounds(450, 3704, 455, 3711);
+	}
+	
+	public boolean isAroundBoulderRock() {
+		return inBounds(407, 3719, 421, 3733);
+	}
+	
+	public boolean isAroundTotemPole() {
+		return inBounds(360, 881, 374, 895);
 	}
 
 	public boolean inArea(Area area) {

@@ -91,3 +91,6 @@ backup:
 update-laravel:
 	sudo docker exec -i php bash -c "cd /var/www/html/openrsc-web && composer install && php artisan key:generate"
 	sudo chmod -R 777 Website/openrsc-web
+
+clear-old-backups:
+	sudo find $(MYSQL_DUMPS_DIR)/*.zip -mtime +30 -exec rm -f {} \;

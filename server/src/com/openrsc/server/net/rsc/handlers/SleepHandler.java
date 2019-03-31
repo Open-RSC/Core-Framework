@@ -34,6 +34,9 @@ public final class SleepHandler implements PacketHandler {
 			if (sleepword.equalsIgnoreCase(player.getSleepword())) {
 				ActionSender.sendWakeUp(player, true, false);
 				player.resetSleepTries();
+				// Advance the fatigue expert part of tutorial island
+				if(player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 85)
+					player.getCache().set("tutorial", 86);
 			} else {
 				ActionSender.sendIncorrectSleepword(player);
 				player.incrementSleepTries();

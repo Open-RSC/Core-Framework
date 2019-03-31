@@ -6,7 +6,11 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.showMenu;
+
+import com.openrsc.server.external.NpcId;
 
 public class BankAssistant implements TalkToNpcExecutiveListener,
 	TalkToNpcListener {
@@ -46,7 +50,7 @@ public class BankAssistant implements TalkToNpcExecutiveListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 485;
+		return n.getID() == NpcId.BANK_ASSISTANT.id();
 	}
 
 }

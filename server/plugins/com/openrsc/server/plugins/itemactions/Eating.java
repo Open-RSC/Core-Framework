@@ -216,5 +216,8 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 
 		else if (id == ItemId.HALF_A_MEAT_PIE.id())
 			player.getInventory().add(new Item(ItemId.PIE_DISH.id()));
+		
+		else if (id == ItemId.STEW.id() || id == ItemId.CURRY.id() || id == ItemId.SPECIAL_CURRY.id())
+			player.getInventory().add(new Item(ItemId.BOWL.id()));
 	}
 }

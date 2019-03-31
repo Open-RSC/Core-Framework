@@ -35,27 +35,37 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 							   final GameObject object) {
 
 		// Tutorial Meat
-		if (p.getLocation().onTutorialIsland() && item.getID() == ItemId.RAW_RAT_MEAT.id() && p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") >= 0 && p.getCache().getInt("tutorial") <= 31) {
-			p.setBusy(true);
-			showBubble(p, item);
-			p.playSound("cooking");
-			p.message("You cook the meat on the stove...");
-			if (p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 25) {
-				p.message("You accidentally burn the meat");
-				p.getInventory().replace(ItemId.RAW_RAT_MEAT.id(), ItemId.BURNTMEAT.id());
+		if(object.getID() == 491) {
+			if (item.getID() == ItemId.RAW_RAT_MEAT.id()) {
+				p.setBusy(true);
+				showBubble(p, item);
+				p.playSound("cooking");
+				p.message("You cook the meat on the stove...");
+				if(p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 25) {
+					p.message("You accidentally burn the meat");
+					p.getInventory().replace(ItemId.RAW_RAT_MEAT.id(), ItemId.BURNTMEAT.id());
+					message(p, "sometimes you will burn food",
+							"As your cooking level increases this will happen less",
+							"Now speak to the cooking instructor again");
+					p.getCache().set("tutorial", 30);
+				} else if (p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 30) {
+					final ItemCookingDef cookingDef = item.getCookingDef();
+					p.message("The meat is now nicely cooked");
+					message(p, "Now speak to the cooking instructor again");
+					p.incExp(Skills.COOKING, cookingDef.getExp(), true);
+					p.getCache().set("tutorial", 31);
+					p.getInventory().replace(ItemId.RAW_RAT_MEAT.id(), ItemId.COOKEDMEAT.id());
 
-				message(p, "sometimes you will burn food",
-					"As your cooking level increases this will happen less",
-					"Now speak to the cooking instructor again");
-				p.getCache().set("tutorial", 30);
-			} else if (p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 30) {
-				p.message("The meat is now nicely cooked");
-				message(p, "Now speak to the cooking instructor again");
-				p.getCache().set("tutorial", 31);
-				p.getInventory().replace(ItemId.RAW_RAT_MEAT.id(), ItemId.COOKEDMEAT.id());
-
+				} else {
+					//per-wiki says rest of meats are burned
+					p.message("You accidentally burn the meat");
+					p.getInventory().replace(ItemId.RAW_RAT_MEAT.id(), ItemId.BURNTMEAT.id());
+				}
+				p.setBusy(false);
+			} else {
+				p.message("Nothing interesting happens");
 			}
-			p.setBusy(false);
+			return;
 		}
 
 		// Raw Oomlie Meat (Always burn)

@@ -293,7 +293,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command,
 									 Player player) {
-		return DataConversions.inArray(new int[] {492, 486, 467, BAXTORIAN_CUPBOARD_OPEN, BAXTORIAN_CUPBOARD_CLOSED, 481, 471, 479, 470, 480, 463, 462, 482, 464}, obj.getID());
+		return DataConversions.inArray(new int[] {492, 486, 467, 469, BAXTORIAN_CUPBOARD_OPEN, BAXTORIAN_CUPBOARD_CLOSED, 481, 471, 479, 470, 480, 463, 462, 482, 464}, obj.getID());
 	}
 
 	@Override
@@ -326,12 +326,19 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 					"you need someway to pull yourself across");
 			} else if (command.equals("jump off")) {
 				message(p, "you jump into the wild rapids");
-				p.teleport(645, 485, false);
+				p.teleport(654, 485, false);
 				p.damage(DataConversions.random(4, 10));
 				playerTalk(p, null, "ouch!");
 				message(p, "you tumble over the water fall",
 					"and are washed up by the river side");
 			}
+		} else if (obj.getID() == 469) {
+			message(p, "you jump into the wild rapids below");
+			p.teleport(654, 485, false);
+			p.damage(DataConversions.random(4, 10));
+			playerTalk(p, null, "ouch!");
+			message(p, "you tumble over the water fall",
+				"and are washed up by the river side");
 		} else if (obj.getID() == 470) {
 			message(p, "you search the bookcase");
 			if (!p.getInventory().hasItemId(ItemId.BOOK_ON_BAXTORIAN.id())) {
@@ -419,7 +426,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 			} else {
 				message(p, "suddenly the corridor floods",
 					"flushing you back into the river");
-				p.teleport(645, 485, false);
+				p.teleport(654, 485, false);
 				p.damage(DataConversions.random(4, 10));
 				playerTalk(p, null, "ouch!");
 				message(p, "you tumble over the water fall");
@@ -439,7 +446,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 				"it falls to the floor", "you hear a gushing of water",
 				"water floods into the cavern");
 			p.damage(DataConversions.random(1, 10));
-			p.teleport(645, 485, false);
+			p.teleport(654, 485, false);
 			message(p, "ouch!", "you tumble over the water fall",
 				"and are washed up by the river side");
 		} else if (obj.getID() == 486) {

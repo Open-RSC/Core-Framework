@@ -81,6 +81,9 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 
 		else if (id == ItemId.DRAGON_BITTER.id())
 			handleDragonBitter(player, item);
+		
+		else if (id == ItemId.GROG.id())
+			handleGrog(player, item);
 
 		else if (id == ItemId.POISON_CHALICE.id())
 			handlePoisonChalice(player, item);
@@ -500,10 +503,9 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		if (player.getSkills().getLevel(Skills.HITPOINTS) < player.getSkills().getMaxStat(Skills.HITPOINTS)) {
 			int newStat = player.getSkills().getLevel(Skills.HITPOINTS) + 11;
 			if (newStat > player.getSkills().getMaxStat(Skills.HITPOINTS)) {
-				player.getSkills().setLevel(Skills.HITPOINTS, player.getSkills().getMaxStat(Skills.HITPOINTS));
-			} else {
-				player.getSkills().setLevel(Skills.HITPOINTS, newStat);
+				newStat = player.getSkills().getMaxStat(Skills.HITPOINTS);
 			}
+			player.getSkills().setLevel(Skills.HITPOINTS, newStat);
 		}
 		player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) - 3);
 	}
@@ -555,6 +557,13 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) - 4);
 		if (player.getSkills().getLevel(Skills.STRENGTH) <= player.getSkills().getMaxStat(Skills.STRENGTH)) {
 			player.getSkills().setLevel(Skills.STRENGTH, player.getSkills().getLevel(Skills.STRENGTH) + 2);
+		}
+		if (player.getSkills().getLevel(Skills.HITPOINTS) < player.getSkills().getMaxStat(Skills.HITPOINTS)) {
+			int newStat = player.getSkills().getLevel(Skills.HITPOINTS) + 1;
+			if (newStat > player.getSkills().getMaxStat(Skills.HITPOINTS)) {
+				newStat = player.getSkills().getMaxStat(Skills.HITPOINTS);
+			}
+			player.getSkills().setLevel(Skills.HITPOINTS, newStat);
 		}
 	}
 
@@ -626,6 +635,13 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		if (player.getSkills().getLevel(Skills.STRENGTH) <= player.getSkills().getMaxStat(Skills.STRENGTH)) {
 			player.getSkills().setLevel(Skills.STRENGTH, player.getSkills().getLevel(Skills.STRENGTH) + 2);
 		}
+		if (player.getSkills().getLevel(Skills.HITPOINTS) < player.getSkills().getMaxStat(Skills.HITPOINTS)) {
+			int newStat = player.getSkills().getLevel(Skills.HITPOINTS) + 2;
+			if (newStat > player.getSkills().getMaxStat(Skills.HITPOINTS)) {
+				newStat = player.getSkills().getMaxStat(Skills.HITPOINTS);
+			}
+			player.getSkills().setLevel(Skills.HITPOINTS, newStat);
+		}
 	}
 
 	private void handleDragonBitter(Player player, Item item) {
@@ -638,6 +654,27 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) - 4);
 		if (player.getSkills().getLevel(Skills.STRENGTH) <= player.getSkills().getMaxStat(Skills.STRENGTH)) {
 			player.getSkills().setLevel(Skills.STRENGTH, player.getSkills().getLevel(Skills.STRENGTH) + 2);
+		}
+	}
+	
+	private void handleGrog(Player player, Item item) {
+		player.message("You drink the " + item.getDef().getName() + ".");
+		showBubble(player, item);
+		player.getInventory().remove(item);
+		player.getInventory().add(new Item(ItemId.BEER_GLASS.id()));
+		sleep(1200);
+		player.message("You feel slightly reinvigorated");
+		player.message("And slightly dizzy too.");
+		player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) - 6);
+		if (player.getSkills().getLevel(Skills.STRENGTH) <= player.getSkills().getMaxStat(Skills.STRENGTH)) {
+			player.getSkills().setLevel(Skills.STRENGTH, player.getSkills().getLevel(Skills.STRENGTH) + 3);
+		}
+		if (player.getSkills().getLevel(Skills.HITPOINTS) < player.getSkills().getMaxStat(Skills.HITPOINTS)) {
+			int newStat = player.getSkills().getLevel(Skills.HITPOINTS) + 3;
+			if (newStat > player.getSkills().getMaxStat(Skills.HITPOINTS)) {
+				newStat = player.getSkills().getMaxStat(Skills.HITPOINTS);
+			}
+			player.getSkills().setLevel(Skills.HITPOINTS, newStat);
 		}
 	}
 
