@@ -10,10 +10,12 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.InvUseOnWallObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.PlayerAttackNpcListener;
+import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
 import com.openrsc.server.plugins.listeners.action.PlayerMageNpcListener;
 import com.openrsc.server.plugins.listeners.action.PlayerRangeNpcListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -22,6 +24,7 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnWallObjectExecutiv
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.PlayerMageNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.PlayerRangeNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
@@ -46,7 +49,8 @@ import static com.openrsc.server.plugins.Functions.showMenu;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
 
 public class HerosQuest implements QuestInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener, InvUseOnWallObjectListener, InvUseOnWallObjectExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, PlayerAttackNpcExecutiveListener, PlayerAttackNpcListener, PlayerRangeNpcListener, PlayerMageNpcListener, PlayerRangeNpcExecutiveListener, PlayerMageNpcExecutiveListener {
+	TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener, InvUseOnWallObjectListener, InvUseOnWallObjectExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, PlayerAttackNpcExecutiveListener, PlayerAttackNpcListener, PlayerRangeNpcListener, PlayerMageNpcListener, PlayerRangeNpcExecutiveListener, PlayerMageNpcExecutiveListener,
+	PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener{
 
 	private static final int GRIPS_CUPBOARD_OPEN = 264;
 	private static final int GRIPS_CUPBOARD_CLOSED = 263;
@@ -586,6 +590,20 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 			}
 		}
 
+	}
+	
+	@Override
+	public void onPlayerKilledNpc(Player p, Npc n) {
+		if (n.getID() == NpcId.GRIP.id()) {
+			World.getWorld().registerItem(
+					new GroundItem(ItemId.BUNCH_OF_KEYS.id(), n.getX(), n.getY(), 1, null));
+		}
+		n.killedBy(p);
+	}
+	
+	@Override
+	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+		return n.getID() == NpcId.GRIP.id();
 	}
 
 	@Override
