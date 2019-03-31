@@ -674,8 +674,6 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	public void unregisterPlayer(final Player player) {
 		FishingTrawler trawlerInstance = getFishingTrawler(player);
 		try {
-			ActionSender.sendLogoutRequestConfirm(player);
-			player.setLoggedIn(false);
 			player.resetAll();
 
 			Mob opponent = player.getOpponent();

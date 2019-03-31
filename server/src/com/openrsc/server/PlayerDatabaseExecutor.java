@@ -66,7 +66,7 @@ public class PlayerDatabaseExecutor extends ThrottleFilter implements Runnable {
 			while ((playerToRemove = removeRequests.poll()) != null) {
 				playerToRemove.remove();
 				World.getWorld().getPlayers().remove(playerToRemove);
-				//LOGGER.info("Removed player " + playerToSave.getUsername() + "");
+				//LOGGER.info("Removed player " + playerToRemove.getUsername() + "");
 			}
 		} catch (Throwable e) {
 			LOGGER.catching(e);

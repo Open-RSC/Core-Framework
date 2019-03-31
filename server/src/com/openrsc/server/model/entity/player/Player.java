@@ -460,7 +460,7 @@ public final class Player extends Mob {
 	}
 
 	public void write(Packet o) {
-		if (channel != null) {
+		if (channel.isOpen() && isLoggedIn()) {
 			synchronized (outgoingPacketsLock) {
 				outgoingPackets.add(o);
 			}
@@ -1620,7 +1620,12 @@ public final class Player extends Mob {
 	}
 
 	public void sendOutgoingPackets() {
-		if (!channel.isOpen() && !channel.isWritable()) {
+		// Unsure if we want to clear right now. Probably OK not to since the player should be cleaned up when the channel is no longer open.
+		/*if(!channel.isOpen() || !isLoggedIn()) {
+			outgoingPackets.clear();
+		}*/
+
+		if (!channel.isOpen() || !isLoggedIn() || !channel.isActive() || !channel.isWritable()) {
 			return;
 		}
 		synchronized (outgoingPacketsLock) {
@@ -1728,6 +1733,8 @@ public final class Player extends Mob {
 	}
 
 	public void logout() {
+		ActionSender.sendLogoutRequestConfirm(this);
+		setLoggedIn(false);
 		Server.getPlayerDataProcessor().addRemoveRequest(this);
 	}
 
