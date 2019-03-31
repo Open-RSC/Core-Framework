@@ -25,6 +25,7 @@ import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveLi
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.closeGenericObject;
@@ -482,9 +483,13 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 				}
 			}
 		}
-		//??
+		//Door of Elvarg chamber
 		else if (obj.getID() == 59) {
-			doDoor(obj, p);
+			if (p.getQuestStage(this) == 3 || p.getX() >= 414) {
+				doDoor(obj, p);
+			} else {
+				p.playerServerMessage(MessageType.QUEST, "the door is locked");
+			}
 		} else if (obj.getID() == 60) {
 			p.message("Nothing interesting happens");
 		}
