@@ -595,7 +595,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockPlayerMageNpc(Player p, Npc n) {
-		return n.getID() == NpcId.GRIP.id();
+		return n.getID() == NpcId.GRIP.id() && !p.getLocation().inHeroQuestRangeRoom();
 	}
 
 	@Override
@@ -605,14 +605,12 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void onPlayerMageNpc(Player p, Npc n) {
-		if (n.getID() == NpcId.GRIP.id()) {
-			if (!p.getLocation().inHeroQuestRangeRoom()) {
-				playerTalk(p, null, "I can't attack the head guard here",
+		if (n.getID() == NpcId.GRIP.id() && !p.getLocation().inHeroQuestRangeRoom()) {
+			playerTalk(p, null, "I can't attack the head guard here",
 					"There are too many witnesses to see me do it",
 					"I'd have the whole of Brimhaven after me",
 					"Besides if he dies I want to have the chance of being promoted");
-				p.message("Maybe you need another player's help");
-			}
+			p.message("Maybe you need another player's help");
 		}
 	}
 
