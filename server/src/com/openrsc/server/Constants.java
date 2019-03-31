@@ -209,6 +209,7 @@ public final class Constants {
 		//quest-minigame related
 		public static boolean WANT_GIANNE_BADGE = false;
 		public static boolean WANT_BLURBERRY_BADGE = false;
+		public static boolean WANT_SHOW_KITTENS_CIVILLIAN = false;
 		public static boolean WANT_BARTER_WORMBRAINS = false;
 
 		/**
@@ -325,6 +326,7 @@ public final class Constants {
 			
 			WANT_GIANNE_BADGE = Boolean.parseBoolean(props.getProperty("want_gianne_badge"));
 			WANT_BLURBERRY_BADGE = Boolean.parseBoolean(props.getProperty("want_blurberry_badge"));
+			WANT_SHOW_KITTENS_CIVILLIAN = Boolean.parseBoolean(props.getProperty("want_show_kittens_civillian"));
 			WANT_BARTER_WORMBRAINS = Boolean.parseBoolean(props.getProperty("want_barter_wormbrains"));
 
 			// Make sure config doesn't exceed max values
