@@ -7,6 +7,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -27,6 +28,7 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 			ActionSender.sendSound(player, "eat");
 
 			int id = item.getID();
+			boolean isKebabVariant = false;
 			if (id == ItemId.SPECIAL_DEFENSE_CABBAGE.id() || id == ItemId.CABBAGE.id()) {
 				player.message("You eat the " + item.getDef().getName()
 					+ ". Yuck!");
@@ -36,6 +38,12 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 					if (newStat <= (lv + 1))
 						player.getSkills().setLevel(Skills.DEFENSE, newStat);
 				}
+			} else if (id == ItemId.KEBAB.id()) {
+				isKebabVariant = true;
+				handleKebab(player, item);
+			} else if (id == ItemId.TASTY_UGTHANKI_KEBAB.id()) {
+				isKebabVariant = true;
+				handleTastyKebab(player, item);
 			} else if (id == ItemId.CHOCOLATE_BOMB.id() || id == ItemId.GNOME_WAITER_CHOCOLATE_BOMB.id()) {
 				message(player, "You eat the choc bomb");
 				player.message("it tastes great");
@@ -155,12 +163,77 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 				player.getSkills().setLevel(Skills.HITPOINTS, newHp);
 			}
 			sleep(325);
-			if (heals) {
+			if (heals && !isKebabVariant) {
 				player.message("It heals some health");
 			}
 			player.getInventory().remove(item);
 
 			addFoodResult(player, id);
+		}
+	}
+	
+	private void handleKebab(Player player, Item item) {
+		int rand = DataConversions.random(0, 31);
+		player.message("You eat the Kebab");
+		int hpRestored = 0;
+		if (rand == 0) { // 1/32 or 3% chance chance of 2-4 damage (can never kill)
+			player.message("That tasted a bit dodgy");
+			player.message("You feel a bit ill");
+			if (player.getSkills().getLevel(Skills.HITPOINTS) > 2) {
+				int dmg = DataConversions.random(2, 4);
+				int newHp = Math.max(player.getSkills().getLevel(Skills.HITPOINTS) - dmg, 1);
+				player.getSkills().setLevel(Skills.HITPOINTS, newHp);
+			}
+		} else if (rand <= 1) { // 1/32 or 3% chance to heal 30 hits and gaining 1-3 levels att, str, def
+			player.message("Wow that was an amazing kebab!");
+			player.message("You feel slightly invigorated");
+			int boost = DataConversions.random(1, 3);
+			int[] skills = {Skills.ATTACK, Skills.STRENGTH, Skills.DEFENSE};
+			for (int skill : skills) {
+				if (player.getSkills().getLevel(skill) <= player.getSkills().getMaxStat(skill)) {
+					player.getSkills().setLevel(skill, player.getSkills().getLevel(skill) + boost);
+				}
+			}
+			hpRestored = 30;
+		} else if (rand <= 8) { // 7/32 or 21% chance of healing 10-20 hits
+			player.message("That was a good kebab");
+			player.message("You feel a lot better");
+			hpRestored = DataConversions.random(10, 20);
+		} else if (rand <= 28) { // 20/32 or 62% chance of healing 10% max hits
+			player.message("It heals some health");
+			hpRestored = player.getSkills().getMaxStat(Skills.HITPOINTS) * 10 / 100;
+		} else { // 3/32 or 9% that does nothing
+			player.message("The kebab didn't seem to do a lot");
+			hpRestored = 0;
+		}
+		if (hpRestored > 0 && player.getSkills().getLevel(Skills.HITPOINTS) < player.getSkills().getMaxStat(Skills.HITPOINTS)) {
+			int newStat = player.getSkills().getLevel(Skills.HITPOINTS) + hpRestored;
+			if (newStat > player.getSkills().getMaxStat(Skills.HITPOINTS)) {
+				newStat = player.getSkills().getMaxStat(Skills.HITPOINTS);
+			}
+			player.getSkills().setLevel(Skills.HITPOINTS, newStat);
+		}
+	}
+	
+	private void handleTastyKebab(Player player, Item item) {
+		player.message("You eat the " + item.getDef().getName());
+		player.message("It heals some health");
+		// restores up to 19
+		int newStat = player.getSkills().getLevel(Skills.HITPOINTS) + 19;
+		if (newStat > player.getSkills().getMaxStat(Skills.HITPOINTS)) {
+			newStat = player.getSkills().getMaxStat(Skills.HITPOINTS);
+		}
+		player.getSkills().setLevel(Skills.HITPOINTS, newStat);
+		switch(DataConversions.random(0,2)) {
+			case 0:
+				playerTalk(player, null, "Yummmmm!");
+				break;
+			case 1:
+				playerTalk(player, null, "Oh, so nice!!!");
+				break;
+			case 2:
+				playerTalk(player, null, "Lovely!");
+				break;
 		}
 	}
 	
