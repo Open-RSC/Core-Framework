@@ -11,6 +11,33 @@ SET time_zone = "+00:00";
 CREATE DATABASE IF NOT EXISTS `openrsc_game` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `openrsc_game`;
 
+DROP TABLE IF EXISTS `openrsc_recovery_questions`;
+CREATE TABLE IF NOT EXISTS `openrsc_recovery_questions` (
+  `questionID` int(10) UNSIGNED NOT NULL,
+  `question` varchar(256) NOT NULL DEFAULT '',
+  PRIMARY KEY (`questionID`),
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+INSERT INTO `openrsc_recovery_questions` (`questionID`, `question`) VALUES
+(1, 'Where were you born?'),
+(2, 'What was your first teacher\'s name?'),
+(3, 'What is your father\'s middle name?'),
+(4, 'Who was your first best friend?'),
+(5, 'What is your favourite vacation spot?'),
+(6, 'What is your mother\'s middle name?'),
+(7, 'What was your first pet\'s name?'),
+(8, 'What was the name of your first school?'),
+(9, 'What is your mother\'s maiden name?'),
+(10, 'Who was your first boyfriend/girlfriend?'),
+(11, 'What was the first computer game you purchased?'),
+(12, 'Who is your favourite actor/actress?'),
+(13, 'Who is your favourite author?'),
+(14, 'Who is your favourite musician?'),
+(15, 'Who is your favourite cartoon character?'),
+(16, 'What is your favourite book?'),
+(17, 'What is your favourite food?'),
+(18, 'What is your favourite movie?');
+
 DROP TABLE IF EXISTS `openrsc_grounditems`;
 CREATE TABLE IF NOT EXISTS `openrsc_grounditems` (
   `id` int(10) DEFAULT NULL,

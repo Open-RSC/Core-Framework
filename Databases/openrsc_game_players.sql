@@ -364,6 +364,24 @@ CREATE TABLE IF NOT EXISTS `openrsc_players` (
   KEY `banned` (`banned`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `openrsc_player_recovery`;
+CREATE TABLE IF NOT EXISTS `openrsc_player_recovery` (
+  `playerID` int(10) UNSIGNED NOT NULL,
+  `username` varchar(12) NOT NULL DEFAULT '',
+  `salt` varchar(250) NOT NULL DEFAULT '',
+  `question1` varchar(256) NOT NULL DEFAULT '',
+  `answer1` varchar(512) NOT NULL DEFAULT '',
+  `question2` varchar(256) NOT NULL DEFAULT '',
+  `answer2` varchar(512) NOT NULL DEFAULT '',
+  `question3` varchar(256) NOT NULL DEFAULT '',
+  `answer3` varchar(512) NOT NULL DEFAULT '',
+  `question4` varchar(256) NOT NULL DEFAULT '',
+  `answer4` varchar(512) NOT NULL DEFAULT '',
+  `question5` varchar(256) NOT NULL DEFAULT '',
+  `answer5` varchar(512) NOT NULL DEFAULT '',
+  PRIMARY KEY (`playerID`),
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `openrsc_player_cache`;
 CREATE TABLE IF NOT EXISTS `openrsc_player_cache` (
   `playerID` int(10) UNSIGNED NOT NULL,
