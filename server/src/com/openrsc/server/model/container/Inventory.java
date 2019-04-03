@@ -76,7 +76,9 @@ public class Inventory {
 			}
 
 			if (this.full()) {
-				player.message("Your Inventory is full, the " + itemToAdd.getDef().getName() + " drops to the ground!");
+				if (Constants.GameServer.MESSAGE_FULL_INVENTORY) {
+					player.message("Your Inventory is full, the " + itemToAdd.getDef().getName() + " drops to the ground!");
+				}
 				world.registerItem(
 					new GroundItem(itemToAdd.getID(), player.getX(), player.getY(), itemToAdd.getAmount(), player),
 					94000);

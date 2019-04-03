@@ -181,6 +181,7 @@ public final class Constants {
 		public static boolean WANT_MISSING_GUILD_GREETINGS = false;
 		public static boolean WANT_DECANTING = false;
 		public static boolean WANT_CERTER_BANK_EXCHANGE = false;
+		public static boolean MESSAGE_FULL_INVENTORY = false;
 		public static boolean NPC_KILL_LIST = false;
 		public static boolean NPC_KILL_MESSAGES = false;
 		public static boolean NPC_KILL_MESSAGES_FILTER = false;
@@ -297,6 +298,7 @@ public final class Constants {
 			WANT_CERTER_BANK_EXCHANGE = Boolean.parseBoolean(props.getProperty("want_certer_bank_exchange"));
 			WANT_CUSTOM_RANK_DISPLAY = Boolean.parseBoolean(props.getProperty("want_custom_rank_display"));
 			FIX_OVERHEAD_CHAT = Boolean.parseBoolean(props.getProperty("want_fixed_overhead_chat"));
+			MESSAGE_FULL_INVENTORY = Boolean.parseBoolean(props.getProperty("message_full_inventory"));
 
 			NPC_KILL_LIST = Boolean.parseBoolean(props.getProperty("npc_kill_list"));
 			NPC_KILL_MESSAGES = Boolean.parseBoolean(props.getProperty("npc_kill_messages"));

@@ -113,12 +113,13 @@ public class Thieving extends Functions
 		Npc shopkeeper = Functions.getNearestNpc(player, stall.getOwnerID(), 8);
 		Npc guard = null;
 		if (stall.equals(Stall.BAKERS_STALL)) {
-			guard = getMultipleNpcsInArea(player, 5, 65);
-		} else if (stall.equals(Stall.SILVER_STALL) || stall.equals(Stall.SPICES_STALL) || stall.equals(Stall.FUR_STALL)
-			|| stall.equals(Stall.SILK_STALL)) {
-			guard = getMultipleNpcsInArea(player, 5, 65, 322);
+			guard = getMultipleNpcsInArea(player, 5, NpcId.GUARD_ARDOUGNE.id());
+		} else if (stall.equals(Stall.SILK_STALL) || stall.equals(Stall.FUR_STALL)) {
+			guard = getMultipleNpcsInArea(player, 5, NpcId.KNIGHT.id(), NpcId.GUARD_ARDOUGNE.id());
+		} else if (stall.equals(Stall.SILVER_STALL) || stall.equals(Stall.SPICES_STALL)) {
+			guard = getMultipleNpcsInArea(player, 5, NpcId.PALADIN.id(), NpcId.KNIGHT.id(), NpcId.GUARD_ARDOUGNE.id());
 		} else if (stall.equals(Stall.GEMS_STALL)) {
-			guard = getMultipleNpcsInArea(player, 5, 65, 322, 324);
+			guard = getMultipleNpcsInArea(player, 5, NpcId.HERO.id(), NpcId.PALADIN.id(), NpcId.KNIGHT.id(), NpcId.GUARD_ARDOUGNE.id());
 		}
 
 		if (shopkeeper != null) {
@@ -160,7 +161,9 @@ public class Thieving extends Functions
 
 		player.incExp(Skills.THIEVING, stall.getXp(), true);
 
-		if (stall.equals(Stall.SILK_STALL)) { // Silk
+		if (stall.equals(Stall.BAKERS_STALL)) { // Cake
+			player.getCache().put("cakeStolen", Instant.now().getEpochSecond());
+		} else if (stall.equals(Stall.SILK_STALL)) { // Silk
 			player.getCache().put("silkStolen", Instant.now().getEpochSecond());
 		} else if (stall.equals(Stall.FUR_STALL)) { // Fur
 			player.getCache().put("furStolen", Instant.now().getEpochSecond());
@@ -744,20 +747,20 @@ public class Thieving extends Functions
 	}
 
 	enum Stall {
-		TEA_STALL(780, 5, 64, 780, 5000,
+		TEA_STALL(5, 64, NpcId.TEA_SELLER.id(), 5000,
 			"", new LootItem(ItemId.CUP_OF_TEA.id(), 1, 100)),
-		BAKERS_STALL(325, 5, 64, 325, 5000,
+		BAKERS_STALL(5, 64, NpcId.BAKER.id(), 5000,
 			"", new LootItem(ItemId.CAKE.id(), 1, 100)),
-		SILK_STALL(326, 20, 96, 326, 8000,
+		SILK_STALL(20, 96, NpcId.SILK_MERCHANT.id(), 8000,
 			piece_of, new LootItem(ItemId.SILK.id(), 1, 100)),
-		FUR_STALL(327, 35, 144, 327, 15000,
+		FUR_STALL(35, 144, NpcId.FUR_TRADER.id(), 15000,
 			piece_of, new LootItem(ItemId.GREY_WOLF_FUR.id(), 1, 10),
 			new LootItem(ItemId.FUR.id(), 1, 100)),
-		SILVER_STALL(328, 50, 216, 328, 30000,
+		SILVER_STALL(50, 216, NpcId.SILVER_MERCHANT.id(), 30000,
 			piece_of, new LootItem(ItemId.SILVER.id(), 1, 100)),
-		SPICES_STALL(329, 65, 324, 329, 80000,
+		SPICES_STALL(65, 324, NpcId.SPICE_MERCHANT.id(), 80000,
 			"pot of ", new LootItem(ItemId.SPICE.id(), 1, 100)),
-		GEMS_STALL(330, 75, 640, 330, 180000,
+		GEMS_STALL(75, 640, NpcId.GEM_MERCHANT.id(), 180000,
 			"", new LootItem(ItemId.UNCUT_SAPPHIRE.id(), 1, 65),
 			new LootItem(ItemId.UNCUT_EMERALD.id(), 1, 20),
 			new LootItem(ItemId.UNCUT_RUBY.id(), 1, 10),
@@ -770,11 +773,11 @@ public class Thieving extends Functions
 		private int respawnTime;
 		private int ownerID;
 
-		Stall(int ownerID, int req, int xp, int ownerNpc, int respawnTime, String lootPrefix, LootItem... loot) {
-			this.ownerID = ownerID;
+		Stall(int req, int xp, int ownerID, int respawnTime, String lootPrefix, LootItem... loot) {
 			this.setXp(xp);
 			this.setRespawnTime(respawnTime);
 			this.setRequiredLevel(req);
+			this.ownerID = ownerID;
 			this.setLootPrefix(lootPrefix);
 			lootTable = new ArrayList<LootItem>();
 			for (LootItem lootItem : loot) {
