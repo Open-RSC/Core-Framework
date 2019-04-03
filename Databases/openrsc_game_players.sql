@@ -379,7 +379,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_player_recovery` (
   `answer4` varchar(512) NOT NULL DEFAULT '',
   `question5` varchar(256) NOT NULL DEFAULT '',
   `answer5` varchar(512) NOT NULL DEFAULT '',
-  PRIMARY KEY (`playerID`),
+  PRIMARY KEY (`playerID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `openrsc_player_cache`;
