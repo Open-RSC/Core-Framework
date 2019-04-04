@@ -249,8 +249,8 @@ public class BankInterface {
 		if (currMouseX > relativeX + 320 && currMouseY >= relativeY + 3 && currMouseX < relativeX + 408 && currMouseY < relativeY + 15)
 			closeButtonColour = 0xff0000;
 		drawString("Close window", relativeX + 326, relativeY + 10, 1, closeButtonColour);
-		drawString("Number in bank in green", relativeX + 7, relativeY + 24, 1, 65280);
-		drawString("Number held in blue", relativeX + 289, relativeY + 24, 1, 65535);
+		drawString("Number in bank in green", relativeX + 7, relativeY + 24, 1, 0x00ff00);
+		drawString("Number held in blue", relativeX + 289, relativeY + 24, 1, 0x00ffff);
 
 
 		// Draw the items in the bank.
@@ -262,6 +262,9 @@ public class BankInterface {
 		// Draw the Quantity Buttons
 		if (this.selectedBankSlot != -1) {
 			drawQuantityButtons(currMouseX, currMouseY, relativeX, relativeY);
+		} else {
+			mc.getSurface().drawColoredStringCentered(relativeX + 204, "Select an object to withdraw or deposit", 0xFFFF00, 0, 3,
+					relativeY + 248);
 		}
 	}
 
@@ -340,10 +343,10 @@ public class BankInterface {
 							0, 1);
 					}
 
-					drawString(""+currentBankCounts.get(inventorySlot), slotX + 1, slotY + 10, 1, 65280); // Amount in bank (green)
+					drawString(""+currentBankCounts.get(inventorySlot), slotX + 1, slotY + 10, 1, 0x00ff00); // Amount in bank (green)
 
 					inventoryCount = mc.getInventoryCount(currentBankIDs.get(inventorySlot));
-					drawString(String.valueOf(inventoryCount), (slotX + 47) - mc.getSurface().stringWidth(1, String.valueOf(inventoryCount)), slotY + 29, 1, 65535); // Amount in inventory (blue)
+					drawString(String.valueOf(inventoryCount), (slotX + 47) - mc.getSurface().stringWidth(1, String.valueOf(inventoryCount)), slotY + 29, 1, 0x00ffff); // Amount in inventory (blue)
 
 				}
 				inventorySlot++;
