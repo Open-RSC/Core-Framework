@@ -675,8 +675,8 @@ public final class mudclient implements Runnable {
 	int pkb = -1;
 	String[] jfb = new String[5];
 	int ifb[] = { 0, 1, 2, 3, 4 };
-	int mfb;
-	int nfb;
+	int instructPassRecovery1;
+	int instructPassRecovery2;
 	int controlPreviousPassword;
 	int controlNewPassword;
 	int controlConfirmation;
@@ -1651,9 +1651,9 @@ public final class mudclient implements Runnable {
 	private void createPasswordRecoveryPanel() {
 		this.panelRecovery = new Panel(this.getSurface(), 100);
 		int i1 = 10;
-		mfb = this.panelRecovery.addCenteredText(256, i1, "@yel@To prove this is your account please provide the answers to", 1, true);
+		this.instructPassRecovery1 = this.panelRecovery.addCenteredText(256, i1, "@yel@To prove this is your account please provide the answers to", 1, true);
 		i1 += 15;
-		nfb = this.panelRecovery.addCenteredText(256, i1, "@yel@your security questions. You will then be able to reset your password", 1, true);
+		this.instructPassRecovery2 = this.panelRecovery.addCenteredText(256, i1, "@yel@your security questions. You will then be able to reset your password", 1, true);
 		i1 += 35;
 		for (int j1 = 0; j1 < 5; j1++) {
 			this.panelRecovery.addButtonBackground(256, i1, 410, 30);
@@ -1680,6 +1680,17 @@ public final class mudclient implements Runnable {
 		this.panelRecovery.addButtonBackground(311, i1, 100, 30);
 		this.panelRecovery.addCenteredText(311, i1, "Cancel", 4, true);
 		this.passwordRecoverCancel = this.panelRecovery.addButton(311, i1, 100, 30);
+	}
+	
+	public void setShowRecoveryDialogue(boolean show) {
+		this.showSetRecoveryQuestion = show;
+
+		for (int i = 0; i < 5; ++i) {
+			this.ifb[i] = i;
+			this.jfb[i] = "~:" + this.ifb[i];
+			this.panelSetRecoveryQuestion.setText(this.controlSetAnswer[this.pkb], "");
+			this.panelSetRecoveryQuestion.setText(this.controlSetQuestion[this.pkb], i + 1 + ": " + this.questions[this.ifb[i]]);
+		}
 	}
 
 	private void createAppearancePanel(int var1) {
@@ -4918,6 +4929,9 @@ public final class mudclient implements Runnable {
 			}
 			if (this.loginScreenNumber == 3) {
 				panelLoginOptions.drawPanel();
+			}
+			if (this.loginScreenNumber == 4) {
+				this.panelRecovery.drawPanel();
 			}
 
 			this.getSurface().drawSpriteClipping(spriteMedia + 22, 0, getGameHeight(), getGameWidth(), 10, 0, 0, false, 0, 1);
@@ -9611,12 +9625,21 @@ public final class mudclient implements Runnable {
 				if (this.loginScreenNumber == 2 && null != this.panelLogin) {
 					this.panelLogin.keyPress(key);
 				}
+				if (this.loginScreenNumber == 4 && null != this.panelRecovery) {
+					this.panelRecovery.keyPress(key);
+				}
 			}
 
 			if (var1 > 105) {
 				if (this.currentViewMode == GameMode.GAME) {
 					if (this.showAppearanceChange) {
 						this.panelAppearance.keyPress(key);
+						return;
+					}
+					if (this.showSetRecoveryQuestion) {
+						if (this.pkb == -1) {
+							this.panelSetRecoveryQuestion.keyPress(key);
+						}
 						return;
 					}
 					if (auctionHouse.isVisible() && (auctionHouse.auctionMenu.focusOn(auctionHouse.auctionSearchHandle)
@@ -11983,6 +12006,10 @@ public final class mudclient implements Runnable {
 	private void showLoginScreenStatus(String a, String b) {
 		try {
 
+			if (this.loginScreenNumber == 4) {
+				this.panelRecovery.setText(this.instructPassRecovery1, a);
+				this.panelRecovery.setText(this.instructPassRecovery2, b);
+			}
 			if (this.loginScreenNumber == 2) {
 				if (b != null && b.length() >= 1) {
 					this.panelLogin.setText(this.controlLoginStatus1, a);

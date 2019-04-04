@@ -243,6 +243,8 @@ public class PacketHandler {
 			else if (opcode == 240) updateOptionsMenuSettings();
 
 			else if (opcode == 206) togglePrayer(length);
+			
+			else if (opcode == 224) mc.setShowRecoveryDialogue(true);
 
 				// Quest Stage Update
 			else if (opcode == 5) updateQuestStage();
