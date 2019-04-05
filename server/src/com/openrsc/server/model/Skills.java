@@ -22,8 +22,9 @@ public class Skills {
 		COOKING = 7, WOODCUT = 8, FLETCHING = 9, FISHING = 10, FIREMAKING = 11, CRAFTING = 12, SMITHING = 13,
 		MINING = 14, HERBLAW = 15, AGILITY = 16, THIEVING = 17, SLAYER = 18, FARMING = 19, RUNECRAFTING = 20;
 	public static final ArrayList<String> STAT_LIST = new ArrayList<String>(){{ for(int i = 0; i < SKILL_NAME.length; i++) { add(SKILL_NAME[i]); } }};
-	// Global Experience Calculations (Some NPCs have levels > PLAYER_LEVEL_LIMIT)
-	private static final int GLOBAL_LEVEL_LIMIT = 1000;
+	// old, check: Global Experience Calculations (Some NPCs have levels > PLAYER_LEVEL_LIMIT)
+	// to truly have 1000 global level limit, needs changing int to long, otherwise caps to 135
+	private static final int GLOBAL_LEVEL_LIMIT = 130;
 	private static int[] experienceArray;
 
 	static {
@@ -40,6 +41,7 @@ public class Skills {
 	private Mob mob;
 	private int[] levels = new int[SKILL_COUNT];
 	private int[] exps = new int[SKILL_COUNT];
+	private int[] maxStatsMob = new int[SKILL_COUNT];
 
 	/**
 	 * Creates a skills object.
@@ -214,7 +216,11 @@ public class Skills {
 	}
 
 	public int getMaxStat(int skill) {
-		return getLevelForExperience(getExperience(skill), mob instanceof Player ? PLAYER_LEVEL_LIMIT : GLOBAL_LEVEL_LIMIT);
+		if (mob instanceof Player) {
+			return getLevelForExperience(getExperience(skill), PLAYER_LEVEL_LIMIT);
+		} else {
+			return maxStatsMob[skill];
+		}
 	}
 
 	public void normalize(int skill) {
@@ -240,7 +246,11 @@ public class Skills {
 	}
 
 	public void setLevelTo(int skill, int level) {
-		exps[skill] = experienceForLevel(level);
+		if (mob instanceof Player) {
+			exps[skill] = experienceForLevel(level);
+		} else {
+			maxStatsMob[skill] = level;
+		}
 		levels[skill] = level;
 	}
 
