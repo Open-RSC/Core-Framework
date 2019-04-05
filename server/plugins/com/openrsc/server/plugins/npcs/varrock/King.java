@@ -20,18 +20,7 @@ public class King implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (hasItem(p, ItemId.BROKEN_SHIELD_ARRAV_1.id()) && hasItem(p, ItemId.BROKEN_SHIELD_ARRAV_1.id())) {
-			playerTalk(p, n, "Your majesty",
-				"I have recovered the shield of Arrav",
-				"I would like to claim the reward");
-			npcTalk(p, n, "The shield of Arrav, eh?",
-				"Yes, I do recall my father putting a reward out for that",
-				"Very well",
-				"Go get the authenticity of the shield verified",
-				"By the curator at the museum",
-				"And I will grant you your reward");
-			return;
-		} else if (hasItem(p, ItemId.CERTIFICATE.id())) {
+		if (hasItem(p, ItemId.CERTIFICATE.id())) {
 			playerTalk(p, n, "Your majesty", "I have come to claim the reward",
 				"For the return of the shield of Arrav");
 			if (p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == 5) {
@@ -58,6 +47,17 @@ public class King implements TalkToNpcListener, TalkToNpcExecutiveListener {
 				message(p, "Why don't you give this certificate",
 					"To whoever helped you get the shield");
 			}
+			return;
+		} else if (hasItem(p, ItemId.BROKEN_SHIELD_ARRAV_1.id()) && hasItem(p, ItemId.BROKEN_SHIELD_ARRAV_2.id())) {
+			playerTalk(p, n, "Your majesty",
+				"I have recovered the shield of Arrav",
+				"I would like to claim the reward");
+			npcTalk(p, n, "The shield of Arrav, eh?",
+				"Yes, I do recall my father putting a reward out for that",
+				"Very well",
+				"Go get the authenticity of the shield verified",
+				"By the curator at the museum",
+				"And I will grant you your reward");
 			return;
 		}
 		playerTalk(p, n, "Greetings, your majesty");
