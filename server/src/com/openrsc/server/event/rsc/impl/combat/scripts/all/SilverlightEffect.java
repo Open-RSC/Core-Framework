@@ -1,6 +1,7 @@
 package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 
 import com.openrsc.server.event.rsc.impl.combat.scripts.OnCombatStartScript;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -13,7 +14,7 @@ public class SilverlightEffect implements OnCombatStartScript {
 
 	@Override
 	public boolean shouldExecute(Mob attacker, Mob victim) {
-		int[] otherDemonIDs = {35, 645, 646, 647, 769};
+		int[] otherDemonIDs = {NpcId.DELRITH.id(), NpcId.OTHAINIAN.id(), NpcId.DOOMION.id(), NpcId.HOLTHION.id(), NpcId.NEZIKCHENED.id()};
 		if (attacker.isPlayer() && victim.isNpc()) {
 			Player attackerPlayer = (Player) attacker;
 			Npc npcVictim = (Npc) victim;

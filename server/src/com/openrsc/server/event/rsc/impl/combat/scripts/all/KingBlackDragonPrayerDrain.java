@@ -1,6 +1,7 @@
 package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 
 import com.openrsc.server.event.rsc.impl.combat.scripts.OnCombatStartScript;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -14,10 +15,10 @@ public class KingBlackDragonPrayerDrain implements OnCombatStartScript {
 	public boolean shouldExecute(Mob attacker, Mob defender) {
 		if (attacker.isNpc()) {
 			Npc attackerNpc = ((Npc) attacker);
-			return attackerNpc.getID() == 477;
+			return attackerNpc.getID() == NpcId.KING_BLACK_DRAGON.id();
 		} else if (defender.isNpc()) {
 			Npc defenderNpc = ((Npc) defender);
-			return defenderNpc.getID() == 477;
+			return defenderNpc.getID() == NpcId.KING_BLACK_DRAGON.id();
 		}
 		return false;
 	}

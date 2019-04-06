@@ -1,6 +1,7 @@
 package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 
 import com.openrsc.server.event.rsc.impl.combat.scripts.OnCombatStartScript;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -14,10 +15,10 @@ public class ElvargPrayerDrain implements OnCombatStartScript {
 	public boolean shouldExecute(Mob attacker, Mob defender) {
 		if (attacker.isNpc()) {
 			Npc attackerNpc = ((Npc) attacker);
-			return attackerNpc.getID() == 196;
+			return attackerNpc.getID() == NpcId.DRAGON.id();
 		} else if (defender.isNpc()) {
 			Npc defenderNpc = ((Npc) defender);
-			return defenderNpc.getID() == 196;
+			return defenderNpc.getID() == NpcId.DRAGON.id();
 		}
 		return false;
 	}

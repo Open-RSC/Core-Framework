@@ -559,6 +559,8 @@ public abstract class Mob extends Entity {
 	public void startCombat(Mob victim) {
 
 		synchronized(victim) {
+			boolean gotUnderAttack = false;
+			
 			if (this.isPlayer()) {
 				((Player) this).resetAll();
 				((Player) this).setStatus(Action.FIGHTING_MOB);
@@ -591,8 +593,7 @@ public abstract class Mob extends Entity {
 				}
 				playerVictim.resetAll();
 				playerVictim.setStatus(Action.FIGHTING_MOB);
-				ActionSender.sendSound(playerVictim, "underattack");
-				playerVictim.message("You are under attack!");
+				gotUnderAttack = true;
 				playerVictim.releaseUnderAttack();
 
 				if (playerVictim.isSleeping()) {
@@ -615,6 +616,10 @@ public abstract class Mob extends Entity {
 			combatEvent = new CombatEvent(this, victim);
 			victim.setCombatEvent(combatEvent);
 			Server.getServer().getGameEventHandler().add(combatEvent);
+			if (gotUnderAttack) {
+				ActionSender.sendSound((Player) victim, "underattack");
+				((Player) victim).message("You are under attack!");
+			}
 		}
 	}
 

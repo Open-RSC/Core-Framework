@@ -1,6 +1,7 @@
 package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 
 import com.openrsc.server.event.rsc.impl.combat.scripts.OnCombatStartScript;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
@@ -10,12 +11,14 @@ public class ShadowSpiderPrayerDrain implements OnCombatStartScript {
 
 	@Override
 	public boolean shouldExecute(Mob attacker, Mob defender) {
-		return attacker.isNpc() && attacker.getID() == 343 || defender.isNpc() && defender.getID() == 343;
+		return attacker.isNpc() && attacker.getID() == NpcId.SHADOW_SPIDER.id()
+				|| defender.isNpc() && defender.getID() == NpcId.SHADOW_SPIDER.id();
 	}
 
 	@Override
 	public void executeScript(Mob attacker, Mob defender) {
 		/* Double down from your current prayer rate. */
+		/* Drains even is player was the attacker */
 		if (attacker.isNpc() && defender.isPlayer()) {
 			defender.getSkills().setLevel(Skills.PRAYER, (int) Math.round((double) defender.getSkills().getLevel(Skills.PRAYER) / 2));
 			((Player) defender).playerServerMessage(MessageType.QUEST, "The spider drains your prayer");

@@ -2,6 +2,7 @@ package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScript;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -25,7 +26,7 @@ public class NpcPoisonPlayerScript implements CombatScript {
 			if (p.isAntidoteProtected()) {
 				return false;
 			}
-			return (((Npc) attacker).getDef().getName().toLowerCase().contains("poison") || ((Npc) attacker).getID() == 656 || ((Npc) attacker).getID() == 421 || ((Npc) attacker).getID() == 776) && (victim.getRandom().nextInt(100) >= 90);
+			return (((Npc) attacker).getDef().getName().toLowerCase().contains("poison") || ((Npc) attacker).getID() == NpcId.DUNGEON_SPIDER.id() || ((Npc) attacker).getID() == NpcId.TRIBESMAN.id() || ((Npc) attacker).getID() == NpcId.JUNGLE_SAVAGE.id()) && (victim.getRandom().nextInt(100) >= 90);
 		}
 		return false;
 	}

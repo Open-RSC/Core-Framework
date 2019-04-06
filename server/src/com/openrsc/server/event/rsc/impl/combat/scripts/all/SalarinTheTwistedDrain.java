@@ -1,6 +1,7 @@
 package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 
 import com.openrsc.server.event.rsc.impl.combat.scripts.OnCombatStartScript;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -15,7 +16,7 @@ public class SalarinTheTwistedDrain implements OnCombatStartScript {
 
 	@Override
 	public boolean shouldExecute(Mob attacker, Mob defender) {
-		return attacker.isNpc() && attacker.getID() == 567;
+		return attacker.isNpc() && attacker.getID() == NpcId.SALARIN_THE_TWISTED.id();
 	}
 
 	@Override
