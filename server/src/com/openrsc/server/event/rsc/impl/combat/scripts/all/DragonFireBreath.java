@@ -1,8 +1,12 @@
 package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
+import static com.openrsc.server.plugins.Functions.getMaxLevel;
+
 import com.openrsc.server.event.rsc.impl.combat.scripts.OnCombatStartScript;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -29,6 +33,7 @@ public class DragonFireBreath implements OnCombatStartScript {
 		if (attacker.isNpc() || victim.getID() == NpcId.DRAGON.id() || victim.getID() == NpcId.KING_BLACK_DRAGON.id()) {
 			player.playerServerMessage(MessageType.QUEST, "The dragon breathes fire at you");
 			int maxHit = 65; // ELVARG & KING BLACK DRAGON - MAXIMUM HIT FOR BOTH
+			int fireDamage;
 			if (dragon.getID() == NpcId.BABY_BLUE_DRAGON.id()) {
 				maxHit = 12; // NOT SURE BUT DEFINITELY NOT 65 FOR BABY BLUES.
 			} else if (dragon.getID() == NpcId.BLUE_DRAGON.id()) {
@@ -37,12 +42,14 @@ public class DragonFireBreath implements OnCombatStartScript {
 				maxHit = 55; // 50+
 			}
 			if (player.getInventory().wielding(ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
-				maxHit = 10; // LOWER DOWN TO MAXIMUM 10 HIT IF WEARING SHIELD
+				maxHit = (int) Math.ceil(maxHit * 0.2D); // shield lowers by about 80% of the max
 				player.playerServerMessage(MessageType.QUEST, "Your shield prevents some of the damage from the flames");
-			} else {
+			}
+			fireDamage = Math.min(getCurrentLevel(player, Skills.HITPOINTS), DataConversions.random(0, maxHit));
+			if (fireDamage >= 25 || (fireDamage >= 20 && getMaxLevel(player, Skills.HITPOINTS) * 2/5 < 25)) {
 				player.message("You are fried");
 			}
-			player.damage(DataConversions.random(0, maxHit));
+			player.damage(fireDamage);
 		}
 	}
 

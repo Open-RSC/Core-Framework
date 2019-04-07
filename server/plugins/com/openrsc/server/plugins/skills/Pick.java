@@ -40,6 +40,7 @@ public final class Pick implements ObjectActionExecutiveListener,
 			owner.message("You uproot a flax plant");
 			addItem(owner, ItemId.FLAX.id(), 1);
 		}
+		owner.playSound("potato");
 	}
 
 	@Override
