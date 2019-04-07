@@ -23,7 +23,9 @@ public abstract class BatchEvent extends DelayedEvent {
 	@Override
 	public void run() {
 		if (repeated < getRepeatFor()) {
-			//owner.setBusyTimer(delay + 200); // This was locking the player until all batching completed
+			if (!BATCH_PROGRESSION) { // Does not force the player to remain locked and busy until inventory full if enabled
+				owner.setBusyTimer(delay + 200);
+			}
 			action();
 			repeated++;
 			if (repeated < getRepeatFor()) {
