@@ -16,7 +16,13 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.showBubble;
+import static com.openrsc.server.plugins.Functions.sleep;
 
 public final class Mining implements ObjectActionListener,
 	ObjectActionExecutiveListener {
@@ -258,13 +264,13 @@ public final class Mining implements ObjectActionListener,
 	public static int getGem() {
 		int rand = DataConversions.random(0, 100);
 		if (rand < 10) {
-			return 157;
+			return ItemId.UNCUT_DIAMOND.id();
 		} else if (rand < 30) {
-			return 158;
+			return ItemId.UNCUT_RUBY.id();
 		} else if (rand < 60) {
-			return 159;
+			return ItemId.UNCUT_EMERALD.id();
 		} else {
-			return 160;
+			return ItemId.UNCUT_SAPPHIRE.id();
 		}
 	}
 

@@ -41,7 +41,7 @@ public class GemMining implements ObjectActionListener,
 		}
 		final ObjectMiningDef def = EntityHandler.getObjectMiningDef(obj.getID());
 		final int axeId = getAxe(p);
-		int retrytimes = -1;
+		int retrytimes;
 		final int mineLvl = p.getSkills().getLevel(Skills.MINING);
 		int reqlvl = 1;
 		switch (ItemId.getById(axeId)) {
@@ -115,7 +115,7 @@ public class GemMining implements ObjectActionListener,
 					if (object != null && object.getID() == obj.getID()) {
 						GameObject newObject = new GameObject(obj.getLocation(), 98, obj.getDirection(), obj.getType());
 						World.getWorld().replaceGameObject(obj, newObject);
-						World.getWorld().delayedSpawnObject(object.getLoc(), 120 * 1000); // 2 minutes respawn time
+						World.getWorld().delayedSpawnObject(object.getLoc(), 120 * 1000); // 2 minute respawn time
 					}
 				} else {
 					owner.message("You only succeed in scratching the rock");
