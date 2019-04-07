@@ -158,29 +158,28 @@ public class GemMining implements ObjectActionListener,
 		return -1;
 	}
 
-	public static int calcAxeBonus(int axeId) {
-		int bonus = 0;
+	private static int calcAxeBonus(int axeId) { // No evidence wielding different pickaxes gives a bonus, only more swings
 		/*switch (axeId) {
-			case 156:
+			case BRONZE_PICKAXE:
 				bonus = 0;
 				break;
-			case 1258:
+			case IRON_PICKAXE:
 				bonus = 1;
 				break;
-			case 1259:
+			case STEEL_PICKAXE:
 				bonus = 2;
 				break;
-			case 1260:
+			case MITHRIL_PICKAXE:
 				bonus = 4;
 				break;
-			case 1261:
+			case ADAMANTITE_PICKAXE:
 				bonus = 8;
 				break;
-			case 1262:
+			case RUNE_PICKAXE:
 				bonus = 16;
 				break;
 		}*/
-		return bonus;
+		return 0;
 	}
 
 	private static boolean getGem(Player p, int req, int miningLevel, int axeId) {
