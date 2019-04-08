@@ -67,7 +67,7 @@ import-phpmyadmin:
 	docker exec -i mysql mysql -uroot -proot < Databases/phpmyadmin.sql
 
 clone-website:
-	@$(shell sudo rm -rf Website && git clone https://github.com/Open-RSC/Website.git)
+	@$(shell sudo rm -rf Website && git clone https://gitlab.openrsc.com/open-rsc/Website.git)
 	sudo chmod 644 Website/sql/config.inc.php
 
 flush-website-avatars-windows:
