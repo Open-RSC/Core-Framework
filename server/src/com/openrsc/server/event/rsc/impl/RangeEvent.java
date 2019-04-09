@@ -198,7 +198,7 @@ public class RangeEvent extends GameTickEvent {
 						getPlayerOwner().damage(DataConversions.random(0, maxHit));
 					}
 				}
-				if (!Formulae.looseArrow(damage)) {
+				if (Formulae.looseArrow(damage)) {
 					GroundItem arrows = getArrows(arrowID);
 					if (arrows == null) {
 						World.getWorld().registerItem(

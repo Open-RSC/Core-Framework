@@ -167,7 +167,7 @@ public class ThrowingEvent extends GameTickEvent {
 					}
 				}
 
-				if (!Formulae.looseArrow(damage)) {
+				if (Formulae.looseArrow(damage)) {
 					GroundItem knivesOrDarts = getFloorItem(throwingID);
 					if (knivesOrDarts == null) {
 						World.getWorld().registerItem(new GroundItem(throwingID, target.getX(), target.getY(), 1, getPlayerOwner()));

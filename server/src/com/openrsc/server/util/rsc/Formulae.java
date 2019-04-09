@@ -3,6 +3,7 @@ package com.openrsc.server.util.rsc;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.FiremakingDef;
 import com.openrsc.server.external.GameObjectLoc;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.ItemLoc;
 import com.openrsc.server.external.NPCLoc;
 import com.openrsc.server.external.SpellDef;
@@ -16,20 +17,46 @@ import com.openrsc.server.model.entity.player.Prayers;
 
 public final class Formulae {
 
-	public static final int[] arrowIDs = {723, 647, 646, 645, 644, 643, 642, 641, 640, 639, 638, 574, 11};
+	public static final int[] arrowIDs = {ItemId.ICE_ARROWS.id(), ItemId.POISON_RUNE_ARROWS.id(),
+		ItemId.RUNE_ARROWS.id(), ItemId.POISON_ADAMANTITE_ARROWS.id(), ItemId.ADAMANTITE_ARROWS.id(),
+		ItemId.POISON_MITHRIL_ARROWS.id(), ItemId.MITHRIL_ARROWS.id(), ItemId.POISON_STEEL_ARROWS.id(),
+		ItemId.STEEL_ARROWS.id(), ItemId.POISON_IRON_ARROWS.id(), ItemId.IRON_ARROWS.id(),
+		ItemId.POISON_BRONZE_ARROWS.id(), ItemId.BRONZE_ARROWS.id()};
 	public static final int[] bodySprites = {2, 5};
-	public static final int[] boltIDs = {786, 592, 190};
-	public static final int[] bowIDs = {188, 189, 648, 649, 650, 651, 652, 653, 654, 655, 656, 657};
+	public static final int[] boltIDs = {ItemId.OYSTER_PEARL_BOLTS.id(), ItemId.POISON_CROSSBOW_BOLTS.id(),
+		ItemId.CROSSBOW_BOLTS.id()};
+	public static final int[] bowIDs = {ItemId.LONGBOW.id(), ItemId.SHORTBOW.id(), ItemId.OAK_LONGBOW.id(),
+		ItemId.OAK_SHORTBOW.id(), ItemId.WILLOW_LONGBOW.id(), ItemId.WILLOW_SHORTBOW.id(),
+		ItemId.MAPLE_LONGBOW.id(), ItemId.MAPLE_SHORTBOW.id(), ItemId.YEW_LONGBOW.id(),
+		ItemId.YEW_SHORTBOW.id(), ItemId.MAGIC_LONGBOW.id(), ItemId.MAGIC_SHORTBOW.id()};
 	public static final int[] headSprites = {1, 4, 6, 7, 8};
-	private static final int[] herbDropIDs = {165, 435, 436, 437, 438, 439, 440, 441, 442, 443};
+	private static final int[] herbDropIDs = {ItemId.UNIDENTIFIED_GUAM_LEAF.id(), ItemId.UNIDENTIFIED_MARRENTILL.id(),
+		ItemId.UNIDENTIFIED_TARROMIN.id(), ItemId.UNIDENTIFIED_HARRALANDER.id(), ItemId.UNIDENTIFIED_RANARR_WEED.id(),
+		ItemId.UNIDENTIFIED_IRIT_LEAF.id(), ItemId.UNIDENTIFIED_AVANTOE.id(), ItemId.UNIDENTIFIED_KWUARM.id(),
+		ItemId.UNIDENTIFIED_CADANTINE.id(), ItemId.UNIDENTIFIED_DWARF_WEED.id()};
 	private static final int[] herbDropWeights = {89, 55, 34, 21, 13, 8, 5, 3, 2, 1};
-	public static final int[] miningAxeIDs = {1262, 1261, 1260, 1259, 1258, 156};
+	public static final int[] miningAxeIDs = {ItemId.RUNE_PICKAXE.id(), ItemId.ADAMANTITE_PICKAXE.id(),
+		ItemId.MITHRIL_PICKAXE.id(), ItemId.STEEL_PICKAXE.id(), ItemId.IRON_PICKAXE.id(), ItemId.BRONZE_PICKAXE.id()};
 	public static final int[] miningAxeLvls = {41, 31, 21, 6, 1, 1};
-	private static final int[] gemDropIDs = {160, 159, 158, 157};
+	private static final int[] gemDropIDs = {ItemId.UNCUT_SAPPHIRE.id(), ItemId.UNCUT_EMERALD.id(),
+		ItemId.UNCUT_RUBY.id(), ItemId.UNCUT_DIAMOND.id()};
 	private static final int[] gemDropWeights = {100, 70, 45, 15};
-	public static final int[] throwingIDs = {1075, 1076, 1077, 1078, 1079, 1080, 1081, 1013, 1015,
-		1122, 1123, 1124, 1125, 1126, 1127, 1128, 1129, 1130, 1131, 1132, 1133, 1134, 1070, 1069,
-		1068, 1024, 827, 1088, 1089, 1090, 1091, 1092, 1135, 1136, 1137, 1138, 1139, 1140};
+	public static final int[] throwingIDs = {ItemId.IRON_THROWING_KNIFE.id(), ItemId.BRONZE_THROWING_KNIFE.id(),
+		ItemId.STEEL_THROWING_KNIFE.id(), ItemId.MITHRIL_THROWING_KNIFE.id(), ItemId.ADAMANTITE_THROWING_KNIFE.id(),
+		ItemId.RUNE_THROWING_KNIFE.id(), ItemId.BLACK_THROWING_KNIFE.id(), ItemId.BRONZE_THROWING_DART.id(),
+		ItemId.IRON_THROWING_DART.id(), ItemId.POISONED_BRONZE_THROWING_DART.id(), ItemId.POISONED_IRON_THROWING_DART.id(),
+		ItemId.POISONED_STEEL_THROWING_DART.id(), ItemId.POISONED_MITHRIL_THROWING_DART.id(),
+		ItemId.POISONED_ADAMANTITE_THROWING_DART.id(), ItemId.POISONED_RUNE_THROWING_DART.id(),
+		ItemId.POISONED_BRONZE_THROWING_KNIFE.id(), ItemId.POISONED_IRON_THROWING_KNIFE.id(),
+		ItemId.POISONED_STEEL_THROWING_KNIFE.id(), ItemId.POISONED_MITHRIL_THROWING_KNIFE.id(),
+		ItemId.POISONED_BLACK_THROWING_KNIFE.id(), ItemId.POISONED_ADAMANTITE_THROWING_KNIFE.id(),
+		ItemId.POISONED_RUNE_THROWING_KNIFE.id(), ItemId.RUNE_THROWING_DART.id(), ItemId.ADAMANTITE_THROWING_DART.id(),
+		ItemId.MITHRIL_THROWING_DART.id(), ItemId.STEEL_THROWING_DART.id(), ItemId.BRONZE_SPEAR.id(),
+		ItemId.IRON_SPEAR.id(), ItemId.STEEL_SPEAR.id(), ItemId.MITHRIL_SPEAR.id(), ItemId.ADAMANTITE_SPEAR.id(),
+		ItemId.RUNE_SPEAR.id(), ItemId.POISONED_BRONZE_SPEAR.id(), ItemId.POISONED_IRON_SPEAR.id(),
+		ItemId.POISONED_STEEL_SPEAR.id(), ItemId.POISONED_MITHRIL_SPEAR.id(), ItemId.POISONED_ADAMANTITE_SPEAR.id(),
+		ItemId.POISONED_RUNE_SPEAR.id()};
+
 	/**
 	 * Cubic P2P boundaries. MinX, MinY - MaxX, MaxY
 	 */
@@ -45,23 +72,44 @@ public final class Formulae {
 		{new java.awt.Point(431, 0), new java.awt.Point(1007, 1007)},
 		{new java.awt.Point(335, 734), new java.awt.Point(437, 894)}};
 	// trawler: 297, 720
-	public static final int[] woodcuttingAxeIDs = {405, 204, 203, 428, 88, 12, 87};
-	public static final int[] xbowIDs = {59, 60};
-	private final static int[] IRON = {6, 5, 7, 8, 2, 3, 9, 28, 1075, 1, 71, 83, 77, 12, 1258, 89, 0, 670, 1063};
-	private final static int[] RUNE = {112, 399, 400, 401, 404, 403, 402, 396, 1080, 397, 75, 398, 81, 405, 1262, 93,
-		98, 674, 1067};
-	private final static int[] ADDY = {111, 107, 116, 120, 131, 127, 123, 65, 1079, 69, 74, 86, 80, 204, 1261, 92, 97,
-		673, 1066};
-	private final static int[] MITH = {110, 106, 115, 119, 130, 126, 122, 64, 1078, 68, 73, 85, 79, 203, 1260, 91, 96,
-		672, 1065};
-	private final static int[] STEEL = {109, 105, 114, 118, 129, 125, 121, 63, 1077, 67, 72, 84, 78, 88, 1259, 90, 95,
-		671, 1064};
-	private final static int[] BRONZE = {108, 104, 113, 117, 128, 124, 206, 62, 1076, 66, 70, 82, 76, 87, 156, 87, 205,
-		669, 1062};
+	public static final int[] woodcuttingAxeIDs = {ItemId.RUNE_AXE.id(), ItemId.ADAMANTITE_AXE.id(), ItemId.MITHRIL_AXE.id(),
+		ItemId.BLACK_AXE.id(), ItemId.STEEL_AXE.id(), ItemId.IRON_AXE.id(), ItemId.BRONZE_AXE.id()};
+	public static final int[] xbowIDs = {ItemId.PHOENIX_CROSSBOW.id(), ItemId.CROSSBOW.id()};
+	private final static int[] IRON = {ItemId.LARGE_IRON_HELMET.id(), ItemId.MEDIUM_IRON_HELMET.id(), ItemId.IRON_CHAIN_MAIL_BODY.id(),
+		ItemId.IRON_PLATE_MAIL_BODY.id(), ItemId.IRON_KITE_SHIELD.id(), ItemId.IRON_SQUARE_SHIELD.id(), ItemId.IRON_PLATE_MAIL_LEGS.id(),
+		ItemId.IRON_DAGGER.id(), ItemId.IRON_THROWING_KNIFE.id(), ItemId.IRON_SHORT_SWORD.id(), ItemId.IRON_LONG_SWORD.id(),
+		ItemId.IRON_SCIMITAR.id(), ItemId.IRON_2_HANDED_SWORD.id(), ItemId.IRON_AXE.id(), ItemId.IRON_PICKAXE.id(),
+		ItemId.IRON_BATTLE_AXE.id(), ItemId.IRON_MACE.id(), ItemId.IRON_ARROW_HEADS.id(), ItemId.IRON_DART_TIPS.id()};
+	private final static int[] RUNE = {ItemId.LARGE_RUNE_HELMET.id(), ItemId.MEDIUM_RUNE_HELMET.id(), ItemId.RUNE_CHAIN_MAIL_BODY.id(),
+		ItemId.RUNE_PLATE_MAIL_BODY.id(), ItemId.RUNE_KITE_SHIELD.id(), ItemId.RUNE_SQUARE_SHIELD.id(), ItemId.RUNE_PLATE_MAIL_LEGS.id(),
+		ItemId.RUNE_DAGGER.id(), ItemId.RUNE_THROWING_KNIFE.id(), ItemId.RUNE_SHORT_SWORD.id(), ItemId.RUNE_LONG_SWORD.id(),
+		ItemId.RUNE_SCIMITAR.id(), ItemId.RUNE_2_HANDED_SWORD.id(), ItemId.RUNE_AXE.id(), ItemId.RUNE_PICKAXE.id(),
+		ItemId.RUNE_BATTLE_AXE.id(), ItemId.RUNE_MACE.id(), ItemId.RUNE_ARROW_HEADS.id(), ItemId.RUNE_DART_TIPS.id()};
+	private final static int[] ADDY = {ItemId.LARGE_ADAMANTITE_HELMET.id(), ItemId.MEDIUM_ADAMANTITE_HELMET.id(),
+		ItemId.ADAMANTITE_CHAIN_MAIL_BODY.id(), ItemId.ADAMANTITE_PLATE_MAIL_BODY.id(), ItemId.ADAMANTITE_KITE_SHIELD.id(),
+		ItemId.ADAMANTITE_SQUARE_SHIELD.id(), ItemId.ADAMANTITE_PLATE_MAIL_LEGS.id(), ItemId.ADAMANTITE_DAGGER.id(),
+		ItemId.ADAMANTITE_THROWING_KNIFE.id(), ItemId.ADAMANTITE_SHORT_SWORD.id(), ItemId.ADAMANTITE_LONG_SWORD.id(),
+		ItemId.ADAMANTITE_SCIMITAR.id(), ItemId.ADAMANTITE_2_HANDED_SWORD.id(), ItemId.ADAMANTITE_AXE.id(), ItemId.ADAMANTITE_PICKAXE.id(),
+		ItemId.ADAMANTITE_BATTLE_AXE.id(), ItemId.ADAMANTITE_MACE.id(), ItemId.ADAMANTITE_ARROW_HEADS.id(), ItemId.ADAMANTITE_DART_TIPS.id()};
+	private final static int[] MITH = {ItemId.LARGE_MITHRIL_HELMET.id(), ItemId.MEDIUM_MITHRIL_HELMET.id(), ItemId.MITHRIL_CHAIN_MAIL_BODY.id(),
+		ItemId.MITHRIL_PLATE_MAIL_BODY.id(), ItemId.MITHRIL_KITE_SHIELD.id(), ItemId.MITHRIL_SQUARE_SHIELD.id(),
+		ItemId.MITHRIL_PLATE_MAIL_LEGS.id(), ItemId.MITHRIL_DAGGER.id(), ItemId.MITHRIL_THROWING_KNIFE.id(), ItemId.MITHRIL_SHORT_SWORD.id(),
+		ItemId.MITHRIL_LONG_SWORD.id(), ItemId.MITHRIL_SCIMITAR.id(), ItemId.MITHRIL_2_HANDED_SWORD.id(), ItemId.MITHRIL_AXE.id(),
+		ItemId.MITHRIL_PICKAXE.id(), ItemId.MITHRIL_BATTLE_AXE.id(), ItemId.MITHRIL_MACE.id(), ItemId.MITHRIL_ARROW_HEADS.id(),
+		ItemId.MITHRIL_DART_TIPS.id()};
+	private final static int[] STEEL = {ItemId.LARGE_STEEL_HELMET.id(), ItemId.MEDIUM_STEEL_HELMET.id(), ItemId.STEEL_CHAIN_MAIL_BODY.id(),
+		ItemId.STEEL_PLATE_MAIL_BODY.id(), ItemId.STEEL_KITE_SHIELD.id(), ItemId.STEEL_SQUARE_SHIELD.id(), ItemId.STEEL_PLATE_MAIL_LEGS.id(),
+		ItemId.STEEL_DAGGER.id(), ItemId.STEEL_THROWING_KNIFE.id(), ItemId.STEEL_SHORT_SWORD.id(), ItemId.STEEL_LONG_SWORD.id(),
+		ItemId.STEEL_SCIMITAR.id(), ItemId.STEEL_2_HANDED_SWORD.id(), ItemId.STEEL_AXE.id(), ItemId.STEEL_PICKAXE.id(),
+		ItemId.STEEL_BATTLE_AXE.id(), ItemId.STEEL_MACE.id(), ItemId.STEEL_ARROW_HEADS.id(), ItemId.STEEL_DART_TIPS.id()};
+	private final static int[] BRONZE = {ItemId.LARGE_BRONZE_HELMET.id(), ItemId.MEDIUM_BRONZE_HELMET.id(), ItemId.BRONZE_CHAIN_MAIL_BODY.id(),
+		ItemId.BRONZE_PLATE_MAIL_BODY.id(), ItemId.BRONZE_KITE_SHIELD.id(), ItemId.BRONZE_SQUARE_SHIELD.id(), ItemId.BRONZE_PLATE_MAIL_LEGS.id(),
+		ItemId.BRONZE_DAGGER.id(), ItemId.BRONZE_THROWING_KNIFE.id(), ItemId.BRONZE_SHORT_SWORD.id(), ItemId.BRONZE_LONG_SWORD.id(),
+		ItemId.BRONZE_SCIMITAR.id(), ItemId.BRONZE_2_HANDED_SWORD.id(), ItemId.BRONZE_AXE.id(), ItemId.BRONZE_PICKAXE.id(),
+		ItemId.BRONZE_AXE.id(), ItemId.BRONZE_BATTLE_AXE.id(), ItemId.BRONZE_ARROW_HEADS.id(), ItemId.BRONZE_DART_TIPS.id()};
 
 	/**
-	 * The one and only method for getting face direction, removed the other
-	 * 10...
+	 * The one and only method for getting face direction
 	 *
 	 * @param you
 	 * @param x
@@ -105,7 +153,7 @@ public final class Formulae {
 	}
 
 	/**
-	 * Adds the prayers together to calculate what perecntage the stat should be
+	 * Adds the prayers together to calculate what percentage the stat should be
 	 * increased
 	 */
 	private static double addPrayers(boolean first, boolean second, boolean third) {
@@ -122,7 +170,7 @@ public final class Formulae {
 	}
 
 	/**
-	 * Returns a power to assosiate with each arrow
+	 * Returns a power to associate with each arrow
 	 */
 	private static double arrowPower(int arrowID) {
 		switch (arrowID) {
@@ -229,7 +277,7 @@ public final class Formulae {
 	 */
 	public static boolean burnFood(Player p, int foodId, int cookingLevel) {
 		int levelDiff;
-		if (p.getInventory().wielding(700))
+		if (p.getInventory().wielding(ItemId.GAUNTLETS_OF_COOKING.id()))
 			levelDiff = (cookingLevel += 10) - EntityHandler.getItemCookingDef(foodId).getReqLevel();
 		else
 			levelDiff = cookingLevel - EntityHandler.getItemCookingDef(foodId).getReqLevel();
@@ -270,7 +318,7 @@ public final class Formulae {
 	public static int calcGodSpells(Mob attacker, Mob defender, boolean iban) {
 		if (attacker.isPlayer()) {
 			Player owner = (Player) attacker;
-			int newAtt = (int) ((owner.getMagicPoints()) + owner.getSkills().getLevel(6));
+			int newAtt = (int) ((owner.getMagicPoints()) + owner.getSkills().getLevel(Skills.MAGIC));
 
 			int newDef = (int) ((addPrayers(defender, Prayers.THICK_SKIN, Prayers.ROCK_SKIN, Prayers.STEEL_SKIN)
 				* defender.getSkills().getLevel(Skills.DEFENSE) / 4D) + (defender.getArmourPoints() / 4D));
@@ -278,13 +326,13 @@ public final class Formulae {
 
 			if (hitChance > (defender.isNpc() ? 50 : 60)) {
 				int max;
-				if (owner.getInventory().wielding(1000) && iban) {
+				if (owner.getInventory().wielding(ItemId.STAFF_OF_IBAN.id()) && iban) {
 					max = DataConversions.random(0, 25);
 				} else {
 					if (owner.isCharged() &&
-						(owner.getInventory().wielding(1213) ||
-							owner.getInventory().wielding(1214) ||
-							owner.getInventory().wielding(1215))) {
+						(owner.getInventory().wielding(ItemId.ZAMORAK_CAPE.id()) ||
+							owner.getInventory().wielding(ItemId.SARADOMIN_CAPE.id()) ||
+							owner.getInventory().wielding(ItemId.GUTHIX_CAPE.id()))) {
 						max = DataConversions.random(0, 25);
 					} else {
 						max = DataConversions.random(0, 18);
@@ -415,7 +463,7 @@ public final class Formulae {
 	/**
 	 * Calculate how much experience a Mob gives
 	 */
-	public static int combatExperience(Mob mob) { //"OPEN RSC FORMULA
+	public static int combatExperience(Mob mob) { // OPEN RSC FORMULA
 		return ((mob.getCombatLevel() * 2) + 20);
 	}
 
@@ -480,7 +528,7 @@ public final class Formulae {
 		// 128 is already guaranteed to fail
 		// 1 is already guaranteed to be successful
 		// using 127 as the min in order for threshold to not be able to hit 128 for a guaranteed chance to fail
-		int threshold = Math.min(127, Math.max(1, skillLevel + equipmentBonus + 40 - (int)(levelReq * 1.5)));
+		int threshold = Math.min(127, Math.max(1, skillLevel + equipmentBonus + 40 - (int) (levelReq * 1.5)));
 		return roll <= threshold;
 	}
 
@@ -488,7 +536,7 @@ public final class Formulae {
 	 * Calculate a mobs combat level based on their stats
 	 */
 	public static int getCombatlevel(int[] stats) {
-		return getCombatLevel(stats[0], stats[1], stats[2], stats[3], stats[6], stats[5], stats[4]);
+		return getCombatLevel(stats[Skills.ATTACK], stats[Skills.DEFENSE], stats[Skills.STRENGTH], stats[Skills.HITPOINTS], stats[Skills.MAGIC], stats[Skills.PRAYER], stats[Skills.RANGED]);
 	}
 
 	/**
@@ -512,12 +560,12 @@ public final class Formulae {
 	 */
 	public static int getEmptyJug(int fullJug) {
 		switch (fullJug) {
-			case 50:
-				return 21;
-			case 141:
-				return 140;
-			case 342:
-				return 341;
+			case 50: // BUCKET_OF_WATER
+				return ItemId.BUCKET.id();
+			case 141: // JUG_OF_WATER
+				return ItemId.JUG.id();
+			case 342: // BOWL_OF_WATER
+				return ItemId.BOWL.id();
 		}
 		return -1;
 	}
@@ -677,7 +725,7 @@ public final class Formulae {
 	 * Should the arrow be dropped or disappear
 	 */
 	public static boolean looseArrow(int damage) {
-		return DataConversions.random(0, 6) == 0;
+		return DataConversions.random(0, 6) != 0;
 	}
 
 	/**
@@ -721,17 +769,17 @@ public final class Formulae {
 
 	public static int getBarIdFromItem(int itemID) {
 		if (DataConversions.inArray(BRONZE, itemID))
-			return 169;
+			return ItemId.BRONZE_BAR.id();
 		if (DataConversions.inArray(IRON, itemID))
-			return 170;
+			return ItemId.IRON_BAR.id();
 		if (DataConversions.inArray(STEEL, itemID))
-			return 171;
+			return ItemId.STEEL_BAR.id();
 		if (DataConversions.inArray(MITH, itemID))
-			return 173;
+			return ItemId.MITHRIL_BAR.id();
 		if (DataConversions.inArray(ADDY, itemID))
-			return 174;
+			return ItemId.ADAMANTITE_BAR.id();
 		if (DataConversions.inArray(RUNE, itemID))
-			return 408;
+			return ItemId.RUNITE_BAR.id();
 		return -1;
 	}
 
@@ -811,11 +859,11 @@ public final class Formulae {
 	}
 
 	public static int calculateGemDrop() {
-		return weightedRandomChoice(gemDropIDs, gemDropWeights, 160);
+		return weightedRandomChoice(gemDropIDs, gemDropWeights, ItemId.UNCUT_SAPPHIRE.id());
 	}
 
 	public static int calculateHerbDrop() {
-		return weightedRandomChoice(herbDropIDs, herbDropWeights, 165);
+		return weightedRandomChoice(herbDropIDs, herbDropWeights, ItemId.UNIDENTIFIED_GUAM_LEAF.id());
 	}
 
 }
