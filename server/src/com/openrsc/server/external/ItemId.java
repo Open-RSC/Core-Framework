@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum ItemId {
+	NOTHING_REROLL(-3),
 	NOTHING_INTEREST(-2),
 	NOTHING(-1),
 	IRON_MACE(0),

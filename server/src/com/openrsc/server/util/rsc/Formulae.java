@@ -34,13 +34,15 @@ public final class Formulae {
 		ItemId.UNIDENTIFIED_TARROMIN.id(), ItemId.UNIDENTIFIED_HARRALANDER.id(), ItemId.UNIDENTIFIED_RANARR_WEED.id(),
 		ItemId.UNIDENTIFIED_IRIT_LEAF.id(), ItemId.UNIDENTIFIED_AVANTOE.id(), ItemId.UNIDENTIFIED_KWUARM.id(),
 		ItemId.UNIDENTIFIED_CADANTINE.id(), ItemId.UNIDENTIFIED_DWARF_WEED.id()};
-	private static final int[] herbDropWeights = {89, 55, 34, 21, 13, 8, 5, 3, 2, 1};
+	private static final int[] herbDropWeights = {33, 25, 19, 14, 11, 8, 6, 5, 4, 3}; //128
 	public static final int[] miningAxeIDs = {ItemId.RUNE_PICKAXE.id(), ItemId.ADAMANTITE_PICKAXE.id(),
 		ItemId.MITHRIL_PICKAXE.id(), ItemId.STEEL_PICKAXE.id(), ItemId.IRON_PICKAXE.id(), ItemId.BRONZE_PICKAXE.id()};
 	public static final int[] miningAxeLvls = {41, 31, 21, 6, 1, 1};
-	private static final int[] gemDropIDs = {ItemId.UNCUT_SAPPHIRE.id(), ItemId.UNCUT_EMERALD.id(),
-		ItemId.UNCUT_RUBY.id(), ItemId.UNCUT_DIAMOND.id()};
-	private static final int[] gemDropWeights = {100, 70, 45, 15};
+	private static final int[] gemDropIDs = {ItemId.NOTHING.id(), ItemId.UNCUT_SAPPHIRE.id(), ItemId.UNCUT_EMERALD.id(),
+		ItemId.UNCUT_RUBY.id(), ItemId.UNCUT_DIAMOND.id(), ItemId.LOOP_KEY_HALF.id(), ItemId.TOOTH_KEY_HALF.id(), ItemId.NOTHING_REROLL.id()};
+	private static final int[] gemDropWeights = {63, 32, 16, 8, 4, 2, 2, 1}; //128
+	private static final int[] rareDropIDs = {ItemId.NOTHING.id(), ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id()};
+	private static final int[] rareDropWeights = {124, 4}; //128
 	public static final int[] throwingIDs = {ItemId.IRON_THROWING_KNIFE.id(), ItemId.BRONZE_THROWING_KNIFE.id(),
 		ItemId.STEEL_THROWING_KNIFE.id(), ItemId.MITHRIL_THROWING_KNIFE.id(), ItemId.ADAMANTITE_THROWING_KNIFE.id(),
 		ItemId.RUNE_THROWING_KNIFE.id(), ItemId.BLACK_THROWING_KNIFE.id(), ItemId.BRONZE_THROWING_DART.id(),
@@ -173,69 +175,69 @@ public final class Formulae {
 	 * Returns a power to associate with each arrow
 	 */
 	private static double arrowPower(int arrowID) {
-		switch (arrowID) {
-			case 11: // bronze arrows
-			case 574: // poison bronze arrows
-			case 190: // crossbow bolts
-			case 592: // poison cross bow bolts
-			case 1013: // bronze throwing dart
-			case 1122: // poison bronze throwing dart
+		switch (ItemId.getById(arrowID)) {
+			case BRONZE_ARROWS:
+			case POISON_BRONZE_ARROWS:
+			case CROSSBOW_BOLTS:
+			case POISON_CROSSBOW_BOLTS:
+			case BRONZE_THROWING_DART:
+			case POISONED_BRONZE_THROWING_DART:
 				return 0;
-			case 638:// iron arrows
-			case 639:// poison iron arrows
-			case 1015: // iron throwing dart
-			case 1123:// poison iron throwing dart
+			case IRON_ARROWS:
+			case POISON_IRON_ARROWS:
+			case IRON_THROWING_DART:
+			case POISONED_IRON_THROWING_DART:
 				return 0.5;
-			case 640:// steel arrows
-			case 641:// poison steel arrows
-			case 1024: // steel throwing dart
-			case 1124: // poison steel throwing dart
-			case 1076:// bronze throwing dart
-			case 1128:// poison bronze throwing knife
-			case 827:// bronze spear
-			case 1135:// poison bronze spear
+			case STEEL_ARROWS:
+			case POISON_STEEL_ARROWS:
+			case STEEL_THROWING_DART:
+			case POISONED_STEEL_THROWING_DART:
+			case BRONZE_THROWING_KNIFE:
+			case POISONED_BRONZE_THROWING_KNIFE:
+			case BRONZE_SPEAR:
+			case POISONED_BRONZE_SPEAR:
 				return 1;
-			case 642:// mith arrows
-			case 643:// poison mith arrows
-			case 786:// pearle crossbow bolts
-			case 1068:// mith throwing dart
-			case 1125: // poison mith throwing dart
-			case 1075:// iron throwing dart
-			case 1129:// poison iron throwing knife
-			case 1088:// iron spear
-			case 1136:// poison iron spear
+			case MITHRIL_ARROWS:
+			case POISON_MITHRIL_ARROWS:
+			case OYSTER_PEARL_BOLTS:
+			case MITHRIL_THROWING_DART:
+			case POISONED_MITHRIL_THROWING_DART:
+			case IRON_THROWING_KNIFE:
+			case POISONED_IRON_THROWING_KNIFE:
+			case IRON_SPEAR:
+			case POISONED_IRON_SPEAR:
 				return 1.5;
-			case 644:// addy arrows
-			case 645:// poison addy arrows
-			case 1069:// addy throwing dart
-			case 1126:// poison addy throwing dart
-			case 1077:// steel throwing knife
-			case 1130:// poison steel throwing knife
-			case 1089:// steel spear
-			case 1137:// poison steel spear
+			case ADAMANTITE_ARROWS:
+			case POISON_ADAMANTITE_ARROWS:
+			case ADAMANTITE_THROWING_DART:
+			case POISONED_ADAMANTITE_THROWING_DART:
+			case STEEL_THROWING_KNIFE:
+			case POISONED_STEEL_THROWING_KNIFE:
+			case STEEL_SPEAR:
+			case POISONED_STEEL_SPEAR:
 				return 1.75;
-			case 1081:// black throwing knife
-			case 1132:// poison black throwing knife
+			case BLACK_THROWING_KNIFE:
+			case POISONED_BLACK_THROWING_KNIFE:
 				return 2;
-			case 646:// rune arrows
-			case 647:// poison rune arrows
-			case 1070:// rune throwing dart
-			case 1127:// poison rune throwing dart
-			case 1078:// mith throwing knife
-			case 1131:// poison mith throwing knife
-			case 1090:// mith spear
-			case 1138:// poison mith spear
+			case RUNE_ARROWS:
+			case POISON_RUNE_ARROWS:
+			case RUNE_THROWING_DART:
+			case POISONED_RUNE_THROWING_DART:
+			case MITHRIL_THROWING_KNIFE:
+			case POISONED_MITHRIL_THROWING_KNIFE:
+			case MITHRIL_SPEAR:
+			case POISONED_MITHRIL_SPEAR:
 				return 5;
-			case 723:// ice arrows
-			case 1079:// addy throwing knife
-			case 1133:// poison addy throwing knife
-			case 1091:// addy spear
-			case 1139:// poison addy spear
+			case ICE_ARROWS:
+			case ADAMANTITE_THROWING_KNIFE:
+			case POISONED_ADAMANTITE_THROWING_KNIFE:
+			case ADAMANTITE_SPEAR:
+			case POISONED_ADAMANTITE_SPEAR:
 				return 6;
-			case 1080:// rune throwing knife
-			case 1134:// poison rune throwing knife
-			case 1092:// rune spear
-			case 1140:// poison rune spear
+			case RUNE_THROWING_KNIFE:
+			case POISONED_RUNE_THROWING_KNIFE:
+			case RUNE_SPEAR:
+			case POISONED_RUNE_SPEAR:
 				return 7;
 			default:
 				return 0;
@@ -426,38 +428,39 @@ public final class Formulae {
 	}
 
 	private static int getBowBonus(Player player) {
-		switch (player.getRangeEquip()) {
-			case 59: /* Phoenix Crossbow */
+		switch (ItemId.getById(player.getRangeEquip())) {
+			case PHOENIX_CROSSBOW:
 				return 10;
-			case 60: /* Crossbow */
+			case CROSSBOW:
 				return 10;
-			case 189: /* Long bow */
+			case LONGBOW:
 				return 8;
-			case 188: /* Shortbow */
+			case SHORTBOW:
 				return 5;
 
-			case 648: // Oak Longbow
+			case OAK_LONGBOW:
 				return 13;
-			case 649: // Oak Shortbow
+			case OAK_SHORTBOW:
 				return 10;
-			case 650: // Willow Longbow
+			case WILLOW_LONGBOW:
 				return 18;
-			case 651: // Willow Shortbow
+			case WILLOW_SHORTBOW:
 				return 15;
-			case 652: // Maple Longbow
+			case MAPLE_LONGBOW:
 				return 23;
-			case 653: // Maple Shortbow
+			case MAPLE_SHORTBOW:
 				return 20;
-			case 654: // Yew Longbow
+			case YEW_LONGBOW:
 				return 28;
-			case 655: // Yew Shortbow
+			case YEW_SHORTBOW:
 				return 25;
-			case 656: // Magic Longbow
-				return 30;
-			case 657: // Magic Shortbow
+			case MAGIC_LONGBOW:
 				return 33;
+			case MAGIC_SHORTBOW:
+				return 30;
+			default:
+				return 0;
 		}
-		return 0;
 	}
 
 	/**
@@ -559,15 +562,16 @@ public final class Formulae {
 	 * Gets the empty jug ID
 	 */
 	public static int getEmptyJug(int fullJug) {
-		switch (fullJug) {
-			case 50: // BUCKET_OF_WATER
+		switch (ItemId.getById(fullJug)) {
+			case BUCKET_OF_WATER:
 				return ItemId.BUCKET.id();
-			case 141: // JUG_OF_WATER
+			case JUG_OF_WATER:
 				return ItemId.JUG.id();
-			case 342: // BOWL_OF_WATER
+			case BOWL_OF_WATER:
 				return ItemId.BOWL.id();
+			default:
+				return ItemId.NOTHING.id();
 		}
-		return -1;
 	}
 
 	/**
@@ -859,7 +863,15 @@ public final class Formulae {
 	}
 
 	public static int calculateGemDrop() {
-		return weightedRandomChoice(gemDropIDs, gemDropWeights, ItemId.UNCUT_SAPPHIRE.id());
+		int roll1 = weightedRandomChoice(gemDropIDs, gemDropWeights, ItemId.NOTHING.id());
+		if (roll1 != ItemId.NOTHING_REROLL.id())
+			return roll1;
+		int roll2 = calculateRareDrop();
+		return roll2;
+	}
+	
+	public static int calculateRareDrop() {
+		return weightedRandomChoice(rareDropIDs, rareDropWeights, ItemId.NOTHING.id());
 	}
 
 	public static int calculateHerbDrop() {

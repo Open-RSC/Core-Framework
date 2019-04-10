@@ -8,6 +8,7 @@ import com.openrsc.server.event.custom.NpcLootEvent;
 import com.openrsc.server.event.rsc.ImmediateEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemDropDef;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NPCDef;
 import com.openrsc.server.external.NPCLoc;
 import com.openrsc.server.model.Point;
@@ -299,22 +300,22 @@ public class Npc extends Mob {
 			int totalXP = (int) (((double) (totalCombatXP) / (double) (getDef().hits)) * (double) (damageDoneByPlayer));
 
 			switch (p.getCombatStyle()) {
-				case 0:
+				case 0: //CONTROLLED
 					for (int x = 0; x < 3; x++) {
 						p.incExp(x, totalXP, true);
 					}
 					break;
-				case 1:
-					p.incExp(2, totalXP * 3, true);
+				case 1: //AGGRESSIVE
+					p.incExp(Skills.STRENGTH, totalXP * 3, true);
 					break;
-				case 2:
-					p.incExp(0, totalXP * 3, true);
+				case 2: //ACCURATE
+					p.incExp(Skills.ATTACK, totalXP * 3, true);
 					break;
-				case 3:
-					p.incExp(1, totalXP * 3, true);
+				case 3: //DEFENSIVE
+					p.incExp(Skills.DEFENSE, totalXP * 3, true);
 					break;
 			}
-			p.incExp(3, totalXP, true);
+			p.incExp(Skills.HITPOINTS, totalXP, true);
 		}
 
 		// Ranged damagers
@@ -330,8 +331,8 @@ public class Npc extends Mob {
 				currentHighestDamage = dmgDoneByPlayer;
 			}
 			newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByPlayer));
-			p.incExp(4, newXP * 4, true);
-			ActionSender.sendStat(p, 4);
+			p.incExp(Skills.MAGIC, newXP * 4, true);
+			ActionSender.sendStat(p, Skills.MAGIC);
 		}
 
 		// Magic damagers
@@ -420,13 +421,12 @@ public class Npc extends Mob {
 			total = 0;
 
 			for (ItemDropDef drop : drops) {
-				if (drop.getID() == 1026 && owner.getQuestStage(Constants.Quests.OBSERVATORY_QUEST) > -1) {
+				if (drop.getID() == ItemId.UNHOLY_SYMBOL_MOULD.id() && owner.getQuestStage(Constants.Quests.OBSERVATORY_QUEST) > -1) {
 					continue;
 				}
 
 				Item temp = new Item();
 				temp.setID(drop.getID());
-
 
 				if (drop == null) {
 					continue;
@@ -453,26 +453,30 @@ public class Npc extends Mob {
 							// We need to drop multiple counts of "1" item if it's not a stack
 							for (int count = 0; count < amount; count++) {
 
-								// Gem Drop Table
-								if (drop.getID() == 160) {
+								// Gem Drop Table + 1/128 chance to roll into very rare item 
+								if (drop.getID() == ItemId.UNCUT_SAPPHIRE.id()) {
 									dropID = Formulae.calculateGemDrop();
 									amount = 1;
 								}
 
 								// Herb Drop Table
-								else if (drop.getID() == 165) {
+								else if (drop.getID() == ItemId.UNIDENTIFIED_GUAM_LEAF.id()) {
 									dropID = Formulae.calculateHerbDrop();
 								}
-
-								groundItem = new GroundItem(dropID, getX(), getY(), 1, owner);
-								groundItem.setAttribute("npcdrop", true);
-								world.registerItem(groundItem);
+								
+								if (dropID != ItemId.NOTHING.id() && EntityHandler.getItemDef(dropID).isMembersOnly() && !Constants.GameServer.MEMBER_WORLD) {
+										continue;
+								} else if (dropID != ItemId.NOTHING.id()) {
+									groundItem = new GroundItem(dropID, getX(), getY(), 1, owner);
+									groundItem.setAttribute("npcdrop", true);
+									world.registerItem(groundItem);
+								}
 							}
 
 						} else {
 
 							// Gold Drops
-							if (drop.getID() == 10) {
+							if (drop.getID() == ItemId.COINS.id()) {
 								amount = Formulae.calculateGoldDrop(
 									GoldDrops.drops.getOrDefault(this.getID(), new int[]{1})
 								);
@@ -487,7 +491,7 @@ public class Npc extends Mob {
 						}
 
 						// Check if we have a "valuable drop" (configurable)
-						if (dropID != -1 && amount > 0 && VALUABLE_DROP_MESSAGES && (currentRatio > VALUABLE_DROP_RATIO || (VALUABLE_DROP_EXTRAS && valuableDrops.contains(temp.getDef().getName())))) {
+						if (dropID != ItemId.NOTHING.id() && amount > 0 && VALUABLE_DROP_MESSAGES && (currentRatio > VALUABLE_DROP_RATIO || (VALUABLE_DROP_EXTRAS && valuableDrops.contains(temp.getDef().getName())))) {
 							if (amount > 1) {
 								owner.message("@red@Valuable drop: " + amount + " x " + temp.getDef().getName() + " (" +
 									(temp.getDef().getDefaultPrice() * amount) + " coins)");
