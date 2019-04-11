@@ -113,6 +113,7 @@ public class Config {
 	public static int C_FPS = 50;
 	public static boolean C_WANT_EMAIL = false;
 	public static boolean S_WANT_REGISTRATION_LIMIT = false;
+	public static boolean S_ALLOW_RESIZE = false;
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());
@@ -274,5 +275,9 @@ public class Config {
 
 	static boolean wantEmail() {
 		return C_WANT_EMAIL;
+	}
+
+	static boolean allowResize1() {
+		return S_ALLOW_RESIZE;
 	}
 }

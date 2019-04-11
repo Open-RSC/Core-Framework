@@ -436,6 +436,7 @@ public class ActionSender {
 			LOGGER.info(FPS + " 46");
 			LOGGER.info(WANT_EMAIL + " 47");
 			LOGGER.info(WANT_REGISTRATION_LIMIT + " 48");
+			LOGGER.info(ALLOW_RESIZE + " 49");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs();
 		ConnectionAttachment attachment = new ConnectionAttachment();
@@ -500,6 +501,7 @@ public class ActionSender {
 		s.writeByte((byte) FPS); // 46
 		s.writeByte((byte) (WANT_EMAIL ? 1 : 0)); // 47
 		s.writeByte((byte) (WANT_REGISTRATION_LIMIT ? 1 : 0)); // 48
+		s.writeByte((byte) (ALLOW_RESIZE ? 1 : 0)); // 49
 		return s;
 	}
 

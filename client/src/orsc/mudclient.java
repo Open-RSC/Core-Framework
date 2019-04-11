@@ -43,6 +43,7 @@ import java.util.TimerTask;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.swing.JFrame;
 
 import orsc.buffers.RSBufferUtils;
 import orsc.enumerations.GameMode;
@@ -106,6 +107,7 @@ import static orsc.Config.SERVER_IP;
 import static orsc.Config.SERVER_NAME;
 import static orsc.Config.SERVER_NAME_WELCOME;
 import static orsc.Config.SERVER_PORT;
+import static orsc.Config.S_ALLOW_RESIZE;
 import static orsc.Config.S_AUTO_MESSAGE_SWITCH_TOGGLE;
 import static orsc.Config.S_BATCH_PROGRESSION;
 import static orsc.Config.S_CUSTOM_FIREMAKING;
@@ -13146,7 +13148,7 @@ public final class mudclient implements Runnable {
 
 	final void continueStartGame(byte var1) {
 		System.out.println("Got server configs!");
-		if (DEBUG) {
+		if (Config.DEBUG) {
 			System.out.println("Debug server configs received:");
 			System.out.println(SERVER_NAME + " 1");
 			System.out.println(SERVER_NAME_WELCOME + " 2");
@@ -13194,6 +13196,9 @@ public final class mudclient implements Runnable {
 			System.out.println(DISPLAY_LOGO_SPRITE + " 44");
 			System.out.println(Config.C_LOGO_SPRITE_ID + " 45");
 			System.out.println(Config.C_FPS + " 46");
+			System.out.println(Config.C_WANT_EMAIL + " 47");
+			System.out.println(Config.S_WANT_REGISTRATION_LIMIT + " 48");
+			System.out.println(Config.S_ALLOW_RESIZE + " 49");
 		}
 		try {
 			this.loadGameConfig(false);

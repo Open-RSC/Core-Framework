@@ -21,8 +21,6 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
 
-import static orsc.Config.*;
-
 
 public class PacketHandler {
 
@@ -75,7 +73,7 @@ public class PacketHandler {
 
 	private void handlePacket1(int opcode, int length) {
 		try {
-			if (DEBUG) {
+			if (Config.DEBUG) {
 				System.out.println("Opcode: " + opcode + " Length: " + length);
 			}
 
@@ -93,7 +91,7 @@ public class PacketHandler {
 			if (opcode == 88) createNPC();
 
 			else if (opcode == 134) { // Batch Progression
-				if (!S_BATCH_PROGRESSION) return;
+				if (!Config.S_BATCH_PROGRESSION) return;
 				updateBatchProgression();
 			}
 
@@ -304,7 +302,7 @@ public class PacketHandler {
 			else if (opcode == 52) mc.setSystemUpdate(packetsIncoming.getShort() * 32);
 
 				// Elixir Timer
-			else if (opcode == 54 && S_WANT_EXPERIENCE_ELIXIRS)
+			else if (opcode == 54 && Config.S_WANT_EXPERIENCE_ELIXIRS)
 				mc.setElixirTimer(packetsIncoming.getShort() * 32);
 
 				// Sleeping Menu Fatigue
@@ -412,7 +410,7 @@ public class PacketHandler {
 	}
 
 	private void updateBatchProgression() {
-		if (!C_BATCH_PROGRESS_BAR) {
+		if (!Config.C_BATCH_PROGRESS_BAR) {
 			mc.hideBatchProgressBar();
 			return;
 		}
@@ -554,7 +552,7 @@ public class PacketHandler {
 	}
 
 	private void announceKill() {
-		if (!S_WANT_KILL_FEED) return;
+		if (!Config.S_WANT_KILL_FEED) return;
 		String killed = packetsIncoming.readString();
 		String killer = packetsIncoming.readString();
 		int killType = packetsIncoming.get32();
@@ -732,7 +730,7 @@ public class PacketHandler {
 		int wantCustomBanks, wantBankPins, wantBankNotes, wantCertDeposit, customFiremaking;
 		int wantDropX, wantExpInfo, wantWoodcuttingGuild, wantFixedOverheadChat;
 		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank;
-		int getFPS, wantEmail, wantRegistrationLimit;
+		int getFPS, wantEmail, wantRegistrationLimit, allowResize;
 		String logoSpriteID;
 
 		if (!mc.gotInitialConfigs) {
@@ -757,7 +755,7 @@ public class PacketHandler {
 			experienceDropsToggle = this.getClientStream().getUnsignedByte(); // 19
 			itemsOnDeathMenu = this.getClientStream().getUnsignedByte(); // 20
 			showRoofToggle = this.getClientStream().getUnsignedByte(); // 21
-			C_HIDE_ROOFS = showRoofToggle != 1; // If we don't want the toggle, always show. (entry does not count in sent config)
+			Config.C_HIDE_ROOFS = showRoofToggle != 1; // If we don't want the toggle, always show. (entry does not count in sent config)
 			wantHideIp = this.getClientStream().getUnsignedByte(); // 22
 			wantRemember = this.getClientStream().getUnsignedByte(); // 23
 			wantGlobalChat = this.getClientStream().getUnsignedByte(); // 24
@@ -785,6 +783,7 @@ public class PacketHandler {
 			getFPS = this.getClientStream().getUnsignedByte(); // 46
 			wantEmail = this.getClientStream().getUnsignedByte(); // 47
 			wantRegistrationLimit = this.getClientStream().getUnsignedByte(); // 48
+			allowResize = this.getClientStream().getUnsignedByte(); // 49
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -807,7 +806,7 @@ public class PacketHandler {
 			experienceDropsToggle = packetsIncoming.getUnsignedByte(); // 19
 			itemsOnDeathMenu = packetsIncoming.getUnsignedByte(); // 20
 			showRoofToggle = packetsIncoming.getUnsignedByte(); // 21
-			C_HIDE_ROOFS = showRoofToggle != 1; // If we don't want the toggle, always show. (entry does not count in sent config)
+			Config.C_HIDE_ROOFS = showRoofToggle != 1; // If we don't want the toggle, always show. (entry does not count in sent config)
 			wantHideIp = packetsIncoming.getUnsignedByte(); // 22
 			wantRemember = packetsIncoming.getUnsignedByte(); // 23
 			wantGlobalChat = packetsIncoming.getUnsignedByte(); // 24
@@ -835,9 +834,10 @@ public class PacketHandler {
 			getFPS = packetsIncoming.getUnsignedByte(); // 46
 			wantEmail = packetsIncoming.getUnsignedByte(); // 47
 			wantRegistrationLimit = packetsIncoming.getUnsignedByte(); // 48
+			allowResize = packetsIncoming.getUnsignedByte(); // 49
 		}
 
-		if (DEBUG) {
+		if (Config.DEBUG) {
 			System.out.println(
 				"SERVER_NAME " + serverName + // 1
 					"\nSERVER_NAME_WELCOME " + serverNameWelcome + // 2
@@ -886,7 +886,8 @@ public class PacketHandler {
 					"\nC_LOGO_SPRITE_ID" + logoSpriteID + // 45
 					"\nC_FPS" + getFPS + // 46
 					"\nC_WANT_EMAIL" + wantEmail + // 47
-					"\nS_WANT_REGISTRATION_LIMIT" + wantRegistrationLimit //48
+					"\nS_WANT_REGISTRATION_LIMIT" + wantRegistrationLimit + //48
+					"\nS_ALLOW_RESIZE" + allowResize //49
 			);
 		}
 
@@ -938,23 +939,24 @@ public class PacketHandler {
 		props.setProperty("C_FPS", Integer.toString(getFPS)); // 46
 		props.setProperty("C_WANT_EMAIL", wantEmail == 1 ? "true" : "false"); // 47
 		props.setProperty("S_WANT_REGISTRATION_LIMIT", wantRegistrationLimit == 1 ? "true" : "false"); // 48
+		props.setProperty("S_ALLOW_RESIZE", allowResize == 1 ? "true" : "false"); // 49
 
-		updateServerConfiguration(props);
+		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(
-			isAndroid() ||
-				S_WANT_CLANS || S_WANT_KILL_FEED
-				|| S_FOG_TOGGLE || S_GROUND_ITEM_TOGGLE
-				|| S_AUTO_MESSAGE_SWITCH_TOGGLE || S_BATCH_PROGRESSION
-				|| S_SIDE_MENU_TOGGLE || S_INVENTORY_COUNT_TOGGLE
-				|| S_MENU_COMBAT_STYLE_TOGGLE
-				|| S_FIGHTMODE_SELECTOR_TOGGLE || S_SHOW_ROOF_TOGGLE
-				|| S_EXPERIENCE_COUNTER_TOGGLE || S_WANT_GLOBAL_CHAT
-				|| S_EXPERIENCE_DROPS_TOGGLE || S_ITEMS_ON_DEATH_MENU);
+			Config.isAndroid() ||
+				Config.S_WANT_CLANS || Config.S_WANT_KILL_FEED
+				|| Config.S_FOG_TOGGLE || Config.S_GROUND_ITEM_TOGGLE
+				|| Config.S_AUTO_MESSAGE_SWITCH_TOGGLE || Config.S_BATCH_PROGRESSION
+				|| Config.S_SIDE_MENU_TOGGLE || Config.S_INVENTORY_COUNT_TOGGLE
+				|| Config.S_MENU_COMBAT_STYLE_TOGGLE
+				|| Config.S_FIGHTMODE_SELECTOR_TOGGLE || Config.S_SHOW_ROOF_TOGGLE
+				|| Config.S_EXPERIENCE_COUNTER_TOGGLE || Config.S_WANT_GLOBAL_CHAT
+				|| Config.S_EXPERIENCE_DROPS_TOGGLE || Config.S_ITEMS_ON_DEATH_MENU);
 
 
 		if (!mc.gotInitialConfigs) {
-			mc.setExperienceArray(new int[S_PLAYER_LEVEL_LIMIT]);
+			mc.setExperienceArray(new int[Config.S_PLAYER_LEVEL_LIMIT]);
 			mc.setExperienceArray();
 			mc.gotInitialConfigs = true;
 			mc.continueStartGame((byte) -92);
@@ -1690,7 +1692,7 @@ public class PacketHandler {
 			mc.totalXpGainedStartTime = System.currentTimeMillis();
 		}
 
-		if (S_EXPERIENCE_DROPS_TOGGLE && C_EXPERIENCE_DROPS) {
+		if (Config.S_EXPERIENCE_DROPS_TOGGLE && Config.C_EXPERIENCE_DROPS) {
 			if (receivedXp > 0) {
 				mc.addXpNotification(skill, receivedXp, false);
 			}
