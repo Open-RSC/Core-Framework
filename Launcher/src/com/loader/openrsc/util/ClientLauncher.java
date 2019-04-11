@@ -4,10 +4,11 @@ import com.loader.openrsc.Constants;
 import com.loader.openrsc.Launcher;
 import com.loader.openrsc.frame.AppFrame;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Dimension;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+
+import javax.swing.JFrame;
 
 public class ClientLauncher {
 	private static ClassLoader loader;
@@ -45,7 +46,7 @@ public class ClientLauncher {
 	private static void startProcess() {
 		try {
 			File f = new File(Constants.CONF_DIR + File.separator + Constants.CLIENT_FILENAME);
-			ProcessBuilder pb = new ProcessBuilder(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java", "-Xms312m", "-jar", f.getAbsolutePath());
+			ProcessBuilder pb = new ProcessBuilder(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java", "-jar", f.getAbsolutePath());
 			pb.start();
 			//exit(); // No need to close on successful launch, some players may want multiple clients open at once.
 		} catch (Exception e) {
