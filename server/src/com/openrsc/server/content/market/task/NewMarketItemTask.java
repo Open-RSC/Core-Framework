@@ -20,7 +20,7 @@ public class NewMarketItemTask extends MarketTask {
 	}
 
 	@Override
-	public void doTask() throws Exception {
+	public void doTask() {
 		ItemDefinition def = EntityHandler.getItemDef(newItem.getItemID());
 
 		if (newItem.getItemID() == 10 || def.isUntradable()) {
@@ -58,17 +58,11 @@ public class NewMarketItemTask extends MarketTask {
 			}
 		}*/
 
-		if (!def.isStackable()) {
-			for (int i = 0; i < newItem.getAmount(); i++) {
-				owner.getInventory().remove(newItem.getItemID(), 1);
-			}
-		} else {
-			owner.getInventory().remove(newItem.getItemID(), newItem.getAmount());
-		}
+		if (!def.isStackable())
+			for (int i = 0; i < newItem.getAmount(); i++) owner.getInventory().remove(newItem.getItemID(), 1);
+		else owner.getInventory().remove(newItem.getItemID(), newItem.getAmount());
 
-		if (def.getOriginalItemID() != -1) {
-			newItem.setItemID(def.getOriginalItemID());
-		}
+		if (def.getOriginalItemID() != -1) newItem.setItemID(def.getOriginalItemID());
 
 		if (MarketDatabase.add(newItem)) {
 			//ActionSender.sendBox(owner, "@gre@[Auction House - Success] % @whi@ Auction has been listed % " + newItem.getAmount() + "x @yel@" + def.getName() + " @whi@for @yel@" + newItem.getPrice() + "gp % @whi@Completed auction fee: @gre@" + feeCost + "gp", false);

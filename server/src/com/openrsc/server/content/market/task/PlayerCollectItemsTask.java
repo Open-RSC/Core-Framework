@@ -27,7 +27,7 @@ public class PlayerCollectItemsTask extends MarketTask {
 	}
 
 	@Override
-	public void doTask() throws Exception {
+	public void doTask() {
 		ArrayList<CollectableItem> list = MarketDatabase.getCollectableItemsFor(player.getDatabaseID());
 
 		if (list.size() == 0) {
@@ -35,7 +35,7 @@ public class PlayerCollectItemsTask extends MarketTask {
 			return;
 		}
 
-		String items = "Following items have been inserted to your bank: % ";
+		StringBuilder items = new StringBuilder("Following items have been inserted to your bank: % ");
 		try {
 			PreparedStatement setCollected = MarketDatabase.databaseInstance
 				.prepareStatement("UPDATE `" + Constants.GameServer.MYSQL_TABLE_PREFIX
@@ -44,12 +44,11 @@ public class PlayerCollectItemsTask extends MarketTask {
 			for (CollectableItem i : list) {
 				Item item = new Item(i.item_id, i.item_amount);
 				if (!player.getBank().canHold(item)) {
-					items += "@gre@Rest of the items are still held by auctioneer% make more space in bank and claim.";
+					items.append("@gre@Rest of the items are still held by auctioneer% make more space in bank and claim.");
 					break;
 				}
 				player.getBank().add(item);
-				items += " @lre@" + item.getDef().getName() + " @whi@x @cya@" + item.getAmount() + "@whi@ "
-					+ i.explanation + " %";
+				items.append(" @lre@").append(item.getDef().getName()).append(" @whi@x @cya@").append(item.getAmount()).append("@whi@ ").append(i.explanation).append(" %");
 				setCollected.setInt(1, i.claim_id);
 				setCollected.addBatch();
 			}
@@ -57,7 +56,6 @@ public class PlayerCollectItemsTask extends MarketTask {
 		} catch (SQLException e) {
 			LOGGER.catching(e);
 		}
-		ActionSender.sendBox(player, items, true);
+		ActionSender.sendBox(player, items.toString(), true);
 	}
-
 }

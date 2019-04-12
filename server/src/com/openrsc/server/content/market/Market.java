@@ -26,11 +26,15 @@ public class Market implements Runnable {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private static Market instance;
-	private ArrayList<MarketItem> auctionItems = new ArrayList<MarketItem>();
-	private LinkedBlockingQueue<MarketTask> auctionTaskQueue = new LinkedBlockingQueue<MarketTask>();
+	private ArrayList<MarketItem> auctionItems;
+	private LinkedBlockingQueue<MarketTask> auctionTaskQueue = new LinkedBlockingQueue<>();
 	private long lastCleanUp = 0;
-	private LinkedBlockingQueue<OpenMarketTask> refreshRequestTasks = new LinkedBlockingQueue<OpenMarketTask>();
+	private LinkedBlockingQueue<OpenMarketTask> refreshRequestTasks = new LinkedBlockingQueue<>();
 	private ScheduledExecutorService scheduledExecutor;
+
+	public Market() {
+		auctionItems = new ArrayList<>();
+	}
 
 	public static Market getInstance() {
 		if (!Constants.GameServer.SPAWN_AUCTION_NPCS) return null;
@@ -75,13 +79,10 @@ public class Market implements Runnable {
 
 	private void checkAndRemoveExpiredItems() {
 		try {
-			LinkedList<MarketItem> expiredItems = new LinkedList<MarketItem>();
+			LinkedList<MarketItem> expiredItems = new LinkedList<>();
 
-			for (MarketItem auction : auctionItems) {
-				if (auction.hasExpired()) {
-					expiredItems.add(auction);
-				}
-			}
+			for (MarketItem auction : auctionItems)
+				if (auction.hasExpired()) expiredItems.add(auction);
 
 			if (expiredItems.size() != 0) {
 				PreparedStatement expiredItemsStatement = MarketDatabase.databaseInstance.prepareStatement(
@@ -122,32 +123,26 @@ public class Market implements Runnable {
 	}
 
 	private void processAuctionTasks() {
-		MarketTask nextTask = null;
-		while ((nextTask = auctionTaskQueue.poll()) != null) {
-			try {
-				nextTask.doTask();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		MarketTask nextTask;
+		while ((nextTask = auctionTaskQueue.poll()) != null) try {
+			nextTask.doTask();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
-	public void processRefreshRequests() {
-		MarketTask refreshTask = null;
-		while ((refreshTask = refreshRequestTasks.poll()) != null) {
-			try {
-				refreshTask.doTask();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+	private void processRefreshRequests() {
+		MarketTask refreshTask;
+		while ((refreshTask = refreshRequestTasks.poll()) != null) try {
+			refreshTask.doTask();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
-	public void processUpdateAuctionItemCache() {
+	private void processUpdateAuctionItemCache() {
 		int activeAuctionCount = MarketDatabase.getAuctionCount();
-		if (activeAuctionCount == auctionItems.size()) {
-			return;
-		}
+		if (activeAuctionCount == auctionItems.size()) return;
 		auctionItems.clear();
 		auctionItems = MarketDatabase.getAuctionItemsOnSale();
 	}
@@ -155,10 +150,7 @@ public class Market implements Runnable {
 	@Override
 	public void run() {
 		try {
-			if (System.currentTimeMillis() - lastCleanUp > 60000) {
-				checkAndRemoveExpiredItems();
-			}
-
+			if (System.currentTimeMillis() - lastCleanUp > 60000) checkAndRemoveExpiredItems();
 			processAuctionTasks();
 			processUpdateAuctionItemCache();
 			processRefreshRequests();

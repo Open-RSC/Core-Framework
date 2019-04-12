@@ -8,7 +8,6 @@ import orsc.graphics.two.GraphicsController;
 import orsc.mudclient;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 
@@ -38,32 +37,29 @@ public final class AuctionHouse {
 	private int selectedFilter;
 	private String[] resources = {"log", "bones", "pickaxe", "dough"};
 	private int orderingBy = 0;
-	Comparator<AuctionItem> auctionComparator = new Comparator<AuctionItem>() {
-		@Override
-		public int compare(AuctionItem o1, AuctionItem o2) {
-			if (orderingBy == 0) { /* price down */
-				return o1.getPrice() - o2.getPrice();
-			} else if (orderingBy == 1) { /* price up */
-				return o2.getPrice() - o1.getPrice();
-			} else if (orderingBy == 2) { /* name */
-				ItemDef d1 = EntityHandler.getItemDef(o1.getItemID());
-				ItemDef d2 = EntityHandler.getItemDef(o2.getItemID());
-
-				return d1.getName().compareToIgnoreCase(d2.getName());
-			} else if (orderingBy == 3) { /* price each down */
-				int priceEach1 = o1.getPrice() / o1.getAmount();
-				int priceEach2 = o2.getPrice() / o2.getAmount();
-				return priceEach1 - priceEach2;
-			} else if (orderingBy == 4) { /* price each up */
-				int priceEach1 = o1.getPrice() / o1.getAmount();
-				int priceEach2 = o2.getPrice() / o2.getAmount();
-				return priceEach2 - priceEach1;
-			}
-			ItemDef d1 = EntityHandler.getItemDef(o1.getAuctionID());
-			ItemDef d2 = EntityHandler.getItemDef(o2.getAuctionID());
+	private Comparator<AuctionItem> auctionComparator = (o1, o2) -> {
+		if (orderingBy == 0) { /* price down */
+			return o1.getPrice() - o2.getPrice();
+		} else if (orderingBy == 1) { /* price up */
+			return o2.getPrice() - o1.getPrice();
+		} else if (orderingBy == 2) { /* name */
+			ItemDef d1 = EntityHandler.getItemDef(o1.getItemID());
+			ItemDef d2 = EntityHandler.getItemDef(o2.getItemID());
 
 			return d1.getName().compareToIgnoreCase(d2.getName());
+		} else if (orderingBy == 3) { /* price each down */
+			int priceEach1 = o1.getPrice() / o1.getAmount();
+			int priceEach2 = o2.getPrice() / o2.getAmount();
+			return priceEach1 - priceEach2;
+		} else if (orderingBy == 4) { /* price each up */
+			int priceEach1 = o1.getPrice() / o1.getAmount();
+			int priceEach2 = o2.getPrice() / o2.getAmount();
+			return priceEach2 - priceEach1;
 		}
+		ItemDef d1 = EntityHandler.getItemDef(o1.getAuctionID());
+		ItemDef d2 = EntityHandler.getItemDef(o2.getAuctionID());
+
+		return d1.getName().compareToIgnoreCase(d2.getName());
 	};
 	private String sortBy = "Price Down";
 	private double fee;
@@ -78,7 +74,7 @@ public final class AuctionHouse {
 		x = (mc.getGameWidth() / 2) - width;
 		y = (mc.getGameHeight() / 2) - height;
 
-		auctionItems = new ArrayList<AuctionItem>();
+		auctionItems = new ArrayList<>();
 
 		auctionMenu = new Panel(mc.getSurface(), 5);
 		myAuctions = new Panel(mc.getSurface(), 15);
@@ -180,8 +176,8 @@ public final class AuctionHouse {
 		int inventoryDrawX = x + 182;
 		int inventoryDrawY = y + 40;
 
-		int boxWidth = (int) (49);
-		int boxHeight = (int) (34);
+		int boxWidth = (49);
+		int boxHeight = (34);
 
 		// START RIGHT SIDE
 		graphics.drawBoxAlpha(x + 138, y + 37, 349, 251, 0, 60);
@@ -281,8 +277,8 @@ public final class AuctionHouse {
 							int itemID = mc.getInventoryItems()[inventorySlot];
 							int amount = mc.getInventoryCount(itemID);
 							if (itemID == 10 || EntityHandler.getItemDef(itemID).quest) {
-								mc.showMessage(false, (String) null, "This object cannot be added to auction", MessageType.GAME,
-									0, (String) null);
+								mc.showMessage(false, null, "This object cannot be added to auction", MessageType.GAME,
+									0, null);
 								return;
 							}
 							if (amount > 0) {
@@ -317,7 +313,7 @@ public final class AuctionHouse {
 				});
 			}
 
-			LinkedList<AuctionItem> filteredList = new LinkedList<AuctionItem>();
+			LinkedList<AuctionItem> filteredList = new LinkedList<>();
 			for (AuctionItem item : auctionItems) {
 				if (item.getSeller().equalsIgnoreCase(mc.getUsername())) {
 					filteredList.add(item);
@@ -340,7 +336,7 @@ public final class AuctionHouse {
 			int listStartPoint = myAuctions.getScrollPosition(myAuctionScrollHandle);
 			int listEndPoint = listStartPoint + 4;
 			for (int i = -1; i < filteredList.size(); i++) {
-				myAuctions.setListEntry(myAuctionScrollHandle, i + 1, "", 0, (String) null, (String) null);
+				myAuctions.setListEntry(myAuctionScrollHandle, i + 1, "", 0, null, null);
 				if (i < listStartPoint || i > listEndPoint)
 					continue;
 				AuctionItem ahItem = filteredList.get(i);
@@ -495,8 +491,8 @@ public final class AuctionHouse {
 		graphics.drawString(text, x + (width / 2 - graphics.stringWidth(1, text) / 2), y + height / 2 + 5, allColor, 1);
 	}
 
-	public void drawAuctionMenu(GraphicsController graphics) {
-		Collections.sort(auctionItems, auctionComparator);
+	private void drawAuctionMenu(GraphicsController graphics) {
+		auctionItems.sort(auctionComparator);
 		auctionMenu.clearList(auctionScrollHandle);
 
 		graphics.drawBoxAlpha(x + 2, y + 61, 81, 223 + 4, 0, 60);
@@ -616,11 +612,11 @@ public final class AuctionHouse {
 				} else if (orderingBy == 4) {
 					sortBy = "Price Each (up)";
 				}
-				Collections.sort(auctionItems, auctionComparator);
+				auctionItems.sort(auctionComparator);
 			}
 		});
 
-		LinkedList<AuctionItem> filteredList = new LinkedList<AuctionItem>();
+		LinkedList<AuctionItem> filteredList = new LinkedList<>();
 		for (AuctionItem item : auctionItems) {
 			ItemDef def = EntityHandler.getItemDef(item.getItemID());
 
@@ -714,8 +710,8 @@ public final class AuctionHouse {
 			auctionMenu.clearList(auctionScrollHandle);
 			auctionMenu.hide(textField_buyAmount);
 			auctionMenu.show(auctionScrollHandle);
-			int boxWidth = (int) (48);
-			int boxHeight = (int) (33);
+			int boxWidth = (48);
+			int boxHeight = (33);
 
 			int listX = x + 90;
 			int listY = y + 85;
@@ -735,7 +731,7 @@ public final class AuctionHouse {
 				if (i >= 500) {
 					break;
 				}
-				auctionMenu.setListEntry(auctionScrollHandle, i + 1, "", 0, (String) null, (String) null);
+				auctionMenu.setListEntry(auctionScrollHandle, i + 1, "", 0, null, null);
 
 				if (i < listStartPoint || i > listEndPoint)
 					continue;
@@ -878,7 +874,7 @@ public final class AuctionHouse {
 		auctionMenu.drawPanel();
 	}
 
-	public final String method74(int i) {
+	private String method74(int i) {
 		String s = String.valueOf(i);
 		for (int j = s.length() - 3; j > 0; j -= 3)
 			s = s.substring(0, j) + "," + s.substring(j);
@@ -948,7 +944,7 @@ public final class AuctionHouse {
 		mc.packetHandler.getClientStream().writeBuffer1.putInt(ahItem.getAuctionID());
 		mc.packetHandler.getClientStream().writeBuffer1.putInt(t);
 		mc.packetHandler.getClientStream().finishPacket();
-		if (t >= ahItem.getAmount() || ahItem.getAmount() <= 1 || ahItem.getSeller() == mc.getLocalPlayer().displayName) {
+		if (t >= ahItem.getAmount() || ahItem.getAmount() <= 1 || ahItem.getSeller().equals(mc.getLocalPlayer().displayName)) {
 			selectedAuction = -1;
 		}
 	}
@@ -1025,7 +1021,7 @@ public final class AuctionHouse {
 		return false;
 	}
 
-	public void updateTextFields(int amount, int price, int priceEach) {
+	private void updateTextFields(int amount, int price, int priceEach) {
 		myAuctions.setText(textField_price, "" + price);
 		myAuctions.setText(textField_priceEach, "" + priceEach);
 		myAuctions.setText(textField_amount, "" + amount);
@@ -1039,7 +1035,7 @@ public final class AuctionHouse {
 		auctionItems.add(new AuctionItem(auctionID, itemID, amount, price, seller, hoursLeft));
 	}
 
-	public void resetAllVariables() {
+	private void resetAllVariables() {
 		auctionMenu.clearList(auctionSearchHandle);
 		auctionMenu.resetScrollIndex(auctionScrollHandle);
 		myAuctions.resetScrollIndex(myAuctionScrollHandle);
@@ -1080,7 +1076,7 @@ class AuctionItem {
 	private String seller;
 	private int hoursLeft;
 
-	public AuctionItem(int auctionID, int itemID, int amount, int price, String seller2, int hoursLeft) {
+	AuctionItem(int auctionID, int itemID, int amount, int price, String seller2, int hoursLeft) {
 		this.auctionID = auctionID;
 		this.itemID = itemID;
 		this.amount = amount;
@@ -1089,7 +1085,7 @@ class AuctionItem {
 		this.hoursLeft = hoursLeft;
 	}
 
-	public int getAuctionID() {
+	int getAuctionID() {
 		return auctionID;
 	}
 
@@ -1113,11 +1109,11 @@ class AuctionItem {
 		this.amount = amount;
 	}
 
-	public int getPrice() {
+	int getPrice() {
 		return price;
 	}
 
-	public void setPrice(int price) {
+	void setPrice(int price) {
 		this.price = price;
 	}
 
@@ -1129,7 +1125,7 @@ class AuctionItem {
 		this.seller = seller;
 	}
 
-	public int getHoursLeft() {
+	int getHoursLeft() {
 		return hoursLeft;
 	}
 

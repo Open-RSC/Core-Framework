@@ -1,7 +1,7 @@
 package com.openrsc.server.content.market;
 
 public class MarketItem {
-	private static final int TIME_LIMIT = (60 * 60 * 24) * 1;
+	private static final int TIME_LIMIT = (60 * 60 * 24 * 5); // Number of hours an auction lasts until it expires - 5 days
 
 	private int auctionID, itemID, amount, amount_left, price;
 	private String buyers;
@@ -9,7 +9,7 @@ public class MarketItem {
 	private long time;
 	private String sellerName;
 
-	public MarketItem(int auctionID, int itemID, int amount, int amount_left, int price, int seller, String sellerName, String buyers, long t) {
+	MarketItem(int auctionID, int itemID, int amount, int amount_left, int price, int seller, String sellerName, String buyers, long t) {
 		this.auctionID = auctionID;
 		this.itemID = itemID;
 		this.amount = amount;
@@ -58,15 +58,14 @@ public class MarketItem {
 	}
 
 	public int getHoursLeft() {
-		int expireDate = (int) (time + TIME_LIMIT);
-		int curTime = (int) (System.currentTimeMillis() / 1000);
-		int timeDiff = (int) (expireDate - curTime);
+		long expireDate = (time + TIME_LIMIT);
+		long curTime = (System.currentTimeMillis() / 1000);
+		long timeDiff = (expireDate - curTime);
 
 		if (timeDiff < 0)
 			return 0;
 
-		int hoursLeft = timeDiff / 60 / 60;
-		return hoursLeft;
+		return (int) (timeDiff / 60 / 60); // Displays in hours the remaining time left on an auction
 	}
 
 	public int getItemID() {
@@ -101,7 +100,7 @@ public class MarketItem {
 		this.time = time;
 	}
 
-	public boolean hasExpired() {
+	boolean hasExpired() {
 		return getHoursLeft() <= 0;
 	}
 }

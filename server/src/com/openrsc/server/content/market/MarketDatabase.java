@@ -80,7 +80,7 @@ public class MarketDatabase {
 		databaseInstance.close();
 	}
 
-	public static int getAuctionCount() {
+	static int getAuctionCount() {
 		try {
 			PreparedStatement statement = databaseInstance
 				.prepareStatement("SELECT count(*) as auction_count FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX
@@ -120,15 +120,11 @@ public class MarketDatabase {
 			statement.setInt(1, auctionID);
 
 			ResultSet result = statement.executeQuery();
-			if (!result.next()) {
-				return null;
-			}
+			if (!result.next()) return null;
 
-			MarketItem auctionItem = new MarketItem(result.getInt("auctionID"), result.getInt("itemID"),
+			return new MarketItem(result.getInt("auctionID"), result.getInt("itemID"),
 				result.getInt("amount"), result.getInt("amount_left"), result.getInt("price"),
 				result.getInt("seller"), result.getString("seller_username"), result.getString("buyer_info"), result.getLong("time"));
-
-			return auctionItem;
 		} catch (SQLException e) {
 			LOGGER.catching(e);
 			e.printStackTrace();
@@ -136,9 +132,8 @@ public class MarketDatabase {
 		return null;
 	}
 
-	public static ArrayList<MarketItem> getAuctionItemsOnSale() {
-		ArrayList<MarketItem> auctionItems = new ArrayList<MarketItem>();
-
+	static ArrayList<MarketItem> getAuctionItemsOnSale() {
+		ArrayList<MarketItem> auctionItems = new ArrayList<>();
 		try {
 			PreparedStatement statement = databaseInstance
 				.prepareStatement("SELECT `auctionID`, `itemID`, `amount`, `amount_left`, `price`, `seller`, `seller_username`, `buyer_info`, `time` FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX
@@ -154,7 +149,6 @@ public class MarketDatabase {
 			LOGGER.catching(e);
 			e.printStackTrace();
 		}
-
 		return auctionItems;
 	}
 
@@ -195,7 +189,7 @@ public class MarketDatabase {
 	}
 
 	public static ArrayList<CollectableItem> getCollectableItemsFor(int player) {
-		ArrayList<CollectableItem> list = new ArrayList<CollectableItem>();
+		ArrayList<CollectableItem> list = new ArrayList<>();
 		try {
 			PreparedStatement statement = databaseInstance.prepareStatement("SELECT `claim_id`, `item_id`, `item_amount`, `playerID`, `explanation` FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX
 				+ "expired_auctions` WHERE `playerID` = ?  AND `claimed`= '0'");

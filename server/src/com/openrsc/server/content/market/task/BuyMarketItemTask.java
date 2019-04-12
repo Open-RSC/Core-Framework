@@ -23,7 +23,7 @@ public class BuyMarketItemTask extends MarketTask {
 	}
 
 	@Override
-	public void doTask() throws Exception {
+	public void doTask() {
 		MarketItem item = MarketDatabase.getAuctionItem(auctionID);
 
 		if (item == null) {
@@ -90,11 +90,8 @@ public class BuyMarketItemTask extends MarketTask {
 		item.setAmountLeft(item.getAmountLeft() - amount);
 		item.setPrice(item.getAmountLeft() * priceForEach);
 
-		if (item.getAmountLeft() == 0) {
-			MarketDatabase.setSoldOut(item);
-		} else {
-			MarketDatabase.update(item);
-		}
+		if (item.getAmountLeft() == 0) MarketDatabase.setSoldOut(item);
+		else MarketDatabase.update(item);
 		Market.getInstance().addRequestOpenAuctionHouseTask(playerBuyer);
 	}
 

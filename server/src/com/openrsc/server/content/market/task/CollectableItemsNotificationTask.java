@@ -18,19 +18,19 @@ public class CollectableItemsNotificationTask extends MarketTask {
 	}
 
 	@Override
-	public void doTask() throws Exception {
+	public void doTask() {
 		ArrayList<CollectableItem> list = MarketDatabase.getCollectableItemsFor(player.getDatabaseID());
-		String items = "Following items have been removed from market: % ";
+		StringBuilder items = new StringBuilder("Following items have been removed from market: % ");
 		for (CollectableItem item : list) {
 			ItemDefinition def = EntityHandler.getItemDef(item.item_id);
-			items += " @lre@" + def.getName() + " @whi@x @cya@" + item.item_amount + " " + item.explanation + "@whi@ %";
+			items.append(" @lre@").append(def.getName()).append(" @whi@x @cya@").append(item.item_amount).append(" ").append(item.explanation).append("@whi@ %");
 		}
-		items += "@gre@You can claim them back from Auctioneer";
+		items.append("@gre@You can claim them back from Auctioneer");
 
 		if (list.size() == 0) {
 			return;
 		}
-		ActionSender.sendBox(player, items, true);
+		ActionSender.sendBox(player, items.toString(), true);
 	}
 
 

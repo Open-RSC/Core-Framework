@@ -15,8 +15,8 @@ public class PacketBuilder {
 	 */
 	private static final int[] BIT_MASK_OUT = new int[32];
 
-	/**
-	 * Creates the bit mask array.
+	/*
+	  Creates the bit mask array.
 	 */
 	static {
 		for (int i = 0; i < BIT_MASK_OUT.length; i++) {
@@ -50,7 +50,6 @@ public class PacketBuilder {
 	 * Creates a packet builder with the specified opcode and type.
 	 *
 	 * @param opcode The opcode.
-	 * @param type   The type.
 	 */
 	public PacketBuilder(int opcode) {
 		this.opcode = opcode;

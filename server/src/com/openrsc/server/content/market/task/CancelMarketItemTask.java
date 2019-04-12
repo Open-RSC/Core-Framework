@@ -20,7 +20,7 @@ public class CancelMarketItemTask extends MarketTask {
 	}
 
 	@Override
-	public void doTask() throws Exception {
+	public void doTask() {
 		MarketItem item = MarketDatabase.getAuctionItem(auctionID);
 		if (item != null) {
 			int itemIndex = item.getItemID();
@@ -28,12 +28,9 @@ public class CancelMarketItemTask extends MarketTask {
 			ItemDefinition def = EntityHandler.getItemDef(itemIndex);
 			if (!owner.getInventory().full() && (!def.isStackable() && owner.getInventory().size() + amount <= 30)) {
 				if (MarketDatabase.cancel(item)) {
-					if (!def.isStackable()) {
-						for (int i = 0; i < amount; i++)
-							owner.getInventory().add(new Item(itemIndex, 1));
-					} else {
-						owner.getInventory().add(new Item(itemIndex, amount));
-					}
+					if (!def.isStackable()) for (int i = 0; i < amount; i++)
+						owner.getInventory().add(new Item(itemIndex, 1));
+					else owner.getInventory().add(new Item(itemIndex, amount));
 					ActionSender.sendBox(owner, "@gre@[Auction House - Success] % @whi@ The item has been canceled and returned to your inventory.", false);
 				}
 			} else if (!owner.getBank().full()) {
@@ -41,9 +38,8 @@ public class CancelMarketItemTask extends MarketTask {
 					owner.getBank().add(new Item(itemIndex, amount));
 					ActionSender.sendBox(owner, "@gre@[Auction House - Success] % @whi@ The item has been canceled and returned to your bank. % Talk with a Banker to collect your item(s).", false);
 				}
-			} else {
+			} else
 				ActionSender.sendBox(owner, "@red@[Auction House - Error] % @whi@ Unable to cancel auction! % % @red@Reason: @whi@No space left in your bank or inventory.", false);
-			}
 		}
 		Market.getInstance().addRequestOpenAuctionHouseTask(owner);
 	}
