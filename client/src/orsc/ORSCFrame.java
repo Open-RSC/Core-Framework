@@ -34,7 +34,6 @@ public class ORSCFrame extends ORSCApplet {
 			jframe.setLocationRelativeTo(null);
 			applet.init();
 			applet.start();
-			//jframe.add(applet);
 		});
 	}
 
@@ -44,11 +43,11 @@ public class ORSCFrame extends ORSCApplet {
 
 	@Override
 	public void playSound(byte[] soundData, int offset, int dataLength) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	@Override
 	public void stopSoundPlayer() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 }
