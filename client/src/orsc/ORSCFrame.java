@@ -25,7 +25,7 @@ public class ORSCFrame extends ORSCApplet {
 			jframe.setIconImage(Utils.getImage("icon.png").getImage());
 			jframe.setTitle(Config.WINDOW_TITLE);
 			jframe.getContentPane().add(applet);
-			jframe.setResizable(Config.allowResize1()); // true or false based on server sent config
+			jframe.setResizable(true); // true or false based on server sent config
 			jframe.setVisible(true);
 			//jframe.setAlwaysOnTop(true);
 			jframe.setBackground(Color.black);

@@ -1,13 +1,23 @@
 package com.loader.openrsc.frame;
 
 import com.loader.openrsc.Constants;
-import com.loader.openrsc.frame.elements.*;
+import com.loader.openrsc.frame.elements.ControlButton;
+import com.loader.openrsc.frame.elements.LaunchButton;
+import com.loader.openrsc.frame.elements.LinkButton;
+import com.loader.openrsc.frame.elements.LinkText;
+import com.loader.openrsc.frame.elements.RadioButton;
 import com.loader.openrsc.frame.listeners.PositionListener;
 import com.loader.openrsc.util.Utils;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.util.Random;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JProgressBar;
 
 public class AppFrame extends JFrame {
 	private static AppFrame instance;

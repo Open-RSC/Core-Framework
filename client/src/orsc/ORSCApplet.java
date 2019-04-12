@@ -1,24 +1,43 @@
 package orsc;
 
 import com.openrsc.client.model.Sprite;
+
+import java.applet.Applet;
+import java.awt.Color;
+import java.awt.Event;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.awt.image.BufferedImage;
+import java.awt.image.DirectColorModel;
+import java.awt.image.ImageConsumer;
+import java.awt.image.ImageObserver;
+import java.awt.image.ImageProducer;
+import java.io.ByteArrayInputStream;
+
+import javax.imageio.ImageIO;
+import javax.swing.SwingUtilities;
+
 import orsc.graphics.two.Fonts;
 import orsc.multiclient.ClientPort;
 import orsc.util.GenUtil;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.applet.Applet;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.*;
-import java.io.ByteArrayInputStream;
 
 import static orsc.Config.C_LAST_ZOOM;
 import static orsc.Config.S_ZOOM_VIEW_TOGGLE;
 
 public class ORSCApplet extends Applet implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener, ComponentListener,
 	ImageObserver, ImageProducer, ClientPort {
-
 	private static final long serialVersionUID = 1L;
 	public static int globalLoadingPercent = 0;
 	public static String globalLoadingState = "";
@@ -44,7 +63,6 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 	void addMouseClick(int button, int x, int y) {
 		try {
-
 		} catch (RuntimeException var6) {
 			throw GenUtil.makeThrowable(var6, "e.Q(" + x + ',' + "dummy" + ',' + button + ',' + y + ')');
 		}
@@ -52,7 +70,6 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 	private void drawCenteredString(Font var1, String str, int y, boolean var4, int x, Graphics g) {
 		try {
-
 			FontMetrics metrics = getFontMetrics(var1);
 			g.setFont(var1);
 			g.drawString(str, x - metrics.stringWidth(str) / 2, y + metrics.getHeight() / 4);
@@ -65,7 +82,6 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 	public final boolean drawLoading(int var1) {
 		try {
-
 			Graphics var2 = this.getGraphics();
 			if (var2 != null) {
 				this.loadingGraphics = var2.create();
@@ -74,9 +90,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 				this.loadingGraphics.fillRect(0, 0, this.width, this.height);
 				this.drawLoadingScreen("Loading...", 0, var1 ^ 103);
 				return true;
-			} else {
-				return false;
-			}
+			} else return false;
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "e.ME(" + var1 + ')');
 		}
@@ -94,31 +108,24 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 				int y = (this.height - 148) / 2;
 				this.loadingGraphics.setColor(Color.black);
 				this.loadingGraphics.fillRect(0, 0, this.width, this.height);
-				if (!this.m_hb) {
-					this.loadingGraphics.drawImage(this.loadingLogo, x, y, this);
-				}
+				if (!this.m_hb) this.loadingGraphics.drawImage(this.loadingLogo, x, y, this);
 
 				x += 2;
 				this.loadingPercent = percent;
 				y += 90;
 				this.loadingState = state;
-				if (var3 <= 97) {
-					this.mouseReleased((MouseEvent) null);
-				}
+				if (var3 <= 97) this.mouseReleased(null);
 
 				this.loadingGraphics.setColor(new Color(132, 132, 132));
-				if (this.m_hb) {
-					this.loadingGraphics.setColor(new Color(220, 0, 0));
-				}
+				if (this.m_hb) this.loadingGraphics.setColor(new Color(220, 0, 0));
 
 				this.loadingGraphics.drawRect(x - 2, y - 2, 280, 23);
 				this.loadingGraphics.fillRect(x, y, percent * 277 / 100, 20);
 				this.loadingGraphics.setColor(new Color(198, 198, 198));
-				if (this.m_hb) {
-					this.loadingGraphics.setColor(new Color(255, 255, 255));
-				}
+				if (this.m_hb) this.loadingGraphics.setColor(new Color(255, 255, 255));
 
 				this.drawCenteredString(this.loadingFont, state, 10 + y, true, 138 + x, this.loadingGraphics);
+
 				if (!this.m_hb) {
 					this.drawCenteredString(this.createdbyFont, "Powered by Open RSC", 30 + y, true,
 						x + 138, this.loadingGraphics);
@@ -134,11 +141,8 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 					this.loadingGraphics.setColor(Color.white);
 					this.drawCenteredString(this.createdbyFont, this.m_p, y - 120, true, x + 138, this.loadingGraphics);
 				}
-			} catch (Exception var6) {
-				;
+			} catch (Exception ignored) {
 			}
-
-
 		} catch (RuntimeException var7) {
 			throw GenUtil.makeThrowable(var7,
 				"e.FE(" + (state != null ? "{...}" : "null") + ',' + percent + ',' + var3 + ')');
@@ -148,98 +152,48 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	@Override
 	public final synchronized void keyPressed(KeyEvent var1) {
 		try {
-
-			this.updateControlShiftState((InputEvent) var1);
+			this.updateControlShiftState(var1);
 			char keyChar = var1.getKeyChar();
 			int keyCode = var1.getKeyCode();
-			mudclient.handleKeyPress((byte) 126, (int) keyChar);
-			if (keyCode == 112) {
-				mudclient.interlace = !mudclient.interlace;
-			}
-			if (keyCode == 113) {
-				Config.C_SIDE_MENU_OVERLAY = !Config.C_SIDE_MENU_OVERLAY;
-			}
-
-			// if ((char) keyChar != 78 && (char) keyChar != 77) {
-			// ;
-			// }
-			//
-			// if ((char) keyChar == 32) {
-			// ;
-			// }
-			//
-			// if ((char) keyChar != 123) {
-			// ;
-			// }
-
-			mudclient.lastMouseAction = 0;
-			// if ((char) keyChar != 110 && (char) keyChar != 109) {
-			// ;
-			// }
-			//
-			// if (keyCode != 40) {
-			// ;
-			// }
-
-			if (keyCode == 39) {
-				mudclient.keyRight = true;
-			}
-
-			// if ((char) keyChar == 125) {
-			// ;
-			// }
-			//
-			// if (keyCode == 38) {
-			// ;
-			// }
-
-			if (keyCode == 37) {
-				mudclient.keyLeft = true;
-			}
-
-			if (keyCode == KeyEvent.VK_UP)
-				mudclient.keyUp = true;
-			if (keyCode == KeyEvent.VK_DOWN)
-				mudclient.keyDown = true;
-			if (keyCode == KeyEvent.VK_PAGE_DOWN)
-				mudclient.pageDown = true;
-			if (keyCode == KeyEvent.VK_PAGE_UP)
-				mudclient.pageUp = true;
-
 			boolean hitInputFilter = false;
+			mudclient.handleKeyPress((byte) 126, (int) keyChar);
+			mudclient.lastMouseAction = 0;
 
-			for (int var5 = 0; var5 < Fonts.inputFilterChars.length(); ++var5) {
+			if (keyCode == 112) mudclient.interlace = !mudclient.interlace;
+			if (keyCode == 113) Config.C_SIDE_MENU_OVERLAY = !Config.C_SIDE_MENU_OVERLAY;
+			if (keyCode == 39) mudclient.keyRight = true;
+			if (keyCode == 37) mudclient.keyLeft = true;
+			if (keyCode == KeyEvent.VK_UP) mudclient.keyUp = true;
+			if (keyCode == KeyEvent.VK_DOWN) mudclient.keyDown = true;
+			if (keyCode == KeyEvent.VK_PAGE_DOWN) mudclient.pageDown = true;
+			if (keyCode == KeyEvent.VK_PAGE_UP) mudclient.pageUp = true;
+
+			for (int var5 = 0; var5 < Fonts.inputFilterChars.length(); ++var5)
 				if (Fonts.inputFilterChars.charAt(var5) == keyChar) {
 					hitInputFilter = true;
 					break;
 				}
-			}
 
-			if (hitInputFilter && mudclient.inputTextCurrent.length() < 20) {
-				mudclient.inputTextCurrent = mudclient.inputTextCurrent + (char) keyChar;
-			}
+			if (hitInputFilter && mudclient.inputTextCurrent.length() < 20)
+				mudclient.inputTextCurrent = mudclient.inputTextCurrent + keyChar;
 
-			if (hitInputFilter && mudclient.chatMessageInput.length() < 80) {
-				mudclient.chatMessageInput = mudclient.chatMessageInput + (char) keyChar;
-			}
+			if (hitInputFilter && mudclient.chatMessageInput.length() < 80)
+				mudclient.chatMessageInput = mudclient.chatMessageInput + keyChar;
 
 			// Backspace
-			if (keyChar == '\b' && mudclient.inputTextCurrent.length() > 0) {
+			if (keyChar == '\b' && mudclient.inputTextCurrent.length() > 0)
 				mudclient.inputTextCurrent = mudclient.inputTextCurrent.substring(0,
 					mudclient.inputTextCurrent.length() - 1);
-			}
 
 			// Backspace
-			if (keyChar == '\b' && mudclient.chatMessageInput.length() > 0) {
+			if (keyChar == '\b' && mudclient.chatMessageInput.length() > 0)
 				mudclient.chatMessageInput = mudclient.chatMessageInput.substring(0,
 					mudclient.chatMessageInput.length() - 1);
-			}
 
 			if (keyChar == '\n' || keyChar == '\r') {
 				mudclient.inputTextFinal = mudclient.inputTextCurrent;
 				mudclient.chatMessageInputCommit = mudclient.chatMessageInput;
 			}
-
 		} catch (RuntimeException var6) {
 			throw GenUtil.makeThrowable(var6, "e.keyPressed(" + (var1 != null ? "{...}" : "null") + ')');
 		}
@@ -248,53 +202,16 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	@Override
 	public final synchronized void keyReleased(KeyEvent var1) {
 		try {
-			updateControlShiftState((InputEvent) var1);
-
+			updateControlShiftState(var1);
 			char c = var1.getKeyChar();
 			int keyCode = var1.getKeyCode();
-			if ((char) c != 32) {
-				;
-			}
 
-			if (keyCode == 40) {
-				;
-			}
-
-			if ((char) c != 78 && (char) c != 77) {
-				;
-			}
-
-			if (keyCode == 39) {
-				mudclient.keyRight = false;
-			}
-
-			if ((char) c != 110 && (char) c != 109) {
-				;
-			}
-
-			if ((char) c != 123) {
-				;
-			}
-
-			if (keyCode == 37) {
-				mudclient.keyLeft = false;
-			}
-			if (keyCode == KeyEvent.VK_UP)
-				mudclient.keyUp = false;
-			if (keyCode == KeyEvent.VK_DOWN)
-				mudclient.keyDown = false;
-			if (keyCode == KeyEvent.VK_PAGE_DOWN)
-				mudclient.pageDown = false;
-			if (keyCode == KeyEvent.VK_PAGE_UP)
-				mudclient.pageUp = false;
-
-			if (keyCode == 38) {
-				;
-			}
-
-			if ((char) c == 125) {
-				;
-			}
+			if (keyCode == 39) mudclient.keyRight = false;
+			if (keyCode == 37) mudclient.keyLeft = false;
+			if (keyCode == KeyEvent.VK_UP) mudclient.keyUp = false;
+			if (keyCode == KeyEvent.VK_DOWN) mudclient.keyDown = false;
+			if (keyCode == KeyEvent.VK_PAGE_DOWN) mudclient.pageDown = false;
+			if (keyCode == KeyEvent.VK_PAGE_UP) mudclient.pageUp = false;
 
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "e.keyReleased(" + (var1 != null ? "{...}" : "null") + ')');
@@ -304,8 +221,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	@Override
 	public final void keyTyped(KeyEvent var1) {
 		try {
-
-			updateControlShiftState((InputEvent) var1);
+			updateControlShiftState(var1);
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "e.keyTyped(" + (var1 != null ? "{...}" : "null") + ')');
 		}
@@ -314,8 +230,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	@Override
 	public final void mouseClicked(MouseEvent var1) {
 		try {
-
-			updateControlShiftState((InputEvent) var1);
+			updateControlShiftState(var1);
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "e.mouseClicked(" + (var1 != null ? "{...}" : "null") + ')');
 		}
@@ -324,17 +239,12 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	@Override
 	public final synchronized void mouseDragged(MouseEvent var1) {
 		try {
-			updateControlShiftState((InputEvent) var1);
-
-
+			updateControlShiftState(var1);
 			mudclient.mouseX = var1.getX() - mudclient.screenOffsetX;
 			mudclient.mouseY = var1.getY() - mudclient.screenOffsetY;
-			if (SwingUtilities.isRightMouseButton(var1)) {
-				mudclient.currentMouseButtonDown = 2;
-			} else {
-				mudclient.currentMouseButtonDown = 1;
-			}
 
+			if (SwingUtilities.isRightMouseButton(var1)) mudclient.currentMouseButtonDown = 2;
+			else mudclient.currentMouseButtonDown = 1;
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "e.mouseDragged(" + (var1 != null ? "{...}" : "null") + ')');
 		}
@@ -343,8 +253,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	@Override
 	public final void mouseEntered(MouseEvent var1) {
 		try {
-			updateControlShiftState((InputEvent) var1);
-
+			updateControlShiftState(var1);
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "e.mouseEntered(" + (var1 != null ? "{...}" : "null") + ')');
 		}
@@ -353,8 +262,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	@Override
 	public final void mouseExited(MouseEvent var1) {
 		try {
-
-			updateControlShiftState((InputEvent) var1);
+			updateControlShiftState(var1);
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "e.mouseExited(" + (var1 != null ? "{...}" : "null") + ')');
 		}
@@ -363,8 +271,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	@Override
 	public final synchronized void mouseMoved(MouseEvent var1) {
 		try {
-			updateControlShiftState((InputEvent) var1);
-
+			updateControlShiftState(var1);
 			mudclient.mouseX = var1.getX() - mudclient.screenOffsetX;
 			mudclient.mouseY = var1.getY() - mudclient.screenOffsetY;
 			mudclient.lastMouseAction = 0;
@@ -376,17 +283,13 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 	@Override
 	public final synchronized void mousePressed(MouseEvent var1) {
-
 		try {
-			updateControlShiftState((InputEvent) var1);
-
+			updateControlShiftState(var1);
 			mudclient.mouseX = var1.getX() - mudclient.screenOffsetX;
 			mudclient.mouseY = var1.getY() - mudclient.screenOffsetY;
-			if (!SwingUtilities.isRightMouseButton(var1)) {
-				mudclient.currentMouseButtonDown = 1;
-			} else {
-				mudclient.currentMouseButtonDown = 2;
-			}
+
+			if (!SwingUtilities.isRightMouseButton(var1)) mudclient.currentMouseButtonDown = 1;
+			else mudclient.currentMouseButtonDown = 2;
 
 			mudclient.lastMouseButtonDown = mudclient.currentMouseButtonDown;
 			mudclient.lastMouseAction = 0;
@@ -399,8 +302,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	@Override
 	public final synchronized void mouseReleased(MouseEvent var1) {
 		try {
-
-			updateControlShiftState((InputEvent) var1);
+			updateControlShiftState(var1);
 			mudclient.mouseX = var1.getX() - mudclient.screenOffsetX;
 			mudclient.mouseY = var1.getY() - mudclient.screenOffsetY;
 			mudclient.currentMouseButtonDown = 0;
@@ -411,29 +313,27 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 	@Override
 	public final synchronized void mouseWheelMoved(MouseWheelEvent e) {
-		updateControlShiftState((InputEvent) e);
+		updateControlShiftState(e);
 		mudclient.runScroll(e.getWheelRotation());
 		if (mudclient.showUiTab == 0 && (S_ZOOM_VIEW_TOGGLE || mudclient.getLocalPlayer().isStaff())) {
 			final int maxHeight = 1000;
 			final int minHeight = 500;
 			final int zoomIncrement = 20;
 			e.consume();
-			if (e.getWheelRotation() == +1) {// Out
+			// Out
+			if (e.getWheelRotation() == +1)
 				if (mudclient.cameraZoom <= maxHeight) { //1 Recommended Value
 					mudclient.cameraZoom += zoomIncrement; //This is how much it decrements.
 					C_LAST_ZOOM = mudclient.cameraZoom / 10;
 					mudclient.saveZoomDistance();
-				} else {
-					return;
-				}
-			}
-			if (e.getWheelRotation() == -1) {// In
+				} else return;
+			// In
+			if (e.getWheelRotation() == -1)
 				if (mudclient.cameraZoom >= minHeight) { //1 Recommended Value
 					mudclient.cameraZoom -= zoomIncrement; //This is how much it decrements.
 					C_LAST_ZOOM = mudclient.cameraZoom / 10;
 					mudclient.saveZoomDistance();
 				}
-			}
 		}
 	}
 
@@ -442,9 +342,8 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 		try {
 			if (mudclient != null) {
 				mudclient.rendering = true;
-				if (mudclient.getGameState() == 2 && this.loadingLogo != null) {
+				if (mudclient.getGameState() == 2 && this.loadingLogo != null)
 					this.drawLoadingScreen(this.loadingState, this.loadingPercent, 126);
-				}
 			}
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "e.paint(" + (var1 != null ? "{...}" : "null") + ')');
@@ -466,16 +365,12 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 				y += 90;
 				int progress = percent * 277 / 100;
 				this.loadingGraphics.setColor(new Color(132, 132, 132));
-				if (this.m_hb) {
-					this.loadingGraphics.setColor(new Color(220, 0, 0));
-				}
+				if (this.m_hb) this.loadingGraphics.setColor(new Color(220, 0, 0));
 				this.loadingGraphics.fillRect(x, y, progress, 20);
 				this.loadingGraphics.setColor(Color.black);
 				this.loadingGraphics.fillRect(progress + x, y, 277 - progress, 20);
 				this.loadingGraphics.setColor(new Color(198, 198, 198));
-				if (this.m_hb) {
-					this.loadingGraphics.setColor(new Color(255, 255, 255));
-				}
+				if (this.m_hb) this.loadingGraphics.setColor(new Color(255, 255, 255));
 				this.drawCenteredString(this.loadingFont, state, 10 + y, true, 138 + x, this.loadingGraphics);
 			} catch (Exception ignored) {
 			}
@@ -546,8 +441,8 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 				return;
 			mudclient.controlPressed = (mod & Event.CTRL_MASK) != 0;
 			mudclient.shiftPressed = (mod & Event.SHIFT_MASK) != 0;
-		} catch (RuntimeException var4) {
-			throw GenUtil.makeThrowable(var4, "e.SE(" + (var1 != null ? "{...}" : "null") + ',' + "dummy" + ')');
+		} catch (RuntimeException e) {
+			throw GenUtil.makeThrowable(e, "e.SE(" + (var1 != null ? "{...}" : "null") + ',' + "dummy" + ')');
 		}
 	}
 
@@ -586,7 +481,6 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 	@Override
 	public void crashed() {
-
 	}
 
 	@Override
@@ -655,7 +549,6 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	public void initGraphics() {
 		int width = mudclient.getSurface().width2;
 		int height = mudclient.getSurface().height2;
-
 		if (width > 1 && height > 1) {
 			this.imageModel = new DirectColorModel(32, 16711680, '\uff00', 255);
 			this.backingImage = createImage(this);
@@ -670,7 +563,6 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 	private synchronized void commitToImage(boolean var1) {
 		try {
-
 			if (null != this.imageProducer) {
 				this.imageProducer.setPixels(0, 0, mudclient.getSurface().width2, mudclient.getSurface().height2,
 					this.imageModel, mudclient.getSurface().pixelData, 0, mudclient.getSurface().width2);
@@ -685,7 +577,6 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	public void addConsumer(ImageConsumer arg0) {
 		try {
 			this.imageProducer = arg0;
-
 			arg0.setDimensions(mudclient.getSurface().width2, mudclient.getSurface().height2);
 			arg0.setProperties(null);
 			arg0.setColorModel(this.imageModel);
@@ -702,15 +593,12 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 	@Override
 	public void removeConsumer(ImageConsumer arg0) {
-		if (this.imageProducer == arg0) {
-			this.imageProducer = null;
-		}
+		if (this.imageProducer == arg0) this.imageProducer = null;
 	}
 
 	@Override
 	public void requestTopDownLeftRightResend(ImageConsumer arg0) {
 		try {
-
 			System.out.println("TDLR");
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3,
@@ -753,18 +641,15 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	public Sprite getSpriteFromByteArray(ByteArrayInputStream byteArrayInputStream) {
 		try {
 			BufferedImage image = ImageIO.read(byteArrayInputStream);
-
 			int captchaWidth = image.getWidth();
 			int captchaHeight = image.getHeight();
 
 			int[] pixels = new int[image.getWidth() * image.getHeight()];
-
-			for (int y = 0; y < image.getHeight(); y++) {
+			for (int y = 0; y < image.getHeight(); y++)
 				for (int x = 0; x < image.getWidth(); x++) {
 					int rgb = image.getRGB(x, y);
 					pixels[x + y * image.getWidth()] = rgb;
 				}
-			}
 
 			Sprite sprite = new Sprite(pixels, captchaWidth, captchaHeight);
 			sprite.setSomething(captchaWidth, captchaHeight);
@@ -779,17 +664,15 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 	@Override
 	public void drawKeyboard() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void playSound(byte[] soundData, int offset, int dataLength) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	@Override
 	public void stopSoundPlayer() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 }
