@@ -89,8 +89,7 @@ backup:
 	docker exec mysql mysqldump -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${MARIADB_DATABASE} --single-transaction --quick --lock-tables=false | sudo zip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d-%H%M-%Z"`.zip
 
 update-laravel:
-	sudo docker exec -i php bash -c "cd /var/www/html/openrsc-web && composer install && php artisan key:generate"
-	sudo chmod -R 777 Website/openrsc-web
+	docker exec -i php bash -c "cd /var/www/html/openrsc_web && composer install && php artisan key:generate"
 
 clear-old-backups:
 	sudo find $(MYSQL_DUMPS_DIR)/*.zip -mtime +30 -exec rm -f {} \;
