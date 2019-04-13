@@ -17,10 +17,6 @@ trim_trailing_whitespace = false
 indent_size = 2
 
 # 4 space indentation
-[*.py]
-indent_style = space
-indent_size = 2
-
 
 [*.java]
 indent_style = tab
