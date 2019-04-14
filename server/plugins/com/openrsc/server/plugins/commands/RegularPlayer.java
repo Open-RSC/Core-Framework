@@ -58,9 +58,18 @@ public final class RegularPlayer implements CommandListener {
 				player.message(messagePrefix + "Invalid bank pin");
 				return;
 			}
-
+			try {
+				PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM openrsc_players WHERE `username`=?");
+				statement.setString(1, player.getUsername());
+				ResultSet result = statement.executeQuery();
+				if (result.next()) {
+					bankPin = DataConversions.hashPassword(bankPin, result.getString("salt"));
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 			p.getCache().store("bank_pin", bankPin);
-			ActionSender.sendBox(p, messagePrefix + "Your new bank pin is " + bankPin, false);
+			//ActionSender.sendBox(p, messagePrefix + "Your new bank pin is " + bankPin, false);
 			player.message(messagePrefix + p.getUsername() + "'s bank pin has been changed");
 		}
 		else if (cmd.equalsIgnoreCase("wilderness")) {

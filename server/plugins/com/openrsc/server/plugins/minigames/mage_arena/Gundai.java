@@ -11,6 +11,12 @@ import com.openrsc.server.plugins.listeners.executive.NpcCommandExecutiveListene
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
+import com.openrsc.server.sql.DatabaseConnection;
+import com.openrsc.server.util.rsc.DataConversions;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -30,6 +36,16 @@ public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, Np
 						String pin = getBankPinInput(p);
 						if (pin == null) {
 							return;
+						}
+						try {
+							PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM openrsc_players WHERE `username`=?");
+							statement.setString(1, p.getUsername());
+							ResultSet result = statement.executeQuery();
+							if (result.next()) {
+								pin = DataConversions.hashPassword(pin, result.getString("salt"));
+							}
+						} catch (SQLException e) {
+							e.printStackTrace();
 						}
 						if (!p.getCache().getString("bank_pin").equals(pin)) {
 							ActionSender.sendBox(p, "Incorrect bank pin", false);
@@ -54,8 +70,19 @@ public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, Np
 							if (bankPin == null) {
 								return;
 							}
-							p.getCache().store("bank_pin", bankPin);
-							ActionSender.sendBox(p, "Your new bank pin is " + bankPin, false);
+							try {
+								PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM openrsc_players WHERE `username`=?");
+								statement.setString(1, p.getUsername());
+								ResultSet result = statement.executeQuery();
+								if (result.next()) {
+									bankPin = DataConversions.hashPassword(bankPin, result.getString("salt"));
+									p.getCache().store("bank_pin", bankPin);
+									//ActionSender.sendBox(p, "Your new bank pin is " + bankPin, false);
+								}
+							} catch (SQLException e) {
+								e.printStackTrace();
+							}
+
 						}
 					} else if (menu == 1) {
 						if (p.getCache().hasKey("bank_pin")) {
@@ -63,13 +90,33 @@ public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, Np
 							if (bankPin == null) {
 								return;
 							}
+							try {
+								PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM openrsc_players WHERE `username`=?");
+								statement.setString(1, p.getUsername());
+								ResultSet result = statement.executeQuery();
+								if (result.next()) {
+									bankPin = DataConversions.hashPassword(bankPin, result.getString("salt"));
+								}
+							} catch (SQLException e) {
+								e.printStackTrace();
+							}
 							if (!p.getCache().getString("bank_pin").equals(bankPin)) {
 								ActionSender.sendBox(p, "Incorrect bank pin", false);
 								return;
 							}
 							String changeTo = getBankPinInput(p);
+							try {
+								PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM openrsc_players WHERE `username`=?");
+								statement.setString(1, p.getUsername());
+								ResultSet result = statement.executeQuery();
+								if (result.next()) {
+									changeTo = DataConversions.hashPassword(changeTo, result.getString("salt"));
+								}
+							} catch (SQLException e) {
+								e.printStackTrace();
+							}
 							p.getCache().store("bank_pin", changeTo);
-							ActionSender.sendBox(p, "Your new bank pin is " + bankPin, false);
+							//ActionSender.sendBox(p, "Your new bank pin is " + bankPin, false);
 						} else {
 							p.message("You don't have a bank pin");
 						}
@@ -103,6 +150,16 @@ public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, Np
 							String pin = getBankPinInput(p);
 							if (pin == null) {
 								return;
+							}
+							try {
+								PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM openrsc_players WHERE `username`=?");
+								statement.setString(1, p.getUsername());
+								ResultSet result = statement.executeQuery();
+								if (result.next()) {
+									pin = DataConversions.hashPassword(pin, result.getString("salt"));
+								}
+							} catch (SQLException e) {
+								e.printStackTrace();
 							}
 							if (!p.getCache().getString("bank_pin").equals(pin)) {
 								ActionSender.sendBox(p, "Incorrect bank pin", false);
@@ -159,6 +216,16 @@ public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, Np
 				String pin = getBankPinInput(player);
 				if (pin == null) {
 					return;
+				}
+				try {
+					PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM openrsc_players WHERE `username`=?");
+					statement.setString(1, player.getUsername());
+					ResultSet result = statement.executeQuery();
+					if (result.next()) {
+						pin = DataConversions.hashPassword(pin, result.getString("salt"));
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
 				}
 				if (!player.getCache().getString("bank_pin").equals(pin)) {
 					ActionSender.sendBox(player, "Incorrect bank pin", false);

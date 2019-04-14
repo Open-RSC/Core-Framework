@@ -9,6 +9,12 @@ import com.openrsc.server.plugins.listeners.action.NpcCommandListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.NpcCommandExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.sql.DatabaseConnection;
+import com.openrsc.server.util.rsc.DataConversions;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -61,6 +67,16 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 				if (pin == null) {
 					return;
 				}
+				try {
+						PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM openrsc_players WHERE `username`=?");
+						statement.setString(1, player.getUsername());
+						ResultSet result = statement.executeQuery();
+						if (result.next()) {
+							pin = DataConversions.hashPassword(pin, result.getString("salt"));
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
 				if (!player.getCache().getString("bank_pin").equals(pin)) {
 					ActionSender.sendBox(player, "Incorrect bank pin", false);
 					return;
@@ -92,8 +108,18 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 					if (bankPin == null) {
 						return;
 					}
-					player.getCache().store("bank_pin", bankPin);
-					ActionSender.sendBox(player, "Your new bank pin is " + bankPin, false);
+					try {
+						PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM openrsc_players WHERE `username`=?");
+						statement.setString(1, player.getUsername());
+						ResultSet result = statement.executeQuery();
+						if (result.next()) {
+							bankPin = DataConversions.hashPassword(bankPin, result.getString("salt"));
+							player.getCache().store("bank_pin", bankPin);
+							//ActionSender.sendBox(player, "Your new bank pin is " + bankPin, false);
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
 				}
 			} else if (bankPinMenu == 1) {
 				if (player.getCache().hasKey("bank_pin")) {
@@ -101,13 +127,35 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 					if (bankPin == null) {
 						return;
 					}
+					try {
+						PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM openrsc_players WHERE `username`=?");
+						statement.setString(1, player.getUsername());
+						ResultSet result = statement.executeQuery();
+						if (result.next()) {
+							bankPin = DataConversions.hashPassword(bankPin, result.getString("salt"));
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
 					if (!player.getCache().getString("bank_pin").equals(bankPin)) {
 						ActionSender.sendBox(player, "Incorrect bank pin", false);
 						return;
 					}
 					String changeTo = getBankPinInput(player);
-					player.getCache().store("bank_pin", changeTo);
-					ActionSender.sendBox(player, "Your new bank pin is " + changeTo, false);
+					try {
+						PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM openrsc_players WHERE `username`=?");
+						statement.setString(1, player.getUsername());
+						ResultSet result = statement.executeQuery();
+						if (result.next()) {
+							changeTo = DataConversions.hashPassword(changeTo, result.getString("salt"));
+							player.getCache().store("bank_pin", changeTo);
+							//ActionSender.sendBox(player, "Your new bank pin is " + changeTo, false);
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+
+
 				} else {
 					player.message("You don't have a bank pin");
 				}
@@ -116,6 +164,16 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 					String bankPin = getBankPinInput(player);
 					if (bankPin == null) {
 						return;
+					}
+					try {
+						PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM openrsc_players WHERE `username`=?");
+						statement.setString(1, player.getUsername());
+						ResultSet result = statement.executeQuery();
+						if (result.next()) {
+							bankPin = DataConversions.hashPassword(bankPin, result.getString("salt"));
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
 					}
 					if (!player.getCache().getString("bank_pin").equals(bankPin)) {
 						ActionSender.sendBox(player, "Incorrect bank pin", false);
@@ -189,6 +247,16 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 			String pin = getBankPinInput(player);
 			if (pin == null) {
 				return;
+			}
+			try {
+				PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM openrsc_players WHERE `username`=?");
+				statement.setString(1, player.getUsername());
+				ResultSet result = statement.executeQuery();
+				if (result.next()) {
+					pin = DataConversions.hashPassword(pin, result.getString("salt"));
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 			if (!player.getCache().getString("bank_pin").equals(pin)) {
 				ActionSender.sendBox(player, "Incorrect bank pin", false);
