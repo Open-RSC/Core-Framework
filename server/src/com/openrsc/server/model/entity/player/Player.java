@@ -2052,7 +2052,7 @@ public final class Player extends Mob {
 		if (getCache().hasKey("setting_last_zoom")) {
 			return getCache().getInt("setting_last_zoom");
 		}
-		return 75;
+		return 63;
 	}
 
 	public int getFontSize() {
