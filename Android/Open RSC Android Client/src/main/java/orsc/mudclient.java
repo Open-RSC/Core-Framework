@@ -360,6 +360,7 @@ public final class mudclient implements Runnable {
     private int cameraRotationX = 0;
     private int cameraRotationZ = 0;
     public int cameraZoom = 750;
+	public int minCameraZoom = 500;
     private int characterBubbleCount = 0;
     private int[] characterBubbleID = new int[150];
     private int characterDialogCount = 0;
@@ -3853,15 +3854,15 @@ public final class mudclient implements Runnable {
                             this.scene.removeModel(this.world.modelRoofGrid[1][centerX]);
                             this.scene.removeModel(this.world.modelWallGrid[2][centerX]);
                             this.scene.removeModel(this.world.modelRoofGrid[2][centerX]);
-                        }
+						}
 
-						/*if (!this.doCameraZoom) {
-							amountToZoom -= 200;
+						if (!this.doCameraZoom) {
+							amountToZoom -= 50;
 							this.doCameraZoom = true;
-						}*/
+						}
 
-                        // Sets camera zoom distance based on last saved value in the player cache
-                        cameraZoom = Config.C_LAST_ZOOM * 10;
+						// Sets camera zoom distance based on last saved value in the player cache
+						cameraZoom = minCameraZoom + (Config.C_LAST_ZOOM * 4);
 
                         if (this.lastHeightOffset == 0
                                 && (world.collisionFlags[this.localPlayer.currentX / 128][this.localPlayer.currentZ
@@ -3876,12 +3877,12 @@ public final class mudclient implements Runnable {
                                 this.scene.addModel(this.world.modelRoofGrid[2][centerX]);
                             }
 
-							/*if (this.doCameraZoom) {
-								amountToZoom += 200;
+							if (this.doCameraZoom) {
+								amountToZoom += 50;
 								this.doCameraZoom = false;
-							}*/
-                        }
-                    }
+							}
+						}
+					}
 
                     if (this.objectAnimationNumberFireLightningSpell != this.lastObjectAnimationNumberFireLightningSpell) {
                         this.lastObjectAnimationNumberFireLightningSpell = this.objectAnimationNumberFireLightningSpell;
@@ -4243,6 +4244,8 @@ public final class mudclient implements Runnable {
                         this.getSurface().drawString(
                                 "Fatigue: " + this.statFatigue + "%", 7, i, 0xffffff, 1);
                         i += 14;
+						this.getSurface().drawString("Camera Zoom: " + cameraZoom, 7, i, 0xffffff, 1);
+						i += 14;
                         this.getSurface().drawString("Camera Pitch: " + cameraPitch, 7, i, 0xffffff, 1);
                     }
 
@@ -9204,30 +9207,20 @@ public final class mudclient implements Runnable {
                         this.cameraRotation = 255 & this.cameraRotation - 2;
                     } else if (this.keyDown) {
                         if (S_ZOOM_VIEW_TOGGLE || getLocalPlayer().isStaff()) {
-                            final int maxHeight = 1000;
-                            if (cameraZoom < maxHeight) {
-                                if (cameraZoom + 4 > maxHeight)
-                                    cameraZoom = maxHeight;
-                                else
-                                    cameraZoom += 10;
-                            }
-                            C_LAST_ZOOM = this.cameraZoom / 10;
-                            saveZoomDistance();
-                        } else {
-                            if (this.cameraAllowPitchModification) {
-                                this.cameraPitch = (this.cameraPitch + 4) & 1023;
-                            }
-                        }
-                    } else if (this.keyUp) {
-                        if (S_ZOOM_VIEW_TOGGLE || getLocalPlayer().isStaff()) {
-                            final int minHeight = 500;
-                            if (cameraZoom > minHeight) {
-                                if (cameraZoom - 4 < minHeight)
-                                    cameraZoom = minHeight;
-                                else
-                                    cameraZoom -= 10;
-                            }
-                            C_LAST_ZOOM = this.cameraZoom / 10;
+							if (C_LAST_ZOOM < 128 || (C_LAST_ZOOM < 255 && getLocalPlayer().isStaff())) {
+								C_LAST_ZOOM++;
+							}
+							saveZoomDistance();
+						} else {
+							if (this.cameraAllowPitchModification) {
+								this.cameraPitch = (this.cameraPitch + 4) & 1023;
+							}
+						}
+					} else if (this.keyUp) {
+						if (S_ZOOM_VIEW_TOGGLE || getLocalPlayer().isStaff()) {
+							if (C_LAST_ZOOM > 0) {
+								C_LAST_ZOOM--;
+							}
                             saveZoomDistance();
                         } else {
                             if (this.cameraAllowPitchModification) {
@@ -9260,14 +9253,14 @@ public final class mudclient implements Runnable {
                         ++this.mouseClickXStep;
                     }
 
-                    if (amountToZoom > 0) {
-                        cameraZoom += 4;
-                        amountToZoom -= 4;
-                    }
-                    if (amountToZoom < 0) {
-                        cameraZoom -= 4;
-                        amountToZoom += 4;
-                    }
+					if (amountToZoom > 0) {
+						minCameraZoom += 4;
+						amountToZoom -= 1;
+					}
+					if (amountToZoom < 0) {
+						minCameraZoom -= 4;
+						amountToZoom += 1;
+					}
 
                     this.scene.d(25013, 17);
                     ++this.objectAnimationCount;
@@ -9346,13 +9339,12 @@ public final class mudclient implements Runnable {
     }
 
     public void saveZoomDistance() {
-        // Saves last zoom distance
-        int lastCameraZoom = this.cameraZoom / 10;
-        this.packetHandler.getClientStream().newPacket(111);
-        this.packetHandler.getClientStream().writeBuffer1.putByte(23);
-        this.packetHandler.getClientStream().writeBuffer1.putByte(lastCameraZoom);
-        this.packetHandler.getClientStream().finishPacket();
-        //System.out.println(cameraZoom);
+		// Saves last zoom distance
+		this.packetHandler.getClientStream().newPacket(111);
+		this.packetHandler.getClientStream().writeBuffer1.putByte(23);
+		this.packetHandler.getClientStream().writeBuffer1.putByte(Config.C_LAST_ZOOM);
+		this.packetHandler.getClientStream().finishPacket();
+		//System.out.println(cameraZoom);
     }
 
     public final void handleKeyPress(byte var1, int key) {
