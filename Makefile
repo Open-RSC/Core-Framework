@@ -76,14 +76,38 @@ fix-mariadb-permissions-windows:
 logs:
 	@docker-compose logs -f
 
-backup:
+backup-openrsc:
 	@mkdir -p $(MYSQL_DUMPS_DIR)
 	sudo chmod -R 777 $(MYSQL_DUMPS_DIR)
 	sudo chmod 644 etc/mariadb/innodb.cnf
-	docker exec mysql mysqldump -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${MARIADB_DATABASE} --single-transaction --quick --lock-tables=false | sudo zip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d-%H%M-%Z"`.zip
+	docker exec mysql mysqldump -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} openrsc --single-transaction --quick --lock-tables=false | sudo zip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d-%H%M-%Z"`-openrsc.zip
+
+backup-cabbage:
+	@mkdir -p $(MYSQL_DUMPS_DIR)
+	sudo chmod -R 777 $(MYSQL_DUMPS_DIR)
+	sudo chmod 644 etc/mariadb/innodb.cnf
+	docker exec mysql mysqldump -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} cabbage --single-transaction --quick --lock-tables=false | sudo zip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d-%H%M-%Z"`-cabbage.zip
+
+backup-preservation:
+	@mkdir -p $(MYSQL_DUMPS_DIR)
+	sudo chmod -R 777 $(MYSQL_DUMPS_DIR)
+	sudo chmod 644 etc/mariadb/innodb.cnf
+	docker exec mysql mysqldump -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} preservation --single-transaction --quick --lock-tables=false | sudo zip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d-%H%M-%Z"`-preservation.zip
+
+backup-openpk:
+	@mkdir -p $(MYSQL_DUMPS_DIR)
+	sudo chmod -R 777 $(MYSQL_DUMPS_DIR)
+	sudo chmod 644 etc/mariadb/innodb.cnf
+	docker exec mysql mysqldump -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} openpk --single-transaction --quick --lock-tables=false | sudo zip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d-%H%M-%Z"`-openpk.zip	
+
+backup-wolfkingdom:
+	@mkdir -p $(MYSQL_DUMPS_DIR)
+	sudo chmod -R 777 $(MYSQL_DUMPS_DIR)
+	sudo chmod 644 etc/mariadb/innodb.cnf
+	docker exec mysql mysqldump -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} wolfkingdom --single-transaction --quick --lock-tables=false | sudo zip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d-%H%M-%Z"`-wolfkingdom.zip
 
 update-laravel:
 	docker exec -i php bash -c "cd /var/www/html/openrsc_web && composer install && php artisan key:generate"
 
 clear-old-backups:
-	sudo find $(MYSQL_DUMPS_DIR)/*.zip -mtime +30 -exec rm -f {} \;
+	sudo find $(MYSQL_DUMPS_DIR)/*.zip -mtime +7 -exec rm -f {} \;

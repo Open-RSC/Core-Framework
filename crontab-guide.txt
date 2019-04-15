@@ -28,8 +28,17 @@ total 15020
 
 
 
-For clearing out database backups older than 30 days (these will grow in size over time and eventually use the entire disk otherwise)
+For clearing out database backups older than 7 days (these will grow in size over time and eventually use the entire disk otherwise)
 0 23 * * * make -C /home/YOUR_USER/Game clear-old-backups
 
 “At 23:00.”
 https://crontab.guru
+
+
+
+
+Example crontab -e under "sudo su" root user:
+
+0 */3 * * * make -C /home/wolf/Game backup-openrsc
+0 */3 * * * make -C /home/wolf/Game backup-cabbage
+0 23 * * * make -C /home/wolf/Game clear-old-backups
