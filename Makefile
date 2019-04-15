@@ -60,12 +60,6 @@ import-game:
 	docker exec -i mysql mysql -uroot -proot < Databases/openrsc_game_server.sql
 	docker exec -i mysql mysql -uroot -proot < Databases/openrsc_game_players.sql
 
-import-mysql:
-	docker exec -i mysql mysql -uroot -proot < Databases/mysql.sql
-
-import-phpmyadmin:
-	docker exec -i mysql mysql -uroot -proot < Databases/phpmyadmin.sql
-
 clone-website:
 	@$(shell sudo rm -rf Website && git clone https://gitlab.openrsc.com/open-rsc/Website.git)
 	sudo chmod 644 Website/sql/config.inc.php
