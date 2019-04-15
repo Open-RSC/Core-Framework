@@ -387,7 +387,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_player_cache` (
   `playerID` int(10) UNSIGNED NOT NULL,
   `type` tinyint(1) NOT NULL,
   `key` varchar(32) NOT NULL,
-  `value` varchar(13) NOT NULL,
+  `value` varchar(150) NOT NULL,
   `dbid` int(10) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`dbid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
