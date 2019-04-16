@@ -147,6 +147,11 @@ public final class Event implements CommandListener {
 						return;
 					}
 
+					if(tpTo.isInvisible(player) && !player.isAdmin()) {
+						player.message(messagePrefix + "You can not teleport to an invisible player.");
+						return;
+					}
+
 					teleportTo = tpTo.getLocation();
 				} else {
 					teleportTo = townLocations[townIndex];
