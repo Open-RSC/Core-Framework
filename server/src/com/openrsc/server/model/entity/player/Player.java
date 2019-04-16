@@ -2215,7 +2215,7 @@ public final class Player extends Mob {
 	}
 
 	public boolean isInvulnerable(Mob m) {
-		return stateIsInvulnerable() && m.isInvulnerableTo(this);
+		return stateIsInvulnerable() && m.isMobInvulnerable(this);
 	}
 
 	public boolean cacheIsInvulnerable() {
