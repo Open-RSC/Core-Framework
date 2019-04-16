@@ -2205,7 +2205,7 @@ public final class Player extends Mob {
 	}
 
 	public boolean stateIsInvisible() {
-		return super.stateIsInvulnerable() || cacheIsInvisible();
+		return super.stateIsInvisible() || cacheIsInvisible();
 	}
 
 	public boolean setCacheInvisible(boolean invisible) {
