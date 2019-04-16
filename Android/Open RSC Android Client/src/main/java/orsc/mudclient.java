@@ -3862,7 +3862,7 @@ public final class mudclient implements Runnable {
 						}
 
 						// Sets camera zoom distance based on last saved value in the player cache
-						cameraZoom = minCameraZoom + (Config.C_LAST_ZOOM * 4);
+						cameraZoom = minCameraZoom + (Config.C_LAST_ZOOM * 2);
 
                         if (this.lastHeightOffset == 0
                                 && (world.collisionFlags[this.localPlayer.currentX / 128][this.localPlayer.currentZ
@@ -9205,12 +9205,14 @@ public final class mudclient implements Runnable {
                         this.cameraRotation = 255 & this.cameraRotation + 2;
                     } else if (this.keyRight) {
                         this.cameraRotation = 255 & this.cameraRotation - 2;
-                    } else if (this.keyDown) {
-                        if (S_ZOOM_VIEW_TOGGLE || getLocalPlayer().isStaff()) {
-							if (C_LAST_ZOOM < 128 || (C_LAST_ZOOM < 255 && getLocalPlayer().isStaff())) {
-								C_LAST_ZOOM++;
+					} else if (this.keyDown) {
+						if (S_ZOOM_VIEW_TOGGLE || getLocalPlayer().isStaff()) {
+							// Don't want to go over 255
+							if (C_LAST_ZOOM < 254) {
+								C_LAST_ZOOM += 2;
+								// We probably want to send this on the client tick rather than each time a button is pressed
+								saveZoomDistance();
 							}
-							saveZoomDistance();
 						} else {
 							if (this.cameraAllowPitchModification) {
 								this.cameraPitch = (this.cameraPitch + 4) & 1023;
@@ -9218,13 +9220,15 @@ public final class mudclient implements Runnable {
 						}
 					} else if (this.keyUp) {
 						if (S_ZOOM_VIEW_TOGGLE || getLocalPlayer().isStaff()) {
-							if (C_LAST_ZOOM > 0) {
-								C_LAST_ZOOM--;
+							// Don't want to go under 0
+							if (C_LAST_ZOOM > 1) {
+								C_LAST_ZOOM -= 2;
+								// We probably want to send this on the client tick rather than each time a button is pressed
+								saveZoomDistance();
 							}
-                            saveZoomDistance();
-                        } else {
-                            if (this.cameraAllowPitchModification) {
-                                this.cameraPitch = (this.cameraPitch + 1024 - 4) & 1023;
+						} else {
+							if (this.cameraAllowPitchModification) {
+								this.cameraPitch = (this.cameraPitch + 1024 - 4) & 1023;
                             }
                         }
                     } else if (this.pageDown) {
