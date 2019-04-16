@@ -2194,7 +2194,7 @@ public final class Player extends Mob {
 	}
 
 	public boolean isInvisible(Mob m) {
-		return stateIsInvisible() && m.isInvisibleTo(this);
+		return stateIsInvisible() && m.isMobInvisible(this);
 	}
 
 	public boolean cacheIsInvisible() {
