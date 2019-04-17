@@ -10,55 +10,11 @@ import com.openrsc.client.entityhandling.defs.extras.AnimationDef;
 import com.openrsc.client.model.Sprite;
 import com.openrsc.interfaces.NComponent;
 import com.openrsc.interfaces.NCustomComponent;
-import com.openrsc.interfaces.misc.AuctionHouse;
-import com.openrsc.interfaces.misc.BankPinInterface;
-import com.openrsc.interfaces.misc.CustomBankInterface;
-import com.openrsc.interfaces.misc.DoSkillInterface;
-import com.openrsc.interfaces.misc.ExperienceConfigInterface;
-import com.openrsc.interfaces.misc.FishingTrawlerInterface;
-import com.openrsc.interfaces.misc.IronManInterface;
-import com.openrsc.interfaces.misc.LostOnDeathInterface;
-import com.openrsc.interfaces.misc.OnlineListInterface;
-import com.openrsc.interfaces.misc.ProgressBarInterface;
-import com.openrsc.interfaces.misc.QuestGuideInterface;
-import com.openrsc.interfaces.misc.SkillGuideInterface;
-import com.openrsc.interfaces.misc.TerritorySignupInterface;
+import com.openrsc.interfaces.misc.*;
 import com.openrsc.interfaces.misc.clan.Clan;
-
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
-import java.util.Timer;
-import java.util.TimerTask;
-
-//import javax.sound.sampled.AudioSystem;
-//import javax.sound.sampled.Clip;
-
 import orsc.buffers.RSBufferUtils;
-import orsc.enumerations.GameMode;
-import orsc.enumerations.InputXAction;
-import orsc.enumerations.MenuItemAction;
-import orsc.enumerations.MessageTab;
-import orsc.enumerations.MessageType;
-import orsc.enumerations.ORSCharacterDirection;
-import orsc.enumerations.SocialPopupMode;
-import orsc.graphics.gui.InputXPrompt;
-import orsc.graphics.gui.KillAnnouncer;
-import orsc.graphics.gui.KillAnnouncerQueue;
-import orsc.graphics.gui.Menu;
-import orsc.graphics.gui.MessageHistory;
-import orsc.graphics.gui.Panel;
-import orsc.graphics.gui.SocialLists;
+import orsc.enumerations.*;
+import orsc.graphics.gui.*;
 import orsc.graphics.three.CollisionFlag;
 import orsc.graphics.three.RSModel;
 import orsc.graphics.three.Scene;
@@ -71,91 +27,14 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
 
-import static orsc.Config.CLIENT_VERSION;
-import static orsc.Config.C_BATCH_PROGRESS_BAR;
-import static orsc.Config.C_EXPERIENCE_CONFIG_SUBMENU;
-import static orsc.Config.C_EXPERIENCE_COUNTER;
-import static orsc.Config.C_EXPERIENCE_COUNTER_COLOR;
-import static orsc.Config.C_EXPERIENCE_COUNTER_MODE;
-import static orsc.Config.C_EXPERIENCE_DROPS;
-import static orsc.Config.C_EXPERIENCE_DROP_SPEED;
-import static orsc.Config.C_FIGHT_MENU;
-import static orsc.Config.C_HIDE_ROOFS;
-import static orsc.Config.C_HOLD_AND_CHOOSE;
-import static orsc.Config.C_INV_COUNT;
-import static orsc.Config.C_KILL_FEED;
-import static orsc.Config.C_LAST_ZOOM;
-import static orsc.Config.C_LONG_PRESS_TIMER;
-import static orsc.Config.C_MENU_SIZE;
-import static orsc.Config.C_MESSAGE_TAB_SWITCH;
-import static orsc.Config.C_NAME_CLAN_TAG_OVERLAY;
-import static orsc.Config.C_SHOW_FOG;
-import static orsc.Config.C_SHOW_GROUND_ITEMS;
-import static orsc.Config.C_SIDE_MENU_OVERLAY;
-import static orsc.Config.C_SWIPE_TO_ROTATE;
-import static orsc.Config.C_SWIPE_TO_SCROLL;
-import static orsc.Config.C_SWIPE_TO_ZOOM;
-import static orsc.Config.C_VOLUME_TO_ROTATE;
-import static orsc.Config.DEBUG;
-import static orsc.Config.DISPLAY_LOGO_SPRITE;
-import static orsc.Config.F_CACHE_DIR;
-import static orsc.Config.F_SHOWING_KEYBOARD;
-import static orsc.Config.MEMBER_WORLD;
-import static orsc.Config.Remember;
-import static orsc.Config.SERVER_IP;
-import static orsc.Config.SERVER_NAME;
-import static orsc.Config.SERVER_NAME_WELCOME;
-import static orsc.Config.SERVER_PORT;
-import static orsc.Config.S_AUTO_MESSAGE_SWITCH_TOGGLE;
-import static orsc.Config.S_BATCH_PROGRESSION;
-import static orsc.Config.S_CUSTOM_FIREMAKING;
-import static orsc.Config.S_EXPERIENCE_COUNTER_TOGGLE;
-import static orsc.Config.S_EXPERIENCE_DROPS_TOGGLE;
-import static orsc.Config.S_FIGHTMODE_SELECTOR_TOGGLE;
-import static orsc.Config.S_FOG_TOGGLE;
-import static orsc.Config.S_GROUND_ITEM_TOGGLE;
-import static orsc.Config.S_INVENTORY_COUNT_TOGGLE;
-import static orsc.Config.S_ITEMS_ON_DEATH_MENU;
-import static orsc.Config.S_MENU_COMBAT_STYLE_TOGGLE;
-import static orsc.Config.S_PLAYER_LEVEL_LIMIT;
-import static orsc.Config.S_RIGHT_CLICK_BANK;
-import static orsc.Config.S_SHOW_FLOATING_NAMETAGS;
-import static orsc.Config.S_SHOW_ROOF_TOGGLE;
-import static orsc.Config.S_SIDE_MENU_TOGGLE;
-import static orsc.Config.S_SPAWN_AUCTION_NPCS;
-import static orsc.Config.S_SPAWN_IRON_MAN_NPCS;
-import static orsc.Config.S_WANT_BANK_NOTES;
-import static orsc.Config.S_WANT_BANK_PINS;
-import static orsc.Config.S_WANT_CERTS_TO_BANK;
-import static orsc.Config.S_WANT_CERT_DEPOSIT;
-import static orsc.Config.S_WANT_CLANS;
-import static orsc.Config.S_WANT_CUSTOM_BANKS;
-import static orsc.Config.S_WANT_CUSTOM_RANK_DISPLAY;
-import static orsc.Config.S_WANT_DECANTING;
-import static orsc.Config.S_WANT_DROP_X;
-import static orsc.Config.S_WANT_EXPERIENCE_ELIXIRS;
-import static orsc.Config.S_WANT_EXP_INFO;
-import static orsc.Config.S_WANT_FIXED_OVERHEAD_CHAT;
-import static orsc.Config.S_WANT_GLOBAL_CHAT;
-import static orsc.Config.S_WANT_HIDE_IP;
-import static orsc.Config.S_WANT_KEYBOARD_SHORTCUTS;
-import static orsc.Config.S_WANT_KILL_FEED;
-import static orsc.Config.S_WANT_QUEST_MENUS;
-import static orsc.Config.S_WANT_REMEMBER;
-import static orsc.Config.S_WANT_SKILL_MENUS;
-import static orsc.Config.S_WANT_WOODCUTTING_GUILD;
-import static orsc.Config.S_ZOOM_VIEW_TOGGLE;
-import static orsc.Config.WELCOME_TEXT;
-import static orsc.Config.getFPS;
-import static orsc.Config.getServerName;
-import static orsc.Config.getServerNameWelcome;
-import static orsc.Config.getWelcomeText;
-import static orsc.Config.getcLogoSpriteId;
-import static orsc.Config.initConfig;
-import static orsc.Config.isAndroid;
-import static orsc.Config.saveConfiguration;
-import static orsc.Config.wantEmail;
-import static orsc.Config.wantMembers;
+//import javax.sound.sampled.AudioSystem;
+//import javax.sound.sampled.Clip;
+import java.io.*;
+import java.security.SecureRandom;
+import java.util.*;
+import java.util.Map.Entry;
+
+import static orsc.Config.*;
 import static orsc.multiclient.ClientPort.saveHideIp;
 
 public final class mudclient implements Runnable {
@@ -360,7 +239,7 @@ public final class mudclient implements Runnable {
     private int cameraRotationX = 0;
     private int cameraRotationZ = 0;
     public int cameraZoom = 750;
-	public int minCameraZoom = 500;
+    public int minCameraZoom = 500;
     private int characterBubbleCount = 0;
     private int[] characterBubbleID = new int[150];
     private int characterDialogCount = 0;
@@ -516,6 +395,8 @@ public final class mudclient implements Runnable {
     private Panel panelAppearance;
     private Panel panelLogin;
     private Panel panelLoginWelcome;
+    private Panel panelSetRecoveryQuestion;
+    private Panel panelRecovery;
     private Panel panelMagic;
     private int panelMessageChat;
     private int panelMessageEntry;
@@ -565,6 +446,7 @@ public final class mudclient implements Runnable {
     private int shopSelectedItemType = -2;
     private int shopSellPriceMod = 0;
     private boolean showAppearanceChange = false;
+    private boolean showSetRecoveryQuestion = false;
     private boolean showDialogBank = false;
     private boolean showDialogDuel = false;
     private boolean showDialogDuelConfirm = false;
@@ -663,6 +545,43 @@ public final class mudclient implements Runnable {
     private ArrayList<XPNotification> xpNotifications = new ArrayList<XPNotification>();
     private int amountToZoom = 0;
     private Panel panelLoginOptions;
+
+    int controlRecoveryInstruction;
+    int[] controlSetQuestion = new int[5];
+    int[] controlSetAnswer = new int[5];
+    int[] controlCustomQuestion = new int[5];
+    int[] controlCustomAnswer = new int[5];
+    int finishSetRecovery;
+    int pkb = -1;
+    String[] jfb = new String[5];
+    int ifb[] = { 0, 1, 2, 3, 4 };
+    int instructPassRecovery1;
+    int instructPassRecovery2;
+    int controlPreviousPassword;
+    int controlNewPassword;
+    int controlConfirmation;
+    int passwordRecoverSubmit;
+    int passwordRecoverCancel;
+    int controlPassQuestion[] = new int[5];
+    int controlPassAnswer[] = new int[5];
+    String questions[] = { "Where were you born?",
+            "What was your first teacher's name?",
+            "What is your father's middle name?",
+            "Who was your first best friend?",
+            "What is your favourite vacation spot?",
+            "What is your mother's middle name?",
+            "What was your first pet's name?",
+            "What was the name of your first school?",
+            "What is your mother's maiden name?",
+            "Who was your first boyfriend/girlfriend?",
+            "What was the first computer game you purchased?",
+            "Who is your favourite actor/actress?",
+            "Who is your favourite author?",
+            "Who is your favourite musician?",
+            "Who is your favourite cartoon character?",
+            "What is your favourite book?",
+            "What is your favourite food?",
+            "What is your favourite movie?" };
 
     /**
      * Newest RSC cache: SAME VALUES.
@@ -1441,6 +1360,216 @@ public final class mudclient implements Runnable {
             this.jumpToLogin();
         } catch (RuntimeException var5) {
             throw GenUtil.makeThrowable(var5, "client.RB(" + sendPacket + ',' + "dummy" + ')');
+        }
+    }
+
+    private void createRecoveryQuestionPanel() {
+        this.panelSetRecoveryQuestion = new Panel(this.getSurface(), 100);
+        int i1 = 8;
+        this.controlRecoveryInstruction = this.panelSetRecoveryQuestion.addCenteredText(256, i1, "@yel@Please provide 5 security questions in case you lose your password", 1, true);
+        i1 += 22;
+        this.panelSetRecoveryQuestion.addCenteredText(256, i1, "If you ever lose your password, you will need these to prove you own your account.", 1, true);
+        i1 += 13;
+        this.panelSetRecoveryQuestion.addCenteredText(256, i1, "Your answers are encrypted and are ONLY used for password recovery purposes.", 1, true);
+        i1 += 22;
+        this.panelSetRecoveryQuestion.addCenteredText(256, i1, "@ora@IMPORTANT:@whi@ To recover your password you must give the EXACT same answers you", 1, true);
+        i1 += 13;
+        this.panelSetRecoveryQuestion.addCenteredText(256, i1, "give here. If you think you might forget an answer, or someone else could guess the", 1, true);
+        i1 += 13;
+        this.panelSetRecoveryQuestion.addCenteredText(256, i1, "answer, then press the 'different question' button to get a better question.", 1, true);
+        i1 += 35;
+        for (int j1 = 0; j1 < 5; j1++) {
+            this.panelSetRecoveryQuestion.addButtonBackground(170, i1, 310, 30);
+            this.jfb[j1] = "~:" + this.ifb[j1];
+            this.controlSetQuestion[j1] = this.panelSetRecoveryQuestion.addCenteredText(170, i1 - 7, (j1 + 1) + ": "
+                    + questions[this.ifb[j1]], 1, true);
+            this.controlSetAnswer[j1] = this.panelSetRecoveryQuestion.addCenteredTextEntry(170, i1 + 7, 310, 30, 1, 80, false, true);
+            this.panelSetRecoveryQuestion.addButtonBackground(370, i1, 80, 30);
+            this.panelSetRecoveryQuestion.addCenteredText(370, i1 - 7, "Different", 1, true);
+            this.controlCustomQuestion[j1] = this.panelSetRecoveryQuestion.addCenteredText(370, i1 + 7, "Question", 1, true);
+            this.panelSetRecoveryQuestion.addButtonBackground(455, i1, 80, 30);
+            this.panelSetRecoveryQuestion.addCenteredText(455, i1 - 7, "Enter own", 1, true);
+            this.panelSetRecoveryQuestion.addCenteredText(455, i1 + 7, "Question", 1, true);
+            this.controlCustomAnswer[j1] = this.panelSetRecoveryQuestion.addButton(455, i1, 80, 30);
+            i1 += 35;
+        }
+
+        this.panelSetRecoveryQuestion.setFocus(this.controlSetAnswer[0]);
+        i1 += 10;
+        this.panelSetRecoveryQuestion.addButtonBackground(256, i1, 250, 30);
+        this.panelSetRecoveryQuestion.addCenteredText(256, i1, "Click here when finished", 4, true);
+        this.finishSetRecovery = this.panelSetRecoveryQuestion.addButton(256, i1, 250, 30);
+    }
+
+    public void method_181() {
+        if (this.pkb != -1) {
+            if (this.chatMessageInputCommit.length() > 0) {
+                this.jfb[this.pkb] = this.chatMessageInputCommit;
+                this.panelSetRecoveryQuestion.setText(this.controlSetQuestion[this.pkb], this.pkb + 1 + ": " + this.jfb[this.pkb]);
+                this.panelSetRecoveryQuestion.setText(this.controlSetAnswer[this.pkb], "");
+                this.pkb = -1;
+            }
+
+        } else {
+            this.panelSetRecoveryQuestion.handleMouse(this.getMouseX(), this.getMouseY(), this.getMouseButtonDown(), this.getLastMouseDown());
+
+            int var3;
+            for (int var1 = 0; var1 < 5; ++var1) {
+                if (this.panelSetRecoveryQuestion.focusOn(this.controlCustomQuestion[var1])) {
+                    boolean var2 = false;
+
+                    while (!var2) {
+                        this.ifb[var1] = (this.ifb[var1] + 1) % this.questions.length;
+                        var2 = true;
+
+                        for (var3 = 0; var3 < 5; ++var3) {
+                            if (var3 != var1 && this.ifb[var3] == this.ifb[var1]) {
+                                var2 = false;
+                            }
+                        }
+                    }
+
+                    this.jfb[var1] = "~:" + this.ifb[var1];
+                    this.panelSetRecoveryQuestion.setText(this.controlSetQuestion[var1], var1 + 1 + ": " + this.questions[this.ifb[var1]]);
+                    this.panelSetRecoveryQuestion.setText(this.controlSetAnswer[var1], "");
+                }
+            }
+
+            for (int var8 = 0; var8 < 5; ++var8) {
+                if (this.panelSetRecoveryQuestion.focusOn(this.controlCustomAnswer[var8])) {
+                    this.pkb = var8;
+                    this.chatMessageInput = "";
+                    this.chatMessageInputCommit = "";
+                }
+            }
+
+            if (this.panelSetRecoveryQuestion.focusOn(this.finishSetRecovery)) {
+                var3 = 0;
+
+                while (true) {
+                    if (var3 >= 5) {
+                        int var6;
+                        for (int var9 = 0; var9 < 5; ++var9) {
+                            String var5 = this.panelSetRecoveryQuestion.getControlText(this.controlSetAnswer[var9]);
+
+                            for (var6 = 0; var6 < var9; ++var6) {
+                                String var7 = this.panelSetRecoveryQuestion.getControlText(this.controlSetAnswer[var6]);
+                                if (var5.equalsIgnoreCase(var7)) {
+                                    this.panelSetRecoveryQuestion.setText(this.controlRecoveryInstruction, "@yel@Each question must have a different answer");
+                                    return;
+                                }
+                            }
+                        }
+
+                        //todo: check opcode
+                        this.packetHandler.getClientStream().newPacket(208);
+
+                        for (int var10 = 0; var10 < 5; ++var10) {
+                            String var11 = this.jfb[var10];
+                            if (var11 == null || var11.length() == 0) {
+                                var11 = String.valueOf(var10 + 1);
+                            }
+
+                            if (var11.length() > 50) {
+                                var11 = var11.substring(0, 50);
+                            }
+
+                            this.packetHandler.getClientStream().writeBuffer1.putByte(var11.length());
+                            this.packetHandler.getClientStream().writeBuffer1.putString(var11);
+                            //todo put encrypted??
+                            //conn.enc_cred_put(DataUtil.method_13(this.panelSetRecoveryQuestion.getControlText(this.controlSetAnswer[var10])),
+                            //		super.sess_id, this.rsa_exponent, this.rsa_modulus);
+                        }
+
+                        this.packetHandler.getClientStream().finishPacket();
+
+                        for (var6 = 0; var6 < 5; ++var6) {
+                            this.ifb[var6] = var6;
+                            this.jfb[var6] = "~:" + this.ifb[var6];
+                            this.panelSetRecoveryQuestion.setText(this.controlSetAnswer[var6], "");
+                            this.panelSetRecoveryQuestion.setText(this.controlSetQuestion[var6], var6 + 1 + ": " + this.questions[this.ifb[var6]]);
+                        }
+
+                        this.getSurface().blackScreen(true);
+                        this.showSetRecoveryQuestion = false;
+                        break;
+                    }
+
+                    String ans = this.panelSetRecoveryQuestion.getControlText(this.controlSetAnswer[var3]);
+                    if (ans == null || ans.length() < 3) {
+                        this.panelSetRecoveryQuestion.setText(this.controlRecoveryInstruction, "@yel@Please provide a longer answer to question: " + (var3 + 1));
+                        return;
+                    }
+
+                    ++var3;
+                }
+            }
+
+        }
+    }
+
+    public void method_182() {
+        this.getSurface().interlace = false;
+        this.getSurface().blackScreen(true);
+        this.panelSetRecoveryQuestion.drawPanel();
+        if (this.pkb != -1) {
+            int y = 150;
+            this.getSurface().drawBox(26, y, 460, 60, 0);
+            this.getSurface().drawBoxBorder(26, y, 460, 60, 0xFFFFFF);
+            y += 22;
+            this.getSurface().drawColoredStringCentered(256, "Please enter your question", 0xFFFFFF, 0, 4, y);
+            y += 25;
+            this.getSurface().drawColoredStringCentered(256, this.chatMessageInput + "*", 0xFFFFFF, 0, 4, y);
+        }
+
+        this.getSurface().drawSprite(this.spriteMedia + 22, 0, this.gameHeight);
+        // this.getSurface().draw(this.graphics, this.screenOffsetX,
+        // 256, this.screenOffsetY);
+        clientPort.draw();
+    }
+
+    private void createPasswordRecoveryPanel() {
+        this.panelRecovery = new Panel(this.getSurface(), 100);
+        int i1 = 10;
+        this.instructPassRecovery1 = this.panelRecovery.addCenteredText(256, i1, "@yel@To prove this is your account please provide the answers to", 1, true);
+        i1 += 15;
+        this.instructPassRecovery2 = this.panelRecovery.addCenteredText(256, i1, "@yel@your security questions. You will then be able to reset your password", 1, true);
+        i1 += 35;
+        for (int j1 = 0; j1 < 5; j1++) {
+            this.panelRecovery.addButtonBackground(256, i1, 410, 30);
+            this.controlPassQuestion[j1] = this.panelRecovery.addCenteredText(256, i1 - 7, (j1 + 1) + ": question?", 1, true);
+            this.controlPassAnswer[j1] = this.panelRecovery.addCenteredTextEntry(256, i1 + 7, 310, 30, 1, 80, true, true);
+            i1 += 35;
+        }
+
+        this.panelRecovery.setFocus(this.controlPassAnswer[0]);
+        this.panelRecovery.addButtonBackground(256, i1, 410, 30);
+        this.panelRecovery.addCenteredText(256, i1 - 7, "If you know it, enter a previous password used on this account", 1, true);
+        this.controlPreviousPassword = this.panelRecovery.addCenteredTextEntry(256, i1 + 7, 310, 30, 1, 80, true, true);
+        i1 += 35;
+        this.panelRecovery.addButtonBackground(151, i1, 200, 30);
+        this.panelRecovery.addCenteredText(151, i1 - 7, "Choose a NEW password", 1, true);
+        this.controlNewPassword = this.panelRecovery.addCenteredTextEntry(146, i1 + 7, 200, 30, 1, 80, true, true);
+        this.panelRecovery.addButtonBackground(361, i1, 200, 30);
+        this.panelRecovery.addCenteredText(361, i1 - 7, "Confirm new password", 1, true);
+        this.controlConfirmation = this.panelRecovery.addCenteredTextEntry(366, i1 + 7, 200, 30, 1, 80, true, true);
+        i1 += 35;
+        this.panelRecovery.addButtonBackground(201, i1, 100, 30);
+        this.panelRecovery.addCenteredText(201, i1, "Submit", 4, true);
+        this.passwordRecoverSubmit = this.panelRecovery.addButton(201, i1, 100, 30);
+        this.panelRecovery.addButtonBackground(311, i1, 100, 30);
+        this.panelRecovery.addCenteredText(311, i1, "Cancel", 4, true);
+        this.passwordRecoverCancel = this.panelRecovery.addButton(311, i1, 100, 30);
+    }
+
+    public void setShowRecoveryDialogue(boolean show) {
+        this.showSetRecoveryQuestion = show;
+
+        for (int i = 0; i < 5; ++i) {
+            this.ifb[i] = i;
+            this.jfb[i] = "~:" + this.ifb[i];
+            this.panelSetRecoveryQuestion.setText(this.controlSetAnswer[this.pkb], "");
+            this.panelSetRecoveryQuestion.setText(this.controlSetQuestion[this.pkb], i + 1 + ": " + this.questions[this.ifb[i]]);
         }
     }
 
@@ -3799,6 +3928,8 @@ public final class mudclient implements Runnable {
                     clientPort.draw();
                 } else if (this.showAppearanceChange) {
                     this.drawAppearancePanelCharacterSprites(-13759);
+                } else if (this.showSetRecoveryQuestion) {
+                    this.method_182();
                 } else if (this.isSleeping) {
                     this.getSurface().fade2black(16316665);
                     if (Math.random() < 0.15D) {
@@ -3854,15 +3985,15 @@ public final class mudclient implements Runnable {
                             this.scene.removeModel(this.world.modelRoofGrid[1][centerX]);
                             this.scene.removeModel(this.world.modelWallGrid[2][centerX]);
                             this.scene.removeModel(this.world.modelRoofGrid[2][centerX]);
-						}
+                        }
 
-						if (!this.doCameraZoom) {
-							amountToZoom -= 50;
-							this.doCameraZoom = true;
-						}
+                        if (!this.doCameraZoom) {
+                            amountToZoom -= 50;
+                            this.doCameraZoom = true;
+                        }
 
-						// Sets camera zoom distance based on last saved value in the player cache
-						cameraZoom = minCameraZoom + (Config.C_LAST_ZOOM * 2);
+                        // Sets camera zoom distance based on last saved value in the player cache
+                        cameraZoom = minCameraZoom + (Config.C_LAST_ZOOM * 2);
 
                         if (this.lastHeightOffset == 0
                                 && (world.collisionFlags[this.localPlayer.currentX / 128][this.localPlayer.currentZ
@@ -3877,12 +4008,12 @@ public final class mudclient implements Runnable {
                                 this.scene.addModel(this.world.modelRoofGrid[2][centerX]);
                             }
 
-							if (this.doCameraZoom) {
-								amountToZoom += 50;
-								this.doCameraZoom = false;
-							}
-						}
-					}
+                            if (this.doCameraZoom) {
+                                amountToZoom += 50;
+                                this.doCameraZoom = false;
+                            }
+                        }
+                    }
 
                     if (this.objectAnimationNumberFireLightningSpell != this.lastObjectAnimationNumberFireLightningSpell) {
                         this.lastObjectAnimationNumberFireLightningSpell = this.objectAnimationNumberFireLightningSpell;
@@ -4244,8 +4375,8 @@ public final class mudclient implements Runnable {
                         this.getSurface().drawString(
                                 "Fatigue: " + this.statFatigue + "%", 7, i, 0xffffff, 1);
                         i += 14;
-						this.getSurface().drawString("Camera Zoom: " + cameraZoom, 7, i, 0xffffff, 1);
-						i += 14;
+                        this.getSurface().drawString("Camera Zoom: " + cameraZoom, 7, i, 0xffffff, 1);
+                        i += 14;
                         this.getSurface().drawString("Camera Pitch: " + cameraPitch, 7, i, 0xffffff, 1);
                     }
 
@@ -4680,6 +4811,9 @@ public final class mudclient implements Runnable {
             }
             if (this.loginScreenNumber == 3) {
                 panelLoginOptions.drawPanel();
+            }
+            if (this.loginScreenNumber == 4) {
+                this.panelRecovery.drawPanel();
             }
 
             this.getSurface().drawSpriteClipping(spriteMedia + 22, 0, getGameHeight(), getGameWidth(), 10, 0, 0, false, 0, 1);
@@ -8734,6 +8868,8 @@ public final class mudclient implements Runnable {
 
             if (this.showAppearanceChange) {
                 this.handleAppearancePanelControls(86);
+            } else if (this.showSetRecoveryQuestion) {
+                this.method_181();
             } else {
                 int var2;
                 ORSCharacter var3;
@@ -9205,30 +9341,30 @@ public final class mudclient implements Runnable {
                         this.cameraRotation = 255 & this.cameraRotation + 2;
                     } else if (this.keyRight) {
                         this.cameraRotation = 255 & this.cameraRotation - 2;
-					} else if (this.keyDown) {
-						if (S_ZOOM_VIEW_TOGGLE || getLocalPlayer().isStaff()) {
-							// Don't want to go over 255
-							if (C_LAST_ZOOM < 254) {
-								C_LAST_ZOOM += 2;
-								// We probably want to send this on the client tick rather than each time a button is pressed
-								saveZoomDistance();
-							}
-						} else {
-							if (this.cameraAllowPitchModification) {
-								this.cameraPitch = (this.cameraPitch + 4) & 1023;
-							}
-						}
-					} else if (this.keyUp) {
-						if (S_ZOOM_VIEW_TOGGLE || getLocalPlayer().isStaff()) {
-							// Don't want to go under 0
-							if (C_LAST_ZOOM > 1) {
-								C_LAST_ZOOM -= 2;
-								// We probably want to send this on the client tick rather than each time a button is pressed
-								saveZoomDistance();
-							}
-						} else {
-							if (this.cameraAllowPitchModification) {
-								this.cameraPitch = (this.cameraPitch + 1024 - 4) & 1023;
+                    } else if (this.keyDown) {
+                        if (S_ZOOM_VIEW_TOGGLE || getLocalPlayer().isStaff()) {
+                            // Don't want to go over 255
+                            if (C_LAST_ZOOM < 254) {
+                                C_LAST_ZOOM += 2;
+                                // We probably want to send this on the client tick rather than each time a button is pressed
+                                saveZoomDistance();
+                            }
+                        } else {
+                            if (this.cameraAllowPitchModification) {
+                                this.cameraPitch = (this.cameraPitch + 4) & 1023;
+                            }
+                        }
+                    } else if (this.keyUp) {
+                        if (S_ZOOM_VIEW_TOGGLE || getLocalPlayer().isStaff()) {
+                            // Don't want to go under 0
+                            if (C_LAST_ZOOM > 1) {
+                                C_LAST_ZOOM -= 2;
+                                // We probably want to send this on the client tick rather than each time a button is pressed
+                                saveZoomDistance();
+                            }
+                        } else {
+                            if (this.cameraAllowPitchModification) {
+                                this.cameraPitch = (this.cameraPitch + 1024 - 4) & 1023;
                             }
                         }
                     } else if (this.pageDown) {
@@ -9257,14 +9393,14 @@ public final class mudclient implements Runnable {
                         ++this.mouseClickXStep;
                     }
 
-					if (amountToZoom > 0) {
-						minCameraZoom += 4;
-						amountToZoom -= 1;
-					}
-					if (amountToZoom < 0) {
-						minCameraZoom -= 4;
-						amountToZoom += 1;
-					}
+                    if (amountToZoom > 0) {
+                        minCameraZoom += 4;
+                        amountToZoom -= 1;
+                    }
+                    if (amountToZoom < 0) {
+                        minCameraZoom -= 4;
+                        amountToZoom += 1;
+                    }
 
                     this.scene.d(25013, 17);
                     ++this.objectAnimationCount;
@@ -9343,12 +9479,12 @@ public final class mudclient implements Runnable {
     }
 
     public void saveZoomDistance() {
-		// Saves last zoom distance
-		this.packetHandler.getClientStream().newPacket(111);
-		this.packetHandler.getClientStream().writeBuffer1.putByte(23);
-		this.packetHandler.getClientStream().writeBuffer1.putByte(Config.C_LAST_ZOOM);
-		this.packetHandler.getClientStream().finishPacket();
-		//System.out.println(cameraZoom);
+        // Saves last zoom distance
+        this.packetHandler.getClientStream().newPacket(111);
+        this.packetHandler.getClientStream().writeBuffer1.putByte(23);
+        this.packetHandler.getClientStream().writeBuffer1.putByte(Config.C_LAST_ZOOM);
+        this.packetHandler.getClientStream().finishPacket();
+        //System.out.println(cameraZoom);
     }
 
     public final void handleKeyPress(byte var1, int key) {
@@ -9364,12 +9500,21 @@ public final class mudclient implements Runnable {
                 if (this.loginScreenNumber == 2 && null != this.panelLogin) {
                     this.panelLogin.keyPress(key);
                 }
+                if (this.loginScreenNumber == 4 && null != this.panelRecovery) {
+                    this.panelRecovery.keyPress(key);
+                }
             }
 
             if (var1 > 105) {
                 if (this.currentViewMode == GameMode.GAME) {
                     if (this.showAppearanceChange) {
                         this.panelAppearance.keyPress(key);
+                        return;
+                    }
+                    if (this.showSetRecoveryQuestion) {
+                        if (this.pkb == -1) {
+                            this.panelSetRecoveryQuestion.keyPress(key);
+                        }
                         return;
                     }
                     if (auctionHouse.isVisible() && (auctionHouse.auctionMenu.focusOn(auctionHouse.auctionSearchHandle)
@@ -11736,6 +11881,10 @@ public final class mudclient implements Runnable {
     private void showLoginScreenStatus(String a, String b) {
         try {
 
+            if (this.loginScreenNumber == 4) {
+                this.panelRecovery.setText(this.instructPassRecovery1, a);
+                this.panelRecovery.setText(this.instructPassRecovery2, b);
+            }
             if (this.loginScreenNumber == 2) {
                 if (b != null && b.length() >= 1) {
                     this.panelLogin.setText(this.controlLoginStatus1, a);
@@ -12872,7 +13021,7 @@ public final class mudclient implements Runnable {
 
     final void continueStartGame(byte var1) {
         System.out.println("Got server configs!");
-        if (DEBUG) {
+        if (Config.DEBUG) {
             System.out.println("Debug server configs received:");
             System.out.println(SERVER_NAME + " 1");
             System.out.println(SERVER_NAME_WELCOME + " 2");
@@ -12920,6 +13069,9 @@ public final class mudclient implements Runnable {
             System.out.println(DISPLAY_LOGO_SPRITE + " 44");
             System.out.println(Config.C_LOGO_SPRITE_ID + " 45");
             System.out.println(Config.C_FPS + " 46");
+            System.out.println(Config.C_WANT_EMAIL + " 47");
+            System.out.println(Config.S_WANT_REGISTRATION_LIMIT + " 48");
+            System.out.println(Config.S_ALLOW_RESIZE + " 49");
         }
         try {
             this.loadGameConfig(false);
@@ -13096,6 +13248,8 @@ public final class mudclient implements Runnable {
                                         this.createMessageTabPanel(56);
                                         this.createLoginPanels(3845);
                                         this.createAppearancePanel(var1 ^ 24649);
+                                        this.createRecoveryQuestionPanel();
+                                        this.createPasswordRecoveryPanel();
                                         this.resetLoginScreenVariables((byte) -88);
                                         this.renderLoginScreenViewports(-116);
                                     }
