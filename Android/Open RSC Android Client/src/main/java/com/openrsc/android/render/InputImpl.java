@@ -78,35 +78,39 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
         if (distanceY < -1)
             distanceY = -1;
 
-        int scrollDist = (int) Math.abs(e1.getY() - e2.getY());
-        int rotateDist = (int) Math.abs(e1.getX() - e2.getX());
-
-        boolean isScroll = scrollDist > rotateDist;
         lastScrollOrRotate = System.currentTimeMillis();
 
-        if (mudclient.showUiTab == 0 && Config.S_ZOOM_VIEW_TOGGLE && Config.C_SWIPE_TO_ZOOM) {
-            final int maxHeight = 1000;
-            final int minHeight = 500;
-            if ((mudclient.cameraZoom < maxHeight - (10 * -distanceY)) && (mudclient.cameraZoom > minHeight + (10 * distanceY))) {
-                mudclient.cameraZoom += 10 * -distanceY;
-                C_LAST_ZOOM = mudclient.cameraZoom / 10;
+        if (mudclient.showUiTab == 0) {
+        	if(Config.S_ZOOM_VIEW_TOGGLE || mudclient.getLocalPlayer().isStaff()) {
+        		if(Config.C_SWIPE_TO_ZOOM) {
+					int zoomDistance = (int) (-distanceY * 5);
+					int newZoom		= C_LAST_ZOOM + zoomDistance;
+					// Keep C_LAST_ZOOM aka the zoom increments on the range of [0, 255]
+					if (newZoom >= 0 && newZoom <= 255) {
+						C_LAST_ZOOM = newZoom;
+						// We probably want to send this on the client tick rather than each time a button is pressed
+						mudclient.saveZoomDistance();
+					}
+				}
+			}
+			else if(mudclient.cameraAllowPitchModification) {
+				mudclient.cameraPitch = (mudclient.cameraPitch + (int)(-distanceY * 10)) & 1023;
+			}
 
-                mudclient.saveZoomDistance();
-            }
-            //mudclient.cameraPitch = (mudclient.cameraPitch + 1024 - 4) & 1023;
-        }
+			if (Config.C_SWIPE_TO_ROTATE) {
+				float clientDist = distanceX / (getWidth() / (float) mudclient.getGameWidth())
+					* 0.5F;
+				mudclient.cameraRotation = (255 & mudclient.cameraRotation + (int) (clientDist));
+			}
 
-        if (isScroll && Config.C_SWIPE_TO_SCROLL) {
-            mudclient.runScroll((int) distanceY);
-            return true;
-        } else {
-            if (mudclient.showUiTab == 0 && Config.C_SWIPE_TO_ROTATE) {
-                float clientDist = distanceX / (getWidth() / (float) mudclient.getGameWidth())
-                        * 0.5F;
-                mudclient.cameraRotation = (255 & mudclient.cameraRotation + (int) (clientDist));
-            }
-            return true;
+			return true;
         }
+        else if(Config.C_SWIPE_TO_SCROLL) {
+			mudclient.runScroll((int) distanceY);
+			return true;
+		}
+
+		return true;
     }
 
     @Override
@@ -132,6 +136,19 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
                 return true;
             }
         }
+        // If we are not volume to rotate, then we are volume to zoom...
+        else {
+        	if(Config.S_ZOOM_VIEW_TOGGLE) {
+				if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+					mudclient.keyUp = event.getAction() == KeyEvent.ACTION_DOWN;
+					return true;
+				}
+				if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+					mudclient.keyDown = event.getAction() == KeyEvent.ACTION_DOWN;
+					return true;
+				}
+			}
+		}
 
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
             int key = event.getUnicodeChar();

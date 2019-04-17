@@ -679,6 +679,7 @@ public final class GameStateUpdater {
 	 */
 	private void processPlayers() {
 		for (Player p : players) {
+			// Checking login because we don't want to unregister more than once
 			if (p.isUnregistering() && p.isLoggedIn()) {
 				World.getWorld().unregisterPlayer(p);
 				continue;
