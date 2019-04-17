@@ -36,6 +36,7 @@ import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.GenericLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -43,6 +44,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.npcTalk;
 
@@ -822,14 +824,24 @@ public class SpellHandler implements PacketHandler {
 				}
 				if (affectedMob.isNpc()) {
 					Npc n = (Npc) affectedMob;
-					if (n.getID() == NpcId.DRAGON.id()) {
-						player.message("The dragon breathes fire at you");
-						int maxHit = 65;
-						if (player.getInventory().wielding(ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
-							maxHit = 10;
-							player.message("Your shield prevents some of the damage from the flames");
+					if (n.getID() == NpcId.DRAGON.id() || n.getID() == NpcId.KING_BLACK_DRAGON.id()) {
+						player.playerServerMessage(MessageType.QUEST, "The dragon breathes fire at you");
+						int fireDamage = 0;
+						if (n.getID() == NpcId.DRAGON.id()) {
+							fireDamage = (int) Math.floor(getCurrentLevel(player, Skills.HITPOINTS) * 0.1);
+						} else if (n.getID() == NpcId.KING_BLACK_DRAGON.id()) {
+							fireDamage = (int) Math.floor(getCurrentLevel(player, Skills.HITPOINTS) * 0.04);
 						}
-						player.damage(DataConversions.random(0, maxHit));
+						if (player.getInventory().wielding(ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
+							player.playerServerMessage(MessageType.QUEST, "Your shield prevents some of the damage from the flames");
+						}
+						player.damage(fireDamage);
+						
+						//reduce ranged level (case for KBD)
+						if (n.getID() == NpcId.KING_BLACK_DRAGON.id()) {
+							int newLevel = getCurrentLevel(player, Skills.RANGED) - Formulae.getLevelsToReduceAttackKBD(player);
+							player.getSkills().setLevel(Skills.RANGED, newLevel);
+						}
 					}
 
 				}

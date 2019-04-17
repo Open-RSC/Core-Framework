@@ -1,9 +1,13 @@
 package com.openrsc.server.event.rsc.impl;
 
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
+
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
@@ -17,12 +21,15 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+import com.openrsc.server.util.rsc.MessageType;
 
 /**
  * @author n0m
  */
 public class RangeEvent extends GameTickEvent {
 
+	private boolean deliveredFirstProjectile;
+	
 	private int[][] allowedArrows = {{189, 11, 638, 639}, // Shortbow
 		{188, 11, 574, 638, 639}, // Longbow
 		{649, 11, 574, 638, 639}, // Oak Shortbow
@@ -47,6 +54,7 @@ public class RangeEvent extends GameTickEvent {
 		super(owner, 1);
 		this.setImmediate(true);
 		this.target = victim;
+		this.deliveredFirstProjectile = false;
 	}
 
 	public boolean equals(Object o) {
@@ -186,16 +194,19 @@ public class RangeEvent extends GameTickEvent {
 
 				if (target.isNpc()) {
 					Npc npc = (Npc) target;
-					if (damage > 1 && npc.getID() == 477)
-						damage = damage / 2;
-					if (npc.getID() == 196) {
-						getPlayerOwner().message("The dragon breathes fire at you");
-						int maxHit = 65;
-						if (getPlayerOwner().getInventory().wielding(420)) {
-							maxHit = 10;
-							getPlayerOwner().message("Your shield prevents some of the damage from the flames");
+					if (!deliveredFirstProjectile && (npc.getID() == NpcId.DRAGON.id() || npc.getID() == NpcId.KING_BLACK_DRAGON.id())) {
+						getPlayerOwner().playerServerMessage(MessageType.QUEST, "The dragon breathes fire at you");
+						int fireDamage = (int) Math.floor(getCurrentLevel(getPlayerOwner(), Skills.HITPOINTS) * 0.2);
+						if (getPlayerOwner().getInventory().wielding(ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
+							getPlayerOwner().playerServerMessage(MessageType.QUEST, "Your shield prevents some of the damage from the flames");
 						}
-						getPlayerOwner().damage(DataConversions.random(0, maxHit));
+						getPlayerOwner().damage(fireDamage);
+						
+						//reduce ranged level (case for KBD)
+						if (npc.getID() == NpcId.KING_BLACK_DRAGON.id()) {
+							int newLevel = getCurrentLevel(getPlayerOwner(), Skills.RANGED) - Formulae.getLevelsToReduceAttackKBD(getPlayerOwner());
+							getPlayerOwner().getSkills().setLevel(Skills.RANGED, newLevel);
+						}
 					}
 				}
 				if (Formulae.looseArrow(damage)) {
@@ -219,6 +230,7 @@ public class RangeEvent extends GameTickEvent {
 				}
 				Server.getServer().getGameEventHandler().add(new ProjectileEvent(getPlayerOwner(), target, damage, 2));
 				owner.setKillType(2);
+				deliveredFirstProjectile = true;
 			}
 		}
 	}

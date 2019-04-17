@@ -140,12 +140,13 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 				} 
 				// cakes
 				else {
+					boolean isChocolate = itemName.contains("chocolate");
 					if (itemName.contains("slice")) {
-						message = "You eat the slice of cake";
+						message = "You eat the slice of " + (isChocolate ? "chocolate " : " ") + "cake";
 					} else if (itemName.contains("partial")) {
-						message = "You eat some more of the cake";
+						message = "You eat some more of the " + (isChocolate ? "chocolate " : " ") + "cake";
 					} else if (itemName.contains("cake")) {
-						message = "You eat part of the cake";
+						message = "You eat part of the " + (isChocolate ? "chocolate " : " ") + "cake";
 					} else { // shouldn't happen
 						message = "You eat the " + itemName;
 					}

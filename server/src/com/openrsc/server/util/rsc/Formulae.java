@@ -1,5 +1,8 @@
 package com.openrsc.server.util.rsc;
 
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
+import static com.openrsc.server.plugins.Functions.getMaxLevel;
+
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.FiremakingDef;
 import com.openrsc.server.external.GameObjectLoc;
@@ -723,6 +726,34 @@ public final class Formulae {
 			return true;
 		}
 		return DataConversions.random(0, levelDiff + 1) != 0;
+	}
+	
+	public static int getLevelsToReduceAttackKBD(Player p) {
+		int levels = 0;
+		int currLvl = getCurrentLevel(p, Skills.RANGED);
+		int maxLvl = getMaxLevel(p, Skills.RANGED);
+		int ratio = currLvl * 100 / maxLvl;
+		if (currLvl <= 3) {
+			return 0;
+		}
+		if (ratio >= 81)
+			levels = (int)(maxLvl * 0.3);
+		else if (ratio >= 61)
+			levels = (int)(maxLvl * 0.2);
+		else if (ratio >= 41)
+			levels = (int)(maxLvl * 0.15);
+		else if (ratio >= 31)
+			levels = (int)(maxLvl * 0.1);
+		else if (ratio >= 21)
+			levels = (int)(maxLvl * 0.075);
+		else if (ratio >= 16)
+			levels = (int)(maxLvl * 0.05);
+		else if (ratio >= 11)
+			levels = (int)(maxLvl * 0.025);
+		else
+			levels = 1;
+		
+		return levels;
 	}
 
 	/**
