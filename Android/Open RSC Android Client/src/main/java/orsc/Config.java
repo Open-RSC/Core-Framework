@@ -12,13 +12,13 @@ import java.util.Properties;
 public class Config {
     private static Properties prop = new Properties();
 
-    public static boolean DEBUG = false; // enables print out of the config being sent to the client
+    public static boolean DEBUG = false; // Enables print out of the config being sent to the client
     static String WINDOW_TITLE = "Open RSC"; // Only set here due to config not set by server fast enough at load time
     public static String SERVER_NAME = "Runescape";
     public static String SERVER_NAME_WELCOME = "Runescape Classic";
     public static String WELCOME_TEXT = "You need a members account to use this server";
-    static final String SERVER_IP = "game.openrsc.com";
-    static final int SERVER_PORT = 43594;
+    static String SERVER_IP = "game.openrsc.com"; // Modify this in "Cache/ip.txt"
+    static int SERVER_PORT = 43594; // Modify this in "Cache/port.txt"
     public static final int CLIENT_VERSION = 2;
     private static final int CACHE_VERSION = 2;
     public static boolean MEMBER_WORLD = false;
@@ -44,10 +44,10 @@ public class Config {
 
     /* Android: */
     public static boolean F_ANDROID_BUILD = true; // This MUST be true if Android client or it will crash on launch
-	public static final String DL_URL = "game.openrsc.com"; // must be left public for Android to work
-	public static final String ANDROID_DOWNLOAD_PATH = "https://" + DL_URL + "/downloads/";
+    private static final String DL_URL = "game.openrsc.com";
+    public static final String ANDROID_DOWNLOAD_PATH = "https://" + DL_URL + "/downloads/";
     public static final String CACHE_URL = "https://" + DL_URL + "/downloads/cache/";
-    public static final int ANDROID_CLIENT_VERSION = 13; // Important! Depends on web server android_version.txt to check for an updated version
+    public static final int ANDROID_CLIENT_VERSION = 14; // Important! Depends on web server android_version.txt to check for an updated version
     public static boolean F_SHOWING_KEYBOARD = false;
     public static boolean C_HOLD_AND_CHOOSE = true;
     public static int C_LONG_PRESS_TIMER = 5; // default hold timer setting
@@ -113,6 +113,7 @@ public class Config {
     public static int C_FPS = 50;
     public static boolean C_WANT_EMAIL = false;
     public static boolean S_WANT_REGISTRATION_LIMIT = false;
+    public static boolean S_ALLOW_RESIZE = false;
 
     public static void set(String key, Object value) {
         prop.setProperty(key, value.toString());
@@ -274,5 +275,9 @@ public class Config {
 
     static boolean wantEmail() {
         return C_WANT_EMAIL;
+    }
+
+    static boolean allowResize1() {
+        return S_ALLOW_RESIZE;
     }
 }
