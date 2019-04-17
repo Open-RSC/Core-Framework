@@ -679,7 +679,7 @@ public final class GameStateUpdater {
 	 */
 	private void processPlayers() {
 		for (Player p : players) {
-			if (p.isUnregistering()) {
+			if (p.isUnregistering() && p.isLoggedIn()) {
 				World.getWorld().unregisterPlayer(p);
 				continue;
 			}
