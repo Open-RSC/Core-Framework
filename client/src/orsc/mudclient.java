@@ -10,11 +10,55 @@ import com.openrsc.client.entityhandling.defs.extras.AnimationDef;
 import com.openrsc.client.model.Sprite;
 import com.openrsc.interfaces.NComponent;
 import com.openrsc.interfaces.NCustomComponent;
-import com.openrsc.interfaces.misc.*;
+import com.openrsc.interfaces.misc.AuctionHouse;
+import com.openrsc.interfaces.misc.BankPinInterface;
+import com.openrsc.interfaces.misc.CustomBankInterface;
+import com.openrsc.interfaces.misc.DoSkillInterface;
+import com.openrsc.interfaces.misc.ExperienceConfigInterface;
+import com.openrsc.interfaces.misc.FishingTrawlerInterface;
+import com.openrsc.interfaces.misc.IronManInterface;
+import com.openrsc.interfaces.misc.LostOnDeathInterface;
+import com.openrsc.interfaces.misc.OnlineListInterface;
+import com.openrsc.interfaces.misc.ProgressBarInterface;
+import com.openrsc.interfaces.misc.QuestGuideInterface;
+import com.openrsc.interfaces.misc.SkillGuideInterface;
+import com.openrsc.interfaces.misc.TerritorySignupInterface;
 import com.openrsc.interfaces.misc.clan.Clan;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+
 import orsc.buffers.RSBufferUtils;
-import orsc.enumerations.*;
-import orsc.graphics.gui.*;
+import orsc.enumerations.GameMode;
+import orsc.enumerations.InputXAction;
+import orsc.enumerations.MenuItemAction;
+import orsc.enumerations.MessageTab;
+import orsc.enumerations.MessageType;
+import orsc.enumerations.ORSCharacterDirection;
+import orsc.enumerations.SocialPopupMode;
+import orsc.graphics.gui.InputXPrompt;
+import orsc.graphics.gui.KillAnnouncer;
+import orsc.graphics.gui.KillAnnouncerQueue;
+import orsc.graphics.gui.Menu;
+import orsc.graphics.gui.MessageHistory;
+import orsc.graphics.gui.Panel;
+import orsc.graphics.gui.SocialLists;
 import orsc.graphics.three.CollisionFlag;
 import orsc.graphics.three.RSModel;
 import orsc.graphics.three.Scene;
@@ -27,14 +71,89 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
 
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import java.io.*;
-import java.security.SecureRandom;
-import java.util.*;
-import java.util.Map.Entry;
-
-import static orsc.Config.*;
+import static orsc.Config.CLIENT_VERSION;
+import static orsc.Config.C_BATCH_PROGRESS_BAR;
+import static orsc.Config.C_EXPERIENCE_CONFIG_SUBMENU;
+import static orsc.Config.C_EXPERIENCE_COUNTER;
+import static orsc.Config.C_EXPERIENCE_COUNTER_COLOR;
+import static orsc.Config.C_EXPERIENCE_COUNTER_MODE;
+import static orsc.Config.C_EXPERIENCE_DROPS;
+import static orsc.Config.C_EXPERIENCE_DROP_SPEED;
+import static orsc.Config.C_FIGHT_MENU;
+import static orsc.Config.C_HIDE_ROOFS;
+import static orsc.Config.C_HOLD_AND_CHOOSE;
+import static orsc.Config.C_INV_COUNT;
+import static orsc.Config.C_KILL_FEED;
+import static orsc.Config.C_LAST_ZOOM;
+import static orsc.Config.C_LONG_PRESS_TIMER;
+import static orsc.Config.C_MENU_SIZE;
+import static orsc.Config.C_MESSAGE_TAB_SWITCH;
+import static orsc.Config.C_NAME_CLAN_TAG_OVERLAY;
+import static orsc.Config.C_SHOW_FOG;
+import static orsc.Config.C_SHOW_GROUND_ITEMS;
+import static orsc.Config.C_SIDE_MENU_OVERLAY;
+import static orsc.Config.C_SWIPE_TO_ROTATE;
+import static orsc.Config.C_SWIPE_TO_SCROLL;
+import static orsc.Config.C_SWIPE_TO_ZOOM;
+import static orsc.Config.C_VOLUME_TO_ROTATE;
+import static orsc.Config.DEBUG;
+import static orsc.Config.DISPLAY_LOGO_SPRITE;
+import static orsc.Config.F_CACHE_DIR;
+import static orsc.Config.F_SHOWING_KEYBOARD;
+import static orsc.Config.MEMBER_WORLD;
+import static orsc.Config.Remember;
+import static orsc.Config.SERVER_NAME;
+import static orsc.Config.SERVER_NAME_WELCOME;
+import static orsc.Config.S_AUTO_MESSAGE_SWITCH_TOGGLE;
+import static orsc.Config.S_BATCH_PROGRESSION;
+import static orsc.Config.S_CUSTOM_FIREMAKING;
+import static orsc.Config.S_EXPERIENCE_COUNTER_TOGGLE;
+import static orsc.Config.S_EXPERIENCE_DROPS_TOGGLE;
+import static orsc.Config.S_FIGHTMODE_SELECTOR_TOGGLE;
+import static orsc.Config.S_FOG_TOGGLE;
+import static orsc.Config.S_GROUND_ITEM_TOGGLE;
+import static orsc.Config.S_INVENTORY_COUNT_TOGGLE;
+import static orsc.Config.S_ITEMS_ON_DEATH_MENU;
+import static orsc.Config.S_MENU_COMBAT_STYLE_TOGGLE;
+import static orsc.Config.S_PLAYER_LEVEL_LIMIT;
+import static orsc.Config.S_RIGHT_CLICK_BANK;
+import static orsc.Config.S_SHOW_FLOATING_NAMETAGS;
+import static orsc.Config.S_SHOW_ROOF_TOGGLE;
+import static orsc.Config.S_SIDE_MENU_TOGGLE;
+import static orsc.Config.S_SPAWN_AUCTION_NPCS;
+import static orsc.Config.S_SPAWN_IRON_MAN_NPCS;
+import static orsc.Config.S_WANT_BANK_NOTES;
+import static orsc.Config.S_WANT_BANK_PINS;
+import static orsc.Config.S_WANT_CERTS_TO_BANK;
+import static orsc.Config.S_WANT_CERT_DEPOSIT;
+import static orsc.Config.S_WANT_CLANS;
+import static orsc.Config.S_WANT_CUSTOM_BANKS;
+import static orsc.Config.S_WANT_CUSTOM_RANK_DISPLAY;
+import static orsc.Config.S_WANT_DECANTING;
+import static orsc.Config.S_WANT_DROP_X;
+import static orsc.Config.S_WANT_EXPERIENCE_ELIXIRS;
+import static orsc.Config.S_WANT_EXP_INFO;
+import static orsc.Config.S_WANT_FIXED_OVERHEAD_CHAT;
+import static orsc.Config.S_WANT_GLOBAL_CHAT;
+import static orsc.Config.S_WANT_HIDE_IP;
+import static orsc.Config.S_WANT_KEYBOARD_SHORTCUTS;
+import static orsc.Config.S_WANT_KILL_FEED;
+import static orsc.Config.S_WANT_QUEST_MENUS;
+import static orsc.Config.S_WANT_REMEMBER;
+import static orsc.Config.S_WANT_SKILL_MENUS;
+import static orsc.Config.S_WANT_WOODCUTTING_GUILD;
+import static orsc.Config.S_ZOOM_VIEW_TOGGLE;
+import static orsc.Config.WELCOME_TEXT;
+import static orsc.Config.getFPS;
+import static orsc.Config.getServerName;
+import static orsc.Config.getServerNameWelcome;
+import static orsc.Config.getWelcomeText;
+import static orsc.Config.getcLogoSpriteId;
+import static orsc.Config.initConfig;
+import static orsc.Config.isAndroid;
+import static orsc.Config.saveConfiguration;
+import static orsc.Config.wantEmail;
+import static orsc.Config.wantMembers;
 import static orsc.multiclient.ClientPort.saveHideIp;
 
 public final class mudclient implements Runnable {
@@ -545,7 +664,7 @@ public final class mudclient implements Runnable {
 	private ArrayList<XPNotification> xpNotifications = new ArrayList<XPNotification>();
 	private int amountToZoom = 0;
 	private Panel panelLoginOptions;
-	
+
 	int controlRecoveryInstruction;
 	int[] controlSetQuestion = new int[5];
 	int[] controlSetAnswer = new int[5];
@@ -554,7 +673,7 @@ public final class mudclient implements Runnable {
 	int finishSetRecovery;
 	int pkb = -1;
 	String[] jfb = new String[5];
-	int ifb[] = { 0, 1, 2, 3, 4 };
+	int ifb[] = {0, 1, 2, 3, 4};
 	int instructPassRecovery1;
 	int instructPassRecovery2;
 	int controlPreviousPassword;
@@ -564,24 +683,24 @@ public final class mudclient implements Runnable {
 	int passwordRecoverCancel;
 	int controlPassQuestion[] = new int[5];
 	int controlPassAnswer[] = new int[5];
-	String questions[] = { "Where were you born?",
-			"What was your first teacher's name?",
-			"What is your father's middle name?",
-			"Who was your first best friend?",
-			"What is your favourite vacation spot?",
-			"What is your mother's middle name?",
-			"What was your first pet's name?",
-			"What was the name of your first school?",
-			"What is your mother's maiden name?",
-			"Who was your first boyfriend/girlfriend?",
-			"What was the first computer game you purchased?",
-			"Who is your favourite actor/actress?",
-			"Who is your favourite author?",
-			"Who is your favourite musician?",
-			"Who is your favourite cartoon character?",
-			"What is your favourite book?",
-			"What is your favourite food?",
-			"What is your favourite movie?" };
+	String questions[] = {"Where were you born?",
+		"What was your first teacher's name?",
+		"What is your father's middle name?",
+		"Who was your first best friend?",
+		"What is your favourite vacation spot?",
+		"What is your mother's middle name?",
+		"What was your first pet's name?",
+		"What was the name of your first school?",
+		"What is your mother's maiden name?",
+		"Who was your first boyfriend/girlfriend?",
+		"What was the first computer game you purchased?",
+		"Who is your favourite actor/actress?",
+		"Who is your favourite author?",
+		"Who is your favourite musician?",
+		"Who is your favourite cartoon character?",
+		"What is your favourite book?",
+		"What is your favourite food?",
+		"What is your favourite movie?"};
 
 	/**
 	 * Newest RSC cache: SAME VALUES.
@@ -1362,7 +1481,7 @@ public final class mudclient implements Runnable {
 			throw GenUtil.makeThrowable(var5, "client.RB(" + sendPacket + ',' + "dummy" + ')');
 		}
 	}
-	
+
 	private void createRecoveryQuestionPanel() {
 		this.panelSetRecoveryQuestion = new Panel(this.getSurface(), 100);
 		int i1 = 8;
@@ -1382,7 +1501,7 @@ public final class mudclient implements Runnable {
 			this.panelSetRecoveryQuestion.addButtonBackground(170, i1, 310, 30);
 			this.jfb[j1] = "~:" + this.ifb[j1];
 			this.controlSetQuestion[j1] = this.panelSetRecoveryQuestion.addCenteredText(170, i1 - 7, (j1 + 1) + ": "
-					+ questions[this.ifb[j1]], 1, true);
+				+ questions[this.ifb[j1]], 1, true);
 			this.controlSetAnswer[j1] = this.panelSetRecoveryQuestion.addCenteredTextEntry(170, i1 + 7, 310, 30, 1, 80, false, true);
 			this.panelSetRecoveryQuestion.addButtonBackground(370, i1, 80, 30);
 			this.panelSetRecoveryQuestion.addCenteredText(370, i1 - 7, "Different", 1, true);
@@ -1393,14 +1512,14 @@ public final class mudclient implements Runnable {
 			this.controlCustomAnswer[j1] = this.panelSetRecoveryQuestion.addButton(455, i1, 80, 30);
 			i1 += 35;
 		}
-		
+
 		this.panelSetRecoveryQuestion.setFocus(this.controlSetAnswer[0]);
 		i1 += 10;
 		this.panelSetRecoveryQuestion.addButtonBackground(256, i1, 250, 30);
 		this.panelSetRecoveryQuestion.addCenteredText(256, i1, "Click here when finished", 4, true);
 		this.finishSetRecovery = this.panelSetRecoveryQuestion.addButton(256, i1, 250, 30);
-    }
-	
+	}
+
 	public void method_181() {
 		if (this.pkb != -1) {
 			if (this.chatMessageInputCommit.length() > 0) {
@@ -1460,7 +1579,7 @@ public final class mudclient implements Runnable {
 								}
 							}
 						}
-						
+
 						//todo: check opcode
 						this.packetHandler.getClientStream().newPacket(208);
 
@@ -1507,7 +1626,7 @@ public final class mudclient implements Runnable {
 
 		}
 	}
-	
+
 	public void method_182() {
 		this.getSurface().interlace = false;
 		this.getSurface().blackScreen(true);
@@ -1527,7 +1646,7 @@ public final class mudclient implements Runnable {
 		// 256, this.screenOffsetY);
 		clientPort.draw();
 	}
-	
+
 	private void createPasswordRecoveryPanel() {
 		this.panelRecovery = new Panel(this.getSurface(), 100);
 		int i1 = 10;
@@ -1541,7 +1660,7 @@ public final class mudclient implements Runnable {
 			this.controlPassAnswer[j1] = this.panelRecovery.addCenteredTextEntry(256, i1 + 7, 310, 30, 1, 80, true, true);
 			i1 += 35;
 		}
-		
+
 		this.panelRecovery.setFocus(this.controlPassAnswer[0]);
 		this.panelRecovery.addButtonBackground(256, i1, 410, 30);
 		this.panelRecovery.addCenteredText(256, i1 - 7, "If you know it, enter a previous password used on this account", 1, true);
@@ -1561,7 +1680,7 @@ public final class mudclient implements Runnable {
 		this.panelRecovery.addCenteredText(311, i1, "Cancel", 4, true);
 		this.passwordRecoverCancel = this.panelRecovery.addButton(311, i1, 100, 30);
 	}
-	
+
 	public void setShowRecoveryDialogue(boolean show) {
 		this.showSetRecoveryQuestion = show;
 
@@ -9730,17 +9849,17 @@ public final class mudclient implements Runnable {
 			showLoginScreenStatus("Invalid email address", "please use a valid email address");
 		}
 		try {
-			if (!isAndroid()) {
+			if ((Config.SERVER_IP != null)) {
+				String ip = Config.SERVER_IP;
+				int port = Config.SERVER_PORT;
+				this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
+				this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
+			} else {
 				String ip = ClientPort.loadIP();
 				int port = ClientPort.loadPort();
-				if (ip == null) ip = SERVER_IP;
-				if (port == 0) port = SERVER_PORT;
 				this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
-			} else {
-				this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(SERVER_PORT, SERVER_IP), this.packetHandler));
+				this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
 			}
-			this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
-
 			this.packetHandler.getClientStream().newPacket(78);
 			this.packetHandler.getClientStream().writeBuffer1.putString(user);
 			this.packetHandler.getClientStream().writeBuffer1.putString(pass);
@@ -11163,16 +11282,17 @@ public final class mudclient implements Runnable {
 								"Connection lost! Please wait...");
 						}
 
-						if (!isAndroid()) {
+						if ((Config.SERVER_IP != null)) {
+							String ip = Config.SERVER_IP;
+							int port = Config.SERVER_PORT;
+							this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
+							this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
+						} else {
 							String ip = ClientPort.loadIP();
 							int port = ClientPort.loadPort();
-							if (ip == null) ip = SERVER_IP;
-							if (port == 0) port = SERVER_PORT;
 							this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
-						} else {
-							this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(SERVER_PORT, SERVER_IP), this.packetHandler));
+							this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
 						}
-						this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
 
 						Math.random();
 						Math.random();
@@ -12092,8 +12212,16 @@ public final class mudclient implements Runnable {
 				RSBufferUtils.setStringEncryptor(RSBufferUtils.encryption);
 				this.setExperienceArray();
 				MiscFunctions.maxReadTries = 1000;
-				// We get the server config before continuing.
-				System.out.println("Getting server configs...");
+				// We must fetch the server config before continuing.
+				if ((Config.SERVER_IP != null)) {
+					String ip = Config.SERVER_IP;
+					int port = Config.SERVER_PORT;
+					System.out.println("Fetching server configs from " + ip + ":" + port);
+				} else {
+					String ip = ClientPort.loadIP();
+					int port = ClientPort.loadPort();
+					System.out.println("Fetching server configs from " + ip + ":" + port);
+				}
 				this.getServerConfig();
 			}
 		} catch (RuntimeException var9) {
@@ -13000,14 +13128,14 @@ public final class mudclient implements Runnable {
 
 	private void getServerConfig() {
 		try {
-			if (!isAndroid()) {
-				String ip = ClientPort.loadIP();
-				int port = ClientPort.loadPort();
-				if (ip == null) ip = SERVER_IP;
-				if (port == 0) port = SERVER_PORT;
+			if ((Config.SERVER_IP != null)) {
+				String ip = Config.SERVER_IP;
+				int port = Config.SERVER_PORT;
 				this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
 			} else {
-				this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(SERVER_PORT, SERVER_IP), this.packetHandler));
+				String ip = ClientPort.loadIP();
+				int port = ClientPort.loadPort();
+				this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
 			}
 			this.packetHandler.getClientStream().newPacket(19);
 			this.packetHandler.getClientStream().finishPacketAndFlush();
