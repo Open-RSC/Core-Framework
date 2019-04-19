@@ -6,6 +6,8 @@ import com.openrsc.server.content.achievement.Achievement;
 import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanInvite;
+import com.openrsc.server.content.clan.ClanManager;
+import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.event.rsc.impl.*;
@@ -1735,6 +1737,43 @@ public final class Player extends Mob {
 	public void logout() {
 		ActionSender.sendLogoutRequestConfirm(this);
 		setLoggedIn(false);
+
+		FishingTrawler trawlerInstance = World.getWorld().getFishingTrawler(this);
+
+		resetAll();
+
+		Mob opponent = getOpponent();
+		if (opponent != null) {
+			resetCombatEvent();
+		}
+		if(trawlerInstance != null && trawlerInstance.getPlayers().contains(this)) {
+			trawlerInstance.disconnectPlayer(this, true);
+		}
+		if (getLocation().inMageArena()) {
+			teleport(228, 109);
+		}
+		// store kitten growth progress
+		getCache().set("kitten_events", getAttribute("kitten_events", 0));
+		getCache().set("kitten_hunger", getAttribute("kitten_hunger", 0));
+		getCache().set("kitten_loneliness", getAttribute("kitten_loneliness", 0));
+		// any gnome ball progress
+		getCache().set("gnomeball_goals", getSyncAttribute("gnomeball_goals", 0));
+		getCache().set("gnomeball_npc", getSyncAttribute("gnomeball_npc", 0));
+
+		save();
+
+		/** IP Tracking in wilderness removal */
+		/*if(player.getLocation().inWilderness())
+		{
+			wildernessIPTracker.remove(player.getCurrentIP());
+		}*/
+
+		for (Player other : World.getWorld().getPlayers()) {
+			other.getSocial().alertOfLogout(this);
+		}
+
+		ClanManager.checkAndUnattachFromClan(this);
+
 		Server.getPlayerDataProcessor().addRemoveRequest(this);
 	}
 

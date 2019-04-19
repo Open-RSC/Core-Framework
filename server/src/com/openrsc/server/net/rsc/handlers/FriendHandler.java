@@ -39,13 +39,13 @@ public final class FriendHandler implements PacketHandler {
 
 			boolean added = player.getSocial().addFriend(friend, 0, DataConversions.hashToUsername(friend));
 			if (added) {
-				ActionSender.sendFriendUpdate(player, friend, 0);
+				ActionSender.sendFriendUpdate(player, friend);
 				if (affectedPlayer != null && affectedPlayer.loggedIn()) {
 					if (affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash())) {
-						ActionSender.sendFriendUpdate(affectedPlayer, player.getUsernameHash(), 99);
-						ActionSender.sendFriendUpdate(player, friend, 99);
+						ActionSender.sendFriendUpdate(affectedPlayer, player.getUsernameHash());
+						ActionSender.sendFriendUpdate(player, friend);
 					} else if (!affectedPlayer.getSettings().getPrivacySetting(1)) {
-						ActionSender.sendFriendUpdate(player, friend, 99);
+						ActionSender.sendFriendUpdate(player, friend);
 					}
 				}
 			}
@@ -53,7 +53,7 @@ public final class FriendHandler implements PacketHandler {
 			player.getSocial().removeFriend(friend);
 			if (affectedPlayer != null && affectedPlayer.loggedIn()) {
 				if (player.getSettings().getPrivacySetting(1) && affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash())) {
-					ActionSender.sendFriendUpdate(affectedPlayer, player.getUsernameHash(), 0);
+					ActionSender.sendFriendUpdate(affectedPlayer, player.getUsernameHash());
 				}
 			}
 		} else if (pID == packetThree) { // Add ignore

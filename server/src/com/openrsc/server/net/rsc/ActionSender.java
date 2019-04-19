@@ -325,7 +325,7 @@ public class ActionSender {
 				int iteratorindex = 0;
 				for (Entry<Long, Integer> entry : player.getSocial().getFriendListEntry()) {
 					if (iteratorindex == currentFriend) {
-						sendFriendUpdate(player, entry.getKey(), entry.getValue());
+						sendFriendUpdate(player, entry.getKey());
 						break;
 					}
 					iteratorindex++;
@@ -338,23 +338,35 @@ public class ActionSender {
 	/**
 	 * Updates a friends login status
 	 */
-	public static void sendFriendUpdate(Player player, long usernameHash, int world) {
+	public static void sendFriendUpdate(Player player, long usernameHash) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+		int arg = 0;
+
+		if (
+			World.getWorld().getPlayer(usernameHash) != null &&
+				World.getWorld().getPlayer(usernameHash).isLoggedIn() &&
+				( !World.getWorld().getPlayer(usernameHash).getSettings().getPrivacySetting(1) ||
+					World.getWorld().getPlayer(usernameHash).getSocial().isFriendsWith(player.getUsernameHash()) ||
+					player.isMod()
+				)
+		) {
+			arg |= 4 | 2; // 4 for is online and 2 for on same world. 1 would be if the User's name changed from original
+		}
+
 		s.setID(Opcode.SEND_FRIEND_UPDATE.opcode);
+
 		String username = DataConversions.hashToUsername(usernameHash);
 		s.writeString(username);
+
 		// if(usernameChanged)
-		// s.writeString(username);
-		s.writeByte(10);
-		if (World.getWorld().getPlayer(usernameHash) != null
-			&& (!World.getWorld().getPlayer(usernameHash).getSettings().getPrivacySetting(1)
-			|| World.getWorld().getPlayer(usernameHash).getSocial().isFriendsWith(player.getUsernameHash())
-			|| player.isMod())) {
-			world = 6;
-		}
-		s.writeByte(world);
-		if (world > 0)
+		//s.writeString(username);
+		s.writeByte(10); // Is this meant to be a null string?
+
+		s.writeByte(arg);
+
+		if((arg & 4) != 0)
 			s.writeString("OpenRSC");
+
 		player.write(s.toPacket());
 	}
 
@@ -1006,8 +1018,6 @@ public class ActionSender {
 	static void sendLogin(Player p) {
 		try {
 			if (World.getWorld().registerPlayer(p)) {
-				p.setBusy(false);
-				p.setLoggedIn(true);
 
 				sendWorldInfo(p);
 				GameStateUpdater.sendUpdatePackets(p);

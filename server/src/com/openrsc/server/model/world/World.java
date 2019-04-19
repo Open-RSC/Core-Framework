@@ -13,7 +13,6 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
-import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.snapshot.Snapshot;
@@ -506,6 +505,9 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		if (!players.contains(player)) {
 			player.setUUID(UUID.randomUUID().toString());
 
+			player.setLoggedIn(true);
+			player.setBusy(false);
+
 			players.add(player);
 			player.updateRegion();
 			if (Server.getPlayerDataProcessor() != null) {
@@ -672,47 +674,13 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	 * Removes a player from the server and saves their account
 	 */
 	public void unregisterPlayer(final Player player) {
-		FishingTrawler trawlerInstance = getFishingTrawler(player);
 		try {
-			player.resetAll();
-
-			Mob opponent = player.getOpponent();
-			if (opponent != null) {
-				player.resetCombatEvent();
-			}
 			if (Server.getPlayerDataProcessor() != null) {
 				GameLogging.addQuery(new PlayerOnlineFlagQuery(player.getDatabaseID(), false));
 				if (Constants.GameServer.AVATAR_GENERATOR)
 					avatarGenerator.generateAvatar(player.getDatabaseID(), player.getSettings().getAppearance(), player.getWornItems());
 			}
-			if(trawlerInstance != null && trawlerInstance.getPlayers().contains(player)) {
-				trawlerInstance.disconnectPlayer(player, true);
-			}
-			if (player.getLocation().inMageArena()) {
-				player.teleport(228, 109);
-			}
-			// store kitten growth progress
-			player.getCache().set("kitten_events", player.getAttribute("kitten_events", 0));
-			player.getCache().set("kitten_hunger", player.getAttribute("kitten_hunger", 0));
-			player.getCache().set("kitten_loneliness", player.getAttribute("kitten_loneliness", 0));
-			// any gnome ball progress
-			player.getCache().set("gnomeball_goals", player.getSyncAttribute("gnomeball_goals", 0));
-			player.getCache().set("gnomeball_npc", player.getSyncAttribute("gnomeball_npc", 0));
-			player.save();
 			player.logout();
-
-
-			/** IP Tracking in wilderness removal */
-			/*if(player.getLocation().inWilderness())
-			{
-				wildernessIPTracker.remove(player.getCurrentIP());
-			}*/
-
-			for (Player other : getPlayers()) {
-				other.getSocial().alertOfLogout(player);
-			}
-
-			ClanManager.checkAndUnattachFromClan(player);
 			LOGGER.info("Unregistered " + player.getUsername() + " from player list.");
 		} catch (Exception e) {
 			LOGGER.catching(e);

@@ -38,8 +38,8 @@ public class PlayerSettings {
 					if (!player.getSocial().isFriendsWith(pl.getUsernameHash())
 						&& pl.getSocial().isFriendsWith(player.getUsernameHash())
 						&& pl.getIndex() != player.getIndex()) {
-						ActionSender.sendFriendUpdate(pl, player.getUsernameHash(),
-							0);
+						ActionSender.sendFriendUpdate(pl, player.getUsernameHash()
+						);
 					}
 				}
 			} else if (!privacySettings[1] && b) {
@@ -47,8 +47,8 @@ public class PlayerSettings {
 					if (!player.getSocial().isFriendsWith(pl.getUsernameHash())
 						&& pl.getSocial().isFriendsWith(player.getUsernameHash())
 						&& pl.getIndex() != player.getIndex()) {
-						ActionSender.sendFriendUpdate(pl, player.getUsernameHash(),
-							99);
+						ActionSender.sendFriendUpdate(pl, player.getUsernameHash()
+						);
 					}
 				}
 			}
