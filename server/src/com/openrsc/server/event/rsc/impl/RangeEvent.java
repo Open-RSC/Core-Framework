@@ -196,10 +196,19 @@ public class RangeEvent extends GameTickEvent {
 					Npc npc = (Npc) target;
 					if (!deliveredFirstProjectile && (npc.getID() == NpcId.DRAGON.id() || npc.getID() == NpcId.KING_BLACK_DRAGON.id())) {
 						getPlayerOwner().playerServerMessage(MessageType.QUEST, "The dragon breathes fire at you");
-						int fireDamage = (int) Math.floor(getCurrentLevel(getPlayerOwner(), Skills.HITPOINTS) * 0.2);
+						int percentage = 20;
+						int fireDamage;
 						if (getPlayerOwner().getInventory().wielding(ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
+							if (npc.getID() == NpcId.DRAGON.id()) {
+								percentage = 10;
+							} else if (npc.getID() == NpcId.KING_BLACK_DRAGON.id()) {
+								percentage = 4;
+							} else {
+								percentage = 0;
+							}
 							getPlayerOwner().playerServerMessage(MessageType.QUEST, "Your shield prevents some of the damage from the flames");
 						}
+						fireDamage = (int) Math.floor(getCurrentLevel(getPlayerOwner(), Skills.HITPOINTS) * percentage / 100.0);
 						getPlayerOwner().damage(fireDamage);
 						
 						//reduce ranged level (case for KBD)
