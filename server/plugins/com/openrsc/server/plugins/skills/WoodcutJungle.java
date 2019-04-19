@@ -5,7 +5,6 @@ import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
-import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
@@ -129,10 +128,7 @@ public class WoodcutJungle implements ObjectActionListener,
 			}
 			if (DataConversions.random(0, 10) == 8) {
 				final Item log = new Item(ItemId.LOGS.id());
-				if (!p.getInventory().full())
-					p.getInventory().add(log);
-				else
-					World.getWorld().registerItem(new GroundItem(log.getID(), p.getX(), p.getY(), log.getAmount(), p));
+				p.getInventory().add(log);
 				p.message("You get some wood");
 			}
 			p.teleport(obj.getX(), obj.getY());
