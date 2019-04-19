@@ -8,7 +8,6 @@ import com.openrsc.server.external.ObjectWoodcuttingDef;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
-import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
@@ -97,30 +96,32 @@ public class Woodcutting implements ObjectActionListener,
 		owner.message("You swing your " + EntityHandler.getItemDef(axeId).getName().toLowerCase() + " at the tree...");
 		owner.setBatchEvent(new BatchEvent(owner, 1800, batchTimes) {
 			public void action() {
+				final Item log = new Item(def.getLogId());
 				if (owner.getFatigue() >= owner.MAX_FATIGUE) {
 					owner.message("You are too tired to cut the tree");
 					interrupt();
 					return;
 				}
 				if (getLog(def.getReqLevel(), owner.getSkills().getLevel(Skills.WOODCUT), axeID)) {
-					final Item log = new Item(def.getLogId());
-					if (!owner.getInventory().full())
+					//check if the tree is still up
+					GameObject obj = owner.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+					if (obj == null) {
+						owner.message("You slip and fail to hit the tree");
+						interrupt();
+					} else {
 						owner.getInventory().add(log);
-					else
-						World.getWorld().registerItem(new GroundItem(log.getID(), owner.getX(),
-							owner.getY(), log.getAmount(), owner));
-					owner.message("You get some wood");
-					owner.incExp(Skills.WOODCUT, (int) def.getExp(), true);
+						owner.message("You get some wood");
+						owner.incExp(Skills.WOODCUT, (int) def.getExp(), true);
+					}
 					if (DataConversions.random(1, 100) <= def.getFell()) {
 						int stumpId;
 						if (def.getLogId() == ItemId.LOGS.id() || def.getLogId() == ItemId.MAGIC_LOGS.id()) {
 							stumpId = 4; //narrow tree stump
 						} else {
-							stumpId = 314; //bigger tree stump
+							stumpId = 314; //wide tree stump
 						}
 						
 						interrupt();
-						GameObject obj = owner.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 						if (obj != null && obj.getID() == object.getID()) {
 							World.getWorld().replaceGameObject(object, new GameObject(object.getLocation(), stumpId, object.getDirection(), object.getType()));
 							World.getWorld().delayedSpawnObject(object.getLoc(), def

@@ -826,15 +826,19 @@ public class SpellHandler implements PacketHandler {
 					Npc n = (Npc) affectedMob;
 					if (n.getID() == NpcId.DRAGON.id() || n.getID() == NpcId.KING_BLACK_DRAGON.id()) {
 						player.playerServerMessage(MessageType.QUEST, "The dragon breathes fire at you");
-						int fireDamage = 0;
-						if (n.getID() == NpcId.DRAGON.id()) {
-							fireDamage = (int) Math.floor(getCurrentLevel(player, Skills.HITPOINTS) * 0.1);
-						} else if (n.getID() == NpcId.KING_BLACK_DRAGON.id()) {
-							fireDamage = (int) Math.floor(getCurrentLevel(player, Skills.HITPOINTS) * 0.04);
-						}
+						int percentage = 20;
+						int fireDamage;
 						if (player.getInventory().wielding(ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
+							if (n.getID() == NpcId.DRAGON.id()) {
+								percentage = 10;
+							} else if (n.getID() == NpcId.KING_BLACK_DRAGON.id()) {
+								percentage = 4;
+							} else {
+								percentage = 0;
+							}
 							player.playerServerMessage(MessageType.QUEST, "Your shield prevents some of the damage from the flames");
 						}
+						fireDamage = (int) Math.floor(getCurrentLevel(player, Skills.HITPOINTS) * percentage / 100.0);
 						player.damage(fireDamage);
 						
 						//reduce ranged level (case for KBD)

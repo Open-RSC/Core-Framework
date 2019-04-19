@@ -239,6 +239,12 @@ public class Thieving extends Functions
 			player.message("You are too tired to thieve here");
 			return;
 		}
+		//check if the chest is still same
+		GameObject checkObj = player.getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
+		if (checkObj == null) {
+			player.message("You find nothing");
+			return;
+		}
 
 		player.message("You find a trap on the chest");
 		GameObject tempChest = new GameObject(obj.getLocation(), 340, obj.getDirection(), obj.getType());

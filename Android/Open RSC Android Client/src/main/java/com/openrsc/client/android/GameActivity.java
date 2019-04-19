@@ -46,9 +46,7 @@ public class GameActivity extends Activity implements ClientPort {
 
         mudclient.packetHandler = new PacketHandler(mudclient);
 
-        if (mudclient.threadState >= 0) {
-            mudclient.threadState = 0;
-        }
+        if (mudclient.threadState >= 0) mudclient.threadState = 0;
 
         Config.F_ANDROID_BUILD = true;
 
@@ -60,96 +58,70 @@ public class GameActivity extends Activity implements ClientPort {
 
     @Override
     public boolean drawLoading(int i) {
-        if (gameView == null) {
-            return false;
-        }
+        if (gameView == null) return false;
         return gameView.drawLoading(i);
     }
 
     @Override
     public void showLoadingProgress(int percentage, String status) {
-        if (gameView != null) {
-            gameView.showLoadingProgress(percentage, status);
-        }
+        if (gameView != null) gameView.showLoadingProgress(percentage, status);
     }
 
     @Override
     public void initListeners() {
-        if (gameView != null) {
-            gameView.initListeners();
-        }
+        if (gameView != null) gameView.initListeners();
     }
 
     @Override
     public void crashed() {
-        if (gameView != null) {
-            gameView.crashed();
-        }
+        if (gameView != null) gameView.crashed();
     }
 
     @Override
     public void drawLoadingError() {
-        if (gameView != null) {
-            gameView.drawLoadingError();
-        }
+        if (gameView != null) gameView.drawLoadingError();
     }
 
     @Override
     public void drawOutOfMemoryError() {
-        if (gameView != null) {
-            gameView.drawOutOfMemoryError();
-        }
+        if (gameView != null) gameView.drawOutOfMemoryError();
     }
 
     @Override
     public boolean isDisplayable() {
-        if (gameView != null) {
-            return gameView.isDisplayable();
-        }
+        if (gameView != null) return gameView.isDisplayable();
         return false;
     }
 
     @Override
     public void drawTextBox(String line2, byte var2, String line1) {
-        if (gameView != null) {
-            gameView.drawTextBox(line2, var2, line1);
-        }
+        if (gameView != null) gameView.drawTextBox(line2, var2, line1);
     }
 
     @Override
     public void initGraphics() {
-        if (gameView != null) {
-            gameView.initGraphics();
-        }
+        if (gameView != null) gameView.initGraphics();
     }
 
     @Override
     public void draw() {
-        if (gameView != null) {
-            gameView.draw();
-        }
+        if (gameView != null) gameView.draw();
     }
 
     @Override
     public void close() {
-        if (gameView != null) {
-            gameView.close();
-        }
+        if (gameView != null) gameView.close();
     }
 
     @Override
     public String getCacheLocation() {
-        if (gameView != null) {
-            return gameView.getCacheLocation();
-        }
+        if (gameView != null) return gameView.getCacheLocation();
         return null;
     }
 
     @Override
     public void resized() {
-        if (gameView != null) {
-            gameView.resized();
-        }
+        if (gameView != null) gameView.resized();
     }
 
     @Override
@@ -159,16 +131,12 @@ public class GameActivity extends Activity implements ClientPort {
 
     @Override
     public void playSound(byte[] soundData, int offset, int dataLength) {
-        if (gameView != null) {
-            gameView.playSound(soundData, offset, dataLength);
-        }
+        if (gameView != null) gameView.playSound(soundData, offset, dataLength);
     }
 
     @Override
     public void stopSoundPlayer() {
-        if (gameView != null) {
-            gameView.stopSoundPlayer();
-        }
+        if (gameView != null) gameView.stopSoundPlayer();
     }
 
     public mudclient getMudclient() {
@@ -191,8 +159,6 @@ public class GameActivity extends Activity implements ClientPort {
         InputMethodManager imm = (InputMethodManager) this
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-        if (imm.isAcceptingText()) { // REMOVE?
-            Config.F_SHOWING_KEYBOARD = true;
-        }
+        if (imm.isAcceptingText()) Config.F_SHOWING_KEYBOARD = true;
     }
 }

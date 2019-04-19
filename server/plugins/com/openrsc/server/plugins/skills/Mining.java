@@ -218,11 +218,16 @@ public final class Mining implements ObjectActionListener,
 						owner.message("You just found a" + gem.getDef().getName().toLowerCase().replaceAll("uncut", "") + "!");
 						interrupt();
 					} else {
-						owner.getInventory().add(ore);
-						owner.message("You manage to obtain some " + ore.getDef().getName().toLowerCase());
-						owner.incExp(Skills.MINING, def.getExp(), true);
-						interrupt();
+						//check if there is still ore at the rock
 						GameObject obj = owner.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+						if (obj == null) {
+							owner.message("You only succeed in scratching the rock");
+						} else {
+							owner.getInventory().add(ore);
+							owner.message("You manage to obtain some " + ore.getDef().getName().toLowerCase());
+							owner.incExp(Skills.MINING, def.getExp(), true);
+						}
+						interrupt();
 						if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
 							GameObject newObject = new GameObject(object.getLocation(), 98, object.getDirection(), object.getType());
 							World.getWorld().replaceGameObject(object, newObject);

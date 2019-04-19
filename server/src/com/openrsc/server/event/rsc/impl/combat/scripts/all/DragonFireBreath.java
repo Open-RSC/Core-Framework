@@ -34,6 +34,8 @@ public class DragonFireBreath implements OnCombatStartScript {
 		if (attacker.isNpc() || victim.getID() == NpcId.DRAGON.id() || victim.getID() == NpcId.KING_BLACK_DRAGON.id()) {
 			player.playerServerMessage(MessageType.QUEST, "The dragon breathes fire at you");
 			int maxHit = 65; // ELVARG & KING BLACK DRAGON - MAXIMUM HIT FOR BOTH
+			boolean wearingShield = false;
+			int percentage;
 			int fireDamage;
 			if (dragon.getID() == NpcId.BABY_BLUE_DRAGON.id()) {
 				maxHit = 12; // NOT SURE BUT DEFINITELY NOT 65 FOR BABY BLUES.
@@ -45,11 +47,22 @@ public class DragonFireBreath implements OnCombatStartScript {
 			if (player.getInventory().wielding(ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
 				maxHit = (int) Math.ceil(maxHit * 0.2D); // shield lowers by about 80% of the max
 				player.playerServerMessage(MessageType.QUEST, "Your shield prevents some of the damage from the flames");
+				wearingShield = true;
 			}
-			if (player.isRanging()) {
-				fireDamage = (int) Math.floor(getCurrentLevel(player, Skills.HITPOINTS) * 0.2);
+			if (player.isRanging() && (dragon.getID() == NpcId.DRAGON.id() || dragon.getID() == NpcId.KING_BLACK_DRAGON.id())) {
+				if (!wearingShield) {
+					percentage = 20;
+				} else if (dragon.getID() == NpcId.DRAGON.id()) {
+					percentage = 10;
+				} else if (dragon.getID() == NpcId.KING_BLACK_DRAGON.id()) {
+					percentage = 4;
+				} else {
+					percentage = 0;
+				}
+				fireDamage = (int) Math.floor(getCurrentLevel(player, Skills.HITPOINTS) * percentage / 100.0);
+			} else {
+				fireDamage = Math.min(getCurrentLevel(player, Skills.HITPOINTS), DataConversions.random(0, maxHit));
 			}
-			fireDamage = Math.min(getCurrentLevel(player, Skills.HITPOINTS), DataConversions.random(0, maxHit));
 			if (fireDamage >= 25 || (fireDamage >= 20 && getMaxLevel(player, Skills.HITPOINTS) * 2/5 < 25)) {
 				player.message("You are fried");
 			}

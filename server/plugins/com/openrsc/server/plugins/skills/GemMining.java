@@ -107,11 +107,17 @@ public class GemMining implements ObjectActionListener,
 			public void action() {
 				if (getGem(p, 40, owner.getSkills().getLevel(Skills.MINING), axeId) && mineLvl >= 40) { // always 40 required mining.
 					Item gem = new Item(getGemFormula(p.getInventory().wielding(ItemId.CHARGED_DRAGONSTONE_AMULET.id())), 1);
-					owner.message(minedString(gem.getID()));
-					owner.incExp(Skills.MINING, 200, true); // always 50XP
-					owner.getInventory().add(gem);
-					interrupt();
+					//check if there is still gem at the rock
 					GameObject object = owner.getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
+					if (object == null) {
+						owner.message("You only succeed in scratching the rock");
+					} else {
+						owner.message(minedString(gem.getID()));
+						owner.incExp(Skills.MINING, 200, true); // always 50XP
+						owner.getInventory().add(gem);
+					}
+					interrupt();
+					
 					if (object != null && object.getID() == obj.getID()) {
 						GameObject newObject = new GameObject(obj.getLocation(), 98, obj.getDirection(), obj.getType());
 						World.getWorld().replaceGameObject(obj, newObject);

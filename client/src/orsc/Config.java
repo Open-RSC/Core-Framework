@@ -17,8 +17,8 @@ public class Config {
 	public static String SERVER_NAME = "Runescape";
 	public static String SERVER_NAME_WELCOME = "Runescape Classic";
 	public static String WELCOME_TEXT = "You need a members account to use this server";
-	static String SERVER_IP; // Modify this in "Cache/ip.txt"
-	static int SERVER_PORT; // Modify this in "Cache/port.txt"
+	static String SERVER_IP = null; // Modify this to override "Cache/ip.txt"
+	static int SERVER_PORT = 43594; // Modify SERVER_IP above to override "Cache/port.txt" with this value
 	public static final int CLIENT_VERSION = 2;
 	private static final int CACHE_VERSION = 2;
 	public static boolean MEMBER_WORLD = false;
