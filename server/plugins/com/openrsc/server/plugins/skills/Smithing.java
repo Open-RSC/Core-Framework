@@ -282,7 +282,11 @@ public class Smithing implements InvUseOnObjectListener,
 		// Armour
 		if (firstType == 1) {
 			player.message("Choose a type of armour to make");
-			return offset + showMenu(player, "Helmet", "Shield", "Armour");
+			int option = showMenu(player, "Helmet", "Shield", "Armour");
+			// Cancel
+			if (option < 0) return -1;
+			
+			return offset + option;
 		}
 
 		offset += 3;
