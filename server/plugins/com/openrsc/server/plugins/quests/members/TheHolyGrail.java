@@ -500,8 +500,7 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 			npcTalk(p, percival, "Ok I will see you there then");
 			p.updateQuestStage(this, 5);
 		} else {
-			playerTalk(p, percival,
-				"Oh dear seems like I have forgot the whistle with me");
+			playerTalk(p, percival, "I will just go and get you one");
 		}
 	}
 }
