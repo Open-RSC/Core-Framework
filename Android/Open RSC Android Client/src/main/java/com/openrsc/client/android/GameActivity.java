@@ -26,7 +26,6 @@ public class GameActivity extends Activity implements ClientPort {
     private InputImpl inputImpl;
     private mudclient mudclient;
     private RSCBitmapSurfaceView gameView;
-    static PacketHandler packetHandler;
 
 
     @Override
@@ -34,12 +33,6 @@ public class GameActivity extends Activity implements ClientPort {
         super.onCreate(savedInstanceState);
 
         gameView = new RSCBitmapSurfaceView(this) {
-            public boolean saveHideIp(int preference) {
-                return false;
-            }
-            public int loadHideIp() {
-                return 0;
-            }
         };
         setMudclient(new mudclient(this));
         setContentView(gameView);
