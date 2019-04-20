@@ -331,8 +331,8 @@ public class Npc extends Mob {
 				currentHighestDamage = dmgDoneByPlayer;
 			}
 			newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByPlayer));
-			p.incExp(Skills.MAGIC, newXP * 4, true);
-			ActionSender.sendStat(p, Skills.MAGIC);
+			p.incExp(Skills.RANGED, newXP * 4, true);
+			ActionSender.sendStat(p, Skills.RANGED);
 		}
 
 		// Magic damagers
