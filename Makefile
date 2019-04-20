@@ -106,8 +106,17 @@ backup-wolfkingdom:
 	sudo chmod 644 etc/mariadb/innodb.cnf
 	docker exec mysql mysqldump -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} wolfkingdom --single-transaction --quick --lock-tables=false | sudo zip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d-%H%M-%Z"`-wolfkingdom.zip
 
+init-laravel:
+	cp Website/openrsc_web/.env.example Website/openrsc_web/.env
+
 update-laravel:
-	docker exec -i php bash -c "cd /var/www/html/openrsc_web && composer install && php artisan key:generate"
+	docker exec -i php bash -c "cd /var/www/html/openrsc_web && composer install && php artisan key:generate && php artisan optimize"
+
+migrate-laravel:
+	docker exec -i php bash -c "cd /var/www/html/openrsc_web && php artisan migrate --seed"
+
+make-laravel:
+	docker exec -i php bash -c "cd /var/www/html/openrsc_web && php artisan make:controller MyController"
 
 clear-old-backups:
 	sudo find $(MYSQL_DUMPS_DIR)/*.zip -mtime +7 -exec rm -f {} \;
