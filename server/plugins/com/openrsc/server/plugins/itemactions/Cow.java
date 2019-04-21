@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.skills;
+package com.openrsc.server.plugins.itemactions;
 
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.container.Item;

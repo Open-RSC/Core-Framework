@@ -1,7 +1,6 @@
 package com.openrsc.server.plugins.itemactions;
 
 import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
@@ -27,17 +26,24 @@ public class SpinningWheel implements InvUseOnObjectListener,
 		int produceID = -1;
 		int requiredLevel = -1;
 		int experience = -1;
+		String verb, consumedItem, producedItem;
 
 		if (item.getID() == ItemId.WOOL.id()) {
 			produceID = ItemId.BALL_OF_WOOL.id();
 			requiredLevel = 1;
 			experience = 10;
+			verb = "spin";
+			consumedItem = "sheeps wool";
+			producedItem = "nice ball of wool";
 		}
 
 		else if (item.getID() == ItemId.FLAX.id()) {
 			produceID = ItemId.BOW_STRING.id();
 			requiredLevel = 10;
 			experience = 60;
+			verb = "make";
+			consumedItem = "flax";
+			producedItem = "bow string";
 		}
 
 		else {
@@ -56,20 +62,17 @@ public class SpinningWheel implements InvUseOnObjectListener,
 			@Override
 			public void action() {
 				if (owner.getSkills().getLevel(Skills.CRAFTING) < requirement) {
-					message(owner, "You need a crafting level of "
-						+ requirement + " to spin "
-						+ item.getDef().getName().toLowerCase() + "!");
+					message(owner, "You need to have a crafting of level "
+						+ requirement + " or higher to make a "
+						+ new Item(produce).getDef().getName().toLowerCase());
 					interrupt();
 					return;
 				}
 				if (owner.getInventory().remove(item.getID(), 1) > -1) {
 					showBubble(owner, item);
 					owner.playSound("mechanical");
-					owner.message("You make the "
-						+ item.getDef().getName()
-						+ " into a "
-						+ EntityHandler.getItemDef(produce).getName()
-						.toLowerCase() + "");
+					owner.message("You " + verb + " the "
+						+ consumedItem + " into a " + producedItem);
 					owner.getInventory().add(new Item(produce, 1));
 					owner.incExp(Skills.CRAFTING, exp, true);
 				} else {

@@ -95,6 +95,16 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 		} else if (item.getID() == ItemId.SEAWEED.id()) { // Seaweed (Glass)
 			cookMethod(p, ItemId.SEAWEED.id(), ItemId.SODA_ASH.id(), true, "You put the seaweed on the "
 				+ object.getGameObjectDef().getName().toLowerCase(), "The seaweed burns to ashes");
+		} else if (item.getID() == ItemId.COOKEDMEAT.id()) { // Cooked meat to get burnt meat
+			if (p.getQuestStage(Constants.Quests.WITCHS_POTION) != -1) {
+				showBubble(p, item);
+				message(p, 1800, cookingOnMessage(p, item, object, false));
+				removeItem(p, ItemId.COOKEDMEAT.id(), 1);
+				addItem(p, ItemId.BURNTMEAT.id(), 1);
+				p.message("you burn the meat");
+			} else {
+				p.message("Nothing interesting happens");
+			}
 		} else {
 			final ItemCookingDef cookingDef = item.getCookingDef();
 			if (cookingDef == null) {
@@ -166,7 +176,9 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
 		int[] ids = new int[]{97, 11, 119, 274, 435, 491};
 		Arrays.sort(ids);
-		if ((item.getID() == ItemId.RAW_OOMLIE_MEAT.id() || item.getID() == ItemId.SEAWEED.id() || item.getID() == ItemId.UNCOOKED_SWAMP_PASTE.id()) && Arrays.binarySearch(ids, obj.getID()) >= 0) {
+		if ((item.getID() == ItemId.RAW_OOMLIE_MEAT.id() || item.getID() == ItemId.SEAWEED.id()
+				|| item.getID() == ItemId.UNCOOKED_SWAMP_PASTE.id() || item.getID() == ItemId.COOKEDMEAT.id())
+				&& Arrays.binarySearch(ids, obj.getID()) >= 0) {
 			return true;
 		}
 		if (item.getID() == ItemId.POISON.id() && obj.getID() == 435 && obj.getX() == 618 && obj.getY() == 3453) {
@@ -235,6 +247,6 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 	}
 
 	private boolean isGeneralMeat(Item item) {
-		return DataConversions.inArray(new int[]{133, 502, 503, 504}, item.getID());
+		return DataConversions.inArray(new int[]{132, 133, 502, 503, 504}, item.getID());
 	}
 }

@@ -4,6 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.MiniEvent;
 import com.openrsc.server.event.ShortEvent;
+import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemCraftingDef;
@@ -26,6 +27,8 @@ import com.openrsc.server.util.rsc.Formulae;
 import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.showBubble;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Crafting implements InvUseOnItemListener,
 	InvUseOnItemExecutiveListener, InvUseOnObjectListener,
@@ -116,7 +119,7 @@ public class Crafting implements InvUseOnItemListener,
 														return;
 													}
 													if (owner.getSkills().getLevel(Skills.CRAFTING) < def.getReqLevel()) {
-														owner.message("You need a crafting skill level of " + def.getReqLevel() + " to make this");
+														owner.message("You need a crafting skill of level " + def.getReqLevel() + " to make this");
 														owner.checkAndInterruptBatchEvent();
 														return;
 													}
@@ -225,6 +228,139 @@ public class Crafting implements InvUseOnItemListener,
 					});
 					return;
 				}
+				break;
+			case 179: // Potters Wheel & Soft Clay
+				if (item.getID() != ItemId.SOFT_CLAY.id()) {
+					owner.message("Nothing interesting happens");
+					return;
+				}
+				owner.message("What would you like to make?");
+				String[] options = new String[]{"Pie dish", "Pot", "Bowl"};
+				owner.setMenuHandler(new MenuOptionListener(options) {
+					public void handleReply(int option, String reply) {
+						if (owner.isBusy()) {
+							return;
+						}
+						int reqLvl, exp;
+						Item result;
+						AtomicReference<String> msg = new AtomicReference<String>();
+						switch (option) {
+							case 1:
+								result = new Item(ItemId.UNFIRED_POT.id(), 1);
+								reqLvl = 1;
+								exp = 25;
+								// should not use this, as pot is made at level 1
+								msg.set("a pot");
+								break;
+							case 0:
+								result = new Item(ItemId.UNFIRED_PIE_DISH.id(), 1);
+								reqLvl = 4;
+								exp = 60;
+								msg.set("pie dishes");
+								break;
+							case 2:
+								result = new Item(ItemId.UNFIRED_BOWL.id(), 1);
+								reqLvl = 7;
+								exp = 40;
+								msg.set("a bowl");
+								break;
+							default:
+								owner.message("Nothing interesting happens");
+								return;
+						}
+						owner.setBatchEvent(new BatchEvent(owner, 600, Formulae.getRepeatTimes(owner, Skills.CRAFTING)) {
+							@Override
+							public void action() {
+								if (owner.getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
+									owner.message("You need to have a crafting of level " + reqLvl + " or higher to make " + msg.get());
+									interrupt();
+									return;
+								}
+								if (owner.getInventory().remove(item) > -1) {
+									showBubble(owner, item);
+									owner.message("you make the clay into a " + potteryItemName(result.getDef().getName()));
+									owner.getInventory().add(result);
+									owner.incExp(Skills.CRAFTING, exp, true);
+								} else {
+									interrupt();
+								}
+							}
+						});
+					}
+				});
+				ActionSender.sendMenu(owner, options);
+				break;
+
+			case 178: // Potters Oven & Unfired Clay
+				int reqLvl, xp;
+				Item result;
+				String msg = "";
+				switch (ItemId.getById(item.getID())) {
+					case UNFIRED_POT:
+						result = new Item(ItemId.POT.id(), 1);
+						reqLvl = 1;
+						xp = 25;
+						// should not use this, as pot is made at level 1
+						msg = "a pot";
+						break;
+					case UNFIRED_PIE_DISH:
+						result = new Item(ItemId.PIE_DISH.id(), 1);
+						reqLvl = 4;
+						xp = 40;
+						msg = "pie dishes";
+						break;
+					case UNFIRED_BOWL:
+						result = new Item(ItemId.BOWL.id(), 1);
+						reqLvl = 7;
+						xp = 60;
+						msg = "a bowl";
+						break;
+					default:
+						owner.message("Nothing interesting happens");
+						return;
+				}
+				if (owner.getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
+					owner.message("You need to have a crafting of level " + reqLvl + " or higher to make " + msg);
+					return;
+				}
+				final int exp = xp;
+				final boolean fail = Formulae.crackPot(reqLvl, owner.getSkills().getLevel(Skills.CRAFTING));
+				showBubble(owner, item);
+				String potteryItem = potteryItemName(item.getDef().getName());
+				owner.message("You put the " + potteryItem + " in the oven");
+				owner.setBatchEvent(new BatchEvent(owner, 1800, Formulae.getRepeatTimes(owner, Skills.CRAFTING)) {
+					@Override
+					public void action() {
+						if (owner.getFatigue() >= owner.MAX_FATIGUE) {
+							owner.message("You are too tired to craft");
+							interrupt();
+							return;
+						}
+						showBubble(owner, item);
+						if (owner.getInventory().remove(item) > -1) {
+							if (fail) {
+								owner.message("The " // TODO: Check if legit
+									+ potteryItem + " cracks in the oven, you throw it away.");
+							} else {
+								owner.message("the "
+									+ potteryItem + " hardens in the oven");
+								Server.getServer().getEventHandler().add(new SingleEvent(owner, 1800) {
+									@Override
+									public void action() {
+										owner.message("You remove a "
+												+ result.getDef().getName().toLowerCase()
+												+ " from the oven");
+										owner.getInventory().add(result);
+										owner.incExp(Skills.CRAFTING, exp, true);
+									}
+									
+								});
+							}
+						} else {
+							interrupt();
+						}
+					}
+				});
 				break;
 		}
 	}
@@ -513,6 +649,14 @@ public class Crafting implements InvUseOnItemListener,
 		}
 		return true;
 	}
+	
+	private String potteryItemName(String rawName) {
+		String uncapName = rawName.toLowerCase();
+		if (uncapName.startsWith("unfired ")) {
+			return uncapName.substring(8);
+		}
+		return uncapName;
+	}
 
 	@Override
 	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
@@ -542,13 +686,20 @@ public class Crafting implements InvUseOnItemListener,
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		int[] blockItems = new int[]{
+		int[] blockItemsFurnance = new int[]{
 			ItemId.SILVER_BAR.id(),
 			ItemId.GOLD_BAR.id(),
 			ItemId.SODA_ASH.id(),
 			ItemId.SAND.id(),
 			ItemId.GOLD_BAR_FAMILYCREST.id(),
 		};
-		return (obj.getID() == 118 || obj.getID() == 813) && DataConversions.inArray(blockItems, item.getID());
+		int[] blockItemsOven = new int[]{
+			ItemId.UNFIRED_POT.id(),
+			ItemId.UNFIRED_PIE_DISH.id(),
+			ItemId.UNFIRED_BOWL.id()
+		};
+		return ((obj.getID() == 118 || obj.getID() == 813) && DataConversions.inArray(blockItemsFurnance, item.getID())) 
+				|| (obj.getID() == 178 && DataConversions.inArray(blockItemsOven, item.getID()))
+				|| (obj.getID() == 179 && item.getID() == ItemId.SOFT_CLAY.id());
 	}
 }

@@ -77,16 +77,6 @@ public class ItemUseOnGroundItem implements PacketHandler {
 				}
 
 				switch (item.getID()) {
-					case 23:
-						if (myItem.getID() == 135) {
-							if (player.getInventory().remove(myItem) < 0)
-								return;
-							player.message("You put the flour in the pot");
-							world.unregisterItem(item);
-							player.getInventory().add(new Item(136));
-							return;
-						}
-						break;
 					default:
 						player.message("Nothing interesting happens");
 						return;

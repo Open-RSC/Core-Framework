@@ -7,14 +7,17 @@ import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
+import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.DropListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
+import com.openrsc.server.plugins.listeners.action.PickupListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.action.UnWieldListener;
 import com.openrsc.server.plugins.listeners.executive.DropExecutiveListener;
@@ -22,6 +25,7 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -39,8 +43,9 @@ import static com.openrsc.server.plugins.Functions.showMenu;
 import static com.openrsc.server.plugins.Functions.sleep;
 import static com.openrsc.server.plugins.Functions.spawnNpc;
 
-public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener, TalkToNpcExecutiveListener {
-
+public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener, PickupListener,
+PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener, TalkToNpcExecutiveListener {
+	
 	private static int MINING_CAVE = 963;
 	private static int MINING_CART = 976;
 	private static int MINING_CAVE_BACK = 964;
@@ -930,6 +935,23 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 		}
 	}
 
+	@Override
+	public boolean blockPickup(Player p, GroundItem item) {
+		return item.getID() == ItemId.ANA_IN_A_BARREL.id();
+	}
+	
+	@Override
+	public void onPickup(Player player, GroundItem item) {
+		if (item.getID() == ItemId.ANA_IN_A_BARREL.id()) {
+			//non-kosher, unsure if item despawned when killed or gave dialogue on this condition
+			player.message("@gre@Ana: Don't think for one minute ...");
+			player.message("@gre@Ana: You can just come back and pick me up");
+			player.message("Ana goes out running away");
+			World.getWorld().unregisterItem(item);
+			return;
+		}
+	}
+	
 	@Override
 	public boolean blockDrop(Player p, Item i) {
 		return i.getID() == ItemId.ANA_IN_A_BARREL.id();

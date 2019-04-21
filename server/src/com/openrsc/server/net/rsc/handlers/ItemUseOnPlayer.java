@@ -1,6 +1,7 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
@@ -34,7 +35,7 @@ public class ItemUseOnPlayer implements PacketHandler {
 		}
 
 		int radius = 1;
-		if (item.getID() == 981)
+		if (item.getID() == ItemId.GNOME_BALL.id())
 			radius = 10;
 
 		player.setFollowing(affectedPlayer);
