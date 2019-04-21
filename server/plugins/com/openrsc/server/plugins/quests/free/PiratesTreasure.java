@@ -175,19 +175,30 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 				break;
 			case 2:
 				npcTalk(p, n, "Arrrh Matey");
-				playerTalk(p, n, "I seem to have lost my chest key");
-				npcTalk(p, n, "Arrr silly you", "Fortunatly I took the precaution to have another one made");
-				message(p, "Frank hands you a chest key");
-				addItem(p, ItemId.CHEST_KEY.id(), 1);
+				if (hasItem(p, ItemId.CHEST_KEY.id()) || p.getBank().hasItemId(ItemId.CHEST_KEY.id())) {
+					npcTalk(p, n, "Arrrh Matey");
+					int menu1 = showMenu(p, n, "Arrrh",
+						"Do you want to trade?");
+					if (menu1 == 0) {
+						npcTalk(p, n, "Arrrh");
+					} else if (menu1 == 1) {
+						npcTalk(p, n, "No I've got nothing to trade");
+					}
+				} else {
+					playerTalk(p, n, "I seem to have lost my chest key");
+					npcTalk(p, n, "Arrr silly you", "Fortunatly I took the precaution to have another one made");
+					message(p, "Frank hands you a chest key");
+					addItem(p, ItemId.CHEST_KEY.id(), 1);
+				}
 				break;
 			case 3:
 			case -1:
 				npcTalk(p, n, "Arrrh Matey");
-				int menu1 = showMenu(p, n, "Arrrh",
+				int menu2 = showMenu(p, n, "Arrrh",
 					"Do you want to trade?");
-				if (menu1 == 0) {
+				if (menu2 == 0) {
 					npcTalk(p, n, "Arrrh");
-				} else if (menu1 == 1) {
+				} else if (menu2 == 1) {
 					npcTalk(p, n, "No I've got nothing to trade");
 				}
 				break;
