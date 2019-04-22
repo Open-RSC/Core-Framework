@@ -117,6 +117,10 @@ public class Point {
 	public boolean onTutorialIsland() {
 		return inBounds(190, 720, 240, 770);
 	}
+	
+	public boolean onBlackHole() {
+		return inBounds(303, 3298, 307, 3302);
+	}
 
 	public boolean inTutorialLanding() {
 		return inBounds(214, 739, 221, 747);

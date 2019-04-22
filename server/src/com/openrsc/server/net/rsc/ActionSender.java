@@ -96,6 +96,13 @@ public class ActionSender {
 		s.writeByte((byte) (player.getLocation().onTutorialIsland() ? 1 : 0));
 		player.write(s.toPacket());
 	}
+	
+	public static void sendPlayerOnBlackHole(Player player) {
+		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+		s.setID(Opcode.SEND_ON_BLACK_HOLE.opcode);
+		s.writeByte((byte) (player.getLocation().onTutorialIsland() ? 1 : 0));
+		player.write(s.toPacket());
+	}
 
 	/**
 	 * Inform client of log-out request denial.
@@ -1031,6 +1038,7 @@ public class ActionSender {
 					sendElixirTimer(p, p.getElixir());
 
 				sendPlayerOnTutorial(p);
+				sendPlayerOnBlackHole(p);
 				if (p.getLastLogin() == 0L) {
 					sendAppearanceScreen(p);
 					for (Item i : Player.STARTER_ITEMS) {
@@ -1265,6 +1273,7 @@ public class ActionSender {
 		SEND_CLAN(112),
 		SEND_IRONMAN(113),
 		SEND_FATIGUE(114),
+		SEND_ON_BLACK_HOLE(115),
 		SEND_SLEEPSCREEN(117),
 		SEND_KILL_ANNOUNCEMENT(118),
 		SEND_PRIVATE_MESSAGE(120),

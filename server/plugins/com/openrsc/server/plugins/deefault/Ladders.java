@@ -12,6 +12,8 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
+import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -167,6 +169,16 @@ public class Ladders {
 					});
 			} else {
 				player.teleport(274, 3397, false);
+			}
+		} else if (obj.getID() == 223 && obj.getX() == 312 && obj.getY() == 3348) { // ladder to black hole
+			if (!hasItem(player, ItemId.DISK_OF_RETURNING.id())) {
+				message(player, "you seem to be missing a disk to use the ladder");
+			} else {
+				message(player, 1200, "You climb down the ladder");
+				int offX = DataConversions.random(0,4) - 2;
+				int offY = DataConversions.random(0,4) - 2;
+				player.teleport(305 + offX, 3300 + offY);
+				ActionSender.sendPlayerOnBlackHole(player);
 			}
 		} else if (obj.getID() == 342 && obj.getX() == 611 && obj.getY() == 601) {
 			Npc paladinGuard = getNearestNpc(player, NpcId.PALADIN.id(), 4);

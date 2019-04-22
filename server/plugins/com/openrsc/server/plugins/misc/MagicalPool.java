@@ -17,26 +17,6 @@ public class MagicalPool implements ObjectActionListener, ObjectActionExecutiveL
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player player) {
 		if (obj.getID() == 1155) {
-			if (obj.getX() == 311 && obj.getY() == 3347) {
-				if (!hasItem(player, 387)) {
-					message(player, "you seem to be missing a disk to use the magic pool");
-				} else {
-					message(player, 1200, "you step into the sparkling water");
-					player.teleport(305, 3300);
-					player.message("you are teleported to the black hole");
-				}
-				return;
-			} else if (obj.getX() == 305 && obj.getY() == 3301) {
-				if (hasItem(player, 387)) {
-					message(player, "your disk seems to block the magic pool");
-				} else {
-					message(player, 1200, "you step into the sparkling water");
-					player.teleport(310, 3347);
-					player.message("you return to the dwarven mines");
-				}
-				return;
-			}
-			
 			/*
 			if (!player.canUsePool()) {
 				player.message("You have just died, you must wait for "

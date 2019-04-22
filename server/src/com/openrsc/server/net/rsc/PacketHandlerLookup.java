@@ -108,6 +108,7 @@ public class PacketHandlerLookup {
 
 		bind(OpcodeIn.SLEEPWORD_ENTERED.getOpcode(), SleepHandler.class);
 		bind(OpcodeIn.ON_TUTORIAL_ISLAND.getOpcode(), TutorialHandler.class);
+		bind(OpcodeIn.ON_BLACK_HOLE.getOpcode(), BlackHoleHandler.class);
 
 		bind(OpcodeIn.COMBAT_STYLE_CHANGED.getOpcode(), StyleHandler.class);
 	}

@@ -9,6 +9,8 @@ public class InputXPrompt {
 	public static String[] duelStakeX = new String[] { "Enter number of items to stake and press enter" };
 	public static String[] promptSkipTutorial = new String[] { "Are you sure you wish to skip the tutorial",
 			"and teleport to Lumbridge?" };
+	public static String[] promptExitBlackHole = new String[]{ "Are you sure you wish to exit the black hole",
+			"and return to the Dwarven Mines?" };
 	public static String[] shopBuyX = new String[] { "Type the number of items to buy and press enter" };
 	public static String[] shopSellX = new String[] { "Type the number of items to sell and press enter" };
 	public static String[] tradeOfferX = new String[] { "Enter number of items to offer and press enter" };

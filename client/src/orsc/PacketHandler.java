@@ -348,6 +348,9 @@ public class PacketHandler {
 
 				// Inside Tutorial
 			else if (opcode == 111) mc.setInsideTutorial(packetsIncoming.getUnsignedByte() != 0);
+			
+				// Inside Black Hole
+			else if (opcode == 115) mc.setInsideBlackHole(packetsIncoming.getUnsignedByte() != 0);
 
 				// Draw Ground Items
 			else if (opcode == 99) drawGroundItems(length);

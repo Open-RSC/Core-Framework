@@ -422,6 +422,7 @@ public final class mudclient implements Runnable {
     private boolean inputX_OK = false;
     private int inputX_Width = 0;
     private boolean insideTutorial = false;
+    private boolean insideBlackHole = false;
     private int inventoryItemCount;
     private boolean isSleeping = false;
     private int knownPlayerCount = 0;
@@ -4819,6 +4820,9 @@ public final class mudclient implements Runnable {
                 } else if (this.inputX_Action == InputXAction.SKIP_TUTORIAL) {
                     this.packetHandler.getClientStream().newPacket(84);
                     this.packetHandler.getClientStream().finishPacket();
+                } else if (this.inputX_Action == InputXAction.EXIT_BLACK_HOLE) {
+                    this.packetHandler.getClientStream().newPacket(86);
+                    this.packetHandler.getClientStream().finishPacket();
                 } else if (this.inputX_Action == InputXAction.DROP_X) {
                     try {
                         if (str.length() > 10) {
@@ -7329,7 +7333,7 @@ public final class mudclient implements Runnable {
                     this.getSurface().drawBoxAlpha(var3, 36, var5, 65, GenUtil.buildColor(181, 181, 181), 160);
                     this.getSurface().drawBoxAlpha(var3, 101, var5, 65, GenUtil.buildColor(201, 201, 201), 160);
                     this.getSurface().drawBoxAlpha(var3, 166, var5, 95, GenUtil.buildColor(181, 181, 181), 160);
-                    this.getSurface().drawBoxAlpha(var3, 261, var5, this.insideTutorial ? 55 : 40, GenUtil.buildColor(201, 201, 201), 160);
+                    this.getSurface().drawBoxAlpha(var3, 261, var5, (this.insideTutorial || this.insideBlackHole) ? 55 : 40, GenUtil.buildColor(201, 201, 201), 160);
                 }
 
                 // Custom Settings GUI
@@ -7433,17 +7437,17 @@ public final class mudclient implements Runnable {
             this.getSurface().drawBoxAlpha(var3, 36, var5, 25, GenUtil.buildColor(181, 181, 181), 160);
             this.getSurface().drawBoxAlpha(var3, 61, var5, 105, GenUtil.buildColor(201, 201, 201), 160);
             this.getSurface().drawBoxAlpha(var3, 166, var5, 95, GenUtil.buildColor(181, 181, 181), 160);
-            this.getSurface().drawBoxAlpha(var3, 261, var5, this.insideTutorial ? 55 : 40, GenUtil.buildColor(201, 201, 201), 160);
+            this.getSurface().drawBoxAlpha(var3, 261, var5, (this.insideTutorial || this.insideBlackHole) ? 55 : 40, GenUtil.buildColor(201, 201, 201), 160);
         } else if (this.settingTab == 1) {
             this.getSurface().drawBoxAlpha(var3, 36, var5, 25, GenUtil.buildColor(181, 181, 181), 160);
             this.getSurface().drawBoxAlpha(var3, 61, var5, 105, GenUtil.buildColor(201, 201, 201), 160);
             this.getSurface().drawBoxAlpha(var3, 166, var5, 95, GenUtil.buildColor(181, 181, 181), 160);
-            this.getSurface().drawBoxAlpha(var3, 261, var5, this.insideTutorial ? 55 : 40, GenUtil.buildColor(201, 201, 201), 160);
+            this.getSurface().drawBoxAlpha(var3, 261, var5, (this.insideTutorial || this.insideBlackHole) ? 55 : 40, GenUtil.buildColor(201, 201, 201), 160);
         } else if (this.settingTab == 2) {
             this.getSurface().drawBoxAlpha(var3, 36, var5, 25, GenUtil.buildColor(181, 181, 181), 160);
             this.getSurface().drawBoxAlpha(var3, 61, var5, 105, GenUtil.buildColor(201, 201, 201), 160);
             this.getSurface().drawBoxAlpha(var3, 166, var5, 95, GenUtil.buildColor(181, 181, 181), 160);
-            this.getSurface().drawBoxAlpha(var3, 261, var5, this.insideTutorial ? 55 : 40, GenUtil.buildColor(201, 201, 201), 160);
+            this.getSurface().drawBoxAlpha(var3, 261, var5, (this.insideTutorial || this.insideBlackHole) ? 55 : 40, GenUtil.buildColor(201, 201, 201), 160);
         }
 
         this.getSurface().drawLineHoriz(var3, 24 + var4 - 25, var5, 0);
@@ -7558,6 +7562,14 @@ public final class mudclient implements Runnable {
                 logoutColor = 0xFFFF00;
             }
             this.getSurface().drawString("Skip the tutorial", x, y, logoutColor, 1);
+        } else if (this.insideBlackHole) {
+            y = 256;
+            logoutColor = 0xFFFFFF;
+            if (x < this.mouseX && this.mouseX < x + boxWidth && y - 12 < this.mouseY
+                    && this.mouseY < 4 + y) {
+                logoutColor = 0xFFFF00;
+            }
+            this.getSurface().drawString("Exit the black hole", x, y, logoutColor, 1);
         }
 
         y = 275;
@@ -8084,6 +8096,13 @@ public final class mudclient implements Runnable {
                 this.showItemModX(InputXPrompt.promptSkipTutorial, InputXAction.SKIP_TUTORIAL, false);
                 this.showUiTab = 0;
             }
+        } else if (this.insideBlackHole) {
+            var7 = 255;
+            if (this.mouseX > var6 && var5 + var6 > this.mouseX && var7 - 12 < this.mouseY
+                    && this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
+                this.showItemModX(InputXPrompt.promptExitBlackHole, InputXAction.EXIT_BLACK_HOLE, false);
+                this.showUiTab = 0;
+            }
         }
 
         var7 = 290;
@@ -8257,6 +8276,13 @@ public final class mudclient implements Runnable {
                 logoutColor = 0xFFFF00;
             }
             this.getSurface().drawString("Skip the tutorial", x, y, logoutColor, 1);
+        } else if (this.insideBlackHole) {
+            y += 20;
+            if (x < this.mouseX && this.mouseX < x + boxWidth && y - 12 < this.mouseY
+                    && this.mouseY < 4 + y) {
+                logoutColor = 0xFFFF00;
+            }
+            this.getSurface().drawString("Exit the black hole", x, y, logoutColor, 1);
         }
 
         y += 20;
@@ -8359,6 +8385,13 @@ public final class mudclient implements Runnable {
             if (this.mouseX > var6 && var5 + var6 > this.mouseX && var7 - 12 < this.mouseY
                     && this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
                 this.showItemModX(InputXPrompt.promptSkipTutorial, InputXAction.SKIP_TUTORIAL, false);
+                this.showUiTab = 0;
+            }
+            var7 += 20;
+        } else if (this.insideBlackHole) {
+            if (this.mouseX > var6 && var5 + var6 > this.mouseX && var7 - 12 < this.mouseY
+                    && this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
+                this.showItemModX(InputXPrompt.promptExitBlackHole, InputXAction.EXIT_BLACK_HOLE, false);
                 this.showUiTab = 0;
             }
             var7 += 20;
@@ -13114,6 +13147,10 @@ public final class mudclient implements Runnable {
 
     public void setInsideTutorial(boolean i) {
         this.insideTutorial = i;
+    }
+	
+    public void setInsideBlackHole(boolean i) {
+        this.insideBlackHole = i;
     }
 
     void setExperienceArray() {

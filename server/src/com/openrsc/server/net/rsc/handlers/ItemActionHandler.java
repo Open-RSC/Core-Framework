@@ -107,16 +107,12 @@ public class ItemActionHandler implements PacketHandler {
 		} else {
 			switch (ItemId.getById(item.getID())) {
 				case DISK_OF_RETURNING:
-					if (player.getX() == 305 && player.getY() == 3300) {
+					if (player.getLocation().onBlackHole()) {
 						player.message("You spin your disk of returning");
-						player.teleport(310, 3347, true);
-						player.getInventory().remove(387, 1);
-					} else if (insideMines(player)) {
-						player.message("You spin your disk of returning");
-						player.teleport(305, 3300, true);
+						player.teleport(311, 3348, true);
+						player.getInventory().remove(ItemId.DISK_OF_RETURNING.id(), 1);
 					} else {
 						player.message("The disk will only work from in Thordur's black hole");
-						player.message("or the dwarven mines");
 					}
 					break;
 				case BURNTPIE:
