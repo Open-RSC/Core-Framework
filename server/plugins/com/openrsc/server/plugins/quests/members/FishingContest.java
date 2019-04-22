@@ -101,7 +101,7 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
 		// joshua and big dave were not interested in talking directly
 		return DataConversions.inArray(new int[] {NpcId.MOUNTAIN_DWARF.id(), NpcId.BONZO.id(), NpcId.SINISTER_STRANGER.id(),
-				NpcId.GRANDPA_JACK.id(), NpcId.JOSHUA.id(), NpcId.BIG_DAVE.id()}, n.getID());
+				NpcId.GRANDPA_JACK.id()}, n.getID());
 	}
 
 	private void bonzoDialogue(final Player p, final Npc n, final boolean isDirectTalk) {

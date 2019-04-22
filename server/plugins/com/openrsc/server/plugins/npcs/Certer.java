@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.npcs;
 import com.openrsc.server.Constants;
 import com.openrsc.server.external.CerterDef;
 import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -16,14 +17,17 @@ import static com.openrsc.server.plugins.Functions.showMenu;
 
 public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
-	int[] certers = new int[]{225, 226, 227, 466, 467, 299, 341, 369,
-		370, 348, 267};
+	//official certers
+	int[] certers = new int[]{NpcId.GILES.id(), NpcId.MILES.id(), NpcId.NILES.id(), NpcId.JINNO.id(), NpcId.WATTO.id(),
+			NpcId.OWEN.id(), NpcId.CHUCK.id(), NpcId.ORVEN.id(), NpcId.PADIK.id(), NpcId.SETH.id()};
+	//forester is custom certer if wc guild enabled
+	//sidney smith is in its own file
 
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
 
 		// Forester (Log certer; custom)
-		if ((n.getID() == 348)
+		if ((n.getID() == NpcId.FORESTER.id())
 			&& !Constants.GameServer.WANT_WOODCUTTING_GUILD) {
 			return;
 		}
@@ -40,7 +44,7 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 		npcTalk(p, n, "Welcome to my " + certerDef.getType()
 			+ " exchange stall");
 		
-		String ending = (n.getID() == 226 || n.getID() == 341 || n.getID() == 467 ? "s" : "");
+		String ending = (n.getID() == NpcId.MILES.id() || n.getID() == NpcId.CHUCK.id() || n.getID() == NpcId.WATTO.id() ? "s" : "");
 		
 		// First Certer Menu
 		int firstType = firstMenu(certerDef, ending, p, n);
@@ -236,6 +240,6 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return DataConversions.inArray(certers, n.getID());
+		return (DataConversions.inArray(certers, n.getID())) || (n.getID() == NpcId.FORESTER.id() && Constants.GameServer.WANT_WOODCUTTING_GUILD);
 	}
 }

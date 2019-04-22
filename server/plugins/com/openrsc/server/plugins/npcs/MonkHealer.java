@@ -26,6 +26,7 @@ public class MonkHealer implements TalkToNpcListener, TalkToNpcExecutiveListener
 			}
 			p.getSkills().setLevel(Skills.HITPOINTS, newHp);
 		} else if (option == 1) {
+			playerTalk(p, n, "Isn't this place built a bit out the way?");
 			npcTalk(p, n, "We like it that way",
 					"We get disturbed less",
 					"We still get rather a large amount of travellers",

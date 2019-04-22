@@ -59,10 +59,13 @@ public final class NpcTalkTo implements PacketHandler {
 						}
 					}
 				}
-				player.face(n);
-				n.face(player);
-				player.setInteractingNpc(n);
-				PluginHandler.getPluginHandler().blockDefaultAction("TalkToNpc", new Object[]{player, n});
+				
+				if (PluginHandler.getPluginHandler().blockDefaultAction("TalkToNpc", new Object[]{player, n})) {
+					player.face(n);
+					n.face(player);
+					player.setInteractingNpc(n);
+					return;
+				}
 			}
 
 			private Point canWalk(int x, int y) {

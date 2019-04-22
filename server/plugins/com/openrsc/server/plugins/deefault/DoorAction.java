@@ -1111,7 +1111,11 @@ public class DoorAction {
 					return;
 				}
 				if (player.getY() <= 472) {
-					doGate(player, obj);
+					if (Constants.GameServer.WANT_WOODCUTTING_GUILD) {
+						doGate(player, obj);
+					} else { // deny exit if not woodcut guild
+						player.playerServerMessage(MessageType.QUEST, "the gate is locked");
+					}
 				} else {
 					if (Constants.GameServer.WANT_WOODCUTTING_GUILD) {
 						if (getCurrentLevel(player, Skills.WOODCUT) < 70) {
@@ -1135,8 +1139,15 @@ public class DoorAction {
 					} else { // Deny Entry
 						final Npc forester = World.getWorld().getNpc(NpcId.FORESTER.id(), 562, 565,
 							468, 472);
-						npcTalk(player, forester, "Hey you can't come through here", "This is private land");
-						message(player, 1200, "You will need to find another way in");
+						if (forester != null) {
+							npcTalk(player, forester, "Hey you can't come through here", "This is private land");
+							sleep(1200);
+							player.playerServerMessage(MessageType.QUEST, "You will need to find another way in");
+						} else {
+							player.playerServerMessage(MessageType.QUEST, "You will need to find another way in");
+							sleep(1200);
+							player.playerServerMessage(MessageType.QUEST, "the gate is locked");
+						}
 					}
 				}
 				return;
