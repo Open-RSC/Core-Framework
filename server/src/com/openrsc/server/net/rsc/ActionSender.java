@@ -100,7 +100,7 @@ public class ActionSender {
 	public static void sendPlayerOnBlackHole(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_ON_BLACK_HOLE.opcode);
-		s.writeByte((byte) (player.getLocation().onTutorialIsland() ? 1 : 0));
+		s.writeByte((byte) (player.getLocation().onBlackHole() ? 1 : 0));
 		player.write(s.toPacket());
 	}
 
