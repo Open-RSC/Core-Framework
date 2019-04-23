@@ -306,6 +306,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 					&& owner.getInventory().hasItemId(herb.getID())) {
 					owner.getInventory().remove(vial.getID(), 1);
 					owner.getInventory().remove(herb.getID(), 1);
+					owner.playSound("mix");
 					owner.message("You put the " + herb.getDef().getName()
 						+ " into the vial of water");
 					owner.getInventory().add(
@@ -360,6 +361,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 					if (bubbleItem.get() != null) {
 						showBubble(owner, bubbleItem.get());
 					}
+					owner.playSound("mix");
 					owner.message("You mix the " + second.getDef().getName()
 						+ " into your potion");
 					owner.getInventory().remove(second.getID(), 1);

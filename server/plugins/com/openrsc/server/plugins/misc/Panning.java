@@ -55,6 +55,7 @@ public class Panning implements ObjectActionListener, ObjectActionExecutiveListe
 		}
 		p.setBusy(true);
 		showBubble(p, new Item(ItemId.PANNING_TRAY.id()));
+		p.playSound("mix");
 		p.playerServerMessage(MessageType.QUEST, "You scrape the tray along the bottom");
 		message(p, "You swirl away the excess water");
 		sleep(1500);

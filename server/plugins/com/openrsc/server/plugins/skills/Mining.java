@@ -213,6 +213,7 @@ public final class Mining implements ObjectActionListener,
 				final Item ore = new Item(def.getOreId());
 				if (getOre(def, owner.getSkills().getLevel(Skills.MINING), axeId) && mineLvl >= def.getReqLevel()) {
 					if (DataConversions.random(1, 200) <= (owner.getInventory().wielding(ItemId.CHARGED_DRAGONSTONE_AMULET.id()) ? 2 : 1)) {
+						owner.playSound("foundgem");
 						Item gem = new Item(getGem(), 1);
 						owner.getInventory().add(gem);
 						owner.message("You just found a" + gem.getDef().getName().toLowerCase().replaceAll("uncut", "") + "!");
