@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.quests.members;
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.Server;
+import com.openrsc.server.event.PluginsUseThisEvent;
 import com.openrsc.server.event.RestartableDelayedEvent;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
@@ -218,8 +219,19 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 				&& p.getInventory().wielding(ItemId.PROTECTIVE_TROUSERS.id());
 	}
 
+	public void handleGateSounds(Player player) {
+        player.playSound("opendoor");
+
+	   Server.getServer().getEventHandler().add(new PluginsUseThisEvent(3000) {
+           @Override
+           public void action() {
+               player.playSound("opendoor");
+           }
+       });
+    }
+
 	public void openGatey(GameObject object, Player player) {
-		player.playSound("opendoor");
+		handleGateSounds(player);
 		player.message("you open the gate and walk through");
 		World.getWorld().replaceGameObject(object,
 			new GameObject(object.getLocation(), 442,
