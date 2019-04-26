@@ -198,8 +198,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if (obj.getID() == GATE) {
-			if (p.getInventory().wielding(ItemId.PROTECTIVE_JACKET.id())
-				&& p.getInventory().wielding(ItemId.PROTECTIVE_TROUSERS.id())) {
+			if (notWearingProtectiveClothing(p)) {
 				openGatey(obj, p);
 				if (p.getX() <= 588) {
 					p.teleport(589, 541, false);
@@ -212,6 +211,11 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 			}
 		}
 
+	}
+
+	public boolean notWearingProtectiveClothing(Player p) {
+		return !p.getInventory().wielding(ItemId.PROTECTIVE_JACKET.id())
+				&& p.getInventory().wielding(ItemId.PROTECTIVE_TROUSERS.id());
 	}
 
 	public void openGatey(GameObject object, Player player) {
