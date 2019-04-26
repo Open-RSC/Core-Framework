@@ -214,7 +214,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 	}
 
 	public boolean notWearingProtectiveClothing(Player p) {
-		return !p.getInventory().wielding(ItemId.PROTECTIVE_JACKET.id())
+		return p.getInventory().wielding(ItemId.PROTECTIVE_JACKET.id())
 				&& p.getInventory().wielding(ItemId.PROTECTIVE_TROUSERS.id());
 	}
 
