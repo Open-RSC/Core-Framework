@@ -133,5 +133,8 @@ migrate:
 clear-config:
 	docker exec -i php bash -c "cd /var/www/html/openrsc_web && php artisan config:cache"
 
+publish-pagination:
+	docker exec -i php bash -c "cd /var/www/html/openrsc_web && php artisan vendor:publish --tag=laravel-pagination"
+
 clear-old-backups:
 	sudo find $(MYSQL_DUMPS_DIR)/*.zip -mtime +7 -exec rm -f {} \;
