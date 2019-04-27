@@ -365,7 +365,6 @@ DROP TABLE IF EXISTS `openrsc_player_recovery`;
 CREATE TABLE IF NOT EXISTS `openrsc_player_recovery` (
   `playerID` int(10) UNSIGNED NOT NULL,
   `username` varchar(12) NOT NULL DEFAULT '',
-  `salt` varchar(250) NOT NULL DEFAULT '',
   `question1` varchar(256) NOT NULL DEFAULT '',
   `answer1` varchar(512) NOT NULL DEFAULT '',
   `question2` varchar(256) NOT NULL DEFAULT '',
@@ -376,6 +375,53 @@ CREATE TABLE IF NOT EXISTS `openrsc_player_recovery` (
   `answer4` varchar(512) NOT NULL DEFAULT '',
   `question5` varchar(256) NOT NULL DEFAULT '',
   `answer5` varchar(512) NOT NULL DEFAULT '',
+  `date_set` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `ip_set` varchar(255) DEFAULT '0.0.0.0',
+  `previous_pass` varchar(512),
+  `earlier_pass` varchar(512),
+  `lastRecoveryTryId` int(10) UNSIGNED,
+  PRIMARY KEY (`playerID`),
+  UNIQUE KEY `lastRecoveryTryId` (`lastRecoveryTryId`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `openrsc_player_change_recovery`;
+CREATE TABLE IF NOT EXISTS `openrsc_player_change_recovery` (
+  `playerID` int(10) UNSIGNED NOT NULL,
+  `username` varchar(12) NOT NULL DEFAULT '',
+  `question1` varchar(256) NOT NULL DEFAULT '',
+  `answer1` varchar(512) NOT NULL DEFAULT '',
+  `question2` varchar(256) NOT NULL DEFAULT '',
+  `answer2` varchar(512) NOT NULL DEFAULT '',
+  `question3` varchar(256) NOT NULL DEFAULT '',
+  `answer3` varchar(512) NOT NULL DEFAULT '',
+  `question4` varchar(256) NOT NULL DEFAULT '',
+  `answer4` varchar(512) NOT NULL DEFAULT '',
+  `question5` varchar(256) NOT NULL DEFAULT '',
+  `answer5` varchar(512) NOT NULL DEFAULT '',
+  `date_set` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `ip_set` varchar(255) DEFAULT '0.0.0.0',
+  PRIMARY KEY (`playerID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `openrsc_recovery_attempts`;
+CREATE TABLE IF NOT EXISTS `openrsc_recovery_attempts` (
+  `playerID` int(10) UNSIGNED NOT NULL,
+  `username` varchar(12) NOT NULL DEFAULT '',
+  `time` int(5) UNSIGNED NOT NULL,
+  `ip` varchar(255) NOT NULL DEFAULT '0.0.0.0',
+  `dbid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`dbid`),
+  KEY `ip` (`ip`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `openrsc_player_contact_details`;
+CREATE TABLE IF NOT EXISTS `openrsc_player_contact_details` (
+  `playerID` int(10) UNSIGNED NOT NULL,
+  `username` varchar(12) NOT NULL DEFAULT '',
+  `fullname` varchar(100) DEFAULT '',
+  `zipCode` varchar(10) DEFAULT '',
+  `country` varchar(100) DEFAULT '',
+  `email` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`playerID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
