@@ -130,5 +130,8 @@ clear-route:
 migrate:
 	docker exec -i php bash -c "cd /var/www/html/openrsc_web && php artisan migrate"
 
+clear-config:
+	docker exec -i php bash -c "cd /var/www/html/openrsc_web && php artisan config:cache"
+
 clear-old-backups:
 	sudo find $(MYSQL_DUMPS_DIR)/*.zip -mtime +7 -exec rm -f {} \;
