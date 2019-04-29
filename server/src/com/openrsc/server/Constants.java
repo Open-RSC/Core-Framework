@@ -72,6 +72,14 @@ public final class Constants {
 		 */
 		static int SERVER_PORT = 43594;
 		/**
+		 * idle timer to force a player logout for standing in the same spot
+		 */
+		static int IDLE_TIMER = 300000; // 5 minutes
+		/**
+		 * auto save interval
+		 */
+		static int AUTO_SAVE = 30000; // 30 seconds
+		/**
 		 * where the server is hosted (i.e. USA, Holland, etc.)
 		 */
 		static String SERVER_LOCATION = "USA";
@@ -230,6 +238,8 @@ public final class Constants {
 
 			// Initialization confs
 			GAME_TICK = Integer.parseInt(props.getProperty("game_tick"));
+			IDLE_TIMER = Integer.parseInt(props.getProperty("idle_timer"));
+			AUTO_SAVE = Integer.parseInt(props.getProperty("auto_save"));
 			CLIENT_VERSION = Integer.parseInt(props.getProperty("client_version"));
 			SERVER_PORT = Integer.parseInt(props.getProperty("server_port"));
 			SERVER_NAME = props.getProperty("server_name");

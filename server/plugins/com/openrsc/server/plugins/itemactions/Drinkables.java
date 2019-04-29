@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.itemactions;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
@@ -29,7 +30,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 			return;
 		}
 		int id = item.getID();
-		player.setConsumeTimer(1200);
+		player.setConsumeTimer(Constants.GameServer.GAME_TICK); // drink speed is same as tick speed setting
 		if (id == ItemId.GUJUO_POTION.id())
 			handleGujouPotion(player);
 

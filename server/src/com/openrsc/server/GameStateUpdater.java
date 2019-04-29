@@ -9,7 +9,11 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
-import com.openrsc.server.model.entity.update.*;
+import com.openrsc.server.model.entity.update.Bubble;
+import com.openrsc.server.model.entity.update.ChatMessage;
+import com.openrsc.server.model.entity.update.Damage;
+import com.openrsc.server.model.entity.update.Projectile;
+import com.openrsc.server.model.entity.update.UpdateFlags;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.PacketBuilder;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -17,6 +21,7 @@ import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.PMLog;
 import com.openrsc.server.util.EntityList;
 import com.openrsc.server.util.rsc.DataConversions;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -62,8 +67,8 @@ public final class GameStateUpdater {
 	 */
 	private static void updateTimeouts(Player player) {
 		long curTime = System.currentTimeMillis();
-		int timeoutLimit = 300000; // 5 minute idle log out
-		int autoSave = 30000; // 30 second autosave
+		int timeoutLimit = Constants.GameServer.IDLE_TIMER; // 5 minute idle log out
+		int autoSave = Constants.GameServer.AUTO_SAVE; // 30 second autosave
 		if (player.isRemoved() || player.getAttribute("dummyplayer", false)) {
 			return;
 		}
@@ -77,6 +82,8 @@ public final class GameStateUpdater {
 		} else if (player.warnedToMove()) {
 			if (curTime - player.getLastMoved() >= (timeoutLimit + 60000) && player.loggedIn() && !player.isStaff()) {
 				player.unregister(false, "Movement time-out");
+			} else if (player.hasMoved()) {
+				player.setWarnedToMove(false);
 			}
 		} else if (curTime - player.getLastMoved() >= timeoutLimit && !player.isMod()) {
 			if (player.isSleeping()) {
@@ -324,7 +331,7 @@ public final class GameStateUpdater {
 				}
 				ChatMessage cm;
 				while ((cm = chatMessagesNeedingDisplayed.poll()) != null) {
-					Player sender = (Player)cm.getSender();
+					Player sender = (Player) cm.getSender();
 
 					int chatType = sender.isMuted() || (sender.getLocation().onTutorialIsland() && !sender.isStaff()) ? 7 : (cm.getRecipient() == null ? 1 : 6);
 					appearancePacket.writeShort(cm.getSender().getIndex());
@@ -335,7 +342,7 @@ public final class GameStateUpdater {
 							appearancePacket.writeInt(sender.getIcon());
 					}
 
-					if(chatType == 7) {
+					if (chatType == 7) {
 						appearancePacket.writeByte(sender.isMuted() ? 1 : 0);
 						appearancePacket.writeByte(sender.getLocation().onTutorialIsland() ? 1 : 0);
 					}
