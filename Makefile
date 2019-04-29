@@ -136,5 +136,9 @@ clear-config:
 publish-pagination:
 	docker exec -i php bash -c "cd /var/www/html/openrsc_web && php artisan vendor:publish --tag=laravel-pagination"
 
+version:
+	docker exec -i php bash -c "cd /var/www/html/openrsc_web && php artisan --version"
+
 clear-old-backups:
 	sudo find $(MYSQL_DUMPS_DIR)/*.zip -mtime +7 -exec rm -f {} \;
+
