@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.itemactions;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
@@ -9,7 +10,10 @@ import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.resetGnomeCooking;
+import static com.openrsc.server.plugins.Functions.sleep;
 
 public class Eating implements InvActionListener, InvActionExecutiveListener {
 
@@ -24,7 +28,7 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 			if (player.cantConsume()) {
 				return;
 			}
-			player.setConsumeTimer(1200);
+			player.setConsumeTimer(Constants.GameServer.GAME_TICK); // eat speed is same as tick speed setting
 			ActionSender.sendSound(player, "eat");
 
 			int id = item.getID();
