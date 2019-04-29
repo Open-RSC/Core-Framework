@@ -130,6 +130,9 @@ clear-route:
 migrate:
 	docker exec -i php bash -c "cd /var/www/html/openrsc_web && php artisan migrate"
 
+migrate-refresh:
+	docker exec -i php bash -c "cd /var/www/html/openrsc_web && php artisan migrate:refresh"
+
 clear-config:
 	docker exec -i php bash -c "cd /var/www/html/openrsc_web && php artisan config:cache"
 
