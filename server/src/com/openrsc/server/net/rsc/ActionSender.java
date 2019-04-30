@@ -89,6 +89,18 @@ public class ActionSender {
 		s.setID(Opcode.SEND_APPEARANCE_CHANGE.opcode);
 		player.write(s.toPacket());
 	}
+	
+	public static void sendRecoveryScreen(Player player) {
+		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+		s.setID(Opcode.SEND_OPEN_RECOVERY.opcode);
+		player.write(s.toPacket());
+	}
+	
+	public static void sendDetailsScreen(Player player) {
+		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+		s.setID(Opcode.SEND_OPEN_DETAILS.opcode);
+		player.write(s.toPacket());
+	}
 
 	public static void sendPlayerOnTutorial(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
@@ -456,6 +468,7 @@ public class ActionSender {
 			LOGGER.info(WANT_EMAIL + " 47");
 			LOGGER.info(WANT_REGISTRATION_LIMIT + " 48");
 			LOGGER.info(ALLOW_RESIZE + " 49");
+			LOGGER.info(LENIENT_CONTACT_DETAILS + " 50");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs();
 		ConnectionAttachment attachment = new ConnectionAttachment();
@@ -521,6 +534,7 @@ public class ActionSender {
 		s.writeByte((byte) (WANT_EMAIL ? 1 : 0)); // 47
 		s.writeByte((byte) (WANT_REGISTRATION_LIMIT ? 1 : 0)); // 48
 		s.writeByte((byte) (ALLOW_RESIZE ? 1 : 0)); // 49
+		s.writeByte((byte) (LENIENT_CONTACT_DETAILS ? 1 : 0)); // 50
 		return s;
 	}
 
@@ -576,6 +590,11 @@ public class ActionSender {
 		s.setID(Opcode.SEND_WELCOME_INFO.opcode);
 		s.writeString(player.getLastIP());
 		s.writeShort(player.getDaysSinceLastLogin());
+		if (player.getDaysSinceLastRecoveryChangeRequest() < 14) {
+			s.writeShort(14 - player.getDaysSinceLastRecoveryChangeRequest());
+		} else {
+			s.writeShort(0);
+		}
 		//s.writeShort(player.getUnreadMessages());
 		player.write(s.toPacket());
 	}
@@ -1306,7 +1325,9 @@ public class ActionSender {
 		SEND_PRAYERS_ACTIVE(206),
 		SEND_DUEL_ACCEPTED(210),
 		SEND_BOX(222),
+		SEND_OPEN_RECOVERY(224),
 		SEND_DUEL_CLOSE(225),
+		SEND_OPEN_DETAILS(232),
 		SEND_GAME_SETTINGS(240),
 		SEND_SLEEP_FATIGUE(244),
 		SEND_OPTIONS_MENU_OPEN(245),

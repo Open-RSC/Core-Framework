@@ -379,9 +379,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_player_recovery` (
   `ip_set` varchar(255) DEFAULT '0.0.0.0',
   `previous_pass` varchar(512),
   `earlier_pass` varchar(512),
-  `lastRecoveryTryId` int(10) UNSIGNED,
-  PRIMARY KEY (`playerID`),
-  UNIQUE KEY `lastRecoveryTryId` (`lastRecoveryTryId`)
+  PRIMARY KEY (`playerID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `openrsc_player_change_recovery`;
@@ -422,7 +420,20 @@ CREATE TABLE IF NOT EXISTS `openrsc_player_contact_details` (
   `zipCode` varchar(10) DEFAULT '',
   `country` varchar(100) DEFAULT '',
   `email` varchar(255) DEFAULT NULL,
+  `date_modified` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `ip` varchar(255) DEFAULT '0.0.0.0',
   PRIMARY KEY (`playerID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `openrsc_player_security_changes`;
+CREATE TABLE IF NOT EXISTS `openrsc_player_security_changes` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `playerID` int(10) UNSIGNED NOT NULL,
+  `eventAlias` varchar(20) NOT NULL,
+  `date` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `ip` varchar(255) DEFAULT '0.0.0.0',
+  `message` text,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `openrsc_player_cache`;
@@ -492,6 +503,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_trade_logs` (
   KEY `time` (`time`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+ALTER TABLE `openrsc_players` ADD COLUMN `lastRecoveryTryId` int(10) UNSIGNED;
 
 ALTER TABLE `openrsc_auctions` ADD FULLTEXT KEY `seller_username` (`seller_username`);
 ALTER TABLE `openrsc_auctions` ADD FULLTEXT KEY `buyer_info` (`buyer_info`);

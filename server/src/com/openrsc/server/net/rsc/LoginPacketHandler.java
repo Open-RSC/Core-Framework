@@ -11,6 +11,9 @@ import com.openrsc.server.net.PacketBuilder;
 import com.openrsc.server.net.RSCConnectionHandler;
 import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.sql.DatabaseConnection;
+import com.openrsc.server.sql.GameLogging;
+import com.openrsc.server.sql.query.logs.SecurityChangeLog;
+import com.openrsc.server.sql.query.logs.SecurityChangeLog.ChangeEvent;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.LoginResponse;
 
@@ -220,6 +223,179 @@ public class LoginPacketHandler {
 					channel.close();
 				}
 				break;
+				
+			/* Forgot password */
+			case 5:
+				try {
+					user = getString(p.getBuffer()).trim();
+					user = user.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ");
+					
+					PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT id FROM " + Constants.GameServer.MYSQL_TABLE_PREFIX + "players WHERE username=?");
+					statement.setString(1, user);
+					ResultSet res = statement.executeQuery();
+					ResultSet res2 = null;
+					boolean foundAndHasRecovery = false;
+					
+					if (res.next()) {
+						statement = DatabaseConnection.getDatabase().prepareStatement("SELECT * FROM " + Constants.GameServer.MYSQL_TABLE_PREFIX + "player_recovery WHERE playerID=?");
+						statement.setInt(1, res.getInt("id"));
+						res2 = statement.executeQuery();
+						if (res2.next()) {
+							foundAndHasRecovery = true;
+						}
+					}
+					
+					if (!foundAndHasRecovery) {
+						channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
+						channel.close();
+					} else {
+						channel.writeAndFlush(new PacketBuilder().writeByte((byte) 1).toPacket());
+						com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+						String st;
+						for (int n = 0; n < 5; ++n) {
+							st = res2.getString("question"+(n+1));
+							s.writeByte((byte)st.length()+1);
+							s.writeString(st);
+						}
+						channel.writeAndFlush(s.toPacket());
+						channel.close();
+					}
+				} catch (Exception e) {
+					LOGGER.catching(e);
+					channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
+					channel.close();
+				}
+				break;
+			
+			/* Attempt recover */
+			case 7:
+				try {
+					user = getString(p.getBuffer()).trim();
+					user = user.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ");
+					String oldPass = getString(p.getBuffer()).trim();
+					String newPass = getString(p.getBuffer()).trim();
+					Long uid = p.getBuffer().readLong();
+					String answers[] = new String[5];
+					for (i=0; i<5; i++) {
+						answers[i] = normalize(getString(p.getBuffer()).trim(), 50);
+					}
+					
+					int pid = -1;
+					
+					PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT id, pass, salt FROM " + Constants.GameServer.MYSQL_TABLE_PREFIX + "players WHERE username=?");
+					statement.setString(1, user);
+					ResultSet res = statement.executeQuery();
+					ResultSet res2 = null;
+					boolean foundAndHasRecovery = false;
+					
+					if (res.next()) {
+						pid = res.getInt("id");
+						statement = DatabaseConnection.getDatabase().prepareStatement("SELECT * FROM " + Constants.GameServer.MYSQL_TABLE_PREFIX + "player_recovery WHERE playerID=?");
+						statement.setInt(1, pid);
+						res2 = statement.executeQuery();
+						if (res2.next()) {
+							foundAndHasRecovery = true;
+						}
+					}
+					
+					if (!foundAndHasRecovery) {
+						channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
+						channel.close();
+					} else {
+						String salt = res.getString("salt");
+						String currDBPass = res.getString("pass");
+						oldPass = DataConversions.hashPassword(oldPass, salt);
+						newPass = DataConversions.hashPassword(newPass, salt);
+						for (i=0; i<5; i++) {
+							answers[i] = DataConversions.hashPassword(answers[i], salt);
+						}
+						
+						int numCorrect = (oldPass.equals(res2.getString("previous_pass"))
+								|| oldPass.equals(res2.getString("earlier_pass"))) ? 1 : 0;
+						for (i=0; i<5; i++) {
+							numCorrect += (answers[i].equals(res2.getString("answer"+(i+1))) ? 1 : 0);
+						}
+						
+						PreparedStatement attempt = DatabaseConnection.getDatabase().prepareStatement("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX
+						+ "recovery_attempts`(`playerID`, `username`, `time`, `ip`) VALUES(?, ?, ?, ?)", new String[]{"dbid"});
+						attempt.setInt(1, pid);
+						attempt.setString(2, user);
+						attempt.setLong(3, System.currentTimeMillis() / 1000);
+						attempt.setString(4, IP);
+						attempt.executeUpdate();
+						set = attempt.getGeneratedKeys();
+
+						int tryID = -1;
+						if (set.next()) {
+							tryID = set.getInt(1);
+						}
+						
+						PreparedStatement innerStatement;
+						
+						//enough treshold to allow pass change for recovery
+						if (numCorrect >= 4) {
+							innerStatement = DatabaseConnection.getDatabase().prepareStatement(
+									"UPDATE `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "players` SET `pass`=?, `lastRecoveryTryId`=? WHERE `id`=?");
+							innerStatement.setString(1, newPass);
+							innerStatement.setInt(2, tryID);
+							innerStatement.setInt(3, pid);
+							innerStatement.executeUpdate();
+							
+							//log password change
+							GameLogging.addQuery(new SecurityChangeLog(pid, ChangeEvent.PASSWORD_CHANGE, IP,
+								"(@Recovery) From: " + currDBPass + ", To: " + newPass));
+							
+							channel.writeAndFlush(new PacketBuilder().writeByte((byte) 1).toPacket());
+							channel.close();
+						} else {
+							innerStatement = DatabaseConnection.getDatabase().prepareStatement(
+									"UPDATE `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "players` SET `lastRecoveryTryId`=? WHERE `id`=?");
+							innerStatement.setInt(1, tryID);
+							innerStatement.setInt(2, pid);
+							innerStatement.executeUpdate();
+							
+							channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
+							channel.close();
+						}
+					}
+					
+				} catch (Exception e) {
+					LOGGER.catching(e);
+					channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
+					channel.close();
+				}
+				break;
 		}
+	}
+	
+	private static String normalize(String s, int len) {
+		String res = addCharacters(s, len);
+		res = res.replaceAll("[\\s_]+","_");
+		char[] chars = res.trim().toCharArray();
+		if (chars.length > 0 && chars[0] == '_')
+			chars[0] = ' ';
+		if (chars.length > 0 && chars[chars.length-1] == '_')
+			chars[chars.length-1] = ' ';
+	    return String.valueOf(chars).toLowerCase().trim();  
+	}
+	
+	public static String addCharacters(String s, int i) {
+		String s1 = "";
+		for (int j = 0; j < i; j++)
+			if (j >= s.length()) {
+				s1 = s1 + " ";
+			} else {
+				char c = s.charAt(j);
+				if (c >= 'a' && c <= 'z')
+					s1 = s1 + c;
+				else if (c >= 'A' && c <= 'Z')
+					s1 = s1 + c;
+				else if (c >= '0' && c <= '9')
+					s1 = s1 + c;
+				else
+					s1 = s1 + '_';
+			}
+
+		return s1;
 	}
 }

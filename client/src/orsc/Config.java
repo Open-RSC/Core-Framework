@@ -114,6 +114,7 @@ public class Config {
 	public static boolean C_WANT_EMAIL = false;
 	public static boolean S_WANT_REGISTRATION_LIMIT = false;
 	public static boolean S_ALLOW_RESIZE = false;
+	public static boolean S_LENIENT_CONTACT_DETAILS = false;
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());
@@ -279,5 +280,9 @@ public class Config {
 
 	static boolean allowResize1() {
 		return S_ALLOW_RESIZE;
+	}
+	
+	static boolean isLenientContactDetails() {
+		return S_LENIENT_CONTACT_DETAILS;
 	}
 }

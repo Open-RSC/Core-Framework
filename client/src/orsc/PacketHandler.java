@@ -242,6 +242,8 @@ public class PacketHandler {
 
 			else if (opcode == 206) togglePrayer(length);
 			
+			else if (opcode == 232) mc.setShowContactDialogue(true);
+			
 			else if (opcode == 224) mc.setShowRecoveryDialogue(true);
 
 				// Quest Stage Update
@@ -1747,6 +1749,8 @@ public class PacketHandler {
 		if (!mc.getWelcomeScreenShown()) {
 			mc.setWelcomeLastLoggedInIp(packetsIncoming.readString());
 			mc.setWelcomeLastLoggedInDays(packetsIncoming.getShort());
+			mc.setWelcomeRecoverySetDays(packetsIncoming.getShort());
+			mc.setWelcomeTipOfDay((int) (Math.random() * 6.0D));
 			//this.welcomeUnreadMessages = packetsIncoming.getShort();
 			mc.setShowDialogMessage(true);
 			mc.setWelcomeLastLoggedInHost(null);

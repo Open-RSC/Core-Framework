@@ -145,7 +145,7 @@ public final class Network_Socket extends Network_Base implements Runnable {
 
 
 	@Override
-	final void read(byte[] data, int offset, int count) throws IOException {
+	public final void read(byte[] data, int offset, int count) throws IOException {
 		try {
 			if (!this.closed) {
 				int totalRead = 0;

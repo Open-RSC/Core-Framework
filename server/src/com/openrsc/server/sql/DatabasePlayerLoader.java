@@ -440,6 +440,11 @@ public class DatabasePlayerLoader {
 			save.getSkills().loadExp(fetchExperience(save.getDatabaseID()));
 
 			save.getSkills().loadLevels(fetchLevels(save.getDatabaseID()));
+			
+			result = resultSetFromInteger(Statements.playerPendingRecovery, save.getDatabaseID());
+			if (result.next()) {
+				save.setLastRecoveryChangeRequest(result.getLong("date_set"));
+			}
 
 			result = resultSetFromInteger(Statements.playerInvItems, save.getDatabaseID());
 
@@ -863,6 +868,9 @@ public class DatabasePlayerLoader {
 			+ "`cur_herblaw`=?, `cur_agility`=?, `cur_thieving`=? WHERE `playerID`=?";
 
 		private static final String playerLoginData = "SELECT `pass`, `salt`, `banned` FROM `" + PREFIX + "players` WHERE `username`=?";
+		
+		private static final String playerPendingRecovery = "SELECT `username`, `question1`, `answer1`, `question2`, `answer2`, `question3`, `answer3`, `question4`, `answer4`, `question5`, `answer5`, `date_set`, `ip_set` FROM `"
+		+ PREFIX + "player_change_recovery` WHERE `playerID`=?";
 
 		private static final String userToId = "SELECT DISTINCT `id` FROM `" + PREFIX + "players` WHERE `username`=?";
 

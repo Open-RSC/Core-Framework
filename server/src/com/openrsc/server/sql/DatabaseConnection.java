@@ -125,5 +125,15 @@ public class DatabaseConnection {
 		statements.put(statement, ps);
 		return ps;
 	}
+	
+	public java.sql.PreparedStatement prepareStatement(String statement, String[] generatedColumns)
+		throws SQLException {
+		if (statements.containsKey(statement))
+			return statements.get(statement);
+
+		PreparedStatement ps = connection.prepareStatement(statement, generatedColumns);
+		statements.put(statement, ps);
+		return ps;
+	}
 
 }

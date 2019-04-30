@@ -99,6 +99,13 @@ public class PacketHandlerLookup {
 
 		bind(OpcodeIn.INTERFACE_OPTIONS.getOpcode(), InterfaceOptionHandler.class);
 		bind(OpcodeIn.BLINK.getOpcode(), BlinkHandler.class);
+		
+		bind(OpcodeIn.CHANGE_PASS.getOpcode(), SecuritySettingsHandler.class);
+		bind(OpcodeIn.CANCEL_RECOVERY_REQUEST.getOpcode(), SecuritySettingsHandler.class);
+		bind(OpcodeIn.CHANGE_RECOVERY.getOpcode(), SecuritySettingsHandler.class);
+		bind(OpcodeIn.CHANGE_DETAILS.getOpcode(), SecuritySettingsHandler.class);
+		bind(OpcodeIn.SET_RECOVERY.getOpcode(), SecuritySettingsHandler.class);
+		bind(OpcodeIn.SET_DETAILS.getOpcode(), SecuritySettingsHandler.class);
 
 		bind(OpcodeIn.PLAYER_TRADE.getOpcode(), PlayerTradeHandler.class);
 		bind(OpcodeIn.TRADE_ACCEPTED.getOpcode(), PlayerTradeHandler.class);

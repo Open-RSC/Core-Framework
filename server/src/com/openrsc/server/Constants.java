@@ -211,6 +211,7 @@ public final class Constants {
 		public static boolean WANT_EMAIL = false;
 		public static boolean WANT_REGISTRATION_LIMIT = false;
 		public static boolean ALLOW_RESIZE = false;
+		public static boolean LENIENT_CONTACT_DETAILS = false;
 		//loosened checks
 		public static boolean LOOSE_SHALLOW_WATER_CHECK = false;
 		public static int PACKET_LIMIT = 30;
@@ -333,6 +334,7 @@ public final class Constants {
 			WANT_EMAIL = Boolean.parseBoolean(props.getProperty("want_email"));
 			WANT_REGISTRATION_LIMIT = Boolean.parseBoolean(props.getProperty("want_registration_limit"));
 			ALLOW_RESIZE = Boolean.parseBoolean(props.getProperty("allow_resize"));
+			LENIENT_CONTACT_DETAILS = Boolean.parseBoolean(props.getProperty("lenient_contact_details"));
 
 			PACKET_LIMIT = Integer.parseInt(props.getProperty("packet_limit"));
 			CONNECTION_LIMIT = Integer.parseInt(props.getProperty("connection_limit"));

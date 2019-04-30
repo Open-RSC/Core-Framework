@@ -171,6 +171,10 @@ public final class Player extends Mob {
 	 */
 	private long lastLogin = 0;
 	/**
+	 * Unix time when the player last requested a change in recovery questions
+	 */
+	private long lastRecoveryChangeRequest = 0;
+	/**
 	 * Last time a 'ping' was received
 	 */
 	private long lastPing = System.currentTimeMillis();
@@ -825,6 +829,15 @@ public final class Player extends Mob {
 	public int getDaysSinceLastLogin() {
 		long now = Calendar.getInstance().getTimeInMillis() / 1000;
 		return (int) ((now - lastLogin) / 86400);
+	}
+	
+	public void setLastRecoveryChangeRequest(long l) {
+		lastRecoveryChangeRequest = l;
+	}
+	
+	public int getDaysSinceLastRecoveryChangeRequest() {
+		long now = Calendar.getInstance().getTimeInMillis() / 1000;
+		return (int) ((now - lastRecoveryChangeRequest) / 86400);
 	}
 
 	public PrayerDrainEvent getDrainer() {
