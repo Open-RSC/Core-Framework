@@ -1610,9 +1610,9 @@ public final class mudclient implements Runnable {
 							if (question.length() > 50) {
 								question = question.substring(0, 50);
 							}
-							
+
 							String answer = this.panelSetRecoveryQuestion.getControlText(this.controlSetAnswer[var10]);
-							
+
 							if (answer.length() > 100) {
 								answer = answer.substring(0, 100);
 							}
@@ -1634,7 +1634,7 @@ public final class mudclient implements Runnable {
 							this.panelSetRecoveryQuestion.setText(this.controlSetAnswer[var6], "");
 							this.panelSetRecoveryQuestion.setText(this.controlSetQuestion[var6], var6 + 1 + ": " + this.questions[this.recoveryQAindices[var6]]);
 						}
-						
+
 						this.panelSetRecoveryQuestion.setFocus(this.controlSetAnswer[0]);
 
 						this.getSurface().blackScreen(true);
@@ -1719,7 +1719,7 @@ public final class mudclient implements Runnable {
 			this.panelSetRecoveryQuestion.setText(this.controlSetQuestion[i], i + 1 + ": " + this.questions[this.recoveryQAindices[i]]);
 		}
 	}
-	
+
 	public void setShowContactDialogue(boolean show) {
 		this.showSetContactDetails = show;
 
@@ -1728,7 +1728,7 @@ public final class mudclient implements Runnable {
 		this.panelContact.setText(this.controlContactCountry, "");
 		this.panelContact.setText(this.controlContactEmail, "");
 	}
-	
+
 	public void createContactDetailsPanel() {
 		this.panelContact = new Panel(this.getSurface(), 100);
 		int i = 256;
@@ -1767,19 +1767,19 @@ public final class mudclient implements Runnable {
 		this.finishSubmitContact = this.panelContact.addButton(i, k, 100, 30);
 		this.panelContact.setFocus(this.controlContactName);
 	}
-	
+
 	public void L()
 	{
 		this.getSurface().interlace = false;
 		this.getSurface().blackScreen(true);
-	    this.panelContact.drawPanel();
-	    this.getSurface().drawSprite(this.spriteMedia + 22, 0, this.gameHeight);
-	    clientPort.draw();
+		this.panelContact.drawPanel();
+		this.getSurface().drawSprite(this.spriteMedia + 22, 0, this.gameHeight);
+		clientPort.draw();
 	}
-	
+
 	public void M() {
 		this.panelContact.handleMouse(this.mouseX, this.mouseY, this.currentMouseButtonDown,
-				this.lastMouseButtonDown);
+			this.lastMouseButtonDown);
 		if (this.panelContact.isClicked(this.controlContactName)) {
 			this.panelContact.setFocus(this.controlContactZipCode);
 		}
@@ -1800,9 +1800,9 @@ public final class mudclient implements Runnable {
 			String email = this.panelContact.getControlText(this.controlContactEmail);
 			//to get from parameters later!
 			boolean emptyFields = ((name == null) || (name.trim().length() == 0))
-					&& ((zipCode == null) || (zipCode.trim().length() == 0))
-					&& ((country == null) || (country.trim().length() == 0))
-					&& ((email == null) || (email.trim().length() == 0));
+				&& ((zipCode == null) || (zipCode.trim().length() == 0))
+				&& ((country == null) || (country.trim().length() == 0))
+				&& ((email == null) || (email.trim().length() == 0));
 			boolean shouldCancel = emptyFields && isLenientContactDetails();
 			if (shouldCancel) {
 				this.panelContact.setFocus(this.controlContactName);
@@ -1817,7 +1817,7 @@ public final class mudclient implements Runnable {
 				this.panelContact.setText(this.instructContactDetails, "@yel@Please use a valid email address");
 				return;
 			}
-			
+
 			this.packetHandler.getClientStream().newPacket(253);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(name.length());
 			this.packetHandler.getClientStream().writeBuffer1.putString(name);
@@ -1828,9 +1828,9 @@ public final class mudclient implements Runnable {
 			this.packetHandler.getClientStream().writeBuffer1.putByte(email.length());
 			this.packetHandler.getClientStream().writeBuffer1.putString(email);
 			this.packetHandler.getClientStream().finishPacket();
-			
+
 			this.panelContact.setFocus(this.controlContactName);
-			
+
 			this.getSurface().blackScreen(true);
 			this.showSetContactDetails = false;
 		}
@@ -1981,9 +1981,9 @@ public final class mudclient implements Runnable {
 			this.panelLogin.addCenteredText(halfGameWidth() + 154, halfGameHeight() + 113 + yOffsetLogin, "Cancel", 4, false);
 			this.m_Xi = this.panelLogin.addButton(halfGameWidth() + 154, halfGameHeight() + 113 + yOffsetLogin, 120, 25);
 			this.panelLogin.setFocus(this.controlLoginUser);
-			this.panelLogin.addButtonBackground(halfGameWidth() + 154, halfGameHeight() + 143, 120, 25);
-			this.panelLogin.addCenteredText(halfGameWidth() + 154, halfGameHeight() + 143, "Forgot password", 4, false);
-			this.lostPasswordButtonIdx = this.panelLogin.addButton(halfGameWidth() + 154, halfGameHeight() + 143, 120, 25);
+			this.panelLogin.addButtonBackground(halfGameWidth() + 154, halfGameHeight() + 143 + yOffsetLogin, 120, 25);
+			this.panelLogin.addCenteredText(halfGameWidth() + 154, halfGameHeight() + 143 + yOffsetLogin, "Forgot password", 4, false);
+			this.lostPasswordButtonIdx = this.panelLogin.addButton(halfGameWidth() + 154, halfGameHeight() + 143 + yOffsetLogin, 120, 25);
 
 			//int offRememb = -1;
 			//int offHide = -1;
@@ -4078,7 +4078,7 @@ public final class mudclient implements Runnable {
 				var3 += 15;
 				var3 += 15;
 			}
-			
+
 			int var5 = 0xFFFFFF;
 			if (this.welcomeRecoverySetDays > 0) {
 				if (this.welcomeRecoverySetDays == 14)
@@ -4089,7 +4089,7 @@ public final class mudclient implements Runnable {
 				} else {
 					var4 = 14 - this.welcomeRecoverySetDays + " days ago";
 				}
-				
+
 				this.getSurface().drawColoredStringCentered(xr + 256 - 56, var4 + " you requested new recovery questions", 0xFF8000, 0, 1, var3);
 				var3 += 15;
 				this.getSurface().drawColoredStringCentered(xr + 256 - 56, "If you do not remember making this request then", 0xFF8000, 0, 1, var3);
@@ -4099,7 +4099,7 @@ public final class mudclient implements Runnable {
 				var3 += 15;
 				var5 = 0xFFFFFF;
 				if (this.mouseY > var3 - 12 && this.mouseY <= var3 && this.mouseX > 106
-						&& this.mouseX < 406) {
+					&& this.mouseX < 406) {
 					var5 = 0xFF0000;
 				}
 
@@ -4113,7 +4113,7 @@ public final class mudclient implements Runnable {
 				var3 += 15;
 				var5 = 0xFFFFFF;
 				if (this.mouseY > var3 - 12 && this.mouseY <= var3 && this.mouseX > 106
-						&& this.mouseX < 406) {
+					&& this.mouseX < 406) {
 					var5 = 0xFF0000;
 				}
 
@@ -4168,7 +4168,7 @@ public final class mudclient implements Runnable {
 				}
 
 				var3 += 22;
-				
+
 				if (isAndroid()) {
 
 					this.getSurface().drawBoxAlpha(150, var3 - 20, (207), var3 - (var3 - 12) + 20, 3158064, 160);
@@ -4196,8 +4196,8 @@ public final class mudclient implements Runnable {
 					}
 				}
 			}
-			
-			
+
+
 
 				/*if (this.welcomeUnreadMessages > 0) {
 					if (this.welcomeUnreadMessages == 1) {
@@ -4266,7 +4266,7 @@ public final class mudclient implements Runnable {
 			throw GenUtil.makeThrowable(var4, "client.FA(" + var1 + ')');
 		}
 	}
-	
+
 	private void drawDialogueChangePassword() {
 		if (this.mouseButtonClick != 0) {
 			this.mouseButtonClick = 0;
@@ -4364,7 +4364,7 @@ public final class mudclient implements Runnable {
 				y += 25;
 				this.getSurface().drawColoredStringCentered(halfGameWidth(), "least 5 letters long", 0xFFFFFF, 0, 4, y);
 			}
-			
+
 			if (this.panelPasswordChange_Mode == PasswordChangeMode.PASSWORD_NOT_EQ_USER) {
 				this.getSurface().drawColoredStringCentered(halfGameWidth(), "Your password must not be", 0xFFFFFF, 0, 4, y);
 				y += 25;
@@ -4373,14 +4373,14 @@ public final class mudclient implements Runnable {
 		}
 
 	}
-	
+
 	private void sendPassChange(String oldPass, String newPass) {
 		this.packetHandler.getClientStream().newPacket(25);
 		oldPass = DataOperations.addCharacters(oldPass, 20);
 		newPass = DataOperations.addCharacters(newPass, 20);
 		this.packetHandler.getClientStream().writeBuffer1.putString(oldPass);
 		this.packetHandler.getClientStream().writeBuffer1.putString(newPass);
-    	this.packetHandler.getClientStream().finishPacket();
+		this.packetHandler.getClientStream().finishPacket();
 	}
 
 	private void drawGame(int var1) {
@@ -7838,6 +7838,32 @@ public final class mudclient implements Runnable {
 	}
 
 	private void drawSocialSettingsOptions(int baseX, short boxWidth, int x, int y) {
+		y += 5;
+		this.getSurface().drawString("Security settings", 3 + baseX, y, 0, 1);
+		y += 15;
+		int securityColor = 0xFFFFFF;
+		if (this.mouseX > x && this.mouseX < x + boxWidth && this.mouseY > y - 12
+			&& this.mouseY < y + 4) {
+			securityColor = 0xFFFF00;
+		}
+
+		this.getSurface().drawString("Change password", 3 + baseX, y, securityColor, 1);
+		y += 15;
+		securityColor = 0xFFFFFF;
+		if (this.mouseX > x && this.mouseX < x + boxWidth && this.mouseY > y - 12
+			&& this.mouseY < y + 4) {
+			securityColor = 0xFFFF00;
+		}
+
+		this.getSurface().drawString("Change recovery questions", 3 + baseX, y, securityColor, 1);
+		y += 15;
+		securityColor = 0xFFFFFF;
+		if (this.mouseX > x && this.mouseX < x + boxWidth && this.mouseY > y - 12 && this.mouseY < y + 4) {
+			securityColor = 0xFFFF00;
+		}
+		this.getSurface().drawString("Change contact details", 3 + baseX, y, securityColor, 1);
+		y += 20;
+
 		this.getSurface().drawString("Privacy settings", 3 + baseX, y, 0, 1);
 
 		y += 15;
@@ -8355,6 +8381,29 @@ public final class mudclient implements Runnable {
 	private void handleSocialSettingsClicks(short var5, int var6, int var7) {
 		boolean var11 = false;
 
+		//Change password
+		var7 += 2 * 15 + 5;
+		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12 && this.mouseY < var7 + 4
+			&& mouseButtonClick == 1) {
+			this.panelPasswordChange_Mode = PasswordChangeMode.OLD_PASSWORD;
+			this.inputTextCurrent = "";
+			this.inputTextFinal = "";
+		}
+		//Change recovery questions
+		var7 += 15;
+		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12 && this.mouseY < var7 + 4
+			&& mouseButtonClick == 1) {
+			this.packetHandler.getClientStream().newPacket(200);
+			this.packetHandler.getClientStream().finishPacket();
+		}
+		//Change contact details
+		var7 += 15;
+		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12 && this.mouseY < var7 + 4
+			&& mouseButtonClick == 1) {
+			this.packetHandler.getClientStream().newPacket(201);
+			this.packetHandler.getClientStream().finishPacket();
+		}
+
 		var7 += 24;
 
 		// Block Chat
@@ -8584,13 +8633,13 @@ public final class mudclient implements Runnable {
 		}
 
 		y += 15;
-		
+
 		y += 5;
 		this.getSurface().drawString("Security settings", 3 + baseX, y, 0, 1);
 		y += 15;
 		int securityColor = 0xFFFFFF;
 		if (this.mouseX > x && this.mouseX < x + boxWidth && this.mouseY > y - 12
-				&& this.mouseY < y + 4) {
+			&& this.mouseY < y + 4) {
 			securityColor = 0xFFFF00;
 		}
 
@@ -8598,18 +8647,18 @@ public final class mudclient implements Runnable {
 		y += 15;
 		securityColor = 0xFFFFFF;
 		if (this.mouseX > x && this.mouseX < x + boxWidth && this.mouseY > y - 12
-				&& this.mouseY < y + 4) {
+			&& this.mouseY < y + 4) {
 			securityColor = 0xFFFF00;
 		}
 
 		this.getSurface().drawString("Change recovery questions", 3 + baseX, y, securityColor, 1);
 		y += 15;
 		securityColor = 0xFFFFFF;
-	    if (this.mouseX > x && this.mouseX < x + boxWidth && this.mouseY > y - 12 && this.mouseY < y + 4) {
-	    	securityColor = 0xFFFF00;
-	    }
-	    this.getSurface().drawString("Change contact details", 3 + baseX, y, securityColor, 1);
-	    y += 20;
+		if (this.mouseX > x && this.mouseX < x + boxWidth && this.mouseY > y - 12 && this.mouseY < y + 4) {
+			securityColor = 0xFFFF00;
+		}
+		this.getSurface().drawString("Change contact details", 3 + baseX, y, securityColor, 1);
+		y += 20;
 
 		/*this.getSurface().drawString("To change you contact details,", 3 + baseX, y, 0xFFFFFF, 0);
 		y += 15;
@@ -8684,7 +8733,7 @@ public final class mudclient implements Runnable {
 	}
 
 	private void handleAuthenticSettingsClicks(short var5, int var6, int var7) {
-		
+
 		var7 += 15;
 
 		// Camera Mode - byte index 0
@@ -8721,29 +8770,29 @@ public final class mudclient implements Runnable {
 			this.packetHandler.getClientStream().writeBuffer1.putByte(this.optionSoundDisabled ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
-        
+
 		//Change password
-        var7 += 2 * 15 + 5;
-        if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12 && this.mouseY < var7 + 4
-        		&& mouseButtonClick == 1) {
-        	this.panelPasswordChange_Mode = PasswordChangeMode.OLD_PASSWORD;
-            this.inputTextCurrent = "";
-            this.inputTextFinal = "";
-        }
-        //Change recovery questions
-        var7 += 15;
-        if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12 && this.mouseY < var7 + 4
-        		&& mouseButtonClick == 1) {
-        	this.packetHandler.getClientStream().newPacket(200);
-        	this.packetHandler.getClientStream().finishPacket();
-        }
-        //Change contact details
-        var7 += 15;
-        if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12 && this.mouseY < var7 + 4
-        		&& mouseButtonClick == 1) {
-        	this.packetHandler.getClientStream().newPacket(201);
-        	this.packetHandler.getClientStream().finishPacket();
-        }
+		var7 += 2 * 15 + 5;
+		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12 && this.mouseY < var7 + 4
+			&& mouseButtonClick == 1) {
+			this.panelPasswordChange_Mode = PasswordChangeMode.OLD_PASSWORD;
+			this.inputTextCurrent = "";
+			this.inputTextFinal = "";
+		}
+		//Change recovery questions
+		var7 += 15;
+		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12 && this.mouseY < var7 + 4
+			&& mouseButtonClick == 1) {
+			this.packetHandler.getClientStream().newPacket(200);
+			this.packetHandler.getClientStream().finishPacket();
+		}
+		//Change contact details
+		var7 += 15;
+		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12 && this.mouseY < var7 + 4
+			&& mouseButtonClick == 1) {
+			this.packetHandler.getClientStream().newPacket(201);
+			this.packetHandler.getClientStream().finishPacket();
+		}
 
 		var7 += 3 * 15 + 5;
 
@@ -10085,9 +10134,9 @@ public final class mudclient implements Runnable {
 					}
 
 					if (this.panelPasswordChange_Mode == PasswordChangeMode.PASSWORD_MISMATCH
-							|| this.panelPasswordChange_Mode == PasswordChangeMode.PASSWORD_REQ_SENT
-							|| this.panelPasswordChange_Mode == PasswordChangeMode.NEED_LONGER_PASSWORD
-							|| this.panelPasswordChange_Mode == PasswordChangeMode.PASSWORD_NOT_EQ_USER) {
+						|| this.panelPasswordChange_Mode == PasswordChangeMode.PASSWORD_REQ_SENT
+						|| this.panelPasswordChange_Mode == PasswordChangeMode.NEED_LONGER_PASSWORD
+						|| this.panelPasswordChange_Mode == PasswordChangeMode.PASSWORD_NOT_EQ_USER) {
 						this.panelPasswordChange_Mode = PasswordChangeMode.NONE;
 					}
 					if (auctionHouse.isVisible() && (auctionHouse.auctionMenu.focusOn(auctionHouse.auctionSearchHandle)
@@ -10241,7 +10290,7 @@ public final class mudclient implements Runnable {
 						this.autoLoginTimeout = 2;
 						this.login(-12, this.password, this.getUsername(), false);
 					}
-					
+
 					if (this.panelLogin.isClicked(this.lostPasswordButtonIdx)) {
 						this.username = this.panelLogin.getControlText(this.controlLoginUser);
 						this.username = DataOperations.addCharacters(this.username, 20);
@@ -10258,7 +10307,7 @@ public final class mudclient implements Runnable {
 //							} else {
 //								conn = new Connection(host, (Applet) null, server_port);
 //							}
-							
+
 							if ((Config.SERVER_IP != null)) {
 								String ip = Config.SERVER_IP;
 								int port = Config.SERVER_PORT;
@@ -10310,9 +10359,9 @@ public final class mudclient implements Runnable {
 
 							this.loginScreenNumber = 4;
 							this.panelRecovery.setText(this.instructPassRecovery1,
-									"@yel@To prove this is your account please provide the answers to");
+								"@yel@To prove this is your account please provide the answers to");
 							this.panelRecovery.setText(this.instructPassRecovery2,
-									"@yel@your security questions. You will then be able to reset your password");
+								"@yel@your security questions. You will then be able to reset your password");
 
 							for (int i = 0; i < 5; ++i) {
 								this.panelRecovery.setText(this.controlPassAnswer[i], "");
@@ -10330,7 +10379,7 @@ public final class mudclient implements Runnable {
 				}
 				else if (this.loginScreenNumber == 4) {
 					this.panelRecovery.handleMouse(this.mouseX, this.mouseY, this.currentMouseButtonDown,
-							this.lastMouseButtonDown);
+						this.lastMouseButtonDown);
 					if (this.panelRecovery.isClicked(this.passwordRecoverSubmit)) {
 						String newPass = this.panelRecovery.getControlText(this.controlNewPassword);
 						String confPass = this.panelRecovery.getControlText(this.controlConfirmation);
@@ -10352,7 +10401,7 @@ public final class mudclient implements Runnable {
 							} else {
 								super.conn = new Connection(super.host, (Applet) null, super.server_port);
 							}*/
-							
+
 							if ((Config.SERVER_IP != null)) {
 								String ip = Config.SERVER_IP;
 								int port = Config.SERVER_PORT;
@@ -10380,7 +10429,7 @@ public final class mudclient implements Runnable {
 								}
 								this.packetHandler.getClientStream().writeBuffer1.putString(answer);
 							}
-							
+
 							//conn.int_put(this.seed());
 							//conn.enc_cred_put(var13 + var5, var3, this.rsa_exponent, this.rsa_modulus);
 
@@ -13583,11 +13632,11 @@ public final class mudclient implements Runnable {
 	public void setWelcomeLastLoggedInDays(int i) {
 		this.welcomeLastLoggedInDays = i;
 	}
-	
+
 	public void setWelcomeRecoverySetDays(int i) {
 		this.welcomeRecoverySetDays = i;
 	}
-	
+
 	public void setWelcomeTipOfDay(int i) {
 		this.welcomeTipOfDay = i;
 	}
@@ -13753,7 +13802,7 @@ public final class mudclient implements Runnable {
 	public void setInsideTutorial(boolean i) {
 		this.insideTutorial = i;
 	}
-	
+
 	public void setInsideBlackHole(boolean i) {
 		this.insideBlackHole = i;
 	}
