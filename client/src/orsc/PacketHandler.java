@@ -735,7 +735,7 @@ public class PacketHandler {
 		int wantCustomBanks, wantBankPins, wantBankNotes, wantCertDeposit, customFiremaking;
 		int wantDropX, wantExpInfo, wantWoodcuttingGuild, wantFixedOverheadChat;
 		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank;
-		int getFPS, wantEmail, wantRegistrationLimit, allowResize;
+		int getFPS, wantEmail, wantRegistrationLimit, allowResize, lenientContactDetails;
 		String logoSpriteID;
 
 		if (!mc.gotInitialConfigs) {
@@ -789,6 +789,7 @@ public class PacketHandler {
 			wantEmail = this.getClientStream().getUnsignedByte(); // 47
 			wantRegistrationLimit = this.getClientStream().getUnsignedByte(); // 48
 			allowResize = this.getClientStream().getUnsignedByte(); // 49
+			lenientContactDetails = this.getClientStream().getUnsignedByte(); // 50
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -840,6 +841,7 @@ public class PacketHandler {
 			wantEmail = packetsIncoming.getUnsignedByte(); // 47
 			wantRegistrationLimit = packetsIncoming.getUnsignedByte(); // 48
 			allowResize = packetsIncoming.getUnsignedByte(); // 49
+			lenientContactDetails = packetsIncoming.getUnsignedByte(); // 50
 		}
 
 		if (Config.DEBUG) {
@@ -892,7 +894,8 @@ public class PacketHandler {
 					"\nC_FPS" + getFPS + // 46
 					"\nC_WANT_EMAIL" + wantEmail + // 47
 					"\nS_WANT_REGISTRATION_LIMIT" + wantRegistrationLimit + //48
-					"\nS_ALLOW_RESIZE" + allowResize //49
+					"\nS_ALLOW_RESIZE" + allowResize + //49
+					"\nS_LENIENT_CONTACT_DETAILS" + lenientContactDetails //50
 			);
 		}
 
@@ -945,6 +948,7 @@ public class PacketHandler {
 		props.setProperty("C_WANT_EMAIL", wantEmail == 1 ? "true" : "false"); // 47
 		props.setProperty("S_WANT_REGISTRATION_LIMIT", wantRegistrationLimit == 1 ? "true" : "false"); // 48
 		props.setProperty("S_ALLOW_RESIZE", allowResize == 1 ? "true" : "false"); // 49
+		props.setProperty("S_LENIENT_CONTACT_DETAILS", lenientContactDetails == 1 ? "true" : "false"); // 50
 
 		Config.updateServerConfiguration(props);
 
