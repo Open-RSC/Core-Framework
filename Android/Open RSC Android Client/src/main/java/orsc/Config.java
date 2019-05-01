@@ -47,7 +47,7 @@ public class Config {
     private static final String DL_URL = "game.openrsc.com";
     public static final String ANDROID_DOWNLOAD_PATH = "https://" + DL_URL + "/downloads/";
     public static final String CACHE_URL = "https://" + DL_URL + "/downloads/cache/";
-    public static final int ANDROID_CLIENT_VERSION = 16; // Important! Depends on web server android_version.txt to check for an updated version
+    public static final int ANDROID_CLIENT_VERSION = 18; // Important! Depends on web server android_version.txt to check for an updated version
     public static boolean F_SHOWING_KEYBOARD = false;
     public static boolean C_HOLD_AND_CHOOSE = true;
     public static int C_LONG_PRESS_TIMER = 5; // default hold timer setting
@@ -115,6 +115,7 @@ public class Config {
     public static boolean S_WANT_REGISTRATION_LIMIT = false;
     public static boolean S_ALLOW_RESIZE = false;
     public static boolean S_LENIENT_CONTACT_DETAILS = false;
+    public static boolean S_WANT_FATIGUE = true;
 
     public static void set(String key, Object value) {
         prop.setProperty(key, value.toString());

@@ -1768,8 +1768,7 @@ public final class mudclient implements Runnable {
 		this.panelContact.setFocus(this.controlContactName);
 	}
 
-	public void L()
-	{
+	public void L() {
 		this.getSurface().interlace = false;
 		this.getSurface().blackScreen(true);
 		this.panelContact.drawPanel();
@@ -1792,8 +1791,7 @@ public final class mudclient implements Runnable {
 		if (this.panelContact.isClicked(this.controlContactEmail)) {
 			this.panelContact.setFocus(this.controlContactName);
 		}
-		if (this.panelContact.isClicked(this.finishSubmitContact))
-		{
+		if (this.panelContact.isClicked(this.finishSubmitContact)) {
 			String name = this.panelContact.getControlText(this.controlContactName);
 			String zipCode = this.panelContact.getControlText(this.controlContactZipCode);
 			String country = this.panelContact.getControlText(this.controlContactCountry);
@@ -1809,8 +1807,7 @@ public final class mudclient implements Runnable {
 				this.getSurface().blackScreen(true);
 				this.showSetContactDetails = false;
 				return;
-			} else if (!isLenientContactDetails() && ((name == null) || (name.trim().length() == 0) || (zipCode == null) || (zipCode.trim().length() == 0) || (country == null) || (country.trim().length() == 0) || (email == null) || (email.trim().length() == 0)))
-			{
+			} else if (!isLenientContactDetails() && ((name == null) || (name.trim().length() == 0) || (zipCode == null) || (zipCode.trim().length() == 0) || (country == null) || (country.trim().length() == 0) || (email == null) || (email.trim().length() == 0))) {
 				this.panelContact.setText(this.instructContactDetails, "@yel@Please fill in all the requested details");
 				return;
 			} else if (email != null && email.trim().length() > 0 && !isValidEmailAddress(email)) {
@@ -4081,8 +4078,7 @@ public final class mudclient implements Runnable {
 
 			int var5 = 0xFFFFFF;
 			if (this.welcomeRecoverySetDays > 0) {
-				if (this.welcomeRecoverySetDays == 14)
-				{
+				if (this.welcomeRecoverySetDays == 14) {
 					var4 = "Earlier today";
 				} else if (this.welcomeRecoverySetDays == 13) {
 					var4 = "Yesterday";
@@ -4276,7 +4272,7 @@ public final class mudclient implements Runnable {
 			}
 		}
 
-		int y = (getGameHeight() - 60) / 2 ;
+		int y = (getGameHeight() - 60) / 2;
 		this.getSurface().drawBox((getGameWidth() - 300) / 2, (getGameHeight() - 60) / 2, 300, 60, 0);
 		this.getSurface().drawBoxBorder((getGameWidth() - 300) / 2, 300, (getGameHeight() - 60) / 2, 60, 0xFFFFFF);
 		y += 22;
@@ -4848,9 +4844,11 @@ public final class mudclient implements Runnable {
 						i += 14;
 						this.getSurface().drawString(
 							"Prayer: " + this.playerStatCurrent[5] + "@gre@/@whi@" + this.playerStatBase[5], 7, i, 0xffffff, 1);
-						i += 14;
-						this.getSurface().drawString(
-							"Fatigue: " + this.statFatigue + "%", 7, i, 0xffffff, 1);
+						if (Config.S_WANT_FATIGUE) {
+							i += 14;
+							this.getSurface().drawString(
+								"Fatigue: " + this.statFatigue + "%", 7, i, 0xffffff, 1);
+						}
 						i += 14;
 						this.getSurface().drawString("Camera Zoom: " + cameraZoom, 7, i, 0xffffff, 1);
 						i += 14;
@@ -8971,9 +8969,11 @@ public final class mudclient implements Runnable {
 				}
 
 				this.getSurface().drawString("Quest Points:@yel@" + this.questPoints, x - 5 + width / 2, heightMargin - 13, 0xFFFFFF, 1);
+				if (Config.S_WANT_FATIGUE) {
 				heightMargin += 12;
-				this.getSurface().drawString("Fatigue: @yel@" + this.statFatigue + "%", 5 + x, heightMargin - 13,
-					0xFFFFFF, 1);
+					this.getSurface().drawString("Fatigue: @yel@" + this.statFatigue + "%", 5 + x, heightMargin - 13,
+						0xFFFFFF, 1);
+				}
 				heightMargin += 8;
 				this.getSurface().drawString("Equipment Status", 5 + x, heightMargin, 0xFFFF00, 3);
 				heightMargin += 12;
@@ -8990,8 +8990,15 @@ public final class mudclient implements Runnable {
 					heightMargin += 13;
 				}
 
-				heightMargin += 6;
+				if (!Config.S_WANT_FATIGUE) { // if we don't want fatigue, push the rest down to compensate for the missing entry
+					heightMargin += 12;
+				} else {
+					heightMargin += 6;
+				}
 				this.getSurface().drawLineHoriz(x, heightMargin - 15, width, 0);
+				if (!Config.S_WANT_FATIGUE) { // if we don't want fatigue, push the rest down to compensate for the missing entry
+					heightMargin += 6;
+				}
 				if (currentlyHoveredSkill == -1) {
 					this.getSurface().drawString("Overall levels", x + 5, heightMargin, 0xFFFF00, 1);
 					heightMargin += 12;
@@ -10376,8 +10383,7 @@ public final class mudclient implements Runnable {
 							return;
 						}
 					}
-				}
-				else if (this.loginScreenNumber == 4) {
+				} else if (this.loginScreenNumber == 4) {
 					this.panelRecovery.handleMouse(this.mouseX, this.mouseY, this.currentMouseButtonDown,
 						this.lastMouseButtonDown);
 					if (this.panelRecovery.isClicked(this.passwordRecoverSubmit)) {
@@ -10422,7 +10428,7 @@ public final class mudclient implements Runnable {
 							this.packetHandler.getClientStream().writeBuffer1.putString(nPass);
 							this.packetHandler.getClientStream().writeBuffer1.putLong(getUID());
 							String answer;
-							for (int i=0; i < 5; ++i) {
+							for (int i = 0; i < 5; ++i) {
 								answer = this.panelRecovery.getControlText(this.controlPassAnswer[i]);
 								if (answer.length() > 100) {
 									answer = answer.substring(0, 100);
@@ -13892,6 +13898,7 @@ public final class mudclient implements Runnable {
 			System.out.println(Config.S_WANT_REGISTRATION_LIMIT + " 48");
 			System.out.println(Config.S_ALLOW_RESIZE + " 49");
 			System.out.println(Config.S_LENIENT_CONTACT_DETAILS + " 50");
+			System.out.println(Config.S_WANT_FATIGUE + " 51");
 		}
 		try {
 			this.loadGameConfig(false);
