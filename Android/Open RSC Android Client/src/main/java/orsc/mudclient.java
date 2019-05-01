@@ -13848,6 +13848,7 @@ public final class mudclient implements Runnable {
         System.out.println("Got server configs!");
         if (Config.DEBUG) {
             System.out.println("Debug server configs received:");
+            System.out.println(F_CACHE_DIR + " 0");
             System.out.println(SERVER_NAME + " 1");
             System.out.println(SERVER_NAME_WELCOME + " 2");
             System.out.println(S_PLAYER_LEVEL_LIMIT + " 3");

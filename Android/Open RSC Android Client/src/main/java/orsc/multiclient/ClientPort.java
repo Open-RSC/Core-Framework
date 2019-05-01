@@ -54,7 +54,7 @@ public interface ClientPort {
             fileout = new FileOutputStream(Config.F_CACHE_DIR + File.separator + "hideIp.txt");
 
             OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-            outputWriter.write(""+preference);
+            outputWriter.write("" + preference);
             outputWriter.close();
             return true;
         } catch (Exception ignored) {
@@ -64,7 +64,6 @@ public interface ClientPort {
 
     static int loadHideIp() {
         try {
-
             FileInputStream in = new FileInputStream(Config.F_CACHE_DIR + File.separator + "hideIp.txt");
             InputStreamReader inputStreamReader = new InputStreamReader(in);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
