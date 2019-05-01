@@ -10,9 +10,19 @@ import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.event.rsc.impl.*;
+import com.openrsc.server.event.rsc.impl.FireCannonEvent;
+import com.openrsc.server.event.rsc.impl.PoisonEvent;
+import com.openrsc.server.event.rsc.impl.PrayerDrainEvent;
+import com.openrsc.server.event.rsc.impl.ProjectileEvent;
+import com.openrsc.server.event.rsc.impl.RangeEvent;
+import com.openrsc.server.event.rsc.impl.ThrowingEvent;
 import com.openrsc.server.login.LoginRequest;
-import com.openrsc.server.model.*;
+import com.openrsc.server.model.Cache;
+import com.openrsc.server.model.MenuOptionListener;
+import com.openrsc.server.model.Point;
+import com.openrsc.server.model.PrivateMessage;
+import com.openrsc.server.model.Shop;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.Inventory;
@@ -40,15 +50,27 @@ import com.openrsc.server.sql.query.logs.LiveFeedLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
-import io.netty.channel.Channel;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.ListIterator;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
+
+import io.netty.channel.Channel;
 
 /**
  * A single player.
@@ -275,7 +297,7 @@ public final class Player extends Mob {
 	private Social social;
 	private Duel duel;
 	private DelayedEvent unregisterEvent;
-	
+
 	/**
 	 * Restricts P2P stuff in F2P wilderness.
 	 */
@@ -321,7 +343,7 @@ public final class Player extends Mob {
 	// so everything is multiplied by 2 to avoid decimals
 	public final int KITTEN_ACTIVITY_THRESHOLD = 50;
 	private int activity = 0;
-	
+
 	/**
 	 * KILLS N DEATHS
 	 **/
@@ -830,11 +852,11 @@ public final class Player extends Mob {
 		long now = Calendar.getInstance().getTimeInMillis() / 1000;
 		return (int) ((now - lastLogin) / 86400);
 	}
-	
+
 	public void setLastRecoveryChangeRequest(long l) {
 		lastRecoveryChangeRequest = l;
 	}
-	
+
 	public int getDaysSinceLastRecoveryChangeRequest() {
 		long now = Calendar.getInstance().getTimeInMillis() / 1000;
 		return (int) ((now - lastRecoveryChangeRequest) / 86400);
@@ -853,12 +875,21 @@ public final class Player extends Mob {
 	}
 
 	public int getFatigue() {
-		return fatigue;
+		if (Constants.GameServer.WANT_FATIGUE) {
+			return fatigue;
+		}
+		else {
+			return 0;
+		}
 	}
 
 	public void setFatigue(int fatigue) {
-		this.fatigue = fatigue;
-		ActionSender.sendFatigue(this);
+		if (Constants.GameServer.WANT_FATIGUE) {
+			this.fatigue = fatigue;
+			ActionSender.sendFatigue(this);
+		} else {
+			this.fatigue = 0;
+		}
 	}
 
 	public int getIncorrectSleepTimes() {
@@ -1282,7 +1313,7 @@ public final class Player extends Mob {
 	public void incrementSleepTries() {
 		incorrectSleepTries++;
 	}
-	
+
 	public void incrementActivity(int amount) {
 		activity += amount;
 		if (activity >= KITTEN_ACTIVITY_THRESHOLD) {
@@ -1290,14 +1321,14 @@ public final class Player extends Mob {
 			PluginHandler.getPluginHandler().blockDefaultAction("CatGrowth", new Object[]{this});
 		}
 	}
-	
+
 	/*
 	 * Called on periodic saves
 	 */
 	public void timeIncrementActivity() {
 		incrementActivity(5);
 	}
-	
+
 	/*
 	 * Called when walking a single step
 	 */
@@ -1759,7 +1790,7 @@ public final class Player extends Mob {
 		if (opponent != null) {
 			resetCombatEvent();
 		}
-		if(trawlerInstance != null && trawlerInstance.getPlayers().contains(this)) {
+		if (trawlerInstance != null && trawlerInstance.getPlayers().contains(this)) {
 			trawlerInstance.disconnectPlayer(this, true);
 		}
 		if (getLocation().inMageArena()) {
@@ -1805,11 +1836,11 @@ public final class Player extends Mob {
 					+ "</font></strong> quest points"));
 		}
 	}
-	
+
 	public void sendMiniGameComplete(int miniGameId, Optional<String> message) {
 		world.getMiniGame(miniGameId).handleReward(this);
 		GameLogging.addQuery(new LiveFeedLog(this, "just completed <strong><font color=#00FF00>" + world.getMiniGame(miniGameId).getMiniGameName()
-				+ "</font></strong> minigame! " + (message.isPresent() ? message.get() : "")));
+			+ "</font></strong> minigame! " + (message.isPresent() ? message.get() : "")));
 	}
 
 	public void setAccessingBank(boolean b) {
@@ -1957,15 +1988,15 @@ public final class Player extends Mob {
 		super.setLocation(p, teleported);
 
 	}
-	
+
 	public void produceUnderAttack() {
 		World.getWorld().produceUnderAttack(this);
 	}
-	
+
 	public boolean checkUnderAttack() {
 		return World.getWorld().checkUnderAttack(this);
 	}
-	
+
 	public void releaseUnderAttack() {
 		World.getWorld().releaseUnderAttack(this);
 	}
