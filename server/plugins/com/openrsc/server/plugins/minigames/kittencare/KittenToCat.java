@@ -218,6 +218,8 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 			else if (kittenEvents >= 32) {
 				p.getInventory().replace(ItemId.KITTEN.id(), ItemId.CAT.id());
 				kittenEvents = kittenHunger = kittenLoneliness = 0;
+				message(p, 1200, "you're kitten has grown into a healthy cat",
+						"it can hunt for its self now");
 			}
 			
 			state.setEvents(kittenEvents);
