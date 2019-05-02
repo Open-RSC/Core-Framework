@@ -142,6 +142,9 @@ publish-pagination:
 version:
 	docker exec -i php bash -c "cd /var/www/html/openrsc_web && php artisan --version"
 
+npm-install:
+	docker exec -i php bash -c "cd /var/www/html/openrsc_web && npm install"
+
 npm-run-dev:
 	docker exec -i php bash -c "cd /var/www/html/openrsc_web && npm run dev"
 
