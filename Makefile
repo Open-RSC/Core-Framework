@@ -110,7 +110,7 @@ init-laravel:
 	cp Website/openrsc_web/.env.example Website/openrsc_web/.env
 
 update-laravel:
-	docker exec -i php bash -c "cd /var/www/html/openrsc_web && composer install && composer update && php artisan key:generate && php artisan optimize && npm install && npm update"
+	docker exec -i php bash -c "cd /var/www/html/openrsc_web && composer install && composer update && php artisan key:generate && php artisan optimize && npm install && npm update && npm audit fix"
 
 migrate-laravel:
 	docker exec -i php bash -c "cd /var/www/html/openrsc_web && php artisan migrate --seed"
