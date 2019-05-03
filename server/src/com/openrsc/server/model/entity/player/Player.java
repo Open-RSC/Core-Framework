@@ -51,6 +51,8 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
+import static com.openrsc.server.plugins.Functions.sleep;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -1582,6 +1584,14 @@ public final class Player extends Mob {
 
 	public void playerServerMessage(MessageType type, String string) {
 		ActionSender.sendPlayerServerMessage(this, type, string);
+	}
+	
+	public void walkThenTeleport(int x1, int y1, int x2, int y2, boolean bubble) {
+		walk(x1, y1);
+		while (!getWalkingQueue().finished()) {
+			sleep(1);
+		}
+		teleport(x2, y2, bubble);
 	}
 
 	public void teleport(int x, int y) {

@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.npcs.alkharid;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -48,10 +49,12 @@ public final class BorderGuard implements TalkToNpcExecutiveListener,
 					p.message("You pay the guard");
 					npcTalk(p, n, "You may pass");
 					p.message("The gate swings open");
-					if (p.getX() > 91)
-						p.teleport(90, 649, false);
-					else
-						p.teleport(93, 649, false);
+					if (p.getX() > 91) {
+						p.walkThenTeleport(92, 649, 91, 649, false);
+					}
+					else {
+						p.walkThenTeleport(91, 649, 92, 649, false);
+					}
 				} else {
 					playerTalk(p, n,
 						"Oh dear I don't actually seem to have enough money");
@@ -62,7 +65,7 @@ public final class BorderGuard implements TalkToNpcExecutiveListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 161;
+		return n.getID() == NpcId.BORDER_GUARD_ALKHARID.id() || n.getID() == NpcId.BORDER_GUARD_LUMBRIDGE.id();
 	}
 
 	@Override
