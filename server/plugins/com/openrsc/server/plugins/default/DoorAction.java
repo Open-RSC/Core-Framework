@@ -531,10 +531,14 @@ public class DoorAction {
 					doDoor(obj, p);
 					return;
 				}
-				if (Bravek != null) {
-					npcTalk(p, Bravek, "Go away,I'm busy", "I'm", "um",
-						"In a meeting");
+				if (p.getX() >= 648) {
+					if (Bravek != null) {
+						npcTalk(p, Bravek, "Go away,I'm busy", "I'm", "um",
+								"In a meeting");
+					}
 					p.message("The door won't open");
+				} else {
+					doDoor(obj, p);
 				}
 				break;
 

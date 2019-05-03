@@ -468,7 +468,7 @@ public final class mudclient implements Runnable {
 	private int m_rc = 0;
 	private int m_Re;
 	private int m_rf;
-	private boolean m_ue = false;
+	private boolean reportAbuse_isMute = false;
 	private int m_Wc = 0;
 	private int m_Wg = 8;
 	private long lastWrite;
@@ -5813,7 +5813,7 @@ public final class mudclient implements Runnable {
 				int var10 = var3 + var4 + 8 + var8 + var9 + 2;
 				int var11 = 0xFFFFFF;
 				if (var2 > 0) {
-					String var12 = this.m_ue ? "[X]" : "[ ]";
+					String var12 = this.reportAbuse_isMute ? "[X]" : "[ ]";
 					if (var2 > 1) {
 						var12 = var12 + " Mute player";
 					} else {
@@ -5824,7 +5824,7 @@ public final class mudclient implements Runnable {
 					if (this.mouseX > 256 - var13 / 2 && this.mouseX < var13 / 2 + 256 && var10 - var3 < this.mouseY
 						&& var10 > this.mouseY) {
 						if (this.mouseButtonClick != 0) {
-							this.m_ue = !this.m_ue;
+							this.reportAbuse_isMute = !this.reportAbuse_isMute;
 							this.mouseButtonClick = 0;
 						}
 
@@ -11170,7 +11170,7 @@ public final class mudclient implements Runnable {
 				this.packetHandler.getClientStream().newPacket(206);
 				this.packetHandler.getClientStream().writeBuffer1.putString(this.reportAbuse_Name);
 				this.packetHandler.getClientStream().writeBuffer1.putByte(this.reportAbuse_AbuseType);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.m_ue ? 1 : 0);
+				this.packetHandler.getClientStream().writeBuffer1.putByte(this.reportAbuse_isMute ? 1 : 0);
 				this.packetHandler.getClientStream().finishPacket();
 				this.reportAbuse_State = 0;
 				this.inputTextFinal = "";
@@ -12024,144 +12024,164 @@ public final class mudclient implements Runnable {
 						 */
 						this.packetHandler.getClientStream().finishPacketAndFlush();
 						// this.clientStream.seedIsaac(isaacSeed);
-						int var11 = this.packetHandler.getClientStream().read();
+						int loginResponse = this.packetHandler.getClientStream().read();
 
-						System.out.println("login response:" + var11);
-						if (var11 == 0) {
-							this.m_Ce = var11 & 3;
+						System.out.println("login response:" + loginResponse);
+						if ((loginResponse & 0x40) != 0)
+						{
 							this.autoLoginTimeout = 0;
-							this.m_Oj = (var11 & 63) >> 2;
-							this.resetGame(-109);
-							return;
+							this.m_Ce = loginResponse & 0x3;
+							this.m_Oj = (loginResponse >> 2) & 0xf;
+							this.resetGame((byte) -123);
 						}
-
-						if (var11 == 1) {
-							this.autoLoginTimeout = 0;
-							this.setEGTo77();
-							return;
-						}
-
-						if (!reconnecting) {
-							if (var11 != -1) {
-								if (var11 != 3) {
-									if (var11 == 4) {
-										this.showLoginScreenStatus("That username is already logged in.",
-											"Wait 60 seconds then retry");
-									} else if (var11 != 5) {
-										if (var11 != 6) {
-											if (var11 != 7) {
-												if (var11 != 8) {
-													if (var11 != 9) {
-														if (var11 != 10) {
-															if (var11 != 11) {
-																if (var11 != 12) {
-																	if (var11 == 14) {
-																		this.showLoginScreenStatus(
-																			"Sorry! This world is currently full.",
-																			"Please try a different world");
-																		this.m_Zb = 1500;
-																	} else if (var11 != 15) {
-																		if (var11 == 16) {
-																			this.showLoginScreenStatus(
-																				"Error - no reply from loginserver.",
-																				"Please try again");
-																		} else if (var11 != 17) {
-																			if (var11 == 18) {
-																				this.showLoginScreenStatus(
-																					"Account suspected stolen.",
-																					"Press \'recover a locked account\' on front page.");
-																			} else if (var11 != 20) {
-																				if (var11 != 21) {
-																					if (var11 == 22) {
-																						this.showLoginScreenStatus(
-																							"Password suspected stolen.",
-																							"Press \'change your password\' on front page.");
-																					} else if (var11 != 23) {
-																						if (var11 == 24) {
-																							this.showLoginScreenStatus(
-																								"Server is currently restarting.",
-																								"Please try again in a minute.");
-																						} else if (var11 != 25) {
-																							this.showLoginScreenStatus(
-																								"Error unable to login.",
-																								"Unrecognised response code");
-																						} else {
-																							this.showLoginScreenStatus(
-																								"None of your characters can log in.",
-																								"Contact customer support");
-																						}
-																					} else {
-																						this.showLoginScreenStatus(
-																							"You need to set your display name.",
-																							"Please go to the Account Management page to do this.");
-																					}
-																				} else {
-																					this.showLoginScreenStatus(
-																						"That is not a veteran RS-Classic account.",
-																						"Please try a non-veterans world.");
-																				}
-																			} else {
-																				this.showLoginScreenStatus(
-																					"Error - loginserver mismatch",
-																					"Please try a different world");
-																			}
-																		} else {
-																			this.showLoginScreenStatus(
-																				"Error - failed to decode profile.",
-																				"Contact customer support");
-																		}
-																	} else {
-																		this.showLoginScreenStatus(
-																			"You need a members account",
-																			"to login to this world");
-																	}
-																} else {
-																	this.showLoginScreenStatus(
-																		"Account permanently disabled.",
-																		"Check your message inbox for details");
-																}
-															} else {
-																this.showLoginScreenStatus(
-																	"Account temporarily disabled.",
-																	"Check your message inbox for details");
-															}
-														} else {
-															this.showLoginScreenStatus(
-																"That username is already in use.",
-																"Wait 60 seconds then retry");
-														}
-													} else {
-														this.showLoginScreenStatus("Error unable to login.",
-															"Under 13 accounts cannot access " + SERVER_NAME);
-													}
-												} else {
-													this.showLoginScreenStatus("Error unable to login.",
-														"Server rejected session");
-												}
-											} else {
-												this.showLoginScreenStatus("Login attempts exceeded!",
-													"Please try again in 5 minutes");
-											}
-										} else {
-											this.showLoginScreenStatus("You may only use 1 character at once.",
-												"Your ip-address is already in use");
-										}
-									} else {
-										this.showLoginScreenStatus("The client has been updated.",
-											"Please reload this page");
-									}
-								} else {
-									this.showLoginScreenStatus("Invalid username or password.",
-										"Try again, or create a new account");
-								}
-							} else {
-								this.showLoginScreenStatus("Error unable to login.", "Server timed out");
+						else
+						{
+							if (loginResponse == 1)
+							{
+								this.autoLoginTimeout = 0;
+								this.setEGTo77();
 							}
-						} else {
-							this.setUsername("");
-							this.jumpToLogin();
+							else
+							{
+								if (!reconnecting)
+								{
+									if (loginResponse == -1)
+									{
+										this.showLoginScreenStatus("Error unable to login.", "Server timed out");
+									}
+									else if (loginResponse == 3)
+									{
+										this.showLoginScreenStatus("Invalid username or password.",
+										        "Try again, or create a new account");
+									}
+									else if (loginResponse != 4)
+									{
+										if (loginResponse == 5)
+										{
+											this.showLoginScreenStatus("The client has been updated.", "Please reload this page");
+										}
+										else if (loginResponse == 6)
+										{
+											this.showLoginScreenStatus("You may only use 1 character at once.",
+											        "Your ip-address is already in use");
+										}
+										else if (loginResponse == 7)
+										{
+											this.showLoginScreenStatus("Login attempts exceeded!", "Please try again in 5 minutes");
+										}
+										else if (loginResponse == 8)
+										{
+											this.showLoginScreenStatus("Error unable to login.", "Server rejected session");
+										}
+										else if (loginResponse == 9)
+										{
+											this.showLoginScreenStatus("Error unable to login.",
+											        "Under 13 accounts cannot access RuneScape Classic");
+										}
+										else if (loginResponse == 10)
+										{
+											this.showLoginScreenStatus("That username is already in use.",
+											        "Wait 60 seconds then retry");
+										}
+										else if (loginResponse == 11)
+										{
+											this.showLoginScreenStatus("Account temporarily disabled.",
+											        "Check your message inbox for details");
+										}
+										else if (loginResponse == 12)
+										{
+											this.showLoginScreenStatus("Account permanently disabled.",
+											        "Check your message inbox for details");
+										}
+										else if (loginResponse == 14)
+										{
+											this.showLoginScreenStatus("Sorry! This world is currently full.",
+											        "Please try a different world");
+											this.m_Zb = 1500;
+										}
+										else if (loginResponse == 15)
+										{
+											this.showLoginScreenStatus("You need a members account", "to login to this world");
+										}
+										else if (loginResponse != 16)
+										{
+											if (loginResponse != 17)
+											{
+												if (loginResponse != 18)
+												{
+													if (loginResponse == 20)
+													{
+														this.showLoginScreenStatus("Error - loginserver mismatch",
+														        "Please try a different world");
+													}
+													else if (loginResponse == 21)
+													{
+														this.showLoginScreenStatus("That is not a veteran RS-Classic account.",
+														        "Please try a non-veterans world.");
+													}
+													else if (loginResponse != 22)
+													{
+														if (loginResponse == 23)
+														{
+															this.showLoginScreenStatus("You need to set your display name.",
+															        "Please go to the Account Management page to do this.");
+														}
+														else if (loginResponse != 24)
+														{
+															if (loginResponse != 25)
+															{
+																this.showLoginScreenStatus("Error unable to login.",
+																        "Unrecognised response code");
+															}
+															else
+															{
+																this.showLoginScreenStatus("None of your characters can log in.",
+																        "Contact customer support");
+															}
+														}
+														else
+														{
+															this.showLoginScreenStatus("This world does not accept new players.",
+															        "Please see the launch page for help");
+														}
+													}
+													else
+													{
+														this.showLoginScreenStatus("Password suspected stolen.",
+														        "Press 'change your password' on front page.");
+													}
+												}
+												else
+												{
+													this.showLoginScreenStatus("Account suspected stolen.",
+													        "Press 'recover a locked account' on front page.");
+												}
+											}
+											else
+											{
+												this.showLoginScreenStatus("Error - failed to decode profile.",
+												        "Contact customer support");
+											}
+										}
+										else
+										{
+											this.showLoginScreenStatus("Error - no reply from loginserver.", "Please try again");
+										}
+									}
+									else
+									{
+										this.showLoginScreenStatus("That username is already logged in.",
+										        "Wait 60 seconds then retry");
+									}
+								}
+								else
+								{
+									this.setUsername("");
+									this.jumpToLogin();
+								}
+							}
 						}
-
+						
 						return;
 					} catch (Exception var15) {
 						var15.printStackTrace();

@@ -6,6 +6,7 @@ import com.openrsc.server.model.snapshot.Snapshot;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.GameReport;
@@ -19,6 +20,7 @@ public final class ReportHandler implements PacketHandler {
 
 		String hash = p.readString();
 		byte reason = p.readByte();
+		byte suggestsOrMutes = p.readByte();
 
 		if (hash.equalsIgnoreCase(player.getUsername())) {
 			player.message("You can't report yourself!!");
@@ -59,7 +61,24 @@ public final class ReportHandler implements PacketHandler {
 		}
 
 		player.message("Thank-you, your abuse report has been received.");
-		GameLogging.addQuery(new GameReport(player, hash, reason));
+		GameLogging.addQuery(new GameReport(player, hash, reason, suggestsOrMutes != 0, player.isMod()));
 		player.setLastReport();
+		
+		if (suggestsOrMutes != 0 && player.isMod()) {
+			muteCommand(player, "mute " + hash + " -1");
+		}
+	}
+	
+	private void muteCommand(Player player, String s) {
+		int firstSpace = s.indexOf(" ");
+		String cmd = s;
+		String[] args = new String[0];
+		if (firstSpace != -1) {
+			cmd = s.substring(0, firstSpace).trim();
+			args = s.substring(firstSpace + 1).trim().split(" ");
+		}
+
+		PluginHandler.getPluginHandler().handleAction("Command",
+			new Object[]{cmd.toLowerCase(), args, player});
 	}
 }

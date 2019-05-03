@@ -8,6 +8,8 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.ThrottleFilter;
 import com.openrsc.server.sql.DatabasePlayerLoader;
 import com.openrsc.server.util.NamedThreadFactory;
+import com.openrsc.server.util.rsc.LoginResponse;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -41,7 +43,7 @@ public class PlayerDatabaseExecutor extends ThrottleFilter implements Runnable {
 			while ((loginRequest = loadRequests.poll()) != null) {
 				int loginResponse = database.validateLogin(loginRequest);
 				loginRequest.loginValidated(loginResponse);
-				if (loginResponse == 0) {
+				if ((loginResponse & 0x40) != LoginResponse.LOGIN_INSUCCESSFUL) {
 					final Player loadedPlayer = database.loadPlayer(loginRequest);
 
 					LoginTask loginTask = new LoginTask(loginRequest, loadedPlayer);

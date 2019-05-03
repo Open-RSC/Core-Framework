@@ -243,7 +243,7 @@ public class KnightsSword implements QuestInterface, TalkToNpcListener,
 
 							squireDialogue(p, n, Squire.MAIN);
 						} else if (option == 1) {
-							squireDialogue(p, n, Squire.MAIN);
+							squireDialogue(p, n, Squire.NEW_SWORD);
 						} else if (option == 2) {
 							squireDialogue(p, n, Squire.ANGRY);
 						}

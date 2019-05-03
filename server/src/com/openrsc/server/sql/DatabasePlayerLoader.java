@@ -8,6 +8,7 @@ import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
+import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -730,6 +731,7 @@ public class DatabasePlayerLoader {
 	public byte validateLogin(LoginRequest request) {
 		PreparedStatement statement = null;
 		ResultSet playerSet = null;
+		int groupId = Group.USER;
 		try {
 			statement = conn.prepareStatement(Statements.playerLoginData);
 			statement.setString(1, request.getUsername());
@@ -756,10 +758,11 @@ public class DatabasePlayerLoader {
 			if (timeBanLeft >= 1) {
 				return (byte) LoginResponse.ACCOUNT_TEMP_DISABLED;
 			}
+			groupId = playerSet.getInt("group_id");
 		} catch (SQLException e) {
 			LOGGER.catching(e);
 		}
-		return (byte) LoginResponse.LOGIN_SUCCESSFUL;
+		return (byte) LoginResponse.LOGIN_SUCCESSFUL[groupId];
 	}
 
 	private class Statements {
@@ -867,7 +870,7 @@ public class DatabasePlayerLoader {
 			+ "`cur_fletching`=?, `cur_fishing`=?, `cur_firemaking`=?, `cur_crafting`=?, `cur_smithing`=?, `cur_mining`=?, "
 			+ "`cur_herblaw`=?, `cur_agility`=?, `cur_thieving`=? WHERE `playerID`=?";
 
-		private static final String playerLoginData = "SELECT `pass`, `salt`, `banned` FROM `" + PREFIX + "players` WHERE `username`=?";
+		private static final String playerLoginData = "SELECT `group_id`, `pass`, `salt`, `banned` FROM `" + PREFIX + "players` WHERE `username`=?";
 		
 		private static final String playerPendingRecovery = "SELECT `username`, `question1`, `answer1`, `question2`, `answer2`, `question3`, `answer3`, `question4`, `answer4`, `question5`, `answer5`, `date_set`, `ip_set` FROM `"
 		+ PREFIX + "player_change_recovery` WHERE `playerID`=?";

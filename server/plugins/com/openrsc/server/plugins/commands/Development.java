@@ -385,7 +385,7 @@ public final class Development implements CommandListener {
 				player;
 
 			if(p != null)
-				player.message(messagePrefix + p.getStaffName() + "is at: " + p.getLocation());
+				player.message(messagePrefix + p.getStaffName() + " is at: " + p.getLocation());
 			else
 				player.message(messagePrefix + "Invalid name or player is not online");
 		}

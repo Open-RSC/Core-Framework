@@ -505,6 +505,9 @@ CREATE TABLE IF NOT EXISTS `openrsc_trade_logs` (
 
 ALTER TABLE `openrsc_players` ADD COLUMN `lastRecoveryTryId` int(10) UNSIGNED;
 
+ALTER TABLE `openrsc_game_reports` ADD COLUMN `suggests_or_mutes` boolean;
+ALTER TABLE `openrsc_game_reports` ADD COLUMN `tried_apply_action` boolean;
+
 ALTER TABLE `openrsc_auctions` ADD FULLTEXT KEY `seller_username` (`seller_username`);
 ALTER TABLE `openrsc_auctions` ADD FULLTEXT KEY `buyer_info` (`buyer_info`);
 
@@ -513,6 +516,7 @@ ALTER TABLE `openrsc_chat_logs` ADD FULLTEXT KEY `message` (`message`);
 ALTER TABLE `openrsc_generic_logs` ADD FULLTEXT KEY `message` (`message`);
 
 ALTER TABLE `openrsc_private_message_logs` ADD FULLTEXT KEY `message` (`message`);
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

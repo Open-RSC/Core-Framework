@@ -19,12 +19,15 @@ public final class GameReport extends Query {
 	private final byte reason;
 	private final StringBuilder chatlog = new StringBuilder();
 	private int reported_x, reported_y;
+	private boolean suggestsOrMutes, triedApplyAction;
 
-	public GameReport(Player reporter, String reported, byte reason) {
-		super("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "game_reports`(`time`, `reporter`, `reported`, `reason`, `chatlog`, `reporter_x`, `reporter_y`, `reported_x`, `reported_y`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)");
+	public GameReport(Player reporter, String reported, byte reason, boolean suggestsOrMutes, boolean triedApplyAction) {
+		super("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "game_reports`(`time`, `reporter`, `reported`, `reason`, `chatlog`, `reporter_x`, `reporter_y`, `reported_x`, `reported_y`, `suggests_or_mutes`, `tried_apply_action`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		this.reason = reason;
 		this.reported = reported;
 		this.reporterPlayer = reporter;
+		this.suggestsOrMutes = suggestsOrMutes;
+		this.triedApplyAction = triedApplyAction;
 
 		long playerish = DataConversions.usernameToHash(reported);
 		Player reportedPlayer = World.getWorld().getPlayer(playerish);
@@ -58,6 +61,8 @@ public final class GameReport extends Query {
 		statement.setInt(7, reporterPlayer.getY());
 		statement.setInt(8, reported_x);
 		statement.setInt(9, reported_y);
+		statement.setBoolean(10, suggestsOrMutes);
+		statement.setBoolean(11, triedApplyAction);
 		return statement;
 	}
 

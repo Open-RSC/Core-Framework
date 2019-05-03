@@ -526,7 +526,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 				npcTalk(p, n, "Sounds like pretty thirsty work");
 				playerTalk(p, n, "Well, there's a pub in Varrock if you're desperate");
 				npcTalk(p, n, "Don't worry, I'm a pretty resourceful fellow you know");
-				int menu = showMenu(p, n,
+				int menu = showMenu(p, n, false, //do not send over
 					"You give him the vial of ethenea",
 					"You give him the vial of liquid honey",
 					"You give him the vial of sulphuric broline");
@@ -582,7 +582,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 				npcTalk(p, n, "Tssch... that chemist asks a lot for the wages he pays");
 				playerTalk(p, n, "Maybe you should ask him for more money");
 				npcTalk(p, n, "Nah...I just use my initiative here and there");
-				int menu = showMenu(p, n,
+				int menu = showMenu(p, n, false, //do not send over
 					"You give him the vial of ethenea",
 					"You give him the vial of liquid honey",
 					"You give him the vial of sulphuric broline");
@@ -701,7 +701,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 				playerTalk(p, n, "Good for you",
 					"Now can you take a vial to Varrock for me?");
 				npcTalk(p, n, "Go on then");
-				int menu = showMenu(p, n,
+				int menu = showMenu(p, n, false, //do not send over
 					"You give him the vial of ethenea",
 					"You give him the vial of liquid honey",
 					"You give him the vial of sulphuric broline");
