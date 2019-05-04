@@ -530,7 +530,7 @@ public final class mudclient implements Runnable {
 	private Panel panelMessageTabs;
 	private Panel panelPlayerInfo;
 	private Panel panelQuestInfo;
-	//private Panel panelPlayerTaskInfo;
+	private Panel panelPlayerTaskInfo;
 	private Panel panelSettings;
 	private Panel panelSocial;
 	private Panel panelClan;
@@ -7906,36 +7906,7 @@ public final class mudclient implements Runnable {
 			this.getSurface().drawString("Block duel requests: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
 		}
 
-		if (S_WANT_CLANS) {
-			y += 20;
-			this.getSurface().drawString("Clan settings", baseX + 3, y, 0, 1);
-		}
-		if (S_SHOW_FLOATING_NAMETAGS) {
-			y += 15;
-			if (!C_NAME_CLAN_TAG_OVERLAY) {
-				this.getSurface().drawString("Name and Clan Tag - @red@<off>", x, y, 0xFFFFFF, 1);
-			} else {
-				this.getSurface().drawString("Name and Clan Tag - @gre@<on>", x, y, 0xFFFFFF, 1);
-			}
-		}
-
 		int logoutColor;
-		if (S_WANT_CLANS) {
-			y += 15;
-			if (!this.clanInviteBlockSetting) {
-				this.getSurface().drawString("Clan Invitation - @gre@Receive", x, y, 0xFFFFFF, 1);
-			} else {
-				this.getSurface().drawString("Clan Invitation - @red@Block", x, y, 0xFFFFFF, 1);
-			}
-
-			y += 20;
-			logoutColor = 0xFF0000;
-			if (x < this.mouseX && this.mouseX < x + boxWidth && y - 12 < this.mouseY
-				&& this.mouseY < 4 + y) {
-				logoutColor = 0xFFFF00;
-			}
-			this.getSurface().drawString("Report Abuse", x, y, logoutColor, 1);
-		}
 
 		if (this.insideTutorial) {
 			y = 256;
@@ -8107,6 +8078,36 @@ public final class mudclient implements Runnable {
 			} else {
 				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 					"@whi@Inventory Count - @gre@On", 15, null, null);
+			}
+		}
+
+		if (S_WANT_CLANS) {
+			if (S_SHOW_FLOATING_NAMETAGS) {
+				if (!C_NAME_CLAN_TAG_OVERLAY) {
+					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+						"@whi@Name and Clan Tag - @red@<off>", 16, null, null);
+				} else {
+					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+						"@whi@Name and Clan Tag - @gre@<on>", 16, null, null);
+				}
+			}
+
+			if (S_WANT_CLANS) {
+				if (!this.clanInviteBlockSetting) {
+					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+						"@whi@Clan Invitation - @gre@Receive", 17, null, null);
+				} else {
+					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+						"@whi@Clan Invitation - @red@Block", 17, null, null);
+				}
+				int logoutColor;
+				logoutColor = 0xFF0000;
+				if (x < this.mouseX && this.mouseX < x + boxWidth && y - 12 < this.mouseY
+					&& this.mouseY < 4 + y) {
+					logoutColor = 0xFFFF00;
+				}
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+					"@whi@Report Abuse", 18, null, null);
 			}
 		}
 
@@ -8357,6 +8358,24 @@ public final class mudclient implements Runnable {
 			saveConfiguration(true);
 		}
 
+		if (S_WANT_CLANS) {
+			// Clan Invite Blocking - byte index 11
+			if (settingIndex == 16 && this.mouseButtonClick == 1) {
+				this.clanInviteBlockSetting = !this.clanInviteBlockSetting;
+				this.packetHandler.getClientStream().newPacket(111);
+				this.packetHandler.getClientStream().writeBuffer1.putByte(11);
+				this.packetHandler.getClientStream().writeBuffer1.putByte(this.clanInviteBlockSetting ? 1 : 0);
+				this.packetHandler.getClientStream().finishPacket();
+			}
+
+			// Report Abuse
+			if (settingIndex == 17 && this.mouseButtonClick == 1) {
+				this.inputTextFinal = "";
+				this.inputTextCurrent = "";
+				this.reportAbuse_State = 1;
+			}
+		}
+
 		var7 += 184;
 
 		// Items On Death
@@ -8420,9 +8439,8 @@ public final class mudclient implements Runnable {
 			var11 = true;
 		}
 
+		// block global
 		var7 += 15;
-
-		// Block Global
 		if (S_WANT_GLOBAL_CHAT) {
 			if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
 				&& var7 + 4 > this.mouseY && this.mouseButtonClick == 1) {
@@ -8435,20 +8453,18 @@ public final class mudclient implements Runnable {
 				this.packetHandler.getClientStream().writeBuffer1.putByte(this.settingsBlockGlobal);
 				this.packetHandler.getClientStream().finishPacket();
 			}
-
 			var7 += 15;
 		}
 
-		// Block Trade
+		// block trade
 		if (this.mouseX > var6 && this.mouseX < var6 + var5 && var7 - 12 < this.mouseY
 			&& this.mouseY < 4 + var7 && this.mouseButtonClick == 1) {
 			this.settingsBlockTrade = 1 - this.settingsBlockTrade;
 			var11 = true;
 		}
 
+		// block duel
 		var7 += 15;
-
-		// Block Duel
 		if (this.mouseX > var6 && this.mouseX < var6 + var5
 			&& var7 - 12 < this.mouseY && this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
 			var11 = true;
@@ -8460,10 +8476,9 @@ public final class mudclient implements Runnable {
 				this.settingsBlockTrade, this.settingsBlockDuel);
 		}
 
+		// floating name tags
 		var7 += 20;
-
 		if (S_SHOW_FLOATING_NAMETAGS) {
-			// Floating Nametag
 			var7 += 15;
 			if (this.mouseX > var6 && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY
 				&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
@@ -8472,29 +8487,7 @@ public final class mudclient implements Runnable {
 			}
 		}
 
-		if (S_WANT_CLANS) {
-			// Clan Invite Blocking - byte index 11
-			var7 += 15;
-			if (this.mouseX > var6 && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY
-				&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
-				this.clanInviteBlockSetting = !this.clanInviteBlockSetting;
-				this.packetHandler.getClientStream().newPacket(111);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(11);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.clanInviteBlockSetting ? 1 : 0);
-				this.packetHandler.getClientStream().finishPacket();
-			}
-
-			// Report Abuse
-			var7 += 20;
-			if (this.mouseX > var6 && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY
-				&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
-				this.inputTextFinal = "";
-				this.inputTextCurrent = "";
-				this.reportAbuse_State = 1;
-			}
-		}
-
-		// Skip Tutorial Button
+		// skip tutorial button or exit blackHole button
 		if (this.insideTutorial) {
 			var7 = 255;
 			if (this.mouseX > var6 && var5 + var6 > this.mouseX && var7 - 12 < this.mouseY
@@ -8511,9 +8504,8 @@ public final class mudclient implements Runnable {
 			}
 		}
 
+		// logout menu option
 		var7 = 290;
-
-		// Logout
 		if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
 			&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
 			this.sendLogout(0);
@@ -8522,6 +8514,7 @@ public final class mudclient implements Runnable {
 
 	private void handleAndroidSettingsClicks(short var5, int var6, int var7) {
 
+		// hold to right click delay control
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 0 && this.mouseButtonClick == 1) {
 			C_LONG_PRESS_TIMER++;
 			if (C_LONG_PRESS_TIMER == 13)
@@ -8533,6 +8526,7 @@ public final class mudclient implements Runnable {
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
+		// font size control
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 1 && this.mouseButtonClick == 1) {
 			C_MENU_SIZE++;
 			if (C_MENU_SIZE == 8)
@@ -8547,6 +8541,7 @@ public final class mudclient implements Runnable {
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
+		// hold to right click toggle
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 2 && this.mouseButtonClick == 1) {
 			C_HOLD_AND_CHOOSE = !C_HOLD_AND_CHOOSE;
 			saveConfiguration(true);
@@ -8556,6 +8551,7 @@ public final class mudclient implements Runnable {
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
+		// swipe scroll control
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 3 && this.mouseButtonClick == 1) {
 			C_SWIPE_TO_SCROLL = !C_SWIPE_TO_SCROLL;
 			saveConfiguration(true);
@@ -8565,6 +8561,7 @@ public final class mudclient implements Runnable {
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
+		// swipe camera zoom control
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 4 && this.mouseButtonClick == 1) {
 			C_SWIPE_TO_ZOOM = !C_SWIPE_TO_ZOOM;
 			saveConfiguration(true);
@@ -8574,6 +8571,7 @@ public final class mudclient implements Runnable {
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
+		// swipe camera rotation control
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 5 && this.mouseButtonClick == 1) {
 			C_SWIPE_TO_ROTATE = !C_SWIPE_TO_ROTATE;
 			saveConfiguration(true);
@@ -8583,6 +8581,7 @@ public final class mudclient implements Runnable {
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
+		// volume button camera rotation control
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 6 && this.mouseButtonClick == 1) {
 			C_VOLUME_TO_ROTATE = !C_VOLUME_TO_ROTATE;
 			saveConfiguration(true);
@@ -8592,6 +8591,7 @@ public final class mudclient implements Runnable {
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
+		// logout menu option
 		var7 += 223;
 		if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
 			&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
@@ -8599,13 +8599,14 @@ public final class mudclient implements Runnable {
 		}
 	}
 
+	// authentic settings / social tab
 	private void drawAuthenticSettingsOptions(int baseX, byte var4, short boxWidth, int x, int y, int chosenColor, int unchosenColor) {
 		int index = 0;
 		this.getSurface().drawString("Game options - click to toggle", 3 + baseX, y, 0, 1);
 
 		y += 15;
 
-		// Camera angle mode - byte index 0
+		// camera angle mode - byte index 0
 		if (this.optionCameraModeAuto) {
 			this.getSurface().drawString("@whi@Camera angle mode - @gre@Auto", 3 + baseX, y, 0, 1);
 		} else {
@@ -8614,7 +8615,7 @@ public final class mudclient implements Runnable {
 
 		y += 15;
 
-		// Mouse Buttons - byte index 1
+		// mouse buttons - byte index 1
 		if (this.optionMouseButtonOne) {
 			this.getSurface().drawString("@whi@Mouse buttons - @red@One", 3 + baseX, y, 0, 1);
 		} else {
@@ -8623,7 +8624,7 @@ public final class mudclient implements Runnable {
 
 		y += 15;
 
-		// Sound Effects - byte index 2
+		// sound effects - byte index 2
 		if (this.optionSoundDisabled) {
 			this.getSurface().drawString("@whi@Sound effects - @red@off", 3 + baseX, y, 0, 1);
 		} else {
@@ -8730,11 +8731,11 @@ public final class mudclient implements Runnable {
 		this.getSurface().drawString("Click here to logout", baseX + 3, y, logoutColor, 1);
 	}
 
+	// authentic settings/social tab version
 	private void handleAuthenticSettingsClicks(short var5, int var6, int var7) {
 
-		var7 += 15;
-
 		// Camera Mode - byte index 0
+		var7 += 15;
 		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12
 			&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
 			this.optionCameraModeAuto = !this.optionCameraModeAuto;
@@ -8744,9 +8745,8 @@ public final class mudclient implements Runnable {
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
-		var7 += 15;
-
 		// One or Two Mouse Button(s) - byte index 1
+		var7 += 15;
 		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12
 			&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
 			this.optionMouseButtonOne = !this.optionMouseButtonOne;
@@ -8757,9 +8757,8 @@ public final class mudclient implements Runnable {
 
 		}
 
-		var7 += 15;
-
 		// Sound On/Off - byte index 2
+		var7 += 15;
 		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12
 			&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
 			this.optionSoundDisabled = !this.optionSoundDisabled;
@@ -8769,7 +8768,7 @@ public final class mudclient implements Runnable {
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
-		//Change password
+		// Change password
 		var7 += 2 * 15 + 5;
 		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12 && this.mouseY < var7 + 4
 			&& mouseButtonClick == 1) {
@@ -8777,14 +8776,16 @@ public final class mudclient implements Runnable {
 			this.inputTextCurrent = "";
 			this.inputTextFinal = "";
 		}
-		//Change recovery questions
+
+		// Change recovery questions
 		var7 += 15;
 		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12 && this.mouseY < var7 + 4
 			&& mouseButtonClick == 1) {
 			this.packetHandler.getClientStream().newPacket(200);
 			this.packetHandler.getClientStream().finishPacket();
 		}
-		//Change contact details
+
+		// Change contact details
 		var7 += 15;
 		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12 && this.mouseY < var7 + 4
 			&& mouseButtonClick == 1) {
@@ -8792,9 +8793,10 @@ public final class mudclient implements Runnable {
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
+		// Divider that states "Privacy settings. Will be applied to all people not on your friends list"
 		var7 += 3 * 15 + 5;
-
 		boolean var11 = false;
+
 		// Block Chat
 		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12
 			&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
@@ -8802,48 +8804,46 @@ public final class mudclient implements Runnable {
 			var11 = true;
 		}
 
-		var7 += 15;
-
 		// Block Private
+		var7 += 15;
 		if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
 			&& var7 + 4 > this.mouseY && this.mouseButtonClick == 1) {
 			this.settingsBlockPrivate = 1 - this.settingsBlockPrivate;
 			var11 = true;
 		}
 
-		var7 += 15;
-
 		// Block Trade
+		var7 += 15;
 		if (this.mouseX > var6 && this.mouseX < var6 + var5 && var7 - 12 < this.mouseY
 			&& this.mouseY < 4 + var7 && this.mouseButtonClick == 1) {
 			this.settingsBlockTrade = 1 - this.settingsBlockTrade;
 			var11 = true;
 		}
 
-		var7 += 15;
-
 		// Block Duel
+		var7 += 15;
 		if (this.mouseX > var6 && this.mouseX < var6 + var5
 			&& var7 - 12 < this.mouseY && this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
 			var11 = true;
 			this.settingsBlockDuel = 1 - this.settingsBlockDuel;
 		}
 
+		// Adjusts the menu slightly to accommodate the skip link below
 		var7 += 20;
 		if (var11) {
 			this.createPacket64(this.settingsBlockChat, this.settingsBlockPrivate,
 				this.settingsBlockTrade, this.settingsBlockDuel);
 		}
 
-		// Skip Tutorial Button
-		if (this.insideTutorial) {
+		// Skip Tutorial Button or Exit BlackHole button
+		if (this.insideTutorial) { // tutorial menu option
 			if (this.mouseX > var6 && var5 + var6 > this.mouseX && var7 - 12 < this.mouseY
 				&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
 				this.showItemModX(InputXPrompt.promptSkipTutorial, InputXAction.SKIP_TUTORIAL, false);
 				this.showUiTab = 0;
 			}
 			var7 += 20;
-		} else if (this.insideBlackHole) {
+		} else if (this.insideBlackHole) { // blackhole menu option
 			if (this.mouseX > var6 && var5 + var6 > this.mouseX && var7 - 12 < this.mouseY
 				&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
 				this.showItemModX(InputXPrompt.promptExitBlackHole, InputXAction.EXIT_BLACK_HOLE, false);
@@ -8852,6 +8852,7 @@ public final class mudclient implements Runnable {
 			var7 += 20;
 		}
 
+		//
 		var7 += 15;
 		if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
 			&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
@@ -8970,7 +8971,7 @@ public final class mudclient implements Runnable {
 
 				this.getSurface().drawString("Quest Points:@yel@" + this.questPoints, x - 5 + width / 2, heightMargin - 13, 0xFFFFFF, 1);
 				if (Config.S_WANT_FATIGUE) {
-				heightMargin += 12;
+					heightMargin += 12;
 					this.getSurface().drawString("Fatigue: @yel@" + this.statFatigue + "%", 5 + x, heightMargin - 13,
 						0xFFFFFF, 1);
 				}
@@ -9292,7 +9293,7 @@ public final class mudclient implements Runnable {
 		panelClan.reposition(controlClanPanel, var3, var12 + 72, 196, 128);
 		panelPlayerInfo.reposition(controlPlayerInfoPanel, var3, 24 + var12, 196, 251);
 		panelQuestInfo.reposition(controlQuestInfoPanel, var3, 24 + var12, 196, 251);
-		//panelPlayerTaskInfo.reposition(controlPlayerTaskInfoPanel, var3, 24 + var12 + 27, 196, 224);
+		panelPlayerTaskInfo.reposition(controlPlayerTaskInfoPanel, var3, 24 + var12 + 27, 196, 224);
 		if (!authenticSettings)
 			panelSettings.reposition(controlSettingPanel, var3 + 1, 24 + var12 + 16, 195, 184);
 
@@ -11433,7 +11434,7 @@ public final class mudclient implements Runnable {
 			if (this.showUiTab == 0 && this.mouseX >= this.getSurface().width2 - 35 - 33 && this.mouseY >= 3
 				&& this.getSurface().width2 - 3 - 33 > this.mouseX && this.mouseY < 35) {
 				this.showUiTab = 2;
-				this.minimapRandom_1 = (int) (13.0D * Math.random()) - 6;
+				this.minimapRandom_1 = (int) (13.0D * Math.random()) - 6; // random rotation of the minimap as anti-bot?
 				this.minimapRandom_2 = (int) (Math.random() * 23.0D) - 11;
 			}
 
@@ -11465,7 +11466,7 @@ public final class mudclient implements Runnable {
 			if (this.showUiTab != 0 && this.showUiTab != 2 && this.getSurface().width2 - 68 <= this.mouseX
 				&& this.mouseY >= 3 && this.getSurface().width2 - 33 - 3 > this.mouseX && this.mouseY < 26) {
 				this.showUiTab = 2;
-				this.minimapRandom_2 = (int) (23.0D * Math.random()) - 11;
+				this.minimapRandom_2 = (int) (23.0D * Math.random()) - 11; // random rotation of the minimap as anti-bot?
 				this.minimapRandom_1 = (int) (13.0D * Math.random()) - 6;
 			}
 
@@ -12027,161 +12028,101 @@ public final class mudclient implements Runnable {
 						int loginResponse = this.packetHandler.getClientStream().read();
 
 						System.out.println("login response:" + loginResponse);
-						if ((loginResponse & 0x40) != 0)
-						{
+						if ((loginResponse & 0x40) != 0) {
 							this.autoLoginTimeout = 0;
 							this.m_Ce = loginResponse & 0x3;
 							this.m_Oj = (loginResponse >> 2) & 0xf;
 							this.resetGame((byte) -123);
-						}
-						else
-						{
-							if (loginResponse == 1)
-							{
+						} else {
+							if (loginResponse == 1) {
 								this.autoLoginTimeout = 0;
 								this.setEGTo77();
-							}
-							else
-							{
-								if (!reconnecting)
-								{
-									if (loginResponse == -1)
-									{
+							} else {
+								if (!reconnecting) {
+									if (loginResponse == -1) {
 										this.showLoginScreenStatus("Error unable to login.", "Server timed out");
-									}
-									else if (loginResponse == 3)
-									{
+									} else if (loginResponse == 3) {
 										this.showLoginScreenStatus("Invalid username or password.",
-										        "Try again, or create a new account");
-									}
-									else if (loginResponse != 4)
-									{
-										if (loginResponse == 5)
-										{
+											"Try again, or create a new account");
+									} else if (loginResponse != 4) {
+										if (loginResponse == 5) {
 											this.showLoginScreenStatus("The client has been updated.", "Please reload this page");
-										}
-										else if (loginResponse == 6)
-										{
+										} else if (loginResponse == 6) {
 											this.showLoginScreenStatus("You may only use 1 character at once.",
-											        "Your ip-address is already in use");
-										}
-										else if (loginResponse == 7)
-										{
+												"Your ip-address is already in use");
+										} else if (loginResponse == 7) {
 											this.showLoginScreenStatus("Login attempts exceeded!", "Please try again in 5 minutes");
-										}
-										else if (loginResponse == 8)
-										{
+										} else if (loginResponse == 8) {
 											this.showLoginScreenStatus("Error unable to login.", "Server rejected session");
-										}
-										else if (loginResponse == 9)
-										{
+										} else if (loginResponse == 9) {
 											this.showLoginScreenStatus("Error unable to login.",
-											        "Under 13 accounts cannot access RuneScape Classic");
-										}
-										else if (loginResponse == 10)
-										{
+												"Under 13 accounts cannot access RuneScape Classic");
+										} else if (loginResponse == 10) {
 											this.showLoginScreenStatus("That username is already in use.",
-											        "Wait 60 seconds then retry");
-										}
-										else if (loginResponse == 11)
-										{
+												"Wait 60 seconds then retry");
+										} else if (loginResponse == 11) {
 											this.showLoginScreenStatus("Account temporarily disabled.",
-											        "Check your message inbox for details");
-										}
-										else if (loginResponse == 12)
-										{
+												"Check your message inbox for details");
+										} else if (loginResponse == 12) {
 											this.showLoginScreenStatus("Account permanently disabled.",
-											        "Check your message inbox for details");
-										}
-										else if (loginResponse == 14)
-										{
+												"Check your message inbox for details");
+										} else if (loginResponse == 14) {
 											this.showLoginScreenStatus("Sorry! This world is currently full.",
-											        "Please try a different world");
+												"Please try a different world");
 											this.m_Zb = 1500;
-										}
-										else if (loginResponse == 15)
-										{
+										} else if (loginResponse == 15) {
 											this.showLoginScreenStatus("You need a members account", "to login to this world");
-										}
-										else if (loginResponse != 16)
-										{
-											if (loginResponse != 17)
-											{
-												if (loginResponse != 18)
-												{
-													if (loginResponse == 20)
-													{
+										} else if (loginResponse != 16) {
+											if (loginResponse != 17) {
+												if (loginResponse != 18) {
+													if (loginResponse == 20) {
 														this.showLoginScreenStatus("Error - loginserver mismatch",
-														        "Please try a different world");
-													}
-													else if (loginResponse == 21)
-													{
+															"Please try a different world");
+													} else if (loginResponse == 21) {
 														this.showLoginScreenStatus("That is not a veteran RS-Classic account.",
-														        "Please try a non-veterans world.");
-													}
-													else if (loginResponse != 22)
-													{
-														if (loginResponse == 23)
-														{
+															"Please try a non-veterans world.");
+													} else if (loginResponse != 22) {
+														if (loginResponse == 23) {
 															this.showLoginScreenStatus("You need to set your display name.",
-															        "Please go to the Account Management page to do this.");
-														}
-														else if (loginResponse != 24)
-														{
-															if (loginResponse != 25)
-															{
+																"Please go to the Account Management page to do this.");
+														} else if (loginResponse != 24) {
+															if (loginResponse != 25) {
 																this.showLoginScreenStatus("Error unable to login.",
-																        "Unrecognised response code");
-															}
-															else
-															{
+																	"Unrecognised response code");
+															} else {
 																this.showLoginScreenStatus("None of your characters can log in.",
-																        "Contact customer support");
+																	"Contact customer support");
 															}
-														}
-														else
-														{
+														} else {
 															this.showLoginScreenStatus("This world does not accept new players.",
-															        "Please see the launch page for help");
+																"Please see the launch page for help");
 														}
-													}
-													else
-													{
+													} else {
 														this.showLoginScreenStatus("Password suspected stolen.",
-														        "Press 'change your password' on front page.");
+															"Press 'change your password' on front page.");
 													}
-												}
-												else
-												{
+												} else {
 													this.showLoginScreenStatus("Account suspected stolen.",
-													        "Press 'recover a locked account' on front page.");
+														"Press 'recover a locked account' on front page.");
 												}
-											}
-											else
-											{
+											} else {
 												this.showLoginScreenStatus("Error - failed to decode profile.",
-												        "Contact customer support");
+													"Contact customer support");
 											}
-										}
-										else
-										{
+										} else {
 											this.showLoginScreenStatus("Error - no reply from loginserver.", "Please try again");
 										}
-									}
-									else
-									{
+									} else {
 										this.showLoginScreenStatus("That username is already logged in.",
-										        "Wait 60 seconds then retry");
+											"Wait 60 seconds then retry");
 									}
-								}
-								else
-								{
+								} else {
 									this.setUsername("");
 									this.jumpToLogin();
 								}
 							}
 						}
-						
+
 						return;
 					} catch (Exception var15) {
 						var15.printStackTrace();
@@ -14061,9 +14002,9 @@ public final class mudclient implements Runnable {
 				this.panelQuestInfo = new Panel(this.getSurface(), 5);
 				this.controlQuestInfoPanel = this.panelQuestInfo.addScrollingList(var3, 24 + var12, 196, 251, 500,
 					1, true);
-						/*this.panelPlayerTaskInfo = new Panel(this.getSurface(), 5);
-						this.controlPlayerTaskInfoPanel = this.panelPlayerTaskInfo.addScrollingList(var3, 24 + var12 + 27, 196, 224, 500,
-								7, true);*/
+				this.panelPlayerTaskInfo = new Panel(this.getSurface(), 5);
+				this.controlPlayerTaskInfoPanel = this.panelPlayerTaskInfo.addScrollingList(var3, 24 + var12 + 27, 196, 224, 500,
+					7, true);
 
 				if (!authenticSettings) {
 					this.panelSettings = new Panel(this.getSurface(), 5);
@@ -14812,7 +14753,7 @@ public final class mudclient implements Runnable {
 			panelSettings.scrollMethodCustomList(controlSettingPanel, x, 1);
 		} else if (showUiTab == 4) // Magic and prayer book list.
 			panelMagic.scrollMethodList(controlMagicPanel, x);
-		else if (showUiTab == 5) { // Friendlist and ignore list.
+		else if (showUiTab == 5) { // Friend list and ignore list.
 			if (this.panelSocialTab == 2 || this.panelSocialTab == 0) {
 				panelSocial.scrollMethodList(controlSocialPanel, x);
 			} else if (this.panelSocialTab == 1) {
