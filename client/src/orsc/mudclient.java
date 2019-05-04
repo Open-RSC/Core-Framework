@@ -1842,64 +1842,64 @@ public final class mudclient implements Runnable {
 			short var2 = 140;
 			byte var3 = 34;
 			int var6 = var2 + 116;
-			int var7 = var3 - 10;
-			this.panelAppearance.addCenteredText(var6 - 55, var7 + 110, "Front", 3, true);
-			this.panelAppearance.addCenteredText(var6, var7 + 110, "Side", 3, true);
-			this.panelAppearance.addCenteredText(var6 + 55, 110 + var7, "Back", 3, true);
-			var7 += 145;
+			int yFromTopDistance = var3 - 10;
+			this.panelAppearance.addCenteredText(var6 - 55, yFromTopDistance + 110, "Front", 3, true);
+			this.panelAppearance.addCenteredText(var6, yFromTopDistance + 110, "Side", 3, true);
+			this.panelAppearance.addCenteredText(var6 + 55, 110 + yFromTopDistance, "Back", 3, true);
+			yFromTopDistance += 145;
 			byte var4 = 54;
-			this.panelAppearance.addDecoratedBox((var6 - var4), var7, 53, 41);
-			this.panelAppearance.addCenteredText(var6 - var4, var7 - 8, "Head", 1, true);
-			this.panelAppearance.addCenteredText(var6 - var4, var7 + 8, "Type", 1, true);
-			this.panelAppearance.addSprite(var6 - var4 - 40, var7, mudclient.spriteUtil + 7);
-			this.controlButtonAppearanceHeadMinus = this.panelAppearance.addButton(-40 - var4 + var6, var7, 20, 20);
-			this.panelAppearance.addSprite(var6 - var4 + 40, var7, 6 + mudclient.spriteUtil);
-			this.controlButtonAppearanceHeadPlus = this.panelAppearance.addButton(var6 + (40 - var4), var7, 20, 20);
-			this.panelAppearance.addDecoratedBox((var6 + var4), var7, 53, 41);
-			this.panelAppearance.addCenteredText(var6 + var4, var7 - 8, "Hair", 1, true);
-			this.panelAppearance.addCenteredText(var4 + var6, 8 + var7, "Color", 1, true);
-			this.panelAppearance.addSprite(var4 + (var6 - 40), var7, 7 + mudclient.spriteUtil);
-			this.m_Kj = this.panelAppearance.addButton(var6 + var4 - 40, var7, 20, 20);
-			this.panelAppearance.addSprite(40 + var4 + var6, var7, 6 + mudclient.spriteUtil);
-			this.m_ed = this.panelAppearance.addButton(40 + var4 + var6, var7, 20, 20);
-			var7 += 50;
-			this.panelAppearance.addDecoratedBox((var6 - var4), var7, 53, 41);
-			this.panelAppearance.addCenteredText(var6 - var4, var7, "Gender", 1, true);
-			this.panelAppearance.addSprite(var6 - var4 - 40, var7, mudclient.spriteUtil + 7);
-			this.m_Ge = this.panelAppearance.addButton(var6 - 40 - var4, var7, 20, 20);
-			this.panelAppearance.addSprite(40 - var4 + var6, var7, mudclient.spriteUtil + 6);
-			this.m_Of = this.panelAppearance.addButton(40 + (var6 - var4), var7, 20, 20);
-			this.panelAppearance.addDecoratedBox((var4 + var6), var7, 53, 41);
-			this.panelAppearance.addCenteredText(var4 + var6, var7 - 8, "Top", 1, true);
-			this.panelAppearance.addCenteredText(var4 + var6, 8 + var7, "Color", 1, true);
-			this.panelAppearance.addSprite(var6 + (var4 - 40), var7, 7 + mudclient.spriteUtil);
-			this.m_Xc = this.panelAppearance.addButton(var4 + (var6 - 40), var7, 20, 20);
-			this.panelAppearance.addSprite(40 + var4 + var6, var7, 6 + mudclient.spriteUtil);
-			this.m_ek = this.panelAppearance.addButton(var6 - (-var4 - 40), var7, 20, 20);
-			var7 += 50;
+			this.panelAppearance.addDecoratedBox((var6 - var4), yFromTopDistance, 53, 41);
+			this.panelAppearance.addCenteredText(var6 - var4, yFromTopDistance - 8, "Head", 1, true);
+			this.panelAppearance.addCenteredText(var6 - var4, yFromTopDistance + 8, "Type", 1, true);
+			this.panelAppearance.addSprite(var6 - var4 - 40, yFromTopDistance, mudclient.spriteUtil + 7);
+			this.controlButtonAppearanceHeadMinus = this.panelAppearance.addButton(-40 - var4 + var6, yFromTopDistance, 20, 20);
+			this.panelAppearance.addSprite(var6 - var4 + 40, yFromTopDistance, 6 + mudclient.spriteUtil);
+			this.controlButtonAppearanceHeadPlus = this.panelAppearance.addButton(var6 + (40 - var4), yFromTopDistance, 20, 20);
+			this.panelAppearance.addDecoratedBox((var6 + var4), yFromTopDistance, 53, 41);
+			this.panelAppearance.addCenteredText(var6 + var4, yFromTopDistance - 8, "Hair", 1, true);
+			this.panelAppearance.addCenteredText(var4 + var6, 8 + yFromTopDistance, "Color", 1, true);
+			this.panelAppearance.addSprite(var4 + (var6 - 40), yFromTopDistance, 7 + mudclient.spriteUtil);
+			this.m_Kj = this.panelAppearance.addButton(var6 + var4 - 40, yFromTopDistance, 20, 20);
+			this.panelAppearance.addSprite(40 + var4 + var6, yFromTopDistance, 6 + mudclient.spriteUtil);
+			this.m_ed = this.panelAppearance.addButton(40 + var4 + var6, yFromTopDistance, 20, 20);
+			yFromTopDistance += 50;
+			this.panelAppearance.addDecoratedBox((var6 - var4), yFromTopDistance, 53, 41);
+			this.panelAppearance.addCenteredText(var6 - var4, yFromTopDistance, "Gender", 1, true);
+			this.panelAppearance.addSprite(var6 - var4 - 40, yFromTopDistance, mudclient.spriteUtil + 7);
+			this.m_Ge = this.panelAppearance.addButton(var6 - 40 - var4, yFromTopDistance, 20, 20);
+			this.panelAppearance.addSprite(40 - var4 + var6, yFromTopDistance, mudclient.spriteUtil + 6);
+			this.m_Of = this.panelAppearance.addButton(40 + (var6 - var4), yFromTopDistance, 20, 20);
+			this.panelAppearance.addDecoratedBox((var4 + var6), yFromTopDistance, 53, 41);
+			this.panelAppearance.addCenteredText(var4 + var6, yFromTopDistance - 8, "Top", 1, true);
+			this.panelAppearance.addCenteredText(var4 + var6, 8 + yFromTopDistance, "Color", 1, true);
+			this.panelAppearance.addSprite(var6 + (var4 - 40), yFromTopDistance, 7 + mudclient.spriteUtil);
+			this.m_Xc = this.panelAppearance.addButton(var4 + (var6 - 40), yFromTopDistance, 20, 20);
+			this.panelAppearance.addSprite(40 + var4 + var6, yFromTopDistance, 6 + mudclient.spriteUtil);
+			this.m_ek = this.panelAppearance.addButton(var6 - (-var4 - 40), yFromTopDistance, 20, 20);
+			yFromTopDistance += 50;
 			if (var1 != -24595) {
 				this.renderLoginScreenViewports(-127);
 			}
 
-			this.panelAppearance.addDecoratedBox((var6 - var4), var7, 53, 41);
-			this.panelAppearance.addCenteredText(var6 - var4, var7 - 8, "Skin", 1, true);
-			this.panelAppearance.addCenteredText(var6 - var4, var7 + 8, "Color", 1, true);
-			this.panelAppearance.addSprite(var6 - 40 - var4, var7, 7 + mudclient.spriteUtil);
-			this.m_Ze = this.panelAppearance.addButton(var6 - var4 - 40, var7, 20, 20);
-			this.panelAppearance.addSprite(var6 - var4 + 40, var7, mudclient.spriteUtil + 6);
-			this.m_Mj = this.panelAppearance.addButton(var6 + (40 - var4), var7, 20, 20);
-			this.panelAppearance.addDecoratedBox((var4 + var6), var7, 53, 41);
-			this.panelAppearance.addCenteredText(var4 + var6, var7 - 8, "Bottom", 1, true);
-			this.panelAppearance.addCenteredText(var4 + var6, var7 + 8, "Color", 1, true);
-			this.panelAppearance.addSprite(var4 - 40 + var6, var7, mudclient.spriteUtil + 7);
-			this.m_Re = this.panelAppearance.addButton(var6 - (40 - var4), var7, 20, 20);
-			this.panelAppearance.addSprite(var6 + var4 + 40, var7, 6 + mudclient.spriteUtil);
-			this.m_Ai = this.panelAppearance.addButton(40 + var4 + var6, var7, 20, 20);
-			var7 += 82;
-			var7 -= 35;
-			this.panelAppearance.addButtonBackground(var6, var7, 200, 30);
-			this.panelAppearance.addCenteredText(var6, var7, "Accept", 4, false);
-			this.m_Eg = this.panelAppearance.addButton(var6, var7, 200, 30);
+			this.panelAppearance.addDecoratedBox((var6 - var4), yFromTopDistance, 53, 41);
+			this.panelAppearance.addCenteredText(var6 - var4, yFromTopDistance - 8, "Skin", 1, true);
+			this.panelAppearance.addCenteredText(var6 - var4, yFromTopDistance + 8, "Color", 1, true);
+			this.panelAppearance.addSprite(var6 - 40 - var4, yFromTopDistance, 7 + mudclient.spriteUtil);
+			this.m_Ze = this.panelAppearance.addButton(var6 - var4 - 40, yFromTopDistance, 20, 20);
+			this.panelAppearance.addSprite(var6 - var4 + 40, yFromTopDistance, mudclient.spriteUtil + 6);
+			this.m_Mj = this.panelAppearance.addButton(var6 + (40 - var4), yFromTopDistance, 20, 20);
+			this.panelAppearance.addDecoratedBox((var4 + var6), yFromTopDistance, 53, 41);
+			this.panelAppearance.addCenteredText(var4 + var6, yFromTopDistance - 8, "Bottom", 1, true);
+			this.panelAppearance.addCenteredText(var4 + var6, yFromTopDistance + 8, "Color", 1, true);
+			this.panelAppearance.addSprite(var4 - 40 + var6, yFromTopDistance, mudclient.spriteUtil + 7);
+			this.m_Re = this.panelAppearance.addButton(var6 - (40 - var4), yFromTopDistance, 20, 20);
+			this.panelAppearance.addSprite(var6 + var4 + 40, yFromTopDistance, 6 + mudclient.spriteUtil);
+			this.m_Ai = this.panelAppearance.addButton(40 + var4 + var6, yFromTopDistance, 20, 20);
+			yFromTopDistance += 82;
+			yFromTopDistance -= 35;
+			this.panelAppearance.addButtonBackground(var6, yFromTopDistance, 200, 30);
+			this.panelAppearance.addCenteredText(var6, yFromTopDistance, "Accept", 4, false);
+			this.m_Eg = this.panelAppearance.addButton(var6, yFromTopDistance, 200, 30);
 		} catch (RuntimeException var5) {
 			throw GenUtil.makeThrowable(var5, "client.J(" + var1 + ')');
 		}
@@ -6902,14 +6902,14 @@ public final class mudclient implements Runnable {
 								this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_REMOVE_EQUIPPED, "Remove",
 									"@lre@" + EntityHandler.getItemDef(id).getName());
 							} else if (EntityHandler.getItemDef(id).wearableID != 0) {
-								String var7;
+								String equipCommand;
 								if ((24 & EntityHandler.getItemDef(id).wearableID) == 0) {
-									var7 = "Wear";
+									equipCommand = "Wear";
 								} else {
-									var7 = "Wield";
+									equipCommand = "Wield";
 								}
 
-								this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_EQUIP, var7,
+								this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_EQUIP, equipCommand,
 									"@lre@" + EntityHandler.getItemDef(id).getName());
 							}
 
@@ -8128,14 +8128,9 @@ public final class mudclient implements Runnable {
 				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 					"@whi@Clan Invitation - @red@Block", 17, null, null);
 			}
+
 			// report abuse
-			int logoutColor;
-			logoutColor = 0xFF0000;
-			if (x < this.mouseX && this.mouseX < x + boxWidth && y - 12 < this.mouseY
-				&& this.mouseY < 4 + y) {
-				logoutColor = 0xFFFF00;
-			}
-			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+			this.panelSettings.setListEntry(this.controlSettingPanel, index,
 				"@whi@Report Abuse", 18, null, null);
 		}
 
@@ -8277,7 +8272,7 @@ public final class mudclient implements Runnable {
 	}
 
 	// custom general menu tab
-	private void handleGeneralSettingsClicks(short var5, int var6, int var7) {
+	private void handleGeneralSettingsClicks(short var5, int var6, int yFromTopDistance) {
 		int settingIndex;
 		int checkPosition = this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel);
 		if (checkPosition >= 0)
@@ -8415,6 +8410,10 @@ public final class mudclient implements Runnable {
 				this.packetHandler.getClientStream().finishPacket();
 			}
 
+			if (settingIndex == 17 && this.mouseButtonClick == 1) {
+				
+			}
+
 			// report abuse
 			if (settingIndex == 17 && this.mouseButtonClick == 1) {
 				this.inputTextFinal = "";
@@ -8424,30 +8423,30 @@ public final class mudclient implements Runnable {
 		}
 
 		// items on death
-		var7 += 184;
+		yFromTopDistance += 275;
 		if (S_ITEMS_ON_DEATH_MENU) {
-			if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
-				&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
+			if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > yFromTopDistance - 12
+				&& this.mouseY < yFromTopDistance + 4 && this.mouseButtonClick == 1) {
 				this.showUiTab = 0;
 				lostOnDeathInterface.setVisible(true);
 			}
 		}
 
 		// logout menu option
-		var7 = 290;
-		if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
-			&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
+		yFromTopDistance = 290;
+		if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > yFromTopDistance - 12
+			&& this.mouseY < yFromTopDistance + 4 && this.mouseButtonClick == 1) {
 			this.sendLogout(0);
 		}
 	}
 
 	// custom social menu tab
-	private void handleSocialSettingsClicks(short var5, int var6, int var7) {
+	private void handleSocialSettingsClicks(short var5, int var6, int yFromTopDistance) {
 		boolean var11 = false;
 
 		// change password
-		var7 += 2 * 15 + 5;
-		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12 && this.mouseY < var7 + 4
+		yFromTopDistance += 2 * 15 + 5;
+		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > yFromTopDistance - 12 && this.mouseY < yFromTopDistance + 4
 			&& mouseButtonClick == 1) {
 			this.panelPasswordChange_Mode = PasswordChangeMode.OLD_PASSWORD;
 			this.inputTextCurrent = "";
@@ -8455,42 +8454,42 @@ public final class mudclient implements Runnable {
 		}
 
 		// change recovery questions
-		var7 += 15;
-		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12 && this.mouseY < var7 + 4
+		yFromTopDistance += 15;
+		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > yFromTopDistance - 12 && this.mouseY < yFromTopDistance + 4
 			&& mouseButtonClick == 1) {
 			this.packetHandler.getClientStream().newPacket(200);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
 		// change contact details
-		var7 += 15;
-		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12 && this.mouseY < var7 + 4
+		yFromTopDistance += 15;
+		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > yFromTopDistance - 12 && this.mouseY < yFromTopDistance + 4
 			&& mouseButtonClick == 1) {
 			this.packetHandler.getClientStream().newPacket(201);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
 		// block chat toggle
-		var7 += 24;
-		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12
-			&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
+		yFromTopDistance += 24;
+		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > yFromTopDistance - 12
+			&& 4 + yFromTopDistance > this.mouseY && this.mouseButtonClick == 1) {
 			this.settingsBlockChat = 1 - this.settingsBlockChat;
 			var11 = true;
 		}
 
 		// block private toggle
-		var7 += 15;
-		if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
-			&& var7 + 4 > this.mouseY && this.mouseButtonClick == 1) {
+		yFromTopDistance += 15;
+		if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > yFromTopDistance - 12
+			&& yFromTopDistance + 4 > this.mouseY && this.mouseButtonClick == 1) {
 			this.settingsBlockPrivate = 1 - this.settingsBlockPrivate;
 			var11 = true;
 		}
 
 		// block global chat toggle
-		var7 += 15;
+		yFromTopDistance += 15;
 		if (S_WANT_GLOBAL_CHAT) {
-			if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
-				&& var7 + 4 > this.mouseY && this.mouseButtonClick == 1) {
+			if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > yFromTopDistance - 12
+				&& yFromTopDistance + 4 > this.mouseY && this.mouseButtonClick == 1) {
 				if (this.settingsBlockGlobal >= 4) {
 					this.settingsBlockGlobal = 0;
 				}
@@ -8500,20 +8499,20 @@ public final class mudclient implements Runnable {
 				this.packetHandler.getClientStream().writeBuffer1.putByte(this.settingsBlockGlobal);
 				this.packetHandler.getClientStream().finishPacket();
 			}
-			var7 += 15;
+			yFromTopDistance += 15;
 		}
 
 		// block trade toggle
-		if (this.mouseX > var6 && this.mouseX < var6 + var5 && var7 - 12 < this.mouseY
-			&& this.mouseY < 4 + var7 && this.mouseButtonClick == 1) {
+		if (this.mouseX > var6 && this.mouseX < var6 + var5 && yFromTopDistance - 12 < this.mouseY
+			&& this.mouseY < 4 + yFromTopDistance && this.mouseButtonClick == 1) {
 			this.settingsBlockTrade = 1 - this.settingsBlockTrade;
 			var11 = true;
 		}
 
 		// block duel toggle
-		var7 += 15;
+		yFromTopDistance += 15;
 		if (this.mouseX > var6 && this.mouseX < var6 + var5
-			&& var7 - 12 < this.mouseY && this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
+			&& yFromTopDistance - 12 < this.mouseY && this.mouseY < yFromTopDistance + 4 && this.mouseButtonClick == 1) {
 			var11 = true;
 			this.settingsBlockDuel = 1 - this.settingsBlockDuel;
 		}
@@ -8524,44 +8523,33 @@ public final class mudclient implements Runnable {
 				this.settingsBlockTrade, this.settingsBlockDuel);
 		}
 
-		// floating name tags
-		var7 += 20;
-		if (S_SHOW_FLOATING_NAMETAGS) {
-			var7 += 15;
-			if (this.mouseX > var6 && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY
-				&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
-				C_NAME_CLAN_TAG_OVERLAY = !C_NAME_CLAN_TAG_OVERLAY;
-				saveConfiguration(true);
-			}
-		}
-
 		// skip tutorial button or exit blackhole button
 		if (this.insideTutorial) {
-			var7 = 255;
-			if (this.mouseX > var6 && var5 + var6 > this.mouseX && var7 - 12 < this.mouseY
-				&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
+			yFromTopDistance = 255;
+			if (this.mouseX > var6 && var5 + var6 > this.mouseX && yFromTopDistance - 12 < this.mouseY
+				&& this.mouseY < yFromTopDistance + 4 && this.mouseButtonClick == 1) {
 				this.showItemModX(InputXPrompt.promptSkipTutorial, InputXAction.SKIP_TUTORIAL, false);
 				this.showUiTab = 0;
 			}
 		} else if (this.insideBlackHole) {
-			var7 = 255;
-			if (this.mouseX > var6 && var5 + var6 > this.mouseX && var7 - 12 < this.mouseY
-				&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
+			yFromTopDistance = 255;
+			if (this.mouseX > var6 && var5 + var6 > this.mouseX && yFromTopDistance - 12 < this.mouseY
+				&& this.mouseY < yFromTopDistance + 4 && this.mouseButtonClick == 1) {
 				this.showItemModX(InputXPrompt.promptExitBlackHole, InputXAction.EXIT_BLACK_HOLE, false);
 				this.showUiTab = 0;
 			}
 		}
 
 		// logout menu option
-		var7 = 290;
-		if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
-			&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
+		yFromTopDistance = 290;
+		if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > yFromTopDistance - 12
+			&& this.mouseY < yFromTopDistance + 4 && this.mouseButtonClick == 1) {
 			this.sendLogout(0);
 		}
 	}
 
 	// android menu tab
-	private void handleAndroidSettingsClicks(short var5, int var6, int var7) {
+	private void handleAndroidSettingsClicks(short var5, int var6, int yFromTopDistance) {
 
 		// hold to right click delay control
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 0 && this.mouseButtonClick == 1) {
@@ -8641,9 +8629,9 @@ public final class mudclient implements Runnable {
 		}
 
 		// logout menu option
-		var7 += 223;
-		if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
-			&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
+		yFromTopDistance += 223;
+		if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > yFromTopDistance - 12
+			&& this.mouseY < yFromTopDistance + 4 && this.mouseButtonClick == 1) {
 			this.sendLogout(0);
 		}
 	}
@@ -8789,12 +8777,12 @@ public final class mudclient implements Runnable {
 	}
 
 	// authentic settings/social tab version
-	private void handleAuthenticSettingsClicks(short var5, int var6, int var7) {
+	private void handleAuthenticSettingsClicks(short var5, int var6, int yFromTopDistance) {
 
 		// camera mode - byte index 0
-		var7 += 15;
-		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12
-			&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
+		yFromTopDistance += 15;
+		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > yFromTopDistance - 12
+			&& 4 + yFromTopDistance > this.mouseY && this.mouseButtonClick == 1) {
 			this.optionCameraModeAuto = !this.optionCameraModeAuto;
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(0);
@@ -8803,9 +8791,9 @@ public final class mudclient implements Runnable {
 		}
 
 		// one or two mouse button(s) - byte index 1
-		var7 += 15;
-		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12
-			&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
+		yFromTopDistance += 15;
+		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > yFromTopDistance - 12
+			&& 4 + yFromTopDistance > this.mouseY && this.mouseButtonClick == 1) {
 			this.optionMouseButtonOne = !this.optionMouseButtonOne;
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(1);
@@ -8815,9 +8803,9 @@ public final class mudclient implements Runnable {
 		}
 
 		// sound on/off - byte index 2
-		var7 += 15;
-		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12
-			&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
+		yFromTopDistance += 15;
+		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > yFromTopDistance - 12
+			&& 4 + yFromTopDistance > this.mouseY && this.mouseButtonClick == 1) {
 			this.optionSoundDisabled = !this.optionSoundDisabled;
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(2);
@@ -8826,8 +8814,8 @@ public final class mudclient implements Runnable {
 		}
 
 		// change password
-		var7 += 2 * 15 + 5;
-		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12 && this.mouseY < var7 + 4
+		yFromTopDistance += 2 * 15 + 5;
+		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > yFromTopDistance - 12 && this.mouseY < yFromTopDistance + 4
 			&& mouseButtonClick == 1) {
 			this.panelPasswordChange_Mode = PasswordChangeMode.OLD_PASSWORD;
 			this.inputTextCurrent = "";
@@ -8835,58 +8823,58 @@ public final class mudclient implements Runnable {
 		}
 
 		// change recovery questions
-		var7 += 15;
-		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12 && this.mouseY < var7 + 4
+		yFromTopDistance += 15;
+		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > yFromTopDistance - 12 && this.mouseY < yFromTopDistance + 4
 			&& mouseButtonClick == 1) {
 			this.packetHandler.getClientStream().newPacket(200);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
 		// change contact details
-		var7 += 15;
-		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12 && this.mouseY < var7 + 4
+		yFromTopDistance += 15;
+		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > yFromTopDistance - 12 && this.mouseY < yFromTopDistance + 4
 			&& mouseButtonClick == 1) {
 			this.packetHandler.getClientStream().newPacket(201);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
 		// divider
-		var7 += 3 * 15 + 5;
+		yFromTopDistance += 3 * 15 + 5;
 		boolean var11 = false;
 
 		// block chat toggle
-		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12
-			&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
+		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > yFromTopDistance - 12
+			&& 4 + yFromTopDistance > this.mouseY && this.mouseButtonClick == 1) {
 			this.settingsBlockChat = 1 - this.settingsBlockChat;
 			var11 = true;
 		}
 
 		// plock private toggle
-		var7 += 15;
-		if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
-			&& var7 + 4 > this.mouseY && this.mouseButtonClick == 1) {
+		yFromTopDistance += 15;
+		if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > yFromTopDistance - 12
+			&& yFromTopDistance + 4 > this.mouseY && this.mouseButtonClick == 1) {
 			this.settingsBlockPrivate = 1 - this.settingsBlockPrivate;
 			var11 = true;
 		}
 
 		// block trade toggle
-		var7 += 15;
-		if (this.mouseX > var6 && this.mouseX < var6 + var5 && var7 - 12 < this.mouseY
-			&& this.mouseY < 4 + var7 && this.mouseButtonClick == 1) {
+		yFromTopDistance += 15;
+		if (this.mouseX > var6 && this.mouseX < var6 + var5 && yFromTopDistance - 12 < this.mouseY
+			&& this.mouseY < 4 + yFromTopDistance && this.mouseButtonClick == 1) {
 			this.settingsBlockTrade = 1 - this.settingsBlockTrade;
 			var11 = true;
 		}
 
 		// block duel toggle
-		var7 += 15;
+		yFromTopDistance += 15;
 		if (this.mouseX > var6 && this.mouseX < var6 + var5
-			&& var7 - 12 < this.mouseY && this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
+			&& yFromTopDistance - 12 < this.mouseY && this.mouseY < yFromTopDistance + 4 && this.mouseButtonClick == 1) {
 			var11 = true;
 			this.settingsBlockDuel = 1 - this.settingsBlockDuel;
 		}
 
 		// adjusts the menu slightly to accommodate the skip link below
-		var7 += 20;
+		yFromTopDistance += 20;
 		if (var11) {
 			this.createPacket64(this.settingsBlockChat, this.settingsBlockPrivate,
 				this.settingsBlockTrade, this.settingsBlockDuel);
@@ -8894,25 +8882,25 @@ public final class mudclient implements Runnable {
 
 		// skip tutorial button or exit blackhole button
 		if (this.insideTutorial) { // tutorial menu option
-			if (this.mouseX > var6 && var5 + var6 > this.mouseX && var7 - 12 < this.mouseY
-				&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
+			if (this.mouseX > var6 && var5 + var6 > this.mouseX && yFromTopDistance - 12 < this.mouseY
+				&& this.mouseY < yFromTopDistance + 4 && this.mouseButtonClick == 1) {
 				this.showItemModX(InputXPrompt.promptSkipTutorial, InputXAction.SKIP_TUTORIAL, false);
 				this.showUiTab = 0;
 			}
-			var7 += 20;
+			yFromTopDistance += 20;
 		} else if (this.insideBlackHole) { // blackhole menu option
-			if (this.mouseX > var6 && var5 + var6 > this.mouseX && var7 - 12 < this.mouseY
-				&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
+			if (this.mouseX > var6 && var5 + var6 > this.mouseX && yFromTopDistance - 12 < this.mouseY
+				&& this.mouseY < yFromTopDistance + 4 && this.mouseButtonClick == 1) {
 				this.showItemModX(InputXPrompt.promptExitBlackHole, InputXAction.EXIT_BLACK_HOLE, false);
 				this.showUiTab = 0;
 			}
-			var7 += 20;
+			yFromTopDistance += 20;
 		}
 
 		// logout menu option
-		var7 += 15;
-		if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
-			&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
+		yFromTopDistance += 15;
+		if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > yFromTopDistance - 12
+			&& this.mouseY < yFromTopDistance + 4 && this.mouseButtonClick == 1) {
 			this.sendLogout(0);
 		}
 	}
@@ -8959,14 +8947,14 @@ public final class mudclient implements Runnable {
 			else
 				height = 262;
 			int var8;
-			int var7 = var8 = GenUtil.buildColor(160, 160, 160);
+			int yFromTopDistance = var8 = GenUtil.buildColor(160, 160, 160);
 			if (this.uiTabPlayerInfoSubTab != 0) {
 				var8 = GenUtil.buildColor(220, 220, 220);
 			} else {
-				var7 = GenUtil.buildColor(220, 220, 220);
+				yFromTopDistance = GenUtil.buildColor(220, 220, 220);
 			}
 
-			this.surface.drawBoxAlpha(x, y, width / 2, 24, var7, 128);
+			this.surface.drawBoxAlpha(x, y, width / 2, 24, yFromTopDistance, 128);
 			this.surface.drawBoxAlpha(x + width / 2, y, width / 2, 24, var8, 128);
 			this.surface.drawBoxAlpha(x, 24 + y, width, height - 12, GenUtil.buildColor(220, 220, 220), 128);
 			this.surface.drawLineHoriz(x, y + 24, width, 0);
@@ -11186,14 +11174,14 @@ public final class mudclient implements Runnable {
 				var2 = false;
 			}
 
-			int var3 = 156;
+			int yFromTopDistance = 156;
 			int color;
 			if (var2) {
 				var2 = false;
 
 				for (color = 0; color < 6; ++color) {
 					int var5 = color == 0 ? 30 : 18;
-					if (this.mouseY > var3 - 12 && this.mouseY < var5 + var3 - 12) {
+					if (this.mouseY > yFromTopDistance - 12 && this.mouseY < var5 + yFromTopDistance - 12) {
 						if (this.reportAbuse_AbuseType == 1) {
 							var2 = true;
 							this.reportAbuse_AbuseType += color;
@@ -11217,7 +11205,7 @@ public final class mudclient implements Runnable {
 						}
 					}
 
-					var3 += 2 + var5;
+					yFromTopDistance += 2 + var5;
 				}
 			}
 
@@ -11236,7 +11224,7 @@ public final class mudclient implements Runnable {
 				this.inputTextCurrent = "";
 				this.mouseButtonClick = 0;
 			} else {
-				var3 += 15;
+				yFromTopDistance += 15;
 				if (this.mouseButtonClick != 0) {
 					this.mouseButtonClick = 0;
 					if (this.mouseX < 31 || this.mouseY < 35 || this.mouseX > 481 || this.mouseY > 310) {
@@ -11244,7 +11232,7 @@ public final class mudclient implements Runnable {
 						return;
 					}
 
-					if (this.mouseX > 66 && this.mouseX < 446 && this.mouseY >= var3 - 15 && this.mouseY < var3 + 5) {
+					if (this.mouseX > 66 && this.mouseX < 446 && this.mouseY >= yFromTopDistance - 15 && this.mouseY < yFromTopDistance + 5) {
 						this.reportAbuse_State = 0;
 						return;
 					}
@@ -11255,227 +11243,227 @@ public final class mudclient implements Runnable {
 				byte var7 = 50;
 				this.getSurface().drawColoredStringCentered(256,
 					"This form is for reporting players who are breaking our rules", 0xFFFFFF, 0, 1, var7);
-				var3 = var7 + 15;
+				yFromTopDistance = var7 + 15;
 				this.getSurface().drawColoredStringCentered(256,
-					"Using it sends a snapshot of the last 60 seconds of activity to us", 0xFFFFFF, 0, 1, var3);
-				var3 += 15;
+					"Using it sends a snapshot of the last 60 seconds of activity to us", 0xFFFFFF, 0, 1, yFromTopDistance);
+				yFromTopDistance += 15;
 				this.getSurface().drawColoredStringCentered(256, "If you misuse this form, you will be banned.",
-					16744448, 0, 1, var3);
-				var3 += 15;
-				var3 += 10;
+					16744448, 0, 1, yFromTopDistance);
+				yFromTopDistance += 15;
+				yFromTopDistance += 10;
 				this.getSurface().drawColoredStringCentered(256,
-					"Click on the most suitable option from the Rules of " + SERVER_NAME + ".", 0xFFFF00, 0, 1, var3);
-				var3 += 15;
+					"Click on the most suitable option from the Rules of " + SERVER_NAME + ".", 0xFFFF00, 0, 1, yFromTopDistance);
+				yFromTopDistance += 15;
 				this.getSurface().drawColoredStringCentered(256,
-					"This will send a report to our Player Support team for investigation.", 0xFFFF00, 0, 1, var3);
-				var3 += 18;
-				this.getSurface().drawColoredStringCentered(106, "Honour", 0xFF0000, 0, 4, var3);
-				this.getSurface().drawColoredStringCentered(256, "Respect", 0xFF0000, 0, 4, var3);
-				this.getSurface().drawColoredStringCentered(406, "Security", 0xFF0000, 0, 4, var3);
-				var3 += 18;
+					"This will send a report to our Player Support team for investigation.", 0xFFFF00, 0, 1, yFromTopDistance);
+				yFromTopDistance += 18;
+				this.getSurface().drawColoredStringCentered(106, "Honour", 0xFF0000, 0, 4, yFromTopDistance);
+				this.getSurface().drawColoredStringCentered(256, "Respect", 0xFF0000, 0, 4, yFromTopDistance);
+				this.getSurface().drawColoredStringCentered(406, "Security", 0xFF0000, 0, 4, yFromTopDistance);
+				yFromTopDistance += 18;
 				if (this.reportAbuse_AbuseType == 1) {
-					this.getSurface().drawBox(36, var3 - 12, 140, 30, 3158064);
+					this.getSurface().drawBox(36, yFromTopDistance - 12, 140, 30, 3158064);
 				}
 
-				this.getSurface().drawBoxBorder(36, 140, var3 - 12, 30, 4210752);
+				this.getSurface().drawBoxBorder(36, 140, yFromTopDistance - 12, 30, 4210752);
 				if (this.reportAbuse_AbuseType == 7) {
-					this.getSurface().drawBox(186, var3 - 12, 140, 30, 3158064);
+					this.getSurface().drawBox(186, yFromTopDistance - 12, 140, 30, 3158064);
 				}
 
-				this.getSurface().drawBoxBorder(186, 140, var3 - 12, 30, 4210752);
+				this.getSurface().drawBoxBorder(186, 140, yFromTopDistance - 12, 30, 4210752);
 				if (this.reportAbuse_AbuseType == 12) {
-					this.getSurface().drawBox(336, var3 - 12, 140, 30, 3158064);
+					this.getSurface().drawBox(336, yFromTopDistance - 12, 140, 30, 3158064);
 				}
 
-				this.getSurface().drawBoxBorder(336, 140, var3 - 12, 30, 4210752);
+				this.getSurface().drawBoxBorder(336, 140, yFromTopDistance - 12, 30, 4210752);
 				if (this.reportAbuse_AbuseType == 1) {
 					color = 16744448;
 				} else {
 					color = 0xFFFFFF;
 				}
 
-				this.getSurface().drawColoredStringCentered(106, "Buying or", color, 0, 0, var3);
+				this.getSurface().drawColoredStringCentered(106, "Buying or", color, 0, 0, yFromTopDistance);
 				if (this.reportAbuse_AbuseType == 7) {
 					color = 16744448;
 				} else {
 					color = 0xFFFFFF;
 				}
 
-				this.getSurface().drawColoredStringCentered(256, "Seriously offensive", color, 0, 0, var3);
+				this.getSurface().drawColoredStringCentered(256, "Seriously offensive", color, 0, 0, yFromTopDistance);
 				if (this.reportAbuse_AbuseType != 12) {
 					color = 0xFFFFFF;
 				} else {
 					color = 16744448;
 				}
 
-				this.getSurface().drawColoredStringCentered(406, "Asking for or providing", color, 0, 0, var3);
-				var3 += 12;
+				this.getSurface().drawColoredStringCentered(406, "Asking for or providing", color, 0, 0, yFromTopDistance);
+				yFromTopDistance += 12;
 				if (this.reportAbuse_AbuseType != 1) {
 					color = 0xFFFFFF;
 				} else {
 					color = 16744448;
 				}
 
-				this.getSurface().drawColoredStringCentered(106, "selling an account", color, 0, 0, var3);
+				this.getSurface().drawColoredStringCentered(106, "selling an account", color, 0, 0, yFromTopDistance);
 				if (this.reportAbuse_AbuseType != 7) {
 					color = 0xFFFFFF;
 				} else {
 					color = 16744448;
 				}
 
-				this.getSurface().drawColoredStringCentered(256, "language", color, 0, 0, var3);
+				this.getSurface().drawColoredStringCentered(256, "language", color, 0, 0, yFromTopDistance);
 				if (this.reportAbuse_AbuseType != 12) {
 					color = 0xFFFFFF;
 				} else {
 					color = 16744448;
 				}
 
-				this.getSurface().drawColoredStringCentered(406, "contact information", color, 0, 0, var3);
-				var3 += 20;
+				this.getSurface().drawColoredStringCentered(406, "contact information", color, 0, 0, yFromTopDistance);
+				yFromTopDistance += 20;
 				if (this.reportAbuse_AbuseType == 2) {
-					this.getSurface().drawBox(36, var3 - 12, 140, 18, 3158064);
+					this.getSurface().drawBox(36, yFromTopDistance - 12, 140, 18, 3158064);
 				}
 
-				this.getSurface().drawBoxBorder(36, 140, var3 - 12, 18, 4210752);
+				this.getSurface().drawBoxBorder(36, 140, yFromTopDistance - 12, 18, 4210752);
 				if (this.reportAbuse_AbuseType == 8) {
-					this.getSurface().drawBox(186, var3 - 12, 140, 18, 3158064);
+					this.getSurface().drawBox(186, yFromTopDistance - 12, 140, 18, 3158064);
 				}
 
-				this.getSurface().drawBoxBorder(186, 140, var3 - 12, 18, 4210752);
+				this.getSurface().drawBoxBorder(186, 140, yFromTopDistance - 12, 18, 4210752);
 				if (this.reportAbuse_AbuseType == 13) {
-					this.getSurface().drawBox(336, var3 - 12, 140, 18, 3158064);
+					this.getSurface().drawBox(336, yFromTopDistance - 12, 140, 18, 3158064);
 				}
 
-				this.getSurface().drawBoxBorder(336, 140, var3 - 12, 18, 4210752);
+				this.getSurface().drawBoxBorder(336, 140, yFromTopDistance - 12, 18, 4210752);
 				if (this.reportAbuse_AbuseType == 2) {
 					color = 16744448;
 				} else {
 					color = 0xFFFFFF;
 				}
 
-				this.getSurface().drawColoredStringCentered(106, "Encouraging rule-breaking", color, 0, 0, var3);
+				this.getSurface().drawColoredStringCentered(106, "Encouraging rule-breaking", color, 0, 0, yFromTopDistance);
 				if (this.reportAbuse_AbuseType == 8) {
 					color = 16744448;
 				} else {
 					color = 0xFFFFFF;
 				}
 
-				this.getSurface().drawColoredStringCentered(256, "Solicitation", color, 0, 0, var3);
+				this.getSurface().drawColoredStringCentered(256, "Solicitation", color, 0, 0, yFromTopDistance);
 				if (this.reportAbuse_AbuseType != 13) {
 					color = 0xFFFFFF;
 				} else {
 					color = 16744448;
 				}
 
-				this.getSurface().drawColoredStringCentered(406, "Breaking real-world laws", color, 0, 0, var3);
-				var3 += 20;
+				this.getSurface().drawColoredStringCentered(406, "Breaking real-world laws", color, 0, 0, yFromTopDistance);
+				yFromTopDistance += 20;
 				if (this.reportAbuse_AbuseType == 3) {
-					this.getSurface().drawBox(36, var3 - 12, 140, 18, 3158064);
+					this.getSurface().drawBox(36, yFromTopDistance - 12, 140, 18, 3158064);
 				}
 
-				this.getSurface().drawBoxBorder(36, 140, var3 - 12, 18, 4210752);
+				this.getSurface().drawBoxBorder(36, 140, yFromTopDistance - 12, 18, 4210752);
 				if (this.reportAbuse_AbuseType == 9) {
-					this.getSurface().drawBox(186, var3 - 12, 140, 18, 3158064);
+					this.getSurface().drawBox(186, yFromTopDistance - 12, 140, 18, 3158064);
 				}
 
-				this.getSurface().drawBoxBorder(186, 140, var3 - 12, 18, 4210752);
+				this.getSurface().drawBoxBorder(186, 140, yFromTopDistance - 12, 18, 4210752);
 				if (this.reportAbuse_AbuseType == 14) {
-					this.getSurface().drawBox(336, var3 - 12, 140, 18, 3158064);
+					this.getSurface().drawBox(336, yFromTopDistance - 12, 140, 18, 3158064);
 				}
 
-				this.getSurface().drawBoxBorder(336, 140, var3 - 12, 18, 4210752);
+				this.getSurface().drawBoxBorder(336, 140, yFromTopDistance - 12, 18, 4210752);
 				if (this.reportAbuse_AbuseType == 3) {
 					color = 16744448;
 				} else {
 					color = 0xFFFFFF;
 				}
 
-				this.getSurface().drawColoredStringCentered(106, "Staff impersonation", color, 0, 0, var3);
+				this.getSurface().drawColoredStringCentered(106, "Staff impersonation", color, 0, 0, yFromTopDistance);
 				if (this.reportAbuse_AbuseType != 9) {
 					color = 0xFFFFFF;
 				} else {
 					color = 16744448;
 				}
 
-				this.getSurface().drawColoredStringCentered(256, "Disruptive behaviour", color, 0, 0, var3);
+				this.getSurface().drawColoredStringCentered(256, "Disruptive behaviour", color, 0, 0, yFromTopDistance);
 				if (this.reportAbuse_AbuseType != 14) {
 					color = 0xFFFFFF;
 				} else {
 					color = 16744448;
 				}
 
-				this.getSurface().drawColoredStringCentered(406, "Advertising websites", color, 0, 0, var3);
-				var3 += 20;
+				this.getSurface().drawColoredStringCentered(406, "Advertising websites", color, 0, 0, yFromTopDistance);
+				yFromTopDistance += 20;
 				if (this.reportAbuse_AbuseType == 4) {
-					this.getSurface().drawBox(36, var3 - 12, 140, 18, 3158064);
+					this.getSurface().drawBox(36, yFromTopDistance - 12, 140, 18, 3158064);
 				}
 
-				this.getSurface().drawBoxBorder(36, 140, var3 - 12, 18, 4210752);
+				this.getSurface().drawBoxBorder(36, 140, yFromTopDistance - 12, 18, 4210752);
 				if (this.reportAbuse_AbuseType == 10) {
-					this.getSurface().drawBox(186, var3 - 12, 140, 18, 3158064);
+					this.getSurface().drawBox(186, yFromTopDistance - 12, 140, 18, 3158064);
 				}
 
-				this.getSurface().drawBoxBorder(186, 140, var3 - 12, 18, 4210752);
+				this.getSurface().drawBoxBorder(186, 140, yFromTopDistance - 12, 18, 4210752);
 				if (this.reportAbuse_AbuseType != 4) {
 					color = 0xFFFFFF;
 				} else {
 					color = 16744448;
 				}
 
-				this.getSurface().drawColoredStringCentered(106, "Macroing or use of bots", color, 0, 0, var3);
+				this.getSurface().drawColoredStringCentered(106, "Macroing or use of bots", color, 0, 0, yFromTopDistance);
 				if (this.reportAbuse_AbuseType == 10) {
 					color = 16744448;
 				} else {
 					color = 0xFFFFFF;
 				}
 
-				this.getSurface().drawColoredStringCentered(256, "Offensive account name", color, 0, 0, var3);
-				var3 += 20;
+				this.getSurface().drawColoredStringCentered(256, "Offensive account name", color, 0, 0, yFromTopDistance);
+				yFromTopDistance += 20;
 				if (this.reportAbuse_AbuseType == 5) {
-					this.getSurface().drawBox(36, var3 - 12, 140, 18, 3158064);
+					this.getSurface().drawBox(36, yFromTopDistance - 12, 140, 18, 3158064);
 				}
 
-				this.getSurface().drawBoxBorder(36, 140, var3 - 12, 18, 4210752);
+				this.getSurface().drawBoxBorder(36, 140, yFromTopDistance - 12, 18, 4210752);
 				if (this.reportAbuse_AbuseType == 11) {
-					this.getSurface().drawBox(186, var3 - 12, 140, 18, 3158064);
+					this.getSurface().drawBox(186, yFromTopDistance - 12, 140, 18, 3158064);
 				}
 
-				this.getSurface().drawBoxBorder(186, 140, var3 - 12, 18, 4210752);
+				this.getSurface().drawBoxBorder(186, 140, yFromTopDistance - 12, 18, 4210752);
 				if (this.reportAbuse_AbuseType == 5) {
 					color = 16744448;
 				} else {
 					color = 0xFFFFFF;
 				}
 
-				this.getSurface().drawColoredStringCentered(106, "Scamming", color, 0, 0, var3);
+				this.getSurface().drawColoredStringCentered(106, "Scamming", color, 0, 0, yFromTopDistance);
 				if (this.reportAbuse_AbuseType != 11) {
 					color = 0xFFFFFF;
 				} else {
 					color = 16744448;
 				}
 
-				this.getSurface().drawColoredStringCentered(256, "Real-life threats", color, 0, 0, var3);
-				var3 += 20;
+				this.getSurface().drawColoredStringCentered(256, "Real-life threats", color, 0, 0, yFromTopDistance);
+				yFromTopDistance += 20;
 				if (this.reportAbuse_AbuseType == 6) {
-					this.getSurface().drawBox(36, var3 - 12, 140, 18, 3158064);
+					this.getSurface().drawBox(36, yFromTopDistance - 12, 140, 18, 3158064);
 				}
 
-				this.getSurface().drawBoxBorder(36, 140, var3 - 12, 18, 4210752);
+				this.getSurface().drawBoxBorder(36, 140, yFromTopDistance - 12, 18, 4210752);
 				if (this.reportAbuse_AbuseType != 6) {
 					color = 0xFFFFFF;
 				} else {
 					color = 16744448;
 				}
 
-				this.getSurface().drawColoredStringCentered(106, "Exploiting a bug", color, 0, 0, var3);
-				var3 += 18;
-				var3 += 15;
+				this.getSurface().drawColoredStringCentered(106, "Exploiting a bug", color, 0, 0, yFromTopDistance);
+				yFromTopDistance += 18;
+				yFromTopDistance += 15;
 				color = 0xFFFFFF;
-				if (this.mouseX > 196 && this.mouseX < 316 && this.mouseY > var3 - 15 && this.mouseY < 5 + var3) {
+				if (this.mouseX > 196 && this.mouseX < 316 && this.mouseY > yFromTopDistance - 15 && this.mouseY < 5 + yFromTopDistance) {
 					color = 0xFFFF00;
 				}
 
-				this.getSurface().drawColoredStringCentered(256, "Click here to cancel", color, 0, 1, var3);
+				this.getSurface().drawColoredStringCentered(256, "Click here to cancel", color, 0, 1, yFromTopDistance);
 			}
 		} catch (RuntimeException var6) {
 			throw GenUtil.makeThrowable(var6, "client.ID(" + "dummy" + ')');
