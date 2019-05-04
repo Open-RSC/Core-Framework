@@ -8,6 +8,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
+import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.compareItemsIds;
 import static com.openrsc.server.plugins.Functions.hasItem;
@@ -114,6 +115,14 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 				player.getInventory().add(new Item(ItemId.HANGOVER_CURE.id()));
 
 			}
+			return;
+		}
+
+		else if (compareItemsIds(item1, item2, ItemId.RAW_BEEF.id(), ItemId.BOWL_OF_WATER.id())
+				|| compareItemsIds(item1, item2, ItemId.RAW_CHICKEN.id(), ItemId.BOWL_OF_WATER.id())
+				|| compareItemsIds(item1, item2, ItemId.RAW_RAT_MEAT.id(), ItemId.BOWL_OF_WATER.id())
+				|| compareItemsIds(item1, item2, ItemId.RAW_BEAR_MEAT.id(), ItemId.BOWL_OF_WATER.id())) {
+			player.playerServerMessage(MessageType.QUEST, "you need to precook the meat");
 			return;
 		}
 
@@ -280,6 +289,11 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 		else if (compareItemsIds(item1, item2, ItemId.MILK.id(), ItemId.CHOCOLATE_DUST.id()))
 			return true;
 		else if (compareItemsIds(item1, item2, ItemId.CHOCOLATY_MILK.id(), ItemId.SNAPE_GRASS.id()))
+			return true;
+		else if (compareItemsIds(item1, item2, ItemId.RAW_BEEF.id(), ItemId.BOWL_OF_WATER.id())
+				|| compareItemsIds(item1, item2, ItemId.RAW_CHICKEN.id(), ItemId.BOWL_OF_WATER.id())
+				|| compareItemsIds(item1, item2, ItemId.RAW_RAT_MEAT.id(), ItemId.BOWL_OF_WATER.id())
+				|| compareItemsIds(item1, item2, ItemId.RAW_BEAR_MEAT.id(), ItemId.BOWL_OF_WATER.id()))
 			return true;
 		/*
 		 * prince ali rescue dye wig and yellow die to blond wig

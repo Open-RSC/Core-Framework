@@ -152,11 +152,18 @@ public class NpcBehavior {
 				setRoaming();
 			}
 			if (npc.inCombat()) {
-				if (DataConversions.inArray(Constants.GameServer.NPCS_THAT_DO_RETREAT, npc.getID())) {
+				if (DataConversions.inArray(Constants.GameServer.NPCS_THAT_RETREAT_NORM, npc.getID())) {
 					if (npc.getSkills().getLevel(Skills.HITPOINTS) <=
 						Math.ceil(npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.20)) {
 						if (npc.getSkills().getLevel(Skills.HITPOINTS) > 0
 							&& npc.getOpponent().getHitsMade() >= 3) {
+							retreat();
+						}
+					}
+				} else if (DataConversions.inArray(Constants.GameServer.NPCS_THAT_RETREAT_LOW, npc.getID())) {
+					if (npc.getSkills().getLevel(Skills.HITPOINTS) <=
+							Math.max(1, Math.round(npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.05))) {
+						if (npc.getSkills().getLevel(Skills.HITPOINTS) > 0) {
 							retreat();
 						}
 					}

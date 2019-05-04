@@ -509,7 +509,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 	private void randomizedChest(Player p, GameObject o) {
 		p.message("You open the chest");
 		openChest(o, 2500, 1002);
-		int[] randomChestReward = {NpcId.POISON_SCORPION.id(), NpcId.POISON_SPIDER.id(), NpcId.CHAOS_DWARF.id(), NpcId.RAT.id(),
+		int[] randomChestReward = {NpcId.POISON_SCORPION.id(), NpcId.POISON_SPIDER.id(), NpcId.CHAOS_DWARF.id(), NpcId.RAT_LVL8.id(),
 				ItemId.ROTTEN_APPLES.id(), ItemId.BONES.id(), ItemId.EMERALD.id(), ItemId.BURNT_PIKE.id()};
 		int choosenReward = (int) (Math.random() * randomChestReward.length);
 		if (choosenReward == 0) {
@@ -526,7 +526,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 			dwarf.startCombat(p);
 		} else if (choosenReward == 3) {
 			playerTalk(p, null, "Ugh! a dirty rat!");
-			spawnNpc(NpcId.RAT.id(), o.getX() - 1, o.getY(), 60000 * 5);
+			spawnNpc(NpcId.RAT_LVL8.id(), o.getX() - 1, o.getY(), 60000 * 5);
 		} else if (choosenReward == 4) {
 			playerTalk(p, null, "Oh dear, I bet these apples taste disgusting");
 			addItem(p, ItemId.ROTTEN_APPLES.id(), 1);

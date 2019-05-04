@@ -9,6 +9,7 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.playerTalk;
@@ -19,12 +20,12 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 
 	@Override
 	public boolean blockInvAction(Item item, Player p) {
-		return item.isEdible();
+		return item.isEdible() || item.getID() == ItemId.ROTTEN_APPLES.id();
 	}
 
 	@Override
 	public void onInvAction(Item item, Player player) {
-		if (item.isEdible()) {
+		if (item.isEdible() || item.getID() == ItemId.ROTTEN_APPLES.id()) {
 			if (player.cantConsume()) {
 				return;
 			}
@@ -34,13 +35,16 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 			int id = item.getID();
 			boolean isKebabVariant = false;
 			if (id == ItemId.SPECIAL_DEFENSE_CABBAGE.id() || id == ItemId.CABBAGE.id()) {
-				player.message("You eat the " + item.getDef().getName()
-					+ ". Yuck!");
 				if (id == ItemId.SPECIAL_DEFENSE_CABBAGE.id()) {
+					player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef().getName());
+					player.playerServerMessage(MessageType.QUEST, "It seems to taste nicer than normal");
 					int lv = player.getSkills().getMaxStat(Skills.DEFENSE);
 					int newStat = player.getSkills().getLevel(Skills.DEFENSE) + 1;
 					if (newStat <= (lv + 1))
 						player.getSkills().setLevel(Skills.DEFENSE, newStat);
+				} else {
+					player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef().getName()
+							+ ". Yuck!");
 				}
 			} else if (id == ItemId.KEBAB.id()) {
 				isKebabVariant = true;
@@ -146,7 +150,7 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 				else {
 					boolean isChocolate = itemName.contains("chocolate");
 					if (itemName.contains("slice")) {
-						message = "You eat the slice of " + (isChocolate ? "chocolate " : " ") + "cake";
+						message = "You eat the " + (isChocolate ? "chocolate slice" : "slice of cake");
 					} else if (itemName.contains("partial")) {
 						message = "You eat some more of the " + (isChocolate ? "chocolate " : " ") + "cake";
 					} else if (itemName.contains("cake")) {
@@ -156,6 +160,10 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 					}
 				}
 				player.message(message);
+			} else if (id == ItemId.ROTTEN_APPLES.id()) {
+				message(player, "you eat an apple");
+				playerTalk(player, null, "yuck");
+				player.message("it's rotten, you spit it out");
 			} else
 				player.message("You eat the " + item.getDef().getName().toLowerCase());
 

@@ -13,7 +13,8 @@ import static com.openrsc.server.plugins.Functions.*;
 public class Refill implements InvUseOnObjectListener,
 	InvUseOnObjectExecutiveListener {
 
-	final int[] VALID_OBJECTS = {2, 466, 814, 48, 26, 86, 1130};
+	final int[] VALID_OBJECTS_WELL = {2, 466, 814};
+	final int[] VALID_OBJECTS_OTHER = {48, 26, 86, 1130};
 	private final int[] REFILLABLE = {
 		ItemId.BUCKET.id(), ItemId.JUG.id(), ItemId.BOWL.id(), ItemId.EMPTY_VIAL.id()
 	};
@@ -23,8 +24,8 @@ public class Refill implements InvUseOnObjectListener,
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		return inArray(obj.getID(), VALID_OBJECTS)
-			&& inArray(item.getID(),REFILLABLE);
+		return (inArray(obj.getID(), VALID_OBJECTS_OTHER)
+			&& inArray(item.getID(),REFILLABLE)) || (inArray(obj.getID(), VALID_OBJECTS_WELL) && item.getID() == ItemId.BUCKET.id());
 	}
 
 	@Override
