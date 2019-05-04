@@ -8248,7 +8248,7 @@ public final class mudclient implements Runnable {
 				"@whi@Swipe to Rotate - @gre@On", 5, null, null);
 		}
 
-		// voluem to rotate
+		// volume to rotate
 		if (!C_VOLUME_TO_ROTATE) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 				"@whi@Volume buttons to Rotate - @red@Off", 6, null, null);
@@ -8400,9 +8400,18 @@ public final class mudclient implements Runnable {
 			saveConfiguration(true);
 		}
 
+		// if clans are enabled
 		if (S_WANT_CLANS) {
+			// floating clan name tag overlay
+			if (S_SHOW_FLOATING_NAMETAGS) {
+				if (settingIndex == 16 && this.mouseButtonClick == 1) {
+					C_NAME_CLAN_TAG_OVERLAY = !C_NAME_CLAN_TAG_OVERLAY;
+					saveConfiguration(true);
+				}
+			}
+
 			// clan invite blocking - byte index 11
-			if (settingIndex == 16 && this.mouseButtonClick == 1) {
+			if (settingIndex == 17 && this.mouseButtonClick == 1) {
 				this.clanInviteBlockSetting = !this.clanInviteBlockSetting;
 				this.packetHandler.getClientStream().newPacket(111);
 				this.packetHandler.getClientStream().writeBuffer1.putByte(11);
@@ -8410,12 +8419,8 @@ public final class mudclient implements Runnable {
 				this.packetHandler.getClientStream().finishPacket();
 			}
 
-			if (settingIndex == 17 && this.mouseButtonClick == 1) {
-				
-			}
-
 			// report abuse
-			if (settingIndex == 17 && this.mouseButtonClick == 1) {
+			if (settingIndex == 18 && this.mouseButtonClick == 1) {
 				this.inputTextFinal = "";
 				this.inputTextCurrent = "";
 				this.reportAbuse_State = 1;
@@ -8423,7 +8428,7 @@ public final class mudclient implements Runnable {
 		}
 
 		// items on death
-		yFromTopDistance += 275;
+		yFromTopDistance = 275;
 		if (S_ITEMS_ON_DEATH_MENU) {
 			if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > yFromTopDistance - 12
 				&& this.mouseY < yFromTopDistance + 4 && this.mouseButtonClick == 1) {
