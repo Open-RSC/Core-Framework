@@ -162,8 +162,8 @@ public class NpcBehavior {
 					}
 				} else if (DataConversions.inArray(Constants.GameServer.NPCS_THAT_RETREAT_LOW, npc.getID())) {
 					if (npc.getSkills().getLevel(Skills.HITPOINTS) <=
-							Math.max(1, Math.round(npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.05))) {
-						if (npc.getSkills().getLevel(Skills.HITPOINTS) > 0) {
+							Math.ceil(npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.05)) {
+						if (npc.getSkills().getLevel(Skills.HITPOINTS) > 0 && npc.getOpponent().getHitsMade() >= 3) {
 							retreat();
 						}
 					}
