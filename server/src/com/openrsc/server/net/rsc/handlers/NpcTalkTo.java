@@ -18,6 +18,9 @@ public final class NpcTalkTo implements PacketHandler {
 	public void handlePacket(Packet p, Player player) throws Exception {
 
 		if (player.isBusy()) {
+			if (player.inCombat()) {
+				player.message("You can't do that whilst you are fighting");
+			}
 			player.resetPath();
 			return;
 		}
