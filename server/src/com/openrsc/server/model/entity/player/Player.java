@@ -10,19 +10,9 @@ import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.event.rsc.impl.FireCannonEvent;
-import com.openrsc.server.event.rsc.impl.PoisonEvent;
-import com.openrsc.server.event.rsc.impl.PrayerDrainEvent;
-import com.openrsc.server.event.rsc.impl.ProjectileEvent;
-import com.openrsc.server.event.rsc.impl.RangeEvent;
-import com.openrsc.server.event.rsc.impl.ThrowingEvent;
+import com.openrsc.server.event.rsc.impl.*;
 import com.openrsc.server.login.LoginRequest;
-import com.openrsc.server.model.Cache;
-import com.openrsc.server.model.MenuOptionListener;
-import com.openrsc.server.model.Point;
-import com.openrsc.server.model.PrivateMessage;
-import com.openrsc.server.model.Shop;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.*;
 import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.Inventory;
@@ -50,29 +40,17 @@ import com.openrsc.server.sql.query.logs.LiveFeedLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
-
-import static com.openrsc.server.plugins.Functions.sleep;
-
+import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.ListIterator;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.netty.channel.Channel;
+import static com.openrsc.server.plugins.Functions.sleep;
 
 /**
  * A single player.
@@ -1221,11 +1199,11 @@ public final class Player extends Mob {
 		skills.addExperience(i, amount);
 	}
 
-	public double getExperienceRate(int skill) {
+	private double getExperienceRate(int skill) {
 		double multiplier = 1.0;
-		/**
-		 * Skilling Experience Rate
-		 **/
+		/*
+		  Skilling Experience Rate
+		 */
 		if (skill >= 4 && skill <= 17) {
 			multiplier = Constants.GameServer.SKILLING_EXP_RATE;
 			if (getLocation().inWilderness() && !getLocation().inBounds(220, 108, 225, 111)) {
@@ -1235,9 +1213,9 @@ public final class Player extends Mob {
 				}
 			}
 		}
-		/**
-		 * Combat Experience Rate
-		 **/
+		/*
+		  Combat Experience Rate
+		 */
 		else if (skill >= 0 && skill <= 3) { // Attack, Strength, Defense & HP bonus.
 			multiplier = Constants.GameServer.COMBAT_EXP_RATE;
 			if (getLocation().inWilderness()) {
@@ -1248,16 +1226,16 @@ public final class Player extends Mob {
 			}
 		}
 
-		/**
-		 * Double Experience
-		 **/
+		/*
+		  Double Experience
+		 */
 		if (Constants.GameServer.IS_DOUBLE_EXP) {
 			multiplier *= 2;
 		}
 
-		/**
-		 * Experience Elixir
-		 **/
+		/*
+		  Experience Elixir
+		 */
 		if (getCache().hasKey("elixir_time")) {
 			if (getElixir() <= 0) {
 				getCache().remove("elixir_time");
@@ -1271,25 +1249,29 @@ public final class Player extends Mob {
 	}
 
 	public void incExp(int skill, int skillXP, boolean useFatigue) {
-		if (isExperienceFrozen()) {
-			ActionSender.sendMessage(this, "You can not gain experience right now!");
-			return;
-		}
-
-		if (useFatigue) {
-			if (fatigue >= this.MAX_FATIGUE) {
-				ActionSender.sendMessage(this, "@gre@You are too tired to gain experience, get some rest!");
+		if (Constants.GameServer.WANT_FATIGUE) {
+			if (isExperienceFrozen()) {
+				ActionSender.sendMessage(this, "You can not gain experience right now!");
 				return;
 			}
-			//if (fatigue >= 69750) {
-			//	ActionSender.sendMessage(this, "@gre@You start to feel tired, maybe you should rest soon.");
-			//}
-			if (skill >= 3 && useFatigue) {
-				fatigue += skillXP * 4;
-				if (fatigue > this.MAX_FATIGUE) {
-					fatigue = this.MAX_FATIGUE;
+		}
+
+		if (Constants.GameServer.WANT_FATIGUE) {
+			if (useFatigue) {
+				if (fatigue >= this.MAX_FATIGUE) {
+					ActionSender.sendMessage(this, "@gre@You are too tired to gain experience, get some rest!");
+					return;
 				}
-				ActionSender.sendFatigue(this);
+				//if (fatigue >= 69750) {
+				//	ActionSender.sendMessage(this, "@gre@You start to feel tired, maybe you should rest soon.");
+				//}
+				if (skill >= 3 && useFatigue) {
+					fatigue += skillXP * 4;
+					if (fatigue > this.MAX_FATIGUE) {
+						fatigue = this.MAX_FATIGUE;
+					}
+					ActionSender.sendFatigue(this);
+				}
 			}
 		}
 
@@ -1313,14 +1295,18 @@ public final class Player extends Mob {
 	}
 
 	public void incrementSleepTries() {
-		incorrectSleepTries++;
+		if (Constants.GameServer.WANT_FATIGUE) {
+			incorrectSleepTries++;
+		}
 	}
 
-	public void incrementActivity(int amount) {
-		activity += amount;
-		if (activity >= KITTEN_ACTIVITY_THRESHOLD) {
-			activity -= KITTEN_ACTIVITY_THRESHOLD;
-			PluginHandler.getPluginHandler().blockDefaultAction("CatGrowth", new Object[]{this});
+	private void incrementActivity(int amount) {
+		if (Constants.GameServer.WANT_FATIGUE) {
+			activity += amount;
+			if (activity >= KITTEN_ACTIVITY_THRESHOLD) {
+				activity -= KITTEN_ACTIVITY_THRESHOLD;
+				PluginHandler.getPluginHandler().blockDefaultAction("CatGrowth", new Object[]{this});
+			}
 		}
 	}
 
