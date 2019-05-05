@@ -17,8 +17,13 @@ sudo rm "/etc/nginx/sites-available/default"
 sudo cat "etc/nginx/native.conf.BAK" > "/etc/nginx/sites-available/default"
 sudo systemctl restart nginx
 
-sudo mysql -u"root" -p"root" < "Databases/openrsc_game_server.sql"
-sudo mysql -u"root" -p"root" < "Databases/openrsc_game_players.sql"
+sudo mysql -u"root" -p"root" -e "create database openrsc; GRANT ALL PRIVILEGES ON openrsc.* TO root@localhost IDENTIFIED BY 'root'"
+sudo mysql -u"root" -p"root" openrsc < "Databases/openrsc_game_server.sql"
+sudo mysql -u"root" -p"root" openrsc < "Databases/openrsc_game_players.sql"
+
+sudo mysql -u"root" -p"root" -e "create database cabbage; GRANT ALL PRIVILEGES ON cabbage.* TO root@localhost IDENTIFIED BY 'root'"
+sudo mysql -u"root" -p"root" cabbage < "Databases/openrsc_game_server.sql"
+sudo mysql -u"root" -p"root" cabbage < "Databases/openrsc_game_players.sql"
 
 sudo rm /var/www/html/*.*
 make clone-website

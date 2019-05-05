@@ -68,8 +68,9 @@ echo "Waiting 10 seconds then importing the databases."
 echo ""
 sleep 10
 sudo chmod 644 etc/mariadb/innodb.cnf
-sudo make import-game
-sudo make import-mysql
-sudo make import-phpmyadmin
+sudo create-database-openrsc
+sudo create-database-cabbage
+sudo make import-openrsc
+sudo make import-cabbage
 
 sudo make clone-website
