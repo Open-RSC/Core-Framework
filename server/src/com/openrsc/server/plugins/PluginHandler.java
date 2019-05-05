@@ -305,6 +305,15 @@ public final class PluginHandler {
 							LOGGER.catching(e);
 							continue;
 						}
+					} else if (instance instanceof MiniGameInterface) {
+						final MiniGameInterface m = (MiniGameInterface) instance;
+						try {
+							World.getWorld().registerMiniGame(m);;
+						} catch (final Exception e) {
+							LOGGER.error("Error registering minigame " + m.getMiniGameName());
+							LOGGER.catching(e);
+							continue;
+						}
 					}
 				}
 				if (actionPlugins.containsKey(interfceName)) {
@@ -345,6 +354,19 @@ public final class PluginHandler {
 							LOGGER.catching(e);
 							continue;
 						}
+					} else if (Arrays.asList(instance.getClass().getInterfaces())
+							.contains(MiniGameInterface.class)) {
+						final MiniGameInterface m = (MiniGameInterface) instance;
+						try {
+							World.getWorld().registerMiniGame(
+								(MiniGameInterface) instance);
+						} catch (final Exception e) {
+							LOGGER.error(
+								"Error registering minigame "
+									+ m.getMiniGameName());
+							LOGGER.catching(e);
+							continue;
+						}
 					}
 				}
 
@@ -360,6 +382,7 @@ public final class PluginHandler {
 			}
 		}
 		LOGGER.info("\t Loaded {}", box(World.getWorld().getQuests().size()) + " Quests.");
+		LOGGER.info("\t Loaded {}", box(World.getWorld().getMiniGames().size()) + " MiniGames.");
 		LOGGER.info("\t Loaded total of {}", box(loadedPlugins.size()) + " plugin handlers.");
 	}
 
@@ -379,6 +402,7 @@ public final class PluginHandler {
 		urlClassLoader.close();
 		executor.shutdown();
 		World.getWorld().getQuests().clear();
+		World.getWorld().getMiniGames().clear();
 		World.getWorld().getShops().clear();
 
 		queue.clear();
