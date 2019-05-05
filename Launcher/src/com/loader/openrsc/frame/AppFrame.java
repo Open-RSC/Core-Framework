@@ -280,7 +280,7 @@ public class AppFrame extends JFrame {
 
 		// RSC Cabbage
 		JLabel rsccDescription;
-		(rsccDescription = new JLabel("[Warning: BETA TEST] -> 5x xp rate, auction house, batched skills, etc")).setBounds(rscc_x, rscc_y, 600, 18);
+		(rsccDescription = new JLabel("-> 5x xp rate, runs 30% faster, auction house, batched skills, etc")).setBounds(rscc_x, rscc_y, 600, 18);
 		rsccDescription.setForeground(new Color(255, 255, 255, 220));
 		rsccDescription.setFont(Utils.getFont("Exo-Regular.otf", 0, 13.0f));
 		this.bg.add(rsccDescription);
