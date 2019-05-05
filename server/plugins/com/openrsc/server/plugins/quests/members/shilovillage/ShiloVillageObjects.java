@@ -77,9 +77,11 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 			}
 		}
 		else if (obj.getID() == CLIMB_CAVE_ROCKS) {
-			if (p.getFatigue() >= p.MAX_FATIGUE) {
-				p.message("You are too fatigued to go any further.");
-				return;
+			if (Constants.GameServer.WANT_FATIGUE) {
+				if (p.getFatigue() >= p.MAX_FATIGUE) {
+					p.message("You are too fatigued to go any further.");
+					return;
+				}
 			}
 			p.setBusy(true);
 			if(!p.getInventory().wielding(ItemId.BEADS_OF_THE_DEAD.id())) {

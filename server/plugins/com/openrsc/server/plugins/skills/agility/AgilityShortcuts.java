@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.skills.agility;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -240,10 +241,12 @@ public class AgilityShortcuts implements ObjectActionListener,
 					p.setBusy(false);
 					return;
 				}
-				if (p.getFatigue() >= 69750) {
-					p.message("You are too tired to swing on the rope");
-					p.setBusy(false);
-					return;
+				if (Constants.GameServer.WANT_FATIGUE) {
+					if (p.getFatigue() >= 69750) {
+						p.message("You are too tired to swing on the rope");
+						p.setBusy(false);
+						return;
+					}
 				}
 				p.message("You grab the rope and try and swing across");
 				if (!succeed(p, 57)) {
@@ -263,10 +266,12 @@ public class AgilityShortcuts implements ObjectActionListener,
 					p.setBusy(false);
 					return;
 				}
-				if (p.getFatigue() >= 69750) {
-					p.message("You are too tired to swing on the rope");
-					p.setBusy(false);
-					return;
+				if (Constants.GameServer.WANT_FATIGUE) {
+					if (p.getFatigue() >= 69750) {
+						p.message("You are too tired to swing on the rope");
+						p.setBusy(false);
+						return;
+					}
 				}
 				p.message("You grab the rope and try and swing across");
 				if (!succeed(p, 57)) {
@@ -287,10 +292,12 @@ public class AgilityShortcuts implements ObjectActionListener,
 					p.setBusy(false);
 					return;
 				}
-				if (p.getFatigue() >= 69750) {
-					p.message("You are too tired to balance on the ledge");
-					p.setBusy(false);
-					return;
+				if (Constants.GameServer.WANT_FATIGUE) {
+					if (p.getFatigue() >= 69750) {
+						p.message("You are too tired to balance on the ledge");
+						p.setBusy(false);
+						return;
+					}
 				}
 				p.message("You put your foot on the ledge and try to edge across");
 				sleep(2200);
@@ -311,10 +318,12 @@ public class AgilityShortcuts implements ObjectActionListener,
 					p.setBusy(false);
 					return;
 				}
-				if (p.getFatigue() >= 69750) {
-					p.message("You are too tired to balance on the ledge");
-					p.setBusy(false);
-					return;
+				if (Constants.GameServer.WANT_FATIGUE) {
+					if (p.getFatigue() >= 69750) {
+						p.message("You are too tired to balance on the ledge");
+						p.setBusy(false);
+						return;
+					}
 				}
 				p.message("You put your foot on the ledge and try to edge across");
 				sleep(2200);
@@ -345,10 +354,12 @@ public class AgilityShortcuts implements ObjectActionListener,
 					p.setBusy(false);
 					return;
 				}
-				if (p.getFatigue() >= 69750) {
-					p.message("You are too tired to climb up the rubble");
-					p.setBusy(false);
-					return;
+				if (Constants.GameServer.WANT_FATIGUE) {
+					if (p.getFatigue() >= 69750) {
+						p.message("You are too tired to climb up the rubble");
+						p.setBusy(false);
+						return;
+					}
 				}
 				movePlayer(p, 582, 3573);
 				p.message("You climb up the pile of rubble");
@@ -361,10 +372,12 @@ public class AgilityShortcuts implements ObjectActionListener,
 					p.setBusy(false);
 					return;
 				}
-				if (p.getFatigue() >= 69750) {
-					p.message("You are too tired to squeeze through the pipe");
-					p.setBusy(false);
-					return;
+				if (Constants.GameServer.WANT_FATIGUE) {
+					if (p.getFatigue() >= 69750) {
+						p.message("You are too tired to squeeze through the pipe");
+						p.setBusy(false);
+						return;
+					}
 				}
 				p.message("You squeeze through the pipe");
 				sleep(2200);
@@ -377,10 +390,12 @@ public class AgilityShortcuts implements ObjectActionListener,
 					p.setBusy(false);
 					return;
 				}
-				if (p.getFatigue() >= 69750) {
-					p.message("You are too tired to squeeze through the pipe");
-					p.setBusy(false);
-					return;
+				if (Constants.GameServer.WANT_FATIGUE) {
+					if (p.getFatigue() >= 69750) {
+						p.message("You are too tired to squeeze through the pipe");
+						p.setBusy(false);
+						return;
+					}
 				}
 				p.message("You squeeze through the pipe");
 				sleep(2200);
@@ -443,10 +458,12 @@ public class AgilityShortcuts implements ObjectActionListener,
 					p.setBusy(false);
 					return;
 				}
-				if (p.getFatigue() >= p.MAX_FATIGUE) {
-					p.message("You are too fatigued to continue.");
-					p.setBusy(false);
-					return;
+				if (Constants.GameServer.WANT_FATIGUE) {
+					if (p.getFatigue() >= p.MAX_FATIGUE) {
+						p.message("You are too fatigued to continue.");
+						p.setBusy(false);
+						return;
+					}
 				}
 				p.message("You jump onto the rock");
 				if (p.getY() <= 805) {
@@ -482,10 +499,12 @@ public class AgilityShortcuts implements ObjectActionListener,
 				p.incExp(Skills.AGILITY, 10, true);
 				break;
 			case YANILLE_WATCHTOWER_HANDHOLDS:
-				if (p.getFatigue() >= p.MAX_FATIGUE) {
-					p.message("You are too tired to climb up the wall");
-					p.setBusy(false);
-					return;
+				if (Constants.GameServer.WANT_FATIGUE) {
+					if (p.getFatigue() >= p.MAX_FATIGUE) {
+						p.message("You are too tired to climb up the wall");
+						p.setBusy(false);
+						return;
+					}
 				}
 				if (getCurrentLevel(p, Skills.AGILITY) < 18) {
 					p.message("You need an agility level of 18 to climb the wall");

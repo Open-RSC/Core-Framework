@@ -187,9 +187,11 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 			}
 
 			if (p.getQuestStage(Constants.Quests.DIGSITE) >= 4 && getLevel2Digsite(p)) {
-				if (p.getFatigue() >= 69750) {
-					p.message("You are too tired to do any more digging");
-					return;
+				if (Constants.GameServer.WANT_FATIGUE) {
+					if (p.getFatigue() >= 69750) {
+						p.message("You are too tired to do any more digging");
+						return;
+					}
 				}
 				showBubble(p, new Item(ItemId.ROCK_PICK.id()));
 				p.incExp(Skills.MINING, 70, true);
@@ -247,9 +249,11 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					}
 					return;
 				}
-				if (p.getFatigue() >= 69750) {
-					p.message("You are too tired to do any more digging");
-					return;
+				if (Constants.GameServer.WANT_FATIGUE) {
+					if (p.getFatigue() >= 69750) {
+						p.message("You are too tired to do any more digging");
+						return;
+					}
 				}
 				showBubble(p, new Item(ItemId.TROWEL.id()));
 				p.incExp(Skills.MINING, 60, true);

@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.skills.agility;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -8,16 +9,16 @@ import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 import static com.openrsc.server.plugins.Functions.inArray;
 import static com.openrsc.server.plugins.Functions.movePlayer;
 import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.random;
 import static com.openrsc.server.plugins.Functions.sleep;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 public class BarbarianAgilityCourse implements WallObjectActionListener,
 	WallObjectActionExecutiveListener, ObjectActionListener,
@@ -50,10 +51,12 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 				p.setBusy(false);
 				return;
 			}
-			if (p.getFatigue() >= p.MAX_FATIGUE) {
-				p.message("You are too tired to squeeze through the pipe");
-				p.setBusy(false);
-				return;
+			if (Constants.GameServer.WANT_FATIGUE) {
+				if (p.getFatigue() >= p.MAX_FATIGUE) {
+					p.message("You are too tired to squeeze through the pipe");
+					p.setBusy(false);
+					return;
+				}
 			}
 
 			p.message("You squeeze through the pipe");
@@ -66,9 +69,11 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 			p.incExp(Skills.AGILITY, 20, true);
 			return;
 		}
-		if (p.getFatigue() >= p.MAX_FATIGUE && !inArray(obj.getID(), SWING, LOG, NET)) {
-			p.message("you are too tired to train");
-			return;
+		if (Constants.GameServer.WANT_FATIGUE) {
+			if (p.getFatigue() >= p.MAX_FATIGUE && !inArray(obj.getID(), SWING, LOG, NET)) {
+				p.message("you are too tired to train");
+				return;
+			}
 		}
 		p.setBusy(true);
 		boolean fail = succeed(p);
@@ -156,9 +161,11 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 
 	@Override
 	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
-		if (p.getFatigue() >= p.MAX_FATIGUE && !inArray(obj.getID(), LOW_WALL, LOW_WALL2)) {
-			p.message("you are too tired to train");
-			return;
+		if (Constants.GameServer.WANT_FATIGUE) {
+			if (p.getFatigue() >= p.MAX_FATIGUE && !inArray(obj.getID(), LOW_WALL, LOW_WALL2)) {
+				p.message("you are too tired to train");
+				return;
+			}
 		}
 		p.setBusy(true);
 		switch (obj.getID()) {

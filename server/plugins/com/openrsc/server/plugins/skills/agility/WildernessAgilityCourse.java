@@ -1,16 +1,23 @@
 package com.openrsc.server.plugins.skills.agility;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
+import static com.openrsc.server.plugins.Functions.inArray;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.movePlayer;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.random;
+import static com.openrsc.server.plugins.Functions.sleep;
 
 public class WildernessAgilityCourse implements ObjectActionListener,
 	ObjectActionExecutiveListener {
@@ -77,9 +84,11 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 			}
 			return;
 		}
-		if (p.getFatigue() >= p.MAX_FATIGUE && !inArray(obj.getID(), WILD_PIPE, WILD_ROPESWING, STONE, LEDGE)) {
-			p.message("you are too tired to train");
-			return;
+		if (Constants.GameServer.WANT_FATIGUE) {
+			if (p.getFatigue() >= p.MAX_FATIGUE && !inArray(obj.getID(), WILD_PIPE, WILD_ROPESWING, STONE, LEDGE)) {
+				p.message("you are too tired to train");
+				return;
+			}
 		}
 		p.setBusy(true);
 		boolean failCourse = failWildCourse(p);

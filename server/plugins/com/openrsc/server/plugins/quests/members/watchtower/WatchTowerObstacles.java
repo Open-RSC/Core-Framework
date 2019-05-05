@@ -356,9 +356,11 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 									"Do you want to get hurt or something ?");
 							} else {
 								removeItem(p, ItemId.COINS.id(), 20);
-								if (p.getFatigue() >= 7500) {
-									p.message("You are too tired to attempt this jump");
-									return;
+								if (Constants.GameServer.WANT_FATIGUE) {
+									if (p.getFatigue() >= 7500) {
+										p.message("You are too tired to attempt this jump");
+										return;
+									}
 								}
 								p.message("You daringly jump across the chasm");
 								p.teleport(647, 799);
@@ -370,9 +372,11 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 							p.message("The guard blocks your path");
 						}
 					} else {
-						if (p.getFatigue() >= 7500) {
-							p.message("You are too tired to attempt this jump");
-							return;
+						if (Constants.GameServer.WANT_FATIGUE) {
+							if (p.getFatigue() >= 7500) {
+								p.message("You are too tired to attempt this jump");
+								return;
+							}
 						}
 						p.message("You daringly jump across the chasm");
 						p.teleport(647, 799);

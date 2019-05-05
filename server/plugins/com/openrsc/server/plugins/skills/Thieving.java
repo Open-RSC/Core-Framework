@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.skills;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.GameServer;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ItemId;
@@ -152,8 +153,10 @@ public class Thieving extends Functions
 			selectedLoot = new Item(stall.lootTable.get(0).getId(), stall.lootTable.get(0).getAmount());
 			return;
 		}
-		if (player.getFatigue() >= player.MAX_FATIGUE)
-			player.message("@gre@You are too tired to gain experience, get some rest");
+		if (Constants.GameServer.WANT_FATIGUE) {
+			if (player.getFatigue() >= player.MAX_FATIGUE)
+				player.message("@gre@You are too tired to gain experience, get some rest");
+		}
 
 		player.getInventory().add(selectedLoot);
 		String loot = stall.equals(Stall.GEMS_STALL) ? "gem" : selectedLoot.getDef().getName().toLowerCase();
@@ -235,9 +238,11 @@ public class Thieving extends Functions
 			player.message("You find nothing");
 			return;
 		}
-		if (player.getFatigue() >= player.MAX_FATIGUE) {
-			player.message("You are too tired to thieve here");
-			return;
+		if (Constants.GameServer.WANT_FATIGUE) {
+			if (player.getFatigue() >= player.MAX_FATIGUE) {
+				player.message("You are too tired to thieve here");
+				return;
+			}
 		}
 		//check if the chest is still same
 		GameObject checkObj = player.getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
@@ -365,8 +370,10 @@ public class Thieving extends Functions
 				}
 				boolean succeededPickpocket = succeedThieving(player, pickpocket.getRequiredLevel());
 				if (succeededPickpocket) {
-					if (player.getFatigue() >= player.MAX_FATIGUE)
-						player.message("@gre@You are too tired to gain experience, get some rest");
+					if (Constants.GameServer.WANT_FATIGUE) {
+						if (player.getFatigue() >= player.MAX_FATIGUE)
+							player.message("@gre@You are too tired to gain experience, get some rest");
+					}
 
 					player.incExp(Skills.THIEVING, pickpocket.getXp(), true);
 					Item selectedLoot = null;
@@ -435,10 +442,12 @@ public class Thieving extends Functions
 			} else {
 				player.setBusyTimer(3000);
 				player.message("you attempt to pick the lock");
-				if (player.getFatigue() >= player.MAX_FATIGUE) {
-					player.message("You are too tired to thieve here");
-					player.setBusyTimer(0);
-					return;
+				if (Constants.GameServer.WANT_FATIGUE) {
+					if (player.getFatigue() >= player.MAX_FATIGUE) {
+						player.message("You are too tired to thieve here");
+						player.setBusyTimer(0);
+						return;
+					}
 				}
 				if (player.getSkills().getLevel(Skills.THIEVING) < 47) {
 					player.message("You are not a high enough level to pick this lock");
@@ -623,9 +632,11 @@ public class Thieving extends Functions
 				player.message("You manage to pick the lock");
 				doDoor(obj, player);
 				player.message("You go through the door");
-				if (player.getFatigue() >= player.MAX_FATIGUE) {
-					player.message("@gre@You are too tired to gain experience, get some rest");
-					return;
+				if (Constants.GameServer.WANT_FATIGUE) {
+					if (player.getFatigue() >= player.MAX_FATIGUE) {
+						player.message("@gre@You are too tired to gain experience, get some rest");
+						return;
+					}
 				}
 				player.incExp(Skills.THIEVING, (int) exp, true);
 			} else {

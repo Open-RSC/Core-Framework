@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.skills;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemId;
@@ -94,9 +95,11 @@ public class GemMining implements ObjectActionListener,
 			return;
 		}
 
-		if (p.getFatigue() >= p.MAX_FATIGUE) {
-			p.message("You are too tired to mine this rock");
-			return;
+		if (Constants.GameServer.WANT_FATIGUE) {
+			if (p.getFatigue() >= p.MAX_FATIGUE) {
+				p.message("You are too tired to mine this rock");
+				return;
+			}
 		}
 
 		p.playSound("mine");

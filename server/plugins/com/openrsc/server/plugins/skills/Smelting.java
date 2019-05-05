@@ -50,10 +50,12 @@ public class Smelting implements InvUseOnObjectListener,
 							if (!isCompleted()) {
 								showBubble(p, item);
 							}
-							if (p.getFatigue() >= p.MAX_FATIGUE) {
-								p.message("You are too tired to smelt cannon ball");
-								interrupt();
-								return;
+							if (Constants.GameServer.WANT_FATIGUE) {
+								if (p.getFatigue() >= p.MAX_FATIGUE) {
+									p.message("You are too tired to smelt cannon ball");
+									interrupt();
+									return;
+								}
 							}
 							if (p.getInventory().countId(ItemId.STEEL_BAR.id()) < 1) {
 								p.message("You have no steel bars left");
@@ -92,9 +94,11 @@ public class Smelting implements InvUseOnObjectListener,
 		if (!p.withinRange(obj, 2)) {
 			return;
 		}
-		if (p.getFatigue() >= p.MAX_FATIGUE) {
-			p.message("You are too tired to smelt this ore");
-			return;
+		if (Constants.GameServer.WANT_FATIGUE) {
+			if (p.getFatigue() >= p.MAX_FATIGUE) {
+				p.message("You are too tired to smelt this ore");
+				return;
+			}
 		}
 		if (getCurrentLevel(p, Skills.SMITHING) < smelt.getRequiredLevel()) {
 			p.message("You need to be at least level-" + smelt.getRequiredLevel() + " smithing to " + (smelt.getSmeltBarId() == ItemId.SILVER_BAR.id() || smelt.getSmeltBarId() == ItemId.GOLD_BAR.id() || smelt.getSmeltBarId() == ItemId.GOLD_BAR_FAMILYCREST.id() ? "work " : "smelt ") + EntityHandler.getItemDef(smelt.getSmeltBarId()).getName().toLowerCase().replaceAll("bar", ""));
@@ -121,10 +125,12 @@ public class Smelting implements InvUseOnObjectListener,
 		p.message(smeltString(smelt, item));
 		p.setBatchEvent(new BatchEvent(p, 1800, Formulae.getRepeatTimes(p, Skills.SMITHING)) {
 			public void action() {
-				if (p.getFatigue() >= p.MAX_FATIGUE) {
-					p.message("You are too tired to smelt this ore");
-					interrupt();
-					return;
+				if (Constants.GameServer.WANT_FATIGUE) {
+					if (p.getFatigue() >= p.MAX_FATIGUE) {
+						p.message("You are too tired to smelt this ore");
+						interrupt();
+						return;
+					}
 				}
 				if (p.getInventory().countId(smelt.getReqOreId()) < smelt.getReqOreAmount() || (p.getInventory().countId(smelt.getID()) < smelt.getOreAmount() && smelt.getReqOreAmount() != -1)) {
 					if (smelt.getID() == Smelt.COAL.getID() && (p.getInventory().countId(Smelt.IRON_ORE.getID()) < 1 || p.getInventory().countId(Smelt.COAL.getID()) <= 1)) {

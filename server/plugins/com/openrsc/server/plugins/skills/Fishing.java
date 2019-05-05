@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.skills;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemId;
@@ -60,9 +61,11 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 		if (def == null) { // This shouldn't happen
 			return;
 		}
-		if (owner.getFatigue() >= owner.MAX_FATIGUE) {
-			owner.message("You are too tired to catch this fish");
-			return;
+		if (Constants.GameServer.WANT_FATIGUE) {
+			if (owner.getFatigue() >= owner.MAX_FATIGUE) {
+				owner.message("You are too tired to catch this fish");
+				return;
+			}
 		}
 		if (object.getID() == 493 && owner.getSkills().getExperience(Skills.FISHING) >= 200) {
 			message(owner, "that's enough fishing for now",
@@ -113,10 +116,12 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 						return;
 					}
 				}
-				if (owner.getFatigue() >= owner.MAX_FATIGUE) {
-					owner.playerServerMessage(MessageType.QUEST, "You are too tired to catch this fish");
-					interrupt();
-					return;
+				if (Constants.GameServer.WANT_FATIGUE) {
+					if (owner.getFatigue() >= owner.MAX_FATIGUE) {
+						owner.playerServerMessage(MessageType.QUEST, "You are too tired to catch this fish");
+						interrupt();
+						return;
+					}
 				}
 				owner.playSound("fish");
 				ObjectFishDef fishDef = getFish(def, owner.getSkills().getLevel(Skills.FISHING), click);

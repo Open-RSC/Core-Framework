@@ -205,10 +205,12 @@ public class Smithing implements InvUseOnObjectListener,
 					interrupt();
 					return;
 				}
-				if (player.getFatigue() >= player.MAX_FATIGUE) {
-					player.message("You are too tired to smith");
-					interrupt();
-					return;
+				if (Constants.GameServer.WANT_FATIGUE) {
+					if (player.getFatigue() >= player.MAX_FATIGUE) {
+						player.message("You are too tired to smith");
+						interrupt();
+						return;
+					}
 				}
 				player.playSound("anvil");
 				for (int x = 0; x < def.getRequiredBars(); x++) {

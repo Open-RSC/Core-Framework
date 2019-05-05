@@ -45,9 +45,11 @@ public class Woodcutting implements ObjectActionListener,
 			owner.message(owner.MEMBER_MESSAGE);
 			return;
 		}
-		if (owner.getFatigue() >= owner.MAX_FATIGUE) {
-			owner.message("You are too tired to cut the tree");
-			return;
+		if (Constants.GameServer.WANT_FATIGUE) {
+			if (owner.getFatigue() >= owner.MAX_FATIGUE) {
+				owner.message("You are too tired to cut the tree");
+				return;
+			}
 		}
 		if (owner.getSkills().getLevel(Skills.WOODCUT) < def.getReqLevel()) {
 			owner.message("You need a woodcutting level of " + def.getReqLevel() + " to axe this tree");
@@ -97,10 +99,12 @@ public class Woodcutting implements ObjectActionListener,
 		owner.setBatchEvent(new BatchEvent(owner, 1800, batchTimes) {
 			public void action() {
 				final Item log = new Item(def.getLogId());
-				if (owner.getFatigue() >= owner.MAX_FATIGUE) {
-					owner.message("You are too tired to cut the tree");
-					interrupt();
-					return;
+				if (Constants.GameServer.WANT_FATIGUE) {
+					if (owner.getFatigue() >= owner.MAX_FATIGUE) {
+						owner.message("You are too tired to cut the tree");
+						interrupt();
+						return;
+					}
 				}
 				if (getLog(def.getReqLevel(), owner.getSkills().getLevel(Skills.WOODCUT), axeID)) {
 					//check if the tree is still up

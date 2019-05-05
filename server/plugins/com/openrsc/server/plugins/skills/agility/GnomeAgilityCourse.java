@@ -1,5 +1,7 @@
 package com.openrsc.server.plugins.skills.agility;
 
+import com.openrsc.server.Constants;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -7,13 +9,17 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.openrsc.server.external.NpcId;
+import static com.openrsc.server.plugins.Functions.getNearestNpc;
+import static com.openrsc.server.plugins.Functions.inArray;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.movePlayer;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.sleep;
 
 public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExecutiveListener {
 
@@ -36,9 +42,11 @@ public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExe
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
-		if (p.getFatigue() >= p.MAX_FATIGUE && !inArray(obj.getID(), WATCH_TOWER, ROPE_SWING, LANDING)) {
-			p.message("you are too tired to train");
-			return;
+		if (Constants.GameServer.WANT_FATIGUE) {
+			if (p.getFatigue() >= p.MAX_FATIGUE && !inArray(obj.getID(), WATCH_TOWER, ROPE_SWING, LANDING)) {
+				p.message("you are too tired to train");
+				return;
+			}
 		}
 		Npc gnomeTrainer;
 		p.setBusy(true);

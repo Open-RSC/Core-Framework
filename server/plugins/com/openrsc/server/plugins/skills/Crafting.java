@@ -24,11 +24,11 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveLis
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.showBubble;
-
-import java.util.concurrent.atomic.AtomicReference;
 
 public class Crafting implements InvUseOnItemListener,
 	InvUseOnItemExecutiveListener, InvUseOnObjectListener,
@@ -102,10 +102,12 @@ public class Crafting implements InvUseOnItemListener,
 														owner.checkAndInterruptBatchEvent();
 														return;
 													}
-													if (owner.getFatigue() >= owner.MAX_FATIGUE) {
-														owner.message("You are too tired to craft");
-														interrupt();
-														return;
+													if (Constants.GameServer.WANT_FATIGUE) {
+														if (owner.getFatigue() >= owner.MAX_FATIGUE) {
+															owner.message("You are too tired to craft");
+															interrupt();
+															return;
+														}
 													}
 													if (option != 0 && owner.getInventory().countId(gems[option]) < 1) {
 														owner.message("You don't have a " + reply + ".");
@@ -331,10 +333,12 @@ public class Crafting implements InvUseOnItemListener,
 				owner.setBatchEvent(new BatchEvent(owner, 1800, Formulae.getRepeatTimes(owner, Skills.CRAFTING)) {
 					@Override
 					public void action() {
-						if (owner.getFatigue() >= owner.MAX_FATIGUE) {
-							owner.message("You are too tired to craft");
-							interrupt();
-							return;
+						if (Constants.GameServer.WANT_FATIGUE) {
+							if (owner.getFatigue() >= owner.MAX_FATIGUE) {
+								owner.message("You are too tired to craft");
+								interrupt();
+								return;
+							}
 						}
 						showBubble(owner, item);
 						if (owner.getInventory().remove(item) > -1) {
