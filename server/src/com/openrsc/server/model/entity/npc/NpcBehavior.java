@@ -1,6 +1,7 @@
 package com.openrsc.server.model.entity.npc;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.event.rsc.impl.combat.AggroEvent;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
@@ -14,7 +15,6 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.hasItem;
 import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.npcYell;
 import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.removeItem;
@@ -94,10 +94,9 @@ public class NpcBehavior {
 
 					state = State.AGGRO;
 					target = p;
-					if (npc.getID() == 232) // Bandit
-						npcTalk(p, npc, "You shall not pass");
-					else if (npc.getID() == 66) // Black Knight
-						npcTalk(p, npc, "Die intruder!!");
+					
+					//aggro behavior if any
+					new AggroEvent(npc, p);
 					break;
 				}
 			}
@@ -169,6 +168,7 @@ public class NpcBehavior {
 					}
 				}
 			} else if (!npc.inCombat()) {
+				npc.setExecutedAggroScript(false);
 				if ((npc.getDef().isAggressive() &&
 					lastTarget != null &&
 					lastTarget.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1)
@@ -325,6 +325,7 @@ public class NpcBehavior {
 	}
 
 	private void setRoaming() {
+		npc.setExecutedAggroScript(false);
 		state = State.ROAM;
 	}
 

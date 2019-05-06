@@ -23,6 +23,10 @@ import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -1116,6 +1120,21 @@ public class Functions {
 		}
 		return closestNpc;
 	}
+	
+	public static Collection<Npc> getNpcsInArea(Player p, final int radius, final int... npcId) {
+		final Iterable<Npc> npcsInView = p.getViewArea().getNpcsInView();
+		final Collection<Npc> npcsList = new ArrayList<Npc>();
+		for (int next = 0; next < radius; next++) {
+			for (final Npc n : npcsInView) {
+				for (final int na : npcId) {
+					if (n.getID() == na && n.withinRange(p.getLocation(), next) && !n.isBusy()) {
+						npcsList.add(n);
+					}
+				}
+			}
+		}
+		return npcsList;
+	}
 
 	public static boolean isNpcNearby(Player p, int id) {
 		for (Npc npc : p.getViewArea().getNpcsInView()) {
@@ -1541,7 +1560,6 @@ public class Functions {
 			n.remove();
 		});
 	}
-
 
 	private static void post(Runnable r) {
 		Server.getServer().getEventHandler().add(new PluginsUseThisEvent() {

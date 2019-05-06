@@ -31,6 +31,11 @@ public class CombatEvent extends GameTickEvent {
 		this.attackerMob = attacker;
 		this.defenderMob = defender;
 		CombatScriptLoader.checkAndExecuteOnStartCombatScript(attacker, defender);
+		if (attacker.isNpc()) {
+			((Npc)attacker).setExecutedAggroScript(false);
+		} else if (defender.isNpc()) {
+			((Npc)defender).setExecutedAggroScript(false);
+		}
 	}
 
 	private static void onDeath(Mob killed, Mob killer) {

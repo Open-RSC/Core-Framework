@@ -67,6 +67,7 @@ public class Npc extends Mob {
 	private Map<Integer, Integer> rangeDamagers = new HashMap<Integer, Integer>();
 	private boolean shouldRespawn = true;
 	private boolean isRespawning = false;
+	private boolean executedAggroScript = false;
 	private int weaponAimPoints = 1;
 	private int weaponPowerPoints = 1;
 	private NpcBehavior npcBehavior;
@@ -619,5 +620,13 @@ public class Npc extends Mob {
 
 	public boolean addDeathListener(NpcLootEvent event) {
 		return deathListeners.add(event);
+	}
+	
+	public void setExecutedAggroScript(boolean executed) {
+		this.executedAggroScript = executed;
+	}
+	
+	public boolean executedAggroScript() {
+		return this.executedAggroScript;
 	}
 }

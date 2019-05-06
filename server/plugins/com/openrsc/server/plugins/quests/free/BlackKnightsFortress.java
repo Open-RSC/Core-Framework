@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.event.rsc.impl.combat.AggroEvent;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
@@ -9,6 +10,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
@@ -20,6 +22,8 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
+
+import java.util.Collection;
 
 public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 	ObjectActionListener, ObjectActionExecutiveListener,
@@ -321,7 +325,6 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 				}
 				break;
 			case 39:
-			case 40:
 				if (obj.getLocation().equals(DOOR2_LOCATION)
 					&& player.getX() <= 274) {
 					final Npc guard = getNearestNpc(player, NpcId.GUARD_FORTRESS.id(), 20);
@@ -336,11 +339,39 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 						int option = showMenu(player, guard, "Ok I won't", "I don't care I'm going in anyway");
 						if (option == 1) {
 							doDoor(obj, player);
+							Npc n = Functions.getNearestNpc(player, NpcId.BLACK_KNIGHT.id(), 7);
+							if (!n.isChasing()) {
+								n.setChasing(player);
+								new AggroEvent(n, player);
+							}
 						}
 					}
 				} else if (obj.getLocation().equals(DOOR2_LOCATION) && player.getX() <= 275) {
 					doDoor(obj, player);
-				} else if (obj.getLocation().equals(DOOR3_LOCATION)) {
+				}
+				break;
+			case 40:
+				if (obj.getLocation().equals(DOOR3_LOCATION)
+						&& player.getY() <= 442) {
+					Collection<Npc> npcs = Functions.getNpcsInArea(player, 5, NpcId.BLACK_KNIGHT.id());
+					int countNotAbleChase = 0;
+					if (npcs.size() == 0) {
+						doDoor(obj, player);
+					} else {
+						for (Npc n : npcs) {
+							if (!n.isChasing()) {
+								n.setChasing(player);
+								new AggroEvent(n, player);
+							} else {
+								countNotAbleChase++;
+							}
+						}
+						if (countNotAbleChase >= npcs.size()) {
+							doDoor(obj, player);
+						}
+					}
+				}
+				else if (obj.getLocation().equals(DOOR3_LOCATION) && player.getY() <= 443) {
 					doDoor(obj, player);
 				}
 				break;
