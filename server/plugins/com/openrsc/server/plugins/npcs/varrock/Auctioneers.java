@@ -8,6 +8,12 @@ import com.openrsc.server.plugins.listeners.action.NpcCommandListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.NpcCommandExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.sql.DatabaseConnection;
+import com.openrsc.server.util.rsc.DataConversions;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -46,6 +52,16 @@ public class Auctioneers implements TalkToNpcExecutiveListener, TalkToNpcListene
 					String pin = getBankPinInput(player);
 					if (pin == null) {
 						return;
+					}
+					try {
+						PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM openrsc_players WHERE `username`=?");
+						statement.setString(1, player.getUsername());
+						ResultSet result = statement.executeQuery();
+						if (result.next()) {
+							pin = DataConversions.hashPassword(pin, result.getString("salt"));
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
 					}
 					if (!player.getCache().getString("bank_pin").equals(pin)) {
 						ActionSender.sendBox(player, "Incorrect bank pin", false);
@@ -92,6 +108,30 @@ public class Auctioneers implements TalkToNpcExecutiveListener, TalkToNpcListene
 					p.message("As an Iron Man, you cannot use the Auction.");
 					return;
 				}
+				if (Constants.GameServer.WANT_BANK_PINS) {
+					if (p.getCache().hasKey("bank_pin") && !p.getAttribute("bankpin", false)) {
+						String pin = getBankPinInput(p);
+						if (pin == null) {
+							return;
+						}
+						try {
+							PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM openrsc_players WHERE `username`=?");
+							statement.setString(1, p.getUsername());
+							ResultSet result = statement.executeQuery();
+							if (result.next()) {
+								pin = DataConversions.hashPassword(pin, result.getString("salt"));
+							}
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}
+						if (!p.getCache().getString("bank_pin").equals(pin)) {
+							ActionSender.sendBox(p, "Incorrect bank pin", false);
+							return;
+						}
+						p.setAttribute("bankpin", true);
+						ActionSender.sendBox(p, "Bank pin correct", false);
+					}
+				}
 				p.message("Welcome to the auction house " + (p.isMale() ? "Sir" : "Miss") + "!");
 				p.setAttribute("auctionhouse", true);
 				ActionSender.sendOpenAuctionHouse(p);
@@ -101,6 +141,30 @@ public class Auctioneers implements TalkToNpcExecutiveListener, TalkToNpcListene
 				if (p.isIronMan(1) || p.isIronMan(2) || p.isIronMan(3)) {
 					p.message("As an Iron Man, you cannot use the Auction.");
 					return;
+				}
+				if (Constants.GameServer.WANT_BANK_PINS) {
+					if (p.getCache().hasKey("bank_pin") && !p.getAttribute("bankpin", false)) {
+						String pin = getBankPinInput(p);
+						if (pin == null) {
+							return;
+						}
+						try {
+							PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM openrsc_players WHERE `username`=?");
+							statement.setString(1, p.getUsername());
+							ResultSet result = statement.executeQuery();
+							if (result.next()) {
+								pin = DataConversions.hashPassword(pin, result.getString("salt"));
+							}
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}
+						if (!p.getCache().getString("bank_pin").equals(pin)) {
+							ActionSender.sendBox(p, "Incorrect bank pin", false);
+							return;
+						}
+						p.setAttribute("bankpin", true);
+						ActionSender.sendBox(p, "Bank pin correct", false);
+					}
 				}
 				p.message("Welcome to the auction house " + (p.isMale() ? "Sir" : "Miss") + "!");
 				p.setAttribute("auctionhouse", true);
