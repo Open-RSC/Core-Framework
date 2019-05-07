@@ -209,6 +209,16 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 				if (pin == null) {
 					return;
 				}
+				try {
+					PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM openrsc_players WHERE `username`=?");
+					statement.setString(1, player.getUsername());
+					ResultSet result = statement.executeQuery();
+					if (result.next()) {
+						pin = DataConversions.hashPassword(pin, result.getString("salt"));
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 				if (!player.getCache().getString("bank_pin").equals(pin)) {
 					ActionSender.sendBox(player, "Incorrect bank pin", false);
 					return;
