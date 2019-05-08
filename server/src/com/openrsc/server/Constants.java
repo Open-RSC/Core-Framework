@@ -37,14 +37,16 @@ public final class Constants {
 				NpcId.MUGGER.id(), NpcId.SCORPION.id(), NpcId.GIANT_SPIDER_LVL8.id(), NpcId.RAT_LVL8.id(), NpcId.ROGUE.id(),
 				NpcId.OOMLIE_BIRD.id(), NpcId.FIREBIRD.id(), NpcId.COW_ATTACKABLE.id(), NpcId.CHAOS_DWARF.id(),
 				NpcId.MONK.id(), NpcId.SHANTAY_PASS_GUARD_MOVING.id(), NpcId.FORESTER.id(), NpcId.ROWDY_GUARD.id(),
-				NpcId.ROWDY_SLAVE.id(), NpcId.WIZARD.id(), NpcId.ZOMBIE_LVL19.id(), NpcId.SKELETON_LVL21.id()
+				NpcId.ROWDY_SLAVE.id(), NpcId.WIZARD.id(), NpcId.ZOMBIE_LVL19.id(), NpcId.SKELETON_LVL21.id(),
+				NpcId.SOULESS_UNDEAD.id()
 		};
 		/* List for extremely low health 5% - min 1hp*/
 		public static final int[] NPCS_THAT_RETREAT_LOW = {NpcId.ZOMBIE_LVL24_GEN.id(), NpcId.SHADOW_SPIDER.id(), NpcId.DEADLY_RED_SPIDER.id(),
 				NpcId.ICE_SPIDER.id(), NpcId.JUNGLE_SPIDER.id(), NpcId.GIANT_SPIDER_LVL31.id(), NpcId.POISON_SCORPION.id(),
 				NpcId.KING_SCORPION.id(), NpcId.DONNY_THE_LAD.id(), NpcId.SPEEDY_KEITH.id(), NpcId.BLACK_HEATHER.id(),
 				NpcId.ZOMBIE_LVL32.id(), NpcId.ZOMBIE_WMAZEKEY.id(), NpcId.GIANT_BAT.id(), NpcId.DEATH_WING.id(),
-				NpcId.RAT_LVL13.id(), NpcId.HOBGOBLIN_LVL32.id(), NpcId.OTHERWORLDLY_BEING.id(), NpcId.WYSON_THE_GARDENER.id()
+				NpcId.RAT_LVL13.id(), NpcId.RAT_WMAZEKEY.id(), NpcId.HOBGOBLIN_LVL32.id(), NpcId.OTHERWORLDLY_BEING.id(),
+				NpcId.WYSON_THE_GARDENER.id(), NpcId.STRAVEN.id()
 		};
 		/**
 		 * Strikes, Bolts & Blast Spells.

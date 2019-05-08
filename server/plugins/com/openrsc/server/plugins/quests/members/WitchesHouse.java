@@ -367,7 +367,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockPickup(Player p, GroundItem i) {
-		if (i.getID() == ItemId.BALL.id() && i.getX() == 350 && i.getY() == 491) {
+		if (i.getID() == ItemId.BALL.id() && i.getX() == 351 && i.getY() == 491) {
 			if (p.getQuestStage(getQuestId()) == -1) {
 				return true;
 			}
