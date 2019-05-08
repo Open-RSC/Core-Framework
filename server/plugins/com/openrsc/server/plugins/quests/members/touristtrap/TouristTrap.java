@@ -1046,24 +1046,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 						break;
 					case 3:
 						npcTalk(p, n, "Do you have the Desert Clothes yet?");
-						if (hasItem(p, ItemId.DESERT_ROBE.id()) && hasItem(p, ItemId.DESERT_SHIRT.id()) && hasItem(p, ItemId.DESERT_BOOTS.id())) {
-							npcTalk(p, n, "Great! You have the Desert Clothes!");
-							message(p, "The slave starts getting undressed right in front of you.");
-							npcTalk(p, n, "Ok, here's the clothes, I won't need them anymore.");
-							message(p, "The slave gives you his dirty, flea infested robe.",
-								"The slave gives you his muddy, sweat soaked shirt.");
-							p.getInventory().replace(ItemId.DESERT_ROBE.id(), ItemId.SLAVES_ROBE_BOTTOM.id());
-							p.getInventory().replace(ItemId.DESERT_SHIRT.id(), ItemId.SLAVES_ROBE_TOP.id());
-							removeItem(p, ItemId.DESERT_BOOTS.id(), 1);
-							Npc newSlave = spawnNpc(NpcId.ESCAPING_MINING_SLAVE.id(), n.getX(), n.getY(), 30000);
-							n.remove();
-							sleep(1000);
-							npcTalk(p, newSlave, "Right, I'm off! Good luck!");
-							playerTalk(p, newSlave, "Yeah, good luck to you too!");
-							p.updateQuestStage(this, 4);
-						} else {
-							npcTalk(p, n, "I need a desert shirt, robe and boots if you want these clothes off me.");
-						}
+						necessaryStuffSlave(p, n);
 						break;
 					case 4:
 					case 5:
@@ -1108,20 +1091,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 								"Yes, I'll trade.",
 								"No thanks...");
 							if (trade == 0) {
-								if (hasItem(p, ItemId.DESERT_ROBE.id()) && hasItem(p, ItemId.DESERT_SHIRT.id()) && hasItem(p, ItemId.DESERT_BOOTS.id())) {
-									npcTalk(p, n, "Great! You have the Desert Clothes!");
-									message(p, "The slave starts getting undressed right in front of you.");
-									npcTalk(p, n, "Ok, here's the clothes, I won't need them anymore.");
-									message(p, "The slave gives you his dirty, flea infested robe.",
-										"The slave gives you his muddy, sweat soaked shirt.");
-									p.getInventory().replace(ItemId.DESERT_ROBE.id(), ItemId.SLAVES_ROBE_BOTTOM.id());
-									p.getInventory().replace(ItemId.DESERT_SHIRT.id(), ItemId.SLAVES_ROBE_TOP.id());
-									removeItem(p, ItemId.DESERT_BOOTS.id(), 1);
-									spawnNpc(NpcId.ESCAPING_MINING_SLAVE.id(), n.getX(), n.getY(), 30000);
-									n.remove();
-								} else {
-									npcTalk(p, n, "I need a desert shirt, robe and boots if you want these clothes off me.");
-								}
+								necessaryStuffSlave(p, n);
 							} else if (trade == 1) {
 								npcTalk(p, n, "Ok, fair enough, let me know if you change your mind though.");
 							}
@@ -1270,8 +1240,56 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 	private void succeedFreeSlave(Player p, Npc n) {
 		message(p, "You hear a satisfying 'click' as you tumble the lock mechanism.");
 		npcTalk(p, n, "Great! You did it!");
-		npcTalk(p, n, "I need a desert shirt, robe and boots if you want these clothes off me.");
-		p.updateQuestStage(this, 3);
+		
+		necessaryStuffSlave(p, n);
+	}
+	
+	private void necessaryStuffSlave(Player p, Npc n) {
+		if (hasItem(p, ItemId.DESERT_SHIRT.id()) && hasItem(p, ItemId.DESERT_ROBE.id()) && 
+				hasItem(p, ItemId.DESERT_BOOTS.id())) {
+			npcTalk(p, n, "Great! You have the Desert Clothes!");
+			message(p, "The slave starts getting undressed right in front of you.");
+			npcTalk(p, n, "Ok, here's the clothes, I won't need them anymore.");
+			message(p, "The slave gives you his dirty, flea infested robe.",
+				"The slave gives you his muddy, sweat soaked shirt.");
+			p.getInventory().replace(ItemId.DESERT_ROBE.id(), ItemId.SLAVES_ROBE_BOTTOM.id());
+			p.getInventory().replace(ItemId.DESERT_SHIRT.id(), ItemId.SLAVES_ROBE_TOP.id());
+			removeItem(p, ItemId.DESERT_BOOTS.id(), 1);
+			Npc newSlave = spawnNpc(NpcId.ESCAPING_MINING_SLAVE.id(), n.getX(), n.getY(), 30000);
+			n.remove();
+			sleep(1000);
+			npcTalk(p, newSlave, "Right, I'm off! Good luck!");
+			playerTalk(p, newSlave, "Yeah, good luck to you too!");
+			if (p.getQuestStage(this) == 2 || p.getQuestStage(this) == 3)
+				p.updateQuestStage(this, 4);
+			return;
+		}
+		
+		if (!hasItem(p, ItemId.DESERT_SHIRT.id()) && !hasItem(p, ItemId.DESERT_ROBE.id()) && 
+				!hasItem(p, ItemId.DESERT_BOOTS.id())) {
+			npcTalk(p, n, "I need a desert shirt, robe and boots if you want these clothes off me.");
+		} else if (!hasItem(p, ItemId.DESERT_SHIRT.id()) && !hasItem(p, ItemId.DESERT_ROBE.id()) && 
+				hasItem(p, ItemId.DESERT_BOOTS.id())) {
+			npcTalk(p, n, "I need desert robe and shirt if you want these clothes off me.");
+		} else if (!hasItem(p, ItemId.DESERT_SHIRT.id()) && hasItem(p, ItemId.DESERT_ROBE.id()) && 
+				!hasItem(p, ItemId.DESERT_BOOTS.id())) {
+			npcTalk(p, n, "I need a desert shirt and boots if you want these clothes off me.");
+		} else if (hasItem(p, ItemId.DESERT_SHIRT.id()) && !hasItem(p, ItemId.DESERT_ROBE.id()) && 
+				!hasItem(p, ItemId.DESERT_BOOTS.id())) {
+			npcTalk(p, n, "I need desert robe and boots if you want these clothes off me.");
+		} else if (!hasItem(p, ItemId.DESERT_SHIRT.id()) && hasItem(p, ItemId.DESERT_ROBE.id()) && 
+				hasItem(p, ItemId.DESERT_BOOTS.id())) {
+			npcTalk(p, n, "I need a desert shirt if you want these clothes off me.");
+		} else if (hasItem(p, ItemId.DESERT_SHIRT.id()) && !hasItem(p, ItemId.DESERT_ROBE.id()) && 
+				hasItem(p, ItemId.DESERT_BOOTS.id())) {
+			npcTalk(p, n, "I need desert robe if you want these clothes off me.");
+		} else if (hasItem(p, ItemId.DESERT_SHIRT.id()) && hasItem(p, ItemId.DESERT_ROBE.id()) && 
+				!hasItem(p, ItemId.DESERT_BOOTS.id())) {
+			npcTalk(p, n, "I need desert boots if you want these clothes off me.");
+		}
+		
+		if (p.getQuestStage(this) == 2)
+			p.updateQuestStage(this, 3);
 	}
 
 	private void mercenaryInsideDialogue(Player p, Npc n, int cID) {
