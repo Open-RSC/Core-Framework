@@ -57,21 +57,21 @@ compile:
 	sudo ant -f Launcher/build.xml compile
 
 create-database-openrsc:
-	docker exec -i mysql mysql -uroot -proot -e "create database openrsc; GRANT ALL PRIVILEGES ON openrsc.* TO root@localhost IDENTIFIED BY 'root'"
+	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} -e "create database openrsc; GRANT ALL PRIVILEGES ON openrsc.* TO root@localhost IDENTIFIED BY 'root'"
 
 create-database-cabbage:
-	docker exec -i mysql mysql -uroot -proot -e "create database cabbage; GRANT ALL PRIVILEGES ON cabbage.* TO root@localhost IDENTIFIED BY 'root'"
+	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} -e "create database cabbage; GRANT ALL PRIVILEGES ON cabbage.* TO root@localhost IDENTIFIED BY 'root'"
 
 import-openrsc:
-	docker exec -i mysql mysql -uroot -proot openrsc < Databases/openrsc_game_server.sql
-	docker exec -i mysql mysql -uroot -proot openrsc < Databases/openrsc_game_players.sql
+	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} openrsc < Databases/openrsc_game_server.sql
+	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} openrsc < Databases/openrsc_game_players.sql
 
 import-cabbage:
-	docker exec -i mysql mysql -uroot -proot cabbage < Databases/openrsc_game_server.sql
-	docker exec -i mysql mysql -uroot -proot cabbage < Databases/openrsc_game_players.sql
+	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} cabbage < Databases/openrsc_game_server.sql
+	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} cabbage < Databases/openrsc_game_players.sql
 
 clone-website:
-	@$(shell sudo rm -rf Website && git clone https://gitlab.openrsc.com/open-rsc/Website.git)
+	@$(shell sudo rm -rf Website && git clone -b 2.0.0 https://gitlab.openrsc.com/open-rsc/Website.git)
 	sudo chmod 644 Website/sql/config.inc.php
 
 flush-website-avatars-windows:
