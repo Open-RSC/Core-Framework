@@ -57,10 +57,10 @@ compile:
 	sudo ant -f Launcher/build.xml compile
 
 create-database-openrsc:
-	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} -e "create database openrsc; GRANT ALL PRIVILEGES ON openrsc.* TO ${MARIADB_ROOT_USER}@% IDENTIFIED BY '${MARIADB_ROOT_USER}'"
+	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} -e "create database openrsc;"
 
 create-database-cabbage:
-	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} -e "create database cabbage; GRANT ALL PRIVILEGES ON cabbage.* TO ${MARIADB_ROOT_USER}@% IDENTIFIED BY '${MARIADB_ROOT_USER}'"
+	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} -e "create database cabbage;"
 
 import-openrsc:
 	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} openrsc < Databases/openrsc_game_server.sql
