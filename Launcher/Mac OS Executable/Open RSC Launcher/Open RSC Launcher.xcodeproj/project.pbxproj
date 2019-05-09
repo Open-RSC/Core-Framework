@@ -1,0 +1,555 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		05CE39C92283C6F5007C9DFE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CE39C82283C6F5007C9DFE /* AppDelegate.swift */; };
+		05CE39CB2283C6F5007C9DFE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CE39CA2283C6F5007C9DFE /* ViewController.swift */; };
+		05CE39CD2283C6F7007C9DFE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 05CE39CC2283C6F7007C9DFE /* Assets.xcassets */; };
+		05CE39D02283C6F7007C9DFE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 05CE39CE2283C6F7007C9DFE /* Main.storyboard */; };
+		05CE39DC2283C6F7007C9DFE /* Open_RSC_LauncherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CE39DB2283C6F7007C9DFE /* Open_RSC_LauncherTests.swift */; };
+		05CE39E72283C6F7007C9DFE /* Open_RSC_LauncherUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CE39E62283C6F7007C9DFE /* Open_RSC_LauncherUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		05CE39D82283C6F7007C9DFE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 05CE39BD2283C6F5007C9DFE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05CE39C42283C6F5007C9DFE;
+			remoteInfo = "Open RSC Launcher";
+		};
+		05CE39E32283C6F7007C9DFE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 05CE39BD2283C6F5007C9DFE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05CE39C42283C6F5007C9DFE;
+			remoteInfo = "Open RSC Launcher";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		05CE39C52283C6F5007C9DFE /* Open RSC Launcher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Open RSC Launcher.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		05CE39C82283C6F5007C9DFE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		05CE39CA2283C6F5007C9DFE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		05CE39CC2283C6F7007C9DFE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		05CE39CF2283C6F7007C9DFE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		05CE39D12283C6F7007C9DFE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		05CE39D22283C6F7007C9DFE /* Open_RSC_Launcher.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Open_RSC_Launcher.entitlements; sourceTree = "<group>"; };
+		05CE39D72283C6F7007C9DFE /* Open RSC LauncherTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Open RSC LauncherTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		05CE39DB2283C6F7007C9DFE /* Open_RSC_LauncherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Open_RSC_LauncherTests.swift; sourceTree = "<group>"; };
+		05CE39DD2283C6F7007C9DFE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		05CE39E22283C6F7007C9DFE /* Open RSC LauncherUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Open RSC LauncherUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		05CE39E62283C6F7007C9DFE /* Open_RSC_LauncherUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Open_RSC_LauncherUITests.swift; sourceTree = "<group>"; };
+		05CE39E82283C6F7007C9DFE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		05CE39C22283C6F5007C9DFE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05CE39D42283C6F7007C9DFE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05CE39DF2283C6F7007C9DFE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		05CE39BC2283C6F5007C9DFE = {
+			isa = PBXGroup;
+			children = (
+				05CE39C72283C6F5007C9DFE /* Open RSC Launcher */,
+				05CE39DA2283C6F7007C9DFE /* Open RSC LauncherTests */,
+				05CE39E52283C6F7007C9DFE /* Open RSC LauncherUITests */,
+				05CE39C62283C6F5007C9DFE /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		05CE39C62283C6F5007C9DFE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				05CE39C52283C6F5007C9DFE /* Open RSC Launcher.app */,
+				05CE39D72283C6F7007C9DFE /* Open RSC LauncherTests.xctest */,
+				05CE39E22283C6F7007C9DFE /* Open RSC LauncherUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		05CE39C72283C6F5007C9DFE /* Open RSC Launcher */ = {
+			isa = PBXGroup;
+			children = (
+				05CE39C82283C6F5007C9DFE /* AppDelegate.swift */,
+				05CE39CA2283C6F5007C9DFE /* ViewController.swift */,
+				05CE39CC2283C6F7007C9DFE /* Assets.xcassets */,
+				05CE39CE2283C6F7007C9DFE /* Main.storyboard */,
+				05CE39D12283C6F7007C9DFE /* Info.plist */,
+				05CE39D22283C6F7007C9DFE /* Open_RSC_Launcher.entitlements */,
+			);
+			path = "Open RSC Launcher";
+			sourceTree = "<group>";
+		};
+		05CE39DA2283C6F7007C9DFE /* Open RSC LauncherTests */ = {
+			isa = PBXGroup;
+			children = (
+				05CE39DB2283C6F7007C9DFE /* Open_RSC_LauncherTests.swift */,
+				05CE39DD2283C6F7007C9DFE /* Info.plist */,
+			);
+			path = "Open RSC LauncherTests";
+			sourceTree = "<group>";
+		};
+		05CE39E52283C6F7007C9DFE /* Open RSC LauncherUITests */ = {
+			isa = PBXGroup;
+			children = (
+				05CE39E62283C6F7007C9DFE /* Open_RSC_LauncherUITests.swift */,
+				05CE39E82283C6F7007C9DFE /* Info.plist */,
+			);
+			path = "Open RSC LauncherUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		05CE39C42283C6F5007C9DFE /* Open RSC Launcher */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 05CE39EB2283C6F7007C9DFE /* Build configuration list for PBXNativeTarget "Open RSC Launcher" */;
+			buildPhases = (
+				05CE39C12283C6F5007C9DFE /* Sources */,
+				05CE39C22283C6F5007C9DFE /* Frameworks */,
+				05CE39C32283C6F5007C9DFE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Open RSC Launcher";
+			productName = "Open RSC Launcher";
+			productReference = 05CE39C52283C6F5007C9DFE /* Open RSC Launcher.app */;
+			productType = "com.apple.product-type.application";
+		};
+		05CE39D62283C6F7007C9DFE /* Open RSC LauncherTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 05CE39EE2283C6F7007C9DFE /* Build configuration list for PBXNativeTarget "Open RSC LauncherTests" */;
+			buildPhases = (
+				05CE39D32283C6F7007C9DFE /* Sources */,
+				05CE39D42283C6F7007C9DFE /* Frameworks */,
+				05CE39D52283C6F7007C9DFE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				05CE39D92283C6F7007C9DFE /* PBXTargetDependency */,
+			);
+			name = "Open RSC LauncherTests";
+			productName = "Open RSC LauncherTests";
+			productReference = 05CE39D72283C6F7007C9DFE /* Open RSC LauncherTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		05CE39E12283C6F7007C9DFE /* Open RSC LauncherUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 05CE39F12283C6F7007C9DFE /* Build configuration list for PBXNativeTarget "Open RSC LauncherUITests" */;
+			buildPhases = (
+				05CE39DE2283C6F7007C9DFE /* Sources */,
+				05CE39DF2283C6F7007C9DFE /* Frameworks */,
+				05CE39E02283C6F7007C9DFE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				05CE39E42283C6F7007C9DFE /* PBXTargetDependency */,
+			);
+			name = "Open RSC LauncherUITests";
+			productName = "Open RSC LauncherUITests";
+			productReference = 05CE39E22283C6F7007C9DFE /* Open RSC LauncherUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		05CE39BD2283C6F5007C9DFE /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1020;
+				LastUpgradeCheck = 1020;
+				ORGANIZATIONNAME = ORSC;
+				TargetAttributes = {
+					05CE39C42283C6F5007C9DFE = {
+						CreatedOnToolsVersion = 10.2.1;
+					};
+					05CE39D62283C6F7007C9DFE = {
+						CreatedOnToolsVersion = 10.2.1;
+						TestTargetID = 05CE39C42283C6F5007C9DFE;
+					};
+					05CE39E12283C6F7007C9DFE = {
+						CreatedOnToolsVersion = 10.2.1;
+						TestTargetID = 05CE39C42283C6F5007C9DFE;
+					};
+				};
+			};
+			buildConfigurationList = 05CE39C02283C6F5007C9DFE /* Build configuration list for PBXProject "Open RSC Launcher" */;
+			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 05CE39BC2283C6F5007C9DFE;
+			productRefGroup = 05CE39C62283C6F5007C9DFE /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				05CE39C42283C6F5007C9DFE /* Open RSC Launcher */,
+				05CE39D62283C6F7007C9DFE /* Open RSC LauncherTests */,
+				05CE39E12283C6F7007C9DFE /* Open RSC LauncherUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		05CE39C32283C6F5007C9DFE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05CE39CD2283C6F7007C9DFE /* Assets.xcassets in Resources */,
+				05CE39D02283C6F7007C9DFE /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05CE39D52283C6F7007C9DFE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05CE39E02283C6F7007C9DFE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		05CE39C12283C6F5007C9DFE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05CE39CB2283C6F5007C9DFE /* ViewController.swift in Sources */,
+				05CE39C92283C6F5007C9DFE /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05CE39D32283C6F7007C9DFE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05CE39DC2283C6F7007C9DFE /* Open_RSC_LauncherTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05CE39DE2283C6F7007C9DFE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05CE39E72283C6F7007C9DFE /* Open_RSC_LauncherUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		05CE39D92283C6F7007C9DFE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05CE39C42283C6F5007C9DFE /* Open RSC Launcher */;
+			targetProxy = 05CE39D82283C6F7007C9DFE /* PBXContainerItemProxy */;
+		};
+		05CE39E42283C6F7007C9DFE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05CE39C42283C6F5007C9DFE /* Open RSC Launcher */;
+			targetProxy = 05CE39E32283C6F7007C9DFE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		05CE39CE2283C6F7007C9DFE /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				05CE39CF2283C6F7007C9DFE /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		05CE39E92283C6F7007C9DFE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		05CE39EA2283C6F7007C9DFE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+			};
+			name = Release;
+		};
+		05CE39EC2283C6F7007C9DFE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Open RSC Launcher/Open_RSC_Launcher.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "Open RSC Launcher/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_BUNDLE_IDENTIFIER = "ORSC.Open-RSC-Launcher";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		05CE39ED2283C6F7007C9DFE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Open RSC Launcher/Open_RSC_Launcher.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "Open RSC Launcher/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_BUNDLE_IDENTIFIER = "ORSC.Open-RSC-Launcher";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		05CE39EF2283C6F7007C9DFE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "Open RSC LauncherTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "ORSC.Open-RSC-LauncherTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Open RSC Launcher.app/Contents/MacOS/Open RSC Launcher";
+			};
+			name = Debug;
+		};
+		05CE39F02283C6F7007C9DFE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "Open RSC LauncherTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "ORSC.Open-RSC-LauncherTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Open RSC Launcher.app/Contents/MacOS/Open RSC Launcher";
+			};
+			name = Release;
+		};
+		05CE39F22283C6F7007C9DFE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "Open RSC LauncherUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "ORSC.Open-RSC-LauncherUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "Open RSC Launcher";
+			};
+			name = Debug;
+		};
+		05CE39F32283C6F7007C9DFE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "Open RSC LauncherUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "ORSC.Open-RSC-LauncherUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "Open RSC Launcher";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		05CE39C02283C6F5007C9DFE /* Build configuration list for PBXProject "Open RSC Launcher" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05CE39E92283C6F7007C9DFE /* Debug */,
+				05CE39EA2283C6F7007C9DFE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		05CE39EB2283C6F7007C9DFE /* Build configuration list for PBXNativeTarget "Open RSC Launcher" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05CE39EC2283C6F7007C9DFE /* Debug */,
+				05CE39ED2283C6F7007C9DFE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		05CE39EE2283C6F7007C9DFE /* Build configuration list for PBXNativeTarget "Open RSC LauncherTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05CE39EF2283C6F7007C9DFE /* Debug */,
+				05CE39F02283C6F7007C9DFE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		05CE39F12283C6F7007C9DFE /* Build configuration list for PBXNativeTarget "Open RSC LauncherUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05CE39F22283C6F7007C9DFE /* Debug */,
+				05CE39F32283C6F7007C9DFE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 05CE39BD2283C6F5007C9DFE /* Project object */;
+}
