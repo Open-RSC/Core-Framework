@@ -79,8 +79,8 @@ public class ButtonListener implements ActionListener {
 				}
 				return;
 			}
-			case "rsc emulation": {
-				Utils.openWebpage("https://www.rscemulation.net");
+			case "rsc arch angel": {
+				Utils.openWebpage("https://www.rscarchangel.com");
 				return;
 			}
 			case "rsc revolution": {
