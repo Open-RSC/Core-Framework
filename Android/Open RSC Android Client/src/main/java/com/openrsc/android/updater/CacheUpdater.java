@@ -4,14 +4,10 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,11 +21,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
-import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Properties;
 
@@ -162,12 +156,16 @@ public class CacheUpdater extends Activity {
         }
 
         void showGameSelectionDialog() {
+
+            // 43594 openrsc / 43595 cabbage / 43596 preservation / 43597 openpk / 43598 wk / 43599 dev
+
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(CacheUpdater.this);
             alertDialogBuilder.setTitle("Game Selection");
             alertDialogBuilder
                     .setMessage("Please select which game you wish to play.")
                     .setCancelable(false).setPositiveButton("Open RSC", (dialog, id) -> {
                 String ip = "game.openrsc.com";
+                String port = "43594";
                 FileOutputStream fileout;
                 try {
                     fileout = new FileOutputStream("/data/user/0/com.openrsc.client/files" + File.separator + "ip.txt");
@@ -177,12 +175,21 @@ public class CacheUpdater extends Activity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                try {
+                    fileout = new FileOutputStream("/data/user/0/com.openrsc.client/files" + File.separator + "port.txt");
+                    OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+                    outputWriter.write(port);
+                    outputWriter.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 Intent mainIntent = new Intent(CacheUpdater.this, GameActivity.class);
                 mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(mainIntent);
                 finish();
-            }).setNegativeButton("RSC Cabbage", (dialog, id) -> {
+            }).setNeutralButton("RSC Cabbage", (dialog, id) -> {
                 String ip = "cabbage.openrsc.com";
+                String port = "43595";
                 FileOutputStream fileout;
                 try {
                     fileout = new FileOutputStream("/data/user/0/com.openrsc.client/files" + File.separator + "ip.txt");
@@ -190,6 +197,60 @@ public class CacheUpdater extends Activity {
                     outputWriter.write(ip);
                     outputWriter.close();
                 } catch (Exception ignored) {
+                }
+                try {
+                    fileout = new FileOutputStream("/data/user/0/com.openrsc.client/files" + File.separator + "port.txt");
+                    OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+                    outputWriter.write(port);
+                    outputWriter.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Intent mainIntent = new Intent(CacheUpdater.this, GameActivity.class);
+                mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(mainIntent);
+                finish();
+           /* }).setNegativeButton("RSC Preservation", (dialog, id) -> {
+                String ip = "rscp.openrsc.com";
+                String port = "43596";
+                FileOutputStream fileout;
+                try {
+                    fileout = new FileOutputStream("/data/user/0/com.openrsc.client/files" + File.separator + "ip.txt");
+                    OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+                    outputWriter.write(ip);
+                    outputWriter.close();
+                } catch (Exception ignored) {
+                }
+                try {
+                    fileout = new FileOutputStream("/data/user/0/com.openrsc.client/files" + File.separator + "port.txt");
+                    OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+                    outputWriter.write(port);
+                    outputWriter.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Intent mainIntent = new Intent(CacheUpdater.this, GameActivity.class);
+                mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(mainIntent);
+                finish();*/
+            }).setNegativeButton("Dev Test", (dialog, id) -> {
+                String ip = "dev.openrsc.com";
+                String port = "43599";
+                FileOutputStream fileout;
+                try {
+                    fileout = new FileOutputStream("/data/user/0/com.openrsc.client/files" + File.separator + "ip.txt");
+                    OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+                    outputWriter.write(ip);
+                    outputWriter.close();
+                } catch (Exception ignored) {
+                }
+                try {
+                    fileout = new FileOutputStream("/data/user/0/com.openrsc.client/files" + File.separator + "port.txt");
+                    OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+                    outputWriter.write(port);
+                    outputWriter.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 Intent mainIntent = new Intent(CacheUpdater.this, GameActivity.class);
                 mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
