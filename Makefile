@@ -77,12 +77,12 @@ import-database-cabbage:
 	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} cabbage < Databases/openrsc_game_players.sql
 
 import-database-preservation:
-	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} cabbage < Databases/openrsc_game_server.sql
-	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} cabbage < Databases/openrsc_game_players.sql
+	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} preservation < Databases/openrsc_game_server.sql
+	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} preservation < Databases/openrsc_game_players.sql
 
 import-database-openpk:
-	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} cabbage < Databases/openrsc_game_server.sql
-	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} cabbage < Databases/openrsc_game_players.sql
+	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} openpk < Databases/openrsc_game_server.sql
+	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} openpk < Databases/openrsc_game_players.sql
 
 clone-website:
 	@$(shell sudo rm -rf Website && git clone -b 2.0.0 https://gitlab.openrsc.com/open-rsc/Website.git)
