@@ -2,7 +2,10 @@
 exec 0</dev/tty
 
 export domain=$(whiptail --inputbox "Please enter your server's domain name. (No http:// or www. needed)" 8 50 ${domain} --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
-export subdomain=$(whiptail --inputbox "Please set your server's private subdomain if one exists or press enter." 8 50 ${domain} --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+export subdomain1=$(whiptail --inputbox "Please set your server's private subdomain if one exists or press enter." 8 50 ${domain} --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+export subdomain2=$(whiptail --inputbox "Please set your server's private subdomai2 if one exists or press enter." 8 50 ${domain} --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+export subdomain3=$(whiptail --inputbox "Please set your server's private subdomain3 if one exists or press enter." 8 50 ${domain} --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+export subdomain4=$(whiptail --inputbox "Please set your server's private subdomain4 if one exists or press enter." 8 50 ${domain} --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
 export email=$(whiptail --inputbox "Please enter your email for Lets Encrypt registration" 8 50 ${email} --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
 
 echo ""
@@ -22,9 +25,9 @@ sudo certbot certonly \
 --config-dir ./etc/letsencrypt \
 --pre-hook 'sudo docker stop nginx' \
 --post-hook 'sudo docker start nginx' \
--d ${domain} -d ${subdomain} --expand \
+-d ${domain} -d ${subdomain1} -d ${subdomain2} -d ${subdomain3} -d ${subdomain4} --expand \
 -m ${email}
-#--force-renewal
+--force-renewal
 echo ""
 echo "Done!"
 echo ""
