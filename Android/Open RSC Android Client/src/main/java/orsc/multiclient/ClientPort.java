@@ -132,7 +132,6 @@ public interface ClientPort {
 
     static int loadPort() {
         try {
-
             FileInputStream in = new FileInputStream(Config.F_CACHE_DIR + File.separator + "port.txt");
             InputStreamReader inputStreamReader = new InputStreamReader(in);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
