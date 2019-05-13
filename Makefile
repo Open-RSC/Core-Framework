@@ -179,5 +179,5 @@ npm-run-watch:
 	docker exec -i php bash -c "cd /var/www/html/openrsc_web && npm run watch"
 
 clear-old-backups:
-	sudo find $(MYSQL_DUMPS_DIR)/*.zip -mtime +7 -exec rm -f {} \;
+	sudo find $(MYSQL_DUMPS_DIR)/*.zip -mtime +30 -exec rm -f {} \;
 
