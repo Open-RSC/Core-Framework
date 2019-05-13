@@ -89,7 +89,11 @@ public class CacheUpdater extends Activity {
                 fi.close();
                 f2.close();
             } catch (Exception e) {
+                System.out.println(" ");
+                System.out.println(" ");
                 System.out.println("Unable to load checksums.");
+                System.out.println(" ");
+                System.out.println(" ");
                 System.exit(1);
             }
             try {
@@ -104,7 +108,11 @@ public class CacheUpdater extends Activity {
                     }
                 }
             } catch (Exception e) {
+                System.out.println(" ");
+                System.out.println(" ");
                 System.out.println("Unable to update cache files.");
+                System.out.println(" ");
+                System.out.println(" ");
                 System.exit(1);
             }
 
@@ -117,7 +125,11 @@ public class CacheUpdater extends Activity {
                     }
                 }
             } catch (Exception e) {
+                System.out.println(" ");
+                System.out.println(" ");
                 System.out.println("Unable to download newly added files.");
+                System.out.println(" ");
+                System.out.println(" ");
                 System.exit(1);
             }
 
@@ -137,7 +149,11 @@ public class CacheUpdater extends Activity {
                     }
                 }
             } catch (Exception e) {
+                System.out.println(" ");
+                System.out.println(" ");
                 System.out.println("Unable to verify data files");
+                System.out.println(" ");
+                System.out.println(" ");
                 System.exit(1);
             }
 
@@ -156,6 +172,12 @@ public class CacheUpdater extends Activity {
         }
 
         void showGameSelectionDialog() {
+
+            System.out.println(" ");
+            System.out.println(" ");
+            System.out.println("Please select which game you wish to play.");
+            System.out.println(" ");
+            System.out.println(" ");
 
             // 43594 openrsc / 43595 cabbage / 43596 preservation / 43597 openpk / 43598 wk / 43599 dev
 

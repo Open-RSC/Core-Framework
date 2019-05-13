@@ -12913,11 +12913,19 @@ public final class mudclient implements Runnable {
 				if ((Config.SERVER_IP != null)) {
 					String ip = Config.SERVER_IP;
 					int port = Config.SERVER_PORT;
+					System.out.println(" ");
+					System.out.println(" ");
 					System.out.println("Fetching server configs from " + ip + ":" + port);
+					System.out.println(" ");
+					System.out.println(" ");
 				} else {
 					String ip = ClientPort.loadIP();
 					int port = ClientPort.loadPort();
+					System.out.println(" ");
+					System.out.println(" ");
 					System.out.println("Fetching server configs from " + ip + ":" + port);
+					System.out.println(" ");
+					System.out.println(" ");
 				}
 				this.getServerConfig();
 			}

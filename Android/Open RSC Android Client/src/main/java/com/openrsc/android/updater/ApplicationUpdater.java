@@ -45,6 +45,11 @@ public class ApplicationUpdater extends Activity {
         progressBar.setTextSize(18);
         progressBar.setIndeterminate(false);
         tv1 = findViewById(R.id.textView1);
+        System.out.println(" ");
+        System.out.println(" ");
+        System.out.println("Connecting to " + Config.DL_URL + " with installed Android client version " + Config.ANDROID_CLIENT_VERSION + ". Please wait...");
+        System.out.println(" ");
+        System.out.println(" ");
         new Handler().postDelayed(() -> {
 			try {
 				new CheckVersionTask().execute().get();
@@ -120,11 +125,30 @@ public class ApplicationUpdater extends Activity {
 
         @Override
         protected String doInBackground(String... aurl) {
+            System.out.println(" ");
+            System.out.println(" ");
+            System.out.println("Performing background task for app version check.");
+            System.out.println(" ");
+            System.out.println(" ");
             URL updatePage;
             try {
                 updatePage = new URL(Config.ANDROID_DOWNLOAD_PATH + "android_version.txt");
+
+                System.out.println(" ");
+                System.out.println(" ");
+                System.out.println("Checking external Android client version at: " + updatePage);
+                System.out.println(" ");
+                System.out.println(" ");
+
                 BufferedReader in = new BufferedReader(new InputStreamReader(updatePage.openStream()));
                 String inputLine = in.readLine();
+
+                System.out.println(" ");
+                System.out.println(" ");
+                System.out.println("Received external Android client version: " + inputLine);
+                System.out.println(" ");
+                System.out.println(" ");
+
                 in.close();
                 if (Integer.parseInt(inputLine) != getVersion()) {
                     shouldUpdate = true;
