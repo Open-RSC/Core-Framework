@@ -44,7 +44,7 @@ public class Config {
 
     /* Android: */
     public static boolean F_ANDROID_BUILD = true; // This MUST be true if Android client or it will crash on launch
-    private static final String DL_URL = "web.openrsc.com";
+    public static final String DL_URL = "androidcheck.openrsc.com";
     public static final String ANDROID_DOWNLOAD_PATH = "https://" + DL_URL + "/downloads/";
     public static final String CACHE_URL = "https://" + DL_URL + "/downloads/cache/";
     public static final int ANDROID_CLIENT_VERSION = 22; // Important! Depends on web server android_version.txt to check for an updated version

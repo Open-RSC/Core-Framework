@@ -186,7 +186,7 @@ public class CacheUpdater extends Activity {
             alertDialogBuilder
                     .setMessage("Please select which game you wish to play.")
                     .setCancelable(false).setPositiveButton("Open RSC", (dialog, id) -> {
-                String ip = "game.openrsc.com";
+                String ip = "androidcheck.openrsc.com";
                 String port = "43594";
                 FileOutputStream fileout;
                 try {
@@ -210,7 +210,7 @@ public class CacheUpdater extends Activity {
                 startActivity(mainIntent);
                 finish();
             }).setNeutralButton("RSC Cabbage", (dialog, id) -> {
-                String ip = "cabbage.openrsc.com";
+                String ip = "androidcheck.openrsc.com";
                 String port = "43595";
                 FileOutputStream fileout;
                 try {
@@ -233,7 +233,7 @@ public class CacheUpdater extends Activity {
                 startActivity(mainIntent);
                 finish();
            /* }).setNegativeButton("RSC Preservation", (dialog, id) -> {
-                String ip = "rscp.openrsc.com";
+                String ip = "androidcheck.openrsc.com";
                 String port = "43596";
                 FileOutputStream fileout;
                 try {
@@ -256,7 +256,7 @@ public class CacheUpdater extends Activity {
                 startActivity(mainIntent);
                 finish();*/
             }).setNegativeButton("Dev Test", (dialog, id) -> {
-                String ip = "dev.openrsc.com";
+                String ip = "androidcheck.openrsc.com";
                 String port = "43599";
                 FileOutputStream fileout;
                 try {
