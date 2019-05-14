@@ -3,6 +3,7 @@ package com.openrsc.server.model.entity.npc;
 import com.openrsc.server.Constants;
 import com.openrsc.server.event.rsc.impl.combat.AggroEvent;
 import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
@@ -69,8 +70,8 @@ public class NpcBehavior {
 			}
 			if (System.currentTimeMillis() - npc.getCombatTimer() > 3000
 				&& ((npc.getDef().isAggressive()
-				&& !(npc.getID() == 40 && npc.getX() >= 208 && npc.getX() <= 211 && npc.getY() >= 545 && npc.getY() <= 546)) // Skeleton in draynor manor
-				|| (npc.getLocation().inWilderness() && npc.getID() != 342 && npc.getID() != 233 && npc.getID() != 234 && npc.getID() != 235))
+				&& !(npc.getID() == NpcId.SKELETON_LVL21.id() && npc.getX() >= 208 && npc.getX() <= 211 && npc.getY() >= 545 && npc.getY() <= 546)) // Skeleton in draynor manor
+				|| (npc.getLocation().inWilderness()))
 				|| (npc.getX() > 274 && npc.getX() < 283 && npc.getY() > 432 && npc.getY() < 441) // Black Knight's Fortress
 			) {
 
@@ -78,11 +79,11 @@ public class NpcBehavior {
 				for (Player p : npc.getViewArea().getPlayersInView()) {
 
 					int range = 1;
-					switch (npc.getID()) {
-						case 232: // Bandit
+					switch (NpcId.getById(npc.getID())) {
+						case BANDIT_AGGRESSIVE:
 							range = 5;
 							break;
-						case 66: // Black Knight
+						case BLACK_KNIGHT:
 							range = 10;
 							break;
 						default:
@@ -95,13 +96,20 @@ public class NpcBehavior {
 					state = State.AGGRO;
 					target = p;
 					
-					//aggro behavior if any
-					new AggroEvent(npc, p);
+					if (npc.getLastOpponent() == p && (p.getLastOpponent() != npc || expiredLastTargetCombatTimer())) {
+						npc.setLastOpponent(null);
+						setRoaming();
+					} else {
+						//aggro behavior if any
+						new AggroEvent(npc, p);
+					}
+					
 					break;
 				}
 			}
 			if (System.currentTimeMillis() - lastTackleAttempt > 3000 &&
-					npc.getDef().getName().toLowerCase().equals("gnome baller") && !(npc.getID() == 609 || npc.getID() == 610)) {
+					npc.getDef().getName().toLowerCase().equals("gnome baller")
+					&& !(npc.getID() == NpcId.GNOME_BALLER_TEAMNORTH.id() || npc.getID() == NpcId.GNOME_BALLER_TEAMSOUTH.id())) {
 				for (Player p : npc.getViewArea().getPlayersInView()) {
 					int range = 1;
 					if (!p.withinRange(npc, range) || !hasItem(p, ItemId.GNOME_BALL.id())
@@ -129,6 +137,7 @@ public class NpcBehavior {
 			// Combat with another target - set state.
 			else {
 				if (npc.inCombat() && npc.getOpponent() != target) {
+					npc.setLastOpponent(null);
 					target = npc.getOpponent();
 					state = State.COMBAT;
 				}
@@ -151,28 +160,17 @@ public class NpcBehavior {
 				setRoaming();
 			}
 			if (npc.inCombat()) {
-				if (DataConversions.inArray(Constants.GameServer.NPCS_THAT_RETREAT_NORM, npc.getID())) {
-					if (npc.getSkills().getLevel(Skills.HITPOINTS) <=
-						Math.ceil(npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.20)) {
-						if (npc.getSkills().getLevel(Skills.HITPOINTS) > 0
+				if (shouldRetreat(npc) && npc.getSkills().getLevel(Skills.HITPOINTS) > 0
 							&& npc.getOpponent().getHitsMade() >= 3) {
-							retreat();
-						}
-					}
-				} else if (DataConversions.inArray(Constants.GameServer.NPCS_THAT_RETREAT_LOW, npc.getID())) {
-					if (npc.getSkills().getLevel(Skills.HITPOINTS) <=
-							Math.ceil(npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.05)) {
-						if (npc.getSkills().getLevel(Skills.HITPOINTS) > 0 && npc.getOpponent().getHitsMade() >= 3) {
-							retreat();
-						}
-					}
+					retreat();
 				}
 			} else if (!npc.inCombat()) {
 				npc.setExecutedAggroScript(false);
-				if ((npc.getDef().isAggressive() &&
-					lastTarget != null &&
-					lastTarget.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1)
-				) || npc.getLocation().inWilderness()) {
+				if (npc.getDef().isAggressive() &&
+					((lastTarget != null &&
+					lastTarget.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1)) ||
+					npc.getLocation().inWilderness())
+				) {
 					state = State.AGGRO;
 					if (lastTarget != null)
 						target = lastTarget;
@@ -231,6 +229,9 @@ public class NpcBehavior {
 
 	public void retreat() {
 		state = State.RETREAT;
+		npc.getOpponent().setLastOpponent(npc);
+		npc.setLastOpponent(npc.getOpponent());
+		npc.setRanAwayTimer();
 		if (npc.getOpponent().isPlayer()) {
 			Player victimPlayer = ((Player) npc.getOpponent());
 			victimPlayer.resetAll();
@@ -266,8 +267,8 @@ public class NpcBehavior {
 			- p.getCombatTimer() < (p.getCombatState() == CombatState.RUNNING
 			|| p.getCombatState() == CombatState.WAITING ? 3000 : 1500);
 
-		boolean shouldAttack = p.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1)
-			|| npc.getLocation().inWilderness();
+		boolean shouldAttack = (npc.getDef().isAggressive() && (p.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1)
+			|| npc.getLocation().inWilderness())) || (npc.getLastOpponent() == p && !shouldRetreat(npc));
 
 		boolean closeEnough = npc.canReach(p);
 
@@ -319,6 +320,10 @@ public class NpcBehavior {
 			|| target.getCombatState() == CombatState.WAITING ? 3000 : 1500)
 		);
 	}
+	
+	public boolean expiredLastTargetCombatTimer() {
+		return (System.currentTimeMillis() - npc.getLastOpponent().getRanAwayTimer() > 10000);
+	}
 
 	public Mob getChaseTarget() {
 		return target;
@@ -332,6 +337,21 @@ public class NpcBehavior {
 	private void setFighting(Mob target) {
 		npc.startCombat(target);
 		state = State.COMBAT;
+	}
+	
+	private boolean shouldRetreat(Npc npc) {
+		if (DataConversions.inArray(Constants.GameServer.NPCS_THAT_RETREAT_NORM, npc.getID())) {
+			if (npc.getSkills().getLevel(Skills.HITPOINTS) <=
+				Math.ceil(npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.20)) {
+				return true;
+			}
+		} else if (DataConversions.inArray(Constants.GameServer.NPCS_THAT_RETREAT_LOW, npc.getID())) {
+			if (npc.getSkills().getLevel(Skills.HITPOINTS) <=
+					Math.ceil(npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.05)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void onKill(Mob killed) {

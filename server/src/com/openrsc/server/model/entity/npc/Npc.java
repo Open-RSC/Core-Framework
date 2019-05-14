@@ -517,6 +517,7 @@ public class Npc extends Mob {
 	}
 
 	public void remove() {
+		this.setLastOpponent(null);
 		if (getCombatEvent() != null) {
 			getCombatEvent().resetCombat();
 		}

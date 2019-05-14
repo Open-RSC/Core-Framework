@@ -91,9 +91,17 @@ public abstract class Mob extends Entity {
 	 */
 	private long combatTimer = 0;
 	/**
+	 * Timer used to track when a mob gets away
+	 */
+	private long ranAwayTimer = 0;
+	/**
 	 * Who they are in combat with
 	 */
 	private volatile Mob combatWith = null;
+	/**
+	 * Who they were last in combat with
+	 */
+	private volatile Mob lastCombatWith = null;
 	/**
 	 * Event to handle following
 	 */
@@ -353,6 +361,14 @@ public abstract class Mob extends Entity {
 	public void setCombatTimer(int delay) {
 		combatTimer = System.currentTimeMillis() + delay;
 	}
+	
+	public long getRanAwayTimer() {
+		return ranAwayTimer;
+	}
+
+	public void setRanAwayTimer() {
+		ranAwayTimer = System.currentTimeMillis();
+	}
 
 	public GameTickEvent getFollowEvent() {
 		return followEvent;
@@ -380,6 +396,14 @@ public abstract class Mob extends Entity {
 
 	public void setOpponent(Mob opponent) {
 		combatWith = opponent;
+	}
+	
+	public Mob getLastOpponent() {
+		return lastCombatWith;
+	}
+
+	public void setLastOpponent(Mob opponent) {
+		lastCombatWith = opponent;
 	}
 
 	public Random getRandom() {
@@ -456,7 +480,6 @@ public abstract class Mob extends Entity {
 	public void resetCombatEvent() {
 		if (combatEvent != null) {
 			combatEvent.resetCombat();
-
 		}
 	}
 

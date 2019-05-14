@@ -11,6 +11,7 @@ import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.event.rsc.impl.*;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.model.*;
 import com.openrsc.server.model.action.WalkToAction;
@@ -1533,7 +1534,8 @@ public final class Player extends Mob {
 		}
 		removeSkull(); // destroy
 		resetCombatEvent();
-		world.registerItem(new GroundItem(20, getX(), getY(), 1, player));
+		this.setLastOpponent(null);
+		world.registerItem(new GroundItem(ItemId.BONES.id(), getX(), getY(), 1, player));
 		if ((!getCache().hasKey("death_location_x") && !getCache().hasKey("death_location_y"))) {
 			setLocation(Point.location(122, 647), true);
 		} else {
@@ -1786,6 +1788,7 @@ public final class Player extends Mob {
 		if (opponent != null) {
 			resetCombatEvent();
 		}
+		this.setLastOpponent(null);
 		if (trawlerInstance != null && trawlerInstance.getPlayers().contains(this)) {
 			trawlerInstance.disconnectPlayer(this, true);
 		}
@@ -1957,6 +1960,7 @@ public final class Player extends Mob {
 			return;
 		}
 		if (inCombat()) {
+			this.setLastOpponent(null);
 			combatEvent.resetCombat();
 		}
 
