@@ -4044,14 +4044,14 @@ public final class mudclient implements Runnable {
             if (!this.welcomeLastLoggedInIp.equalsIgnoreCase("0.0.0.0")) {
                 var2 += 45;
             }
-            int xr = (getGameWidth() - 400) / 2;
-            int yr = (getGameHeight() - var2) / 2;
+            int welcomeWindowX = (getGameWidth() - 400) / 2;
+            int welcomeWindowY = (getGameHeight() - var2) / 2;
 
-            this.getSurface().drawBox(xr, yr, 400, var2, 0);
-            int var3 = yr;
-            this.getSurface().drawBoxBorder(xr, 400, yr, var2, 0xFFFFFF);
+            this.getSurface().drawBox(welcomeWindowX, welcomeWindowY, 400, var2, 0);
+            int var3 = welcomeWindowY;
+            this.getSurface().drawBoxBorder(welcomeWindowX, 400, welcomeWindowY, var2, 0xFFFFFF);
             var3 += 20;
-            this.getSurface().drawColoredStringCentered(xr + 256 - 56, "Welcome to " + getServerName() + " " + this.localPlayer.accountName,
+            this.getSurface().drawColoredStringCentered(welcomeWindowX + 256 - 56, "Welcome to " + getServerName() + " " + this.localPlayer.accountName,
                     0xFFFF00, 0, 4, var3);
             var3 += 30;
             String var4;
@@ -4064,14 +4064,14 @@ public final class mudclient implements Runnable {
             }
 
             if (!this.welcomeLastLoggedInIp.equalsIgnoreCase("0.0.0.0")) {
-                this.getSurface().drawColoredStringCentered(xr + 256 - 56, "You last logged in " + var4, 0xFFFFFF, 0, 1, var3);
+                this.getSurface().drawColoredStringCentered(welcomeWindowX + 256 - 56, "You last logged in " + var4, 0xFFFFFF, 0, 1, var3);
                 var3 += 15;
                 if (this.welcomeLastLoggedInHost == null) {
                     this.welcomeLastLoggedInHost = getHostnameFromIP();
                 }
 
                 if (this.settingsHideIP != null && this.settingsHideIP != 1) {
-                    this.getSurface().drawColoredStringCentered(xr + 256 - 56, "from: " + this.welcomeLastLoggedInHost, 0xFFFFFF,
+                    this.getSurface().drawColoredStringCentered(welcomeWindowX + 256 - 56, "from: " + this.welcomeLastLoggedInHost, 0xFFFFFF,
                             var1 ^ -4853, 1, var3);
                 }
                 var3 += 15;
@@ -4088,11 +4088,11 @@ public final class mudclient implements Runnable {
                     var4 = 14 - this.welcomeRecoverySetDays + " days ago";
                 }
 
-                this.getSurface().drawColoredStringCentered(xr + 256 - 56, var4 + " you requested new recovery questions", 0xFF8000, 0, 1, var3);
+                this.getSurface().drawColoredStringCentered(welcomeWindowX + 256 - 56, var4 + " you requested new recovery questions", 0xFF8000, 0, 1, var3);
                 var3 += 15;
-                this.getSurface().drawColoredStringCentered(xr + 256 - 56, "If you do not remember making this request then", 0xFF8000, 0, 1, var3);
+                this.getSurface().drawColoredStringCentered(welcomeWindowX + 256 - 56, "If you do not remember making this request then", 0xFF8000, 0, 1, var3);
                 var3 += 15;
-                this.getSurface().drawColoredStringCentered(xr + 256 - 56, "cancel it and change your password immediately!", 0xFF8000, 0, 1, var3);
+                this.getSurface().drawColoredStringCentered(welcomeWindowX + 256 - 56, "cancel it and change your password immediately!", 0xFF8000, 0, 1, var3);
                 var3 += 15;
                 var3 += 15;
                 var5 = 0xFFFFFF;
@@ -4101,7 +4101,7 @@ public final class mudclient implements Runnable {
                     var5 = 0xFF0000;
                 }
 
-                this.getSurface().drawColoredStringCentered(xr + 256 - 56, "No that wasn't me - Cancel the request!", var5, 0, 1, var3);
+                this.getSurface().drawColoredStringCentered(welcomeWindowX + 256 - 56, "No that wasn't me - Cancel the request!", var5, 0, 1, var3);
                 if (var5 == 0xFF0000 && this.mouseButtonClick == 1) {
                     this.packetHandler.getClientStream().newPacket(196);
                     this.packetHandler.getClientStream().finishPacket();
@@ -4115,53 +4115,53 @@ public final class mudclient implements Runnable {
                     var5 = 0xFF0000;
                 }
 
-                this.getSurface().drawColoredStringCentered(xr + 256 - 56, "That's ok, activate the new questions in " + this.welcomeRecoverySetDays + " days time", var5, 0, 1, var3);
+                this.getSurface().drawColoredStringCentered(welcomeWindowX + 256 - 56, "That's ok, activate the new questions in " + this.welcomeRecoverySetDays + " days time", var5, 0, 1, var3);
                 if (var5 == 0xFF0000 && this.mouseButtonClick == 1) {
                     this.showDialogMessage = false;
                 }
             } else {
                 var3 += 7;
-                this.getSurface().drawColoredStringCentered(xr + 256 - 56, "Security tip of the day", 0xFF0000, 0, 1, var3);
+                this.getSurface().drawColoredStringCentered(welcomeWindowX + 256 - 56, "Security tip of the day", 0xFF0000, 0, 1, var3);
                 var3 += 15;
                 if (this.welcomeTipOfDay == 0) {
-                    this.getSurface().drawColoredStringCentered(xr + 256 - 56, "Don't tell ANYONE your password or recovery questions!", 0xFFFFFF, 0, 1, var3);
+                    this.getSurface().drawColoredStringCentered(welcomeWindowX + 256 - 56, "Don't tell ANYONE your password or recovery questions!", 0xFFFFFF, 0, 1, var3);
                     var3 += 15;
-                    this.getSurface().drawColoredStringCentered(xr + 256 - 56, "Not even people claiming to be Jagex staff.", 0xFFFFFF, 0, 1, var3);
+                    this.getSurface().drawColoredStringCentered(welcomeWindowX + 256 - 56, "Not even people claiming to be Jagex staff.", 0xFFFFFF, 0, 1, var3);
                     var3 += 15;
                 }
 
                 if (this.welcomeTipOfDay == 1) {
-                    this.getSurface().drawColoredStringCentered(xr + 256 - 56, "Never enter your password or recovery questions into ANY", 0xFFFFFF, 0, 1, var3);
+                    this.getSurface().drawColoredStringCentered(welcomeWindowX + 256 - 56, "Never enter your password or recovery questions into ANY", 0xFFFFFF, 0, 1, var3);
                     var3 += 15;
-                    this.getSurface().drawColoredStringCentered(xr + 256 - 56, "website other than this one - Not even if it looks similar.", 0xFFFFFF, 0, 1, var3);
+                    this.getSurface().drawColoredStringCentered(welcomeWindowX + 256 - 56, "website other than this one - Not even if it looks similar.", 0xFFFFFF, 0, 1, var3);
                     var3 += 15;
                 }
 
                 if (this.welcomeTipOfDay == 2) {
-                    this.getSurface().drawColoredStringCentered(xr + 256 - 56, "Don't use RuneScape cheats, helpers, or automaters.", 0xFFFFFF, 0, 1, var3);
+                    this.getSurface().drawColoredStringCentered(welcomeWindowX + 256 - 56, "Don't use RuneScape cheats, helpers, or automaters.", 0xFFFFFF, 0, 1, var3);
                     var3 += 15;
-                    this.getSurface().drawColoredStringCentered(xr + 256 - 56, "These programs WILL steal your password.", 0xFFFFFF, 0, 1, var3);
+                    this.getSurface().drawColoredStringCentered(welcomeWindowX + 256 - 56, "These programs WILL steal your password.", 0xFFFFFF, 0, 1, var3);
                     var3 += 15;
                 }
 
                 if (this.welcomeTipOfDay == 3) {
-                    this.getSurface().drawColoredStringCentered(xr + 256 - 56, "Watch out for fake emails, and fake staff. Real staff", 0xFFFFFF, 0, 1, var3);
+                    this.getSurface().drawColoredStringCentered(welcomeWindowX + 256 - 56, "Watch out for fake emails, and fake staff. Real staff", 0xFFFFFF, 0, 1, var3);
                     var3 += 15;
-                    this.getSurface().drawColoredStringCentered(xr + 256 - 56, "will NEVER ask you for your password or recovery questions!", 0xFFFFFF, 0, 1, var3);
+                    this.getSurface().drawColoredStringCentered(welcomeWindowX + 256 - 56, "will NEVER ask you for your password or recovery questions!", 0xFFFFFF, 0, 1, var3);
                     var3 += 15;
                 }
 
                 if (this.welcomeTipOfDay == 4) {
-                    this.getSurface().drawColoredStringCentered(xr + 256 - 56, "Use a password your friends won't guess. Do NOT use your name!", 0xFFFFFF, 0, 1, var3);
+                    this.getSurface().drawColoredStringCentered(welcomeWindowX + 256 - 56, "Use a password your friends won't guess. Do NOT use your name!", 0xFFFFFF, 0, 1, var3);
                     var3 += 15;
-                    this.getSurface().drawColoredStringCentered(xr + 256 - 56, "Choose a unique password which you haven't used anywhere else", 0xFFFFFF, 0, 1, var3);
+                    this.getSurface().drawColoredStringCentered(welcomeWindowX + 256 - 56, "Choose a unique password which you haven't used anywhere else", 0xFFFFFF, 0, 1, var3);
                     var3 += 15;
                 }
 
                 if (this.welcomeTipOfDay == 5) {
-                    this.getSurface().drawColoredStringCentered(xr + 256 - 56, "If possible only play runescape from your own computer", 0xFFFFFF, 0, 1, var3);
+                    this.getSurface().drawColoredStringCentered(welcomeWindowX + 256 - 56, "If possible only play runescape from your own computer", 0xFFFFFF, 0, 1, var3);
                     var3 += 15;
-                    this.getSurface().drawColoredStringCentered(xr + 256 - 56, "Other machines could have been tampered with to steal your pass", 0xFFFFFF, 0, 1, var3);
+                    this.getSurface().drawColoredStringCentered(welcomeWindowX + 256 - 56, "Other machines could have been tampered with to steal your pass", 0xFFFFFF, 0, 1, var3);
                     var3 += 15;
                 }
 
@@ -4177,41 +4177,30 @@ public final class mudclient implements Runnable {
 
                 } else {
 
-                    if (this.mouseY > var3 - 12 && this.mouseY <= var3 && this.mouseX > xr + 106 - 56 && this.mouseX < xr + 406 - 56) {
+                    if (this.mouseY > var3 - 12 && this.mouseY <= var3 && this.mouseX > welcomeWindowX + 106 - 56 && this.mouseX < welcomeWindowX + 406 - 56) {
                         var5 = 0xFF0000;
                     }
                 }
 
-                this.getSurface().drawColoredStringCentered(xr + 256 - 56, "Click here to close window", var5, var1 ^ var1, 1, var3);
+                this.getSurface().drawColoredStringCentered(welcomeWindowX + 256 - 56, "Click here to close window", var5, var1 ^ var1, 1, var3);
                 if (this.mouseButtonClick == 1) {
                     if (var5 == 0xFF0000) {
                         this.showDialogMessage = false;
                     }
 
-                    if ((this.mouseX < xr + 86 - 56 || this.mouseX > xr + 426 - 56)
-                            && (this.mouseY < 167 - yr || yr + 167 < this.mouseY)) {
+                    // allows closing the window by clicking anywhere in the upper half of the screen outside of the window
+                    if ((this.mouseX < welcomeWindowX + 86 - 56 || this.mouseX > welcomeWindowX + 426 - 56)
+                            && (this.mouseY > 167 - welcomeWindowY || welcomeWindowY + 167 > this.mouseY)) {
+                        this.showDialogMessage = false;
+                    }
+
+                    // allows closing the window by clicking anywhere in the lower half of the screen outside of the window
+                    if ((this.mouseX < welcomeWindowX + 86 - 56 || this.mouseX > welcomeWindowX + 426 - 56)
+                            && (this.mouseY < 167 - welcomeWindowY || welcomeWindowY + 167 < this.mouseY)) {
                         this.showDialogMessage = false;
                     }
                 }
             }
-
-
-
-				/*if (this.welcomeUnreadMessages > 0) {
-					if (this.welcomeUnreadMessages == 1) {
-						this.getSurface().drawColoredStringCentered(xr + 256 - 56,
-								"You have @yel@0@whi@ unread messages in your message-centre", 0xFFFFFF, 0, 1, var3);
-					} else {
-						this.getSurface()
-						.drawColoredStringCentered(xr + 256 - 56,
-								"You have @gre@" + (this.welcomeUnreadMessages - 1)
-								+ " unread messages @whi@in your message-centre",
-								0xFFFFFF, var1 + 4853, 1, var3);
-					}
-
-					var3 += 15;
-					var3 += 15;
-				}*/
 
             this.mouseButtonClick = 0;
         } catch (RuntimeException var6) {
