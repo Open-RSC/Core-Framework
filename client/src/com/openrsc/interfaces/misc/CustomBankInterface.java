@@ -2,22 +2,23 @@ package com.openrsc.interfaces.misc;
 
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
+
+import java.util.ArrayList;
+
 import orsc.Config;
 import orsc.enumerations.InputXAction;
 import orsc.graphics.gui.InputXPrompt;
 import orsc.mudclient;
 
-import java.util.ArrayList;
-
 public final class CustomBankInterface extends BankInterface {
 	private static int fontSize = Config.isAndroid() ? Config.C_MENU_SIZE : 1;
 	private static int fontSizeHeight;
-	public int selectedInventorySlot = -1;
+	private int selectedInventorySlot = -1;
 	public int bankSearch;
 	public int bankScroll;
 	public int lastXAmount = 0;
-	public boolean saveXAmount = false;
-	protected boolean rightClickMenu;
+	private boolean saveXAmount = false;
+	private boolean rightClickMenu;
 	private int organizeMode = 0;
 	private int rightClickMenuX;
 	private int rightClickMenuY;
@@ -93,6 +94,7 @@ public final class CustomBankInterface extends BankInterface {
 		} else if (bankItems.size() > 200) {
 			bankPages = 6;
 		}
+
 		for (int tabs = 0; tabs < bankPages + 1; tabs++) {
 			int colorTab = 0x5A5A55;
 			if (tabs == mc.bankPage) {
@@ -102,8 +104,8 @@ public final class CustomBankInterface extends BankInterface {
 			mc.getSurface().drawBoxBorder(tabX, tabWidth + 1, tabY, tabHeight, 0x2D2C24);
 			mc.getSurface().drawBoxBorder(tabX + 1, tabWidth - 1, tabY + 1, tabHeight - 2, 0x706452);
 			int first_item = -1;
-			for (int index = 0; index < bankItems.size(); index++) {
-				if (bankItems.get(index).itemID > 0) {
+			for (BankItem bankItem : bankItems) {
+				if (bankItem.itemID > 0) {
 					first_item = bankItems.get(bankItemSelector[tabs]).itemID;
 					break;
 				}
@@ -145,9 +147,21 @@ public final class CustomBankInterface extends BankInterface {
 			mc.getMouseY();
 			mc.getGameHeight();
 
+			int currMouseX = mc.getMouseX();
+			int currMouseY = mc.getMouseY();
+			int selectedX = currMouseX - (mc.getGameWidth() / 2 - width / 2);
+			int selectedY = currMouseY - (mc.getGameHeight() / 2 - height / 2 + 20);
+
+			if (selectedX < 0 || selectedY < 16 || selectedX >= 509 || selectedY >= 331) { // is cursor located outside of the bank window area?
+				if (mc.getMouseClick() == 1) { // if click, close bank window
+					resetVar();
+					bankClose();
+				}
+			}
+
 			if (mc.getMouseClick() != 0 && !rightClickMenu) {
 				if (mc.getMouseX() > x + 380 && mc.getMouseY() >= y && mc.getMouseX() < x + width
-					&& mc.getMouseY() < y + 12 + 9) {
+					&& mc.getMouseY() < y + 12 + 9) { // close bank button
 					resetVar();
 					bankClose();
 				} else if (mc.getMouseX() >= x + 8 && mc.getMouseX() <= x + 83 && mc.getMouseY() >= y + 206
@@ -739,7 +753,7 @@ public final class CustomBankInterface extends BankInterface {
 		}
 	}
 
-	public void sendDepositAll() {
+	private void sendDepositAll() {
 		for (int i = 0; i < mc.getInventoryItemCount(); i++) {
 			selectedInventorySlot = i;
 			sendDeposit(Integer.MAX_VALUE);
@@ -773,7 +787,7 @@ public final class CustomBankInterface extends BankInterface {
 		return true;
 	}
 
-	public void resetVar() {
+	private void resetVar() {
 		//bank.resetList(this.bankScroll);
 		bank.clearList(this.bankSearch);
 		bank.setText(this.bankSearch, "");
