@@ -316,24 +316,21 @@ public final class Event implements CommandListener {
 			GameLogging.addQuery(new StaffLog(player, 22, player.getUsername() + " has made " + p.getUsername() + " " + invulnerbleText));
 		}
 		else if (cmd.equalsIgnoreCase("check")) {
-			Player target = args.length > 0 ?
-				world.getPlayer(DataConversions.usernameToHash(args[0])) :
-				player;
-
-			if(target == null) {
-				player.message(messagePrefix + "Invalid name or player is not online");
-				return;
+			if(args.length < 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
 			}
 
-			String username = target.getUsername();
+			String targetUsername	= args[0];
+			Player target			= world.getPlayer(DataConversions.usernameToHash(targetUsername));
+
 			String currentIp = null;
 			if (target == null) {
 				player.message(
-					messagePrefix + "No online character found named '" + username + "'.. checking database..");
+					messagePrefix + "No online character found named '" + targetUsername + "'.. checking database..");
 				try {
 					PreparedStatement statement = DatabaseConnection.getDatabase()
-						.prepareStatement("SELECT * FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "players` WHERE `username`=?");
-					statement.setString(1, username);
+						.prepareStatement("SELECT `login_ip` FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "players` WHERE `username`=?");
+					statement.setString(1, targetUsername);
 					ResultSet result = statement.executeQuery();
 					if (!result.next()) {
 						player.message(messagePrefix + "Error character not found in MySQL");
@@ -341,8 +338,7 @@ public final class Event implements CommandListener {
 					}
 					currentIp = result.getString("login_ip");
 					result.close();
-					player.message(messagePrefix + "Found character '" + username + "' with IP: " + currentIp
-						+ ", fetching other characters..");
+					player.message(messagePrefix + "Found character '" + targetUsername + "' fetching other characters..");
 				} catch (SQLException e) {
 					e.printStackTrace();
 					player.message(messagePrefix + "A MySQL error has occured! " + e.getMessage());
@@ -359,15 +355,31 @@ public final class Event implements CommandListener {
 
 			try {
 				PreparedStatement statement = DatabaseConnection.getDatabase()
-					.prepareStatement("SELECT `username` FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "players` WHERE `login_ip` LIKE ?");
+					.prepareStatement("SELECT `username`, `group_id` FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "players` WHERE `login_ip` LIKE ?");
 				statement.setString(1, currentIp);
 				ResultSet result = statement.executeQuery();
 
+				// Check if any of the found users have a group less than the player who is running this command
+				boolean authorized = true;
+				while (result.next()) {
+					int group	= result.getInt("group_id");
+
+					if(group < player.getGroupID())
+					{
+						authorized = false;
+						break;
+					}
+				}
+
+				result.beforeFirst();
 				List<String> names = new ArrayList<>();
 				while (result.next()) {
-					names.add(result.getString("username"));
+					String dbUsername	= result.getString("username");
+					// Only display usernames if the player running the action has a better rank or if the username is the one being targeted
+					if(authorized || dbUsername.toLowerCase().trim().equals(targetUsername.toLowerCase().trim()))
+						names.add(dbUsername);
 				}
-				StringBuilder builder = new StringBuilder("@red@").append(username.toUpperCase())
+				StringBuilder builder = new StringBuilder("@red@").append(targetUsername.toUpperCase())
 					.append(" @whi@currently has ").append(names.size() > 0 ? "@gre@" : "@red@")
 					.append(names.size()).append(" @whi@registered characters.");
 
