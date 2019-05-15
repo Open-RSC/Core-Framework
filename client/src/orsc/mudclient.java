@@ -284,6 +284,7 @@ public final class mudclient implements Runnable {
 	public boolean keyDown = false;
 	public boolean pageDown = false;
 	public boolean pageUp = false;
+	public boolean enterPressed = false;
 	public int lastMouseAction = 0;
 	public int lastMouseButtonDown = 0;
 	public PacketHandler packetHandler;
@@ -10342,7 +10343,9 @@ public final class mudclient implements Runnable {
 						this.panelLogin.setFocus(this.controlLoginPass);
 					}
 
-					if (this.panelLogin.isClicked(this.controlLoginPass) || this.panelLogin.isClicked(this.m_be)) {
+					if (this.panelLogin.isClicked(this.controlLoginPass) || this.panelLogin.isClicked(this.m_be) || this.enterPressed) {
+
+						this.enterPressed = false;
 
 						this.setUsername(this.panelLogin.getControlText(this.controlLoginUser));
 						this.password = this.panelLogin.getControlText(this.controlLoginPass);

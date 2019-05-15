@@ -1,17 +1,37 @@
 package orsc;
 
 import com.openrsc.client.model.Sprite;
+
+import java.applet.Applet;
+import java.awt.Color;
+import java.awt.Event;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.awt.image.BufferedImage;
+import java.awt.image.DirectColorModel;
+import java.awt.image.ImageConsumer;
+import java.awt.image.ImageObserver;
+import java.awt.image.ImageProducer;
+import java.io.ByteArrayInputStream;
+
+import javax.imageio.ImageIO;
+import javax.swing.SwingUtilities;
+
 import orsc.graphics.two.Fonts;
 import orsc.multiclient.ClientPort;
 import orsc.util.GenUtil;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.applet.Applet;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.*;
-import java.io.ByteArrayInputStream;
 
 import static orsc.Config.C_LAST_ZOOM;
 import static orsc.Config.S_ZOOM_VIEW_TOGGLE;
@@ -143,6 +163,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			if (keyCode == 113) Config.C_SIDE_MENU_OVERLAY = !Config.C_SIDE_MENU_OVERLAY;
 			if (keyCode == 39) mudclient.keyRight = true;
 			if (keyCode == 37) mudclient.keyLeft = true;
+			if (keyCode == 13 || keyCode == 10) mudclient.enterPressed = true;
 			if (keyCode == KeyEvent.VK_UP) mudclient.keyUp = true;
 			if (keyCode == KeyEvent.VK_DOWN) mudclient.keyDown = true;
 			if (keyCode == KeyEvent.VK_PAGE_DOWN) mudclient.pageDown = true;
@@ -361,6 +382,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			this.addMouseListener(this);
 			this.addMouseMotionListener(this);
 			this.addKeyListener(this);
+			this.setFocusTraversalKeysEnabled(false);
 			this.addComponentListener(this);
 			this.addMouseWheelListener(this);
 		} catch (RuntimeException var2) {
