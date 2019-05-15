@@ -152,7 +152,7 @@ public final class CustomBankInterface extends BankInterface {
 			int selectedX = currMouseX - (mc.getGameWidth() / 2 - width / 2);
 			int selectedY = currMouseY - (mc.getGameHeight() / 2 - height / 2 + 20);
 
-			if (selectedX < 0 || selectedY < 16 || selectedX >= 509 || selectedY >= 331) { // is cursor located outside of the bank window area?
+			if (selectedX < 0 || selectedY < 16 || selectedX >= 600 || selectedY >= 488) { // is cursor located outside of the bank window area?
 				if (mc.getMouseClick() == 1) { // if click, close bank window
 					resetVar();
 					bankClose();
