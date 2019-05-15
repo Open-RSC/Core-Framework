@@ -36,11 +36,11 @@ public class SeersPartyChest implements InvUseOnObjectExecutiveListener, InvUseO
 		}
 
 		ActionSender.sendMessage(player, null, 0, MessageType.QUEST, "You place the item into the chest...", 0);
-		Server.getServer().getEventHandler().add(new SingleEvent(player, DataConversions.random(0,5000)) {
+		Server.getServer().getEventHandler().add(new SingleEvent(player, DataConversions.random(0,5000), true) {
 			@Override
 			public void action() {
 				Random rand = DataConversions.getRandom();
-				boolean upstairs = player.getLocation().isInSeersPartyHallUpstairs();
+				boolean upstairs = owner.getLocation().isInSeersPartyHallUpstairs();
 
 				while(true) {
 					Point location = upstairs ?

@@ -13,10 +13,16 @@ public abstract class DelayedEvent {
 	protected boolean matchRunning = true;
 	private boolean gameEvent;
 	private long lastRun = System.currentTimeMillis();
+	private boolean uniqueEvent = true;
 
 	public DelayedEvent(Player owner, int delay) {
 		this.owner = owner;
 		this.delay = delay;
+	}
+
+	public DelayedEvent(Player owner, int delay, boolean uniqueEvent) {
+		this(owner, delay);
+		this.uniqueEvent = uniqueEvent;
 	}
 
 	public boolean belongsTo(Player player) {
@@ -77,4 +83,6 @@ public abstract class DelayedEvent {
 	public boolean isGameEvent() {
 		return gameEvent;
 	}
+
+	public boolean isUniqueEvent() { return uniqueEvent; }
 }

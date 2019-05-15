@@ -745,7 +745,27 @@ public abstract class Mob extends Entity {
 
 	public boolean stateIsInvulnerable() { return false; }
 
-	public boolean isMobInvisible(Mob m) { return !(this instanceof Player) || (this instanceof Player && !((Player)this).isAdmin()); }
+	public boolean isMobInvisible(Mob m) {
+		return !(this instanceof Player)	||
+			(
+				this instanceof Player	&&
+				(
+					(m instanceof Player)									?
+					((Player)m).getGroupID() < ((Player)this).getGroupID()	:
+					((Player)this).isAdmin()
+				)
+			);
+	}
 
-	public boolean isMobInvulnerable(Mob m) { return !(this instanceof Player) || (this instanceof Player && !((Player)this).isAdmin()); }
+	public boolean isMobInvulnerable(Mob m) {
+		return !(this instanceof Player)	||
+			(
+				this instanceof Player	&&
+				(
+					(m instanceof Player)									?
+					((Player)m).getGroupID() < ((Player)this).getGroupID()	:
+					((Player)this).isAdmin()
+				)
+			);
+	}
 }

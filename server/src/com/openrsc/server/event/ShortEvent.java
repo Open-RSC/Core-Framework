@@ -8,6 +8,8 @@ public abstract class ShortEvent extends SingleEvent {
 		super(owner, 1200);
 	}
 
+	protected ShortEvent(Player owner, boolean uniqueEvent) { super(owner, 1200, uniqueEvent); }
+
 	public abstract void action();
 
 }

@@ -22,7 +22,7 @@ public final class ServerEventHandler {
 
 	public void add(DelayedEvent event) {
 		String className = String.valueOf(event.getClass());
-		if (event.getOwner() == null) {
+		if (event.isUniqueEvent() || !event.hasOwner()) {
 			String u;
 			while (toAdd.containsKey(u = UUID.randomUUID().toString())) {
 			}

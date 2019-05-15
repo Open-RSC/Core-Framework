@@ -13,6 +13,10 @@ public abstract class SingleEvent extends DelayedEvent {
 		super(owner, delay);
 	}
 
+	public SingleEvent(Player owner, int delay, boolean uniqueEvent) {
+		super(owner, delay, uniqueEvent);
+	}
+
 	public abstract void action();
 
 	public void run() {
