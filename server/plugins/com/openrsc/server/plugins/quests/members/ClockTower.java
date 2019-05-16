@@ -11,6 +11,7 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
+import com.openrsc.server.model.world.region.RegionManager;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
@@ -24,8 +25,6 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 	WallObjectActionExecutiveListener, InvUseOnGroundItemListener,
 	InvUseOnGroundItemExecutiveListener, PickupListener,
 	PickupExecutiveListener {
-
-	private boolean closed = false;
 
 	@Override
 	public int getQuestId() {
@@ -170,35 +169,46 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 			}
 		}
 		else if (obj.getID() == 373 || obj.getID() == 374) {
-			if (closed) {
+			GameObject dynGate, statGate, newGate;
+			boolean correctSetup = false;
+			if (obj.getID() == 373) {
+				dynGate = RegionManager.getRegion(Point.location(594, 3475)).getGameObject(Point.location(594, 3475));
+				statGate = RegionManager.getRegion(Point.location(590, 3475)).getGameObject(Point.location(590, 3475));
+				//outer gate was open + inner gate is open
+				correctSetup = (dynGate.getID() == 372) && (statGate.getID() == 372);
+			} else {
+				dynGate = RegionManager.getRegion(Point.location(590, 3475)).getGameObject(Point.location(590, 3475));
+				statGate = RegionManager.getRegion(Point.location(594, 3475)).getGameObject(Point.location(594, 3475));
+				//inner gate was closed + outer gate is closed
+				correctSetup = (dynGate.getID() == 371) && (statGate.getID() == 371);
+			}
+			//gate closed
+			if (dynGate.getID() == 371) {
 				p.message("The gate swings open");
-				GameObject firstGate = new GameObject(
-					obj.getID() == 373 ? Point.location(594, 3475) : Point
-						.location(590, 3475), 372, 0, 0);
-				World.getWorld().registerGameObject(firstGate);
-				closed = false;
-				if (p.getCache().hasKey("foodtrough")) {
-					message(p, "In their panic the rats bend and twist",
+				newGate = new GameObject(dynGate.getLocation(), 372, 0, 0);
+				World.getWorld().registerGameObject(newGate);
+			}
+			//gate open
+			else {
+				p.message("The gate creaks shut");
+				newGate = new GameObject(dynGate.getLocation(), 371, 0, 0);
+				World.getWorld().registerGameObject(newGate);
+			}
+			
+			if (p.getCache().hasKey("foodtrough") && correctSetup) {
+				message(p, "In their panic the rats bend and twist",
 						"The cage bars with their teeth",
 						"They're becoming weak, some have collapsed",
 						"The rats are eating the poison",
 						"They're becoming weak, some have collapsed",
 						"The rats are slowly dying");
-					for (Npc rats : p.getViewArea().getNpcsInView()) {
-						if (rats.getID() == NpcId.DUNGEON_RAT.id()) {
-							rats.remove();
-						}
+				for (Npc rats : p.getViewArea().getNpcsInView()) {
+					if (rats.getID() == NpcId.DUNGEON_RAT.id()) {
+						rats.remove();
 					}
-					p.getCache().remove("foodtrough");
-					p.getCache().store("rats_dead", true);
 				}
-			} else {
-				p.message("The gate creaks shut");
-				GameObject secondGate = new GameObject(
-					obj.getID() == 373 ? Point.location(594, 3475) : Point
-						.location(590, 3475), 371, 0, 0);
-				World.getWorld().registerGameObject(secondGate);
-				closed = true;
+				p.getCache().remove("foodtrough");
+				p.getCache().store("rats_dead", true);
 			}
 		}
 		else if (obj.getID() == 371 && obj.getY() == 3475) {
