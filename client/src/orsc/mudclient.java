@@ -10251,7 +10251,6 @@ public final class mudclient implements Runnable {
 				--this.m_Zb;
 			}
 
-
 			if (this.loginScreenNumber != 0) {
 				if (loginScreenNumber == 1) {
 					menuNewUser.handleMouse(this.mouseX, this.mouseY, this.currentMouseButtonDown,
@@ -10520,6 +10519,8 @@ public final class mudclient implements Runnable {
 				this.panelLoginWelcome.handleMouse(this.mouseX, this.mouseY, this.currentMouseButtonDown,
 					this.lastMouseButtonDown);
 				if (this.panelLoginWelcome.isClicked(loginButtonExistingUser)) {
+					if (isAndroid())
+						clientPort.drawKeyboard(); // launches the Android soft keyboard
 					this.loginScreenNumber = 2;
 					this.panelLogin.setText(this.controlLoginStatus1, "");
 					this.panelLogin.setText(this.controlLoginStatus2, "Please enter your username and password");
@@ -12005,6 +12006,8 @@ public final class mudclient implements Runnable {
 
 						if (!reconnecting) {
 							this.showLoginScreenStatus("Please wait...", "Connecting to server");
+							if (isAndroid())
+								clientPort.closeKeyboard(); // close the keyboard if still open
 						} else {
 							this.drawTextBox("Attempting to re-establish", (byte) -64,
 								"Connection lost! Please wait...");

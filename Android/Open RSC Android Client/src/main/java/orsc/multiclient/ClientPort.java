@@ -48,6 +48,8 @@ public interface ClientPort {
 
     void drawKeyboard();
 
+    void closeKeyboard();
+
     static boolean saveHideIp(int preference) {
         FileOutputStream fileout;
         try {

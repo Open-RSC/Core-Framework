@@ -661,6 +661,9 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	public void drawKeyboard() {
 	}
 
+	public void closeKeyboard() {
+	}
+
 	@Override
 	public void playSound(byte[] soundData, int offset, int dataLength) {
 		throw new UnsupportedOperationException("Not supported yet.");

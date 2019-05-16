@@ -19,6 +19,7 @@ import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.inputmethod.BaseInputConnection;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
@@ -107,7 +108,7 @@ public abstract class RSCBitmapSurfaceView extends SurfaceView implements Surfac
 		return true;
 	}
 
-	private final void drawLoadingScreen(String state, int percent, int var3) {
+	private void drawLoadingScreen(String state, int percent, int var3) {
 		try {
 
 			int x = (this.client_width - 281) / 2;
@@ -324,6 +325,9 @@ public abstract class RSCBitmapSurfaceView extends SurfaceView implements Surfac
 	}
 
 	public void drawKeyboard() {
+	}
+
+	public void closeKeyboard() {
 	}
 
 	public boolean saveCredentials(String creds) {

@@ -154,4 +154,10 @@ public class GameActivity extends Activity implements ClientPort {
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         if (imm.isAcceptingText()) Config.F_SHOWING_KEYBOARD = true;
     }
+
+    public void closeKeyboard() {
+        ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE))
+                .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+        Config.F_SHOWING_KEYBOARD = false;
+    }
 }
