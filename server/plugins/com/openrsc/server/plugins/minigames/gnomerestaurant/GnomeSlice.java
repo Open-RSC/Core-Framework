@@ -19,7 +19,8 @@ public class GnomeSlice implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 			return true;
 		else if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.LIME.id()))
 			return true;
-		else if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.FRESH_PINEAPPLE.id()))
+		else if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.PINEAPPLE.id()) ||
+				compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.FRESH_PINEAPPLE.id()))
 			return true;
 		else if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.LEMON.id()))
 			return true;
@@ -55,18 +56,25 @@ public class GnomeSlice implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 				p.getInventory().replace(ItemId.LIME.id(), ItemId.LIME_CHUNKS.id());
 			}
 		}
-		else if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.FRESH_PINEAPPLE.id())) {
+		else if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.PINEAPPLE.id()) ||
+				compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.FRESH_PINEAPPLE.id())) {
+			int pineappleId;
+			if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.PINEAPPLE.id())) {
+				pineappleId = ItemId.PINEAPPLE.id();
+			} else {
+				pineappleId = ItemId.FRESH_PINEAPPLE.id();
+			}
 			p.message("you can slice or dice the pineapple");
 			int menu = showMenu(p,
 				"slice pineapple",
 				"dice pineapple");
 			if (menu == 0) {
 				p.message("you slice the pineapple into rings");
-				p.getInventory().replace(ItemId.FRESH_PINEAPPLE.id(), ItemId.PINEAPPLE_RING.id());
+				p.getInventory().replace(pineappleId, ItemId.PINEAPPLE_RING.id());
 				addItem(p, ItemId.PINEAPPLE_RING.id(), 3);
 			} else if (menu == 1) {
 				p.message("you cut the pineapple into chunks");
-				p.getInventory().replace(ItemId.FRESH_PINEAPPLE.id(), ItemId.PINEAPPLE_CHUNKS.id());
+				p.getInventory().replace(pineappleId, ItemId.PINEAPPLE_CHUNKS.id());
 			}
 		}
 		else if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.LEMON.id())) {

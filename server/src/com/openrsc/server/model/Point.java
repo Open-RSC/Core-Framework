@@ -111,7 +111,7 @@ public class Point {
 	}
 
 	public boolean inHeroQuestRangeRoom() {
-		return inBounds(459, 460, 672, 673);
+		return inBounds(459, 672, 460, 673);
 	}
 
 	public boolean onTutorialIsland() {
