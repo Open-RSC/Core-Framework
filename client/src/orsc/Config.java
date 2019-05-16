@@ -116,6 +116,7 @@ public class Config {
 	public static boolean S_ALLOW_RESIZE = false;
 	public static boolean S_LENIENT_CONTACT_DETAILS = false;
 	public static boolean S_WANT_FATIGUE = true;
+	public static boolean S_WANT_CUSTOM_SPRITES = false;
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());

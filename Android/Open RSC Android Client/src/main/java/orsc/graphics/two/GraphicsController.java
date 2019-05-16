@@ -2,6 +2,10 @@ package orsc.graphics.two;
 
 import com.openrsc.client.data.DataConversions;
 import com.openrsc.client.model.Sprite;
+import orsc.Config;
+import orsc.MiscFunctions;
+import orsc.util.FastMath;
+import orsc.util.GenUtil;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -10,11 +14,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import orsc.Config;
-import orsc.MiscFunctions;
-import orsc.util.FastMath;
-import orsc.util.GenUtil;
 
 public class GraphicsController {
 
@@ -59,7 +58,11 @@ public class GraphicsController {
 			this.width2 = var1;
 			sprites = new Sprite[var3];
 			try {
-				spriteArchive = new ZipFile(Config.F_CACHE_DIR + File.separator + "Sprites.orsc");
+				if (Config.S_WANT_CUSTOM_SPRITES) {
+					spriteArchive = new ZipFile(Config.F_CACHE_DIR + File.separator + "Custom_Sprites.orsc");
+				} else {
+					spriteArchive = new ZipFile(Config.F_CACHE_DIR + File.separator + "Authentic_Sprites.orsc");
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.exit(1);
@@ -120,9 +123,9 @@ public class GraphicsController {
 			}
 		} catch (RuntimeException var10) {
 			throw GenUtil.makeThrowable(var10,
-					"ua.S(" + var0 + ',' + (var1 != null ? "{...}" : "null") + ',' + var2 + ','
-							+ (var3 != null ? "{...}" : "null") + ',' + var4 + ',' + var5 + ',' + var6 + ',' + var7
-							+ ')');
+				"ua.S(" + var0 + ',' + (var1 != null ? "{...}" : "null") + ',' + var2 + ','
+					+ (var3 != null ? "{...}" : "null") + ',' + var4 + ',' + var5 + ',' + var6 + ',' + var7
+					+ ')');
 		}
 	}
 
@@ -178,15 +181,15 @@ public class GraphicsController {
 			if (width > 0 && height > 0) {
 				if (antiAliased) {
 					this.plotLetterAntialiased(fontData, color, width, startPixel, height, srcStride, rowStride,
-							this.pixelData, dataAddr);
+						this.pixelData, dataAddr);
 				} else {
 					this.plotLetter(color, this.pixelData, startPixel, rowStride, height, width, dataAddr, fontData,
-							srcStride);
+						srcStride);
 				}
 			}
 		} catch (RuntimeException var17) {
 			throw GenUtil.makeThrowable(var17, "ua.SA(" + "dummy" + ',' + antiAliased + ','
-					+ (fontData != null ? "{...}" : "null") + ',' + x + ',' + color + ',' + indexAddr + ',' + y + ')');
+				+ (fontData != null ? "{...}" : "null") + ',' + x + ',' + color + ',' + indexAddr + ',' + y + ')');
 		}
 	}
 
@@ -283,14 +286,14 @@ public class GraphicsController {
 				}
 
 				this.plot_tran_scale(var19, var11, width, (byte) -61, scaleY, spriteWidth, scaleX, height, var14,
-						sprites[sprite].getPixels(), 0, var10, var15, var7, this.pixelData);
+					sprites[sprite].getPixels(), 0, var10, var15, var7, this.pixelData);
 			} catch (Exception var17) {
 				System.out.println("error in sprite clipping routine");
 			}
 
 		} catch (RuntimeException var18) {
 			throw GenUtil.makeThrowable(var18, "ua.E(" + sprite + ',' + var2 + ',' + height + ',' + var4 + ',' + width
-					+ ',' + var6 + ',' + var7 + ')');
+				+ ',' + var6 + ',' + var7 + ')');
 		}
 	}
 
@@ -361,13 +364,13 @@ public class GraphicsController {
 				// this.image2D_colorLookupTable[sprite], var6);
 				// } else {
 				this.a(var7, var8, var6, sprites[sprite].getPixels(), 0, var4, var14, this.pixelData, -107, var11,
-						var10, var9);
+					var10, var9);
 				// }
 
 			}
 		} catch (RuntimeException var13) {
 			throw GenUtil.makeThrowable(var13,
-					"ua.T(" + sprite + ',' + var2 + ',' + var3 + ',' + var4 + ',' + var5 + ')');
+				"ua.T(" + sprite + ',' + var2 + ',' + var3 + ',' + var4 + ',' + var5 + ')');
 		}
 	}
 
@@ -450,14 +453,14 @@ public class GraphicsController {
 				}
 
 				this.a(var11, var12, var7, var10, var15, sprites[sprite].getPixels(), var14, this.pixelData, 0,
-						spriteWidth, false, var13, var5, var2, var19);
+					spriteWidth, false, var13, var5, var2, var19);
 			} catch (Exception var17) {
 				System.out.println("error in sprite clipping routine");
 			}
 
 		} catch (RuntimeException var18) {
 			throw GenUtil.makeThrowable(var18, "ua.FA(" + var1 + ',' + var2 + ',' + sprite + ',' + var4 + ',' + var5
-					+ ',' + var6 + ',' + var7 + ')');
+				+ ',' + var6 + ',' + var7 + ')');
 		}
 	}
 
@@ -467,7 +470,7 @@ public class GraphicsController {
 
 		} catch (RuntimeException var10) {
 			throw GenUtil.makeThrowable(var10, "ua.B(" + var1 + ',' + index + ',' + height + ',' + x + ',' + y + ','
-					+ width + ',' + 29 + ',' + var8 + ')');
+				+ width + ',' + 29 + ',' + var8 + ')');
 		}
 	}
 
@@ -495,14 +498,14 @@ public class GraphicsController {
 					}
 
 					this.pixelData[var8 + var9 * this.width2] = var12 / var13 + (var10 / var13 << 16)
-							+ (var11 / var13 << 8);
+						+ (var11 / var13 << 8);
 				}
 			}
 
 
 		} catch (RuntimeException var17) {
 			throw GenUtil.makeThrowable(var17, "ua.VA(" + var1 + ',' + var2 + ',' + var3 + ',' + var4 + ',' + 16740352
-					+ ',' + var6 + ',' + var7 + ')');
+				+ ',' + var6 + ',' + var7 + ')');
 		}
 	}
 
@@ -531,7 +534,7 @@ public class GraphicsController {
 							int var25 = 255 & var9;
 							if (var23 == var24 && var25 == var24) {
 								letterPlotTable[var7++] = (var23 * var16 >> 8 << 16) + (var17 * var24 >> 8 << 8)
-										+ (var25 * var18 >> 8);
+									+ (var25 * var18 >> 8);
 							} else {
 								letterPlotTable[var7++] = var9;
 							}
@@ -552,10 +555,10 @@ public class GraphicsController {
 
 		} catch (RuntimeException var27) {
 			throw GenUtil.makeThrowable(var27,
-					"ua.EB(" + var1 + ',' + var2 + ',' + var3 + ',' + var4 + ',' + var5 + ','
-							+ (var6 != null ? "{...}" : "null") + ',' + var7 + ','
-							+ (letterPlotTable != null ? "{...}" : "null") + ',' + var9 + ',' + var10 + ',' + var11
-							+ ',' + var12 + ',' + var13 + ',' + var14 + ',' + var15 + ')');
+				"ua.EB(" + var1 + ',' + var2 + ',' + var3 + ',' + var4 + ',' + var5 + ','
+					+ (var6 != null ? "{...}" : "null") + ',' + var7 + ','
+					+ (letterPlotTable != null ? "{...}" : "null") + ',' + var9 + ',' + var10 + ',' + var11
+					+ ',' + var12 + ',' + var13 + ',' + var14 + ',' + var15 + ')');
 		}
 	}
 
@@ -581,9 +584,9 @@ public class GraphicsController {
 
 		} catch (RuntimeException var13) {
 			throw GenUtil.makeThrowable(var13,
-					"ua.M(" + negCount + ',' + srcWidth + ',' + "dummy" + ',' + (dest != null ? "{...}" : "null") + ','
-							+ srcStepX + ',' + srcHeadY + ',' + srcHeadX + ',' + (src != null ? "{...}" : "null") + ','
-							+ srcStepY + ',' + destHead + ',' + "dummy" + ')');
+				"ua.M(" + negCount + ',' + srcWidth + ',' + "dummy" + ',' + (dest != null ? "{...}" : "null") + ','
+					+ srcStepX + ',' + srcHeadY + ',' + srcHeadX + ',' + (src != null ? "{...}" : "null") + ','
+					+ srcStepY + ',' + destHead + ',' + "dummy" + ')');
 		}
 	}
 
@@ -601,10 +604,10 @@ public class GraphicsController {
 						} else {
 							int var16 = var8[var3];
 							var8[var3++] = FastMath.bitwiseAnd(16711680,
-									var6 * FastMath.bitwiseAnd(var5, '\uff00')
-											+ var13 * FastMath.bitwiseAnd('\uff00', var16))
-									+ FastMath.bitwiseAnd(var13 * FastMath.bitwiseAnd(var16, 16711935)
-									+ FastMath.bitwiseAnd(var5, 16711935) * var6, -16711936) >> 8;
+								var6 * FastMath.bitwiseAnd(var5, '\uff00')
+									+ var13 * FastMath.bitwiseAnd('\uff00', var16))
+								+ FastMath.bitwiseAnd(var13 * FastMath.bitwiseAnd(var16, 16711935)
+								+ FastMath.bitwiseAnd(var5, 16711935) * var6, -16711936) >> 8;
 						}
 					}
 
@@ -615,9 +618,9 @@ public class GraphicsController {
 			}
 		} catch (RuntimeException var17) {
 			throw GenUtil.makeThrowable(var17,
-					"ua.TA(" + var1 + ',' + var2 + ',' + var3 + ',' + (var4 != null ? "{...}" : "null") + ',' + var5
-							+ ',' + var6 + ',' + var7 + ',' + (var8 != null ? "{...}" : "null") + ',' + var9 + ','
-							+ var10 + ',' + var11 + ',' + var12 + ')');
+				"ua.TA(" + var1 + ',' + var2 + ',' + var3 + ',' + (var4 != null ? "{...}" : "null") + ',' + var5
+					+ ',' + var6 + ',' + var7 + ',' + (var8 != null ? "{...}" : "null") + ',' + var9 + ','
+					+ var10 + ',' + var11 + ',' + var12 + ')');
 		}
 	}
 
@@ -653,9 +656,9 @@ public class GraphicsController {
 			}
 		} catch (RuntimeException var13) {
 			throw GenUtil.makeThrowable(var13,
-					"ua.UA(" + srcStepY + ',' + negCount + ',' + srcHeadX + ',' + (src != null ? "{...}" : "null") + ','
-							+ (var5 != null ? "{...}" : "null") + ',' + srcHeadY + ',' + destHead + ',' + srcWidth + ','
-							+ srcStepX + ',' + "dummy" + ',' + "dummy" + ')');
+				"ua.UA(" + srcStepY + ',' + negCount + ',' + srcHeadX + ',' + (src != null ? "{...}" : "null") + ','
+					+ (var5 != null ? "{...}" : "null") + ',' + srcHeadY + ',' + destHead + ',' + srcWidth + ','
+					+ srcStepX + ',' + "dummy" + ',' + "dummy" + ')');
 		}
 	}
 
@@ -669,7 +672,7 @@ public class GraphicsController {
 
 		} catch (RuntimeException var9) {
 			throw GenUtil.makeThrowable(var9, "ua.OA(" + var1 + ',' + var2 + ',' + (var3 != null ? "{...}" : "null")
-					+ ',' + var4 + ',' + var5 + ',' + var6 + ',' + var7 + ')');
+				+ ',' + var4 + ',' + var5 + ',' + var6 + ',' + var7 + ')');
 		}
 	}
 
@@ -731,9 +734,9 @@ public class GraphicsController {
 
 		} catch (RuntimeException var15) {
 			throw GenUtil.makeThrowable(var15,
-					"ua.JB(" + var1 + ',' + (var2 != null ? "{...}" : "null") + ',' + var3 + ',' + var4 + ',' + var5
-							+ ',' + var6 + ',' + var7 + ',' + var8 + ',' + (var9 != null ? "{...}" : "null") + ','
-							+ var10 + ',' + var11 + ')');
+				"ua.JB(" + var1 + ',' + (var2 != null ? "{...}" : "null") + ',' + var3 + ',' + var4 + ',' + var5
+					+ ',' + var6 + ',' + var7 + ',' + var8 + ',' + (var9 != null ? "{...}" : "null") + ','
+					+ var10 + ',' + var11 + ')');
 		}
 	}
 
@@ -832,7 +835,7 @@ public class GraphicsController {
 
 		} catch (RuntimeException var16) {
 			throw GenUtil.makeThrowable(var16, "ua.HB(" + wrapWidth + ',' + (str != null ? "{...}" : "null") + ',' + x
-					+ ',' + "dummy" + ',' + font + ',' + y + ',' + newLineOnPercent + ',' + color + ')');
+				+ ',' + "dummy" + ',' + font + ',' + y + ',' + newLineOnPercent + ',' + color + ')');
 		}
 	}
 
@@ -886,10 +889,10 @@ public class GraphicsController {
 
 		} catch (RuntimeException var21) {
 			throw GenUtil.makeThrowable(var21,
-					"ua.DA(" + (src != null ? "{...}" : "null") + ',' + heightStep + ',' + scaleX + ',' + dummy1 + ','
-							+ srcStartY + ',' + (dest != null ? "{...}" : "null") + ',' + dummy2 + ',' + scaleY + ','
-							+ destHeight + ',' + srcStartX + ',' + destRowStride + ',' + destWidth + ',' + srcWidth
-							+ ',' + destHead + ')');
+				"ua.DA(" + (src != null ? "{...}" : "null") + ',' + heightStep + ',' + scaleX + ',' + dummy1 + ','
+					+ srcStartY + ',' + (dest != null ? "{...}" : "null") + ',' + dummy2 + ',' + scaleY + ','
+					+ destHeight + ',' + srcStartX + ',' + destRowStride + ',' + destWidth + ',' + srcWidth
+					+ ',' + destHead + ')');
 		}
 	}
 
@@ -1016,9 +1019,9 @@ public class GraphicsController {
 								int canvasB = (dest[var32 + destRowHead] & 0xff) * inverseOpacity;
 
 								int finalColour =
-										(((spriteR + canvasR) >> 8) << 16) +
-												(((spriteG + canvasG) >> 8) << 8) +
-												((spriteB + canvasB) >> 8);
+									(((spriteR + canvasR) >> 8) << 16) +
+										(((spriteG + canvasG) >> 8) << 8) +
+										((spriteB + canvasB) >> 8);
 								dest[var32 + destRowHead] = finalColour;
 
 								/*if (spritePixelR == spritePixelG && spritePixelB == spritePixelG) {
@@ -1047,11 +1050,11 @@ public class GraphicsController {
 
 		} catch (RuntimeException var34) {
 			throw GenUtil.makeThrowable(var34,
-					"ua.AA(" + (dest != null ? "{...}" : "null") + ',' + (src != null ? "{...}" : "null") + ','
-							+ destColumnCount + ',' + destColumnSkewPerRow + ',' + destFirstColumn + ',' + dummy1 + ','
-							+ spritePixel + ',' + mask2 + ',' + scaleY + ',' + scaleX + ',' + srcStartX + ','
-							+ skipEveryOther + ',' + srcStartY + ',' + srcWidth + ',' + mask1 + ',' + destHeight + ','
-							+ destRowHead + ')');
+				"ua.AA(" + (dest != null ? "{...}" : "null") + ',' + (src != null ? "{...}" : "null") + ','
+					+ destColumnCount + ',' + destColumnSkewPerRow + ',' + destFirstColumn + ',' + dummy1 + ','
+					+ spritePixel + ',' + mask2 + ',' + scaleY + ',' + scaleX + ',' + srcStartX + ','
+					+ skipEveryOther + ',' + srcStartY + ',' + srcWidth + ',' + mask1 + ',' + destHeight + ','
+					+ destRowHead + ')');
 		}
 	}
 
@@ -1089,7 +1092,7 @@ public class GraphicsController {
 			 */
 		} catch (RuntimeException var11) {
 			throw GenUtil.makeThrowable(var11, "ua.BB(" + height + ',' + xOffset + ',' + yOffset + ',' + "dummy" + ','
-					+ destLayer + ',' + width + ')');
+				+ destLayer + ',' + width + ')');
 		}
 	}
 
@@ -1126,8 +1129,8 @@ public class GraphicsController {
 			for (int yi = 0; height > yi; yi += yStep) {
 				if (this.clipTop <= yi + y && y + yi < this.clipBottom) {
 					int color = ((topG * yi + btmG * (height - yi)) / height << 8)
-							+ ((btmR * (height - yi) + topR * yi) / height << 16)
-							+ (yi * topB + btmB * (height - yi)) / height;
+						+ ((btmR * (height - yi) + topR * yi) / height << 16)
+						+ (yi * topB + btmB * (height - yi)) / height;
 
 					for (int xi = -width; xi < 0; ++xi) {
 						this.pixelData[pxHead++] = color;
@@ -1141,7 +1144,7 @@ public class GraphicsController {
 
 		} catch (RuntimeException var20) {
 			throw GenUtil.makeThrowable(var20, "ua.F(" + x + ',' + bottomColor + ',' + width + ',' + topColor + ','
-					+ height + ',' + y + ',' + "dummy" + ')');
+				+ height + ',' + y + ',' + "dummy" + ')');
 		}
 	}
 
@@ -1151,7 +1154,7 @@ public class GraphicsController {
 			this.a(var1, var3, var2, var4, -12200, (int) var6, 0);
 		} catch (RuntimeException var8) {
 			throw GenUtil.makeThrowable(var8, "ua.J(" + var1 + ',' + (var2 != null ? "{...}" : "null") + ',' + var3
-					+ ',' + var4 + ',' + var5 + ',' + var6 + ')');
+				+ ',' + var4 + ',' + var5 + ',' + var6 + ')');
 		}
 	}
 
@@ -1269,7 +1272,7 @@ public class GraphicsController {
 
 		} catch (RuntimeException var13) {
 			throw GenUtil.makeThrowable(var13,
-					"ua.LA(" + xr + ',' + "dummy" + ',' + color + ',' + yr + ',' + height + ',' + widthh + ')');
+				"ua.LA(" + xr + ',' + "dummy" + ',' + color + ',' + yr + ',' + height + ',' + widthh + ')');
 		}
 	}
 
@@ -1326,7 +1329,7 @@ public class GraphicsController {
 
 		} catch (RuntimeException var21) {
 			throw GenUtil.makeThrowable(var21, "ua.KB(" + alpha + ',' + x + ',' + height + ',' + "dummy" + ',' + y + ','
-					+ width + ',' + color + ')');
+				+ width + ',' + color + ')');
 		}
 	}
 
@@ -1339,7 +1342,7 @@ public class GraphicsController {
 			this.drawLineVert(width + x - 1, y, color, height);
 		} catch (RuntimeException var8) {
 			throw GenUtil.makeThrowable(var8,
-					"ua.U(" + x + ',' + width + ',' + y + ',' + "dummy" + ',' + height + ',' + color + ')');
+				"ua.U(" + x + ',' + width + ',' + y + ',' + "dummy" + ',' + height + ',' + color + ')');
 		}
 	}
 
@@ -1395,7 +1398,7 @@ public class GraphicsController {
 
 		} catch (RuntimeException var25) {
 			throw GenUtil.makeThrowable(var25,
-					"ua.WA(" + alpha + ',' + -1057205208 + ',' + radius + ',' + y + ',' + color + ',' + x + ')');
+				"ua.WA(" + alpha + ',' + -1057205208 + ',' + radius + ',' + y + ',' + color + ',' + x + ')');
 		}
 	}
 
@@ -1407,16 +1410,16 @@ public class GraphicsController {
 					int spriteHeaderMask = (spriteHeader & 0x00FFFFFF);
 					if (sprites[iconSprite] != null) {
 						this.drawSpriteClipping(
-								iconSprite,
-								x,
-								y - sprites[iconSprite].getHeight(),
-								sprites[iconSprite].getWidth(),
-								sprites[iconSprite].getHeight(),
-								spriteHeaderMask,
-								0,
-								false,
-								0,
-								0
+							iconSprite,
+							x,
+							y - sprites[iconSprite].getHeight(),
+							sprites[iconSprite].getWidth(),
+							sprites[iconSprite].getHeight(),
+							spriteHeaderMask,
+							0,
+							false,
+							0,
+							0
 						);
 						//this.drawSprite(var8, x, y - sprites[var8].getHeight());
 						x += sprites[iconSprite].getWidth() + 5;
@@ -1506,66 +1509,66 @@ public class GraphicsController {
 							char c2 = str.charAt(i + 3);
 							char c3 = str.charAt(i + 4);
 							if (c >= '0' && c <= '9' && c1 >= '0' && c1 <= '9' && c2 >= '0' && c2 <= '9' && c3 >= '0'
-									&& c3 <= '9')
+								&& c3 <= '9')
 								x = Integer.parseInt(str.substring(i + 1, i + 5));
 							i += 5;
 						} else if (false && Config.S_WANT_CUSTOM_RANK_DISPLAY && str.charAt(i) == '#' && i + 4 < str.length() && str.charAt(i + 4) == '#' && str.substring(i + 1, i + 4).equalsIgnoreCase("adm")) {
 							this.drawSpriteClipping(
-									this.iconSpriteIndex,
-									x - 1,
-									y - sprites[this.iconSpriteIndex].getHeight(),
-									sprites[this.iconSpriteIndex].getWidth(),
-									sprites[this.iconSpriteIndex].getHeight(),
-									0x00FF00,
-									0,
-									false,
-									0,
-									0
+								this.iconSpriteIndex,
+								x - 1,
+								y - sprites[this.iconSpriteIndex].getHeight(),
+								sprites[this.iconSpriteIndex].getWidth(),
+								sprites[this.iconSpriteIndex].getHeight(),
+								0x00FF00,
+								0,
+								false,
+								0,
+								0
 							);
 							x += sprites[this.iconSpriteIndex].getWidth() + 5;
 							i += 4;
 						} else if (false && Config.S_WANT_CUSTOM_RANK_DISPLAY && str.charAt(i) == '#' && i + 4 < str.length() && str.charAt(i + 4) == '#' && str.substring(i + 1, i + 4).equalsIgnoreCase("mod")) {
 							this.drawSpriteClipping(
-									this.iconSpriteIndex,
-									x - 1,
-									y - sprites[this.iconSpriteIndex].getHeight(),
-									sprites[this.iconSpriteIndex].getWidth(),
-									sprites[this.iconSpriteIndex].getHeight(),
-									0x0000FF,
-									0,
-									false,
-									0,
-									0
+								this.iconSpriteIndex,
+								x - 1,
+								y - sprites[this.iconSpriteIndex].getHeight(),
+								sprites[this.iconSpriteIndex].getWidth(),
+								sprites[this.iconSpriteIndex].getHeight(),
+								0x0000FF,
+								0,
+								false,
+								0,
+								0
 							);
 							x += sprites[this.iconSpriteIndex].getWidth() + 5;
 							i += 4;
 						} else if (false && Config.S_WANT_CUSTOM_RANK_DISPLAY && str.charAt(i) == '#' && i + 4 < str.length() && str.charAt(i + 4) == '#' && str.substring(i + 1, i + 4).equalsIgnoreCase("dev")) {
 							this.drawSpriteClipping(
-									this.iconSpriteIndex,
-									x - 1,
-									y - sprites[this.iconSpriteIndex].getHeight(),
-									sprites[this.iconSpriteIndex].getWidth(),
-									sprites[this.iconSpriteIndex].getHeight(),
-									0xFF0000,
-									0,
-									false,
-									0,
-									0
+								this.iconSpriteIndex,
+								x - 1,
+								y - sprites[this.iconSpriteIndex].getHeight(),
+								sprites[this.iconSpriteIndex].getWidth(),
+								sprites[this.iconSpriteIndex].getHeight(),
+								0xFF0000,
+								0,
+								false,
+								0,
+								0
 							);
 							x += sprites[this.iconSpriteIndex].getWidth() + 5;
 							i += 4;
 						} else if (false && Config.S_WANT_CUSTOM_RANK_DISPLAY && str.charAt(i) == '#' && i + 4 < str.length() && str.charAt(i + 4) == '#' && str.substring(i + 1, i + 4).equalsIgnoreCase("eve")) {
 							this.drawSpriteClipping(
-									this.iconSpriteIndex,
-									x - 1,
-									y - sprites[this.iconSpriteIndex].getHeight(),
-									sprites[this.iconSpriteIndex].getWidth(),
-									sprites[this.iconSpriteIndex].getHeight(),
-									0x4D33BD,
-									0,
-									false,
-									0,
-									0
+								this.iconSpriteIndex,
+								x - 1,
+								y - sprites[this.iconSpriteIndex].getHeight(),
+								sprites[this.iconSpriteIndex].getWidth(),
+								sprites[this.iconSpriteIndex].getHeight(),
+								0x4D33BD,
+								0,
+								false,
+								0,
+								0
 							);
 							x += sprites[this.iconSpriteIndex].getWidth() + 5;
 							i += 4;
@@ -1601,9 +1604,9 @@ public class GraphicsController {
 
 		} catch (
 
-				RuntimeException var15) {
+			RuntimeException var15) {
 			throw GenUtil.makeThrowable(var15, "ua.FB(" + spriteHeader + ',' + y + ','
-					+ (str != null ? "{...}" : "null") + ',' + x + ',' + color + ',' + "dummy" + ',' + font + ')');
+				+ (str != null ? "{...}" : "null") + ',' + x + ',' + color + ',' + "dummy" + ',' + font + ')');
 		}
 
 	}
@@ -1614,7 +1617,7 @@ public class GraphicsController {
 
 		} catch (RuntimeException var9) {
 			throw GenUtil.makeThrowable(var9, "ua.G(" + 11815 + ',' + color + ',' + font + ',' + spriteHeader + ','
-					+ (str != null ? "{...}" : "null") + ',' + x + ',' + y + ')');
+				+ (str != null ? "{...}" : "null") + ',' + x + ',' + y + ')');
 		}
 	}
 
@@ -1624,7 +1627,7 @@ public class GraphicsController {
 
 		} catch (RuntimeException var8) {
 			throw GenUtil.makeThrowable(var8, "ua.N(" + x + ',' + (str != null ? "{...}" : "null") + ',' + color + ','
-					+ spriteHeader + ',' + font + ',' + y + ')');
+				+ spriteHeader + ',' + font + ',' + y + ')');
 		}
 	}
 
@@ -1980,10 +1983,10 @@ public class GraphicsController {
 					if (!this.interlace || (var41 & 1) == 0) {
 						if (sprites[sprite].requiresShift()) {
 							this.plot_trans_horiz_line(var47, var42 - var43, var44, var40, this.pixelData, var46,
-									var42 + var39, var37, var45);
+								var42 + var39, var37, var45);
 						} else {
 							this.plot_horiz_line(var42 - var43, var37, this.pixelData, var45, var46, var44, var40,
-									var47, var42 + var39);
+								var47, var42 + var39);
 						}
 					}
 
@@ -1994,7 +1997,7 @@ public class GraphicsController {
 			}
 		} catch (RuntimeException var48) {
 			throw GenUtil.makeThrowable(var48,
-					"ua.O(" + sprite + ',' + var2 + ',' + var3 + ',' + 842218000 + ',' + var5 + ',' + var6 + ')');
+				"ua.O(" + sprite + ',' + var2 + ',' + var3 + ',' + 842218000 + ',' + var5 + ',' + var6 + ')');
 		}
 	}
 
@@ -2060,7 +2063,7 @@ public class GraphicsController {
 				}
 
 				this.a(var8, this.pixelData, var13, var7, 0, var6, (byte) 123, var5, sprites[sprite].getPixels(), var9,
-						var10);
+					var10);
 
 			}
 		} catch (RuntimeException var12) {
@@ -2158,7 +2161,7 @@ public class GraphicsController {
 
 					if (sprites[sprite].getYShift() * destHeight % destRowStride != 0) {
 						srcStartY = (destRowStride - destHeight * sprites[sprite].getYShift() % destRowStride << 16)
-								/ destHeight;
+							/ destHeight;
 					}
 
 					scaleX = (destHead << 16) / destWidth;
@@ -2215,15 +2218,15 @@ public class GraphicsController {
 				}
 
 				this.plot_scale_black_mask(sprites[sprite].getPixels(), heightStep, scaleX, 0, srcStartY,
-						this.pixelData, (byte) 78, scaleY, destHeight, srcStartX, destRowStride, destWidth, spriteWidth,
-						destHead);
+					this.pixelData, (byte) 78, scaleY, destHeight, srcStartX, destRowStride, destWidth, spriteWidth,
+					destHead);
 			} catch (Exception var16) {
 				System.out.println("error in sprite clipping routine");
 			}
 
 		} catch (RuntimeException var17) {
 			throw GenUtil.makeThrowable(var17,
-					"ua.D(" + x + ',' + y + ',' + destHeight + ',' + destWidth + ',' + 5924 + ',' + sprite + ')');
+				"ua.D(" + x + ',' + y + ',' + destHeight + ',' + destWidth + ',' + 5924 + ',' + sprite + ')');
 		}
 	}
 
@@ -2235,8 +2238,8 @@ public class GraphicsController {
 			for (int i = 0; var4 > i; ++i) {
 				int var2 = 0xFFFFFF & this.pixelData[i];
 				this.pixelData[i] = FastMath.bitwiseAnd(var2 >>> 4, 0x0F0F0F)
-						+ (FastMath.bitwiseAnd(var2, 0xF8F8F9) >>> 3) + (FastMath.bitwiseAnd(0xFEFEFF, var2) >>> 1)
-						+ FastMath.bitwiseAnd(-2143338689, var2 >>> 2);
+					+ (FastMath.bitwiseAnd(var2, 0xF8F8F9) >>> 3) + (FastMath.bitwiseAnd(0xFEFEFF, var2) >>> 1)
+					+ FastMath.bitwiseAnd(-2143338689, var2 >>> 2);
 			}
 
 		} catch (RuntimeException var5) {
@@ -2248,14 +2251,14 @@ public class GraphicsController {
 		try {
 
 			return font != 0
-					? (font != 1
-					? (font == 2 ? 14
-					: (font == 3 ? 15
-					: (font != 4 ? (font != 5
-					? (font == 6 ? 24 : (font != 7 ? this.c(60, font) : 29)) : 19)
-					: 15)))
-					: 14)
-					: 12;
+				? (font != 1
+				? (font == 2 ? 14
+				: (font == 3 ? 15
+				: (font != 4 ? (font != 5
+				? (font == 6 ? 24 : (font != 7 ? this.c(60, font) : 29)) : 19)
+				: 15)))
+				: 14)
+				: 12;
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "ua.QA(" + "dummy" + ',' + font + ')');
 		}
@@ -2317,9 +2320,9 @@ public class GraphicsController {
 			// var11 = 82 % ((-45 - var4) / 48);
 		} catch (RuntimeException var15) {
 			throw GenUtil.makeThrowable(var15,
-					"ua.PA(" + color + ',' + (dest != null ? "{...}" : "null") + ',' + destHead + ',' + "dummy" + ','
-							+ rowStride + ',' + height + ',' + width + ',' + srcHead + ','
-							+ (src != null ? "{...}" : "null") + ',' + srcStride + ')');
+				"ua.PA(" + color + ',' + (dest != null ? "{...}" : "null") + ',' + destHead + ',' + "dummy" + ','
+					+ rowStride + ',' + height + ',' + width + ',' + srcHead + ','
+					+ (src != null ? "{...}" : "null") + ',' + srcStride + ')');
 		}
 	}
 
@@ -2336,10 +2339,10 @@ public class GraphicsController {
 						int invAlpha = (256 - alpha);
 						int destColor = dest[destHead];
 						dest[destHead++] = (FastMath.bitwiseAnd(0xFF00FF00,
-								FastMath.bitwiseAnd(0xFF00FF, color) * alpha
-										+ FastMath.bitwiseAnd(destColor, 0xFF00FF) * invAlpha)
-								+ FastMath.bitwiseAnd(invAlpha * FastMath.bitwiseAnd(0xFF00, destColor)
-								+ alpha * FastMath.bitwiseAnd(0xFF00, color), 0xFF0000)) >> 8;
+							FastMath.bitwiseAnd(0xFF00FF, color) * alpha
+								+ FastMath.bitwiseAnd(destColor, 0xFF00FF) * invAlpha)
+							+ FastMath.bitwiseAnd(invAlpha * FastMath.bitwiseAnd(0xFF00, destColor)
+							+ alpha * FastMath.bitwiseAnd(0xFF00, color), 0xFF0000)) >> 8;
 					} else {
 						dest[destHead++] = color;
 					}
@@ -2351,9 +2354,9 @@ public class GraphicsController {
 
 		} catch (RuntimeException var15) {
 			throw GenUtil.makeThrowable(var15,
-					"ua.MA(" + (src != null ? "{...}" : "null") + ',' + color + ',' + width + ',' + destHead + ','
-							+ height + ',' + srcStride + ',' + "dummy" + ',' + rowStride + ','
-							+ (dest != null ? "{...}" : "null") + ',' + srcHead + ')');
+				"ua.MA(" + (src != null ? "{...}" : "null") + ',' + color + ',' + width + ',' + destHead + ','
+					+ height + ',' + srcStride + ',' + "dummy" + ',' + rowStride + ','
+					+ (dest != null ? "{...}" : "null") + ',' + srcHead + ')');
 		}
 	}
 
@@ -2391,7 +2394,7 @@ public class GraphicsController {
 			this.clipLeft = clipLeft;
 		} catch (RuntimeException var7) {
 			throw GenUtil.makeThrowable(var7,
-					"ua.NA(" + clipLeft + ',' + clipRight + ',' + clipBottom + ',' + clipTop + ',' + "dummy" + ')');
+				"ua.NA(" + clipLeft + ',' + clipRight + ',' + clipBottom + ',' + clipTop + ',' + "dummy" + ')');
 		}
 	}
 
@@ -2488,24 +2491,24 @@ public class GraphicsController {
 					if (null != sprites[sprite].getPixels()) {
 						if (mirrorX) {
 							this.plot_tran_scale_with_mask(dummy ^ 74, sprites[sprite].getPixels(), scaleY, 0,
-									srcStartY, (sprites[sprite].getWidth() << 16) - (srcStartX + 1), width,
-									this.pixelData, height, destColumnSkewPerRow, destRowHead, -scaleX, destFirstColumn,
-									spriteWidth, skipEveryOther, colorMask, colourTransform);
+								srcStartY, (sprites[sprite].getWidth() << 16) - (srcStartX + 1), width,
+								this.pixelData, height, destColumnSkewPerRow, destRowHead, -scaleX, destFirstColumn,
+								spriteWidth, skipEveryOther, colorMask, colourTransform);
 						} else {
 							this.plot_tran_scale_with_mask(dummy + 89, sprites[sprite].getPixels(), scaleY, 0,
-									srcStartY, srcStartX, width, this.pixelData, height, destColumnSkewPerRow,
-									destRowHead, scaleX, destFirstColumn, spriteWidth, skipEveryOther, colorMask, colourTransform);
+								srcStartY, srcStartX, width, this.pixelData, height, destColumnSkewPerRow,
+								destRowHead, scaleX, destFirstColumn, spriteWidth, skipEveryOther, colorMask, colourTransform);
 						}
 					}
 				} else if (mirrorX) {
 					this.plot_trans_scale_with_2_masks(this.pixelData, sprites[sprite].getPixels(), width,
-							destColumnSkewPerRow, destFirstColumn, dummy + 1603920391, 0, colorMask2, scaleY, -scaleX,
-							(sprites[sprite].getWidth() << 16) - srcStartX - 1, skipEveryOther, srcStartY, spriteWidth,
-							colorMask, height, destRowHead, colourTransform);
+						destColumnSkewPerRow, destFirstColumn, dummy + 1603920391, 0, colorMask2, scaleY, -scaleX,
+						(sprites[sprite].getWidth() << 16) - srcStartX - 1, skipEveryOther, srcStartY, spriteWidth,
+						colorMask, height, destRowHead, colourTransform);
 				} else {
 					this.plot_trans_scale_with_2_masks(this.pixelData, sprites[sprite].getPixels(), width,
-							destColumnSkewPerRow, destFirstColumn, 1603920392, 0, colorMask2, scaleY, scaleX, srcStartX,
-							skipEveryOther, srcStartY, spriteWidth, colorMask, height, destRowHead, colourTransform);
+						destColumnSkewPerRow, destFirstColumn, 1603920392, 0, colorMask2, scaleY, scaleX, srcStartX,
+						skipEveryOther, srcStartY, spriteWidth, colorMask, height, destRowHead, colourTransform);
 				}
 			} catch (Exception var24) {
 				System.out.println("error in sprite clipping routine");
@@ -2513,7 +2516,7 @@ public class GraphicsController {
 
 		} catch (RuntimeException var25) {
 			throw GenUtil.makeThrowable(var25, "ua.AB(" + y + ',' + colorMask + ',' + colorMask2 + ',' + mirrorX + ','
-					+ topPixelSkew + ',' + sprite + ',' + height + ',' + width + ',' + x + ',' + dummy + ')');
+				+ topPixelSkew + ',' + sprite + ',' + height + ',' + width + ',' + x + ',' + dummy + ')');
 		}
 	}
 
@@ -2541,7 +2544,7 @@ public class GraphicsController {
 			return width;
 		} catch (RuntimeException var8) {
 			throw GenUtil.makeThrowable(var8,
-					"ua.K(" + font + ',' + "dummy" + ',' + (str != null ? "{...}" : "null") + ')');
+				"ua.K(" + font + ',' + "dummy" + ',' + (str != null ? "{...}" : "null") + ')');
 		}
 	}
 
@@ -2586,12 +2589,12 @@ public class GraphicsController {
 						} else {
 							int oldColor = dest[destHead];
 							dest[destHead++] = FastMath
-									.bitwiseAnd(FastMath.bitwiseAnd(0xFF00, oldColor) * alphaInverse
-											+ FastMath.bitwiseAnd(0xFF00, newColor) * alpha, 0xFF0000)
-									+ FastMath.bitwiseAnd(
-									FastMath.bitwiseAnd(newColor, 0xFF00FF) * alpha
-											+ alphaInverse * FastMath.bitwiseAnd(0xFF00FF, oldColor),
-									-16711936) >> 8;
+								.bitwiseAnd(FastMath.bitwiseAnd(0xFF00, oldColor) * alphaInverse
+									+ FastMath.bitwiseAnd(0xFF00, newColor) * alpha, 0xFF0000)
+								+ FastMath.bitwiseAnd(
+								FastMath.bitwiseAnd(newColor, 0xFF00FF) * alpha
+									+ alphaInverse * FastMath.bitwiseAnd(0xFF00FF, oldColor),
+								-16711936) >> 8;
 						}
 					}
 
@@ -2604,10 +2607,10 @@ public class GraphicsController {
 
 		} catch (RuntimeException var23) {
 			throw GenUtil.makeThrowable(var23,
-					"ua.EA(" + heightStep + ',' + srcStartY + ',' + destWidth + ',' + dummy1 + ',' + scaleY + ','
-							+ spriteWidth + ',' + scaleX + ',' + height + ',' + destHead + ','
-							+ (src != null ? "{...}" : "null") + ',' + dummy2 + ',' + srcStartX + ',' + destRowStride
-							+ ',' + alpha + ',' + (dest != null ? "{...}" : "null") + ')');
+				"ua.EA(" + heightStep + ',' + srcStartY + ',' + destWidth + ',' + dummy1 + ',' + scaleY + ','
+					+ spriteWidth + ',' + scaleX + ',' + height + ',' + destHead + ','
+					+ (src != null ? "{...}" : "null") + ',' + dummy2 + ',' + srcStartX + ',' + destRowStride
+					+ ',' + alpha + ',' + (dest != null ? "{...}" : "null") + ')');
 		}
 	}
 
@@ -2698,9 +2701,9 @@ public class GraphicsController {
 								int canvasB = (dest[destRowHead + j] & 0xff) * inverseOpacity;
 
 								int finalColour =
-										(((spriteR + canvasR) >> 8) << 16) +
-												(((spriteG + canvasG) >> 8) << 8) +
-												((spriteB + canvasB) >> 8);
+									(((spriteR + canvasR) >> 8) << 16) +
+										(((spriteG + canvasG) >> 8) << 8) +
+										((spriteB + canvasB) >> 8);
 								dest[destRowHead + j] = finalColour;
 
 								/*// Are we a grey?
@@ -2731,11 +2734,11 @@ public class GraphicsController {
 
 		} catch (RuntimeException var30) {
 			throw GenUtil.makeThrowable(var30,
-					"ua.GA(" + dummy2 + ',' + (src != null ? "{...}" : "null") + ',' + scaleY + ',' + dummy1 + ','
-							+ srcStartY + ',' + srcStartX + ',' + destColumnCount + ','
-							+ (dest != null ? "{...}" : "null") + ',' + destHeight + ',' + destColumnSkewPerRow + ','
-							+ destRowHead + ',' + scaleX + ',' + destFirstColumn + ',' + srcWidth + ',' + skipEveryOther
-							+ ',' + spritePixel + ')');
+				"ua.GA(" + dummy2 + ',' + (src != null ? "{...}" : "null") + ',' + scaleY + ',' + dummy1 + ','
+					+ srcStartY + ',' + srcStartX + ',' + destColumnCount + ','
+					+ (dest != null ? "{...}" : "null") + ',' + destHeight + ',' + destColumnSkewPerRow + ','
+					+ destRowHead + ',' + scaleX + ',' + destFirstColumn + ',' + srcWidth + ',' + skipEveryOther
+					+ ',' + spritePixel + ')');
 		}
 	}
 
@@ -2801,7 +2804,7 @@ public class GraphicsController {
 								// Is grey
 								if (newR == newG && newB == newG) {
 									dest[j + destRowHead] = (backG * newG >> 8 << 8) + (backR * newR >> 8 << 16)
-											+ (backB * newB >> 8);
+										+ (backB * newB >> 8);
 								} else {
 									dest[destRowHead + j] = newColor;
 								}
@@ -2821,11 +2824,11 @@ public class GraphicsController {
 
 		} catch (RuntimeException var32) {
 			throw GenUtil.makeThrowable(var32,
-					"ua.IB(" + (src != null ? "{...}" : "null") + ',' + background + ',' + dummy1 + ','
-							+ destColumnSkewPerRow + ',' + (lookupTable != null ? "{...}" : "null") + ',' + srcWidth
-							+ ',' + srcStartY + ',' + scaleY + ',' + destFirstColumn + ',' + scaleX + ','
-							+ (dest != null ? "{...}" : "null") + ',' + skipEveryOther + ',' + dummy2 + ',' + srcStartX
-							+ ',' + destRowHead + ',' + destColumnCount + ',' + destHeight + ')');
+				"ua.IB(" + (src != null ? "{...}" : "null") + ',' + background + ',' + dummy1 + ','
+					+ destColumnSkewPerRow + ',' + (lookupTable != null ? "{...}" : "null") + ',' + srcWidth
+					+ ',' + srcStartY + ',' + scaleY + ',' + destFirstColumn + ',' + scaleX + ','
+					+ (dest != null ? "{...}" : "null") + ',' + skipEveryOther + ',' + dummy2 + ',' + srcStartX
+					+ ',' + destRowHead + ',' + destColumnCount + ',' + destHeight + ')');
 		}
 	}
 

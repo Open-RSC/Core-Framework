@@ -2,13 +2,6 @@ package orsc;
 
 import com.openrsc.client.model.Sprite;
 import com.openrsc.interfaces.misc.clan.Clan;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.util.Properties;
-
 import orsc.buffers.RSBufferUtils;
 import orsc.buffers.RSBuffer_Bits;
 import orsc.enumerations.MessageType;
@@ -20,6 +13,12 @@ import orsc.net.Network_Socket;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.Properties;
 
 
 public class PacketHandler {
@@ -241,9 +240,9 @@ public class PacketHandler {
 			else if (opcode == 240) updateOptionsMenuSettings();
 
 			else if (opcode == 206) togglePrayer(length);
-			
+
 			else if (opcode == 232) mc.setShowContactDialogue(true);
-			
+
 			else if (opcode == 224) mc.setShowRecoveryDialogue(true);
 
 				// Quest Stage Update
@@ -350,7 +349,7 @@ public class PacketHandler {
 
 				// Inside Tutorial
 			else if (opcode == 111) mc.setInsideTutorial(packetsIncoming.getUnsignedByte() != 0);
-			
+
 				// Inside Black Hole
 			else if (opcode == 115) mc.setInsideBlackHole(packetsIncoming.getUnsignedByte() != 0);
 
@@ -735,7 +734,7 @@ public class PacketHandler {
 		int wantCustomBanks, wantBankPins, wantBankNotes, wantCertDeposit, customFiremaking;
 		int wantDropX, wantExpInfo, wantWoodcuttingGuild, wantFixedOverheadChat;
 		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank;
-		int getFPS, wantEmail, wantRegistrationLimit, allowResize, lenientContactDetails, wantFatigue;
+		int getFPS, wantEmail, wantRegistrationLimit, allowResize, lenientContactDetails, wantFatigue, wantCustomSprites;
 		String logoSpriteID;
 
 		if (!mc.gotInitialConfigs) {
@@ -791,6 +790,7 @@ public class PacketHandler {
 			allowResize = this.getClientStream().getUnsignedByte(); // 49
 			lenientContactDetails = this.getClientStream().getUnsignedByte(); // 50
 			wantFatigue = this.getClientStream().getUnsignedByte(); // 51
+			wantCustomSprites = this.getClientStream().getUnsignedByte(); // 52
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -844,6 +844,7 @@ public class PacketHandler {
 			allowResize = packetsIncoming.getUnsignedByte(); // 49
 			lenientContactDetails = packetsIncoming.getUnsignedByte(); // 50
 			wantFatigue = packetsIncoming.getUnsignedByte(); // 51
+			wantCustomSprites = packetsIncoming.getUnsignedByte(); // 52
 		}
 
 		if (Config.DEBUG) {
@@ -898,7 +899,8 @@ public class PacketHandler {
 					"\nS_WANT_REGISTRATION_LIMIT" + wantRegistrationLimit + //48
 					"\nS_ALLOW_RESIZE" + allowResize + //49
 					"\nS_LENIENT_CONTACT_DETAILS" + lenientContactDetails + //50
-					"\nS_WANT_FATIGUE" + wantFatigue //51
+					"\nS_WANT_FATIGUE" + wantFatigue + //51
+					"\nS_WANT_CUSTOM_SPRITES" + wantCustomSprites //52
 			);
 		}
 
@@ -953,6 +955,7 @@ public class PacketHandler {
 		props.setProperty("S_ALLOW_RESIZE", allowResize == 1 ? "true" : "false"); // 49
 		props.setProperty("S_LENIENT_CONTACT_DETAILS", lenientContactDetails == 1 ? "true" : "false"); // 50
 		props.setProperty("S_WANT_FATIGUE", wantFatigue == 1 ? "true" : "false"); // 51
+		props.setProperty("S_WANT_CUSTOM_SPRITES", wantCustomSprites == 1 ? "true" : "false"); // 52
 
 		Config.updateServerConfiguration(props);
 

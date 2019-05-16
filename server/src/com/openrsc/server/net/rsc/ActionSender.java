@@ -20,7 +20,8 @@ import com.openrsc.server.util.rsc.CaptchaGenerator;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
-
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFutureListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,61 +30,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFutureListener;
-
-import static com.openrsc.server.Constants.GameServer.ALLOW_RESIZE;
-import static com.openrsc.server.Constants.GameServer.AUTO_MESSAGE_SWITCH_TOGGLE;
-import static com.openrsc.server.Constants.GameServer.BATCH_PROGRESSION;
-import static com.openrsc.server.Constants.GameServer.CUSTOM_FIREMAKING;
-import static com.openrsc.server.Constants.GameServer.DEBUG;
-import static com.openrsc.server.Constants.GameServer.DISPLAY_LOGO_SPRITE;
-import static com.openrsc.server.Constants.GameServer.EXPERIENCE_COUNTER_TOGGLE;
-import static com.openrsc.server.Constants.GameServer.EXPERIENCE_DROPS_TOGGLE;
-import static com.openrsc.server.Constants.GameServer.FIGHTMODE_SELECTOR_TOGGLE;
-import static com.openrsc.server.Constants.GameServer.FIX_OVERHEAD_CHAT;
-import static com.openrsc.server.Constants.GameServer.FOG_TOGGLE;
-import static com.openrsc.server.Constants.GameServer.FPS;
-import static com.openrsc.server.Constants.GameServer.GROUND_ITEM_TOGGLE;
-import static com.openrsc.server.Constants.GameServer.INVENTORY_COUNT_TOGGLE;
-import static com.openrsc.server.Constants.GameServer.ITEMS_ON_DEATH_MENU;
-import static com.openrsc.server.Constants.GameServer.LENIENT_CONTACT_DETAILS;
-import static com.openrsc.server.Constants.GameServer.LOGO_SPRITE_ID;
-import static com.openrsc.server.Constants.GameServer.MEMBER_WORLD;
-import static com.openrsc.server.Constants.GameServer.MENU_COMBAT_STYLE_TOGGLE;
-import static com.openrsc.server.Constants.GameServer.PLAYER_LEVEL_LIMIT;
-import static com.openrsc.server.Constants.GameServer.RIGHT_CLICK_BANK;
-import static com.openrsc.server.Constants.GameServer.SERVER_NAME;
-import static com.openrsc.server.Constants.GameServer.SERVER_NAME_WELCOME;
-import static com.openrsc.server.Constants.GameServer.SHOW_FLOATING_NAMETAGS;
-import static com.openrsc.server.Constants.GameServer.SHOW_ROOF_TOGGLE;
-import static com.openrsc.server.Constants.GameServer.SIDE_MENU_TOGGLE;
-import static com.openrsc.server.Constants.GameServer.SPAWN_AUCTION_NPCS;
-import static com.openrsc.server.Constants.GameServer.SPAWN_IRON_MAN_NPCS;
-import static com.openrsc.server.Constants.GameServer.WANT_BANK_NOTES;
-import static com.openrsc.server.Constants.GameServer.WANT_BANK_PINS;
-import static com.openrsc.server.Constants.GameServer.WANT_CERTER_BANK_EXCHANGE;
-import static com.openrsc.server.Constants.GameServer.WANT_CERT_DEPOSIT;
-import static com.openrsc.server.Constants.GameServer.WANT_CLANS;
-import static com.openrsc.server.Constants.GameServer.WANT_CUSTOM_BANKS;
-import static com.openrsc.server.Constants.GameServer.WANT_CUSTOM_RANK_DISPLAY;
-import static com.openrsc.server.Constants.GameServer.WANT_DECANTING;
-import static com.openrsc.server.Constants.GameServer.WANT_DROP_X;
-import static com.openrsc.server.Constants.GameServer.WANT_EMAIL;
-import static com.openrsc.server.Constants.GameServer.WANT_EXPERIENCE_ELIXIRS;
-import static com.openrsc.server.Constants.GameServer.WANT_EXP_INFO;
-import static com.openrsc.server.Constants.GameServer.WANT_FATIGUE;
-import static com.openrsc.server.Constants.GameServer.WANT_GLOBAL_CHAT;
-import static com.openrsc.server.Constants.GameServer.WANT_HIDE_IP;
-import static com.openrsc.server.Constants.GameServer.WANT_KEYBOARD_SHORTCUTS;
-import static com.openrsc.server.Constants.GameServer.WANT_KILL_FEED;
-import static com.openrsc.server.Constants.GameServer.WANT_QUEST_MENUS;
-import static com.openrsc.server.Constants.GameServer.WANT_REGISTRATION_LIMIT;
-import static com.openrsc.server.Constants.GameServer.WANT_REMEMBER;
-import static com.openrsc.server.Constants.GameServer.WANT_SKILL_MENUS;
-import static com.openrsc.server.Constants.GameServer.WANT_WOODCUTTING_GUILD;
-import static com.openrsc.server.Constants.GameServer.WELCOME_TEXT;
-import static com.openrsc.server.Constants.GameServer.ZOOM_VIEW_TOGGLE;
+import static com.openrsc.server.Constants.GameServer.*;
 
 /**
  * @author n0m
@@ -523,6 +470,7 @@ public class ActionSender {
 			LOGGER.info(ALLOW_RESIZE + " 49");
 			LOGGER.info(LENIENT_CONTACT_DETAILS + " 50");
 			LOGGER.info(WANT_FATIGUE + " 51");
+			LOGGER.info(WANT_CUSTOM_SPRITES + " 52");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs();
 		ConnectionAttachment attachment = new ConnectionAttachment();
@@ -590,6 +538,7 @@ public class ActionSender {
 		s.writeByte((byte) (ALLOW_RESIZE ? 1 : 0)); // 49
 		s.writeByte((byte) (LENIENT_CONTACT_DETAILS ? 1 : 0)); // 50
 		s.writeByte((byte) (WANT_FATIGUE ? 1 : 0)); // 51
+		s.writeByte((byte) (WANT_CUSTOM_SPRITES ? 1 : 0)); // 52
 		return s;
 	}
 
