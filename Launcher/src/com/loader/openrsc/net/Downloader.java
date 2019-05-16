@@ -22,7 +22,7 @@ import java.util.Set;
 
 public class Downloader {
 	private final String[] nicename = new String[]{"Client", "Library", "Landscape", // 3
-		"Graphics", "3D Models", // 2
+		"Graphics", "Graphics", "3D Models", // 3
 		"Game Sound", "Game Sound", "Game Sound", "Game Sound", // 4
 		"Game Sound", "Game Sound", "Game Sound", "Game Sound", // 4
 		"Game Sound", "Game Sound", "Game Sound", "Game Sound", // 4
@@ -35,7 +35,7 @@ public class Downloader {
 		"Game Sound", "Game Sound", "Game Sound"}; // 3
 
 	private final String[] normalName = new String[]{"Open_RSC_Client.jar", "library.orsc", "Landscape.orsc", //3
-		"Sprites.orsc", "models.orsc", // 2
+		"Authentic_Sprites.orsc", "Custom_Sprites.orsc", "models.orsc", // 3
 		"advance.wav", "anvil.wav", "chisel.wav", "click.wav", // 4
 		"closedoor.wav", "coins.wav", "takeobject.wav", "victory.wav", // 4
 		"combat1a.wav", "combat1b.wav", "combat2a.wav", "combat2b.wav", // 4

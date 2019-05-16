@@ -211,8 +211,8 @@ public class AppFrame extends JFrame {
 		int friend_link_x = 75;
 		int friend_link_y = 400;
 		this.bg.add(new LinkText("RSC Arch Angel", new Rectangle(friend_link_x, friend_link_y, 140, 20)));
-		this.bg.add(new LinkText("RSC Dawn", new Rectangle(friend_link_x + 145, friend_link_y, 150, 20)));
-		this.bg.add(new LinkText("RSC Revolution", new Rectangle(friend_link_x + (150 * 2), friend_link_y, 150, 20)));
+		//this.bg.add(new LinkText("RSC Dawn", new Rectangle(friend_link_x + 145, friend_link_y, 150, 20)));
+		this.bg.add(new LinkText("RSC Revolution", new Rectangle(friend_link_x + (150), friend_link_y, 150, 20)));
 
 		JLabel spacer1;
 		(spacer1 = new JLabel("|")).setBounds(friend_link_x + 150, 400, 10, 20);
@@ -220,11 +220,11 @@ public class AppFrame extends JFrame {
 		spacer1.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
 		this.bg.add(spacer1);
 
-		JLabel spacer2;
+		/*JLabel spacer2;
 		(spacer2 = new JLabel("|")).setBounds(friend_link_x + 285, 400, 10, 20);
 		spacer2.setForeground(new Color(255, 0, 0, 220));
 		spacer2.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
-		this.bg.add(spacer2);
+		this.bg.add(spacer2);*/
 
 
 		// Launch button section
