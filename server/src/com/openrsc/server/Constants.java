@@ -221,6 +221,7 @@ public final class Constants {
 		public static boolean RIGHT_CLICK_BANK = false;
 		public static boolean FIX_OVERHEAD_CHAT = false;
 		public static boolean WANT_FATIGUE = true;
+		public static boolean WANT_CUSTOM_SPRITES = false;
 		//strict check on level requirements for "glitched" validations on rsc
 		public static boolean STRICT_CHECK_ALL = false;
 		public static boolean STRICT_PDART_CHECK = false;
@@ -331,6 +332,7 @@ public final class Constants {
 			FIX_OVERHEAD_CHAT = Boolean.parseBoolean(props.getProperty("want_fixed_overhead_chat"));
 			MESSAGE_FULL_INVENTORY = Boolean.parseBoolean(props.getProperty("message_full_inventory"));
 			WANT_FATIGUE = Boolean.parseBoolean(props.getProperty("want_fatigue"));
+			WANT_CUSTOM_SPRITES = Boolean.parseBoolean(props.getProperty("custom_sprites"));
 
 			NPC_KILL_LIST = Boolean.parseBoolean(props.getProperty("npc_kill_list"));
 			NPC_KILL_MESSAGES = Boolean.parseBoolean(props.getProperty("npc_kill_messages"));

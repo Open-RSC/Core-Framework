@@ -2,6 +2,10 @@ package orsc.graphics.two;
 
 import com.openrsc.client.data.DataConversions;
 import com.openrsc.client.model.Sprite;
+import orsc.Config;
+import orsc.MiscFunctions;
+import orsc.util.FastMath;
+import orsc.util.GenUtil;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -10,11 +14,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import orsc.Config;
-import orsc.MiscFunctions;
-import orsc.util.FastMath;
-import orsc.util.GenUtil;
 
 public class GraphicsController {
 
@@ -59,7 +58,11 @@ public class GraphicsController {
 			this.width2 = var1;
 			sprites = new Sprite[var3];
 			try {
-				spriteArchive = new ZipFile(Config.F_CACHE_DIR + File.separator + "Sprites.orsc");
+				if (Config.S_WANT_CUSTOM_SPRITES) {
+					spriteArchive = new ZipFile(Config.F_CACHE_DIR + File.separator + "Custom_Sprites.orsc");
+				} else {
+					spriteArchive = new ZipFile(Config.F_CACHE_DIR + File.separator + "Authentic_Sprites.orsc");
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.exit(1);
