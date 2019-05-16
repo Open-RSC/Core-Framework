@@ -32,7 +32,7 @@ public class Constants {
 	public static final String CONF_DIR = "Cache";
 	public static final String CLIENT_FILENAME = "Open_RSC_Client.jar";
 	public static final String CACHE_URL = BASE_URL + "downloads/cache/";
-	public static final Double VERSION_NUMBER = 20190512.230700; //YYYYMMDD.HHMMSS format
+	public static final Double VERSION_NUMBER = 20190516.141200; //YYYYMMDD.HHMMSS format
 	public static final String VERSION_UPDATE_URL = "https://gitlab.openrsc.com/open-rsc/Game/raw/2.0.0/Launcher/src/com/loader/openrsc/Constants.java";
 	public static final String UPDATE_JAR_URL = "https://web.openrsc.com/downloads/OpenRSC.jar";
 	public static final String JAR_FILENAME = "OpenRSC.jar";
