@@ -1017,40 +1017,40 @@ public final class World {
 
 							final byte eaveSize = 16;
 
-							if (!this.hasRoofStrut(x - 1, z))
+							if (this.hasRoofStrut(x - 1, z))
 								p00x -= eaveSize;
-							if (!this.hasRoofStrut(x + 1, z))
+							if (this.hasRoofStrut(x + 1, z))
 								p00x += eaveSize;
-							if (!this.hasRoofStrut(x, z - 1))
+							if (this.hasRoofStrut(x, z - 1))
 								p00z -= eaveSize;
-							if (!this.hasRoofStrut(x, 1 + z))
+							if (this.hasRoofStrut(x, 1 + z))
 								p00z += eaveSize;
 
-							if (!this.hasRoofStrut(x10 - 1, z))
+							if (this.hasRoofStrut(x10 - 1, z))
 								p10x -= eaveSize;
-							if (!this.hasRoofStrut(x10 + 1, z))
+							if (this.hasRoofStrut(x10 + 1, z))
 								p10x += eaveSize;
-							if (!this.hasRoofStrut(x10, z - 1))
+							if (this.hasRoofStrut(x10, z - 1))
 								p10z -= eaveSize;
-							if (!this.hasRoofStrut(x10, z + 1))
+							if (this.hasRoofStrut(x10, z + 1))
 								p10z += eaveSize;
 
-							if (!this.hasRoofStrut(x11 - 1, z11))
+							if (this.hasRoofStrut(x11 - 1, z11))
 								p11x -= eaveSize;
-							if (!this.hasRoofStrut(1 + x11, z11))
+							if (this.hasRoofStrut(1 + x11, z11))
 								p11x += eaveSize;
-							if (!this.hasRoofStrut(x11, z11 - 1))
+							if (this.hasRoofStrut(x11, z11 - 1))
 								p11z -= eaveSize;
-							if (!this.hasRoofStrut(x11, 1 + z11))
+							if (this.hasRoofStrut(x11, 1 + z11))
 								p11z += eaveSize;
 
-							if (!this.hasRoofStrut(x - 1, z01))
+							if (this.hasRoofStrut(x - 1, z01))
 								p01x -= eaveSize;
-							if (!this.hasRoofStrut(x + 1, z01))
+							if (this.hasRoofStrut(x + 1, z01))
 								p01x += eaveSize;
-							if (!this.hasRoofStrut(x, z01 - 1))
+							if (this.hasRoofStrut(x, z01 - 1))
 								p01z -= eaveSize;
-							if (!this.hasRoofStrut(x, z01 + 1))
+							if (this.hasRoofStrut(x, z01 + 1))
 								p01z += eaveSize;
 
 							roof = Objects.requireNonNull(EntityHandler.getElevationDef(roof - 1)).getUnknown2();
@@ -1250,7 +1250,7 @@ public final class World {
 		}
 	}
 
-	private final int getTileDirection(int xTile, int zTile) {
+	private int getTileDirection(int xTile, int zTile) {
 		try {
 
 			if (xTile >= 0 && xTile < 96 && zTile >= 0 && zTile < 96) {
@@ -1390,8 +1390,8 @@ public final class World {
 	private boolean hasRoofStrut(int tileX, int tileZ) {
 		try {
 
-			return this.getWallRoof(tileX, tileZ) > 0 || this.getWallRoof(tileX - 1, tileZ) > 0
-					|| this.getWallRoof(tileX - 1, tileZ - 1) > 0 || this.getWallRoof(tileX, tileZ - 1) > 0;
+			return this.getWallRoof(tileX, tileZ) <= 0 && this.getWallRoof(tileX - 1, tileZ) <= 0
+					&& this.getWallRoof(tileX - 1, tileZ - 1) <= 0 && this.getWallRoof(tileX, tileZ - 1) <= 0;
 		} catch (RuntimeException var5) {
 			throw GenUtil.makeThrowable(var5, "k.DA(" + tileX + ',' + "dummy" + ',' + tileZ + ')');
 		}
