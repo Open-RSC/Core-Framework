@@ -59,7 +59,7 @@ public final class RegularPlayer implements CommandListener {
 				return;
 			}
 			try {
-				PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM openrsc_players WHERE `username`=?");
+				PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Constants.GameServer.MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 				statement.setString(1, player.getUsername());
 				ResultSet result = statement.executeQuery();
 				if (result.next()) {

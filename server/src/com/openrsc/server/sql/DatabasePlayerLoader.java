@@ -1,5 +1,6 @@
 package com.openrsc.server.sql;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.model.PlayerAppearance;
 import com.openrsc.server.model.Point;
@@ -13,6 +14,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.LoginResponse;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -765,8 +767,8 @@ public class DatabasePlayerLoader {
 		return (byte) LoginResponse.LOGIN_SUCCESSFUL[groupId];
 	}
 
-	private class Statements {
-		private static final String PREFIX = "openrsc_";
+	private static class Statements {
+		private static final String PREFIX = Constants.GameServer.MYSQL_TABLE_PREFIX;
 
 		//private static final String unreadMessages = "SELECT COUNT(*) FROM `messages` WHERE showed=0 AND show_message=1 AND owner=?";
 
@@ -871,7 +873,7 @@ public class DatabasePlayerLoader {
 			+ "`cur_herblaw`=?, `cur_agility`=?, `cur_thieving`=? WHERE `playerID`=?";
 
 		private static final String playerLoginData = "SELECT `group_id`, `pass`, `salt`, `banned` FROM `" + PREFIX + "players` WHERE `username`=?";
-		
+
 		private static final String playerPendingRecovery = "SELECT `username`, `question1`, `answer1`, `question2`, `answer2`, `question3`, `answer3`, `question4`, `answer4`, `question5`, `answer5`, `date_set`, `ip_set` FROM `"
 		+ PREFIX + "player_change_recovery` WHERE `playerID`=?";
 

@@ -68,7 +68,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 					return;
 				}
 				try {
-						PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM openrsc_players WHERE `username`=?");
+						PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Constants.GameServer.MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 						statement.setString(1, player.getUsername());
 						ResultSet result = statement.executeQuery();
 						if (result.next()) {
@@ -109,7 +109,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 						return;
 					}
 					try {
-						PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM openrsc_players WHERE `username`=?");
+						PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Constants.GameServer.MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 						statement.setString(1, player.getUsername());
 						ResultSet result = statement.executeQuery();
 						if (result.next()) {
@@ -128,7 +128,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 						return;
 					}
 					try {
-						PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM openrsc_players WHERE `username`=?");
+						PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Constants.GameServer.MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 						statement.setString(1, player.getUsername());
 						ResultSet result = statement.executeQuery();
 						if (result.next()) {
@@ -143,7 +143,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 					}
 					String changeTo = getBankPinInput(player);
 					try {
-						PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM openrsc_players WHERE `username`=?");
+						PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Constants.GameServer.MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 						statement.setString(1, player.getUsername());
 						ResultSet result = statement.executeQuery();
 						if (result.next()) {
@@ -166,7 +166,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 						return;
 					}
 					try {
-						PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM openrsc_players WHERE `username`=?");
+						PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Constants.GameServer.MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 						statement.setString(1, player.getUsername());
 						ResultSet result = statement.executeQuery();
 						if (result.next()) {
@@ -210,7 +210,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 					return;
 				}
 				try {
-					PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM openrsc_players WHERE `username`=?");
+					PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Constants.GameServer.MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 					statement.setString(1, player.getUsername());
 					ResultSet result = statement.executeQuery();
 					if (result.next()) {
@@ -259,7 +259,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 				return;
 			}
 			try {
-				PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM openrsc_players WHERE `username`=?");
+				PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Constants.GameServer.MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 				statement.setString(1, player.getUsername());
 				ResultSet result = statement.executeQuery();
 				if (result.next()) {

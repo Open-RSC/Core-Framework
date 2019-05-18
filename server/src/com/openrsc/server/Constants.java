@@ -112,7 +112,7 @@ public final class Constants {
 		/**
 		 * the mysql database name
 		 */
-		public static String MYSQL_DB = "openrsc_game";
+		public static String MYSQL_DB = "openrsc";
 		/**
 		 * the mysql username
 		 */
@@ -168,7 +168,6 @@ public final class Constants {
 		public static String CONFIG_DIR = "conf" + File.separator + "server";
 		static long START_TIME = 0L;
 		public static boolean AVATAR_GENERATOR = false; // Not sent to client
-		public static boolean PLAYER_COMMANDS = false; // Not sent to client
 		public static boolean IS_DOUBLE_EXP = false;
 		public static boolean DISPLAY_LOGO_SPRITE = false;
 		public static boolean SPAWN_AUCTION_NPCS = false;
@@ -222,6 +221,7 @@ public final class Constants {
 		public static boolean FIX_OVERHEAD_CHAT = false;
 		public static boolean WANT_FATIGUE = true;
 		public static boolean WANT_CUSTOM_SPRITES = false;
+		public static boolean PLAYER_COMMANDS = false;
 		//strict check on level requirements for "glitched" validations on rsc
 		public static boolean STRICT_CHECK_ALL = false;
 		public static boolean STRICT_PDART_CHECK = false;

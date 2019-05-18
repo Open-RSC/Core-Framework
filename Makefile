@@ -68,6 +68,12 @@ create-database-preservation:
 create-database-openpk:
 	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} -e "create database openpk;"
 
+create-database-wk:
+   	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} -e "create database wk;"
+
+create-database-dev:
+	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} -e "create database dev;"
+
 import-database-openrsc:
 	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} openrsc < Databases/openrsc_game_server.sql
 	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} openrsc < Databases/openrsc_game_players.sql
@@ -83,6 +89,14 @@ import-database-preservation:
 import-database-openpk:
 	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} openpk < Databases/openrsc_game_server.sql
 	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} openpk < Databases/openrsc_game_players.sql
+
+import-database-wk:
+	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} wk < Databases/openrsc_game_server.sql
+	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} wk < Databases/openrsc_game_players.sql
+
+import-database-dev:
+	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} dev < Databases/openrsc_game_server.sql
+	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} dev < Databases/openrsc_game_players.sql
 
 clone-website:
 	@$(shell sudo rm -rf Website && git clone -b 2.0.0 https://gitlab.openrsc.com/open-rsc/Website.git)
@@ -124,11 +138,17 @@ backup-openpk:
 	sudo chmod 644 etc/mariadb/innodb.cnf
 	docker exec mysql mysqldump -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} openpk --single-transaction --quick --lock-tables=false | sudo zip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d-%H%M-%Z"`-openpk.zip	
 
-backup-wolfkingdom:
+backup-wk:
 	@mkdir -p $(MYSQL_DUMPS_DIR)
 	sudo chmod -R 777 $(MYSQL_DUMPS_DIR)
 	sudo chmod 644 etc/mariadb/innodb.cnf
 	docker exec mysql mysqldump -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} wolfkingdom --single-transaction --quick --lock-tables=false | sudo zip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d-%H%M-%Z"`-wolfkingdom.zip
+
+backup-dev:
+	@mkdir -p $(MYSQL_DUMPS_DIR)
+	sudo chmod -R 777 $(MYSQL_DUMPS_DIR)
+	sudo chmod 644 etc/mariadb/innodb.cnf
+	docker exec mysql mysqldump -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} dev --single-transaction --quick --lock-tables=false | sudo zip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d-%H%M-%Z"`-dev.zip
 
 init-laravel:
 	cp Website/openrsc_web/.env.example Website/openrsc_web/.env

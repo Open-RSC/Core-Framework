@@ -1918,7 +1918,8 @@ public final class mudclient implements Runnable {
             }
 
             if (!wantMembers()) { // Free version
-                this.panelLoginWelcome.addCenteredText(halfGameWidth(), halfGameHeight() + 35 + yOffsetWelcome, "Click on an option", 5, true);
+                this.panelLoginWelcome.addCenteredText(halfGameWidth(), halfGameHeight() + 23 + yOffsetWelcome, "Welcome to " + getServerNameWelcome(), 4, true);
+                this.panelLoginWelcome.addCenteredText(halfGameWidth(), halfGameHeight() + 38 + yOffsetWelcome, getWelcomeText(), 4, true);
 
                 panelLoginWelcome.addButtonBackground(halfGameWidth() - 100, halfGameHeight() + 73 + yOffsetWelcome, 120, 35);
                 panelLoginWelcome.addButtonBackground(halfGameWidth() + 100, halfGameHeight() + 73 + yOffsetWelcome, 120, 35);
@@ -4840,17 +4841,19 @@ public final class mudclient implements Runnable {
                             this.getSurface().drawString(
                                     "Fatigue: " + this.statFatigue + "%", 7, i, 0xffffff, 1);
                         }
-                        i += 14;
-                        this.getSurface().drawString("Camera Zoom: " + cameraZoom, 7, i, 0xffffff, 1);
-                        i += 14;
-                        this.getSurface().drawString("Camera Pitch: " + cameraPitch, 7, i, 0xffffff, 1);
+                        if (Config.DEBUG) {
+                            i += 14;
+                            this.getSurface().drawString("Camera Zoom: " + cameraZoom, 7, i, 0xffffff, 1);
+                            i += 14;
+                            this.getSurface().drawString("Camera Pitch: " + cameraPitch, 7, i, 0xffffff, 1);
+                        }
                     }
 
                     if (S_EXPERIENCE_COUNTER_TOGGLE && C_EXPERIENCE_COUNTER == 2) {
                         this.drawExperienceCounter(recentSkill);
                     }
 
-                    /*if (isAndroid()) { // on screen buttons for various player chat commands
+                    if (isAndroid() && Config.S_WANT_PLAYER_COMMANDS) { // on screen buttons for various player chat commands
                         if (F_SHOWING_KEYBOARD) {
                             int uiX = 5;
                             int uiY = 5;
@@ -4867,7 +4870,6 @@ public final class mudclient implements Runnable {
                                 }
                             }
                             uiX += uiWidth + 15;
-
                             this.getSurface().drawBoxAlpha(uiX, uiY, uiWidth, uiHeight, 0x659CDE, 160);
                             this.getSurface().drawBoxBorder(uiX, uiWidth, uiY, uiHeight, 0);
                             this.getSurface().drawString("@whi@PK", uiX + 25, uiY + 20, 0xffffff, 1);
@@ -4877,15 +4879,26 @@ public final class mudclient implements Runnable {
                                     this.panelMessageTabs.setText(this.panelMessageEntry, "::p ");
                                 }
                             }
+                            if (S_WANT_CLANS) {
+                                uiX += uiWidth + 15;
+                                this.getSurface().drawBoxAlpha(uiX, uiY, uiWidth, uiHeight, 0x659CDE, 160);
+                                this.getSurface().drawBoxBorder(uiX, uiWidth, uiY, uiHeight, 0);
+                                this.getSurface().drawString("@whi@PK", uiX + 25, uiY + 20, 0xffffff, 1);
+                                if (this.mouseButtonClick != 0) {
+                                    if (this.mouseX >= uiX && this.mouseX <= uiX + uiWidth && this.mouseY >= uiY && this.mouseY <= uiY + uiHeight) {
+                                        this.mouseButtonClick = 0;
+                                        this.panelMessageTabs.setText(this.panelMessageEntry, "::p ");
+                                    }
+                                }
+                            }
                             uiX += uiWidth + 15;
-
                             this.getSurface().drawBoxAlpha(uiX, uiY, uiWidth, uiHeight, 0xff0000, 160);
                             this.getSurface().drawBoxBorder(uiX, uiWidth, uiY, uiHeight, 0);
                             this.getSurface().drawString("@whi@Online", uiX + 12, uiY + 20, 0xffffff, 1);
                             if (this.mouseButtonClick != 0) {
                                 if (this.mouseX >= uiX && this.mouseX <= uiX + uiWidth && this.mouseY >= uiY && this.mouseY <= uiY + uiHeight) {
                                     this.mouseButtonClick = 0;
-                                    this.panelMessageTabs.setText(this.panelMessageEntry, "::online");
+                                    this.panelMessageTabs.setText(this.panelMessageEntry, "::onlinelist");
                                 }
                             }
                             uiX += uiWidth + 15;
@@ -4898,10 +4911,18 @@ public final class mudclient implements Runnable {
                                     this.panelMessageTabs.setText(this.panelMessageEntry, "::info");
                                 }
                             }
-
-
+                            uiX += uiWidth + 15;
+                            this.getSurface().drawBoxAlpha(uiX, uiY, uiWidth, uiHeight, 0xff0000, 160);
+                            this.getSurface().drawBoxBorder(uiX, uiWidth, uiY, uiHeight, 0);
+                            this.getSurface().drawString("@whi@Commands", uiX + 20, uiY + 20, 0xffffff, 1);
+                            if (this.mouseButtonClick != 0) {
+                                if (this.mouseX >= uiX && this.mouseX <= uiX + uiWidth && this.mouseY >= uiY && this.mouseY <= uiY + uiHeight) {
+                                    this.mouseButtonClick = 0;
+                                    this.panelMessageTabs.setText(this.panelMessageEntry, "::commands");
+                                }
+                            }
                         }
-                    }*/
+                    }
 
                     if (isAndroid()) {
                         if (F_SHOWING_KEYBOARD) {
