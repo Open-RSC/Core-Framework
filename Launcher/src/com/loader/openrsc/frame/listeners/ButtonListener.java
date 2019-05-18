@@ -54,8 +54,48 @@ public class ButtonListener implements ActionListener {
 				return;
 			}
 			case "rsc cabbage": {
-				String ip = "cabbage.openrsc.com";
+				String ip = "game.openrsc.com";
 				String port = "43595";
+				FileOutputStream fileout;
+				try {
+					fileout = new FileOutputStream("Cache" + File.separator + "ip.txt");
+					OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+					outputWriter.write(ip);
+					outputWriter.close();
+				} catch (Exception ignored) {
+				}
+				try {
+					fileout = new FileOutputStream("Cache" + File.separator + "port.txt");
+					OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+					outputWriter.write(port);
+					outputWriter.close();
+				} catch (Exception ignored) {
+				}
+				return;
+			}
+			case "open pk (alpha)": {
+				String ip = "game.openrsc.com";
+				String port = "43597";
+				FileOutputStream fileout;
+				try {
+					fileout = new FileOutputStream("Cache" + File.separator + "ip.txt");
+					OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+					outputWriter.write(ip);
+					outputWriter.close();
+				} catch (Exception ignored) {
+				}
+				try {
+					fileout = new FileOutputStream("Cache" + File.separator + "port.txt");
+					OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+					outputWriter.write(port);
+					outputWriter.close();
+				} catch (Exception ignored) {
+				}
+				return;
+			}
+			case "rsc preservation (alpha)": {
+				String ip = "game.openrsc.com";
+				String port = "43596";
 				FileOutputStream fileout;
 				try {
 					fileout = new FileOutputStream("Cache" + File.separator + "ip.txt");

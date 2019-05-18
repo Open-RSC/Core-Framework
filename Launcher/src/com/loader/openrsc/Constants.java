@@ -13,12 +13,24 @@ public class Constants {
 	// RSC Cabbage
 	public static final String RSCC_GAME_NAME = "RSC Cabbage";
 	public static final String RSCC_WORLD_STATS_URL = "https://openrsc.com/cabbagestats"; // Used for the world statistics
-	static final String RSCC_SERVER_DOMAIN = "cabbage.openrsc.com"; // Used for the server status display
+	static final String RSCC_SERVER_DOMAIN = "game.openrsc.com"; // Used for the server status display
 	static final int RSCC_SERVER_PORT = 43595;
+
+	// RSC Preservation
+	public static final String RSCP_GAME_NAME = "RSC Preservation (Alpha)";
+	//public static final String RSCP_WORLD_STATS_URL = "https://openrsc.com/cabbagestats"; // Used for the world statistics
+	static final String RSCP_SERVER_DOMAIN = "game.openrsc.com"; // Used for the server status display
+	static final int RSCP_SERVER_PORT = 43596;
+
+	// Open PK
+	public static final String OPENPK_GAME_NAME = "Open PK (Alpha)";
+	//public static final String OPENPK_WORLD_STATS_URL = "https://openrsc.com/cabbagestats"; // Used for the world statistics
+	static final String OPENPK_SERVER_DOMAIN = "game.openrsc.com"; // Used for the server status display
+	static final int OPENPK_SERVER_PORT = 43597;
 
 	// Dev World
 	public static final String DEV_GAME_NAME = "Dev World";
-	static final String DEV_SERVER_DOMAIN = "dev.openrsc.com"; // Used for the server status display
+	static final String DEV_SERVER_DOMAIN = "game.openrsc.com"; // Used for the server status display
 	static final int DEV_SERVER_PORT = 43599;
 
 	// Localhost
@@ -32,7 +44,7 @@ public class Constants {
 	public static final String CONF_DIR = "Cache";
 	public static final String CLIENT_FILENAME = "Open_RSC_Client.jar";
 	public static final String CACHE_URL = BASE_URL + "downloads/cache/";
-	public static final Double VERSION_NUMBER = 20190516.141200; //YYYYMMDD.HHMMSS format
+	public static final Double VERSION_NUMBER = 20190518.155000; //YYYYMMDD.HHMMSS format
 	public static final String VERSION_UPDATE_URL = "https://gitlab.openrsc.com/open-rsc/Game/raw/2.0.0/Launcher/src/com/loader/openrsc/Constants.java";
 	public static final String UPDATE_JAR_URL = "https://web.openrsc.com/downloads/OpenRSC.jar";
 	public static final String JAR_FILENAME = "OpenRSC.jar";

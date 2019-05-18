@@ -36,11 +36,17 @@ public class AppFrame extends JFrame {
 	private JLabel rscc_online;
 	private JLabel rscc_logins48;
 
-	// Localhost section
-	private JLabel local_status;
+	// Open PK section
+	private JLabel openpk_status;
+
+	// RSC Preservation section
+	private JLabel rscp_status;
 
 	// Dev World section
 	private JLabel dev_status;
+
+	// Localhost section
+	private JLabel local_status;
 
 	public AppFrame() {
 		this.setPreferredSize(new Dimension(795, 555));
@@ -147,22 +153,46 @@ public class AppFrame extends JFrame {
 		this.bg.add(this.rscc_logins48);
 
 		/*
+		 * Open PK
+		 */
+		// Server status check - spaced 12px apart
+		(this.openpk_status = new JLabel(Constants.OPENPK_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
+		this.openpk_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
+		int openpk_x = 630;
+		int openpk_y = rscc_y + 39; //
+		this.openpk_status.setBounds(openpk_x, openpk_y + 12, 327, 15);
+		this.bg.add(this.openpk_status);
+
+		/*
+		 * RSC Preservation
+		 */
+		// Server status check - spaced 12px apart
+		(this.rscp_status = new JLabel(Constants.RSCP_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
+		this.rscp_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
+		int rscp_x = 630;
+		int rscp_y = openpk_y + 26; //
+		this.rscp_status.setBounds(rscp_x, rscp_y + 12, 327, 15);
+		this.bg.add(this.rscp_status);
+
+		/*
 		 * Dev World
 		 */
+		// Server status check - spaced 12px apart
 		(this.dev_status = new JLabel(Constants.DEV_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
 		this.dev_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
 		int dev_x = 630;
-		int dev_y = rscc_y + 39; // 231
+		int dev_y = rscp_y + 26; //
 		this.dev_status.setBounds(dev_x, dev_y + 12, 327, 15);
 		this.bg.add(this.dev_status);
 
 		/*
 		 * Localhost
 		 */
+		// Server status check - spaced 12px apart
 		(this.local_status = new JLabel(Constants.LOCALHOST_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
 		this.local_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
 		int local_x = 630;
-		int local_y = dev_y + 26; // 257
+		int local_y = dev_y + 26; //
 		this.local_status.setBounds(local_x, local_y + 12, 327, 15);
 		this.bg.add(this.local_status);
 	}
@@ -226,7 +256,6 @@ public class AppFrame extends JFrame {
 		spacer2.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
 		this.bg.add(spacer2);*/
 
-
 		// Launch button section
 		(this.launch = new LaunchButton()).setBounds(617, 477, 174, 69);
 		this.bg.add(this.launch);
@@ -239,12 +268,16 @@ public class AppFrame extends JFrame {
 		int orsc_radio_x = 30;
 		int orsc_radio_y = 142;
 		int rscc_radio_y = orsc_radio_y + 28;
-		int dev_radio_y = orsc_radio_y + 56;
-		int local_radio_y = orsc_radio_y + 84;
+		int openpk_radio_y = rscc_radio_y + 28;
+		int rscp_radio_y = openpk_radio_y + 28;
+		int dev_radio_y = rscp_radio_y + 28;
+		int local_radio_y = dev_radio_y + 28;
 
 		ButtonGroup group = new ButtonGroup();
 		RadioButton orscRadioButton = new RadioButton(Constants.ORSC_GAME_NAME, new Rectangle(orsc_radio_x, orsc_radio_y, 140, 40));
 		RadioButton rsccRadioButton = new RadioButton(Constants.RSCC_GAME_NAME, new Rectangle(orsc_radio_x, rscc_radio_y, 140, 40));
+		RadioButton openpkRadioButton = new RadioButton(Constants.OPENPK_GAME_NAME, new Rectangle(orsc_radio_x, openpk_radio_y, 260, 40));
+		RadioButton rscpRadioButton = new RadioButton(Constants.RSCP_GAME_NAME, new Rectangle(orsc_radio_x, rscp_radio_y, 260, 40));
 		RadioButton devRadioButton = new RadioButton(Constants.DEV_GAME_NAME, new Rectangle(orsc_radio_x, dev_radio_y, 140, 40));
 		RadioButton localRadioButton = new RadioButton(Constants.LOCALHOST_GAME_NAME, new Rectangle(orsc_radio_x, local_radio_y, 140, 40));
 
@@ -252,11 +285,15 @@ public class AppFrame extends JFrame {
 
 		group.add(orscRadioButton);
 		group.add(rsccRadioButton);
+		group.add(openpkRadioButton);
+		group.add(rscpRadioButton);
 		group.add(devRadioButton);
 		group.add(localRadioButton);
 
 		this.bg.add(orscRadioButton);
 		this.bg.add(rsccRadioButton);
+		this.bg.add(openpkRadioButton);
+		this.bg.add(rscpRadioButton);
 		this.bg.add(devRadioButton);
 		this.bg.add(localRadioButton);
 	}
@@ -266,8 +303,12 @@ public class AppFrame extends JFrame {
 		int orsc_y = 152;
 		int rscc_x = 165;
 		int rscc_y = orsc_y + 29; // 188
+		int openpk_y = rscc_y + 29; //
+		int rscp_y = openpk_y + 29; //
+		int openpk_x = 185;
+		int rscp_x = 240;
 		int dev_x = 150;
-		int dev_y = rscc_y + 27; // 215
+		int dev_y = rscp_y + 27; // 215
 		int local_x = 165;
 		int local_y = dev_y + 29; // 242
 
@@ -284,6 +325,20 @@ public class AppFrame extends JFrame {
 		rsccDescription.setForeground(new Color(255, 255, 255, 220));
 		rsccDescription.setFont(Utils.getFont("Exo-Regular.otf", 0, 13.0f));
 		this.bg.add(rsccDescription);
+
+		// Open PK
+		JLabel openpkDescription;
+		(openpkDescription = new JLabel("-> Stork PK remake")).setBounds(openpk_x, openpk_y, 600, 18);
+		openpkDescription.setForeground(new Color(255, 255, 255, 220));
+		openpkDescription.setFont(Utils.getFont("Exo-Regular.otf", 0, 13.0f));
+		this.bg.add(openpkDescription);
+
+		// RSC Preservation
+		JLabel rscpDescription;
+		(rscpDescription = new JLabel("-> authentic RSC")).setBounds(rscp_x, rscp_y, 600, 18);
+		rscpDescription.setForeground(new Color(255, 255, 255, 220));
+		rscpDescription.setFont(Utils.getFont("Exo-Regular.otf", 0, 13.0f));
+		this.bg.add(rscpDescription);
 
 		// Dev World
 		JLabel devDescription;
@@ -334,13 +389,23 @@ public class AppFrame extends JFrame {
 		return this.rscc_logins48;
 	}
 
-	// Localhost section
-	public JLabel getlocalStatus() {
-		return this.local_status;
+	// Open PK section
+	public JLabel getopenpkStatus() {
+		return this.openpk_status;
+	}
+
+	// RSCP section
+	public JLabel getrscpStatus() {
+		return this.rscp_status;
 	}
 
 	// Dev World section
 	public JLabel getdevStatus() {
 		return this.dev_status;
+	}
+
+	// Localhost section
+	public JLabel getlocalStatus() {
+		return this.local_status;
 	}
 }

@@ -26,6 +26,8 @@ public class Launcher {
 		Launcher.popup = new PopupFrame();
 		String orsc = "orsc";
 		String rscc = "rscc";
+		String openpk = "openpk";
+		String rscp = "rscp";
 		String local = "local";
 		String dev = "dev";
 
@@ -34,6 +36,12 @@ public class Launcher {
 
 		// RSCC server status checker
 		new Thread(new StatusChecker(Constants.RSCC_SERVER_DOMAIN, rscc, Constants.RSCC_SERVER_PORT)).start();
+
+		// OpenPK server status checker
+		new Thread(new StatusChecker(Constants.OPENPK_SERVER_DOMAIN, openpk, Constants.OPENPK_SERVER_PORT)).start();
+
+		// RSCP server status checker
+		new Thread(new StatusChecker(Constants.RSCP_SERVER_DOMAIN, rscp, Constants.RSCP_SERVER_PORT)).start();
 
 		// Localhost server status checker
 		new Thread(new StatusChecker(Constants.LOCALHOST_SERVER_DOMAIN, local, Constants.LOCALHOST_SERVER_PORT)).start();

@@ -47,6 +47,34 @@ public class StatusChecker implements Runnable {
 			} catch (Exception ignored) {
 			}
 		}
+		if (game.equals("openpk")) {
+			try {
+				boolean isOnline = isOnline();
+				String text = isOnline ? "Online" : "Offline";
+				String color = isOnline ? "#00FF00" : "#FF0000";
+				AppFrame.get().getopenpkStatus().setText("<html>Open PK: <span style='color:" + color + ";'>" + text + "</span></html>");
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+			try {
+				Thread.sleep(15000L);
+			} catch (Exception ignored) {
+			}
+		}
+		if (game.equals("rscp")) {
+			try {
+				boolean isOnline = isOnline();
+				String text = isOnline ? "Online" : "Offline";
+				String color = isOnline ? "#00FF00" : "#FF0000";
+				AppFrame.get().getrscpStatus().setText("<html>RSC Preservation: <span style='color:" + color + ";'>" + text + "</span></html>");
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+			try {
+				Thread.sleep(15000L);
+			} catch (Exception ignored) {
+			}
+		}
 		if (game.equals("dev")) {
 			try {
 				boolean isOnline = isOnline();
