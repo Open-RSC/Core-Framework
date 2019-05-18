@@ -306,7 +306,7 @@ public class AppFrame extends JFrame {
 		int openpk_y = rscc_y + 29; //
 		int rscp_y = openpk_y + 29; //
 		int openpk_x = 185;
-		int rscp_x = 240;
+		int rscp_x = 250;
 		int dev_x = 150;
 		int dev_y = rscp_y + 27; // 215
 		int local_x = 165;
