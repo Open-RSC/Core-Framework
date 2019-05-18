@@ -191,11 +191,11 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 
 		if (level_difference < 0)
 			return false;
-		else if (level_difference >= 10)
-			level_difference = 80;
-
 		else if (level_difference >= 15)
 			level_difference = 90;
+
+		else if (level_difference >= 10)
+			level_difference = 80;
 		else
 			level_difference = 60 + level_difference;
 		return percent <= level_difference;
