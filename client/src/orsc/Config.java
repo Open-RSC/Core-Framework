@@ -118,6 +118,7 @@ public class Config {
 	public static boolean S_WANT_FATIGUE = true;
 	public static boolean S_WANT_CUSTOM_SPRITES = false;
 	public static boolean S_WANT_PLAYER_COMMANDS = false;
+	public static boolean S_WANT_PETS = false;
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());

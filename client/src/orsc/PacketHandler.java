@@ -733,7 +733,7 @@ public class PacketHandler {
 		int wantGlobalChat, wantSkillMenus, wantQuestMenus;
 		int wantExperienceElixirs, wantKeyboardShortcuts, wantMembers, displayLogoSprite;
 		int wantCustomBanks, wantBankPins, wantBankNotes, wantCertDeposit, customFiremaking;
-		int wantDropX, wantExpInfo, wantWoodcuttingGuild, wantFixedOverheadChat;
+		int wantDropX, wantExpInfo, wantWoodcuttingGuild, wantFixedOverheadChat, wantPets;
 		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank, wantPlayerCommands;
 		int getFPS, wantEmail, wantRegistrationLimit, allowResize, lenientContactDetails, wantFatigue, wantCustomSprites;
 		String logoSpriteID;
@@ -793,6 +793,7 @@ public class PacketHandler {
 			wantFatigue = this.getClientStream().getUnsignedByte(); // 51
 			wantCustomSprites = this.getClientStream().getUnsignedByte(); // 52
 			wantPlayerCommands = this.getClientStream().getUnsignedByte(); // 53
+			wantPets = this.getClientStream().getUnsignedByte(); // 54
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -848,6 +849,7 @@ public class PacketHandler {
 			wantFatigue = packetsIncoming.getUnsignedByte(); // 51
 			wantCustomSprites = packetsIncoming.getUnsignedByte(); // 52
 			wantPlayerCommands = packetsIncoming.getUnsignedByte(); // 53
+			wantPets = packetsIncoming.getUnsignedByte(); // 54
 		}
 
 		if (Config.DEBUG) {
@@ -904,7 +906,8 @@ public class PacketHandler {
 					"\nS_LENIENT_CONTACT_DETAILS" + lenientContactDetails + // 50
 					"\nS_WANT_FATIGUE" + wantFatigue + // 51
 					"\nS_WANT_CUSTOM_SPRITES" + wantCustomSprites + // 52
-					"\nS_WANT_PLAYER_COMMANDS" + wantPlayerCommands // 53
+					"\nS_WANT_PLAYER_COMMANDS" + wantPlayerCommands + // 53
+					"\nS_WANT_PETS" + wantPets // 54
 			);
 		}
 
@@ -961,6 +964,7 @@ public class PacketHandler {
 		props.setProperty("S_WANT_FATIGUE", wantFatigue == 1 ? "true" : "false"); // 51
 		props.setProperty("S_WANT_CUSTOM_SPRITES", wantCustomSprites == 1 ? "true" : "false"); // 52
 		props.setProperty("S_WANT_PLAYER_COMMANDS", wantPlayerCommands == 1 ? "true" : "false"); // 53
+		props.setProperty("S_WANT_PETS", wantPets == 1 ? "true" : "false"); // 54
 
 		Config.updateServerConfiguration(props);
 

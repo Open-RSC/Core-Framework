@@ -222,6 +222,7 @@ public final class Constants {
 		public static boolean WANT_FATIGUE = true;
 		public static boolean WANT_CUSTOM_SPRITES = false;
 		public static boolean PLAYER_COMMANDS = false;
+		public static boolean WANT_PETS = false;
 		//strict check on level requirements for "glitched" validations on rsc
 		public static boolean STRICT_CHECK_ALL = false;
 		public static boolean STRICT_PDART_CHECK = false;
@@ -333,6 +334,7 @@ public final class Constants {
 			MESSAGE_FULL_INVENTORY = Boolean.parseBoolean(props.getProperty("message_full_inventory"));
 			WANT_FATIGUE = Boolean.parseBoolean(props.getProperty("want_fatigue"));
 			WANT_CUSTOM_SPRITES = Boolean.parseBoolean(props.getProperty("custom_sprites"));
+			WANT_PETS = Boolean.parseBoolean(props.getProperty("want_pets"));
 
 			NPC_KILL_LIST = Boolean.parseBoolean(props.getProperty("npc_kill_list"));
 			NPC_KILL_MESSAGES = Boolean.parseBoolean(props.getProperty("npc_kill_messages"));

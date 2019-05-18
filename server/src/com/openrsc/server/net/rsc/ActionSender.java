@@ -79,6 +79,7 @@ import static com.openrsc.server.Constants.GameServer.WANT_GLOBAL_CHAT;
 import static com.openrsc.server.Constants.GameServer.WANT_HIDE_IP;
 import static com.openrsc.server.Constants.GameServer.WANT_KEYBOARD_SHORTCUTS;
 import static com.openrsc.server.Constants.GameServer.WANT_KILL_FEED;
+import static com.openrsc.server.Constants.GameServer.WANT_PETS;
 import static com.openrsc.server.Constants.GameServer.WANT_QUEST_MENUS;
 import static com.openrsc.server.Constants.GameServer.WANT_REGISTRATION_LIMIT;
 import static com.openrsc.server.Constants.GameServer.WANT_REMEMBER;
@@ -144,13 +145,13 @@ public class ActionSender {
 		s.setID(Opcode.SEND_APPEARANCE_CHANGE.opcode);
 		player.write(s.toPacket());
 	}
-	
+
 	public static void sendRecoveryScreen(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_OPEN_RECOVERY.opcode);
 		player.write(s.toPacket());
 	}
-	
+
 	public static void sendDetailsScreen(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_OPEN_DETAILS.opcode);
@@ -163,7 +164,7 @@ public class ActionSender {
 		s.writeByte((byte) (player.getLocation().onTutorialIsland() ? 1 : 0));
 		player.write(s.toPacket());
 	}
-	
+
 	public static void sendPlayerOnBlackHole(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_ON_BLACK_HOLE.opcode);
@@ -419,7 +420,7 @@ public class ActionSender {
 		if (
 			World.getWorld().getPlayer(usernameHash) != null &&
 				World.getWorld().getPlayer(usernameHash).isLoggedIn() &&
-				( !World.getWorld().getPlayer(usernameHash).getSettings().getPrivacySetting(1) ||
+				(!World.getWorld().getPlayer(usernameHash).getSettings().getPrivacySetting(1) ||
 					World.getWorld().getPlayer(usernameHash).getSocial().isFriendsWith(player.getUsernameHash()) ||
 					player.isMod()
 				)
@@ -438,7 +439,7 @@ public class ActionSender {
 
 		s.writeByte(arg);
 
-		if((arg & 4) != 0)
+		if ((arg & 4) != 0)
 			s.writeString("OpenRSC");
 
 		player.write(s.toPacket());
@@ -451,9 +452,9 @@ public class ActionSender {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_GAME_SETTINGS.opcode);
 		//s.writeByte((byte) player.getGroupID());
-		s.writeByte((byte) (player.getSettings().getGameSetting(0) ? 1: 0)); // Camera Auto Angle 0
-		s.writeByte((byte) (player.getSettings().getGameSetting(1) ? 1: 0)); // Mouse buttons 1
-		s.writeByte((byte) (player.getSettings().getGameSetting(2) ? 1: 0)); // Sound Effects 2
+		s.writeByte((byte) (player.getSettings().getGameSetting(0) ? 1 : 0)); // Camera Auto Angle 0
+		s.writeByte((byte) (player.getSettings().getGameSetting(1) ? 1 : 0)); // Mouse buttons 1
+		s.writeByte((byte) (player.getSettings().getGameSetting(2) ? 1 : 0)); // Sound Effects 2
 		s.writeByte((byte) player.getCombatStyle());
 		// show roof 5?
 		// fog 6?
@@ -527,6 +528,7 @@ public class ActionSender {
 			LOGGER.info(WANT_FATIGUE + " 51");
 			LOGGER.info(WANT_CUSTOM_SPRITES + " 52");
 			LOGGER.info(PLAYER_COMMANDS + " 53");
+			LOGGER.info(WANT_PETS + " 54");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs();
 		ConnectionAttachment attachment = new ConnectionAttachment();
@@ -596,6 +598,7 @@ public class ActionSender {
 		s.writeByte((byte) (WANT_FATIGUE ? 1 : 0)); // 51
 		s.writeByte((byte) (WANT_CUSTOM_SPRITES ? 1 : 0)); // 52
 		s.writeByte((byte) (PLAYER_COMMANDS ? 1 : 0)); // 53
+		s.writeByte((byte) (WANT_PETS ? 1 : 0)); // 54
 		return s;
 	}
 
