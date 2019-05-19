@@ -90,10 +90,10 @@ public class CombinePotions implements InvUseOnItemListener, InvUseOnItemExecuti
 					}
 				}
 				/** 1 dose with 1 dose. **/
-				else if (item1.getID() == combinePotions[i][1] && item2.getID() == combinePotions[i][1]) {
-					if (p.getInventory().remove(new Item(combinePotions[i][1])) > -1 && p.getInventory().remove(new Item(combinePotions[i][1])) > -1) {
+				else if (item1.getID() == combinePotions[i][0] && item2.getID() == combinePotions[i][0]) {
+					if (p.getInventory().remove(new Item(combinePotions[i][0])) > -1 && p.getInventory().remove(new Item(combinePotions[i][0])) > -1) {
 						p.message("You combine two 1 dose of " + item1.getDef().getName().toLowerCase());
-						p.getInventory().add(new Item(combinePotions[i][0])); // 2 dose pot
+						p.getInventory().add(new Item(combinePotions[i][1])); // 2 dose pot
 						p.message("to 2 doses of " + item1.getDef().getName().toLowerCase());
 						addItem(p, ItemId.EMPTY_VIAL.id(), 1); // give 1 empty vial.
 						p.message("you get an empty vial over");
@@ -101,11 +101,11 @@ public class CombinePotions implements InvUseOnItemListener, InvUseOnItemExecuti
 					}
 				}
 				/** 2 dose with 2 dose. **/
-				else if (item1.getID() == combinePotions[i][0] && item2.getID() == combinePotions[i][0]) {
-					if (p.getInventory().remove(new Item(combinePotions[i][0])) > -1 && p.getInventory().remove(new Item(combinePotions[i][0])) > -1) {
+				else if (item1.getID() == combinePotions[i][1] && item2.getID() == combinePotions[i][1]) {
+					if (p.getInventory().remove(new Item(combinePotions[i][1])) > -1 && p.getInventory().remove(new Item(combinePotions[i][1])) > -1) {
 						p.message("You combine two 2 doses of " + item1.getDef().getName().toLowerCase());
 						p.getInventory().add(new Item(combinePotions[i][2])); // 1 full pot
-						p.getInventory().add(new Item(combinePotions[i][1])); // 1 dose pot
+						p.getInventory().add(new Item(combinePotions[i][0])); // 1 dose pot
 						p.message("to a full 3 doses of " + item1.getDef().getName().toLowerCase() + " and 1 dose of " + item1.getDef().getName().toLowerCase());
 						return;
 					}
