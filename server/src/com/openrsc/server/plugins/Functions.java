@@ -24,11 +24,11 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * @author n0m
@@ -70,27 +70,21 @@ public class Functions {
 	}
 
 	public static void teleport(Mob n, int x, int y) {
-		post(new Runnable() {
-			@Override
-			public void run() {
-				n.resetPath();
-				n.setLocation(new Point(x, y), true);
-			}
+		post(() -> {
+			n.resetPath();
+			n.setLocation(new Point(x, y), true);
 		});
 	}
 
 	public static void walkMob(Mob n, Point... waypoints) {
-		post(new Runnable() {
-			@Override
-			public void run() {
-				n.resetPath();
-				Path path = new Path(n, PathType.WALK_TO_POINT);
-				for (Point p : waypoints) {
-					path.addStep(p.getX(), p.getY());
-				}
-				path.finish();
-				n.getWalkingQueue().setPath(path);
+		post(() -> {
+			n.resetPath();
+			Path path = new Path(n, PathType.WALK_TO_POINT);
+			for (Point p : waypoints) {
+				path.addStep(p.getX(), p.getY());
 			}
+			path.finish();
+			n.getWalkingQueue().setPath(path);
 		});
 	}
 
@@ -123,10 +117,10 @@ public class Functions {
 	public static void kill(Npc mob, Player killedBy) {
 		mob.killedBy(killedBy);
 	}
-	
+
 	/**
 	 * Determines if the id of item1 is idA and the id of item2 is idB
-	 * and does the check the other way around as well 
+	 * and does the check the other way around as well
 	 */
 	public static boolean compareItemsIds(Item item1, Item item2, int idA, int idB) {
 		return item1.getID() == idA && item2.getID() == idB || item1.getID() == idB && item2.getID() == idA;
@@ -328,30 +322,24 @@ public class Functions {
 
 	public static Npc spawnNpc(int id, int x, int y, final int time, final Player spawnedFor) {
 		final Npc npc = new Npc(id, x, y);
-		post(new Runnable() {
-			@Override
-			public void run() {
-				npc.setShouldRespawn(false);
-				npc.setAttribute("spawnedFor", spawnedFor);
-				World.getWorld().registerNpc(npc);
-				Server.getServer().getEventHandler().add(new SingleEvent(null, time) {
-					public void action() {
-						npc.remove();
-					}
-				});
-			}
+		post(() -> {
+			npc.setShouldRespawn(false);
+			npc.setAttribute("spawnedFor", spawnedFor);
+			World.getWorld().registerNpc(npc);
+			Server.getServer().getEventHandler().add(new SingleEvent(null, time) {
+				public void action() {
+					npc.remove();
+				}
+			});
 		});
 		return npc;
 	}
 
 	public static Npc spawnNpc(int id, int x, int y) {
 		final Npc npc = new Npc(id, x, y);
-		post(new Runnable() {
-			@Override
-			public void run() {
-				npc.setShouldRespawn(false);
-				World.getWorld().registerNpc(npc);
-			}
+		post(() -> {
+			npc.setShouldRespawn(false);
+			World.getWorld().registerNpc(npc);
 		});
 		return npc;
 	}
@@ -359,17 +347,14 @@ public class Functions {
 	public static Npc spawnNpcWithRadius(Player p, int id, int x, int y, int radius, final int time) {
 
 		final Npc npc = new Npc(id, x, y, radius);
-		post(new Runnable() {
-			@Override
-			public void run() {
-				npc.setShouldRespawn(false);
-				World.getWorld().registerNpc(npc);
-				Server.getServer().getEventHandler().add(new SingleEvent(null, time) {
-					public void action() {
-						npc.remove();
-					}
-				});
-			}
+		post(() -> {
+			npc.setShouldRespawn(false);
+			World.getWorld().registerNpc(npc);
+			Server.getServer().getEventHandler().add(new SingleEvent(null, time) {
+				public void action() {
+					npc.remove();
+				}
+			});
 		});
 		return npc;
 	}
@@ -377,17 +362,14 @@ public class Functions {
 	public static Npc spawnNpc(int id, int x, int y, final int time) {
 
 		final Npc npc = new Npc(id, x, y);
-		post(new Runnable() {
-			@Override
-			public void run() {
-				npc.setShouldRespawn(false);
-				World.getWorld().registerNpc(npc);
-				Server.getServer().getEventHandler().add(new SingleEvent(null, time) {
-					public void action() {
-						npc.remove();
-					}
-				});
-			}
+		post(() -> {
+			npc.setShouldRespawn(false);
+			World.getWorld().registerNpc(npc);
+			Server.getServer().getEventHandler().add(new SingleEvent(null, time) {
+				public void action() {
+					npc.remove();
+				}
+			});
 		});
 		return npc;
 	}
@@ -427,27 +409,19 @@ public class Functions {
 	}
 
 	public static void createGroundItemDelayedRemove(final GroundItem i, int time) {
-		post(new Runnable() {
-			@Override
-			public void run() {
-				if (i.getLoc() == null) {
-					Server.getServer().getEventHandler().add(new SingleEvent(null, time) {
-						public void action() {
-							World.getWorld().unregisterItem(i);
-						}
-					});
-				}
+		post(() -> {
+			if (i.getLoc() == null) {
+				Server.getServer().getEventHandler().add(new SingleEvent(null, time) {
+					public void action() {
+						World.getWorld().unregisterItem(i);
+					}
+				});
 			}
 		});
 	}
 
 	public static void removeNpc(final Npc npc) {
-		post(new Runnable() {
-			@Override
-			public void run() {
-				npc.setUnregistering(true);
-			}
-		});
+		post(() -> npc.setUnregistering(true));
 	}
 
 	/**
@@ -506,12 +480,7 @@ public class Functions {
 	 * @param stage
 	 */
 	public static void setQuestStage(final Player p, final int questID, final int stage) {
-		post(new Runnable() {
-			@Override
-			public void run() {
-				p.updateQuestStage(questID, stage);
-			}
-		});
+		post(() -> p.updateQuestStage(questID, stage));
 	}
 
 	/**
@@ -555,17 +524,17 @@ public class Functions {
 		replaceObject(obj, new GameObject(obj.getLocation(), cupboardID, obj.getDirection(), obj.getType()));
 		p.message("You open the cupboard");
 	}
-	
-	public static void closeGenericObject(GameObject obj, Player p, int objectID, String ... messages) {
+
+	public static void closeGenericObject(GameObject obj, Player p, int objectID, String... messages) {
 		replaceObject(obj, new GameObject(obj.getLocation(), objectID, obj.getDirection(), obj.getType()));
-		for(String message : messages) {
+		for (String message : messages) {
 			p.message(message);
 		}
 	}
 
-	public static void openGenericObject(GameObject obj, Player p, int objectID, String ... messages) {
+	public static void openGenericObject(GameObject obj, Player p, int objectID, String... messages) {
 		replaceObject(obj, new GameObject(obj.getLocation(), objectID, obj.getDirection(), obj.getType()));
-		for(String message : messages) {
+		for (String message : messages) {
 			p.message(message);
 		}
 	}
@@ -597,17 +566,14 @@ public class Functions {
 	 */
 	public static void addItem(final Player p, final int item, final int amt) {
 
-		post(new Runnable() {
-			@Override
-			public void run() {
-				final Item items = new Item(item, amt);
-				if (!items.getDef().isStackable() && amt > 1) {
-					for (int i = 0; i < amt; i++) {
-						p.getInventory().add(new Item(item, 1));
-					}
-				} else {
-					p.getInventory().add(items);
+		post(() -> {
+			final Item items = new Item(item, amt);
+			if (!items.getDef().isStackable() && amt > 1) {
+				for (int i = 0; i < amt; i++) {
+					p.getInventory().add(new Item(item, 1));
 				}
+			} else {
+				p.getInventory().add(items);
 			}
 		});
 	}
@@ -992,48 +958,23 @@ public class Functions {
 	}
 
 	public static void removeObject(final GameObject o) {
-		post(new Runnable() {
-			@Override
-			public void run() {
-				World.getWorld().unregisterGameObject(o);
-			}
-		});
+		post(() -> World.getWorld().unregisterGameObject(o));
 	}
 
 	public static void registerObject(final GameObject o) {
-		post(new Runnable() {
-			@Override
-			public void run() {
-				World.getWorld().registerGameObject(o);
-			}
-		});
+		post(() -> World.getWorld().registerGameObject(o));
 	}
 
 	public static void registerObjects(final GameObject... o) {
-		post(new Runnable() {
-			@Override
-			public void run() {
-				World.getWorld().registerObjects(o);
-			}
-		});
+		post(() -> World.getWorld().registerObjects(o));
 	}
 
 	public static void replaceObject(final GameObject o, final GameObject newObject) {
-		post(new Runnable() {
-			@Override
-			public void run() {
-				World.getWorld().replaceGameObject(o, newObject);
-			}
-		});
+		post(() -> World.getWorld().replaceGameObject(o, newObject));
 	}
 
 	public static void delayedSpawnObject(final GameObjectLoc loc, final int time) {
-		post(new Runnable() {
-			@Override
-			public void run() {
-				World.getWorld().delayedSpawnObject(loc, time);
-			}
-		});
+		post(() -> World.getWorld().delayedSpawnObject(loc, time));
 	}
 
 	public static void doGate(final Player p, final GameObject object, int replaceID) {
@@ -1120,7 +1061,7 @@ public class Functions {
 		}
 		return closestNpc;
 	}
-	
+
 	public static Collection<Npc> getNpcsInArea(Player p, final int radius, final int... npcId) {
 		final Iterable<Npc> npcsInView = p.getViewArea().getNpcsInView();
 		final Collection<Npc> npcsList = new ArrayList<Npc>();
@@ -1189,12 +1130,7 @@ public class Functions {
 					npc.setBusyTimer(delay);
 				}
 				player.setBusy(true);
-				post(new Runnable() {
-					@Override
-					public void run() {
-						player.message(message);
-					}
-				});
+				post(() -> player.message(message));
 			}
 			sleep(delay);
 		}
@@ -1213,12 +1149,7 @@ public class Functions {
 				if (player.getInteractingNpc() != null) {
 					player.getInteractingNpc().setBusyTimer(1900);
 				}
-				post(new Runnable() {
-					@Override
-					public void run() {
-						player.message("@que@" + message);
-					}
-				});
+				post(() -> player.message("@que@" + message));
 				player.setBusyTimer(1900);
 			}
 			sleep(1900);
@@ -1242,18 +1173,15 @@ public class Functions {
 				}
 				npc.setBusy(true);
 				player.setBusy(true);
-				post(new Runnable() {
-					@Override
-					public void run() {
-						npc.resetPath();
-						player.resetPath();
+				post(() -> {
+					npc.resetPath();
+					player.resetPath();
 
-						npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, message, player));
+					npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, message, player));
 
-						npc.face(player);
-						if (!player.inCombat()) {
-							player.face(npc);
-						}
+					npc.face(player);
+					if (!player.inCombat()) {
+						player.face(npc);
 					}
 				});
 			}
@@ -1279,12 +1207,7 @@ public class Functions {
 	public static void npcYell(final Player player, final Npc npc, final String... messages) {
 		for (final String message : messages) {
 			if (!message.equalsIgnoreCase("null")) {
-				post(new Runnable() {
-					@Override
-					public void run() {
-						npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, message, player));
-					}
-				});
+				post(() -> npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, message, player)));
 			}
 		}
 	}
@@ -1305,23 +1228,20 @@ public class Functions {
 						return;
 					}
 				}
-				post(new Runnable() {
-					@Override
-					public void run() {
-						if (npc != null) {
-							npc.resetPath();
-							npc.setBusyTimer(2500);
-						}
-						if (!player.inCombat()) {
-							if (npc != null) {
-								npc.face(player);
-								player.face(npc);
-							}
-							player.setBusyTimer(2500);
-							player.resetPath();
-						}
-						player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, (npc == null ? player : npc)));
+				post(() -> {
+					if (npc != null) {
+						npc.resetPath();
+						npc.setBusyTimer(2500);
 					}
+					if (!player.inCombat()) {
+						if (npc != null) {
+							npc.face(player);
+							player.face(npc);
+						}
+						player.setBusyTimer(2500);
+						player.resetPath();
+					}
+					player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, (npc == null ? player : npc)));
 				});
 			}
 			sleep(1900);
@@ -1340,15 +1260,12 @@ public class Functions {
 		if (!hasItem(p, id, amt)) {
 			return false;
 		}
-		post(new Runnable() {
-			@Override
-			public void run() {
-				final Item item = new Item(id, 1);
-				if (!item.getDef().isStackable()) {
-					p.getInventory().remove(new Item(id, 1));
-				} else {
-					p.getInventory().remove(new Item(id, amt));
-				}
+		post(() -> {
+			final Item item = new Item(id, 1);
+			if (!item.getDef().isStackable()) {
+				p.getInventory().remove(new Item(id, 1));
+			} else {
+				p.getInventory().remove(new Item(id, amt));
 			}
 		});
 		return true;
@@ -1368,12 +1285,9 @@ public class Functions {
 				return false;
 			}
 		}
-		post(new Runnable() {
-			@Override
-			public void run() {
-				for (Item ir : items) {
-					p.getInventory().remove(ir);
-				}
+		post(() -> {
+			for (Item ir : items) {
+				p.getInventory().remove(ir);
 			}
 		});
 		return true;
@@ -1410,7 +1324,7 @@ public class Functions {
 	}
 
 	public static int showMenu(final Player player, final Npc npc, final boolean sendToClient, final String... options) {
-		synchronized(player) {
+		synchronized (player) {
 			final long start = System.currentTimeMillis();
 			if (npc != null) {
 				if (npc.isRemoved()) {
@@ -1540,16 +1454,13 @@ public class Functions {
 	 */
 	public static Npc transform(final Npc n, final int newID, boolean onlyShift) {
 		final Npc newNpc = new Npc(newID, n.getX(), n.getY());
-		post(new Runnable() {
-			@Override
-			public void run() {
-				newNpc.setShouldRespawn(false);
-				World.getWorld().registerNpc(newNpc);
-				if (onlyShift) {
-					n.setShouldRespawn(false);
-				}
-				n.remove();
+		post(() -> {
+			newNpc.setShouldRespawn(false);
+			World.getWorld().registerNpc(newNpc);
+			if (onlyShift) {
+				n.setShouldRespawn(false);
 			}
+			n.remove();
 		});
 		return newNpc;
 	}

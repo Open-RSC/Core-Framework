@@ -96,7 +96,7 @@ public class LegendsQuestInvAction implements InvActionListener, InvActionExecut
 				message(p, 600, "There is no suitable candidate to cast this spell on.");
 			}
 		}
-		else if (item.getID() == ItemId.A_RED_CRYSTAL.id()) {
+		else if (item.getID() == ItemId.A_RED_CRYSTAL.id() && !Constants.GameServer.WANT_PETS) {
 			message(p, 1300, "As the crystal touches your hands a voice inside of your head says..",
 				"@gre@Voice in head: Bring life to the dragons eye.");
 		}

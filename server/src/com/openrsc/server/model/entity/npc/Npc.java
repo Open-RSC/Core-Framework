@@ -84,7 +84,7 @@ public class Npc extends Mob {
 	public Npc(int id, int startX, int startY, int minX, int maxX, int minY, int maxY) {
 		this(new NPCLoc(id, startX, startY, minX, maxX, minY, maxY));
 	}
-	public Npc() {
+	public Npc(Point location, int x, String username) {
         //Default constructor for NPC, this is useful for finding the name of an NPC without having to spawn an NPC.
 	}
 	public Npc(NPCLoc loc) {
@@ -120,6 +120,10 @@ public class Npc extends Mob {
 		setUUID(UUID.randomUUID().toString());
 
 		Server.getServer().getGameEventHandler().add(statRestorationEvent);
+	}
+
+	public Npc() {
+
 	}
 
 	/**
