@@ -38,7 +38,8 @@ public class WatchTowerShaman implements TalkToNpcListener, TalkToNpcExecutiveLi
 
 	@Override
 	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
-		return npc.getID() == NpcId.OGRE_SHAMAN.id() && item.getID() == ItemId.MAGIC_OGRE_POTION.id();
+		return npc.getID() == NpcId.OGRE_SHAMAN.id() && (item.getID() == ItemId.MAGIC_OGRE_POTION.id()
+				|| item.getID() == ItemId.OGRE_POTION.id());
 	}
 
 	@Override
@@ -84,6 +85,10 @@ public class WatchTowerShaman implements TalkToNpcListener, TalkToNpcExecutiveLi
 				playerTalk(p, null, "Thats one destroyed...");
 			}
 			p.setBusy(false);
+		} else if (n.getID() == NpcId.OGRE_SHAMAN.id() && item.getID() == ItemId.OGRE_POTION.id()) {
+			p.message("There is a small flash");
+			p.message("But the potion was ineffective");
+			playerTalk(p, null, "Oh no! I better go back to the wizards about this");
 		}
 	}
 }
