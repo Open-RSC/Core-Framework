@@ -21,6 +21,7 @@ import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
+import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.util.rsc.CollisionFlag;
 import com.openrsc.server.util.rsc.Formulae;
 
@@ -50,8 +51,8 @@ public abstract class Mob extends Entity {
 	/**
 	 * Tiles around us that we can see
 	 */
-	public ViewArea viewArea = new ViewArea(this);
-	public int killType = 0;
+	private ViewArea viewArea = new ViewArea(this);
+	private int killType = 0;
 	/**
 	 * Flag to indicate that this mob will be needed to be unregistered after
 	 * next update tick.
@@ -60,7 +61,7 @@ public abstract class Mob extends Entity {
 	/**
 	 * Time in MS when we are freed from the 'busy' mode.
 	 */
-	protected volatile long busyTimer;
+	private volatile long busyTimer;
 	/**
 	 * The combat event instance.
 	 */
@@ -68,12 +69,12 @@ public abstract class Mob extends Entity {
 	/**
 	 * Have we moved since last update?
 	 */
-	protected boolean hasMoved;
+	private boolean hasMoved;
 	/**
 	 * Time of last movement, used for timeout
 	 */
-	protected long lastMovement = System.currentTimeMillis();
-	protected int mobSprite = 0;
+	private long lastMovement = System.currentTimeMillis();
+	private int mobSprite = 0;
 	/**
 	 * The stat restore event
 	 */
@@ -81,7 +82,7 @@ public abstract class Mob extends Entity {
 	/**
 	 * If we are warned to move
 	 */
-	protected boolean warnedToMove = false;
+	private boolean warnedToMove = false;
 	/**
 	 * Unique ID for event tracking.
 	 */
@@ -140,30 +141,24 @@ public abstract class Mob extends Entity {
 		Point high = boundaries[1];
 		if (o.getType() == 0) {
 			if (o.getGameObjectDef().getType() == 2 || o.getGameObjectDef().getType() == 3) {
-				if (getX() >= low.getX() && getX() <= high.getX() && getY() >= low.getY() && getY() <= high.getY()) {
-					return true;
-				}
+				return getX() >= low.getX() && getX() <= high.getX() && getY() >= low.getY() && getY() <= high.getY();
 			} else {
 				return canReach(low.getX(), high.getX(), low.getY(), high.getY()) || closeSpecObject(o);
 			}
 		} else if (o.getType() == 1) {
-			if (getX() >= low.getX() && getX() <= high.getX() && getY() >= low.getY() && getY() <= high.getY()) {
-				return true;
-			}
+			return getX() >= low.getX() && getX() <= high.getX() && getY() >= low.getY() && getY() <= high.getY();
 		}
 		return false;
 	}
 
 	//TODO: Verify block of special rock in tourist trap
-	public final boolean closeSpecObject(GameObject o) {
+	private boolean closeSpecObject(GameObject o) {
 		Point[] boundaries = o.getObjectBoundary();
 		Point low = boundaries[0];
 		Point high = boundaries[1];
 		if ((Math.abs(getX() - low.getX()) <= 1 || Math.abs(getX() - high.getX()) <= 1) &&
 			(Math.abs(getY() - low.getY()) <= 1 || Math.abs(getY() - high.getY()) <= 1)) {
-			if (o.getID() == 953) {
-				return true;
-			}
+			return o.getID() == 953;
 		}
 		return false;
 	}
@@ -184,11 +179,8 @@ public abstract class Mob extends Entity {
 			&& (CollisionFlag.WALL_SOUTH & World.getWorld().getTile(getX(), getY() - 1).traversalMask) == 0) {
 			return true;
 		}
-		if (minX <= getX() && getX() <= maxX && minY <= getY() + 1 && maxY >= getY() + 1
-			&& (CollisionFlag.WALL_NORTH & World.getWorld().getTile(getX(), getY() + 1).traversalMask) == 0) {
-			return true;
-		}
-		return false;
+		return minX <= getX() && getX() <= maxX && minY <= getY() + 1 && maxY >= getY() + 1
+			&& (CollisionFlag.WALL_NORTH & World.getWorld().getTile(getX(), getY() + 1).traversalMask) == 0;
 	}
 
 	public final boolean canReach(Entity e) {
@@ -271,12 +263,9 @@ public abstract class Mob extends Entity {
 		if ((val & 32) != 0) {
 			return true;
 		}
-		if ((val & 64) != 0
+		return (val & 64) != 0
 			&& (e instanceof Npc || e instanceof Player || (e instanceof GroundItem && !((GroundItem) e).isOn(x, y))
-			|| (e instanceof GameObject && !((GameObject) e).isOn(x, y)))) {
-			return true;
-		}
-		return false;
+			|| (e instanceof GameObject && !((GameObject) e).isOn(x, y)));
 	}
 
 	public void cure() {
@@ -361,7 +350,7 @@ public abstract class Mob extends Entity {
 	public void setCombatTimer(int delay) {
 		combatTimer = System.currentTimeMillis() + delay;
 	}
-	
+
 	public long getRanAwayTimer() {
 		return ranAwayTimer;
 	}
@@ -397,7 +386,7 @@ public abstract class Mob extends Entity {
 	public void setOpponent(Mob opponent) {
 		combatWith = opponent;
 	}
-	
+
 	public Mob getLastOpponent() {
 		return lastCombatWith;
 	}
@@ -517,21 +506,39 @@ public abstract class Mob extends Entity {
 		combatTimer = System.currentTimeMillis();
 	}
 
+	public void teleport(int x, int y, boolean bubble) {
+		if (bubble && PluginHandler.getPluginHandler().blockDefaultAction("Teleport", new Object[]{this})) {
+			return;
+		}
+		setLocation(Point.location(x, y), true);
+		resetPath();
+	}
+
 	public void setFollowing(final Mob mob, final int radius) {
 		if (isFollowing()) {
 			resetFollowing();
 		}
 		final Mob me = this;
 		following = mob;
-		followEvent = new GameTickEvent(null, 2) {
+		followEvent = new GameTickEvent(null, 1) {
 			public void run() {
 				if (!me.withinRange(mob) || mob.isRemoved()
 					|| (me.isPlayer() && !((Player) me).getDuel().isDuelActive() && me.isBusy())) {
-					resetFollowing();
+					if (!mob.isFollowing())
+						resetFollowing();
 				} else if (!me.finishedPath() && me.withinRange(mob, radius)) {
 					me.resetPath();
 				} else if (me.finishedPath() && !me.withinRange(mob, radius)) {
 					me.walkToEntity(mob.getX(), mob.getY());
+				} else if (!me.withinRange(mob, radius) && (System.currentTimeMillis() - me.getLastMoved() > 1000 || System.currentTimeMillis() - mob.getLastMoved() > 1000)) { // keeps Rover on a tight leash
+					if (Constants.GameServer.DEBUG)
+						System.out.println("Pet attempted teleport to owner");
+					me.teleport(mob.getX() + 1, mob.getY(), false);
+					me.resetPath();
+				} else if (!me.isFollowing()) {
+					//if (Constants.GameServer.DEBUG)
+					System.out.println("Pet despawning");
+					me.setUnregistering(true);
 				}
 			}
 		};
@@ -567,7 +574,7 @@ public abstract class Mob extends Entity {
 		warnedToMove = moved;
 	}
 
-	public void setSpriteChanged() {
+	private void setSpriteChanged() {
 		spriteChanged = true;
 	}
 
@@ -581,9 +588,9 @@ public abstract class Mob extends Entity {
 
 	public void startCombat(Mob victim) {
 
-		synchronized(victim) {
+		synchronized (victim) {
 			boolean gotUnderAttack = false;
-			
+
 			if (this.isPlayer()) {
 				((Player) this).resetAll();
 				((Player) this).setStatus(Action.FIGHTING_MOB);
@@ -624,7 +631,7 @@ public abstract class Mob extends Entity {
 					ActionSender.sendFatigue(playerVictim);
 				}
 			} else {
-				Player attacker = (Player)this;
+				Player attacker = (Player) this;
 				attacker.releaseUnderAttack();
 			}
 
@@ -741,31 +748,35 @@ public abstract class Mob extends Entity {
 		this.killType = i;
 	}
 
-	public boolean stateIsInvisible() { return false; }
+	public boolean stateIsInvisible() {
+		return false;
+	}
 
-	public boolean stateIsInvulnerable() { return false; }
+	public boolean stateIsInvulnerable() {
+		return false;
+	}
 
 	public boolean isMobInvisible(Mob m) {
-		return !(this instanceof Player)	||
+		return !(this instanceof Player) ||
 			(
-				this instanceof Player	&&
-				(
-					(m instanceof Player)									?
-					((Player)m).getGroupID() < ((Player)this).getGroupID()	:
-					((Player)this).isAdmin()
-				)
+				this instanceof Player &&
+					(
+						(m instanceof Player) ?
+							((Player) m).getGroupID() < ((Player) this).getGroupID() :
+							((Player) this).isAdmin()
+					)
 			);
 	}
 
 	public boolean isMobInvulnerable(Mob m) {
-		return !(this instanceof Player)	||
+		return !(this instanceof Player) ||
 			(
-				this instanceof Player	&&
-				(
-					(m instanceof Player)									?
-					((Player)m).getGroupID() < ((Player)this).getGroupID()	:
-					((Player)this).isAdmin()
-				)
+				this instanceof Player &&
+					(
+						(m instanceof Player) ?
+							((Player) m).getGroupID() < ((Player) this).getGroupID() :
+							((Player) this).isAdmin()
+					)
 			);
 	}
 }

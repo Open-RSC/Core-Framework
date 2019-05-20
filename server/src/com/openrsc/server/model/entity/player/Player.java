@@ -10,10 +10,20 @@ import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.event.rsc.impl.*;
+import com.openrsc.server.event.rsc.impl.FireCannonEvent;
+import com.openrsc.server.event.rsc.impl.PoisonEvent;
+import com.openrsc.server.event.rsc.impl.PrayerDrainEvent;
+import com.openrsc.server.event.rsc.impl.ProjectileEvent;
+import com.openrsc.server.event.rsc.impl.RangeEvent;
+import com.openrsc.server.event.rsc.impl.ThrowingEvent;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.login.LoginRequest;
-import com.openrsc.server.model.*;
+import com.openrsc.server.model.Cache;
+import com.openrsc.server.model.MenuOptionListener;
+import com.openrsc.server.model.Point;
+import com.openrsc.server.model.PrivateMessage;
+import com.openrsc.server.model.Shop;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.Inventory;
@@ -41,15 +51,27 @@ import com.openrsc.server.sql.query.logs.LiveFeedLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
-import io.netty.channel.Channel;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.ListIterator;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
+
+import io.netty.channel.Channel;
 
 import static com.openrsc.server.plugins.Functions.sleep;
 
@@ -80,15 +102,15 @@ public final class Player extends Mob {
 	private final ArrayList<Packet> outgoingPackets = new ArrayList<Packet>();
 	private final Object outgoingPacketsLock = new Object();
 	private final Map<Integer, Integer> questStages = new ConcurrentHashMap<>();
-	public int IRON_MAN_MODE = 0;
-	public int IRON_MAN_RESTRICTION = 1;
-	public int IRON_MAN_HC_DEATH = 0;
+	private int IRON_MAN_MODE = 0;
+	private int IRON_MAN_RESTRICTION = 1;
+	private int IRON_MAN_HC_DEATH = 0;
 	public int lastMineTry = -1;
 	public int click = -1;
 	/**
 	 * Added by Zerratar: Correct sleepword we are looking for! Case SenSitIvE
 	 */
-	public String correctSleepword = "";
+	private String correctSleepword = "";
 	/**
 	 * The last menu reply this player gave in a quest
 	 */
@@ -322,7 +344,7 @@ public final class Player extends Mob {
 	// 100 trigger up a Kitten to cat event
 	// 1 walked step is +1 activity, 1 5-min warn to move is +25 activity (saved each 30 secs => 2.5 per save)
 	// so everything is multiplied by 2 to avoid decimals
-	public final int KITTEN_ACTIVITY_THRESHOLD = 50;
+	private final int KITTEN_ACTIVITY_THRESHOLD = 50;
 	private int activity = 0;
 
 	/**
@@ -386,7 +408,7 @@ public final class Player extends Mob {
 		this.IRON_MAN_HC_DEATH = i;
 	}
 
-	public void updateHCIronman(int int1) {
+	private void updateHCIronman(int int1) {
 		this.IRON_MAN_MODE = int1;
 		this.IRON_MAN_HC_DEATH = int1;
 	}
@@ -433,7 +455,7 @@ public final class Player extends Mob {
 		lastSaveTime = save;
 	}
 
-	public int getAppearanceID() {
+	private int getAppearanceID() {
 		return appearanceID;
 	}
 
@@ -529,7 +551,7 @@ public final class Player extends Mob {
 		skullEvent.setLastRun(System.currentTimeMillis() - (1200000 - timeLeft));
 	}
 
-	public void removeCharge() {
+	private void removeCharge() {
 		if (chargeEvent == null) {
 			return;
 		}
@@ -1552,7 +1574,7 @@ public final class Player extends Mob {
 		skills.normalize();
 	}
 
-	public int getEquippedWeaponID() {
+	private int getEquippedWeaponID() {
 		for (Item i : getInventory().getItems()) {
 			if (i.isWielded() && (i.getDef().getWieldPosition() == 4))
 				return i.getID();
@@ -1894,7 +1916,7 @@ public final class Player extends Mob {
 		ActionSender.sendQuestInfo(this, q.getQuestId(), stage);
 	}
 
-	public Map<Integer, Integer> getAchievements() {
+	private Map<Integer, Integer> getAchievements() {
 		return achievements;
 	}
 
@@ -2020,7 +2042,7 @@ public final class Player extends Mob {
 		getUpdateFlags().setAppearanceChanged(true);
 	}
 
-	public Queue<PrivateMessage> getPrivateMessageQueue() {
+	private Queue<PrivateMessage> getPrivateMessageQueue() {
 		return privateMessageQueue;
 	}
 
@@ -2044,11 +2066,11 @@ public final class Player extends Mob {
 		this.deaths = i;
 	}
 
-	public void incDeaths() {
+	private void incDeaths() {
 		deaths++;
 	}
 
-	public void incKills() {
+	private void incKills() {
 		kills++;
 	}
 
@@ -2280,7 +2302,7 @@ public final class Player extends Mob {
 		return stateIsInvisible() && m.isMobInvisible(this);
 	}
 
-	public boolean cacheIsInvisible() {
+	private boolean cacheIsInvisible() {
 		if (!getCache().hasKey("invisible"))
 			return false;
 
@@ -2301,7 +2323,7 @@ public final class Player extends Mob {
 		return stateIsInvulnerable() && m.isMobInvulnerable(this);
 	}
 
-	public boolean cacheIsInvulnerable() {
+	private boolean cacheIsInvulnerable() {
 		if (!getCache().hasKey("invulnerable"))
 			return false;
 
@@ -2322,7 +2344,7 @@ public final class Player extends Mob {
 		return setCacheInvulnerable(!cacheIsInvulnerable());
 	}
 
-	public boolean isExperienceFrozen() {
+	private boolean isExperienceFrozen() {
 		if (!getCache().hasKey("freezexp"))
 			return false;
 
@@ -2358,20 +2380,20 @@ public final class Player extends Mob {
 		getCache().store("was_summoned", true);
 	}
 
-	public void resetSummonReturnPoint() {
+	private void resetSummonReturnPoint() {
 		getCache().remove("return_x");
 		getCache().remove("return_y");
 		getCache().remove("was_summoned");
 	}
 
-	public int getSummonReturnX() {
+	private int getSummonReturnX() {
 		if (!getCache().hasKey("return_x"))
 			return -1;
 
 		return getCache().getInt("return_x");
 	}
 
-	public int getSummonReturnY() {
+	private int getSummonReturnY() {
 		if (!getCache().hasKey("return_y"))
 			return -1;
 
@@ -2406,7 +2428,7 @@ public final class Player extends Mob {
 		return originalLocation;
 	}
 
-	public void setJailReturnPoint() {
+	private void setJailReturnPoint() {
 		if (isJailed())
 			return;
 
@@ -2415,20 +2437,20 @@ public final class Player extends Mob {
 		getCache().store("is_jailed", true);
 	}
 
-	public void resetJailReturnPoint() {
+	private void resetJailReturnPoint() {
 		getCache().remove("jail_return_x");
 		getCache().remove("jail_return_y");
 		getCache().remove("is_jailed");
 	}
 
-	public int getJailReturnX() {
+	private int getJailReturnX() {
 		if (!getCache().hasKey("jail_return_x"))
 			return -1;
 
 		return getCache().getInt("jail_return_x");
 	}
 
-	public int getJailReturnY() {
+	private int getJailReturnY() {
 		if (!getCache().hasKey("jail_return_y"))
 			return -1;
 

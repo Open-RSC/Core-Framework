@@ -23,14 +23,14 @@ import static com.openrsc.server.plugins.Functions.showBubble;
 
 public class NpcBehavior {
 
-	protected long lastMovement;
-	protected long lastTackleAttempt;
+	private long lastMovement;
+	private long lastTackleAttempt;
 	private static final int[] TACKLING_XP = {7, 10, 15, 20};
 
 	protected Npc npc;
 
 	protected Mob target;
-	protected Mob lastTarget;
+	private Mob lastTarget;
 	private State state = State.ROAM;
 
 	public NpcBehavior(Npc npc) {
@@ -58,12 +58,11 @@ public class NpcBehavior {
 				if (!npc.isBusy() && rand == 1 && !npc.isRemoved()) {
 					int newX = DataConversions.random(npc.getLoc().minX(), npc.getLoc().maxX());
 					int newY = DataConversions.random(npc.getLoc().minY(), npc.getLoc().maxY());
-					if (!grandTreeGnome(npc) || npc.getLocation().equals(new Point(0,0))) {
+					if (!grandTreeGnome(npc) || npc.getLocation().equals(new Point(0, 0))) {
 						npc.walk(newX, newY);
-					}
-					else {
+					} else {
 						Point p = walkablePoint(npc, Point.location(npc.getLoc().minX(), npc.getLoc().minY()),
-								Point.location(npc.getLoc().maxX(), npc.getLoc().maxY()));
+							Point.location(npc.getLoc().maxX(), npc.getLoc().maxY()));
 						npc.walk(p.getX(), p.getY());
 					}
 				}
@@ -95,7 +94,7 @@ public class NpcBehavior {
 
 					state = State.AGGRO;
 					target = p;
-					
+
 					if (npc.getLastOpponent() == p && (p.getLastOpponent() != npc || expiredLastTargetCombatTimer())) {
 						npc.setLastOpponent(null);
 						setRoaming();
@@ -103,19 +102,19 @@ public class NpcBehavior {
 						//aggro behavior if any
 						new AggroEvent(npc, p);
 					}
-					
+
 					break;
 				}
 			}
 			if (System.currentTimeMillis() - lastTackleAttempt > 3000 &&
-					npc.getDef().getName().toLowerCase().equals("gnome baller")
-					&& !(npc.getID() == NpcId.GNOME_BALLER_TEAMNORTH.id() || npc.getID() == NpcId.GNOME_BALLER_TEAMSOUTH.id())) {
+				npc.getDef().getName().toLowerCase().equals("gnome baller")
+				&& !(npc.getID() == NpcId.GNOME_BALLER_TEAMNORTH.id() || npc.getID() == NpcId.GNOME_BALLER_TEAMSOUTH.id())) {
 				for (Player p : npc.getViewArea().getPlayersInView()) {
 					int range = 1;
 					if (!p.withinRange(npc, range) || !hasItem(p, ItemId.GNOME_BALL.id())
-							|| !inArray(p.getSyncAttribute("gnomeball_npc", -1), -1, 0))
+						|| !inArray(p.getSyncAttribute("gnomeball_npc", -1), -1, 0))
 						continue; // Not in range, does not have a gnome ball or a gnome baller already has ball.
-					
+
 					//set tackle
 					state = State.TACKLE;
 					target = p;
@@ -124,7 +123,7 @@ public class NpcBehavior {
 		} else if (state == State.AGGRO) {
 
 			// There should not be combat or aggro. Let's resume roaming.
-			if (target == null || npc.isRespawning() || npc.isRemoved() || target.isRemoved() || target.inCombat()) {
+			if ((target == null || npc.isRespawning() || npc.isRemoved() || target.isRemoved() || target.inCombat()) && !npc.isFollowing()) {
 				setRoaming();
 			}
 
@@ -161,21 +160,22 @@ public class NpcBehavior {
 			}
 			if (npc.inCombat()) {
 				if (shouldRetreat(npc) && npc.getSkills().getLevel(Skills.HITPOINTS) > 0
-							&& npc.getOpponent().getHitsMade() >= 3) {
+					&& npc.getOpponent().getHitsMade() >= 3) {
 					retreat();
 				}
 			} else if (!npc.inCombat()) {
 				npc.setExecutedAggroScript(false);
 				if (npc.getDef().isAggressive() &&
 					((lastTarget != null &&
-					lastTarget.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1)) ||
-					npc.getLocation().inWilderness())
+						lastTarget.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1)) ||
+						npc.getLocation().inWilderness())
 				) {
 					state = State.AGGRO;
 					if (lastTarget != null)
 						target = lastTarget;
 				} else {
-					setRoaming();
+					if (!npc.isFollowing())
+						setRoaming();
 				}
 			}
 
@@ -189,7 +189,7 @@ public class NpcBehavior {
 				|| target.getY() < (npc.getLoc().minY() - 4) || target.getY() > (npc.getLoc().maxY() + 4)) {
 				setRoaming();
 			}
-			
+
 			if (target.isPlayer()) {
 				attemptTackle(npc, (Player) target);
 				tackle_retreat();
@@ -198,8 +198,8 @@ public class NpcBehavior {
 			if (npc.finishedPath()) setRoaming();
 		}
 	}
-	
-	public synchronized void attemptTackle(Npc n, Player p) {
+
+	private synchronized void attemptTackle(Npc n, Player p) {
 		int otherNpcId = p.getSyncAttribute("gnomeball_npc", -1);
 		if ((!inArray(otherNpcId, -1, 0) && npc.getID() != otherNpcId) || p.getSyncAttribute("throwing_ball_game", false)) {
 			return;
@@ -211,7 +211,7 @@ public class NpcBehavior {
 			//successful avoiding tackles gives agility xp
 			p.playerServerMessage(MessageType.QUEST, "You manage to push him away");
 			npcYell(p, npc, "grrrrr");
-			p.incExp(Skills.AGILITY, TACKLING_XP[DataConversions.random(0,3)], true);
+			p.incExp(Skills.AGILITY, TACKLING_XP[DataConversions.random(0, 3)], true);
 		} else {
 			if (!inArray(p.getSyncAttribute("gnomeball_npc", -1), -1, 0) || p.getSyncAttribute("throwing_ball_game", false)) {
 				// some other gnome beat here or player is shooting at goal
@@ -221,7 +221,7 @@ public class NpcBehavior {
 			removeItem(p, ItemId.GNOME_BALL.id(), 1);
 			p.playerServerMessage(MessageType.QUEST, "he takes the ball...");
 			p.playerServerMessage(MessageType.QUEST, "and pushes you to the floor");
-			p.damage((int)(Math.ceil(p.getSkills().getLevel(Skills.HITPOINTS)*0.05)));
+			p.damage((int) (Math.ceil(p.getSkills().getLevel(Skills.HITPOINTS) * 0.05)));
 			playerTalk(p, null, "ouch");
 			npcYell(p, npc, "yeah");
 		}
@@ -246,8 +246,8 @@ public class NpcBehavior {
 			DataConversions.random(npc.getLoc().minY(), npc.getLoc().maxY()));
 		npc.walk(walkTo.getX(), walkTo.getY());
 	}
-	
-	public void tackle_retreat() {
+
+	private void tackle_retreat() {
 		state = State.TACKLE_RETREAT;
 		npc.setLastCombatState(CombatState.RUNNING);
 		target.setLastCombatState(CombatState.WAITING);
@@ -273,21 +273,21 @@ public class NpcBehavior {
 		boolean closeEnough = npc.canReach(p);
 
 		return closeEnough && shouldAttack
-			&& (p instanceof Player && (!((Player)p).isInvulnerable(npc) && !((Player)p).isInvisible(npc)))
+			&& (p instanceof Player && (!((Player) p).isInvulnerable(npc) && !((Player) p).isInvisible(npc)))
 			&& !outOfBounds && !playerOccupied && !playerCombatTimeout;
 	}
-	
+
 	private boolean grandTreeGnome(Npc npc) {
 		String npcName = npc.getDef().getName();
 		return npcName.equalsIgnoreCase("gnome child") || npcName.equalsIgnoreCase("gnome local");
 	}
-	
+
 	private Point walkablePoint(Npc npc, Point minP, Point maxP) {
 		int currX = npc.getX();
 		int currY = npc.getY();
 		int radius = 8;
-		int newX = DataConversions.random(Math.max(minP.getX(),currX-radius), Math.min(maxP.getX(),currX+radius));
-		int newY = DataConversions.random(Math.max(minP.getY(),currY-radius), Math.min(maxP.getY(),currY+radius));
+		int newX = DataConversions.random(Math.max(minP.getX(), currX - radius), Math.min(maxP.getX(), currX + radius));
+		int newY = DataConversions.random(Math.max(minP.getY(), currY - radius), Math.min(maxP.getY(), currY + radius));
 		if (Point.location(newX, newY).inBounds(680, 491, 696, 511)) {
 			return Point.location(currX, currY);
 		}
@@ -314,14 +314,14 @@ public class NpcBehavior {
 		return null;
 	}
 
-	public boolean checkTargetCombatTimer() {
+	private boolean checkTargetCombatTimer() {
 		return (System.currentTimeMillis() - target.getCombatTimer()
 			< (target.getCombatState() == CombatState.RUNNING
 			|| target.getCombatState() == CombatState.WAITING ? 3000 : 1500)
 		);
 	}
-	
-	public boolean expiredLastTargetCombatTimer() {
+
+	private boolean expiredLastTargetCombatTimer() {
 		return (System.currentTimeMillis() - npc.getLastOpponent().getRanAwayTimer() > 10000);
 	}
 
@@ -338,18 +338,14 @@ public class NpcBehavior {
 		npc.startCombat(target);
 		state = State.COMBAT;
 	}
-	
+
 	private boolean shouldRetreat(Npc npc) {
 		if (DataConversions.inArray(Constants.GameServer.NPCS_THAT_RETREAT_NORM, npc.getID())) {
-			if (npc.getSkills().getLevel(Skills.HITPOINTS) <=
-				Math.ceil(npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.20)) {
-				return true;
-			}
+			return npc.getSkills().getLevel(Skills.HITPOINTS) <=
+				Math.ceil(npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.20);
 		} else if (DataConversions.inArray(Constants.GameServer.NPCS_THAT_RETREAT_LOW, npc.getID())) {
-			if (npc.getSkills().getLevel(Skills.HITPOINTS) <=
-					Math.ceil(npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.05)) {
-				return true;
-			}
+			return npc.getSkills().getLevel(Skills.HITPOINTS) <=
+				Math.ceil(npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.05);
 		}
 		return false;
 	}

@@ -9,7 +9,6 @@ import com.openrsc.server.plugins.PluginHandler;
 public final class Logout implements PacketHandler {
 
 	public void handlePacket(Packet p, Player player) throws Exception {
-
 		if (PluginHandler.getPluginHandler().blockDefaultAction("PlayerLogout",
 			new Object[]{player}, false)) {
 			ActionSender.sendCantLogout(player);

@@ -4123,6 +4123,52 @@ INSERT INTO `openrsc_npcdef` (`primary_id`, `id`, `name`, `description`, `comman
 (803, 801, 'Hardcore Iron Man', 'A Hardcore Iron Man', 'Armour', '', 0, 0, 0, 0, 0, 0, 0, 0, 45, 250, 251, 252, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, 1),
 (804, 802, 'Greatwood', 'A scary hard slamming tree', '', '', 255, 245, 400, 300, 300, 0, 1, 1, 30, 309, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 345, 410, 11, 11, 30, 0);
 
+DROP TABLE IF EXISTS `openrsc_petdef`;
+CREATE TABLE IF NOT EXISTS `openrsc_petdef` (
+  `primary_id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(10) DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
+  `description` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
+  `command` varchar(255) DEFAULT NULL,
+  `command2` varchar(255) DEFAULT NULL,
+  `attack` int(10) DEFAULT NULL,
+  `strength` int(10) DEFAULT NULL,
+  `hits` int(10) DEFAULT NULL,
+  `defense` int(10) DEFAULT NULL,
+  `combatlvl` int(10) NOT NULL DEFAULT 0,
+  `isMembers` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+  `attackable` tinyint(1) DEFAULT NULL,
+  `aggressive` tinyint(1) DEFAULT NULL,
+  `respawnTime` int(10) DEFAULT NULL,
+  `sprites1` int(10) DEFAULT NULL,
+  `sprites2` int(10) DEFAULT NULL,
+  `sprites3` int(10) DEFAULT NULL,
+  `sprites4` int(10) DEFAULT NULL,
+  `sprites5` int(10) DEFAULT NULL,
+  `sprites6` int(10) DEFAULT NULL,
+  `sprites7` int(10) DEFAULT NULL,
+  `sprites8` int(10) DEFAULT NULL,
+  `sprites9` int(10) DEFAULT NULL,
+  `sprites10` int(10) DEFAULT NULL,
+  `sprites11` int(10) DEFAULT NULL,
+  `sprites12` int(10) DEFAULT NULL,
+  `hairColour` int(10) DEFAULT NULL,
+  `topColour` int(10) DEFAULT NULL,
+  `bottomColour` int(10) DEFAULT NULL,
+  `skinColour` int(10) DEFAULT NULL,
+  `camera1` int(10) DEFAULT NULL,
+  `camera2` int(10) DEFAULT NULL,
+  `walkModel` int(10) DEFAULT NULL,
+  `combatModel` int(10) DEFAULT NULL,
+  `combatSprite` int(10) DEFAULT NULL,
+  `canEdit` tinyint(1) NOT NULL,
+  PRIMARY KEY (`primary_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=805 DEFAULT CHARSET=utf8;
+
+INSERT INTO `openrsc_petdef` (`primary_id`, `id`, `name`, `description`, `command`, `command2`, `attack`, `strength`, `hits`, `defense`, `combatlvl`, `isMembers`, `attackable`, `aggressive`, `respawnTime`, `sprites1`, `sprites2`, `sprites3`, `sprites4`, `sprites5`, `sprites6`, `sprites7`, `sprites8`, `sprites9`, `sprites10`, `sprites11`, `sprites12`, `hairColour`, `topColour`, `bottomColour`, `skinColour`, `camera1`, `camera2`, `walkModel`, `combatModel`, `combatSprite`, `canEdit`) VALUES
+(1, 0, 'Unicorn', 'It\'s a unicorn', '', '', 21, 23, 19, 23, 21, 0, 0, 0, 211, 130, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 201, 230, 6, 6, 7, 0),
+(204, 203, 'Baby Blue Dragon', 'Young but still dangerous', '', '', 50, 50, 50, 50, 50, 0, 0, 0, 73, 146, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 226, 163, 10, 7, 30, 0);
+
 DROP TABLE IF EXISTS `openrsc_npcdrops`;
 CREATE TABLE IF NOT EXISTS `openrsc_npcdrops` (
   `npcdef_id` int(11) DEFAULT NULL,
