@@ -6,12 +6,8 @@ import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.PoisonEvent;
 import com.openrsc.server.event.rsc.impl.StatRestorationEvent;
 import com.openrsc.server.event.rsc.impl.combat.CombatEvent;
-import com.openrsc.server.model.Path;
+import com.openrsc.server.model.*;
 import com.openrsc.server.model.Path.PathType;
-import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills;
-import com.openrsc.server.model.ViewArea;
-import com.openrsc.server.model.WalkingQueue;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.Damage;
@@ -21,10 +17,8 @@ import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.util.rsc.CollisionFlag;
 import com.openrsc.server.util.rsc.Formulae;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -506,14 +500,6 @@ public abstract class Mob extends Entity {
 		combatTimer = System.currentTimeMillis();
 	}
 
-	public void teleport(int x, int y, boolean bubble) {
-		if (bubble && PluginHandler.getPluginHandler().blockDefaultAction("Teleport", new Object[]{this})) {
-			return;
-		}
-		setLocation(Point.location(x, y), true);
-		resetPath();
-	}
-
 	public void setFollowing(final Mob mob, final int radius) {
 		if (isFollowing()) {
 			resetFollowing();
@@ -530,10 +516,10 @@ public abstract class Mob extends Entity {
 					me.resetPath();
 				} else if (me.finishedPath() && !me.withinRange(mob, radius)) {
 					me.walkToEntity(mob.getX(), mob.getY());
-				} else if (!me.withinRange(mob, radius) && (System.currentTimeMillis() - me.getLastMoved() > 1000 || System.currentTimeMillis() - mob.getLastMoved() > 1000)) { // keeps Rover on a tight leash
-					if (Constants.GameServer.DEBUG)
-						System.out.println("Pet attempted teleport to owner");
-					me.teleport(mob.getX() + 1, mob.getY(), false);
+				} else if ((!me.withinRange(mob, radius) && (System.currentTimeMillis() - me.getLastMoved() > 1000 || System.currentTimeMillis() - mob.getLastMoved() > 1000)) && !me.isPlayer()) { // keeps Rover on a tight leash
+					//if (Constants.GameServer.DEBUG)
+						System.out.println("Pet teleported to owner");
+					me.setLocation(Point.location(mob.getX()+1, mob.getY()), true);
 					me.resetPath();
 				} else if (!me.isFollowing()) {
 					//if (Constants.GameServer.DEBUG)
