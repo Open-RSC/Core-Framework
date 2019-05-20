@@ -24,6 +24,7 @@
     <entry key="PrayerDef">com.openrsc.server.external.PrayerDef</entry>
     <entry key="SpellDef">com.openrsc.server.external.SpellDef</entry>
     <entry key="NPCDef">com.openrsc.server.external.NPCDef</entry>
+    <entry key="PetDef">com.openrsc.server.external.PetDef</entry>
 
     <entry key="ItemCraftingDef">com.openrsc.server.external.ItemCraftingDef</entry>
     <entry key="ItemHerbSecond">com.openrsc.server.external.ItemHerbSecond</entry>

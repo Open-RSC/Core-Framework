@@ -281,7 +281,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	/**
 	 * Finds a specific miniquest/minigame by ID
 	 *
-	 * @param q
+	 * @param m
 	 * @return
 	 * @throws IllegalArgumentException when a quest by that ID isn't found
 	 */
