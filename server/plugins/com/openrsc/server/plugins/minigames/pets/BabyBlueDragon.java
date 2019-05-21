@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.pets;
+package com.openrsc.server.plugins.minigames.pets;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
@@ -41,9 +41,22 @@ public class BabyBlueDragon implements InvUseOnNpcListener, InvUseOnNpcExecutive
 				public void action() {
 					Npc nearbyNpc = getMultipleNpcsInArea(player, 5, NpcId.BABY_BLUE_DRAGON.id(), NpcId.BLUE_DRAGON.id(), NpcId.RED_DRAGON.id(), NpcId.DRAGON.id());
 					if (nearbyNpc != null) {
+						int selected = npc.getRandom().nextInt(5);
+						if (selected == 0)
+							npcYell(player, nearbyNpc, "roar!");
+						else if (selected == 1)
+							npcYell(player, nearbyNpc, "grrrr!");
+						else if (selected == 2)
+							npcYell(player, nearbyNpc, "growl!");
+						else if (selected == 3)
+							npcYell(player, nearbyNpc, "grr!");
+						else if (selected == 4) {
+							npcYell(player, nearbyNpc, "roar!");
+						} else if (selected == 5) {
+							npcYell(player, nearbyNpc, "grrrarrr!");
+						}
 						message(player, 1300, "The nearby " + (nearbyNpc.getDef().getName().contains("dragon") ? nearbyNpc.getDef().getName() : "" + nearbyNpc.getDef().getName().toLowerCase()) + " take a sudden dislike to you.");
 						nearbyNpc.setChasing(player);
-						message(player, 0, "and attacks...");
 					}
 					if (random(0, 4) != 0) {
 						player.message("You catch the baby blue dragon in the crystal.");
