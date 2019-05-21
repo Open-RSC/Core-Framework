@@ -6,6 +6,7 @@ import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.PoisonEvent;
 import com.openrsc.server.event.rsc.impl.StatRestorationEvent;
 import com.openrsc.server.event.rsc.impl.combat.CombatEvent;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.*;
 import com.openrsc.server.model.Path.PathType;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -24,6 +25,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.removeItem;
 
 public abstract class Mob extends Entity {
 
@@ -519,12 +523,17 @@ public abstract class Mob extends Entity {
 				} else if ((!me.withinRange(mob, radius) && (System.currentTimeMillis() - me.getLastMoved() > 1000 || System.currentTimeMillis() - mob.getLastMoved() > 1000)) && !me.isPlayer()) { // keeps Rover on a tight leash
 					//if (Constants.GameServer.DEBUG)
 						System.out.println("Pet teleported to owner");
-					me.setLocation(Point.location(mob.getX()+1, mob.getY()), true);
+					me.setLocation(Point.location(mob.getX() + 1, mob.getY()), true);
 					me.resetPath();
-				} else if (!me.isFollowing()) {
-					//if (Constants.GameServer.DEBUG)
-					System.out.println("Pet despawning");
+				} else if (!me.isFollowing()) { // not working yet
+					if (Constants.GameServer.DEBUG)
+						System.out.println("Pet despawning");
 					me.setUnregistering(true);
+					me.remove();
+					removeItem((Player) mob, ItemId.A_GLOWING_RED_CRYSTAL.id(), 1);
+					addItem((Player) mob, ItemId.A_RED_CRYSTAL.id(), 1);
+				} else if (mob.isRemoved()) {
+					resetFollowing();
 				}
 			}
 		};
