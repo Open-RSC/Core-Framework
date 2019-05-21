@@ -6,7 +6,6 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
-import com.openrsc.server.model.entity.pet.Pet;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.util.rsc.Formulae;
 import org.apache.logging.log4j.LogManager;
@@ -95,53 +94,6 @@ public final class WorldPopulation {
 			LOGGER.info("\t Loaded {}", box(npcDefinitions.size()) + " NPC definitions");
 			EntityHandler.npcs = (ArrayList<NPCDef>) npcDefinitions.clone();
 			for (NPCDef n : EntityHandler.npcs) {
-				if (n.isAttackable()) {
-					n.respawnTime -= (n.respawnTime / 3);
-				}
-			}
-
-			/* LOAD PET DEFS */
-			ArrayList<PetDef> petDefinitions = new ArrayList<PetDef>();
-			result = statement.executeQuery("SELECT `id`, `name`, `description`, `command`, `command2`, "
-				+ "`attack`, `strength`, `hits`, `defense`, `combatlvl`, `isMembers`, `attackable`, `aggressive`, `respawnTime`, "
-				+ "`sprites1`, `sprites2`, `sprites3`, `sprites4`, `sprites5`, `sprites6`, `sprites7`, `sprites8`, `sprites9`, "
-				+ "`sprites10`, `sprites11`, `sprites12`, `hairColour`, `topColour`, `bottomColour`, `skinColour`, `camera1`, "
-				+ "`camera2`, `walkModel`, `combatModel`, `combatSprite` FROM `"
-				+ Constants.GameServer.MYSQL_TABLE_PREFIX + "petdef`");
-			while (result.next()) {
-				PetDef def = new PetDef();
-				def.name = result.getString("name");
-				def.description = result.getString("description");
-				def.command1 = result.getString("command");
-				def.command2 = result.getString("command2");
-				def.attack = result.getInt("attack");
-				def.strength = result.getInt("strength");
-				def.hits = result.getInt("hits");
-				def.defense = result.getInt("defense");
-				def.combatLevel = result.getInt("combatlvl");
-				def.members = result.getBoolean("isMembers");
-				def.attackable = result.getBoolean("attackable");
-				def.aggressive = result.getBoolean("aggressive");
-				def.respawnTime = result.getInt("respawnTime");
-				for (int i = 0; i < 12; i++) {
-					def.sprites[i] = result.getInt("sprites" + (i + 1));
-				}
-				def.hairColour = result.getInt("hairColour");
-				def.topColour = result.getInt("topColour");
-				def.bottomColour = result.getInt("bottomColour");
-				def.skinColour = result.getInt("skinColour");
-				def.camera1 = result.getInt("camera1");
-				def.camera2 = result.getInt("camera2");
-				def.walkModel = result.getInt("walkModel");
-				def.combatModel = result.getInt("combatModel");
-				def.combatSprite = result.getInt("combatSprite");
-
-				petDefinitions.add(def);
-			}
-
-			LOGGER.info("\t Loaded {}", box(petDefinitions.size()) + " Pet definitions");
-			EntityHandler.pets = (ArrayList<PetDef>) petDefinitions.clone();
-			for (PetDef n : EntityHandler.pets) {
 				if (n.isAttackable()) {
 					n.respawnTime -= (n.respawnTime / 3);
 				}

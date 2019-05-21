@@ -15,7 +15,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
-import com.openrsc.server.model.entity.pet.Pet;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.Bubble;
 import com.openrsc.server.model.entity.update.ChatMessage;
@@ -320,22 +319,6 @@ public class Functions {
 		}
 	}
 
-	public static void petWalkFromPlayer(Player player, Pet n) {
-		if (player.getLocation().equals(n.getLocation())) {
-			for (int x = -1; x <= 1; ++x) {
-				for (int y = -1; y <= 1; ++y) {
-					if (x == 0 || y == 0)
-						continue;
-					Point destination = canWalk(n, player.getX() - x, player.getY() - y);
-					if (destination != null && destination.inBounds(n.getLoc().minX, n.getLoc().minY, n.getLoc().maxY, n.getLoc().maxY)) {
-						n.walk(destination.getX(), destination.getY());
-						break;
-					}
-				}
-			}
-		}
-	}
-
 	public static Npc spawnNpc(int id, int x, int y, final int time, final Player spawnedFor) {
 		final Npc npc = new Npc(id, x, y);
 		post(() -> {
@@ -351,21 +334,6 @@ public class Functions {
 		return npc;
 	}
 
-	public static Pet spawnPet(int id, int x, int y, final int time, final Player spawnedFor) {
-		final Pet pet = new Pet(id, x, y);
-		post(() -> {
-			pet.setShouldRespawn(false);
-			pet.setAttribute("spawnedFor", spawnedFor);
-			World.getWorld().registerNpc(pet);
-			Server.getServer().getEventHandler().add(new SingleEvent(null, time) {
-				public void action() {
-					pet.remove();
-				}
-			});
-		});
-		return pet;
-	}
-
 	public static Npc spawnNpc(int id, int x, int y) {
 		final Npc npc = new Npc(id, x, y);
 		post(() -> {
@@ -373,15 +341,6 @@ public class Functions {
 			World.getWorld().registerNpc(npc);
 		});
 		return npc;
-	}
-
-	public static Pet spawnPet(int id, int x, int y) {
-		final Pet pet = new Pet(id, x, y);
-		post(() -> {
-			pet.setShouldRespawn(false);
-			World.getWorld().registerNpc(pet);
-		});
-		return pet;
 	}
 
 	public static Npc spawnNpcWithRadius(Player p, int id, int x, int y, int radius, final int time) {
@@ -412,21 +371,6 @@ public class Functions {
 			});
 		});
 		return npc;
-	}
-
-	public static Pet spawnPet(int id, int x, int y, final int time) {
-
-		final Pet pet = new Pet(id, x, y);
-		post(() -> {
-			pet.setShouldRespawn(false);
-			World.getWorld().registerNpc(pet);
-			Server.getServer().getEventHandler().add(new SingleEvent(null, time) {
-				public void action() {
-					pet.remove();
-				}
-			});
-		});
-		return pet;
 	}
 
 	public static void completeQuest(Player p, QuestInterface quest) {
