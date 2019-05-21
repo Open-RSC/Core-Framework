@@ -1,10 +1,12 @@
-package com.openrsc.server.plugins.deefault;
+package com.openrsc.server.plugins.defaults;
 
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.DefaultHandler;
+import com.openrsc.server.plugins.deefault.DoorAction;
+import com.openrsc.server.plugins.deefault.Ladders;
 import com.openrsc.server.plugins.listeners.action.*;
 
 /**
