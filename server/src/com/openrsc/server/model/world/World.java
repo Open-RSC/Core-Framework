@@ -14,6 +14,7 @@ import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
+import com.openrsc.server.model.entity.pet.Pet;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.snapshot.Snapshot;
 import com.openrsc.server.model.world.region.RegionManager;
@@ -68,6 +69,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	private static World worldInstance;
 	private final WorldLoader db = new WorldLoader();
 	private final EntityList<Npc> npcs = new EntityList<Npc>(4000);
+	private final EntityList<Pet> pets = new EntityList<Pet>(4000);
 	private final EntityList<Player> players = new EntityList<Player>(2000);
 	private final List<QuestInterface> quests = new LinkedList<QuestInterface>();
 	private final List<MiniGameInterface> minigames = new LinkedList<MiniGameInterface>();
@@ -148,6 +150,10 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		return npcs.size();
 	}
 
+	public int countPets() {
+		return pets.size();
+	}
+
 	public int countPlayers() {
 		return players.size();
 	}
@@ -183,11 +189,29 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		}
 	}
 
+	public Pet getPet(int idx) {
+		try {
+			return pets.get(idx);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
 	public Npc getNpc(int id, int minX, int maxX, int minY, int maxY) {
 		for (Npc npc : npcs) {
 			if (npc.getID() == id && npc.getX() >= minX && npc.getX() <= maxX && npc.getY() >= minY
 				&& npc.getY() <= maxY) {
 				return npc;
+			}
+		}
+		return null;
+	}
+
+	public Pet getPet(int id, int minX, int maxX, int minY, int maxY) {
+		for (Pet pet : pets) {
+			if (pet.getID() == id && pet.getX() >= minX && pet.getX() <= maxX && pet.getY() >= minY
+				&& pet.getY() <= maxY) {
+				return pet;
 			}
 		}
 		return null;
@@ -205,10 +229,31 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		return null;
 	}
 
+	public Pet getPet(int id, int minX, int maxX, int minY, int maxY, boolean notNull) {
+		for (Pet pet : pets) {
+			if (pet.getID() == id && pet.getX() >= minX && pet.getX() <= maxX && pet.getY() >= minY
+				&& pet.getY() <= maxY) {
+				if (!pet.inCombat()) {
+					return pet;
+				}
+			}
+		}
+		return null;
+	}
+
 	public Npc getNpcById(int id) {
 		for (Npc npc : npcs) {
 			if (npc.getID() == id) {
 				return npc;
+			}
+		}
+		return null;
+	}
+
+	public Pet getPetById(int id) {
+		for (Pet pet : pets) {
+			if (pet.getID() == id) {
+				return pet;
 			}
 		}
 		return null;
@@ -219,6 +264,13 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	 */
 	public synchronized EntityList<Npc> getNpcs() {
 		return npcs;
+	}
+
+	/**
+	 * Gets the list of pets on the server
+	 */
+	public synchronized EntityList<Pet> getPets() {
+		return pets;
 	}
 
 	/**
@@ -324,6 +376,10 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 	public boolean hasNpc(Npc n) {
 		return npcs.contains(n);
+	}
+
+	public boolean hasPet(Pet n) {
+		return pets.contains(n);
 	}
 	/*
 	 * Note to self - Remove CollidingWallObject, Remove getWallGameObject, And others if this doesn't work in long run.
@@ -666,6 +722,16 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	public void unregisterNpc(Npc n) {
 		if (hasNpc(n)) {
 			npcs.remove(n);
+		}
+		n.superRemove();
+	}
+
+	/**
+	 * Removes a pet from the server
+	 */
+	public void unregisterPet(Pet n) {
+		if (hasPet(n)) {
+			pets.remove(n);
 		}
 		n.superRemove();
 	}
