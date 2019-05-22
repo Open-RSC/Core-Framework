@@ -590,12 +590,15 @@ public abstract class Mob extends Entity {
 				((Player) this).resetAll();
 				((Player) this).setStatus(Action.FIGHTING_MOB);
 				((Player) this).produceUnderAttack();
-			}
-			if (this.isNpc()) {
+			} else if (this.isNpc()) {
 				((Npc) this).setStatus(Action.FIGHTING_MOB);
 				((Npc) this).produceUnderAttack();
 			} else {
-				((Player) victim).produceUnderAttack();
+				if (!this.isNpc()) {
+					((Player) victim).produceUnderAttack();
+				} else {
+					((Npc) victim).produceUnderAttack();
+				}
 			}
 			Functions.sleep(1);
 
@@ -633,7 +636,7 @@ public abstract class Mob extends Entity {
 				if (this.isPlayer()) {
 					Player attacker = (Player) this;
 					attacker.releaseUnderAttack();
-				} else {
+				} else if (this.isNpc()) {
 					Npc attacker = (Npc) this;
 					attacker.releaseUnderAttack();
 				}
@@ -648,7 +651,7 @@ public abstract class Mob extends Entity {
 				if (this.isPlayer()) {
 					Player attacker = (Player) this;
 					attacker.releaseUnderAttack();
-				} else {
+				} else if (this.isNpc()) {
 					Npc attacker = (Npc) this;
 					attacker.releaseUnderAttack();
 				}
