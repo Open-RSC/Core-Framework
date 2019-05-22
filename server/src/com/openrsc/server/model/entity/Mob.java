@@ -285,10 +285,10 @@ public abstract class Mob extends Entity {
 		if (newHp <= 0) {
 			if (this.isPlayer()) {
 				((Player) this).setStatus(Action.DIED_FROM_DAMAGE);
-				killedBy(null, ((Player) this));
+				killedBy(null);
 			} else {
 				((Npc) this).setStatus(Action.DIED_FROM_DAMAGE);
-				killedBy(null, ((Npc) this));
+				killedBy(null);
 			}
 		} else {
 			skills.setLevel(3, newHp);
@@ -466,10 +466,6 @@ public abstract class Mob extends Entity {
 	}
 
 	public abstract void killedBy(Mob mob);
-
-	public abstract void killedBy(Mob mob, Player p);
-
-	public abstract void killedBy(Mob mob, Npc n);
 
 	public void resetCombatEvent() {
 		if (combatEvent != null) {
