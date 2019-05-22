@@ -283,6 +283,151 @@ public class Npc extends Mob {
 		return weaponPowerPoints;
 	}
 
+	@Override
+	public void killedBy(Mob mob) {
+		this.cure();
+		Player owner = mob instanceof Player ? (Player) mob : null;
+		if (owner != null) {
+			ActionSender.sendSound(owner, "victory");
+			AchievementSystem.checkAndIncSlayNpcTasks(owner, this);
+
+			//If NPC kill messages are enabled and the filter is enabled and the NPC is in the list of NPCs, display the messages,
+			//otherwise we will display the message for all NPCs if NPC kill messages are enabled if there is no filter.
+			//Also, if we don't have NPC kill logging enabled, we can't have NPC kill messages.
+			if (NPC_KILL_LOGGING) {
+				if (NPC_KILL_MESSAGES && NPC_KILL_MESSAGES_FILTER) {
+					if (NPC_KILL_MESSAGES_NPCs.contains(this.getDef().getName())) {
+						owner.addNpcKill(this, true);
+					} else {
+						owner.addNpcKill(this, false);
+					}
+				} else {
+					owner.addNpcKill(this, NPC_KILL_MESSAGES);
+				}
+			}
+
+
+			owner = handleLootAndXpDistribution((Player) mob);
+
+			ItemDropDef[] drops = def.getDrops();
+
+			int total = 0;
+			int weightTotal = 0;
+			for (ItemDropDef drop : drops) {
+				total += drop.getWeight();
+				weightTotal += drop.getWeight();
+				if (drop.getWeight() == 0 && drop.getID() != -1) {
+					GroundItem groundItem = new GroundItem(drop.getID(), getX(), getY(), drop.getAmount(), owner);
+					groundItem.setAttribute("npcdrop", true);
+					world.registerItem(groundItem);
+					continue;
+				}
+
+			}
+
+			int hit = DataConversions.random(0, total);
+			total = 0;
+
+			for (ItemDropDef drop : drops) {
+				if (drop.getID() == ItemId.UNHOLY_SYMBOL_MOULD.id() && owner.getQuestStage(Constants.Quests.OBSERVATORY_QUEST) > -1) {
+					continue;
+				}
+
+				Item temp = new Item();
+				temp.setID(drop.getID());
+
+				if (drop == null) {
+					continue;
+				}
+
+				int dropID = drop.getID();
+				int amount = drop.getAmount();
+				int weight = drop.getWeight();
+
+				double currentRatio = (double) weight / (double) weightTotal;
+				if (hit >= total && hit < (total + weight)) {
+					if (dropID != -1) {
+						if (EntityHandler.getItemDef(dropID).isMembersOnly()
+							&& !Constants.GameServer.MEMBER_WORLD) {
+							continue;
+						}
+
+						if (!EntityHandler.getItemDef(dropID).isStackable()) {
+
+							Server.getPlayerDataProcessor().getDatabase().addNpcDrop(
+								owner, this, dropID, amount);
+							GroundItem groundItem;
+
+							// We need to drop multiple counts of "1" item if it's not a stack
+							for (int count = 0; count < amount; count++) {
+
+								// Gem Drop Table + 1/128 chance to roll into very rare item
+								if (drop.getID() == ItemId.UNCUT_SAPPHIRE.id()) {
+									dropID = Formulae.calculateGemDrop();
+									amount = 1;
+								}
+
+								// Herb Drop Table
+								else if (drop.getID() == ItemId.UNIDENTIFIED_GUAM_LEAF.id()) {
+									dropID = Formulae.calculateHerbDrop();
+								}
+
+								if (dropID != ItemId.NOTHING.id() && EntityHandler.getItemDef(dropID).isMembersOnly() && !Constants.GameServer.MEMBER_WORLD) {
+									continue;
+								} else if (dropID != ItemId.NOTHING.id()) {
+									groundItem = new GroundItem(dropID, getX(), getY(), 1, owner);
+									groundItem.setAttribute("npcdrop", true);
+									world.registerItem(groundItem);
+								}
+							}
+
+						} else {
+
+							// Gold Drops
+							if (drop.getID() == ItemId.COINS.id()) {
+								amount = Formulae.calculateGoldDrop(
+									GoldDrops.drops.getOrDefault(this.getID(), new int[]{1})
+								);
+							}
+
+							Server.getPlayerDataProcessor().getDatabase().addNpcDrop(
+								owner, this, dropID, amount);
+							GroundItem groundItem = new GroundItem(dropID, getX(), getY(), amount, owner);
+							groundItem.setAttribute("npcdrop", true);
+
+							world.registerItem(groundItem);
+						}
+
+						// Check if we have a "valuable drop" (configurable)
+						if (dropID != ItemId.NOTHING.id() && amount > 0 && VALUABLE_DROP_MESSAGES && (currentRatio > VALUABLE_DROP_RATIO || (VALUABLE_DROP_EXTRAS && valuableDrops.contains(temp.getDef().getName())))) {
+							if (amount > 1) {
+								owner.message("@red@Valuable drop: " + amount + " x " + temp.getDef().getName() + " (" +
+									(temp.getDef().getDefaultPrice() * amount) + " coins)");
+							} else {
+								owner.message("@red@Valuable drop: " + temp.getDef().getName() + " (" +
+									(temp.getDef().getDefaultPrice()) + " coins)");
+							}
+						}
+					}
+					break;
+				}
+				total += weight;
+			}
+			if (mob instanceof Player) {
+				for (NpcLootEvent e : deathListeners) {
+					e.onLootNpcDeath((Player) mob, this);
+				}
+			}
+			if (mob instanceof Npc) {
+				for (NpcLootEvent e : deathListeners) {
+					e.onLootNpcDeath((Npc) mob, this);
+				}
+			}
+			deathListeners.clear();
+			remove();
+		}
+	}
+
 	/**
 	 * Distributes the XP from this monster and the loot
 	 *
@@ -386,247 +531,247 @@ public class Npc extends Mob {
 		});
 	}
 
-	public void killedBy(Mob mob) {
+	public void killedBy(Mob mob, Player p) {
 		this.cure();
-		if (this.isNpc()) {
-			Npc owner = mob instanceof Npc ? (Npc) mob : null;
-			if (owner != null) {
-				//owner = handleLootAndXpDistribution((Npc) mob);
-				ItemDropDef[] drops = def.getDrops();
+		Player owner = mob instanceof Player ? (Player) mob : null;
+		if (owner != null) {
+			ActionSender.sendSound(owner, "victory");
+			AchievementSystem.checkAndIncSlayNpcTasks(owner, this);
 
-				int total = 0;
-				int weightTotal = 0;
-				for (ItemDropDef drop : drops) {
-					total += drop.getWeight();
-					weightTotal += drop.getWeight();
-					if (drop.getWeight() == 0 && drop.getID() != -1) {
-						GroundItem groundItem = new GroundItem(drop.getID(), getX(), getY(), drop.getAmount(), owner);
-						groundItem.setAttribute("npcdrop", true);
-						world.registerItem(groundItem);
-						continue;
-					}
-				}
-
-				int hit = DataConversions.random(0, total);
-				total = 0;
-
-				for (ItemDropDef drop : drops) {
-
-					Item temp = new Item();
-					temp.setID(drop.getID());
-
-					if (drop == null) {
-						continue;
-					}
-
-					int dropID = drop.getID();
-					int amount = drop.getAmount();
-					int weight = drop.getWeight();
-
-					double currentRatio = (double) weight / (double) weightTotal;
-					if (hit >= total && hit < (total + weight)) {
-						if (dropID != -1) {
-							if (EntityHandler.getItemDef(dropID).isMembersOnly()
-								&& !Constants.GameServer.MEMBER_WORLD) {
-								continue;
-							}
-
-							if (!EntityHandler.getItemDef(dropID).isStackable()) {
-								GroundItem groundItem;
-
-								// We need to drop multiple counts of "1" item if it's not a stack
-								for (int count = 0; count < amount; count++) {
-
-									// Gem Drop Table + 1/128 chance to roll into very rare item
-									if (drop.getID() == ItemId.UNCUT_SAPPHIRE.id()) {
-										dropID = Formulae.calculateGemDrop();
-										amount = 1;
-									}
-
-									// Herb Drop Table
-									else if (drop.getID() == ItemId.UNIDENTIFIED_GUAM_LEAF.id()) {
-										dropID = Formulae.calculateHerbDrop();
-									}
-
-									if (dropID != ItemId.NOTHING.id() && EntityHandler.getItemDef(dropID).isMembersOnly() && !Constants.GameServer.MEMBER_WORLD) {
-										continue;
-									} else if (dropID != ItemId.NOTHING.id()) {
-										groundItem = new GroundItem(dropID, getX(), getY(), 1, owner);
-										groundItem.setAttribute("npcdrop", true);
-										world.registerItem(groundItem);
-									}
-								}
-							} else {
-								// Gold Drops
-								if (drop.getID() == ItemId.COINS.id()) {
-									amount = Formulae.calculateGoldDrop(
-										GoldDrops.drops.getOrDefault(this.getID(), new int[]{1})
-									);
-								}
-
-								GroundItem groundItem = new GroundItem(dropID, getX(), getY(), amount, owner);
-								groundItem.setAttribute("npcdrop", true);
-								world.registerItem(groundItem);
-							}
-						}
-						break;
-					}
-					total += weight;
-				}
-				if (mob instanceof Npc) {
-					for (NpcLootEvent e : deathListeners) {
-						e.onLootNpcDeath((Npc) mob, this);
-					}
-				}
-				if (mob instanceof Player) {
-					for (NpcLootEvent e : deathListeners) {
-						e.onLootNpcDeath((Player) mob, this);
-					}
-				}
-				deathListeners.clear();
-				remove();
-			}
-		} else {
-			Player owner = mob instanceof Player ? (Player) mob : null;
-			if (owner != null) {
-				ActionSender.sendSound(owner, "victory");
-				AchievementSystem.checkAndIncSlayNpcTasks(owner, this);
-
-				//If NPC kill messages are enabled and the filter is enabled and the NPC is in the list of NPCs, display the messages,
-				//otherwise we will display the message for all NPCs if NPC kill messages are enabled if there is no filter.
-				//Also, if we don't have NPC kill logging enabled, we can't have NPC kill messages.
-				if (NPC_KILL_LOGGING) {
-					if (NPC_KILL_MESSAGES && NPC_KILL_MESSAGES_FILTER) {
-						if (NPC_KILL_MESSAGES_NPCs.contains(this.getDef().getName())) {
-							owner.addNpcKill(this, true);
-						} else {
-							owner.addNpcKill(this, false);
-						}
+			//If NPC kill messages are enabled and the filter is enabled and the NPC is in the list of NPCs, display the messages,
+			//otherwise we will display the message for all NPCs if NPC kill messages are enabled if there is no filter.
+			//Also, if we don't have NPC kill logging enabled, we can't have NPC kill messages.
+			if (NPC_KILL_LOGGING) {
+				if (NPC_KILL_MESSAGES && NPC_KILL_MESSAGES_FILTER) {
+					if (NPC_KILL_MESSAGES_NPCs.contains(this.getDef().getName())) {
+						owner.addNpcKill(this, true);
 					} else {
-						owner.addNpcKill(this, NPC_KILL_MESSAGES);
+						owner.addNpcKill(this, false);
 					}
+				} else {
+					owner.addNpcKill(this, NPC_KILL_MESSAGES);
+				}
+			}
+
+
+			owner = handleLootAndXpDistribution((Player) mob);
+
+			ItemDropDef[] drops = def.getDrops();
+
+			int total = 0;
+			int weightTotal = 0;
+			for (ItemDropDef drop : drops) {
+				total += drop.getWeight();
+				weightTotal += drop.getWeight();
+				if (drop.getWeight() == 0 && drop.getID() != -1) {
+					GroundItem groundItem = new GroundItem(drop.getID(), getX(), getY(), drop.getAmount(), owner);
+					groundItem.setAttribute("npcdrop", true);
+					world.registerItem(groundItem);
+					continue;
 				}
 
+			}
 
-				owner = handleLootAndXpDistribution((Player) mob);
+			int hit = DataConversions.random(0, total);
+			total = 0;
 
-				ItemDropDef[] drops = def.getDrops();
-
-				int total = 0;
-				int weightTotal = 0;
-				for (ItemDropDef drop : drops) {
-					total += drop.getWeight();
-					weightTotal += drop.getWeight();
-					if (drop.getWeight() == 0 && drop.getID() != -1) {
-						GroundItem groundItem = new GroundItem(drop.getID(), getX(), getY(), drop.getAmount(), owner);
-						groundItem.setAttribute("npcdrop", true);
-						world.registerItem(groundItem);
-						continue;
-					}
-
+			for (ItemDropDef drop : drops) {
+				if (drop.getID() == ItemId.UNHOLY_SYMBOL_MOULD.id() && owner.getQuestStage(Constants.Quests.OBSERVATORY_QUEST) > -1) {
+					continue;
 				}
 
-				int hit = DataConversions.random(0, total);
-				total = 0;
+				Item temp = new Item();
+				temp.setID(drop.getID());
 
-				for (ItemDropDef drop : drops) {
-					if (drop.getID() == ItemId.UNHOLY_SYMBOL_MOULD.id() && owner.getQuestStage(Constants.Quests.OBSERVATORY_QUEST) > -1) {
-						continue;
-					}
+				if (drop == null) {
+					continue;
+				}
 
-					Item temp = new Item();
-					temp.setID(drop.getID());
+				int dropID = drop.getID();
+				int amount = drop.getAmount();
+				int weight = drop.getWeight();
 
-					if (drop == null) {
-						continue;
-					}
+				double currentRatio = (double) weight / (double) weightTotal;
+				if (hit >= total && hit < (total + weight)) {
+					if (dropID != -1) {
+						if (EntityHandler.getItemDef(dropID).isMembersOnly()
+							&& !Constants.GameServer.MEMBER_WORLD) {
+							continue;
+						}
 
-					int dropID = drop.getID();
-					int amount = drop.getAmount();
-					int weight = drop.getWeight();
+						if (!EntityHandler.getItemDef(dropID).isStackable()) {
 
-					double currentRatio = (double) weight / (double) weightTotal;
-					if (hit >= total && hit < (total + weight)) {
-						if (dropID != -1) {
-							if (EntityHandler.getItemDef(dropID).isMembersOnly()
-								&& !Constants.GameServer.MEMBER_WORLD) {
-								continue;
-							}
+							Server.getPlayerDataProcessor().getDatabase().addNpcDrop(
+								owner, this, dropID, amount);
+							GroundItem groundItem;
 
-							if (!EntityHandler.getItemDef(dropID).isStackable()) {
+							// We need to drop multiple counts of "1" item if it's not a stack
+							for (int count = 0; count < amount; count++) {
 
-								Server.getPlayerDataProcessor().getDatabase().addNpcDrop(
-									owner, this, dropID, amount);
-								GroundItem groundItem;
-
-								// We need to drop multiple counts of "1" item if it's not a stack
-								for (int count = 0; count < amount; count++) {
-
-									// Gem Drop Table + 1/128 chance to roll into very rare item
-									if (drop.getID() == ItemId.UNCUT_SAPPHIRE.id()) {
-										dropID = Formulae.calculateGemDrop();
-										amount = 1;
-									}
-
-									// Herb Drop Table
-									else if (drop.getID() == ItemId.UNIDENTIFIED_GUAM_LEAF.id()) {
-										dropID = Formulae.calculateHerbDrop();
-									}
-
-									if (dropID != ItemId.NOTHING.id() && EntityHandler.getItemDef(dropID).isMembersOnly() && !Constants.GameServer.MEMBER_WORLD) {
-										continue;
-									} else if (dropID != ItemId.NOTHING.id()) {
-										groundItem = new GroundItem(dropID, getX(), getY(), 1, owner);
-										groundItem.setAttribute("npcdrop", true);
-										world.registerItem(groundItem);
-									}
+								// Gem Drop Table + 1/128 chance to roll into very rare item
+								if (drop.getID() == ItemId.UNCUT_SAPPHIRE.id()) {
+									dropID = Formulae.calculateGemDrop();
+									amount = 1;
 								}
 
+								// Herb Drop Table
+								else if (drop.getID() == ItemId.UNIDENTIFIED_GUAM_LEAF.id()) {
+									dropID = Formulae.calculateHerbDrop();
+								}
+
+								if (dropID != ItemId.NOTHING.id() && EntityHandler.getItemDef(dropID).isMembersOnly() && !Constants.GameServer.MEMBER_WORLD) {
+									continue;
+								} else if (dropID != ItemId.NOTHING.id()) {
+									groundItem = new GroundItem(dropID, getX(), getY(), 1, owner);
+									groundItem.setAttribute("npcdrop", true);
+									world.registerItem(groundItem);
+								}
+							}
+
+						} else {
+
+							// Gold Drops
+							if (drop.getID() == ItemId.COINS.id()) {
+								amount = Formulae.calculateGoldDrop(
+									GoldDrops.drops.getOrDefault(this.getID(), new int[]{1})
+								);
+							}
+
+							Server.getPlayerDataProcessor().getDatabase().addNpcDrop(
+								owner, this, dropID, amount);
+							GroundItem groundItem = new GroundItem(dropID, getX(), getY(), amount, owner);
+							groundItem.setAttribute("npcdrop", true);
+
+							world.registerItem(groundItem);
+						}
+
+						// Check if we have a "valuable drop" (configurable)
+						if (dropID != ItemId.NOTHING.id() && amount > 0 && VALUABLE_DROP_MESSAGES && (currentRatio > VALUABLE_DROP_RATIO || (VALUABLE_DROP_EXTRAS && valuableDrops.contains(temp.getDef().getName())))) {
+							if (amount > 1) {
+								owner.message("@red@Valuable drop: " + amount + " x " + temp.getDef().getName() + " (" +
+									(temp.getDef().getDefaultPrice() * amount) + " coins)");
 							} else {
-
-								// Gold Drops
-								if (drop.getID() == ItemId.COINS.id()) {
-									amount = Formulae.calculateGoldDrop(
-										GoldDrops.drops.getOrDefault(this.getID(), new int[]{1})
-									);
-								}
-
-								Server.getPlayerDataProcessor().getDatabase().addNpcDrop(
-									owner, this, dropID, amount);
-								GroundItem groundItem = new GroundItem(dropID, getX(), getY(), amount, owner);
-								groundItem.setAttribute("npcdrop", true);
-
-								world.registerItem(groundItem);
-							}
-
-							// Check if we have a "valuable drop" (configurable)
-							if (dropID != ItemId.NOTHING.id() && amount > 0 && VALUABLE_DROP_MESSAGES && (currentRatio > VALUABLE_DROP_RATIO || (VALUABLE_DROP_EXTRAS && valuableDrops.contains(temp.getDef().getName())))) {
-								if (amount > 1) {
-									owner.message("@red@Valuable drop: " + amount + " x " + temp.getDef().getName() + " (" +
-										(temp.getDef().getDefaultPrice() * amount) + " coins)");
-								} else {
-									owner.message("@red@Valuable drop: " + temp.getDef().getName() + " (" +
-										(temp.getDef().getDefaultPrice()) + " coins)");
-								}
+								owner.message("@red@Valuable drop: " + temp.getDef().getName() + " (" +
+									(temp.getDef().getDefaultPrice()) + " coins)");
 							}
 						}
-						break;
 					}
-					total += weight;
+					break;
 				}
-				if (mob instanceof Player) {
-					for (NpcLootEvent e : deathListeners) {
-						e.onLootNpcDeath((Player) mob, this);
-					}
-				}
-				if (mob instanceof Npc) {
-					for (NpcLootEvent e : deathListeners) {
-						e.onLootNpcDeath((Npc) mob, this);
-					}
-				}
-				deathListeners.clear();
-				remove();
+				total += weight;
 			}
+			if (mob instanceof Player) {
+				for (NpcLootEvent e : deathListeners) {
+					e.onLootNpcDeath((Player) mob, this);
+				}
+			}
+			if (mob instanceof Npc) {
+				for (NpcLootEvent e : deathListeners) {
+					e.onLootNpcDeath((Npc) mob, this);
+				}
+			}
+			deathListeners.clear();
+			remove();
+		}
+	}
+
+	public void killedBy(Mob mob, Npc n) {
+		Npc owner = mob instanceof Npc ? (Npc) mob : null;
+		if (owner != null) {
+			//owner = handleLootAndXpDistribution((Npc) mob);
+			ItemDropDef[] drops = def.getDrops();
+
+			int total = 0;
+			int weightTotal = 0;
+			for (ItemDropDef drop : drops) {
+				total += drop.getWeight();
+				weightTotal += drop.getWeight();
+				if (drop.getWeight() == 0 && drop.getID() != -1) {
+					GroundItem groundItem = new GroundItem(drop.getID(), getX(), getY(), drop.getAmount(), owner);
+					groundItem.setAttribute("npcdrop", true);
+					world.registerItem(groundItem);
+					continue;
+				}
+			}
+
+			int hit = DataConversions.random(0, total);
+			total = 0;
+
+			for (ItemDropDef drop : drops) {
+
+				Item temp = new Item();
+				temp.setID(drop.getID());
+
+				if (drop == null) {
+					continue;
+				}
+
+				int dropID = drop.getID();
+				int amount = drop.getAmount();
+				int weight = drop.getWeight();
+
+				double currentRatio = (double) weight / (double) weightTotal;
+				if (hit >= total && hit < (total + weight)) {
+					if (dropID != -1) {
+						if (EntityHandler.getItemDef(dropID).isMembersOnly()
+							&& !Constants.GameServer.MEMBER_WORLD) {
+							continue;
+						}
+
+						if (!EntityHandler.getItemDef(dropID).isStackable()) {
+							GroundItem groundItem;
+
+							// We need to drop multiple counts of "1" item if it's not a stack
+							for (int count = 0; count < amount; count++) {
+
+								// Gem Drop Table + 1/128 chance to roll into very rare item
+								if (drop.getID() == ItemId.UNCUT_SAPPHIRE.id()) {
+									dropID = Formulae.calculateGemDrop();
+									amount = 1;
+								}
+
+								// Herb Drop Table
+								else if (drop.getID() == ItemId.UNIDENTIFIED_GUAM_LEAF.id()) {
+									dropID = Formulae.calculateHerbDrop();
+								}
+
+								if (dropID != ItemId.NOTHING.id() && EntityHandler.getItemDef(dropID).isMembersOnly() && !Constants.GameServer.MEMBER_WORLD) {
+									continue;
+								} else if (dropID != ItemId.NOTHING.id()) {
+									groundItem = new GroundItem(dropID, getX(), getY(), 1, owner);
+									groundItem.setAttribute("npcdrop", true);
+									world.registerItem(groundItem);
+								}
+							}
+						} else {
+							// Gold Drops
+							if (drop.getID() == ItemId.COINS.id()) {
+								amount = Formulae.calculateGoldDrop(
+									GoldDrops.drops.getOrDefault(this.getID(), new int[]{1})
+								);
+							}
+
+							GroundItem groundItem = new GroundItem(dropID, getX(), getY(), amount, owner);
+							groundItem.setAttribute("npcdrop", true);
+							world.registerItem(groundItem);
+						}
+					}
+					break;
+				}
+				total += weight;
+			}
+			if (mob instanceof Npc) {
+				for (NpcLootEvent e : deathListeners) {
+					e.onLootNpcDeath((Npc) mob, this);
+				}
+			}
+			if (mob instanceof Player) {
+				for (NpcLootEvent e : deathListeners) {
+					e.onLootNpcDeath((Player) mob, this);
+				}
+			}
+			deathListeners.clear();
+			remove();
 		}
 	}
 

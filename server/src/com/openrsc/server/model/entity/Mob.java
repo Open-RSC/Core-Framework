@@ -283,10 +283,14 @@ public abstract class Mob extends Entity {
 	public void damage(int damage) {
 		int newHp = skills.getLevel(Skills.HITPOINTS) - damage;
 		if (newHp <= 0) {
-			if (this.isPlayer())
+			if (this.isPlayer()) {
 				((Player) this).setStatus(Action.DIED_FROM_DAMAGE);
-
-			killedBy(null);
+				killedBy(null, ((Player) this));
+			}
+			if (this.isNpc()) {
+				((Npc) this).setStatus(Action.DIED_FROM_DAMAGE);
+				killedBy(null, ((Npc) this));
+			}
 		} else {
 			skills.setLevel(3, newHp);
 		}
@@ -464,6 +468,10 @@ public abstract class Mob extends Entity {
 
 	public abstract void killedBy(Mob mob);
 
+	public abstract void killedBy(Mob mob, Player p);
+
+	public abstract void killedBy(Mob mob, Npc n);
+
 	public void resetCombatEvent() {
 		if (combatEvent != null) {
 			combatEvent.resetCombat();
@@ -633,11 +641,11 @@ public abstract class Mob extends Entity {
 					ActionSender.sendFatigue(playerVictim);
 				}
 			} else {
-				if (this.isPlayer()) {
-					Player attacker = (Player) this;
-					attacker.releaseUnderAttack();
-				} else if (this.isNpc()) {
+				if (this.isNpc()) {
 					Npc attacker = (Npc) this;
+					attacker.releaseUnderAttack();
+				} else {
+					Player attacker = (Player) this;
 					attacker.releaseUnderAttack();
 				}
 			}
@@ -648,11 +656,11 @@ public abstract class Mob extends Entity {
 				gotUnderAttack = true;
 				npcVictim.releaseUnderAttack();
 			} else {
-				if (this.isPlayer()) {
-					Player attacker = (Player) this;
-					attacker.releaseUnderAttack();
-				} else if (this.isNpc()) {
+				if (this.isNpc()) {
 					Npc attacker = (Npc) this;
+					attacker.releaseUnderAttack();
+				} else {
+					Player attacker = (Player) this;
 					attacker.releaseUnderAttack();
 				}
 			}

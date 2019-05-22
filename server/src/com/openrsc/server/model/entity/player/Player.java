@@ -10,20 +10,10 @@ import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.event.rsc.impl.FireCannonEvent;
-import com.openrsc.server.event.rsc.impl.PoisonEvent;
-import com.openrsc.server.event.rsc.impl.PrayerDrainEvent;
-import com.openrsc.server.event.rsc.impl.ProjectileEvent;
-import com.openrsc.server.event.rsc.impl.RangeEvent;
-import com.openrsc.server.event.rsc.impl.ThrowingEvent;
+import com.openrsc.server.event.rsc.impl.*;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.login.LoginRequest;
-import com.openrsc.server.model.Cache;
-import com.openrsc.server.model.MenuOptionListener;
-import com.openrsc.server.model.Point;
-import com.openrsc.server.model.PrivateMessage;
-import com.openrsc.server.model.Shop;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.*;
 import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.Inventory;
@@ -51,27 +41,15 @@ import com.openrsc.server.sql.query.logs.LiveFeedLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
-
+import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.ListIterator;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
-
-import io.netty.channel.Channel;
 
 import static com.openrsc.server.plugins.Functions.sleep;
 
@@ -1502,6 +1480,154 @@ public final class Player extends Mob {
 
 	@Override
 	public void killedBy(Mob mob) {
+		if (!loggedIn) {
+			return;
+		}
+
+		ActionSender.sendSound(this, "death");
+		ActionSender.sendDied(this);
+
+		if (getAttribute("projectile", null) != null) {
+			ProjectileEvent projectileEvent = getAttribute("projectile");
+			projectileEvent.setCanceled(true);
+		}
+		getSettings().getAttackedBy().clear();
+
+		getCache().store("last_death", System.currentTimeMillis());
+
+		Player player = mob instanceof Player ? (Player) mob : null;
+		boolean stake = getDuel().isDuelActive() || (player != null && player.getDuel().isDuelActive());
+
+		if (player != null) {
+			player.message("You have defeated " + getUsername() + "!");
+			ActionSender.sendSound(player, "victory");
+			if (player.getLocation().inWilderness()) {
+				int id = -1;
+				if (player.getKillType() == 0) {
+					id = player.getEquippedWeaponID();
+					if (id == -1 || id == 59 || id == 60)
+						id = 16;
+				} else if (player.getKillType() == 1) {
+					id = -1;
+				} else if (player.getKillType() == 2) {
+					id = -2;
+				}
+				world.sendKilledUpdate(this.getUsernameHash(), player.getUsernameHash(), id);
+				player.incKills();
+				this.incDeaths();
+				GameLogging.addQuery(new LiveFeedLog(player, "has PKed <strong>" + this.getUsername() + "</strong>"));
+			} else if (stake) {
+				GameLogging.addQuery(new LiveFeedLog(player,
+					"has just won a stake against <strong>" + this.getUsername() + "</strong>"));
+			}
+		}
+		if (stake) {
+			getDuel().dropOnDeath();
+		} else {
+			if (!isStaff())
+				getInventory().dropOnDeath(mob);
+		}
+		if (isIronMan(3)) {
+			updateHCIronman(1);
+			ActionSender.sendIronManMode(this);
+			GameLogging.addQuery(new LiveFeedLog(this, "has died and lost the HC Iron Man Rank!"));
+		}
+		removeSkull(); // destroy
+		resetCombatEvent();
+		this.setLastOpponent(null);
+		world.registerItem(new GroundItem(ItemId.BONES.id(), getX(), getY(), 1, player));
+		if ((!getCache().hasKey("death_location_x") && !getCache().hasKey("death_location_y"))) {
+			setLocation(Point.location(122, 647), true);
+		} else {
+			setLocation(Point.location(getCache().getInt("death_location_x"), getCache().getInt("death_location_y")), true);
+		}
+		setTeleporting(true);
+		ActionSender.sendWorldInfo(this);
+		ActionSender.sendEquipmentStats(this);
+		ActionSender.sendInventory(this);
+
+		resetPath();
+		this.cure();
+		prayers.resetPrayers();
+		skills.normalize();
+	}
+
+	@Override
+	public void killedBy(Mob mob, Player p) {
+		if (!loggedIn) {
+			return;
+		}
+
+		ActionSender.sendSound(this, "death");
+		ActionSender.sendDied(this);
+
+		if (getAttribute("projectile", null) != null) {
+			ProjectileEvent projectileEvent = getAttribute("projectile");
+			projectileEvent.setCanceled(true);
+		}
+		getSettings().getAttackedBy().clear();
+
+		getCache().store("last_death", System.currentTimeMillis());
+
+		Player player = mob instanceof Player ? (Player) mob : null;
+		boolean stake = getDuel().isDuelActive() || (player != null && player.getDuel().isDuelActive());
+
+		if (player != null) {
+			player.message("You have defeated " + getUsername() + "!");
+			ActionSender.sendSound(player, "victory");
+			if (player.getLocation().inWilderness()) {
+				int id = -1;
+				if (player.getKillType() == 0) {
+					id = player.getEquippedWeaponID();
+					if (id == -1 || id == 59 || id == 60)
+						id = 16;
+				} else if (player.getKillType() == 1) {
+					id = -1;
+				} else if (player.getKillType() == 2) {
+					id = -2;
+				}
+				world.sendKilledUpdate(this.getUsernameHash(), player.getUsernameHash(), id);
+				player.incKills();
+				this.incDeaths();
+				GameLogging.addQuery(new LiveFeedLog(player, "has PKed <strong>" + this.getUsername() + "</strong>"));
+			} else if (stake) {
+				GameLogging.addQuery(new LiveFeedLog(player,
+					"has just won a stake against <strong>" + this.getUsername() + "</strong>"));
+			}
+		}
+		if (stake) {
+			getDuel().dropOnDeath();
+		} else {
+			if (!isStaff())
+				getInventory().dropOnDeath(mob);
+		}
+		if (isIronMan(3)) {
+			updateHCIronman(1);
+			ActionSender.sendIronManMode(this);
+			GameLogging.addQuery(new LiveFeedLog(this, "has died and lost the HC Iron Man Rank!"));
+		}
+		removeSkull(); // destroy
+		resetCombatEvent();
+		this.setLastOpponent(null);
+		world.registerItem(new GroundItem(ItemId.BONES.id(), getX(), getY(), 1, player));
+		if ((!getCache().hasKey("death_location_x") && !getCache().hasKey("death_location_y"))) {
+			setLocation(Point.location(122, 647), true);
+		} else {
+			setLocation(Point.location(getCache().getInt("death_location_x"), getCache().getInt("death_location_y")), true);
+		}
+		setTeleporting(true);
+		ActionSender.sendWorldInfo(this);
+		ActionSender.sendEquipmentStats(this);
+		ActionSender.sendInventory(this);
+
+		resetPath();
+		this.cure();
+		prayers.resetPrayers();
+		skills.normalize();
+	}
+
+	@Override
+	public void killedBy(Mob mob, Npc n) {
 		if (!loggedIn) {
 			return;
 		}
