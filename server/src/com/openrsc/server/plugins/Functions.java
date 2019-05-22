@@ -1278,8 +1278,7 @@ public class Functions {
 	 * Removes an item from players inventory.
 	 *
 	 * @param p
-	 * @param id
-	 * @param amt
+	 * @param items
 	 * @return
 	 */
 	public static boolean removeItem(final Player p, final Item... items) {

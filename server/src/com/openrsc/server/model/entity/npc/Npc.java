@@ -209,20 +209,6 @@ public class Npc extends Mob {
 	}
 
 	/**
-	 * Combat damage done by npc n
-	 *
-	 * @param n
-	 * @return
-	 */
-	private int getCombatDamageDoneBy(Npc n) {
-		if (n == null) {
-			return 0;
-		}
-		int dmgDone = combatDamagers.get(n.getID());
-		return (dmgDone > this.getDef().getHits() ? this.getDef().getHits() : dmgDone);
-	}
-
-	/**
 	 * Iterates over combatDamagers map and returns the keys
 	 *
 	 * @return
@@ -257,14 +243,6 @@ public class Npc extends Mob {
 		return (dmgDone > this.getDef().getHits() ? this.getDef().getHits() : dmgDone);
 	}
 
-	private int getMageDamageDoneBy(Npc n) {
-		if (n == null || !mageDamagers.containsKey(n.getID())) {
-			return 0;
-		}
-		int dmgDone = mageDamagers.get(n.getID());
-		return (dmgDone > this.getDef().getHits() ? this.getDef().getHits() : dmgDone);
-	}
-
 	/**
 	 * Iterates over mageDamagers map and returns the keys
 	 *
@@ -285,14 +263,6 @@ public class Npc extends Mob {
 			return 0;
 		}
 		int dmgDone = rangeDamagers.get(p.getDatabaseID());
-		return (dmgDone > this.getDef().getHits() ? this.getDef().getHits() : dmgDone);
-	}
-
-	private int getRangeDamageDoneBy(Npc n) {
-		if (n == null || !rangeDamagers.containsKey(n.getID())) {
-			return 0;
-		}
-		int dmgDone = rangeDamagers.get(n.getID());
 		return (dmgDone > this.getDef().getHits() ? this.getDef().getHits() : dmgDone);
 	}
 
@@ -394,56 +364,6 @@ public class Npc extends Mob {
 		return playerWithMostDamage;
 	}
 
-	private Npc handleLootAndXpDistribution(Npc attacker) {
-
-		Npc npcWithMostDamage = attacker;
-		int currentHighestDamage = 0;
-
-		// Melee damagers
-		for (int npcID : getCombatDamagers()) {
-
-			final Npc n = World.getWorld().getNpcById(npcID);
-			if (n == null)
-				continue;
-			final int dmgDoneByNpc = getCombatDamageDoneBy(n);
-
-			if (dmgDoneByNpc > currentHighestDamage) {
-				npcWithMostDamage = n;
-				currentHighestDamage = dmgDoneByNpc;
-			}
-		}
-
-		// Ranged damagers
-		for (int npcID : getRangeDamagers()) {
-			int newXP = 0;
-			Npc n = World.getWorld().getNpcById(npcID);
-			int dmgDoneByNpc = getRangeDamageDoneBy(n);
-			if (n == null)
-				continue;
-
-			if (dmgDoneByNpc > currentHighestDamage) {
-				npcWithMostDamage = n;
-				currentHighestDamage = dmgDoneByNpc;
-			}
-		}
-
-		// Magic damagers
-		for (int npcID : getMageDamagers()) {
-
-			Npc n = World.getWorld().getNpcById(npcID);
-
-			int dmgDoneByNpc = getMageDamageDoneBy(n);
-			if (n == null)
-				continue;
-
-			if (dmgDoneByNpc > currentHighestDamage) {
-				npcWithMostDamage = n;
-				currentHighestDamage = dmgDoneByNpc;
-			}
-		}
-		return npcWithMostDamage;
-	}
-
 	public void initializeTalkScript(final Player p) {
 		final Npc npc = this;
 		//p.setBusyTimer(600);
@@ -471,7 +391,7 @@ public class Npc extends Mob {
 		if (this.isNpc()) {
 			Npc owner = mob instanceof Npc ? (Npc) mob : null;
 			if (owner != null) {
-				owner = handleLootAndXpDistribution((Npc) mob);
+				//owner = handleLootAndXpDistribution((Npc) mob);
 				ItemDropDef[] drops = def.getDrops();
 
 				int total = 0;
