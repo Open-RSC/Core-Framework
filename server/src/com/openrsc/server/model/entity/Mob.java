@@ -286,8 +286,7 @@ public abstract class Mob extends Entity {
 			if (this.isPlayer()) {
 				((Player) this).setStatus(Action.DIED_FROM_DAMAGE);
 				killedBy(null, ((Player) this));
-			}
-			if (this.isNpc()) {
+			} else {
 				((Npc) this).setStatus(Action.DIED_FROM_DAMAGE);
 				killedBy(null, ((Npc) this));
 			}
