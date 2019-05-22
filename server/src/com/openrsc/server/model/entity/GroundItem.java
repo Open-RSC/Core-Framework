@@ -7,6 +7,7 @@ import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.ItemLoc;
 import com.openrsc.server.model.Point;
+import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 
 public class GroundItem extends Entity {
@@ -43,10 +44,26 @@ public class GroundItem extends Entity {
 		setLocation(Point.location(x, y));
 	}
 
+	public GroundItem(int id, int x, int y, int amount, Npc owner) {
+		setID(id);
+		setAmount(amount);
+		//this.ownerUsernameHash = owner == null ? 0 : owner.getUsernameHash();
+		spawnedTime = System.currentTimeMillis();
+		setLocation(Point.location(x, y));
+	}
+
 	public GroundItem(int id, int x, int y, int amount, Player owner, long spawntime) {
 		setID(id);
 		setAmount(amount);
 		this.ownerUsernameHash = owner == null ? 0 : owner.getUsernameHash();
+		spawnedTime = spawntime;
+		setLocation(Point.location(x, y));
+	}
+
+	public GroundItem(int id, int x, int y, int amount, Npc owner, long spawntime) {
+		setID(id);
+		setAmount(amount);
+		//this.ownerUsernameHash = owner == null ? 0 : owner.getUsernameHash();
 		spawnedTime = spawntime;
 		setLocation(Point.location(x, y));
 	}

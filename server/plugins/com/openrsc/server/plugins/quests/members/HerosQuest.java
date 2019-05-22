@@ -596,7 +596,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 	public void onPlayerKilledNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.GRIP.id()) {
 			World.getWorld().registerItem(
-					new GroundItem(ItemId.BUNCH_OF_KEYS.id(), n.getX(), n.getY(), 1, null));
+					new GroundItem(ItemId.BUNCH_OF_KEYS.id(), n.getX(), n.getY(), 1, (Player) null));
 		}
 		n.killedBy(p);
 	}

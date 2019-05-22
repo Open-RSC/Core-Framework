@@ -51,7 +51,7 @@ public class SeersPartyChest implements InvUseOnObjectExecutiveListener, InvUseO
 						continue;
 					}
 
-					World.getWorld().registerItem(new GroundItem(item.getID(), location.getX(), location.getY(), item.getAmount(), null));
+					World.getWorld().registerItem(new GroundItem(item.getID(), location.getX(), location.getY(), item.getAmount(), (Player) null));
 					break;
 				}
 

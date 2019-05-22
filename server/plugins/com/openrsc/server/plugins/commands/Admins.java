@@ -1314,7 +1314,7 @@ public final class Admins implements CommandListener {
 
 						if(world.withinWorld(baseX + x, baseY + y)) {
 							if ((world.getTile(new Point(baseX + x, baseY + y)).traversalMask & 64) == 0) {
-								world.registerItem(new GroundItem(id, baseX + x, baseY + y, amount, null));
+								world.registerItem(new GroundItem(id, baseX + x, baseY + y, amount, (Player) null));
 							}
 						}
 					}

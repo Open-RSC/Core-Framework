@@ -69,6 +69,26 @@ public class NpcLootEvent extends SingleEvent {
 		stop();
 	}
 
+	public void onLootNpcDeath(Npc n, Npc n2) {
+		if(!n.equals(lootNpc)) {
+			return;
+		}
+
+		String npcName  = n.getDef().getName();
+		ItemDefinition itemDef = EntityHandler.getItemDef(itemId);
+
+		if(itemDef.isStackable()) {
+			World.getWorld().registerItem(new GroundItem(itemId, n.getX(), n.getY(), itemAmount, n2));
+		} else {
+			for (int i = 0; i < itemAmount; i++) {
+				World.getWorld().registerItem(new GroundItem(itemId, n.getX(), n.getY(), itemAmount, n2));
+			}
+		}
+
+		lootNpc = null;
+		stop();
+	}
+
 	public void action() {
 		int prizeIndex = DataConversions.random(0, npcAmount-1);
 		int x = 0;

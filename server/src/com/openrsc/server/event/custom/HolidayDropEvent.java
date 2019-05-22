@@ -55,7 +55,7 @@ public class HolidayDropEvent extends HourlyEvent  {
 							(traversal & 64) != 0    // water or black,  etc.
 					);
 					if (!containsObject && !isBlocking) { // Nothing in the way.
-						World.getWorld().registerItem(new GroundItem(getItems().get(DataConversions.random(0, getItems().size() - 1)), x, y, 1, null));
+						World.getWorld().registerItem(new GroundItem(getItems().get(DataConversions.random(0, getItems().size() - 1)), x, y, 1, (Player) null));
 						totalItemsDropped++;
 					}
 				}

@@ -95,7 +95,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 										World.getWorld().registerItem(new GroundItem(181,
 											fire.getX(),
 											fire.getY(),
-											1, null));
+											1, (Player) null));
 										World.getWorld().unregisterGameObject(fire);
 									}
 								}
@@ -150,7 +150,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 									World.getWorld().registerItem(new GroundItem(ItemId.ASHES.id(),
 										fire.getX(),
 										fire.getY(),
-										1, null));
+										1, (Player) null));
 									World.getWorld().unregisterGameObject(fire);
 								}
 							}
