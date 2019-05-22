@@ -110,7 +110,6 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 			public void action() {
 				int currSecond = (int) (System.currentTimeMillis() / 1000.0 - (4 * 3600));
 				if (Constants.GameServer.AUTO_SERVER_RESTART) {
-
 					if ((int) ((currSecond / 3600.0) % 24) == Constants.GameServer.RESTART_HOUR
 						&& (int) ((currSecond / 60.0) % 60) >= Constants.GameServer.RESTART_MINUTE) {
 						int seconds = Constants.GameServer.RESTART_DELAY;

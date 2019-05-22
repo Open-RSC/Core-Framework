@@ -13,11 +13,7 @@ import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.util.NamedThreadFactory;
-import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.*;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,6 +22,16 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 import static org.apache.logging.log4j.util.Unbox.box;
 
@@ -214,7 +220,7 @@ public final class Server implements Runnable {
 	private void unbind() {
 		try {
 			serverChannel.channel().disconnect();
-		} catch (Exception e) {
+		} catch (Exception ignored) {
 		}
 	}
 
@@ -266,8 +272,9 @@ public final class Server implements Runnable {
 		}
 		updateEvent = new SingleEvent(null, (seconds - 1) * 1000) {
 			public void action() {
-				//unbind();
-				saveAndRestart();
+				unbind();
+				//saveAndRestart();
+				saveAndShutdown();
 			}
 		};
 		Server.getServer().getEventHandler().add(updateEvent);
@@ -275,7 +282,7 @@ public final class Server implements Runnable {
 	}
 
 	private void saveAndRestart() {
-		//ClanManager.saveClans();
+		ClanManager.saveClans();
 		LOGGER.info("Saving players...");
 		for (Player p : World.getWorld().getPlayers()) {
 			p.unregister(true, "Server shutting down.");
@@ -286,6 +293,7 @@ public final class Server implements Runnable {
 			public void action() {
 				LOGGER.info("Trying to run restart script...");
 				try {
+					// at this time, no successful method for guaranteed relaunch works so just use a cronjob instead
 					Runtime.getRuntime().exec("./run_server.sh");
 				} catch (IOException e) {
 					e.printStackTrace();

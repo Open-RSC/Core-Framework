@@ -4735,11 +4735,11 @@ public final class mudclient implements Runnable {
                         centerX %= 60;
                         if (centerX < 10) {
                             this.getSurface().drawColoredStringCentered(256,
-                                    "Server shutting down for updates in: " + centerZ + ":0" + centerX, 0xFFFF00, 0, 1,
+                                    "Automatic server restart in: " + centerZ + ":0" + centerX, 0xFFFF00, 0, 1,
                                     this.getGameHeight() - 7);
                         } else {
                             this.getSurface().drawColoredStringCentered(256,
-                                    "Server shutting down for updates in: " + centerZ + ":" + centerX, 0xFFFF00, 0, 1,
+                                    "Automatic server restart in: " + centerZ + ":" + centerX, 0xFFFF00, 0, 1,
                                     this.getGameHeight() - 7);
                         }
                     }
@@ -4901,26 +4901,26 @@ public final class mudclient implements Runnable {
                                     this.panelMessageTabs.setText(this.panelMessageEntry, "::onlinelist");
                                 }
                             }
-                            /*uiX += uiWidth + 15;
-                            this.getSurface().drawBoxAlpha(uiX, uiY, uiWidth, uiHeight, 0xff0000, 160);
-                            this.getSurface().drawBoxBorder(uiX, uiWidth, uiY, uiHeight, 0);
-                            this.getSurface().drawString("@whi@Info", uiX + 20, uiY + 20, 0xffffff, 1);
-                            if (this.mouseButtonClick != 0) {
-                                if (this.mouseX >= uiX && this.mouseX <= uiX + uiWidth && this.mouseY >= uiY && this.mouseY <= uiY + uiHeight) {
-                                    this.mouseButtonClick = 0;
-                                    this.panelMessageTabs.setText(this.panelMessageEntry, "::info");
-                                }
-                            }
-                            uiX += uiWidth + 15;
-                            this.getSurface().drawBoxAlpha(uiX, uiY, uiWidth, uiHeight, 0xff0000, 160);
-                            this.getSurface().drawBoxBorder(uiX, uiWidth, uiY, uiHeight, 0);
-                            this.getSurface().drawString("@whi@Commands", uiX + 20, uiY + 20, 0xffffff, 1);
-                            if (this.mouseButtonClick != 0) {
-                                if (this.mouseX >= uiX && this.mouseX <= uiX + uiWidth && this.mouseY >= uiY && this.mouseY <= uiY + uiHeight) {
-                                    this.mouseButtonClick = 0;
-                                    this.panelMessageTabs.setText(this.panelMessageEntry, "::commands");
-                                }
-                            }*/
+							/*uiX += uiWidth + 15;
+							this.getSurface().drawBoxAlpha(uiX, uiY, uiWidth, uiHeight, 0xff0000, 160);
+							this.getSurface().drawBoxBorder(uiX, uiWidth, uiY, uiHeight, 0);
+							this.getSurface().drawString("@whi@Info", uiX + 20, uiY + 20, 0xffffff, 1);
+							if (this.mouseButtonClick != 0) {
+								if (this.mouseX >= uiX && this.mouseX <= uiX + uiWidth && this.mouseY >= uiY && this.mouseY <= uiY + uiHeight) {
+									this.mouseButtonClick = 0;
+									this.panelMessageTabs.setText(this.panelMessageEntry, "::info");
+								}
+							}
+							uiX += uiWidth + 15;
+							this.getSurface().drawBoxAlpha(uiX, uiY, uiWidth, uiHeight, 0xff0000, 160);
+							this.getSurface().drawBoxBorder(uiX, uiWidth, uiY, uiHeight, 0);
+							this.getSurface().drawString("@whi@Commands", uiX + 20, uiY + 20, 0xffffff, 1);
+							if (this.mouseButtonClick != 0) {
+								if (this.mouseX >= uiX && this.mouseX <= uiX + uiWidth && this.mouseY >= uiY && this.mouseY <= uiY + uiHeight) {
+									this.mouseButtonClick = 0;
+									this.panelMessageTabs.setText(this.panelMessageEntry, "::commands");
+								}
+							}*/
                         }
                     }
 
