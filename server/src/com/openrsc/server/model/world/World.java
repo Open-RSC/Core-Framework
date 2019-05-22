@@ -32,10 +32,18 @@ import com.openrsc.server.util.SimpleSubscriber;
 import com.openrsc.server.util.ThreadSafeIPTracker;
 import com.openrsc.server.util.rsc.CollisionFlag;
 import com.openrsc.server.util.rsc.MessageType;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public final class World implements SimpleSubscriber<FishingTrawler> {
 
@@ -75,10 +83,10 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	private final List<Shop> shops = new ArrayList<Shop>();
 	private final TileValue[][] tiles = new TileValue[MAX_WIDTH][MAX_HEIGHT];
 	public WorldLoader wl;
-	
+
 	private Map<Player, Boolean> underAttackMap = new HashMap<Player, Boolean>();
 	private Map<Npc, Boolean> underAttackMap2 = new HashMap<Npc, Boolean>();
-	
+
 	/**
 	 * Double ended queue to store snapshots into
 	 */
@@ -101,6 +109,20 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		Server.getServer().getEventHandler().add(new SingleEvent(null, 1000) {
 			public void action() {
 				int currSecond = (int) (System.currentTimeMillis() / 1000.0 - (4 * 3600));
+				if (Constants.GameServer.AUTO_SERVER_RESTART) {
+
+					if ((int) ((currSecond / 3600.0) % 24) == Constants.GameServer.RESTART_HOUR
+						&& (int) ((currSecond / 60.0) % 60) >= Constants.GameServer.RESTART_MINUTE) {
+						int seconds = Constants.GameServer.RESTART_DELAY;
+						int minutes = seconds / 60;
+						int remainder = seconds % 60;
+						if (Server.getServer().restart(seconds)) {
+							for (Player p : World.getWorld().getPlayers()) {
+								ActionSender.startShutdown(p, seconds);
+							}
+						}
+					}
+				}
 				shutdownCheck();
 			}
 		});
@@ -278,7 +300,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		}
 		throw new IllegalArgumentException("No quest found");
 	}
-	
+
 	/**
 	 * Finds a specific miniquest/minigame by ID
 	 *
@@ -298,7 +320,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	public List<QuestInterface> getQuests() {
 		return quests;
 	}
-	
+
 	public List<MiniGameInterface> getMiniGames() {
 		return minigames;
 	}
@@ -538,7 +560,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		}
 		quests.add(quest);
 	}
-	
+
 	public void registerMiniGame(MiniGameInterface minigame) {
 		if (minigame.getMiniGameName() == null) {
 			throw new IllegalArgumentException("Minigame name cannot be null");
@@ -694,7 +716,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 			quests.remove(quest);
 		}
 	}
-	
+
 	public void unregisterMiniGame(MiniGameInterface minigame) {
 		if (minigames.contains(minigame)) {
 			minigames.remove(minigame);
@@ -707,13 +729,12 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	public boolean withinWorld(int x, int y) {
 		return x >= 0 && x < MAX_WIDTH && y >= 0 && y < MAX_HEIGHT;
 	}
-	
+
 	public FishingTrawler getFishingTrawler(TrawlerBoat boat) {
 		FishingTrawler trawlerInstance = fishingTrawler.get(boat);
 		if (trawlerInstance != null && !trawlerInstance.shouldRemove()) {
 			return trawlerInstance;
-		}
-		else {
+		} else {
 			trawlerInstance = new FishingTrawler(boat);
 			trawlerInstance.register(this);
 			fishingTrawler.put(boat, trawlerInstance);
@@ -721,7 +742,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 			return trawlerInstance;
 		}
 	}
-	
+
 	public FishingTrawler getFishingTrawler(Player p) {
 		if (fishingTrawler.get(TrawlerBoat.EAST) != null && fishingTrawler.get(TrawlerBoat.EAST).getPlayers().contains(p)) {
 			return fishingTrawler.get(TrawlerBoat.EAST);
@@ -739,7 +760,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 			fishingTrawler.put(ctx.getBoat(), null);
 		}
 	}
-	
+
 	public void produceUnderAttack(Player p) {
 		underAttackMap.put(p, true);
 	}
@@ -747,7 +768,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	public void produceUnderAttack(Npc n) {
 		underAttackMap2.put(n, true);
 	}
-	
+
 	public boolean checkUnderAttack(Player p) {
 		return underAttackMap.getOrDefault(p, false);
 	}
@@ -755,7 +776,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	public boolean checkUnderAttack(Npc n) {
 		return underAttackMap2.getOrDefault(n, false);
 	}
-	
+
 	public void releaseUnderAttack(Player p) {
 		underAttackMap.put(p, false);
 	}

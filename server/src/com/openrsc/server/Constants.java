@@ -32,21 +32,21 @@ public final class Constants {
 		public static final int CRUMBLE_UNDEAD_MAX = 12;
 		/* Normal list */
 		public static final int[] NPCS_THAT_RETREAT_NORM = {NpcId.CHICKEN.id(), NpcId.IMP.id(), NpcId.UNICORN.id(), NpcId.BLACK_UNICORN.id(),
-				NpcId.GOBLIN_OBSERVATORY.id(), NpcId.DUNGEON_RAT.id(), NpcId.HIGHWAYMAN.id(), NpcId.BEAR_LVL24.id(), NpcId.BEAR_LVL26.id(),
-				NpcId.UGTHANKI.id(), NpcId.SPIDER.id(), NpcId.RAT_WITCHES_POTION.id(), NpcId.THIEF_GENERIC.id(), NpcId.THIEF_BLANKET.id(),
-				NpcId.MUGGER.id(), NpcId.SCORPION.id(), NpcId.GIANT_SPIDER_LVL8.id(), NpcId.RAT_LVL8.id(), NpcId.ROGUE.id(),
-				NpcId.OOMLIE_BIRD.id(), NpcId.FIREBIRD.id(), NpcId.COW_ATTACKABLE.id(), NpcId.CHAOS_DWARF.id(),
-				NpcId.MONK.id(), NpcId.SHANTAY_PASS_GUARD_MOVING.id(), NpcId.FORESTER.id(), NpcId.ROWDY_GUARD.id(),
-				NpcId.ROWDY_SLAVE.id(), NpcId.WIZARD.id(), NpcId.ZOMBIE_LVL19.id(), NpcId.SKELETON_LVL21.id(),
-				NpcId.SOULESS_UNDEAD.id()
+			NpcId.GOBLIN_OBSERVATORY.id(), NpcId.DUNGEON_RAT.id(), NpcId.HIGHWAYMAN.id(), NpcId.BEAR_LVL24.id(), NpcId.BEAR_LVL26.id(),
+			NpcId.UGTHANKI.id(), NpcId.SPIDER.id(), NpcId.RAT_WITCHES_POTION.id(), NpcId.THIEF_GENERIC.id(), NpcId.THIEF_BLANKET.id(),
+			NpcId.MUGGER.id(), NpcId.SCORPION.id(), NpcId.GIANT_SPIDER_LVL8.id(), NpcId.RAT_LVL8.id(), NpcId.ROGUE.id(),
+			NpcId.OOMLIE_BIRD.id(), NpcId.FIREBIRD.id(), NpcId.COW_ATTACKABLE.id(), NpcId.CHAOS_DWARF.id(),
+			NpcId.MONK.id(), NpcId.SHANTAY_PASS_GUARD_MOVING.id(), NpcId.FORESTER.id(), NpcId.ROWDY_GUARD.id(),
+			NpcId.ROWDY_SLAVE.id(), NpcId.WIZARD.id(), NpcId.ZOMBIE_LVL19.id(), NpcId.SKELETON_LVL21.id(),
+			NpcId.SOULESS_UNDEAD.id()
 		};
 		/* List for extremely low health 5% - min 1hp*/
 		public static final int[] NPCS_THAT_RETREAT_LOW = {NpcId.ZOMBIE_LVL24_GEN.id(), NpcId.SHADOW_SPIDER.id(), NpcId.DEADLY_RED_SPIDER.id(),
-				NpcId.ICE_SPIDER.id(), NpcId.JUNGLE_SPIDER.id(), NpcId.GIANT_SPIDER_LVL31.id(), NpcId.POISON_SCORPION.id(),
-				NpcId.KING_SCORPION.id(), NpcId.DONNY_THE_LAD.id(), NpcId.SPEEDY_KEITH.id(), NpcId.BLACK_HEATHER.id(),
-				NpcId.ZOMBIE_ENTRANA.id(), NpcId.ZOMBIE_LVL32.id(), NpcId.ZOMBIE_WMAZEKEY.id(), NpcId.GIANT_BAT.id(), NpcId.DEATH_WING.id(),
-				NpcId.RAT_LVL13.id(), NpcId.RAT_WMAZEKEY.id(), NpcId.HOBGOBLIN_LVL32.id(), NpcId.OTHERWORLDLY_BEING.id(),
-				NpcId.WYSON_THE_GARDENER.id(), NpcId.STRAVEN.id()
+			NpcId.ICE_SPIDER.id(), NpcId.JUNGLE_SPIDER.id(), NpcId.GIANT_SPIDER_LVL31.id(), NpcId.POISON_SCORPION.id(),
+			NpcId.KING_SCORPION.id(), NpcId.DONNY_THE_LAD.id(), NpcId.SPEEDY_KEITH.id(), NpcId.BLACK_HEATHER.id(),
+			NpcId.ZOMBIE_ENTRANA.id(), NpcId.ZOMBIE_LVL32.id(), NpcId.ZOMBIE_WMAZEKEY.id(), NpcId.GIANT_BAT.id(), NpcId.DEATH_WING.id(),
+			NpcId.RAT_LVL13.id(), NpcId.RAT_WMAZEKEY.id(), NpcId.HOBGOBLIN_LVL32.id(), NpcId.OTHERWORLDLY_BEING.id(),
+			NpcId.WYSON_THE_GARDENER.id(), NpcId.STRAVEN.id()
 		};
 		/**
 		 * Strikes, Bolts & Blast Spells.
@@ -105,6 +105,15 @@ public final class Constants {
 		 * The HMAC SHA512 + Salt private key.
 		 */
 		static String HMAC_PRIVATE_KEY = "";
+		/**
+		 * AutoRestart hour, minute - let 0, 0 = 0000h, 13, 22 = 1322h (1pm)
+		 */
+		public static int RESTART_HOUR;
+		public static int RESTART_MINUTE;
+		/**
+		 * AutoRestart Delay in seconds, alert players
+		 */
+		public static int RESTART_DELAY;
 		/**
 		 * the mysql database host
 		 */
@@ -223,6 +232,7 @@ public final class Constants {
 		public static boolean WANT_CUSTOM_SPRITES = false;
 		public static boolean PLAYER_COMMANDS = false;
 		public static boolean WANT_PETS = false;
+		public static boolean AUTO_SERVER_RESTART = false;
 		//strict check on level requirements for "glitched" validations on rsc
 		public static boolean STRICT_CHECK_ALL = false;
 		public static boolean STRICT_PDART_CHECK = false;
@@ -347,6 +357,10 @@ public final class Constants {
 			VALUABLE_DROP_ITEMS = props.getProperty("valuable_drop_items");
 			START_TIME = System.currentTimeMillis();
 			NPC_BLOCKING = Integer.parseInt(props.getProperty("npc_blocking"));
+			AUTO_SERVER_RESTART = Boolean.parseBoolean(props.getProperty("auto_server_restart"));
+			RESTART_HOUR = Integer.parseInt(props.getProperty("restart_hour"));
+			RESTART_MINUTE = Integer.parseInt(props.getProperty("restart_minute"));
+			RESTART_DELAY = Integer.parseInt(props.getProperty("restart_delay"));
 
 			STRICT_CHECK_ALL = Boolean.parseBoolean(props.getProperty("strict_check_all"));
 			STRICT_PDART_CHECK = Boolean.parseBoolean(props.getProperty("strict_pdart_check"));
@@ -363,7 +377,7 @@ public final class Constants {
 			PACKET_LIMIT = Integer.parseInt(props.getProperty("packet_limit"));
 			CONNECTION_LIMIT = Integer.parseInt(props.getProperty("connection_limit"));
 			CONNECTION_TIMEOUT = Integer.parseInt(props.getProperty("connection_timeout"));
-			
+
 			WANT_GIANNE_BADGE = Boolean.parseBoolean(props.getProperty("want_gianne_badge"));
 			WANT_BLURBERRY_BADGE = Boolean.parseBoolean(props.getProperty("want_blurberry_badge"));
 			WANT_SHOW_KITTENS_CIVILLIAN = Boolean.parseBoolean(props.getProperty("want_show_kittens_civillian"));
@@ -390,7 +404,7 @@ public final class Constants {
 			put(JUNGLE_SAVAGE, 68);
 		}};
 	}
-	
+
 	public static final class Minigames {
 		public static final int ALFRED_GRIMHANDS_BARCRAWL = 0;
 		public static final int MAGE_ARENA = 1;
