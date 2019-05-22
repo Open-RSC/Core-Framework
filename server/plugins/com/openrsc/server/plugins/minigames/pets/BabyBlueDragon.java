@@ -5,20 +5,23 @@ import com.openrsc.server.Server;
 import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.external.PetId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.attack;
+import static com.openrsc.server.plugins.Functions.getMultipleNpcsInArea;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcYell;
+import static com.openrsc.server.plugins.Functions.showBubble;
 
 public class BabyBlueDragon implements InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
 
 	@Override
 	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
-		return npc.getID() == PetId.BABY_BLUE_DRAGON.id() && item.getID() == ItemId.A_GLOWING_RED_CRYSTAL.id();
+		return npc.getID() == NpcId.BABY_BLUE_DRAGON.id() && item.getID() == ItemId.A_GLOWING_RED_CRYSTAL.id();
 	}
 
 	@Override

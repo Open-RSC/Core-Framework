@@ -16,7 +16,6 @@ public final class EntityHandler {
 
 	public static ItemDefinition[] items;
 	public static ArrayList<NPCDef> npcs;
-	public static ArrayList<PetDef> pets;
 	public static SpellDef[] spells;
 	private static HashMap<Integer, ItemArrowHeadDef> arrowHeads;
 	private static HashMap<Integer, ItemBowStringDef> bowString;
@@ -244,17 +243,6 @@ public final class EntityHandler {
 			return null;
 		}
 		return npcs.get(id);
-	}
-
-	/**
-	 * @param id the entities ID
-	 * @return the PetDef with the given ID
-	 */
-	public static PetDef getPetDef(int id) {
-		if (id < 0 || id >= pets.size()) {
-			return null;
-		}
-		return pets.get(id);
 	}
 
 	/**
