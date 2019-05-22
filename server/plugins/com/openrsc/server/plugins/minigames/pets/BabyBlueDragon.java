@@ -9,7 +9,6 @@ import com.openrsc.server.external.PetId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
 
@@ -56,9 +55,12 @@ public class BabyBlueDragon implements InvUseOnNpcListener, InvUseOnNpcExecutive
 							npcYell(player, nearbyNpc, "grrrarrr!");
 						}
 						message(player, 1300, "The nearby " + (nearbyNpc.getDef().getName().contains("dragon") ? nearbyNpc.getDef().getName() : "" + nearbyNpc.getDef().getName().toLowerCase()) + " take a sudden dislike to you.");
-						nearbyNpc.setChasing(player);
+						//nearbyNpc.setChasing(player);
+						//transform(nearbyNpc, 11, true);
+						attack(npc, nearbyNpc);
+						//attack(nearbyNpc, npc);
 					}
-					if (random(0, 4) != 0) {
+					/*if (random(0, 4) != 0) {
 						player.message("You catch the baby blue dragon in the crystal.");
 						removeItem(player, ItemId.A_GLOWING_RED_CRYSTAL.id(), 1);
 						addItem(player, ItemId.A_RED_CRYSTAL.id(), 1);
@@ -70,7 +72,7 @@ public class BabyBlueDragon implements InvUseOnNpcListener, InvUseOnNpcExecutive
 						player.message("The baby blue dragon manages to get away from you!");
 						npc.setBusyTimer(0);
 						player.setBusy(false);
-					}
+					}*/
 				}
 			});
 		}

@@ -522,7 +522,7 @@ public abstract class Mob extends Entity {
 					me.walkToEntity(mob.getX(), mob.getY());
 				} else if ((!me.withinRange(mob, radius) && (System.currentTimeMillis() - me.getLastMoved() > 1000 || System.currentTimeMillis() - mob.getLastMoved() > 1000)) && !me.isPlayer()) { // keeps Rover on a tight leash
 					//if (Constants.GameServer.DEBUG)
-						System.out.println("Pet teleported to owner");
+					System.out.println("Pet teleported to owner");
 					me.setLocation(Point.location(mob.getX() + 1, mob.getY()), true);
 					me.resetPath();
 				} else if (!me.isFollowing()) { // not working yet
@@ -590,6 +590,10 @@ public abstract class Mob extends Entity {
 				((Player) this).resetAll();
 				((Player) this).setStatus(Action.FIGHTING_MOB);
 				((Player) this).produceUnderAttack();
+			}
+			if (this.isNpc()) {
+				((Npc) this).setStatus(Action.FIGHTING_MOB);
+				((Npc) this).produceUnderAttack();
 			} else {
 				((Player) victim).produceUnderAttack();
 			}
@@ -598,8 +602,8 @@ public abstract class Mob extends Entity {
 			resetPath();
 			victim.resetPath();
 
-			int victimSprite = this.isNpc() && victim.isPlayer() ? 9 : 8;
-			int ourSprite = this.isNpc() && victim.isPlayer() ? 8 : 9;
+			int victimSprite = this.isNpc() && victim.isPlayer() || this.isNpc() && victim.isNpc() ? 9 : 8;
+			int ourSprite = this.isNpc() && victim.isPlayer() || this.isNpc() && victim.isNpc() ? 8 : 9;
 
 			if (this.isNpc() && victim.isNpc()) {
 				victimSprite = 8;
@@ -626,8 +630,28 @@ public abstract class Mob extends Entity {
 					ActionSender.sendFatigue(playerVictim);
 				}
 			} else {
-				Player attacker = (Player) this;
-				attacker.releaseUnderAttack();
+				if (this.isPlayer()) {
+					Player attacker = (Player) this;
+					attacker.releaseUnderAttack();
+				} else {
+					Npc attacker = (Npc) this;
+					attacker.releaseUnderAttack();
+				}
+			}
+
+			if (victim.isNpc()) {
+				Npc npcVictim = (Npc) victim;
+				npcVictim.setStatus(Action.FIGHTING_MOB);
+				gotUnderAttack = true;
+				npcVictim.releaseUnderAttack();
+			} else {
+				if (this.isPlayer()) {
+					Player attacker = (Player) this;
+					attacker.releaseUnderAttack();
+				} else {
+					Npc attacker = (Npc) this;
+					attacker.releaseUnderAttack();
+				}
 			}
 
 			setLocation(victim.getLocation(), true);
@@ -642,8 +666,10 @@ public abstract class Mob extends Entity {
 			victim.setCombatEvent(combatEvent);
 			Server.getServer().getGameEventHandler().add(combatEvent);
 			if (gotUnderAttack) {
-				ActionSender.sendSound((Player) victim, "underattack");
-				((Player) victim).message("You are under attack!");
+				if (victim.isPlayer()) {
+					ActionSender.sendSound((Player) victim, "underattack");
+					((Player) victim).message("You are under attack!");
+				}
 			}
 		}
 	}

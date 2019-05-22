@@ -165,6 +165,10 @@ public class Functions {
 		npc.setChasing(p);
 	}
 
+	public static void attack(Npc npc, Npc npc2) {
+		npc.setChasing(npc2);
+	}
+
 	public static int getCurrentLevel(Player p, int i) {
 		return p.getSkills().getLevel(i);
 	}

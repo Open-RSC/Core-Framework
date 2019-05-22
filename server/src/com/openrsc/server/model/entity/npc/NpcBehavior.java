@@ -307,10 +307,20 @@ public class NpcBehavior {
 		target = player;
 	}
 
+	public void setChasing(Npc npc) {
+		state = State.AGGRO;
+		target = npc;
+	}
+
 	Player getChasedPlayer() {
 		if (target.isPlayer())
 			return (Player) target;
+		return null;
+	}
 
+	Npc getChasedNpc() {
+		if (target.isNpc())
+			return (Npc) target;
 		return null;
 	}
 

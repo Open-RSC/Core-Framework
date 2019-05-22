@@ -17,6 +17,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.PluginHandler;
@@ -44,6 +45,10 @@ public class Npc extends Mob {
 	private static final List<String> valuableDrops = Arrays.asList(
 		VALUABLE_DROP_ITEMS.split(",")
 	);
+	/**
+	 * The current status of the player
+	 */
+	private Action status = Action.IDLE;
 	/**
 	 * The definition of this npc
 	 */
@@ -579,6 +584,22 @@ public class Npc extends Mob {
 		super.updatePosition();
 	}
 
+	public void produceUnderAttack() {
+		World.getWorld().produceUnderAttack(this);
+	}
+
+	public boolean checkUnderAttack() {
+		return World.getWorld().checkUnderAttack(this);
+	}
+
+	public void releaseUnderAttack() {
+		World.getWorld().releaseUnderAttack(this);
+	}
+
+	public void setStatus(Action a) {
+		status = a;
+	}
+
 	public boolean isChasing() {
 		return npcBehavior.isChasing();
 	}
@@ -587,8 +608,16 @@ public class Npc extends Mob {
 		npcBehavior.setChasing(player);
 	}
 
+	public void setChasing(Npc npc) {
+		npcBehavior.setChasing(npc);
+	}
+
 	public Player getChasedPlayer() {
 		return npcBehavior.getChasedPlayer();
+	}
+
+	public Npc getChasedNpc() {
+		return npcBehavior.getChasedNpc();
 	}
 
 	public NpcBehavior getBehavior() {
