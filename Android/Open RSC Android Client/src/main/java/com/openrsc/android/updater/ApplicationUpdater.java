@@ -150,7 +150,7 @@ public class ApplicationUpdater extends Activity {
                 System.out.println(" ");
 
                 in.close();
-                if (Integer.parseInt(inputLine) != getVersion()) {
+                if (Integer.parseInt(inputLine) > getVersion()) {
                     shouldUpdate = true;
                     publishProgress("New app version available!");
                 }
