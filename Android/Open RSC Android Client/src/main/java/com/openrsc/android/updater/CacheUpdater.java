@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -66,7 +65,7 @@ public class CacheUpdater extends Activity {
     public void setStatus(String s) {
         tv1.setText(s);
     }
-
+    
     @SuppressLint("StaticFieldLeak")
     class UpdateTask extends AsyncTask<String, String, String> {
 
@@ -186,7 +185,7 @@ public class CacheUpdater extends Activity {
             builder.setTitle("Game Selection");
 
             // add a list
-            String[] games = {"Open RSC", "RSC Cabbage", "RSC Preservation", "Open PK", "Dev World"};
+            String[] games = {"Open RSC", "RSC Cabbage", "RSC Preservation (alpha testing)", "Open PK (alpha testing)", "Dev Testing"};
             builder.setItems(games, (dialog, which) -> {
                 switch (which) {
                     case 0:
