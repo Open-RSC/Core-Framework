@@ -1,35 +1,45 @@
-Guide for implementing cron jobs in Ubuntu to perform automatic tasks. The following is for automated
-game database backups that occur every 3 hours.
+Guide for implementing cron jobs in Ubuntu to perform automatic tasks. It assumes you have cloned the Game repository to /opt/Game and recursively set file permissions to 777.
 
 
-sudo su (become root)
+
+
+
+The following is for automated game database backups that occur every 3 hours:
+
+
+sudo su (become root user)
 
 crontab -e (will prompt for editor choice, I like nano so I pick 1)
 
-Paste the following at the bottom:
+Example usage, providing you have cloned the Game repo to /opt/Web with recursive 777 file permissions:
 
-0 */3 * * * make -C /home/YOUR_USER/Game backup
-(Save and exit (ctrl+x and y)
+0 */3 * * * make -C /opt/Web backup-openrsc
+0 */3 * * * make -C /opt/Web backup-cabbage
+0 23 * * * make -C /opt/Web clear-old-backups
 
-“At minute 0 past every 3rd hour.” 
 
-Make sure you have edited "/home/YOUR_USER/Game/.env" with the database (openrsc_game) as well as your
+
+
+
+Make sure you have edited "/opt/Game/.env" with the database (openrsc/cabbage/etc) as well as your
 created MariaDB SQL user and password. The make command refers to a Makefile in the Game directory that
 reads environment variables from the hidden .env file in the Game directory.
 
 You can test out crontab scheduling using: https://crontab.guru
 
-If successful, a zip file should appear in the "/home/YOUR_USER/Game/data" directory. Example:
+If successful, a zip file should appear in the "/opt/Game/data" directory. Example:
 
-root@MariaDB:/home/wolf/Game/data# ls -ls
+root@MariaDB:/opt/Game/data# ls -ls
 total 15020
 15016 -rw-r--r-- 1 root root 15373449 Mar  7 22:11 20190307-2211-EST.zip
     4 drwxrwxrwx 3 root root     4096 Mar  2 11:35 db
 
 
 
-For clearing out database backups older than 7 days (these will grow in size over time and eventually use the entire disk otherwise)
-0 23 * * * make -C /home/YOUR_USER/Game clear-old-backups
+
+
+For clearing out database backups older than 7 days (these will grow in size over time and eventually use the entire disk otherwise):
+0 23 * * * make -C /opt/Game clear-old-backups
 
 “At 23:00.”
 https://crontab.guru
@@ -37,8 +47,18 @@ https://crontab.guru
 
 
 
-Example crontab -e under "sudo su" root user:
 
-0 */3 * * * make -C /home/wolf/Game backup-openrsc
-0 */3 * * * make -C /home/wolf/Game backup-cabbage
-0 23 * * * make -C /home/wolf/Game clear-old-backups
+To perform a nightly renewal check for Lets Encrypt SSL certs, providing you have cloned the Game repo to /opt/Web with recursive 777 file permissions:
+
+0 23 * * * cd /opt/Web && certbot certonly --standalone --preferred-challenges http --agree-tos -n --config-dir ./etc/letsencrypt --pre-hook 'sudo docker stop nginx' --post-hook 'sudo docker start nginx' -d openrsc.com -d game.openrsc.com -d cabbage.openrsc.com -d dev.openrsc.com -d web.openrsc.com -d androidcheck.openrsc.com --expand -m YOUR_EMAIL@gmail.com > /opt/Web/certbot-renewal.log
+
+
+
+
+
+If the server config is set to shutdown the game server at a specified hour and minute each day, use the following corresponding cron job to start the server back up:
+
+1 0 * * * make -C /opt/OpenRSC run-game
+1 0 * * * make -C /opt/Cabbage run-game
+1 0 * * * make -C /opt/Preservation run-game
+1 0 * * * make -C /opt/OpenPK run-game
