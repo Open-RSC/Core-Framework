@@ -4476,6 +4476,40 @@ public final class mudclient implements Runnable {
 						}
 					}
 
+					for (centerX = 0; centerX < this.npcCount; ++centerX) {
+						ORSCharacter var3 = this.npcs[centerX];
+						if (var3.projectileRange > 0) {
+							ORSCharacter var16 = null;
+							if (var3.attackingNpcServerIndex == -1) {
+								if (var3.attackingPlayerServerIndex != -1) {
+									var16 = this.playerServer[var3.attackingPlayerServerIndex];
+								}
+							} else {
+								var16 = this.npcsServer[var3.attackingNpcServerIndex];
+							}
+
+							if (null != var16) {
+								int var5 = var3.currentX;
+								int var6 = var3.currentZ;
+								int var7 = -this.world.getElevation(var5, var6) - 110;
+								int var8 = var16.currentX;
+								int var9 = var16.currentZ;
+								int var10 = -this.world.getElevation(var8, var9)
+									- EntityHandler.getNpcDef(var3.npcId).getCamera2() / 2;
+								int var11 = (var8 * (this.projectileMaxRange - var3.projectileRange)
+									+ var5 * var3.projectileRange) / this.projectileMaxRange;
+								int var12 = (var7 * var3.projectileRange
+									+ var10 * (this.projectileMaxRange - var3.projectileRange))
+									/ this.projectileMaxRange;
+								int var13 = ((this.projectileMaxRange - var3.projectileRange) * var9
+									+ var6 * var3.projectileRange) / this.projectileMaxRange;
+								this.scene.drawSprite(var3.incomingProjectileSprite + mudclient.spriteProjectile, var13,
+									0, var11, var12, 32, 32, (byte) 109);
+								++this.spriteCount;
+							}
+						}
+					}
+
 					for (centerX = 0; this.npcCount > centerX; ++centerX) {
 						ORSCharacter var3 = this.npcs[centerX];
 						int var4 = var3.currentX;
@@ -4560,11 +4594,13 @@ public final class mudclient implements Runnable {
 						centerZ = this.cameraPositionZ + this.cameraAutoMoveZ;
 						this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ), centerZ, cameraPitch,
 							this.cameraRotation * 4, 0, 2000);
-						float zoomMultiplier = 0;
+
+						int zoomMultiplier = 0;
 						if (Config.S_ZOOM_VIEW_TOGGLE)
 							zoomMultiplier = Config.C_ZOOM == 0 ? 0 : Config.C_ZOOM == 1 ? +200 : Config.C_ZOOM == 2 ? +400 : -200;
+
 						this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ), centerZ, cameraPitch,
-							this.cameraRotation * 4, (int) 0, (int) (this.cameraZoom + zoomMultiplier) * 2);
+							this.cameraRotation * 4, 0, (this.cameraZoom + zoomMultiplier) * 2);
 
 					} else {
 						if (this.optionCameraModeAuto && !this.doCameraZoom) {
@@ -9676,6 +9712,13 @@ public final class mudclient implements Runnable {
 
 				for (updateIndex = 0; updateIndex < this.playerCount; ++updateIndex) {
 					updateEntity = this.players[updateIndex];
+					if (updateEntity.projectileRange > 0) {
+						--updateEntity.projectileRange;
+					}
+				}
+
+				for (updateIndex = 0; updateIndex < this.npcCount; ++updateIndex) {
+					updateEntity = this.npcs[updateIndex];
 					if (updateEntity.projectileRange > 0) {
 						--updateEntity.projectileRange;
 					}

@@ -1383,6 +1383,24 @@ public class PacketHandler {
 					npc.combatTimeout = 200;
 					npc.healthCurrent = currentHits;
 				}
+			} else if (updateType == 3) {
+				int sprite = packetsIncoming.getShort();
+				int shooterServerIndex = packetsIncoming.getShort();
+				if (null != npc) {
+					npc.attackingNpcServerIndex = shooterServerIndex;
+					npc.projectileRange = mc.getProjectileMaxRange();
+					npc.attackingPlayerServerIndex = -1;
+					npc.incomingProjectileSprite = sprite;
+				}
+			} else if (updateType == 4) {
+				int sprite = packetsIncoming.getShort();
+				int shooterServerIndex = packetsIncoming.getShort();
+				if (npc != null) {
+					npc.projectileRange = mc.getProjectileMaxRange();
+					npc.attackingNpcServerIndex = -1;
+					npc.attackingPlayerServerIndex = shooterServerIndex;
+					npc.incomingProjectileSprite = sprite;
+				}
 			}
 		}
 	}

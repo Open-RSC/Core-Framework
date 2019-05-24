@@ -224,6 +224,10 @@ public final class GameStateUpdater {
 				Damage damage = updateFlags.getDamage().get();
 				npcsNeedingHitsUpdate.add(damage);
 			}
+			if (updateFlags.hasFiredProjectile()) {
+				Projectile projectileFired = updateFlags.getProjectile().get();
+				npcProjectilesNeedingDisplayed.add(projectileFired);
+			}
 		}
 		int updateSize = npcMessagesNeedingDisplayed.size() + npcsNeedingHitsUpdate.size()
 			+ npcProjectilesNeedingDisplayed.size();
@@ -246,6 +250,21 @@ public final class GameStateUpdater {
 				npcAppearancePacket.writeByte((byte) npcNeedingHitsUpdate.getDamage());
 				npcAppearancePacket.writeByte((byte) npcNeedingHitsUpdate.getCurHits());
 				npcAppearancePacket.writeByte((byte) npcNeedingHitsUpdate.getMaxHits());
+			}
+			Projectile projectile;
+			while ((projectile = npcProjectilesNeedingDisplayed.poll()) != null) {
+				Entity victim = projectile.getVictim();
+				if (victim.isNpc()) {
+					npcAppearancePacket.writeShort(projectile.getCaster().getIndex());
+					npcAppearancePacket.writeByte((byte) 3);
+					npcAppearancePacket.writeShort(projectile.getType());
+					npcAppearancePacket.writeShort(((Npc) victim).getIndex());
+				} else if (victim.isPlayer()) {
+					npcAppearancePacket.writeShort(projectile.getCaster().getIndex());
+					npcAppearancePacket.writeByte((byte) 4);
+					npcAppearancePacket.writeShort(projectile.getType());
+					npcAppearancePacket.writeShort(((Player) victim).getIndex());
+				}
 			}
 			player.write(npcAppearancePacket.toPacket());
 		}
