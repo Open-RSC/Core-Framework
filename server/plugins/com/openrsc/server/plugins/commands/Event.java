@@ -383,6 +383,9 @@ public final class Event implements CommandListener {
 					.append(" @whi@currently has ").append(names.size() > 0 ? "@gre@" : "@red@")
 					.append(names.size()).append(" @whi@registered characters.");
 
+				if(player.isAdmin())
+					builder.append(" %IP Address: " + currentIp);
+
 				if (names.size() > 0) {
 					builder.append(" % % They are: ");
 				}
