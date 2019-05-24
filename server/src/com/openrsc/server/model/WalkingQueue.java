@@ -68,9 +68,10 @@ public class WalkingQueue {
 		if (mob.isNpc())
 			mob.setLocation(Point.location(destX, destY));
 		else {
-			Player p = (Player) mob;
+			Player p		= (Player) mob;
+			int distance	= p.getLocation().getDistanceTo(walkPoint);
 			p.setLocation(Point.location(destX, destY));
-			p.stepIncrementActivity();
+			p.stepIncrementActivity(distance);
 		}
 
 	}

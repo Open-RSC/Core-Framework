@@ -79,19 +79,20 @@ public class Point {
 	}
 
 	public final boolean withinRange(Point p, int radius) {
-		int xDiff = this.x - p.x;
+		/*int xDiff = this.x - p.x;
 		int yDiff = this.y - p.y;
 
 		return xDiff <= radius && xDiff >= -radius && yDiff <= radius
-			&& yDiff >= -radius;
+			&& yDiff >= -radius;*/
+		return getDistanceTo(p) <= radius;
 	}
 
-	public final boolean withinGridRange(Point p, int radius) {
+	public final boolean withinGridRange(Point p, int gridSize) {
 		// Snap coordinates to an 8x8 grid
 		// radius is compared in multiples of 8
 		final int xDiff = (this.x >> 3) - (p.x >> 3);
 		final int yDiff = (this.y >> 3) - (p.y >> 3);
-		return xDiff <= radius && xDiff >= -radius && yDiff <= radius && yDiff >= -radius;
+		return xDiff <= gridSize && xDiff >= -gridSize && yDiff <= gridSize && yDiff >= -gridSize;
 	}
 
 	public final int getX() {
@@ -268,10 +269,11 @@ public class Point {
 		return "(" + x + ", " + y + ")";
 	}
 
-	public double getDistanceTo(Point o2) {
-		int xDiff = Math.abs(getX() - o2.getX());
+	public int getDistanceTo(Point o2) {
+		/*int xDiff = Math.abs(getX() - o2.getX());
 		int yDiff = Math.abs(getY() - o2.getY());
-		return xDiff + yDiff;
+		return xDiff + yDiff;*/
+		return (int)Math.sqrt(Math.pow(getX() - o2.getX(), 2) + Math.pow(getY() - o2.getY(), 2));
 	}
 
 	public boolean inDwarfArea() {

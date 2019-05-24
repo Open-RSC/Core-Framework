@@ -1321,8 +1321,8 @@ public final class Player extends Mob {
 	/*
 	 * Called when walking a single step
 	 */
-	public void stepIncrementActivity() {
-		incrementActivity(2);
+	public void stepIncrementActivity(int distance) {
+		incrementActivity(2 * distance);
 	}
 
 	public int getGroupID() {
