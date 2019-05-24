@@ -10,57 +10,11 @@ import com.openrsc.client.entityhandling.defs.extras.AnimationDef;
 import com.openrsc.client.model.Sprite;
 import com.openrsc.interfaces.NComponent;
 import com.openrsc.interfaces.NCustomComponent;
-import com.openrsc.interfaces.misc.AchievementGUI;
-import com.openrsc.interfaces.misc.AuctionHouse;
-import com.openrsc.interfaces.misc.BankPinInterface;
-import com.openrsc.interfaces.misc.CustomBankInterface;
-import com.openrsc.interfaces.misc.DoSkillInterface;
-import com.openrsc.interfaces.misc.ExperienceConfigInterface;
-import com.openrsc.interfaces.misc.FishingTrawlerInterface;
-import com.openrsc.interfaces.misc.IronManInterface;
-import com.openrsc.interfaces.misc.LostOnDeathInterface;
-import com.openrsc.interfaces.misc.OnlineListInterface;
-import com.openrsc.interfaces.misc.ProgressBarInterface;
-import com.openrsc.interfaces.misc.QuestGuideInterface;
-import com.openrsc.interfaces.misc.SkillGuideInterface;
-import com.openrsc.interfaces.misc.TerritorySignupInterface;
+import com.openrsc.interfaces.misc.*;
 import com.openrsc.interfaces.misc.clan.Clan;
-
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-
 import orsc.buffers.RSBufferUtils;
-import orsc.enumerations.GameMode;
-import orsc.enumerations.InputXAction;
-import orsc.enumerations.MenuItemAction;
-import orsc.enumerations.MessageTab;
-import orsc.enumerations.MessageType;
-import orsc.enumerations.ORSCharacterDirection;
-import orsc.enumerations.PasswordChangeMode;
-import orsc.enumerations.SocialPopupMode;
-import orsc.graphics.gui.InputXPrompt;
-import orsc.graphics.gui.KillAnnouncer;
-import orsc.graphics.gui.KillAnnouncerQueue;
-import orsc.graphics.gui.Menu;
-import orsc.graphics.gui.MessageHistory;
-import orsc.graphics.gui.Panel;
-import orsc.graphics.gui.SocialLists;
+import orsc.enumerations.*;
+import orsc.graphics.gui.*;
 import orsc.graphics.three.CollisionFlag;
 import orsc.graphics.three.RSModel;
 import orsc.graphics.three.Scene;
@@ -73,90 +27,14 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
 
-import static orsc.Config.CLIENT_VERSION;
-import static orsc.Config.C_BATCH_PROGRESS_BAR;
-import static orsc.Config.C_EXPERIENCE_CONFIG_SUBMENU;
-import static orsc.Config.C_EXPERIENCE_COUNTER;
-import static orsc.Config.C_EXPERIENCE_COUNTER_COLOR;
-import static orsc.Config.C_EXPERIENCE_COUNTER_MODE;
-import static orsc.Config.C_EXPERIENCE_DROPS;
-import static orsc.Config.C_EXPERIENCE_DROP_SPEED;
-import static orsc.Config.C_FIGHT_MENU;
-import static orsc.Config.C_HIDE_ROOFS;
-import static orsc.Config.C_HOLD_AND_CHOOSE;
-import static orsc.Config.C_INV_COUNT;
-import static orsc.Config.C_KILL_FEED;
-import static orsc.Config.C_LAST_ZOOM;
-import static orsc.Config.C_LONG_PRESS_TIMER;
-import static orsc.Config.C_MENU_SIZE;
-import static orsc.Config.C_MESSAGE_TAB_SWITCH;
-import static orsc.Config.C_NAME_CLAN_TAG_OVERLAY;
-import static orsc.Config.C_SHOW_FOG;
-import static orsc.Config.C_SHOW_GROUND_ITEMS;
-import static orsc.Config.C_SIDE_MENU_OVERLAY;
-import static orsc.Config.C_SWIPE_TO_ROTATE;
-import static orsc.Config.C_SWIPE_TO_SCROLL;
-import static orsc.Config.C_SWIPE_TO_ZOOM;
-import static orsc.Config.C_VOLUME_TO_ROTATE;
-import static orsc.Config.DEBUG;
-import static orsc.Config.DISPLAY_LOGO_SPRITE;
-import static orsc.Config.F_CACHE_DIR;
-import static orsc.Config.F_SHOWING_KEYBOARD;
-import static orsc.Config.MEMBER_WORLD;
-import static orsc.Config.Remember;
-import static orsc.Config.SERVER_NAME;
-import static orsc.Config.SERVER_NAME_WELCOME;
-import static orsc.Config.S_AUTO_MESSAGE_SWITCH_TOGGLE;
-import static orsc.Config.S_BATCH_PROGRESSION;
-import static orsc.Config.S_CUSTOM_FIREMAKING;
-import static orsc.Config.S_EXPERIENCE_COUNTER_TOGGLE;
-import static orsc.Config.S_EXPERIENCE_DROPS_TOGGLE;
-import static orsc.Config.S_FIGHTMODE_SELECTOR_TOGGLE;
-import static orsc.Config.S_FOG_TOGGLE;
-import static orsc.Config.S_GROUND_ITEM_TOGGLE;
-import static orsc.Config.S_INVENTORY_COUNT_TOGGLE;
-import static orsc.Config.S_ITEMS_ON_DEATH_MENU;
-import static orsc.Config.S_MENU_COMBAT_STYLE_TOGGLE;
-import static orsc.Config.S_PLAYER_LEVEL_LIMIT;
-import static orsc.Config.S_RIGHT_CLICK_BANK;
-import static orsc.Config.S_SHOW_FLOATING_NAMETAGS;
-import static orsc.Config.S_SHOW_ROOF_TOGGLE;
-import static orsc.Config.S_SIDE_MENU_TOGGLE;
-import static orsc.Config.S_SPAWN_AUCTION_NPCS;
-import static orsc.Config.S_SPAWN_IRON_MAN_NPCS;
-import static orsc.Config.S_WANT_BANK_NOTES;
-import static orsc.Config.S_WANT_BANK_PINS;
-import static orsc.Config.S_WANT_CERTS_TO_BANK;
-import static orsc.Config.S_WANT_CERT_DEPOSIT;
-import static orsc.Config.S_WANT_CLANS;
-import static orsc.Config.S_WANT_CUSTOM_BANKS;
-import static orsc.Config.S_WANT_CUSTOM_RANK_DISPLAY;
-import static orsc.Config.S_WANT_DECANTING;
-import static orsc.Config.S_WANT_DROP_X;
-import static orsc.Config.S_WANT_EXPERIENCE_ELIXIRS;
-import static orsc.Config.S_WANT_EXP_INFO;
-import static orsc.Config.S_WANT_FIXED_OVERHEAD_CHAT;
-import static orsc.Config.S_WANT_GLOBAL_CHAT;
-import static orsc.Config.S_WANT_HIDE_IP;
-import static orsc.Config.S_WANT_KEYBOARD_SHORTCUTS;
-import static orsc.Config.S_WANT_KILL_FEED;
-import static orsc.Config.S_WANT_QUEST_MENUS;
-import static orsc.Config.S_WANT_REMEMBER;
-import static orsc.Config.S_WANT_SKILL_MENUS;
-import static orsc.Config.S_WANT_WOODCUTTING_GUILD;
-import static orsc.Config.S_ZOOM_VIEW_TOGGLE;
-import static orsc.Config.WELCOME_TEXT;
-import static orsc.Config.getFPS;
-import static orsc.Config.getServerName;
-import static orsc.Config.getServerNameWelcome;
-import static orsc.Config.getWelcomeText;
-import static orsc.Config.getcLogoSpriteId;
-import static orsc.Config.initConfig;
-import static orsc.Config.isAndroid;
-import static orsc.Config.isLenientContactDetails;
-import static orsc.Config.saveConfiguration;
-import static orsc.Config.wantEmail;
-import static orsc.Config.wantMembers;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import java.io.*;
+import java.security.SecureRandom;
+import java.util.*;
+import java.util.Map.Entry;
+
+import static orsc.Config.*;
 import static orsc.multiclient.ClientPort.saveHideIp;
 
 public final class mudclient implements Runnable {
@@ -292,6 +170,8 @@ public final class mudclient implements Runnable {
 	public boolean m_N = false;
 	public int mouseX = 0;
 	public int mouseY = 0;
+	public int mouseLastProcessedX = 0;
+	public int mouseLastProcessedY = 0;
 	public int screenOffsetX;
 	public int screenOffsetY;
 	public boolean shiftPressed = false;
@@ -355,12 +235,12 @@ public final class mudclient implements Runnable {
 	private int appearanceHeadType = 0;
 	private int autoLoginTimeout = 0;
 	private int cameraAngle = 1;
-	private int cameraAutoRotatePlayerX = 0;
-	private int cameraAutoRotatePlayerZ = 0;
+	private int cameraPositionX = 0;
+	private int cameraPositionZ = 0;
 	public boolean cameraAllowPitchModification = false;
 	public int cameraPitch = 912;
-	private int cameraRotationX = 0;
-	private int cameraRotationZ = 0;
+	private int cameraAutoMoveX = 0;
+	private int cameraAutoMoveZ = 0;
 	public int cameraZoom = 750;
 	public int minCameraZoom = 500;
 	private int characterBubbleCount = 0;
@@ -444,7 +324,7 @@ public final class mudclient implements Runnable {
 	private int m_cl = 30;
 	private int m_dk = 1;
 	private int m_ed;
-	private int m_eg = 2;
+	private int cameraAutoMoveAmountX = 2;
 	private int m_Eg;
 	private int m_ek;
 	private int m_Ge;
@@ -463,9 +343,9 @@ public final class mudclient implements Runnable {
 	private int m_Mj;
 	private int m_nj = -1;
 	private int m_Of;
-	private int m_oj = 0;
+	private int cameraAutoMoveFrameCount = 0;
 	private int m_Oj = 0;
-	private int m_Ok = 2;
+	private int cameraAutoMoveAmountZ = 2;
 	private int m_qd = 9;
 	private int m_rc = 0;
 	private int m_Re;
@@ -2105,16 +1985,16 @@ public final class mudclient implements Runnable {
 			if (var8) {
 				character.animationNext = sprite;
 				character.npcId = type;
-				waypointIdx = character.waypointCurrent;
+				waypointIdx = character.waypointIndexCurrent;
 				if (x != character.waypointsX[waypointIdx] || y != character.waypointsZ[waypointIdx]) {
-					character.waypointCurrent = waypointIdx = (1 + waypointIdx) % 10;
+					character.waypointIndexCurrent = waypointIdx = (1 + waypointIdx) % 10;
 					character.waypointsX[waypointIdx] = x;
 					character.waypointsZ[waypointIdx] = y;
 				}
 			} else {
 				character.serverIndex = serverIndex;
-				character.waypointCurrent = 0;
-				character.movingStep = 0;
+				character.waypointIndexCurrent = 0;
+				character.waypointIndexNext = 0;
 				character.waypointsX[0] = character.currentX = x;
 				character.direction = ORSCharacterDirection.lookup(sprite);
 				character.animationNext = character.direction.rsDir;
@@ -2182,17 +2062,17 @@ public final class mudclient implements Runnable {
 
 			if (existingCharFound) {
 				c.animationNext = direction.rsDir;
-				i = c.waypointCurrent;
+				i = c.waypointIndexCurrent;
 				if (xPosition != c.waypointsX[i] || c.waypointsZ[i] != zPosition) {
-					c.waypointCurrent = i = (1 + i) % 10;
+					c.waypointIndexCurrent = i = (1 + i) % 10;
 					c.waypointsX[i] = xPosition;
 					c.waypointsZ[i] = zPosition;
 				}
 			} else {
 				c.serverIndex = serverIndex;
 				c.waypointsX[0] = c.currentX = xPosition;
-				c.waypointCurrent = 0;
-				c.movingStep = 0;
+				c.waypointIndexCurrent = 0;
+				c.waypointIndexNext = 0;
 				c.stepFrame = 0;
 				c.direction = direction;
 				c.animationNext = direction.rsDir;
@@ -4376,8 +4256,6 @@ public final class mudclient implements Runnable {
 
 			if (isAndroid()) {
 				this.menuCommon.font = C_MENU_SIZE;
-
-
 			}
 
 			if (var1 == 13) {
@@ -4452,6 +4330,7 @@ public final class mudclient implements Runnable {
 							this.scene.removeModel(this.world.modelRoofGrid[2][centerX]);
 						}
 
+
 						if (!this.doCameraZoom) {
 							amountToZoom -= 50;
 							this.doCameraZoom = true;
@@ -4460,13 +4339,12 @@ public final class mudclient implements Runnable {
 						// Sets camera zoom distance based on last saved value in the player cache
 						cameraZoom = minCameraZoom + (Config.C_LAST_ZOOM * 2);
 
-						if (this.lastHeightOffset == 0
+						if ((this.lastHeightOffset == 0
 							&& (world.collisionFlags[this.localPlayer.currentX / 128][this.localPlayer.currentZ
-							/ 128] & 0x80) == 0
-							&& !C_HIDE_ROOFS) {
+							/ 128] & 0x80) == 0 && !C_HIDE_ROOFS)) {
 
 							this.scene.addModel(this.world.modelRoofGrid[this.lastHeightOffset][centerX]);
-							if (this.lastHeightOffset == 0 && !C_HIDE_ROOFS) {
+							if (this.lastHeightOffset == 0) {
 								this.scene.addModel(this.world.modelWallGrid[1][centerX]);
 								this.scene.addModel(this.world.modelRoofGrid[1][centerX]);
 								this.scene.addModel(this.world.modelWallGrid[2][centerX]);
@@ -4667,8 +4545,8 @@ public final class mudclient implements Runnable {
 							centerX = this.cameraAngle;
 							this.autoRotateCamera((byte) 22);
 							if (centerX != this.cameraAngle) {
-								this.cameraAutoRotatePlayerZ = this.localPlayer.currentZ;
-								this.cameraAutoRotatePlayerX = this.localPlayer.currentX;
+								this.cameraPositionZ = this.localPlayer.currentZ;
+								this.cameraPositionX = this.localPlayer.currentX;
 							}
 						}
 
@@ -4678,8 +4556,8 @@ public final class mudclient implements Runnable {
 						this.scene.fogZFalloff = 1;
 						this.scene.fogSmoothingStartDistance = 2800;
 
-						centerX = this.cameraAutoRotatePlayerX + this.cameraRotationX;
-						centerZ = this.cameraAutoRotatePlayerZ + this.cameraRotationZ;
+						centerX = this.cameraPositionX + this.cameraAutoMoveX;
+						centerZ = this.cameraPositionZ + this.cameraAutoMoveZ;
 						this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ), centerZ, cameraPitch,
 							this.cameraRotation * 4, 0, 2000);
 						float zoomMultiplier = 0;
@@ -4711,8 +4589,8 @@ public final class mudclient implements Runnable {
 							this.scene.fogSmoothingStartDistance = cameraZoom * 6;
 						}
 
-						centerX = this.cameraAutoRotatePlayerX + this.cameraRotationX;
-						centerZ = this.cameraAutoRotatePlayerZ + this.cameraRotationZ;
+						centerX = this.cameraPositionX + this.cameraAutoMoveX;
+						centerZ = this.cameraPositionZ + this.cameraAutoMoveZ;
 
 						this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ), centerZ, cameraPitch,
 							this.cameraRotation * 4, 0, this.cameraZoom * 2);
@@ -4735,11 +4613,11 @@ public final class mudclient implements Runnable {
 						centerX %= 60;
 						if (centerX < 10) {
 							this.getSurface().drawColoredStringCentered(256,
-								"Automatic server restart in: " + centerZ + ":0" + centerX, 0xFFFF00, 0, 1,
+								"Server shutting down for updates in: " + centerZ + ":0" + centerX, 0xFFFF00, 0, 1,
 								this.getGameHeight() - 7);
 						} else {
 							this.getSurface().drawColoredStringCentered(256,
-								"Automatic server restart in: " + centerZ + ":" + centerX, 0xFFFF00, 0, 1,
+								"Server shutting down for updates in: " + centerZ + ":" + centerX, 0xFFFF00, 0, 1,
 								this.getGameHeight() - 7);
 						}
 					}
@@ -4846,8 +4724,20 @@ public final class mudclient implements Runnable {
 							this.getSurface().drawString("Camera Zoom: " + cameraZoom, 7, i, 0xffffff, 1);
 							i += 14;
 							this.getSurface().drawString("Camera Pitch: " + cameraPitch, 7, i, 0xffffff, 1);
+							i += 14;
+							this.getSurface().drawString("Camera Rotation: " + cameraRotation, 7, i, 0xffffff, 1);
+							int cameraX = this.cameraPositionX + this.cameraAutoMoveX;
+							int cameraZ = this.cameraPositionZ + this.cameraAutoMoveZ;
+							int cameraY = -this.world.getElevation(cameraX, cameraZ) - 170;
+							i += 14;
+							this.getSurface().drawString("Frame: " + cameraAutoMoveFrameCount, 7, i, 0xffffffff, 1);
+							i += 14;
+							this.getSurface().drawString("Camera X: " + cameraX + " (" + this.cameraPositionX + " + " + this.cameraAutoMoveX + ") [" + this.localPlayer.currentX + "] [" + cameraAutoMoveAmountX + "]", 7, i, 0xffffff, 1);
+							i += 14;
+							this.getSurface().drawString("Camera Z: " + cameraZ + " (" + this.cameraPositionZ + " + " + this.cameraAutoMoveZ + ") [" + this.localPlayer.currentZ + "] [" + cameraAutoMoveAmountZ + "]", 7, i, 0xffffff, 1);
+							i += 14;
+							this.getSurface().drawString("Camera Y: " + cameraY, 7, i, 0xffffff, 1);						}
 						}
-					}
 
 					if (S_EXPERIENCE_COUNTER_TOGGLE && C_EXPERIENCE_COUNTER == 2) {
 						this.drawExperienceCounter(recentSkill);
@@ -4870,6 +4760,7 @@ public final class mudclient implements Runnable {
 								}
 							}
 							uiX += uiWidth + 15;
+
 							this.getSurface().drawBoxAlpha(uiX, uiY, uiWidth, uiHeight, 0x659CDE, 160);
 							this.getSurface().drawBoxBorder(uiX, uiWidth, uiY, uiHeight, 0);
 							this.getSurface().drawString("@whi@PK", uiX + 25, uiY + 20, 0xffffff, 1);
@@ -6822,6 +6713,8 @@ public final class mudclient implements Runnable {
 							this.selectedSpell, this.world.faceTileZ[var2]);
 					}
 				} else if (this.selectedItemInventoryIndex < 0) {
+					//System.out.println("Build Walk Here Right Click: var2=" + var2 + ", this.world.faceTileX[var2]= " + this.world.faceTileX[var2] + ", this.world.faceTileZ[var2]=" + this.world.faceTileZ[var2]);
+
 					this.menuCommon.addCharacterItem_WithID(this.world.faceTileX[var2], "",
 						MenuItemAction.LANDSCAPE_WALK_HERE, "Walk here", this.world.faceTileZ[var2]);
 					if (modMenu) {
@@ -6966,7 +6859,7 @@ public final class mudclient implements Runnable {
 			int maxWidth = getGameWidth() - 23;
 			int minWidth = getGameWidth() - 83;
 			if (var2) {
-				this.cameraRotationX = -88;
+				this.cameraAutoMoveX = -88;
 			}
 
 			// if clans are enabled
@@ -9552,105 +9445,105 @@ public final class mudclient implements Runnable {
 			} else if (this.showSetContactDetails) {
 				this.M();
 			} else {
-				int var2;
-				ORSCharacter var3;
-				int var4;
-				int var6;
-				int var7;
-				int var8;
-				for (var2 = 0; var2 < this.playerCount; ++var2) {
-					var3 = this.players[var2];
-					var4 = (1 + var3.waypointCurrent) % 10;
-					if (var3.movingStep == var4) {
-						var3.direction = ORSCharacterDirection.lookup(var3.animationNext);
+				int updateIndex;
+				ORSCharacter updateEntity;
+				int waypointIndexCurrent;
+				int waypointIndexNext;
+				int stepsToMove;
+				int amountToMove;
+				for (updateIndex = 0; updateIndex < this.playerCount; ++updateIndex) {
+					updateEntity = this.players[updateIndex];
+					waypointIndexCurrent = (1 + updateEntity.waypointIndexCurrent) % 10;
+					if (updateEntity.waypointIndexNext == waypointIndexCurrent) {
+						updateEntity.direction = ORSCharacterDirection.lookup(updateEntity.animationNext);
 					} else {
-						ORSCharacterDirection var5 = null;
-						var6 = var3.movingStep;
-						if (var6 < var4) {
-							var7 = var4 - var6;
+						ORSCharacterDirection characterDirection = null;
+						waypointIndexNext = updateEntity.waypointIndexNext;
+						if (waypointIndexNext < waypointIndexCurrent) {
+							stepsToMove = waypointIndexCurrent - waypointIndexNext;
 						} else {
-							var7 = 10 + var4 - var6;
+							stepsToMove = 10 + waypointIndexCurrent - waypointIndexNext;
 						}
 
-						var8 = 4;
-						if (var7 > 2) {
-							var8 = var7 * 4 - 4;
+						amountToMove = 4;
+						if (stepsToMove > 2) {
+							amountToMove = stepsToMove * amountToMove - amountToMove;
 						}
 
-						if (var3.waypointsX[var6] - var3.currentX <= this.tileSize * 3
-							&& var3.waypointsZ[var6] - var3.currentZ <= this.tileSize * 3
-							&& var3.waypointsX[var6] - var3.currentX >= -this.tileSize * 3
-							&& var3.waypointsZ[var6] - var3.currentZ >= -this.tileSize * 3 && var7 <= 8) {
-							if (var3.waypointsX[var6] > var3.currentX) {
-								var5 = ORSCharacterDirection.WEST;
-								var3.currentX += var8;
-								++var3.stepFrame;
-							} else if (var3.waypointsX[var6] < var3.currentX) {
-								++var3.stepFrame;
-								var5 = ORSCharacterDirection.EAST;
-								var3.currentX -= var8;
+						if (updateEntity.waypointsX[waypointIndexNext] - updateEntity.currentX <= this.tileSize * 3
+							&& updateEntity.waypointsZ[waypointIndexNext] - updateEntity.currentZ <= this.tileSize * 3
+							&& updateEntity.waypointsX[waypointIndexNext] - updateEntity.currentX >= -this.tileSize * 3
+							&& updateEntity.waypointsZ[waypointIndexNext] - updateEntity.currentZ >= -this.tileSize * 3 && stepsToMove <= 8 * S_MAX_WALKING_SPEED) {
+							if (updateEntity.waypointsX[waypointIndexNext] > updateEntity.currentX) {
+								characterDirection = ORSCharacterDirection.WEST;
+								updateEntity.currentX += amountToMove;
+								++updateEntity.stepFrame;
+							} else if (updateEntity.waypointsX[waypointIndexNext] < updateEntity.currentX) {
+								++updateEntity.stepFrame;
+								characterDirection = ORSCharacterDirection.EAST;
+								updateEntity.currentX -= amountToMove;
 							}
 
-							if (var3.currentX - var3.waypointsX[var6] < var8
-								&& var3.currentX - var3.waypointsX[var6] > -var8) {
-								var3.currentX = var3.waypointsX[var6];
+							if (updateEntity.currentX - updateEntity.waypointsX[waypointIndexNext] < amountToMove
+								&& updateEntity.currentX - updateEntity.waypointsX[waypointIndexNext] > -amountToMove) {
+								updateEntity.currentX = updateEntity.waypointsX[waypointIndexNext];
 							}
 
-							if (var3.waypointsZ[var6] > var3.currentZ) {
-								if (var5 != null) {
-									if (var5 == ORSCharacterDirection.WEST) {
-										var5 = ORSCharacterDirection.SOUTH_WEST;
+							if (updateEntity.waypointsZ[waypointIndexNext] > updateEntity.currentZ) {
+								if (characterDirection != null) {
+									if (characterDirection == ORSCharacterDirection.WEST) {
+										characterDirection = ORSCharacterDirection.SOUTH_WEST;
 									} else {
-										var5 = ORSCharacterDirection.SOUTH_EAST;
+										characterDirection = ORSCharacterDirection.SOUTH_EAST;
 									}
 								} else {
-									var5 = ORSCharacterDirection.SOUTH;
+									characterDirection = ORSCharacterDirection.SOUTH;
 								}
 
-								var3.currentZ += var8;
-								++var3.stepFrame;
-							} else if (var3.waypointsZ[var6] < var3.currentZ) {
-								++var3.stepFrame;
-								var3.currentZ -= var8;
-								if (var5 != null) {
-									if (var5 == ORSCharacterDirection.WEST) {
-										var5 = ORSCharacterDirection.NORTH_WEST;
+								updateEntity.currentZ += amountToMove;
+								++updateEntity.stepFrame;
+							} else if (updateEntity.waypointsZ[waypointIndexNext] < updateEntity.currentZ) {
+								++updateEntity.stepFrame;
+								updateEntity.currentZ -= amountToMove;
+								if (characterDirection != null) {
+									if (characterDirection == ORSCharacterDirection.WEST) {
+										characterDirection = ORSCharacterDirection.NORTH_WEST;
 									} else {
-										var5 = ORSCharacterDirection.NORTH_EAST;
+										characterDirection = ORSCharacterDirection.NORTH_EAST;
 									}
 								} else {
-									var5 = ORSCharacterDirection.NORTH;
+									characterDirection = ORSCharacterDirection.NORTH;
 								}
 							}
 
-							if (var3.currentZ - var3.waypointsZ[var6] < var8
-								&& var3.currentZ - var3.waypointsZ[var6] > -var8) {
-								var3.currentZ = var3.waypointsZ[var6];
+							if (updateEntity.currentZ - updateEntity.waypointsZ[waypointIndexNext] < amountToMove
+								&& updateEntity.currentZ - updateEntity.waypointsZ[waypointIndexNext] > -amountToMove) {
+								updateEntity.currentZ = updateEntity.waypointsZ[waypointIndexNext];
 							}
 						} else {
-							var3.currentX = var3.waypointsX[var6];
-							var3.currentZ = var3.waypointsZ[var6];
+							updateEntity.currentX = updateEntity.waypointsX[waypointIndexNext];
+							updateEntity.currentZ = updateEntity.waypointsZ[waypointIndexNext];
 						}
 
-						if (var5 != null) {
-							var3.direction = var5;
+						if (characterDirection != null) {
+							updateEntity.direction = characterDirection;
 						}
 
-						if (var3.waypointsX[var6] == var3.currentX && var3.waypointsZ[var6] == var3.currentZ) {
-							var3.movingStep = (1 + var6) % 10;
+						if (updateEntity.waypointsX[waypointIndexNext] == updateEntity.currentX && updateEntity.waypointsZ[waypointIndexNext] == updateEntity.currentZ) {
+							updateEntity.waypointIndexNext = (1 + waypointIndexNext) % 10;
 						}
 					}
 
-					if (var3.bubbleTimeout > 0) {
-						--var3.bubbleTimeout;
+					if (updateEntity.bubbleTimeout > 0) {
+						--updateEntity.bubbleTimeout;
 					}
 
-					if (var3.combatTimeout > 0) {
-						--var3.combatTimeout;
+					if (updateEntity.combatTimeout > 0) {
+						--updateEntity.combatTimeout;
 					}
 
-					if (var3.messageTimeout > 0) {
-						--var3.messageTimeout;
+					if (updateEntity.messageTimeout > 0) {
+						--updateEntity.messageTimeout;
 					}
 
 					if (this.deathScreenTimeout > 0) {
@@ -9669,102 +9562,102 @@ public final class mudclient implements Runnable {
 					}
 				}
 
-				for (var2 = 0; var2 < this.npcCount; ++var2) {
-					var3 = this.npcs[var2];
-					var4 = (var3.waypointCurrent + 1) % 10;
-					if (var4 == var3.movingStep) {
-						if (var3.npcId == 43) {
-							++var3.stepFrame;
+				for (updateIndex = 0; updateIndex < this.npcCount; ++updateIndex) {
+					updateEntity = this.npcs[updateIndex];
+					waypointIndexCurrent = (updateEntity.waypointIndexCurrent + 1) % 10;
+					if (waypointIndexCurrent == updateEntity.waypointIndexNext) {
+						if (updateEntity.npcId == 43) {
+							++updateEntity.stepFrame;
 						}
 
-						var3.direction = ORSCharacterDirection.lookup(var3.animationNext);
+						updateEntity.direction = ORSCharacterDirection.lookup(updateEntity.animationNext);
 					} else {
-						ORSCharacterDirection var5 = null;
-						var6 = var3.movingStep;
-						if (var4 <= var6) {
-							var7 = var4 + (10 - var6);
+						ORSCharacterDirection characterDirection = null;
+						waypointIndexNext = updateEntity.waypointIndexNext;
+						if (waypointIndexCurrent <= waypointIndexNext) {
+							stepsToMove = waypointIndexCurrent + (10 - waypointIndexNext);
 						} else {
-							var7 = var4 - var6;
+							stepsToMove = waypointIndexCurrent - waypointIndexNext;
 						}
 
-						var8 = 4;
-						if (var7 > 2) {
-							var8 = (var7 - 1) * 4;
+						amountToMove = 4;
+						if (stepsToMove > 2) {
+							amountToMove = (stepsToMove - 1) * amountToMove;
 						}
 
-						if (this.tileSize * 3 >= var3.waypointsX[var6] - var3.currentX
-							&& var3.waypointsZ[var6] - var3.currentZ <= this.tileSize * 3
-							&& var3.waypointsX[var6] - var3.currentX >= -this.tileSize * 3
-							&& var3.waypointsZ[var6] - var3.currentZ >= -this.tileSize * 3 && var7 <= 8) {
-							if (var3.waypointsX[var6] > var3.currentX) {
-								++var3.stepFrame;
-								var3.currentX += var8;
-								var5 = ORSCharacterDirection.WEST;
-							} else if (var3.currentX > var3.waypointsX[var6]) {
-								var5 = ORSCharacterDirection.EAST;
-								++var3.stepFrame;
-								var3.currentX -= var8;
+						if (this.tileSize * 3 >= updateEntity.waypointsX[waypointIndexNext] - updateEntity.currentX
+							&& updateEntity.waypointsZ[waypointIndexNext] - updateEntity.currentZ <= this.tileSize * 3
+							&& updateEntity.waypointsX[waypointIndexNext] - updateEntity.currentX >= -this.tileSize * 3
+							&& updateEntity.waypointsZ[waypointIndexNext] - updateEntity.currentZ >= -this.tileSize * 3 && stepsToMove <= 8) {
+							if (updateEntity.waypointsX[waypointIndexNext] > updateEntity.currentX) {
+								++updateEntity.stepFrame;
+								updateEntity.currentX += amountToMove;
+								characterDirection = ORSCharacterDirection.WEST;
+							} else if (updateEntity.currentX > updateEntity.waypointsX[waypointIndexNext]) {
+								characterDirection = ORSCharacterDirection.EAST;
+								++updateEntity.stepFrame;
+								updateEntity.currentX -= amountToMove;
 							}
 
-							if (var8 > var3.currentX - var3.waypointsX[var6]
-								&& -var8 < var3.currentX - var3.waypointsX[var6]) {
-								var3.currentX = var3.waypointsX[var6];
+							if (amountToMove > updateEntity.currentX - updateEntity.waypointsX[waypointIndexNext]
+								&& -amountToMove < updateEntity.currentX - updateEntity.waypointsX[waypointIndexNext]) {
+								updateEntity.currentX = updateEntity.waypointsX[waypointIndexNext];
 							}
 
-							if (var3.waypointsZ[var6] <= var3.currentZ) {
-								if (var3.currentZ > var3.waypointsZ[var6]) {
-									if (var5 == null) {
-										var5 = ORSCharacterDirection.NORTH;
-									} else if (var5 != ORSCharacterDirection.WEST) {
-										var5 = ORSCharacterDirection.NORTH_EAST;
+							if (updateEntity.waypointsZ[waypointIndexNext] <= updateEntity.currentZ) {
+								if (updateEntity.currentZ > updateEntity.waypointsZ[waypointIndexNext]) {
+									if (characterDirection == null) {
+										characterDirection = ORSCharacterDirection.NORTH;
+									} else if (characterDirection != ORSCharacterDirection.WEST) {
+										characterDirection = ORSCharacterDirection.NORTH_EAST;
 									} else {
-										var5 = ORSCharacterDirection.NORTH_WEST;
+										characterDirection = ORSCharacterDirection.NORTH_WEST;
 									}
 
-									var3.currentZ -= var8;
-									++var3.stepFrame;
+									updateEntity.currentZ -= amountToMove;
+									++updateEntity.stepFrame;
 								}
 							} else {
-								++var3.stepFrame;
-								if (var5 == null) {
-									var5 = ORSCharacterDirection.SOUTH;
-								} else if (var5 != ORSCharacterDirection.WEST) {
-									var5 = ORSCharacterDirection.SOUTH_EAST;
+								++updateEntity.stepFrame;
+								if (characterDirection == null) {
+									characterDirection = ORSCharacterDirection.SOUTH;
+								} else if (characterDirection != ORSCharacterDirection.WEST) {
+									characterDirection = ORSCharacterDirection.SOUTH_EAST;
 								} else {
-									var5 = ORSCharacterDirection.SOUTH_WEST;
+									characterDirection = ORSCharacterDirection.SOUTH_WEST;
 								}
 
-								var3.currentZ += var8;
+								updateEntity.currentZ += amountToMove;
 							}
 
-							if (var3.currentZ - var3.waypointsZ[var6] < var8
-								&& -var8 < var3.currentZ - var3.waypointsZ[var6]) {
-								var3.currentZ = var3.waypointsZ[var6];
+							if (updateEntity.currentZ - updateEntity.waypointsZ[waypointIndexNext] < amountToMove
+								&& -amountToMove < updateEntity.currentZ - updateEntity.waypointsZ[waypointIndexNext]) {
+								updateEntity.currentZ = updateEntity.waypointsZ[waypointIndexNext];
 							}
 						} else {
-							var3.currentX = var3.waypointsX[var6];
-							var3.currentZ = var3.waypointsZ[var6];
+							updateEntity.currentX = updateEntity.waypointsX[waypointIndexNext];
+							updateEntity.currentZ = updateEntity.waypointsZ[waypointIndexNext];
 						}
 
-						if (var5 != null) {
-							var3.direction = var5;
+						if (characterDirection != null) {
+							updateEntity.direction = characterDirection;
 						}
 
-						if (var3.currentX == var3.waypointsX[var6] && var3.waypointsZ[var6] == var3.currentZ) {
-							var3.movingStep = (1 + var6) % 10;
+						if (updateEntity.currentX == updateEntity.waypointsX[waypointIndexNext] && updateEntity.waypointsZ[waypointIndexNext] == updateEntity.currentZ) {
+							updateEntity.waypointIndexNext = (1 + waypointIndexNext) % 10;
 						}
 					}
 
-					if (var3.combatTimeout > 0) {
-						--var3.combatTimeout;
+					if (updateEntity.combatTimeout > 0) {
+						--updateEntity.combatTimeout;
 					}
 
-					if (var3.bubbleTimeout > 0) {
-						--var3.bubbleTimeout;
+					if (updateEntity.bubbleTimeout > 0) {
+						--updateEntity.bubbleTimeout;
 					}
 
-					if (var3.messageTimeout > 0) {
-						--var3.messageTimeout;
+					if (updateEntity.messageTimeout > 0) {
+						--updateEntity.messageTimeout;
 					}
 				}
 
@@ -9781,10 +9674,10 @@ public final class mudclient implements Runnable {
 					MiscFunctions.netsock_s_M = 0;
 				}
 
-				for (var2 = 0; var2 < this.playerCount; ++var2) {
-					var3 = this.players[var2];
-					if (var3.projectileRange > 0) {
-						--var3.projectileRange;
+				for (updateIndex = 0; updateIndex < this.playerCount; ++updateIndex) {
+					updateEntity = this.players[updateIndex];
+					if (updateEntity.projectileRange > 0) {
+						--updateEntity.projectileRange;
 					}
 				}
 
@@ -9795,17 +9688,17 @@ public final class mudclient implements Runnable {
 
 				int var10;
 				if (!this.cameraAutoAngleDebug) {
-					if (this.cameraAutoRotatePlayerX - this.localPlayer.currentX < -500
-						|| this.cameraAutoRotatePlayerX - this.localPlayer.currentX > 500
-						|| this.cameraAutoRotatePlayerZ - this.localPlayer.currentZ < -500
-						|| this.cameraAutoRotatePlayerZ - this.localPlayer.currentZ > 500) {
-						this.cameraAutoRotatePlayerX = this.localPlayer.currentX;
-						this.cameraAutoRotatePlayerZ = this.localPlayer.currentZ;
+					if (this.cameraPositionX - this.localPlayer.currentX < -500
+						|| this.cameraPositionX - this.localPlayer.currentX > 500
+						|| this.cameraPositionZ - this.localPlayer.currentZ < -500
+						|| this.cameraPositionZ - this.localPlayer.currentZ > 500) {
+						this.cameraPositionX = this.localPlayer.currentX;
+						this.cameraPositionZ = this.localPlayer.currentZ;
 					}
 
 					if (this.optionCameraModeAuto) {
-						var2 = this.cameraAngle * 32;
-						var10 = var2 - this.cameraRotation;
+						updateIndex = this.cameraAngle * 32;
+						var10 = updateIndex - this.cameraRotation;
 						byte var12 = 1;
 						if (var10 != 0) {
 							++this.m_Wc;
@@ -9835,21 +9728,21 @@ public final class mudclient implements Runnable {
 						}
 					}
 
-					if (this.localPlayer.currentZ != this.cameraAutoRotatePlayerZ) {
-						this.cameraAutoRotatePlayerZ += (this.localPlayer.currentZ - this.cameraAutoRotatePlayerZ)
+					if (this.localPlayer.currentZ != this.cameraPositionZ) {
+						this.cameraPositionZ += (this.localPlayer.currentZ - this.cameraPositionZ)
 							/ ((this.cameraZoom - 500) / 15 + 16);
 					}
 
-					if (this.cameraAutoRotatePlayerX != this.localPlayer.currentX) {
-						this.cameraAutoRotatePlayerX += (this.localPlayer.currentX - this.cameraAutoRotatePlayerX)
+					if (this.cameraPositionX != this.localPlayer.currentX) {
+						this.cameraPositionX += (this.localPlayer.currentX - this.cameraPositionX)
 							/ ((this.cameraZoom - 500) / 15 + 16);
 					}
-				} else if (this.cameraAutoRotatePlayerX - this.localPlayer.currentX < -500
-					|| this.cameraAutoRotatePlayerX - this.localPlayer.currentX > 500
-					|| this.cameraAutoRotatePlayerZ - this.localPlayer.currentZ < -500
-					|| this.cameraAutoRotatePlayerZ - this.localPlayer.currentZ > 500) {
-					this.cameraAutoRotatePlayerX = this.localPlayer.currentX;
-					this.cameraAutoRotatePlayerZ = this.localPlayer.currentZ;
+				} else if (this.cameraPositionX - this.localPlayer.currentX < -500
+					|| this.cameraPositionX - this.localPlayer.currentX > 500
+					|| this.cameraPositionZ - this.localPlayer.currentZ < -500
+					|| this.cameraPositionZ - this.localPlayer.currentZ > 500) {
+					this.cameraPositionX = this.localPlayer.currentX;
+					this.cameraPositionZ = this.localPlayer.currentZ;
 				}
 
 				if (!this.isSleeping) {
@@ -9914,7 +9807,7 @@ public final class mudclient implements Runnable {
 							} else if (var11.startsWith("::n ") && localPlayer.isDev()) {
 								devMenuNpcID = Integer.parseInt(var11.split(" ")[1]);
 							} else if (var11.equalsIgnoreCase("::overlay") && S_SIDE_MENU_TOGGLE) {
-								C_SIDE_MENU_OVERLAY = C_SIDE_MENU_OVERLAY;
+								C_SIDE_MENU_OVERLAY = !C_SIDE_MENU_OVERLAY;
 							} else {
 								this.sendCommandString(var11.substring(2));
 								String putQueue = var11.substring(2);
@@ -9937,9 +9830,9 @@ public final class mudclient implements Runnable {
 						}
 					}
 
-					for (var2 = 0; var2 < messagesArray.length; ++var2) {
-						if (MessageHistory.messageHistoryTimeout[var2] > 0) {
-							--MessageHistory.messageHistoryTimeout[var2];
+					for (updateIndex = 0; updateIndex < messagesArray.length; ++updateIndex) {
+						if (MessageHistory.messageHistoryTimeout[updateIndex] > 0) {
+							--MessageHistory.messageHistoryTimeout[updateIndex];
 						}
 					}
 
@@ -9998,7 +9891,7 @@ public final class mudclient implements Runnable {
 										this.cameraAngle = 7 & 1 + this.cameraAngle;
 									}
 
-									for (var2 = 0; var2 < 8 && !this.cameraColliding(this.cameraAngle); ++var2) {
+									for (updateIndex = 0; updateIndex < 8 && !this.cameraColliding(this.cameraAngle); ++updateIndex) {
 										this.cameraAngle = 1 + this.cameraAngle & 7;
 									}
 								}
@@ -10012,7 +9905,7 @@ public final class mudclient implements Runnable {
 										this.cameraAngle = this.cameraAngle + 7 & 7;
 									}
 
-									for (var2 = 0; var2 < 8 && !this.cameraColliding(this.cameraAngle); ++var2) {
+									for (updateIndex = 0; updateIndex < 8 && !this.cameraColliding(this.cameraAngle); ++updateIndex) {
 										this.cameraAngle = this.cameraAngle + 7 & 7;
 									}
 								}
@@ -10033,6 +9926,13 @@ public final class mudclient implements Runnable {
 						} else {
 							if (this.cameraAllowPitchModification) {
 								this.cameraPitch = (this.cameraPitch + 4) & 1023;
+
+								// Limit on the half circled where everything is right side up
+								if(this.cameraPitch > 256 && this.cameraPitch <= 512)
+									this.cameraPitch = 256;
+
+								if(this.cameraPitch < 768 && this.cameraPitch > 512)
+									this.cameraPitch = 768;
 							}
 						}
 					} else if (this.keyUp) {
@@ -10093,21 +9993,21 @@ public final class mudclient implements Runnable {
 						this.objectAnimationNumberClaw = (1 + this.objectAnimationNumberClaw) % 5;
 					}
 
-					for (var2 = 0; var2 < this.gameObjectInstanceCount; ++var2) {
-						var10 = this.gameObjectInstanceX[var2];
-						var4 = this.gameObjectInstanceZ[var2];
-						if (var10 >= 0 && var4 >= 0 && var10 < 96 && var4 < 96
-							&& this.gameObjectInstanceID[var2] == 74) {
-							this.gameObjectInstanceModel[var2].addRotation(1, 0, 0);
+					for (updateIndex = 0; updateIndex < this.gameObjectInstanceCount; ++updateIndex) {
+						var10 = this.gameObjectInstanceX[updateIndex];
+						waypointIndexCurrent = this.gameObjectInstanceZ[updateIndex];
+						if (var10 >= 0 && waypointIndexCurrent >= 0 && var10 < 96 && waypointIndexCurrent < 96
+							&& this.gameObjectInstanceID[updateIndex] == 74) {
+							this.gameObjectInstanceModel[updateIndex].addRotation(1, 0, 0);
 						}
 					}
 
-					for (var2 = 0; var2 < this.teleportBubbleCount; ++var2) {
-						++this.teleportBubbleTime[var2];
-						if (this.teleportBubbleTime[var2] > 50) {
+					for (updateIndex = 0; updateIndex < this.teleportBubbleCount; ++updateIndex) {
+						++this.teleportBubbleTime[updateIndex];
+						if (this.teleportBubbleTime[updateIndex] > 50) {
 							--this.teleportBubbleCount;
 
-							for (var10 = var2; var10 < this.teleportBubbleCount; ++var10) {
+							for (var10 = updateIndex; var10 < this.teleportBubbleCount; ++var10) {
 								this.teleportBubbleX[var10] = this.teleportBubbleX[var10 + 1];
 								this.teleportBubbleZ[var10] = this.teleportBubbleZ[1 + var10];
 								this.teleportBubbleTime[var10] = this.teleportBubbleTime[1 + var10];
@@ -10271,6 +10171,7 @@ public final class mudclient implements Runnable {
 			if (this.m_Zb > 0) {
 				--this.m_Zb;
 			}
+
 
 			if (this.loginScreenNumber != 0) {
 				if (loginScreenNumber == 1) {
@@ -11070,6 +10971,7 @@ public final class mudclient implements Runnable {
 					break;
 				}
 				case LANDSCAPE_WALK_HERE: {
+					//System.out.println("LANDSCAPE_WALK_HERE: playerLocalX=" + this.playerLocalX + ", playerLocalZ= " + this.playerLocalZ + ", indexOrX=" + indexOrX + ", idOrZ=" + idOrZ);
 					this.walkToActionSource(this.playerLocalX, this.playerLocalZ, indexOrX, idOrZ, false);
 					if (this.mouseClickXStep == -24) {
 						this.mouseClickXStep = 24;
@@ -11879,7 +11781,7 @@ public final class mudclient implements Runnable {
 						var23.currentX -= this.tileSize * baseDX;
 						var23.currentZ -= baseDZ * this.tileSize;
 
-						for (int j = 0; j <= var23.waypointCurrent; ++j) {
+						for (int j = 0; j <= var23.waypointIndexCurrent; ++j) {
 							var23.waypointsX[j] -= this.tileSize * baseDX;
 							var23.waypointsZ[j] -= baseDZ * this.tileSize;
 						}
@@ -11890,7 +11792,7 @@ public final class mudclient implements Runnable {
 						var23.currentZ -= this.tileSize * baseDZ;
 						var23.currentX -= this.tileSize * baseDX;
 
-						for (int j = 0; var23.waypointCurrent >= j; ++j) {
+						for (int j = 0; var23.waypointIndexCurrent >= j; ++j) {
 							var23.waypointsX[j] -= this.tileSize * baseDX;
 							var23.waypointsZ[j] -= baseDZ * this.tileSize;
 						}
@@ -12103,7 +12005,6 @@ public final class mudclient implements Runnable {
 						} else {
 							if (loginResponse == 1) {
 								this.autoLoginTimeout = 0;
-								this.setEGTo77();
 							} else {
 								if (!reconnecting) {
 									if (loginResponse == -1) {
@@ -12663,21 +12564,10 @@ public final class mudclient implements Runnable {
 		}
 	}
 
-	private void setEGTo77() {
-		try {
-
-			this.m_eg = 77;
-
-		} catch (RuntimeException var3) {
-			throw GenUtil.makeThrowable(var3, "client.EA(" + "dummy" + ')');
-		}
-	}
-
 	private void showItemModX(InputXAction action, String[] lines, boolean var4, String defaultText) {
 		try {
 			this.inputX_Lines = lines;
 			this.inputX_Width = 400;
-
 
 			for (int i = 0; lines.length > i; ++i) {
 				int width = this.getSurface().stringWidth(1, lines[i]) + 10;
@@ -14286,29 +14176,29 @@ public final class mudclient implements Runnable {
 							}
 
 							this.lastMouseButtonDown = 0;
-							++this.m_oj;
-							if (this.m_oj > 500) {
-								this.m_oj = 0;
+							++this.cameraAutoMoveFrameCount;
+							if (this.cameraAutoMoveFrameCount > 500) {
+								this.cameraAutoMoveFrameCount = 0;
 								int var2 = (int) (4.0D * Math.random());
 								if ((2 & var2) == 2) {
-									this.cameraRotationZ += this.m_Ok;
+									this.cameraAutoMoveZ += this.cameraAutoMoveAmountZ;
 								}
 
 								if ((var2 & 1) == 1) {
-									this.cameraRotationX += this.m_eg;
+									this.cameraAutoMoveX += this.cameraAutoMoveAmountX;
 								}
 							}
 
-							if (this.cameraRotationX < -50) {
-								this.m_eg = 2;
+							if (this.cameraAutoMoveX < -50) {
+								this.cameraAutoMoveAmountX = 2;
 							}
 
-							if (this.cameraRotationZ < -50) {
-								this.m_Ok = 2;
+							if (this.cameraAutoMoveZ < -50) {
+								this.cameraAutoMoveAmountZ = 2;
 							}
 
-							if (this.cameraRotationX > 50) {
-								this.m_eg = -2;
+							if (this.cameraAutoMoveX > 50) {
+								this.cameraAutoMoveAmountX = -2;
 							}
 
 							if (this.messageTabActivity_Private > 0) {
@@ -14330,8 +14220,8 @@ public final class mudclient implements Runnable {
 								--this.messageTabActivity_Chat;
 							}
 
-							if (this.cameraRotationZ > 50) {
-								this.m_Ok = -2;
+							if (this.cameraAutoMoveZ > 50) {
+								this.cameraAutoMoveAmountZ = -2;
 							}
 						} catch (OutOfMemoryError var3) {
 							var3.printStackTrace();
@@ -14374,23 +14264,23 @@ public final class mudclient implements Runnable {
 		}
 	}
 
-	private void walkToActionSource(int startX, int startZ, int destX, int destZ, boolean var5) {
+	private void walkToActionSource(int startX, int startZ, int destX, int destZ, boolean walkToEntity) {
 		try {
 
-			this.walkToArea(startX, startZ, destX, destZ, destX, destZ, false, var5);
+			this.walkToArea(startX, startZ, destX, destZ, destX, destZ, false, walkToEntity);
 		} catch (RuntimeException var8) {
 			throw GenUtil.makeThrowable(var8, "client.BE(" + destZ + ',' + destX + ',' + startZ + ',' + startX + ','
-				+ var5 + ',' + "dummy" + ')');
+				+ walkToEntity + ',' + "dummy" + ')');
 		}
 	}
 
 	private void walkToArea(int startX, int startZ, int x1, int z1, int x2, int z2, boolean reachBorder,
-							boolean var2) {
+							boolean walkToEntity) {
 		try {
 
 			int count = this.world.findPath(this.pathX, this.pathZ, startX, startZ, x1, x2, z1, z2, reachBorder);
 			if (count == -1) {
-				if (!var2) {
+				if (!walkToEntity) {
 					return;
 				}
 
@@ -14403,7 +14293,7 @@ public final class mudclient implements Runnable {
 			startZ = this.pathZ[count];
 			startX = this.pathX[count];
 			--count;
-			if (!var2) {
+			if (!walkToEntity) {
 				this.packetHandler.getClientStream().newPacket(187);
 			} else {
 				this.packetHandler.getClientStream().newPacket(16);
@@ -14411,13 +14301,20 @@ public final class mudclient implements Runnable {
 
 			this.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseX + startX);
 			this.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + startZ);
-			if (var2 && count == -1 && (startX + this.midRegionBaseX) % 5 == 0) {
+
+			//System.out.println("walkToArea, startX: " + (this.midRegionBaseX + startX) + " (" + this.midRegionBaseX + " + " + startX + ")");
+			//System.out.println("walkToArea, startZ: " + (this.midRegionBaseZ + startZ) + " (" + this.midRegionBaseZ + " + " + startZ + ")");
+
+			if (walkToEntity && count == -1 && (startX + this.midRegionBaseX) % 5 == 0) {
 				count = 0;
 			}
 
 			for (int i = count; i >= 0 && i > count - 25; --i) {
 				this.packetHandler.getClientStream().writeBuffer1.putByte(this.pathX[i] - startX);
 				this.packetHandler.getClientStream().writeBuffer1.putByte(this.pathZ[i] - startZ);
+
+				//System.out.println("walkToArea, count: " + count + ", pathX[" + i + "]: " + (this.pathX[i] - startX) + " (" + this.pathX[i] + " - " + startX + ")");
+				//System.out.println("walkToArea, count: " + count + ", pathZ[" + i + "]: " + (this.pathZ[i] - startZ) + " (" + this.pathZ[i] + " - " + startZ + ")");
 			}
 
 			this.packetHandler.getClientStream().finishPacket();
@@ -14425,7 +14322,7 @@ public final class mudclient implements Runnable {
 			this.mouseWalkX = this.mouseX;
 			this.mouseClickXStep = -24;
 		} catch (RuntimeException var13) {
-			throw GenUtil.makeThrowable(var13, "client.DD(" + x1 + ',' + var2 + ',' + startX + ',' + z1 + ',' + startZ
+			throw GenUtil.makeThrowable(var13, "client.DD(" + x1 + ',' + walkToEntity + ',' + startX + ',' + z1 + ',' + startZ
 				+ ',' + x2 + ',' + reachBorder + ',' + z2 + ',' + "dummy" + ')');
 		}
 	}

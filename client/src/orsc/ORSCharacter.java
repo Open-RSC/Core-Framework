@@ -25,13 +25,13 @@ public final class ORSCharacter {
 	public int level = -1;
 	public String message;
 	public int messageTimeout = 0;
-	public int movingStep;
+	public int waypointIndexNext;
 	public int npcId;
 	public int projectileRange = 0;
 	public int serverIndex;
 	public int skullVisible = 0;
 	int stepFrame;
-	public int waypointCurrent;
+	public int waypointIndexCurrent;
 	public int[] waypointsX = new int[10];
 	public int[] waypointsZ = new int[10];
 	public String clanTag;

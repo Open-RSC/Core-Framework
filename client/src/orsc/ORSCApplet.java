@@ -1,37 +1,17 @@
 package orsc;
 
 import com.openrsc.client.model.Sprite;
-
-import java.applet.Applet;
-import java.awt.Color;
-import java.awt.Event;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-import java.awt.image.BufferedImage;
-import java.awt.image.DirectColorModel;
-import java.awt.image.ImageConsumer;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
-import java.io.ByteArrayInputStream;
-
-import javax.imageio.ImageIO;
-import javax.swing.SwingUtilities;
-
 import orsc.graphics.two.Fonts;
 import orsc.multiclient.ClientPort;
 import orsc.util.GenUtil;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.applet.Applet;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.*;
+import java.io.ByteArrayInputStream;
 
 import static orsc.Config.C_LAST_ZOOM;
 import static orsc.Config.S_ZOOM_VIEW_TOGGLE;
@@ -195,6 +175,11 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 				mudclient.inputTextFinal = mudclient.inputTextCurrent;
 				mudclient.chatMessageInputCommit = mudclient.chatMessageInput;
 			}
+
+			if(keyCode == KeyEvent.VK_ALT) {
+				mudclient.mouseLastProcessedX = mudclient.mouseX;
+				mudclient.mouseLastProcessedY = mudclient.mouseY;
+			}
 		} catch (RuntimeException var6) {
 			throw GenUtil.makeThrowable(var6, "e.keyPressed(" + (var1 != null ? "{...}" : "null") + ')');
 		}
@@ -214,6 +199,10 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			if (keyCode == KeyEvent.VK_PAGE_DOWN) mudclient.pageDown = false;
 			if (keyCode == KeyEvent.VK_PAGE_UP) mudclient.pageUp = false;
 
+			if(keyCode == KeyEvent.VK_ALT) {
+				mudclient.mouseLastProcessedX = 0;
+				mudclient.mouseLastProcessedY = 0;
+			}
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "e.keyReleased(" + (var1 != null ? "{...}" : "null") + ')');
 		}
@@ -277,6 +266,55 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			mudclient.mouseY = var1.getY() - mudclient.screenOffsetY;
 			mudclient.lastMouseAction = 0;
 			mudclient.currentMouseButtonDown = 0;
+
+			if(mudclient.mouseLastProcessedX != 0 && mudclient.mouseLastProcessedY != 0) {
+				int distanceX = mudclient.mouseX - mudclient.mouseLastProcessedX;
+				int distanceY = mudclient.mouseY - mudclient.mouseLastProcessedY;
+
+				if (mudclient.showUiTab == 0) {
+					if((Config.S_ZOOM_VIEW_TOGGLE || mudclient.getLocalPlayer().isStaff()) && !var1.isControlDown()) {
+						if(Config.C_SWIPE_TO_ZOOM) {
+							int zoomDistance	= distanceY;
+							int newZoom			= C_LAST_ZOOM + zoomDistance;
+							// Keep C_LAST_ZOOM aka the zoom increments on the range of [0, 255]
+							if (newZoom >= 0 && newZoom <= 255) {
+								C_LAST_ZOOM = newZoom;
+								// We probably want to send this on the client tick rather than each time a button is pressed
+								mudclient.saveZoomDistance();
+							}
+						}
+					}
+					else if(mudclient.cameraAllowPitchModification) {
+						mudclient.cameraPitch = (mudclient.cameraPitch + (int)(-distanceY * 2)) & 1023;
+
+						// Limit on the half circled where everything is right side up
+						if(mudclient.cameraPitch > 256 && mudclient.cameraPitch <= 512)
+							mudclient.cameraPitch = 256;
+
+						if(mudclient.cameraPitch < 768 && mudclient.cameraPitch > 512)
+							mudclient.cameraPitch = 768;
+					}
+
+					if (Config.C_SWIPE_TO_ROTATE) {
+						float clientDist = distanceX / (getWidth() / (float) mudclient.getGameWidth());
+						mudclient.cameraRotation = (255 & mudclient.cameraRotation + (int) (clientDist));
+					}
+				}
+				else if(true|| Config.C_SWIPE_TO_SCROLL) {
+					mudclient.runScroll((int) distanceY);
+				}
+
+				// To make the mouse move:
+				//mudclient.mouseLastProcessedX = mudclient.mouseX;
+				//mudclient.mouseLastProcessedY = mudclient.mouseY;
+
+				// Move the mouse back to the last processed position.
+				try {
+					Robot robot = new Robot();
+					//robot.mouseMove((int)getLocationOnScreen().getX() + mudclient.mouseLastProcessedX, (int)getLocationOnScreen().getY() + mudclient.mouseLastProcessedY);
+					robot.mouseMove((int)MouseInfo.getPointerInfo().getLocation().getX() - distanceX, (int)MouseInfo.getPointerInfo().getLocation().getY() - distanceY);
+				} catch (AWTException e) { }
+			}
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "e.mouseMoved(" + (var1 != null ? "{...}" : "null") + ')');
 		}

@@ -73,90 +73,8 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
 
-import static orsc.Config.CLIENT_VERSION;
-import static orsc.Config.C_BATCH_PROGRESS_BAR;
-import static orsc.Config.C_EXPERIENCE_CONFIG_SUBMENU;
-import static orsc.Config.C_EXPERIENCE_COUNTER;
-import static orsc.Config.C_EXPERIENCE_COUNTER_COLOR;
-import static orsc.Config.C_EXPERIENCE_COUNTER_MODE;
-import static orsc.Config.C_EXPERIENCE_DROPS;
-import static orsc.Config.C_EXPERIENCE_DROP_SPEED;
-import static orsc.Config.C_FIGHT_MENU;
-import static orsc.Config.C_HIDE_ROOFS;
-import static orsc.Config.C_HOLD_AND_CHOOSE;
-import static orsc.Config.C_INV_COUNT;
-import static orsc.Config.C_KILL_FEED;
-import static orsc.Config.C_LAST_ZOOM;
-import static orsc.Config.C_LONG_PRESS_TIMER;
-import static orsc.Config.C_MENU_SIZE;
-import static orsc.Config.C_MESSAGE_TAB_SWITCH;
-import static orsc.Config.C_NAME_CLAN_TAG_OVERLAY;
-import static orsc.Config.C_SHOW_FOG;
-import static orsc.Config.C_SHOW_GROUND_ITEMS;
-import static orsc.Config.C_SIDE_MENU_OVERLAY;
-import static orsc.Config.C_SWIPE_TO_ROTATE;
-import static orsc.Config.C_SWIPE_TO_SCROLL;
-import static orsc.Config.C_SWIPE_TO_ZOOM;
-import static orsc.Config.C_VOLUME_TO_ROTATE;
-import static orsc.Config.DEBUG;
-import static orsc.Config.DISPLAY_LOGO_SPRITE;
-import static orsc.Config.F_CACHE_DIR;
-import static orsc.Config.F_SHOWING_KEYBOARD;
-import static orsc.Config.MEMBER_WORLD;
-import static orsc.Config.Remember;
-import static orsc.Config.SERVER_NAME;
-import static orsc.Config.SERVER_NAME_WELCOME;
-import static orsc.Config.S_AUTO_MESSAGE_SWITCH_TOGGLE;
-import static orsc.Config.S_BATCH_PROGRESSION;
-import static orsc.Config.S_CUSTOM_FIREMAKING;
-import static orsc.Config.S_EXPERIENCE_COUNTER_TOGGLE;
-import static orsc.Config.S_EXPERIENCE_DROPS_TOGGLE;
-import static orsc.Config.S_FIGHTMODE_SELECTOR_TOGGLE;
-import static orsc.Config.S_FOG_TOGGLE;
-import static orsc.Config.S_GROUND_ITEM_TOGGLE;
-import static orsc.Config.S_INVENTORY_COUNT_TOGGLE;
-import static orsc.Config.S_ITEMS_ON_DEATH_MENU;
-import static orsc.Config.S_MENU_COMBAT_STYLE_TOGGLE;
-import static orsc.Config.S_PLAYER_LEVEL_LIMIT;
-import static orsc.Config.S_RIGHT_CLICK_BANK;
-import static orsc.Config.S_SHOW_FLOATING_NAMETAGS;
-import static orsc.Config.S_SHOW_ROOF_TOGGLE;
-import static orsc.Config.S_SIDE_MENU_TOGGLE;
-import static orsc.Config.S_SPAWN_AUCTION_NPCS;
-import static orsc.Config.S_SPAWN_IRON_MAN_NPCS;
-import static orsc.Config.S_WANT_BANK_NOTES;
-import static orsc.Config.S_WANT_BANK_PINS;
-import static orsc.Config.S_WANT_CERTS_TO_BANK;
-import static orsc.Config.S_WANT_CERT_DEPOSIT;
-import static orsc.Config.S_WANT_CLANS;
-import static orsc.Config.S_WANT_CUSTOM_BANKS;
-import static orsc.Config.S_WANT_CUSTOM_RANK_DISPLAY;
-import static orsc.Config.S_WANT_DECANTING;
-import static orsc.Config.S_WANT_DROP_X;
-import static orsc.Config.S_WANT_EXPERIENCE_ELIXIRS;
-import static orsc.Config.S_WANT_EXP_INFO;
-import static orsc.Config.S_WANT_FIXED_OVERHEAD_CHAT;
-import static orsc.Config.S_WANT_GLOBAL_CHAT;
-import static orsc.Config.S_WANT_HIDE_IP;
-import static orsc.Config.S_WANT_KEYBOARD_SHORTCUTS;
-import static orsc.Config.S_WANT_KILL_FEED;
-import static orsc.Config.S_WANT_QUEST_MENUS;
-import static orsc.Config.S_WANT_REMEMBER;
-import static orsc.Config.S_WANT_SKILL_MENUS;
-import static orsc.Config.S_WANT_WOODCUTTING_GUILD;
-import static orsc.Config.S_ZOOM_VIEW_TOGGLE;
-import static orsc.Config.WELCOME_TEXT;
-import static orsc.Config.getFPS;
-import static orsc.Config.getServerName;
-import static orsc.Config.getServerNameWelcome;
-import static orsc.Config.getWelcomeText;
-import static orsc.Config.getcLogoSpriteId;
-import static orsc.Config.initConfig;
-import static orsc.Config.isAndroid;
-import static orsc.Config.isLenientContactDetails;
-import static orsc.Config.saveConfiguration;
-import static orsc.Config.wantEmail;
-import static orsc.Config.wantMembers;
+import java.security.SecureRandom;
+import static orsc.Config.*;
 import static orsc.multiclient.ClientPort.saveHideIp;
 
 public final class mudclient implements Runnable {
@@ -291,8 +209,10 @@ public final class mudclient implements Runnable {
     public int selectedSkill = -1;
     public boolean m_N = false;
     public int mouseX = 0;
-    public int mouseY = 0;
-    public int screenOffsetX;
+	public int mouseY = 0;
+	public int mouseLastProcessedX = 0;
+	public int mouseLastProcessedY = 0;
+	public int screenOffsetX;
     public int screenOffsetY;
     public boolean shiftPressed = false;
     //public int groupID = 100;
@@ -352,16 +272,16 @@ public final class mudclient implements Runnable {
     private int sleepModifier = 20;
     private int[] animFrameToSprite_Walk = new int[]{0, 1, 2, 1};
     private int appearanceHeadGender = 1;
-    private int appearanceHeadType = 0;
-    private int autoLoginTimeout = 0;
-    private int cameraAngle = 1;
-    private int cameraAutoRotatePlayerX = 0;
-    private int cameraAutoRotatePlayerZ = 0;
-    public boolean cameraAllowPitchModification = false;
-    public int cameraPitch = 912;
-    private int cameraRotationX = 0;
-    private int cameraRotationZ = 0;
-    public int cameraZoom = 750;
+	private int appearanceHeadType = 0;
+	private int autoLoginTimeout = 0;
+	private int cameraAngle = 1;
+	private int cameraPositionX = 0;
+	private int cameraPositionZ = 0;
+	public boolean cameraAllowPitchModification = false;
+	public int cameraPitch = 912;
+	private int cameraAutoMoveX = 0;
+	private int cameraAutoMoveZ = 0;
+	public int cameraZoom = 750;
     public int minCameraZoom = 500;
     private int characterBubbleCount = 0;
     private int[] characterBubbleID = new int[150];
@@ -440,14 +360,14 @@ public final class mudclient implements Runnable {
     private int m_Ai;
     private int m_be;
     private int m_Ce = 0;
-    private int m_Cg;
-    private int m_cl = 30;
-    private int m_dk = 1;
-    private int m_ed;
-    private int m_eg = 2;
-    private int m_Eg;
-    private int m_ek;
-    private int m_Ge;
+	private int m_Cg;
+	private int m_cl = 30;
+	private int m_dk = 1;
+	private int m_ed;
+	private int cameraAutoMoveAmountX = 2;
+	private int m_Eg;
+	private int m_ek;
+	private int m_Ge;
     private int m_hh = 0;
     private boolean runningAsApplet = true;
     private boolean allowDebugCommands = !runningAsApplet || true;
@@ -457,17 +377,17 @@ public final class mudclient implements Runnable {
     private int m_Ji = 0;
     private int settingTab = 0;
     private int loginButtonExistingUser;
-    private int m_Kj;
-    private int m_ld = 2;
-    private int characterBottomColour = 14;
-    private int m_Mj;
-    private int m_nj = -1;
-    private int m_Of;
-    private int m_oj = 0;
-    private int m_Oj = 0;
-    private int m_Ok = 2;
-    private int m_qd = 9;
-    private int m_rc = 0;
+	private int m_Kj;
+	private int m_ld = 2;
+	private int characterBottomColour = 14;
+	private int m_Mj;
+	private int m_nj = -1;
+	private int m_Of;
+	private int cameraAutoMoveFrameCount = 0;
+	private int m_Oj = 0;
+	private int cameraAutoMoveAmountZ = 2;
+	private int m_qd = 9;
+	private int m_rc = 0;
     private int m_Re;
     private int m_rf;
     private boolean reportAbuse_isMute = false;
@@ -2102,23 +2022,23 @@ public final class mudclient implements Runnable {
                 }
             }
 
-            if (var8) {
-                character.animationNext = sprite;
-                character.npcId = type;
-                waypointIdx = character.waypointCurrent;
-                if (x != character.waypointsX[waypointIdx] || y != character.waypointsZ[waypointIdx]) {
-                    character.waypointCurrent = waypointIdx = (1 + waypointIdx) % 10;
-                    character.waypointsX[waypointIdx] = x;
-                    character.waypointsZ[waypointIdx] = y;
-                }
-            } else {
-                character.serverIndex = serverIndex;
-                character.waypointCurrent = 0;
-                character.movingStep = 0;
-                character.waypointsX[0] = character.currentX = x;
-                character.direction = ORSCharacterDirection.lookup(sprite);
-                character.animationNext = character.direction.rsDir;
-                character.stepFrame = 0;
+			if (var8) {
+				character.animationNext = sprite;
+				character.npcId = type;
+				waypointIdx = character.waypointIndexCurrent;
+				if (x != character.waypointsX[waypointIdx] || y != character.waypointsZ[waypointIdx]) {
+					character.waypointIndexCurrent = waypointIdx = (1 + waypointIdx) % 10;
+					character.waypointsX[waypointIdx] = x;
+					character.waypointsZ[waypointIdx] = y;
+				}
+			} else {
+				character.serverIndex = serverIndex;
+				character.waypointIndexCurrent = 0;
+				character.waypointIndexNext = 0;
+				character.waypointsX[0] = character.currentX = x;
+				character.direction = ORSCharacterDirection.lookup(sprite);
+				character.animationNext = character.direction.rsDir;
+				character.stepFrame = 0;
                 character.npcId = type;
                 character.waypointsZ[0] = character.currentZ = y;
             }
@@ -2180,20 +2100,20 @@ public final class mudclient implements Runnable {
                 }
             }
 
-            if (existingCharFound) {
-                c.animationNext = direction.rsDir;
-                i = c.waypointCurrent;
-                if (xPosition != c.waypointsX[i] || c.waypointsZ[i] != zPosition) {
-                    c.waypointCurrent = i = (1 + i) % 10;
-                    c.waypointsX[i] = xPosition;
-                    c.waypointsZ[i] = zPosition;
-                }
-            } else {
-                c.serverIndex = serverIndex;
-                c.waypointsX[0] = c.currentX = xPosition;
-                c.waypointCurrent = 0;
-                c.movingStep = 0;
-                c.stepFrame = 0;
+			if (existingCharFound) {
+				c.animationNext = direction.rsDir;
+				i = c.waypointIndexCurrent;
+				if (xPosition != c.waypointsX[i] || c.waypointsZ[i] != zPosition) {
+					c.waypointIndexCurrent = i = (1 + i) % 10;
+					c.waypointsX[i] = xPosition;
+					c.waypointsZ[i] = zPosition;
+				}
+			} else {
+				c.serverIndex = serverIndex;
+				c.waypointsX[0] = c.currentX = xPosition;
+				c.waypointIndexCurrent = 0;
+				c.waypointIndexNext = 0;
+				c.stepFrame = 0;
                 c.direction = direction;
                 c.animationNext = direction.rsDir;
                 c.waypointsZ[0] = c.currentZ = zPosition;
@@ -4374,14 +4294,12 @@ public final class mudclient implements Runnable {
     private void drawGame(int var1) {
         try {
 
-            if (isAndroid()) {
-                this.menuCommon.font = C_MENU_SIZE;
+			if (isAndroid()) {
+				this.menuCommon.font = C_MENU_SIZE;
+			}
 
-
-            }
-
-            if (var1 == 13) {
-                if (this.deathScreenTimeout != 0) {
+			if (var1 == 13) {
+				if (this.deathScreenTimeout != 0) {
                     this.getSurface().fade2black(16316665);
                     this.getSurface().drawColoredStringCentered(this.halfGameWidth(), "Oh dear! You are dead...",
                             0xFF0000, 0, 7, this.halfGameHeight());
@@ -4452,22 +4370,22 @@ public final class mudclient implements Runnable {
                             this.scene.removeModel(this.world.modelRoofGrid[2][centerX]);
                         }
 
-                        if (!this.doCameraZoom) {
-                            amountToZoom -= 50;
-                            this.doCameraZoom = true;
-                        }
 
-                        // Sets camera zoom distance based on last saved value in the player cache
-                        cameraZoom = minCameraZoom + (Config.C_LAST_ZOOM * 2);
+						if (!this.doCameraZoom) {
+							amountToZoom -= 50;
+							this.doCameraZoom = true;
+						}
 
-                        if (this.lastHeightOffset == 0
-                                && (world.collisionFlags[this.localPlayer.currentX / 128][this.localPlayer.currentZ
-                                / 128] & 0x80) == 0
-                                && !C_HIDE_ROOFS) {
+						// Sets camera zoom distance based on last saved value in the player cache
+						cameraZoom = minCameraZoom + (Config.C_LAST_ZOOM * 2);
 
-                            this.scene.addModel(this.world.modelRoofGrid[this.lastHeightOffset][centerX]);
-                            if (this.lastHeightOffset == 0 && !C_HIDE_ROOFS) {
-                                this.scene.addModel(this.world.modelWallGrid[1][centerX]);
+						if ((this.lastHeightOffset == 0
+							&& (world.collisionFlags[this.localPlayer.currentX / 128][this.localPlayer.currentZ
+							/ 128] & 0x80) == 0 && !C_HIDE_ROOFS)) {
+
+							this.scene.addModel(this.world.modelRoofGrid[this.lastHeightOffset][centerX]);
+							if (this.lastHeightOffset == 0) {
+								this.scene.addModel(this.world.modelWallGrid[1][centerX]);
                                 this.scene.addModel(this.world.modelRoofGrid[1][centerX]);
                                 this.scene.addModel(this.world.modelWallGrid[2][centerX]);
                                 this.scene.addModel(this.world.modelRoofGrid[2][centerX]);
@@ -4659,30 +4577,30 @@ public final class mudclient implements Runnable {
                         this.scene.setFrustum(-50, centerZ, 0, -50, centerX, -10);
                     }
 
-                    this.characterBubbleCount = 0;
-                    this.characterHealthCount = 0;
-                    this.characterDialogCount = 0;
-                    if (this.cameraAutoAngleDebug) {
-                        if (this.optionCameraModeAuto && !this.doCameraZoom) {
-                            centerX = this.cameraAngle;
-                            this.autoRotateCamera((byte) 22);
-                            if (centerX != this.cameraAngle) {
-                                this.cameraAutoRotatePlayerZ = this.localPlayer.currentZ;
-                                this.cameraAutoRotatePlayerX = this.localPlayer.currentX;
-                            }
-                        }
+					this.characterBubbleCount = 0;
+					this.characterHealthCount = 0;
+					this.characterDialogCount = 0;
+					if (this.cameraAutoAngleDebug) {
+						if (this.optionCameraModeAuto && !this.doCameraZoom) {
+							centerX = this.cameraAngle;
+							this.autoRotateCamera((byte) 22);
+							if (centerX != this.cameraAngle) {
+								this.cameraPositionZ = this.localPlayer.currentZ;
+								this.cameraPositionX = this.localPlayer.currentX;
+							}
+						}
 
-                        this.cameraRotation = this.cameraAngle * 32;
-                        this.scene.fogLandscapeDistance = 3000;
-                        this.scene.fogEntityDistance = 3000;
-                        this.scene.fogZFalloff = 1;
-                        this.scene.fogSmoothingStartDistance = 2800;
+						this.cameraRotation = this.cameraAngle * 32;
+						this.scene.fogLandscapeDistance = 3000;
+						this.scene.fogEntityDistance = 3000;
+						this.scene.fogZFalloff = 1;
+						this.scene.fogSmoothingStartDistance = 2800;
 
-                        centerX = this.cameraAutoRotatePlayerX + this.cameraRotationX;
-                        centerZ = this.cameraAutoRotatePlayerZ + this.cameraRotationZ;
-                        this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ), centerZ, cameraPitch,
-                                this.cameraRotation * 4, 0, 2000);
-                        float zoomMultiplier = 0;
+						centerX = this.cameraPositionX + this.cameraAutoMoveX;
+						centerZ = this.cameraPositionZ + this.cameraAutoMoveZ;
+						this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ), centerZ, cameraPitch,
+							this.cameraRotation * 4, 0, 2000);
+						float zoomMultiplier = 0;
                         if (Config.S_ZOOM_VIEW_TOGGLE)
                             zoomMultiplier = Config.C_ZOOM == 0 ? 0 : Config.C_ZOOM == 1 ? +200 : Config.C_ZOOM == 2 ? +400 : -200;
                         this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ), centerZ, cameraPitch,
@@ -4704,17 +4622,17 @@ public final class mudclient implements Runnable {
                                 this.scene.fogEntityDistance = gameWidth * 2 + cameraZoom * 2 - 324;
                                 this.scene.fogSmoothingStartDistance = gameWidth * 2 + cameraZoom * 2 - 424;
                             }
-                        } else {
-                            this.scene.fogZFalloff = 1;
-                            this.scene.fogLandscapeDistance = cameraZoom * 6;
-                            this.scene.fogEntityDistance = cameraZoom * 6;
-                            this.scene.fogSmoothingStartDistance = cameraZoom * 6;
-                        }
+						} else {
+							this.scene.fogZFalloff = 1;
+							this.scene.fogLandscapeDistance = cameraZoom * 6;
+							this.scene.fogEntityDistance = cameraZoom * 6;
+							this.scene.fogSmoothingStartDistance = cameraZoom * 6;
+						}
 
-                        centerX = this.cameraAutoRotatePlayerX + this.cameraRotationX;
-                        centerZ = this.cameraAutoRotatePlayerZ + this.cameraRotationZ;
+						centerX = this.cameraPositionX + this.cameraAutoMoveX;
+						centerZ = this.cameraPositionZ + this.cameraAutoMoveZ;
 
-                        this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ), centerZ, cameraPitch,
+						this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ), centerZ, cameraPitch,
                                 this.cameraRotation * 4, 0, this.cameraZoom * 2);
                     }
 
@@ -4731,18 +4649,18 @@ public final class mudclient implements Runnable {
 
                     if (this.systemUpdate != 0) {
                         centerX = this.systemUpdate / 50;
-                        centerZ = centerX / 60;
-                        centerX %= 60;
-                        if (centerX < 10) {
-                            this.getSurface().drawColoredStringCentered(256,
-                                    "Automatic server restart in: " + centerZ + ":0" + centerX, 0xFFFF00, 0, 1,
-                                    this.getGameHeight() - 7);
-                        } else {
-                            this.getSurface().drawColoredStringCentered(256,
-                                    "Automatic server restart in: " + centerZ + ":" + centerX, 0xFFFF00, 0, 1,
-                                    this.getGameHeight() - 7);
-                        }
-                    }
+						centerZ = centerX / 60;
+						centerX %= 60;
+						if (centerX < 10) {
+							this.getSurface().drawColoredStringCentered(256,
+								"Server shutting down for updates in: " + centerZ + ":0" + centerX, 0xFFFF00, 0, 1,
+								this.getGameHeight() - 7);
+						} else {
+							this.getSurface().drawColoredStringCentered(256,
+								"Server shutting down for updates in: " + centerZ + ":" + centerX, 0xFFFF00, 0, 1,
+								this.getGameHeight() - 7);
+						}
+					}
                     if (S_WANT_EXPERIENCE_ELIXIRS && this.elixirTimer != 0) {
                         centerX = this.elixirTimer / 50;
                         centerZ = centerX / 60;
@@ -4842,12 +4760,24 @@ public final class mudclient implements Runnable {
                                     "Fatigue: " + this.statFatigue + "%", 7, i, 0xffffff, 1);
                         }
                         if (Config.DEBUG) {
-                            i += 14;
-                            this.getSurface().drawString("Camera Zoom: " + cameraZoom, 7, i, 0xffffff, 1);
-                            i += 14;
-                            this.getSurface().drawString("Camera Pitch: " + cameraPitch, 7, i, 0xffffff, 1);
-                        }
-                    }
+							i += 14;
+							this.getSurface().drawString("Camera Zoom: " + cameraZoom, 7, i, 0xffffff, 1);
+							i += 14;
+							this.getSurface().drawString("Camera Pitch: " + cameraPitch, 7, i, 0xffffff, 1);
+							i += 14;
+							this.getSurface().drawString("Camera Rotation: " + cameraRotation, 7, i, 0xffffff, 1);
+							int cameraX = this.cameraPositionX + this.cameraAutoMoveX;
+							int cameraZ = this.cameraPositionZ + this.cameraAutoMoveZ;
+							int cameraY = -this.world.getElevation(cameraX, cameraZ) - 170;
+							i += 14;
+							this.getSurface().drawString("Frame: " + cameraAutoMoveFrameCount, 7, i, 0xffffffff, 1);
+							i += 14;
+							this.getSurface().drawString("Camera X: " + cameraX + " (" + this.cameraPositionX + " + " + this.cameraAutoMoveX + ") [" + this.localPlayer.currentX + "] [" + cameraAutoMoveAmountX + "]", 7, i, 0xffffff, 1);
+							i += 14;
+							this.getSurface().drawString("Camera Z: " + cameraZ + " (" + this.cameraPositionZ + " + " + this.cameraAutoMoveZ + ") [" + this.localPlayer.currentZ + "] [" + cameraAutoMoveAmountZ + "]", 7, i, 0xffffff, 1);
+							i += 14;
+							this.getSurface().drawString("Camera Y: " + cameraY, 7, i, 0xffffff, 1);						}
+						}
 
                     if (S_EXPERIENCE_COUNTER_TOGGLE && C_EXPERIENCE_COUNTER == 2) {
                         this.drawExperienceCounter(recentSkill);
@@ -4865,14 +4795,15 @@ public final class mudclient implements Runnable {
                             this.getSurface().drawString("@whi@Global", uiX + 12, uiY + 20, 0xffffff, 1);
                             if (this.mouseButtonClick != 0) {
                                 if (this.mouseX >= uiX && this.mouseX <= uiX + uiWidth && this.mouseY >= uiY && this.mouseY <= uiY + uiHeight) {
-                                    this.mouseButtonClick = 0;
-                                    this.panelMessageTabs.setText(this.panelMessageEntry, "::g ");
-                                }
-                            }
-                            uiX += uiWidth + 15;
-                            this.getSurface().drawBoxAlpha(uiX, uiY, uiWidth, uiHeight, 0x659CDE, 160);
-                            this.getSurface().drawBoxBorder(uiX, uiWidth, uiY, uiHeight, 0);
-                            this.getSurface().drawString("@whi@PK", uiX + 25, uiY + 20, 0xffffff, 1);
+									this.mouseButtonClick = 0;
+									this.panelMessageTabs.setText(this.panelMessageEntry, "::g ");
+								}
+							}
+							uiX += uiWidth + 15;
+
+							this.getSurface().drawBoxAlpha(uiX, uiY, uiWidth, uiHeight, 0x659CDE, 160);
+							this.getSurface().drawBoxBorder(uiX, uiWidth, uiY, uiHeight, 0);
+							this.getSurface().drawString("@whi@PK", uiX + 25, uiY + 20, 0xffffff, 1);
                             if (this.mouseButtonClick != 0) {
                                 if (this.mouseX >= uiX && this.mouseX <= uiX + uiWidth && this.mouseY >= uiY && this.mouseY <= uiY + uiHeight) {
                                     this.mouseButtonClick = 0;
@@ -6822,6 +6753,8 @@ public final class mudclient implements Runnable {
                                 this.selectedSpell, this.world.faceTileZ[var2]);
                     }
                 } else if (this.selectedItemInventoryIndex < 0) {
+					//System.out.println("Build Walk Here Right Click: var2=" + var2 + ", this.world.faceTileX[var2]= " + this.world.faceTileX[var2] + ", this.world.faceTileZ[var2]=" + this.world.faceTileZ[var2]);
+
                     this.menuCommon.addCharacterItem_WithID(this.world.faceTileX[var2], "",
                             MenuItemAction.LANDSCAPE_WALK_HERE, "Walk here", this.world.faceTileZ[var2]);
                     if (modMenu) {
@@ -6966,7 +6899,7 @@ public final class mudclient implements Runnable {
             int maxWidth = getGameWidth() - 23;
             int minWidth = getGameWidth() - 83;
             if (var2) {
-                this.cameraRotationX = -88;
+				this.cameraAutoMoveX = -88;
             }
 
             // if clans are enabled
@@ -9552,623 +9485,630 @@ public final class mudclient implements Runnable {
             } else if (this.showSetContactDetails) {
                 this.M();
             } else {
-                int var2;
-                ORSCharacter var3;
-                int var4;
-                int var6;
-                int var7;
-                int var8;
-                for (var2 = 0; var2 < this.playerCount; ++var2) {
-                    var3 = this.players[var2];
-                    var4 = (1 + var3.waypointCurrent) % 10;
-                    if (var3.movingStep == var4) {
-                        var3.direction = ORSCharacterDirection.lookup(var3.animationNext);
-                    } else {
-                        ORSCharacterDirection var5 = null;
-                        var6 = var3.movingStep;
-                        if (var6 < var4) {
-                            var7 = var4 - var6;
-                        } else {
-                            var7 = 10 + var4 - var6;
-                        }
+				int updateIndex;
+				ORSCharacter updateEntity;
+				int waypointIndexCurrent;
+				int waypointIndexNext;
+				int stepsToMove;
+				int amountToMove;
+				for (updateIndex = 0; updateIndex < this.playerCount; ++updateIndex) {
+					updateEntity = this.players[updateIndex];
+					waypointIndexCurrent = (1 + updateEntity.waypointIndexCurrent) % 10;
+					if (updateEntity.waypointIndexNext == waypointIndexCurrent) {
+						updateEntity.direction = ORSCharacterDirection.lookup(updateEntity.animationNext);
+					} else {
+						ORSCharacterDirection characterDirection = null;
+						waypointIndexNext = updateEntity.waypointIndexNext;
+						if (waypointIndexNext < waypointIndexCurrent) {
+							stepsToMove = waypointIndexCurrent - waypointIndexNext;
+						} else {
+							stepsToMove = 10 + waypointIndexCurrent - waypointIndexNext;
+						}
 
-                        var8 = 4;
-                        if (var7 > 2) {
-                            var8 = var7 * 4 - 4;
-                        }
+						amountToMove = 4;
+						if (stepsToMove > 2) {
+							amountToMove = stepsToMove * amountToMove - amountToMove;
+						}
 
-                        if (var3.waypointsX[var6] - var3.currentX <= this.tileSize * 3
-                                && var3.waypointsZ[var6] - var3.currentZ <= this.tileSize * 3
-                                && var3.waypointsX[var6] - var3.currentX >= -this.tileSize * 3
-                                && var3.waypointsZ[var6] - var3.currentZ >= -this.tileSize * 3 && var7 <= 8) {
-                            if (var3.waypointsX[var6] > var3.currentX) {
-                                var5 = ORSCharacterDirection.WEST;
-                                var3.currentX += var8;
-                                ++var3.stepFrame;
-                            } else if (var3.waypointsX[var6] < var3.currentX) {
-                                ++var3.stepFrame;
-                                var5 = ORSCharacterDirection.EAST;
-                                var3.currentX -= var8;
-                            }
+						if (updateEntity.waypointsX[waypointIndexNext] - updateEntity.currentX <= this.tileSize * 3
+							&& updateEntity.waypointsZ[waypointIndexNext] - updateEntity.currentZ <= this.tileSize * 3
+							&& updateEntity.waypointsX[waypointIndexNext] - updateEntity.currentX >= -this.tileSize * 3
+							&& updateEntity.waypointsZ[waypointIndexNext] - updateEntity.currentZ >= -this.tileSize * 3 && stepsToMove <= 8 * S_MAX_WALKING_SPEED) {
+							if (updateEntity.waypointsX[waypointIndexNext] > updateEntity.currentX) {
+								characterDirection = ORSCharacterDirection.WEST;
+								updateEntity.currentX += amountToMove;
+								++updateEntity.stepFrame;
+							} else if (updateEntity.waypointsX[waypointIndexNext] < updateEntity.currentX) {
+								++updateEntity.stepFrame;
+								characterDirection = ORSCharacterDirection.EAST;
+								updateEntity.currentX -= amountToMove;
+							}
 
-                            if (var3.currentX - var3.waypointsX[var6] < var8
-                                    && var3.currentX - var3.waypointsX[var6] > -var8) {
-                                var3.currentX = var3.waypointsX[var6];
-                            }
+							if (updateEntity.currentX - updateEntity.waypointsX[waypointIndexNext] < amountToMove
+								&& updateEntity.currentX - updateEntity.waypointsX[waypointIndexNext] > -amountToMove) {
+								updateEntity.currentX = updateEntity.waypointsX[waypointIndexNext];
+							}
 
-                            if (var3.waypointsZ[var6] > var3.currentZ) {
-                                if (var5 != null) {
-                                    if (var5 == ORSCharacterDirection.WEST) {
-                                        var5 = ORSCharacterDirection.SOUTH_WEST;
-                                    } else {
-                                        var5 = ORSCharacterDirection.SOUTH_EAST;
-                                    }
-                                } else {
-                                    var5 = ORSCharacterDirection.SOUTH;
-                                }
+							if (updateEntity.waypointsZ[waypointIndexNext] > updateEntity.currentZ) {
+								if (characterDirection != null) {
+									if (characterDirection == ORSCharacterDirection.WEST) {
+										characterDirection = ORSCharacterDirection.SOUTH_WEST;
+									} else {
+										characterDirection = ORSCharacterDirection.SOUTH_EAST;
+									}
+								} else {
+									characterDirection = ORSCharacterDirection.SOUTH;
+								}
 
-                                var3.currentZ += var8;
-                                ++var3.stepFrame;
-                            } else if (var3.waypointsZ[var6] < var3.currentZ) {
-                                ++var3.stepFrame;
-                                var3.currentZ -= var8;
-                                if (var5 != null) {
-                                    if (var5 == ORSCharacterDirection.WEST) {
-                                        var5 = ORSCharacterDirection.NORTH_WEST;
-                                    } else {
-                                        var5 = ORSCharacterDirection.NORTH_EAST;
-                                    }
-                                } else {
-                                    var5 = ORSCharacterDirection.NORTH;
-                                }
-                            }
+								updateEntity.currentZ += amountToMove;
+								++updateEntity.stepFrame;
+							} else if (updateEntity.waypointsZ[waypointIndexNext] < updateEntity.currentZ) {
+								++updateEntity.stepFrame;
+								updateEntity.currentZ -= amountToMove;
+								if (characterDirection != null) {
+									if (characterDirection == ORSCharacterDirection.WEST) {
+										characterDirection = ORSCharacterDirection.NORTH_WEST;
+									} else {
+										characterDirection = ORSCharacterDirection.NORTH_EAST;
+									}
+								} else {
+									characterDirection = ORSCharacterDirection.NORTH;
+								}
+							}
 
-                            if (var3.currentZ - var3.waypointsZ[var6] < var8
-                                    && var3.currentZ - var3.waypointsZ[var6] > -var8) {
-                                var3.currentZ = var3.waypointsZ[var6];
-                            }
-                        } else {
-                            var3.currentX = var3.waypointsX[var6];
-                            var3.currentZ = var3.waypointsZ[var6];
-                        }
+							if (updateEntity.currentZ - updateEntity.waypointsZ[waypointIndexNext] < amountToMove
+								&& updateEntity.currentZ - updateEntity.waypointsZ[waypointIndexNext] > -amountToMove) {
+								updateEntity.currentZ = updateEntity.waypointsZ[waypointIndexNext];
+							}
+						} else {
+							updateEntity.currentX = updateEntity.waypointsX[waypointIndexNext];
+							updateEntity.currentZ = updateEntity.waypointsZ[waypointIndexNext];
+						}
 
-                        if (var5 != null) {
-                            var3.direction = var5;
-                        }
+						if (characterDirection != null) {
+							updateEntity.direction = characterDirection;
+						}
 
-                        if (var3.waypointsX[var6] == var3.currentX && var3.waypointsZ[var6] == var3.currentZ) {
-                            var3.movingStep = (1 + var6) % 10;
-                        }
-                    }
+						if (updateEntity.waypointsX[waypointIndexNext] == updateEntity.currentX && updateEntity.waypointsZ[waypointIndexNext] == updateEntity.currentZ) {
+							updateEntity.waypointIndexNext = (1 + waypointIndexNext) % 10;
+						}
+					}
 
-                    if (var3.bubbleTimeout > 0) {
-                        --var3.bubbleTimeout;
-                    }
+					if (updateEntity.bubbleTimeout > 0) {
+						--updateEntity.bubbleTimeout;
+					}
 
-                    if (var3.combatTimeout > 0) {
-                        --var3.combatTimeout;
-                    }
+					if (updateEntity.combatTimeout > 0) {
+						--updateEntity.combatTimeout;
+					}
 
-                    if (var3.messageTimeout > 0) {
-                        --var3.messageTimeout;
-                    }
+					if (updateEntity.messageTimeout > 0) {
+						--updateEntity.messageTimeout;
+					}
 
-                    if (this.deathScreenTimeout > 0) {
-                        --this.deathScreenTimeout;
-                        if (this.deathScreenTimeout == 0) {
-                            this.showMessage(false, null,
-                                    "You have been granted another life. Be more careful this time!", MessageType.GAME,
-                                    0, null);
-                        }
+					if (this.deathScreenTimeout > 0) {
+						--this.deathScreenTimeout;
+						if (this.deathScreenTimeout == 0) {
+							this.showMessage(false, null,
+								"You have been granted another life. Be more careful this time!", MessageType.GAME,
+								0, null);
+						}
 
-                        if (this.deathScreenTimeout == 0) {
-                            this.showMessage(false, null,
-                                    "You retain your skills. Your objects land where you died", MessageType.GAME, 0,
-                                    null);
-                        }
-                    }
-                }
+						if (this.deathScreenTimeout == 0) {
+							this.showMessage(false, null,
+								"You retain your skills. Your objects land where you died", MessageType.GAME, 0,
+								null);
+						}
+					}
+				}
 
-                for (var2 = 0; var2 < this.npcCount; ++var2) {
-                    var3 = this.npcs[var2];
-                    var4 = (var3.waypointCurrent + 1) % 10;
-                    if (var4 == var3.movingStep) {
-                        if (var3.npcId == 43) {
-                            ++var3.stepFrame;
-                        }
+				for (updateIndex = 0; updateIndex < this.npcCount; ++updateIndex) {
+					updateEntity = this.npcs[updateIndex];
+					waypointIndexCurrent = (updateEntity.waypointIndexCurrent + 1) % 10;
+					if (waypointIndexCurrent == updateEntity.waypointIndexNext) {
+						if (updateEntity.npcId == 43) {
+							++updateEntity.stepFrame;
+						}
 
-                        var3.direction = ORSCharacterDirection.lookup(var3.animationNext);
-                    } else {
-                        ORSCharacterDirection var5 = null;
-                        var6 = var3.movingStep;
-                        if (var4 <= var6) {
-                            var7 = var4 + (10 - var6);
-                        } else {
-                            var7 = var4 - var6;
-                        }
+						updateEntity.direction = ORSCharacterDirection.lookup(updateEntity.animationNext);
+					} else {
+						ORSCharacterDirection characterDirection = null;
+						waypointIndexNext = updateEntity.waypointIndexNext;
+						if (waypointIndexCurrent <= waypointIndexNext) {
+							stepsToMove = waypointIndexCurrent + (10 - waypointIndexNext);
+						} else {
+							stepsToMove = waypointIndexCurrent - waypointIndexNext;
+						}
 
-                        var8 = 4;
-                        if (var7 > 2) {
-                            var8 = (var7 - 1) * 4;
-                        }
+						amountToMove = 4;
+						if (stepsToMove > 2) {
+							amountToMove = (stepsToMove - 1) * amountToMove;
+						}
 
-                        if (this.tileSize * 3 >= var3.waypointsX[var6] - var3.currentX
-                                && var3.waypointsZ[var6] - var3.currentZ <= this.tileSize * 3
-                                && var3.waypointsX[var6] - var3.currentX >= -this.tileSize * 3
-                                && var3.waypointsZ[var6] - var3.currentZ >= -this.tileSize * 3 && var7 <= 8) {
-                            if (var3.waypointsX[var6] > var3.currentX) {
-                                ++var3.stepFrame;
-                                var3.currentX += var8;
-                                var5 = ORSCharacterDirection.WEST;
-                            } else if (var3.currentX > var3.waypointsX[var6]) {
-                                var5 = ORSCharacterDirection.EAST;
-                                ++var3.stepFrame;
-                                var3.currentX -= var8;
-                            }
+						if (this.tileSize * 3 >= updateEntity.waypointsX[waypointIndexNext] - updateEntity.currentX
+							&& updateEntity.waypointsZ[waypointIndexNext] - updateEntity.currentZ <= this.tileSize * 3
+							&& updateEntity.waypointsX[waypointIndexNext] - updateEntity.currentX >= -this.tileSize * 3
+							&& updateEntity.waypointsZ[waypointIndexNext] - updateEntity.currentZ >= -this.tileSize * 3 && stepsToMove <= 8) {
+							if (updateEntity.waypointsX[waypointIndexNext] > updateEntity.currentX) {
+								++updateEntity.stepFrame;
+								updateEntity.currentX += amountToMove;
+								characterDirection = ORSCharacterDirection.WEST;
+							} else if (updateEntity.currentX > updateEntity.waypointsX[waypointIndexNext]) {
+								characterDirection = ORSCharacterDirection.EAST;
+								++updateEntity.stepFrame;
+								updateEntity.currentX -= amountToMove;
+							}
 
-                            if (var8 > var3.currentX - var3.waypointsX[var6]
-                                    && -var8 < var3.currentX - var3.waypointsX[var6]) {
-                                var3.currentX = var3.waypointsX[var6];
-                            }
+							if (amountToMove > updateEntity.currentX - updateEntity.waypointsX[waypointIndexNext]
+								&& -amountToMove < updateEntity.currentX - updateEntity.waypointsX[waypointIndexNext]) {
+								updateEntity.currentX = updateEntity.waypointsX[waypointIndexNext];
+							}
 
-                            if (var3.waypointsZ[var6] <= var3.currentZ) {
-                                if (var3.currentZ > var3.waypointsZ[var6]) {
-                                    if (var5 == null) {
-                                        var5 = ORSCharacterDirection.NORTH;
-                                    } else if (var5 != ORSCharacterDirection.WEST) {
-                                        var5 = ORSCharacterDirection.NORTH_EAST;
-                                    } else {
-                                        var5 = ORSCharacterDirection.NORTH_WEST;
-                                    }
+							if (updateEntity.waypointsZ[waypointIndexNext] <= updateEntity.currentZ) {
+								if (updateEntity.currentZ > updateEntity.waypointsZ[waypointIndexNext]) {
+									if (characterDirection == null) {
+										characterDirection = ORSCharacterDirection.NORTH;
+									} else if (characterDirection != ORSCharacterDirection.WEST) {
+										characterDirection = ORSCharacterDirection.NORTH_EAST;
+									} else {
+										characterDirection = ORSCharacterDirection.NORTH_WEST;
+									}
 
-                                    var3.currentZ -= var8;
-                                    ++var3.stepFrame;
-                                }
-                            } else {
-                                ++var3.stepFrame;
-                                if (var5 == null) {
-                                    var5 = ORSCharacterDirection.SOUTH;
-                                } else if (var5 != ORSCharacterDirection.WEST) {
-                                    var5 = ORSCharacterDirection.SOUTH_EAST;
-                                } else {
-                                    var5 = ORSCharacterDirection.SOUTH_WEST;
-                                }
+									updateEntity.currentZ -= amountToMove;
+									++updateEntity.stepFrame;
+								}
+							} else {
+								++updateEntity.stepFrame;
+								if (characterDirection == null) {
+									characterDirection = ORSCharacterDirection.SOUTH;
+								} else if (characterDirection != ORSCharacterDirection.WEST) {
+									characterDirection = ORSCharacterDirection.SOUTH_EAST;
+								} else {
+									characterDirection = ORSCharacterDirection.SOUTH_WEST;
+								}
 
-                                var3.currentZ += var8;
-                            }
+								updateEntity.currentZ += amountToMove;
+							}
 
-                            if (var3.currentZ - var3.waypointsZ[var6] < var8
-                                    && -var8 < var3.currentZ - var3.waypointsZ[var6]) {
-                                var3.currentZ = var3.waypointsZ[var6];
-                            }
-                        } else {
-                            var3.currentX = var3.waypointsX[var6];
-                            var3.currentZ = var3.waypointsZ[var6];
-                        }
+							if (updateEntity.currentZ - updateEntity.waypointsZ[waypointIndexNext] < amountToMove
+								&& -amountToMove < updateEntity.currentZ - updateEntity.waypointsZ[waypointIndexNext]) {
+								updateEntity.currentZ = updateEntity.waypointsZ[waypointIndexNext];
+							}
+						} else {
+							updateEntity.currentX = updateEntity.waypointsX[waypointIndexNext];
+							updateEntity.currentZ = updateEntity.waypointsZ[waypointIndexNext];
+						}
 
-                        if (var5 != null) {
-                            var3.direction = var5;
-                        }
+						if (characterDirection != null) {
+							updateEntity.direction = characterDirection;
+						}
 
-                        if (var3.currentX == var3.waypointsX[var6] && var3.waypointsZ[var6] == var3.currentZ) {
-                            var3.movingStep = (1 + var6) % 10;
-                        }
-                    }
+						if (updateEntity.currentX == updateEntity.waypointsX[waypointIndexNext] && updateEntity.waypointsZ[waypointIndexNext] == updateEntity.currentZ) {
+							updateEntity.waypointIndexNext = (1 + waypointIndexNext) % 10;
+						}
+					}
 
-                    if (var3.combatTimeout > 0) {
-                        --var3.combatTimeout;
-                    }
+					if (updateEntity.combatTimeout > 0) {
+						--updateEntity.combatTimeout;
+					}
 
-                    if (var3.bubbleTimeout > 0) {
-                        --var3.bubbleTimeout;
-                    }
+					if (updateEntity.bubbleTimeout > 0) {
+						--updateEntity.bubbleTimeout;
+					}
 
-                    if (var3.messageTimeout > 0) {
-                        --var3.messageTimeout;
-                    }
-                }
+					if (updateEntity.messageTimeout > 0) {
+						--updateEntity.messageTimeout;
+					}
+				}
 
-                if (this.showUiTab != 2) {
-                    if (MiscFunctions.cachingFile_s_g > 0) {
-                        ++this.sleepWordDelayTimer;
-                    }
+				if (this.showUiTab != 2) {
+					if (MiscFunctions.cachingFile_s_g > 0) {
+						++this.sleepWordDelayTimer;
+					}
 
-                    if (MiscFunctions.netsock_s_M > 0) {
-                        this.sleepWordDelayTimer = 0;
-                    }
+					if (MiscFunctions.netsock_s_M > 0) {
+						this.sleepWordDelayTimer = 0;
+					}
 
-                    MiscFunctions.cachingFile_s_g = 0;
-                    MiscFunctions.netsock_s_M = 0;
-                }
+					MiscFunctions.cachingFile_s_g = 0;
+					MiscFunctions.netsock_s_M = 0;
+				}
 
-                for (var2 = 0; var2 < this.playerCount; ++var2) {
-                    var3 = this.players[var2];
-                    if (var3.projectileRange > 0) {
-                        --var3.projectileRange;
-                    }
-                }
+				for (updateIndex = 0; updateIndex < this.playerCount; ++updateIndex) {
+					updateEntity = this.players[updateIndex];
+					if (updateEntity.projectileRange > 0) {
+						--updateEntity.projectileRange;
+					}
+				}
 
-                if (this.sleepWordDelayTimer > 20) {
-                    this.sleepWordDelayTimer = 0;
-                    this.sleepWordDelay = false;
-                }
+				if (this.sleepWordDelayTimer > 20) {
+					this.sleepWordDelayTimer = 0;
+					this.sleepWordDelay = false;
+				}
 
-                int var10;
-                if (!this.cameraAutoAngleDebug) {
-                    if (this.cameraAutoRotatePlayerX - this.localPlayer.currentX < -500
-                            || this.cameraAutoRotatePlayerX - this.localPlayer.currentX > 500
-                            || this.cameraAutoRotatePlayerZ - this.localPlayer.currentZ < -500
-                            || this.cameraAutoRotatePlayerZ - this.localPlayer.currentZ > 500) {
-                        this.cameraAutoRotatePlayerX = this.localPlayer.currentX;
-                        this.cameraAutoRotatePlayerZ = this.localPlayer.currentZ;
-                    }
+				int var10;
+				if (!this.cameraAutoAngleDebug) {
+					if (this.cameraPositionX - this.localPlayer.currentX < -500
+						|| this.cameraPositionX - this.localPlayer.currentX > 500
+						|| this.cameraPositionZ - this.localPlayer.currentZ < -500
+						|| this.cameraPositionZ - this.localPlayer.currentZ > 500) {
+						this.cameraPositionX = this.localPlayer.currentX;
+						this.cameraPositionZ = this.localPlayer.currentZ;
+					}
 
-                    if (this.optionCameraModeAuto) {
-                        var2 = this.cameraAngle * 32;
-                        var10 = var2 - this.cameraRotation;
-                        byte var12 = 1;
-                        if (var10 != 0) {
-                            ++this.m_Wc;
-                            if (var10 <= 128) {
-                                if (var10 <= 0) {
-                                    if (var10 >= -128) {
-                                        if (var10 < 0) {
-                                            var12 = -1;
-                                            var10 = -var10;
-                                        }
-                                    } else {
-                                        var10 += 256;
-                                        var12 = 1;
-                                    }
-                                } else {
-                                    var12 = 1;
-                                }
-                            } else {
-                                var12 = -1;
-                                var10 = 256 - var10;
-                            }
+					if (this.optionCameraModeAuto) {
+						updateIndex = this.cameraAngle * 32;
+						var10 = updateIndex - this.cameraRotation;
+						byte var12 = 1;
+						if (var10 != 0) {
+							++this.m_Wc;
+							if (var10 <= 128) {
+								if (var10 <= 0) {
+									if (var10 >= -128) {
+										if (var10 < 0) {
+											var12 = -1;
+											var10 = -var10;
+										}
+									} else {
+										var10 += 256;
+										var12 = 1;
+									}
+								} else {
+									var12 = 1;
+								}
+							} else {
+								var12 = -1;
+								var10 = 256 - var10;
+							}
 
-                            this.cameraRotation += (var10 * this.m_Wc + 255) / 256 * var12;
-                            this.cameraRotation &= 255;
-                        } else {
-                            this.m_Wc = 0;
-                        }
-                    }
+							this.cameraRotation += (var10 * this.m_Wc + 255) / 256 * var12;
+							this.cameraRotation &= 255;
+						} else {
+							this.m_Wc = 0;
+						}
+					}
 
-                    if (this.localPlayer.currentZ != this.cameraAutoRotatePlayerZ) {
-                        this.cameraAutoRotatePlayerZ += (this.localPlayer.currentZ - this.cameraAutoRotatePlayerZ)
-                                / ((this.cameraZoom - 500) / 15 + 16);
-                    }
+					if (this.localPlayer.currentZ != this.cameraPositionZ) {
+						this.cameraPositionZ += (this.localPlayer.currentZ - this.cameraPositionZ)
+							/ ((this.cameraZoom - 500) / 15 + 16);
+					}
 
-                    if (this.cameraAutoRotatePlayerX != this.localPlayer.currentX) {
-                        this.cameraAutoRotatePlayerX += (this.localPlayer.currentX - this.cameraAutoRotatePlayerX)
-                                / ((this.cameraZoom - 500) / 15 + 16);
-                    }
-                } else if (this.cameraAutoRotatePlayerX - this.localPlayer.currentX < -500
-                        || this.cameraAutoRotatePlayerX - this.localPlayer.currentX > 500
-                        || this.cameraAutoRotatePlayerZ - this.localPlayer.currentZ < -500
-                        || this.cameraAutoRotatePlayerZ - this.localPlayer.currentZ > 500) {
-                    this.cameraAutoRotatePlayerX = this.localPlayer.currentX;
-                    this.cameraAutoRotatePlayerZ = this.localPlayer.currentZ;
-                }
+					if (this.cameraPositionX != this.localPlayer.currentX) {
+						this.cameraPositionX += (this.localPlayer.currentX - this.cameraPositionX)
+							/ ((this.cameraZoom - 500) / 15 + 16);
+					}
+				} else if (this.cameraPositionX - this.localPlayer.currentX < -500
+					|| this.cameraPositionX - this.localPlayer.currentX > 500
+					|| this.cameraPositionZ - this.localPlayer.currentZ < -500
+					|| this.cameraPositionZ - this.localPlayer.currentZ > 500) {
+					this.cameraPositionX = this.localPlayer.currentX;
+					this.cameraPositionZ = this.localPlayer.currentZ;
+				}
 
-                if (!this.isSleeping) {
-                    if (mouseY > (getGameHeight() - 4)) { // Chat Tab Selection
-                        if (mouseX > 15 + (halfGameWidth() - 256) && mouseX < 96 + (halfGameWidth() - 256)
-                                && lastMouseButtonDown == 1)
-                            this.messageTabSelected = MessageTab.ALL;
-                        if (mouseX > 110 + (halfGameWidth() - 256) && mouseX < 194 + (halfGameWidth() - 256)
-                                && lastMouseButtonDown == 1) {
-                            this.messageTabSelected = MessageTab.CHAT;
-                            this.panelMessageTabs.controlScrollAmount[this.panelMessageChat] = 999999;
-                        }
-                        if (mouseX > 215 + (halfGameWidth() - 256) && mouseX < 295 + (halfGameWidth() - 256)
-                                && lastMouseButtonDown == 1) {
-                            this.messageTabSelected = MessageTab.QUEST;
-                            this.panelMessageTabs.controlScrollAmount[this.panelMessageQuest] = 999999;
-                        }
-                        if (mouseX > 315 + (halfGameWidth() - 256) && mouseX < 395 + (halfGameWidth() - 256)
-                                && lastMouseButtonDown == 1) {
-                            this.messageTabSelected = MessageTab.PRIVATE;
-                            this.panelMessageTabs.controlScrollAmount[this.panelMessagePrivate] = 999999;
-                        }
-                        if (mouseX > 417 + (halfGameWidth() - 256) && mouseX < 497 + (halfGameWidth() - 256)
-                                && lastMouseButtonDown == 1) {
-                            if (S_WANT_CLANS) {
-                                this.messageTabSelected = MessageTab.CLAN;
-                                this.panelMessageTabs.controlScrollAmount[this.panelMessageClan] = 999999;
-                            } else {
-                                this.inputTextFinal = "";
-                                this.inputTextCurrent = "";
-                                this.reportAbuse_State = 1;
-                            }
-                        }
+				if (!this.isSleeping) {
+					if (mouseY > (getGameHeight() - 4)) { // Chat Tab Selection
+						if (mouseX > 15 + (halfGameWidth() - 256) && mouseX < 96 + (halfGameWidth() - 256)
+							&& lastMouseButtonDown == 1)
+							this.messageTabSelected = MessageTab.ALL;
+						if (mouseX > 110 + (halfGameWidth() - 256) && mouseX < 194 + (halfGameWidth() - 256)
+							&& lastMouseButtonDown == 1) {
+							this.messageTabSelected = MessageTab.CHAT;
+							this.panelMessageTabs.controlScrollAmount[this.panelMessageChat] = 999999;
+						}
+						if (mouseX > 215 + (halfGameWidth() - 256) && mouseX < 295 + (halfGameWidth() - 256)
+							&& lastMouseButtonDown == 1) {
+							this.messageTabSelected = MessageTab.QUEST;
+							this.panelMessageTabs.controlScrollAmount[this.panelMessageQuest] = 999999;
+						}
+						if (mouseX > 315 + (halfGameWidth() - 256) && mouseX < 395 + (halfGameWidth() - 256)
+							&& lastMouseButtonDown == 1) {
+							this.messageTabSelected = MessageTab.PRIVATE;
+							this.panelMessageTabs.controlScrollAmount[this.panelMessagePrivate] = 999999;
+						}
+						if (mouseX > 417 + (halfGameWidth() - 256) && mouseX < 497 + (halfGameWidth() - 256)
+							&& lastMouseButtonDown == 1) {
+							if (S_WANT_CLANS) {
+								this.messageTabSelected = MessageTab.CLAN;
+								this.panelMessageTabs.controlScrollAmount[this.panelMessageClan] = 999999;
+							} else {
+								this.inputTextFinal = "";
+								this.inputTextCurrent = "";
+								this.reportAbuse_State = 1;
+							}
+						}
 
-                        this.currentMouseButtonDown = 0;
-                        this.lastMouseButtonDown = 0;
-                    }
+						this.currentMouseButtonDown = 0;
+						this.lastMouseButtonDown = 0;
+					}
 
-                    this.panelMessageTabs.handleMouse(this.mouseX, this.mouseY,
-                            this.currentMouseButtonDown, this.lastMouseButtonDown);
-                    auctionHouse.myAuctions.handleMouse(this.mouseX, this.mouseY,
-                            this.currentMouseButtonDown, this.lastMouseButtonDown);
-                    auctionHouse.auctionMenu.handleMouse(this.mouseX, this.mouseY,
-                            this.currentMouseButtonDown, this.lastMouseButtonDown);
-                    clan.getClanInterface().clanSetupPanel.handleMouse(this.mouseX, this.mouseY,
-                            this.currentMouseButtonDown, this.lastMouseButtonDown);
-                    bank.bank.handleMouse(this.mouseX, this.mouseY,
-                            this.currentMouseButtonDown, this.lastMouseButtonDown);
-                    if (this.messageTabSelected != MessageTab.ALL && this.mouseX >= 494
-                            && this.mouseY >= this.getGameHeight() - 66) {
-                        this.lastMouseButtonDown = 0;
-                    }
+					this.panelMessageTabs.handleMouse(this.mouseX, this.mouseY,
+						this.currentMouseButtonDown, this.lastMouseButtonDown);
+					auctionHouse.myAuctions.handleMouse(this.mouseX, this.mouseY,
+						this.currentMouseButtonDown, this.lastMouseButtonDown);
+					auctionHouse.auctionMenu.handleMouse(this.mouseX, this.mouseY,
+						this.currentMouseButtonDown, this.lastMouseButtonDown);
+					clan.getClanInterface().clanSetupPanel.handleMouse(this.mouseX, this.mouseY,
+						this.currentMouseButtonDown, this.lastMouseButtonDown);
+					bank.bank.handleMouse(this.mouseX, this.mouseY,
+						this.currentMouseButtonDown, this.lastMouseButtonDown);
+					if (this.messageTabSelected != MessageTab.ALL && this.mouseX >= 494
+						&& this.mouseY >= this.getGameHeight() - 66) {
+						this.lastMouseButtonDown = 0;
+					}
 
-                    if (this.panelMessageTabs.isClicked(this.panelMessageEntry)) {
-                        String var11 = this.panelMessageTabs.getControlText(this.panelMessageEntry);
-                        this.panelMessageTabs.setText(this.panelMessageEntry, "");
-                        if (var11.startsWith("::")) {
-                            if (var11.equalsIgnoreCase("::dev") && localPlayer.isDev()) {
-                                developerMenu = true;
-                            } else if (var11.equalsIgnoreCase("::mod") && localPlayer.isMod()) {
-                                modMenu = true;
-                            } else if (var11.startsWith("::n ") && localPlayer.isDev()) {
-                                devMenuNpcID = Integer.parseInt(var11.split(" ")[1]);
-                            } else if (var11.equalsIgnoreCase("::overlay") && S_SIDE_MENU_TOGGLE) {
-                                C_SIDE_MENU_OVERLAY = C_SIDE_MENU_OVERLAY;
-                            } else {
-                                this.sendCommandString(var11.substring(2));
-                                String putQueue = var11.substring(2);
-                                if (messages.size() == 0
-                                        || !messages.get(messages.size() - 1).equalsIgnoreCase("::" + putQueue)) {
-                                    messages.add("::" + putQueue);
-                                    currentChat = messages.size();
-                                } else if (messages.get(messages.size() - 1).equalsIgnoreCase("::" + putQueue)) {
-                                    currentChat = messages.size();
-                                }
-                            }
-                        } else {
-                            this.sendChatMessage(var11);
-                            if (messages.size() == 0 || !messages.get(messages.size() - 1).equalsIgnoreCase(var11)) {
-                                messages.add(var11);
-                                currentChat = messages.size();
-                            } else if (messages.get(messages.size() - 1).equalsIgnoreCase(var11)) {
-                                currentChat = messages.size();
-                            }
-                        }
-                    }
+					if (this.panelMessageTabs.isClicked(this.panelMessageEntry)) {
+						String var11 = this.panelMessageTabs.getControlText(this.panelMessageEntry);
+						this.panelMessageTabs.setText(this.panelMessageEntry, "");
+						if (var11.startsWith("::")) {
+							if (var11.equalsIgnoreCase("::dev") && localPlayer.isDev()) {
+								developerMenu = true;
+							} else if (var11.equalsIgnoreCase("::mod") && localPlayer.isMod()) {
+								modMenu = true;
+							} else if (var11.startsWith("::n ") && localPlayer.isDev()) {
+								devMenuNpcID = Integer.parseInt(var11.split(" ")[1]);
+							} else if (var11.equalsIgnoreCase("::overlay") && S_SIDE_MENU_TOGGLE) {
+								C_SIDE_MENU_OVERLAY = !C_SIDE_MENU_OVERLAY;
+							} else {
+								this.sendCommandString(var11.substring(2));
+								String putQueue = var11.substring(2);
+								if (messages.size() == 0
+									|| !messages.get(messages.size() - 1).equalsIgnoreCase("::" + putQueue)) {
+									messages.add("::" + putQueue);
+									currentChat = messages.size();
+								} else if (messages.get(messages.size() - 1).equalsIgnoreCase("::" + putQueue)) {
+									currentChat = messages.size();
+								}
+							}
+						} else {
+							this.sendChatMessage(var11);
+							if (messages.size() == 0 || !messages.get(messages.size() - 1).equalsIgnoreCase(var11)) {
+								messages.add(var11);
+								currentChat = messages.size();
+							} else if (messages.get(messages.size() - 1).equalsIgnoreCase(var11)) {
+								currentChat = messages.size();
+							}
+						}
+					}
 
-                    for (var2 = 0; var2 < messagesArray.length; ++var2) {
-                        if (MessageHistory.messageHistoryTimeout[var2] > 0) {
-                            --MessageHistory.messageHistoryTimeout[var2];
-                        }
-                    }
+					for (updateIndex = 0; updateIndex < messagesArray.length; ++updateIndex) {
+						if (MessageHistory.messageHistoryTimeout[updateIndex] > 0) {
+							--MessageHistory.messageHistoryTimeout[updateIndex];
+						}
+					}
 
-                    if (this.deathScreenTimeout != 0) {
-                        this.lastMouseButtonDown = 0;
-                    }
+					if (this.deathScreenTimeout != 0) {
+						this.lastMouseButtonDown = 0;
+					}
 
-                    if (!this.showDialogTrade && !this.showDialogDuel && !isShowDialogBank()) {
-                        this.mouseButtonDownTime = 0;
-                        this.mouseButtonItemCountIncrement = 0;
-                    } else {
-                        if (this.currentMouseButtonDown == 0) {
-                            this.mouseButtonDownTime = 0;
-                            this.mouseButtonItemCountIncrement = 0;
-                        } else {
-                            ++this.mouseButtonDownTime;
-                        }
-                        if (!isAndroid()) {
-                            if (this.mouseButtonDownTime > 500)
-                                this.mouseButtonItemCountIncrement += 100000;
-                            else if (this.mouseButtonDownTime > 350)
-                                this.mouseButtonItemCountIncrement += 10000;
-                            else if (this.mouseButtonDownTime > 250)
-                                this.mouseButtonItemCountIncrement += 1000;
-                            else if (this.mouseButtonDownTime > 150)
-                                this.mouseButtonItemCountIncrement += 100;
-                            else if (this.mouseButtonDownTime > 100)
-                                this.mouseButtonItemCountIncrement += 10;
-                            else if (this.mouseButtonDownTime > 50)
-                                this.mouseButtonItemCountIncrement++;
-                            else if (this.mouseButtonDownTime > 20 && (this.mouseButtonDownTime & 5) == 0)
-                                ++this.mouseButtonItemCountIncrement;
-                        }
-                    }
+					if (!this.showDialogTrade && !this.showDialogDuel && !isShowDialogBank()) {
+						this.mouseButtonDownTime = 0;
+						this.mouseButtonItemCountIncrement = 0;
+					} else {
+						if (this.currentMouseButtonDown == 0) {
+							this.mouseButtonDownTime = 0;
+							this.mouseButtonItemCountIncrement = 0;
+						} else {
+							++this.mouseButtonDownTime;
+						}
+						if (!isAndroid()) {
+							if (this.mouseButtonDownTime > 500)
+								this.mouseButtonItemCountIncrement += 100000;
+							else if (this.mouseButtonDownTime > 350)
+								this.mouseButtonItemCountIncrement += 10000;
+							else if (this.mouseButtonDownTime > 250)
+								this.mouseButtonItemCountIncrement += 1000;
+							else if (this.mouseButtonDownTime > 150)
+								this.mouseButtonItemCountIncrement += 100;
+							else if (this.mouseButtonDownTime > 100)
+								this.mouseButtonItemCountIncrement += 10;
+							else if (this.mouseButtonDownTime > 50)
+								this.mouseButtonItemCountIncrement++;
+							else if (this.mouseButtonDownTime > 20 && (this.mouseButtonDownTime & 5) == 0)
+								++this.mouseButtonItemCountIncrement;
+						}
+					}
 
-                    if (this.lastMouseButtonDown == 1) {
-                        this.mouseButtonClick = 1;
-                    } else if (this.lastMouseButtonDown == 2) {
-                        this.mouseButtonClick = 2;
-                    }
-                    if (mainComponent.checkMouseInput(getMouseX(), getMouseY(), getMouseButtonDown(),
-                            getMouseClick()) && !this.isShowDialogBank()) {
-                        this.currentMouseButtonDown = 0;
-                        this.mouseButtonClick = 0;
-                        this.lastMouseButtonDown = 0;
-                    }
-                    this.scene.setMouseLoc(0, this.mouseX, this.mouseY);
-                    this.lastMouseButtonDown = 0;
-                    if (this.optionCameraModeAuto) {
-                        if (this.m_Wc == 0 || this.cameraAutoAngleDebug) {
-                            if (this.keyLeft) {
-                                this.keyLeft = false;
-                                this.cameraAngle = this.cameraAngle + 1 & 7;
-                                if (!this.doCameraZoom) {
-                                    if ((1 & this.cameraAngle) == 0) {
-                                        this.cameraAngle = 7 & 1 + this.cameraAngle;
-                                    }
+					if (this.lastMouseButtonDown == 1) {
+						this.mouseButtonClick = 1;
+					} else if (this.lastMouseButtonDown == 2) {
+						this.mouseButtonClick = 2;
+					}
+					if (mainComponent.checkMouseInput(getMouseX(), getMouseY(), getMouseButtonDown(),
+						getMouseClick()) && !this.isShowDialogBank()) {
+						this.currentMouseButtonDown = 0;
+						this.mouseButtonClick = 0;
+						this.lastMouseButtonDown = 0;
+					}
+					this.scene.setMouseLoc(0, this.mouseX, this.mouseY);
+					this.lastMouseButtonDown = 0;
+					if (this.optionCameraModeAuto) {
+						if (this.m_Wc == 0 || this.cameraAutoAngleDebug) {
+							if (this.keyLeft) {
+								this.keyLeft = false;
+								this.cameraAngle = this.cameraAngle + 1 & 7;
+								if (!this.doCameraZoom) {
+									if ((1 & this.cameraAngle) == 0) {
+										this.cameraAngle = 7 & 1 + this.cameraAngle;
+									}
 
-                                    for (var2 = 0; var2 < 8 && !this.cameraColliding(this.cameraAngle); ++var2) {
-                                        this.cameraAngle = 1 + this.cameraAngle & 7;
-                                    }
-                                }
-                            }
+									for (updateIndex = 0; updateIndex < 8 && !this.cameraColliding(this.cameraAngle); ++updateIndex) {
+										this.cameraAngle = 1 + this.cameraAngle & 7;
+									}
+								}
+							}
 
-                            if (this.keyRight) {
-                                this.keyRight = false;
-                                this.cameraAngle = 7 + this.cameraAngle & 7;
-                                if (!this.doCameraZoom) {
-                                    if ((1 & this.cameraAngle) == 0) {
-                                        this.cameraAngle = this.cameraAngle + 7 & 7;
-                                    }
+							if (this.keyRight) {
+								this.keyRight = false;
+								this.cameraAngle = 7 + this.cameraAngle & 7;
+								if (!this.doCameraZoom) {
+									if ((1 & this.cameraAngle) == 0) {
+										this.cameraAngle = this.cameraAngle + 7 & 7;
+									}
 
-                                    for (var2 = 0; var2 < 8 && !this.cameraColliding(this.cameraAngle); ++var2) {
-                                        this.cameraAngle = this.cameraAngle + 7 & 7;
-                                    }
-                                }
-                            }
-                        }
-                    } else if (this.keyLeft) {
-                        this.cameraRotation = 255 & this.cameraRotation + 2;
-                    } else if (this.keyRight) {
-                        this.cameraRotation = 255 & this.cameraRotation - 2;
-                    } else if (this.keyDown) {
-                        if (S_ZOOM_VIEW_TOGGLE || getLocalPlayer().isStaff()) {
-                            // Don't want to go over 255
-                            if (C_LAST_ZOOM < 254) {
-                                C_LAST_ZOOM += 2;
-                                // We probably want to send this on the client tick rather than each time a button is pressed
-                                saveZoomDistance();
-                            }
-                        } else {
-                            if (this.cameraAllowPitchModification) {
-                                this.cameraPitch = (this.cameraPitch + 4) & 1023;
-                            }
-                        }
-                    } else if (this.keyUp) {
-                        if (S_ZOOM_VIEW_TOGGLE || getLocalPlayer().isStaff()) {
-                            // Don't want to go under 0
-                            if (C_LAST_ZOOM > 1) {
-                                C_LAST_ZOOM -= 2;
-                                // We probably want to send this on the client tick rather than each time a button is pressed
-                                saveZoomDistance();
-                            }
-                        } else {
-                            if (this.cameraAllowPitchModification) {
-                                this.cameraPitch = (this.cameraPitch + 1024 - 4) & 1023;
-                            }
-                        }
-                    } else if (this.pageDown) {
-                        currentChat++;
-                        if (currentChat >= messages.size()) {
-                            currentChat = messages.size() - 1;
-                            this.pageDown = false;
-                            return;
-                        }
-                        panelMessageTabs.setText(panelMessageEntry, messages.get(currentChat));
-                        this.pageDown = false;
-                    } else if (this.pageUp) {
-                        currentChat--;
-                        if (currentChat < 0) {
-                            currentChat = 0;
-                            this.pageUp = false;
-                            return;
-                        }
-                        panelMessageTabs.setText(panelMessageEntry, messages.get(currentChat));
-                        this.pageUp = false;
-                    }
+									for (updateIndex = 0; updateIndex < 8 && !this.cameraColliding(this.cameraAngle); ++updateIndex) {
+										this.cameraAngle = this.cameraAngle + 7 & 7;
+									}
+								}
+							}
+						}
+					} else if (this.keyLeft) {
+						this.cameraRotation = 255 & this.cameraRotation + 2;
+					} else if (this.keyRight) {
+						this.cameraRotation = 255 & this.cameraRotation - 2;
+					} else if (this.keyDown) {
+						if (S_ZOOM_VIEW_TOGGLE || getLocalPlayer().isStaff()) {
+							// Don't want to go over 255
+							if (C_LAST_ZOOM < 254) {
+								C_LAST_ZOOM += 2;
+								// We probably want to send this on the client tick rather than each time a button is pressed
+								saveZoomDistance();
+							}
+						} else {
+							if (this.cameraAllowPitchModification) {
+								this.cameraPitch = (this.cameraPitch + 4) & 1023;
 
-                    if (this.mouseClickXStep > 0) {
-                        --this.mouseClickXStep;
-                    } else if (this.mouseClickXStep < 0) {
-                        ++this.mouseClickXStep;
-                    }
+								// Limit on the half circled where everything is right side up
+								if(this.cameraPitch > 256 && this.cameraPitch <= 512)
+									this.cameraPitch = 256;
 
-                    if (amountToZoom > 0) {
-                        minCameraZoom += 4;
-                        amountToZoom -= 1;
-                    }
-                    if (amountToZoom < 0) {
-                        minCameraZoom -= 4;
-                        amountToZoom += 1;
-                    }
+								if(this.cameraPitch < 768 && this.cameraPitch > 512)
+									this.cameraPitch = 768;
+							}
+						}
+					} else if (this.keyUp) {
+						if (S_ZOOM_VIEW_TOGGLE || getLocalPlayer().isStaff()) {
+							// Don't want to go under 0
+							if (C_LAST_ZOOM > 1) {
+								C_LAST_ZOOM -= 2;
+								// We probably want to send this on the client tick rather than each time a button is pressed
+								saveZoomDistance();
+							}
+						} else {
+							if (this.cameraAllowPitchModification) {
+								this.cameraPitch = (this.cameraPitch + 1024 - 4) & 1023;
+							}
+						}
+					} else if (this.pageDown) {
+						currentChat++;
+						if (currentChat >= messages.size()) {
+							currentChat = messages.size() - 1;
+							this.pageDown = false;
+							return;
+						}
+						panelMessageTabs.setText(panelMessageEntry, messages.get(currentChat));
+						this.pageDown = false;
+					} else if (this.pageUp) {
+						currentChat--;
+						if (currentChat < 0) {
+							currentChat = 0;
+							this.pageUp = false;
+							return;
+						}
+						panelMessageTabs.setText(panelMessageEntry, messages.get(currentChat));
+						this.pageUp = false;
+					}
 
-                    this.scene.d(25013, 17);
-                    ++this.objectAnimationCount;
-                    if (this.objectAnimationCount > 5) {
-                        this.objectAnimationCount = 0;
-                        this.objectAnimationNumberTorch = (1 + this.objectAnimationNumberTorch) % 4;
-                        this.objectAnimationNumberFireLightningSpell = (1
-                                + this.objectAnimationNumberFireLightningSpell) % 3;
-                        this.objectAnimationNumberClaw = (1 + this.objectAnimationNumberClaw) % 5;
-                    }
+					if (this.mouseClickXStep > 0) {
+						--this.mouseClickXStep;
+					} else if (this.mouseClickXStep < 0) {
+						++this.mouseClickXStep;
+					}
 
-                    for (var2 = 0; var2 < this.gameObjectInstanceCount; ++var2) {
-                        var10 = this.gameObjectInstanceX[var2];
-                        var4 = this.gameObjectInstanceZ[var2];
-                        if (var10 >= 0 && var4 >= 0 && var10 < 96 && var4 < 96
-                                && this.gameObjectInstanceID[var2] == 74) {
-                            this.gameObjectInstanceModel[var2].addRotation(1, 0, 0);
-                        }
-                    }
+					if (amountToZoom > 0) {
+						minCameraZoom += 4;
+						amountToZoom -= 1;
+					}
+					if (amountToZoom < 0) {
+						minCameraZoom -= 4;
+						amountToZoom += 1;
+					}
 
-                    for (var2 = 0; var2 < this.teleportBubbleCount; ++var2) {
-                        ++this.teleportBubbleTime[var2];
-                        if (this.teleportBubbleTime[var2] > 50) {
-                            --this.teleportBubbleCount;
+					this.scene.d(25013, 17);
+					++this.objectAnimationCount;
+					if (this.objectAnimationCount > 5) {
+						this.objectAnimationCount = 0;
+						this.objectAnimationNumberTorch = (1 + this.objectAnimationNumberTorch) % 4;
+						this.objectAnimationNumberFireLightningSpell = (1
+							+ this.objectAnimationNumberFireLightningSpell) % 3;
+						this.objectAnimationNumberClaw = (1 + this.objectAnimationNumberClaw) % 5;
+					}
 
-                            for (var10 = var2; var10 < this.teleportBubbleCount; ++var10) {
-                                this.teleportBubbleX[var10] = this.teleportBubbleX[var10 + 1];
-                                this.teleportBubbleZ[var10] = this.teleportBubbleZ[1 + var10];
-                                this.teleportBubbleTime[var10] = this.teleportBubbleTime[1 + var10];
-                                this.teleportBubbleType[var10] = this.teleportBubbleType[1 + var10];
-                            }
-                        }
-                    }
+					for (updateIndex = 0; updateIndex < this.gameObjectInstanceCount; ++updateIndex) {
+						var10 = this.gameObjectInstanceX[updateIndex];
+						waypointIndexCurrent = this.gameObjectInstanceZ[updateIndex];
+						if (var10 >= 0 && waypointIndexCurrent >= 0 && var10 < 96 && waypointIndexCurrent < 96
+							&& this.gameObjectInstanceID[updateIndex] == 74) {
+							this.gameObjectInstanceModel[updateIndex].addRotation(1, 0, 0);
+						}
+					}
 
-                } else {
-                    if (this.inputTextFinal.length() > 0) {
-                        this.packetHandler.getClientStream().newPacket(45);
-                        if (this.sleepWordDelay) {
-                            this.packetHandler.getClientStream().writeBuffer1.putByte(1);
-                        } else {
-                            this.packetHandler.getClientStream().writeBuffer1.putByte(0);
-                            this.sleepWordDelay = true;
-                        }
+					for (updateIndex = 0; updateIndex < this.teleportBubbleCount; ++updateIndex) {
+						++this.teleportBubbleTime[updateIndex];
+						if (this.teleportBubbleTime[updateIndex] > 50) {
+							--this.teleportBubbleCount;
 
-                        this.packetHandler.getClientStream().writeBuffer1.putNullThenString(this.inputTextFinal, 116);
-                        this.packetHandler.getClientStream().finishPacket();
-                        this.inputTextCurrent = "";
-                        this.sleepingStatusText = "Please wait...";
-                        this.inputTextFinal = "";
-                    }
+							for (var10 = updateIndex; var10 < this.teleportBubbleCount; ++var10) {
+								this.teleportBubbleX[var10] = this.teleportBubbleX[var10 + 1];
+								this.teleportBubbleZ[var10] = this.teleportBubbleZ[1 + var10];
+								this.teleportBubbleTime[var10] = this.teleportBubbleTime[1 + var10];
+								this.teleportBubbleType[var10] = this.teleportBubbleType[1 + var10];
+							}
+						}
+					}
 
-                    if (this.lastMouseButtonDown == 1 && this.mouseY > 275 - (isAndroid() ? 110 : 0) && this.mouseY < 310 - (isAndroid() ? 110 : 0) && this.mouseX > 56
-                            && this.mouseX < 456) {
-                        this.packetHandler.getClientStream().newPacket(45);
-                        if (!this.sleepWordDelay) {
-                            this.packetHandler.getClientStream().writeBuffer1.putByte(0);
-                            this.sleepWordDelay = true;
-                        } else {
-                            this.packetHandler.getClientStream().writeBuffer1.putByte(1);
-                        }
+				} else {
+					if (this.inputTextFinal.length() > 0) {
+						this.packetHandler.getClientStream().newPacket(45);
+						if (this.sleepWordDelay) {
+							this.packetHandler.getClientStream().writeBuffer1.putByte(1);
+						} else {
+							this.packetHandler.getClientStream().writeBuffer1.putByte(0);
+							this.sleepWordDelay = true;
+						}
 
-                        this.packetHandler.getClientStream().writeBuffer1.putNullThenString("-null-", -74);
-                        this.packetHandler.getClientStream().finishPacket();
-                        this.sleepingStatusText = "Please wait...";
-                        this.inputTextFinal = "";
-                        this.inputTextCurrent = "";
-                    }
+						this.packetHandler.getClientStream().writeBuffer1.putNullThenString(this.inputTextFinal, 116);
+						this.packetHandler.getClientStream().finishPacket();
+						this.inputTextCurrent = "";
+						this.sleepingStatusText = "Please wait...";
+						this.inputTextFinal = "";
+					}
 
-                    this.lastMouseButtonDown = 0;
-                }
-            }
+					if (this.lastMouseButtonDown == 1 && this.mouseY > 275 - (isAndroid() ? 110 : 0) && this.mouseY < 310 - (isAndroid() ? 110 : 0) && this.mouseX > 56
+						&& this.mouseX < 456) {
+						this.packetHandler.getClientStream().newPacket(45);
+						if (!this.sleepWordDelay) {
+							this.packetHandler.getClientStream().writeBuffer1.putByte(0);
+							this.sleepWordDelay = true;
+						} else {
+							this.packetHandler.getClientStream().writeBuffer1.putByte(1);
+						}
 
-        } catch (RuntimeException var9) {
-            throw GenUtil.makeThrowable(var9, "client.RD(" + "dummy" + ')');
-        }
-    }
+						this.packetHandler.getClientStream().writeBuffer1.putNullThenString("-null-", -74);
+						this.packetHandler.getClientStream().finishPacket();
+						this.sleepingStatusText = "Please wait...";
+						this.inputTextFinal = "";
+						this.inputTextCurrent = "";
+					}
 
-    public void saveZoomDistance() {
-        // Saves last zoom distance
-        this.packetHandler.getClientStream().newPacket(111);
-        this.packetHandler.getClientStream().writeBuffer1.putByte(23);
-        this.packetHandler.getClientStream().writeBuffer1.putByte(Config.C_LAST_ZOOM);
-        this.packetHandler.getClientStream().finishPacket();
-        //System.out.println(cameraZoom);
-    }
+					this.lastMouseButtonDown = 0;
+				}
+			}
 
-    public final void handleKeyPress(byte var1, int key) {
+		} catch (RuntimeException var9) {
+			throw GenUtil.makeThrowable(var9, "client.RD(" + "dummy" + ')');
+		}
+	}
+
+	public void saveZoomDistance() {
+		// Saves last zoom distance
+		this.packetHandler.getClientStream().newPacket(111);
+		this.packetHandler.getClientStream().writeBuffer1.putByte(23);
+		this.packetHandler.getClientStream().writeBuffer1.putByte(Config.C_LAST_ZOOM);
+		this.packetHandler.getClientStream().finishPacket();
+		//System.out.println(cameraZoom);
+	}
+
+	public final void handleKeyPress(byte var1, int key) {
         try {
 
             if (this.currentViewMode == GameMode.LOGIN) {
@@ -10270,9 +10210,10 @@ public final class mudclient implements Runnable {
 
             if (this.m_Zb > 0) {
                 --this.m_Zb;
-            }
+			}
 
-            if (this.loginScreenNumber != 0) {
+
+			if (this.loginScreenNumber != 0) {
                 if (loginScreenNumber == 1) {
                     menuNewUser.handleMouse(this.mouseX, this.mouseY, this.currentMouseButtonDown,
                             this.lastMouseButtonDown);
@@ -11068,8 +11009,9 @@ public final class mudclient implements Runnable {
                     this.packetHandler.getClientStream().finishPacket();
                     this.selectedSpell = -1;
                     break;
-                }
-                case LANDSCAPE_WALK_HERE: {
+				}
+				case LANDSCAPE_WALK_HERE: {
+					//System.out.println("LANDSCAPE_WALK_HERE: playerLocalX=" + this.playerLocalX + ", playerLocalZ= " + this.playerLocalZ + ", indexOrX=" + indexOrX + ", idOrZ=" + idOrZ);
                     this.walkToActionSource(this.playerLocalX, this.playerLocalZ, indexOrX, idOrZ, false);
                     if (this.mouseClickXStep == -24) {
                         this.mouseClickXStep = 24;
@@ -11876,28 +11818,28 @@ public final class mudclient implements Runnable {
 
                     for (int i = 0; i < this.playerCount; ++i) {
                         ORSCharacter var23 = this.players[i];
-                        var23.currentX -= this.tileSize * baseDX;
-                        var23.currentZ -= baseDZ * this.tileSize;
+						var23.currentX -= this.tileSize * baseDX;
+						var23.currentZ -= baseDZ * this.tileSize;
 
-                        for (int j = 0; j <= var23.waypointCurrent; ++j) {
-                            var23.waypointsX[j] -= this.tileSize * baseDX;
-                            var23.waypointsZ[j] -= baseDZ * this.tileSize;
-                        }
-                    }
+						for (int j = 0; j <= var23.waypointIndexCurrent; ++j) {
+							var23.waypointsX[j] -= this.tileSize * baseDX;
+							var23.waypointsZ[j] -= baseDZ * this.tileSize;
+						}
+					}
 
-                    for (int i = 0; i < this.npcCount; ++i) {
-                        ORSCharacter var23 = this.npcs[i];
-                        var23.currentZ -= this.tileSize * baseDZ;
-                        var23.currentX -= this.tileSize * baseDX;
+					for (int i = 0; i < this.npcCount; ++i) {
+						ORSCharacter var23 = this.npcs[i];
+						var23.currentZ -= this.tileSize * baseDZ;
+						var23.currentX -= this.tileSize * baseDX;
 
-                        for (int j = 0; var23.waypointCurrent >= j; ++j) {
-                            var23.waypointsX[j] -= this.tileSize * baseDX;
-                            var23.waypointsZ[j] -= baseDZ * this.tileSize;
-                        }
-                    }
+						for (int j = 0; var23.waypointIndexCurrent >= j; ++j) {
+							var23.waypointsX[j] -= this.tileSize * baseDX;
+							var23.waypointsZ[j] -= baseDZ * this.tileSize;
+						}
+					}
 
-                    this.world.playerAlive = true;
-                    return true;
+					this.world.playerAlive = true;
+					return true;
                 }
             }
         } catch (RuntimeException var22) {
@@ -12101,13 +12043,12 @@ public final class mudclient implements Runnable {
                             this.m_Oj = (loginResponse >> 2) & 0xf;
                             this.resetGame((byte) -123);
                         } else {
-                            if (loginResponse == 1) {
-                                this.autoLoginTimeout = 0;
-                                this.setEGTo77();
-                            } else {
-                                if (!reconnecting) {
-                                    if (loginResponse == -1) {
-                                        this.showLoginScreenStatus("Error unable to login.", "Server timed out");
+							if (loginResponse == 1) {
+								this.autoLoginTimeout = 0;
+							} else {
+								if (!reconnecting) {
+									if (loginResponse == -1) {
+										this.showLoginScreenStatus("Error unable to login.", "Server timed out");
                                     } else if (loginResponse == 3) {
                                         this.showLoginScreenStatus("Invalid username or password.",
                                                 "Try again, or create a new account");
@@ -12661,25 +12602,14 @@ public final class mudclient implements Runnable {
             throw GenUtil.makeThrowable(var12, "client.WA(" + startZ + ',' + startX + ',' + "dummy" + ',' + var4 + ','
                     + x1 + ',' + x2 + ',' + z1 + ',' + z2 + ',' + var9 + ')');
         }
-    }
+	}
 
-    private void setEGTo77() {
-        try {
+	private void showItemModX(InputXAction action, String[] lines, boolean var4, String defaultText) {
+		try {
+			this.inputX_Lines = lines;
+			this.inputX_Width = 400;
 
-            this.m_eg = 77;
-
-        } catch (RuntimeException var3) {
-            throw GenUtil.makeThrowable(var3, "client.EA(" + "dummy" + ')');
-        }
-    }
-
-    private void showItemModX(InputXAction action, String[] lines, boolean var4, String defaultText) {
-        try {
-            this.inputX_Lines = lines;
-            this.inputX_Width = 400;
-
-
-            for (int i = 0; lines.length > i; ++i) {
+			for (int i = 0; lines.length > i; ++i) {
                 int width = this.getSurface().stringWidth(1, lines[i]) + 10;
                 if (this.inputX_Width < width) {
                     this.inputX_Width = width;
@@ -14285,58 +14215,58 @@ public final class mudclient implements Runnable {
                                 this.handleGameInput();
                             }
 
-                            this.lastMouseButtonDown = 0;
-                            ++this.m_oj;
-                            if (this.m_oj > 500) {
-                                this.m_oj = 0;
-                                int var2 = (int) (4.0D * Math.random());
-                                if ((2 & var2) == 2) {
-                                    this.cameraRotationZ += this.m_Ok;
-                                }
+							this.lastMouseButtonDown = 0;
+							++this.cameraAutoMoveFrameCount;
+							if (this.cameraAutoMoveFrameCount > 500) {
+								this.cameraAutoMoveFrameCount = 0;
+								int var2 = (int) (4.0D * Math.random());
+								if ((2 & var2) == 2) {
+									this.cameraAutoMoveZ += this.cameraAutoMoveAmountZ;
+								}
 
-                                if ((var2 & 1) == 1) {
-                                    this.cameraRotationX += this.m_eg;
-                                }
-                            }
+								if ((var2 & 1) == 1) {
+									this.cameraAutoMoveX += this.cameraAutoMoveAmountX;
+								}
+							}
 
-                            if (this.cameraRotationX < -50) {
-                                this.m_eg = 2;
-                            }
+							if (this.cameraAutoMoveX < -50) {
+								this.cameraAutoMoveAmountX = 2;
+							}
 
-                            if (this.cameraRotationZ < -50) {
-                                this.m_Ok = 2;
-                            }
+							if (this.cameraAutoMoveZ < -50) {
+								this.cameraAutoMoveAmountZ = 2;
+							}
 
-                            if (this.cameraRotationX > 50) {
-                                this.m_eg = -2;
-                            }
+							if (this.cameraAutoMoveX > 50) {
+								this.cameraAutoMoveAmountX = -2;
+							}
 
-                            if (this.messageTabActivity_Private > 0) {
-                                --this.messageTabActivity_Private;
-                            }
-                            if (this.messageTabActivity_Clan > 0) {
-                                --this.messageTabActivity_Clan;
-                            }
+							if (this.messageTabActivity_Private > 0) {
+								--this.messageTabActivity_Private;
+							}
+							if (this.messageTabActivity_Clan > 0) {
+								--this.messageTabActivity_Clan;
+							}
 
-                            if (this.messageTabActivity_Quest > 0) {
-                                --this.messageTabActivity_Quest;
-                            }
+							if (this.messageTabActivity_Quest > 0) {
+								--this.messageTabActivity_Quest;
+							}
 
-                            if (this.messageTabActivity_Game > 0) {
-                                --this.messageTabActivity_Game;
-                            }
+							if (this.messageTabActivity_Game > 0) {
+								--this.messageTabActivity_Game;
+							}
 
-                            if (this.messageTabActivity_Chat > 0) {
-                                --this.messageTabActivity_Chat;
-                            }
+							if (this.messageTabActivity_Chat > 0) {
+								--this.messageTabActivity_Chat;
+							}
 
-                            if (this.cameraRotationZ > 50) {
-                                this.m_Ok = -2;
-                            }
-                        } catch (OutOfMemoryError var3) {
-                            var3.printStackTrace();
-                            this.errorLoadingMemory = true;
-                        }
+							if (this.cameraAutoMoveZ > 50) {
+								this.cameraAutoMoveAmountZ = -2;
+							}
+						} catch (OutOfMemoryError var3) {
+							var3.printStackTrace();
+							this.errorLoadingMemory = true;
+						}
 
                     }
                 }
@@ -14372,63 +14302,70 @@ public final class mudclient implements Runnable {
             throw GenUtil.makeThrowable(var11, "client.FD(" + var1 + ',' + instanceNumber + ','
                     + (modelFileName != null ? "{...}" : "null") + ')');
         }
-    }
+	}
 
-    private void walkToActionSource(int startX, int startZ, int destX, int destZ, boolean var5) {
-        try {
+	private void walkToActionSource(int startX, int startZ, int destX, int destZ, boolean walkToEntity) {
+		try {
 
-            this.walkToArea(startX, startZ, destX, destZ, destX, destZ, false, var5);
-        } catch (RuntimeException var8) {
-            throw GenUtil.makeThrowable(var8, "client.BE(" + destZ + ',' + destX + ',' + startZ + ',' + startX + ','
-                    + var5 + ',' + "dummy" + ')');
-        }
-    }
+			this.walkToArea(startX, startZ, destX, destZ, destX, destZ, false, walkToEntity);
+		} catch (RuntimeException var8) {
+			throw GenUtil.makeThrowable(var8, "client.BE(" + destZ + ',' + destX + ',' + startZ + ',' + startX + ','
+				+ walkToEntity + ',' + "dummy" + ')');
+		}
+	}
 
-    private void walkToArea(int startX, int startZ, int x1, int z1, int x2, int z2, boolean reachBorder,
-                            boolean var2) {
-        try {
+	private void walkToArea(int startX, int startZ, int x1, int z1, int x2, int z2, boolean reachBorder,
+							boolean walkToEntity) {
+		try {
 
-            int count = this.world.findPath(this.pathX, this.pathZ, startX, startZ, x1, x2, z1, z2, reachBorder);
-            if (count == -1) {
-                if (!var2) {
-                    return;
-                }
+			int count = this.world.findPath(this.pathX, this.pathZ, startX, startZ, x1, x2, z1, z2, reachBorder);
+			if (count == -1) {
+				if (!walkToEntity) {
+					return;
+				}
 
                 count = 1;
                 this.pathX[0] = x1;
                 this.pathZ[0] = z1;
             }
 
-            --count;
-            startZ = this.pathZ[count];
-            startX = this.pathX[count];
-            --count;
-            if (!var2) {
-                this.packetHandler.getClientStream().newPacket(187);
-            } else {
-                this.packetHandler.getClientStream().newPacket(16);
-            }
+			--count;
+			startZ = this.pathZ[count];
+			startX = this.pathX[count];
+			--count;
+			if (!walkToEntity) {
+				this.packetHandler.getClientStream().newPacket(187);
+			} else {
+				this.packetHandler.getClientStream().newPacket(16);
+			}
 
-            this.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseX + startX);
-            this.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + startZ);
-            if (var2 && count == -1 && (startX + this.midRegionBaseX) % 5 == 0) {
-                count = 0;
-            }
+			this.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseX + startX);
+			this.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + startZ);
 
-            for (int i = count; i >= 0 && i > count - 25; --i) {
-                this.packetHandler.getClientStream().writeBuffer1.putByte(this.pathX[i] - startX);
-                this.packetHandler.getClientStream().writeBuffer1.putByte(this.pathZ[i] - startZ);
-            }
+			//System.out.println("walkToArea, startX: " + (this.midRegionBaseX + startX) + " (" + this.midRegionBaseX + " + " + startX + ")");
+			//System.out.println("walkToArea, startZ: " + (this.midRegionBaseZ + startZ) + " (" + this.midRegionBaseZ + " + " + startZ + ")");
 
-            this.packetHandler.getClientStream().finishPacket();
-            this.mouseWalkY = this.mouseY;
-            this.mouseWalkX = this.mouseX;
-            this.mouseClickXStep = -24;
-        } catch (RuntimeException var13) {
-            throw GenUtil.makeThrowable(var13, "client.DD(" + x1 + ',' + var2 + ',' + startX + ',' + z1 + ',' + startZ
-                    + ',' + x2 + ',' + reachBorder + ',' + z2 + ',' + "dummy" + ')');
-        }
-    }
+			if (walkToEntity && count == -1 && (startX + this.midRegionBaseX) % 5 == 0) {
+				count = 0;
+			}
+
+			for (int i = count; i >= 0 && i > count - 25; --i) {
+				this.packetHandler.getClientStream().writeBuffer1.putByte(this.pathX[i] - startX);
+				this.packetHandler.getClientStream().writeBuffer1.putByte(this.pathZ[i] - startZ);
+
+				//System.out.println("walkToArea, count: " + count + ", pathX[" + i + "]: " + (this.pathX[i] - startX) + " (" + this.pathX[i] + " - " + startX + ")");
+				//System.out.println("walkToArea, count: " + count + ", pathZ[" + i + "]: " + (this.pathZ[i] - startZ) + " (" + this.pathZ[i] + " - " + startZ + ")");
+			}
+
+			this.packetHandler.getClientStream().finishPacket();
+			this.mouseWalkY = this.mouseY;
+			this.mouseWalkX = this.mouseX;
+			this.mouseClickXStep = -24;
+		} catch (RuntimeException var13) {
+			throw GenUtil.makeThrowable(var13, "client.DD(" + x1 + ',' + walkToEntity + ',' + startX + ',' + z1 + ',' + startZ
+				+ ',' + x2 + ',' + reachBorder + ',' + z2 + ',' + "dummy" + ')');
+		}
+	}
 
     private void walkToGroundItem(int startX, int startZ, int destX, int destZ, boolean var5) {
         try {

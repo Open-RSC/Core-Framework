@@ -233,6 +233,8 @@ public final class Constants {
 		public static boolean PLAYER_COMMANDS = false;
 		public static boolean WANT_PETS = false;
 		public static boolean AUTO_SERVER_RESTART = false;
+		public static int MAX_WALKING_SPEED = 1;
+		public static int MAX_TICKS_UNTIL_FULL_WALKING_SPEED = 5;
 		//strict check on level requirements for "glitched" validations on rsc
 		public static boolean STRICT_CHECK_ALL = false;
 		public static boolean STRICT_PDART_CHECK = false;
@@ -382,6 +384,10 @@ public final class Constants {
 			WANT_BLURBERRY_BADGE = Boolean.parseBoolean(props.getProperty("want_blurberry_badge"));
 			WANT_SHOW_KITTENS_CIVILLIAN = Boolean.parseBoolean(props.getProperty("want_show_kittens_civillian"));
 			WANT_BARTER_WORMBRAINS = Boolean.parseBoolean(props.getProperty("want_barter_wormbrains"));
+
+			// Walking/running related
+			MAX_WALKING_SPEED = Integer.parseInt(props.getProperty("max_walking_speed"));
+			MAX_TICKS_UNTIL_FULL_WALKING_SPEED = Integer.parseInt(props.getProperty("max_ticks_until_full_walking_speed"));
 
 			// Make sure config doesn't exceed max values
 			if (VIEW_DISTANCE > 4)

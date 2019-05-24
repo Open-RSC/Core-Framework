@@ -117,7 +117,6 @@ public abstract class Mob extends Entity {
 	 * The end state of the last combat encounter
 	 */
 	private CombatState lastCombatState = CombatState.WAITING;
-	private int[][] mobSprites = new int[][]{{3, 2, 1}, {4, -1, 0}, {5, 6, 7}};
 	/**
 	 * Has the sprite changed?
 	 */
@@ -696,10 +695,11 @@ public abstract class Mob extends Entity {
 
 	private void updateSprite(Point newLocation) {
 		try {
-			int xIndex = getLocation().getX() - newLocation.getX() + 1;
-			int yIndex = getLocation().getY() - newLocation.getY() + 1;
-			setSprite(mobSprites[xIndex][yIndex]);
+			int direction = Path.direction(newLocation.getX() - getLocation().getX(), newLocation.getY() - getLocation().getY());
+			if(direction == -1)
+				direction = getSprite();
 
+			setSprite(direction);
 		} catch (Exception e) {
 			LOGGER.catching(e);
 		}

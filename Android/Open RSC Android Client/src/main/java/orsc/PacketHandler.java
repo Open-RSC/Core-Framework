@@ -2,13 +2,6 @@ package orsc;
 
 import com.openrsc.client.model.Sprite;
 import com.openrsc.interfaces.misc.clan.Clan;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.util.Properties;
-
 import orsc.buffers.RSBufferUtils;
 import orsc.buffers.RSBuffer_Bits;
 import orsc.enumerations.MessageType;
@@ -20,6 +13,12 @@ import orsc.net.Network_Socket;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.Properties;
 
 
 public class PacketHandler {
@@ -241,9 +240,9 @@ public class PacketHandler {
 			else if (opcode == 240) updateOptionsMenuSettings();
 
 			else if (opcode == 206) togglePrayer(length);
-
+			
 			else if (opcode == 232) mc.setShowContactDialogue(true);
-
+			
 			else if (opcode == 224) mc.setShowRecoveryDialogue(true);
 
 				// Quest Stage Update
@@ -350,7 +349,7 @@ public class PacketHandler {
 
 				// Inside Tutorial
 			else if (opcode == 111) mc.setInsideTutorial(packetsIncoming.getUnsignedByte() != 0);
-
+			
 				// Inside Black Hole
 			else if (opcode == 115) mc.setInsideBlackHole(packetsIncoming.getUnsignedByte() != 0);
 
@@ -361,7 +360,7 @@ public class PacketHandler {
 
 		} catch (RuntimeException var17) {
 			String var5 = "T2 - " + opcode + " - " + length + " rx:" + mc.getLocalPlayerX() + " ry:" + mc.getLocalPlayerZ()
-					+ " num3l:" + mc.getGameObjectInstanceCount() + " - ";
+				+ " num3l:" + mc.getGameObjectInstanceCount() + " - ";
 
 			for (int var6 = 0; length > var6 && var6 < 50; ++var6) {
 				var5 = var5 + packetsIncoming.getByte() + ",";
@@ -409,8 +408,8 @@ public class PacketHandler {
 		int combatModel = packetsIncoming.getByte() & 0xff;
 		int combatSprite = packetsIncoming.getByte() & 0xff;
 		com.openrsc.client.entityhandling.defs.NPCDef newNpc = new com.openrsc.client.entityhandling.defs.NPCDef(name, description, optionCommand, attack, strength, hits, defense,
-				attackable, sprites, hairColour, topColour, bottomColour, skinColour, camera1, camera2,
-				walkModel, combatModel, combatSprite, id);
+			attackable, sprites, hairColour, topColour, bottomColour, skinColour, camera1, camera2,
+			walkModel, combatModel, combatSprite, id);
 		com.openrsc.client.entityhandling.EntityHandler.npcs.set(id, newNpc);
 	}
 
@@ -499,7 +498,7 @@ public class PacketHandler {
 				break;
 			case 1:
 				mc.getFishingTrawlerInterface().setVariables(packetsIncoming.getShort(), packetsIncoming.getShort(),
-						packetsIncoming.getByte(), packetsIncoming.getByte() == 1);
+					packetsIncoming.getByte(), packetsIncoming.getByte() == 1);
 				break;
 			case 2:
 				mc.getFishingTrawlerInterface().hide();
@@ -599,12 +598,12 @@ public class PacketHandler {
 				if (SocialLists.friendList[i].equals(currentName)) {
 					if (SocialLists.friendListArgS[i] == null && online) {
 						mc.showMessage(false, (String) null, currentName + " has logged in",
-								MessageType.FRIEND_STATUS, 0, (String) null);
+							MessageType.FRIEND_STATUS, 0, (String) null);
 					}
 
 					if (null != SocialLists.friendListArgS[i] && !online) {
 						mc.showMessage(false, (String) null, currentName + " has logged out",
-								MessageType.FRIEND_STATUS, 0, (String) null);
+							MessageType.FRIEND_STATUS, 0, (String) null);
 					}
 
 					SocialLists.friendListOld[i] = formerName;
@@ -616,12 +615,12 @@ public class PacketHandler {
 			} else if (SocialLists.friendList[i].equals(formerName)) {
 				if (SocialLists.friendListArgS[i] == null && online) {
 					mc.showMessage(false, (String) null, currentName + " has logged in",
-							MessageType.FRIEND_STATUS, 0, (String) null);
+						MessageType.FRIEND_STATUS, 0, (String) null);
 				}
 
 				if (SocialLists.friendListArgS[i] != null && !online) {
 					mc.showMessage(false, (String) null, currentName + " has logged out",
-							MessageType.FRIEND_STATUS, 0, (String) null);
+						MessageType.FRIEND_STATUS, 0, (String) null);
 				}
 
 				SocialLists.friendList[i] = currentName;
@@ -635,7 +634,7 @@ public class PacketHandler {
 
 		if (rename) {
 			System.out.println("Error: friend display name change packet received, but old name \'" + formerName
-					+ "\' is not on friend list");
+				+ "\' is not on friend list");
 			return;
 		}
 
@@ -678,7 +677,7 @@ public class PacketHandler {
 
 		if (rename) {
 			System.out.println("Error: ignore display name change packet received, but old name \'" + find
-					+ "\' is not on ignore list");
+				+ "\' is not on ignore list");
 			return;
 		}
 
@@ -730,10 +729,10 @@ public class PacketHandler {
 		int sideMenuToggle, inventoryCountToggle, zoomViewToggle;
 		int menuCombatStyleToggle, fightmodeSelectorToggle, experienceCounterToggle;
 		int experienceDropsToggle, itemsOnDeathMenu, showRoofToggle, wantHideIp, wantRemember;
-		int wantGlobalChat, wantSkillMenus, wantQuestMenus;
+		int wantGlobalChat, wantSkillMenus, wantQuestMenus, maxWalkingSpeed;
 		int wantExperienceElixirs, wantKeyboardShortcuts, wantMembers, displayLogoSprite;
 		int wantCustomBanks, wantBankPins, wantBankNotes, wantCertDeposit, customFiremaking;
-		int wantDropX, wantExpInfo, wantWoodcuttingGuild, wantFixedOverheadChat;
+		int wantDropX, wantExpInfo, wantWoodcuttingGuild, wantFixedOverheadChat, wantPets;
 		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank, wantPlayerCommands;
 		int getFPS, wantEmail, wantRegistrationLimit, allowResize, lenientContactDetails, wantFatigue, wantCustomSprites;
 		String logoSpriteID;
@@ -793,6 +792,8 @@ public class PacketHandler {
 			wantFatigue = this.getClientStream().getUnsignedByte(); // 51
 			wantCustomSprites = this.getClientStream().getUnsignedByte(); // 52
 			wantPlayerCommands = this.getClientStream().getUnsignedByte(); // 53
+			wantPets = this.getClientStream().getUnsignedByte(); // 54
+			maxWalkingSpeed = this.getClientStream().getUnsignedByte(); // 55
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -848,63 +849,67 @@ public class PacketHandler {
 			wantFatigue = packetsIncoming.getUnsignedByte(); // 51
 			wantCustomSprites = packetsIncoming.getUnsignedByte(); // 52
 			wantPlayerCommands = packetsIncoming.getUnsignedByte(); // 53
+			wantPets = packetsIncoming.getUnsignedByte(); // 54
+			maxWalkingSpeed = packetsIncoming.getUnsignedByte(); // 55
 		}
 
 		if (Config.DEBUG) {
 			System.out.println(
-					"SERVER_NAME " + serverName + // 1
-							"\nSERVER_NAME_WELCOME " + serverNameWelcome + // 2
-							"\nS_PLAYER_LEVEL_LIMIT " + playerLevelLimit + // 3
-							"\nS_SPAWN_AUCTION_NPCS " + spawnAuctionNpcs + // 4
-							"\nS_SPAWN_IRON_MAN_NPCS " + spawnIronManNpcs + // 5
-							"\nS_SHOW_FLOATING_NAMETAGS " + showFloatingNametags + // 6
-							"\nS_WANT_CLANS " + wantClans + // 7
-							"\nS_WANT_KILL_FEED " + wantKillFeed + // 8
-							"\nS_FOG_TOGGLE " + fogToggle + // 9
-							"\nS_GROUND_ITEM_TOGGLE " + groundItemToggle + // 10
-							"\nS_AUTO_MESSAGE_SWITCH_TOGGLE " + autoMessageSwitchToggle + // 11
-							"\nS_BATCH_PROGRESSION " + batchProgression + // 12
-							"\nS_SIDE_MENU_TOGGLE " + sideMenuToggle + // 13
-							"\nS_INVENTORY_COUNT_TOGGLE " + inventoryCountToggle + // 14
-							"\nS_ZOOM_VIEW_TOGGLE " + zoomViewToggle + // 15
-							"\nS_MENU_COMBAT_STYLE_TOGGLE " + menuCombatStyleToggle + // 16
-							"\nS_FIGHTMODE_SELECTOR_TOGGLE " + fightmodeSelectorToggle + // 17
-							"\nS_EXPERIENCE_COUNTER_TOGGLE " + experienceCounterToggle + // 18
-							"\nS_EXPERIENCE_DROPS_TOGGLE " + experienceDropsToggle + // 19
-							"\nS_ITEMS_ON_DEATH_MENU " + itemsOnDeathMenu + // 20
-							"\nS_SHOW_ROOF_TOGGLE " + showRoofToggle + // 21
-							"\nS_WANT_HIDE_IP " + wantHideIp + // 22
-							"\nS_WANT_REMEMBER " + wantRemember + // 23
-							"\nS_WANT_GLOBAL_CHAT " + wantGlobalChat + // 24
-							"\nS_WANT_SKILL_MENUS " + wantSkillMenus + // 25
-							"\nS_WANT_QUEST_MENUS " + wantQuestMenus + // 26
-							"\nS_WANT_EXPERIENCE_ELIXIRS " + wantExperienceElixirs + // 27
-							"\nS_WANT_KEYBOARD_SHORTCUTS " + wantKeyboardShortcuts + // 28
-							"\nS_WANT_CUSTOM_BANKS " + wantCustomBanks + // 29
-							"\nS_WANT_BANK_PINS " + wantBankPins + // 30
-							"\nS_WANT_BANK_NOTES " + wantBankNotes + // 31
-							"\nS_WANT_CERT_DEPOSIT " + wantCertDeposit + // 32
-							"\nS_CUSTOM_FIREMAKING " + customFiremaking + // 33
-							"\nS_WANT_DROP_X " + wantDropX + // 34
-							"\nS_WANT_EXP_INFO " + wantExpInfo + // 35
-							"\nS_WANT_WOODCUTTING_GUILD " + wantWoodcuttingGuild + // 36
-							"\nS_WANT_DECANTING " + wantDecanting + // 37
-							"\nS_WANT_CERTS_TO_BANK " + wantCertsToBank + // 38
-							"\nS_WANT_CUSTOM_RANK_DISPLAY" + wantCustomRankDisplay + // 39
-							"\nS_RIGHT_CLICK_BANK" + wantRightClickBank + // 40
-							"\nS_WANT_FIXED_OVERHEAD_CHAT" + wantFixedOverheadChat + // 41
-							"\nWELCOME_TEXT" + welcomeText + // 42
-							"\nMEMBERS_FEATURES" + wantMembers + // 43
-							"\nDISPLAY_LOGO_SPRITE" + displayLogoSprite + // 44
-							"\nC_LOGO_SPRITE_ID" + logoSpriteID + // 45
-							"\nC_FPS" + getFPS + // 46
-							"\nC_WANT_EMAIL" + wantEmail + // 47
-							"\nS_WANT_REGISTRATION_LIMIT" + wantRegistrationLimit + // 48
-							"\nS_ALLOW_RESIZE" + allowResize + // 49
-							"\nS_LENIENT_CONTACT_DETAILS" + lenientContactDetails + // 50
-							"\nS_WANT_FATIGUE" + wantFatigue + // 51
-							"\nS_WANT_CUSTOM_SPRITES" + wantCustomSprites + // 52
-							"\nS_WANT_PLAYER_COMMANDS" + wantPlayerCommands // 53
+				"SERVER_NAME " + serverName + // 1
+					"\nSERVER_NAME_WELCOME " + serverNameWelcome + // 2
+					"\nS_PLAYER_LEVEL_LIMIT " + playerLevelLimit + // 3
+					"\nS_SPAWN_AUCTION_NPCS " + spawnAuctionNpcs + // 4
+					"\nS_SPAWN_IRON_MAN_NPCS " + spawnIronManNpcs + // 5
+					"\nS_SHOW_FLOATING_NAMETAGS " + showFloatingNametags + // 6
+					"\nS_WANT_CLANS " + wantClans + // 7
+					"\nS_WANT_KILL_FEED " + wantKillFeed + // 8
+					"\nS_FOG_TOGGLE " + fogToggle + // 9
+					"\nS_GROUND_ITEM_TOGGLE " + groundItemToggle + // 10
+					"\nS_AUTO_MESSAGE_SWITCH_TOGGLE " + autoMessageSwitchToggle + // 11
+					"\nS_BATCH_PROGRESSION " + batchProgression + // 12
+					"\nS_SIDE_MENU_TOGGLE " + sideMenuToggle + // 13
+					"\nS_INVENTORY_COUNT_TOGGLE " + inventoryCountToggle + // 14
+					"\nS_ZOOM_VIEW_TOGGLE " + zoomViewToggle + // 15
+					"\nS_MENU_COMBAT_STYLE_TOGGLE " + menuCombatStyleToggle + // 16
+					"\nS_FIGHTMODE_SELECTOR_TOGGLE " + fightmodeSelectorToggle + // 17
+					"\nS_EXPERIENCE_COUNTER_TOGGLE " + experienceCounterToggle + // 18
+					"\nS_EXPERIENCE_DROPS_TOGGLE " + experienceDropsToggle + // 19
+					"\nS_ITEMS_ON_DEATH_MENU " + itemsOnDeathMenu + // 20
+					"\nS_SHOW_ROOF_TOGGLE " + showRoofToggle + // 21
+					"\nS_WANT_HIDE_IP " + wantHideIp + // 22
+					"\nS_WANT_REMEMBER " + wantRemember + // 23
+					"\nS_WANT_GLOBAL_CHAT " + wantGlobalChat + // 24
+					"\nS_WANT_SKILL_MENUS " + wantSkillMenus + // 25
+					"\nS_WANT_QUEST_MENUS " + wantQuestMenus + // 26
+					"\nS_WANT_EXPERIENCE_ELIXIRS " + wantExperienceElixirs + // 27
+					"\nS_WANT_KEYBOARD_SHORTCUTS " + wantKeyboardShortcuts + // 28
+					"\nS_WANT_CUSTOM_BANKS " + wantCustomBanks + // 29
+					"\nS_WANT_BANK_PINS " + wantBankPins + // 30
+					"\nS_WANT_BANK_NOTES " + wantBankNotes + // 31
+					"\nS_WANT_CERT_DEPOSIT " + wantCertDeposit + // 32
+					"\nS_CUSTOM_FIREMAKING " + customFiremaking + // 33
+					"\nS_WANT_DROP_X " + wantDropX + // 34
+					"\nS_WANT_EXP_INFO " + wantExpInfo + // 35
+					"\nS_WANT_WOODCUTTING_GUILD " + wantWoodcuttingGuild + // 36
+					"\nS_WANT_DECANTING " + wantDecanting + // 37
+					"\nS_WANT_CERTS_TO_BANK " + wantCertsToBank + // 38
+					"\nS_WANT_CUSTOM_RANK_DISPLAY " + wantCustomRankDisplay + // 39
+					"\nS_RIGHT_CLICK_BANK " + wantRightClickBank + // 40
+					"\nS_WANT_FIXED_OVERHEAD_CHAT " + wantFixedOverheadChat + // 41
+					"\nWELCOME_TEXT " + welcomeText + // 42
+					"\nMEMBERS_FEATURES " + wantMembers + // 43
+					"\nDISPLAY_LOGO_SPRITE " + displayLogoSprite + // 44
+					"\nC_LOGO_SPRITE_ID " + logoSpriteID + // 45
+					"\nC_FPS " + getFPS + // 46
+					"\nC_WANT_EMAIL " + wantEmail + // 47
+					"\nS_WANT_REGISTRATION_LIMIT " + wantRegistrationLimit + // 48
+					"\nS_ALLOW_RESIZE " + allowResize + // 49
+					"\nS_LENIENT_CONTACT_DETAILS " + lenientContactDetails + // 50
+					"\nS_WANT_FATIGUE " + wantFatigue + // 51
+					"\nS_WANT_CUSTOM_SPRITES " + wantCustomSprites + // 52
+					"\nS_WANT_PLAYER_COMMANDS " + wantPlayerCommands + // 53
+					"\nS_WANT_PETS " + wantPets + // 54
+					"\nS_MAX_RUNNING_SPEED " + maxWalkingSpeed //55
 			);
 		}
 
@@ -961,19 +966,21 @@ public class PacketHandler {
 		props.setProperty("S_WANT_FATIGUE", wantFatigue == 1 ? "true" : "false"); // 51
 		props.setProperty("S_WANT_CUSTOM_SPRITES", wantCustomSprites == 1 ? "true" : "false"); // 52
 		props.setProperty("S_WANT_PLAYER_COMMANDS", wantPlayerCommands == 1 ? "true" : "false"); // 53
+		props.setProperty("S_WANT_PETS", wantPets == 1 ? "true" : "false"); // 54
+		props.setProperty("S_MAX_WALKING_SPEED", Integer.toString(maxWalkingSpeed)); // 55
 
 		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(
-				Config.isAndroid() ||
-						Config.S_WANT_CLANS || Config.S_WANT_KILL_FEED
-						|| Config.S_FOG_TOGGLE || Config.S_GROUND_ITEM_TOGGLE
-						|| Config.S_AUTO_MESSAGE_SWITCH_TOGGLE || Config.S_BATCH_PROGRESSION
-						|| Config.S_SIDE_MENU_TOGGLE || Config.S_INVENTORY_COUNT_TOGGLE
-						|| Config.S_MENU_COMBAT_STYLE_TOGGLE
-						|| Config.S_FIGHTMODE_SELECTOR_TOGGLE || Config.S_SHOW_ROOF_TOGGLE
-						|| Config.S_EXPERIENCE_COUNTER_TOGGLE || Config.S_WANT_GLOBAL_CHAT
-						|| Config.S_EXPERIENCE_DROPS_TOGGLE || Config.S_ITEMS_ON_DEATH_MENU);
+			Config.isAndroid() ||
+				Config.S_WANT_CLANS || Config.S_WANT_KILL_FEED
+				|| Config.S_FOG_TOGGLE || Config.S_GROUND_ITEM_TOGGLE
+				|| Config.S_AUTO_MESSAGE_SWITCH_TOGGLE || Config.S_BATCH_PROGRESSION
+				|| Config.S_SIDE_MENU_TOGGLE || Config.S_INVENTORY_COUNT_TOGGLE
+				|| Config.S_MENU_COMBAT_STYLE_TOGGLE
+				|| Config.S_FIGHTMODE_SELECTOR_TOGGLE || Config.S_SHOW_ROOF_TOGGLE
+				|| Config.S_EXPERIENCE_COUNTER_TOGGLE || Config.S_WANT_GLOBAL_CHAT
+				|| Config.S_EXPERIENCE_DROPS_TOGGLE || Config.S_ITEMS_ON_DEATH_MENU);
 
 
 		if (!mc.gotInitialConfigs) {
@@ -1006,16 +1013,16 @@ public class PacketHandler {
 		int currentZ = mc.getLocalPlayerZ() * tileSize + 64;
 		mc.setPlayerCount(0);
 		if (needNextRegion) {
-			mc.getLocalPlayer().movingStep = 0;
-			mc.getLocalPlayer().waypointCurrent = 0;
+			mc.getLocalPlayer().waypointIndexNext = 0;
+			mc.getLocalPlayer().waypointIndexCurrent = 0;
 			mc.getLocalPlayer().currentX = mc.getLocalPlayer().waypointsX[0] = currentX;
 			mc.getLocalPlayer().currentZ = mc.getLocalPlayer().waypointsZ[0] = currentZ;
 		}
 
 		mc.setLocalPlayer(
-				mc.createPlayer(currentZ, mc.getLocalPlayerServerIndex(), currentX, 1,
-						ORSCharacterDirection.lookup(direction)
-				)
+			mc.createPlayer(currentZ, mc.getLocalPlayerServerIndex(), currentX, 1,
+				ORSCharacterDirection.lookup(direction)
+			)
 		);
 
 		int dir = packetsIncoming.getBitMask(8);
@@ -1033,7 +1040,7 @@ public class PacketHandler {
 					playerToShow.animationNext = packetsIncoming.getBitMask(2) + (needsNextSprite << 2);
 				} else {
 					int modelIndex = packetsIncoming.getBitMask(3);
-					int var33 = playerToShow.waypointCurrent;
+					int var33 = playerToShow.waypointIndexCurrent;
 					int var15 = playerToShow.waypointsX[var33];
 					int var16 = playerToShow.waypointsZ[var33];
 					if (modelIndex == 2 || modelIndex == 1 || modelIndex == 3) {
@@ -1051,7 +1058,7 @@ public class PacketHandler {
 					if (modelIndex == 0 || modelIndex == 1 || modelIndex == 7) {
 						var16 -= tileSize;
 					}
-					playerToShow.waypointCurrent = var33 = (1 + var33) % 10;
+					playerToShow.waypointIndexCurrent = var33 = (1 + var33) % 10;
 					playerToShow.waypointsX[var33] = var15;
 					playerToShow.waypointsZ[var33] = var16;
 				}
@@ -1096,7 +1103,7 @@ public class PacketHandler {
 					if (mc.getGameObjectInstanceX(i) == xTile && zTile == mc.getGameObjectInstanceZ(i)) {
 						mc.getScene().removeModel(mc.getGameObjectInstanceModel(i));
 						mc.getWorld().removeGameObject_CollisonFlags(mc.getGameObjectInstanceID(i),
-								mc.getGameObjectInstanceX(i), mc.getGameObjectInstanceZ(i));
+							mc.getGameObjectInstanceX(i), mc.getGameObjectInstanceZ(i));
 					} else {
 						if (count != i) {
 							mc.setGameObjectInstanceModel(count, mc.getGameObjectInstanceModel(i));
@@ -1157,8 +1164,8 @@ public class PacketHandler {
 					if (dxTile == 0 && dzTile == 0) {
 						mc.getScene().removeModel(mc.getGameObjectInstanceModel(localIndex));
 						mc.getWorld().removeGameObject_CollisonFlags(mc.getGameObjectInstanceID(localIndex),
-								mc.getGameObjectInstanceX(localIndex),
-								mc.getGameObjectInstanceZ(localIndex));
+							mc.getGameObjectInstanceX(localIndex),
+							mc.getGameObjectInstanceZ(localIndex));
 					} else {
 						if (localIndex != id) {
 							mc.setGameObjectInstanceModel(id, mc.getGameObjectInstanceModel(localIndex));
@@ -1202,10 +1209,10 @@ public class PacketHandler {
 					if (dir == 0 && var9 == 0) {
 						mc.getScene().removeModel(mc.getWallObjectInstanceModel(wallInstance));
 						mc.getWorld().removeWallObject_CollisionFlags(true,
-								mc.getWallObjectInstanceDir(wallInstance),
-								mc.getWallObjectInstanceZ(wallInstance),
-								mc.getWallObjectInstanceX(wallInstance),
-								mc.getWallObjectInstanceID(wallInstance));
+							mc.getWallObjectInstanceDir(wallInstance),
+							mc.getWallObjectInstanceZ(wallInstance),
+							mc.getWallObjectInstanceX(wallInstance),
+							mc.getWallObjectInstanceID(wallInstance));
 					} else {
 						if (wallID != wallInstance) {
 							mc.setWallObjectInstanceModel(wallID, mc.getWallObjectInstanceModel(wallInstance));
@@ -1231,14 +1238,14 @@ public class PacketHandler {
 
 				for (int var9 = 0; var9 < mc.getWallObjectInstanceCount(); ++var9) {
 					if (mc.getWallObjectInstanceX(var9) == x
-							&& mc.getWallObjectInstanceZ(var9) == y
-							&& direction == mc.getWallObjectInstanceDir(var9)) {
+						&& mc.getWallObjectInstanceZ(var9) == y
+						&& direction == mc.getWallObjectInstanceDir(var9)) {
 						mc.getScene().removeModel(mc.getWallObjectInstanceModel(var9));
 						mc.getWorld().removeWallObject_CollisionFlags(true,
-								mc.getWallObjectInstanceDir(var9),
-								mc.getWallObjectInstanceZ(var9),
-								mc.getWallObjectInstanceX(var9),
-								mc.getWallObjectInstanceID(var9));
+							mc.getWallObjectInstanceDir(var9),
+							mc.getWallObjectInstanceZ(var9),
+							mc.getWallObjectInstanceX(var9),
+							mc.getWallObjectInstanceID(var9));
 					} else {
 						if (var9 != localIndex) {
 							mc.setWallObjectInstanceModel(localIndex, mc.getWallObjectInstanceModel(var9));
@@ -1256,7 +1263,7 @@ public class PacketHandler {
 				if (id != 60000) {
 					mc.getWorld().applyWallToCollisionFlags(id, x, y, direction);
 					RSModel model = mc.createWallObjectModel(x, y, id, direction,
-							mc.getWallObjectInstanceCount());
+						mc.getWallObjectInstanceCount());
 					mc.setWallObjectInstanceModel(mc.getWallObjectInstanceCount(), model);
 					mc.setWallObjectInstanceX(mc.getWallObjectInstanceCount(), x);
 					mc.setWallObjectInstanceZ(mc.getWallObjectInstanceCount(), y);
@@ -1280,44 +1287,44 @@ public class PacketHandler {
 		int count = packetsIncoming.getBitMask(8);
 		int tileSize = mc.getTileSize();
 
-		int var10, var9, var11, dir, var19;
-		for (var19 = 0; count > var19; ++var19) {
-			ORSCharacter npc = mc.getNpcFromCache(var19);
+		int waypointCurrentIndex, rsDir, waypointX, var12, i;
+		for (i = 0; count > i; ++i) {
+			ORSCharacter npc = mc.getNpcFromCache(i);
 			int var7 = packetsIncoming.getBitMask(1);
 			if (var7 != 0) {
-				dir = packetsIncoming.getBitMask(1);
-				if (dir != 0) {
+				var12 = packetsIncoming.getBitMask(1);
+				if (var12 != 0) {
 					int nextSpriteOffset = packetsIncoming.getBitMask(2);
 					if (nextSpriteOffset == 3) {
 						continue;
 					}
 					npc.animationNext = (nextSpriteOffset << 2)
-							+ packetsIncoming.getBitMask(2);
+						+ packetsIncoming.getBitMask(2);
 				} else {
-					var9 = packetsIncoming.getBitMask(3);
-					var10 = npc.waypointCurrent;
-					var11 = npc.waypointsX[var10];
-					if (var9 == 2 || var9 == 1 || var9 == 3) {
-						var11 += tileSize;
+					rsDir = packetsIncoming.getBitMask(3);
+					waypointCurrentIndex = npc.waypointIndexCurrent;
+					waypointX = npc.waypointsX[waypointCurrentIndex];
+					if (rsDir == 2 || rsDir == 1 || rsDir == 3) {
+						waypointX += tileSize;
 					}
 
-					int var31 = npc.waypointsZ[var10];
-					if (var9 == 6 || var9 == 5 || var9 == 7) {
-						var11 -= tileSize;
+					int waypointY = npc.waypointsZ[waypointCurrentIndex];
+					if (rsDir == 6 || rsDir == 5 || rsDir == 7) {
+						waypointX -= tileSize;
 					}
 
-					if (var9 == 4 || var9 == 3 || var9 == 5) {
-						var31 += tileSize;
+					if (rsDir == 4 || rsDir == 3 || rsDir == 5) {
+						waypointY += tileSize;
 					}
 
-					if (var9 == 0 || var9 == 1 || var9 == 7) {
-						var31 -= tileSize;
+					if (rsDir == 0 || rsDir == 1 || rsDir == 7) {
+						waypointY -= tileSize;
 					}
 
-					npc.waypointCurrent = var10 = (var10 - -1) % 10;
-					npc.animationNext = var9;
-					npc.waypointsX[var10] = var11;
-					npc.waypointsZ[var10] = var31;
+					npc.waypointIndexCurrent = waypointCurrentIndex = (waypointCurrentIndex + 1) % 10;
+					npc.animationNext = rsDir;
+					npc.waypointsX[waypointCurrentIndex] = waypointX;
+					npc.waypointsZ[waypointCurrentIndex] = waypointY;
 				}
 			}
 
@@ -1326,7 +1333,7 @@ public class PacketHandler {
 		}
 
 		while (length * 8 > packetsIncoming.getBitHead() + 34) {
-			var19 = packetsIncoming.getBitMask(12);
+			i = packetsIncoming.getBitMask(12);
 			int var6 = packetsIncoming.getBitMask(6);
 			if (var6 > 31) {
 				var6 -= 64;
@@ -1335,11 +1342,11 @@ public class PacketHandler {
 			if (var7 > 31) {
 				var7 -= 64;
 			}
-			dir = packetsIncoming.getBitMask(4);
-			var9 = (var6 + mc.getLocalPlayerX()) * tileSize + 64;
-			var10 = (var7 + mc.getLocalPlayerZ()) * tileSize + 64;
-			var11 = packetsIncoming.getBitMask(10);
-			mc.createNpc(dir, var11, var9, var10, var19);
+			var12 = packetsIncoming.getBitMask(4);
+			rsDir = (var6 + mc.getLocalPlayerX()) * tileSize + 64;
+			waypointCurrentIndex = (var7 + mc.getLocalPlayerZ()) * tileSize + 64;
+			waypointX = packetsIncoming.getBitMask(10);
+			mc.createNpc(var12, waypointX, rsDir, waypointCurrentIndex, i);
 		}
 
 		packetsIncoming.endBitAccess();
@@ -1360,8 +1367,8 @@ public class PacketHandler {
 					npc.message = message;
 					if (mc.getLocalPlayer().serverIndex == chatRecipient) {
 						mc.showMessage(false, (String) null,
-								com.openrsc.client.entityhandling.EntityHandler.getNpcDef(npc.npcId).getName() + ": " + npc.message,
-								MessageType.QUEST, 0, (String) null, "@yel@");
+							com.openrsc.client.entityhandling.EntityHandler.getNpcDef(npc.npcId).getName() + ": " + npc.message,
+							MessageType.QUEST, 0, (String) null, "@yel@");
 					}
 				}
 
@@ -1453,9 +1460,9 @@ public class PacketHandler {
 				if (var10 == 0 && var11 == 0) {
 					mc.getScene().removeModel(mc.getGameObjectInstanceModel(j));
 					mc.getWorld().removeGameObject_CollisonFlags(
-							mc.getGameObjectInstanceID(j),
-							mc.getGameObjectInstanceX(j),
-							mc.getGameObjectInstanceZ(j));
+						mc.getGameObjectInstanceID(j),
+						mc.getGameObjectInstanceX(j),
+						mc.getGameObjectInstanceZ(j));
 				} else {
 					if (j != count) {
 						mc.setGameObjectInstanceModel(count, mc.getGameObjectInstanceModel(j));
@@ -1479,10 +1486,10 @@ public class PacketHandler {
 				if (wallX == 0 && wallZ == 0) {
 					mc.getScene().removeModel(mc.getWallObjectInstanceModel(n));
 					mc.getWorld().removeWallObject_CollisionFlags(true,
-							mc.getWallObjectInstanceDir(n),
-							mc.getWallObjectInstanceZ(n),
-							mc.getWallObjectInstanceX(n),
-							mc.getWallObjectInstanceID(n));
+						mc.getWallObjectInstanceDir(n),
+						mc.getWallObjectInstanceZ(n),
+						mc.getWallObjectInstanceX(n),
+						mc.getWallObjectInstanceID(n));
 				} else {
 					if (n != count) {
 						mc.setWallObjectInstanceModel(count, mc.getWallObjectInstanceModel(n));
@@ -1872,7 +1879,7 @@ public class PacketHandler {
 			int var6 = 39;
 
 			for (int inventoryIndex = 0; inventoryIndex < mc.getInventoryItemCount()
-					&& shopItemCount <= var6; ++inventoryIndex) {
+				&& shopItemCount <= var6; ++inventoryIndex) {
 				boolean var25 = false;
 
 				for (int var9 = 0; var9 < 40; ++var9) {
@@ -1896,7 +1903,7 @@ public class PacketHandler {
 		}
 
 		if (mc.getShopSelectedItemIndex() >= 0 && 40 > mc.getShopSelectedItemIndex()
-				&& mc.getShopSelectedItemType() != mc.getShopItemID(mc.getShopSelectedItemIndex())) {
+			&& mc.getShopSelectedItemType() != mc.getShopItemID(mc.getShopSelectedItemIndex())) {
 			mc.setShopSelectedItemIndex(-1);
 			mc.setShopSelectedItemType(-2);
 		}
@@ -1958,7 +1965,7 @@ public class PacketHandler {
 						if (null != displayName) {
 							for (int modelIndex = 0; modelIndex < SocialLists.ignoreListCount; ++modelIndex) {
 								if (displayName.equals(
-										StringUtil.displayNameToKey(SocialLists.ignoreList[modelIndex]))) {
+									StringUtil.displayNameToKey(SocialLists.ignoreList[modelIndex]))) {
 									var29 = true;
 									break;
 								}
@@ -1969,17 +1976,17 @@ public class PacketHandler {
 							player.messageTimeout = 150;
 							player.message = message;
 							mc.showMessage(
-									/*!Config.S_WANT_CUSTOM_RANK_DISPLAY*/ true,
-									(
-											((updateType == 7 && muted) ? "@whi@[MUTED]@yel@ " : "") +
-													((updateType == 7 && onTutorial) ? "@whi@[TUTORIAL]@yel@ " : "") +
-													(player.clanTag != null ? "@whi@[@cla@" + player.clanTag + "@whi@]@yel@ " : "") +
-													player.getStaffName()
-									),
-									player.message,
-									MessageType.CHAT,
-									crownID,
-									player.accountName
+								/*!Config.S_WANT_CUSTOM_RANK_DISPLAY*/ true,
+								(
+									((updateType == 7 && muted) ? "@whi@[MUTED]@yel@ " : "") +
+										((updateType == 7 && onTutorial) ? "@whi@[TUTORIAL]@yel@ " : "") +
+										(player.clanTag != null ? "@whi@[@cla@" + player.clanTag + "@whi@]@yel@ " : "") +
+										player.getStaffName()
+								),
+								player.message,
+								MessageType.CHAT,
+								crownID,
+								player.accountName
 							);
 						}
 					}
@@ -2098,7 +2105,7 @@ public class PacketHandler {
 
 					for (int dir = 0; dir < mc.getGroundItemCount(); ++dir) {
 						if (mc.getGroundItemX(dir) == var19 && mc.getGroundItemZ(dir) == var6
-								&& mc.getGroundItemID(dir) == groundItemID) {
+							&& mc.getGroundItemID(dir) == groundItemID) {
 							groundItemID = -123;
 						} else {
 							if (var7 != dir) {
@@ -2122,10 +2129,10 @@ public class PacketHandler {
 
 					for (int var7 = 0; mc.getGameObjectInstanceCount() > var7; ++var7) {
 						if (mc.getGameObjectInstanceX(var7) == var19
-								&& mc.getGameObjectInstanceZ(var7) == var6) {
+							&& mc.getGameObjectInstanceZ(var7) == var6) {
 							mc.setGroundItemHeight(mc.getGroundItemCount(),
-									com.openrsc.client.entityhandling.EntityHandler.getObjectDef(
-											mc.getGameObjectInstanceID(var7)).getGroundItemVar());
+								com.openrsc.client.entityhandling.EntityHandler.getObjectDef(
+									mc.getGameObjectInstanceID(var7)).getGroundItemVar());
 							break;
 						}
 					}

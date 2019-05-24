@@ -2,13 +2,6 @@ package orsc;
 
 import com.openrsc.client.model.Sprite;
 import com.openrsc.interfaces.misc.clan.Clan;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.util.Properties;
-
 import orsc.buffers.RSBufferUtils;
 import orsc.buffers.RSBuffer_Bits;
 import orsc.enumerations.MessageType;
@@ -20,6 +13,12 @@ import orsc.net.Network_Socket;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.Properties;
 
 
 public class PacketHandler {
@@ -241,9 +240,9 @@ public class PacketHandler {
 			else if (opcode == 240) updateOptionsMenuSettings();
 
 			else if (opcode == 206) togglePrayer(length);
-
+			
 			else if (opcode == 232) mc.setShowContactDialogue(true);
-
+			
 			else if (opcode == 224) mc.setShowRecoveryDialogue(true);
 
 				// Quest Stage Update
@@ -350,7 +349,7 @@ public class PacketHandler {
 
 				// Inside Tutorial
 			else if (opcode == 111) mc.setInsideTutorial(packetsIncoming.getUnsignedByte() != 0);
-
+			
 				// Inside Black Hole
 			else if (opcode == 115) mc.setInsideBlackHole(packetsIncoming.getUnsignedByte() != 0);
 
@@ -730,7 +729,7 @@ public class PacketHandler {
 		int sideMenuToggle, inventoryCountToggle, zoomViewToggle;
 		int menuCombatStyleToggle, fightmodeSelectorToggle, experienceCounterToggle;
 		int experienceDropsToggle, itemsOnDeathMenu, showRoofToggle, wantHideIp, wantRemember;
-		int wantGlobalChat, wantSkillMenus, wantQuestMenus;
+		int wantGlobalChat, wantSkillMenus, wantQuestMenus, maxWalkingSpeed;
 		int wantExperienceElixirs, wantKeyboardShortcuts, wantMembers, displayLogoSprite;
 		int wantCustomBanks, wantBankPins, wantBankNotes, wantCertDeposit, customFiremaking;
 		int wantDropX, wantExpInfo, wantWoodcuttingGuild, wantFixedOverheadChat, wantPets;
@@ -794,6 +793,7 @@ public class PacketHandler {
 			wantCustomSprites = this.getClientStream().getUnsignedByte(); // 52
 			wantPlayerCommands = this.getClientStream().getUnsignedByte(); // 53
 			wantPets = this.getClientStream().getUnsignedByte(); // 54
+			maxWalkingSpeed = this.getClientStream().getUnsignedByte(); // 55
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -850,6 +850,7 @@ public class PacketHandler {
 			wantCustomSprites = packetsIncoming.getUnsignedByte(); // 52
 			wantPlayerCommands = packetsIncoming.getUnsignedByte(); // 53
 			wantPets = packetsIncoming.getUnsignedByte(); // 54
+			maxWalkingSpeed = packetsIncoming.getUnsignedByte(); // 55
 		}
 
 		if (Config.DEBUG) {
@@ -892,22 +893,23 @@ public class PacketHandler {
 					"\nS_WANT_WOODCUTTING_GUILD " + wantWoodcuttingGuild + // 36
 					"\nS_WANT_DECANTING " + wantDecanting + // 37
 					"\nS_WANT_CERTS_TO_BANK " + wantCertsToBank + // 38
-					"\nS_WANT_CUSTOM_RANK_DISPLAY" + wantCustomRankDisplay + // 39
-					"\nS_RIGHT_CLICK_BANK" + wantRightClickBank + // 40
-					"\nS_WANT_FIXED_OVERHEAD_CHAT" + wantFixedOverheadChat + // 41
-					"\nWELCOME_TEXT" + welcomeText + // 42
-					"\nMEMBERS_FEATURES" + wantMembers + // 43
-					"\nDISPLAY_LOGO_SPRITE" + displayLogoSprite + // 44
-					"\nC_LOGO_SPRITE_ID" + logoSpriteID + // 45
-					"\nC_FPS" + getFPS + // 46
-					"\nC_WANT_EMAIL" + wantEmail + // 47
-					"\nS_WANT_REGISTRATION_LIMIT" + wantRegistrationLimit + // 48
-					"\nS_ALLOW_RESIZE" + allowResize + // 49
-					"\nS_LENIENT_CONTACT_DETAILS" + lenientContactDetails + // 50
-					"\nS_WANT_FATIGUE" + wantFatigue + // 51
-					"\nS_WANT_CUSTOM_SPRITES" + wantCustomSprites + // 52
-					"\nS_WANT_PLAYER_COMMANDS" + wantPlayerCommands + // 53
-					"\nS_WANT_PETS" + wantPets // 54
+					"\nS_WANT_CUSTOM_RANK_DISPLAY " + wantCustomRankDisplay + // 39
+					"\nS_RIGHT_CLICK_BANK " + wantRightClickBank + // 40
+					"\nS_WANT_FIXED_OVERHEAD_CHAT " + wantFixedOverheadChat + // 41
+					"\nWELCOME_TEXT " + welcomeText + // 42
+					"\nMEMBERS_FEATURES " + wantMembers + // 43
+					"\nDISPLAY_LOGO_SPRITE " + displayLogoSprite + // 44
+					"\nC_LOGO_SPRITE_ID " + logoSpriteID + // 45
+					"\nC_FPS " + getFPS + // 46
+					"\nC_WANT_EMAIL " + wantEmail + // 47
+					"\nS_WANT_REGISTRATION_LIMIT " + wantRegistrationLimit + // 48
+					"\nS_ALLOW_RESIZE " + allowResize + // 49
+					"\nS_LENIENT_CONTACT_DETAILS " + lenientContactDetails + // 50
+					"\nS_WANT_FATIGUE " + wantFatigue + // 51
+					"\nS_WANT_CUSTOM_SPRITES " + wantCustomSprites + // 52
+					"\nS_WANT_PLAYER_COMMANDS " + wantPlayerCommands + // 53
+					"\nS_WANT_PETS " + wantPets + // 54
+					"\nS_MAX_RUNNING_SPEED " + maxWalkingSpeed //55
 			);
 		}
 
@@ -965,6 +967,7 @@ public class PacketHandler {
 		props.setProperty("S_WANT_CUSTOM_SPRITES", wantCustomSprites == 1 ? "true" : "false"); // 52
 		props.setProperty("S_WANT_PLAYER_COMMANDS", wantPlayerCommands == 1 ? "true" : "false"); // 53
 		props.setProperty("S_WANT_PETS", wantPets == 1 ? "true" : "false"); // 54
+		props.setProperty("S_MAX_WALKING_SPEED", Integer.toString(maxWalkingSpeed)); // 55
 
 		Config.updateServerConfiguration(props);
 
@@ -1010,8 +1013,8 @@ public class PacketHandler {
 		int currentZ = mc.getLocalPlayerZ() * tileSize + 64;
 		mc.setPlayerCount(0);
 		if (needNextRegion) {
-			mc.getLocalPlayer().movingStep = 0;
-			mc.getLocalPlayer().waypointCurrent = 0;
+			mc.getLocalPlayer().waypointIndexNext = 0;
+			mc.getLocalPlayer().waypointIndexCurrent = 0;
 			mc.getLocalPlayer().currentX = mc.getLocalPlayer().waypointsX[0] = currentX;
 			mc.getLocalPlayer().currentZ = mc.getLocalPlayer().waypointsZ[0] = currentZ;
 		}
@@ -1037,7 +1040,7 @@ public class PacketHandler {
 					playerToShow.animationNext = packetsIncoming.getBitMask(2) + (needsNextSprite << 2);
 				} else {
 					int modelIndex = packetsIncoming.getBitMask(3);
-					int var33 = playerToShow.waypointCurrent;
+					int var33 = playerToShow.waypointIndexCurrent;
 					int var15 = playerToShow.waypointsX[var33];
 					int var16 = playerToShow.waypointsZ[var33];
 					if (modelIndex == 2 || modelIndex == 1 || modelIndex == 3) {
@@ -1055,7 +1058,7 @@ public class PacketHandler {
 					if (modelIndex == 0 || modelIndex == 1 || modelIndex == 7) {
 						var16 -= tileSize;
 					}
-					playerToShow.waypointCurrent = var33 = (1 + var33) % 10;
+					playerToShow.waypointIndexCurrent = var33 = (1 + var33) % 10;
 					playerToShow.waypointsX[var33] = var15;
 					playerToShow.waypointsZ[var33] = var16;
 				}
@@ -1284,13 +1287,13 @@ public class PacketHandler {
 		int count = packetsIncoming.getBitMask(8);
 		int tileSize = mc.getTileSize();
 
-		int var10, var9, var11, dir, var19;
-		for (var19 = 0; count > var19; ++var19) {
-			ORSCharacter npc = mc.getNpcFromCache(var19);
+		int waypointCurrentIndex, rsDir, waypointX, var12, i;
+		for (i = 0; count > i; ++i) {
+			ORSCharacter npc = mc.getNpcFromCache(i);
 			int var7 = packetsIncoming.getBitMask(1);
 			if (var7 != 0) {
-				dir = packetsIncoming.getBitMask(1);
-				if (dir != 0) {
+				var12 = packetsIncoming.getBitMask(1);
+				if (var12 != 0) {
 					int nextSpriteOffset = packetsIncoming.getBitMask(2);
 					if (nextSpriteOffset == 3) {
 						continue;
@@ -1298,30 +1301,30 @@ public class PacketHandler {
 					npc.animationNext = (nextSpriteOffset << 2)
 						+ packetsIncoming.getBitMask(2);
 				} else {
-					var9 = packetsIncoming.getBitMask(3);
-					var10 = npc.waypointCurrent;
-					var11 = npc.waypointsX[var10];
-					if (var9 == 2 || var9 == 1 || var9 == 3) {
-						var11 += tileSize;
+					rsDir = packetsIncoming.getBitMask(3);
+					waypointCurrentIndex = npc.waypointIndexCurrent;
+					waypointX = npc.waypointsX[waypointCurrentIndex];
+					if (rsDir == 2 || rsDir == 1 || rsDir == 3) {
+						waypointX += tileSize;
 					}
 
-					int var31 = npc.waypointsZ[var10];
-					if (var9 == 6 || var9 == 5 || var9 == 7) {
-						var11 -= tileSize;
+					int waypointY = npc.waypointsZ[waypointCurrentIndex];
+					if (rsDir == 6 || rsDir == 5 || rsDir == 7) {
+						waypointX -= tileSize;
 					}
 
-					if (var9 == 4 || var9 == 3 || var9 == 5) {
-						var31 += tileSize;
+					if (rsDir == 4 || rsDir == 3 || rsDir == 5) {
+						waypointY += tileSize;
 					}
 
-					if (var9 == 0 || var9 == 1 || var9 == 7) {
-						var31 -= tileSize;
+					if (rsDir == 0 || rsDir == 1 || rsDir == 7) {
+						waypointY -= tileSize;
 					}
 
-					npc.waypointCurrent = var10 = (var10 - -1) % 10;
-					npc.animationNext = var9;
-					npc.waypointsX[var10] = var11;
-					npc.waypointsZ[var10] = var31;
+					npc.waypointIndexCurrent = waypointCurrentIndex = (waypointCurrentIndex + 1) % 10;
+					npc.animationNext = rsDir;
+					npc.waypointsX[waypointCurrentIndex] = waypointX;
+					npc.waypointsZ[waypointCurrentIndex] = waypointY;
 				}
 			}
 
@@ -1330,7 +1333,7 @@ public class PacketHandler {
 		}
 
 		while (length * 8 > packetsIncoming.getBitHead() + 34) {
-			var19 = packetsIncoming.getBitMask(12);
+			i = packetsIncoming.getBitMask(12);
 			int var6 = packetsIncoming.getBitMask(6);
 			if (var6 > 31) {
 				var6 -= 64;
@@ -1339,11 +1342,11 @@ public class PacketHandler {
 			if (var7 > 31) {
 				var7 -= 64;
 			}
-			dir = packetsIncoming.getBitMask(4);
-			var9 = (var6 + mc.getLocalPlayerX()) * tileSize + 64;
-			var10 = (var7 + mc.getLocalPlayerZ()) * tileSize + 64;
-			var11 = packetsIncoming.getBitMask(10);
-			mc.createNpc(dir, var11, var9, var10, var19);
+			var12 = packetsIncoming.getBitMask(4);
+			rsDir = (var6 + mc.getLocalPlayerX()) * tileSize + 64;
+			waypointCurrentIndex = (var7 + mc.getLocalPlayerZ()) * tileSize + 64;
+			waypointX = packetsIncoming.getBitMask(10);
+			mc.createNpc(var12, waypointX, rsDir, waypointCurrentIndex, i);
 		}
 
 		packetsIncoming.endBitAccess();
