@@ -37,8 +37,7 @@ public final class Constants {
 			NpcId.MUGGER.id(), NpcId.SCORPION.id(), NpcId.GIANT_SPIDER_LVL8.id(), NpcId.RAT_LVL8.id(), NpcId.ROGUE.id(),
 			NpcId.OOMLIE_BIRD.id(), NpcId.FIREBIRD.id(), NpcId.COW_ATTACKABLE.id(), NpcId.CHAOS_DWARF.id(),
 			NpcId.MONK.id(), NpcId.SHANTAY_PASS_GUARD_MOVING.id(), NpcId.FORESTER.id(), NpcId.ROWDY_GUARD.id(),
-			NpcId.ROWDY_SLAVE.id(), NpcId.WIZARD.id(), NpcId.ZOMBIE_LVL19.id(), NpcId.SKELETON_LVL21.id(),
-			NpcId.SOULESS_UNDEAD.id()
+			NpcId.ROWDY_SLAVE.id(), NpcId.WIZARD.id(), NpcId.ZOMBIE_LVL19.id(), NpcId.SOULESS_UNDEAD.id()
 		};
 		/* List for extremely low health 5% - min 1hp*/
 		public static final int[] NPCS_THAT_RETREAT_LOW = {NpcId.ZOMBIE_LVL24_GEN.id(), NpcId.SHADOW_SPIDER.id(), NpcId.DEADLY_RED_SPIDER.id(),
