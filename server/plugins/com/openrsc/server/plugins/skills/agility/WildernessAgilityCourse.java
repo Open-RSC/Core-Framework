@@ -6,6 +6,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+import com.openrsc.server.util.rsc.Formulae;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -91,7 +92,7 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 			}
 		}
 		p.setBusy(true);
-		boolean failCourse = failWildCourse(p);
+		boolean passObstacle = succeed(p);
 		switch (obj.getID()) {
 			case WILD_PIPE:
 				p.message("You squeeze through the pipe");
@@ -104,7 +105,7 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 				p.message("You grab the rope and try and swing across");
 				sleep(1000);
 				int damage = (int) Math.round((p.getSkills().getLevel(Skills.HITPOINTS)) * 0.15D);
-				if (failCourse) {
+				if (passObstacle) {
 					message(p, "You skillfully swing across the hole");
 					movePlayer(p, 292, 108);
 					p.incExp(Skills.AGILITY, 100, true);
@@ -123,7 +124,7 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 			case STONE:
 				p.message("you stand on the stepping stones");
 				sleep(1000);
-				if (failCourse) {
+				if (passObstacle) {
 					movePlayer(p, 293, 105);
 					sleep(600);
 					movePlayer(p, 294, 104);
@@ -147,7 +148,7 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 				p.message("you stand on the ledge");
 				sleep(1000);
 				int ledgeDamage = (int) Math.round((p.getSkills().getLevel(Skills.HITPOINTS)) * 0.25D);
-				if (failCourse) {
+				if (passObstacle) {
 					movePlayer(p, 296, 112);
 					sleep(600);
 					p.message("and walk across");
@@ -185,20 +186,8 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 		p.setBusy(false);
 	}
 
-	private boolean failWildCourse(Player player) {
-		int level_difference = getCurrentLevel(player, Skills.AGILITY) - 52;
-		int percent = random(1, 100);
-
-		if (level_difference < 0)
-			return false;
-		else if (level_difference >= 15)
-			level_difference = 90;
-
-		else if (level_difference >= 10)
-			level_difference = 80;
-		else
-			level_difference = 60 + level_difference;
-		return percent <= level_difference;
+	private boolean succeed(Player player) {
+		return Formulae.calcProductionSuccessful(52, getCurrentLevel(player, Skills.AGILITY), false, 151);
 	}
 
 	private int failRate() {

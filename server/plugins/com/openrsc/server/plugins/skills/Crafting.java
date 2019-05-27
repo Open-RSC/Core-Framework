@@ -433,7 +433,8 @@ public class Crafting implements InvUseOnItemListener,
 						ItemId.UNCUT_JADE.id(),
 						ItemId.UNCUT_OPAL.id(),
 					};
-					if (DataConversions.inArray(gemsThatFail, gem.getID()) && DataConversions.random(0, 3) == 2) {
+					if (DataConversions.inArray(gemsThatFail, gem.getID()) &&
+							Formulae.smashGem(gem.getID(), gemDef.getReqLevel(), owner.getSkills().getLevel(Skills.CRAFTING))) {
 						owner.message("You miss hit the chisel and smash the " + cutGem.getDef().getName() + " to pieces!");
 						owner.getInventory().add(new Item(ItemId.CRUSHED_GEMSTONE.id()));
 						if (gem.getID() == ItemId.UNCUT_RED_TOPAZ.id()) {

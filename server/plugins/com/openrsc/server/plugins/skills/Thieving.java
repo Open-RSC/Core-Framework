@@ -35,51 +35,13 @@ public class Thieving extends Functions
 	private static final String piece_of = "piece of ";
 
 	public static boolean succeedPickLockThieving(Player player, int req_level) {
-		int level_diff = player.getSkills().getLevel(Skills.THIEVING) - req_level;
-
-		int percent = DataConversions.random(1, 100);
-		if (level_diff < 0)
-			level_diff = 0;
-
-		if (level_diff > 40) {
-			level_diff = 75;
-		} else {
-			level_diff = (int) (player.getSkills().getLevel(Skills.THIEVING) * (double) 0.2D) + 50;
-		}
-		if (hasItem(player, 714, 1)) {
-			level_diff += 10;
-		}
-		return percent <= level_diff;
+		//lockpick said to make picking a bit easier
+		int effectiveLevel = player.getSkills().getLevel(Skills.THIEVING) + (hasItem(player, ItemId.LOCKPICK.id()) ? 10 : 0);
+		return Formulae.calcGatheringSuccessful(req_level, effectiveLevel);
 	}
 
-	/*
-	 * public static boolean succeedThieving(Player p, int req_level) { int
-	 * levelDiff = p.getSkills().getLevel(17) - req_level;
-	 *
-	 * if (levelDiff < 0) { return false; }
-	 *
-	 * System.out.println("Thieving: " + DataConversions.random(0, (levelDiff +
-	 * 2) * 2)); return DataConversions.random(0, (levelDiff + 2) * 2) != 0; }
-	 */
 	private static boolean succeedThieving(Player player, int req_level) {
-		int level_diff = player.getSkills().getLevel(Skills.THIEVING) - req_level;
-
-		int percent = DataConversions.random(1, 100);
-		if (level_diff < 0)
-			level_diff = 0;
-
-		if (level_diff > 10) {
-			level_diff = 70;
-		}
-		if (level_diff > 20) {
-			level_diff = 80;
-		}
-		if (level_diff > 30) {
-			level_diff = 90;
-		} else {
-			level_diff = 56 + level_diff;
-		}
-		return percent <= level_diff;
+		return Formulae.calcGatheringSuccessful(req_level, player.getSkills().getLevel(Skills.THIEVING));
 	}
 
 	public void stallThieving(Player player, GameObject object, Stall stall) {
@@ -434,7 +396,6 @@ public class Thieving extends Functions
 			} else {
 				player.message("You have activated a trap on the chest");
 				player.damage(DataConversions.random(0, 8));
-
 			}
 		} else if (obj.getID() == 379) { // HEMENSTER CHEST HARDCODE
 			if (command.equalsIgnoreCase("Open")) {

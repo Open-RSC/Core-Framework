@@ -8,6 +8,7 @@ import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
+import com.openrsc.server.util.rsc.Formulae;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -17,7 +18,6 @@ import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 import static com.openrsc.server.plugins.Functions.inArray;
 import static com.openrsc.server.plugins.Functions.movePlayer;
 import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.random;
 import static com.openrsc.server.plugins.Functions.sleep;
 
 public class BarbarianAgilityCourse implements WallObjectActionListener,
@@ -76,13 +76,13 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 			}
 		}
 		p.setBusy(true);
-		boolean fail = succeed(p);
+		boolean passObstacle = succeed(p);
 		switch (obj.getID()) {
 			case SWING:
 				p.message("You grab the rope and try and swing across");
 				sleep(1000);
 				int swingDamage = (int) Math.round((p.getSkills().getLevel(Skills.HITPOINTS)) * 0.15D);
-				if (fail) {
+				if (passObstacle) {
 					p.message("You skillfully swing across the hole");
 					movePlayer(p, 486, 559);
 					p.incExp(Skills.AGILITY, 80, true);
@@ -100,7 +100,7 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 				int slipDamage = (int) Math.round((p.getSkills().getLevel(Skills.HITPOINTS)) * 0.1D);
 				p.message("you stand on the slippery log");
 				sleep(2000);
-				if (fail) {
+				if (passObstacle) {
 					movePlayer(p, 489, 563);
 					sleep(650);
 					movePlayer(p, 490, 563);
@@ -130,7 +130,7 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 				p.message("You put your foot on the ledge and try to edge across");
 				sleep(1000);
 				int ledgeDamage = (int) Math.round((p.getSkills().getLevel(Skills.HITPOINTS)) * 0.15D);
-				if (fail) {
+				if (passObstacle) {
 					movePlayer(p, 501, 1506);
 					p.message("You skillfully balance across the hole");
 					p.incExp(Skills.AGILITY, 80, true);
@@ -188,19 +188,7 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 	}
 
 	private boolean succeed(Player player) {
-		int level_difference = getCurrentLevel(player, Skills.AGILITY) - 35;
-		int percent = random(1, 100);
-
-		if (level_difference < 0)
-			return true;
-		if (level_difference >= 10)
-			level_difference = 80;
-		if (level_difference >= 15)
-			level_difference = 90;
-		else
-			level_difference = 60 + level_difference;
-
-		return percent <= level_difference;
+		return Formulae.calcProductionSuccessful(35, getCurrentLevel(player, Skills.AGILITY), false, 134);
 	}
 
 }

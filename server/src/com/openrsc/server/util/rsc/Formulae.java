@@ -277,27 +277,23 @@ public final class Formulae {
 
 	/**
 	 * Decide if the food we are cooking should be burned or not Gauntlets of
-	 * Cooking. These gauntlets give an invisible bonus (+10 levels) to your
-	 * cooking level which allows you to burn food less often
+	 * Cooking. These gauntlets lowers lvl to burn of lobs, sword and shark
 	 */
 	public static boolean burnFood(Player p, int foodId, int cookingLevel) {
-		int levelDiff;
-		if (p.getInventory().wielding(ItemId.GAUNTLETS_OF_COOKING.id()))
-			levelDiff = (cookingLevel += 10) - EntityHandler.getItemCookingDef(foodId).getReqLevel();
-		else
-			levelDiff = cookingLevel - EntityHandler.getItemCookingDef(foodId).getReqLevel();
-		if (levelDiff < 0) {
-			return true;
-		}
-		if (levelDiff >= 20) {
-			return false;
-		}
-		return DataConversions.random(0, levelDiff - DataConversions.random(0, levelDiff) + 1) == 0;
+		//gauntlets of cooking effective on lobsters, swordfish and shark
+		//chef: Wearing them means you will burn your lobsters, swordfish and shark less
+		int bonusLevel = p.getInventory().wielding(ItemId.GAUNTLETS_OF_COOKING.id()) ?
+				(foodId == ItemId.RAW_SWORDFISH.id() ? 6 :
+				foodId == ItemId.RAW_LOBSTER.id() || foodId == ItemId.RAW_SHARK.id() ? 11 : 0) : 0;
+		int effectiveLevel = cookingLevel + bonusLevel;
+		int levelReq = EntityHandler.getItemCookingDef(foodId).getReqLevel();
+		//from cooking training table, level stop failing usually 35 since player can cook item
+		int levelStopFail = levelReq + 35;
+		return !Formulae.calcProductionSuccessful(levelReq, effectiveLevel, true, levelStopFail);
 	}
 
 	public static boolean goodWine(int cookingLevel) {
-		int chance = (int) (13 * Math.sqrt(cookingLevel - 10));
-		return chance > DataConversions.random(0, 100);
+		return Formulae.calcProductionSuccessful(35, cookingLevel, true, 70);
 	}
 
 	private static double addPrayers(Mob source, int prayer1, int prayer2, int prayer3) {
@@ -477,14 +473,21 @@ public final class Formulae {
 	 * Should the pot crack?
 	 */
 	public static boolean crackPot(int requiredLvl, int craftingLvl) {
-		int levelDiff = craftingLvl - requiredLvl;
-		if (levelDiff < 0) {
-			return true;
-		}
-		if (levelDiff >= 20) {
+		int levelStopFail = requiredLvl + 20;
+		return !Formulae.calcProductionSuccessful(requiredLvl, craftingLvl, true, levelStopFail);
+	}
+	
+	/**
+	 * Should the gem be smashed?
+	 */
+	public static boolean smashGem(int gemId, int requiredLvl, int craftingLvl) {
+		int[] SEMIPRECIOUS = {ItemId.UNCUT_OPAL.id(), ItemId.UNCUT_JADE.id(), ItemId.UNCUT_RED_TOPAZ.id()};
+		
+		if (!DataConversions.inArray(SEMIPRECIOUS, gemId))
 			return false;
-		}
-		return DataConversions.random(0, levelDiff + 1) == 0;
+		
+		int levelStopFail = requiredLvl + 89;
+		return !Formulae.calcProductionSuccessful(requiredLvl, craftingLvl, true, levelStopFail);
 	}
 
 	/**
@@ -535,6 +538,19 @@ public final class Formulae {
 		// 1 is already guaranteed to be successful
 		// using 127 as the min in order for threshold to not be able to hit 128 for a guaranteed chance to fail
 		int threshold = Math.min(127, Math.max(1, skillLevel + equipmentBonus + 40 - (int) (levelReq * 1.5)));
+		return roll <= threshold;
+	}
+	
+	public static boolean calcProductionSuccessful(int levelReq, int skillLevel, boolean stopsFailing, int levelStopFail) {
+		int roll = DataConversions.random(1, 256);
+		
+		if (skillLevel < levelReq)
+			return false;
+		
+		// min chance is 64/256
+		// skillLevel is the effective one
+		int maxThreshold = stopsFailing ? 256 : 255;
+		int threshold = Math.min(maxThreshold, (int)Math.floor(64 + (skillLevel - 1) * (19200.0D / (levelStopFail * 98 ))));
 		return roll <= threshold;
 	}
 
@@ -713,19 +729,14 @@ public final class Formulae {
 	 * Should the fire light or fail?
 	 */
 	public static boolean lightLogs(int firemakingLvl) {
-		int chance = (int) (35 * Math.pow(firemakingLvl, (1 / 4.0)));
-		return chance > DataConversions.random(0, 100);
+		return Formulae.calcProductionSuccessful(1, firemakingLvl, true, 60);
 	}
 
 	public static boolean lightCustomLogs(FiremakingDef def, int firemakingLvl) {
-		int levelDiff = firemakingLvl - def.getRequiredLevel();
-		if (levelDiff < 0) {
-			return false;
-		}
-		if (levelDiff >= 20) {
-			return true;
-		}
-		return DataConversions.random(0, levelDiff + 1) != 0;
+		int levelReq = def.getRequiredLevel();
+		//from normal logs, level stop failing is 60 since start
+		int levelStopFail = levelReq + 59;
+		return Formulae.calcProductionSuccessful(levelReq, firemakingLvl, true, levelStopFail);
 	}
 	
 	public static int getLevelsToReduceAttackKBD(Player p) {

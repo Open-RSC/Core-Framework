@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.skills.agility;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -10,6 +11,7 @@ import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -522,34 +524,19 @@ public class AgilityShortcuts implements ObjectActionListener,
 	// you tie the rope to the tree
 
 	boolean succeed(Player player, int req) {
-		int level_difference = getCurrentLevel(player, Skills.AGILITY) - req;
-		int percent = random(1, 100);
-
-		if (level_difference < 0)
-			return true;
-		if (level_difference >= 15)
-			level_difference = 80;
-		if (level_difference >= 20)
-			level_difference = 90;
-		else
-			level_difference = 30 + level_difference;
-
-		return percent <= level_difference;
+		return Formulae.calcProductionSuccessful(req, getCurrentLevel(player, Skills.AGILITY), false, req + 99);
 	}
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		if (obj.getID() == GREW_ISLAND_ROPE_ATTACH && item.getID() == 237) {
-			return true;
-		}
-		return false;
+		return obj.getID() == GREW_ISLAND_ROPE_ATTACH && item.getID() == ItemId.ROPE.id();
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == GREW_ISLAND_ROPE_ATTACH && item.getID() == 237) {
+		if (obj.getID() == GREW_ISLAND_ROPE_ATTACH && item.getID() == ItemId.ROPE.id()) {
 			p.message("you tie the rope to the tree");
-			removeItem(p, 237, 1);
+			removeItem(p, ItemId.ROPE.id(), 1);
 			World.getWorld().replaceGameObject(obj,
 				new GameObject(obj.getLocation(), 663, obj.getDirection(), obj
 					.getType()));
