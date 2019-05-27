@@ -28,6 +28,7 @@ public final class EntityHandler {
 	private static ItemHerbSecond[] herbSeconds;
 	private static HashMap<Integer, int[]> itemAffectedTypes;
 	private static HashMap<Integer, ItemCookingDef> itemCooking;
+	private static HashMap<Integer, ItemPerfectCookingDef> itemPerfectCooking;
 	private static ItemCraftingDef[] itemCrafting;
 	private static HashMap<Integer, Integer> itemEdibleHeals;
 	private static HashMap<Integer, ItemHerbDef> itemHerb;
@@ -62,6 +63,7 @@ public final class EntityHandler {
 		itemHerb = (HashMap<Integer, ItemHerbDef>) PersistenceManager.load("defs/extras/ItemHerbDef.xml.gz");
 		itemEdibleHeals = (HashMap<Integer, Integer>) PersistenceManager.load("defs/extras/ItemEdibleHeals.xml.gz");
 		itemCooking = (HashMap<Integer, ItemCookingDef>) PersistenceManager.load("defs/extras/ItemCookingDef.xml.gz");
+		itemPerfectCooking = (HashMap<Integer, ItemPerfectCookingDef>) PersistenceManager.load("defs/extras/ItemPerfectCookingDef.xml.gz");
 		itemSmelting = (HashMap<Integer, ItemSmeltingDef>) PersistenceManager.load("defs/extras/ItemSmeltingDef.xml.gz");
 		itemSmithing = (ItemSmithingDef[]) PersistenceManager.load("defs/extras/ItemSmithingDef.xml.gz");
 		itemCrafting = (ItemCraftingDef[]) PersistenceManager.load("defs/extras/ItemCraftingDef.xml.gz");
@@ -152,6 +154,14 @@ public final class EntityHandler {
 	 */
 	public static ItemCookingDef getItemCookingDef(int id) {
 		return itemCooking.get(id);
+	}
+	
+	/**
+	 * @param id the entities ID
+	 * @return the ItemPerfectCookingDef with the given ID
+	 */
+	public static ItemPerfectCookingDef getItemPerfectCookingDef(int id) {
+		return itemPerfectCooking.get(id);
 	}
 
 	/**

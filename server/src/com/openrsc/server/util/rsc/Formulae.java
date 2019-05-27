@@ -287,8 +287,10 @@ public final class Formulae {
 				foodId == ItemId.RAW_LOBSTER.id() || foodId == ItemId.RAW_SHARK.id() ? 11 : 0) : 0;
 		int effectiveLevel = cookingLevel + bonusLevel;
 		int levelReq = EntityHandler.getItemCookingDef(foodId).getReqLevel();
-		//from cooking training table, level stop failing usually 35 since player can cook item
-		int levelStopFail = levelReq + 35;
+		//if not on def file from cooking training table, level stop failing
+		//is usually 35 since player can cook item
+		int levelStopFail = EntityHandler.getItemPerfectCookingDef(foodId) != null ?
+				 EntityHandler.getItemPerfectCookingDef(foodId).getReqLevel() : levelReq + 35;
 		return !Formulae.calcProductionSuccessful(levelReq, effectiveLevel, true, levelStopFail);
 	}
 

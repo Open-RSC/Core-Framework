@@ -83,6 +83,10 @@ public class Item implements Comparable<Item> {
 	public ItemCookingDef getCookingDef() {
 		return EntityHandler.getItemCookingDef(id);
 	}
+	
+	public ItemPerfectCookingDef getPerfectCookingDef() {
+		return EntityHandler.getItemPerfectCookingDef(id);
+	}
 
 	public ItemDefinition getDef() {
 		return EntityHandler.getItemDef(id);

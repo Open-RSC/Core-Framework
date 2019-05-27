@@ -37,6 +37,7 @@
     <entry key="ItemUnIdentHerbDef">com.openrsc.server.external.ItemUnIdentHerbDef</entry>
     <entry key="ItemHerbDef">com.openrsc.server.external.ItemHerbDef</entry>
     <entry key="ItemCookingDef">com.openrsc.server.external.ItemCookingDef</entry>
+    <entry key="ItemPerfectCookingDef">com.openrsc.server.external.ItemPerfectCookingDef</entry>
     <entry key="ItemSmeltingDef">com.openrsc.server.external.ItemSmeltingDef</entry>
     <entry key="ItemSmithingDef">com.openrsc.server.external.ItemSmithingDef</entry>
     <entry key="ObjectMiningDef">com.openrsc.server.external.ObjectMiningDef</entry>
