@@ -136,12 +136,17 @@ public final class QuestGuideInterface {
 		}
 
 		// Temporary for tracking
-		drawString("Progress: " + Integer.toString(mc.getQuestGuideProgress()), x + width - 85, trackY, 2, this.textColour);
+		drawString("Progress: " + asStringStage(mc.getQuestGuideProgress()) + " (" + 
+				Integer.toString(mc.getQuestGuideProgress()) + ")", x + width - 85, trackY, 2, this.textColour);
 		trackY += 15;
 
 		autoHeight = trackY;
 
 		questGuide.drawPanel();
+	}
+
+	public String asStringStage(int progress) {
+		return progress == 0 ? "Not started" : progress < 0 ? "Completed" : "In progress";
 	}
 
 	public void customAdd(String text, int font, int color) {
