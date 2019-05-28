@@ -130,7 +130,7 @@ public final class QuestGuideInterface {
 
 		// Temporary for tracking
 		drawString("Progress: " + asStringStage(mc.getQuestGuideProgress()) + " (" + 
-				Integer.toString(mc.getQuestGuideProgress()) + ")", x + width - 85, trackY, 2, this.textColour);
+				Integer.toString(mc.getQuestGuideProgress()) + ")", x + width - 150, trackY, 2, this.textColour);
 		trackY += 15;
 
 		autoHeight = trackY;
