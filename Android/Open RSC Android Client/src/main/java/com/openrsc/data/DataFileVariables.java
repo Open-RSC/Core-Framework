@@ -1,4 +1,4 @@
-package com.openrsc.client.data;
+package com.openrsc.data;
 
 class DataFileVariables {
 

@@ -1,13 +1,13 @@
 package orsc;
 
-import com.openrsc.client.data.DataFileDecrypter;
-import com.openrsc.client.data.DataOperations;
+import com.openrsc.data.DataFileDecrypter;
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
 import com.openrsc.client.entityhandling.defs.NPCDef;
 import com.openrsc.client.entityhandling.defs.SpellDef;
 import com.openrsc.client.entityhandling.defs.extras.AnimationDef;
 import com.openrsc.client.model.Sprite;
+import com.openrsc.data.DataOperations;
 import com.openrsc.interfaces.NComponent;
 import com.openrsc.interfaces.NCustomComponent;
 import com.openrsc.interfaces.misc.*;
@@ -4771,8 +4771,9 @@ public final class mudclient implements Runnable {
 							i += 14;
 							this.getSurface().drawString("Camera Z: " + cameraZ + " (" + this.cameraPositionZ + " + " + this.cameraAutoMoveZ + ") [" + this.localPlayer.currentZ + "] [" + cameraAutoMoveAmountZ + "]", 7, i, 0xffffff, 1);
 							i += 14;
-							this.getSurface().drawString("Camera Y: " + cameraY, 7, i, 0xffffff, 1);						}
+							this.getSurface().drawString("Camera Y: " + cameraY, 7, i, 0xffffff, 1);
 						}
+					}
 
 					if (S_EXPERIENCE_COUNTER_TOGGLE && C_EXPERIENCE_COUNTER == 2) {
 						this.drawExperienceCounter(recentSkill);
@@ -9970,10 +9971,10 @@ public final class mudclient implements Runnable {
 								this.cameraPitch = (this.cameraPitch + 4) & 1023;
 
 								// Limit on the half circled where everything is right side up
-								if(this.cameraPitch > 256 && this.cameraPitch <= 512)
+								if (this.cameraPitch > 256 && this.cameraPitch <= 512)
 									this.cameraPitch = 256;
 
-								if(this.cameraPitch < 768 && this.cameraPitch > 512)
+								if (this.cameraPitch < 768 && this.cameraPitch > 512)
 									this.cameraPitch = 768;
 							}
 						}

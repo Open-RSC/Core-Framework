@@ -104,8 +104,20 @@ public final class AuctionHouse {
 		myAuctions.reposition(textField_priceEach, x + 60, y + 169, 70, 18);
 	}
 
+	public boolean inBounds(int x, int y, int rectX, int rectY, int width, int height)
+	{
+		return x >= rectX && x < (rectX + width) && y >= rectY && y < (rectY + height);
+	}
+
 	public boolean onRender(GraphicsController graphics) {
 		reposition();
+
+		if (mc.getMouseClick() == 1) {
+			if(!inBounds(mc.getMouseX(), mc.getMouseY(), x, y, width, height + 12)) {
+				auctionClose();
+			}
+		}
+
 		graphics.drawBox(x, y, width, 12, 192);
 		int colour = 10000536;
 		graphics.drawBoxAlpha(x, y + 12, width, height, colour, 160);
@@ -140,12 +152,7 @@ public final class AuctionHouse {
 		drawTextHit(graphics, x + 405, y - 1, 81, 12, "Close window", false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.packetHandler.getClientStream().newPacket(199);
-				mc.packetHandler.getClientStream().writeBuffer1.putByte(10);
-				mc.packetHandler.getClientStream().writeBuffer1.putByte(4);
-				mc.packetHandler.getClientStream().finishPacket();
-				resetAllVariables();
-				setVisible(false);
+				auctionClose();
 			}
 		});
 
@@ -155,6 +162,15 @@ public final class AuctionHouse {
 			drawMyAuctions(graphics);
 		}
 		return true;
+	}
+
+	private void auctionClose() {
+		mc.packetHandler.getClientStream().newPacket(199);
+		mc.packetHandler.getClientStream().writeBuffer1.putByte(10);
+		mc.packetHandler.getClientStream().writeBuffer1.putByte(4);
+		mc.packetHandler.getClientStream().finishPacket();
+		resetAllVariables();
+		setVisible(false);
 	}
 
 	private void sendRefreshList() {

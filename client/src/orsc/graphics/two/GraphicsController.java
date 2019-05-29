@@ -1,6 +1,6 @@
 package orsc.graphics.two;
 
-import com.openrsc.client.data.DataConversions;
+import com.openrsc.data.DataConversions;
 import com.openrsc.client.model.Sprite;
 import orsc.Config;
 import orsc.MiscFunctions;

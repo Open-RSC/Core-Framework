@@ -1,6 +1,6 @@
 package orsc.graphics.three;
 
-import com.openrsc.client.data.DataConversions;
+import com.openrsc.data.DataConversions;
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.model.Sector;
 

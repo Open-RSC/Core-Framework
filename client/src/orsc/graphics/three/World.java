@@ -1,8 +1,12 @@
 package orsc.graphics.three;
 
-import com.openrsc.client.data.DataConversions;
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.model.Sector;
+import com.openrsc.data.DataConversions;
+import orsc.Config;
+import orsc.graphics.two.GraphicsController;
+import orsc.util.FastMath;
+import orsc.util.GenUtil;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -10,11 +14,6 @@ import java.nio.ByteBuffer;
 import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import orsc.Config;
-import orsc.graphics.two.GraphicsController;
-import orsc.util.FastMath;
-import orsc.util.GenUtil;
 
 public final class World {
 	private final int[] colorToResource = new int[256];
