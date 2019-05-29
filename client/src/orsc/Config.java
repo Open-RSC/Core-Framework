@@ -121,6 +121,7 @@ public class Config {
 	public static boolean S_WANT_PETS = false;
 	public static int S_MAX_WALKING_SPEED = 1;
 	public static boolean S_SHOW_UNIDENTIFIED_HERB_NAMES = false;
+	public static boolean S_WANT_QUEST_STARTED_INDICATOR = false;
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());

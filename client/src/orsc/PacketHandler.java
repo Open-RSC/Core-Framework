@@ -729,7 +729,7 @@ public class PacketHandler {
 		int sideMenuToggle, inventoryCountToggle, zoomViewToggle;
 		int menuCombatStyleToggle, fightmodeSelectorToggle, experienceCounterToggle;
 		int experienceDropsToggle, itemsOnDeathMenu, showRoofToggle, wantHideIp, wantRemember;
-		int wantGlobalChat, wantSkillMenus, wantQuestMenus, maxWalkingSpeed;
+		int wantGlobalChat, wantSkillMenus, wantQuestMenus, wantQuestStartedIndicator, maxWalkingSpeed;
 		int wantExperienceElixirs, wantKeyboardShortcuts, wantMembers, displayLogoSprite;
 		int wantCustomBanks, wantBankPins, wantBankNotes, wantCertDeposit, customFiremaking;
 		int wantDropX, wantExpInfo, wantWoodcuttingGuild, wantFixedOverheadChat, wantPets, showUnidentifiedHerbNames;
@@ -795,6 +795,7 @@ public class PacketHandler {
 			wantPets = this.getClientStream().getUnsignedByte(); // 54
 			maxWalkingSpeed = this.getClientStream().getUnsignedByte(); // 55
 			showUnidentifiedHerbNames = this.getClientStream().getUnsignedByte(); // 56
+			wantQuestStartedIndicator = this.getClientStream().getUnsignedByte(); // 57
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -853,6 +854,7 @@ public class PacketHandler {
 			wantPets = packetsIncoming.getUnsignedByte(); // 54
 			maxWalkingSpeed = packetsIncoming.getUnsignedByte(); // 55
 			showUnidentifiedHerbNames = packetsIncoming.getUnsignedByte(); // 56
+			wantQuestStartedIndicator = packetsIncoming.getUnsignedByte(); // 57
 		}
 
 		if (Config.DEBUG) {
@@ -912,7 +914,8 @@ public class PacketHandler {
 					"\nS_WANT_PLAYER_COMMANDS " + wantPlayerCommands + // 53
 					"\nS_WANT_PETS " + wantPets + // 54
 					"\nS_MAX_RUNNING_SPEED " + maxWalkingSpeed + //55
-					"\nS_SHOW_UNIDENTIFIED_HERB_NAMES " + showUnidentifiedHerbNames // 56
+					"\nS_SHOW_UNIDENTIFIED_HERB_NAMES " + showUnidentifiedHerbNames + // 56
+					"\nS_WANT_QUEST_STARTED_INDICATOR  " + wantQuestStartedIndicator // 57
 			);
 		}
 		
@@ -972,6 +975,7 @@ public class PacketHandler {
 		props.setProperty("S_WANT_PETS", wantPets == 1 ? "true" : "false"); // 54
 		props.setProperty("S_MAX_WALKING_SPEED", Integer.toString(maxWalkingSpeed)); // 55
 		props.setProperty("S_SHOW_UNIDENTIFIED_HERB_NAMES", showUnidentifiedHerbNames == 1 ? "true" : "false"); // 56
+		props.setProperty("S_WANT_QUEST_STARTED_INDICATOR", wantQuestStartedIndicator == 1 ? "true" : "false"); // 57
 
 		Config.updateServerConfiguration(props);
 

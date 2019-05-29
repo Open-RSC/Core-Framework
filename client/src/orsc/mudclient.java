@@ -9041,7 +9041,8 @@ public final class mudclient implements Runnable {
 				for (questNum = 0; questNum < 50; ++questNum) {
 					if (this.questNames[questNum] != null) {
 						this.panelQuestInfo.setListEntry(this.controlQuestInfoPanel, index++,
-							(questStages[questNum] < 0 ? "@gre@" : "@red@")//questStages[questNum] > 0 ? "@yel@" : "@gre@")
+							(questStages[questNum] < 0 ? "@gre@" :
+								questStages[questNum] > 0 && Config.S_WANT_QUEST_STARTED_INDICATOR ? "@yel@" : "@red@")
 								+ this.questNames[questNum],
 							0, null, null);
 					}

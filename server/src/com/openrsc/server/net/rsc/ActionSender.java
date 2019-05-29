@@ -474,6 +474,8 @@ public class ActionSender {
 			LOGGER.info(PLAYER_COMMANDS + " 53");
 			LOGGER.info(WANT_PETS + " 54");
 			LOGGER.info(MAX_WALKING_SPEED + " 55");
+			LOGGER.info(SHOW_UNIDENTIFIED_HERB_NAMES + " 56");
+			LOGGER.info(WANT_QUEST_STARTED_INDICATOR + " 57");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs();
 		ConnectionAttachment attachment = new ConnectionAttachment();
@@ -546,6 +548,7 @@ public class ActionSender {
 		s.writeByte((byte) (WANT_PETS ? 1 : 0)); // 54
 		s.writeByte((byte) MAX_WALKING_SPEED); // 55
 		s.writeByte((byte) (SHOW_UNIDENTIFIED_HERB_NAMES ? 1 : 0)); // 56
+		s.writeByte((byte) (WANT_QUEST_STARTED_INDICATOR ? 1 : 0)); // 57
 		return s;
 	}
 
