@@ -47,7 +47,7 @@ public class Config {
 	public static final String DL_URL = "androidcheck.openrsc.com"; // needs to be set as public for the Android client to use
 	public static final String ANDROID_DOWNLOAD_PATH = "https://" + DL_URL + "/downloads/";
 	public static final String CACHE_URL = "https://" + DL_URL + "/downloads/cache/";
-	public static final int ANDROID_CLIENT_VERSION = 31; // Important! Depends on web server android_version.txt to check for an updated version
+	public static final int ANDROID_CLIENT_VERSION = 32; // Important! Depends on web server android_version.txt to check for an updated version
 	public static boolean F_SHOWING_KEYBOARD = false;
 	public static boolean C_HOLD_AND_CHOOSE = true;
 	public static int C_LONG_PRESS_TIMER = 5; // default hold timer setting
@@ -121,6 +121,7 @@ public class Config {
 	public static boolean S_WANT_PETS = false;
 	public static int S_MAX_WALKING_SPEED = 1;
 	public static boolean S_SHOW_UNIDENTIFIED_HERB_NAMES = false;
+	public static boolean S_WANT_QUEST_STARTED_INDICATOR = false;
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());
