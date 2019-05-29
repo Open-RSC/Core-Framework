@@ -2,14 +2,17 @@ package com.openrsc.interfaces.misc;
 
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+
+import orsc.Config;
 import orsc.enumerations.MessageType;
 import orsc.graphics.gui.Panel;
 import orsc.graphics.two.GraphicsController;
 import orsc.mudclient;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedList;
 
 public final class AuctionHouse {
 	public int auctionScrollHandle;
@@ -104,7 +107,7 @@ public final class AuctionHouse {
 		myAuctions.reposition(textField_priceEach, x + 60, y + 169, 70, 18);
 	}
 
-	public boolean inBounds(int x, int y, int rectX, int rectY, int width, int height)
+	private boolean inBounds(int x, int y, int rectX, int rectY, int width, int height)
 	{
 		return x >= rectX && x < (rectX + width) && y >= rectY && y < (rectY + height);
 	}
@@ -112,7 +115,7 @@ public final class AuctionHouse {
 	public boolean onRender(GraphicsController graphics) {
 		reposition();
 
-		if (mc.getMouseClick() == 1) {
+		if (!Config.isAndroid() && mc.getMouseClick() == 1) {
 			if(!inBounds(mc.getMouseX(), mc.getMouseY(), x, y, width, height + 12)) {
 				auctionClose();
 			}
@@ -508,7 +511,7 @@ public final class AuctionHouse {
 	}
 
 	private void drawAuctionMenu(GraphicsController graphics) {
-		auctionItems.sort(auctionComparator);
+		Collections.sort(auctionItems, auctionComparator);
 		auctionMenu.clearList(auctionScrollHandle);
 
 		graphics.drawBoxAlpha(x + 2, y + 61, 81, 223 + 4, 0, 60);
@@ -628,7 +631,7 @@ public final class AuctionHouse {
 				} else if (orderingBy == 4) {
 					sortBy = "Price Each (up)";
 				}
-				auctionItems.sort(auctionComparator);
+				Collections.sort(auctionItems, auctionComparator);
 			}
 		});
 
