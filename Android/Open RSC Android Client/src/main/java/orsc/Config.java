@@ -43,7 +43,7 @@ public class Config {
 	public static int C_ZOOM;
 
 	/* Android: */
-	public static boolean F_ANDROID_BUILD = false; // This MUST be true if Android client or it will crash on launch, needs to be set as public for the Android client to use
+	public static boolean F_ANDROID_BUILD = true; // This MUST be true if Android client or it will crash on launch, needs to be set as public for the Android client to use
 	public static final String DL_URL = "androidcheck.openrsc.com"; // needs to be set as public for the Android client to use
 	public static final String ANDROID_DOWNLOAD_PATH = "https://" + DL_URL + "/downloads/";
 	public static final String CACHE_URL = "https://" + DL_URL + "/downloads/cache/";
