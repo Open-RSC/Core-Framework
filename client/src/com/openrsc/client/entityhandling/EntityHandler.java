@@ -3233,6 +3233,25 @@ public class EntityHandler {
 		items.add(new ItemDef("Scythe", "Get another from the clothes shop if you die", "", 15, 434, false, true, 8216, 0, false, true, 2134, -1, 1289));
 		loadNoteDefinitions();
 		loadCustomItemAndNoteDefinitions();
+		
+		if(Config.S_SHOW_UNIDENTIFIED_HERB_NAMES) {
+			items.get(165).name = "Muddy Guam";
+			items.get(435).name = "Muddy Marrentill";
+			items.get(436).name = "Muddy Tarromin";
+			items.get(437).name = "Muddy Harralander";
+			items.get(438).name = "Muddy Ranarr Weed";
+			items.get(439).name = "Muddy Irit Leaf";
+			items.get(440).name = "Muddy Avantoe";
+			items.get(441).name = "Muddy Kwuarm";
+			items.get(442).name = "Muddy Cadantine";
+			items.get(443).name = "Muddy Dwarf Weed";
+			items.get(815).name = "Muddy Snake Weed";
+			items.get(817).name = "Muddy Ardrigal";
+			items.get(819).name = "Muddy Sito Foil";
+			items.get(821).name = "Muddy Volencia Moss";
+			items.get(823).name = "Muddy Rogues Purse";
+			items.get(933).name = "Muddy Torstol";
+		}
 
 		/*try {
 		PrintWriter printWriter = new PrintWriter(new FileOutputStream("newItemDef.txt"), true);

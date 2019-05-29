@@ -233,6 +233,8 @@ public final class Constants {
 		public static boolean WANT_PETS = false;
 		public static boolean AUTO_SERVER_RESTART = false;
 		public static int MAX_WALKING_SPEED = 1;
+		public static boolean SHOW_UNIDENTIFIED_HERB_NAMES = false;
+		
 		public static int MAX_TICKS_UNTIL_FULL_WALKING_SPEED = 5;
 		//strict check on level requirements for "glitched" validations on rsc
 		public static boolean STRICT_CHECK_ALL = false;
@@ -346,6 +348,7 @@ public final class Constants {
 			WANT_FATIGUE = Boolean.parseBoolean(props.getProperty("want_fatigue"));
 			WANT_CUSTOM_SPRITES = Boolean.parseBoolean(props.getProperty("custom_sprites"));
 			WANT_PETS = Boolean.parseBoolean(props.getProperty("want_pets"));
+			SHOW_UNIDENTIFIED_HERB_NAMES = Boolean.parseBoolean(props.getProperty("show_unidentified_herb_names"));
 
 			NPC_KILL_LIST = Boolean.parseBoolean(props.getProperty("npc_kill_list"));
 			NPC_KILL_MESSAGES = Boolean.parseBoolean(props.getProperty("npc_kill_messages"));

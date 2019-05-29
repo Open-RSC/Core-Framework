@@ -545,6 +545,7 @@ public class ActionSender {
 		s.writeByte((byte) (PLAYER_COMMANDS ? 1 : 0)); // 53
 		s.writeByte((byte) (WANT_PETS ? 1 : 0)); // 54
 		s.writeByte((byte) MAX_WALKING_SPEED); // 55
+		s.writeByte((byte) (SHOW_UNIDENTIFIED_HERB_NAMES ? 1 : 0)); // 56
 		return s;
 	}
 

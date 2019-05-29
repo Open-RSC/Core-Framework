@@ -732,7 +732,7 @@ public class PacketHandler {
 		int wantGlobalChat, wantSkillMenus, wantQuestMenus, maxWalkingSpeed;
 		int wantExperienceElixirs, wantKeyboardShortcuts, wantMembers, displayLogoSprite;
 		int wantCustomBanks, wantBankPins, wantBankNotes, wantCertDeposit, customFiremaking;
-		int wantDropX, wantExpInfo, wantWoodcuttingGuild, wantFixedOverheadChat, wantPets;
+		int wantDropX, wantExpInfo, wantWoodcuttingGuild, wantFixedOverheadChat, wantPets, showUnidentifiedHerbNames;
 		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank, wantPlayerCommands;
 		int getFPS, wantEmail, wantRegistrationLimit, allowResize, lenientContactDetails, wantFatigue, wantCustomSprites;
 		String logoSpriteID;
@@ -794,6 +794,7 @@ public class PacketHandler {
 			wantPlayerCommands = this.getClientStream().getUnsignedByte(); // 53
 			wantPets = this.getClientStream().getUnsignedByte(); // 54
 			maxWalkingSpeed = this.getClientStream().getUnsignedByte(); // 55
+			showUnidentifiedHerbNames = this.getClientStream().getUnsignedByte(); // 56
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -851,6 +852,7 @@ public class PacketHandler {
 			wantPlayerCommands = packetsIncoming.getUnsignedByte(); // 53
 			wantPets = packetsIncoming.getUnsignedByte(); // 54
 			maxWalkingSpeed = packetsIncoming.getUnsignedByte(); // 55
+			showUnidentifiedHerbNames = packetsIncoming.getUnsignedByte(); // 56
 		}
 
 		if (Config.DEBUG) {
@@ -909,10 +911,11 @@ public class PacketHandler {
 					"\nS_WANT_CUSTOM_SPRITES " + wantCustomSprites + // 52
 					"\nS_WANT_PLAYER_COMMANDS " + wantPlayerCommands + // 53
 					"\nS_WANT_PETS " + wantPets + // 54
-					"\nS_MAX_RUNNING_SPEED " + maxWalkingSpeed //55
+					"\nS_MAX_RUNNING_SPEED " + maxWalkingSpeed + //55
+					"\nS_SHOW_UNIDENTIFIED_HERB_NAMES " + showUnidentifiedHerbNames // 56
 			);
 		}
-
+		
 		props.setProperty("SERVER_NAME", serverName); // 1
 		props.setProperty("SERVER_NAME_WELCOME", serverNameWelcome); // 2
 		props.setProperty("S_PLAYER_LEVEL_LIMIT", Integer.toString(playerLevelLimit)); // 3
@@ -968,6 +971,7 @@ public class PacketHandler {
 		props.setProperty("S_WANT_PLAYER_COMMANDS", wantPlayerCommands == 1 ? "true" : "false"); // 53
 		props.setProperty("S_WANT_PETS", wantPets == 1 ? "true" : "false"); // 54
 		props.setProperty("S_MAX_WALKING_SPEED", Integer.toString(maxWalkingSpeed)); // 55
+		props.setProperty("S_SHOW_UNIDENTIFIED_HERB_NAMES", showUnidentifiedHerbNames == 1 ? "true" : "false"); // 56
 
 		Config.updateServerConfiguration(props);
 
