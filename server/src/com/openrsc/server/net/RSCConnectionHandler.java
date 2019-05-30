@@ -74,10 +74,12 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 
 	@Override
 	public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable e) throws Exception {
-		System.out.println("Exception caught in thread!\n" + e);
+		if (!Constants.GameServer.IGNORED_NETWORK_EXCEPTIONS.stream().anyMatch($it -> Objects.equal($it, e.getMessage()))) {
+			 System.out.println("Exception caught in thread!\n" + e);
 
-		for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
-			System.out.println(ste);
+			 for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
+				 System.out.println(ste);
+			 }
 		}
 
 		if (ctx.channel().isActive())
