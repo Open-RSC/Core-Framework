@@ -1,5 +1,6 @@
 package com.openrsc.server;
 
+import com.google.common.collect.ImmutableList;
 import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 
@@ -258,6 +259,10 @@ public final class Constants {
 		public static boolean WANT_SHOW_KITTENS_CIVILLIAN = false;
 		public static boolean WANT_BARTER_WORMBRAINS = false;
 
+		public static ImmutableList<String> IGNORED_NETWORK_EXCEPTIONS =
+            ImmutableList.of("An existing connection was forcibly closed by the remote host",
+                    "An established connection was aborted by the software in your host machine",
+                    "Connection reset by peer");
 		/**
 		 * @param file
 		 * @throws IOException
