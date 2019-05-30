@@ -104,7 +104,7 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 		}
 		owner.playerServerMessage(MessageType.QUEST, "You attempt to catch " + tryToCatchFishString(def));
 		showBubble(owner, new Item(netId));
-		owner.setBatchEvent(new BatchEvent(owner, 1800, Formulae.getRepeatTimes(owner, Skills.FISHING)) {
+		owner.setBatchEvent(new BatchEvent(owner, 1800, Formulae.getRepeatTimes(owner, Skills.FISHING), true) {
 			@Override
 			public void action() {
 				showBubble(owner, new Item(netId));

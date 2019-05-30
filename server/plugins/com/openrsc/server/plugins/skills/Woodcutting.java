@@ -96,7 +96,7 @@ public class Woodcutting implements ObjectActionListener,
 		final int axeID = axeId;
 		showBubble(owner, new Item(axeId));
 		owner.message("You swing your " + EntityHandler.getItemDef(axeId).getName().toLowerCase() + " at the tree...");
-		owner.setBatchEvent(new BatchEvent(owner, 1800, batchTimes) {
+		owner.setBatchEvent(new BatchEvent(owner, 1800, batchTimes, true) {
 			public void action() {
 				final Item log = new Item(def.getLogId());
 				if (Constants.GameServer.WANT_FATIGUE) {

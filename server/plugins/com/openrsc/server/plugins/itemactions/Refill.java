@@ -34,7 +34,7 @@ public class Refill implements InvUseOnObjectListener,
 			if (REFILLABLE[i] == item.getID()) {
 				final int itemID = item.getID();
 				final int refilledID = REFILLED[i];
-				player.setBatchEvent(new BatchEvent(player, 600, player.getInventory().countId(itemID)) {
+				player.setBatchEvent(new BatchEvent(player, 600, player.getInventory().countId(itemID), true) {
 					@Override
 					public void action() {
 						if (removeItem(owner, itemID, 1)) {

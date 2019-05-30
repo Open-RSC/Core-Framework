@@ -105,7 +105,7 @@ public class GemMining implements ObjectActionListener,
 		p.playSound("mine");
 		showBubble(p, new Item(ItemId.IRON_PICKAXE.id()));
 		p.message("You have a swing at the rock!");
-		p.setBatchEvent(new BatchEvent(p, 1800, 1000 + retrytimes) {
+		p.setBatchEvent(new BatchEvent(p, 1800, 1000 + retrytimes, true) {
 			@Override
 			public void action() {
 				if (getGem(p, 40, owner.getSkills().getLevel(Skills.MINING), axeId) && mineLvl >= 40) { // always 40 required mining.

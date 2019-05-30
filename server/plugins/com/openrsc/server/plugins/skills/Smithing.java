@@ -197,7 +197,7 @@ public class Smithing implements InvUseOnObjectListener,
 
 		if (makeCount == -1) return;
 
-		player.setBatchEvent(new BatchEvent(player, 600, makeCount) {
+		player.setBatchEvent(new BatchEvent(player, 600, makeCount, false) {
 			@Override
 			public void action() {
 				if (player.getInventory().countId(item.getID()) < def.getRequiredBars()) {

@@ -64,7 +64,7 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 					"Well give me them and 5 gold and I'll make you your potion");
 				int sub_option = showMenu(p, n, "Yes ok", "No thanks");
 				if (sub_option == 0) {
-					p.setBatchEvent(new BatchEvent(p, 600, 14) {
+					p.setBatchEvent(new BatchEvent(p, 600, 14, false) {
 						@Override
 						public void action() {
 							if (p.getInventory().countId(ItemId.COINS.id()) < 5) {

@@ -29,7 +29,7 @@ InvUseOnObjectExecutiveListener {
 			player.message("Nothing interesting happens");
 			return;
 		}
-		player.setBatchEvent(new BatchEvent(player, 600, player.getInventory().countId(itemID)) {
+		player.setBatchEvent(new BatchEvent(player, 600, player.getInventory().countId(itemID), true) {
 			@Override
 			public void action() {
 				if (removeItem(owner, itemID, 1)) {

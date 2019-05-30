@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.deefault;
+package com.openrsc.server.plugins.defaults;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;

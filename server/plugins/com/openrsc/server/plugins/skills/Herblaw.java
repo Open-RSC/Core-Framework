@@ -28,7 +28,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 	@Override
 	public void onInvAction(final Item item, Player player) {
 		if (item.getDef().getCommand().equalsIgnoreCase("Identify")) {
-			handleHerbCleanup(item, player);
+			handleHerbIdentify(item, player);
 		}
 	}
 
@@ -36,7 +36,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 		return i.getDef().getCommand().equalsIgnoreCase("Identify");
 	}
 
-	private boolean handleHerbCleanup(final Item item, Player player) {
+	private boolean handleHerbIdentify(final Item item, Player player) {
 		if (!Constants.GameServer.MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return false;
@@ -55,7 +55,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			return false;
 		}
 		player.setBatchEvent(new BatchEvent(player, 600, Formulae
-			.getRepeatTimes(player, Skills.HERBLAW)) {
+			.getRepeatTimes(player, Skills.HERBLAW), false) {
 			public void action() {
 				if (!owner.getInventory().hasItemId(item.getID())) {
 					interrupt();
@@ -289,7 +289,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			return false;
 		}
 		player.setBatchEvent(new BatchEvent(player, 1200, Formulae
-			.getRepeatTimes(player, Skills.HERBLAW)) {
+			.getRepeatTimes(player, Skills.HERBLAW), false) {
 			@Override
 			public void action() {
 				if (owner.getSkills().getLevel(Skills.HERBLAW) < herbDef.getReqLevel()) {
@@ -344,7 +344,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			}
 		}
 		player.setBatchEvent(new BatchEvent(player, 1200, Formulae
-			.getRepeatTimes(player, Skills.HERBLAW)) {
+			.getRepeatTimes(player, Skills.HERBLAW), false) {
 			public void action() {
 				if (owner.getSkills().getLevel(Skills.HERBLAW) < def.getReqLevel()) {
 					owner.message("You need a herblaw level of "

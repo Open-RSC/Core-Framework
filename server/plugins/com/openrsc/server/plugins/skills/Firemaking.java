@@ -132,7 +132,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 		player.getUpdateFlags().setActionBubble(new Bubble(player, TINDERBOX));
 		player.message("You attempt to light the logs");
 
-		player.setBatchEvent(new BatchEvent(player, 1200, Formulae.getRepeatTimes(player, Skills.FIREMAKING)) {
+		player.setBatchEvent(new BatchEvent(player, 1200, Formulae.getRepeatTimes(player, Skills.FIREMAKING), false) {
 			@Override
 			public void action() {
 				if (Formulae.lightCustomLogs(def, owner.getSkills().getLevel(Skills.FIREMAKING))) {

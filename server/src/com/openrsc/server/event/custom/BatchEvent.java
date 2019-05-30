@@ -9,14 +9,20 @@ public abstract class BatchEvent extends DelayedEvent {
 
 	private long repeatFor;
 	private long repeated;
+	private boolean gathering;
 
-	public BatchEvent(Player owner, int delay, int repeatFor) {
+	public BatchEvent(Player owner, int delay, int repeatFor, boolean gathering) {
 		super(owner, delay);
+		this.gathering = gathering;
 		if (Constants.GameServer.BATCH_PROGRESSION) this.repeatFor = repeatFor;
 		else if (repeatFor > 1000) this.repeatFor = repeatFor - 1000; // Mining default
 		else this.repeatFor = 1; // Always 1, otherwise.
 		ActionSender.sendProgressBar(owner, delay, repeatFor);
 		owner.setBusyTimer(delay + 200);
+	}
+	
+	public BatchEvent(Player owner, int delay, int repeatFor) {
+		this(owner, delay, repeatFor, true);
 	}
 
 	@Override
@@ -30,7 +36,7 @@ public abstract class BatchEvent extends DelayedEvent {
 			} else {
 				interrupt();
 			}
-			if (owner.getInventory().full()) {
+			if (owner.getInventory().full() && gathering) {
 				interrupt();
 				if (Constants.GameServer.BATCH_PROGRESSION) owner.message("Your Inventory is too full to continue.");
 			}

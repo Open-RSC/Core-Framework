@@ -96,7 +96,7 @@ public class Crafting implements InvUseOnItemListener,
 									owner.message("What type of " + reply + " would you like to make?");
 									owner.setMenuHandler(new MenuOptionListener(options) {
 										public void handleReply(final int option, final String reply) {
-											owner.setBatchEvent(new BatchEvent(owner, 1200, Formulae.getRepeatTimes(owner, Skills.CRAFTING)) {
+											owner.setBatchEvent(new BatchEvent(owner, 1200, Formulae.getRepeatTimes(owner, Skills.CRAFTING), false) {
 												public void action() {
 													if (option < 0 || option > (Constants.GameServer.MEMBER_WORLD ? 5 : 4)) {
 														owner.checkAndInterruptBatchEvent();
@@ -180,7 +180,7 @@ public class Crafting implements InvUseOnItemListener,
 										return;
 									}
 
-									owner.setBatchEvent(new BatchEvent(owner, 1200, Formulae.getRepeatTimes(owner, Skills.CRAFTING)) {
+									owner.setBatchEvent(new BatchEvent(owner, 1200, Formulae.getRepeatTimes(owner, Skills.CRAFTING), false) {
 										@Override
 										public void action() {
 											if (owner.getSkills().getLevel(Skills.CRAFTING) < 16) {
@@ -270,7 +270,7 @@ public class Crafting implements InvUseOnItemListener,
 								owner.message("Nothing interesting happens");
 								return;
 						}
-						owner.setBatchEvent(new BatchEvent(owner, 600, Formulae.getRepeatTimes(owner, Skills.CRAFTING)) {
+						owner.setBatchEvent(new BatchEvent(owner, 600, Formulae.getRepeatTimes(owner, Skills.CRAFTING), false) {
 							@Override
 							public void action() {
 								if (owner.getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
@@ -330,7 +330,7 @@ public class Crafting implements InvUseOnItemListener,
 				showBubble(owner, item);
 				String potteryItem = potteryItemName(item.getDef().getName());
 				owner.message("You put the " + potteryItem + " in the oven");
-				owner.setBatchEvent(new BatchEvent(owner, 1800, Formulae.getRepeatTimes(owner, Skills.CRAFTING)) {
+				owner.setBatchEvent(new BatchEvent(owner, 1800, Formulae.getRepeatTimes(owner, Skills.CRAFTING), false) {
 					@Override
 					public void action() {
 						if (Constants.GameServer.WANT_FATIGUE) {
@@ -343,7 +343,7 @@ public class Crafting implements InvUseOnItemListener,
 						showBubble(owner, item);
 						if (owner.getInventory().remove(item) > -1) {
 							if (fail) {
-								owner.message("The " // TODO: Check if legit
+								owner.message("The " // TODO: Check if is authentic message
 									+ potteryItem + " cracks in the oven, you throw it away.");
 							} else {
 								owner.message("the "
@@ -414,7 +414,7 @@ public class Crafting implements InvUseOnItemListener,
 			return false;
 		}
 
-		player.setBatchEvent(new BatchEvent(player, 600, Formulae.getRepeatTimes(player, Skills.CRAFTING)) {
+		player.setBatchEvent(new BatchEvent(player, 600, Formulae.getRepeatTimes(player, Skills.CRAFTING), false) {
 			@Override
 			public void action() {
 				if (owner.getSkills().getLevel(Skills.CRAFTING) < gemDef.getReqLevel()) {
@@ -617,7 +617,7 @@ public class Crafting implements InvUseOnItemListener,
 		}
 		final int newId = newID;
 		player.setBatchEvent(new BatchEvent(player, 600,
-			Formulae.getRepeatTimes(player, Skills.CRAFTING)) {
+			Formulae.getRepeatTimes(player, Skills.CRAFTING), false) {
 			@Override
 			public void action() {
 				if (owner.getInventory().countId(item.getID()) <= 0 || owner.getInventory().countId(ItemId.BALL_OF_WOOL.id()) <= 0) {

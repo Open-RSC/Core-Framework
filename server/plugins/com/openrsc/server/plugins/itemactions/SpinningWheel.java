@@ -58,7 +58,7 @@ public class SpinningWheel implements InvUseOnObjectListener,
 			return;
 		}
 		player.setBatchEvent(new BatchEvent(player, 600, Formulae
-			.getRepeatTimes(player, Skills.CRAFTING)) {
+			.getRepeatTimes(player, Skills.CRAFTING), false) {
 			@Override
 			public void action() {
 				if (owner.getSkills().getLevel(Skills.CRAFTING) < requirement) {
