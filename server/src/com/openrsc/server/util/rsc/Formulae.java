@@ -475,7 +475,7 @@ public final class Formulae {
 	 * Should the pot crack?
 	 */
 	public static boolean crackPot(int requiredLvl, int craftingLvl) {
-		int levelStopFail = requiredLvl + 20;
+		int levelStopFail = requiredLvl + 8;
 		return !Formulae.calcProductionSuccessful(requiredLvl, craftingLvl, true, levelStopFail);
 	}
 	

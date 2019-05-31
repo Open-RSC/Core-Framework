@@ -55,7 +55,7 @@ public class UndergroundPassMechanismMap1 implements InvUseOnItemListener, InvUs
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		return (item.getID() == ItemId.ARROW.id() && obj.getID() == 97 && obj.getX() == 701 && obj.getY() == 3420)
+		return (item.getID() == ItemId.ARROW.id() && obj.getID() == 97)
 				|| (item.getID() == ItemId.LIT_ARROW.id() && obj.getID() == OLD_BRIDGE)
 				|| (item.getID() == ItemId.ROPE.id() && (obj.getID() == STALACTITE_1 || obj.getID() == STALACTITE_2 || obj.getID() == STALACTITE_2 + 1))
 				|| (item.getID() == ItemId.ROCKS.id() && obj.getID() == SWAMP_CROSS);
@@ -63,7 +63,7 @@ public class UndergroundPassMechanismMap1 implements InvUseOnItemListener, InvUs
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
-		if (item.getID() == ItemId.ARROW.id() && obj.getID() == 97 && obj.getX() == 701 && obj.getY() == 3420) {
+		if (item.getID() == ItemId.ARROW.id() && obj.getID() == 97) {
 			player.message("you light the cloth wrapped arrow head");
 			removeItem(player, ItemId.ARROW.id(), 1);
 			addItem(player, ItemId.LIT_ARROW.id(), 1);
