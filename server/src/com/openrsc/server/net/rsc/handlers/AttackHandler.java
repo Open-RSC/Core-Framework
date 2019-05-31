@@ -76,7 +76,7 @@ public class AttackHandler implements PacketHandler {
 		player.setStatus(Action.ATTACKING_MOB);
 		if (player.getRangeEquip() < 0 && player.getThrowingEquip() < 0) {
 			if (affectedMob.isNpc())
-				player.setFollowing(affectedMob);
+				player.setFollowing(affectedMob, 0);
 			player.setWalkToAction(new WalkToMobAction(player, affectedMob, affectedMob.isNpc() ? 1 : 2) {
 				public void execute() {
 					player.resetPath();
