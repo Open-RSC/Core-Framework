@@ -85,7 +85,7 @@ public class DoorAction {
 
 		// Door's lock needs to be picked, or needs a key.
 		if (blockInvUseOnWallObject(obj, null, p)) {
-			p.message("The door is locked.");
+			p.message("The door is locked");
 			return;
 		}
 
@@ -858,20 +858,19 @@ public class DoorAction {
 		if (obj.getID() == 69) {
 			return true;
 		}
-		if (item != null) {
-			if (obj.getID() == 23 && item.getID() == ItemId.BRASS_KEY.id()) { // brasskey giant door
-				return true;
-			}
-			/* Jail keys in the taverly dungeon to get dust key.*/
-			if ((obj.getID() == 83 && obj.getX() == 360 && obj.getY() == 3428 && item.getID() == ItemId.JAIL_KEYS.id())
-				|| (obj.getID() == 83 && obj.getX() == 360
-				&& obj.getY() == 3425 && item.getID() == ItemId.JAIL_KEYS.id())) {
-				return true;
-			}
-			/* Dust key to enter blue dragons in taverly dungeon */
-			if (obj.getID() == 84 && obj.getX() == 355 && obj.getY() == 3353 && item.getID() == ItemId.DUSTY_KEY.id()) {
-				return true;
-			}
+		/* varrocks shortcut to edgeville dung*/
+		if (obj.getID() == 23) {
+			return true;
+		}
+		/* taverly dungeon door near jailer */
+		if ((obj.getID() == 83 && obj.getX() == 360 && obj.getY() == 3428)
+			|| (obj.getID() == 83 && obj.getX() == 360
+			&& obj.getY() == 3425)) {
+			return true;
+		}
+		/* Door to enter blue dragons in taverly dungeon */
+		if (obj.getID() == 84 && obj.getX() == 355 && obj.getY() == 3353) {
+			return true;
 		}
 
 		return false;
