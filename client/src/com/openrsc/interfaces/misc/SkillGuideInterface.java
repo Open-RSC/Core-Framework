@@ -748,7 +748,7 @@ public final class SkillGuideInterface {
 			} else if (curTab == 1) {
 				skillItems.add(new SkillItem(474, "3", "Attack potion - Guam leaf & eye of newt"));
 				skillItems.add(new SkillItem(566, "5", "Cure poison potion - Marrentill & ground unicorn horn"));
-				skillItems.add(new SkillItem(1176, "10", "Explosive compound - Nitroglycerin & ammonium nitrate & ground charcoal & arcenia root"));
+				skillItems.add(new SkillItem(1176, "10", "Explosive compound - Nitro & nitrate & charcoal & a. root"));
 				skillItems.add(new SkillItem(222, "12", "Strength potion - Tarromin & limpwurt root"));
 				skillItems.add(new SkillItem(1053, "14", "Ogre potion - Guam leaf & jangerberries & ground bat bones"));
 				skillItems.add(new SkillItem(477, "22", "Stat restore potion - Harralander & red spiders' eggs"));
