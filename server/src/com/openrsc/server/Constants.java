@@ -277,7 +277,7 @@ public final class Constants {
 				props.loadFromXML(new FileInputStream("local.conf"));
 			} catch (Exception e) { // Otherwise default to default.conf
 				props.loadFromXML(new FileInputStream(defaultFile));
-				LOGGER.info("File local.conf not found, loading properties from default.conf");
+				LOGGER.info("Properties file local.conf not found, loading properties from default.conf");
 			}
 
 			// Initialization confs
