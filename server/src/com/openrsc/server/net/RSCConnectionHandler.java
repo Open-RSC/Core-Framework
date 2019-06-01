@@ -84,6 +84,7 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 			 for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
 				 System.out.println(ste);
 			 }
+			 LOGGER.catching(e);
 		}
 
 		if (ctx.channel().isActive())
