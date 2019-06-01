@@ -1,5 +1,6 @@
 package com.openrsc.server;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.SingleEvent;
@@ -13,7 +14,11 @@ import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.util.NamedThreadFactory;
-
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.*;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,16 +27,6 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 import static org.apache.logging.log4j.util.Unbox.box;
 
@@ -46,10 +41,11 @@ public final class Server implements Runnable {
 
 	static {
 		try {
+			Thread.currentThread().setName("InitializationThread");
 			System.setProperty("log4j.configurationFile", "conf/server/log4j2.xml");
 			/* Enables asynchronous, garbage-free logging. */
-			//System.setProperty("Log4jContextSelector",
-			//		"org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
+			System.setProperty("Log4jContextSelector",
+					"org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
 
 			LOGGER = LogManager.getLogger();
 		} catch (Exception e) {
@@ -58,7 +54,7 @@ public final class Server implements Runnable {
 	}
 
 	private final ScheduledExecutorService scheduledExecutor = Executors
-		.newSingleThreadScheduledExecutor(new NamedThreadFactory("GameEngine"));
+		.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat("GameThread").build());
 	private final GameStateUpdater gameUpdater = new GameStateUpdater();
 	private final GameTickEventHandler tickEventHandler = new GameTickEventHandler();
 	private final ServerEventHandler eventHandler = new ServerEventHandler();
@@ -93,9 +89,14 @@ public final class Server implements Runnable {
 			}
 		}
 		if (server == null) {
-			server = new Server();
-			server.initialize();
-			server.start();
+			try {
+				server = new Server();
+				server.initialize();
+				server.start();
+			} catch (Throwable e) {
+				LOGGER.catching(e);
+			}
+
 		}
 	}
 
@@ -132,10 +133,10 @@ public final class Server implements Runnable {
 			LOGGER.info("Starting database loader...");
 			playerDataProcessor.start();
 			LOGGER.info("\t Database Loader Completed");
-
+			//Never run ResourceLeakDetector PARANOID in production.
 			//ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.PARANOID);
-			final EventLoopGroup bossGroup = new NioEventLoopGroup();
-			final EventLoopGroup workerGroup = new NioEventLoopGroup();
+			final EventLoopGroup bossGroup = new NioEventLoopGroup(0, new NamedThreadFactory("IOBossThread"));
+			final EventLoopGroup workerGroup = new NioEventLoopGroup(0, new NamedThreadFactory("IOWorkerThread"));
 			final ServerBootstrap bootstrap = new ServerBootstrap();
 
 			bootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
@@ -159,10 +160,10 @@ public final class Server implements Runnable {
 				serverChannel = bootstrap.bind(new InetSocketAddress(Constants.GameServer.SERVER_PORT)).sync();
 				LOGGER.info("Game world is now online on port {}!", box(Constants.GameServer.SERVER_PORT));
 			} catch (final InterruptedException e) {
-				e.printStackTrace();
+				LOGGER.catching(e);
 			}
 
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			LOGGER.catching(e);
 			System.exit(1);
 		}
@@ -245,12 +246,13 @@ public final class Server implements Runnable {
 					}
 				}
 			}
+
+			for (Player p : World.getWorld().getPlayers()) {
+				p.sendOutgoingPackets();
+			}
+
 		} catch (Exception e) {
 			LOGGER.catching(e);
-		}
-
-		for (Player p : World.getWorld().getPlayers()) {
-			p.sendOutgoingPackets();
 		}
 	}
 
@@ -296,7 +298,7 @@ public final class Server implements Runnable {
 					// at this time, no successful method for guaranteed relaunch works so just use a cronjob instead
 					Runtime.getRuntime().exec("./run_server.sh");
 				} catch (IOException e) {
-					e.printStackTrace();
+					LOGGER.catching(e);
 				}
 			}
 		};

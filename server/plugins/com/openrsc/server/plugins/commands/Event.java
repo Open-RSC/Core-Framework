@@ -15,6 +15,8 @@ import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.StaffLog;
 import com.openrsc.server.util.rsc.DataConversions;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public final class Event implements CommandListener {
+	private static final Logger LOGGER = LogManager.getLogger(Event.class);
 	private static final String[] towns = {"varrock", "falador", "draynor", "portsarim", "karamja", "alkharid",
 		"lumbridge", "edgeville", "castle", "taverly", "clubhouse", "seers", "barbarian", "rimmington", "catherby",
 		"ardougne", "yanille", "lostcity", "gnome", "shilovillage", "tutorial", "modroom"};
@@ -340,7 +343,7 @@ public final class Event implements CommandListener {
 					result.close();
 					player.message(messagePrefix + "Found character '" + targetUsername + "' fetching other characters..");
 				} catch (SQLException e) {
-					e.printStackTrace();
+					LOGGER.catching(e);
 					player.message(messagePrefix + "A MySQL error has occured! " + e.getMessage());
 					return;
 				}

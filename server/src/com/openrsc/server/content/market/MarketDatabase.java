@@ -56,7 +56,6 @@ public class MarketDatabase {
 			return true;
 		} catch (Throwable e) {
 			LOGGER.catching(e);
-			e.printStackTrace();
 		}
 		return false;
 	}
@@ -71,7 +70,6 @@ public class MarketDatabase {
 			return true;
 		} catch (Throwable e) {
 			LOGGER.catching(e);
-			e.printStackTrace();
 		}
 		return false;
 	}
@@ -127,7 +125,6 @@ public class MarketDatabase {
 				result.getInt("seller"), result.getString("seller_username"), result.getString("buyer_info"), result.getLong("time"));
 		} catch (SQLException e) {
 			LOGGER.catching(e);
-			e.printStackTrace();
 		}
 		return null;
 	}
@@ -147,7 +144,6 @@ public class MarketDatabase {
 			}
 		} catch (Throwable e) {
 			LOGGER.catching(e);
-			e.printStackTrace();
 		}
 		return auctionItems;
 	}
@@ -165,7 +161,6 @@ public class MarketDatabase {
 			return true;
 		} catch (Throwable e) {
 			LOGGER.catching(e);
-			e.printStackTrace();
 		}
 		return false;
 	}
@@ -183,7 +178,6 @@ public class MarketDatabase {
 			return true;
 		} catch (Throwable e) {
 			LOGGER.catching(e);
-			e.printStackTrace();
 		}
 		return false;
 	}

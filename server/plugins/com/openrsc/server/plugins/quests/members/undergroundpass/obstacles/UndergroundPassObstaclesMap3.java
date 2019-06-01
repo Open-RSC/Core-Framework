@@ -12,21 +12,13 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.delayedSpawnObject;
-import static com.openrsc.server.plugins.Functions.displayTeleportBubble;
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.replaceObject;
-import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class UndergroundPassObstaclesMap3 implements ObjectActionListener, ObjectActionExecutiveListener {
-
+	private static final Logger LOGGER = LogManager.getLogger(UndergroundPassObstaclesMap3.class);
 	/**
 	 * OBJECT IDs
 	 **/
@@ -170,7 +162,7 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 								sleep(650);
 							}
 						} catch (Exception e) {
-							e.printStackTrace();
+							LOGGER.catching(e);
 						}
 					} else {
 						p.message("inside iban stands preaching at the alter");

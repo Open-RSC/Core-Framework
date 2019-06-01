@@ -36,6 +36,8 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.GoldDrops;
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -43,7 +45,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 public final class Admins implements CommandListener {
-
+	private static final Logger LOGGER = LogManager.getLogger(Admins.class);
 	private Point getRandomLocation() {
 		Point location = Point.location(DataConversions.random(48, 91), DataConversions.random(575, 717));
 
@@ -353,7 +355,7 @@ public final class Admins implements CommandListener {
 					def.drops = drops.toArray(new ItemDropDef[]{});
 				}
 			} catch (SQLException e) {
-				System.out.println(e);
+				LOGGER.catching(e);
 			}
 			player.message(messagePrefix + "Drop tables reloaded");
 		}

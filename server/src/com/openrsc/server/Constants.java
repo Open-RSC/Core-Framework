@@ -3,6 +3,8 @@ package com.openrsc.server;
 import com.google.common.collect.ImmutableList;
 import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,7 +13,7 @@ import java.util.HashMap;
 import java.util.Properties;
 
 public final class Constants {
-
+	private static final Logger LOGGER = LogManager.getLogger();
 	public static final class GameServer {
 
 		public static boolean DEBUG = false; // enables print out of the config being sent to the client
@@ -275,6 +277,7 @@ public final class Constants {
 				props.loadFromXML(new FileInputStream("local.conf"));
 			} catch (Exception e) { // Otherwise default to default.conf
 				props.loadFromXML(new FileInputStream(defaultFile));
+				LOGGER.info("File local.conf not found, loading properties from default.conf");
 			}
 
 			// Initialization confs

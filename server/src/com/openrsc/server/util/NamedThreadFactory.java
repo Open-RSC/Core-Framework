@@ -26,7 +26,7 @@ public final class NamedThreadFactory implements ThreadFactory {
 	@Override
 	public Thread newThread(Runnable runnable) {
 		int currentId = id.getAndIncrement();
-		return new Thread(runnable, name + " [id=" + currentId + "]");
+		return new Thread(runnable, name + "-" + currentId);
 	}
 
 }

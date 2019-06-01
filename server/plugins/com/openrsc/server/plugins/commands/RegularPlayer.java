@@ -16,6 +16,8 @@ import com.openrsc.server.sql.query.logs.ChatLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,6 +29,7 @@ import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGan
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isPhoenixGang;
 
 public final class RegularPlayer implements CommandListener {
+	private static final Logger LOGGER = LogManager.getLogger(RegularPlayer.class);
 	public void onCommand(String cmd, String[] args, Player player) {
 		if (isCommandAllowed(player, cmd))
 			handleCommand(cmd, args, player);
@@ -66,7 +69,7 @@ public final class RegularPlayer implements CommandListener {
 					bankPin = DataConversions.hashPassword(bankPin, result.getString("salt"));
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				LOGGER.catching(e);
 			}
 			p.getCache().store("bank_pin", bankPin);
 			//ActionSender.sendBox(p, messagePrefix + "Your new bank pin is " + bankPin, false);
@@ -315,7 +318,7 @@ public final class RegularPlayer implements CommandListener {
 				result.close();
 				ActionSender.sendBox(player, kills, true);
 			} catch (SQLException e) {
-				System.out.println(e);
+				LOGGER.catching(e);
 			}
 		}
 		else if (cmd.equalsIgnoreCase("commands")) {

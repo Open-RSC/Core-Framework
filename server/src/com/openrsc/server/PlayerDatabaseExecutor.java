@@ -1,5 +1,6 @@
 package com.openrsc.server;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.event.rsc.ImmediateEvent;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.login.LoginTask;
@@ -7,9 +8,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.ThrottleFilter;
 import com.openrsc.server.sql.DatabasePlayerLoader;
-import com.openrsc.server.util.NamedThreadFactory;
 import com.openrsc.server.util.rsc.LoginResponse;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,7 +25,7 @@ public class PlayerDatabaseExecutor extends ThrottleFilter implements Runnable {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private final ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new NamedThreadFactory("PlayerDataProcessor"));
+	private final ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat("PlayerDataProcessorThread").build());
 
 	private Queue<LoginRequest> loadRequests = new ConcurrentLinkedQueue<LoginRequest>();
 

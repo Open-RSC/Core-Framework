@@ -83,7 +83,7 @@ public class CombatScriptLoader {
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
 			LOGGER.catching(e);
 		} catch (NoSuchMethodException | InvocationTargetException e) {
-			e.printStackTrace();
+			LOGGER.catching(e);
 		}
 	}
 }

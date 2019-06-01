@@ -1673,8 +1673,12 @@ public final class Player extends Mob {
 			return;
 		}
 		synchronized (outgoingPacketsLock) {
-			for (Packet outgoing : outgoingPackets) {
-				channel.writeAndFlush(outgoing);
+			try {
+				for (Packet outgoing : outgoingPackets) {
+					channel.writeAndFlush(outgoing);
+				}
+			} catch (Exception e) {
+				LOGGER.catching(e);
 			}
 			// channel.flush();
 

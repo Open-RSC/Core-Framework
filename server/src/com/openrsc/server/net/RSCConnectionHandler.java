@@ -5,14 +5,14 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.LoginPacketHandler;
-
-import org.jboss.netty.channel.ChannelHandler;
-
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.AttributeKey;
 import io.netty.util.ReferenceCountUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jboss.netty.channel.ChannelHandler;
 
 /**
  * @author Imposter
@@ -20,7 +20,7 @@ import io.netty.util.ReferenceCountUtil;
 public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implements ChannelHandler {
 	public static final AttributeKey<ConnectionAttachment> attachment = AttributeKey.valueOf("conn-attachment");
 	private LoginPacketHandler loginHandler = new LoginPacketHandler();
-
+	private static final Logger LOGGER = LogManager.getLogger();
 	@Override
 	public void channelInactive(final ChannelHandlerContext ctx) throws Exception {
 		final Channel channel = ctx.channel();
@@ -49,6 +49,8 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 					player.addToPacketQueue(packet);
 				}
 			}
+		} catch (Exception e) {
+			LOGGER.catching(e);
 		} finally {
 			ReferenceCountUtil.release(message);
 		}

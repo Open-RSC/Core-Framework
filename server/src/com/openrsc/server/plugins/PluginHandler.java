@@ -5,6 +5,7 @@ import com.openrsc.server.event.custom.ShopRestockEvent;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
+import com.openrsc.server.util.NamedThreadFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,7 +46,7 @@ public final class PluginHandler {
 	private URLClassLoader urlClassLoader;
 	private Map<String, Set<Object>> actionPlugins = new HashMap<String, Set<Object>>();
 	private Map<String, Set<Object>> executivePlugins = new HashMap<String, Set<Object>>();
-	private ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+	private ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool(new NamedThreadFactory("PluginThread"));
 	private List<Class<?>> knownInterfaces = new ArrayList<Class<?>>();
 	// private ExecutorService executor = Executors.newFixedThreadPool(2);
 	private Map<String, Class<?>> queue = new ConcurrentHashMap<String, Class<?>>();

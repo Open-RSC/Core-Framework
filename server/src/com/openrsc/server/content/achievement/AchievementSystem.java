@@ -12,6 +12,8 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.sql.DatabaseConnection;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,7 +22,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class AchievementSystem {
-
+	private static final Logger LOGGER = LogManager.getLogger();
 	private static final int ACHIEVEMENT_COMPLETED = 2;
 	private static final int ACHIEVEMENT_STARTED = 1;
 
@@ -65,7 +67,7 @@ public class AchievementSystem {
 				loadedAchievements.add(achievement);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.catching(e);
 		}
 	}
 
@@ -374,7 +376,7 @@ public class AchievementSystem {
 			}
 			p.write(s.toPacket());
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.catching(e);
 		}
 	}
 }

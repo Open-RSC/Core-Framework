@@ -11,6 +11,8 @@ import com.openrsc.server.plugins.listeners.executive.NpcCommandExecutiveListene
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.util.rsc.DataConversions;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,7 +21,7 @@ import java.sql.SQLException;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, NpcCommandListener, NpcCommandExecutiveListener {
-
+	private static final Logger LOGGER = LogManager.getLogger(Bankers.class);
 	public static int[] BANKERS = {95, 224, 268, 540, 617};
 
 	@Override
@@ -75,7 +77,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 							pin = DataConversions.hashPassword(pin, result.getString("salt"));
 						}
 					} catch (SQLException e) {
-						e.printStackTrace();
+						LOGGER.catching(e);
 					}
 				if (!player.getCache().getString("bank_pin").equals(pin)) {
 					ActionSender.sendBox(player, "Incorrect bank pin", false);
@@ -118,8 +120,10 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 							//ActionSender.sendBox(player, "Your new bank pin is " + bankPin, false);
 						}
 					} catch (SQLException e) {
-						e.printStackTrace();
+						LOGGER.catching(e);
 					}
+				} else {
+					ActionSender.sendBox(player, "You already have a bank pin", false);
 				}
 			} else if (bankPinMenu == 1) {
 				if (player.getCache().hasKey("bank_pin")) {
@@ -135,7 +139,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 							bankPin = DataConversions.hashPassword(bankPin, result.getString("salt"));
 						}
 					} catch (SQLException e) {
-						e.printStackTrace();
+						LOGGER.catching(e);
 					}
 					if (!player.getCache().getString("bank_pin").equals(bankPin)) {
 						ActionSender.sendBox(player, "Incorrect bank pin", false);
@@ -152,7 +156,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 							//ActionSender.sendBox(player, "Your new bank pin is " + changeTo, false);
 						}
 					} catch (SQLException e) {
-						e.printStackTrace();
+						LOGGER.catching(e);
 					}
 
 
@@ -173,7 +177,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 							bankPin = DataConversions.hashPassword(bankPin, result.getString("salt"));
 						}
 					} catch (SQLException e) {
-						e.printStackTrace();
+						LOGGER.catching(e);
 					}
 					if (!player.getCache().getString("bank_pin").equals(bankPin)) {
 						ActionSender.sendBox(player, "Incorrect bank pin", false);
@@ -217,7 +221,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 						pin = DataConversions.hashPassword(pin, result.getString("salt"));
 					}
 				} catch (SQLException e) {
-					e.printStackTrace();
+					LOGGER.catching(e);
 				}
 				if (!player.getCache().getString("bank_pin").equals(pin)) {
 					ActionSender.sendBox(player, "Incorrect bank pin", false);
@@ -266,7 +270,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 					pin = DataConversions.hashPassword(pin, result.getString("salt"));
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				LOGGER.catching(e);
 			}
 			if (!player.getCache().getString("bank_pin").equals(pin)) {
 				ActionSender.sendBox(player, "Incorrect bank pin", false);

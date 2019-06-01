@@ -744,7 +744,7 @@ public final class DataConversions {
 			byte[] rawHmac = mac.doFinal(value.getBytes());
 			return new BigInteger(1, rawHmac).toString(16);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.catching(e);
 		}
 		return "";
 	}

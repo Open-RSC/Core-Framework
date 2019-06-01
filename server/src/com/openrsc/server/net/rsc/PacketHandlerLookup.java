@@ -1,6 +1,8 @@
 package com.openrsc.server.net.rsc;
 
 import com.openrsc.server.net.rsc.handlers.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 
@@ -8,7 +10,7 @@ public class PacketHandlerLookup {
 
 	/* Handlers for incoming Packets. */
 	public static HashMap<Integer, PacketHandler> packetHandlers = new HashMap<Integer, PacketHandler>();
-
+	private static final Logger LOGGER = LogManager.getLogger();
 	static {
 
 		bind(OpcodeIn.PING.getOpcode(), Ping.class);
@@ -131,7 +133,7 @@ public class PacketHandlerLookup {
 				throw new Exception("bind(opcode, class) not instance of PacketHandler");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.catching(e);
 		}
 	}
 

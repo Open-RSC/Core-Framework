@@ -11,17 +11,13 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import static com.openrsc.server.plugins.Functions.getMultipleNpcsInArea;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.npcWalkFromPlayer;
-import static com.openrsc.server.plugins.Functions.sleep;
-import static com.openrsc.server.plugins.Functions.spawnNpc;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestBullRoarer implements InvActionListener, InvActionExecutiveListener {
-
+	private static final Logger LOGGER = LogManager.getLogger(LegendsQuestBullRoarer.class);
 	private boolean inKharaziJungle(Player p) {
 		return p.getLocation().inBounds(338, 869, 477, 908);
 	}
@@ -122,7 +118,7 @@ public class LegendsQuestBullRoarer implements InvActionListener, InvActionExecu
 				}
 			});
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.catching(e);
 		}
 	}
 }

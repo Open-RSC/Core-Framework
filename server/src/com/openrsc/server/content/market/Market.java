@@ -1,12 +1,12 @@
 package com.openrsc.server.content.market;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.Constants;
 import com.openrsc.server.content.market.task.*;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
-import com.openrsc.server.util.NamedThreadFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -42,7 +42,7 @@ public class Market implements Runnable {
 			instance = new Market();
 
 			instance.scheduledExecutor = Executors
-				.newSingleThreadScheduledExecutor(new NamedThreadFactory("AuctionHouseService"));
+				.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat("AuctionHouseThread").build());
 			instance.start();
 		}
 		return instance;
@@ -114,7 +114,7 @@ public class Market implements Runnable {
 			}
 			lastCleanUp = System.currentTimeMillis();
 		} catch (Throwable e) {
-			e.printStackTrace();
+			LOGGER.catching(e);
 		}
 	}
 
@@ -127,7 +127,7 @@ public class Market implements Runnable {
 		while ((nextTask = auctionTaskQueue.poll()) != null) try {
 			nextTask.doTask();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.catching(e);
 		}
 	}
 
@@ -136,7 +136,7 @@ public class Market implements Runnable {
 		while ((refreshTask = refreshRequestTasks.poll()) != null) try {
 			refreshTask.doTask();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.catching(e);
 		}
 	}
 
@@ -155,7 +155,7 @@ public class Market implements Runnable {
 			processUpdateAuctionItemCache();
 			processRefreshRequests();
 		} catch (Throwable r) {
-			r.printStackTrace();
+			LOGGER.catching(r);
 		}
 	}
 

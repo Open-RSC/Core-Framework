@@ -637,7 +637,7 @@ public class DatabasePlayerLoader {
 		try {
 			result.next();
 		} catch (SQLException e1) {
-			e1.printStackTrace();
+			LOGGER.catching(e1);
 			return null;
 		}
 		int[] data = new int[Skills.SKILL_NAME.length];
@@ -668,7 +668,7 @@ public class DatabasePlayerLoader {
 				}
 			}
 		} catch (SQLException e1) {
-			e1.printStackTrace();
+			LOGGER.catching(e1);
 			return null;
 		}
 		return data;

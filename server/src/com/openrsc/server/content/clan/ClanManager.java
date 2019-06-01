@@ -28,7 +28,7 @@ public class ClanManager {
 			clans.add(clan);
 			databaseCreateClan(clan);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.catching(e);
 		}
 	}
 
@@ -37,7 +37,7 @@ public class ClanManager {
 			databaseDeleteClan(clan);
 			clans.remove(clan);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.catching(e);
 		}
 	}
 

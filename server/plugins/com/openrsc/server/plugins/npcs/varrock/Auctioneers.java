@@ -10,6 +10,8 @@ import com.openrsc.server.plugins.listeners.executive.NpcCommandExecutiveListene
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.util.rsc.DataConversions;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,7 +20,7 @@ import java.sql.SQLException;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Auctioneers implements TalkToNpcExecutiveListener, TalkToNpcListener, NpcCommandListener, NpcCommandExecutiveListener {
-
+	private static final Logger LOGGER = LogManager.getLogger(Auctioneers.class);
 	public static int AUCTIONEER = 794;
 	public static int AUCTION_CLERK = 795;
 
@@ -61,7 +63,7 @@ public class Auctioneers implements TalkToNpcExecutiveListener, TalkToNpcListene
 							pin = DataConversions.hashPassword(pin, result.getString("salt"));
 						}
 					} catch (SQLException e) {
-						e.printStackTrace();
+						LOGGER.catching(e);
 					}
 					if (!player.getCache().getString("bank_pin").equals(pin)) {
 						ActionSender.sendBox(player, "Incorrect bank pin", false);
@@ -122,7 +124,7 @@ public class Auctioneers implements TalkToNpcExecutiveListener, TalkToNpcListene
 								pin = DataConversions.hashPassword(pin, result.getString("salt"));
 							}
 						} catch (SQLException e) {
-							e.printStackTrace();
+							LOGGER.catching(e);
 						}
 						if (!p.getCache().getString("bank_pin").equals(pin)) {
 							ActionSender.sendBox(p, "Incorrect bank pin", false);
@@ -156,7 +158,7 @@ public class Auctioneers implements TalkToNpcExecutiveListener, TalkToNpcListene
 								pin = DataConversions.hashPassword(pin, result.getString("salt"));
 							}
 						} catch (SQLException e) {
-							e.printStackTrace();
+							LOGGER.catching(e);
 						}
 						if (!p.getCache().getString("bank_pin").equals(pin)) {
 							ActionSender.sendBox(p, "Incorrect bank pin", false);
