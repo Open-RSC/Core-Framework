@@ -226,11 +226,12 @@ public final class Server implements Runnable {
 	}
 
 	public void run() {
-		for (Player p : World.getWorld().getPlayers()) {
-			p.processIncomingPackets();
-		}
-		getEventHandler().doEvents();
-		try {
+	    try {
+    		for (Player p : World.getWorld().getPlayers()) {
+    			p.processIncomingPackets();
+    		}
+    		getEventHandler().doEvents();
+		
 			long timeLate = System.currentTimeMillis() - lastClientUpdate - Constants.GameServer.GAME_TICK;
 			if (timeLate >= 0) {
 				lastClientUpdate += Constants.GameServer.GAME_TICK;
