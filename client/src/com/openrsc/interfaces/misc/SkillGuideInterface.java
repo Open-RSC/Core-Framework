@@ -234,6 +234,7 @@ public final class SkillGuideInterface {
 			skillItems.add(new SkillItem(617, "30", "Battlestaves"));
 			skillItems.add(new SkillItem(397, "40", "Rune"));
 			skillItems.add(new SkillItem(684, "40", "Enchanted battlestaves"));
+			skillItems.add(new SkillItem(1000, "50", "Staff of Iban"));
 			skillItems.add(new SkillItem(593, "60", "Dragon"));
 		}
 		if (mc.getSkillGuideChosen().equals("Defense")) {
@@ -250,14 +251,15 @@ public final class SkillGuideInterface {
 			skillItems.add(new SkillItem(90, "", "Strength raises your max hit with melee"));
 		}
 		if (mc.getSkillGuideChosen().equals("Hits")) {
-			skillItems.add(new SkillItem(350, "", "Shrimp - Heals 1"));
-			skillItems.add(new SkillItem(352, "", "Anchovies - Heals 1"));
 			skillItems.add(new SkillItem(193, "", "Beer - Heals 1"));
+			skillItems.add(new SkillItem(350, "", "Shrimp - Heals 2"));
+			skillItems.add(new SkillItem(352, "", "Anchovies - Heals 2"));
 			skillItems.add(new SkillItem(249, "", "Banana - Heals 2"));
 			skillItems.add(new SkillItem(132, "", "Cooked Meat - Heals 3"));
 			skillItems.add(new SkillItem(355, "", "Sardine - Heals 4"));
 			skillItems.add(new SkillItem(138, "", "Bread - Heals 4"));
 			skillItems.add(new SkillItem(362, "", "Herring - Heals 5"));
+			skillItems.add(new SkillItem(718, "", "Giant Carp - Heals 6"));
 			skillItems.add(new SkillItem(553, "", "Mackerel - Heals 6"));
 			skillItems.add(new SkillItem(258, "", "Redberry Pie - Heals 6"));
 			skillItems.add(new SkillItem(359, "", "Trout - Heals 7"));
@@ -282,9 +284,9 @@ public final class SkillGuideInterface {
 			skillItems.add(new SkillItem(709, "", "Curry - Heals 19"));
 			skillItems.add(new SkillItem(1102, "", "Tasty Ugthanki Kebab - Heals 19"));
 			skillItems.add(new SkillItem(546, "", "Shark - Heals 20"));
-			skillItems.add(new SkillItem(1193, "", "Sea Turtle - Heals 20"));
 			skillItems.add(new SkillItem(750, "", "Pineapple Pizza - Heals 20"));
-			skillItems.add(new SkillItem(1191, "", "Manta Ray - Heals 21"));
+			skillItems.add(new SkillItem(1193, "", "Sea Turtle - Heals 21"));
+			skillItems.add(new SkillItem(1191, "", "Manta Ray - Heals 22"));
 		}
 		if (mc.getSkillGuideChosen().equals("Ranged")) {
 			if (curTab == 0) {
@@ -398,7 +400,7 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(352, "1", "Anchovies"));
 				skillItems.add(new SkillItem(355, "1", "Sardine"));
 				skillItems.add(new SkillItem(362, "5", "Herring"));
-				skillItems.add(new SkillItem(718, "1", "Giant Carp"));
+				skillItems.add(new SkillItem(718, "10", "Giant Carp"));
 				skillItems.add(new SkillItem(553, "10", "Mackerel"));
 				skillItems.add(new SkillItem(359, "15", "Trout"));
 				skillItems.add(new SkillItem(551, "18", "Cod"));
@@ -497,19 +499,20 @@ public final class SkillGuideInterface {
 		if (mc.getSkillGuideChosen().equals("Fishing")) {
 			skillItems.add(new SkillItem(349, "1", "Shrimp - Small Fishing Net"));
 			skillItems.add(new SkillItem(354, "5", "Sardine - Fishing Rod and Bait"));
+			skillItems.add(new SkillItem(717, "10", "Giant Carp - Fishing Rod and Red vine worms"));
 			skillItems.add(new SkillItem(361, "10", "Herring - Fishing Rod and Bait"));
 			skillItems.add(new SkillItem(351, "15", "Anchovies - Small Fishing Net"));
 			skillItems.add(new SkillItem(552, "16", "Mackerel - Big Fishing Net"));
-			skillItems.add(new SkillItem(358, "20", "Trout - Fly Fishing Rod and Feathers "));
+			skillItems.add(new SkillItem(358, "20", "Trout - Fly Fishing Rod and Feathers"));
 			skillItems.add(new SkillItem(550, "23", "Cod - Big Fishing Net"));
-			skillItems.add(new SkillItem(363, "26", "Pike - Fishing Rod and Bait"));
+			skillItems.add(new SkillItem(363, "25", "Pike - Fishing Rod and Bait"));
 			skillItems.add(new SkillItem(356, "30", "Salmon - Fly Fishing Rod and Feathers"));
 			skillItems.add(new SkillItem(366, "35", "Tuna - Harpoon"));
 			skillItems.add(new SkillItem(372, "40", "Lobster - Lobster Pot"));
 			skillItems.add(new SkillItem(554, "46", "Bass - Big Fishing Net"));
 			skillItems.add(new SkillItem(369, "50", "Swordfish - Harpoon"));
-			skillItems.add(new SkillItem(1192, "75", "Sea Turtle - Fishing Trawler"));
 			skillItems.add(new SkillItem(545, "76", "Sharks - Harpoon"));
+			skillItems.add(new SkillItem(1192, "79", "Sea Turtle - Fishing Trawler"));
 			skillItems.add(new SkillItem(1190, "81", "Manta Ray - Fishing Trawler"));
 		}
 		if (mc.getSkillGuideChosen().equals("Firemaking")) {
@@ -525,7 +528,7 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(251, "4", "Pie Dish"));
 				skillItems.add(new SkillItem(341, "7", "Bowl"));
 			} else if (curTab == 2) {
-				skillItems.add(new SkillItem(894, "1", "Opal"));
+				skillItems.add(new SkillItem(894, "10", "Opal"));
 				skillItems.add(new SkillItem(893, "13", "Jade"));
 				skillItems.add(new SkillItem(892, "16", "Red Topaz"));
 				skillItems.add(new SkillItem(164, "20", "Sapphire"));
@@ -541,7 +544,7 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(289, "10", "Sapphire Necklace"));
 				skillItems.add(new SkillItem(297, "13", "Sapphire Amulet"));
 				skillItems.add(new SkillItem(44, "16", "Holy Symbol"));
-				skillItems.add(new SkillItem(1027, "17", "Unholy Symbol"));
+				skillItems.add(new SkillItem(1027, "16", "Unholy Symbol"));
 				skillItems.add(new SkillItem(285, "18", "Emerald Ring"));
 				skillItems.add(new SkillItem(290, "24", "Emerald Necklace"));
 				skillItems.add(new SkillItem(298, "30", "Emerald Amulet"));
@@ -549,7 +552,7 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(291, "40", "Ruby Necklace"));
 				skillItems.add(new SkillItem(287, "42", "Diamond Ring"));
 				skillItems.add(new SkillItem(299, "50", "Ruby Amulet"));
-				skillItems.add(new SkillItem(543, "55", "Dragonstone Ring"));
+				skillItems.add(new SkillItem(543, "54", "Dragonstone Ring"));
 				skillItems.add(new SkillItem(292, "56", "Diamond Necklace"));
 				skillItems.add(new SkillItem(300, "70", "Diamond Amulet"));
 				skillItems.add(new SkillItem(544, "72", "Dragonstone Necklace"));
@@ -559,7 +562,7 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(676, "10", "Bow String"));
 			} else if (curTab == 5) {
 				skillItems.add(new SkillItem(623, "1", "Molten Glass"));
-				skillItems.add(new SkillItem(620, "3", "Beer Glass"));
+				skillItems.add(new SkillItem(620, "1", "Beer Glass"));
 				skillItems.add(new SkillItem(1018, "10", "Lens"));
 				skillItems.add(new SkillItem(465, "33", "Vial"));
 				skillItems.add(new SkillItem(611, "46", "Orb"));
@@ -583,20 +586,22 @@ public final class SkillGuideInterface {
 			} else if (curTab == 1) {
 				skillItems.add(new SkillItem(62, "1", "Bronze Daggers - 1 Bar"));
 				skillItems.add(new SkillItem(87, "1", "Bronze Axes - 1 Bar"));
-				skillItems.add(new SkillItem(94, "1", "Bronze Maces - 1 Bar"));
+				skillItems.add(new SkillItem(94, "2", "Bronze Maces - 1 Bar"));
 				skillItems.add(new SkillItem(104, "3", "Bronze Medium Helms - 1 Bar"));
-				skillItems.add(new SkillItem(66, "4", "Bronze Swords - 1 Bar"));
+				skillItems.add(new SkillItem(66, "4", "Bronze Short Swords - 1 Bar"));
 				skillItems.add(new SkillItem(1062, "4", "Bronze Dart Tips - 1 Bar makes 7"));
 				skillItems.add(new SkillItem(979, "4", "Bronze Wire - 1 Bar"));
 				skillItems.add(new SkillItem(82, "5", "Bronze Scimitars - 2 Bars"));
 				skillItems.add(new SkillItem(669, "5", "Bronze Arrowheads - 1 Bar makes 10"));
 				skillItems.add(new SkillItem(70, "6", "Bronze Longswords - 2 Bars"));
 				skillItems.add(new SkillItem(108, "7", "Bronze Full Helms - 2 Bars"));
+				skillItems.add(new SkillItem(1076, "7", "Bronze Throwing Knives - 1 Bar makes 2"));
 				skillItems.add(new SkillItem(124, "8", "Bronze Square Shields - 2 Bars"));
 				skillItems.add(new SkillItem(205, "10", "Bronze Battleaxes - 3 Bars"));
 				skillItems.add(new SkillItem(113, "11", "Bronze Chainbodies - 3 Bars"));
 				skillItems.add(new SkillItem(128, "12", "Bronze Kiteshields - 3 Bars"));
 				skillItems.add(new SkillItem(76, "14", "Bronze Two-handed Swords - 3 Bars"));
+				skillItems.add(new SkillItem(214, "16", "Bronze Plated Skirts - 3 Bars"));
 				skillItems.add(new SkillItem(206, "16", "Bronze Platelegs - 3 Bars"));
 				skillItems.add(new SkillItem(117, "18", "Bronze Platebodies - 5 Bars"));
 			} else if (curTab == 2) {
@@ -604,17 +609,19 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(12, "16", "Iron Axes - 1 Bar"));
 				skillItems.add(new SkillItem(0, "17", "Iron Maces - 1 Bar"));
 				skillItems.add(new SkillItem(5, "18", "Iron Medium Helms - 1 Bar"));
-				skillItems.add(new SkillItem(1, "19", "Iron Swords - 1 Bar"));
+				skillItems.add(new SkillItem(1, "19", "Iron Short Swords - 1 Bar"));
 				skillItems.add(new SkillItem(1063, "19", "Iron Dart Tips - 1 Bar makes 7"));
 				skillItems.add(new SkillItem(83, "20", "Iron Scimitars - 2 Bars"));
 				skillItems.add(new SkillItem(670, "20", "Iron Arrowheads - 1 Bar makes 10"));
 				skillItems.add(new SkillItem(71, "21", "Iron Longswords - 2 Bars"));
 				skillItems.add(new SkillItem(6, "22", "Iron Full Helms - 2 Bars"));
+				skillItems.add(new SkillItem(1075, "22", "Iron Throwing Knives - 1 Bar makes 2"));
 				skillItems.add(new SkillItem(3, "23", "Iron Square Shields - 2 Bars"));
 				skillItems.add(new SkillItem(89, "25", "Iron Battleaxes - 3 Bars"));
 				skillItems.add(new SkillItem(7, "26", "Iron Chainbodies - 3 Bars"));
 				skillItems.add(new SkillItem(2, "27", "Iron Kiteshields - 3 Bars"));
 				skillItems.add(new SkillItem(77, "29", "Iron Two-handed Swords - 3 Bars"));
+				skillItems.add(new SkillItem(215, "31", "Iron Plated Skirts - 3 Bars"));
 				skillItems.add(new SkillItem(9, "31", "Iron Platelegs - 3 Bars"));
 				skillItems.add(new SkillItem(8, "33", "Iron Platebodies - 5 Bars"));
 			} else if (curTab == 3) {
@@ -622,18 +629,20 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(88, "31", "Steel Axes - 1 Bar"));
 				skillItems.add(new SkillItem(95, "32", "Steel Maces - 1 Bar"));
 				skillItems.add(new SkillItem(105, "33", "Steel Medium Helms - 1 Bar"));
-				skillItems.add(new SkillItem(67, "34", "Steel Swords - 1 Bar"));
+				skillItems.add(new SkillItem(67, "34", "Steel Short Swords - 1 Bar"));
 				skillItems.add(new SkillItem(1064, "34", "Steel Dart Tips - 1 Bar makes 7"));
 				skillItems.add(new SkillItem(84, "35", "Steel Scimitars - 2 Bars"));
 				skillItems.add(new SkillItem(671, "35", "Steel Arrowheads - 1 Bar makes 10"));
-				skillItems.add(new SkillItem(1041, "35", "Cannonball - 1 Bar makes 2"));
+				skillItems.add(new SkillItem(1041, "35", "Cannonball - 1 Bar"));
 				skillItems.add(new SkillItem(72, "36", "Steel Longswords - 2 Bars"));
 				skillItems.add(new SkillItem(109, "37", "Steel Full Helms - 2 Bars"));
+				skillItems.add(new SkillItem(1077, "37", "Steel Throwing Knives - 1 Bar makes 2"));
 				skillItems.add(new SkillItem(125, "38", "Steel Square Shields - 2 Bars"));
 				skillItems.add(new SkillItem(90, "40", "Steel Battleaxes - 3 Bars"));
 				skillItems.add(new SkillItem(114, "41", "Steel Chainbodies - 3 Bars"));
 				skillItems.add(new SkillItem(129, "42", "Steel Kiteshields - 3 Bars"));
 				skillItems.add(new SkillItem(78, "44", "Steel Two-handed Swords - 3 Bars"));
+				skillItems.add(new SkillItem(225, "46", "Steel Plated Skirts - 3 Bars"));
 				skillItems.add(new SkillItem(121, "46", "Steel Platelegs - 3 Bars"));
 				skillItems.add(new SkillItem(118, "48", "Steel Platebodies - 5 Bars"));
 			} else if (curTab == 4) {
@@ -641,17 +650,19 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(203, "51", "Mithril Axes - 1 Bar"));
 				skillItems.add(new SkillItem(96, "52", "Mithril Maces - 1 Bar"));
 				skillItems.add(new SkillItem(106, "53", "Mithril Medium Helms - 1 Bar"));
-				skillItems.add(new SkillItem(68, "54", "Mithril Swords - 1 Bar"));
+				skillItems.add(new SkillItem(68, "54", "Mithril Short Swords - 1 Bar"));
 				skillItems.add(new SkillItem(1065, "54", "Mithril Dart Tips - 1 Bar makes 7"));
 				skillItems.add(new SkillItem(85, "55", "Mithril Scimitars - 2 Bars"));
 				skillItems.add(new SkillItem(672, "55", "Mithril Arrowheads - 1 Bar makes 10"));
 				skillItems.add(new SkillItem(73, "56", "Mithril Longswords - 2 Bars"));
 				skillItems.add(new SkillItem(110, "57", "Mithril Full Helms - 2 Bars"));
+				skillItems.add(new SkillItem(1078, "57", "Mithril Throwing Knives - 1 Bar makes 2"));
 				skillItems.add(new SkillItem(126, "58", "Mithril Square Shields - 2 Bars"));
 				skillItems.add(new SkillItem(91, "60", "Mithril Battleaxes - 3 Bars"));
 				skillItems.add(new SkillItem(115, "61", "Mithril Chainbodies - 3 Bars"));
 				skillItems.add(new SkillItem(130, "62", "Mithril Kiteshields - 3 Bars"));
 				skillItems.add(new SkillItem(79, "64", "Mithril Two-handed Swords - 3 Bars"));
+				skillItems.add(new SkillItem(226, "66", "Mithril Plated Skirts - 3 Bars"));
 				skillItems.add(new SkillItem(122, "66", "Mithril Platelegs - 3 Bars"));
 				skillItems.add(new SkillItem(119, "68", "Mithril Platebodies - 5 Bars"));
 			} else if (curTab == 5) {
@@ -659,17 +670,19 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(204, "71", "Adamant Axes - 1 Bar"));
 				skillItems.add(new SkillItem(97, "72", "Adamant Maces - 1 Bar"));
 				skillItems.add(new SkillItem(107, "73", "Adamant Medium Helms - 1 Bar"));
-				skillItems.add(new SkillItem(69, "74", "Adamant Swords - 1 Bar"));
+				skillItems.add(new SkillItem(69, "74", "Adamant Short Swords - 1 Bar"));
 				skillItems.add(new SkillItem(1066, "74", "Adamantite Dart Tips - 1 Bar makes 7"));
 				skillItems.add(new SkillItem(86, "75", "Adamant Scimitars - 2 Bars"));
 				skillItems.add(new SkillItem(673, "75", "Adamant Arrowheads - 1 Bar makes 10"));
 				skillItems.add(new SkillItem(71, "76", "Adamant Longswords - 2 Bars"));
 				skillItems.add(new SkillItem(111, "77", "Adamant Full Helms - 2 Bars"));
+				skillItems.add(new SkillItem(1079, "77", "Adamant Throwing Knives - 1 Bar makes 2"));
 				skillItems.add(new SkillItem(127, "78", "Adamant Square Shields - 2 Bars"));
 				skillItems.add(new SkillItem(92, "80", "Adamant Battleaxes - 3 Bars"));
 				skillItems.add(new SkillItem(116, "81", "Adamant Chainbodies - 3 Bars"));
 				skillItems.add(new SkillItem(131, "82", "Adamant Kiteshields - 3 Bars"));
 				skillItems.add(new SkillItem(80, "84", "Adamant Two-handed Swords - 3 Bars"));
+				skillItems.add(new SkillItem(227, "86", "Adamant Plated Skirts - 3 Bars"));
 				skillItems.add(new SkillItem(123, "86", "Adamant Platelegs - 3 Bars"));
 				skillItems.add(new SkillItem(120, "88", "Adamant Platebodies - 5 Bars"));
 			} else if (curTab == 6) {
@@ -677,17 +690,19 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(405, "86", "Rune Axes - 1 Bar"));
 				skillItems.add(new SkillItem(98, "87", "Rune Maces - 1 Bar"));
 				skillItems.add(new SkillItem(399, "88", "Rune Medium Helms - 1 Bar"));
-				skillItems.add(new SkillItem(397, "89", "Rune Swords - 1 Bar"));
+				skillItems.add(new SkillItem(397, "89", "Rune Short Swords - 1 Bar"));
 				skillItems.add(new SkillItem(1067, "89", "Rune Dart Tips - 1 Bar makes 7"));
 				skillItems.add(new SkillItem(398, "90", "Rune Scimitars - 2 Bars"));
 				skillItems.add(new SkillItem(674, "90", "Rune Arrowheads - 1 Bar makes 10"));
 				skillItems.add(new SkillItem(75, "91", "Rune Longswords - 2 Bars"));
 				skillItems.add(new SkillItem(112, "92", "Rune Full Helms - 2 Bars"));
+				skillItems.add(new SkillItem(1080, "92", "Rune Throwing Knives - 1 Bar makes 2"));
 				skillItems.add(new SkillItem(403, "93", "Rune Square Shields - 2 Bars"));
 				skillItems.add(new SkillItem(93, "95", "Rune Battleaxes - 3 Bars"));
 				skillItems.add(new SkillItem(400, "96", "Rune Chainbodies - 3 Bars"));
 				skillItems.add(new SkillItem(404, "97", "Rune Kiteshields - 3 Bars"));
 				skillItems.add(new SkillItem(81, "99", "Rune Two-handed Swords - 3 Bars"));
+				skillItems.add(new SkillItem(406, "99", "Rune Plated Skirts - 3 Bars"));
 				skillItems.add(new SkillItem(402, "99", "Rune Platelegs - 3 Bars"));
 				skillItems.add(new SkillItem(401, "99", "Rune Platebodies - 5 Bars"));
 			} else if (curTab == 7) {
@@ -729,11 +744,13 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(451, "54", EntityHandler.getItemDef(451).name));
 				skillItems.add(new SkillItem(452, "65", EntityHandler.getItemDef(452).name));
 				skillItems.add(new SkillItem(453, "70", EntityHandler.getItemDef(453).name));
-				skillItems.add(new SkillItem(934, "76", EntityHandler.getItemDef(934).name));
+				skillItems.add(new SkillItem(934, "75", EntityHandler.getItemDef(934).name));
 			} else if (curTab == 1) {
 				skillItems.add(new SkillItem(474, "3", "Attack potion - Guam leaf & eye of newt"));
 				skillItems.add(new SkillItem(566, "5", "Cure poison potion - Marrentill & ground unicorn horn"));
+				skillItems.add(new SkillItem(1176, "10", "Explosive compound - Nitroglycerin & ammonium nitrate & ground charcoal & arcenia root"));
 				skillItems.add(new SkillItem(222, "12", "Strength potion - Tarromin & limpwurt root"));
+				skillItems.add(new SkillItem(1053, "14", "Ogre potion - Guam leaf & jangerberries & ground bat bones"));
 				skillItems.add(new SkillItem(477, "22", "Stat restore potion - Harralander & red spiders' eggs"));
 				skillItems.add(new SkillItem(588, "25", "Blamish oil - Harralander & blamish snail slime"));
 				skillItems.add(new SkillItem(480, "30", "Defense potion - Ranarr weed & white berries"));
@@ -760,10 +777,10 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(410, "10", "Brimhaven treeswing"));
 				skillItems.add(new SkillItem(410, "15", "Edgeville dungeon ropeswing"));
 				skillItems.add(new SkillItem(410, "15", "Yanille North climbing rocks"));
+				skillItems.add(new SkillItem(410, "18", "Yanille watchtower handholds"));
 				skillItems.add(new SkillItem(410, "20", "North-west of McGrouber's Woods log balance"));
 				skillItems.add(new SkillItem(410, "25", "Lum river stepping stone"));
 				skillItems.add(new SkillItem(410, "25", "Glough's watch tower"));
-				skillItems.add(new SkillItem(410, "30", "Yanille watchtower handholds"));
 				skillItems.add(new SkillItem(410, "30", "Southern Gu'Tanoth bridge rock"));
 				skillItems.add(new SkillItem(410, "30", "West of Yanille tree swing"));
 				skillItems.add(new SkillItem(410, "32", "Ardougne river rock crossing"));
@@ -797,6 +814,7 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(895, "75", "Gnome"));
 				skillItems.add(new SkillItem(75, "80", "Hero"));
 			} else if (curTab == 1) {
+				skillItems.add(new SkillItem(739, "5", "Tea Stall"));
 				skillItems.add(new SkillItem(330, "5", "Baker's Stall"));
 				skillItems.add(new SkillItem(1061, "15", "Rock Cake Stall"));
 				skillItems.add(new SkillItem(200, "20", "Silk Stall"));
