@@ -2150,24 +2150,36 @@ public final class Player extends Mob {
 	}
 
 	public Boolean getBatchProgressBar() {
-		if (getCache().hasKey("setting_batch_progressbar")) {
-			return getCache().getBoolean("setting_batch_progressbar");
+		if (Constants.GameServer.BATCH_PROGRESSION) {
+			if (getCache().hasKey("setting_batch_progressbar")) {
+				return getCache().getBoolean("setting_batch_progressbar");
+			}
+			return true;
+		} else {
+			return false;
 		}
-		return true;
 	}
 
 	public Boolean getExperienceDrops() {
-		if (getCache().hasKey("setting_experience_drops")) {
-			return getCache().getBoolean("setting_experience_drops");
+		if (Constants.GameServer.EXPERIENCE_DROPS_TOGGLE) {
+			if (getCache().hasKey("setting_experience_drops")) {
+				return getCache().getBoolean("setting_experience_drops");
+			}
+			return true;
+		} else {
+			return false;
 		}
-		return true;
 	}
 
 	public Boolean getHideFog() {
-		if (getCache().hasKey("setting_showfog")) {
-			return getCache().getBoolean("setting_showfog");
+		if (Constants.GameServer.FOG_TOGGLE) {
+			if (getCache().hasKey("setting_showfog")) {
+				return getCache().getBoolean("setting_showfog");
+			}
+			return true;
+		} else {
+			return false;
 		}
-		return true;
 	}
 
 	public Boolean getHideRoofs() {
@@ -2210,10 +2222,14 @@ public final class Player extends Mob {
 	}
 
 	public boolean getClanInviteSetting() {
-		if (getCache().hasKey("p_block_invites")) {
-			return getCache().getBoolean("p_block_invites");
+		if (Constants.GameServer.WANT_CLANS) {
+			if (getCache().hasKey("p_block_invites")) {
+				return getCache().getBoolean("p_block_invites");
+			}
+			return true;
+		} else {
+			return false;
 		}
-		return true;
 	}
 
 	public boolean isPlayer() {
