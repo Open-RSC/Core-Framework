@@ -242,9 +242,9 @@ public class PacketHandler {
 			else if (opcode == 240) updateOptionsMenuSettings();
 
 			else if (opcode == 206) togglePrayer(length);
-			
+
 			else if (opcode == 232) mc.setShowContactDialogue(true);
-			
+
 			else if (opcode == 224) mc.setShowRecoveryDialogue(true);
 
 				// Quest Stage Update
@@ -351,7 +351,7 @@ public class PacketHandler {
 
 				// Inside Tutorial
 			else if (opcode == 111) mc.setInsideTutorial(packetsIncoming.getUnsignedByte() != 0);
-			
+
 				// Inside Black Hole
 			else if (opcode == 115) mc.setInsideBlackHole(packetsIncoming.getUnsignedByte() != 0);
 
@@ -1586,8 +1586,8 @@ public class PacketHandler {
 		mc.setHoldAndChoose(packetsIncoming.getUnsignedByte() == 1); // 21
 		mc.setSwipeToZoom(packetsIncoming.getUnsignedByte() == 1); // 22
 		mc.setLastZoom(packetsIncoming.getUnsignedByte()); // 23
-		mc.setOptionExperienceDrops(packetsIncoming.getUnsignedByte() == 1); // 24
-		mc.setOptionBatchProgressBar(packetsIncoming.getUnsignedByte() == 1); // 25
+		mc.setOptionBatchProgressBar(packetsIncoming.getUnsignedByte() == 1); // 24
+		mc.setOptionExperienceDrops(packetsIncoming.getUnsignedByte() == 1); // 25
 		mc.setOptionHideRoofs(packetsIncoming.getUnsignedByte() == 1); // 26
 		mc.setOptionHideFog(packetsIncoming.getUnsignedByte() == 1); // 27
 	}

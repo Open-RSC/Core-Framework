@@ -1586,8 +1586,8 @@ public class PacketHandler {
 		mc.setHoldAndChoose(packetsIncoming.getUnsignedByte() == 1); // 21
 		mc.setSwipeToZoom(packetsIncoming.getUnsignedByte() == 1); // 22
 		mc.setLastZoom(packetsIncoming.getUnsignedByte()); // 23
-		mc.setOptionExperienceDrops(packetsIncoming.getUnsignedByte() == 1); // 24
-		mc.setOptionBatchProgressBar(packetsIncoming.getUnsignedByte() == 1); // 25
+		mc.setOptionBatchProgressBar(packetsIncoming.getUnsignedByte() == 1); // 24
+		mc.setOptionExperienceDrops(packetsIncoming.getUnsignedByte() == 1); // 25
 		mc.setOptionHideRoofs(packetsIncoming.getUnsignedByte() == 1); // 26
 		mc.setOptionHideFog(packetsIncoming.getUnsignedByte() == 1); // 27
 	}
