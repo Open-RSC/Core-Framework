@@ -29,7 +29,7 @@ public class Config {
 	public static boolean C_EXPERIENCE_DROPS = false;
 	public static boolean C_BATCH_PROGRESS_BAR = false;
 	public static boolean C_HIDE_ROOFS = false;
-	public static boolean C_SHOW_FOG = true;
+	public static boolean C_SHOW_FOG = false;
 	public static int C_SHOW_GROUND_ITEMS = 0;
 	public static boolean C_MESSAGE_TAB_SWITCH = false;
 	public static boolean C_NAME_CLAN_TAG_OVERLAY = false;

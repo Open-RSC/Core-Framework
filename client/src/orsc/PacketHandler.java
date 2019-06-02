@@ -980,6 +980,8 @@ public class PacketHandler {
 		props.setProperty("S_SHOW_UNIDENTIFIED_HERB_NAMES", showUnidentifiedHerbNames == 1 ? "true" : "false"); // 56
 		props.setProperty("S_WANT_QUEST_STARTED_INDICATOR", wantQuestStartedIndicator == 1 ? "true" : "false"); // 57
 
+		Config.updateServerConfiguration(props);
+
 		mc.authenticSettings = !(
 			Config.isAndroid() ||
 				Config.S_WANT_CLANS || Config.S_WANT_KILL_FEED
