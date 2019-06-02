@@ -17,8 +17,8 @@ public class Config {
 	public static String SERVER_NAME = "Runescape";
 	public static String SERVER_NAME_WELCOME = "Runescape Classic";
 	public static String WELCOME_TEXT = "You need a members account to use this server";
-	static String SERVER_IP = null; // Modify this to override "Cache/ip.txt"
-	static int SERVER_PORT; // Modify SERVER_IP above to override "Cache/port.txt" with this value
+	public static String SERVER_IP = null; // Modify this to override "Cache/ip.txt"
+	public static int SERVER_PORT; // Modify SERVER_IP above to override "Cache/port.txt" with this value
 	public static final int CLIENT_VERSION = 2;
 	private static final int CACHE_VERSION = 2;
 	public static boolean MEMBER_WORLD = false;
@@ -176,7 +176,7 @@ public class Config {
 	 *
 	 * @param force
 	 */
-	static void saveConfiguration(boolean force) {
+	private static void saveConfiguration(boolean force) {
 		Field[] fields = Config.class.getDeclaredFields();
 		for (Field f : fields) {
 			if (f.getName().startsWith("F_"))
@@ -244,6 +244,10 @@ public class Config {
 		}
 		setConfigurationFromProperties();
 	}
+
+	public static String getServerIp() { return prop.getProperty("SERVER_IP"); }
+
+	public static int getServerPort() { return Integer.parseInt(prop.getProperty("SERVER_PORT")); }
 
 	public static String getServerName() {
 		return prop.getProperty("SERVER_NAME");

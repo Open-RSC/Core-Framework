@@ -4796,7 +4796,6 @@ public final class mudclient implements Runnable {
 								}
 							}
 							uiX += uiWidth + 15;
-
 							this.getSurface().drawBoxAlpha(uiX, uiY, uiWidth, uiHeight, 0x659CDE, 160);
 							this.getSurface().drawBoxBorder(uiX, uiWidth, uiY, uiHeight, 0);
 							this.getSurface().drawString("@whi@PK", uiX + 25, uiY + 20, 0xffffff, 1);
@@ -4810,7 +4809,7 @@ public final class mudclient implements Runnable {
 								uiX += uiWidth + 15;
 								this.getSurface().drawBoxAlpha(uiX, uiY, uiWidth, uiHeight, 0x659CDE, 160);
 								this.getSurface().drawBoxBorder(uiX, uiWidth, uiY, uiHeight, 0);
-								this.getSurface().drawString("@whi@Clan", uiX + 25, uiY + 20, 0xffffff, 1);
+								this.getSurface().drawString("@whi@Clan", uiX + 12, uiY + 20, 0xffffff, 1);
 								if (this.mouseButtonClick != 0) {
 									if (this.mouseX >= uiX && this.mouseX <= uiX + uiWidth && this.mouseY >= uiY && this.mouseY <= uiY + uiHeight) {
 										this.mouseButtonClick = 0;
@@ -10330,8 +10329,10 @@ public final class mudclient implements Runnable {
 								this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
 								this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
 							} else {
-								String ip = ClientPort.loadIP();
-								int port = ClientPort.loadPort();
+								//String ip = ClientPort.loadIP();
+								//int port = ClientPort.loadPort();
+								String ip = Config.getServerIp();
+								int port = Config.getServerPort();
 								this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
 								this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
 							}
@@ -10341,7 +10342,7 @@ public final class mudclient implements Runnable {
 							this.packetHandler.getClientStream().finishPacketAndFlush();
 							int var11 = this.packetHandler.getClientStream().read();
 
-							System.out.println("Getpq response: " + var11);
+							System.out.println("Getting response: " + var11);
 							if (var11 == 0) {
 								showLoginScreenStatus("Sorry, the recovery questions for this user have not been set", "");
 								return;
@@ -10423,8 +10424,10 @@ public final class mudclient implements Runnable {
 								this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
 								this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
 							} else {
-								String ip = ClientPort.loadIP();
-								int port = ClientPort.loadPort();
+								//String ip = ClientPort.loadIP();
+								//int port = ClientPort.loadPort();
+								String ip = Config.getServerIp();
+								int port = Config.getServerPort();
 								this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
 								this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
 							}
@@ -10550,8 +10553,10 @@ public final class mudclient implements Runnable {
 				this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
 				this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
 			} else {
-				String ip = ClientPort.loadIP();
-				int port = ClientPort.loadPort();
+				//String ip = ClientPort.loadIP();
+				//int port = ClientPort.loadPort();
+				String ip = Config.getServerIp();
+				int port = Config.getServerPort();
 				this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
 				this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
 			}
@@ -11986,8 +11991,10 @@ public final class mudclient implements Runnable {
 							this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
 							this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
 						} else {
-							String ip = ClientPort.loadIP();
-							int port = ClientPort.loadPort();
+							//String ip = ClientPort.loadIP();
+							//int port = ClientPort.loadPort();
+							String ip = Config.getServerIp();
+							int port = Config.getServerPort();
 							this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
 							this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
 						}
