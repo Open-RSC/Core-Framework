@@ -16,6 +16,7 @@ import orsc.enumerations.ORSCharacterDirection;
 import orsc.graphics.gui.KillAnnouncer;
 import orsc.graphics.gui.SocialLists;
 import orsc.graphics.three.RSModel;
+import orsc.multiclient.ClientPort;
 import orsc.net.Network_Socket;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
@@ -920,6 +921,8 @@ public class PacketHandler {
 			);
 		}
 
+		props.setProperty("SERVER_IP", ClientPort.loadIP()); // 0
+		props.setProperty("SERVER_PORT", String.valueOf(ClientPort.loadPort())); // 0
 		props.setProperty("SERVER_NAME", serverName); // 1
 		props.setProperty("SERVER_NAME_WELCOME", serverNameWelcome); // 2
 		props.setProperty("S_PLAYER_LEVEL_LIMIT", Integer.toString(playerLevelLimit)); // 3

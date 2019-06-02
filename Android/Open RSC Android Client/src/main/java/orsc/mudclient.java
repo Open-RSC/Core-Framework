@@ -4796,7 +4796,6 @@ public final class mudclient implements Runnable {
 								}
 							}
 							uiX += uiWidth + 15;
-
 							this.getSurface().drawBoxAlpha(uiX, uiY, uiWidth, uiHeight, 0x659CDE, 160);
 							this.getSurface().drawBoxBorder(uiX, uiWidth, uiY, uiHeight, 0);
 							this.getSurface().drawString("@whi@PK", uiX + 25, uiY + 20, 0xffffff, 1);
@@ -4810,7 +4809,7 @@ public final class mudclient implements Runnable {
 								uiX += uiWidth + 15;
 								this.getSurface().drawBoxAlpha(uiX, uiY, uiWidth, uiHeight, 0x659CDE, 160);
 								this.getSurface().drawBoxBorder(uiX, uiWidth, uiY, uiHeight, 0);
-								this.getSurface().drawString("@whi@Clan", uiX + 25, uiY + 20, 0xffffff, 1);
+								this.getSurface().drawString("@whi@Clan", uiX + 12, uiY + 20, 0xffffff, 1);
 								if (this.mouseButtonClick != 0) {
 									if (this.mouseX >= uiX && this.mouseX <= uiX + uiWidth && this.mouseY >= uiY && this.mouseY <= uiY + uiHeight) {
 										this.mouseButtonClick = 0;
@@ -10325,13 +10324,13 @@ public final class mudclient implements Runnable {
 //							}
 
 							if ((Config.SERVER_IP != null)) {
-								String ip = Config.SERVER_IP;
-								int port = Config.SERVER_PORT;
+								String ip = Config.SERVER_IP; // allows override if manually set in Config code
+								int port = Config.SERVER_PORT; // allows override if manually set in Config code
 								this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
 								this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
 							} else {
-								String ip = ClientPort.loadIP();
-								int port = ClientPort.loadPort();
+								String ip = Config.getServerIp(); // loads cached server IP addressed
+								int port = Config.getServerPort(); // loads cached port
 								this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
 								this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
 							}
@@ -10341,7 +10340,7 @@ public final class mudclient implements Runnable {
 							this.packetHandler.getClientStream().finishPacketAndFlush();
 							int var11 = this.packetHandler.getClientStream().read();
 
-							System.out.println("Getpq response: " + var11);
+							System.out.println("Getting response: " + var11);
 							if (var11 == 0) {
 								showLoginScreenStatus("Sorry, the recovery questions for this user have not been set", "");
 								return;
@@ -10418,13 +10417,13 @@ public final class mudclient implements Runnable {
 							}*/
 
 							if ((Config.SERVER_IP != null)) {
-								String ip = Config.SERVER_IP;
-								int port = Config.SERVER_PORT;
+								String ip = Config.SERVER_IP; // allows override if manually set in Config code
+								int port = Config.SERVER_PORT; // allows override if manually set in Config code
 								this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
 								this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
 							} else {
-								String ip = ClientPort.loadIP();
-								int port = ClientPort.loadPort();
+								String ip = Config.getServerIp(); // loads cached server IP addressed
+								int port = Config.getServerPort(); // loads cached port
 								this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
 								this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
 							}
@@ -10545,13 +10544,13 @@ public final class mudclient implements Runnable {
 		}
 		try {
 			if ((Config.SERVER_IP != null)) {
-				String ip = Config.SERVER_IP;
-				int port = Config.SERVER_PORT;
+				String ip = Config.SERVER_IP; // allows override if manually set in Config code
+				int port = Config.SERVER_PORT; // allows override if manually set in Config code
 				this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
 				this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
 			} else {
-				String ip = ClientPort.loadIP();
-				int port = ClientPort.loadPort();
+				String ip = Config.getServerIp(); // loads cached server IP addressed
+				int port = Config.getServerPort(); // loads cached port
 				this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
 				this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
 			}
@@ -11981,13 +11980,13 @@ public final class mudclient implements Runnable {
 						}
 
 						if ((Config.SERVER_IP != null)) {
-							String ip = Config.SERVER_IP;
-							int port = Config.SERVER_PORT;
+							String ip = Config.SERVER_IP; // allows override if manually set in Config code
+							int port = Config.SERVER_PORT; // allows override if manually set in Config code
 							this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
 							this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
 						} else {
-							String ip = ClientPort.loadIP();
-							int port = ClientPort.loadPort();
+							String ip = Config.getServerIp(); // loads cached server IP addressed
+							int port = Config.getServerPort(); // loads cached port
 							this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
 							this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
 						}
@@ -12861,16 +12860,16 @@ public final class mudclient implements Runnable {
 				MiscFunctions.maxReadTries = 1000;
 				// We must fetch the server config before continuing.
 				if ((Config.SERVER_IP != null)) {
-					String ip = Config.SERVER_IP;
-					int port = Config.SERVER_PORT;
+					String ip = Config.SERVER_IP; // allows override if manually set in Config code
+					int port = Config.SERVER_PORT; // allows override if manually set in Config code
 					System.out.println(" ");
 					System.out.println(" ");
 					System.out.println("Fetching server configs from " + ip + ":" + port);
 					System.out.println(" ");
 					System.out.println(" ");
 				} else {
-					String ip = ClientPort.loadIP();
-					int port = ClientPort.loadPort();
+					String ip = ClientPort.loadIP(); // loads based on Cache/ip.txt
+					int port = ClientPort.loadPort(); // loads based on Cache/port.txt
 					System.out.println(" ");
 					System.out.println(" ");
 					System.out.println("Fetching server configs from " + ip + ":" + port);
@@ -13800,8 +13799,8 @@ public final class mudclient implements Runnable {
 				int port = Config.SERVER_PORT;
 				this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
 			} else {
-				String ip = ClientPort.loadIP();
-				int port = ClientPort.loadPort();
+				String ip = ClientPort.loadIP(); // loads based on Cache/ip.txt
+				int port = ClientPort.loadPort(); // loads based on Cache/port.txt
 				this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
 			}
 			this.packetHandler.getClientStream().newPacket(19);
