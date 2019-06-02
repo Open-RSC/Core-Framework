@@ -2,6 +2,13 @@ package orsc;
 
 import com.openrsc.client.model.Sprite;
 import com.openrsc.interfaces.misc.clan.Clan;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.Properties;
+
 import orsc.buffers.RSBufferUtils;
 import orsc.buffers.RSBuffer_Bits;
 import orsc.enumerations.MessageType;
@@ -14,12 +21,6 @@ import orsc.net.Network_Socket;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.util.Properties;
 
 
 public class PacketHandler {
@@ -760,7 +761,6 @@ public class PacketHandler {
 			experienceDropsToggle = this.getClientStream().getUnsignedByte(); // 19
 			itemsOnDeathMenu = this.getClientStream().getUnsignedByte(); // 20
 			showRoofToggle = this.getClientStream().getUnsignedByte(); // 21
-			Config.C_HIDE_ROOFS = showRoofToggle != 1; // If we don't want the toggle, always show. (entry does not count in sent config)
 			wantHideIp = this.getClientStream().getUnsignedByte(); // 22
 			wantRemember = this.getClientStream().getUnsignedByte(); // 23
 			wantGlobalChat = this.getClientStream().getUnsignedByte(); // 24
@@ -819,7 +819,6 @@ public class PacketHandler {
 			experienceDropsToggle = packetsIncoming.getUnsignedByte(); // 19
 			itemsOnDeathMenu = packetsIncoming.getUnsignedByte(); // 20
 			showRoofToggle = packetsIncoming.getUnsignedByte(); // 21
-			Config.C_HIDE_ROOFS = showRoofToggle != 1; // If we don't want the toggle, always show. (entry does not count in sent config)
 			wantHideIp = packetsIncoming.getUnsignedByte(); // 22
 			wantRemember = packetsIncoming.getUnsignedByte(); // 23
 			wantGlobalChat = packetsIncoming.getUnsignedByte(); // 24
@@ -919,7 +918,7 @@ public class PacketHandler {
 					"\nS_WANT_QUEST_STARTED_INDICATOR  " + wantQuestStartedIndicator // 57
 			);
 		}
-		
+
 		props.setProperty("SERVER_IP", ClientPort.loadIP()); // 0
 		props.setProperty("SERVER_PORT", String.valueOf(ClientPort.loadPort())); // 0
 		props.setProperty("SERVER_NAME", serverName); // 1
@@ -1573,7 +1572,6 @@ public class PacketHandler {
 	}
 
 	private void updateOptionsMenuSettings() {
-		//mc.setGroupID(packetsIncoming.getByte());
 		mc.setOptionCameraModeAuto(packetsIncoming.getUnsignedByte() == 1); // byte index 0
 		mc.setOptionMouseButtonOne(packetsIncoming.getUnsignedByte() == 1); // 1
 		mc.setOptionSoundDisabled(packetsIncoming.getUnsignedByte() == 1); // 2
@@ -1588,6 +1586,10 @@ public class PacketHandler {
 		mc.setHoldAndChoose(packetsIncoming.getUnsignedByte() == 1); // 21
 		mc.setSwipeToZoom(packetsIncoming.getUnsignedByte() == 1); // 22
 		mc.setLastZoom(packetsIncoming.getUnsignedByte()); // 23
+		mc.setOptionExperienceDrops(packetsIncoming.getUnsignedByte() == 1); // 24
+		mc.setOptionBatchProgressBar(packetsIncoming.getUnsignedByte() == 1); // 25
+		mc.setOptionHideRoofs(packetsIncoming.getUnsignedByte() == 1); // 26
+		mc.setOptionHideFog(packetsIncoming.getUnsignedByte() == 1); // 27
 	}
 
 	private void togglePrayer(int length) {

@@ -1,20 +1,66 @@
 package orsc;
 
-import com.openrsc.data.DataFileDecrypter;
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
 import com.openrsc.client.entityhandling.defs.NPCDef;
 import com.openrsc.client.entityhandling.defs.SpellDef;
 import com.openrsc.client.entityhandling.defs.extras.AnimationDef;
 import com.openrsc.client.model.Sprite;
+import com.openrsc.data.DataFileDecrypter;
 import com.openrsc.data.DataOperations;
 import com.openrsc.interfaces.NComponent;
 import com.openrsc.interfaces.NCustomComponent;
-import com.openrsc.interfaces.misc.*;
+import com.openrsc.interfaces.misc.AchievementGUI;
+import com.openrsc.interfaces.misc.AuctionHouse;
+import com.openrsc.interfaces.misc.BankPinInterface;
+import com.openrsc.interfaces.misc.CustomBankInterface;
+import com.openrsc.interfaces.misc.DoSkillInterface;
+import com.openrsc.interfaces.misc.ExperienceConfigInterface;
+import com.openrsc.interfaces.misc.FishingTrawlerInterface;
+import com.openrsc.interfaces.misc.IronManInterface;
+import com.openrsc.interfaces.misc.LostOnDeathInterface;
+import com.openrsc.interfaces.misc.OnlineListInterface;
+import com.openrsc.interfaces.misc.ProgressBarInterface;
+import com.openrsc.interfaces.misc.QuestGuideInterface;
+import com.openrsc.interfaces.misc.SkillGuideInterface;
+import com.openrsc.interfaces.misc.TerritorySignupInterface;
 import com.openrsc.interfaces.misc.clan.Clan;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.Timer;
+import java.util.TimerTask;
+
+//import javax.sound.sampled.AudioSystem;
+//import javax.sound.sampled.Clip;
+
 import orsc.buffers.RSBufferUtils;
-import orsc.enumerations.*;
-import orsc.graphics.gui.*;
+import orsc.enumerations.GameMode;
+import orsc.enumerations.InputXAction;
+import orsc.enumerations.MenuItemAction;
+import orsc.enumerations.MessageTab;
+import orsc.enumerations.MessageType;
+import orsc.enumerations.ORSCharacterDirection;
+import orsc.enumerations.PasswordChangeMode;
+import orsc.enumerations.SocialPopupMode;
+import orsc.graphics.gui.InputXPrompt;
+import orsc.graphics.gui.KillAnnouncer;
+import orsc.graphics.gui.KillAnnouncerQueue;
+import orsc.graphics.gui.Menu;
+import orsc.graphics.gui.MessageHistory;
+import orsc.graphics.gui.Panel;
+import orsc.graphics.gui.SocialLists;
 import orsc.graphics.three.CollisionFlag;
 import orsc.graphics.three.RSModel;
 import orsc.graphics.three.Scene;
@@ -27,14 +73,90 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
 
-//import javax.sound.sampled.AudioSystem;
-//import javax.sound.sampled.Clip;
-import java.io.*;
-import java.security.SecureRandom;
-import java.util.*;
-import java.util.Map.Entry;
-
-import static orsc.Config.*;
+import static orsc.Config.CLIENT_VERSION;
+import static orsc.Config.C_BATCH_PROGRESS_BAR;
+import static orsc.Config.C_EXPERIENCE_CONFIG_SUBMENU;
+import static orsc.Config.C_EXPERIENCE_COUNTER;
+import static orsc.Config.C_EXPERIENCE_COUNTER_COLOR;
+import static orsc.Config.C_EXPERIENCE_COUNTER_MODE;
+import static orsc.Config.C_EXPERIENCE_DROPS;
+import static orsc.Config.C_EXPERIENCE_DROP_SPEED;
+import static orsc.Config.C_FIGHT_MENU;
+import static orsc.Config.C_HIDE_FOG;
+import static orsc.Config.C_HIDE_ROOFS;
+import static orsc.Config.C_HOLD_AND_CHOOSE;
+import static orsc.Config.C_INV_COUNT;
+import static orsc.Config.C_KILL_FEED;
+import static orsc.Config.C_LAST_ZOOM;
+import static orsc.Config.C_LONG_PRESS_TIMER;
+import static orsc.Config.C_MENU_SIZE;
+import static orsc.Config.C_MESSAGE_TAB_SWITCH;
+import static orsc.Config.C_NAME_CLAN_TAG_OVERLAY;
+import static orsc.Config.C_SHOW_GROUND_ITEMS;
+import static orsc.Config.C_SIDE_MENU_OVERLAY;
+import static orsc.Config.C_SWIPE_TO_ROTATE;
+import static orsc.Config.C_SWIPE_TO_SCROLL;
+import static orsc.Config.C_SWIPE_TO_ZOOM;
+import static orsc.Config.C_VOLUME_TO_ROTATE;
+import static orsc.Config.DEBUG;
+import static orsc.Config.DISPLAY_LOGO_SPRITE;
+import static orsc.Config.F_CACHE_DIR;
+import static orsc.Config.F_SHOWING_KEYBOARD;
+import static orsc.Config.MEMBER_WORLD;
+import static orsc.Config.Remember;
+import static orsc.Config.SERVER_NAME;
+import static orsc.Config.SERVER_NAME_WELCOME;
+import static orsc.Config.S_AUTO_MESSAGE_SWITCH_TOGGLE;
+import static orsc.Config.S_BATCH_PROGRESSION;
+import static orsc.Config.S_CUSTOM_FIREMAKING;
+import static orsc.Config.S_EXPERIENCE_COUNTER_TOGGLE;
+import static orsc.Config.S_EXPERIENCE_DROPS_TOGGLE;
+import static orsc.Config.S_FIGHTMODE_SELECTOR_TOGGLE;
+import static orsc.Config.S_FOG_TOGGLE;
+import static orsc.Config.S_GROUND_ITEM_TOGGLE;
+import static orsc.Config.S_INVENTORY_COUNT_TOGGLE;
+import static orsc.Config.S_ITEMS_ON_DEATH_MENU;
+import static orsc.Config.S_MAX_WALKING_SPEED;
+import static orsc.Config.S_MENU_COMBAT_STYLE_TOGGLE;
+import static orsc.Config.S_PLAYER_LEVEL_LIMIT;
+import static orsc.Config.S_RIGHT_CLICK_BANK;
+import static orsc.Config.S_SHOW_FLOATING_NAMETAGS;
+import static orsc.Config.S_SHOW_ROOF_TOGGLE;
+import static orsc.Config.S_SIDE_MENU_TOGGLE;
+import static orsc.Config.S_SPAWN_AUCTION_NPCS;
+import static orsc.Config.S_SPAWN_IRON_MAN_NPCS;
+import static orsc.Config.S_WANT_BANK_NOTES;
+import static orsc.Config.S_WANT_BANK_PINS;
+import static orsc.Config.S_WANT_CERTS_TO_BANK;
+import static orsc.Config.S_WANT_CERT_DEPOSIT;
+import static orsc.Config.S_WANT_CLANS;
+import static orsc.Config.S_WANT_CUSTOM_BANKS;
+import static orsc.Config.S_WANT_CUSTOM_RANK_DISPLAY;
+import static orsc.Config.S_WANT_DECANTING;
+import static orsc.Config.S_WANT_DROP_X;
+import static orsc.Config.S_WANT_EXPERIENCE_ELIXIRS;
+import static orsc.Config.S_WANT_EXP_INFO;
+import static orsc.Config.S_WANT_FIXED_OVERHEAD_CHAT;
+import static orsc.Config.S_WANT_GLOBAL_CHAT;
+import static orsc.Config.S_WANT_HIDE_IP;
+import static orsc.Config.S_WANT_KEYBOARD_SHORTCUTS;
+import static orsc.Config.S_WANT_KILL_FEED;
+import static orsc.Config.S_WANT_QUEST_MENUS;
+import static orsc.Config.S_WANT_REMEMBER;
+import static orsc.Config.S_WANT_SKILL_MENUS;
+import static orsc.Config.S_WANT_WOODCUTTING_GUILD;
+import static orsc.Config.S_ZOOM_VIEW_TOGGLE;
+import static orsc.Config.WELCOME_TEXT;
+import static orsc.Config.getFPS;
+import static orsc.Config.getServerName;
+import static orsc.Config.getServerNameWelcome;
+import static orsc.Config.getWelcomeText;
+import static orsc.Config.getcLogoSpriteId;
+import static orsc.Config.initConfig;
+import static orsc.Config.isAndroid;
+import static orsc.Config.isLenientContactDetails;
+import static orsc.Config.wantEmail;
+import static orsc.Config.wantMembers;
 import static orsc.multiclient.ClientPort.saveHideIp;
 
 public final class mudclient implements Runnable {
@@ -55,7 +177,6 @@ public final class mudclient implements Runnable {
 	public final int[] bankItemOnTab = new int[500];
 	private final int[] mouseClickX = new int[8192];
 	private final int[] mouseClickY = new int[8192];
-	private final int m_S = 1000;
 	private final int[][] animDirLayer_To_CharLayer = new int[][]{{11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3, 4},
 			{11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3, 4}, {11, 3, 2, 9, 7, 1, 6, 10, 0, 5, 8, 4},
 			{3, 4, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5}, {3, 4, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5},
@@ -177,7 +298,6 @@ public final class mudclient implements Runnable {
 	public boolean shiftPressed = false;
 	//public int groupID = 100;
 	public boolean rendering;
-	private int bankItemCount = 0;
 	public int bankItemsMax = 50;
 	public int bankPage = 0;
 	public int bankSelectedItemSlot = -1;
@@ -209,7 +329,6 @@ public final class mudclient implements Runnable {
 	public int[] achievementProgress = new int[500];
 	public int showUiTab = 0;
 	public boolean topMouseMenuVisible = false;
-	private boolean LAST_FRAME_SHOWING_KEYBOARD = false;
 	public int resizeWidth;
 	public int resizeHeight;
 	public Clan clan;
@@ -219,15 +338,12 @@ public final class mudclient implements Runnable {
 	public String clanKickPlayer;
 	private long lastFPSUpdate = 0;
 	private int currentFPS = 0;
-	private int m_Q = 10;
 	private long[] m_F = new long[10];
 	String m_p = null;
-	private long timePassed = 0;
 	private double xpPerHour = 0;
 	private boolean hasGameCrashed = false;
 	private int gameState = 1;
 	private int m_b = 0;
-	private PrintWriter printWriter;
 	private int totalAchievements = 0;
 	private int sleepModifier = 20;
 	private int[] animFrameToSprite_Walk = new int[]{0, 1, 2, 1};
@@ -471,7 +587,6 @@ public final class mudclient implements Runnable {
 	private String sleepingStatusText = null;
 	private boolean sleepWordDelay = true;
 	private int sleepWordDelayTimer = 0;
-	private byte[] soundData = null;
 	private int spriteCount = 0;
 	private int statFatigue = 0;
 	private MudClientGraphics surface;
@@ -520,6 +635,10 @@ public final class mudclient implements Runnable {
 	private int xpPerHourCount = 0;
 	private CustomBankInterface bank;
 	private int settingsBlockGlobal;
+	private boolean settingsHideFog;
+	private boolean settingsHideRoofs;
+	private boolean settingsBatchProgressBar;
+	private boolean settingsExperienceDrops;
 	private int lastSelectedSpell = -1;
 	private int flag = 0;
 	private Timer tiktok = new Timer();
@@ -854,8 +973,9 @@ public final class mudclient implements Runnable {
 					if (var4 > 256) {
 						var4 = 256;
 						var5 = (int) (-((-this.m_F[var3] + var1) / 10L) + (long) this.sleepModifier);
-						if (var5 < this.m_Q) {
-							var5 = this.m_Q;
+						int m_Q = 10;
+						if (var5 < m_Q) {
+							var5 = m_Q;
 						}
 					}
 					GenUtil.sleepShadow((long) var5);
@@ -876,7 +996,8 @@ public final class mudclient implements Runnable {
 						this.update();
 						var6 += var4;
 						++var9;
-						if (var9 > this.m_S) {
+						int m_S = 1000;
+						if (var9 > m_S) {
 							var6 = 0;
 							this.m_b += 6;
 							if (this.m_b > 25) {
@@ -4605,7 +4726,7 @@ public final class mudclient implements Runnable {
 						if (this.optionCameraModeAuto && !this.doCameraZoom) {
 							this.autoRotateCamera((byte) 94);
 						}
-						if (C_SHOW_FOG) {
+						if (C_HIDE_FOG) {
 							if (!this.interlace) {
 								this.scene.fogZFalloff = 1;
 								this.scene.fogLandscapeDistance = gameWidth * 2 + cameraZoom * 2 - 124;
@@ -4875,7 +4996,7 @@ public final class mudclient implements Runnable {
 					}
 
 
-					LAST_FRAME_SHOWING_KEYBOARD = F_SHOWING_KEYBOARD;
+					boolean LAST_FRAME_SHOWING_KEYBOARD = F_SHOWING_KEYBOARD;
 					this.panelMessageTabs.hide(this.panelMessageChat);
 					this.panelMessageTabs.hide(this.panelMessageQuest);
 					this.panelMessageTabs.hide(this.panelMessagePrivate);
@@ -6041,6 +6162,7 @@ public final class mudclient implements Runnable {
 						C_EXPERIENCE_COUNTER_COLOR == 2 ? 0xFF0000 :
 								C_EXPERIENCE_COUNTER_COLOR == 3 ? 0x0000FF : 0x00FF00;
 		int totalXp = 0;
+		long timePassed = 0;
 		if (C_EXPERIENCE_COUNTER_MODE == 1 || skill < 0) {
 			for (int i = 0; i < 18; i++) {
 				totalXp += this.playerExperience[i];
@@ -7937,10 +8059,10 @@ public final class mudclient implements Runnable {
 		if (S_BATCH_PROGRESSION) {
 			if (!C_BATCH_PROGRESS_BAR) {
 				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-						"@whi@Batch Progress Bar - @red@Off", 3, null, null);
+						"@whi@Batch Progress Bar - @red@Off", 24, null, null);
 			} else {
 				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-						"@whi@Batch Progress Bar - @gre@On", 3, null, null);
+						"@whi@Batch Progress Bar - @gre@On", 24, null, null);
 			}
 		}
 
@@ -7948,21 +8070,10 @@ public final class mudclient implements Runnable {
 		if (S_EXPERIENCE_DROPS_TOGGLE) {
 			if (!C_EXPERIENCE_DROPS) {
 				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-						"@whi@Experience Drops - @red@Off", 4, null, null);
+						"@whi@Experience Drops - @red@Off", 25, null, null);
 			} else {
 				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-						"@whi@Experience Drops - @gre@On", 4, null, null);
-			}
-		}
-
-		// fog toggle
-		if (S_FOG_TOGGLE) {
-			if (!C_SHOW_FOG) {
-				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-						"@whi@Fog - @red@Off", 6, null, null);
-			} else {
-				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-						"@whi@Fog - @gre@On", 6, null, null);
+						"@whi@Experience Drops - @gre@On", 25, null, null);
 			}
 		}
 
@@ -7970,10 +8081,21 @@ public final class mudclient implements Runnable {
 		if (S_SHOW_ROOF_TOGGLE) {
 			if (!C_HIDE_ROOFS) {
 				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-						"@whi@Hide Roofs - @red@Off", 7, null, null);
+						"@whi@Hide Roofs - @red@Off", 26, null, null);
 			} else {
 				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-						"@whi@Hide Roofs - @gre@On", 7, null, null);
+						"@whi@Hide Roofs - @gre@On", 26, null, null);
+			}
+		}
+
+		// fog toggle
+		if (S_FOG_TOGGLE) {
+			if (!C_HIDE_FOG) {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+						"@whi@Fog - @red@Off", 27, null, null);
+			} else {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+						"@whi@Fog - @gre@On", 27, null, null);
 			}
 		}
 
@@ -8219,7 +8341,7 @@ public final class mudclient implements Runnable {
 		else
 			settingIndex = checkPosition;
 
-		// camera mode
+		// camera mode - byte index 0
 		if (settingIndex == 0 && this.mouseButtonClick == 1) {
 			this.optionCameraModeAuto = !this.optionCameraModeAuto;
 			this.packetHandler.getClientStream().newPacket(111);
@@ -8228,7 +8350,7 @@ public final class mudclient implements Runnable {
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
-		// one or two mouse button(s)
+		// one or two mouse button(s) - byte index 1
 		if (settingIndex == 1 && this.mouseButtonClick == 1) {
 			this.optionMouseButtonOne = !this.optionMouseButtonOne;
 			this.packetHandler.getClientStream().newPacket(111);
@@ -8237,7 +8359,7 @@ public final class mudclient implements Runnable {
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
-		// sound on/off
+		// sound on/off - byte index 2
 		if (settingIndex == 2 && this.mouseButtonClick == 1) {
 			this.optionSoundDisabled = !this.optionSoundDisabled;
 			this.packetHandler.getClientStream().newPacket(111);
@@ -8246,38 +8368,24 @@ public final class mudclient implements Runnable {
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
-		// batch progress bar
-		if (S_BATCH_PROGRESSION) {
-			if (settingIndex == 3 && this.mouseButtonClick == 1) {
-				C_BATCH_PROGRESS_BAR = !C_BATCH_PROGRESS_BAR;
-				saveConfiguration(true);
-			}
-		}
-
-		// experience drops
-		if (settingIndex == 4 && this.mouseButtonClick == 1 && S_EXPERIENCE_DROPS_TOGGLE) {
-			C_EXPERIENCE_DROPS = !C_EXPERIENCE_DROPS;
-			saveConfiguration(true);
+		// hide roofs toggle - byte index 5
+		if (settingIndex == 26 && this.mouseButtonClick == 1 && S_SHOW_ROOF_TOGGLE) {
+			C_HIDE_ROOFS = !C_HIDE_ROOFS;
+			this.packetHandler.getClientStream().newPacket(111);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(26);
+			boolean optionHideRoofs = C_HIDE_ROOFS;
+			this.packetHandler.getClientStream().writeBuffer1.putByte(optionHideRoofs ? 1 : 0);
+			this.packetHandler.getClientStream().finishPacket();
 		}
 
 		// fog toggle - byte index 6
-		if (settingIndex == 6 && this.mouseButtonClick == 1 && S_FOG_TOGGLE) {
-			C_SHOW_FOG = !C_SHOW_FOG;
+		if (settingIndex == 27 && this.mouseButtonClick == 1 && S_FOG_TOGGLE) {
+			C_HIDE_FOG = !C_HIDE_FOG;
 			this.packetHandler.getClientStream().newPacket(111);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(6);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(C_SHOW_FOG ? 1 : 0);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(27);
+			boolean optionHideFog = C_HIDE_FOG;
+			this.packetHandler.getClientStream().writeBuffer1.putByte(optionHideFog ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
-			saveConfiguration(true);
-		}
-
-		// hide roofs toggle - byte index 5
-		if (settingIndex == 7 && this.mouseButtonClick == 1 && S_SHOW_ROOF_TOGGLE) {
-			C_HIDE_ROOFS = !C_HIDE_ROOFS;
-			this.packetHandler.getClientStream().newPacket(111);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(5);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(C_HIDE_ROOFS ? 1 : 0);
-			this.packetHandler.getClientStream().finishPacket();
-			saveConfiguration(true);
 		}
 
 		// ground items toggle
@@ -8285,25 +8393,21 @@ public final class mudclient implements Runnable {
 			C_SHOW_GROUND_ITEMS++;
 			if (C_SHOW_GROUND_ITEMS == 4)
 				C_SHOW_GROUND_ITEMS = 0;
-			saveConfiguration(true);
 		}
 
 		// auto message tab switch
 		if (settingIndex == 9 && this.mouseButtonClick == 1 && S_AUTO_MESSAGE_SWITCH_TOGGLE) {
 			C_MESSAGE_TAB_SWITCH = !C_MESSAGE_TAB_SWITCH;
-			saveConfiguration(true);
 		}
 
 		// side menu
 		if (settingIndex == 10 && this.mouseButtonClick == 1 && S_SIDE_MENU_TOGGLE) {
 			C_SIDE_MENU_OVERLAY = !C_SIDE_MENU_OVERLAY;
-			saveConfiguration(true);
 		}
 
 		// kill feed
 		if (settingIndex == 11 && this.mouseButtonClick == 1 && S_WANT_KILL_FEED) {
 			C_KILL_FEED = !C_KILL_FEED;
-			saveConfiguration(true);
 		}
 
 		// combat style
@@ -8322,7 +8426,6 @@ public final class mudclient implements Runnable {
 			C_FIGHT_MENU++;
 			if (C_FIGHT_MENU == 3)
 				C_FIGHT_MENU = 0;
-			saveConfiguration(true);
 		}
 
 		// experience counter
@@ -8330,13 +8433,11 @@ public final class mudclient implements Runnable {
 			C_EXPERIENCE_COUNTER++;
 			if (C_EXPERIENCE_COUNTER == 3)
 				C_EXPERIENCE_COUNTER = 0;
-			saveConfiguration(true);
 		}
 
 		// inventory count
 		if (settingIndex == 15 && this.mouseButtonClick == 1 && S_INVENTORY_COUNT_TOGGLE) {
 			C_INV_COUNT = !C_INV_COUNT;
-			saveConfiguration(true);
 		}
 
 		// if clans are enabled
@@ -8345,7 +8446,6 @@ public final class mudclient implements Runnable {
 			if (S_SHOW_FLOATING_NAMETAGS) {
 				if (settingIndex == 16 && this.mouseButtonClick == 1) {
 					C_NAME_CLAN_TAG_OVERLAY = !C_NAME_CLAN_TAG_OVERLAY;
-					saveConfiguration(true);
 				}
 			}
 
@@ -8363,6 +8463,28 @@ public final class mudclient implements Runnable {
 				this.inputTextFinal = "";
 				this.inputTextCurrent = "";
 				this.reportAbuse_State = 1;
+			}
+
+			// batch progress bar - byte index 24
+			if (S_BATCH_PROGRESSION) {
+				if (settingIndex == 24 && this.mouseButtonClick == 1) {
+					C_BATCH_PROGRESS_BAR = !C_BATCH_PROGRESS_BAR;
+					this.packetHandler.getClientStream().newPacket(111);
+					this.packetHandler.getClientStream().writeBuffer1.putByte(24);
+					boolean optionBatchProgressBar = C_BATCH_PROGRESS_BAR;
+					this.packetHandler.getClientStream().writeBuffer1.putByte(optionBatchProgressBar ? 1 : 0);
+					this.packetHandler.getClientStream().finishPacket();
+				}
+			}
+
+			// experience drops - byte index 25
+			if (settingIndex == 25 && this.mouseButtonClick == 1 && S_EXPERIENCE_DROPS_TOGGLE) {
+				C_EXPERIENCE_DROPS = !C_EXPERIENCE_DROPS;
+				this.packetHandler.getClientStream().newPacket(111);
+				this.packetHandler.getClientStream().writeBuffer1.putByte(25);
+				boolean optionExperienceDrops = C_EXPERIENCE_DROPS;
+				this.packetHandler.getClientStream().writeBuffer1.putByte(optionExperienceDrops ? 1 : 0);
+				this.packetHandler.getClientStream().finishPacket();
 			}
 		}
 
@@ -8500,7 +8622,6 @@ public final class mudclient implements Runnable {
 			C_LONG_PRESS_TIMER++;
 			if (C_LONG_PRESS_TIMER == 13)
 				C_LONG_PRESS_TIMER = 1;
-			saveConfiguration(true);
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(19);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(C_LONG_PRESS_TIMER);
@@ -8512,7 +8633,6 @@ public final class mudclient implements Runnable {
 			C_MENU_SIZE++;
 			if (C_MENU_SIZE == 8)
 				C_MENU_SIZE = 1;
-			saveConfiguration(true);
 			if (isAndroid()) {
 				this.menuCommon.font = C_MENU_SIZE;
 			}
@@ -8525,7 +8645,6 @@ public final class mudclient implements Runnable {
 		// hold to right click toggle
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 2 && this.mouseButtonClick == 1) {
 			C_HOLD_AND_CHOOSE = !C_HOLD_AND_CHOOSE;
-			saveConfiguration(true);
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(21);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(C_HOLD_AND_CHOOSE ? 1 : 0);
@@ -8535,7 +8654,6 @@ public final class mudclient implements Runnable {
 		// swipe scroll control
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 3 && this.mouseButtonClick == 1) {
 			C_SWIPE_TO_SCROLL = !C_SWIPE_TO_SCROLL;
-			saveConfiguration(true);
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(18);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(C_SWIPE_TO_SCROLL ? 1 : 0);
@@ -8545,7 +8663,6 @@ public final class mudclient implements Runnable {
 		// swipe camera zoom control
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 4 && this.mouseButtonClick == 1) {
 			C_SWIPE_TO_ZOOM = !C_SWIPE_TO_ZOOM;
-			saveConfiguration(true);
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(22);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(C_SWIPE_TO_ZOOM ? 1 : 0);
@@ -8555,7 +8672,6 @@ public final class mudclient implements Runnable {
 		// swipe camera rotation control
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 5 && this.mouseButtonClick == 1) {
 			C_SWIPE_TO_ROTATE = !C_SWIPE_TO_ROTATE;
-			saveConfiguration(true);
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(17);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(C_SWIPE_TO_ROTATE ? 1 : 0);
@@ -8565,7 +8681,6 @@ public final class mudclient implements Runnable {
 		// volume button camera rotation control
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 6 && this.mouseButtonClick == 1) {
 			C_VOLUME_TO_ROTATE = !C_VOLUME_TO_ROTATE;
-			saveConfiguration(true);
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(16);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(C_VOLUME_TO_ROTATE ? 1 : 0);
@@ -11576,6 +11691,7 @@ public final class mudclient implements Runnable {
 	private long getUID() {
 		File uID = new File(F_CACHE_DIR + File.separator + "uid.dat");
 		try {
+			PrintWriter printWriter;
 			if (!uID.exists()) {
 				printWriter = new PrintWriter(new FileOutputStream(uID), true);
 				long uuID = new SecureRandom().nextLong();
@@ -11860,7 +11976,7 @@ public final class mudclient implements Runnable {
 					soundCache.put(listOfFiles[i].getName().toLowerCase(), listOfFiles[i]);
 				}
 
-			soundData = unpackData("sounds.mem", "Sound effects", 90);
+			byte[] soundData = unpackData("sounds.mem", "Sound effects", 90);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -13795,8 +13911,8 @@ public final class mudclient implements Runnable {
 	private void getServerConfig() {
 		try {
 			if ((Config.SERVER_IP != null)) {
-				String ip = Config.SERVER_IP;
-				int port = Config.SERVER_PORT;
+				String ip = Config.SERVER_IP; // allows override if manually set in Config code
+				int port = Config.SERVER_PORT; // allows override if manually set in Config code
 				this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
 			} else {
 				String ip = ClientPort.loadIP(); // loads based on Cache/ip.txt
@@ -14528,6 +14644,7 @@ public final class mudclient implements Runnable {
 	}
 
 	public int getBankItemCount() {
+		int bankItemCount = 0;
 		return bankItemCount;
 	}
 
@@ -14862,6 +14979,26 @@ public final class mudclient implements Runnable {
 
 	public void setHoldAndChoose(boolean b) {
 		Config.C_HOLD_AND_CHOOSE = b;
+	}
+
+	public void setOptionBatchProgressBar(boolean b) {
+		Config.C_BATCH_PROGRESS_BAR = b;
+		this.settingsBatchProgressBar = b;
+	}
+
+	public void setOptionExperienceDrops(boolean b) {
+		Config.C_EXPERIENCE_DROPS = b;
+		this.settingsExperienceDrops = b;
+	}
+
+	public void setOptionHideRoofs(boolean b) {
+		Config.C_HIDE_ROOFS = b;
+		this.settingsHideRoofs = b;
+	}
+
+	public void setOptionHideFog(boolean b) {
+		Config.C_HIDE_FOG = b;
+		this.settingsHideFog = b;
 	}
 
 	class XPNotification {

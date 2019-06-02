@@ -10,10 +10,10 @@ public final class GameSettingHandler implements PacketHandler {
 
 	public static final World world = World.getWorld();
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet p, Player player) {
 
 		int idx = (int) p.readByte();
-		if (idx < 0 || idx > 23) {
+		if (idx < 0 || idx > 99) {
 			player.setSuspiciousPlayer(true);
 			return;
 		}
@@ -21,10 +21,6 @@ public final class GameSettingHandler implements PacketHandler {
 		if (idx >= 4) {
 			if (idx == 4) {
 				player.getCache().set("setting_android_longpress", p.readByte());
-			} else if (idx == 5) {
-				player.getCache().store("setting_showroof", p.readByte() == 1);
-			} else if (idx == 6) {
-				player.getCache().store("setting_fogofwar", p.readByte() == 1);
 			} else if (idx == 7) {
 				player.getCache().store("setting_android_holdnchoose", p.readByte() == 1);
 			} else if (idx == 8) {
@@ -51,6 +47,14 @@ public final class GameSettingHandler implements PacketHandler {
 				player.getCache().store("setting_swipe_zoom", p.readByte() == 1);
 			} else if (idx == 23) {
 				player.getCache().set("setting_last_zoom", p.readByte());
+			} else if (idx == 24) {
+				player.getCache().store("setting_batch_progressbar", p.readByte() == 1);
+			} else if (idx == 25) {
+				player.getCache().store("setting_experience_drops", p.readByte() == 1);
+			} else if (idx == 26) {
+				player.getCache().store("setting_showroof", p.readByte() == 1);
+			} else if (idx == 27) {
+				player.getCache().store("setting_showfog", p.readByte() == 1);
 			}
 			return;
 		}

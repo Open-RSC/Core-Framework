@@ -10,10 +10,20 @@ import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.event.rsc.impl.*;
+import com.openrsc.server.event.rsc.impl.FireCannonEvent;
+import com.openrsc.server.event.rsc.impl.PoisonEvent;
+import com.openrsc.server.event.rsc.impl.PrayerDrainEvent;
+import com.openrsc.server.event.rsc.impl.ProjectileEvent;
+import com.openrsc.server.event.rsc.impl.RangeEvent;
+import com.openrsc.server.event.rsc.impl.ThrowingEvent;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.login.LoginRequest;
-import com.openrsc.server.model.*;
+import com.openrsc.server.model.Cache;
+import com.openrsc.server.model.MenuOptionListener;
+import com.openrsc.server.model.Point;
+import com.openrsc.server.model.PrivateMessage;
+import com.openrsc.server.model.Shop;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.Inventory;
@@ -41,15 +51,27 @@ import com.openrsc.server.sql.query.logs.LiveFeedLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
-import io.netty.channel.Channel;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.ListIterator;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
+
+import io.netty.channel.Channel;
 
 import static com.openrsc.server.plugins.Functions.sleep;
 
@@ -858,8 +880,7 @@ public final class Player extends Mob {
 	public int getFatigue() {
 		if (Constants.GameServer.WANT_FATIGUE) {
 			return fatigue;
-		}
-		else {
+		} else {
 			return 0;
 		}
 	}
@@ -1573,7 +1594,7 @@ public final class Player extends Mob {
 	public void playerServerMessage(MessageType type, String string) {
 		ActionSender.sendPlayerServerMessage(this, type, string);
 	}
-	
+
 	public void walkThenTeleport(int x1, int y1, int x2, int y2, boolean bubble) {
 		walk(x1, y1);
 		while (!getWalkingQueue().finished()) {
@@ -1809,7 +1830,7 @@ public final class Player extends Mob {
 
 		save();
 
-		/** IP Tracking in wilderness removal */
+		/* IP Tracking in wilderness removal */
 		/*if(player.getLocation().inWilderness())
 		{
 			wildernessIPTracker.remove(player.getCurrentIP());
@@ -2124,6 +2145,34 @@ public final class Player extends Mob {
 	public Boolean getSwipeToZoom() {
 		if (getCache().hasKey("setting_swipe_zoom")) {
 			return getCache().getBoolean("setting_swipe_zoom");
+		}
+		return true;
+	}
+
+	public Boolean getBatchProgressBar() {
+		if (getCache().hasKey("setting_batch_progressbar")) {
+			return getCache().getBoolean("setting_batch_progressbar");
+		}
+		return true;
+	}
+
+	public Boolean getExperienceDrops() {
+		if (getCache().hasKey("setting_experience_drops")) {
+			return getCache().getBoolean("setting_experience_drops");
+		}
+		return true;
+	}
+
+	public Boolean getHideFog() {
+		if (getCache().hasKey("setting_showfog")) {
+			return getCache().getBoolean("setting_showfog");
+		}
+		return true;
+	}
+
+	public Boolean getHideRoofs() {
+		if (getCache().hasKey("setting_showroof")) {
+			return getCache().getBoolean("setting_showroof");
 		}
 		return true;
 	}
