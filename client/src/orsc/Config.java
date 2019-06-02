@@ -1,9 +1,6 @@
 package orsc;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Map;
@@ -32,14 +29,14 @@ public class Config {
 	public static boolean C_EXPERIENCE_DROPS = false;
 	public static boolean C_BATCH_PROGRESS_BAR = false;
 	public static boolean C_HIDE_ROOFS = false;
-	static boolean C_SHOW_FOG = true;
-	static int C_SHOW_GROUND_ITEMS = 0;
-	static boolean C_MESSAGE_TAB_SWITCH = false;
-	static boolean C_NAME_CLAN_TAG_OVERLAY = false;
+	public static boolean C_SHOW_FOG = true;
+	public static int C_SHOW_GROUND_ITEMS = 0;
+	public static boolean C_MESSAGE_TAB_SWITCH = false;
+	public static boolean C_NAME_CLAN_TAG_OVERLAY = false;
 	public static boolean C_SIDE_MENU_OVERLAY = false;
-	static boolean C_KILL_FEED = false;
-	static int C_FIGHT_MENU = 1;
-	static boolean C_INV_COUNT = false;
+	public static boolean C_KILL_FEED = false;
+	public static int C_FIGHT_MENU = 1;
+	public static boolean C_INV_COUNT = false;
 	public static int C_ZOOM;
 
 	/* Android: */
@@ -128,47 +125,25 @@ public class Config {
 	}
 
 	static void initConfig() {
-		try {
-			if (!F_ANDROID_BUILD) {
-				if (CUSTOM_CACHE_DIR_ENABLED) {
-					if (CACHE_APPEND_VERSION) {
-						F_CACHE_DIR = CUSTOM_CACHE_DIR + "_v" + CACHE_VERSION;
-					} else {
-						F_CACHE_DIR = CUSTOM_CACHE_DIR;
-					}
+		if (!F_ANDROID_BUILD) {
+			if (CUSTOM_CACHE_DIR_ENABLED) {
+				if (CACHE_APPEND_VERSION) {
+					F_CACHE_DIR = CUSTOM_CACHE_DIR + "_v" + CACHE_VERSION;
 				} else {
-					if (CACHE_APPEND_VERSION) {
-						F_CACHE_DIR = "Cache" + "_v" + CACHE_VERSION;
-					} else {
-						F_CACHE_DIR = "Cache";
-					}
+					F_CACHE_DIR = CUSTOM_CACHE_DIR;
 				}
 			} else {
-				return;
+				if (CACHE_APPEND_VERSION) {
+					F_CACHE_DIR = "Cache" + "_v" + CACHE_VERSION;
+				} else {
+					F_CACHE_DIR = "Cache";
+				}
 			}
-			File file = new File(F_CACHE_DIR + File.separator + "client.properties");
-			if (!file.exists()) {
-				file.createNewFile();
-				saveConfiguration(true);
-			}
-			prop.load(new FileInputStream(F_CACHE_DIR + File.separator + "client.properties"));
-			setConfigurationFromProperties();
-			saveConfiguration(false);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} else {
+			return;
 		}
-	}
-
-	private static void saveConfigProperties() {
-		try {
-			File file = new File(F_CACHE_DIR + File.separator + "client.properties");
-			if (file.exists()) {
-				file.delete();
-			}
-			prop.store(new FileOutputStream(F_CACHE_DIR + File.separator + "client.properties"), null);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		setConfigurationFromProperties();
+		saveConfiguration(false);
 	}
 
 	/**
@@ -205,7 +180,6 @@ public class Config {
 				}
 			}
 		}
-		saveConfigProperties();
 	}
 
 	private static void setConfigurationFromProperties() {
