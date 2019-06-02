@@ -2171,10 +2171,14 @@ public final class Player extends Mob {
 	}
 
 	public Boolean getHideRoofs() {
-		if (getCache().hasKey("setting_showroof")) {
-			return getCache().getBoolean("setting_showroof");
+		if (Constants.GameServer.SHOW_ROOF_TOGGLE) {
+			if (getCache().hasKey("setting_showroof")) {
+				return getCache().getBoolean("setting_showroof");
+			}
+			return true;
+		} else {
+			return false;
 		}
-		return true;
 	}
 
 	public int getLongPressDelay() {
