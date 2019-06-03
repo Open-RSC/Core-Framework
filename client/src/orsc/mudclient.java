@@ -8384,7 +8384,7 @@ public final class mudclient implements Runnable {
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
-		// ground items toggle
+		// ground items toggle - byte index 28
 		if (settingIndex == 8 && this.mouseButtonClick == 1 && S_GROUND_ITEM_TOGGLE) {
 			C_SHOW_GROUND_ITEMS++;
 			if (C_SHOW_GROUND_ITEMS == 4)
@@ -8395,19 +8395,34 @@ public final class mudclient implements Runnable {
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
-		// auto message tab switch
+		// auto message tab switch - byte index 29
 		if (settingIndex == 9 && this.mouseButtonClick == 1 && S_AUTO_MESSAGE_SWITCH_TOGGLE) {
 			C_MESSAGE_TAB_SWITCH = !C_MESSAGE_TAB_SWITCH;
+			this.packetHandler.getClientStream().newPacket(111);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(29);
+			boolean optionHideFog = C_MESSAGE_TAB_SWITCH;
+			this.packetHandler.getClientStream().writeBuffer1.putByte(optionHideFog ? 1 : 0);
+			this.packetHandler.getClientStream().finishPacket();
 		}
 
-		// side menu
+		// side menu - byte index 30
 		if (settingIndex == 10 && this.mouseButtonClick == 1 && S_SIDE_MENU_TOGGLE) {
 			C_SIDE_MENU_OVERLAY = !C_SIDE_MENU_OVERLAY;
+			this.packetHandler.getClientStream().newPacket(111);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(30);
+			boolean optionHideFog = C_SIDE_MENU_OVERLAY;
+			this.packetHandler.getClientStream().writeBuffer1.putByte(optionHideFog ? 1 : 0);
+			this.packetHandler.getClientStream().finishPacket();
 		}
 
-		// kill feed
+		// kill feed - byte index 31
 		if (settingIndex == 11 && this.mouseButtonClick == 1 && S_WANT_KILL_FEED) {
 			C_KILL_FEED = !C_KILL_FEED;
+			this.packetHandler.getClientStream().newPacket(111);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(31);
+			boolean optionHideFog = C_KILL_FEED;
+			this.packetHandler.getClientStream().writeBuffer1.putByte(optionHideFog ? 1 : 0);
+			this.packetHandler.getClientStream().finishPacket();
 		}
 
 		// combat style
@@ -14998,6 +15013,18 @@ public final class mudclient implements Runnable {
 
 	public void setOptionHideFog(boolean b) {
 		Config.C_HIDE_FOG = b;
+	}
+
+	public void setOptionAutoMessageSwitch(boolean b) {
+		Config.C_MESSAGE_TAB_SWITCH = b;
+	}
+
+	public void setOptionHideSideMenu(boolean b) {
+		Config.C_SIDE_MENU_OVERLAY = b;
+	}
+
+	public void setOptionHideKillFeed(boolean b) {
+		Config.C_KILL_FEED = b;
 	}
 
 	class XPNotification {

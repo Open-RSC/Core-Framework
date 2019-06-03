@@ -472,10 +472,10 @@ public class ActionSender {
 		s.writeByte((byte) (player.getHideRoofs() ? 1 : 0)); // 26
 		s.writeByte((byte) (player.getHideFog() ? 1 : 0)); // 27
 		s.writeByte(player.getGroundItemsToggle()); // 28
-		/*s.writeByte((byte) (player.getAutoMessageSwitch() ? 1 : 0)); // 29
+		s.writeByte((byte) (player.getAutoMessageSwitch() ? 1 : 0)); // 29
 		s.writeByte((byte) (player.getHideSideMenu() ? 1 : 0)); // 30
 		s.writeByte((byte) (player.getHideKillFeed() ? 1 : 0)); // 31
-		s.writeByte(player.getFightModeSelectorToggle()); // 32
+		/*s.writeByte(player.getFightModeSelectorToggle()); // 32
 		s.writeByte(player.getExperienceCounterToggle()); // 33
 		s.writeByte((byte) (player.getHideInventoryCount() ? 1 : 0)); // 34
 		s.writeByte((byte) (player.getHideNameTag() ? 1 : 0)); // 35*/

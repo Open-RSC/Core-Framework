@@ -2182,6 +2182,39 @@ public final class Player extends Mob {
 		}
 	}
 
+	public Boolean getAutoMessageSwitch() {
+		if (Constants.GameServer.AUTO_MESSAGE_SWITCH_TOGGLE) {
+			if (getCache().hasKey("setting_auto_messageswitch")) {
+				return getCache().getBoolean("setting_auto_messageswitch");
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public Boolean getHideSideMenu() {
+		if (Constants.GameServer.SIDE_MENU_TOGGLE) {
+			if (getCache().hasKey("setting_side_menu")) {
+				return getCache().getBoolean("setting_side_menu");
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public Boolean getHideKillFeed() {
+		if (Constants.GameServer.WANT_KILL_FEED) {
+			if (getCache().hasKey("setting_kill_feed")) {
+				return getCache().getBoolean("setting_kill_feed");
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public Boolean getHideRoofs() {
 		if (Constants.GameServer.SHOW_ROOF_TOGGLE) {
 			if (getCache().hasKey("setting_showroof")) {

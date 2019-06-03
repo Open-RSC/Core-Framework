@@ -1591,6 +1591,9 @@ public class PacketHandler {
 		mc.setOptionHideRoofs(packetsIncoming.getUnsignedByte() == 1); // 26
 		mc.setOptionHideFog(packetsIncoming.getUnsignedByte() == 1); // 27
 		mc.setGroundItemsToggle(packetsIncoming.getUnsignedByte()); // 28
+		mc.setOptionAutoMessageSwitch(packetsIncoming.getUnsignedByte() == 1); // 29
+		mc.setOptionHideSideMenu(packetsIncoming.getUnsignedByte() == 1); // 30
+		mc.setOptionHideKillFeed(packetsIncoming.getUnsignedByte() == 1); // 31
 	}
 
 	private void togglePrayer(int length) {
