@@ -2215,6 +2215,28 @@ public final class Player extends Mob {
 		}
 	}
 
+	public Boolean getHideInventoryCount() {
+		if (Constants.GameServer.INVENTORY_COUNT_TOGGLE) {
+			if (getCache().hasKey("setting_inventory_count")) {
+				return getCache().getBoolean("setting_inventory_count");
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public Boolean getHideNameTag() {
+		if (Constants.GameServer.SHOW_FLOATING_NAMETAGS) {
+			if (getCache().hasKey("setting_floating_nametags")) {
+				return getCache().getBoolean("setting_floating_nametags");
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public Boolean getHideRoofs() {
 		if (Constants.GameServer.SHOW_ROOF_TOGGLE) {
 			if (getCache().hasKey("setting_showroof")) {
@@ -2232,6 +2254,28 @@ public final class Player extends Mob {
 				return getCache().getInt("setting_ground_items");
 			}
 			return 0;
+		} else {
+			return 0;
+		}
+	}
+
+	public int getFightModeSelectorToggle() {
+		if (Constants.GameServer.FIGHTMODE_SELECTOR_TOGGLE) {
+			if (getCache().hasKey("setting_fightmode_selector")) {
+				return getCache().getInt("setting_fightmode_selector");
+			}
+			return 1;
+		} else {
+			return 1;
+		}
+	}
+
+	public int getExperienceCounterToggle() {
+		if (Constants.GameServer.EXPERIENCE_COUNTER_TOGGLE) {
+			if (getCache().hasKey("setting_experience_counter")) {
+				return getCache().getInt("setting_experience_counter");
+			}
+			return 1;
 		} else {
 			return 0;
 		}

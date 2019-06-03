@@ -1594,6 +1594,10 @@ public class PacketHandler {
 		mc.setOptionAutoMessageSwitch(packetsIncoming.getUnsignedByte() == 1); // 29
 		mc.setOptionHideSideMenu(packetsIncoming.getUnsignedByte() == 1); // 30
 		mc.setOptionHideKillFeed(packetsIncoming.getUnsignedByte() == 1); // 31
+		mc.setFightModeSelectorToggle(packetsIncoming.getUnsignedByte()); // 32
+		mc.setExperienceCounterToggle(packetsIncoming.getUnsignedByte()); // 33
+		mc.setHideInventoryCount(packetsIncoming.getUnsignedByte() == 1); // 34
+		mc.setHideNameTag(packetsIncoming.getUnsignedByte() == 1); // 35
 	}
 
 	private void togglePrayer(int length) {

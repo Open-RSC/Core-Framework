@@ -63,6 +63,14 @@ public final class GameSettingHandler implements PacketHandler {
 				player.getCache().store("setting_side_menu", p.readByte() == 1);
 			} else if (idx == 31) {
 				player.getCache().store("setting_kill_feed", p.readByte() == 1);
+			} else if (idx == 32) {
+				player.getCache().set("setting_fightmode_selector", p.readByte());
+			} else if (idx == 33) {
+				player.getCache().set("setting_experience_counter", p.readByte());
+			} else if (idx == 34) {
+				player.getCache().store("setting_inventory_count", p.readByte() == 1);
+			} else if (idx == 35) {
+				player.getCache().store("setting_floating_nametags", p.readByte() == 1);
 			}
 			return;
 		}

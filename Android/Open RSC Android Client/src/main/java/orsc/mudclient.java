@@ -8170,10 +8170,10 @@ public final class mudclient implements Runnable {
 				// name and clan tag overlay
 				if (!C_NAME_CLAN_TAG_OVERLAY) {
 					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-							"@whi@Name and Clan Tag - @red@<off>", 16, null, null);
+							"@whi@Name and Clan Tag - @red@Off", 16, null, null);
 				} else {
 					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-							"@whi@Name and Clan Tag - @gre@<on>", 16, null, null);
+							"@whi@Name and Clan Tag - @gre@On", 16, null, null);
 				}
 			}
 
@@ -8435,31 +8435,49 @@ public final class mudclient implements Runnable {
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
-		// fight mode selector
+		// fight mode selector - byte index 32
 		if (settingIndex == 13 && this.mouseButtonClick == 1 && S_FIGHTMODE_SELECTOR_TOGGLE) {
 			C_FIGHT_MENU++;
 			if (C_FIGHT_MENU == 3)
 				C_FIGHT_MENU = 0;
+			this.packetHandler.getClientStream().newPacket(111);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(32);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(C_FIGHT_MENU);
+			this.packetHandler.getClientStream().finishPacket();
 		}
 
-		// experience counter
+		// experience counter - byte index 33
 		if (settingIndex == 14 && this.mouseButtonClick == 1 && S_EXPERIENCE_COUNTER_TOGGLE) {
 			C_EXPERIENCE_COUNTER++;
 			if (C_EXPERIENCE_COUNTER == 3)
 				C_EXPERIENCE_COUNTER = 0;
+			this.packetHandler.getClientStream().newPacket(111);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(33);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(C_EXPERIENCE_COUNTER);
+			this.packetHandler.getClientStream().finishPacket();
 		}
 
-		// inventory count
+		// inventory count - byte index 34
 		if (settingIndex == 15 && this.mouseButtonClick == 1 && S_INVENTORY_COUNT_TOGGLE) {
 			C_INV_COUNT = !C_INV_COUNT;
+			this.packetHandler.getClientStream().newPacket(111);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(34);
+			boolean optionHideFog = C_INV_COUNT;
+			this.packetHandler.getClientStream().writeBuffer1.putByte(optionHideFog ? 1 : 0);
+			this.packetHandler.getClientStream().finishPacket();
 		}
 
 		// if clans are enabled
 		if (S_WANT_CLANS) {
-			// floating clan name tag overlay
+			// floating clan name tag overlay - byte index 35
 			if (S_SHOW_FLOATING_NAMETAGS) {
 				if (settingIndex == 16 && this.mouseButtonClick == 1) {
 					C_NAME_CLAN_TAG_OVERLAY = !C_NAME_CLAN_TAG_OVERLAY;
+					this.packetHandler.getClientStream().newPacket(111);
+					this.packetHandler.getClientStream().writeBuffer1.putByte(35);
+					boolean optionHideFog = C_NAME_CLAN_TAG_OVERLAY;
+					this.packetHandler.getClientStream().writeBuffer1.putByte(optionHideFog ? 1 : 0);
+					this.packetHandler.getClientStream().finishPacket();
 				}
 			}
 
@@ -14991,6 +15009,14 @@ public final class mudclient implements Runnable {
 		Config.C_SHOW_GROUND_ITEMS = i;
 	}
 
+	public void setFightModeSelectorToggle(int i) {
+		C_FIGHT_MENU = i;
+	}
+
+	public void setExperienceCounterToggle(int i) {
+		C_EXPERIENCE_COUNTER = i;
+	}
+
 	public void setFontSize(int i) {
 		Config.C_MENU_SIZE = i;
 	}
@@ -15025,6 +15051,14 @@ public final class mudclient implements Runnable {
 
 	public void setOptionHideKillFeed(boolean b) {
 		Config.C_KILL_FEED = b;
+	}
+
+	public void setHideInventoryCount(boolean b) {
+		Config.C_INV_COUNT = b;
+	}
+
+	public void setHideNameTag(boolean b) {
+		Config.C_NAME_CLAN_TAG_OVERLAY = b;
 	}
 
 	class XPNotification {
