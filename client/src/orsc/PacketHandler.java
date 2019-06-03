@@ -1590,6 +1590,7 @@ public class PacketHandler {
 		mc.setOptionExperienceDrops(packetsIncoming.getUnsignedByte() == 1); // 25
 		mc.setOptionHideRoofs(packetsIncoming.getUnsignedByte() == 1); // 26
 		mc.setOptionHideFog(packetsIncoming.getUnsignedByte() == 1); // 27
+		mc.setGroundItemsToggle(packetsIncoming.getUnsignedByte()); // 28
 	}
 
 	private void togglePrayer(int length) {

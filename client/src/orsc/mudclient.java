@@ -635,10 +635,6 @@ public final class mudclient implements Runnable {
 	private int xpPerHourCount = 0;
 	private CustomBankInterface bank;
 	private int settingsBlockGlobal;
-	private boolean settingsHideFog;
-	private boolean settingsHideRoofs;
-	private boolean settingsBatchProgressBar;
-	private boolean settingsExperienceDrops;
 	private int lastSelectedSpell = -1;
 	private int flag = 0;
 	private Timer tiktok = new Timer();
@@ -8393,6 +8389,10 @@ public final class mudclient implements Runnable {
 			C_SHOW_GROUND_ITEMS++;
 			if (C_SHOW_GROUND_ITEMS == 4)
 				C_SHOW_GROUND_ITEMS = 0;
+			this.packetHandler.getClientStream().newPacket(111);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(28);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(C_SHOW_GROUND_ITEMS);
+			this.packetHandler.getClientStream().finishPacket();
 		}
 
 		// auto message tab switch
@@ -8413,9 +8413,8 @@ public final class mudclient implements Runnable {
 		// combat style
 		if (settingIndex == 12 && this.mouseButtonClick == 1 && S_MENU_COMBAT_STYLE_TOGGLE) {
 			this.combatStyle++;
-			if (this.combatStyle == 4) {
+			if (this.combatStyle == 4)
 				this.combatStyle = 0;
-			}
 			this.packetHandler.getClientStream().newPacket(29);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(this.combatStyle);
 			this.packetHandler.getClientStream().finishPacket();
@@ -14973,6 +14972,10 @@ public final class mudclient implements Runnable {
 		Config.C_LAST_ZOOM = i;
 	}
 
+	public void setGroundItemsToggle(int i) {
+		Config.C_SHOW_GROUND_ITEMS = i;
+	}
+
 	public void setFontSize(int i) {
 		Config.C_MENU_SIZE = i;
 	}
@@ -14983,22 +14986,18 @@ public final class mudclient implements Runnable {
 
 	public void setOptionBatchProgressBar(boolean b) {
 		Config.C_BATCH_PROGRESS_BAR = b;
-		this.settingsBatchProgressBar = b;
 	}
 
 	public void setOptionExperienceDrops(boolean b) {
 		Config.C_EXPERIENCE_DROPS = b;
-		this.settingsExperienceDrops = b;
 	}
 
 	public void setOptionHideRoofs(boolean b) {
 		Config.C_HIDE_ROOFS = b;
-		this.settingsHideRoofs = b;
 	}
 
 	public void setOptionHideFog(boolean b) {
 		Config.C_HIDE_FOG = b;
-		this.settingsHideFog = b;
 	}
 
 	class XPNotification {

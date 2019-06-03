@@ -471,11 +471,18 @@ public class ActionSender {
 		s.writeByte((byte) (player.getExperienceDrops() ? 1 : 0)); // 25
 		s.writeByte((byte) (player.getHideRoofs() ? 1 : 0)); // 26
 		s.writeByte((byte) (player.getHideFog() ? 1 : 0)); // 27
-
+		s.writeByte(player.getGroundItemsToggle()); // 28
+		/*s.writeByte((byte) (player.getAutoMessageSwitch() ? 1 : 0)); // 29
+		s.writeByte((byte) (player.getHideSideMenu() ? 1 : 0)); // 30
+		s.writeByte((byte) (player.getHideKillFeed() ? 1 : 0)); // 31
+		s.writeByte(player.getFightModeSelectorToggle()); // 32
+		s.writeByte(player.getExperienceCounterToggle()); // 33
+		s.writeByte((byte) (player.getHideInventoryCount() ? 1 : 0)); // 34
+		s.writeByte((byte) (player.getHideNameTag() ? 1 : 0)); // 35*/
 		player.write(s.toPacket());
 	}
 
-	public static void sendInitialServerConfigs(Channel channel) throws Exception {
+	public static void sendInitialServerConfigs(Channel channel) {
 		LOGGER.info("Sending initial configs to: " + channel.remoteAddress());
 		if (DEBUG) {
 			LOGGER.info("Debug server configs being sent:");
@@ -640,6 +647,7 @@ public class ActionSender {
 
 	/**
 	 * @param player
+	 * sends the player inventory
 	 */
 	public static void sendInventory(Player player) {
 		if (player == null)
@@ -1144,7 +1152,6 @@ public class ActionSender {
 				sendWakeUp(p, false, true);
 				sendLoginBox(p);
 				sendMessage(p, null, 0, MessageType.QUEST, "Welcome to " + SERVER_NAME + "!", 0);
-				//sendMessage(p, null, 0, MessageType.QUEST, "For guides and tips - please visit http://runescapeclassic.wikia.com", 0);
 				if (p.isMuted()) {
 					sendMessage(p, "You are muted for "
 						+ (double) (System.currentTimeMillis() - p.getMuteExpires()) / 3600000D + " hours.");

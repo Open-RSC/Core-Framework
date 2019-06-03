@@ -2193,6 +2193,17 @@ public final class Player extends Mob {
 		}
 	}
 
+	public int getGroundItemsToggle() {
+		if (Constants.GameServer.GROUND_ITEM_TOGGLE) {
+			if (getCache().hasKey("setting_ground_items")) {
+				return getCache().getInt("setting_ground_items");
+			}
+			return 0;
+		} else {
+			return 0;
+		}
+	}
+
 	public int getLongPressDelay() {
 		if (getCache().hasKey("setting_press_delay")) {
 			return getCache().getInt("setting_press_delay");
