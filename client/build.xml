@@ -22,13 +22,13 @@
         </javac>
         <jar basedir="${build}" destfile="${jar}">
             <manifest>
-                <attribute name="Main-Class" value="orsc.ORSCFrame"/>
+                <attribute name="Main-Class" value="orsc.OpenRSC"/>
             </manifest>
         </jar>
     </target>
 
     <target name="runclient">
-        <java classname="orsc.ORSCFrame" fork="true">
+        <java classname="orsc.OpenRSC" fork="true">
             <jvmarg line="-Xms312m -Dsun.java2d.opengl=true"/>
             <classpath>
                 <pathelement path="${jar}/"/>

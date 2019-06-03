@@ -11,14 +11,14 @@ import javax.swing.SwingUtilities;
 
 import orsc.util.Utils;
 
-public class ORSCFrame extends ORSCApplet {
+public class OpenRSC extends ORSCApplet {
 
 	private static final long serialVersionUID = 1L;
 
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> {
 			JFrame jframe = new JFrame(Config.getServerNameWelcome());
-			final Applet applet = new ORSCFrame();
+			final Applet applet = new OpenRSC();
 			applet.setPreferredSize(new Dimension(512, 334 + 12));
 			jframe.getContentPane().setLayout(new BorderLayout());
 			jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
