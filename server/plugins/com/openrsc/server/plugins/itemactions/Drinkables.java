@@ -496,7 +496,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		player.getInventory().remove(item);
 		//half-wine set to 1/25k chance
 		int rand = DataConversions.random(0, 25000);
-		if (item.getID() == ItemId.WINE.id() && rand == 0) {
+		if (item.getID() == ItemId.WINE.id()/* && rand == 0*/) {
 			player.getInventory().add(new Item(ItemId.HALF_FULL_WINE_JUG.id()));
 		} else {
 			player.getInventory().add(new Item(ItemId.JUG.id()));

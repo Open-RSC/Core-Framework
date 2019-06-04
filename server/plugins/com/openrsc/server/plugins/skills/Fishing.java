@@ -18,6 +18,8 @@ import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.message;
@@ -29,15 +31,14 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 		ArrayList<ObjectFishDef> fish = new ArrayList<ObjectFishDef>();
 
 		for (ObjectFishDef def : objectFishDef.getFishDefs()) {
-			if (fishingLevel >= def.getReqLevel()) {
+			if (fishingLevel >= def.getReqLevel() && Formulae.calcGatheringSuccessful(def.getReqLevel(), fishingLevel)) {
 				fish.add(def);
 			}
 		}
 		if (fish.size() <= 0) {
 			return null;
 		}
-		ObjectFishDef thisFish = fish.get(DataConversions.random(0, fish.size() - 1));
-		return Formulae.calcGatheringSuccessful(thisFish.getReqLevel(), fishingLevel) ? thisFish : null;
+		return fish.get(DataConversions.random(0, fish.size() - 1));
 	}
 
 	@Override
@@ -124,8 +125,15 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 					}
 				}
 				owner.playSound("fish");
-				ObjectFishDef fishDef = getFish(def, owner.getSkills().getLevel(Skills.FISHING), click);
-				if (fishDef != null) {
+				List<ObjectFishDef> fishLst = new ArrayList<ObjectFishDef>();
+				ObjectFishDef aFishDef;
+				//big net spot may get up to 4 at once
+				int max = netId == ItemId.BIG_NET.id() ? DataConversions.random(1, 4) : 1;
+				for (int i = 0; i < max; i++) {
+					aFishDef = getFish(def, owner.getSkills().getLevel(Skills.FISHING), click);
+					if (aFishDef != null) fishLst.add(aFishDef);
+				}
+				if (fishLst.size() > 0) {
 					if (baitId >= 0) {
 						int idx = owner.getInventory().getLastIndexById(baitId);
 						Item bait = owner.getInventory().get(idx);
@@ -140,21 +148,24 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 					if (netId == ItemId.BIG_NET.id()) {
 						if (DataConversions.random(0, 200) == 100) {
 							owner.playerServerMessage(MessageType.QUEST, "You catch a casket");
-							owner.incExp(Skills.FISHING, fishDef.getExp(), true);
+							owner.incExp(Skills.FISHING, 40, true);
 							addItem(owner, ItemId.CASKET.id(), 1);
 						}
-						Item fish = new Item(fishDef.getId());
-						owner.getInventory().add(fish);
-						owner.playerServerMessage(MessageType.QUEST, "You catch " + (fish.getID() == ItemId.BOOTS.id() || fish.getID() == ItemId.SEAWEED.id() || fish.getID() == ItemId.LEATHER_GLOVES.id() ? "some" : fish.getID() == ItemId.OYSTER.id() ? "an" : "a") + " "
-							+ fish.getDef().getName().toLowerCase().replace("raw ", "").replace("leather ", "") + (fish.getID() == ItemId.OYSTER.id() ? " shell" : ""));
-						owner.incExp(Skills.FISHING, fishDef.getExp(), true);
+						for (Iterator<ObjectFishDef> iter = fishLst.iterator(); iter.hasNext();) {
+							ObjectFishDef fishDef = iter.next();
+							Item fish = new Item(fishDef.getId());
+							owner.getInventory().add(fish);
+							owner.playerServerMessage(MessageType.QUEST, "You catch " + (fish.getID() == ItemId.BOOTS.id() || fish.getID() == ItemId.SEAWEED.id() || fish.getID() == ItemId.LEATHER_GLOVES.id() ? "some" : fish.getID() == ItemId.OYSTER.id() ? "an" : "a") + " "
+								+ fish.getDef().getName().toLowerCase().replace("raw ", "").replace("leather ", "") + (fish.getID() == ItemId.OYSTER.id() ? " shell" : ""));
+							owner.incExp(Skills.FISHING, fishDef.getExp(), true);
+						}
 					} else {
-						Item fish = new Item(fishDef.getId());
+						Item fish = new Item(fishLst.get(0).getId());
 						owner.getInventory().add(fish);
 						owner.playerServerMessage(MessageType.QUEST, "You catch " + (netId == ItemId.NET.id() ? "some" : "a") + " "
 							+ fish.getDef().getName().toLowerCase().replace("raw ", "") + (fish.getID() == ItemId.RAW_SHRIMP.id() ? "s" : "")
 							+ (fish.getID() == ItemId.RAW_SHARK.id() ? "!" : ""));
-						owner.incExp(Skills.FISHING, fishDef.getExp(), true);
+						owner.incExp(Skills.FISHING, fishLst.get(0).getExp(), true);
 						if (object.getID() == 493 && owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 41)
 							owner.getCache().set("tutorial", 42);
 					}
