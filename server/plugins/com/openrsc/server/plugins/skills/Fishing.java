@@ -127,12 +127,8 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 				owner.playSound("fish");
 				List<ObjectFishDef> fishLst = new ArrayList<ObjectFishDef>();
 				ObjectFishDef aFishDef;
-				//big net spot may get up to 4 at once
-				int max = netId == ItemId.BIG_NET.id() ? DataConversions.random(1, 4) : 1;
-				for (int i = 0; i < max; i++) {
-					aFishDef = getFish(def, owner.getSkills().getLevel(Skills.FISHING), click);
-					if (aFishDef != null) fishLst.add(aFishDef);
-				}
+				aFishDef = getFish(def, owner.getSkills().getLevel(Skills.FISHING), click);
+				if (aFishDef != null) fishLst.add(aFishDef);
 				if (fishLst.size() > 0) {
 					if (baitId >= 0) {
 						int idx = owner.getInventory().getLastIndexById(baitId);
@@ -146,6 +142,12 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 						ActionSender.sendInventory(owner);
 					}
 					if (netId == ItemId.BIG_NET.id()) {
+						//big net spot may get 4 items but 1 already gotten
+						int max = bigNetRand() - 1;
+						for (int i = 0; i < max; i++) {
+							aFishDef = getFish(def, owner.getSkills().getLevel(Skills.FISHING), click);
+							if (aFishDef != null) fishLst.add(aFishDef);
+						}
 						if (DataConversions.random(0, 200) == 100) {
 							owner.playerServerMessage(MessageType.QUEST, "You catch a casket");
 							owner.incExp(Skills.FISHING, 40, true);
@@ -177,6 +179,19 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 				}
 			}
 		});
+	}
+	
+	private int bigNetRand() {
+		int roll = DataConversions.random(0, 30);
+		if (roll <= 23) {
+			return 1;
+		} else if (roll <= 27) {
+			return 2;
+		} else if (roll <= 29) {
+			return 3;
+		} else {
+			return 4;
+		}
 	}
 
 	@Override
