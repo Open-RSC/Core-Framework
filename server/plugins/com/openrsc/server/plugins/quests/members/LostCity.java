@@ -125,10 +125,10 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 					} else {
 						p.message("A Leprechaun jumps down from the tree and runs off");
 						final Npc lepr = spawnNpc(NpcId.LEPRECHAUN.id(), 172, 661, 60000 * 3);
-						sleep(1000);
+						p.setBusyTimer(1800);
 						lepr.walk(173, 661);
 						try {
-							Server.getServer().getEventHandler().add(new DelayedEvent(null, 3000) {
+							Server.getServer().getEventHandler().add(new DelayedEvent(null, 600) {
 								@Override
 								public void run() {
 									lepr.walk(177, 661 + DataConversions.random(0, 10) - 5);
