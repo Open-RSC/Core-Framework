@@ -306,7 +306,7 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 									p.getCache().store("blackarm_mission", true);
 								}
 							}
-						} else if (p.getQuestStage(Constants.Quests.HEROS_QUEST) == -1) {
+						} else {
 							playerTalk(p, n, "Hey");
 							npcTalk(p, n, "Hey");
 							int choice1 = showMenu(p, n,

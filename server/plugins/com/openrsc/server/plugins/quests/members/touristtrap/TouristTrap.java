@@ -1,7 +1,9 @@
 package com.openrsc.server.plugins.quests.members.touristtrap;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
@@ -34,6 +36,9 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.ArrayList;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.doDoor;
 import static com.openrsc.server.plugins.Functions.doGate;
@@ -49,10 +54,13 @@ import static com.openrsc.server.plugins.Functions.removeItem;
 import static com.openrsc.server.plugins.Functions.showMenu;
 import static com.openrsc.server.plugins.Functions.sleep;
 import static com.openrsc.server.plugins.Functions.spawnNpc;
+import static com.openrsc.server.plugins.Functions.transform;
 
 public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpcExecutiveListener, IndirectTalkToNpcListener, IndirectTalkToNpcExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener,
 	ObjectActionListener, ObjectActionExecutiveListener, NpcCommandListener, NpcCommandExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener {
 
+	private static final Logger LOGGER = LogManager.getLogger(TouristTrap.class);
+	
 	/**
 	 * Player isWielding
 	 **/
@@ -1255,9 +1263,9 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			p.getInventory().replace(ItemId.DESERT_ROBE.id(), ItemId.SLAVES_ROBE_BOTTOM.id());
 			p.getInventory().replace(ItemId.DESERT_SHIRT.id(), ItemId.SLAVES_ROBE_TOP.id());
 			removeItem(p, ItemId.DESERT_BOOTS.id(), 1);
-			Npc newSlave = spawnNpc(NpcId.ESCAPING_MINING_SLAVE.id(), n.getX(), n.getY(), 30000);
-			n.remove();
+			Npc newSlave = transform(n, NpcId.ESCAPING_MINING_SLAVE.id(), true);
 			sleep(1000);
+			delayedReturnSlave(p, newSlave);
 			npcTalk(p, newSlave, "Right, I'm off! Good luck!");
 			playerTalk(p, newSlave, "Yeah, good luck to you too!");
 			if (p.getQuestStage(this) == 2 || p.getQuestStage(this) == 3)
@@ -3054,6 +3062,19 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 		else if (hasWeapon) return Armed.WEAPON;
 		else if (hasArmour) return Armed.ARMOUR;
 		else return Armed.NONE;
+	}
+	
+	private void delayedReturnSlave(Player p, Npc n) {
+		try {
+			Server.getServer().getEventHandler().add(new DelayedEvent(null, 30000) {
+				@Override
+				public void run() {
+					transform(n, NpcId.MINING_SLAVE.id(), true);
+				}
+			});
+		} catch (Exception e) {
+			LOGGER.catching(e);
+		}
 	}
 
 	@Override

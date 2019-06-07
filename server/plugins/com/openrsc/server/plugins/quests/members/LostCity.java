@@ -1,7 +1,9 @@
 package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
@@ -50,6 +52,9 @@ import static com.openrsc.server.plugins.Functions.showMenu;
 import static com.openrsc.server.plugins.Functions.sleep;
 import static com.openrsc.server.plugins.Functions.spawnNpc;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Rewritten in Java.
  *
@@ -61,6 +66,8 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 	PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener,
 	InvUseOnItemListener, InvUseOnItemExecutiveListener,
 	WallObjectActionListener, WallObjectActionExecutiveListener {
+	private static final Logger LOGGER = LogManager.getLogger(LostCity.class);
+	
 	/* Objects */
 	final int LEPROCHAUN_TREE = 237, ENTRANA_LADDER = 244, DRAMEN_TREE = 245,
 		MAGIC_DOOR = 65, ZANARIS_DOOR = 66;
@@ -113,9 +120,24 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 				} else if (getQuestStage(p, this) >= 1
 					&& getQuestStage(p, this) <= 3) {
 					Npc leprechaun = getNearestNpc(p, NpcId.LEPRECHAUN.id(), 15);
-					if (leprechaun == null) {
-						leprechaun = spawnNpc(NpcId.LEPRECHAUN.id(), p.getX(), p.getY() + 1, 60000 * 3);
-						leprechaun.initializeTalkScript(p);
+					if (leprechaun != null) {
+						p.message("There is nothing in this tree");
+					} else {
+						p.message("A Leprechaun jumps down from the tree and runs off");
+						final Npc lepr = spawnNpc(NpcId.LEPRECHAUN.id(), 172, 661, 60000 * 3);
+						sleep(1000);
+						lepr.walk(173, 661);
+						try {
+							Server.getServer().getEventHandler().add(new DelayedEvent(null, 3000) {
+								@Override
+								public void run() {
+									lepr.walk(177, 661 + DataConversions.random(0, 10) - 5);
+								}
+							});
+						} catch (Exception e) {
+							LOGGER.catching(e);
+						}
+						
 					}
 				} else {
 					p.message("There is nothing in this tree");
