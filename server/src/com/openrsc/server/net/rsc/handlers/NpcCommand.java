@@ -19,6 +19,9 @@ public final class NpcCommand implements PacketHandler {
 		int pID = p.getID();
 		int serverIndex = p.readShort();
 		if (player.isBusy()) {
+			if (player.inCombat()) {
+				player.message("You can't do that whilst you are fighting");
+			}
 			return;
 		}
 		final int click = pID == OpcodeIn.NPC_COMMAND1.getOpcode() ? 0 : 1;

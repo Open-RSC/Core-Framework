@@ -41,7 +41,7 @@ public class Thieving extends Functions
 	}
 
 	private static boolean succeedThieving(Player player, int req_level) {
-		return Formulae.calcGatheringSuccessful(req_level, player.getSkills().getLevel(Skills.THIEVING));
+		return Formulae.calcGatheringSuccessful(req_level, player.getSkills().getLevel(Skills.THIEVING), 40);
 	}
 
 	public void stallThieving(Player player, GameObject object, Stall stall) {
