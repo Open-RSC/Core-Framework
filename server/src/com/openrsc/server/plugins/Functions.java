@@ -1111,6 +1111,28 @@ public class Functions {
 	public static boolean hasItem(final Player p, final int id, final int amt) {
 		return p.getInventory().countId(id) >= amt;
 	}
+	
+	/**
+	 * Checks if player has an item in bank, and returns true/false.
+	 *
+	 * @param p
+	 * @param item
+	 * @return
+	 */
+	public static boolean hasItemInBank(final Player p, final int item) {
+		return p.getBank().hasItemId(item);
+	}
+	
+	/**
+	 * Checks if player has an item including bank, and returns true/false.
+	 *
+	 * @param p
+	 * @param item
+	 * @return
+	 */
+	public static boolean hasItemInclBank(final Player p, final int item) {
+		return hasItem(p, item) || hasItemInBank(p, item);
+	}
 
 	/**
 	 * Displays server message(s) with 2.2 second delay.
