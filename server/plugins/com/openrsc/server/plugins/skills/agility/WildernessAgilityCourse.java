@@ -187,7 +187,7 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 	}
 
 	private boolean succeed(Player player) {
-		return Formulae.calcProductionSuccessful(52, getCurrentLevel(player, Skills.AGILITY), false, 151);
+		return Formulae.calcProductionSuccessful(52, getCurrentLevel(player, Skills.AGILITY), true, 102);
 	}
 
 	private int failRate() {

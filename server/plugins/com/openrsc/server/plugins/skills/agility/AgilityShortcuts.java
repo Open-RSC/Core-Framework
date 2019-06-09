@@ -251,7 +251,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 					}
 				}
 				p.message("You grab the rope and try and swing across");
-				if (!succeed(p, 57)) {
+				if (!succeed(p, 57, 77)) {
 					message(p, "You miss the opposite side and fall to the level below");
 					movePlayer(p, 596, 3534);
 					p.setBusy(false);
@@ -276,7 +276,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 					}
 				}
 				p.message("You grab the rope and try and swing across");
-				if (!succeed(p, 57)) {
+				if (!succeed(p, 57, 77)) {
 					message(p, "You miss the opposite side and fall to the level below");
 					movePlayer(p, 598, 3536);
 					p.setBusy(false);
@@ -303,7 +303,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 				}
 				p.message("You put your foot on the ledge and try to edge across");
 				sleep(2200);
-				if (!succeed(p, 40)) {
+				if (!succeed(p, 40, 65)) {
 					message(p, "you lose your footing and fall to the level below");
 					movePlayer(p, 603, 3520);
 					p.setBusy(false);
@@ -329,7 +329,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 				}
 				p.message("You put your foot on the ledge and try to edge across");
 				sleep(2200);
-				if (!succeed(p, 40)) {
+				if (!succeed(p, 40, 65)) {
 					message(p, "you lose your footing and fall to the level below");
 					movePlayer(p, 603, 3520);
 					p.setBusy(false);
@@ -524,7 +524,11 @@ public class AgilityShortcuts implements ObjectActionListener,
 	// you tie the rope to the tree
 
 	boolean succeed(Player player, int req) {
-		return Formulae.calcProductionSuccessful(req, getCurrentLevel(player, Skills.AGILITY), false, req + 99);
+		return Formulae.calcProductionSuccessful(req, getCurrentLevel(player, Skills.AGILITY), false, req + 30);
+	}
+	
+	boolean succeed(Player player, int req, int lvlStopFail) {
+		return Formulae.calcProductionSuccessful(req, getCurrentLevel(player, Skills.AGILITY), true, lvlStopFail);
 	}
 
 	@Override
