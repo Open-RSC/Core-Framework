@@ -20,11 +20,11 @@ import static com.openrsc.server.plugins.Functions.random;
 import static com.openrsc.server.plugins.Functions.removeItem;
 import static com.openrsc.server.plugins.Functions.showBubble;
 
-public class BabyBlueDragon implements InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
+public class AceArcher implements InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
 
 	@Override
 	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
-		return npc.getID() == NpcId.BABY_BLUE_DRAGON.id() && item.getID() == ItemId.A_GLOWING_RED_CRYSTAL.id();
+		return npc.getID() == NpcId.GUARD_UNRELEASED.id() && item.getID() == ItemId.A_GLOWING_RED_CRYSTAL.id();
 	}
 
 	@Override
@@ -73,7 +73,6 @@ public class BabyBlueDragon implements InvUseOnNpcListener, InvUseOnNpcExecutive
 					if (random(0, 4) != 0) {
 						player.message("You catch the baby blue dragon in the crystal.");
 						player.setPet(0);
-						npc.setPetNpcType(0);
 						npc.setPetNpc(0);
 						removeItem(player, ItemId.A_GLOWING_RED_CRYSTAL.id(), 1);
 						addItem(player, ItemId.A_RED_CRYSTAL.id(), 1);
