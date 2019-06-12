@@ -391,6 +391,20 @@ public final class Formulae {
 		int dip = (int) (((double) peak / 3D) * 2D);
 		return DataConversions.randomWeighted(0, dip, peak, max);
 	}
+	public static int calcRangeHitNpc(Mob owner, int rangeLvl, int armourEquip, int arrowID) {
+		int rangeEquip = 8;
+
+		int armourRatio = (int) (60D + ((double) ((rangeEquip * 3D) - armourEquip) / 300D) * 40D);
+
+		if (DataConversions.random(0, 100) > armourRatio && DataConversions.random(0, 1) == 0) {
+			return 0;
+		}
+
+		int max = (int) (((double) rangeLvl * 0.15D) + 0.85D + arrowPower(arrowID));
+		int peak = (int) (((double) max / 100D) * (double) armourRatio);
+		int dip = (int) (((double) peak / 3D) * 2D);
+		return DataConversions.randomWeighted(0, dip, peak, max);
+	}
 
 	/**
 	 * Calculates what a spell should hit based on its strength and the magic

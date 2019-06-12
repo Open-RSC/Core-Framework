@@ -31,7 +31,7 @@ public final class NpcCommand implements PacketHandler {
 		if (affectedNpc == null || affectedMob == null || player == null)
 			return;
 
-		player.setFollowing(affectedNpc, 0);
+		player.setFollowing(affectedNpc);
 		player.setWalkToAction(new WalkToMobAction(player, affectedMob, 1) {
 			public void execute() {
 				player.resetFollowing();

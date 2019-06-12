@@ -194,6 +194,27 @@ public class Skills {
 
 		sendUpdate(skill);
 	}
+	public void addPetExperience(int skill, int exp) {
+		int oldLevel = getMaxStat(skill);
+		exps[skill] += exp;
+		if (exps[skill] > MAXIMUM_EXP) {
+			exps[skill] = MAXIMUM_EXP;
+		}
+		int newLevel = getMaxStat(skill);
+		int levelDiff = newLevel - oldLevel;
+
+		if (levelDiff > 0) {
+			levels[skill] += levelDiff;
+				Player p28x = mob.getPetOwnerA2();
+				p28x.message("@gre@You just advanced " + levelDiff + " " + SKILL_NAME[skill] + " level"
+					/*+ (levelDiff > 1 ? "s" : "")*/ + "!");
+				ActionSender.sendSound(p28x, "advance");
+
+			mob.getUpdateFlags().setAppearanceChanged(true);
+		}
+
+		sendUpdate(skill);
+	}
 
 	private void sendUpdate(int skill) {
 		if (mob.isPlayer()) {

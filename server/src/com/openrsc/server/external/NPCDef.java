@@ -33,6 +33,7 @@ public class NPCDef extends EntityDef {
 	 * The def lvl
 	 */
 	public int defense;
+	public int ranged;
 	/**
 	 * Possible drops
 	 */
@@ -111,6 +112,9 @@ public class NPCDef extends EntityDef {
 
 	public int getDef() {
 		return defense;
+	}
+	public int getRanged() {
+		return ranged;
 	}
 
 	public ItemDropDef[] getDrops() {

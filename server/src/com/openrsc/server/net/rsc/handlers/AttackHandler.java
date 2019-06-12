@@ -2,6 +2,7 @@ package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.Server;
 import com.openrsc.server.event.MiniEvent;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.event.rsc.impl.RangeEvent;
 import com.openrsc.server.event.rsc.impl.ThrowingEvent;
 import com.openrsc.server.model.action.WalkToMobAction;
@@ -14,6 +15,8 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.plugins.PluginHandler;
+
+import static com.openrsc.server.plugins.Functions.transform;
 
 public class AttackHandler implements PacketHandler {
 	/**
@@ -47,6 +50,9 @@ public class AttackHandler implements PacketHandler {
 			player.resetPath();
 			return;
 		}
+		if (affectedMob.getID() == 236 && affectedMob.isNpc() && !player.checkAttack(affectedMob, true)) {
+			return;
+		}
 
 		/*if (System.currentTimeMillis() - player.getLastRun() < 600) {
 			return;
@@ -65,6 +71,16 @@ public class AttackHandler implements PacketHandler {
 		}
 		if (affectedMob.isNpc()) {
 			Npc n = (Npc) affectedMob;
+			if (n.getLocation().inWilderness() && !player.getLocation().inWilderness() && (n.getID() == 210 || n.getID() == 236)){
+				player.message("You must be in the wilderness to attack this NPC");
+				player.resetPath();
+				return;
+			}
+			if(n.getPetNpc() > 0) {
+			player.message("This npc belongs too " + n.getPetOwnerA2() + ". You may not attack it.");
+			player.resetPath();
+			return;
+			}
 			if (n.getX() == 0 && n.getY() == 0)
 				return;
 			if (n.getID() == 525 && player.getRangeEquip() < 0 && player.getThrowingEquip() < 0) {
@@ -76,7 +92,7 @@ public class AttackHandler implements PacketHandler {
 		player.setStatus(Action.ATTACKING_MOB);
 		if (player.getRangeEquip() < 0 && player.getThrowingEquip() < 0) {
 			if (affectedMob.isNpc())
-				player.setFollowing(affectedMob, 0);
+				player.setFollowing(affectedMob);
 			player.setWalkToAction(new WalkToMobAction(player, affectedMob, affectedMob.isNpc() ? 1 : 2) {
 				public void execute() {
 					player.resetPath();

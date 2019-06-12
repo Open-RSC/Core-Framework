@@ -168,7 +168,7 @@ public class CombatEvent extends GameTickEvent {
 					player.setStatus(Action.IDLE);
 					player.resetAll();
 				} else {
-					if (defenderMob.getCombatState() == CombatState.RUNNING)
+					if (defenderMob.getID() != 210 && defenderMob.getCombatState() == CombatState.RUNNING)
 						delayedAggro = 17000; // 17 + 3 second aggro timer for npds running
 				}
 

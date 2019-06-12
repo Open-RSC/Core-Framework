@@ -25,6 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -368,6 +369,18 @@ public class ActionSender {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_FATIGUE.opcode);
 		s.writeShort(player.getFatigue() / 750);
+		player.write(s.toPacket());
+	}
+	public static void sendPetFatigue(Player player) {
+		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+		s.setID(Opcode.SEND_PET_FATIGUE.opcode);
+		s.writeShort(player.getPetFatigue() / 750);
+		player.write(s.toPacket());
+	}
+	public static void sendKills2(Player player) {
+		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+		s.setID(Opcode.SEND_KILLS2.opcode);
+		s.writeShort(player.getKills2());
 		player.write(s.toPacket());
 	}
 
@@ -1167,6 +1180,8 @@ public class ActionSender {
 				sendStats(p);
 				sendEquipmentStats(p);
 				sendFatigue(p);
+				sendPetFatigue(p);
+				sendKills2(p);
 
 				sendCombatStyle(p);
 				sendIronManMode(p);

@@ -4,6 +4,8 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.PluginsUseThisEvent;
 import com.openrsc.server.event.SingleEvent;
+import com.openrsc.server.event.rsc.impl.BankEventNpc;
+import com.openrsc.server.event.rsc.impl.RangeEventNpc;
 import com.openrsc.server.event.custom.UndergroundPassMessages;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.model.MenuOptionListener;
@@ -17,6 +19,7 @@ import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.Bubble;
+import com.openrsc.server.model.entity.update.BubbleNpc;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.TileValue;
@@ -176,6 +179,9 @@ public class Functions {
 	public static int getMaxLevel(Player p, int i) {
 		return p.getSkills().getMaxStat(i);
 	}
+	public static int getMaxLevel(Mob n, int i) {
+		return n.getSkills().getMaxStat(i);
+	}
 
 	public static void setCurrentLevel(Player p, int skill, int level) {
 		p.getSkills().setLevel(skill, level);
@@ -259,7 +265,7 @@ public class Functions {
 		return false;
 	}
 
-	private static Point canWalk(Npc n, int x, int y) {
+	public static Point canWalk(Npc n, int x, int y) {
 		int myX = n.getX();
 		int myY = n.getY();
 		int newX = x;
@@ -1326,6 +1332,10 @@ public class Functions {
 	public static void showBubble(final Player player, final Item item) {
 		final Bubble bubble = new Bubble(player, item.getID());
 		player.getUpdateFlags().setActionBubble(bubble);
+	}
+	public static void showBubble2(final Npc npc, final Item item) {
+		final BubbleNpc bubble = new BubbleNpc(npc, item.getID());
+		npc.getUpdateFlags().setActionBubbleNpc(bubble);
 	}
 
 	/**
