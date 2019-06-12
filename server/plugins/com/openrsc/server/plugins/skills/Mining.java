@@ -280,8 +280,12 @@ public final class Mining implements ObjectActionListener,
 		}
 	}
 
-	private static int calcAxeBonus(int axeId) { // No evidence wielding different pickaxes gives a bonus, only more swings
-		/*switch (axeId) {
+	private static int calcAxeBonus(int axeId) {
+			//If server doesn't use batching, pickaxe shouldn't improve gathering chance
+			if (!Constants.GameServer.BATCH_PROGRESSION)
+				return 0;
+			int bonus = 0;
+			switch (ItemId.getById(axeId)) {
 			case BRONZE_PICKAXE:
 				bonus = 0;
 				break;
@@ -300,8 +304,8 @@ public final class Mining implements ObjectActionListener,
 			case RUNE_PICKAXE:
 				bonus = 16;
 				break;
-		}*/
-		return 0;
+			}
+			return bonus;
 	}
 
 	/**
