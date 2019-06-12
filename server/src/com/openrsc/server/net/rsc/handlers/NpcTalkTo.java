@@ -30,7 +30,7 @@ public final class NpcTalkTo implements PacketHandler {
 		if (n == null) {
 			return;
 		}
-		player.setFollowing(n, 0);
+		player.setFollowing(n);
 		player.setStatus(Action.TALKING_MOB);
 		player.setWalkToAction(new WalkToMobAction(player, n, 1) {
 			public void execute() {
@@ -48,6 +48,7 @@ public final class NpcTalkTo implements PacketHandler {
 				}
 
 				n.resetPath();
+				n.resetRange();
 
 				if (player.getLocation().equals(n.getLocation())) {
 					for (int x = -1; x <= 1; ++x) {

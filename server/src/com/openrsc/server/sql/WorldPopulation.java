@@ -36,7 +36,7 @@ public final class WorldPopulation {
 			/* LOAD NPC DEFS */
 			ArrayList<NPCDef> npcDefinitions = new ArrayList<NPCDef>();
 			result = statement.executeQuery("SELECT `id`, `name`, `description`, `command`, `command2`, "
-				+ "`attack`, `strength`, `hits`, `defense`, `combatlvl`, `isMembers`, `attackable`, `aggressive`, `respawnTime`, "
+				+ "`attack`, `strength`, `hits`, `defense`, `ranged`, `combatlvl`, `isMembers`, `attackable`, `aggressive`, `respawnTime`, "
 				+ "`sprites1`, `sprites2`, `sprites3`, `sprites4`, `sprites5`, `sprites6`, `sprites7`, `sprites8`, `sprites9`, "
 				+ "`sprites10`, `sprites11`, `sprites12`, `hairColour`, `topColour`, `bottomColour`, `skinColour`, `camera1`, "
 				+ "`camera2`, `walkModel`, `combatModel`, `combatSprite` FROM `"
@@ -51,6 +51,7 @@ public final class WorldPopulation {
 				def.strength = result.getInt("strength");
 				def.hits = result.getInt("hits");
 				def.defense = result.getInt("defense");
+				def.ranged = result.getInt("ranged");
 				def.combatLevel = result.getInt("combatlvl");
 				def.members = result.getBoolean("isMembers");
 				def.attackable = result.getBoolean("attackable");

@@ -218,6 +218,16 @@ public class SpellHandler implements PacketHandler {
 					player.resetPath();
 					return;
 				}
+				if (affectedNpc.getPetNpc() > 0 ) {
+				player.message("This pet belongs too " + affectedNpc.getPetOwnerA2() + ". You may not attack it.");
+				player.resetPath();
+				return;
+				}
+				if (affectedNpc.getLocation().inWilderness() && !player.getLocation().inWilderness() && (affectedNpc.getID() == 210 || affectedNpc.getID() == 236)){
+				player.message("You must be in the wilderness to attack this NPC");
+				player.resetPath();
+				return;
+				}
 				if (affectedNpc.getID() == NpcId.DELRITH.id()) {
 					player.message("Delrith can not be attacked without the Silverlight sword");
 					return;
