@@ -5,6 +5,11 @@ import com.openrsc.server.GameStateUpdater;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.SingleEvent;
+import com.openrsc.server.event.rsc.impl.RangeEvent;
+import com.openrsc.server.event.rsc.impl.RangeEventNpc;
+import com.openrsc.server.event.rsc.impl.StrPotEventNpc;
+import com.openrsc.server.event.rsc.impl.ThrowingEvent;
+import com.openrsc.server.event.rsc.impl.BankEventNpc;
 import com.openrsc.server.event.custom.HolidayDropEvent;
 import com.openrsc.server.event.custom.HourlyNpcLootEvent;
 import com.openrsc.server.event.custom.NpcLootEvent;
@@ -17,6 +22,7 @@ import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
+import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
@@ -28,6 +34,7 @@ import com.openrsc.server.model.world.region.RegionManager;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
+import com.openrsc.server.plugins.itemactions.Drinkables;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.ChatLog;
@@ -36,13 +43,16 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.GoldDrops;
 import org.apache.commons.lang.StringUtils;
-import org.apache.logging.log4j.LogManager;
+import com.openrsc.server.plugins.Functions;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+
+import static com.openrsc.server.plugins.Functions.attack;
+import static com.openrsc.server.plugins.Functions.sleep;
 
 public final class Admins implements CommandListener {
 	private static final Logger LOGGER = LogManager.getLogger(Admins.class);
@@ -178,6 +188,14 @@ public final class Admins implements CommandListener {
 			}
 
 			player.message(messagePrefix + "There is no running Holiday Drop Event");
+		}
+				else if (cmd.equalsIgnoreCase("kills2")) {
+			Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
+			if (p == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+			player.message(player.getKills2() + "");
 		}
 		/*else if (cmd.equalsIgnoreCase("fakecrystalchest")) {
 			String loot;
@@ -1820,30 +1838,36 @@ public final class Admins implements CommandListener {
 			}
 			player.message(messagePrefix + "Experience has been " + freezeMessage + ": " + p.getUsername());
 		} else if (cmd.equalsIgnoreCase("shootme")) {
-			if(args.length < 1) {
+			if(args.length < 2) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] (damage)");
 				return;
 			}
 
 			int id, damage;
 			Npc n;
+			Npc j;
 
 			try {
 				id = Integer.parseInt(args[0]);
 				n = world.getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
+				j = world.getNpc(11, n.getX() - 5, n.getX() + 5, n.getY() - 10, n.getY() + 10);
 				if (n == null) {
 					player.message(messagePrefix + "Unable to find the specified NPC");
 					return;
 				}
+				if (j == null) {
+					player.message(messagePrefix + "Unable to find the specified NPC");
+					return;
+			}
 			}
 			catch(NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] (damage)");
 				return;
 			}
 
-			if(args.length >= 2) {
+			if(args.length >= 3) {
 				try {
-					damage = Integer.parseInt(args[1]);
+					damage = Integer.parseInt(args[2]);
 				} catch (NumberFormatException e) {
 					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] (damage)");
 					return;
@@ -1864,6 +1888,342 @@ public final class Admins implements CommandListener {
 			}
 
 			player.message(messagePrefix + n.getDef().getName() + " has shot you");
+		} else if (cmd.equalsIgnoreCase("shootme2")) {
+			if(args.length < 2) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] (damage)");
+				return;
 		}
+
+			int id, type;
+			Npc n;
+			Npc j;
+
+			try {
+				id = Integer.parseInt(args[0]);
+				n = world.getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
+				j = world.getNpc(11, n.getX() - 5, n.getX() + 5, n.getY() - 10, n.getY() + 10);
+				if (n == null) {
+					player.message(messagePrefix + "Unable to find the specified NPC");
+					return;
+				}
+				if (j == null) {
+					player.message(messagePrefix + "Unable to find the specified NPC");
+					return;
+				}
+			}
+			catch(NumberFormatException e) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] (damage)");
+				return;
+			}
+
+			if(args.length >= 2) {
+				try {
+					type = Integer.parseInt(args[1]);
+				} catch (NumberFormatException e) {
+					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] (damage)");
+					return;
+				}
+			}
+			else {
+				type = 1;
+			}
+
+			Server.getServer().getGameEventHandler().add(new ProjectileEvent(n, player, 0, type));
+
+			String message = "Die " + player.getUsername() + "!";
+			for(Player playerToChat : n.getViewArea().getPlayersInView()) {
+				GameStateUpdater.updateNpcAppearances(playerToChat); // First call is to flush any NPC chat that is generated by other server processes
+				n.getUpdateFlags().setChatMessage(new ChatMessage(n, message, playerToChat));
+				GameStateUpdater.updateNpcAppearances(playerToChat);
+				n.getUpdateFlags().setChatMessage(null);
+			}
+
+			player.message(messagePrefix + n.getDef().getName() + " has shot you");
+		} else if (cmd.equalsIgnoreCase("npcrangeevent")) {
+			if(args.length < 2) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id] [victim_id]");
+				return;
+			}
+
+			int id;
+			Npc n;
+			Npc j;
+
+			try {
+				id = Integer.parseInt(args[0]);
+				n = world.getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
+				j = world.getNpc(11, n.getX() - 5, n.getX() + 5, n.getY() - 10, n.getY() + 10);
+				if (n == null) {
+					player.message(messagePrefix + "Unable to find the specified NPC");
+					return;
+				}
+				if (j == null) {
+					player.message(messagePrefix + "Unable to find the specified NPC");
+					return;
+				}
 	}
+			catch(NumberFormatException e) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id] [victim_id]");
+				return;
 }
+			n.setRangeEventNpc(new RangeEventNpc(n, j));
+		} else if (cmd.equalsIgnoreCase("npcfightevent")) {
+			if(args.length < 2) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id] [victim_id]");
+				return;
+			}
+
+			int id;
+			int id2;
+			Npc n;
+			Npc j;
+
+			try {
+				id = Integer.parseInt(args[0]);
+				id2 = Integer.parseInt(args[1]);
+				n = world.getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
+				j = world.getNpc(id2, n.getX() - 5, n.getX() + 5, n.getY() - 10, n.getY() + 10);
+				if (n == null) {
+					player.message(messagePrefix + "Unable to find the specified NPC");
+					return;
+			}
+				if (j == null) {
+					player.message(messagePrefix + "Unable to find the specified NPC");
+				return;
+				}
+			}
+			catch(NumberFormatException e) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id] [victim_id]");
+				return;
+			}
+			Functions.attack(n, j);
+		} else if (cmd.equalsIgnoreCase("npcrangedlvl")) {
+			if(args.length < 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc id]");
+				return;
+			}
+
+			int id;
+			Npc n;
+			try {
+				id = Integer.parseInt(args[0]);
+				n = world.getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
+				if (n == null) {
+					player.message(messagePrefix + "Unable to find the specified NPC");
+					return;
+				}
+			}
+			catch(NumberFormatException e) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id] [victim_id]");
+				return;
+			}
+			player.message(n.getDef().getRanged() + "");
+		} else if (cmd.equalsIgnoreCase("bankeventnpc")) {
+			if(args.length < 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc id]");
+				return;
+			}
+
+			int id;
+			Npc n;
+			Npc j;
+			id = Integer.parseInt(args[0]);
+			n = world.getNpc(95, 212, 220, 448, 453);
+			j = world.getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
+			try {
+				if (n == null) {
+					player.message(messagePrefix + "Unable to find the banker");
+					return;
+				} else if (j == null) {
+					player.message(messagePrefix + "Unable to find the specified npc");
+					return;
+			}
+			}
+			catch(NumberFormatException e) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id]");
+				return;
+			}
+			j.setBankEventNpc(new BankEventNpc(j, n));
+		} else if (cmd.equalsIgnoreCase("addskull")) {
+			if(args.length < 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc id]");
+				return;
+			}
+
+			int id;
+			Npc j;
+			id = Integer.parseInt(args[0]);
+			j = world.getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
+			try {
+				if (j == null) {
+					player.message(messagePrefix + "Unable to find the specified npc");
+					return;
+				}
+			}
+			catch(NumberFormatException e) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id]");
+				return;
+			}
+			j.addSkull(1200000);
+		} else if (cmd.equalsIgnoreCase("getstats")) {
+			if(args.length < 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc id]");
+				return;
+			}
+
+			int id;
+			Npc j;
+			id = Integer.parseInt(args[0]);
+			j = world.getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
+			try {
+				if (j == null) {
+					player.message(messagePrefix + "Unable to find the specified npc");
+					return;
+				}
+			}
+			catch(NumberFormatException e) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id]");
+				return;
+			}
+			player.message(j.getSkills().getLevel(0) + " " + j.getSkills().getLevel(1) + " " + j.getSkills().getLevel(2) + " " + j.getSkills().getLevel(3) + " ");
+			player.message(j.getCombatLevel() + " cb");
+		} else if (cmd.equalsIgnoreCase("strpotnpc")) {
+			if(args.length < 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc id]");
+				return;
+			}
+
+			int id;
+			Npc j;
+			id = Integer.parseInt(args[0]);
+			j = world.getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
+			try {
+				if (j == null) {
+					player.message(messagePrefix + "Unable to find the specified npc");
+					return;
+				}
+			}
+			catch(NumberFormatException e) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id]");
+				return;
+			}
+		j.setStrPotEventNpc(new StrPotEventNpc(j));
+			player.message(j.getSkills().getLevel(0) + " " + j.getSkills().getLevel(1) + " " + j.getSkills().getLevel(2) + " " + j.getSkills().getLevel(3) + " ");
+			player.message(j.getCombatLevel() + " cb");
+		} else if (cmd.equalsIgnoreCase("combatstylenpc")) {
+			if(args.length < 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc id]");
+				return;
+			}
+
+			int id;
+			Npc j;
+			id = Integer.parseInt(args[0]);
+			j = world.getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
+			try {
+				if (j == null) {
+					player.message(messagePrefix + "Unable to find the specified npc");
+					return;
+			}
+			}
+			catch(NumberFormatException e) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id]");
+				return;
+			}
+			j.setCombatStyle(1);
+			player.message(j.getCombatStyle() + " ");
+		} else if (cmd.equalsIgnoreCase("combatstyle")) {
+			if(args.length > 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " ");
+				return;
+			}
+		player.message(player.getCombatStyle() + " cb");
+		} else if (cmd.equalsIgnoreCase("petowner")) {
+			if(args.length < 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc id]");
+				return;
+			}
+
+			int id;
+			Npc j;
+			id = Integer.parseInt(args[0]);
+			j = world.getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
+			try {
+				if (j == null) {
+					player.message(messagePrefix + "Unable to find the specified npc");
+					return;
+				}
+			}
+			catch(NumberFormatException e) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id]");
+				return;
+			}
+			player.message(j.getPetOwnerA2() + "");
+			player.message(j.getPetNpc() + "");
+		} else if (cmd.equalsIgnoreCase("petinfo")) {
+			if(args.length > 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + "");
+				return;
+				}
+			Npc j;
+			j = world.getNpc(203, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
+			player.message(player.getPetFatigue() + "");
+			player.message(j.getPetNpcType() + "");
+		} else if (cmd.equalsIgnoreCase("setnpcstats")) {
+			if(args.length < 5) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc id] [str lvl]");
+				return;
+			}
+
+			int id, att, def, str, hp;
+			Npc j;
+			id = Integer.parseInt(args[0]);
+			att = Integer.parseInt(args[1]);
+			def = Integer.parseInt(args[2]);
+			str = Integer.parseInt(args[3]);
+			hp = Integer.parseInt(args[4]);
+			j = world.getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
+			try {
+				if (j == null) {
+					player.message(messagePrefix + "Unable to find the specified npc");
+					return;
+			}
+			}
+			catch(NumberFormatException e) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id] [str_lvl]");
+				return;
+			}
+			j.getSkills().setLevel(0, att);
+			j.getSkills().setLevel(1, def);
+			j.getSkills().setLevel(2, str);
+			j.getSkills().setLevel(3, hp);
+			player.message(j.getSkills().getLevel(0) + " " + j.getSkills().getLevel(1) + " " + j.getSkills().getLevel(2) + " " + j.getSkills().getLevel(3) + " ");
+		} else if (cmd.equalsIgnoreCase("npcrangeevent2")) {
+			if(args.length < 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id]");
+				return;
+			}
+
+			int id;
+			Npc n;
+
+			try {
+				id = Integer.parseInt(args[0]);
+				n = world.getNpc(id, player.getX() - 7, player.getX() + 7, player.getY() - 10, player.getY() + 10);
+				if (n == null) {
+					player.message(messagePrefix + "Unable to find the specified NPC");
+					return;
+			}
+			}
+			catch(NumberFormatException e) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id]");
+				return;
+				}
+			n.setRangeEventNpc(new RangeEventNpc(n, player));
+			try {
+
+				}
+
+			}
+			}
+				}
