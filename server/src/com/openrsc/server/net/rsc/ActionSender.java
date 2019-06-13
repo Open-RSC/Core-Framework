@@ -25,7 +25,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -1387,7 +1386,9 @@ public class ActionSender {
 		SEND_ON_TUTORIAL(111),
 		SEND_CLAN(112),
 		SEND_IRONMAN(113),
+		SEND_KILLS2(147),
 		SEND_FATIGUE(114),
+		SEND_PET_FATIGUE(140),
 		SEND_ON_BLACK_HOLE(115),
 		SEND_SLEEPSCREEN(117),
 		SEND_KILL_ANNOUNCEMENT(118),

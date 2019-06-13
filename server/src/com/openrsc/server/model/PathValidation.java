@@ -53,14 +53,14 @@ public class PathValidation {
 
 		Point nextPoint = null;
 		while ((nextPoint = path.poll()) != null) {
-			if (!checkAdjacent(curPoint, nextPoint, false)) return false;
+			if (!checkAdjacent(curPoint, nextPoint)) return false;
 			curPoint.x = nextPoint.x;
 			curPoint.y = nextPoint.y;
 		}
 		return true;
 	}
-	
-	public static boolean checkAdjacent(Point curPoint, Point nextPoint, boolean ignoreProjectileAllowed) {
+
+	public static boolean checkAdjacent(Point curPoint, Point nextPoint) {
 		int[] coords = {curPoint.getX(), curPoint.getY()};
 		int startX = curPoint.getX();
 		int startY = curPoint.getY();
@@ -70,13 +70,13 @@ public class PathValidation {
 
 		if (startX > destX) {
 			// Check for wall on east edge of current square,
-			myXBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_EAST, true, ignoreProjectileAllowed);
+			myXBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_EAST, true);
 			// Or on west edge of square we are travelling toward.
 			// newXBlocked = checkBlocking(startX - 1, startY, CollisionFlag.WALL_WEST, false);
 			coords[0] = startX - 1;
 		} else if (startX < destX) {
 			// Check for wall on west edge of current square,
-			myXBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_WEST, true, ignoreProjectileAllowed);
+			myXBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_WEST, true);
 			// Or on east edge of square we are travelling toward.
 			// newXBlocked = checkBlocking(startX + 1, startY, CollisionFlag.WALL_EAST, false);
 			coords[0] = startX + 1;
@@ -84,14 +84,14 @@ public class PathValidation {
 
 		if (startY > destY) {
 			// Check for wall on north edge of current square,
-			myYBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_NORTH, true, ignoreProjectileAllowed);
+			myYBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_NORTH, true);
 			// Or on south edge of square we are travelling toward.
 			// newYBlocked = checkBlocking(startX, startY - 1, CollisionFlag.WALL_SOUTH, false);
 			coords[1] = startY - 1;
 
 		} else if (startY < destY) {
 			// Check for wall on south edge of current square,
-			myYBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_SOUTH, true, ignoreProjectileAllowed);
+			myYBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_SOUTH, true);
 			// Or on north edge of square we are travelling toward.
 			// newYBlocked = checkBlocking(startX, startY + 1, CollisionFlag.WALL_NORTH, false);
 			coords[1] = startX + 1;
@@ -116,15 +116,15 @@ public class PathValidation {
 		if (DEBUG) System.out.println("PathValidation 8");*/
 
 		if (coords[0] > startX) {
-			newXBlocked = checkBlocking(coords[0], coords[1], CollisionFlag.WALL_EAST, false, ignoreProjectileAllowed);
+			newXBlocked = checkBlocking(coords[0], coords[1], CollisionFlag.WALL_EAST, false);
 		} else if (coords[0] < startX) {
-			newXBlocked = checkBlocking(coords[0], coords[1], CollisionFlag.WALL_WEST, false, ignoreProjectileAllowed);
+			newXBlocked = checkBlocking(coords[0], coords[1], CollisionFlag.WALL_WEST, false);
 		}
 
 		if (coords[1] > startY) {
-			newXBlocked = checkBlocking(coords[0], coords[1], CollisionFlag.WALL_NORTH, false, ignoreProjectileAllowed);
+			newXBlocked = checkBlocking(coords[0], coords[1], CollisionFlag.WALL_NORTH, false);
 		} else if (coords[1] < startY) {
-			newXBlocked = checkBlocking(coords[0], coords[1], CollisionFlag.WALL_SOUTH, false, ignoreProjectileAllowed);
+			newXBlocked = checkBlocking(coords[0], coords[1], CollisionFlag.WALL_SOUTH, false);
 		}
 
 		if (newXBlocked && newYBlocked) return false;
@@ -142,16 +142,16 @@ public class PathValidation {
 		boolean diagonalBlocked = false;
 		if (startX + 1 == destX && startY + 1 == destY)
 			diagonalBlocked = checkBlocking(startX + 1, startY + 1,
-				CollisionFlag.WALL_NORTH + CollisionFlag.WALL_EAST, false, ignoreProjectileAllowed);
+				CollisionFlag.WALL_NORTH + CollisionFlag.WALL_EAST, false);
 		else if (startX + 1 == destX && startY - 1 == destY)
 			diagonalBlocked = checkBlocking(startX + 1, startY - 1,
-				CollisionFlag.WALL_SOUTH + CollisionFlag.WALL_EAST, false, ignoreProjectileAllowed);
+				CollisionFlag.WALL_SOUTH + CollisionFlag.WALL_EAST, false);
 		else if (startX - 1 == destX && startY + 1 == destY)
 			diagonalBlocked = checkBlocking(startX - 1, startY + 1,
-				CollisionFlag.WALL_NORTH + CollisionFlag.WALL_WEST, false, ignoreProjectileAllowed);
+				CollisionFlag.WALL_NORTH + CollisionFlag.WALL_WEST, false);
 		else if (startX - 1 == destX && startY - 1 == destY)
 			diagonalBlocked = checkBlocking(startX - 1, startY - 1,
-				CollisionFlag.WALL_SOUTH + CollisionFlag.WALL_WEST, false, ignoreProjectileAllowed);
+				CollisionFlag.WALL_SOUTH + CollisionFlag.WALL_WEST, false);
 
 		if (diagonalBlocked)
 			return false;
@@ -160,9 +160,9 @@ public class PathValidation {
 		return true;
 	}
 
-	private static boolean checkBlocking(int x, int y, int bit, boolean isCurrentTile, boolean ignoreProjectileAllowed) {
+	private static boolean checkBlocking(int x, int y, int bit, boolean isCurrentTile) {
 		TileValue t = World.getWorld().getTile(x, y);
-		if (!ignoreProjectileAllowed && t.projectileAllowed) {
+		if (t.projectileAllowed) {
 			return false;
 		}
 
