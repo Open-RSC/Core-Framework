@@ -1881,6 +1881,7 @@ public final class Player extends Mob {
 	public void setBatchEvent(BatchEvent batchEvent) {
 		if (batchEvent != null) {
 			this.batchEvent = batchEvent;
+			Server.getServer().getEventHandler().removePlayersEvents(batchEvent.getOwner());
 			Server.getServer().getEventHandler().add(batchEvent);
 		}
 	}

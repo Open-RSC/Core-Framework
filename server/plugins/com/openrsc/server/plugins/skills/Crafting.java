@@ -503,11 +503,23 @@ public class Crafting implements InvUseOnItemListener,
 								"You need a crafting level of " + reqLvl + " to make " + resultGen);
 							return;
 						}
-						if (owner.getInventory().remove(glass) > -1) {
-							owner.message("You make a " + result.getDef().getName());
-							owner.getInventory().add(result);
-							owner.incExp(Skills.CRAFTING, exp, true);
-						}
+						player.setBatchEvent(new BatchEvent(player, 600, player.getInventory().countId(glass.getID()), false) {
+							@Override
+							public void action() {
+								if (Constants.GameServer.WANT_FATIGUE) {
+									if (owner.getFatigue() >= owner.MAX_FATIGUE) {
+										owner.message("You are too tired to craft");
+										interrupt();
+										return;
+									}
+								}
+								if (owner.getInventory().remove(glass) > -1) {
+									owner.message("You make a " + result.getDef().getName());
+									owner.getInventory().add(result);
+									owner.incExp(Skills.CRAFTING, exp, true);
+								}
+							}
+						});
 					}
 				});
 				ActionSender.sendMenu(owner, options);

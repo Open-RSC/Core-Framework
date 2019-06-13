@@ -460,14 +460,20 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			default:
 				return false;
 		}
-		if (player.getInventory().remove(item) > -1) {
-			if (item.getID() != ItemId.A_LUMP_OF_CHARCOAL.id()) {
-				player.message("You grind the " + item.getDef().getName()
-					+ " to dust");
+		player.setBatchEvent(new BatchEvent(player, 600, player.getInventory().countId(item.getID()), false) {
+			@Override
+			public void action() {
+				if (player.getInventory().remove(item) > -1) {
+					if (item.getID() != ItemId.A_LUMP_OF_CHARCOAL.id()) {
+						player.message("You grind the " + item.getDef().getName()
+							+ " to dust");
+					}
+					showBubble(player, new Item(ItemId.PESTLE_AND_MORTAR.id()));
+					player.getInventory().add(new Item(newID, 1));
+
+				}
 			}
-			showBubble(player, new Item(ItemId.PESTLE_AND_MORTAR.id()));
-			player.getInventory().add(new Item(newID, 1));
-		}
+			});
 		return true;
 	}
 }
