@@ -5,16 +5,18 @@ import com.openrsc.server.GameStateUpdater;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.SingleEvent;
-import com.openrsc.server.event.rsc.impl.RangeEvent;
-import com.openrsc.server.event.rsc.impl.RangeEventNpc;
-import com.openrsc.server.event.rsc.impl.StrPotEventNpc;
-import com.openrsc.server.event.rsc.impl.ThrowingEvent;
-import com.openrsc.server.event.rsc.impl.BankEventNpc;
 import com.openrsc.server.event.custom.HolidayDropEvent;
 import com.openrsc.server.event.custom.HourlyNpcLootEvent;
 import com.openrsc.server.event.custom.NpcLootEvent;
+import com.openrsc.server.event.rsc.impl.BankEventNpc;
 import com.openrsc.server.event.rsc.impl.ProjectileEvent;
-import com.openrsc.server.external.*;
+import com.openrsc.server.event.rsc.impl.RangeEventNpc;
+import com.openrsc.server.event.rsc.impl.StrPotEventNpc;
+import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.external.ItemDefinition;
+import com.openrsc.server.external.ItemDropDef;
+import com.openrsc.server.external.ItemLoc;
+import com.openrsc.server.external.NPCDef;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
@@ -22,7 +24,6 @@ import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
-import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
@@ -33,8 +34,8 @@ import com.openrsc.server.model.world.region.Region;
 import com.openrsc.server.model.world.region.RegionManager;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
-import com.openrsc.server.plugins.itemactions.Drinkables;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.ChatLog;
@@ -42,20 +43,23 @@ import com.openrsc.server.sql.query.logs.StaffLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.GoldDrops;
+
 import org.apache.commons.lang.StringUtils;
-import com.openrsc.server.plugins.Functions;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
-
-import static com.openrsc.server.plugins.Functions.attack;
-import static com.openrsc.server.plugins.Functions.sleep;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Objects;
+import java.util.Random;
 
 public final class Admins implements CommandListener {
 	private static final Logger LOGGER = LogManager.getLogger(Admins.class);
+
 	private Point getRandomLocation() {
 		Point location = Point.location(DataConversions.random(48, 91), DataConversions.random(575, 717));
 
@@ -100,16 +104,14 @@ public final class Admins implements CommandListener {
 				}
 			});
 			player.message(messagePrefix + "Cleaned " + count1 + " NPC opponent references.");
-		}
-		else if (cmd.equalsIgnoreCase("saveall")) {
+		} else if (cmd.equalsIgnoreCase("saveall")) {
 			int count = 0;
 			for (Player p : World.getWorld().getPlayers()) {
 				p.save();
 				count++;
 			}
 			player.message(messagePrefix + "Saved " + count + " players on server!");
-		}
-		else if (cmd.equalsIgnoreCase("cleanregions")) {
+		} else if (cmd.equalsIgnoreCase("cleanregions")) {
 			Server.getServer().submitTask(() -> {
 				final int HORIZONTAL_PLANES = (World.MAX_WIDTH / RegionManager.REGION_SIZE) + 1;
 				final int VERTICAL_PLANES = (World.MAX_HEIGHT / RegionManager.REGION_SIZE) + 1;
@@ -124,8 +126,7 @@ public final class Admins implements CommandListener {
 				}
 			});
 			player.message(messagePrefix + "Cleaned " + count1 + " regions.");
-		}
-		else if (cmd.equalsIgnoreCase("holidaydrop")) {
+		} else if (cmd.equalsIgnoreCase("holidaydrop")) {
 			if (args.length < 2) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [hours] [item_id] ...");
 				return;
@@ -162,8 +163,7 @@ public final class Admins implements CommandListener {
 			Server.getServer().getEventHandler().add(new HolidayDropEvent(executionCount, player, items));
 			player.message(messagePrefix + "Starting holiday drop!");
 			GameLogging.addQuery(new StaffLog(player, 21, messagePrefix + "Started holiday drop"));
-		}
-		else if (cmd.equalsIgnoreCase("stopholidaydrop") || cmd.equalsIgnoreCase("cancelholidaydrop")) {
+		} else if (cmd.equalsIgnoreCase("stopholidaydrop") || cmd.equalsIgnoreCase("cancelholidaydrop")) {
 			HashMap<String, DelayedEvent> events = Server.getServer().getEventHandler().getEvents();
 			for (DelayedEvent event : events.values()) {
 				if (!(event instanceof HolidayDropEvent)) continue;
@@ -173,8 +173,7 @@ public final class Admins implements CommandListener {
 				GameLogging.addQuery(new StaffLog(player, 21, messagePrefix + "Stopped holiday drop"));
 				return;
 			}
-		}
-		else if (cmd.equalsIgnoreCase("getholidaydrop") || cmd.equalsIgnoreCase("checkholidaydrop")) {
+		} else if (cmd.equalsIgnoreCase("getholidaydrop") || cmd.equalsIgnoreCase("checkholidaydrop")) {
 			HashMap<String, DelayedEvent> events = Server.getServer().getEventHandler().getEvents();
 			for (DelayedEvent event : events.values()) {
 				if (!(event instanceof HolidayDropEvent)) continue;
@@ -188,8 +187,7 @@ public final class Admins implements CommandListener {
 			}
 
 			player.message(messagePrefix + "There is no running Holiday Drop Event");
-		}
-				else if (cmd.equalsIgnoreCase("kills2")) {
+		} else if (cmd.equalsIgnoreCase("kills2")) {
 			Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
 			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
@@ -258,8 +256,7 @@ public final class Admins implements CommandListener {
 			int npcID;
 			try {
 				npcID = Integer.parseInt(args[0]);
-			}
-			catch(NumberFormatException ex) {
+			} catch (NumberFormatException ex) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [max_attempts]");
 				return;
 			}
@@ -267,8 +264,7 @@ public final class Admins implements CommandListener {
 			int maxAttempts;
 			try {
 				maxAttempts = Integer.parseInt(args[1]);
-			}
-			catch(NumberFormatException ex) {
+			} catch (NumberFormatException ex) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [max_attempts]");
 				return;
 			}
@@ -346,11 +342,9 @@ public final class Admins implements CommandListener {
 				}
 			}
 			System.out.println(Arrays.toString(hmap.entrySet().toArray()));
-		}
-		else if (cmd.equalsIgnoreCase("restart")) {
+		} else if (cmd.equalsIgnoreCase("restart")) {
 			World.restartCommand();
-		}
-		else if (cmd.equalsIgnoreCase("reloaddrops")) {
+		} else if (cmd.equalsIgnoreCase("reloaddrops")) {
 			try {
 				PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement(
 					"SELECT * FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "npcdrops` WHERE npcdef_id = ?");
@@ -376,8 +370,7 @@ public final class Admins implements CommandListener {
 				LOGGER.catching(e);
 			}
 			player.message(messagePrefix + "Drop tables reloaded");
-		}
-		else if (cmd.equalsIgnoreCase("gi") || cmd.equalsIgnoreCase("gitem") || cmd.equalsIgnoreCase("grounditem")) {
+		} else if (cmd.equalsIgnoreCase("gi") || cmd.equalsIgnoreCase("gitem") || cmd.equalsIgnoreCase("grounditem")) {
 			if (args.length < 1 || args.length == 4) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] (respawn_time) (amount) (x) (y)");
 				return;
@@ -392,7 +385,7 @@ public final class Admins implements CommandListener {
 			}
 
 			int respawnTime;
-			if(args.length >= 3) {
+			if (args.length >= 3) {
 				try {
 					respawnTime = Integer.parseInt(args[1]);
 				} catch (NumberFormatException ex) {
@@ -404,7 +397,7 @@ public final class Admins implements CommandListener {
 			}
 
 			int amount;
-			if(args.length >= 3) {
+			if (args.length >= 3) {
 				try {
 					amount = Integer.parseInt(args[2]);
 				} catch (NumberFormatException ex) {
@@ -416,7 +409,7 @@ public final class Admins implements CommandListener {
 			}
 
 			int x;
-			if(args.length >= 4) {
+			if (args.length >= 4) {
 				try {
 					x = Integer.parseInt(args[3]);
 				} catch (NumberFormatException ex) {
@@ -428,7 +421,7 @@ public final class Admins implements CommandListener {
 			}
 
 			int y;
-			if(args.length >= 5) {
+			if (args.length >= 5) {
 				try {
 					y = Integer.parseInt(args[4]);
 				} catch (NumberFormatException ex) {
@@ -439,8 +432,8 @@ public final class Admins implements CommandListener {
 				y = player.getY();
 			}
 
-			Point itemLocation = new Point(x,y);
-			if((world.getTile(itemLocation).traversalMask & 64) != 0) {
+			Point itemLocation = new Point(x, y);
+			if ((world.getTile(itemLocation).traversalMask & 64) != 0) {
 				player.message(messagePrefix + "Can not place a ground item here");
 				return;
 			}
@@ -450,8 +443,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			if(!world.withinWorld(x, y))
-			{
+			if (!world.withinWorld(x, y)) {
 				player.message(messagePrefix + "Invalid coordinates");
 				return;
 			}
@@ -464,15 +456,14 @@ public final class Admins implements CommandListener {
 					+ "','" + item.getRespawnTime() + "')");
 			World.getWorld().registerItem(new GroundItem(item));
 			player.message(messagePrefix + "Added ground item to database: " + EntityHandler.getItemDef(item.getId()).getName() + " with item ID " + item.getId() + " at " + itemLocation);
-		}
-		else if (cmd.equalsIgnoreCase("rgi") || cmd.equalsIgnoreCase("rgitem") || cmd.equalsIgnoreCase("rgrounditem") || cmd.equalsIgnoreCase("removegi") || cmd.equalsIgnoreCase("removegitem") || cmd.equalsIgnoreCase("removegrounditem")) {
-			if(args.length == 1) {
+		} else if (cmd.equalsIgnoreCase("rgi") || cmd.equalsIgnoreCase("rgitem") || cmd.equalsIgnoreCase("rgrounditem") || cmd.equalsIgnoreCase("removegi") || cmd.equalsIgnoreCase("removegitem") || cmd.equalsIgnoreCase("removegrounditem")) {
+			if (args.length == 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (x) (y)");
 				return;
 			}
 
 			int x = -1;
-			if(args.length >= 1) {
+			if (args.length >= 1) {
 				try {
 					x = Integer.parseInt(args[0]);
 				} catch (NumberFormatException ex) {
@@ -484,7 +475,7 @@ public final class Admins implements CommandListener {
 			}
 
 			int y = -1;
-			if(args.length >= 2) {
+			if (args.length >= 2) {
 				try {
 					y = Integer.parseInt(args[1]);
 				} catch (NumberFormatException ex) {
@@ -495,13 +486,12 @@ public final class Admins implements CommandListener {
 				y = player.getY();
 			}
 
-			if(!world.withinWorld(x, y))
-			{
+			if (!world.withinWorld(x, y)) {
 				player.message(messagePrefix + "Invalid coordinates");
 				return;
 			}
 
-			Point itemLocation = new Point(x,y);
+			Point itemLocation = new Point(x, y);
 
 			GroundItem itemr = player.getViewArea().getGroundItem(itemLocation);
 			if (itemr == null) {
@@ -515,23 +505,21 @@ public final class Admins implements CommandListener {
 					+ "grounditems` WHERE `x` = '" + itemr.getX() + "' AND `y` =  '" + itemr.getY()
 					+ "' AND `id` = '" + itemr.getID() + "'");
 			World.getWorld().unregisterItem(itemr);
-		}
-		else if (cmd.equalsIgnoreCase("reloadworld") || cmd.equalsIgnoreCase("reloadland")) {
+		} else if (cmd.equalsIgnoreCase("reloadworld") || cmd.equalsIgnoreCase("reloadland")) {
 			World.getWorld().wl.loadWorld(World.getWorld());
 			player.message(messagePrefix + "World Reloaded");
-		}
-		else if (cmd.equalsIgnoreCase("summonall")) {
-			if(args.length == 1) {
+		} else if (cmd.equalsIgnoreCase("summonall")) {
+			if (args.length == 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (width) (height)");
 				return;
 			}
 
 			if (args.length == 0) {
 				for (Player p : world.getPlayers()) {
-					if(p == null)
+					if (p == null)
 						continue;
 
-					if(p.isStaff())
+					if (p.isStaff())
 						continue;
 
 					p.summon(player);
@@ -543,9 +531,7 @@ public final class Admins implements CommandListener {
 				try {
 					width = Integer.parseInt(args[0]);
 					height = Integer.parseInt(args[1]);
-				}
-				catch(NumberFormatException e)
-				{
+				} catch (NumberFormatException e) {
 					player.message(badSyntaxPrefix + cmd.toUpperCase() + " (width) (height)");
 					return;
 				}
@@ -561,7 +547,7 @@ public final class Admins implements CommandListener {
 						if (YModifier)
 							y = -y;
 
-						Point summonLocation = new Point(x,y);
+						Point summonLocation = new Point(x, y);
 
 						p.summon(summonLocation);
 						p.message(messagePrefix + "You have been summoned by " + player.getStaffName());
@@ -571,21 +557,19 @@ public final class Admins implements CommandListener {
 
 			player.message(messagePrefix + "You have summoned all players to " + player.getLocation());
 			GameLogging.addQuery(new StaffLog(player, 15, player.getUsername() + " has summoned all players to " + player.getLocation()));
-		}
-		else if(cmd.equalsIgnoreCase("returnall")) {
+		} else if (cmd.equalsIgnoreCase("returnall")) {
 			for (Player p : world.getPlayers()) {
 				if (p == null)
 					continue;
 
-				if(p.isStaff())
+				if (p.isStaff())
 					continue;
 
 				p.returnFromSummon();
 				p.message(messagePrefix + "You have been returned by " + player.getStaffName());
 			}
 			player.message(messagePrefix + "All players who have been summoned were returned");
-		}
-		else if (cmd.equalsIgnoreCase("setcache") || cmd.equalsIgnoreCase("scache") || cmd.equalsIgnoreCase("storecache")) {
+		} else if (cmd.equalsIgnoreCase("setcache") || cmd.equalsIgnoreCase("scache") || cmd.equalsIgnoreCase("storecache")) {
 			if (args.length < 2) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (name) [cache_key] [cache_value]");
 				return;
@@ -598,22 +582,22 @@ public final class Admins implements CommandListener {
 				world.getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
-			if(p == null) {
+			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not modify cache of a staff member of equal or greater rank.");
 				return;
 			}
 
-			if(args[keyArg].equals("invisible")) {
+			if (args[keyArg].equals("invisible")) {
 				player.message(messagePrefix + "Can not change that cache value. Use ::invisible instead.");
 				return;
 			}
 
-			if(args[keyArg].equals("invulnerable")) {
+			if (args[keyArg].equals("invulnerable")) {
 				player.message(messagePrefix + "Can not change that cache value. Use ::invulnerable instead.");
 				return;
 			}
@@ -626,12 +610,12 @@ public final class Admins implements CommandListener {
 			try {
 				boolean value = DataConversions.parseBoolean(args[valArg]);
 				args[valArg] = value ? "1" : "0";
-			} catch (NumberFormatException ex) { }
+			} catch (NumberFormatException ex) {
+			}
 
 			p.getCache().store(args[keyArg], args[valArg]);
 			player.message(messagePrefix + "Added " + args[keyArg] + " with value " + args[valArg] + " to " + p.getUsername() + "'s cache");
-		}
-		else if (cmd.equalsIgnoreCase("getcache") || cmd.equalsIgnoreCase("gcache") || cmd.equalsIgnoreCase("checkcache")) {
+		} else if (cmd.equalsIgnoreCase("getcache") || cmd.equalsIgnoreCase("gcache") || cmd.equalsIgnoreCase("checkcache")) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (name) [cache_key]");
 				return;
@@ -643,7 +627,7 @@ public final class Admins implements CommandListener {
 				world.getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
-			if(p == null) {
+			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
@@ -654,8 +638,7 @@ public final class Admins implements CommandListener {
 			}
 
 			player.message(messagePrefix + p.getUsername() + " has value " + p.getCache().getCacheMap().get(args[keyArg]).toString() + " for cache key " + args[keyArg]);
-		}
-		else if (cmd.equalsIgnoreCase("deletecache") || cmd.equalsIgnoreCase("dcache") || cmd.equalsIgnoreCase("removecache") || cmd.equalsIgnoreCase("rcache")) {
+		} else if (cmd.equalsIgnoreCase("deletecache") || cmd.equalsIgnoreCase("dcache") || cmd.equalsIgnoreCase("removecache") || cmd.equalsIgnoreCase("rcache")) {
 			if (args.length < 2) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (name) [cache_key]");
 				return;
@@ -667,12 +650,12 @@ public final class Admins implements CommandListener {
 				world.getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
-			if(p == null) {
+			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not modify cache of a staff member of equal or greater rank.");
 				return;
 			}
@@ -684,8 +667,7 @@ public final class Admins implements CommandListener {
 
 			p.getCache().remove(args[keyArg]);
 			player.message(messagePrefix + "Removed " + p.getUsername() + "'s cache key " + args[keyArg]);
-		}
-		else if (cmd.equalsIgnoreCase("setquest") || cmd.equalsIgnoreCase("queststage") || cmd.equalsIgnoreCase("setqueststage") || cmd.equalsIgnoreCase("resetquest") || cmd.equalsIgnoreCase("resetq")) {
+		} else if (cmd.equalsIgnoreCase("setquest") || cmd.equalsIgnoreCase("queststage") || cmd.equalsIgnoreCase("setqueststage") || cmd.equalsIgnoreCase("resetquest") || cmd.equalsIgnoreCase("resetq")) {
 			if (args.length < 3) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [questId] (stage)");
 				return;
@@ -693,12 +675,12 @@ public final class Admins implements CommandListener {
 
 			Player p = World.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
-			if(p == null) {
+			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not modify quests of a staff member of equal or greater rank.");
 				return;
 			}
@@ -706,14 +688,13 @@ public final class Admins implements CommandListener {
 			int quest;
 			try {
 				quest = Integer.parseInt(args[1]);
-			}
-			catch(NumberFormatException ex) {
+			} catch (NumberFormatException ex) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [questId] (stage)");
 				return;
 			}
 
 			int stage;
-			if(args.length >= 3) {
+			if (args.length >= 3) {
 				try {
 					stage = Integer.parseInt(args[2]);
 				} catch (NumberFormatException ex) {
@@ -725,12 +706,11 @@ public final class Admins implements CommandListener {
 			}
 
 			p.updateQuestStage(quest, stage);
-			if(p.getUsernameHash() != player.getUsernameHash()) {
+			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "A staff member has changed your quest stage for QuestID " + quest + " to stage " + stage);
 			}
 			player.message(messagePrefix + "You have changed " + p.getUsername() + "'s QuestID: " + quest + " to Stage: " + stage + ".");
-		}
-		else if (cmd.equalsIgnoreCase("questcomplete") || cmd.equalsIgnoreCase("questcom")) {
+		} else if (cmd.equalsIgnoreCase("questcomplete") || cmd.equalsIgnoreCase("questcom")) {
 			if (args.length < 2) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [questId]");
 				return;
@@ -738,12 +718,12 @@ public final class Admins implements CommandListener {
 
 			Player p = World.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
-			if(p == null) {
+			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not modify quests of a staff member of equal or greater rank.");
 				return;
 			}
@@ -751,19 +731,17 @@ public final class Admins implements CommandListener {
 			int quest;
 			try {
 				quest = Integer.parseInt(args[1]);
-			}
-			catch(NumberFormatException ex) {
+			} catch (NumberFormatException ex) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [questId]");
 				return;
 			}
 
 			p.sendQuestComplete(quest);
-			if(p.getUsernameHash() != player.getUsernameHash()) {
+			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "A staff member has changed your quest to completed for QuestID " + quest);
 			}
 			player.message(messagePrefix + "You have completed Quest ID " + quest + " for " + p.getUsername());
-		}
-		else if (cmd.equalsIgnoreCase("quest") || cmd.equalsIgnoreCase("getquest") || cmd.equalsIgnoreCase("checkquest")) {
+		} else if (cmd.equalsIgnoreCase("quest") || cmd.equalsIgnoreCase("getquest") || cmd.equalsIgnoreCase("checkquest")) {
 			if (args.length < 2) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [questId]");
 				return;
@@ -771,7 +749,7 @@ public final class Admins implements CommandListener {
 
 			Player p = World.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
-			if(p == null) {
+			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
@@ -779,23 +757,20 @@ public final class Admins implements CommandListener {
 			int quest;
 			try {
 				quest = Integer.parseInt(args[1]);
-			}
-			catch(NumberFormatException ex) {
+			} catch (NumberFormatException ex) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [questId]");
 				return;
 			}
 
 			player.message(messagePrefix + p.getUsername() + " has stage " + p.getQuestStage(quest) + " for quest " + quest);
-		}
-		else if (cmd.equalsIgnoreCase("shutdown")) {
+		} else if (cmd.equalsIgnoreCase("shutdown")) {
 			int seconds = 0;
 			if (Server.getServer().shutdownForUpdate(seconds)) {
 				for (Player p : world.getPlayers()) {
 					ActionSender.startShutdown(p, seconds);
 				}
 			}
-		}
-		else if (cmd.equalsIgnoreCase("update")) {
+		} else if (cmd.equalsIgnoreCase("update")) {
 			StringBuilder reason = new StringBuilder();
 			int seconds = 300; // 5 minutes
 			if (args.length > 0) {
@@ -827,8 +802,7 @@ public final class Admins implements CommandListener {
 			}
 			// Services.lookup(DatabaseManager.class).addQuery(new
 			// StaffLog(player, 7));
-		}
-		else if (cmd.equalsIgnoreCase("appearance")) {
+		} else if (cmd.equalsIgnoreCase("appearance")) {
 			Player p = args.length > 0 ?
 				world.getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
@@ -844,8 +818,7 @@ public final class Admins implements CommandListener {
 			}
 			p.setChangingAppearance(true);
 			ActionSender.sendAppearanceScreen(p);
-		}
-		else if (cmd.equalsIgnoreCase("item")) {
+		} else if (cmd.equalsIgnoreCase("item")) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] (amount) (player)");
 				return;
@@ -854,8 +827,7 @@ public final class Admins implements CommandListener {
 			int id;
 			try {
 				id = Integer.parseInt(args[0]);
-			}
-			catch(NumberFormatException ex) {
+			} catch (NumberFormatException ex) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] (amount) (player)");
 				return;
 			}
@@ -873,13 +845,13 @@ public final class Admins implements CommandListener {
 			}
 
 			Player p;
-			if(args.length >= 3) {
+			if (args.length >= 3) {
 				p = world.getPlayer(DataConversions.usernameToHash(args[2]));
 			} else {
 				p = player;
 			}
 
-			if(p == null) {
+			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
@@ -899,11 +871,10 @@ public final class Admins implements CommandListener {
 			}
 
 			player.message(messagePrefix + "You have spawned " + amount + " " + EntityHandler.getItemDef(id).getName() + " to " + p.getUsername());
-			if(p.getUsernameHash() != player.getUsernameHash()) {
+			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "A staff member has given you " + amount + " " + EntityHandler.getItemDef(id).getName());
 			}
-		}
-		else if (cmd.equalsIgnoreCase("bankitem") || cmd.equalsIgnoreCase("bitem") || cmd.equalsIgnoreCase("addbank")) {
+		} else if (cmd.equalsIgnoreCase("bankitem") || cmd.equalsIgnoreCase("bitem") || cmd.equalsIgnoreCase("addbank")) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] (amount) (player)");
 				return;
@@ -912,8 +883,7 @@ public final class Admins implements CommandListener {
 			int id;
 			try {
 				id = Integer.parseInt(args[0]);
-			}
-			catch(NumberFormatException ex) {
+			} catch (NumberFormatException ex) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] (amount) (player)");
 				return;
 			}
@@ -931,13 +901,13 @@ public final class Admins implements CommandListener {
 			}
 
 			Player p;
-			if(args.length >= 3) {
+			if (args.length >= 3) {
 				p = world.getPlayer(DataConversions.usernameToHash(args[2]));
 			} else {
 				p = player;
 			}
 
-			if(p == null) {
+			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
@@ -945,13 +915,12 @@ public final class Admins implements CommandListener {
 			p.getBank().add(new Item(id, amount));
 
 			player.message(messagePrefix + "You have spawned to bank " + amount + " " + EntityHandler.getItemDef(id).getName() + " to " + p.getUsername());
-			if(p.getUsernameHash() != player.getUsernameHash()) {
+			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "A staff member has added to your bank " + amount + " " + EntityHandler.getItemDef(id).getName());
 			}
-		}
-		else if (cmd.equalsIgnoreCase("info") || cmd.equalsIgnoreCase("about")) {
+		} else if (cmd.equalsIgnoreCase("info") || cmd.equalsIgnoreCase("about")) {
 			Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
-			if(p == null) {
+			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
@@ -975,8 +944,7 @@ public final class Admins implements CommandListener {
 					+ "@gre@Time Logged In:@whi@ " + DataConversions.getDateFromMsec(timeOnline) + " %"
 					+ "@gre@Total Time Played:@whi@ " + DataConversions.getDateFromMsec(timePlayed) + " %"
 				, true);
-		}
-		else if (cmd.equalsIgnoreCase("inventory")) {
+		} else if (cmd.equalsIgnoreCase("inventory")) {
 			Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
 			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
@@ -989,16 +957,14 @@ public final class Admins implements CommandListener {
 
 			ActionSender.sendBox(player, "@lre@Inventory of " + p.getUsername() + ":%"
 				+ "@whi@" + StringUtils.join(itemStrings, ", "), true);
-		}
-		else if (cmd.equalsIgnoreCase("auction")) {
+		} else if (cmd.equalsIgnoreCase("auction")) {
 			Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
-			if(p == null) {
+			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 			ActionSender.sendOpenAuctionHouse(p);
-		}
-		else if (cmd.equalsIgnoreCase("bank") || cmd.equalsIgnoreCase("quickbank")) {
+		} else if (cmd.equalsIgnoreCase("bank") || cmd.equalsIgnoreCase("quickbank")) {
 			Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
 			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
@@ -1016,42 +982,39 @@ public final class Admins implements CommandListener {
 				ActionSender.sendBox(player, "@lre@Bank of " + p.getUsername() + ":%"
 					+ "@whi@" + StringUtils.join(itemStrings, ", "), true);
 			}
-		}
-		else if (cmd.equalsIgnoreCase("heal")) {
+		} else if (cmd.equalsIgnoreCase("heal")) {
 			Player p = args.length > 0 ?
 				world.getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
-			if(p == null) {
+			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
 			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(Skills.HITPOINTS) - p.getSkills().getMaxStat(Skills.HITPOINTS)));
 			p.getSkills().normalize(Skills.HITPOINTS);
-			if(p.getUsernameHash() != player.getUsernameHash()) {
+			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "You have been healed by an admin");
 			}
 			player.message(messagePrefix + "Healed: " + p.getUsername());
-		}
-		else if (cmd.equalsIgnoreCase("recharge") || cmd.equalsIgnoreCase("healprayer") || cmd.equalsIgnoreCase("healp")) {
+		} else if (cmd.equalsIgnoreCase("recharge") || cmd.equalsIgnoreCase("healprayer") || cmd.equalsIgnoreCase("healp")) {
 			Player p = args.length > 0 ?
 				world.getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
-			if(p == null) {
+			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
 			p.getSkills().normalize(Skills.PRAYER);
-			if(p.getUsernameHash() != player.getUsernameHash()) {
+			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "Your prayer has been recharged by an admin");
 			}
 			player.message(messagePrefix + "Recharged: " + p.getUsername());
-		}
-		else if (cmd.equalsIgnoreCase("hp") || cmd.equalsIgnoreCase("sethp") || cmd.equalsIgnoreCase("hits") || cmd.equalsIgnoreCase("sethits")) {
-			if(args.length < 1) {
+		} else if (cmd.equalsIgnoreCase("hp") || cmd.equalsIgnoreCase("sethp") || cmd.equalsIgnoreCase("hits") || cmd.equalsIgnoreCase("sethits")) {
+			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] [hp]");
 				return;
 			}
@@ -1060,12 +1023,12 @@ public final class Admins implements CommandListener {
 				world.getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
-			if(p == null) {
+			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not set hp of a staff member of equal or greater rank.");
 				return;
 			}
@@ -1073,15 +1036,14 @@ public final class Admins implements CommandListener {
 			int newHits;
 			try {
 				newHits = Integer.parseInt(args[args.length > 1 ? 1 : 0]);
-			}
-			catch (NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (name) [hp]");
 				return;
 			}
 
-			if(newHits > p.getSkills().getMaxStat(Skills.HITPOINTS))
+			if (newHits > p.getSkills().getMaxStat(Skills.HITPOINTS))
 				newHits = p.getSkills().getMaxStat(Skills.HITPOINTS);
-			if(newHits < 0)
+			if (newHits < 0)
 				newHits = 0;
 
 			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(Skills.HITPOINTS) - newHits));
@@ -1089,13 +1051,12 @@ public final class Admins implements CommandListener {
 			if (p.getSkills().getLevel(Skills.HITPOINTS) <= 0)
 				p.killedBy(player);
 
-			if(p.getUsernameHash() != player.getUsernameHash()) {
+			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "Your hits have been set to " + newHits + " by an admin");
 			}
 			player.message(messagePrefix + "Set " + p.getUsername() + "'s hits to " + newHits);
-		}
-		else if (cmd.equalsIgnoreCase("prayer") || cmd.equalsIgnoreCase("setprayer")) {
-			if(args.length < 1) {
+		} else if (cmd.equalsIgnoreCase("prayer") || cmd.equalsIgnoreCase("setprayer")) {
+			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] [prayer]");
 				return;
 			}
@@ -1104,12 +1065,12 @@ public final class Admins implements CommandListener {
 				world.getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
-			if(p == null) {
+			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not set prayer of a staff member of equal or greater rank.");
 				return;
 			}
@@ -1117,26 +1078,24 @@ public final class Admins implements CommandListener {
 			int newPrayer;
 			try {
 				newPrayer = Integer.parseInt(args[args.length > 1 ? 1 : 0]);
-			}
-			catch (NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (name) [prayer]");
 				return;
 			}
 
-			if(newPrayer > p.getSkills().getMaxStat(Skills.HITPOINTS))
+			if (newPrayer > p.getSkills().getMaxStat(Skills.HITPOINTS))
 				newPrayer = p.getSkills().getMaxStat(Skills.HITPOINTS);
-			if(newPrayer < 0)
+			if (newPrayer < 0)
 				newPrayer = 0;
 
 			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(Skills.HITPOINTS) - newPrayer));
 			p.getSkills().setLevel(Skills.HITPOINTS, newPrayer);
 
-			if(p.getUsernameHash() != player.getUsernameHash()) {
+			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "Your prayer has been set to " + newPrayer + " by an admin");
 			}
 			player.message(messagePrefix + "Set " + p.getUsername() + "'s prayer to " + newPrayer);
-		}
-		else if (cmd.equalsIgnoreCase("kill")) {
+		} else if (cmd.equalsIgnoreCase("kill")) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
 				return;
@@ -1144,12 +1103,12 @@ public final class Admins implements CommandListener {
 
 			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
 
-			if(p == null) {
+			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not kill a staff member of equal or greater rank.");
 				return;
 			}
@@ -1157,12 +1116,11 @@ public final class Admins implements CommandListener {
 			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(Skills.HITPOINTS)));
 			p.getSkills().setLevel(Skills.HITPOINTS, 0);
 			p.killedBy(player);
-			if(p.getUsernameHash() != player.getUsernameHash()) {
+			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "You have been killed by an admin");
 			}
 			player.message(messagePrefix + "Killed " + p.getUsername());
-		}
-		else if ((cmd.equalsIgnoreCase("damage") || cmd.equalsIgnoreCase("dmg"))) {
+		} else if ((cmd.equalsIgnoreCase("damage") || cmd.equalsIgnoreCase("dmg"))) {
 			if (args.length < 2) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] [amount]");
 				return;
@@ -1170,7 +1128,7 @@ public final class Admins implements CommandListener {
 
 			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
 
-			if(p == null) {
+			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
@@ -1178,13 +1136,12 @@ public final class Admins implements CommandListener {
 			int damage;
 			try {
 				damage = Integer.parseInt(args[1]);
-			}
-			catch (NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] [amount]");
 				return;
 			}
 
-			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not damage a staff member of equal or greater rank.");
 				return;
 			}
@@ -1194,25 +1151,24 @@ public final class Admins implements CommandListener {
 			if (p.getSkills().getLevel(Skills.HITPOINTS) <= 0)
 				p.killedBy(player);
 
-			if(p.getUsernameHash() != player.getUsernameHash()) {
+			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "You have been taken " + damage + " damage from an admin");
 			}
 			player.message(messagePrefix + "Damaged " + p.getUsername() + " " + damage + " hits");
-		}
-		else if (cmd.equalsIgnoreCase("wipeinventory") || cmd.equalsIgnoreCase("wipeinv")) {
-			if(args.length < 1) {
+		} else if (cmd.equalsIgnoreCase("wipeinventory") || cmd.equalsIgnoreCase("wipeinv")) {
+			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
 				return;
 			}
 
 			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
 
-			if(p == null) {
+			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not wipe the inventory of a staff member of equal or greater rank.");
 				return;
 			}
@@ -1226,44 +1182,42 @@ public final class Admins implements CommandListener {
 				p.getInventory().remove(i);
 			}
 
-			if(p.getUsernameHash() != player.getUsernameHash()) {
+			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "Your inventory has been wiped by an admin");
 			}
 			player.message(messagePrefix + "Wiped inventory of " + p.getUsername());
-		}
-		else if (cmd.equalsIgnoreCase("wipebank")) {
-			if(args.length < 1) {
+		} else if (cmd.equalsIgnoreCase("wipebank")) {
+			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
 				return;
 			}
 
 			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
 
-			if(p == null) {
+			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not wipe the bank of a staff member of equal or greater rank.");
 				return;
 			}
 
 			p.getBank().getItems().clear();
-			if(p.getUsernameHash() != player.getUsernameHash()) {
+			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "Your bank has been wiped by an admin");
 			}
 			player.message(messagePrefix + "Wiped bank of " + p.getUsername());
-		}
-		else if(cmd.equalsIgnoreCase("massitem")) {
+		} else if (cmd.equalsIgnoreCase("massitem")) {
 			if (args.length < 2) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount]");
 				return;
 			}
 
 			try {
-				int id          = Integer.parseInt(args[0]);
-				int amount      = Integer.parseInt(args[1]);
+				int id = Integer.parseInt(args[0]);
+				int amount = Integer.parseInt(args[1]);
 				ItemDefinition itemDef = EntityHandler.getItemDef(id);
 				if (itemDef != null) {
 					int x = 0;
@@ -1298,7 +1252,7 @@ public final class Admins implements CommandListener {
 								dX = 0;
 								dY = nextY;
 								if (dY < 0)
-									minY -=1;
+									minY -= 1;
 								else
 									maxY += 1;
 								nextX = -1;
@@ -1333,23 +1287,20 @@ public final class Admins implements CommandListener {
 							}
 						}
 
-						if(world.withinWorld(baseX + x, baseY + y)) {
+						if (world.withinWorld(baseX + x, baseY + y)) {
 							if ((world.getTile(new Point(baseX + x, baseY + y)).traversalMask & 64) == 0) {
 								world.registerItem(new GroundItem(id, baseX + x, baseY + y, amount, (Player) null));
 							}
 						}
 					}
 					player.message(messagePrefix + "Spawned " + amount + " " + itemDef.getName());
-				}
-				else {
+				} else {
 					player.message(messagePrefix + "Invalid ID");
 				}
-			}
-			catch (NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount]");
 			}
-		}
-		else if (cmd.equalsIgnoreCase("massnpc")) {
+		} else if (cmd.equalsIgnoreCase("massnpc")) {
 			if (args.length < 2) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount] (duration_minutes)");
 				return;
@@ -1359,9 +1310,9 @@ public final class Admins implements CommandListener {
 				int id = Integer.parseInt(args[0]);
 				int amount = Integer.parseInt(args[1]);
 				int duration = args.length >= 3 ? Integer.parseInt(args[2]) : 10;
-				NPCDef npcDef   = EntityHandler.getNpcDef(id);
+				NPCDef npcDef = EntityHandler.getNpcDef(id);
 
-				if(npcDef == null) {
+				if (npcDef == null) {
 					player.message(messagePrefix + "Invalid ID");
 					return;
 				}
@@ -1379,7 +1330,7 @@ public final class Admins implements CommandListener {
 					int minY = 0;
 					int maxX = 0;
 					int maxY = 0;
-					for(int i = 0; i < amount; i++) {
+					for (int i = 0; i < amount; i++) {
 						if (dX < 0) {
 							x -= 1;
 							if (x == minX) {
@@ -1397,7 +1348,7 @@ public final class Admins implements CommandListener {
 								dX = 0;
 								dY = nextY;
 								if (dY < 0)
-									minY -=1;
+									minY -= 1;
 								else
 									maxY += 1;
 								nextX = -1;
@@ -1431,7 +1382,7 @@ public final class Admins implements CommandListener {
 								nextX = 1;
 							}
 						}
-						if(world.withinWorld(baseX + x, baseY + y)) {
+						if (world.withinWorld(baseX + x, baseY + y)) {
 							if ((world.getTile(new Point(baseX + x, baseY + y)).traversalMask & 64) == 0) {
 								final Npc n = new Npc(id, baseX + x, baseY + y, baseX + x - 20, baseX + x + 20, baseY + y - 20, baseY + y + 20);
 								n.setShouldRespawn(false);
@@ -1448,19 +1399,17 @@ public final class Admins implements CommandListener {
 				}
 
 				player.message(messagePrefix + "Spawned " + amount + " " + npcDef.getName() + " for " + duration + " minutes");
-			}
-			catch(NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount] (duration_minutes)");
 			}
-		}
-		else if (cmd.equalsIgnoreCase("npctalk")) {
-			if(args.length < 2) {
+		} else if (cmd.equalsIgnoreCase("npctalk")) {
+			if (args.length < 2) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [msg]");
 				return;
 			}
 
 			try {
-				int npc_id      = Integer.parseInt(args[0]);
+				int npc_id = Integer.parseInt(args[0]);
 
 				StringBuilder msg = new StringBuilder();
 				for (int i = 1; i < args.length; i++)
@@ -1471,22 +1420,19 @@ public final class Admins implements CommandListener {
 				String message = DataConversions.upperCaseAllFirst(DataConversions.stripBadCharacters(msg.toString()));
 
 				if (npc != null) {
-					for(Player playerToChat : npc.getViewArea().getPlayersInView()) {
+					for (Player playerToChat : npc.getViewArea().getPlayersInView()) {
 						GameStateUpdater.updateNpcAppearances(playerToChat); // First call is to flush any NPC chat that is generated by other server processes
 						npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, message, playerToChat));
 						GameStateUpdater.updateNpcAppearances(playerToChat);
 						npc.getUpdateFlags().setChatMessage(null);
 					}
-				}
-				else {
+				} else {
 					player.message(messagePrefix + "NPC could not be found");
 				}
-			}
-			catch (NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [msg]");
 			}
-		}
-		else if (cmd.equalsIgnoreCase("playertalk")) {
+		} else if (cmd.equalsIgnoreCase("playertalk")) {
 			if (args.length < 2) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] [msg]");
 				return;
@@ -1503,7 +1449,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not talk as a staff member of equal or greater rank.");
 				return;
 			}
@@ -1512,18 +1458,17 @@ public final class Admins implements CommandListener {
 
 			ChatMessage chatMessage = new ChatMessage(p, message);
 			// First of second call to updatePlayerAppearance is to send out messages generated by other server processes so they don't get overwritten
-			for(Player playerToChat : p.getViewArea().getPlayersInView()) {
+			for (Player playerToChat : p.getViewArea().getPlayersInView()) {
 				GameStateUpdater.updatePlayerAppearances(playerToChat);
 			}
 			p.getUpdateFlags().setChatMessage(chatMessage);
-			for(Player playerToChat : p.getViewArea().getPlayersInView()) {
+			for (Player playerToChat : p.getViewArea().getPlayersInView()) {
 				GameStateUpdater.updatePlayerAppearances(playerToChat);
 			}
 			p.getUpdateFlags().setChatMessage(null);
 			GameLogging.addQuery(new ChatLog(p.getUsername(), chatMessage.getMessageString()));
 			World.getWorld().addEntryToSnapshots(new Chatlog(p.getUsername(), chatMessage.getMessageString()));
-		}
-		else if ((cmd.equalsIgnoreCase("smitenpc") || cmd.equalsIgnoreCase("damagenpc") || cmd.equalsIgnoreCase("dmgnpc"))) {
+		} else if ((cmd.equalsIgnoreCase("smitenpc") || cmd.equalsIgnoreCase("damagenpc") || cmd.equalsIgnoreCase("dmgnpc"))) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] (damage)");
 				return;
@@ -1540,21 +1485,19 @@ public final class Admins implements CommandListener {
 					player.message(messagePrefix + "Unable to find the specified NPC");
 					return;
 				}
-			}
-			catch(NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] (damage)");
 				return;
 			}
 
-			if(args.length >= 2) {
+			if (args.length >= 2) {
 				try {
 					damage = Integer.parseInt(args[1]);
 				} catch (NumberFormatException e) {
 					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] (damage)");
 					return;
 				}
-			}
-			else {
+			} else {
 				damage = 9999;
 			}
 
@@ -1565,9 +1508,7 @@ public final class Admins implements CommandListener {
 			n.getSkills().subtractLevel(Skills.HITPOINTS, damage);
 			if (n.getSkills().getLevel(Skills.HITPOINTS) < 1)
 				n.killedBy(player);
-		}
-		else if (cmd.equalsIgnoreCase("npcevent"))
-		{
+		} else if (cmd.equalsIgnoreCase("npcevent")) {
 			if (args.length < 3) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [npc_amount] [item_id] (item_amount) (duration)");
 				return;
@@ -1584,18 +1525,17 @@ public final class Admins implements CommandListener {
 				duration = args.length >= 5 ? Integer.parseInt(args[4]) : 10;
 				itemDef = EntityHandler.getItemDef(itemID);
 				npcDef = EntityHandler.getNpcDef(npcID);
-			}
-			catch (NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [npc_amount] [item_id] (item_amount) (duration)");
 				return;
 			}
 
-			if(itemDef == null) {
+			if (itemDef == null) {
 				player.message(messagePrefix + "Invalid item_id");
 				return;
 			}
 
-			if(npcDef == null) {
+			if (npcDef == null) {
 				player.message(messagePrefix + "Invalid npc_id");
 				return;
 			}
@@ -1603,58 +1543,52 @@ public final class Admins implements CommandListener {
 			Server.getServer().getEventHandler().add(new NpcLootEvent(player.getLocation(), npcID, npcAmt, itemID, itemAmt, duration));
 			player.message(messagePrefix + "Spawned " + npcAmt + " " + npcDef.getName());
 			player.message(messagePrefix + "Loot is " + itemAmt + " " + itemDef.getName());
-		}
-		else if (cmd.equalsIgnoreCase("chickenevent"))
-		{
+		} else if (cmd.equalsIgnoreCase("chickenevent")) {
 			int hours;
-			if(args.length >= 1) {
+			if (args.length >= 1) {
 				try {
 					hours = Integer.parseInt(args[0]);
 				} catch (NumberFormatException e) {
 					player.message(badSyntaxPrefix + cmd.toUpperCase() + " (hours) (chicken_amount) (item_amount) (chicken_lifetime)");
 					return;
 				}
-			}
-			else {
+			} else {
 				hours = 24;
 			}
 
 			int npcAmount;
-			if(args.length >= 2) {
+			if (args.length >= 2) {
 				try {
 					npcAmount = Integer.parseInt(args[1]);
 				} catch (NumberFormatException e) {
 					player.message(badSyntaxPrefix + cmd.toUpperCase() + " (hours) (chicken_amount) (item_amount) (chicken_lifetime)");
 					return;
 				}
-			}
-			else {
+			} else {
 				npcAmount = 50;
 			}
 
 			int itemAmount;
-			if(args.length >= 3) {
+			if (args.length >= 3) {
 				try {
 					itemAmount = Integer.parseInt(args[2]);
 				} catch (NumberFormatException e) {
 					player.message(badSyntaxPrefix + cmd.toUpperCase() + " (hours) (chicken_amount) (item_amount) (chicken_lifetime)");
 					return;
 				}
-			}
-			else {
+			} else {
 				itemAmount = 10000;
 			}
 
 			int npcLifeTime;
-			if(args.length >= 4) {
+			if (args.length >= 4) {
 				try {
 					npcLifeTime = Integer.parseInt(args[3]);
 				} catch (NumberFormatException e) {
 					player.message(badSyntaxPrefix + cmd.toUpperCase() + " (hours) (chicken_amount) (item_amount) (chicken_lifetime)");
 					return;
 				}
-			}
-			else {
+			} else {
 				npcLifeTime = 10;
 			}
 
@@ -1668,8 +1602,7 @@ public final class Admins implements CommandListener {
 
 			Server.getServer().getEventHandler().add(new HourlyNpcLootEvent(hours, "Oh no! Chickens are invading Lumbridge!", player.getLocation(), 3, npcAmount, 10, itemAmount, npcLifeTime));
 			player.message(messagePrefix + "Chicken event started.");
-		}
-		else if (cmd.equalsIgnoreCase("stopnpcevent") || cmd.equalsIgnoreCase("cancelnpcevent")) {
+		} else if (cmd.equalsIgnoreCase("stopnpcevent") || cmd.equalsIgnoreCase("cancelnpcevent")) {
 			HashMap<String, DelayedEvent> events = Server.getServer().getEventHandler().getEvents();
 			for (DelayedEvent event : events.values()) {
 				if (!(event instanceof HourlyNpcLootEvent)) continue;
@@ -1678,8 +1611,7 @@ public final class Admins implements CommandListener {
 				player.message(messagePrefix + "Stopping hourly npc event!");
 				return;
 			}
-		}
-		else if (cmd.equalsIgnoreCase("getnpcevent") || cmd.equalsIgnoreCase("checknpcevent")) {
+		} else if (cmd.equalsIgnoreCase("getnpcevent") || cmd.equalsIgnoreCase("checknpcevent")) {
 			HashMap<String, DelayedEvent> events = Server.getServer().getEventHandler().getEvents();
 			for (DelayedEvent event : events.values()) {
 				if (!(event instanceof HourlyNpcLootEvent)) continue;
@@ -1693,8 +1625,7 @@ public final class Admins implements CommandListener {
 			}
 
 			player.message(messagePrefix + "There is no running Hourly Npc Loot Event");
-		}
-		else if (cmd.equalsIgnoreCase("wildrule")) {
+		} else if (cmd.equalsIgnoreCase("wildrule")) {
 			if (args.length < 3) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [god/members] [startLevel] [endLevel]");
 				return;
@@ -1705,8 +1636,7 @@ public final class Admins implements CommandListener {
 			int startLevel = -1;
 			try {
 				startLevel = Integer.parseInt(args[1]);
-			}
-			catch(NumberFormatException ex) {
+			} catch (NumberFormatException ex) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [god/members] [startLevel] [endLevel]");
 				return;
 			}
@@ -1714,13 +1644,12 @@ public final class Admins implements CommandListener {
 			int endLevel = -1;
 			try {
 				endLevel = Integer.parseInt(args[2]);
-			}
-			catch(NumberFormatException ex) {
+			} catch (NumberFormatException ex) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [god/members] [startLevel] [endLevel]");
 				return;
 			}
 
-			if(rule.equalsIgnoreCase("god")) {
+			if (rule.equalsIgnoreCase("god")) {
 				int start = Integer.parseInt(args[1]);
 				int end = Integer.parseInt(args[2]);
 				World.godSpellsStart = startLevel;
@@ -1737,8 +1666,7 @@ public final class Admins implements CommandListener {
 			} else {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [god/members] [startLevel] [endLevel]");
 			}
-		}
-		else if (cmd.equalsIgnoreCase("ban")) {
+		} else if (cmd.equalsIgnoreCase("ban")) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] [time in minutes, -1 for permanent, 0 to unban]");
 				return;
@@ -1749,7 +1677,7 @@ public final class Admins implements CommandListener {
 			Player p = World.getWorld().getPlayer(userToBan);
 
 			int time;
-			if(args.length >= 2) {
+			if (args.length >= 2) {
 				try {
 					time = Integer.parseInt(args[1]);
 				} catch (NumberFormatException ex) {
@@ -1775,7 +1703,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not ban a staff member of equal or greater rank.");
 				return;
 			}
@@ -1791,28 +1719,27 @@ public final class Admins implements CommandListener {
 			}
 
 			player.message(messagePrefix + Server.getPlayerDataProcessor().getDatabase().banPlayer(usernameToBan, time)); // Disabled as it doesn't compile with PlayerDatabaseExecutor extending ThrottleFilter
-		}
-		else if (cmd.equalsIgnoreCase("freezexp") || cmd.equalsIgnoreCase("freezeexp") || cmd.equalsIgnoreCase("freezeexperience")) {
-			if(args.length < 1) {
+		} else if (cmd.equalsIgnoreCase("freezexp") || cmd.equalsIgnoreCase("freezeexp") || cmd.equalsIgnoreCase("freezeexperience")) {
+			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] (boolean)");
 				return;
 			}
 
 			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
 
-			if(p == null) {
+			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not freeze experience of a staff member of equal or greater rank.");
 				return;
 			}
 
 			boolean freezeXp;
 			boolean toggle;
-			if(args.length > 1) {
+			if (args.length > 1) {
 				try {
 					freezeXp = DataConversions.parseBoolean(args[1]);
 					toggle = false;
@@ -1826,19 +1753,19 @@ public final class Admins implements CommandListener {
 			}
 
 			boolean newFreezeXp;
-			if(toggle) {
+			if (toggle) {
 				newFreezeXp = p.toggleFreezeXp();
 			} else {
 				newFreezeXp = p.setFreezeXp(freezeXp);
 			}
 
 			String freezeMessage = newFreezeXp ? "frozen" : "unfrozen";
-			if(p.getUsernameHash() != player.getUsernameHash()) {
+			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "Your experience has been " + freezeMessage + " by an admin");
 			}
 			player.message(messagePrefix + "Experience has been " + freezeMessage + ": " + p.getUsername());
 		} else if (cmd.equalsIgnoreCase("shootme")) {
-			if(args.length < 2) {
+			if (args.length < 2) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] (damage)");
 				return;
 			}
@@ -1858,29 +1785,27 @@ public final class Admins implements CommandListener {
 				if (j == null) {
 					player.message(messagePrefix + "Unable to find the specified NPC");
 					return;
-			}
-			}
-			catch(NumberFormatException e) {
+				}
+			} catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] (damage)");
 				return;
 			}
 
-			if(args.length >= 3) {
+			if (args.length >= 3) {
 				try {
 					damage = Integer.parseInt(args[2]);
 				} catch (NumberFormatException e) {
 					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] (damage)");
 					return;
 				}
-			}
-			else {
+			} else {
 				damage = 1;
 			}
 
 			Server.getServer().getGameEventHandler().add(new ProjectileEvent(n, player, damage, 2));
 
 			String message = "Die " + player.getUsername() + "!";
-			for(Player playerToChat : n.getViewArea().getPlayersInView()) {
+			for (Player playerToChat : n.getViewArea().getPlayersInView()) {
 				GameStateUpdater.updateNpcAppearances(playerToChat); // First call is to flush any NPC chat that is generated by other server processes
 				n.getUpdateFlags().setChatMessage(new ChatMessage(n, message, playerToChat));
 				GameStateUpdater.updateNpcAppearances(playerToChat);
@@ -1889,10 +1814,10 @@ public final class Admins implements CommandListener {
 
 			player.message(messagePrefix + n.getDef().getName() + " has shot you");
 		} else if (cmd.equalsIgnoreCase("shootme2")) {
-			if(args.length < 2) {
+			if (args.length < 2) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] (damage)");
 				return;
-		}
+			}
 
 			int id, type;
 			Npc n;
@@ -1910,28 +1835,26 @@ public final class Admins implements CommandListener {
 					player.message(messagePrefix + "Unable to find the specified NPC");
 					return;
 				}
-			}
-			catch(NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] (damage)");
 				return;
 			}
 
-			if(args.length >= 2) {
+			if (args.length >= 2) {
 				try {
 					type = Integer.parseInt(args[1]);
 				} catch (NumberFormatException e) {
 					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] (damage)");
 					return;
 				}
-			}
-			else {
+			} else {
 				type = 1;
 			}
 
 			Server.getServer().getGameEventHandler().add(new ProjectileEvent(n, player, 0, type));
 
 			String message = "Die " + player.getUsername() + "!";
-			for(Player playerToChat : n.getViewArea().getPlayersInView()) {
+			for (Player playerToChat : n.getViewArea().getPlayersInView()) {
 				GameStateUpdater.updateNpcAppearances(playerToChat); // First call is to flush any NPC chat that is generated by other server processes
 				n.getUpdateFlags().setChatMessage(new ChatMessage(n, message, playerToChat));
 				GameStateUpdater.updateNpcAppearances(playerToChat);
@@ -1940,7 +1863,7 @@ public final class Admins implements CommandListener {
 
 			player.message(messagePrefix + n.getDef().getName() + " has shot you");
 		} else if (cmd.equalsIgnoreCase("npcrangeevent")) {
-			if(args.length < 2) {
+			if (args.length < 2) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id] [victim_id]");
 				return;
 			}
@@ -1961,14 +1884,13 @@ public final class Admins implements CommandListener {
 					player.message(messagePrefix + "Unable to find the specified NPC");
 					return;
 				}
-	}
-			catch(NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id] [victim_id]");
 				return;
-}
+			}
 			n.setRangeEventNpc(new RangeEventNpc(n, j));
 		} else if (cmd.equalsIgnoreCase("npcfightevent")) {
-			if(args.length < 2) {
+			if (args.length < 2) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id] [victim_id]");
 				return;
 			}
@@ -1986,19 +1908,18 @@ public final class Admins implements CommandListener {
 				if (n == null) {
 					player.message(messagePrefix + "Unable to find the specified NPC");
 					return;
-			}
+				}
 				if (j == null) {
 					player.message(messagePrefix + "Unable to find the specified NPC");
-				return;
+					return;
 				}
-			}
-			catch(NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id] [victim_id]");
 				return;
 			}
 			Functions.attack(n, j);
 		} else if (cmd.equalsIgnoreCase("npcrangedlvl")) {
-			if(args.length < 1) {
+			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc id]");
 				return;
 			}
@@ -2012,14 +1933,13 @@ public final class Admins implements CommandListener {
 					player.message(messagePrefix + "Unable to find the specified NPC");
 					return;
 				}
-			}
-			catch(NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id] [victim_id]");
 				return;
 			}
 			player.message(n.getDef().getRanged() + "");
 		} else if (cmd.equalsIgnoreCase("bankeventnpc")) {
-			if(args.length < 1) {
+			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc id]");
 				return;
 			}
@@ -2037,15 +1957,14 @@ public final class Admins implements CommandListener {
 				} else if (j == null) {
 					player.message(messagePrefix + "Unable to find the specified npc");
 					return;
-			}
-			}
-			catch(NumberFormatException e) {
+				}
+			} catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id]");
 				return;
 			}
 			j.setBankEventNpc(new BankEventNpc(j, n));
 		} else if (cmd.equalsIgnoreCase("addskull")) {
-			if(args.length < 1) {
+			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc id]");
 				return;
 			}
@@ -2059,14 +1978,13 @@ public final class Admins implements CommandListener {
 					player.message(messagePrefix + "Unable to find the specified npc");
 					return;
 				}
-			}
-			catch(NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id]");
 				return;
 			}
 			j.addSkull(1200000);
 		} else if (cmd.equalsIgnoreCase("getstats")) {
-			if(args.length < 1) {
+			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc id]");
 				return;
 			}
@@ -2080,15 +1998,14 @@ public final class Admins implements CommandListener {
 					player.message(messagePrefix + "Unable to find the specified npc");
 					return;
 				}
-			}
-			catch(NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id]");
 				return;
 			}
 			player.message(j.getSkills().getLevel(0) + " " + j.getSkills().getLevel(1) + " " + j.getSkills().getLevel(2) + " " + j.getSkills().getLevel(3) + " ");
 			player.message(j.getCombatLevel() + " cb");
 		} else if (cmd.equalsIgnoreCase("strpotnpc")) {
-			if(args.length < 1) {
+			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc id]");
 				return;
 			}
@@ -2102,16 +2019,15 @@ public final class Admins implements CommandListener {
 					player.message(messagePrefix + "Unable to find the specified npc");
 					return;
 				}
-			}
-			catch(NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id]");
 				return;
 			}
-		j.setStrPotEventNpc(new StrPotEventNpc(j));
+			j.setStrPotEventNpc(new StrPotEventNpc(j));
 			player.message(j.getSkills().getLevel(0) + " " + j.getSkills().getLevel(1) + " " + j.getSkills().getLevel(2) + " " + j.getSkills().getLevel(3) + " ");
 			player.message(j.getCombatLevel() + " cb");
 		} else if (cmd.equalsIgnoreCase("combatstylenpc")) {
-			if(args.length < 1) {
+			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc id]");
 				return;
 			}
@@ -2124,22 +2040,21 @@ public final class Admins implements CommandListener {
 				if (j == null) {
 					player.message(messagePrefix + "Unable to find the specified npc");
 					return;
-			}
-			}
-			catch(NumberFormatException e) {
+				}
+			} catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id]");
 				return;
 			}
 			j.setCombatStyle(1);
 			player.message(j.getCombatStyle() + " ");
 		} else if (cmd.equalsIgnoreCase("combatstyle")) {
-			if(args.length > 1) {
+			if (args.length > 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " ");
 				return;
 			}
-		player.message(player.getCombatStyle() + " cb");
+			player.message(player.getCombatStyle() + " cb");
 		} else if (cmd.equalsIgnoreCase("petowner")) {
-			if(args.length < 1) {
+			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc id]");
 				return;
 			}
@@ -2153,24 +2068,23 @@ public final class Admins implements CommandListener {
 					player.message(messagePrefix + "Unable to find the specified npc");
 					return;
 				}
-			}
-			catch(NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id]");
 				return;
 			}
 			player.message(j.getPetOwnerA2() + "");
 			player.message(j.getPetNpc() + "");
 		} else if (cmd.equalsIgnoreCase("petinfo")) {
-			if(args.length > 1) {
+			if (args.length > 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + "");
 				return;
-				}
+			}
 			Npc j;
 			j = world.getNpc(203, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
 			player.message(player.getPetFatigue() + "");
 			player.message(j.getPetNpcType() + "");
 		} else if (cmd.equalsIgnoreCase("setnpcstats")) {
-			if(args.length < 5) {
+			if (args.length < 5) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc id] [str lvl]");
 				return;
 			}
@@ -2187,9 +2101,8 @@ public final class Admins implements CommandListener {
 				if (j == null) {
 					player.message(messagePrefix + "Unable to find the specified npc");
 					return;
-			}
-			}
-			catch(NumberFormatException e) {
+				}
+			} catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id] [str_lvl]");
 				return;
 			}
@@ -2199,7 +2112,7 @@ public final class Admins implements CommandListener {
 			j.getSkills().setLevel(3, hp);
 			player.message(j.getSkills().getLevel(0) + " " + j.getSkills().getLevel(1) + " " + j.getSkills().getLevel(2) + " " + j.getSkills().getLevel(3) + " ");
 		} else if (cmd.equalsIgnoreCase("npcrangeevent2")) {
-			if(args.length < 1) {
+			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id]");
 				return;
 			}
@@ -2213,17 +2126,12 @@ public final class Admins implements CommandListener {
 				if (n == null) {
 					player.message(messagePrefix + "Unable to find the specified NPC");
 					return;
-			}
-			}
-			catch(NumberFormatException e) {
+				}
+			} catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id]");
 				return;
-				}
+			}
 			n.setRangeEventNpc(new RangeEventNpc(n, player));
-			try {
-
-				}
-
-			}
-			}
-				}
+		}
+	}
+}
