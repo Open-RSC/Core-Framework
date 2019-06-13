@@ -4,6 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.event.DelayedEvent;
+import com.openrsc.server.event.rsc.impl.*;
 import com.openrsc.server.event.custom.NpcLootEvent;
 import com.openrsc.server.event.rsc.ImmediateEvent;
 import com.openrsc.server.external.EntityHandler;
@@ -18,6 +19,7 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.states.Action;
+import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.PluginHandler;
@@ -49,6 +51,197 @@ public class Npc extends Mob {
 	 * The current status of the player
 	 */
 	private Action status = Action.IDLE;
+	
+	/*private int petNpc = 0;
+	public int getPetNpc() {
+		return petNpc;
+	}
+	public void setPetNpc(int i) {
+		this.petNpc = i;
+		//ActionSender.sendPetNpc(this);
+	}
+	public void incPetNpc() {
+		petNpc++;
+	}*/
+	private int petNpcType = 0;
+	public int getPetNpcType() {
+		return petNpcType;
+	}
+	public void setPetNpcType(int i) {
+		this.petNpcType = i;
+		//ActionSender.sendPetNpc(this);
+	}
+	/**
+	 * HEALING
+	 */
+	private HealEventNpc healEventNpc;
+	private StrPotEventNpc strPotEventNpc;
+	public HealEventNpc getHealEventNpc() {
+		return healEventNpc;
+	}
+	public StrPotEventNpc getStrPotEventNpc() {
+		return strPotEventNpc;
+	}
+	public void setHealEventNpc(HealEventNpc event) {
+		if (healEventNpc != null) {
+			healEventNpc.stop();
+		}
+		healEventNpc = event;
+		Server.getServer().getGameEventHandler().add(healEventNpc);
+	}
+	public void setStrPotEventNpc(StrPotEventNpc event) {
+		if (strPotEventNpc != null) {
+			strPotEventNpc.stop();
+		}
+		strPotEventNpc = event;
+		Server.getServer().getGameEventHandler().add(strPotEventNpc);
+	}
+	public boolean isHealing() {
+		return healEventNpc != null;
+	}
+	public void resetHealing() {
+		if (healEventNpc != null) {
+			healEventNpc.stop();
+			healEventNpc = null;
+		}
+		setStatus(Action.IDLE);
+	}
+	private long healTimer = 0;
+	public boolean cantHeal() {
+		return healTimer - System.currentTimeMillis() > 0;
+	}
+	public void setHealTimer(long l) {
+		healTimer = System.currentTimeMillis() + l;
+	}
+	
+	
+	/*public Player petOwnerA2;
+	public Player getPetOwnerA2() {
+			return petOwnerA2;
+	}
+	public void setPetOwnerA2(Player petOwnerA3) {
+		petOwnerA2 = petOwnerA3;
+	}*/
+	 /**
+	 * RANGED
+	 */
+	private RangeEventNpc rangeEventNpc;
+	private BankEventNpc bankEventNpc;
+	private ThrowingEvent throwingEvent;
+	public RangeEventNpc getRangeEventNpc() {
+		return rangeEventNpc;
+	}
+	public BankEventNpc getBankEventNpc() {
+		return bankEventNpc;
+	}
+
+	public void setRangeEventNpc(RangeEventNpc event) {
+		if (rangeEventNpc != null) {
+			rangeEventNpc.stop();
+		}
+		rangeEventNpc = event;
+		setStatus(Action.RANGING_MOB);
+		Server.getServer().getGameEventHandler().add(rangeEventNpc);
+	}
+	public void setBankEventNpc(BankEventNpc event) {
+		if (bankEventNpc != null) {
+			bankEventNpc.stop();
+		}
+		bankEventNpc = event;
+		Server.getServer().getGameEventHandler().add(bankEventNpc);
+	}
+	public boolean isRanging() {
+		return rangeEventNpc != null || throwingEvent != null;
+	}
+	public boolean isBanking() {
+		return bankEventNpc != null;
+	}
+	public void resetRange() {
+		if (rangeEventNpc != null) {
+			rangeEventNpc.stop();
+			rangeEventNpc = null;
+		}
+		if (throwingEvent != null) {
+			throwingEvent.stop();
+			throwingEvent = null;
+		}
+		setStatus(Action.IDLE);
+	}
+	public void resetBankEvent() {
+		if (bankEventNpc != null) {
+			bankEventNpc.stop();
+			bankEventNpc = null;
+		}
+		setStatus(Action.IDLE);
+	}
+	private long consumeTimer2 = 0;
+	public long getConsumeTimer2() {
+		return consumeTimer2;
+	}
+	public void setConsumeTimer2(int delay) {
+		consumeTimer2 = System.currentTimeMillis() + 0;
+	}
+	public void setConsumeTimer2() {
+		consumeTimer2 = System.currentTimeMillis();
+	}
+		public boolean checkAttack(Npc mob, boolean missile) {
+		if (mob.isPlayer()) {
+			Mob victim = (Mob) mob;
+			/*if (victim.inCombat() && victim.getDuel().isDuelActive()) {
+				Mob opponent = (Mob) getOpponent();
+				if (opponent != null && victim.equals(opponent)) {
+					return true;
+				}
+			}*/
+			if (!missile) {
+				if (System.currentTimeMillis() - mob.getCombatTimer() < (mob.getCombatState() == CombatState.RUNNING
+					|| mob.getCombatState() == CombatState.WAITING ? 3000 : 500)) {
+					return false;
+				}
+			}
+
+			int myWildLvl = getLocation().wildernessLevel();
+			int victimWildLvl = victim.getLocation().wildernessLevel();
+			if (myWildLvl < 1 || victimWildLvl < 1) {
+				//message("You can't attack other players here. Move to the wilderness");
+				return false;
+			}
+			int combDiff = Math.abs(getCombatLevel() - victim.getCombatLevel());
+			if (combDiff > myWildLvl) {
+				//message("You can only attack players within " + (myWildLvl) + " levels of your own here");
+				//message("Move further into the wilderness for less restrictions");
+				return false;
+			}
+			if (combDiff > victimWildLvl) {
+				//message("You can only attack players within " + (victimWildLvl) + " levels of your own here");
+				//message("Move further into the wilderness for less restrictions");
+				return false;
+			}
+
+			/*if (victim.isInvulnerable(mob) || victim.isInvisible(mob)) {
+				//message("You are not allowed to attack that person");
+				return false;
+			}*/
+			return true;
+		} else if (mob.isNpc()) {
+			Npc victim = (Npc) mob;
+			if (!victim.getDef().isAttackable()) {
+				//setSuspiciousPlayer(true);
+				return false;
+			}
+			return true;
+		}
+		return true;
+	}
+	/*public int getRangeEquip() {
+		for (Item item : getInventory().getItems()) {
+			if (item.isWielded() && (DataConversions.inArray(Formulae.bowIDs, item.getID())
+				|| DataConversions.inArray(Formulae.xbowIDs, item.getID()))) {
+				return item.getID();
+			}
+		}
+		return -1;
+	}*/
 	/**
 	 * The definition of this npc
 	 */
@@ -110,7 +303,6 @@ public class Npc extends Mob {
 			throw new NullPointerException("NPC definition is invalid for NPC ID: " + loc.getId() + ", coordinates: " + "("
 				+ loc.startX() + ", " + loc.startY() + ")");
 		}
-
 		this.npcBehavior = new NpcBehavior(this);
 		this.loc = loc;
 		super.setID(loc.getId());
@@ -118,6 +310,7 @@ public class Npc extends Mob {
 
 		getSkills().setLevelTo(Skills.ATTACK, def.getAtt());
 		getSkills().setLevelTo(Skills.DEFENSE, def.getDef());
+		getSkills().setLevelTo(Skills.RANGED, def.getRanged());
 		getSkills().setLevelTo(Skills.STRENGTH, def.getStr());
 		getSkills().setLevelTo(Skills.HITPOINTS, def.getHits());
 
@@ -174,6 +367,23 @@ public class Npc extends Mob {
 			rangeDamagers.put(p.getDatabaseID(), damage);
 		}
 	}
+	
+	public void useNormalPotionNpc(final int affectedStat, final int percentageIncrease, final int modifier, final int left) {
+		//mob.message("You drink some of your " + item.getDef().getName().toLowerCase());
+		int baseStat = this.getSkills().getLevel(affectedStat) > this.getSkills().getMaxStat(affectedStat) ? this.getSkills().getMaxStat(affectedStat) : this.getSkills().getLevel(affectedStat);
+		int newStat = baseStat
+			+ DataConversions.roundUp((this.getSkills().getMaxStat(affectedStat) / 100D) * percentageIncrease)
+			+ modifier;
+		if (newStat > this.getSkills().getLevel(affectedStat)) {
+			this.getSkills().setLevel(affectedStat, newStat);
+		}
+		//sleep(1200);
+		if (left <= 0) {
+			//player.message("You have finished your potion");
+		} else {
+			//player.message("You have " + left + " dose" + (left == 1 ? "" : "s") + " of potion left");
+		}
+	}
 
 	public void displayNpcTeleportBubble(int x, int y) {
 		for (Object o : getViewArea().getPlayersInView()) {
@@ -205,6 +415,14 @@ public class Npc extends Mob {
 			return 0;
 		}
 		int dmgDone = combatDamagers.get(p.getDatabaseID());
+		return (dmgDone > this.getDef().getHits() ? this.getDef().getHits() : dmgDone);
+	}
+	
+	private int getCombatDamageDoneBy(Npc n) {
+		if (n == null) {
+			return 0;
+		}
+		int dmgDone = combatDamagers.get(n.getID());
 		return (dmgDone > this.getDef().getHits() ? this.getDef().getHits() : dmgDone);
 	}
 
@@ -242,6 +460,13 @@ public class Npc extends Mob {
 		int dmgDone = mageDamagers.get(p.getDatabaseID());
 		return (dmgDone > this.getDef().getHits() ? this.getDef().getHits() : dmgDone);
 	}
+	private int getMageDamageDoneBy(Npc n) {
+		if (n == null || !mageDamagers.containsKey(n.getID())) {
+			return 0;
+		}
+		int dmgDone = mageDamagers.get(n.getID());
+		return (dmgDone > this.getDef().getHits() ? this.getDef().getHits() : dmgDone);
+	}
 
 	/**
 	 * Iterates over mageDamagers map and returns the keys
@@ -265,6 +490,13 @@ public class Npc extends Mob {
 		int dmgDone = rangeDamagers.get(p.getDatabaseID());
 		return (dmgDone > this.getDef().getHits() ? this.getDef().getHits() : dmgDone);
 	}
+	private int getRangeDamageDoneBy(Npc n) {
+		if (n == null || !rangeDamagers.containsKey(n.getID())) {
+			return 0;
+		}
+		int dmgDone = rangeDamagers.get(n.getID());
+		return (dmgDone > this.getDef().getHits() ? this.getDef().getHits() : dmgDone);
+	}
 
 	/**
 	 * Iterates over rangeDamagers map and returns the keys
@@ -276,21 +508,28 @@ public class Npc extends Mob {
 	}
 
 	public int getWeaponAimPoints() {
+		if(this.getID() == 236) {
+		return 71;} else
 		return weaponAimPoints;
 	}
 
 	public int getWeaponPowerPoints() {
+		if(this.getID() == 236) {
+		return 81;} else
 		return weaponPowerPoints;
 	}
-
+	
 	@Override
 	public void killedBy(Mob mob) {
 		if (!mob.isNpc()) {
+			mob = handleLootAndXpDistribution(mob);
 			this.cure();
 			Player owner = mob instanceof Player ? (Player) mob : null;
 			if (owner != null) {
 				ActionSender.sendSound(owner, "victory");
 				AchievementSystem.checkAndIncSlayNpcTasks(owner, this);
+				owner.incKills2();
+				ActionSender.sendKills2(owner);
 
 				//If NPC kill messages are enabled and the filter is enabled and the NPC is in the list of NPCs, display the messages,
 				//otherwise we will display the message for all NPCs if NPC kill messages are enabled if there is no filter.
@@ -308,7 +547,7 @@ public class Npc extends Mob {
 				}
 
 
-				owner = handleLootAndXpDistribution((Player) mob);
+				//owner = handleLootAndXpDistribution((Player) mob);
 
 				ItemDropDef[] drops = def.getDrops();
 
@@ -428,9 +667,18 @@ public class Npc extends Mob {
 				remove();
 			}
 		} else {
+			mob = handleLootAndXpDistribution(mob);
 			Npc owner = mob instanceof Npc ? (Npc) mob : null;
+			Player owner2 = mob instanceof Player ? (Player) mob : null;
 			if (owner != null) {
-				//owner = handleLootAndXpDistribution((Npc) mob);
+				/*if(owner.getPetNpc() > 0) {
+				owner = handleLootAndXpDistributionPet((Npc) mob);
+				} else*/
+				owner = handleLootAndXpDistribution((Npc) mob);
+				//if(owner2 != null){
+				//owner2 = handleLootAndXpDistribution((Player) mob);
+				//}
+			
 				ItemDropDef[] drops = def.getDrops();
 
 				int total = 0;
@@ -527,6 +775,14 @@ public class Npc extends Mob {
 			}
 		}
 	}
+	public void petOwner(Mob mob) {
+		if (!mob.isNpc()) {
+			Player owner = mob instanceof Player ? (Player) mob : null;
+			if (owner != null) {
+			//this = mob;
+			}
+		}
+	}
 
 	/**
 	 * Distributes the XP from this monster and the loot
@@ -534,7 +790,7 @@ public class Npc extends Mob {
 	 * @param attacker the person that "finished off" the npc
 	 * @return the player who did the most damage / should get the loot
 	 */
-	private Player handleLootAndXpDistribution(Player attacker) {
+	/*private Player handleLootAndXpDistribution(Player attacker) {
 
 		Player playerWithMostDamage = attacker;
 		int currentHighestDamage = 0;
@@ -607,8 +863,294 @@ public class Npc extends Mob {
 			}
 		}
 		return playerWithMostDamage;
-	}
+	}*/
+	private Mob handleLootAndXpDistribution(Mob attacker) {
 
+		Mob playerWithMostDamage = attacker;
+		int currentHighestDamage = 0;
+
+		int totalCombatXP = Formulae.combatExperience(this);
+		// Melee damagers
+		for (int playerID : getCombatDamagers()) {
+
+			final Player p = World.getWorld().getPlayerID(playerID);
+			if (p == null)
+				continue;
+			final int damageDoneByPlayer = getCombatDamageDoneBy(p);
+
+			if (damageDoneByPlayer > currentHighestDamage) {
+				playerWithMostDamage = p;
+				currentHighestDamage = damageDoneByPlayer;
+			}
+
+			// Give the player their share of the experience.
+			int totalXP = (int) (((double) (totalCombatXP) / (double) (getDef().hits)) * (double) (damageDoneByPlayer));
+
+			switch (p.getCombatStyle()) {
+				case 0: //CONTROLLED
+					for (int x = 0; x < 3; x++) {
+						p.incExp(x, totalXP, true);
+					}
+					break;
+				case 1: //AGGRESSIVE
+					p.incExp(Skills.STRENGTH, totalXP * 3, true);
+					break;
+				case 2: //ACCURATE
+					p.incExp(Skills.ATTACK, totalXP * 3, true);
+					break;
+				case 3: //DEFENSIVE
+					p.incExp(Skills.DEFENSE, totalXP * 3, true);
+					break;
+			}
+			p.incExp(Skills.HITPOINTS, totalXP, true);
+		}
+
+		// Ranged damagers
+		for (int playerID : getRangeDamagers()) {
+			int newXP = 0;
+			Player p = World.getWorld().getPlayerID(playerID);
+			int dmgDoneByPlayer = getRangeDamageDoneBy(p);
+			if (p == null)
+				continue;
+
+			if (dmgDoneByPlayer > currentHighestDamage) {
+				playerWithMostDamage = p;
+				currentHighestDamage = dmgDoneByPlayer;
+			}
+			newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByPlayer));
+			p.incExp(Skills.RANGED, newXP * 4, true);
+			ActionSender.sendStat(p, Skills.RANGED);
+		}
+
+		// Magic damagers
+		for (int playerID : getMageDamagers()) {
+
+			Player p = World.getWorld().getPlayerID(playerID);
+
+			int dmgDoneByPlayer = getMageDamageDoneBy(p);
+			if (p == null)
+				continue;
+
+			if (dmgDoneByPlayer > currentHighestDamage) {
+				playerWithMostDamage = p;
+				currentHighestDamage = dmgDoneByPlayer;
+			}
+		}
+		//return playerWithMostDamage;
+		
+		Mob npcWithMostDamage = attacker;
+		for (Player p282828 : World.getWorld().getPlayers()) {
+		p282828.message("TEST 0");
+		}
+		// Melee damagers
+		for (int npcID : getCombatDamagers()) {
+			int newXP = 0;
+			final Npc n = World.getWorld().getNpcById(npcID);
+			if (n == null)
+				continue;
+			
+			Player p28x = attacker.getPetOwnerA2();
+			if (p28x == null)
+				continue;
+			final int dmgDoneByNpc = getCombatDamageDoneBy(n);
+
+			if (dmgDoneByNpc > currentHighestDamage) {
+				npcWithMostDamage = n;
+				currentHighestDamage = dmgDoneByNpc;
+			}
+			if(attacker.getPetNpc() > 0) {
+			newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByNpc));
+			p28x.incPet1Exp(Skills.PETRANGED, newXP * 4, true);
+			//ActionSender.sendStat(p28x, Skills.PETRANGED);
+			for (Player p282828 : World.getWorld().getPlayers()) {
+				p282828.message("TEST 28");
+			}
+			}
+		}
+
+		// Ranged damagers
+		for (int npcID : getRangeDamagers()) {
+			int newXP = 0;
+			Npc n = World.getWorld().getNpcById(npcID);
+			int dmgDoneByNpc = getRangeDamageDoneBy(n);
+			if (n == null)
+				continue;
+
+			Player p28x = attacker.getPetOwnerA2();
+			if (p28x == null)
+				continue;
+			if (dmgDoneByNpc > currentHighestDamage) {
+				npcWithMostDamage = n;
+				currentHighestDamage = dmgDoneByNpc;
+			}
+			if(attacker.getPetNpc() > 0) {
+			newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByNpc));
+			p28x.incPet1Exp(Skills.PETRANGED, newXP * 4, true);
+			//ActionSender.sendStat(p28x, Skills.PETRANGED);
+			for (Player p282828 : World.getWorld().getPlayers()) {
+				p282828.message("TEST 28282828");
+			}
+			}
+		}
+
+		// Magic damagers
+		for (int npcID : getMageDamagers()) {
+			int newXP = 0;
+			Npc n = World.getWorld().getNpcById(npcID);
+
+			int dmgDoneByNpc = getMageDamageDoneBy(n);
+			if (n == null)
+				continue;
+			Player p28x = attacker.getPetOwnerA2();
+			if (dmgDoneByNpc > currentHighestDamage) {
+				npcWithMostDamage = n;
+				currentHighestDamage = dmgDoneByNpc;
+			}
+			if(attacker.getPetNpc() > 0) {
+			newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByNpc));
+			p28x.incPet1Exp(Skills.PETRANGED, newXP * 4, true);
+			//ActionSender.sendStat(p28x, Skills.PETRANGED);
+			for (Player p282828 : World.getWorld().getPlayers()) {
+				p282828.message("TEST 28111128");
+			}
+			}
+		}
+		return npcWithMostDamage;
+	}
+	
+	
+	private Npc handleLootAndXpDistribution(Npc attacker) {
+
+		Npc npcWithMostDamage = attacker;
+		int currentHighestDamage = 0;
+
+		// Melee damagers
+		for (int npcID : getCombatDamagers()) {
+
+			final Npc n = World.getWorld().getNpcById(npcID);
+			if (n == null)
+				continue;
+			final int dmgDoneByNpc = getCombatDamageDoneBy(n);
+
+			if (dmgDoneByNpc > currentHighestDamage) {
+				npcWithMostDamage = n;
+				currentHighestDamage = dmgDoneByNpc;
+			}
+		}
+
+		// Ranged damagers
+		for (int npcID : getRangeDamagers()) {
+			int newXP = 0;
+			Npc n = World.getWorld().getNpcById(npcID);
+			int dmgDoneByNpc = getRangeDamageDoneBy(n);
+			if (n == null)
+				continue;
+
+			if (dmgDoneByNpc > currentHighestDamage) {
+				npcWithMostDamage = n;
+				currentHighestDamage = dmgDoneByNpc;
+			}
+		}
+
+		// Magic damagers
+		for (int npcID : getMageDamagers()) {
+
+			Npc n = World.getWorld().getNpcById(npcID);
+
+			int dmgDoneByNpc = getMageDamageDoneBy(n);
+			if (n == null)
+				continue;
+
+			if (dmgDoneByNpc > currentHighestDamage) {
+				npcWithMostDamage = n;
+				currentHighestDamage = dmgDoneByNpc;
+			}
+		}
+		return npcWithMostDamage;
+	}
+	
+		private Npc handleLootAndXpDistributionPet(Npc attacker) {
+		
+		Npc npcWithMostDamage = attacker;
+		int currentHighestDamage = 0;
+		int totalCombatXP = Formulae.combatExperience(this);
+		// Melee damagers
+		for (int npcID : getCombatDamagers()) {
+
+			//final Player p = World.getWorld().getPlayerID(playerID);
+			final Npc n = World.getWorld().getNpcById(npcID);
+			if (n == null)
+				continue;
+			final int damageDoneByNpc = getCombatDamageDoneBy(n);
+
+			if (damageDoneByNpc > currentHighestDamage) {
+				npcWithMostDamage = n;
+				currentHighestDamage = damageDoneByNpc;
+			}
+
+			// Give the player their share of the experience.
+			int totalXP = (int) (((double) (totalCombatXP) / (double) (getDef().hits)) * (double) (damageDoneByNpc));
+			Player p28x = n.getPetOwnerA2();
+
+			switch (n.getPetNpcType()) {
+				case 1: //Melee
+					p28x.incPet1Exp(Skills.PETMELEE, totalXP * 3, true);
+					break;
+				case 2: //Magic
+					p28x.incPet1Exp(Skills.PETMAGIC, totalXP * 3, true);
+					break;
+				case 3: //Ranged
+					p28x.incPet1Exp(Skills.PETRANGED, totalXP * 3, true);
+					break;
+			}
+			//p.incExp(Skills.HITPOINTS, totalXP, true);
+		}
+
+		// Melee damagers
+		for (int npcID : getCombatDamagers()) {
+
+			final Npc n = World.getWorld().getNpcById(npcID);
+			if (n == null)
+				continue;
+			final int dmgDoneByNpc = getCombatDamageDoneBy(n);
+
+			if (dmgDoneByNpc > currentHighestDamage) {
+				npcWithMostDamage = n;
+				currentHighestDamage = dmgDoneByNpc;
+			}
+		}
+
+		// Ranged damagers
+		for (int npcID : getRangeDamagers()) {
+			int newXP = 0;
+			Npc n = World.getWorld().getNpcById(npcID);
+			int dmgDoneByNpc = getRangeDamageDoneBy(n);
+			if (n == null)
+				continue;
+
+			if (dmgDoneByNpc > currentHighestDamage) {
+				npcWithMostDamage = n;
+				currentHighestDamage = dmgDoneByNpc;
+			}
+		}
+
+		// Magic damagers
+		for (int npcID : getMageDamagers()) {
+
+			Npc n = World.getWorld().getNpcById(npcID);
+
+			int dmgDoneByNpc = getMageDamageDoneBy(n);
+			if (n == null)
+				continue;
+
+			if (dmgDoneByNpc > currentHighestDamage) {
+				npcWithMostDamage = n;
+				currentHighestDamage = dmgDoneByNpc;
+			}
+		}
+		return npcWithMostDamage;
+	}
+	
 	public void initializeTalkScript(final Player p) {
 		final Npc npc = this;
 		//p.setBusyTimer(600);
@@ -681,7 +1223,11 @@ public class Npc extends Mob {
 
 	@Override
 	public String toString() {
-		return "[NPC:" + EntityHandler.getNpcDef(id).getName() + "]";
+		if(this.getID() == 210 || this.getID() == 236) {
+		return "Warning! @yel@" + EntityHandler.getNpcDef(id).getName() + "@red@WILD@whi@";	
+		} else {
+		return "Warning! @yel@" + EntityHandler.getNpcDef(id).getName() + "@whi@";
+		}
 	}
 
 	public void updatePosition() {
@@ -721,6 +1267,10 @@ public class Npc extends Mob {
 	public Player getChasedPlayer() {
 		return npcBehavior.getChasedPlayer();
 	}
+	
+	//public Player getPetOwnerA() {
+	//	return BabyBlueDragonCrystal.getPetOwnerA();
+	//}
 
 	public Npc getChasedNpc() {
 		return npcBehavior.getChasedNpc();

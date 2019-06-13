@@ -85,6 +85,7 @@ public final class Player extends Mob {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 	public final int MAX_FATIGUE = 75000;
+	public final int MAX_PET_FATIGUE = 75000;
 	public final String MEMBER_MESSAGE = "This feature is only available for members only";
 	/**
 	 * Players cache is used to store various objects into database
@@ -650,8 +651,17 @@ public final class Player extends Mob {
 				setSuspiciousPlayer(true);
 				return false;
 			}
+			if (getRangeEquip() < 0 && victim.getID() == 236 && System.currentTimeMillis() - victim.getCombatTimer() < (victim.getCombatState() == CombatState.RUNNING || victim.getCombatState() == CombatState.WAITING ? 3000 : 500)) {
+				return false;
+			}
+			if (getRangeEquip() < 0 && victim.getID() == 210) {
+				if (System.currentTimeMillis() - victim.getCombatTimer() > 3000) {
 			return true;
+				} else
+					return false;
 		}
+		return true;
+	}
 		return true;
 	}
 
@@ -1334,6 +1344,37 @@ public final class Player extends Mob {
 		// ActionSender.sendExperience(this, skill);
 	}
 
+	public void incPet1Exp(int skill, int skillXP, boolean usePetFatigue) {
+		if (Constants.GameServer.WANT_FATIGUE) {
+			if (isExperienceFrozen()) {
+				//ActionSender.sendMessage(this, "You can not gain experience right now!");
+				return;
+			}
+		}
+
+		if (Constants.GameServer.WANT_FATIGUE) {
+			if (usePetFatigue) {
+				if (fatigue >= this.MAX_PET_FATIGUE) {
+					ActionSender.sendMessage(this, "@gre@Your companion is too tired to gain experience.");
+					return;
+				}
+				//if (fatigue >= 69750) {
+				//	ActionSender.sendMessage(this, "@gre@You start to feel tired, maybe you should rest soon.");
+				//}
+				if (skill >= 3 && usePetFatigue) {
+					petFatigue += skillXP * 4;
+					if (petFatigue > this.MAX_PET_FATIGUE) {
+						petFatigue = this.MAX_PET_FATIGUE;
+					}
+					ActionSender.sendPetFatigue(this);
+				}
+			}
+		}
+		skillXP *= getExperienceRate(skill);
+		/*skills.addPetExperience(skill, (int) skillXP);
+		ActionSender.sendPetExperience(this, skill);*/
+	}
+
 	public void incQuestPoints(int amount) {
 		setQuestPoints(getQuestPoints() + amount);
 	}
@@ -1364,8 +1405,8 @@ public final class Player extends Mob {
 	/*
 	 * Called when walking a single step
 	 */
-	public void stepIncrementActivity(int distance) {
-		incrementActivity(2 * distance);
+	public void stepIncrementActivity() {
+		incrementActivity(2);
 	}
 
 	public int getGroupID() {
@@ -1852,7 +1893,7 @@ public final class Player extends Mob {
 
 		save();
 
-		/* IP Tracking in wilderness removal */
+		/** IP Tracking in wilderness removal */
 		/*if(player.getLocation().inWilderness())
 		{
 			wildernessIPTracker.remove(player.getCurrentIP());
