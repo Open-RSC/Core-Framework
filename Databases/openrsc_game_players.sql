@@ -517,6 +517,10 @@ ALTER TABLE `openrsc_generic_logs` ADD FULLTEXT KEY `message` (`message`);
 
 ALTER TABLE `openrsc_private_message_logs` ADD FULLTEXT KEY `message` (`message`);
 
+ALTER TABLE `openrsc_players` ADD `petfatigue` INT(10) NULL DEFAULT '0' AFTER `fatigue`;
+ALTER TABLE `openrsc_players` ADD `kills2` INT NOT NULL DEFAULT '0' AFTER `kills`;
+ALTER TABLE `openrsc_players` ADD `pets` INT(10) NOT NULL DEFAULT '0' AFTER `kills2`;
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
