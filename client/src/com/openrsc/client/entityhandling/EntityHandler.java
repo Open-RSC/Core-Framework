@@ -704,8 +704,8 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Adventurer", "A wizard", "", 20, 15, 3, 10, false, sprites, 1, 255, 255, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{5, 28, 37, -1, 110, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Adventurer", "A Warrior", "", 55, 60, 52, 58, false, sprites, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, i++));
-		sprites = new int[]{3, 4, 2, -1, 107, -1, -1, -1, 46, -1, -1, 63};
-		npcs.add(new NPCDef("Adventurer", "An archer", "", 35, 25, 10, 30, false, sprites, 16753488, 15645504, 3, 15523536, 145, 220, 6, 6, 5, i++));
+		sprites = new int[]{3, 4, 2, -1, 107, -1, -1, -1, 46, -1, 80, -1};
+		npcs.add(new NPCDef("Adventurer", "An archer", "", 39, 39, 39, 39, true, sprites, 16753488, 15645504, 3, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Leprechaun", "A funny little man who lives in a tree", "", 20, 17, 16, 20, false, sprites, 5271616, 5286432, 5286432, 15523536, 103, 141, 6, 6, 5, i++));
 		sprites = new int[]{6, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1};
@@ -756,8 +756,8 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Bandit", "A wilderness outlaw", "", 32, 33, 27, 26, true, sprites, 1, 221, 3, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{0, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1};
 		npcs.add(new NPCDef("Fat Tony", "A Gourmet Pizza chef", "", 20, 20, 3, 20, false, sprites, 1, 16777215, 16711680, 15523536, 160, 220, 6, 6, 5, i++));
-		sprites = new int[]{5, 1, 2, 49, 98, -1, -1, -1, -1, -1, -1, 62};
-		npcs.add(new NPCDef("Donny the lad", "A bandit leader", "", 42, 43, 37, 36, true, sprites, 16752704, 8060928, 3, 15523536, 145, 220, 6, 6, 5, i++));
+		sprites = new int[]{5, 4, 2, -1, 52, -1, -1, -1, -1, -1, 80, -1};
+		npcs.add(new NPCDef("Hunter", "A bandit leader", "", 42, 43, 37, 36, true, sprites, 16752704, 8060928, 3, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{3, 4, 2, 109, 98, -1, -1, -1, -1, -1, -1, 62};
 		npcs.add(new NPCDef("Black Heather", "A bandit leader", "", 42, 43, 37, 36, true, sprites, 1, 8060928, 3, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{0, 1, 2, 49, -1, -1, 22, -1, -1, -1, -1, 62};
@@ -1652,7 +1652,7 @@ public class EntityHandler {
 		sprites = new int[]{6, 1, 2, -1, 122, -1, 84, -1, -1, -1, -1, 68};
 		npcs.add(new NPCDef("Dark Mage", "He works in the ways of dark magic", "", 0, 0, 3, 0, false, sprites, 3158064, 16763952, 15609986, 13415270, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{5, 1, 2, -1, 49, 70, 22, -1, -1, -1, -1, -1};
-		npcs.add(new NPCDef("Mercenary", "He seems to be guarding an area", "", 48, 60, 60, 32, true, sprites, 1, 11379585, 14858776, 11766848, 145, 220, 6, 6, 5, i++));
+		npcs.add(new NPCDef("Mercenary", "He seems to be guarding an area", "", 39, 39, 39, 39, true, sprites, 1, 11379585, 14858776, 11766848, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{6, 1, 2, -1, 51, 71, 22, -1, -1, -1, -1, 62};
 		npcs.add(new NPCDef("Mercenary Captain", "He's in control of the local guards.", "watch", 48, 80, 80, 48, true, sprites, 1, 11379585, 14858776, 11766848, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{5, 1, 2, -1, 49, 70, 22, -1, -1, -1, -1, -1};
@@ -1907,20 +1907,20 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Auctioneer", "He gives access to auction house", "Auction", 0, 0, 3, 0, false, sprites, 16761440, 2, 8409120, 13415270, 145, 230, 6, 6, 5, i++));
 		sprites = new int[]{3, 4, 2, -1, -1, -1, -1, -1, -1, 11, -1, -1};
 		npcs.add(new NPCDef("Auction Clerk", "There to help me make my auctions", "Auction", "Teleport", 15, 16, 12, 18, false, sprites, 11167296, 11141375, 11141375, 14415270, 145, 220, 6, 6, 5, i++));
-		sprites = new int[]{3, 4, 2, -1, -1, 77, -1, -1, -1, -1, -1, -1};
-		npcs.add(new NPCDef("Subscription Vendor", "Exchange your subscription token to subscription time", "", 0, 0, 3, 0, false, sprites, 16711680, 143190, 143190, 15523536, 145, 220, 6, 6, 5, i++));
-		sprites = new int[]{0, 1, 2, -1, -1, 77, -1, -1, -1, -1, -1, -1};
-		npcs.add(new NPCDef("Subscription Vendor", "Exchange your subscription token to subscription time", "", 0, 0, 3, 0, false, sprites, 16761440, 143190, 143190, 15523536, 145, 230, 6, 6, 5, i++));
-		sprites = new int[]{241, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-		npcs.add(new NPCDef("Gaia", "The earth queen with a rotten heart", "", 78, 79, 79, 80, true, sprites, 0, 0, 0, 0, 275, 262, 11, 11, 30, i++));
-		sprites = new int[]{0, 245, 246, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-		npcs.add(new NPCDef("Iron Man", "An Iron Man", "Armour", 0, 0, 0, 0, false, sprites, 6751590, 0, 14, 13415270, 145, 220, 6, 6, 5, i++));
-		sprites = new int[]{0, 248, 249, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-		npcs.add(new NPCDef("Ultimate Iron Man", "An Ultimate Iron Man", "Armour", 0, 0, 0, 0, false, sprites, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, i++));
-		sprites = new int[]{250, 251, 252, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-		npcs.add(new NPCDef("Hardcore Iron Man", "A Hardcore Iron Man", "Armour", 0, 0, 0, 0, false, sprites, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, i++));
-		sprites = new int[]{309, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-		npcs.add(new NPCDef("Greatwood", "A scary hard slamming tree", "", 255, 245, 400, 300, true, sprites, 0, 0, 0, 0, 345, 410, 11, 11, 30, i++));
+		sprites = new int[] { 3, 4, 2, -1, -1, 77, -1, -1, -1, -1, -1, -1 };
+		npcs.add(new NPCDef("Subscription Vendor", "Exchange your subscription token to subscription time", "", 0, 0, 3, 0, false, sprites, 16711680, 143190, 143190,15523536, 145, 220, 6, 6, 5, i++));
+		sprites = new int[] { 0, 1, 2, -1, -1, 77, -1, -1, -1, -1, -1, -1 };
+		npcs.add(new NPCDef("Subscription Vendor", "Exchange your subscription token to subscription time", "", 0, 0, 3, 0, false, sprites, 16761440, 143190, 143190,15523536, 145, 230, 6, 6, 5, i++));
+		sprites = new int[] { 241, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+		npcs.add(new NPCDef("Gaia","The earth queen with a rotten heart", "", 78, 79, 79, 80, true, sprites, 0, 0, 0, 0, 275, 262, 11, 11, 30, i++));
+		sprites = new int[] { 0, 245, 246, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+		npcs.add(new NPCDef("Iron Man","An Iron Man", "Armour", 0, 0, 0, 0, false, sprites, 6751590, 0, 14, 13415270, 145, 220, 6, 6, 5, i++));
+		sprites = new int[] { 0, 248, 249, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+		npcs.add(new NPCDef("Ultimate Iron Man","An Ultimate Iron Man", "Armour", 0, 0, 0, 0, false, sprites, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, i++));
+		sprites = new int[] { 250, 251, 252, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+		npcs.add(new NPCDef("Hardcore Iron Man","A Hardcore Iron Man", "Armour", 0, 0, 0, 0, false, sprites, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, i++));
+		sprites = new int[] { 309, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+		npcs.add(new NPCDef("Greatwood","A scary hard slamming tree", "", 255, 245, 400, 300, true, sprites, 0, 0, 0, 0, 345, 410, 11, 11, 30, i++));
 
 		/*try {
 			PrintWriter printWriter = new PrintWriter(new FileOutputStream("NpcType.txt"), true);
@@ -3060,7 +3060,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Specimen jar", "a jar for holding soil samples", "", 1, 378, false, false, 0, 4194304, true, true, -1, -1, 1116));
 		items.add(new ItemDef("Rock Sample", "A rock sample", "", 1, 379, false, false, 0, 4194304, true, true, -1, -1, 1117));
 		items.add(new ItemDef("gold Nuggets", "Real gold pieces!", "", 1, 380, true, false, 0, 4194304, true, true, -1, -1, 1118));
-		items.add(new ItemDef("cat", "looks like a healthy one", "", 1, 381, false, false, 0, 4194304, true, false, 2046, -1, 1119));
+		items.add(new ItemDef("cat", "looks like a healthy one", "stroke", 1, 381, false, false, 0, 4194304, true, false, 2046, -1, 1119));
 		items.add(new ItemDef("Scrumpled piece of paper", "A piece of paper with barely legible writing - looks like a recipe!", "Read", 10, 218, false, false, 0, 16317080, true, false, 2047, -1, 1120));
 		items.add(new ItemDef("Digsite info", "IAN ONLY", "read", 63, 382, false, false, 0, 0, true, true, -1, -1, 1121));
 		items.add(new ItemDef("Poisoned Bronze Throwing Dart", "A venomous throwing dart with a bronze tip.", "", 2, 384, true, true, 16, 16737817, true, false, -1, -1, 1122));

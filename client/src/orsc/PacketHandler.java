@@ -316,6 +316,13 @@ public class PacketHandler {
 			else if (opcode == 114)
 				mc.setStatFatigue(packetsIncoming.getShort());
 
+				// Kills2
+			else if (opcode == 147)
+				mc.setStatKills2(packetsIncoming.getShort());
+			
+			else if (opcode == 140)
+				mc.setPetFatigue(packetsIncoming.getShort());
+
 				// Server Message Input (Second Style)
 			else if (opcode == 89) showServerMessageDialogTwo();
 
