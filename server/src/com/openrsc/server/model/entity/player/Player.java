@@ -161,6 +161,7 @@ public final class Player extends Mob {
 	 * Amount of fatigue - 0 to 75000
 	 */
 	private int fatigue = 0, sleepStateFatigue = 0;
+	private int petFatigue = 0;
 	/**
 	 * The main accounts group is
 	 */
@@ -351,7 +352,11 @@ public final class Player extends Mob {
 	 * KILLS N DEATHS
 	 **/
 	private int kills = 0;
+	private int kills2 = 0;
+	private int pet = 0;
+	private int pets = 0;
 	private int deaths = 0;
+	private int npcDeaths = 0;
 	private WalkToAction walkToAction;
 	private Trade trade;
 	private int databaseID;
@@ -885,12 +890,29 @@ public final class Player extends Mob {
 		}
 	}
 
+	public int getPetFatigue() {
+		if (Constants.GameServer.WANT_FATIGUE) {
+			return petFatigue;
+		} else {
+			return 0;
+		}
+	}
+
 	public void setFatigue(int fatigue) {
 		if (Constants.GameServer.WANT_FATIGUE) {
 			this.fatigue = fatigue;
 			ActionSender.sendFatigue(this);
 		} else {
 			this.fatigue = 0;
+		}
+	}
+
+	public void setPetFatigue(int petFatigue) {
+		if (Constants.GameServer.WANT_FATIGUE) {
+			this.petFatigue = petFatigue;
+			ActionSender.sendPetFatigue(this);
+		} else {
+			this.petFatigue = 0;
 		}
 	}
 
@@ -2065,16 +2087,63 @@ public final class Player extends Mob {
 		return deaths;
 	}
 
+	public int getNpcDeaths() {
+		return npcDeaths;
+	}
+
+	public int getKills2() {
+		return kills2;
+	}
+
+	public int getPet() {
+		return pet;
+	}
+
+	public int getPets() {
+		return pets;
+	}
+
 	public void setDeaths(int i) {
 		this.deaths = i;
+	}
+
+	public void setNpcDeaths(int i) {
+		this.npcDeaths = i;
+	}
+
+	public void setKills2(int i) {
+		this.kills2 = i;
+		ActionSender.sendKills2(this);
+	}
+
+	public void setPet(int i) {
+		this.pet = i;
+		//ActionSender.sendKills2(this);
+	}
+
+	public void setPets(int i) {
+		this.pets = i;
+		//ActionSender.sendKills2(this);
 	}
 
 	private void incDeaths() {
 		deaths++;
 	}
 
+	private void incPets() {
+		pets++;
+	}
+
+	private void incNpcDeaths() {
+		npcDeaths++;
+	}
+
 	private void incKills() {
 		kills++;
+	}
+
+	public void incKills2() {
+		kills2++;
 	}
 
 	public void addKill(boolean add) {
