@@ -589,6 +589,8 @@ public final class mudclient implements Runnable {
 	private int sleepWordDelayTimer = 0;
 	private int spriteCount = 0;
 	private int statFatigue = 0;
+	private int statKills2 = 0;
+	private int petFatigue = 0;
 	private MudClientGraphics surface;
 	private int systemUpdate = 0;
 	private int elixirTimer = 0;
@@ -4859,13 +4861,16 @@ public final class mudclient implements Runnable {
 								+ "@gre@,@whi@" + (playerLocalZ + midRegionBaseZ) + "@gre@)", 7, i, 0xffffff, 1);
 							i += 14;
 						}
-						this.getSurface().drawString("FPS: @gre@(@whi@" + FPS + "@gre@)", 7, i, 0xffffff, 1);
-						i += 14;
+						//this.getSurface().drawString("FPS: @gre@(@whi@" + FPS + "@gre@)", 7, i, 0xffffff, 1);
+						//i += 14;
 						this.getSurface().drawString(
 							"Hits: " + this.playerStatCurrent[3] + "@gre@/@whi@" + this.playerStatBase[3], 7, i, 0xffffff, 1);
 						i += 14;
 						this.getSurface().drawString(
 							"Prayer: " + this.playerStatCurrent[5] + "@gre@/@whi@" + this.playerStatBase[5], 7, i, 0xffffff, 1);
+							i += 14;
+						this.getSurface().drawString(
+							"Kills: " + this.statKills2 + "@whi@", 7, i, 0xffffff, 1);
 						if (Config.S_WANT_FATIGUE) {
 							i += 14;
 							this.getSurface().drawString(
@@ -13799,11 +13804,27 @@ public final class mudclient implements Runnable {
 	public int getStatFatigue() {
 		return this.statFatigue;
 	}
+	public int getStatKills2() {
+		return this.statKills2;
+	}
+	public int getPetFatigue() {
+		return this.petFatigue;
+	}
 
 	public void setStatFatigue(int fatigue) {
 		if (DEBUG)
 			System.out.println("Fatigue: " + fatigue);
 		this.statFatigue = fatigue;
+	}
+	public void setStatKills2(int kills2) {
+		if (DEBUG)
+			System.out.println("Kills2: " + kills2);
+		this.statKills2 = kills2;
+	}
+	public void setPetFatigue(int petFatigue) {
+		if (DEBUG)
+			System.out.println("PetFatigue: " + petFatigue);
+		this.petFatigue = petFatigue;
 	}
 
 	public void setInputTextCurrent(String s) {
