@@ -37,7 +37,7 @@ public class BabyBlueDragonCrystal implements InvActionListener, InvActionExecut
 	}
 
 	private void handleBabyBlueDragon(Player player, Item item) {
-		//if (Constants.GameServer.DEBUG)
+		if (Constants.GameServer.DEBUG)
 		System.out.println("Pet spawn attempt");
 		if (Constants.GameServer.WANT_PETS){
 			if (player.getInventory().hasItemId(ItemId.A_RED_CRYSTAL.id())) {
@@ -80,8 +80,6 @@ public class BabyBlueDragonCrystal implements InvActionListener, InvActionExecut
 							petDragon.teleport(player.getX() + 1, player.getY());
 							petDragon.setFollowing(player, 1); // approach up to 1 tile from player then stop
 							player.setBusy(false);
-							//player.message(getPetOwnerA() + "");
-							//player.message(petDragon.getPetOwnerA2() + "");
 						}
 					});
 				}

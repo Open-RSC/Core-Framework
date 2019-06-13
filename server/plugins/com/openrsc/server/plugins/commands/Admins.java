@@ -4,6 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.GameStateUpdater;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
+import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.HolidayDropEvent;
 import com.openrsc.server.event.custom.HourlyNpcLootEvent;
@@ -15,8 +16,10 @@ import com.openrsc.server.event.rsc.impl.StrPotEventNpc;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.ItemDropDef;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.ItemLoc;
 import com.openrsc.server.external.NPCDef;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
@@ -57,8 +60,13 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
 
+import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.spawnNpc;
+
 public final class Admins implements CommandListener {
 	private static final Logger LOGGER = LogManager.getLogger(Admins.class);
+
+	protected Player petOwnerA;
 
 	private Point getRandomLocation() {
 		Point location = Point.location(DataConversions.random(48, 91), DataConversions.random(575, 717));
@@ -1963,6 +1971,46 @@ public final class Admins implements CommandListener {
 				return;
 			}
 			j.setBankEventNpc(new BankEventNpc(j, n));
+		} else if (cmd.equalsIgnoreCase("spawnpetdragon")) {
+			player.getInventory().add(new Item(ItemId.A_GLOWING_RED_CRYSTAL.id()));
+			sleep(Constants.GameServer.GAME_TICK);
+			player.message("You summon your pet.");
+			Server.getServer().getEventHandler().add(new ShortEvent(player) {
+				public void action() {
+					player.setBusy(true);
+					final Npc petDragon = spawnNpc(NpcId.BABY_BLUE_DRAGON.id(), player.getX() + 1, player.getY(), 1000 * 60 * 24, player); // spawns for 5 hours and then poof!
+					petDragon.petOwner(player);
+					petOwnerA = player;
+					petDragon.setPetOwnerA2(petOwnerA);
+					petDragon.setPetNpc(1);
+					player.setPet(1);
+					petDragon.setPetNpcType(3);
+					petDragon.setShouldRespawn(false);
+					petDragon.teleport(player.getX() + 1, player.getY());
+					petDragon.setFollowing(player, 1); // approach up to 1 tile from player then stop
+					player.setBusy(false);
+				}
+			});
+		} else if (cmd.equalsIgnoreCase("spawnpetarcher")) {
+			player.getInventory().add(new Item(ItemId.A_GLOWING_RED_CRYSTAL.id()));
+			sleep(Constants.GameServer.GAME_TICK);
+			player.message("You summon your pet.");
+			Server.getServer().getEventHandler().add(new ShortEvent(player) {
+				public void action() {
+					player.setBusy(true);
+					final Npc petArcher = spawnNpc(NpcId.ADVENTURER_ARCHER.id(), player.getX() + 1, player.getY(), 1000 * 60 * 24, player); // spawns for 5 hours and then poof!
+					petArcher.petOwner(player);
+					petOwnerA = player;
+					petArcher.setPetOwnerA2(petOwnerA);
+					petArcher.setPetNpc(1);
+					player.setPet(1);
+					petArcher.setPetNpcType(3);
+					petArcher.setShouldRespawn(false);
+					petArcher.teleport(player.getX() + 1, player.getY());
+					petArcher.setFollowing(player, 1); // approach up to 1 tile from player then stop
+					player.setBusy(false);
+				}
+			});
 		} else if (cmd.equalsIgnoreCase("addskull")) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc id]");

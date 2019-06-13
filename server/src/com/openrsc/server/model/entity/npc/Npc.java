@@ -940,7 +940,6 @@ public class Npc extends Mob {
 		
 		Mob npcWithMostDamage = attacker;
 		for (Player p282828 : World.getWorld().getPlayers()) {
-		p282828.message("TEST 0");
 		}
 		// Melee damagers
 		for (int npcID : getCombatDamagers()) {
