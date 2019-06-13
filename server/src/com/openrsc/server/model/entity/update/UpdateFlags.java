@@ -14,6 +14,7 @@ public class UpdateFlags {
 	 * Do we require action bubble update for players around?
 	 */
 	private AtomicReference<Bubble> actionBubble = new AtomicReference<Bubble>();
+	private AtomicReference<BubbleNpc> actionBubbleNpc = new AtomicReference<BubbleNpc>();
 	/**
 	 * Has our appearance changed since last major update?
 	 */
@@ -34,9 +35,17 @@ public class UpdateFlags {
 	public AtomicReference<Bubble> getActionBubble() {
 		return actionBubble;
 	}
+	
+	public AtomicReference<BubbleNpc> getActionBubbleNpc() {
+		return actionBubbleNpc;
+	}
 
 	public void setActionBubble(Bubble bubble) {
 		this.actionBubble.set(bubble);
+	}
+	
+	public void setActionBubbleNpc(BubbleNpc bubble) {
+		this.actionBubbleNpc.set(bubble);
 	}
 
 	public AtomicBoolean getAppearanceChanged() {
