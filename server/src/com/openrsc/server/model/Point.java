@@ -118,7 +118,7 @@ public class Point {
 	public boolean onTutorialIsland() {
 		return inBounds(190, 720, 240, 770);
 	}
-	
+
 	public boolean onBlackHole() {
 		return inBounds(303, 3298, 307, 3302);
 	}
@@ -126,7 +126,7 @@ public class Point {
 	public boolean inTutorialLanding() {
 		return inBounds(214, 739, 221, 747);
 	}
-	
+
 	public boolean aroundTutorialRatZone() {
 		return inBounds(226, 728, 234, 738);
 	}
@@ -226,7 +226,7 @@ public class Point {
 	public boolean isInSeersPartyHallDownstairs() {
 		return inBounds(490, 464, 500, 471);
 	}
-	
+
 	public boolean isInFisherKingRealm() {
 		return inBounds(388, 4, 427, 40) || inBounds(484, 4, 523, 40)
 				|| inBounds(411, 976, 519, 984)
@@ -234,7 +234,7 @@ public class Point {
 				|| inBounds(511, 976, 519, 984)
 				|| inBounds(511, 1920, 518, 1925);
 	}
-	
+
 	public boolean isInsideGrandTreeGround() {
 		return inBounds(410, 158, 422, 170);
 	}
@@ -303,15 +303,15 @@ public class Point {
 	public boolean inTouristTrapCave3() {
 		return inBounds(49, 3600, 95, 3647);
 	}
-	
+
 	public boolean isInsideFlameWall() {
 		return inBounds(450, 3704, 455, 3711);
 	}
-	
+
 	public boolean isAroundBoulderRock() {
 		return inBounds(407, 3719, 421, 3733);
 	}
-	
+
 	public boolean isAroundTotemPole() {
 		return inBounds(360, 881, 374, 895);
 	}
