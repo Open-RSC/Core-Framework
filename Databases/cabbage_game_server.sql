@@ -37864,6 +37864,8 @@ INSERT INTO `openrsc_recovery_questions` (`questionID`, `question`) VALUES
 
 
 ALTER TABLE `openrsc_itemdef` ADD FULLTEXT KEY `name_2` (`name`);
+ALTER TABLE `openrsc_npcdef` ADD `ranged` INT(10) NULL DEFAULT NULL AFTER `defense`;
+UPDATE `openrsc_npcdef` SET `ranged` = '30' WHERE `openrsc_npcdef`.`id` = 210;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
