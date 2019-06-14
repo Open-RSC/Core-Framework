@@ -36,10 +36,10 @@ public abstract class BatchEvent extends DelayedEvent {
 			} else {
 				interrupt();
 			}
-			if (owner.getInventory().full() && gathering) {
+			/*if (owner.getInventory().full() && gathering) { // this is a PITA to have to drop inventory items too keep going so Marwolf comments this out
 				interrupt();
 				if (Constants.GameServer.BATCH_PROGRESSION) owner.message("Your Inventory is too full to continue.");
-			}
+			}*/
 			if (owner.hasMoved()) { // If the player walks away, stop batching
 				//this.stop();
 				//owner.setStatus(Action.IDLE);
