@@ -1235,18 +1235,6 @@ public class Npc extends Mob {
 		super.updatePosition();
 	}
 
-	public void produceUnderAttack() {
-		World.getWorld().produceUnderAttack(this);
-	}
-
-	public boolean checkUnderAttack() {
-		return World.getWorld().checkUnderAttack(this);
-	}
-
-	public void releaseUnderAttack() {
-		World.getWorld().releaseUnderAttack(this);
-	}
-
 	public void setStatus(Action a) {
 		status = a;
 	}

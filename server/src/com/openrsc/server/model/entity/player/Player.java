@@ -2078,18 +2078,6 @@ public final class Player extends Mob {
 
 	}
 
-	public void produceUnderAttack() {
-		World.getWorld().produceUnderAttack(this);
-	}
-
-	public boolean checkUnderAttack() {
-		return World.getWorld().checkUnderAttack(this);
-	}
-
-	public void releaseUnderAttack() {
-		World.getWorld().releaseUnderAttack(this);
-	}
-
 	@Override
 	public String toString() {
 		return "[Player:" + username + "]";
