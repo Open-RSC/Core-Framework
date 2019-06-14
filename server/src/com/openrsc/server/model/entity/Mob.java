@@ -864,8 +864,16 @@ public abstract class Mob extends Entity {
 			if (this.isPlayer()) {
 				((Player) this).resetAll();
 				((Player) this).setStatus(Action.FIGHTING_MOB);
+				((Player) this).produceUnderAttack();
 			} else if (this.isNpc()) {
 				((Npc) this).setStatus(Action.FIGHTING_MOB);
+				((Npc) this).produceUnderAttack();
+			} else {
+				if (!this.isNpc()) {
+					((Player) victim).produceUnderAttack();
+				} else {
+					((Npc) victim).produceUnderAttack();
+				}
 			}
 			Functions.sleep(1);
 
@@ -889,17 +897,25 @@ public abstract class Mob extends Entity {
 
 			if (victim.isPlayer()) {
 				Player playerVictim = (Player) victim;
-				World.getWorld().setInterrumpted(playerVictim.getID());
 				if (this.isPlayer()) {
 					((Player) this).setSkulledOn(playerVictim);
 				}
 				playerVictim.resetAll();
 				playerVictim.setStatus(Action.FIGHTING_MOB);
 				gotUnderAttack = true;
+				playerVictim.releaseUnderAttack();
 
 				if (playerVictim.isSleeping()) {
 					ActionSender.sendWakeUp(playerVictim, false, false);
 					ActionSender.sendFatigue(playerVictim);
+				}
+			} else {
+				if (this.isNpc()) {
+					Npc attacker = (Npc) this;
+					attacker.releaseUnderAttack();
+				} else {
+					Player attacker = (Player) this;
+					attacker.releaseUnderAttack();
 				}
 			}
 
@@ -907,6 +923,15 @@ public abstract class Mob extends Entity {
 				Npc npcVictim = (Npc) victim;
 				npcVictim.setStatus(Action.FIGHTING_MOB);
 				gotUnderAttack = true;
+				npcVictim.releaseUnderAttack();
+			} else {
+				if (this.isNpc()) {
+					Npc attacker = (Npc) this;
+					attacker.releaseUnderAttack();
+				} else {
+					Player attacker = (Player) this;
+					attacker.releaseUnderAttack();
+				}
 			}
 
 			setLocation(victim.getLocation(), true);
