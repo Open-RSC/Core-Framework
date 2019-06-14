@@ -111,7 +111,7 @@ public final class Ned implements TalkToNpcExecutiveListener, TalkToNpcListener 
 				);
 			}
 			if (choice == 0) {
-				if (p.getInventory().countId(ItemId.COINS.id()) <= 15) {
+				if (p.getInventory().countId(ItemId.COINS.id()) < 15) {
 					p.message("You Don't have enough coins to buy any rope!");
 				} else {
 					playerTalk(p, n, "Okay, please sell me some Rope");

@@ -66,37 +66,11 @@ public class Woodcutting implements ObjectActionListener,
 			owner.message("You need an axe to chop this tree down");
 			return;
 		}
-		int batchTimes = 1;
-		switch (ItemId.getById(axeId)) {
-			case BRONZE_AXE:
-				batchTimes = 1;
-				break;
-			case IRON_AXE:
-				batchTimes = 2;
-				break;
-			case STEEL_AXE:
-				batchTimes = 3;
-				break;
-			case BLACK_AXE:
-				batchTimes = 4;
-				break;
-			case MITHRIL_AXE:
-				batchTimes = 5;
-				break;
-			case ADAMANTITE_AXE:
-				batchTimes = 8;
-			case RUNE_AXE:
-				batchTimes = 12;
-				break;
-			default:
-				batchTimes = 1;
-				break;
-		}
 
 		final int axeID = axeId;
-		showBubble(owner, new Item(axeId));
 		owner.message("You swing your " + EntityHandler.getItemDef(axeId).getName().toLowerCase() + " at the tree...");
-		owner.setBatchEvent(new BatchEvent(owner, 1800, batchTimes, true) {
+		showBubble(owner, new Item(axeId));
+		owner.setBatchEvent(new BatchEvent(owner, 1800, 1000, true) {
 			public void action() {
 				final Item log = new Item(def.getLogId());
 				if (Constants.GameServer.WANT_FATIGUE) {
@@ -106,6 +80,7 @@ public class Woodcutting implements ObjectActionListener,
 						return;
 					}
 				}
+
 				if (getLog(def.getReqLevel(), owner.getSkills().getLevel(Skills.WOODCUT), axeID)) {
 					//check if the tree is still up
 					GameObject obj = owner.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
@@ -140,6 +115,10 @@ public class Woodcutting implements ObjectActionListener,
 							interrupt();
 						}
 					}
+				}
+				if (!isCompleted() && !owner.getInventory().full()) {
+					showBubble(owner, new Item(axeID));
+					owner.message("You swing your " + EntityHandler.getItemDef(axeID).getName().toLowerCase() + " at the tree...");
 				}
 			}
 		});

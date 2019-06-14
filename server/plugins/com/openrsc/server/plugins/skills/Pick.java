@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.skills;
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.SingleEvent;
+import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -10,8 +11,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class Pick implements ObjectActionExecutiveListener,
 	ObjectActionListener {
@@ -23,24 +23,15 @@ public final class Pick implements ObjectActionExecutiveListener,
 			|| /* Flax */obj.getID() == 313;
 	}
 
-	private void handleFlaxPickup(final Player owner, GameObject obj) {
-		if (Constants.GameServer.BATCH_PROGRESSION) {
-			for(int i=30; i>1; i--) {
-				if (!owner.getInventory().full()) {
-					owner.setBusyTimer(250);
-					owner.message("You uproot a flax plant");
-					addItem(owner, ItemId.FLAX.id(), 1);
-					sleep(600);
-				} else {
-					break;
-				}
+	private void handleCropPickup(final Player owner, int objID, String pickMessage) {
+		owner.setBatchEvent(new BatchEvent(owner, 600, owner.getInventory().getFreeSlots(), true) {
+			public void action() {
+				owner.setBusyTimer(250);
+				owner.message(pickMessage);
+				addItem(owner, objID, 1);
+				owner.playSound("potato");
 			}
-		} else {
-			owner.setBusyTimer(250);
-			owner.message("You uproot a flax plant");
-			addItem(owner, ItemId.FLAX.id(), 1);
-		}
-		owner.playSound("potato");
+		});
 	}
 
 	@Override
@@ -48,52 +39,17 @@ public final class Pick implements ObjectActionExecutiveListener,
 							   final Player owner) {
 		switch (object.getID()) {
 			case 72: // Wheat
-				if (Constants.GameServer.BATCH_PROGRESSION) {
-					for(int i=30; i>1; i--) {
-						if (!owner.getInventory().full()) {
-							owner.message("You get some grain");
-							owner.getInventory().add(new Item(ItemId.GRAIN.id(), 1));
-							sleep(600);
-						} else {
-							break;
-						}
-					}
-				} else {
-					owner.message("You get some grain");
-					owner.getInventory().add(new Item(ItemId.GRAIN.id(), 1));
-					break;
-				}
+				handleCropPickup(owner, ItemId.GRAIN.id(), "You get some grain");
+				break;
 			case 191: // Potatos
-				if (Constants.GameServer.BATCH_PROGRESSION) {
-					for(int i=30; i>1; i--) {
-						if (!owner.getInventory().full()) {
-							owner.message("You pick a potato");
-							owner.getInventory().add(new Item(ItemId.POTATO.id(), 1));
-							sleep(600);
-						} else {
-							break;
-						}
-					}
-				} else {
-					owner.message("You pick a potato");
-					owner.getInventory().add(new Item(ItemId.POTATO.id(), 1));
-					break;
-				}
+				handleCropPickup(owner, ItemId.POTATO.id(), "You pick a potato");
+				break;
 			case 313: // Flax
-				handleFlaxPickup(owner, object);
-				return;
+				handleCropPickup(owner, ItemId.FLAX.id(), "You uproot a flax plant");
+				break;
 			default:
 				owner.message("Nothing interesting happens");
-				return;
+				break;
 		}
-		owner.playSound("potato");
-		owner.setBusy(true);
-		Server.getServer().getEventHandler().add(
-			new SingleEvent(owner, 600) {
-				@Override
-				public void action() {
-					owner.setBusy(false);
-				}
-			});
 	}
 }

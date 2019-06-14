@@ -571,24 +571,36 @@ public class Crafting implements InvUseOnItemListener,
 							owner.message("You need to have a crafting of level " + reqLvl + " or higher to make " + result.getDef().getName());
 							return;
 						}
-						if (owner.getInventory().remove(leather) > -1) {
-							owner.message("You make some " + result.getDef().getName());
-							owner.getInventory().add(result);
-							owner.incExp(Skills.CRAFTING, exp, true);
-							//a reel of thread accounts for 5 uses
-							if (!owner.getCache().hasKey("part_reel_thread")) {
-								owner.getCache().set("part_reel_thread", 1);
-							} else {
-								int parts = owner.getCache().getInt("part_reel_thread");
-								if (parts >= 4) {
-									owner.message("You use up one of your reels of thread");
-									owner.getInventory().remove(ItemId.THREAD.id(), 1);
-									owner.getCache().remove("part_reel_thread");
-								} else {
-									owner.getCache().put("part_reel_thread", parts + 1);
+						player.setBatchEvent(new BatchEvent(player, 600, player.getInventory().countId(leather.getID()), false) {
+							@Override
+							public void action() {
+								if (Constants.GameServer.WANT_FATIGUE) {
+									if (owner.getFatigue() >= owner.MAX_FATIGUE) {
+										owner.message("You are too tired to craft");
+										interrupt();
+										return;
+									}
+								}
+								if (owner.getInventory().remove(leather) > -1) {
+									owner.message("You make some " + result.getDef().getName());
+									owner.getInventory().add(result);
+									owner.incExp(Skills.CRAFTING, exp, true);
+									//a reel of thread accounts for 5 uses
+									if (!owner.getCache().hasKey("part_reel_thread")) {
+										owner.getCache().set("part_reel_thread", 1);
+									} else {
+										int parts = owner.getCache().getInt("part_reel_thread");
+										if (parts >= 4) {
+											owner.message("You use up one of your reels of thread");
+											owner.getInventory().remove(ItemId.THREAD.id(), 1);
+											owner.getCache().remove("part_reel_thread");
+										} else {
+											owner.getCache().put("part_reel_thread", parts + 1);
+										}
+									}
 								}
 							}
-						}
+						});
 					}
 				});
 				ActionSender.sendMenu(owner, options);
