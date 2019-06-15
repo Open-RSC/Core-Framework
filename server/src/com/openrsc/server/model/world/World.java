@@ -84,10 +84,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	private final TileValue[][] tiles = new TileValue[MAX_WIDTH][MAX_HEIGHT];
 	public WorldLoader wl;
 	
-	private final Map<Player, Boolean> underAttackMap = new HashMap<Player, Boolean>();
-	private final Map<Npc, Boolean> underAttackMap2 = new HashMap<Npc, Boolean>();
-	
-	private final Map<Integer, Boolean> interrumpted = new HashMap<Integer, Boolean>();
+	private static Map<Integer, Boolean> interrumpted = new HashMap<Integer, Boolean>();
 
 	/**
 	 * Double ended queue to store snapshots into
@@ -773,30 +770,5 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	public void unsetInterrumpted(Integer playerId) {
 		interrumpted.remove(playerId);
 	}
-	
-	public void produceUnderAttack(Player p) {
-		underAttackMap.put(p, true);
-	}
-
-	public void produceUnderAttack(Npc n) {
-		underAttackMap2.put(n, true);
-	}
-
-	public boolean checkUnderAttack(Player p) {
-		return underAttackMap.getOrDefault(p, false);
-	}
-
-	public boolean checkUnderAttack(Npc n) {
-		return underAttackMap2.getOrDefault(n, false);
-	}
-
-	public void releaseUnderAttack(Player p) {
-		underAttackMap.put(p, false);
-	}
-
-	public void releaseUnderAttack(Npc n) {
-		underAttackMap2.put(n, false);
-	}
-
 
 }

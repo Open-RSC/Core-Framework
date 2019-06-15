@@ -1306,16 +1306,4 @@ public class Npc extends Mob {
 	public boolean executedAggroScript() {
 		return this.executedAggroScript;
 	}
-	
-	public void produceUnderAttack() {
-		World.getWorld().produceUnderAttack(this);
-	}
-
-	public boolean checkUnderAttack() {
-		return World.getWorld().checkUnderAttack(this);
-	}
-
-	public void releaseUnderAttack() {
-		World.getWorld().releaseUnderAttack(this);
-	}
 }
