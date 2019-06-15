@@ -2715,6 +2715,18 @@ public final class Player extends Mob {
 
 		return getCache().getBoolean("is_jailed");
 	}
+	
+	public void produceUnderAttack() {
+		World.getWorld().produceUnderAttack(this);
+	}
+
+	public boolean checkUnderAttack() {
+		return World.getWorld().checkUnderAttack(this);
+	}
+
+	public void releaseUnderAttack() {
+		World.getWorld().releaseUnderAttack(this);
+	}
 
 	public boolean groundItemTake(GroundItem item) {
 		Item itemFinal = new Item(item.getID(), item.getAmount());
