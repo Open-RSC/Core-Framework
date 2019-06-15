@@ -1398,6 +1398,11 @@ public class Functions {
 					return -1;
 				}
 				sleep(1);
+				try {
+					player.wait(1);
+				} catch (InterruptedException e) {
+					break;
+				}
 			}
 			//player.releaseUnderAttack();
 			//player.notify();

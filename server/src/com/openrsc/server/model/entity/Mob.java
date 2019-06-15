@@ -898,6 +898,7 @@ public abstract class Mob extends Entity {
 			if (victim.isPlayer()) {
 				Player playerVictim = (Player) victim;
 				World.getWorld().setInterrumpted(playerVictim.getID());
+				playerVictim.notifyAll();
 				if (this.isPlayer()) {
 					((Player) this).setSkulledOn(playerVictim);
 				}
