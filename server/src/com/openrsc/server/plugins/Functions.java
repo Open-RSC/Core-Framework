@@ -1358,7 +1358,6 @@ public class Functions {
 	}
 
 	public static int showMenu(final Player player, final Npc npc, final boolean sendToClient, final String... options) {
-		synchronized (player) {
 			final long start = System.currentTimeMillis();
 			if (npc != null) {
 				if (npc.isRemoved()) {
@@ -1378,34 +1377,35 @@ public class Functions {
 				}
 			});
 			ActionSender.sendMenu(player, options);
-
-			while (!player.checkUnderAttack()) {
-				if (player.getOption() != -1) {
-					if (npc != null && options[player.getOption()] != null) {
-						npc.setBusy(false);
-						if (sendToClient)
-							playerTalk(player, npc, options[player.getOption()]);
+			
+			synchronized (player.getMenuHandler()) {
+				while (!player.checkUnderAttack()) {
+					if (player.getOption() != -1) {
+						if (npc != null && options[player.getOption()] != null) {
+							npc.setBusy(false);
+							if (sendToClient)
+								playerTalk(player, npc, options[player.getOption()]);
+						}
+						return player.getOption();
+					} else if (System.currentTimeMillis() - start > 90000 || player.getMenuHandler() == null) {
+						player.setOption(-1);
+						player.resetMenuHandler();
+						if (npc != null) {
+							npc.setBusy(false);
+							player.setBusyTimer(0);
+						}
+						return -1;
 					}
-					return player.getOption();
-				} else if (System.currentTimeMillis() - start > 90000 || player.getMenuHandler() == null) {
-					player.setOption(-1);
-					player.resetMenuHandler();
-					if (npc != null) {
-						npc.setBusy(false);
-						player.setBusyTimer(0);
-					}
-					return -1;
+					sleep(1);
 				}
-				sleep(1);
+				player.releaseUnderAttack();
+				player.notify();
+				//player got busy (combat), free npc if any
+				if (npc != null) {
+					npc.setBusy(false);
+				}
+				return -1;
 			}
-			player.releaseUnderAttack();
-			player.notify();
-			//player got busy (combat), free npc if any
-			if (npc != null) {
-				npc.setBusy(false);
-			}
-			return -1;
-		}
 	}
 
 	public static void resetGnomeCooking(Player p) {
