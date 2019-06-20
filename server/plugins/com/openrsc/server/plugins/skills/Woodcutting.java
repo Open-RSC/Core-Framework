@@ -101,7 +101,7 @@ public class Woodcutting implements ObjectActionListener,
 						}
 						
 						interrupt();
-						if (obj != null && obj.getID() == object.getID()) {
+						if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
 							World.getWorld().replaceGameObject(object, new GameObject(object.getLocation(), stumpId, object.getDirection(), object.getType()));
 							World.getWorld().delayedSpawnObject(object.getLoc(), def
 								.getRespawnTime() * 1000);
