@@ -24,12 +24,20 @@ public final class Pick implements ObjectActionExecutiveListener,
 	}
 
 	private void handleCropPickup(final Player owner, int objID, String pickMessage) {
-		owner.setBatchEvent(new BatchEvent(owner, 600, owner.getInventory().getFreeSlots(), true) {
+		int delaytime = Constants.GameServer.GAME_TICK;
+
+		if (delaytime == 600)
+			delaytime = 300;//openrsc
+		else if (delaytime == 420)
+			delaytime = 370;//cabbage
+
+		owner.setBatchEvent(new BatchEvent(owner, delaytime, 30, true) {
 			public void action() {
-				owner.setBusyTimer(250);
 				owner.message(pickMessage);
 				addItem(owner, objID, 1);
 				owner.playSound("potato");
+				if (owner.getInventory().full())
+					interrupt();
 			}
 		});
 	}
