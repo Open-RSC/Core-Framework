@@ -46,7 +46,7 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 		}
 		npcTalk(p, n, "I am the apothecary", "I have potions to brew. Do you need anything specific?");
 		int option;
-		if (!Constants.GameServer.WANT_EXPERIENCE_ELIXIRS)
+		/*if (!Constants.GameServer.WANT_EXPERIENCE_ELIXIRS)
 			option = showMenu(p, n, "Can you make a strength potion?",
 				"Do you know a potion to make hair fall out?",
 				"Have you got any good potions to give way?");
@@ -54,7 +54,12 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 			option = showMenu(p, n, "Can you make a strength potion?",
 				"Do you know a potion to make hair fall out?",
 				"Have you got any good potions to give way?",
-				"Do you have any experience elixir?");
+				"Do you have any experience elixir?");*/
+
+		// Disabled experience elixir due to not being functional at this time
+		option = showMenu(p, n, "Can you make a strength potion?",
+			"Do you know a potion to make hair fall out?",
+			"Have you got any good potions to give way?");
 
 		if (option == 0) {
 			if (hasItem(p, ItemId.COINS.id(), 5)
@@ -73,7 +78,7 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 								return;
 							}
 							if (p.getInventory().countId(ItemId.LIMPWURT_ROOT.id()) < 1
-									|| p.getInventory().countId(ItemId.RED_SPIDERS_EGGS.id()) < 1) {
+								|| p.getInventory().countId(ItemId.RED_SPIDERS_EGGS.id()) < 1) {
 								p.message("You don't have all the ingredients");
 								interrupt();
 								return;
