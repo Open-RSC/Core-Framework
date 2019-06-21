@@ -1,4 +1,4 @@
-# Open RSC
+# Open RSC Source Code
 
 # Table of contents <a name="top"></a>
 1. [Project Information](#general)
@@ -19,7 +19,7 @@ The first priority of our development is ensuring the authentic content found in
 ## How to Install<a name="install"></a>
 <b>Windows Single Player:</b>
 
-<a href="https://gitlab.openrsc.com/open-rsc/Single-Player">Check out the dedicated single player verison of Open RSC for Windows!</a>
+#### <a href="https://gitlab.openrsc.com/open-rsc/Single-Player">Check out the pre-compiled single player verison of Open RSC!</a>
 
 <b>Developers on Windows / Linux / Mac:</b>
 
@@ -35,9 +35,9 @@ It is strongly suggested that you download IntelliJ IDEA Community IDE and Git K
 
 ## Default Credentials (user / pass)<a name="credentials"></a>
 
-user: root
+username: root
 
-pass: root
+password: root
 
 [Return to top](#top)
 
