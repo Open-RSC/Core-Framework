@@ -87,12 +87,14 @@ public class Woodcutting implements ObjectActionListener,
 					GameObject obj = owner.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 					if (obj == null) {
 						owner.message("You slip and fail to hit the tree");
+						interrupt();
 					} else {
 						owner.getInventory().add(log);
 						owner.message("You get some wood");
 						owner.incExp(Skills.WOODCUT, def.getExp(), true);
 					}
 					if (DataConversions.random(1, 100) <= def.getFell()) {
+						obj = owner.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 						int stumpId;
 						if (def.getLogId() == ItemId.LOGS.id() || def.getLogId() == ItemId.MAGIC_LOGS.id()) {
 							stumpId = 4; //narrow tree stump
@@ -115,7 +117,7 @@ public class Woodcutting implements ObjectActionListener,
 						}
 					}
 				}
-				if (!isCompleted() && !owner.getInventory().full()) {
+				if (!isCompleted()) {
 					showBubble(owner, new Item(axeID));
 					owner.message("You swing your " + EntityHandler.getItemDef(axeID).getName().toLowerCase() + " at the tree...");
 				}
