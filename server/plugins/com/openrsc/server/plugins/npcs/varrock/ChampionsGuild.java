@@ -23,7 +23,7 @@ public final class ChampionsGuild implements ShopInterface,
 		new Item(ItemId.RUNE_SKIRT.id(), 1), new Item(ItemId.RUNE_PLATE_MAIL_LEGS.id(), 1), new Item(ItemId.RUNE_MACE.id(), 1),
 		new Item(ItemId.RUNE_CHAIN_MAIL_BODY.id(), 1), new Item(ItemId.RUNE_LONG_SWORD.id(), 1), new Item(ItemId.RUNE_SHORT_SWORD.id(), 1));
 
-	private final Shop valsShop = new Shop(false, 60000, 130, 40, 3, new Item(
+	private final Shop valsShop = new Shop(true, 60000, 130, 40, 3, new Item(
 		ItemId.BLUE_CAPE.id(), 2), new Item(ItemId.LARGE_BLACK_HELMET.id(), 1), new Item(ItemId.BLACK_PLATE_MAIL_LEGS.id(), 1), new Item(ItemId.ADAMANTITE_PLATE_MAIL_BODY.id(),
 		1));
 
