@@ -37,7 +37,7 @@ public class Woodcutting implements ObjectActionListener,
 		if (!owner.withinRange(object, 2)) {
 			return;
 		}
-		if (def == null) { // This shoudln't happen
+		if (def == null) { // This shouldn't happen
 			owner.message("Nothing interesting happens");
 			return;
 		}
@@ -71,6 +71,7 @@ public class Woodcutting implements ObjectActionListener,
 		owner.message("You swing your " + EntityHandler.getItemDef(axeId).getName().toLowerCase() + " at the tree...");
 		showBubble(owner, new Item(axeId));
 		owner.setBatchEvent(new BatchEvent(owner, 1800, 1000, true) {
+			@Override
 			public void action() {
 				final Item log = new Item(def.getLogId());
 				if (Constants.GameServer.WANT_FATIGUE) {
@@ -80,7 +81,7 @@ public class Woodcutting implements ObjectActionListener,
 						return;
 					}
 				}
-
+				
 				if (getLog(def.getReqLevel(), owner.getSkills().getLevel(Skills.WOODCUT), axeID)) {
 					//check if the tree is still up
 					GameObject obj = owner.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
@@ -90,21 +91,21 @@ public class Woodcutting implements ObjectActionListener,
 					} else {
 						owner.getInventory().add(log);
 						owner.message("You get some wood");
-						owner.incExp(Skills.WOODCUT, (int) def.getExp(), true);
+						owner.incExp(Skills.WOODCUT, def.getExp(), true);
 					}
 					if (DataConversions.random(1, 100) <= def.getFell()) {
+						obj = owner.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 						int stumpId;
 						if (def.getLogId() == ItemId.LOGS.id() || def.getLogId() == ItemId.MAGIC_LOGS.id()) {
 							stumpId = 4; //narrow tree stump
 						} else {
 							stumpId = 314; //wide tree stump
 						}
-						
 						interrupt();
 						if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
-							World.getWorld().replaceGameObject(object, new GameObject(object.getLocation(), stumpId, object.getDirection(), object.getType()));
-							World.getWorld().delayedSpawnObject(object.getLoc(), def
-								.getRespawnTime() * 1000);
+							GameObject newObject = new GameObject(object.getLocation(), stumpId, object.getDirection(), object.getType());
+							World.getWorld().replaceGameObject(object, newObject);
+							World.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
 						}
 					}
 				} else {
@@ -116,7 +117,7 @@ public class Woodcutting implements ObjectActionListener,
 						}
 					}
 				}
-				if (!isCompleted() && !owner.getInventory().full()) {
+				if (!isCompleted()) {
 					showBubble(owner, new Item(axeID));
 					owner.message("You swing your " + EntityHandler.getItemDef(axeID).getName().toLowerCase() + " at the tree...");
 				}

@@ -19,6 +19,14 @@ public class ObjectFishingDef {
 	 * The Id of the net required to fish with
 	 */
 	public int netId;
+	/**
+	 * Percent chance the spot will deplete
+	 */
+	private int depletion;
+	/**
+	 * How long the spot takes to respawn afterwards
+	 */
+	private int respawnTime;
 
 	public int getBaitId() {
 		return baitId;
@@ -40,6 +48,14 @@ public class ObjectFishingDef {
 			}
 		}
 		return requiredLevel;
+	}
+	
+	public int getDepletion() {
+		return depletion;
+	}
+	
+	public int getRespawnTime() {
+		return respawnTime;
 	}
 
 }

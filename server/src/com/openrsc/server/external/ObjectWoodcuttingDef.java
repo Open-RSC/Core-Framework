@@ -21,7 +21,7 @@ public final class ObjectWoodcuttingDef {
 	private int logId;
 
 	/**
-	 * Herblaw level required to identify
+	 * Woodcut level required to cut
 	 */
 	private int requiredLvl;
 

@@ -40,6 +40,7 @@ import static com.openrsc.server.Constants.GameServer.DISPLAY_LOGO_SPRITE;
 import static com.openrsc.server.Constants.GameServer.EXPERIENCE_COUNTER_TOGGLE;
 import static com.openrsc.server.Constants.GameServer.EXPERIENCE_DROPS_TOGGLE;
 import static com.openrsc.server.Constants.GameServer.FIGHTMODE_SELECTOR_TOGGLE;
+import static com.openrsc.server.Constants.GameServer.FISHING_SPOTS_DEPLETABLE;
 import static com.openrsc.server.Constants.GameServer.FIX_OVERHEAD_CHAT;
 import static com.openrsc.server.Constants.GameServer.FOG_TOGGLE;
 import static com.openrsc.server.Constants.GameServer.FPS;
@@ -555,6 +556,7 @@ public class ActionSender {
 			LOGGER.info(MAX_WALKING_SPEED + " 55");
 			LOGGER.info(SHOW_UNIDENTIFIED_HERB_NAMES + " 56");
 			LOGGER.info(WANT_QUEST_STARTED_INDICATOR + " 57");
+			LOGGER.info(FISHING_SPOTS_DEPLETABLE + " 58");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs();
 		ConnectionAttachment attachment = new ConnectionAttachment();
@@ -628,6 +630,7 @@ public class ActionSender {
 		s.writeByte((byte) MAX_WALKING_SPEED); // 55
 		s.writeByte((byte) (SHOW_UNIDENTIFIED_HERB_NAMES ? 1 : 0)); // 56
 		s.writeByte((byte) (WANT_QUEST_STARTED_INDICATOR ? 1 : 0)); // 57
+		s.writeByte((byte) (FISHING_SPOTS_DEPLETABLE ? 1 : 0)); // 58
 		return s;
 	}
 
