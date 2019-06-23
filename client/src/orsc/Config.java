@@ -119,6 +119,8 @@ public class Config {
 	public static int S_MAX_WALKING_SPEED = 1;
 	public static boolean S_SHOW_UNIDENTIFIED_HERB_NAMES = false;
 	public static boolean S_WANT_QUEST_STARTED_INDICATOR = false;
+	public static boolean S_FISHING_SPOTS_DEPLETABLE = false;
+	public static boolean S_PROPER_MAGIC_TREE_NAME = false;
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());
