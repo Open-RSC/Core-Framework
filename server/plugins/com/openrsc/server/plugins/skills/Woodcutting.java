@@ -37,7 +37,7 @@ public class Woodcutting implements ObjectActionListener,
 		if (!owner.withinRange(object, 2)) {
 			return;
 		}
-		if (def == null) { // This shoudln't happen
+		if (def == null) { // This shouldn't happen
 			owner.message("Nothing interesting happens");
 			return;
 		}
