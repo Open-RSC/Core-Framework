@@ -239,6 +239,7 @@ public final class Constants {
 		public static boolean SHOW_UNIDENTIFIED_HERB_NAMES = false;
 		public static boolean WANT_QUEST_STARTED_INDICATOR = false;
 		public static boolean FISHING_SPOTS_DEPLETABLE = false;
+		public static boolean PROPER_MAGIC_TREE_NAME = false;
 		
 		public static int MAX_TICKS_UNTIL_FULL_WALKING_SPEED = 5;
 		//strict check on level requirements for "glitched" validations on rsc
@@ -361,6 +362,7 @@ public final class Constants {
 			SHOW_UNIDENTIFIED_HERB_NAMES = Boolean.parseBoolean(props.getProperty("show_unidentified_herb_names"));
 			WANT_QUEST_STARTED_INDICATOR = Boolean.parseBoolean(props.getProperty("want_quest_started_indicator"));
 			FISHING_SPOTS_DEPLETABLE = Boolean.parseBoolean(props.getProperty("fishing_spots_depletable"));
+			PROPER_MAGIC_TREE_NAME = Boolean.parseBoolean(props.getProperty("proper_magic_tree_name"));
 
 			NPC_KILL_LIST = Boolean.parseBoolean(props.getProperty("npc_kill_list"));
 			NPC_KILL_MESSAGES = Boolean.parseBoolean(props.getProperty("npc_kill_messages"));

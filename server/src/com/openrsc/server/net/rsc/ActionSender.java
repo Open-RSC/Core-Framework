@@ -54,6 +54,7 @@ import static com.openrsc.server.Constants.GameServer.MEMBER_WORLD;
 import static com.openrsc.server.Constants.GameServer.MENU_COMBAT_STYLE_TOGGLE;
 import static com.openrsc.server.Constants.GameServer.PLAYER_COMMANDS;
 import static com.openrsc.server.Constants.GameServer.PLAYER_LEVEL_LIMIT;
+import static com.openrsc.server.Constants.GameServer.PROPER_MAGIC_TREE_NAME;
 import static com.openrsc.server.Constants.GameServer.RIGHT_CLICK_BANK;
 import static com.openrsc.server.Constants.GameServer.SERVER_NAME;
 import static com.openrsc.server.Constants.GameServer.SERVER_NAME_WELCOME;
@@ -90,6 +91,7 @@ import static com.openrsc.server.Constants.GameServer.WANT_SKILL_MENUS;
 import static com.openrsc.server.Constants.GameServer.WANT_WOODCUTTING_GUILD;
 import static com.openrsc.server.Constants.GameServer.WELCOME_TEXT;
 import static com.openrsc.server.Constants.GameServer.ZOOM_VIEW_TOGGLE;
+
 
 /**
  * @author n0m
@@ -557,6 +559,7 @@ public class ActionSender {
 			LOGGER.info(SHOW_UNIDENTIFIED_HERB_NAMES + " 56");
 			LOGGER.info(WANT_QUEST_STARTED_INDICATOR + " 57");
 			LOGGER.info(FISHING_SPOTS_DEPLETABLE + " 58");
+			LOGGER.info(PROPER_MAGIC_TREE_NAME + " 59");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs();
 		ConnectionAttachment attachment = new ConnectionAttachment();
@@ -631,6 +634,7 @@ public class ActionSender {
 		s.writeByte((byte) (SHOW_UNIDENTIFIED_HERB_NAMES ? 1 : 0)); // 56
 		s.writeByte((byte) (WANT_QUEST_STARTED_INDICATOR ? 1 : 0)); // 57
 		s.writeByte((byte) (FISHING_SPOTS_DEPLETABLE ? 1 : 0)); // 58
+		s.writeByte((byte) (PROPER_MAGIC_TREE_NAME ? 1 : 0)); // 59
 		return s;
 	}
 
