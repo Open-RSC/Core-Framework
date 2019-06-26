@@ -13,6 +13,8 @@ import com.openrsc.server.util.rsc.MessageType;
 import static com.openrsc.server.plugins.Functions.compareItemsIds;
 import static com.openrsc.server.plugins.Functions.hasItem;
 
+import static com.openrsc.server.Constants.GameServer.CRYSTAL_KEY_GIVES_XP;
+
 public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutiveListener {
 	private int[] capes = {
 		ItemId.RED_CAPE.id(), ItemId.BLACK_CAPE.id(), ItemId.BLUE_CAPE.id(),
@@ -186,6 +188,9 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 			if (player.getInventory().remove(item1) > -1 && player.getInventory().remove(item2) > -1) {
 				player.message("You join the two halves of the key together");
 				player.getInventory().add(new Item(ItemId.CRYSTAL_KEY.id(), 1));
+				if (CRYSTAL_KEY_GIVES_XP) {
+					player.incExp(Skills.CRAFTING, 40, true);
+				}
 			}
 		}
 
