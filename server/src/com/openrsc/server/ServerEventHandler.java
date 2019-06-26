@@ -24,8 +24,9 @@ public final class ServerEventHandler {
 		String className = String.valueOf(event.getClass());
 		if (event.isUniqueEvent() || !event.hasOwner()) {
 			String u;
-			while (toAdd.containsKey(u = UUID.randomUUID().toString())) {
-			}
+			do {
+				u = UUID.randomUUID().toString();
+			} while (toAdd.containsKey(className + u));
 			toAdd.put(className + u, event);
 		} else {
 			if (event.getOwner().isPlayer())
