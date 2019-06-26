@@ -6319,6 +6319,10 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Ladder", "it's a ladder leading upwards", "Climb-Up", "Examine", 1, 1, 1, 0, "ladder", i++));
 		objects.add(new GameObjectDef("Ladder", "it's a ladder leading downwards", "Climb-Down", "Examine", 1, 1, 1, 0, "ladderdown", i++));
 		objects.add(new GameObjectDef("Vine", "A creepy creeper", "Grab", "Examine", 0, 1, 1, 0, "vinejunction", i++));
+
+		if (Config.S_PROPER_MAGIC_TREE_NAME) {
+			objects.get(310).name = "Magic Tree";
+		}
 	}
 
 	public static void load(boolean loadMembers) {
