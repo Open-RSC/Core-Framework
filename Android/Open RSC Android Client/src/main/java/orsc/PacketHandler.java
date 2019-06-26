@@ -744,6 +744,7 @@ public class PacketHandler {
 		int wantDropX, wantExpInfo, wantWoodcuttingGuild, wantFixedOverheadChat, wantPets, showUnidentifiedHerbNames;
 		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank, wantPlayerCommands;
 		int getFPS, wantEmail, wantRegistrationLimit, allowResize, lenientContactDetails, wantFatigue, wantCustomSprites;
+		int fishingSpotsDepletable, properMagicTreeName;
 		String logoSpriteID;
 
 		if (!mc.gotInitialConfigs) {
@@ -804,6 +805,8 @@ public class PacketHandler {
 			maxWalkingSpeed = this.getClientStream().getUnsignedByte(); // 55
 			showUnidentifiedHerbNames = this.getClientStream().getUnsignedByte(); // 56
 			wantQuestStartedIndicator = this.getClientStream().getUnsignedByte(); // 57
+			fishingSpotsDepletable = this.getClientStream().getUnsignedByte(); //58
+			properMagicTreeName = this.getClientStream().getUnsignedByte(); //59
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -862,6 +865,8 @@ public class PacketHandler {
 			maxWalkingSpeed = packetsIncoming.getUnsignedByte(); // 55
 			showUnidentifiedHerbNames = packetsIncoming.getUnsignedByte(); // 56
 			wantQuestStartedIndicator = packetsIncoming.getUnsignedByte(); // 57
+			fishingSpotsDepletable = packetsIncoming.getUnsignedByte(); //58
+			properMagicTreeName = packetsIncoming.getUnsignedByte(); //59
 		}
 
 		if (Config.DEBUG) {
@@ -922,7 +927,9 @@ public class PacketHandler {
 					"\nS_WANT_PETS " + wantPets + // 54
 					"\nS_MAX_RUNNING_SPEED " + maxWalkingSpeed + //55
 					"\nS_SHOW_UNIDENTIFIED_HERB_NAMES " + showUnidentifiedHerbNames + // 56
-					"\nS_WANT_QUEST_STARTED_INDICATOR  " + wantQuestStartedIndicator // 57
+					"\nS_WANT_QUEST_STARTED_INDICATOR  " + wantQuestStartedIndicator + // 57
+					"\nS_FISHING_SPOTS_DEPLETABLE " + fishingSpotsDepletable + // 58
+					"\nS_PROPER_MAGIC_TREE_NAME  " + properMagicTreeName // 59
 			);
 		}
 
@@ -985,6 +992,8 @@ public class PacketHandler {
 		props.setProperty("S_MAX_WALKING_SPEED", Integer.toString(maxWalkingSpeed)); // 55
 		props.setProperty("S_SHOW_UNIDENTIFIED_HERB_NAMES", showUnidentifiedHerbNames == 1 ? "true" : "false"); // 56
 		props.setProperty("S_WANT_QUEST_STARTED_INDICATOR", wantQuestStartedIndicator == 1 ? "true" : "false"); // 57
+		props.setProperty("S_FISHING_SPOTS_DEPLETABLE", fishingSpotsDepletable == 1 ? "true" : "false"); //58
+		props.setProperty("S_PROPER_MAGIC_TREE_NAME", properMagicTreeName == 1 ? "true" : "false"); //59
 
 		Config.updateServerConfiguration(props);
 
