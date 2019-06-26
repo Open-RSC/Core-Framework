@@ -201,7 +201,7 @@ public class Functions {
 		int baseXP = questData[2];
 		int varXP = questData[3];
 		if (skillId >= 0 && baseXP > 0 && varXP >= 0) {
-			p.incQuestExp(skillId, p.getSkills().getMaxStat(skillId) * varXP + baseXP);
+			p.incQuestExp(skillId, (int) Math.round(Constants.GameServer.SKILLING_EXP_RATE * (p.getSkills().getMaxStat(skillId) * varXP + baseXP)));
 		}
 		if (applyQP) {
 			p.incQuestPoints(qp);
