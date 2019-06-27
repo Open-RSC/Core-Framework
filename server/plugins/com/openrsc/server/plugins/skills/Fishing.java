@@ -178,7 +178,7 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 								owner.getCache().set("tutorial", 42);
 						}
 					}
-					if (Constants.GameServer.FISHING_SPOTS_DEPLETABLE && DataConversions.random(1, 100) <= def.getDepletion()) {
+					if (Constants.GameServer.FISHING_SPOTS_DEPLETABLE && DataConversions.random(1, 1000) <= def.getDepletion()) {
 						obj = owner.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 						interrupt();
 						if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {

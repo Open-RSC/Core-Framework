@@ -375,6 +375,9 @@ public class Thieving extends Functions
 					interrupt();
 					npc.startCombat(player);
 				}
+				if (!isCompleted()) {
+					owner.playerServerMessage(MessageType.QUEST, "You attempt to pick the " + thievedMobSt + "'s pocket");
+				}
 			}
 		});
 	}
