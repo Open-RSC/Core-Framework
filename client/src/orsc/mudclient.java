@@ -5146,7 +5146,7 @@ public final class mudclient implements Runnable {
 					}
 				} else if (this.inputX_Action == InputXAction.BANK_DEPOSIT) {
 					try {
-						if (this.bank.selectedBankSlot >= 0) {
+						if (this.bank.selectedInventorySlot >= 0) {
 							if (str.length() > 10) {
 								str = str.substring(str.length() - 10);
 							}
