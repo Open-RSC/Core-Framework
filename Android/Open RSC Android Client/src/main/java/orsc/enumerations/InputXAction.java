@@ -27,6 +27,8 @@ public enum InputXAction {
 	}
 
 	public boolean requiresNumeric() {
-		return id >= 1 && id <= 8 || id == 10;
+		return (id >= TRADE_OFFER.id && id <= DUEL_REMOVE.id) 
+				|| id == EXIT_BLACK_HOLE.id
+				|| id == DROP_X.id;
 	}
 }
