@@ -13,7 +13,7 @@ import orsc.mudclient;
 public final class CustomBankInterface extends BankInterface {
 	private static int fontSize = Config.isAndroid() ? Config.C_MENU_SIZE : 1;
 	private static int fontSizeHeight;
-	private int selectedInventorySlot = -1;
+	public int selectedInventorySlot = -1;
 	public int bankSearch;
 	public int bankScroll;
 	public int lastXAmount = 0;
