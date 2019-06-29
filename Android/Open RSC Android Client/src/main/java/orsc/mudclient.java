@@ -6456,7 +6456,7 @@ public final class mudclient implements Runnable {
 				}
 
 				if (S_INVENTORY_COUNT_TOGGLE && C_INV_COUNT) {
-					this.getSurface().drawShadowText(this.inventoryItemCount + "/30", this.getGameWidth() - 19, 17, 0xFFFFFF, 1, true);
+					this.getSurface().drawShadowText(this.inventoryItemCount + "/30", this.getGameWidth() - 19, 17, (0x00FFFFFF << (int)Math.floor((this.inventoryItemCount / 15)) * 8) & 0x00FFFFFF, 1, true);
 				}
 
 				if (this.showUiTab == 2) {
