@@ -67,7 +67,7 @@ public final class Mining implements ObjectActionListener,
 					owner.message("you need a pickaxe to clear the rockslide");
 				}
 			} else if (command.equalsIgnoreCase("prospect")) {
-				owner.message("these rocks contain nothing intersting");
+				owner.message("these rocks contain nothing interesting");
 				owner.message("they are just in the way");
 			}
 		} else if (object.getID() == 770) {
