@@ -517,38 +517,38 @@ public class PacketHandler {
 
 	private void updateClan() {
 		int actionType = packetsIncoming.getByte();
-		Clan clan = new Clan(mc);
+		//Clan clan = new Clan(mc);
 		switch (actionType) {
 			case 0: // Send clan
-				clan.setClanName(packetsIncoming.readString());
-				clan.setClanTag(packetsIncoming.readString());
-				clan.setClanLeaderUsername(packetsIncoming.readString());
+				mc.clan.setClanName(packetsIncoming.readString());
+				mc.clan.setClanTag(packetsIncoming.readString());
+				mc.clan.setClanLeaderUsername(packetsIncoming.readString());
 				boolean isLeader = packetsIncoming.getByte() == 1;
-				clan.setClanLeader(isLeader);
+				mc.clan.setClanLeader(isLeader);
 				SocialLists.clanListCount = packetsIncoming.getByte();
 				for (int id = 0; id < SocialLists.clanListCount; id++) {
-					clan.username[id] = packetsIncoming.readString();
-					clan.clanRank[id] = packetsIncoming.getByte();
-					clan.onlineClanMember[id] = packetsIncoming.getByte();
+					mc.clan.username[id] = packetsIncoming.readString();
+					mc.clan.clanRank[id] = packetsIncoming.getByte();
+					mc.clan.onlineClanMember[id] = packetsIncoming.getByte();
 				}
-				clan.putClan(true);
+				mc.clan.putClan(true);
 				break;
 			case 1: // Leave clan
-				clan.putClan(false);
-				clan.update();
+				mc.clan.putClan(false);
+				mc.clan.update();
 				break;
 			case 2: // Sent invitation
-				clan.getClanInterface().initializeInvite(packetsIncoming.readString(), packetsIncoming.readString());
+				mc.clan.getClanInterface().initializeInvite(packetsIncoming.readString(), packetsIncoming.readString());
 				break;
 			case 3: // Settings
-				clan.setClanSetting(0, packetsIncoming.getByte());
-				clan.setClanSetting(1, packetsIncoming.getByte());
-				clan.setClanSetting(2, packetsIncoming.getByte());
-				clan.allowed[0] = packetsIncoming.getByte() == 1;
-				clan.allowed[1] = packetsIncoming.getByte() == 1;
+				mc.clan.setClanSetting(0, packetsIncoming.getByte());
+				mc.clan.setClanSetting(1, packetsIncoming.getByte());
+				mc.clan.setClanSetting(2, packetsIncoming.getByte());
+				mc.clan.allowed[0] = packetsIncoming.getByte() == 1;
+				mc.clan.allowed[1] = packetsIncoming.getByte() == 1;
 				break;
 			case 4: // Clan search visual
-				clan.getClanInterface().resetClans();
+				mc.clan.getClanInterface().resetClans();
 				int clanCount = packetsIncoming.getShort();
 				for (int i = 0; i < clanCount; i++) {
 					int clanID = packetsIncoming.getShort();
@@ -558,7 +558,7 @@ public class PacketHandler {
 					int canJoin = packetsIncoming.getByte();
 					int clanPoints = packetsIncoming.get32();
 					int clanRank = packetsIncoming.getShort();
-					clan.getClanInterface().addClan(clanID, clanName, clanTag, members, canJoin, clanPoints, clanRank);
+					mc.clan.getClanInterface().addClan(clanID, clanName, clanTag, members, canJoin, clanPoints, clanRank);
 				}
 				break;
 		}
