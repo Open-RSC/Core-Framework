@@ -6986,9 +6986,12 @@ public final class mudclient implements Runnable {
 								"@lre@" + EntityHandler.getItemDef(id).getName());
 							this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP, "Drop",
 								"@lre@" + EntityHandler.getItemDef(id).getName());
-							if (S_WANT_DROP_X)
+							if (S_WANT_DROP_X) {
 								this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP_X, "Drop X",
 									"@lre@" + EntityHandler.getItemDef(id).getName());
+								this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP_ALL, "Drop All",
+									"@lre@" + EntityHandler.getItemDef(id).getName());
+							}
 							this.menuCommon.addCharacterItem(id, MenuItemAction.ITEM_EXAMINE, "Examine",
 								"@lre@" + EntityHandler.getItemDef(id).getName()
 									+ (localPlayer.isDev() ? " @or1@(" + id + ")" : ""));
@@ -10977,6 +10980,22 @@ public final class mudclient implements Runnable {
 				case ITEM_DROP_X: {
 					dropInventorySlot = indexOrX;
 					this.showItemModX(InputXPrompt.dropX, InputXAction.DROP_X, true);
+					break;
+				}
+				case ITEM_DROP_ALL: {
+					dropInventorySlot = indexOrX;
+					int dropQuantity = getInventoryCount(inventoryItemID[dropInventorySlot]);
+					this.packetHandler.getClientStream().newPacket(246);
+					this.packetHandler.getClientStream().writeBuffer1.putShort(dropInventorySlot);
+					this.packetHandler.getClientStream().writeBuffer1.putInt(dropQuantity);
+					this.packetHandler.getClientStream().finishPacket();
+					if (!isAndroid())
+						this.showUiTab = 0;
+					this.selectedItemInventoryIndex = this.dropInventorySlot = -1;
+					if (dropQuantity == 1)
+						this.showMessage(false, null,
+							"Dropping " + EntityHandler.getItemDef(this.inventoryItemID[indexOrX]).getName(),
+							MessageType.INVENTORY, 0, null);
 					break;
 				}
 				case NPC_CAST_SPELL: {
