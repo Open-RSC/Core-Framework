@@ -5438,7 +5438,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Tree", "A magical tree", "Chop", "Examine", 1, 1, 1, 0, "magictree", i++));
 		objects.add(new GameObjectDef("gate", "A gate guarded by a fierce barbarian", "open", "Examine", 2, 1, 2, 0, "metalgateclosed", i++));
 		objects.add(new GameObjectDef("sign", "The forester's arms", "WalkTo", "Examine", 0, 1, 1, 0, "shopsign", i++));
-		objects.add(new GameObjectDef("flax", "A flax plant", "WalkTo", "pick", 0, 1, 1, 0, "flax", i++));
+		objects.add(new GameObjectDef("flax", "A flax plant", Config.S_BATCH_PROGRESSION ? "pick" : "WalkTo", Config.S_BATCH_PROGRESSION ? "Examine" : "pick", 0, 1, 1, 0, "flax", i++));
 		objects.add(new GameObjectDef("Large treestump", "Someone has chopped this tree down!", "WalkTo", "Examine", 1, 2, 2, 0, "treestump", i++));
 		objects.add(new GameObjectDef("Rocks", "A rocky outcrop", "Mine", "Prospect", 1, 1, 1, 0, "goldrock1", i++));
 		objects.add(new GameObjectDef("Lever", "It's a lever", "Pull", "Inspect", 0, 1, 1, 0, "leverup", i++));
