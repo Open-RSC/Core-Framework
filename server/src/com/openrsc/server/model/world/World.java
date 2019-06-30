@@ -122,6 +122,19 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 						}
 					}
 				}
+				if (Constants.GameServer.AUTO_SERVER_RESTART_2) {
+					if ((int) ((currSecond / 3600.0) % 24) == Constants.GameServer.RESTART_HOUR_2
+						&& (int) ((currSecond / 60.0) % 60) >= Constants.GameServer.RESTART_MINUTE_2) {
+						int seconds = Constants.GameServer.RESTART_DELAY_2;
+						int minutes = seconds / 60;
+						int remainder = seconds % 60;
+						if (Server.getServer().restart(seconds)) {
+							for (Player p : World.getWorld().getPlayers()) {
+								ActionSender.startShutdown(p, seconds);
+							}
+						}
+					}
+				}
 				shutdownCheck();
 			}
 		});

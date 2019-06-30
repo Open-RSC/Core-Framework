@@ -111,11 +111,14 @@ public final class Constants {
 		 * AutoRestart hour, minute - let 0, 0 = 0000h, 13, 22 = 1322h (1pm)
 		 */
 		public static int RESTART_HOUR;
+		public static int RESTART_HOUR_2;
 		public static int RESTART_MINUTE;
+		public static int RESTART_MINUTE_2;
 		/**
 		 * AutoRestart Delay in seconds, alert players
 		 */
 		public static int RESTART_DELAY;
+		public static int RESTART_DELAY_2;
 		/**
 		 * the mysql database host
 		 */
@@ -235,6 +238,7 @@ public final class Constants {
 		public static boolean PLAYER_COMMANDS = false;
 		public static boolean WANT_PETS = false;
 		public static boolean AUTO_SERVER_RESTART = false;
+		public static boolean AUTO_SERVER_RESTART_2 = false;
 		public static int MAX_WALKING_SPEED = 1;
 		public static boolean SHOW_UNIDENTIFIED_HERB_NAMES = false;
 		public static boolean WANT_QUEST_STARTED_INDICATOR = false;
@@ -381,6 +385,10 @@ public final class Constants {
 			RESTART_HOUR = Integer.parseInt(props.getProperty("restart_hour"));
 			RESTART_MINUTE = Integer.parseInt(props.getProperty("restart_minute"));
 			RESTART_DELAY = Integer.parseInt(props.getProperty("restart_delay"));
+			AUTO_SERVER_RESTART_2 = Boolean.parseBoolean(props.getProperty("auto_server_restart_2"));
+			RESTART_HOUR_2 = Integer.parseInt(props.getProperty("restart_hour_2"));
+			RESTART_MINUTE_2 = Integer.parseInt(props.getProperty("restart_minute_2"));
+			RESTART_DELAY_2 = Integer.parseInt(props.getProperty("restart_delay_2"));
 
 			STRICT_CHECK_ALL = Boolean.parseBoolean(props.getProperty("strict_check_all"));
 			STRICT_PDART_CHECK = Boolean.parseBoolean(props.getProperty("strict_pdart_check"));

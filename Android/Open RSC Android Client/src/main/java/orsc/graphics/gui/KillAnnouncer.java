@@ -5,7 +5,7 @@ public class KillAnnouncer {
 	public int killPicture;
 	public String killerString;
 	long displayTime;
-	private String killedString;
+	public String killedString;
 
 	public KillAnnouncer(String kill) {
 		displayTime = System.currentTimeMillis();
