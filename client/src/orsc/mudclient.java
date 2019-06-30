@@ -4681,31 +4681,31 @@ public final class mudclient implements Runnable {
 					}
 					if (C_KILL_FEED) {
 						killQueue.clean();
-						int Offset = 0;
-						for (KillAnnouncer notify : killQueue.Kill) {
-							int picture_width = 20;
-							int width_killed = 507 - this.getSurface().stringWidth(1, notify.getKilledString());
-							int width_icon = 507 - this.getSurface().stringWidth(1, notify.getKilledString()) - picture_width - 5;
-							int width_killer = 507 - this.getSurface().stringWidth(1, notify.getKilledString()) - picture_width - 8 - this.getSurface().stringWidth(1, notify.killerString);
+							int Offset = 0;
+							for(KillAnnouncer notify : killQueue.Kill) {
+								int picture_width = 20;
+								int width_killed = 507 - this.getSurface().stringWidth(1, notify.killedString);
+								int width_icon = 507 - this.getSurface().stringWidth(1, notify.killedString) - picture_width - 5;
+								int width_killer = 507 - this.getSurface().stringWidth(1, notify.killedString) - picture_width - 8 - this.getSurface().stringWidth(1, notify.killerString);
 
-							this.getSurface().drawString(notify.killerString, width_killer, 50 + Offset, 0xffffff, 1);
-							switch (notify.killPicture) {
+								this.getSurface().drawString(notify.killerString, width_killer, 50 + Offset, 0xffffff, 1);
+								switch(notify.killPicture) {
 								case -1:
 									getSurface().drawSpriteClipping(mudclient.spriteProjectile + 1, width_icon, 36 + Offset, picture_width,
-										18, 0, 0, false, 0, 1);
+											18, 0, 0, false, 0, 1);
 									break;
 								case -2:
 									getSurface().drawSpriteClipping(mudclient.spriteProjectile + 2, width_icon, 36 + Offset, picture_width,
-										18, 0, 0, false, 0, 1);
+											18, 0, 0, false, 0, 1);
 									break;
 								default:
 									getSurface().drawSpriteClipping(mudclient.spriteItem + EntityHandler.getItemDef(notify.killPicture).getSprite(), width_icon, 36 + Offset, picture_width,
-										18, EntityHandler.getItemDef(notify.killPicture).getPictureMask(), 0, false, 0, 1);
+											18, EntityHandler.getItemDef(notify.killPicture).getPictureMask(), 0, false, 0, 1);
 									break;
+								}
+								this.getSurface().drawString(notify.killedString, width_killed, 50 + Offset, 0xffffff, 1);
+								Offset += 16;
 							}
-							this.getSurface().drawString(notify.getKilledString(), width_killed, 50 + Offset, 0xffffff, 1);
-							Offset += 16;
-						}
 					}
 					if (!this.loadingArea) {
 						centerX = -this.playerLocalZ - this.worldOffsetZ - (this.midRegionBaseZ - 2203);
