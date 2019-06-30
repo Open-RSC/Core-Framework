@@ -31,7 +31,7 @@ public class ClanInvite {
 		if (invited.getCache().hasKey("p_block_invites")) {
 			boolean blockInvites = invited.getCache().getBoolean("p_block_invites");
 			if (blockInvites) {
-				player.message("This player has Clan invitations blocked");
+				player.message("This player has clan invitations blocked");
 				invited.message(player.getUsername() + " tried to send you an invite, you have clans invite setting blocked");
 				return;
 			}
