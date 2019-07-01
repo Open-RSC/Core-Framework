@@ -61,7 +61,7 @@ public final class ORSCharacter {
 		return groupID == 0;
 	}
 
-	boolean isAdmin() {
+	public boolean isAdmin() {
 		return groupID == 1 || isOwner();
 	}
 
