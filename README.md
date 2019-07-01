@@ -91,6 +91,6 @@ Note: This requires Java 9 or newer to be installed. Java 8 does not support DPI
 
 ## In-Game Commands<a name="commands"></a>
 
-#### <a href="https://gitlab.openrsc.com/open-rsc/Single-Player/blob/master/Commands.md">Click here for in-game command documentation.</a>
+#### <a href="https://gitlab.openrsc.com/open-rsc/Game/blob/2.0.0/Commands.md">Click here for in-game command documentation.</a>
 
 [Return to top](#top)
