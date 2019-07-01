@@ -24,8 +24,8 @@ public class Launcher {
 		final AppFrame frame = new AppFrame();
 		frame.build();
 		Launcher.popup = new PopupFrame();
-		String orsc = "orsc";
 		String rscc = "rscc";
+		String orsc = "orsc";
 		String openpk = "openpk";
 		String rscp = "rscp";
 		String local = "local";
