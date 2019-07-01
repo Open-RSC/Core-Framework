@@ -7,6 +7,7 @@
 4. [Minimum Requirements](#requirements)
 5. [Bug Reports, Discord, and Reddit](#bugs)
 6. [Enable High DPI Scaling For High Res Monitors](#dpi)
+7. [In-Game Commands] (#commands)
 
 ## Project Information<a name="general"></a>
 The first priority of our development is ensuring the authentic content found in the original Runescape Classic game is replicated to its full extent. We are in no way associated or affiliated with JaGex, Runescape Classic, or any other similar companies or products. Our goal is to program and play Runescape Classic, and have fun doing it!
@@ -84,5 +85,12 @@ Note: This requires Java 9 or newer to be installed. Java 8 does not support DPI
 7. Set this: <img src="https://i.imgur.com/5gJqSMr.png"/>
 
 8. Re-launch the Open RSC game client
+
+[Return to top](#top)
+
+
+## In-Game Commands<a name="commands"></a>
+
+#### <a href="https://gitlab.openrsc.com/open-rsc/Single-Player/blob/master/Commands.md">Click here for in-game command documentation.</a>
 
 [Return to top](#top)
