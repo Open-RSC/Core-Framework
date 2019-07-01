@@ -373,14 +373,12 @@ public class ActionSender {
 		s.writeShort(player.getFatigue() / 750);
 		player.write(s.toPacket());
 	}
-
 	public static void sendPetFatigue(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_PET_FATIGUE.opcode);
 		s.writeShort(player.getPetFatigue() / 750);
 		player.write(s.toPacket());
 	}
-
 	public static void sendKills2(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_KILLS2.opcode);
@@ -667,7 +665,8 @@ public class ActionSender {
 	}
 
 	/**
-	 * @param player sends the player inventory
+	 * @param player
+	 * sends the player inventory
 	 */
 	public static void sendInventory(Player player) {
 		if (player == null)
