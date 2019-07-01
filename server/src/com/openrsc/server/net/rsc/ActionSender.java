@@ -1097,18 +1097,27 @@ public class ActionSender {
 	public static void sendRemoveProgressBar(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_REMOVE_PROGRESS_BAR.opcode);
-		s.writeByte(0); // interface ID
-		s.writeByte((byte) 2);
+		s.writeByte(2); // interface ID
+		//s.writeByte((byte) 2);
 		player.write(s.toPacket());
 	}
 
 	public static void sendProgressBar(Player player, int delay, int repeatFor) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_PROGRESS_BAR.opcode);
-		s.writeByte(0); // interface ID
-		s.writeByte((byte) 1);
+		s.writeByte(1); // interface ID then it writes a byte of 1 which it shouldnt...
+		//s.writeByte((byte) 1);
 		s.writeShort(delay);
 		s.writeByte((byte) repeatFor);
+		player.write(s.toPacket());
+	}
+	
+	public static void sendUpdateProgressBar(Player player, int repeatFor) {
+		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+		s.setID(Opcode.SEND_UPDATE_PROGRESS_BAR.opcode);
+		s.writeByte(3); // interface ID
+		//s.writeByte((byte) 3);
+		s.writeByte((byte) repeatFor); //where is this called from
 		player.write(s.toPacket());
 	}
 
@@ -1407,6 +1416,7 @@ public class ActionSender {
 		SEND_AUCTION_PROGRESS(132),
 		SEND_FISHING_TRAWLER(133),
 		SEND_PROGRESS_BAR(134),
+		SEND_UPDATE_PROGRESS_BAR(134),
 		SEND_REMOVE_PROGRESS_BAR(134),
 		SEND_BANK_PIN_INTERFACE(135),
 		SEND_ONLINE_LIST(136),
