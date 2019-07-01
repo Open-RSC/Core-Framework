@@ -7,7 +7,7 @@
 4. [Minimum Requirements](#requirements)
 5. [Bug Reports, Discord, and Reddit](#bugs)
 6. [Enable High DPI Scaling For High Res Monitors](#dpi)
-7. [In-Game Commands] (#commands)
+7. [In-Game Commands](#commands)
 
 ## Project Information<a name="general"></a>
 The first priority of our development is ensuring the authentic content found in the original Runescape Classic game is replicated to its full extent. We are in no way associated or affiliated with JaGex, Runescape Classic, or any other similar companies or products. Our goal is to program and play Runescape Classic, and have fun doing it!
