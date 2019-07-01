@@ -11,6 +11,20 @@ public class Statistics implements Runnable {
 
 	@Override
 	public void run() {
+		// RSCC
+		try {
+			Document document = Jsoup.connect(Constants.RSCC_WORLD_STATS_URL).get();
+
+			for (Element getrsccOnline : document.select("a[href$=\"cabbageonline\"]")) {
+				AppFrame.get().getrsccOnline().setText("<html>Players Online: <span style='color:00FF00;'>" + getrsccOnline.text() + "</span></html>");
+			}
+
+			for (Element getrsccLogins48 : document.select("a[href$=\"cabbagelogins48\"]")) {
+				AppFrame.get().getrsccLogins48().setText("<html>Online Last 48 Hours: <span style='color:00FF00;'>" + getrsccLogins48.text() + "</span></html>");
+			}
+		} catch (Exception ignored) {
+		}
+
 		// ORSC
 		try {
 			Document document = Jsoup.connect(Constants.ORSC_WORLD_STATS_URL).get();
@@ -21,20 +35,6 @@ public class Statistics implements Runnable {
 
 			for (Element getorscLogins48 : document.select("a[href$=\"logins48\"]")) {
 				AppFrame.get().getorscLogins48().setText("<html>Online Last 48 Hours: <span style='color:00FF00;'>" + getorscLogins48.text() + "</span></html>");
-			}
-		} catch (Exception ignored) {
-		}
-
-		// RSCC
-		try {
-			Document document = Jsoup.connect(Constants.RSCC_WORLD_STATS_URL).get();
-
-			for (Element getrsccOnline : document.select("a[href$=\"online\"]")) {
-				AppFrame.get().getrsccOnline().setText("<html>Players Online: <span style='color:00FF00;'>" + getrsccOnline.text() + "</span></html>");
-			}
-
-			for (Element getrsccLogins48 : document.select("a[href$=\"logins48\"]")) {
-				AppFrame.get().getrsccLogins48().setText("<html>Online Last 48 Hours: <span style='color:00FF00;'>" + getrsccLogins48.text() + "</span></html>");
 			}
 		} catch (Exception ignored) {
 		}

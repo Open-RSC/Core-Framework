@@ -153,25 +153,25 @@ public class ButtonListener implements ActionListener {
 				}
 				return;
 			}
-			case "rsc arch angel": {
-				Utils.openWebpage("https://www.rscarchangel.com");
+			/*case "place holder": {
+				Utils.openWebpage("https://www.google.com");
 				return;
 			}
-			case "rsc revolution": {
-				Utils.openWebpage("https://www.rscrevolution.com");
+			case "place holder2": {
+				Utils.openWebpage("https://www.google2.com");
 				return;
 			}
-			case "rsc dawn": {
-				Utils.openWebpage("https://www.rscdawn.com");
+			case "place holder3": {
+				Utils.openWebpage("https://www.google3.com");
 				return;
-			}
+			}*/
 			case "minimize": {
 				AppFrame.get().setState(1);
 				return;
 			}
 			case "launch": {
 				try {
-					// Deletes the client.properties file that may persist unwanted settings between different gamess
+					// Deletes the client.properties file that may persist unwanted settings between different games
 					File f = new File(Constants.CONF_DIR + File.separator + "client.properties");
 					f.delete();
 

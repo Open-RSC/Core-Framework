@@ -185,35 +185,10 @@ public class CacheUpdater extends Activity {
             builder.setTitle("Game Selection");
 
             // add a list
-            String[] games = {"Open RSC", "RSC Cabbage", "RSC Preservation (alpha testing)", "Open PK (alpha testing)", "Dev Testing"};
+            String[] games = {"RSC Cabbage", "Open RSC", "RSC Preservation (alpha testing)", "Open PK (alpha testing)", "Dev Testing"};
             builder.setItems(games, (dialog, which) -> {
                 switch (which) {
                     case 0:
-                        String ip_openrsc = "androidcheck.openrsc.com";
-                        String port_openrsc = "43594";
-                        FileOutputStream fileout_openrsc;
-                        try {
-                            fileout_openrsc = new FileOutputStream("/data/user/0/com.openrsc.client/files" + File.separator + "ip.txt");
-                            OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_openrsc);
-                            outputWriter.write(ip_openrsc);
-                            outputWriter.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            fileout_openrsc = new FileOutputStream("/data/user/0/com.openrsc.client/files" + File.separator + "port.txt");
-                            OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_openrsc);
-                            outputWriter.write(port_openrsc);
-                            outputWriter.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        Intent mainIntent_openrsc = new Intent(CacheUpdater.this, GameActivity.class);
-                        mainIntent_openrsc.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(mainIntent_openrsc);
-                        finish();
-                        return;
-                    case 1:
                         String ip_cabbage = "androidcheck.openrsc.com";
                         String port_cabbage = "43595";
                         FileOutputStream fileout_cabbage;
@@ -236,6 +211,31 @@ public class CacheUpdater extends Activity {
                         Intent mainIntent_cabbage = new Intent(CacheUpdater.this, GameActivity.class);
                         mainIntent_cabbage.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(mainIntent_cabbage);
+                        finish();
+                        return;
+                    case 1:
+                        String ip_openrsc = "androidcheck.openrsc.com";
+                        String port_openrsc = "43594";
+                        FileOutputStream fileout_openrsc;
+                        try {
+                            fileout_openrsc = new FileOutputStream("/data/user/0/com.openrsc.client/files" + File.separator + "ip.txt");
+                            OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_openrsc);
+                            outputWriter.write(ip_openrsc);
+                            outputWriter.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            fileout_openrsc = new FileOutputStream("/data/user/0/com.openrsc.client/files" + File.separator + "port.txt");
+                            OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_openrsc);
+                            outputWriter.write(port_openrsc);
+                            outputWriter.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        Intent mainIntent_openrsc = new Intent(CacheUpdater.this, GameActivity.class);
+                        mainIntent_openrsc.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(mainIntent_openrsc);
                         finish();
                         return;
                     case 2:
