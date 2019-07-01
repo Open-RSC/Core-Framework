@@ -431,7 +431,7 @@ public final class mudclient implements Runnable {
 	private int lastObjectAnimationNumberTorch = -1;
 	private int lastObjectAnimatonNumberClaw = -1;
 	private boolean loadingArea = false;
-	private ORSCharacter localPlayer = new ORSCharacter();
+	public ORSCharacter localPlayer = new ORSCharacter();
 	private int logoutTimeout = 0;
 	private int m_Ai;
 	private int m_be;

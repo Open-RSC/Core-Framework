@@ -10,24 +10,19 @@ import orsc.mudclient;
 
 public class OnlineListInterface extends NComponent {
 
-	private NRightClickMenu rightClickMenu;
-	private int currentX = 5, currentY = 25;
-
-	private NComponent userListContainer;
-
-	private NComponent title, titleText;
 	public int scroll;
 	public Panel panel;
+	private NRightClickMenu rightClickMenu;
+	private int currentX = 5, currentY = 25;
+	private NComponent userListContainer;
+	private NComponent titleText;
 
 	public OnlineListInterface(mudclient client) {
 		super(client);
-		
+
 		panel = new Panel(client.getSurface(), 1);
 		scroll = panel.addScrollingList2(getX(), getY() + 20, getWidth(), getHeight() - 20, 500, 1, true);
-		
 
-		//graphics.drawBoxAlpha((client.getGameHeight() - getWidth()) / 2, (client.getGameHeight() - getHeight()) / 2, 408, 246, 10000536, 192);
-		
 		setBackground(10000536, 10000536, 128);
 		setSize(408, 246);
 		setLocation((client.getGameWidth() - getWidth()) / 2, (client.getGameHeight() - getHeight()) / 2);
@@ -36,19 +31,20 @@ public class OnlineListInterface extends NComponent {
 			public boolean onMouseDown(int clickX, int clickY, int mButtonDown, int mButtonClick) {
 				return true;
 			}
+
 			@Override
 			public boolean onMouseMove(int x, int y) {
 				return true;
 			}
 
 		});
-		title = new NComponent(client);
-		title.setBackground(0x7e8d09, 0x7e8d09, 192);
+		NComponent title = new NComponent(client);
+		title.setBackground(3093151, 0x7e8d09, 192);
 		title.setLocation(0, 0);
 		title.setSize(408, 20);
-		
-		titleText =  new NComponent(client);
-		titleText.setText("Users online");
+
+		titleText = new NComponent(client);
+		titleText.setText("Online Players");
 		titleText.setFontColor(0xFFFFFF, 0xFFFFFF);
 		titleText.setTextSize(1);
 		titleText.setLocation(2, 1);
@@ -92,14 +88,14 @@ public class OnlineListInterface extends NComponent {
 			currentY += textHeight;
 		}
 		final NComponent userComponent = new NComponent(getClient());
-		userComponent.setText(user + ",");
+		userComponent.setText(user + ", ");
 		userComponent.setFontColor(0xFFFFFF, 0xFF0000);
 		userComponent.setTextSize(1);
 		userComponent.setLocation(currentX, currentY);
 		userComponent.setSize(textWidth, textHeight);
 		userComponent.setCrownDisplay(true);
 		userComponent.setCrown(crownID);
-		
+
 		userListContainer.addComponent(userComponent);
 		currentX += textWidth + 5;
 	}
@@ -110,27 +106,19 @@ public class OnlineListInterface extends NComponent {
 				getClient().getLastMouseDown());
 		panel.reposition(scroll, getX(), getY() + 20, getWidth(), getHeight() - 20);
 		panel.clearList(scroll);
-		
-		getClient().getSurface().drawBoxAlpha((getClient().getGameHeight() - getWidth()) / 2 + 40, (getClient().getGameHeight() - getHeight()) / 2 - 29, 408, 226, 10000536, 192);
-		
-		
 		int currentX = 5;
 		int currentY = 0;
-		
-		
-		int startComponentIndex = panel.getScrollPosition(scroll); 
+		int startComponentIndex = panel.getScrollPosition(scroll);
 		int listEndPoint = startComponentIndex + 49;
 
 		for (int componentIndex = 0; componentIndex < userListContainer.subComponents().size(); componentIndex++) {
 			final NComponent userComp = userListContainer.subComponents().get(componentIndex);
 			userComp.setVisible(false);
+			panel.setListEntry(scroll, componentIndex, "", 0, null, null);
 
-			panel.setListEntry(scroll, componentIndex, "", 0, (String) null, (String) null);
-			
-		
-			if (componentIndex < startComponentIndex || componentIndex > listEndPoint) 
+			if (componentIndex < startComponentIndex || componentIndex > listEndPoint)
 				continue;
-			
+
 			int textWidth = graphics().stringWidth(1, userComp.getText()) + (userComp.crown > 0 ? 15 : 0) + 5;
 			int textHeight = graphics().fontHeight(1);
 
@@ -144,37 +132,123 @@ public class OnlineListInterface extends NComponent {
 					if (mButtonClick == 2) {
 						rightClickMenu.hide();
 						final String username = userComp.getText().replaceAll(" ", "_").replace(",", "");
-
 						NRightClickMenu staffMenu = new NRightClickMenu(OnlineListInterface.this);
-						staffMenu.createOption("Goto", new MenuAction() {
-							@Override
-							public void action() {
-								getClient().sendCommandString("goto " + username);
-							}
-						});
-						staffMenu.createOption("Summon", new MenuAction() {
-							@Override
-							public void action() { getClient().sendCommandString("summon " + username); }
-						});
-						staffMenu.createOption("Take", new MenuAction() {
-							@Override
-							public void action() {
-								getClient().sendCommandString("take " + username);
-							}
-						});
-						staffMenu.createOption("Mute", new MenuAction() {
-							@Override
-							public void action() {
-								getClient().sendCommandString("mute " + username + " -1");
-							}
-						});
-						staffMenu.createOption("Kick", new MenuAction() {
-							@Override
-							public void action() {
-								getClient().sendCommandString("kick " + username + "");
-							}
-						});
 
+						// Moderator menu options
+						if (getClient().getLocalPlayer().isMod()) {
+							staffMenu.createOption("Goto", new MenuAction() {
+								@Override
+								public void action() {
+									getClient().sendCommandString("goto " + username);
+								}
+							});
+							staffMenu.createOption("Summon Player", new MenuAction() {
+								@Override
+								public void action() {
+									getClient().sendCommandString("summon " + username);
+								}
+							});
+							staffMenu.createOption("Return Player", new MenuAction() {
+								@Override
+								public void action() {
+									getClient().sendCommandString("return " + username);
+								}
+							});
+							staffMenu.createOption("Inspect inventory", new MenuAction() {
+								@Override
+								public void action() {
+									getClient().sendCommandString("inventory " + username);
+								}
+							});
+							staffMenu.createOption("Inspect bank", new MenuAction() {
+								@Override
+								public void action() {
+									getClient().sendCommandString("bank " + username);
+								}
+							});
+							staffMenu.createOption("10 minute mute", new MenuAction() {
+								@Override
+								public void action() {
+									getClient().sendCommandString("mute " + username + " 10");
+								}
+							});
+							staffMenu.createOption("Permanent mute", new MenuAction() {
+								@Override
+								public void action() {
+									getClient().sendCommandString("mute " + username + " -1");
+								}
+							});
+							staffMenu.createOption("Unmute", new MenuAction() {
+								@Override
+								public void action() {
+									getClient().sendCommandString("mute " + username + " 0");
+								}
+							});
+							staffMenu.createOption("Kick", new MenuAction() {
+								@Override
+								public void action() {
+									getClient().sendCommandString("kick " + username + "");
+								}
+							});
+						}
+
+						// Super Moderator menu options
+						if (getClient().getLocalPlayer().isSuperMod()) {
+							staffMenu.createOption("Jail", new MenuAction() {
+								@Override
+								public void action() {
+									getClient().sendCommandString("jail " + username + "");
+								}
+							});
+							staffMenu.createOption("Release", new MenuAction() {
+								@Override
+								public void action() {
+									getClient().sendCommandString("release " + username + "");
+								}
+							});
+						}
+
+						// Administrator menu options
+						if (getClient().getLocalPlayer().isOwner() || getClient().getLocalPlayer().isAdmin()) {
+							staffMenu.createOption("10 minute ban", new MenuAction() {
+								@Override
+								public void action() {
+									getClient().sendCommandString("ban " + username + " 10");
+								}
+							});
+							staffMenu.createOption("Permanent ban", new MenuAction() {
+								@Override
+								public void action() {
+									getClient().sendCommandString("ban " + username + " -1");
+								}
+							});
+							staffMenu.createOption("Demote to player", new MenuAction() {
+								@Override
+								public void action() {
+									getClient().sendCommandString("rank " + username + " 10");
+								}
+							});
+							staffMenu.createOption("Promote to mod", new MenuAction() {
+								@Override
+								public void action() {
+									getClient().sendCommandString("rank " + username + " 3");
+								}
+							});
+							staffMenu.createOption("Promote to super mod", new MenuAction() {
+								@Override
+								public void action() {
+									getClient().sendCommandString("rank " + username + " 2");
+								}
+							});
+							staffMenu.createOption("Promote to admin", new MenuAction() {
+								@Override
+								public void action() {
+									getClient().sendCommandString("rank " + username + " 1");
+								}
+							});
+						}
+
+						// Regular player menu options
 						rightClickMenu.createOption("Add friend", new MenuAction() {
 							@Override
 							public void action() {
@@ -188,9 +262,9 @@ public class OnlineListInterface extends NComponent {
 							}
 						});
 
-						if(getClient().getLocalPlayer().isMod())
+						if (getClient().getLocalPlayer().isMod())
 							rightClickMenu.createSubMenuOption("Staff >", null, staffMenu);
-						
+
 						rightClickMenu.show(userComp.x, userComp.y);
 						return true;
 					}
@@ -202,7 +276,7 @@ public class OnlineListInterface extends NComponent {
 
 			currentX += textWidth;
 		}
-		titleText.setText("Users online: " + userListContainer.subComponents().size());
+		titleText.setText("Online Players: " + userListContainer.subComponents().size());
 
 		panel.drawPanel();
 	}
