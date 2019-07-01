@@ -25,7 +25,7 @@ public class NComponent {
 	private int borderColorHovered;
 	private int horizWidth;
 	private int horizColor;
-	private ArrayList<NComponent> subComponents = new ArrayList<NComponent>();
+	private ArrayList<NComponent> subComponents = new ArrayList<>();
 	private InputListener inputListener;
 	private int textFontSize;
 	private boolean textCentered = false;
@@ -44,7 +44,7 @@ public class NComponent {
 	private boolean drawBox;
 	private boolean drawCircle;
 	private int circleRadius;
-	private HashMap<String, Object> attributes = new HashMap<String, Object>();
+	private HashMap<String, Object> attributes = new HashMap<>();
 	private mudclient graphics;
 	private boolean overlay;
 

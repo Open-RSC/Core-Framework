@@ -27,7 +27,6 @@ import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
-import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.entity.update.Damage;
@@ -148,7 +147,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			final ArrayList<Integer> items = new ArrayList<Integer>();
+			final ArrayList<Integer> items = new ArrayList<>();
 			for (int i = 1; i < args.length; i++) {
 				int itemId;
 				try {
@@ -280,7 +279,7 @@ public final class Admins implements CommandListener {
 			int dropID = -1;
 			int dropWeight = 0;
 
-			HashMap<String, Integer> hmap = new HashMap<String, Integer>();
+			HashMap<String, Integer> hmap = new HashMap<>();
 
 			ItemDropDef[] drops = Objects.requireNonNull(EntityHandler.getNpcDef(npcID)).getDrops();
 			for (ItemDropDef drop : drops) {
@@ -362,7 +361,7 @@ public final class Admins implements CommandListener {
 
 					NPCDef def = EntityHandler.getNpcDef(i);
 					def.drops = null;
-					ArrayList<ItemDropDef> drops = new ArrayList<ItemDropDef>();
+					ArrayList<ItemDropDef> drops = new ArrayList<>();
 					while (dropResult.next()) {
 						ItemDropDef drop;
 
@@ -926,70 +925,16 @@ public final class Admins implements CommandListener {
 			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "A staff member has added to your bank " + amount + " " + EntityHandler.getItemDef(id).getName());
 			}
-		} else if (cmd.equalsIgnoreCase("info") || cmd.equalsIgnoreCase("about")) {
-			Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
-			if (p == null) {
-				player.message(messagePrefix + "Invalid name or player is not online");
-				return;
-			}
-
-			p.updateTotalPlayed();
-			long timePlayed = p.getCache().getLong("total_played");
-			long timeMoved = System.currentTimeMillis() - p.getLastMoved();
-			long timeOnline = System.currentTimeMillis() - p.getCurrentLogin();
-			ActionSender.sendBox(player,
-				"@lre@Player Information: %"
-					+ " %"
-					+ "@gre@Name:@whi@ " + p.getUsername() + " %"
-					+ "@gre@Group:@whi@ " + p.getGroupID() + " %"
-					+ "@gre@Fatigue:@whi@ " + (p.getFatigue() / 750) + " %"
-					+ "@gre@Group ID:@whi@ " + Group.GROUP_NAMES.get(p.getGroupID()) + " (" + p.getGroupID() + ") %"
-					+ "@gre@Busy:@whi@ " + (p.isBusy() ? "true" : "false") + " %"
-					+ "@gre@IP:@whi@ " + p.getLastIP() + " %"
-					+ "@gre@Last Login:@whi@ " + p.getDaysSinceLastLogin() + " days ago %"
-					+ "@gre@Coordinates:@whi@ " + p.getStatus() + " at " + p.getLocation().toString() + " %"
-					+ "@gre@Last Moved:@whi@ " + DataConversions.getDateFromMsec(timeMoved) + " %"
-					+ "@gre@Time Logged In:@whi@ " + DataConversions.getDateFromMsec(timeOnline) + " %"
-					+ "@gre@Total Time Played:@whi@ " + DataConversions.getDateFromMsec(timePlayed) + " %"
-				, true);
-		} else if (cmd.equalsIgnoreCase("inventory")) {
-			Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
-			if (p == null) {
-				player.message(messagePrefix + "Invalid name or player is not online");
-				return;
-			}
-			ArrayList<Item> inventory = p.getInventory().getItems();
-			ArrayList<String> itemStrings = new ArrayList<String>();
-			for (Item invItem : inventory)
-				itemStrings.add("@gre@" + invItem.getAmount() + " @whi@" + invItem.getDef().getName());
-
-			ActionSender.sendBox(player, "@lre@Inventory of " + p.getUsername() + ":%"
-				+ "@whi@" + StringUtils.join(itemStrings, ", "), true);
-		} else if (cmd.equalsIgnoreCase("auction")) {
+		} else if (cmd.equalsIgnoreCase("quickauction")) {
 			Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
 			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 			ActionSender.sendOpenAuctionHouse(p);
-		} else if (cmd.equalsIgnoreCase("bank") || cmd.equalsIgnoreCase("quickbank")) {
-			Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
-			if (p == null) {
-				player.message(messagePrefix + "Invalid name or player is not online");
-				return;
-			}
-			// Show bank screen to yourself
-			if (p.getUsernameHash() == player.getUsernameHash() || cmd.equalsIgnoreCase("quickbank")) {
+		} else if (cmd.equalsIgnoreCase("quickbank")) { // Show the bank screen to yourself
 				player.setAccessingBank(true);
 				ActionSender.showBank(player);
-			} else {
-				ArrayList<Item> inventory = p.getBank().getItems();
-				ArrayList<String> itemStrings = new ArrayList<String>();
-				for (Item bankItem : inventory)
-					itemStrings.add("@gre@" + bankItem.getAmount() + " @whi@" + bankItem.getDef().getName());
-				ActionSender.sendBox(player, "@lre@Bank of " + p.getUsername() + ":%"
-					+ "@whi@" + StringUtils.join(itemStrings, ", "), true);
-			}
 		} else if (cmd.equalsIgnoreCase("heal")) {
 			Player p = args.length > 0 ?
 				world.getPlayer(DataConversions.usernameToHash(args[0])) :

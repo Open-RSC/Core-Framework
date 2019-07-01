@@ -41,7 +41,7 @@ public final class ORSCharacter {
 	public int groupID = Group.DEFAULT_GROUP;
 	ORSCharacterDirection direction = ORSCharacterDirection.NORTH;
 
-	private boolean isSuperMod() {
+	public boolean isSuperMod() {
 		return groupID == 2 || isAdmin();
 	}
 
@@ -61,7 +61,7 @@ public final class ORSCharacter {
 		return groupID == 0;
 	}
 
-	boolean isAdmin() {
+	public boolean isAdmin() {
 		return groupID == 1 || isOwner();
 	}
 

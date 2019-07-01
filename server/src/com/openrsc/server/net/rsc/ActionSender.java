@@ -1219,7 +1219,6 @@ public class ActionSender {
 
 	public static void sendOnlineList(Player player) {
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_ONLINE_LIST.opcode);
-		pb.writeByte(5);
 		pb.writeShort(World.getWorld().getPlayers().size());
 		for (Player p : World.getWorld().getPlayers()) {
 			pb.writeString(p.getUsername());

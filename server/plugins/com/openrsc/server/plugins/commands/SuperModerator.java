@@ -119,7 +119,7 @@ public final class SuperModerator implements CommandListener {
 			p.setFatigue(fatigue * 750);
 
 			if(p.getUsernameHash() != player.getUsernameHash()) {
-				p.message(messagePrefix + "Your fatigue has been set to " + ((p.getFatigue() / 25) * 100 / 750) + "% by an admin");
+				p.message(messagePrefix + "Your fatigue has been set to " + ((p.getFatigue() / 25) * 100 / 750) + "% by a staff member");
 			}
 			player.message(messagePrefix + p.getUsername() + "'s fatigue has been set to " + ((p.getFatigue() / 25) * 100 / 750 / 4) + "%");
 			GameLogging.addQuery(new StaffLog(player, 12, p, p.getUsername() + "'s fatigue percentage was set to " + fatigue + "% by " + player.getUsername()));
@@ -165,7 +165,7 @@ public final class SuperModerator implements CommandListener {
 
 			String skullMessage = p.isSkulled() ? "added" : "removed";
 			if(p.getUsernameHash() != player.getUsernameHash()) {
-				p.message(messagePrefix + "PK skull has been " + skullMessage + " by an admin");
+				p.message(messagePrefix + "PK skull has been " + skullMessage + " by a staff member");
 			}
 			player.message(messagePrefix + "PK skull has been " + skullMessage + ": " + p.getUsername());
 		}

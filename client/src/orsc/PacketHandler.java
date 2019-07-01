@@ -1,6 +1,13 @@
 package orsc;
 
 import com.openrsc.client.model.Sprite;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.Properties;
+
 import orsc.buffers.RSBufferUtils;
 import orsc.buffers.RSBuffer_Bits;
 import orsc.enumerations.MessageType;
@@ -13,12 +20,6 @@ import orsc.net.Network_Socket;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.util.Properties;
 
 public class PacketHandler {
 
@@ -316,7 +317,7 @@ public class PacketHandler {
 				// Kills2
 			else if (opcode == 147)
 				mc.setStatKills2(packetsIncoming.getShort());
-			
+
 			else if (opcode == 140)
 				mc.setPetFatigue(packetsIncoming.getShort());
 
@@ -991,7 +992,7 @@ public class PacketHandler {
 		props.setProperty("S_SHOW_UNIDENTIFIED_HERB_NAMES", showUnidentifiedHerbNames == 1 ? "true" : "false"); // 56
 		props.setProperty("S_WANT_QUEST_STARTED_INDICATOR", wantQuestStartedIndicator == 1 ? "true" : "false"); // 57
 		props.setProperty("S_FISHING_SPOTS_DEPLETABLE", fishingSpotsDepletable == 1 ? "true" : "false"); //58
-		props.setProperty("S_PROPER_MAGIC_TREE_NAME", properMagicTreeName	 == 1 ? "true" : "false"); //59
+		props.setProperty("S_PROPER_MAGIC_TREE_NAME", properMagicTreeName == 1 ? "true" : "false"); //59
 
 		Config.updateServerConfiguration(props);
 
