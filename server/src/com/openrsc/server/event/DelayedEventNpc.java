@@ -1,5 +1,7 @@
 package com.openrsc.server.event;
 
+import java.util.UUID;
+
 import com.openrsc.server.Server;
 import com.openrsc.server.ServerEventHandlerNpc;
 //import com.openrsc.server.model.entity.player.Player;
@@ -15,10 +17,12 @@ public abstract class DelayedEventNpc {
 	private boolean gameEvent;
 	private long lastRun = System.currentTimeMillis();
 	private boolean uniqueEvent = true;
+	private UUID uuid;
 
 	public DelayedEventNpc(Mob owner, int delay) {
 		this.owner = owner;
 		this.delay = delay;
+		this.uuid = UUID.randomUUID();
 	}
 
 	public DelayedEventNpc(Mob owner, int delay, boolean uniqueEvent) {
@@ -48,6 +52,10 @@ public abstract class DelayedEventNpc {
 
 	public boolean hasOwner() {
 		return owner != null;
+	}
+	
+	public UUID getUUID() {
+		return uuid;
 	}
 
 	public boolean is(DelayedEventNpc e) {
