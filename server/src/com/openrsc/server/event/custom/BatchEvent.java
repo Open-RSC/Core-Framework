@@ -8,7 +8,7 @@ import com.openrsc.server.net.rsc.ActionSender;
 public abstract class BatchEvent extends DelayedEvent {
 
 	private long repeatFor;
-	private long repeated;
+	private int repeated;
 	private boolean gathering;
 
 	public BatchEvent(Player owner, int delay, int repeatFor, boolean gathering) {
@@ -32,7 +32,7 @@ public abstract class BatchEvent extends DelayedEvent {
 			action();
 			repeated++;
 			if (repeated < getRepeatFor()) {
-				ActionSender.sendProgress(owner, repeated);
+				ActionSender.sendUpdateProgressBar(owner, repeated);
 			} else {
 				interrupt();
 			}
