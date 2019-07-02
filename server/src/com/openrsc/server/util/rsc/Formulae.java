@@ -1,8 +1,5 @@
 package com.openrsc.server.util.rsc;
 
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.getMaxLevel;
-
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.FiremakingDef;
 import com.openrsc.server.external.GameObjectLoc;
@@ -17,6 +14,9 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
+
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
+import static com.openrsc.server.plugins.Functions.getMaxLevel;
 
 public final class Formulae {
 
@@ -846,31 +846,31 @@ public final class Formulae {
 	}
 
 	public static int getRepeatTimes(Player p, int skill) {
-		//int maxStat = p.getSkills().getMaxStat(skill); // Number of time repeats is based on your highest level using this method
-		/*int regular = 0;
+		int maxStat = p.getSkills().getMaxStat(skill); // Number of time repeats is based on your highest level using this method
+		int regular = 0;
 		if (maxStat <= 10)
-			regular = 2;
+			regular = 40;
 		else if (maxStat <= 19)
-			regular = 3;
+			regular = 60;
 		else if (maxStat <= 29)
-			regular = 4;
+			regular = 80;
 		else if (maxStat <= 39)
-			regular = 5;
+			regular = 100;
 		else if (maxStat <= 49)
-			regular = 6;
+			regular = 120;
 		else if (maxStat <= 59)
-			regular = 7;
+			regular = 140;
 		else if (maxStat <= 69)
-			regular = 8;
+			regular = 160;
 		else if (maxStat <= 79)
-			regular = 9;
+			regular = 180;
 		else if (maxStat <= 89)
-			regular = 10;
-		else if (maxStat <= PLAYER_LEVEL_LIMIT)
-			regular = 11;*/
-		//return (maxStat / 10) + 1 + (maxStat == PLAYER_LEVEL_LIMIT ? 1 : 0);
+			regular = 200;
+		else if (maxStat <= 99)
+			regular = 230;
+		return (maxStat / 10) + 1 + (maxStat == 99 ? 1 : 0);
 
-		return 1000; // Total attempts made before stopping. Inventory will fill up, fatigue will reach 100, or player will walk away to interrupt
+		//return 1000; // Total attempts made before stopping. Inventory will fill up, fatigue will reach 100, or player will walk away to interrupt
 	}
 
 	public static int getSpellMaxHit(SpellDef spell) {
