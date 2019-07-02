@@ -283,14 +283,14 @@ public final class Formulae {
 		//gauntlets of cooking effective on lobsters, swordfish and shark
 		//chef: Wearing them means you will burn your lobsters, swordfish and shark less
 		int bonusLevel = p.getInventory().wielding(ItemId.GAUNTLETS_OF_COOKING.id()) ?
-				(foodId == ItemId.RAW_SWORDFISH.id() ? 6 :
+			(foodId == ItemId.RAW_SWORDFISH.id() ? 6 :
 				foodId == ItemId.RAW_LOBSTER.id() || foodId == ItemId.RAW_SHARK.id() ? 11 : 0) : 0;
 		int effectiveLevel = cookingLevel + bonusLevel;
 		int levelReq = EntityHandler.getItemCookingDef(foodId).getReqLevel();
 		//if not on def file from cooking training table, level stop failing
 		//is usually 35 since player can cook item
 		int levelStopFail = EntityHandler.getItemPerfectCookingDef(foodId) != null ?
-				 EntityHandler.getItemPerfectCookingDef(foodId).getReqLevel() : levelReq + 35;
+			EntityHandler.getItemPerfectCookingDef(foodId).getReqLevel() : levelReq + 35;
 		return !Formulae.calcProductionSuccessful(levelReq, effectiveLevel, true, levelStopFail);
 	}
 
@@ -391,6 +391,7 @@ public final class Formulae {
 		int dip = (int) (((double) peak / 3D) * 2D);
 		return DataConversions.randomWeighted(0, dip, peak, max);
 	}
+
 	public static int calcRangeHitNpc(Mob owner, int rangeLvl, int armourEquip, int arrowID) {
 		int rangeEquip = 8;
 
@@ -492,16 +493,16 @@ public final class Formulae {
 		int levelStopFail = requiredLvl + 8;
 		return !Formulae.calcProductionSuccessful(requiredLvl, craftingLvl, true, levelStopFail);
 	}
-	
+
 	/**
 	 * Should the gem be smashed?
 	 */
 	public static boolean smashGem(int gemId, int requiredLvl, int craftingLvl) {
 		int[] SEMIPRECIOUS = {ItemId.UNCUT_OPAL.id(), ItemId.UNCUT_JADE.id(), ItemId.UNCUT_RED_TOPAZ.id()};
-		
+
 		if (!DataConversions.inArray(SEMIPRECIOUS, gemId))
 			return false;
-		
+
 		int levelStopFail = requiredLvl + 89;
 		return !Formulae.calcProductionSuccessful(requiredLvl, craftingLvl, true, levelStopFail);
 	}
@@ -556,17 +557,17 @@ public final class Formulae {
 		int threshold = Math.min(127, Math.max(1, skillLevel + equipmentBonus + 40 - (int) (levelReq * 1.5)));
 		return roll <= threshold;
 	}
-	
+
 	public static boolean calcProductionSuccessful(int levelReq, int skillLevel, boolean stopsFailing, int levelStopFail) {
 		int roll = DataConversions.random(1, 256);
-		
+
 		if (skillLevel < levelReq)
 			return false;
-		
+
 		// min chance is 64/256
 		// skillLevel is the effective one
 		int maxThreshold = stopsFailing ? 256 : 255;
-		int threshold = Math.min(maxThreshold, (int)Math.floor(64 + (skillLevel - 1) * (19200.0D / (levelStopFail * 98 ))));
+		int threshold = Math.min(maxThreshold, (int) Math.floor(64 + (skillLevel - 1) * (19200.0D / (levelStopFail * 98))));
 		return roll <= threshold;
 	}
 
@@ -754,7 +755,7 @@ public final class Formulae {
 		int levelStopFail = levelReq + 59;
 		return Formulae.calcProductionSuccessful(levelReq, firemakingLvl, true, levelStopFail);
 	}
-	
+
 	public static int getLevelsToReduceAttackKBD(Player p) {
 		int levels = 0;
 		int currLvl = getCurrentLevel(p, Skills.RANGED);
@@ -764,22 +765,22 @@ public final class Formulae {
 			return 0;
 		}
 		if (ratio >= 81)
-			levels = (int)(maxLvl * 0.3);
+			levels = (int) (maxLvl * 0.3);
 		else if (ratio >= 61)
-			levels = (int)(maxLvl * 0.2);
+			levels = (int) (maxLvl * 0.2);
 		else if (ratio >= 41)
-			levels = (int)(maxLvl * 0.15);
+			levels = (int) (maxLvl * 0.15);
 		else if (ratio >= 31)
-			levels = (int)(maxLvl * 0.1);
+			levels = (int) (maxLvl * 0.1);
 		else if (ratio >= 21)
-			levels = (int)(maxLvl * 0.075);
+			levels = (int) (maxLvl * 0.075);
 		else if (ratio >= 16)
-			levels = (int)(maxLvl * 0.05);
+			levels = (int) (maxLvl * 0.05);
 		else if (ratio >= 11)
-			levels = (int)(maxLvl * 0.025);
+			levels = (int) (maxLvl * 0.025);
 		else
 			levels = 1;
-		
+
 		return levels;
 	}
 
@@ -847,30 +848,27 @@ public final class Formulae {
 
 	public static int getRepeatTimes(Player p, int skill) {
 		int maxStat = p.getSkills().getMaxStat(skill); // Number of time repeats is based on your highest level using this method
-		int regular = 0;
 		if (maxStat <= 10)
-			regular = 40;
-		else if (maxStat <= 19)
-			regular = 60;
-		else if (maxStat <= 29)
-			regular = 80;
-		else if (maxStat <= 39)
-			regular = 100;
-		else if (maxStat <= 49)
-			regular = 120;
-		else if (maxStat <= 59)
-			regular = 140;
-		else if (maxStat <= 69)
-			regular = 160;
-		else if (maxStat <= 79)
-			regular = 180;
-		else if (maxStat <= 89)
-			regular = 200;
-		else if (maxStat <= 99)
-			regular = 230;
-		return (maxStat / 10) + 1 + (maxStat == 99 ? 1 : 0);
-
-		//return 1000; // Total attempts made before stopping. Inventory will fill up, fatigue will reach 100, or player will walk away to interrupt
+			return 40;
+		if (maxStat <= 19)
+			return 60;
+		if (maxStat <= 29)
+			return 80;
+		if (maxStat <= 39)
+			return 100;
+		if (maxStat <= 49)
+			return 120;
+		if (maxStat <= 59)
+			return 140;
+		if (maxStat <= 69)
+			return 160;
+		if (maxStat <= 79)
+			return 180;
+		if (maxStat <= 89)
+			return 200;
+		if (maxStat <= 99)
+			return 230;
+		return 1000;
 	}
 
 	public static int getSpellMaxHit(SpellDef spell) {
@@ -927,7 +925,7 @@ public final class Formulae {
 		int roll2 = calculateRareDrop();
 		return roll2;
 	}
-	
+
 	public static int calculateRareDrop() {
 		return weightedRandomChoice(rareDropIDs, rareDropWeights, ItemId.NOTHING.id());
 	}
