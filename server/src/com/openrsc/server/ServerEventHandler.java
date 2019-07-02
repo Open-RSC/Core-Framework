@@ -5,10 +5,11 @@ import com.openrsc.server.model.entity.player.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class ServerEventHandler {
 
@@ -17,22 +18,18 @@ public final class ServerEventHandler {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private LinkedHashMap<String, DelayedEvent> events = new LinkedHashMap<String, DelayedEvent>();
-	private LinkedHashMap<String, DelayedEvent> toAdd = new LinkedHashMap<String, DelayedEvent>();
-
+	private ConcurrentHashMap<String, DelayedEvent> events = new ConcurrentHashMap<String, DelayedEvent>();
+	private ConcurrentHashMap<String, DelayedEvent> toAdd = new ConcurrentHashMap<String, DelayedEvent>();
+	
 	public void add(DelayedEvent event) {
 		String className = String.valueOf(event.getClass());
 		if (event.isUniqueEvent() || !event.hasOwner()) {
-			String u;
-			do {
-				u = UUID.randomUUID().toString();
-			} while (toAdd.containsKey(className + u));
-			toAdd.put(className + u, event);
+			toAdd.putIfAbsent(className + event.getUUID(), event);
 		} else {
 			if (event.getOwner().isPlayer())
-				toAdd.put(className + event.getOwner().getUUID() + "p", event);
+				toAdd.putIfAbsent(className + event.getOwner().getUUID() + "p", event);
 			else
-				toAdd.put(className + event.getOwner().getUUID() + "n", event);
+				toAdd.putIfAbsent(className + event.getOwner().getUUID() + "n", event);
 		}
 	}
 
@@ -44,9 +41,11 @@ public final class ServerEventHandler {
 
 	void doEvents() {
 		if (toAdd.size() > 0) {
-			for (Map.Entry<String, DelayedEvent> e : toAdd.entrySet())
-				events.put(e.getKey(), e.getValue());
-			toAdd.clear();
+			for(Iterator<Map.Entry<String, DelayedEvent>> iter = toAdd.entrySet().iterator(); iter.hasNext(); ) {
+			    Map.Entry<String, DelayedEvent> e = iter.next();
+			    events.putIfAbsent(e.getKey(), e.getValue());
+			    iter.remove();
+			}
 		}
 		for (Iterator<Map.Entry<String, DelayedEvent>> it = events.entrySet().iterator(); it.hasNext(); ) {
 			DelayedEvent event = it.next().getValue();
@@ -69,8 +68,8 @@ public final class ServerEventHandler {
 		}
 	}
 
-	public LinkedHashMap<String, DelayedEvent> getEvents() {
-		return events;
+	public HashMap<String, DelayedEvent> getEvents() {
+		return new LinkedHashMap<String, DelayedEvent>(events);
 	}
 
 	public void remove(DelayedEvent event) {

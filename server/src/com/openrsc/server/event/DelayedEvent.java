@@ -1,5 +1,7 @@
 package com.openrsc.server.event;
 
+import java.util.UUID;
+
 import com.openrsc.server.Server;
 import com.openrsc.server.ServerEventHandler;
 import com.openrsc.server.model.entity.player.Player;
@@ -14,10 +16,12 @@ public abstract class DelayedEvent {
 	private boolean gameEvent;
 	private long lastRun = System.currentTimeMillis();
 	private boolean uniqueEvent = true;
+	private UUID uuid;
 
 	public DelayedEvent(Player owner, int delay) {
 		this.owner = owner;
 		this.delay = delay;
+		this.uuid = UUID.randomUUID();
 	}
 
 	public DelayedEvent(Player owner, int delay, boolean uniqueEvent) {
@@ -47,6 +51,10 @@ public abstract class DelayedEvent {
 
 	public boolean hasOwner() {
 		return owner != null;
+	}
+	
+	public UUID getUUID() {
+		return uuid;
 	}
 
 	public boolean is(DelayedEvent e) {

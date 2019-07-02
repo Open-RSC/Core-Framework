@@ -4,10 +4,12 @@ import com.openrsc.server.event.rsc.GameTickEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GameTickEventHandler {
 
@@ -15,21 +17,18 @@ public class GameTickEventHandler {
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
-	private LinkedHashMap<String, GameTickEvent> events = new LinkedHashMap<String, GameTickEvent>();
-	private LinkedHashMap<String, GameTickEvent> toAdd = new LinkedHashMap<String, GameTickEvent>();
+	private ConcurrentHashMap<String, GameTickEvent> events = new ConcurrentHashMap<String, GameTickEvent>();
+	private ConcurrentHashMap<String, GameTickEvent> toAdd = new ConcurrentHashMap<String, GameTickEvent>();
 
 	public void add(GameTickEvent event) {
 		String className = String.valueOf(event.getClass());
 		if (event.getOwner() == null) { // Server events, no owner.
-			String u;
-			while (events.containsKey(u = UUID.randomUUID().toString())) {
-			}
-			toAdd.put(className + u, event);
+			toAdd.merge(className + UUID.randomUUID(), event, (oldEvent, newEvent) -> newEvent);
 		} else {
 			if (event.getOwner().isPlayer())
-				toAdd.put(className + event.getOwner().getUUID() + "p", event);
+				toAdd.merge(className + event.getOwner().getUUID() + "p", event, (oldEvent, newEvent) -> newEvent);
 			else
-				toAdd.put(className + event.getOwner().getUUID() + "n", event);
+				toAdd.merge(className + event.getOwner().getUUID() + "n", event, (oldEvent, newEvent) -> newEvent);
 		}
 	}
 
@@ -41,9 +40,11 @@ public class GameTickEventHandler {
 
 	void doGameEvents() {
 		if (toAdd.size() > 0) {
-			for (Map.Entry<String, GameTickEvent> e : toAdd.entrySet())
-				events.put(e.getKey(), e.getValue());
-			toAdd.clear();
+			for(Iterator<Map.Entry<String, GameTickEvent>> iter = toAdd.entrySet().iterator(); iter.hasNext(); ) {
+			    Map.Entry<String, GameTickEvent> e = iter.next();
+			    events.merge(e.getKey(), e.getValue(), (oldEvent, newEvent) -> newEvent);
+			    iter.remove();
+			}
 		}
 		for (Iterator<Map.Entry<String, GameTickEvent>> it = events.entrySet().iterator(); it.hasNext(); ) {
 			GameTickEvent event = it.next().getValue();
@@ -67,8 +68,8 @@ public class GameTickEventHandler {
 		}
 	}
 
-	public LinkedHashMap<String, GameTickEvent> getEvents() {
-		return events;
+	public HashMap<String, GameTickEvent> getEvents() {
+		return new LinkedHashMap<String, GameTickEvent>(events);
 	}
 
 	public void remove(GameTickEvent event) {

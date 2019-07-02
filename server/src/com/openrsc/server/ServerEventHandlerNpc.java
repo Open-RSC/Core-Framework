@@ -1,15 +1,15 @@
 package com.openrsc.server;
 
 import com.openrsc.server.event.DelayedEventNpc;
-import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.Mob;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class ServerEventHandlerNpc {
 
@@ -18,21 +18,18 @@ public final class ServerEventHandlerNpc {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private LinkedHashMap<String, DelayedEventNpc> events = new LinkedHashMap<String, DelayedEventNpc>();
-	private LinkedHashMap<String, DelayedEventNpc> toAdd = new LinkedHashMap<String, DelayedEventNpc>();
+	private ConcurrentHashMap<String, DelayedEventNpc> events = new ConcurrentHashMap<String, DelayedEventNpc>();
+	private ConcurrentHashMap<String, DelayedEventNpc> toAdd = new ConcurrentHashMap<String, DelayedEventNpc>();
 
 	public void add(DelayedEventNpc event) {
 		String className = String.valueOf(event.getClass());
 		if (event.isUniqueEvent() || !event.hasOwner()) {
-			String u;
-			while (toAdd.containsKey(u = UUID.randomUUID().toString())) {
-			}
-			toAdd.put(className + u, event);
+			toAdd.putIfAbsent(className + event.getUUID(), event);
 		} else {
 			if (event.getOwner().isPlayer())
-				toAdd.put(className + event.getOwner().getUUID() + "p", event);
+				toAdd.putIfAbsent(className + event.getOwner().getUUID() + "p", event);
 			else
-				toAdd.put(className + event.getOwner().getUUID() + "n", event);
+				toAdd.putIfAbsent(className + event.getOwner().getUUID() + "n", event);
 		}
 	}
 
@@ -44,9 +41,11 @@ public final class ServerEventHandlerNpc {
 
 	void doEvents() {
 		if (toAdd.size() > 0) {
-			for (Map.Entry<String, DelayedEventNpc> e : toAdd.entrySet())
-				events.put(e.getKey(), e.getValue());
-			toAdd.clear();
+			for(Iterator<Map.Entry<String, DelayedEventNpc>> iter = toAdd.entrySet().iterator(); iter.hasNext(); ) {
+			    Map.Entry<String, DelayedEventNpc> e = iter.next();
+			    events.putIfAbsent(e.getKey(), e.getValue());
+			    iter.remove();
+			}
 		}
 		for (Iterator<Map.Entry<String, DelayedEventNpc>> it = events.entrySet().iterator(); it.hasNext(); ) {
 			DelayedEventNpc event = it.next().getValue();
@@ -69,8 +68,8 @@ public final class ServerEventHandlerNpc {
 		}
 	}
 
-	public LinkedHashMap<String, DelayedEventNpc> getEvents() {
-		return events;
+	public HashMap<String, DelayedEventNpc> getEvents() {
+		return new LinkedHashMap<String, DelayedEventNpc>(events);
 	}
 
 	public void remove(DelayedEventNpc event) {
