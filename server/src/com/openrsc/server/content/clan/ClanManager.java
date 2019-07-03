@@ -15,13 +15,13 @@ import java.util.Comparator;
 
 
 public class ClanManager {
-	public static final int MAX_CLAN_SIZE = 15;
+	static final int MAX_CLAN_SIZE = 150;
 	public final static ClanRankComparator CLAN_COMPERATOR = new ClanRankComparator();
 	/**
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
-	public static ArrayList<Clan> clans = new ArrayList<Clan>();
+	public static ArrayList<Clan> clans = new ArrayList<>();
 
 	public static void createClan(Clan clan) {
 		try {
@@ -32,7 +32,7 @@ public class ClanManager {
 		}
 	}
 
-	public static void deleteClan(Clan clan) {
+	static void deleteClan(Clan clan) {
 		try {
 			databaseDeleteClan(clan);
 			clans.remove(clan);
@@ -169,7 +169,7 @@ public class ClanManager {
 		}
 	}
 
-	public static void deleteClanPlayer(Clan clan) {
+	private static void deleteClanPlayer(Clan clan) {
 		try {
 			PreparedStatement statement = DatabaseConnection.getDatabase()
 				.prepareStatement("DELETE FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "clan_players` WHERE `clan_id`=?");
@@ -181,7 +181,7 @@ public class ClanManager {
 		}
 	}
 
-	public static void updateClan(Clan clan) {
+	private static void updateClan(Clan clan) {
 		try {
 			PreparedStatement statement = DatabaseConnection.getDatabase()
 				.prepareStatement("UPDATE `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "clan` SET `name`=?, `tag`=?, `leader`=?, `kick_setting`=?, `invite_setting`=?, `allow_search_join`=?, `clan_points`=? WHERE `id`=?");
@@ -202,7 +202,7 @@ public class ClanManager {
 		}
 	}
 
-	public static void updateClanRankPlayer(ClanPlayer cp) {
+	static void updateClanRankPlayer(ClanPlayer cp) {
 		try {
 			PreparedStatement statement = DatabaseConnection.getDatabase()
 				.prepareStatement("UPDATE `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "clan_players` SET `rank`=? WHERE `username`=?");
@@ -233,7 +233,7 @@ public class ClanManager {
 		}
 	}
 
-	public static void saveClanChanges(Clan clan) {
+	static void saveClanChanges(Clan clan) {
 		updateClan(clan);
 
 		deleteClanPlayer(clan);
