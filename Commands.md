@@ -28,9 +28,6 @@ Admin Commands
 - restart
   - Usage: `::restart`
   - Restarts the server.
-- reloaddrops
-  - Usage: `::reloaddrops`
-  - Reloads NPC drop tables.
 - grounditem
   - Usage: `::grounditem [id] (respawn_time) (amount) (x) (y)`
   - Alias: `::gi` or `::gitem`
@@ -43,56 +40,12 @@ Admin Commands
   - Alias: `::rgi` or `::rgitem` or `::removegi` or `::removegitem` or `::rgrounditem`
   - Removes from the database a ground item spawn entry.
   - If no coordinates are supplied, then the current player's coordinates are used.
-- reloadworld
-  - Usage: `::reloadworld`
-  - Alias: `::reloadland`
-  - Reloads landscape.
-- summonall
-  - Usage: `::summonall (width) (height)`
-  - Summons all currently logged in players to the current player.
-  - Width and height define a rectangle that the summon players will be placed into.
-  - If width and height is not supplied then all players are summoned to the same square as the current player.
-- returnall
-  - Usage: `::returnall`
-  - Returns all non-staff members who have been summoned.
-- setcache
-  - Usage: `::setcache (name) [cache_key] [cache_value]`
-  - Alias: `::scache` or `::storecache`
-  - Sets a cache value for the specified player.
-  - If no player is specified, then the current player's cache is modified.
-- getcache
-  - Usage: `::getcache (name) [cache_key]`
-  - Alias: `::gcache` or `::checkcache`
-  - Display the cache contents for the specified player.
-  - If no player is specified, then the current player's cache is modified.
-- deletecache
-  - Usage: `::getcache (name) [cache_key]`
-  - Alias: `::dcache` or `::removecache` or `::rcache`
-  - Remove the cache contents of a specified key for the specified player.
-  - If no player is specified, then the current player's cache is modified.
-- setquest
-  - Usage: `::setquest [player] [questId] (stage)`
-  - Alias: `::queststage` or `::setqueststage` or `::resetquest` or `::resetq`
-  - Sets the quest stage for the specified quest to the specified stage for the specified player.
-  - If no quest stage is supplied, then 0 is used.
-- questcomplete
-  - Usage: `::setquest [player] [questId]`
-  - Alias: `::questcom`
-  - Sets the specified quest to completed for the specified player.
-- quest
-  - Usage: `::quest  [player] [questId]`
-  - Alias: `::getquest` or `::checkquest`
-  - Display the quest stage for the specified user for the specified quest.
 - shutdown
   - Usage: `::shutdown 
   - Shuts down the server immediately.
 - update
   - Usage: `::update (reason)`
   - Shuts down the server with a warning to users and a graceful timer to allow players to save their status.
-- appearance
-  - Usage: `::appearance (player)`
-  - Shows the appearance change screen to the specified player.
-  - If no player is specified, then it shows the appearance change screen to the current player.
 - item
   - Usage: `::item [id] (amount) (player)`
   - Spawns an item for the specified player.
@@ -191,15 +144,28 @@ Admin Commands
 - quickbank
   - Usage: `::quickbank`
   - Displays the logged in player's bank window.
-- ban
-  - Usage: `::ban [name] [time in minutes, -1 for permanent, 0 to unban]`
-  - Bans the specified player.
-  - You can not ban a staff member of equal or greater rank.
 - freezeexperience
   - Usage: `::freezeexperience [player] (boolean)`
   - Alias: `::freezeexp` or `::freezexp`
   - Freezes the specified player's experience such that they can not gain anymore experience until the freeze is lifted.
   - If no boolean is supplied, then this command works as a toggle.
+- skull
+  - Usage: `::skull [player] (boolean)`
+  - Gives or removes the PK skull for the specified player.
+  - If no boolean is supplied, then this command works as a toggle.
+- ip
+  - Usage: `::ip (name)`
+  - Shows the IP address of the specified player.
+  - If no player is specified, then the current player's IP is shown.
+- appearance
+  - Usage: `::appearance (player)`
+  - Shows the appearance change screen to the specified player.
+  - If no player is specified, then it shows the appearance change screen to the current player.
+- spawnnpc
+  - Usage: `::spawnnpc [id] (radius) (time in minutes)`
+  - Spawns the specified NPC with the specified walking radius for the specified amount of time.
+  - If no walking radius is supplied, then 1 is used.
+  - If no duration is supplied, then 10 minutes is used.
 ------------------------
 Developer Commands
 ------------------------
@@ -244,19 +210,53 @@ Developer Commands
 ------------------------
 Super/Senior Moderator Commands
 ------------------------
-- spawnnpc
-  - Usage: `::spawnnpc [id] (radius) (time in minutes)`
-  - Spawns the specified NPC with the specified walking radius for the specified amount of time.
-  - If no walking radius is supplied, then 1 is used.
-  - If no duration is supplied, then 10 minutes is used.
+- setcache
+  - Usage: `::setcache (name) [cache_key] [cache_value]`
+  - Alias: `::scache` or `::storecache`
+  - Sets a cache value for the specified player.
+  - If no player is specified, then the current player's cache is modified.
+- getcache
+  - Usage: `::getcache (name) [cache_key]`
+  - Alias: `::gcache` or `::checkcache`
+  - Display the cache contents for the specified player.
+  - If no player is specified, then the current player's cache is modified.
+- deletecache
+  - Usage: `::getcache (name) [cache_key]`
+  - Alias: `::dcache` or `::removecache` or `::rcache`
+  - Remove the cache contents of a specified key for the specified player.
+  - If no player is specified, then the current player's cache is modified.
+- setquest
+  - Usage: `::setquest [player] [questId] (stage)`
+  - Alias: `::queststage` or `::setqueststage` or `::resetquest` or `::resetq`
+  - Sets the quest stage for the specified quest to the specified stage for the specified player.
+  - If no quest stage is supplied, then 0 is used.
+- questcomplete
+  - Usage: `::setquest [player] [questId]`
+  - Alias: `::questcom`
+  - Sets the specified quest to completed for the specified player.
+- quest
+  - Usage: `::quest  [player] [questId]`
+  - Alias: `::getquest` or `::checkquest`
+  - Display the quest stage for the specified user for the specified quest.
+- reloaddrops
+  - Usage: `::reloaddrops`
+  - Reloads NPC drop tables.
+- reloadworld
+  - Usage: `::reloadworld`
+  - Alias: `::reloadland`
+  - Reloads landscape.
+- summonall
+  - Usage: `::summonall (width) (height)`
+  - Summons all currently logged in players to the current player.
+  - Width and height define a rectangle that the summon players will be placed into.
+  - If width and height is not supplied then all players are summoned to the same square as the current player.
+- returnall
+  - Usage: `::returnall`
+  - Returns all non-staff members who have been summoned.
 - fatigue
   - Usage: `::fatigue [player] (percentage)`
   - Sets fatigue of the specified player to the specified percentage.
   - If no percentage is specified, then 100 is used.
-- skull
-  - Usage: `::skull [player] (boolean)`
-  - Gives or removes the PK skull for the specified player.
-  - If no boolean is supplied, then this command works as a toggle.
 - jail
   - Usage: `::jail [name]`
   - Puts the specified player in Runescape Jail.
@@ -265,14 +265,14 @@ Super/Senior Moderator Commands
 - release
   - Usage: `::release [name]`
   - Releases the specified player from Runescape Jail to the location they were before being jailed.
-- ip
-  - Usage: `::ip (name)`
-  - Shows the IP address of the specified player.
-  - If no player is specified, then the current player's IP is shown.
 - ipcount
   - Usage: `::ipcount (name)`
   - Shows the number of players connected with the same IP address as the specified player.
   - If no player is specified, then the current player's information is shown.
+- ban
+  - Usage: `::ban [name] [time in minutes, -1 for permanent, 0 to unban]`
+  - Bans the specified player.
+  - You can not ban a staff member of equal or greater rank.
 ------------------------
 Moderator Commands
 ------------------------

@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public final class Event implements CommandListener {
-	private static final Logger LOGGER = LogManager.getLogger(Event.class);
+	public static final Logger LOGGER = LogManager.getLogger(Event.class);
 	private static final String[] towns = {"varrock", "falador", "draynor", "portsarim", "karamja", "alkharid",
 		"lumbridge", "edgeville", "castle", "taverly", "clubhouse", "seers", "barbarian", "rimmington", "catherby",
 		"ardougne", "yanille", "lostcity", "gnome", "shilovillage", "tutorial", "modroom"};
