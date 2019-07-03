@@ -925,6 +925,16 @@ public final class Admins implements CommandListener {
 			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "A staff member has added to your bank " + amount + " " + EntityHandler.getItemDef(id).getName());
 			}
+		} else if (cmd.equals("fillbank")) {
+				for (int i = 0; i < 1289; i++) {
+					player.getBank().add(new Item(i, 50));
+				}
+				player.message("Added bank items.");
+		} else if (cmd.equals("unfillbank")) {
+			for (int i = 0; i < 1289; i++) {
+				player.getBank().remove(new Item(i, 50));
+			}
+			player.message("Removed bank items.");
 		} else if (cmd.equalsIgnoreCase("quickauction")) {
 			Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
 			if (p == null) {

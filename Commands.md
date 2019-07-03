@@ -2,6 +2,12 @@ OpenRSC Commands
 ------------------------
 Admin Commands
 ------------------------
+- fillbank
+  - Usage: `::fillbank`
+  - Adds 50 of every item in the game to the admin's bank.
+- unfillbank
+  - Usage: `::unfillbank`
+  - Subtracts 50 of every item in the game from the admin's bank.
 - saveall
   - Usage: `::saveall`
   - Saves all users currently logged in.
