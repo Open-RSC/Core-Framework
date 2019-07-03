@@ -212,15 +212,24 @@ public class Thieving extends Functions
 			player.message("You find nothing");
 			return;
 		}
+		
+		boolean makeChestStuck = Constants.GameServer.LOOTED_CHESTS_STUCK;
 
 		player.message("You find a trap on the chest");
-		GameObject tempChest = new GameObject(obj.getLocation(), 340, obj.getDirection(), obj.getType());
-		replaceObject(obj, tempChest);
+		GameObject tempChest = null;
+		if (!makeChestStuck) {
+			tempChest = new GameObject(obj.getLocation(), 340, obj.getDirection(), obj.getType());
+			replaceObject(obj, tempChest);
+		}
 		sleep(1200);
 		player.message("You disable the trap");
 
 		message(player, "You open the chest");
-		openChest(tempChest);
+		if (!makeChestStuck && tempChest != null) {
+			openChest(tempChest);
+		} else {
+			replaceObjectDelayed(obj, respawnTime, 339);
+		}
 		int random = DataConversions.random(1, 100);
 		Collections.sort(loot);
 		for (LootItem l : loot) {
@@ -230,7 +239,9 @@ public class Thieving extends Functions
 		}
 		player.incExp(Skills.THIEVING, xp, true);
 		message(player, "You find treasure inside!");
-		replaceObjectDelayed(obj, respawnTime, 340);
+		if (!makeChestStuck) {
+			replaceObjectDelayed(obj, respawnTime, 340);
+		}
 		if (teleLoc != null) {
 			message(player, "suddenly a second magical trap triggers");
 			player.teleport(teleLoc.getX(), teleLoc.getY(), true);
