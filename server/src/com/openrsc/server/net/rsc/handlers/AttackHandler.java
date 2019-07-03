@@ -2,7 +2,6 @@ package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.Server;
 import com.openrsc.server.event.MiniEvent;
-import com.openrsc.server.external.NpcId;
 import com.openrsc.server.event.rsc.impl.RangeEvent;
 import com.openrsc.server.event.rsc.impl.ThrowingEvent;
 import com.openrsc.server.model.action.WalkToMobAction;
@@ -15,8 +14,6 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.plugins.PluginHandler;
-
-import static com.openrsc.server.plugins.Functions.transform;
 
 public class AttackHandler implements PacketHandler {
 	/**
@@ -92,7 +89,7 @@ public class AttackHandler implements PacketHandler {
 		player.setStatus(Action.ATTACKING_MOB);
 		if (player.getRangeEquip() < 0 && player.getThrowingEquip() < 0) {
 			if (affectedMob.isNpc())
-				player.setFollowing(affectedMob);
+				player.setFollowing(affectedMob, 0);
 			player.setWalkToAction(new WalkToMobAction(player, affectedMob, affectedMob.isNpc() ? 1 : 2) {
 				public void execute() {
 					player.resetPath();

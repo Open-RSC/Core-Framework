@@ -30,7 +30,7 @@ public class ItemUseOnNpc implements PacketHandler {
 		if (affectedNpc == null || item == null) {
 			return;
 		}
-		player.setFollowing(affectedNpc);
+		player.setFollowing(affectedNpc, 0);
 		player.setStatus(Action.USING_Item_ON_NPC);
 		player.setWalkToAction(new WalkToMobAction(player, affectedNpc, 1) {
 			public void execute() {
