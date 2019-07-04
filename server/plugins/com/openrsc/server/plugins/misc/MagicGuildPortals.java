@@ -4,6 +4,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
+import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -19,7 +20,7 @@ public class MagicGuildPortals implements WallObjectActionListener, WallObjectAc
 	@Override
 	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
 		if (inArray(obj.getID(), MAGIC_PORTALS)) {
-			p.message("you enter the magic portal");
+			p.playerServerMessage(MessageType.QUEST, "you enter the magic portal");
 			if (obj.getID() == MAGIC_PORTALS[0]) {
 				p.teleport(212, 695);
 			} else if (obj.getID() == MAGIC_PORTALS[1]) {

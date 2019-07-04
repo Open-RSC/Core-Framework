@@ -9,6 +9,8 @@ import com.openrsc.server.plugins.listeners.executive.PlayerMageNpcExecutiveList
 
 import static com.openrsc.server.plugins.Functions.sleep;
 
+import com.openrsc.server.external.NpcId;
+
 public class SalarinTheTwistedMageAI implements PlayerMageNpcListener, PlayerMageNpcExecutiveListener {
 
 	/*
@@ -17,12 +19,12 @@ public class SalarinTheTwistedMageAI implements PlayerMageNpcListener, PlayerMag
 
 	@Override
 	public boolean blockPlayerMageNpc(Player p, Npc n) {
-		return n.getID() == 567 && (p.getSkills().getLevel(Skills.ATTACK) > 2 || p.getSkills().getLevel(Skills.STRENGTH) > 2);
+		return n.getID() == NpcId.SALARIN_THE_TWISTED.id() && (p.getSkills().getLevel(Skills.ATTACK) > 2 || p.getSkills().getLevel(Skills.STRENGTH) > 2);
 	}
 
 	@Override
 	public void onPlayerMageNpc(Player p, Npc n) {
-		if (n.getID() == 567 && (p.getSkills().getLevel(Skills.ATTACK) > 2 || p.getSkills().getLevel(Skills.STRENGTH) > 2)) {
+		if (n.getID() == NpcId.SALARIN_THE_TWISTED.id() && (p.getSkills().getLevel(Skills.ATTACK) > 2 || p.getSkills().getLevel(Skills.STRENGTH) > 2)) {
 			if (!p.withinRange(n, 5))
 				return;
 			n.getUpdateFlags().setChatMessage(new ChatMessage(n, "Amshalaraz Nithcosh dimarilo", p));

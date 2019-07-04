@@ -54,17 +54,9 @@ public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveL
 			if (p.getInventory().hasItemId(ItemId.PLAGUE_SAMPLE.id())) {
 				p.message("the plague sample is too delicate...");
 				p.message("it disintegrates in the crossing");
-				while (p.getInventory().countId(812) > 0) {
+				while (p.getInventory().countId(ItemId.PLAGUE_SAMPLE.id()) > 0) {
 					p.getInventory().remove(new Item(ItemId.PLAGUE_SAMPLE.id()));
 				}
-			}
-			if (p.getLocation().inBounds(388, 4, 427, 40) || p.getLocation().inBounds(484, 4, 523, 40)
-				|| p.getLocation().inBounds(411, 976, 519, 984)
-				|| p.getLocation().inBounds(411, 1920, 518, 1925)
-				|| p.getLocation().inBounds(511, 976, 519, 984)
-				|| p.getLocation().inBounds(511, 1920, 518, 1925)) {
-				message(p, "A mysterious force blocks your teleport!",
-					"You can't use this teleport after level 30 wilderness!");
 			}
 			if (menu != -1) {
 				if (menu == 0) { // Edgeville
@@ -84,7 +76,7 @@ public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveL
 				} else {
 					int rubs = p.getCache().getInt("charged_ds_amulet");
 					if (rubs >= 3) {
-						p.getInventory().replace(597, 522);
+						p.getInventory().replace(ItemId.CHARGED_DRAGONSTONE_AMULET.id(), ItemId.DRAGONSTONE_AMULET.id());
 						p.getCache().remove("charged_ds_amulet");
 					} else {
 						p.getCache().put("charged_ds_amulet", rubs + 1);

@@ -198,12 +198,19 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	/**
 	 * Adds a DelayedEvent that will spawn a GameObject
 	 */
-	public void delayedSpawnObject(final GameObjectLoc loc, final int respawnTime) {
+	public void delayedSpawnObject(final GameObjectLoc loc, final int respawnTime, final boolean forceFullBlock) {
 		Server.getServer().getEventHandler().add(new SingleEvent(null, respawnTime) {
 			public void action() {
 				registerGameObject(new GameObject(loc));
+				if (forceFullBlock) {
+					getTile(loc.getX(), loc.getY()).traversalMask |= 64;
+				}
 			}
 		});
+	}
+	
+	public void delayedSpawnObject(final GameObjectLoc loc, final int respawnTime) {
+		this.delayedSpawnObject(loc, respawnTime, false);
 	}
 
 	public WorldLoader getDB() {
