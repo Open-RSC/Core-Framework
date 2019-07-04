@@ -73,6 +73,7 @@ public class SewerValve implements ObjectActionExecutiveListener, ObjectActionLi
 				p.teleport(587, 3411);
 				p.message("the raft washes up the sewer, the sewer passages end here");
 			} else {
+				//TODO MAKE CORRECT ISLAND
 				p.teleport(621, 3465);
 				p.message("the raft washes up the sewer, and stops at the first island");
 				p.message("You need to find the right combination");

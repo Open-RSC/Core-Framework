@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.misc;
 
 import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -30,7 +31,6 @@ import static com.openrsc.server.plugins.Functions.sleep;
 public class Panning implements ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener, InvActionListener, InvActionExecutiveListener {
 
 	private static int PANNING_POINT = 1058;
-	private static int GUIDE = 726;
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
@@ -71,7 +71,7 @@ public class Panning implements ObjectActionListener, ObjectActionExecutiveListe
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == PANNING_POINT) {
 			if (item.getID() == ItemId.PANNING_TRAY.id()) {
-				Npc guide = getNearestNpc(p, GUIDE, 15);
+				Npc guide = getNearestNpc(p, NpcId.DIGSITE_GUIDE.id(), 15);
 				if (guide != null) {
 					// NOT SURE? if(p.getQuestStage(Constants.Quests.DIGSITE) < 2) {
 					if (!p.getCache().hasKey("unlocked_panning")) {
@@ -111,12 +111,12 @@ public class Panning implements ObjectActionListener, ObjectActionExecutiveListe
 
 	@Override
 	public boolean blockInvUseOnNpc(Player p, Npc npc, Item item) {
-		return npc.getID() == GUIDE;
+		return npc.getID() == NpcId.DIGSITE_GUIDE.id();
 	}
 
 	@Override
 	public void onInvUseOnNpc(Player p, Npc npc, Item item) {
-		if (npc.getID() == GUIDE) {
+		if (npc.getID() == NpcId.DIGSITE_GUIDE.id()) {
 			if (item.getID() == ItemId.PANNING_TRAY.id()) {
 				p.message("You give the panning tray to the guide");
 				npcTalk(p, npc, "Yes, this is a panning tray...");

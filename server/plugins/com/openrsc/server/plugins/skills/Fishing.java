@@ -184,7 +184,7 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 						if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
 							GameObject newObject = new GameObject(object.getLocation(), 668, object.getDirection(), object.getType());
 							World.getWorld().replaceGameObject(object, newObject);
-							World.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
+							World.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000, true);
 						}
 					}					
 				} else {

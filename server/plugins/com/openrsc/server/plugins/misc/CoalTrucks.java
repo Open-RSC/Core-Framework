@@ -8,6 +8,7 @@ import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -21,11 +22,11 @@ public class CoalTrucks implements ObjectActionExecutiveListener, ObjectActionLi
 			if (p.getCache().hasKey("coal_truck") && p.getCache().getInt("coal_truck") > 0) {
 				p.setBusyTimer(500);
 				int coalLeft = p.getCache().getInt("coal_truck");
-				p.message("You remove a piece of coal from the truck");
+				p.playerServerMessage(MessageType.QUEST, "You remove a piece of coal from the truck");
 				addItem(p, ItemId.COAL.id(), 1);
 				p.getCache().set("coal_truck", coalLeft - 1);
 			} else {
-				p.message("there is no coal left in the truck");
+				p.playerServerMessage(MessageType.QUEST, "there is no coal left in the truck\"");
 			}
 		}
 	}
@@ -56,7 +57,7 @@ public class CoalTrucks implements ObjectActionExecutiveListener, ObjectActionLi
 				} else {
 					p.getCache().set("coal_truck", coalAmount);
 				}
-				p.message("You put a piece of coal in the truck");
+				p.playerServerMessage(MessageType.QUEST, "You put a piece of coal in the truck");
 				removeItem(p, ItemId.COAL.id(), 1);
 				sleep(50);
 			}

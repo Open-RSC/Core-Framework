@@ -45,7 +45,7 @@ public final class Constants {
 		/* List for extremely low health 5% - min 1hp*/
 		public static final int[] NPCS_THAT_RETREAT_LOW = {NpcId.ZOMBIE_LVL24_GEN.id(), NpcId.SHADOW_SPIDER.id(), NpcId.DEADLY_RED_SPIDER.id(),
 			NpcId.ICE_SPIDER.id(), NpcId.JUNGLE_SPIDER.id(), NpcId.GIANT_SPIDER_LVL31.id(), NpcId.POISON_SCORPION.id(),
-			NpcId.KING_SCORPION.id(), NpcId.DONNY_THE_LAD.id(), NpcId.SPEEDY_KEITH.id(), NpcId.BLACK_HEATHER.id(),
+			NpcId.KING_SCORPION.id(), NpcId.DONNY_THE_LAD.id(), NpcId.SPEEDY_KEITH.id(), NpcId.BLACK_HEATHER.id(), NpcId.ZOMBIE_INVOKED.id(),
 			NpcId.ZOMBIE_ENTRANA.id(), NpcId.ZOMBIE_LVL32.id(), NpcId.ZOMBIE_WMAZEKEY.id(), NpcId.GIANT_BAT.id(), NpcId.DEATH_WING.id(),
 			NpcId.RAT_LVL13.id(), NpcId.RAT_WMAZEKEY.id(), NpcId.HOBGOBLIN_LVL32.id(), NpcId.OTHERWORLDLY_BEING.id(),
 			NpcId.WYSON_THE_GARDENER.id(), NpcId.STRAVEN.id()

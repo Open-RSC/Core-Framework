@@ -3,11 +3,11 @@ package com.openrsc.server.plugins.misc;
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.ShortEvent;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.MessageType;
@@ -32,21 +32,10 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 			return;
 		}
 		switch (object.getID()) {
-			/* Brimhaven Jungle tree swings TODO: Possibly should give agility XP ? */
-			/* Stones */
-			case 701:
-				message(owner, "You jump onto the rock");
-				if (object.getX() == 346 && object.getY() == 807) {
-					owner.teleport(346, 807, false);
-				} else if (object.getX() == 347 && object.getY() == 806) {
-					owner.teleport(347, 808, false);
-				}
-				message(owner, "And cross the water without problems");
-				break;
 			case 79:
 				if (command.equals("close")) {
 					owner.setBusyTimer(600);
-					owner.message("You slide the cover back over the manhole");
+					owner.playerServerMessage(MessageType.QUEST, "You slide the cover back over the manhole");
 					replaceObject(object, new GameObject(object.getLocation(), 78, object.getDirection(), object.getType()));
 				} else {
 					owner.message("Nothing interesting happens");
@@ -55,22 +44,18 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 			case 78:
 				if (command.equals("open")) {
 					owner.setBusyTimer(600);
-					owner.message("You slide open the manhole cover");
+					owner.playerServerMessage(MessageType.QUEST, "You slide open the manhole cover");
 					replaceObject(object, new GameObject(object.getLocation(), 79, object.getDirection(), object.getType()));
 				}
 				break;
 			case 203:
 				if (command.equals("close"))
-					World.getWorld().replaceGameObject(object,
-						new GameObject(object.getLocation(), 202, object
-							.getDirection(), object.getType()));
+					replaceObject(object, new GameObject(object.getLocation(), 202, object.getDirection(), object.getType()));
 				else
 					owner.message("the coffin is empty.");
 				break;
 			case 202:
-				World.getWorld().replaceGameObject(object,
-					new GameObject(object.getLocation(), 203, object
-						.getDirection(), object.getType()));
+				replaceObject(object, new GameObject(object.getLocation(), 203, object.getDirection(), object.getType()));
 				break;
 			case 613: // Shilo cart
 				if (object.getX() != 384 || object.getY() != 851) {
@@ -83,32 +68,36 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 					owner.playerServerMessage(MessageType.QUEST, "...to the other and climb down again.");
 					return;
 				}
-				if (owner.getQuestStage(Constants.Quests.SHILO_VILLAGE) != -1) {
+				if (command.toLowerCase().equals("search") || owner.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
+					message(owner, "It looks as if you can climb across.",
+							"You search the cart.");
+					if (owner.getFatigue() >= owner.MAX_FATIGUE) {
+						owner.message("You are too fatigued to attempt climb across");
+						return;
+					}
+					message(owner, "You may be able to climb across the cart.",
+							"Would you like to try?");
+						int menu = showMenu(owner,
+							"Yes, I am am very nimble and agile!",
+							"No, I am happy where I am thanks!");
+						if (menu == 0) {
+							message(owner, "You climb up onto the cart",
+								"You nimbly jump from one side of the cart to the other.");
+							owner.teleport(386, 852);
+							owner.playerServerMessage(MessageType.QUEST, "And climb down again");
+						} else if (menu == 1) {
+							message(owner, "You think better of clambering over the cart, you might get dirty.");
+							playerTalk(owner, null, "I'd probably have just scraped my knees up as well.");
+						}
+				} else {
 					message(owner, "You approach the cart and see undead creatures gathering by the village gates.",
-						"There is a note attached to the cart.",
-						"The note says,",
-						"@gre@Danger deadly green mist do not enter if you value your life");
-					Npc mosol = getNearestNpc(owner, 539, 15);
+							"There is a note attached to the cart.",
+							"The note says,",
+							"@gre@Danger deadly green mist do not enter if you value your life");
+					Npc mosol = getNearestNpc(owner, NpcId.MOSOL.id(), 15);
 					if (mosol != null) {
 						npcTalk(owner, mosol, "You must be a maniac to go in there!");
 					}
-				} else {
-					owner.message("It looks as if you can climb across.");
-				}
-				message(owner, "You search the cart.",
-					"You may be able to climb across the cart.",
-					"Would you like to try?");
-				int menu = showMenu(owner,
-					"Yes, I am am very nimble and agile!",
-					"No, I am happy where I am thanks!");
-				if (menu == 0) {
-					message(owner, "You climb up onto the cart",
-						"You nimbly jump from one side of the cart to the other.");
-					owner.teleport(386, 852);
-					owner.playerServerMessage(MessageType.QUEST, "And climb down again");
-				} else if (menu == 1) {
-					message(owner, "You think better of clambering over the cart, you might get dirty.");
-					playerTalk(owner, null, "I'd probably have just scraped my knees up as well.");
 				}
 				break;
 			case 643: // Gnome tree stone
@@ -116,19 +105,21 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 					return;
 				}
 				owner.setBusy(true);
-				owner.message(
-					"You twist the stone tile to one side");
-				Server.getServer().getEventHandler().add(
-					new ShortEvent(owner) {
-						public void action() {
-							owner.message(
-								"It reveals a ladder, you climb down");
-							owner.teleport(703, 3284, false);
-							owner.setBusy(false);
-						}
+				owner.message("You twist the stone tile to one side");
+				if (owner.getQuestStage(Constants.Quests.GRAND_TREE) == -1) {
+					Server.getServer().getEventHandler().add(
+						new ShortEvent(owner) {
+							public void action() {
+								owner.message("It reveals a ladder, you climb down");
+								owner.teleport(703, 3284, false);
+								owner.setBusy(false);
+							}
 					});
+				} else {
+					owner.message("but nothing happens");
+				}
 				break;
-			case 417:
+			case 417: // CAVE ENTRANCE HAZEEL CULT
 				owner.message("you enter the cave");
 				owner.teleport(617, 3479);
 				owner.message("it leads downwards to the sewer");
@@ -142,7 +133,7 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 				owner.message("The ship arrives at Port Sarim");
 				break;
 		}
-
+		// SMUGGLING GATE VARROCK
 		if (object.getX() == 94 && object.getY() == 521 && object.getID() == 60) {
 			int x = owner.getX() == 94 ? 93 : 94, y = owner.getY();
 			owner.teleport(x, y, false);
@@ -152,7 +143,7 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 			message(owner, "you pull on the large wooden doors");
 			if (owner.getQuestStage(Constants.Quests.BIOHAZARD) == -1) {
 				owner.message("you open it and walk through");
-				Npc gateMourner = getNearestNpc(owner, 451, 15);
+				Npc gateMourner = getNearestNpc(owner, NpcId.MOURNER_BYENTRANCE.id(), 15);
 				if (gateMourner != null) {
 					npcTalk(owner, gateMourner, "go through");
 				}

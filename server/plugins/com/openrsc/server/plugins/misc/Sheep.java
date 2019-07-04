@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.misc;
 
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -18,7 +19,7 @@ public class Sheep implements InvUseOnNpcListener, InvUseOnNpcExecutiveListener 
 
 	@Override
 	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
-		return npc.getID() == 2 && item.getID() == 144;
+		return npc.getID() == NpcId.SHEEP.id() && item.getID() == ItemId.SHEARS.id();
 	}
 
 	@Override

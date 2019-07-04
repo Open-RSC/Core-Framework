@@ -12,7 +12,7 @@ public class Bed implements ObjectActionExecutiveListener, ObjectActionListener 
 	public void onObjectAction(final GameObject object, String command, Player owner) {
 		if ((command.equalsIgnoreCase("rest") || command.equalsIgnoreCase("sleep")) && !owner.isSleeping() || command.equalsIgnoreCase("lie in")) {
 			ActionSender.sendEnterSleep(owner);
-			if (object.getID() == 1035) // Crude Bed is like Sleeping Bag.
+			if (object.getID() == 1035 || object.getID() == 1162) // Crude Bed is like Sleeping Bag.
 				owner.startSleepEvent(false);
 			else
 				owner.startSleepEvent(true);
