@@ -190,15 +190,15 @@ public final class BankHandler implements PacketHandler {
 
 	private boolean isCert(int itemID) {
 		int[] certIds = {
-			/** Ores **/
+			/* Ores **/
 			517, 518, 519, 520, 521,
-			/** Bars **/
+			/* Bars **/
 			528, 529, 530, 531, 532,
-			/** Fish **/
+			/* Fish **/
 			533, 534, 535, 536, 628, 629, 630, 631,
-			/** Logs **/
+			/* Logs **/
 			711, 712, 713,
-			/** Misc **/
+			/* Misc **/
 			1270, 1271, 1272, 1273, 1274, 1275
 		};
 

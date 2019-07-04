@@ -116,43 +116,40 @@ public final class InterfaceShopHandler implements PacketHandler {
 
 			int totalMoney = 0;
 			int totalSold = 0;
-			if (def.getOriginalItemID() != -1) {
-				player.message("You can't sell noted items");
-				return;
-			}
 			for (int i = 0; i < amount; i++) {
 				/* If no noted version can be removed */
-				//if (player.getInventory().remove(def.getNoteID(), 1) == -1) { // commented out to prevent selling notes to specialty shops if a non-noted item is in inventory too
-				/* Try removing with original item ID */
-				if (player.getInventory().remove(itemID, 1) == -1) {
-					/* Break, player doesn't have anything. */
-					player.message("You don't have that many items");
-					break;
-				}
-				//}
+				if (player.getInventory().remove(def.getNoteID(), 1) == -1) {
+					/* Try removing with original item ID */
+					if (player.getInventory().remove(itemID, 1) == -1) {
+						/* Break, player doesn't have anything. */
+						player.message("You don't have that many items");
+						break;
+					}
+					//}
 
-				totalSold++;
-				/* if we are selling noted item, calculate price from the original item */
+					totalSold++;
+					/* if we are selling noted item, calculate price from the original item */
+					if (def.getOriginalItemID() != -1) {
+						totalMoney += shop.getItemSellPrice(def.getOriginalItemID(),
+							EntityHandler.getItemDef(def.getOriginalItemID()).getDefaultPrice(), totalSold);
+					} else {
+						totalMoney += shop.getItemSellPrice(itemID, def.getDefaultPrice(), totalSold);
+					}
+				}
+				if (totalMoney > 0) {
+					player.getInventory().add(new Item(10, totalMoney));
+				}
+				Item originalItem = null;
 				if (def.getOriginalItemID() != -1) {
-					totalMoney += shop.getItemSellPrice(def.getOriginalItemID(),
-						EntityHandler.getItemDef(def.getOriginalItemID()).getDefaultPrice(), totalSold);
-				} else {
-					totalMoney += shop.getItemSellPrice(itemID, def.getDefaultPrice(), totalSold);
+					originalItem = new Item(def.getOriginalItemID(), totalSold);
 				}
-			}
-			if (totalMoney > 0) {
-				player.getInventory().add(new Item(10, totalMoney));
-			}
-			Item originalItem = null;
-			if (def.getOriginalItemID() != -1) {
-				originalItem = new Item(def.getOriginalItemID(), totalSold);
-			}
-			shop.addShopItem(originalItem != null ? originalItem : new Item(itemID, totalSold));
-			ActionSender.sendInventory(player);
-			player.playSound("coins");
-			GameLogging.addQuery(new GenericLog(player.getUsername() + " sold " + def.getName() + " x" + totalSold
-				+ " for " + totalMoney + "gp" + " at " + player.getLocation().toString()));
+				shop.addShopItem(originalItem != null ? originalItem : new Item(itemID, totalSold));
+				ActionSender.sendInventory(player);
+				player.playSound("coins");
+				GameLogging.addQuery(new GenericLog(player.getUsername() + " sold " + def.getName() + " x" + totalSold
+					+ " for " + totalMoney + "gp" + " at " + player.getLocation().toString()));
 
+			}
 		}
 	}
 }
