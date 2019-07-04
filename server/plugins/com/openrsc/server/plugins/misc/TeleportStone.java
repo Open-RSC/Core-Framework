@@ -7,6 +7,8 @@ import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.*;
 
+import com.openrsc.server.external.ItemId;
+
 public class TeleportStone implements InvActionListener, InvActionExecutiveListener {
 
 	// Pretty sure this item doesn't even exist.
@@ -24,25 +26,27 @@ public class TeleportStone implements InvActionListener, InvActionExecutiveListe
 			p.message("a magical portal opens up, where would you like to go?");
 			String[] teleLoc = {"Lumbridge", "Draynor", "Falador", "Edgeville", "Varrock", "Alkharid", "Karamja", "Yanille", "Ardougne", "Catherby", "Seers", "Gnome Stronghold", "Stay here"};
 			int menu = showMenu(p, teleLoc);
-			if (p.getLocation().inWilderness() && System.currentTimeMillis() - p.getCombatTimer() < 10000) {
-				p.message("You need to stay out of combat for 10 seconds before using a teleport.");
-				return;
-			}
-			if (p.getLocation().wildernessLevel() >= 30 || (p.getLocation().inModRoom() && !p.isAdmin())) {
+			//if (p.getLocation().inWilderness() && System.currentTimeMillis() - p.getCombatTimer() < 10000) {
+			//	p.message("You need to stay out of combat for 10 seconds before using a teleport.");
+			//	return;
+			//}
+			if (p.getLocation().wildernessLevel() >= 30 || p.getLocation().isInFisherKingRealm()
+					|| p.getLocation().isInsideGrandTreeGround()
+					|| (p.getLocation().inModRoom() && !p.isAdmin())) {
 				p.message("A mysterious force blocks your teleport!");
 				p.message("You can't use this teleport after level 30 wilderness");
 				return;
 			}
-			if (p.getInventory().countId(1039) > 0) {
+			if (p.getInventory().countId(ItemId.ANA_IN_A_BARREL.id()) > 0) {
 				message(p, "You can't teleport while holding Ana,",
 					"It's just too difficult to concentrate.");
 				return;
 			}
-			if (p.getInventory().hasItemId(812)) {
+			if (p.getInventory().hasItemId(ItemId.PLAGUE_SAMPLE.id())) {
 				p.message("the plague sample is too delicate...");
 				p.message("it disintegrates in the crossing");
-				while (p.getInventory().countId(812) > 0) {
-					p.getInventory().remove(new Item(812));
+				while (p.getInventory().countId(ItemId.PLAGUE_SAMPLE.id()) > 0) {
+					p.getInventory().remove(new Item(ItemId.PLAGUE_SAMPLE.id()));
 				}
 			}
 			switch (menu) {

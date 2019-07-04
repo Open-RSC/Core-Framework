@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.misc;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GameObject;
@@ -101,7 +102,12 @@ public class StrangeBarrels implements ObjectActionListener, ObjectActionExecuti
 		ItemId.YEW_LOGS_CERTIFICATE.id()
 	};
 
-	private static final int[] MONSTER = {190, 199, 57, 99, 768, 61, 43, 21, 23, 41, 46, 40, 47, 67, 104, 66, 45, 19, 70};
+	//TODO CHECK IDS ON AMBIGUOUS NPCS
+	private static final int[] MONSTER = {NpcId.CHAOS_DWARF.id(), NpcId.DARK_WARRIOR.id(), NpcId.DARKWIZARD_LVL13.id(),
+			NpcId.DEADLY_RED_SPIDER.id(), NpcId.DEATH_WING.id(), NpcId.GIANT.id(), NpcId.GIANT_BAT.id(), NpcId.MUGGER.id(),
+			NpcId.GIANT_SPIDER_LVL8.id(), NpcId.ZOMBIE_LVL24_GEN.id(), NpcId.SKELETON_LVL25.id(), NpcId.SKELETON_LVL21.id(),
+			NpcId.RAT_LVL13.id(), NpcId.HOBGOBLIN_LVL32.id(), NpcId.MOSS_GIANT.id(), NpcId.BLACK_KNIGHT.id(), NpcId.SKELETON_LVL31.id(),
+			NpcId.RAT_LVL8.id(), NpcId.SCORPION.id()};
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
