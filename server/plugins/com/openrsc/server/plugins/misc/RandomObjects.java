@@ -157,7 +157,7 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 			}
 		}
 		if (object.getID() == 400) {
-			owner.message("The plant takes a bite at you!");
+			owner.playerServerMessage(MessageType.QUEST, "The plant takes a bite at you!");
 			owner.damage(getCurrentLevel(owner, Skills.HITPOINTS) / 10 + 2);
 		}
 	}
