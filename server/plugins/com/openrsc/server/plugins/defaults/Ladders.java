@@ -15,6 +15,7 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -79,19 +80,33 @@ public class Ladders {
 				displayTeleportBubble(player, player.getX(), player.getY(), false);
 			}
 		} else if (obj.getID() == 349) {
-			player.message("You pull the lever");
+			player.playerServerMessage(MessageType.QUEST, "You pull the lever");
 			player.teleport(621, 596);
 			sleep(600);
 			if (player.getX() == 621 && player.getY() == 596) {
 				displayTeleportBubble(player, player.getX(), player.getY(), false);
 			}
 		} else if (obj.getID() == 348) {
-			player.message("you pull the lever");
-			player.teleport(180, 128);
-			displayTeleportBubble(player, player.getX(), player.getY(), false);
-			sleep(600);
-			if (player.getX() == 180 && player.getY() == 128) {
+			boolean skip = player.getCache().hasKey("hide_wild_lever_warn")
+					&& player.getCache().getBoolean("hide_wild_lever_warn");
+			boolean teleport = false;
+			if (!skip) {
+				player.playerServerMessage(MessageType.QUEST, "warning pulling this lever will teleport you deep into the wilderness");
+				player.playerServerMessage(MessageType.QUEST, "Are you sure you wish to pull it?");
+				int menu = showMenu(player, "Yes I'm brave", "Eeep the wilderness no thankyou", "Yes please, don't show this message again");
+				if (menu == 0 || menu == 2) {
+					if (menu == 2) player.getCache().store("hide_wild_lever_warn", true);
+					teleport = true;
+				}
+			}
+			if (skip || teleport) {
+				player.message("you pull the lever");
+				player.teleport(180, 128);
 				displayTeleportBubble(player, player.getX(), player.getY(), false);
+				sleep(600);
+				if (player.getX() == 180 && player.getY() == 128) {
+					displayTeleportBubble(player, player.getX(), player.getY(), false);
+				}
 			}
 		} else if (obj.getID() == 776) {
 			if (hasItem(player, ItemId.PARAMAYA_REST_TICKET.id())) {

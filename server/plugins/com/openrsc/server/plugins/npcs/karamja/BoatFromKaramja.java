@@ -53,6 +53,7 @@ public final class BoatFromKaramja implements TalkToNpcExecutiveListener,
 				int pay_opt = showMenu(p, n, false, "Ok", "Oh, I'll not bother then");
 				if (pay_opt == 0) {
 					if (removeItem(p, ItemId.COINS.id(), 30)) {
+						playerTalk(p, n, "Ok");
 						message(p, "You pay 30 gold", "You board the ship");
 						movePlayer(p, 269, 648, true);
 						p.message("The ship arrives at Port Sarim");
