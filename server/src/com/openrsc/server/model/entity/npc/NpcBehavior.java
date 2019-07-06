@@ -840,13 +840,17 @@ public class NpcBehavior {
 	}
 
 	private boolean shouldRetreat(Npc npc) {
-		if (DataConversions.inArray(Constants.GameServer.NPCS_THAT_RETREAT_NORM, npc.getID())) {
-			return npc.getSkills().getLevel(Skills.HITPOINTS) <=
-				Math.ceil(npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.20);
-		} else if (DataConversions.inArray(Constants.GameServer.NPCS_THAT_RETREAT_LOW, npc.getID())) {
-			return npc.getSkills().getLevel(Skills.HITPOINTS) <=
-				Math.ceil(npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.05);
+		if(!Constants.GameServer.NPC_DONT_RETREAT)
+		{
+			if (DataConversions.inArray(Constants.GameServer.NPCS_THAT_RETREAT_NORM, npc.getID())) {
+				return npc.getSkills().getLevel(Skills.HITPOINTS) <=
+					Math.ceil(npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.20);
+			} else if (DataConversions.inArray(Constants.GameServer.NPCS_THAT_RETREAT_LOW, npc.getID())) {
+				return npc.getSkills().getLevel(Skills.HITPOINTS) <=
+					Math.ceil(npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.05);
+			}
 		}
+		
 		return false;
 	}
 
