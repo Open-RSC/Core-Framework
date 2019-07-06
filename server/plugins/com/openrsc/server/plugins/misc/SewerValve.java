@@ -72,8 +72,32 @@ public class SewerValve implements ObjectActionExecutiveListener, ObjectActionLi
 			if (p.getCache().hasKey("VALVE_1_RIGHT") && p.getCache().hasKey("VALVE_2_LEFT") && p.getCache().hasKey("VALVE_3_RIGHT") && p.getCache().hasKey("VALVE_4_RIGHT") && p.getCache().hasKey("VALVE_5_LEFT")) {
 				p.teleport(587, 3411);
 				p.message("the raft washes up the sewer, the sewer passages end here");
-			} else {
-				//TODO MAKE CORRECT ISLAND
+			}
+			else if (p.getCache().hasKey("VALVE_1_RIGHT") && p.getCache().hasKey("VALVE_2_LEFT") && p.getCache().hasKey("VALVE_3_RIGHT") && p.getCache().hasKey("VALVE_4_RIGHT")) {
+				p.teleport(600, 3409);
+				p.message("the raft washes up the sewer, and stops at the fifth island");
+				p.message("You need to find the right combination");
+				p.message("of the 5 sewer valves above to get further");
+			}
+			else if (p.getCache().hasKey("VALVE_1_RIGHT") && p.getCache().hasKey("VALVE_2_LEFT") && p.getCache().hasKey("VALVE_3_RIGHT")) {
+				p.teleport(622, 3410);
+				p.message("the raft washes up the sewer, and stops at the fourth island");
+				p.message("You need to find the right combination");
+				p.message("of the 5 sewer valves above to get further");
+			}
+			else if (p.getCache().hasKey("VALVE_1_RIGHT") && p.getCache().hasKey("VALVE_2_LEFT")) {
+				p.teleport(622, 3422);
+				p.message("the raft washes up the sewer, and stops at the third island");
+				p.message("You need to find the right combination");
+				p.message("of the 5 sewer valves above to get further");
+			}
+			else if (p.getCache().hasKey("VALVE_1_RIGHT")) {
+				p.teleport(622, 3434);
+				p.message("the raft washes up the sewer, and stops at the second island");
+				p.message("You need to find the right combination");
+				p.message("of the 5 sewer valves above to get further");
+			}
+			else {
 				p.teleport(621, 3465);
 				p.message("the raft washes up the sewer, and stops at the first island");
 				p.message("You need to find the right combination");
