@@ -221,6 +221,7 @@ public final class Constants {
 		public static boolean WANT_DECANTING = false;
 		public static boolean WANT_CERTER_BANK_EXCHANGE = false;
 		public static boolean MESSAGE_FULL_INVENTORY = false;
+		public static boolean NPC_DONT_RETREAT;
 		public static boolean NPC_KILL_LIST = false;
 		public static boolean NPC_KILL_MESSAGES = false;
 		public static boolean NPC_KILL_MESSAGES_FILTER = false;
@@ -382,6 +383,7 @@ public final class Constants {
 			VALUABLE_DROP_EXTRAS = Boolean.parseBoolean(props.getProperty("valuable_drop_extras"));
 			VALUABLE_DROP_ITEMS = props.getProperty("valuable_drop_items");
 			START_TIME = System.currentTimeMillis();
+			NPC_DONT_RETREAT = Boolean.parseBoolean(props.getProperty("npc_dont_retreat"));
 			NPC_BLOCKING = Integer.parseInt(props.getProperty("npc_blocking"));
 			AUTO_SERVER_RESTART = Boolean.parseBoolean(props.getProperty("auto_server_restart"));
 			RESTART_HOUR = Integer.parseInt(props.getProperty("restart_hour"));
