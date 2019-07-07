@@ -134,9 +134,9 @@ public final class InterfaceShopHandler implements PacketHandler {
 					/* if we are selling noted item, calculate price from the original item */
 					if (def.getOriginalItemID() != -1) {
 						totalMoney += shop.getItemSellPrice(def.getOriginalItemID(),
-							EntityHandler.getItemDef(def.getOriginalItemID()).getDefaultPrice(), totalSold);
+							EntityHandler.getItemDef(def.getOriginalItemID()).getDefaultPrice(), 1);
 					} else {
-						totalMoney += shop.getItemSellPrice(itemID, def.getDefaultPrice(), totalSold);
+						totalMoney += shop.getItemSellPrice(itemID, def.getDefaultPrice(), 1);
 					}
 				}
 				if (totalMoney > 0) {
