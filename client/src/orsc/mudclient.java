@@ -8640,6 +8640,13 @@ public final class mudclient implements Runnable {
 				this.settingsBlockTrade, this.settingsBlockDuel);
 		}
 
+		//Handle online list click
+		yFromTopDistance += 25;
+		if (this.mouseX > var6 && this.mouseX < var6 + var5
+			&& yFromTopDistance - 12 < this.mouseY && this.mouseY < yFromTopDistance + 4 && this.mouseButtonClick == 1) {
+			this.sendCommandString("onlinelist");
+		}
+
 		// skip tutorial button or exit blackhole button
 		if (this.insideTutorial) {
 			yFromTopDistance = 255;
