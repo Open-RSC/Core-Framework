@@ -120,6 +120,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 			int totalMoney = 0;
 			int totalSold = 0;
 			for (int i = 0; i < amount; i++) {
+			    int sellAmount = 0;
 				/* If no noted version can be removed */
 				if (player.getInventory().remove(def.getNoteID(), 1) == -1) {
 					/* Try removing with original item ID */
@@ -133,14 +134,16 @@ public final class InterfaceShopHandler implements PacketHandler {
 					totalSold++;
 					/* if we are selling noted item, calculate price from the original item */
 					if (def.getOriginalItemID() != -1) {
-						totalMoney += shop.getItemSellPrice(def.getOriginalItemID(),
+						sellAmount += shop.getItemSellPrice(def.getOriginalItemID(),
 							EntityHandler.getItemDef(def.getOriginalItemID()).getDefaultPrice(), 1);
 					} else {
-						totalMoney += shop.getItemSellPrice(itemID, def.getDefaultPrice(), 1);
+						sellAmount += shop.getItemSellPrice(itemID, def.getDefaultPrice(), 1);
 					}
+					
+					totalMoney += sellAmount;
 				}
-				if (totalMoney > 0) {
-					player.getInventory().add(new Item(10, totalMoney));
+				if (sellAmount > 0) {
+					player.getInventory().add(new Item(10, sellAmount));
 				}
 				
 				// Determine if we are selling a Noted item
