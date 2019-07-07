@@ -20,14 +20,21 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.util.rsc.DataConversions;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public class ShantayPassNpcs implements ShopInterface,
 	TalkToNpcExecutiveListener, TalkToNpcListener, ObjectActionListener,
 	ObjectActionExecutiveListener, PickupListener, PickupExecutiveListener {
-
+	private static final Logger LOGGER = LogManager.getLogger(ShantayPassNpcs.class);
 	private static int ASSISTANT = 720;
 	private static int SHANTAY_DISCLAIMER = ItemId.A_FREE_SHANTAY_DISCLAIMER.id();
 	private static int SHANTAY_STANDING_GUARD = 719;
@@ -387,12 +394,25 @@ public class ShantayPassNpcs implements ShopInterface,
 			if (p.getCache().hasKey("bank_pin")
 				&& !p.getAttribute("bankpin", false)) {
 				String pin = Functions.getBankPinInput(p);
-
+				if (pin == null) {
+					return;
+				}
+				try {
+					PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Constants.GameServer.MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+					statement.setString(1, p.getUsername());
+					ResultSet result = statement.executeQuery();
+					if (result.next()) {
+						pin = DataConversions.hashPassword(pin, result.getString("salt"));
+					}
+				} catch (SQLException e) {
+					LOGGER.catching(e);
+				}
 				if (!p.getCache().getString("bank_pin").equals(pin)) {
-					p.message("Wrong bank pin, try again.");
+					ActionSender.sendBox(p, "Incorrect bank pin", false);
 					return;
 				}
 				p.setAttribute("bankpin", true);
+				ActionSender.sendBox(p, "Bank pin correct", false);
 			}
 			if (!p.getCache().hasKey("shantay-chest")) {
 				message(p, "This chest is used by Shantay and his men.",

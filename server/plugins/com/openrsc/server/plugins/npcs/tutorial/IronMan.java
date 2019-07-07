@@ -8,13 +8,21 @@ import com.openrsc.server.plugins.listeners.action.NpcCommandListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.NpcCommandExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.sql.DatabaseConnection;
+import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public class IronMan implements TalkToNpcExecutiveListener,
 	TalkToNpcListener, NpcCommandListener, NpcCommandExecutiveListener {
-
+	private static final Logger LOGGER = LogManager.getLogger(IronMan.class);
 	private static int IRON_MAN = 799;
 	private static int ULTIMATE_IRON_MAN = 800;
 	private static int HARDCORE_IRON_MAN = 801;
@@ -30,6 +38,16 @@ public class IronMan implements TalkToNpcExecutiveListener,
 					String pin = getBankPinInput(p);
 					if (pin == null) {
 						return;
+					}
+					try {
+						PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Constants.GameServer.MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+						statement.setString(1, p.getUsername());
+						ResultSet result = statement.executeQuery();
+						if (result.next()) {
+							pin = DataConversions.hashPassword(pin, result.getString("salt"));
+						}
+					} catch (SQLException e) {
+						LOGGER.catching(e);
 					}
 					if (!p.getCache().getString("bank_pin").equals(pin)) {
 						ActionSender.sendBox(p, "Incorrect bank pin", false);
@@ -61,6 +79,16 @@ public class IronMan implements TalkToNpcExecutiveListener,
 							if (bankPin == null) {
 								p.setAttribute("ironman_pin", false);
 								return;
+							}
+							try {
+								PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Constants.GameServer.MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+								statement.setString(1, p.getUsername());
+								ResultSet result = statement.executeQuery();
+								if (result.next()) {
+									bankPin = DataConversions.hashPassword(bankPin, result.getString("salt"));
+								}
+							} catch (SQLException e) {
+								LOGGER.catching(e);
 							}
 							p.getCache().store("bank_pin", bankPin);
 							p.message("Your new PIN is now in effect.");
