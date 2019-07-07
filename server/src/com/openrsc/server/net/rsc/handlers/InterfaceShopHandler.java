@@ -94,13 +94,16 @@ public final class InterfaceShopHandler implements PacketHandler {
 			if (totalBought <= 0 && totalMoneySpent <= 0) {
 				return;
 			}
+			
 			shop.removeShopItem(new Item(itemID, totalBought));
 			player.getInventory().remove(10, totalMoneySpent);
 			int correctItemsBought = totalBought;
 			for (; totalBought > 0; totalBought--) {
 				player.getInventory().add(new Item(itemID, 1), false);
+    			// TODO: Does the authentic code send an update per item?
+    			ActionSender.sendInventory(player);
 			}
-			ActionSender.sendInventory(player);
+			
 			player.playSound("coins");
 			GameLogging.addQuery(new GenericLog(player.getUsername() + " bought " + def.getName() + " x" + correctItemsBought + " for " + totalMoneySpent + "gp" + " at " + player.getLocation().toString()));
 
@@ -139,17 +142,22 @@ public final class InterfaceShopHandler implements PacketHandler {
 				if (totalMoney > 0) {
 					player.getInventory().add(new Item(10, totalMoney));
 				}
+				
+				// Determine if we are selling a Noted item
 				Item originalItem = null;
 				if (def.getOriginalItemID() != -1) {
-					originalItem = new Item(def.getOriginalItemID(), totalSold);
+					originalItem = new Item(def.getOriginalItemID(), 1);
 				}
-				shop.addShopItem(originalItem != null ? originalItem : new Item(itemID, totalSold));
-				ActionSender.sendInventory(player);
-				player.playSound("coins");
-				GameLogging.addQuery(new GenericLog(player.getUsername() + " sold " + def.getName() + " x" + totalSold
-					+ " for " + totalMoney + "gp" + " at " + player.getLocation().toString()));
-
+				
+				shop.addShopItem(originalItem != null ? originalItem : new Item(itemID, 1));
+				
+    			// TODO: Does the authentic code send an update per item?
+    			ActionSender.sendInventory(player);
 			}
+
+			player.playSound("coins");
+			GameLogging.addQuery(new GenericLog(player.getUsername() + " sold " + def.getName() + " x" + totalSold
+				+ " for " + totalMoney + "gp" + " at " + player.getLocation().toString()));
 		}
 	}
 }
