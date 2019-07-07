@@ -51,6 +51,8 @@ public class IronMan implements TalkToNpcExecutiveListener,
 					}
 					if (!p.getCache().getString("bank_pin").equals(pin)) {
 						ActionSender.sendBox(p, "Incorrect bank pin", false);
+						p.setAttribute("ironman_delete", false);
+						ActionSender.sendIronManInterface(p);
 						return;
 					}
 					p.setAttribute("bankpin", true);
