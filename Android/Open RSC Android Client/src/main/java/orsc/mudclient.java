@@ -7993,6 +7993,17 @@ public final class mudclient implements Runnable {
 			this.getSurface().drawString("Block duel requests: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
 		}
 
+		//Display Online List
+		if (!this.insideTutorial) {
+			y += 25;
+			int textColor = 0xFFFFFF;
+			if (this.mouseX > x && this.mouseX < x + boxWidth && this.mouseY > y - 12
+				&& this.mouseY < y + 4) {
+				textColor = 0xFFFF00;
+			}
+			this.getSurface().drawString("Display online list", (baseX + 3), y, textColor, 1);
+		}
+
 		// skip tutorial or exit the black hole menu option
 		int logoutColor;
 		if (this.insideTutorial) {
@@ -8627,6 +8638,13 @@ public final class mudclient implements Runnable {
 		if (var11) {
 			this.createPacket64(this.settingsBlockChat, this.settingsBlockPrivate,
 					this.settingsBlockTrade, this.settingsBlockDuel);
+		}
+
+		//Handle online list click
+		yFromTopDistance += 25;
+		if (this.mouseX > var6 && this.mouseX < var6 + var5
+			&& yFromTopDistance - 12 < this.mouseY && this.mouseY < yFromTopDistance + 4 && this.mouseButtonClick == 1) {
+			this.sendCommandString("onlinelist");
 		}
 
 		// skip tutorial button or exit blackhole button
