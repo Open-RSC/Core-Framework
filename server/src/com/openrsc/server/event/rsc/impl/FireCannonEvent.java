@@ -2,7 +2,9 @@ package com.openrsc.server.event.rsc.impl;
 
 import com.openrsc.server.Server;
 import com.openrsc.server.event.rsc.GameTickEvent;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.PathValidation;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -41,10 +43,12 @@ public class FireCannonEvent extends GameTickEvent {
 		Npc target = possibleTargets.get(DataConversions.random(0, possibleTargets.size() - 1));
 
 		getPlayerOwner().face(target);
-		int cannonBallDamage = DataConversions.random(0, 16);
+		//35 at level 99 per wayback tip.it
+		int max = owner.getSkills().getMaxStat(Skills.RANGED) / 3 + 2;
+		int cannonBallDamage = DataConversions.random(0, max);
 		Server.getServer().getGameEventHandler().add(new ProjectileEvent(owner, target, cannonBallDamage, 5));
 		getPlayerOwner().playSound("shoot");
-		getPlayerOwner().getInventory().remove(1041, 1);
+		getPlayerOwner().getInventory().remove(ItemId.MULTI_CANNON_BALL.id(), 1);
 
 		this.count += 1;
 		if (this.count >= 20) {
@@ -52,7 +56,7 @@ public class FireCannonEvent extends GameTickEvent {
 			return;
 		}
 
-		if (!getPlayerOwner().getInventory().hasItemId(1041)) {
+		if (!getPlayerOwner().getInventory().hasItemId(ItemId.MULTI_CANNON_BALL.id())) {
 			getPlayerOwner().message("you're out of ammo");
 			getPlayerOwner().resetCannonEvent();
 		}
