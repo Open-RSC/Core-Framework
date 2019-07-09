@@ -57,7 +57,7 @@ public class StatRestorationEvent extends GameTickEvent {
 					it.remove();
 					if (owner.isPlayer() && stat != 3) {
 						Player p = (Player) owner;
-						p.message("Your " + Skills.SKILL_NAME[stat] + " ability has returned to normal.");
+						p.message("Your " + Skills.getSkillName(stat) + " ability has returned to normal.");
 					}
 				}
 			}

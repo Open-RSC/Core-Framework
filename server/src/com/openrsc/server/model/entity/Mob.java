@@ -314,9 +314,28 @@ public abstract class Mob extends Entity {
 		Point[] boundaries = o.getObjectBoundary();
 		Point low = boundaries[0];
 		Point high = boundaries[1];
-		if ((Math.abs(getX() - low.getX()) <= 1 || Math.abs(getX() - high.getX()) <= 1) &&
-			(Math.abs(getY() - low.getY()) <= 1 || Math.abs(getY() - high.getY()) <= 1)) {
-			return o.getID() == 953;
+		int lowXDiff = Math.abs(getX() - low.getX());
+		int highXDiff = Math.abs(getX() - high.getX());
+		int lowYDiff = Math.abs(getY() - low.getY());
+		int highYDiff = Math.abs(getY() - high.getY());
+
+		switch (o.getID())
+		{
+			case 1190:
+			case 1191:
+				if ((lowXDiff <= 2 || highXDiff <= 2) &&
+				(lowYDiff <= 2 || highYDiff <= 2)) {
+				return true;
+				}
+				break;
+			case 953:
+				if ((lowXDiff <= 1 || highXDiff <= 1) &&
+					(lowYDiff <= 1 || highYDiff <= 1)) {
+					return true;
+				}
+				break;
+			default:
+				return false;
 		}
 		return false;
 	}

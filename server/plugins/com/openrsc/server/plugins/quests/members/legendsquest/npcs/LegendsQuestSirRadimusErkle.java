@@ -210,7 +210,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 		questData[Quests.MAPIDX_SKILL] = skill;
 		incQuestReward(p, questData, false);
 		updateRewardClaimCount(p);
-		p.message("You receive some training and increase experience to your " + Skills.SKILL_NAME[skill] + ".");
+		p.message("You receive some training and increase experience to your " + Skills.getSkillName(skill) + ".");
 		if (getRewardClaimCount(p) == 0) {
 			npcTalk(p, n, "Right, that's all the training I can offer.! ",
 				"Hope you're happy with your new skills.",

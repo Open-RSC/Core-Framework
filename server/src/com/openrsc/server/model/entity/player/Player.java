@@ -774,14 +774,14 @@ public final class Player extends Mob {
 				if (getSkills().getMaxStat(requiredSkillIndex) < requiredLevel) {
 					if (!bypass) {
 						message("You are not a high enough level to use this item");
-						message("You need to have a " + Skills.SKILL_NAME[requiredSkillIndex] + " level of " + requiredLevel);
+						message("You need to have a " + Skills.getSkillName(requiredSkillIndex) + " level of " + requiredLevel);
 						unWield = true;
 					}
 				}
 				if (optionalSkillIndex.isPresent() && getSkills().getMaxStat(optionalSkillIndex.get()) < optionalLevel.get()) {
 					if (!bypass) {
 						message("You are not a high enough level to use this item");
-						message("You need to have a " + Skills.SKILL_NAME[optionalSkillIndex.get()] + " level of " + optionalLevel.get());
+						message("You need to have a " + Skills.getSkillName(optionalSkillIndex.get()) + " level of " + optionalLevel.get());
 						unWield = true;
 					}
 				}
@@ -1258,7 +1258,7 @@ public final class Player extends Mob {
 		/*
 		  Skilling Experience Rate
 		 */
-		if (skill >= 4 && skill <= 17) {
+		if (skill >= 4 && skill <= Skills.SKILL_COUNT-1) {
 			multiplier = Constants.GameServer.SKILLING_EXP_RATE;
 			if (getLocation().inWilderness() && !getLocation().inBounds(220, 108, 225, 111)) {
 				multiplier += Constants.GameServer.WILDERNESS_BOOST;

@@ -85,6 +85,7 @@ import static com.openrsc.server.Constants.GameServer.WANT_KILL_FEED;
 import static com.openrsc.server.Constants.GameServer.WANT_PETS;
 import static com.openrsc.server.Constants.GameServer.WANT_QUEST_MENUS;
 import static com.openrsc.server.Constants.GameServer.WANT_QUEST_STARTED_INDICATOR;
+import static com.openrsc.server.Constants.GameServer.WANT_RUNECRAFTING;
 import static com.openrsc.server.Constants.GameServer.WANT_REGISTRATION_LIMIT;
 import static com.openrsc.server.Constants.GameServer.WANT_REMEMBER;
 import static com.openrsc.server.Constants.GameServer.WANT_SKILL_MENUS;
@@ -560,6 +561,7 @@ public class ActionSender {
 			LOGGER.info(WANT_QUEST_STARTED_INDICATOR + " 57");
 			LOGGER.info(FISHING_SPOTS_DEPLETABLE + " 58");
 			LOGGER.info(PROPER_MAGIC_TREE_NAME + " 59");
+			LOGGER.info(WANT_RUNECRAFTING + " 60");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs();
 		ConnectionAttachment attachment = new ConnectionAttachment();
@@ -635,6 +637,7 @@ public class ActionSender {
 		s.writeByte((byte) (WANT_QUEST_STARTED_INDICATOR ? 1 : 0)); // 57
 		s.writeByte((byte) (FISHING_SPOTS_DEPLETABLE ? 1 : 0)); // 58
 		s.writeByte((byte) (PROPER_MAGIC_TREE_NAME ? 1 : 0)); // 59
+		s.writeByte((byte) (WANT_RUNECRAFTING ? 1 : 0)); //60
 		return s;
 	}
 

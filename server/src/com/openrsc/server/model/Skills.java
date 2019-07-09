@@ -7,21 +7,30 @@ import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.LiveFeedLog;
 import com.openrsc.server.util.rsc.Formulae;
 
+import static com.openrsc.server.Constants.GameServer.WANT_RUNECRAFTING;
+import static com.openrsc.server.Constants.GameServer.PLAYER_LEVEL_LIMIT;
 import java.util.ArrayList;
 
-import static com.openrsc.server.Constants.GameServer.PLAYER_LEVEL_LIMIT;
+
 
 public class Skills {
 
-	private static final int SKILL_COUNT = 18;
+	public static final int SKILL_COUNT = 19;
 	private static final int MAXIMUM_EXP = 2000000000;
-	public static final String[] SKILL_NAME = {"attack", "defense", "strength", "hits", "ranged", "prayer", "magic",
-		"cooking", "woodcut", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblaw",
-		"agility", "thieving"};
+	private static String[] SKILL_NAME() {
+		if (WANT_RUNECRAFTING)
+			return new String[] {"attack", "defense", "strength", "hits", "ranged", "prayer", "magic",
+				"cooking", "woodcut", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblaw",
+				"agility", "thieving", "runecraft"};
+		else
+			return new String[] {"attack", "defense", "strength", "hits", "ranged", "prayer", "magic",
+				"cooking", "woodcut", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblaw",
+				"agility", "thieving"};
+	}
 	public static final int ATTACK = 0, DEFENSE = 1, STRENGTH = 2, HITPOINTS = 3, RANGED = 4, PRAYER = 5, MAGIC = 6,
 		COOKING = 7, WOODCUT = 8, FLETCHING = 9, FISHING = 10, FIREMAKING = 11, CRAFTING = 12, SMITHING = 13,
-		MINING = 14, HERBLAW = 15, AGILITY = 16, THIEVING = 17, SLAYER = 18, FARMING = 19, RUNECRAFTING = 20, PETMELEE = 21, PETMAGIC = 22, PETRANGED = 23;
-	public static final ArrayList<String> STAT_LIST = new ArrayList<String>(){{ for(int i = 0; i < SKILL_NAME.length; i++) { add(SKILL_NAME[i]); } }};
+		MINING = 14, HERBLAW = 15, AGILITY = 16, THIEVING = 17, RUNECRAFTING = 18, SLAYER = 19, FARMING = 20, PETMELEE = 21, PETMAGIC = 22, PETRANGED = 23;
+	public static final ArrayList<String> STAT_LIST = new ArrayList<String>(){{ for(int i = 0; i < SKILL_COUNT; i++) { add(SKILL_NAME()[i]); } }};
 	// old, check: Global Experience Calculations (Some NPCs have levels > PLAYER_LEVEL_LIMIT)
 	// to truly have 1000 global level limit, needs changing int to long, otherwise caps to 135
 	private static final int GLOBAL_LEVEL_LIMIT = 130;
@@ -179,12 +188,12 @@ public class Skills {
 				Player player = (Player) mob;
 				if (newLevel >= PLAYER_LEVEL_LIMIT - 5 && newLevel <= PLAYER_LEVEL_LIMIT - 1) {
 					GameLogging.addQuery(new LiveFeedLog(player,
-						"has achieved level-" + newLevel + " in " + SKILL_NAME[skill] + "!"));
+						"has achieved level-" + newLevel + " in " + SKILL_NAME()[skill] + "!"));
 				} else if (newLevel == PLAYER_LEVEL_LIMIT) {
 					GameLogging.addQuery(new LiveFeedLog(player, "has achieved the maximum level of " + newLevel
-						+ " in " + SKILL_NAME[skill] + ", congratulations!"));
+						+ " in " + SKILL_NAME()[skill] + ", congratulations!"));
 				}
-				player.message("@gre@You just advanced " + levelDiff + " " + SKILL_NAME[skill] + " level"
+				player.message("@gre@You just advanced " + levelDiff + " " + SKILL_NAME()[skill] + " level"
 					/*+ (levelDiff > 1 ? "s" : "")*/ + "!");
 				ActionSender.sendSound((Player) mob, "advance");
 			}
@@ -206,7 +215,7 @@ public class Skills {
 		if (levelDiff > 0) {
 			levels[skill] += levelDiff;
 				Player p28x = mob.getPetOwnerA2();
-				p28x.message("@gre@You just advanced " + levelDiff + " " + SKILL_NAME[skill] + " level"
+				p28x.message("@gre@You just advanced " + levelDiff + " " + SKILL_NAME()[skill] + " level"
 					/*+ (levelDiff > 1 ? "s" : "")*/ + "!");
 				ActionSender.sendSound(p28x, "advance");
 
@@ -259,7 +268,7 @@ public class Skills {
 	}
 
 	private void normalize(boolean sendUpdate) {
-		for (int i = 0; i < Skills.SKILL_NAME.length; i++) {
+		for (int i = 0; i < Skills.SKILL_COUNT; i++) {
 			normalize(i, false);
 		}
 		if(sendUpdate)
@@ -290,4 +299,6 @@ public class Skills {
 	public void loadLevels(int[] lv) {
 		this.levels = lv;
 	}
+
+	public static String getSkillName(int skillIndex) { return SKILL_NAME()[skillIndex]; }
 }

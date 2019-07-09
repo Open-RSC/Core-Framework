@@ -431,12 +431,12 @@ public class SpellHandler implements PacketHandler {
 				- (int) Math.ceil((affectedMob.getSkills().getLevel(affectsStat) * lowersBy) * 4);
 
 			if (newStat < maxWeaken && spell != 34) {
-				player.message("Your opponent already has weakened " + Skills.SKILL_NAME[affectsStat]);
+				player.message("Your opponent already has weakened " + Skills.getSkillName(affectsStat));
 				return;
 			}
 			if (player.getDuel().isDuelActive() && affectedMob.isPlayer()) {
 				Player aff = (Player) affectedMob;
-				aff.message("Your " + Skills.SKILL_NAME[affectsStat] + " has been reduced by the spell!");
+				aff.message("Your " + Skills.getSkillName(affectsStat) + " has been reduced by the spell!");
 			}
 			affectedMob.getSkills().setLevel(affectsStat, newStat);
 		}
@@ -904,7 +904,7 @@ public class SpellHandler implements PacketHandler {
 						final int maxWeaken = affectedMob.getSkills().getMaxStat(affectsStat)
 							- (int) Math.ceil((affectedMob.getSkills().getLevel(affectsStat) * lowersBy));
 						if (newStat < maxWeaken) {
-							player.message("Your opponent already has weakened " + Skills.SKILL_NAME[affectsStat]);
+							player.message("Your opponent already has weakened " + Skills.getSkillName(affectsStat));
 							return;
 						}
 						if (!checkAndRemoveRunes(player, spell)) {

@@ -10,57 +10,11 @@ import com.openrsc.data.DataFileDecrypter;
 import com.openrsc.data.DataOperations;
 import com.openrsc.interfaces.NComponent;
 import com.openrsc.interfaces.NCustomComponent;
-import com.openrsc.interfaces.misc.AchievementGUI;
-import com.openrsc.interfaces.misc.AuctionHouse;
-import com.openrsc.interfaces.misc.BankPinInterface;
-import com.openrsc.interfaces.misc.CustomBankInterface;
-import com.openrsc.interfaces.misc.DoSkillInterface;
-import com.openrsc.interfaces.misc.ExperienceConfigInterface;
-import com.openrsc.interfaces.misc.FishingTrawlerInterface;
-import com.openrsc.interfaces.misc.IronManInterface;
-import com.openrsc.interfaces.misc.LostOnDeathInterface;
-import com.openrsc.interfaces.misc.OnlineListInterface;
-import com.openrsc.interfaces.misc.ProgressBarInterface;
-import com.openrsc.interfaces.misc.QuestGuideInterface;
-import com.openrsc.interfaces.misc.SkillGuideInterface;
-import com.openrsc.interfaces.misc.TerritorySignupInterface;
+import com.openrsc.interfaces.misc.*;
 import com.openrsc.interfaces.misc.clan.Clan;
-
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-
 import orsc.buffers.RSBufferUtils;
-import orsc.enumerations.GameMode;
-import orsc.enumerations.InputXAction;
-import orsc.enumerations.MenuItemAction;
-import orsc.enumerations.MessageTab;
-import orsc.enumerations.MessageType;
-import orsc.enumerations.ORSCharacterDirection;
-import orsc.enumerations.PasswordChangeMode;
-import orsc.enumerations.SocialPopupMode;
-import orsc.graphics.gui.InputXPrompt;
-import orsc.graphics.gui.KillAnnouncer;
-import orsc.graphics.gui.KillAnnouncerQueue;
-import orsc.graphics.gui.Menu;
-import orsc.graphics.gui.MessageHistory;
-import orsc.graphics.gui.Panel;
-import orsc.graphics.gui.SocialLists;
+import orsc.enumerations.*;
+import orsc.graphics.gui.*;
 import orsc.graphics.three.CollisionFlag;
 import orsc.graphics.three.RSModel;
 import orsc.graphics.three.Scene;
@@ -73,90 +27,14 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
 
-import static orsc.Config.CLIENT_VERSION;
-import static orsc.Config.C_BATCH_PROGRESS_BAR;
-import static orsc.Config.C_EXPERIENCE_CONFIG_SUBMENU;
-import static orsc.Config.C_EXPERIENCE_COUNTER;
-import static orsc.Config.C_EXPERIENCE_COUNTER_COLOR;
-import static orsc.Config.C_EXPERIENCE_COUNTER_MODE;
-import static orsc.Config.C_EXPERIENCE_DROPS;
-import static orsc.Config.C_EXPERIENCE_DROP_SPEED;
-import static orsc.Config.C_FIGHT_MENU;
-import static orsc.Config.C_HIDE_FOG;
-import static orsc.Config.C_HIDE_ROOFS;
-import static orsc.Config.C_HOLD_AND_CHOOSE;
-import static orsc.Config.C_INV_COUNT;
-import static orsc.Config.C_KILL_FEED;
-import static orsc.Config.C_LAST_ZOOM;
-import static orsc.Config.C_LONG_PRESS_TIMER;
-import static orsc.Config.C_MENU_SIZE;
-import static orsc.Config.C_MESSAGE_TAB_SWITCH;
-import static orsc.Config.C_NAME_CLAN_TAG_OVERLAY;
-import static orsc.Config.C_SHOW_GROUND_ITEMS;
-import static orsc.Config.C_SIDE_MENU_OVERLAY;
-import static orsc.Config.C_SWIPE_TO_ROTATE;
-import static orsc.Config.C_SWIPE_TO_SCROLL;
-import static orsc.Config.C_SWIPE_TO_ZOOM;
-import static orsc.Config.C_VOLUME_TO_ROTATE;
-import static orsc.Config.DEBUG;
-import static orsc.Config.DISPLAY_LOGO_SPRITE;
-import static orsc.Config.F_CACHE_DIR;
-import static orsc.Config.F_SHOWING_KEYBOARD;
-import static orsc.Config.MEMBER_WORLD;
-import static orsc.Config.Remember;
-import static orsc.Config.SERVER_NAME;
-import static orsc.Config.SERVER_NAME_WELCOME;
-import static orsc.Config.S_AUTO_MESSAGE_SWITCH_TOGGLE;
-import static orsc.Config.S_BATCH_PROGRESSION;
-import static orsc.Config.S_CUSTOM_FIREMAKING;
-import static orsc.Config.S_EXPERIENCE_COUNTER_TOGGLE;
-import static orsc.Config.S_EXPERIENCE_DROPS_TOGGLE;
-import static orsc.Config.S_FIGHTMODE_SELECTOR_TOGGLE;
-import static orsc.Config.S_FOG_TOGGLE;
-import static orsc.Config.S_GROUND_ITEM_TOGGLE;
-import static orsc.Config.S_INVENTORY_COUNT_TOGGLE;
-import static orsc.Config.S_ITEMS_ON_DEATH_MENU;
-import static orsc.Config.S_MAX_WALKING_SPEED;
-import static orsc.Config.S_MENU_COMBAT_STYLE_TOGGLE;
-import static orsc.Config.S_PLAYER_LEVEL_LIMIT;
-import static orsc.Config.S_RIGHT_CLICK_BANK;
-import static orsc.Config.S_SHOW_FLOATING_NAMETAGS;
-import static orsc.Config.S_SHOW_ROOF_TOGGLE;
-import static orsc.Config.S_SIDE_MENU_TOGGLE;
-import static orsc.Config.S_SPAWN_AUCTION_NPCS;
-import static orsc.Config.S_SPAWN_IRON_MAN_NPCS;
-import static orsc.Config.S_WANT_BANK_NOTES;
-import static orsc.Config.S_WANT_BANK_PINS;
-import static orsc.Config.S_WANT_CERTS_TO_BANK;
-import static orsc.Config.S_WANT_CERT_DEPOSIT;
-import static orsc.Config.S_WANT_CLANS;
-import static orsc.Config.S_WANT_CUSTOM_BANKS;
-import static orsc.Config.S_WANT_CUSTOM_RANK_DISPLAY;
-import static orsc.Config.S_WANT_DECANTING;
-import static orsc.Config.S_WANT_DROP_X;
-import static orsc.Config.S_WANT_EXPERIENCE_ELIXIRS;
-import static orsc.Config.S_WANT_EXP_INFO;
-import static orsc.Config.S_WANT_FIXED_OVERHEAD_CHAT;
-import static orsc.Config.S_WANT_GLOBAL_CHAT;
-import static orsc.Config.S_WANT_HIDE_IP;
-import static orsc.Config.S_WANT_KEYBOARD_SHORTCUTS;
-import static orsc.Config.S_WANT_KILL_FEED;
-import static orsc.Config.S_WANT_QUEST_MENUS;
-import static orsc.Config.S_WANT_REMEMBER;
-import static orsc.Config.S_WANT_SKILL_MENUS;
-import static orsc.Config.S_WANT_WOODCUTTING_GUILD;
-import static orsc.Config.S_ZOOM_VIEW_TOGGLE;
-import static orsc.Config.WELCOME_TEXT;
-import static orsc.Config.getFPS;
-import static orsc.Config.getServerName;
-import static orsc.Config.getServerNameWelcome;
-import static orsc.Config.getWelcomeText;
-import static orsc.Config.getcLogoSpriteId;
-import static orsc.Config.initConfig;
-import static orsc.Config.isAndroid;
-import static orsc.Config.isLenientContactDetails;
-import static orsc.Config.wantEmail;
-import static orsc.Config.wantMembers;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import java.io.*;
+import java.security.SecureRandom;
+import java.util.*;
+import java.util.Map.Entry;
+
+import static orsc.Config.*;
 import static orsc.multiclient.ClientPort.saveHideIp;
 
 public final class mudclient implements Runnable {
@@ -231,25 +109,27 @@ public final class mudclient implements Runnable {
 	private final int[] pathZ = new int[8000];
 	private final int[] playerClothingColors = new int[]{0xFF0000, 16744448, 16769024, 10543104, '\ue000', '\u8000',
 		'\ua080', '\ub0ff', '\u80ff', 12528, 14680288, 3158064, 6307840, 8409088, 0xFFFFFF};
-	private final int[] playerExperience = new int[18];
 	private final int[] playerHairColors = new int[]{16760880, 16752704, 8409136, 6307872, 3158064, 16736288,
 		16728064, 0xFFFFFF, '\uff00', '\uffff'};
 	private final ORSCharacter[] players = new ORSCharacter[500];
 	private final ORSCharacter[] playerServer = new ORSCharacter[4000];
+	private static String[] skillNameLong = new String[]{"Attack", "Defense", "Strength", "Hits", "Ranged", "Prayer",
+		"Magic", "Cooking", "Woodcutting", "Fletching", "Fishing", "Firemaking", "Crafting", "Smithing", "Mining",
+		"Herblaw", "Agility", "Thieving", "Runecrafting"};
+	private static String[] skillNames = new String[]{"Attack", "Defense", "Strength", "Hits", "Ranged", "Prayer",
+		"Magic", "Cooking", "Woodcut", "Fletching", "Fishing", "Firemaking", "Crafting", "Smithing", "Mining",
+		"Herblaw", "Agility", "Thieving", "Runecraft"};
+	public static int skillCount = skillNames.length;
 	private final int[] playerSkinColors = new int[]{15523536, 13415270, 11766848, 10056486, 9461792};
-	private final int[] playerStatBase = new int[18];
+	private final int[] playerStatBase = new int[skillCount];
+	private final int[] playerExperience = new int[skillCount];
 	private final int[] playerStatEquipment = new int[5];
 	private final boolean[] prayerOn = new boolean[50];
 	private final int projectileMaxRange = 40;
 	private final int[] shopItemCount = new int[256];
 	private final int[] shopItemID = new int[256];
 	private final int[] shopItemPrice = new int[256];
-	private final String[] skillNameLong = new String[]{"Attack", "Defense", "Strength", "Hits", "Ranged", "Prayer",
-		"Magic", "Cooking", "Woodcutting", "Fletching", "Fishing", "Firemaking", "Crafting", "Smithing", "Mining",
-		"Herblaw", "Agility", "Thieving"};
-	private final String[] skillNames = new String[]{"Attack", "Defense", "Strength", "Hits", "Ranged", "Prayer",
-		"Magic", "Cooking", "Woodcut", "Fletching", "Fishing", "Firemaking", "Crafting", "Smithing", "Mining",
-		"Herblaw", "Agility", "Thieving"};
+
 	private final int[] teleportBubbleTime = new int[50];
 	private final int[] teleportBubbleX = new int[50];
 	private final int[] teleportBubbleZ = new int[50];
@@ -541,10 +421,10 @@ public final class mudclient implements Runnable {
 	private int playerCount = 0;
 	private int playerLocalX;
 	private int playerLocalZ;
-	private int[] playerStatCurrent = new int[18];
+	private int[] playerStatCurrent = new int[skillCount];
 	private String[] messagesArray = new String[5];
-	private long[] playerStatXpGained = new long[18];
-	private long[] xpGainedStartTime = new long[18];
+	private long[] playerStatXpGained = new long[skillCount];
+	private long[] xpGainedStartTime = new long[skillCount];
 	private long playerXpGainedTotal = 0;
 	private String[] questNames = new String[100];
 	private int[] questStages = new int[100];
@@ -6165,7 +6045,7 @@ public final class mudclient implements Runnable {
 		int totalXp = 0;
 		long timePassed = 0;
 		if (C_EXPERIENCE_COUNTER_MODE == 1 || skill < 0) {
-			for (int i = 0; i < 18; i++) {
+			for (int i = 0; i < skillCount; i++) {
 				totalXp += this.playerExperience[i];
 			}
 
@@ -9081,18 +8961,26 @@ public final class mudclient implements Runnable {
 			int heightMargin;
 
 			// stats menu tab
-			if (this.uiTabPlayerInfoSubTab == 0) {
-				byte yOffset = 72;
-				this.getSurface().drawString("Skills", x + 5, yOffset, 0xFFFF00, 3);
-				int currentlyHoveredSkill = -1;
-				heightMargin = yOffset + 13;
-				int currSkill = 0, textColour = 0, totalXp = 0;
-				for (currSkill = 0; currSkill < 9; currSkill++) {
-					textColour = 0xFFFFFF;
-					if (this.mouseX > 3 + x && this.mouseY >= heightMargin - 11 && this.mouseY < 2 + heightMargin
-						&& this.mouseX < 90 + x) {
-						textColour = 0xFF0000;
-						currentlyHoveredSkill = currSkill;
+			heightMargin = 72;
+			int yOffset = heightMargin + 13;
+			int xOffset = x + 5;
+			int textColour = 0xFFFFFF, textColourHovered = 0xFF0000, textColourHeading = 0xFFFF00;
+			int currentlyHoveredSkill = -1;
+			int currSkill = 0, totalXp = 0, i =0;
+			int leftColLength = (int)Math.floor(skillCount/2);
+			int rightColLength = skillCount - leftColLength;
+
+			this.getSurface().drawString("Skills", xOffset, heightMargin, textColourHeading, 3);
+
+			//Determine if the mouse is hovering over a skill
+			if (this.mouseX >= xOffset && this.mouseX <= x + 196){
+				if (this.mouseY >= heightMargin-13 && this.mouseY <= (heightMargin + 13*leftColLength) - 2) {
+					int xthing = this.mouseX > (xOffset + width/2 - 10) ? 1 : 0;
+					int ything = (int)Math.floor((double)(this.mouseY-heightMargin+13)/13);
+					currentlyHoveredSkill = (leftColLength + 1)*xthing + ything - 1;
+					if (!(currentlyHoveredSkill >= 0 && currentlyHoveredSkill <= this.getSkillNames().length-1)) {
+						currentlyHoveredSkill = -1;
+					} else {
 						if (isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0) {
 							if (doubleClick() && S_WANT_SKILL_MENUS) {
 								setSkillGuideChosen(this.skillNameLong[currentlyHoveredSkill]);
@@ -9105,102 +8993,97 @@ public final class mudclient implements Runnable {
 							this.showUiTab = 0;
 						}
 					}
-
-					this.getSurface().drawString(this.getSkillNames()[currSkill] + ":@yel@" + this.playerStatCurrent[currSkill]
-						+ "/" + this.playerStatBase[currSkill], x + 5, heightMargin, textColour, 1);
-					textColour = 0xFFFFFF;
-					if (this.mouseX >= x + 90 && this.mouseY >= heightMargin - 11 - 13 && heightMargin - 13 + 2 > this.mouseY
-						&& this.mouseX < x + 196) {
-						textColour = 0xFF0000;
-						currentlyHoveredSkill = 9 + currSkill;
-						if (isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0) {
-							if (doubleClick() && S_WANT_SKILL_MENUS) {
-								setSkillGuideChosen(this.skillNameLong[currentlyHoveredSkill]);
-								skillGuideInterface.setVisible(true);
-								this.showUiTab = 0;
-							}
-						} else if (!isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0 && S_WANT_SKILL_MENUS) {
-							setSkillGuideChosen(this.skillNameLong[currentlyHoveredSkill]);
-							skillGuideInterface.setVisible(true);
-							this.showUiTab = 0;
-						}
-					}
-
-					this.getSurface().drawString(this.skillNames[9 + currSkill] + ":@yel@" + this.playerStatCurrent[9 + currSkill]
-						+ "/" + this.playerStatBase[9 + currSkill], width / 2 - 5 + x, heightMargin - 13, textColour, 1);
-					heightMargin += 13;
 				}
+			}
 
-				this.getSurface().drawString("Quest Points:@yel@" + this.questPoints, x - 5 + width / 2, heightMargin - 13, 0xFFFFFF, 1);
-				if (Config.S_WANT_FATIGUE) {
-					heightMargin += 12;
-					this.getSurface().drawString("Fatigue: @yel@" + this.statFatigue + "%", 5 + x, heightMargin - 13,
-						0xFFFFFF, 1);
+			for (currSkill=0; currSkill < skillCount; currSkill++){
+
+				this.getSurface().drawString(this.getSkillNames()[currSkill] + ":@yel@" + this.playerStatCurrent[i]
+					+ "/" + this.playerStatBase[i], xOffset, yOffset, currentlyHoveredSkill == i ? textColourHovered : textColour, 1);
+
+				yOffset += 13;
+				i++;
+
+				if (i == leftColLength) {
+					xOffset += width/2 - 10;
+					yOffset = heightMargin;
 				}
-				heightMargin += 8;
-				this.getSurface().drawString("Equipment Status", 5 + x, heightMargin, 0xFFFF00, 3);
+			}
+
+			if (leftColLength != rightColLength) {
+				xOffset = x + 5;
+			}
+
+			this.getSurface().drawString("Quest Points:@yel@" + this.questPoints, xOffset, yOffset, textColour, 1);
+
+			if (Config.S_WANT_FATIGUE) {
+				if (xOffset == x + 5) {
+					xOffset += width/2 - 10;
+				} else {
+					yOffset += 13;
+					xOffset = x + 5;
+				}
+				this.getSurface().drawString("Fatigue: @yel@" + this.statFatigue + "%", xOffset, yOffset,
+					textColour, 1);
+			}
+
+			yOffset += 20;
+			this.getSurface().drawString("Equipment Status", 5 + x, yOffset, textColourHeading, 3);
+			yOffset += 13;
+
+			//Draw the equipment bonuses
+			for (currSkill = 0; currSkill < 3; ++currSkill) {
+				this.getSurface().drawString(this.equipmentStatNames[currSkill] + ":@yel@" + this.playerStatEquipment[currSkill],
+					5 + x, yOffset, textColour, 1);
+				if (2 > currSkill) {
+					this.getSurface().drawString(
+						this.equipmentStatNames[currSkill + 3] + ":@yel@" + this.playerStatEquipment[3 + currSkill],
+						width / 2 + x + 25, yOffset, 0xFFFFFF, 1);
+				}
+				yOffset += 13;
+			}
+
+			this.getSurface().drawLineHoriz(x, yOffset-7, width, 0);
+
+			heightMargin = yOffset + 8;
+			if (currentlyHoveredSkill == -1) {
+				this.getSurface().drawString("Overall levels", x + 5, heightMargin, textColourHeading, 1);
 				heightMargin += 12;
+				int currSkillTotal = 0;
+				totalXp = 0;
 
-				for (currSkill = 0; currSkill < 3; ++currSkill) {
-					this.getSurface().drawString(this.equipmentStatNames[currSkill] + ":@yel@" + this.playerStatEquipment[currSkill],
-						5 + x, heightMargin, 0xFFFFFF, 1);
-					if (2 > currSkill) {
-						this.getSurface().drawString(
-							this.equipmentStatNames[currSkill + 3] + ":@yel@" + this.playerStatEquipment[3 + currSkill],
-							width / 2 + x + 25, heightMargin, 0xFFFFFF, 1);
-					}
-
-					heightMargin += 13;
+				for (currSkill = 0; currSkill < skillCount; ++currSkill) {
+					totalXp += this.playerExperience[currSkill];
+					currSkillTotal += this.playerStatBase[currSkill];
 				}
 
-				if (!Config.S_WANT_FATIGUE) { // if we don't want fatigue, push the rest down to compensate for the missing entry
+				if (S_WANT_EXP_INFO) {
+					this.getSurface().drawString("Total xp: " + totalXp, 5 + x, heightMargin, textColour, 1);
 					heightMargin += 12;
-				} else {
-					heightMargin += 6;
 				}
-				this.getSurface().drawLineHoriz(x, heightMargin - 15, width, 0);
-				if (!Config.S_WANT_FATIGUE) { // if we don't want fatigue, push the rest down to compensate for the missing entry
-					heightMargin += 6;
+				this.getSurface().drawString("Skill total: " + currSkillTotal, 5 + x, heightMargin, textColour, 1);
+				heightMargin += 12;
+				this.getSurface().drawString("Combat level: " + this.localPlayer.level, 5 + x, heightMargin, textColour, 1);
+				heightMargin += 12;
+				//if there is a skill hovered over
+			} else {
+				this.getSurface().drawString(this.skillNameLong[currentlyHoveredSkill] + " skill", 5 + x, heightMargin, textColourHeading, 1);
+				heightMargin += 12;
+				int nextLevelExp = this.experienceArray[0];
+
+				for (int currLevel = 0; currLevel < S_PLAYER_LEVEL_LIMIT - 1; ++currLevel) {
+					if (this.experienceArray[currLevel] <= this.playerExperience[currentlyHoveredSkill]) {
+						nextLevelExp = this.experienceArray[currLevel + 1];
+					}
 				}
-				if (currentlyHoveredSkill == -1) {
-					this.getSurface().drawString("Overall levels", x + 5, heightMargin, 0xFFFF00, 1);
-					heightMargin += 12;
-					int currSkillTotal = 0;
-					totalXp = 0;
 
-					for (currSkill = 0; currSkill < 18; ++currSkill) {
-						totalXp += this.playerExperience[currSkill];
-						currSkillTotal += this.playerStatBase[currSkill];
-					}
-
-					if (S_WANT_EXP_INFO) {
-						this.getSurface().drawString("Total xp: " + totalXp, 5 + x, heightMargin, 0xFFFFFF, 1);
-						heightMargin += 12;
-					}
-					this.getSurface().drawString("Skill total: " + currSkillTotal, 5 + x, heightMargin, 0xFFFFFF, 1);
+				this.getSurface().drawString("Total xp: " + this.playerExperience[currentlyHoveredSkill], 5 + x, heightMargin, textColour,
+					1);
+				heightMargin += 12;
+				this.getSurface().drawString("Next level at: " + nextLevelExp, 5 + x, heightMargin, textColour, 1);
+				if (S_WANT_EXP_INFO) {
 					heightMargin += 12;
-					this.getSurface().drawString("Combat level: " + this.localPlayer.level, 5 + x, heightMargin, 0xFFFFFF, 1);
-					heightMargin += 12;
-
-				} else {
-					this.getSurface().drawString(this.skillNameLong[currentlyHoveredSkill] + " skill", 5 + x, heightMargin, 0xFFFF00, 1);
-					heightMargin += 12;
-					int nextLevelExp = this.experienceArray[0];
-
-					for (int currLevel = 0; currLevel < S_PLAYER_LEVEL_LIMIT - 1; ++currLevel) {
-						if (this.experienceArray[currLevel] <= this.playerExperience[currentlyHoveredSkill]) {
-							nextLevelExp = this.experienceArray[currLevel + 1];
-						}
-					}
-
-					this.getSurface().drawString("Total xp: " + this.playerExperience[currentlyHoveredSkill], 5 + x, heightMargin, 0xFFFFFF,
-						1);
-					heightMargin += 12;
-					this.getSurface().drawString("Next level at: " + nextLevelExp, 5 + x, heightMargin, 0xFFFFFF, 1);
-					if (S_WANT_EXP_INFO) {
-						heightMargin += 12;
-						this.getSurface().drawString("Xp to next level: " + (nextLevelExp - this.playerExperience[currentlyHoveredSkill]), 5 + x, heightMargin, 0xFFFFFF, 1);
-					}
+					this.getSurface().drawString("Xp to next level: " + (nextLevelExp - this.playerExperience[currentlyHoveredSkill]), 5 + x, heightMargin, textColour, 1);
 				}
 			}
 
@@ -10215,6 +10098,10 @@ public final class mudclient implements Runnable {
 						if (var10 >= 0 && waypointIndexCurrent >= 0 && var10 < 96 && waypointIndexCurrent < 96
 							&& this.gameObjectInstanceID[updateIndex] == 74) {
 							this.gameObjectInstanceModel[updateIndex].addRotation(1, 0, 0);
+						}
+						if (var10 >= 0 && waypointIndexCurrent >= 0 && var10 < 96 && waypointIndexCurrent < 96
+							&& EntityHandler.getObjectDef(this.gameObjectInstanceID[updateIndex]).getObjectModel() == "portal") {
+							this.gameObjectInstanceModel[updateIndex].addRotation(0, 1, 0);
 						}
 					}
 
@@ -11898,7 +11785,24 @@ public final class mudclient implements Runnable {
 			errorLoadingData = true;
 			return;
 		}
+		int numEntries = DataOperations.getUnsigned2Bytes(models, 0);/*
+
+			int offset = 2 + numEntries * 10;
+
+			for (int entry = 0; entry < numEntries; entry++) {
+				int fileHash = (models[entry * 10 + 2] & 0xff) * 0x1000000 + (models[entry * 10 + 3] & 0xff) * 0x10000
+					+ (models[entry * 10 + 4] & 0xff) * 256 + (models[entry * 10 + 5] & 0xff);
+				int fileSize = (models[entry * 10 + 9] & 0xff) * 0x10000 + (models[entry * 10 + 10] & 0xff) * 256
+					+ (models[entry * 10 + 11] & 0xff);
+
+				RSModel temp = new RSModel(models, entry, true);
+
+				offset += fileSize;
+			}
+*/
 		for (int j = 0; j < EntityHandler.getModelCount(); j++) {
+			if (EntityHandler.getModelName(j) == "dolmen")
+				j = j;
 			int k = DataOperations.getDataFileOffset(EntityHandler.getModelName(j) + ".ob3", models);
 			if (k == 0) {
 				modelCache[j] = new RSModel(1, 1);
@@ -11977,6 +11881,7 @@ public final class mudclient implements Runnable {
 								if (objectID == 74) {
 									model.translate2(0, -480, 0);
 								}
+
 							}
 						} catch (RuntimeException var21) {
 							System.out.println("Loc Error: " + var21.getMessage());
@@ -14075,6 +13980,7 @@ public final class mudclient implements Runnable {
 			System.out.println(Config.S_ALLOW_RESIZE + " 49");
 			System.out.println(Config.S_LENIENT_CONTACT_DETAILS + " 50");
 			System.out.println(Config.S_WANT_FATIGUE + " 51");
+			System.out.println(Config.S_WANT_RUNECRAFTING + " 52");
 		}
 		try {
 			this.loadGameConfig(false);
@@ -14087,6 +13993,11 @@ public final class mudclient implements Runnable {
 				getSurface().setIconsStart(0, 3284);
 				this.getSurface().mudClientRef = this;
 				this.getSurface().setClip(0, this.getGameWidth(), this.getGameHeight() + 12, 0);
+
+				if (!S_WANT_RUNECRAFTING)
+				{
+					skillCount--;
+				}
 
 				bank = new CustomBankInterface(this);
 				auctionHouse = new AuctionHouse(this);
@@ -14886,6 +14797,9 @@ public final class mudclient implements Runnable {
 			skillGuideChosenTabs.add("Stalls");
 			skillGuideChosenTabs.add("Chests");
 			skillGuideChosenTabs.add("Doors");
+		} else if (skillGuideChosen.equalsIgnoreCase("Runecrafting")) {
+			skillGuideChosenTabs.add("Singles");
+			skillGuideChosenTabs.add("Multiples");
 		}
 	}
 

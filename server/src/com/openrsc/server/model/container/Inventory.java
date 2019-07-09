@@ -419,14 +419,14 @@ public class Inventory {
 		if (player.getSkills().getMaxStat(requiredSkillIndex) < requiredLevel) {
 			if (!bypass) {
 				player.message("You are not a high enough level to use this item");
-				player.message("You need to have a " + Skills.SKILL_NAME[requiredSkillIndex] + " level of " + requiredLevel);
+				player.message("You need to have a " + Skills.getSkillName(requiredSkillIndex) + " level of " + requiredLevel);
 				ableToWield = false;
 			}
 		}
 		if (optionalSkillIndex.isPresent() && player.getSkills().getMaxStat(optionalSkillIndex.get()) < optionalLevel.get()) {
 			if (!bypass) {
 				player.message("You are not a high enough level to use this item");
-				player.message("You need to have a " + Skills.SKILL_NAME[optionalSkillIndex.get()] + " level of " + optionalLevel.get());
+				player.message("You need to have a " + Skills.getSkillName(optionalSkillIndex.get()) + " level of " + optionalLevel.get());
 				ableToWield = false;
 			}
 		}

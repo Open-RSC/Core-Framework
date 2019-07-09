@@ -705,7 +705,7 @@ public final class Event implements CommandListener {
 				}
 			}
 			else {
-				for(int i = 0; i < Skills.SKILL_NAME.length; i++) {
+				for(int i = 0; i < Skills.SKILL_COUNT; i++) {
 					p.getSkills().setLevelTo(i, level);
 				}
 
@@ -846,7 +846,7 @@ public final class Event implements CommandListener {
 				}
 			}
 			else {
-				for(int i = 0; i < Skills.SKILL_NAME.length; i++) {
+				for(int i = 0; i < Skills.SKILL_COUNT; i++) {
 					p.getSkills().setLevel(i, level);
 				}
 

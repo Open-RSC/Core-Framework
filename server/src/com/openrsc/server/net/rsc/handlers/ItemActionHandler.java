@@ -12,6 +12,7 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.plugins.PluginHandler;
+import com.openrsc.server.external.ItemId;
 
 public class ItemActionHandler implements PacketHandler {
 	/**
@@ -147,6 +148,36 @@ public class ItemActionHandler implements PacketHandler {
 					break;
 				case SPADE:
 					// nothing - no action/message was triggered with spade's dig option
+					break;
+				case AIR_TALISMAN:
+					if (item.getDef().getCommand().equalsIgnoreCase("locate")) {
+						String northORsouth="", eastORwest="";
+						int playerX, playerY, altarX, altarY;
+						playerX = player.getX();
+						playerY = player.getY();
+
+						switch (ItemId.getById(item.getID()))
+						{
+							case AIR_TALISMAN:
+								altarX = 304;
+								altarY = 601;
+								break;
+							default:
+								altarX = 0;
+								altarY = 0;
+								break;
+						}
+						int diffX = altarX - playerX;
+						int diffY = altarY - playerY;
+
+						if (diffX != 0)
+							eastORwest = diffX > 0 ? "west" : "east";
+
+						if (diffY != 0)
+							northORsouth = diffY > 0 ? "south" : "north";
+
+						player.message("The talisman pulls towards the " + northORsouth + eastORwest + ".");
+					}
 					break;
 				default:
 					player.message("Nothing interesting happens");
