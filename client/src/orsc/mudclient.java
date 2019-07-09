@@ -2459,36 +2459,36 @@ public final class mudclient implements Runnable {
 
 			// pants
 			this.getSurface().spriteClip3(var5 - 87, this.getPlayerClothingColors()[this.characterBottomColour],
-				spriteSelect(EntityHandler.getAnimationDef(this.character2Colour),0), y, 102, (byte) 105, 64);
+				spriteSelect(EntityHandler.getAnimationDef(this.character2Colour), 0), y, 102, (byte) 105, 64);
 
 			// body
-			this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.getAnimationDef(m_dk),0), var5 - 32 - 55, y, 64,
+			this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.getAnimationDef(m_dk), 0), var5 - 32 - 55, y, 64,
 				102, this.getPlayerClothingColors()[this.m_Wg], this.getPlayerSkinColors()[this.m_hh], false, 0, 1);
 
-			this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.getAnimationDef(appearanceHeadType),0),
+			this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.getAnimationDef(appearanceHeadType), 0),
 				var5 - 32 - 55, y, 64, 102, this.getPlayerHairColors()[this.m_ld],
 				this.getPlayerSkinColors()[this.m_hh], false, 0, var1 + 13760);
 
 			this.getSurface().spriteClip3(var5 - 32, this.getPlayerClothingColors()[this.characterBottomColour],
-				spriteSelect(EntityHandler.getAnimationDef(character2Colour),6), y, 102, (byte) 105, 64);
+				spriteSelect(EntityHandler.getAnimationDef(character2Colour), 6), y, 102, (byte) 105, 64);
 
-			this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.getAnimationDef(this.m_dk),6), var5 - 32, y,
+			this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.getAnimationDef(this.m_dk), 6), var5 - 32, y,
 				64, 102, this.getPlayerClothingColors()[this.m_Wg], this.getPlayerSkinColors()[this.m_hh], false, 0,
 				1);
 
-			this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.getAnimationDef(this.appearanceHeadType),6),
+			this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.getAnimationDef(this.appearanceHeadType), 6),
 				var5 - 32, y, 64, 102, this.getPlayerHairColors()[this.m_ld], this.getPlayerSkinColors()[this.m_hh],
 				false, 0, 1);
 
 			this.getSurface().spriteClip3(var5 + 55 - 32, this.getPlayerClothingColors()[this.characterBottomColour],
-				spriteSelect(EntityHandler.getAnimationDef(this.character2Colour),12), y, 102, (byte) 110, 64);
+				spriteSelect(EntityHandler.getAnimationDef(this.character2Colour), 12), y, 102, (byte) 110, 64);
 
-			this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.getAnimationDef(this.m_dk),12),
+			this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.getAnimationDef(this.m_dk), 12),
 				55 + (var5 - 32), y, 64, 102, this.getPlayerClothingColors()[this.m_Wg],
 				this.getPlayerSkinColors()[this.m_hh], false, 0, var1 + 13760);
 
 			this.getSurface().drawSpriteClipping(
-				spriteSelect(EntityHandler.getAnimationDef(this.appearanceHeadType),12), var5 + 55 - 32, y, 64, 102,
+				spriteSelect(EntityHandler.getAnimationDef(this.appearanceHeadType), 12), var5 + 55 - 32, y, 64, 102,
 				this.getPlayerHairColors()[this.m_ld], this.getPlayerSkinColors()[this.m_hh], false, 0, 1);
 			this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.BLUEBAR.id())), 0, this.getGameHeight());
 			// this.getSurface().draw(this.graphics, this.screenOffsetX, 256,
@@ -2503,11 +2503,17 @@ public final class mudclient implements Runnable {
 		}
 	}
 
-	public Sprite spriteSelect(ItemDef item) {return getSurface().spriteSelect(item);}
+	public Sprite spriteSelect(ItemDef item) {
+		return getSurface().spriteSelect(item);
+	}
+
 	public Sprite spriteSelect(AnimationDef animation, int offset) {
 		return getSurface().spriteSelect(animation, offset);
 	}
-	public Sprite spriteSelect(SpriteDef sprite) { return getSurface().spriteSelect(sprite); }
+
+	public Sprite spriteSelect(SpriteDef sprite) {
+		return getSurface().spriteSelect(sprite);
+	}
 
 	private void drawCharacterOverlay() {
 		try {
@@ -4752,7 +4758,7 @@ public final class mudclient implements Runnable {
 					this.drawCharacterOverlay();
 
 					if (this.mouseClickXStep > 0) {
-						switch ((int)((24 - this.mouseClickXStep)/6)) {
+						switch ((int) ((24 - this.mouseClickXStep) / 6)) {
 							case 0:
 								this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.YELLOWX1.id())),
 									this.mouseWalkX - 8, this.mouseWalkY - 8);
@@ -4771,7 +4777,7 @@ public final class mudclient implements Runnable {
 								break;
 						}
 					} else if (this.mouseClickXStep < 0) {
-						switch ((int)((this.mouseClickXStep + 24) / 6)) {
+						switch ((int) ((this.mouseClickXStep + 24) / 6)) {
 							case 0:
 								this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.REDX1.id())),
 									this.mouseWalkX - 8, this.mouseWalkY - 8);
@@ -5549,10 +5555,10 @@ public final class mudclient implements Runnable {
 					}
 					if (var13 != 5 || animationDef.hasA()) {
 						//int sprite = variant + animationDef.getNumber();
-						Sprite sprite = spriteSelect(animationDef,variant);
+						Sprite sprite = spriteSelect(animationDef, variant);
 						int something1 = sprite.getSomething1();
 						int something2 = sprite.getSomething2();
-						int something3 = this.spriteSelect(EntityHandler.getAnimationDef(animID),0).getSomething1();
+						int something3 = this.spriteSelect(EntityHandler.getAnimationDef(animID), 0).getSomething1();
 						if (something1 != 0 && something2 != 0 && something3 != 0) {
 							int xOffset = (spriteOffsetX * width1) / something1;
 							int yOffset = (spriteOffsetY * height) / something2;
@@ -5718,7 +5724,7 @@ public final class mudclient implements Runnable {
 							Sprite sprite = spriteSelect(EntityHandler.getAnimationDef(animID), mySpriteOffset);
 							int something1 = sprite.getSomething1();
 							int something2 = sprite.getSomething2();
-							int something3 = this.spriteSelect(EntityHandler.getAnimationDef(animID),0).getSomething1();
+							int something3 = this.spriteSelect(EntityHandler.getAnimationDef(animID), 0).getSomething1();
 							if (something1 != 0 && something2 != 0 && something3 != 0) {
 								int xOffset = (spriteOffsetX * width) / something1;
 								int yOffset = (spriteOffsetY * height) / something2;
@@ -11831,7 +11837,57 @@ public final class mudclient implements Runnable {
         return "failed";
     }*/
 
-	private void loadEntities() {
+	private void loadSprites() {
+		clientPort.showLoadingProgress(30, "people and monsters");
+		//Load all sprites from the disk
+		getSurface().fillSpriteTree();
+
+		//Load & apply sprite packs
+		File configFile = new File(clientPort.getCacheLocation() + "spritepacks");
+		if (configFile.isDirectory()) {
+			configFile = new File(clientPort.getCacheLocation() + "spritepacks" + File.separator + "config.txt");
+			if (configFile.exists()) {
+				ArrayList<String> activePacks = new ArrayList<>();
+				try {
+					BufferedReader br = new BufferedReader(new FileReader(configFile));
+					String line;
+					while ((line = br.readLine()) != null) {
+						String[] packageName = line.split(":");
+						if (Integer.parseInt(packageName[1]) == 1)
+							activePacks.add(packageName[0]);
+					}
+					br.close();
+
+					for (String filename : activePacks) {
+						ZipFile spritePack = new ZipFile(clientPort.getCacheLocation() + "spritepacks" + File.separator + filename + ".pack");
+						Enumeration<? extends ZipEntry> entries = spritePack.entries();
+						//Loop through each spritesheet in the sprite pack
+
+						while (entries.hasMoreElements()) {
+							List<Sprite> spriteGroup = new ArrayList<Sprite>();
+							ZipEntry entry = entries.nextElement();
+							spriteGroup = getSurface().unpackSpriteData(spritePack, entry);
+							List<Sprite> defaultSprites = getSurface().spriteTree.get(entry.getName());
+							for (Sprite sprite : spriteGroup) {
+								for (int i = 0; i < defaultSprites.size(); i++) {
+									if (sprite.getID() == defaultSprites.get(i).getID()) {
+										defaultSprites.set(i, sprite);
+										break;
+									}
+								}
+							}
+							getSurface().spriteTree.replace(entry.getName(), defaultSprites);
+						}
+
+					}
+				} catch (IOException a) {
+					a.printStackTrace();
+				}
+			}
+
+		}
+
+		//Create a hashmap of the animation names to their index in the sprite tree
 		getSurface().mapAnimations();
 	}
 
@@ -14355,72 +14411,25 @@ public final class mudclient implements Runnable {
 							if (!this.errorLoadingData) {
 								this.loadModels();
 								if (!this.errorLoadingData) {
+									this.loadSounds();
 									if (!this.errorLoadingData) {
-										this.loadSounds();
-										if (!this.errorLoadingData) {
-											clientPort.showLoadingProgress(100, "Starting game...");
-											this.createMessageTabPanel(56);
-											this.createLoginPanels(3845);
-											this.createAppearancePanel(var1 ^ 24649);
-											this.createRecoveryQuestionPanel();
-											this.createPasswordRecoveryPanel();
-											this.createContactDetailsPanel();
-											this.resetLoginScreenVariables((byte) -88);
-											this.renderLoginScreenViewports(-116);
-										}
+										clientPort.showLoadingProgress(100, "Starting game...");
+										this.createMessageTabPanel(56);
+										this.createLoginPanels(3845);
+										this.createAppearancePanel(var1 ^ 24649);
+										this.createRecoveryQuestionPanel();
+										this.createPasswordRecoveryPanel();
+										this.createContactDetailsPanel();
+										this.resetLoginScreenVariables((byte) -88);
+										this.renderLoginScreenViewports(-116);
 									}
 								}
 							}
 						}
 					}
 				} else {
-					//Load sprite packs
-					File configFile = new File(clientPort.getCacheLocation() + "spritepacks");
-					if (configFile.isDirectory())
-					{
-						configFile = new File(clientPort.getCacheLocation() + "spritepacks" + File.separator + "config.txt");
-						ArrayList<String> activePacks = new ArrayList<>();
-						try {
-							BufferedReader br = new BufferedReader(new FileReader(configFile));
-							String line;
-							while ((line = br.readLine()) != null) {
-								String[] packageName = line.split(":");
-								if (Integer.parseInt(packageName[1]) == 1)
-									activePacks.add(packageName[0]);
-							}
-							br.close();
-
-							for (String filename : activePacks) {
-								ZipFile spritePack = new ZipFile(clientPort.getCacheLocation() + "spritepacks" + File.separator + filename + ".pack");
-								Enumeration<? extends ZipEntry> entries = spritePack.entries();
-								//Loop through each spritesheet in the sprite pack
-
-									while (entries.hasMoreElements()) {
-										List<Sprite> spriteGroup = new ArrayList<Sprite>();
-										ZipEntry entry = entries.nextElement();
-										spriteGroup = getSurface().unpackSpriteData(spritePack, entry);
-										List<Sprite> defaultSprites = getSurface().spriteTree.get(entry.getName());
-										for (Sprite sprite : spriteGroup)
-										{
-											for (int i = 0; i < defaultSprites.size(); i++) {
-												if (sprite.getID() == defaultSprites.get(i).getID()) {
-													defaultSprites.set(i,sprite);
-													break;
-												}
-											}
-										}
-										getSurface().spriteTree.replace(entry.getName(), defaultSprites);
-									}
-
-							}
-						} catch (IOException a) {
-							a.printStackTrace();
-						}
-
-
-					}
 					if (!this.errorLoadingData) {
-						this.loadEntities();
+						this.loadSprites();
 						if (!this.errorLoadingData) {
 							this.scene = new Scene(this.getSurface(), 25000, 50000, 1000);
 							this.scene.setMidpoints(this.halfGameHeight(), true, this.getGameWidth(),
@@ -14437,26 +14446,23 @@ public final class mudclient implements Runnable {
 							if (!this.errorLoadingData) {
 								this.loadModels();
 								if (!this.errorLoadingData) {
+									this.loadSounds();
 									if (!this.errorLoadingData) {
-										this.loadSounds();
-										if (!this.errorLoadingData) {
-											clientPort.showLoadingProgress(100, "Starting game...");
-											this.createMessageTabPanel(56);
-											this.createLoginPanels(3845);
-											this.createAppearancePanel(var1 ^ 24649);
-											this.createRecoveryQuestionPanel();
-											this.createPasswordRecoveryPanel();
-											this.createContactDetailsPanel();
-											this.resetLoginScreenVariables((byte) -88);
-											this.renderLoginScreenViewports(-116);
-										}
+										clientPort.showLoadingProgress(100, "Starting game...");
+										this.createMessageTabPanel(56);
+										this.createLoginPanels(3845);
+										this.createAppearancePanel(var1 ^ 24649);
+										this.createRecoveryQuestionPanel();
+										this.createPasswordRecoveryPanel();
+										this.createContactDetailsPanel();
+										this.resetLoginScreenVariables((byte) -88);
+										this.renderLoginScreenViewports(-116);
 									}
 								}
 							}
 						}
 					}
 				}
-
 			}
 		} catch (RuntimeException var9) {
 			throw GenUtil.makeThrowable(var9, "client.KC(" + var1 + ')');

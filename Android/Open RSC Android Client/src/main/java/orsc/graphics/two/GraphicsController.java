@@ -72,8 +72,6 @@ public class GraphicsController {
 			try {
 				if (Config.S_WANT_CUSTOM_SPRITES) {
 					spriteArchive = new ZipFile(Config.F_CACHE_DIR + File.separator + "Custom_Sprites.orsc");
-					fillSpriteTree();
-
 				} else {
 					spriteArchive = new ZipFile(Config.F_CACHE_DIR + File.separator + "Authentic_Sprites.orsc");
 					sprites = new Sprite[var3];
