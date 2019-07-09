@@ -119,7 +119,7 @@ public final class DoSkillInterface {
 
 			lotsaText = skillDetail.length() >= 15;
 
-			mc.getSurface().drawSpriteClipping(mudclient.spriteItem + def.getSprite(),
+			mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
 				curX, spriteY, 48, 32, def.getPictureMask(), 0, false, 0, 1);
 
 			int stringWidth = drawStringWrapped(skillDetail, curX, textY, 2, textColour);

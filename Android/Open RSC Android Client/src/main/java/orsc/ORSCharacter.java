@@ -1,5 +1,6 @@
 package orsc;
 
+import com.openrsc.client.entityhandling.defs.SpriteDef;
 import orsc.enumerations.ORSCharacterDirection;
 
 public final class ORSCharacter {
@@ -21,7 +22,7 @@ public final class ORSCharacter {
 	public int[] layerAnimation = new int[12];
 	public int healthCurrent = 0;
 	public int healthMax = 0;
-	public int incomingProjectileSprite = 0;
+	public SpriteDef incomingProjectileSprite;
 	public int level = -1;
 	public String message;
 	public int messageTimeout = 0;

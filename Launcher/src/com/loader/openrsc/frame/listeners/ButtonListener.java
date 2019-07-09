@@ -2,15 +2,15 @@ package com.loader.openrsc.frame.listeners;
 
 import com.loader.openrsc.Constants;
 import com.loader.openrsc.frame.AppFrame;
+import com.loader.openrsc.frame.elements.CheckCombo;
 import com.loader.openrsc.util.ClientLauncher;
 import com.loader.openrsc.util.Utils;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Iterator;
 
 public class ButtonListener implements ActionListener {
 	@Override
@@ -174,6 +174,27 @@ public class ButtonListener implements ActionListener {
 					// Deletes the client.properties file that may persist unwanted settings between different games
 					File f = new File(Constants.CONF_DIR + File.separator + "client.properties");
 					f.delete();
+
+					//update the sprite pack config file
+					File configFile = new File(Constants.CONF_DIR + File.separator + "spritepacks" + File.separator + "config.txt");
+					configFile.delete();
+
+					CheckCombo.store[] entries = AppFrame.get().getComboBoxState();
+
+					//Update the config file
+					if (!(entries.length == 1 && entries[0].text.equalsIgnoreCase("none"))) {
+						try {
+							FileWriter write = new FileWriter(configFile, true);
+							PrintWriter writer = new PrintWriter(write);
+							for (CheckCombo.store entry : entries)
+								writer.println(entry.text + ":" + (entry.state==true ? 1 : 0));
+							writer.close();
+							write.close();
+						} catch (IOException a) {
+							a.printStackTrace();
+						}
+					}
+
 
 					ClientLauncher.launchClient();
 				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {

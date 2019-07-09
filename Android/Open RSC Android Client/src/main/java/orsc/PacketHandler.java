@@ -1,13 +1,7 @@
 package orsc;
 
+import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.model.Sprite;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.util.Properties;
-
 import orsc.buffers.RSBufferUtils;
 import orsc.buffers.RSBuffer_Bits;
 import orsc.enumerations.MessageType;
@@ -20,6 +14,12 @@ import orsc.net.Network_Socket;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.Properties;
 
 public class PacketHandler {
 
@@ -1415,7 +1415,7 @@ public class PacketHandler {
 					npc.attackingNpcServerIndex = shooterServerIndex;
 					npc.projectileRange = mc.getProjectileMaxRange();
 					npc.attackingPlayerServerIndex = -1;
-					npc.incomingProjectileSprite = sprite;
+					npc.incomingProjectileSprite = EntityHandler.projectiles.get(sprite);
 				}
 			} else if (updateType == 4) {
 				int sprite = packetsIncoming.getShort();
@@ -1424,7 +1424,7 @@ public class PacketHandler {
 					npc.projectileRange = mc.getProjectileMaxRange();
 					npc.attackingNpcServerIndex = -1;
 					npc.attackingPlayerServerIndex = shooterServerIndex;
-					npc.incomingProjectileSprite = sprite;
+					npc.incomingProjectileSprite = EntityHandler.projectiles.get(sprite);
 				}
 			}
 		}
@@ -1850,7 +1850,7 @@ public class PacketHandler {
 		mc.setIsSleeping(true);
 		mc.setInputTextFinal("");
 		Sprite sprite = mc.makeSleepSprite(new ByteArrayInputStream(packetsIncoming.dataBuffer, 1, length));
-		mc.getSurface().createCaptchaSprite(mudclient.spriteLogo + 2, sprite);
+		mc.getSurface().createCaptchaSprite(sprite);
 
 		mc.setSleepingStatusText(null);
 	}
@@ -2078,7 +2078,7 @@ public class PacketHandler {
 					player.attackingNpcServerIndex = shooterServerIndex;
 					player.projectileRange = mc.getProjectileMaxRange();
 					player.attackingPlayerServerIndex = -1;
-					player.incomingProjectileSprite = sprite;
+					player.incomingProjectileSprite = EntityHandler.projectiles.get(sprite);
 				}
 			} else if (updateType == 4) {
 				int sprite = packetsIncoming.getShort();
@@ -2087,7 +2087,7 @@ public class PacketHandler {
 					player.projectileRange = mc.getProjectileMaxRange();
 					player.attackingNpcServerIndex = -1;
 					player.attackingPlayerServerIndex = shooterServerIndex;
-					player.incomingProjectileSprite = sprite;
+					player.incomingProjectileSprite = EntityHandler.projectiles.get(sprite);
 				}
 			} else if (updateType == 5) {
 				if (player == null) {

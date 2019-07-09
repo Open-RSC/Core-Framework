@@ -1,21 +1,31 @@
 package orsc.graphics.two;
 
+import com.openrsc.client.entityhandling.EntityHandler;
+import com.openrsc.client.entityhandling.defs.ItemDef;
+import com.openrsc.client.entityhandling.defs.SpriteDef;
+import com.openrsc.client.entityhandling.defs.extras.AnimationDef;
 import com.openrsc.data.DataConversions;
 import com.openrsc.client.model.Sprite;
 import orsc.Config;
 import orsc.MiscFunctions;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
+import orsc.mudclient;
 
-import java.io.BufferedInputStream;
-import java.io.File;
+import java.io.*;
 import java.nio.ByteBuffer;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 public class GraphicsController {
+
+	public enum SPRITE_LAYER {
+		MINIMAP, WORLDMAP, SHOP
+	}
 
 	public boolean interlace = false;
 
@@ -33,6 +43,8 @@ public class GraphicsController {
 	public int[] pixelData;
 	public int width2;
 	public Sprite[] sprites;
+	public Sprite[] spriteVerts = new Sprite[3];
+	public Sprite minimapSprite = new Sprite();
 	private int clipTop = 0;
 	private int iconSpriteIndex;
 	private int clipLeft = 0;
@@ -44,7 +56,8 @@ public class GraphicsController {
 	private int[] m_tb;
 	private int[] m_Tb;
 	private int[] m_Wb;
-
+	public Map<String, List<Sprite>> spriteTree = new HashMap<String, List<Sprite>>();
+	public static Map<String, Integer> animationMap = new HashMap<>();
 	// public int[][] image2D_pixels;
 	private int[] m_Xb;
 	private ZipFile spriteArchive;
@@ -56,12 +69,13 @@ public class GraphicsController {
 			this.pixelData = new int[var1 * var2];
 			this.height2 = var2;
 			this.width2 = var1;
-			sprites = new Sprite[var3];
 			try {
 				if (Config.S_WANT_CUSTOM_SPRITES) {
 					spriteArchive = new ZipFile(Config.F_CACHE_DIR + File.separator + "Custom_Sprites.orsc");
+					fillSpriteTree();
 				} else {
 					spriteArchive = new ZipFile(Config.F_CACHE_DIR + File.separator + "Authentic_Sprites.orsc");
+					sprites = new Sprite[var3];
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -205,38 +219,38 @@ public class GraphicsController {
 		}
 	}
 
-	public final void spriteClipping(int sprite, byte var2, int height, int var4, int width, int var6, int var7) {
+	public final void spriteClipping(Sprite sprite, byte var2, int height, int var4, int width, int var6, int var7) {
 		try {
 
 
 			try {
-				int spriteWidth = sprites[sprite].getWidth();// this.image2D_width[sprite];
-				int spriteHeight = sprites[sprite].getHeight();
+				int spriteWidth = sprite.getWidth();// this.image2D_width[sprite];
+				int spriteHeight = sprite.getHeight();
 				int var10 = 0;
 				int var11 = 0;
 				int scaleX = (spriteWidth << 16) / width;
 				int scaleY = (spriteHeight << 16) / height;
-				if (sprites[sprite].requiresShift()) {
-					int var14 = sprites[sprite].getSomething1();
-					int var15 = sprites[sprite].getSomething2();
+				if (sprite.requiresShift()) {
+					int var14 = sprite.getSomething1();
+					int var15 = sprite.getSomething2();
 					if (var14 == 0 || var15 == 0) {
 						return;
 					}
 
 					scaleY = (var15 << 16) / height;
-					var6 += (var15 + height * sprites[sprite].getYShift() - 1) / var15;
-					var4 += (var14 + sprites[sprite].getXShift() * width - 1) / var14;
+					var6 += (var15 + height * sprite.getYShift() - 1) / var15;
+					var4 += (var14 + sprite.getXShift() * width - 1) / var14;
 					scaleX = (var14 << 16) / width;
-					if (width * sprites[sprite].getXShift() % var14 != 0) {
-						var10 = (var14 - sprites[sprite].getXShift() * width % var14 << 16) / width;
+					if (width * sprite.getXShift() % var14 != 0) {
+						var10 = (var14 - sprite.getXShift() * width % var14 << 16) / width;
 					}
 
-					if (sprites[sprite].getYShift() * height % var15 != 0) {
-						var11 = (var15 - sprites[sprite].getYShift() * height % var15 << 16) / height;
+					if (sprite.getYShift() * height % var15 != 0) {
+						var11 = (var15 - sprite.getYShift() * height % var15 << 16) / height;
 					}
 
-					width = width * (sprites[sprite].getWidth() - (var10 >> 16)) / var14;
-					height = (sprites[sprite].getHeight() - (var11 >> 16)) * height / var15;
+					width = width * (sprite.getWidth() - (var10 >> 16)) / var14;
+					height = (sprite.getHeight() - (var11 >> 16)) * height / var15;
 				}
 
 				int var14 = var6 * this.width2 + var4;
@@ -286,7 +300,7 @@ public class GraphicsController {
 				}
 
 				this.plot_tran_scale(var19, var11, width, (byte) -61, scaleY, spriteWidth, scaleX, height, var14,
-					sprites[sprite].getPixels(), 0, var10, var15, var7, this.pixelData);
+					sprite.getPixels(), 0, var10, var15, var7, this.pixelData);
 			} catch (Exception var17) {
 				System.out.println("error in sprite clipping routine");
 			}
@@ -297,22 +311,82 @@ public class GraphicsController {
 		}
 	}
 
-	public final void a(int sprite, int var2, int var3, int var4, int var5) {
+	public Sprite spriteSelect(ItemDef item) {
+		if (!Config.S_WANT_CUSTOM_SPRITES)
+			return sprites[item.authenticSpriteID + mudclient.spriteItem];
+
+		String[] location = item.getSpriteLocation().split(":");
+		Sprite retVal = spriteTree.get(location[0]).get(Integer.parseInt(location[1]));
+		return retVal;
+	}
+
+	public Sprite spriteSelect(AnimationDef animation, int offset) {
+		if (!Config.S_WANT_CUSTOM_SPRITES)
+			return sprites[animation.getNumber()+offset];
+
+		Sprite sprite = spriteTree.get("animations").get(animationMap.get(animation.name) + offset);
+		return sprite;
+	}
+
+	public Sprite spriteSelect(SpriteDef sprite) {
+		if (!Config.S_WANT_CUSTOM_SPRITES)
+			return sprites[sprite.getAuthenticSpriteID()];
+
+		String[] location = sprite.getSpriteLocation().split(":");
+
+		Sprite retVal = spriteTree.get(location[0]).get(Integer.parseInt(location[1]));
+		return retVal;
+	}
+	/*
+	public Sprite spriteSelect(int id) {
+		if (!Config.S_WANT_CUSTOM_SPRITES)
+			return this.sprites[id];
+		/**
+		 * Newest RSC cache: SAME VALUES.
+		 * <p>
+		 * mudclient.spriteMedia = 2000;
+		 * mudclient.spriteUtil = mudclient.spriteMedia + 100; 2100
+		 * mudclient.spriteItem = 50 + mudclient.spriteUtil; 2150
+		 * mudclient.spriteLogo = 1000 + mudclient.spriteItem; 3150
+		 * mudclient.spriteProjectile = 10 + mudclient.spriteLogo; 3160
+		 * mudclient.spriteTexture = 50 + mudclient.spriteProjectile; 3210
+
+
+		if (id < mudclient.spriteMedia) {
+			return spriteTree.get("animations").get(id);
+		} else if (id < mudclient.spriteUtil) {
+			return spriteTree.get("GUI").get(id - mudclient.spriteMedia);
+		} else if (id < mudclient.spriteItem) {
+			return spriteTree.get("GUIutil").get(id - mudclient.spriteUtil);
+		} else if (id < mudclient.spriteProjectile) {
+			return spriteTree.get("items").get(id - mudclient.spriteItem);
+		} else if (id < mudclient.spriteTexture) {
+			return spriteTree.get("projectiles").get(id - mudclient.spriteProjectile);
+		} else if (id < 3284) {
+			return spriteTree.get("textures").get(id - mudclient.spriteTexture);
+		} else
+			return spriteTree.get("crowns").get(id - 3284);
+
+	}
+
+	 */
+
+	public final void a(Sprite sprite, int var2, int var3, int var4, int var5) {
 		try {
-			if (sprites[sprite] == null) {
-				System.out.println("Sprite missing: " + sprite);
+			if (sprite == null) {
+				System.out.println("Sprite missing: " + sprite.getID());
 				return;
 			}
-			if (sprites[sprite].requiresShift()) {
-				var3 += sprites[sprite].getXShift();
-				var5 += sprites[sprite].getYShift();
+			if (sprite.requiresShift()) {
+				var3 += sprite.getXShift();
+				var5 += sprite.getYShift();
 			}
 
 
 			int var6 = this.width2 * var5 + var3;
 			int var7 = var2;
-			int var8 = sprites[sprite].getHeight();
-			int var9 = sprites[sprite].getWidth();
+			int var8 = sprite.getHeight();
+			int var9 = sprite.getWidth();
 			int var10 = this.width2 - var9;
 			int var11 = 0;
 			int var12;
@@ -348,7 +422,7 @@ public class GraphicsController {
 			if (var9 > 0 && var8 > 0) {
 				byte var14 = 1;
 				if (this.interlace) {
-					var11 += sprites[sprite].getWidth();
+					var11 += sprite.getWidth();
 					var14 = 2;
 					if ((1 & var5) != 0) {
 						--var8;
@@ -363,7 +437,7 @@ public class GraphicsController {
 				// var8, var11, var4, var9, this.pixelData,
 				// this.image2D_colorLookupTable[sprite], var6);
 				// } else {
-				this.a(var7, var8, var6, sprites[sprite].getPixels(), 0, var4, var14, this.pixelData, -107, var11,
+				this.a(var7, var8, var6, sprite.getPixels(), 0, var4, var14, this.pixelData, -107, var11,
 					var10, var9);
 				// }
 
@@ -374,40 +448,40 @@ public class GraphicsController {
 		}
 	}
 
-	public final void spriteClip3(int var1, int var2, int sprite, int var4, int var5, byte var6, int var7) {
+	public final void spriteClip3(int var1, int var2, Sprite sprite, int var4, int var5, byte var6, int var7) {
 		try {
 
 
 			try {
-				int spriteWidth = sprites[sprite].getWidth();
-				int spriteHeight = sprites[sprite].getHeight();
+				int spriteWidth = sprite.getWidth();
+				int spriteHeight = sprite.getHeight();
 				int var10 = 0;
 				int var11 = 0;
 				int var12 = (spriteWidth << 16) / var7;
 				int var13 = (spriteHeight << 16) / var5;
 				int var14;
 				int var15;
-				if (sprites[sprite].requiresShift()) {
-					var14 = sprites[sprite].getSomething1();
-					var15 = sprites[sprite].getSomething2();
+				if (sprite.requiresShift()) {
+					var14 = sprite.getSomething1();
+					var15 = sprite.getSomething2();
 					if (var14 == 0 || var15 == 0) {
 						return;
 					}
 
-					if (sprites[sprite].getXShift() * var7 % var14 != 0) {
-						var10 = (var14 - sprites[sprite].getXShift() * var7 % var14 << 16) / var7;
+					if (sprite.getXShift() * var7 % var14 != 0) {
+						var10 = (var14 - sprite.getXShift() * var7 % var14 << 16) / var7;
 					}
 
-					var1 += (var7 * sprites[sprite].getXShift() + var14 - 1) / var14;
+					var1 += (var7 * sprite.getXShift() + var14 - 1) / var14;
 					var12 = (var14 << 16) / var7;
-					var4 += (var15 + var5 * sprites[sprite].getYShift() - 1) / var15;
+					var4 += (var15 + var5 * sprite.getYShift() - 1) / var15;
 					var13 = (var15 << 16) / var5;
-					if (sprites[sprite].getYShift() * var5 % var15 != 0) {
-						var11 = (var15 - var5 * sprites[sprite].getYShift() % var15 << 16) / var5;
+					if (sprite.getYShift() * var5 % var15 != 0) {
+						var11 = (var15 - var5 * sprite.getYShift() % var15 << 16) / var5;
 					}
 
-					var5 = var5 * (sprites[sprite].getHeight() - (var11 >> 16)) / var15;
-					var7 = (sprites[sprite].getWidth() - (var10 >> 16)) * var7 / var14;
+					var5 = var5 * (sprite.getHeight() - (var11 >> 16)) / var15;
+					var7 = (sprite.getWidth() - (var10 >> 16)) * var7 / var14;
 				}
 
 				var14 = var1 + var4 * this.width2;
@@ -452,7 +526,7 @@ public class GraphicsController {
 					var15 += this.width2;
 				}
 
-				this.a(var11, var12, var7, var10, var15, sprites[sprite].getPixels(), var14, this.pixelData, 0,
+				this.a(var11, var12, var7, var10, var15, sprite.getPixels(), var14, this.pixelData, 0,
 					spriteWidth, false, var13, var5, var2, var19);
 			} catch (Exception var17) {
 				System.out.println("error in sprite clipping routine");
@@ -466,7 +540,8 @@ public class GraphicsController {
 
 	public void drawEntity(int index, int x, int y, int width, int height, int var1, int var8) {
 		try {
-			this.drawSprite(index, x, y, width, height, 5924);
+			Sprite sprite = sprites[index];
+			this.drawSprite(sprite, x, y, width, height, 5924);
 
 		} catch (RuntimeException var10) {
 			throw GenUtil.makeThrowable(var10, "ua.B(" + var1 + ',' + index + ',' + height + ',' + x + ',' + y + ','
@@ -667,7 +742,7 @@ public class GraphicsController {
 			this.drawColoredString(var1 - this.stringWidth(var6, var3), var2, var3, var6, var4, var7);
 
 			if (var5 != -12200) {
-				this.copyPixelDataToSurface(49, -128, -127, -124, 75);
+				this.copyPixelDataToSurface(SPRITE_LAYER.SHOP, -128, -127, -124, 75);
 			}
 
 		} catch (RuntimeException var9) {
@@ -786,9 +861,9 @@ public class GraphicsController {
 							lineEndsAt++;
 						}
 
-						StringBuilder colourCode    = new StringBuilder();
+						StringBuilder colourCode = new StringBuilder();
 
-						if(Config.S_WANT_FIXED_OVERHEAD_CHAT) {
+						if (Config.S_WANT_FIXED_OVERHEAD_CHAT) {
 							StringBuilder regexBuilder = new StringBuilder(str.substring(0, lastLineTerm));
 							String regexCheck = regexBuilder.reverse().toString();
 							Pattern regex = Pattern.compile("(@.{3}@)");
@@ -810,16 +885,16 @@ public class GraphicsController {
 				}
 
 				if (width > 0) {
-					StringBuilder colourCode    = new StringBuilder();
+					StringBuilder colourCode = new StringBuilder();
 
-					if(Config.S_WANT_FIXED_OVERHEAD_CHAT) {
+					if (Config.S_WANT_FIXED_OVERHEAD_CHAT) {
 						StringBuilder regexBuilder = new StringBuilder(str.substring(0, lastLineTerm));
 						String regexCheck = regexBuilder.reverse().toString();
 						Pattern regex = Pattern.compile("(@.{3}@)");
 						Matcher match = regex.matcher(regexCheck);
 
-						if(match.find())
-							colourCode  = colourCode.append(match.group(0)).reverse();
+						if (match.find())
+							colourCode = colourCode.append(match.group(0)).reverse();
 					}
 
 					if (centered) {
@@ -1058,7 +1133,7 @@ public class GraphicsController {
 		}
 	}
 
-	public final void copyPixelDataToSurface(int destLayer, int xOffset, int yOffset, int width, int height) {
+	public final void copyPixelDataToSurface(SPRITE_LAYER layer, int xOffset, int yOffset, int width, int height) {
 		try {
 			int[] pixels = new int[width * height];
 			int pixel = 0;
@@ -1072,7 +1147,19 @@ public class GraphicsController {
 			sprite.setShift(0, 0);
 			sprite.setRequiresShift(false);
 			sprite.setSomething(width, height);
-			sprites[destLayer] = sprite;
+
+			switch (layer) {
+				case MINIMAP:
+					minimapSprite = sprite;
+					break;
+				case WORLDMAP:
+					//doesn't look like the worldmap is generated on hte fly
+					//sprites[4500] = sprite;
+					break;
+				case SHOP:
+					//sprites[49] = sprite;
+					break;
+			}
 
 			/*
 			 *  this.image2D_width[destLayer] = width;
@@ -1092,7 +1179,7 @@ public class GraphicsController {
 			 */
 		} catch (RuntimeException var11) {
 			throw GenUtil.makeThrowable(var11, "ua.BB(" + height + ',' + xOffset + ',' + yOffset + ',' + "dummy" + ','
-				+ destLayer + ',' + width + ')');
+				+ layer + ',' + width + ')');
 		}
 	}
 
@@ -1223,7 +1310,7 @@ public class GraphicsController {
 		sprite.setRequiresShift(false);
 		sprite.setSomething(width, height);
 
-		sprites[index] = sprite;
+		spriteVerts[index] = sprite;
 
 	}
 
@@ -1408,13 +1495,15 @@ public class GraphicsController {
 				if (spriteHeader > 0) {
 					int iconSprite = (spriteHeader >> 24 & 0xFF) + this.iconSpriteIndex - 1;
 					int spriteHeaderMask = (spriteHeader & 0x00FFFFFF);
-					if (sprites[iconSprite] != null) {
+
+					Sprite crown = spriteSelect(EntityHandler.crowns.get(iconSprite-3284));
+					if (crown != null) {
 						this.drawSpriteClipping(
-							iconSprite,
+							crown,
 							x,
-							y - sprites[iconSprite].getHeight(),
-							sprites[iconSprite].getWidth(),
-							sprites[iconSprite].getHeight(),
+							y - crown.getHeight(),
+							crown.getWidth(),
+							crown.getHeight(),
 							spriteHeaderMask,
 							0,
 							false,
@@ -1422,7 +1511,7 @@ public class GraphicsController {
 							0
 						);
 						//this.drawSprite(var8, x, y - sprites[var8].getHeight());
-						x += sprites[iconSprite].getWidth() + 5;
+						x += crown.getWidth() + 5;
 					}
 				}
 
@@ -1514,7 +1603,7 @@ public class GraphicsController {
 							i += 5;
 						} else if (false && Config.S_WANT_CUSTOM_RANK_DISPLAY && str.charAt(i) == '#' && i + 4 < str.length() && str.charAt(i + 4) == '#' && str.substring(i + 1, i + 4).equalsIgnoreCase("adm")) {
 							this.drawSpriteClipping(
-								this.iconSpriteIndex,
+								spriteSelect(EntityHandler.GUIparts.get(0)),
 								x - 1,
 								y - sprites[this.iconSpriteIndex].getHeight(),
 								sprites[this.iconSpriteIndex].getWidth(),
@@ -1529,7 +1618,7 @@ public class GraphicsController {
 							i += 4;
 						} else if (false && Config.S_WANT_CUSTOM_RANK_DISPLAY && str.charAt(i) == '#' && i + 4 < str.length() && str.charAt(i + 4) == '#' && str.substring(i + 1, i + 4).equalsIgnoreCase("mod")) {
 							this.drawSpriteClipping(
-								this.iconSpriteIndex,
+								spriteSelect(EntityHandler.crowns.get(0)),
 								x - 1,
 								y - sprites[this.iconSpriteIndex].getHeight(),
 								sprites[this.iconSpriteIndex].getWidth(),
@@ -1544,7 +1633,7 @@ public class GraphicsController {
 							i += 4;
 						} else if (false && Config.S_WANT_CUSTOM_RANK_DISPLAY && str.charAt(i) == '#' && i + 4 < str.length() && str.charAt(i + 4) == '#' && str.substring(i + 1, i + 4).equalsIgnoreCase("dev")) {
 							this.drawSpriteClipping(
-								this.iconSpriteIndex,
+								spriteSelect(EntityHandler.crowns.get(0)),
 								x - 1,
 								y - sprites[this.iconSpriteIndex].getHeight(),
 								sprites[this.iconSpriteIndex].getWidth(),
@@ -1559,7 +1648,7 @@ public class GraphicsController {
 							i += 4;
 						} else if (false && Config.S_WANT_CUSTOM_RANK_DISPLAY && str.charAt(i) == '#' && i + 4 < str.length() && str.charAt(i + 4) == '#' && str.substring(i + 1, i + 4).equalsIgnoreCase("eve")) {
 							this.drawSpriteClipping(
-								this.iconSpriteIndex,
+								spriteSelect(EntityHandler.GUIparts.get(0)),
 								x - 1,
 								y - sprites[this.iconSpriteIndex].getHeight(),
 								sprites[this.iconSpriteIndex].getWidth(),
@@ -1681,7 +1770,7 @@ public class GraphicsController {
 
 	}
 
-	public final void drawMinimapSprite(int sprite, int var2, int var3, int var4, int var5, int var6) {
+	public final void drawMinimapSprite(Sprite sprite, int var2, int var3, int var4, int var5, int var6) {
 		try {
 
 			int var7 = this.width2;
@@ -1696,15 +1785,15 @@ public class GraphicsController {
 				}
 			}
 
-			var9 = -sprites[sprite].getSomething1() / 2;
-			int var10 = -sprites[sprite].getSomething2() / 2;
-			if (sprites[sprite].requiresShift()) {
-				var9 += sprites[sprite].getXShift();
-				var10 += sprites[sprite].getYShift();
+			var9 = -sprite.getSomething1() / 2;
+			int var10 = -sprite.getSomething2() / 2;
+			if (sprite.requiresShift()) {
+				var9 += sprite.getXShift();
+				var10 += sprite.getYShift();
 			}
 
-			int var11 = sprites[sprite].getWidth() + var9;
-			int var12 = sprites[sprite].getHeight() + var10;
+			int var11 = sprite.getWidth() + var9;
+			int var12 = sprite.getHeight() + var10;
 			var6 &= 255;
 			int var17 = this.trigTable256[var6] * var5;
 			int var18 = this.trigTable256[var6 + 256] * var5;
@@ -1770,9 +1859,9 @@ public class GraphicsController {
 			int var32 = 0;
 			int var34 = 0;
 			int var36 = 0;
-			int var37 = sprites[sprite].getWidth();
+			int var37 = sprite.getWidth();
 			var11 = var37 - 1;
-			int var38 = sprites[sprite].getHeight();
+			int var38 = sprite.getHeight();
 			int var13 = var37 - 1;
 			byte var49 = 0;
 			byte var50 = 0;
@@ -1960,7 +2049,7 @@ public class GraphicsController {
 			}
 
 			var39 = var27 * var7;
-			var40 = sprites[sprite].getPixels();
+			var40 = sprite.getPixels();
 
 			for (int var41 = var27; var41 < var28; ++var41) {
 				int var42 = this.m_Xb[var41] >> 8;
@@ -1981,7 +2070,7 @@ public class GraphicsController {
 					}
 
 					if (!this.interlace || (var41 & 1) == 0) {
-						if (sprites[sprite].requiresShift()) {
+						if (sprite.requiresShift()) {
 							this.plot_trans_horiz_line(var47, var42 - var43, var44, var40, this.pixelData, var46,
 								var42 + var39, var37, var45);
 						} else {
@@ -2001,22 +2090,21 @@ public class GraphicsController {
 		}
 	}
 
-	public final void drawSprite(int sprite, int x, int y) {
+	public final void drawSprite(Sprite sprite, int x, int y) {
 		try {
-
-			if (sprites[sprite] == null) {
+			if (sprite == null) {
 				System.out.println("sprite missing:" + sprite);
 				return;
 			}
-			if (sprites[sprite].requiresShift()) {
-				x += sprites[sprite].getXShift();
-				y += sprites[sprite].getYShift();
+			if (sprite.requiresShift()) {
+				x += sprite.getXShift();
+				y += sprite.getYShift();
 			}
 
 			int var5 = y * this.width2 + x;
 			int var6 = 0;
-			int var7 = sprites[sprite].getHeight();
-			int var8 = sprites[sprite].getWidth();
+			int var7 = sprite.getHeight();
+			int var8 = sprite.getWidth();
 			int var9 = this.width2 - var8;
 			int var10 = 0;
 			int var11;
@@ -2059,10 +2147,10 @@ public class GraphicsController {
 					}
 
 					var13 = 2;
-					var10 += sprites[sprite].getWidth();
+					var10 += sprite.getWidth();
 				}
 
-				this.a(var8, this.pixelData, var13, var7, 0, var6, (byte) 123, var5, sprites[sprite].getPixels(), var9,
+				this.a(var8, this.pixelData, var13, var7, 0, var6, (byte) 123, var5, sprite.getPixels(), var9,
 					var10);
 
 			}
@@ -2139,41 +2227,39 @@ public class GraphicsController {
 		this.drawColoredString(x, y, str, font, color, 0);
 	}
 
-	public final void drawSprite(int sprite, int x, int y, int destWidth, int destHeight, int var5) {
+	public final void drawSprite(Sprite sprite, int x, int y, int destWidth, int destHeight, int var5) {
 		try {
-
-
 			try {
-				int spriteWidth = sprites[sprite].getWidth();
-				int spriteHeight = sprites[sprite].getHeight();
+				int spriteWidth = sprite.getWidth();
+				int spriteHeight = sprite.getHeight();
 				int srcStartX = 0;
 				int srcStartY = 0;
 				int scaleX = (spriteWidth << 16) / destWidth;
 				int scaleY = (spriteHeight << 16) / destHeight;
 				int destHead;
 				int destRowStride;
-				if (sprites[sprite].requiresShift()) {
-					destHead = sprites[sprite].getSomething1();
-					destRowStride = sprites[sprite].getSomething2();
+				if (sprite.requiresShift()) {
+					destHead = sprite.getSomething1();
+					destRowStride = sprite.getSomething2();
 					if (destHead == 0 || destRowStride == 0) {
 						return;
 					}
 
-					if (sprites[sprite].getYShift() * destHeight % destRowStride != 0) {
-						srcStartY = (destRowStride - destHeight * sprites[sprite].getYShift() % destRowStride << 16)
+					if (sprite.getYShift() * destHeight % destRowStride != 0) {
+						srcStartY = (destRowStride - destHeight * sprite.getYShift() % destRowStride << 16)
 							/ destHeight;
 					}
 
 					scaleX = (destHead << 16) / destWidth;
-					if (sprites[sprite].getXShift() * destWidth % destHead != 0) {
-						srcStartX = (destHead - sprites[sprite].getXShift() * destWidth % destHead << 16) / destWidth;
+					if (sprite.getXShift() * destWidth % destHead != 0) {
+						srcStartX = (destHead - sprite.getXShift() * destWidth % destHead << 16) / destWidth;
 					}
 
-					x += (destWidth * sprites[sprite].getXShift() + destHead - 1) / destHead;
+					x += (destWidth * sprite.getXShift() + destHead - 1) / destHead;
 					scaleY = (destRowStride << 16) / destHeight;
-					y += (destRowStride + destHeight * sprites[sprite].getYShift() - 1) / destRowStride;
-					destHeight = (sprites[sprite].getHeight() - (srcStartY >> 16)) * destHeight / destRowStride;
-					destWidth = destWidth * (sprites[sprite].getWidth() - (srcStartX >> 16)) / destHead;
+					y += (destRowStride + destHeight * sprite.getYShift() - 1) / destRowStride;
+					destHeight = (sprite.getHeight() - (srcStartY >> 16)) * destHeight / destRowStride;
+					destWidth = destWidth * (sprite.getWidth() - (srcStartX >> 16)) / destHead;
 				}
 
 				destHead = x + this.width2 * y;
@@ -2217,7 +2303,7 @@ public class GraphicsController {
 					scaleY += scaleY;
 				}
 
-				this.plot_scale_black_mask(sprites[sprite].getPixels(), heightStep, scaleX, 0, srcStartY,
+				this.plot_scale_black_mask(sprite.getPixels(), heightStep, scaleX, 0, srcStartY,
 					this.pixelData, (byte) 78, scaleY, destHeight, srcStartX, destRowStride, destWidth, spriteWidth,
 					destHead);
 			} catch (Exception var16) {
@@ -2360,10 +2446,10 @@ public class GraphicsController {
 		}
 	}
 
-	public final void createCaptchaSprite(int spriteID, Sprite s) {
+	public final void createCaptchaSprite(Sprite s) {
 		try {
 
-			sprites[spriteID] = s;
+			spriteVerts[2] = s;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2409,15 +2495,16 @@ public class GraphicsController {
 		}
 	}
 
-	public final void drawSpriteClipping(int sprite, int x, int y, int width, int height, int colorMask, int colorMask2,
+	public final void drawSpriteClipping(Sprite sprite, int x, int y, int width, int height, int colorMask, int colorMask2,
 										 boolean mirrorX, int topPixelSkew, int dummy) {
 		drawSpriteClipping(sprite, x, y, width, height, colorMask, colorMask2, mirrorX, topPixelSkew, dummy, 0xFFFFFFFF);
 	}
 
-	public final void drawSpriteClipping(int sprite, int x, int y, int width, int height, int colorMask, int colorMask2,
+	public final void drawSpriteClipping(Sprite e, int x, int y, int width, int height, int colorMask, int colorMask2,
 										 boolean mirrorX, int topPixelSkew, int dummy, int colourTransform) {
 		try {
 			try {
+
 				if (colorMask2 == 0) {
 					colorMask2 = 0xFFFFFF;
 				}
@@ -2426,8 +2513,8 @@ public class GraphicsController {
 					colorMask = 0xFFFFFF;
 				}
 
-				int spriteWidth = sprites[sprite].getWidth();
-				int spriteHeight = sprites[sprite].getHeight();
+				int spriteWidth = e.getWidth();
+				int spriteHeight = e.getHeight();
 				int srcStartX = 0;
 				int srcStartY = 0;
 				int destFirstColumn = topPixelSkew << 16;
@@ -2436,21 +2523,21 @@ public class GraphicsController {
 				int destColumnSkewPerRow = -(topPixelSkew << 16) / height;
 				int destRowHead;
 				int skipEveryOther;
-				if (sprites[sprite].requiresShift()) {
-					destRowHead = sprites[sprite].getSomething1();
-					skipEveryOther = sprites[sprite].getSomething2();
+				if (e.requiresShift()) {
+					destRowHead = e.getSomething1();
+					skipEveryOther = e.getSomething2();
 					if (destRowHead == 0 || skipEveryOther == 0) {
 						return;
 					}
 
 					scaleX = (destRowHead << 16) / width;
 					scaleY = (skipEveryOther << 16) / height;
-					int var21 = sprites[sprite].getXShift();
+					int var21 = e.getXShift();
 					if (mirrorX) {
-						var21 = destRowHead - this.sprites[sprite].getWidth() - var21;
+						var21 = destRowHead - e.getWidth() - var21;
 					}
 
-					int var22 = this.sprites[sprite].getYShift();
+					int var22 = e.getYShift();
 					x += (destRowHead + var21 * width - 1) / destRowHead;
 					int var23 = (var22 * height + skipEveryOther - 1) / skipEveryOther;
 					if (var21 * width % destRowHead != 0) {
@@ -2463,8 +2550,8 @@ public class GraphicsController {
 						srcStartY = (skipEveryOther - height * var22 % skipEveryOther << 16) / height;
 					}
 
-					width = (scaleX + ((this.sprites[sprite].getWidth() << 16) - (srcStartX + 1))) / scaleX;
-					height = ((this.sprites[sprite].getHeight() << 16) - srcStartY - (1 - scaleY)) / scaleY;
+					width = (scaleX + ((e.getWidth() << 16) - (srcStartX + 1))) / scaleX;
+					height = ((e.getHeight() << 16) - srcStartY - (1 - scaleY)) / scaleY;
 				}
 
 				destRowHead = this.width2 * y;
@@ -2488,25 +2575,25 @@ public class GraphicsController {
 				}
 				// TODO:Make sure this works.
 				if (colorMask2 == 0xFFFFFF) {
-					if (null != sprites[sprite].getPixels()) {
+					if (null != e.getPixels()) {
 						if (mirrorX) {
-							this.plot_tran_scale_with_mask(dummy ^ 74, sprites[sprite].getPixels(), scaleY, 0,
-								srcStartY, (sprites[sprite].getWidth() << 16) - (srcStartX + 1), width,
+							this.plot_tran_scale_with_mask(dummy ^ 74, e.getPixels(), scaleY, 0,
+								srcStartY, (e.getWidth() << 16) - (srcStartX + 1), width,
 								this.pixelData, height, destColumnSkewPerRow, destRowHead, -scaleX, destFirstColumn,
 								spriteWidth, skipEveryOther, colorMask, colourTransform);
 						} else {
-							this.plot_tran_scale_with_mask(dummy + 89, sprites[sprite].getPixels(), scaleY, 0,
+							this.plot_tran_scale_with_mask(dummy + 89, e.getPixels(), scaleY, 0,
 								srcStartY, srcStartX, width, this.pixelData, height, destColumnSkewPerRow,
 								destRowHead, scaleX, destFirstColumn, spriteWidth, skipEveryOther, colorMask, colourTransform);
 						}
 					}
 				} else if (mirrorX) {
-					this.plot_trans_scale_with_2_masks(this.pixelData, sprites[sprite].getPixels(), width,
+					this.plot_trans_scale_with_2_masks(this.pixelData, e.getPixels(), width,
 						destColumnSkewPerRow, destFirstColumn, dummy + 1603920391, 0, colorMask2, scaleY, -scaleX,
-						(sprites[sprite].getWidth() << 16) - srcStartX - 1, skipEveryOther, srcStartY, spriteWidth,
+						(e.getWidth() << 16) - srcStartX - 1, skipEveryOther, srcStartY, spriteWidth,
 						colorMask, height, destRowHead, colourTransform);
 				} else {
-					this.plot_trans_scale_with_2_masks(this.pixelData, sprites[sprite].getPixels(), width,
+					this.plot_trans_scale_with_2_masks(this.pixelData, e.getPixels(), width,
 						destColumnSkewPerRow, destFirstColumn, 1603920392, 0, colorMask2, scaleY, scaleX, srcStartX,
 						skipEveryOther, srcStartY, spriteWidth, colorMask, height, destRowHead, colourTransform);
 				}
@@ -2516,7 +2603,7 @@ public class GraphicsController {
 
 		} catch (RuntimeException var25) {
 			throw GenUtil.makeThrowable(var25, "ua.AB(" + y + ',' + colorMask + ',' + colorMask2 + ',' + mirrorX + ','
-				+ topPixelSkew + ',' + sprite + ',' + height + ',' + width + ',' + x + ',' + dummy + ')');
+				+ topPixelSkew + ',' + e + ',' + height + ',' + width + ',' + x + ',' + dummy + ')');
 		}
 	}
 
@@ -2832,6 +2919,113 @@ public class GraphicsController {
 		}
 	}
 
+	public boolean fillSpriteTree() {
+		Enumeration<? extends ZipEntry> entries = spriteArchive.entries();
+		//Loop through each spritesheet
+		try {
+			while (entries.hasMoreElements()) {
+				List<Sprite> spriteGroup = new ArrayList<Sprite>();
+				ZipEntry entry = entries.nextElement();
+				//ZipInputStream entryStream = new ZipInputStream(spriteArchive.getInputStream(entry));
+				//InputStream in = spriteArchive.getInputStream(entry);
+
+				//ByteBuffer buffer = streamToBuffer(in);
+				spriteGroup = unpackSpriteData(spriteArchive, entry);
+				spriteTree.put(entry.getName(), spriteGroup);
+			}
+		} catch (IOException a) {
+			a.printStackTrace();
+		}
+
+		return true;
+	}
+
+	public static ArrayList<Sprite> unpackSpriteData(ZipFile ioe, ZipEntry zipEntry) throws IOException {
+		ArrayList<Sprite> sprites = new ArrayList<Sprite>();
+
+		try {
+			InputStream fileIn = ioe.getInputStream(zipEntry);
+			ByteArrayOutputStream fileBytesBuffer = new ByteArrayOutputStream();
+			byte[] buffer = new byte[4096];
+			int readByte;
+			while ((readByte = fileIn.read(buffer)) != -1) {
+				fileBytesBuffer.write(buffer,0, readByte);
+			}
+
+			fileBytesBuffer.close();
+			fileIn.close();
+			
+			byte[] fileBytes = fileBytesBuffer.toByteArray();
+			ByteBuffer fileByteBuffer = ByteBuffer.wrap(fileBytes);
+			sprites = unpackSpriteNew(fileByteBuffer);
+
+		}
+		catch (IOException a) {
+			a.printStackTrace();
+		}
+		return sprites;
+	}
+
+	public static ArrayList<Sprite> unpackSpriteNew(ByteBuffer in) {
+		ArrayList<Sprite> spriteArray = new ArrayList<>();
+
+
+		while (in.hasRemaining()) {
+
+			int id = in.getShort();
+			int width = in.getShort();
+			int height = in.getShort();
+
+			boolean requiresShift = in.get() == 1;
+			int xShift = in.getShort();
+			int yShift = in.getShort();
+
+			int width2 = in.getShort();
+			int height2 = in.getShort();
+
+			int[] pixels = new int[width * height];
+
+			//if (in.remaining() < (pixels.length * 4))
+			//   throw new IOException("Provided buffer too short - Pixels missing");
+
+			for (int pixel = 0; pixel < pixels.length; pixel++)
+				pixels[pixel] = Integer.valueOf(in.getInt());
+
+			//if (in.remaining() <= 0)
+			//  e.name = "Missing";
+			//else
+
+			Sprite e = new Sprite(pixels, width, height);
+			e.setPackageName(readString(in));
+
+			//e.data = rgbTo8bit(pixels,width,height);
+			e.setID(id);
+			e.setSomething(width2, height2);
+
+			e.setXShift(xShift);
+			e.setYShift(yShift);
+
+			e.setRequiresShift(requiresShift);
+			spriteArray.add(e);
+		}
+		//if (in.remaining() < 15)
+		//   throw new IOException("Provided buffer too short - Headers missing");
+
+
+		return spriteArray;
+	}
+
+	private static final String readString(ByteBuffer buffer) {
+		StringBuilder bldr = new StringBuilder();
+
+		byte b;
+		while ((b = buffer.get()) != 10) {
+			bldr.append((char) b);
+		}
+
+		return bldr.toString();
+	}
+
 	public boolean loadSprite(int id, String packageName) {
 		try {
 			ZipEntry e = spriteArchive.getEntry(String.valueOf(id));
@@ -2845,6 +3039,26 @@ public class GraphicsController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
+		}
+	}
+
+	public void mapAnimations() {
+
+		List<Sprite> animationList = spriteTree.get("animations");
+
+		for (int i = 0; i < EntityHandler.animationCount(); i++)
+		{
+			AnimationDef animation = EntityHandler.getAnimationDef(i);
+			if (!animationMap.containsKey(animation.getName())) {
+				int p = 0;
+				for (Sprite sprite : animationList) {
+					if (animation.getName().equalsIgnoreCase(sprite.getPackageName())) {
+						animationMap.put(animation.getName(), p);
+						break;
+					}
+					p++;
+				}
+			}
 		}
 	}
 }

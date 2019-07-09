@@ -1,5 +1,8 @@
 package orsc.graphics.two;
 
+import com.openrsc.client.entityhandling.EntityHandler;
+import com.openrsc.client.entityhandling.defs.SpriteDef;
+import com.openrsc.client.model.Sprite;
 import orsc.mudclient;
 import orsc.util.GenUtil;
 
@@ -13,22 +16,23 @@ public final class MudClientGraphics extends GraphicsController {
 	@Override
 	public final void drawEntity(int index, int x, int y, int width, int height, int overlayMovement, int topPixelSkew) {
 		try {
-			if (index < 0xC350) {
-				if (index < 0x9C40) {
+			if (index < 50000) {
+				if (index < 40000) {
 					if (index >= 20000) {
 						this.mudClientRef.drawNPC(index - 20000, x, y, width, height, topPixelSkew, 105,
 							overlayMovement);
 					} else if (index < 5000) {
-						super.drawSprite(index, x, y, width, height, 5924);
+						Sprite projectile = spriteSelect(EntityHandler.projectiles.get(index-mudclient.spriteProjectile));
+						super.drawSprite(projectile, x, y, width, height, 5924);
 					} else {
 						this.mudClientRef.drawPlayer(index - 5000, x, y, width, height, topPixelSkew, 20,
 							overlayMovement);
 					}
 				} else {
-					this.mudClientRef.drawItemAt(index - 0x9C40, x, y, width, height, topPixelSkew);
+					this.mudClientRef.drawItemAt(index - 40000, x, y, width, height, topPixelSkew);
 				}
 			} else {
-				this.mudClientRef.drawTeleportBubble(index - 0xC350, x, y, width, height, topPixelSkew, 2);
+				this.mudClientRef.drawTeleportBubble(index - 50000, x, y, width, height, topPixelSkew, 2);
 			}
 		} catch (RuntimeException var10) {
 			throw GenUtil.makeThrowable(var10, "ba.B(" + overlayMovement + ',' + index + ',' + height + ',' + x + ','

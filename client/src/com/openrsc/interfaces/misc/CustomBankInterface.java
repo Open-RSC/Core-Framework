@@ -116,7 +116,7 @@ public final class CustomBankInterface extends BankInterface {
 						mc.getSurface().drawString("" + tabs, tabX, tabY, 0xFFFFFF, 1);
 						break;
 					case FIRST_ITEM_IN_TAB:
-						mc.getSurface().drawSpriteClipping(mudclient.spriteItem + EntityHandler.getItemDef(first_item).getSprite(),
+						mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.getItemDef(first_item)),
 							tabX, tabY, 48, 32, EntityHandler.getItemDef(first_item).getPictureMask(), 0, false, 0, 1);
 						mc.getSurface().drawString("" + tabs, tabX + 2, tabY + 12, 0xFFFFFF, 3);
 						break;
@@ -240,11 +240,11 @@ public final class CustomBankInterface extends BankInterface {
 					// Dragging items
 					if (draggingBankSlot != -1 && bank.getControlText(bankSearch).isEmpty()) {
 						ItemDef def = EntityHandler.getItemDef(bankItems.get(draggingBankSlot).itemID);
-						mc.getSurface().drawSpriteClipping(mudclient.spriteItem + def.getSprite(),
+						mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
 							mc.getMouseX(), mc.getMouseY(), 48, 32, def.getPictureMask(), 0, false, 0, 1);
 						if (def.getNotedFormOf() >= 0) {
 							ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-							mc.getSurface().drawSpriteClipping(mudclient.spriteItem + originalDef.getSprite(),
+							mc.getSurface().drawSpriteClipping(mc.spriteSelect(originalDef),
 								mc.getMouseX() + 7, mc.getMouseY() + 8, 29, 19,
 								originalDef.getPictureMask(), 0, false, 0, 1);
 						}
@@ -255,11 +255,11 @@ public final class CustomBankInterface extends BankInterface {
 					if (bankSlotStart < bankItems.size() && bankItems.get(bankSlotStart).itemID != -1) {
 						ItemDef def = EntityHandler.getItemDef(bankItem.itemID);
 						if (draggingBankSlot != bankSlotStart) {
-							mc.getSurface().drawSpriteClipping(mudclient.spriteItem + def.getSprite(), drawX, drawY, 48, 32,
+							mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), drawX, drawY, 48, 32,
 								def.getPictureMask(), 0, false, 0, 1);
 							if (def.getNotedFormOf() >= 0) {
 								ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-								mc.getSurface().drawSpriteClipping(mudclient.spriteItem + originalDef.getSprite(), drawX + 7,
+								mc.getSurface().drawSpriteClipping(mc.spriteSelect(originalDef), drawX + 7,
 									drawY + 8, 29, 19, originalDef.getPictureMask(), 0, false, 0, 1);
 							}
 							drawString(mudclient.formatStackAmount(bankItem.amount), drawX + 1, drawY + 10, 1, 65280);
@@ -371,11 +371,11 @@ public final class CustomBankInterface extends BankInterface {
 				if (draggingInventoryID != -1
 					&& (mc.getInventoryItemsCount()[draggingInventoryID]) != -1) {
 					ItemDef def = EntityHandler.getItemDef(mc.getInventoryItems()[draggingInventoryID]);
-					mc.getSurface().drawSpriteClipping(mudclient.spriteItem + def.getSprite(),
+					mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
 						mc.getMouseX(), mc.getMouseY(), 48, 32, def.getPictureMask(), 0, false, 0, 1);
 					if (def.getNotedFormOf() >= 0) {
 						ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-						mc.getSurface().drawSpriteClipping(mudclient.spriteItem + originalDef.getSprite(),
+						mc.getSurface().drawSpriteClipping(mc.spriteSelect(originalDef),
 							mc.getMouseX() + 7, mc.getMouseY() + 8, 29, 19,
 							originalDef.getPictureMask(), 0, false, 0, 1);
 					}
@@ -384,12 +384,12 @@ public final class CustomBankInterface extends BankInterface {
 				// Draw inventory-only items
 				if (inventorySlot < mc.getInventoryItemCount() && mc.getInventoryItems()[inventorySlot] != -1) {
 					ItemDef def = EntityHandler.getItemDef(mc.getInventoryItems()[inventorySlot]);
-					mc.getSurface().drawSpriteClipping(mudclient.spriteItem + def.getSprite(), drawX, drawY, 48, 32,
+					mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), drawX, drawY, 48, 32,
 						def.getPictureMask(), 0, false, 0, 1);
 
 					if (def.getNotedFormOf() >= 0) { // Noted items
 						ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-						mc.getSurface().drawSpriteClipping(mudclient.spriteItem + originalDef.getSprite(),
+						mc.getSurface().drawSpriteClipping(mc.spriteSelect(originalDef),
 							drawX + 7, drawY + 8, 29, 19, originalDef.getPictureMask(), 0, false,
 							0, 1);
 					}

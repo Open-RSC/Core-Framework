@@ -1,10 +1,10 @@
 package com.openrsc.interfaces.misc;
 
+import com.openrsc.client.entityhandling.EntityHandler;
 import orsc.Config;
 import orsc.graphics.gui.Panel;
 import orsc.graphics.two.GraphicsController;
 import orsc.mudclient;
-
 public final class AchievementGUI {
 	private int x, y;
 	private int width, height;
@@ -57,7 +57,7 @@ public final class AchievementGUI {
 			graphics.drawBoxAlpha(rewardBoxX + 74, rewardBoxY, sizeX, sizeY, boxColor, 160);
 			graphics.drawBoxBorder(rewardBoxX + 74 - 1, sizeX + 2, rewardBoxY - 1, sizeY + 2, 0);
 			//rewardBox.setSprite(2150 + 130, 48, 32, 0);
-			graphics.drawSpriteClipping(2150 + 30, rewardBoxX + 74, rewardBoxY, 48, 32, 0, 0, false, 0,1);
+			graphics.drawSpriteClipping(mc.spriteSelect(EntityHandler.getItemDef(30)), rewardBoxX + 74, rewardBoxY, 48, 32, 0, 0, false, 0,1);
 
 			rewardBoxX += sizeX + 15;
 
