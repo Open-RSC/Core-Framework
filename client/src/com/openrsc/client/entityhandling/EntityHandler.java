@@ -396,10 +396,10 @@ public class EntityHandler {
 		GUIparts.add(new SpriteDef("yellow cross 2", mudclient.spriteMedia + 15,"GUI:12",31));
 		GUIparts.add(new SpriteDef("yellow cross 3", mudclient.spriteMedia + 16,"GUI:13",32));
 		GUIparts.add(new SpriteDef("yellow cross 4", mudclient.spriteMedia + 17,"GUI:14",33));
-		GUIparts.add(new SpriteDef("red cross 1", mudclient.spriteUtil + 18,"GUI:15",34));
-		GUIparts.add(new SpriteDef("red cross 2", mudclient.spriteUtil + 19,"GUI:16",35));
-		GUIparts.add(new SpriteDef("red cross 3", mudclient.spriteUtil + 20,"GUI:17",36));
-		GUIparts.add(new SpriteDef("red cross 4", mudclient.spriteUtil + 21,"GUI:18",37));
+		GUIparts.add(new SpriteDef("red cross 1", mudclient.spriteMedia + 18,"GUI:15",34));
+		GUIparts.add(new SpriteDef("red cross 2", mudclient.spriteMedia + 19,"GUI:16",35));
+		GUIparts.add(new SpriteDef("red cross 3", mudclient.spriteMedia + 20,"GUI:17",36));
+		GUIparts.add(new SpriteDef("red cross 4", mudclient.spriteMedia + 21,"GUI:18",37));
 
 	}
 
