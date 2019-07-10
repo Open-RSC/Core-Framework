@@ -438,8 +438,8 @@ public final class Development implements CommandListener {
 			List list = new LinkedList(events.entrySet());
 			Collections.sort(list, new Comparator() {
 				public int compare(Object o1, Object o2) {
-					return ((Comparable) ((Map.Entry) (o1)).getValue())
-						.compareTo(((Map.Entry) (o2)).getValue());
+					return ((Comparable) ((Map.Entry) (o2)).getValue())
+						.compareTo(((Map.Entry) (o1)).getValue());
 				}
 			});
 			HashMap sortedHashMap = new LinkedHashMap();
@@ -452,7 +452,7 @@ public final class Development implements CommandListener {
 			int i = 0;
 			StringBuilder s = new StringBuilder();
 			for (Map.Entry<String, Integer> entry : events.entrySet()) {
-				if(i >= 18)
+				if(i >= 18) // Only display first 18 elements of the hashmap
 					break;
 
 				String name = entry.getKey();
