@@ -2,7 +2,8 @@ package com.openrsc.server.plugins.quests.members.digsite;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.external.ItemId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -110,7 +111,7 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 		}
 		else if (obj.getID() == SPECIMEN_TRAY) {
 			int[] TRAY_ITEMS = {ItemId.NOTHING.id(), ItemId.BONES.id(), ItemId.CRACKED_ROCK_SAMPLE.id(), ItemId.IRON_DAGGER.id(), ItemId.BROKEN_ARROW.id(), ItemId.BROKEN_GLASS.id(), ItemId.CERAMIC_REMAINS.id(), ItemId.COINS.id(), ItemId.A_LUMP_OF_CHARCOAL.id()};
-			p.incExp(Skills.MINING, 4, true);
+			p.incExp(SKILLS.MINING.id(), 4, true);
 			message(p, "You sift through the earth in the tray");
 			int randomize = DataConversions.random(0, (TRAY_ITEMS.length - 1));
 			int chosenItem = TRAY_ITEMS[randomize];

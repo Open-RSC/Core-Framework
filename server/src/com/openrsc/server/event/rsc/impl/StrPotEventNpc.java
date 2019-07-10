@@ -9,7 +9,7 @@ import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.PathValidation;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;

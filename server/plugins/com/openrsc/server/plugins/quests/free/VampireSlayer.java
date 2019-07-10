@@ -4,7 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -268,7 +268,7 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 					p.sendQuestComplete(Constants.Quests.VAMPIRE_SLAYER);
 				}
 			} else {
-				n.getSkills().setLevel(Skills.HITPOINTS, 35);
+				n.getSkills().setLevel(SKILLS.HITS.id(), 35);
 				p.message("The vampire seems to regenerate");
 			}
 		}

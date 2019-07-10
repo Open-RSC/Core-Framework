@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.misc;
 
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ItemId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -97,7 +97,7 @@ public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveL
 			p.setBusy(true);
 			p.message("You dip the amulet in the fountain");
 			sleep(1000);
-			p.setBatchEvent(new BatchEvent(p, 600, Formulae.getRepeatTimes(p, Skills.CRAFTING), false) {
+			p.setBatchEvent(new BatchEvent(p, 600, Formulae.getRepeatTimes(p, SKILLS.CRAFTING.id()), false) {
 				@Override
 				public void action() {
 					if (!p.getInventory().hasItemId(item.getID())) {

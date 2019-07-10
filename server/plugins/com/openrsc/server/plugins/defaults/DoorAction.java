@@ -7,7 +7,7 @@ import com.openrsc.server.Server;
 import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -350,7 +350,7 @@ public class DoorAction {
 					p.message("You fall through the bridge");
 					sleep(1000);
 					p.message("The lava singes you");
-					p.damage(DataConversions.roundUp(p.getSkills().getLevel(Skills.HITPOINTS) / 5));
+					p.damage(DataConversions.roundUp(p.getSkills().getLevel(SKILLS.HITS.id()) / 5));
 				}
 				break;
 
@@ -552,7 +552,7 @@ public class DoorAction {
 					break;
 				}
 				if (p.getY() > 523) {
-					if (getCurrentLevel(p, Skills.FISHING) < 68) {
+					if (getCurrentLevel(p, SKILLS.FISHING.id()) < 68) {
 						p.setBusy(true);
 						Npc masterFisher = World.getWorld().getNpc(NpcId.MASTER_FISHER.id(), 582, 588,
 							524, 527);
@@ -579,7 +579,7 @@ public class DoorAction {
 				if (obj.getX() != 268 || obj.getY() != 3381) {
 					break;
 				}
-				if (getCurrentLevel(p, Skills.MINING) < 60) {
+				if (getCurrentLevel(p, SKILLS.MINING.id()) < 60) {
 					Npc dwarf = World.getWorld().getNpc(NpcId.DWARF_MINING_GUILD.id(), 265, 270, 3379, 3380);
 					if (dwarf != null) {
 						npcTalk(p, dwarf, "Sorry only the top miners are allowed in there");
@@ -595,7 +595,7 @@ public class DoorAction {
 				if (obj.getX() != 347 || obj.getY() != 601) {
 					return;
 				}
-				if (getCurrentLevel(p, Skills.CRAFTING) < 40) {
+				if (getCurrentLevel(p, SKILLS.CRAFTING.id()) < 40) {
 					p.setBusy(true);
 					Npc master = World.getWorld().getNpc(NpcId.MASTER_CRAFTER.id(), 341, 349, 599, 612);
 					if (master != null) {
@@ -619,7 +619,7 @@ public class DoorAction {
 				if (obj.getX() != 179 || obj.getY() != 488) {
 					break;
 				}
-				if (getCurrentLevel(p, Skills.COOKING) < 32) {
+				if (getCurrentLevel(p, SKILLS.COOKING.id()) < 32) {
 					Npc chef = World.getWorld().getNpc(NpcId.HEAD_CHEF.id(), 176, 181, 480, 487);
 					if (chef != null) {
 						npcTalk(p, chef, "Sorry. Only the finest chefs are allowed in here");
@@ -641,7 +641,7 @@ public class DoorAction {
 				if (obj.getX() != 599 || obj.getY() != 757) {
 					break;
 				}
-				if (getCurrentLevel(p, Skills.MAGIC) < 66) {
+				if (getCurrentLevel(p, SKILLS.MAGIC.id()) < 66) {
 					Npc wizard = World.getWorld().getNpc(NpcId.HEAD_WIZARD.id(), 596, 597, 755, 758);
 					if (wizard != null) {
 						npcTalk(p, wizard, "You need a magic level of 66 to get in here",
@@ -1121,7 +1121,7 @@ public class DoorAction {
 					}
 				} else {
 					if (Constants.GameServer.WANT_WOODCUTTING_GUILD) {
-						if (getCurrentLevel(player, Skills.WOODCUT) < 70) {
+						if (getCurrentLevel(player, SKILLS.WOODCUT.id()) < 70) {
 							player.setBusy(true);
 							final Npc forester = World.getWorld().getNpc(NpcId.FORESTER.id(), 562, 565,
 								468, 472);

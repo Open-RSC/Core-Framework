@@ -4,7 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -129,7 +129,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 		if (n.getCombatEvent() != null) {
 			n.getCombatEvent().resetCombat();
 		}
-		n.getSkills().setLevel(Skills.HITPOINTS, 5);
+		n.getSkills().setLevel(SKILLS.HITS.id(), 5);
 		Npc leFaye = spawnNpc(NpcId.MORGAN_LE_FAYE.id(), 461, 2407, 60000);
 		sleep(500);
 		npcTalk(p, leFaye, "Please spare my son");

@@ -6,7 +6,7 @@ import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.ItemSmithingDef;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -70,7 +70,7 @@ public class Smithing implements InvUseOnObjectListener,
 			return false;
 		}
 
-		if (player.getSkills().getLevel(Skills.SMITHING) < minSmithingLevel) {
+		if (player.getSkills().getLevel(SKILLS.SMITHING.id()) < minSmithingLevel) {
 			player.message("You need at least level "
 				+ minSmithingLevel + " smithing to work with "
 				+ item.getDef().getName().toLowerCase().replaceAll("bar", ""));
@@ -112,7 +112,7 @@ public class Smithing implements InvUseOnObjectListener,
 	}
 
 	private void attemptDragonSquareCombine(Item item, Player player) {
-		if (player.getSkills().getLevel(Skills.SMITHING) < 60) {
+		if (player.getSkills().getLevel(SKILLS.SMITHING.id()) < 60) {
 			player.message("You need a smithing ability of at least 60 to complete this task.");
 		}
 		// non-kosher this message
@@ -127,7 +127,7 @@ public class Smithing implements InvUseOnObjectListener,
 			player.getInventory().remove(ItemId.RIGHT_HALF_DRAGON_SQUARE_SHIELD.id(), 1);
 			player.getInventory().remove(ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id(), 1);
 			player.getInventory().add(new Item(ItemId.DRAGON_SQUARE_SHIELD.id(), 1));
-			player.incExp(Skills.SMITHING, 300, true);
+			player.incExp(SKILLS.SMITHING.id(), 300, true);
 		}
 	}
 
@@ -141,18 +141,18 @@ public class Smithing implements InvUseOnObjectListener,
 			if (player.getInventory().countId(ItemId.GOLD_BAR.id()) < 2) {
 				player.message("You need two bars of gold to make this item.");
 			} else {
-				if (Formulae.failCalculation(player, Skills.SMITHING, 50)) {
+				if (Formulae.failCalculation(player, SKILLS.SMITHING.id(), 50)) {
 					for (int x = 0; x < 2; x++) {
 						player.getInventory().remove(ItemId.GOLD_BAR.id(), 1);
 					}
 					player.message("You forge a beautiful bowl made out of solid gold.");
 					player.getInventory().add(new Item(ItemId.GOLDEN_BOWL.id(), 1));
-					player.incExp(Skills.SMITHING, 120, true);
+					player.incExp(SKILLS.SMITHING.id(), 120, true);
 				} else {
 					player.message("You make a mistake forging the bowl..");
 					player.message("You pour molten gold all over the floor..");
 					player.getInventory().remove(ItemId.GOLD_BAR.id(), 1);
-					player.incExp(Skills.SMITHING, 4, true);
+					player.incExp(SKILLS.SMITHING.id(), 4, true);
 				}
 			}
 		}
@@ -187,7 +187,7 @@ public class Smithing implements InvUseOnObjectListener,
 			return;
 		}
 
-		if (player.getSkills().getLevel(Skills.SMITHING) < def.getRequiredLevel()) {
+		if (player.getSkills().getLevel(SKILLS.SMITHING.id()) < def.getRequiredLevel()) {
 			player.message("You need to be at least level "
 				+ def.getRequiredLevel() + " smithing to do that");
 			return;
@@ -230,7 +230,7 @@ public class Smithing implements InvUseOnObjectListener,
 						player.getInventory().add(new Item(def.getItemID(), 1));
 					}
 				}
-				player.incExp(Skills.SMITHING, getSmithingExp(item.getID(), def.getRequiredBars()), true);
+				player.incExp(SKILLS.SMITHING.id(), getSmithingExp(item.getID(), def.getRequiredBars()), true);
 			}
 		});
 	}
@@ -341,7 +341,7 @@ public class Smithing implements InvUseOnObjectListener,
 	}
 
 	private void makeNails(Item item, Player player) {
-		if (player.getSkills().getLevel(Skills.SMITHING) < 34) {
+		if (player.getSkills().getLevel(SKILLS.SMITHING.id()) < 34) {
 			player.message("You need to be at least level 34 smithing to do that");
 			return;
 		}
@@ -353,7 +353,7 @@ public class Smithing implements InvUseOnObjectListener,
 		player.getInventory().remove(ItemId.STEEL_BAR.id(), 1);
 		player.message("You hammer the metal and make some nails");
 		player.getInventory().add(new Item(ItemId.NAILS.id(), 2));
-		player.incExp(Skills.SMITHING, 70, true);
+		player.incExp(SKILLS.SMITHING.id(), 70, true);
 	}
 
 	private void makeWire(Item item, Player player) {
@@ -371,7 +371,7 @@ public class Smithing implements InvUseOnObjectListener,
 			player.getInventory().remove(ItemId.BRONZE_BAR.id(), 1);
 			player.message("You hammer the Bronze Bar and make some bronze wire");
 			player.getInventory().add(new Item(ItemId.BRONZE_WIRE.id(), 1));
-			player.incExp(Skills.SMITHING, 50, true);
+			player.incExp(SKILLS.SMITHING.id(), 50, true);
 		}
 	}
 

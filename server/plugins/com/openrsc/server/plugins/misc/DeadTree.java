@@ -1,6 +1,6 @@
 package com.openrsc.server.plugins.misc;
 
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
@@ -19,7 +19,7 @@ public class DeadTree implements ObjectActionListener, ObjectActionExecutiveList
 	public void onObjectAction(GameObject obj, String command, Player player) {
 		player.message("The tree seems to lash out at you!");
 		sleep(500);
-		player.damage((int) (player.getSkills().getLevel(Skills.HITPOINTS) * 0.2D));
+		player.damage((int) (player.getSkills().getLevel(SKILLS.HITS.id()) * 0.2D));
 		player.message("You are badly scratched by the tree");
 	}
 }

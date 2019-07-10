@@ -1,6 +1,7 @@
 package com.openrsc.server.event.rsc.impl;
 
 import com.openrsc.server.event.rsc.GameTickEvent;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
@@ -29,7 +30,7 @@ public class StatRestorationEvent extends GameTickEvent {
 
 		// Add new skills to the restoration cycle
 		for (int skillIndex = 0; skillIndex < 18; skillIndex++) {
-			if (skillIndex != Skills.PRAYER) {
+			if (skillIndex != SKILLS.PRAYER.id()) {
 				checkAndStartRestoration(skillIndex);
 			}
 		}

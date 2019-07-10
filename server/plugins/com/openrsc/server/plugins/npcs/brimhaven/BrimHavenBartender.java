@@ -1,6 +1,6 @@
 package com.openrsc.server.plugins.npcs.brimhaven;
 
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -69,7 +69,7 @@ public final class BrimHavenBartender implements TalkToNpcExecutiveListener,
 	}
 
 	private void drinkAle(Player p) {
-		int[] skillIDs = {Skills.ATTACK, Skills.DEFENSE, Skills.PRAYER, Skills.COOKING, Skills.HERBLAW};
+		int[] skillIDs = {SKILLS.ATTACK.id(), SKILLS.DEFENSE.id(), SKILLS.PRAYER.id(), SKILLS.COOKING.id(), SKILLS.HERBLAW.id()};
 		for (int i = 0; i < skillIDs.length; i++) {
 			setAleEffect(p, skillIDs[i]);
 		}

@@ -4,7 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -26,7 +26,7 @@ public class Smelting implements InvUseOnObjectListener,
 		if (obj.getID() == FURNACE && !DataConversions.inArray(new int[]{ItemId.GOLD_BAR.id(), ItemId.SILVER_BAR.id(), ItemId.SAND.id(), ItemId.GOLD_BAR_FAMILYCREST.id()}, item.getID())) {
 			if (item.getID() == ItemId.STEEL_BAR.id()) {
 				if (p.getInventory().hasItemId(ItemId.CANNON_AMMO_MOULD.id())) {
-					if (getCurrentLevel(p, Skills.SMITHING) < 30) {
+					if (getCurrentLevel(p, SKILLS.SMITHING.id()) < 30) {
 						p.message("You need at least level 30 smithing to make cannon balls");
 						return;
 					}
@@ -38,9 +38,9 @@ public class Smelting implements InvUseOnObjectListener,
 					message(p, 1200, "you heat the steel bar into a liquid state",
 						"and pour it into your cannon ball mould",
 						"you then leave it to cool for a short while");
-					p.setBatchEvent(new BatchEvent(p, 1800, Formulae.getRepeatTimes(p, Skills.SMITHING), false) {
+					p.setBatchEvent(new BatchEvent(p, 1800, Formulae.getRepeatTimes(p, SKILLS.SMITHING.id()), false) {
 						public void action() {
-							p.incExp(Skills.SMITHING, 100, true);
+							p.incExp(SKILLS.SMITHING.id(), 100, true);
 							p.getInventory().replace(ItemId.STEEL_BAR.id(), ItemId.MULTI_CANNON_BALL.id());
 							addItem(p, ItemId.MULTI_CANNON_BALL.id(), 1);
 							ActionSender.sendInventory(p);
@@ -80,7 +80,7 @@ public class Smelting implements InvUseOnObjectListener,
 		}
 		String formattedName = item.getDef().getName().toUpperCase().replaceAll(" ", "_");
 		Smelt smelt;
-		if (item.getID() == Smelt.IRON_ORE.getID() && getCurrentLevel(p, Skills.SMITHING) >= 30 && p.getInventory().countId(Smelt.COAL.getID()) >= 2) {
+		if (item.getID() == Smelt.IRON_ORE.getID() && getCurrentLevel(p, SKILLS.SMITHING.id()) >= 30 && p.getInventory().countId(Smelt.COAL.getID()) >= 2) {
 			String coalChange = EntityHandler.getItemDef(Smelt.COAL.getID()).getName().toUpperCase();
 			smelt = Smelt.valueOf(coalChange);
 		} else {
@@ -100,7 +100,7 @@ public class Smelting implements InvUseOnObjectListener,
 				return;
 			}
 		}
-		if (getCurrentLevel(p, Skills.SMITHING) < smelt.getRequiredLevel()) {
+		if (getCurrentLevel(p, SKILLS.SMITHING.id()) < smelt.getRequiredLevel()) {
 			p.message("You need to be at least level-" + smelt.getRequiredLevel() + " smithing to " + (smelt.getSmeltBarId() == ItemId.SILVER_BAR.id() || smelt.getSmeltBarId() == ItemId.GOLD_BAR.id() || smelt.getSmeltBarId() == ItemId.GOLD_BAR_FAMILYCREST.id() ? "work " : "smelt ") + EntityHandler.getItemDef(smelt.getSmeltBarId()).getName().toLowerCase().replaceAll("bar", ""));
 			if (smelt.getSmeltBarId() == ItemId.IRON_BAR.id())
 				p.message("Practice your smithing using tin and copper to make bronze");
@@ -123,7 +123,7 @@ public class Smelting implements InvUseOnObjectListener,
 		}
 
 		p.message(smeltString(smelt, item));
-		p.setBatchEvent(new BatchEvent(p, 1800, Formulae.getRepeatTimes(p, Skills.SMITHING), false) {
+		p.setBatchEvent(new BatchEvent(p, 1800, Formulae.getRepeatTimes(p, SKILLS.SMITHING.id()), false) {
 			public void action() {
 				if (Constants.GameServer.WANT_FATIGUE) {
 					if (p.getFatigue() >= p.MAX_FATIGUE) {
@@ -172,9 +172,9 @@ public class Smelting implements InvUseOnObjectListener,
 
 						/** Gauntlets of Goldsmithing provide an additional 23 experience when smelting gold ores **/
 						if (p.getInventory().wielding(ItemId.GAUNTLETS_OF_GOLDSMITHING.id()) && new Item(smelt.getSmeltBarId()).getID() == ItemId.GOLD_BAR.id()) {
-							p.incExp(Skills.SMITHING, smelt.getXp() + 45, true);
+							p.incExp(SKILLS.SMITHING.id(), smelt.getXp() + 45, true);
 						} else {
-							p.incExp(Skills.SMITHING, smelt.getXp(), true);
+							p.incExp(SKILLS.SMITHING.id(), smelt.getXp(), true);
 						}
 					}
 				} else {

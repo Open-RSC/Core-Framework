@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 import com.openrsc.server.Constants;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -46,7 +46,7 @@ public class UndergroundPassDungeonFloor implements ObjectActionListener, Object
 			p.message("@red@leave me be");
 			GameObject claws_of_iban = new GameObject(Point.location(p.getX(), p.getY()), 879, 0, 0);
 			registerObject(claws_of_iban);
-			p.damage(((int) getCurrentLevel(p, Skills.HITPOINTS) / 5) + 5);
+			p.damage(((int) getCurrentLevel(p, SKILLS.HITS.id()) / 5) + 5);
 			playerTalk(p, null, "aaarrgghhh");
 			sleep(1000);
 			removeObject(claws_of_iban);

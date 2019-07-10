@@ -1,6 +1,7 @@
 package com.openrsc.server.sql;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.SkillDef;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.model.PlayerAppearance;
 import com.openrsc.server.model.Point;
@@ -202,15 +203,15 @@ public class DatabasePlayerLoader {
 			// GAME SETTINGS
 			setGameSettings(s.getSettings().getGameSettings(), s.getDatabaseID());
 
-			statement = conn.prepareStatement(Statements.updateExperience());
-			statement.setInt(Skills.SKILL_COUNT + 1, s.getDatabaseID());
-			for (int index = 0; index < Skills.SKILL_COUNT; index++)
+			statement = conn.prepareStatement(Statements.updateExperience);
+			statement.setInt(Skills.getSkillCount() + 1, s.getDatabaseID());
+			for (int index = 0; index < Skills.getSkillCount(); index++)
 				statement.setInt(index + 1, s.getSkills().getExperience(index));
 			statement.executeUpdate();
 
-			statement = conn.prepareStatement(Statements.updateStats());
-			statement.setInt(Skills.SKILL_COUNT + 1, s.getDatabaseID());
-			for (int index = 0; index < Skills.SKILL_COUNT; index++)
+			statement = conn.prepareStatement(Statements.updateStats);
+			statement.setInt(Skills.getSkillCount() + 1, s.getDatabaseID());
+			for (int index = 0; index < Skills.getSkillCount(); index++)
 				statement.setInt(index + 1, s.getSkills().getLevel(index));
 			statement.executeUpdate();
 
@@ -640,14 +641,14 @@ public class DatabasePlayerLoader {
 	}
 
 	private int[] fetchLevels(int playerID) {
-		ResultSet result = resultSetFromInteger(Statements.playerCurExp(), playerID);
+		ResultSet result = resultSetFromInteger(Statements.playerCurExp, playerID);
 		try {
 			result.next();
 		} catch (SQLException e1) {
 			LOGGER.catching(e1);
 			return null;
 		}
-		int[] data = new int[Skills.SKILL_COUNT];
+		int[] data = new int[Skills.getSkillCount()];
 		for (int i = 0; i < data.length; i++) {
 			try {
 				data[i] = result.getInt("cur_" + Skills.getSkillName(i));
@@ -660,9 +661,9 @@ public class DatabasePlayerLoader {
 	}
 
 	private int[] fetchExperience(int playerID) {
-		int[] data = new int[Skills.SKILL_COUNT];
+		int[] data = new int[Skills.getSkillCount()];
 		try {
-			PreparedStatement statement = conn.prepareStatement(Statements.playerExp());
+			PreparedStatement statement = conn.prepareStatement(Statements.playerExp);
 			statement.setInt(1, playerID);
 			ResultSet result = statement.executeQuery();
 			result.next();
@@ -774,8 +775,39 @@ public class DatabasePlayerLoader {
 		return (byte) LoginResponse.LOGIN_SUCCESSFUL[groupId];
 	}
 
-	private static class Statements {
+	public static class Statements {
+		public static String updateExperience = "";
+		public static String updateStats = "";
+		public static String playerExp = "";
+		public static String playerCurExp = "";
 		private static final String PREFIX = Constants.GameServer.MYSQL_TABLE_PREFIX;
+
+		static {
+			updateExperience = "UPDATE `" + PREFIX + "experience` SET ";
+			updateStats = "UPDATE `" + PREFIX + "curstats` SET ";
+			playerExp = "SELECT ";
+			playerCurExp = "SELECT ";
+
+			for (SkillDef skill : Skills.skills)
+			{
+				updateExperience = updateExperience + "`exp_" + skill.getShortName().toLowerCase() + "`=?, ";
+				updateStats = updateStats + "`cur_" + skill.getShortName().toLowerCase() + "`=?, ";
+				playerExp = playerExp + "`exp_" + skill.getShortName().toLowerCase() + "`, ";
+				playerCurExp = playerCurExp + "`cur_" + skill.getShortName().toLowerCase() + "`, ";
+			}
+
+			updateExperience = updateExperience.substring(0, updateExperience.length() - 2) + " ";
+			updateStats = updateStats.substring(0, updateStats.length() - 2) + " ";
+			playerExp = playerExp.substring(0, playerExp.length() - 2) + " ";
+			playerCurExp = playerCurExp.substring(0, playerCurExp.length() - 2) + " ";
+
+			updateExperience = updateExperience + "WHERE `playerID`=?";
+			updateStats = updateStats + "WHERE `playerID`=?";
+			playerExp = playerExp + "FROM `" + PREFIX + "experience` WHERE `playerID`=?";
+			playerCurExp = playerCurExp + "FROM `" + PREFIX + "curstats` WHERE `playerID`=?";
+		}
+
+
 
 		//private static final String unreadMessages = "SELECT COUNT(*) FROM `messages` WHERE showed=0 AND show_message=1 AND owner=?";
 
@@ -811,21 +843,6 @@ public class DatabasePlayerLoader {
 			+ "`trousercolour`, `skincolour`, `headsprite`, `bodysprite`, `male`,"
 			+ "`skulled`, `charged`, `pass`, `salt`, `banned`, `bank_size` FROM `" + PREFIX + "players` WHERE `username`=?";
 
-		private static final String playerExp(){
-			return "SELECT `exp_attack`, `exp_defense`, `exp_strength`, "
-				+ "`exp_hits`, `exp_ranged`, `exp_prayer`, `exp_magic`, `exp_cooking`, `exp_woodcut`,"
-				+ "`exp_fletching`, `exp_fishing`, `exp_firemaking`, `exp_crafting`, `exp_smithing`,"
-				+ "`exp_mining`, `exp_herblaw`, `exp_agility`, `exp_thieving`, `exp_runecraft` FROM `" + PREFIX
-				+ "experience` WHERE `playerID`=?";
-		}
-
-		private static final String playerCurExp() {
-			return "SELECT `cur_attack`, `cur_defense`, `cur_strength`,"
-				+ "`cur_hits`, `cur_ranged`, `cur_prayer`, `cur_magic`, `cur_cooking`, `cur_woodcut`,"
-				+ "`cur_fletching`, `cur_fishing`, `cur_firemaking`, `cur_crafting`, `cur_smithing`,"
-				+ "`cur_mining`, `cur_herblaw`, `cur_agility`, `cur_thieving`, `cur_runecraft` FROM `" + PREFIX
-				+ "curstats` WHERE `playerID`=?";
-		}
 
 		private static final String playerInvItems = "SELECT `id`,`amount`,`wielded` FROM `" + PREFIX
 			+ "invitems` WHERE `playerID`=? ORDER BY `slot` ASC";
@@ -870,26 +887,6 @@ public class DatabasePlayerLoader {
 
 		private static final String save_AddAchievement = "INSERT INTO `" + PREFIX
 			+ "achievement_status` (`playerID`, `id`, `status`) VALUES(?, ?, ?)";
-
-		private static final String updateExperience() {
-			return "UPDATE `" + PREFIX
-				+ "experience` SET `exp_attack`=?, `exp_defense`=?, "
-				+ "`exp_strength`=?, `exp_hits`=?, `exp_ranged`=?, `exp_prayer`=?, `exp_magic`=?, `exp_cooking`=?, `exp_woodcut`=?, "
-				+ "`exp_fletching`=?, `exp_fishing`=?, `exp_firemaking`=?, `exp_crafting`=?, `exp_smithing`=?, `exp_mining`=?, "
-				+ "`exp_herblaw`=?, `exp_agility`=?, `exp_thieving`=?," +
-				(WANT_RUNECRAFTING == true ? " `exp_runecraft`=? " : " ") +
-			    "WHERE `playerID`=?";
-		}
-
-		private static final String updateStats() {
-			return "UPDATE `" + PREFIX
-				+ "curstats` SET `cur_attack`=?, `cur_defense`=?, "
-				+ "`cur_strength`=?, `cur_hits`=?, `cur_ranged`=?, `cur_prayer`=?, `cur_magic`=?, `cur_cooking`=?, `cur_woodcut`=?, "
-				+ "`cur_fletching`=?, `cur_fishing`=?, `cur_firemaking`=?, `cur_crafting`=?, `cur_smithing`=?, `cur_mining`=?, "
-				+ "`cur_herblaw`=?, `cur_agility`=?, `cur_thieving`=?," +
-				(WANT_RUNECRAFTING == true ? " `cur_runecraft`=? " : " ") +
-				"WHERE `playerID`=?";
-		}
 
 		private static final String playerLoginData = "SELECT `group_id`, `pass`, `salt`, `banned` FROM `" + PREFIX + "players` WHERE `username`=?";
 

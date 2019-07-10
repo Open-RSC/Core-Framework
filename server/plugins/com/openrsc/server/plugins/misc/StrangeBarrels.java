@@ -5,7 +5,7 @@ import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -176,7 +176,7 @@ public class StrangeBarrels implements ObjectActionListener, ObjectActionExecuti
 							"You're heavily jarred from the vibrations of the blow.");
 						int reduceAttack = DataConversions.random(1, 3);
 						p.message("Your attack is reduced by " + reduceAttack + ".");
-						p.getSkills().setLevel(Skills.ATTACK, p.getSkills().getLevel(Skills.ATTACK) - reduceAttack);
+						p.getSkills().setLevel(SKILLS.ATTACK.id(), p.getSkills().getLevel(SKILLS.ATTACK.id()) - reduceAttack);
 					} else {
 						p.message("You were unable to smash this barrel open.");
 					}

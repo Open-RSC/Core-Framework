@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.quests.members.undergroundpass.npcs;
 import com.openrsc.server.Constants;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -54,7 +54,7 @@ public class UndergroundPassKardiaTheWitch implements ObjectActionListener, Obje
 					sleep(1000);
 					p.message("the witch raises her hands above her");
 					displayTeleportBubble(p, p.getX(), p.getY(), true);
-					p.damage(((int) getCurrentLevel(p, Skills.HITPOINTS) / 5) + 5); // 6 lowest, 25 max.
+					p.damage(((int) getCurrentLevel(p, SKILLS.HITS.id()) / 5) + 5); // 6 lowest, 25 max.
 					npcTalk(p, witch, "haa haa.. die mortal");
 				}
 			} else if (click == 1) {

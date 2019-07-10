@@ -4,7 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -47,7 +47,7 @@ public class DigsiteExpert implements QuestInterface, TalkToNpcListener, TalkToN
 		player.message("@gre@You haved gained 2 quest points!");
 		int[] questData = Quests.questData.get(Quests.DIGSITE);
 		//keep order kosher
-		int[] skillIDs = {Skills.MINING, Skills.HERBLAW};
+		int[] skillIDs = {SKILLS.MINING.id(), SKILLS.HERBLAW.id()};
 		//1200 for mining, 500 for herblaw
 		int[] amounts = {1200, 500};
 		for (int i = 0; i < skillIDs.length; i++) {

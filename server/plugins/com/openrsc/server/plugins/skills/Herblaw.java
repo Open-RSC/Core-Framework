@@ -8,7 +8,7 @@ import com.openrsc.server.external.ItemHerbDef;
 import com.openrsc.server.external.ItemHerbSecond;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.ItemUnIdentHerbDef;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
@@ -45,7 +45,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 		if (herb == null) {
 			return false;
 		}
-		if (player.getSkills().getLevel(Skills.HERBLAW) < herb.getLevelRequired()) {
+		if (player.getSkills().getLevel(SKILLS.HERBLAW.id()) < herb.getLevelRequired()) {
 			player.message("You cannot identify this herb");
 			player.message("you need a higher herblaw level");
 			return false;
@@ -55,7 +55,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			return false;
 		}
 		player.setBatchEvent(new BatchEvent(player, 600, Formulae
-			.getRepeatTimes(player, Skills.HERBLAW), false) {
+			.getRepeatTimes(player, SKILLS.HERBLAW.id()), false) {
 			public void action() {
 				if (!owner.getInventory().hasItemId(item.getID())) {
 					interrupt();
@@ -70,7 +70,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 				owner.getInventory().remove(item);
 				owner.getInventory().add(newItem);
 				owner.message("This herb is " + newItem.getDef().getName());
-				owner.incExp(Skills.HERBLAW, herb.getExp(), true);
+				owner.incExp(SKILLS.HERBLAW.id(), herb.getExp(), true);
 				owner.setBusy(false);
 			}
 		});
@@ -104,7 +104,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			makeLiquid(player, usedWith, item, true);
 		} else if (usedWith.getID() == ItemId.NITROGLYCERIN.id() && item.getID() == ItemId.AMMONIUM_NITRATE.id()
 				|| usedWith.getID() == ItemId.AMMONIUM_NITRATE.id() && item.getID() == ItemId.NITROGLYCERIN.id()) {
-			if (player.getSkills().getLevel(Skills.HERBLAW) < 10) {
+			if (player.getSkills().getLevel(SKILLS.HERBLAW.id()) < 10) {
 				player.message("You need to have a herblaw level of 10 or over to mix this liquid");
 				return;
 			}
@@ -112,7 +112,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 				player.message("You need to complete Druidic ritual quest first");
 				return;
 			}
-			player.incExp(Skills.HERBLAW, 20, true);
+			player.incExp(SKILLS.HERBLAW.id(), 20, true);
 			player.playerServerMessage(MessageType.QUEST, "You mix the nitrate powder into the liquid");
 			player.message("It has produced a foul mixture");
 			showBubble(player, new Item(ItemId.AMMONIUM_NITRATE.id()));
@@ -120,7 +120,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			player.getInventory().replace(ItemId.NITROGLYCERIN.id(), ItemId.MIXED_CHEMICALS_1.id());
 		} else if (usedWith.getID() == ItemId.GROUND_CHARCOAL.id() && item.getID() == ItemId.MIXED_CHEMICALS_1.id()
 				|| usedWith.getID() == ItemId.MIXED_CHEMICALS_1.id() && item.getID() == ItemId.GROUND_CHARCOAL.id()) {
-			if (player.getSkills().getLevel(Skills.HERBLAW) < 10) {
+			if (player.getSkills().getLevel(SKILLS.HERBLAW.id()) < 10) {
 				player.message("You need to have a herblaw level of 10 or over to mix this liquid");
 				return;
 			}
@@ -128,7 +128,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 				player.message("You need to complete Druidic ritual quest first");
 				return;
 			}
-			player.incExp(Skills.HERBLAW, 25, true);
+			player.incExp(SKILLS.HERBLAW.id(), 25, true);
 			player.playerServerMessage(MessageType.QUEST, "You mix the charcoal into the liquid");
 			player.message("It has produced an even fouler mixture");
 			showBubble(player, new Item(ItemId.GROUND_CHARCOAL.id()));
@@ -136,7 +136,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			player.getInventory().replace(ItemId.MIXED_CHEMICALS_1.id(), ItemId.MIXED_CHEMICALS_2.id());
 		} else if (usedWith.getID() == ItemId.ARCENIA_ROOT.id() && item.getID() == ItemId.MIXED_CHEMICALS_2.id()
 				|| usedWith.getID() == ItemId.MIXED_CHEMICALS_2.id() && item.getID() == ItemId.ARCENIA_ROOT.id()) {
-			if (player.getSkills().getLevel(Skills.HERBLAW) < 10) {
+			if (player.getSkills().getLevel(SKILLS.HERBLAW.id()) < 10) {
 				player.message("You need to have a herblaw level of 10 or over to mix this liquid");
 				return;
 			}
@@ -144,7 +144,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 				player.message("You need to complete Druidic ritual quest first");
 				return;
 			}
-			player.incExp(Skills.HERBLAW, 30, true);
+			player.incExp(SKILLS.HERBLAW.id(), 30, true);
 			player.message("You mix the root into the mixture");
 			player.message("You produce a potentially explosive compound...");
 			showBubble(player, new Item(ItemId.ARCENIA_ROOT.id()));
@@ -153,7 +153,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			playerTalk(player, null, "Excellent this looks just right");
 		} else if (usedWith.getID() == ItemId.UNFINISHED_HARRALANDER_POTION.id() && item.getID() == ItemId.BLAMISH_SNAIL_SLIME.id()
 				|| usedWith.getID() == ItemId.BLAMISH_SNAIL_SLIME.id() && item.getID() == ItemId.UNFINISHED_HARRALANDER_POTION.id()) {
-			if (player.getSkills().getLevel(Skills.HERBLAW) < 25) {
+			if (player.getSkills().getLevel(SKILLS.HERBLAW.id()) < 25) {
 				player.message("You need a level of 25 herblaw to mix this potion");
 				return;
 			}
@@ -161,13 +161,13 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 				player.message("You need to complete Druidic ritual quest first");
 				return;
 			}
-			player.incExp(Skills.HERBLAW, 320, true);
+			player.incExp(SKILLS.HERBLAW.id(), 320, true);
 			player.message("You mix the slime into your potion");
 			player.getInventory().remove(ItemId.UNFINISHED_HARRALANDER_POTION.id(), 1);
 			player.getInventory().replace(ItemId.BLAMISH_SNAIL_SLIME.id(), ItemId.BLAMISH_OIL.id());
 		} else if (usedWith.getID() == ItemId.SNAKES_WEED_SOLUTION.id() && item.getID() == ItemId.ARDRIGAL.id()
 				|| usedWith.getID() == ItemId.ARDRIGAL.id() && item.getID() == ItemId.SNAKES_WEED_SOLUTION.id()) {
-			if (player.getSkills().getLevel(Skills.HERBLAW) < 45) {
+			if (player.getSkills().getLevel(SKILLS.HERBLAW.id()) < 45) {
 				player.message("You need to have a herblaw level of 45 or over to mix this potion");
 				return;
 			}
@@ -187,7 +187,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			player.getInventory().replace(ItemId.SNAKES_WEED_SOLUTION.id(), ItemId.GUJUO_POTION.id());
 		} else if (usedWith.getID() == ItemId.ARDRIGAL_SOLUTION.id() && item.getID() == ItemId.SNAKE_WEED.id()
 				|| usedWith.getID() == ItemId.SNAKE_WEED.id() && item.getID() == ItemId.ARDRIGAL_SOLUTION.id()) {
-			if (player.getSkills().getLevel(Skills.HERBLAW) < 45) {
+			if (player.getSkills().getLevel(SKILLS.HERBLAW.id()) < 45) {
 				player.message("You need to have a herblaw level of 45 or over to mix this potion");
 				return;
 			}
@@ -289,10 +289,10 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			return false;
 		}
 		player.setBatchEvent(new BatchEvent(player, 1200, Formulae
-			.getRepeatTimes(player, Skills.HERBLAW), false) {
+			.getRepeatTimes(player, SKILLS.HERBLAW.id()), false) {
 			@Override
 			public void action() {
-				if (owner.getSkills().getLevel(Skills.HERBLAW) < herbDef.getReqLevel()) {
+				if (owner.getSkills().getLevel(SKILLS.HERBLAW.id()) < herbDef.getReqLevel()) {
 					owner.message("you need level " + herbDef.getReqLevel()
 						+ " herblaw to make this potion");
 					interrupt();
@@ -344,9 +344,9 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			}
 		}
 		player.setBatchEvent(new BatchEvent(player, 1200, Formulae
-			.getRepeatTimes(player, Skills.HERBLAW), false) {
+			.getRepeatTimes(player, SKILLS.HERBLAW.id()), false) {
 			public void action() {
-				if (owner.getSkills().getLevel(Skills.HERBLAW) < def.getReqLevel()) {
+				if (owner.getSkills().getLevel(SKILLS.HERBLAW.id()) < def.getReqLevel()) {
 					owner.message("You need a herblaw level of "
 						+ def.getReqLevel() + " to make this potion");
 					interrupt();
@@ -367,7 +367,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 					owner.getInventory().remove(second.getID(), 1);
 					owner.getInventory().remove(unfinished.getID(), 1);
 					owner.getInventory().add(new Item(def.getPotionID(), 1));
-					owner.incExp(Skills.HERBLAW, def.getExp(), true);
+					owner.incExp(SKILLS.HERBLAW.id(), def.getExp(), true);
 				} else
 					interrupt();
 			}
@@ -396,7 +396,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 		}
 		if (unfinishedPot.getID() == ItemId.UNFINISHED_OGRE_POTION.id() && ingredient.getID() == ItemId.GROUND_BAT_BONES.id()
 			|| unfinishedPot.getID() == ItemId.GROUND_BAT_BONES.id() && ingredient.getID() == ItemId.UNFINISHED_OGRE_POTION.id()) {
-			if (p.getSkills().getLevel(Skills.HERBLAW) < 14) {
+			if (p.getSkills().getLevel(SKILLS.HERBLAW.id()) < 14) {
 				p.message("You need to have a herblaw level of 14 or over to mix this liquid");
 				return false;
 			}
@@ -421,7 +421,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 				p.getInventory().remove(unfinishedPot.getID(), 1);
 				p.getInventory().add(new Item(ItemId.OGRE_POTION.id(), 1));
 				//the other half has been done already
-				p.incExp(Skills.HERBLAW, 100, true);
+				p.incExp(SKILLS.HERBLAW.id(), 100, true);
 			}
 		}
 		return false;

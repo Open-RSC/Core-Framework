@@ -1,6 +1,6 @@
 package com.openrsc.server.plugins.misc;
 
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
@@ -19,11 +19,11 @@ public class Dummy implements ObjectActionListener, ObjectActionExecutiveListene
 	public void onObjectAction(GameObject obj, String command, Player player) {
 		message(player, 3200, "You swing at the dummy");
 		if (obj.getID() == 49) { // Dummy
-			if (player.getSkills().getLevel(Skills.ATTACK) > 7) {
+			if (player.getSkills().getLevel(SKILLS.ATTACK.id()) > 7) {
 				player.message("There is only so much you can learn from hitting a dummy");
 			} else {
 				player.message("You hit the dummy");
-				player.incExp(Skills.ATTACK, 20, true);
+				player.incExp(SKILLS.ATTACK.id(), 20, true);
 			}
 		} else if (obj.getID() == 562) { // fight Dummy
 			if (player.getCache().hasKey("combat_dummy")) {
@@ -38,7 +38,7 @@ public class Dummy implements ObjectActionListener, ObjectActionExecutiveListene
 
 			// TODO: Proper message for this prop.
 			player.message("You hit the dummy");
-			player.incExp(Skills.ATTACK, 200, true);
+			player.incExp(SKILLS.ATTACK.id(), 200, true);
 		}
 	}
 }

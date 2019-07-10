@@ -5,7 +5,7 @@ import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -382,7 +382,7 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 		}
 		else if (obj.getID() == 331 && obj.getX() == 563 && obj.getY() == 587) {
 			if (command.equalsIgnoreCase("Search for traps")) {
-				if (getCurrentLevel(p, Skills.THIEVING) < 21) {
+				if (getCurrentLevel(p, SKILLS.THIEVING.id()) < 21) {
 					message(p, "You don't find anything interesting");
 				} else {
 					message(p, "You find a trap in the stairs",

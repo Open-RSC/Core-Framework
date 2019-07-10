@@ -11,7 +11,7 @@ import com.openrsc.server.external.ItemCraftingDef;
 import com.openrsc.server.external.ItemGemDef;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.MenuOptionListener;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -96,7 +96,7 @@ public class Crafting implements InvUseOnItemListener,
 									owner.message("What type of " + reply + " would you like to make?");
 									owner.setMenuHandler(new MenuOptionListener(options) {
 										public void handleReply(final int option, final String reply) {
-											owner.setBatchEvent(new BatchEvent(owner, 1200, Formulae.getRepeatTimes(owner, Skills.CRAFTING), false) {
+											owner.setBatchEvent(new BatchEvent(owner, 1200, Formulae.getRepeatTimes(owner, SKILLS.CRAFTING.id()), false) {
 												public void action() {
 													if (option < 0 || option > (Constants.GameServer.MEMBER_WORLD ? 5 : 4)) {
 														owner.checkAndInterruptBatchEvent();
@@ -120,7 +120,7 @@ public class Crafting implements InvUseOnItemListener,
 														owner.checkAndInterruptBatchEvent();
 														return;
 													}
-													if (owner.getSkills().getLevel(Skills.CRAFTING) < def.getReqLevel()) {
+													if (owner.getSkills().getLevel(SKILLS.CRAFTING.id()) < def.getReqLevel()) {
 														owner.message("You need a crafting skill of level " + def.getReqLevel() + " to make this");
 														owner.checkAndInterruptBatchEvent();
 														return;
@@ -137,7 +137,7 @@ public class Crafting implements InvUseOnItemListener,
 														}
 														owner.message("You make a " + result.getDef().getName());
 														owner.getInventory().add(result);
-														owner.incExp(Skills.CRAFTING, def.getExp(), true);
+														owner.incExp(SKILLS.CRAFTING.id(), def.getExp(), true);
 													} else {
 														owner.message("You don't have a " + reply + ".");
 														owner.checkAndInterruptBatchEvent();
@@ -180,10 +180,10 @@ public class Crafting implements InvUseOnItemListener,
 										return;
 									}
 
-									owner.setBatchEvent(new BatchEvent(owner, 1200, Formulae.getRepeatTimes(owner, Skills.CRAFTING), false) {
+									owner.setBatchEvent(new BatchEvent(owner, 1200, Formulae.getRepeatTimes(owner, SKILLS.CRAFTING.id()), false) {
 										@Override
 										public void action() {
-											if (owner.getSkills().getLevel(Skills.CRAFTING) < 16) {
+											if (owner.getSkills().getLevel(SKILLS.CRAFTING.id()) < 16) {
 												owner.message("You need a crafting skill of level 16 to make this");
 												interrupt();
 												return;
@@ -193,7 +193,7 @@ public class Crafting implements InvUseOnItemListener,
 												Item result = new Item(results[option]);
 												owner.message("You make a " + result.getDef().getName());
 												owner.getInventory().add(result);
-												owner.incExp(Skills.CRAFTING, 200, true);
+												owner.incExp(SKILLS.CRAFTING.id(), 200, true);
 											} else {
 												interrupt();
 											}
@@ -223,7 +223,7 @@ public class Crafting implements InvUseOnItemListener,
 								&& owner.getInventory().remove(item) > -1) {
 								owner.getInventory().add(new Item(ItemId.MOLTEN_GLASS.id(), 1));
 								owner.getInventory().add(new Item(ItemId.BUCKET.id(), 1));
-								owner.incExp(Skills.CRAFTING, 80, true);
+								owner.incExp(SKILLS.CRAFTING.id(), 80, true);
 							}
 							owner.setBusy(false);
 						}
@@ -270,10 +270,10 @@ public class Crafting implements InvUseOnItemListener,
 								owner.message("Nothing interesting happens");
 								return;
 						}
-						owner.setBatchEvent(new BatchEvent(owner, 600, Formulae.getRepeatTimes(owner, Skills.CRAFTING), false) {
+						owner.setBatchEvent(new BatchEvent(owner, 600, Formulae.getRepeatTimes(owner, SKILLS.CRAFTING.id()), false) {
 							@Override
 							public void action() {
-								if (owner.getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
+								if (owner.getSkills().getLevel(SKILLS.CRAFTING.id()) < reqLvl) {
 									owner.message("You need to have a crafting of level " + reqLvl + " or higher to make " + msg.get());
 									interrupt();
 									return;
@@ -282,7 +282,7 @@ public class Crafting implements InvUseOnItemListener,
 									showBubble(owner, item);
 									owner.message("you make the clay into a " + potteryItemName(result.getDef().getName()));
 									owner.getInventory().add(result);
-									owner.incExp(Skills.CRAFTING, exp, true);
+									owner.incExp(SKILLS.CRAFTING.id(), exp, true);
 								} else {
 									interrupt();
 								}
@@ -321,16 +321,16 @@ public class Crafting implements InvUseOnItemListener,
 						owner.message("Nothing interesting happens");
 						return;
 				}
-				if (owner.getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
+				if (owner.getSkills().getLevel(SKILLS.CRAFTING.id()) < reqLvl) {
 					owner.message("You need to have a crafting of level " + reqLvl + " or higher to make " + msg);
 					return;
 				}
 				final int exp = xp;
-				final boolean fail = Formulae.crackPot(reqLvl, owner.getSkills().getLevel(Skills.CRAFTING));
+				final boolean fail = Formulae.crackPot(reqLvl, owner.getSkills().getLevel(SKILLS.CRAFTING.id()));
 				showBubble(owner, item);
 				String potteryItem = potteryItemName(item.getDef().getName());
 				owner.message("You put the " + potteryItem + " in the oven");
-				owner.setBatchEvent(new BatchEvent(owner, 1800, Formulae.getRepeatTimes(owner, Skills.CRAFTING), false) {
+				owner.setBatchEvent(new BatchEvent(owner, 1800, Formulae.getRepeatTimes(owner, SKILLS.CRAFTING.id()), false) {
 					@Override
 					public void action() {
 						if (Constants.GameServer.WANT_FATIGUE) {
@@ -355,7 +355,7 @@ public class Crafting implements InvUseOnItemListener,
 												+ result.getDef().getName().toLowerCase()
 												+ " from the oven");
 										owner.getInventory().add(result);
-										owner.incExp(Skills.CRAFTING, exp, true);
+										owner.incExp(SKILLS.CRAFTING.id(), exp, true);
 									}
 									
 								});
@@ -393,7 +393,7 @@ public class Crafting implements InvUseOnItemListener,
 		} else if ((item2.getID() == ItemId.BUCKET_OF_WATER.id() || item2.getID() == ItemId.JUG_OF_WATER.id() || item2.getID() == ItemId.BOWL_OF_WATER.id()) && useWater(player, item2, item1)) {
 			return;
 		} else if (item1.getID() == ItemId.MOLTEN_GLASS.id() && item2.getID() == ItemId.LENS_MOULD.id() || item1.getID() == ItemId.LENS_MOULD.id() && item2.getID() == ItemId.MOLTEN_GLASS.id()) {
-			if (getCurrentLevel(player, Skills.CRAFTING) < 10) {
+			if (getCurrentLevel(player, SKILLS.CRAFTING.id()) < 10) {
 				player.message("You need a crafting level of 10 to make the lens");
 				return;
 			}
@@ -414,10 +414,10 @@ public class Crafting implements InvUseOnItemListener,
 			return false;
 		}
 
-		player.setBatchEvent(new BatchEvent(player, 600, Formulae.getRepeatTimes(player, Skills.CRAFTING), false) {
+		player.setBatchEvent(new BatchEvent(player, 600, Formulae.getRepeatTimes(player, SKILLS.CRAFTING.id()), false) {
 			@Override
 			public void action() {
-				if (owner.getSkills().getLevel(Skills.CRAFTING) < gemDef.getReqLevel()) {
+				if (owner.getSkills().getLevel(SKILLS.CRAFTING.id()) < gemDef.getReqLevel()) {
 					boolean pluralize = gemDef.getGemID() <= ItemId.UNCUT_DRAGONSTONE.id();
 					owner.message(
 						"you need a crafting level of " + gemDef.getReqLevel()
@@ -434,21 +434,21 @@ public class Crafting implements InvUseOnItemListener,
 						ItemId.UNCUT_OPAL.id(),
 					};
 					if (DataConversions.inArray(gemsThatFail, gem.getID()) &&
-							Formulae.smashGem(gem.getID(), gemDef.getReqLevel(), owner.getSkills().getLevel(Skills.CRAFTING))) {
+							Formulae.smashGem(gem.getID(), gemDef.getReqLevel(), owner.getSkills().getLevel(SKILLS.CRAFTING.id()))) {
 						owner.message("You miss hit the chisel and smash the " + cutGem.getDef().getName() + " to pieces!");
 						owner.getInventory().add(new Item(ItemId.CRUSHED_GEMSTONE.id()));
 						if (gem.getID() == ItemId.UNCUT_RED_TOPAZ.id()) {
-							owner.incExp(Skills.CRAFTING, 25, true);
+							owner.incExp(SKILLS.CRAFTING.id(), 25, true);
 						} else if (gem.getID() == ItemId.UNCUT_JADE.id()) {
-							owner.incExp(Skills.CRAFTING, 20, true);
+							owner.incExp(SKILLS.CRAFTING.id(), 20, true);
 						} else {
-							owner.incExp(Skills.CRAFTING, 15, true);
+							owner.incExp(SKILLS.CRAFTING.id(), 15, true);
 						}
 					} else {
 						owner.message("You cut the " + cutGem.getDef().getName().toLowerCase());
 						owner.playSound("chisel");
 						owner.getInventory().add(cutGem);
-						owner.incExp(Skills.CRAFTING, gemDef.getExp(), true);
+						owner.incExp(SKILLS.CRAFTING.id(), gemDef.getExp(), true);
 					}
 				} else {
 					interrupt();
@@ -498,7 +498,7 @@ public class Crafting implements InvUseOnItemListener,
 							default:
 								return;
 						}
-						if (owner.getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
+						if (owner.getSkills().getLevel(SKILLS.CRAFTING.id()) < reqLvl) {
 							owner.message(
 								"You need a crafting level of " + reqLvl + " to make " + resultGen);
 							return;
@@ -516,7 +516,7 @@ public class Crafting implements InvUseOnItemListener,
 								if (owner.getInventory().remove(glass) > -1) {
 									owner.message("You make a " + result.getDef().getName());
 									owner.getInventory().add(result);
-									owner.incExp(Skills.CRAFTING, exp, true);
+									owner.incExp(SKILLS.CRAFTING.id(), exp, true);
 								}
 							}
 						});
@@ -567,7 +567,7 @@ public class Crafting implements InvUseOnItemListener,
 							default:
 								return;
 						}
-						if (owner.getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
+						if (owner.getSkills().getLevel(SKILLS.CRAFTING.id()) < reqLvl) {
 							owner.message("You need to have a crafting of level " + reqLvl + " or higher to make " + result.getDef().getName());
 							return;
 						}
@@ -584,7 +584,7 @@ public class Crafting implements InvUseOnItemListener,
 								if (owner.getInventory().remove(leather) > -1) {
 									owner.message("You make some " + result.getDef().getName());
 									owner.getInventory().add(result);
-									owner.incExp(Skills.CRAFTING, exp, true);
+									owner.incExp(SKILLS.CRAFTING.id(), exp, true);
 									//a reel of thread accounts for 5 uses
 									if (!owner.getCache().hasKey("part_reel_thread")) {
 										owner.getCache().set("part_reel_thread", 1);
@@ -641,7 +641,7 @@ public class Crafting implements InvUseOnItemListener,
 		}
 		final int newId = newID;
 		player.setBatchEvent(new BatchEvent(player, 600,
-			Formulae.getRepeatTimes(player, Skills.CRAFTING), false) {
+			Formulae.getRepeatTimes(player, SKILLS.CRAFTING.id()), false) {
 			@Override
 			public void action() {
 				if (owner.getInventory().countId(item.getID()) <= 0 || owner.getInventory().countId(ItemId.BALL_OF_WOOL.id()) <= 0) {

@@ -9,7 +9,7 @@ import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.PathValidation;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
@@ -47,7 +47,7 @@ public class HealEventNpc extends GameTickEvent {
 
 		boolean restored = false;
 		for (int skillIndex = 0; skillIndex < 18; skillIndex++) {
-			if (skillIndex == Skills.HITPOINTS) {
+			if (skillIndex == SKILLS.HITS.id()) {
 				checkAndStartHpRestoration(skillIndex);
 			}
 		}
@@ -62,7 +62,7 @@ public class HealEventNpc extends GameTickEvent {
 			long delay = 2500; // 60 seconds
 			if (!owner.inCombat() && !owner.cantHeal() && owner.getLocation().inWilderness()) {
 				owner.setHealTimer(Constants.GameServer.GAME_TICK);
-				normalizeLevel(Skills.HITPOINTS);
+				normalizeLevel(SKILLS.HITS.id());
 				restored = true;
 				lastHeal = 0;
 				if (restoringStats.get(stat) == 0) {
@@ -81,11 +81,11 @@ public class HealEventNpc extends GameTickEvent {
 	 * @return true if action done, false if skill is already normal
 	 */
 	private void normalizeLevel(int skill) {
-		int cur = owner.getSkills().getLevel(Skills.HITPOINTS);
-		int norm = owner.getSkills().getMaxStat(Skills.HITPOINTS);
+		int cur = owner.getSkills().getLevel(SKILLS.HITS.id());
+		int norm = owner.getSkills().getMaxStat(SKILLS.HITS.id());
 
 		if(cur < norm * 0.67) {
-			owner.getSkills().setLevel(Skills.HITPOINTS, cur + 12);
+			owner.getSkills().setLevel(SKILLS.HITS.id(), cur + 12);
 		}
 
 		if (cur == norm)

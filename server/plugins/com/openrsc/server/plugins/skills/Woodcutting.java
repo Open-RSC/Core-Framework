@@ -5,7 +5,7 @@ import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.ObjectWoodcuttingDef;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -51,7 +51,7 @@ public class Woodcutting implements ObjectActionListener,
 				return;
 			}
 		}
-		if (owner.getSkills().getLevel(Skills.WOODCUT) < def.getReqLevel()) {
+		if (owner.getSkills().getLevel(SKILLS.WOODCUT.id()) < def.getReqLevel()) {
 			owner.message("You need a woodcutting level of " + def.getReqLevel() + " to axe this tree");
 			return;
 		}
@@ -82,7 +82,7 @@ public class Woodcutting implements ObjectActionListener,
 					}
 				}
 				
-				if (getLog(def.getReqLevel(), owner.getSkills().getLevel(Skills.WOODCUT), axeID)) {
+				if (getLog(def.getReqLevel(), owner.getSkills().getLevel(SKILLS.WOODCUT.id()), axeID)) {
 					//check if the tree is still up
 					GameObject obj = owner.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 					if (obj == null) {
@@ -91,7 +91,7 @@ public class Woodcutting implements ObjectActionListener,
 					} else {
 						owner.getInventory().add(log);
 						owner.message("You get some wood");
-						owner.incExp(Skills.WOODCUT, def.getExp(), true);
+						owner.incExp(SKILLS.WOODCUT.id(), def.getExp(), true);
 					}
 					if (DataConversions.random(1, 100) <= def.getFell()) {
 						obj = owner.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());

@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
@@ -63,7 +63,7 @@ public class UndergroundPassPuzzle implements ObjectActionListener, ObjectAction
 		sleep(1600);
 		message(p, "you fall onto a pit of spikes");
 		p.teleport(679, 3448);
-		p.damage((int) (getCurrentLevel(p, Skills.HITPOINTS) * 0.2D));
+		p.damage((int) (getCurrentLevel(p, SKILLS.HITS.id()) * 0.2D));
 		p.message("you crawl out of the pit");
 		World.getWorld().replaceGameObject(obj,
 			new GameObject(obj.getLocation(), 778, obj.getDirection(), obj

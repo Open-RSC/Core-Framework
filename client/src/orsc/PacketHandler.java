@@ -211,7 +211,7 @@ public class PacketHandler {
 				loadStats();
 				loadExperience();
 				loadQuestPoints();
-
+				mc.updateQuestRewards();
 				// Set Death Screen Timeout
 			} else if (opcode == 83) mc.setDeathScreenTimeout(250);
 
@@ -743,7 +743,7 @@ public class PacketHandler {
 		int wantDropX, wantExpInfo, wantWoodcuttingGuild, wantFixedOverheadChat, wantPets, showUnidentifiedHerbNames;
 		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank, wantPlayerCommands;
 		int getFPS, wantEmail, wantRegistrationLimit, allowResize, lenientContactDetails, wantFatigue, wantCustomSprites;
-		int fishingSpotsDepletable, properMagicTreeName;
+		int fishingSpotsDepletable, properMagicTreeName, wantRunecrafting;
 		String logoSpriteID;
 
 		if (!mc.gotInitialConfigs) {
@@ -806,6 +806,7 @@ public class PacketHandler {
 			wantQuestStartedIndicator = this.getClientStream().getUnsignedByte(); // 57
 			fishingSpotsDepletable = this.getClientStream().getUnsignedByte(); //58
 			properMagicTreeName = this.getClientStream().getUnsignedByte(); //59
+			wantRunecrafting = this.getClientStream().getUnsignedByte(); //60
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -866,6 +867,7 @@ public class PacketHandler {
 			wantQuestStartedIndicator = packetsIncoming.getUnsignedByte(); // 57
 			fishingSpotsDepletable = packetsIncoming.getUnsignedByte(); //58
 			properMagicTreeName = packetsIncoming.getUnsignedByte(); //59
+			wantRunecrafting = packetsIncoming.getUnsignedByte(); //60
 		}
 
 		if (Config.DEBUG) {
@@ -928,7 +930,8 @@ public class PacketHandler {
 					"\nS_SHOW_UNIDENTIFIED_HERB_NAMES " + showUnidentifiedHerbNames + // 56
 					"\nS_WANT_QUEST_STARTED_INDICATOR  " + wantQuestStartedIndicator + // 57
 					"\nS_FISHING_SPOTS_DEPLETABLE " + fishingSpotsDepletable + // 58
-					"\nS_PROPER_MAGIC_TREE_NAME  " + properMagicTreeName // 59
+					"\nS_PROPER_MAGIC_TREE_NAME  " + properMagicTreeName +// 59
+					"\nS_WANT_RUNECRAFTING  "   // 59
 			);
 		}
 
@@ -993,6 +996,7 @@ public class PacketHandler {
 		props.setProperty("S_WANT_QUEST_STARTED_INDICATOR", wantQuestStartedIndicator == 1 ? "true" : "false"); // 57
 		props.setProperty("S_FISHING_SPOTS_DEPLETABLE", fishingSpotsDepletable == 1 ? "true" : "false"); //58
 		props.setProperty("S_PROPER_MAGIC_TREE_NAME", properMagicTreeName == 1 ? "true" : "false"); //59
+		props.setProperty("S_WANT_RUNECRAFTING", wantRunecrafting == 1 ? "true" : "false"); //60
 
 		Config.updateServerConfiguration(props);
 
@@ -1450,17 +1454,17 @@ public class PacketHandler {
 	}
 
 	private void loadStats() {
-		for (int stat = 0; stat < 18; ++stat) {
+		for (int stat = 0; stat < mudclient.skillCount; ++stat) {
 			mc.setPlayerStatCurrent(stat, packetsIncoming.getUnsignedByte());
 		}
 
-		for (int stat = 0; stat < 18; ++stat) {
+		for (int stat = 0; stat < mudclient.skillCount; ++stat) {
 			mc.setPlayerStatBase(stat, packetsIncoming.getUnsignedByte());
 		}
 	}
 
 	private void loadExperience() {
-		for (int skill = 0; skill < 18; ++skill) {
+		for (int skill = 0; skill < mudclient.skillCount; ++skill) {
 			mc.setPlayerExperience(skill, packetsIncoming.get32() / 4);
 		}
 	}

@@ -5,7 +5,7 @@ import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.impl.ObjectRemover;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -55,7 +55,7 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 	
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
-		if (getMaxLevel(p, Skills.MAGIC) < 60) { // TODO: Enter the arena game.
+		if (getMaxLevel(p, SKILLS.MAGIC.id()) < 60) { // TODO: Enter the arena game.
 			playerTalk(p, n, "hello there", "what is this place?");
 			npcTalk(p, n, "do not waste my time with trivial questions!",
 				"i am the great kolodion, master of battle magic", "i have an arena to run");
@@ -192,8 +192,8 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 					p.getCache().set("mage_arena", 1);
 				}
 				movePlayer(p, 229, 130);
-				setCurrentLevel(p, Skills.ATTACK, 0);
-				setCurrentLevel(p, Skills.STRENGTH, 0);
+				setCurrentLevel(p, SKILLS.ATTACK.id(), 0);
+				setCurrentLevel(p, SKILLS.STRENGTH.id(), 0);
 
 				startKolodionEvent(p);
 				spawnKolodion(p, NpcId.KOLODION_HUMAN.id());
@@ -221,9 +221,9 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 				if (owner.inCombat()) {
 					return;
 				}
-				if (owner.getSkills().getLevel(Skills.ATTACK) > 0 || owner.getSkills().getLevel(Skills.STRENGTH) > 0) {
-					owner.getSkills().setLevel(Skills.ATTACK, 0);
-					owner.getSkills().setLevel(Skills.STRENGTH, 0);
+				if (owner.getSkills().getLevel(SKILLS.ATTACK.id()) > 0 || owner.getSkills().getLevel(SKILLS.STRENGTH.id()) > 0) {
+					owner.getSkills().setLevel(SKILLS.ATTACK.id(), 0);
+					owner.getSkills().setLevel(SKILLS.STRENGTH.id(), 0);
 				}
 				Npc Guthix = getNearestNpc(p, NpcId.BATTLE_MAGE_GUTHIX.id(), 2);
 				Npc Zamorak = getNearestNpc(p, NpcId.BATTLE_MAGE_ZAMAROK.id(), 2);
@@ -232,26 +232,26 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 				if (Guthix != null && Guthix.withinRange(owner, 1)) {
 					godSpellObject(owner, 33);
 					p.message(randomMessage[2]);
-					if (getCurrentLevel(owner, Skills.HITPOINTS) < 20) {
+					if (getCurrentLevel(owner, SKILLS.HITS.id()) < 20) {
 						owner.damage(2);
 					} else {
-						owner.damage(getCurrentLevel(owner, Skills.HITPOINTS) / 10);
+						owner.damage(getCurrentLevel(owner, SKILLS.HITS.id()) / 10);
 					}
 				} else if (Zamorak != null && Zamorak.withinRange(owner, 1)) {
 					godSpellObject(owner, 35);
 					p.message(randomMessage[0]);
-					if (getCurrentLevel(owner, Skills.HITPOINTS) < 20) {
+					if (getCurrentLevel(owner, SKILLS.HITS.id()) < 20) {
 						owner.damage(2);
 					} else {
-						owner.damage(getCurrentLevel(owner, Skills.HITPOINTS) / 10);
+						owner.damage(getCurrentLevel(owner, SKILLS.HITS.id()) / 10);
 					}
 				} else if (Saradomin != null && Saradomin.withinRange(owner, 1)) {
 					godSpellObject(owner, 34);
 					p.message(randomMessage[1]);
-					if (getCurrentLevel(owner, Skills.HITPOINTS) < 20) {
+					if (getCurrentLevel(owner, SKILLS.HITS.id()) < 20) {
 						owner.damage(2);
 					} else {
-						owner.damage(getCurrentLevel(owner, Skills.HITPOINTS) / 10);
+						owner.damage(getCurrentLevel(owner, SKILLS.HITS.id()) / 10);
 					}
 				}
 			}

@@ -23,6 +23,7 @@ import com.openrsc.server.model.MenuOptionListener;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.PrivateMessage;
 import com.openrsc.server.model.Shop;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.container.Bank;
@@ -758,17 +759,17 @@ public final class Player extends Mob {
 					);
 				if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
 					optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
-					optionalSkillIndex = Optional.of(Skills.ATTACK);
+					optionalSkillIndex = Optional.of(SKILLS.ATTACK.id());
 				}
 				//staff of iban (usable)
 				if (item.getID() == 1000) {
 					optionalLevel = Optional.of(requiredLevel);
-					optionalSkillIndex = Optional.of(Skills.ATTACK);
+					optionalSkillIndex = Optional.of(SKILLS.ATTACK.id());
 				}
 				//battlestaves (incl. enchanted version)
 				if (itemLower.contains("battlestaff")) {
 					optionalLevel = Optional.of(requiredLevel);
-					optionalSkillIndex = Optional.of(Skills.ATTACK);
+					optionalSkillIndex = Optional.of(SKILLS.ATTACK.id());
 				}
 
 				if (getSkills().getMaxStat(requiredSkillIndex) < requiredLevel) {
@@ -1258,7 +1259,7 @@ public final class Player extends Mob {
 		/*
 		  Skilling Experience Rate
 		 */
-		if (skill >= 4 && skill <= Skills.SKILL_COUNT-1) {
+		if (skill >= 4 && skill <= Skills.getSkillCount()-1) {
 			multiplier = Constants.GameServer.SKILLING_EXP_RATE;
 			if (getLocation().inWilderness() && !getLocation().inBounds(220, 108, 225, 111)) {
 				multiplier += Constants.GameServer.WILDERNESS_BOOST;

@@ -14,7 +14,7 @@ import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.action.WalkToPointActionNpc;
 import com.openrsc.server.model.action.WalkToActionNpc;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;

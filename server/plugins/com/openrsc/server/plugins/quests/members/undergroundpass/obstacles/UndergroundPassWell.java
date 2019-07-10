@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 
 import com.openrsc.server.Constants;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
@@ -30,7 +30,7 @@ public class UndergroundPassWell implements ObjectActionListener, ObjectActionEx
 				displayTeleportBubble(p, p.getX(), p.getY(), true);
 				p.message("..slowly dragging you futher down into the caverns");
 			} else {
-				p.damage((int) (getCurrentLevel(p, Skills.HITPOINTS) * 0.2D));
+				p.damage((int) (getCurrentLevel(p, SKILLS.HITS.id()) * 0.2D));
 				displayTeleportBubble(p, obj.getX(), obj.getY(), false);
 				message(p, "from below an icy blast of air chills you to your bones",
 					"a mystical force seems to blast you back out of the well");

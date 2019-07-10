@@ -5,7 +5,7 @@ import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.ObjectMiningDef;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -43,7 +43,7 @@ public class GemMining implements ObjectActionListener,
 		final ObjectMiningDef def = EntityHandler.getObjectMiningDef(obj.getID());
 		final int axeId = getAxe(p);
 		int retrytimes;
-		final int mineLvl = p.getSkills().getLevel(Skills.MINING);
+		final int mineLvl = p.getSkills().getLevel(SKILLS.MINING.id());
 		int reqlvl = 1;
 		switch (ItemId.getById(axeId)) {
 			case BRONZE_PICKAXE:
@@ -108,7 +108,7 @@ public class GemMining implements ObjectActionListener,
 		p.setBatchEvent(new BatchEvent(p, 1800, 1000 + retrytimes, true) {
 			@Override
 			public void action() {
-				if (getGem(p, 40, owner.getSkills().getLevel(Skills.MINING), axeId) && mineLvl >= 40) { // always 40 required mining.
+				if (getGem(p, 40, owner.getSkills().getLevel(SKILLS.MINING.id()), axeId) && mineLvl >= 40) { // always 40 required mining.
 					Item gem = new Item(getGemFormula(p.getInventory().wielding(ItemId.CHARGED_DRAGONSTONE_AMULET.id())), 1);
 					//check if there is still gem at the rock
 					GameObject object = owner.getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
@@ -116,7 +116,7 @@ public class GemMining implements ObjectActionListener,
 						owner.message("You only succeed in scratching the rock");
 					} else {
 						owner.message(minedString(gem.getID()));
-						owner.incExp(Skills.MINING, 200, true); // always 50XP
+						owner.incExp(SKILLS.MINING.id(), 200, true); // always 50XP
 						owner.getInventory().add(gem);
 					}
 					interrupt();
@@ -156,7 +156,7 @@ public class GemMining implements ObjectActionListener,
 	}
 
 	private int getAxe(Player p) {
-		int lvl = p.getSkills().getLevel(Skills.MINING);
+		int lvl = p.getSkills().getLevel(SKILLS.MINING.id());
 		for (int i = 0; i < Formulae.miningAxeIDs.length; i++) {
 			if (p.getInventory().countId(Formulae.miningAxeIDs[i]) > 0) {
 				if (lvl >= Formulae.miningAxeLvls[i]) {

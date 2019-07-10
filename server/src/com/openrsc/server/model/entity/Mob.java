@@ -27,7 +27,7 @@ import com.openrsc.server.util.rsc.Formulae;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.openrsc.server.util.rsc.DataConversions;
-
+import com.openrsc.server.model.Skills.SKILLS;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -489,7 +489,7 @@ public abstract class Mob extends Entity {
 	}
 
 	public void damage(int damage) {
-		int newHp = skills.getLevel(Skills.HITPOINTS) - damage;
+		int newHp = skills.getLevel(SKILLS.HITS.id()) - damage;
 		if (newHp <= 0) {
 			if (this.isPlayer()) {
 				((Player) this).setStatus(Action.DIED_FROM_DAMAGE);

@@ -4,6 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.external.Gauntlets;
 import com.openrsc.server.external.ItemId;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
@@ -403,17 +404,17 @@ public class Inventory {
 
 		if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
 			optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
-			optionalSkillIndex = Optional.of(Skills.ATTACK);
+			optionalSkillIndex = Optional.of(SKILLS.ATTACK.id());
 		}
 		//staff of iban (usable)
 		if (item.getID() == 1000) {
 			optionalLevel = Optional.of(requiredLevel);
-			optionalSkillIndex = Optional.of(Skills.ATTACK);
+			optionalSkillIndex = Optional.of(SKILLS.ATTACK.id());
 		}
 		//battlestaves (incl. enchanted version)
 		if (itemLower.contains("battlestaff")) {
 			optionalLevel = Optional.of(requiredLevel);
-			optionalSkillIndex = Optional.of(Skills.ATTACK);
+			optionalSkillIndex = Optional.of(SKILLS.ATTACK.id());
 		}
 
 		if (player.getSkills().getMaxStat(requiredSkillIndex) < requiredLevel) {

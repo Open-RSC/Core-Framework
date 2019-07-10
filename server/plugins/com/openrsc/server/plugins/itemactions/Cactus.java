@@ -7,7 +7,7 @@ import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -48,7 +48,7 @@ InvUseOnObjectExecutiveListener {
 							boolean fail = Formulae.cutCacti();
 							if (fail) {
 								owner.message("You make a mistake and fail to fill your waterskin.");
-								owner.incExp(Skills.WOODCUT, 4, true);
+								owner.incExp(SKILLS.WOODCUT.id(), 4, true);
 								owner.getInventory().add(new Item(s, 1));
 								owner.setBusy(false);
 								return;
@@ -70,7 +70,7 @@ InvUseOnObjectExecutiveListener {
 							// Remove healthy cacti
 							world.unregisterGameObject(object);
 
-							owner.incExp(Skills.WOODCUT, 100, true); // Woodcutting XP
+							owner.incExp(SKILLS.WOODCUT.id(), 100, true); // Woodcutting XP
 
 							// Swap cacti back after 30 seconds.
 							Server.getServer().getEventHandler().add(

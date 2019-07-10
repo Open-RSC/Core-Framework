@@ -1,6 +1,6 @@
 package com.openrsc.server.plugins.minigames.gnomerestaurant;
 
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -277,7 +277,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, Ta
 					&& hasItem(p, ItemId.TOAD_BATTA.id())) {
 				playerTalk(p, n, "all done, here you go");
 				message(p, 1900, "you give aluft two worm batta's a veg batta and a toad batta");
-				p.incExp(Skills.COOKING, 425, true);
+				p.incExp(SKILLS.COOKING.id(), 425, true);
 				removeItem(p, ItemId.WORM_BATTA.id(), 2);
 				removeItem(p, ItemId.VEG_BATTA.id(), 1);
 				removeItem(p, ItemId.TOAD_BATTA.id(), 1);
@@ -302,7 +302,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, Ta
 				removeItem(p, ItemId.CHOCOLATE_BOMB.id(), 1);
 				removeItem(p, ItemId.CHOC_CRUNCHIES.id(), 2);
 				removeItem(p, ItemId.TOAD_CRUNCHIES.id(), 2);
-				p.incExp(Skills.COOKING, 675, true);
+				p.incExp(SKILLS.COOKING.id(), 675, true);
 				npcTalk(p, n, "they look great, well done",
 					"here's your share of the profit");
 				p.message("mr gianne gives you 75 gold coins");
@@ -320,7 +320,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, Ta
 				playerTalk(p, n, "all done, here you go");
 				message(p, 1900, "you give aluft the two choc crunchies");
 				removeItem(p, ItemId.CHOC_CRUNCHIES.id(), 2);
-				p.incExp(Skills.COOKING, 300, true);
+				p.incExp(SKILLS.COOKING.id(), 300, true);
 				npcTalk(p, n, "they look great, well done",
 					"here's your share of the profit");
 				p.message("mr gianne gives you 30 gold coins");
@@ -339,7 +339,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, Ta
 				message(p, 1900, "you give aluft one choc bomb and two choc crunchies");
 				removeItem(p, ItemId.CHOCOLATE_BOMB.id(), 1);
 				removeItem(p, ItemId.CHOC_CRUNCHIES.id(), 2);
-				p.incExp(Skills.COOKING, 425, true);
+				p.incExp(SKILLS.COOKING.id(), 425, true);
 				npcTalk(p, n, "they look great, well done",
 					"here's your share of the profit");
 				p.message("mr gianne gives you 45 gold coins");
@@ -357,7 +357,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, Ta
 				message(p, 1900, "you give aluft two veg batta's and a worm hole");
 				removeItem(p, ItemId.VEG_BATTA.id(), 2);
 				removeItem(p, ItemId.WORM_HOLE.id(), 1);
-				p.incExp(Skills.COOKING, 425, true);
+				p.incExp(SKILLS.COOKING.id(), 425, true);
 				npcTalk(p, n, "they look great, well done",
 					"here's your share of the profit");
 				p.message("mr gianne gives you 45 gold coins");
@@ -379,7 +379,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, Ta
 				removeItem(p, ItemId.VEGBALL.id(), 1);
 				removeItem(p, ItemId.TANGLED_TOADS_LEGS.id(), 1);
 				removeItem(p, ItemId.WORM_HOLE.id(), 1);
-				p.incExp(Skills.COOKING, 425, true);
+				p.incExp(SKILLS.COOKING.id(), 425, true);
 				npcTalk(p, n, "they look great, well done",
 					"here's your share of the profit");
 				p.message("mr gianne gives you 45 gold coins");
@@ -400,7 +400,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, Ta
 				removeItem(p, ItemId.CHEESE_AND_TOMATO_BATTA.id(), 1);
 				removeItem(p, ItemId.VEGBALL.id(), 1);
 				removeItem(p, ItemId.WORM_CRUNCHIES.id(), 2);
-				p.incExp(Skills.COOKING, 550, true);
+				p.incExp(SKILLS.COOKING.id(), 550, true);
 				npcTalk(p, n, "they look great, well done",
 					"here's your share of the profit");
 				p.message("mr gianne gives you 60 gold coins");
@@ -424,7 +424,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, Ta
 				removeItem(p, ItemId.FRUIT_BATTA.id(), 1);
 				removeItem(p, ItemId.CHOCOLATE_BOMB.id(), 1);
 				removeItem(p, ItemId.VEGBALL.id(), 1);
-				p.incExp(Skills.COOKING, 425, true);
+				p.incExp(SKILLS.COOKING.id(), 425, true);
 				npcTalk(p, n, "they look great, well done",
 					"here's your share of the profit");
 				p.message("mr gianne gives you 45 gold coins");
@@ -446,7 +446,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, Ta
 				message(p, 1900, "you give aluft one choc bomb and two choc crunchies");
 				removeItem(p, ItemId.TANGLED_TOADS_LEGS.id(), 1);
 				removeItem(p, ItemId.WORM_CRUNCHIES.id(), 2);
-				p.incExp(Skills.COOKING, 425, true);
+				p.incExp(SKILLS.COOKING.id(), 425, true);
 				npcTalk(p, n, "they look great, well done",
 					"here's your share of the profit");
 				p.message("mr gianne gives you 45 gold coins");

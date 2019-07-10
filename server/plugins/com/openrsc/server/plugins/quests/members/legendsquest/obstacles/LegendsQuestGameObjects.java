@@ -7,7 +7,7 @@ import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -274,7 +274,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					"Yes, I'm very strong, I'll force them open.",
 					"No, I'm having second thoughts.");
 				if (menu == 0) {
-					if (getCurrentLevel(p, Skills.STRENGTH) < 50) {
+					if (getCurrentLevel(p, SKILLS.STRENGTH.id()) < 50) {
 						p.message("You need a Strength of at least 50 to affect these gates.");
 						return;
 					}
@@ -286,7 +286,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					playerTalk(p, null, "Arghhhhhhh!");
 					message(p, 1300, "You push and push,");
 					playerTalk(p, null, "Shhhhhhhshshehshsh");
-					if (Formulae.failCalculation(p, Skills.STRENGTH, 50)) {
+					if (Formulae.failCalculation(p, SKILLS.STRENGTH.id(), 50)) {
 						message(p, 1300, "You just manage to force the gates open slightly, ",
 							"just enough to force yourself through.");
 						replaceObjectDelayed(obj, 2000, 181);
@@ -298,7 +298,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					} else {
 						message(p, 1300, "but run out of steam before you're able to force the gates open.");
 						p.message("The effort of trying to force the gates reduces your strength temporarily");
-						p.getSkills().decrementLevel(Skills.STRENGTH);
+						p.getSkills().decrementLevel(SKILLS.STRENGTH.id());
 					}
 				} else if (menu == 1) {
 					p.message("You decide against forcing the gates.");
@@ -307,11 +307,11 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 		}
 		else if (inArray(obj.getID(), SMASH_BOULDERS)) {
 			if (hasItem(p, Mining.getAxe(p))) {
-				if (getCurrentLevel(p, Skills.MINING) < 52) {
+				if (getCurrentLevel(p, SKILLS.MINING.id()) < 52) {
 					p.message("You need a mining ability of at least 52 to affect these boulders.");
 					return;
 				}
-				if (Formulae.failCalculation(p, Skills.MINING, 50)) {
+				if (Formulae.failCalculation(p, SKILLS.MINING.id(), 50)) {
 					message(p, 1300, "You take a good swing at the rock with your pick...");
 					replaceObjectDelayed(obj, 2000, 1143);
 					if (obj.getID() == SMASH_BOULDERS[0] && p.getY() <= 3704) {
@@ -333,7 +333,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					p.message("You fail to make a mark on the rocks.");
 					p.message("You miss hit the rock and the vibration shakes your bones.");
 					p.message("Your mining ability suffers...");
-					p.getSkills().decrementLevel(Skills.MINING);
+					p.getSkills().decrementLevel(SKILLS.MINING.id());
 				}
 			} else {
 				message(p, "You'll need a pickaxe to smash your way through these boulders.");
@@ -360,7 +360,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					message(p, 1300, "You walk through the door.");
 					p.message("The doors make a satisfying 'CLICK' sound as they close.");
 				} else {
-					if (getCurrentLevel(p, Skills.THIEVING) < 50) {
+					if (getCurrentLevel(p, SKILLS.THIEVING.id()) < 50) {
 						p.message("You need a thieving level of at least 50 to attempt this.");
 						return;
 					}
@@ -380,7 +380,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 							playerTalk(p, null, "Easy as pie...");
 							sleep(1300);
 							message(p, 1300, "You tumble the lock mechanism and the door opens easily.");
-							p.incExp(Skills.THIEVING, 100, true);
+							p.incExp(SKILLS.THIEVING.id(), 100, true);
 							replaceObjectDelayed(obj, 2000, 497);
 							p.teleport(441, 3703);
 						} else {
@@ -495,14 +495,14 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					"Yes, I'll crawl through, I'm very athletic.",
 					"No, I'm pretty scared of enclosed areas.");
 				if (menu == 0) {
-					if (getCurrentLevel(p, Skills.AGILITY) < 50) {
+					if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 50) {
 						p.message("You need an agility of 50 to even attempt this.");
 						p.setBusy(false);
 						return;
 					}
 					message(p, 1300, "You try to crawl through...",
 						"You contort your body to fit the crevice.");
-					if (Formulae.failCalculation(p, Skills.AGILITY, 50)) {
+					if (Formulae.failCalculation(p, SKILLS.AGILITY.id(), 50)) {
 						message(p, 1300, "You adroitely squeeze serpent like into the crevice.",
 							"You find a small narrow tunnel that goes for some distance.",
 							"After some time, you find a small cave opening...and walk through.");
@@ -597,7 +597,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					p.getCache().store("crafted_totem_pole", true);
 				}
 				p.message("Carrying this totem pole saps your strength...");
-				p.getSkills().setLevel(Skills.STRENGTH, (int) (p.getSkills().getLevel(Skills.STRENGTH) * 0.9));
+				p.getSkills().setLevel(SKILLS.STRENGTH.id(), (int) (p.getSkills().getLevel(SKILLS.STRENGTH.id()) * 0.9));
 			} else {
 				p.message("This is not your totem pole to carry.");
 			}
@@ -742,12 +742,12 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				p.message("fell the tree once it is grown.");
 				return;
 			}
-			if (getCurrentLevel(p, Skills.WOODCUT) < 50) {
+			if (getCurrentLevel(p, SKILLS.WOODCUT.id()) < 50) {
 				p.message("You need an woodcut level of 50 to");
 				p.message("fell the tree once it is grown.");
 				return;
 			}
-			if (getCurrentLevel(p, Skills.HERBLAW) < 45) {
+			if (getCurrentLevel(p, SKILLS.HERBLAW.id()) < 45) {
 				p.message("You need a herblaw skill of at least 45 to complete this task.");
 				return;
 			}
@@ -799,7 +799,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				case A_CHUNK_OF_CRYSTAL:
 				case A_LUMP_OF_CRYSTAL:
 				case A_HUNK_OF_CRYSTAL:
-					if (getCurrentLevel(p, Skills.CRAFTING) < 50) {
+					if (getCurrentLevel(p, SKILLS.CRAFTING.id()) < 50) {
 						//message possibly non kosher
 						p.message("You need a crafting ability of at least 50 to perform this task.");
 						return;

@@ -8,7 +8,7 @@ import com.openrsc.server.external.ItemLoc;
 import com.openrsc.server.external.NPCLoc;
 import com.openrsc.server.external.SpellDef;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.Mob;
@@ -321,10 +321,10 @@ public final class Formulae {
 	public static int calcGodSpells(Mob attacker, Mob defender, boolean iban) {
 		if (attacker.isPlayer()) {
 			Player owner = (Player) attacker;
-			int newAtt = (int) ((owner.getMagicPoints()) + owner.getSkills().getLevel(Skills.MAGIC));
+			int newAtt = (int) ((owner.getMagicPoints()) + owner.getSkills().getLevel(SKILLS.MAGIC.id()));
 
 			int newDef = (int) ((addPrayers(defender, Prayers.THICK_SKIN, Prayers.ROCK_SKIN, Prayers.STEEL_SKIN)
-				* defender.getSkills().getLevel(Skills.DEFENSE) / 4D) + (defender.getArmourPoints() / 4D));
+				* defender.getSkills().getLevel(SKILLS.DEFENSE.id()) / 4D) + (defender.getArmourPoints() / 4D));
 			int hitChance = DataConversions.random(0, 150 + (newAtt - newDef));
 
 			if (hitChance > (defender.isNpc() ? 50 : 60)) {
@@ -575,7 +575,7 @@ public final class Formulae {
 	 * Calculate a mobs combat level based on their stats
 	 */
 	public static int getCombatlevel(int[] stats) {
-		return getCombatLevel(stats[Skills.ATTACK], stats[Skills.DEFENSE], stats[Skills.STRENGTH], stats[Skills.HITPOINTS], stats[Skills.MAGIC], stats[Skills.PRAYER], stats[Skills.RANGED]);
+		return getCombatLevel(stats[SKILLS.ATTACK.id()], stats[SKILLS.DEFENSE.id()], stats[SKILLS.STRENGTH.id()], stats[SKILLS.HITS.id()], stats[SKILLS.MAGIC.id()], stats[SKILLS.PRAYER.id()], stats[SKILLS.RANGED.id()]);
 	}
 
 	/**
@@ -758,8 +758,8 @@ public final class Formulae {
 
 	public static int getLevelsToReduceAttackKBD(Player p) {
 		int levels = 0;
-		int currLvl = getCurrentLevel(p, Skills.RANGED);
-		int maxLvl = getMaxLevel(p, Skills.RANGED);
+		int currLvl = getCurrentLevel(p, SKILLS.RANGED.id());
+		int maxLvl = getMaxLevel(p, SKILLS.RANGED.id());
 		int ratio = currLvl * 100 / maxLvl;
 		if (currLvl <= 3) {
 			return 0;

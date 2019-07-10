@@ -14,6 +14,7 @@ import com.openrsc.server.external.ReqOreDef;
 import com.openrsc.server.external.SpellDef;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.Point;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.action.WalkToPointAction;
@@ -156,13 +157,13 @@ public class SpellHandler implements PacketHandler {
 		// GenericLog(player.getUsername() + " tried to cast spell 49 at " +
 		// player.getLocation()));
 
-		if (player.getSkills().getLevel(Skills.MAGIC) < spell.getReqLevel()) {
+		if (player.getSkills().getLevel(SKILLS.MAGIC.id()) < spell.getReqLevel()) {
 			player.setSuspiciousPlayer(true);
 			player.message("Your magic ability is not high enough for this spell.");
 			player.resetPath();
 			return;
 		}
-		if (!Formulae.castSpell(spell, player.getSkills().getLevel(Skills.MAGIC), player.getMagicPoints())) {
+		if (!Formulae.castSpell(spell, player.getSkills().getLevel(SKILLS.MAGIC.id()), player.getMagicPoints())) {
 			player.message("The spell fails! You may try again in 20 seconds");
 			player.playSound("spellfail");
 			player.setSpellFail();
@@ -345,7 +346,7 @@ public class SpellHandler implements PacketHandler {
 			player.lastCast = System.currentTimeMillis();
 			player.playSound("spellok");
 			player.message("You succesfully charge the orb");
-			player.incExp(Skills.MAGIC, spell.getExp(), true);
+			player.incExp(SKILLS.MAGIC.id(), spell.getExp(), true);
 			player.setCastTimer();
 		} else if (pID == CAST_ON_GROUNDITEM) { // Cast on ground items
 			if (player.getDuel().isDuelActive()) {
@@ -372,7 +373,7 @@ public class SpellHandler implements PacketHandler {
 	private void finalizeSpellNoMessage(Player player, SpellDef spell) {
 		player.lastCast = System.currentTimeMillis();
 		player.playSound("spellok");
-		player.incExp(Skills.MAGIC, spell.getExp(), true);
+		player.incExp(SKILLS.MAGIC.id(), spell.getExp(), true);
 		player.setCastTimer();
 	}
 
@@ -380,7 +381,7 @@ public class SpellHandler implements PacketHandler {
 		player.lastCast = System.currentTimeMillis();
 		player.playSound("spellok");
 		player.message("Cast spell successfully");
-		player.incExp(Skills.MAGIC, spell.getExp(), true);
+		player.incExp(SKILLS.MAGIC.id(), spell.getExp(), true);
 		player.setCastTimer();
 	}
 
@@ -574,7 +575,7 @@ public class SpellHandler implements PacketHandler {
 					}
 				}
 
-				if (player.getSkills().getLevel(Skills.SMITHING) < smeltingDef.getReqLevel()) {
+				if (player.getSkills().getLevel(SKILLS.SMITHING.id()) < smeltingDef.getReqLevel()) {
 					player.message("You need to be at least level-" + smeltingDef.getReqLevel() + " smithing to smelt "
 						+ EntityHandler.getItemDef(smeltingDef.barId).getName().toLowerCase().replaceAll("bar", ""));
 					return;
@@ -591,7 +592,7 @@ public class SpellHandler implements PacketHandler {
 					}
 					player.message("You make a bar of " + bar.getDef().getName().replace("bar", "").toLowerCase());
 					player.getInventory().add(bar);
-					player.incExp(Skills.SMITHING, smeltingDef.getExp(), true);
+					player.incExp(SKILLS.SMITHING.id(), smeltingDef.getExp(), true);
 				}
 				finalizeSpell(player, spell);
 				break;
@@ -819,7 +820,7 @@ public class SpellHandler implements PacketHandler {
 				player.resetFollowing();
 				player.resetPath();
 				SpellDef spell = EntityHandler.getSpellDef(spellID);
-				if (!canCast(player) || affectedMob.getSkills().getLevel(Skills.HITPOINTS) <= 0 || player.getStatus() != Action.CASTING_MOB) {
+				if (!canCast(player) || affectedMob.getSkills().getLevel(SKILLS.HITS.id()) <= 0 || player.getStatus() != Action.CASTING_MOB) {
 					player.resetPath();
 					return;
 				}
@@ -848,13 +849,13 @@ public class SpellHandler implements PacketHandler {
 							}
 							player.playerServerMessage(MessageType.QUEST, "Your shield prevents some of the damage from the flames");
 						}
-						fireDamage = (int) Math.floor(getCurrentLevel(player, Skills.HITPOINTS) * percentage / 100.0);
+						fireDamage = (int) Math.floor(getCurrentLevel(player, SKILLS.HITS.id()) * percentage / 100.0);
 						player.damage(fireDamage);
 						
 						//reduce ranged level (case for KBD)
 						if (n.getID() == NpcId.KING_BLACK_DRAGON.id()) {
-							int newLevel = getCurrentLevel(player, Skills.RANGED) - Formulae.getLevelsToReduceAttackKBD(player);
-							player.getSkills().setLevel(Skills.RANGED, newLevel);
+							int newLevel = getCurrentLevel(player, SKILLS.RANGED.id()) - Formulae.getLevelsToReduceAttackKBD(player);
+							player.getSkills().setLevel(SKILLS.RANGED.id(), newLevel);
 						}
 					}
 
@@ -1065,7 +1066,7 @@ public class SpellHandler implements PacketHandler {
 								public void action() {
 									affectedMob.getSkills().subtractLevel(3, secondAdditionalDamage, false);
 									affectedMob.getUpdateFlags().setDamage(new Damage(affectedMob, secondAdditionalDamage));
-									if (affectedMob.getSkills().getLevel(Skills.HITPOINTS) <= 0) {
+									if (affectedMob.getSkills().getLevel(SKILLS.HITS.id()) <= 0) {
 										affectedMob.killedBy(player);
 									}
 

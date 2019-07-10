@@ -5,7 +5,7 @@ import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -246,7 +246,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 			}
 			if (shouldShock) {
 				int damage;
-				if (p.getSkills().getLevel(Skills.HITPOINTS) < 20) {
+				if (p.getSkills().getLevel(SKILLS.HITS.id()) < 20) {
 					damage = p.getRandom().nextInt(9) + 1;
 				} else {
 					damage = p.getRandom().nextInt(14) + 1;

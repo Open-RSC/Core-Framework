@@ -4,7 +4,7 @@ import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.ObjectRunecraftingDef;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -57,7 +57,7 @@ public class Runecrafting implements ObjectActionListener, ObjectActionExecutive
 			return;
 		}
 		else {
-			if (player.getSkills().getLevel(Skills.RUNECRAFTING) < def.getRequiredLvl()) {
+			if (player.getSkills().getLevel(SKILLS.RUNECRAFT.id()) < def.getRequiredLvl()) {
 				player.message("You require more skill to use this altar.");
 				return;
 			}
@@ -71,7 +71,7 @@ public class Runecrafting implements ObjectActionListener, ObjectActionExecutive
 				}
 				removeItem(player, ItemId.RUNE_ESSENCE.id(), 1);
 				addItem(player, def.getRuneId(), getRuneMultiplier(player,def.getRuneName()));
-				player.incExp(Skills.RUNECRAFTING, def.getExp(), true);
+				player.incExp(SKILLS.RUNECRAFT.id(), def.getExp(), true);
 			}
 		});
 
@@ -159,32 +159,32 @@ public class Runecrafting implements ObjectActionListener, ObjectActionExecutive
 
 		switch(runeName) {
 			case "air":
-				retVal =  (int)Math.floor(getCurrentLevel(p, Skills.RUNECRAFTING)/11.0)+1;
+				retVal =  (int)Math.floor(getCurrentLevel(p, SKILLS.RUNECRAFT.id())/11.0)+1;
 				if (retVal > 10)
 					retVal = 10;
 				break;
 			case "mind":
-				retVal = (int)Math.floor(getCurrentLevel(p, Skills.RUNECRAFTING)/14.0)+1;
+				retVal = (int)Math.floor(getCurrentLevel(p, SKILLS.RUNECRAFT.id())/14.0)+1;
 				if (retVal > 8)
 					retVal = 8;
 				break;
 			case "water":
-				retVal = (int)Math.floor(getCurrentLevel(p, Skills.RUNECRAFTING)/19.0)+1;
+				retVal = (int)Math.floor(getCurrentLevel(p, SKILLS.RUNECRAFT.id())/19.0)+1;
 				if (retVal > 6)
 					retVal = 6;
 				break;
 			case "earth":
-				retVal = (int)Math.floor(getCurrentLevel(p, Skills.RUNECRAFTING)/26.0)+1;
+				retVal = (int)Math.floor(getCurrentLevel(p, SKILLS.RUNECRAFT.id())/26.0)+1;
 				if (retVal > 4)
 					retVal = 4;
 				break;
 			case "fire":
-				retVal = (int)Math.floor(getCurrentLevel(p, Skills.RUNECRAFTING)/35.0)+1;
+				retVal = (int)Math.floor(getCurrentLevel(p, SKILLS.RUNECRAFT.id())/35.0)+1;
 				if (retVal > 3)
 					retVal = 3;
 				break;
 			case "body":
-				retVal = (int)Math.floor(getCurrentLevel(p, Skills.RUNECRAFTING)/46.0)+1;
+				retVal = (int)Math.floor(getCurrentLevel(p, SKILLS.RUNECRAFT.id())/46.0)+1;
 				if (retVal > 2)
 					retVal = 2;
 				break;

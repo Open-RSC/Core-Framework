@@ -1,5 +1,6 @@
 package com.openrsc.server.external;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.TelePoint;
 import com.openrsc.server.util.PersistenceManager;
@@ -74,7 +75,6 @@ public final class EntityHandler {
 		objectFishing = (HashMap<Integer, ObjectFishingDef[]>) PersistenceManager.load("defs/extras/ObjectFishing.xml.gz");
 		objectTelePoints = (HashMap<Point, TelePoint>) PersistenceManager.load("locs/extras/ObjectTelePoints.xml.gz");
 		certers = (HashMap<Integer, CerterDef>) PersistenceManager.load("defs/extras/NpcCerters.xml.gz");
-
 	}
 
 	/**
@@ -356,5 +356,9 @@ public final class EntityHandler {
 			return null;
 		}
 		return tiles[id];
+	}
+
+	public static SkillDef getSkillDef(String skillName) {
+		return null;
 	}
 }

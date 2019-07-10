@@ -1,6 +1,6 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.mechanism;
 
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -104,7 +104,7 @@ public class LegendsQuestMapJungle implements InvActionListener, InvActionExecut
 					canMap = false;
 				}
 				//potentially this check was done earlier?
-				if (getCurrentLevel(p, Skills.CRAFTING) < 50) {
+				if (getCurrentLevel(p, SKILLS.CRAFTING.id()) < 50) {
 					p.message("You need a crafting level of 50 to perform this task.");
 					return;
 				}

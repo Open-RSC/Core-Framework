@@ -2,7 +2,7 @@ package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 
 import com.openrsc.server.event.rsc.impl.combat.scripts.OnCombatStartScript;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 
@@ -26,12 +26,12 @@ public class KingBlackDragonPrayerDrain implements OnCombatStartScript {
 	@Override
 	public void executeScript(Mob attacker, Mob defender) {
 		if (attacker.isPlayer()) {
-			if (attacker.getSkills().getLevel(Skills.PRAYER) > 1)
-				attacker.getSkills().setLevel(Skills.PRAYER, 1);
+			if (attacker.getSkills().getLevel(SKILLS.PRAYER.id()) > 1)
+				attacker.getSkills().setLevel(SKILLS.PRAYER.id(), 1);
 
 		} else if (defender.isPlayer()) {
-			if (defender.getSkills().getLevel(Skills.PRAYER) > 1)
-				defender.getSkills().setLevel(Skills.PRAYER, 1);
+			if (defender.getSkills().getLevel(SKILLS.PRAYER.id()) > 1)
+				defender.getSkills().setLevel(SKILLS.PRAYER.id(), 1);
 		}
 
 	}

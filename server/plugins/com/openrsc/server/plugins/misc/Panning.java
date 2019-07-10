@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.misc;
 
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -62,7 +62,7 @@ public class Panning implements ObjectActionListener, ObjectActionExecutiveListe
 		showBubble(p, new Item(ItemId.PANNING_TRAY_FULL.id()));
 		p.playerServerMessage(MessageType.QUEST, "You lift the full tray from the water");
 		p.getInventory().replace(ItemId.PANNING_TRAY.id(), ItemId.PANNING_TRAY_FULL.id());
-		p.incExp(Skills.MINING, 20, true);
+		p.incExp(SKILLS.MINING.id(), 20, true);
 		p.setBusy(false);
 		return false;
 	}

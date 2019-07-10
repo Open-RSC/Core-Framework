@@ -3,7 +3,7 @@ package com.openrsc.server.event.rsc.impl.combat;
 import com.openrsc.server.Constants;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScriptLoader;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -112,7 +112,7 @@ public class CombatEvent extends GameTickEvent {
 			}
 		}
 
-		target.getSkills().subtractLevel(Skills.HITPOINTS, damage, false);
+		target.getSkills().subtractLevel(SKILLS.HITS.id(), damage, false);
 		target.getUpdateFlags().setDamage(new Damage(target, damage));
 		if (target.isNpc() && hitter.isPlayer()) {
 			Npc n = (Npc) target;

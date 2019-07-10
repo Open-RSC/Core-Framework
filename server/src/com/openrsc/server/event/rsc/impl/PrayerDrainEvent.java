@@ -3,7 +3,7 @@ package com.openrsc.server.event.rsc.impl;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.PrayerDef;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.player.Player;
 
 import java.util.Map.Entry;
@@ -37,8 +37,8 @@ public class PrayerDrainEvent extends GameTickEvent {
 	}
 
 	private void drainPrayer() {
-		if (getPlayerOwner().getSkills().getLevel(Skills.PRAYER) > 0) {
-			getPlayerOwner().getSkills().decrementLevel(Skills.PRAYER);
+		if (getPlayerOwner().getSkills().getLevel(SKILLS.PRAYER.id()) > 0) {
+			getPlayerOwner().getSkills().decrementLevel(SKILLS.PRAYER.id());
 		} else {
 			getPlayerOwner().getPrayers().resetPrayers();
 			activePrayers.clear();
@@ -57,7 +57,7 @@ public class PrayerDrainEvent extends GameTickEvent {
 				partialPoints += timePrayerUsed / drainDelay;
 				activePrayers.remove(prayer);
 			}
-			if (getPlayerOwner().getPrayers().isPrayerActivated(x) && (getPlayerOwner().getSkills().getLevel(Skills.PRAYER) < 1)) {
+			if (getPlayerOwner().getPrayers().isPrayerActivated(x) && (getPlayerOwner().getSkills().getLevel(SKILLS.PRAYER.id()) < 1)) {
 				getPlayerOwner().getPrayers().resetPrayers();
 				getPlayerOwner().message("You have run out of prayer points. Return to a church to recharge");
 				activePrayers.clear();

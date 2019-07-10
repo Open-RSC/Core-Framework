@@ -21,7 +21,7 @@ import com.openrsc.server.external.ItemLoc;
 import com.openrsc.server.external.NPCDef;
 import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
@@ -651,8 +651,8 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(Skills.HITPOINTS) - p.getSkills().getMaxStat(Skills.HITPOINTS)));
-			p.getSkills().normalize(Skills.HITPOINTS);
+			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(SKILLS.HITS.id()) - p.getSkills().getMaxStat(SKILLS.HITS.id())));
+			p.getSkills().normalize(SKILLS.HITS.id());
 			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "You have been healed by an admin");
 			}
@@ -667,7 +667,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			p.getSkills().normalize(Skills.PRAYER);
+			p.getSkills().normalize(SKILLS.PRAYER.id());
 			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "Your prayer has been recharged by an admin");
 			}
@@ -700,14 +700,14 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			if (newHits > p.getSkills().getMaxStat(Skills.HITPOINTS))
-				newHits = p.getSkills().getMaxStat(Skills.HITPOINTS);
+			if (newHits > p.getSkills().getMaxStat(SKILLS.HITS.id()))
+				newHits = p.getSkills().getMaxStat(SKILLS.HITS.id());
 			if (newHits < 0)
 				newHits = 0;
 
-			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(Skills.HITPOINTS) - newHits));
-			p.getSkills().setLevel(Skills.HITPOINTS, newHits);
-			if (p.getSkills().getLevel(Skills.HITPOINTS) <= 0)
+			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(SKILLS.HITS.id()) - newHits));
+			p.getSkills().setLevel(SKILLS.HITS.id(), newHits);
+			if (p.getSkills().getLevel(SKILLS.HITS.id()) <= 0)
 				p.killedBy(player);
 
 			if (p.getUsernameHash() != player.getUsernameHash()) {
@@ -742,13 +742,13 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			if (newPrayer > p.getSkills().getMaxStat(Skills.HITPOINTS))
-				newPrayer = p.getSkills().getMaxStat(Skills.HITPOINTS);
+			if (newPrayer > p.getSkills().getMaxStat(SKILLS.HITS.id()))
+				newPrayer = p.getSkills().getMaxStat(SKILLS.HITS.id());
 			if (newPrayer < 0)
 				newPrayer = 0;
 
-			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(Skills.HITPOINTS) - newPrayer));
-			p.getSkills().setLevel(Skills.HITPOINTS, newPrayer);
+			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(SKILLS.HITS.id()) - newPrayer));
+			p.getSkills().setLevel(SKILLS.HITS.id(), newPrayer);
 
 			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "Your prayer has been set to " + newPrayer + " by an admin");
@@ -772,8 +772,8 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(Skills.HITPOINTS)));
-			p.getSkills().setLevel(Skills.HITPOINTS, 0);
+			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(SKILLS.HITS.id())));
+			p.getSkills().setLevel(SKILLS.HITS.id(), 0);
 			p.killedBy(player);
 			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "You have been killed by an admin");
@@ -806,8 +806,8 @@ public final class Admins implements CommandListener {
 			}
 
 			p.getUpdateFlags().setDamage(new Damage(player, damage));
-			p.getSkills().subtractLevel(Skills.HITPOINTS, damage);
-			if (p.getSkills().getLevel(Skills.HITPOINTS) <= 0)
+			p.getSkills().subtractLevel(SKILLS.HITS.id(), damage);
+			if (p.getSkills().getLevel(SKILLS.HITS.id()) <= 0)
 				p.killedBy(player);
 
 			if (p.getUsernameHash() != player.getUsernameHash()) {
@@ -1164,8 +1164,8 @@ public final class Admins implements CommandListener {
 			world.registerGameObject(sara);
 			world.delayedRemoveObject(sara, 600);
 			n.getUpdateFlags().setDamage(new Damage(player, damage));
-			n.getSkills().subtractLevel(Skills.HITPOINTS, damage);
-			if (n.getSkills().getLevel(Skills.HITPOINTS) < 1)
+			n.getSkills().subtractLevel(SKILLS.HITS.id(), damage);
+			if (n.getSkills().getLevel(SKILLS.HITS.id()) < 1)
 				n.killedBy(player);
 		} else if (cmd.equalsIgnoreCase("npcevent")) {
 			if (args.length < 3) {

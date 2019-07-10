@@ -4,7 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -77,7 +77,7 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 		p.getCache().remove("killedLesarkus");
 		int[] questData = Quests.questData.get(Quests.TEMPLE_OF_IKOV);
 		//keep order kosher
-		int[] skillIDs = {Skills.RANGED, Skills.FLETCHING};
+		int[] skillIDs = {SKILLS.RANGED.id(), SKILLS.FLETCHING.id()};
 		for (int i = 0; i < skillIDs.length; i++) {
 			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
 			incQuestReward(p, questData, i == (skillIDs.length - 1));
@@ -507,7 +507,7 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 			if (command.equals("pull")) {
 				if (!p.getCache().hasKey("ikovLever")) {
 					p.message("You have activated a trap on the lever");
-					p.damage(DataConversions.roundUp(p.getSkills().getLevel(Skills.HITPOINTS) / 5));
+					p.damage(DataConversions.roundUp(p.getSkills().getLevel(SKILLS.HITS.id()) / 5));
 				} else {
 					message(p, "You pull the lever",
 						"You hear a clunk",
@@ -521,7 +521,7 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 				}
 			} else if (command.equals("searchfortraps")) {
 				p.message("You search the lever for traps");
-				if (getCurrentLevel(p, Skills.THIEVING) < 42) {
+				if (getCurrentLevel(p, SKILLS.THIEVING.id()) < 42) {
 					p.message("You have not high thieving enough to disable this trap");
 					return;
 				}
@@ -638,10 +638,10 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 		else if (n.getID() == NpcId.LUCIEN_EDGE.id()) {
 			if (p.getQuestStage(this) == -1 || p.getQuestStage(this) == -2) {
 				p.message("You have already completed this quest");
-				n.getSkills().setLevel(Skills.HITPOINTS, n.getSkills().getMaxStat(Skills.HITPOINTS));
+				n.getSkills().setLevel(SKILLS.HITS.id(), n.getSkills().getMaxStat(SKILLS.HITS.id()));
 				return;
 			}
-			n.getSkills().setLevel(Skills.HITPOINTS, n.getSkills().getMaxStat(Skills.HITPOINTS));
+			n.getSkills().setLevel(SKILLS.HITS.id(), n.getSkills().getMaxStat(SKILLS.HITS.id()));
 			npcTalk(p, n, "You may have defeated me for now",
 				"But I will be back");
 			p.sendQuestComplete(Constants.Quests.TEMPLE_OF_IKOV);

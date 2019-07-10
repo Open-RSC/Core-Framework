@@ -1,6 +1,6 @@
 package com.openrsc.server.plugins.minigames.gnomerestaurant;
 
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -38,19 +38,19 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 		p.playSound("cooking");
 		if (p.getInventory().remove(item) > -1) {
 			message(p, 3000, gc.messages[0]);
-			if (!burnFood(p, gc.requiredLevel, p.getSkills().getLevel(Skills.COOKING))) {
+			if (!burnFood(p, gc.requiredLevel, p.getSkills().getLevel(SKILLS.COOKING.id()))) {
 				if (gc.cookedID == ItemId.GNOMEBATTA.id()) {
 					// stop tomato cheese batta when doing veg batta.
 					if (p.getCache().hasKey("cheese_on_batta") && p.getCache().hasKey("tomato_on_batta") && !p.getCache().hasKey("onion_on_batta")) {
 						p.getCache().store("tomato_cheese_batta", true);
 						p.message(gc.messages[1]);
-						p.incExp(Skills.COOKING, gc.experience, true);
+						p.incExp(SKILLS.COOKING.id(), gc.experience, true);
 					} else if (p.getCache().hasKey("cheese_on_batta")
 						&& p.getCache().hasKey("aqua_toad_legs")
 						&& p.getCache().hasKey("gnomespice_toad_legs")
 						&& p.getCache().hasKey("toadlegs_on_batta")) { // Makes toad batta
 						p.message(gc.messages[1]);
-						p.incExp(Skills.COOKING, gc.experience, true);
+						p.incExp(SKILLS.COOKING.id(), gc.experience, true);
 						addItem(p, ItemId.TOAD_BATTA.id(), 1);
 						resetGnomeCooking(p);
 						return;
@@ -81,18 +81,18 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 						&& p.getCache().hasKey("onions_on_bowl") && p.getCache().getInt("onions_on_bowl") >= 2
 						&& p.getCache().hasKey("gnomespice_on_bowl")) {
 						p.getCache().store("wormhole", true);
-						p.incExp(Skills.COOKING, gc.experience, true);
+						p.incExp(SKILLS.COOKING.id(), gc.experience, true);
 					} else if (p.getCache().hasKey("onions_on_bowl") && p.getCache().getInt("onions_on_bowl") >= 2
 						&& p.getCache().hasKey("potato_on_bowl") && p.getCache().getInt("potato_on_bowl") >= 2
 						&& p.getCache().hasKey("gnomespice_on_bowl")) {
 						p.getCache().store("vegball", true);
-						p.incExp(Skills.COOKING, gc.experience, true);
+						p.incExp(SKILLS.COOKING.id(), gc.experience, true);
 					} else if (p.getCache().hasKey("cheese_on_bowl") && p.getCache().getInt("cheese_on_bowl") >= 2
 						&& p.getCache().hasKey("toadlegs_on_bowl") && p.getCache().getInt("toadlegs_on_bowl") >= 5
 						&& p.getCache().hasKey("leaves_on_bowl") && p.getCache().getInt("leaves_on_bowl") >= 2
 						&& p.getCache().hasKey("dwell_on_bowl")
 						&& p.getCache().hasKey("gnomespice_on_bowl") && p.getCache().getInt("gnomespice_on_bowl") >= 2) { // tangled toads legs
-						p.incExp(Skills.COOKING, gc.experience, true);
+						p.incExp(SKILLS.COOKING.id(), gc.experience, true);
 						addItem(p, ItemId.TANGLED_TOADS_LEGS.id(), 1);
 						resetGnomeCooking(p);
 						return;
@@ -104,7 +104,7 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 					}
 				} else {
 					p.message(gc.messages[1]);
-					p.incExp(Skills.COOKING, gc.experience, true);
+					p.incExp(SKILLS.COOKING.id(), gc.experience, true);
 				}
 				addItem(p, gc.cookedID, 1);
 			} else {
@@ -132,7 +132,7 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 			p.setOption(-1);
 			p.setBusy(true);
 			if (menu == 0) {
-				if (p.getSkills().getLevel(Skills.COOKING) < 25) {
+				if (p.getSkills().getLevel(SKILLS.COOKING.id()) < 25) {
 					p.message("you need a cooking level of 25 to mould dough batta's");
 					p.setBusy(false);
 					return false;
@@ -142,7 +142,7 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 				p.message("You manage to make some gnome batta dough");
 				p.getInventory().replace(item.getID(), ItemId.GNOMEBATTA_DOUGH.id());
 			} else if (menu == 1) {
-				if (p.getSkills().getLevel(Skills.COOKING) < 30) {
+				if (p.getSkills().getLevel(SKILLS.COOKING.id()) < 30) {
 					p.message("you need a cooking level of 30 to mould dough bowls");
 					p.setBusy(false);
 					return false;
@@ -152,7 +152,7 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 				p.message("You manage to make some gnome bowl dough");
 				p.getInventory().replace(item.getID(), ItemId.GNOMEBOWL_DOUGH.id());
 			} else if (menu == 2) {
-				if (p.getSkills().getLevel(Skills.COOKING) < 15) {
+				if (p.getSkills().getLevel(SKILLS.COOKING.id()) < 15) {
 					p.message("you need a cooking level of 15 to mould crunchies");
 					p.setBusy(false);
 					return false;
@@ -165,7 +165,7 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 					p.getCache().store("gnomecrunchie_dough", true);
 				}
 			}
-			p.incExp(Skills.COOKING, 100, true);
+			p.incExp(SKILLS.COOKING.id(), 100, true);
 			p.setBusy(false);
 		}
 		return true;

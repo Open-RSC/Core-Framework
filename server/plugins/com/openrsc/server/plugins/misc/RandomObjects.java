@@ -4,7 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -158,7 +158,7 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 		}
 		if (object.getID() == 400) {
 			owner.playerServerMessage(MessageType.QUEST, "The plant takes a bite at you!");
-			owner.damage(getCurrentLevel(owner, Skills.HITPOINTS) / 10 + 2);
+			owner.damage(getCurrentLevel(owner, SKILLS.HITS.id()) / 10 + 2);
 		}
 	}
 

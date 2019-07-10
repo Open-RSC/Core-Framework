@@ -4,7 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -171,7 +171,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 					p.message("You need a hammer to work anything on the anvil.");
 					return;
 				}
-				if (getCurrentLevel(p, Skills.SMITHING) < 20) {
+				if (getCurrentLevel(p, SKILLS.SMITHING.id()) < 20) {
 					p.message("You need level 20 in smithing before you can attempt this.");
 					return;
 				}
@@ -202,7 +202,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 				p.message("You need at least ten feathers to make this item.");
 				return;
 			}
-			if (getCurrentLevel(p, Skills.FLETCHING) < 10) {
+			if (getCurrentLevel(p, SKILLS.FLETCHING.id()) < 10) {
 				p.message("You need a fletching level of at least 10 to complete this.");
 				return;
 			}
@@ -213,7 +213,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 				message(p, "You succesfully attach the feathers to the dart tip.");
 				p.getInventory().replace(ItemId.PROTOTYPE_DART_TIP.id(), ItemId.PROTOTYPE_THROWING_DART.id());
 				//kosher: dependent on fletching level!
-				p.incExp(Skills.FLETCHING, getMaxLevel(p, Skills.FLETCHING) * 50, true);
+				p.incExp(SKILLS.FLETCHING.id(), getMaxLevel(p, SKILLS.FLETCHING.id()) * 50, true);
 			} else {
 				message(p, "An unlucky accident causes you to waste the feathers.",
 					"But you feel that you're close to making this item though.");

@@ -4,6 +4,8 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.model.Point;
+import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.ConnectionAttachment;
 import com.openrsc.server.net.Packet;
@@ -11,6 +13,7 @@ import com.openrsc.server.net.PacketBuilder;
 import com.openrsc.server.net.RSCConnectionHandler;
 import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.sql.DatabaseConnection;
+import com.openrsc.server.sql.DatabasePlayerLoader;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.SecurityChangeLog;
 import com.openrsc.server.sql.query.logs.SecurityChangeLog.ChangeEvent;
@@ -214,6 +217,23 @@ public class LoginPacketHandler {
 					statement = DatabaseConnection.getDatabase().prepareStatement("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "experience` (`playerID`) VALUES (?)");
 					statement.setInt(1, playerID);
 					statement.executeUpdate();
+
+					//Don't rely on the default values of the database.
+					//Update the stats based on their StatDef-----------------------------------------------
+					statement = DatabaseConnection.getDatabase().prepareStatement(DatabasePlayerLoader.Statements.updateExperience);
+					statement.setInt(Skills.getSkillCount() + 1, playerID);
+					Skills newGuy = new Skills(null);
+
+					for (int index = 0; index < Skills.getSkillCount(); index++)
+						statement.setInt(index + 1, newGuy.getExperience(index));
+					statement.executeUpdate();
+
+					statement = DatabaseConnection.getDatabase().prepareStatement(DatabasePlayerLoader.Statements.updateStats);
+					statement.setInt(Skills.getSkillCount() + 1, playerID);
+					for (int index = 0; index < Skills.getSkillCount(); index++)
+						statement.setInt(index + 1, newGuy.getLevel(index));
+					statement.executeUpdate();
+					//---------------------------------------------------------------------------------------
 
 					LOGGER.info(IP + " - Registration successful");
 					channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());

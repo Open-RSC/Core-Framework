@@ -5,7 +5,7 @@ import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.external.Gauntlets;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -661,7 +661,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 				}
 			}
 			if (regenerate) {
-				n.getSkills().setLevel(Skills.HITPOINTS, n.getDef().hits);
+				n.getSkills().setLevel(SKILLS.HITS.id(), n.getDef().hits);
 				p.message("Chronozon regenerates");
 			} else {
 				if (p.getQuestStage(this) == 8) {

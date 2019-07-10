@@ -4,7 +4,7 @@ import com.openrsc.server.Server;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.PathValidation;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
@@ -71,7 +71,7 @@ public class ThrowingEvent extends GameTickEvent {
 		int throwingID = getPlayerOwner().getThrowingEquip();
 		if (!getPlayerOwner().loggedIn() || getPlayerOwner().inCombat()
 			|| (target.isPlayer() && !((Player) target).loggedIn())
-			|| target.getSkills().getLevel(Skills.HITPOINTS) <= 0 || !getPlayerOwner().checkAttack(target, true)
+			|| target.getSkills().getLevel(SKILLS.HITS.id()) <= 0 || !getPlayerOwner().checkAttack(target, true)
 			|| !getPlayerOwner().withinRange(target)) {
 			getPlayerOwner().resetRange();
 			stop();
@@ -150,7 +150,7 @@ public class ThrowingEvent extends GameTickEvent {
 					ActionSender.sendInventory(getPlayerOwner());
 				}
 
-				int damage = Formulae.calcRangeHit(getPlayerOwner(), getPlayerOwner().getSkills().getLevel(Skills.RANGED), target.getArmourPoints(), throwingID);
+				int damage = Formulae.calcRangeHit(getPlayerOwner(), getPlayerOwner().getSkills().getLevel(SKILLS.RANGED.id()), target.getArmourPoints(), throwingID);
 
 				if (target.isNpc()) {
 					Npc npc = (Npc) target;
@@ -178,7 +178,7 @@ public class ThrowingEvent extends GameTickEvent {
 				ActionSender.sendSound(getPlayerOwner(), "shoot");
 				if (EntityHandler.getItemDef(throwingID).getName().toLowerCase().contains("poison") && target.isPlayer()) {
 					if (DataConversions.random(0, 100) <= 10) {
-						target.poisonDamage = target.getSkills().getMaxStat(Skills.HITPOINTS);
+						target.poisonDamage = target.getSkills().getMaxStat(SKILLS.HITS.id());
 						target.startPoisonEvent();
 					}
 				}

@@ -4,7 +4,7 @@ import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -81,7 +81,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 		addItem(p, ItemId.DIAMOND.id(), 2);
 		int[] questData = Quests.questData.get(Quests.WATERFALL_QUEST);
 		//keep order kosher
-		int[] skillIDs = {Skills.STRENGTH, Skills.ATTACK};
+		int[] skillIDs = {SKILLS.STRENGTH.id(), SKILLS.ATTACK.id()};
 		for (int i = 0; i < skillIDs.length; i++) {
 			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
 			incQuestReward(p, questData, i == (skillIDs.length - 1));

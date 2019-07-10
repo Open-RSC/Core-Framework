@@ -13,6 +13,7 @@ import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NPCDef;
 import com.openrsc.server.external.NPCLoc;
 import com.openrsc.server.model.Point;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
@@ -308,11 +309,11 @@ public class Npc extends Mob {
 		super.setID(loc.getId());
 		super.setLocation(Point.location(loc.startX(), loc.startY()), true);
 
-		getSkills().setLevelTo(Skills.ATTACK, def.getAtt());
-		getSkills().setLevelTo(Skills.DEFENSE, def.getDef());
-		getSkills().setLevelTo(Skills.RANGED, def.getRanged());
-		getSkills().setLevelTo(Skills.STRENGTH, def.getStr());
-		getSkills().setLevelTo(Skills.HITPOINTS, def.getHits());
+		getSkills().setLevelTo(SKILLS.ATTACK.id(), def.getAtt());
+		getSkills().setLevelTo(SKILLS.DEFENSE.id(), def.getDef());
+		getSkills().setLevelTo(SKILLS.RANGED.id(), def.getRanged());
+		getSkills().setLevelTo(SKILLS.STRENGTH.id(), def.getStr());
+		getSkills().setLevelTo(SKILLS.HITS.id(), def.getHits());
 
 		/*
 		  Unique ID for event tracking.
@@ -819,16 +820,16 @@ public class Npc extends Mob {
 					}
 					break;
 				case 1: //AGGRESSIVE
-					p.incExp(Skills.STRENGTH, totalXP * 3, true);
+					p.incExp(SKILLS.STRENGTH.id(), totalXP * 3, true);
 					break;
 				case 2: //ACCURATE
-					p.incExp(Skills.ATTACK, totalXP * 3, true);
+					p.incExp(SKILLS.ATTACK.id(), totalXP * 3, true);
 					break;
 				case 3: //DEFENSIVE
-					p.incExp(Skills.DEFENSE, totalXP * 3, true);
+					p.incExp(SKILLS.DEFENSE.id(), totalXP * 3, true);
 					break;
 			}
-			p.incExp(Skills.HITPOINTS, totalXP, true);
+			p.incExp(SKILLS.HITS.id(), totalXP, true);
 		}
 
 		// Ranged damagers
@@ -844,8 +845,8 @@ public class Npc extends Mob {
 				currentHighestDamage = dmgDoneByPlayer;
 			}
 			newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByPlayer));
-			p.incExp(Skills.RANGED, newXP * 4, true);
-			ActionSender.sendStat(p, Skills.RANGED);
+			p.incExp(SKILLS.RANGED.id(), newXP * 4, true);
+			ActionSender.sendStat(p, SKILLS.RANGED.id());
 		}
 
 		// Magic damagers
@@ -893,16 +894,16 @@ public class Npc extends Mob {
 					}
 					break;
 				case 1: //AGGRESSIVE
-					p.incExp(Skills.STRENGTH, totalXP * 3, true);
+					p.incExp(SKILLS.STRENGTH.id(), totalXP * 3, true);
 					break;
 				case 2: //ACCURATE
-					p.incExp(Skills.ATTACK, totalXP * 3, true);
+					p.incExp(SKILLS.ATTACK.id(), totalXP * 3, true);
 					break;
 				case 3: //DEFENSIVE
-					p.incExp(Skills.DEFENSE, totalXP * 3, true);
+					p.incExp(SKILLS.DEFENSE.id(), totalXP * 3, true);
 					break;
 			}
-			p.incExp(Skills.HITPOINTS, totalXP, true);
+			p.incExp(SKILLS.HITS.id(), totalXP, true);
 		}
 
 		// Ranged damagers
@@ -918,8 +919,8 @@ public class Npc extends Mob {
 				currentHighestDamage = dmgDoneByPlayer;
 			}
 			newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByPlayer));
-			p.incExp(Skills.RANGED, newXP * 4, true);
-			ActionSender.sendStat(p, Skills.RANGED);
+			p.incExp(SKILLS.RANGED.id(), newXP * 4, true);
+			ActionSender.sendStat(p, SKILLS.RANGED.id());
 		}
 
 		// Magic damagers
@@ -957,6 +958,7 @@ public class Npc extends Mob {
 				npcWithMostDamage = n;
 				currentHighestDamage = dmgDoneByNpc;
 			}
+			/*
 			if(attacker.getPetNpc() > 0) {
 			newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByNpc));
 			p28x.incPet1Exp(Skills.PETRANGED, newXP * 4, true);
@@ -965,6 +967,9 @@ public class Npc extends Mob {
 				p282828.message("TEST 28");
 			}
 			}
+
+			 */
+
 		}
 
 		// Ranged damagers
@@ -982,6 +987,7 @@ public class Npc extends Mob {
 				npcWithMostDamage = n;
 				currentHighestDamage = dmgDoneByNpc;
 			}
+			/*
 			if(attacker.getPetNpc() > 0) {
 			newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByNpc));
 			p28x.incPet1Exp(Skills.PETRANGED, newXP * 4, true);
@@ -990,6 +996,8 @@ public class Npc extends Mob {
 				p282828.message("TEST 28282828");
 			}
 			}
+
+			 */
 		}
 
 		// Magic damagers
@@ -1005,6 +1013,7 @@ public class Npc extends Mob {
 				npcWithMostDamage = n;
 				currentHighestDamage = dmgDoneByNpc;
 			}
+			/*
 			if(attacker.getPetNpc() > 0) {
 			newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByNpc));
 			p28x.incPet1Exp(Skills.PETRANGED, newXP * 4, true);
@@ -1013,6 +1022,8 @@ public class Npc extends Mob {
 				p282828.message("TEST 28111128");
 			}
 			}
+
+			 */
 		}
 		return npcWithMostDamage;
 	}
@@ -1088,6 +1099,7 @@ public class Npc extends Mob {
 			}
 
 			// Give the player their share of the experience.
+			/*
 			int totalXP = (int) (((double) (totalCombatXP) / (double) (getDef().hits)) * (double) (damageDoneByNpc));
 			Player p28x = n.getPetOwnerA2();
 
@@ -1102,7 +1114,9 @@ public class Npc extends Mob {
 					p28x.incPet1Exp(Skills.PETRANGED, totalXP * 3, true);
 					break;
 			}
-			//p.incExp(Skills.HITPOINTS, totalXP, true);
+
+			 */
+			//p.incExp(SKILLS.HITS.id(), totalXP, true);
 		}
 
 		// Melee damagers

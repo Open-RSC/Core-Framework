@@ -5,7 +5,7 @@ import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.PathValidation;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -85,7 +85,7 @@ public class RangeEventNpc extends GameTickEvent {
 		int combDiff = Math.abs(owner.getCombatLevel() - target.getCombatLevel());
 		int targetWildLvl = target.getLocation().wildernessLevel();
 		int myWildLvl = owner.getLocation().wildernessLevel();
-		if ((target.isPlayer() && !((Player) target).loggedIn()) || target.getSkills().getLevel(Skills.HITPOINTS) <= 0 || !owner.withinRange(target)) {
+		if ((target.isPlayer() && !((Player) target).loggedIn()) || target.getSkills().getLevel(SKILLS.HITS.id()) <= 0 || !owner.withinRange(target)) {
 			owner.resetRange();
 			//p22.message("TEST 45454545");
 			stop();
@@ -198,7 +198,7 @@ public class RangeEventNpc extends GameTickEvent {
 				}	
 				int arrowID = -1;
 				//int damage = 1;
-				int damage = Formulae.calcRangeHitNpc(owner, owner.getSkills().getLevel(Skills.RANGED), target.getArmourPoints(), 11);
+				int damage = Formulae.calcRangeHitNpc(owner, owner.getSkills().getLevel(SKILLS.RANGED.id()), target.getArmourPoints(), 11);
 				if (Formulae.looseArrow(damage)) {
 					GroundItem arrows = getArrows(11);
 					if (arrows == null) {
@@ -219,7 +219,7 @@ public class RangeEventNpc extends GameTickEvent {
 				//ActionSender.sendSound(getPlayerOwner(), "shoot");
 				if (EntityHandler.getItemDef(11).getName().toLowerCase().contains("poison") && target.isPlayer()) {
 					if (DataConversions.random(0, 100) <= 10) {
-						target.poisonDamage = target.getSkills().getMaxStat(Skills.HITPOINTS);
+						target.poisonDamage = target.getSkills().getMaxStat(SKILLS.HITS.id());
 						target.startPoisonEvent();
 					}
 				}

@@ -11,7 +11,7 @@ import com.openrsc.server.external.ItemDartTipDef;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.ItemLogCutDef;
 import com.openrsc.server.model.MenuOptionListener;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -98,7 +98,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 				}
 				if (owner.getInventory().remove(feathers.getID(), 1) > -1
 					&& owner.getInventory().remove(item.getID(), 1) > -1) {
-					owner.incExp(Skills.FLETCHING, exp, true);
+					owner.incExp(SKILLS.FLETCHING.id(), exp, true);
 					addItem(owner, itemID, 1);
 				} else {
 					interrupt();
@@ -134,7 +134,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 		player.setBatchEvent(new BatchEvent(player, 40, 1000 + amount, false) {
 			@Override
 			public void action() {
-				if (owner.getSkills().getLevel(Skills.FLETCHING) < headDef.getReqLevel()) {
+				if (owner.getSkills().getLevel(SKILLS.FLETCHING.id()) < headDef.getReqLevel()) {
 					owner.message("You need a fletching skill of "
 						+ headDef.getReqLevel() + " or above to do that");
 					interrupt();
@@ -150,7 +150,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 				}
 				if (owner.getInventory().remove(headlessArrows.getID(), 1) > -1
 					&& owner.getInventory().remove(arrowHeads.getID(), 1) > -1) {
-					owner.incExp(Skills.FLETCHING, headDef.getExp(), true);
+					owner.incExp(SKILLS.FLETCHING.id(), headDef.getExp(), true);
 					owner.getInventory().add(new Item(headDef.getArrowID(), 1));
 				} else {
 					interrupt();
@@ -173,10 +173,10 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 		}
 
 		player.setBatchEvent(new BatchEvent(player, 600, Formulae
-			.getRepeatTimes(player, Skills.FLETCHING), false) {
+			.getRepeatTimes(player, SKILLS.FLETCHING.id()), false) {
 			@Override
 			public void action() {
-				if (owner.getSkills().getLevel(Skills.FLETCHING) < stringDef.getReqLevel()) {
+				if (owner.getSkills().getLevel(SKILLS.FLETCHING.id()) < stringDef.getReqLevel()) {
 					owner.message("You need a fletching skill of "
 						+ stringDef.getReqLevel() + " or above to do that");
 					interrupt();
@@ -194,7 +194,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 					&& owner.getInventory().remove(bow) > -1) {
 					owner.message("You add a string to the bow");
 					owner.getInventory().add(new Item(stringDef.getBowID(), 1));
-					owner.incExp(Skills.FLETCHING, stringDef.getExp(), true);
+					owner.incExp(SKILLS.FLETCHING.id(), stringDef.getExp(), true);
 				} else
 					interrupt();
 			}
@@ -254,11 +254,11 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 							final int experience = exp;
 							final String cutMessages = cutMessage;
 							player.setBatchEvent(new BatchEvent(player, 600, Formulae
-								.getRepeatTimes(player, Skills.FLETCHING), false) {
+								.getRepeatTimes(player, SKILLS.FLETCHING.id()), false) {
 
 								@Override
 								public void action() {
-									if (owner.getSkills().getLevel(Skills.FLETCHING) < requiredLvl) {
+									if (owner.getSkills().getLevel(SKILLS.FLETCHING.id()) < requiredLvl) {
 										owner.message("You need a fletching skill of "
 											+ requiredLvl + " or above to do that");
 										interrupt();
@@ -267,7 +267,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 									if (owner.getInventory().remove(log) > -1) {
 										owner.message(cutMessages);
 										addItem(owner, itemID, amount);
-										owner.incExp(Skills.FLETCHING, experience, true);
+										owner.incExp(SKILLS.FLETCHING.id(), experience, true);
 									} else
 										interrupt();
 								}
@@ -304,11 +304,11 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 						final int experience = exp;
 						final String cutMessages = cutMessage;
 						player.setBatchEvent(new BatchEvent(player, 600, Formulae
-							.getRepeatTimes(player, Skills.FLETCHING), false) {
+							.getRepeatTimes(player, SKILLS.FLETCHING.id()), false) {
 
 							@Override
 							public void action() {
-								if (owner.getSkills().getLevel(Skills.FLETCHING) < requiredLvl) {
+								if (owner.getSkills().getLevel(SKILLS.FLETCHING.id()) < requiredLvl) {
 									owner.message("You need a fletching skill of "
 										+ requiredLvl + " or above to do that");
 									interrupt();
@@ -317,7 +317,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 								if (owner.getInventory().remove(log) > -1) {
 									owner.message(cutMessages);
 									addItem(owner, itemID, amount);
-									owner.incExp(Skills.FLETCHING, experience, true);
+									owner.incExp(SKILLS.FLETCHING.id(), experience, true);
 								} else
 									interrupt();
 							}
@@ -350,17 +350,17 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 		final int exp = 25;
 		final int pearlID = pearl.getID();
 		player.setBatchEvent(new BatchEvent(player, 600, Formulae
-			.getRepeatTimes(player, Skills.FLETCHING), false) {
+			.getRepeatTimes(player, SKILLS.FLETCHING.id()), false) {
 			@Override
 			public void action() {
-				if (owner.getSkills().getLevel(Skills.FLETCHING) < 34) {
+				if (owner.getSkills().getLevel(SKILLS.FLETCHING.id()) < 34) {
 					owner.message("You need a fletching skill of 34 to do that");
 					interrupt();
 					return;
 				}
 				if (owner.getInventory().remove(pearlID, 1) > -1) {
 					owner.message("");
-					owner.incExp(Skills.FLETCHING, exp, true);
+					owner.incExp(SKILLS.FLETCHING.id(), exp, true);
 					addItem(owner, ItemId.OYSTER_PEARL_BOLT_TIPS.id(), amt);
 				} else interrupt();
 			}
@@ -390,7 +390,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 		player.setBatchEvent(new BatchEvent(player, 40, 1000 + amount, false) {
 			@Override
 			public void action() {
-				if (owner.getSkills().getLevel(Skills.FLETCHING) < 34) {
+				if (owner.getSkills().getLevel(SKILLS.FLETCHING.id()) < 34) {
 					owner.message("You need a fletching skill of 34 to do that");
 					interrupt();
 					return;
@@ -406,7 +406,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 				if (owner.getInventory().remove(bolt, 1) > -1
 					&& owner.getInventory().remove(tip, 1) > -1) {
 					owner.message("");
-					owner.incExp(Skills.FLETCHING, 25, true);
+					owner.incExp(SKILLS.FLETCHING.id(), 25, true);
 					addItem(owner, ItemId.OYSTER_PEARL_BOLTS.id(), 1);
 				} else interrupt();
 			}

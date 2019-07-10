@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.minigames.gnomeball;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.rsc.impl.BallProjectileEvent;
 import com.openrsc.server.external.ItemId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -200,8 +200,8 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 	private void handleScore(Player p, int score_zone) {
 		loadIfNotMemory(p, "gnomeball_goals");
 		int prev_goalCount = p.getAttribute("gnomeball_goals", 0);
-		p.incExp(Skills.RANGED, SCORES_XP[score_zone][prev_goalCount], true);
-		p.incExp(Skills.AGILITY, SCORES_XP[score_zone][prev_goalCount], true);
+		p.incExp(SKILLS.RANGED.id(), SCORES_XP[score_zone][prev_goalCount], true);
+		p.incExp(SKILLS.AGILITY.id(), SCORES_XP[score_zone][prev_goalCount], true);
 		showScoreWindow(p, prev_goalCount+1);
 		if (prev_goalCount+1 == 5) {
 			ActionSender.sendTeleBubble(p, p.getX(), p.getY(), true);
