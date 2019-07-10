@@ -1307,6 +1307,7 @@ public enum ItemId {
 	HARDCORE_IRONMAN_HELM(2141),
 	HARDCORE_IRONMAN_PLATEBODY(2142),
 	HARDCORE_IRONMAN_PLATELEGS(2143),
+	//Runecrafting items---------
 	RUNE_ESSENCE(2258),
 	AIR_TALISMAN(2260),
 	MIND_TALISMAN(2262),
@@ -1319,8 +1320,10 @@ public enum ItemId {
 	NATURE_TALISMAN(2276),
 	LAW_TALISMAN(2278),
 	DEATH_TALISMAN(2280),
-	BLOOD_TALISMAN(2282);
-
+	BLOOD_TALISMAN(2282),
+	RESEARCH_PACKAGE(2284),
+	RESEARCH_NOTES(2285);
+	//----------------------------
 	private int itemId;
 
 	private static final Map<Integer, ItemId> byId = new HashMap<Integer, ItemId>();

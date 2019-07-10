@@ -505,6 +505,7 @@ public final class Constants {
 		public static final int DIGSITE = 47;
 		public static final int GERTRUDES_CAT = 48;
 		public static final int LEGENDS_QUEST = 49;
+		public static final int RUNE_MYSTERIES = 50;
 
 		public static final int MAPIDX_QP = 0;
 		public static final int MAPIDX_SKILL = 1;
@@ -563,6 +564,9 @@ public final class Constants {
 			put(DIGSITE, new int[]{2, -1, 0, 0}); // XP Handled in Digsite files
 			put(GERTRUDES_CAT, new int[]{1, SKILLS.COOKING.id(), 700, 180});
 			put(LEGENDS_QUEST, new int[]{4, -1, 600, 600}); // Skill ID Handled in Legends files
+			if (GameServer.WANT_RUNECRAFTING){
+				put(RUNE_MYSTERIES, new int[]{1, -1, 0, 0});
+			}
 		}};
 	}
 

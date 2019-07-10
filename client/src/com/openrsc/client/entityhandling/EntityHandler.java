@@ -1915,6 +1915,10 @@ public class EntityHandler {
 		sprites = new int[] { 309, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 		npcs.add(new NPCDef("Greatwood","A scary hard slamming tree", "", 255, 245, 400, 300, true, sprites, 0, 0, 0, 0, 345, 410, 11, 11, 30, i++));
 
+		if (Config.S_WANT_RUNECRAFTING) {
+			sprites = new int[]{6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1};
+			npcs.add(new NPCDef("Wizard Sedridor", "An old wizard", "", 0, 0, 0, 0, false, sprites, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, i++));
+		}
 		/*try {
 			PrintWriter printWriter = new PrintWriter(new FileOutputStream("NpcType.txt"), true);
 			int count = 0;
@@ -3225,7 +3229,9 @@ public class EntityHandler {
 		items.add(new ItemDef("Cape of legends", "Shows I am a member of the legends guild", "", 450, 59, false, true, 2048, 16777215, true, true, -1, -1, 1288));
 		items.add(new ItemDef("Scythe", "Get another from the clothes shop if you die", "", 15, 434, false, true, 8216, 0, false, true, 2134, -1, 1289));
 		loadNoteDefinitions();
-		loadCustomItemAndNoteDefinitions();
+
+		if (Config.S_WANT_CUSTOM_SPRITES)
+			loadCustomItemAndNoteDefinitions();
 
 		if (Config.S_SHOW_UNIDENTIFIED_HERB_NAMES) {
 			items.get(165).name = "Muddy Guam";
@@ -3355,6 +3361,8 @@ public class EntityHandler {
 		items.add(new ItemDef("Death talisman", "Swap this note at any bank for the equivalent item.", "", 0, 438, true, false, 0, 0, false, false, -1, 2280, 2281));
 		items.add(new ItemDef("Blood talisman", "A mysterious power eminates from the talisman...", "Locate", 0, 454, false, false, 0, 0, false, false, 2283, -1, 2282));
 		items.add(new ItemDef("Blood talisman", "Swap this note at any bank for the equivalent item.", "", 0, 438, true, false, 0, 0, false, false, -1, 2282, 2283));
+		items.add(new ItemDef("Research package", "This contains some vital research results.", "", 0, 330, false, false, 0, 0, true, true, -1, -1, 2284));
+		items.add(new ItemDef("Research notes", "These make no sense at all.", "", 0, 427, false, false, 0, 0, true, true, -1, -1, 2285));
 
 	}
 
