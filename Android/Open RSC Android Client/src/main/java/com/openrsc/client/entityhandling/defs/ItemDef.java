@@ -3,7 +3,8 @@ package com.openrsc.client.entityhandling.defs;
 public class ItemDef extends EntityDef {
 	public String command;
 	public int basePrice;
-	public int sprite;
+	public int authenticSpriteID;
+	public String spriteLocation;
 	public boolean stackable;
 	public boolean wieldable;
 	public int wearableID;
@@ -14,12 +15,12 @@ public class ItemDef extends EntityDef {
 	private int isNotedFormOf = -1;
 	private int notedFormID = -1;
 
-	public ItemDef(String name, String description, String command, int basePrice, int sprite, boolean stackable,
+	public ItemDef(String name, String description, String command, int basePrice, int authenticSpriteID, boolean stackable,
 				   boolean wieldable, int wearableID, int pictureMask, boolean membersItem, boolean quest, int id) {
 		super(name, description, id);
 		this.command = command;
 		this.basePrice = basePrice;
-		this.sprite = sprite;
+		this.authenticSpriteID = authenticSpriteID;
 		this.stackable = stackable;
 		this.wieldable = wieldable;
 		this.wearableID = wearableID;
@@ -29,13 +30,14 @@ public class ItemDef extends EntityDef {
 		this.id = id;
 	}
 
-	public ItemDef(String name, String description, String command, int basePrice, int sprite, boolean stackable,
-				   boolean wieldable, int wearableID, int pictureMask, boolean membersItem, boolean quest, int notedForm, int notedFormOf,
-				   int id) {
+
+	public ItemDef(String name, String description, String command, int basePrice, int authenticSpriteID, String spriteLocation,
+				   boolean stackable, boolean wieldable, int wearableID, int pictureMask, boolean membersItem,
+				   boolean quest, int notedForm, int notedFormOf, int id) {
 		super(name, description, id);
 		this.command = command;
 		this.basePrice = basePrice;
-		this.sprite = sprite;
+		this.authenticSpriteID = authenticSpriteID;
 		this.stackable = stackable;
 		this.wieldable = wieldable;
 		this.wearableID = wearableID;
@@ -45,13 +47,15 @@ public class ItemDef extends EntityDef {
 		this.id = id;
 		this.notedFormID = notedForm;
 		this.isNotedFormOf = notedFormOf;
+		this.spriteLocation = spriteLocation;
 	}
+
 
 	public ItemDef(int i, ItemDef item) {
 		super(item.name, "Swap this note at any bank for the equivalent item.", i);
 		this.command = item.command;
 		this.basePrice = item.basePrice;
-		this.sprite = 438;
+		this.authenticSpriteID = 438;
 		this.stackable = true;
 		this.wieldable = false;
 		this.pictureMask = 0;
@@ -61,13 +65,15 @@ public class ItemDef extends EntityDef {
 		this.id = i;
 	}
 
+
 	public String getCommand() {
 		return command;
 	}
 
-	public int getSprite() {
-		return sprite;
-	}
+	public int getAuthenticSpriteID() {	return authenticSpriteID; }
+
+
+	public String getSpriteLocation() { return this.spriteLocation; }
 
 	public int getBasePrice() {
 		return basePrice;

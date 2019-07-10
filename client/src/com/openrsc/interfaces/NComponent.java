@@ -183,8 +183,7 @@ public class NComponent {
 		if (drawBorder)
 			graphics().drawBoxBorder(drawX, width, drawY, height, !isHovered() ? borderColor : borderColorHovered);
 		if (drawSprite) {
-			graphics().drawSpriteClipping(spriteID, drawX, drawY, spriteWidth, spriteHeight, spriteOverlay, 0, false, 0,
-				1);
+			//graphics().drawSpriteClipping(spriteID, drawX, drawY, spriteWidth, spriteHeight, spriteOverlay, 0, false, 0,				1);
 		}
 		if (drawHorizLine) {
 			graphics().drawLineHoriz(drawX, drawY, horizWidth, horizColor);

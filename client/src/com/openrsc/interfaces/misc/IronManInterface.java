@@ -1,6 +1,7 @@
 package com.openrsc.interfaces.misc;
 
 
+import com.openrsc.client.entityhandling.EntityHandler;
 import orsc.graphics.gui.Panel;
 import orsc.graphics.two.GraphicsController;
 import orsc.mudclient;
@@ -102,9 +103,9 @@ public final class IronManInterface {
 		graphics.drawString("- " + (getIronManMode() >= 1 ? this.iron_man_restriction == 0 ? "PIN." : "Permanent." : "None."), x + (width / 2) + 49 + 27, y + 243, 0xFF981F, 0);
 
 		// iron helm, plate, legs sprites
-		graphics.drawSpriteClipping(2158, x + 410, y + 60, 48, 32, 0, 0, false, 0, 1);
-		graphics.drawSpriteClipping(2159, x + 390, y + 100, 48, 32, 0, 0, false, 0, 1);
-		graphics.drawSpriteClipping(2156, x + 425, y + 135, 48, 32, 0, 0, true, 0, 1);
+		graphics.drawSpriteClipping(mc.spriteSelect(EntityHandler.getItemDef(8)), x + 410, y + 60, 48, 32, 0, 0, false, 0, 1);
+		graphics.drawSpriteClipping(mc.spriteSelect(EntityHandler.getItemDef(9)), x + 390, y + 100, 48, 32, 0, 0, false, 0, 1);
+		graphics.drawSpriteClipping(mc.spriteSelect(EntityHandler.getItemDef(6)), x + 425, y + 135, 48, 32, 0, 0, true, 0, 1);
 
 
 		drawCloseButton(graphics, x + 457, y + 2, 21, 21, "X", new ButtonHandler() {
@@ -158,7 +159,7 @@ public final class IronManInterface {
 
 			graphics.drawCircle(drawBoxX + 8 + 5, circleY, 8, 0x3A3026, 255, 0);
 			if (i == order[iron_man_mode]) {
-				graphics.drawSpriteClipping(2027, drawBoxX + 8, circleY - 5, 13, 10, 0, 0, false, 0, 1);
+				graphics.drawSpriteClipping(mc.spriteSelect(EntityHandler.GUIparts.get(EntityHandler.GUIPARTS.CHECKMARK.id())), drawBoxX + 8, circleY - 5, 13, 10, 0, 0, false, 0, 1);
 			}
 		}
 
@@ -171,7 +172,7 @@ public final class IronManInterface {
 			}
 		});
 
-		graphics.drawSpriteClipping(2340, drawBoxX + 8, circleY + 21, 48, 32, 0, 0, false, 0, 1);
+		//graphics.drawSpriteClipping(2340, drawBoxX + 8, circleY + 21, 48, 32, 0, 0, false, 0, 1);
 		if (deactivationMenu)
 			graphics.drawBoxAlpha(x, y, width, height, 0, 192);
 	}
@@ -212,7 +213,7 @@ public final class IronManInterface {
 			});
 			graphics.drawCircle(drawBoxX + 8 + 5, circleY, 8, 0x3A3026, 255, 0);
 			if (i == this.iron_man_restriction) {
-				graphics.drawSpriteClipping(2027, drawBoxX + 8, circleY - 5, 13, 10, 0, 0, false, 0, 1);
+				graphics.drawSpriteClipping(mc.spriteSelect(EntityHandler.GUIparts.get(EntityHandler.GUIPARTS.CHECKMARK.id())), drawBoxX + 8, circleY - 5, 13, 10, 0, 0, false, 0, 1);
 			}
 			drawBoxheight = 20;
 			drawBoxY += 45;
