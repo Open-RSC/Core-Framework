@@ -1,10 +1,10 @@
 package com.openrsc.server.event;
 
-import java.util.UUID;
-
 import com.openrsc.server.Server;
 import com.openrsc.server.ServerEventHandler;
 import com.openrsc.server.model.entity.player.Player;
+
+import java.util.UUID;
 
 
 public abstract class DelayedEvent {
@@ -17,15 +17,17 @@ public abstract class DelayedEvent {
 	private long lastRun = System.currentTimeMillis();
 	private boolean uniqueEvent = true;
 	private UUID uuid;
+	private String descriptor;
 
-	public DelayedEvent(Player owner, int delay) {
-		this.owner = owner;
-		this.delay = delay;
-		this.uuid = UUID.randomUUID();
+	public DelayedEvent(Player owner, int delay, String descriptor) {
+		this.owner 		= owner;
+		this.delay 		= delay;
+		this.descriptor	= descriptor;
+		this.uuid 		= UUID.randomUUID();
 	}
 
-	public DelayedEvent(Player owner, int delay, boolean uniqueEvent) {
-		this(owner, delay);
+	public DelayedEvent(Player owner, int delay, String descriptor, boolean uniqueEvent) {
+		this(owner, delay, descriptor);
 		this.uniqueEvent = uniqueEvent;
 	}
 
@@ -55,6 +57,10 @@ public abstract class DelayedEvent {
 	
 	public UUID getUUID() {
 		return uuid;
+	}
+
+	public String getDescriptor() {
+		return descriptor;
 	}
 
 	public boolean is(DelayedEvent e) {

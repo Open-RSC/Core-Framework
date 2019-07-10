@@ -4,8 +4,6 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.PluginsUseThisEvent;
 import com.openrsc.server.event.SingleEvent;
-import com.openrsc.server.event.rsc.impl.BankEventNpc;
-import com.openrsc.server.event.rsc.impl.RangeEventNpc;
 import com.openrsc.server.event.custom.UndergroundPassMessages;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.model.MenuOptionListener;
@@ -75,7 +73,7 @@ public class Functions {
 		post(() -> {
 			n.resetPath();
 			n.setLocation(new Point(x, y), true);
-		});
+		}, "Teleport");
 	}
 
 	public static void walkMob(Mob n, Point... waypoints) {
@@ -87,7 +85,7 @@ public class Functions {
 			}
 			path.finish();
 			n.getWalkingQueue().setPath(path);
-		});
+		}, "Walk Mob");
 	}
 
 	public static boolean hasItemAtAll(Player p, int id) {
@@ -335,12 +333,12 @@ public class Functions {
 			npc.setShouldRespawn(false);
 			npc.setAttribute("spawnedFor", spawnedFor);
 			World.getWorld().registerNpc(npc);
-			Server.getServer().getEventHandler().add(new SingleEvent(null, time) {
+			Server.getServer().getEventHandler().add(new SingleEvent(null, time, "Spawn Pet NPC Timed") {
 				public void action() {
 					npc.remove();
 				}
 			});
-		});
+		}, "Spawn Pet NPC Delayed");
 		return npc;
 	}
 
@@ -349,7 +347,7 @@ public class Functions {
 		post(() -> {
 			npc.setShouldRespawn(false);
 			World.getWorld().registerNpc(npc);
-		});
+		}, "Spawn Permanent NPC Delayed");
 		return npc;
 	}
 
@@ -359,12 +357,12 @@ public class Functions {
 		post(() -> {
 			npc.setShouldRespawn(false);
 			World.getWorld().registerNpc(npc);
-			Server.getServer().getEventHandler().add(new SingleEvent(null, time) {
+			Server.getServer().getEventHandler().add(new SingleEvent(null, time, "Spawn Radius NPC Timed") {
 				public void action() {
 					npc.remove();
 				}
 			});
-		});
+		}, "Spawn Radius NPC Delayed");
 		return npc;
 	}
 
@@ -374,12 +372,12 @@ public class Functions {
 		post(() -> {
 			npc.setShouldRespawn(false);
 			World.getWorld().registerNpc(npc);
-			Server.getServer().getEventHandler().add(new SingleEvent(null, time) {
+			Server.getServer().getEventHandler().add(new SingleEvent(null, time, "Spawn NPC Timed") {
 				public void action() {
 					npc.remove();
 				}
 			});
-		});
+		}, "Spawn NPC Delayed");
 		return npc;
 	}
 
@@ -420,17 +418,17 @@ public class Functions {
 	public static void createGroundItemDelayedRemove(final GroundItem i, int time) {
 		post(() -> {
 			if (i.getLoc() == null) {
-				Server.getServer().getEventHandler().add(new SingleEvent(null, time) {
+				Server.getServer().getEventHandler().add(new SingleEvent(null, time, "Spawn Ground Item Timed") {
 					public void action() {
 						World.getWorld().unregisterItem(i);
 					}
 				});
 			}
-		});
+		}, "Spawn Ground Item Timed");
 	}
 
 	public static void removeNpc(final Npc npc) {
-		post(() -> npc.setUnregistering(true));
+		post(() -> npc.setUnregistering(true), "Remove NPC");
 	}
 
 	/**
@@ -489,7 +487,7 @@ public class Functions {
 	 * @param stage
 	 */
 	public static void setQuestStage(final Player p, final int questID, final int stage) {
-		post(() -> p.updateQuestStage(questID, stage));
+		post(() -> p.updateQuestStage(questID, stage), "Set Quest Stage");
 	}
 
 	/**
@@ -584,7 +582,7 @@ public class Functions {
 			} else {
 				p.getInventory().add(items);
 			}
-		});
+		}, "Add Item");
 	}
 
 	/**
@@ -967,23 +965,23 @@ public class Functions {
 	}
 
 	public static void removeObject(final GameObject o) {
-		post(() -> World.getWorld().unregisterGameObject(o));
+		post(() -> World.getWorld().unregisterGameObject(o), "Remove Game Object");
 	}
 
 	public static void registerObject(final GameObject o) {
-		post(() -> World.getWorld().registerGameObject(o));
+		post(() -> World.getWorld().registerGameObject(o), "Add Game Object");
 	}
 
 	public static void registerObjects(final GameObject... o) {
-		post(() -> World.getWorld().registerObjects(o));
+		post(() -> World.getWorld().registerObjects(o), "Add Multi Game Object");
 	}
 
 	public static void replaceObject(final GameObject o, final GameObject newObject) {
-		post(() -> World.getWorld().replaceGameObject(o, newObject));
+		post(() -> World.getWorld().replaceGameObject(o, newObject), "Replace Game Object");
 	}
 
 	public static void delayedSpawnObject(final GameObjectLoc loc, final int time) {
-		post(() -> World.getWorld().delayedSpawnObject(loc, time));
+		post(() -> World.getWorld().delayedSpawnObject(loc, time), "Delayed Add Game Object");
 	}
 
 	public static void doGate(final Player p, final GameObject object, int replaceID) {
@@ -1161,7 +1159,7 @@ public class Functions {
 					npc.setBusyTimer(delay);
 				}
 				player.setBusy(true);
-				post(() -> player.message(message));
+				post(() -> player.message(message), "Message Player");
 			}
 			sleep(delay);
 		}
@@ -1180,7 +1178,7 @@ public class Functions {
 				if (player.getInteractingNpc() != null) {
 					player.getInteractingNpc().setBusyTimer(1900);
 				}
-				post(() -> player.message("@que@" + message));
+				post(() -> player.message("@que@" + message), "Multi Message Player");
 				player.setBusyTimer(1900);
 			}
 			sleep(1900);
@@ -1214,7 +1212,7 @@ public class Functions {
 					if (!player.inCombat()) {
 						player.face(npc);
 					}
-				});
+				}, "NPC Talk");
 			}
 
 			sleep(delay);
@@ -1238,7 +1236,7 @@ public class Functions {
 	public static void npcYell(final Player player, final Npc npc, final String... messages) {
 		for (final String message : messages) {
 			if (!message.equalsIgnoreCase("null")) {
-				post(() -> npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, message, player)));
+				post(() -> npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, message, player)), "NPC Yell");
 			}
 		}
 	}
@@ -1273,7 +1271,7 @@ public class Functions {
 						player.resetPath();
 					}
 					player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, (npc == null ? player : npc)));
-				});
+				}, "Talk as Player");
 			}
 			sleep(1900);
 		}
@@ -1298,7 +1296,7 @@ public class Functions {
 			} else {
 				p.getInventory().remove(new Item(id, amt));
 			}
-		});
+		}, "Remove Ground Item");
 		return true;
 	}
 
@@ -1319,7 +1317,7 @@ public class Functions {
 			for (Item ir : items) {
 				p.getInventory().remove(ir);
 			}
-		});
+		}, "Remove Multi Ground Item");
 		return true;
 	}
 
@@ -1495,7 +1493,7 @@ public class Functions {
 				n.setShouldRespawn(false);
 			}
 			n.remove();
-		});
+		}, "Transform NPC to NPC");
 		return newNpc;
 	}
 
@@ -1503,11 +1501,11 @@ public class Functions {
 		post(() -> {
 			n.setShouldRespawn(true);
 			n.remove();
-		});
+		}, "Temporary Remove NPC");
 	}
 
-	private static void post(Runnable r) {
-		Server.getServer().getEventHandler().add(new PluginsUseThisEvent() {
+	private static void post(Runnable r, String descriptor) {
+		Server.getServer().getEventHandler().add(new PluginsUseThisEvent(descriptor) {
 			@Override
 			public void action() {
 				try {

@@ -78,7 +78,7 @@ public class LegendsQuestBullRoarer implements InvActionListener, InvActionExecu
 
 	private void delayedRemoveGujuo(Player p, Npc n) {
 		try {
-			Server.getServer().getEventHandler().add(new DelayedEvent(null, 60000 * 3) {
+			Server.getServer().getEventHandler().add(new DelayedEvent(null, 60000 * 3, "Delayed Remove Gujuo") {
 				@Override
 				public void run() {
 					if (!p.isLoggedIn() || p.isRemoved()) {
@@ -108,7 +108,7 @@ public class LegendsQuestBullRoarer implements InvActionListener, InvActionExecu
 					} else {
 						npcTalk(p, n, "I have work to do Bwana, I may see you again...");
 					}
-					Server.getServer().getEventHandler().add(new SingleEvent(null, 1900) {
+					Server.getServer().getEventHandler().add(new SingleEvent(null, 1900, "Legends Quest Gujuo Disappears") {
 						public void action() {
 							p.message("Gujuo disapears into the Kharazi jungle as swiftly as he appeared...");
 							n.remove();

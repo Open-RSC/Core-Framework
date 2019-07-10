@@ -1153,7 +1153,7 @@ public class Npc extends Mob {
 	public void initializeTalkScript(final Player p) {
 		final Npc npc = this;
 		//p.setBusyTimer(600);
-		Server.getServer().getGameEventHandler().add(new ImmediateEvent() {
+		Server.getServer().getGameEventHandler().add(new ImmediateEvent("Init Talk Script") {
 			@Override
 			public void action() {
 				PluginHandler.getPluginHandler().blockDefaultAction("TalkToNpc", new Object[]{p, npc});
@@ -1164,7 +1164,7 @@ public class Npc extends Mob {
 	public void initializeIndirectTalkScript(final Player p) {
 		final Npc npc = this;
 		//p.setBusyTimer(600);
-		Server.getServer().getGameEventHandler().add(new ImmediateEvent() {
+		Server.getServer().getGameEventHandler().add(new ImmediateEvent("Init Indirect Talk Script") {
 			@Override
 			public void action() {
 				PluginHandler.getPluginHandler().blockDefaultAction("IndirectTalkToNpc", new Object[]{p, npc});
@@ -1180,7 +1180,7 @@ public class Npc extends Mob {
 		if (!isRemoved() && shouldRespawn && def.respawnTime() > 0) {
 			startRespawning();
 			teleport(0, 0);
-			Server.getServer().getEventHandler().add(new DelayedEvent(null, def.respawnTime() * 1000) {
+			Server.getServer().getEventHandler().add(new DelayedEvent(null, def.respawnTime() * 1000, "Respawn NPC") {
 				public void run() {
 					setRespawning(false);
 					teleport(loc.startX, loc.startY);

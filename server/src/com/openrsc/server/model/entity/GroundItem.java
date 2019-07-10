@@ -127,7 +127,7 @@ public class GroundItem extends Entity {
 
 	public void remove() {
 		if (!removed && loc != null && loc.getRespawnTime() > 0) {
-			Server.getServer().getGameEventHandler().add(new GameTickEvent(null, loc.getRespawnTime()) {
+			Server.getServer().getGameEventHandler().add(new GameTickEvent(null, loc.getRespawnTime(), "Respawn Ground Item") {
 				public void run() {
 					world.registerItem(new GroundItem(loc));
 					stop();

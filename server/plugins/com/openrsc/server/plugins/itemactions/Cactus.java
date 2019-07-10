@@ -1,7 +1,5 @@
 package com.openrsc.server.plugins.itemactions;
 
-import static com.openrsc.server.plugins.Functions.showBubble;
-
 import com.openrsc.server.Server;
 import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.event.SingleEvent;
@@ -15,6 +13,8 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.util.rsc.Formulae;
+
+import static com.openrsc.server.plugins.Functions.showBubble;
 
 public class Cactus implements InvUseOnObjectListener,
 InvUseOnObjectExecutiveListener {
@@ -41,7 +41,7 @@ InvUseOnObjectExecutiveListener {
 		showBubble(player, item);
 		player.setBusy(true);
 		Server.getServer().getEventHandler()
-			.add(new ShortEvent(player) {
+			.add(new ShortEvent(player, "Cactus Fill Waterskin") {
 				public void action() {
 					for (int s : skins) {
 						if (owner.getInventory().remove(s, 1) > -1) {
@@ -74,7 +74,7 @@ InvUseOnObjectExecutiveListener {
 
 							// Swap cacti back after 30 seconds.
 							Server.getServer().getEventHandler().add(
-								new SingleEvent(null, 30000) {
+								new SingleEvent(null, 30000, "Cactus Respawn") {
 									@Override
 									public void action() {
 										if (cacti != null) {

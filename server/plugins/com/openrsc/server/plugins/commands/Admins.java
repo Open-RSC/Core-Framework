@@ -1046,7 +1046,7 @@ public final class Admins implements CommandListener {
 								final Npc n = new Npc(id, baseX + x, baseY + y, baseX + x - 20, baseX + x + 20, baseY + y - 20, baseY + y + 20);
 								n.setShouldRespawn(false);
 								World.getWorld().registerNpc(n);
-								Server.getServer().getEventHandler().add(new SingleEvent(null, duration * 60000) {
+								Server.getServer().getEventHandler().add(new SingleEvent(null, duration * 60000, "Spawn Multi NPC Command") {
 									@Override
 									public void action() {
 										n.remove();
@@ -1573,7 +1573,7 @@ public final class Admins implements CommandListener {
 			player.getInventory().add(new Item(ItemId.A_GLOWING_RED_CRYSTAL.id()));
 			sleep(Constants.GameServer.GAME_TICK);
 			player.message("You summon your pet.");
-			Server.getServer().getEventHandler().add(new ShortEvent(player) {
+			Server.getServer().getEventHandler().add(new ShortEvent(player, "Spawn Pet Dragon Command") {
 				public void action() {
 					player.setBusy(true);
 					final Npc petDragon = spawnNpc(NpcId.BABY_BLUE_DRAGON.id(), player.getX() + 1, player.getY(), 1000 * 60 * 24, player); // spawns for 5 hours and then poof!
@@ -1593,7 +1593,7 @@ public final class Admins implements CommandListener {
 			player.getInventory().add(new Item(ItemId.A_GLOWING_RED_CRYSTAL.id()));
 			sleep(Constants.GameServer.GAME_TICK);
 			player.message("You summon your pet.");
-			Server.getServer().getEventHandler().add(new ShortEvent(player) {
+			Server.getServer().getEventHandler().add(new ShortEvent(player, "Spawn Pet Archer Command") {
 				public void action() {
 					player.setBusy(true);
 					final Npc petArcher = spawnNpc(NpcId.ADVENTURER_ARCHER.id(), player.getX() + 1, player.getY(), 1000 * 60 * 24, player); // spawns for 5 hours and then poof!
@@ -1897,7 +1897,7 @@ public final class Admins implements CommandListener {
 				player.getY() - radius, player.getY() + radius);
 			n.setShouldRespawn(false);
 			World.getWorld().registerNpc(n);
-			Server.getServer().getEventHandler().add(new SingleEvent(null, time * 60000) {
+			Server.getServer().getEventHandler().add(new SingleEvent(null, time * 60000, "Spawn NPC Command") {
 				@Override
 				public void action() {
 					n.remove();

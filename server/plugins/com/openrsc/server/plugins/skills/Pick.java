@@ -1,17 +1,14 @@
 package com.openrsc.server.plugins.skills;
 
 import com.openrsc.server.Constants;
-import com.openrsc.server.Server;
-import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ItemId;
-import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
 
 public final class Pick implements ObjectActionExecutiveListener,
 	ObjectActionListener {
@@ -31,7 +28,7 @@ public final class Pick implements ObjectActionExecutiveListener,
 		else if (delaytime == 420)
 			delaytime = 370;//cabbage
 
-		owner.setBatchEvent(new BatchEvent(owner, delaytime, 30, true) {
+		owner.setBatchEvent(new BatchEvent(owner, delaytime, "Pick Vegetal", 30, true) {
 			public void action() {
 				owner.message(pickMessage);
 				addItem(owner, objID, 1);

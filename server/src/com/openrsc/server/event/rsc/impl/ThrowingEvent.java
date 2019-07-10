@@ -26,7 +26,7 @@ public class ThrowingEvent extends GameTickEvent {
 	private Mob target;
 
 	public ThrowingEvent(Player owner, Mob victim) {
-		super(owner, 1);
+		super(owner, 1, "Throwing Event");
 		this.setImmediate(true);
 		this.target = victim;
 	}

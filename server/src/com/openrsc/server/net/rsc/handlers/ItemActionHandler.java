@@ -76,7 +76,7 @@ public class ItemActionHandler implements PacketHandler {
 			player.setBusyTimer(650);
 			player.message("You dig a hole in the ground");
 			Server.getServer().getEventHandler()
-				.add(new MiniEvent(player) {
+				.add(new MiniEvent(player, "Bury Bones") {
 					public void action() {
 						owner.message("You bury the "
 							+ item.getDef().getName().toLowerCase());

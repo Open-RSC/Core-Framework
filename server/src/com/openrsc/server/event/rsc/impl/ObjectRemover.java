@@ -11,7 +11,7 @@ public class ObjectRemover extends GameTickEvent {
 	private GameObject object;
 
 	public ObjectRemover(GameObject object, int ticks) {
-		super(null, ticks);
+		super(null, ticks, "Object Remover");
 		this.object = object;
 	}
 

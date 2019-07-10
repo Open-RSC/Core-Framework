@@ -16,7 +16,7 @@ public class FireCannonEvent extends GameTickEvent {
 	protected int count;
 
 	public FireCannonEvent(Player player) {
-		super(player, 1);
+		super(player, 1, "Fire Canon Event");
 		this.count = 0;
 	}
 

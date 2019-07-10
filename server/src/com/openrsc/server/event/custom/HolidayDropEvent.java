@@ -27,7 +27,7 @@ public class HolidayDropEvent extends HourlyEvent  {
 	}
 
 	private HolidayDropEvent(int lifeTime, Player executor, ArrayList<Integer> items, String eventMessage) {
-		super(lifeTime);
+		super(lifeTime, "Holiday Drop Event");
 		this.executor = executor;
 		this.items = items;
 		this.eventMessage = eventMessage;

@@ -2,12 +2,12 @@ package com.openrsc.server.event;
 
 public abstract class PluginsUseThisEvent extends DelayedEvent {
 
-	protected PluginsUseThisEvent() {
-		super(null, 0);
+	protected PluginsUseThisEvent(String descriptor) {
+		super(null, 0, descriptor);
 	}
 
-	public PluginsUseThisEvent(int delay) {
-		super(null, delay);
+	public PluginsUseThisEvent(int delay, String descriptor) {
+		super(null, delay, descriptor);
 	}
 
 	@Override

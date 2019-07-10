@@ -1,8 +1,5 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.mechanism;
 
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.message;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.RestartableDelayedEvent;
@@ -19,11 +16,9 @@ import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.transform;
-
 import java.util.HashMap;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestHolyWater implements InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener {
 
@@ -84,7 +79,7 @@ public class LegendsQuestHolyWater implements InvActionListener, InvActionExecut
 				RestartableDelayedEvent playerEvent = playerEventMap.get(player);
 				//rethrowing holy water resets the timer
 				if (playerEvent == null) {
-					playerEvent = new RestartableDelayedEvent(player, 1000) {
+					playerEvent = new RestartableDelayedEvent(player, 1000, "Legends Quest User Holy Water") {
 						int timesRan = 0;
 
 						@Override

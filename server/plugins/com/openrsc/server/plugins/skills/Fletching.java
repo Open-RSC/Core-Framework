@@ -85,7 +85,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 		player.message("You attach feathers to some of your "
 			+ item.getDef().getName());
 		final int exp = experience;
-		player.setBatchEvent(new BatchEvent(player, 40, 1000 + amount, false) {
+		player.setBatchEvent(new BatchEvent(player, 40, "Fletching Attach Feathers", 1000 + amount, false) {
 			@Override
 			public void action() {
 				if (owner.getInventory().countId(feathers.getID()) < 1) {
@@ -131,7 +131,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 		player.message("You attach "
 			+ arrowHeads.getDef().getName().toLowerCase()
 			+ " to some of your arrows");
-		player.setBatchEvent(new BatchEvent(player, 40, 1000 + amount, false) {
+		player.setBatchEvent(new BatchEvent(player, 40, "Fletching Attach Arrowheads", 1000 + amount, false) {
 			@Override
 			public void action() {
 				if (owner.getSkills().getLevel(Skills.FLETCHING) < headDef.getReqLevel()) {
@@ -172,8 +172,8 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 			return false;
 		}
 
-		player.setBatchEvent(new BatchEvent(player, 600, Formulae
-			.getRepeatTimes(player, Skills.FLETCHING), false) {
+		player.setBatchEvent(new BatchEvent(player, 600, "Fletching String Bow",
+			Formulae.getRepeatTimes(player, Skills.FLETCHING), false) {
 			@Override
 			public void action() {
 				if (owner.getSkills().getLevel(Skills.FLETCHING) < stringDef.getReqLevel()) {
@@ -213,7 +213,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 			return false;
 		}
 		player.message("What would you like to make?");
-		Server.getServer().getEventHandler().add(new MiniEvent(player) {
+		Server.getServer().getEventHandler().add(new MiniEvent(player, "Fletching Make Bow") {
 			public void action() {
 				String[] option = new String[]{"Make arrow shafts",
 					"Make shortbow", "Make longbow"};
@@ -253,8 +253,8 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 							final int requiredLvl = reqLvl;
 							final int experience = exp;
 							final String cutMessages = cutMessage;
-							player.setBatchEvent(new BatchEvent(player, 600, Formulae
-								.getRepeatTimes(player, Skills.FLETCHING), false) {
+							player.setBatchEvent(new BatchEvent(player, 600, "Fletching Make Bow",
+								Formulae.getRepeatTimes(player, Skills.FLETCHING), false) {
 
 								@Override
 								public void action() {
@@ -303,8 +303,8 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 						final int requiredLvl = reqLvl;
 						final int experience = exp;
 						final String cutMessages = cutMessage;
-						player.setBatchEvent(new BatchEvent(player, 600, Formulae
-							.getRepeatTimes(player, Skills.FLETCHING), false) {
+						player.setBatchEvent(new BatchEvent(player, 600, "Fletching Make Bow",
+							Formulae.getRepeatTimes(player, Skills.FLETCHING), false) {
 
 							@Override
 							public void action() {
@@ -349,8 +349,8 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 		final int amt = amount;
 		final int exp = 25;
 		final int pearlID = pearl.getID();
-		player.setBatchEvent(new BatchEvent(player, 600, Formulae
-			.getRepeatTimes(player, Skills.FLETCHING), false) {
+		player.setBatchEvent(new BatchEvent(player, 600, "Fletching Pearl Cut",
+			Formulae.getRepeatTimes(player, Skills.FLETCHING), false) {
 			@Override
 			public void action() {
 				if (owner.getSkills().getLevel(Skills.FLETCHING) < 34) {
@@ -387,7 +387,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 		if (player.getInventory().countId(tip) < amount)
 			amount = player.getInventory().countId(tip);
 
-		player.setBatchEvent(new BatchEvent(player, 40, 1000 + amount, false) {
+		player.setBatchEvent(new BatchEvent(player, 40, "Fletching Make Bolt", 1000 + amount, false) {
 			@Override
 			public void action() {
 				if (owner.getSkills().getLevel(Skills.FLETCHING) < 34) {

@@ -222,7 +222,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 	public void handleGateSounds(Player player) {
         player.playSound("opendoor");
 
-	   Server.getServer().getEventHandler().add(new PluginsUseThisEvent(3000) {
+	   Server.getServer().getEventHandler().add(new PluginsUseThisEvent(3000, "Sheep Herder Gate Sounds") {
            @Override
            public void action() {
                player.playSound("opendoor");
@@ -267,7 +267,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 					RestartableDelayedEvent npcEvent = npcEventMap.get(plagueSheep);
 					//nudging outside of pen resets the timer
 					if (npcEvent == null) {
-						npcEvent = new RestartableDelayedEvent(p, 1000) {
+						npcEvent = new RestartableDelayedEvent(p, 1000, "Sheep Herder Nudge Sheep") {
 							int timesRan = 0;
 
 							@Override

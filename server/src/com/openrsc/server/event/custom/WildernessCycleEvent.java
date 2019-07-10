@@ -26,7 +26,7 @@ public class WildernessCycleEvent extends DelayedEvent {
 	private int lastWildernessType;
 
 	public WildernessCycleEvent() {
-		super(null, 1000);
+		super(null, 1000, "Wilderness Cycle Event");
 	}
 
 	@Override

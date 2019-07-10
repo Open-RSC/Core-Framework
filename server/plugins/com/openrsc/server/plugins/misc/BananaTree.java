@@ -17,7 +17,7 @@ public class BananaTree implements ObjectActionExecutiveListener,
 	public void onObjectAction(GameObject obj, String command, Player p) {
 
 		if (obj.getID() == 183) {
-			p.setBatchEvent(new BatchEvent(p, 600, p.getInventory().getFreeSlots(), false) {
+			p.setBatchEvent(new BatchEvent(p, 600, "Pick Banana Tree", p.getInventory().getFreeSlots(), false) {
 				@Override
 				public void action () {
 					int bananaCount = 1;

@@ -12,13 +12,7 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.getMultipleNpcsInArea;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcYell;
-import static com.openrsc.server.plugins.Functions.random;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showBubble;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class BabyBlueDragon implements InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
 
@@ -43,7 +37,7 @@ public class BabyBlueDragon implements InvUseOnNpcListener, InvUseOnNpcExecutive
 			player.message("You attempt to put the baby blue dragon in the crystal.");
 			npc.setBusyTimer(1600);
 
-			Server.getServer().getEventHandler().add(new ShortEvent(player) {
+			Server.getServer().getEventHandler().add(new ShortEvent(player, "Baby Blue Dragon Pet") {
 				public void action() {
 					if (npc.getPetOwnerA2() != player) {
 						//player.message("That's someone elses pet!");

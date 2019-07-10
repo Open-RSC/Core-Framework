@@ -19,7 +19,7 @@ public class StatRestorationEvent extends GameTickEvent {
 	private long lastRestoration = System.currentTimeMillis();
 
 	public StatRestorationEvent(Mob mob) {
-		super(mob, 1);
+		super(mob, 1, "Stat Restoration Event");
 	}
 
 	@Override

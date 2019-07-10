@@ -107,7 +107,7 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 		owner.playSound("fish");
 		owner.playerServerMessage(MessageType.QUEST, "You attempt to catch " + tryToCatchFishString(def));
 		showBubble(owner, new Item(netId));
-		owner.setBatchEvent(new BatchEvent(owner, 1800, 1000, true) {
+		owner.setBatchEvent(new BatchEvent(owner, 1800, "Fishing", 1000, true) {
 			@Override
 			public void action() {
 				final int baitId = def.getBaitId();
