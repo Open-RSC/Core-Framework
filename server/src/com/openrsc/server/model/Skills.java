@@ -355,9 +355,9 @@ public class Skills {
 	}
 	public static void loadSkills() {
 		int i = 0;
-		skills.add(new SkillDef("Attack", "Attack", 15,99, SkillDef.EXP_CURVE.ORIGINAL,i++)) ;
-		skills.add(new SkillDef("Defense", "Defense", 22,99, SkillDef.EXP_CURVE.ORIGINAL,i++));
-		skills.add(new SkillDef("Strength", "Strength", 19,99, SkillDef.EXP_CURVE.ORIGINAL,i++));
+		skills.add(new SkillDef("Attack", "Attack", 1,99, SkillDef.EXP_CURVE.ORIGINAL,i++)) ;
+		skills.add(new SkillDef("Defense", "Defense", 1,99, SkillDef.EXP_CURVE.ORIGINAL,i++));
+		skills.add(new SkillDef("Strength", "Strength", 1,99, SkillDef.EXP_CURVE.ORIGINAL,i++));
 		skills.add(new SkillDef("Hits", "Hits", 10,99, SkillDef.EXP_CURVE.ORIGINAL,i++));
 		skills.add(new SkillDef("Ranged", "Ranged", 1,99, SkillDef.EXP_CURVE.ORIGINAL,i++));
 		skills.add(new SkillDef("Prayer", "Prayer", 1,99, SkillDef.EXP_CURVE.ORIGINAL,i++));

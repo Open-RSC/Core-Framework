@@ -15,7 +15,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.LoginResponse;
-import static com.openrsc.server.Constants.GameServer.WANT_RUNECRAFTING;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
