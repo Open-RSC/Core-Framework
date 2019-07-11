@@ -1,8 +1,8 @@
 package orsc.graphics.two;
 
 import com.openrsc.client.entityhandling.EntityHandler;
-import com.openrsc.client.entityhandling.defs.SpriteDef;
 import com.openrsc.client.model.Sprite;
+
 import orsc.mudclient;
 import orsc.util.GenUtil;
 
