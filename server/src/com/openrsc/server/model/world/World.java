@@ -797,11 +797,15 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	}
 
 	public void releaseUnderAttack(Player p) {
-		playerUnderAttackMap.put(p, false);
+		if (playerUnderAttackMap.containsKey(p)) {
+			playerUnderAttackMap.remove(p);
+		}
 	}
 
 	public void releaseUnderAttack(Npc n) {
-		npcUnderAttackMap.put(n, false);
+		if (npcUnderAttackMap.containsKey(n)) {
+			npcUnderAttackMap.remove(n);
+		}
 	}
 
 	public synchronized Map<Player, Boolean> getPlayersUnderAttack() {
