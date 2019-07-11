@@ -1,6 +1,7 @@
 package orsc;
 
 import com.openrsc.client.entityhandling.defs.SpriteDef;
+
 import orsc.enumerations.ORSCharacterDirection;
 
 public final class ORSCharacter {

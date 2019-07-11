@@ -2,6 +2,7 @@ package orsc.graphics.two;
 
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.model.Sprite;
+
 import orsc.mudclient;
 import orsc.util.GenUtil;
 
@@ -22,7 +23,6 @@ public final class MudClientGraphics extends GraphicsController {
 								overlayMovement);
 					} else if (index < 5000) {
 						Sprite projectile = spriteSelect(EntityHandler.projectiles.get(index-mudclient.spriteProjectile));
-
 						super.drawSprite(projectile, x, y, width, height, 5924);
 					} else {
 						this.mudClientRef.drawPlayer(index - 5000, x, y, width, height, topPixelSkew, 20,

@@ -14,21 +14,14 @@ import orsc.mudclient;
 
 
 public final class LostOnDeathInterface {
-	private ArrayList<OnDeathItem> onDeathItems;
-
-	private boolean visible;
-
-	int itemSelected = -1, rightClickMenuX = 0, rightClickMenuY = 0;
-
 	public Panel lostOnDeathPanel;
-
-	private mudclient mc;
-
-	private int panelColour, textColour, bordColour;
-
+	int itemSelected = -1, rightClickMenuX = 0, rightClickMenuY = 0;
 	int width = 509;
 	int height = 331;
-
+	private ArrayList<OnDeathItem> onDeathItems;
+	private boolean visible;
+	private mudclient mc;
+	private int panelColour, textColour, bordColour;
 	private int x, y;
 
 	public LostOnDeathInterface(mudclient mc) {
@@ -50,7 +43,9 @@ public final class LostOnDeathInterface {
 	public void onRender() {
 		reposition();
 
-		panelColour = 0x989898; textColour = 0xFFFFFF; bordColour = 0x000000;
+		panelColour = 0x989898;
+		textColour = 0xFFFFFF;
+		bordColour = 0x000000;
 
 		lostOnDeathPanel.handleMouse(mc.getMouseX(), mc.getMouseY(), mc.getMouseButtonDown(), mc.getLastMouseDown());
 
@@ -134,7 +129,8 @@ public final class LostOnDeathInterface {
 
 	private void populateOnDeathItems() {
 		int[] invyItems = mc.getInventoryItems();
-		for (int i = 0; i < mc.getInventoryItemCount(); i++) {int count = mc.getInventoryItemCount();
+		for (int i = 0; i < mc.getInventoryItemCount(); i++) {
+			int count = mc.getInventoryItemCount();
 			if (invyItems[i] > 0) {
 				ItemDef def = EntityHandler.getItemDef(invyItems[i]);
 				int stackCount = 1;
@@ -169,7 +165,7 @@ public final class LostOnDeathInterface {
 			// Handles special case of stackable items being kept
 			if (EntityHandler.getItemDef(onDeathItems.get(i).getItemID()).isStackable()) {
 				onDeathItems.add(i, new OnDeathItem(onDeathItems.get(i).getItemID(), onDeathItems.get(i).getPrice(), 1, false));
-				onDeathItems.set(i+1, new OnDeathItem(onDeathItems.get(i+1).getItemID(), onDeathItems.get(i+1).getPrice(), onDeathItems.get(i+1).getStackCount() - 1, false));
+				onDeathItems.set(i + 1, new OnDeathItem(onDeathItems.get(i + 1).getItemID(), onDeathItems.get(i + 1).getPrice(), onDeathItems.get(i + 1).getStackCount() - 1, false));
 			}
 			onDeathItems.get(i).setLost(true);
 		}
@@ -185,7 +181,7 @@ public final class LostOnDeathInterface {
 			for (int j = i + 1; j < keepXItems; j++) {
 				if (onDeathItems.get(i).getItemID() == onDeathItems.get(j).getItemID()) {
 					onDeathItems.set(i, new OnDeathItem(onDeathItems.get(i).getItemID(), onDeathItems.get(i).getPrice(), onDeathItems.get(i).getStackCount() + 1, onDeathItems.get(i).getLost()));
-					onDeathItems.remove(i+1);
+					onDeathItems.remove(i + 1);
 				}
 			}
 		}
@@ -208,7 +204,7 @@ public final class LostOnDeathInterface {
 
 	public void drawStringCentered(String str, int x, int y, int font, int color) {
 		int stringWid = mc.getSurface().stringWidth(font, str);
-		mc.getSurface().drawString(str, x + (width/2) - (stringWid/2) - 2, y, color, font);
+		mc.getSurface().drawString(str, x + (width / 2) - (stringWid / 2) - 2, y, color, font);
 	}
 
 	private void drawButton(int x, int y, int width, int height, String text, int font, boolean checked, ButtonHandler handler) {
@@ -226,7 +222,7 @@ public final class LostOnDeathInterface {
 		}
 		mc.getSurface().drawBoxAlpha(x, y, width, height, bgBtnColour, 192);
 		mc.getSurface().drawBoxBorder(x, width, y, height, 0x242424);
-		mc.getSurface().drawString(text, x + (width/2) - (mc.getSurface().stringWidth(font, text)/2) - 1, y + height / 2 + 5, textColour, font);
+		mc.getSurface().drawString(text, x + (width / 2) - (mc.getSurface().stringWidth(font, text) / 2) - 1, y + height / 2 + 5, textColour, font);
 	}
 
 	public boolean isVisible() {

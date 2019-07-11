@@ -2,11 +2,11 @@ package orsc.graphics.gui;
 
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.model.Sprite;
+
 import orsc.MiscFunctions;
 import orsc.enumerations.PanelControlType;
 import orsc.graphics.two.Fonts;
 import orsc.graphics.two.GraphicsController;
-import orsc.mudclient;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
 
@@ -715,6 +715,7 @@ public final class Panel {
 			this.graphics.drawBoxBorder(x, width, y, height, this.colorF);
 			this.graphics.drawBoxBorder(1 + x, width - 2, 1 + y, height - 2, this.colorG);
 			this.graphics.drawBoxBorder(x + 2, width - 4, 2 + y, height - 4, this.colorH);
+
 			this.graphics.drawSprite(this.graphics.spriteSelect(EntityHandler.GUIparts.get(EntityHandler.GUIPARTS.DECORATEDBOXUL.id())), x, y);
 			this.graphics.drawSprite(this.graphics.spriteSelect(EntityHandler.GUIparts.get(EntityHandler.GUIPARTS.DECORATEDBOXUR.id())), width + x - 7, y);
 			this.graphics.drawSprite(this.graphics.spriteSelect(EntityHandler.GUIparts.get(EntityHandler.GUIPARTS.DECORATEDBOXLL.id())), x, y - (7 - height));
@@ -722,6 +723,7 @@ public final class Panel {
 		} catch (RuntimeException var7) {
 			throw GenUtil.makeThrowable(var7, "qa.V(" + y + ',' + width + ',' + "true" + ',' + x + ',' + height + ')');
 		}
+
 	}
 
 	private void renderHorizLine(int x, int y, int width, int color) {

@@ -96,12 +96,12 @@ public class Sprite {
     public int getID() {
         return id;
     }
-	public void setID(int id) { this.id = id; }
+    public void setID(int id) { this.id = id; }
 
     public String getPackageName() {
         return packageName;
     }
-	public void setPackageName(String name) { this.packageName = name; }
+    public void setPackageName(String name) { this.packageName = name; }
 
     public void setShift(int xShift, int yShift) {
         this.xShift = xShift;
@@ -119,12 +119,10 @@ public class Sprite {
     public int getXShift() {
         return xShift;
     }
-	public void setXShift(int value) { this.xShift = value; }
+    public void setXShift(int value) { this.xShift = value; }
 
-    public int getYShift() {
-        return yShift;
-    }
-	public void setYShift(int value) { this.yShift = value; }
+    public int getYShift() { return yShift;	}
+    public void setYShift(int value) { this.yShift = value; }
 
     public int[] getPixels() {
         return pixels;

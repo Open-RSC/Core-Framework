@@ -212,11 +212,11 @@ public final class AuctionHouse {
 		} else if (newAuctionItem != null) {
 			ItemDef def = EntityHandler.getItemDef(newAuctionItem.getItemID());
 			mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), x + 40, y + 55, 48, 32,
-				def.getPictureMask(), 0, false, 0, 1);
+					def.getPictureMask(), 0, false, 0, 1);
 			if (def.getNotedFormOf() >= 0) {
 				ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
 				mc.getSurface().drawSpriteClipping(mc.spriteSelect(originalDef), x + 47,
-					y + 59, 33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
+						y + 59, 33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
 			}
 			//graphics.drawString("Fee: +" + (int) getFee() + "gp", x + 6, y + 101, 0xffffff, 0);
 		}
@@ -280,24 +280,24 @@ public final class AuctionHouse {
 						ItemDef def = EntityHandler.getItemDef(mc.getInventoryItems()[inventorySlot]);
 
 						mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), drawX, drawY, 48,
-							32, def.getPictureMask(), 0, false, 0, 1);
+								32, def.getPictureMask(), 0, false, 0, 1);
 						if (def.getNotedFormOf() >= 0) {
 							ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
 							mc.getSurface().drawSpriteClipping(mc.spriteSelect(originalDef), drawX + 7,
-								drawY + 4, 33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
+									drawY + 4, 33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
 						}
 						graphics.drawString(String.valueOf(mc.getInventoryItemsCount()[inventorySlot]), drawX + 1,
-							drawY + 10, 65280, 1);
+								drawY + 10, 65280, 1);
 					}
 					if (mc.getMouseX() > drawX && mc.getMouseX() < drawX + boxWidth && mc.getMouseY() > drawY
-						&& mc.getMouseY() < drawY + boxHeight) {
+							&& mc.getMouseY() < drawY + boxHeight) {
 						graphics.drawBoxAlpha(drawX, drawY, boxWidth, boxHeight, i7, 160);
 						if (mc.getMouseClick() == 1) {
 							int itemID = mc.getInventoryItems()[inventorySlot];
 							int amount = mc.getInventoryCount(itemID);
 							if (itemID == 10 || EntityHandler.getItemDef(itemID).quest) {
 								mc.showMessage(false, null, "This object cannot be added to auction", MessageType.GAME,
-									0, null);
+										0, null);
 								return;
 							}
 							if (amount > 0) {
@@ -360,7 +360,7 @@ public final class AuctionHouse {
 					continue;
 				AuctionItem ahItem = filteredList.get(i);
 				if (mc.getMouseX() >= listX - 72 && mc.getMouseY() >= listY - 11 && mc.getMouseX() <= listX + 275 - 12
-					&& mc.getMouseY() <= listY - 11 + boxHeight) {
+						&& mc.getMouseY() <= listY - 11 + boxHeight) {
 					graphics.drawBoxAlpha(listX - 72, listY - 11, 348, boxHeight, 0x980000, 128);
 					if (mc.getMouseClick() == 1) {
 						selectedCancelAuction = i;
@@ -395,7 +395,7 @@ public final class AuctionHouse {
 				graphics.drawBoxAlpha(listX - 72, listY - 10, boxWidth + 1, boxHeight - 1, 0xfffffff, 128);
 
 				mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), listX - 72, listY - 10, 48,
-					32, def.getPictureMask(), 0, false, 0, 1);
+						32, def.getPictureMask(), 0, false, 0, 1);
 
 				graphics.drawString(String.valueOf(ahItem.getAmount()), listX - 72 + 1, listY - 10 + 11, 65280, 3);
 				listY += boxHeight + 2;
@@ -405,7 +405,7 @@ public final class AuctionHouse {
 				int cancelAuctionColor = 0x980000;
 
 				if (mc.getMouseX() >= x + 285 - 29 && mc.getMouseY() >= y + 260 && mc.getMouseX() <= x + 385 - 17
-					&& mc.getMouseY() <= y + 20 + 260) {
+						&& mc.getMouseY() <= y + 20 + 260) {
 					cancelAuctionColor = 0x500000;
 					if (mc.getMouseClick() == 1 && selectedCancelAuction < filteredList.size()) {
 						sendCancelAuction(filteredList.get(selectedCancelAuction).getAuctionID());
@@ -659,7 +659,7 @@ public final class AuctionHouse {
 			} else if (selectedFilter == 5) {
 				nameFilter = new String[]{"uncut", "sapphire", "emerald", "ruby", "diamond", "dragonstone"};
 				exactNameFilter = new String[]{"opal", "jade", "amulet of accuracy", "gold amulet", "brass necklace",
-					"gold necklace", "holy symbol of saradomin", "unblessed holy symbol"};
+						"gold necklace", "holy symbol of saradomin", "unblessed holy symbol"};
 			} else if (selectedFilter == 6) {
 				nameFilter = new String[]{" ore", "coal", "bar", "clay"};
 				exactNameFilter = new String[]{"gold", "silver", "silver certificate", "gold certificate"};
@@ -667,8 +667,8 @@ public final class AuctionHouse {
 				commandFilter = new String[]{"identify"};
 				nameFilter = new String[]{"unfinished", "vial", "weed", "ground", "root", "scale"};
 				exactNameFilter = new String[]{"Guam Leaf", "Marrentill", "Tarromin", "Harralander", "Irit leaf",
-					"Avantoe", "Kwuarm", "Cadantine", "Torstol", "Pestle and mortar", "Eye of newt", "Jangerberries",
-					"Red spiders eggs", "White berries", "Snape grass", "Wine of zamorak"};
+						"Avantoe", "Kwuarm", "Cadantine", "Torstol", "Pestle and mortar", "Eye of newt", "Jangerberries",
+						"Red spiders eggs", "White berries", "Snape grass", "Wine of zamorak"};
 			} else if (selectedFilter == 8) {
 				nameFilter = new String[]{"halloween", "bunny", "party", "pumpkin", "easter", "scythe", "cracker"};
 				exactNameFilter = new String[]{"Disc of returning", "santa's hat"};
@@ -676,14 +676,14 @@ public final class AuctionHouse {
 			if (selectedFilter == 9) {
 				nameFilter = resources;
 				exactNameFilter = new String[]{
-					"fur", "leather", "wool", "bow string", "flax", "cow hide",
-					"knife", "egg", "bucket", "milk", "flour", "skull", "grain",
-					"needle", "thread", "holy", "water", "cadavaberries",
-					"pot", "jug", "grapes", "shears", "tinderbox",
-					"chisel", "hammer", "ashes", "apron", "chef's hat", "skirt", "silk",
-					"flier", "garlic", "redberries", "rope", "bad wine", "cape",
-					"eye of newt", "lobster pot", "net", "fishing rod", "fly fishing rod", "harpoon",
-					"fishing bait", "feather"
+						"fur", "leather", "wool", "bow string", "flax", "cow hide",
+						"knife", "egg", "bucket", "milk", "flour", "skull", "grain",
+						"needle", "thread", "holy", "water", "cadavaberries",
+						"pot", "jug", "grapes", "shears", "tinderbox",
+						"chisel", "hammer", "ashes", "apron", "chef's hat", "skirt", "silk",
+						"flier", "garlic", "redberries", "rope", "bad wine", "cape",
+						"eye of newt", "lobster pot", "net", "fishing rod", "fly fishing rod", "harpoon",
+						"fishing bait", "feather"
 				};
 			}
 			boolean skip = true;
@@ -756,7 +756,7 @@ public final class AuctionHouse {
 					continue;
 				AuctionItem ahItem = filteredList.get(i);
 				if (mc.getMouseX() >= (listX - 3) && mc.getMouseY() >= (listY - 5) && mc.getMouseX() <= listX + 384
-					&& mc.getMouseY() <= (listY - 5) + boxHeight) {
+						&& mc.getMouseY() <= (listY - 5) + boxHeight) {
 					graphics.drawBoxAlpha(listX - 3, listY - 5, 400, boxHeight, 0x980000, 128);
 					if (mc.getMouseClick() == 1) {
 						selectedAuction = i;
@@ -786,13 +786,13 @@ public final class AuctionHouse {
 				graphics.drawBoxAlpha(listX - 3, listY - 4, boxWidth + 1, boxHeight - 1, 0xfffffff, 128);
 
 				mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), listX - 3, listY - 5, 48,
-					32, def.getPictureMask(), 0, false, 0, 1);
+						32, def.getPictureMask(), 0, false, 0, 1);
 
 				graphics.drawString(String.valueOf(ahItem.getAmount()), listX + 1 - 3, listY + 10 - 4, 65280, 1);
 				listY += boxHeight + 2;
 			}
 			graphics.drawString("Showing: " + (showing) + "/" + (filteredList.size()) + " items", listX + 49, y + 75,
-				0xffffff, 1);
+					0xffffff, 1);
 			graphics.drawString("Expires in", listX + 201, y + 75, 0xffffff, 1);
 		}
 
@@ -834,7 +834,7 @@ public final class AuctionHouse {
 			graphics.drawBoxBorder(selectX + 8, 50, selectY + 22, 34, 0);
 
 			mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), selectX + 8, selectY + 22, 48, 32,
-				def.getPictureMask(), 0, false, 0, 1);
+					def.getPictureMask(), 0, false, 0, 1);
 			graphics.drawString(String.valueOf(ahItem.getAmount()), selectX + 10, selectY + 22 + 11, 65280, 1);
 
 			graphics.drawString(getTime(ahItem) + "h left", selectX + 60, selectY + 32, 0xffffff, 2);
@@ -987,7 +987,7 @@ public final class AuctionHouse {
 			}
 		} else if (activeInterface == 1) {
 			if (myAuctions.focusOn(textField_amount) || myAuctions.focusOn(textField_price)
-				|| myAuctions.focusOn(textField_priceEach)) {
+					|| myAuctions.focusOn(textField_priceEach)) {
 				if (newAuctionItem != null) {
 					if (key >= 48 && key <= 57 || key == 8) {
 						myAuctions.keyPress(key);
