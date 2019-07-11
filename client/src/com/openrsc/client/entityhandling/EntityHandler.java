@@ -7,35 +7,34 @@ import com.openrsc.client.entityhandling.defs.ItemDef;
 import com.openrsc.client.entityhandling.defs.NPCDef;
 import com.openrsc.client.entityhandling.defs.PrayerDef;
 import com.openrsc.client.entityhandling.defs.SpellDef;
+import com.openrsc.client.entityhandling.defs.SpriteDef;
 import com.openrsc.client.entityhandling.defs.TileDef;
 import com.openrsc.client.entityhandling.defs.extras.AnimationDef;
 import com.openrsc.client.entityhandling.defs.extras.TextureDef;
-import com.openrsc.client.entityhandling.defs.SpriteDef;
-import orsc.mudclient;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 import orsc.Config;
+import orsc.mudclient;
 
 public class EntityHandler {
 
-	public static ArrayList<NPCDef> npcs = new ArrayList<NPCDef>();
-	private static ArrayList<ItemDef> items = new ArrayList<ItemDef>();
+	public static ArrayList<NPCDef> npcs = new ArrayList<>();
+	private static ArrayList<ItemDef> items = new ArrayList<>();
 	//public static ArrayList<ItemDef> specificSprites = new ArrayList<ItemDef>();
-	private static ArrayList<TextureDef> textures = new ArrayList<TextureDef>();
-	private static ArrayList<AnimationDef> animations = new ArrayList<AnimationDef>();
+	private static ArrayList<TextureDef> textures = new ArrayList<>();
+	private static ArrayList<AnimationDef> animations = new ArrayList<>();
 	public static ArrayList<SpriteDef> projectiles = new ArrayList<>();
 	public static ArrayList<SpriteDef> GUIparts = new ArrayList<>();
 	public static ArrayList<SpriteDef> crowns = new ArrayList<>();
-	private static ArrayList<SpellDef> spells = new ArrayList<SpellDef>();
-	private static ArrayList<PrayerDef> prayers = new ArrayList<PrayerDef>();
-	private static ArrayList<TileDef> tiles = new ArrayList<TileDef>();
-	private static ArrayList<DoorDef> doors = new ArrayList<DoorDef>();
-	private static ArrayList<ElevationDef> elevation = new ArrayList<ElevationDef>();
-	private static ArrayList<GameObjectDef> objects = new ArrayList<GameObjectDef>();
-	private static ArrayList<String> models = new ArrayList<String>();
+	private static ArrayList<SpellDef> spells = new ArrayList<>();
+	private static ArrayList<PrayerDef> prayers = new ArrayList<>();
+	private static ArrayList<TileDef> tiles = new ArrayList<>();
+	private static ArrayList<DoorDef> doors = new ArrayList<>();
+	private static ArrayList<ElevationDef> elevation = new ArrayList<>();
+	private static ArrayList<GameObjectDef> objects = new ArrayList<>();
+	private static ArrayList<String> models = new ArrayList<>();
 
 	private static int invPictureCount = 0;
 
@@ -4540,7 +4539,7 @@ public class EntityHandler {
 
 	@SuppressWarnings("unchecked")
 	private static void loadSpellDefinitions() {
-		LinkedHashMap<Integer, Integer> runes = new LinkedHashMap<Integer, Integer>();
+		LinkedHashMap<Integer, Integer> runes = new LinkedHashMap<>();
 		runes.put(33, 1);
 		runes.put(35, 1);
 		spells.add(new SpellDef("Wind strike", "A strength 1 missile attack",

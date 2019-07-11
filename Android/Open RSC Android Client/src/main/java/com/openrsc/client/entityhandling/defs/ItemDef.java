@@ -15,6 +15,12 @@ public class ItemDef extends EntityDef {
 	private int isNotedFormOf = -1;
 	private int notedFormID = -1;
 
+	public ItemDef(String name, String description, int authenticSpriteID, String spriteLocation,int id) {
+		super(name,description,id);
+		this.authenticSpriteID = authenticSpriteID;
+		this.spriteLocation = spriteLocation;
+	}
+
 	public ItemDef(String name, String description, String command, int basePrice, int authenticSpriteID, boolean stackable,
 				   boolean wieldable, int wearableID, int pictureMask, boolean membersItem, boolean quest, int id) {
 		super(name, description, id);
@@ -29,7 +35,6 @@ public class ItemDef extends EntityDef {
 		this.quest = quest;
 		this.id = id;
 	}
-
 
 	public ItemDef(String name, String description, String command, int basePrice, int authenticSpriteID, String spriteLocation,
 				   boolean stackable, boolean wieldable, int wearableID, int pictureMask, boolean membersItem,
@@ -50,7 +55,6 @@ public class ItemDef extends EntityDef {
 		this.spriteLocation = spriteLocation;
 	}
 
-
 	public ItemDef(int i, ItemDef item) {
 		super(item.name, "Swap this note at any bank for the equivalent item.", i);
 		this.command = item.command;
@@ -65,13 +69,13 @@ public class ItemDef extends EntityDef {
 		this.id = i;
 	}
 
-
 	public String getCommand() {
 		return command;
 	}
 
-	public int getAuthenticSpriteID() {	return authenticSpriteID; }
-
+	public int getAuthenticSpriteID() {
+		return authenticSpriteID;
+	}
 
 	public String getSpriteLocation() { return this.spriteLocation; }
 

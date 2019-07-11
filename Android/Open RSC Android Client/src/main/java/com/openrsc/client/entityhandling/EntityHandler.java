@@ -1,30 +1,40 @@
 package com.openrsc.client.entityhandling;
 
-import com.openrsc.client.entityhandling.defs.*;
+import com.openrsc.client.entityhandling.defs.DoorDef;
+import com.openrsc.client.entityhandling.defs.ElevationDef;
+import com.openrsc.client.entityhandling.defs.GameObjectDef;
+import com.openrsc.client.entityhandling.defs.ItemDef;
+import com.openrsc.client.entityhandling.defs.NPCDef;
+import com.openrsc.client.entityhandling.defs.PrayerDef;
+import com.openrsc.client.entityhandling.defs.SpellDef;
+import com.openrsc.client.entityhandling.defs.SpriteDef;
+import com.openrsc.client.entityhandling.defs.TileDef;
 import com.openrsc.client.entityhandling.defs.extras.AnimationDef;
 import com.openrsc.client.entityhandling.defs.extras.TextureDef;
-import orsc.Config;
-import orsc.mudclient;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
+import orsc.Config;
+import orsc.mudclient;
+
 public class EntityHandler {
 
-	public static ArrayList<NPCDef> npcs = new ArrayList<NPCDef>();
-	private static ArrayList<ItemDef> items = new ArrayList<ItemDef>();
-	private static ArrayList<TextureDef> textures = new ArrayList<TextureDef>();
-	private static ArrayList<AnimationDef> animations = new ArrayList<AnimationDef>();
+	public static ArrayList<NPCDef> npcs = new ArrayList<>();
+	private static ArrayList<ItemDef> items = new ArrayList<>();
+	//public static ArrayList<ItemDef> specificSprites = new ArrayList<ItemDef>();
+	private static ArrayList<TextureDef> textures = new ArrayList<>();
+	private static ArrayList<AnimationDef> animations = new ArrayList<>();
 	public static ArrayList<SpriteDef> projectiles = new ArrayList<>();
 	public static ArrayList<SpriteDef> GUIparts = new ArrayList<>();
 	public static ArrayList<SpriteDef> crowns = new ArrayList<>();
-	private static ArrayList<SpellDef> spells = new ArrayList<SpellDef>();
-	private static ArrayList<PrayerDef> prayers = new ArrayList<PrayerDef>();
-	private static ArrayList<TileDef> tiles = new ArrayList<TileDef>();
-	private static ArrayList<DoorDef> doors = new ArrayList<DoorDef>();
-	private static ArrayList<ElevationDef> elevation = new ArrayList<ElevationDef>();
-	private static ArrayList<GameObjectDef> objects = new ArrayList<GameObjectDef>();
-	private static ArrayList<String> models = new ArrayList<String>();
+	private static ArrayList<SpellDef> spells = new ArrayList<>();
+	private static ArrayList<PrayerDef> prayers = new ArrayList<>();
+	private static ArrayList<TileDef> tiles = new ArrayList<>();
+	private static ArrayList<DoorDef> doors = new ArrayList<>();
+	private static ArrayList<ElevationDef> elevation = new ArrayList<>();
+	private static ArrayList<GameObjectDef> objects = new ArrayList<>();
+	private static ArrayList<String> models = new ArrayList<>();
 
 	private static int invPictureCount = 0;
 
@@ -148,33 +158,33 @@ public class EntityHandler {
 
 	private static void loadPrayerDefinitions() {
 		prayers.add(new PrayerDef(1, 15, "Thick skin",
-			"Increases your defense by 5%"));
+				"Increases your defense by 5%"));
 		prayers.add(new PrayerDef(4, 15, "Burst of strength",
-			"Increases your strength by 5%"));
+				"Increases your strength by 5%"));
 		prayers.add(new PrayerDef(7, 15, "Clarity of thought",
-			"Increases your attack by 5%"));
+				"Increases your attack by 5%"));
 		prayers.add(new PrayerDef(10, 30, "Rock skin",
-			"Increases your defense by 10%"));
+				"Increases your defense by 10%"));
 		prayers.add(new PrayerDef(13, 30, "Superhuman strength",
-			"Increases your strength by 10%"));
+				"Increases your strength by 10%"));
 		prayers.add(new PrayerDef(16, 30, "Improved reflexes",
-			"Increases your attack by 10%"));
+				"Increases your attack by 10%"));
 		prayers.add(new PrayerDef(19, 5, "Rapid restore",
-			"2x restore rate for all stats except hits"));
+				"2x restore rate for all stats except hits"));
 		prayers.add(new PrayerDef(22, 10, "Rapid heal",
-			"2x restore rate for hitpoints stat"));
+				"2x restore rate for hitpoints stat"));
 		prayers.add(new PrayerDef(25, 10, "Protect items",
-			"Keep 1 extra item if you die"));
+				"Keep 1 extra item if you die"));
 		prayers.add(new PrayerDef(28, 60, "Steel skin",
-			"Increases your defense by 15%"));
+				"Increases your defense by 15%"));
 		prayers.add(new PrayerDef(31, 60, "Ultimate strength",
-			"Increases your strength by 15%"));
+				"Increases your strength by 15%"));
 		prayers.add(new PrayerDef(34, 60, "Incredible reflexes",
-			"Increases your attack by 15%"));
+				"Increases your attack by 15%"));
 		prayers.add(new PrayerDef(37, 60, "Paralyze monster",
-			"Stops monsters from fighting back"));
+				"Stops monsters from fighting back"));
 		prayers.add(new PrayerDef(40, 60, "Protect from missiles",
-			"100% protection from ranged attacks"));
+				"100% protection from ranged attacks"));
 	}
 
 	private static void loadTileDefinitions() {
@@ -271,6 +281,7 @@ public class EntityHandler {
 		textures.add(new TextureDef("cavern2", "crumbled"));
 		textures.add(new TextureDef("lava", "flames"));
 	}
+
 	public enum PROJECTILE_TYPES {
 		ORB(0),
 		MAGIC(1),
@@ -416,6 +427,7 @@ public class EntityHandler {
 		crowns.add(new SpriteDef("key", 3288, "crowns:4", 4));
 
 	}
+
 	private static void loadNpcDefinitionsA() {
 		int i = 0;
 		int[] sprites;
@@ -2094,6 +2106,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Coins", "Lovely money!", "", 1, 10, "items:10", true, false, 0, 0, false, false, -1, -1, 10));
 		items.add(new ItemDef("Bronze Arrows", "Arrows with bronze heads", "", 2, 11, "items:11", true, false, 0, 16737817, false, false, -1, -1, 11));
 		items.add(new ItemDef("Iron Axe", "A woodcutters axe", "", 56, 12, "items:12", false, true, 16, 15654365, false, false, 1300, -1, 12));
+
 		items.add(new ItemDef("Knife", "A dangerous looking knife", "", 6, 13, "items:13", false, false, 0, 0, false, false, 1301, -1, 13));
 		items.add(new ItemDef("Logs", "A number of wooden logs", "", 4, 14, "items:14", false, false, 0, 0, false, false, 1302, -1, 14));
 		items.add(new ItemDef("Leather Armour", "Better than no armour!", "", 21, 15, "items:15", false, true, 64, 0, false, false, 1303, -1, 15));
@@ -3464,8 +3477,8 @@ public class EntityHandler {
 		items.add(new ItemDef("Hardcore ironman helm", "For those who stand alone.", "", 154, 6, false, true, 33, 10027084, false, true, -1, -1, 2141));
 		items.add(new ItemDef("Hardcore ironman platebody", "Take it off and what are you?", "", 560, 8, false, true, 322, 10027084, false, true, -1, -1, 2142));
 		items.add(new ItemDef("Hardcore ironman platelegs", "Take it off and what are you?", "", 280, 9, false, true, 644, 10027084, false, true, -1, -1, 2143));
+		*/
 
-		 */
 	}
 
 	private static void loadNoteDefinitions() {
@@ -4505,9 +4518,11 @@ public class EntityHandler {
 		animations.add(new AnimationDef("boots", 1118481, 0, true, false, 0));
 		animations.add(new AnimationDef("wizardsrobe", 1118481, 0, true, false, 0));
 		animations.add(new AnimationDef("Scythe", 0, 0, true, false, 0));
+
 		/*
 		  Add custom animation below.
 		 */
+
 		if (Config.S_WANT_CUSTOM_SPRITES) {
 			animations.add(new AnimationDef("hatchet", 0, 0, true, false, 0)); // 231 appearanceID.
 			animations.add(new AnimationDef("fullhelm", 11189164, 0, true, false, 0));
@@ -4524,751 +4539,751 @@ public class EntityHandler {
 
 	@SuppressWarnings("unchecked")
 	private static void loadSpellDefinitions() {
-		LinkedHashMap<Integer, Integer> runes = new LinkedHashMap<Integer, Integer>();
+		LinkedHashMap<Integer, Integer> runes = new LinkedHashMap<>();
 		runes.put(33, 1);
 		runes.put(35, 1);
 		spells.add(new SpellDef("Wind strike", "A strength 1 missile attack",
-			1, 2, 2, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				1, 2, 2, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(32, 3);
 		runes.put(34, 2);
 		runes.put(36, 1);
 		spells.add(new SpellDef("Confuse",
-			"Reduces your opponents attack by 5%", 3, 2, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Reduces your opponents attack by 5%", 3, 2, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(32, 1);
 		runes.put(33, 1);
 		runes.put(35, 1);
 		spells.add(new SpellDef("Water Strike", "A strength 2 missile attack",
-			5, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				5, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(32, 1);
 		runes.put(46, 1);
 		spells.add(new SpellDef("Enchant lvl-1 amulet",
-			"For use on sapphire amulets", 7, 3, 2,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"For use on sapphire amulets", 7, 3, 2,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 2);
 		runes.put(33, 1);
 		runes.put(35, 1);
 		spells.add(new SpellDef("Earth Strike", "A strength 3 missile attack",
-			9, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				9, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(32, 3);
 		runes.put(34, 2);
 		runes.put(36, 1);
 		spells.add(new SpellDef("Weaken",
-			"Reduces your opponents strength by 5%", 11, 2, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Reduces your opponents strength by 5%", 11, 2, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 3);
 		runes.put(33, 2);
 		runes.put(35, 1);
 		spells.add(new SpellDef("Fire Strike", "A strength 4 missile attack",
-			13, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				13, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 2);
 		runes.put(32, 2);
 		runes.put(40, 1);
 		spells.add(new SpellDef("Bones to bananas",
-			"Changes all held bones into bananas!", 15, 0, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Changes all held bones into bananas!", 15, 0, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(33, 2);
 		runes.put(41, 1);
 		spells.add(new SpellDef("Wind Bolt", "A strength 5 missile attack", 17,
-			2, 2, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				2, 2, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(32, 2);
 		runes.put(34, 3);
 		runes.put(36, 1);
 		spells.add(new SpellDef("Curse",
-			"Reduces your opponents defense by 5%", 19, 2, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Reduces your opponents defense by 5%", 19, 2, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 3);
 		runes.put(40, 1);
 		spells.add(new SpellDef("Low level alchemy",
-			"Converts an item into gold", 21, 3, 2,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Converts an item into gold", 21, 3, 2,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(32, 2);
 		runes.put(33, 2);
 		runes.put(41, 1);
 		spells.add(new SpellDef("Water bolt", "A strength 6 missle attack", 23,
-			2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 1);
 		runes.put(33, 3);
 		runes.put(42, 1);
 		spells.add(new SpellDef("Varrock teleport", "Teleports you to Varrock",
-			25, 0, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				25, 0, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(33, 3);
 		runes.put(46, 1);
 		spells.add(new SpellDef("Enchant lvl-2 amulet",
-			"For use on emerald amulets", 27, 3, 2,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"For use on emerald amulets", 27, 3, 2,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 3);
 		runes.put(33, 2);
 		runes.put(41, 1);
 		spells.add(new SpellDef("Earth bolt", "A strength 7 missile attack",
-			29, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				29, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 1);
 		runes.put(33, 3);
 		runes.put(42, 1);
 		spells.add(new SpellDef("Lumbridge teleport",
-			"Teleports you to Lumbridge", 31, 0, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Teleports you to Lumbridge", 31, 0, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(33, 1);
 		runes.put(42, 1);
 		spells.add(new SpellDef("Telekinetic grab",
-			"Take an item you can see but can't reach", 33, 3, 2,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Take an item you can see but can't reach", 33, 3, 2,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 4);
 		runes.put(33, 3);
 		runes.put(41, 1);
 		spells.add(new SpellDef("Fire bolt", "A strength 8 missile attack", 35,
-			2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(32, 1);
 		runes.put(33, 3);
 		runes.put(42, 1);
 		spells.add(new SpellDef("Falador teleport", "Teleports you to Falador",
-			37, 0, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				37, 0, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 2);
 		runes.put(33, 2);
 		runes.put(41, 1);
 		spells.add(new SpellDef("Crumble undead",
-			"Hits skeleton, ghosts & zombies hard!", 39, 2, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Hits skeleton, ghosts & zombies hard!", 39, 2, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(33, 3);
 		runes.put(38, 1);
 		spells.add(new SpellDef("Wind blast", "A strength 9 missile attack",
-			41, 2, 2, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				41, 2, 2, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 4);
 		runes.put(40, 1);
 		spells.add(new SpellDef("Superheat item",
-			"Smelt 1 ore without a furnace", 43, 3, 2,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Smelt 1 ore without a furnace", 43, 3, 2,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(33, 5);
 		runes.put(42, 1);
 		spells.add(new SpellDef("Camelot teleport", "Teleports you to Camelot",
-			45, 0, 2, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				45, 0, 2, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(32, 3);
 		runes.put(33, 3);
 		runes.put(38, 1);
 		spells.add(new SpellDef("Water blast", "A strength 10 missile attack",
-			47, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				47, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 5);
 		runes.put(46, 1);
 		spells.add(new SpellDef("Enchant lvl-3 amulet",
-			"For use on ruby amulets", 49, 3, 2,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"For use on ruby amulets", 49, 3, 2,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 5);
 		runes.put(38, 1);
 		spells.add(new SpellDef("Iban blast", "A strength 25 missile attack!",
-			50, 2, 2, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				50, 2, 2, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(32, 2);
 		runes.put(42, 2);
 		spells.add(new SpellDef("Ardougne teleport",
-			"Teleports you to Ardougne", 51, 0, 2,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Teleports you to Ardougne", 51, 0, 2,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 4);
 		runes.put(33, 3);
 		runes.put(38, 1);
 		spells.add(new SpellDef("Earth blast", "A strength 11 missile attack",
-			53, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				53, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 5);
 		runes.put(40, 1);
 		spells.add(new SpellDef("High level alchemy",
-			"Convert an item into more gold", 55, 3, 2,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Convert an item into more gold", 55, 3, 2,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(32, 30);
 		runes.put(46, 3);
 		runes.put(611, 1);
 		spells.add(new SpellDef("Charge Water Orb",
-			"Needs to be cast on a water obelisk", 56, 5, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Needs to be cast on a water obelisk", 56, 5, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 10);
 		runes.put(46, 1);
 		spells.add(new SpellDef("Enchant lvl-4 amulet",
-			"For use on diamond amulets", 57, 3, 2,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"For use on diamond amulets", 57, 3, 2,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 2);
 		runes.put(42, 2);
 		spells.add(new SpellDef("Watchtower teleport",
-			"Teleports you to the watchtower", 58, 0, 2,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Teleports you to the watchtower", 58, 0, 2,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 5);
 		runes.put(33, 4);
 		runes.put(38, 1);
 		spells.add(new SpellDef("Fire blast", "A strength 12 missile attack",
-			59, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				59, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 1);
 		runes.put(33, 4);
 		runes.put(619, 2);
 		spells.add(new SpellDef("Claws of Guthix",
-			"Summons the power of Guthix", 60, 2, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Summons the power of Guthix", 60, 2, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 2);
 		runes.put(33, 4);
 		runes.put(619, 2);
 		spells.add(new SpellDef("Saradomin strike",
-			"Summons the power of Saradomin", 60, 2, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Summons the power of Saradomin", 60, 2, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 4);
 		runes.put(33, 1);
 		runes.put(619, 2);
 		spells.add(new SpellDef("Flames of Zamorak",
-			"Summons the power of Zamorak", 60, 2, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Summons the power of Zamorak", 60, 2, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 30);
 		runes.put(46, 3);
 		runes.put(611, 1);
 		spells.add(new SpellDef("Charge earth Orb",
-			"Needs to be cast on an earth obelisk", 60, 5, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Needs to be cast on an earth obelisk", 60, 5, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(33, 5);
 		runes.put(619, 1);
 		spells.add(new SpellDef("Wind wave", "A strength 13 missile attack",
-			62, 2, 2, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				62, 2, 2, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 30);
 		runes.put(46, 3);
 		runes.put(611, 1);
 		spells.add(new SpellDef("Charge Fire Orb",
-			"Needs to be cast on a fire obelisk", 63, 5, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Needs to be cast on a fire obelisk", 63, 5, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(32, 7);
 		runes.put(33, 5);
 		runes.put(619, 1);
 		spells.add(new SpellDef("Water wave", "A strength 14 missile attack",
-			65, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				65, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(33, 30);
 		runes.put(46, 3);
 		runes.put(611, 1);
 		spells.add(new SpellDef("Charge air Orb",
-			"Needs to be cast on an air obelisk", 66, 5, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Needs to be cast on an air obelisk", 66, 5, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 5);
 		runes.put(32, 5);
 		runes.put(825, 1);
 		spells.add(new SpellDef("Vulnerability",
-			"Reduces your opponents defense by 10%", 66, 2, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Reduces your opponents defense by 10%", 66, 2, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(32, 15);
 		runes.put(34, 15);
 		runes.put(46, 1);
 		spells.add(new SpellDef("Enchant lvl-5 amulet",
-			"For use on dragonstone amulets", 68, 3, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"For use on dragonstone amulets", 68, 3, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 7);
 		runes.put(33, 5);
 		runes.put(619, 1);
 		spells.add(new SpellDef("Earth wave", "A strength 15 missile attack",
-			70, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				70, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 8);
 		runes.put(32, 8);
 		runes.put(825, 1);
 		spells.add(new SpellDef("Enfeeble",
-			"Reduces your opponents strength by 10%", 73, 2, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Reduces your opponents strength by 10%", 73, 2, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 7);
 		runes.put(33, 5);
 		runes.put(619, 1);
 		spells.add(new SpellDef("Fire wave", "A strength 16 missile attack", 75,
-			2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 12);
 		runes.put(32, 12);
 		runes.put(825, 1);
 		spells.add(new SpellDef("Stun", "Reduces your opponents attack by 10%",
-			80, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				80, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 3);
 		runes.put(33, 3);
 		runes.put(619, 3);
 		spells.add(new SpellDef("Charge",
-			"Increase your mage arena spells damage", 80, 0, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Increase your mage arena spells damage", 80, 0, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes = null;
 	}
 
 	private static void loadDoorDefinitions() {
 		int i = 0;
 		doors.add(new DoorDef("Wall", "", "WalkTo", "Examine", 1, 0, 192, 2, 2,
-			i++));
+				i++));
 		doors.add(new DoorDef("Doorframe", "", "WalkTo", "Close", 0, 1, 192, 4,
-			4, i++));
+				4, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Window", "", "WalkTo", "Examine", 1, 0, 192, 5,
-			5, i++));
+				5, i++));
 		doors.add(new DoorDef("Fence", "", "WalkTo", "Examine", 1, 0, 192, 10,
-			10, i++));
+				10, i++));
 		doors.add(new DoorDef("railings", "", "WalkTo", "Examine", 1, 0, 192,
-			12, 12, i++));
+				12, 12, i++));
 		doors.add(new DoorDef("Stained glass window", "", "WalkTo", "Examine",
-			1, 0, 192, 18, 18, i++));
+				1, 0, 192, 18, 18, i++));
 		doors.add(new DoorDef("Highwall", "", "WalkTo", "Examine", 1, 0, 275,
-			2, 2, i++));
+				2, 2, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 275, 0, 0, i++));
+				1, 275, 0, 0, i++));
 		doors.add(new DoorDef("Doorframe", "", "WalkTo", "Close", 0, 1, 275, 4,
-			4, i++));
+				4, i++));
 		doors.add(new DoorDef("battlement", "", "WalkTo", "Examine", 1, 0, 70,
-			2, 2, i++));
+				2, 2, i++));
 		doors.add(new DoorDef("Doorframe", "", "WalkTo", "Examine", 1, 0, 192,
-			4, 4, i++));
+				4, 4, i++));
 		doors.add(new DoorDef("snowwall", "", "WalkTo", "Examine", 1, 0, 192,
-			-31711, -31711, i++));
+				-31711, -31711, i++));
 		doors.add(new DoorDef("arrowslit", "", "WalkTo", "Examine", 1, 0, 192,
-			7, 7, i++));
+				7, 7, i++));
 		doors.add(new DoorDef("timberwall", "", "WalkTo", "Examine", 1, 0, 192,
-			21, 21, i++));
+				21, 21, i++));
 		doors.add(new DoorDef("timberwindow", "", "WalkTo", "Examine", 1, 0,
-			192, 22, 22, i++));
+				192, 22, 22, i++));
 		doors.add(new DoorDef("blank", "", "WalkTo", "Examine", 0, 0, 192,
-			12345678, 12345678, i++));
+				12345678, 12345678, i++));
 		doors.add(new DoorDef("highblank", "", "WalkTo", "Examine", 0, 0, 275,
-			12345678, 12345678, i++));
+				12345678, 12345678, i++));
 		doors.add(new DoorDef("mossybricks", "", "WalkTo", "Examine", 1, 0,
-			192, 23, 23, i++));
+				192, 23, 23, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Odd looking wall",
-			"This wall doesn't look quite right", "Push", "Examine", 1, 1,
-			192, 2, 2, i++));
+				"This wall doesn't look quite right", "Push", "Examine", 1, 1,
+				192, 2, 2, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("web", "A spider's web", "WalkTo", "Examine", 1,
-			1, 192, 26, 26, i++));
+				1, 192, 26, 26, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Window", "", "WalkTo", "Examine", 1, 0, 192, 27,
-			27, i++));
+				27, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Crumbled", "", "WalkTo", "Examine", 1, 0, 192,
-			28, 28, i++));
+				28, 28, i++));
 		doors.add(new DoorDef("Cavern", "", "WalkTo", "Examine", 1, 0, 192, 29,
-			29, i++));
+				29, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("cavern2", "", "WalkTo", "Examine", 1, 0, 192,
-			30, 30, i++));
+				30, 30, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Wall", "", "WalkTo", "Examine", 1, 0, 192, 3, 3,
-			i++));
+				i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Strange looking wall",
-			"This wall doesn't look quite right", "Push", "Examine", 1, 1,
-			192, 29, 29, i++));
+				"This wall doesn't look quite right", "Push", "Examine", 1, 1,
+				192, 29, 29, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("memberrailings", "", "WalkTo", "Examine", 1, 0,
-			192, 12, 12, i++));
+				192, 12, 12, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Magic Door", "The door is shut", "Open",
-			"Examine", 1, 1, 192, 0, 0, i++));
+				"Examine", 1, 1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Strange Panel",
-			"This wall doesn't look quite right", "Push", "Examine", 1, 1,
-			192, 21, 21, i++));
+				"This wall doesn't look quite right", "Push", "Examine", 1, 1,
+				192, 21, 21, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("blockblank", "", "WalkTo", "Examine", 1, 0, 192,
-			12345678, 12345678, i++));
+				12345678, 12345678, i++));
 		doors.add(new DoorDef("unusual looking wall",
-			"This wall doesn't look quite right", "Push", "Examine", 1, 1,
-			192, 2, 2, i++));
+				"This wall doesn't look quite right", "Push", "Examine", 1, 1,
+				192, 2, 2, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Pick lock",
-			1, 1, 192, 0, 0, i++));
+				1, 1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Pick lock",
-			1, 1, 192, 0, 0, i++));
+				1, 1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Pick lock",
-			1, 1, 192, 0, 0, i++));
+				1, 1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Pick lock",
-			1, 1, 192, 0, 0, i++));
+				1, 1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Pick lock",
-			1, 1, 192, 0, 0, i++));
+				1, 1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Pick Lock",
-			1, 1, 192, 0, 0, i++));
+				1, 1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Pick lock",
-			1, 1, 192, 0, 0, i++));
+				1, 1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Fence with loose pannels",
-			"I wonder if I could get through this", "push", "Examine", 1,
-			1, 192, 10, 10, i++));
+				"I wonder if I could get through this", "push", "Examine", 1,
+				1, 192, 10, 10, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("rat cage", "The rat's have damaged the bars",
-			"search", "Examine", 1, 1, 192, 12, 12, i++));
+				"search", "Examine", 1, 1, 192, 12, 12, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("arrowslit", "", "WalkTo", "Examine", 1, 0, 192,
-			44, 44, i++));
+				44, 44, i++));
 		doors.add(new DoorDef("solidblank", "", "WalkTo", "Examine", 1, 0, 192,
-			12345678, 12345678, i++));
+				12345678, 12345678, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("loose panel", "The panel has worn with age",
-			"break", "Examine", 1, 1, 192, 3, 3, i++));
+				"break", "Examine", 1, 1, 192, 3, 3, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("plankswindow", "", "WalkTo", "Examine", 1, 0,
-			192, 45, 45, i++));
+				192, 45, 45, i++));
 		doors.add(new DoorDef("Low Fence", "", "WalkTo", "Examine", 1, 0, 96,
-			10, 10, i++));
+				10, 10, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Cooking pot", "Smells good!", "WalkTo",
-			"Examine", 1, 1, 96, 10, 10, i++));
+				"Examine", 1, 1, 96, 10, 10, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("plankstimber", "", "WalkTo", "Examine", 1, 0,
-			192, 46, 46, i++));
+				192, 46, 46, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("magic portal", "", "enter", "Examine", 1, 1,
-			192, 17, 17, i++));
+				192, 17, 17, i++));
 		doors.add(new DoorDef("magic portal", "", "enter", "Examine", 1, 1,
-			192, 17, 17, i++));
+				192, 17, 17, i++));
 		doors.add(new DoorDef("magic portal", "", "enter", "Examine", 1, 1,
-			192, 17, 17, i++));
+				192, 17, 17, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Cavern wall",
-			"It looks as if it is covered in some fungus.", "WalkTo",
-			"search", 1, 1, 192, 29, 29, i++));
+				"It looks as if it is covered in some fungus.", "WalkTo",
+				"search", 1, 1, 192, 29, 29, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "the door is shut", "walk through",
-			"Examine", 1, 1, 192, 3, 3, i++));
+				"Examine", 1, 1, 192, 3, 3, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "walk through",
-			"Examine", 1, 1, 192, 0, 0, i++));
+				"Examine", 1, 1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "walk through",
-			"Examine", 1, 1, 192, 0, 0, i++));
+				"Examine", 1, 1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "walk through",
-			"Examine", 1, 1, 192, 0, 0, i++));
+				"Examine", 1, 1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "walk through",
-			"Examine", 1, 1, 192, 0, 0, i++));
+				"Examine", 1, 1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "walk through",
-			"Examine", 1, 1, 192, 0, 0, i++));
+				"Examine", 1, 1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "walk through",
-			"Examine", 1, 1, 192, 0, 0, i++));
+				"Examine", 1, 1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "walk through",
-			"Examine", 1, 1, 192, 0, 0, i++));
+				"Examine", 1, 1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Pick Lock",
-			1, 1, 192, 0, 0, i++));
+				1, 1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Low wall", "a low wall", "jump", "Examine", 1,
-			1, 70, 2, 2, i++));
+				1, 70, 2, 2, i++));
 		doors.add(new DoorDef("Low wall", "a low wall", "jump", "Examine", 1,
-			1, 70, 2, 2, i++));
+				1, 70, 2, 2, i++));
 		doors.add(new DoorDef("Blacksmiths Door", "The door is shut", "Open",
-			"Examine", 1, 1, 192, 0, 0, i++));
+				"Examine", 1, 1, 192, 0, 0, i++));
 		doors.add(new DoorDef("railings", "", "pick lock", "Examine", 1, 1,
-			192, 12, 12, i++));
+				192, 12, 12, i++));
 		doors.add(new DoorDef("railings", "", "pick lock", "Examine", 1, 1,
-			192, 12, 12, i++));
+				192, 12, 12, i++));
 		doors.add(new DoorDef("railings", "", "pick lock", "search", 1, 1, 192,
-			12, 12, i++));
+				12, 12, i++));
 		doors.add(new DoorDef("railings", "", "pick lock", "search", 1, 1, 192,
-			12, 12, i++));
+				12, 12, i++));
 		doors.add(new DoorDef("railings", "", "pick lock", "search", 1, 1, 192,
-			12, 12, i++));
+				12, 12, i++));
 		doors.add(new DoorDef("railings", "", "WalkTo", "search", 1, 1, 192,
-			12, 12, i++));
+				12, 12, i++));
 		doors.add(new DoorDef("railings", "", "WalkTo", "look through", 1, 1,
-			192, 12, 12, i++));
+				192, 12, 12, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "knock on",
-			1, 1, 192, 0, 0, i++));
+				1, 1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Doorframe", "", "WalkTo", "Close", 1, 1, 192, 4,
-			4, i++));
+				4, i++));
 		doors.add(new DoorDef("Tent", "", "WalkTo", "Examine", 1, 0, 192, 36,
-			36, i++));
+				36, i++));
 		doors.add(new DoorDef("Jail Door", "The door is shut", "Open",
-			"Examine", 1, 1, 192, 0, 0, i++));
+				"Examine", 1, 1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Jail Door", "The door is shut", "Open",
-			"Examine", 1, 1, 192, 0, 0, i++));
+				"Examine", 1, 1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Window", "A barred window", "WalkTo", "Search",
-			1, 1, 192, 27, 27, i++));
+				1, 1, 192, 27, 27, i++));
 		doors.add(new DoorDef("magic portal",
-			"A magical barrier shimmers with power", "WalkTo", "Examine",
-			1, 1, 192, 17, 17, i++));
+				"A magical barrier shimmers with power", "WalkTo", "Examine",
+				1, 1, 192, 17, 17, i++));
 		doors.add(new DoorDef("Jail Door", "A solid iron gate", "Open",
-			"Examine", 1, 1, 192, 12, 12, i++));
+				"Examine", 1, 1, 192, 12, 12, i++));
 		doors.add(new DoorDef("railings", "", "WalkTo", "search", 1, 1, 192,
-			12, 12, i++));
+				12, 12, i++));
 		doors.add(new DoorDef("railings", "", "WalkTo", "search", 1, 1, 192,
-			12, 12, i++));
+				12, 12, i++));
 		doors.add(new DoorDef("railings", "", "WalkTo", "search", 1, 1, 192,
-			12, 12, i++));
+				12, 12, i++));
 		doors.add(new DoorDef("railings", "", "WalkTo", "search", 1, 1, 192,
-			12, 12, i++));
+				12, 12, i++));
 		doors.add(new DoorDef("railings", "", "WalkTo", "search", 1, 1, 192,
-			12, 12, i++));
+				12, 12, i++));
 		doors.add(new DoorDef("railings", "", "WalkTo", "search", 1, 1, 192,
-			12, 12, i++));
+				12, 12, i++));
 		doors.add(new DoorDef("Cave exit", "The way out", "Leave", "Examine",
-			0, 1, 192, 26, 26, i++));
+				0, 1, 192, 26, 26, i++));
 		doors.add(new DoorDef("Cave exit", "The way out", "Leave", "Examine",
-			0, 1, 192, 26, 26, i++));
+				0, 1, 192, 26, 26, i++));
 		doors.add(new DoorDef("Cave exit", "The way out", "Leave", "Examine",
-			0, 1, 192, 26, 26, i++));
+				0, 1, 192, 26, 26, i++));
 		doors.add(new DoorDef("Cave exit", "The way out", "Leave", "Examine",
-			0, 1, 192, 26, 26, i++));
+				0, 1, 192, 26, 26, i++));
 		doors.add(new DoorDef("Cave exit", "The way out", "Leave", "Examine",
-			0, 1, 192, 26, 26, i++));
+				0, 1, 192, 26, 26, i++));
 		doors.add(new DoorDef("Cave exit", "The way out", "Leave", "Examine",
-			0, 1, 192, 26, 26, i++));
+				0, 1, 192, 26, 26, i++));
 		doors.add(new DoorDef("railings", "", "WalkTo", "search", 1, 1, 192,
-			12, 12, i++));
+				12, 12, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("battlement", "This is blocking your path",
-			"Climb-over", "Examine", 1, 1, 70, 2, 2, i++));
+				"Climb-over", "Examine", 1, 1, 70, 2, 2, i++));
 		doors.add(new DoorDef("Tent Door", "An entrance into the tent",
-			"Go through", "Examine", 1, 1, 192, 50, 50, i++));
+				"Go through", "Examine", 1, 1, 192, 50, 50, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 		doors.add(new DoorDef("Tent Door", "An entrance into the tent",
-			"Go through", "Examine", 1, 1, 192, 50, 50, i++));
+				"Go through", "Examine", 1, 1, 192, 50, 50, i++));
 		doors.add(new DoorDef("Low Fence", "A damaged wooden fence", "search",
-			"Examine", 1, 1, 96, 10, 10, i++));
+				"Examine", 1, 1, 96, 10, 10, i++));
 		doors.add(new DoorDef("Sturdy Iron Gate", "A solid iron gate", "Open",
-			"Examine", 1, 1, 192, 12, 12, i++));
+				"Examine", 1, 1, 192, 12, 12, i++));
 		doors.add(new DoorDef("battlement", "this low wall blocks your path",
-			"climb over", "Examine", 1, 1, 70, 2, 2, i++));
+				"climb over", "Examine", 1, 1, 70, 2, 2, i++));
 		doors.add(new DoorDef("Water", "My waterfall boundary!", "WalkTo",
-			"Examine", 1, 0, 192, 25, 25, i++));
+				"Examine", 1, 0, 192, 25, 25, i++));
 		doors.add(new DoorDef("Wheat", "Test Boundary!", "WalkTo", "Examine",
-			1, 0, 192, 24, 24, i++));
+				1, 0, 192, 24, 24, i++));
 		doors.add(new DoorDef("Jungle", "Thick inpenetrable jungle", "Chop",
-			"Examine", 1, 1, 192, 8, 8, i++));
+				"Examine", 1, 1, 192, 8, 8, i++));
 		doors.add(new DoorDef("Window",
-			"you can see a vicious looking guard dog right outside",
-			"Investigate", "Examine", 1, 1, 192, 5, 5, i++));
+				"you can see a vicious looking guard dog right outside",
+				"Investigate", "Examine", 1, 1, 192, 5, 5, i++));
 		doors.add(new DoorDef("Rut",
-			"Looks like a small rut carved into the ground.", "WalkTo",
-			"Search", 1, 0, 96, 51, 51, i++));
+				"Looks like a small rut carved into the ground.", "WalkTo",
+				"Search", 1, 0, 96, 51, 51, i++));
 		doors.add(new DoorDef("Crumbled Cavern 1", "", "WalkTo", "Examine", 0,
-			0, 192, 52, 52, i++));
+				0, 192, 52, 52, i++));
 		doors.add(new DoorDef("Crumbled Cavern 2", "", "WalkTo", "Examine", 0,
-			0, 192, 53, 53, i++));
+				0, 192, 53, 53, i++));
 		doors.add(new DoorDef("cavernhole", "", "WalkTo", "Examine", 1, 0, 192,
-			54, 54, i++));
+				54, 54, i++));
 		doors.add(new DoorDef("flamewall",
-			"A supernatural fire of incredible intensity", "Touch",
-			"Investigate", 1, 1, 192, 54, 54, i++));
+				"A supernatural fire of incredible intensity", "Touch",
+				"Investigate", 1, 1, 192, 54, 54, i++));
 		doors.add(new DoorDef("Ruined wall",
-			"Some ancient wall structure - it doesn't look too high.",
-			"WalkTo", "Jump", 1, 1, 192, 28, 28, i++));
+				"Some ancient wall structure - it doesn't look too high.",
+				"WalkTo", "Jump", 1, 1, 192, 28, 28, i++));
 		doors.add(new DoorDef(
-			"Ancient Wall",
-			"An ancient - slightly higher wall with some strange markings on it",
-			"Use", "Search", 1, 1, 275, 2, 2, i++));
+				"Ancient Wall",
+				"An ancient - slightly higher wall with some strange markings on it",
+				"Use", "Search", 1, 1, 275, 2, 2, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
-			1, 192, 0, 0, i++));
+				1, 192, 0, 0, i++));
 	}
 
 	private static void loadGameObjectDefinitionsA() { // GOOD
@@ -6505,9 +6520,10 @@ public class EntityHandler {
 				}
 			}
 		}
+
 		for (GameObjectDef object : objects) {
 			object.modelID = storeModel(object
-				.getObjectModel());
+					.getObjectModel());
 		}
 
 	}
@@ -6544,5 +6560,4 @@ public class EntityHandler {
 		}
 		return index;
 	}
-
 }

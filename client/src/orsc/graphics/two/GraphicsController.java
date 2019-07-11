@@ -4,22 +4,30 @@ import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
 import com.openrsc.client.entityhandling.defs.SpriteDef;
 import com.openrsc.client.entityhandling.defs.extras.AnimationDef;
-import com.openrsc.data.DataConversions;
 import com.openrsc.client.model.Sprite;
-import orsc.Config;
-import orsc.MiscFunctions;
-import orsc.util.FastMath;
-import orsc.util.GenUtil;
-import orsc.mudclient;
+import com.openrsc.data.DataConversions;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
+
+import orsc.Config;
+import orsc.MiscFunctions;
+import orsc.mudclient;
+import orsc.util.FastMath;
+import orsc.util.GenUtil;
 
 public class GraphicsController {
 
@@ -56,8 +64,8 @@ public class GraphicsController {
 	private int[] m_tb;
 	private int[] m_Tb;
 	private int[] m_Wb;
-	public Map<String, List<Sprite>> spriteTree = new HashMap<String, List<Sprite>>();
-	public static Map<String, Integer> animationMap = new HashMap<>();
+	public Map<String, List<Sprite>> spriteTree = new HashMap<>();
+	private static Map<String, Integer> animationMap = new HashMap<>();
 	// public int[][] image2D_pixels;
 	private int[] m_Xb;
 	private ZipFile spriteArchive;
@@ -2923,12 +2931,8 @@ public class GraphicsController {
 		//Loop through each spritesheet
 		try {
 			while (entries.hasMoreElements()) {
-				List<Sprite> spriteGroup = new ArrayList<Sprite>();
+				List<Sprite> spriteGroup;
 				ZipEntry entry = entries.nextElement();
-				//ZipInputStream entryStream = new ZipInputStream(spriteArchive.getInputStream(entry));
-				//InputStream in = spriteArchive.getInputStream(entry);
-
-				//ByteBuffer buffer = streamToBuffer(in);
 				spriteGroup = unpackSpriteData(spriteArchive, entry);
 				spriteTree.put(entry.getName(), spriteGroup);
 			}
@@ -2940,7 +2944,7 @@ public class GraphicsController {
 	}
 
 	public static ArrayList<Sprite> unpackSpriteData(ZipFile ioe, ZipEntry zipEntry) throws IOException {
-		ArrayList<Sprite> sprites = new ArrayList<Sprite>();
+		ArrayList<Sprite> sprites = new ArrayList<>();
 
 		try {
 			InputStream fileIn = ioe.getInputStream(zipEntry);
@@ -2965,7 +2969,7 @@ public class GraphicsController {
 		return sprites;
 	}
 
-	public static ArrayList<Sprite> unpackSpriteNew(ByteBuffer in) {
+	private static ArrayList<Sprite> unpackSpriteNew(ByteBuffer in) {
 		ArrayList<Sprite> spriteArray = new ArrayList<>();
 
 
@@ -2988,7 +2992,7 @@ public class GraphicsController {
 			//   throw new IOException("Provided buffer too short - Pixels missing");
 
 			for (int pixel = 0; pixel < pixels.length; pixel++)
-				pixels[pixel] = Integer.valueOf(in.getInt());
+				pixels[pixel] = in.getInt();
 
 			//if (in.remaining() <= 0)
 			//  e.name = "Missing";
@@ -3014,7 +3018,7 @@ public class GraphicsController {
 		return spriteArray;
 	}
 
-	private static final String readString(ByteBuffer buffer) {
+	private static String readString(ByteBuffer buffer) {
 		StringBuilder bldr = new StringBuilder();
 
 		byte b;

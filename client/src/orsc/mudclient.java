@@ -1,7 +1,8 @@
 package orsc;
 
 import com.openrsc.client.entityhandling.EntityHandler;
-import com.openrsc.client.entityhandling.EntityHandler.*;
+import com.openrsc.client.entityhandling.EntityHandler.GUIPARTS;
+import com.openrsc.client.entityhandling.EntityHandler.PROJECTILE_TYPES;
 import com.openrsc.client.entityhandling.defs.ItemDef;
 import com.openrsc.client.entityhandling.defs.NPCDef;
 import com.openrsc.client.entityhandling.defs.SpellDef;
@@ -28,17 +29,28 @@ import com.openrsc.interfaces.misc.SkillGuideInterface;
 import com.openrsc.interfaces.misc.TerritorySignupInterface;
 import com.openrsc.interfaces.misc.clan.Clan;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.security.SecureRandom;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.swing.text.html.parser.Entity;
 
 import orsc.buffers.RSBufferUtils;
 import orsc.enumerations.GameMode;
@@ -61,6 +73,7 @@ import orsc.graphics.three.RSModel;
 import orsc.graphics.three.Scene;
 import orsc.graphics.three.World;
 import orsc.graphics.two.Fonts;
+import orsc.graphics.two.GraphicsController;
 import orsc.graphics.two.MudClientGraphics;
 import orsc.multiclient.ClientPort;
 import orsc.net.Network_Socket;
@@ -146,7 +159,6 @@ import static orsc.Config.getFPS;
 import static orsc.Config.getServerName;
 import static orsc.Config.getServerNameWelcome;
 import static orsc.Config.getWelcomeText;
-import static orsc.Config.getcLogoSpriteId;
 import static orsc.Config.initConfig;
 import static orsc.Config.isAndroid;
 import static orsc.Config.isLenientContactDetails;
@@ -11843,9 +11855,9 @@ public final class mudclient implements Runnable {
 		getSurface().fillSpriteTree();
 
 		//Load & apply sprite packs
-		File configFile = new File(clientPort.getCacheLocation() + "spritepacks");
+		File configFile = new File(clientPort.getCacheLocation());
 		if (configFile.isDirectory()) {
-			configFile = new File(clientPort.getCacheLocation() + "spritepacks" + File.separator + "config.txt");
+			configFile = new File(clientPort.getCacheLocation() + File.separator + "config.txt");
 			if (configFile.exists()) {
 				ArrayList<String> activePacks = new ArrayList<>();
 				try {
@@ -11859,14 +11871,14 @@ public final class mudclient implements Runnable {
 					br.close();
 
 					for (String filename : activePacks) {
-						ZipFile spritePack = new ZipFile(clientPort.getCacheLocation() + "spritepacks" + File.separator + filename + ".pack");
+						ZipFile spritePack = new ZipFile(clientPort.getCacheLocation() + File.separator + filename + ".pack");
 						Enumeration<? extends ZipEntry> entries = spritePack.entries();
 						//Loop through each spritesheet in the sprite pack
 
 						while (entries.hasMoreElements()) {
-							List<Sprite> spriteGroup = new ArrayList<Sprite>();
+							List<Sprite> spriteGroup;
 							ZipEntry entry = entries.nextElement();
-							spriteGroup = getSurface().unpackSpriteData(spritePack, entry);
+							spriteGroup = GraphicsController.unpackSpriteData(spritePack, entry);
 							List<Sprite> defaultSprites = getSurface().spriteTree.get(entry.getName());
 							for (Sprite sprite : spriteGroup) {
 								for (int i = 0; i < defaultSprites.size(); i++) {
