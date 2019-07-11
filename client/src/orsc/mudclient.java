@@ -11852,7 +11852,11 @@ public final class mudclient implements Runnable {
 	private void loadSprites() {
 		clientPort.showLoadingProgress(30, "people and monsters");
 		//Load all sprites from the disk
-		getSurface().fillSpriteTree();
+		try {
+			getSurface().fillSpriteTree();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 
 		//Load & apply sprite packs
 		File configFile = new File(clientPort.getCacheLocation());

@@ -329,7 +329,7 @@ public class GraphicsController {
 
 	public Sprite spriteSelect(AnimationDef animation, int offset) {
 		if (!Config.S_WANT_CUSTOM_SPRITES)
-			return sprites[animation.getNumber()+offset];
+			return sprites[animation.getNumber() + offset];
 
 		Sprite sprite = spriteTree.get("animations").get(animationMap.get(animation.name) + offset);
 		return sprite;
@@ -1503,7 +1503,7 @@ public class GraphicsController {
 					int iconSprite = (spriteHeader >> 24 & 0xFF) + this.iconSpriteIndex - 1;
 					int spriteHeaderMask = (spriteHeader & 0x00FFFFFF);
 
-					Sprite crown = spriteSelect(EntityHandler.crowns.get(iconSprite-3284));
+					Sprite crown = spriteSelect(EntityHandler.crowns.get(iconSprite - 3284));
 					if (crown != null) {
 						this.drawSpriteClipping(
 							crown,
@@ -2952,18 +2952,21 @@ public class GraphicsController {
 			byte[] buffer = new byte[4096];
 			int readByte;
 			while ((readByte = fileIn.read(buffer)) != -1) {
-				fileBytesBuffer.write(buffer,0, readByte);
+				fileBytesBuffer.write(buffer, 0, readByte);
 			}
 
 			fileBytesBuffer.close();
 			fileIn.close();
-			
+
 			byte[] fileBytes = fileBytesBuffer.toByteArray();
 			ByteBuffer fileByteBuffer = ByteBuffer.wrap(fileBytes);
-			sprites = unpackSpriteNew(fileByteBuffer);
+			try {
+				sprites = unpackSpriteNew(fileByteBuffer);
+			} catch (Exception e) {
+				System.out.println(e);
+			}
 
-		}
-		catch (IOException a) {
+		} catch (IOException a) {
 			a.printStackTrace();
 		}
 		return sprites;
@@ -3022,8 +3025,12 @@ public class GraphicsController {
 		StringBuilder bldr = new StringBuilder();
 
 		byte b;
-		while ((b = buffer.get()) != 10) {
-			bldr.append((char) b);
+		try {
+			while ((b = buffer.get()) != 10) {
+				bldr.append((char) b);
+			}
+		} catch (Exception e) {
+			System.out.println(e);
 		}
 
 		return bldr.toString();
@@ -3049,8 +3056,7 @@ public class GraphicsController {
 
 		List<Sprite> animationList = spriteTree.get("animations");
 
-		for (int i = 0; i < EntityHandler.animationCount(); i++)
-		{
+		for (int i = 0; i < EntityHandler.animationCount(); i++) {
 			AnimationDef animation = EntityHandler.getAnimationDef(i);
 			if (!animationMap.containsKey(animation.getName())) {
 				int p = 0;
