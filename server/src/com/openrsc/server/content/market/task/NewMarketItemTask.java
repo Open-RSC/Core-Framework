@@ -7,6 +7,7 @@ import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.net.DiscordSender;
 import com.openrsc.server.net.rsc.ActionSender;
 
 public class NewMarketItemTask extends MarketTask {
@@ -67,6 +68,7 @@ public class NewMarketItemTask extends MarketTask {
 		if (MarketDatabase.add(newItem)) {
 			//ActionSender.sendBox(owner, "@gre@[Auction House - Success] % @whi@ Auction has been listed % " + newItem.getAmount() + "x @yel@" + def.getName() + " @whi@for @yel@" + newItem.getPrice() + "gp % @whi@Completed auction fee: @gre@" + feeCost + "gp", false);
 			ActionSender.sendBox(owner, "@gre@[Auction House - Success] % @whi@ Auction has been listed % " + newItem.getAmount() + "x @yel@" + def.getName() + " @whi@for @yel@" + newItem.getPrice() + "gp", false);
+			DiscordSender.auctionAdd(newItem.getItemID(), newItem.getPrice(), newItem.getAmount(), newItem.getSellerName());
 		} else {
 			Item item = new Item(newItem.getItemID(), newItem.getAmount());
 			if (item.getDef().isStackable()) {
