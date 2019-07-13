@@ -647,7 +647,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				int objectY = obj.getY();
 				message(p, 1300, "You craft a totem pole out of the Yommi tree.");
 				replaceObject(obj, new GameObject(obj.getLocation(), CRAFTED_TOTEM_POLE, obj.getDirection(), obj.getType(), p.getUsername()));
-				Server.getServer().getEventHandler().add(new SingleEvent(null, 60000) {
+				Server.getServer().getEventHandler().add(new SingleEvent(null, 60000, "Legends Quest Craft Totem Pole") {
 					public void action() {
 						GameObject whatObject = RegionManager.getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
 						if (whatObject != null && whatObject.getID() == CRAFTED_TOTEM_POLE) {
@@ -666,7 +666,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				message(p, 1300, "You professionally wield your Rune Axe...",
 					"As you trim the branches from the Yommi tree.");
 				replaceObject(obj, new GameObject(obj.getLocation(), TRIMMED_YOMMI_TREE, obj.getDirection(), obj.getType(), p.getUsername()));
-				Server.getServer().getEventHandler().add(new SingleEvent(null, 60000) {
+				Server.getServer().getEventHandler().add(new SingleEvent(null, 60000, "Legend Quest Trim Yommi Tree") {
 					public void action() {
 						GameObject whatObject = RegionManager.getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
 						if (whatObject != null && whatObject.getID() == TRIMMED_YOMMI_TREE) {
@@ -684,7 +684,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				int objectY = obj.getY();
 				message(p, 1300, "You wield the Rune Axe and prepare to chop the Yommi tree.");
 				replaceObject(obj, new GameObject(obj.getLocation(), CHOPPED_YOMMI_TREE, obj.getDirection(), obj.getType(), p.getUsername()));
-				Server.getServer().getEventHandler().add(new SingleEvent(null, 60000) {
+				Server.getServer().getEventHandler().add(new SingleEvent(null, 60000, "Legend Quest Chop Yommi Tree") {
 					public void action() {
 						GameObject whatObject = RegionManager.getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
 						if (whatObject != null && whatObject.getID() == CHOPPED_YOMMI_TREE) {
@@ -712,7 +712,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 			message(p, 1300, "You water the Yommi tree from the golden bowl...",
 				"It grows at a remarkable rate.");
 			replaceObject(obj, new GameObject(obj.getLocation(), GROWN_YOMMI_TREE, obj.getDirection(), obj.getType(), p.getUsername()));
-			Server.getServer().getEventHandler().add(new SingleEvent(null, 15000) {
+			Server.getServer().getEventHandler().add(new SingleEvent(null, 15000, "Legend Quest Water Yommi Tree") {
 				public void action() {
 					GameObject whatObject = RegionManager.getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
 					if (whatObject != null && whatObject.getID() == GROWN_YOMMI_TREE) {
@@ -761,7 +761,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				message(p, 1300, "You bury the Germinated Yommi tree seed in the fertile earth...",
 					"You start to see something growing.");
 				replaceObject(obj, new GameObject(obj.getLocation(), YOMMI_TREE, obj.getDirection(), obj.getType()));
-				Server.getServer().getEventHandler().add(new SingleEvent(null, 15000) {
+				Server.getServer().getEventHandler().add(new SingleEvent(null, 15000, "Legends Quest Grow Yommi Tree") {
 					public void action() {
 						GameObject whatObject = RegionManager.getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
 						if (whatObject != null && whatObject.getID() == YOMMI_TREE) {

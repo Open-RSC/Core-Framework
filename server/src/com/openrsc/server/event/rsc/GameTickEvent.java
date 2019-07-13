@@ -11,9 +11,11 @@ public abstract class GameTickEvent {
 	private int delayTicks;
 	private boolean immediate;
 	private int ticksBeforeRun = -1;
+	private String descriptor;
 
-	public GameTickEvent(Mob owner, int ticks) {
+	public GameTickEvent(Mob owner, int ticks, String descriptor) {
 		this.owner = owner;
+		this.descriptor = descriptor;
 		this.setDelayTicks(ticks);
 		this.resetCountdown();
 	}
@@ -50,6 +52,10 @@ public abstract class GameTickEvent {
 
 	public int getDelayTicks() {
 		return delayTicks;
+	}
+
+	public String getDescriptor() {
+		return descriptor;
 	}
 
 	protected void setDelayTicks(int delayTicks) {

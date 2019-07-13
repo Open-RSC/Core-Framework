@@ -331,7 +331,7 @@ public class Thieving extends Functions
 			player.message("You need to be a level " + pickpocket.getRequiredLevel() + " thief to pick the " + thievedMobSt + "'s pocket");
 			return;
 		}
-		player.setBatchEvent(new BatchEvent(player, 1200, Formulae.getRepeatTimes(player, Skills.THIEVING), true) {
+		player.setBatchEvent(new BatchEvent(player, 1200, "Thieving Pickpocket", Formulae.getRepeatTimes(player, Skills.THIEVING), true) {
 			@Override
 			public void action() {
 

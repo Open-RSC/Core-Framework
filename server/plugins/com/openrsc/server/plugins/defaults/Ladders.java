@@ -145,7 +145,7 @@ public class Ladders {
 						} else {
 							npcTalk(player, abbot, "No I feel you are not devout enough");
 							Server.getServer().getEventHandler().add(
-								new ShortEvent(player) {
+								new ShortEvent(player, "Prayer Guild Ladder") {
 									public void action() {
 										owner.setBusy(false);
 										owner.message(
@@ -175,7 +175,7 @@ public class Ladders {
 						"Sorry only the top miners are allowed in there");
 				}
 				Server.getServer().getEventHandler().add(
-					new ShortEvent(player) {
+					new ShortEvent(player, "Mining Guild Ladder") {
 						public void action() {
 							owner.setBusy(false);
 							owner.message(

@@ -55,7 +55,7 @@ public final class ItemDropHandler implements PacketHandler {
 
 		final int finalAmount = amount;
 
-		Server.getServer().getEventHandler().add(new DelayedEvent(player, 0) {
+		Server.getServer().getEventHandler().add(new DelayedEvent(player, 0, "Player Drop Item") {
 			int dropTickCount = 0;
 
 			@Override
@@ -111,7 +111,7 @@ public final class ItemDropHandler implements PacketHandler {
 		}
 
 		player.setStatus(Action.DROPPING_GITEM);
-		Server.getServer().getEventHandler().add(new DelayedEvent(player, 500) {
+		Server.getServer().getEventHandler().add(new DelayedEvent(player, 500, "Player Drop Unstackable") {
 			int dropCount = 0;
 
 			public void run() {

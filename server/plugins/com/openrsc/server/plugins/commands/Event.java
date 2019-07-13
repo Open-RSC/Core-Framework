@@ -440,7 +440,7 @@ public final class Event implements CommandListener {
 			} else {
 				GameObject newObject = new GameObject(objectLoc, 18, 0, 0);
 				World.getWorld().registerGameObject(newObject);
-				Server.getServer().getEventHandler().add(new SingleEvent(null, time * 60000) {
+				Server.getServer().getEventHandler().add(new SingleEvent(null, time * 60000, "Unregister Seers Party Hall") {
 					@Override
 					public void action() {
 						World.getWorld().unregisterGameObject(newObject);

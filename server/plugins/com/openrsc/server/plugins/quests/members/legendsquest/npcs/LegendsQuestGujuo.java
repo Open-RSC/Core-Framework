@@ -988,7 +988,7 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 			npcTalk(p, n, "I have work to do Bwana, I may see you again...");
 		}
 		npcTalk(p, n, "");
-		Server.getServer().getEventHandler().add(new SingleEvent(null, 1900) {
+		Server.getServer().getEventHandler().add(new SingleEvent(null, 1900, "Legends Quest Gujuo Disappears") {
 			public void action() {
 				p.message("Gujuo disapears into the Kharazi jungle as swiftly as he appeared...");
 				if(n != null) {

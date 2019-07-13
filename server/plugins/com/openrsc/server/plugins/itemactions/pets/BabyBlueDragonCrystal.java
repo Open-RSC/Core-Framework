@@ -66,7 +66,7 @@ public class BabyBlueDragonCrystal implements InvActionListener, InvActionExecut
 					player.getInventory().add(new Item(ItemId.A_GLOWING_RED_CRYSTAL.id()));
 					sleep(Constants.GameServer.GAME_TICK);
 					player.message("You summon your pet.");
-					Server.getServer().getEventHandler().add(new ShortEvent(player) {
+					Server.getServer().getEventHandler().add(new ShortEvent(player, "Baby Blue Dragon Crystal Pet") {
 						public void action() {
 							player.setBusy(true);
 							final Npc petDragon = spawnNpc(NpcId.BABY_BLUE_DRAGON.id(), player.getX() + 1, player.getY(), 1000 * 60 * 24, player); // spawns for 5 hours and then poof!

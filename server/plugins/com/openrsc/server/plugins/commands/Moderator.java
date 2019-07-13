@@ -263,7 +263,7 @@ public final class Moderator implements CommandListener {
 			GameLogging.addQuery(new StaffLog(player, 13, newStr.toString()));
 			newStr.insert(0, player.getStaffName() + ": ");
 			for (Player p : World.getWorld().getPlayers()) {
-				ActionSender.sendMessage(p, player, 1, MessageType.GLOBAL_CHAT, "ANNOUNCEMENT: " + newStr.toString(), player.getIcon());
+				ActionSender.sendMessage(p, player, 1, MessageType.GLOBAL_CHAT, "ANNOUNCEMENT: @whi@" + newStr.toString(), player.getIcon());
 			}
 		}
 	}

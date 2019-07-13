@@ -11,8 +11,8 @@ public abstract class BatchEvent extends DelayedEvent {
 	private int repeated;
 	private boolean gathering;
 
-	public BatchEvent(Player owner, int delay, int repeatFor, boolean gathering) {
-		super(owner, delay);
+	public BatchEvent(Player owner, int delay, String descriptor, int repeatFor, boolean gathering) {
+		super(owner, delay, descriptor);
 		this.gathering = gathering;
 		if (Constants.GameServer.BATCH_PROGRESSION) this.repeatFor = repeatFor;
 		else if (repeatFor > 1000) this.repeatFor = repeatFor - 1000; // Mining default
@@ -21,8 +21,8 @@ public abstract class BatchEvent extends DelayedEvent {
 		owner.setBusyTimer(delay + 200);
 	}
 	
-	public BatchEvent(Player owner, int delay, int repeatFor) {
-		this(owner, delay, repeatFor, true);
+	public BatchEvent(Player owner, int delay, String descriptor, int repeatFor) {
+		this(owner, delay, descriptor, repeatFor, true);
 	}
 
 	@Override

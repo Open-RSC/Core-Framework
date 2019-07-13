@@ -84,8 +84,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	private final TileValue[][] tiles = new TileValue[MAX_WIDTH][MAX_HEIGHT];
 	public WorldLoader wl;
 
-	private Map<Player, Boolean> underAttackMap = new HashMap<Player, Boolean>();
-	private Map<Npc, Boolean> underAttackMap2 = new HashMap<Npc, Boolean>();
+	private Map<Player, Boolean> playerUnderAttackMap = new HashMap<Player, Boolean>();
+	private Map<Npc, Boolean> npcUnderAttackMap = new HashMap<Npc, Boolean>();
 
 	/**
 	 * Double ended queue to store snapshots into
@@ -106,7 +106,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	}
 
 	private static void shutdownCheck() {
-		Server.getServer().getEventHandler().add(new SingleEvent(null, 1000) {
+		Server.getServer().getEventHandler().add(new SingleEvent(null, 1000, "Shutdown Check") {
 			public void action() {
 				int currSecond = (int) (System.currentTimeMillis() / 1000.0 - (4 * 3600));
 				if (Constants.GameServer.AUTO_SERVER_RESTART) {
@@ -141,7 +141,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	}
 
 	public static void restartCommand() {
-		Server.getServer().getEventHandler().add(new SingleEvent(null, 1000) {
+		Server.getServer().getEventHandler().add(new SingleEvent(null, 1000, "Restart Command") {
 			public void action() {
 				int currSecond = (int) (System.currentTimeMillis() / 1000.0 - (4 * 3600));
 				int seconds = 10;
@@ -188,7 +188,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	}
 
 	public void delayedRemoveObject(final GameObject object, final int delay) {
-		Server.getServer().getEventHandler().add(new SingleEvent(null, delay) {
+		Server.getServer().getEventHandler().add(new SingleEvent(null, delay, "Delayed Remove Object") {
 			public void action() {
 				unregisterGameObject(object);
 			}
@@ -199,7 +199,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	 * Adds a DelayedEvent that will spawn a GameObject
 	 */
 	public void delayedSpawnObject(final GameObjectLoc loc, final int respawnTime, final boolean forceFullBlock) {
-		Server.getServer().getEventHandler().add(new SingleEvent(null, respawnTime) {
+		Server.getServer().getEventHandler().add(new SingleEvent(null, respawnTime, "Delayed Spawn Object") {
 			public void action() {
 				registerGameObject(new GameObject(loc));
 				if (forceFullBlock) {
@@ -512,7 +512,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	public void registerItem(final GroundItem i, int delayTime) {
 		try {
 			if (i.getLoc() == null) {
-				Server.getServer().getEventHandler().add(new SingleEvent(null, delayTime) {
+				Server.getServer().getEventHandler().add(new SingleEvent(null, delayTime, "Register Item") {
 					public void action() {
 						unregisterItem(i);
 					}
@@ -781,27 +781,40 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	}
 
 	public void produceUnderAttack(Player p) {
-		underAttackMap.put(p, true);
+		playerUnderAttackMap.put(p, true);
 	}
 
 	public void produceUnderAttack(Npc n) {
-		underAttackMap2.put(n, true);
+		npcUnderAttackMap.put(n, true);
 	}
 
 	public boolean checkUnderAttack(Player p) {
-		return underAttackMap.getOrDefault(p, false);
+		return playerUnderAttackMap.getOrDefault(p, false);
 	}
 
 	public boolean checkUnderAttack(Npc n) {
-		return underAttackMap2.getOrDefault(n, false);
+		return npcUnderAttackMap.getOrDefault(n, false);
 	}
 
 	public void releaseUnderAttack(Player p) {
-		underAttackMap.put(p, false);
+		if (playerUnderAttackMap.containsKey(p)) {
+			playerUnderAttackMap.remove(p);
+		}
 	}
 
 	public void releaseUnderAttack(Npc n) {
-		underAttackMap2.put(n, false);
+		if (npcUnderAttackMap.containsKey(n)) {
+			npcUnderAttackMap.remove(n);
+		}
 	}
+
+	public synchronized Map<Player, Boolean> getPlayersUnderAttack() {
+		return playerUnderAttackMap;
+	}
+
+	public synchronized Map<Npc, Boolean> getNpcsUnderAttack() {
+		return npcUnderAttackMap;
+	}
+
 
 }

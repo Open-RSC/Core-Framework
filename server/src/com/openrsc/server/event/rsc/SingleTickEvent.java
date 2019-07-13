@@ -4,8 +4,8 @@ import com.openrsc.server.model.entity.Mob;
 
 public abstract class SingleTickEvent extends GameTickEvent {
 
-	public SingleTickEvent(Mob caster, int ticks) {
-		super(caster, ticks);
+	public SingleTickEvent(Mob caster, int ticks, String description) {
+		super(caster, ticks, description);
 	}
 
 	public abstract void action();

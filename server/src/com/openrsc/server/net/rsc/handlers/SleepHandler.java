@@ -21,7 +21,7 @@ public final class SleepHandler implements PacketHandler {
 			Server.getServer()
 				.getEventHandler()
 				.add(new SingleEvent(player, player
-					.getIncorrectSleepTimes() * 1000) {
+					.getIncorrectSleepTimes() * 1000, "Guess Sleep Word") {
 					@Override
 					public void action() {
 						ActionSender.sendEnterSleep(owner);
@@ -47,7 +47,7 @@ public final class SleepHandler implements PacketHandler {
 
 				Server.getServer().getEventHandler()
 					.add(new SingleEvent(player, player
-						.getIncorrectSleepTimes() * 1000) {
+						.getIncorrectSleepTimes() * 1000, "Guess Sleep Word") {
 						@Override
 						public void action() {
 							ActionSender.sendEnterSleep(owner);

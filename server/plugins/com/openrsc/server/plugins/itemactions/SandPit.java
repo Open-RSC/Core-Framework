@@ -1,10 +1,5 @@
 package com.openrsc.server.plugins.itemactions;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showBubble;
-import static com.openrsc.server.plugins.Functions.sleep;
-
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.container.Item;
@@ -12,6 +7,8 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class SandPit implements InvUseOnObjectListener,
 InvUseOnObjectExecutiveListener {
@@ -29,7 +26,7 @@ InvUseOnObjectExecutiveListener {
 			player.message("Nothing interesting happens");
 			return;
 		}
-		player.setBatchEvent(new BatchEvent(player, 600, player.getInventory().countId(itemID), true) {
+		player.setBatchEvent(new BatchEvent(player, 600, "Fill Bucket with Sand", player.getInventory().countId(itemID), true) {
 			@Override
 			public void action() {
 				if (removeItem(owner, itemID, 1)) {
