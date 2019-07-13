@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.skills;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemId;
@@ -23,20 +24,20 @@ public class Runecrafting implements ObjectActionListener, ObjectActionExecutive
 		if (def == null)
 			return false;
 
-		switch (def.getRuneName())
+		switch (ItemId.getById(def.getRuneId()))
 		{
-			case "air":
-			case "mind":
-			case "water":
-			case "earth":
-			case "fire":
-			case "body":
-			case "cosmic":
-			case "chaos":
-			case "nature":
-			case "law":
-			case "death":
-			case "blood":
+			case AIR_RUNE:
+			case MIND_RUNE:
+			case WATER_RUNE:
+			case EARTH_RUNE:
+			case FIRE_RUNE:
+			case BODY_RUNE:
+			case COSMIC_RUNE:
+			case CHAOS_RUNE:
+			case NATURE_RUNE:
+			case LAW_RUNE:
+			case DEATH_RUNE:
+			case BLOOD_RUNE:
 				return true;
 			default:
 				return false;
@@ -49,6 +50,12 @@ public class Runecrafting implements ObjectActionListener, ObjectActionExecutive
 		final ObjectRunecraftingDef def = EntityHandler.getObjectRunecraftingDef(obj.getID());
 
 		if (def == null) {
+			return;
+		}
+
+		if (player.getQuestStage(Constants.Quests.RUNE_MYSTERIES) != -1)
+		{
+			player.message("You need to complete Rune Mysteries first. How did you get here?");
 			return;
 		}
 
@@ -70,7 +77,7 @@ public class Runecrafting implements ObjectActionListener, ObjectActionExecutive
 					return;
 				}
 				removeItem(player, ItemId.RUNE_ESSENCE.id(), 1);
-				addItem(player, def.getRuneId(), getRuneMultiplier(player,def.getRuneName()));
+				addItem(player, def.getRuneId(), getRuneMultiplier(player,def.getRuneId()));
 				player.incExp(SKILLS.RUNECRAFT.id(), def.getExp(), true);
 			}
 		});
@@ -122,68 +129,68 @@ public class Runecrafting implements ObjectActionListener, ObjectActionExecutive
 				p.teleport(934,14,false);
 				break;
 			case WATER_TALISMAN:
-				p.teleport(934,14,false);
+				p.teleport(986,63,false);
 				break;
 			case EARTH_TALISMAN:
-				p.teleport(934,14,false);
+				p.teleport(934,70,false);
 				break;
 			case FIRE_TALISMAN:
-				p.teleport(934,14,false);
+				p.teleport(887,26,false);
 				break;
 			case BODY_TALISMAN:
-				p.teleport(934,14,false);
+				p.teleport(893,71,false);
 				break;
 			case COSMIC_TALISMAN:
-				p.teleport(934,14,false);
+				p.teleport(839,26,false);
 				break;
 			case CHAOS_TALISMAN:
 				p.teleport(934,14,false);
 				break;
 			case NATURE_TALISMAN:
-				p.teleport(934,14,false);
+				p.teleport(787,29,false);
 				break;
 			case LAW_TALISMAN:
-				p.teleport(934,14,false);
+				p.teleport(790,69,false);
 				break;
 			case DEATH_TALISMAN:
 				p.teleport(934,14,false);
 				break;
 			case BLOOD_TALISMAN:
-				p.teleport(934,14,false);
+				p.teleport(743,22,false);
 				break;
 		}
 	}
 
-	public int getRuneMultiplier(Player p, String runeName) {
+	public int getRuneMultiplier(Player p, int runeId) {
 		int retVal;
 
-		switch(runeName) {
-			case "air":
+		switch(ItemId.getById(runeId)) {
+			case AIR_RUNE:
 				retVal =  (int)Math.floor(getCurrentLevel(p, SKILLS.RUNECRAFT.id())/11.0)+1;
 				if (retVal > 10)
 					retVal = 10;
 				break;
-			case "mind":
+			case MIND_RUNE:
 				retVal = (int)Math.floor(getCurrentLevel(p, SKILLS.RUNECRAFT.id())/14.0)+1;
 				if (retVal > 8)
 					retVal = 8;
 				break;
-			case "water":
+			case WATER_RUNE:
 				retVal = (int)Math.floor(getCurrentLevel(p, SKILLS.RUNECRAFT.id())/19.0)+1;
 				if (retVal > 6)
 					retVal = 6;
 				break;
-			case "earth":
+			case EARTH_RUNE:
 				retVal = (int)Math.floor(getCurrentLevel(p, SKILLS.RUNECRAFT.id())/26.0)+1;
 				if (retVal > 4)
 					retVal = 4;
 				break;
-			case "fire":
+			case FIRE_RUNE:
 				retVal = (int)Math.floor(getCurrentLevel(p, SKILLS.RUNECRAFT.id())/35.0)+1;
 				if (retVal > 3)
 					retVal = 3;
 				break;
-			case "body":
+			case BODY_RUNE:
 				retVal = (int)Math.floor(getCurrentLevel(p, SKILLS.RUNECRAFT.id())/46.0)+1;
 				if (retVal > 2)
 					retVal = 2;

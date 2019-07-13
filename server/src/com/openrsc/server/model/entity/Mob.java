@@ -319,23 +319,16 @@ public abstract class Mob extends Entity {
 		int lowYDiff = Math.abs(getY() - low.getY());
 		int highYDiff = Math.abs(getY() - high.getY());
 
-		switch (o.getID())
-		{
-			case 1190:
-			case 1191:
-				if ((lowXDiff <= 2 || highXDiff <= 2) &&
-				(lowYDiff <= 2 || highYDiff <= 2)) {
+		//Runecrafting objects need to be accessible from all angles
+		if (o.getID() >= 1190 && o.getID() <= 1225)	{
+			if ((lowXDiff <= 2 || highXDiff <= 2) && (lowYDiff <= 2 || highYDiff <= 2))
 				return true;
-				}
-				break;
-			case 953:
-				if ((lowXDiff <= 1 || highXDiff <= 1) &&
-					(lowYDiff <= 1 || highYDiff <= 1)) {
-					return true;
-				}
-				break;
-			default:
-				return false;
+		}
+
+		else if (o.getID() == 953)
+		{
+			if ((lowXDiff <= 1 || highXDiff <= 1) &&(lowYDiff <= 1 || highYDiff <= 1))
+				return true;
 		}
 		return false;
 	}

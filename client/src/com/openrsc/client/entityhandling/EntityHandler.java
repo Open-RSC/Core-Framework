@@ -5203,7 +5203,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Target", "Coming soon archery practice", "Practice", "Examine", 1, 1, 1, 0, "target", i++));
 		objects.add(new GameObjectDef("PalmTree", "A nice palm tree", "WalkTo", "Examine", 1, 1, 1, 0, "palm2", i++));
 		objects.add(new GameObjectDef("PalmTree", "A shady palm tree", "WalkTo", "Examine", 1, 1, 1, 0, "palm", i++));
-		objects.add(new GameObjectDef("Fern", "A leafy plant", "WalkTo", "Examine", 0, 1, 1, 0, "fern", i++));
+		objects.add(new GameObjectDef("Fern", "A leafy plant", "WalkTo", "Examine", 0, 1, 1, 0, "fern", i++));//34
 		objects.add(new GameObjectDef("Cactus", "It looks very spikey", "WalkTo", "Examine", 1, 1, 1, 0, "cactus", i++));
 		objects.add(new GameObjectDef("Bullrushes", "I wonder why it's called a bullrush", "WalkTo", "Examine", 0, 1, 1, 0, "bullrushes", i++));
 		objects.add(new GameObjectDef("Flower", "Ooh thats pretty", "WalkTo", "Examine", 0, 1, 1, 0, "flower", i++));
@@ -6365,32 +6365,47 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Vine", "A creepy creeper", "Grab", "Examine", 0, 1, 1, 0, "vinejunction", i++));
 
 		//Runecrafting Objects
-		objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Air 1190
-		objects.add(new GameObjectDef("Air Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "air altar", i++));//Air
-		objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Mind
-		objects.add(new GameObjectDef("Mind Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Mind
-		objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Water
-		objects.add(new GameObjectDef("Water Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Water
-		objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Earth
-		objects.add(new GameObjectDef("Earth Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Earth
-		objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Fire
-		objects.add(new GameObjectDef("Fire Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Fire
-		objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Body
-		objects.add(new GameObjectDef("Body Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Body
-		objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Cosmic
-		objects.add(new GameObjectDef("Cosmic Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Cosmic
-		objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Chaos
-		objects.add(new GameObjectDef("Chaos Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Chaos
-		objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Nature
-		objects.add(new GameObjectDef("Nature Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Nature
-		objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Law
-		objects.add(new GameObjectDef("Law Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Law
-		objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Death
-		objects.add(new GameObjectDef("Death Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Death
-		objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Blood
-		objects.add(new GameObjectDef("Blood Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Blood
-		objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//air altar
-		objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//mind altar
+		if (Config.S_WANT_RUNECRAFTING)
+		{
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Air 1190
+			objects.add(new GameObjectDef("Air Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Air
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Mind
+			objects.add(new GameObjectDef("Mind Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Mind
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Water
+			objects.add(new GameObjectDef("Water Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Water
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Earth
+			objects.add(new GameObjectDef("Earth Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Earth
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Fire
+			objects.add(new GameObjectDef("Fire Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Fire
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Body
+			objects.add(new GameObjectDef("Body Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Body
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Cosmic
+			objects.add(new GameObjectDef("Cosmic Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Cosmic
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Chaos
+			objects.add(new GameObjectDef("Chaos Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Chaos
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Nature 1206
+			objects.add(new GameObjectDef("Nature Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Nature
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Law
+			objects.add(new GameObjectDef("Law Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Law
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Death
+			objects.add(new GameObjectDef("Death Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Death
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Blood
+			objects.add(new GameObjectDef("Blood Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Blood
+			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//air altar 1214
+			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//mind altar
+			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//water altar
+			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//earth altar
+			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//fire altar
+			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//body altar
+			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//cosmic altar
+			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//chaos altar
+			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//nature altar
+			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//law altar
+			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//death altar
+			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//blood altar
+			objects.add(new GameObjectDef("Raw Essence", "A pile of raw essence", "Mine", "Examine", 1, 2, 2, 0, "essencemine", i++));//rune essence mine1226
+		}
+
 	}
 
 	public static void load(boolean loadMembers) {
