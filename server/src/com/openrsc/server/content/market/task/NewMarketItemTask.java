@@ -1,5 +1,6 @@
 package com.openrsc.server.content.market.task;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.content.market.Market;
 import com.openrsc.server.content.market.MarketDatabase;
 import com.openrsc.server.content.market.MarketItem;
@@ -23,6 +24,7 @@ public class NewMarketItemTask extends MarketTask {
 	@Override
 	public void doTask() {
 		ItemDefinition def = EntityHandler.getItemDef(newItem.getItemID());
+		boolean updateDiscord = false;
 
 		if (newItem.getItemID() == 10 || def.isUntradable()) {
 			ActionSender.sendBox(owner, "@red@[Auction House - Error] % @whi@ You cannot sell that item on auction house!", false);
@@ -68,7 +70,7 @@ public class NewMarketItemTask extends MarketTask {
 		if (MarketDatabase.add(newItem)) {
 			//ActionSender.sendBox(owner, "@gre@[Auction House - Success] % @whi@ Auction has been listed % " + newItem.getAmount() + "x @yel@" + def.getName() + " @whi@for @yel@" + newItem.getPrice() + "gp % @whi@Completed auction fee: @gre@" + feeCost + "gp", false);
 			ActionSender.sendBox(owner, "@gre@[Auction House - Success] % @whi@ Auction has been listed % " + newItem.getAmount() + "x @yel@" + def.getName() + " @whi@for @yel@" + newItem.getPrice() + "gp", false);
-			DiscordSender.auctionAdd(newItem.getItemID(), newItem.getPrice(), newItem.getAmount(), newItem.getSellerName());
+			updateDiscord = true;
 		} else {
 			Item item = new Item(newItem.getItemID(), newItem.getAmount());
 			if (item.getDef().isStackable()) {
@@ -81,5 +83,8 @@ public class NewMarketItemTask extends MarketTask {
 			ActionSender.sendBox(owner, "@red@[Auction House - Error] % @whi@ Failed to add item to Auction. % Item(s) have been returned to your inventory.", false);
 		}
 		Market.getInstance().addRequestOpenAuctionHouseTask(owner);
+		if (updateDiscord && Constants.GameServer.WANT_DISCORD_UPDATES) {
+			DiscordSender.auctionAdd(newItem);
+		}
 	}
 }
