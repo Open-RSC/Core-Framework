@@ -7,14 +7,11 @@ import com.openrsc.server.content.market.Market;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
-
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.util.rsc.DataConversions;
-
-
 
 public class InterfaceOptionHandler implements PacketHandler {
 
@@ -227,7 +224,6 @@ public class InterfaceOptionHandler implements PacketHandler {
 						int amount = p.readInt();
 						int price = p.readInt();
 						Market.getInstance().addNewAuctionItemTask(player, itemID, amount, price);
-
 						break;
 					case 2:
 						int auctionID = p.readInt();
