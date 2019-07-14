@@ -52,6 +52,8 @@ public final class AuburysRunes implements ShopInterface,
 				menu.add("I've been sent here with a package for you.");
 			else if (p.getQuestStage(Constants.Quests.RUNE_MYSTERIES) == 3)
 				menu.add("Rune mysteries");
+			else if (p.getQuestStage(Constants.Quests.RUNE_MYSTERIES) == -1)
+				menu.add("Teleport to rune essence");
 
 		npcTalk(p, n, "Do you want to buy some runes?");
 

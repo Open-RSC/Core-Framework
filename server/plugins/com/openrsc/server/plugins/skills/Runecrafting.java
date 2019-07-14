@@ -117,6 +117,11 @@ public class Runecrafting implements ObjectActionListener, ObjectActionExecutive
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 
+		if (p.getQuestStage(Constants.Quests.RUNE_MYSTERIES) != -1)
+		{
+			p.message("You need to complete Rune Mysteries first.");
+			return;
+		}
 		p.message("You feel a powerful force take hold of you...");
 		sleep(500);
 

@@ -16,7 +16,7 @@ public class ExitPortal implements ObjectActionListener, ObjectActionExecutiveLi
 	public void onObjectAction(GameObject obj, String command, Player player) {
 
 		if (command.equalsIgnoreCase("exit")) {
-			switch (obj.getID()) {//air altar 1214
+			switch (obj.getID()) {
 				case 1214: //air altar
 					player.teleport(305,594,false);
 					break;
@@ -53,6 +53,21 @@ public class ExitPortal implements ObjectActionListener, ObjectActionExecutiveLi
 				case 1225://blood altar
 					player.teleport(0,0,false);
 					break;
+				case 1226://rune essence mine
+				{
+					if (player.getCache().hasKey("essence_entrance"))
+					{
+						if (player.getCache().getInt("essence_entrance") == 0) {
+							player.teleport(101,523,false);
+						} else {
+							player.teleport(222,3517,false);
+						}
+						player.getCache().remove("essence_entrance");
+					}
+					else //shouldn't happen unless a gm teleports to essence
+						player.teleport(101,523,false);
+				}
+				break;
 			}
 		}
 	}
