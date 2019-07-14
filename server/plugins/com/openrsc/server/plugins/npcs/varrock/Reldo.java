@@ -27,7 +27,7 @@ public final class Reldo implements TalkToNpcListener,
 	public void onTalkToNpc(final Player p, final Npc n) {
 		Menu defaultMenu = new Menu();
 		if (p.getCache().hasKey("read_arrav")
-			&& p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 1) {
+			&& p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 1 || p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 2) {
 			playerTalk(p, n, "OK I've read the book",
 				"Do you know where I can find the Phoenix Gang");
 			npcTalk(p, n, "No I don't",
@@ -35,7 +35,9 @@ public final class Reldo implements TalkToNpcListener,
 				"Talk to Baraek, the fur trader in the market place",
 				"I've heard he has connections with the Phoenix Gang");
 			playerTalk(p, n, "Thanks, I'll try that");
-			p.updateQuestStage(Quests.SHIELD_OF_ARRAV, 2);
+			if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 1) {
+				p.updateQuestStage(Quests.SHIELD_OF_ARRAV, 2);
+			}
 			return;
 		}
 		playerTalk(p, n, "Hello");

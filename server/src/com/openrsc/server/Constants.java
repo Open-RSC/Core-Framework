@@ -48,7 +48,7 @@ public final class Constants {
 			NpcId.KING_SCORPION.id(), NpcId.DONNY_THE_LAD.id(), NpcId.SPEEDY_KEITH.id(), NpcId.BLACK_HEATHER.id(), NpcId.ZOMBIE_INVOKED.id(),
 			NpcId.ZOMBIE_ENTRANA.id(), NpcId.ZOMBIE_LVL32.id(), NpcId.ZOMBIE_WMAZEKEY.id(), NpcId.GIANT_BAT.id(), NpcId.DEATH_WING.id(),
 			NpcId.RAT_LVL13.id(), NpcId.RAT_WMAZEKEY.id(), NpcId.HOBGOBLIN_LVL32.id(), NpcId.OTHERWORLDLY_BEING.id(),
-			NpcId.WYSON_THE_GARDENER.id(), NpcId.STRAVEN.id()
+			NpcId.WYSON_THE_GARDENER.id(), NpcId.STRAVEN.id(), NpcId.JONNY_THE_BEARD.id()
 		};
 		/**
 		 * Strikes, Bolts & Blast Spells.
