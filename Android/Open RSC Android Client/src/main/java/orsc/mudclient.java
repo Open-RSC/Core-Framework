@@ -5636,7 +5636,7 @@ public final class mudclient implements Runnable {
                         var15 = x - overlayMovement * 10 / 100;
                     }
 
-                    this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGEGIVEN.id())), var15 - (12 - width1 / 2),
+                    this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), var15 - (12 - width1 / 2),
                             y + height / 2 - 12);
                     this.getSurface().drawColoredStringCentered(width1 / 2 - 1 + var15, "" + npc.damageTaken, 0xFFFFFF,
                             0, 3, 5 + y + height / 2);
@@ -5836,7 +5836,7 @@ public final class mudclient implements Runnable {
                             var14 = x - overlayMovement * 10 / 100;
                         }
 
-                        this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), width / 2 + var14 - 12,
+                        this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGEGIVEN.id())), width / 2 + var14 - 12,
                                 height / 2 + (y - 12));
                         this.getSurface().drawColoredStringCentered(width / 2 + (var14 - 1), "" + player.damageTaken,
                                 0xFFFFFF, 0, 3, height / 2 + y + 5);
