@@ -1,9 +1,11 @@
 package com.openrsc.server.content.market.task;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.content.market.Market;
 import com.openrsc.server.content.market.MarketDatabase;
 import com.openrsc.server.content.market.MarketItem;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.net.DiscordSender;
 import com.openrsc.server.net.rsc.ActionSender;
 
 public class ModeratorDeleteAuctionTask extends MarketTask {
@@ -18,6 +20,7 @@ public class ModeratorDeleteAuctionTask extends MarketTask {
 
 	@Override
 	public void doTask() {
+		boolean updateDiscord = false;
 		if (!player.isMod()) {
 			player.setSuspiciousPlayer(true);
 			ActionSender.sendBox(player, "@red@[Auction House - Error] % @whi@ Unable to remove auction", false);
@@ -29,10 +32,14 @@ public class ModeratorDeleteAuctionTask extends MarketTask {
 				if (MarketDatabase.setSoldOut(item)) {
 					MarketDatabase.addCollectableItem("Removed by " + player.getStaffName(), itemIndex, amount, item.getSeller());
 					ActionSender.sendBox(player, "@gre@[Auction House - Success] % @whi@ Item has been removed from Auctions. % % Returned to collections for:  " + item.getSellerName(), false);
+					updateDiscord = true;
 				} else
 					ActionSender.sendBox(player, "@red@[Auction House - Error] % @whi@ Unable to remove auction", false);
 			}
 			Market.getInstance().addRequestOpenAuctionHouseTask(player);
+			if (updateDiscord && Constants.GameServer.WANT_DISCORD_UPDATES) {
+				DiscordSender.auctionModDelete(item);
+			}
 		}
 	}
 }
