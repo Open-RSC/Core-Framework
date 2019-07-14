@@ -50,7 +50,6 @@ InvUseOnObjectExecutiveListener {
 							boolean fail = Formulae.cutCacti();
 							if (fail) {
 								owner.message("You make a mistake and fail to fill your waterskin.");
-<<<<<<< HEAD
 								owner.incExp(SKILLS.WOODCUT.id(), 4, true);
 								owner.getInventory().add(new Item(s, 1));
 								owner.setBusy(false);

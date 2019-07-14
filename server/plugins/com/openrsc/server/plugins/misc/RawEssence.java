@@ -27,7 +27,7 @@ public class RawEssence implements ObjectActionListener, ObjectActionExecutiveLi
 			return;
 		}
 
-		player.setBatchEvent(new BatchEvent(player, Constants.GameServer.GAME_TICK, player.getInventory().getFreeSlots(), true) {
+		player.setBatchEvent(new BatchEvent(player, Constants.GameServer.GAME_TICK, "Mining rune essence", player.getInventory().getFreeSlots(), true) {
 			public void action() {
 				addItem(player, ItemId.RUNE_ESSENCE.id(), 1);
 				if (player.getInventory().full())

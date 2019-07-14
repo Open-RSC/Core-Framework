@@ -3465,62 +3465,62 @@ public class EntityHandler {
 		//A bunch of custom items we don't use are in the DB
 		//Rather than delete them from the DB, use loops to load dummy items in their place
 		for (int i=2092; i<2106; i++)
-			items.add(new ItemDef("Hardcore ironman platelegs", "Take it off and what are you?", "", 280, 9, false, true, 644, 10027084, false, true, -1, -1, i));
+			items.add(new ItemDef("Hardcore ironman platelegs", "Take it off and what are you?", "", 280, 9, "items:9",false, true, 644, 10027084, false, true, -1, -1, i));
 
 		//Experience Elixir
-		items.add(new ItemDef("Experience elixir", "A mysterious experience elixir once produced by hetty", "Drink", 2250, 48, false, false, 0, 514131489, false, false, -1, -1, 2106));
+		items.add(new ItemDef("Experience elixir", "A mysterious experience elixir once produced by hetty", "Drink", 2250, 48, "items:48",false, false, 0, 514131489, false, false, -1, -1, 2106));
 
 		for (int i=2107; i<2133; i++)
-			items.add(new ItemDef("Hardcore ironman platelegs", "Take it off and what are you?", "", 280, 9, false, true, 644, 10027084, false, true, -1, -1, i));
+			items.add(new ItemDef("Hardcore ironman platelegs", "Take it off and what are you?", "", 280, 9, "items:9",false, true, 644, 10027084, false, true, -1, -1, i));
 
-		items.add(new ItemDef("Bunny ears", "Swap this note at any bank for the equivalent item.", "", 0, 438, true, false, 0, 0, false, true, -1, 1156, 2133));
-		items.add(new ItemDef("Scythe", "Swap this note at any bank for the equivalent item.", "", 0, 438, true, false, 0, 0, false, true, -1, 1289, 2134));
+		items.add(new ItemDef("Bunny ears", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438",true, false, 0, 0, false, true, -1, 1156, 2133));
+		items.add(new ItemDef("Scythe", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438",true, false, 0, 0, false, true, -1, 1289, 2134));
 
 
-		items.add(new ItemDef("Ironman helm", "For just a rather very independent scaper.", "", 154, 6, false, true, 33, 11189164, false, true, -1, -1, 2135));
-		items.add(new ItemDef("Ironman platebody", "Take it off and what are you?", "", 560, 8, false, true, 322, 11189164, false, true, -1, -1, 2136));
-		items.add(new ItemDef("Ironman platelegs", "Take it off and what are you?", "", 280, 9, false, true, 644, 11189164, false, true, -1, -1, 2137));
+		items.add(new ItemDef("Ironman helm", "For just a rather very independent scaper.", "", 154, 6, "items:6",false, true, 33, 11189164, false, true, -1, -1, 2135));
+		items.add(new ItemDef("Ironman platebody", "Take it off and what are you?", "", 560, 8, "items:8",false, true, 322, 11189164, false, true, -1, -1, 2136));
+		items.add(new ItemDef("Ironman platelegs", "Take it off and what are you?", "", 280, 9, "items:9",false, true, 644, 11189164, false, true, -1, -1, 2137));
 
-		items.add(new ItemDef("Ultimate ironman helm", "For Just A Rather Very Independent Scaper.", "", 154, 6, false, true, 33, 16768685, false, true, -1, -1, 2138));
-		items.add(new ItemDef("Ultimate ironman platebody", "Take it off and what are you?", "", 560, 8, false, true, 322, 16768685, false, true, -1, -1, 2139));
-		items.add(new ItemDef("Ultimate ironman platelegs", "Take it off and what are you?", "", 280, 9, false, true, 644, 16768685, false, true, -1, -1, 2140));
+		items.add(new ItemDef("Ultimate ironman helm", "For Just A Rather Very Independent Scaper.", "", 154, 6, "items:6",false, true, 33, 16768685, false, true, -1, -1, 2138));
+		items.add(new ItemDef("Ultimate ironman platebody", "Take it off and what are you?", "", 560, 8, "items:8",false, true, 322, 16768685, false, true, -1, -1, 2139));
+		items.add(new ItemDef("Ultimate ironman platelegs", "Take it off and what are you?", "", 280, 9, "items:9",false, true, 644, 16768685, false, true, -1, -1, 2140));
 
-		items.add(new ItemDef("Hardcore ironman helm", "For those who stand alone.", "", 154, 6, false, true, 33, 10027084, false, true, -1, -1, 2141));
-		items.add(new ItemDef("Hardcore ironman platebody", "Take it off and what are you?", "", 560, 8, false, true, 322, 10027084, false, true, -1, -1, 2142));
-		items.add(new ItemDef("Hardcore ironman platelegs", "Take it off and what are you?", "", 280, 9, false, true, 644, 10027084, false, true, -1, -1, 2143));
+		items.add(new ItemDef("Hardcore ironman helm", "For those who stand alone.", "", 154, 6, "items:6",false, true, 33, 10027084, false, true, -1, -1, 2141));
+		items.add(new ItemDef("Hardcore ironman platebody", "Take it off and what are you?", "", 560, 8, "items:8",false, true, 322, 10027084, false, true, -1, -1, 2142));
+		items.add(new ItemDef("Hardcore ironman platelegs", "Take it off and what are you?", "", 280, 9, "items:9",false, true, 644, 10027084, false, true, -1, -1, 2143));
 
 		for (int i=2144; i<2258; i++)
-			items.add(new ItemDef("Hardcore ironman platelegs", "Take it off and what are you?", "", 280, 9, false, true, 644, 10027084, false, true, -1, -1, i));
+			items.add(new ItemDef("Hardcore ironman platelegs", "Take it off and what are you?", "", 280, 9, "items:9",false, true, 644, 10027084, false, true, -1, -1, i));
 
 		//Runecrafting
-		items.add(new ItemDef("Rune essence", "An uncharged runestone", "", 0, 443, false, false, 0, 0, false, false, 2259, -1, 2258));
-		items.add(new ItemDef("Rune essence", "Swap this note at any bank for the equivalent item.", "", 0, 438, true, false, 0, 0, false, false, -1, 2258, 2259));
-		items.add(new ItemDef("Air talisman", "A mysterious power eminates from the talisman...", "Locate", 0, 445, false, false, 0, 0, false, false, 2261, -1, 2260));
-		items.add(new ItemDef("Air talisman", "Swap this note at any bank for the equivalent item.", "", 0, 438, true, false, 0, 0, false, false, -1, 2260, 2261));
-		items.add(new ItemDef("Mind talisman", "A mysterious power eminates from the talisman...", "Locate", 0, 464, false, false, 0, 0, false, false, 2263, -1, 2262));
-		items.add(new ItemDef("Mind talisman", "Swap this note at any bank for the equivalent item.", "", 0, 438, true, false, 0, 0, false, false, -1, 2262, 2263));
-		items.add(new ItemDef("Water talisman", "A mysterious power eminates from the talisman...", "Locate", 0, 446, false, false, 0, 0, false, false, 2265, -1, 2264));
-		items.add(new ItemDef("Water talisman", "Swap this note at any bank for the equivalent item.", "", 0, 438, true, false, 0, 0, false, false, -1, 2264, 2265));
-		items.add(new ItemDef("Earth talisman", "A mysterious power eminates from the talisman...", "Locate", 0, 448, false, false, 0, 0, false, false, 2267, -1, 2266));
-		items.add(new ItemDef("Earth talisman", "Swap this note at any bank for the equivalent item.", "", 0, 438, true, false, 0, 0, false, false, -1, 2266, 2267));
-		items.add(new ItemDef("Fire talisman", "A mysterious power eminates from the talisman...", "Locate", 0, 447, false, false, 0, 0, false, false, 2269, -1, 2268));
-		items.add(new ItemDef("Fire talisman", "Swap this note at any bank for the equivalent item.", "", 0, 438, true, false, 0, 0, false, false, -1, 2268, 2269));
-		items.add(new ItemDef("Body talisman", "A mysterious power eminates from the talisman...", "Locate", 0, 444, false, false, 0, 0, false, false, 2271, -1, 2270));
-		items.add(new ItemDef("Body talisman", "Swap this note at any bank for the equivalent item.", "", 0, 438, true, false, 0, 0, false, false, -1, 2270, 2271));
-		items.add(new ItemDef("Cosmic talisman", "A mysterious power eminates from the talisman...", "Locate", 0, 451, false, false, 0, 0, false, false, 2273, -1, 2272));
-		items.add(new ItemDef("Cosmic talisman", "Swap this note at any bank for the equivalent item.", "", 0, 438, true, false, 0, 0, false, false, -1, 2272, 2273));
-		items.add(new ItemDef("Chaos talisman", "A mysterious power eminates from the talisman...", "Locate", 0, 452, false, false, 0, 0, false, false, 2275, -1, 2274));
-		items.add(new ItemDef("Chaos talisman", "Swap this note at any bank for the equivalent item.", "", 0, 438, true, false, 0, 0, false, false, -1, 2274, 2275));
-		items.add(new ItemDef("Nature talisman", "A mysterious power eminates from the talisman...", "Locate", 0, 449, false, false, 0, 0, false, false, 2277, -1, 2276));
-		items.add(new ItemDef("Nature talisman", "Swap this note at any bank for the equivalent item.", "", 0, 438, true, false, 0, 0, false, false, -1, 2276, 2277));
-		items.add(new ItemDef("Law talisman", "A mysterious power eminates from the talisman...", "Locate", 0, 450, false, false, 0, 0, false, false, 2279, -1, 2278));
-		items.add(new ItemDef("Law talisman", "Swap this note at any bank for the equivalent item.", "", 0, 438, true, false, 0, 0, false, false, -1, 2278, 2279));
-		items.add(new ItemDef("Death talisman", "A mysterious power eminates from the talisman...", "Locate", 0, 453, false, false, 0, 0, false, false, 2281, -1, 2280));
-		items.add(new ItemDef("Death talisman", "Swap this note at any bank for the equivalent item.", "", 0, 438, true, false, 0, 0, false, false, -1, 2280, 2281));
-		items.add(new ItemDef("Blood talisman", "A mysterious power eminates from the talisman...", "Locate", 0, 454, false, false, 0, 0, false, false, 2283, -1, 2282));
-		items.add(new ItemDef("Blood talisman", "Swap this note at any bank for the equivalent item.", "", 0, 438, true, false, 0, 0, false, false, -1, 2282, 2283));
-		items.add(new ItemDef("Research package", "This contains some vital research results.", "", 0, 330, false, false, 0, 0, true, true, -1, -1, 2284));
-		items.add(new ItemDef("Research notes", "These make no sense at all.", "", 0, 427, false, false, 0, 0, true, true, -1, -1, 2285));
+		items.add(new ItemDef("Rune essence", "An uncharged runestone", "", 0, -1, "items:443",false, false, 0, 0, false, false, 2259, -1, 2258));
+		items.add(new ItemDef("Rune essence", "Swap this note at any bank for the equivalent item.", "", 0, -1, "items:438",true, false, 0, 0, false, false, -1, 2258, 2259));
+		items.add(new ItemDef("Air talisman", "A mysterious power eminates from the talisman...", "Locate", 0, -1, "items:445",false, false, 0, 0, false, false, 2261, -1, 2260));
+		items.add(new ItemDef("Air talisman", "Swap this note at any bank for the equivalent item.", "", 0, -1,"items:438", true, false, 0, 0, false, false, -1, 2260, 2261));
+		items.add(new ItemDef("Mind talisman", "A mysterious power eminates from the talisman...", "Locate", 0, -1, "items:464",false, false, 0, 0, false, false, 2263, -1, 2262));
+		items.add(new ItemDef("Mind talisman", "Swap this note at any bank for the equivalent item.", "", 0, -1, "items:438",true, false, 0, 0, false, false, -1, 2262, 2263));
+		items.add(new ItemDef("Water talisman", "A mysterious power eminates from the talisman...", "Locate", 0, -1, "items:446",false, false, 0, 0, false, false, 2265, -1, 2264));
+		items.add(new ItemDef("Water talisman", "Swap this note at any bank for the equivalent item.", "", 0, -1, "items:438",true, false, 0, 0, false, false, -1, 2264, 2265));
+		items.add(new ItemDef("Earth talisman", "A mysterious power eminates from the talisman...", "Locate", 0, -1, "items:448",false, false, 0, 0, false, false, 2267, -1, 2266));
+		items.add(new ItemDef("Earth talisman", "Swap this note at any bank for the equivalent item.", "", 0, -1, "items:438",true, false, 0, 0, false, false, -1, 2266, 2267));
+		items.add(new ItemDef("Fire talisman", "A mysterious power eminates from the talisman...", "Locate", 0, -1, "items:447",false, false, 0, 0, false, false, 2269, -1, 2268));
+		items.add(new ItemDef("Fire talisman", "Swap this note at any bank for the equivalent item.", "", 0, -1, "items:438",true, false, 0, 0, false, false, -1, 2268, 2269));
+		items.add(new ItemDef("Body talisman", "A mysterious power eminates from the talisman...", "Locate", 0, -1, "items:444",false, false, 0, 0, false, false, 2271, -1, 2270));
+		items.add(new ItemDef("Body talisman", "Swap this note at any bank for the equivalent item.", "", 0, -1, "items:438",true, false, 0, 0, false, false, -1, 2270, 2271));
+		items.add(new ItemDef("Cosmic talisman", "A mysterious power eminates from the talisman...", "Locate", 0, -1, "items:451",false, false, 0, 0, false, false, 2273, -1, 2272));
+		items.add(new ItemDef("Cosmic talisman", "Swap this note at any bank for the equivalent item.", "", 0, -1, "items:438",true, false, 0, 0, false, false, -1, 2272, 2273));
+		items.add(new ItemDef("Chaos talisman", "A mysterious power eminates from the talisman...", "Locate", 0, -1, "items:452",false, false, 0, 0, false, false, 2275, -1, 2274));
+		items.add(new ItemDef("Chaos talisman", "Swap this note at any bank for the equivalent item.", "", 0, -1, "items:438",true, false, 0, 0, false, false, -1, 2274, 2275));
+		items.add(new ItemDef("Nature talisman", "A mysterious power eminates from the talisman...", "Locate", 0, -1, "items:449",false, false, 0, 0, false, false, 2277, -1, 2276));
+		items.add(new ItemDef("Nature talisman", "Swap this note at any bank for the equivalent item.", "", 0, -1, "items:438",true, false, 0, 0, false, false, -1, 2276, 2277));
+		items.add(new ItemDef("Law talisman", "A mysterious power eminates from the talisman...", "Locate", 0, -1, "items:450",false, false, 0, 0, false, false, 2279, -1, 2278));
+		items.add(new ItemDef("Law talisman", "Swap this note at any bank for the equivalent item.", "", 0, -1, "items:438",true, false, 0, 0, false, false, -1, 2278, 2279));
+		items.add(new ItemDef("Death talisman", "A mysterious power eminates from the talisman...", "Locate", 0, -1, "items:453",false, false, 0, 0, false, false, 2281, -1, 2280));
+		items.add(new ItemDef("Death talisman", "Swap this note at any bank for the equivalent item.", "", 0, -1, "items:438",true, false, 0, 0, false, false, -1, 2280, 2281));
+		items.add(new ItemDef("Blood talisman", "A mysterious power eminates from the talisman...", "Locate", 0, -1, "items:454",false, false, 0, 0, false, false, 2283, -1, 2282));
+		items.add(new ItemDef("Blood talisman", "Swap this note at any bank for the equivalent item.", "", 0, -1, "items:438",true, false, 0, 0, false, false, -1, 2282, 2283));
+		items.add(new ItemDef("Research package", "This contains some vital research results.", "", 0, -1, "items:330",false, false, 0, 0, true, true, -1, -1, 2284));
+		items.add(new ItemDef("Research notes", "These make no sense at all.", "", 0, -1, "items:427",false, false, 0, 0, true, true, -1, -1, 2285));
 	}
 
 	private static void loadNoteDefinitions() {

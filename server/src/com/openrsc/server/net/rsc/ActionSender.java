@@ -32,8 +32,6 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 
 import static com.openrsc.server.Constants.GameServer.*;
->>>>>>> 2.0.0
-
 
 /**
  * @author n0m

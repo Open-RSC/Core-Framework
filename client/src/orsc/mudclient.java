@@ -55,7 +55,6 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
 
-<<<<<<< HEAD
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.io.*;

@@ -13,7 +13,7 @@ import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.event.rsc.impl.*;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.login.LoginRequest;
-
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.*;
 
 import com.openrsc.server.model.action.WalkToAction;
