@@ -1,19 +1,14 @@
 package com.openrsc.data;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.EOFException;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Arrays;
 
 public class DataOperations {
 	private static final char[] special_characters = "~`!@#$%^&*()_-+={}[]|'\";:?><,./".toCharArray();
 
 	private static int baseLengthArray[] = {0, 1, 3, 7, 15, 31, 63, 127, 255, 511, 1023, 2047, 4095, 8191, 16383,
-		32767, 65535, 0x1ffff, 0x3ffff, 0x7ffff, 0xfffff, 0x1fffff, 0x3fffff, 0x7fffff, 0xffffff, 0x1ffffff,
-		0x3ffffff, 0x7ffffff, 0xfffffff, 0x1fffffff, 0x3fffffff, 0x7fffffff, -1};
+			32767, 65535, 0x1ffff, 0x3ffff, 0x7ffff, 0xfffff, 0x1fffff, 0x3fffff, 0x7fffff, 0xffffff, 0x1ffffff,
+			0x3ffffff, 0x7ffffff, 0xfffffff, 0x1fffffff, 0x3fffffff, 0x7fffffff, -1};
 
 	static {
 		Arrays.sort(special_characters);
@@ -44,17 +39,17 @@ public class DataOperations {
 
 	public static int getUnsigned4Bytes(byte abyte0[], int i) {
 		return ((abyte0[i] & 0xff) << 24) + ((abyte0[i + 1] & 0xff) << 16) + ((abyte0[i + 2] & 0xff) << 8)
-			+ (abyte0[i + 3] & 0xff);
+				+ (abyte0[i + 3] & 0xff);
 	}
 
 	public static long getUnsigned8Bytes(byte abyte0[], int i) {
 		return (((long) getUnsigned4Bytes(abyte0, i) & 0xffffffffL) << 32)
-			+ ((long) getUnsigned4Bytes(abyte0, i + 4) & 0xffffffffL);
+				+ ((long) getUnsigned4Bytes(abyte0, i + 4) & 0xffffffffL);
 	}
 
 	public static int readInt(byte abyte0[], int i) {
 		return ((abyte0[i] & 0xff) << 24) | ((abyte0[i + 1] & 0xff) << 16) | ((abyte0[i + 2] & 0xff) << 8)
-			| (abyte0[i + 3] & 0xff);
+				| (abyte0[i + 3] & 0xff);
 	}
 
 	public static int getShort(byte abyte0[], int i) {
@@ -70,7 +65,7 @@ public class DataOperations {
 			return abyte0[i];
 		} else {
 			return ((abyte0[i] & 0xff) - 128 << 24) + ((abyte0[i + 1] & 0xff) << 16) + ((abyte0[i + 2] & 0xff) << 8)
-				+ (abyte0[i + 3] & 0xff);
+					+ (abyte0[i + 3] & 0xff);
 		}
 	}
 
@@ -201,9 +196,9 @@ public class DataOperations {
 		int offset = 2 + numEntries * 10;
 		for (int entry = 0; entry < numEntries; entry++) {
 			int fileHash = (data[entry * 10 + 2] & 0xff) * 0x1000000 + (data[entry * 10 + 3] & 0xff) * 0x10000
-				+ (data[entry * 10 + 4] & 0xff) * 256 + (data[entry * 10 + 5] & 0xff);
+					+ (data[entry * 10 + 4] & 0xff) * 256 + (data[entry * 10 + 5] & 0xff);
 			int fileSize = (data[entry * 10 + 9] & 0xff) * 0x10000 + (data[entry * 10 + 10] & 0xff) * 256
-				+ (data[entry * 10 + 11] & 0xff);
+					+ (data[entry * 10 + 11] & 0xff);
 			if (fileHash == wantedHash)
 				return offset;
 			offset += fileSize;
@@ -222,11 +217,11 @@ public class DataOperations {
 		int offset = 2 + numEntries * 10;
 		for (int i1 = 0; i1 < numEntries; i1++) {
 			int fileHash = (data[i1 * 10 + 2] & 0xff) * 0x1000000 + (data[i1 * 10 + 3] & 0xff) * 0x10000
-				+ (data[i1 * 10 + 4] & 0xff) * 256 + (data[i1 * 10 + 5] & 0xff);
+					+ (data[i1 * 10 + 4] & 0xff) * 256 + (data[i1 * 10 + 5] & 0xff);
 			int fileSize = (data[i1 * 10 + 6] & 0xff) * 0x10000 + (data[i1 * 10 + 7] & 0xff) * 256
-				+ (data[i1 * 10 + 8] & 0xff);
+					+ (data[i1 * 10 + 8] & 0xff);
 			int fileSizeCompressed = (data[i1 * 10 + 9] & 0xff) * 0x10000 + (data[i1 * 10 + 10] & 0xff) * 256
-				+ (data[i1 * 10 + 11] & 0xff);
+					+ (data[i1 * 10 + 11] & 0xff);
 			if (fileHash == wantedHash)
 				return fileSize;
 			offset += fileSizeCompressed;
@@ -248,11 +243,11 @@ public class DataOperations {
 		int offset = 2 + arc_length * 10;
 		for (int i = 0; i < arc_length; i++) {
 			int entry_hash = (arc[(i * 10 + 2)] & 0xFF) * 16777216 + (arc[(i * 10 + 3)] & 0xFF) * 65536
-				+ (arc[(i * 10 + 4)] & 0xFF) * 256 + (arc[(i * 10 + 5)] & 0xFF);
+					+ (arc[(i * 10 + 4)] & 0xFF) * 256 + (arc[(i * 10 + 5)] & 0xFF);
 			int decmp_len = (arc[(i * 10 + 6)] & 0xFF) * 65536 + (arc[(i * 10 + 7)] & 0xFF) * 256
-				+ (arc[(i * 10 + 8)] & 0xFF);
+					+ (arc[(i * 10 + 8)] & 0xFF);
 			int cmp_len = (arc[(i * 10 + 9)] & 0xFF) * 65536 + (arc[(i * 10 + 10)] & 0xFF) * 256
-				+ (arc[(i * 10 + 11)] & 0xFF);
+					+ (arc[(i * 10 + 11)] & 0xFF);
 
 			if (entry_hash == hash) {
 				if (dest == null)

@@ -10,21 +10,12 @@ import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.event.rsc.impl.FireCannonEvent;
-import com.openrsc.server.event.rsc.impl.PoisonEvent;
-import com.openrsc.server.event.rsc.impl.PrayerDrainEvent;
-import com.openrsc.server.event.rsc.impl.ProjectileEvent;
-import com.openrsc.server.event.rsc.impl.RangeEvent;
-import com.openrsc.server.event.rsc.impl.ThrowingEvent;
+import com.openrsc.server.event.rsc.impl.*;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.login.LoginRequest;
-import com.openrsc.server.model.Cache;
-import com.openrsc.server.model.MenuOptionListener;
-import com.openrsc.server.model.Point;
-import com.openrsc.server.model.PrivateMessage;
-import com.openrsc.server.model.Shop;
-import com.openrsc.server.model.Skills.SKILLS;
-import com.openrsc.server.model.Skills;
+
+import com.openrsc.server.model.*;
+
 import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.Inventory;
@@ -52,27 +43,15 @@ import com.openrsc.server.sql.query.logs.LiveFeedLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
-
+import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.ListIterator;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
-
-import io.netty.channel.Channel;
 
 import static com.openrsc.server.plugins.Functions.sleep;
 
@@ -545,7 +524,7 @@ public final class Player extends Mob {
 
 	public void addSkull(long timeLeft) {
 		if (skullEvent == null) {
-			skullEvent = new DelayedEvent(this, 1200000) {
+			skullEvent = new DelayedEvent(this, 1200000, "Player Add Skull") {
 
 				@Override
 				public void run() {
@@ -568,7 +547,7 @@ public final class Player extends Mob {
 
 	public void addCharge(long timeLeft) {
 		if (chargeEvent == null) {
-			chargeEvent = new DelayedEvent(this, 6 * 60000) {
+			chargeEvent = new DelayedEvent(this, 6 * 60000, "Charge Spell Removal") {
 				// 6 minutes taken from RS2.
 				// the charge spell in RSC seem to be bugged, but 10 minutes most of the times.
 				// sometimes you are charged for 1 hour lol.
@@ -706,7 +685,7 @@ public final class Player extends Mob {
 				return;
 			}
 			final long startDestroy = System.currentTimeMillis();
-			unregisterEvent = new DelayedEvent(this, 500) {
+			unregisterEvent = new DelayedEvent(this, 500, "Unregister Player") {
 				@Override
 				public void run() {
 					if (owner.canLogout() || (!(owner.inCombat() && owner.getDuel().isDuelActive())
@@ -2020,7 +1999,7 @@ public final class Player extends Mob {
 	}
 
 	public void startSleepEvent(final boolean bed) {
-		sleepEvent = new DelayedEvent(this, 600) {
+		sleepEvent = new DelayedEvent(this, 600, "Start Sleep Event") {
 			@Override
 			public void run() {
 				if (owner.isRemoved() || sleepStateFatigue == 0 || !sleeping) {

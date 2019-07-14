@@ -4,16 +4,16 @@ import com.openrsc.server.model.entity.player.Player;
 
 public abstract class MiniEvent extends SingleEvent {
 
-	protected MiniEvent(Player owner) {
-		super(owner, 600);
+	protected MiniEvent(Player owner, String descriptor) {
+		super(owner, 600, descriptor);
 	}
 
-	protected MiniEvent(Player owner, int delay) {
-		super(owner, delay);
+	protected MiniEvent(Player owner, int delay, String descriptor) {
+		super(owner, delay, descriptor);
 	}
 
-	protected MiniEvent(Player owner, int delay, boolean uniqueEvent) {
-		super(owner, delay, uniqueEvent);
+	protected MiniEvent(Player owner, int delay, String descriptor, boolean uniqueEvent) {
+		super(owner, delay, descriptor, uniqueEvent);
 	}
 
 	public abstract void action();

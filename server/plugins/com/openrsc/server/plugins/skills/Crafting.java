@@ -45,7 +45,7 @@ public class Crafting implements InvUseOnItemListener,
 			case 118:
 			case 813: // Furnace
 				if (item.getID() == ItemId.GOLD_BAR.id() || item.getID() == ItemId.GOLD_BAR_FAMILYCREST.id()) {
-					Server.getServer().getEventHandler().add(new MiniEvent(owner) {
+					Server.getServer().getEventHandler().add(new MiniEvent(owner, "Craft Jewelry") {
 						public void action() {
 							owner.message("What would you like to make?");
 							String[] options = new String[]{
@@ -96,7 +96,8 @@ public class Crafting implements InvUseOnItemListener,
 									owner.message("What type of " + reply + " would you like to make?");
 									owner.setMenuHandler(new MenuOptionListener(options) {
 										public void handleReply(final int option, final String reply) {
-											owner.setBatchEvent(new BatchEvent(owner, 1200, Formulae.getRepeatTimes(owner, SKILLS.CRAFTING.id()), false) {
+											owner.setBatchEvent(new BatchEvent(owner, 1200, "Craft Jewelry", Formulae.getRepeatTimes(owner, SKILLS.CRAFTING.id()), false) {
+
 												public void action() {
 													if (option < 0 || option > (Constants.GameServer.MEMBER_WORLD ? 5 : 4)) {
 														owner.checkAndInterruptBatchEvent();
@@ -155,7 +156,7 @@ public class Crafting implements InvUseOnItemListener,
 					return;
 				}
 				if (item.getID() == ItemId.SILVER_BAR.id()) {
-					Server.getServer().getEventHandler().add(new MiniEvent(owner) {
+					Server.getServer().getEventHandler().add(new MiniEvent(owner, "Craft Silver") {
 						public void action() {
 							owner.message("What would you like to make?");
 							String[] options = new String[]{
@@ -180,7 +181,8 @@ public class Crafting implements InvUseOnItemListener,
 										return;
 									}
 
-									owner.setBatchEvent(new BatchEvent(owner, 1200, Formulae.getRepeatTimes(owner, SKILLS.CRAFTING.id()), false) {
+									owner.setBatchEvent(new BatchEvent(owner, 1200, "Craft Silver", Formulae.getRepeatTimes(owner, SKILLS.CRAFTING.id()), false) {
+
 										@Override
 										public void action() {
 											if (owner.getSkills().getLevel(SKILLS.CRAFTING.id()) < 16) {
@@ -217,7 +219,7 @@ public class Crafting implements InvUseOnItemListener,
 					showBubble(owner, item);
 					int otherItem = item.getID() == ItemId.SAND.id() ? ItemId.SODA_ASH.id() : ItemId.SAND.id();
 					owner.message("you heat the sand and soda ash in the furnace to make glass");
-					Server.getServer().getEventHandler().add(new ShortEvent(owner) {
+					Server.getServer().getEventHandler().add(new ShortEvent(owner, "Craft Glass") {
 						public void action() {
 							if (owner.getInventory().remove(otherItem, 1) > -1
 								&& owner.getInventory().remove(item) > -1) {
@@ -270,7 +272,8 @@ public class Crafting implements InvUseOnItemListener,
 								owner.message("Nothing interesting happens");
 								return;
 						}
-						owner.setBatchEvent(new BatchEvent(owner, 600, Formulae.getRepeatTimes(owner, SKILLS.CRAFTING.id()), false) {
+						owner.setBatchEvent(new BatchEvent(owner, 600, "Craft Clay", Formulae.getRepeatTimes(owner, SKILLS.CRAFTING.id()), false) {
+
 							@Override
 							public void action() {
 								if (owner.getSkills().getLevel(SKILLS.CRAFTING.id()) < reqLvl) {
@@ -330,7 +333,8 @@ public class Crafting implements InvUseOnItemListener,
 				showBubble(owner, item);
 				String potteryItem = potteryItemName(item.getDef().getName());
 				owner.message("You put the " + potteryItem + " in the oven");
-				owner.setBatchEvent(new BatchEvent(owner, 1800, Formulae.getRepeatTimes(owner, SKILLS.CRAFTING.id()), false) {
+				owner.setBatchEvent(new BatchEvent(owner, 1800, "Craft Clay", Formulae.getRepeatTimes(owner, SKILLS.CRAFTING.id()), false) {
+
 					@Override
 					public void action() {
 						if (Constants.GameServer.WANT_FATIGUE) {
@@ -348,7 +352,7 @@ public class Crafting implements InvUseOnItemListener,
 							} else {
 								owner.message("the "
 									+ potteryItem + " hardens in the oven");
-								Server.getServer().getEventHandler().add(new SingleEvent(owner, 1800) {
+								Server.getServer().getEventHandler().add(new SingleEvent(owner, 1800, "Remove Clay From Oven") {
 									@Override
 									public void action() {
 										owner.message("You remove a "
@@ -414,7 +418,8 @@ public class Crafting implements InvUseOnItemListener,
 			return false;
 		}
 
-		player.setBatchEvent(new BatchEvent(player, 600, Formulae.getRepeatTimes(player, SKILLS.CRAFTING.id()), false) {
+		player.setBatchEvent(new BatchEvent(player, 600, "Cut Gem", Formulae.getRepeatTimes(player, SKILLS.CRAFTING.id()), false) {
+
 			@Override
 			public void action() {
 				if (owner.getSkills().getLevel(SKILLS.CRAFTING.id()) < gemDef.getReqLevel()) {
@@ -463,7 +468,7 @@ public class Crafting implements InvUseOnItemListener,
 			return false;
 		}
 		player.message("what would you like to make?");
-		Server.getServer().getEventHandler().add(new MiniEvent(player) {
+		Server.getServer().getEventHandler().add(new MiniEvent(player, "Craft Glass Blowing") {
 			public void action() {
 				String[] options = new String[]{
 					"Vial",
@@ -503,7 +508,7 @@ public class Crafting implements InvUseOnItemListener,
 								"You need a crafting level of " + reqLvl + " to make " + resultGen);
 							return;
 						}
-						player.setBatchEvent(new BatchEvent(player, 600, player.getInventory().countId(glass.getID()), false) {
+						player.setBatchEvent(new BatchEvent(player, 600, "Craft Glass Blowing", player.getInventory().countId(glass.getID()), false) {
 							@Override
 							public void action() {
 								if (Constants.GameServer.WANT_FATIGUE) {
@@ -536,7 +541,7 @@ public class Crafting implements InvUseOnItemListener,
 			player.message("You need some thread to make anything out of leather");
 			return true;
 		}
-		Server.getServer().getEventHandler().add(new MiniEvent(player) {
+		Server.getServer().getEventHandler().add(new MiniEvent(player, "Craft Leather") {
 			public void action() {
 				String[] options = new String[]{
 					"Armour",
@@ -571,7 +576,7 @@ public class Crafting implements InvUseOnItemListener,
 							owner.message("You need to have a crafting of level " + reqLvl + " or higher to make " + result.getDef().getName());
 							return;
 						}
-						player.setBatchEvent(new BatchEvent(player, 600, player.getInventory().countId(leather.getID()), false) {
+						player.setBatchEvent(new BatchEvent(player, 600, "Craft Leather", player.getInventory().countId(leather.getID()), false) {
 							@Override
 							public void action() {
 								if (Constants.GameServer.WANT_FATIGUE) {
@@ -640,8 +645,9 @@ public class Crafting implements InvUseOnItemListener,
 				return false;
 		}
 		final int newId = newID;
-		player.setBatchEvent(new BatchEvent(player, 600,
+		player.setBatchEvent(new BatchEvent(player, 600, "Craft String Amulet", 
 			Formulae.getRepeatTimes(player, SKILLS.CRAFTING.id()), false) {
+
 			@Override
 			public void action() {
 				if (owner.getInventory().countId(item.getID()) <= 0 || owner.getInventory().countId(ItemId.BALL_OF_WOOL.id()) <= 0) {

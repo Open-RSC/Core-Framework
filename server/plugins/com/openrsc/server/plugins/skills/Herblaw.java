@@ -54,8 +54,10 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			player.message("You need to complete Druidic ritual quest first");
 			return false;
 		}
-		player.setBatchEvent(new BatchEvent(player, 600, Formulae
+
+		player.setBatchEvent(new BatchEvent(player, 600, "Herblaw Identify Herb", Formulae
 			.getRepeatTimes(player, SKILLS.HERBLAW.id()), false) {
+
 			public void action() {
 				if (!owner.getInventory().hasItemId(item.getID())) {
 					interrupt();
@@ -288,8 +290,9 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 		if (herbDef == null) {
 			return false;
 		}
-		player.setBatchEvent(new BatchEvent(player, 1200, Formulae
+		player.setBatchEvent(new BatchEvent(player, 1200, "Herblaw Make Potion", Formulae
 			.getRepeatTimes(player, SKILLS.HERBLAW.id()), false) {
+
 			@Override
 			public void action() {
 				if (owner.getSkills().getLevel(SKILLS.HERBLAW.id()) < herbDef.getReqLevel()) {
@@ -343,8 +346,9 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 				bubbleItem.set(second);
 			}
 		}
-		player.setBatchEvent(new BatchEvent(player, 1200, Formulae
+		player.setBatchEvent(new BatchEvent(player, 1200, "Herblaw Make Potion", Formulae
 			.getRepeatTimes(player, SKILLS.HERBLAW.id()), false) {
+
 			public void action() {
 				if (owner.getSkills().getLevel(SKILLS.HERBLAW.id()) < def.getReqLevel()) {
 					owner.message("You need a herblaw level of "
@@ -460,7 +464,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			default:
 				return false;
 		}
-		player.setBatchEvent(new BatchEvent(player, 600, player.getInventory().countId(item.getID()), false) {
+		player.setBatchEvent(new BatchEvent(player, 600, "Herblaw Grind", player.getInventory().countId(item.getID()), false) {
 			@Override
 			public void action() {
 				if (player.getInventory().remove(item) > -1) {

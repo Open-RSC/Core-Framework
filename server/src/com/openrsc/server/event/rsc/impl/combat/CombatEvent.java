@@ -27,7 +27,7 @@ public class CombatEvent extends GameTickEvent {
 	private int roundNumber = 0;
 
 	public CombatEvent(Mob attacker, Mob defender) {
-		super(null, 0);
+		super(null, 0, "Combat Event");
 		this.attackerMob = attacker;
 		this.defenderMob = defender;
 		CombatScriptLoader.checkAndExecuteOnStartCombatScript(attacker, defender);

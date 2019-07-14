@@ -1,6 +1,7 @@
 package com.loader.openrsc.frame;
 
 import com.loader.openrsc.Constants;
+import com.loader.openrsc.frame.elements.CheckCombo;
 import com.loader.openrsc.frame.elements.ControlButton;
 import com.loader.openrsc.frame.elements.LaunchButton;
 import com.loader.openrsc.frame.elements.LinkButton;
@@ -14,6 +15,7 @@ import java.awt.Rectangle;
 import java.util.Random;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
@@ -46,6 +48,10 @@ public class AppFrame extends JFrame {
 
 	// Localhost section
 	private JLabel local_status;
+
+	//Sprite pack
+	private JLabel sprite_pack;
+	private CheckCombo comboBox;
 
 	public AppFrame() {
 		this.setPreferredSize(new Dimension(795, 555));
@@ -194,7 +200,24 @@ public class AppFrame extends JFrame {
 		int local_y = dev_y + 26; //
 		this.local_status.setBounds(local_x, local_y + 12, 327, 15);
 		this.bg.add(this.local_status);
+
+		/*
+		 * Sprite pack
+		 */
+
+		this.sprite_pack = new JLabel("Available sprite packs:");
+		this.sprite_pack.setForeground(Color.WHITE);
+		this.sprite_pack.setBounds(600, local_y + 100, 150, 15);
+		this.bg.add(this.sprite_pack);
+
+		comboBox = new CheckCombo();
+		comboBox.combo.setBounds(600, local_y + 120, 190, 30);
+		comboBox.combo.setBackground(Color.black);
+		comboBox.combo.setForeground(Color.white);
+
+		this.bg.add(comboBox.combo);
 	}
+
 
 	public JLabel getCheckLabel() {
 		return this.checkLabel;
@@ -406,5 +429,17 @@ public class AppFrame extends JFrame {
 	// Localhost section
 	public JLabel getlocalStatus() {
 		return this.local_status;
+	}
+
+	//Spritepack combobox
+	public CheckCombo.store[] getComboBoxState() {
+		int entryCount = comboBox.combo.getItemCount();
+		CheckCombo.store[] items = new CheckCombo.store[entryCount];
+		JComboBox entry = (JComboBox) comboBox.combo;
+		for (int p = 0; p < entryCount; p++) {
+			items[p] = (CheckCombo.store) entry.getItemAt(p);
+		}
+
+		return items;
 	}
 }

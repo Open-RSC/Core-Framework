@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.minigames.mage_arena;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.impl.ObjectRemover;
@@ -15,14 +16,15 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.MiniGameInterface;
-import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
+import com.openrsc.server.plugins.listeners.action.PickupListener;
+import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
+import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.*;
-
-import static com.openrsc.server.plugins.Functions.*;
 
 import java.util.Optional;
 
-import com.openrsc.server.Constants;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener, TalkToNpcListener, PlayerKilledNpcListener,
 	PlayerKilledNpcExecutiveListener, PlayerAttackNpcExecutiveListener, PlayerDeathExecutiveListener,
@@ -206,7 +208,7 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 
 	public void learnSpellEvent(Player p) {
 		DelayedEvent mageArena = p.getAttribute("mageArenaEvent", null);
-		DelayedEvent mageArenaEvent = new DelayedEvent(p, 1900) {
+		DelayedEvent mageArenaEvent = new DelayedEvent(p, 1900, "Mage Arena Learn Spell Event") {
 			@Override
 			public void run() {
 				/* Player logged out. */
@@ -269,7 +271,7 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 
 	private void startKolodionEvent(Player p) {
 		DelayedEvent kolE = p.getAttribute("kolodionEvent", null);
-		DelayedEvent kolodionEvent = new DelayedEvent(p, 650) {
+		DelayedEvent kolodionEvent = new DelayedEvent(p, 650, "Mage Arena Kolodion Event") {
 			@Override
 			public void run() {
 				Npc npc = owner.getAttribute("spawned_kolodion");

@@ -10,24 +10,16 @@ import orsc.mudclient;
 
 
 public final class DoSkillInterface {
-	private ArrayList<DoSkillItem> doSkillItems;
-
-	private String skillToDo, skillDoing;
-	private String title = "";
-
-	private boolean visible, rightClickMenu = false;
-
-	int itemSelected = -1, rightClickMenuX = 0, rightClickMenuY = 0;
-
 	public Panel doSkillPanel;
-
-	private mudclient mc;
-
-	private int panelColour, textColour, bordColour;
-
+	int itemSelected = -1, rightClickMenuX = 0, rightClickMenuY = 0;
 	int width = 430;
 	int height = 320;
-
+	private ArrayList<DoSkillItem> doSkillItems;
+	private String skillToDo, skillDoing;
+	private String title = "";
+	private boolean visible, rightClickMenu = false;
+	private mudclient mc;
+	private int panelColour, textColour, bordColour;
 	private int x, y, autoHeight;
 
 	public DoSkillInterface(mudclient mc) {
@@ -48,14 +40,16 @@ public final class DoSkillInterface {
 		if (autoHeight == 0) {
 			y = (mc.getGameHeight() - height) / 2;
 		} else {
-			y = (mc.getGameHeight() - autoHeight)/ 2;
+			y = (mc.getGameHeight() - autoHeight) / 2;
 		}
 	}
 
 	public void onRender() {
 		reposition();
 
-		panelColour = 0x989898; textColour = 0xFFFFFF; bordColour = 0x000000;
+		panelColour = 0x989898;
+		textColour = 0xFFFFFF;
+		bordColour = 0x000000;
 
 		doSkillPanel.handleMouse(mc.getMouseX(), mc.getMouseY(), mc.getMouseButtonDown(), mc.getLastMouseDown());
 
@@ -68,13 +62,17 @@ public final class DoSkillInterface {
 
 		int itemAmount = doSkillItems.size();
 		switch (itemAmount) {
-			case 1: width = mc.getSurface().stringWidth(5, title) + 80;
+			case 1:
+				width = mc.getSurface().stringWidth(5, title) + 80;
 				break;
-			case 2: width = mc.getSurface().stringWidth(5, title) + 80;
+			case 2:
+				width = mc.getSurface().stringWidth(5, title) + 80;
 				break;
-			case 3: width = 320;
+			case 3:
+				width = 320;
 				break;
-			default: width = 430;
+			default:
+				width = 430;
 				break;
 		}
 		reposition();
@@ -101,7 +99,7 @@ public final class DoSkillInterface {
 
 		int curX = x + 30, spriteY = y + 45, textY = spriteY + 45;
 		if (doSkillItems.size() == 1) {
-			curX = x + width/2 - 30;
+			curX = x + width / 2 - 30;
 		}
 
 		// Determines if the text takes two lines
@@ -122,7 +120,7 @@ public final class DoSkillInterface {
 
 			lotsaText = skillDetail.length() >= 15;
 
-			mc.getSurface().drawSpriteClipping(mudclient.spriteItem + def.getSprite(),
+			mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
 					curX, spriteY, 48, 32, def.getPictureMask(), 0, false, 0, 1);
 
 			int stringWidth = drawStringWrapped(skillDetail, curX, textY, 2, textColour);
@@ -137,9 +135,9 @@ public final class DoSkillInterface {
 				boxColor = 0x000000;
 			}
 
-			if (mc.getMouseX() >= curX - (boxWidth - 48)/2 && mc.getMouseX() <= boxWidth + curX - (boxWidth - 48)/2 && mc.getMouseY() >= spriteY - 2 && mc.getMouseY() <= spriteY + boxHeight
+			if (mc.getMouseX() >= curX - (boxWidth - 48) / 2 && mc.getMouseX() <= boxWidth + curX - (boxWidth - 48) / 2 && mc.getMouseY() >= spriteY - 2 && mc.getMouseY() <= spriteY + boxHeight
 					&& !rightClickMenu) {
-				mc.getSurface().drawBoxAlpha(curX - (boxWidth - 48)/2, spriteY - 2, boxWidth, boxHeight, boxColor, 92);
+				mc.getSurface().drawBoxAlpha(curX - (boxWidth - 48) / 2, spriteY - 2, boxWidth, boxHeight, boxColor, 92);
 				if (mc.mouseButtonClick == 1 && boxColor != 0x000000) {
 					mc.packetHandler.getClientStream().newPacket(212);
 					mc.packetHandler.getClientStream().finishPacket();
@@ -161,7 +159,8 @@ public final class DoSkillInterface {
 
 			if (((i + 1) % 4) == 0) {
 				curX = x + 30;
-				spriteY += lotsaText ? 65 : 55; textY += lotsaText ? 65 : 55;
+				spriteY += lotsaText ? 65 : 55;
+				textY += lotsaText ? 65 : 55;
 			} else {
 				curX += 105;
 			}
@@ -190,32 +189,46 @@ public final class DoSkillInterface {
 
 					int hovering = 0;
 					for (int f = 1; f <= 6; f++) {
-						if (mc.getMouseX() >= rightClickMenuX + 1 && mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() > rightClickMenuY + 11 + (f-1)*15 && mc.getMouseY() <= rightClickMenuY + 11 + f*15) {
+						if (mc.getMouseX() >= rightClickMenuX + 1 && mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() > rightClickMenuY + 11 + (f - 1) * 15 && mc.getMouseY() <= rightClickMenuY + 11 + f * 15) {
 							hovering = f;
 							if (mc.mouseButtonClick == 1) {
 								System.out.println("Send make: " + f);
 								switch (hovering) {
-									case 1: ;// send make 1
-									case 2: ;// send make 5
-									case 3: ;// send make 10
-									case 4: ;// send make x
-									case 5: ;// send make all
-									case 6: rightClickMenu = false;
+									case 1:
+										;// send make 1
+									case 2:
+										;// send make 5
+									case 3:
+										;// send make 10
+									case 4:
+										;// send make x
+									case 5:
+										;// send make all
+									case 6:
+										rightClickMenu = false;
 										break;
-									default: break;
+									default:
+										break;
 								}
 							}
 						}
 
 						switch (f) {
-							case 1: drawString("Make-1", rightClickMenuX + 1, rightClickMenuY + 26, 2, hovering == 1 ? 0xFF0000 : 0xFFFFFF);
-							case 2: drawString("Make-5", rightClickMenuX + 1, rightClickMenuY + 41, 2, hovering == 2 ? 0xFF0000 : 0xFFFFFF);
-							case 3: drawString("Make-10", rightClickMenuX + 1, rightClickMenuY + 56, 2, hovering == 3 ? 0xFF0000 : 0xFFFFFF);
-							case 4: drawString("Make-X", rightClickMenuX + 1, rightClickMenuY + 71, 2, hovering == 4 ? 0xFF0000 : 0xFFFFFF);
-							case 5: drawString("Make-All", rightClickMenuX + 1, rightClickMenuY + 86, 2, hovering == 5 ? 0xFF0000 : 0xFFFFFF);
-							case 6: drawString("Cancel", rightClickMenuX + 1, rightClickMenuY + 101, 2, hovering == 6 ? 0xFF0000 : 0xFFFFFF);
+							case 1:
+								drawString("Make-1", rightClickMenuX + 1, rightClickMenuY + 26, 2, hovering == 1 ? 0xFF0000 : 0xFFFFFF);
+							case 2:
+								drawString("Make-5", rightClickMenuX + 1, rightClickMenuY + 41, 2, hovering == 2 ? 0xFF0000 : 0xFFFFFF);
+							case 3:
+								drawString("Make-10", rightClickMenuX + 1, rightClickMenuY + 56, 2, hovering == 3 ? 0xFF0000 : 0xFFFFFF);
+							case 4:
+								drawString("Make-X", rightClickMenuX + 1, rightClickMenuY + 71, 2, hovering == 4 ? 0xFF0000 : 0xFFFFFF);
+							case 5:
+								drawString("Make-All", rightClickMenuX + 1, rightClickMenuY + 86, 2, hovering == 5 ? 0xFF0000 : 0xFFFFFF);
+							case 6:
+								drawString("Cancel", rightClickMenuX + 1, rightClickMenuY + 101, 2, hovering == 6 ? 0xFF0000 : 0xFFFFFF);
 								break;
-							default: break;
+							default:
+								break;
 						}
 					}
 				}
@@ -233,7 +246,7 @@ public final class DoSkillInterface {
 
 	public void drawStringCentered(String str, int x, int y, int font, int color) {
 		int stringWid = mc.getSurface().stringWidth(font, str);
-		mc.getSurface().drawString(str, x + (width/2) - (stringWid/2) - 2, y, color, font);
+		mc.getSurface().drawString(str, x + (width / 2) - (stringWid / 2) - 2, y, color, font);
 	}
 
 	public int drawStringWrapped(String text, int x, int y, int font, int color) {
@@ -242,15 +255,15 @@ public final class DoSkillInterface {
 			String text1 = text.substring(0, 15);
 			text1 = text.substring(0, text1.lastIndexOf(" "));
 			int strWidth1 = mc.getSurface().stringWidth(font, text1);
-			drawString(text1, x + 24 - (strWidth1/2), y, font, color);
+			drawString(text1, x + 24 - (strWidth1 / 2), y, font, color);
 
 			String text2 = text.substring(text1.lastIndexOf(" ") + 1);
 			text2 = text2.substring(text2.indexOf(" ") + 1);
 			int strWidth2 = mc.getSurface().stringWidth(font, text2);
-			drawString(text2, x + 24 - (strWidth2/2), y + 15, font, color);
+			drawString(text2, x + 24 - (strWidth2 / 2), y + 15, font, color);
 			return text1.length() >= text2.length() ? strWidth1 : strWidth2;
 		} else {
-			drawString(text, x + 24 - (strWidth/2), y, font, color);
+			drawString(text, x + 24 - (strWidth / 2), y, font, color);
 			return strWidth;
 		}
 	}
@@ -270,7 +283,7 @@ public final class DoSkillInterface {
 		}
 		mc.getSurface().drawBoxAlpha(x, y, width, height, bgBtnColour, 192);
 		mc.getSurface().drawBoxBorder(x, width, y, height, 0x242424);
-		mc.getSurface().drawString(text, x + (width/2) - (mc.getSurface().stringWidth(font, text)/2) - 1, y + height / 2 + 5, textColour, font);
+		mc.getSurface().drawString(text, x + (width / 2) - (mc.getSurface().stringWidth(font, text) / 2) - 1, y + height / 2 + 5, textColour, font);
 	}
 
 	public void populateSkillItems() {
@@ -282,21 +295,18 @@ public final class DoSkillInterface {
 			doSkillItems.add(new DoSkillItem(16, "1", ""));
 			doSkillItems.add(new DoSkillItem(17, "7", ""));
 			doSkillItems.add(new DoSkillItem(15, "14", ""));
-		}
-		else if (skillToDo.equals("Clay")) {
+		} else if (skillToDo.equals("Clay")) {
 			title = "Choose a clay item to craft";
 			skillDoing = "Crafting";
 			doSkillItems.add(new DoSkillItem(135, "1", ""));
 			doSkillItems.add(new DoSkillItem(251, "4", ""));
 			doSkillItems.add(new DoSkillItem(341, "7", ""));
-		}
-		else if (skillToDo.equals("Spin")) {
+		} else if (skillToDo.equals("Spin")) {
 			title = "Choose an item to spin";
 			skillDoing = "Crafting";
 			doSkillItems.add(new DoSkillItem(207, "1", "Wool"));
 			doSkillItems.add(new DoSkillItem(676, "10", "Flax"));
-		}
-		else if (skillToDo.equals("Glass")) {
+		} else if (skillToDo.equals("Glass")) {
 			title = "Choose a glass item to blow";
 			skillDoing = "Crafting";
 			doSkillItems.add(new DoSkillItem(623, "1", ""));
@@ -304,14 +314,12 @@ public final class DoSkillInterface {
 			doSkillItems.add(new DoSkillItem(1018, "10", ""));
 			doSkillItems.add(new DoSkillItem(465, "33", ""));
 			doSkillItems.add(new DoSkillItem(611, "46", ""));
-		}
-		else if (skillToDo.equals("Silver")) {
+		} else if (skillToDo.equals("Silver")) {
 			title = "Choose a jewellry piece to craft";
 			skillDoing = "Crafting";
 			doSkillItems.add(new DoSkillItem(44, "16", ""));
 			doSkillItems.add(new DoSkillItem(1027, "17", ""));
-		}
-		else if (skillToDo.equals("Gold")) {
+		} else if (skillToDo.equals("Gold")) {
 			title = "Choose a jewellry piece to craft";
 			skillDoing = "Crafting";
 			doSkillItems.add(new DoSkillItem(283, "5", ""));
@@ -332,69 +340,55 @@ public final class DoSkillInterface {
 			doSkillItems.add(new DoSkillItem(300, "70", ""));
 			doSkillItems.add(new DoSkillItem(544, "72", ""));
 			doSkillItems.add(new DoSkillItem(524, "80", ""));
-		}
-		else if (skillToDo.equals("Battlestaff water")) {
+		} else if (skillToDo.equals("Battlestaff water")) {
 			title = "Choose an amount to craft";
 			skillDoing = "Crafting";
 			doSkillItems.add(new DoSkillItem(616, "54", ""));
-		}
-		else if (skillToDo.equals("Battlestaff earth")) {
+		} else if (skillToDo.equals("Battlestaff earth")) {
 			title = "Choose an amount to craft";
 			skillDoing = "Crafting";
 			doSkillItems.add(new DoSkillItem(618, "58", ""));
-		}
-		else if (skillToDo.equals("Battlestaff fire")) {
+		} else if (skillToDo.equals("Battlestaff fire")) {
 			title = "Choose an amount to craft";
 			skillDoing = "Crafting";
 			doSkillItems.add(new DoSkillItem(615, "62", ""));
-		}
-		else if (skillToDo.equals("Battlestaff air")) {
+		} else if (skillToDo.equals("Battlestaff air")) {
 			title = "Choose an amount to craft";
 			skillDoing = "Crafting";
 			doSkillItems.add(new DoSkillItem(617, "66", ""));
-		}
-		else if (skillToDo.equals("Cut opal")) {
+		} else if (skillToDo.equals("Cut opal")) {
 			title = "Choose an amount to cut";
 			skillDoing = "Crafting";
 			doSkillItems.add(new DoSkillItem(891, "1", ""));
-		}
-		else if (skillToDo.equals("Cut jade")) {
+		} else if (skillToDo.equals("Cut jade")) {
 			title = "Choose an amount to cut";
 			skillDoing = "Crafting";
 			doSkillItems.add(new DoSkillItem(890, "13", ""));
-		}
-		else if (skillToDo.equals("Cut topaz")) {
+		} else if (skillToDo.equals("Cut topaz")) {
 			title = "Choose an amount to cut";
 			skillDoing = "Crafting";
 			doSkillItems.add(new DoSkillItem(889, "16", ""));
-		}
-		else if (skillToDo.equals("Cut sapphire")) {
+		} else if (skillToDo.equals("Cut sapphire")) {
 			title = "Choose an amount to cut";
 			skillDoing = "Crafting";
 			doSkillItems.add(new DoSkillItem(160, "20", ""));
-		}
-		else if (skillToDo.equals("Cut emerald")) {
+		} else if (skillToDo.equals("Cut emerald")) {
 			title = "Choose an amount to cut";
 			skillDoing = "Crafting";
 			doSkillItems.add(new DoSkillItem(159, "27", ""));
-		}
-		else if (skillToDo.equals("Cut ruby")) {
+		} else if (skillToDo.equals("Cut ruby")) {
 			title = "Choose an amount to cut";
 			skillDoing = "Crafting";
 			doSkillItems.add(new DoSkillItem(158, "34", ""));
-		}
-		else if (skillToDo.equals("Cut diamond")) {
+		} else if (skillToDo.equals("Cut diamond")) {
 			title = "Choose an amount to cut";
 			skillDoing = "Crafting";
 			doSkillItems.add(new DoSkillItem(157, "43", ""));
-		}
-		else if (skillToDo.equals("Cut dragonstone")) {
+		} else if (skillToDo.equals("Cut dragonstone")) {
 			title = "Choose an amount to cut";
 			skillDoing = "Crafting";
 			doSkillItems.add(new DoSkillItem(542, "55", ""));
-		}
-
-		else if (skillToDo.equals("Smelt")) {
+		} else if (skillToDo.equals("Smelt")) {
 			title = "Choose a bar type to smelt";
 			skillDoing = "Smithing";
 			doSkillItems.add(new DoSkillItem(169, "1", "1 Tin ore & 1 copper ore"));
@@ -405,8 +399,7 @@ public final class DoSkillInterface {
 			doSkillItems.add(new DoSkillItem(173, "50", "4 Coal & 1 mithril ore"));
 			doSkillItems.add(new DoSkillItem(174, "70", "6 Coal & 1 adamantite ore"));
 			doSkillItems.add(new DoSkillItem(408, "85", "8 Coal & 1 runite ore"));
-		}
-		else if (skillToDo.equals("Bronze")) {
+		} else if (skillToDo.equals("Bronze")) {
 			title = "Choose a bronze item to smith";
 			skillDoing = "Smithing";
 			doSkillItems.add(new DoSkillItem(62, "1", "1 Bar"));
@@ -427,8 +420,7 @@ public final class DoSkillInterface {
 			doSkillItems.add(new DoSkillItem(76, "14", "3 Bars"));
 			doSkillItems.add(new DoSkillItem(206, "16", "3 Bars"));
 			doSkillItems.add(new DoSkillItem(117, "18", "5 Bars"));
-		}
-		else if (skillToDo.equals("Iron")) {
+		} else if (skillToDo.equals("Iron")) {
 			title = "Choose an iron item to smith";
 			skillDoing = "Smithing";
 			doSkillItems.add(new DoSkillItem(28, "15", "1 Bar"));
@@ -448,8 +440,7 @@ public final class DoSkillInterface {
 			doSkillItems.add(new DoSkillItem(77, "29", "3 Bars"));
 			doSkillItems.add(new DoSkillItem(9, "31", "3 Bars"));
 			doSkillItems.add(new DoSkillItem(8, "33", "5 Bars"));
-		}
-		else if (skillToDo.equals("Steel")) {
+		} else if (skillToDo.equals("Steel")) {
 			title = "Choose a steel item to smith";
 			skillDoing = "Smithing";
 			doSkillItems.add(new DoSkillItem(63, "30", "1 Bar"));
@@ -470,8 +461,7 @@ public final class DoSkillInterface {
 			doSkillItems.add(new DoSkillItem(78, "44", "3 Bars"));
 			doSkillItems.add(new DoSkillItem(121, "46", "3 Bars"));
 			doSkillItems.add(new DoSkillItem(118, "48", "5 Bars"));
-		}
-		else if (skillToDo.equals("Mithril")) {
+		} else if (skillToDo.equals("Mithril")) {
 			title = "Choose a mithril item to smith";
 			skillDoing = "Smithing";
 			doSkillItems.add(new DoSkillItem(64, "50", "1 Bar"));
@@ -491,8 +481,7 @@ public final class DoSkillInterface {
 			doSkillItems.add(new DoSkillItem(79, "64", "3 Bars"));
 			doSkillItems.add(new DoSkillItem(122, "66", "3 Bars"));
 			doSkillItems.add(new DoSkillItem(119, "68", "5 Bars"));
-		}
-		else if (skillToDo.equals("Adamant")) {
+		} else if (skillToDo.equals("Adamant")) {
 			title = "Choose an adamant item to smith";
 			skillDoing = "Smithing";
 			doSkillItems.add(new DoSkillItem(65, "70", "1 Bar"));
@@ -512,8 +501,7 @@ public final class DoSkillInterface {
 			doSkillItems.add(new DoSkillItem(80, "84", "3 Bars"));
 			doSkillItems.add(new DoSkillItem(123, "86", "3 Bars"));
 			doSkillItems.add(new DoSkillItem(120, "88", "5 Bars"));
-		}
-		else if (skillToDo.equals("Rune")) {
+		} else if (skillToDo.equals("Rune")) {
 			title = "Choose a rune item to smith";
 			skillDoing = "Smithing";
 			doSkillItems.add(new DoSkillItem(396, "85", "1 Bar"));
@@ -533,314 +521,250 @@ public final class DoSkillInterface {
 			doSkillItems.add(new DoSkillItem(81, "99", "3 Bars"));
 			doSkillItems.add(new DoSkillItem(402, "99", "3 Bars"));
 			doSkillItems.add(new DoSkillItem(401, "99", "5 Bars"));
-		}
-
-		else if (skillToDo.equals("Fletch normal")) {
+		} else if (skillToDo.equals("Fletch normal")) {
 			title = "Choose an item to fletch";
 			skillDoing = "Fletching";
-			doSkillItems.add(new DoSkillItem(280, "1",""));
+			doSkillItems.add(new DoSkillItem(280, "1", ""));
 			doSkillItems.add(new DoSkillItem(277, "5", ""));
 			doSkillItems.add(new DoSkillItem(188, "10", ""));
-		}
-		else if (skillToDo.equals("Fletch oak")) {
+		} else if (skillToDo.equals("Fletch oak")) {
 			title = "Choose a bow to fletch";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(659, "20", ""));
 			doSkillItems.add(new DoSkillItem(658, "25", ""));
-		}
-		else if (skillToDo.equals("Fletch willow")) {
+		} else if (skillToDo.equals("Fletch willow")) {
 			title = "Choose a bow to fletch";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(661, "35", ""));
 			doSkillItems.add(new DoSkillItem(660, "40", ""));
-		}
-		else if (skillToDo.equals("Fletch maple")) {
+		} else if (skillToDo.equals("Fletch maple")) {
 			title = "Choose a bow to fletch";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(663, "50", ""));
 			doSkillItems.add(new DoSkillItem(662, "55", ""));
-		}
-		else if (skillToDo.equals("Fletch yew")) {
+		} else if (skillToDo.equals("Fletch yew")) {
 			title = "Choose a bow to fletch";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(665, "65", ""));
 			doSkillItems.add(new DoSkillItem(664, "70", ""));
-		}
-		else if (skillToDo.equals("Fletch magic")) {
+		} else if (skillToDo.equals("Fletch magic")) {
 			title = "Choose a bow to fletch";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(667, "80", ""));
 			doSkillItems.add(new DoSkillItem(666, "85", ""));
-		}
-		else if (skillToDo.equals("String normal short")) {
+		} else if (skillToDo.equals("String normal short")) {
 			title = "Choose an amount to string";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(189, "5", ""));
-		}
-		else if (skillToDo.equals("String normal long")) {
+		} else if (skillToDo.equals("String normal long")) {
 			title = "Choose an amount to string";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(188, "10", ""));
-		}
-		else if (skillToDo.equals("String oak short")) {
+		} else if (skillToDo.equals("String oak short")) {
 			title = "Choose an amount to string";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(649, "20", ""));
-		}
-		else if (skillToDo.equals("String oak long")) {
+		} else if (skillToDo.equals("String oak long")) {
 			title = "Choose an amount to string";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(648, "25", ""));
-		}
-		else if (skillToDo.equals("String willow short")) {
+		} else if (skillToDo.equals("String willow short")) {
 			title = "Choose an amount to string";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(651, "35", ""));
-		}
-		else if (skillToDo.equals("String willow long")) {
+		} else if (skillToDo.equals("String willow long")) {
 			title = "Choose an amount to string";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(650, "40", ""));
-		}
-		else if (skillToDo.equals("String maple short")) {
+		} else if (skillToDo.equals("String maple short")) {
 			title = "Choose an amount to string";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(653, "50", ""));
-		}
-		else if (skillToDo.equals("String maple long")) {
+		} else if (skillToDo.equals("String maple long")) {
 			title = "Choose an amount to string";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(652, "55", ""));
-		}
-		else if (skillToDo.equals("String yew short")) {
+		} else if (skillToDo.equals("String yew short")) {
 			title = "Choose an amount to string";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(655, "65", ""));
-		}
-		else if (skillToDo.equals("String yew long")) {
+		} else if (skillToDo.equals("String yew long")) {
 			title = "Choose an amount to string";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(654, "70", ""));
-		}
-		else if (skillToDo.equals("String magic short")) {
+		} else if (skillToDo.equals("String magic short")) {
 			title = "Choose an amount to string";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(657, "80", ""));
-		}
-		else if (skillToDo.equals("String magic long")) {
+		} else if (skillToDo.equals("String magic long")) {
 			title = "Choose an amount to string";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(656, "85", ""));
-		}
-		else if (skillToDo.equals("Fletch headless arrows")) {
+		} else if (skillToDo.equals("Fletch headless arrows")) {
 			title = "Choose an amount to fletch";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(637, "1", ""));
-		}
-		else if (skillToDo.equals("Fletch bronze arrows")) {
+		} else if (skillToDo.equals("Fletch bronze arrows")) {
 			title = "Choose an amount to fletch";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(11, "1", ""));
-		}
-		else if (skillToDo.equals("Fletch iron arrows")) {
+		} else if (skillToDo.equals("Fletch iron arrows")) {
 			title = "Choose an amount to fletch";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(638, "15", ""));
-		}
-		else if (skillToDo.equals("Fletch steel arrows")) {
+		} else if (skillToDo.equals("Fletch steel arrows")) {
 			title = "Choose an amount to fletch";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(640, "30", ""));
-		}
-		else if (skillToDo.equals("Fletch mithril arrows")) {
+		} else if (skillToDo.equals("Fletch mithril arrows")) {
 			title = "Choose an amount to fletch";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(642, "45", ""));
-		}
-		else if (skillToDo.equals("Fletch adamant arrows")) {
+		} else if (skillToDo.equals("Fletch adamant arrows")) {
 			title = "Choose an amount to fletch";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(644, "60", ""));
-		}
-		else if (skillToDo.equals("Fletch rune arrows")) {
+		} else if (skillToDo.equals("Fletch rune arrows")) {
 			title = "Choose an amount to fletch";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(646, "75", ""));
-		}
-		else if (skillToDo.equals("Fletch bronze darts")) {
+		} else if (skillToDo.equals("Fletch bronze darts")) {
 			title = "Choose an amount to fletch";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(1013, "1", ""));
-		}
-		else if (skillToDo.equals("Fletch iron darts")) {
+		} else if (skillToDo.equals("Fletch iron darts")) {
 			title = "Choose an amount to fletch";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(1015, "22", ""));
-		}
-		else if (skillToDo.equals("Fletch steel darts")) {
+		} else if (skillToDo.equals("Fletch steel darts")) {
 			title = "Choose an amount to fletch";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(1024, "37", ""));
-		}
-		else if (skillToDo.equals("Fletch mithril darts")) {
+		} else if (skillToDo.equals("Fletch mithril darts")) {
 			title = "Choose an amount to fletch";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(1068, "52", ""));
-		}
-		else if (skillToDo.equals("Fletch adamant darts")) {
+		} else if (skillToDo.equals("Fletch adamant darts")) {
 			title = "Choose an amount to fletch";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(1069, "67", ""));
-		}
-		else if (skillToDo.equals("Fletch rune darts")) {
+		} else if (skillToDo.equals("Fletch rune darts")) {
 			title = "Choose an amount to fletch";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(1070, "82", ""));
-		}
-		else if (skillToDo.equals("Fletch pearl bolts")) {
+		} else if (skillToDo.equals("Fletch pearl bolts")) {
 			title = "Choose an amount to fletch";
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(786, "34", ""));
-		}
-
-		else if (skillToDo.equals("Mix guam")) {
+		} else if (skillToDo.equals("Mix guam")) {
 			title = "Choose an amount to mix";
 			skillDoing = "Herblaw";
 			doSkillItems.add(new DoSkillItem(454, "1", ""));
-		}
-		else if (skillToDo.equals("Mix marrentill")) {
+		} else if (skillToDo.equals("Mix marrentill")) {
 			title = "Choose an amount to mix";
 			skillDoing = "Herblaw";
 			doSkillItems.add(new DoSkillItem(455, "1", ""));
-		}
-		else if (skillToDo.equals("Mix tarromin")) {
+		} else if (skillToDo.equals("Mix tarromin")) {
 			title = "Choose an amount to mix";
 			skillDoing = "Herblaw";
 			doSkillItems.add(new DoSkillItem(456, "1", ""));
-		}
-		else if (skillToDo.equals("Mix harralander")) {
+		} else if (skillToDo.equals("Mix harralander")) {
 			title = "Choose an amount to mix";
 			skillDoing = "Herblaw";
 			doSkillItems.add(new DoSkillItem(457, "1", ""));
-		}
-		else if (skillToDo.equals("Mix ranarr")) {
+		} else if (skillToDo.equals("Mix ranarr")) {
 			title = "Choose an amount to mix";
 			skillDoing = "Herblaw";
 			doSkillItems.add(new DoSkillItem(458, "1", ""));
-		}
-		else if (skillToDo.equals("Mix irit")) {
+		} else if (skillToDo.equals("Mix irit")) {
 			title = "Choose an amount to mix";
 			skillDoing = "Herblaw";
 			doSkillItems.add(new DoSkillItem(459, "1", ""));
-		}
-		else if (skillToDo.equals("Mix avantoe")) {
+		} else if (skillToDo.equals("Mix avantoe")) {
 			title = "Choose an amount to mix";
 			skillDoing = "Herblaw";
 			doSkillItems.add(new DoSkillItem(460, "1", ""));
-		}
-		else if (skillToDo.equals("Mix kwuarm")) {
+		} else if (skillToDo.equals("Mix kwuarm")) {
 			title = "Choose an amount to mix";
 			skillDoing = "Herblaw";
 			doSkillItems.add(new DoSkillItem(461, "1", ""));
-		}
-		else if (skillToDo.equals("Mix cadantine")) {
+		} else if (skillToDo.equals("Mix cadantine")) {
 			title = "Choose an amount to mix";
 			skillDoing = "Herblaw";
 			doSkillItems.add(new DoSkillItem(462, "1", ""));
-		}
-		else if (skillToDo.equals("Mix dwarfweed")) {
+		} else if (skillToDo.equals("Mix dwarfweed")) {
 			title = "Choose an amount to mix";
 			skillDoing = "Herblaw";
 			doSkillItems.add(new DoSkillItem(463, "1", ""));
-		}
-		else if (skillToDo.equals("Mix attack")) {
+		} else if (skillToDo.equals("Mix attack")) {
 			title = "Choose an amount to mix";
 			skillDoing = "Herblaw";
 			doSkillItems.add(new DoSkillItem(474, "3", ""));
-		}
-		else if (skillToDo.equals("Mix cure poison")) {
+		} else if (skillToDo.equals("Mix cure poison")) {
 			title = "Choose an amount to mix";
 			skillDoing = "Herblaw";
 			doSkillItems.add(new DoSkillItem(566, "5", ""));
-		}
-		else if (skillToDo.equals("Mix strength")) {
+		} else if (skillToDo.equals("Mix strength")) {
 			title = "Choose an amount to mix";
 			skillDoing = "Herblaw";
 			doSkillItems.add(new DoSkillItem(222, "12", ""));
-		}
-		else if (skillToDo.equals("Mix stat restore")) {
+		} else if (skillToDo.equals("Mix stat restore")) {
 			title = "Choose an amount to mix";
 			skillDoing = "Herblaw";
 			doSkillItems.add(new DoSkillItem(477, "22", ""));
-		}
-		else if (skillToDo.equals("Mix defense")) {
+		} else if (skillToDo.equals("Mix defense")) {
 			title = "Choose an amount to mix";
 			skillDoing = "Herblaw";
 			doSkillItems.add(new DoSkillItem(480, "30", ""));
-		}
-		else if (skillToDo.equals("Mix prayer")) {
+		} else if (skillToDo.equals("Mix prayer")) {
 			title = "Choose an amount to mix";
 			skillDoing = "Herblaw";
 			doSkillItems.add(new DoSkillItem(483, "38", ""));
-		}
-		else if (skillToDo.equals("Mix super attack")) {
+		} else if (skillToDo.equals("Mix super attack")) {
 			title = "Choose an amount to mix";
 			skillDoing = "Herblaw";
 			doSkillItems.add(new DoSkillItem(486, "45", ""));
-		}
-		else if (skillToDo.equals("Mix poison antidote")) {
+		} else if (skillToDo.equals("Mix poison antidote")) {
 			title = "Choose an amount to mix";
 			skillDoing = "Herblaw";
 			doSkillItems.add(new DoSkillItem(569, "48", ""));
-		}
-		else if (skillToDo.equals("Mix fishing")) {
+		} else if (skillToDo.equals("Mix fishing")) {
 			title = "Choose an amount to mix";
 			skillDoing = "Herblaw";
 			doSkillItems.add(new DoSkillItem(489, "50", ""));
-		}
-		else if (skillToDo.equals("Mix super strength")) {
+		} else if (skillToDo.equals("Mix super strength")) {
 			title = "Choose an amount to mix";
 			skillDoing = "Herblaw";
 			doSkillItems.add(new DoSkillItem(492, "55", ""));
-		}
-		else if (skillToDo.equals("Mix weapon poison")) {
+		} else if (skillToDo.equals("Mix weapon poison")) {
 			title = "Choose an amount to mix";
 			skillDoing = "Herblaw";
 			doSkillItems.add(new DoSkillItem(572, "60", ""));
-		}
-		else if (skillToDo.equals("Mix super defense")) {
+		} else if (skillToDo.equals("Mix super defense")) {
 			title = "Choose an amount to mix";
 			skillDoing = "Herblaw";
 			doSkillItems.add(new DoSkillItem(495, "66", ""));
-		}
-		else if (skillToDo.equals("Mix ranging")) {
+		} else if (skillToDo.equals("Mix ranging")) {
 			title = "Choose an amount to mix";
 			skillDoing = "Herblaw";
 			doSkillItems.add(new DoSkillItem(498, "72", ""));
-		}
-		else if (skillToDo.equals("Mix zamorak")) {
+		} else if (skillToDo.equals("Mix zamorak")) {
 			title = "Choose an amount to mix";
 			skillDoing = "Herblaw";
 			doSkillItems.add(new DoSkillItem(963, "78", ""));
-		}
-		else if (skillToDo.equals("Grind horn")) {
+		} else if (skillToDo.equals("Grind horn")) {
 			title = "Choose an amount to grind";
 			skillDoing = "Herblaw";
 			doSkillItems.add(new DoSkillItem(473, "1", ""));
-		}
-		else if (skillToDo.equals("Grind scale")) {
+		} else if (skillToDo.equals("Grind scale")) {
 			title = "Choose an amount to grind";
 			skillDoing = "Herblaw";
 			doSkillItems.add(new DoSkillItem(472, "1", ""));
-		}
-
-		else if (skillToDo.equals("Wine")) {
+		} else if (skillToDo.equals("Wine")) {
 			title = "Choose an amount to create";
 			skillDoing = "Cooking";
 			doSkillItems.add(new DoSkillItem(142, "35", ""));
-		}
-
-		else {
+		} else {
 			System.out.println("No doSkill matches");
 		}
 	}

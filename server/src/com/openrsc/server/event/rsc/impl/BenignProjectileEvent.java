@@ -13,7 +13,7 @@ public class BenignProjectileEvent extends SingleTickEvent {
 	boolean canceled;
 
 	BenignProjectileEvent(Mob caster, Mob opponent, int damage, int type) {
-		super(caster, 1);
+		super(caster, 1, "Benign Projectile Event");
 		this.caster = caster;
 		this.opponent = opponent;
 		this.damage = damage;

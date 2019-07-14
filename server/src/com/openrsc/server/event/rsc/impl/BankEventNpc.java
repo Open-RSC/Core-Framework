@@ -1,32 +1,16 @@
 package com.openrsc.server.event.rsc.impl;
 
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.walkMob;
-import static com.openrsc.server.plugins.Functions.canWalk;
-
-import com.openrsc.server.Constants;
-import com.openrsc.server.Server;
 import com.openrsc.server.event.rsc.GameTickEvent;
-import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.action.WalkToPointActionNpc;
 import com.openrsc.server.model.action.WalkToActionNpc;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
+
 import com.openrsc.server.model.entity.GroundItem;
-import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.entity.player.Prayers;
 import com.openrsc.server.model.world.World;
-import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.PluginHandler;
-import com.openrsc.server.util.rsc.DataConversions;
-import com.openrsc.server.util.rsc.Formulae;
-import com.openrsc.server.util.rsc.MessageType;
 
 /**
  * @author n0m
@@ -38,7 +22,7 @@ public class BankEventNpc extends GameTickEvent {
 	private Npc target;
 
 	public BankEventNpc(Npc owner, Npc banker) {
-		super(owner, 1);
+		super(owner, 1, "Bank Event NPC");
 		this.target = banker;
 	}
 

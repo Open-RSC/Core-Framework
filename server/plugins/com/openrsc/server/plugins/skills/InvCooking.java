@@ -52,7 +52,7 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 				player.getInventory().remove(ItemId.JUG_OF_WATER.id(), 1);
 				player.getInventory().remove(ItemId.GRAPES.id(), 1);
 
-				player.setBatchEvent(new BatchEvent(player, 3000, 1, false) {
+				player.setBatchEvent(new BatchEvent(player, 3000, "Cook Wine", 1, false) {
 					@Override
 					public void action() {
 						if (Formulae.goodWine(owner.getSkills().getLevel(SKILLS.COOKING.id()))) {

@@ -1,14 +1,5 @@
 package com.openrsc.server.content.minigame.fishingtrawler;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
@@ -21,6 +12,13 @@ import com.openrsc.server.model.world.region.RegionManager;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.SimpleSubscriber;
 import com.openrsc.server.util.rsc.DataConversions;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class FishingTrawler extends DelayedEvent {
 	
@@ -65,7 +63,7 @@ public class FishingTrawler extends DelayedEvent {
 	private List<SimpleSubscriber<FishingTrawler>> subscribers = new ArrayList<SimpleSubscriber<FishingTrawler>>();
 	
 	public FishingTrawler(TrawlerBoat selectedBoat) {
-		super(null, 600);
+		super(null, 600, "Fishing Trawler Event");
 		
 		if (selectedBoat == TrawlerBoat.EAST) {
 			shipArea = new Area(270, 278, 740, 744, "FishingTrawler: Fine");

@@ -38,7 +38,8 @@ public class Smelting implements InvUseOnObjectListener,
 					message(p, 1200, "you heat the steel bar into a liquid state",
 						"and pour it into your cannon ball mould",
 						"you then leave it to cool for a short while");
-					p.setBatchEvent(new BatchEvent(p, 1800, Formulae.getRepeatTimes(p, SKILLS.SMITHING.id()), false) {
+					p.setBatchEvent(new BatchEvent(p, 1800, "Smelting", Formulae.getRepeatTimes(p, SKILLS.SMITHING.id()), false) {
+
 						public void action() {
 							p.incExp(SKILLS.SMITHING.id(), 100, true);
 							p.getInventory().replace(ItemId.STEEL_BAR.id(), ItemId.MULTI_CANNON_BALL.id());
@@ -123,7 +124,8 @@ public class Smelting implements InvUseOnObjectListener,
 		}
 
 		p.message(smeltString(smelt, item));
-		p.setBatchEvent(new BatchEvent(p, 1800, Formulae.getRepeatTimes(p, SKILLS.SMITHING.id()), false) {
+		p.setBatchEvent(new BatchEvent(p, 1800, "Smelt", Formulae.getRepeatTimes(p, SKILLS.SMITHING.id()), false) {
+
 			public void action() {
 				if (Constants.GameServer.WANT_FATIGUE) {
 					if (p.getFatigue() >= p.MAX_FATIGUE) {

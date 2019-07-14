@@ -9,12 +9,12 @@ import com.openrsc.server.model.entity.player.Player;
  */
 public abstract class SingleEvent extends DelayedEvent {
 
-	public SingleEvent(Player owner, int delay) {
-		super(owner, delay);
+	public SingleEvent(Player owner, int delay, String descriptor) {
+		super(owner, delay, descriptor);
 	}
 
-	public SingleEvent(Player owner, int delay, boolean uniqueEvent) {
-		super(owner, delay, uniqueEvent);
+	public SingleEvent(Player owner, int delay, String descriptor, boolean uniqueEvent) {
+		super(owner, delay, descriptor, uniqueEvent);
 	}
 
 	public abstract void action();

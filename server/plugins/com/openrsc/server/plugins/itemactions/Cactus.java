@@ -1,12 +1,13 @@
 package com.openrsc.server.plugins.itemactions;
 
-import static com.openrsc.server.plugins.Functions.showBubble;
 
+import static com.openrsc.server.plugins.Functions.showBubble;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Point;
+
 import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -41,13 +42,15 @@ InvUseOnObjectExecutiveListener {
 		showBubble(player, item);
 		player.setBusy(true);
 		Server.getServer().getEventHandler()
-			.add(new ShortEvent(player) {
+
+			.add(new ShortEvent(player, "Cactus Fill Waterskin") {
 				public void action() {
 					for (int s : skins) {
 						if (owner.getInventory().remove(s, 1) > -1) {
 							boolean fail = Formulae.cutCacti();
 							if (fail) {
 								owner.message("You make a mistake and fail to fill your waterskin.");
+<<<<<<< HEAD
 								owner.incExp(SKILLS.WOODCUT.id(), 4, true);
 								owner.getInventory().add(new Item(s, 1));
 								owner.setBusy(false);
@@ -69,12 +72,12 @@ InvUseOnObjectExecutiveListener {
 
 							// Remove healthy cacti
 							world.unregisterGameObject(object);
-
 							owner.incExp(SKILLS.WOODCUT.id(), 100, true); // Woodcutting XP
 
 							// Swap cacti back after 30 seconds.
 							Server.getServer().getEventHandler().add(
-								new SingleEvent(null, 30000) {
+								new SingleEvent(null, 30000, "Cactus Respawn") {
+
 									@Override
 									public void action() {
 										if (cacti != null) {

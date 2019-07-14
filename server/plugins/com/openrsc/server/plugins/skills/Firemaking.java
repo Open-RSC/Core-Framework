@@ -78,7 +78,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 		if (Formulae.lightLogs(player.getSkills().getLevel(SKILLS.FIREMAKING.id()))) {
 
 			Server.getServer().getEventHandler().add(
-				new SingleEvent(null, 1200) {
+				new SingleEvent(null, 1200, "Light Logs") {
 					@Override
 					public void action() {
 						player.message("The fire catches and the logs begin to burn");
@@ -88,7 +88,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 						World.getWorld().registerGameObject(fire);
 
 						Server.getServer().getEventHandler().add(
-							new SingleEvent(null, def.getLength()) {
+							new SingleEvent(null, def.getLength(), "Light Logs Fire Removal") {
 								@Override
 								public void action() {
 									if (fire != null) {
@@ -131,8 +131,8 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 
 		player.getUpdateFlags().setActionBubble(new Bubble(player, TINDERBOX));
 		player.message("You attempt to light the logs");
+		player.setBatchEvent(new BatchEvent(player, 1200, "Firemaking Logs Lit", Formulae.getRepeatTimes(player, SKILLS.FIREMAKING.id()), false) {
 
-		player.setBatchEvent(new BatchEvent(player, 1200, Formulae.getRepeatTimes(player, SKILLS.FIREMAKING.id()), false) {
 			@Override
 			public void action() {
 				if (Formulae.lightCustomLogs(def, owner.getSkills().getLevel(SKILLS.FIREMAKING.id()))) {
@@ -143,7 +143,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 					World.getWorld().registerGameObject(fire);
 
 					Server.getServer().getEventHandler().add(
-						new SingleEvent(null, def.getLength()) {
+						new SingleEvent(null, def.getLength(), "Firemaking Logs Lit") {
 							@Override
 							public void action() {
 								if (fire != null) {

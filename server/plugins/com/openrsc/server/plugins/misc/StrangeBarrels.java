@@ -122,7 +122,7 @@ public class StrangeBarrels implements ObjectActionListener, ObjectActionExecuti
 			if (action != 0) {
 				p.message("You smash the barrel open.");
 				removeObject(obj);
-				Server.getServer().getEventHandler().add(new SingleEvent(null, 40000) { // 40 seconds
+				Server.getServer().getEventHandler().add(new SingleEvent(null, 40000, "Smash Strange Barrel") { // 40 seconds
 					public void action() {
 						int newObjectX = DataConversions.random(467, 476);
 						int newObjectY = DataConversions.random(3699, 3714);

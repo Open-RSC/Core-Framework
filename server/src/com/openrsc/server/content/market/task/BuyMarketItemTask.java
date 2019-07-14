@@ -1,5 +1,6 @@
 package com.openrsc.server.content.market.task;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.content.market.Market;
 import com.openrsc.server.content.market.MarketDatabase;
 import com.openrsc.server.content.market.MarketItem;
@@ -8,6 +9,7 @@ import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
+import com.openrsc.server.net.DiscordSender;
 import com.openrsc.server.net.rsc.ActionSender;
 
 public class BuyMarketItemTask extends MarketTask {
@@ -25,6 +27,7 @@ public class BuyMarketItemTask extends MarketTask {
 	@Override
 	public void doTask() {
 		MarketItem item = MarketDatabase.getAuctionItem(auctionID);
+		boolean updateDiscord = false;
 
 		if (item == null) {
 			ActionSender.sendBox(playerBuyer, "@red@[Auction House - Error] % @whi@ This item is sold out! % Click 'Refresh' to update the Auction.", false);
@@ -62,11 +65,13 @@ public class BuyMarketItemTask extends MarketTask {
 			}
 			playerBuyer.getInventory().remove(10, auctionPrice);
 			ActionSender.sendBox(playerBuyer, "@gre@[Auction House - Success] % @whi@ The item has been placed to your inventory.", false);
+			updateDiscord = true;
 			playerBuyer.save();
 		} else if (!playerBuyer.getBank().full()) {
 			playerBuyer.getBank().add(new Item(item.getItemID(), amount));
 			playerBuyer.getInventory().remove(10, auctionPrice);
 			ActionSender.sendBox(playerBuyer, "@gre@[Auction House - Success] % @whi@ The item has been placed to your bank.", false);
+			updateDiscord = true;
 			playerBuyer.save();
 		} else {
 			ActionSender.sendBox(playerBuyer, "@red@[Auction House - Error] % @whi@ Unable to buy auction, no space left in your inventory or bank.", false);
@@ -93,6 +98,10 @@ public class BuyMarketItemTask extends MarketTask {
 		if (item.getAmountLeft() == 0) MarketDatabase.setSoldOut(item);
 		else MarketDatabase.update(item);
 		Market.getInstance().addRequestOpenAuctionHouseTask(playerBuyer);
+
+		if (updateDiscord && Constants.GameServer.WANT_DISCORD_UPDATES) {
+			DiscordSender.auctionBuy(item);
+		}
 	}
 
 }

@@ -35,7 +35,7 @@ public class NpcLootEvent extends SingleEvent {
 	}
 
 	public NpcLootEvent(Point location, int npcId, int npcAmount, int itemId, int itemAmount, int npcLifeTime) {
-		super(null, 0);
+		super(null, 0, "NPC Loot Event");
 		this.location = location;
 		this.npcId = npcId;
 		this.npcAmount = npcAmount;
@@ -160,7 +160,7 @@ public class NpcLootEvent extends SingleEvent {
 					final Npc n = new Npc(npcId, baseX + x, baseY + y, baseX + x - 20, baseX + x + 20, baseY + y - 20, baseY + y + 20);
 					n.setShouldRespawn(false);
 					World.getWorld().registerNpc(n);
-					Server.getServer().getEventHandler().add(new SingleEvent(null, npcLifetime * 60000) {
+					Server.getServer().getEventHandler().add(new SingleEvent(null, npcLifetime * 60000, "NPC Loot Delayed Remover") {
 						@Override
 						public void action() {
 							n.remove();
@@ -174,7 +174,7 @@ public class NpcLootEvent extends SingleEvent {
 			}
 		}
 
-		Server.getServer().getEventHandler().add(new SingleEvent(null, npcLifetime * 60000) {
+		Server.getServer().getEventHandler().add(new SingleEvent(null, npcLifetime * 60000, "NPC Loot Stop Event") {
 			@Override
 			public void action() {
 				lootNpc = null;

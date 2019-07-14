@@ -31,7 +31,8 @@ public class Sheep implements InvUseOnNpcListener, InvUseOnNpcExecutiveListener 
 		showBubble(player, item);
 		player.message("You attempt to shear the sheep");
 		npc.setBusyTimer(1600);
-		player.setBatchEvent(new BatchEvent(player, 1200, Formulae.getRepeatTimes(player, SKILLS.CRAFTING.id()), true) {
+		player.setBatchEvent(new BatchEvent(player, 1200, "Crafting Shear Wool", Formulae.getRepeatTimes(player, SKILLS.CRAFTING.id()), true) {
+
 			@Override
 			public void action() {
 				npc.setBusyTimer(1600);

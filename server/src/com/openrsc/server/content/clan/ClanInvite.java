@@ -61,7 +61,7 @@ public class ClanInvite {
 	}
 
 	public void startTimeoutCounter() {
-		timeOutEvent = new SingleEvent(null, 60000) {
+		timeOutEvent = new SingleEvent(null, 60000, "Clan Invite") {
 			@Override
 			public void action() {
 				inviter.message(invited.getUsername() + " did not respond to your invitation");

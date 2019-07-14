@@ -37,7 +37,7 @@ public class HourlyNpcLootEvent extends HourlyEvent  {
 	}
 
 	public HourlyNpcLootEvent(int lifeTime, String eventMessage, Point location, int npcId, int npcAmount, int itemId, int itemAmount, int npcLifeTime) {
-		super(lifeTime);
+		super(lifeTime, "Hourly NPC Loot Event");
 		this.location = location;
 		this.npcId = npcId;
 		this.npcAmount = npcAmount;

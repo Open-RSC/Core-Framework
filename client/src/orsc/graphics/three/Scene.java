@@ -1,5 +1,6 @@
 package orsc.graphics.three;
 
+import com.openrsc.client.model.Sprite;
 import orsc.MiscFunctions;
 import orsc.buffers.BufferStack;
 import orsc.graphics.two.GraphicsController;

@@ -10,7 +10,7 @@ public class AggroEvent extends GameTickEvent {
 	private final Player player;
 	
 	public AggroEvent(Npc npc, Player player) {
-		super(null, 0);
+		super(null, 0, "Aggro Event");
 		this.npc = npc;
 		this.player = player;
 		CombatScriptLoader.checkAndExecuteCombatAggroScript(npc, player);

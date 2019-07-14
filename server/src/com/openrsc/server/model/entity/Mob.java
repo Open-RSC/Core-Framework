@@ -2,19 +2,17 @@ package com.openrsc.server.model.entity;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
+import com.openrsc.server.event.DelayedEventNpc;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.PoisonEvent;
+import com.openrsc.server.event.rsc.impl.RangeEventNpc;
 import com.openrsc.server.event.rsc.impl.StatRestorationEvent;
 import com.openrsc.server.event.rsc.impl.combat.CombatEvent;
-import com.openrsc.server.event.rsc.impl.RangeEvent;
-import com.openrsc.server.event.rsc.impl.RangeEventNpc;
-import com.openrsc.server.event.DelayedEventNpc;
-import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.*;
 import com.openrsc.server.model.Path.PathType;
+import com.openrsc.server.model.action.WalkToActionNpc;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.action.WalkToActionNpc;
 import com.openrsc.server.model.entity.update.Damage;
 import com.openrsc.server.model.entity.update.UpdateFlags;
 import com.openrsc.server.model.states.Action;
@@ -23,16 +21,16 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.util.rsc.CollisionFlag;
+import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.model.Skills.SKILLS;
+
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.removeItem;
 import static com.openrsc.server.plugins.Functions.sleep;
 
 public abstract class Mob extends Entity {
@@ -43,7 +41,7 @@ public abstract class Mob extends Entity {
 	private DelayedEventNpc skullEventNpc = null;
 	public void addSkull(long timeLeft) {
 		if (skullEventNpc == null) {
-			skullEventNpc = new DelayedEventNpc(this, 1200000) {
+			skullEventNpc = new DelayedEventNpc(this, 1200000, "NPC Add Skull") {
 
 				@Override
 				public void run() {
@@ -748,7 +746,7 @@ public abstract class Mob extends Entity {
 		}
 		final Mob me = this;
 		following = mob;
-		followEvent = new GameTickEvent(null, 1) {
+		followEvent = new GameTickEvent(null, 1, "Player Following Mob") {
 			public void run() {
 				//if(me.isNpc()) {
 				//Npc meX = (Npc) me;

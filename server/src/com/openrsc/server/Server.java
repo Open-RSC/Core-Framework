@@ -14,7 +14,11 @@ import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.util.NamedThreadFactory;
-
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.*;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,16 +27,6 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 import static org.apache.logging.log4j.util.Unbox.box;
 
@@ -193,7 +187,7 @@ public final class Server implements Runnable {
 		if (updateEvent != null) {
 			return false;
 		}
-		updateEvent = new SingleEvent(null, (seconds - 1) * 1000) {
+		updateEvent = new SingleEvent(null, (seconds - 1) * 1000, "Shutdown for Update") {
 			public void action() {
 				unbind();
 				saveAndShutdown();
@@ -209,7 +203,7 @@ public final class Server implements Runnable {
 			p.unregister(true, "Server shutting down.");
 		}
 
-		SingleEvent up = new SingleEvent(null, 6000) {
+		SingleEvent up = new SingleEvent(null, 6000, "Save and Shutdown") {
 			public void action() {
 				kill();
 				DatabaseConnection.getDatabase().close();
@@ -284,7 +278,7 @@ public final class Server implements Runnable {
 		if (updateEvent != null) {
 			return false;
 		}
-		updateEvent = new SingleEvent(null, (seconds - 1) * 1000) {
+		updateEvent = new SingleEvent(null, (seconds - 1) * 1000, "Restart") {
 			public void action() {
 				unbind();
 				//saveAndRestart();
@@ -303,7 +297,7 @@ public final class Server implements Runnable {
 			LOGGER.info("Players saved...");
 		}
 
-		SingleEvent up = new SingleEvent(null, 6000) {
+		SingleEvent up = new SingleEvent(null, 6000, "Save and Restart") {
 			public void action() {
 				LOGGER.info("Trying to run restart script...");
 				try {

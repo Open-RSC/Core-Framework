@@ -126,7 +126,7 @@ public class AttackHandler implements PacketHandler {
 			player.resetPath();
 			player.resetAll();
 			/* To skip the walk packet resetAll() */
-			Server.getServer().getEventHandler().add(new MiniEvent(player) {
+			Server.getServer().getEventHandler().add(new MiniEvent(player, "Handle Attack") {
 				@Override
 				public void action() {
 					owner.setStatus(Action.RANGING_MOB);

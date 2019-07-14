@@ -223,12 +223,10 @@ public class InterfaceOptionHandler implements PacketHandler {
 						int itemID = p.readInt();
 						int amount = p.readInt();
 						int price = p.readInt();
-
 						Market.getInstance().addNewAuctionItemTask(player, itemID, amount, price);
 						break;
 					case 2:
 						int auctionID = p.readInt();
-
 						Market.getInstance().addCancelAuctionItemTask(player, auctionID);
 						break;
 					case 3:

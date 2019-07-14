@@ -1,7 +1,5 @@
 package com.openrsc.server.event.rsc.impl;
 
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.rsc.GameTickEvent;
@@ -22,6 +20,8 @@ import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
+
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 
 /**
  * @author n0m
@@ -65,7 +65,7 @@ public class RangeEvent extends GameTickEvent {
 	private Mob target;
 
 	public RangeEvent(Player owner, Mob victim) {
-		super(owner, 1);
+		super(owner, 1, "Range Event");
 		this.setImmediate(true);
 		this.target = victim;
 		this.deliveredFirstProjectile = false;

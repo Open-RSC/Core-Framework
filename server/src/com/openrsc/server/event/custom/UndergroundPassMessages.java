@@ -16,7 +16,7 @@ public class UndergroundPassMessages extends DelayedEvent {
 	private Player p;
 
 	public UndergroundPassMessages(Player p, int delay) {
-		super(null, delay);
+		super(null, delay, "Underground Pass Messages");
 		this.p = p;
 	}
 

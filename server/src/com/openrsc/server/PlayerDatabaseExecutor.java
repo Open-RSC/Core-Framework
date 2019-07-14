@@ -46,7 +46,7 @@ public class PlayerDatabaseExecutor extends ThrottleFilter implements Runnable {
 					final Player loadedPlayer = database.loadPlayer(loginRequest);
 
 					LoginTask loginTask = new LoginTask(loginRequest, loadedPlayer);
-					Server.getServer().getGameEventHandler().add(new ImmediateEvent() {
+					Server.getServer().getGameEventHandler().add(new ImmediateEvent("Login Player") {
 						@Override
 						public void action() {
 							loginTask.run();

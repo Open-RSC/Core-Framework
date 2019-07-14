@@ -15,7 +15,7 @@ public class PrayerDrainEvent extends GameTickEvent {
 	private double partialPoints = 0.0;
 
 	public PrayerDrainEvent(Player owner, int delay) {
-		super(owner, 1);
+		super(owner, 1, "Prayer Drain Event");
 	}
 
 	@Override

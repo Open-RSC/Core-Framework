@@ -249,6 +249,8 @@ public final class Constants {
 		public static boolean CRYSTAL_KEY_GIVES_XP = false;
 		public static boolean LOOTED_CHESTS_STUCK = false;
 		public static boolean WANT_RUNECRAFTING = false;
+		public static boolean WANT_DISCORD_UPDATES = false;
+		public static String DISCORD_WEBHOOK_URL = "";
 		
 		public static int MAX_TICKS_UNTIL_FULL_WALKING_SPEED = 5;
 		//strict check on level requirements for "glitched" validations on rsc
@@ -375,6 +377,8 @@ public final class Constants {
 			CRYSTAL_KEY_GIVES_XP = Boolean.parseBoolean(props.getProperty("crystal_key_gives_xp"));
 			LOOTED_CHESTS_STUCK = Boolean.parseBoolean(props.getProperty("looted_chests_stuck"));
 			WANT_RUNECRAFTING = Boolean.parseBoolean(props.getProperty("want_runecrafting"));
+			WANT_DISCORD_UPDATES = Boolean.parseBoolean(props.getProperty("want_discord_updates"));
+			DISCORD_WEBHOOK_URL = props.getProperty("discord_webhook_url");
 
 			NPC_KILL_LIST = Boolean.parseBoolean(props.getProperty("npc_kill_list"));
 			NPC_KILL_MESSAGES = Boolean.parseBoolean(props.getProperty("npc_kill_messages"));

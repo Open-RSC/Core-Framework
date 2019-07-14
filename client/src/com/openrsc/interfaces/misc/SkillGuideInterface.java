@@ -154,7 +154,7 @@ public final class SkillGuideInterface {
 			if (i != skillItems.size() - 1 && i != listEndPoint) {
 				mc.getSurface().drawBoxBorder(detailX - 75, width, allY, 37 + 1, 0);
 			}
-			mc.getSurface().drawSpriteClipping(mudclient.spriteItem + def.getSprite(),
+			mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
 				spriteX + 5, allY + 2, 48, 32, def.getPictureMask(), 0, false, 0, 1);
 
 			drawString(skillDetail, detailX + 10, allY + 25, 2, textColour);

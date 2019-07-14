@@ -560,7 +560,7 @@ public class DoorAction {
 							npcTalk(p, masterFisher, "Hello only the top fishers are allowed in here");
 						}
 						Server.getServer().getEventHandler().add(
-							new ShortEvent(p) {
+							new ShortEvent(p, "Fishing Guild Door") {
 								public void action() {
 									p.setBusy(false);
 									p.message(
@@ -1129,7 +1129,7 @@ public class DoorAction {
 								npcTalk(player, forester, "Hello only the top woodcutters are allowed in here");
 							}
 							Server.getServer().getEventHandler().add(
-								new ShortEvent(player) {
+								new ShortEvent(player, "Woodcutting Guild Door") {
 									public void action() {
 										owner.setBusy(false);
 										owner.message(

@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.commands;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
+import com.openrsc.server.event.DelayedEvent;
+import com.openrsc.server.event.DelayedEventNpc;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.Point;
@@ -15,8 +17,7 @@ import com.openrsc.server.plugins.listeners.action.CommandListener;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public final class Development implements CommandListener {
 	public void onCommand(String cmd, String[] args, Player player) {
@@ -389,27 +390,82 @@ public final class Development implements CommandListener {
 			else
 				player.message(messagePrefix + "Invalid name or player is not online");
 		}
-		else if (cmd.equalsIgnoreCase("events")) {
-			player.message("Total amount of events running: " + Server.getServer().getGameEventHandler().getEvents().size());
+		else if (cmd.equalsIgnoreCase("events") || cmd.equalsIgnoreCase("serverstats")) {
+			String total	= "Total Events: " + (Server.getServer().getGameEventHandler().getEvents().size() + Server.getServer().getEventHandler().getEvents().size() + Server.getServer().getEventHandlerNpc().getEvents().size());
+			player.message(messagePrefix + total);
 			HashMap<String, Integer> events = new HashMap<String, Integer>();
-			for (Map.Entry<String, GameTickEvent> stringGameTickEventEntry : Server.getServer().getGameEventHandler().getEvents().entrySet()) {
-				GameTickEvent e = stringGameTickEventEntry.getValue();
-				String eventName = e.getClass().getName();
-				if (e.getOwner() != null && e.getOwner().isUnregistering()) {
-					if (!events.containsKey(eventName)) {
-						events.put(eventName, 1);
-					} else {
-						events.put(eventName, events.get(eventName) + 1);
-					}
+
+			// Show info for game tick events
+			for (Map.Entry<String, GameTickEvent> eventEntry : Server.getServer().getGameEventHandler().getEvents().entrySet()) {
+				GameTickEvent e = eventEntry.getValue();
+				String eventName = e.getDescriptor();
+				//if (e.getOwner() != null && e.getOwner().isUnregistering()) {
+				if (!events.containsKey(eventName)) {
+					events.put(eventName, 1);
+				} else {
+					events.put(eventName, events.get(eventName) + 1);
 				}
+				//}
 			}
+
+			// Show info for general server events
+			for (Map.Entry<String, DelayedEvent> eventEntry : Server.getServer().getEventHandler().getEvents().entrySet()) {
+				DelayedEvent e = eventEntry.getValue();
+				String eventName = e.getDescriptor();
+				//if (e.getOwner() != null && e.getOwner().isUnregistering()) {
+				if (!events.containsKey(eventName)) {
+					events.put(eventName, 1);
+				} else {
+					events.put(eventName, events.get(eventName) + 1);
+				}
+				//}
+			}
+
+			// Show info for game NPC events
+			for (Map.Entry<String, DelayedEventNpc> eventEntry : Server.getServer().getEventHandlerNpc().getEvents().entrySet()) {
+				DelayedEventNpc e = eventEntry.getValue();
+				String eventName = e.getDescriptor();
+				//if (e.getOwner() != null && e.getOwner().isUnregistering()) {
+				if (!events.containsKey(eventName)) {
+					events.put(eventName, 1);
+				} else {
+					events.put(eventName, events.get(eventName) + 1);
+				}
+				//}
+			}
+
+			// Sort the Events Hashmap
+			List list = new LinkedList(events.entrySet());
+			Collections.sort(list, new Comparator() {
+				public int compare(Object o1, Object o2) {
+					return ((Comparable) ((Map.Entry) (o2)).getValue())
+						.compareTo(((Map.Entry) (o1)).getValue());
+				}
+			});
+			HashMap sortedHashMap = new LinkedHashMap();
+			for (Iterator it = list.iterator(); it.hasNext();) {
+				Map.Entry entry = (Map.Entry) it.next();
+				sortedHashMap.put(entry.getKey(), entry.getValue());
+			}
+			events	= sortedHashMap;
+
+			int i = 0;
 			StringBuilder s = new StringBuilder();
 			for (Map.Entry<String, Integer> entry : events.entrySet()) {
+				if(i >= 18) // Only display first 18 elements of the hashmap
+					break;
+
 				String name = entry.getKey();
 				Integer value = entry.getValue();
 				s.append(name).append(": ").append(value).append("%");
 			}
-			ActionSender.sendBox(player, s.toString(), true);
+
+			ActionSender.sendBox(player,
+				total + ", NPCs: " + World.getWorld().getNpcs().size() + ", Players: " + World.getWorld().getPlayers().size() + ", Shops: " + World.getWorld().getShops().size() + "%" +
+				"Player Atk Map: " + World.getWorld().getPlayersUnderAttack().size() + ", NPC Atk Map: " + World.getWorld().getNpcsUnderAttack().size() + ", Quests: " + World.getWorld().getQuests().size() + ", Mini Games: " + World.getWorld().getMiniGames().size() + "%" +
+				s,
+				true
+			);
 		}
 	}
 }
