@@ -1,16 +1,24 @@
 package com.loader.openrsc.frame;
 
 import com.loader.openrsc.Constants;
-import com.loader.openrsc.frame.elements.*;
+import com.loader.openrsc.frame.elements.CheckCombo;
+import com.loader.openrsc.frame.elements.ControlButton;
+import com.loader.openrsc.frame.elements.LaunchButton;
+import com.loader.openrsc.frame.elements.LinkButton;
+import com.loader.openrsc.frame.elements.RadioButton;
 import com.loader.openrsc.frame.listeners.PositionListener;
 import com.loader.openrsc.util.Utils;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.util.Random;
 
-import javax.swing.*;
+import javax.swing.ButtonGroup;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JProgressBar;
 
 public class AppFrame extends JFrame {
 	private static AppFrame instance;
@@ -197,7 +205,7 @@ public class AppFrame extends JFrame {
 		 * Sprite pack
 		 */
 
-		this.sprite_pack = new JLabel("Sprite packs:");
+		this.sprite_pack = new JLabel("Available sprite packs:");
 		this.sprite_pack.setForeground(Color.WHITE);
 		this.sprite_pack.setBounds(600, local_y + 100, 150, 15);
 		this.bg.add(this.sprite_pack);
