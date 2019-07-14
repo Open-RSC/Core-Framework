@@ -6403,7 +6403,8 @@ public class EntityHandler {
 			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//law altar
 			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//death altar
 			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//blood altar
-			objects.add(new GameObjectDef("Raw Essence", "A pile of raw essence", "Mine", "Examine", 1, 2, 2, 0, "essencemine", i++));//rune essence mine1226
+			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//Runeessence portal
+			objects.add(new GameObjectDef("Raw Essence", "A pile of raw essence", "Mine", "Examine", 1, 8, 8, 0, "essencemine", i++));//rune essence mine1226
 		}
 
 	}

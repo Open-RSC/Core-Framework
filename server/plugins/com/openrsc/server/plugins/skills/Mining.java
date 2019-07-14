@@ -261,7 +261,7 @@ public final class Mining implements ObjectActionListener,
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
-		return (command.equals("mine") || command.equals("prospect")) && obj.getID() != 588;
+		return (command.equals("mine") || command.equals("prospect")) && obj.getID() != 588 && obj.getID() != 1227;
 	}
 
 	/**
