@@ -51,36 +51,12 @@
     </system>
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="false">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/Config.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="630">
-              <caret line="49" column="55" selection-start-line="49" selection-start-column="55" selection-end-line="49" selection-end-column="55" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/mudclient.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="12259" column="22" selection-start-line="12259" selection-start-column="22" selection-end-line="12259" selection-end-column="22" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/android/updater/ApplicationUpdater.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="376">
-              <caret line="209" column="13" selection-start-line="209" selection-start-column="13" selection-end-line="209" selection-end-column="13" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="225">
+              <caret line="19" column="46" selection-start-line="19" selection-start-column="46" selection-end-line="19" selection-end-column="46" />
             </state>
           </provider>
         </entry>
@@ -88,58 +64,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/android/updater/CacheUpdater.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-208">
-              <caret line="36" column="38" selection-start-line="36" selection-start-column="38" selection-end-line="36" selection-end-column="38" />
+            <state relative-caret-position="124">
+              <caret line="191" column="69" selection-start-line="191" selection-start-column="69" selection-end-line="191" selection-end-column="69" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Open RSC Android Client/build.gradle">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="18" column="27" selection-start-line="18" selection-start-column="27" selection-end-line="18" selection-end-column="27" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/res/layout/updater.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="811">
-              <caret line="60" column="46" selection-start-line="60" selection-start-column="34" selection-end-line="60" selection-end-column="46" />
-            </state>
-          </provider>
-          <provider editor-type-id="android-designer2" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/res/layout/applicationupdater.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="600">
-              <caret line="40" column="26" lean-forward="true" selection-start-line="40" selection-start-column="26" selection-end-line="40" selection-end-column="28" />
-            </state>
-          </provider>
-          <provider editor-type-id="android-designer2" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/res/font/pressstart2p.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="14" selection-start-line="8" selection-start-column="14" selection-end-line="8" selection-end-column="14" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/res/font/exo.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="6" column="38" selection-start-line="6" selection-start-column="38" selection-end-line="6" selection-end-column="38" />
             </state>
           </provider>
         </entry>
@@ -155,10 +84,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>cameraZoom</find>
-      <find>C_ZOOM</find>
-      <find>zoom</find>
-      <find>25</find>
       <find>setLongPressDelay</find>
       <find>saveZoomDistance();</find>
       <find>} else if (this.keyLeft) {</find>
@@ -170,7 +95,6 @@
       <find>getMouseClick</find>
       <find>getMouseButtonDownTime</find>
       <find>C_SWIPE_TO_ROTATE</find>
-      <find>audio</find>
       <find>ANDROID_CLIENT_VERSION</find>
       <find>showUpdateDialog</find>
       <find>shouldUpdate</find>
@@ -185,6 +109,11 @@
       <find>tv1</find>
       <find>textView1</find>
       <find>exoregular</find>
+      <find>audio</find>
+      <find>config</find>
+      <find>config.txt</find>
+      <find>43594</find>
+      <find>CACHE_VERSION</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/Open RSC Android Client</dir>
@@ -205,29 +134,55 @@
         <option value="$PROJECT_DIR$/build.gradle" />
         <option value="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" />
         <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/AndroidManifest.xml" />
-        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/PacketHandler.java" />
         <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/android/render/InputImpl.java" />
-        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/multiclient/ClientPort.java" />
-        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/BankInterface.java" />
-        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/mudclient.java" />
         <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/android/updater/ApplicationUpdater.java" />
-        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/Config.java" />
         <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/res/values/styles.xml" />
         <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/res/values-v11/styles.xml" />
         <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/res/values-v14/styles.xml" />
         <option value="$PROJECT_DIR$/Open RSC Android Client/build.gradle" />
-        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/android/updater/CacheUpdater.java" />
         <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/res/font/pressstart2pregular.xml" />
         <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/res/font/exoregular.xml" />
         <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/res/layout/applicationupdater.xml" />
         <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/res/layout/updater.xml" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/graphics/two/MudClientGraphics.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/graphics/three/World.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/graphics/gui/Panel.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/AchievementGUI.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/AuctionHouse.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/BankInterface.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/CustomBankInterface.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/DoSkillInterface.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/IronManInterface.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/LostOnDeathInterface.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/SkillGuideInterface.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/NComponent.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/client/model/Sprite.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/graphics/two/GraphicsController.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/mudclient.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/defs/ItemDef.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/defs/NPCDef.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/defs/SpriteDef.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/EntityHandler.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/defs/extras/AnimationDef.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/defs/extras/TextureDef.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/multiclient/ClientPort.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/Group.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/MiscFunctions.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/ORSCharacter.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/PacketHandler.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/data/DataConversions.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/data/DataFileDecrypter.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/data/DataFileVariables.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/data/DataOperations.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/android/updater/CacheUpdater.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/Config.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="44" />
+    <option name="x" value="45" />
     <option name="y" value="23" />
-    <option name="width" value="2519" />
+    <option name="width" value="1759" />
     <option name="height" value="1417" />
   </component>
   <component name="ProjectView">
@@ -235,8 +190,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="ProjectPane" />
       <pane id="AndroidView">
         <subPane>
           <expand>
@@ -247,19 +200,34 @@
             <path>
               <item name="Android" type="1abcf292:AndroidViewProjectNode" />
               <item name="Open RSC Android Client" type="feadf853:AndroidModuleNode" />
-              <item name="res" type="d4f16f75:AndroidResFolderNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
             </path>
             <path>
               <item name="Android" type="1abcf292:AndroidViewProjectNode" />
               <item name="Open RSC Android Client" type="feadf853:AndroidModuleNode" />
-              <item name="res" type="d4f16f75:AndroidResFolderNode" />
-              <item name="font" type="ddeffd01:AndroidResFolderTypeNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="openrsc" type="cbb59c9e:AndroidPsiDirectoryNode" />
             </path>
             <path>
               <item name="Android" type="1abcf292:AndroidViewProjectNode" />
               <item name="Open RSC Android Client" type="feadf853:AndroidModuleNode" />
-              <item name="res" type="d4f16f75:AndroidResFolderNode" />
-              <item name="layout" type="ddeffd01:AndroidResFolderTypeNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="openrsc" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="android" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Android" type="1abcf292:AndroidViewProjectNode" />
+              <item name="Open RSC Android Client" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="openrsc" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="android" type="462c0819:PsiDirectoryNode" />
+              <item name="updater" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Android" type="1abcf292:AndroidViewProjectNode" />
+              <item name="Open RSC Android Client" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="orsc" type="cbb59c9e:AndroidPsiDirectoryNode" />
             </path>
             <path>
               <item name="Android" type="1abcf292:AndroidViewProjectNode" />
@@ -269,6 +237,8 @@
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
+      <pane id="ProjectPane" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -399,10 +369,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="44" y="23" width="2519" height="1417" extended-state="0" />
+    <frame x="45" y="23" width="1759" height="1417" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.12434396" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17122889" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info id="Build Variants" order="3" side_tool="true" />
@@ -413,18 +383,17 @@
       <window_info id="Resources Explorer" order="8" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.4978001" weight="0.32834226" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49842867" visible="true" weight="0.23169811" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49842867" visible="true" weight="0.3026415" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Logcat" order="7" weight="0.32939914" />
       <window_info anchor="bottom" id="Terminal" order="8" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50157136" side_tool="true" weight="0.32834226" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5023866" side_tool="true" weight="0.2264151" />
       <window_info anchor="bottom" id="Version Control" order="10" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Build" order="11" sideWeight="0.49717158" weight="0.22673796" />
+      <window_info anchor="bottom" id="Build" order="11" sideWeight="0.49761337" weight="0.2264151" />
       <window_info anchor="bottom" id="Android Profiler" order="12" />
-      <window_info anchor="right" id="Preview" visible="true" weight="0.36213163" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -434,7 +403,8 @@
       <window_info anchor="right" id="Theme Preview" order="6" />
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info anchor="right" id="Codota" order="8" />
-      <window_info anchor="right" id="Assistant" order="9" weight="0.32998747" />
+      <window_info anchor="right" id="Assistant" order="9" weight="0.32995227" />
+      <window_info anchor="right" id="Preview" order="10" visible="true" weight="0.36213163" />
     </layout>
   </component>
   <component name="VcsManagerConfiguration">
@@ -443,88 +413,18 @@
     </ignored-roots>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/res/drawable-hdpi/logo.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/res/drawable-xxxhdpi/ic_launcher.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/res/drawable-mdpi/ic_launcher.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/res/drawable-hdpi/ic_launcher.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/com/openrsc/client/R.java" />
-    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/res/values/colors.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1882" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gradlew">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/settings.gradle">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/local.properties">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/proguard-project.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/build/intermediates/incremental/mergeDebugResources/merged.dir/values/values.xml" />
-    <entry file="file://$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/android/render/RSCBitmapSurfaceView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="63" column="13" lean-forward="true" selection-start-line="63" selection-start-column="13" selection-end-line="63" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/build/outputs/apk/debug/test.apk" />
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="56" selection-start-line="7" selection-start-column="56" selection-end-line="7" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/AndroidManifest.xml">
-      <provider editor-type-id="android-manifest" />
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="4" column="27" selection-start-line="4" selection-start-column="27" selection-end-line="4" selection-end-column="27" />
         </state>
       </provider>
+      <provider editor-type-id="android-manifest" />
     </entry>
     <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/InputListener.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
           <caret line="2" column="22" selection-start-line="2" selection-start-column="22" selection-end-line="2" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/multiclient/ClientPort.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="326">
-          <caret line="105" column="64" lean-forward="true" selection-start-line="105" selection-start-column="64" selection-end-line="105" selection-end-column="64" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/BankInterface.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="353">
-          <caret line="165" selection-start-line="165" selection-end-line="165" />
         </state>
       </provider>
     </entry>
@@ -536,13 +436,6 @@
             <element signature="e#1152#1153#0" expanded="true" />
             <element signature="e#1192#1193#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/PacketHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="141">
-          <caret line="1519" column="26" selection-end-line="2132" />
         </state>
       </provider>
     </entry>
@@ -577,23 +470,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/mudclient.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="12259" column="22" selection-start-line="12259" selection-start-column="22" selection-end-line="12259" selection-end-column="22" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/Config.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="630">
-          <caret line="49" column="55" selection-start-line="49" selection-start-column="55" selection-end-line="49" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/android/updater/TextProgressBar.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="165">
@@ -601,20 +477,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="27" selection-start-line="18" selection-start-column="27" selection-end-line="18" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/res/exoregular.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="8" selection-start-line="3" selection-start-column="8" selection-end-line="5" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/res/exoregular.xml" />
     <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/res/layout/gameactivity.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
@@ -625,7 +488,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/android/updater/ApplicationUpdater.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="376">
+        <state relative-caret-position="2700">
           <caret line="209" column="13" selection-start-line="209" selection-start-column="13" selection-end-line="209" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -633,27 +496,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/res/font/exo.xml">
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="38" selection-start-line="6" selection-start-column="38" selection-end-line="6" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/android/updater/CacheUpdater.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-208">
-          <caret line="36" column="38" selection-start-line="36" selection-start-column="38" selection-end-line="36" selection-end-column="38" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="270">
+          <caret line="18" column="27" selection-start-line="18" selection-start-column="27" selection-end-line="18" selection-end-column="27" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/res/layout/applicationupdater.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="600">
-          <caret line="40" column="26" lean-forward="true" selection-start-line="40" selection-start-column="26" selection-end-line="40" selection-end-column="28" />
+          <caret line="40" column="26" selection-start-line="40" selection-start-column="26" selection-end-line="40" selection-end-column="28" />
         </state>
       </provider>
       <provider editor-type-id="android-designer2" />
@@ -665,13 +518,849 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/res/font/exo.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="38" selection-start-line="6" selection-start-column="38" selection-end-line="6" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/res/layout/updater.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="811">
+        <state relative-caret-position="516">
           <caret line="60" column="46" selection-start-line="60" selection-start-column="34" selection-end-line="60" selection-end-column="46" />
         </state>
       </provider>
       <provider editor-type-id="android-designer2" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/MenuAction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="22" selection-start-line="2" selection-start-column="22" selection-end-line="2" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/graphics/three/World.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="377">
+          <caret line="1926" selection-start-line="1926" selection-end-line="1926" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/graphics/gui/Panel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="377">
+          <caret line="1323" selection-start-line="1323" selection-end-line="1323" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/AchievementGUI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="377">
+          <caret line="124" selection-start-line="124" selection-end-line="124" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/AuctionHouse.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="377">
+          <caret line="1154" selection-start-line="1154" selection-end-line="1154" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/BankInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="377">
+          <caret line="661" selection-start-line="661" selection-end-line="661" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/CustomBankInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="377">
+          <caret line="803" selection-start-line="803" selection-end-line="803" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/DoSkillInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="377">
+          <caret line="815" selection-start-line="815" selection-end-line="815" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/IronManInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="377">
+          <caret line="305" selection-start-line="305" selection-end-line="305" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/LostOnDeathInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="377">
+          <caret line="273" selection-start-line="273" selection-end-line="273" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/SkillGuideInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="377">
+          <caret line="890" selection-start-line="890" selection-end-line="890" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/NComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="377">
+          <caret line="432" selection-start-line="432" selection-end-line="432" />
+          <folding>
+            <element signature="e#1825#1855#0" expanded="true" />
+            <element signature="e#1942#1972#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/client/model/Sprite.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="377">
+          <caret line="194" selection-start-line="194" selection-end-line="194" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/util/GenUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="66" selection-start-line="66" selection-end-line="66" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/mudclient.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="299">
+          <caret line="11862" column="18" lean-forward="true" selection-start-line="11862" selection-start-column="18" selection-end-line="11862" selection-end-column="18" />
+          <folding>
+            <element signature="e#7619#7627#0" expanded="true" />
+            <element signature="e#15472#15486#0" expanded="true" />
+            <element signature="e#39045#39061#0" expanded="true" />
+            <element signature="e#52551#52552#0" expanded="true" />
+            <element signature="e#52579#52580#0" expanded="true" />
+            <element signature="e#113528#113529#0" expanded="true" />
+            <element signature="e#113578#113579#0" expanded="true" />
+            <element signature="e#113630#113631#0" expanded="true" />
+            <element signature="e#113677#113678#0" expanded="true" />
+            <element signature="e#113705#113706#0" expanded="true" />
+            <element signature="e#113737#113738#0" expanded="true" />
+            <element signature="e#113771#113772#0" expanded="true" />
+            <element signature="e#113800#113801#0" expanded="true" />
+            <element signature="e#129326#129327#0" expanded="true" />
+            <element signature="e#129380#129381#0" expanded="true" />
+            <element signature="e#129569#129570#0" expanded="true" />
+            <element signature="e#129625#129626#0" expanded="true" />
+            <element signature="e#347940#347941#0" expanded="true" />
+            <element signature="e#347971#347972#0" expanded="true" />
+            <element signature="e#484806#484906#0" expanded="true" />
+            <element signature="e#484905#484906#0" expanded="true" />
+            <element signature="e#695987#695988#0" expanded="true" />
+            <element signature="e#696027#696028#0" expanded="true" />
+            <element signature="e#696075#696076#0" expanded="true" />
+            <element signature="e#696114#696115#0" expanded="true" />
+            <element signature="e#696162#696163#0" expanded="true" />
+            <element signature="e#696201#696202#0" expanded="true" />
+            <element signature="e#696365#696366#0" expanded="true" />
+            <element signature="e#696416#696417#0" expanded="true" />
+            <element signature="e#696606#696607#0" expanded="true" />
+            <element signature="e#696645#696646#0" expanded="true" />
+            <element signature="e#696687#696688#0" expanded="true" />
+            <element signature="e#696726#696727#0" expanded="true" />
+            <element signature="e#696779#696780#0" expanded="true" />
+            <element signature="e#696818#696819#0" expanded="true" />
+            <element signature="e#696863#696864#0" expanded="true" />
+            <element signature="e#696898#696899#0" expanded="true" />
+            <element signature="e#696948#696949#0" expanded="true" />
+            <element signature="e#696981#696982#0" expanded="true" />
+            <element signature="e#697048#697049#0" expanded="true" />
+            <element signature="e#697094#697095#0" expanded="true" />
+            <element signature="e#697138#697139#0" expanded="true" />
+            <element signature="e#697185#697186#0" expanded="true" />
+            <element signature="e#697232#697233#0" expanded="true" />
+            <element signature="e#697282#697283#0" expanded="true" />
+            <element signature="e#697327#697328#0" expanded="true" />
+            <element signature="e#697375#697376#0" expanded="true" />
+            <element signature="e#697419#697420#0" expanded="true" />
+            <element signature="e#697466#697467#0" expanded="true" />
+            <element signature="e#697501#697502#0" expanded="true" />
+            <element signature="e#697540#697541#0" expanded="true" />
+            <element signature="e#697581#697582#0" expanded="true" />
+            <element signature="e#697617#697618#0" expanded="true" />
+            <element signature="e#697666#697667#0" expanded="true" />
+            <element signature="e#697709#697710#0" expanded="true" />
+            <element signature="e#697749#697750#0" expanded="true" />
+            <element signature="e#697793#697794#0" expanded="true" />
+            <element signature="e#697839#697840#0" expanded="true" />
+            <element signature="e#697880#697881#0" expanded="true" />
+            <element signature="e#697937#697938#0" expanded="true" />
+            <element signature="e#697977#697978#0" expanded="true" />
+            <element signature="e#698029#698030#0" expanded="true" />
+            <element signature="e#698064#698065#0" expanded="true" />
+            <element signature="e#698108#698109#0" expanded="true" />
+            <element signature="e#698146#698147#0" expanded="true" />
+            <element signature="e#698182#698183#0" expanded="true" />
+            <element signature="e#698222#698223#0" expanded="true" />
+            <element signature="e#698264#698265#0" expanded="true" />
+            <element signature="e#698301#698302#0" expanded="true" />
+            <element signature="e#698337#698338#0" expanded="true" />
+            <element signature="e#698377#698378#0" expanded="true" />
+            <element signature="e#698419#698420#0" expanded="true" />
+            <element signature="e#698456#698457#0" expanded="true" />
+            <element signature="e#698494#698495#0" expanded="true" />
+            <element signature="e#698536#698537#0" expanded="true" />
+            <element signature="e#698574#698575#0" expanded="true" />
+            <element signature="e#698616#698617#0" expanded="true" />
+            <element signature="e#698648#698649#0" expanded="true" />
+            <element signature="e#698684#698685#0" expanded="true" />
+            <element signature="e#698731#698732#0" expanded="true" />
+            <element signature="e#698777#698778#0" expanded="true" />
+            <element signature="e#698830#698831#0" expanded="true" />
+            <element signature="e#698878#698879#0" expanded="true" />
+            <element signature="e#698934#698935#0" expanded="true" />
+            <element signature="e#698981#698982#0" expanded="true" />
+            <element signature="e#699029#699030#0" expanded="true" />
+            <element signature="e#699079#699080#0" expanded="true" />
+            <element signature="e#699135#699136#0" expanded="true" />
+            <element signature="e#699182#699183#0" expanded="true" />
+            <element signature="e#699230#699231#0" expanded="true" />
+            <element signature="e#699280#699281#0" expanded="true" />
+            <element signature="e#699500#699501#0" expanded="true" />
+            <element signature="e#699554#699555#0" expanded="true" />
+            <element signature="e#699611#699612#0" expanded="true" />
+            <element signature="e#699659#699660#0" expanded="true" />
+            <element signature="e#699708#699709#0" expanded="true" />
+            <element signature="e#699759#699760#0" expanded="true" />
+            <element signature="e#699817#699818#0" expanded="true" />
+            <element signature="e#699866#699867#0" expanded="true" />
+            <element signature="e#699916#699917#0" expanded="true" />
+            <element signature="e#699968#699969#0" expanded="true" />
+            <element signature="e#700015#700016#0" expanded="true" />
+            <element signature="e#700066#700067#0" expanded="true" />
+            <element signature="e#700119#700120#0" expanded="true" />
+            <element signature="e#700167#700168#0" expanded="true" />
+            <element signature="e#700223#700224#0" expanded="true" />
+            <element signature="e#700270#700271#0" expanded="true" />
+            <element signature="e#700318#700319#0" expanded="true" />
+            <element signature="e#700368#700369#0" expanded="true" />
+            <element signature="e#700424#700425#0" expanded="true" />
+            <element signature="e#700471#700472#0" expanded="true" />
+            <element signature="e#700519#700520#0" expanded="true" />
+            <element signature="e#700569#700570#0" expanded="true" />
+            <element signature="e#700797#700798#0" expanded="true" />
+            <element signature="e#700851#700852#0" expanded="true" />
+            <element signature="e#700909#700910#0" expanded="true" />
+            <element signature="e#700958#700959#0" expanded="true" />
+            <element signature="e#701008#701009#0" expanded="true" />
+            <element signature="e#701060#701061#0" expanded="true" />
+            <element signature="e#701117#701118#0" expanded="true" />
+            <element signature="e#701165#701166#0" expanded="true" />
+            <element signature="e#701214#701215#0" expanded="true" />
+            <element signature="e#701265#701266#0" expanded="true" />
+            <element signature="e#701296#701297#0" expanded="true" />
+            <element signature="e#701329#701330#0" expanded="true" />
+            <element signature="e#701376#701377#0" expanded="true" />
+            <element signature="e#701417#701418#0" expanded="true" />
+            <element signature="e#701469#701470#0" expanded="true" />
+            <element signature="e#701512#701513#0" expanded="true" />
+            <element signature="e#701556#701557#0" expanded="true" />
+            <element signature="e#701602#701603#0" expanded="true" />
+            <element signature="e#701660#701661#0" expanded="true" />
+            <element signature="e#701709#701710#0" expanded="true" />
+            <element signature="e#701763#701764#0" expanded="true" />
+            <element signature="e#701808#701809#0" expanded="true" />
+            <element signature="e#701854#701855#0" expanded="true" />
+            <element signature="e#701902#701903#0" expanded="true" />
+            <element signature="e#701934#701935#0" expanded="true" />
+            <element signature="e#701970#701971#0" expanded="true" />
+            <element signature="e#702008#702009#0" expanded="true" />
+            <element signature="e#702041#702042#0" expanded="true" />
+            <element signature="e#702078#702079#0" expanded="true" />
+            <element signature="e#702119#702120#0" expanded="true" />
+            <element signature="e#702162#702163#0" expanded="true" />
+            <element signature="e#702200#702201#0" expanded="true" />
+            <element signature="e#702258#702259#0" expanded="true" />
+            <element signature="e#702295#702296#0" expanded="true" />
+            <element signature="e#702345#702346#0" expanded="true" />
+            <element signature="e#702385#702386#0" expanded="true" />
+            <element signature="e#702434#702435#0" expanded="true" />
+            <element signature="e#702466#702467#0" expanded="true" />
+            <element signature="e#702507#702508#0" expanded="true" />
+            <element signature="e#702542#702543#0" expanded="true" />
+            <element signature="e#702593#702594#0" expanded="true" />
+            <element signature="e#702634#702635#0" expanded="true" />
+            <element signature="e#702686#702687#0" expanded="true" />
+            <element signature="e#702729#702730#0" expanded="true" />
+            <element signature="e#702775#702776#0" expanded="true" />
+            <element signature="e#702816#702817#0" expanded="true" />
+            <element signature="e#702871#702872#0" expanded="true" />
+            <element signature="e#702914#702915#0" expanded="true" />
+            <element signature="e#702965#702966#0" expanded="true" />
+            <element signature="e#703007#703008#0" expanded="true" />
+            <element signature="e#703049#703050#0" expanded="true" />
+            <element signature="e#703086#703087#0" expanded="true" />
+            <element signature="e#703122#703123#0" expanded="true" />
+            <element signature="e#703162#703163#0" expanded="true" />
+            <element signature="e#703204#703205#0" expanded="true" />
+            <element signature="e#703241#703242#0" expanded="true" />
+            <element signature="e#703279#703280#0" expanded="true" />
+            <element signature="e#703321#703322#0" expanded="true" />
+            <element signature="e#703365#703366#0" expanded="true" />
+            <element signature="e#703404#703405#0" expanded="true" />
+            <element signature="e#703496#703497#0" expanded="true" />
+            <element signature="e#703548#703549#0" expanded="true" />
+            <element signature="e#703606#703607#0" expanded="true" />
+            <element signature="e#703655#703656#0" expanded="true" />
+            <element signature="e#703701#703702#0" expanded="true" />
+            <element signature="e#703749#703750#0" expanded="true" />
+            <element signature="e#703918#703919#0" expanded="true" />
+            <element signature="e#703968#703969#0" expanded="true" />
+            <element signature="e#704009#704010#0" expanded="true" />
+            <element signature="e#704045#704046#0" expanded="true" />
+            <element signature="e#704093#704094#0" expanded="true" />
+            <element signature="e#704136#704137#0" expanded="true" />
+            <element signature="e#704175#704176#0" expanded="true" />
+            <element signature="e#704218#704219#0" expanded="true" />
+            <element signature="e#704263#704264#0" expanded="true" />
+            <element signature="e#704303#704304#0" expanded="true" />
+            <element signature="e#704351#704352#0" expanded="true" />
+            <element signature="e#704390#704391#0" expanded="true" />
+            <element signature="e#704430#704431#0" expanded="true" />
+            <element signature="e#704472#704473#0" expanded="true" />
+            <element signature="e#704520#704521#0" expanded="true" />
+            <element signature="e#704559#704560#0" expanded="true" />
+            <element signature="e#704599#704600#0" expanded="true" />
+            <element signature="e#704641#704642#0" expanded="true" />
+            <element signature="e#704690#704691#0" expanded="true" />
+            <element signature="e#704730#704731#0" expanded="true" />
+            <element signature="e#704771#704772#0" expanded="true" />
+            <element signature="e#704814#704815#0" expanded="true" />
+            <element signature="e#704867#704868#0" expanded="true" />
+            <element signature="e#704911#704912#0" expanded="true" />
+            <element signature="e#704956#704957#0" expanded="true" />
+            <element signature="e#705003#705004#0" expanded="true" />
+            <element signature="e#705057#705058#0" expanded="true" />
+            <element signature="e#705100#705101#0" expanded="true" />
+            <element signature="e#705151#705152#0" expanded="true" />
+            <element signature="e#705194#705195#0" expanded="true" />
+            <element signature="e#705246#705247#0" expanded="true" />
+            <element signature="e#705289#705290#0" expanded="true" />
+            <element signature="e#705337#705338#0" expanded="true" />
+            <element signature="e#705389#705390#0" expanded="true" />
+            <element signature="e#705443#705444#0" expanded="true" />
+            <element signature="e#705492#705493#0" expanded="true" />
+            <element signature="e#705547#705548#0" expanded="true" />
+            <element signature="e#705593#705594#0" expanded="true" />
+            <element signature="e#705653#705654#0" expanded="true" />
+            <element signature="e#705704#705705#0" expanded="true" />
+            <element signature="e#705742#705743#0" expanded="true" />
+            <element signature="e#705784#705785#0" expanded="true" />
+            <element signature="e#705828#705829#0" expanded="true" />
+            <element signature="e#705867#705868#0" expanded="true" />
+            <element signature="e#705991#705992#0" expanded="true" />
+            <element signature="e#706030#706031#0" expanded="true" />
+            <element signature="e#706080#706081#0" expanded="true" />
+            <element signature="e#706121#706122#0" expanded="true" />
+            <element signature="e#706175#706176#0" expanded="true" />
+            <element signature="e#706220#706221#0" expanded="true" />
+            <element signature="e#706512#706513#0" expanded="true" />
+            <element signature="e#706563#706564#0" expanded="true" />
+            <element signature="e#706621#706622#0" expanded="true" />
+            <element signature="e#706671#706672#0" expanded="true" />
+            <element signature="e#706726#706727#0" expanded="true" />
+            <element signature="e#706785#706786#0" expanded="true" />
+            <element signature="e#707190#707191#0" expanded="true" />
+            <element signature="e#707240#707241#0" expanded="true" />
+            <element signature="e#707292#707293#0" expanded="true" />
+            <element signature="e#707339#707340#0" expanded="true" />
+            <element signature="e#707393#707394#0" expanded="true" />
+            <element signature="e#707438#707439#0" expanded="true" />
+            <element signature="e#707498#707499#0" expanded="true" />
+            <element signature="e#707549#707550#0" expanded="true" />
+            <element signature="e#707606#707607#0" expanded="true" />
+            <element signature="e#707654#707655#0" expanded="true" />
+            <element signature="e#707705#707706#0" expanded="true" />
+            <element signature="e#707747#707748#0" expanded="true" />
+            <element signature="e#707804#707805#0" expanded="true" />
+            <element signature="e#707852#707853#0" expanded="true" />
+            <element signature="e#707911#707912#0" expanded="true" />
+            <element signature="e#707961#707962#0" expanded="true" />
+            <element signature="e#708021#708022#0" expanded="true" />
+            <element signature="e#708072#708073#0" expanded="true" />
+            <element signature="e#708117#708118#0" expanded="true" />
+            <element signature="e#708157#708158#0" expanded="true" />
+            <element signature="e#708210#708211#0" expanded="true" />
+            <element signature="e#708258#708259#0" expanded="true" />
+            <element signature="e#708318#708319#0" expanded="true" />
+            <element signature="e#708369#708370#0" expanded="true" />
+            <element signature="e#708412#708413#0" expanded="true" />
+            <element signature="e#708451#708452#0" expanded="true" />
+            <element signature="e#708506#708507#0" expanded="true" />
+            <element signature="e#708547#708548#0" expanded="true" />
+            <element signature="e#708596#708597#0" expanded="true" />
+            <element signature="e#708634#708635#0" expanded="true" />
+            <element signature="e#708681#708682#0" expanded="true" />
+            <element signature="e#708720#708721#0" expanded="true" />
+            <element signature="e#708764#708765#0" expanded="true" />
+            <element signature="e#708796#708797#0" expanded="true" />
+            <element signature="e#708836#708837#0" expanded="true" />
+            <element signature="e#708880#708881#0" expanded="true" />
+            <element signature="e#708926#708927#0" expanded="true" />
+            <element signature="e#708967#708968#0" expanded="true" />
+            <element signature="e#709009#709010#0" expanded="true" />
+            <element signature="e#709046#709047#0" expanded="true" />
+            <element signature="e#709097#709098#0" expanded="true" />
+            <element signature="e#709139#709140#0" expanded="true" />
+            <element signature="e#709197#709198#0" expanded="true" />
+            <element signature="e#709246#709247#0" expanded="true" />
+            <element signature="e#709297#709298#0" expanded="true" />
+            <element signature="e#709352#709353#0" expanded="true" />
+            <element signature="e#709409#709410#0" expanded="true" />
+            <element signature="e#709461#709462#0" expanded="true" />
+            <element signature="e#709516#709517#0" expanded="true" />
+            <element signature="e#709562#709563#0" expanded="true" />
+            <element signature="e#709620#709621#0" expanded="true" />
+            <element signature="e#709669#709670#0" expanded="true" />
+            <element signature="e#709727#709728#0" expanded="true" />
+            <element signature="e#709776#709777#0" expanded="true" />
+            <element signature="e#709960#709961#0" expanded="true" />
+            <element signature="e#710010#710011#0" expanded="true" />
+            <element signature="e#710063#710064#0" expanded="true" />
+            <element signature="e#710111#710112#0" expanded="true" />
+            <element signature="e#710166#710167#0" expanded="true" />
+            <element signature="e#710212#710213#0" expanded="true" />
+            <element signature="e#710261#710262#0" expanded="true" />
+            <element signature="e#710305#710306#0" expanded="true" />
+            <element signature="e#710362#710363#0" expanded="true" />
+            <element signature="e#710410#710411#0" expanded="true" />
+            <element signature="e#710461#710462#0" expanded="true" />
+            <element signature="e#710507#710508#0" expanded="true" />
+            <element signature="e#710566#710567#0" expanded="true" />
+            <element signature="e#710616#710617#0" expanded="true" />
+            <element signature="e#710669#710670#0" expanded="true" />
+            <element signature="e#710717#710718#0" expanded="true" />
+            <element signature="e#710772#710773#0" expanded="true" />
+            <element signature="e#710818#710819#0" expanded="true" />
+            <element signature="e#710867#710868#0" expanded="true" />
+            <element signature="e#710908#710909#0" expanded="true" />
+            <element signature="e#710954#710955#0" expanded="true" />
+            <element signature="e#711004#711005#0" expanded="true" />
+            <element signature="e#711056#711057#0" expanded="true" />
+            <element signature="e#711103#711104#0" expanded="true" />
+            <element signature="e#711157#711158#0" expanded="true" />
+            <element signature="e#711202#711203#0" expanded="true" />
+            <element signature="e#711261#711262#0" expanded="true" />
+            <element signature="e#711311#711312#0" expanded="true" />
+            <element signature="e#711349#711350#0" expanded="true" />
+            <element signature="e#711391#711392#0" expanded="true" />
+            <element signature="e#711435#711436#0" expanded="true" />
+            <element signature="e#711474#711475#0" expanded="true" />
+            <element signature="e#711520#711521#0" expanded="true" />
+            <element signature="e#711557#711558#0" expanded="true" />
+            <element signature="e#711608#711609#0" expanded="true" />
+            <element signature="e#711650#711651#0" expanded="true" />
+            <element signature="e#711698#711699#0" expanded="true" />
+            <element signature="e#711741#711742#0" expanded="true" />
+            <element signature="e#711797#711798#0" expanded="true" />
+            <element signature="e#711845#711846#0" expanded="true" />
+            <element signature="e#711889#711890#0" expanded="true" />
+            <element signature="e#711928#711929#0" expanded="true" />
+            <element signature="e#711989#711990#0" expanded="true" />
+            <element signature="e#712040#712041#0" expanded="true" />
+            <element signature="e#712091#712092#0" expanded="true" />
+            <element signature="e#712143#712144#0" expanded="true" />
+            <element signature="e#712198#712199#0" expanded="true" />
+            <element signature="e#712243#712244#0" expanded="true" />
+            <element signature="e#712293#712294#0" expanded="true" />
+            <element signature="e#712344#712345#0" expanded="true" />
+            <element signature="e#712388#712389#0" expanded="true" />
+            <element signature="e#712435#712436#0" expanded="true" />
+            <element signature="e#712487#712488#0" expanded="true" />
+            <element signature="e#712533#712534#0" expanded="true" />
+            <element signature="e#712578#712579#0" expanded="true" />
+            <element signature="e#712616#712617#0" expanded="true" />
+            <element signature="e#712660#712661#0" expanded="true" />
+            <element signature="e#712704#712705#0" expanded="true" />
+            <element signature="e#712760#712761#0" expanded="true" />
+            <element signature="e#712807#712808#0" expanded="true" />
+            <element signature="e#712853#712854#0" expanded="true" />
+            <element signature="e#712899#712900#0" expanded="true" />
+            <element signature="e#712954#712955#0" expanded="true" />
+            <element signature="e#713000#713001#0" expanded="true" />
+            <element signature="e#713054#713055#0" expanded="true" />
+            <element signature="e#713100#713101#0" expanded="true" />
+            <element signature="e#713153#713154#0" expanded="true" />
+            <element signature="e#713201#713202#0" expanded="true" />
+            <element signature="e#713253#713254#0" expanded="true" />
+            <element signature="e#713300#713301#0" expanded="true" />
+            <element signature="e#713345#713346#0" expanded="true" />
+            <element signature="e#713385#713386#0" expanded="true" />
+            <element signature="e#713439#713440#0" expanded="true" />
+            <element signature="e#713484#713485#0" expanded="true" />
+            <element signature="e#713540#713541#0" expanded="true" />
+            <element signature="e#713588#713589#0" expanded="true" />
+            <element signature="e#713634#713635#0" expanded="true" />
+            <element signature="e#713672#713673#0" expanded="true" />
+            <element signature="e#713732#713733#0" expanded="true" />
+            <element signature="e#713783#713784#0" expanded="true" />
+            <element signature="e#713841#713842#0" expanded="true" />
+            <element signature="e#713890#713891#0" expanded="true" />
+            <element signature="e#713928#713929#0" expanded="true" />
+            <element signature="e#713966#713967#0" expanded="true" />
+            <element signature="e#714017#714018#0" expanded="true" />
+            <element signature="e#714059#714060#0" expanded="true" />
+            <element signature="e#714110#714111#0" expanded="true" />
+            <element signature="e#714156#714157#0" expanded="true" />
+            <element signature="e#714191#714192#0" expanded="true" />
+            <element signature="e#714230#714231#0" expanded="true" />
+            <element signature="e#714264#714265#0" expanded="true" />
+            <element signature="e#714302#714303#0" expanded="true" />
+            <element signature="e#714336#714337#0" expanded="true" />
+            <element signature="e#714374#714375#0" expanded="true" />
+            <element signature="e#714916#714917#0" expanded="true" />
+            <element signature="e#714957#714958#0" expanded="true" />
+            <element signature="e#715004#715005#0" expanded="true" />
+            <element signature="e#715043#715044#0" expanded="true" />
+            <element signature="e#715214#715215#0" expanded="true" />
+            <element signature="e#715257#715258#0" expanded="true" />
+            <element signature="e#715299#715300#0" expanded="true" />
+            <element signature="e#715336#715337#0" expanded="true" />
+            <element signature="e#715377#715378#0" expanded="true" />
+            <element signature="e#715413#715414#0" expanded="true" />
+            <element signature="e#715456#715457#0" expanded="true" />
+            <element signature="e#715503#715504#0" expanded="true" />
+            <element signature="e#715556#715557#0" expanded="true" />
+            <element signature="e#715604#715605#0" expanded="true" />
+            <element signature="e#715659#715660#0" expanded="true" />
+            <element signature="e#715705#715706#0" expanded="true" />
+            <element signature="e#715760#715761#0" expanded="true" />
+            <element signature="e#715806#715807#0" expanded="true" />
+            <element signature="e#715858#715859#0" expanded="true" />
+            <element signature="e#715901#715902#0" expanded="true" />
+            <element signature="e#715953#715954#0" expanded="true" />
+            <element signature="e#715996#715997#0" expanded="true" />
+            <element signature="e#716042#716043#0" expanded="true" />
+            <element signature="e#716083#716084#0" expanded="true" />
+            <element signature="e#716128#716129#0" expanded="true" />
+            <element signature="e#716168#716169#0" expanded="true" />
+            <element signature="e#716217#716218#0" expanded="true" />
+            <element signature="e#716261#716262#0" expanded="true" />
+            <element signature="e#716754#716755#0" expanded="true" />
+            <element signature="e#716792#716793#0" expanded="true" />
+            <element signature="e#716831#716832#0" expanded="true" />
+            <element signature="e#716872#716873#0" expanded="true" />
+            <element signature="e#716922#716923#0" expanded="true" />
+            <element signature="e#716963#716964#0" expanded="true" />
+            <element signature="e#717013#717014#0" expanded="true" />
+            <element signature="e#717054#717055#0" expanded="true" />
+            <element signature="e#717099#717100#0" expanded="true" />
+            <element signature="e#717148#717149#0" expanded="true" />
+            <element signature="e#717199#717200#0" expanded="true" />
+            <element signature="e#717245#717246#0" expanded="true" />
+            <element signature="e#717289#717290#0" expanded="true" />
+            <element signature="e#717337#717338#0" expanded="true" />
+            <element signature="e#717387#717388#0" expanded="true" />
+            <element signature="e#717432#717433#0" expanded="true" />
+            <element signature="e#717488#717489#0" expanded="true" />
+            <element signature="e#717535#717536#0" expanded="true" />
+            <element signature="e#717577#717578#0" expanded="true" />
+            <element signature="e#717623#717624#0" expanded="true" />
+            <element signature="e#717671#717672#0" expanded="true" />
+            <element signature="e#717710#717711#0" expanded="true" />
+            <element signature="e#717759#717760#0" expanded="true" />
+            <element signature="e#717799#717800#0" expanded="true" />
+            <element signature="e#752660#752661#0" expanded="true" />
+            <element signature="e#752690#752691#0" expanded="true" />
+            <element signature="e#752747#752748#0" expanded="true" />
+            <element signature="e#752785#752786#0" expanded="true" />
+            <element signature="e#752818#752819#0" expanded="true" />
+            <element signature="e#752850#752851#0" expanded="true" />
+            <element signature="e#752885#752886#0" expanded="true" />
+            <element signature="e#752921#752922#0" expanded="true" />
+            <element signature="e#752955#752956#0" expanded="true" />
+            <element signature="e#752988#752989#0" expanded="true" />
+            <element signature="e#753024#753025#0" expanded="true" />
+            <element signature="e#753061#753062#0" expanded="true" />
+            <element signature="e#753110#753111#0" expanded="true" />
+            <element signature="e#753154#753155#0" expanded="true" />
+            <element signature="e#753208#753209#0" expanded="true" />
+            <element signature="e#753256#753257#0" expanded="true" />
+            <element signature="e#753306#753307#0" expanded="true" />
+            <element signature="e#753353#753354#0" expanded="true" />
+            <element signature="e#753396#753397#0" expanded="true" />
+            <element signature="e#753435#753436#0" expanded="true" />
+            <element signature="e#753482#753483#0" expanded="true" />
+            <element signature="e#753525#753526#0" expanded="true" />
+            <element signature="e#753568#753569#0" expanded="true" />
+            <element signature="e#753607#753608#0" expanded="true" />
+            <element signature="e#753651#753652#0" expanded="true" />
+            <element signature="e#753685#753686#0" expanded="true" />
+            <element signature="e#753735#753736#0" expanded="true" />
+            <element signature="e#753771#753772#0" expanded="true" />
+            <element signature="e#753801#753802#0" expanded="true" />
+            <element signature="e#753830#753831#0" expanded="true" />
+            <element signature="e#753860#753861#0" expanded="true" />
+            <element signature="e#753889#753890#0" expanded="true" />
+            <element signature="e#753923#753924#0" expanded="true" />
+            <element signature="e#753962#753963#0" expanded="true" />
+            <element signature="e#754002#754003#0" expanded="true" />
+            <element signature="e#754043#754044#0" expanded="true" />
+            <element signature="e#754082#754083#0" expanded="true" />
+            <element signature="e#754127#754128#0" expanded="true" />
+            <element signature="e#754172#754173#0" expanded="true" />
+            <element signature="e#754219#754220#0" expanded="true" />
+            <element signature="e#754262#754263#0" expanded="true" />
+            <element signature="e#754304#754305#0" expanded="true" />
+            <element signature="e#754443#754444#0" expanded="true" />
+            <element signature="e#754476#754477#0" expanded="true" />
+            <element signature="e#754516#754517#0" expanded="true" />
+            <element signature="e#754551#754552#0" expanded="true" />
+            <element signature="e#754593#754594#0" expanded="true" />
+            <element signature="e#754634#754635#0" expanded="true" />
+            <element signature="e#754682#754683#0" expanded="true" />
+            <element signature="e#754725#754726#0" expanded="true" />
+            <element signature="e#754772#754773#0" expanded="true" />
+            <element signature="e#754816#754817#0" expanded="true" />
+            <element signature="e#754868#754869#0" expanded="true" />
+            <element signature="e#754915#754916#0" expanded="true" />
+            <element signature="e#754955#754956#0" expanded="true" />
+            <element signature="e#754993#754994#0" expanded="true" />
+            <element signature="e#755255#755256#0" expanded="true" />
+            <element signature="e#755295#755296#0" expanded="true" />
+            <element signature="e#755554#755555#0" expanded="true" />
+            <element signature="e#755596#755597#0" expanded="true" />
+            <element signature="e#755636#755637#0" expanded="true" />
+            <element signature="e#755669#755670#0" expanded="true" />
+            <element signature="e#755712#755713#0" expanded="true" />
+            <element signature="e#755748#755749#0" expanded="true" />
+            <element signature="e#755783#755784#0" expanded="true" />
+            <element signature="e#755814#755815#0" expanded="true" />
+            <element signature="e#755862#755863#0" expanded="true" />
+            <element signature="e#755902#755903#0" expanded="true" />
+            <element signature="e#755935#755936#0" expanded="true" />
+            <element signature="e#755967#755968#0" expanded="true" />
+            <element signature="e#756004#756005#0" expanded="true" />
+            <element signature="e#756067#756068#0" expanded="true" />
+            <element signature="e#756110#756111#0" expanded="true" />
+            <element signature="e#756149#756150#0" expanded="true" />
+            <element signature="e#759913#759914#0" expanded="true" />
+            <element signature="e#759976#759977#0" expanded="true" />
+            <element signature="e#760019#760020#0" expanded="true" />
+            <element signature="e#760058#760059#0" expanded="true" />
+            <element signature="e#760221#760222#0" expanded="true" />
+            <element signature="e#760262#760263#0" expanded="true" />
+            <element signature="e#760433#760434#0" expanded="true" />
+            <element signature="e#760474#760475#0" expanded="true" />
+            <element signature="e#760644#760645#0" expanded="true" />
+            <element signature="e#760687#760688#0" expanded="true" />
+            <element signature="e#760866#760867#0" expanded="true" />
+            <element signature="e#760910#760911#0" expanded="true" />
+            <element signature="e#761087#761088#0" expanded="true" />
+            <element signature="e#761126#761127#0" expanded="true" />
+            <element signature="e#761277#761278#0" expanded="true" />
+            <element signature="e#761325#761326#0" expanded="true" />
+            <element signature="e#761361#761362#0" expanded="true" />
+            <element signature="e#761393#761394#0" expanded="true" />
+            <element signature="e#761443#761444#0" expanded="true" />
+            <element signature="e#761485#761486#0" expanded="true" />
+            <element signature="e#761656#761657#0" expanded="true" />
+            <element signature="e#761707#761708#0" expanded="true" />
+            <element signature="e#764856#764857#0" expanded="true" />
+            <element signature="e#764893#764894#0" expanded="true" />
+            <element signature="e#764954#764955#0" expanded="true" />
+            <element signature="e#765006#765007#0" expanded="true" />
+            <element signature="e#765463#765464#0" expanded="true" />
+            <element signature="e#765507#765508#0" expanded="true" />
+            <element signature="e#765555#765556#0" expanded="true" />
+            <element signature="e#765600#765601#0" expanded="true" />
+            <element signature="e#765647#765648#0" expanded="true" />
+            <element signature="e#765691#765692#0" expanded="true" />
+            <element signature="e#765840#765841#0" expanded="true" />
+            <element signature="e#765882#765883#0" expanded="true" />
+            <element signature="e#765926#765927#0" expanded="true" />
+            <element signature="e#765971#765972#0" expanded="true" />
+            <element signature="e#766009#766010#0" expanded="true" />
+            <element signature="e#766047#766048#0" expanded="true" />
+            <element signature="e#766094#766095#0" expanded="true" />
+            <element signature="e#766140#766141#0" expanded="true" />
+            <element signature="e#766193#766194#0" expanded="true" />
+            <element signature="e#766225#766226#0" expanded="true" />
+            <element signature="e#766278#766279#0" expanded="true" />
+            <element signature="e#766318#766319#0" expanded="true" />
+            <element signature="e#766356#766357#0" expanded="true" />
+            <element signature="e#766394#766395#0" expanded="true" />
+            <element signature="e#766441#766442#0" expanded="true" />
+            <element signature="e#766485#766486#0" expanded="true" />
+            <element signature="e#766541#766542#0" expanded="true" />
+            <element signature="e#766588#766589#0" expanded="true" />
+            <element signature="e#766643#766644#0" expanded="true" />
+            <element signature="e#766688#766689#0" expanded="true" />
+            <element signature="e#766737#766738#0" expanded="true" />
+            <element signature="e#766776#766777#0" expanded="true" />
+            <element signature="e#766823#766824#0" expanded="true" />
+            <element signature="e#766860#766861#0" expanded="true" />
+            <element signature="e#766917#766918#0" expanded="true" />
+            <element signature="e#766964#766965#0" expanded="true" />
+            <element signature="e#767016#767017#0" expanded="true" />
+            <element signature="e#767062#767063#0" expanded="true" />
+            <element signature="e#767114#767115#0" expanded="true" />
+            <element signature="e#767152#767153#0" expanded="true" />
+            <element signature="e#767204#767205#0" expanded="true" />
+            <element signature="e#767242#767243#0" expanded="true" />
+            <element signature="e#767287#767288#0" expanded="true" />
+            <element signature="e#767337#767338#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/defs/ItemDef.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="509">
+          <caret line="117" selection-start-line="117" selection-end-line="117" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/defs/NPCDef.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="509">
+          <caret line="130" lean-forward="true" selection-start-line="130" selection-end-line="130" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/defs/SpriteDef.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/EntityHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="509">
+          <caret line="6563" selection-start-line="6563" selection-end-line="6563" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/defs/extras/AnimationDef.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="465">
+          <caret line="43" lean-forward="true" selection-start-line="43" selection-end-line="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/defs/extras/TextureDef.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="19" selection-start-line="19" selection-end-line="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/graphics/two/MudClientGraphics.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="8" column="19" selection-end-line="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/multiclient/ClientPort.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="509">
+          <caret line="152" selection-start-line="152" selection-end-line="152" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/buffers/RSBuffer_Sound.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="22" selection-start-line="2" selection-start-column="22" selection-end-line="2" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/Group.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1185">
+          <caret line="79" selection-start-line="79" selection-end-line="79" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/MiscFunctions.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3795">
+          <caret line="255" selection-start-line="255" selection-end-line="255" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/ORSCharacter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="885">
+          <caret line="77" selection-start-line="77" selection-end-line="77" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/PacketHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="32865">
+          <caret line="2221" selection-start-line="2221" selection-end-line="2221" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/data/DataConversions.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3720">
+          <caret line="255" selection-start-line="255" selection-end-line="255" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/data/DataFileDecrypter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7800">
+          <caret line="520" selection-start-line="520" selection-end-line="520" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/data/DataFileVariables.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1050">
+          <caret line="70" selection-start-line="70" selection-end-line="70" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/data/DataOperations.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3990">
+          <caret line="269" selection-start-line="269" selection-end-line="269" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/graphics/two/GraphicsController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="181">
+          <caret line="2980" column="23" selection-start-line="2980" selection-start-column="23" selection-end-line="2980" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/android/updater/CacheUpdater.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="124">
+          <caret line="191" column="69" selection-start-line="191" selection-start-column="69" selection-end-line="191" selection-end-column="69" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/Config.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="19" column="46" selection-start-line="19" selection-start-column="46" selection-end-line="19" selection-end-column="46" />
+        </state>
+      </provider>
     </entry>
   </component>
   <component name="masterDetails">

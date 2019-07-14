@@ -15,6 +15,7 @@ import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+
 public final class World {
 	private final int[] colorToResource = new int[256];
 	private final int[][] tileElevationCache = new int[96][96];
@@ -870,7 +871,7 @@ public final class World {
 					}
 
 				if (showWallOnMinimap)
-					this.minimapGraphics.copyPixelDataToSurface(this.baseMediaSprite - 1, 0, 0, 285, 285);
+					this.minimapGraphics.copyPixelDataToSurface(GraphicsController.SPRITE_LAYER.MINIMAP, 0, 0, 285, 285);
 
 				this.modelAccumulate.setDiffuseLightAndColor(-50, -10, -50, 60, 24, false, 122);
 				this.modelWallGrid[plane] = this.modelAccumulate.divideModelByGrid(0, 8, 1536, -120, 64, 338, 1536,
@@ -1860,7 +1861,7 @@ public final class World {
 					this.minimapGraphics.setPixel(x * 3, 2 + z * 3, wallColor);
 				}
 			}
-		this.minimapGraphics.copyPixelDataToSurface(4500, 0, 0, 285, 285);
+		this.minimapGraphics.copyPixelDataToSurface(GraphicsController.SPRITE_LAYER.WORLDMAP, 0, 0, 285, 285);
 	}
 
 	private void loadWorldmapSection(int sector, int height, int sectionX, int sectionY) {

@@ -192,11 +192,19 @@ public class CacheUpdater extends Activity {
                         String ip_cabbage = "androidcheck.openrsc.com";
                         String port_cabbage = "43595";
                         FileOutputStream fileout_cabbage;
+
+                        String pack = "cabbagemenus:1";
+                        FileOutputStream fileout_cabbage2;
                         try {
                             fileout_cabbage = new FileOutputStream("/data/user/0/com.openrsc.client/files" + File.separator + "ip.txt");
                             OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_cabbage);
                             outputWriter.write(ip_cabbage);
                             outputWriter.close();
+
+                            fileout_cabbage2 = new FileOutputStream("/data/user/0/com.openrsc.client/files" + File.separator + "config.txt");
+                            OutputStreamWriter outputWriter2 = new OutputStreamWriter(fileout_cabbage2);
+                            outputWriter2.write(pack);
+                            outputWriter2.close();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

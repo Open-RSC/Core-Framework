@@ -1,10 +1,12 @@
 package orsc.graphics.gui;
 
+import com.openrsc.client.entityhandling.EntityHandler;
+import com.openrsc.client.model.Sprite;
+
 import orsc.MiscFunctions;
 import orsc.enumerations.PanelControlType;
 import orsc.graphics.two.Fonts;
 import orsc.graphics.two.GraphicsController;
-import orsc.mudclient;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
 
@@ -25,6 +27,7 @@ public final class Panel {
 	private int colorK;
 	private int colorL;
 	private int[] controlArgInt;
+	private Sprite[] controlArgSprite;
 	private boolean[] controlClicked;
 	private int[] controlClickedListIndex;
 	private int controlCount = 0;
@@ -62,6 +65,7 @@ public final class Panel {
 			this.controlY = new int[maxControls];
 			this.controlFlag = new boolean[maxControls];
 			this.controlArgInt = new int[maxControls];
+			this.controlArgSprite = new Sprite[maxControls];
 			this.controlListCurrentSize = new int[maxControls];
 			this.controlWidth = new int[maxControls];
 			this.controlVisible = new boolean[maxControls];
@@ -297,11 +301,11 @@ public final class Panel {
 		}
 	}
 
-	public final int addSprite(int x, int y, int spriteID) {
+	public final int addSprite(int x, int y, Sprite e) {
 		try {
 
-			int width = this.graphics.sprites[spriteID].getWidth();
-			int height = this.graphics.sprites[spriteID].getHeight();
+			int width = e.getWidth();
+			int height = e.getHeight();
 			this.controlType[this.controlCount] = PanelControlType.SPRITE;
 			this.controlVisible[this.controlCount] = true;
 			this.controlClicked[this.controlCount] = false;
@@ -309,10 +313,10 @@ public final class Panel {
 			this.controlY[this.controlCount] = y - height / 2;
 			this.controlWidth[this.controlCount] = width;
 			this.controlHeight[this.controlCount] = height;
-			this.controlArgInt[this.controlCount] = spriteID;
+			this.controlArgSprite[this.controlCount] = e;
 			return this.controlCount++;
 		} catch (RuntimeException var7) {
-			throw GenUtil.makeThrowable(var7, "qa.PA(" + spriteID + ',' + y + ',' + x + ',' + "dummy" + ')');
+			throw GenUtil.makeThrowable(var7, "qa.PA(" + e.getID() + ',' + y + ',' + x + ',' + "dummy" + ')');
 		}
 	}
 
@@ -398,7 +402,7 @@ public final class Panel {
 									this.controlHeight[i]);
 							break;
 						case SPRITE:
-							this.renderSprite(this.controlX[i], this.controlY[i], this.controlArgInt[i]);
+							this.renderSprite(this.controlX[i], this.controlY[i], this.controlArgSprite[i]);
 							break;
 						case DECORATED_BOX:
 							this.renderDecoratedBox(this.controlX[i], this.controlY[i], this.controlWidth[i],
@@ -634,7 +638,7 @@ public final class Panel {
 			if (MiscFunctions.drawBackgroundArrow) {
 				for (int xi = x - (y & 63); xi < width + x; xi += 128) {
 					for (int yi = y - (31 & y); y + height > yi; yi += 128) {
-						this.graphics.a(6 + mudclient.spriteUtil, 0, xi, 128, (int) yi);
+						this.graphics.a(this.graphics.spriteSelect(EntityHandler.GUIparts.get(EntityHandler.GUIPARTS.LEFTARROW.id())), 0, xi, 128, (int) yi);
 					}
 				}
 			}
@@ -711,13 +715,15 @@ public final class Panel {
 			this.graphics.drawBoxBorder(x, width, y, height, this.colorF);
 			this.graphics.drawBoxBorder(1 + x, width - 2, 1 + y, height - 2, this.colorG);
 			this.graphics.drawBoxBorder(x + 2, width - 4, 2 + y, height - 4, this.colorH);
-			this.graphics.drawSprite(mudclient.spriteUtil + 2, x, y);
-			this.graphics.drawSprite(3 + mudclient.spriteUtil, width + x - 7, y);
-			this.graphics.drawSprite(4 + mudclient.spriteUtil, x, y - (7 - height));
-			this.graphics.drawSprite(5 + mudclient.spriteUtil, x + width - 7, height - 7 + y);
+
+			this.graphics.drawSprite(this.graphics.spriteSelect(EntityHandler.GUIparts.get(EntityHandler.GUIPARTS.DECORATEDBOXUL.id())), x, y);
+			this.graphics.drawSprite(this.graphics.spriteSelect(EntityHandler.GUIparts.get(EntityHandler.GUIPARTS.DECORATEDBOXUR.id())), width + x - 7, y);
+			this.graphics.drawSprite(this.graphics.spriteSelect(EntityHandler.GUIparts.get(EntityHandler.GUIPARTS.DECORATEDBOXLL.id())), x, y - (7 - height));
+			this.graphics.drawSprite(this.graphics.spriteSelect(EntityHandler.GUIparts.get(EntityHandler.GUIPARTS.DECORATEDBOXLR.id())), x + width - 7, height - 7 + y);
 		} catch (RuntimeException var7) {
 			throw GenUtil.makeThrowable(var7, "qa.V(" + y + ',' + width + ',' + "true" + ',' + x + ',' + height + ')');
 		}
+
 	}
 
 	private void renderHorizLine(int x, int y, int width, int color) {
@@ -790,8 +796,8 @@ public final class Panel {
 
 			int barX = x + width - 12;
 			this.graphics.drawBoxBorder(barX, 12, y, height, 0);
-			this.graphics.drawSprite(0 + mudclient.spriteUtil, 1 + barX, y + 1);
-			this.graphics.drawSprite(mudclient.spriteUtil + 1, 1 + barX, height - 12 + y);
+			this.graphics.drawSprite(this.graphics.spriteSelect(EntityHandler.GUIparts.get(EntityHandler.GUIPARTS.MINIARROWUP.id())), 1 + barX, y + 1);
+			this.graphics.drawSprite(this.graphics.spriteSelect(EntityHandler.GUIparts.get(EntityHandler.GUIPARTS.MINIARROWDOWN.id())), 1 + barX, height - 12 + y);
 			this.graphics.drawLineHoriz(barX, 13 + y, 12, 0);
 			this.graphics.drawLineHoriz(barX, y - 13 + height, 12, 0);
 			this.graphics.drawVerticalGradient(1 + barX, 14 + y, 11, height - 27, this.colorB, this.colorA);
@@ -1106,12 +1112,12 @@ public final class Panel {
 		}
 	}
 
-	private void renderSprite(int x, int y, int spriteID) {
+	private void renderSprite(int x, int y, Sprite sprite) {
 		try {
-			this.graphics.drawSprite(spriteID, x, y);
+			this.graphics.drawSprite(sprite, x, y);
 
 		} catch (RuntimeException var6) {
-			throw GenUtil.makeThrowable(var6, "qa.LA(" + "dummy" + ',' + y + ',' + x + ',' + spriteID + ')');
+			throw GenUtil.makeThrowable(var6, "qa.LA(" + "dummy" + ',' + y + ',' + x + ',' + sprite.getID() + ')');
 		}
 	}
 
