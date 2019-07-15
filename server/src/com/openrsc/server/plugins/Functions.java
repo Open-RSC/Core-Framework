@@ -983,8 +983,12 @@ public class Functions {
 	public static void delayedSpawnObject(final GameObjectLoc loc, final int time) {
 		post(() -> World.getWorld().delayedSpawnObject(loc, time), "Delayed Add Game Object");
 	}
-
+	
 	public static void doGate(final Player p, final GameObject object, int replaceID) {
+		doGate(p, object, replaceID, null);
+	}
+
+	public static void doGate(final Player p, final GameObject object, int replaceID, Point destination) {
 		p.setBusyTimer(650);
 		// 0 - East
 		// 1 - Diagonal S- NE
@@ -1000,7 +1004,9 @@ public class Functions {
 		registerObject(new GameObject(object.getLocation(), replaceID, object.getDirection(), object.getType()));
 
 		int dir = object.getDirection();
-		if (dir == 0) {
+		if (destination != null && Math.abs(p.getX() - destination.getX()) <= 5 && Math.abs(p.getY() - destination.getY()) <= 5) {
+			movePlayer(p, destination.getX(), destination.getY());
+		} else if (dir == 0) {
 			if (p.getX() >= object.getX()) {
 				movePlayer(p, object.getX() - 1, object.getY());
 			} else {

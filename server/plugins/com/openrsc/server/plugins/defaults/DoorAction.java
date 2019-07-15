@@ -7,6 +7,7 @@ import com.openrsc.server.Server;
 import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
+import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -1212,30 +1213,32 @@ public class DoorAction {
 					return;
 				}
 				if (player.getX() >= 94) {
-					if (player.getQuestStage(Constants.Quests.BIOHAZARD) == 7) {
+					if (player.getQuestStage(Constants.Quests.BIOHAZARD) >= 6 
+							&& player.getQuestStage(Constants.Quests.BIOHAZARD) < 8) {
 						Npc guard = getNearestNpc(player, NpcId.GUARD_VARROCKGATE.id(), 10);
 						if (guard != null) {
 							npcTalk(player, guard, "Halt. I need to conduct a search on you",
 								"There have been reports of a someone bringing a virus into Varrock");
 						}
 						if (hasItem(player, ItemId.ETHENEA.id())) {
-							while (player.getInventory().remove(new Item(ItemId.ETHENEA.id())) != -1) ;
+							removeItem(player, ItemId.ETHENEA.id(), 1);
 							player.message("He takes the vial of ethenea from you");
 						}
 						if (hasItem(player, ItemId.SULPHURIC_BROLINE.id())) {
-							while (player.getInventory().remove(new Item(ItemId.SULPHURIC_BROLINE.id())) != -1) ;
+							removeItem(player, ItemId.SULPHURIC_BROLINE.id(), 1);
 							player.message("He takes the vial of sulphuric broline from you");
 						}
 						if (hasItem(player, ItemId.LIQUID_HONEY.id())) {
-							while (player.getInventory().remove(new Item(ItemId.LIQUID_HONEY.id())) != -1) ;
+							removeItem(player, ItemId.LIQUID_HONEY.id(), 1);
 							player.message("He takes the vial of liquid honey from you");
 						}
 					}
-					player.teleport(92, 522, false);
+					player.message("you open the gate and pass through");
+					doGate(player, obj, 514, new Point(92, 522));
 				} else {
+					player.message("you open the gate and pass through");
 					doGate(player, obj, 514);
 				}
-				player.message("you open the gate and pass through");
 				return;
 
 			case 93: // Red dragon gate (140, 180)
