@@ -397,9 +397,9 @@ public class Inventory {
 		boolean ableToWield = true;
 		boolean bypass = !Constants.GameServer.STRICT_CHECK_ALL &&
 				(itemLower.startsWith("poisoned") &&
-					(itemLower.endsWith("throwing dart") && !Constants.GameServer.STRICT_PDART_CHECK) ||
+					((itemLower.endsWith("throwing dart") && !Constants.GameServer.STRICT_PDART_CHECK) ||
 					(itemLower.endsWith("throwing knife") && !Constants.GameServer.STRICT_PKNIFE_CHECK) ||
-					(itemLower.endsWith("spear") && !Constants.GameServer.STRICT_PSPEAR_CHECK)
+					(itemLower.endsWith("spear") && !Constants.GameServer.STRICT_PSPEAR_CHECK))
 				);
 
 		if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
@@ -407,7 +407,7 @@ public class Inventory {
 			optionalSkillIndex = Optional.of(SKILLS.ATTACK.id());
 		}
 		//staff of iban (usable)
-		if (item.getID() == 1000) {
+		if (item.getID() == ItemId.STAFF_OF_IBAN.id()) {
 			optionalLevel = Optional.of(requiredLevel);
 			optionalSkillIndex = Optional.of(SKILLS.ATTACK.id());
 		}
@@ -436,20 +436,20 @@ public class Inventory {
 			player.message("Perhaps I should get someone to adjust it for me");
 			ableToWield = false;
 		}
-		if ((item.getID() == 401 || item.getID() == 407)
+		if ((item.getID() == ItemId.RUNE_PLATE_MAIL_BODY.id() || item.getID() == ItemId.RUNE_PLATE_MAIL_TOP.id())
 			&& (player.getQuestStage(Constants.Quests.DRAGON_SLAYER) != -1)) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the dragon slayer quest");
 			return;
-		} else if (item.getID() == 593 && player.getQuestStage(Constants.Quests.LOST_CITY) != -1) {
+		} else if (item.getID() == ItemId.DRAGON_SWORD.id() && player.getQuestStage(Constants.Quests.LOST_CITY) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Lost city of zanaris quest");
 			return;
-		} else if (item.getID() == 594 && player.getQuestStage(Constants.Quests.HEROS_QUEST) != -1) {
+		} else if (item.getID() == ItemId.DRAGON_AXE.id() && player.getQuestStage(Constants.Quests.HEROS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Hero's guild entry quest");
 			return;
-		} else if (item.getID() == 1278 && player.getQuestStage(Constants.Quests.LEGENDS_QUEST) != -1) {
+		} else if (item.getID() == ItemId.DRAGON_SQUARE_SHIELD.id() && player.getQuestStage(Constants.Quests.LEGENDS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the legend's guild quest");
 			return;
@@ -457,22 +457,22 @@ public class Inventory {
 		/*
 		 * Hacky but works for god staffs and god capes.
 		 */
-		else if (item.getID() == 1217 && (wielding(1213) || wielding(1214))) { // try to wear guthix staff
+		else if (item.getID() == ItemId.STAFF_OF_GUTHIX.id() && (wielding(ItemId.ZAMORAK_CAPE.id()) || wielding(ItemId.SARADOMIN_CAPE.id()))) { // try to wear guthix staff
 			player.message("you may not wield this staff while wearing a cape of another god");
 			return;
-		} else if (item.getID() == 1218 && (wielding(1213) || wielding(1215))) { // try to wear sara staff
+		} else if (item.getID() == ItemId.STAFF_OF_SARADOMIN.id() && (wielding(ItemId.ZAMORAK_CAPE.id()) || wielding(ItemId.GUTHIX_CAPE.id()))) { // try to wear sara staff
 			player.message("you may not wield this staff while wearing a cape of another god");
 			return;
-		} else if (item.getID() == 1216 && (wielding(1214) || wielding(1215))) { // try to wear zamorak staff
+		} else if (item.getID() == ItemId.STAFF_OF_ZAMORAK.id() && (wielding(ItemId.SARADOMIN_CAPE.id()) || wielding(ItemId.GUTHIX_CAPE.id()))) { // try to wear zamorak staff
 			player.message("you may not wield this staff while wearing a cape of another god");
 			return;
-		} else if (item.getID() == 1215 && (wielding(1216) || wielding(1218))) { // try to wear guthix cape
+		} else if (item.getID() == ItemId.GUTHIX_CAPE.id() && (wielding(ItemId.STAFF_OF_ZAMORAK.id()) || wielding(ItemId.STAFF_OF_SARADOMIN.id()))) { // try to wear guthix cape
 			player.message("you may not wear this cape while wielding staffs of the other gods");
 			return;
-		} else if (item.getID() == 1214 && (wielding(1216) || wielding(1217))) { // try to wear sara cape
+		} else if (item.getID() == ItemId.SARADOMIN_CAPE.id() && (wielding(ItemId.STAFF_OF_ZAMORAK.id()) || wielding(ItemId.STAFF_OF_GUTHIX.id()))) { // try to wear sara cape
 			player.message("you may not wear this cape while wielding staffs of the other gods");
 			return;
-		} else if (item.getID() == 1213 && (wielding(1217) || wielding(1218))) { // try to wear zamorak cape
+		} else if (item.getID() == ItemId.ZAMORAK_CAPE.id() && (wielding(ItemId.STAFF_OF_GUTHIX.id()) || wielding(ItemId.STAFF_OF_SARADOMIN.id()))) { // try to wear zamorak cape
 			player.message("you may not wear this cape while wielding staffs of the other gods");
 			return;
 		}

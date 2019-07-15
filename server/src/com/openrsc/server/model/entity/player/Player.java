@@ -732,16 +732,16 @@ public final class Player extends Mob {
 				boolean unWield = false;
 				boolean bypass = !Constants.GameServer.STRICT_CHECK_ALL &&
 					(itemLower.startsWith("poisoned") &&
-						(itemLower.endsWith("throwing dart") && !Constants.GameServer.STRICT_PDART_CHECK) ||
+						((itemLower.endsWith("throwing dart") && !Constants.GameServer.STRICT_PDART_CHECK) ||
 						(itemLower.endsWith("throwing knife") && !Constants.GameServer.STRICT_PKNIFE_CHECK) ||
-						(itemLower.endsWith("spear") && !Constants.GameServer.STRICT_PSPEAR_CHECK)
+						(itemLower.endsWith("spear") && !Constants.GameServer.STRICT_PSPEAR_CHECK))
 					);
 				if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
 					optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
 					optionalSkillIndex = Optional.of(SKILLS.ATTACK.id());
 				}
 				//staff of iban (usable)
-				if (item.getID() == 1000) {
+				if (item.getID() == ItemId.STAFF_OF_IBAN.id()) {
 					optionalLevel = Optional.of(requiredLevel);
 					optionalSkillIndex = Optional.of(SKILLS.ATTACK.id());
 				}
@@ -2718,13 +2718,6 @@ public final class Player extends Mob {
 			return false;
 		}
 
-		if (item.getID() == 59 && item.getX() == 106 && item.getY() == 1476) {
-			Npc n = world.getNpc(37, 103, 107, 1476, 1479);
-			if (n != null && !n.inCombat()) {
-				n.getUpdateFlags().setChatMessage(new ChatMessage(n, "Hey thief!", this));
-				n.setChasing(this);
-			}
-		}
 		world.unregisterItem(item);
 		this.playSound("takeobject");
 		this.getInventory().add(itemFinal);

@@ -68,13 +68,15 @@ public class ManPhoenix implements TalkToNpcExecutiveListener,
 				"Have this spare");
 			addItem(p, ItemId.PHOENIX_GANG_WEAPON_KEY.id(), 1);
 			message(p, "Straven hands you a key");
-		} else if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 4 && isPhoenixGang(p)) {
+		} else if ((p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 4 && isPhoenixGang(p))
+				|| (p.getCache().hasKey("arrav_mission") && (p.getCache().getInt("arrav_mission") & 2) == PHOENIX_MISSION)) {
 			npcTalk(p, n, "Hows your little mission going?");
 			if (p.getInventory().hasItemId(ItemId.SCROLL.id())) {
 				playerTalk(p, n, "I have the intelligence report");
 				npcTalk(p, n, "Lets see it then");
 				message(p, "You hand over the report");
 				removeItem(p, ItemId.SCROLL.id(), 1);
+				message(p, "The man reads the report");
 				npcTalk(p, n, "Yes this is very good",
 					"Ok you can join the phoenix gang",
 					"I am Straven, one of the gang leaders");
@@ -85,6 +87,12 @@ public class ManPhoenix implements TalkToNpcExecutiveListener,
 				npcTalk(p, n, "It will let you enter our weapon supply area",
 					"Round the front of this building");
 				p.updateQuestStage(Quests.SHIELD_OF_ARRAV, 5);
+				if (p.getCache().hasKey("arrav_mission")) {
+					p.getCache().remove("arrav_mission");
+				}
+				if (p.getCache().hasKey("spoken_tramp")) {
+					p.getCache().remove("spoken_tramp");
+				}
 			} else {
 				playerTalk(p, n, "I haven't managed to find the report yet");
 				npcTalk(p, n,
@@ -160,19 +168,6 @@ public class ManPhoenix implements TalkToNpcExecutiveListener,
 			n,
 			"Heh you can't go in there",
 			"Only authorised personnel of the VTAM corporation are allowed beyond this point");
-		defaultMenu.addOption(new Option(
-			"How do I get a job with the VTAM corporation?") {
-			public void action() {
-				npcTalk(p, n, "Get a copy of the Varrock Herald",
-					"If we have any positions right now",
-					"They'll be advertised in there");
-			}
-		});
-		defaultMenu.addOption(new Option("Why not?") {
-			public void action() {
-				npcTalk(p, n, "Sorry that is classified information");
-			}
-		});
 		if (p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == 3) {
 			defaultMenu.addOption(new Option("I know who you are") {
 				public void action() {
@@ -204,9 +199,11 @@ public class ManPhoenix implements TalkToNpcExecutiveListener,
 									"By the south entrance to this city",
 									"The name of the contact is Jonny the beard",
 									"Kill him and bring back his intelligence report");
-								p.getCache().set("arrav_gang", PHOENIX_GANG);
-								p.updateQuestStage(Quests.SHIELD_OF_ARRAV, 4);
-								p.getCache().remove("spoken_tramp");
+								if (p.getCache().hasKey("arrav_mission")) {
+									p.getCache().set("arrav_mission", ANY_MISSION);
+								} else {
+									p.getCache().set("arrav_mission", PHOENIX_MISSION);
+								}
 								playerTalk(p, n, "Ok, I'll get on it");
 							}
 						},
@@ -222,6 +219,19 @@ public class ManPhoenix implements TalkToNpcExecutiveListener,
 				}
 			});
 		}
+		defaultMenu.addOption(new Option(
+			"How do I get a job with the VTAM corporation?") {
+			public void action() {
+				npcTalk(p, n, "Get a copy of the Varrock Herald",
+					"If we have any positions right now",
+					"They'll be advertised in there");
+			}
+		});
+		defaultMenu.addOption(new Option("Why not?") {
+			public void action() {
+				npcTalk(p, n, "Sorry that is classified information");
+			}
+		});
 		defaultMenu.showMenu(p);
 	}
 
