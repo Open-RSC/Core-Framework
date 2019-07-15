@@ -199,12 +199,12 @@ public class ItemActionHandler implements PacketHandler {
 								altarY = 503;
 								break;
 							case COSMIC_TALISMAN:
-								altarX = 304;
-								altarY = 601;
+								altarX = 106;
+								altarY = 3565;
 								break;
 							case CHAOS_TALISMAN:
-								altarX = 304;
-								altarY = 601;
+								altarX = 232;
+								altarY = 375;
 								break;
 							case NATURE_TALISMAN:
 								altarX = 392;

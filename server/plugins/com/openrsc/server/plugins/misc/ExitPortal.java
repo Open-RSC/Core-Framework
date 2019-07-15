@@ -36,10 +36,10 @@ public class ExitPortal implements ObjectActionListener, ObjectActionExecutiveLi
 					player.teleport(260,502,false);
 					break;
 				case 1220://cosmic altar
-					player.teleport(0,0,false);
+					player.teleport(104,3566,false);
 					break;
 				case 1221://chaos altar
-					player.teleport(0,0,false);
+					player.teleport(236,376,false);
 					break;
 				case 1222://nature altar
 					player.teleport(393,803,false);
