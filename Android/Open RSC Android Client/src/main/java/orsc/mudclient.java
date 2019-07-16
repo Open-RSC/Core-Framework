@@ -648,7 +648,7 @@ public final class mudclient implements Runnable {
     private int flag = 0;
     private Timer tiktok = new Timer();
     private NComponent mainComponent;
-    private OnlineListInterface onlineList;
+    public OnlineListInterface onlineList;
     private NCustomComponent experienceOverlay;
     private ProgressBarInterface batchProgressBar;
     private BankPinInterface bankPinInterface;

@@ -80,7 +80,7 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
 
         lastScrollOrRotate = System.currentTimeMillis();
 
-        if (mudclient.auctionHouse.isVisible() || mudclient.messageTabSelected != MessageTab.ALL)
+        if (mudclient.auctionHouse.isVisible() || mudclient.onlineList.isVisible() || mudclient.messageTabSelected != MessageTab.ALL)
             return false;
 
         if (mudclient.showUiTab == 0) {

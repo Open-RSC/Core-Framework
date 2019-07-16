@@ -375,7 +375,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	public final synchronized void mouseWheelMoved(MouseWheelEvent e) {
 		updateControlShiftState(e);
 		mudclient.runScroll(e.getWheelRotation());
-		if (mudclient.auctionHouse.isVisible() || mudclient.messageTabSelected != MessageTab.ALL)
+		if (mudclient.auctionHouse.isVisible() || mudclient.onlineList.isVisible() || mudclient.messageTabSelected != MessageTab.ALL) // disables zoom while visible
 			return;
 		if (mudclient.showUiTab == 0 && (S_ZOOM_VIEW_TOGGLE || mudclient.getLocalPlayer().isStaff())) {
 			e.consume();
