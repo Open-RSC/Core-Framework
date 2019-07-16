@@ -501,7 +501,7 @@ public final class mudclient implements Runnable {
     private int messageTabActivity_Private = 0;
     private int messageTabActivity_Clan = 0;
     private int messageTabActivity_Quest = 0;
-    private MessageTab messageTabSelected = MessageTab.ALL;
+    public MessageTab messageTabSelected = MessageTab.ALL;
     private int midRegionBaseX;
     private int midRegionBaseZ;
     private int minimapRandom_1 = 0;
@@ -655,7 +655,7 @@ public final class mudclient implements Runnable {
     private FishingTrawlerInterface fishingTrawlerInterface;
     private AchievementGUI achievementInterface;
     private IronManInterface ironmanInterface;
-    private AuctionHouse auctionHouse;
+    public AuctionHouse auctionHouse;
     private SkillGuideInterface skillGuideInterface;
     private QuestGuideInterface questGuideInterface;
     private ExperienceConfigInterface experienceConfigInterface;
@@ -2075,7 +2075,6 @@ public final class mudclient implements Runnable {
 
     private void createMessageTabPanel(int var1) {
         try {
-
             this.panelMessageTabs = new Panel(this.getSurface(), 10);
             this.panelMessageChat = this.panelMessageTabs.addScrollingList2(5, 269, 502, var1, 20, 1, true);
             this.panelMessageEntry = this.panelMessageTabs.addLeftTextEntry(7, 324, 498, 14, 1, 80, false, true);
@@ -4953,6 +4952,7 @@ public final class mudclient implements Runnable {
 
                     if (isAndroid() && Config.S_WANT_PLAYER_COMMANDS) { // on screen buttons for various player chat commands
                         if (F_SHOWING_KEYBOARD) {
+                            C_SIDE_MENU_OVERLAY = false;
                             int uiX = 5;
                             int uiY = 5;
                             int uiWidth = 60;
@@ -15228,7 +15228,6 @@ public final class mudclient implements Runnable {
             panelMessageTabs.scrollMethodList(panelMessagePrivate, x);
         else if (this.messageTabSelected == MessageTab.CLAN && !this.controlPressed)
             panelMessageTabs.scrollMethodList(panelMessageClan, x);
-        //else if ();
     }
 
     private boolean isShowDialogBank() {

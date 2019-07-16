@@ -2,11 +2,11 @@ package orsc.graphics.gui;
 
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.model.Sprite;
+
 import orsc.MiscFunctions;
 import orsc.enumerations.PanelControlType;
 import orsc.graphics.two.Fonts;
 import orsc.graphics.two.GraphicsController;
-import orsc.mudclient;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
 
@@ -277,7 +277,6 @@ public final class Panel {
 
 	public final int addScrollingList2(int x, int y, int width, int height, int maxSize, int font, boolean altColor) {
 		try {
-
 			this.controlType[this.controlCount] = PanelControlType.SCROLLING_LIST_2;
 			this.controlVisible[this.controlCount] = true;
 			this.controlClicked[this.controlCount] = false;
@@ -826,7 +825,7 @@ public final class Panel {
 					barDraggerSize = 6;
 				}
 
-				int barDraggerY = (height - 27 - barDraggerSize) * scroll / (entryCount - maxLines);
+				int barDraggerY;
 				if (this.currentMouseButtonDown == 1 && this.currMouseX >= scrollBarStartX
 					&& 12 + scrollBarStartX >= this.currMouseX) {
 					if (y < this.currMouseY && this.currMouseY < 12 + y && scroll > 0) {
@@ -931,7 +930,7 @@ public final class Panel {
 					barDraggerSize = 6;
 				}
 
-				int barDraggerY = (height - 27 - (spaceHeightText + spaceHeight) - barDraggerSize) * scroll / (entryCount - maxLines);
+				int barDraggerY;
 				if (this.currentMouseButtonDown == 1 && this.currMouseX >= scrollBarStartX
 					&& 12 + scrollBarStartX >= this.currMouseX) {
 					if (y < this.currMouseY && this.currMouseY < 12 + y && scroll > 0) {

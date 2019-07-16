@@ -1,6 +1,11 @@
 package com.openrsc.interfaces.misc.clan;
 
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+
 import orsc.Config;
 import orsc.enumerations.InputXAction;
 import orsc.enumerations.MenuItemAction;
@@ -11,11 +16,6 @@ import orsc.graphics.gui.SocialLists;
 import orsc.graphics.two.GraphicsController;
 import orsc.mudclient;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-
 public final class ClanInterface {
 	public int clanGUIScroll;
 	public int clanSearchScroll;
@@ -23,18 +23,15 @@ public final class ClanInterface {
 	public int clanName_field;
 	public int clanTag_field;
 	public int clanSearch_field;
-	public int selectedClanMate = -1;
-	public int selectedClanInSearch = -1;
-	public ArrayList<ClanResult> readClans;
+	private int selectedClanMate = -1;
+	private int selectedClanInSearch = -1;
+	private ArrayList<ClanResult> readClans;
 	public Panel clanSetupPanel;
-	Comparator<ClanResult> clanComperator = new Comparator<ClanResult>() {
-		@Override
-		public int compare(ClanResult o1, ClanResult o2) {
-			if (o1.getClanPoints() == o2.getClanPoints()) {
-				return o1.getClanName().compareTo(o2.getClanName());
-			}
-			return o1.getClanPoints() > o2.getClanPoints() ? -1 : 1;
+	private Comparator<ClanResult> clanComperator = (o1, o2) -> {
+		if (o1.getClanPoints() == o2.getClanPoints()) {
+			return o1.getClanName().compareTo(o2.getClanName());
 		}
+		return o1.getClanPoints() > o2.getClanPoints() ? -1 : 1;
 	};
 	private mudclient mc;
 	private int x, y;
@@ -49,7 +46,7 @@ public final class ClanInterface {
 	private String[] clanMateTable = {"Username", "Rank", "Kills", "Deaths", "Ratio"};
 	private Menu rightClickMenu;
 
-	public ClanInterface(mudclient mc) {
+	ClanInterface(mudclient mc) {
 		this.mc = mc;
 
 		width = 408;
@@ -58,7 +55,7 @@ public final class ClanInterface {
 		x = (mc.getGameWidth() / 2) - width;
 		y = (mc.getGameHeight() / 2) - height;
 
-		readClans = new ArrayList<ClanResult>();
+		readClans = new ArrayList<>();
 
 		clanSetupPanel = new Panel(mc.getSurface(), 15);
 		rightClickMenu = new Menu(mc.getSurface(), 1, "@ora@Choose Option");
@@ -96,14 +93,14 @@ public final class ClanInterface {
 		return true;
 	}
 
-	public void drawClanMates(GraphicsController graphics) {
+	private void drawClanMates(GraphicsController graphics) {
 		clanSetupPanel.clearList(clanGUIScroll);
 		clanSetupPanel.show(clanGUIScroll);
 		int leftBoxW = 402;
 		int leftBoxH = 113;
 
-		int boxWidth = (int) (397);
-		int boxHeight = (int) (22);
+		int boxWidth = 397;
+		int boxHeight = 22;
 
 		int newX = x + 4;
 		int newY = y + 82;
@@ -142,7 +139,7 @@ public final class ClanInterface {
 				break;
 			}
 
-			clanSetupPanel.setListEntry(clanGUIScroll, i + 1, "", 0, (String) null, (String) null);
+			clanSetupPanel.setListEntry(clanGUIScroll, i + 1, "", 0, null, null);
 
 			if (i < listStartPoint || i > listEndPoint)
 				continue;
@@ -214,7 +211,7 @@ public final class ClanInterface {
 		clanSetupPanel.drawPanel();
 	}
 
-	public void drawInvite(GraphicsController graphics) {
+	private void drawInvite(GraphicsController graphics) {
 		clanSetupPanel.hide(clanGUIScroll);
 		clanSetupPanel.hide(clanSearchScroll);
 		int leftBoxW = width - 88;
@@ -244,7 +241,7 @@ public final class ClanInterface {
 		});
 	}
 
-	public void drawClanMain(GraphicsController graphics) {
+	private void drawClanMain(GraphicsController graphics) {
 		clanSetupPanel.hide(clanGUIScroll);
 		clanSetupPanel.hide(clanSearchScroll);
 		clanSetupPanel.hide(clanName_field);
@@ -352,8 +349,8 @@ public final class ClanInterface {
 		int width = 200;
 		int height = 28;
 
-		int boxWidth = (int) (387);
-		int boxHeight = (int) (32);
+		int boxWidth = 387;
+		int boxHeight = 32;
 
 		int newX = x + 4;
 		int newY = y + 96;
@@ -426,7 +423,7 @@ public final class ClanInterface {
 					break;
 				}
 				graphics.drawString("Displaying search results For: " + (!searchTerm.isEmpty() ? "\"" + searchTerm.toLowerCase() + "\"" : "ALL") + " (" + (filteredList.size()) + ")", x + 5, y + 90, 0xf1f1f1, 0);
-				clanSetupPanel.setListEntry(clanSearchScroll, i + 1, "", 0, (String) null, (String) null);
+				clanSetupPanel.setListEntry(clanSearchScroll, i + 1, "", 0, null, null);
 
 				if (i < listStartPoint || i > listEndPoint)
 					continue;
@@ -469,7 +466,7 @@ public final class ClanInterface {
 		clanSetupPanel.drawPanel();
 	}
 
-	public void drawClanSetup(GraphicsController graphics) {
+	private void drawClanSetup(GraphicsController graphics) {
 		int leftBoxW = 196;
 		int leftBoxH = 184;
 		if (mc.clan.inClan()) {
@@ -697,7 +694,7 @@ public final class ClanInterface {
 				if (clickedIndex >= 0) {
 					mc.mouseButtonClick = 0;
 					menu_visible = false;
-					MenuItemAction act = this.rightClickMenu.getItemAction((int) clickedIndex);
+					MenuItemAction act = this.rightClickMenu.getItemAction(clickedIndex);
 					if (act == MenuItemAction.CLAN_PROMOTE) {
 						if (clickedIndex == 1) {
 							clickedIndex = 2;
@@ -736,7 +733,7 @@ public final class ClanInterface {
 		selectedClanInSearch = -1;
 	}
 
-	public void resetAfterCreation() {
+	private void resetAfterCreation() {
 		clanActiveInterface = 1;
 		clanSetupPanel.setText(clanName_field, "");
 		clanSetupPanel.setText(clanTag_field, "");
@@ -745,7 +742,7 @@ public final class ClanInterface {
 		clanSetupPanel.setFocus(-1);
 	}
 
-	protected void sendCreateClan(String name, String tag) {
+	private void sendCreateClan(String name, String tag) {
 		getClient().packetHandler.getClientStream().newPacket(199);
 		getClient().packetHandler.getClientStream().writeBuffer1.putByte(11);
 		getClient().packetHandler.getClientStream().writeBuffer1.putByte(0);
@@ -765,7 +762,7 @@ public final class ClanInterface {
 		resetAll();
 	}
 
-	protected void sendClanAccept() {
+	private void sendClanAccept() {
 		getClient().packetHandler.getClientStream().newPacket(199);
 		getClient().packetHandler.getClientStream().writeBuffer1.putByte(11);
 		getClient().packetHandler.getClientStream().writeBuffer1.putByte(3);
@@ -774,7 +771,7 @@ public final class ClanInterface {
 		resetAll();
 	}
 
-	protected void sendClanDecline() {
+	private void sendClanDecline() {
 		getClient().packetHandler.getClientStream().newPacket(199);
 		getClient().packetHandler.getClientStream().writeBuffer1.putByte(11);
 		getClient().packetHandler.getClientStream().writeBuffer1.putByte(4);
@@ -783,7 +780,7 @@ public final class ClanInterface {
 		resetAll();
 	}
 
-	protected void sendClanRank(String playerName, int rank) {
+	private void sendClanRank(String playerName, int rank) {
 		getClient().packetHandler.getClientStream().newPacket(199);
 		getClient().packetHandler.getClientStream().writeBuffer1.putByte(11);
 		getClient().packetHandler.getClientStream().writeBuffer1.putByte(6);
@@ -792,7 +789,7 @@ public final class ClanInterface {
 		getClient().packetHandler.getClientStream().finishPacket();
 	}
 
-	protected void sendClanSettings(int settingMode, int state) {
+	private void sendClanSettings(int settingMode, int state) {
 		getClient().packetHandler.getClientStream().newPacket(199);
 		getClient().packetHandler.getClientStream().writeBuffer1.putByte(11);
 		getClient().packetHandler.getClientStream().writeBuffer1.putByte(7);
@@ -850,7 +847,7 @@ public final class ClanInterface {
 		private int membersTotal, clanPoints, canJoin, clanID, clanRank;
 		private String[] clanSearchSettings = {"@gr2@Anyone can join", "@yel@Invite only", "@red@Closed"};
 
-		public ClanResult(int clanID, String clanName, String clanTag, int members, int canJoin, int clanPoints, int clanRank) {
+		ClanResult(int clanID, String clanName, String clanTag, int members, int canJoin, int clanPoints, int clanRank) {
 			this.clanID = clanID;
 			this.clanName = clanName;
 			this.clanTag = clanTag;
@@ -860,15 +857,15 @@ public final class ClanInterface {
 			this.clanRank = clanRank;
 		}
 
-		public int getClanGlobalRank() {
+		int getClanGlobalRank() {
 			return clanRank;
 		}
 
-		public String getClanSearchSettingByName(int i) {
+		String getClanSearchSettingByName(int i) {
 			return clanSearchSettings[i];
 		}
 
-		public int getClanPoints() {
+		int getClanPoints() {
 			return clanPoints;
 		}
 
@@ -892,7 +889,7 @@ public final class ClanInterface {
 			this.clanTag = tag;
 		}
 
-		public int getClanMembersTotal() {
+		int getClanMembersTotal() {
 			return membersTotal;
 		}
 	}
