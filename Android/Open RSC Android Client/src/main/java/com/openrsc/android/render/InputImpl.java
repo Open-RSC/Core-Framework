@@ -80,7 +80,11 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
 
         lastScrollOrRotate = System.currentTimeMillis();
 
-        if (mudclient.auctionHouse.isVisible() || mudclient.onlineList.isVisible() || mudclient.messageTabSelected != MessageTab.ALL)
+        // Disables zoom while visible
+        if (mudclient.auctionHouse.isVisible() || mudclient.onlineList.isVisible() || mudclient.skillGuideInterface.isVisible()
+                || mudclient.questGuideInterface.isVisible() || mudclient.clan.getClanInterface().isVisible() || mudclient.experienceConfigInterface.isVisible()
+                || mudclient.ironmanInterface.isVisible() || mudclient.achievementInterface.isVisible() || mudclient.doSkillInterface.isVisible()
+                || mudclient.lostOnDeathInterface.isVisible() || mudclient.territorySignupInterface.isVisible() || mudclient.messageTabSelected != MessageTab.ALL)
             return false;
 
         if (mudclient.showUiTab == 0) {
