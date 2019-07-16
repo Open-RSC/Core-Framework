@@ -1,10 +1,9 @@
 package com.openrsc.server.model.entity.npc;
 
 import com.openrsc.server.Constants;
-import com.openrsc.server.event.rsc.impl.combat.AggroEvent;
-import com.openrsc.server.event.rsc.impl.RangeEventNpc;
 import com.openrsc.server.event.rsc.impl.HealEventNpc;
-import com.openrsc.server.event.rsc.impl.StrPotEventNpc;
+import com.openrsc.server.event.rsc.impl.RangeEventNpc;
+import com.openrsc.server.event.rsc.impl.combat.AggroEvent;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
@@ -12,8 +11,8 @@ import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.states.CombatState;
+import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
@@ -35,432 +34,283 @@ public class NpcBehavior {
 	protected Npc npc;
 
 	protected Mob target;
-	private Mob lastTarget;
 	private State state = State.ROAM;
 
-	public NpcBehavior(Npc npc) {
+	NpcBehavior(Npc npc) {
 		this.npc = npc;
 	}
 
 	public void tick() {
-		if(npc.getID() == 210) {//Npcs in wild - RANGED AGGRO
+		Mob lastTarget;
+		if (npc.getID() == 210) { //Npcs in wild - RANGED AGGRO
 			for (Player p5 : npc.getViewArea().getPlayersInView()) {
-			for (Npc npc5 : npc.getViewArea().getNpcsInView()) {
-				int combDiff2 = Math.abs(npc.getCombatLevel() - p5.getCombatLevel());
-		int targetWildLvl2 = p5.getLocation().wildernessLevel();
-		int myWildLvl2 = npc.getLocation().wildernessLevel();
-				if(!p5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
-			npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && !npc5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
-			npc.getLoc().maxX + 9, npc.getLoc().maxY + 9)) {
-				target = null;
-				//setRoaming();
-				for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 1a1a1a");
-				}
-			} else
-			if(p5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
-			npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && p5.getLocation().inWilderness() && combDiff2 < targetWildLvl2 && combDiff2 < myWildLvl2 && npc.withinRange(p5, 10) && npc.getLocation().inWilderness() && p5.getLocation().inWilderness() && npc.getID() == 210) {
-				for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 8a8a8a8");
-				target = p5;
-				//p22.message("TEST 7p7p7p7p");
-				}
-			} else if(npc5.getID() != 210 && npc5.getID() != 236 && npc5.getCombatLevel() == npc.getCombatLevel() && npc5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
-			npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && npc.withinRange(npc5, 10) && npc.getLocation().inWilderness() && npc5.getLocation().inWilderness() && npc.getID() == 210) {
-				for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 8a8a8a8");
-					if(npc5.inCombat()) {
-				target = npc5;
+				for (Npc npc5 : npc.getViewArea().getNpcsInView()) {
+					int combDiff2 = Math.abs(npc.getCombatLevel() - p5.getCombatLevel());
+					int targetWildLvl2 = p5.getLocation().wildernessLevel();
+					int myWildLvl2 = npc.getLocation().wildernessLevel();
+					if (!p5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
+						npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && !npc5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
+						npc.getLoc().maxX + 9, npc.getLoc().maxY + 9)) {
+						target = null;
+						//setRoaming();
+						World.getWorld();
+					} else if (p5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
+						npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && p5.getLocation().inWilderness() && combDiff2 < targetWildLvl2 && combDiff2 < myWildLvl2 && npc.withinRange(p5, 10) && npc.getLocation().inWilderness() && p5.getLocation().inWilderness() && npc.getID() == 210) {
+						for (Player p22 : World.getWorld().getPlayers()) {
+							target = p5;
+						}
+					} else if (npc5.getID() != 210 && npc5.getID() != 236 && npc5.getCombatLevel() == npc.getCombatLevel() && npc5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
+						npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && npc.withinRange(npc5, 10) && npc.getLocation().inWilderness() && npc5.getLocation().inWilderness() && npc.getID() == 210) {
+						for (Player p22 : World.getWorld().getPlayers()) {
+							if (npc5.inCombat()) {
+								target = npc5;
+							} else {
+								target = npc5;
+							}
+						}
 					} else {
-					target = npc5;
+						World.getWorld();
+						target = null;
 					}
-				//p22.message("TEST 8a8a8a8");
-				}
-			} else {
-				for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 91919191");
-				}
-				target = null;
-			}
-			if(target == null) {
-			if (!npc.inCombat() && System.currentTimeMillis() - lastMovement > 3000 && System.currentTimeMillis() - npc.getCombatTimer() > 3000 && npc.finishedPath()) {
-				lastMovement = System.currentTimeMillis();
-				lastTarget = null;
-				int rand = DataConversions.random(0, 1);
-				if (!npc.isBusy() && rand == 1 && !npc.isRemoved()) {
-					int newX = DataConversions.random(npc.getLoc().minX(), npc.getLoc().maxX());
-					int newY = DataConversions.random(npc.getLoc().minY(), npc.getLoc().maxY());
-					if (!grandTreeGnome(npc) || npc.getLocation().equals(new Point(0, 0))) {
-						npc.walk(newX, newY);
-					} else {
-						Point p = walkablePoint(npc, Point.location(npc.getLoc().minX(), npc.getLoc().minY()),
-							Point.location(npc.getLoc().maxX(), npc.getLoc().maxY()));
-						npc.walk(p.getX(), p.getY());
-					}
-				}
-			}
-			} else
+					if (target == null) {
+						if (!npc.inCombat() && System.currentTimeMillis() - lastMovement > 3000 && System.currentTimeMillis() - npc.getCombatTimer() > 3000 && npc.finishedPath()) {
+							lastMovement = System.currentTimeMillis();
+							lastTarget = null;
+							int rand = DataConversions.random(0, 1);
+							if (!npc.isBusy() && rand == 1 && !npc.isRemoved()) {
+								int newX = DataConversions.random(npc.getLoc().minX(), npc.getLoc().maxX());
+								int newY = DataConversions.random(npc.getLoc().minY(), npc.getLoc().maxY());
+								if (!grandTreeGnome(npc) || npc.getLocation().equals(new Point(0, 0))) {
+									npc.walk(newX, newY);
+								} else {
+									Point p = walkablePoint(npc, Point.location(npc.getLoc().minX(), npc.getLoc().minY()),
+										Point.location(npc.getLoc().maxX(), npc.getLoc().maxY()));
+									npc.walk(p.getX(), p.getY());
+								}
+							}
+						}
+					} else
 
-					for (Player p3 : npc.getViewArea().getPlayersInView()) {
-															/*for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 200000");
-				}*/
-		//for (Player p : World.getWorld().getPlayers()) {
-			if(npc.getHitsMade() >= 3 && npc.inCombat() && npc.getLocation().inWilderness()) {
-					retreat();
-					lastRetreat = System.currentTimeMillis();
-					npc.setHealEventNpc(new HealEventNpc(npc));
-					setRoaming();
-									for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 20");
+						for (Player p3 : npc.getViewArea().getPlayersInView()) {
+							if (npc.getHitsMade() >= 3 && npc.inCombat() && npc.getLocation().inWilderness()) {
+								retreat();
+								lastRetreat = System.currentTimeMillis();
+								npc.setHealEventNpc(new HealEventNpc(npc));
+								setRoaming();
+								World.getWorld();
+							}
+							if (npc.inCombat() && npc.getID() == 210) {
+								target = npc.getOpponent();
+								if (npc.getLocation().inWilderness()) {
+									World.getWorld();
+									npc.setRangeEventNpc(new RangeEventNpc(npc, target));
+								} else {
+									World.getWorld();
+								}
+							}
+							if (npc.getLocation().inWilderness() && npc.getID() == 210 && npc.getSkills().getLevel(Skills.HITPOINTS) < npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.67) {
+								npc.setHealEventNpc(new HealEventNpc(npc));
+								//lastHeal = System.currentTimeMillis();
+								return;
+							}
+							int combDiff = Math.abs(npc.getCombatLevel() - target.getCombatLevel());
+							int targetWildLvl = target.getLocation().wildernessLevel();
+							int myWildLvl = npc.getLocation().wildernessLevel();
+							if (p5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
+								npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && combDiff < targetWildLvl && combDiff < myWildLvl && npc.withinRange(target, 5) && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && npc.getID() == 210) {
+								if (p5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
+									npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && System.currentTimeMillis() - lastRetreat > 3000 && combDiff < targetWildLvl && combDiff < myWildLvl && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && target != null && !npc.isRespawning() && !npc.isRemoved() && !target.isRemoved()) {
+									if (p5.inCombat()) {
+										npc.setRangeEventNpc(new RangeEventNpc(npc, target));
+									} else {
+										npc.setRangeEventNpc(new RangeEventNpc(npc, target));
+									}
+								} else {
+									setRoaming();
+									World.getWorld();
+									return;
+								}
+							} else if (combDiff < targetWildLvl && combDiff < myWildLvl && npc.withinRange(target, 10) && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && npc.getID() == 210) {
+								if (p5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
+									npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && combDiff < targetWildLvl && combDiff < myWildLvl && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && target != null && !npc.isRespawning() && !npc.isRemoved() && !target.isRemoved()) {
+									if (p5.inCombat()) {
+										npc.walkToEntity(target.getX(), target.getY());
+									} else {
+										npc.walkToEntity(target.getX(), target.getY());
+									}
+								} else {
+									setRoaming();
+									World.getWorld();
+									return;
+								}
+							} else if (npc5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
+								npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && combDiff < targetWildLvl && combDiff < myWildLvl && npc.withinRange(target, 5) && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && npc.getID() == 210) {
+								if (npc5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
+									npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && System.currentTimeMillis() - lastRetreat > 3000 && combDiff < targetWildLvl && combDiff < myWildLvl && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && target != null && !npc.isRespawning() && !npc.isRemoved() && !target.isRemoved()) {
+									if (npc5.inCombat()) {
+										npc.setRangeEventNpc(new RangeEventNpc(npc, target));
+									} else {
+										npc.setRangeEventNpc(new RangeEventNpc(npc, target));
+									}
+								} else {
+									setRoaming();
+									World.getWorld();
+									return;
+								}
+							} else if (combDiff < targetWildLvl && combDiff < myWildLvl && npc.withinRange(target, 10) && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && npc.getID() == 210) {
+
+								if (npc5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
+									npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && combDiff < targetWildLvl && combDiff < myWildLvl && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && target != null && !npc.isRespawning() && !npc.isRemoved() && !target.isRemoved()) {
+									if (npc5.inCombat()) {
+										npc.walkToEntity(target.getX(), target.getY());
+									} else {
+										npc.walkToEntity(target.getX(), target.getY());
+									}
+								} else {
+									setRoaming();
+									World.getWorld();
+									return;
+								}
+							}
+							if (npc.getID() == 210 && (target == null || npc.isRespawning() || npc.isRemoved() || target.isRemoved() || combDiff > targetWildLvl || combDiff > myWildLvl || !npc.getLocation().inWilderness())) {
+								setRoaming();
+								World.getWorld();
+							} else
+								// Target is not in range.
+								if (npc.getID() == 210 && (combDiff > targetWildLvl || combDiff > myWildLvl || !npc.getLocation().inWilderness() || target.getX() < (npc.getLoc().minX() - 4) || target.getX() > (npc.getLoc().maxX() + 4) || target.getY() < (npc.getLoc().minY() - 4) || target.getY() > (npc.getLoc().maxY() + 4))) {
+									setRoaming();
+									World.getWorld();
+								} else if (!target.getLocation().inWilderness() && npc.getID() == 210) {
+									for (Player p28 : npc.getViewArea().getPlayersInView()) {
+										World.getWorld();
+										if (p28.getLocation().inWilderness()) {
+											World.getWorld();
+											target = p28;
+										} else
+											target = null;
+										World.getWorld();
+									}
+								}
+
+						}
 				}
 			}
-			if(npc.inCombat() && npc.getID() == 210) {
-			target = npc.getOpponent();
-			if(npc.getLocation().inWilderness()){
-				for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 95");
-				}
-			npc.setRangeEventNpc(new RangeEventNpc(npc, target));
-			} else
-			{
-				for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 100");
-				}
-			}
-			}
-			if(npc.getLocation().inWilderness() && npc.getID() == 210 && npc.getSkills().getLevel(Skills.HITPOINTS) < npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.67)
-			{
-				npc.setHealEventNpc(new HealEventNpc(npc));
-				//lastHeal = System.currentTimeMillis();
-				return;
-			}
-			int combDiff = Math.abs(npc.getCombatLevel() - target.getCombatLevel());
-		int targetWildLvl = target.getLocation().wildernessLevel();
-		int myWildLvl = npc.getLocation().wildernessLevel();
-					if (p5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
-			npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && combDiff < targetWildLvl && combDiff < myWildLvl && npc.withinRange(target, 5) && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && npc.getID() == 210) {
-			/*if(!target.getLocation().inWilderness())
-			{
-				//target = null;
-				return;
-			} else*/
-					if(p5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
-			npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && System.currentTimeMillis() - lastRetreat > 3000 && combDiff < targetWildLvl && combDiff < myWildLvl && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && target != null && !npc.isRespawning() && !npc.isRemoved() && !target.isRemoved()) 
-					{
-						if(p5.inCombat()) {
-						npc.setRangeEventNpc(new RangeEventNpc(npc, target));
-						} else {
-						npc.setRangeEventNpc(new RangeEventNpc(npc, target));
-						}
-					} else
-				    {
-					setRoaming();
-					for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 1");
-					}
-					return;
-					}
-			} else
-			if (combDiff < targetWildLvl && combDiff < myWildLvl && npc.withinRange(target, 10) && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && npc.getID() == 210) {
-			/*if(!target.getLocation().inWilderness())
-			{
-				//target = null;
-				return;
-			} else*/
-					if(p5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
-			npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && combDiff < targetWildLvl && combDiff < myWildLvl && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && target != null && !npc.isRespawning() && !npc.isRemoved() && !target.isRemoved()) 
-					{
-						if(p5.inCombat()) {
-					npc.walkToEntity(target.getX(), target.getY());
-						}
-						else
-						{
-						npc.walkToEntity(target.getX(), target.getY());
-						}
-					} else
-					{
-					setRoaming();
-					for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 2");
-					}
-					return;
-					}
-			} else
-									if (npc5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
-			npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && combDiff < targetWildLvl && combDiff < myWildLvl && npc.withinRange(target, 5) && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && npc.getID() == 210) {
-			/*if(!target.getLocation().inWilderness())
-			{
-				//target = null;
-				return;
-			} else*/
-					if(npc5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
-			npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && System.currentTimeMillis() - lastRetreat > 3000 && combDiff < targetWildLvl && combDiff < myWildLvl && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && target != null && !npc.isRespawning() && !npc.isRemoved() && !target.isRemoved()) 
-					{
-						if(npc5.inCombat()) {
-						npc.setRangeEventNpc(new RangeEventNpc(npc, target));
-						} else {
-						npc.setRangeEventNpc(new RangeEventNpc(npc, target));
-						}
-					} else
-				    {
-					setRoaming();
-					for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 1");
-					}
-					return;
-					}
-			} else
-			if (combDiff < targetWildLvl && combDiff < myWildLvl && npc.withinRange(target, 10) && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && npc.getID() == 210) {
-			/*if(!target.getLocation().inWilderness())
-			{
-				//target = null;
-				return;
-			} else*/
-					if(npc5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
-			npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && combDiff < targetWildLvl && combDiff < myWildLvl && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && target != null && !npc.isRespawning() && !npc.isRemoved() && !target.isRemoved()) 
-					{
-						if(npc5.inCombat()) {
-					npc.walkToEntity(target.getX(), target.getY());
-						}
-						else
-						{
-						npc.walkToEntity(target.getX(), target.getY());
-						}
-					} else
-					{
-					setRoaming();
-					for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 2");
-					}
-					return;
-					}
-			}
-			if (npc.getID() == 210 && (target == null || npc.isRespawning() || npc.isRemoved() || target.isRemoved() || combDiff > targetWildLvl || combDiff > myWildLvl || !npc.getLocation().inWilderness())) {
-				setRoaming();
-				for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 300");
-					}
-			}  
-			else
-			// Target is not in range.
-			if (npc.getID() == 210 && (combDiff > targetWildLvl || combDiff > myWildLvl || !npc.getLocation().inWilderness() || target.getX() < (npc.getLoc().minX() - 4) || target.getX() > (npc.getLoc().maxX() + 4) || target.getY() < (npc.getLoc().minY() - 4) || target.getY() > (npc.getLoc().maxY() + 4))) {
-				setRoaming();
-				for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 4");
-					}
-			} else 
-			if (!target.getLocation().inWilderness() && npc.getID() == 210) {
-				for (Player p28 : npc.getViewArea().getPlayersInView()) {
-				for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 5");
-				}
-				if (p28.getLocation().inWilderness()) {
-					for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 99999999999999999999999");
-				}
-				target = p28;
-				} else
-				target = null;
-				for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 55x");
-				}
-			}
-			}
-		
-		}
-					}
-					}
-					} else if(npc.getID() == 236) { //Npcs in wild - MELEE AGGRO
+		} else if (npc.getID() == 236) { // Npcs in wild - MELEE AGGRO
 			for (Player p5 : npc.getViewArea().getPlayersInView()) {
-			for (Npc npc5 : npc.getViewArea().getNpcsInView()) {
-				int combDiff2 = Math.abs(npc.getCombatLevel() - p5.getCombatLevel());
-		int targetWildLvl2 = p5.getLocation().wildernessLevel();
-		int myWildLvl2 = npc.getLocation().wildernessLevel();
-			if(!p5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
-			npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && !npc5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
-			npc.getLoc().maxX + 9, npc.getLoc().maxY + 9)) {
-				target = null;
-				//setRoaming();
-				for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 1a1a1a");
-				}
-			} else
-			if(p5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
-			npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && !npc5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
-			npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && System.currentTimeMillis() - p5.getCombatTimer() > 1000 && System.currentTimeMillis() - npc.getCombatTimer() > 1000 && !npc.inCombat() && !p5.inCombat() && p5.getLocation().inWilderness() && combDiff2 < targetWildLvl2 && combDiff2 < myWildLvl2 && npc.withinRange(p5, 10) && npc.getLocation().inWilderness() && npc.getID() == 236) {
-				for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 7777");
-				}
-				target = p5;
-			} else
-			if(npc5.getID() != 236 && npc5.getID() != 210 && System.currentTimeMillis() - npc5.getCombatTimer() > 1000 && System.currentTimeMillis() - npc.getCombatTimer() > 1000 && !npc.inCombat() && !npc5.inCombat() && npc5.getLocation().inWilderness() && npc5.getCombatLevel() == npc.getCombatLevel() && npc.withinRange(npc5, 10) && npc.getLocation().inWilderness() && npc.getID() == 236) {
-				for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 7777");
-				}
-				target = npc5;
-			} else {
-				for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 1p1p1p1p");
-				}
-				npc5.setStrPotEventNpc(new StrPotEventNpc(npc5));
-				target = null;
-			}
-			if(npc.inCombat() && npc.getOpponent().getHitsMade() >= 3 && npc.getSkills().getLevel(Skills.HITPOINTS) < npc.getOpponent().getSkills().getLevel(Skills.HITPOINTS)) {
-				retreat();
-				lastRetreat = System.currentTimeMillis();
-				npc.setHealEventNpc(new HealEventNpc(npc));
-				//setRoaming();
-				for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 0000");				
-				}
-				//target = null;
-				}
-			if(target == null) {
-			if (!npc.inCombat() && System.currentTimeMillis() - lastMovement > 3250 && System.currentTimeMillis() - npc.getCombatTimer() > 3250 && npc.finishedPath()) {
-				lastMovement = System.currentTimeMillis();
-				lastTarget = null;
-				int rand = DataConversions.random(0, 1);
-				if (!npc.isBusy() && rand == 1 && !npc.isRemoved()) {
-					int newX = DataConversions.random(npc.getLoc().minX(), npc.getLoc().maxX());
-					int newY = DataConversions.random(npc.getLoc().minY(), npc.getLoc().maxY());
-					if (!grandTreeGnome(npc) || npc.getLocation().equals(new Point(0, 0))) {
-						npc.walk(newX, newY);
+				for (Npc npc5 : npc.getViewArea().getNpcsInView()) {
+					int combDiff2 = Math.abs(npc.getCombatLevel() - p5.getCombatLevel());
+					int targetWildLvl2 = p5.getLocation().wildernessLevel();
+					int myWildLvl2 = npc.getLocation().wildernessLevel();
+					if (!p5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
+						npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && !npc5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
+						npc.getLoc().maxX + 9, npc.getLoc().maxY + 9)) {
+						target = null;
+						//setRoaming();
+						World.getWorld();
+					} else if (p5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
+						npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && !npc5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
+						npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && System.currentTimeMillis() - p5.getCombatTimer() > 1000 && System.currentTimeMillis() - npc.getCombatTimer() > 1000 && !npc.inCombat() && !p5.inCombat() && p5.getLocation().inWilderness() && combDiff2 < targetWildLvl2 && combDiff2 < myWildLvl2 && npc.withinRange(p5, 10) && npc.getLocation().inWilderness() && npc.getID() == 236) {
+						World.getWorld();
+						target = p5;
+					} else if (npc5.getID() != 236 && npc5.getID() != 210 && System.currentTimeMillis() - npc5.getCombatTimer() > 1000 && System.currentTimeMillis() - npc.getCombatTimer() > 1000 && !npc.inCombat() && !npc5.inCombat() && npc5.getLocation().inWilderness() && npc5.getCombatLevel() == npc.getCombatLevel() && npc.withinRange(npc5, 10) && npc.getLocation().inWilderness() && npc.getID() == 236) {
+						World.getWorld();
+						target = npc5;
 					} else {
-						Point p = walkablePoint(npc, Point.location(npc.getLoc().minX(), npc.getLoc().minY()),
-							Point.location(npc.getLoc().maxX(), npc.getLoc().maxY()));
-						npc.walk(p.getX(), p.getY());
+						World.getWorld();
+						//npc5.setStrPotEventNpc(new StrPotEventNpc(npc5));
+						target = null;
 					}
-				}
-			}
-			} else
-
-					for (Player p3 : npc.getViewArea().getPlayersInView()) {
-															/*for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 200000");
-				}*/
-		//for (Player p : World.getWorld().getPlayers()) {
-			if(npc.inCombat() && npc.getID() == 236) {
-			target = npc.getOpponent();
-			if(npc.getLocation().inWilderness() && target.getLocation().inWilderness()){
-				for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 55555");
-				}
-			//npc.setRangeEventNpc(new RangeEventNpc(npc, target));
-			//setChasing2(target);
-			npc.walkToEntity(target.getX(), target.getY());
-			} else
-			{
-				for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 101010");
-				}
-			}
-			}
-			if(npc.getLocation().inWilderness() && npc.getID() == 236 && npc.getSkills().getLevel(Skills.HITPOINTS) < npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.67)
-			{
-				npc.setHealEventNpc(new HealEventNpc(npc));
-				//lastHeal = System.currentTimeMillis();
-				for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST HEALHEALHEALHEAL");
-				}
-				return;
-			}
-			int combDiff = Math.abs(npc.getCombatLevel() - target.getCombatLevel());
-		int targetWildLvl = target.getLocation().wildernessLevel();
-		int myWildLvl = npc.getLocation().wildernessLevel();
-					if (System.currentTimeMillis() - target.getCombatTimer() > 3250 && System.currentTimeMillis() - npc.getCombatTimer() > 3250 && !npc.inCombat() && !target.inCombat() && combDiff < targetWildLvl && combDiff < myWildLvl && npc.withinRange(target, 10) && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && npc.getID() == 236) {
-			/*if(!target.getLocation().inWilderness())
-			{
-				//target = null;
-				return;
-			} else*/
-					if(npc.withinRange(target, 2) && System.currentTimeMillis() - target.getCombatTimer() > 3250 && System.currentTimeMillis() - npc.getCombatTimer() > 3250 && !npc.inCombat() && !target.inCombat() && combDiff < targetWildLvl && combDiff < myWildLvl && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && target != null && !npc.isRespawning() && !npc.isRemoved() && !target.isRemoved()) 
-					{
-					//npc.walkToEntity(target.getX(), target.getY());
-					setFighting(target);
-										for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST BO");
+					if (npc.inCombat() && npc.getOpponent().getHitsMade() >= 3 && npc.getSkills().getLevel(Skills.HITPOINTS) < npc.getOpponent().getSkills().getLevel(Skills.HITPOINTS)) {
+						retreat();
+						lastRetreat = System.currentTimeMillis();
+						npc.setHealEventNpc(new HealEventNpc(npc));
+						//setRoaming();
+						World.getWorld();
 					}
-					} /*else
-					{
-					setRoaming();
-					for (Player p22 : World.getWorld().getPlayers()) {
-					p22.message("TEST 2");
-					}
-					return;
-					}*/
-			}
-					if (System.currentTimeMillis() - npc.getCombatTimer() > 1000 && System.currentTimeMillis() - target.getCombatTimer() > 1000 && !target.inCombat() && combDiff < targetWildLvl && combDiff < myWildLvl && npc.withinRange(target, 10) && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && npc.getID() == 236) {
-			/*if(!target.getLocation().inWilderness())
-			{
-				//target = null;
-				return;
-			} else*/
-			/*for (Player p22 : World.getWorld().getPlayers()) {
-					p22.message("TEST 0y0y0y0y0y0y0");
-				}*/
-				if(System.currentTimeMillis() - npc.getCombatTimer() > 1000 && System.currentTimeMillis() - target.getCombatTimer() > 1000 && !npc.inCombat() && !target.inCombat() && System.currentTimeMillis() - lastRetreat > 3250 && combDiff < targetWildLvl && combDiff < myWildLvl && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && target != null && !npc.isRespawning() && !npc.isRemoved() && !target.isRemoved()) 
-					{
-						//npc.setRangeEventNpc(new RangeEventNpc(npc, target));
-											for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST A");
-					}
-						//setChasing2(target);
-						npc.walkToEntity(target.getX(), target.getY());
+					if (target == null) {
+						if (!npc.inCombat() && System.currentTimeMillis() - lastMovement > 3250 && System.currentTimeMillis() - npc.getCombatTimer() > 3250 && npc.finishedPath()) {
+							lastMovement = System.currentTimeMillis();
+							lastTarget = null;
+							int rand = DataConversions.random(0, 1);
+							if (!npc.isBusy() && rand == 1 && !npc.isRemoved()) {
+								int newX = DataConversions.random(npc.getLoc().minX(), npc.getLoc().maxX());
+								int newY = DataConversions.random(npc.getLoc().minY(), npc.getLoc().maxY());
+								if (!grandTreeGnome(npc) || npc.getLocation().equals(new Point(0, 0))) {
+									npc.walk(newX, newY);
+								} else {
+									Point p = walkablePoint(npc, Point.location(npc.getLoc().minX(), npc.getLoc().minY()),
+										Point.location(npc.getLoc().maxX(), npc.getLoc().maxY()));
+									npc.walk(p.getX(), p.getY());
+								}
+							}
+						}
 					} else
-				    {
-					setRoaming();
-					for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST Q");
-					}
-					return;
-					}
-			} else
-			if (npc.inCombat() && (target == null || npc.isRespawning() || npc.isRemoved() || target.isRemoved() || combDiff > targetWildLvl || combDiff > myWildLvl || !npc.getLocation().inWilderness())) {
-				setRoaming();
-				for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 300");
-					}
-			}  
-			else
-			// Target is not in range.
-			if (System.currentTimeMillis() - target.getCombatTimer() > 3000 && System.currentTimeMillis() - npc.getCombatTimer() > 3000 && !npc.inCombat() && !target.inCombat() && npc.getID() == 236 && (combDiff > targetWildLvl || combDiff > myWildLvl || !npc.getLocation().inWilderness() || target.getX() < (npc.getLoc().minX() - 4) || target.getX() > (npc.getLoc().maxX() + 4) || target.getY() < (npc.getLoc().minY() - 4) || target.getY() > (npc.getLoc().maxY() + 4))) {
-				setRoaming();
-				for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 4");
-					}
-			} else 
-			if (!target.getLocation().inWilderness() && npc.getID() == 236) {
-				for (Player p28 : npc.getViewArea().getPlayersInView()) {
-				for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 5");
-				}
-				if (p28.getLocation().inWilderness()) {
-					for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 99999999999999999999999");
-				}
-				target = p28;
-				} else
-				target = null;
-				for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 55x");
-				}
-			}
-			}
-		
-		}
-					}
-					}
-					} else
-						if(npc.getPetNpc() > 0 && npc.getID() != 210 && npc.getID() != 236) {
-				Mob p28x = npc.getPetOwnerA2();
-				if(!p28x.inCombat()) {
-					npc.setFollowing(p28x);
-					npc.resetRange();
-				}
-			} else
 
-		if (state == State.ROAM) {
+						for (Player p3 : npc.getViewArea().getPlayersInView()) {
+							if (npc.inCombat() && npc.getID() == 236) {
+								target = npc.getOpponent();
+								if (npc.getLocation().inWilderness() && target.getLocation().inWilderness()) {
+									World.getWorld();
+									npc.walkToEntity(target.getX(), target.getY());
+								} else {
+									World.getWorld();
+								}
+							}
+							if (npc.getLocation().inWilderness() && npc.getID() == 236 && npc.getSkills().getLevel(Skills.HITPOINTS) < npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.67) {
+								npc.setHealEventNpc(new HealEventNpc(npc));
+								World.getWorld();
+								return;
+							}
+							int combDiff = Math.abs(npc.getCombatLevel() - target.getCombatLevel());
+							int targetWildLvl = target.getLocation().wildernessLevel();
+							int myWildLvl = npc.getLocation().wildernessLevel();
+							if (System.currentTimeMillis() - target.getCombatTimer() > 3250 && System.currentTimeMillis() - npc.getCombatTimer() > 3250 && !npc.inCombat() && !target.inCombat() && combDiff < targetWildLvl && combDiff < myWildLvl && npc.withinRange(target, 10) && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && npc.getID() == 236) {
+
+								if (npc.withinRange(target, 2) && System.currentTimeMillis() - target.getCombatTimer() > 3250 && System.currentTimeMillis() - npc.getCombatTimer() > 3250 && !npc.inCombat() && !target.inCombat() && combDiff < targetWildLvl && combDiff < myWildLvl && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && target != null && !npc.isRespawning() && !npc.isRemoved() && !target.isRemoved()) {
+									//npc.walkToEntity(target.getX(), target.getY());
+									setFighting(target);
+									World.getWorld();
+								}
+							}
+							if (System.currentTimeMillis() - npc.getCombatTimer() > 1000 && System.currentTimeMillis() - target.getCombatTimer() > 1000 && !target.inCombat() && combDiff < targetWildLvl && combDiff < myWildLvl && npc.withinRange(target, 10) && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && npc.getID() == 236) {
+								if (System.currentTimeMillis() - npc.getCombatTimer() > 1000 && System.currentTimeMillis() - target.getCombatTimer() > 1000 && !npc.inCombat() && !target.inCombat() && System.currentTimeMillis() - lastRetreat > 3250 && combDiff < targetWildLvl && combDiff < myWildLvl && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && target != null && !npc.isRespawning() && !npc.isRemoved() && !target.isRemoved()) {
+									World.getWorld();
+									npc.walkToEntity(target.getX(), target.getY());
+								} else {
+									setRoaming();
+									World.getWorld();
+									return;
+								}
+							} else if (npc.inCombat() && (target == null || npc.isRespawning() || npc.isRemoved() || target.isRemoved() || combDiff > targetWildLvl || combDiff > myWildLvl || !npc.getLocation().inWilderness())) {
+								setRoaming();
+								World.getWorld();
+							} else
+								// Target is not in range.
+								if (System.currentTimeMillis() - target.getCombatTimer() > 3000 && System.currentTimeMillis() - npc.getCombatTimer() > 3000 && !npc.inCombat() && !target.inCombat() && npc.getID() == 236 && (combDiff > targetWildLvl || combDiff > myWildLvl || !npc.getLocation().inWilderness() || target.getX() < (npc.getLoc().minX() - 4) || target.getX() > (npc.getLoc().maxX() + 4) || target.getY() < (npc.getLoc().minY() - 4) || target.getY() > (npc.getLoc().maxY() + 4))) {
+									setRoaming();
+									World.getWorld();
+								} else if (!target.getLocation().inWilderness() && npc.getID() == 236) {
+									for (Player p28 : npc.getViewArea().getPlayersInView()) {
+										World.getWorld();
+										if (p28.getLocation().inWilderness()) {
+											World.getWorld();
+											target = p28;
+										} else
+											target = null;
+										World.getWorld();
+									}
+								}
+
+						}
+				}
+			}
+		} else if (npc.getPetNpc() > 0 && npc.getID() != 210 && npc.getID() != 236) {
+			Mob p28x = npc.getPetOwnerA2();
+			if (!p28x.inCombat()) {
+				npc.setFollowing(p28x);
+				npc.resetRange();
+			}
+		} else if (state == State.ROAM) {
 
 			if (npc.inCombat()) {
 				state = State.COMBAT;
@@ -622,9 +472,7 @@ public class NpcBehavior {
 			if ((target == null || npc.isRespawning() || npc.isRemoved() || target.isRemoved() || target.inCombat()) && !npc.isFollowing()) {
 				setRoaming();
 				target = null;
-								for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 6x6x5x5x");
-				}
+				World.getWorld();
 			}
 
 			// Target is not in range.
@@ -632,9 +480,7 @@ public class NpcBehavior {
 				|| target.getY() < (npc.getLoc().minY() - 4) || target.getY() > (npc.getLoc().maxY() + 4)) {
 				target = null;
 				setRoaming();
-								for (Player p22 : World.getWorld().getPlayers()) {
-					//p22.message("TEST 1234");
-				}
+				World.getWorld();
 			}
 
 			// Combat with another target - set state.
@@ -659,7 +505,7 @@ public class NpcBehavior {
 		} else if (state == State.RETREAT || state == State.TACKLE_RETREAT) {
 			if (npc.finishedPath()) setRoaming();
 		}
-		}
+	}
 
 	private synchronized void attemptTackle(Npc n, Player p) {
 		int otherNpcId = p.getSyncAttribute("gnomeball_npc", -1);
@@ -700,8 +546,8 @@ public class NpcBehavior {
 			victimPlayer.message("Your opponent is retreating");
 			ActionSender.sendSound(victimPlayer, "retreat");
 		}
-		if(npc.getID() != 236){
-		npc.setLastCombatState(CombatState.RUNNING);
+		if (npc.getID() != 236) {
+			npc.setLastCombatState(CombatState.RUNNING);
 		}
 		npc.getOpponent().setLastCombatState(CombatState.WAITING);
 		npc.resetCombatEvent();
@@ -740,6 +586,7 @@ public class NpcBehavior {
 			&& (p instanceof Player && (!((Player) p).isInvulnerable(npc) && !((Player) p).isInvisible(npc)))
 			&& !outOfBounds && !playerOccupied && !playerCombatTimeout;
 	}
+
 	private boolean canAggro2(Mob p) {
 		boolean outOfBounds = !p.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
 			npc.getLoc().maxX + 9, npc.getLoc().maxY + 9);
@@ -757,6 +604,7 @@ public class NpcBehavior {
 			&& (p instanceof Player && (!((Player) p).isInvulnerable(npc) && !((Player) p).isInvisible(npc)))
 			&& !outOfBounds && !playerOccupied && !playerCombatTimeout;
 	}
+
 	private boolean shouldRetreat2(Npc npc) {
 		if (npc.getID() == 236) {
 			return npc.getSkills().getLevel(Skills.HITPOINTS) <= Math.ceil(npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.20);
@@ -798,10 +646,12 @@ public class NpcBehavior {
 		state = State.AGGRO;
 		target = npc;
 	}
+
 	public void setChasing2(Mob mob) {
 		state = State.AGGRO2;
 		target = mob;
 	}
+
 	Player getChasedPlayer() {
 		if (target.isPlayer())
 			return (Player) target;
@@ -840,8 +690,7 @@ public class NpcBehavior {
 	}
 
 	private boolean shouldRetreat(Npc npc) {
-		if(!Constants.GameServer.NPC_DONT_RETREAT)
-		{
+		if (!Constants.GameServer.NPC_DONT_RETREAT) {
 			if (DataConversions.inArray(Constants.GameServer.NPCS_THAT_RETREAT_NORM, npc.getID())) {
 				return npc.getSkills().getLevel(Skills.HITPOINTS) <=
 					Math.ceil(npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.20);
@@ -850,7 +699,7 @@ public class NpcBehavior {
 					Math.ceil(npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.05);
 			}
 		}
-		
+
 		return false;
 	}
 
