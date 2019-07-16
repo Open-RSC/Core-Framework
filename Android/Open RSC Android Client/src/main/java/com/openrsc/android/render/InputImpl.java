@@ -10,11 +10,11 @@ import android.view.View.OnKeyListener;
 import android.view.View.OnTouchListener;
 
 import orsc.Config;
+import orsc.enumerations.MessageTab;
 import orsc.graphics.two.Fonts;
 import orsc.mudclient;
 
 import static orsc.Config.C_LAST_ZOOM;
-import static orsc.Config.S_ZOOM_VIEW_TOGGLE;
 
 public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListener {
 
@@ -80,37 +80,42 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
 
         lastScrollOrRotate = System.currentTimeMillis();
 
+        // Disables zoom while visible
+        if (mudclient.auctionHouse.isVisible() || mudclient.onlineList.isVisible() || mudclient.skillGuideInterface.isVisible()
+                || mudclient.questGuideInterface.isVisible() || mudclient.clan.getClanInterface().isVisible() || mudclient.experienceConfigInterface.isVisible()
+                || mudclient.ironmanInterface.isVisible() || mudclient.achievementInterface.isVisible() || mudclient.doSkillInterface.isVisible()
+                || mudclient.lostOnDeathInterface.isVisible() || mudclient.territorySignupInterface.isVisible() || mudclient.messageTabSelected != MessageTab.ALL)
+            return false;
+
         if (mudclient.showUiTab == 0) {
-        	if(Config.S_ZOOM_VIEW_TOGGLE || mudclient.getLocalPlayer().isStaff()) {
-        		if(Config.C_SWIPE_TO_ZOOM) {
-					int zoomDistance = (int) (-distanceY * 5);
-					int newZoom		= C_LAST_ZOOM + zoomDistance;
-					// Keep C_LAST_ZOOM aka the zoom increments on the range of [0, 255]
-					if (newZoom >= 0 && newZoom <= 255) {
-						C_LAST_ZOOM = newZoom;
-						// We probably want to send this on the client tick rather than each time a button is pressed
-						mudclient.saveZoomDistance();
-					}
-				}
-			}
-			else if(mudclient.cameraAllowPitchModification) {
-				mudclient.cameraPitch = (mudclient.cameraPitch + (int)(-distanceY * 10)) & 1023;
-			}
+            if (Config.S_ZOOM_VIEW_TOGGLE || mudclient.getLocalPlayer().isStaff()) {
+                if (Config.C_SWIPE_TO_ZOOM) {
+                    int zoomDistance = (int) (-distanceY * 5);
+                    int newZoom = C_LAST_ZOOM + zoomDistance;
+                    // Keep C_LAST_ZOOM aka the zoom increments on the range of [0, 255]
+                    if (newZoom >= 0 && newZoom <= 255) {
+                        C_LAST_ZOOM = newZoom;
+                        // We probably want to send this on the client tick rather than each time a button is pressed
+                        mudclient.saveZoomDistance();
+                    }
+                }
+            } else if (mudclient.cameraAllowPitchModification) {
+                mudclient.cameraPitch = (mudclient.cameraPitch + (int) (-distanceY * 10)) & 1023;
+            }
 
-			if (Config.C_SWIPE_TO_ROTATE) {
-				float clientDist = distanceX / (getWidth() / (float) mudclient.getGameWidth())
-					* 0.5F;
-				mudclient.cameraRotation = (255 & mudclient.cameraRotation + (int) (clientDist));
-			}
+            if (Config.C_SWIPE_TO_ROTATE) {
+                float clientDist = distanceX / (getWidth() / (float) mudclient.getGameWidth())
+                        * 0.5F;
+                mudclient.cameraRotation = (255 & mudclient.cameraRotation + (int) (clientDist));
+            }
 
-			return true;
+            return true;
+        } else if (Config.C_SWIPE_TO_SCROLL) {
+            mudclient.runScroll((int) distanceY);
+            return true;
         }
-        else if(Config.C_SWIPE_TO_SCROLL) {
-			mudclient.runScroll((int) distanceY);
-			return true;
-		}
 
-		return true;
+        return true;
     }
 
     @Override
@@ -138,17 +143,17 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
         }
         // If we are not volume to rotate, then we are volume to zoom...
         else {
-        	if(Config.S_ZOOM_VIEW_TOGGLE) {
-				if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-					mudclient.keyUp = event.getAction() == KeyEvent.ACTION_DOWN;
-					return true;
-				}
-				if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-					mudclient.keyDown = event.getAction() == KeyEvent.ACTION_DOWN;
-					return true;
-				}
-			}
-		}
+            if (Config.S_ZOOM_VIEW_TOGGLE) {
+                if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+                    mudclient.keyUp = event.getAction() == KeyEvent.ACTION_DOWN;
+                    return true;
+                }
+                if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+                    mudclient.keyDown = event.getAction() == KeyEvent.ACTION_DOWN;
+                    return true;
+                }
+            }
+        }
 
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
             int key = event.getUnicodeChar();

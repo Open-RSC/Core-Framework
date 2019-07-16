@@ -4,9 +4,13 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.event.DelayedEvent;
-import com.openrsc.server.event.rsc.impl.*;
 import com.openrsc.server.event.custom.NpcLootEvent;
 import com.openrsc.server.event.rsc.ImmediateEvent;
+import com.openrsc.server.event.rsc.impl.BankEventNpc;
+import com.openrsc.server.event.rsc.impl.HealEventNpc;
+import com.openrsc.server.event.rsc.impl.RangeEventNpc;
+import com.openrsc.server.event.rsc.impl.StrPotEventNpc;
+import com.openrsc.server.event.rsc.impl.ThrowingEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemDropDef;
 import com.openrsc.server.external.ItemId;
@@ -26,12 +30,25 @@ import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.GoldDrops;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
-import static com.openrsc.server.Constants.GameServer.*;
+import static com.openrsc.server.Constants.GameServer.NPC_KILL_LOGGING;
+import static com.openrsc.server.Constants.GameServer.NPC_KILL_MESSAGES;
+import static com.openrsc.server.Constants.GameServer.NPC_KILL_MESSAGES_FILTER;
+import static com.openrsc.server.Constants.GameServer.NPC_KILL_MESSAGES_NPCs;
+import static com.openrsc.server.Constants.GameServer.VALUABLE_DROP_EXTRAS;
+import static com.openrsc.server.Constants.GameServer.VALUABLE_DROP_ITEMS;
+import static com.openrsc.server.Constants.GameServer.VALUABLE_DROP_MESSAGES;
+import static com.openrsc.server.Constants.GameServer.VALUABLE_DROP_RATIO;
 
 public class Npc extends Mob {
 
@@ -51,7 +68,7 @@ public class Npc extends Mob {
 	 * The current status of the player
 	 */
 	private Action status = Action.IDLE;
-	
+
 	/*private int petNpc = 0;
 	public int getPetNpc() {
 		return petNpc;
@@ -64,41 +81,49 @@ public class Npc extends Mob {
 		petNpc++;
 	}*/
 	private int petNpcType = 0;
+
 	public int getPetNpcType() {
 		return petNpcType;
 	}
+
 	public void setPetNpcType(int i) {
 		this.petNpcType = i;
 		//ActionSender.sendPetNpc(this);
 	}
+
 	/**
 	 * HEALING
 	 */
 	private HealEventNpc healEventNpc;
 	private StrPotEventNpc strPotEventNpc;
+
 	public HealEventNpc getHealEventNpc() {
 		return healEventNpc;
 	}
+
 	public StrPotEventNpc getStrPotEventNpc() {
 		return strPotEventNpc;
 	}
-	public void setHealEventNpc(HealEventNpc event) {
+
+	void setHealEventNpc(HealEventNpc event) {
 		if (healEventNpc != null) {
 			healEventNpc.stop();
 		}
 		healEventNpc = event;
 		Server.getServer().getGameEventHandler().add(healEventNpc);
 	}
-	public void setStrPotEventNpc(StrPotEventNpc event) {
+
+	/*public void setStrPotEventNpc(StrPotEventNpc event) {
 		if (strPotEventNpc != null) {
 			strPotEventNpc.stop();
 		}
 		strPotEventNpc = event;
 		Server.getServer().getGameEventHandler().add(strPotEventNpc);
-	}
+	}*/
 	public boolean isHealing() {
 		return healEventNpc != null;
 	}
+
 	public void resetHealing() {
 		if (healEventNpc != null) {
 			healEventNpc.stop();
@@ -106,10 +131,13 @@ public class Npc extends Mob {
 		}
 		setStatus(Action.IDLE);
 	}
+
 	private long healTimer = 0;
+
 	public boolean cantHeal() {
 		return healTimer - System.currentTimeMillis() > 0;
 	}
+
 	public void setHealTimer(long l) {
 		healTimer = System.currentTimeMillis() + l;
 	}
@@ -122,15 +150,17 @@ public class Npc extends Mob {
 	public void setPetOwnerA2(Player petOwnerA3) {
 		petOwnerA2 = petOwnerA3;
 	}*/
-	 /**
+	/**
 	 * RANGED
 	 */
 	private RangeEventNpc rangeEventNpc;
 	private BankEventNpc bankEventNpc;
 	private ThrowingEvent throwingEvent;
+
 	public RangeEventNpc getRangeEventNpc() {
 		return rangeEventNpc;
 	}
+
 	public BankEventNpc getBankEventNpc() {
 		return bankEventNpc;
 	}
@@ -143,6 +173,7 @@ public class Npc extends Mob {
 		setStatus(Action.RANGING_MOB);
 		Server.getServer().getGameEventHandler().add(rangeEventNpc);
 	}
+
 	public void setBankEventNpc(BankEventNpc event) {
 		if (bankEventNpc != null) {
 			bankEventNpc.stop();
@@ -150,12 +181,15 @@ public class Npc extends Mob {
 		bankEventNpc = event;
 		Server.getServer().getGameEventHandler().add(bankEventNpc);
 	}
+
 	public boolean isRanging() {
 		return rangeEventNpc != null || throwingEvent != null;
 	}
+
 	public boolean isBanking() {
 		return bankEventNpc != null;
 	}
+
 	public void resetRange() {
 		if (rangeEventNpc != null) {
 			rangeEventNpc.stop();
@@ -167,6 +201,7 @@ public class Npc extends Mob {
 		}
 		setStatus(Action.IDLE);
 	}
+
 	public void resetBankEvent() {
 		if (bankEventNpc != null) {
 			bankEventNpc.stop();
@@ -174,17 +209,22 @@ public class Npc extends Mob {
 		}
 		setStatus(Action.IDLE);
 	}
+
 	private long consumeTimer2 = 0;
+
 	public long getConsumeTimer2() {
 		return consumeTimer2;
 	}
+
 	public void setConsumeTimer2(int delay) {
 		consumeTimer2 = System.currentTimeMillis() + 0;
 	}
+
 	public void setConsumeTimer2() {
 		consumeTimer2 = System.currentTimeMillis();
 	}
-		public boolean checkAttack(Npc mob, boolean missile) {
+
+	public boolean checkAttack(Npc mob, boolean missile) {
 		if (mob.isPlayer()) {
 			Mob victim = (Mob) mob;
 			/*if (victim.inCombat() && victim.getDuel().isDuelActive()) {
@@ -367,7 +407,7 @@ public class Npc extends Mob {
 			rangeDamagers.put(p.getDatabaseID(), damage);
 		}
 	}
-	
+
 	public void useNormalPotionNpc(final int affectedStat, final int percentageIncrease, final int modifier, final int left) {
 		//mob.message("You drink some of your " + item.getDef().getName().toLowerCase());
 		int baseStat = this.getSkills().getLevel(affectedStat) > this.getSkills().getMaxStat(affectedStat) ? this.getSkills().getMaxStat(affectedStat) : this.getSkills().getLevel(affectedStat);
@@ -417,7 +457,7 @@ public class Npc extends Mob {
 		int dmgDone = combatDamagers.get(p.getDatabaseID());
 		return (dmgDone > this.getDef().getHits() ? this.getDef().getHits() : dmgDone);
 	}
-	
+
 	private int getCombatDamageDoneBy(Npc n) {
 		if (n == null) {
 			return 0;
@@ -460,6 +500,7 @@ public class Npc extends Mob {
 		int dmgDone = mageDamagers.get(p.getDatabaseID());
 		return (dmgDone > this.getDef().getHits() ? this.getDef().getHits() : dmgDone);
 	}
+
 	private int getMageDamageDoneBy(Npc n) {
 		if (n == null || !mageDamagers.containsKey(n.getID())) {
 			return 0;
@@ -490,6 +531,7 @@ public class Npc extends Mob {
 		int dmgDone = rangeDamagers.get(p.getDatabaseID());
 		return (dmgDone > this.getDef().getHits() ? this.getDef().getHits() : dmgDone);
 	}
+
 	private int getRangeDamageDoneBy(Npc n) {
 		if (n == null || !rangeDamagers.containsKey(n.getID())) {
 			return 0;
@@ -508,17 +550,19 @@ public class Npc extends Mob {
 	}
 
 	public int getWeaponAimPoints() {
-		if(this.getID() == 236) {
-		return 71;} else
-		return weaponAimPoints;
+		if (this.getID() == 236) {
+			return 71;
+		} else
+			return weaponAimPoints;
 	}
 
 	public int getWeaponPowerPoints() {
-		if(this.getID() == 236) {
-		return 81;} else
-		return weaponPowerPoints;
+		if (this.getID() == 236) {
+			return 81;
+		} else
+			return weaponPowerPoints;
 	}
-	
+
 	@Override
 	public void killedBy(Mob mob) {
 		if (!mob.isNpc()) {
@@ -678,7 +722,7 @@ public class Npc extends Mob {
 				//if(owner2 != null){
 				//owner2 = handleLootAndXpDistribution((Player) mob);
 				//}
-			
+
 				ItemDropDef[] drops = def.getDrops();
 
 				int total = 0;
@@ -775,11 +819,12 @@ public class Npc extends Mob {
 			}
 		}
 	}
+
 	public void petOwner(Mob mob) {
 		if (!mob.isNpc()) {
 			Player owner = mob instanceof Player ? (Player) mob : null;
 			if (owner != null) {
-			//this = mob;
+				//this = mob;
 			}
 		}
 	}
@@ -937,7 +982,7 @@ public class Npc extends Mob {
 			}
 		}
 		//return playerWithMostDamage;
-		
+
 		Mob npcWithMostDamage = attacker;
 		for (Player p282828 : World.getWorld().getPlayers()) {
 		}
@@ -947,7 +992,7 @@ public class Npc extends Mob {
 			final Npc n = World.getWorld().getNpcById(npcID);
 			if (n == null)
 				continue;
-			
+
 			Player p28x = attacker.getPetOwnerA2();
 			if (p28x == null)
 				continue;
@@ -957,13 +1002,13 @@ public class Npc extends Mob {
 				npcWithMostDamage = n;
 				currentHighestDamage = dmgDoneByNpc;
 			}
-			if(attacker.getPetNpc() > 0) {
-			newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByNpc));
-			p28x.incPet1Exp(Skills.PETRANGED, newXP * 4, true);
-			//ActionSender.sendStat(p28x, Skills.PETRANGED);
-			for (Player p282828 : World.getWorld().getPlayers()) {
-				p282828.message("TEST 28");
-			}
+			if (attacker.getPetNpc() > 0) {
+				newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByNpc));
+				p28x.incPet1Exp(Skills.PETRANGED, newXP * 4, true);
+				//ActionSender.sendStat(p28x, Skills.PETRANGED);
+				for (Player p282828 : World.getWorld().getPlayers()) {
+					p282828.message("TEST 28");
+				}
 			}
 		}
 
@@ -982,13 +1027,13 @@ public class Npc extends Mob {
 				npcWithMostDamage = n;
 				currentHighestDamage = dmgDoneByNpc;
 			}
-			if(attacker.getPetNpc() > 0) {
-			newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByNpc));
-			p28x.incPet1Exp(Skills.PETRANGED, newXP * 4, true);
-			//ActionSender.sendStat(p28x, Skills.PETRANGED);
-			for (Player p282828 : World.getWorld().getPlayers()) {
-				p282828.message("TEST 28282828");
-			}
+			if (attacker.getPetNpc() > 0) {
+				newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByNpc));
+				p28x.incPet1Exp(Skills.PETRANGED, newXP * 4, true);
+				//ActionSender.sendStat(p28x, Skills.PETRANGED);
+				for (Player p282828 : World.getWorld().getPlayers()) {
+					p282828.message("TEST 28282828");
+				}
 			}
 		}
 
@@ -1005,19 +1050,19 @@ public class Npc extends Mob {
 				npcWithMostDamage = n;
 				currentHighestDamage = dmgDoneByNpc;
 			}
-			if(attacker.getPetNpc() > 0) {
-			newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByNpc));
-			p28x.incPet1Exp(Skills.PETRANGED, newXP * 4, true);
-			//ActionSender.sendStat(p28x, Skills.PETRANGED);
-			for (Player p282828 : World.getWorld().getPlayers()) {
-				p282828.message("TEST 28111128");
-			}
+			if (attacker.getPetNpc() > 0) {
+				newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByNpc));
+				p28x.incPet1Exp(Skills.PETRANGED, newXP * 4, true);
+				//ActionSender.sendStat(p28x, Skills.PETRANGED);
+				for (Player p282828 : World.getWorld().getPlayers()) {
+					p282828.message("TEST 28111128");
+				}
 			}
 		}
 		return npcWithMostDamage;
 	}
-	
-	
+
+
 	private Npc handleLootAndXpDistribution(Npc attacker) {
 
 		Npc npcWithMostDamage = attacker;
@@ -1067,9 +1112,9 @@ public class Npc extends Mob {
 		}
 		return npcWithMostDamage;
 	}
-	
-		private Npc handleLootAndXpDistributionPet(Npc attacker) {
-		
+
+	private Npc handleLootAndXpDistributionPet(Npc attacker) {
+
 		Npc npcWithMostDamage = attacker;
 		int currentHighestDamage = 0;
 		int totalCombatXP = Formulae.combatExperience(this);
@@ -1149,7 +1194,7 @@ public class Npc extends Mob {
 		}
 		return npcWithMostDamage;
 	}
-	
+
 	public void initializeTalkScript(final Player p) {
 		final Npc npc = this;
 		//p.setBusyTimer(600);
@@ -1222,10 +1267,10 @@ public class Npc extends Mob {
 
 	@Override
 	public String toString() {
-		if(this.getID() == 210 || this.getID() == 236) {
-		return "Warning! @yel@" + EntityHandler.getNpcDef(id).getName() + "@red@WILD@whi@";	
+		if (this.getID() == 210 || this.getID() == 236) {
+			return "Warning! @yel@" + EntityHandler.getNpcDef(id).getName() + "@red@WILD@whi@";
 		} else {
-		return "Warning! @yel@" + EntityHandler.getNpcDef(id).getName() + "@whi@";
+			return "Warning! @yel@" + EntityHandler.getNpcDef(id).getName() + "@whi@";
 		}
 	}
 
@@ -1266,7 +1311,7 @@ public class Npc extends Mob {
 	public Player getChasedPlayer() {
 		return npcBehavior.getChasedPlayer();
 	}
-	
+
 	//public Player getPetOwnerA() {
 	//	return BabyBlueDragonCrystal.getPetOwnerA();
 	//}
