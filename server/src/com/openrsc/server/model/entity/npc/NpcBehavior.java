@@ -348,7 +348,7 @@ public class NpcBehavior {
 				// We loop through all players in view.
 				for (Player p : npc.getViewArea().getPlayersInView()) {
 
-					int range = 1;
+					int range = Constants.GameServer.AGGRO_RANGE; // Default tile range an aggressive NPC will attack a victim
 					switch (NpcId.getById(npc.getID())) {
 						case BANDIT_AGGRESSIVE:
 							range = 5;
