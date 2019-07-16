@@ -12,7 +12,6 @@ import com.openrsc.server.event.custom.NpcLootEvent;
 import com.openrsc.server.event.rsc.impl.BankEventNpc;
 import com.openrsc.server.event.rsc.impl.ProjectileEvent;
 import com.openrsc.server.event.rsc.impl.RangeEventNpc;
-import com.openrsc.server.event.rsc.impl.StrPotEventNpc;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.ItemDropDef;
@@ -1669,7 +1668,7 @@ public final class Admins implements CommandListener {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id]");
 				return;
 			}
-			j.setStrPotEventNpc(new StrPotEventNpc(j));
+			//j.setStrPotEventNpc(new StrPotEventNpc(j));
 			player.message(j.getSkills().getLevel(0) + " " + j.getSkills().getLevel(1) + " " + j.getSkills().getLevel(2) + " " + j.getSkills().getLevel(3) + " ");
 			player.message(j.getCombatLevel() + " cb");
 		} else if (cmd.equalsIgnoreCase("combatstylenpc")) {

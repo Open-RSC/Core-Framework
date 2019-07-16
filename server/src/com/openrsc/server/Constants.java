@@ -121,6 +121,10 @@ public final class Constants {
 		public static int RESTART_DELAY;
 		public static int RESTART_DELAY_2;
 		/**
+		 * Default tile range an aggressive NPC will attack a victim
+		 */
+		public static int AGGRO_RANGE;
+		/**
 		 * the mysql database host
 		 */
 		public static String MYSQL_HOST = "localhost";
@@ -402,6 +406,7 @@ public final class Constants {
 			RESTART_HOUR_2 = Integer.parseInt(props.getProperty("restart_hour_2"));
 			RESTART_MINUTE_2 = Integer.parseInt(props.getProperty("restart_minute_2"));
 			RESTART_DELAY_2 = Integer.parseInt(props.getProperty("restart_delay_2"));
+			AGGRO_RANGE = Integer.parseInt(props.getProperty("aggro_range"));
 
 			STRICT_CHECK_ALL = Boolean.parseBoolean(props.getProperty("strict_check_all"));
 			STRICT_PDART_CHECK = Boolean.parseBoolean(props.getProperty("strict_pdart_check"));
