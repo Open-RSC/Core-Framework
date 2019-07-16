@@ -9108,7 +9108,7 @@ public final class mudclient implements Runnable {
 					}
 					yOffset += 13;
 				}
-
+				yOffset -= 2;
 				this.getSurface().drawLineHoriz(x, yOffset-7, width, 0);
 
 				heightMargin = yOffset + 8;

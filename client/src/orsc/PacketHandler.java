@@ -744,7 +744,7 @@ public class PacketHandler {
 		int wantDropX, wantExpInfo, wantWoodcuttingGuild, wantFixedOverheadChat, wantPets, showUnidentifiedHerbNames;
 		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank, wantPlayerCommands;
 		int getFPS, wantEmail, wantRegistrationLimit, allowResize, lenientContactDetails, wantFatigue, wantCustomSprites;
-		int fishingSpotsDepletable, properMagicTreeName, wantRunecrafting;
+		int fishingSpotsDepletable, properMagicTreeName, wantRunecrafting, wantCustomLandscape;
 		String logoSpriteID;
 
 		if (!mc.gotInitialConfigs) {
@@ -808,6 +808,7 @@ public class PacketHandler {
 			fishingSpotsDepletable = this.getClientStream().getUnsignedByte(); //58
 			properMagicTreeName = this.getClientStream().getUnsignedByte(); //59
 			wantRunecrafting = this.getClientStream().getUnsignedByte(); //60
+			wantCustomLandscape = this.getClientStream().getUnsignedByte(); //61
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -869,6 +870,7 @@ public class PacketHandler {
 			fishingSpotsDepletable = packetsIncoming.getUnsignedByte(); //58
 			properMagicTreeName = packetsIncoming.getUnsignedByte(); //59
 			wantRunecrafting = packetsIncoming.getUnsignedByte(); //60
+			wantCustomLandscape = packetsIncoming.getUnsignedByte(); //61
 		}
 
 		if (Config.DEBUG) {
@@ -932,7 +934,8 @@ public class PacketHandler {
 					"\nS_WANT_QUEST_STARTED_INDICATOR  " + wantQuestStartedIndicator + // 57
 					"\nS_FISHING_SPOTS_DEPLETABLE " + fishingSpotsDepletable + // 58
 					"\nS_PROPER_MAGIC_TREE_NAME  " + properMagicTreeName +// 59
-					"\nS_WANT_RUNECRAFTING  "   // 59
+					"\nS_WANT_RUNECRAFTING  "   + wantRunecrafting +// 60
+					"\nS_WANT_CUSTOM_LANDSCAPE  "   + wantCustomLandscape// 61
 			);
 		}
 
@@ -998,6 +1001,7 @@ public class PacketHandler {
 		props.setProperty("S_FISHING_SPOTS_DEPLETABLE", fishingSpotsDepletable == 1 ? "true" : "false"); //58
 		props.setProperty("S_PROPER_MAGIC_TREE_NAME", properMagicTreeName == 1 ? "true" : "false"); //59
 		props.setProperty("S_WANT_RUNECRAFTING", wantRunecrafting == 1 ? "true" : "false"); //60
+		props.setProperty("S_WANT_CUSTOM_LANDSCAPE", wantCustomLandscape == 1 ? "true" : "false"); //61
 
 		Config.updateServerConfiguration(props);
 

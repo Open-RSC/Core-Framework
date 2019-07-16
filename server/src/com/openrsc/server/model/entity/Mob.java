@@ -325,6 +325,9 @@ public abstract class Mob extends Entity {
 		else if (o.getID() == 1227)
 			if ((lowXDiff <= 2 || highXDiff <= 2) && (highYDiff <= 3))
 				return true;
+			else if (o.getID() >= 1228 && o.getID() <= 1232)
+				if ((lowXDiff <= 2 || highXDiff <= 2) && (lowYDiff <= 2 || highYDiff <= 2))
+					return true;
 
 		else if (o.getID() == 953)
 		{

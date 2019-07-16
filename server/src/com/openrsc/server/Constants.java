@@ -237,6 +237,7 @@ public final class Constants {
 		public static boolean FIX_OVERHEAD_CHAT = false;
 		public static boolean WANT_FATIGUE = true;
 		public static boolean WANT_CUSTOM_SPRITES = false;
+		public static boolean WANT_CUSTOM_LANDSCAPE = false;
 		public static boolean PLAYER_COMMANDS = false;
 		public static boolean WANT_PETS = false;
 		public static boolean AUTO_SERVER_RESTART = false;
@@ -369,6 +370,7 @@ public final class Constants {
 			MESSAGE_FULL_INVENTORY = Boolean.parseBoolean(props.getProperty("message_full_inventory"));
 			WANT_FATIGUE = Boolean.parseBoolean(props.getProperty("want_fatigue"));
 			WANT_CUSTOM_SPRITES = Boolean.parseBoolean(props.getProperty("custom_sprites"));
+			WANT_CUSTOM_LANDSCAPE = Boolean.parseBoolean(props.getProperty("custom_landscape"));
 			WANT_PETS = Boolean.parseBoolean(props.getProperty("want_pets"));
 			SHOW_UNIDENTIFIED_HERB_NAMES = Boolean.parseBoolean(props.getProperty("show_unidentified_herb_names"));
 			WANT_QUEST_STARTED_INDICATOR = Boolean.parseBoolean(props.getProperty("want_quest_started_indicator"));

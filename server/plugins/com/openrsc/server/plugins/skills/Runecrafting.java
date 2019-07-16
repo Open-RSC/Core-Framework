@@ -149,7 +149,7 @@ public class Runecrafting implements ObjectActionListener, ObjectActionExecutive
 				p.teleport(839,26,false);
 				break;
 			case CHAOS_TALISMAN:
-				p.teleport(934,14,false);
+				p.teleport(826,90,false);
 				break;
 			case NATURE_TALISMAN:
 				p.teleport(787,29,false);
