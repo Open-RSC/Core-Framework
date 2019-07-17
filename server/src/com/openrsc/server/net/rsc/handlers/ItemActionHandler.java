@@ -22,6 +22,7 @@ public class ItemActionHandler implements PacketHandler {
 	public void handlePacket(Packet p, Player player) throws Exception {
 
 		int idx = (int) p.readShort();
+		int amount = p.readInt();
 		if (player == null || player.getInventory() == null) {
 			return;
 		}
@@ -75,35 +76,38 @@ public class ItemActionHandler implements PacketHandler {
 			}
 			player.setBusyTimer(650);
 			player.message("You dig a hole in the ground");
-			Server.getServer().getEventHandler()
-				.add(new MiniEvent(player, "Bury Bones") {
-					public void action() {
-						owner.message("You bury the "
-							+ item.getDef().getName().toLowerCase());
-						owner.getInventory().remove(item);
-						switch (ItemId.getById(item.getID())) {
-							case BONES:
-								owner.incExp(Skills.PRAYER, 15, true); // 3.75
-								break;
-							case BAT_BONES:
-								owner.incExp(Skills.PRAYER, 18, true); // 4.5
-								break;
-							case BIG_BONES:
-								owner.incExp(Skills.PRAYER, 50, true); // 12.5
-								break;
-							case DRAGON_BONES:
-								owner.incExp(Skills.PRAYER, 240, true); // 60
-								break;
+			for (int i = 0; i < amount; i++) {
+				Server.getServer().getEventHandler()
+						.add(new MiniEvent(player, "Bury Bones") {
+							public void action() {
+								owner.message("You bury the "
+										+ item.getDef().getName().toLowerCase());
+								owner.getInventory().remove(item);
+								switch (ItemId.getById(item.getID())) {
+									case BONES:
+										owner.incExp(Skills.PRAYER, 15, true); // 3.75
+										break;
+									case BAT_BONES:
+										owner.incExp(Skills.PRAYER, 18, true); // 4.5
+										break;
+									case BIG_BONES:
+										owner.incExp(Skills.PRAYER, 50, true); // 12.5
+										break;
+									case DRAGON_BONES:
+										owner.incExp(Skills.PRAYER, 240, true); // 60
+										break;
 //							case 2256: // Soul of Greatwood NOT INCLUDED
 //								owner.incExp(5, 800 * 4, true); // 800
 //								break;
-							// any other item with command bury
-							default:
-								player.message("Nothing interesting happens");
-								break;	
-						}
-					}
-				});
+									// any other item with command bury
+									default:
+										player.message("Nothing interesting happens");
+										break;
+								}
+							}
+						});
+			}
+
 		} else {
 			switch (ItemId.getById(item.getID())) {
 				case DISK_OF_RETURNING:
