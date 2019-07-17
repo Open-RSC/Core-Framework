@@ -375,7 +375,6 @@ public final class mudclient implements Runnable {
     private int frameCounter = 0;
     private int combatStyle = 0;
     private int combatTimeout = 0;
-    private int commandInventorySlot = -1;
     private int controlButtonAppearanceHeadMinus;
     private int controlButtonAppearanceHeadPlus;
     private int controlLoginPass;
@@ -11027,10 +11026,9 @@ public final class mudclient implements Runnable {
                     break;
                 }
                 case ITEM_COMMAND_ALL: {
-                    commandInventorySlot = indexOrX;
-                    int commandQuantity = getInventoryCount(inventoryItemID[commandInventorySlot]);
+                    int commandQuantity = getInventoryCount(inventoryItemID[indexOrX]);
                     this.packetHandler.getClientStream().newPacket(90);
-                    this.packetHandler.getClientStream().writeBuffer1.putShort(commandInventorySlot);
+                    this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
                     this.packetHandler.getClientStream().writeBuffer1.putInt(commandQuantity);
                     this.packetHandler.getClientStream().finishPacket();
                     break;
