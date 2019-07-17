@@ -377,10 +377,10 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 		mudclient.runScroll(e.getWheelRotation());
 
 		// Disables zoom while visible
-		if (mudclient.auctionHouse.isVisible() || mudclient.onlineList.isVisible() || mudclient.skillGuideInterface.isVisible()
-			|| mudclient.questGuideInterface.isVisible() || mudclient.clan.getClanInterface().isVisible() || mudclient.experienceConfigInterface.isVisible()
-			|| mudclient.ironmanInterface.isVisible() || mudclient.achievementInterface.isVisible() || mudclient.doSkillInterface.isVisible()
-			|| mudclient.lostOnDeathInterface.isVisible() || mudclient.territorySignupInterface.isVisible() || mudclient.messageTabSelected != MessageTab.ALL)
+		if (Config.S_SPAWN_AUCTION_NPCS && mudclient.auctionHouse.isVisible() || mudclient.onlineList.isVisible() || Config.S_WANT_SKILL_MENUS && mudclient.skillGuideInterface.isVisible()
+			|| Config.S_WANT_QUEST_MENUS && mudclient.questGuideInterface.isVisible() || mudclient.clan.getClanInterface().isVisible() || mudclient.experienceConfigInterface.isVisible()
+			|| mudclient.ironmanInterface.isVisible() || mudclient.achievementInterface.isVisible() || Config.S_WANT_SKILL_MENUS && mudclient.doSkillInterface.isVisible()
+			|| Config.S_ITEMS_ON_DEATH_MENU && mudclient.lostOnDeathInterface.isVisible() || mudclient.territorySignupInterface.isVisible() || mudclient.messageTabSelected != MessageTab.ALL)
 			return;
 
 		if (mudclient.showUiTab == 0 && (S_ZOOM_VIEW_TOGGLE || mudclient.getLocalPlayer().isStaff())) {
