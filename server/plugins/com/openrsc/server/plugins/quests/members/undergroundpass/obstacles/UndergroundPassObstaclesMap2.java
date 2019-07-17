@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.external.ItemId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
@@ -104,7 +104,7 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 				p.message("you climb the ledge");
 				if (DataConversions.getRandom().nextInt(10) <= 1) {
 					p.message("but you slip");
-					p.damage((int) (getCurrentLevel(p, Skills.HITPOINTS) / 42) + 1);
+					p.damage((int) (getCurrentLevel(p, SKILLS.HITS.id()) / 42) + 1);
 					playerTalk(p, null, "aargh");
 				} else
 					p.teleport(764, 3463);
@@ -114,7 +114,7 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 				p.teleport(764, 3461);
 				sleep(1600);
 				p.message("you land way short of the other platform");
-				p.damage((int) (getCurrentLevel(p, Skills.HITPOINTS) / 5) + 5);
+				p.damage((int) (getCurrentLevel(p, SKILLS.HITS.id()) / 5) + 5);
 				p.teleport(764, 3467);
 				playerTalk(p, null, "ooof");
 			}
@@ -137,22 +137,22 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 			switch (obj.getID()) {
 				case 859:
 				case 858:
-					doRock(obj, p, (int) (getCurrentLevel(p, Skills.HITPOINTS) / 5) + 5, false, 5); // fall side 5.
+					doRock(obj, p, (int) (getCurrentLevel(p, SKILLS.HITS.id()) / 5) + 5, false, 5); // fall side 5.
 					break;
 				case 854:
 				case 853:
 				case 855:
 				case 857:
-					doRock(obj, p, (int) (getCurrentLevel(p, Skills.HITPOINTS) / 5) + 5, false, 4); // fall side 4.
+					doRock(obj, p, (int) (getCurrentLevel(p, SKILLS.HITS.id()) / 5) + 5, false, 4); // fall side 4.
 					break;
 				case 852:
-					doRock(obj, p, (int) (getCurrentLevel(p, Skills.HITPOINTS) / 5) + 5, false, 3); // fall side 3.
+					doRock(obj, p, (int) (getCurrentLevel(p, SKILLS.HITS.id()) / 5) + 5, false, 3); // fall side 3.
 					break;
 				case 851:
-					doRock(obj, p, (int) (getCurrentLevel(p, Skills.HITPOINTS) / 5) + 5, false, 2); // fall side 2.
+					doRock(obj, p, (int) (getCurrentLevel(p, SKILLS.HITS.id()) / 5) + 5, false, 2); // fall side 2.
 					break;
 				default:
-					doRock(obj, p, (int) (getCurrentLevel(p, Skills.HITPOINTS) / 5) + 5, false, 1); // fall side 1
+					doRock(obj, p, (int) (getCurrentLevel(p, SKILLS.HITS.id()) / 5) + 5, false, 1); // fall side 1
 					break;
 			}
 		}
@@ -161,7 +161,7 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 			p.message("you climb onto the rock");
 			if (DataConversions.getRandom().nextInt(5) == 4) {
 				p.message("but you slip");
-				p.damage((int) (getCurrentLevel(p, Skills.HITPOINTS) / 5) + 5);
+				p.damage((int) (getCurrentLevel(p, SKILLS.HITS.id()) / 5) + 5);
 				p.teleport(734, 3483);
 				playerTalk(p, null, "aargh");
 			} else {
@@ -186,7 +186,7 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 				new GameObject(obj.getLocation(), 826, obj.getDirection(), obj
 					.getType()));
 			World.getWorld().delayedSpawnObject(obj.getLoc(), 5000);
-			p.damage((int) (getCurrentLevel(p, Skills.HITPOINTS) / 5) + 5);
+			p.damage((int) (getCurrentLevel(p, SKILLS.HITS.id()) / 5) + 5);
 			playerTalk(p, null, "aaarghh");
 		}
 		else if (obj.getID() == CAGE_REMAINS) {
@@ -251,7 +251,7 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 					return;
 				}
 				p.message("you attempt to pick the lock");
-				if (obj.getID() == 169 && getCurrentLevel(p, Skills.THIEVING) < 50) {
+				if (obj.getID() == 169 && getCurrentLevel(p, SKILLS.THIEVING.id()) < 50) {
 					p.message("you need a level of 50 thieving to pick this lock");
 					return;
 				}
@@ -270,7 +270,7 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 					else
 						p.teleport(obj.getX(), obj.getY());
 				}
-				p.incExp(Skills.THIEVING, 15, true);
+				p.incExp(SKILLS.THIEVING.id(), 15, true);
 				sleep(1600);
 				p.message("the cage slams shut behind you");
 			} else if (click == 1) {

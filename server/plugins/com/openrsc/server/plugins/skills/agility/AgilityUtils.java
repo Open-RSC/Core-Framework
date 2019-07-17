@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.player.Player;
 
 public class AgilityUtils {
@@ -24,7 +24,7 @@ public class AgilityUtils {
 				p.setAttribute("obstaclesDone", obstaclesDone);
 			}
 			else if (id == lastObstacle && obstaclesDone.containsAll(obstacles)) {
-				p.incExp(Skills.AGILITY, bonus, true);
+				p.incExp(SKILLS.AGILITY.id(), bonus, true);
 				p.setAttribute("obstaclesDone", new HashSet<Integer>());
 			}
 		}
@@ -50,7 +50,7 @@ public class AgilityUtils {
 				for (int i = 0; i < obstacleOrder.length; i++) {
 					if (obstacleOrder[i] == id) {
 						if (i == obstacleOrder.length - 1) {
-							p.incExp(Skills.AGILITY, bonus, true);
+							p.incExp(SKILLS.AGILITY.id(), bonus, true);
 							p.setAttribute("nextObstacle", obstacleOrder[0]);
 							break;
 						}

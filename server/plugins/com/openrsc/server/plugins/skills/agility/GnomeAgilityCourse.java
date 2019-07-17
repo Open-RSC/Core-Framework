@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.skills.agility;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -119,7 +119,7 @@ public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExe
 				}
 				break;
 		}
-		p.incExp(Skills.AGILITY, 30, true);
+		p.incExp(SKILLS.AGILITY.id(), 30, true);
 		AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 150);
 		p.setBusy(false);
 	}

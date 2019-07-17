@@ -4,7 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.custom.UndergroundPassMessages;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -118,7 +118,7 @@ public class UndergroundPassAgilityObstacles implements ObjectActionListener, Ob
 	}
 
 	boolean succeed(Player player, int req) {
-		int level_difference = getCurrentLevel(player, Skills.AGILITY) - req;
+		int level_difference = getCurrentLevel(player, SKILLS.AGILITY.id()) - req;
 		int percent = random(1, 100);
 
 		if (level_difference < 0)
@@ -136,7 +136,7 @@ public class UndergroundPassAgilityObstacles implements ObjectActionListener, Ob
 	private void failBlackAreaObstacle(Player p, GameObject obj) {
 		p.message("..but you slip and tumble into the darkness");
 		fallTeleportLocation(p, obj);
-		p.damage(((int) getCurrentLevel(p, Skills.HITPOINTS) / 5) + 5); // 6 lowest, 25 max.
+		p.damage(((int) getCurrentLevel(p, SKILLS.HITS.id()) / 5) + 5); // 6 lowest, 25 max.
 		playerTalk(p, null, "ouch!");
 		if (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) >= 4) {
 			if (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == 4) {

@@ -3,6 +3,10 @@ package orsc.graphics.three;
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.model.Sector;
 import com.openrsc.data.DataConversions;
+import orsc.Config;
+import orsc.graphics.two.GraphicsController;
+import orsc.util.FastMath;
+import orsc.util.GenUtil;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -10,11 +14,6 @@ import java.nio.ByteBuffer;
 import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import orsc.Config;
-import orsc.graphics.two.GraphicsController;
-import orsc.util.FastMath;
-import orsc.util.GenUtil;
 
 
 public final class World {
@@ -76,7 +75,10 @@ public final class World {
 			sectors = new Sector[4];
 
 			try {
-				tileArchive = new ZipFile(new File(Config.F_CACHE_DIR + File.separator + "Landscape.orsc"));
+				if (Config.S_WANT_CUSTOM_LANDSCAPE)
+					tileArchive = new ZipFile(new File(Config.F_CACHE_DIR + File.separator + "Custom_Landscape.orsc"));
+				else
+					tileArchive = new ZipFile(new File(Config.F_CACHE_DIR + File.separator + "Authentic_Landscape.orsc"));
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.exit(1);

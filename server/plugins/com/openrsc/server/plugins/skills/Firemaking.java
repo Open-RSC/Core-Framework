@@ -7,7 +7,7 @@ import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.FiremakingDef;
 import com.openrsc.server.external.ItemId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -75,7 +75,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 		player.getUpdateFlags().setActionBubble(new Bubble(player, TINDERBOX));
 		player.message("You attempt to light the logs");
 
-		if (Formulae.lightLogs(player.getSkills().getLevel(Skills.FIREMAKING))) {
+		if (Formulae.lightLogs(player.getSkills().getLevel(SKILLS.FIREMAKING.id()))) {
 
 			Server.getServer().getEventHandler().add(
 				new SingleEvent(null, 1200, "Light Logs") {
@@ -101,7 +101,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 								}
 							}
 						);
-						player.incExp(Skills.FIREMAKING, getExp(player.getSkills().getMaxStat(Skills.FIREMAKING), 25), true);
+						player.incExp(SKILLS.FIREMAKING.id(), getExp(player.getSkills().getMaxStat(SKILLS.FIREMAKING.id()), 25), true);
 					}
 				}
 			);
@@ -119,7 +119,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 			return;
 		}
 
-		if (player.getSkills().getLevel(Skills.FIREMAKING) < def.getRequiredLevel()) {
+		if (player.getSkills().getLevel(SKILLS.FIREMAKING.id()) < def.getRequiredLevel()) {
 			player.message("You need at least " + def.getRequiredLevel() + " firemaking to light these logs");
 			return;
 		}
@@ -131,11 +131,11 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 
 		player.getUpdateFlags().setActionBubble(new Bubble(player, TINDERBOX));
 		player.message("You attempt to light the logs");
+		player.setBatchEvent(new BatchEvent(player, 1200, "Firemaking Logs Lit", Formulae.getRepeatTimes(player, SKILLS.FIREMAKING.id()), false) {
 
-		player.setBatchEvent(new BatchEvent(player, 1200,"Firemaking Logs Lit", Formulae.getRepeatTimes(player, Skills.FIREMAKING), false) {
 			@Override
 			public void action() {
-				if (Formulae.lightCustomLogs(def, owner.getSkills().getLevel(Skills.FIREMAKING))) {
+				if (Formulae.lightCustomLogs(def, owner.getSkills().getLevel(SKILLS.FIREMAKING.id()))) {
 					owner.message("The fire catches and the logs begin to burn");
 					World.getWorld().unregisterItem(gItem);
 
@@ -156,7 +156,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 							}
 						});
 
-					owner.incExp(Skills.FIREMAKING, getExp(owner.getSkills().getMaxStat(Skills.FIREMAKING), 25), true);
+					owner.incExp(SKILLS.FIREMAKING.id(), getExp(owner.getSkills().getMaxStat(SKILLS.FIREMAKING.id()), 25), true);
 					interrupt();
 
 				} else {

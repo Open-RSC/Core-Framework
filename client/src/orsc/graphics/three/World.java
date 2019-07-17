@@ -75,7 +75,10 @@ public final class World {
 			sectors = new Sector[4];
 
 			try {
-				tileArchive = new ZipFile(new File(Config.F_CACHE_DIR + File.separator + "Landscape.orsc"));
+				if (Config.S_WANT_CUSTOM_LANDSCAPE)
+					tileArchive = new ZipFile(new File(Config.F_CACHE_DIR + File.separator + "Custom_Landscape.orsc"));
+				else
+					tileArchive = new ZipFile(new File(Config.F_CACHE_DIR + File.separator + "Authentic_Landscape.orsc"));
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.exit(1);

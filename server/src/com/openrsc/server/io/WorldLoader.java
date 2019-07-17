@@ -141,9 +141,12 @@ public class WorldLoader {
 		final long start = System.currentTimeMillis();
 		try {
 			if (Constants.GameServer.MEMBER_WORLD) {
-				tileArchive = new ZipFile(new File("./conf/server/data/P2PLandscape.rscd")); // Members landscape
+				if (Constants.GameServer.WANT_CUSTOM_LANDSCAPE)
+					tileArchive = new ZipFile(new File("./conf/server/data/Custom_P2PLandscape.orsc")); // Members landscape
+				else
+					tileArchive = new ZipFile(new File("./conf/server/data/Authentic_P2PLandscape.orsc")); // Members landscape
 			} else {
-				tileArchive = new ZipFile(new File("./conf/server/data/F2PLandscape.rscd")); // Free landscape
+				tileArchive = new ZipFile(new File("./conf/server/data/F2PLandscape.orsc")); // Free landscape
 			}
 		} catch (Exception e) {
 			LOGGER.catching(e);

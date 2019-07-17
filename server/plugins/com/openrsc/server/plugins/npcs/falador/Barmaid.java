@@ -1,6 +1,6 @@
 package com.openrsc.server.plugins.npcs.falador;
 
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -105,7 +105,7 @@ public final class Barmaid implements TalkToNpcExecutiveListener,
 	}
 	
 	private void drinkAle(Player p) {
-		int[] skillIDs = {Skills.ATTACK, Skills.DEFENSE, Skills.RANGED, Skills.FISHING};
+		int[] skillIDs = {SKILLS.ATTACK.id(), SKILLS.DEFENSE.id(), SKILLS.RANGED.id(), SKILLS.FISHING.id()};
 		for (int i = 0; i < skillIDs.length; i++) {
 			setAleEffect(p, skillIDs[i]);
 		}

@@ -2,12 +2,11 @@ package com.openrsc.interfaces.misc;
 
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
-
-import java.util.ArrayList;
-
 import orsc.graphics.gui.Panel;
 import orsc.graphics.two.GraphicsController;
 import orsc.mudclient;
+
+import java.util.ArrayList;
 
 
 public final class SkillGuideInterface {
@@ -842,6 +841,56 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(714, "82", "Yanille Agility Dungeon"));
 			}
 		}
+		if (mc.getSkillGuideChosen().equalsIgnoreCase("Runecrafting")) {
+			if (curTab == 0) {
+				skillItems.add(new SkillItem(33, "1","Air Rune"));
+				skillItems.add(new SkillItem(35, "1","Mind Rune"));
+				skillItems.add(new SkillItem(32, "5","Water Rune"));
+				skillItems.add(new SkillItem(34, "9","Earth Rune"));
+				skillItems.add(new SkillItem(31, "14","Fire Rune"));
+				skillItems.add(new SkillItem(36, "20","Body Rune"));
+				skillItems.add(new SkillItem(46, "27","Cosmic Rune"));
+				skillItems.add(new SkillItem(41, "35","Chaos Rune"));
+				skillItems.add(new SkillItem(40, "44","Nature Rune"));
+				//skillItems.add(new SkillItem(42, "54","Law Rune"));
+				//skillItems.add(new SkillItem(38, "65","Death Rune"));
+				//skillItems.add(new SkillItem(619, "77","Blood Rune"));
+			} else if (curTab == 1) {
+				skillItems.add(new SkillItem(33, "11","Air Rune x2"));
+				skillItems.add(new SkillItem(35, "14","Mind Rune x2"));
+				skillItems.add(new SkillItem(32, "19","Water Rune x2"));
+				skillItems.add(new SkillItem(33, "22","Air Rune x3"));
+				skillItems.add(new SkillItem(34, "26","Earth Rune x2"));
+				skillItems.add(new SkillItem(35, "28","Mind Rune x3"));
+				skillItems.add(new SkillItem(33, "33","Air Rune x4"));
+				skillItems.add(new SkillItem(31, "35","Fire Rune x2"));
+				skillItems.add(new SkillItem(32, "38","Water Rune x3"));
+				skillItems.add(new SkillItem(35, "42","Mind Rune x4"));
+				skillItems.add(new SkillItem(33, "44","Air Rune x5"));
+				skillItems.add(new SkillItem(36, "46","Body Rune x2"));
+				skillItems.add(new SkillItem(34, "52","Earth Rune x3"));
+				skillItems.add(new SkillItem(33, "55","Air Rune x6"));
+				skillItems.add(new SkillItem(35, "56","Mind Rune x5"));
+				skillItems.add(new SkillItem(32, "57","Water Rune x4"));
+				skillItems.add(new SkillItem(46, "59","Cosmic Rune x2"));
+				skillItems.add(new SkillItem(33, "66","Air Rune x7"));
+				skillItems.add(new SkillItem(35, "70","Mind Rune x6"));
+				skillItems.add(new SkillItem(31, "70","Fire Rune x3"));
+				skillItems.add(new SkillItem(41, "74","Chaos Rune x2"));
+				skillItems.add(new SkillItem(32, "76","Water Rune x5"));
+				skillItems.add(new SkillItem(33, "77","Air Rune x8"));
+				skillItems.add(new SkillItem(34, "78","Earth Rune x4"));
+				skillItems.add(new SkillItem(40, "82","Nature Rune x2"));
+				skillItems.add(new SkillItem(35, "84","Mind Rune x7"));
+				skillItems.add(new SkillItem(33, "88","Air Rune x9"));
+				//skillItems.add(new SkillItem(42, "91","Law Rune x2"));
+				skillItems.add(new SkillItem(36, "92","Body Rune x3"));
+				skillItems.add(new SkillItem(32, "95","Water Rune x6"));
+				skillItems.add(new SkillItem(35, "98","Mind Rune x8"));
+				skillItems.add(new SkillItem(33, "99","Air Rune x10"));
+			}
+		}
+
 	}
 
 	public boolean isVisible() {

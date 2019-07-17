@@ -1,7 +1,7 @@
 package com.openrsc.server.event.rsc.impl;
 
 import com.openrsc.server.event.rsc.SingleTickEvent;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -87,7 +87,7 @@ public class ProjectileEvent extends SingleTickEvent {
 			Player affectedPlayer = (Player) opponent;
 			ActionSender.sendStat(affectedPlayer, 3);
 		}
-		if (opponent.getSkills().getLevel(Skills.HITPOINTS) <= 0) {
+		if (opponent.getSkills().getLevel(SKILLS.HITS.id()) <= 0) {
 			if (caster.isPlayer()) {
 				Player player = (Player) caster;
 				if (type == 2 || type == 5) {

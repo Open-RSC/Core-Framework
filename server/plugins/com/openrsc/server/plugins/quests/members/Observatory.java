@@ -4,7 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -57,7 +57,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 	public void handleReward(Player p) {
 		p.message("@gre@You haved gained 2 quest points!");
 		int[] questData = Quests.questData.get(Quests.OBSERVATORY_QUEST);
-		questData[Quests.MAPIDX_SKILL] = Skills.CRAFTING;
+		questData[Quests.MAPIDX_SKILL] = SKILLS.CRAFTING.id();
 		incQuestReward(p, questData, true);
 		p.getCache().remove("keep_key_gate");
 	}
@@ -618,7 +618,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 		if (selectedNumber == 0) {
 			npcTalk(p, n, "Virgo the virtuous",
 				"The strong and peaceful nature of virgo boosts your defence");
-			questData[Quests.MAPIDX_SKILL] = Skills.DEFENSE;
+			questData[Quests.MAPIDX_SKILL] = SKILLS.DEFENSE.id();
 			incQuestReward(p, questData, false);
 		} else if (selectedNumber == 1) {
 			npcTalk(p, n, "Libra the scales",
@@ -647,7 +647,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 		} else if (selectedNumber == 7) {
 			npcTalk(p, n, "Aries the ram",
 				"The ram's strength improves your attack abilities");
-			questData[Quests.MAPIDX_SKILL] = Skills.ATTACK;
+			questData[Quests.MAPIDX_SKILL] = SKILLS.ATTACK.id();
 			incQuestReward(p, questData, false);
 		} else if (selectedNumber == 8) {
 			npcTalk(p, n, "Sagittarius the Centaur",
@@ -656,12 +656,12 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 		} else if (selectedNumber == 9) {
 			npcTalk(p, n, "Leo the lion",
 				"The power of the lion has increased your hitpoints");
-			questData[Quests.MAPIDX_SKILL] = Skills.HITPOINTS;
+			questData[Quests.MAPIDX_SKILL] = SKILLS.HITS.id();
 			incQuestReward(p, questData, false);
 		} else if (selectedNumber == 10) {
 			npcTalk(p, n, "Capricorn the goat",
 				"you are granted an increase in strength");
-			questData[Quests.MAPIDX_SKILL] = Skills.STRENGTH;
+			questData[Quests.MAPIDX_SKILL] = SKILLS.STRENGTH.id();
 			incQuestReward(p, questData, false);
 		} else if (selectedNumber == 11) {
 			npcTalk(p, n, "Cancer the crab",

@@ -4,7 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ItemCookingDef;
 import com.openrsc.server.external.ItemId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -52,7 +52,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 					final ItemCookingDef cookingDef = item.getCookingDef();
 					p.message("The meat is now nicely cooked");
 					message(p, "Now speak to the cooking instructor again");
-					p.incExp(Skills.COOKING, cookingDef.getExp(), true);
+					p.incExp(SKILLS.COOKING.id(), cookingDef.getExp(), true);
 					p.getCache().set("tutorial", 31);
 					p.getInventory().replace(ItemId.RAW_RAT_MEAT.id(), ItemId.COOKEDMEAT.id());
 
@@ -111,7 +111,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 				p.message("Nothing interesting happens");
 				return;
 			}
-			if (p.getSkills().getLevel(Skills.COOKING) < cookingDef.getReqLevel()) {
+			if (p.getSkills().getLevel(SKILLS.COOKING.id()) < cookingDef.getReqLevel()) {
 				String itemName = item.getDef().getName().toLowerCase();
 				itemName = itemName.startsWith("raw ") ? itemName.substring(4) :
 					itemName.startsWith("uncooked ") ? itemName.substring(9) : itemName;
@@ -138,7 +138,8 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 			else
 				p.message(cookingOnMessage(p, item, object, needOven));
 			showBubble(p, item);
-			p.setBatchEvent(new BatchEvent(p, timeToCook, "Cooking on Object", Formulae.getRepeatTimes(p, Skills.COOKING), false) {
+			p.setBatchEvent(new BatchEvent(p, timeToCook, "Cooking on Object", Formulae.getRepeatTimes(p, SKILLS.COOKING.id()), false) {
+
 				@Override
 				public void action() {
 					Item cookedFood = new Item(cookingDef.getCookedId());
@@ -152,10 +153,10 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 					showBubble(owner, item);
 					owner.playSound("cooking");
 					if (owner.getInventory().remove(item) > -1) {
-						if (!Formulae.burnFood(owner, item.getID(), owner.getSkills().getLevel(Skills.COOKING)) || item.getID() == ItemId.RAW_LAVA_EEL.id()) {
+						if (!Formulae.burnFood(owner, item.getID(), owner.getSkills().getLevel(SKILLS.COOKING.id())) || item.getID() == ItemId.RAW_LAVA_EEL.id()) {
 							owner.getInventory().add(cookedFood);
 							owner.message(cookedMessage(p, cookedFood, isOvenFood(item)));
-							owner.incExp(Skills.COOKING, cookingDef.getExp(), true);
+							owner.incExp(SKILLS.COOKING.id(), cookingDef.getExp(), true);
 						} else {
 							owner.getInventory().add(new Item(cookingDef.getBurnedId()));
 							if (cookedFood.getID() == ItemId.COOKEDMEAT.id()) {

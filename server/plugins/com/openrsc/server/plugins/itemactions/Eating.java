@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.itemactions;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.external.ItemId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -38,10 +38,10 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 				if (id == ItemId.SPECIAL_DEFENSE_CABBAGE.id()) {
 					player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef().getName());
 					player.playerServerMessage(MessageType.QUEST, "It seems to taste nicer than normal");
-					int lv = player.getSkills().getMaxStat(Skills.DEFENSE);
-					int newStat = player.getSkills().getLevel(Skills.DEFENSE) + 1;
+					int lv = player.getSkills().getMaxStat(SKILLS.DEFENSE.id());
+					int newStat = player.getSkills().getLevel(SKILLS.DEFENSE.id()) + 1;
 					if (newStat <= (lv + 1))
-						player.getSkills().setLevel(Skills.DEFENSE, newStat);
+						player.getSkills().setLevel(SKILLS.DEFENSE.id(), newStat);
 				} else {
 					player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef().getName()
 							+ ". Yuck!");
@@ -167,13 +167,13 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 			} else
 				player.message("You eat the " + item.getDef().getName().toLowerCase());
 
-			final boolean heals = player.getSkills().getLevel(Skills.HITPOINTS) < player.getSkills().getMaxStat(Skills.HITPOINTS);
+			final boolean heals = player.getSkills().getLevel(SKILLS.HITS.id()) < player.getSkills().getMaxStat(SKILLS.HITS.id());
 			if (heals) {
-				int newHp = player.getSkills().getLevel(Skills.HITPOINTS) + item.eatingHeals();
-				if (newHp > player.getSkills().getMaxStat(Skills.HITPOINTS)) {
-					newHp = player.getSkills().getMaxStat(Skills.HITPOINTS);
+				int newHp = player.getSkills().getLevel(SKILLS.HITS.id()) + item.eatingHeals();
+				if (newHp > player.getSkills().getMaxStat(SKILLS.HITS.id())) {
+					newHp = player.getSkills().getMaxStat(SKILLS.HITS.id());
 				}
-				player.getSkills().setLevel(Skills.HITPOINTS, newHp);
+				player.getSkills().setLevel(SKILLS.HITS.id(), newHp);
 			}
 			sleep(325);
 			if (heals && !isKebabVariant) {
@@ -192,16 +192,16 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 		if (rand == 0) { // 1/32 or 3% chance chance of 2-4 damage (can never kill)
 			player.message("That tasted a bit dodgy");
 			player.message("You feel a bit ill");
-			if (player.getSkills().getLevel(Skills.HITPOINTS) > 2) {
+			if (player.getSkills().getLevel(SKILLS.HITS.id()) > 2) {
 				int dmg = DataConversions.random(2, 4);
-				int newHp = Math.max(player.getSkills().getLevel(Skills.HITPOINTS) - dmg, 1);
-				player.getSkills().setLevel(Skills.HITPOINTS, newHp);
+				int newHp = Math.max(player.getSkills().getLevel(SKILLS.HITS.id()) - dmg, 1);
+				player.getSkills().setLevel(SKILLS.HITS.id(), newHp);
 			}
 		} else if (rand <= 1) { // 1/32 or 3% chance to heal 30 hits and gaining 1-3 levels att, str, def
 			player.message("Wow that was an amazing kebab!");
 			player.message("You feel slightly invigorated");
 			int boost = DataConversions.random(1, 3);
-			int[] skills = {Skills.ATTACK, Skills.STRENGTH, Skills.DEFENSE};
+			int[] skills = {SKILLS.ATTACK.id(), SKILLS.STRENGTH.id(), SKILLS.DEFENSE.id()};
 			for (int skill : skills) {
 				if (player.getSkills().getLevel(skill) <= player.getSkills().getMaxStat(skill)) {
 					player.getSkills().setLevel(skill, player.getSkills().getLevel(skill) + boost);
@@ -214,17 +214,17 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 			hpRestored = DataConversions.random(10, 20);
 		} else if (rand <= 28) { // 20/32 or 62% chance of healing 10% max hits
 			player.message("It heals some health");
-			hpRestored = player.getSkills().getMaxStat(Skills.HITPOINTS) * 10 / 100;
+			hpRestored = player.getSkills().getMaxStat(SKILLS.HITS.id()) * 10 / 100;
 		} else { // 3/32 or 9% that does nothing
 			player.message("The kebab didn't seem to do a lot");
 			hpRestored = 0;
 		}
-		if (hpRestored > 0 && player.getSkills().getLevel(Skills.HITPOINTS) < player.getSkills().getMaxStat(Skills.HITPOINTS)) {
-			int newStat = player.getSkills().getLevel(Skills.HITPOINTS) + hpRestored;
-			if (newStat > player.getSkills().getMaxStat(Skills.HITPOINTS)) {
-				newStat = player.getSkills().getMaxStat(Skills.HITPOINTS);
+		if (hpRestored > 0 && player.getSkills().getLevel(SKILLS.HITS.id()) < player.getSkills().getMaxStat(SKILLS.HITS.id())) {
+			int newStat = player.getSkills().getLevel(SKILLS.HITS.id()) + hpRestored;
+			if (newStat > player.getSkills().getMaxStat(SKILLS.HITS.id())) {
+				newStat = player.getSkills().getMaxStat(SKILLS.HITS.id());
 			}
-			player.getSkills().setLevel(Skills.HITPOINTS, newStat);
+			player.getSkills().setLevel(SKILLS.HITS.id(), newStat);
 		}
 	}
 	
@@ -232,11 +232,11 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 		player.message("You eat the " + item.getDef().getName());
 		player.message("It heals some health");
 		// restores up to 19
-		int newStat = player.getSkills().getLevel(Skills.HITPOINTS) + 19;
-		if (newStat > player.getSkills().getMaxStat(Skills.HITPOINTS)) {
-			newStat = player.getSkills().getMaxStat(Skills.HITPOINTS);
+		int newStat = player.getSkills().getLevel(SKILLS.HITS.id()) + 19;
+		if (newStat > player.getSkills().getMaxStat(SKILLS.HITS.id())) {
+			newStat = player.getSkills().getMaxStat(SKILLS.HITS.id());
 		}
-		player.getSkills().setLevel(Skills.HITPOINTS, newStat);
+		player.getSkills().setLevel(SKILLS.HITS.id(), newStat);
 		switch(DataConversions.random(0,2)) {
 			case 0:
 				playerTalk(player, null, "Yummmmm!");

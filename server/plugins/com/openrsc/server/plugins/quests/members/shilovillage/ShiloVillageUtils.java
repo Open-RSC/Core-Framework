@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.quests.members.shilovillage;
 import com.openrsc.server.Constants;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -48,7 +48,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				p.damage(1);
 				sleep(500);
 				p.teleport(352, 3650);
-				p.damage((int) (getCurrentLevel(p, Skills.HITPOINTS) * 0.2 + 10));
+				p.damage((int) (getCurrentLevel(p, SKILLS.HITS.id()) * 0.2 + 10));
 				message(p, "You hit the floor and it knocks the wind out of you!");
 				playerTalk(p, null, "Ugghhhh!!");
 			}
@@ -59,7 +59,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				playerTalk(p, null, "Yay!");
 				p.teleport(352, 3650);
 			}
-			p.incExp(Skills.AGILITY, 30, true);
+			p.incExp(SKILLS.AGILITY.id(), 30, true);
 			if(p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == 2) {
 				p.updateQuestStage(Constants.Quests.SHILO_VILLAGE, 3);
 			}
@@ -71,7 +71,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 	}
 
 	public static boolean succeed(Player player, int req) {
-		int level_difference = getCurrentLevel(player, Skills.AGILITY) - req;
+		int level_difference = getCurrentLevel(player, SKILLS.AGILITY.id()) - req;
 		int percent = random(1, 100);
 
 		if (level_difference < 0)
@@ -288,7 +288,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				"Yes, that seems fine.",
 				"No, it sounds a bit dangerous.");
 			if (menu == 0) {
-				if (getCurrentLevel(p, Skills.PRAYER) < 10) {
+				if (getCurrentLevel(p, SKILLS.PRAYER.id()) < 10) {
 					p.message("You have no spiritual energy that the crystal can draw from.");
 					sleep(1200);
 					p.message("You need to have at least 10 prayer points for it to work.");
@@ -298,19 +298,19 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				//TODO: check ranges
 				if (objectX - p.getX() <= 5 && objectX - p.getX() >= -5) {
 					p.message("The crystal blazes brilliantly.");
-					p.getSkills().subtractLevel(Skills.PRAYER, 1);
+					p.getSkills().subtractLevel(SKILLS.PRAYER.id(), 1);
 				} else if (objectX - p.getX() <= 7 && objectX - p.getX() >= -7) {
 					p.message("@yel@The crystal is very bright.");
-					p.getSkills().subtractLevel(Skills.PRAYER, 1);
+					p.getSkills().subtractLevel(SKILLS.PRAYER.id(), 1);
 				}else if (objectX - p.getX() <= 10 && objectX - p.getX() >= -10) {
 					p.message("@red@The crystal glows brightly");
-					p.getSkills().subtractLevel(Skills.PRAYER, 1);
+					p.getSkills().subtractLevel(SKILLS.PRAYER.id(), 1);
 				} else if (objectX - p.getX() <= 20 && objectX - p.getX() >= -20) {
 					p.message("The crystal glows feintly");
-					p.getSkills().subtractLevel(Skills.PRAYER, 1);
+					p.getSkills().subtractLevel(SKILLS.PRAYER.id(), 1);
 				} else {
 					p.message("Nothing seems different about the Crystal.");
-					p.getSkills().subtractLevel(Skills.PRAYER, 2);
+					p.getSkills().subtractLevel(SKILLS.PRAYER.id(), 2);
 				}
 			} else if (menu == 1) {
 				p.message("You decide not to allow the crystal to draw spiritual energy from your body.");
@@ -403,7 +403,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 	@Override
 	public void onInvUseOnItem(Player p, Item item1, Item item2) {
 		if (Functions.compareItemsIds(item1, item2, ItemId.BONE_BEADS.id(), ItemId.BRONZE_WIRE.id())) {
-			if (getCurrentLevel(p, Skills.CRAFTING) < 20) {
+			if (getCurrentLevel(p, SKILLS.CRAFTING.id()) < 20) {
 				p.message("You need a level of 20 Crafting to craft this.");
 				return;
 			}
@@ -418,7 +418,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				return;
 			}
 			if (p.getCache().hasKey("can_chisel_bone")) {
-				if (getCurrentLevel(p, Skills.CRAFTING) < 20) {
+				if (getCurrentLevel(p, SKILLS.CRAFTING.id()) < 20) {
 					p.message("You need a level of 20 Crafting to craft this.");
 					return;
 				}
@@ -426,21 +426,21 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 					"you start to craft the bone.");
 				p.message("You succesfully make a key out of the bone shard.");
 				p.getInventory().replace(ItemId.BONE_SHARD.id(), ItemId.BONE_KEY.id());
-				p.incExp(Skills.CRAFTING, 35, true);
+				p.incExp(SKILLS.CRAFTING.id(), 35, true);
 			} else {
 				message(p, "You're not quite sure what to make with this.");
 				p.message("Perhaps it will come to you as you discover more about Rashiliyia?");
 			}
 		}
 		else if (Functions.compareItemsIds(item1, item2, ItemId.CHISEL.id(), ItemId.SWORD_POMMEL.id())) {
-			if (getCurrentLevel(p, Skills.CRAFTING) < 20) {
+			if (getCurrentLevel(p, SKILLS.CRAFTING.id()) < 20) {
 				p.message("You need a level of 20 Crafting to craft this.");
 				return;
 			}
 			message(p, "You prepare the ivory pommel and the chisel to start crafting...",
 				"You successfully craft some of the ivory into beads.");
 			p.message("They may look good as part of a necklace.");
-			p.incExp(Skills.CRAFTING, 35, true);
+			p.incExp(SKILLS.CRAFTING.id(), 35, true);
 			p.getInventory().replace(ItemId.SWORD_POMMEL.id(), ItemId.BONE_BEADS.id());
 		}
 	}

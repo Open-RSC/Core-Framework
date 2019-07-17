@@ -4,7 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -92,7 +92,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 		p.message("well done you have completed the grand tree quest");
 		int[] questData = Quests.questData.get(Quests.GRAND_TREE);
 		//keep order kosher
-		int[] skillIDs = {Skills.AGILITY, Skills.ATTACK, Skills.MAGIC};
+		int[] skillIDs = {SKILLS.AGILITY.id(), SKILLS.ATTACK.id(), SKILLS.MAGIC.id()};
 		//1600 for agility, 1600 for attack, 600 for magic
 		int[] baseAmounts = {1600, 1600, 600};
 		//1200 for agility, 1200 for attack, 200 for magic
@@ -1321,10 +1321,10 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 				"...you need a key");
 		}
 		else if (obj.getID() == WATCH_TOWER_UP) {
-			if (getCurrentLevel(p, Skills.AGILITY) >= 25) {
+			if (getCurrentLevel(p, SKILLS.AGILITY.id()) >= 25) {
 				p.message("you jump up and grab hold of the platform");
 				p.teleport(710, 2364);
-				p.incExp(Skills.AGILITY, 30, true);
+				p.incExp(SKILLS.AGILITY.id(), 30, true);
 				sleep(3000);
 				p.message("and pull yourself up");
 			} else {

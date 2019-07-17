@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.itemactions;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.external.ItemId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
@@ -217,7 +217,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		player.message("You drink some of your " + item.getDef().getName().toLowerCase());
 		player.getInventory().remove(item);
 		player.getInventory().add(new Item(newItem));
-		player.getSkills().setLevel(Skills.FISHING, player.getSkills().getMaxStat(Skills.FISHING) + 3);
+		player.getSkills().setLevel(SKILLS.FISHING.id(), player.getSkills().getMaxStat(SKILLS.FISHING.id()) + 3);
 		sleep(1200);
 		if (left <= 0) {
 			player.message("You have finished your potion");
@@ -281,56 +281,56 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		int defenceDecrease = (int) 12.5;
 		int hitsDecrease = 10;
 
-		if (player.getSkills().getLevel(Skills.ATTACK) > player.getSkills().getMaxStat(Skills.ATTACK)) {
-			int baseStat = player.getSkills().getMaxStat(Skills.ATTACK);
-			int newStat = baseStat + DataConversions.roundUp(player.getSkills().getMaxStat(Skills.ATTACK) / 100D * attackBoost);
-			if (newStat > player.getSkills().getLevel(Skills.ATTACK)) {
-				player.getSkills().setLevel(Skills.ATTACK, newStat);
+		if (player.getSkills().getLevel(SKILLS.ATTACK.id()) > player.getSkills().getMaxStat(SKILLS.ATTACK.id())) {
+			int baseStat = player.getSkills().getMaxStat(SKILLS.ATTACK.id());
+			int newStat = baseStat + DataConversions.roundUp(player.getSkills().getMaxStat(SKILLS.ATTACK.id()) / 100D * attackBoost);
+			if (newStat > player.getSkills().getLevel(SKILLS.ATTACK.id())) {
+				player.getSkills().setLevel(SKILLS.ATTACK.id(), newStat);
 			}
 		} else {
-			int baseStat = player.getSkills().getLevel(Skills.ATTACK);
-			int newStat = baseStat + DataConversions.roundUp(player.getSkills().getMaxStat(Skills.ATTACK) / 100D * attackBoost);
-			if (newStat > player.getSkills().getLevel(Skills.ATTACK)) {
-				player.getSkills().setLevel(Skills.ATTACK, newStat);
+			int baseStat = player.getSkills().getLevel(SKILLS.ATTACK.id());
+			int newStat = baseStat + DataConversions.roundUp(player.getSkills().getMaxStat(SKILLS.ATTACK.id()) / 100D * attackBoost);
+			if (newStat > player.getSkills().getLevel(SKILLS.ATTACK.id())) {
+				player.getSkills().setLevel(SKILLS.ATTACK.id(), newStat);
 			}
 		}
-		if (player.getSkills().getLevel(Skills.STRENGTH) > player.getSkills().getMaxStat(Skills.STRENGTH)) {
-			int baseStat = player.getSkills().getMaxStat(Skills.STRENGTH);
-			int newStat = baseStat + DataConversions.roundUp(player.getSkills().getMaxStat(Skills.STRENGTH) / 100D * strengthBoost);
-			if (newStat > player.getSkills().getLevel(Skills.STRENGTH)) {
-				player.getSkills().setLevel(Skills.STRENGTH, newStat);
+		if (player.getSkills().getLevel(SKILLS.STRENGTH.id()) > player.getSkills().getMaxStat(SKILLS.STRENGTH.id())) {
+			int baseStat = player.getSkills().getMaxStat(SKILLS.STRENGTH.id());
+			int newStat = baseStat + DataConversions.roundUp(player.getSkills().getMaxStat(SKILLS.STRENGTH.id()) / 100D * strengthBoost);
+			if (newStat > player.getSkills().getLevel(SKILLS.STRENGTH.id())) {
+				player.getSkills().setLevel(SKILLS.STRENGTH.id(), newStat);
 			}
 		} else {
-			int baseStat = player.getSkills().getLevel(Skills.STRENGTH);
-			int newStat = baseStat + DataConversions.roundUp(player.getSkills().getMaxStat(Skills.STRENGTH) / 100D * strengthBoost);
-			if (newStat > player.getSkills().getLevel(Skills.STRENGTH)) {
-				player.getSkills().setLevel(Skills.STRENGTH, newStat);
+			int baseStat = player.getSkills().getLevel(SKILLS.STRENGTH.id());
+			int newStat = baseStat + DataConversions.roundUp(player.getSkills().getMaxStat(SKILLS.STRENGTH.id()) / 100D * strengthBoost);
+			if (newStat > player.getSkills().getLevel(SKILLS.STRENGTH.id())) {
+				player.getSkills().setLevel(SKILLS.STRENGTH.id(), newStat);
 			}
 		}
-		if (player.getSkills().getLevel(Skills.DEFENSE) < player.getSkills().getMaxStat(Skills.DEFENSE)) {
-			int baseStat = player.getSkills().getMaxStat(Skills.DEFENSE);
-			int newStat = baseStat - DataConversions.roundUp(player.getSkills().getMaxStat(Skills.DEFENSE) / 100D * defenceDecrease);
-			if (newStat < player.getSkills().getLevel(Skills.DEFENSE)) {
-				player.getSkills().setLevel(Skills.DEFENSE, newStat);
+		if (player.getSkills().getLevel(SKILLS.DEFENSE.id()) < player.getSkills().getMaxStat(SKILLS.DEFENSE.id())) {
+			int baseStat = player.getSkills().getMaxStat(SKILLS.DEFENSE.id());
+			int newStat = baseStat - DataConversions.roundUp(player.getSkills().getMaxStat(SKILLS.DEFENSE.id()) / 100D * defenceDecrease);
+			if (newStat < player.getSkills().getLevel(SKILLS.DEFENSE.id())) {
+				player.getSkills().setLevel(SKILLS.DEFENSE.id(), newStat);
 			}
 		} else {
-			int baseStat = player.getSkills().getLevel(Skills.DEFENSE);
-			int newStat = baseStat - DataConversions.roundUp(player.getSkills().getMaxStat(Skills.DEFENSE) / 100D * defenceDecrease);
-			if (newStat < player.getSkills().getLevel(Skills.DEFENSE)) {
-				player.getSkills().setLevel(Skills.DEFENSE, newStat);
+			int baseStat = player.getSkills().getLevel(SKILLS.DEFENSE.id());
+			int newStat = baseStat - DataConversions.roundUp(player.getSkills().getMaxStat(SKILLS.DEFENSE.id()) / 100D * defenceDecrease);
+			if (newStat < player.getSkills().getLevel(SKILLS.DEFENSE.id())) {
+				player.getSkills().setLevel(SKILLS.DEFENSE.id(), newStat);
 			}
 		}
-		if (player.getSkills().getLevel(Skills.HITPOINTS) < player.getSkills().getMaxStat(Skills.HITPOINTS)) {
-			int baseStat = player.getSkills().getMaxStat(Skills.HITPOINTS);
-			int newStat = baseStat - DataConversions.roundUp(player.getSkills().getMaxStat(Skills.HITPOINTS) / 100D * hitsDecrease);
-			if (newStat < player.getSkills().getLevel(Skills.HITPOINTS)) {
-				player.getSkills().setLevel(Skills.HITPOINTS, newStat);
+		if (player.getSkills().getLevel(SKILLS.HITS.id()) < player.getSkills().getMaxStat(SKILLS.HITS.id())) {
+			int baseStat = player.getSkills().getMaxStat(SKILLS.HITS.id());
+			int newStat = baseStat - DataConversions.roundUp(player.getSkills().getMaxStat(SKILLS.HITS.id()) / 100D * hitsDecrease);
+			if (newStat < player.getSkills().getLevel(SKILLS.HITS.id())) {
+				player.getSkills().setLevel(SKILLS.HITS.id(), newStat);
 			}
 		} else {
-			int baseStat = player.getSkills().getLevel(Skills.HITPOINTS);
-			int newStat = baseStat - DataConversions.roundUp(player.getSkills().getMaxStat(Skills.HITPOINTS) / 100D * hitsDecrease);
-			if (newStat < player.getSkills().getLevel(Skills.HITPOINTS)) {
-				player.getSkills().setLevel(Skills.HITPOINTS, newStat);
+			int baseStat = player.getSkills().getLevel(SKILLS.HITS.id());
+			int newStat = baseStat - DataConversions.roundUp(player.getSkills().getMaxStat(SKILLS.HITS.id()) / 100D * hitsDecrease);
+			if (newStat < player.getSkills().getLevel(SKILLS.HITS.id())) {
+				player.getSkills().setLevel(SKILLS.HITS.id(), newStat);
 			}
 		}
 		sleep(1200);
@@ -345,11 +345,11 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		player.message("You drink some of your " + item.getDef().getName().toLowerCase());
 		player.getInventory().remove(item);
 		player.getInventory().add(new Item(newItem));
-		int newPrayer = player.getSkills().getLevel(Skills.PRAYER) + (int) ((player.getSkills().getMaxStat(Skills.PRAYER) * 0.25) + 7);
-		if (newPrayer > player.getSkills().getMaxStat(Skills.PRAYER)) {
-			newPrayer = player.getSkills().getMaxStat(Skills.PRAYER);
+		int newPrayer = player.getSkills().getLevel(SKILLS.PRAYER.id()) + (int) ((player.getSkills().getMaxStat(SKILLS.PRAYER.id()) * 0.25) + 7);
+		if (newPrayer > player.getSkills().getMaxStat(SKILLS.PRAYER.id())) {
+			newPrayer = player.getSkills().getMaxStat(SKILLS.PRAYER.id());
 		}
-		player.getSkills().setLevel(Skills.PRAYER, newPrayer);
+		player.getSkills().setLevel(SKILLS.PRAYER.id(), newPrayer);
 		sleep(1200);
 		if (left <= 0) {
 			player.message("You have finished your potion");
@@ -362,8 +362,8 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		player.message("You drink some of your " + item.getDef().getName().toLowerCase());
 		player.getInventory().remove(item);
 		player.getInventory().add(new Item(newItem));
-		for (int i = Skills.ATTACK; i < Skills.COOKING; i++) {
-			if (i == Skills.HITPOINTS || i == Skills.PRAYER) {
+		for (int i = SKILLS.ATTACK.id(); i < SKILLS.COOKING.id(); i++) {
+			if (i == SKILLS.HITS.id() || i == SKILLS.PRAYER.id()) {
 				continue;
 			}
 			if (player.getSkills().getLevel(i) > player.getSkills().getMaxStat(i)) {
@@ -415,27 +415,27 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		player.playerServerMessage(MessageType.QUEST, "You feel slightly reinvigorated");
 		player.playerServerMessage(MessageType.QUEST, "And slightly dizzy too");
 		if (item.getID() == ItemId.WHISKY.id())
-			player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) - 6);
+			player.getSkills().setLevel(SKILLS.ATTACK.id(), player.getSkills().getLevel(SKILLS.ATTACK.id()) - 6);
 		else
-			player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) - 3);
-		if (player.getSkills().getLevel(Skills.STRENGTH) <= player.getSkills().getMaxStat(Skills.STRENGTH)) {
-			player.getSkills().setLevel(Skills.STRENGTH, player.getSkills().getLevel(Skills.STRENGTH) + 5);
+			player.getSkills().setLevel(SKILLS.ATTACK.id(), player.getSkills().getLevel(SKILLS.ATTACK.id()) - 3);
+		if (player.getSkills().getLevel(SKILLS.STRENGTH.id()) <= player.getSkills().getMaxStat(SKILLS.STRENGTH.id())) {
+			player.getSkills().setLevel(SKILLS.STRENGTH.id(), player.getSkills().getLevel(SKILLS.STRENGTH.id()) + 5);
 		}
-		final boolean heals = player.getSkills().getLevel(Skills.HITPOINTS) < player.getSkills().getMaxStat(Skills.HITPOINTS);
+		final boolean heals = player.getSkills().getLevel(SKILLS.HITS.id()) < player.getSkills().getMaxStat(SKILLS.HITS.id());
 		if (heals) {
-			int newHp = player.getSkills().getLevel(Skills.HITPOINTS) + 4;
-			if (newHp > player.getSkills().getMaxStat(Skills.HITPOINTS)) {
-				newHp = player.getSkills().getMaxStat(Skills.HITPOINTS);
+			int newHp = player.getSkills().getLevel(SKILLS.HITS.id()) + 4;
+			if (newHp > player.getSkills().getMaxStat(SKILLS.HITS.id())) {
+				newHp = player.getSkills().getMaxStat(SKILLS.HITS.id());
 			}
-			player.getSkills().setLevel(Skills.HITPOINTS, newHp);
+			player.getSkills().setLevel(SKILLS.HITS.id(), newHp);
 		}
 		player.getInventory().remove(item);
 	}
 
 	private void handleCocktail(Player player, Item item) {
-		player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) - 3);
-		player.getSkills().setLevel(Skills.DEFENSE, player.getSkills().getLevel(Skills.DEFENSE) - 1);
-		player.getSkills().setLevel(Skills.STRENGTH, player.getSkills().getLevel(Skills.STRENGTH) - 4);
+		player.getSkills().setLevel(SKILLS.ATTACK.id(), player.getSkills().getLevel(SKILLS.ATTACK.id()) - 3);
+		player.getSkills().setLevel(SKILLS.DEFENSE.id(), player.getSkills().getLevel(SKILLS.DEFENSE.id()) - 1);
+		player.getSkills().setLevel(SKILLS.STRENGTH.id(), player.getSkills().getLevel(SKILLS.STRENGTH.id()) - 4);
 		player.playerServerMessage(MessageType.QUEST, "You drink the cocktail");
 		player.playerServerMessage(MessageType.QUEST, "It tastes awful..yuck");
 		player.getInventory().remove(item);
@@ -444,12 +444,12 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 	}
 
 	private void handleFruitCocktail(Player player, Item item) {
-		if (player.getSkills().getLevel(Skills.HITPOINTS) < player.getSkills().getMaxStat(Skills.HITPOINTS)) {
-			int newHp = player.getSkills().getLevel(Skills.HITPOINTS) + 8;
-			if (newHp > player.getSkills().getMaxStat(Skills.HITPOINTS)) {
-				newHp = player.getSkills().getMaxStat(Skills.HITPOINTS);
+		if (player.getSkills().getLevel(SKILLS.HITS.id()) < player.getSkills().getMaxStat(SKILLS.HITS.id())) {
+			int newHp = player.getSkills().getLevel(SKILLS.HITS.id()) + 8;
+			if (newHp > player.getSkills().getMaxStat(SKILLS.HITS.id())) {
+				newHp = player.getSkills().getMaxStat(SKILLS.HITS.id());
 			}
-			player.getSkills().setLevel(Skills.HITPOINTS, newHp);
+			player.getSkills().setLevel(SKILLS.HITS.id(), newHp);
 		}
 		player.playerServerMessage(MessageType.QUEST, "You drink the cocktail");
 		player.playerServerMessage(MessageType.QUEST, "yum ..it tastes great");
@@ -459,16 +459,16 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 	}
 
 	private void handleSpecialCocktail(Player player, Item item) {
-		if (player.getSkills().getLevel(Skills.HITPOINTS) < player.getSkills().getMaxStat(Skills.HITPOINTS)) {
-			int newHp = player.getSkills().getLevel(Skills.HITPOINTS) + 5;
-			if (newHp > player.getSkills().getMaxStat(Skills.HITPOINTS)) {
-				newHp = player.getSkills().getMaxStat(Skills.HITPOINTS);
+		if (player.getSkills().getLevel(SKILLS.HITS.id()) < player.getSkills().getMaxStat(SKILLS.HITS.id())) {
+			int newHp = player.getSkills().getLevel(SKILLS.HITS.id()) + 5;
+			if (newHp > player.getSkills().getMaxStat(SKILLS.HITS.id())) {
+				newHp = player.getSkills().getMaxStat(SKILLS.HITS.id());
 			}
-			player.getSkills().setLevel(Skills.HITPOINTS, newHp);
+			player.getSkills().setLevel(SKILLS.HITS.id(), newHp);
 		}
-		player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) - 4);
-		if (player.getSkills().getLevel(Skills.STRENGTH) <= player.getSkills().getMaxStat(Skills.STRENGTH)) {
-			player.getSkills().setLevel(Skills.STRENGTH, player.getSkills().getLevel(Skills.STRENGTH) + 6);
+		player.getSkills().setLevel(SKILLS.ATTACK.id(), player.getSkills().getLevel(SKILLS.ATTACK.id()) - 4);
+		if (player.getSkills().getLevel(SKILLS.STRENGTH.id()) <= player.getSkills().getMaxStat(SKILLS.STRENGTH.id())) {
+			player.getSkills().setLevel(SKILLS.STRENGTH.id(), player.getSkills().getLevel(SKILLS.STRENGTH.id()) + 6);
 		}
 		player.playerServerMessage(MessageType.QUEST, "You drink the cocktail");
 		player.playerServerMessage(MessageType.QUEST, "yum ..it tastes great");
@@ -484,7 +484,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		player.getInventory().remove(item);
 		player.getInventory().add(new Item(ItemId.JUG.id()));
 
-		player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) - 3);
+		player.getSkills().setLevel(SKILLS.ATTACK.id(), player.getSkills().getLevel(SKILLS.ATTACK.id()) - 3);
 		sleep(1200);
 		player.message("You start to feel sick");
 	}
@@ -501,14 +501,14 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		} else {
 			player.getInventory().add(new Item(ItemId.JUG.id()));
 		}
-		if (player.getSkills().getLevel(Skills.HITPOINTS) < player.getSkills().getMaxStat(Skills.HITPOINTS)) {
-			int newStat = player.getSkills().getLevel(Skills.HITPOINTS) + 11;
-			if (newStat > player.getSkills().getMaxStat(Skills.HITPOINTS)) {
-				newStat = player.getSkills().getMaxStat(Skills.HITPOINTS);
+		if (player.getSkills().getLevel(SKILLS.HITS.id()) < player.getSkills().getMaxStat(SKILLS.HITS.id())) {
+			int newStat = player.getSkills().getLevel(SKILLS.HITS.id()) + 11;
+			if (newStat > player.getSkills().getMaxStat(SKILLS.HITS.id())) {
+				newStat = player.getSkills().getMaxStat(SKILLS.HITS.id());
 			}
-			player.getSkills().setLevel(Skills.HITPOINTS, newStat);
+			player.getSkills().setLevel(SKILLS.HITS.id(), newStat);
 		}
-		player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) - 3);
+		player.getSkills().setLevel(SKILLS.ATTACK.id(), player.getSkills().getLevel(SKILLS.ATTACK.id()) - 3);
 	}
 
 	private void handleChocolatyMilk(Player player, Item item) {
@@ -516,12 +516,12 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		player.message("You drink the " + item.getDef().getName().toLowerCase());
 		player.getInventory().remove(item);
 		player.getInventory().add(new Item(ItemId.BUCKET.id()));
-		if (player.getSkills().getLevel(Skills.HITPOINTS) < player.getSkills().getMaxStat(Skills.HITPOINTS)) {
-			int newHp = player.getSkills().getLevel(Skills.HITPOINTS) + 4;
-			if (newHp > player.getSkills().getMaxStat(Skills.HITPOINTS)) {
-				newHp = player.getSkills().getMaxStat(Skills.HITPOINTS);
+		if (player.getSkills().getLevel(SKILLS.HITS.id()) < player.getSkills().getMaxStat(SKILLS.HITS.id())) {
+			int newHp = player.getSkills().getLevel(SKILLS.HITS.id()) + 4;
+			if (newHp > player.getSkills().getMaxStat(SKILLS.HITS.id())) {
+				newHp = player.getSkills().getMaxStat(SKILLS.HITS.id());
 			}
-			player.getSkills().setLevel(Skills.HITPOINTS, newHp);
+			player.getSkills().setLevel(SKILLS.HITS.id(), newHp);
 		}
 	}
 
@@ -529,22 +529,22 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		showBubble(player, item);
 		player.message("You drink the " + item.getDef().getName().toLowerCase());
 		player.getInventory().remove(item);
-		int changeHp = (player.getSkills().getMaxStat(Skills.HITPOINTS) > 55 ? 3 : 2);
-		if (player.getSkills().getLevel(Skills.HITPOINTS) < player.getSkills().getMaxStat(Skills.HITPOINTS)) {
-			int newHp = player.getSkills().getLevel(Skills.HITPOINTS) + changeHp;
-			if (newHp > player.getSkills().getMaxStat(Skills.HITPOINTS)) {
-				newHp = player.getSkills().getMaxStat(Skills.HITPOINTS);
+		int changeHp = (player.getSkills().getMaxStat(SKILLS.HITS.id()) > 55 ? 3 : 2);
+		if (player.getSkills().getLevel(SKILLS.HITS.id()) < player.getSkills().getMaxStat(SKILLS.HITS.id())) {
+			int newHp = player.getSkills().getLevel(SKILLS.HITS.id()) + changeHp;
+			if (newHp > player.getSkills().getMaxStat(SKILLS.HITS.id())) {
+				newHp = player.getSkills().getMaxStat(SKILLS.HITS.id());
 			}
-			player.getSkills().setLevel(Skills.HITPOINTS, newHp);
+			player.getSkills().setLevel(SKILLS.HITS.id(), newHp);
 		}
-		int changeAtt = (player.getSkills().getMaxStat(Skills.ATTACK) > 55 ? 3 : 2);
-		int maxWithTea = (player.getSkills().getMaxStat(Skills.ATTACK) + changeAtt);
-		if (maxWithTea - player.getSkills().getLevel(Skills.ATTACK) < changeAtt) {
-			changeAtt = maxWithTea - player.getSkills().getLevel(Skills.ATTACK);
+		int changeAtt = (player.getSkills().getMaxStat(SKILLS.ATTACK.id()) > 55 ? 3 : 2);
+		int maxWithTea = (player.getSkills().getMaxStat(SKILLS.ATTACK.id()) + changeAtt);
+		if (maxWithTea - player.getSkills().getLevel(SKILLS.ATTACK.id()) < changeAtt) {
+			changeAtt = maxWithTea - player.getSkills().getLevel(SKILLS.ATTACK.id());
 		}
-		if (player.getSkills().getLevel(Skills.ATTACK) <= 
-				(player.getSkills().getMaxStat(Skills.ATTACK) + (player.getSkills().getMaxStat(Skills.ATTACK) > 55 ? 3 : 2))) {
-			player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) + changeAtt);
+		if (player.getSkills().getLevel(SKILLS.ATTACK.id()) <=
+				(player.getSkills().getMaxStat(SKILLS.ATTACK.id()) + (player.getSkills().getMaxStat(SKILLS.ATTACK.id()) > 55 ? 3 : 2))) {
+			player.getSkills().setLevel(SKILLS.ATTACK.id(), player.getSkills().getLevel(SKILLS.ATTACK.id()) + changeAtt);
 		}
 	}
 
@@ -555,16 +555,16 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		player.playerServerMessage(MessageType.QUEST, "And slightly dizzy too");
 		player.getInventory().remove(item);
 		player.getInventory().add(new Item(ItemId.BEER_GLASS.id()));
-		player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) - 4);
-		if (player.getSkills().getLevel(Skills.STRENGTH) <= player.getSkills().getMaxStat(Skills.STRENGTH)) {
-			player.getSkills().setLevel(Skills.STRENGTH, player.getSkills().getLevel(Skills.STRENGTH) + 2);
+		player.getSkills().setLevel(SKILLS.ATTACK.id(), player.getSkills().getLevel(SKILLS.ATTACK.id()) - 4);
+		if (player.getSkills().getLevel(SKILLS.STRENGTH.id()) <= player.getSkills().getMaxStat(SKILLS.STRENGTH.id())) {
+			player.getSkills().setLevel(SKILLS.STRENGTH.id(), player.getSkills().getLevel(SKILLS.STRENGTH.id()) + 2);
 		}
-		if (player.getSkills().getLevel(Skills.HITPOINTS) < player.getSkills().getMaxStat(Skills.HITPOINTS)) {
-			int newStat = player.getSkills().getLevel(Skills.HITPOINTS) + 1;
-			if (newStat > player.getSkills().getMaxStat(Skills.HITPOINTS)) {
-				newStat = player.getSkills().getMaxStat(Skills.HITPOINTS);
+		if (player.getSkills().getLevel(SKILLS.HITS.id()) < player.getSkills().getMaxStat(SKILLS.HITS.id())) {
+			int newStat = player.getSkills().getLevel(SKILLS.HITS.id()) + 1;
+			if (newStat > player.getSkills().getMaxStat(SKILLS.HITS.id())) {
+				newStat = player.getSkills().getMaxStat(SKILLS.HITS.id());
 			}
-			player.getSkills().setLevel(Skills.HITPOINTS, newStat);
+			player.getSkills().setLevel(SKILLS.HITS.id(), newStat);
 		}
 	}
 
@@ -575,11 +575,11 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		player.getInventory().add(new Item(ItemId.BEER_GLASS.id()));
 		sleep(1200);
 		player.message("It has a strange taste.");
-		for (int stat = Skills.ATTACK; stat < Skills.HITPOINTS; stat++) {
+		for (int stat = SKILLS.ATTACK.id(); stat < SKILLS.HITS.id(); stat++) {
 			player.getSkills().setLevel(stat, player.getSkills().getLevel(stat) - 4);
 		}
-		if (player.getSkills().getLevel(Skills.HERBLAW) <= player.getSkills().getMaxStat(Skills.HERBLAW)) {
-			player.getSkills().setLevel(Skills.HERBLAW, player.getSkills().getLevel(Skills.HERBLAW) + 1);
+		if (player.getSkills().getLevel(SKILLS.HERBLAW.id()) <= player.getSkills().getMaxStat(SKILLS.HERBLAW.id())) {
+			player.getSkills().setLevel(SKILLS.HERBLAW.id(), player.getSkills().getLevel(SKILLS.HERBLAW.id()) + 1);
 		}
 	}
 
@@ -590,18 +590,18 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		player.getInventory().add(new Item(ItemId.BEER_GLASS.id()));
 		sleep(1200);
 		player.message("You feel very strange.");
-		for (int stat = Skills.ATTACK; stat < Skills.HITPOINTS; stat++) {
+		for (int stat = SKILLS.ATTACK.id(); stat < SKILLS.HITS.id(); stat++) {
 			player.getSkills().setLevel(stat, player.getSkills().getLevel(stat) - 4);
 		}
-		int change = (player.getSkills().getMaxStat(Skills.MAGIC) > 55 ? 3 : 2);
-		int maxWithBomb = (player.getSkills().getMaxStat(Skills.MAGIC) + change);
-		if (maxWithBomb - player.getSkills().getLevel(Skills.MAGIC) < change) {
-			change = maxWithBomb - player.getSkills().getLevel(Skills.MAGIC);
+		int change = (player.getSkills().getMaxStat(SKILLS.MAGIC.id()) > 55 ? 3 : 2);
+		int maxWithBomb = (player.getSkills().getMaxStat(SKILLS.MAGIC.id()) + change);
+		if (maxWithBomb - player.getSkills().getLevel(SKILLS.MAGIC.id()) < change) {
+			change = maxWithBomb - player.getSkills().getLevel(SKILLS.MAGIC.id());
 		}
-		if (player.getSkills().getLevel(Skills.MAGIC)
-				<= (player.getSkills().getMaxStat(Skills.MAGIC) + (player.getSkills().getMaxStat(Skills.MAGIC)
+		if (player.getSkills().getLevel(SKILLS.MAGIC.id())
+				<= (player.getSkills().getMaxStat(SKILLS.MAGIC.id()) + (player.getSkills().getMaxStat(SKILLS.MAGIC.id())
 				> 55 ? 3 : 2))) {
-			player.getSkills().setLevel(Skills.MAGIC, player.getSkills().getLevel(Skills.MAGIC) + change);
+			player.getSkills().setLevel(SKILLS.MAGIC.id(), player.getSkills().getLevel(SKILLS.MAGIC.id()) + change);
 		}
 	}
 
@@ -613,14 +613,14 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		player.getInventory().add(new Item(ItemId.BEER_GLASS.id()));
 		sleep(1600);
 		player.message("It tastes pretty strong too");
-		for (int stat = Skills.ATTACK; stat < Skills.HITPOINTS; stat++) {
+		for (int stat = SKILLS.ATTACK.id(); stat < SKILLS.HITS.id(); stat++) {
 			player.getSkills().setLevel(stat, player.getSkills().getLevel(stat) - 4);
 		}
-		if (player.getSkills().getLevel(Skills.SMITHING) <= player.getSkills().getMaxStat(Skills.SMITHING)) {
-			player.getSkills().setLevel(Skills.SMITHING, player.getSkills().getLevel(Skills.SMITHING) + 1);
+		if (player.getSkills().getLevel(SKILLS.SMITHING.id()) <= player.getSkills().getMaxStat(SKILLS.SMITHING.id())) {
+			player.getSkills().setLevel(SKILLS.SMITHING.id(), player.getSkills().getLevel(SKILLS.SMITHING.id()) + 1);
 		}
-		if (player.getSkills().getLevel(Skills.MINING) <= player.getSkills().getMaxStat(Skills.MINING)) {
-			player.getSkills().setLevel(Skills.MINING, player.getSkills().getLevel(Skills.MINING) + 1);
+		if (player.getSkills().getLevel(SKILLS.MINING.id()) <= player.getSkills().getMaxStat(SKILLS.MINING.id())) {
+			player.getSkills().setLevel(SKILLS.MINING.id(), player.getSkills().getLevel(SKILLS.MINING.id()) + 1);
 		}
 	}
 
@@ -632,16 +632,16 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		sleep(1200);
 		player.message("You feel slightly reinvigorated");
 		player.message("And slightly dizzy too.");
-		player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) - 4);
-		if (player.getSkills().getLevel(Skills.STRENGTH) <= player.getSkills().getMaxStat(Skills.STRENGTH)) {
-			player.getSkills().setLevel(Skills.STRENGTH, player.getSkills().getLevel(Skills.STRENGTH) + 2);
+		player.getSkills().setLevel(SKILLS.ATTACK.id(), player.getSkills().getLevel(SKILLS.ATTACK.id()) - 4);
+		if (player.getSkills().getLevel(SKILLS.STRENGTH.id()) <= player.getSkills().getMaxStat(SKILLS.STRENGTH.id())) {
+			player.getSkills().setLevel(SKILLS.STRENGTH.id(), player.getSkills().getLevel(SKILLS.STRENGTH.id()) + 2);
 		}
-		if (player.getSkills().getLevel(Skills.HITPOINTS) < player.getSkills().getMaxStat(Skills.HITPOINTS)) {
-			int newStat = player.getSkills().getLevel(Skills.HITPOINTS) + 2;
-			if (newStat > player.getSkills().getMaxStat(Skills.HITPOINTS)) {
-				newStat = player.getSkills().getMaxStat(Skills.HITPOINTS);
+		if (player.getSkills().getLevel(SKILLS.HITS.id()) < player.getSkills().getMaxStat(SKILLS.HITS.id())) {
+			int newStat = player.getSkills().getLevel(SKILLS.HITS.id()) + 2;
+			if (newStat > player.getSkills().getMaxStat(SKILLS.HITS.id())) {
+				newStat = player.getSkills().getMaxStat(SKILLS.HITS.id());
 			}
-			player.getSkills().setLevel(Skills.HITPOINTS, newStat);
+			player.getSkills().setLevel(SKILLS.HITS.id(), newStat);
 		}
 	}
 
@@ -652,9 +652,9 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		showBubble(player, item);
 		sleep(1200);
 		player.message("You feel slightly dizzy.");
-		player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) - 4);
-		if (player.getSkills().getLevel(Skills.STRENGTH) <= player.getSkills().getMaxStat(Skills.STRENGTH)) {
-			player.getSkills().setLevel(Skills.STRENGTH, player.getSkills().getLevel(Skills.STRENGTH) + 2);
+		player.getSkills().setLevel(SKILLS.ATTACK.id(), player.getSkills().getLevel(SKILLS.ATTACK.id()) - 4);
+		if (player.getSkills().getLevel(SKILLS.STRENGTH.id()) <= player.getSkills().getMaxStat(SKILLS.STRENGTH.id())) {
+			player.getSkills().setLevel(SKILLS.STRENGTH.id(), player.getSkills().getLevel(SKILLS.STRENGTH.id()) + 2);
 		}
 	}
 	
@@ -666,16 +666,16 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		sleep(1200);
 		player.message("You feel slightly reinvigorated");
 		player.message("And slightly dizzy too.");
-		player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) - 6);
-		if (player.getSkills().getLevel(Skills.STRENGTH) <= player.getSkills().getMaxStat(Skills.STRENGTH)) {
-			player.getSkills().setLevel(Skills.STRENGTH, player.getSkills().getLevel(Skills.STRENGTH) + 3);
+		player.getSkills().setLevel(SKILLS.ATTACK.id(), player.getSkills().getLevel(SKILLS.ATTACK.id()) - 6);
+		if (player.getSkills().getLevel(SKILLS.STRENGTH.id()) <= player.getSkills().getMaxStat(SKILLS.STRENGTH.id())) {
+			player.getSkills().setLevel(SKILLS.STRENGTH.id(), player.getSkills().getLevel(SKILLS.STRENGTH.id()) + 3);
 		}
-		if (player.getSkills().getLevel(Skills.HITPOINTS) < player.getSkills().getMaxStat(Skills.HITPOINTS)) {
-			int newStat = player.getSkills().getLevel(Skills.HITPOINTS) + 3;
-			if (newStat > player.getSkills().getMaxStat(Skills.HITPOINTS)) {
-				newStat = player.getSkills().getMaxStat(Skills.HITPOINTS);
+		if (player.getSkills().getLevel(SKILLS.HITS.id()) < player.getSkills().getMaxStat(SKILLS.HITS.id())) {
+			int newStat = player.getSkills().getLevel(SKILLS.HITS.id()) + 3;
+			if (newStat > player.getSkills().getMaxStat(SKILLS.HITS.id())) {
+				newStat = player.getSkills().getMaxStat(SKILLS.HITS.id());
 			}
-			player.getSkills().setLevel(Skills.HITPOINTS, newStat);
+			player.getSkills().setLevel(SKILLS.HITS.id(), newStat);
 		}
 	}
 
@@ -686,72 +686,72 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		switch (chance) {
 			case 0: // Hits -1 or -3
 				int c = DataConversions.random(0, 1);
-				int hp = player.getSkills().getLevel(Skills.HITPOINTS);
-				player.getSkills().setLevel(Skills.HITPOINTS, c == 0 ? hp - 1 : hp - 3);
+				int hp = player.getSkills().getLevel(SKILLS.HITS.id());
+				player.getSkills().setLevel(SKILLS.HITS.id(), c == 0 ? hp - 1 : hp - 3);
 				player.message("That tasted a bit dodgy. You feel a bit ill");
 				break;
 			case 1: // Hits + 7
 				needs = (
-					player.getSkills().getMaxStat(Skills.HITPOINTS)
-						- player.getSkills().getLevel(Skills.HITPOINTS));
+					player.getSkills().getMaxStat(SKILLS.HITS.id())
+						- player.getSkills().getLevel(SKILLS.HITS.id()));
 				needs = needs < 7 ? needs : 7;
-				player.getSkills().setLevel(Skills.HITPOINTS,
-					player.getSkills().getLevel(Skills.HITPOINTS) + needs);
+				player.getSkills().setLevel(SKILLS.HITS.id(),
+					player.getSkills().getLevel(SKILLS.HITS.id()) + needs);
 				player.message("It heals some health");
 				break;
 			case 2: // Crafting +1 Attack & Defence -1
 				needs = (
-					player.getSkills().getMaxStat(Skills.CRAFTING) + 1
-						- player.getSkills().getLevel(Skills.CRAFTING));
+					player.getSkills().getMaxStat(SKILLS.CRAFTING.id()) + 1
+						- player.getSkills().getLevel(SKILLS.CRAFTING.id()));
 				needs = needs < 4 ? needs : 4;
-				player.getSkills().setLevel(Skills.CRAFTING,
-					player.getSkills().getLevel(Skills.CRAFTING) + needs);
-				player.getSkills().setLevel(Skills.ATTACK,
-					player.getSkills().getLevel(Skills.ATTACK) - 1);
-				player.getSkills().setLevel(Skills.DEFENSE,
-					player.getSkills().getLevel(Skills.DEFENSE) - 1);
+				player.getSkills().setLevel(SKILLS.CRAFTING.id(),
+					player.getSkills().getLevel(SKILLS.CRAFTING.id()) + needs);
+				player.getSkills().setLevel(SKILLS.ATTACK.id(),
+					player.getSkills().getLevel(SKILLS.ATTACK.id()) - 1);
+				player.getSkills().setLevel(SKILLS.DEFENSE.id(),
+					player.getSkills().getLevel(SKILLS.DEFENSE.id()) - 1);
 				player.message("You feel a little strange");
 				break;
 			case 3: // Hits +? Thieving + 1
 				needs = (
-					player.getSkills().getMaxStat(Skills.HITPOINTS)
-						- player.getSkills().getLevel(Skills.HITPOINTS));
+					player.getSkills().getMaxStat(SKILLS.HITS.id())
+						- player.getSkills().getLevel(SKILLS.HITS.id()));
 				needs = needs < 30 ? needs : 30;
-				player.getSkills().setLevel(Skills.HITPOINTS,
-					player.getSkills().getLevel(Skills.HITPOINTS) + needs);
+				player.getSkills().setLevel(SKILLS.HITS.id(),
+					player.getSkills().getLevel(SKILLS.HITS.id()) + needs);
 				needs = (
-					player.getSkills().getMaxStat(Skills.THIEVING) + 1
-						- player.getSkills().getLevel(Skills.THIEVING));
+					player.getSkills().getMaxStat(SKILLS.THIEVING.id()) + 1
+						- player.getSkills().getLevel(SKILLS.THIEVING.id()));
 				needs = needs < 1 ? needs : 1;
-				player.getSkills().setLevel(Skills.THIEVING,
-					player.getSkills().getLevel(Skills.THIEVING) + needs);
+				player.getSkills().setLevel(SKILLS.THIEVING.id(),
+					player.getSkills().getLevel(SKILLS.THIEVING.id()) + needs);
 				player.message("You feel a lot better");
 				break;
 			case 4: // Hits +? Attack, Defence, Strength +4
 				needs = (
-					player.getSkills().getMaxStat(Skills.HITPOINTS)
-						- player.getSkills().getLevel(Skills.HITPOINTS));
+					player.getSkills().getMaxStat(SKILLS.HITS.id())
+						- player.getSkills().getLevel(SKILLS.HITS.id()));
 				needs = needs < 30 ? needs : 30;
-				player.getSkills().setLevel(Skills.HITPOINTS,
-					player.getSkills().getLevel(Skills.HITPOINTS) + needs);
+				player.getSkills().setLevel(SKILLS.HITS.id(),
+					player.getSkills().getLevel(SKILLS.HITS.id()) + needs);
 				needs = (
-					player.getSkills().getMaxStat(Skills.ATTACK) + 4
-						- player.getSkills().getLevel(Skills.ATTACK));
+					player.getSkills().getMaxStat(SKILLS.ATTACK.id()) + 4
+						- player.getSkills().getLevel(SKILLS.ATTACK.id()));
 				needs = needs < 4 ? needs : 4;
-				player.getSkills().setLevel(Skills.ATTACK,
-					player.getSkills().getLevel(Skills.ATTACK) + needs);
+				player.getSkills().setLevel(SKILLS.ATTACK.id(),
+					player.getSkills().getLevel(SKILLS.ATTACK.id()) + needs);
 				needs = (
-					player.getSkills().getMaxStat(Skills.STRENGTH) + 4
-						- player.getSkills().getLevel(Skills.STRENGTH));
+					player.getSkills().getMaxStat(SKILLS.STRENGTH.id()) + 4
+						- player.getSkills().getLevel(SKILLS.STRENGTH.id()));
 				needs = needs < 4 ? needs : 4;
-				player.getSkills().setLevel(Skills.STRENGTH,
-					player.getSkills().getLevel(Skills.STRENGTH) + needs);
+				player.getSkills().setLevel(SKILLS.STRENGTH.id(),
+					player.getSkills().getLevel(SKILLS.STRENGTH.id()) + needs);
 				needs = (
-					player.getSkills().getMaxStat(Skills.DEFENSE) + 4
-						- player.getSkills().getLevel(Skills.DEFENSE));
+					player.getSkills().getMaxStat(SKILLS.DEFENSE.id()) + 4
+						- player.getSkills().getLevel(SKILLS.DEFENSE.id()));
 				needs = needs < 4 ? needs : 4;
-				player.getSkills().setLevel(Skills.DEFENSE,
-					player.getSkills().getLevel(Skills.DEFENSE) + needs);
+				player.getSkills().setLevel(SKILLS.DEFENSE.id(),
+					player.getSkills().getLevel(SKILLS.DEFENSE.id()) + needs);
 				player.message("Wow that was an amazing!! You feel really invigorated");
 				break;
 			case 5: // No effect

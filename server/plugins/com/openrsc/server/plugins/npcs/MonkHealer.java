@@ -1,6 +1,6 @@
 package com.openrsc.server.plugins.npcs;
 
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -20,11 +20,11 @@ public class MonkHealer implements TalkToNpcListener, TalkToNpcExecutiveListener
 			playerTalk(p, n, "Can you heal me?", "I'm injured");
 			npcTalk(p, n, "Ok");
 			message(p, "The monk places his hands on your head", "You feel a little better");
-			int newHp = getCurrentLevel(p, Skills.HITPOINTS) + 5;
-			if (newHp > getMaxLevel(p, Skills.HITPOINTS)) {
-				newHp = getMaxLevel(p, Skills.HITPOINTS);
+			int newHp = getCurrentLevel(p, SKILLS.HITS.id()) + 5;
+			if (newHp > getMaxLevel(p, SKILLS.HITS.id())) {
+				newHp = getMaxLevel(p, SKILLS.HITS.id());
 			}
-			p.getSkills().setLevel(Skills.HITPOINTS, newHp);
+			p.getSkills().setLevel(SKILLS.HITS.id(), newHp);
 		} else if (option == 1) {
 			playerTalk(p, n, "Isn't this place built a bit out the way?");
 			npcTalk(p, n, "We like it that way",

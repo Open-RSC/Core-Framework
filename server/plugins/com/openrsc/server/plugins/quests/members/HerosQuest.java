@@ -4,7 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -84,9 +84,9 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 		player.getCache().remove("armband");
 		int[] questData = Quests.questData.get(Quests.HEROS_QUEST);
 		//keep order kosher
-		int[] skillIDs = {Skills.STRENGTH, Skills.DEFENSE, Skills.HITPOINTS,
-			Skills.ATTACK, Skills.RANGED, Skills.HERBLAW,
-			Skills.FISHING, Skills.COOKING, Skills.FIREMAKING, Skills.WOODCUT, Skills.MINING, Skills.SMITHING};
+		int[] skillIDs = {SKILLS.STRENGTH.id(), SKILLS.DEFENSE.id(), SKILLS.HITS.id(),
+			SKILLS.ATTACK.id(), SKILLS.RANGED.id(), SKILLS.HERBLAW.id(),
+			SKILLS.FISHING.id(), SKILLS.COOKING.id(), SKILLS.FIREMAKING.id(), SKILLS.WOODCUT.id(), SKILLS.MINING.id(), SKILLS.SMITHING.id()};
 		for (int i = 0; i < skillIDs.length; i++) {
 			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
 			incQuestReward(player, questData, i == (skillIDs.length - 1));
@@ -361,7 +361,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 			} else {
 				p.message("Ouch that is too hot to take");
 				p.message("I need something cold to pick it up with");
-				int damage = (int) Math.round((p.getSkills().getLevel(Skills.HITPOINTS)) * 0.15D);
+				int damage = (int) Math.round((p.getSkills().getLevel(SKILLS.HITS.id())) * 0.15D);
 				p.damage(damage);
 				return true;
 			}

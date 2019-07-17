@@ -6,7 +6,7 @@ import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.ObjectMiningDef;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -36,7 +36,7 @@ public final class Mining implements ObjectActionListener,
 	}*/
 
 	public static int getAxe(Player p) {
-		int lvl = p.getSkills().getLevel(Skills.MINING);
+		int lvl = p.getSkills().getLevel(SKILLS.MINING.id());
 		for (int i = 0; i < Formulae.miningAxeIDs.length; i++) {
 			if (p.getInventory().countId(Formulae.miningAxeIDs[i]) > 0) {
 				if (lvl >= Formulae.miningAxeLvls[i]) {
@@ -53,7 +53,7 @@ public final class Mining implements ObjectActionListener,
 		if (object.getID() == 269) {
 			if (command.equalsIgnoreCase("mine")) {
 				if (hasItem(owner, getAxe(owner))) {
-					if (getCurrentLevel(owner, Skills.MINING) >= 50) {
+					if (getCurrentLevel(owner, SKILLS.MINING.id()) >= 50) {
 						owner.message("you manage to dig a way through the rockslide");
 						if (owner.getX() <= 425) {
 							owner.teleport(428, 438);
@@ -85,7 +85,7 @@ public final class Mining implements ObjectActionListener,
 						owner.message("You need a pickaxe to mine the rock");
 						return;
 					}
-					if (getCurrentLevel(owner, Skills.MINING) < 40) {
+					if (getCurrentLevel(owner, SKILLS.MINING.id()) < 40) {
 						owner.message("You need a mining level of 40 to mine this crystal out");
 						return;
 					}
@@ -126,8 +126,8 @@ public final class Mining implements ObjectActionListener,
 		final ObjectMiningDef def = EntityHandler.getObjectMiningDef(object.getID());
 		final int axeId = getAxe(owner);
 		int retrytimes = -1;
-		final int mineLvl = owner.getSkills().getLevel(Skills.MINING);
-		final int mineXP = owner.getSkills().getExperience(Skills.MINING);
+		final int mineLvl = owner.getSkills().getLevel(SKILLS.MINING.id());
+		final int mineXP = owner.getSkills().getExperience(SKILLS.MINING.id());
 		int reqlvl = 1;
 		switch (ItemId.getById(axeId)) {
 			case BRONZE_PICKAXE:
@@ -211,7 +211,7 @@ public final class Mining implements ObjectActionListener,
 			@Override
 			public void action() {
 				final Item ore = new Item(def.getOreId());
-				if (getOre(def, owner.getSkills().getLevel(Skills.MINING), axeId) && mineLvl >= def.getReqLevel()) {
+				if (getOre(def, owner.getSkills().getLevel(SKILLS.MINING.id()), axeId) && mineLvl >= def.getReqLevel()) {
 					if (DataConversions.random(1, 200) <= (owner.getInventory().wielding(ItemId.CHARGED_DRAGONSTONE_AMULET.id()) ? 2 : 1)) {
 						owner.playSound("foundgem");
 						Item gem = new Item(getGem(), 1);
@@ -226,7 +226,7 @@ public final class Mining implements ObjectActionListener,
 						} else {
 							owner.getInventory().add(ore);
 							owner.message("You manage to obtain some " + ore.getDef().getName().toLowerCase());
-							owner.incExp(Skills.MINING, def.getExp(), true);
+							owner.incExp(SKILLS.MINING.id(), def.getExp(), true);
 						}
 						interrupt();
 						if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
@@ -261,7 +261,7 @@ public final class Mining implements ObjectActionListener,
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
-		return (command.equals("mine") || command.equals("prospect")) && obj.getID() != 588;
+		return (command.equals("mine") || command.equals("prospect")) && obj.getID() != 588 && obj.getID() != 1227;
 	}
 
 	/**

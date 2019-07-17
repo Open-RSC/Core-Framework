@@ -7,7 +7,7 @@ import com.openrsc.server.event.rsc.impl.HealEventNpc;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.world.World;
@@ -69,7 +69,7 @@ public class NpcBehaviorA {
 			}
 			//state = State.AGGRO;
 			}
-			if(npc.getLocation().inWilderness() && npc.getID() == 210 && npc.getSkills().getLevel(Skills.HITPOINTS) < npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.67)
+			if(npc.getLocation().inWilderness() && npc.getID() == 210 && npc.getSkills().getLevel(SKILLS.HITS.id()) < npc.getSkills().getMaxStat(SKILLS.HITS.id()) * 0.67)
 			{
 				npc.setHealEventNpc(new HealEventNpc(npc));
 				//lastHeal = System.currentTimeMillis();
@@ -274,8 +274,8 @@ public class NpcBehaviorA {
 				}
 			}
 		} else if (state == State.AGGRO) {
-			//if(!checkTargetCombatTimer() && npc.getID() == 210 && npc.getSkills().getLevel(Skills.HITPOINTS) > npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.67 ){
-			/*if(npc.getSkills().getLevel(Skills.HITPOINTS) < npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.67)
+			//if(!checkTargetCombatTimer() && npc.getID() == 210 && npc.getSkills().getLevel(SKILLS.HITS.id()) > npc.getSkills().getMaxStat(SKILLS.HITS.id()) * 0.67 ){
+			/*if(npc.getSkills().getLevel(SKILLS.HITS.id()) < npc.getSkills().getMaxStat(SKILLS.HITS.id()) * 0.67)
 			{
 				npc.setHealEventNpc(new HealEventNpc(npc));
 				return;
@@ -540,7 +540,7 @@ public class NpcBehaviorA {
 			//successful avoiding tackles gives agility xp
 			p.playerServerMessage(MessageType.QUEST, "You manage to push him away");
 			npcYell(p, npc, "grrrrr");
-			p.incExp(Skills.AGILITY, TACKLING_XP[DataConversions.random(0, 3)], true);
+			p.incExp(SKILLS.AGILITY.id(), TACKLING_XP[DataConversions.random(0, 3)], true);
 		} else {
 			if (!inArray(p.getSyncAttribute("gnomeball_npc", -1), -1, 0) || p.getSyncAttribute("throwing_ball_game", false)) {
 				// some other gnome beat here or player is shooting at goal
@@ -550,7 +550,7 @@ public class NpcBehaviorA {
 			removeItem(p, ItemId.GNOME_BALL.id(), 1);
 			p.playerServerMessage(MessageType.QUEST, "he takes the ball...");
 			p.playerServerMessage(MessageType.QUEST, "and pushes you to the floor");
-			p.damage((int) (Math.ceil(p.getSkills().getLevel(Skills.HITPOINTS) * 0.05)));
+			p.damage((int) (Math.ceil(p.getSkills().getLevel(SKILLS.HITS.id()) * 0.05)));
 			playerTalk(p, null, "ouch");
 			npcYell(p, npc, "yeah");
 		}
@@ -697,17 +697,17 @@ public class NpcBehaviorA {
 
 	private boolean shouldRetreat(Npc npc) {
 		if (DataConversions.inArray(Constants.GameServer.NPCS_THAT_RETREAT_NORM, npc.getID())) {
-			return npc.getSkills().getLevel(Skills.HITPOINTS) <=
-				Math.ceil(npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.20);
+			return npc.getSkills().getLevel(SKILLS.HITS.id()) <=
+				Math.ceil(npc.getSkills().getMaxStat(SKILLS.HITS.id()) * 0.20);
 		} else if (DataConversions.inArray(Constants.GameServer.NPCS_THAT_RETREAT_LOW, npc.getID())) {
-			return npc.getSkills().getLevel(Skills.HITPOINTS) <=
-				Math.ceil(npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.05);
+			return npc.getSkills().getLevel(SKILLS.HITS.id()) <=
+				Math.ceil(npc.getSkills().getMaxStat(SKILLS.HITS.id()) * 0.05);
 		}
 		return false;
 	}
 	private boolean shouldRetreat2(Npc npc) {
 		if (npc.getID() == 668) {
-			return npc.getSkills().getLevel(Skills.HITPOINTS) <= Math.ceil(npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.20);
+			return npc.getSkills().getLevel(SKILLS.HITS.id()) <= Math.ceil(npc.getSkills().getMaxStat(SKILLS.HITS.id()) * 0.20);
 		}
 		return false;
 	}

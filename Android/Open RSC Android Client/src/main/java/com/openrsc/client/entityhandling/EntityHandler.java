@@ -1,14 +1,6 @@
 package com.openrsc.client.entityhandling;
 
-import com.openrsc.client.entityhandling.defs.DoorDef;
-import com.openrsc.client.entityhandling.defs.ElevationDef;
-import com.openrsc.client.entityhandling.defs.GameObjectDef;
-import com.openrsc.client.entityhandling.defs.ItemDef;
-import com.openrsc.client.entityhandling.defs.NPCDef;
-import com.openrsc.client.entityhandling.defs.PrayerDef;
-import com.openrsc.client.entityhandling.defs.SpellDef;
-import com.openrsc.client.entityhandling.defs.SpriteDef;
-import com.openrsc.client.entityhandling.defs.TileDef;
+import com.openrsc.client.entityhandling.defs.*;
 import com.openrsc.client.entityhandling.defs.extras.AnimationDef;
 import com.openrsc.client.entityhandling.defs.extras.TextureDef;
 
@@ -2073,6 +2065,10 @@ public class EntityHandler {
 		sprites = new int[] { 309, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 		npcs.add(new NPCDef("Greatwood","A scary hard slamming tree", "", 255, 245, 400, 300, true, sprites, 0, 0, 0, 0, 345, 410, 11, 11, 30, i++));
 
+		if (Config.S_WANT_RUNECRAFTING) {
+			sprites = new int[]{6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1};
+			npcs.add(new NPCDef("Wizard Sedridor", "An old wizard", "", 0, 0, 0, 0, false, sprites, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, i++));
+		}
 		/*try {
 			PrintWriter printWriter = new PrintWriter(new FileOutputStream("NpcType.txt"), true);
 			int count = 0;
@@ -3461,22 +3457,65 @@ public class EntityHandler {
 		 * After id 2091 - Display Tea from regular RSC as the last real RSC item in note.
 		 */
 
-		items.add(new ItemDef("Bunny ears", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, true, -1, 1156, 2133));
-		items.add(new ItemDef("Scythe", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, true, -1, 1289, 2134));
+		//A bunch of custom items we don't use are in the DB
+		//Rather than delete them from the DB, use loops to load dummy items in their place
+		for (int i=2092; i<2106; i++)
+			items.add(new ItemDef("Hardcore ironman platelegs", "Take it off and what are you?", "", 280, 9, "items:9",false, true, 644, 10027084, false, true, -1, -1, i));
 
-		/*
-		items.add(new ItemDef("Ironman helm", "For just a rather very independent scaper.", "", 154, 6, false, true, 33, 11189164, false, true, -1, -1, 2135));
-		items.add(new ItemDef("Ironman platebody", "Take it off and what are you?", "", 560, 8, false, true, 322, 11189164, false, true, -1, -1, 2136));
-		items.add(new ItemDef("Ironman platelegs", "Take it off and what are you?", "", 280, 9, false, true, 644, 11189164, false, true, -1, -1, 2137));
+		//Experience Elixir
+		items.add(new ItemDef("Experience elixir", "A mysterious experience elixir once produced by hetty", "Drink", 2250, 48, "items:48",false, false, 0, 514131489, false, false, -1, -1, 2106));
 
-		items.add(new ItemDef("Ultimate ironman helm", "For Just A Rather Very Independent Scaper.", "", 154, 6, false, true, 33, 16768685, false, true, -1, -1, 2138));
-		items.add(new ItemDef("Ultimate ironman platebody", "Take it off and what are you?", "", 560, 8, false, true, 322, 16768685, false, true, -1, -1, 2139));
-		items.add(new ItemDef("Ultimate ironman platelegs", "Take it off and what are you?", "", 280, 9, false, true, 644, 16768685, false, true, -1, -1, 2140));
+		for (int i=2107; i<2133; i++)
+			items.add(new ItemDef("Hardcore ironman platelegs", "Take it off and what are you?", "", 280, 9, "items:9",false, true, 644, 10027084, false, true, -1, -1, i));
 
-		items.add(new ItemDef("Hardcore ironman helm", "For those who stand alone.", "", 154, 6, false, true, 33, 10027084, false, true, -1, -1, 2141));
-		items.add(new ItemDef("Hardcore ironman platebody", "Take it off and what are you?", "", 560, 8, false, true, 322, 10027084, false, true, -1, -1, 2142));
-		items.add(new ItemDef("Hardcore ironman platelegs", "Take it off and what are you?", "", 280, 9, false, true, 644, 10027084, false, true, -1, -1, 2143));
-		*/
+		items.add(new ItemDef("Bunny ears", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438",true, false, 0, 0, false, true, -1, 1156, 2133));
+		items.add(new ItemDef("Scythe", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438",true, false, 0, 0, false, true, -1, 1289, 2134));
+
+
+		items.add(new ItemDef("Ironman helm", "For just a rather very independent scaper.", "", 154, 6, "items:6",false, true, 33, 11189164, false, true, -1, -1, 2135));
+		items.add(new ItemDef("Ironman platebody", "Take it off and what are you?", "", 560, 8, "items:8",false, true, 322, 11189164, false, true, -1, -1, 2136));
+		items.add(new ItemDef("Ironman platelegs", "Take it off and what are you?", "", 280, 9, "items:9",false, true, 644, 11189164, false, true, -1, -1, 2137));
+
+		items.add(new ItemDef("Ultimate ironman helm", "For Just A Rather Very Independent Scaper.", "", 154, 6, "items:6",false, true, 33, 16768685, false, true, -1, -1, 2138));
+		items.add(new ItemDef("Ultimate ironman platebody", "Take it off and what are you?", "", 560, 8, "items:8",false, true, 322, 16768685, false, true, -1, -1, 2139));
+		items.add(new ItemDef("Ultimate ironman platelegs", "Take it off and what are you?", "", 280, 9, "items:9",false, true, 644, 16768685, false, true, -1, -1, 2140));
+
+		items.add(new ItemDef("Hardcore ironman helm", "For those who stand alone.", "", 154, 6, "items:6",false, true, 33, 10027084, false, true, -1, -1, 2141));
+		items.add(new ItemDef("Hardcore ironman platebody", "Take it off and what are you?", "", 560, 8, "items:8",false, true, 322, 10027084, false, true, -1, -1, 2142));
+		items.add(new ItemDef("Hardcore ironman platelegs", "Take it off and what are you?", "", 280, 9, "items:9",false, true, 644, 10027084, false, true, -1, -1, 2143));
+
+		for (int i=2144; i<2258; i++)
+			items.add(new ItemDef("Hardcore ironman platelegs", "Take it off and what are you?", "", 280, 9, "items:9",false, true, 644, 10027084, false, true, -1, -1, i));
+
+		//Runecrafting
+		items.add(new ItemDef("Rune essence", "An uncharged runestone", "", 0, -1, "items:443",false, false, 0, 0, false, false, 2259, -1, 2258));
+		items.add(new ItemDef("Rune essence", "Swap this note at any bank for the equivalent item.", "", 0, -1, "items:438",true, false, 0, 0, false, false, -1, 2258, 2259));
+		items.add(new ItemDef("Air talisman", "A mysterious power eminates from the talisman...", "Locate", 0, -1, "items:445",false, false, 0, 0, false, false, 2261, -1, 2260));
+		items.add(new ItemDef("Air talisman", "Swap this note at any bank for the equivalent item.", "", 0, -1,"items:438", true, false, 0, 0, false, false, -1, 2260, 2261));
+		items.add(new ItemDef("Mind talisman", "A mysterious power eminates from the talisman...", "Locate", 0, -1, "items:464",false, false, 0, 0, false, false, 2263, -1, 2262));
+		items.add(new ItemDef("Mind talisman", "Swap this note at any bank for the equivalent item.", "", 0, -1, "items:438",true, false, 0, 0, false, false, -1, 2262, 2263));
+		items.add(new ItemDef("Water talisman", "A mysterious power eminates from the talisman...", "Locate", 0, -1, "items:446",false, false, 0, 0, false, false, 2265, -1, 2264));
+		items.add(new ItemDef("Water talisman", "Swap this note at any bank for the equivalent item.", "", 0, -1, "items:438",true, false, 0, 0, false, false, -1, 2264, 2265));
+		items.add(new ItemDef("Earth talisman", "A mysterious power eminates from the talisman...", "Locate", 0, -1, "items:448",false, false, 0, 0, false, false, 2267, -1, 2266));
+		items.add(new ItemDef("Earth talisman", "Swap this note at any bank for the equivalent item.", "", 0, -1, "items:438",true, false, 0, 0, false, false, -1, 2266, 2267));
+		items.add(new ItemDef("Fire talisman", "A mysterious power eminates from the talisman...", "Locate", 0, -1, "items:447",false, false, 0, 0, false, false, 2269, -1, 2268));
+		items.add(new ItemDef("Fire talisman", "Swap this note at any bank for the equivalent item.", "", 0, -1, "items:438",true, false, 0, 0, false, false, -1, 2268, 2269));
+		items.add(new ItemDef("Body talisman", "A mysterious power eminates from the talisman...", "Locate", 0, -1, "items:444",false, false, 0, 0, false, false, 2271, -1, 2270));
+		items.add(new ItemDef("Body talisman", "Swap this note at any bank for the equivalent item.", "", 0, -1, "items:438",true, false, 0, 0, false, false, -1, 2270, 2271));
+		items.add(new ItemDef("Cosmic talisman", "A mysterious power eminates from the talisman...", "Locate", 0, -1, "items:451",false, false, 0, 0, false, false, 2273, -1, 2272));
+		items.add(new ItemDef("Cosmic talisman", "Swap this note at any bank for the equivalent item.", "", 0, -1, "items:438",true, false, 0, 0, false, false, -1, 2272, 2273));
+		items.add(new ItemDef("Chaos talisman", "A mysterious power eminates from the talisman...", "Locate", 0, -1, "items:452",false, false, 0, 0, false, false, 2275, -1, 2274));
+		items.add(new ItemDef("Chaos talisman", "Swap this note at any bank for the equivalent item.", "", 0, -1, "items:438",true, false, 0, 0, false, false, -1, 2274, 2275));
+		items.add(new ItemDef("Nature talisman", "A mysterious power eminates from the talisman...", "Locate", 0, -1, "items:449",false, false, 0, 0, false, false, 2277, -1, 2276));
+		items.add(new ItemDef("Nature talisman", "Swap this note at any bank for the equivalent item.", "", 0, -1, "items:438",true, false, 0, 0, false, false, -1, 2276, 2277));
+		items.add(new ItemDef("Law talisman", "A mysterious power eminates from the talisman...", "Locate", 0, -1, "items:450",false, false, 0, 0, false, false, 2279, -1, 2278));
+		items.add(new ItemDef("Law talisman", "Swap this note at any bank for the equivalent item.", "", 0, -1, "items:438",true, false, 0, 0, false, false, -1, 2278, 2279));
+		items.add(new ItemDef("Death talisman", "A mysterious power eminates from the talisman...", "Locate", 0, -1, "items:453",false, false, 0, 0, false, false, 2281, -1, 2280));
+		items.add(new ItemDef("Death talisman", "Swap this note at any bank for the equivalent item.", "", 0, -1, "items:438",true, false, 0, 0, false, false, -1, 2280, 2281));
+		items.add(new ItemDef("Blood talisman", "A mysterious power eminates from the talisman...", "Locate", 0, -1, "items:454",false, false, 0, 0, false, false, 2283, -1, 2282));
+		items.add(new ItemDef("Blood talisman", "Swap this note at any bank for the equivalent item.", "", 0, -1, "items:438",true, false, 0, 0, false, false, -1, 2282, 2283));
+		items.add(new ItemDef("Research package", "This contains some vital research results.", "", 0, -1, "items:330",false, false, 0, 0, true, true, -1, -1, 2284));
+		items.add(new ItemDef("Research notes", "These make no sense at all.", "", 0, -1, "items:427",false, false, 0, 0, true, true, -1, -1, 2285));
 
 	}
 
@@ -5595,7 +5634,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Willow Tree", "A weeping willow", "Chop", "Examine", 1, 2, 2, 0, "willowtree", i++));
 		objects.add(new GameObjectDef("Maple Tree", "It's got nice shaped leaves", "Chop", "Examine", 1, 2, 2, 0, "mapletree", i++));
 		objects.add(new GameObjectDef("Yew Tree", "A tough looking yew tree", "Chop", "Examine", 1, 2, 2, 0, "yewtree", i++));
-		objects.add(new GameObjectDef("Tree", "A magical tree", "Chop", "Examine", 1, 1, 1, 0, "magictree", i++));
+		objects.add(new GameObjectDef(Config.S_PROPER_MAGIC_TREE_NAME ? "Magic Tree" : "Tree", "A magical tree", "Chop", "Examine", 1, 1, 1, 0, "magictree", i++));
 		objects.add(new GameObjectDef("gate", "A gate guarded by a fierce barbarian", "open", "Examine", 2, 1, 2, 0, "metalgateclosed", i++));
 		objects.add(new GameObjectDef("sign", "The forester's arms", "WalkTo", "Examine", 0, 1, 1, 0, "shopsign", i++));
 		objects.add(new GameObjectDef("flax", "A flax plant", Config.S_BATCH_PROGRESSION ? "pick" : "WalkTo", Config.S_BATCH_PROGRESSION ? "Examine" : "pick", 0, 1, 1, 0, "flax", i++));
@@ -6480,8 +6519,55 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Ladder", "it's a ladder leading downwards", "Climb-Down", "Examine", 1, 1, 1, 0, "ladderdown", i++));
 		objects.add(new GameObjectDef("Vine", "A creepy creeper", "Grab", "Examine", 0, 1, 1, 0, "vinejunction", i++));
 
-		if (Config.S_PROPER_MAGIC_TREE_NAME) {
-			objects.get(310).name = "Magic Tree";
+		//Runecrafting Objects
+		if (Config.S_WANT_RUNECRAFTING)
+		{
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Air 1190
+			objects.add(new GameObjectDef("Air Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Air
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Mind
+			objects.add(new GameObjectDef("Mind Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Mind
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Water
+			objects.add(new GameObjectDef("Water Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Water
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Earth
+			objects.add(new GameObjectDef("Earth Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Earth
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Fire
+			objects.add(new GameObjectDef("Fire Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Fire
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Body
+			objects.add(new GameObjectDef("Body Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Body
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Cosmic
+			objects.add(new GameObjectDef("Cosmic Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Cosmic
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Chaos
+			objects.add(new GameObjectDef("Chaos Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Chaos
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Nature 1206
+			objects.add(new GameObjectDef("Nature Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Nature
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Law
+			objects.add(new GameObjectDef("Law Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Law
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Death
+			objects.add(new GameObjectDef("Death Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Death
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Blood
+			objects.add(new GameObjectDef("Blood Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Blood
+			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//air altar 1214
+			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//mind altar
+			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//water altar
+			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//earth altar
+			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//fire altar
+			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//body altar
+			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//cosmic altar
+			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//chaos altar
+			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//nature altar
+			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//law altar
+			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//death altar
+			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//blood altar
+			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//Runeessence portal
+			objects.add(new GameObjectDef("Raw Essence", "A pile of raw essence", "Mine", "Examine", 1, 8, 8, 0, "essencemine", i++));//rune essence mine1227
+			objects.add(new GameObjectDef("Portal", "This portal helps you navigate the maze.", "Take", "Examine", 1, 1, 1, 0, "portal", i++));//Runeessence portal 1228
+			objects.add(new GameObjectDef("Portal", "This portal helps you navigate the maze.", "Take", "Examine", 1, 1, 1, 0, "portal", i++));//Runeessence portal
+			objects.add(new GameObjectDef("Portal", "This portal helps you navigate the maze.", "Take", "Examine", 1, 1, 1, 0, "portal", i++));//Runeessence portal
+			objects.add(new GameObjectDef("Portal", "This portal helps you navigate the maze.", "Take", "Examine", 1, 1, 1, 0, "portal", i++));//Runeessence portal
+			objects.add(new GameObjectDef("Portal", "This portal helps you navigate the maze.", "Take", "Examine", 1, 1, 1, 0, "portal", i++));//Runeessence portal
+			objects.add(new GameObjectDef("Portal", "This portal helps you navigate the maze.", "Take", "Examine", 1, 1, 1, 0, "portal", i++));//Runeessence portal
+			objects.add(new GameObjectDef("Portal", "This portal helps you navigate the maze.", "Take", "Examine", 1, 1, 1, 0, "portal", i++));//Runeessence portal
+			objects.add(new GameObjectDef("Portal", "This portal helps you navigate the maze.", "Take", "Examine", 1, 1, 1, 0, "portal", i++));//Runeessence portal
 		}
 	}
 

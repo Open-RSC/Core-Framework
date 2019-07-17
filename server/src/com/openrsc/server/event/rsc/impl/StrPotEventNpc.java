@@ -2,6 +2,15 @@ package com.openrsc.server.event.rsc.impl;
 
 import com.openrsc.server.Server;
 import com.openrsc.server.event.rsc.GameTickEvent;
+import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.external.NpcId;
+import com.openrsc.server.model.PathValidation;
+import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.model.container.Item;
+import com.openrsc.server.model.entity.GroundItem;
+import com.openrsc.server.model.entity.Mob;
+
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;

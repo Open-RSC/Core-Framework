@@ -4,7 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -60,10 +60,10 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 		p.message("Well done you have completed the fishing competition quest");
 		p.message("@gre@You haved gained 1 quest point!");
 		int[] questData = Quests.questData.get(Quests.FISHING_CONTEST);
-		if (p.getSkills().getMaxStat(Skills.FISHING) <= 23) {
+		if (p.getSkills().getMaxStat(SKILLS.FISHING.id()) <= 23) {
 			questData[Quests.MAPIDX_BASE] = 900;
 			incQuestReward(p, questData, true);
-		} else if (p.getSkills().getMaxStat(Skills.FISHING) >= 24) {
+		} else if (p.getSkills().getMaxStat(SKILLS.FISHING.id()) >= 24) {
 			questData[Quests.MAPIDX_BASE] = 1700;
 			incQuestReward(p, questData, true);
 		}
@@ -573,7 +573,7 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 				//cases: not enough level
 				//no bait
 				//else do catch
-				if (p.getSkills().getLevel(Skills.FISHING) < 10) {
+				if (p.getSkills().getLevel(SKILLS.FISHING.id()) < 10) {
 					p.message("You need at least level 10 fishing to lure these fish");
 				} else if (!hasItem(p, ItemId.FISHING_ROD.id())) {
 					// probably non-kosher
@@ -617,7 +617,7 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 				//no rod
 				//no bait
 				//else do catch
-				if (p.getSkills().getLevel(Skills.FISHING) < 10) {
+				if (p.getSkills().getLevel(SKILLS.FISHING.id()) < 10) {
 					p.message("You need at least level 10 fishing to lure these fish");
 				} else if (!hasItem(p, ItemId.FISHING_ROD.id())) {
 					// probably non-kosher

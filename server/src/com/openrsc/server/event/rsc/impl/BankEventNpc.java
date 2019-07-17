@@ -2,6 +2,11 @@ package com.openrsc.server.event.rsc.impl;
 
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.action.WalkToPointActionNpc;
+import com.openrsc.server.model.action.WalkToActionNpc;
+import com.openrsc.server.model.Point;
+import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.model.container.Item;
+
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;

@@ -4,7 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
@@ -46,7 +46,7 @@ public class UndergroundPassKoftik implements QuestInterface, TalkToNpcListener,
 		p.message("@gre@You haved gained 5 quest points!");
 		int[] questData = Quests.questData.get(Quests.UNDERGROUND_PASS);
 		//keep order kosher
-		int[] skillIDs = {Skills.AGILITY, Skills.ATTACK};
+		int[] skillIDs = {SKILLS.AGILITY.id(), SKILLS.ATTACK.id()};
 		for (int i = 0; i < skillIDs.length; i++) {
 			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
 			incQuestReward(p, questData, i == (skillIDs.length - 1));

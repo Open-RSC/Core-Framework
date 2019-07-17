@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.quests.members.shilovillage;
 import com.openrsc.server.Constants;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -118,7 +118,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				p.damage(0);
 				playerTalk(p, null, "Ooooff!");
 			}
-			p.incExp(Skills.AGILITY, 5, true);
+			p.incExp(SKILLS.AGILITY.id(), 5, true);
 			p.setBusy(false);
 		}
 		else if (obj.getID() == METALLIC_DUNGEON_GATE) {
@@ -137,7 +137,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 					if (!p.getInventory().wielding(ItemId.BEADS_OF_THE_DEAD.id())) {
 						replaceObjectDelayed(obj, 1800, 181);
 						p.teleport(348, 3616);
-						p.damage(getCurrentLevel(p, Skills.HITPOINTS) / 2 + 1);
+						p.damage(getCurrentLevel(p, SKILLS.HITS.id()) / 2 + 1);
 						if (p.getStatus() != Action.DIED_FROM_DAMAGE) {
 							message(p, "@red@You feel invisible hands starting to choke you...");
 							p.teleport(348, 3614);
@@ -218,9 +218,9 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				message(p, "You fall back to the floor.");
 				p.teleport(380, 3692);
 				playerTalk(p, null, "Ahhhhh!");
-				p.damage(getCurrentLevel(p, Skills.HITPOINTS) / 10);
+				p.damage(getCurrentLevel(p, SKILLS.HITS.id()) / 10);
 				message(p, "And it knocks the wind out of you.");
-				p.damage(getCurrentLevel(p, Skills.HITPOINTS) / 10);
+				p.damage(getCurrentLevel(p, SKILLS.HITS.id()) / 10);
 				p.teleport(467, 3674);
 				playerTalk(p, null, "Oooff!");
 			}
@@ -291,12 +291,12 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 						if (!p.getCache().hasKey("obtained_shilo_info")) {
 							p.getCache().store("obtained_shilo_info", true);
 						}
-						p.incExp(Skills.AGILITY, 15, true);
+						p.incExp(SKILLS.AGILITY.id(), 15, true);
 					} else {
 						message(p, "You acidently knock some rocks and the ceiling starts to cave in.");
 						message(p, "Some rocks fall on you.");
-						p.damage((int) (getCurrentLevel(p, Skills.HITPOINTS) * 0.1D + 1));
-						p.incExp(Skills.AGILITY, 5, true);
+						p.damage((int) (getCurrentLevel(p, SKILLS.HITS.id()) * 0.1D + 1));
+						p.incExp(SKILLS.AGILITY.id(), 5, true);
 					}
 				}
 			} else if (menu == 1) {
@@ -372,15 +372,15 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 					p.teleport(339, 808);
 					message(p, "You are washed onto the waterfall river bank");
 					p.message("barely alive!");
-					p.damage((int) (getCurrentLevel(p, Skills.HITPOINTS) * 0.2D + 4));
-					p.incExp(Skills.AGILITY, 5, true);
+					p.damage((int) (getCurrentLevel(p, SKILLS.HITS.id()) * 0.2D + 4));
+					p.incExp(SKILLS.AGILITY.id(), 5, true);
 				} else {
 					message(p, "You manage to work your way along the slippery wall");
 					message(p, "and avoid falling into the water below.");
 					p.teleport(344, 808);
 					message(p, "You make it out of the cave");
 					p.message("and into the warmth of the jungle.");
-					p.incExp(Skills.AGILITY, 100, true);
+					p.incExp(SKILLS.AGILITY.id(), 100, true);
 				}
 			} else if (m == 1) {
 				message(p, "You decide to have another look around.");
@@ -481,7 +481,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				} else if (obj.getX() == 357 && obj.getY() == 3668) {
 					p.teleport(347, 3709);
 				}
-				p.incExp(Skills.AGILITY, 10, true);
+				p.incExp(SKILLS.AGILITY.id(), 10, true);
 			} else if (menu == 1) {
 				p.message("You decide to stay where you are");
 			}
@@ -558,7 +558,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 		else if (obj.getID() == RASH_EXIT_DOOR && item.getID() == ItemId.BONE_KEY.id()) {
 			if (!p.getInventory().wielding(ItemId.BEADS_OF_THE_DEAD.id())) {
 				message(p, "@red@You feel invisible hands starting to choke you...");
-				p.damage(getCurrentLevel(p, Skills.HITPOINTS) / 2);
+				p.damage(getCurrentLevel(p, SKILLS.HITS.id()) / 2);
 			}
 			message(p, "You insert the key into the lock and it merges with the door.",
 					"The doors creak open revealing bright day light.");
@@ -666,7 +666,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 			message(p, "You cleanly cut the plaque of letters away from the rock.",
 					"You place it carefully into your inventory.");
 			addItem(p, ItemId.STONE_PLAQUE.id(), 1);
-			p.incExp(Skills.CRAFTING, 10, true);
+			p.incExp(SKILLS.CRAFTING.id(), 10, true);
 		}
 	}
 

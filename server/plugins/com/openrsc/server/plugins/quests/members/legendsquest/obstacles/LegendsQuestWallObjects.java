@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.quests.members.legendsquest.obstacles;
 import com.openrsc.server.Constants;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -100,7 +100,7 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 			}
 		}
 		else if (obj.getID() == RUINED_WALL) {
-			if (getCurrentLevel(p, Skills.AGILITY) < 50) {
+			if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 50) {
 				p.message("You need an agility level of 50 to jump this wall");
 				p.setBusy(false);
 				return;
@@ -132,7 +132,7 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 					message(p, "You walk blindly into the intense heat of the supernatural flames.");
 					if (DataConversions.random(0, 9) <= 3) {
 						message(p, 1300, "The heat is so intense that it burns you.");
-						p.damage((int) Math.ceil((double) p.getSkills().getLevel(Skills.HITPOINTS) / 10 + 1));
+						p.damage((int) Math.ceil((double) p.getSkills().getLevel(SKILLS.HITS.id()) / 10 + 1));
 						playerTalk(p, null, "Owwww!");
 					} else {
 						message(p, 1300, "The heat is intense and just before you burn yourself,",

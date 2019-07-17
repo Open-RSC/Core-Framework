@@ -29,9 +29,9 @@ public final class ClanInterface {
 	public int clanName_field;
 	public int clanTag_field;
 	public int clanSearch_field;
-	public int selectedClanMate = -1;
-	public int selectedClanInSearch = -1;
-	public ArrayList<ClanResult> readClans;
+	private int selectedClanMate = -1;
+	private int selectedClanInSearch = -1;
+	private ArrayList<ClanResult> readClans;
 
 	private boolean visible;
 	private boolean menu_visible = false;

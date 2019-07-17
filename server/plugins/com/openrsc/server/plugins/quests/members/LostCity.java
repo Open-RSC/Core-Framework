@@ -6,7 +6,7 @@ import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -111,7 +111,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 				break;
 			case 245:
 				if (atQuestStages(p, this, 4, 3, 2, -1)) {
-					if (getCurrentLevel(p, Skills.WOODCUT) < 36) {
+					if (getCurrentLevel(p, SKILLS.WOODCUT.id()) < 36) {
 						message(p,
 							"You are not a high enough woodcutting level to chop down this tree",
 							"You need a woodcutting level of 36");
@@ -332,12 +332,12 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 				sleep(1000);
 				movePlayer(p, 427, 3380, true);
 				/* What is the point of this? */
-				if (getCurrentLevel(p, Skills.PRAYER) <= 3)
-					setCurrentLevel(p, Skills.PRAYER, 1);
-				else if (getCurrentLevel(p, Skills.PRAYER) <= 39)
-					setCurrentLevel(p, Skills.PRAYER, 2);
+				if (getCurrentLevel(p, SKILLS.PRAYER.id()) <= 3)
+					setCurrentLevel(p, SKILLS.PRAYER.id(), 1);
+				else if (getCurrentLevel(p, SKILLS.PRAYER.id()) <= 39)
+					setCurrentLevel(p, SKILLS.PRAYER.id(), 2);
 				else
-					setCurrentLevel(p, Skills.PRAYER, 3);
+					setCurrentLevel(p, SKILLS.PRAYER.id(), 3);
 			}
 		}
 	}
@@ -414,7 +414,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onInvUseOnItem(Player p, Item item1, Item item2) {
 		if (hasItem(p, ItemId.DRAMEN_BRANCH.id(), 1)) {
-			if (getCurrentLevel(p, Skills.CRAFTING) < 31) {
+			if (getCurrentLevel(p, SKILLS.CRAFTING.id()) < 31) {
 				message(p,
 					"You are not a high enough crafting level to craft this staff",
 					"You need a crafting level of 31");

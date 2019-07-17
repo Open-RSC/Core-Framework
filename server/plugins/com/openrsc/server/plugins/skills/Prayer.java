@@ -1,6 +1,6 @@
 package com.openrsc.server.plugins.skills;
 
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
@@ -16,14 +16,14 @@ public class Prayer implements ObjectActionExecutiveListener, ObjectActionListen
 	@Override
 	public void onObjectAction(final GameObject object, String command, Player player) {
 		if (command.equalsIgnoreCase("recharge at")) {
-			int maxPray = getMaxLevel(player, Skills.PRAYER) + (object.getID() == 200 ? 2 : 0);
-			if (getCurrentLevel(player, Skills.PRAYER) == maxPray) {
+			int maxPray = getMaxLevel(player, SKILLS.PRAYER.id()) + (object.getID() == 200 ? 2 : 0);
+			if (getCurrentLevel(player, SKILLS.PRAYER.id()) == maxPray) {
 				player.message("You already have full prayer points");
 			} else {
 				player.message("You recharge your prayer points");
 				player.playSound("recharge");
-				if (getCurrentLevel(player, Skills.PRAYER) < maxPray) {
-					player.getSkills().setLevel(Skills.PRAYER, maxPray);
+				if (getCurrentLevel(player, SKILLS.PRAYER.id()) < maxPray) {
+					player.getSkills().setLevel(SKILLS.PRAYER.id(), maxPray);
 				}
 
 			}
