@@ -207,7 +207,8 @@ public final class Mining implements ObjectActionListener,
 		owner.playSound("mine");
 		showBubble(owner, new Item(ItemId.IRON_PICKAXE.id()));
 		owner.message("You swing your pick at the rock...");
-		owner.setBatchEvent(new BatchEvent(owner, 1800, "Mining", 1000 + retrytimes, true) {
+		retrytimes = Constants.GameServer.BATCH_PROGRESSION ? Formulae.getRepeatTimes(owner, Skills.MINING) : retrytimes + 1000;
+		owner.setBatchEvent(new BatchEvent(owner, 1800, "Mining", retrytimes, true) {
 			@Override
 			public void action() {
 				final Item ore = new Item(def.getOreId());
