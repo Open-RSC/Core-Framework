@@ -9,10 +9,11 @@ import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.LiveFeedLog;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.Constants.GameServer.WANT_RUNECRAFTING;
-import static com.openrsc.server.Constants.GameServer.PLAYER_LEVEL_LIMIT;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static com.openrsc.server.Constants.GameServer.PLAYER_LEVEL_LIMIT;
+import static com.openrsc.server.Constants.GameServer.WANT_RUNECRAFTING;
 
 
 public class Skills {
@@ -36,7 +37,7 @@ public class Skills {
 		}
 		experienceCurves.put(SkillDef.EXP_CURVE.ORIGINAL, experienceArray);
 	}
-	/*private static String[] SKILL_NAME() {
+	private static String[] SKILL_NAME() {
 		if (WANT_RUNECRAFTING)
 			return new String[] {"attack", "defense", "strength", "hits", "ranged", "prayer", "magic",
 				"cooking", "woodcut", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblaw",
@@ -45,10 +46,10 @@ public class Skills {
 			return new String[] {"attack", "defense", "strength", "hits", "ranged", "prayer", "magic",
 				"cooking", "woodcut", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblaw",
 				"agility", "thieving"};
-	}*/
-	/*public static final int ATTACK = 0, DEFENSE = 1, STRENGTH = 2, HITPOINTS = 3, RANGED = 4, PRAYER = 5, MAGIC = 6,
+	}
+	public static final int ATTACK = 0, DEFENSE = 1, STRENGTH = 2, HITPOINTS = 3, RANGED = 4, PRAYER = 5, MAGIC = 6,
 		COOKING = 7, WOODCUT = 8, FLETCHING = 9, FISHING = 10, FIREMAKING = 11, CRAFTING = 12, SMITHING = 13,
-		MINING = 14, HERBLAW = 15, AGILITY = 16, THIEVING = 17, RUNECRAFTING = 18, SLAYER = 19, FARMING = 20, PETMELEE = 21, PETMAGIC = 22, PETRANGED = 23;*/
+		MINING = 14, HERBLAW = 15, AGILITY = 16, THIEVING = 17, RUNECRAFTING = 18, SLAYER = 19, FARMING = 20, PETMELEE = 21, PETMAGIC = 22, PETRANGED = 23;
 	//public static final ArrayList<String> STAT_LIST = new ArrayList<String>(){{ for(int i = 0; i < SKILL_COUNT; i++) { add(SKILL_NAME()[i]); } }};
 	// old, check: Global Experience Calculations (Some NPCs have levels > PLAYER_LEVEL_LIMIT)
 	// to truly have 1000 global level limit, needs changing int to long, otherwise caps to 135
