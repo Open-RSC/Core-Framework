@@ -211,7 +211,7 @@ public final class ExperienceConfigInterface {
 
 		experienceConfig.clearList(experienceConfigScroll);
 
-		for (int i = 0; i < skillNames.length; i++) {
+		for (int i = 0; i < mudclient.skillCount; i++) {
 			experienceConfig.setListEntry(experienceConfigScroll, i, "@whi@" + skillNames[i], 0, (String) null, (String) null);
 		}
 

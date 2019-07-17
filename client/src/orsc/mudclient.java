@@ -9161,7 +9161,7 @@ public final class mudclient implements Runnable {
 				int index = 0, questNum = 0;
 				this.panelQuestInfo.setListEntry(this.controlQuestInfoPanel, index++,
 					"@whi@Quest-list (green=completed)", 0, null, null);
-				for (questNum = 0; questNum < questGuideRequirements.length; ++questNum) {
+				for (questNum = 0; questNum < questNames.length; ++questNum) {
 					if (this.questNames[questNum] != null) {
 						this.panelQuestInfo.setListEntry(this.controlQuestInfoPanel, index++,
 							(questStages[questNum] < 0 ? "@gre@" :
@@ -10163,13 +10163,11 @@ public final class mudclient implements Runnable {
 					for (updateIndex = 0; updateIndex < this.gameObjectInstanceCount; ++updateIndex) {
 						var10 = this.gameObjectInstanceX[updateIndex];
 						waypointIndexCurrent = this.gameObjectInstanceZ[updateIndex];
-						if (var10 >= 0 && waypointIndexCurrent >= 0 && var10 < 96 && waypointIndexCurrent < 96
-							&& this.gameObjectInstanceID[updateIndex] == 74) {
-							this.gameObjectInstanceModel[updateIndex].addRotation(1, 0, 0);
-						}
-						if (var10 >= 0 && waypointIndexCurrent >= 0 && var10 < 96 && waypointIndexCurrent < 96
-							&& EntityHandler.getObjectDef(this.gameObjectInstanceID[updateIndex]).getObjectModel() == "portal") {
-							this.gameObjectInstanceModel[updateIndex].addRotation(0, 1, 0);
+						if (var10 >= 0 && waypointIndexCurrent >= 0 && var10 < 96 && waypointIndexCurrent < 96) {
+							if (this.gameObjectInstanceID[updateIndex] == 74)
+								this.gameObjectInstanceModel[updateIndex].addRotation(1, 0, 0);
+							else if (EntityHandler.getObjectDef(this.gameObjectInstanceID[updateIndex]).getObjectModel() == "portal")
+								this.gameObjectInstanceModel[updateIndex].addRotation(0, 1, 0);
 						}
 					}
 
@@ -11915,24 +11913,8 @@ public final class mudclient implements Runnable {
 			errorLoadingData = true;
 			return;
 		}
-		int numEntries = DataOperations.getUnsigned2Bytes(models, 0);/*
 
-			int offset = 2 + numEntries * 10;
-
-			for (int entry = 0; entry < numEntries; entry++) {
-				int fileHash = (models[entry * 10 + 2] & 0xff) * 0x1000000 + (models[entry * 10 + 3] & 0xff) * 0x10000
-					+ (models[entry * 10 + 4] & 0xff) * 256 + (models[entry * 10 + 5] & 0xff);
-				int fileSize = (models[entry * 10 + 9] & 0xff) * 0x10000 + (models[entry * 10 + 10] & 0xff) * 256
-					+ (models[entry * 10 + 11] & 0xff);
-
-				RSModel temp = new RSModel(models, entry, true);
-
-				offset += fileSize;
-			}
-*/
 		for (int j = 0; j < EntityHandler.getModelCount(); j++) {
-			if (EntityHandler.getModelName(j) == "dolmen")
-				j = j;
 			int k = DataOperations.getDataFileOffset(EntityHandler.getModelName(j) + ".ob3", models);
 			if (k == 0) {
 				modelCache[j] = new RSModel(1, 1);
@@ -14185,7 +14167,8 @@ public final class mudclient implements Runnable {
 			System.out.println(Config.S_ALLOW_RESIZE + " 49");
 			System.out.println(Config.S_LENIENT_CONTACT_DETAILS + " 50");
 			System.out.println(Config.S_WANT_FATIGUE + " 51");
-			System.out.println(Config.S_WANT_RUNECRAFTING + " 52");
+			System.out.println(Config.S_WANT_RUNECRAFTING + " 60");
+			System.out.println(S_WANT_CUSTOM_LANDSCAPE + " 61");
 		}
 		try {
 			this.loadGameConfig(false);

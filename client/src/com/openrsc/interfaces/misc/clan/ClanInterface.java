@@ -46,7 +46,7 @@ public final class ClanInterface {
 	private String[] clanMateTable = {"Username", "Rank", "Kills", "Deaths", "Ratio"};
 	private Menu rightClickMenu;
 
-	ClanInterface(mudclient mc) {
+	public ClanInterface(mudclient mc) {
 		this.mc = mc;
 
 		width = 408;

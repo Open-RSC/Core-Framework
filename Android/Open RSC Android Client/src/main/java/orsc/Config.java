@@ -76,6 +76,7 @@ public class Config {
 	public static boolean S_WANT_BANK_NOTES = false;
 	public static boolean S_WANT_CERT_DEPOSIT = false;
 	public static boolean S_CUSTOM_FIREMAKING = false;
+	public static boolean S_WANT_RUNECRAFTING = false;
 	public static boolean S_WANT_DROP_X = false;
 	public static boolean S_WANT_EXP_INFO = false;
 	public static boolean S_WANT_WOODCUTTING_GUILD = false;
@@ -114,6 +115,7 @@ public class Config {
 	public static boolean S_LENIENT_CONTACT_DETAILS = false;
 	public static boolean S_WANT_FATIGUE = true;
 	public static boolean S_WANT_CUSTOM_SPRITES = false;
+	public static boolean S_WANT_CUSTOM_LANDSCAPE = false;
 	public static boolean S_WANT_PLAYER_COMMANDS = false;
 	public static boolean S_WANT_PETS = false;
 	public static int S_MAX_WALKING_SPEED = 1;
@@ -121,6 +123,7 @@ public class Config {
 	public static boolean S_WANT_QUEST_STARTED_INDICATOR = false;
 	public static boolean S_FISHING_SPOTS_DEPLETABLE = false;
 	public static boolean S_PROPER_MAGIC_TREE_NAME = false;
+
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());
