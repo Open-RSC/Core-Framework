@@ -139,7 +139,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_curstats` (
   `cur_herblaw` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
   `cur_agility` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
   `cur_thieving` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
-  `cur_runecraft` tinyint(3) UNSIGNED NOT NUTT DEFAULT 1,
+  `cur_runecraft` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   KEY `playerID` (`playerID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
