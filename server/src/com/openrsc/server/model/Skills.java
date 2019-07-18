@@ -220,20 +220,22 @@ public class Skills {
 		}
 		int newLevel = getMaxStat(skill);
 		int levelDiff = newLevel - oldLevel;
+		String skillName;
 
 		if (levelDiff > 0) {
 			levels[skill] += levelDiff;
 			// TODO: Maybe a level up listener?
 			if (mob.isPlayer()) {
 				Player player = (Player) mob;
+				skillName = skills.get(skill).getShortName().toLowerCase();
 				if (newLevel >= PLAYER_LEVEL_LIMIT - 5 && newLevel <= PLAYER_LEVEL_LIMIT - 1) {
 					GameLogging.addQuery(new LiveFeedLog(player,
-						"has achieved level-" + newLevel + " in " + skills.get(skill).getShortName() + "!"));
+						"has achieved level-" + newLevel + " in " + skillName + "!"));
 				} else if (newLevel == PLAYER_LEVEL_LIMIT) {
 					GameLogging.addQuery(new LiveFeedLog(player, "has achieved the maximum level of " + newLevel
-						+ " in " + skills.get(skill).getShortName() + ", congratulations!"));
+						+ " in " + skillName + ", congratulations!"));
 				}
-				player.message("@gre@You just advanced " + levelDiff + " " + skills.get(skill).getShortName() + " level"
+				player.message("@gre@You just advanced " + levelDiff + " " + skillName + " level"
 					/*+ (levelDiff > 1 ? "s" : "")*/ + "!");
 				ActionSender.sendSound((Player) mob, "advance");
 			}
@@ -251,11 +253,13 @@ public class Skills {
 		}
 		int newLevel = getMaxStat(skill);
 		int levelDiff = newLevel - oldLevel;
+		String skillName;
 
 		if (levelDiff > 0) {
 			levels[skill] += levelDiff;
 				Player p28x = mob.getPetOwnerA2();
-				p28x.message("@gre@You just advanced " + levelDiff + " " + skills.get(skill).getShortName() + " level"
+				skillName = skills.get(skill).getShortName().toLowerCase();
+				p28x.message("@gre@You just advanced " + levelDiff + " " + skillName + " level"
 					/*+ (levelDiff > 1 ? "s" : "")*/ + "!");
 				ActionSender.sendSound(p28x, "advance");
 
