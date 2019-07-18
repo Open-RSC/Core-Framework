@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.MiniEvent;
@@ -20,9 +21,14 @@ public class ItemActionHandler implements PacketHandler {
 	 */
 	public static final World world = World.getWorld();
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public static Player player;
+
+	public void handlePacket(Packet p, Player packetPlayer) throws Exception {
 
 		int idx = (int) p.readShort();
+		int amount = p.readInt();
+		player = packetPlayer;
+
 		if (player == null || player.getInventory() == null) {
 			return;
 		}
@@ -74,37 +80,25 @@ public class ItemActionHandler implements PacketHandler {
 				player.message("You can't bury noted bones");
 				return;
 			}
-			player.setBusyTimer(650);
-			player.message("You dig a hole in the ground");
-			Server.getServer().getEventHandler()
-				.add(new MiniEvent(player, "Bury Bones") {
+			if (amount > 1) { // bury all
+				player.message("You dig a hole in the ground");
+				player.setBatchEvent(new BatchEvent(player, 650, String.format("Bury %s", item.getDef().getName()), amount, false){
+					@Override
 					public void action() {
-						owner.message("You bury the "
-							+ item.getDef().getName().toLowerCase());
-						owner.getInventory().remove(item);
-						switch (ItemId.getById(item.getID())) {
-							case BONES:
-								owner.incExp(SKILLS.PRAYER.id(), 15, true); // 3.75
-								break;
-							case BAT_BONES:
-								owner.incExp(SKILLS.PRAYER.id(), 18, true); // 4.5
-								break;
-							case BIG_BONES:
-								owner.incExp(SKILLS.PRAYER.id(), 50, true); // 12.5
-								break;
-							case DRAGON_BONES:
-								owner.incExp(SKILLS.PRAYER.id(), 240, true); // 60
-								break;
-//							case 2256: // Soul of Greatwood NOT INCLUDED
-//								owner.incExp(5, 800 * 4, true); // 800
-//								break;
-							// any other item with command bury
-							default:
-								player.message("Nothing interesting happens");
-								break;	
-						}
+						buryBonesHelper(player, item);
+						
 					}
 				});
+			} else {
+				player.setBusyTimer(650);
+				player.message("You dig a hole in the ground");
+				Server.getServer().getEventHandler()
+						.add(new MiniEvent(player, "Bury Bones") {
+							public void action() {
+								buryBonesHelper(player, item);
+							}
+						});
+			}
 		} else {
 			switch (ItemId.getById(item.getID())) {
 				case DISK_OF_RETURNING:
@@ -243,6 +237,32 @@ public class ItemActionHandler implements PacketHandler {
 					player.message("Nothing interesting happens");
 					return;
 			}
+		}
+	}
+	private void buryBonesHelper(Player owner, Item item) {
+		owner.message("You bury the "
+				+ item.getDef().getName().toLowerCase());
+		owner.getInventory().remove(item);
+		switch (ItemId.getById(item.getID())) {
+			case BONES:
+				owner.incExp(Skills.PRAYER, 15, true); // 3.75
+				break;
+			case BAT_BONES:
+				owner.incExp(Skills.PRAYER, 18, true); // 4.5
+				break;
+			case BIG_BONES:
+				owner.incExp(Skills.PRAYER, 50, true); // 12.5
+				break;
+			case DRAGON_BONES:
+				owner.incExp(Skills.PRAYER, 240, true); // 60
+				break;
+//							case 2256: // Soul of Greatwood NOT INCLUDED
+//								owner.incExp(5, 800 * 4, true); // 800
+//								break;
+			// any other item with command bury
+			default:
+				player.message("Nothing interesting happens");
+				break;
 		}
 	}
 

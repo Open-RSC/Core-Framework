@@ -6921,6 +6921,14 @@ public final class mudclient implements Runnable {
                                         "@lre@" + EntityHandler.getItemDef(id).getName());
                             }
 
+                            if (S_WANT_DROP_X && EntityHandler.getItemDef(id).getCommand().equals("Bury")
+                                    && EntityHandler.getItemDef(id).getNotedFormOf() == -1) {
+                                this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_COMMAND_ALL,
+                                        //EntityHandler.getItemDef(id).getCommand(), -- generic label.
+                                        "Bury All",
+                                        "@lre@" + EntityHandler.getItemDef(id).getName());
+                            }
+
                             this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_USE, "Use",
                                     "@lre@" + EntityHandler.getItemDef(id).getName());
                             this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP, "Drop",
@@ -10917,6 +10925,14 @@ public final class mudclient implements Runnable {
                 case ITEM_COMMAND: {
                     this.packetHandler.getClientStream().newPacket(90);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+                    this.packetHandler.getClientStream().finishPacket();
+                    break;
+                }
+                case ITEM_COMMAND_ALL: {
+                    int commandQuantity = getInventoryCount(inventoryItemID[indexOrX]);
+                    this.packetHandler.getClientStream().newPacket(90);
+                    this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+                    this.packetHandler.getClientStream().writeBuffer1.putInt(commandQuantity);
                     this.packetHandler.getClientStream().finishPacket();
                     break;
                 }
