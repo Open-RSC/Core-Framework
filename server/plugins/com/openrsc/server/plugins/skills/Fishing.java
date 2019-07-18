@@ -6,7 +6,7 @@ import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.ObjectFishDef;
 import com.openrsc.server.external.ObjectFishingDef;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -69,12 +69,12 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 				return;
 			}
 		}
-		if (object.getID() == 493 && owner.getSkills().getExperience(Skills.FISHING) >= 200) {
+		if (object.getID() == 493 && owner.getSkills().getExperience(SKILLS.FISHING.id()) >= 200) {
 			message(owner, "that's enough fishing for now",
 					"go through the next door to continue the tutorial");
 			return;
 		}
-		if (owner.getSkills().getLevel(Skills.FISHING) < def.getReqLevel()) {
+		if (owner.getSkills().getLevel(SKILLS.FISHING.id()) < def.getReqLevel()) {
 			owner.playerServerMessage(MessageType.QUEST, "You need at least level " + def.getReqLevel() + " "
 				+ fishingRequirementString(object, command) + " "
 				+ (!command.contains("cage") ? "these fish"
@@ -127,7 +127,7 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 					}
 				}
 				List<ObjectFishDef> fishLst = new ArrayList<ObjectFishDef>();
-				ObjectFishDef aFishDef = getFish(def, owner.getSkills().getLevel(Skills.FISHING), click);
+				ObjectFishDef aFishDef = getFish(def, owner.getSkills().getLevel(SKILLS.FISHING.id()), click);
 				if (aFishDef != null) fishLst.add(aFishDef);
 				if (fishLst.size() > 0) {
 					//check if the spot is still active
@@ -151,12 +151,12 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 							//big net spot may get 4 items but 1 already gotten
 							int max = bigNetRand() - 1;
 							for (int i = 0; i < max; i++) {
-								aFishDef = getFish(def, owner.getSkills().getLevel(Skills.FISHING), click);
+								aFishDef = getFish(def, owner.getSkills().getLevel(SKILLS.FISHING.id()), click);
 								if (aFishDef != null) fishLst.add(aFishDef);
 							}
 							if (DataConversions.random(0, 200) == 100) {
 								owner.playerServerMessage(MessageType.QUEST, "You catch a casket");
-								owner.incExp(Skills.FISHING, 40, true);
+								owner.incExp(SKILLS.FISHING.id(), 40, true);
 								addItem(owner, ItemId.CASKET.id(), 1);
 							}
 							for (Iterator<ObjectFishDef> iter = fishLst.iterator(); iter.hasNext();) {
@@ -165,7 +165,7 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 								owner.getInventory().add(fish);
 								owner.playerServerMessage(MessageType.QUEST, "You catch " + (fish.getID() == ItemId.BOOTS.id() || fish.getID() == ItemId.SEAWEED.id() || fish.getID() == ItemId.LEATHER_GLOVES.id() ? "some" : fish.getID() == ItemId.OYSTER.id() ? "an" : "a") + " "
 									+ fish.getDef().getName().toLowerCase().replace("raw ", "").replace("leather ", "") + (fish.getID() == ItemId.OYSTER.id() ? " shell" : ""));
-								owner.incExp(Skills.FISHING, fishDef.getExp(), true);
+								owner.incExp(SKILLS.FISHING.id(), fishDef.getExp(), true);
 							}
 						} else {
 							Item fish = new Item(fishLst.get(0).getId());
@@ -173,7 +173,7 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 							owner.playerServerMessage(MessageType.QUEST, "You catch " + (netId == ItemId.NET.id() ? "some" : "a") + " "
 								+ fish.getDef().getName().toLowerCase().replace("raw ", "") + (fish.getID() == ItemId.RAW_SHRIMP.id() ? "s" : "")
 								+ (fish.getID() == ItemId.RAW_SHARK.id() ? "!" : ""));
-							owner.incExp(Skills.FISHING, fishLst.get(0).getExp(), true);
+							owner.incExp(SKILLS.FISHING.id(), fishLst.get(0).getExp(), true);
 							if (object.getID() == 493 && owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 41)
 								owner.getCache().set("tutorial", 42);
 						}

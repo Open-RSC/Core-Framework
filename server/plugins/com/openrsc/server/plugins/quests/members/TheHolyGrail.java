@@ -4,7 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -69,7 +69,7 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 		player.message("@gre@You haved gained 2 quest points!");
 		int[] questData = Quests.questData.get(Quests.THE_HOLY_GRAIL);
 		//keep order kosher
-		int[] skillIDs = {Skills.PRAYER, Skills.DEFENSE};
+		int[] skillIDs = {SKILLS.PRAYER.id(), SKILLS.DEFENSE.id()};
 		//1000 for prayer, 1200 for defense
 		int[] amounts = {1000, 1200};
 		for (int i = 0; i < skillIDs.length; i++) {
@@ -399,7 +399,7 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 				p.teleport(414, 11, false);
 			} else {
 				n.resetCombatEvent();
-				n.getSkills().setLevel(Skills.HITPOINTS, n.getDef().hits);
+				n.getSkills().setLevel(SKILLS.HITS.id(), n.getDef().hits);
 				n.teleport(n.getLoc().startX, n.getLoc().startY);
 				p.message("Maybe you need something more to beat the titan");
 			}

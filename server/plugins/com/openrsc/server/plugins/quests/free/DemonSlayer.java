@@ -4,7 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -1088,7 +1088,7 @@ public class DemonSlayer implements QuestInterface,
 						return true;
 					} else {
 						// silverlight effect shared in its own file
-						n.getSkills().setLevel(Skills.HITPOINTS, n.getDef().getHits());
+						n.getSkills().setLevel(SKILLS.HITS.id(), n.getDef().getHits());
 						p.resetMenuHandler();
 						p.setOption(-1);
 						p.setAttribute("delrith", false);
@@ -1103,7 +1103,7 @@ public class DemonSlayer implements QuestInterface,
 	}
 
 	public void onPlayerKilledNpc(Player p, Npc n) {
-		n.getSkills().setLevel(Skills.HITPOINTS, n.getDef().getHits());
+		n.getSkills().setLevel(SKILLS.HITS.id(), n.getDef().getHits());
 		if (p.getMenuHandler() == null && !p.getAttribute("delrith", false)) {
 			p.setAttribute("delrith", true);
 			message(p, "As you strike Delrith a vortex opens up");

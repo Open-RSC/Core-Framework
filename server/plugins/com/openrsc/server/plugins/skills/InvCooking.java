@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.skills;
 
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ItemId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
@@ -42,7 +42,7 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 		}
 		if (item1.getID() == ItemId.GRAPES.id() && item2.getID() == ItemId.JUG_OF_WATER.id()
 			|| item1.getID() == ItemId.JUG_OF_WATER.id() && item2.getID() == ItemId.GRAPES.id()) {
-			if (player.getSkills().getLevel(Skills.COOKING) < 35) {
+			if (player.getSkills().getLevel(SKILLS.COOKING.id()) < 35) {
 				player.message("You need level 35 cooking to do this");
 				return;
 			}
@@ -55,10 +55,10 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 				player.setBatchEvent(new BatchEvent(player, 3000, "Cook Wine", 1, false) {
 					@Override
 					public void action() {
-						if (Formulae.goodWine(owner.getSkills().getLevel(Skills.COOKING))) {
+						if (Formulae.goodWine(owner.getSkills().getLevel(SKILLS.COOKING.id()))) {
 							owner.message("You make some nice wine");
 							owner.getInventory().add(new Item(ItemId.WINE.id()));
-							owner.incExp(Skills.COOKING, 440, true);
+							owner.incExp(SKILLS.COOKING.id(), 440, true);
 						} else {
 							owner.message("You accidentally make some bad wine");
 							owner.getInventory().add(new Item(ItemId.BAD_WINE.id()));
@@ -119,7 +119,7 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 				combine = c;
 			}
 		}
-		if (p.getSkills().getLevel(Skills.COOKING) < combine.requiredLevel) {
+		if (p.getSkills().getLevel(SKILLS.COOKING.id()) < combine.requiredLevel) {
 			p.message("You need level " + combine.requiredLevel + " cooking to do this");
 			return;
 		}
@@ -146,7 +146,7 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 				p.message(combine.messages[0]);
 
 			addItem(p, combine.resultItem, 1);
-			p.incExp(Skills.COOKING, combine.experience, true);
+			p.incExp(SKILLS.COOKING.id(), combine.experience, true);
 
 			if (combine.messages.length > 1)
 				p.message(combine.messages[1]);

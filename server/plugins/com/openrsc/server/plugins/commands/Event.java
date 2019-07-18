@@ -29,14 +29,14 @@ public final class Event implements CommandListener {
 	public static final Logger LOGGER = LogManager.getLogger(Event.class);
 	private static final String[] towns = {"varrock", "falador", "draynor", "portsarim", "karamja", "alkharid",
 		"lumbridge", "edgeville", "castle", "taverly", "clubhouse", "seers", "barbarian", "rimmington", "catherby",
-		"ardougne", "yanille", "lostcity", "gnome", "shilovillage", "tutorial", "modroom"};
+		"ardougne", "yanille", "lostcity", "gnome", "shilovillage", "tutorial", "modroom", "entrana"};
 
 	private static final Point[] townLocations = {Point.location(122, 509), Point.location(304, 542),
 		Point.location(214, 632), Point.location(269, 643), Point.location(370, 685), Point.location(89, 693),
 		Point.location(120, 648), Point.location(217, 449), Point.location(270, 352), Point.location(373, 498),
 		Point.location(653, 491), Point.location(501, 450), Point.location(233, 513), Point.location(325, 663),
 		Point.location(440, 501), Point.location(549, 589), Point.location(583, 747), Point.location(127, 3518),
-		Point.location(703, 527), Point.location(400, 850), Point.location(217, 740), Point.location(75, 1641)};
+		Point.location(703, 527), Point.location(400, 850), Point.location(217, 740), Point.location(75, 1641), Point.location(425,564)};
 
 	public void onCommand(String cmd, String[] args, Player player) {
 		if (isCommandAllowed(player, cmd))
@@ -601,7 +601,7 @@ public final class Event implements CommandListener {
 						stat = Integer.parseInt(args[1]);
 					}
 					catch (NumberFormatException ex) {
-						stat = Skills.STAT_LIST.indexOf(args[1].toLowerCase());
+						stat = Skills.getSkillIndex(args[1].toLowerCase());
 
 						if(stat == -1) {
 							player.message(messagePrefix + "Invalid stat");
@@ -610,7 +610,7 @@ public final class Event implements CommandListener {
 					}
 
 					try {
-						statName = Skills.STAT_LIST.get(stat);
+						statName = Skills.getSkillName(stat);
 					}
 					catch (IndexOutOfBoundsException ex) {
 						player.message(messagePrefix + "Invalid stat");
@@ -658,7 +658,7 @@ public final class Event implements CommandListener {
 						stat = Integer.parseInt(args[2]);
 					}
 					catch (NumberFormatException e) {
-						stat = Skills.STAT_LIST.indexOf(args[2].toLowerCase());
+						stat = Skills.getSkillIndex(args[2].toLowerCase());
 
 						if(stat == -1) {
 							player.message(messagePrefix + "Invalid stat");
@@ -667,7 +667,7 @@ public final class Event implements CommandListener {
 					}
 
 					try {
-						statName = Skills.STAT_LIST.get(stat);
+						statName = Skills.getSkillName(stat);
 					}
 					catch (IndexOutOfBoundsException e) {
 						player.message(messagePrefix + "Invalid stat");
@@ -705,7 +705,7 @@ public final class Event implements CommandListener {
 				}
 			}
 			else {
-				for(int i = 0; i < Skills.SKILL_NAME.length; i++) {
+				for(int i = 0; i < Skills.getSkillCount(); i++) {
 					p.getSkills().setLevelTo(i, level);
 				}
 
@@ -742,7 +742,7 @@ public final class Event implements CommandListener {
 						stat = Integer.parseInt(args[1]);
 					}
 					catch (NumberFormatException ex) {
-						stat = Skills.STAT_LIST.indexOf(args[1].toLowerCase());
+						stat = Skills.getSkillIndex(args[1].toLowerCase());
 
 						if(stat == -1) {
 							player.message(messagePrefix + "Invalid stat");
@@ -751,7 +751,7 @@ public final class Event implements CommandListener {
 					}
 
 					try {
-						statName = Skills.STAT_LIST.get(stat);
+						statName = Skills.getSkillName(stat);
 					}
 					catch (IndexOutOfBoundsException ex) {
 						player.message(messagePrefix + "Invalid stat");
@@ -799,7 +799,7 @@ public final class Event implements CommandListener {
 						stat = Integer.parseInt(args[2]);
 					}
 					catch (NumberFormatException e) {
-						stat = Skills.STAT_LIST.indexOf(args[2].toLowerCase());
+						stat = Skills.getSkillIndex(args[2].toLowerCase());
 
 						if(stat == -1) {
 							player.message(messagePrefix + "Invalid stat");
@@ -808,7 +808,7 @@ public final class Event implements CommandListener {
 					}
 
 					try {
-						statName = Skills.STAT_LIST.get(stat);
+						statName = Skills.getSkillName(stat);
 					}
 					catch (IndexOutOfBoundsException e) {
 						player.message(messagePrefix + "Invalid stat");
@@ -846,7 +846,7 @@ public final class Event implements CommandListener {
 				}
 			}
 			else {
-				for(int i = 0; i < Skills.SKILL_NAME.length; i++) {
+				for(int i = 0; i < Skills.getSkillCount(); i++) {
 					p.getSkills().setLevel(i, level);
 				}
 

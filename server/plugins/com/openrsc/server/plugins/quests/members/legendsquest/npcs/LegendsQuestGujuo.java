@@ -5,7 +5,7 @@ import com.openrsc.server.Server;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -929,7 +929,7 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 					}
 					break;
 				case Gujuo.BLESS_THE_BOWL:
-					if (getCurrentLevel(p, Skills.PRAYER) < 42) {
+					if (getCurrentLevel(p, SKILLS.PRAYER.id()) < 42) {
 						npcTalk(p, n, "Bwana, I am very sorry,",
 							"But you are too inexperienced to bless this bowl.");
 						p.message("You need a prayer ability of 42 to complete this task.");
@@ -942,7 +942,7 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 						npcTalk(p, n, 3000, "Ohhhhhmmmmmm");
 						playerTalk(p, n, "Oooooohhhhmmmmmmmmmm");
 						npcTalk(p, n, 3000, "Ohhhhhmmmmmm");
-						if (Formulae.failCalculation(p, Skills.PRAYER, 42)) {
+						if (Formulae.failCalculation(p, SKILLS.PRAYER.id(), 42)) {
 							message(p, 1300, "A totally peacefull aura surrounds you and you ",
 								"bring down the blessings of your god on the bowl.");
 							if (hasItem(p, ItemId.GOLDEN_BOWL.id())) {
@@ -954,7 +954,7 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 						} else {
 							message(p, 1300, "You were not able to go into a deep enough trance.",
 								"You lose some prayer...");
-							p.getSkills().setLevel(Skills.PRAYER, p.getSkills().getLevel(Skills.PRAYER) - 5);
+							p.getSkills().setLevel(SKILLS.PRAYER.id(), p.getSkills().getLevel(SKILLS.PRAYER.id()) - 5);
 							npcTalk(p, n, "Would you like to try again.");
 							int failMenu = showMenu(p, n, false, //do not send over
 								"Yes, I'd like to bless my golden bowl.",

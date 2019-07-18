@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.quests.members.undergroundpass.mechanism;
 import com.openrsc.server.Constants;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -71,7 +71,7 @@ public class UndergroundPassMechanismMap1 implements InvUseOnItemListener, InvUs
 		else if (item.getID() == ItemId.LIT_ARROW.id() && obj.getID() == OLD_BRIDGE) {
 			if (hasABow(player)) {
 				removeItem(player, ItemId.LIT_ARROW.id(), 1);
-				if ((getCurrentLevel(player, Skills.RANGED) < 25) || (player.getY() != 3417 && player.getX() < 701)) {
+				if ((getCurrentLevel(player, SKILLS.RANGED.id()) < 25) || (player.getY() != 3417 && player.getX() < 701)) {
 					message(player, "you fire the lit arrow at the bridge",
 						"it burns out and has little effect");
 				} else {

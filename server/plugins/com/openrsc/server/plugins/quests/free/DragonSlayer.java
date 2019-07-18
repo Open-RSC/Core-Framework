@@ -5,7 +5,7 @@ import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -90,7 +90,7 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 		p.message("@gre@You haved gained 2 quest points!");
 		int[] questData = Quests.questData.get(Quests.DRAGON_SLAYER);
 		//keep order kosher
-		int[] skillIDs = {Skills.STRENGTH, Skills.DEFENSE};
+		int[] skillIDs = {SKILLS.STRENGTH.id(), SKILLS.DEFENSE.id()};
 		for (int i = 0; i < skillIDs.length; i++) {
 			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
 			incQuestReward(p, questData, i == (skillIDs.length - 1));

@@ -45,4 +45,5 @@
     <entry key="ObjectFishingDef">com.openrsc.server.external.ObjectFishingDef</entry>
     <entry key="ObjectFishDef">com.openrsc.server.external.ObjectFishDef</entry>
     <entry key="ItemDropDef">com.openrsc.server.external.ItemDropDef</entry>
+    <entry key="ObjectRunecraftingDef">com.openrsc.server.external.ObjectRunecraftingDef</entry>
 </properties>

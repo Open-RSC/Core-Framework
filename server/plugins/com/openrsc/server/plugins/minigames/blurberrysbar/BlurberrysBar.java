@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.minigames.blurberrysbar;
 
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -188,7 +188,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, Talk
 				removeItem(p, ItemId.PINEAPPLE_PUNCH.id(), 1);
 				removeItem(p, ItemId.CHOCOLATE_SATURDAY.id(), 1);
 				removeItem(p, ItemId.DRUNK_DRAGON.id(), 1);
-				p.incExp(Skills.COOKING, 360, true);
+				p.incExp(SKILLS.COOKING.id(), 360, true);
 				npcTalk(p, n, "that's blurberry-tastic");
 				p.message("blurberry gives you 100 gold coins");
 				addItem(p, ItemId.COINS.id(), 100);
@@ -205,7 +205,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, Talk
 				p.message("you give blurberry two wizard blizzards and an s.g.g.");
 				removeItem(p, ItemId.WIZARD_BLIZZARD.id(), 2);
 				removeItem(p, ItemId.SGG.id(), 1);
-				p.incExp(Skills.COOKING, 360, true);
+				p.incExp(SKILLS.COOKING.id(), 360, true);
 				npcTalk(p, n, "that's excellent, here's your share of the profit");
 				p.message("blurberry gives you 150 gold coins");
 				addItem(p, ItemId.COINS.id(), 150);
@@ -229,7 +229,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, Talk
 				removeItem(p, ItemId.PINEAPPLE_PUNCH.id(), 1);
 				removeItem(p, ItemId.BLURBERRY_SPECIAL.id(), 1);
 				removeItem(p, ItemId.FRUIT_BLAST.id(), 2);
-				p.incExp(Skills.COOKING, 540, true);
+				p.incExp(SKILLS.COOKING.id(), 540, true);
 				npcTalk(p, n, "wow fantastic, here's your share of the profit");
 				p.message("blurberry gives you 179 gold coins");
 				addItem(p, ItemId.COINS.id(), 179);
@@ -248,7 +248,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, Talk
 				p.message("you give blurberry two s.g.g. and one blurberry special");
 				removeItem(p, ItemId.SGG.id(), 2);
 				removeItem(p, ItemId.BLURBERRY_SPECIAL.id(), 1);
-				p.incExp(Skills.COOKING, 360, true);
+				p.incExp(SKILLS.COOKING.id(), 360, true);
 				npcTalk(p, n, "great, here's your share of the profit");
 				p.message("blurberry gives you 120 gold coins");
 				addItem(p, ItemId.COINS.id(), 120);
@@ -264,7 +264,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, Talk
 				playerTalk(p, n, "here you go, one fruit blast");
 				p.message("you give blurberry one fruit blast");
 				removeItem(p, ItemId.FRUIT_BLAST.id(), 1);
-				p.incExp(Skills.COOKING, 240, true);
+				p.incExp(SKILLS.COOKING.id(), 240, true);
 				npcTalk(p, n, "that's frutty-licious");
 				p.message("blurberry gives you 10 gold coins");
 				addItem(p, ItemId.COINS.id(), 10);
@@ -419,7 +419,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, Talk
 		playerTalk(player, npc, "here you go");
 		message(player, "you give blurberry the drunk dragon");
 		removeItem(player, ItemId.DRUNK_DRAGON.id(), 1);
-		player.incExp(Skills.COOKING, 160, true);
+		player.incExp(SKILLS.COOKING.id(), 160, true);
 		player.message("he takes a sip");
 		npcTalk(player, npc, "woooo, that's some good stuff",
 			"i can sell that",
@@ -443,7 +443,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, Talk
 		playerTalk(player, npc, "here you go");
 		message(player, "you give blurberry the short green guy");
 		removeItem(player, ItemId.SGG.id(), 1);
-		player.incExp(Skills.COOKING, 160, true);
+		player.incExp(SKILLS.COOKING.id(), 160, true);
 		player.message("he takes a sip");
 		npcTalk(player, npc, "hmmm, not bad, not bad at all",
 			"i can sell that",
@@ -469,7 +469,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, Talk
 		playerTalk(player, npc, "here.. try some");
 		message(player, "you give blurberry the cocktail");
 		removeItem(player, ItemId.CHOCOLATE_SATURDAY.id(), 1);
-		player.incExp(Skills.COOKING, 160, true);
+		player.incExp(SKILLS.COOKING.id(), 160, true);
 		player.message("he takes a sip");
 		npcTalk(player, npc, "that's blurberry-tastic",
 			"you're quite a bartender",

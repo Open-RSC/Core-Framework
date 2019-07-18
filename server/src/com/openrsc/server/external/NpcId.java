@@ -803,7 +803,9 @@ public enum NpcId {
 	BATTLE_MAGE_ZAMAROK(790),
 	BATTLE_MAGE_SARADOMIN(791),
 	GUNDAI(792),
-	LUNDAIL(793);
+	LUNDAIL(793),
+	SEDRIDOR(803);
+
 	private int npcId;
 
 	private static final Map<Integer, NpcId> byId = new HashMap<Integer, NpcId>();

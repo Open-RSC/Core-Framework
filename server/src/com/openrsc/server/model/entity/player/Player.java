@@ -13,7 +13,9 @@ import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.event.rsc.impl.*;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.login.LoginRequest;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.*;
+
 import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.Inventory;
@@ -736,30 +738,30 @@ public final class Player extends Mob {
 					);
 				if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
 					optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
-					optionalSkillIndex = Optional.of(Skills.ATTACK);
+					optionalSkillIndex = Optional.of(SKILLS.ATTACK.id());
 				}
 				//staff of iban (usable)
 				if (item.getID() == ItemId.STAFF_OF_IBAN.id()) {
 					optionalLevel = Optional.of(requiredLevel);
-					optionalSkillIndex = Optional.of(Skills.ATTACK);
+					optionalSkillIndex = Optional.of(SKILLS.ATTACK.id());
 				}
 				//battlestaves (incl. enchanted version)
 				if (itemLower.contains("battlestaff")) {
 					optionalLevel = Optional.of(requiredLevel);
-					optionalSkillIndex = Optional.of(Skills.ATTACK);
+					optionalSkillIndex = Optional.of(SKILLS.ATTACK.id());
 				}
 
 				if (getSkills().getMaxStat(requiredSkillIndex) < requiredLevel) {
 					if (!bypass) {
 						message("You are not a high enough level to use this item");
-						message("You need to have a " + Skills.SKILL_NAME[requiredSkillIndex] + " level of " + requiredLevel);
+						message("You need to have a " + Skills.getSkillName(requiredSkillIndex) + " level of " + requiredLevel);
 						unWield = true;
 					}
 				}
 				if (optionalSkillIndex.isPresent() && getSkills().getMaxStat(optionalSkillIndex.get()) < optionalLevel.get()) {
 					if (!bypass) {
 						message("You are not a high enough level to use this item");
-						message("You need to have a " + Skills.SKILL_NAME[optionalSkillIndex.get()] + " level of " + optionalLevel.get());
+						message("You need to have a " + Skills.getSkillName(optionalSkillIndex.get()) + " level of " + optionalLevel.get());
 						unWield = true;
 					}
 				}
@@ -1236,7 +1238,7 @@ public final class Player extends Mob {
 		/*
 		  Skilling Experience Rate
 		 */
-		if (skill >= 4 && skill <= 17) {
+		if (skill >= 4 && skill <= Skills.getSkillCount()-1) {
 			multiplier = Constants.GameServer.SKILLING_EXP_RATE;
 			if (getLocation().inWilderness() && !getLocation().inBounds(220, 108, 225, 111)) {
 				multiplier += Constants.GameServer.WILDERNESS_BOOST;
@@ -1921,8 +1923,8 @@ public final class Player extends Mob {
 
 	public void setBatchEvent(BatchEvent batchEvent) {
 		if (batchEvent != null) {
+			batchEvent.getOwner().checkAndInterruptBatchEvent();
 			this.batchEvent = batchEvent;
-			Server.getServer().getEventHandler().removePlayersEvents(batchEvent.getOwner());
 			Server.getServer().getEventHandler().add(batchEvent);
 		}
 	}

@@ -1,5 +1,6 @@
 package com.openrsc.server.external;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.TelePoint;
 import com.openrsc.server.util.PersistenceManager;
@@ -40,6 +41,7 @@ public final class EntityHandler {
 	private static HashMap<Integer, ObjectMiningDef> objectMining;
 	private static HashMap<Point, TelePoint> objectTelePoints;
 	private static HashMap<Integer, ObjectWoodcuttingDef> objectWoodcutting;
+	private static HashMap<Integer, ObjectRunecraftingDef> objectRunecrafting;
 	private static PrayerDef[] prayers;
 	private static TileDef[] tiles;
 
@@ -69,6 +71,7 @@ public final class EntityHandler {
 		itemCrafting = (ItemCraftingDef[]) PersistenceManager.load("defs/extras/ItemCraftingDef.xml.gz");
 		objectMining = (HashMap<Integer, ObjectMiningDef>) PersistenceManager.load("defs/extras/ObjectMining.xml.gz");
 		objectWoodcutting = (HashMap<Integer, ObjectWoodcuttingDef>) PersistenceManager.load("defs/extras/ObjectWoodcutting.xml.gz");
+		objectRunecrafting = (HashMap<Integer, ObjectRunecraftingDef>) PersistenceManager.load("defs/extras/ObjectRunecrafting.xml.gz");
 		objectFishing = (HashMap<Integer, ObjectFishingDef[]>) PersistenceManager.load("defs/extras/ObjectFishing.xml.gz");
 		objectTelePoints = (HashMap<Point, TelePoint>) PersistenceManager.load("locs/extras/ObjectTelePoints.xml.gz");
 		certers = (HashMap<Integer, CerterDef>) PersistenceManager.load("defs/extras/NpcCerters.xml.gz");
@@ -290,6 +293,9 @@ public final class EntityHandler {
 		return null;
 	}
 
+	public static ObjectRunecraftingDef getObjectRunecraftingDef(int id) {
+		return objectRunecrafting.get(id);
+	}
 	/**
 	 * @param id the entities ID
 	 * @return the ObjectWoodcuttingDef with the given ID
@@ -350,5 +356,9 @@ public final class EntityHandler {
 			return null;
 		}
 		return tiles[id];
+	}
+
+	public static SkillDef getSkillDef(String skillName) {
+		return null;
 	}
 }

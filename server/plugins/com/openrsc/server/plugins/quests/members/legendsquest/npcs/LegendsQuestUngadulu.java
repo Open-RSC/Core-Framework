@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 import com.openrsc.server.Constants;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -668,9 +668,9 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 		npcTalk(p, n, "Iles Resti Yam Darkus Spiritus Possesi Yanai..");
 		message(p, n, 1300, "You feel a strange power coming over you...");
 		p.damage(5);
-		p.getSkills().setLevel(Skills.ATTACK, p.getSkills().getLevel(Skills.ATTACK) - 5);
-		p.getSkills().setLevel(Skills.DEFENSE, p.getSkills().getLevel(Skills.DEFENSE) - 5);
-		p.getSkills().setLevel(Skills.STRENGTH, p.getSkills().getLevel(Skills.STRENGTH) - 5);
+		p.getSkills().setLevel(SKILLS.ATTACK.id(), p.getSkills().getLevel(SKILLS.ATTACK.id()) - 5);
+		p.getSkills().setLevel(SKILLS.DEFENSE.id(), p.getSkills().getLevel(SKILLS.DEFENSE.id()) - 5);
+		p.getSkills().setLevel(SKILLS.STRENGTH.id(), p.getSkills().getLevel(SKILLS.STRENGTH.id()) - 5);
 		message(p, n, 1300, "The Shaman seems to get stronger...",
 			"The Shaman seems to return to normal...");
 		n = transform(n, NpcId.UNGADULU.id(), true);
@@ -786,8 +786,8 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 		if (affectedmob.getID() == NpcId.UNGADULU.id()) {
 			p.message("You feel a strange force coming over you...");
 			p.message("You feel weakened....");
-			p.getSkills().setLevel(Skills.ATTACK, 0);
-			p.getSkills().setLevel(Skills.STRENGTH, 0);
+			p.getSkills().setLevel(SKILLS.ATTACK.id(), 0);
+			p.getSkills().setLevel(SKILLS.STRENGTH.id(), 0);
 			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 9 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
 				message(p, 1300, "The Shaman casts a debilitating spell on you..",
 					"You're sent reeling backwards through the flames..");
@@ -815,8 +815,8 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 		if (affectedmob.getID() == NpcId.UNGADULU.id()) {
 			p.message("You feel a strange force coming over you...");
 			p.message("You feel weakened....");
-			p.getSkills().setLevel(Skills.ATTACK, 0);
-			p.getSkills().setLevel(Skills.STRENGTH, 0);
+			p.getSkills().setLevel(SKILLS.ATTACK.id(), 0);
+			p.getSkills().setLevel(SKILLS.STRENGTH.id(), 0);
 			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 9 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
 				message(p, 1300, "The Shaman casts a debilitating spell on you..",
 					"You're sent reeling backwards through the flames..");
@@ -844,8 +844,8 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 		if (affectedmob.getID() == NpcId.UNGADULU.id()) {
 			p.message("You feel a strange force coming over you...");
 			p.message("You feel weakened....");
-			p.getSkills().setLevel(Skills.ATTACK, 0);
-			p.getSkills().setLevel(Skills.STRENGTH, 0);
+			p.getSkills().setLevel(SKILLS.ATTACK.id(), 0);
+			p.getSkills().setLevel(SKILLS.STRENGTH.id(), 0);
 			p.message("The spell fizzles and dies...");
 			p.message("Some sort of magical effect seems to be protecting the Shaman.");
 			return;
@@ -869,8 +869,8 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 			sleep(650);
 			npcTalk(p, n, "Run then....run away....",
 				"Save yourself....");
-			p.getSkills().setLevel(Skills.ATTACK, (p.getSkills().getMaxStat(Skills.ATTACK) - 19) + p.getSkills().getLevel(Skills.ATTACK));
-			p.getSkills().setLevel(Skills.STRENGTH, (p.getSkills().getMaxStat(Skills.STRENGTH) - 19) + p.getSkills().getLevel(Skills.STRENGTH));
+			p.getSkills().setLevel(SKILLS.ATTACK.id(), (p.getSkills().getMaxStat(SKILLS.ATTACK.id()) - 19) + p.getSkills().getLevel(SKILLS.ATTACK.id()));
+			p.getSkills().setLevel(SKILLS.STRENGTH.id(), (p.getSkills().getMaxStat(SKILLS.STRENGTH.id()) - 19) + p.getSkills().getLevel(SKILLS.STRENGTH.id()));
 			p.message("Strangely, you start to feel better.");
 		}
 	}
@@ -956,7 +956,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 				if (nez != null) {
 					npcTalk(p, nez, "Curse you foul intruder...your faith will help you little here.");
 					nez.startCombat(p);
-					p.getSkills().setLevel(Skills.PRAYER, (int) Math.ceil((double) p.getSkills().getLevel(Skills.PRAYER) / 4));
+					p.getSkills().setLevel(SKILLS.PRAYER.id(), (int) Math.ceil((double) p.getSkills().getLevel(SKILLS.PRAYER.id()) / 4));
 					message(p, 1300, "A sense of hopelessness fills your body...");
 					npcTalk(p, nez, "'Ere near to death ye comes now that ye has meddled in my dealings..");
 					if (p.getCache().hasKey("holy_water_neiz")) {

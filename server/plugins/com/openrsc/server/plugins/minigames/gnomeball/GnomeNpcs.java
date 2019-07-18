@@ -14,7 +14,7 @@ import static com.openrsc.server.plugins.Functions.sleep;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.rsc.impl.BallProjectileEvent;
 import com.openrsc.server.external.ItemId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -296,12 +296,12 @@ TalkToNpcListener, TalkToNpcExecutiveListener, NpcCommandListener, NpcCommandExe
 				p.playerServerMessage(MessageType.QUEST, "and push the gnome to the floor");
 				npcTalk(p, n, "grrrr");
 				addItem(p, ItemId.GNOME_BALL.id(), 1);
-				p.incExp(Skills.AGILITY, TACKLING_XP[DataConversions.random(0,1)], true);
+				p.incExp(SKILLS.AGILITY.id(), TACKLING_XP[DataConversions.random(0,1)], true);
 				p.setSyncAttribute("gnomeball_npc", 0);
 			} else {
 				p.playerServerMessage(MessageType.QUEST, "You're pushed away by the gnome");
 				playerTalk(p, n, "ouch");
-				p.damage((int)(Math.ceil(p.getSkills().getLevel(Skills.HITPOINTS)*0.05)));
+				p.damage((int)(Math.ceil(p.getSkills().getLevel(SKILLS.HITS.id())*0.05)));
 				npcTalk(p, n, "hee hee");
 			}
 		}

@@ -1,6 +1,6 @@
 package com.openrsc.server.event.rsc.impl.combat;
 
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
@@ -85,7 +85,7 @@ class MeleeFormula {
 			Prayers.SUPERHUMAN_STRENGTH,
 			Prayers.ULTIMATE_STRENGTH);
 
-		int strengthLevel = (int) (source.getSkills().getLevel(Skills.STRENGTH) * prayerBonus) + styleBonus + 8;
+		int strengthLevel = (int) (source.getSkills().getLevel(SKILLS.STRENGTH.id()) * prayerBonus) + styleBonus + 8;
 
 		double bonusMultiplier = (source.getWeaponPowerPoints() + 64) / 640.0D;
 
@@ -99,7 +99,7 @@ class MeleeFormula {
 			Prayers.ROCK_SKIN,
 			Prayers.STEEL_SKIN);
 
-		int defenseLevel = (int) (defender.getSkills().getLevel(Skills.DEFENSE) * prayerBonus) + styleBonus + 8;
+		int defenseLevel = (int) (defender.getSkills().getLevel(SKILLS.DEFENSE.id()) * prayerBonus) + styleBonus + 8;
 		double bonusMultiplier = (double) (defender.getArmourPoints() + 64);
 
 		if (defender.isNpc())
@@ -114,7 +114,7 @@ class MeleeFormula {
 			Prayers.IMPROVED_REFLEXES,
 			Prayers.INCREDIBLE_REFLEXES);
 
-		int attackLevel = (int) (attacker.getSkills().getLevel(Skills.ATTACK) * prayerBonus) + styleBonus + 8;
+		int attackLevel = (int) (attacker.getSkills().getLevel(SKILLS.ATTACK.id()) * prayerBonus) + styleBonus + 8;
 		double bonusMultiplier = (double) (attacker.getWeaponAimPoints() + 64);
 
 		if (attacker.isNpc())

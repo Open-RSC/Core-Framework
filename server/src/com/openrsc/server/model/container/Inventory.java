@@ -4,6 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.external.Gauntlets;
 import com.openrsc.server.external.ItemId;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
@@ -403,30 +404,30 @@ public class Inventory {
 
 		if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
 			optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
-			optionalSkillIndex = Optional.of(Skills.ATTACK);
+			optionalSkillIndex = Optional.of(SKILLS.ATTACK.id());
 		}
 		//staff of iban (usable)
 		if (item.getID() == ItemId.STAFF_OF_IBAN.id()) {
 			optionalLevel = Optional.of(requiredLevel);
-			optionalSkillIndex = Optional.of(Skills.ATTACK);
+			optionalSkillIndex = Optional.of(SKILLS.ATTACK.id());
 		}
 		//battlestaves (incl. enchanted version)
 		if (itemLower.contains("battlestaff")) {
 			optionalLevel = Optional.of(requiredLevel);
-			optionalSkillIndex = Optional.of(Skills.ATTACK);
+			optionalSkillIndex = Optional.of(SKILLS.ATTACK.id());
 		}
 
 		if (player.getSkills().getMaxStat(requiredSkillIndex) < requiredLevel) {
 			if (!bypass) {
 				player.message("You are not a high enough level to use this item");
-				player.message("You need to have a " + Skills.SKILL_NAME[requiredSkillIndex] + " level of " + requiredLevel);
+				player.message("You need to have a " + Skills.getSkillName(requiredSkillIndex) + " level of " + requiredLevel);
 				ableToWield = false;
 			}
 		}
 		if (optionalSkillIndex.isPresent() && player.getSkills().getMaxStat(optionalSkillIndex.get()) < optionalLevel.get()) {
 			if (!bypass) {
 				player.message("You are not a high enough level to use this item");
-				player.message("You need to have a " + Skills.SKILL_NAME[optionalSkillIndex.get()] + " level of " + optionalLevel.get());
+				player.message("You need to have a " + Skills.getSkillName(optionalSkillIndex.get()) + " level of " + optionalLevel.get());
 				ableToWield = false;
 			}
 		}

@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.misc;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -31,7 +31,8 @@ public class Sheep implements InvUseOnNpcListener, InvUseOnNpcExecutiveListener 
 		showBubble(player, item);
 		player.message("You attempt to shear the sheep");
 		npc.setBusyTimer(1600);
-		player.setBatchEvent(new BatchEvent(player, 1200, "Crafting Shear Wool", Formulae.getRepeatTimes(player, Skills.CRAFTING), true) {
+		player.setBatchEvent(new BatchEvent(player, 1200, "Crafting Shear Wool", Formulae.getRepeatTimes(player, SKILLS.CRAFTING.id()), true) {
+
 			@Override
 			public void action() {
 				npc.setBusyTimer(1600);

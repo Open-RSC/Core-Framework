@@ -25,6 +25,8 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.model.Skills.SKILLS;
 
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -310,9 +312,27 @@ public abstract class Mob extends Entity {
 		Point[] boundaries = o.getObjectBoundary();
 		Point low = boundaries[0];
 		Point high = boundaries[1];
-		if ((Math.abs(getX() - low.getX()) <= 1 || Math.abs(getX() - high.getX()) <= 1) &&
-			(Math.abs(getY() - low.getY()) <= 1 || Math.abs(getY() - high.getY()) <= 1)) {
-			return o.getID() == 953;
+		int lowXDiff = Math.abs(getX() - low.getX());
+		int highXDiff = Math.abs(getX() - high.getX());
+		int lowYDiff = Math.abs(getY() - low.getY());
+		int highYDiff = Math.abs(getY() - high.getY());
+
+		//Runecrafting objects need to be accessible from all angles
+		if (o.getID() >= 1190 && o.getID() <= 1225)	{
+			if ((lowXDiff <= 2 || highXDiff <= 2) && (lowYDiff <= 2 || highYDiff <= 2))
+				return true;
+		}
+		else if (o.getID() == 1227)
+			if ((lowXDiff <= 2 || highXDiff <= 2) && (highYDiff <= 3))
+				return true;
+			else if (o.getID() >= 1228 && o.getID() <= 1232)
+				if ((lowXDiff <= 2 || highXDiff <= 2) && (lowYDiff <= 2 || highYDiff <= 2))
+					return true;
+
+		else if (o.getID() == 953)
+		{
+			if ((lowXDiff <= 1 || highXDiff <= 1) &&(lowYDiff <= 1 || highYDiff <= 1))
+				return true;
 		}
 		return false;
 	}
@@ -466,7 +486,7 @@ public abstract class Mob extends Entity {
 	}
 
 	public void damage(int damage) {
-		int newHp = skills.getLevel(Skills.HITPOINTS) - damage;
+		int newHp = skills.getLevel(SKILLS.HITS.id()) - damage;
 		if (newHp <= 0) {
 			if (this.isPlayer()) {
 				((Player) this).setStatus(Action.DIED_FROM_DAMAGE);

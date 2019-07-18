@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 import com.openrsc.server.Constants;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
@@ -75,7 +75,7 @@ public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerMag
 					"I'll kill you myself !");
 				third_nezikchened.startCombat(p);
 				p.message("You feel a great sense of loss...");
-				p.getSkills().setLevel(Skills.PRAYER, (int) Math.ceil((double) p.getSkills().getLevel(Skills.PRAYER) / 4));
+				p.getSkills().setLevel(SKILLS.PRAYER.id(), (int) Math.ceil((double) p.getSkills().getLevel(SKILLS.PRAYER.id()) / 4));
 				npcTalk(p, third_nezikchened, "Your faith will help you little here.");
 			} else {
 				third_nezikchened.startCombat(p);

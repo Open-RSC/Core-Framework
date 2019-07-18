@@ -6,7 +6,7 @@ import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -36,12 +36,12 @@ public class Thieving extends Functions
 
 	public static boolean succeedPickLockThieving(Player player, int req_level) {
 		//lockpick said to make picking a bit easier
-		int effectiveLevel = player.getSkills().getLevel(Skills.THIEVING) + (hasItem(player, ItemId.LOCKPICK.id()) ? 10 : 0);
+		int effectiveLevel = player.getSkills().getLevel(SKILLS.THIEVING.id()) + (hasItem(player, ItemId.LOCKPICK.id()) ? 10 : 0);
 		return Formulae.calcGatheringSuccessful(req_level, effectiveLevel);
 	}
 
 	private static boolean succeedThieving(Player player, int req_level) {
-		return Formulae.calcGatheringSuccessful(req_level, player.getSkills().getLevel(Skills.THIEVING), 40);
+		return Formulae.calcGatheringSuccessful(req_level, player.getSkills().getLevel(SKILLS.THIEVING.id()), 40);
 	}
 
 	public void stallThieving(Player player, GameObject object, Stall stall) {
@@ -68,7 +68,7 @@ public class Thieving extends Functions
 		if (!failNoun.endsWith("s")) {
 			failNoun += "s";
 		}
-		if (player.getSkills().getLevel(Skills.THIEVING) < stall.getRequiredLevel()) {
+		if (player.getSkills().getLevel(SKILLS.THIEVING.id()) < stall.getRequiredLevel()) {
 			player.message("You are not a high enough level to steal the " + failNoun);
 			return;
 		}
@@ -124,7 +124,7 @@ public class Thieving extends Functions
 		String loot = stall.equals(Stall.GEMS_STALL) ? "gem" : selectedLoot.getDef().getName().toLowerCase();
 		player.message("You steal a " + stall.getLootPrefix() + loot);
 
-		player.incExp(Skills.THIEVING, stall.getXp(), true);
+		player.incExp(SKILLS.THIEVING.id(), stall.getXp(), true);
 
 		if (stall.equals(Stall.BAKERS_STALL)) { // Cake
 			player.getCache().put("cakeStolen", Instant.now().getEpochSecond());
@@ -196,7 +196,7 @@ public class Thieving extends Functions
 
 		player.message("You search the chest for traps");
 		sleep(1200);
-		if (player.getSkills().getLevel(Skills.THIEVING) < req) {
+		if (player.getSkills().getLevel(SKILLS.THIEVING.id()) < req) {
 			player.message("You find nothing");
 			return;
 		}
@@ -237,7 +237,7 @@ public class Thieving extends Functions
 				player.getInventory().add(new Item(l.getId(), l.getAmount()));
 			}
 		}
-		player.incExp(Skills.THIEVING, xp, true);
+		player.incExp(SKILLS.THIEVING.id(), xp, true);
 		message(player, "You find treasure inside!");
 		if (!makeChestStuck) {
 			replaceObjectDelayed(obj, respawnTime, 340);
@@ -326,12 +326,13 @@ public class Thieving extends Functions
 		final String thievedMobSt = (thievedMobName.contains("gnome") || thievedMobName.contains("blurberry")) ? "gnome" :
 			thievedMobName.contains("watchman") ? "watchman" : thievedMobName;
 		player.playerServerMessage(MessageType.QUEST, "You attempt to pick the " + thievedMobSt + "'s pocket");
-		if (player.getSkills().getLevel(Skills.THIEVING) < pickpocket.getRequiredLevel()) {
+		if (player.getSkills().getLevel(SKILLS.THIEVING.id()) < pickpocket.getRequiredLevel()) {
 			sleep(1800);
 			player.message("You need to be a level " + pickpocket.getRequiredLevel() + " thief to pick the " + thievedMobSt + "'s pocket");
 			return;
 		}
-		player.setBatchEvent(new BatchEvent(player, 1200, "Thieving Pickpocket", Formulae.getRepeatTimes(player, Skills.THIEVING), true) {
+		player.setBatchEvent(new BatchEvent(player, 1200, "Thieving Pickpocket", Formulae.getRepeatTimes(player, SKILLS.THIEVING.id()), true) {
+
 			@Override
 			public void action() {
 
@@ -348,7 +349,7 @@ public class Thieving extends Functions
 							player.message("@gre@You are too tired to gain experience, get some rest");
 					}
 
-					player.incExp(Skills.THIEVING, pickpocket.getXp(), true);
+					player.incExp(SKILLS.THIEVING.id(), pickpocket.getXp(), true);
 					Item selectedLoot = null;
 					int total = 0;
 					for (LootItem loot : lootTable) {
@@ -424,7 +425,7 @@ public class Thieving extends Functions
 						return;
 					}
 				}
-				if (player.getSkills().getLevel(Skills.THIEVING) < 47) {
+				if (player.getSkills().getLevel(SKILLS.THIEVING.id()) < 47) {
 					player.message("You are not a high enough level to pick this lock");
 					player.setBusyTimer(0);
 					return;
@@ -441,7 +442,7 @@ public class Thieving extends Functions
 
 				message(player, "You find a treasure inside!");
 
-				player.incExp(Skills.THIEVING, 600, true);
+				player.incExp(SKILLS.THIEVING.id(), 600, true);
 				addItem(player, ItemId.COINS.id(), 20);
 				addItem(player, ItemId.STEEL_ARROW_HEADS.id(), 5);
 
@@ -595,7 +596,7 @@ public class Thieving extends Functions
 			}
 			message(player, 1200, "you attempt to pick the lock");
 
-			if (getCurrentLevel(player, Skills.THIEVING) < req) {
+			if (getCurrentLevel(player, SKILLS.THIEVING.id()) < req) {
 				player.message("You are not a high enough level to pick this lock");
 				return;
 			}
@@ -613,7 +614,7 @@ public class Thieving extends Functions
 						return;
 					}
 				}
-				player.incExp(Skills.THIEVING, (int) exp, true);
+				player.incExp(SKILLS.THIEVING.id(), (int) exp, true);
 			} else {
 				player.message("You fail to pick the lock");
 			}

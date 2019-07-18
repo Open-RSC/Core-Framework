@@ -5,7 +5,7 @@ import static com.openrsc.server.plugins.Functions.npcTalk;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -16,7 +16,7 @@ public class HeadWizard implements TalkToNpcExecutiveListener, TalkToNpcListener
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		if (Constants.GameServer.WANT_MISSING_GUILD_GREETINGS && n.getID() == NpcId.HEAD_WIZARD.id()) {
-			if (getCurrentLevel(p, Skills.MAGIC) < 66) {
+			if (getCurrentLevel(p, SKILLS.MAGIC.id()) < 66) {
 				npcTalk(p, n, "Hello, you need a magic level of 66 to get in here",
 						"The magical energy in here is unsafe for those below that level");
 			} else {

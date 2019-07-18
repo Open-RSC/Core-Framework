@@ -139,6 +139,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_curstats` (
   `cur_herblaw` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
   `cur_agility` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
   `cur_thieving` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+  `cur_runecraft` tinyint(3) UNSIGNED NOT NUTT DEFAULT 1,
   PRIMARY KEY (`id`),
   KEY `playerID` (`playerID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -176,6 +177,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_experience` (
   `exp_herblaw` int(9) UNSIGNED NOT NULL DEFAULT 0,
   `exp_agility` int(9) UNSIGNED NOT NULL DEFAULT 0,
   `exp_thieving` int(9) UNSIGNED NOT NULL DEFAULT 0,
+  `exp_runecraft` int(9) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `playerID` (`playerID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

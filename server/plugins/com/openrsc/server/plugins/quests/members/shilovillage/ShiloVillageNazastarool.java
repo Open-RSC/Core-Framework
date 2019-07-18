@@ -1,6 +1,6 @@
 package com.openrsc.server.plugins.quests.members.shilovillage;
 
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -88,7 +88,7 @@ public class ShiloVillageNazastarool implements ObjectActionListener, ObjectActi
 
 	private void choke(Player p) {
 		message(p, "@red@You feel invisible hands starting to choke you...");
-		p.damage(getCurrentLevel(p, Skills.HITPOINTS) / 2);
+		p.damage(getCurrentLevel(p, SKILLS.HITS.id()) / 2);
 	}
 
 	private void runFromNazastarool(Player p, Npc n) {
@@ -215,7 +215,7 @@ public class ShiloVillageNazastarool implements ObjectActionListener, ObjectActi
 			if (!p.getInventory().wielding(ItemId.BEADS_OF_THE_DEAD.id())) {
 				choke(p);
 			}
-			n.getSkills().setLevel(Skills.HITPOINTS, n.getSkills().getMaxStat(Skills.HITPOINTS));
+			n.getSkills().setLevel(SKILLS.HITS.id(), n.getSkills().getMaxStat(SKILLS.HITS.id()));
 		}
 	}
 }

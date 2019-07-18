@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.quests.members.digsite;
 import com.openrsc.server.Constants;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -194,7 +194,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					}
 				}
 				showBubble(p, new Item(ItemId.ROCK_PICK.id()));
-				p.incExp(Skills.MINING, 70, true);
+				p.incExp(SKILLS.MINING.id(), 70, true);
 				message(p, "You dig through the earth");
 				sleep(1500);
 				int randomize = DataConversions.random(0, (DIGSITE_LEVEL2_ITEMS.length - 1));
@@ -211,7 +211,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 		if (item.getID() == ItemId.TROWEL.id() && inArray(obj.getID(), SOIL)) {
 			if (getTrainingAreas(p)) {
 				showBubble(p, new Item(ItemId.TROWEL.id()));
-				p.incExp(Skills.MINING, 50, true);
+				p.incExp(SKILLS.MINING.id(), 50, true);
 				message(p, "You dig with the trowel...");
 				sleep(1500);
 				int randomize = DataConversions.random(0, (TRAINING_AREA_ITEMS.length - 1));
@@ -256,7 +256,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					}
 				}
 				showBubble(p, new Item(ItemId.TROWEL.id()));
-				p.incExp(Skills.MINING, 60, true);
+				p.incExp(SKILLS.MINING.id(), 60, true);
 				message(p, "You dig through the earth");
 				sleep(1500);
 				int randomize = DataConversions.random(0, (DIGSITE_LEVEL1_ITEMS.length - 1));
@@ -316,7 +316,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					return;
 				}
 				showBubble(p, new Item(ItemId.TROWEL.id()));
-				p.incExp(Skills.MINING, 80, true);
+				p.incExp(SKILLS.MINING.id(), 80, true);
 				message(p, "You dig through the earth");
 				sleep(1500);
 				int randomize = DataConversions.random(0, (DIGSITE_LEVEL3_ITEMS.length - 1));

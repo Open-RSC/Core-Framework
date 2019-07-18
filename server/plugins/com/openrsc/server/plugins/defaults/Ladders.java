@@ -6,7 +6,7 @@ import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.TelePoint;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -136,7 +136,7 @@ public class Ladders {
 						"Oh sorry");
 					if (op == 0) {
 						playerTalk(player, abbot, "Well can I join your order?");
-						if (getCurrentLevel(player, Skills.PRAYER) >= 31) {
+						if (getCurrentLevel(player, SKILLS.PRAYER.id()) >= 31) {
 							npcTalk(player, abbot, "Ok I see you are someone suitable for our order",
 								"You may join");
 							player.getCache().set("prayer_guild", 1);
@@ -167,7 +167,7 @@ public class Ladders {
 		} else if (obj.getID() == 223 && obj.getX() == 274 && obj.getY() == 566) { // Mining
 			// Guild
 			// Ladder
-			if (getCurrentLevel(player, Skills.MINING) < 60) {
+			if (getCurrentLevel(player, SKILLS.MINING.id()) < 60) {
 				player.setBusy(true);
 				Npc dwarf = World.getWorld().getNpc(NpcId.DWARF_MINING_GUILD.id(), 272, 277, 563, 567);
 				if (dwarf != null) {

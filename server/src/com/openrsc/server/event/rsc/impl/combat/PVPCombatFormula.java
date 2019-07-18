@@ -1,6 +1,6 @@
 package com.openrsc.server.event.rsc.impl.combat;
 
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
@@ -11,14 +11,14 @@ public class PVPCombatFormula {
 	 * Calulates what one mob should hit on another with meelee
 	 */
 	public static int calcFightHit(Mob attacker, Mob defender) {
-		int max = (int) maxHit(attacker, attacker.getSkills().getLevel(Skills.STRENGTH), attacker.getWeaponPowerPoints(), styleBonus(attacker, 2));
+		int max = (int) maxHit(attacker, attacker.getSkills().getLevel(SKILLS.STRENGTH.id()), attacker.getWeaponPowerPoints(), styleBonus(attacker, 2));
 		int newAtt = (int)
 			(
 				addPrayers(attacker, Prayers.CLARITY_OF_THOUGHT,
 					Prayers.IMPROVED_REFLEXES,
 					Prayers.INCREDIBLE_REFLEXES)
 					*
-					(attacker.getSkills().getLevel(Skills.ATTACK) / 0.8D)
+					(attacker.getSkills().getLevel(SKILLS.ATTACK.id()) / 0.8D)
 					+
 					(
 						(DataConversions.random(0, 4) == 0 ? attacker.getWeaponPowerPoints() : attacker.getWeaponAimPoints()) / 2.5D
@@ -29,7 +29,7 @@ public class PVPCombatFormula {
 					)
 					+
 					(
-						DataConversions.random(0, 100) <= 10 ? (attacker.getSkills().getLevel(Skills.STRENGTH) / 5D) : 0
+						DataConversions.random(0, 100) <= 10 ? (attacker.getSkills().getLevel(SKILLS.STRENGTH.id()) / 5D) : 0
 					)
 					+
 					(
@@ -42,14 +42,14 @@ public class PVPCombatFormula {
 					Prayers.STEEL_SKIN)
 					*
 					(
-						(DataConversions.random(0, 100) <= 5 ? 0 : defender.getSkills().getLevel(Skills.DEFENSE)) * 1.1D
+						(DataConversions.random(0, 100) <= 5 ? 0 : defender.getSkills().getLevel(SKILLS.DEFENSE.id())) * 1.1D
 					)
 					+
 					(
 						(DataConversions.random(0, 100) <= 5 ? 0 : defender.getArmourPoints()) / 2.75D
 					)
 					+
-					(defender.getSkills().getLevel(Skills.STRENGTH) / 4D)
+					(defender.getSkills().getLevel(SKILLS.STRENGTH.id()) / 4D)
 					+
 					(styleBonus(defender, 1) * 2)
 			);

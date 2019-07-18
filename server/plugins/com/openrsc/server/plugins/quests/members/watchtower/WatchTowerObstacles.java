@@ -5,7 +5,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -300,13 +300,13 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 				npcTalk(p, ogre_trader, "Grr! get your hands off those cakes");
 				ogre_trader.startCombat(p);
 			} else {
-				if (getCurrentLevel(p, Skills.THIEVING) < 15) {
+				if (getCurrentLevel(p, SKILLS.THIEVING.id()) < 15) {
 					p.message("You need a thieving level of 15 to steal from this stall");
 					return;
 				}
 				p.message("You cautiously grab a cake from the stall");
 				addItem(p, ItemId.ROCK_CAKE.id(), 1);
-				p.incExp(Skills.THIEVING, 64, true);
+				p.incExp(SKILLS.THIEVING.id(), 64, true);
 				replaceObject(obj, new GameObject(obj.getLocation(), ROCK_CAKE_COUNTER_EMPTY, obj.getDirection(), obj.getType()));
 				delayedSpawnObject(obj.getLoc(), 5000);
 			}
@@ -332,7 +332,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 				p.message("The bridge has collapsed");
 				p.message("It seems this rock is placed here to jump from");
 			} else if (command.equalsIgnoreCase("jump over")) {
-				if (getCurrentLevel(p, Skills.AGILITY) < 30) {
+				if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 30) {
 					p.message("You need agility level of 30 to attempt this jump");
 					return;
 				}
@@ -364,7 +364,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 								}
 								p.message("You daringly jump across the chasm");
 								p.teleport(647, 799);
-								p.incExp(Skills.AGILITY, 50, true);
+								p.incExp(SKILLS.AGILITY.id(), 50, true);
 								playerTalk(p, null, "Phew! I just made it");
 							}
 						} else if (menu == 1) {
@@ -380,7 +380,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 						}
 						p.message("You daringly jump across the chasm");
 						p.teleport(647, 799);
-						p.incExp(Skills.AGILITY, 50, true);
+						p.incExp(SKILLS.AGILITY.id(), 50, true);
 						playerTalk(p, null, "Phew! I just made it");
 					}
 				}

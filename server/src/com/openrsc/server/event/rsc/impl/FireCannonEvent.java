@@ -4,7 +4,7 @@ import com.openrsc.server.Server;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.PathValidation;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -44,7 +44,7 @@ public class FireCannonEvent extends GameTickEvent {
 
 		getPlayerOwner().face(target);
 		//35 at level 99 per wayback tip.it
-		int max = owner.getSkills().getMaxStat(Skills.RANGED) / 3 + 2;
+		int max = owner.getSkills().getMaxStat(SKILLS.RANGED.id()) / 3 + 2;
 		int cannonBallDamage = DataConversions.random(0, max);
 		Server.getServer().getGameEventHandler().add(new ProjectileEvent(owner, target, cannonBallDamage, 5));
 		getPlayerOwner().playSound("shoot");

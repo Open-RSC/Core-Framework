@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 import com.openrsc.server.Constants;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -62,20 +62,20 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 				holyForceSpell(p, second_nezikchened);
 				message(p, second_nezikchened, 1300, "The spirit lets out an unearthly, blood curdling scream...");
 				message(p, second_nezikchened, 600, "The spell seems to weaken the Demon.");
-				second_nezikchened.getSkills().setLevel(Skills.DEFENSE, second_nezikchened.getSkills().getLevel(Skills.DEFENSE) - 5);
-				int newPray = (int) Math.ceil((double) p.getSkills().getLevel(Skills.PRAYER) / 2);
-				if (p.getSkills().getLevel(Skills.PRAYER) - newPray < 30) {
+				second_nezikchened.getSkills().setLevel(SKILLS.DEFENSE.id(), second_nezikchened.getSkills().getLevel(SKILLS.DEFENSE.id()) - 5);
+				int newPray = (int) Math.ceil((double) p.getSkills().getLevel(SKILLS.PRAYER.id()) / 2);
+				if (p.getSkills().getLevel(SKILLS.PRAYER.id()) - newPray < 30) {
 					message(p, 1300, "A sense of fear comes over you ",
 						"You feel a sense of loss...");
 				} else {
 					message(p, 1300, "An intense sense of fear comes over you ",
 						"You feel a great sense of loss...");
 				}
-				p.getSkills().setLevel(Skills.PRAYER, newPray);
+				p.getSkills().setLevel(SKILLS.PRAYER.id(), newPray);
 			} else {
 				message(p, 1300, "A terrible fear comes over you. ",
 					"You feel a terrible sense of loss...");
-				p.getSkills().setLevel(Skills.PRAYER, 0);
+				p.getSkills().setLevel(SKILLS.PRAYER.id(), 0);
 			}
 		}
 		if (useHolySpell) {
@@ -146,7 +146,7 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 								sleep(600);
 								second_nezikchened.startCombat(p);
 								p.message("You feel a terrible sense of loss...");
-								p.getSkills().setLevel(Skills.PRAYER, 0);
+								p.getSkills().setLevel(SKILLS.PRAYER.id(), 0);
 							}
 						}
 						/**
