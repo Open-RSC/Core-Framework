@@ -1,11 +1,11 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.MiniEvent;
+import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ItemId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
@@ -13,7 +13,6 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.plugins.PluginHandler;
-import com.openrsc.server.external.ItemId;
 
 public class ItemActionHandler implements PacketHandler {
 	/**
@@ -43,11 +42,6 @@ public class ItemActionHandler implements PacketHandler {
 			player.setSuspiciousPlayer(true);
 			return;
 		}
-
-		/*if (!player.getLocation().isMembersWild() && item.getDef().isMembersOnly()) {
-			player.message("Members content can only be used in wild levels: " + World.membersWildStart + " - " + World.membersWildMax);
-			return;
-		}*/
 
 		if (item.getDef().isMembersOnly() && !Constants.GameServer.MEMBER_WORLD) {
 			player.message("You need to be a member to use this object");
@@ -82,22 +76,22 @@ public class ItemActionHandler implements PacketHandler {
 			}
 			if (amount > 1) { // bury all
 				player.message("You dig a hole in the ground");
-				player.setBatchEvent(new BatchEvent(player, 650, String.format("Bury %s", item.getDef().getName()), amount, false){
+				player.setBatchEvent(new BatchEvent(player, 650, String.format("Bury %s", item.getDef().getName()), amount, false) {
 					@Override
 					public void action() {
 						buryBonesHelper(player, item);
-						
+
 					}
 				});
 			} else {
 				player.setBusyTimer(650);
 				player.message("You dig a hole in the ground");
 				Server.getServer().getEventHandler()
-						.add(new MiniEvent(player, "Bury Bones") {
-							public void action() {
-								buryBonesHelper(player, item);
-							}
-						});
+					.add(new MiniEvent(player, "Bury Bones") {
+						public void action() {
+							buryBonesHelper(player, item);
+						}
+					});
 			}
 		} else {
 			switch (ItemId.getById(item.getID())) {
@@ -156,18 +150,16 @@ public class ItemActionHandler implements PacketHandler {
 				case DEATH_TALISMAN:
 				case BLOOD_TALISMAN:
 					if (item.getDef().getCommand().equalsIgnoreCase("locate")) {
-						if (player.getQuestStage(Constants.Quests.RUNE_MYSTERIES) != -1)
-						{
+						if (player.getQuestStage(Constants.Quests.RUNE_MYSTERIES) != -1) {
 							player.message("You can't understand what the talisman is trying to tell you.");
 							return;
 						}
-						String northORsouth="", eastORwest="";
+						String northORsouth = "", eastORwest = "";
 						int playerX, playerY, altarX, altarY;
 						playerX = player.getX();
 						playerY = player.getY();
 
-						switch (ItemId.getById(item.getID()))
-						{
+						switch (ItemId.getById(item.getID())) {
 							case AIR_TALISMAN:
 								altarX = 306;
 								altarY = 593;
@@ -235,13 +227,13 @@ public class ItemActionHandler implements PacketHandler {
 					break;
 				default:
 					player.message("Nothing interesting happens");
-					return;
 			}
 		}
 	}
+
 	private void buryBonesHelper(Player owner, Item item) {
 		owner.message("You bury the "
-				+ item.getDef().getName().toLowerCase());
+			+ item.getDef().getName().toLowerCase());
 		owner.getInventory().remove(item);
 		switch (ItemId.getById(item.getID())) {
 			case BONES:
@@ -256,10 +248,6 @@ public class ItemActionHandler implements PacketHandler {
 			case DRAGON_BONES:
 				owner.incExp(Skills.PRAYER, 240, true); // 60
 				break;
-//							case 2256: // Soul of Greatwood NOT INCLUDED
-//								owner.incExp(5, 800 * 4, true); // 800
-//								break;
-			// any other item with command bury
 			default:
 				player.message("Nothing interesting happens");
 				break;
