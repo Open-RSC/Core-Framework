@@ -44,7 +44,7 @@ public class Config {
 	public static final String DL_URL = "game.openrsc.com"; // needs to be set as public for the Android client to use
 	public static final String ANDROID_DOWNLOAD_PATH = "https://" + DL_URL + "/downloads/";
 	public static final String CACHE_URL = "https://" + DL_URL + "/downloads/cache/";
-	public static final int ANDROID_CLIENT_VERSION = 45; // Important! Depends on web server android_version.txt to check for an updated version
+	public static final int ANDROID_CLIENT_VERSION = 46; // Important! Depends on web server android_version.txt to check for an updated version
 	public static boolean F_SHOWING_KEYBOARD = false;
 	public static boolean C_HOLD_AND_CHOOSE = true;
 	public static int C_LONG_PRESS_TIMER = 5; // default hold timer setting
@@ -70,7 +70,7 @@ public class Config {
 	public static boolean S_WANT_SKILL_MENUS = false;
 	public static boolean S_WANT_QUEST_MENUS = false;
 	public static boolean S_WANT_EXPERIENCE_ELIXIRS = false;
-	public static boolean S_WANT_KEYBOARD_SHORTCUTS = false;
+	public static int S_WANT_KEYBOARD_SHORTCUTS = 0;
 	public static boolean S_WANT_CUSTOM_BANKS = false;
 	public static boolean S_WANT_BANK_PINS = false;
 	public static boolean S_WANT_BANK_NOTES = false;

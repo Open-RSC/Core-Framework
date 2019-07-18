@@ -968,7 +968,7 @@ public class PacketHandler {
 		props.setProperty("S_WANT_SKILL_MENUS", wantSkillMenus == 1 ? "true" : "false"); // 25
 		props.setProperty("S_WANT_QUEST_MENUS", wantQuestMenus == 1 ? "true" : "false"); // 26
 		props.setProperty("S_WANT_EXPERIENCE_ELIXIRS", wantExperienceElixirs == 1 ? "true" : "false"); // 27
-		props.setProperty("S_WANT_KEYBOARD_SHORTCUTS", wantKeyboardShortcuts == 1 ? "true" : "false"); // 28
+		props.setProperty("S_WANT_KEYBOARD_SHORTCUTS", Integer.toString(wantKeyboardShortcuts)); // 28
 		props.setProperty("S_WANT_CUSTOM_BANKS", wantCustomBanks == 1 ? "true" : "false"); // 29
 		props.setProperty("S_WANT_BANK_PINS", wantBankPins == 1 ? "true" : "false"); // 30
 		props.setProperty("S_WANT_BANK_NOTES", wantBankNotes == 1 ? "true" : "false"); // 31
