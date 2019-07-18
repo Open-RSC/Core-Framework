@@ -545,7 +545,7 @@ public class ActionSender {
 		s.writeByte((byte) (WANT_SKILL_MENUS ? 1 : 0)); // 25
 		s.writeByte((byte) (WANT_QUEST_MENUS ? 1 : 0)); // 26
 		s.writeByte((byte) (WANT_EXPERIENCE_ELIXIRS ? 1 : 0)); // 27
-		s.writeByte((byte) (WANT_KEYBOARD_SHORTCUTS ? 1 : 0)); // 28
+		s.writeByte((byte) WANT_KEYBOARD_SHORTCUTS); // 28
 		s.writeByte((byte) (WANT_CUSTOM_BANKS ? 1 : 0)); // 29
 		s.writeByte((byte) (WANT_BANK_PINS ? 1 : 0)); // 30
 		s.writeByte((byte) (WANT_BANK_NOTES ? 1 : 0)); // 31

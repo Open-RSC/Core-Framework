@@ -3196,7 +3196,7 @@ public final class mudclient implements Runnable {
                         k = 0xff0000;
 
                     this.getSurface().drawString(
-                            (S_WANT_KEYBOARD_SHORTCUTS ? "(" + (j + 1) + ")" : "") + optionsMenuText[j],
+                            (S_WANT_KEYBOARD_SHORTCUTS > 1 ? "(" + (j + 1) + ")" : "") + optionsMenuText[j],
                             startX + 10, startY + j * spread, k, 6);
                 }
             } else {
@@ -3212,7 +3212,7 @@ public final class mudclient implements Runnable {
                         }
 
                         this.getSurface().drawString(
-                                (S_WANT_KEYBOARD_SHORTCUTS ? "(" + (var2 + 1) + ") " : "") + this.optionsMenuText[var2],
+                                (S_WANT_KEYBOARD_SHORTCUTS > 1 ? "(" + (var2 + 1) + ") " : "") + this.optionsMenuText[var2],
                                 6, var2 * 12 + 12, var3, 1);
                         ++var2;
                     }
@@ -10303,7 +10303,7 @@ public final class mudclient implements Runnable {
                         return;
                     }
 
-                    if (optionsMenuShow && S_WANT_KEYBOARD_SHORTCUTS) {
+                    if (optionsMenuShow && S_WANT_KEYBOARD_SHORTCUTS > 0) {
                         try {
                             int option = Integer.parseInt("" + (char) key) - 1;
                             if (option >= 0 && option < optionsMenuCount) {
