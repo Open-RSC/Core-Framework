@@ -2,23 +2,20 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.container.Item;
-import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
+import com.openrsc.server.plugins.listeners.action.QuestDecoy;
+import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class RuneMysteries implements QuestInterface,
-	WallObjectActionListener, WallObjectActionExecutiveListener, InvUseOnObjectListener,
-	InvUseOnObjectExecutiveListener {
+public class RuneMysteries implements QuestInterface, QuestDecoy {
+
+	@Override
+	public void questDecoy(Player p) {
+
+	}
 
 	@Override
 	public int getQuestId() {
@@ -152,7 +149,7 @@ public class RuneMysteries implements QuestInterface,
 							"He said the head wizard would be interested in it.");
 						npcTalk(p, n, "Did he now? Well, that IS interesting.",
 							"Hand it over, then, adventurer - let me see what",
-							"all the hubbub is about. Just some crudge amulet, I'll wager.");
+							"all the hubbub is about. Just some crude amulet, I'll wager.");
 						playerTalk(p, n, "Okay, here you go.");
 
 						if (!p.getInventory().hasItemId(ItemId.AIR_TALISMAN.id())) {
@@ -161,7 +158,6 @@ public class RuneMysteries implements QuestInterface,
 							return;
 						}
 						message(p, "You give the talisman to the wizard.");
-						removeItem(p, ItemId.AIR_TALISMAN.id(), 1);
 						npcTalk(p, n, "Wow! This is incredible! Th-this talisman you brought me...",
 							"it is the last piece of the puzzle. Finally! the legacy of our",
 							"ancestors will return to us once more! I need time to",
@@ -186,18 +182,11 @@ public class RuneMysteries implements QuestInterface,
 								"south-east quarter. He will give you a special item -",
 								"bring it back to me and I will show you the mystery of runes.");
 
-							if (p.getInventory().getFreeSlots() > 0) {
+								removeItem(p, ItemId.AIR_TALISMAN.id(), 1);
 								message(p, "The head wizard gives you a research package.");
-								npcTalk(p, n, "Best of luck with your quest, " + p.getUsername());
 								addItem(p, ItemId.RESEARCH_PACKAGE.id(), 1);
+								npcTalk(p, n, "Best of luck with your quest, " + p.getUsername());
 								p.setQuestStage(Quests.RUNE_MYSTERIES, 2);
-							} else {
-								message(p, "The head wizard tried to give you a research package, but your inventory was full.");
-							}
-
-						} else if (choice2 == 1) {
-							message(p, "The head wizard returns your talisman.");
-							addItem(p, ItemId.AIR_TALISMAN.id(), 1);
 						}
 						break;
 				}
@@ -261,8 +250,7 @@ public class RuneMysteries implements QuestInterface,
 					"spoken of in the ancient texts, we would once",
 					"more be able to create runes as",
 					"our ancestors had done.");
-				playerTalk(p, n, "I'm still not sure how I fit into",
-					"this little story of yours.");
+				playerTalk(p, n, "I'm still not sure how I fit into this little story of yours.");
 				npcTalk(p, n, "You haven't guessed? The talisman you brought me",
 					"is a key to the elemental altar of air! When you hold",
 					"it, it directs you to the entrance of the long",
@@ -297,8 +285,8 @@ public class RuneMysteries implements QuestInterface,
 					"locate the Air Altar and use any further talismans",
 					"you find to locate the other altars.",
 					"Now, my research notes, please?");
-				message(p, "You hand Sedridor the research notes.");
 				removeItem(p, ItemId.RESEARCH_NOTES.id(), 1);
+				message(p, "You hand Sedridor the research notes.");
 				addItem(p, ItemId.AIR_TALISMAN.id(), 1);
 				p.sendQuestComplete(Quests.RUNE_MYSTERIES);
 				break;
@@ -326,7 +314,7 @@ public class RuneMysteries implements QuestInterface,
 				p.setQuestStage(Quests.RUNE_MYSTERIES, 3);
 				message(p, "Aubury gives you his research notes.");
 				npcTalk(p, n, "Now, I'm sure I can spare a couple of runes for",
-					"such a worth cause as these notes.",
+					"such a worthy cause as these notes.",
 					"Do you want me to teleport you back?");
 				int choice = showMenu(p, "Yes, please.", "No, thank you.");
 				if (choice == 0) {
@@ -360,77 +348,11 @@ public class RuneMysteries implements QuestInterface,
 
 	}
 
-
 	@Override
 	public void handleReward(Player p) {
 		p.message("Well done you have completed the rune mysteries quest");
-		p.message("@gre@You haved gained 1 quest point!");
+		p.message("@gre@You have gained 1 quest point!");
 		p.message("You now have access to the Runecrafting skill!");
 		incQuestReward(p, Quests.questData.get(Quests.RUNE_MYSTERIES), true);
-	}
-
-
-	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click,
-										 Player player) {
-		return (obj.getID() == 63 && obj.getY() == 3332) || (obj.getID() == 64 && (obj.getY() == 3336 || obj.getY() == 3332));
-	}
-
-	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
-		if (obj.getID() == 63 && obj.getY() == 3332) {
-			Npc suit = World.getWorld().getNpc(NpcId.SUIT_OF_ARMOUR.id(), 374, 374, 3330, 3334);
-			if (suit != null && !(p.getX() <= 373)) {
-				p.message("Suddenly the suit of armour comes to life!");
-				suit.setChasing(p);
-			} else {
-				doDoor(obj, p);
-			}
-		} else if (obj.getID() == 64 && (obj.getY() == 3336 || obj.getY() == 3332)) {
-			doDoor(obj, p);
-		}
-	}
-
-	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item,
-									   Player player) {
-		return obj.getID() == 236 &&
-			(item.getID() == ItemId.RAW_CHICKEN.id() || item.getID() == ItemId.RAW_RAT_MEAT.id()
-				|| item.getID() == ItemId.RAW_BEEF.id() || item.getID() == ItemId.RAW_BEAR_MEAT.id());
-	}
-
-	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == 236 &&
-			(item.getID() == ItemId.RAW_CHICKEN.id() || item.getID() == ItemId.RAW_RAT_MEAT.id()
-				|| item.getID() == ItemId.RAW_BEEF.id() || item.getID() == ItemId.RAW_BEAR_MEAT.id())) {
-			if (item.getID() == ItemId.RAW_CHICKEN.id()) {
-				message(p, "You dip the chicken in the cauldron");
-				p.getInventory().remove(ItemId.RAW_CHICKEN.id(), 1);
-
-				addItem(p, ItemId.ENCHANTED_CHICKEN_MEAT.id(), 1);
-			} else if (item.getID() == ItemId.RAW_BEAR_MEAT.id()) {
-				message(p, "You dip the bear meat in the cauldron");
-				p.getInventory().remove(ItemId.RAW_BEAR_MEAT.id(), 1);
-
-				addItem(p, ItemId.ENCHANTED_BEAR_MEAT.id(), 1);
-			} else if (item.getID() == ItemId.RAW_RAT_MEAT.id()) {
-				message(p, "You dip the rat meat in the cauldron");
-				p.getInventory().remove(ItemId.RAW_RAT_MEAT.id(), 1);
-
-				addItem(p, ItemId.ENCHANTED_RAT_MEAT.id(), 1);
-			} else if (item.getID() == ItemId.RAW_BEEF.id()) {
-				message(p, "You dip the beef in the cauldron");
-				p.getInventory().remove(ItemId.RAW_BEEF.id(), 1);
-
-				addItem(p, ItemId.ENCHANTED_BEEF.id(), 1);
-			}
-		}
-	}
-
-	class kaqemeex {
-		public static final int STONE_CIRCLE = 0;
-		public static final int ON_MY_WAY_NOW = 1;
-		public static final int SEARCH_OF_QUEST = 2;
 	}
 }

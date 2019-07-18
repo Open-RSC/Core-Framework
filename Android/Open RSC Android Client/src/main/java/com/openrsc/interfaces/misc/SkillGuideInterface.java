@@ -880,10 +880,9 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(32, "76","Water Rune x5"));
 				skillItems.add(new SkillItem(33, "77","Air Rune x8"));
 				skillItems.add(new SkillItem(34, "78","Earth Rune x4"));
-				skillItems.add(new SkillItem(40, "82","Nature Rune x2"));
 				skillItems.add(new SkillItem(35, "84","Mind Rune x7"));
 				skillItems.add(new SkillItem(33, "88","Air Rune x9"));
-				//skillItems.add(new SkillItem(42, "91","Law Rune x2"));
+				skillItems.add(new SkillItem(40, "91","Nature Rune x2"));
 				skillItems.add(new SkillItem(36, "92","Body Rune x3"));
 				skillItems.add(new SkillItem(32, "95","Water Rune x6"));
 				skillItems.add(new SkillItem(35, "98","Mind Rune x8"));
