@@ -167,7 +167,7 @@ public class Runecrafting implements ObjectActionListener, ObjectActionExecutive
 	}
 
 	public int getRuneMultiplier(Player p, int runeId) {
-		int retVal;
+		int retVal = 1;
 
 		switch(ItemId.getById(runeId)) {
 			case AIR_RUNE:
@@ -200,8 +200,15 @@ public class Runecrafting implements ObjectActionListener, ObjectActionExecutive
 				if (retVal > 2)
 					retVal = 2;
 				break;
-			default:
-				retVal = 1;
+			case COSMIC_RUNE:
+				retVal = getCurrentLevel(p,SKILLS.RUNECRAFT.id()) >= 59 ? 2 : 1;
+				break;
+			case CHAOS_RUNE:
+				retVal = getCurrentLevel(p,SKILLS.RUNECRAFT.id()) >= 74 ? 2 : 1;
+				break;
+			case NATURE_RUNE:
+				retVal = getCurrentLevel(p,SKILLS.RUNECRAFT.id()) >= 91 ? 2 : 1;
+				break;
 		}
 
 		return retVal;
