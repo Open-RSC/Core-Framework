@@ -1239,16 +1239,25 @@ public class PacketHandler {
 
 	private void updateEquipment() {
 		int equipCount = packetsIncoming.getUnsignedByte();
-		if (equipCount > 0)
-		{
-			int equipslot = 0;
-			int itemID = 0;
-			for (int i = 0; i < equipCount; i++) {
-				equipslot = packetsIncoming.getByte();
-				itemID = packetsIncoming.getShort();
-				mc.equippedItems[equipslot] = EntityHandler.getItemDef(itemID);
-			}
+
+		int equipslot = 0;
+		int itemID = 0;
+		for (int i = 0; i < Config.S_PLAYER_SLOT_COUNT; i++)
+			mc.equippedItems[i] = null;
+		for (int i = 0; i < equipCount; i++) {
+			equipslot = packetsIncoming.getByte();
+			itemID = packetsIncoming.getShort();
+			if (equipslot == 5)
+				equipslot = 0;
+			else if (equipslot == 6)
+				equipslot = 1;
+			else if (equipslot == 7)
+				equipslot = 2;
+			else if (equipslot > 7)
+				equipslot -= 3;
+			mc.equippedItems[equipslot] = EntityHandler.getItemDef(itemID);
 		}
+
 	}
 
 

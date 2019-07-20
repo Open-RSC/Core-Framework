@@ -29,6 +29,8 @@ import com.openrsc.interfaces.misc.SkillGuideInterface;
 import com.openrsc.interfaces.misc.TerritorySignupInterface;
 import com.openrsc.interfaces.misc.clan.Clan;
 
+import java.awt.*;
+import java.awt.geom.Point2D;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -107,6 +109,8 @@ public final class mudclient implements Runnable {
 		{3, 4, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5}, {3, 4, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5},
 		{4, 3, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5}, {11, 4, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3},
 		{11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 4, 3}};
+	private final int[] equipIconXLocations = new int[]{104,65,104,65,104,150,65,150,104,104,150};
+	private final int[] equipIconYLocations = new int[]{10,200,110,65,65,65,110,110,155,200,200};
 	private final int[] animFrameToSprite_CombatA = new int[]{0, 1, 2, 1, 0, 0, 0, 0};
 	private final int[] animFrameToSprite_CombatB = new int[]{0, 0, 0, 0, 0, 1, 2, 1};
 	private final int[] bankItemID = new int[500];
@@ -6994,13 +6998,52 @@ public final class mudclient implements Runnable {
 			} else if (this.tabEquipmentIndex == 1) //equipment tab
 			{
 				this.getSurface().drawBoxAlpha(xOffset, yOffset, 245, 245, this.clearBox, 128);
-				if (this.equippedItems[4] != null)
-					this.getSurface().drawSpriteClipping(
-						spriteSelect(equippedItems[4]),
-						xOffset+20, yOffset+20, 48, 32, equippedItems[4].getPictureMask(), 0,
-						false, 0, var1 ^ -15251);
-			}
+				Sprite todraw = null;
+				for (int i=0; i < S_PLAYER_SLOT_COUNT; i++)
+				{
+					if (this.equippedItems[i] == null) {
+						todraw = spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.EQUIPSLOT_HELM.id() + i));
+						this.getSurface().drawSpriteClipping(todraw
+							, xOffset+equipIconXLocations[i]
+							, yOffset+equipIconYLocations[i],
+							todraw.getWidth(),todraw.getHeight(),
+							0, 0, false, 0, var1 ^ -15251,0x80FFFFFF);
+					} else {
+						todraw = spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.EQUIPSLOT_HIGHLIGHT.id()));
+						this.getSurface().drawSpriteClipping(
+							todraw,
+							xOffset+equipIconXLocations[i],
+							yOffset+equipIconYLocations[i],
+							todraw.getWidth(),todraw.getHeight(),
+							equippedItems[i].getPictureMask(), 0, false, 0, var1 ^ -15251);
+						todraw = spriteSelect(equippedItems[i]);
+						this.getSurface().drawSpriteClipping(
+							todraw,
+							xOffset+equipIconXLocations[i],
+							yOffset+equipIconYLocations[i],
+							todraw.getSomething1(),todraw.getSomething2(),
+							equippedItems[i].getPictureMask(), 0, false, 0, var1 ^ -15251);
+					}
 
+					//handle equipment clicks
+					if (this.mouseButtonClick == 1 && this.mouseY > yOffset) {
+						for (int j = 0; j < S_PLAYER_SLOT_COUNT; j++) {
+							if (this.mouseX >= xOffset+equipIconXLocations[j] && this.mouseX < xOffset + equipIconXLocations[j] + 48)
+								if (this.mouseY >= yOffset+equipIconYLocations[j] && this.mouseY < yOffset + equipIconYLocations[j] + 32) {
+									//Send a packet to the server to unequip the item.
+									if (equippedItems[j] != null) {
+										this.packetHandler.getClientStream().newPacket(170);
+										this.packetHandler.getClientStream().writeBuffer1.putShort(equippedItems[j].id);
+										this.packetHandler.getClientStream().finishPacket();
+										break;
+									}
+								}
+
+
+						}
+					}
+				}
+			}
 			if (S_WANT_EQUIPMENT_TAB) {
 				this.getSurface().drawLineHoriz(xOffset, yOffset, 245, 0);
 				this.getSurface().drawLineVert(xOffset + 122, 36, 0, yOffset-36);

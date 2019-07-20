@@ -30,11 +30,23 @@ public final class ItemWieldHandler implements PacketHandler {
 		player.resetAllExceptDueling();
 		int idx = (int) p.readShort();
 
-		if (idx < 0 || idx >= 30) {
-			player.setSuspiciousPlayer(true);
-			return;
+		Item item = null;
+
+		if (p.getID() == packetTwo && Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			for (Item loop : player.getEquipment().list) {
+				if (loop != null && loop.getID() == idx) {
+					item = loop;
+					item.setWielded(true);
+					break;
+				}
+			}
+		} else {
+			if (idx < 0 || idx >= 30) {
+				player.setSuspiciousPlayer(true);
+				return;
+			}
+			item = player.getInventory().get(idx);
 		}
-		Item item = player.getInventory().get(idx);
 
 		if (item == null || !item.isWieldable()) {
 			player.setSuspiciousPlayer(true);

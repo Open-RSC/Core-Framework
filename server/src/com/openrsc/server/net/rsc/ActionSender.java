@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.GameStateUpdater;
 import com.openrsc.server.Server;
 import com.openrsc.server.content.clan.Clan;
@@ -300,6 +301,9 @@ public class ActionSender {
 		s.writeByte(player.getMagicPoints());
 		s.writeByte(player.getPrayerPoints());
 		player.write(s.toPacket());
+
+		if (WANT_EQUIPMENT_TAB)
+			sendEquipment(player);
 	}
 
 	/**

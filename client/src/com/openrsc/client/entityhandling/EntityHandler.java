@@ -343,7 +343,19 @@ public class EntityHandler {
 		REDX1(34),
 		REDX2(35),
 		REDX3(36),
-		REDX4(37);
+		REDX4(37),
+		EQUIPSLOT_HELM(38),
+		EQUIPSLOT_BODY(39),
+		EQUIPSLOT_LEGS(40),
+		EQUIPSLOT_SHIELD(41),
+		EQUIPSLOT_SWORD(42),
+		EQUIPSLOT_NECK(43),
+		EQUIPSLOT_BOOTS(44),
+		EQUIPSLOT_GLOVES(45),
+		EQUIPSLOT_CAPE(46),
+		EQUIPSLOT_AMMO(47),
+		EQUIPSLOT_RING(48),
+		EQUIPSLOT_HIGHLIGHT(49);
 
 		private final int value;
 
@@ -394,6 +406,18 @@ public class EntityHandler {
 		GUIparts.add(new SpriteDef("red cross 2", mudclient.spriteMedia + 19,"GUI:16",35));
 		GUIparts.add(new SpriteDef("red cross 3", mudclient.spriteMedia + 20,"GUI:17",36));
 		GUIparts.add(new SpriteDef("red cross 4", mudclient.spriteMedia + 21,"GUI:18",37));
+		GUIparts.add(new SpriteDef("equipment slot head", -1,"GUI:28",38));
+		GUIparts.add(new SpriteDef("equipment slot body", -1,"GUI:29",39));
+		GUIparts.add(new SpriteDef("equipment slot legs", -1,"GUI:30",40));
+		GUIparts.add(new SpriteDef("equipment slot shield", -1,"GUI:31",41));
+		GUIparts.add(new SpriteDef("equipment slot sword", -1,"GUI:32",42));
+		GUIparts.add(new SpriteDef("equipment slot neck", -1,"GUI:33",43));
+		GUIparts.add(new SpriteDef("equipment slot gloves", -1,"GUI:34",44));
+		GUIparts.add(new SpriteDef("equipment slot boots", -1,"GUI:35",45));
+		GUIparts.add(new SpriteDef("equipment slot cape", -1,"GUI:36",46));
+		GUIparts.add(new SpriteDef("equipment slot ammo", -1,"GUI:37",47));
+		GUIparts.add(new SpriteDef("equipment slot ring", -1,"GUI:38",48));
+		GUIparts.add(new SpriteDef("equipment blue highlight+", -1,"GUI:39",49));
 
 	}
 

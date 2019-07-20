@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Equipment {
 
 	//Number of equipment slots the player has
-	public static final int slots = 11;
+	public static final int slots = 13;
 	public Item[] list = new Item[slots];
 	private Player player = null;
 

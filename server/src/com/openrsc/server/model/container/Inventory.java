@@ -383,8 +383,10 @@ public class Inventory {
 		}
 
 		//Can't unequip something if inventory is full
-		if (player.getInventory().full() && Constants.GameServer.WANT_EQUIPMENT_TAB)
+		if (player.getInventory().full() && Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			player.message("You need more inventory space to unequip that.");
 			return;
+		}
 
 		affectedItem.setWielded(false);
 		if (sound) {
@@ -401,7 +403,6 @@ public class Inventory {
 
 		ActionSender.sendInventory(player);
 		ActionSender.sendEquipmentStats(player);
-		ActionSender.sendEquipment(player);
 	}
 
 	public void wieldItem(Item item, boolean sound) {
@@ -525,6 +526,17 @@ public class Inventory {
 			return;
 
 		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			//Do an inventory count check
+			int count = 0;
+			for (Item i: player.getEquipment().list){
+				if (i!=null && item.wieldingAffectsItem(i))
+					count++;
+			}
+			if (player.getInventory().getFreeSlots() - count + 1 < 0) {
+				player.message("You need more inventory space to equip that.");
+				return;
+			}
+
 			player.getInventory().remove(item);
 			for (Item i : player.getEquipment().list)
 			{
@@ -551,7 +563,6 @@ public class Inventory {
 
 		ActionSender.sendInventory(player);
 		ActionSender.sendEquipmentStats(player);
-		ActionSender.sendEquipment(player);
 	}
 
 	public void dropOnDeath(Mob opponent) {
