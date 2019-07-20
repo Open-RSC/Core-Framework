@@ -1,12 +1,14 @@
 package com.openrsc.server.sql;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.SkillDef;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.model.PlayerAppearance;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Bank;
+import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -90,6 +92,22 @@ public class DatabasePlayerLoader {
 				}
 				statement.executeBatch();
 			}
+
+			if (Constants.GameServer.WANT_EQUIPMENT_TAB)
+			{
+				updateLongs(Statements.save_DeleteEquip, s.getDatabaseID());
+				statement = conn.prepareStatement(Statements.save_SaveEquip);
+				for (Item item : s.getEquipment().list) {
+					if (item != null) {
+						statement.setInt(1, s.getDatabaseID());
+						statement.setInt(2, item.getID());
+						statement.setInt(3, item.getAmount());
+						statement.addBatch();
+					}
+				}
+				statement.executeBatch();
+			}
+
 
 			updateLongs(Statements.save_DeleteQuests, s.getDatabaseID());
 			if (s.getQuestStages().size() > 0) {
@@ -459,19 +477,43 @@ public class DatabasePlayerLoader {
 			result = resultSetFromInteger(Statements.playerInvItems, save.getDatabaseID());
 
 			Inventory inv = new Inventory(save);
+			Equipment equipment = new Equipment(save);
+
+
 			while (result.next()) {
 				Item item = new Item(result.getInt("id"), result.getInt("amount"));
-				item.setWielded(result.getInt("wielded") == 1);
-				inv.add(item, false);
+				ItemDefinition itemDef = item.getDef();
+				item.setWielded(false);
 				if (item.isWieldable() && result.getInt("wielded") == 1) {
-					save.updateWornItems(item.getDef().getWieldPosition(), item.getDef().getAppearanceId());
-					item.setWielded(true);
-				}
+					if (itemDef != null) {
+						if (Constants.GameServer.WANT_EQUIPMENT_TAB)
+							equipment.list[itemDef.getWieldPosition()] = item;
+						else
+						{
+							item.setWielded(true);
+							inv.add(item,false);
+						}
+						save.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId());
+
+					}
+				} else
+					inv.add(item, false);
 			}
 			save.setInventory(inv);
 
-			result = resultSetFromInteger(Statements.playerBankItems, save.getDatabaseID());
+			result = resultSetFromInteger(Statements.playerEquipped, save.getDatabaseID());
+			while (result.next()) {
+				Item item = new Item(result.getInt("id"), result.getInt("amount"));
+				ItemDefinition itemDef = item.getDef();
+				if (item.isWieldable()){
+					equipment.list[itemDef.getWieldPosition()] = item;
+					save.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId());
+				}
+			}
 
+			save.setEquipment(equipment);
+
+			result = resultSetFromInteger(Statements.playerBankItems, save.getDatabaseID());
 			Bank bank = new Bank(save);
 			while (result.next()) {
 				bank.add(new Item(result.getInt("id"), result.getInt("amount")));
@@ -846,6 +888,9 @@ public class DatabasePlayerLoader {
 		private static final String playerInvItems = "SELECT `id`,`amount`,`wielded` FROM `" + PREFIX
 			+ "invitems` WHERE `playerID`=? ORDER BY `slot` ASC";
 
+		private static final String playerEquipped = "SELECT `id`,`amount` FROM `" + PREFIX
+			+ "equipped` WHERE `playerID`=?";
+
 		private static final String playerBankItems = "SELECT `id`, `amount` FROM `" + PREFIX
 			+ "bank` WHERE `playerID`=? ORDER BY `slot` ASC";
 
@@ -871,6 +916,11 @@ public class DatabasePlayerLoader {
 
 		private static final String save_AddInvItem = "INSERT INTO `" + PREFIX
 			+ "invitems`(`playerID`, `id`, `amount`, `wielded`, `slot`) VALUES(?, ?, ?, ?, ?)";
+
+		private static final String save_DeleteEquip = "DELETE FROM `" + PREFIX + "equipped` WHERE `playerID`=?";
+
+		private static final String save_SaveEquip = "INSERT INTO `" + PREFIX
+			+ "equipped`(`playerID`, `id`, `amount`) VALUES(?, ?, ?)";
 
 		private static final String save_UpdateBasicInfo = "UPDATE `" + PREFIX
 			+ "players` SET `combat`=?, skill_total=?, `x`=?, `y`=?, `fatigue`=?,  `petfatigue`=?, `kills`=?, `deaths`=?, `kills2`=?, `pets`=?, `iron_man`=?, `iron_man_restriction`=?, `hc_ironman_death`=?, `quest_points`=?, `haircolour`=?, `topcolour`=?, `trousercolour`=?, `skincolour`=?, `headsprite`=?, `bodysprite`=?, `male`=?, `skulled`=?, `charged`=?, `combatstyle`=?, `muted`=?, `bank_size`=?, `group_id`=? WHERE `id`=?";

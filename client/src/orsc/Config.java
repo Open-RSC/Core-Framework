@@ -64,6 +64,7 @@ public class Config {
 
 	/* Server Defined: DOUBLE CHECK THESE ON SERVER */
 	public static int S_PLAYER_LEVEL_LIMIT = 99;
+	public static int S_PLAYER_SLOT_COUNT = 11;
 	public static boolean S_SPAWN_AUCTION_NPCS = false;
 	public static boolean S_SPAWN_IRON_MAN_NPCS = false;
 	public static boolean S_SHOW_FLOATING_NAMETAGS = false;
@@ -84,6 +85,7 @@ public class Config {
 	public static boolean S_WANT_CERTS_TO_BANK = false;
 	public static boolean S_WANT_CUSTOM_RANK_DISPLAY = false;
 	public static boolean S_RIGHT_CLICK_BANK = false;
+	public static boolean S_WANT_EQUIPMENT_TAB = false;
 	// if you change these, and the config file,
 	// they will also change the options menu to
 	// 2-tabs (3 on android). (Not enough room for

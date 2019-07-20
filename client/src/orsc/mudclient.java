@@ -81,91 +81,7 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
 
-import static orsc.Config.CLIENT_VERSION;
-import static orsc.Config.C_BATCH_PROGRESS_BAR;
-import static orsc.Config.C_EXPERIENCE_CONFIG_SUBMENU;
-import static orsc.Config.C_EXPERIENCE_COUNTER;
-import static orsc.Config.C_EXPERIENCE_COUNTER_COLOR;
-import static orsc.Config.C_EXPERIENCE_COUNTER_MODE;
-import static orsc.Config.C_EXPERIENCE_DROPS;
-import static orsc.Config.C_EXPERIENCE_DROP_SPEED;
-import static orsc.Config.C_FIGHT_MENU;
-import static orsc.Config.C_HIDE_FOG;
-import static orsc.Config.C_HIDE_ROOFS;
-import static orsc.Config.C_HOLD_AND_CHOOSE;
-import static orsc.Config.C_INV_COUNT;
-import static orsc.Config.C_KILL_FEED;
-import static orsc.Config.C_LAST_ZOOM;
-import static orsc.Config.C_LONG_PRESS_TIMER;
-import static orsc.Config.C_MENU_SIZE;
-import static orsc.Config.C_MESSAGE_TAB_SWITCH;
-import static orsc.Config.C_NAME_CLAN_TAG_OVERLAY;
-import static orsc.Config.C_SHOW_GROUND_ITEMS;
-import static orsc.Config.C_SIDE_MENU_OVERLAY;
-import static orsc.Config.C_SWIPE_TO_ROTATE;
-import static orsc.Config.C_SWIPE_TO_SCROLL;
-import static orsc.Config.C_SWIPE_TO_ZOOM;
-import static orsc.Config.C_VOLUME_TO_ROTATE;
-import static orsc.Config.DEBUG;
-import static orsc.Config.DISPLAY_LOGO_SPRITE;
-import static orsc.Config.F_CACHE_DIR;
-import static orsc.Config.F_SHOWING_KEYBOARD;
-import static orsc.Config.MEMBER_WORLD;
-import static orsc.Config.Remember;
-import static orsc.Config.SERVER_NAME;
-import static orsc.Config.SERVER_NAME_WELCOME;
-import static orsc.Config.S_AUTO_MESSAGE_SWITCH_TOGGLE;
-import static orsc.Config.S_BATCH_PROGRESSION;
-import static orsc.Config.S_CUSTOM_FIREMAKING;
-import static orsc.Config.S_EXPERIENCE_COUNTER_TOGGLE;
-import static orsc.Config.S_EXPERIENCE_DROPS_TOGGLE;
-import static orsc.Config.S_FIGHTMODE_SELECTOR_TOGGLE;
-import static orsc.Config.S_FOG_TOGGLE;
-import static orsc.Config.S_GROUND_ITEM_TOGGLE;
-import static orsc.Config.S_INVENTORY_COUNT_TOGGLE;
-import static orsc.Config.S_ITEMS_ON_DEATH_MENU;
-import static orsc.Config.S_MAX_WALKING_SPEED;
-import static orsc.Config.S_MENU_COMBAT_STYLE_TOGGLE;
-import static orsc.Config.S_PLAYER_LEVEL_LIMIT;
-import static orsc.Config.S_RIGHT_CLICK_BANK;
-import static orsc.Config.S_SHOW_FLOATING_NAMETAGS;
-import static orsc.Config.S_SHOW_ROOF_TOGGLE;
-import static orsc.Config.S_SIDE_MENU_TOGGLE;
-import static orsc.Config.S_SPAWN_AUCTION_NPCS;
-import static orsc.Config.S_SPAWN_IRON_MAN_NPCS;
-import static orsc.Config.S_WANT_BANK_NOTES;
-import static orsc.Config.S_WANT_BANK_PINS;
-import static orsc.Config.S_WANT_CERTS_TO_BANK;
-import static orsc.Config.S_WANT_CERT_DEPOSIT;
-import static orsc.Config.S_WANT_CLANS;
-import static orsc.Config.S_WANT_CUSTOM_BANKS;
-import static orsc.Config.S_WANT_CUSTOM_LANDSCAPE;
-import static orsc.Config.S_WANT_CUSTOM_RANK_DISPLAY;
-import static orsc.Config.S_WANT_DECANTING;
-import static orsc.Config.S_WANT_DROP_X;
-import static orsc.Config.S_WANT_EXPERIENCE_ELIXIRS;
-import static orsc.Config.S_WANT_EXP_INFO;
-import static orsc.Config.S_WANT_FIXED_OVERHEAD_CHAT;
-import static orsc.Config.S_WANT_GLOBAL_CHAT;
-import static orsc.Config.S_WANT_HIDE_IP;
-import static orsc.Config.S_WANT_KEYBOARD_SHORTCUTS;
-import static orsc.Config.S_WANT_KILL_FEED;
-import static orsc.Config.S_WANT_QUEST_MENUS;
-import static orsc.Config.S_WANT_REMEMBER;
-import static orsc.Config.S_WANT_RUNECRAFTING;
-import static orsc.Config.S_WANT_SKILL_MENUS;
-import static orsc.Config.S_WANT_WOODCUTTING_GUILD;
-import static orsc.Config.S_ZOOM_VIEW_TOGGLE;
-import static orsc.Config.WELCOME_TEXT;
-import static orsc.Config.getFPS;
-import static orsc.Config.getServerName;
-import static orsc.Config.getServerNameWelcome;
-import static orsc.Config.getWelcomeText;
-import static orsc.Config.initConfig;
-import static orsc.Config.isAndroid;
-import static orsc.Config.isLenientContactDetails;
-import static orsc.Config.wantEmail;
-import static orsc.Config.wantMembers;
+import static orsc.Config.*;
 import static orsc.multiclient.ClientPort.saveHideIp;
 
 public final class mudclient implements Runnable {
@@ -226,6 +142,7 @@ public final class mudclient implements Runnable {
 	private final int[] inventoryItemEquipped = new int[35];
 	private final int[] inventoryItemID = new int[35];
 	private final int[] inventoryItemSize = new int[35];
+	public ItemDef[] equippedItems = new ItemDef[S_PLAYER_SLOT_COUNT];
 	private final ORSCharacter[] knownPlayers = new ORSCharacter[500];
 	private final String[] optionsMenuText = new String[20];
 	private final int[] groundItemHeight = new int[5000];
@@ -460,6 +377,7 @@ public final class mudclient implements Runnable {
 	private String m_ig = "";
 	private int questPoints = 0;
 	private int m_Ji = 0;
+	private int tabEquipmentIndex = 0;
 	private int settingTab = 0;
 	private int loginButtonExistingUser;
 	private int m_Kj;
@@ -681,7 +599,8 @@ public final class mudclient implements Runnable {
 	private ArrayList<XPNotification> xpNotifications = new ArrayList<XPNotification>();
 	private int amountToZoom = 0;
 	private Panel panelLoginOptions;
-
+	int clearBox = GenUtil.buildColor(181, 181, 181);
+	int selectedBox = GenUtil.buildColor(220, 220, 220);
 	int instructContactDetails;
 	int controlContactName;
 	int controlContactZipCode;
@@ -6950,115 +6869,162 @@ public final class mudclient implements Runnable {
 			}
 
 			int var3 = this.getSurface().width2 - 248;
+			int xOffset = var3;
 			this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.BAGTAB.id())), var3, 3);
 
 			int var4;
 			int var5;
 			int id;
-			for (var4 = 0; this.m_cl > var4; ++var4) {
-				var5 = var3 + var4 % 5 * 49;
-				id = var4 / 5 * 34 + 36;
-				if (this.inventoryItemCount > var4 && this.inventoryItemEquipped[var4] == 1) {
-					this.getSurface().drawBoxAlpha(var5, id, 49, 34, 0xFF0000, 128);
-				} else {
-					this.getSurface().drawBoxAlpha(var5, id, 49, 34, GenUtil.buildColor(181, 181, 181), 128);
-				}
+			int yOffset = 36;
 
-				if (var4 < this.inventoryItemCount) {
-					this.getSurface().drawSpriteClipping(
-						spriteSelect(EntityHandler.getItemDef(this.inventoryItemID[var4])),
-						var5, id, 48, 32, EntityHandler.getItemDef(this.inventoryItemID[var4]).getPictureMask(), 0,
-						false, 0, var1 ^ -15251);
+			if (S_WANT_EQUIPMENT_TAB) {
+				yOffset += 24;
+				this.getSurface().drawBoxAlpha(xOffset, 36, 122, yOffset-35, this.tabEquipmentIndex == 1 ? selectedBox : clearBox, 128);
+				this.getSurface().drawBoxAlpha(xOffset + 122, 36, 123, yOffset-35, this.tabEquipmentIndex == 0 ? selectedBox : clearBox, 128);
+				this.getSurface().drawColoredStringCentered(xOffset + 60, "Equipment", 0, 0, 4, yOffset-8);
+				this.getSurface().drawColoredStringCentered(xOffset + 183, "Inventory", 0, 0, 4, yOffset-8);
+			}
 
-					ItemDef def = EntityHandler.getItemDef(this.inventoryItemID[var4]);
-					if (def.getNotedFormOf() >= 0) {
-						ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-						getSurface().drawSpriteClipping(spriteSelect(originalDef), var5 + 7,
-							id + 4, 33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
+
+			if (this.tabEquipmentIndex == 0) //inventory tab
+			{
+				for (var4 = 0; this.m_cl > var4; ++var4) {
+					var5 = var3 + var4 % 5 * 49;
+					id = var4 / 5 * 34 + yOffset;
+					if (!S_WANT_EQUIPMENT_TAB && this.inventoryItemCount > var4 && this.inventoryItemEquipped[var4] == 1) {
+						this.getSurface().drawBoxAlpha(var5, id, 49, 34, 0xFF0000, 128);
+					} else {
+						this.getSurface().drawBoxAlpha(var5, id, 49, 34, GenUtil.buildColor(181, 181, 181), 128);
 					}
-					if (EntityHandler.getItemDef(this.inventoryItemID[var4]).isStackable()) {
-						this.getSurface().drawString("" + this.inventoryItemSize[var4], 1 + var5,
-							id + 10, 0xFFFF00, 1);
-					}
-				}
-			}
 
-			for (var4 = 1; var4 <= 4; ++var4) {
-				this.getSurface().drawLineVert(var3 + var4 * 49, 36, 0, this.m_cl / 5 * 34);
-			}
+					if (var4 < this.inventoryItemCount) {
+						this.getSurface().drawSpriteClipping(
+							spriteSelect(EntityHandler.getItemDef(this.inventoryItemID[var4])),
+							var5, id, 48, 32, EntityHandler.getItemDef(this.inventoryItemID[var4]).getPictureMask(), 0,
+							false, 0, var1 ^ -15251);
 
-			for (var4 = 1; this.m_cl / 5 - 1 >= var4; ++var4) {
-				this.getSurface().drawLineHoriz(var3, 36 + var4 * 34, 245, 0);
-			}
-
-			if (var2) {
-				var3 = 248 + (this.mouseX - this.getSurface().width2);
-				var4 = this.mouseY - 36;
-				if (var3 >= 0 && var4 >= 0 && var3 < 248 && this.m_cl / 5 * 34 > var4) {
-					var5 = var4 / 34 * 5 + var3 / 49;
-					if (this.inventoryItemCount > var5) {
-						id = this.inventoryItemID[var5];
-						if (this.selectedSpell >= 0) {
-							if (EntityHandler.getSpellDef(selectedSpell).getSpellType() == 3) {
-								this.menuCommon.addCharacterItem_WithID(var5,
-									"@lre@" + EntityHandler.getItemDef(id).getName(),
-									MenuItemAction.ITEM_CAST_SPELL,
-									"Cast " + EntityHandler.getSpellDef(selectedSpell).getName() + " on",
-									this.selectedSpell);
-							}
-						} else if (this.selectedItemInventoryIndex < 0) {
-							if (this.inventoryItemEquipped[var5] == 1) {
-								this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_REMOVE_EQUIPPED, "Remove",
-									"@lre@" + EntityHandler.getItemDef(id).getName());
-							} else if (EntityHandler.getItemDef(id).wearableID != 0) {
-								String equipCommand;
-								if ((24 & EntityHandler.getItemDef(id).wearableID) == 0) {
-									equipCommand = "Wear";
-								} else {
-									equipCommand = "Wield";
-								}
-
-								this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_EQUIP, equipCommand,
-									"@lre@" + EntityHandler.getItemDef(id).getName());
-							}
-
-							if (!EntityHandler.getItemDef(id).getCommand().equals("")
-								&& EntityHandler.getItemDef(id).getNotedFormOf() == -1) {
-								this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_COMMAND,
-									EntityHandler.getItemDef(id).getCommand(),
-									"@lre@" + EntityHandler.getItemDef(id).getName());
-							}
-
-							if (S_WANT_DROP_X && EntityHandler.getItemDef(id).getCommand().equals("Bury")
-								&& EntityHandler.getItemDef(id).getNotedFormOf() == -1) {
-								this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_COMMAND_ALL,
-									//EntityHandler.getItemDef(id).getCommand(), -- generic label.
-									"Bury All",
-									"@lre@" + EntityHandler.getItemDef(id).getName());
-							}
-
-							this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_USE, "Use",
-								"@lre@" + EntityHandler.getItemDef(id).getName());
-							this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP, "Drop",
-								"@lre@" + EntityHandler.getItemDef(id).getName());
-							if (S_WANT_DROP_X) {
-								this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP_X, "Drop X",
-									"@lre@" + EntityHandler.getItemDef(id).getName());
-								this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP_ALL, "Drop All",
-									"@lre@" + EntityHandler.getItemDef(id).getName());
-							}
-							this.menuCommon.addCharacterItem(id, MenuItemAction.ITEM_EXAMINE, "Examine",
-								"@lre@" + EntityHandler.getItemDef(id).getName()
-									+ (localPlayer.isDev() ? " @or1@(" + id + ")" : ""));
-						} else {
-							this.menuCommon.addCharacterItem_WithID(var5,
-								"@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.ITEM_USE_ITEM,
-								"Use " + this.m_ig + " with", this.selectedItemInventoryIndex);
+						ItemDef def = EntityHandler.getItemDef(this.inventoryItemID[var4]);
+						if (def.getNotedFormOf() >= 0) {
+							ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
+							getSurface().drawSpriteClipping(spriteSelect(originalDef), var5 + 7,
+								id + 4, 33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
+						}
+						if (EntityHandler.getItemDef(this.inventoryItemID[var4]).isStackable()) {
+							this.getSurface().drawString("" + this.inventoryItemSize[var4], 1 + var5,
+								id + 10, 0xFFFF00, 1);
 						}
 					}
 				}
 
+				for (var4 = 1; var4 <= 4; ++var4) {
+					this.getSurface().drawLineVert(var3 + var4 * 49, yOffset, 0, this.m_cl / 5 * 34);
+				}
+
+				for (var4 = 1; this.m_cl / 5 - 1 >= var4; ++var4) {
+					this.getSurface().drawLineHoriz(var3, yOffset + var4 * 34, 245, 0);
+				}
+				if (var2) {
+					var3 = 248 + (this.mouseX - this.getSurface().width2);
+					var4 = this.mouseY - yOffset;
+					if (var3 >= 0 && var4 >= 0 && var3 < 248 && this.m_cl / 5 * 34 > var4) {
+						var5 = var4 / 34 * 5 + var3 / 49;
+						if (this.inventoryItemCount > var5) {
+							id = this.inventoryItemID[var5];
+							if (this.selectedSpell >= 0) {
+								if (EntityHandler.getSpellDef(selectedSpell).getSpellType() == 3) {
+									this.menuCommon.addCharacterItem_WithID(var5,
+										"@lre@" + EntityHandler.getItemDef(id).getName(),
+										MenuItemAction.ITEM_CAST_SPELL,
+										"Cast " + EntityHandler.getSpellDef(selectedSpell).getName() + " on",
+										this.selectedSpell);
+								}
+							} else if (this.selectedItemInventoryIndex < 0) {
+								if (this.inventoryItemEquipped[var5] == 1) {
+									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_REMOVE_EQUIPPED, "Remove",
+										"@lre@" + EntityHandler.getItemDef(id).getName());
+								} else if (EntityHandler.getItemDef(id).wearableID != 0) {
+									String equipCommand;
+									if ((24 & EntityHandler.getItemDef(id).wearableID) == 0) {
+										equipCommand = "Wear";
+									} else {
+										equipCommand = "Wield";
+									}
+
+									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_EQUIP, equipCommand,
+										"@lre@" + EntityHandler.getItemDef(id).getName());
+								}
+
+								if (!EntityHandler.getItemDef(id).getCommand().equals("")
+									&& EntityHandler.getItemDef(id).getNotedFormOf() == -1) {
+									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_COMMAND,
+										EntityHandler.getItemDef(id).getCommand(),
+										"@lre@" + EntityHandler.getItemDef(id).getName());
+								}
+
+								if (S_WANT_DROP_X && EntityHandler.getItemDef(id).getCommand().equals("Bury")
+									&& EntityHandler.getItemDef(id).getNotedFormOf() == -1) {
+									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_COMMAND_ALL,
+										//EntityHandler.getItemDef(id).getCommand(), -- generic label.
+										"Bury All",
+										"@lre@" + EntityHandler.getItemDef(id).getName());
+								}
+
+								this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_USE, "Use",
+									"@lre@" + EntityHandler.getItemDef(id).getName());
+								this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP, "Drop",
+									"@lre@" + EntityHandler.getItemDef(id).getName());
+								if (S_WANT_DROP_X) {
+									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP_X, "Drop X",
+										"@lre@" + EntityHandler.getItemDef(id).getName());
+									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP_ALL, "Drop All",
+										"@lre@" + EntityHandler.getItemDef(id).getName());
+								}
+								this.menuCommon.addCharacterItem(id, MenuItemAction.ITEM_EXAMINE, "Examine",
+									"@lre@" + EntityHandler.getItemDef(id).getName()
+										+ (localPlayer.isDev() ? " @or1@(" + id + ")" : ""));
+							} else {
+								this.menuCommon.addCharacterItem_WithID(var5,
+									"@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.ITEM_USE_ITEM,
+									"Use " + this.m_ig + " with", this.selectedItemInventoryIndex);
+							}
+						}
+					}
+
+				}
+			} else if (this.tabEquipmentIndex == 1) //equipment tab
+			{
+				this.getSurface().drawBoxAlpha(xOffset, yOffset, 245, 245, this.clearBox, 128);
+				if (this.equippedItems[4] != null)
+					this.getSurface().drawSpriteClipping(
+						spriteSelect(equippedItems[4]),
+						xOffset+20, yOffset+20, 48, 32, equippedItems[4].getPictureMask(), 0,
+						false, 0, var1 ^ -15251);
 			}
+
+			if (S_WANT_EQUIPMENT_TAB) {
+				this.getSurface().drawLineHoriz(xOffset, yOffset, 245, 0);
+				this.getSurface().drawLineVert(xOffset + 122, 36, 0, yOffset-36);
+
+				//Handle ui clicks
+				if (this.mouseButtonClick == 1) {
+					if (this.mouseX >= xOffset) {
+						if (this.mouseY <= yOffset) {
+							if (this.mouseY >= 36) {
+								if (this.mouseX <= xOffset + 245) {
+									if (this.tabEquipmentIndex == 0) {
+										if (this.mouseX < xOffset + 122)
+											this.tabEquipmentIndex = 1;
+									} else if (this.tabEquipmentIndex == 1) {
+										if (this.mouseX >= xOffset + 122)
+											this.tabEquipmentIndex = 0;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
 		} catch (RuntimeException var8) {
 			throw GenUtil.makeThrowable(var8, "client.EB(" + var1 + ',' + var2 + ')');
 		}
@@ -14289,6 +14255,7 @@ public final class mudclient implements Runnable {
 			System.out.println(Config.S_WANT_FATIGUE + " 51");
 			System.out.println(Config.S_WANT_RUNECRAFTING + " 60");
 			System.out.println(S_WANT_CUSTOM_LANDSCAPE + " 61");
+			System.out.println(S_WANT_EQUIPMENT_TAB + " 62");
 		}
 		try {
 			this.loadGameConfig(false);

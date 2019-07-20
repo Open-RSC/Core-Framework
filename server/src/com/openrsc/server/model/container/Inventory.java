@@ -372,9 +372,19 @@ public class Inventory {
 	}
 
 	public void unwieldItem(Item affectedItem, boolean sound) {
-		if (affectedItem == null || !affectedItem.isWieldable() || !getItems().contains(affectedItem)) {
+
+		if (affectedItem == null || !affectedItem.isWieldable()) {
 			return;
 		}
+
+		//If inventory doesn't have the item
+		if (!Constants.GameServer.WANT_EQUIPMENT_TAB && !getItems().contains(affectedItem)) {
+			return;
+		}
+
+		//Can't unequip something if inventory is full
+		if (player.getInventory().full() && Constants.GameServer.WANT_EQUIPMENT_TAB)
+			return;
 
 		affectedItem.setWielded(false);
 		if (sound) {
@@ -383,8 +393,15 @@ public class Inventory {
 		player.updateWornItems(affectedItem.getDef().getWieldPosition(),
 			player.getSettings().getAppearance().getSprite(affectedItem.getDef().getWieldPosition()));
 
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			player.getEquipment().list[affectedItem.getDef().getWieldPosition()] = null;
+			add(affectedItem, false);
+		}
+
+
 		ActionSender.sendInventory(player);
 		ActionSender.sendEquipmentStats(player);
+		ActionSender.sendEquipment(player);
 	}
 
 	public void wieldItem(Item item, boolean sound) {
@@ -507,20 +524,34 @@ public class Inventory {
 		if (!ableToWield)
 			return;
 
-		ArrayList<Item> items = getItems();
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			player.getInventory().remove(item);
+			for (Item i : player.getEquipment().list)
+			{
+				if (i != null && item.wieldingAffectsItem(i))
+					unwieldItem(i, false);
+			}
+		} else {
+			ArrayList<Item> items = getItems();
 
-		for (Item i : items) {
-			if (item.wieldingAffectsItem(i) && i.isWielded()) {
-				unwieldItem(i, false);
+			for (Item i : items) {
+				if (item.wieldingAffectsItem(i) && i.isWielded()) {
+					unwieldItem(i, false);
+				}
 			}
 		}
+
+
+
 		item.setWielded(true);
 		if (sound)
 			player.playSound("click");
 		player.updateWornItems(item.getDef().getWieldPosition(), item.getDef().getAppearanceId());
+		player.getEquipment().list[item.getDef().getWieldPosition()] = item;
 
 		ActionSender.sendInventory(player);
 		ActionSender.sendEquipmentStats(player);
+		ActionSender.sendEquipment(player);
 	}
 
 	public void dropOnDeath(Mob opponent) {

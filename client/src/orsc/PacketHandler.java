@@ -192,6 +192,9 @@ public class PacketHandler {
 				// Inventory items
 			else if (opcode == 53) updateInventoryItems();
 
+				//Equipment
+			else if (opcode == 254) updateEquipment();
+
 				// Show Walls
 			else if (opcode == 91) showWalls(length);
 
@@ -744,7 +747,7 @@ public class PacketHandler {
 		int wantDropX, wantExpInfo, wantWoodcuttingGuild, wantFixedOverheadChat, wantPets, showUnidentifiedHerbNames;
 		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank, wantPlayerCommands;
 		int getFPS, wantEmail, wantRegistrationLimit, allowResize, lenientContactDetails, wantFatigue, wantCustomSprites;
-		int fishingSpotsDepletable, properMagicTreeName, wantRunecrafting, wantCustomLandscape;
+		int fishingSpotsDepletable, properMagicTreeName, wantRunecrafting, wantCustomLandscape, wantEquipmentTab;
 		String logoSpriteID;
 
 		if (!mc.gotInitialConfigs) {
@@ -809,6 +812,7 @@ public class PacketHandler {
 			properMagicTreeName = this.getClientStream().getUnsignedByte(); //59
 			wantRunecrafting = this.getClientStream().getUnsignedByte(); //60
 			wantCustomLandscape = this.getClientStream().getUnsignedByte(); //61
+			wantEquipmentTab = this.getClientStream().getUnsignedByte(); //62
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -871,6 +875,7 @@ public class PacketHandler {
 			properMagicTreeName = packetsIncoming.getUnsignedByte(); //59
 			wantRunecrafting = packetsIncoming.getUnsignedByte(); //60
 			wantCustomLandscape = packetsIncoming.getUnsignedByte(); //61
+			wantEquipmentTab = packetsIncoming.getUnsignedByte(); //62
 		}
 
 		if (Config.DEBUG) {
@@ -935,7 +940,8 @@ public class PacketHandler {
 					"\nS_FISHING_SPOTS_DEPLETABLE " + fishingSpotsDepletable + // 58
 					"\nS_PROPER_MAGIC_TREE_NAME  " + properMagicTreeName +// 59
 					"\nS_WANT_RUNECRAFTING  "   + wantRunecrafting +// 60
-					"\nS_WANT_CUSTOM_LANDSCAPE  "   + wantCustomLandscape// 61
+					"\nS_WANT_CUSTOM_LANDSCAPE  "   + wantCustomLandscape +// 61
+					"\nS_WANT_EQUIPMENT_TAB  "   + wantEquipmentTab// 61
 			);
 		}
 
@@ -1002,6 +1008,7 @@ public class PacketHandler {
 		props.setProperty("S_PROPER_MAGIC_TREE_NAME", properMagicTreeName == 1 ? "true" : "false"); //59
 		props.setProperty("S_WANT_RUNECRAFTING", wantRunecrafting == 1 ? "true" : "false"); //60
 		props.setProperty("S_WANT_CUSTOM_LANDSCAPE", wantCustomLandscape == 1 ? "true" : "false"); //61
+		props.setProperty("S_WANT_EQUIPMENT_TAB", wantEquipmentTab == 1 ? "true" : "false"); //62
 
 		Config.updateServerConfiguration(props);
 
@@ -1229,6 +1236,21 @@ public class PacketHandler {
 			}
 		}
 	}
+
+	private void updateEquipment() {
+		int equipCount = packetsIncoming.getUnsignedByte();
+		if (equipCount > 0)
+		{
+			int equipslot = 0;
+			int itemID = 0;
+			for (int i = 0; i < equipCount; i++) {
+				equipslot = packetsIncoming.getByte();
+				itemID = packetsIncoming.getShort();
+				mc.equippedItems[equipslot] = EntityHandler.getItemDef(itemID);
+			}
+		}
+	}
+
 
 	private void showWalls(int length) {
 		while (length > packetsIncoming.packetEnd) {

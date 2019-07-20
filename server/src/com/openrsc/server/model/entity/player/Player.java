@@ -11,6 +11,7 @@ import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.event.rsc.impl.*;
+import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.model.Skills.SKILLS;
@@ -18,6 +19,7 @@ import com.openrsc.server.model.*;
 
 import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.container.Bank;
+import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -161,6 +163,9 @@ public final class Player extends Mob {
 	 * it is never changed during session.
 	 */
 	private AtomicReference<Inventory> inventory = new AtomicReference<Inventory>();
+
+	private AtomicReference<Equipment> equipment = new AtomicReference<Equipment>();
+
 	/**
 	 * Channel
 	 */
@@ -922,8 +927,17 @@ public final class Player extends Mob {
 		return inventory.get();
 	}
 
+	public Equipment getEquipment() {
+		return equipment.get();
+	}
+
+
 	public void setInventory(Inventory i) {
 		inventory.set(i);
+	}
+
+	public void setEquipment(Equipment e) {
+		equipment.set(e);
 	}
 
 	public String getLastIP() {
@@ -1185,32 +1199,48 @@ public final class Player extends Mob {
 	@Override
 	public int getArmourPoints() {
 		int points = 1;
-		for (Item item : getInventory().getItems()) {
-			if (item.isWielded()) {
-				points += item.getDef().getArmourBonus();
+		if (!Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			for (Item item : getInventory().getItems()) {
+				if (item.isWielded()) {
+					points += item.getDef().getArmourBonus();
+				}
 			}
+		} else {
+			points = getEquipment().getArmour();
 		}
+
 		return points < 1 ? 1 : points;
 	}
 
 	@Override
 	public int getWeaponAimPoints() {
 		int points = 1;
-		for (Item item : getInventory().getItems()) {
-			if (item.isWielded()) {
-				points += item.getDef().getWeaponAimBonus();
+		if (!Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			for (Item item : getInventory().getItems()) {
+				if (item.isWielded()) {
+					points += item.getDef().getWeaponAimBonus();
+				}
 			}
+		} else
+		{
+			points = this.getEquipment().getWeaponAim();
 		}
+
+
 		return points < 1 ? 1 : points;
 	}
 
 	@Override
 	public int getWeaponPowerPoints() {
 		int points = 1;
-		for (Item item : getInventory().getItems()) {
-			if (item.isWielded()) {
-				points += item.getDef().getWeaponPowerBonus();
+		if (!Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			for (Item item : getInventory().getItems()) {
+				if (item.isWielded()) {
+					points += item.getDef().getWeaponPowerBonus();
+				}
 			}
+		} else {
+			points = this.getEquipment().getWeaponPower();
 		}
 		return points < 1 ? 1 : points;
 	}
