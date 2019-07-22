@@ -396,8 +396,10 @@ public class Inventory {
 			player.getSettings().getAppearance().getSprite(affectedItem.getDef().getWieldPosition()));
 
 		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
-			player.getEquipment().list[affectedItem.getDef().getWieldPosition()] = null;
-			add(affectedItem, false);
+			if (player.getEquipment().hasEquipped(affectedItem.getID())) {
+				player.getEquipment().list[affectedItem.getDef().getWieldPosition()] = null;
+				add(affectedItem, false);
+			}
 		}
 
 
@@ -543,6 +545,8 @@ public class Inventory {
 				if (i != null && item.wieldingAffectsItem(i))
 					unwieldItem(i, false);
 			}
+
+			//Check requirements for ammo/bow compatibility here??
 		} else {
 			ArrayList<Item> items = getItems();
 

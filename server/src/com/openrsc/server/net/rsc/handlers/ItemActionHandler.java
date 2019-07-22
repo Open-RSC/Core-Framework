@@ -32,12 +32,19 @@ public class ItemActionHandler implements PacketHandler {
 			return;
 		}
 
-		if (idx < 0 || idx >= player.getInventory().size()) {
+		if (idx < 0 || idx >= player.getInventory().size() && !Constants.GameServer.WANT_EQUIPMENT_TAB) {
 			player.setSuspiciousPlayer(true);
 			return;
 		}
-		final Item item = player.getInventory().get(idx);
+		Item tempitem = null;
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			if (player.getEquipment().hasEquipped(idx))
+				tempitem = new Item(idx);
+		} else {
+			tempitem = player.getInventory().get(idx);
+		}
 
+		final Item item = tempitem;
 		if (item == null || item.getDef().getCommand().equals("")) {
 			player.setSuspiciousPlayer(true);
 			return;

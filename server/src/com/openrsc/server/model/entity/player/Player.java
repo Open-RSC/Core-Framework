@@ -1066,10 +1066,20 @@ public final class Player extends Mob {
 	}
 
 	public int getRangeEquip() {
-		for (Item item : getInventory().getItems()) {
-			if (item.isWielded() && (DataConversions.inArray(Formulae.bowIDs, item.getID())
-				|| DataConversions.inArray(Formulae.xbowIDs, item.getID()))) {
-				return item.getID();
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB)
+		{
+			for (Item item : getEquipment().list) {
+				if (item != null && (DataConversions.inArray(Formulae.bowIDs, item.getID())
+					|| DataConversions.inArray(Formulae.xbowIDs, item.getID()))) {
+					return item.getID();
+				}
+			}
+		} else {
+			for (Item item : getInventory().getItems()) {
+				if (item.isWielded() && (DataConversions.inArray(Formulae.bowIDs, item.getID())
+					|| DataConversions.inArray(Formulae.xbowIDs, item.getID()))) {
+					return item.getID();
+				}
 			}
 		}
 		return -1;
@@ -2115,8 +2125,12 @@ public final class Player extends Mob {
 	}
 
 	public void updateWornItems(int index, int id) {
-		wornItems[index] = id;
-		getUpdateFlags().setAppearanceChanged(true);
+		//Don't need to show arrows or rings
+		if (index <= 11)
+		{
+			wornItems[index] = id;
+			getUpdateFlags().setAppearanceChanged(true);
+		}
 	}
 
 	private Queue<PrivateMessage> getPrivateMessageQueue() {

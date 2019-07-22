@@ -2127,7 +2127,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Iron Plate Mail Body", "Provides excellent protection", "", 560, 8, "items:8", false, true, 322, 15654365, false, false, 1298, -1, 8));
 		items.add(new ItemDef("Iron Plate Mail Legs", "These look pretty heavy", "", 280, 9, "items:9", false, true, 644, 15654365, false, false, 1299, -1, 9));
 		items.add(new ItemDef("Coins", "Lovely money!", "", 1, 10, "items:10", true, false, 0, 0, false, false, -1, -1, 10));
-		items.add(new ItemDef("Bronze Arrows", "Arrows with bronze heads", "", 2, 11, "items:11", true, false, 0, 16737817, false, false, -1, -1, 11));
+		items.add(new ItemDef("Bronze Arrows", "Arrows with bronze heads", "", 2, 11, "items:11", true, true, 12, 16737817, false, false, -1, -1, 11));
 		items.add(new ItemDef("Iron Axe", "A woodcutters axe", "", 56, 12, "items:12", false, true, 16, 15654365, false, false, 1300, -1, 12));
 
 		items.add(new ItemDef("Knife", "A dangerous looking knife", "", 6, 13, "items:13", false, false, 0, 0, false, false, 1301, -1, 13));

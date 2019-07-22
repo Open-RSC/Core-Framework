@@ -109,8 +109,8 @@ public final class mudclient implements Runnable {
 		{3, 4, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5}, {3, 4, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5},
 		{4, 3, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5}, {11, 4, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3},
 		{11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 4, 3}};
-	private final int[] equipIconXLocations = new int[]{104,65,104,65,104,150,65,150,104,104,150};
-	private final int[] equipIconYLocations = new int[]{10,200,110,65,65,65,110,110,155,200,200};
+	private final int[] equipIconXLocations = new int[]{98, 98, 98, 153, 43, 98, 98, 43, 43, 153, 153};
+	private final int[] equipIconYLocations = new int[]{5, 85, 125, 85, 85, 45, 165, 165, 45, 45, 165};
 	private final int[] animFrameToSprite_CombatA = new int[]{0, 1, 2, 1, 0, 0, 0, 0};
 	private final int[] animFrameToSprite_CombatB = new int[]{0, 0, 0, 0, 0, 1, 2, 1};
 	private final int[] bankItemID = new int[500];
@@ -147,6 +147,7 @@ public final class mudclient implements Runnable {
 	private final int[] inventoryItemID = new int[35];
 	private final int[] inventoryItemSize = new int[35];
 	public ItemDef[] equippedItems = new ItemDef[S_PLAYER_SLOT_COUNT];
+	public int[] equippedItemAmount = new int[S_PLAYER_SLOT_COUNT];
 	private final ORSCharacter[] knownPlayers = new ORSCharacter[500];
 	private final String[] optionsMenuText = new String[20];
 	private final int[] groundItemHeight = new int[5000];
@@ -6881,15 +6882,6 @@ public final class mudclient implements Runnable {
 			int id;
 			int yOffset = 36;
 
-			if (S_WANT_EQUIPMENT_TAB) {
-				yOffset += 24;
-				this.getSurface().drawBoxAlpha(xOffset, 36, 122, yOffset-35, this.tabEquipmentIndex == 1 ? selectedBox : clearBox, 128);
-				this.getSurface().drawBoxAlpha(xOffset + 122, 36, 123, yOffset-35, this.tabEquipmentIndex == 0 ? selectedBox : clearBox, 128);
-				this.getSurface().drawColoredStringCentered(xOffset + 60, "Equipment", 0, 0, 4, yOffset-8);
-				this.getSurface().drawColoredStringCentered(xOffset + 183, "Inventory", 0, 0, 4, yOffset-8);
-			}
-
-
 			if (this.tabEquipmentIndex == 0) //inventory tab
 			{
 				for (var4 = 0; this.m_cl > var4; ++var4) {
@@ -6997,62 +6989,97 @@ public final class mudclient implements Runnable {
 				}
 			} else if (this.tabEquipmentIndex == 1) //equipment tab
 			{
-				this.getSurface().drawBoxAlpha(xOffset, yOffset, 245, 245, this.clearBox, 128);
+				this.getSurface().drawBoxAlpha(xOffset, yOffset, 245, 204, this.clearBox, 128);
+				this.getSurface().drawBoxAlpha(xOffset, yOffset + 228, 245, 45, this.clearBox, 128);
 				Sprite todraw = null;
-				for (int i=0; i < S_PLAYER_SLOT_COUNT; i++)
-				{
+				for (int i = 0; i < S_PLAYER_SLOT_COUNT; i++) {
 					if (this.equippedItems[i] == null) {
 						todraw = spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.EQUIPSLOT_HELM.id() + i));
 						this.getSurface().drawSpriteClipping(todraw
-							, xOffset+equipIconXLocations[i]
-							, yOffset+equipIconYLocations[i],
-							todraw.getWidth(),todraw.getHeight(),
-							0, 0, false, 0, var1 ^ -15251,0x80FFFFFF);
+							, xOffset + equipIconXLocations[i]
+							, yOffset + equipIconYLocations[i],
+							todraw.getWidth(), todraw.getHeight(),
+							0, 0, false, 0, var1 ^ -15251, 0x80FFFFFF);
 					} else {
 						todraw = spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.EQUIPSLOT_HIGHLIGHT.id()));
 						this.getSurface().drawSpriteClipping(
 							todraw,
-							xOffset+equipIconXLocations[i],
-							yOffset+equipIconYLocations[i],
-							todraw.getWidth(),todraw.getHeight(),
-							equippedItems[i].getPictureMask(), 0, false, 0, var1 ^ -15251);
+							xOffset + equipIconXLocations[i],
+							yOffset + equipIconYLocations[i],
+							todraw.getWidth(), todraw.getHeight(),
+							equippedItems[i].getPictureMask(), 0, false, 0, var1 ^ -15251, 0xC0FFFFFF);
 						todraw = spriteSelect(equippedItems[i]);
 						this.getSurface().drawSpriteClipping(
 							todraw,
-							xOffset+equipIconXLocations[i],
-							yOffset+equipIconYLocations[i],
-							todraw.getSomething1(),todraw.getSomething2(),
+							xOffset + equipIconXLocations[i],
+							yOffset + equipIconYLocations[i],
+							todraw.getSomething1(), todraw.getSomething2(),
 							equippedItems[i].getPictureMask(), 0, false, 0, var1 ^ -15251);
+						if (equippedItemAmount[i] > 1)
+							this.getSurface().drawString("" + equippedItemAmount[i],xOffset + equipIconXLocations[i] + (todraw.getSomething1()/2)-1 - 4*(int)Math.log10(equippedItemAmount[i]), yOffset + equipIconYLocations[i] + todraw.getSomething2() - 3, 0xFFFFFF, 2);
 					}
-
-					//handle equipment clicks
-					if (this.mouseButtonClick == 1 && this.mouseY > yOffset) {
-						for (int j = 0; j < S_PLAYER_SLOT_COUNT; j++) {
-							if (this.mouseX >= xOffset+equipIconXLocations[j] && this.mouseX < xOffset + equipIconXLocations[j] + 48)
-								if (this.mouseY >= yOffset+equipIconYLocations[j] && this.mouseY < yOffset + equipIconYLocations[j] + 32) {
-									//Send a packet to the server to unequip the item.
-									if (equippedItems[j] != null) {
+				}
+				for (int currSkill = 0; currSkill < 3; ++currSkill) {
+					this.getSurface().drawString(this.equipmentStatNames[currSkill] + ":@yel@" + this.playerStatEquipment[currSkill],
+						xOffset + 42, yOffset + 243 + currSkill * 13, 0xFFFFFF, 1);
+					if (2 > currSkill) {
+						this.getSurface().drawString(
+							this.equipmentStatNames[currSkill + 3] + ":@yel@" + this.playerStatEquipment[3 + currSkill],
+							244 / 2 + xOffset + 35, yOffset + 243 + currSkill * 13, 0xFFFFFF, 1);
+					}
+					this.getSurface().drawLineHoriz(xOffset, yOffset+228, 245, 0);
+				}
+				//handle equipment clicks
+				if ((this.mouseButtonClick == 1 || this.mouseButtonClick == 2) && this.mouseY > yOffset) {
+					for (int j = 0; j < S_PLAYER_SLOT_COUNT; j++) {
+						if (this.mouseX >= xOffset + equipIconXLocations[j] && this.mouseX < xOffset + equipIconXLocations[j] + 48) {
+							if (this.mouseY >= yOffset + equipIconYLocations[j] && this.mouseY < yOffset + equipIconYLocations[j] + 32) {
+								//Send a packet to the server to unequip the item.
+								if (equippedItems[j] != null) {
+									if (this.mouseButtonClick == 1 && !this.topMouseMenuVisible) {
 										this.packetHandler.getClientStream().newPacket(170);
 										this.packetHandler.getClientStream().writeBuffer1.putShort(equippedItems[j].id);
 										this.packetHandler.getClientStream().finishPacket();
 										break;
+									} else {
+										if (!equippedItems[j].getCommand().equalsIgnoreCase(""))
+											this.menuCommon.addCharacterItem(equippedItems[j].id, MenuItemAction.ITEM_COMMAND, equippedItems[j].getCommand(),
+												"@lre@" + equippedItems[j].getName());
+										this.menuCommon.addCharacterItem(equippedItems[j].id, MenuItemAction.ITEM_USE, "Use",
+											"@lre@" + equippedItems[j].getName());
+										this.menuCommon.addCharacterItem(equippedItems[j].id, MenuItemAction.ITEM_DROP, "Drop",
+											"@lre@" + equippedItems[j].getName());
+										this.menuCommon.addCharacterItem(equippedItems[j].id, MenuItemAction.ITEM_EXAMINE, "Examine",
+											"@lre@" + equippedItems[j].getName()
+												+ (localPlayer.isDev() ? " @or1@(" + equippedItems[j].id + ")" : ""));
+										break;
 									}
+
 								}
-
-
+							}
 						}
+
 					}
 				}
+
 			}
+
 			if (S_WANT_EQUIPMENT_TAB) {
-				this.getSurface().drawLineHoriz(xOffset, yOffset, 245, 0);
-				this.getSurface().drawLineVert(xOffset + 122, 36, 0, yOffset-36);
+
+				yOffset += 228;
+				this.getSurface().drawBoxAlpha(xOffset, yOffset-24, 122, 24, this.tabEquipmentIndex == 1 ? selectedBox : clearBox, 128);
+				this.getSurface().drawBoxAlpha(xOffset + 122, yOffset-24, 123, 24, this.tabEquipmentIndex == 0 ? selectedBox : clearBox, 128);
+				this.getSurface().drawColoredStringCentered(xOffset + 60, "Equipment", 0, 0, 4, yOffset - 7);
+				this.getSurface().drawColoredStringCentered(xOffset + 183, "Inventory", 0, 0, 4, yOffset - 7);
+
+				this.getSurface().drawLineHoriz(xOffset, yOffset-24, 245, 0);
+				this.getSurface().drawLineVert(xOffset + 122, yOffset-24, 0, 24);
 
 				//Handle ui clicks
 				if (this.mouseButtonClick == 1) {
 					if (this.mouseX >= xOffset) {
 						if (this.mouseY <= yOffset) {
-							if (this.mouseY >= 36) {
+							if (this.mouseY >= yOffset-24) {
 								if (this.mouseX <= xOffset + 245) {
 									if (this.tabEquipmentIndex == 0) {
 										if (this.mouseX < xOffset + 122)
@@ -11058,15 +11085,24 @@ public final class mudclient implements Runnable {
 					this.selectedItemInventoryIndex = indexOrX;
 					if (!isAndroid())
 						this.showUiTab = 0;
-					this.m_ig = EntityHandler.getItemDef(this.inventoryItemID[this.selectedItemInventoryIndex]).getName();
+					if (S_WANT_EQUIPMENT_TAB)
+						this.m_ig = EntityHandler.getItemDef(this.selectedItemInventoryIndex).getName();
+					else
+						this.m_ig = EntityHandler.getItemDef(this.inventoryItemID[this.selectedItemInventoryIndex]).getName();
 					break;
 				}
 				case ITEM_DROP: {
 					this.packetHandler.getClientStream().newPacket(246);
 					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
 					int amount = 1;
-					if (EntityHandler.getItemDef(inventoryItemID[indexOrX]).isStackable())
-						amount = getInventoryCount(this.inventoryItemID[indexOrX]);
+					if (S_WANT_EQUIPMENT_TAB) {
+						if (EntityHandler.getItemDef(indexOrX).isStackable())
+							amount = getInventoryCount(this.inventoryItemID[indexOrX]);
+					} else {
+						if (EntityHandler.getItemDef(inventoryItemID[indexOrX]).isStackable())
+							amount = getInventoryCount(this.inventoryItemID[indexOrX]);
+					}
+
 					this.packetHandler.getClientStream().writeBuffer1.putInt(amount);
 					this.packetHandler.getClientStream().finishPacket();
 					if (!isAndroid())
@@ -11771,9 +11807,19 @@ public final class mudclient implements Runnable {
 				this.showUiTab = 6;
 			}
 
-			if (this.showUiTab == 1
-				&& (this.mouseX < this.getSurface().width2 - 248 || 36 + this.m_cl / 5 * 34 < this.mouseY)) {
-				this.showUiTab = 0;
+			if (!S_WANT_EQUIPMENT_TAB) {
+				if (this.showUiTab == 1
+					&& (this.mouseX < this.getSurface().width2 - 248 || 36 + this.m_cl / 5 * 34 < this.mouseY)) {
+					this.showUiTab = 0;
+				}
+			} else {
+				if (this.showUiTab == 1 && this.tabEquipmentIndex == 0
+					&& (this.mouseX < this.getSurface().width2 - 248 || 90 + this.m_cl / 5 * 34 < this.mouseY)) {
+					this.showUiTab = 0;
+				} else if (this.showUiTab == 1 && this.tabEquipmentIndex == 1
+					&& (this.mouseX < this.getSurface().width2 - 248 || 90 + this.m_cl / 5 * 34 < this.mouseY)) {
+					this.showUiTab = 0;
+				}
 			}
 
 			if (this.showUiTab == 3 && (this.getSurface().width2 - 199 > this.mouseX || this.mouseY > 324)) {

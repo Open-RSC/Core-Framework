@@ -1243,7 +1243,11 @@ public class PacketHandler {
 		int equipslot = 0;
 		int itemID = 0;
 		for (int i = 0; i < Config.S_PLAYER_SLOT_COUNT; i++)
+		{
 			mc.equippedItems[i] = null;
+			mc.equippedItemAmount[i] = 0;
+		}
+
 		for (int i = 0; i < equipCount; i++) {
 			equipslot = packetsIncoming.getByte();
 			itemID = packetsIncoming.getShort();
@@ -1256,6 +1260,8 @@ public class PacketHandler {
 			else if (equipslot > 7)
 				equipslot -= 3;
 			mc.equippedItems[equipslot] = EntityHandler.getItemDef(itemID);
+			if (mc.equippedItems[equipslot].isStackable())
+				mc.equippedItemAmount[equipslot] = packetsIncoming.get32();
 		}
 
 	}
