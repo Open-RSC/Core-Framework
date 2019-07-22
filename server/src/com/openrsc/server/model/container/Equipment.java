@@ -48,11 +48,14 @@ public class Equipment {
 		return total;
 	}
 
-	public boolean hasEquipped(int id) {
-		for (Item item : list)
+	public int hasEquipped(int id) {
+		Item item;
+		for (int i = 0; i < slots; i++) {
+			item = list[i];
 			if (item != null && item.getID() == id)
-				return true;
-		return false;
+				return i;
+		}
+		return -1;
 	}
 
 	public Item getAmmoItem() {

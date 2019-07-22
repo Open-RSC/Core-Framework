@@ -63,6 +63,11 @@ public class RangeEvent extends GameTickEvent {
 			ItemId.ADAMANTITE_ARROWS.id(), ItemId.POISON_ADAMANTITE_ARROWS.id(), ItemId.RUNE_ARROWS.id(), ItemId.POISON_RUNE_ARROWS.id(), ItemId.ICE_ARROWS.id()} // Magic
 		// Longbow
 	};
+
+	private int[][] allowedBolts = {
+		{ItemId.CROSSBOW.id(), ItemId.CROSSBOW_BOLTS.id(), ItemId.POISON_CROSSBOW_BOLTS.id()},
+		{ItemId.PHOENIX_CROSSBOW.id(), ItemId.CROSSBOW_BOLTS.id(), ItemId.POISON_CROSSBOW_BOLTS.id()}
+	};
 	private Mob target;
 
 	public RangeEvent(Player owner, Mob victim) {
@@ -147,6 +152,24 @@ public class RangeEvent extends GameTickEvent {
 						return;
 					}
 					arrowID = ammo.getID();
+					boolean canFire = false;
+					int[][] allowed = xbow ? allowedBolts : allowedArrows;
+					for (int[] arrow : allowed) {
+						if (arrow[0] == bowID) {
+							for (int arrows : arrow)
+								if (arrows == arrowID) {
+									canFire = true;
+									break;
+								}
+						}
+						if (canFire)
+							break;
+					}
+					if (!canFire) {
+						getPlayerOwner().message("Your ammo is too powerful for your bow");
+						getPlayerOwner().resetRange();
+						return;
+					}
 					if (ammo.getAmount() == 1) {
 						getPlayerOwner().getEquipment().list[12] = null;
 					} else {

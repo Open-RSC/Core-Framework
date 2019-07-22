@@ -1262,8 +1262,9 @@ public class PacketHandler {
 			mc.equippedItems[equipslot] = EntityHandler.getItemDef(itemID);
 			if (mc.equippedItems[equipslot].isStackable())
 				mc.equippedItemAmount[equipslot] = packetsIncoming.get32();
+			else
+				mc.equippedItemAmount[equipslot] = 1;
 		}
-
 	}
 
 

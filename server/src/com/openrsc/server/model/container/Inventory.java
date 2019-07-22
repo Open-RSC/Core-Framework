@@ -396,7 +396,7 @@ public class Inventory {
 			player.getSettings().getAppearance().getSprite(affectedItem.getDef().getWieldPosition()));
 
 		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
-			if (player.getEquipment().hasEquipped(affectedItem.getID())) {
+			if (player.getEquipment().hasEquipped(affectedItem.getID()) != -1) {
 				player.getEquipment().list[affectedItem.getDef().getWieldPosition()] = null;
 				add(affectedItem, false);
 			}
@@ -531,8 +531,13 @@ public class Inventory {
 			//Do an inventory count check
 			int count = 0;
 			for (Item i: player.getEquipment().list){
-				if (i!=null && item.wieldingAffectsItem(i))
+				if (i!=null && item.wieldingAffectsItem(i)) {
+					if (item.getDef().isStackable()) {
+						if (item.getID() == i.getID())
+							continue;
+					}
 					count++;
+				}
 			}
 			if (player.getInventory().getFreeSlots() - count + 1 < 0) {
 				player.message("You need more inventory space to equip that.");
@@ -542,8 +547,18 @@ public class Inventory {
 			player.getInventory().remove(item);
 			for (Item i : player.getEquipment().list)
 			{
-				if (i != null && item.wieldingAffectsItem(i))
+				if (i != null && item.wieldingAffectsItem(i)) {
+					if (item.getDef().isStackable()) {
+						if (item.getID() == i.getID())
+						{
+							i.setAmount(i.getAmount() + item.getAmount());
+							ActionSender.sendEquipment(player);
+							return;
+						}
+					}
 					unwieldItem(i, false);
+				}
+
 			}
 
 			//Check requirements for ammo/bow compatibility here??
@@ -557,12 +572,12 @@ public class Inventory {
 			}
 		}
 
-
-
-		item.setWielded(true);
 		if (sound)
 			player.playSound("click");
+
+		item.setWielded(true);
 		player.updateWornItems(item.getDef().getWieldPosition(), item.getDef().getAppearanceId());
+		item.setWielded(false);
 		player.getEquipment().list[item.getDef().getWieldPosition()] = item;
 
 		ActionSender.sendInventory(player);

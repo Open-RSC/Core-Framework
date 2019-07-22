@@ -1086,11 +1086,20 @@ public final class Player extends Mob {
 	}
 
 	public int getThrowingEquip() {
-		for (Item item : getInventory().getItems()) {
-			if (item.isWielded() && (DataConversions.inArray(Formulae.throwingIDs, getEquippedWeaponID()) && item.getDef().getWieldPosition() == 4)) {
-				return item.getID();
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB){
+			for (Item item : getEquipment().list) {
+				if (item != null && DataConversions.inArray(Formulae.throwingIDs, item.getID())) {
+					return item.getID();
+				}
+			}
+		} else {
+			for (Item item : getInventory().getItems()) {
+				if (item.isWielded() && (DataConversions.inArray(Formulae.throwingIDs, getEquippedWeaponID()) && item.getDef().getWieldPosition() == 4)) {
+					return item.getID();
+				}
 			}
 		}
+
 		return -1;
 	}
 

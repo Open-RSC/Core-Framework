@@ -6935,7 +6935,7 @@ public final class mudclient implements Runnable {
 										this.selectedSpell);
 								}
 							} else if (this.selectedItemInventoryIndex < 0) {
-								if (this.inventoryItemEquipped[var5] == 1) {
+								if (this.inventoryItemEquipped[var5] == 1 && !S_WANT_EQUIPMENT_TAB) {
 									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_REMOVE_EQUIPPED, "Remove",
 										"@lre@" + EntityHandler.getItemDef(id).getName());
 								} else if (EntityHandler.getItemDef(id).wearableID != 0) {
@@ -7015,8 +7015,10 @@ public final class mudclient implements Runnable {
 							yOffset + equipIconYLocations[i],
 							todraw.getSomething1(), todraw.getSomething2(),
 							equippedItems[i].getPictureMask(), 0, false, 0, var1 ^ -15251);
-						if (equippedItemAmount[i] > 1)
-							this.getSurface().drawString("" + equippedItemAmount[i],xOffset + equipIconXLocations[i] + (todraw.getSomething1()/2)-1 - 4*(int)Math.log10(equippedItemAmount[i]), yOffset + equipIconYLocations[i] + todraw.getSomething2() - 3, 0xFFFFFF, 2);
+						if (equippedItems[i].isStackable())
+							this.getSurface().drawString("" + equippedItemAmount[i],
+								xOffset + equipIconXLocations[i] + 2,
+								yOffset + equipIconYLocations[i] + 11, 0xFFFF00, 1);
 					}
 				}
 				for (int currSkill = 0; currSkill < 3; ++currSkill) {
@@ -7043,11 +7045,11 @@ public final class mudclient implements Runnable {
 										break;
 									} else {
 										if (!equippedItems[j].getCommand().equalsIgnoreCase(""))
-											this.menuCommon.addCharacterItem(equippedItems[j].id, MenuItemAction.ITEM_COMMAND, equippedItems[j].getCommand(),
+											this.menuCommon.addCharacterItem(j, MenuItemAction.ITEM_COMMAND_EQUIPTAB, equippedItems[j].getCommand(),
 												"@lre@" + equippedItems[j].getName());
-										this.menuCommon.addCharacterItem(equippedItems[j].id, MenuItemAction.ITEM_USE, "Use",
+										this.menuCommon.addCharacterItem(j, MenuItemAction.ITEM_USE_EQUIPTAB, "Use",
 											"@lre@" + equippedItems[j].getName());
-										this.menuCommon.addCharacterItem(equippedItems[j].id, MenuItemAction.ITEM_DROP, "Drop",
+										this.menuCommon.addCharacterItem(equippedItems[j].id, MenuItemAction.ITEM_DROP_EQUIPTAB, "Drop",
 											"@lre@" + equippedItems[j].getName());
 										this.menuCommon.addCharacterItem(equippedItems[j].id, MenuItemAction.ITEM_EXAMINE, "Examine",
 											"@lre@" + equippedItems[j].getName()
@@ -11081,28 +11083,32 @@ public final class mudclient implements Runnable {
 					this.packetHandler.getClientStream().finishPacket();
 					break;
 				}
+				case ITEM_COMMAND_EQUIPTAB: {
+					int commandQuantity = 1;
+					this.packetHandler.getClientStream().newPacket(90);
+					this.packetHandler.getClientStream().writeBuffer1.putShort(0xFFFF);
+					this.packetHandler.getClientStream().writeBuffer1.putInt(commandQuantity);
+					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.packetHandler.getClientStream().finishPacket();
+					break;
+				}
 				case ITEM_USE: {
 					this.selectedItemInventoryIndex = indexOrX;
 					if (!isAndroid())
 						this.showUiTab = 0;
-					if (S_WANT_EQUIPMENT_TAB)
-						this.m_ig = EntityHandler.getItemDef(this.selectedItemInventoryIndex).getName();
-					else
 						this.m_ig = EntityHandler.getItemDef(this.inventoryItemID[this.selectedItemInventoryIndex]).getName();
 					break;
 				}
+				case ITEM_USE_EQUIPTAB:
+					this.selectedItemInventoryIndex = indexOrX;
+					if (!isAndroid())
+						this.showUiTab = 0;
+					this.m_ig = equippedItems[indexOrX].getName();
+					break;
 				case ITEM_DROP: {
 					this.packetHandler.getClientStream().newPacket(246);
 					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
-					int amount = 1;
-					if (S_WANT_EQUIPMENT_TAB) {
-						if (EntityHandler.getItemDef(indexOrX).isStackable())
-							amount = getInventoryCount(this.inventoryItemID[indexOrX]);
-					} else {
-						if (EntityHandler.getItemDef(inventoryItemID[indexOrX]).isStackable())
-							amount = getInventoryCount(this.inventoryItemID[indexOrX]);
-					}
-
+					int amount = getInventoryCount(this.inventoryItemID[indexOrX]);
 					this.packetHandler.getClientStream().writeBuffer1.putInt(amount);
 					this.packetHandler.getClientStream().finishPacket();
 					if (!isAndroid())
@@ -11132,6 +11138,24 @@ public final class mudclient implements Runnable {
 						this.showMessage(false, null,
 							"Dropping " + EntityHandler.getItemDef(this.inventoryItemID[indexOrX]).getName(),
 							MessageType.INVENTORY, 0, null);
+					break;
+				}
+				case ITEM_DROP_EQUIPTAB: {
+					this.packetHandler.getClientStream().newPacket(246);
+					this.packetHandler.getClientStream().writeBuffer1.putShort(0xFFFF);
+					int slot;
+					for (slot = 0; slot < S_PLAYER_SLOT_COUNT; slot++)
+					{
+						if (equippedItems[slot] != null && equippedItems[slot].id == indexOrX)
+							break;
+					}
+					int amount = this.equippedItemAmount[slot];
+					this.packetHandler.getClientStream().writeBuffer1.putInt(amount);
+					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.packetHandler.getClientStream().finishPacket();
+					this.showMessage(false, null,
+						"Dropping " + this.equippedItems[slot].getName(),
+						MessageType.INVENTORY, 0, null);
 					break;
 				}
 				case NPC_CAST_SPELL: {
