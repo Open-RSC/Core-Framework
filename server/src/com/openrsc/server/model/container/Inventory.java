@@ -240,7 +240,7 @@ public class Inventory {
 						// Exact amount, remove all.
 						if (i.isWielded()) {
 							unwieldItem(i, false);
-							ActionSender.sendEquipmentStats(player);
+							//ActionSender.sendEquipmentStats(player);
 						}
 						iterator.remove();
 						ActionSender.sendRemoveItem(player, index);
@@ -251,7 +251,7 @@ public class Inventory {
 						// Remove 1.
 						if (i.isWielded()) {
 							unwieldItem(i, false);
-							ActionSender.sendEquipmentStats(player);
+							//ActionSender.sendEquipmentStats(player);
 						}
 						iterator.remove();
 						ActionSender.sendRemoveItem(player, index);
@@ -291,10 +291,15 @@ public class Inventory {
 	}
 
 	public boolean wielding(int id) {
-		synchronized (list) {
-			for (Item i : list) {
-				if (i.getID() == id && i.isWielded()) {
-					return true;
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			if (player.getEquipment().hasEquipped(id) != -1)
+				return true;
+		} else {
+			synchronized (list) {
+				for (Item i : list) {
+					if (i.getID() == id && i.isWielded()) {
+						return true;
+					}
 				}
 			}
 		}
@@ -401,10 +406,8 @@ public class Inventory {
 				add(affectedItem, false);
 			}
 		}
-
-
 		ActionSender.sendInventory(player);
-		ActionSender.sendEquipmentStats(player);
+		ActionSender.sendEquipmentStats(player, affectedItem.getDef().getWieldPosition());
 	}
 
 	public void wieldItem(Item item, boolean sound) {
@@ -552,7 +555,7 @@ public class Inventory {
 						if (item.getID() == i.getID())
 						{
 							i.setAmount(i.getAmount() + item.getAmount());
-							ActionSender.sendEquipment(player);
+							ActionSender.updateEquipmentSlot(player, i.getDef().getWieldPosition());
 							return;
 						}
 					}
@@ -581,7 +584,7 @@ public class Inventory {
 		player.getEquipment().list[item.getDef().getWieldPosition()] = item;
 
 		ActionSender.sendInventory(player);
-		ActionSender.sendEquipmentStats(player);
+		ActionSender.sendEquipmentStats(player, item.getDef().getWieldPosition());
 	}
 
 	public void dropOnDeath(Mob opponent) {

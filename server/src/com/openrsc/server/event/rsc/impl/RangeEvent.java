@@ -65,8 +65,8 @@ public class RangeEvent extends GameTickEvent {
 	};
 
 	private int[][] allowedBolts = {
-		{ItemId.CROSSBOW.id(), ItemId.CROSSBOW_BOLTS.id(), ItemId.POISON_CROSSBOW_BOLTS.id()},
-		{ItemId.PHOENIX_CROSSBOW.id(), ItemId.CROSSBOW_BOLTS.id(), ItemId.POISON_CROSSBOW_BOLTS.id()}
+		{ItemId.CROSSBOW.id(), ItemId.CROSSBOW_BOLTS.id(), ItemId.POISON_CROSSBOW_BOLTS.id(), ItemId.OYSTER_PEARL_BOLTS.id()},
+		{ItemId.PHOENIX_CROSSBOW.id(), ItemId.CROSSBOW_BOLTS.id(), ItemId.POISON_CROSSBOW_BOLTS.id(), ItemId.OYSTER_PEARL_BOLTS.id()}
 	};
 	private Mob target;
 
@@ -176,7 +176,7 @@ public class RangeEvent extends GameTickEvent {
 						ammo.setAmount(ammo.getAmount() - 1);
 						getPlayerOwner().getEquipment().list[12] = ammo;
 					}
-					ActionSender.sendEquipment(getPlayerOwner());
+					ActionSender.updateEquipmentSlot(getPlayerOwner(), 12);
 				} else {
 					for (int aID : (xbow ? Formulae.boltIDs : Formulae.arrowIDs)) {
 						int slot = getPlayerOwner().getInventory().getLastIndexById(aID);

@@ -292,7 +292,8 @@ public class ActionSender {
 	/**
 	 * Updates the equipment status
 	 */
-	public static void sendEquipmentStats(Player player) {
+	public static void sendEquipmentStats(Player player) { sendEquipmentStats(player, -1); }
+	public static void sendEquipmentStats(Player player, int slot) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_EQUIPMENT_STATS.opcode);
 		s.writeByte(player.getArmourPoints());
@@ -302,9 +303,14 @@ public class ActionSender {
 		s.writeByte(player.getPrayerPoints());
 		player.write(s.toPacket());
 
-		if (WANT_EQUIPMENT_TAB)
-			sendEquipment(player);
+		if (WANT_EQUIPMENT_TAB) {
+			if (slot == -1)
+				sendEquipment(player);
+			else
+				updateEquipmentSlot(player, slot);
+		}
 	}
+
 
 	/**
 	 * Sends fatigue
@@ -650,6 +656,24 @@ public class ActionSender {
 		}
 		player.write(s.toPacket());
 	}
+
+	public static void updateEquipmentSlot(Player player, int slot) {
+		if (player == null)
+			return;
+		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+		s.setID(Opcode.SEND_EQUIPMENT_UPDATE.opcode);
+		s.writeByte(slot);
+		Item item = player.getEquipment().list[slot];
+			if (item != null) {
+				s.writeShort(item.getID());
+				if (item.getDef().isStackable())
+					s.writeInt(item.getAmount());
+			} else {
+				s.writeShort(0xFFFF);
+			}
+		player.write(s.toPacket());
+	}
+
 
 
 	/**
@@ -1411,7 +1435,8 @@ public class ActionSender {
 		SEND_BANK_UPDATE(249),
 		SEND_OPTIONS_MENU_CLOSE(252),
 		SEND_DUEL_OTHER_ACCEPTED(253),
-		SEND_EQUIPMENT(254);
+		SEND_EQUIPMENT(254),
+		SEND_EQUIPMENT_UPDATE(255);
 
 		private int opcode;
 

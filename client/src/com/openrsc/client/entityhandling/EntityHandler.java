@@ -2709,7 +2709,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Oily Fishing Rod", "A rod covered in Blamish oil", "", 15, 172, "items:172", false, false, 0, 0, true, true, -1, -1, 589));
 		items.add(new ItemDef("lava eel", "Strange it looks cooler now it's been cooked", "eat", 150, 194, "items:194", false, false, 0, 11558912, true, true, -1, -1, 590));
 		items.add(new ItemDef("Raw lava eel", "A very strange eel", "", 150, 194, "items:194", false, false, 0, 16711680, true, true, -1, -1, 591));
-		items.add(new ItemDef("Poison Crossbow bolts", "Good if you have a crossbow!", "", 3, 56, "items:56", true, false, 0, 0, true, false, -1, -1, 592));
+		items.add(new ItemDef("Poison Crossbow bolts", "Good if you have a crossbow!", "", 3, 56, "items:56", true, true, 1001, 0, true, false, -1, -1, 592));
 		items.add(new ItemDef("Dragon sword", "A Razor sharp sword", "", 100000, 273, "items:273", false, true, 16, 16711748, true, false, 1789, -1, 593));
 		items.add(new ItemDef("Dragon axe", "A vicious looking axe", "", 200000, 272, "items:272", false, true, 16, 16711748, true, false, 1790, -1, 594));
 		items.add(new ItemDef("Jail keys", "Keys to the black knight jail", "", 2, 190, "items:190", false, false, 0, 0, true, true, -1, -1, 595));
@@ -2903,7 +2903,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Swamp tar", "A foul smelling thick tar like substance", "", 1, 262, "items:262", true, false, 0, 12303291, true, false, -1, -1, 783));
 		items.add(new ItemDef("Uncooked Swamp paste", "A thick tar like substance mixed with flour", "", 1, 263, "items:263", true, false, 0, 12303291, true, false, -1, -1, 784));
 		items.add(new ItemDef("Swamp paste", "A tar like substance mixed with flour and warmed", "", 30, 263, "items:263", true, false, 0, 12303291, true, false, -1, -1, 785));
-		items.add(new ItemDef("Oyster pearl bolts", "Great if you have a crossbow!", "", 110, 266, "items:266", true, false, 0, 0, true, false, -1, -1, 786));
+		items.add(new ItemDef("Oyster pearl bolts", "Great if you have a crossbow!", "", 110, 266, "items:266", true, true, 1001, 0, true, false, -1, -1, 786));
 		items.add(new ItemDef("Glarials pebble", "A small pebble with elven inscription", "", 1, 264, "items:264", false, false, 0, 12303291, true, true, -1, -1, 787));
 		items.add(new ItemDef("book on baxtorian", "A book on elven history in north runescape", "read", 2, 28, "items:28", false, false, 0, 0, true, true, -1, -1, 788));
 		items.add(new ItemDef("large key", "I wonder what this is the key to", "", 1, 25, "items:25", false, false, 0, 16750848, true, true, -1, -1, 789));

@@ -11888,11 +11888,17 @@ public final class mudclient implements Runnable {
 
 	private boolean isEquipped(int id) {
 		try {
-
-
-			for (int i = 0; this.inventoryItemCount > i; ++i) {
-				if (id == this.inventoryItemID[i] && this.inventoryItemEquipped[i] == 1) {
-					return true;
+			if (S_WANT_EQUIPMENT_TAB) {
+				for (int i = 0; i < S_PLAYER_SLOT_COUNT; i++) {
+					if (this.equippedItems[i] != null && this.equippedItems[i].id == id) {
+						return true;
+					}
+				}
+			} else {
+				for (int i = 0; this.inventoryItemCount > i; ++i) {
+					if (id == this.inventoryItemID[i] && this.inventoryItemEquipped[i] == 1) {
+						return true;
+					}
 				}
 			}
 			return false;

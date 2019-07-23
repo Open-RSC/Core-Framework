@@ -39,6 +39,20 @@ public class Equipment {
 		return total;
 	}
 
+	public int getMagic() {
+		int total = 1;
+		for (Item item : list)
+			total += item == null ? 0 : item.getDef().getMagicBonus();
+		return total;
+	}
+
+	public int getPrayer() {
+		int total = 1;
+		for (Item item : list)
+			total += item == null ? 0 : item.getDef().getPrayerBonus();
+		return total;
+	}
+
 	public int equipCount() {
 		int total = 0;
 		for (Item item : list) {

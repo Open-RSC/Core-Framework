@@ -962,9 +962,13 @@ public final class Player extends Mob {
 
 	public int getMagicPoints() {
 		int points = 1;
-		for (Item item : getInventory().getItems()) {
-			if (item.isWielded()) {
-				points += item.getDef().getMagicBonus();
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			points = getEquipment().getMagic();
+		} else {
+			for (Item item : getInventory().getItems()) {
+				if (item.isWielded()) {
+					points += item.getDef().getMagicBonus();
+				}
 			}
 		}
 		return points < 1 ? 1 : points;
@@ -1022,11 +1026,16 @@ public final class Player extends Mob {
 
 	public int getPrayerPoints() {
 		int points = 1;
-		for (Item item : getInventory().getItems()) {
-			if (item.isWielded()) {
-				points += item.getDef().getPrayerBonus();
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			points = getEquipment().getPrayer();
+		} else {
+			for (Item item : getInventory().getItems()) {
+				if (item.isWielded()) {
+					points += item.getDef().getPrayerBonus();
+				}
 			}
 		}
+
 		return points < 1 ? 1 : points;
 	}
 
