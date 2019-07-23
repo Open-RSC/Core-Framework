@@ -351,7 +351,7 @@ public class RuneMysteries implements QuestInterface, QuestDecoy {
 	@Override
 	public void handleReward(Player p) {
 		p.message("Well done you have completed the rune mysteries quest");
-		p.message("@gre@You have gained 1 quest point!");
+		p.message("@gre@You haved gained 1 quest point!");
 		p.message("You now have access to the Runecrafting skill!");
 		incQuestReward(p, Quests.questData.get(Quests.RUNE_MYSTERIES), true);
 	}
