@@ -3005,25 +3005,48 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 		boolean hasArmour = false;
 		boolean hasWeapon = false;
 		int wieldpos;
-		for (Item item : p.getInventory().getItems()) {
-			if (item.isWielded() && item.getDef().getWieldPosition() > 5 && allowed.contains(item.getID())) {
-				continue;
-			}
-			wieldpos = item.getDef().getWieldPosition();
-			if (item.isWielded() && wieldPos.contains(wieldpos)) {
-				if (wieldpos == 3) {
-					if (item.getDef().getName().toLowerCase().contains("shield")) {
-						hasArmour = true;
-					} else {
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			for (Item item : p.getEquipment().list) {
+				if (item == null)
+					continue;
+				if (item.getDef().getWieldPosition() > 5 && allowed.contains(item.getID()))
+					continue;
+				if (wieldPos.contains(item.getDef().getWieldPosition())) {
+					if (item.getDef().getWieldPosition() == 3) {
+						if (item.getDef().getName().toLowerCase().contains("shield"))
+							hasArmour = true;
+						else
+							hasWeapon = true;
+					} else if (item.getDef().getWieldPosition() == 4) {
 						hasWeapon = true;
+					} else {
+						hasArmour = true;
 					}
-				} else if (wieldpos == 4) {
-					hasWeapon = true;
-				} else {
-					hasArmour = true;
+				}
+
+			}
+		} else {
+			for (Item item : p.getInventory().getItems()) {
+				if (item.isWielded() && item.getDef().getWieldPosition() > 5 && allowed.contains(item.getID())) {
+					continue;
+				}
+				wieldpos = item.getDef().getWieldPosition();
+				if (item.isWielded() && wieldPos.contains(wieldpos)) {
+					if (wieldpos == 3) {
+						if (item.getDef().getName().toLowerCase().contains("shield")) {
+							hasArmour = true;
+						} else {
+							hasWeapon = true;
+						}
+					} else if (wieldpos == 4) {
+						hasWeapon = true;
+					} else {
+						hasArmour = true;
+					}
 				}
 			}
 		}
+
 		if (hasWeapon && hasArmour) return Armed.BOTH;
 		else if (hasWeapon) return Armed.WEAPON;
 		else if (hasArmour) return Armed.ARMOUR;

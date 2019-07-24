@@ -1107,7 +1107,10 @@ public class Functions {
 	 * @return
 	 */
 	public static boolean hasItem(final Player p, final int item) {
-		return p.getInventory().hasItemId(item);
+		boolean retval = p.getInventory().hasItemId(item);
+		if (!retval && Constants.GameServer.WANT_EQUIPMENT_TAB)
+			retval = (p.getEquipment().hasEquipped(item) != -1);
+		return retval;
 	}
 
 	/**

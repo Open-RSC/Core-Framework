@@ -106,9 +106,10 @@ public class Inventory {
 	}
 
 	public boolean contains(Item i) {
-		synchronized (list) {
-			return list.contains(i);
-		}
+		//synchronized (list) {
+		//	return list.contains(i);
+		//}
+		return hasItemId(i.getID());
 	}
 
 	public int countId(long id) {
@@ -195,6 +196,16 @@ public class Inventory {
 	public boolean hasItemId(int id) {
 		synchronized (list) {
 			for (Item i : list) {
+				if (i.getID() == id)
+					return true;
+			}
+		}
+
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			for (Item i : player.getEquipment().list)
+			{
+				if (i == null)
+					continue;
 				if (i.getID() == id)
 					return true;
 			}
@@ -376,21 +387,21 @@ public class Inventory {
 		return true;
 	}
 
-	public void unwieldItem(Item affectedItem, boolean sound) {
+	public boolean unwieldItem(Item affectedItem, boolean sound) {
 
 		if (affectedItem == null || !affectedItem.isWieldable()) {
-			return;
+			return false;
 		}
 
 		//If inventory doesn't have the item
 		if (!Constants.GameServer.WANT_EQUIPMENT_TAB && !getItems().contains(affectedItem)) {
-			return;
+			return false;
 		}
 
 		//Can't unequip something if inventory is full
 		if (player.getInventory().full() && Constants.GameServer.WANT_EQUIPMENT_TAB) {
 			player.message("You need more inventory space to unequip that.");
-			return;
+			return false;
 		}
 
 		affectedItem.setWielded(false);
@@ -408,6 +419,7 @@ public class Inventory {
 		}
 		ActionSender.sendInventory(player);
 		ActionSender.sendEquipmentStats(player, affectedItem.getDef().getWieldPosition());
+		return true;
 	}
 
 	public void wieldItem(Item item, boolean sound) {
@@ -580,8 +592,11 @@ public class Inventory {
 
 		item.setWielded(true);
 		player.updateWornItems(item.getDef().getWieldPosition(), item.getDef().getAppearanceId());
-		item.setWielded(false);
-		player.getEquipment().list[item.getDef().getWieldPosition()] = item;
+
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			item.setWielded(false);
+			player.getEquipment().list[item.getDef().getWieldPosition()] = item;
+		}
 
 		ActionSender.sendInventory(player);
 		ActionSender.sendEquipmentStats(player, item.getDef().getWieldPosition());

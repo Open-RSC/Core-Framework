@@ -65,6 +65,7 @@ public class Config {
 	/* Server Defined: DOUBLE CHECK THESE ON SERVER */
 	public static int S_PLAYER_LEVEL_LIMIT = 99;
 	public static int S_PLAYER_SLOT_COUNT = 11;
+	public static int S_PLAYER_INVENTORY_SLOTS = 30;
 	public static boolean S_SPAWN_AUCTION_NPCS = false;
 	public static boolean S_SPAWN_IRON_MAN_NPCS = false;
 	public static boolean S_SHOW_FLOATING_NAMETAGS = false;

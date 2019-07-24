@@ -501,17 +501,19 @@ public class DatabasePlayerLoader {
 			}
 			save.setInventory(inv);
 
-			result = resultSetFromInteger(Statements.playerEquipped, save.getDatabaseID());
-			while (result.next()) {
-				Item item = new Item(result.getInt("id"), result.getInt("amount"));
-				ItemDefinition itemDef = item.getDef();
-				if (item.isWieldable()){
-					equipment.list[itemDef.getWieldPosition()] = item;
-					save.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId());
+			if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+				result = resultSetFromInteger(Statements.playerEquipped, save.getDatabaseID());
+				while (result.next()) {
+					Item item = new Item(result.getInt("id"), result.getInt("amount"));
+					ItemDefinition itemDef = item.getDef();
+					if (item.isWieldable()){
+						equipment.list[itemDef.getWieldPosition()] = item;
+						save.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId());
+					}
 				}
-			}
 
-			save.setEquipment(equipment);
+				save.setEquipment(equipment);
+			}
 
 			result = resultSetFromInteger(Statements.playerBankItems, save.getDatabaseID());
 			Bank bank = new Bank(save);

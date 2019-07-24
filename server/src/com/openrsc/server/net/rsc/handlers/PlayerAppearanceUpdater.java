@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.model.PlayerAppearance;
 import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
@@ -46,14 +47,22 @@ public class PlayerAppearanceUpdater implements PacketHandler {
 		player.setMale(headGender == 1);
 
 		if (player.isMale()) {
-			Inventory inv = player.getInventory();
-			for (int slot = 0; slot < inv.size(); slot++) {
-				Item i = inv.get(slot);
-				if (i.isWieldable() && i.getDef().getWieldPosition() == 1
-					&& i.isWielded() && i.getDef().isFemaleOnly()) {
-					player.getInventory().unwieldItem(i, false);
-					ActionSender.sendInventoryUpdateItem(player, slot);
-					break;
+			if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+				Item top = player.getEquipment().list[1];
+				if (top != null && top.getDef().isFemaleOnly()) {
+					player.getInventory().unwieldItem(top, false);
+					ActionSender.sendEquipmentStats(player, 1);
+				}
+			} else {
+				Inventory inv = player.getInventory();
+				for (int slot = 0; slot < inv.size(); slot++) {
+					Item i = inv.get(slot);
+					if (i.isWieldable() && i.getDef().getWieldPosition() == 1
+						&& i.isWielded() && i.getDef().isFemaleOnly()) {
+						player.getInventory().unwieldItem(i, false);
+						ActionSender.sendInventoryUpdateItem(player, slot);
+						break;
+					}
 				}
 			}
 		}

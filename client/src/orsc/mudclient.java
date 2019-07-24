@@ -10910,6 +10910,12 @@ public final class mudclient implements Runnable {
 					break;
 				}
 				case GROUND_ITEM_USE_ITEM: {
+					if (S_WANT_EQUIPMENT_TAB && tileID > S_PLAYER_INVENTORY_SLOTS) {
+						//they used an item from the equiptab on the ground item - we don't want to handle this yet.
+						this.showMessage(false, null, "Please unequip your item and try again.",
+							MessageType.GAME, 0, null);
+						return;
+					}
 					this.walkToGroundItem(this.playerLocalX, this.playerLocalZ, indexOrX, idOrZ, true);
 					this.packetHandler.getClientStream().newPacket(53);
 					this.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseX + indexOrX);
@@ -10966,7 +10972,11 @@ public final class mudclient implements Runnable {
 					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX + this.midRegionBaseX);
 					this.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ + this.midRegionBaseZ);
 					this.packetHandler.getClientStream().writeBuffer1.putByte(dir);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(tileID);
+					if (tileID > S_PLAYER_INVENTORY_SLOTS) {
+						this.packetHandler.getClientStream().writeBuffer1.putShort(0xFFFF);
+						this.packetHandler.getClientStream().writeBuffer1.putShort(equippedItems[tileID-S_PLAYER_INVENTORY_SLOTS].id);
+					} else
+						this.packetHandler.getClientStream().writeBuffer1.putShort(tileID);
 					this.packetHandler.getClientStream().finishPacket();
 					this.selectedItemInventoryIndex = -1;
 					break;
@@ -11048,9 +11058,16 @@ public final class mudclient implements Runnable {
 					break;
 				}
 				case ITEM_USE_ITEM: {
+					if (S_WANT_EQUIPMENT_TAB && (indexOrX > S_PLAYER_INVENTORY_SLOTS || idOrZ > S_PLAYER_INVENTORY_SLOTS)) {
+						//they used an item from the equiptab on the item - we don't want to handle this yet.
+						this.showMessage(false, null, "Please unequip your item and try again.",
+							MessageType.GAME, 0, null);
+						return;
+					}
 					this.packetHandler.getClientStream().newPacket(91);
 					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
 					this.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ);
+
 					this.packetHandler.getClientStream().finishPacket();
 					this.selectedItemInventoryIndex = -1;
 					break;
@@ -11088,7 +11105,7 @@ public final class mudclient implements Runnable {
 					this.packetHandler.getClientStream().newPacket(90);
 					this.packetHandler.getClientStream().writeBuffer1.putShort(0xFFFF);
 					this.packetHandler.getClientStream().writeBuffer1.putInt(commandQuantity);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.packetHandler.getClientStream().writeBuffer1.putShort(equippedItems[indexOrX].id);
 					this.packetHandler.getClientStream().finishPacket();
 					break;
 				}
@@ -11100,7 +11117,7 @@ public final class mudclient implements Runnable {
 					break;
 				}
 				case ITEM_USE_EQUIPTAB:
-					this.selectedItemInventoryIndex = indexOrX;
+					this.selectedItemInventoryIndex = indexOrX + S_PLAYER_INVENTORY_SLOTS;
 					if (!isAndroid())
 						this.showUiTab = 0;
 					this.m_ig = equippedItems[indexOrX].getName();
@@ -11108,7 +11125,7 @@ public final class mudclient implements Runnable {
 				case ITEM_DROP: {
 					this.packetHandler.getClientStream().newPacket(246);
 					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
-					int amount = getInventoryCount(this.inventoryItemID[indexOrX]);
+					int amount = this.inventoryItemSize[indexOrX];
 					this.packetHandler.getClientStream().writeBuffer1.putInt(amount);
 					this.packetHandler.getClientStream().finishPacket();
 					if (!isAndroid())
@@ -11177,6 +11194,12 @@ public final class mudclient implements Runnable {
 				case NPC_USE_ITEM: {
 					character = this.getServerNPC(indexOrX);
 					if (character == null) {
+						return;
+					}
+					if (S_WANT_EQUIPMENT_TAB && idOrZ > S_PLAYER_INVENTORY_SLOTS) {
+						//they used an item from the equiptab on the npc - we don't want to handle this yet.
+						this.showMessage(false, null, "Please unequip your item and try again.",
+							MessageType.GAME, 0, null);
 						return;
 					}
 					cTileX = (character.currentX - 64) / this.tileSize;
@@ -11266,6 +11289,12 @@ public final class mudclient implements Runnable {
 				case PLAYER_USE_ITEM: {
 					character = this.getServerPlayer(indexOrX);
 					if (character == null) {
+						return;
+					}
+					if (S_WANT_EQUIPMENT_TAB && idOrZ > S_PLAYER_INVENTORY_SLOTS) {
+						//they used an item from their equipment tab on a player- don't handle this yet
+						this.showMessage(false, null, "Please unequip your item and try again.",
+							MessageType.GAME, 0, null);
 						return;
 					}
 					cTileX = (character.currentX - 64) / this.tileSize;

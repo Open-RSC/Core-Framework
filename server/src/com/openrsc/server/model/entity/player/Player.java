@@ -34,6 +34,7 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.net.rsc.PacketHandlerLookup;
+import com.openrsc.server.net.rsc.handlers.ItemDropHandler;
 import com.openrsc.server.net.rsc.handlers.Ping;
 import com.openrsc.server.net.rsc.handlers.WalkRequest;
 import com.openrsc.server.plugins.PluginHandler;
@@ -724,7 +725,76 @@ public final class Player extends Mob {
 		return false;
 	}
 
+	public void checkEquipment2() {
+		for (int slot = 0; slot < Equipment.slots; slot++) {
+			Item item = getEquipment().list[slot];
+			if (item == null)
+				continue;
+			int requiredLevel = item.getDef().getRequiredLevel();
+			int requiredSkillIndex = item.getDef().getRequiredSkillIndex();
+			String itemLower = item.getDef().getName().toLowerCase();
+			Optional<Integer> optionalLevel = Optional.empty();
+			Optional<Integer> optionalSkillIndex = Optional.empty();
+			boolean unWield = false;
+			boolean bypass = !Constants.GameServer.STRICT_CHECK_ALL &&
+				(itemLower.startsWith("poisoned") &&
+					((itemLower.endsWith("throwing dart") && !Constants.GameServer.STRICT_PDART_CHECK) ||
+						(itemLower.endsWith("throwing knife") && !Constants.GameServer.STRICT_PKNIFE_CHECK) ||
+						(itemLower.endsWith("spear") && !Constants.GameServer.STRICT_PSPEAR_CHECK))
+				);
+			if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
+				optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
+				optionalSkillIndex = Optional.of(SKILLS.ATTACK.id());
+			}
+			//staff of iban (usable)
+			if (item.getID() == ItemId.STAFF_OF_IBAN.id()) {
+				optionalLevel = Optional.of(requiredLevel);
+				optionalSkillIndex = Optional.of(SKILLS.ATTACK.id());
+			}
+			//battlestaves (incl. enchanted version)
+			if (itemLower.contains("battlestaff")) {
+				optionalLevel = Optional.of(requiredLevel);
+				optionalSkillIndex = Optional.of(SKILLS.ATTACK.id());
+			}
+
+			if (getSkills().getMaxStat(requiredSkillIndex) < requiredLevel) {
+				if (!bypass) {
+					message("You are not a high enough level to use this item");
+					message("You need to have a " + Skills.getSkillName(requiredSkillIndex) + " level of " + requiredLevel);
+					unWield = true;
+				}
+			}
+			if (optionalSkillIndex.isPresent() && getSkills().getMaxStat(optionalSkillIndex.get()) < optionalLevel.get()) {
+				if (!bypass) {
+					message("You are not a high enough level to use this item");
+					message("You need to have a " + Skills.getSkillName(optionalSkillIndex.get()) + " level of " + optionalLevel.get());
+					unWield = true;
+				}
+			}
+
+			if (unWield) {
+				getInventory().unwieldItem(item, false);
+				//check to make sure their item was actually unequipped.
+				//it might not have if they have a full inventory.
+				if (getEquipment().list[slot] != null)
+				{
+					ItemDropHandler doit = new ItemDropHandler();
+					if (item.getDef().isStackable())
+						doit.dropStackable(this,item,item.getAmount(),false);
+					else
+						doit.dropUnstackable(this, item,1, false);
+				}
+			}
+
+		}
+		ActionSender.sendEquipmentStats(this);
+	}
+
 	public void checkEquipment() {
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			checkEquipment2();
+			return;
+		}
 		ListIterator<Item> iterator = getInventory().iterator();
 		for (int slot = 0; iterator.hasNext(); slot++) {
 			Item item = iterator.next();
@@ -1675,9 +1745,15 @@ public final class Player extends Mob {
 	}
 
 	private int getEquippedWeaponID() {
-		for (Item i : getInventory().getItems()) {
-			if (i.isWielded() && (i.getDef().getWieldPosition() == 4))
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			Item i = getEquipment().list[4];
+			if (i != null)
 				return i.getID();
+		} else {
+			for (Item i : getInventory().getItems()) {
+				if (i.isWielded() && (i.getDef().getWieldPosition() == 4))
+					return i.getID();
+			}
 		}
 		return -1;
 	}

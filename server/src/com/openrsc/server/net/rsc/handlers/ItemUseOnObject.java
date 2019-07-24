@@ -1,8 +1,10 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.action.WalkToObjectAction;
+import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -28,7 +30,7 @@ public class ItemUseOnObject implements PacketHandler {
 				GameObject obj = player.getViewArea().getWallObjectWithDir(
 					object.getLocation(), object.getDirection());
 				if (player.isBusy() || player.isRanging()
-					|| !player.getInventory().contains(item) || obj == null
+					|| !player.getInventory().hasItemId(item.getID()) || obj == null
 					|| !obj.equals(object)
 					|| player.getStatus() != Action.USING_Item_ON_DOOR) {
 					return;
@@ -113,7 +115,19 @@ public class ItemUseOnObject implements PacketHandler {
 				return;
 			}
 			int dir = object.getDirection();
-			item = player.getInventory().get(p.readShort());
+			int slotID = p.readShort();
+			if (Constants.GameServer.WANT_EQUIPMENT_TAB && slotID == -1)
+			{
+				//they used the item from their equipment slot
+				int itemID = p.readShort();
+				int realSlot = player.getEquipment().hasEquipped(itemID);
+				if (realSlot == -1)
+					return;
+				item = player.getEquipment().list[realSlot];
+				if (item == null)
+					return;
+			} else
+				item = player.getInventory().get(slotID);
 			if (object == null || object.getType() == 0 || item == null) { // This
 				player.setSuspiciousPlayer(true);
 				return;
@@ -126,7 +140,11 @@ public class ItemUseOnObject implements PacketHandler {
 				player.resetPath();
 				return;
 			}
-			item = player.getInventory().get(p.readShort());
+			int slotID = p.readShort();
+			if (Constants.GameServer.WANT_EQUIPMENT_TAB && slotID > Inventory.MAX_SIZE) {
+				item = player.getEquipment().list[slotID - Inventory.MAX_SIZE];
+			} else
+				item = player.getInventory().get(slotID);
 			if (object == null || object.getType() == 1 || item == null) { // This
 				player.setSuspiciousPlayer(true);
 				return;

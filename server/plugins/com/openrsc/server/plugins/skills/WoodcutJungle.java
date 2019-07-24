@@ -84,7 +84,7 @@ public class WoodcutJungle implements ObjectActionListener,
 		int axeId = -1;
 		if (obj.getID() != JUNGLE_VINE) {
 			for (final int a : Formulae.woodcuttingAxeIDs) {
-				if (p.getInventory().countId(a) > 0) {
+				if (hasItem(p, a)) {
 					axeId = a;
 					break;
 				}
