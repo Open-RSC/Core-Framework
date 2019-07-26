@@ -2,6 +2,7 @@ package com.openrsc.server.model.container;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.content.achievement.AchievementSystem;
+import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.Gauntlets;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Skills.SKILLS;
@@ -12,6 +13,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.DeathLog;
 import com.openrsc.server.sql.query.logs.GenericLog;
@@ -201,7 +203,7 @@ public class Inventory {
 			}
 		}
 
-		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB && EntityHandler.getItemDef(id).isWieldable()) {
 			for (Item i : player.getEquipment().list)
 			{
 				if (i == null)
@@ -394,7 +396,7 @@ public class Inventory {
 		}
 
 		//If inventory doesn't have the item
-		if (!Constants.GameServer.WANT_EQUIPMENT_TAB && !getItems().contains(affectedItem)) {
+		if (!Functions.isWielding(player, affectedItem.getID())) {
 			return false;
 		}
 

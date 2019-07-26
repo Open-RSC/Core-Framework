@@ -860,6 +860,10 @@ public final class Player extends Mob {
 		this.bankSize = size;
 	}
 
+	public int getFreeBankSlots() {
+		return bankSize - getBank().size();
+	}
+
 	public Bank getBank() {
 		return bank;
 	}
@@ -1898,17 +1902,23 @@ public final class Player extends Mob {
 	}
 
 	public void resetAll() {
-		resetAllExceptTradeOrDuel();
+		resetAllExceptTradeOrDuel(true);
+		getTrade().resetAll();
+		getDuel().resetAll();
+	}
+
+	public void resetAllExceptBank() {
+		resetAllExceptTradeOrDuel(false);
 		getTrade().resetAll();
 		getDuel().resetAll();
 	}
 
 	public void resetAllExceptDueling() {
-		resetAllExceptTradeOrDuel();
+		resetAllExceptTradeOrDuel(true);
 		getTrade().resetAll();
 	}
 
-	private void resetAllExceptTradeOrDuel() {
+	private void resetAllExceptTradeOrDuel(boolean resetBank) {
 		resetCannonEvent();
 		setAttribute("bank_pin_entered", "cancel");
 		setWalkToAction(null);
@@ -1918,7 +1928,7 @@ public final class Player extends Mob {
 		if (getMenuHandler() != null) {
 			resetMenuHandler();
 		}
-		if (accessingBank()) {
+		if (accessingBank() && resetBank) {
 			resetBank();
 		}
 		if (accessingShop()) {
@@ -1935,7 +1945,7 @@ public final class Player extends Mob {
 	}
 
 	public void resetAllExceptTrading() {
-		resetAllExceptTradeOrDuel();
+		resetAllExceptTradeOrDuel(true);
 		getDuel().resetAll();
 	}
 

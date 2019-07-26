@@ -71,6 +71,8 @@ public class PacketHandlerLookup {
 
 		bind(OpcodeIn.ITEM_EQUIP.getOpcode(), ItemWieldHandler.class);
 		bind(OpcodeIn.ITEM_REMOVE_EQUIPPED.getOpcode(), ItemWieldHandler.class);
+		bind(OpcodeIn.ITEM_EQUIP_FROM_BANK.getOpcode(), ItemWieldHandler.class);
+		bind(OpcodeIn.ITEM_REMOVE_TO_BANK.getOpcode(), ItemWieldHandler.class);
 
 		bind(OpcodeIn.GAME_SETTINGS_CHANGED.getOpcode(), GameSettingHandler.class);
 		bind(OpcodeIn.PRIVACY_SETTINGS_CHANGED.getOpcode(), PrivacySettingHandler.class);

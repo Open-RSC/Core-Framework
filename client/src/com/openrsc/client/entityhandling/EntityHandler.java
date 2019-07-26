@@ -355,7 +355,9 @@ public class EntityHandler {
 		EQUIPSLOT_CAPE(46),
 		EQUIPSLOT_AMMO(47),
 		EQUIPSLOT_RING(48),
-		EQUIPSLOT_HIGHLIGHT(49);
+		EQUIPSLOT_HIGHLIGHT(49),
+		BANK_EQUIP_BAG(50),
+		BANK_EQUIP_HELM(51);
 
 		private final int value;
 
@@ -418,7 +420,8 @@ public class EntityHandler {
 		GUIparts.add(new SpriteDef("equipment slot ammo", -1,"GUI:37",47));
 		GUIparts.add(new SpriteDef("equipment slot ring", -1,"GUI:38",48));
 		GUIparts.add(new SpriteDef("equipment blue highlight+", -1,"GUI:39",49));
-
+		GUIparts.add(new SpriteDef("bank toggle for inventory mode", -1,"GUI:40",50));
+		GUIparts.add(new SpriteDef("bank toggle for equipment mode", -1,"GUI:41",51));
 	}
 
 	public enum CROWN_TYPES {

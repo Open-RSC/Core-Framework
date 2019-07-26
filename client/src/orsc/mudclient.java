@@ -133,7 +133,7 @@ public final class mudclient implements Runnable {
 	private final int[] duelOpponentItemCounts = new int[8];
 	private final int[] duelOpponentItemId = new int[8];
 	private final int[] duelOpponentItems = new int[8];
-	private final String[] equipmentStatNames = new String[]{"Armour", "WeaponAim", "WeaponPower", "Magic",
+	public final String[] equipmentStatNames = new String[]{"Armour", "WeaponAim", "WeaponPower", "Magic",
 		"Prayer"};
 	private final boolean[] gameObjectInstance_Arg1 = new boolean[5000];
 	private final int[] gameObjectInstanceDir = new int[5000];
@@ -174,7 +174,7 @@ public final class mudclient implements Runnable {
 	private final int[] playerSkinColors = new int[]{15523536, 13415270, 11766848, 10056486, 9461792};
 	private int[] playerStatBase;
 	private int[] playerExperience;
-	private final int[] playerStatEquipment = new int[5];
+	public final int[] playerStatEquipment = new int[5];
 	private final boolean[] prayerOn = new boolean[50];
 	private final int projectileMaxRange = 40;
 	private final int[] shopItemCount = new int[256];
