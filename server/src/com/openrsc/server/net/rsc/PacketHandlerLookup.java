@@ -100,6 +100,8 @@ public class PacketHandlerLookup {
 		bind(OpcodeIn.BANK_CLOSE.getOpcode(), BankHandler.class);
 		bind(OpcodeIn.BANK_WITHDRAW.getOpcode(), BankHandler.class);
 		bind(OpcodeIn.BANK_DEPOSIT.getOpcode(), BankHandler.class);
+		bind(OpcodeIn.BANK_DEPOSIT_ALL_FROM_INVENTORY.getOpcode(), BankHandler.class);
+		bind(OpcodeIn.BANK_DEPOSIT_ALL_FROM_EQUIPMENT.getOpcode(), BankHandler.class);
 
 		bind(OpcodeIn.INTERFACE_OPTIONS.getOpcode(), InterfaceOptionHandler.class);
 		bind(OpcodeIn.BLINK.getOpcode(), BlinkHandler.class);

@@ -962,20 +962,20 @@ public final class CustomBankInterface extends BankInterface {
 	}
 
 	private void sendDepositAllInventory() {
-		for (int i = mc.getInventoryItemCount() - 1; i >= 0; i--) {
-			selectedInventorySlot = i;
-			sendDeposit(Integer.MAX_VALUE);
-		}
+		mc.packetHandler.getClientStream().newPacket(24);
+		mc.packetHandler.getClientStream().finishPacket();
+		rightClickMenu = false;
+		mc.setMouseClick(0);
+		mc.setMouseButtonDown(0);
+		selectedInventorySlot = -1;
 	}
 	private void sendDepositAllEquipment() {
-		for (int i = Config.S_PLAYER_SLOT_COUNT - 1; i >= 0; i--) {
-			if (mc.equippedItems[i] != null)
-			{
-				mc.packetHandler.getClientStream().newPacket(173);
-				mc.packetHandler.getClientStream().writeBuffer1.putShort(mc.equippedItems[i].id);
-				mc.packetHandler.getClientStream().finishPacket();
-			}
-		}
+		mc.packetHandler.getClientStream().newPacket(26);
+		mc.packetHandler.getClientStream().finishPacket();
+		rightClickMenu = false;
+		mc.setMouseClick(0);
+		mc.setMouseButtonDown(0);
+		selectedEquipmentSlot = -1;
 	}
 	public void sendWithdraw(int i) {
 		if (Config.S_WANT_CUSTOM_BANKS) {

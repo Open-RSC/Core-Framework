@@ -256,7 +256,7 @@ public class Inventory {
 							//ActionSender.sendEquipmentStats(player);
 						}
 						iterator.remove();
-						ActionSender.sendRemoveItem(player, index);
+						//ActionSender.sendRemoveItem(player, index);
 					}
 
 					/* Non-stack items */
@@ -267,7 +267,7 @@ public class Inventory {
 							//ActionSender.sendEquipmentStats(player);
 						}
 						iterator.remove();
-						ActionSender.sendRemoveItem(player, index);
+						//ActionSender.sendRemoveItem(player, index);
 
 						amount -= 1;
 						if (amount > 0)
@@ -287,10 +287,13 @@ public class Inventory {
 		return remove(id, amount, true);
 	}
 
+	public int remove(Item item, boolean updatePlayer) {
+		return remove(item.getID(), item.getAmount(), updatePlayer);
+	}
+
 	public int remove(Item item) {
 		return remove(item.getID(), item.getAmount(), true);
 	}
-
 	public int size() {
 		synchronized (list) {
 			return list.size();
