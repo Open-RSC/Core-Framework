@@ -189,11 +189,13 @@ public final class CustomBankInterface extends BankInterface {
 					selectedBankSlot = -1;
 					selectedEquipmentSlot = -1;
 					rightClickMenu = false;
+					swapNoteMode = false;
+					sendNoteMode();
 				} else if (mc.getMouseX() >= x + 349 && mc.getMouseX() <= x + 422 && mc.getMouseY() >= y + 206
 					&& mc.getMouseY() <= y + 220) {
 					swapNoteMode = false;
 					sendNoteMode();
-				} else if (mc.getMouseX() >= x + 423 && mc.getMouseX() <= x + 498 && mc.getMouseY() >= y + 206
+				} else if (!equipmentMode && mc.getMouseX() >= x + 423 && mc.getMouseX() <= x + 498 && mc.getMouseY() >= y + 206
 					&& mc.getMouseY() <= y + 220) {
 					swapNoteMode = true;
 					sendNoteMode();
@@ -285,13 +287,13 @@ public final class CustomBankInterface extends BankInterface {
 						ItemDef def = EntityHandler.getItemDef(bankItem.itemID);
 						if (draggingBankSlot != bankSlotStart) {
 							mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), drawX, drawY, 48, 32,
-								def.getPictureMask(), 0, false, 0, 1);
+								def.getPictureMask(), 0, false, 0, 1, (equipmentMode && !def.isWieldable()) ? 0x60FFFFFF : 0xFFFFFFFF);
 							if (def.getNotedFormOf() >= 0) {
 								ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
 								mc.getSurface().drawSpriteClipping(mc.spriteSelect(originalDef), drawX + 7,
 									drawY + 8, 29, 19, originalDef.getPictureMask(), 0, false, 0, 1);
 							}
-							drawString(mudclient.formatStackAmount(bankItem.amount), drawX + 1, drawY + 10, 1, 65280);
+							drawString(mudclient.formatStackAmount(bankItem.amount), drawX + 1, drawY + 10, 1, (equipmentMode && !def.isWieldable()) ? 0x404040 : 65280);
 						}
 					}
 
@@ -406,7 +408,7 @@ public final class CustomBankInterface extends BankInterface {
 		mc.getSurface().drawBoxBorder(x + 424 - 75, 73, settingsY, 14, 0x706452);
 		drawString("Item", x + 26 + 423 - 75, settingsY + 11, 1, 0xffffff);
 
-		mc.getSurface().drawBoxAlpha(x + 422, settingsY - 1, 75, 16, (swapNoteMode ? 0x7E1F1C : 0x5A5A55), 192);
+		mc.getSurface().drawBoxAlpha(x + 422, settingsY - 1, 75, 16, equipmentMode ? boxColourGreyed : (swapNoteMode ? 0x7E1F1C : 0x5A5A55), 192);
 		mc.getSurface().drawBoxBorder(x + 422, 75, settingsY - 1, 16, 0x2D2C24);
 		mc.getSurface().drawBoxBorder(x + 423, 73, settingsY, 14, 0x706452);
 		drawString("Note", x + 26 + 422, settingsY + 11, 1, 0xffffff);
@@ -416,17 +418,17 @@ public final class CustomBankInterface extends BankInterface {
 			int xOffset = x + 20;
 			int yOffset = settingsY + 20;
 			Sprite todraw;
-			mc.getSurface().drawBoxAlpha(x + 6, yOffset - 1, width - 16, 104, boxColour, 192);
+			mc.getSurface().drawBoxAlpha(x + 6, yOffset - 1, (width - 16)/2, 104, boxColour, 192);
+			mc.getSurface().drawBoxAlpha(xOffset + 231, yOffset - 1, (width - 16)/2 + 1, 104, 0x0, 192);
 			mc.getSurface().drawBoxBorder(x + 6, width - 16, yOffset - 1, 104, 0x0);
 			mc.getSurface().drawLineVert(xOffset + 231, yOffset - 1, 0x0, 104);
-			mc.getSurface().drawBoxAlpha(xOffset + 240, yOffset + 8, 180, 60, 0x0, 192);
 			for (int currSkill = 0; currSkill < 3; ++currSkill) {
 				mc.getSurface().drawString(mc.equipmentStatNames[currSkill] + ":@yel@" + mc.playerStatEquipment[currSkill],
-					xOffset + 251, yOffset + 30 + currSkill * 13, 0xFFFFFF, 1);
+					xOffset + 249, yOffset + 26 + currSkill * 13, 0xFFFFFF, 1);
 				if (2 > currSkill) {
 					mc.getSurface().drawString(
 						mc.equipmentStatNames[currSkill + 3] + ":@yel@" + mc.playerStatEquipment[3 + currSkill],
-						xOffset + 351, yOffset + 30 + currSkill * 13, 0xFFFFFF, 1);
+						xOffset + 348, yOffset + 26 + currSkill * 13, 0xFFFFFF, 1);
 				}
 				mc.getSurface().drawLineHoriz(xOffset, yOffset + 228, 245, 0);
 			}
@@ -466,16 +468,17 @@ public final class CustomBankInterface extends BankInterface {
 				}
 			}
 
-			if (mc.getMouseClick() != 0 && selectedEquipmentSlot == -1) {
+			if (selectedEquipmentSlot == -1) {
 				int xDiff = mc.getMouseX() - (x + 20);
 				int yDiff = mc.getMouseY() - (settingsY + 20);
-				if (xDiff % 55 < 49 && xDiff >= 0 && xDiff < x + 241
+				if (xDiff % 55 < 49 && xDiff >= 0 && xDiff < x + 234
 					&& yDiff >= 0 && yDiff <= 105) {
 
 					selectedEquipmentSlot = (xDiff / 55) + (yDiff / 35) * 4;
 					if (selectedEquipmentSlot < Config.S_PLAYER_SLOT_COUNT) {
 						selectedEquipmentSlot = this.equipmentViewOrder[selectedEquipmentSlot];
 						if (mc.equippedItems[selectedEquipmentSlot] != null) {
+							drawString(mc.equippedItems[selectedEquipmentSlot].getName(), x + 7, y + 15, 1, 0xFFFFFF);
 							if (mc.getMouseClick() == 2) {
 								rightClickMenuX = mc.getMouseX();
 								rightClickMenuY = mc.getMouseY();
@@ -486,7 +489,8 @@ public final class CustomBankInterface extends BankInterface {
 								mc.packetHandler.getClientStream().finishPacket();
 								selectedEquipmentSlot = -1;
 								rightClickMenu = false;
-							}
+							} else
+								selectedEquipmentSlot = -1;
 						} else {
 							selectedEquipmentSlot = -1;
 							rightClickMenu = false;
@@ -869,9 +873,13 @@ public final class CustomBankInterface extends BankInterface {
 			} else if (selectedEquipmentSlot > -1) {
 				if (mc.equippedItems[selectedEquipmentSlot] != null) {
 					menuWidth = mc.getSurface().stringWidth(fontSize, mc.equippedItems[selectedEquipmentSlot].getName()) + 8;
-					mc.getSurface().drawBoxAlpha(rightClickMenuX, rightClickMenuY, menuWidth + 2, menuHeight + 20, 0x5C5548, 255);
+					int menuWidth2 = mc.getSurface().stringWidth(fontSize, "Unequip to bank") + 8;
+					if (menuWidth2 > menuWidth)
+						menuWidth = menuWidth2;
+					menuHeight = fontSizeHeight*2 + 8;
+					mc.getSurface().drawBoxAlpha(rightClickMenuX, rightClickMenuY, menuWidth + 1, menuHeight, 0x5C5548, 255);
 					mc.getSurface().drawBoxAlpha(rightClickMenuX + 1, rightClickMenuY + 1, menuWidth, fontSize + 18, 0x000000, 255);
-					mc.getSurface().drawBoxBorder(rightClickMenuX + 1, menuWidth, rightClickMenuY + 18, menuHeight + 1, 0x000000);
+					mc.getSurface().drawBoxBorder(rightClickMenuX + 1, menuWidth, rightClickMenuY, menuHeight + 1, 0x000000);
 
 					drawString(mc.equippedItems[selectedEquipmentSlot].getName(), rightClickMenuX + 4, rightClickMenuY + fontSize + 15, fontSize, 0xFFFFFF);
 					int color = 0xFFFFFFFF;
@@ -889,11 +897,10 @@ public final class CustomBankInterface extends BankInterface {
 						} else if (mc.getMouseClick() == 0) {
 							color = 0xFDFF21;
 						}
-					} else {
-						if (mc.getMouseClick() == 1) {
+					} else if (mc.getMouseX() < rightClickMenuX || mc.getMouseX() > rightClickMenuX + menuWidth
+					|| mc.getMouseY() < rightClickMenuY || mc.getMouseY() > rightClickMenuY + menuHeight){
 							rightClickMenu = false;
 							selectedEquipmentSlot = -1;
-						}
 					}
 					drawString("Unequip to bank", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight + 20, fontSize, color);
 				}
