@@ -174,7 +174,10 @@ public final class CustomBankInterface extends BankInterface {
 					bankClose();
 				} else if (mc.getMouseX() >= x + 8 && mc.getMouseX() <= x + 83 && mc.getMouseY() >= y + 206
 					&& mc.getMouseY() <= y + 220) {
-					sendDepositAll();
+					if (equipmentMode)
+						sendDepositAllEquipment();
+					else
+						sendDepositAllInventory();
 				} else if (Config.S_WANT_EQUIPMENT_TAB && mc.getMouseX() >= modeOffset - 68
 					&& mc.getMouseX() < modeOffset - 40 && mc.getMouseY() > y + 197 && mc.getMouseY() < y + 225) {
 					equipmentMode = false;
@@ -958,13 +961,22 @@ public final class CustomBankInterface extends BankInterface {
 		}
 	}
 
-	private void sendDepositAll() {
-		for (int i = 0; i < mc.getInventoryItemCount(); i++) {
+	private void sendDepositAllInventory() {
+		for (int i = mc.getInventoryItemCount() - 1; i >= 0; i--) {
 			selectedInventorySlot = i;
 			sendDeposit(Integer.MAX_VALUE);
 		}
 	}
-
+	private void sendDepositAllEquipment() {
+		for (int i = Config.S_PLAYER_SLOT_COUNT - 1; i >= 0; i--) {
+			if (mc.equippedItems[i] != null)
+			{
+				mc.packetHandler.getClientStream().newPacket(173);
+				mc.packetHandler.getClientStream().writeBuffer1.putShort(mc.equippedItems[i].id);
+				mc.packetHandler.getClientStream().finishPacket();
+			}
+		}
+	}
 	public void sendWithdraw(int i) {
 		if (Config.S_WANT_CUSTOM_BANKS) {
 			mc.packetHandler.getClientStream().newPacket(22);
