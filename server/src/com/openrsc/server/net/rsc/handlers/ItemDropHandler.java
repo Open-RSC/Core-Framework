@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.container.Item;
@@ -26,14 +27,26 @@ public final class ItemDropHandler implements PacketHandler {
 			return;
 		}
 		player.resetAll();
-		final int idx = (int) p.readShort();
+		int idx = (int) p.readShort();
 		int amount = p.readInt();
 
-		if (idx < 0 || idx >= player.getInventory().size()) {
+		if (idx < -1 || idx >= player.getInventory().size()) {
 			player.setSuspiciousPlayer(true);
 			return;
 		}
-		final Item item = player.getInventory().get(idx);
+		Item tempitem = null;
+
+		//User wants to drop the item from equipment tab
+		if (idx == -1)
+		{
+			int realid = (int) p.readShort();
+			int slot = player.getEquipment().hasEquipped(realid);
+			if (slot != -1)
+				tempitem = player.getEquipment().list[slot];
+		} else {
+			tempitem = player.getInventory().get(idx);
+		}
+		final Item item = tempitem;
 
 		if (item == null) {
 			player.setSuspiciousPlayer(true);
@@ -47,7 +60,7 @@ public final class ItemDropHandler implements PacketHandler {
 			if (amount > item.getAmount()) {
 				amount = item.getAmount();
 			}
-		} else {
+		} else if (idx != -1){
 			if (amount > player.getInventory().countId(item.getID())) {
 				amount = player.getInventory().countId(item.getID());
 			}
@@ -70,42 +83,58 @@ public final class ItemDropHandler implements PacketHandler {
 				if (owner.finishedPath()) {
 					stop();
 					if (item.getDef().isStackable()) {
-						dropStackable(player, item, finalAmount);
+						dropStackable(player, item, finalAmount, idx != -1);
 					} else {
-						dropUnstackable(player, item, finalAmount);
+						dropUnstackable(player, item, finalAmount, idx != -1);
 					}
 				}
 			}
 		});
 
 	}
-
-	public void dropStackable(final Player player, final Item item, final int amount) {
+	private void dropStackable(final Player player, final Item item, final int amount) { this.dropStackable(player, item, amount, true);}
+	public void dropStackable(final Player player, final Item item, final int amount, boolean fromInventory) {
 		if (!item.getDef().isStackable()) {
 			throw new IllegalArgumentException("Item must be stackable when passed on to dropStackable()");
 		}
 
 		player.setStatus(Action.DROPPING_GITEM);
 
-		if (!player.getInventory().contains(item) || player.getStatus() != Action.DROPPING_GITEM) {
+		if ((!player.getInventory().contains(item) && fromInventory) || player.getStatus() != Action.DROPPING_GITEM) {
 			player.setStatus(Action.IDLE);
 			return;
 		}
 		if (PluginHandler.getPluginHandler().blockDefaultAction("Drop", new Object[]{player, item})) {
 			return;
 		}
-		if (player.getInventory().remove(item.getID(), amount) > -1) {
-			GroundItem groundItem = new GroundItem(item.getID(), player.getX(), player.getY(), amount,
-				player);
-			ActionSender.sendSound(player, "dropobject");
-			World.getWorld().registerItem(groundItem, 188000);
-			GameLogging.addQuery(new GenericLog(player.getUsername() + " dropped " + item.getDef().getName() + " x"
-				+ DataConversions.numberFormat(groundItem.getAmount()) + " at " + player.getLocation().toString()));
-			player.setStatus(Action.IDLE);
-		}
-	}
 
-	public void dropUnstackable(final Player player, final Item item, final int amount) {
+		if (fromInventory) {
+			if (player.getInventory().remove(item.getID(), amount) < 0) {
+				player.setStatus(Action.IDLE);
+				return;
+			}
+		} else {
+			int slot = player.getEquipment().hasEquipped(item.getID());
+			if (slot == -1 || player.getEquipment().list[slot].getAmount() != amount) {
+				player.setStatus(Action.IDLE);
+				return;
+			}
+			player.getEquipment().list[slot] = null;
+			ActionSender.sendEquipmentStats(player);
+			if (item.getDef().getWieldPosition() < 12)
+				player.updateWornItems(item.getDef().getWieldPosition(), player.getSettings().getAppearance().getSprite(item.getDef().getWieldPosition()));
+		}
+
+		GroundItem groundItem = new GroundItem(item.getID(), player.getX(), player.getY(), amount,
+			player);
+		ActionSender.sendSound(player, "dropobject");
+		World.getWorld().registerItem(groundItem, 188000);
+		GameLogging.addQuery(new GenericLog(player.getUsername() + " dropped " + item.getDef().getName() + " x"
+			+ DataConversions.numberFormat(groundItem.getAmount()) + " at " + player.getLocation().toString()));
+		player.setStatus(Action.IDLE);
+	}
+	public void dropUnstackable(final Player player, final Item item, final int amount) { this.dropStackable(player, item, amount, true); }
+	public void dropUnstackable(final Player player, final Item item, final int amount, boolean fromInventory) {
 		if (item.getDef().isStackable()) {
 			throw new IllegalArgumentException("Item must be unstackable when passed on to dropUnstackable()");
 		}
@@ -115,7 +144,7 @@ public final class ItemDropHandler implements PacketHandler {
 			int dropCount = 0;
 
 			public void run() {
-				if (!owner.getInventory().contains(item) || owner.getStatus() != Action.DROPPING_GITEM) {
+				if ((!owner.getInventory().contains(item) && fromInventory) || owner.getStatus() != Action.DROPPING_GITEM) {
 					matchRunning = false;
 					player.setStatus(Action.IDLE);
 					return;
@@ -130,7 +159,9 @@ public final class ItemDropHandler implements PacketHandler {
 					player.setStatus(Action.IDLE);
 					return;
 				}
-				if (!player.getInventory().hasItemId(item.getID())) {
+				int slot = 0;
+				if ((fromInventory && !player.getInventory().hasItemId(item.getID())) ||
+					(!fromInventory && (slot=player.getEquipment().hasEquipped(item.getID())) == -1)) {
 					player.message("You don't have the entered amount to drop");
 					matchRunning = false;
 					player.setStatus(Action.IDLE);
@@ -142,16 +173,25 @@ public final class ItemDropHandler implements PacketHandler {
 					player.setStatus(Action.IDLE);
 					return;
 				}
-				if (owner.getInventory().remove(item) > -1) {
-					GroundItem groundItem = new GroundItem(item.getID(), owner.getX(), owner.getY(), amount,
-						owner);
-					World.getWorld().registerItem(groundItem, 188000);
-					GameLogging.addQuery(new GenericLog(owner.getUsername() + " dropped " + item.getDef().getName()
-						+ " at " + owner.getLocation().toString()));
-					dropCount++;
-					if (amount > 1)
-						player.message("Dropped " + dropCount + "/" + amount);
+				if (fromInventory) {
+					if (owner.getInventory().remove(item) < 0) {
+						player.setStatus(Action.IDLE);
+						return;
+					}
+				} else {
+					player.getEquipment().list[slot] = null;
+					ActionSender.sendEquipmentStats(player);
+					player.updateWornItems(item.getDef().getWieldPosition(),
+						player.getSettings().getAppearance().getSprite(item.getDef().getWieldPosition()));
 				}
+				GroundItem groundItem = new GroundItem(item.getID(), owner.getX(), owner.getY(), amount,
+					owner);
+				World.getWorld().registerItem(groundItem, 188000);
+				GameLogging.addQuery(new GenericLog(owner.getUsername() + " dropped " + item.getDef().getName()
+					+ " at " + owner.getLocation().toString()));
+				dropCount++;
+				if (amount > 1)
+					player.message("Dropped " + dropCount + "/" + amount);
 
 			}
 		});

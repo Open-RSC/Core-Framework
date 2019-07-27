@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.GameStateUpdater;
 import com.openrsc.server.Server;
 import com.openrsc.server.content.clan.Clan;
@@ -291,7 +292,8 @@ public class ActionSender {
 	/**
 	 * Updates the equipment status
 	 */
-	public static void sendEquipmentStats(Player player) {
+	public static void sendEquipmentStats(Player player) { sendEquipmentStats(player, -1); }
+	public static void sendEquipmentStats(Player player, int slot) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_EQUIPMENT_STATS.opcode);
 		s.writeByte(player.getArmourPoints());
@@ -300,7 +302,15 @@ public class ActionSender {
 		s.writeByte(player.getMagicPoints());
 		s.writeByte(player.getPrayerPoints());
 		player.write(s.toPacket());
+
+		if (WANT_EQUIPMENT_TAB) {
+			if (slot == -1)
+				sendEquipment(player);
+			else
+				updateEquipmentSlot(player, slot);
+		}
 	}
+
 
 	/**
 	 * Sends fatigue
@@ -502,6 +512,7 @@ public class ActionSender {
 			LOGGER.info(PROPER_MAGIC_TREE_NAME + " 59");
 			LOGGER.info(WANT_RUNECRAFTING + " 60");
 			LOGGER.info(WANT_CUSTOM_LANDSCAPE + " 61");
+			LOGGER.info(WANT_EQUIPMENT_TAB + " 62");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs();
 		ConnectionAttachment attachment = new ConnectionAttachment();
@@ -579,7 +590,7 @@ public class ActionSender {
 		s.writeByte((byte) (PROPER_MAGIC_TREE_NAME ? 1 : 0)); // 59
 		s.writeByte((byte) (WANT_RUNECRAFTING ? 1 : 0)); //60
 		s.writeByte((byte) (WANT_CUSTOM_LANDSCAPE ? 1 : 0)); //61
-
+		s.writeByte((byte) (WANT_EQUIPMENT_TAB ? 1 : 0)); //62
 		return s;
 	}
 
@@ -627,6 +638,43 @@ public class ActionSender {
 		}
 		player.write(s.toPacket());
 	}
+
+	//Sends the player's equipment
+	public static void sendEquipment(Player player) {
+		if (player == null)
+			return;
+		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+		s.setID(Opcode.SEND_EQUIPMENT.opcode);
+		s.writeByte(player.getEquipment().equipCount());
+		for (Item item : player.getEquipment().list) {
+			if (item != null) {
+				s.writeByte(item.getDef().getWieldPosition());
+				s.writeShort(item.getID());
+				if (item.getDef().isStackable())
+					s.writeInt(item.getAmount());
+			}
+		}
+		player.write(s.toPacket());
+	}
+
+	public static void updateEquipmentSlot(Player player, int slot) {
+		if (player == null)
+			return;
+		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+		s.setID(Opcode.SEND_EQUIPMENT_UPDATE.opcode);
+		s.writeByte(slot);
+		Item item = player.getEquipment().list[slot];
+			if (item != null) {
+				s.writeShort(item.getID());
+				if (item.getDef().isStackable())
+					s.writeInt(item.getAmount());
+			} else {
+				s.writeShort(0xFFFF);
+			}
+		player.write(s.toPacket());
+	}
+
+
 
 	/**
 	 * Displays the login box and last IP and login date
@@ -1386,7 +1434,9 @@ public class ActionSender {
 		SEND_OPTIONS_MENU_OPEN(245),
 		SEND_BANK_UPDATE(249),
 		SEND_OPTIONS_MENU_CLOSE(252),
-		SEND_DUEL_OTHER_ACCEPTED(253);
+		SEND_DUEL_OTHER_ACCEPTED(253),
+		SEND_EQUIPMENT(254),
+		SEND_EQUIPMENT_UPDATE(255);
 
 		private int opcode;
 

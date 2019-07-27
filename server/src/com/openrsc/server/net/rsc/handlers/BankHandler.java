@@ -1,8 +1,10 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.container.Bank;
+import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
@@ -49,6 +51,9 @@ public final class BankHandler implements PacketHandler {
 		int packetOne = OpcodeIn.BANK_CLOSE.getOpcode();
 		int packetTwo = OpcodeIn.BANK_WITHDRAW.getOpcode();
 		int packetThree = OpcodeIn.BANK_DEPOSIT.getOpcode();
+		int packetFour = OpcodeIn.BANK_DEPOSIT_ALL_FROM_INVENTORY.getOpcode();
+		int packetFive = OpcodeIn.BANK_DEPOSIT_ALL_FROM_EQUIPMENT.getOpcode();
+
 		if (pID == packetOne) { // Close bank
 			player.resetBank();
 		} else if (pID == packetTwo) { // Withdraw item
@@ -129,63 +134,104 @@ public final class BankHandler implements PacketHandler {
 				return;
 			}
 
+			depositItem(player, itemID, amount, true);
 			// Services.lookup(DatabaseManager.class).addQuery(new
 			// GenericLog(player.getUsername() + " deposited item " + itemID +
 			// " amount " + amount));
 
-			if (EntityHandler.getItemDef(itemID).isStackable()) {
-				if (!player.getAttribute("swap_cert", false) || !isCert(itemID)) {
-					item = new Item(itemID, amount);
-					Item originalItem = null;
-					if (item.getDef().getOriginalItemID() != -1) {
-						originalItem = new Item(item.getDef().getOriginalItemID(), amount);
-						itemID = originalItem.getID();
-					}
-					if (bank.canHold(item) && inventory.remove(item) > -1) {
-						bank.add(originalItem != null ? originalItem : item);
-					} else {
-						player.message("You don't have room for that in your bank");
-					}
-				} else {
-					item = new Item(itemID, amount);
-					Item originalItem = null;
-					if (item.getDef().getOriginalItemID() != -1) {
-						originalItem = new Item(item.getDef().getOriginalItemID(), amount);
-						itemID = originalItem.getID();
-					}
-					Item removedItem = originalItem != null ? originalItem : item;
-					int uncertedID = uncertedID(removedItem.getID());
-					itemID = uncertedID;
-					Item uncertedItem = new Item(uncertedID, uncertedID == removedItem.getID() ? amount : amount * 5);
-					if (bank.canHold(uncertedItem) && inventory.remove(removedItem) > -1) {
-						bank.add(uncertedItem);
-					} else {
-						player.message("You don't have room for that in your bank");
-					}
-				}
 
+		} else if (pID == packetFour) {
+			//deposit all from inventory
+			for (int k = player.getInventory().size() - 1; k >= 0; k--) {
+				Item depoItem = player.getInventory().get(k);
+				if (PluginHandler.getPluginHandler().blockDefaultAction("Deposit",
+					new Object[]{player, depoItem.getID(), depoItem.getAmount()})) {
+					continue;
+				}
+				depositItem(player, depoItem.getID(), depoItem.getAmount(), false);
+			}
+			ActionSender.sendInventory(player);
+			ActionSender.showBank(player);
+		} else if (pID == packetFive && Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			//deposit all from equipment
+			for (int k = Equipment.slots - 1; k >= 0; k--) {
+				Item depoItem = player.getEquipment().list[k];
+				if (depoItem == null)
+					continue;
+				if (PluginHandler.getPluginHandler().blockDefaultAction("Deposit",
+					new Object[]{player, depoItem.getID(), depoItem.getAmount()})) {
+					continue;
+				}
+				if (PluginHandler.getPluginHandler().blockDefaultAction(
+					"UnWield", new Object[]{player, depoItem}))
+					return;
+				player.getBank().unwieldItem(depoItem, false);
+			}
+			ActionSender.sendInventory(player);
+			ActionSender.showBank(player);
+		}
+
+	}
+
+	private boolean depositItem(Player player, int itemID, int amount, boolean updatePlayer) {
+		Item item = null;
+		Bank bank = player.getBank();
+		Inventory inventory = player.getInventory();
+		if (EntityHandler.getItemDef(itemID).isStackable()) {
+			if (!player.getAttribute("swap_cert", false) || !isCert(itemID)) {
+				item = new Item(itemID, amount);
+				Item originalItem = null;
+				if (item.getDef().getOriginalItemID() != -1) {
+					originalItem = new Item(item.getDef().getOriginalItemID(), amount);
+					itemID = originalItem.getID();
+				}
+				if (bank.canHold(item) && inventory.remove(item, false) > -1) {
+					bank.add(originalItem != null ? originalItem : item);
+				} else {
+					player.message("You don't have room for that in your bank");
+					return false;
+				}
 			} else {
-				for (int i = 0; i < amount; i++) {
-					int idx = inventory.getLastIndexById(itemID);
-					item = inventory.get(idx);
-					if (item == null) { // This shouldn't happen
-						break;
-					}
-					if (bank.canHold(item) && inventory.remove(item.getID(), item.getAmount()) > -1) {
-						bank.add(item);
-					} else {
-						player.message("You don't have room for that in your bank");
-						break;
-					}
+				item = new Item(itemID, amount);
+				Item originalItem = null;
+				if (item.getDef().getOriginalItemID() != -1) {
+					originalItem = new Item(item.getDef().getOriginalItemID(), amount);
+					itemID = originalItem.getID();
+				}
+				Item removedItem = originalItem != null ? originalItem : item;
+				int uncertedID = uncertedID(removedItem.getID());
+				itemID = uncertedID;
+				Item uncertedItem = new Item(uncertedID, uncertedID == removedItem.getID() ? amount : amount * 5);
+				if (bank.canHold(uncertedItem) && inventory.remove(removedItem) > -1) {
+					bank.add(uncertedItem);
+				} else {
+					player.message("You don't have room for that in your bank");
+					return false;
 				}
 			}
-			slot = bank.getFirstIndexById(itemID);
-			if (slot > -1) {
-				ActionSender.sendInventory(player);
-				ActionSender.updateBankItem(player, slot, itemID,
-					bank.countId(itemID));
+
+		} else {
+			for (int i = 0; i < amount; i++) {
+				int idx = inventory.getLastIndexById(itemID);
+				item = inventory.get(idx);
+				if (item == null) { // This shouldn't happen
+					break;
+				}
+				if (bank.canHold(item) && inventory.remove(item.getID(), item.getAmount()) > -1) {
+					bank.add(item);
+				} else {
+					player.message("You don't have room for that in your bank");
+					break;
+				}
 			}
 		}
+		int slot = bank.getFirstIndexById(itemID);
+		if (updatePlayer && slot > -1) {
+			ActionSender.sendInventory(player);
+			ActionSender.updateBankItem(player, slot, itemID,
+				bank.countId(itemID));
+		}
+		return true;
 	}
 
 	private boolean isCert(int itemID) {

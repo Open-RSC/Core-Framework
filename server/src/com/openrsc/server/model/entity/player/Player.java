@@ -11,6 +11,7 @@ import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.event.rsc.impl.*;
+import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.model.Skills.SKILLS;
@@ -18,6 +19,7 @@ import com.openrsc.server.model.*;
 
 import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.container.Bank;
+import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -32,6 +34,7 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.net.rsc.PacketHandlerLookup;
+import com.openrsc.server.net.rsc.handlers.ItemDropHandler;
 import com.openrsc.server.net.rsc.handlers.Ping;
 import com.openrsc.server.net.rsc.handlers.WalkRequest;
 import com.openrsc.server.plugins.PluginHandler;
@@ -161,6 +164,9 @@ public final class Player extends Mob {
 	 * it is never changed during session.
 	 */
 	private AtomicReference<Inventory> inventory = new AtomicReference<Inventory>();
+
+	private AtomicReference<Equipment> equipment = new AtomicReference<Equipment>();
+
 	/**
 	 * Channel
 	 */
@@ -719,7 +725,76 @@ public final class Player extends Mob {
 		return false;
 	}
 
+	public void checkEquipment2() {
+		for (int slot = 0; slot < Equipment.slots; slot++) {
+			Item item = getEquipment().list[slot];
+			if (item == null)
+				continue;
+			int requiredLevel = item.getDef().getRequiredLevel();
+			int requiredSkillIndex = item.getDef().getRequiredSkillIndex();
+			String itemLower = item.getDef().getName().toLowerCase();
+			Optional<Integer> optionalLevel = Optional.empty();
+			Optional<Integer> optionalSkillIndex = Optional.empty();
+			boolean unWield = false;
+			boolean bypass = !Constants.GameServer.STRICT_CHECK_ALL &&
+				(itemLower.startsWith("poisoned") &&
+					((itemLower.endsWith("throwing dart") && !Constants.GameServer.STRICT_PDART_CHECK) ||
+						(itemLower.endsWith("throwing knife") && !Constants.GameServer.STRICT_PKNIFE_CHECK) ||
+						(itemLower.endsWith("spear") && !Constants.GameServer.STRICT_PSPEAR_CHECK))
+				);
+			if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
+				optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
+				optionalSkillIndex = Optional.of(SKILLS.ATTACK.id());
+			}
+			//staff of iban (usable)
+			if (item.getID() == ItemId.STAFF_OF_IBAN.id()) {
+				optionalLevel = Optional.of(requiredLevel);
+				optionalSkillIndex = Optional.of(SKILLS.ATTACK.id());
+			}
+			//battlestaves (incl. enchanted version)
+			if (itemLower.contains("battlestaff")) {
+				optionalLevel = Optional.of(requiredLevel);
+				optionalSkillIndex = Optional.of(SKILLS.ATTACK.id());
+			}
+
+			if (getSkills().getMaxStat(requiredSkillIndex) < requiredLevel) {
+				if (!bypass) {
+					message("You are not a high enough level to use this item");
+					message("You need to have a " + Skills.getSkillName(requiredSkillIndex) + " level of " + requiredLevel);
+					unWield = true;
+				}
+			}
+			if (optionalSkillIndex.isPresent() && getSkills().getMaxStat(optionalSkillIndex.get()) < optionalLevel.get()) {
+				if (!bypass) {
+					message("You are not a high enough level to use this item");
+					message("You need to have a " + Skills.getSkillName(optionalSkillIndex.get()) + " level of " + optionalLevel.get());
+					unWield = true;
+				}
+			}
+
+			if (unWield) {
+				getInventory().unwieldItem(item, false);
+				//check to make sure their item was actually unequipped.
+				//it might not have if they have a full inventory.
+				if (getEquipment().list[slot] != null)
+				{
+					ItemDropHandler doit = new ItemDropHandler();
+					if (item.getDef().isStackable())
+						doit.dropStackable(this,item,item.getAmount(),false);
+					else
+						doit.dropUnstackable(this, item,1, false);
+				}
+			}
+
+		}
+		ActionSender.sendEquipmentStats(this);
+	}
+
 	public void checkEquipment() {
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			checkEquipment2();
+			return;
+		}
 		ListIterator<Item> iterator = getInventory().iterator();
 		for (int slot = 0; iterator.hasNext(); slot++) {
 			Item item = iterator.next();
@@ -783,6 +858,10 @@ public final class Player extends Mob {
 
 	public void setBankSize(int size) {
 		this.bankSize = size;
+	}
+
+	public int getFreeBankSlots() {
+		return bankSize - getBank().size();
 	}
 
 	public Bank getBank() {
@@ -922,8 +1001,17 @@ public final class Player extends Mob {
 		return inventory.get();
 	}
 
+	public Equipment getEquipment() {
+		return equipment.get();
+	}
+
+
 	public void setInventory(Inventory i) {
 		inventory.set(i);
+	}
+
+	public void setEquipment(Equipment e) {
+		equipment.set(e);
 	}
 
 	public String getLastIP() {
@@ -948,9 +1036,13 @@ public final class Player extends Mob {
 
 	public int getMagicPoints() {
 		int points = 1;
-		for (Item item : getInventory().getItems()) {
-			if (item.isWielded()) {
-				points += item.getDef().getMagicBonus();
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			points = getEquipment().getMagic();
+		} else {
+			for (Item item : getInventory().getItems()) {
+				if (item.isWielded()) {
+					points += item.getDef().getMagicBonus();
+				}
 			}
 		}
 		return points < 1 ? 1 : points;
@@ -1008,11 +1100,16 @@ public final class Player extends Mob {
 
 	public int getPrayerPoints() {
 		int points = 1;
-		for (Item item : getInventory().getItems()) {
-			if (item.isWielded()) {
-				points += item.getDef().getPrayerBonus();
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			points = getEquipment().getPrayer();
+		} else {
+			for (Item item : getInventory().getItems()) {
+				if (item.isWielded()) {
+					points += item.getDef().getPrayerBonus();
+				}
 			}
 		}
+
 		return points < 1 ? 1 : points;
 	}
 
@@ -1052,21 +1149,40 @@ public final class Player extends Mob {
 	}
 
 	public int getRangeEquip() {
-		for (Item item : getInventory().getItems()) {
-			if (item.isWielded() && (DataConversions.inArray(Formulae.bowIDs, item.getID())
-				|| DataConversions.inArray(Formulae.xbowIDs, item.getID()))) {
-				return item.getID();
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB)
+		{
+			for (Item item : getEquipment().list) {
+				if (item != null && (DataConversions.inArray(Formulae.bowIDs, item.getID())
+					|| DataConversions.inArray(Formulae.xbowIDs, item.getID()))) {
+					return item.getID();
+				}
+			}
+		} else {
+			for (Item item : getInventory().getItems()) {
+				if (item.isWielded() && (DataConversions.inArray(Formulae.bowIDs, item.getID())
+					|| DataConversions.inArray(Formulae.xbowIDs, item.getID()))) {
+					return item.getID();
+				}
 			}
 		}
 		return -1;
 	}
 
 	public int getThrowingEquip() {
-		for (Item item : getInventory().getItems()) {
-			if (item.isWielded() && (DataConversions.inArray(Formulae.throwingIDs, getEquippedWeaponID()) && item.getDef().getWieldPosition() == 4)) {
-				return item.getID();
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB){
+			for (Item item : getEquipment().list) {
+				if (item != null && DataConversions.inArray(Formulae.throwingIDs, item.getID())) {
+					return item.getID();
+				}
+			}
+		} else {
+			for (Item item : getInventory().getItems()) {
+				if (item.isWielded() && (DataConversions.inArray(Formulae.throwingIDs, getEquippedWeaponID()) && item.getDef().getWieldPosition() == 4)) {
+					return item.getID();
+				}
 			}
 		}
+
 		return -1;
 	}
 
@@ -1185,32 +1301,48 @@ public final class Player extends Mob {
 	@Override
 	public int getArmourPoints() {
 		int points = 1;
-		for (Item item : getInventory().getItems()) {
-			if (item.isWielded()) {
-				points += item.getDef().getArmourBonus();
+		if (!Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			for (Item item : getInventory().getItems()) {
+				if (item.isWielded()) {
+					points += item.getDef().getArmourBonus();
+				}
 			}
+		} else {
+			points = getEquipment().getArmour();
 		}
+
 		return points < 1 ? 1 : points;
 	}
 
 	@Override
 	public int getWeaponAimPoints() {
 		int points = 1;
-		for (Item item : getInventory().getItems()) {
-			if (item.isWielded()) {
-				points += item.getDef().getWeaponAimBonus();
+		if (!Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			for (Item item : getInventory().getItems()) {
+				if (item.isWielded()) {
+					points += item.getDef().getWeaponAimBonus();
+				}
 			}
+		} else
+		{
+			points = this.getEquipment().getWeaponAim();
 		}
+
+
 		return points < 1 ? 1 : points;
 	}
 
 	@Override
 	public int getWeaponPowerPoints() {
 		int points = 1;
-		for (Item item : getInventory().getItems()) {
-			if (item.isWielded()) {
-				points += item.getDef().getWeaponPowerBonus();
+		if (!Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			for (Item item : getInventory().getItems()) {
+				if (item.isWielded()) {
+					points += item.getDef().getWeaponPowerBonus();
+				}
 			}
+		} else {
+			points = this.getEquipment().getWeaponPower();
 		}
 		return points < 1 ? 1 : points;
 	}
@@ -1617,9 +1749,15 @@ public final class Player extends Mob {
 	}
 
 	private int getEquippedWeaponID() {
-		for (Item i : getInventory().getItems()) {
-			if (i.isWielded() && (i.getDef().getWieldPosition() == 4))
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			Item i = getEquipment().list[4];
+			if (i != null)
 				return i.getID();
+		} else {
+			for (Item i : getInventory().getItems()) {
+				if (i.isWielded() && (i.getDef().getWieldPosition() == 4))
+					return i.getID();
+			}
 		}
 		return -1;
 	}
@@ -1764,17 +1902,23 @@ public final class Player extends Mob {
 	}
 
 	public void resetAll() {
-		resetAllExceptTradeOrDuel();
+		resetAllExceptTradeOrDuel(true);
+		getTrade().resetAll();
+		getDuel().resetAll();
+	}
+
+	public void resetAllExceptBank() {
+		resetAllExceptTradeOrDuel(false);
 		getTrade().resetAll();
 		getDuel().resetAll();
 	}
 
 	public void resetAllExceptDueling() {
-		resetAllExceptTradeOrDuel();
+		resetAllExceptTradeOrDuel(true);
 		getTrade().resetAll();
 	}
 
-	private void resetAllExceptTradeOrDuel() {
+	private void resetAllExceptTradeOrDuel(boolean resetBank) {
 		resetCannonEvent();
 		setAttribute("bank_pin_entered", "cancel");
 		setWalkToAction(null);
@@ -1784,7 +1928,7 @@ public final class Player extends Mob {
 		if (getMenuHandler() != null) {
 			resetMenuHandler();
 		}
-		if (accessingBank()) {
+		if (accessingBank() && resetBank) {
 			resetBank();
 		}
 		if (accessingShop()) {
@@ -1801,7 +1945,7 @@ public final class Player extends Mob {
 	}
 
 	public void resetAllExceptTrading() {
-		resetAllExceptTradeOrDuel();
+		resetAllExceptTradeOrDuel(true);
 		getDuel().resetAll();
 	}
 
@@ -2085,8 +2229,12 @@ public final class Player extends Mob {
 	}
 
 	public void updateWornItems(int index, int id) {
-		wornItems[index] = id;
-		getUpdateFlags().setAppearanceChanged(true);
+		//Don't need to show arrows or rings
+		if (index <= 11)
+		{
+			wornItems[index] = id;
+			getUpdateFlags().setAppearanceChanged(true);
+		}
 	}
 
 	private Queue<PrivateMessage> getPrivateMessageQueue() {

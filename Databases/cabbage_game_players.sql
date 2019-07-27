@@ -257,6 +257,15 @@ CREATE TABLE IF NOT EXISTS `openrsc_invitems` (
   PRIMARY KEY (`dbid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `openrsc_equipped`;
+CREATE TABLE IF NOT EXISTS `openrsc_equipped` (
+  `playerID` int(10) UNSIGNED NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
+  `amount` int(10) UNSIGNED NOT NULL DEFAULT 1,
+  `dbid` int(10) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`dbid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `openrsc_live_feeds`;
 CREATE TABLE IF NOT EXISTS `openrsc_live_feeds` (
   `id` int(10) NOT NULL AUTO_INCREMENT,

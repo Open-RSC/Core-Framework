@@ -75,16 +75,25 @@ public class SpellHandler implements PacketHandler {
 	public static boolean checkAndRemoveRunes(Player player, SpellDef spell) {
 		for (Entry<Integer, Integer> e : spell.getRunesRequired()) {
 			boolean skipRune = false;
-			for (Item staff : getStaffs(e.getKey())) {
-				if (player.getInventory().contains(staff)) {
-					for (Item item : player.getInventory().getItems()) {
-						if (item.equals(staff) && item.isWielded()) {
-							skipRune = true;
-							break;
+			if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+				for (Item staff : getStaffs(e.getKey())) {
+					if (player.getEquipment().hasEquipped(staff.getID()) != -1) {
+						skipRune = true;
+					}
+				}
+			} else {
+				for (Item staff : getStaffs(e.getKey())) {
+					if (player.getInventory().contains(staff)) {
+						for (Item item : player.getInventory().getItems()) {
+							if (item.equals(staff) && item.isWielded()) {
+								skipRune = true;
+								break;
+							}
 						}
 					}
 				}
 			}
+
 			if (skipRune) {
 				continue;
 			}
@@ -93,7 +102,9 @@ public class SpellHandler implements PacketHandler {
 				player.message("You don't have all the reagents you need for this spell");
 				return false;
 			}
+			player.getInventory().remove(e.getKey(), e.getValue());
 		}
+		/*
 		for (Entry<Integer, Integer> e : spell.getRunesRequired()) {
 			boolean skipRune = false;
 			for (Item staff : getStaffs(e.getKey())) {
@@ -111,6 +122,10 @@ public class SpellHandler implements PacketHandler {
 			}
 			player.getInventory().remove(e.getKey(), e.getValue());
 		}
+
+		 */
+
+
 		return true;
 	}
 

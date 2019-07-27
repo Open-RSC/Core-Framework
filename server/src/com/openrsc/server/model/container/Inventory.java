@@ -2,6 +2,7 @@ package com.openrsc.server.model.container;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.content.achievement.AchievementSystem;
+import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.Gauntlets;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Skills.SKILLS;
@@ -12,6 +13,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.DeathLog;
 import com.openrsc.server.sql.query.logs.GenericLog;
@@ -106,9 +108,10 @@ public class Inventory {
 	}
 
 	public boolean contains(Item i) {
-		synchronized (list) {
-			return list.contains(i);
-		}
+		//synchronized (list) {
+		//	return list.contains(i);
+		//}
+		return hasItemId(i.getID());
 	}
 
 	public int countId(long id) {
@@ -200,6 +203,16 @@ public class Inventory {
 			}
 		}
 
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB && EntityHandler.getItemDef(id).isWieldable()) {
+			for (Item i : player.getEquipment().list)
+			{
+				if (i == null)
+					continue;
+				if (i.getID() == id)
+					return true;
+			}
+		}
+
 		return false;
 	}
 
@@ -240,10 +253,10 @@ public class Inventory {
 						// Exact amount, remove all.
 						if (i.isWielded()) {
 							unwieldItem(i, false);
-							ActionSender.sendEquipmentStats(player);
+							//ActionSender.sendEquipmentStats(player);
 						}
 						iterator.remove();
-						ActionSender.sendRemoveItem(player, index);
+						//ActionSender.sendRemoveItem(player, index);
 					}
 
 					/* Non-stack items */
@@ -251,10 +264,10 @@ public class Inventory {
 						// Remove 1.
 						if (i.isWielded()) {
 							unwieldItem(i, false);
-							ActionSender.sendEquipmentStats(player);
+							//ActionSender.sendEquipmentStats(player);
 						}
 						iterator.remove();
-						ActionSender.sendRemoveItem(player, index);
+						//ActionSender.sendRemoveItem(player, index);
 
 						amount -= 1;
 						if (amount > 0)
@@ -274,10 +287,13 @@ public class Inventory {
 		return remove(id, amount, true);
 	}
 
+	public int remove(Item item, boolean updatePlayer) {
+		return remove(item.getID(), item.getAmount(), updatePlayer);
+	}
+
 	public int remove(Item item) {
 		return remove(item.getID(), item.getAmount(), true);
 	}
-
 	public int size() {
 		synchronized (list) {
 			return list.size();
@@ -291,10 +307,15 @@ public class Inventory {
 	}
 
 	public boolean wielding(int id) {
-		synchronized (list) {
-			for (Item i : list) {
-				if (i.getID() == id && i.isWielded()) {
-					return true;
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			if (player.getEquipment().hasEquipped(id) != -1)
+				return true;
+		} else {
+			synchronized (list) {
+				for (Item i : list) {
+					if (i.getID() == id && i.isWielded()) {
+						return true;
+					}
 				}
 			}
 		}
@@ -371,9 +392,21 @@ public class Inventory {
 		return true;
 	}
 
-	public void unwieldItem(Item affectedItem, boolean sound) {
-		if (affectedItem == null || !affectedItem.isWieldable() || !getItems().contains(affectedItem)) {
-			return;
+	public boolean unwieldItem(Item affectedItem, boolean sound) {
+
+		if (affectedItem == null || !affectedItem.isWieldable()) {
+			return false;
+		}
+
+		//If inventory doesn't have the item
+		if (!Functions.isWielding(player, affectedItem.getID())) {
+			return false;
+		}
+
+		//Can't unequip something if inventory is full
+		if (player.getInventory().full() && Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			player.message("You need more inventory space to unequip that.");
+			return false;
 		}
 
 		affectedItem.setWielded(false);
@@ -383,8 +416,15 @@ public class Inventory {
 		player.updateWornItems(affectedItem.getDef().getWieldPosition(),
 			player.getSettings().getAppearance().getSprite(affectedItem.getDef().getWieldPosition()));
 
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			if (player.getEquipment().hasEquipped(affectedItem.getID()) != -1) {
+				player.getEquipment().list[affectedItem.getDef().getWieldPosition()] = null;
+				add(affectedItem, false);
+			}
+		}
 		ActionSender.sendInventory(player);
-		ActionSender.sendEquipmentStats(player);
+		ActionSender.sendEquipmentStats(player, affectedItem.getDef().getWieldPosition());
+		return true;
 	}
 
 	public void wieldItem(Item item, boolean sound) {
@@ -507,20 +547,64 @@ public class Inventory {
 		if (!ableToWield)
 			return;
 
-		ArrayList<Item> items = getItems();
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			//Do an inventory count check
+			int count = 0;
+			for (Item i: player.getEquipment().list){
+				if (i!=null && item.wieldingAffectsItem(i)) {
+					if (item.getDef().isStackable()) {
+						if (item.getID() == i.getID())
+							continue;
+					}
+					count++;
+				}
+			}
+			if (player.getInventory().getFreeSlots() - count + 1 < 0) {
+				player.message("You need more inventory space to equip that.");
+				return;
+			}
 
-		for (Item i : items) {
-			if (item.wieldingAffectsItem(i) && i.isWielded()) {
-				unwieldItem(i, false);
+			player.getInventory().remove(item);
+			for (Item i : player.getEquipment().list)
+			{
+				if (i != null && item.wieldingAffectsItem(i)) {
+					if (item.getDef().isStackable()) {
+						if (item.getID() == i.getID())
+						{
+							i.setAmount(i.getAmount() + item.getAmount());
+							ActionSender.updateEquipmentSlot(player, i.getDef().getWieldPosition());
+							return;
+						}
+					}
+					unwieldItem(i, false);
+				}
+
+			}
+
+			//Check requirements for ammo/bow compatibility here??
+		} else {
+			ArrayList<Item> items = getItems();
+
+			for (Item i : items) {
+				if (item.wieldingAffectsItem(i) && i.isWielded()) {
+					unwieldItem(i, false);
+				}
 			}
 		}
-		item.setWielded(true);
+
 		if (sound)
 			player.playSound("click");
+
+		item.setWielded(true);
 		player.updateWornItems(item.getDef().getWieldPosition(), item.getDef().getAppearanceId());
 
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			item.setWielded(false);
+			player.getEquipment().list[item.getDef().getWieldPosition()] = item;
+		}
+
 		ActionSender.sendInventory(player);
-		ActionSender.sendEquipmentStats(player);
+		ActionSender.sendEquipmentStats(player, item.getDef().getWieldPosition());
 	}
 
 	public void dropOnDeath(Mob opponent) {
