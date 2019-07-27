@@ -1,6 +1,7 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
@@ -35,6 +36,10 @@ public final class ItemUseOnItem implements PacketHandler {
 			return;
 		}
 
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB && (itemIndex1 > Inventory.MAX_SIZE || itemIndex2 > Inventory.MAX_SIZE)) {
+			player.message("Please unequip your item and try again.");
+			return;
+		}
 		if (item1.getDef().isMembersOnly() || item2.getDef().isMembersOnly()) {
 			if (!Constants.GameServer.MEMBER_WORLD) {
 				player.sendMemberErrorMessage();

@@ -15,6 +15,7 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
+import static com.openrsc.server.plugins.Functions.hasItem;
 import static com.openrsc.server.plugins.Functions.showBubble;
 
 public class Woodcutting implements ObjectActionListener,
@@ -57,7 +58,7 @@ public class Woodcutting implements ObjectActionListener,
 		}
 		int axeId = -1;
 		for (final int a : Formulae.woodcuttingAxeIDs) {
-			if (owner.getInventory().countId(a) > 0) {
+			if (hasItem(owner,a)) {
 				axeId = a;
 				break;
 			}

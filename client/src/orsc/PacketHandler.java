@@ -1,6 +1,7 @@
 package orsc;
 
 import com.openrsc.client.entityhandling.EntityHandler;
+import com.openrsc.client.entityhandling.defs.ItemDef;
 import com.openrsc.client.model.Sprite;
 
 import java.io.ByteArrayInputStream;
@@ -192,6 +193,11 @@ public class PacketHandler {
 				// Inventory items
 			else if (opcode == 53) updateInventoryItems();
 
+				//All Equipment sent
+			else if (opcode == 254) updateEquipment();
+
+			//Only update one slot
+			else if (opcode == 255) updateEquipmentSlot();
 				// Show Walls
 			else if (opcode == 91) showWalls(length);
 
@@ -744,7 +750,7 @@ public class PacketHandler {
 		int wantDropX, wantExpInfo, wantWoodcuttingGuild, wantFixedOverheadChat, wantPets, showUnidentifiedHerbNames;
 		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank, wantPlayerCommands;
 		int getFPS, wantEmail, wantRegistrationLimit, allowResize, lenientContactDetails, wantFatigue, wantCustomSprites;
-		int fishingSpotsDepletable, properMagicTreeName, wantRunecrafting, wantCustomLandscape;
+		int fishingSpotsDepletable, properMagicTreeName, wantRunecrafting, wantCustomLandscape, wantEquipmentTab;
 		String logoSpriteID;
 
 		if (!mc.gotInitialConfigs) {
@@ -809,6 +815,7 @@ public class PacketHandler {
 			properMagicTreeName = this.getClientStream().getUnsignedByte(); //59
 			wantRunecrafting = this.getClientStream().getUnsignedByte(); //60
 			wantCustomLandscape = this.getClientStream().getUnsignedByte(); //61
+			wantEquipmentTab = this.getClientStream().getUnsignedByte(); //62
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -871,6 +878,7 @@ public class PacketHandler {
 			properMagicTreeName = packetsIncoming.getUnsignedByte(); //59
 			wantRunecrafting = packetsIncoming.getUnsignedByte(); //60
 			wantCustomLandscape = packetsIncoming.getUnsignedByte(); //61
+			wantEquipmentTab = packetsIncoming.getUnsignedByte(); //62
 		}
 
 		if (Config.DEBUG) {
@@ -935,7 +943,8 @@ public class PacketHandler {
 					"\nS_FISHING_SPOTS_DEPLETABLE " + fishingSpotsDepletable + // 58
 					"\nS_PROPER_MAGIC_TREE_NAME  " + properMagicTreeName +// 59
 					"\nS_WANT_RUNECRAFTING  "   + wantRunecrafting +// 60
-					"\nS_WANT_CUSTOM_LANDSCAPE  "   + wantCustomLandscape// 61
+					"\nS_WANT_CUSTOM_LANDSCAPE  "   + wantCustomLandscape +// 61
+					"\nS_WANT_EQUIPMENT_TAB  "   + wantEquipmentTab// 61
 			);
 		}
 
@@ -1002,6 +1011,7 @@ public class PacketHandler {
 		props.setProperty("S_PROPER_MAGIC_TREE_NAME", properMagicTreeName == 1 ? "true" : "false"); //59
 		props.setProperty("S_WANT_RUNECRAFTING", wantRunecrafting == 1 ? "true" : "false"); //60
 		props.setProperty("S_WANT_CUSTOM_LANDSCAPE", wantCustomLandscape == 1 ? "true" : "false"); //61
+		props.setProperty("S_WANT_EQUIPMENT_TAB", wantEquipmentTab == 1 ? "true" : "false"); //62
 
 		Config.updateServerConfiguration(props);
 
@@ -1229,6 +1239,64 @@ public class PacketHandler {
 			}
 		}
 	}
+	private void updateEquipmentSlot() {
+		int slot = packetsIncoming.getByte();
+		int id = packetsIncoming.getShort();
+		if (slot == 5)
+			slot = 0;
+		else if (slot == 6)
+			slot = 1;
+		else if (slot == 7)
+			slot = 2;
+		else if (slot > 7)
+			slot -= 3;
+		int amount = 1;
+		if (id == 0xFFFF) {
+			mc.equippedItems[slot] = null;
+			mc.equippedItemAmount[slot] = 0;
+		} else {
+			ItemDef item = EntityHandler.getItemDef(id);
+			if (item == null)
+				return;
+			if (item.isStackable())
+				amount = packetsIncoming.get32();
+			mc.equippedItems[slot] = item;
+			mc.equippedItemAmount[slot] = amount;
+		}
+
+	}
+
+	private void updateEquipment() {
+		int equipCount = packetsIncoming.getUnsignedByte();
+
+		int equipslot = 0;
+		int itemID = 0;
+
+		for (int i = 0; i < Config.S_PLAYER_SLOT_COUNT; i++)
+		{
+			mc.equippedItems[i] = null;
+			mc.equippedItemAmount[i] = 0;
+		}
+
+		for (int i = 0; i < equipCount; i++) {
+			equipslot = packetsIncoming.getByte();
+			itemID = packetsIncoming.getShort();
+			if (equipslot == 5)
+				equipslot = 0;
+			else if (equipslot == 6)
+				equipslot = 1;
+			else if (equipslot == 7)
+				equipslot = 2;
+			else if (equipslot > 7)
+				equipslot -= 3;
+			mc.equippedItems[equipslot] = EntityHandler.getItemDef(itemID);
+			if (mc.equippedItems[equipslot].isStackable())
+				mc.equippedItemAmount[equipslot] = packetsIncoming.get32();
+			else
+				mc.equippedItemAmount[equipslot] = 1;
+		}
+	}
+
 
 	private void showWalls(int length) {
 		while (length > packetsIncoming.packetEnd) {

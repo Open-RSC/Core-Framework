@@ -21,6 +21,7 @@ import com.openrsc.server.external.NPCDef;
 import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
@@ -831,6 +832,15 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
+			if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+				for (int i = 0; i < Equipment.slots; i++) {
+					if (p.getEquipment().list[i] == null)
+						continue;
+					p.getEquipment().list[i] = null;
+					p.updateWornItems(i, p.getSettings().getAppearance().getSprite(i));
+				}
+			}
+
 			for (Item i : p.getInventory().getItems()) {
 				if (p.getInventory().get(i).isWielded()) {
 					p.getInventory().get(i).setWielded(false);
@@ -840,6 +850,7 @@ public final class Admins implements CommandListener {
 				p.getInventory().remove(i);
 			}
 
+			ActionSender.sendEquipmentStats(p);
 			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "Your inventory has been wiped by an admin");
 			}

@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.rsc.impl.combat.CombatEvent;
 import com.openrsc.server.model.PathValidation;
@@ -181,26 +182,59 @@ public class PlayerDuelHandler implements PacketHandler {
 				affectedPlayer.setBusy(true);
 				affectedPlayer.setStatus(Action.DUELING_PLAYER);
 
+				//				player.getDuel().resetAll();
+				//
+				//				return;
 				if (player.getDuel().getDuelSetting(3)) {
-					for (Item item : player.getInventory().getItems()) {
-						if (item.isWielded()) {
-							player.getInventory().unwieldItem(item, false);
+					if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+						for (Item item : player.getEquipment().list)
+						{
+							if (item != null)
+								if (!player.getInventory().unwieldItem(item,false)) {
+									player.getDuel().resetAll();
+									player.setBusy(false);
+									player.setStatus(Action.IDLE);
+									affectedPlayer.setBusy(false);
+									affectedPlayer.setStatus(Action.IDLE);
+									player.message("Your inventory is full and you can't unequip your items. Cancelling duel.");
+									affectedPlayer.message("Your opponent needs to clear his inventory. Cancelling duel.");
+									return;
+								}
 						}
-					}
-					ActionSender.sendSound(player, "click");
-					ActionSender.sendInventory(player);
-					ActionSender.sendEquipmentStats(player);
-
-					for (Item item : affectedPlayer.getInventory().getItems()) {
-						if (item.isWielded()) {
-							item.setWielded(false);
-							affectedPlayer.getInventory().unwieldItem(item, false);
+						for (Item item : affectedPlayer.getEquipment().list)
+						{
+							if (item != null)
+								if (!affectedPlayer.getInventory().unwieldItem(item,false)) {
+									affectedPlayer.getDuel().resetAll();
+									player.setBusy(false);
+									player.setStatus(Action.IDLE);
+									affectedPlayer.setBusy(false);
+									affectedPlayer.setStatus(Action.IDLE);
+									affectedPlayer.message("Your inventory is full and you can't unequip your items. Cancelling duel.");
+									player.message("Your opponent needs to clear his inventory. Cancelling duel.");
+									return;
+								}
 						}
-					}
-					ActionSender.sendSound(affectedPlayer, "click");
-					ActionSender.sendInventory(affectedPlayer);
-					ActionSender.sendEquipmentStats(affectedPlayer);
+					} else {
+						for (Item item : player.getInventory().getItems()) {
+							if (item.isWielded()) {
+								player.getInventory().unwieldItem(item, false);
+							}
+						}
+						ActionSender.sendSound(player, "click");
+						ActionSender.sendInventory(player);
+						ActionSender.sendEquipmentStats(player);
 
+						for (Item item : affectedPlayer.getInventory().getItems()) {
+							if (item.isWielded()) {
+								item.setWielded(false);
+								affectedPlayer.getInventory().unwieldItem(item, false);
+							}
+						}
+						ActionSender.sendSound(affectedPlayer, "click");
+						ActionSender.sendInventory(affectedPlayer);
+						ActionSender.sendEquipmentStats(affectedPlayer);
+					}
 				}
 
 				if (player.getDuel().getDuelSetting(2)) {

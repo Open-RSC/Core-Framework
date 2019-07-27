@@ -2,6 +2,7 @@ package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.action.WalkToMobAction;
+import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -26,7 +27,12 @@ public class ItemUseOnNpc implements PacketHandler {
 		player.resetAll();
 		int npcIndex = p.readShort();
 		final Npc affectedNpc = world.getNpc(npcIndex);
-		final Item item = player.getInventory().get(p.readShort());
+		int itemID = p.readShort();
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB && itemID > Inventory.MAX_SIZE) {
+			player.message("Please unequip your item and try again.");
+			return;
+		}
+		final Item item = player.getInventory().get(itemID);
 		if (affectedNpc == null || item == null) {
 			return;
 		}
