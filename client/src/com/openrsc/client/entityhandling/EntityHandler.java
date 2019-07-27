@@ -4564,8 +4564,23 @@ public class EntityHandler {
 		 */
 
 		if (Config.S_WANT_CUSTOM_SPRITES) {
-			animations.add(new AnimationDef("hatchet", 0, 0, true, false, 0)); // 231 appearanceID.
-			animations.add(new AnimationDef("fullhelm", 11189164, 0, true, false, 0));
+			animations.add(new AnimationDef("hatchet", 16737817, 0, true, false, 0)); //230
+			animations.add(new AnimationDef("hatchet", 15654365, 0, true, false, 0));
+			animations.add(new AnimationDef("hatchet", 15658734, 0, true, false, 0));
+			animations.add(new AnimationDef("hatchet", 10072780, 0, true, false, 0));
+			animations.add(new AnimationDef("hatchet", 11717785, 0, true, false, 0));
+			animations.add(new AnimationDef("hatchet", 65535, 0, true, false, 0));
+			animations.add(new AnimationDef("hatchet", 3158064, 0, true, false, 0));
+			animations.add(new AnimationDef("kiteshield", 0xBB4B12, 0, true, false, 0)); //237
+			animations.add(new AnimationDef("kiteshield", 0xAFA2A2, 0, true, false, 0));
+			animations.add(new AnimationDef("kiteshield", 0xAFAFAF, 0, true, false, 0));
+			animations.add(new AnimationDef("kiteshield", 0x708396, 0, true, false, 0));
+			animations.add(new AnimationDef("kiteshield", 0x839670, 0, true, false, 0));
+			animations.add(new AnimationDef("kiteshield", 48059, 0, true, false, 0));
+			animations.add(new AnimationDef("kiteshield", 0x232323, 0, true, false, 0));
+			animations.add(new AnimationDef("dragonshield", 0, 0, true, false, 0)); //244
+			animations.add(new AnimationDef("dragonmedhelm", 0, 0, true, false, 0)); //245
+			/*animations.add(new AnimationDef("fullhelm", 11189164, 0, true, false, 0));
 			animations.add(new AnimationDef("platemailtop", 11189164, 0, true, false, 0));
 			animations.add(new AnimationDef("platemaillegs", 11189164, 0, true, false, 0));
 			animations.add(new AnimationDef("fullhelm", 16768685, 0, true, false, 0));
@@ -4573,7 +4588,7 @@ public class EntityHandler {
 			animations.add(new AnimationDef("platemaillegs", 16768685, 0, true, false, 0));
 			animations.add(new AnimationDef("fullhelm", 10027084, 0, true, false, 0));
 			animations.add(new AnimationDef("platemailtop", 10027084, 0, true, false, 0));
-			animations.add(new AnimationDef("platemaillegs", 10027084, 0, true, false, 0));
+			*/
 		}
 	}
 

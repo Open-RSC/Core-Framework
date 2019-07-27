@@ -274,16 +274,22 @@ public final class AvatarGenerator {
 				/**
 				 * Add custom animation below.
 				*/
-				new AnimationDef("hatchet", 0, 0, true, false, 0), // 231 appearanceID.
-				new AnimationDef("fullhelm", 11189164, 0, true, false, 0),
-				new AnimationDef("platemailtop", 11189164, 0, true, false, 0),
-				new AnimationDef("platemaillegs", 11189164, 0, true, false, 0),
-				new AnimationDef("fullhelm", 16768685, 0, true, false, 0),
-				new AnimationDef("platemailtop", 16768685, 0, true, false, 0),
-				new AnimationDef("platemaillegs", 16768685, 0, true, false, 0),
-				new AnimationDef("fullhelm", 10027084, 0, true, false, 0),
-				new AnimationDef("platemailtop", 10027084, 0, true, false, 0),
-				new AnimationDef("platemaillegs", 10027084, 0, true, false, 0),
+				new AnimationDef("hatchet", 16737817, 0, true, false, 0), //230
+			new AnimationDef("hatchet", 15654365, 0, true, false, 0),
+			new AnimationDef("hatchet", 15658734, 0, true, false, 0),
+			new AnimationDef("hatchet", 10072780, 0, true, false, 0),
+			new AnimationDef("hatchet", 11717785, 0, true, false, 0),
+			new AnimationDef("hatchet", 65535, 0, true, false, 0),
+			new AnimationDef("hatchet", 3158064, 0, true, false, 0),
+			new AnimationDef("kiteshield", 0xBB4B12, 0, true, false, 0), //237
+			new AnimationDef("kiteshield", 0xAFA2A2, 0, true, false, 0),
+			new AnimationDef("kiteshield", 0xAFAFAF, 0, true, false, 0),
+			new AnimationDef("kiteshield", 0x708396, 0, true, false, 0),
+			new AnimationDef("kiteshield", 0x839670, 0, true, false, 0),
+			new AnimationDef("kiteshield", 48059, 0, true, false, 0),
+			new AnimationDef("kiteshield", 0x232323, 0, true, false, 0),
+			new AnimationDef("dragonshield", 0, 0, true, false, 0), //244
+			new AnimationDef("dragonmedhelm", 0, 0, true, false, 0) //245
 			};
 		/// A helper array for rendering
 		private final static int characterSkinColours[] = {0xecded0, 0xccb366, 0xb38c40, 0x997326, 0x906020};
