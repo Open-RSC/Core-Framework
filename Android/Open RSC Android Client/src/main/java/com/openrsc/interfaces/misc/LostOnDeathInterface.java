@@ -2,15 +2,15 @@ package com.openrsc.interfaces.misc;
 
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
+import orsc.Config;
+import orsc.graphics.gui.Panel;
+import orsc.mudclient;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Locale;
-
-import orsc.graphics.gui.Panel;
-import orsc.mudclient;
 
 
 public final class LostOnDeathInterface {
@@ -81,11 +81,6 @@ public final class LostOnDeathInterface {
 		int curX = x + 160, curY = y + 48;
 		int movedAtFlag = -1;
 
-		onDeathItems.clear();
-		if (mc.getInventoryItemCount() > 0) {
-			populateOnDeathItems();
-		}
-
 		for (int i = 0; i < onDeathItems.size(); i++) {
 			if (i >= 100) {
 				break;
@@ -101,16 +96,16 @@ public final class LostOnDeathInterface {
 			}
 
 			mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
-					curX, curY, 48, 32, def.getPictureMask(), 0, false, 0, 1);
+				curX, curY, 48, 32, def.getPictureMask(), 0, false, 0, 1);
 			if (def.getNotedFormOf() >= 0) {
 				ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
 				mc.getSurface().drawSpriteClipping(mc.spriteSelect(originalDef),
-						curX, curY, 48, 32, originalDef.getPictureMask(), 0, false, 0, 1);
+					curX, curY, 48, 32, originalDef.getPictureMask(), 0, false, 0, 1);
 			}
 
 			if (def.isStackable()) {
 				drawString(mudclient.formatStackAmount((int) curItem.getStackCount()),
-						curX + 1, curY + 10, 1, '\uffff');
+					curX + 1, curY + 10, 1, '\uffff');
 			}
 
 			drawString("Amount lost on death:", x + 5, y + 200, 3, textColour);
@@ -129,13 +124,22 @@ public final class LostOnDeathInterface {
 
 	private void populateOnDeathItems() {
 		int[] invyItems = mc.getInventoryItems();
-		for (int i = 0; i < mc.getInventoryItemCount(); i++) {
-			int count = mc.getInventoryItemCount();
+		Object[] equipmentItems = mc.getEquipmentItems();
+		if (Config.S_WANT_EQUIPMENT_TAB && equipmentItems != null) {
+			int[] temp = invyItems;
+			invyItems = new int[invyItems.length + ((int[])equipmentItems[0]).length];
+			System.arraycopy(temp, 0, invyItems, 0, temp.length);
+			System.arraycopy(((int[])equipmentItems[0]), 0, invyItems, temp.length, ((int[])equipmentItems[0]).length);
+		}
+		for (int i = 0; i < invyItems.length; i++) {
 			if (invyItems[i] > 0) {
 				ItemDef def = EntityHandler.getItemDef(invyItems[i]);
 				int stackCount = 1;
 				if (def.isStackable()) {
-					stackCount = mc.getInventoryItemsCount()[i];
+					if (Config.S_WANT_EQUIPMENT_TAB && i >= mc.getInventoryItems().length)
+						stackCount = ((int[])equipmentItems[1])[i - mc.getInventoryItems().length];
+					else
+						stackCount = mc.getInventoryItemsCount()[i];
 					onDeathItems.add(new OnDeathItem(invyItems[i], def.getBasePrice(), stackCount, false));
 				} else {
 					onDeathItems.add(new OnDeathItem(invyItems[i], def.getBasePrice(), 1, false));
@@ -166,6 +170,8 @@ public final class LostOnDeathInterface {
 			if (EntityHandler.getItemDef(onDeathItems.get(i).getItemID()).isStackable()) {
 				onDeathItems.add(i, new OnDeathItem(onDeathItems.get(i).getItemID(), onDeathItems.get(i).getPrice(), 1, false));
 				onDeathItems.set(i + 1, new OnDeathItem(onDeathItems.get(i + 1).getItemID(), onDeathItems.get(i + 1).getPrice(), onDeathItems.get(i + 1).getStackCount() - 1, false));
+				if (onDeathItems.get(i+1).getStackCount() <= 0)
+					onDeathItems.remove(i+1);
 			}
 			onDeathItems.get(i).setLost(true);
 		}
@@ -179,6 +185,9 @@ public final class LostOnDeathInterface {
 				break;
 			}
 			for (int j = i + 1; j < keepXItems; j++) {
+				if (j >= onDeathItems.size()) {
+					break;
+				}
 				if (onDeathItems.get(i).getItemID() == onDeathItems.get(j).getItemID()) {
 					onDeathItems.set(i, new OnDeathItem(onDeathItems.get(i).getItemID(), onDeathItems.get(i).getPrice(), onDeathItems.get(i).getStackCount() + 1, onDeathItems.get(i).getLost()));
 					onDeathItems.remove(i + 1);
@@ -231,6 +240,10 @@ public final class LostOnDeathInterface {
 
 	public void setVisible(boolean visible) {
 		this.visible = visible;
+		if (visible) {
+			onDeathItems.clear();
+			populateOnDeathItems();
+		}
 	}
 }
 

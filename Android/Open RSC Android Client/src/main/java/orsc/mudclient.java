@@ -101,9 +101,9 @@ public final class mudclient implements Runnable {
     private final int[] groundItemID = new int[5000];
     private final int[] groundItemX = new int[5000];
     private final int[] groundItemZ = new int[5000];
-    private final int[] inventoryItemEquipped = new int[35];
-    private final int[] inventoryItemID = new int[35];
-    private final int[] inventoryItemSize = new int[35];
+    private final int[] inventoryItemEquipped = new int[S_PLAYER_INVENTORY_SLOTS];
+    private final int[] inventoryItemID = new int[S_PLAYER_INVENTORY_SLOTS];
+    private final int[] inventoryItemSize = new int[S_PLAYER_INVENTORY_SLOTS];
 	public ItemDef[] equippedItems = new ItemDef[S_PLAYER_SLOT_COUNT];
 	public int[] equippedItemAmount = new int[S_PLAYER_SLOT_COUNT];
 	private final ORSCharacter[] knownPlayers = new ORSCharacter[500];
@@ -15101,7 +15101,28 @@ public final class mudclient implements Runnable {
         return inventoryItemID;
     }
 
-    public ArrayList<Integer> getInventoryItemsArray() {
+	public Object[] getEquipmentItems() {
+		int count = 0;
+		for (ItemDef item : equippedItems) {
+			if (item != null)
+				count ++;
+		}
+		if (count == 0)
+			return null;
+		int[] equipmentIDs = new int[count];
+		int[] equipmentAmounts = new int[count];
+		count = 0;
+		for (int i = 0; i < S_PLAYER_SLOT_COUNT; i ++) {
+			ItemDef item = equippedItems[i];
+			if (item != null) {
+				equipmentIDs[count] = item.id;
+				equipmentAmounts[count++] = equippedItemAmount[i];
+			}
+		}
+		return new Object[]{equipmentIDs, equipmentAmounts};
+	}
+
+	public ArrayList<Integer> getInventoryItemsArray() {
         ArrayList<Integer> toReturn = new ArrayList<>();
         for (int i : getInventoryItems())
             toReturn.add(i);

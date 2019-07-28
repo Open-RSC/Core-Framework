@@ -18,6 +18,7 @@ import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.DeathLog;
 import com.openrsc.server.sql.query.logs.GenericLog;
 
+import java.io.ObjectInputFilter;
 import java.util.*;
 
 public class Inventory {
@@ -608,6 +609,17 @@ public class Inventory {
 	}
 
 	public void dropOnDeath(Mob opponent) {
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			for (int i = 0; i < Equipment.slots; i++) {
+				Item equipped = player.getEquipment().list[i];
+				if (equipped != null) {
+					add(equipped, false);
+					player.updateWornItems(equipped.getDef().getWieldPosition(),
+						player.getSettings().getAppearance().getSprite(equipped.getDef().getWieldPosition()));
+					player.getEquipment().list[i] = null;
+				}
+			}
+		}
 		sort();
 		ListIterator<Item> iterator = iterator();
 		if (!player.isIronMan(2)) {
@@ -647,6 +659,7 @@ public class Inventory {
 				world.registerItem(groundItem, 644000); // 10m 44s
 			}
 		}
+
 		//check for fam crest gloves in bank, if not present there give player
 		int fam_gloves;
 		Gauntlets enchantment;

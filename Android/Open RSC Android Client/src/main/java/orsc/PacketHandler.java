@@ -1226,6 +1226,12 @@ public class PacketHandler {
 	}
 
 	private void updateInventoryItems() {
+		for (int i = 0; i < Config.S_PLAYER_INVENTORY_SLOTS; i++)
+		{
+			mc.setInventoryItemID(i, 0);
+			mc.setInventoryItemEquipped(i, 0);
+			mc.setInventoryItemSize(i, 0);
+		}
 		mc.setInventoryItemCount(packetsIncoming.getUnsignedByte());
 		for (int i = 0; i < mc.getInventoryItemCount(); ++i) {
 			int itemID = packetsIncoming.getShort();
