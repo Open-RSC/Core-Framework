@@ -1,5 +1,6 @@
 package com.openrsc.server.model.entity.player;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.model.container.ContainerListener;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.container.ItemContainer;
@@ -7,6 +8,7 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.DeathLog;
 import org.apache.logging.log4j.LogManager;
@@ -163,13 +165,21 @@ public class Duel implements ContainerListener {
 		for (Item item : getDuelOffer().getItems()) {
 			Item affectedItem = player.getInventory().get(item);
 			if (affectedItem == null) {
+				if (Constants.GameServer.WANT_EQUIPMENT_TAB && item.getAmount() == 1 && Functions.isWielding(player, item.getID())) {
+					player.updateWornItems(item.getDef().getWieldPosition(),
+						player.getSettings().getAppearance().getSprite(item.getDef().getWieldPosition()));
+					player.getEquipment().list[item.getDef().getWieldPosition()] = null;
+					log.addDroppedItem(item);
+					World.getWorld().registerItem(new GroundItem(item.getID(), player.getX(), player.getY(), item.getAmount(), duelOpponent));
+				}
 				LOGGER.info("Missing staked item [" + item.getID() + ", " + item.getAmount()
 					+ "] from = " + player.getUsername() + "; to = " + duelRecipient.getUsername() + ";");
 				continue;
+			} else {
+				player.getInventory().remove(item);
+				log.addDroppedItem(item);
+				World.getWorld().registerItem(new GroundItem(item.getID(), player.getX(), player.getY(), item.getAmount(), duelOpponent));
 			}
-			player.getInventory().remove(item);
-			log.addDroppedItem(item);
-			World.getWorld().registerItem(new GroundItem(item.getID(), player.getX(), player.getY(), item.getAmount(), duelOpponent));
 		}
 		log.build();
 		GameLogging.addQuery(log);

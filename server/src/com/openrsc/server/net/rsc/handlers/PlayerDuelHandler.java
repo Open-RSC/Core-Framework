@@ -14,6 +14,7 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -349,8 +350,10 @@ public class PlayerDuelHandler implements PacketHandler {
 					continue;
 				}
 				if (tItem.getAmount() > player.getInventory().countId(tItem.getID())) {
-					player.setSuspiciousPlayer(true);
-					return;
+					if (!(Constants.GameServer.WANT_EQUIPMENT_TAB && tItem.getAmount() == 1 && Functions.isWielding(player, tItem.getID()))) {
+						player.setSuspiciousPlayer(true);
+						return;
+					}
 				}
 				player.getDuel().addToDuelOffer(tItem);
 			}
