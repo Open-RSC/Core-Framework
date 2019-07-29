@@ -91,6 +91,7 @@ public final class mudclient implements Runnable {
     private final int[] duelOpponentItemCounts = new int[8];
     private final int[] duelOpponentItemId = new int[8];
     private final int[] duelOpponentItems = new int[8];
+    private boolean stakeOfferEquipMode = false;
     public final String[] equipmentStatNames = new String[]{"Armour", "WeaponAim", "WeaponPower", "Magic",
             "Prayer"};
     private final boolean[] gameObjectInstance_Arg1 = new boolean[5000];
@@ -2587,442 +2588,496 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private void drawDialogDuel() {
-        try {
+	private void drawDialogDuel() {
+		try {
 
-            int clickedIndex = -1;
-            if (this.mouseButtonClick != 0 && this.menuDuel_Visible) {
-                clickedIndex = this.menuDuel.handleClick(this.mouseX, this.menuDuelX, this.menuDuelY, this.mouseY);
-            }
+			int clickedIndex = -1;
+			if (this.mouseButtonClick != 0 && this.menuDuel_Visible) {
+				clickedIndex = this.menuDuel.handleClick(this.mouseX, this.menuDuelX, this.menuDuelY, this.mouseY);
+			}
 
-            if (clickedIndex >= 0) {
-                this.mouseButtonClick = 0;
-                this.menuDuel_Visible = false;
-                MenuItemAction act = this.menuDuel.getItemAction(clickedIndex);
-                int itemID = this.menuDuel.getItemIndexOrX(clickedIndex);
-                int firstItemIndex = -1;
-                int itemCount = 0;
-                if (act != MenuItemAction.DUEL_STAKE) {
-                    for (int duelIdx = 0; this.duelOfferItemCount > duelIdx; ++duelIdx) {
-                        if (this.duelOfferItemID[duelIdx] == itemID) {
-                            if (firstItemIndex < 0) {
-                                firstItemIndex = duelIdx;
-                            }
+			if (clickedIndex >= 0) {
+				this.mouseButtonClick = 0;
+				this.menuDuel_Visible = false;
+				MenuItemAction act = this.menuDuel.getItemAction(clickedIndex);
+				int itemID = this.menuDuel.getItemIndexOrX(clickedIndex);
+				int firstItemIndex = -1;
+				int itemCount = 0;
+				if (act != MenuItemAction.DUEL_STAKE) {
+					for (int duelIdx = 0; this.duelOfferItemCount > duelIdx; ++duelIdx) {
+						if (this.duelOfferItemID[duelIdx] == itemID) {
+							if (firstItemIndex < 0) {
+								firstItemIndex = duelIdx;
+							}
 
-                            if (EntityHandler.getItemDef(itemID).isStackable()) {
-                                itemCount = this.duelOfferItemSize[duelIdx];
-                                break;
-                            }
+							if (EntityHandler.getItemDef(itemID).isStackable()) {
+								itemCount = this.duelOfferItemSize[duelIdx];
+								break;
+							}
 
-                            ++itemCount;
-                        }
-                    }
-                } else {
-                    for (int invIdx = 0; this.inventoryItemCount > invIdx; ++invIdx) {
-                        if (itemID == this.inventoryItemID[invIdx]) {
-                            if (firstItemIndex < 0) {
-                                firstItemIndex = invIdx;
-                            }
+							++itemCount;
+						}
+					}
+				} else {
+					for (int invIdx = 0; this.inventoryItemCount > invIdx; ++invIdx) {
+						if (itemID == this.inventoryItemID[invIdx]) {
+							if (firstItemIndex < 0) {
+								firstItemIndex = invIdx;
+							}
 
-                            if (EntityHandler.getItemDef(itemID).isStackable()) {
-                                itemCount = this.inventoryItemSize[invIdx];
-                                break;
-                            }
+							if (EntityHandler.getItemDef(itemID).isStackable()) {
+								itemCount = this.inventoryItemSize[invIdx];
+								break;
+							}
 
-                            ++itemCount;
-                        }
-                    }
-                }
+							++itemCount;
+						}
+					}
+				}
 
-                if (firstItemIndex >= 0) {
-                    int doCount = this.menuDuel.getItemIdOrZ(clickedIndex);
-                    if (doCount != -2) {
-                        if (doCount == -1) {
-                            doCount = itemCount;
-                        }
+				if (firstItemIndex >= 0) {
+					int doCount = this.menuDuel.getItemIdOrZ(clickedIndex);
+					if (doCount != -2) {
+						if (doCount == -1) {
+							doCount = itemCount;
+						}
 
-                        if (act == MenuItemAction.DUEL_STAKE) {
-                            this.duelStakeItem(doCount, firstItemIndex);
-                        } else {
-                            this.duelRemoveItem(firstItemIndex, doCount);
-                        }
-                    } else {
-                        this.duelDoX_Slot = firstItemIndex;
-                        if (act == MenuItemAction.DUEL_STAKE) {
-                            this.showItemModX(InputXPrompt.duelStakeX, InputXAction.DUEL_STAKE, true);
-                        } else {
-                            this.showItemModX(InputXPrompt.duelRemoveX, InputXAction.DUEL_REMOVE, true);
-                        }
-                    }
-                }
-            } else if (this.inputX_Action == InputXAction.ACT_0) {
-                if (this.mouseButtonClick == 1 && this.mouseButtonItemCountIncrement == 0) {
-                    this.mouseButtonItemCountIncrement = 1;
-                }
+						if (act == MenuItemAction.DUEL_STAKE) {
+							this.duelStakeItem(doCount, firstItemIndex);
+						} else {
+							this.duelRemoveItem(firstItemIndex, doCount);
+						}
+						clickedIndex = -1;
+					} else {
+						this.duelDoX_Slot = firstItemIndex;
+						if (act == MenuItemAction.DUEL_STAKE) {
+							this.showItemModX(InputXPrompt.duelStakeX, InputXAction.DUEL_STAKE, true);
+						} else {
+							this.showItemModX(InputXPrompt.duelRemoveX, InputXAction.DUEL_REMOVE, true);
+						}
+					}
+				}
+			} else if (this.inputX_Action == InputXAction.ACT_0) {
+				if (this.mouseButtonClick == 1 && this.mouseButtonItemCountIncrement == 0) {
+					this.mouseButtonItemCountIncrement = 1;
+				}
+				if (getMouseY() >= 239 + 36 && getMouseY() <= 257 + 36) {
+					if (mouseButtonClick != 0 && S_WANT_EQUIPMENT_TAB) {
+						if (getMouseX() >= 22 + 320 && getMouseX() <= 22 + 348) {
+							stakeOfferEquipMode = false;
+						} else if (getMouseX() >= 22 + 348 && getMouseX() <= 22 + 376)
+							stakeOfferEquipMode = true;
+						mouseButtonClick = 0;
+					}
+				}
+				int mouseX_Local = this.mouseX - 22;
+				int mouseY_Local = this.mouseY - 36;
+				if (mouseX_Local >= 0 && mouseY_Local >= 0 && mouseX_Local < 468 && mouseY_Local < 262) {
+					if (this.mouseButtonItemCountIncrement > 0) {
+						if (mouseX_Local > 216 && mouseY_Local > 30 && mouseX_Local < 462 && mouseY_Local < 235) {
+							int slot = (mouseX_Local - 217) / 49 + (mouseY_Local - 31) / 34 * 5;
+							if (slot >= 0) {
+								if (stakeOfferEquipMode) {
+									this.duelStakeItem(-1, slot);
+								} else if (this.inventoryItemCount > slot) {
+									this.duelStakeItem(-1, slot);
+								}
+								clickedIndex = -1;
+							}
+						}
 
-                int mouseX_Local = this.mouseX - 22;
-                int mouseY_Local = this.mouseY - 36;
-                if (mouseX_Local >= 0 && mouseY_Local >= 0 && mouseX_Local < 468 && mouseY_Local < 262) {
-                    if (this.mouseButtonItemCountIncrement > 0) {
-                        if (mouseX_Local > 216 && mouseY_Local > 30 && mouseX_Local < 462 && mouseY_Local < 235) {
-                            int slot = (mouseX_Local - 217) / 49 + (mouseY_Local - 31) / 34 * 5;
-                            if (slot >= 0 && this.inventoryItemCount > slot) {
-                                this.duelStakeItem(-1, slot);
-                            }
-                        }
+						if (mouseX_Local > 8 && mouseY_Local > 30 && mouseX_Local < 205 && mouseY_Local < 129) {
+							int slot = (mouseX_Local - 9) / 49 + (mouseY_Local - 31) / 34 * 4;
+							if (slot >= 0 && slot < this.duelOfferItemCount) {
+								this.duelRemoveItem(slot, -1);
+							}
+						}
 
-                        if (mouseX_Local > 8 && mouseY_Local > 30 && mouseX_Local < 205 && mouseY_Local < 129) {
-                            int slot = (mouseX_Local - 9) / 49 + (mouseY_Local - 31) / 34 * 4;
-                            if (slot >= 0 && slot < this.duelOfferItemCount) {
-                                this.duelRemoveItem(slot, -1);
-                            }
-                        }
+						boolean settingsChanged = false;
+						if (mouseX_Local >= 93 && mouseY_Local >= 221 && mouseX_Local <= 104 && mouseY_Local <= 232) {
+							settingsChanged = true;
+							this.duelSettingsRetreat = !this.duelSettingsRetreat;
+						}
 
-                        boolean settingsChanged = false;
-                        if (mouseX_Local >= 93 && mouseY_Local >= 221 && mouseX_Local <= 104 && mouseY_Local <= 232) {
-                            settingsChanged = true;
-                            this.duelSettingsRetreat = !this.duelSettingsRetreat;
-                        }
+						if (mouseX_Local >= 93 && mouseY_Local >= 240 && mouseX_Local <= 104 && mouseY_Local <= 251) {
+							this.duelSettingsMagic = !this.duelSettingsMagic;
+							settingsChanged = true;
+						}
 
-                        if (mouseX_Local >= 93 && mouseY_Local >= 240 && mouseX_Local <= 104 && mouseY_Local <= 251) {
-                            this.duelSettingsMagic = !this.duelSettingsMagic;
-                            settingsChanged = true;
-                        }
+						if (mouseX_Local >= 191 && mouseY_Local >= 221 && mouseX_Local <= 202 && mouseY_Local <= 232) {
+							this.duelSettingsPrayer = !this.duelSettingsPrayer;
+							settingsChanged = true;
+						}
 
-                        if (mouseX_Local >= 191 && mouseY_Local >= 221 && mouseX_Local <= 202 && mouseY_Local <= 232) {
-                            this.duelSettingsPrayer = !this.duelSettingsPrayer;
-                            settingsChanged = true;
-                        }
+						if (mouseX_Local >= 191 && mouseY_Local >= 240 && mouseX_Local <= 202 && mouseY_Local <= 251) {
+							settingsChanged = true;
+							this.duelSettingsWeapons = !this.duelSettingsWeapons;
+						}
 
-                        if (mouseX_Local >= 191 && mouseY_Local >= 240 && mouseX_Local <= 202 && mouseY_Local <= 251) {
-                            settingsChanged = true;
-                            this.duelSettingsWeapons = !this.duelSettingsWeapons;
-                        }
+						if (settingsChanged) {
+							this.packetHandler.getClientStream().newPacket(8);
+							this.packetHandler.getClientStream().writeBuffer1.putByte(!this.duelSettingsRetreat ? 0 : 1);
+							this.packetHandler.getClientStream().writeBuffer1.putByte(this.duelSettingsMagic ? 1 : 0);
+							this.packetHandler.getClientStream().writeBuffer1.putByte(!this.duelSettingsPrayer ? 0 : 1);
+							this.packetHandler.getClientStream().writeBuffer1.putByte(!this.duelSettingsWeapons ? 0 : 1);
+							this.packetHandler.getClientStream().finishPacket();
+							this.duelOffsetOpponentAccepted = false;
+							this.duelOfferAccepted = false;
+						}
 
-                        if (settingsChanged) {
-                            this.packetHandler.getClientStream().newPacket(8);
-                            this.packetHandler.getClientStream().writeBuffer1.putByte(!this.duelSettingsRetreat ? 0 : 1);
-                            this.packetHandler.getClientStream().writeBuffer1.putByte(this.duelSettingsMagic ? 1 : 0);
-                            this.packetHandler.getClientStream().writeBuffer1.putByte(!this.duelSettingsPrayer ? 0 : 1);
-                            this.packetHandler.getClientStream().writeBuffer1.putByte(!this.duelSettingsWeapons ? 0 : 1);
-                            this.packetHandler.getClientStream().finishPacket();
-                            this.duelOffsetOpponentAccepted = false;
-                            this.duelOfferAccepted = false;
-                        }
+						if (mouseX_Local >= 217 && mouseY_Local >= 238 && mouseX_Local <= 286 && mouseY_Local <= 259) {
+							this.duelOfferAccepted = true;
+							this.packetHandler.getClientStream().newPacket(176);
+							this.packetHandler.getClientStream().finishPacket();
+						}
 
-                        if (mouseX_Local >= 217 && mouseY_Local >= 238 && mouseX_Local <= 286 && mouseY_Local <= 259) {
-                            this.duelOfferAccepted = true;
-                            this.packetHandler.getClientStream().newPacket(176);
-                            this.packetHandler.getClientStream().finishPacket();
-                        }
+						if (mouseX_Local >= 394 && mouseY_Local >= 238 && mouseX_Local < 463 && mouseY_Local < 259) {
+							this.showDialogDuel = false;
+							this.packetHandler.getClientStream().newPacket(197);
+							this.packetHandler.getClientStream().finishPacket();
+						}
 
-                        if (mouseX_Local >= 394 && mouseY_Local >= 238 && mouseX_Local < 463 && mouseY_Local < 259) {
-                            this.showDialogDuel = false;
-                            this.packetHandler.getClientStream().newPacket(197);
-                            this.packetHandler.getClientStream().finishPacket();
-                        }
+						this.mouseButtonItemCountIncrement = 0;
+						this.mouseButtonClick = 0;
+					}
 
-                        this.mouseButtonItemCountIncrement = 0;
-                        this.mouseButtonClick = 0;
-                    }
+					if (this.mouseButtonClick == 2) {
+						if (mouseX_Local > 216 && mouseY_Local > 30 && mouseX_Local < 462 && mouseY_Local < 235) {
+							int w = this.menuCommon.getWidth();
+							int h = this.menuCommon.getHeight();
+							this.menuX = this.mouseX - w / 2;
+							this.menuY = this.mouseY - 7;
+							this.topMouseMenuVisible = true;
+							if (this.menuY < 0) {
+								this.menuY = 0;
+							}
 
-                    if (this.mouseButtonClick == 2) {
-                        if (mouseX_Local > 216 && mouseY_Local > 30 && mouseX_Local < 462 && mouseY_Local < 235) {
-                            int w = this.menuCommon.getWidth();
-                            int h = this.menuCommon.getHeight();
-                            this.menuX = this.mouseX - w / 2;
-                            this.menuY = this.mouseY - 7;
-                            this.topMouseMenuVisible = true;
-                            if (this.menuY < 0) {
-                                this.menuY = 0;
-                            }
+							if (this.menuX < 0) {
+								this.menuX = 0;
+							}
 
-                            if (this.menuX < 0) {
-                                this.menuX = 0;
-                            }
+							if (w + this.menuX > 510) {
+								this.menuX = 510 - w;
+							}
 
-                            if (w + this.menuX > 510) {
-                                this.menuX = 510 - w;
-                            }
+							if (h + this.menuY > 315) {
+								this.menuY = 315 - h;
+							}
 
-                            if (h + this.menuY > 315) {
-                                this.menuY = 315 - h;
-                            }
+							int invIndex = (mouseX_Local - 217) / 49 + (mouseY_Local - 31) / 34 * 5;
+							if (invIndex >= 0) {
+								if (stakeOfferEquipMode) {
+									Object[] equipment = getEquipmentItems();
+									if (invIndex < ((int[])equipment[0]).length) {
+										int itemID = ((int[])equipment[0])[invIndex];
+										this.menuDuel_Visible = true;
+										this.menuDuel.recalculateSize(0);
+										this.menuDuel.addCharacterItem_WithID(itemID,
+											"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
+											"Stake", 1);
+									}
+								} else {
+									if (this.inventoryItemCount > invIndex) {
+										int itemID = this.inventoryItemID[invIndex];
+										this.menuDuel_Visible = true;
+										this.menuDuel.recalculateSize(0);
+										this.menuDuel.addCharacterItem_WithID(itemID,
+											"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
+											"Stake 1", 1);
+										this.menuDuel.addCharacterItem_WithID(itemID,
+											"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
+											"Stake 5", 5);
+										this.menuDuel.addCharacterItem_WithID(itemID,
+											"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
+											"Stake 10", 10);
+										this.menuDuel.addCharacterItem_WithID(itemID,
+											"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
+											"Stake All", -1);
+										this.menuDuel.addCharacterItem_WithID(itemID,
+											"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
+											"Stake X", -2);
+									}
+								}
+								int width = this.menuDuel.getWidth();
+								int height = this.menuDuel.getHeight();
+								this.menuDuelY = this.mouseY - 7;
+								this.menuDuelX = this.mouseX - width / 2;
+								if (this.menuDuelX < 0) {
+									this.menuDuelX = 0;
+								}
 
-                            int invIndex = (mouseX_Local - 217) / 49 + (mouseY_Local - 31) / 34 * 5;
-                            if (invIndex >= 0 && this.inventoryItemCount > invIndex) {
-                                int itemID = this.inventoryItemID[invIndex];
-                                this.menuDuel_Visible = true;
-                                this.menuDuel.recalculateSize(0);
-                                this.menuDuel.addCharacterItem_WithID(itemID,
-                                        "@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
-                                        "Stake 1", 1);
-                                this.menuDuel.addCharacterItem_WithID(itemID,
-                                        "@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
-                                        "Stake 5", 5);
-                                this.menuDuel.addCharacterItem_WithID(itemID,
-                                        "@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
-                                        "Stake 10", 10);
-                                this.menuDuel.addCharacterItem_WithID(itemID,
-                                        "@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
-                                        "Stake All", -1);
-                                this.menuDuel.addCharacterItem_WithID(itemID,
-                                        "@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
-                                        "Stake X", -2);
-                                int width = this.menuDuel.getWidth();
-                                int height = this.menuDuel.getHeight();
-                                this.menuDuelY = this.mouseY - 7;
-                                this.menuDuelX = this.mouseX - width / 2;
-                                if (this.menuDuelX < 0) {
-                                    this.menuDuelX = 0;
-                                }
+								if (this.menuDuelY < 0) {
+									this.menuDuelY = 0;
+								}
 
-                                if (this.menuDuelY < 0) {
-                                    this.menuDuelY = 0;
-                                }
+								if (this.menuDuelX + width > 510) {
+									this.menuDuelX = 510 - width;
+								}
 
-                                if (this.menuDuelX + width > 510) {
-                                    this.menuDuelX = 510 - width;
-                                }
+								if (this.menuDuelY + height > 315) {
+									this.menuDuelY = 315 - height;
+								}
+							}
+						}
 
-                                if (this.menuDuelY + height > 315) {
-                                    this.menuDuelY = 315 - height;
-                                }
-                            }
-                        }
+						if (mouseX_Local > 8 && mouseY_Local > 30 && mouseX_Local < 205 && mouseY_Local < 133) {
+							int slot = (mouseX_Local - 9) / 49 + (mouseY_Local - 31) / 34 * 4;
+							if (slot >= 0 && this.duelOfferItemCount > slot) {
+								int id = this.duelOfferItemID[slot];
+								this.menuDuel_Visible = true;
+								this.menuDuel.recalculateSize(0);
+								this.menuDuel.addCharacterItem_WithID(id,
+									"@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.DUEL_REMOVE,
+									"Remove 1", 1);
+								this.menuDuel.addCharacterItem_WithID(id,
+									"@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.DUEL_REMOVE,
+									"Remove 5", 5);
+								this.menuDuel.addCharacterItem_WithID(id,
+									"@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.DUEL_REMOVE,
+									"Remove 10", 10);
+								this.menuDuel.addCharacterItem_WithID(id,
+									"@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.DUEL_REMOVE,
+									"Remove All", -1);
+								this.menuDuel.addCharacterItem_WithID(id,
+									"@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.DUEL_REMOVE,
+									"Remove X", -2);
+								int w = this.menuDuel.getWidth();
+								int h = this.menuDuel.getHeight();
+								this.menuDuelY = this.mouseY - 7;
+								this.menuDuelX = this.mouseX - w / 2;
+								if (this.menuDuelX < 0) {
+									this.menuDuelX = 0;
+								}
 
-                        if (mouseX_Local > 8 && mouseY_Local > 30 && mouseX_Local < 205 && mouseY_Local < 133) {
-                            int slot = (mouseX_Local - 9) / 49 + (mouseY_Local - 31) / 34 * 4;
-                            if (slot >= 0 && this.duelOfferItemCount > slot) {
-                                int id = this.duelOfferItemID[slot];
-                                this.menuDuel_Visible = true;
-                                this.menuDuel.recalculateSize(0);
-                                this.menuDuel.addCharacterItem_WithID(id,
-                                        "@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.DUEL_REMOVE,
-                                        "Remove 1", 1);
-                                this.menuDuel.addCharacterItem_WithID(id,
-                                        "@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.DUEL_REMOVE,
-                                        "Remove 5", 5);
-                                this.menuDuel.addCharacterItem_WithID(id,
-                                        "@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.DUEL_REMOVE,
-                                        "Remove 10", 10);
-                                this.menuDuel.addCharacterItem_WithID(id,
-                                        "@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.DUEL_REMOVE,
-                                        "Remove All", -1);
-                                this.menuDuel.addCharacterItem_WithID(id,
-                                        "@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.DUEL_REMOVE,
-                                        "Remove X", -2);
-                                int w = this.menuDuel.getWidth();
-                                int h = this.menuDuel.getHeight();
-                                this.menuDuelY = this.mouseY - 7;
-                                this.menuDuelX = this.mouseX - w / 2;
-                                if (this.menuDuelX < 0) {
-                                    this.menuDuelX = 0;
-                                }
+								if (this.menuDuelY < 0) {
+									this.menuDuelY = 0;
+								}
 
-                                if (this.menuDuelY < 0) {
-                                    this.menuDuelY = 0;
-                                }
+								if (this.menuDuelX + w > 510) {
+									this.menuDuelX = 510 - w;
+								}
 
-                                if (this.menuDuelX + w > 510) {
-                                    this.menuDuelX = 510 - w;
-                                }
+								if (h + this.menuDuelY > 315) {
+									this.menuDuelY = 315 - h;
+								}
+							}
+						}
 
-                                if (h + this.menuDuelY > 315) {
-                                    this.menuDuelY = 315 - h;
-                                }
-                            }
-                        }
+						this.mouseButtonClick = 0;
+					}
 
-                        this.mouseButtonClick = 0;
-                    }
+					if (this.menuDuel_Visible) {
+						int w = this.menuDuel.getWidth();
+						int h = this.menuDuel.getHeight();
+						if (this.menuDuelX - 10 > this.mouseX || this.mouseY < this.menuDuelY - 10
+							|| this.mouseX > this.menuDuelX + w + 10 || this.mouseY > 10 + h + this.menuDuelY) {
+							this.menuDuel_Visible = false;
+						}
+					}
+				} else if (this.mouseButtonClick != 0) {
+					this.showDialogDuel = false;
+					this.packetHandler.getClientStream().newPacket(197);
+					this.packetHandler.getClientStream().finishPacket();
+				}
+			}
 
-                    if (this.menuDuel_Visible) {
-                        int w = this.menuDuel.getWidth();
-                        int h = this.menuDuel.getHeight();
-                        if (this.menuDuelX - 10 > this.mouseX || this.mouseY < this.menuDuelY - 10
-                                || this.mouseX > this.menuDuelX + w + 10 || this.mouseY > 10 + h + this.menuDuelY) {
-                            this.menuDuel_Visible = false;
-                        }
-                    }
-                } else if (this.mouseButtonClick != 0) {
-                    this.showDialogDuel = false;
-                    this.packetHandler.getClientStream().newPacket(197);
-                    this.packetHandler.getClientStream().finishPacket();
-                }
-            }
+			if (this.showDialogDuel) {
+				byte xr = 22;
+				byte yr = 36;
+				this.getSurface().drawBox(xr, yr, 468, 12, 13175581);
+				int colorA = 10000536;
+				this.getSurface().drawBoxAlpha(xr, 12 + yr, 468, 18, colorA, 160);
+				this.getSurface().drawBoxAlpha(xr, 30 + yr, 8, 248, colorA, 160);
+				this.getSurface().drawBoxAlpha(xr + 205, 30 + yr, 11, 248, colorA, 160);
+				this.getSurface().drawBoxAlpha(xr + 462, 30 + yr, 6, 248, colorA, 160);
+				this.getSurface().drawBoxAlpha(xr + 8, yr + 99, 197, 24, colorA, 160);
+				this.getSurface().drawBoxAlpha(8 + xr, 192 + yr, 197, 23, colorA, 160);
+				this.getSurface().drawBoxAlpha(xr + 8, yr + 258, 197, 20, colorA, 160);
+				this.getSurface().drawBoxAlpha(xr + 216, yr + 235, 246, 43, colorA, 160);
+				int colorB = 13684944;
+				this.getSurface().drawBoxAlpha(8 + xr, yr + 30, 197, 69, colorB, 160);
+				this.getSurface().drawBoxAlpha(xr + 8, 123 + yr, 197, 69, colorB, 160);
+				this.getSurface().drawBoxAlpha(8 + xr, yr + 215, 197, 43, colorB, 160);
+				this.getSurface().drawBoxAlpha(216 + xr, yr + 30, 246, 205, colorB, 160);
 
-            if (this.showDialogDuel) {
-                byte xr = 22;
-                byte yr = 36;
-                this.getSurface().drawBox(xr, yr, 468, 12, 13175581);
-                int colorA = 10000536;
-                this.getSurface().drawBoxAlpha(xr, 12 + yr, 468, 18, colorA, 160);
-                this.getSurface().drawBoxAlpha(xr, 30 + yr, 8, 248, colorA, 160);
-                this.getSurface().drawBoxAlpha(xr + 205, 30 + yr, 11, 248, colorA, 160);
-                this.getSurface().drawBoxAlpha(xr + 462, 30 + yr, 6, 248, colorA, 160);
-                this.getSurface().drawBoxAlpha(xr + 8, yr + 99, 197, 24, colorA, 160);
-                this.getSurface().drawBoxAlpha(8 + xr, 192 + yr, 197, 23, colorA, 160);
-                this.getSurface().drawBoxAlpha(xr + 8, yr + 258, 197, 20, colorA, 160);
-                this.getSurface().drawBoxAlpha(xr + 216, yr + 235, 246, 43, colorA, 160);
-                int colorB = 13684944;
-                this.getSurface().drawBoxAlpha(8 + xr, yr + 30, 197, 69, colorB, 160);
-                this.getSurface().drawBoxAlpha(xr + 8, 123 + yr, 197, 69, colorB, 160);
-                this.getSurface().drawBoxAlpha(8 + xr, yr + 215, 197, 43, colorB, 160);
-                this.getSurface().drawBoxAlpha(216 + xr, yr + 30, 246, 205, colorB, 160);
+				for (int i = 0; i < 3; ++i) {
+					this.getSurface().drawLineHoriz(xr + 8, yr + 30 + i * 34, 197, 0);
+				}
 
-                for (int i = 0; i < 3; ++i) {
-                    this.getSurface().drawLineHoriz(xr + 8, yr + 30 + i * 34, 197, 0);
-                }
+				for (int i = 0; i < 3; ++i) {
+					this.getSurface().drawLineHoriz(8 + xr, i * 34 + yr + 123, 197, 0);
+				}
 
-                for (int i = 0; i < 3; ++i) {
-                    this.getSurface().drawLineHoriz(8 + xr, i * 34 + yr + 123, 197, 0);
-                }
+				for (int i = 0; i < 7; ++i) {
+					this.getSurface().drawLineHoriz(216 + xr, i * 34 + yr + 30, 246, 0);
+				}
 
-                for (int i = 0; i < 7; ++i) {
-                    this.getSurface().drawLineHoriz(216 + xr, i * 34 + yr + 30, 246, 0);
-                }
+				for (int i = 0; i < 6; ++i) {
+					if (i < 5) {
+						this.getSurface().drawLineVert(i * 49 + 8 + xr, yr + 30, 0, 69);
+						this.getSurface().drawLineVert(i * 49 + xr + 8, yr + 123, 0, 69);
+					}
 
-                for (int i = 0; i < 6; ++i) {
-                    if (i < 5) {
-                        this.getSurface().drawLineVert(i * 49 + 8 + xr, yr + 30, 0, 69);
-                        this.getSurface().drawLineVert(i * 49 + xr + 8, yr + 123, 0, 69);
-                    }
+					this.getSurface().drawLineVert(i * 49 + xr + 216, yr + 30, 0, 205);
+				}
 
-                    this.getSurface().drawLineVert(i * 49 + xr + 216, yr + 30, 0, 205);
-                }
+				this.getSurface().drawLineHoriz(xr + 8, 215 + yr, 197, 0);
+				this.getSurface().drawLineHoriz(xr + 8, yr + 257, 197, 0);
+				this.getSurface().drawLineVert(8 + xr, yr + 215, 0, 43);
+				this.getSurface().drawLineVert(xr + 204, yr + 215, 0, 43);
+				this.getSurface().drawString("Preparing to duel with: " + this.duelConfirmOpponentName, 1 + xr, yr + 10,
+					0xFFFFFF, 1);
+				this.getSurface().drawString("Your Stake", xr + 9, 27 + yr, 0xFFFFFF, 4);
+				this.getSurface().drawString("Opponent\'s Stake", 9 + xr, 120 + yr, 0xFFFFFF, 4);
+				this.getSurface().drawString("Duel Options", xr + 9, yr + 212, 0xFFFFFF, 4);
+				this.getSurface().drawString("Your Inventory", xr + 216, yr + 27, 0xFFFFFF, 4);
+				this.getSurface().drawString("No retreating", 1 + 8 + xr, 215 + yr + 16, 0xFFFF00, 3);
+				this.getSurface().drawString("No magic", 1 + 8 + xr, 250 + yr, 0xFFFF00, 3);
+				this.getSurface().drawString("No prayer", 8 + xr + 102, yr + 231, 0xFFFF00, 3);
+				this.getSurface().drawString("No weapons", 102 + 8 + xr, 35 + yr + 215, 0xFFFF00, 3);
 
-                this.getSurface().drawLineHoriz(xr + 8, 215 + yr, 197, 0);
-                this.getSurface().drawLineHoriz(xr + 8, yr + 257, 197, 0);
-                this.getSurface().drawLineVert(8 + xr, yr + 215, 0, 43);
-                this.getSurface().drawLineVert(xr + 204, yr + 215, 0, 43);
-                this.getSurface().drawString("Preparing to duel with: " + this.duelConfirmOpponentName, 1 + xr, yr + 10,
-                        0xFFFFFF, 1);
-                this.getSurface().drawString("Your Stake", xr + 9, 27 + yr, 0xFFFFFF, 4);
-                this.getSurface().drawString("Opponent\'s Stake", 9 + xr, 120 + yr, 0xFFFFFF, 4);
-                this.getSurface().drawString("Duel Options", xr + 9, yr + 212, 0xFFFFFF, 4);
-                this.getSurface().drawString("Your Inventory", xr + 216, yr + 27, 0xFFFFFF, 4);
-                this.getSurface().drawString("No retreating", 1 + 8 + xr, 215 + yr + 16, 0xFFFF00, 3);
-                this.getSurface().drawString("No magic", 1 + 8 + xr, 250 + yr, 0xFFFF00, 3);
-                this.getSurface().drawString("No prayer", 8 + xr + 102, yr + 231, 0xFFFF00, 3);
-                this.getSurface().drawString("No weapons", 102 + 8 + xr, 35 + yr + 215, 0xFFFF00, 3);
+				if (S_WANT_EQUIPMENT_TAB) {
+					this.getSurface().drawBoxAlpha(xr + 320, 239 + yr, 28, 28, stakeOfferEquipMode ? clearBox : selectedBox, 160);
+					this.getSurface().drawBoxAlpha(xr + 348, 239 + yr, 28, 28, stakeOfferEquipMode ? selectedBox : clearBox, 160);
+					this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.BANK_EQUIP_BAG.id())), xr + 320, 239 + yr, 28, 28, 0, 0, false, 0, 0);
+					this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.BANK_EQUIP_HELM.id())), xr + 348, 239 + yr, 28, 28, 0, 0, false, 0, 0);
+				}
+				if (stakeOfferEquipMode) {
+					int count = 0;
+					for (ItemDef item : equippedItems) {
+						if (item == null)
+							continue;
+						int xI = 217 + xr + (count % 5) * 49;
+						int yI = yr + 31 + (count / 5) * 34;
+						this.getSurface().drawSpriteClipping(
+							spriteSelect(item), xI,
+							yI, 48, 32, item.getPictureMask(), 0, false,
+							0, 1);
+						if (item.isStackable()) {
+							this.getSurface().drawString("" + this.inventoryItemSize[count], xI + 1,
+								10 + yI, 0xFFFF00, 1);
+						}
+						count++;
+					}
+				} else {
+					for (int itm = 0; this.inventoryItemCount > itm; ++itm) {
+						int xI = 217 + xr + (itm % 5) * 49;
+						int yI = yr + 31 + (itm / 5) * 34;
+						this.getSurface().drawSpriteClipping(
+							spriteSelect(EntityHandler.getItemDef(this.inventoryItemID[itm])), xI,
+							yI, 48, 32, EntityHandler.getItemDef(this.inventoryItemID[itm]).getPictureMask(), 0, false,
+							0, 1);
 
-                this.getSurface().drawBoxBorder(xr + 93, 11, 215 + yr + 6, 11, 0xFFFF00);
-                if (this.duelSettingsRetreat) {
-                    this.getSurface().drawBox(xr + 95, 8 + 215 + yr, 7, 7, 0xFFFF00);
-                }
+						ItemDef def = EntityHandler.getItemDef(this.inventoryItemID[itm]);
+						if (def.getNotedFormOf() >= 0) {
+							ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
+							getSurface().drawSpriteClipping(spriteSelect(originalDef), xI + 7, yI + 4,
+								33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
+						}
+						if (EntityHandler.getItemDef(this.inventoryItemID[itm]).isStackable()) {
+							this.getSurface().drawString("" + this.inventoryItemSize[itm], xI + 1,
+								10 + yI, 0xFFFF00, 1);
+						}
+					}
+				}
+				this.getSurface().drawBoxBorder(xr + 93, 11, 215 + yr + 6, 11, 0xFFFF00);
+				if (this.duelSettingsRetreat) {
+					this.getSurface().drawBox(xr + 95, 8 + 215 + yr, 7, 7, 0xFFFF00);
+				}
 
-                this.getSurface().drawBoxBorder(93 + xr, 11, 25 + yr + 215, 11, 0xFFFF00);
-                if (this.duelSettingsMagic) {
-                    this.getSurface().drawBox(xr + 95, 215 + yr + 27, 7, 7, 0xFFFF00);
-                }
+				this.getSurface().drawBoxBorder(93 + xr, 11, 25 + yr + 215, 11, 0xFFFF00);
+				if (this.duelSettingsMagic) {
+					this.getSurface().drawBox(xr + 95, 215 + yr + 27, 7, 7, 0xFFFF00);
+				}
 
-                this.getSurface().drawBoxBorder(191 + xr, 11, 6 + 215 + yr, 11, 0xFFFF00);
-                if (this.duelSettingsPrayer) {
-                    this.getSurface().drawBox(xr + 193, 8 + yr + 215, 7, 7, 0xFFFF00);
-                }
-                this.getSurface().drawBoxBorder(xr + 191, 11, yr + 215 + 25, 11, 0xFFFF00);
-                if (this.duelSettingsWeapons) {
-                    this.getSurface().drawBox(193 + xr, 215 + yr + 27, 7, 7, 0xFFFF00);
-                }
+				this.getSurface().drawBoxBorder(191 + xr, 11, 6 + 215 + yr, 11, 0xFFFF00);
+				if (this.duelSettingsPrayer) {
+					this.getSurface().drawBox(xr + 193, 8 + yr + 215, 7, 7, 0xFFFF00);
+				}
+				this.getSurface().drawBoxBorder(xr + 191, 11, yr + 215 + 25, 11, 0xFFFF00);
+				if (this.duelSettingsWeapons) {
+					this.getSurface().drawBox(193 + xr, 215 + yr + 27, 7, 7, 0xFFFF00);
+				}
 
-                if (!this.duelOfferAccepted) {
-                    this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.ACCEPTBUTTON.id())), 217 + xr, yr + 238);
-                }
+				if (!this.duelOfferAccepted) {
+					this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.ACCEPTBUTTON.id())), 217 + xr, yr + 238);
+				}
 
-                this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DECLINEBUTTON.id())), xr + 394, yr + 238);
-                if (this.duelOffsetOpponentAccepted) {
-                    this.getSurface().drawColoredStringCentered(xr + 341, "Other player", 0xFFFFFF, 0, 1, 246 + yr);
-                    this.getSurface().drawColoredStringCentered(341 + xr, "has accepted", 0xFFFFFF, 0, 1, 256 + yr);
-                }
+				this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DECLINEBUTTON.id())), xr + 394, yr + 238);
+				if (this.duelOffsetOpponentAccepted) {
+					this.getSurface().drawColoredStringCentered(xr + 341, "Other player", 0xFFFFFF, 0, 1, 246 + yr);
+					this.getSurface().drawColoredStringCentered(341 + xr, "has accepted", 0xFFFFFF, 0, 1, 256 + yr);
+				}
 
-                if (this.duelOfferAccepted) {
-                    this.getSurface().drawColoredStringCentered(35 + 217 + xr, "Waiting for", 0xFFFFFF, 0, 1, yr + 246);
-                    this.getSurface().drawColoredStringCentered(252 + xr, "other player", 0xFFFFFF, 0, 1, 256 + yr);
-                }
+				if (this.duelOfferAccepted) {
+					this.getSurface().drawColoredStringCentered(35 + 217 + xr, "Waiting for", 0xFFFFFF, 0, 1, yr + 246);
+					this.getSurface().drawColoredStringCentered(252 + xr, "other player", 0xFFFFFF, 0, 1, 256 + yr);
+				}
 
-                for (int itm = 0; this.inventoryItemCount > itm; ++itm) {
-                    int xI = 217 + xr + (itm % 5) * 49;
-                    int yI = yr + 31 + (itm / 5) * 34;
-                    this.getSurface().drawSpriteClipping(
-                            spriteSelect(EntityHandler.getItemDef(this.inventoryItemID[itm])), xI,
-                            yI, 48, 32, EntityHandler.getItemDef(this.inventoryItemID[itm]).getPictureMask(), 0, false,
-                            0, 1);
 
-                    ItemDef def = EntityHandler.getItemDef(this.inventoryItemID[itm]);
-                    if (def.getNotedFormOf() >= 0) {
-                        ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-                        getSurface().drawSpriteClipping(spriteSelect(originalDef), xI + 7, yI + 4,
-                                33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
-                    }
-                    if (EntityHandler.getItemDef(this.inventoryItemID[itm]).isStackable()) {
-                        this.getSurface().drawString("" + this.inventoryItemSize[itm], xI + 1,
-                                10 + yI, 0xFFFF00, 1);
-                    }
-                }
 
-                for (int itmOffer = 0; this.duelOfferItemCount > itmOffer; ++itmOffer) {
-                    int xI = xr + 9 + itmOffer % 4 * 49;
-                    int yI = yr + 31 + itmOffer / 4 * 34;
-                    this.getSurface().drawSpriteClipping(
-                            spriteSelect(EntityHandler.getItemDef(this.duelOfferItemID[itmOffer])),
-                            xI, yI, 48, 32, EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]).getPictureMask(),
-                            0, false, 0, 1);
+				for (int itmOffer = 0; this.duelOfferItemCount > itmOffer; ++itmOffer) {
+					int xI = xr + 9 + itmOffer % 4 * 49;
+					int yI = yr + 31 + itmOffer / 4 * 34;
+					this.getSurface().drawSpriteClipping(
+						spriteSelect(EntityHandler.getItemDef(this.duelOfferItemID[itmOffer])),
+						xI, yI, 48, 32, EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]).getPictureMask(),
+						0, false, 0, 1);
 
-                    ItemDef def = EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]);
-                    if (def.getNotedFormOf() >= 0) {
-                        ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-                        getSurface().drawSpriteClipping(spriteSelect(originalDef), xI + 7, yI + 4,
-                                33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
-                    }
+					ItemDef def = EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]);
+					if (def.getNotedFormOf() >= 0) {
+						ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
+						getSurface().drawSpriteClipping(spriteSelect(originalDef), xI + 7, yI + 4,
+							33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
+					}
 
-                    if (EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]).isStackable()) {
-                        this.getSurface().drawString("" + this.duelOfferItemSize[itmOffer], 1 + xI, 10 + yI, 0xFFFF00,
-                                1);
-                    }
+					if (EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]).isStackable()) {
+						this.getSurface().drawString("" + this.duelOfferItemSize[itmOffer], 1 + xI, 10 + yI, 0xFFFF00,
+							1);
+					}
 
-                    if (xI < this.mouseX && this.mouseX < 48 + xI && yI < this.mouseY && 32 + yI > this.mouseY) {
-                        this.getSurface().drawString(
-                                EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]).getName() + ": @whi@"
-                                        + EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]).getDescription(),
-                                8 + xr, yr + 273, 0xFFFF00, 1);
-                    }
-                }
+					if (xI < this.mouseX && this.mouseX < 48 + xI && yI < this.mouseY && 32 + yI > this.mouseY) {
+						this.getSurface().drawString(
+							EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]).getName() + ": @whi@"
+								+ EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]).getDescription(),
+							8 + xr, yr + 273, 0xFFFF00, 1);
+					}
+				}
 
-                for (int itmOffer = 0; itmOffer < this.duelOffsetOpponentItemCount; ++itmOffer) {
-                    int xI = itmOffer % 4 * 49 + 9 + xr;
-                    int yI = itmOffer / 4 * 34 + 124 + yr;
-                    this.getSurface().drawSpriteClipping(
-                            spriteSelect(EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer])),
-                            xI, yI, 48, 32,
-                            EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).getPictureMask(), 0, false, 0,
-                            1);
+				for (int itmOffer = 0; itmOffer < this.duelOffsetOpponentItemCount; ++itmOffer) {
+					int xI = itmOffer % 4 * 49 + 9 + xr;
+					int yI = itmOffer / 4 * 34 + 124 + yr;
+					this.getSurface().drawSpriteClipping(
+						spriteSelect(EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer])),
+						xI, yI, 48, 32,
+						EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).getPictureMask(), 0, false, 0,
+						1);
 
-                    ItemDef def = EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]);
-                    if (def.getNotedFormOf() >= 0) {
-                        ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-                        getSurface().drawSpriteClipping(spriteSelect(originalDef), xI + 7, yI + 4,
-                                33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
-                    }
+					ItemDef def = EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]);
+					if (def.getNotedFormOf() >= 0) {
+						ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
+						getSurface().drawSpriteClipping(spriteSelect(originalDef), xI + 7, yI + 4,
+							33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
+					}
 
-                    if (EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).isStackable()) {
-                        this.getSurface().drawString("" + this.duelOpponentItemCount[itmOffer], 1 + xI, 10 + yI,
-                                0xFFFF00, 1);
-                    }
+					if (EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).isStackable()) {
+						this.getSurface().drawString("" + this.duelOpponentItemCount[itmOffer], 1 + xI, 10 + yI,
+							0xFFFF00, 1);
+					}
 
-                    if (this.mouseX > xI && 48 + xI > this.mouseX && yI < this.mouseY && this.mouseY < yI + 32) {
-                        this.getSurface().drawString(
-                                EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).getName() + ": @whi@"
-                                        + EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).getDescription(),
-                                xr + 8, 273 + yr, 0xFFFF00, 1);
-                    }
-                }
+					if (this.mouseX > xI && 48 + xI > this.mouseX && yI < this.mouseY && this.mouseY < yI + 32) {
+						this.getSurface().drawString(
+							EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).getName() + ": @whi@"
+								+ EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).getDescription(),
+							xr + 8, 273 + yr, 0xFFFF00, 1);
+					}
+				}
 
-                if (this.menuDuel_Visible) {
-                    this.menuDuel.render(this.menuDuelY, this.menuDuelX, this.mouseY, (byte) -12, this.mouseX);
-                }
+				if (this.menuDuel_Visible) {
+					this.menuDuel.render(this.menuDuelY, this.menuDuelX, this.mouseY, (byte) -12, this.mouseX);
+				}
 
-            }
+			}
         } catch (RuntimeException var11) {
             throw GenUtil.makeThrowable(var11, "client.TD(" + "dummy" + ')');
         }
@@ -9321,143 +9376,171 @@ public final class mudclient implements Runnable {
         }
     }
 
-    private void duelRemoveItem(int itemIndex, int removeCount) {
-        try {
+	private void duelRemoveItem(int itemIndex, int removeCount) {
+		try {
 
-            int itemID = this.duelOfferItemID[itemIndex];
-            int count = removeCount >= 0 ? removeCount : this.mouseButtonItemCountIncrement;
-            if (EntityHandler.getItemDef(itemID).isStackable()) {
-                this.duelOfferItemSize[itemIndex] -= count;
-                if (this.duelOfferItemSize[itemIndex] <= 0) {
-                    --this.duelOfferItemCount;
+			int itemID = this.duelOfferItemID[itemIndex];
+			int count = removeCount >= 0 ? removeCount : this.mouseButtonItemCountIncrement;
+			if (EntityHandler.getItemDef(itemID).isStackable()) {
+				this.duelOfferItemSize[itemIndex] -= count;
+				if (this.duelOfferItemSize[itemIndex] <= 0) {
+					--this.duelOfferItemCount;
 
-                    for (int i = itemIndex; i < this.duelOfferItemCount; ++i) {
-                        this.duelOfferItemID[i] = this.duelOfferItemID[i + 1];
-                        this.duelOfferItemSize[i] = this.duelOfferItemSize[i + 1];
-                    }
-                }
-            } else {
-                int removed = 0;
+					for (int i = itemIndex; i < this.duelOfferItemCount; ++i) {
+						this.duelOfferItemID[i] = this.duelOfferItemID[i + 1];
+						this.duelOfferItemSize[i] = this.duelOfferItemSize[i + 1];
+					}
+				}
+			} else {
+				int removed = 0;
 
-                for (int j = 0; j < this.duelOfferItemCount && removed < count; ++j) {
-                    if (this.duelOfferItemID[j] == itemID) {
-                        --this.duelOfferItemCount;
-                        ++removed;
+				for (int j = 0; j < this.duelOfferItemCount && removed < count; ++j) {
+					if (this.duelOfferItemID[j] == itemID) {
+						--this.duelOfferItemCount;
+						++removed;
 
-                        for (int i = j; this.duelOfferItemCount > i; ++i) {
-                            this.duelOfferItemID[i] = this.duelOfferItemID[1 + i];
-                            this.duelOfferItemSize[i] = this.duelOfferItemSize[1 + i];
-                        }
+						for (int i = j; this.duelOfferItemCount > i; ++i) {
+							this.duelOfferItemID[i] = this.duelOfferItemID[1 + i];
+							this.duelOfferItemSize[i] = this.duelOfferItemSize[1 + i];
+						}
 
-                        --j;
-                    }
-                }
-            }
+						--j;
+					}
+				}
+			}
 
-            this.packetHandler.getClientStream().newPacket(33);
-            this.packetHandler.getClientStream().writeBuffer1.putByte(this.duelOfferItemCount);
+			this.packetHandler.getClientStream().newPacket(33);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(this.duelOfferItemCount);
 
-            for (int i = 0; this.duelOfferItemCount > i; ++i) {
-                this.packetHandler.getClientStream().writeBuffer1.putShort(this.duelOfferItemID[i]);
-                this.packetHandler.getClientStream().writeBuffer1.putInt(this.duelOfferItemSize[i]);
-            }
+			for (int i = 0; this.duelOfferItemCount > i; ++i) {
+				this.packetHandler.getClientStream().writeBuffer1.putShort(this.duelOfferItemID[i]);
+				this.packetHandler.getClientStream().writeBuffer1.putInt(this.duelOfferItemSize[i]);
+			}
 
-            this.packetHandler.getClientStream().finishPacket();
-            this.duelOfferAccepted = false;
-            this.duelOffsetOpponentAccepted = false;
-        } catch (RuntimeException var9) {
-            throw GenUtil.makeThrowable(var9, "client.IC(" + itemIndex + ',' + removeCount + ',' + "dummy" + ')');
-        }
-    }
+			this.packetHandler.getClientStream().finishPacket();
+			this.duelOfferAccepted = false;
+			this.duelOffsetOpponentAccepted = false;
+		} catch (RuntimeException var9) {
+			throw GenUtil.makeThrowable(var9, "client.IC(" + itemIndex + ',' + removeCount + ',' + "dummy" + ')');
+		}
+	}
 
-    private void duelStakeItem(int andStakeCount, int andStakeInvIndex) {
-        try {
+	private void duelStakeItem(int andStakeCount, int andStakeInvIndex) {
+		try {
+			boolean andStakeSuccess = false;
 
-            boolean andStakeSuccess = false;
-            int hitStakeStacks = 0;
-            int andStakeInvID = this.inventoryItemID[andStakeInvIndex];
+			int hitStakeStacks = 0;
+			int[] itemIdArray, itemAmountArray;
+			Object[] thang = getEquipmentItems();
+			if (stakeOfferEquipMode) {
+				itemIdArray = ((int[])thang[0]);
+				itemAmountArray = ((int[])thang[1]);
+				if (andStakeInvIndex >= itemIdArray.length)
+					return;
+			} else {
+				itemIdArray = this.inventoryItemID;
+				itemAmountArray = this.inventoryItemSize;
 
-            for (int duelIdx = 0; duelIdx < this.duelOfferItemCount; ++duelIdx) {
-                if (this.duelOfferItemID[duelIdx] == andStakeInvID) {
-                    if (EntityHandler.getItemDef(andStakeInvID).isStackable()) {
-                        if (andStakeCount < 0) {
-                            for (int invIdx = 0; invIdx < this.mouseButtonItemCountIncrement; ++invIdx) {
-                                if (this.duelOfferItemSize[duelIdx] < this.inventoryItemSize[andStakeInvIndex]) {
-                                    ++this.duelOfferItemSize[duelIdx];
-                                }
+			}
+			int invCount = this.getInventoryCount(itemIdArray[andStakeInvIndex]);
+			if (S_WANT_EQUIPMENT_TAB) {
+				for (int itemid : ((int[])thang[0])) {
+					if (itemid == itemIdArray[andStakeInvIndex]) {
+						invCount++;
+						break;
+					}
+				}
+			}
 
-                                andStakeSuccess = true;
-                            }
-                        } else {
-                            this.duelOfferItemSize[duelIdx] += andStakeCount;
-                            if (this.inventoryItemSize[andStakeInvIndex] < this.duelOfferItemSize[duelIdx]) {
-                                this.duelOfferItemSize[duelIdx] = this.inventoryItemSize[andStakeInvIndex];
-                            }
+			int andStakeInvID = itemIdArray[andStakeInvIndex];
+			if (S_WANT_EQUIPMENT_TAB && EntityHandler.getItemDef(andStakeInvID).isStackable() && stakeOfferEquipMode) {
+				this.showMessage(false, null, "You can't stake stackables from your equipment.",MessageType.GAME,0,null);
+				return;
+			}
 
-                            andStakeSuccess = true;
-                        }
-                    } else {
-                        ++hitStakeStacks;
-                    }
-                }
-            }
 
-            int invCount = this.getInventoryCount(andStakeInvID);
-            if (hitStakeStacks >= invCount) {
-                andStakeSuccess = true;
-            }
+			for (int duelIdx = 0; duelIdx < this.duelOfferItemCount; ++duelIdx) {
+				if (this.duelOfferItemID[duelIdx] == andStakeInvID) {
+					if (EntityHandler.getItemDef(andStakeInvID).isStackable()) {
+						if (andStakeCount < 0) {
+							for (int invIdx = 0; invIdx < this.mouseButtonItemCountIncrement; ++invIdx) {
+								if (this.duelOfferItemSize[duelIdx] < itemAmountArray[andStakeInvIndex]) {
+									++this.duelOfferItemSize[duelIdx];
+								}
 
-            if (EntityHandler.getItemDef(andStakeInvID).quest && !localPlayer.isAdmin()) {
-                andStakeSuccess = true;
-                this.showMessage(false, null, "This object cannot be added to a duel offer", MessageType.GAME,
-                        0, null);
-            }
+								andStakeSuccess = true;
+							}
+						} else {
+							this.duelOfferItemSize[duelIdx] += andStakeCount;
+							if (itemAmountArray[andStakeInvIndex] < this.duelOfferItemSize[duelIdx]) {
+								this.duelOfferItemSize[duelIdx] = itemAmountArray[andStakeInvIndex];
+							}
 
-            if (!andStakeSuccess) {
-                if (andStakeCount < 0) {
-                    if (this.duelOfferItemCount < 8) {
-                        this.duelOfferItemID[this.duelOfferItemCount] = andStakeInvID;
-                        this.duelOfferItemSize[this.duelOfferItemCount] = 1;
-                        ++this.duelOfferItemCount;
-                        andStakeSuccess = true;
-                    }
-                } else {
-                    for (int var8 = 0; andStakeCount > var8 && this.duelOfferItemCount < 8
-                            && hitStakeStacks < invCount; ++var8) {
-                        this.duelOfferItemID[this.duelOfferItemCount] = andStakeInvID;
-                        this.duelOfferItemSize[this.duelOfferItemCount] = 1;
-                        ++hitStakeStacks;
-                        ++this.duelOfferItemCount;
-                        andStakeSuccess = true;
-                        if (var8 == 0 && EntityHandler.getItemDef(andStakeInvID).isStackable()) {
-                            this.duelOfferItemSize[this.duelOfferItemCount
-                                    - 1] = this.inventoryItemSize[andStakeInvIndex] < andStakeCount
-                                    ? this.inventoryItemSize[andStakeInvIndex] : andStakeCount;
-                            break;
-                        }
-                    }
-                }
-            }
+							andStakeSuccess = true;
+						}
+					} else {
+						++hitStakeStacks;
+					}
+				}
+			}
 
-            if (andStakeSuccess) {
-                this.packetHandler.getClientStream().newPacket(33);
-                this.packetHandler.getClientStream().writeBuffer1.putByte(this.duelOfferItemCount);
 
-                for (int i = 0; this.duelOfferItemCount > i; ++i) {
-                    this.packetHandler.getClientStream().writeBuffer1.putShort(this.duelOfferItemID[i]);
-                    this.packetHandler.getClientStream().writeBuffer1.putInt(this.duelOfferItemSize[i]);
-                }
 
-                this.packetHandler.getClientStream().finishPacket();
-                this.duelOffsetOpponentAccepted = false;
-                this.duelOfferAccepted = false;
-            }
+			if (hitStakeStacks >= invCount) {
+				andStakeSuccess = true;
+			}
 
-        } catch (RuntimeException var9) {
-            throw GenUtil.makeThrowable(var9,
-                    "client.C(" + "dummy" + ',' + andStakeCount + ',' + andStakeInvIndex + ')');
-        }
-    }
+			if (EntityHandler.getItemDef(andStakeInvID).quest && !localPlayer.isAdmin()) {
+				andStakeSuccess = true;
+				this.showMessage(false, null, "This object cannot be added to a duel offer", MessageType.GAME,
+					0, null);
+			}
+
+			if (!andStakeSuccess) {
+				if (andStakeCount < 0) {
+					if (this.duelOfferItemCount < 8) {
+						this.duelOfferItemID[this.duelOfferItemCount] = andStakeInvID;
+						this.duelOfferItemSize[this.duelOfferItemCount] = 1;
+						++this.duelOfferItemCount;
+						andStakeSuccess = true;
+					}
+				} else {
+					for (int var8 = 0; andStakeCount > var8 && this.duelOfferItemCount < 8
+						&& hitStakeStacks < invCount; ++var8) {
+						this.duelOfferItemID[this.duelOfferItemCount] = andStakeInvID;
+						this.duelOfferItemSize[this.duelOfferItemCount] = 1;
+						++hitStakeStacks;
+						++this.duelOfferItemCount;
+						andStakeSuccess = true;
+						if (var8 == 0 && EntityHandler.getItemDef(andStakeInvID).isStackable()) {
+							this.duelOfferItemSize[this.duelOfferItemCount
+								- 1] = itemAmountArray[andStakeInvIndex] < andStakeCount
+								? itemAmountArray[andStakeInvIndex] : andStakeCount;
+							break;
+						}
+					}
+				}
+			}
+
+			if (andStakeSuccess) {
+				this.packetHandler.getClientStream().newPacket(33);
+				this.packetHandler.getClientStream().writeBuffer1.putByte(this.duelOfferItemCount);
+
+				for (int i = 0; this.duelOfferItemCount > i; ++i) {
+					this.packetHandler.getClientStream().writeBuffer1.putShort(this.duelOfferItemID[i]);
+					this.packetHandler.getClientStream().writeBuffer1.putInt(this.duelOfferItemSize[i]);
+				}
+
+				this.packetHandler.getClientStream().finishPacket();
+				this.duelOffsetOpponentAccepted = false;
+				this.duelOfferAccepted = false;
+			}
+
+		} catch (RuntimeException var9) {
+			throw GenUtil.makeThrowable(var9,
+				"client.C(" + "dummy" + ',' + andStakeCount + ',' + andStakeInvIndex + ')');
+		}
+	}
 
     private void fetchContainerSize() {
         try {

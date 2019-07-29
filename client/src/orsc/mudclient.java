@@ -133,6 +133,7 @@ public final class mudclient implements Runnable {
 	private final int[] duelOpponentItemCounts = new int[8];
 	private final int[] duelOpponentItemId = new int[8];
 	private final int[] duelOpponentItems = new int[8];
+	private boolean stakeOfferEquipMode = false;
 	public final String[] equipmentStatNames = new String[]{"Armour", "WeaponAim", "WeaponPower", "Magic",
 		"Prayer"};
 	private final boolean[] gameObjectInstance_Arg1 = new boolean[5000];
@@ -2688,6 +2689,7 @@ public final class mudclient implements Runnable {
 						} else {
 							this.duelRemoveItem(firstItemIndex, doCount);
 						}
+						clickedIndex = -1;
 					} else {
 						this.duelDoX_Slot = firstItemIndex;
 						if (act == MenuItemAction.DUEL_STAKE) {
@@ -2701,15 +2703,28 @@ public final class mudclient implements Runnable {
 				if (this.mouseButtonClick == 1 && this.mouseButtonItemCountIncrement == 0) {
 					this.mouseButtonItemCountIncrement = 1;
 				}
-
+				if (getMouseY() >= 239 + 36 && getMouseY() <= 257 + 36) {
+					if (mouseButtonClick != 0 && S_WANT_EQUIPMENT_TAB) {
+						if (getMouseX() >= 22 + 320 && getMouseX() <= 22 + 348) {
+							stakeOfferEquipMode = false;
+						} else if (getMouseX() >= 22 + 348 && getMouseX() <= 22 + 376)
+							stakeOfferEquipMode = true;
+						mouseButtonClick = 0;
+					}
+				}
 				int mouseX_Local = this.mouseX - 22;
 				int mouseY_Local = this.mouseY - 36;
 				if (mouseX_Local >= 0 && mouseY_Local >= 0 && mouseX_Local < 468 && mouseY_Local < 262) {
 					if (this.mouseButtonItemCountIncrement > 0) {
 						if (mouseX_Local > 216 && mouseY_Local > 30 && mouseX_Local < 462 && mouseY_Local < 235) {
 							int slot = (mouseX_Local - 217) / 49 + (mouseY_Local - 31) / 34 * 5;
-							if (slot >= 0 && this.inventoryItemCount > slot) {
-								this.duelStakeItem(-1, slot);
+							if (slot >= 0) {
+								if (stakeOfferEquipMode) {
+									this.duelStakeItem(-1, slot);
+								} else if (this.inventoryItemCount > slot) {
+									this.duelStakeItem(-1, slot);
+								}
+								clickedIndex = -1;
 							}
 						}
 
@@ -2792,25 +2807,39 @@ public final class mudclient implements Runnable {
 							}
 
 							int invIndex = (mouseX_Local - 217) / 49 + (mouseY_Local - 31) / 34 * 5;
-							if (invIndex >= 0 && this.inventoryItemCount > invIndex) {
-								int itemID = this.inventoryItemID[invIndex];
-								this.menuDuel_Visible = true;
-								this.menuDuel.recalculateSize(0);
-								this.menuDuel.addCharacterItem_WithID(itemID,
-									"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
-									"Stake 1", 1);
-								this.menuDuel.addCharacterItem_WithID(itemID,
-									"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
-									"Stake 5", 5);
-								this.menuDuel.addCharacterItem_WithID(itemID,
-									"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
-									"Stake 10", 10);
-								this.menuDuel.addCharacterItem_WithID(itemID,
-									"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
-									"Stake All", -1);
-								this.menuDuel.addCharacterItem_WithID(itemID,
-									"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
-									"Stake X", -2);
+							if (invIndex >= 0) {
+								if (stakeOfferEquipMode) {
+									Object[] equipment = getEquipmentItems();
+									if (invIndex < ((int[])equipment[0]).length) {
+										int itemID = ((int[])equipment[0])[invIndex];
+										this.menuDuel_Visible = true;
+										this.menuDuel.recalculateSize(0);
+										this.menuDuel.addCharacterItem_WithID(itemID,
+											"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
+											"Stake", 1);
+									}
+								} else {
+									if (this.inventoryItemCount > invIndex) {
+										int itemID = this.inventoryItemID[invIndex];
+										this.menuDuel_Visible = true;
+										this.menuDuel.recalculateSize(0);
+										this.menuDuel.addCharacterItem_WithID(itemID,
+											"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
+											"Stake 1", 1);
+										this.menuDuel.addCharacterItem_WithID(itemID,
+											"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
+											"Stake 5", 5);
+										this.menuDuel.addCharacterItem_WithID(itemID,
+											"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
+											"Stake 10", 10);
+										this.menuDuel.addCharacterItem_WithID(itemID,
+											"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
+											"Stake All", -1);
+										this.menuDuel.addCharacterItem_WithID(itemID,
+											"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
+											"Stake X", -2);
+									}
+								}
 								int width = this.menuDuel.getWidth();
 								int height = this.menuDuel.getHeight();
 								this.menuDuelY = this.mouseY - 7;
@@ -2949,6 +2978,50 @@ public final class mudclient implements Runnable {
 				this.getSurface().drawString("No prayer", 8 + xr + 102, yr + 231, 0xFFFF00, 3);
 				this.getSurface().drawString("No weapons", 102 + 8 + xr, 35 + yr + 215, 0xFFFF00, 3);
 
+				if (S_WANT_EQUIPMENT_TAB) {
+					this.getSurface().drawBoxAlpha(xr + 320, 239 + yr, 28, 28, stakeOfferEquipMode ? clearBox : selectedBox, 160);
+					this.getSurface().drawBoxAlpha(xr + 348, 239 + yr, 28, 28, stakeOfferEquipMode ? selectedBox : clearBox, 160);
+					this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.BANK_EQUIP_BAG.id())), xr + 320, 239 + yr, 28, 28, 0, 0, false, 0, 0);
+					this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.BANK_EQUIP_HELM.id())), xr + 348, 239 + yr, 28, 28, 0, 0, false, 0, 0);
+				}
+				if (stakeOfferEquipMode) {
+					int count = 0;
+					for (ItemDef item : equippedItems) {
+						if (item == null)
+							continue;
+						int xI = 217 + xr + (count % 5) * 49;
+						int yI = yr + 31 + (count / 5) * 34;
+						this.getSurface().drawSpriteClipping(
+							spriteSelect(item), xI,
+							yI, 48, 32, item.getPictureMask(), 0, false,
+							0, 1);
+						if (item.isStackable()) {
+							this.getSurface().drawString("" + this.inventoryItemSize[count], xI + 1,
+								10 + yI, 0xFFFF00, 1);
+						}
+						count++;
+					}
+				} else {
+					for (int itm = 0; this.inventoryItemCount > itm; ++itm) {
+						int xI = 217 + xr + (itm % 5) * 49;
+						int yI = yr + 31 + (itm / 5) * 34;
+						this.getSurface().drawSpriteClipping(
+							spriteSelect(EntityHandler.getItemDef(this.inventoryItemID[itm])), xI,
+							yI, 48, 32, EntityHandler.getItemDef(this.inventoryItemID[itm]).getPictureMask(), 0, false,
+							0, 1);
+
+						ItemDef def = EntityHandler.getItemDef(this.inventoryItemID[itm]);
+						if (def.getNotedFormOf() >= 0) {
+							ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
+							getSurface().drawSpriteClipping(spriteSelect(originalDef), xI + 7, yI + 4,
+								33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
+						}
+						if (EntityHandler.getItemDef(this.inventoryItemID[itm]).isStackable()) {
+							this.getSurface().drawString("" + this.inventoryItemSize[itm], xI + 1,
+								10 + yI, 0xFFFF00, 1);
+						}
+					}
+				}
 				this.getSurface().drawBoxBorder(xr + 93, 11, 215 + yr + 6, 11, 0xFFFF00);
 				if (this.duelSettingsRetreat) {
 					this.getSurface().drawBox(xr + 95, 8 + 215 + yr, 7, 7, 0xFFFF00);
@@ -2983,25 +3056,7 @@ public final class mudclient implements Runnable {
 					this.getSurface().drawColoredStringCentered(252 + xr, "other player", 0xFFFFFF, 0, 1, 256 + yr);
 				}
 
-				for (int itm = 0; this.inventoryItemCount > itm; ++itm) {
-					int xI = 217 + xr + (itm % 5) * 49;
-					int yI = yr + 31 + (itm / 5) * 34;
-					this.getSurface().drawSpriteClipping(
-						spriteSelect(EntityHandler.getItemDef(this.inventoryItemID[itm])), xI,
-						yI, 48, 32, EntityHandler.getItemDef(this.inventoryItemID[itm]).getPictureMask(), 0, false,
-						0, 1);
 
-					ItemDef def = EntityHandler.getItemDef(this.inventoryItemID[itm]);
-					if (def.getNotedFormOf() >= 0) {
-						ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-						getSurface().drawSpriteClipping(spriteSelect(originalDef), xI + 7, yI + 4,
-							33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
-					}
-					if (EntityHandler.getItemDef(this.inventoryItemID[itm]).isStackable()) {
-						this.getSurface().drawString("" + this.inventoryItemSize[itm], xI + 1,
-							10 + yI, 0xFFFF00, 1);
-					}
-				}
 
 				for (int itmOffer = 0; this.duelOfferItemCount > itmOffer; ++itmOffer) {
 					int xI = xr + 9 + itmOffer % 4 * 49;
@@ -7029,7 +7084,7 @@ public final class mudclient implements Runnable {
 							this.equipmentStatNames[currSkill + 3] + ":@yel@" + this.playerStatEquipment[3 + currSkill],
 							244 / 2 + xOffset + 35, yOffset + 243 + currSkill * 13, 0xFFFFFF, 1);
 					}
-					this.getSurface().drawLineHoriz(xOffset, yOffset+228, 245, 0);
+					this.getSurface().drawLineHoriz(xOffset, yOffset + 228, 245, 0);
 				}
 				//handle equipment clicks
 				if ((this.mouseButtonClick == 1 || this.mouseButtonClick == 2) && this.mouseY > yOffset) {
@@ -7069,19 +7124,19 @@ public final class mudclient implements Runnable {
 			if (S_WANT_EQUIPMENT_TAB) {
 
 				yOffset += 228;
-				this.getSurface().drawBoxAlpha(xOffset, yOffset-24, 122, 24, this.tabEquipmentIndex == 1 ? selectedBox : clearBox, 128);
-				this.getSurface().drawBoxAlpha(xOffset + 122, yOffset-24, 123, 24, this.tabEquipmentIndex == 0 ? selectedBox : clearBox, 128);
+				this.getSurface().drawBoxAlpha(xOffset, yOffset - 24, 122, 24, this.tabEquipmentIndex == 1 ? selectedBox : clearBox, 128);
+				this.getSurface().drawBoxAlpha(xOffset + 122, yOffset - 24, 123, 24, this.tabEquipmentIndex == 0 ? selectedBox : clearBox, 128);
 				this.getSurface().drawColoredStringCentered(xOffset + 60, "Equipment", 0, 0, 4, yOffset - 7);
 				this.getSurface().drawColoredStringCentered(xOffset + 183, "Inventory", 0, 0, 4, yOffset - 7);
 
-				this.getSurface().drawLineHoriz(xOffset, yOffset-24, 245, 0);
-				this.getSurface().drawLineVert(xOffset + 122, yOffset-24, 0, 24);
+				this.getSurface().drawLineHoriz(xOffset, yOffset - 24, 245, 0);
+				this.getSurface().drawLineVert(xOffset + 122, yOffset - 24, 0, 24);
 
 				//Handle ui clicks
 				if (this.mouseButtonClick == 1) {
 					if (this.mouseX >= xOffset) {
 						if (this.mouseY <= yOffset) {
-							if (this.mouseY >= yOffset-24) {
+							if (this.mouseY >= yOffset - 24) {
 								if (this.mouseX <= xOffset + 245) {
 									if (this.tabEquipmentIndex == 0) {
 										if (this.mouseX < xOffset + 122)
@@ -9414,17 +9469,44 @@ public final class mudclient implements Runnable {
 
 	private void duelStakeItem(int andStakeCount, int andStakeInvIndex) {
 		try {
-
 			boolean andStakeSuccess = false;
+
 			int hitStakeStacks = 0;
-			int andStakeInvID = this.inventoryItemID[andStakeInvIndex];
+			int[] itemIdArray, itemAmountArray;
+			Object[] thang = getEquipmentItems();
+			if (stakeOfferEquipMode) {
+				itemIdArray = ((int[])thang[0]);
+				itemAmountArray = ((int[])thang[1]);
+				if (andStakeInvIndex >= itemIdArray.length)
+					return;
+			} else {
+				itemIdArray = this.inventoryItemID;
+				itemAmountArray = this.inventoryItemSize;
+
+			}
+			int invCount = this.getInventoryCount(itemIdArray[andStakeInvIndex]);
+			if (S_WANT_EQUIPMENT_TAB) {
+				for (int itemid : ((int[])thang[0])) {
+					if (itemid == itemIdArray[andStakeInvIndex]) {
+						invCount++;
+						break;
+					}
+				}
+			}
+
+			int andStakeInvID = itemIdArray[andStakeInvIndex];
+			if (S_WANT_EQUIPMENT_TAB && EntityHandler.getItemDef(andStakeInvID).isStackable() && stakeOfferEquipMode) {
+				this.showMessage(false, null, "You can't stake stackables from your equipment.",MessageType.GAME,0,null);
+				return;
+			}
+
 
 			for (int duelIdx = 0; duelIdx < this.duelOfferItemCount; ++duelIdx) {
 				if (this.duelOfferItemID[duelIdx] == andStakeInvID) {
 					if (EntityHandler.getItemDef(andStakeInvID).isStackable()) {
 						if (andStakeCount < 0) {
 							for (int invIdx = 0; invIdx < this.mouseButtonItemCountIncrement; ++invIdx) {
-								if (this.duelOfferItemSize[duelIdx] < this.inventoryItemSize[andStakeInvIndex]) {
+								if (this.duelOfferItemSize[duelIdx] < itemAmountArray[andStakeInvIndex]) {
 									++this.duelOfferItemSize[duelIdx];
 								}
 
@@ -9432,8 +9514,8 @@ public final class mudclient implements Runnable {
 							}
 						} else {
 							this.duelOfferItemSize[duelIdx] += andStakeCount;
-							if (this.inventoryItemSize[andStakeInvIndex] < this.duelOfferItemSize[duelIdx]) {
-								this.duelOfferItemSize[duelIdx] = this.inventoryItemSize[andStakeInvIndex];
+							if (itemAmountArray[andStakeInvIndex] < this.duelOfferItemSize[duelIdx]) {
+								this.duelOfferItemSize[duelIdx] = itemAmountArray[andStakeInvIndex];
 							}
 
 							andStakeSuccess = true;
@@ -9444,7 +9526,8 @@ public final class mudclient implements Runnable {
 				}
 			}
 
-			int invCount = this.getInventoryCount(andStakeInvID);
+
+
 			if (hitStakeStacks >= invCount) {
 				andStakeSuccess = true;
 			}
@@ -9473,8 +9556,8 @@ public final class mudclient implements Runnable {
 						andStakeSuccess = true;
 						if (var8 == 0 && EntityHandler.getItemDef(andStakeInvID).isStackable()) {
 							this.duelOfferItemSize[this.duelOfferItemCount
-								- 1] = this.inventoryItemSize[andStakeInvIndex] < andStakeCount
-								? this.inventoryItemSize[andStakeInvIndex] : andStakeCount;
+								- 1] = itemAmountArray[andStakeInvIndex] < andStakeCount
+								? itemAmountArray[andStakeInvIndex] : andStakeCount;
 							break;
 						}
 					}
@@ -10974,7 +11057,7 @@ public final class mudclient implements Runnable {
 					this.packetHandler.getClientStream().writeBuffer1.putByte(dir);
 					if (tileID > S_PLAYER_INVENTORY_SLOTS) {
 						this.packetHandler.getClientStream().writeBuffer1.putShort(0xFFFF);
-						this.packetHandler.getClientStream().writeBuffer1.putShort(equippedItems[tileID-S_PLAYER_INVENTORY_SLOTS].id);
+						this.packetHandler.getClientStream().writeBuffer1.putShort(equippedItems[tileID - S_PLAYER_INVENTORY_SLOTS].id);
 					} else
 						this.packetHandler.getClientStream().writeBuffer1.putShort(tileID);
 					this.packetHandler.getClientStream().finishPacket();
@@ -11113,7 +11196,7 @@ public final class mudclient implements Runnable {
 					this.selectedItemInventoryIndex = indexOrX;
 					if (!isAndroid())
 						this.showUiTab = 0;
-						this.m_ig = EntityHandler.getItemDef(this.inventoryItemID[this.selectedItemInventoryIndex]).getName();
+					this.m_ig = EntityHandler.getItemDef(this.inventoryItemID[this.selectedItemInventoryIndex]).getName();
 					break;
 				}
 				case ITEM_USE_EQUIPTAB:
@@ -11161,8 +11244,7 @@ public final class mudclient implements Runnable {
 					this.packetHandler.getClientStream().newPacket(246);
 					this.packetHandler.getClientStream().writeBuffer1.putShort(0xFFFF);
 					int slot;
-					for (slot = 0; slot < S_PLAYER_SLOT_COUNT; slot++)
-					{
+					for (slot = 0; slot < S_PLAYER_SLOT_COUNT; slot++) {
 						if (equippedItems[slot] != null && equippedItems[slot].id == indexOrX)
 							break;
 					}
@@ -15146,14 +15228,14 @@ public final class mudclient implements Runnable {
 		int count = 0;
 		for (ItemDef item : equippedItems) {
 			if (item != null)
-				count ++;
+				count++;
 		}
 		if (count == 0)
 			return null;
 		int[] equipmentIDs = new int[count];
 		int[] equipmentAmounts = new int[count];
 		count = 0;
-		for (int i = 0; i < S_PLAYER_SLOT_COUNT; i ++) {
+		for (int i = 0; i < S_PLAYER_SLOT_COUNT; i++) {
 			ItemDef item = equippedItems[i];
 			if (item != null) {
 				equipmentIDs[count] = item.id;
