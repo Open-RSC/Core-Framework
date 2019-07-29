@@ -13,61 +13,11 @@ import com.openrsc.data.DataFileDecrypter;
 import com.openrsc.data.DataOperations;
 import com.openrsc.interfaces.NComponent;
 import com.openrsc.interfaces.NCustomComponent;
-import com.openrsc.interfaces.misc.AchievementGUI;
-import com.openrsc.interfaces.misc.AuctionHouse;
-import com.openrsc.interfaces.misc.BankPinInterface;
-import com.openrsc.interfaces.misc.CustomBankInterface;
-import com.openrsc.interfaces.misc.DoSkillInterface;
-import com.openrsc.interfaces.misc.ExperienceConfigInterface;
-import com.openrsc.interfaces.misc.FishingTrawlerInterface;
-import com.openrsc.interfaces.misc.IronManInterface;
-import com.openrsc.interfaces.misc.LostOnDeathInterface;
-import com.openrsc.interfaces.misc.OnlineListInterface;
-import com.openrsc.interfaces.misc.ProgressBarInterface;
-import com.openrsc.interfaces.misc.QuestGuideInterface;
-import com.openrsc.interfaces.misc.SkillGuideInterface;
-import com.openrsc.interfaces.misc.TerritorySignupInterface;
+import com.openrsc.interfaces.misc.*;
 import com.openrsc.interfaces.misc.clan.Clan;
-
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-
-//import javax.sound.sampled.AudioSystem;
-//import javax.sound.sampled.Clip;
-
 import orsc.buffers.RSBufferUtils;
-import orsc.enumerations.GameMode;
-import orsc.enumerations.InputXAction;
-import orsc.enumerations.MenuItemAction;
-import orsc.enumerations.MessageTab;
-import orsc.enumerations.MessageType;
-import orsc.enumerations.ORSCharacterDirection;
-import orsc.enumerations.PasswordChangeMode;
-import orsc.enumerations.SocialPopupMode;
-import orsc.graphics.gui.InputXPrompt;
-import orsc.graphics.gui.KillAnnouncer;
-import orsc.graphics.gui.KillAnnouncerQueue;
-import orsc.graphics.gui.Menu;
-import orsc.graphics.gui.MessageHistory;
-import orsc.graphics.gui.Panel;
-import orsc.graphics.gui.SocialLists;
+import orsc.enumerations.*;
+import orsc.graphics.gui.*;
 import orsc.graphics.three.CollisionFlag;
 import orsc.graphics.three.RSModel;
 import orsc.graphics.three.Scene;
@@ -81,92 +31,18 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
 
-import static orsc.Config.CLIENT_VERSION;
-import static orsc.Config.C_BATCH_PROGRESS_BAR;
-import static orsc.Config.C_EXPERIENCE_CONFIG_SUBMENU;
-import static orsc.Config.C_EXPERIENCE_COUNTER;
-import static orsc.Config.C_EXPERIENCE_COUNTER_COLOR;
-import static orsc.Config.C_EXPERIENCE_COUNTER_MODE;
-import static orsc.Config.C_EXPERIENCE_DROPS;
-import static orsc.Config.C_EXPERIENCE_DROP_SPEED;
-import static orsc.Config.C_FIGHT_MENU;
-import static orsc.Config.C_HIDE_FOG;
-import static orsc.Config.C_HIDE_ROOFS;
-import static orsc.Config.C_HOLD_AND_CHOOSE;
-import static orsc.Config.C_INV_COUNT;
-import static orsc.Config.C_KILL_FEED;
-import static orsc.Config.C_LAST_ZOOM;
-import static orsc.Config.C_LONG_PRESS_TIMER;
-import static orsc.Config.C_MENU_SIZE;
-import static orsc.Config.C_MESSAGE_TAB_SWITCH;
-import static orsc.Config.C_NAME_CLAN_TAG_OVERLAY;
-import static orsc.Config.C_SHOW_GROUND_ITEMS;
-import static orsc.Config.C_SIDE_MENU_OVERLAY;
-import static orsc.Config.C_SWIPE_TO_ROTATE;
-import static orsc.Config.C_SWIPE_TO_SCROLL;
-import static orsc.Config.C_SWIPE_TO_ZOOM;
-import static orsc.Config.C_VOLUME_TO_ROTATE;
-import static orsc.Config.DEBUG;
-import static orsc.Config.DISPLAY_LOGO_SPRITE;
-import static orsc.Config.F_CACHE_DIR;
-import static orsc.Config.F_SHOWING_KEYBOARD;
-import static orsc.Config.MEMBER_WORLD;
-import static orsc.Config.Remember;
-import static orsc.Config.SERVER_NAME;
-import static orsc.Config.SERVER_NAME_WELCOME;
-import static orsc.Config.S_AUTO_MESSAGE_SWITCH_TOGGLE;
-import static orsc.Config.S_BATCH_PROGRESSION;
-import static orsc.Config.S_CUSTOM_FIREMAKING;
-import static orsc.Config.S_EXPERIENCE_COUNTER_TOGGLE;
-import static orsc.Config.S_EXPERIENCE_DROPS_TOGGLE;
-import static orsc.Config.S_FIGHTMODE_SELECTOR_TOGGLE;
-import static orsc.Config.S_FOG_TOGGLE;
-import static orsc.Config.S_GROUND_ITEM_TOGGLE;
-import static orsc.Config.S_INVENTORY_COUNT_TOGGLE;
-import static orsc.Config.S_ITEMS_ON_DEATH_MENU;
-import static orsc.Config.S_MAX_WALKING_SPEED;
-import static orsc.Config.S_MENU_COMBAT_STYLE_TOGGLE;
-import static orsc.Config.S_PLAYER_LEVEL_LIMIT;
-import static orsc.Config.S_RIGHT_CLICK_BANK;
-import static orsc.Config.S_SHOW_FLOATING_NAMETAGS;
-import static orsc.Config.S_SHOW_ROOF_TOGGLE;
-import static orsc.Config.S_SIDE_MENU_TOGGLE;
-import static orsc.Config.S_SPAWN_AUCTION_NPCS;
-import static orsc.Config.S_SPAWN_IRON_MAN_NPCS;
-import static orsc.Config.S_WANT_BANK_NOTES;
-import static orsc.Config.S_WANT_BANK_PINS;
-import static orsc.Config.S_WANT_CERTS_TO_BANK;
-import static orsc.Config.S_WANT_CERT_DEPOSIT;
-import static orsc.Config.S_WANT_CLANS;
-import static orsc.Config.S_WANT_CUSTOM_BANKS;
-import static orsc.Config.S_WANT_CUSTOM_LANDSCAPE;
-import static orsc.Config.S_WANT_CUSTOM_RANK_DISPLAY;
-import static orsc.Config.S_WANT_DECANTING;
-import static orsc.Config.S_WANT_DROP_X;
-import static orsc.Config.S_WANT_EXPERIENCE_ELIXIRS;
-import static orsc.Config.S_WANT_EXP_INFO;
-import static orsc.Config.S_WANT_FIXED_OVERHEAD_CHAT;
-import static orsc.Config.S_WANT_GLOBAL_CHAT;
-import static orsc.Config.S_WANT_HIDE_IP;
-import static orsc.Config.S_WANT_KEYBOARD_SHORTCUTS;
-import static orsc.Config.S_WANT_KILL_FEED;
-import static orsc.Config.S_WANT_QUEST_MENUS;
-import static orsc.Config.S_WANT_REMEMBER;
-import static orsc.Config.S_WANT_RUNECRAFTING;
-import static orsc.Config.S_WANT_SKILL_MENUS;
-import static orsc.Config.S_WANT_WOODCUTTING_GUILD;
-import static orsc.Config.S_ZOOM_VIEW_TOGGLE;
-import static orsc.Config.WELCOME_TEXT;
-import static orsc.Config.getFPS;
-import static orsc.Config.getServerName;
-import static orsc.Config.getServerNameWelcome;
-import static orsc.Config.getWelcomeText;
-import static orsc.Config.initConfig;
-import static orsc.Config.isAndroid;
-import static orsc.Config.isLenientContactDetails;
-import static orsc.Config.wantEmail;
-import static orsc.Config.wantMembers;
+import java.io.*;
+import java.security.SecureRandom;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
+import static orsc.Config.*;
 import static orsc.multiclient.ClientPort.saveHideIp;
+
+//import javax.sound.sampled.AudioSystem;
+//import javax.sound.sampled.Clip;
 
 public final class mudclient implements Runnable {
 
@@ -191,7 +67,9 @@ public final class mudclient implements Runnable {
             {3, 4, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5}, {3, 4, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5},
             {4, 3, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5}, {11, 4, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3},
             {11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 4, 3}};
-    private final int[] animFrameToSprite_CombatA = new int[]{0, 1, 2, 1, 0, 0, 0, 0};
+	private final int[] equipIconXLocations = new int[]{98, 98, 98, 153, 43, 98, 98, 43, 43, 153, 153};
+	private final int[] equipIconYLocations = new int[]{5, 85, 125, 85, 85, 45, 165, 165, 45, 45, 165};
+	private final int[] animFrameToSprite_CombatA = new int[]{0, 1, 2, 1, 0, 0, 0, 0};
     private final int[] animFrameToSprite_CombatB = new int[]{0, 0, 0, 0, 0, 1, 2, 1};
     private final int[] bankItemID = new int[500];
     private final int[] bankItemSize = new int[500];
@@ -213,7 +91,7 @@ public final class mudclient implements Runnable {
     private final int[] duelOpponentItemCounts = new int[8];
     private final int[] duelOpponentItemId = new int[8];
     private final int[] duelOpponentItems = new int[8];
-    private final String[] equipmentStatNames = new String[]{"Armour", "WeaponAim", "WeaponPower", "Magic",
+    public final String[] equipmentStatNames = new String[]{"Armour", "WeaponAim", "WeaponPower", "Magic",
             "Prayer"};
     private final boolean[] gameObjectInstance_Arg1 = new boolean[5000];
     private final int[] gameObjectInstanceDir = new int[5000];
@@ -226,7 +104,9 @@ public final class mudclient implements Runnable {
     private final int[] inventoryItemEquipped = new int[35];
     private final int[] inventoryItemID = new int[35];
     private final int[] inventoryItemSize = new int[35];
-    private final ORSCharacter[] knownPlayers = new ORSCharacter[500];
+	public ItemDef[] equippedItems = new ItemDef[S_PLAYER_SLOT_COUNT];
+	public int[] equippedItemAmount = new int[S_PLAYER_SLOT_COUNT];
+	private final ORSCharacter[] knownPlayers = new ORSCharacter[500];
     private final String[] optionsMenuText = new String[20];
     private final int[] groundItemHeight = new int[5000];
     private final int character2Colour = 2;
@@ -252,7 +132,7 @@ public final class mudclient implements Runnable {
     private final int[] playerSkinColors = new int[]{15523536, 13415270, 11766848, 10056486, 9461792};
     private int[] playerStatBase;
     private int[] playerExperience;
-    private final int[] playerStatEquipment = new int[5];
+    public final int[] playerStatEquipment = new int[5];
     private final boolean[] prayerOn = new boolean[50];
     private final int projectileMaxRange = 40;
     private final int[] shopItemCount = new int[256];
@@ -460,7 +340,8 @@ public final class mudclient implements Runnable {
     private String m_ig = "";
     private int questPoints = 0;
     private int m_Ji = 0;
-    private int settingTab = 0;
+	private int tabEquipmentIndex = 0;
+	private int settingTab = 0;
     private int loginButtonExistingUser;
     private int m_Kj;
     private int m_ld = 2;
@@ -681,7 +562,8 @@ public final class mudclient implements Runnable {
     private ArrayList<XPNotification> xpNotifications = new ArrayList<XPNotification>();
     private int amountToZoom = 0;
     private Panel panelLoginOptions;
-
+	int clearBox = GenUtil.buildColor(181, 181, 181);
+	int selectedBox = GenUtil.buildColor(220, 220, 220);
     int instructContactDetails;
     int controlContactName;
     int controlContactZipCode;
@@ -6943,126 +6825,240 @@ public final class mudclient implements Runnable {
     }
 
     // inventory right click menu definitions
-    private void drawUiTab1(int var1, boolean var2) {
-        try {
-            if (var1 != -15252) {
-                this.packetHandler.handlePacket2(-79, -83);
-            }
+	private void drawUiTab1(int var1, boolean var2) {
+		try {
+			if (var1 != -15252) {
+				this.packetHandler.handlePacket2(-79, -83);
+			}
 
-            int var3 = this.getSurface().width2 - 248;
-            this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.BAGTAB.id())), var3, 3);
+			int var3 = this.getSurface().width2 - 248;
+			int xOffset = var3;
+			this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.BAGTAB.id())), var3, 3);
 
-            int var4;
-            int var5;
-            int id;
-            for (var4 = 0; this.m_cl > var4; ++var4) {
-                var5 = var3 + var4 % 5 * 49;
-                id = var4 / 5 * 34 + 36;
-                if (this.inventoryItemCount > var4 && this.inventoryItemEquipped[var4] == 1) {
-                    this.getSurface().drawBoxAlpha(var5, id, 49, 34, 0xFF0000, 128);
-                } else {
-                    this.getSurface().drawBoxAlpha(var5, id, 49, 34, GenUtil.buildColor(181, 181, 181), 128);
-                }
+			int var4;
+			int var5;
+			int id;
+			int yOffset = 36;
 
-                if (var4 < this.inventoryItemCount) {
-                    this.getSurface().drawSpriteClipping(
-                            spriteSelect(EntityHandler.getItemDef(this.inventoryItemID[var4])),
-                            var5, id, 48, 32, EntityHandler.getItemDef(this.inventoryItemID[var4]).getPictureMask(), 0,
-                            false, 0, var1 ^ -15251);
+			if (this.tabEquipmentIndex == 0) //inventory tab
+			{
+				for (var4 = 0; this.m_cl > var4; ++var4) {
+					var5 = var3 + var4 % 5 * 49;
+					id = var4 / 5 * 34 + yOffset;
+					if (!S_WANT_EQUIPMENT_TAB && this.inventoryItemCount > var4 && this.inventoryItemEquipped[var4] == 1) {
+						this.getSurface().drawBoxAlpha(var5, id, 49, 34, 0xFF0000, 128);
+					} else {
+						this.getSurface().drawBoxAlpha(var5, id, 49, 34, GenUtil.buildColor(181, 181, 181), 128);
+					}
 
-                    ItemDef def = EntityHandler.getItemDef(this.inventoryItemID[var4]);
-                    if (def.getNotedFormOf() >= 0) {
-                        ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-                        getSurface().drawSpriteClipping(spriteSelect(originalDef), var5 + 7,
-                                id + 4, 33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
-                    }
-                    if (EntityHandler.getItemDef(this.inventoryItemID[var4]).isStackable()) {
-                        this.getSurface().drawString("" + this.inventoryItemSize[var4], 1 + var5,
-                                id + 10, 0xFFFF00, 1);
-                    }
-                }
-            }
+					if (var4 < this.inventoryItemCount) {
+						this.getSurface().drawSpriteClipping(
+							spriteSelect(EntityHandler.getItemDef(this.inventoryItemID[var4])),
+							var5, id, 48, 32, EntityHandler.getItemDef(this.inventoryItemID[var4]).getPictureMask(), 0,
+							false, 0, var1 ^ -15251);
 
-            for (var4 = 1; var4 <= 4; ++var4) {
-                this.getSurface().drawLineVert(var3 + var4 * 49, 36, 0, this.m_cl / 5 * 34);
-            }
+						ItemDef def = EntityHandler.getItemDef(this.inventoryItemID[var4]);
+						if (def.getNotedFormOf() >= 0) {
+							ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
+							getSurface().drawSpriteClipping(spriteSelect(originalDef), var5 + 7,
+								id + 4, 33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
+						}
+						if (EntityHandler.getItemDef(this.inventoryItemID[var4]).isStackable()) {
+							this.getSurface().drawString("" + this.inventoryItemSize[var4], 1 + var5,
+								id + 10, 0xFFFF00, 1);
+						}
+					}
+				}
 
-            for (var4 = 1; this.m_cl / 5 - 1 >= var4; ++var4) {
-                this.getSurface().drawLineHoriz(var3, 36 + var4 * 34, 245, 0);
-            }
+				for (var4 = 1; var4 <= 4; ++var4) {
+					this.getSurface().drawLineVert(var3 + var4 * 49, yOffset, 0, this.m_cl / 5 * 34);
+				}
 
-            if (var2) {
-                var3 = 248 + (this.mouseX - this.getSurface().width2);
-                var4 = this.mouseY - 36;
-                if (var3 >= 0 && var4 >= 0 && var3 < 248 && this.m_cl / 5 * 34 > var4) {
-                    var5 = var4 / 34 * 5 + var3 / 49;
-                    if (this.inventoryItemCount > var5) {
-                        id = this.inventoryItemID[var5];
-                        if (this.selectedSpell >= 0) {
-                            if (EntityHandler.getSpellDef(selectedSpell).getSpellType() == 3) {
-                                this.menuCommon.addCharacterItem_WithID(var5,
-                                        "@lre@" + EntityHandler.getItemDef(id).getName(),
-                                        MenuItemAction.ITEM_CAST_SPELL,
-                                        "Cast " + EntityHandler.getSpellDef(selectedSpell).getName() + " on",
-                                        this.selectedSpell);
-                            }
-                        } else if (this.selectedItemInventoryIndex < 0) {
-                            if (this.inventoryItemEquipped[var5] == 1) {
-                                this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_REMOVE_EQUIPPED, "Remove",
-                                        "@lre@" + EntityHandler.getItemDef(id).getName());
-                            } else if (EntityHandler.getItemDef(id).wearableID != 0) {
-                                String equipCommand;
-                                if ((24 & EntityHandler.getItemDef(id).wearableID) == 0) {
-                                    equipCommand = "Wear";
-                                } else {
-                                    equipCommand = "Wield";
-                                }
+				for (var4 = 1; this.m_cl / 5 - 1 >= var4; ++var4) {
+					this.getSurface().drawLineHoriz(var3, yOffset + var4 * 34, 245, 0);
+				}
+				if (var2) {
+					var3 = 248 + (this.mouseX - this.getSurface().width2);
+					var4 = this.mouseY - yOffset;
+					if (var3 >= 0 && var4 >= 0 && var3 < 248 && this.m_cl / 5 * 34 > var4) {
+						var5 = var4 / 34 * 5 + var3 / 49;
+						if (this.inventoryItemCount > var5) {
+							id = this.inventoryItemID[var5];
+							if (this.selectedSpell >= 0) {
+								if (EntityHandler.getSpellDef(selectedSpell).getSpellType() == 3) {
+									this.menuCommon.addCharacterItem_WithID(var5,
+										"@lre@" + EntityHandler.getItemDef(id).getName(),
+										MenuItemAction.ITEM_CAST_SPELL,
+										"Cast " + EntityHandler.getSpellDef(selectedSpell).getName() + " on",
+										this.selectedSpell);
+								}
+							} else if (this.selectedItemInventoryIndex < 0) {
+								if (this.inventoryItemEquipped[var5] == 1 && !S_WANT_EQUIPMENT_TAB) {
+									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_REMOVE_EQUIPPED, "Remove",
+										"@lre@" + EntityHandler.getItemDef(id).getName());
+								} else if (EntityHandler.getItemDef(id).wearableID != 0) {
+									String equipCommand;
+									if ((24 & EntityHandler.getItemDef(id).wearableID) == 0) {
+										equipCommand = "Wear";
+									} else {
+										equipCommand = "Wield";
+									}
 
-                                this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_EQUIP, equipCommand,
-                                        "@lre@" + EntityHandler.getItemDef(id).getName());
-                            }
+									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_EQUIP, equipCommand,
+										"@lre@" + EntityHandler.getItemDef(id).getName());
+								}
 
-                            if (!EntityHandler.getItemDef(id).getCommand().equals("")
-                                    && EntityHandler.getItemDef(id).getNotedFormOf() == -1) {
-                                this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_COMMAND,
-                                        EntityHandler.getItemDef(id).getCommand(),
-                                        "@lre@" + EntityHandler.getItemDef(id).getName());
-                            }
+								if (!EntityHandler.getItemDef(id).getCommand().equals("")
+									&& EntityHandler.getItemDef(id).getNotedFormOf() == -1) {
+									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_COMMAND,
+										EntityHandler.getItemDef(id).getCommand(),
+										"@lre@" + EntityHandler.getItemDef(id).getName());
+								}
 
-                            if (S_WANT_DROP_X && EntityHandler.getItemDef(id).getCommand().equals("Bury")
-                                    && EntityHandler.getItemDef(id).getNotedFormOf() == -1) {
-                                this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_COMMAND_ALL,
-                                        //EntityHandler.getItemDef(id).getCommand(), -- generic label.
-                                        "Bury All",
-                                        "@lre@" + EntityHandler.getItemDef(id).getName());
-                            }
+								if (S_WANT_DROP_X && EntityHandler.getItemDef(id).getCommand().equals("Bury")
+									&& EntityHandler.getItemDef(id).getNotedFormOf() == -1) {
+									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_COMMAND_ALL,
+										//EntityHandler.getItemDef(id).getCommand(), -- generic label.
+										"Bury All",
+										"@lre@" + EntityHandler.getItemDef(id).getName());
+								}
 
-                            this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_USE, "Use",
-                                    "@lre@" + EntityHandler.getItemDef(id).getName());
-                            this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP, "Drop",
-                                    "@lre@" + EntityHandler.getItemDef(id).getName());
-                            if (S_WANT_DROP_X) {
-                                this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP_X, "Drop X",
-                                        "@lre@" + EntityHandler.getItemDef(id).getName());
-                                this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP_ALL, "Drop All",
-                                        "@lre@" + EntityHandler.getItemDef(id).getName());
-                            }
-                            this.menuCommon.addCharacterItem(id, MenuItemAction.ITEM_EXAMINE, "Examine",
-                                    "@lre@" + EntityHandler.getItemDef(id).getName()
-                                            + (localPlayer.isDev() ? " @or1@(" + id + ")" : ""));
-                        } else {
-                            this.menuCommon.addCharacterItem_WithID(var5,
-                                    "@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.ITEM_USE_ITEM,
-                                    "Use " + this.m_ig + " with", this.selectedItemInventoryIndex);
-                        }
-                    }
-                }
+								this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_USE, "Use",
+									"@lre@" + EntityHandler.getItemDef(id).getName());
+								this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP, "Drop",
+									"@lre@" + EntityHandler.getItemDef(id).getName());
+								if (S_WANT_DROP_X) {
+									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP_X, "Drop X",
+										"@lre@" + EntityHandler.getItemDef(id).getName());
+									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP_ALL, "Drop All",
+										"@lre@" + EntityHandler.getItemDef(id).getName());
+								}
+								this.menuCommon.addCharacterItem(id, MenuItemAction.ITEM_EXAMINE, "Examine",
+									"@lre@" + EntityHandler.getItemDef(id).getName()
+										+ (localPlayer.isDev() ? " @or1@(" + id + ")" : ""));
+							} else {
+								this.menuCommon.addCharacterItem_WithID(var5,
+									"@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.ITEM_USE_ITEM,
+									"Use " + this.m_ig + " with", this.selectedItemInventoryIndex);
+							}
+						}
+					}
 
-            }
-        } catch (RuntimeException var8) {
-            throw GenUtil.makeThrowable(var8, "client.EB(" + var1 + ',' + var2 + ')');
-        }
-    }
+				}
+			} else if (this.tabEquipmentIndex == 1) //equipment tab
+			{
+				this.getSurface().drawBoxAlpha(xOffset, yOffset, 245, 204, this.clearBox, 128);
+				this.getSurface().drawBoxAlpha(xOffset, yOffset + 228, 245, 45, this.clearBox, 128);
+				Sprite todraw = null;
+				for (int i = 0; i < S_PLAYER_SLOT_COUNT; i++) {
+					if (this.equippedItems[i] == null) {
+						todraw = spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.EQUIPSLOT_HELM.id() + i));
+						this.getSurface().drawSpriteClipping(todraw
+							, xOffset + equipIconXLocations[i]
+							, yOffset + equipIconYLocations[i],
+							todraw.getWidth(), todraw.getHeight(),
+							0, 0, false, 0, var1 ^ -15251, 0x80FFFFFF);
+					} else {
+						todraw = spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.EQUIPSLOT_HIGHLIGHT.id()));
+						this.getSurface().drawSpriteClipping(
+							todraw,
+							xOffset + equipIconXLocations[i],
+							yOffset + equipIconYLocations[i],
+							todraw.getWidth(), todraw.getHeight(),
+							equippedItems[i].getPictureMask(), 0, false, 0, var1 ^ -15251, 0xC0FFFFFF);
+						todraw = spriteSelect(equippedItems[i]);
+						this.getSurface().drawSpriteClipping(
+							todraw,
+							xOffset + equipIconXLocations[i],
+							yOffset + equipIconYLocations[i],
+							todraw.getSomething1(), todraw.getSomething2(),
+							equippedItems[i].getPictureMask(), 0, false, 0, var1 ^ -15251);
+						if (equippedItems[i].isStackable())
+							this.getSurface().drawString("" + equippedItemAmount[i],
+								xOffset + equipIconXLocations[i] + 2,
+								yOffset + equipIconYLocations[i] + 11, 0xFFFF00, 1);
+					}
+				}
+				for (int currSkill = 0; currSkill < 3; ++currSkill) {
+					this.getSurface().drawString(this.equipmentStatNames[currSkill] + ":@yel@" + this.playerStatEquipment[currSkill],
+						xOffset + 42, yOffset + 243 + currSkill * 13, 0xFFFFFF, 1);
+					if (2 > currSkill) {
+						this.getSurface().drawString(
+							this.equipmentStatNames[currSkill + 3] + ":@yel@" + this.playerStatEquipment[3 + currSkill],
+							244 / 2 + xOffset + 35, yOffset + 243 + currSkill * 13, 0xFFFFFF, 1);
+					}
+					this.getSurface().drawLineHoriz(xOffset, yOffset+228, 245, 0);
+				}
+				//handle equipment clicks
+				if ((this.mouseButtonClick == 1 || this.mouseButtonClick == 2) && this.mouseY > yOffset) {
+					for (int j = 0; j < S_PLAYER_SLOT_COUNT; j++) {
+						if (this.mouseX >= xOffset + equipIconXLocations[j] && this.mouseX < xOffset + equipIconXLocations[j] + 48) {
+							if (this.mouseY >= yOffset + equipIconYLocations[j] && this.mouseY < yOffset + equipIconYLocations[j] + 32) {
+								//Send a packet to the server to unequip the item.
+								if (equippedItems[j] != null) {
+									if (this.mouseButtonClick == 1 && !this.topMouseMenuVisible) {
+										this.packetHandler.getClientStream().newPacket(170);
+										this.packetHandler.getClientStream().writeBuffer1.putShort(equippedItems[j].id);
+										this.packetHandler.getClientStream().finishPacket();
+										break;
+									} else {
+										if (!equippedItems[j].getCommand().equalsIgnoreCase(""))
+											this.menuCommon.addCharacterItem(j, MenuItemAction.ITEM_COMMAND_EQUIPTAB, equippedItems[j].getCommand(),
+												"@lre@" + equippedItems[j].getName());
+										this.menuCommon.addCharacterItem(j, MenuItemAction.ITEM_USE_EQUIPTAB, "Use",
+											"@lre@" + equippedItems[j].getName());
+										this.menuCommon.addCharacterItem(equippedItems[j].id, MenuItemAction.ITEM_DROP_EQUIPTAB, "Drop",
+											"@lre@" + equippedItems[j].getName());
+										this.menuCommon.addCharacterItem(equippedItems[j].id, MenuItemAction.ITEM_EXAMINE, "Examine",
+											"@lre@" + equippedItems[j].getName()
+												+ (localPlayer.isDev() ? " @or1@(" + equippedItems[j].id + ")" : ""));
+										break;
+									}
+
+								}
+							}
+						}
+
+					}
+				}
+
+			}
+
+			if (S_WANT_EQUIPMENT_TAB) {
+
+				yOffset += 228;
+				this.getSurface().drawBoxAlpha(xOffset, yOffset-24, 122, 24, this.tabEquipmentIndex == 1 ? selectedBox : clearBox, 128);
+				this.getSurface().drawBoxAlpha(xOffset + 122, yOffset-24, 123, 24, this.tabEquipmentIndex == 0 ? selectedBox : clearBox, 128);
+				this.getSurface().drawColoredStringCentered(xOffset + 60, "Equipment", 0, 0, 4, yOffset - 7);
+				this.getSurface().drawColoredStringCentered(xOffset + 183, "Inventory", 0, 0, 4, yOffset - 7);
+
+				this.getSurface().drawLineHoriz(xOffset, yOffset-24, 245, 0);
+				this.getSurface().drawLineVert(xOffset + 122, yOffset-24, 0, 24);
+
+				//Handle ui clicks
+				if (this.mouseButtonClick == 1) {
+					if (this.mouseX >= xOffset) {
+						if (this.mouseY <= yOffset) {
+							if (this.mouseY >= yOffset-24) {
+								if (this.mouseX <= xOffset + 245) {
+									if (this.tabEquipmentIndex == 0) {
+										if (this.mouseX < xOffset + 122)
+											this.tabEquipmentIndex = 1;
+									} else if (this.tabEquipmentIndex == 1) {
+										if (this.mouseX >= xOffset + 122)
+											this.tabEquipmentIndex = 0;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+		} catch (RuntimeException var8) {
+			throw GenUtil.makeThrowable(var8, "client.EB(" + var1 + ',' + var2 + ')');
+		}
+	}
 
     // social tab
     private void drawUiTab5(boolean var1, boolean var2) {
@@ -10872,7 +10868,13 @@ public final class mudclient implements Runnable {
                     break;
                 }
                 case GROUND_ITEM_USE_ITEM: {
-                    this.walkToGroundItem(this.playerLocalX, this.playerLocalZ, indexOrX, idOrZ, true);
+					if (S_WANT_EQUIPMENT_TAB && tileID > S_PLAYER_INVENTORY_SLOTS) {
+						//they used an item from the equiptab on the ground item - we don't want to handle this yet.
+						this.showMessage(false, null, "Please unequip your item and try again.",
+							MessageType.GAME, 0, null);
+						return;
+					}
+					this.walkToGroundItem(this.playerLocalX, this.playerLocalZ, indexOrX, idOrZ, true);
                     this.packetHandler.getClientStream().newPacket(53);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseX + indexOrX);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + idOrZ);
@@ -10928,7 +10930,11 @@ public final class mudclient implements Runnable {
                     this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX + this.midRegionBaseX);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ + this.midRegionBaseZ);
                     this.packetHandler.getClientStream().writeBuffer1.putByte(dir);
-                    this.packetHandler.getClientStream().writeBuffer1.putShort(tileID);
+					if (tileID > S_PLAYER_INVENTORY_SLOTS) {
+						this.packetHandler.getClientStream().writeBuffer1.putShort(0xFFFF);
+						this.packetHandler.getClientStream().writeBuffer1.putShort(equippedItems[tileID-S_PLAYER_INVENTORY_SLOTS].id);
+					} else
+						this.packetHandler.getClientStream().writeBuffer1.putShort(tileID);
                     this.packetHandler.getClientStream().finishPacket();
                     this.selectedItemInventoryIndex = -1;
                     break;
@@ -11010,7 +11016,14 @@ public final class mudclient implements Runnable {
                     break;
                 }
                 case ITEM_USE_ITEM: {
-                    this.packetHandler.getClientStream().newPacket(91);
+					if (S_WANT_EQUIPMENT_TAB && (indexOrX > S_PLAYER_INVENTORY_SLOTS || idOrZ > S_PLAYER_INVENTORY_SLOTS)) {
+						//they used an item from the equiptab on the item - we don't want to handle this yet.
+						this.showMessage(false, null, "Please unequip your item and try again.",
+							MessageType.GAME, 0, null);
+						return;
+					}
+
+					this.packetHandler.getClientStream().newPacket(91);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ);
                     this.packetHandler.getClientStream().finishPacket();
@@ -11045,20 +11058,34 @@ public final class mudclient implements Runnable {
                     this.packetHandler.getClientStream().finishPacket();
                     break;
                 }
-                case ITEM_USE: {
+				case ITEM_COMMAND_EQUIPTAB: {
+					int commandQuantity = 1;
+					this.packetHandler.getClientStream().newPacket(90);
+					this.packetHandler.getClientStream().writeBuffer1.putShort(0xFFFF);
+					this.packetHandler.getClientStream().writeBuffer1.putInt(commandQuantity);
+					this.packetHandler.getClientStream().writeBuffer1.putShort(equippedItems[indexOrX].id);
+					this.packetHandler.getClientStream().finishPacket();
+					break;
+				}
+				case ITEM_USE: {
                     this.selectedItemInventoryIndex = indexOrX;
                     if (!isAndroid())
                         this.showUiTab = 0;
-                    this.m_ig = EntityHandler.getItemDef(this.inventoryItemID[this.selectedItemInventoryIndex]).getName();
-                    break;
+					this.m_ig = EntityHandler.getItemDef(this.inventoryItemID[this.selectedItemInventoryIndex]).getName();
+					break;
                 }
-                case ITEM_DROP: {
+				case ITEM_USE_EQUIPTAB: {
+					this.selectedItemInventoryIndex = indexOrX + S_PLAYER_INVENTORY_SLOTS;
+					if (!isAndroid())
+						this.showUiTab = 0;
+					this.m_ig = equippedItems[indexOrX].getName();
+					break;
+				}
+				case ITEM_DROP: {
                     this.packetHandler.getClientStream().newPacket(246);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
-                    int amount = 1;
-                    if (EntityHandler.getItemDef(inventoryItemID[indexOrX]).isStackable())
-                        amount = getInventoryCount(this.inventoryItemID[indexOrX]);
-                    this.packetHandler.getClientStream().writeBuffer1.putInt(amount);
+					int amount = this.inventoryItemSize[indexOrX];
+					this.packetHandler.getClientStream().writeBuffer1.putInt(amount);
                     this.packetHandler.getClientStream().finishPacket();
                     if (!isAndroid())
                         this.showUiTab = 0;
@@ -11089,7 +11116,25 @@ public final class mudclient implements Runnable {
                                 MessageType.INVENTORY, 0, null);
                     break;
                 }
-                case NPC_CAST_SPELL: {
+				case ITEM_DROP_EQUIPTAB: {
+					this.packetHandler.getClientStream().newPacket(246);
+					this.packetHandler.getClientStream().writeBuffer1.putShort(0xFFFF);
+					int slot;
+					for (slot = 0; slot < S_PLAYER_SLOT_COUNT; slot++)
+					{
+						if (equippedItems[slot] != null && equippedItems[slot].id == indexOrX)
+							break;
+					}
+					int amount = this.equippedItemAmount[slot];
+					this.packetHandler.getClientStream().writeBuffer1.putInt(amount);
+					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.packetHandler.getClientStream().finishPacket();
+					this.showMessage(false, null,
+						"Dropping " + this.equippedItems[slot].getName(),
+						MessageType.INVENTORY, 0, null);
+					break;
+				}
+				case NPC_CAST_SPELL: {
                     character = this.getServerNPC(indexOrX);
                     if (character == null) {
                         return;
@@ -11110,7 +11155,13 @@ public final class mudclient implements Runnable {
                     if (character == null) {
                         return;
                     }
-                    cTileX = (character.currentX - 64) / this.tileSize;
+					if (S_WANT_EQUIPMENT_TAB && idOrZ > S_PLAYER_INVENTORY_SLOTS) {
+						//they used an item from the equiptab on the npc - we don't want to handle this yet.
+						this.showMessage(false, null, "Please unequip your item and try again.",
+							MessageType.GAME, 0, null);
+						return;
+					}
+					cTileX = (character.currentX - 64) / this.tileSize;
                     cTileZ = (character.currentZ - 64) / this.tileSize;
                     this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, cTileZ, true);
                     this.packetHandler.getClientStream().newPacket(135);
@@ -11199,7 +11250,13 @@ public final class mudclient implements Runnable {
                     if (character == null) {
                         return;
                     }
-                    cTileX = (character.currentX - 64) / this.tileSize;
+					if (S_WANT_EQUIPMENT_TAB && idOrZ > S_PLAYER_INVENTORY_SLOTS) {
+						//they used an item from their equipment tab on a player- don't handle this yet
+						this.showMessage(false, null, "Please unequip your item and try again.",
+							MessageType.GAME, 0, null);
+						return;
+					}
+					cTileX = (character.currentX - 64) / this.tileSize;
                     cTileZ = (character.currentZ - 64) / this.tileSize;
                     this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, cTileZ, true);
                     this.packetHandler.getClientStream().newPacket(113);
@@ -11762,10 +11819,20 @@ public final class mudclient implements Runnable {
                 this.showUiTab = 6;
             }
 
-            if (this.showUiTab == 1
-                    && (this.mouseX < this.getSurface().width2 - 248 || 36 + this.m_cl / 5 * 34 < this.mouseY)) {
-                this.showUiTab = 0;
-            }
+			if (!S_WANT_EQUIPMENT_TAB) {
+				if (this.showUiTab == 1
+					&& (this.mouseX < this.getSurface().width2 - 248 || 36 + this.m_cl / 5 * 34 < this.mouseY)) {
+					this.showUiTab = 0;
+				}
+			} else {
+				if (this.showUiTab == 1 && this.tabEquipmentIndex == 0
+					&& (this.mouseX < this.getSurface().width2 - 248 || 90 + this.m_cl / 5 * 34 < this.mouseY)) {
+					this.showUiTab = 0;
+				} else if (this.showUiTab == 1 && this.tabEquipmentIndex == 1
+					&& (this.mouseX < this.getSurface().width2 - 248 || 90 + this.m_cl / 5 * 34 < this.mouseY)) {
+					this.showUiTab = 0;
+				}
+			}
 
             if (this.showUiTab == 3 && (this.getSurface().width2 - 199 > this.mouseX || this.mouseY > 324)) {
                 this.showUiTab = 0;
@@ -11809,11 +11876,17 @@ public final class mudclient implements Runnable {
 
     private boolean isEquipped(int id) {
         try {
-
-
-            for (int i = 0; this.inventoryItemCount > i; ++i) {
-                if (id == this.inventoryItemID[i] && this.inventoryItemEquipped[i] == 1) {
-                    return true;
+			if (S_WANT_EQUIPMENT_TAB) {
+				for (int i = 0; i < S_PLAYER_SLOT_COUNT; i++) {
+					if (this.equippedItems[i] != null && this.equippedItems[i].id == id) {
+						return true;
+					}
+				}
+			} else {
+				for (int i = 0; this.inventoryItemCount > i; ++i) {
+					if (id == this.inventoryItemID[i] && this.inventoryItemEquipped[i] == 1) {
+						return true;
+					}
                 }
             }
             return false;
@@ -14289,6 +14362,7 @@ public final class mudclient implements Runnable {
             System.out.println(Config.S_WANT_FATIGUE + " 51");
             System.out.println(Config.S_WANT_RUNECRAFTING + " 60");
             System.out.println(S_WANT_CUSTOM_LANDSCAPE + " 61");
+			System.out.println(S_WANT_EQUIPMENT_TAB + " 62");
         }
         try {
             this.loadGameConfig(false);

@@ -22,6 +22,7 @@ import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.getCurrentLevel;
+import static com.openrsc.server.plugins.Functions.message;
 
 /**
  * @author n0m
@@ -61,6 +62,11 @@ public class RangeEvent extends GameTickEvent {
 			ItemId.STEEL_ARROWS.id(), ItemId.POISON_STEEL_ARROWS.id(), ItemId.MITHRIL_ARROWS.id(), ItemId.POISON_MITHRIL_ARROWS.id(),
 			ItemId.ADAMANTITE_ARROWS.id(), ItemId.POISON_ADAMANTITE_ARROWS.id(), ItemId.RUNE_ARROWS.id(), ItemId.POISON_RUNE_ARROWS.id(), ItemId.ICE_ARROWS.id()} // Magic
 		// Longbow
+	};
+
+	private int[][] allowedBolts = {
+		{ItemId.CROSSBOW.id(), ItemId.CROSSBOW_BOLTS.id(), ItemId.POISON_CROSSBOW_BOLTS.id(), ItemId.OYSTER_PEARL_BOLTS.id()},
+		{ItemId.PHOENIX_CROSSBOW.id(), ItemId.CROSSBOW_BOLTS.id(), ItemId.POISON_CROSSBOW_BOLTS.id(), ItemId.OYSTER_PEARL_BOLTS.id()}
 	};
 	private Mob target;
 
@@ -136,26 +142,62 @@ public class RangeEvent extends GameTickEvent {
 				}
 				boolean xbow = DataConversions.inArray(Formulae.xbowIDs, bowID);
 				int arrowID = -1;
-				for (int aID : (xbow ? Formulae.boltIDs : Formulae.arrowIDs)) {
-					int slot = getPlayerOwner().getInventory().getLastIndexById(aID);
-					if (slot < 0) {
-						continue;
+				if (Constants.GameServer.WANT_EQUIPMENT_TAB)
+				{
+					Item ammo = getPlayerOwner().getEquipment().getAmmoItem();
+					if (ammo == null)
+					{
+						getPlayerOwner().message("you don't have any ammo equipped");
+						getPlayerOwner().resetRange();
+						return;
 					}
-					Item arrow = getPlayerOwner().getInventory().get(slot);
-					if (arrow == null) { // This shouldn't happen
-						continue;
-					}
-					arrowID = aID;
-					if (!Constants.GameServer.MEMBER_WORLD) {
-						if (arrowID != 11 && arrowID != 190) {
-							getPlayerOwner().message("You don't have enough ammo in your quiver");
-							getPlayerOwner().resetRange();
-							stop();
-							return;
+					arrowID = ammo.getID();
+					boolean canFire = false;
+					int[][] allowed = xbow ? allowedBolts : allowedArrows;
+					for (int[] arrow : allowed) {
+						if (arrow[0] == bowID) {
+							for (int arrows : arrow)
+								if (arrows == arrowID) {
+									canFire = true;
+									break;
+								}
 						}
-
+						if (canFire)
+							break;
 					}
-					//if (arrowID != 11 && arrowID != 190) {
+					if (!canFire) {
+						getPlayerOwner().message("Your ammo is too powerful for your bow");
+						getPlayerOwner().resetRange();
+						return;
+					}
+					if (ammo.getAmount() == 1) {
+						getPlayerOwner().getEquipment().list[12] = null;
+					} else {
+						ammo.setAmount(ammo.getAmount() - 1);
+						getPlayerOwner().getEquipment().list[12] = ammo;
+					}
+					ActionSender.updateEquipmentSlot(getPlayerOwner(), 12);
+				} else {
+					for (int aID : (xbow ? Formulae.boltIDs : Formulae.arrowIDs)) {
+						int slot = getPlayerOwner().getInventory().getLastIndexById(aID);
+						if (slot < 0) {
+							continue;
+						}
+						Item arrow = getPlayerOwner().getInventory().get(slot);
+						if (arrow == null) { // This shouldn't happen
+							continue;
+						}
+						arrowID = aID;
+						if (!Constants.GameServer.MEMBER_WORLD) {
+							if (arrowID != 11 && arrowID != 190) {
+								getPlayerOwner().message("You don't have enough ammo in your quiver");
+								getPlayerOwner().resetRange();
+								stop();
+								return;
+							}
+
+						}
+						//if (arrowID != 11 && arrowID != 190) {
 						/*if (!getPlayerOwner().getLocation().isMembersWild()) {
 							getPlayerOwner().message("Members content can only be used in wild levels: "
 									+ World.membersWildStart + " - " + World.membersWildMax);
@@ -164,36 +206,38 @@ public class RangeEvent extends GameTickEvent {
 							stop();
 							return;
 						}*/
-					//}
+						//}
 
-					int newAmount = arrow.getAmount() - 1;
-					if (!xbow && arrowID > 0) {
-						int temp = -1;
+						int newAmount = arrow.getAmount() - 1;
+						if (!xbow && arrowID > 0) {
+							int temp = -1;
 
-						for (int i = 0; i < allowedArrows.length; i++)
-							if (allowedArrows[i][0] == getPlayerOwner().getRangeEquip())
-								temp = i;
+							for (int i = 0; i < allowedArrows.length; i++)
+								if (allowedArrows[i][0] == getPlayerOwner().getRangeEquip())
+									temp = i;
 
-						boolean canFire = false;
-						for (int i = 0; i < allowedArrows[temp].length; i++)
-							if (allowedArrows[temp][i] == aID)
-								canFire = true;
+							boolean canFire = false;
+							for (int i = 0; i < allowedArrows[temp].length; i++)
+								if (allowedArrows[temp][i] == aID)
+									canFire = true;
 
-						if (!canFire) {
-							getPlayerOwner().message("Your arrows are too powerful for your Bow.");
-							getPlayerOwner().resetRange();
-							return;
+							if (!canFire) {
+								getPlayerOwner().message("Your arrows are too powerful for your Bow.");
+								getPlayerOwner().resetRange();
+								return;
+							}
 						}
-					}
 
-					if (newAmount <= 0) {
-						getPlayerOwner().getInventory().remove(slot);
-					} else {
-						arrow.setAmount(newAmount);
-						ActionSender.sendInventory(getPlayerOwner());
+						if (newAmount <= 0) {
+							getPlayerOwner().getInventory().remove(slot);
+						} else {
+							arrow.setAmount(newAmount);
+							ActionSender.sendInventory(getPlayerOwner());
+						}
+						break;
 					}
-					break;
 				}
+
 				if (arrowID < 0) {
 					getPlayerOwner().message("I've run out of ammo!");
 					if (getPlayerOwner().getCache().hasKey("shot_ice")) {

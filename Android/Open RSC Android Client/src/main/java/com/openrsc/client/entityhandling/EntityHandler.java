@@ -3,12 +3,11 @@ package com.openrsc.client.entityhandling;
 import com.openrsc.client.entityhandling.defs.*;
 import com.openrsc.client.entityhandling.defs.extras.AnimationDef;
 import com.openrsc.client.entityhandling.defs.extras.TextureDef;
+import orsc.Config;
+import orsc.mudclient;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-
-import orsc.Config;
-import orsc.mudclient;
 
 public class EntityHandler {
 
@@ -339,7 +338,21 @@ public class EntityHandler {
 		REDX1(34),
 		REDX2(35),
 		REDX3(36),
-		REDX4(37);
+		REDX4(37),
+		EQUIPSLOT_HELM(38),
+		EQUIPSLOT_BODY(39),
+		EQUIPSLOT_LEGS(40),
+		EQUIPSLOT_SHIELD(41),
+		EQUIPSLOT_SWORD(42),
+		EQUIPSLOT_NECK(43),
+		EQUIPSLOT_BOOTS(44),
+		EQUIPSLOT_GLOVES(45),
+		EQUIPSLOT_CAPE(46),
+		EQUIPSLOT_AMMO(47),
+		EQUIPSLOT_RING(48),
+		EQUIPSLOT_HIGHLIGHT(49),
+		BANK_EQUIP_BAG(50),
+		BANK_EQUIP_HELM(51);
 
 		private final int value;
 
@@ -390,7 +403,20 @@ public class EntityHandler {
 		GUIparts.add(new SpriteDef("red cross 2", mudclient.spriteMedia + 19,"GUI:16",35));
 		GUIparts.add(new SpriteDef("red cross 3", mudclient.spriteMedia + 20,"GUI:17",36));
 		GUIparts.add(new SpriteDef("red cross 4", mudclient.spriteMedia + 21,"GUI:18",37));
-
+		GUIparts.add(new SpriteDef("equipment slot head", -1,"GUI:28",38));
+		GUIparts.add(new SpriteDef("equipment slot body", -1,"GUI:29",39));
+		GUIparts.add(new SpriteDef("equipment slot legs", -1,"GUI:30",40));
+		GUIparts.add(new SpriteDef("equipment slot shield", -1,"GUI:31",41));
+		GUIparts.add(new SpriteDef("equipment slot sword", -1,"GUI:32",42));
+		GUIparts.add(new SpriteDef("equipment slot neck", -1,"GUI:33",43));
+		GUIparts.add(new SpriteDef("equipment slot gloves", -1,"GUI:34",44));
+		GUIparts.add(new SpriteDef("equipment slot boots", -1,"GUI:35",45));
+		GUIparts.add(new SpriteDef("equipment slot cape", -1,"GUI:36",46));
+		GUIparts.add(new SpriteDef("equipment slot ammo", -1,"GUI:37",47));
+		GUIparts.add(new SpriteDef("equipment slot ring", -1,"GUI:38",48));
+		GUIparts.add(new SpriteDef("equipment blue highlight+", -1,"GUI:39",49));
+		GUIparts.add(new SpriteDef("bank toggle for inventory mode", -1,"GUI:40",50));
+		GUIparts.add(new SpriteDef("bank toggle for equipment mode", -1,"GUI:41",51));
 	}
 
 	public enum CROWN_TYPES {
@@ -2099,9 +2125,8 @@ public class EntityHandler {
 		items.add(new ItemDef("Iron Plate Mail Body", "Provides excellent protection", "", 560, 8, "items:8", false, true, 322, 15654365, false, false, 1298, -1, 8));
 		items.add(new ItemDef("Iron Plate Mail Legs", "These look pretty heavy", "", 280, 9, "items:9", false, true, 644, 15654365, false, false, 1299, -1, 9));
 		items.add(new ItemDef("Coins", "Lovely money!", "", 1, 10, "items:10", true, false, 0, 0, false, false, -1, -1, 10));
-		items.add(new ItemDef("Bronze Arrows", "Arrows with bronze heads", "", 2, 11, "items:11", true, false, 0, 16737817, false, false, -1, -1, 11));
+		items.add(new ItemDef("Bronze Arrows", "Arrows with bronze heads", "", 2, 11, "items:11", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1000 : 0, 16737817, false, false, -1, -1, 11));
 		items.add(new ItemDef("Iron Axe", "A woodcutters axe", "", 56, 12, "items:12", false, true, 16, 15654365, false, false, 1300, -1, 12));
-
 		items.add(new ItemDef("Knife", "A dangerous looking knife", "", 6, 13, "items:13", false, false, 0, 0, false, false, 1301, -1, 13));
 		items.add(new ItemDef("Logs", "A number of wooden logs", "", 4, 14, "items:14", false, false, 0, 0, false, false, 1302, -1, 14));
 		items.add(new ItemDef("Leather Armour", "Better than no armour!", "", 21, 15, "items:15", false, true, 64, 0, false, false, 1303, -1, 15));
@@ -2279,7 +2304,7 @@ public class EntityHandler {
 		items.add(new ItemDef("skirt", "A ladies skirt", "", 2, 88, "items:88", false, true, 128, 255, false, false, 1450, -1, 187));
 		items.add(new ItemDef("Longbow", "A Nice sturdy bow", "", 80, 54, "items:54", false, true, 24, 65280, false, false, 1451, -1, 188));
 		items.add(new ItemDef("Shortbow", "Short but effective", "", 50, 55, "items:55", false, true, 24, 65280, false, false, 1452, -1, 189));
-		items.add(new ItemDef("Crossbow bolts", "Good if you have a crossbow!", "", 3, 56, "items:56", true, false, 0, 0, false, false, -1, -1, 190));
+		items.add(new ItemDef("Crossbow bolts", "Good if you have a crossbow!", "", 3, 56, "items:56", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1001 : 0, 0, false, false, -1, -1, 190));
 		items.add(new ItemDef("Apron", "this will help keep my clothes clean", "", 2, 58, "items:58", false, true, 1024, 9789488, false, false, 1453, -1, 191));
 		items.add(new ItemDef("Chef's hat", "What a silly hat", "", 2, 89, "items:89", false, true, 32, 0, false, false, 1454, -1, 192));
 		items.add(new ItemDef("Beer", "A glass of frothy ale", "drink", 2, 90, "items:90", false, false, 0, 0, false, false, 1455, -1, 193));
@@ -2663,7 +2688,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Poison antidote", "1 dose of anti poison potion", "Drink", 144, 437, "items:437", false, false, 0, 16716134, true, false, 1775, -1, 571));
 		items.add(new ItemDef("weapon poison", "For use on daggers and arrows", "", 144, 48, "items:48", false, false, 0, 1140479, true, false, 1776, -1, 572));
 		items.add(new ItemDef("ID Paper", "ID of Hartigen the black knight", "", 1, 29, "items:29", false, false, 0, 0, true, false, 1777, -1, 573));
-		items.add(new ItemDef("Poison Bronze Arrows", "Venomous looking arrows", "", 2, 206, "items:206", true, false, 0, 16737817, true, false, -1, -1, 574));
+		items.add(new ItemDef("Poison Bronze Arrows", "Venomous looking arrows", "", 2, 206, "items:206", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1000 : 0, 16737817, true, false, -1, -1, 574));
 		items.add(new ItemDef("Christmas cracker", "Use on another player to pull it", "", 1, 188, "items:188", false, false, 0, 16711680, false, false, 1778, -1, 575));
 		items.add(new ItemDef("Party Hat", "Party!!!", "", 2, 189, "items:189", false, true, 32, 16711680, false, false, 1779, -1, 576));
 		items.add(new ItemDef("Party Hat", "Party!!!", "", 2, 189, "items:189", false, true, 32, 16776960, false, false, 1780, -1, 577));
@@ -2681,7 +2706,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Oily Fishing Rod", "A rod covered in Blamish oil", "", 15, 172, "items:172", false, false, 0, 0, true, true, -1, -1, 589));
 		items.add(new ItemDef("lava eel", "Strange it looks cooler now it's been cooked", "eat", 150, 194, "items:194", false, false, 0, 11558912, true, true, -1, -1, 590));
 		items.add(new ItemDef("Raw lava eel", "A very strange eel", "", 150, 194, "items:194", false, false, 0, 16711680, true, true, -1, -1, 591));
-		items.add(new ItemDef("Poison Crossbow bolts", "Good if you have a crossbow!", "", 3, 56, "items:56", true, false, 0, 0, true, false, -1, -1, 592));
+		items.add(new ItemDef("Poison Crossbow bolts", "Good if you have a crossbow!", "", 3, 56, "items:56", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1001 : 0, 0, true, false, -1, -1, 592));
 		items.add(new ItemDef("Dragon sword", "A Razor sharp sword", "", 100000, 273, "items:273", false, true, 16, 16711748, true, false, 1789, -1, 593));
 		items.add(new ItemDef("Dragon axe", "A vicious looking axe", "", 200000, 272, "items:272", false, true, 16, 16711748, true, false, 1790, -1, 594));
 		items.add(new ItemDef("Jail keys", "Keys to the black knight jail", "", 2, 190, "items:190", false, false, 0, 0, true, true, -1, -1, 595));
@@ -2727,16 +2752,16 @@ public class EntityHandler {
 		items.add(new ItemDef("Yew Logs", "Logs cut from a yew tree", "", 160, 14, "items:14", false, false, 0, 0, true, false, 1817, -1, 635));
 		items.add(new ItemDef("Magic Logs", "Logs made from magical wood", "", 320, 14, "items:14", false, false, 0, 0, true, false, 1818, -1, 636));
 		items.add(new ItemDef("Headless Arrows", "I need to attach arrow heads to these", "", 1, 205, "items:205", true, false, 0, 0, true, false, -1, -1, 637));
-		items.add(new ItemDef("Iron Arrows", "Arrows with iron heads", "", 6, 11, "items:11", true, false, 0, 15654365, true, false, -1, -1, 638));
-		items.add(new ItemDef("Poison Iron Arrows", "Venomous looking arrows", "", 6, 206, "items:206", true, false, 0, 15654365, true, false, -1, -1, 639));
-		items.add(new ItemDef("Steel Arrows", "Arrows with steel heads", "", 24, 11, "items:11", true, false, 0, 15658734, true, false, -1, -1, 640));
-		items.add(new ItemDef("Poison Steel Arrows", "Venomous looking arrows", "", 24, 206, "items:206", true, false, 0, 15658734, true, false, -1, -1, 641));
-		items.add(new ItemDef("Mithril Arrows", "Arrows with mithril heads", "", 64, 11, "items:11", true, false, 0, 9614028, true, false, -1, -1, 642));
-		items.add(new ItemDef("Poison Mithril Arrows", "Venomous looking arrows", "", 64, 206, "items:206", true, false, 0, 9614028, true, false, -1, -1, 643));
-		items.add(new ItemDef("Adamantite Arrows", "Arrows with adamantite heads", "", 160, 11, "items:11", true, false, 0, 11717785, true, false, -1, -1, 644));
-		items.add(new ItemDef("Poison Adamantite Arrows", "Venomous looking arrows", "", 160, 206, "items:206", true, false, 0, 11717785, true, false, -1, -1, 645));
-		items.add(new ItemDef("Rune Arrows", "Arrows with rune heads", "", 800, 11, "items:11", true, false, 0, 65535, true, false, -1, -1, 646));
-		items.add(new ItemDef("Poison Rune Arrows", "Venomous looking arrows", "", 800, 206, "items:206", true, false, 0, 65535, true, false, -1, -1, 647));
+		items.add(new ItemDef("Iron Arrows", "Arrows with iron heads", "", 6, 11, "items:11", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1000 : 0, 15654365, true, false, -1, -1, 638));
+		items.add(new ItemDef("Poison Iron Arrows", "Venomous looking arrows", "", 6, 206, "items:206", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1000 : 0, 15654365, true, false, -1, -1, 639));
+		items.add(new ItemDef("Steel Arrows", "Arrows with steel heads", "", 24, 11, "items:11", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1000 : 0, 15658734, true, false, -1, -1, 640));
+		items.add(new ItemDef("Poison Steel Arrows", "Venomous looking arrows", "", 24, 206, "items:206", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1000 : 0, 15658734, true, false, -1, -1, 641));
+		items.add(new ItemDef("Mithril Arrows", "Arrows with mithril heads", "", 64, 11, "items:11", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1000 : 0, 9614028, true, false, -1, -1, 642));
+		items.add(new ItemDef("Poison Mithril Arrows", "Venomous looking arrows", "", 64, 206, "items:206", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1000 : 0, 9614028, true, false, -1, -1, 643));
+		items.add(new ItemDef("Adamantite Arrows", "Arrows with adamantite heads", "", 160, 11, "items:11", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1000 : 0, 11717785, true, false, -1, -1, 644));
+		items.add(new ItemDef("Poison Adamantite Arrows", "Venomous looking arrows", "", 160, 206, "items:206", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1000 : 0, 11717785, true, false, -1, -1, 645));
+		items.add(new ItemDef("Rune Arrows", "Arrows with rune heads", "", 800, 11, "items:11", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1000 : 0, 65535, true, false, -1, -1, 646));
+		items.add(new ItemDef("Poison Rune Arrows", "Venomous looking arrows", "", 800, 206, "items:206", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1000 : 0, 65535, true, false, -1, -1, 647));
 		items.add(new ItemDef("Oak Longbow", "A Nice sturdy bow", "", 160, 54, "items:54", false, true, 24, 255, true, false, 1819, -1, 648));
 		items.add(new ItemDef("Oak Shortbow", "Short but effective", "", 100, 55, "items:55", false, true, 24, 255, true, false, 1820, -1, 649));
 		items.add(new ItemDef("Willow Longbow", "A Nice sturdy bow", "", 320, 54, "items:54", false, true, 24, 16776960, true, false, 1821, -1, 650));
@@ -2812,7 +2837,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Hemenster fishing trophy", "Hurrah you won a fishing competition", "", 20, 221, "items:221", false, false, 0, 16763980, true, true, -1, -1, 720));
 		items.add(new ItemDef("Pendant of Lucien", "Gets me through the chamber of fear", "", 12, 222, "items:222", false, true, 1024, 3158064, true, true, -1, -1, 721));
 		items.add(new ItemDef("Boots of lightfootedness", "Wearing these makes me feel like I am floating", "", 6, 223, "items:223", false, true, 512, 16742144, true, true, -1, -1, 722));
-		items.add(new ItemDef("Ice Arrows", "Can only be fired with yew or magic bows", "", 2, 11, "items:11", true, false, 0, 11206655, true, true, -1, -1, 723));
+		items.add(new ItemDef("Ice Arrows", "Can only be fired with yew or magic bows", "", 2, 11, "items:11", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1000 : 0, 11206655, true, true, -1, -1, 723));
 		items.add(new ItemDef("Lever", "This was once attached to something", "", 20, 224, "items:224", false, false, 0, 0, true, true, -1, -1, 724));
 		items.add(new ItemDef("Staff of Armadyl", "A Magical staff", "", 15, 91, "items:91", false, true, 16, 16776960, true, true, -1, -1, 725));
 		items.add(new ItemDef("Pendant of Armadyl", "Allows me to fight Lucien", "", 12, 222, "items:222", false, true, 1024, 0, true, true, -1, -1, 726));
@@ -2875,7 +2900,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Swamp tar", "A foul smelling thick tar like substance", "", 1, 262, "items:262", true, false, 0, 12303291, true, false, -1, -1, 783));
 		items.add(new ItemDef("Uncooked Swamp paste", "A thick tar like substance mixed with flour", "", 1, 263, "items:263", true, false, 0, 12303291, true, false, -1, -1, 784));
 		items.add(new ItemDef("Swamp paste", "A tar like substance mixed with flour and warmed", "", 30, 263, "items:263", true, false, 0, 12303291, true, false, -1, -1, 785));
-		items.add(new ItemDef("Oyster pearl bolts", "Great if you have a crossbow!", "", 110, 266, "items:266", true, false, 0, 0, true, false, -1, -1, 786));
+		items.add(new ItemDef("Oyster pearl bolts", "Great if you have a crossbow!", "", 110, 266, "items:266", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1001 : 0, 0, true, false, -1, -1, 786));
 		items.add(new ItemDef("Glarials pebble", "A small pebble with elven inscription", "", 1, 264, "items:264", false, false, 0, 12303291, true, true, -1, -1, 787));
 		items.add(new ItemDef("book on baxtorian", "A book on elven history in north runescape", "read", 2, 28, "items:28", false, false, 0, 0, true, true, -1, -1, 788));
 		items.add(new ItemDef("large key", "I wonder what this is the key to", "", 1, 25, "items:25", false, false, 0, 16750848, true, true, -1, -1, 789));
@@ -4560,8 +4585,23 @@ public class EntityHandler {
 		 */
 
 		if (Config.S_WANT_CUSTOM_SPRITES) {
-			animations.add(new AnimationDef("hatchet", 0, 0, true, false, 0)); // 231 appearanceID.
-			animations.add(new AnimationDef("fullhelm", 11189164, 0, true, false, 0));
+			animations.add(new AnimationDef("hatchet", 16737817, 0, true, false, 0)); //230
+			animations.add(new AnimationDef("hatchet", 15654365, 0, true, false, 0));
+			animations.add(new AnimationDef("hatchet", 15658734, 0, true, false, 0));
+			animations.add(new AnimationDef("hatchet", 10072780, 0, true, false, 0));
+			animations.add(new AnimationDef("hatchet", 11717785, 0, true, false, 0));
+			animations.add(new AnimationDef("hatchet", 65535, 0, true, false, 0));
+			animations.add(new AnimationDef("hatchet", 3158064, 0, true, false, 0));
+			animations.add(new AnimationDef("kiteshield", 0xBB4B12, 0, true, false, 0)); //237
+			animations.add(new AnimationDef("kiteshield", 0xAFA2A2, 0, true, false, 0));
+			animations.add(new AnimationDef("kiteshield", 0xAFAFAF, 0, true, false, 0));
+			animations.add(new AnimationDef("kiteshield", 0x708396, 0, true, false, 0));
+			animations.add(new AnimationDef("kiteshield", 0x839670, 0, true, false, 0));
+			animations.add(new AnimationDef("kiteshield", 48059, 0, true, false, 0));
+			animations.add(new AnimationDef("kiteshield", 0x232323, 0, true, false, 0));
+			animations.add(new AnimationDef("dragonshield", 0, 0, true, false, 0)); //244
+			animations.add(new AnimationDef("dragonmedhelm", 0, 0, true, false, 0)); //245
+			/*animations.add(new AnimationDef("fullhelm", 11189164, 0, true, false, 0));
 			animations.add(new AnimationDef("platemailtop", 11189164, 0, true, false, 0));
 			animations.add(new AnimationDef("platemaillegs", 11189164, 0, true, false, 0));
 			animations.add(new AnimationDef("fullhelm", 16768685, 0, true, false, 0));
@@ -4569,7 +4609,7 @@ public class EntityHandler {
 			animations.add(new AnimationDef("platemaillegs", 16768685, 0, true, false, 0));
 			animations.add(new AnimationDef("fullhelm", 10027084, 0, true, false, 0));
 			animations.add(new AnimationDef("platemailtop", 10027084, 0, true, false, 0));
-			animations.add(new AnimationDef("platemaillegs", 10027084, 0, true, false, 0));
+			*/
 		}
 	}
 

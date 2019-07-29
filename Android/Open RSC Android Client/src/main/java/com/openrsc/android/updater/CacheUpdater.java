@@ -26,8 +26,10 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicReference;
 
 import orsc.Config;
+import orsc.util.GenUtil;
 
 public class CacheUpdater extends Activity {
 
@@ -173,6 +175,27 @@ public class CacheUpdater extends Activity {
 
         void showGameSelectionDialog() {
 
+            String desiredPath = "/storage/emulated/0/Android/data/user/0/com.openrsc.client/files" + File.separator;
+            final AtomicReference<String> realPath = new AtomicReference<String>();
+            FileOutputStream fos = null;
+
+            try {
+                fos = new FileOutputStream(desiredPath + "test.txt");
+                realPath.set(desiredPath);
+            } catch (Exception e) {
+                try {
+                    fos = new FileOutputStream(getFilesDir().getPath() + File.separator + "test.txt");
+                    realPath.set(getFilesDir().getPath() + File.separator);
+                } catch (Exception e2) {
+                    try {
+                        fos = new FileOutputStream(getExternalFilesDir(null).getPath() + File.separator + "test.txt");
+                        realPath.set(getExternalFilesDir(null).getPath() + File.separator);
+                    } catch (Exception e3) {}
+                }
+            } finally {
+                GenUtil.close(fos);
+            }
+
             System.out.println(" ");
             System.out.println(" ");
             System.out.println("Please select which game you wish to play.");
@@ -196,12 +219,12 @@ public class CacheUpdater extends Activity {
                         String pack = "cabbagemenus:1";
                         FileOutputStream fileout_cabbage2;
                         try {
-                            fileout_cabbage = new FileOutputStream("/data/user/0/com.openrsc.client/files" + File.separator + "ip.txt");
+                            fileout_cabbage = new FileOutputStream(realPath.get() + "ip.txt");
                             OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_cabbage);
                             outputWriter.write(ip_cabbage);
                             outputWriter.close();
 
-                            fileout_cabbage2 = new FileOutputStream("/data/user/0/com.openrsc.client/files" + File.separator + "config.txt");
+                            fileout_cabbage2 = new FileOutputStream(realPath.get() + "config.txt");
                             OutputStreamWriter outputWriter2 = new OutputStreamWriter(fileout_cabbage2);
                             outputWriter2.write(pack);
                             outputWriter2.close();
@@ -209,7 +232,7 @@ public class CacheUpdater extends Activity {
                             e.printStackTrace();
                         }
                         try {
-                            fileout_cabbage = new FileOutputStream("/data/user/0/com.openrsc.client/files" + File.separator + "port.txt");
+                            fileout_cabbage = new FileOutputStream(realPath.get() + "port.txt");
                             OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_cabbage);
                             outputWriter.write(port_cabbage);
                             outputWriter.close();
@@ -226,7 +249,7 @@ public class CacheUpdater extends Activity {
                         String port_openrsc = "43594";
                         FileOutputStream fileout_openrsc;
                         try {
-                            fileout_openrsc = new FileOutputStream("/data/user/0/com.openrsc.client/files" + File.separator + "ip.txt");
+                            fileout_openrsc = new FileOutputStream(realPath.get() + "ip.txt");
                             OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_openrsc);
                             outputWriter.write(ip_openrsc);
                             outputWriter.close();
@@ -234,7 +257,7 @@ public class CacheUpdater extends Activity {
                             e.printStackTrace();
                         }
                         try {
-                            fileout_openrsc = new FileOutputStream("/data/user/0/com.openrsc.client/files" + File.separator + "port.txt");
+                            fileout_openrsc = new FileOutputStream(realPath.get() + "port.txt");
                             OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_openrsc);
                             outputWriter.write(port_openrsc);
                             outputWriter.close();
@@ -251,7 +274,7 @@ public class CacheUpdater extends Activity {
                         String port_preservation = "43596";
                         FileOutputStream fileout_preservation;
                         try {
-                            fileout_preservation = new FileOutputStream("/data/user/0/com.openrsc.client/files" + File.separator + "ip.txt");
+                            fileout_preservation = new FileOutputStream(realPath.get() + "ip.txt");
                             OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_preservation);
                             outputWriter.write(ip_preservation);
                             outputWriter.close();
@@ -259,7 +282,7 @@ public class CacheUpdater extends Activity {
                             e.printStackTrace();
                         }
                         try {
-                            fileout_preservation = new FileOutputStream("/data/user/0/com.openrsc.client/files" + File.separator + "port.txt");
+                            fileout_preservation = new FileOutputStream(realPath.get() + "port.txt");
                             OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_preservation);
                             outputWriter.write(port_preservation);
                             outputWriter.close();
@@ -276,7 +299,7 @@ public class CacheUpdater extends Activity {
                         String port_openpk = "43597";
                         FileOutputStream fileout_openpk;
                         try {
-                            fileout_openpk = new FileOutputStream("/data/user/0/com.openrsc.client/files" + File.separator + "ip.txt");
+                            fileout_openpk = new FileOutputStream(realPath.get() + "ip.txt");
                             OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_openpk);
                             outputWriter.write(ip_openpk);
                             outputWriter.close();
@@ -284,7 +307,7 @@ public class CacheUpdater extends Activity {
                             e.printStackTrace();
                         }
                         try {
-                            fileout_openpk = new FileOutputStream("/data/user/0/com.openrsc.client/files" + File.separator + "port.txt");
+                            fileout_openpk = new FileOutputStream(realPath.get() + "port.txt");
                             OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_openpk);
                             outputWriter.write(port_openpk);
                             outputWriter.close();
@@ -301,7 +324,7 @@ public class CacheUpdater extends Activity {
                         String port_dev = "43599";
                         FileOutputStream fileout_dev;
                         try {
-                            fileout_dev = new FileOutputStream("/data/user/0/com.openrsc.client/files" + File.separator + "ip.txt");
+                            fileout_dev = new FileOutputStream(realPath.get() + "ip.txt");
                             OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_dev);
                             outputWriter.write(ip_dev);
                             outputWriter.close();
@@ -309,7 +332,7 @@ public class CacheUpdater extends Activity {
                             e.printStackTrace();
                         }
                         try {
-                            fileout_dev = new FileOutputStream("/data/user/0/com.openrsc.client/files" + File.separator + "port.txt");
+                            fileout_dev = new FileOutputStream(realPath.get() + "port.txt");
                             OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_dev);
                             outputWriter.write(port_dev);
                             outputWriter.close();

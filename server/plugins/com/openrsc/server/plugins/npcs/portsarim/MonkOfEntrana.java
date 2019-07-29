@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.npcs.portsarim;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -29,6 +30,22 @@ public final class MonkOfEntrana implements ObjectActionExecutiveListener, Objec
 				|| name.contains("mace") || name.contains("helmet")
 				|| name.contains("axe")) {
 				return true;
+			}
+		}
+
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			for (Item item : p.getEquipment().list) {
+				if (item == null)
+					continue;
+				String name = item.getDef().getName().toLowerCase();
+				if (name.contains("dagger") || name.contains("scimitar")
+					|| (name.contains("bow") && !name.contains("unstrung") && !name.contains("string")) || name.contains("mail")
+					|| (name.contains("sword")
+					&& !name.equalsIgnoreCase("Swordfish") && !name.equalsIgnoreCase("Burnt Swordfish") && !name.equalsIgnoreCase("Raw Swordfish"))
+					|| name.contains("mace") || name.contains("helmet")
+					|| name.contains("axe")) {
+					return true;
+				}
 			}
 		}
 		return false;

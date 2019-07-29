@@ -5,6 +5,7 @@ import com.openrsc.server.Server;
 import com.openrsc.server.event.PluginsUseThisEvent;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.UndergroundPassMessages;
+import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.model.MenuOptionListener;
 import com.openrsc.server.model.Path;
@@ -1107,7 +1108,9 @@ public class Functions {
 	 * @return
 	 */
 	public static boolean hasItem(final Player p, final int item) {
-		return p.getInventory().hasItemId(item);
+		boolean retval = p.getInventory().hasItemId(item);
+
+		return retval;
 	}
 
 	/**

@@ -15,6 +15,24 @@ public class Item implements Comparable<Item> {
 
 	private boolean wielded = false;
 
+	public enum WearableID {
+		NOTHING(0),
+		CROSSBOW(16),
+		BOW(24),
+		ARROW(1000),
+		CROSSBOWBOLT(1001);
+		int value;
+		WearableID(int value) {this.value = value;}
+		public int value() { return this.value; }
+		public static WearableID getByID(int id) {
+			for (WearableID item : WearableID.values()) {
+				if (item.value == id)
+					return item;
+			}
+			return NOTHING;
+		}
+	}
+
 	public Item() {
 	}
 

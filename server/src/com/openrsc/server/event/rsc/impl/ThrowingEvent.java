@@ -1,5 +1,6 @@
 package com.openrsc.server.event.rsc.impl;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.EntityHandler;
@@ -123,14 +124,42 @@ public class ThrowingEvent extends GameTickEvent {
 					stop();
 					return;
 				}
+				Item rangeType;
+				int slot;
+				if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+					slot = getPlayerOwner().getEquipment().hasEquipped(throwingID);
+					if (slot < 0)
+						return;
+					rangeType = getPlayerOwner().getEquipment().list[slot];
+					if (rangeType == null)
+						return;
+					rangeType.setAmount(rangeType.getAmount()-1);
+					if (rangeType.getAmount() <= 0) {
+						getPlayerOwner().updateWornItems(rangeType.getDef().getWieldPosition(), getPlayerOwner().getSettings().getAppearance().getSprite(rangeType.getDef().getWieldPosition()));
+						rangeType = null;
+					}
 
-				int slot = getPlayerOwner().getInventory().getLastIndexById(throwingID);
-				if (slot < 0) {
-					return;
-				}
-				Item rangeType = getPlayerOwner().getInventory().get(slot);
-				if (rangeType == null) { // This shouldn't happen
-					return;
+					getPlayerOwner().getEquipment().list[slot] = rangeType;
+
+					ActionSender.sendEquipmentStats(getPlayerOwner());
+
+
+				} else {
+					slot = getPlayerOwner().getInventory().getLastIndexById(throwingID);
+					if (slot < 0) {
+						return;
+					}
+					rangeType = getPlayerOwner().getInventory().get(slot);
+					if (rangeType == null) { // This shouldn't happen
+						return;
+					}
+					int newAmount = rangeType.getAmount() - 1;
+					if (newAmount <= 0) {
+						getPlayerOwner().getInventory().remove(slot);
+					} else {
+						rangeType.setAmount(newAmount);
+						ActionSender.sendInventory(getPlayerOwner());
+					}
 				}
 
 				/*if (!getPlayerOwner().getLocation().isMembersWild()) {
@@ -142,13 +171,7 @@ public class ThrowingEvent extends GameTickEvent {
 					return;
 				}*/
 
-				int newAmount = rangeType.getAmount() - 1;
-				if (newAmount <= 0) {
-					getPlayerOwner().getInventory().remove(slot);
-				} else {
-					rangeType.setAmount(newAmount);
-					ActionSender.sendInventory(getPlayerOwner());
-				}
+
 
 				int damage = Formulae.calcRangeHit(getPlayerOwner(), getPlayerOwner().getSkills().getLevel(SKILLS.RANGED.id()), target.getArmourPoints(), throwingID);
 
