@@ -12792,10 +12792,15 @@ public final class mudclient implements Runnable {
 					return;
 				try {
 					// PC sound code:
-					Clip clip = AudioSystem.getClip();
+					final Clip clip = AudioSystem.getClip();
+					clip.addLineListener(new LineListener() {
+						public void update(LineEvent myLineEvent) {
+							if (myLineEvent.getType() == LineEvent.Type.STOP)
+								clip.close();
+						}
+					});
 					clip.open(AudioSystem.getAudioInputStream(sound));
 					clip.start();
-
 					// Android sound code:
 					//int dataLength = DataOperations.getDataFileLength(key + ".pcm", soundData);
 					//int offset = DataOperations.getDataFileOffset(key + ".pcm", soundData);
