@@ -1844,7 +1844,7 @@ public class GraphicsController {
 				var27 = this.clipTop;
 			}
 
-			if (this.m_Xb == null || var8 + 1 != this.m_Xb.length) {
+			if (this.m_Xb == null || this.m_t == null || var8 + 1 != this.m_Xb.length) {
 				this.m_tb = new int[var8 + 1];
 				this.m_M = new int[1 + var8];
 				this.m_t = new int[var8 + 1];

@@ -4,6 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.Gauntlets;
+import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.Skills;
@@ -20,6 +21,8 @@ import com.openrsc.server.sql.query.logs.GenericLog;
 
 import java.io.ObjectInputFilter;
 import java.util.*;
+
+import static com.openrsc.server.external.EntityHandler.getItemDef;
 
 public class Inventory {
 
@@ -204,13 +207,15 @@ public class Inventory {
 			}
 		}
 
-		if (Constants.GameServer.WANT_EQUIPMENT_TAB && EntityHandler.getItemDef(id).isWieldable()) {
-			for (Item i : player.getEquipment().list)
-			{
-				if (i == null)
-					continue;
-				if (i.getID() == id)
-					return true;
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			ItemDefinition itemDef = EntityHandler.getItemDef(id);
+			if (itemDef != null && itemDef.isWieldable()) {
+				for (Item i : player.getEquipment().list) {
+					if (i == null)
+						continue;
+					if (i.getID() == id)
+						return true;
+				}
 			}
 		}
 
@@ -295,6 +300,7 @@ public class Inventory {
 	public int remove(Item item) {
 		return remove(item.getID(), item.getAmount(), true);
 	}
+
 	public int size() {
 		synchronized (list) {
 			return list.size();
@@ -428,7 +434,7 @@ public class Inventory {
 		return true;
 	}
 
-	public void wieldItem(Item item, boolean sound) {
+	public boolean wieldItem(Item item, boolean sound) {
 
 		int requiredLevel = item.getDef().getRequiredLevel();
 		int requiredSkillIndex = item.getDef().getRequiredSkillIndex();
@@ -437,11 +443,11 @@ public class Inventory {
 		Optional<Integer> optionalSkillIndex = Optional.empty();
 		boolean ableToWield = true;
 		boolean bypass = !Constants.GameServer.STRICT_CHECK_ALL &&
-				(itemLower.startsWith("poisoned") &&
-					((itemLower.endsWith("throwing dart") && !Constants.GameServer.STRICT_PDART_CHECK) ||
+			(itemLower.startsWith("poisoned") &&
+				((itemLower.endsWith("throwing dart") && !Constants.GameServer.STRICT_PDART_CHECK) ||
 					(itemLower.endsWith("throwing knife") && !Constants.GameServer.STRICT_PKNIFE_CHECK) ||
 					(itemLower.endsWith("spear") && !Constants.GameServer.STRICT_PSPEAR_CHECK))
-				);
+			);
 
 		if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
 			optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
@@ -481,41 +487,41 @@ public class Inventory {
 			&& (player.getQuestStage(Constants.Quests.DRAGON_SLAYER) != -1)) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the dragon slayer quest");
-			return;
+			return false;
 		} else if (item.getID() == ItemId.DRAGON_SWORD.id() && player.getQuestStage(Constants.Quests.LOST_CITY) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Lost city of zanaris quest");
-			return;
+			return false;
 		} else if (item.getID() == ItemId.DRAGON_AXE.id() && player.getQuestStage(Constants.Quests.HEROS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Hero's guild entry quest");
-			return;
+			return false;
 		} else if (item.getID() == ItemId.DRAGON_SQUARE_SHIELD.id() && player.getQuestStage(Constants.Quests.LEGENDS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the legend's guild quest");
-			return;
+			return false;
 		}
 		/*
 		 * Hacky but works for god staffs and god capes.
 		 */
 		else if (item.getID() == ItemId.STAFF_OF_GUTHIX.id() && (wielding(ItemId.ZAMORAK_CAPE.id()) || wielding(ItemId.SARADOMIN_CAPE.id()))) { // try to wear guthix staff
 			player.message("you may not wield this staff while wearing a cape of another god");
-			return;
+			return false;
 		} else if (item.getID() == ItemId.STAFF_OF_SARADOMIN.id() && (wielding(ItemId.ZAMORAK_CAPE.id()) || wielding(ItemId.GUTHIX_CAPE.id()))) { // try to wear sara staff
 			player.message("you may not wield this staff while wearing a cape of another god");
-			return;
+			return false;
 		} else if (item.getID() == ItemId.STAFF_OF_ZAMORAK.id() && (wielding(ItemId.SARADOMIN_CAPE.id()) || wielding(ItemId.GUTHIX_CAPE.id()))) { // try to wear zamorak staff
 			player.message("you may not wield this staff while wearing a cape of another god");
-			return;
+			return false;
 		} else if (item.getID() == ItemId.GUTHIX_CAPE.id() && (wielding(ItemId.STAFF_OF_ZAMORAK.id()) || wielding(ItemId.STAFF_OF_SARADOMIN.id()))) { // try to wear guthix cape
 			player.message("you may not wear this cape while wielding staffs of the other gods");
-			return;
+			return false;
 		} else if (item.getID() == ItemId.SARADOMIN_CAPE.id() && (wielding(ItemId.STAFF_OF_ZAMORAK.id()) || wielding(ItemId.STAFF_OF_GUTHIX.id()))) { // try to wear sara cape
 			player.message("you may not wear this cape while wielding staffs of the other gods");
-			return;
+			return false;
 		} else if (item.getID() == ItemId.ZAMORAK_CAPE.id() && (wielding(ItemId.STAFF_OF_GUTHIX.id()) || wielding(ItemId.STAFF_OF_SARADOMIN.id()))) { // try to wear zamorak cape
 			player.message("you may not wear this cape while wielding staffs of the other gods");
-			return;
+			return false;
 		}
 		/** Quest cape 112QP TODO item id **/
 		/*
@@ -533,26 +539,26 @@ public class Inventory {
 		/** iron men armours **/
 		else if ((item.getID() == 2135 || item.getID() == 2136 || item.getID() == 2137) && !player.isIronMan(1)) {
 			player.message("You need to be an Iron Man to wear this");
-			return;
+			return false;
 		} else if ((item.getID() == 2138 || item.getID() == 2139 || item.getID() == 2140) && !player.isIronMan(2)) {
 			player.message("You need to be an Ultimate Iron Man to wear this");
-			return;
+			return false;
 		} else if ((item.getID() == 2141 || item.getID() == 2142 || item.getID() == 2143) && !player.isIronMan(3)) {
 			player.message("You need to be a Hardcore Iron Man to wear this");
-			return;
+			return false;
 		} else if (item.getID() == 2254 && player.getQuestStage(Constants.Quests.LEGENDS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Legends Quest");
-			return;
+			return false;
 		}
 		if (!ableToWield)
-			return;
+			return false;
 
 		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
 			//Do an inventory count check
 			int count = 0;
-			for (Item i: player.getEquipment().list){
-				if (i!=null && item.wieldingAffectsItem(i)) {
+			for (Item i : player.getEquipment().list) {
+				if (i != null && item.wieldingAffectsItem(i)) {
 					if (item.getDef().isStackable()) {
 						if (item.getID() == i.getID())
 							continue;
@@ -562,19 +568,17 @@ public class Inventory {
 			}
 			if (player.getInventory().getFreeSlots() - count + 1 < 0) {
 				player.message("You need more inventory space to equip that.");
-				return;
+				return false;
 			}
 
 			player.getInventory().remove(item);
-			for (Item i : player.getEquipment().list)
-			{
+			for (Item i : player.getEquipment().list) {
 				if (i != null && item.wieldingAffectsItem(i)) {
 					if (item.getDef().isStackable()) {
-						if (item.getID() == i.getID())
-						{
+						if (item.getID() == i.getID()) {
 							i.setAmount(i.getAmount() + item.getAmount());
 							ActionSender.updateEquipmentSlot(player, i.getDef().getWieldPosition());
-							return;
+							return true;
 						}
 					}
 					unwieldItem(i, false);
@@ -606,6 +610,7 @@ public class Inventory {
 
 		ActionSender.sendInventory(player);
 		ActionSender.sendEquipmentStats(player, item.getDef().getWieldPosition());
+		return true;
 	}
 
 	public void dropOnDeath(Mob opponent) {
@@ -668,7 +673,7 @@ public class Inventory {
 		} catch (Exception e) {
 			enchantment = Gauntlets.STEEL;
 		}
-		switch(enchantment) {
+		switch (enchantment) {
 			case GOLDSMITHING:
 				fam_gloves = ItemId.GAUNTLETS_OF_GOLDSMITHING.id();
 				break;
@@ -688,4 +693,6 @@ public class Inventory {
 		log.build();
 		GameLogging.addQuery(log);
 	}
+
+	public ArrayList getList() { return list;}
 }

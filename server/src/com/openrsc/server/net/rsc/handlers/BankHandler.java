@@ -53,6 +53,8 @@ public final class BankHandler implements PacketHandler {
 		int packetThree = OpcodeIn.BANK_DEPOSIT.getOpcode();
 		int packetFour = OpcodeIn.BANK_DEPOSIT_ALL_FROM_INVENTORY.getOpcode();
 		int packetFive = OpcodeIn.BANK_DEPOSIT_ALL_FROM_EQUIPMENT.getOpcode();
+		int packetSix = OpcodeIn.BANK_SAVE_PRESET.getOpcode();
+		int packetSeven = OpcodeIn.BANK_LOAD_PRESET.getOpcode();
 
 		if (pID == packetOne) { // Close bank
 			player.resetBank();
@@ -142,14 +144,7 @@ public final class BankHandler implements PacketHandler {
 
 		} else if (pID == packetFour) {
 			//deposit all from inventory
-			for (int k = player.getInventory().size() - 1; k >= 0; k--) {
-				Item depoItem = player.getInventory().get(k);
-				if (PluginHandler.getPluginHandler().blockDefaultAction("Deposit",
-					new Object[]{player, depoItem.getID(), depoItem.getAmount()})) {
-					continue;
-				}
-				depositItem(player, depoItem.getID(), depoItem.getAmount(), false);
-			}
+			depositInventory(player);
 			ActionSender.sendInventory(player);
 			ActionSender.showBank(player);
 		} else if (pID == packetFive && Constants.GameServer.WANT_EQUIPMENT_TAB) {
@@ -167,13 +162,56 @@ public final class BankHandler implements PacketHandler {
 					return;
 				player.getBank().unwieldItem(depoItem, false);
 			}
-			ActionSender.sendInventory(player);
+			ActionSender.sendEquipmentStats(player);
 			ActionSender.showBank(player);
+		} else if (pID == packetSix && Constants.GameServer.WANT_BANK_PRESETS) {
+			int presetSlot = p.readShort();
+			if (presetSlot < 0 || presetSlot >= Bank.PRESET_COUNT) {
+				player.setSuspiciousPlayer(true);
+				return;
+			}
+			for (int k = 0; k < Inventory.MAX_SIZE; k++) {
+				if (k < inventory.size())
+					player.getBank().presets[presetSlot].inventory[k] = inventory.get(k);
+				else
+					player.getBank().presets[presetSlot].inventory[k] = new Item(-1,0);
+			}
+			for (int k = 0; k < Equipment.slots; k++) {
+				Item equipmentItem = player.getEquipment().list[k];
+				if (equipmentItem != null)
+					player.getBank().presets[presetSlot].equipment[k] = equipmentItem;
+				else
+					player.getBank().presets[presetSlot].equipment[k] = new Item(-1,0);
+			}
+			player.getBank().presets[presetSlot].changed = true;
+		} else if (pID == packetSeven && Constants.GameServer.WANT_BANK_PRESETS) {
+			int presetSlot = p.readShort();
+			if (presetSlot < 0 || presetSlot >= Bank.PRESET_COUNT) {
+				player.setSuspiciousPlayer(true);
+				return;
+			}
+			player.getBank().attemptPresetLoadout(presetSlot);
+			ActionSender.sendEquipmentStats(player);
+			ActionSender.sendInventory(player);
 		}
 
 	}
+	public static boolean depositInventory(Player player) {
+		boolean retval = true;
+		for (int k = player.getInventory().size() - 1; k >= 0; k--) {
+			Item depoItem = player.getInventory().get(k);
+			if (PluginHandler.getPluginHandler().blockDefaultAction("Deposit",
+				new Object[]{player, depoItem.getID(), depoItem.getAmount()})) {
+				continue;
+			}
+			if (!depositItem(player, depoItem.getID(), depoItem.getAmount(), false))
+				retval = false;
 
-	private boolean depositItem(Player player, int itemID, int amount, boolean updatePlayer) {
+		}
+		return retval;
+	}
+
+	public static boolean depositItem(Player player, int itemID, int amount, boolean updatePlayer) {
 		Item item = null;
 		Bank bank = player.getBank();
 		Inventory inventory = player.getInventory();
@@ -202,7 +240,7 @@ public final class BankHandler implements PacketHandler {
 				int uncertedID = uncertedID(removedItem.getID());
 				itemID = uncertedID;
 				Item uncertedItem = new Item(uncertedID, uncertedID == removedItem.getID() ? amount : amount * 5);
-				if (bank.canHold(uncertedItem) && inventory.remove(removedItem) > -1) {
+				if (bank.canHold(uncertedItem) && inventory.remove(removedItem,false) > -1) {
 					bank.add(uncertedItem);
 				} else {
 					player.message("You don't have room for that in your bank");
@@ -217,7 +255,7 @@ public final class BankHandler implements PacketHandler {
 				if (item == null) { // This shouldn't happen
 					break;
 				}
-				if (bank.canHold(item) && inventory.remove(item.getID(), item.getAmount()) > -1) {
+				if (bank.canHold(item) && inventory.remove(item.getID(), item.getAmount(), false) > -1) {
 					bank.add(item);
 				} else {
 					player.message("You don't have room for that in your bank");
@@ -234,7 +272,9 @@ public final class BankHandler implements PacketHandler {
 		return true;
 	}
 
-	private boolean isCert(int itemID) {
+	public BankHandler getBankHandler() { return this; }
+
+	private static boolean isCert(int itemID) {
 		int[] certIds = {
 			/* Ores **/
 			517, 518, 519, 520, 521,
@@ -251,7 +291,7 @@ public final class BankHandler implements PacketHandler {
 		return DataConversions.inArray(certIds, itemID);
 	}
 
-	private int uncertedID(int itemID) {
+	private static int uncertedID(int itemID) {
 
 		if (itemID == ItemId.IRON_ORE_CERTIFICATE.id()) {
 			return ItemId.IRON_ORE.id();

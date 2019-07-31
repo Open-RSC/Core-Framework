@@ -10,6 +10,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Properties;
 
+import com.openrsc.interfaces.misc.CustomBankInterface;
 import orsc.buffers.RSBufferUtils;
 import orsc.buffers.RSBuffer_Bits;
 import orsc.enumerations.MessageType;
@@ -170,6 +171,8 @@ public class PacketHandler {
 
 				// Send Private Message
 			else if (opcode == 87) sendPrivateMessage();
+
+			else if (opcode == 150) updatePreset();
 
 				// Set Server Configs
 			else if (opcode == 19) setServerConfiguration();
@@ -751,6 +754,7 @@ public class PacketHandler {
 		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank, wantPlayerCommands;
 		int getFPS, wantEmail, wantRegistrationLimit, allowResize, lenientContactDetails, wantFatigue, wantCustomSprites;
 		int fishingSpotsDepletable, properMagicTreeName, wantRunecrafting, wantCustomLandscape, wantEquipmentTab;
+		int wantBankPresets;
 		String logoSpriteID;
 
 		if (!mc.gotInitialConfigs) {
@@ -816,6 +820,7 @@ public class PacketHandler {
 			wantRunecrafting = this.getClientStream().getUnsignedByte(); //60
 			wantCustomLandscape = this.getClientStream().getUnsignedByte(); //61
 			wantEquipmentTab = this.getClientStream().getUnsignedByte(); //62
+			wantBankPresets = this.getClientStream().getUnsignedByte(); //63
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -879,6 +884,7 @@ public class PacketHandler {
 			wantRunecrafting = packetsIncoming.getUnsignedByte(); //60
 			wantCustomLandscape = packetsIncoming.getUnsignedByte(); //61
 			wantEquipmentTab = packetsIncoming.getUnsignedByte(); //62
+			wantBankPresets = packetsIncoming.getUnsignedByte(); //63
 		}
 
 		if (Config.DEBUG) {
@@ -944,7 +950,8 @@ public class PacketHandler {
 					"\nS_PROPER_MAGIC_TREE_NAME  " + properMagicTreeName +// 59
 					"\nS_WANT_RUNECRAFTING  "   + wantRunecrafting +// 60
 					"\nS_WANT_CUSTOM_LANDSCAPE  "   + wantCustomLandscape +// 61
-					"\nS_WANT_EQUIPMENT_TAB  "   + wantEquipmentTab// 61
+					"\nS_WANT_EQUIPMENT_TAB  "   + wantEquipmentTab +// 61
+					"\nS_WANT_BANK_PRESETS  "   + wantEquipmentTab// 62
 			);
 		}
 
@@ -1012,6 +1019,7 @@ public class PacketHandler {
 		props.setProperty("S_WANT_RUNECRAFTING", wantRunecrafting == 1 ? "true" : "false"); //60
 		props.setProperty("S_WANT_CUSTOM_LANDSCAPE", wantCustomLandscape == 1 ? "true" : "false"); //61
 		props.setProperty("S_WANT_EQUIPMENT_TAB", wantEquipmentTab == 1 ? "true" : "false"); //62
+		props.setProperty("S_WANT_BANK_PRESETS", wantBankPresets == 1 ? "true" : "false"); //63
 
 		Config.updateServerConfiguration(props);
 
@@ -2300,4 +2308,55 @@ public class PacketHandler {
 			}
 		}
 	}
+
+	private void updatePreset() {
+		int slot = packetsIncoming.getShort();
+		int itemID, amount;
+		ItemDef item;
+		CustomBankInterface.Item[] inventoryItems = new CustomBankInterface.Item[Config.S_PLAYER_INVENTORY_SLOTS];
+		CustomBankInterface.Item[] equipmentItems = new CustomBankInterface.Item[Config.S_PLAYER_SLOT_COUNT];
+		byte[] itemBytes = new byte[2];
+		for (int i = 0; i < inventoryItems.length; i++) {
+			itemBytes[0] = packetsIncoming.getByte();
+			if (itemBytes[0] == -1)
+				continue;
+			itemBytes[1] = packetsIncoming.getByte();
+			itemID = (((int)itemBytes[0] << 8)&0xFF00) | (int)itemBytes[1] & 0xFF;
+			item = EntityHandler.getItemDef(itemID);
+			if (item != null) {
+				if (item.isStackable())
+					amount = packetsIncoming.get32();
+				else
+					amount = 1;
+				inventoryItems[i] = new CustomBankInterface.Item(itemID,amount);
+			}
+		}
+		//The server uses 2 more slots than the client
+		for (int i = 0; i < equipmentItems.length+2; i++) {
+			itemBytes[0] = packetsIncoming.getByte();
+			if (itemBytes[0] == -1)
+				continue;
+			itemBytes[1] = packetsIncoming.getByte();
+			itemID = (((int)itemBytes[0] << 8)&0xFF00) | (int)itemBytes[1] & 0xFF;
+			item = EntityHandler.getItemDef(itemID);
+			if (item != null) {
+				if (item.isStackable())
+					amount = packetsIncoming.get32();
+				else
+					amount = 1;
+				int equipslot = i;
+				if (equipslot == 5)
+					equipslot = 0;
+				else if (equipslot == 6)
+					equipslot = 1;
+				else if (equipslot == 7)
+					equipslot = 2;
+				else if (equipslot > 7)
+					equipslot -= 3;
+				equipmentItems[equipslot] = new CustomBankInterface.Item(itemID,amount);
+			}
+		}
+		mc.getBank().updatePreset(slot, inventoryItems, equipmentItems);
+	}
+
 }

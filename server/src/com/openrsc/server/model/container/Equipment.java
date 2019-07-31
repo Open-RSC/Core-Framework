@@ -76,5 +76,9 @@ public class Equipment {
 		return list[12];
 	}
 
-
+	public void clearList() {
+		for (int i = 0; i < list.length; i++) {
+			list[i] = null;
+		}
+	}
 }
