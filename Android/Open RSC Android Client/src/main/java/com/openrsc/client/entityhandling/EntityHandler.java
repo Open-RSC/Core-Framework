@@ -352,7 +352,8 @@ public class EntityHandler {
 		EQUIPSLOT_RING(48),
 		EQUIPSLOT_HIGHLIGHT(49),
 		BANK_EQUIP_BAG(50),
-		BANK_EQUIP_HELM(51);
+		BANK_EQUIP_HELM(51),
+		BANK_PRESET_OPTIONS(52);
 
 		private final int value;
 
@@ -363,6 +364,7 @@ public class EntityHandler {
 		public int id() {
 			return value;
 		}
+		public SpriteDef getDef() { return GUIparts.get(this.value); }
 	}
 	private static void loadGUIParts() {
 		GUIparts.add(new SpriteDef("main logo", mudclient.spriteMedia + 10,"GUI:7",0));
@@ -417,6 +419,7 @@ public class EntityHandler {
 		GUIparts.add(new SpriteDef("equipment blue highlight+", -1,"GUI:39",49));
 		GUIparts.add(new SpriteDef("bank toggle for inventory mode", -1,"GUI:40",50));
 		GUIparts.add(new SpriteDef("bank toggle for equipment mode", -1,"GUI:41",51));
+		GUIparts.add(new SpriteDef("bank preset options gear", -1,"GUI:42",52));
 	}
 
 	public enum CROWN_TYPES {

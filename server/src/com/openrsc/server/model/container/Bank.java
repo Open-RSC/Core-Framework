@@ -1,23 +1,57 @@
 package com.openrsc.server.model.container;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.net.rsc.handlers.BankHandler;
 import com.openrsc.server.plugins.Functions;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.*;
 
 
 public class Bank {
 
 	private ArrayList<Item> list = new ArrayList<Item>();
-
 	private Player player;
+	public static int PRESET_COUNT = 2;
+	public Preset[] presets = new Preset[PRESET_COUNT];
+
+	public static class Preset {
+		public Item[] inventory;
+		public Item[] equipment;
+		public boolean changed = false;
+
+		public Preset() {
+			inventory = new Item[Inventory.MAX_SIZE];
+			equipment = new Item[Equipment.slots];
+			for (int i = 0; i < inventory.length; i++)
+				inventory[i] = new Item();
+			for (int i = 0; i < equipment.length; i++)
+				equipment[i] = new Item();
+		}
+	}
 
 	public Bank(Player player) {
 		this.player = player;
+		for (int i = 0; i < this.presets.length; i++) {
+			presets[i] = new Preset();
+			for (int j = 0; j < presets[i].inventory.length; j++) {
+				this.presets[i].inventory[j] = new Item(-1, 0);
+			}
+			for (int j = 0; j < presets[i].equipment.length; j++) {
+				this.presets[i].equipment[j] = new Item(-1, 0);
+			}
+		}
 	}
 
 	public int add(Item item) {
@@ -228,171 +262,60 @@ public class Bank {
 
 	public void wieldItem(int bankslot, boolean sound) {
 		Item item = get(bankslot);
-		int requiredLevel = item.getDef().getRequiredLevel();
-		int requiredSkillIndex = item.getDef().getRequiredSkillIndex();
-		String itemLower = item.getDef().getName().toLowerCase();
-		Optional<Integer> optionalLevel = Optional.empty();
-		Optional<Integer> optionalSkillIndex = Optional.empty();
-		boolean ableToWield = true;
-		boolean bypass = !Constants.GameServer.STRICT_CHECK_ALL &&
-			(itemLower.startsWith("poisoned") &&
-				((itemLower.endsWith("throwing dart") && !Constants.GameServer.STRICT_PDART_CHECK) ||
-					(itemLower.endsWith("throwing knife") && !Constants.GameServer.STRICT_PKNIFE_CHECK) ||
-					(itemLower.endsWith("spear") && !Constants.GameServer.STRICT_PSPEAR_CHECK))
-			);
+		if (item.getDef() == null)
+			return;
 
-		if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
-			optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
-			optionalSkillIndex = Optional.of(Skills.SKILLS.ATTACK.id());
-		}
-		//staff of iban (usable)
-		if (item.getID() == ItemId.STAFF_OF_IBAN.id()) {
-			optionalLevel = Optional.of(requiredLevel);
-			optionalSkillIndex = Optional.of(Skills.SKILLS.ATTACK.id());
-		}
-		//battlestaves (incl. enchanted version)
-		if (itemLower.contains("battlestaff")) {
-			optionalLevel = Optional.of(requiredLevel);
-			optionalSkillIndex = Optional.of(Skills.SKILLS.ATTACK.id());
-		}
+		if ( !item.getDef().isStackable() && player.getEquipment().list[item.getDef().getWieldPosition()] != null
+			&& item.getID() == player.getEquipment().list[item.getDef().getWieldPosition()].getID())
+			return;
 
-		if (player.getSkills().getMaxStat(requiredSkillIndex) < requiredLevel) {
-			if (!bypass) {
-				player.message("You are not a high enough level to use this item");
-				player.message("You need to have a " + Skills.getSkillName(requiredSkillIndex) + " level of " + requiredLevel);
-				ableToWield = false;
-			}
-		}
-		if (optionalSkillIndex.isPresent() && player.getSkills().getMaxStat(optionalSkillIndex.get()) < optionalLevel.get()) {
-			if (!bypass) {
-				player.message("You are not a high enough level to use this item");
-				player.message("You need to have a " + Skills.getSkillName(optionalSkillIndex.get()) + " level of " + optionalLevel.get());
-				ableToWield = false;
-			}
-		}
-		if (item.getDef().isFemaleOnly() && player.isMale()) {
-			player.message("It doesn't fit!");
-			player.message("Perhaps I should get someone to adjust it for me");
-			ableToWield = false;
-		}
-		if ((item.getID() == ItemId.RUNE_PLATE_MAIL_BODY.id() || item.getID() == ItemId.RUNE_PLATE_MAIL_TOP.id())
-			&& (player.getQuestStage(Constants.Quests.DRAGON_SLAYER) != -1)) {
-			player.message("you have not earned the right to wear this yet");
-			player.message("you need to complete the dragon slayer quest");
-			return;
-		} else if (item.getID() == ItemId.DRAGON_SWORD.id() && player.getQuestStage(Constants.Quests.LOST_CITY) != -1) {
-			player.message("you have not earned the right to wear this yet");
-			player.message("you need to complete the Lost city of zanaris quest");
-			return;
-		} else if (item.getID() == ItemId.DRAGON_AXE.id() && player.getQuestStage(Constants.Quests.HEROS_QUEST) != -1) {
-			player.message("you have not earned the right to wear this yet");
-			player.message("you need to complete the Hero's guild entry quest");
-			return;
-		} else if (item.getID() == ItemId.DRAGON_SQUARE_SHIELD.id() && player.getQuestStage(Constants.Quests.LEGENDS_QUEST) != -1) {
-			player.message("you have not earned the right to wear this yet");
-			player.message("you need to complete the legend's guild quest");
+		if (!Functions.canWield(player, item) || !item.getDef().isWieldable()) {
 			return;
 		}
-		/*
-		 * Hacky but works for god staffs and god capes.
-		 */
-		else if (item.getID() == ItemId.STAFF_OF_GUTHIX.id() && (player.getInventory().wielding(ItemId.ZAMORAK_CAPE.id()) || player.getInventory().wielding(ItemId.SARADOMIN_CAPE.id()))) { // try to wear guthix staff
-			player.message("you may not wield this staff while wearing a cape of another god");
-			return;
-		} else if (item.getID() == ItemId.STAFF_OF_SARADOMIN.id() && (player.getInventory().wielding(ItemId.ZAMORAK_CAPE.id()) || player.getInventory().wielding(ItemId.GUTHIX_CAPE.id()))) { // try to wear sara staff
-			player.message("you may not wield this staff while wearing a cape of another god");
-			return;
-		} else if (item.getID() == ItemId.STAFF_OF_ZAMORAK.id() && (player.getInventory().wielding(ItemId.SARADOMIN_CAPE.id()) || player.getInventory().wielding(ItemId.GUTHIX_CAPE.id()))) { // try to wear zamorak staff
-			player.message("you may not wield this staff while wearing a cape of another god");
-			return;
-		} else if (item.getID() == ItemId.GUTHIX_CAPE.id() && (player.getInventory().wielding(ItemId.STAFF_OF_ZAMORAK.id()) || player.getInventory().wielding(ItemId.STAFF_OF_SARADOMIN.id()))) { // try to wear guthix cape
-			player.message("you may not wear this cape while wielding staffs of the other gods");
-			return;
-		} else if (item.getID() == ItemId.SARADOMIN_CAPE.id() && (player.getInventory().wielding(ItemId.STAFF_OF_ZAMORAK.id()) || player.getInventory().wielding(ItemId.STAFF_OF_GUTHIX.id()))) { // try to wear sara cape
-			player.message("you may not wear this cape while wielding staffs of the other gods");
-			return;
-		} else if (item.getID() == ItemId.ZAMORAK_CAPE.id() && (player.getInventory().wielding(ItemId.STAFF_OF_GUTHIX.id()) || player.getInventory().wielding(ItemId.STAFF_OF_SARADOMIN.id()))) { // try to wear zamorak cape
-			player.message("you may not wear this cape while wielding staffs of the other gods");
-			return;
-		}
-		/** Quest cape 112QP TODO item id **/
-		/*
-		else if (item.getID() == 2145 && player.getQuestPoints() < 112) {
-			player.message("you have not earned the right to wear this yet");
-			player.message("you need to complete all the available quests");
-			return;
-		}*/
-		/** Max skill total cape TODO item id **/
-		/*else if (item.getID() == 2146 && player.getSkills().getTotalLevel() < 1782) {
-			player.message("you have not earned the right to wear this yet");
-			player.message("you need to be level 99 in all skills");
-			return;
-		}*/
-		/** iron men armours **/
-		else if ((item.getID() == 2135 || item.getID() == 2136 || item.getID() == 2137) && !player.isIronMan(1)) {
-			player.message("You need to be an Iron Man to wear this");
-			return;
-		} else if ((item.getID() == 2138 || item.getID() == 2139 || item.getID() == 2140) && !player.isIronMan(2)) {
-			player.message("You need to be an Ultimate Iron Man to wear this");
-			return;
-		} else if ((item.getID() == 2141 || item.getID() == 2142 || item.getID() == 2143) && !player.isIronMan(3)) {
-			player.message("You need to be a Hardcore Iron Man to wear this");
-			return;
-		} else if (item.getID() == 2254 && player.getQuestStage(Constants.Quests.LEGENDS_QUEST) != -1) {
-			player.message("you have not earned the right to wear this yet");
-			player.message("you need to complete the Legends Quest");
-			return;
-		}
-		if (!ableToWield)
-			return;
 
 		ArrayList<Item> itemsToStore = new ArrayList<>();
 
-			//Do an inventory count check
-			int count = 0;
-			for (Item i: player.getEquipment().list){
-				if (i!=null && item.wieldingAffectsItem(i)) {
-					if (item.getDef().isStackable()) {
-						if (item.getID() == i.getID())
-							continue;
-					}
-					count++;
-					itemsToStore.add(i);
+		//Do an inventory count check
+		int count = 0;
+		for (Item i : player.getEquipment().list) {
+			if (i != null && item.wieldingAffectsItem(i)) {
+				if (item.getDef().isStackable()) {
+					if (item.getID() == i.getID())
+						continue;
 				}
+				count++;
+				itemsToStore.add(i);
 			}
-			int requiredSpaces = getRequiredSlots(itemsToStore);
-			if (player.getFreeBankSlots() + 1 < requiredSpaces) {
-				player.message("You need more bank space to equip that.");
-				return;
-			}
+		}
 
-			int amountToRemove = item.getDef().isStackable() ? item.getAmount() : 1;
-		    remove(item.getID(), amountToRemove);
+		int requiredSpaces = getRequiredSlots(itemsToStore);
 
-			for (Item i : player.getEquipment().list)
-			{
-				if (i != null && item.wieldingAffectsItem(i)) {
-					if (item.getDef().isStackable()) {
-						if (item.getID() == i.getID())
-						{
-							i.setAmount(i.getAmount() + item.getAmount());
-							ActionSender.updateEquipmentSlot(player, i.getDef().getWieldPosition());
-							return;
-						}
+		if (player.getFreeBankSlots() + 1 < requiredSpaces) {
+			player.message("You need more bank space to equip that.");
+			return;
+		}
+
+		int amountToRemove = item.getDef().isStackable() ? item.getAmount() : 1;
+		remove(item.getID(), amountToRemove);
+		for (Item i : player.getEquipment().list) {
+			if (i != null && item.wieldingAffectsItem(i)) {
+				if (item.getDef().isStackable()) {
+					if (item.getID() == i.getID()) {
+						i.setAmount(i.getAmount() + item.getAmount());
+						ActionSender.updateEquipmentSlot(player, i.getDef().getWieldPosition());
+						return;
 					}
-					unwieldItem(i, false);
 				}
-
+				unwieldItem(i, false);
 			}
 
-			//Check requirements for ammo/bow compatibility here??
-
+		}
 
 		if (sound)
 			player.playSound("click");
 
 		player.updateWornItems(item.getDef().getWieldPosition(), item.getDef().getAppearanceId());
-		player.getEquipment().list[item.getDef().getWieldPosition()] = item;
+		player.getEquipment().list[item.getDef().getWieldPosition()] = new Item(item.getID(), amountToRemove);
 		ActionSender.sendEquipmentStats(player, item.getDef().getWieldPosition());
 	}
 
@@ -403,12 +326,13 @@ public class Bank {
 		}
 
 		//check to see if the item is actually wielded
-		if (!Functions.isWielding(player,affectedItem.getID())) {
+		if (!Functions.isWielding(player, affectedItem.getID())) {
 			return false;
 		}
 
 		//Can't unequip something if inventory is full
-		if (player.getFreeBankSlots() <= 0) {
+		int requiredSlots = getRequiredSlots(affectedItem);
+		if (player.getFreeBankSlots() - requiredSlots < 0) {
 			player.message("You need more bank space to unequip that.");
 			return false;
 		}
@@ -422,7 +346,220 @@ public class Bank {
 
 		player.getEquipment().list[affectedItem.getDef().getWieldPosition()] = null;
 		add(affectedItem);
-		ActionSender.sendEquipmentStats(player, affectedItem.getDef().getWieldPosition());
 		return true;
 	}
+
+	public void loadPreset(int slot, Blob inventoryItems, Blob equipmentItems) {
+		try {
+			InputStream readBlob = inventoryItems.getBinaryStream();
+			ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+			int nRead;
+			byte[] data = new byte[1024];
+			while ((nRead = readBlob.read(data, 0, data.length)) != -1) {
+				buffer.write(data, 0, nRead);
+			}
+			buffer.flush();
+			readBlob.close();
+			ByteBuffer blobData = ByteBuffer.wrap(buffer.toByteArray());
+			byte[] itemID = new byte[2];
+			for (int i = 0; i < Inventory.MAX_SIZE; i++) {
+				itemID[0] = blobData.get();
+				if (itemID[0] == -1)
+					continue;
+				itemID[1] = blobData.get();
+				int itemIDreal = (((int) itemID[0] << 8) & 0xFF00) | (int) itemID[1] & 0xFF;
+				ItemDefinition item = EntityHandler.getItemDef(itemIDreal);
+				if (item == null)
+					continue;
+
+				presets[slot].inventory[i].setID(itemIDreal);
+				if (item.isStackable())
+					presets[slot].inventory[i].setAmount(blobData.getInt());
+				else
+					presets[slot].inventory[i].setAmount(1);
+			}
+
+			readBlob = equipmentItems.getBinaryStream();
+			buffer = new ByteArrayOutputStream();
+			while ((nRead = readBlob.read(data, 0, data.length)) != -1) {
+				buffer.write(data, 0, nRead);
+			}
+			buffer.flush();
+
+			blobData = ByteBuffer.wrap(buffer.toByteArray());
+			for (int i = 0; i < Equipment.slots; i++) {
+				itemID[0] = blobData.get();
+				if (itemID[0] == -1)
+					continue;
+				itemID[1] = blobData.get();
+				int itemIDreal = (((int) itemID[0] << 8) & 0xFF00) | (int) itemID[1] & 0xFF;
+				ItemDefinition item = EntityHandler.getItemDef(itemIDreal);
+				if (item == null)
+					continue;
+
+				presets[slot].equipment[i].setID(itemIDreal);
+				if (item.isStackable())
+					presets[slot].equipment[i].setAmount(blobData.getInt());
+				else
+					presets[slot].equipment[i].setAmount(1);
+			}
+		} catch (IOException a) {
+			a.printStackTrace();
+		} catch (SQLException b) {
+			b.printStackTrace();
+		}
+	}
+
+	public boolean isEmptyPreset(int slot) {
+		for (Item inv : presets[slot].inventory) {
+			if (inv.getID() != -1)
+				return false;
+		}
+		for (Item eqp : presets[slot].equipment) {
+			if (eqp.getID() != -1)
+				return false;
+		}
+		return true;
+	}
+
+	public void attemptPresetLoadout(int slot) {
+		Map<Integer, Integer> itemsOwned = new HashMap<>();
+		Item tempItem;
+
+		//Loop through their bank and add it to the hashmap
+		for (int i = 0; i < list.size(); i++) {
+			tempItem = get(i);
+			if (tempItem != null) {
+				if (!itemsOwned.containsKey(tempItem.getID())) {
+					itemsOwned.put(tempItem.getID(), 0);
+				}
+				int hasAmount = itemsOwned.get(tempItem.getID());
+				hasAmount += tempItem.getAmount();
+				itemsOwned.put(tempItem.getID(), hasAmount);
+			}
+		}
+
+		//Loop through their inventory and add it to the hashmap
+		for (int i = 0; i < player.getInventory().size(); i++) {
+			tempItem = player.getInventory().get(i);
+			if (tempItem != null) {
+				if (!itemsOwned.containsKey(tempItem.getID())) {
+					itemsOwned.put(tempItem.getID(), 0);
+				}
+				int hasAmount = itemsOwned.get(tempItem.getID());
+				hasAmount += tempItem.getAmount();
+				itemsOwned.put(tempItem.getID(), hasAmount);
+			}
+		}
+
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			//Loop through their equipment and add it to the hashmap
+			for (int i = 0; i < player.getEquipment().list.length; i++) {
+				tempItem = player.getEquipment().list[i];
+				if (tempItem != null) {
+					if (!itemsOwned.containsKey(tempItem.getID())) {
+						itemsOwned.put(tempItem.getID(), 0);
+					}
+					int hasAmount = itemsOwned.get(tempItem.getID());
+					hasAmount += tempItem.getAmount();
+					itemsOwned.put(tempItem.getID(), hasAmount);
+				}
+			}
+		}
+
+		//Make sure they have enough space - disregard edge cases
+		if (itemsOwned.size() > player.getBankSize() + Inventory.MAX_SIZE) {
+			player.message("Your bank and inventory are critically full. Clean up before using presets.");
+			return;
+		}
+
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			//Attempt to equip the preset equipment
+			for (int i = 0; i < presets[slot].equipment.length; i++) {
+				Item presetEquipment = presets[slot].equipment[i];
+				if (presetEquipment.getDef() == null) {
+					player.getEquipment().list[i] = null;
+					player.updateWornItems(i,
+						player.getSettings().getAppearance().getSprite(i));
+					continue;
+				}
+				presetEquipment.setWielded(false);
+				if (itemsOwned.containsKey(presetEquipment.getID())) {
+					int presetAmount = presetEquipment.getAmount();
+					int ownedAmount = itemsOwned.get(presetEquipment.getID());
+					if (presetAmount > ownedAmount) {
+						player.message("Preset error: Requested item missing " + presetEquipment.getDef().getName());
+						presetAmount = ownedAmount;
+						presetEquipment.setAmount(presetAmount);
+					}
+					if (presetAmount > 0) {
+						if (player.getSkills().getMaxStat(presetEquipment.getDef().getRequiredSkillIndex()) < presetEquipment.getDef().getRequiredLevel()) {
+							player.message("Unable to equip " + presetEquipment.getDef().getName() + " due to lack of skill.");
+							continue;
+						}
+						player.getEquipment().list[presetEquipment.getDef().getWieldPosition()] = presetEquipment;
+						player.updateWornItems(i,
+							presetEquipment.getDef().getAppearanceId());
+						if (presetAmount == ownedAmount) {
+							itemsOwned.remove(presetEquipment.getID());
+						} else {
+							itemsOwned.put(presetEquipment.getID(), ownedAmount - presetAmount);
+						}
+					}
+				} else {
+					player.message("Preset error: Requested item missing " + presetEquipment.getDef().getName());
+				}
+			}
+		}
+
+		player.getInventory().getList().clear();
+		//Attempt to load the preset inventory
+		for (int i = 0; i < presets[slot].inventory.length; i++) {
+			Item presetInventory = presets[slot].inventory[i];
+			if (presetInventory.getDef() == null) {
+				continue;
+			}
+			presetInventory.setWielded(false);
+			if (itemsOwned.containsKey(presetInventory.getID())) {
+				int presetAmount = presetInventory.getAmount();
+				int ownedAmount = itemsOwned.get(presetInventory.getID());
+				if (presetAmount > ownedAmount) {
+					player.message("Preset error: Requested item missing " + presetInventory.getDef().getName());
+					presetAmount = ownedAmount;
+					presetInventory.setAmount(presetAmount);
+				}
+				if (presetAmount > 0) {
+					player.getInventory().add(presetInventory, false);
+					if (presetAmount == ownedAmount) {
+						itemsOwned.remove(presetInventory.getID());
+					} else {
+						itemsOwned.put(presetInventory.getID(), ownedAmount - presetAmount);
+					}
+				}
+			} else {
+				player.message("Preset error: Requested item missing " + presetInventory.getDef().getName());
+			}
+		}
+
+		Iterator<Map.Entry<Integer, Integer>> itr = itemsOwned.entrySet().iterator();
+
+		int slotCounter = 0;
+		list.clear();
+		while (itr.hasNext()) {
+			Map.Entry<Integer, Integer> entry = itr.next();
+
+			if (slotCounter < player.getBankSize()) {
+				//Their bank isn't full, stick it in the bank
+				add(new Item(entry.getKey(), entry.getValue()));
+			} else {
+				//Their bank is full, stick it in their inventory
+				player.getInventory().add(new Item(entry.getKey(), entry.getValue()), false);
+				player.message("Your bank was too full and an item was placed into your inventory.");
+			}
+			slotCounter++;
+		}
+		player.resetBank();
+	}
+
+
 }

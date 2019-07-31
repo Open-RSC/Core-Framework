@@ -53,6 +53,8 @@ import java.util.zip.ZipFile;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
 
 import orsc.buffers.RSBufferUtils;
 import orsc.enumerations.GameMode;
@@ -109,8 +111,8 @@ public final class mudclient implements Runnable {
 		{3, 4, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5}, {3, 4, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5},
 		{4, 3, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5}, {11, 4, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3},
 		{11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 4, 3}};
-	private final int[] equipIconXLocations = new int[]{98, 98, 98, 153, 43, 98, 98, 43, 43, 153, 153};
-	private final int[] equipIconYLocations = new int[]{5, 85, 125, 85, 85, 45, 165, 165, 45, 45, 165};
+	public final int[] equipIconXLocations = new int[]{98, 98, 98, 153, 43, 98, 98, 43, 43, 153, 153};
+	public final int[] equipIconYLocations = new int[]{5, 85, 125, 85, 85, 45, 165, 165, 45, 45, 165};
 	private final int[] animFrameToSprite_CombatA = new int[]{0, 1, 2, 1, 0, 0, 0, 0};
 	private final int[] animFrameToSprite_CombatB = new int[]{0, 0, 0, 0, 0, 1, 2, 1};
 	private final int[] bankItemID = new int[500];
@@ -1603,7 +1605,7 @@ public final class mudclient implements Runnable {
 			this.getSurface().drawColoredStringCentered(256, this.chatMessageInput + "*", 0xFFFFFF, 0, 4, y);
 		}
 
-		this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.BLUEBAR.id())), 0, this.gameHeight);
+		this.getSurface().drawSprite(spriteSelect(GUIPARTS.BLUEBAR.getDef()), 0, this.gameHeight);
 		// this.getSurface().draw(this.graphics, this.screenOffsetX,
 		// 256, this.screenOffsetY);
 		clientPort.draw();
@@ -1706,7 +1708,7 @@ public final class mudclient implements Runnable {
 		this.getSurface().interlace = false;
 		this.getSurface().blackScreen(true);
 		this.panelContact.drawPanel();
-		this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.BLUEBAR.id())), 0, this.gameHeight);
+		this.getSurface().drawSprite(spriteSelect(GUIPARTS.BLUEBAR.getDef()), 0, this.gameHeight);
 		clientPort.draw();
 	}
 
@@ -1784,30 +1786,30 @@ public final class mudclient implements Runnable {
 			this.panelAppearance.addDecoratedBox((var6 - var4), yFromTopDistance, 53, 41);
 			this.panelAppearance.addCenteredText(var6 - var4, yFromTopDistance - 8, "Head", 1, true);
 			this.panelAppearance.addCenteredText(var6 - var4, yFromTopDistance + 8, "Type", 1, true);
-			this.panelAppearance.addSprite(var6 - var4 - 40, yFromTopDistance, spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.LEFTARROW.id())));
+			this.panelAppearance.addSprite(var6 - var4 - 40, yFromTopDistance, spriteSelect(GUIPARTS.LEFTARROW.getDef()));
 			this.controlButtonAppearanceHeadMinus = this.panelAppearance.addButton(-40 - var4 + var6, yFromTopDistance, 20, 20);
-			this.panelAppearance.addSprite(var6 - var4 + 40, yFromTopDistance, spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.RIGHTARROW.id())));
+			this.panelAppearance.addSprite(var6 - var4 + 40, yFromTopDistance, spriteSelect(GUIPARTS.RIGHTARROW.getDef()));
 			this.controlButtonAppearanceHeadPlus = this.panelAppearance.addButton(var6 + (40 - var4), yFromTopDistance, 20, 20);
 			this.panelAppearance.addDecoratedBox((var6 + var4), yFromTopDistance, 53, 41);
 			this.panelAppearance.addCenteredText(var6 + var4, yFromTopDistance - 8, "Hair", 1, true);
 			this.panelAppearance.addCenteredText(var4 + var6, 8 + yFromTopDistance, "Color", 1, true);
-			this.panelAppearance.addSprite(var4 + (var6 - 40), yFromTopDistance, spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.LEFTARROW.id())));
+			this.panelAppearance.addSprite(var4 + (var6 - 40), yFromTopDistance, spriteSelect(GUIPARTS.LEFTARROW.getDef()));
 			this.m_Kj = this.panelAppearance.addButton(var6 + var4 - 40, yFromTopDistance, 20, 20);
-			this.panelAppearance.addSprite(40 + var4 + var6, yFromTopDistance, spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.RIGHTARROW.id())));
+			this.panelAppearance.addSprite(40 + var4 + var6, yFromTopDistance, spriteSelect(GUIPARTS.RIGHTARROW.getDef()));
 			this.m_ed = this.panelAppearance.addButton(40 + var4 + var6, yFromTopDistance, 20, 20);
 			yFromTopDistance += 50;
 			this.panelAppearance.addDecoratedBox((var6 - var4), yFromTopDistance, 53, 41);
 			this.panelAppearance.addCenteredText(var6 - var4, yFromTopDistance, "Gender", 1, true);
-			this.panelAppearance.addSprite(var6 - var4 - 40, yFromTopDistance, spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.LEFTARROW.id())));
+			this.panelAppearance.addSprite(var6 - var4 - 40, yFromTopDistance, spriteSelect(GUIPARTS.LEFTARROW.getDef()));
 			this.m_Ge = this.panelAppearance.addButton(var6 - 40 - var4, yFromTopDistance, 20, 20);
-			this.panelAppearance.addSprite(40 - var4 + var6, yFromTopDistance, spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.RIGHTARROW.id())));
+			this.panelAppearance.addSprite(40 - var4 + var6, yFromTopDistance, spriteSelect(GUIPARTS.RIGHTARROW.getDef()));
 			this.m_Of = this.panelAppearance.addButton(40 + (var6 - var4), yFromTopDistance, 20, 20);
 			this.panelAppearance.addDecoratedBox((var4 + var6), yFromTopDistance, 53, 41);
 			this.panelAppearance.addCenteredText(var4 + var6, yFromTopDistance - 8, "Top", 1, true);
 			this.panelAppearance.addCenteredText(var4 + var6, 8 + yFromTopDistance, "Color", 1, true);
-			this.panelAppearance.addSprite(var6 + (var4 - 40), yFromTopDistance, spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.LEFTARROW.id())));
+			this.panelAppearance.addSprite(var6 + (var4 - 40), yFromTopDistance, spriteSelect(GUIPARTS.LEFTARROW.getDef()));
 			this.m_Xc = this.panelAppearance.addButton(var4 + (var6 - 40), yFromTopDistance, 20, 20);
-			this.panelAppearance.addSprite(40 + var4 + var6, yFromTopDistance, spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.RIGHTARROW.id())));
+			this.panelAppearance.addSprite(40 + var4 + var6, yFromTopDistance, spriteSelect(GUIPARTS.RIGHTARROW.getDef()));
 			this.m_ek = this.panelAppearance.addButton(var6 - (-var4 - 40), yFromTopDistance, 20, 20);
 			yFromTopDistance += 50;
 			if (var1 != -24595) {
@@ -1817,16 +1819,16 @@ public final class mudclient implements Runnable {
 			this.panelAppearance.addDecoratedBox((var6 - var4), yFromTopDistance, 53, 41);
 			this.panelAppearance.addCenteredText(var6 - var4, yFromTopDistance - 8, "Skin", 1, true);
 			this.panelAppearance.addCenteredText(var6 - var4, yFromTopDistance + 8, "Color", 1, true);
-			this.panelAppearance.addSprite(var6 - 40 - var4, yFromTopDistance, spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.LEFTARROW.id())));
+			this.panelAppearance.addSprite(var6 - 40 - var4, yFromTopDistance, spriteSelect(GUIPARTS.LEFTARROW.getDef()));
 			this.m_Ze = this.panelAppearance.addButton(var6 - var4 - 40, yFromTopDistance, 20, 20);
-			this.panelAppearance.addSprite(var6 - var4 + 40, yFromTopDistance, spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.RIGHTARROW.id())));
+			this.panelAppearance.addSprite(var6 - var4 + 40, yFromTopDistance, spriteSelect(GUIPARTS.RIGHTARROW.getDef()));
 			this.m_Mj = this.panelAppearance.addButton(var6 + (40 - var4), yFromTopDistance, 20, 20);
 			this.panelAppearance.addDecoratedBox((var4 + var6), yFromTopDistance, 53, 41);
 			this.panelAppearance.addCenteredText(var4 + var6, yFromTopDistance - 8, "Bottom", 1, true);
 			this.panelAppearance.addCenteredText(var4 + var6, yFromTopDistance + 8, "Color", 1, true);
-			this.panelAppearance.addSprite(var4 - 40 + var6, yFromTopDistance, spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.LEFTARROW.id())));
+			this.panelAppearance.addSprite(var4 - 40 + var6, yFromTopDistance, spriteSelect(GUIPARTS.LEFTARROW.getDef()));
 			this.m_Re = this.panelAppearance.addButton(var6 - (40 - var4), yFromTopDistance, 20, 20);
-			this.panelAppearance.addSprite(var6 + var4 + 40, yFromTopDistance, spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.RIGHTARROW.id())));
+			this.panelAppearance.addSprite(var6 + var4 + 40, yFromTopDistance, spriteSelect(GUIPARTS.RIGHTARROW.getDef()));
 			this.m_Ai = this.panelAppearance.addButton(40 + var4 + var6, yFromTopDistance, 20, 20);
 			yFromTopDistance += 82;
 			yFromTopDistance -= 35;
@@ -2428,7 +2430,7 @@ public final class mudclient implements Runnable {
 			this.getSurface().drawSpriteClipping(
 				spriteSelect(EntityHandler.getAnimationDef(this.appearanceHeadType), 12), var5 + 55 - 32, y, 64, 102,
 				this.getPlayerHairColors()[this.m_ld], this.getPlayerSkinColors()[this.m_hh], false, 0, 1);
-			this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.BLUEBAR.id())), 0, this.getGameHeight());
+			this.getSurface().drawSprite(spriteSelect(GUIPARTS.BLUEBAR.getDef()), 0, this.getGameHeight());
 			// this.getSurface().draw(this.graphics, this.screenOffsetX, 256,
 			// this.screenOffsetY);
 			clientPort.draw();
@@ -2491,7 +2493,7 @@ public final class mudclient implements Runnable {
 				int var7 = scale * 39 / 100;
 				int offsetY = scale * 27 / 100;
 				int centerY = bubbleY - offsetY;
-				this.getSurface().spriteClipping(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.CLIPPING.id())), (byte) -122, offsetY, centerX - var7 / 2,
+				this.getSurface().spriteClipping(spriteSelect(GUIPARTS.CLIPPING.getDef()), (byte) -122, offsetY, centerX - var7 / 2,
 					var7, centerY, 85);
 				int width = scale * 36 / 100;
 				int height = scale * 24 / 100;
@@ -2515,12 +2517,12 @@ public final class mudclient implements Runnable {
 
 	private void drawChatMessageTabs(int var1) {
 		try {
-			this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.BLUEBAR.id())), 0, getGameHeight(), getGameWidth(), 10, 0, 0, false, 0, 1);
+			this.getSurface().drawSpriteClipping(spriteSelect(GUIPARTS.BLUEBAR.getDef()), 0, getGameHeight(), getGameWidth(), 10, 0, 0, false, 0, 1);
 			if (S_WANT_CLANS) {
-				this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.CHATTABS.id())), halfGameWidth() - 256,
+				this.getSurface().drawSprite(spriteSelect(GUIPARTS.CHATTABS.getDef()), halfGameWidth() - 256,
 					this.getGameHeight() - 4);
 			} else {
-				this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.CHATTABSCLAN.id())), halfGameWidth() - 256,
+				this.getSurface().drawSprite(spriteSelect(GUIPARTS.CHATTABSCLAN.getDef()), halfGameWidth() - 256,
 					this.getGameHeight() - 4);
 			}
 
@@ -2981,8 +2983,8 @@ public final class mudclient implements Runnable {
 				if (S_WANT_EQUIPMENT_TAB) {
 					this.getSurface().drawBoxAlpha(xr + 320, 239 + yr, 28, 28, stakeOfferEquipMode ? clearBox : selectedBox, 160);
 					this.getSurface().drawBoxAlpha(xr + 348, 239 + yr, 28, 28, stakeOfferEquipMode ? selectedBox : clearBox, 160);
-					this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.BANK_EQUIP_BAG.id())), xr + 320, 239 + yr, 28, 28, 0, 0, false, 0, 0);
-					this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.BANK_EQUIP_HELM.id())), xr + 348, 239 + yr, 28, 28, 0, 0, false, 0, 0);
+					this.getSurface().drawSpriteClipping(spriteSelect(GUIPARTS.BANK_EQUIP_BAG.getDef()), xr + 320, 239 + yr, 28, 28, 0, 0, false, 0, 0);
+					this.getSurface().drawSpriteClipping(spriteSelect(GUIPARTS.BANK_EQUIP_HELM.getDef()), xr + 348, 239 + yr, 28, 28, 0, 0, false, 0, 0);
 				}
 				if (stakeOfferEquipMode) {
 					int count = 0;
@@ -3042,10 +3044,10 @@ public final class mudclient implements Runnable {
 				}
 
 				if (!this.duelOfferAccepted) {
-					this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.ACCEPTBUTTON.id())), 217 + xr, yr + 238);
+					this.getSurface().drawSprite(spriteSelect(GUIPARTS.ACCEPTBUTTON.getDef()), 217 + xr, yr + 238);
 				}
 
-				this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DECLINEBUTTON.id())), xr + 394, yr + 238);
+				this.getSurface().drawSprite(spriteSelect(GUIPARTS.DECLINEBUTTON.getDef()), xr + 394, yr + 238);
 				if (this.duelOffsetOpponentAccepted) {
 					this.getSurface().drawColoredStringCentered(xr + 341, "Other player", 0xFFFFFF, 0, 1, 246 + yr);
 					this.getSurface().drawColoredStringCentered(341 + xr, "has accepted", 0xFFFFFF, 0, 1, 256 + yr);
@@ -3196,8 +3198,8 @@ public final class mudclient implements Runnable {
 			this.getSurface().drawColoredStringCentered(xr + 234, "If you are sure click \'Accept\' to begin the duel",
 				0xFFFFFF, 0, 1, yr + 230);
 			if (!this.duelConfirmed) {
-				this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.ACCEPTBUTTON.id())), 83 + xr, 238 + yr);
-				this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DECLINEBUTTON.id())), xr - 35 + 352, yr + 238);
+				this.getSurface().drawSprite(spriteSelect(GUIPARTS.ACCEPTBUTTON.getDef()), 83 + xr, 238 + yr);
+				this.getSurface().drawSprite(spriteSelect(GUIPARTS.DECLINEBUTTON.getDef()), xr - 35 + 352, yr + 238);
 			} else {
 				this.getSurface().drawColoredStringCentered(xr + 234, "Waiting for other player...", 0xFFFF00, 0, 1,
 					yr + 250);
@@ -3928,10 +3930,10 @@ public final class mudclient implements Runnable {
 				this.getSurface().drawString("Opponent\'s Offer", xr + 9, yr + 152, 0xFFFFFF, 4);
 				this.getSurface().drawString("Your Inventory", xr + 216, yr + 27, 0xFFFFFF, 4);
 				if (!this.tradeAccepted) {
-					this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.ACCEPTBUTTON.id())), xr + 217, yr + 238);
+					this.getSurface().drawSprite(spriteSelect(GUIPARTS.ACCEPTBUTTON.getDef()), xr + 217, yr + 238);
 				}
 
-				this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DECLINEBUTTON.id())), xr + 394, yr + 238);
+				this.getSurface().drawSprite(spriteSelect(GUIPARTS.DECLINEBUTTON.getDef()), xr + 394, yr + 238);
 				if (this.tradeRecipientAccepted) {
 					this.getSurface().drawColoredStringCentered(xr + 341, "Other player", 0xFFFFFF, 0, 1, 246 + yr);
 					this.getSurface().drawColoredStringCentered(xr + 341, "has accepted", 0xFFFFFF, 0, 1, 256 + yr);
@@ -4752,38 +4754,38 @@ public final class mudclient implements Runnable {
 					if (this.mouseClickXStep > 0) {
 						switch ((int) ((24 - this.mouseClickXStep) / 6)) {
 							case 0:
-								this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.YELLOWX1.id())),
+								this.getSurface().drawSprite(spriteSelect(GUIPARTS.YELLOWX1.getDef()),
 									this.mouseWalkX - 8, this.mouseWalkY - 8);
 								break;
 							case 1:
-								this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.YELLOWX2.id())),
+								this.getSurface().drawSprite(spriteSelect(GUIPARTS.YELLOWX2.getDef()),
 									this.mouseWalkX - 8, this.mouseWalkY - 8);
 								break;
 							case 2:
-								this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.YELLOWX3.id())),
+								this.getSurface().drawSprite(spriteSelect(GUIPARTS.YELLOWX3.getDef()),
 									this.mouseWalkX - 8, this.mouseWalkY - 8);
 								break;
 							case 3:
-								this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.YELLOWX4.id())),
+								this.getSurface().drawSprite(spriteSelect(GUIPARTS.YELLOWX4.getDef()),
 									this.mouseWalkX - 8, this.mouseWalkY - 8);
 								break;
 						}
 					} else if (this.mouseClickXStep < 0) {
 						switch ((int) ((this.mouseClickXStep + 24) / 6)) {
 							case 0:
-								this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.REDX1.id())),
+								this.getSurface().drawSprite(spriteSelect(GUIPARTS.REDX1.getDef()),
 									this.mouseWalkX - 8, this.mouseWalkY - 8);
 								break;
 							case 1:
-								this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.REDX2.id())),
+								this.getSurface().drawSprite(spriteSelect(GUIPARTS.REDX2.getDef()),
 									this.mouseWalkX - 8, this.mouseWalkY - 8);
 								break;
 							case 2:
-								this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.REDX3.id())),
+								this.getSurface().drawSprite(spriteSelect(GUIPARTS.REDX3.getDef()),
 									this.mouseWalkX - 8, this.mouseWalkY - 8);
 								break;
 							case 3:
-								this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.REDX4.id())),
+								this.getSurface().drawSprite(spriteSelect(GUIPARTS.REDX4.getDef()),
 									this.mouseWalkX - 8, this.mouseWalkY - 8);
 								break;
 						}
@@ -4868,7 +4870,7 @@ public final class mudclient implements Runnable {
 						if (centerX > 0) {
 							inWild = true;
 							centerZ = centerX / 6 + 1;
-							this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), this.getGameWidth() - 59, this.getGameHeight() - 56);
+							this.getSurface().drawSprite(spriteSelect(GUIPARTS.SKULL.getDef()), this.getGameWidth() - 59, this.getGameHeight() - 56);
 							this.getSurface().drawColoredStringCentered(this.getGameWidth() - 47, "Wilderness", 0xFFFF00, 0, 1,
 								this.getGameHeight() - 20);
 							this.getSurface().drawColoredStringCentered(this.getGameWidth() - 47, "Level: " + centerZ, 0xFFFF00, 0, 1,
@@ -5046,7 +5048,7 @@ public final class mudclient implements Runnable {
 					MiscFunctions.textListEntryHeightMod = 2;
 					this.panelMessageTabs.drawPanel();
 					MiscFunctions.textListEntryHeightMod = 0;
-					this.getSurface().a(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.MENUBAR.id())), 0, this.getSurface().width2 - 200, 128, 3);
+					this.getSurface().a(spriteSelect(GUIPARTS.MENUBAR.getDef()), 0, this.getSurface().width2 - 200, 128, 3);
 					this.drawUi(0);
 					this.getSurface().loggedIn = false;
 					this.drawChatMessageTabs(var1 - 8);
@@ -5381,7 +5383,7 @@ public final class mudclient implements Runnable {
 				this.panelRecovery.drawPanel();
 			}
 
-			this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.BLUEBAR.id())), 0, getGameHeight(), getGameWidth(), 10, 0, 0, false, 0, 1);
+			this.getSurface().drawSpriteClipping(spriteSelect(GUIPARTS.BLUEBAR.getDef()), 0, getGameHeight(), getGameWidth(), 10, 0, 0, false, 0, 1);
 			// this.getSurface().draw(this.graphics, this.screenOffsetX, 256,
 			// this.screenOffsetY);
 			clientPort.draw();
@@ -5617,7 +5619,7 @@ public final class mudclient implements Runnable {
 						var15 = x - overlayMovement * 10 / 100;
 					}
 
-					this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), var15 - (12 - width1 / 2),
+					this.getSurface().drawSprite(spriteSelect(GUIPARTS.DAMAGETAKEN.getDef()), var15 - (12 - width1 / 2),
 						y + height / 2 - 12);
 					this.getSurface().drawColoredStringCentered(width1 / 2 - 1 + var15, "" + npc.damageTaken, 0xFFFFFF,
 						0, 3, 5 + y + height / 2);
@@ -5817,7 +5819,7 @@ public final class mudclient implements Runnable {
 							var14 = x - overlayMovement * 10 / 100;
 						}
 
-						this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGEGIVEN.id())), width / 2 + var14 - 12,
+						this.getSurface().drawSprite(spriteSelect(GUIPARTS.DAMAGEGIVEN.getDef()), width / 2 + var14 - 12,
 							height / 2 + (y - 12));
 						this.getSurface().drawColoredStringCentered(width / 2 + (var14 - 1), "" + player.damageTaken,
 							0xFFFFFF, 0, 3, height / 2 + y + 5);
@@ -5834,7 +5836,7 @@ public final class mudclient implements Runnable {
 
 					int destWidth = overlayMovement * 16 / 100;
 					int destHeight = overlayMovement * 16 / 100;
-					this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), skullX - destWidth / 2,
+					this.getSurface().drawSprite(spriteSelect(GUIPARTS.SKULL.getDef()), skullX - destWidth / 2,
 						y - destHeight / 2 - overlayMovement * 10 / 100, destWidth, destHeight, 5924);
 				} else if (player.skullVisible == 2 && player.bubbleTimeout == 0) {
 					int skullX = topPixelSkew + x + width / 2;
@@ -5846,7 +5848,7 @@ public final class mudclient implements Runnable {
 
 					int destWidth = overlayMovement * 16 / 100;
 					int destHeight = overlayMovement * 16 / 100;
-					getSurface().drawSpriteClipping(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), skullX - destWidth / 2,
+					getSurface().drawSpriteClipping(spriteSelect(GUIPARTS.SKULL.getDef()), skullX - destWidth / 2,
 						y - destHeight / 2 - overlayMovement * 10 / 100, destWidth, destHeight, 0xFF0000, 0, false,
 						0, 0);
 
@@ -6146,8 +6148,8 @@ public final class mudclient implements Runnable {
 				this.getSurface().drawColoredStringCentered(234 + var2, "Waiting for other player...", 0xFFFF00, 0, 1,
 					250 + var3);
 			} else {
-				this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.ACCEPTBUTTON.id())), var2 - 35 + 118, 238 + var3);
-				this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DECLINEBUTTON.id())), var2 + 352 - 35, var3 + 238);
+				this.getSurface().drawSprite(spriteSelect(GUIPARTS.ACCEPTBUTTON.getDef()), var2 - 35 + 118, 238 + var3);
+				this.getSurface().drawSprite(spriteSelect(GUIPARTS.DECLINEBUTTON.getDef()), var2 + 352 - 35, var3 + 238);
 			}
 
 			if (this.mouseButtonClick == 1) {
@@ -6930,7 +6932,7 @@ public final class mudclient implements Runnable {
 
 			int var3 = this.getSurface().width2 - 248;
 			int xOffset = var3;
-			this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.BAGTAB.id())), var3, 3);
+			this.getSurface().drawSprite(spriteSelect(GUIPARTS.BAGTAB.getDef()), var3, 3);
 
 			int var4;
 			int var5;
@@ -7056,13 +7058,13 @@ public final class mudclient implements Runnable {
 							todraw.getWidth(), todraw.getHeight(),
 							0, 0, false, 0, var1 ^ -15251, 0x80FFFFFF);
 					} else {
-						todraw = spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.EQUIPSLOT_HIGHLIGHT.id()));
+						todraw = spriteSelect(GUIPARTS.EQUIPSLOT_HIGHLIGHT.getDef());
 						this.getSurface().drawSpriteClipping(
 							todraw,
 							xOffset + equipIconXLocations[i],
 							yOffset + equipIconYLocations[i],
 							todraw.getWidth(), todraw.getHeight(),
-							equippedItems[i].getPictureMask(), 0, false, 0, var1 ^ -15251, 0xC0FFFFFF);
+							0, 0, false, 0, var1 ^ -15251, 0xC0FFFFFF);
 						todraw = spriteSelect(equippedItems[i]);
 						this.getSurface().drawSpriteClipping(
 							todraw,
@@ -7162,7 +7164,7 @@ public final class mudclient implements Runnable {
 		try {
 			int var3 = this.getSurface().width2 - 199;
 			byte var4 = 36;
-			this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.MENUSOCIAL.id())), var3 - 49, 3);
+			this.getSurface().drawSprite(spriteSelect(GUIPARTS.MENUSOCIAL.getDef()), var3 - 49, 3);
 			short var5 = 196;
 			short var6 = 182;
 			int maxWidth = getGameWidth() - 23;
@@ -7555,7 +7557,7 @@ public final class mudclient implements Runnable {
 		try {
 			int var3 = this.getSurface().width2 - 199;
 			byte var4 = 36;
-			this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.MENUSPELLS.id())), var3 - 49, 3);
+			this.getSurface().drawSprite(spriteSelect(GUIPARTS.MENUSPELLS.getDef()), var3 - 49, 3);
 			short var5 = 196;
 			short var6 = 182;
 			int var8;
@@ -7775,7 +7777,7 @@ public final class mudclient implements Runnable {
 			int var3 = this.getSurface().width2 - 199;
 			short var4 = 156;
 			short var5 = 152;
-			this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.MINIMAPTAB.id())), var3 - 49, 3);
+			this.getSurface().drawSprite(spriteSelect(GUIPARTS.MINIMAPTAB.getDef()), var3 - 49, 3);
 			var3 += 40;
 			this.getSurface().drawBox(var3, 36, var4, var5, 0);
 			this.getSurface().setClip(var3, var4 + var3, 36 + var5, 36);
@@ -7852,7 +7854,7 @@ public final class mudclient implements Runnable {
 			}
 
 			this.getSurface().drawCircle(var3 + var4 / 2, var5 / 2 + 36, 2, 0xFFFFFF, 255, -1057205208);
-			this.getSurface().drawMinimapSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.COMPASS.id())), 55, var3 + 19, 842218000, 128,
+			this.getSurface().drawMinimapSprite(spriteSelect(GUIPARTS.COMPASS.getDef()), 55, var3 + 19, 842218000, 128,
 				255 & this.cameraRotation + 128);
 			this.getSurface().setClip(0, this.getGameWidth(), this.getGameHeight() + 12, 0);
 			if (var1) {
@@ -7890,7 +7892,7 @@ public final class mudclient implements Runnable {
 	private void drawUiTabOptions(int var1, boolean mustTrackMouse) {
 		try {
 			int var3 = this.getSurface().width2 - 199;
-			this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SETTINGSTAB.id())), var3 - 49, 3);
+			this.getSurface().drawSprite(spriteSelect(GUIPARTS.SETTINGSTAB.getDef()), var3 - 49, 3);
 			byte var4 = 36 + 25;
 			short var5 = 196;
 
@@ -9204,7 +9206,7 @@ public final class mudclient implements Runnable {
 
 			int x = this.surface.width2 - 199;
 			byte y = 36;
-			this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKILLSTAB.id())), x - 49, 3);
+			this.getSurface().drawSprite(spriteSelect(GUIPARTS.SKILLSTAB.getDef()), x - 49, 3);
 			short width = 196;
 			short height;
 			if (S_WANT_EXP_INFO)
@@ -10517,8 +10519,8 @@ public final class mudclient implements Runnable {
 						auctionHouse.keyDown(key);
 						return;
 					}
-					if (S_WANT_CUSTOM_BANKS && bank.bank.focusOn(bank.bankSearch)) {
-						bank.keyDown(key);
+					if (S_WANT_CUSTOM_BANKS && this.isShowDialogBank() && this.combatTimeout == 0) {
+							bank.keyDown(key);
 						return;
 					}
 					if (clan.getClanInterface().isVisible() && (clan.getClanInterface().clanSetupPanel.focusOn(clan.getClanInterface().clanName_field)
@@ -10555,7 +10557,6 @@ public final class mudclient implements Runnable {
 						this.panelMessageTabs.keyPress(key);
 					}
 				}
-
 			}
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "client.AD(" + var1 + ',' + key + ')');
@@ -12934,7 +12935,7 @@ public final class mudclient implements Runnable {
 			}
 
 			if (DISPLAY_LOGO_SPRITE)
-				this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.MAINLOGO.id())), 15, 15);
+				this.getSurface().drawSprite(spriteSelect(GUIPARTS.MAINLOGO.getDef()), 15, 15);
 			//this.getSurface().drawColoredStringCentered(250, "Open RSC", 0xFFFFFF, 0, 7, 110); // width, title, color, crown sprite, font size, height
 			this.getSurface().storeSpriteVert(0, 0, 0, getGameWidth(), halfGameHeight() + 33);
 
@@ -12964,7 +12965,7 @@ public final class mudclient implements Runnable {
 			}
 
 			if (DISPLAY_LOGO_SPRITE)
-				this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.MAINLOGO.id())), 15, 15);
+				this.getSurface().drawSprite(spriteSelect(GUIPARTS.MAINLOGO.getDef()), 15, 15);
 			//this.getSurface().drawColoredStringCentered(250, "Open RSC", 0xFFFFFF, 0, 7, 110); // width, title, color, crown sprite, font size, height
 			this.getSurface().storeSpriteVert(1, 0, 0, getGameWidth(), halfGameHeight() + 33);
 
@@ -13004,7 +13005,7 @@ public final class mudclient implements Runnable {
 			}
 
 			if (DISPLAY_LOGO_SPRITE)
-				this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.MAINLOGO.id())), 15, 15);
+				this.getSurface().drawSprite(spriteSelect(GUIPARTS.MAINLOGO.getDef()), 15, 15);
 			//this.getSurface().drawColoredStringCentered(250, "Open RSC", 0xFFFFFF, 0, 7, 110); // width, title, color, crown sprite, font size, height
 			this.getSurface().storeSpriteVert(2, 0, 0, getGameWidth(), halfGameHeight() + 33);
 		} catch (RuntimeException var10) {
@@ -14517,6 +14518,8 @@ public final class mudclient implements Runnable {
 				this.xpGainedStartTime = new long[skillCount];
 
 				bank = new CustomBankInterface(this);
+				if (S_WANT_BANK_PRESETS)
+					bank.initPresets();
 				auctionHouse = new AuctionHouse(this);
 				skillGuideInterface = new SkillGuideInterface(this);
 				questGuideInterface = new QuestGuideInterface(this);

@@ -105,6 +105,7 @@ public final class ItemWieldHandler implements PacketHandler {
 				return;
 			player.getBank().unwieldItem(item, true);
 			ActionSender.showBank(player);
+			ActionSender.sendEquipmentStats(player, item.getDef().getWieldPosition());
 		}
 	}
 }
