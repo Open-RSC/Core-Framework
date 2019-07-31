@@ -671,7 +671,7 @@ public final class CustomBankInterface extends BankInterface {
 			int menuWidth = mc.getSurface().stringWidth(fontSize, "Withdraw-All-But-1") + 8;
 			if (equipmentMode)
 				menuHeight = fontSizeHeight + 5;
-			if (selectedBankSlot > -1) {
+			if (selectedBankSlot > -1 && selectedBankSlot < bankItems.size()) {
 				int checkMenuWidth = mc.getSurface().stringWidth(fontSize, EntityHandler.getItemDef(bankItems.get(selectedBankSlot).itemID).getName()) + 8;
 				if (menuWidth < checkMenuWidth) {
 					menuWidth = checkMenuWidth;
