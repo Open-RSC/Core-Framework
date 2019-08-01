@@ -316,7 +316,7 @@ public class Bank {
 
 		player.updateWornItems(item.getDef().getWieldPosition(), item.getDef().getAppearanceId());
 		player.getEquipment().list[item.getDef().getWieldPosition()] = new Item(item.getID(), amountToRemove);
-		ActionSender.sendEquipmentStats(player, item.getDef().getWieldPosition());
+		ActionSender.sendEquipmentStats(player);
 	}
 
 	public boolean unwieldItem(Item affectedItem, boolean sound) {
@@ -343,7 +343,6 @@ public class Bank {
 		}
 		player.updateWornItems(affectedItem.getDef().getWieldPosition(),
 			player.getSettings().getAppearance().getSprite(affectedItem.getDef().getWieldPosition()));
-
 		player.getEquipment().list[affectedItem.getDef().getWieldPosition()] = null;
 		add(affectedItem);
 		return true;
