@@ -199,11 +199,6 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 				mudclient.inputTextFinal = mudclient.inputTextCurrent;
 				mudclient.chatMessageInputCommit = mudclient.chatMessageInput;
 			}
-
-			if (keyCode == KeyEvent.VK_ALT) {
-				mudclient.mouseLastProcessedX = mudclient.mouseX;
-				mudclient.mouseLastProcessedY = mudclient.mouseY;
-			}
 		} catch (RuntimeException var6) {
 			throw GenUtil.makeThrowable(var6, "e.keyPressed(" + (var1 != null ? "{...}" : "null") + ')');
 		}
@@ -257,43 +252,9 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			mudclient.mouseX = var1.getX() - mudclient.screenOffsetX;
 			mudclient.mouseY = var1.getY() - mudclient.screenOffsetY;
 
-			if (SwingUtilities.isRightMouseButton(var1)) mudclient.currentMouseButtonDown = 2;
-			else mudclient.currentMouseButtonDown = 1;
-		} catch (RuntimeException var3) {
-			throw GenUtil.makeThrowable(var3, "e.mouseDragged(" + (var1 != null ? "{...}" : "null") + ')');
-		}
-	}
-
-	@Override
-	public final void mouseEntered(MouseEvent var1) {
-		try {
-			updateControlShiftState(var1);
-		} catch (RuntimeException var3) {
-			throw GenUtil.makeThrowable(var3, "e.mouseEntered(" + (var1 != null ? "{...}" : "null") + ')');
-		}
-	}
-
-	@Override
-	public final void mouseExited(MouseEvent var1) {
-		try {
-			updateControlShiftState(var1);
-		} catch (RuntimeException var3) {
-			throw GenUtil.makeThrowable(var3, "e.mouseExited(" + (var1 != null ? "{...}" : "null") + ')');
-		}
-	}
-
-	@Override
-	public final synchronized void mouseMoved(MouseEvent var1) {
-		try {
-			updateControlShiftState(var1);
-			mudclient.mouseX = var1.getX() - mudclient.screenOffsetX;
-			mudclient.mouseY = var1.getY() - mudclient.screenOffsetY;
-			mudclient.lastMouseAction = 0;
-			mudclient.currentMouseButtonDown = 0;
-
 			if (mudclient.mouseLastProcessedX != 0 && mudclient.mouseLastProcessedY != 0) {
-				int distanceX = mudclient.mouseX - mudclient.mouseLastProcessedX;
-				int distanceY = mudclient.mouseY - mudclient.mouseLastProcessedY;
+				int distanceX = (mudclient.mouseX - mudclient.mouseLastProcessedX)/2;
+				int distanceY = (mudclient.mouseY - mudclient.mouseLastProcessedY)/2;
 
 				if (mudclient.showUiTab == 0) {
 					if ((Config.S_ZOOM_VIEW_TOGGLE || mudclient.getLocalPlayer().isStaff()) && !var1.isControlDown()) {
@@ -336,6 +297,39 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 				} catch (AWTException ignored) {
 				}
 			}
+			if (SwingUtilities.isRightMouseButton(var1)) mudclient.currentMouseButtonDown = 2;
+			else mudclient.currentMouseButtonDown = 1;
+		} catch (RuntimeException var3) {
+			throw GenUtil.makeThrowable(var3, "e.mouseDragged(" + (var1 != null ? "{...}" : "null") + ')');
+		}
+	}
+
+	@Override
+	public final void mouseEntered(MouseEvent var1) {
+		try {
+			updateControlShiftState(var1);
+		} catch (RuntimeException var3) {
+			throw GenUtil.makeThrowable(var3, "e.mouseEntered(" + (var1 != null ? "{...}" : "null") + ')');
+		}
+	}
+
+	@Override
+	public final void mouseExited(MouseEvent var1) {
+		try {
+			updateControlShiftState(var1);
+		} catch (RuntimeException var3) {
+			throw GenUtil.makeThrowable(var3, "e.mouseExited(" + (var1 != null ? "{...}" : "null") + ')');
+		}
+	}
+
+	@Override
+	public final synchronized void mouseMoved(MouseEvent var1) {
+		try {
+			updateControlShiftState(var1);
+			mudclient.mouseX = var1.getX() - mudclient.screenOffsetX;
+			mudclient.mouseY = var1.getY() - mudclient.screenOffsetY;
+			mudclient.lastMouseAction = 0;
+			mudclient.currentMouseButtonDown = 0;
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "e.mouseMoved(" + (var1 != null ? "{...}" : "null") + ')');
 		}
@@ -344,6 +338,11 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	@Override
 	public final synchronized void mousePressed(MouseEvent var1) {
 		try {
+			if (var1.getButton() == MouseEvent.BUTTON2) {
+					mudclient.mouseLastProcessedX = mudclient.mouseX;
+					mudclient.mouseLastProcessedY = mudclient.mouseY;
+				return;
+			}
 			updateControlShiftState(var1);
 			mudclient.mouseX = var1.getX() - mudclient.screenOffsetX;
 			mudclient.mouseY = var1.getY() - mudclient.screenOffsetY;
@@ -362,6 +361,11 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	@Override
 	public final synchronized void mouseReleased(MouseEvent var1) {
 		try {
+			if (var1.getButton() == MouseEvent.BUTTON2) {
+				mudclient.mouseLastProcessedX = 0;
+				mudclient.mouseLastProcessedY = 0;
+				return;
+			}
 			updateControlShiftState(var1);
 			mudclient.mouseX = var1.getX() - mudclient.screenOffsetX;
 			mudclient.mouseY = var1.getY() - mudclient.screenOffsetY;

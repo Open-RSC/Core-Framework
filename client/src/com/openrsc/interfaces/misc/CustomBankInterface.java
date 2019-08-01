@@ -10,20 +10,29 @@ import orsc.Config;
 import orsc.enumerations.InputXAction;
 import orsc.graphics.gui.InputXPrompt;
 import orsc.mudclient;
+import orsc.util.GenUtil;
+
+import static orsc.Config.*;
 
 public final class CustomBankInterface extends BankInterface {
 	private static int fontSize = Config.isAndroid() ? Config.C_MENU_SIZE : 1;
 	private static int fontSizeHeight;
 	private int[] equipmentViewOrder = new int[]{0, 1, 2, 5, 4, 3, 8, 9, 6, 7, 10};
+	private final int presetCount = 2;
+	public Preset[] presets = new Preset[presetCount];
 	public int selectedInventorySlot = -1;
-	public int selectedEquipmentSlot = -1;
+	private int selectedEquipmentSlot = -1;
+	private int selectedPresetSlot = 0;
+	private int selectedPresetTab = -1;
 	public int bankSearch;
 	public int bankScroll;
 	public int lastXAmount = 0;
+	private int hotkey = -1;
 	private boolean saveXAmount = false;
 	private boolean rightClickMenu;
 	private int organizeMode = 0;
 	private boolean equipmentMode = false;
+	private boolean presetMode = false;
 	private int rightClickMenuX;
 	private int rightClickMenuY;
 	private int draggingInventoryID = -1;
@@ -51,11 +60,40 @@ public final class CustomBankInterface extends BankInterface {
 
 		x = (mc.getGameWidth() - width) / 2;
 		y = (mc.getGameHeight() - height) / 2 - 3;
-
 		bank.reposition(bankSearch, x + 375 + 6, y + 44, 110, 18);
 		bank.reposition(bankScroll, x + 4, y + 57, width - 5, 137);
-
+		int tapPresetXOffset = x + 380 - presetCount * 17;
+		int tapPresetYOffset = y + 3;
 		fontSizeHeight = mc.getSurface().fontHeight(fontSize);
+
+		if (presetMode) {
+			renderPresetEdit();
+			mc.setMouseClick(0);
+			return true;
+		}
+
+		//Keyboard controls
+		if (mc.controlPressed) {
+			switch (hotkey) {
+				case (int)'1':
+					loadPreset(0);
+					break;
+				case (int)'2':
+					loadPreset(1);
+					break;
+				case 4:
+					if (equipmentMode)
+						sendDepositAllEquipment();
+					else
+						sendDepositAllInventory();
+					break;
+				case -1:
+				default:
+					break;
+			}
+			hotkey = -1;
+		}
+
 
 		mc.getSurface().drawBox(x, y, width, 21, 192);
 		int colour = 0x989898;
@@ -68,6 +106,32 @@ public final class CustomBankInterface extends BankInterface {
 		if (mc.getMouseX() > x + 415 && mc.getMouseY() >= y && mc.getMouseX() < x + width && mc.getMouseY() < y + 12 + 9) {
 			j3 = 16711680;
 		}
+		if (S_WANT_BANK_PRESETS) {
+			if (mc.getMouseX() >= tapPresetXOffset && mc.getMouseX() < tapPresetXOffset + presetCount * 17
+				&& mc.getMouseY() >= tapPresetYOffset && mc.getMouseY() < tapPresetYOffset + 17) {
+				if (mc.mouseButtonClick == 0)
+					selectedPresetTab = (mc.getMouseX() - tapPresetXOffset) / 17;
+				else if (selectedPresetTab != -1){
+					loadPreset(selectedPresetTab);
+					mc.mouseButtonClick = 0;
+				}
+			} else if (mc.mouseButtonClick == 1 && mc.getMouseX() > x + 380 && mc.getMouseX() < x + 420
+				&& mc.getMouseY() >= y && mc.getMouseY() < y + 12 + 9) {
+				presetMode = true;
+			} else
+				selectedPresetTab = -1;
+
+			for (int p = 0; p < presetCount; p++) {
+				mc.getSurface().drawBoxAlpha(tapPresetXOffset + 17 * p, tapPresetYOffset, 17, 17, selectedPresetTab == p ? 0x7E1F1C : 0x5A5A55 , 160);
+				mc.getSurface().drawBoxBorder(tapPresetXOffset + 17 * p, 17, tapPresetYOffset, 17, 0x000000);
+				drawString("" + (p + 1), tapPresetXOffset + 17 * p + 6, tapPresetYOffset + fontSizeHeight, 1, 0xFFFFFF);
+
+			}
+
+			mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.GUIPARTS.BANK_PRESET_OPTIONS.getDef()),
+				x + 390, y + 3, 17, 17, 0, 0, false, 0, 0, 0xCCFFFFFF);
+		}
+
 		drawString("Close Window", x + 401 + 19, y + 15, 1, j3);
 
 		int tabWidth = 48;
@@ -150,25 +214,16 @@ public final class CustomBankInterface extends BankInterface {
 		int textStart = modeOffset + modeWidth / 2 - 14;
 
 		if (mc.getMouseClick() != 0 || mc.getMouseButtonDownTime() >= 0) {
-			mc.getMouseX();
-			mc.getGameWidth();
-			mc.getMouseY();
-			mc.getGameHeight();
-
-			int currMouseX = mc.getMouseX();
-			int currMouseY = mc.getMouseY();
-			int selectedX = currMouseX - (mc.getGameWidth() / 2 - width / 2);
-			int selectedY = currMouseY - (mc.getGameHeight() / 2 - height / 2 + 20);
-
-			if (selectedX < 0 || selectedY < 16 || selectedX >= 600 || selectedY >= 488) { // is cursor located outside of the bank window area?
-				if (mc.getMouseClick() == 1) { // if click, close bank window
+			if (mc.getMouseX() > x + width || mc.getMouseX() < x
+				|| mc.getMouseY() > y + height || mc.getMouseY() < y) {
+				if (!rightClickMenu && mc.mouseButtonClick != 0) {
 					resetVar();
 					bankClose();
 				}
 			}
 
 			if (mc.getMouseClick() != 0 && !rightClickMenu) {
-				if (mc.getMouseX() > x + 380 && mc.getMouseY() >= y && mc.getMouseX() < x + width
+				if (mc.getMouseX() >= x + 420 && mc.getMouseY() >= y && mc.getMouseX() < x + width
 					&& mc.getMouseY() < y + 12 + 9) { // close bank button
 					resetVar();
 					bankClose();
@@ -380,10 +435,10 @@ public final class CustomBankInterface extends BankInterface {
 			mc.getSurface().drawBoxBorder(modeOffset - 67, 26, settingsY - 9, 26, 0x706452);
 			mc.getSurface().drawBoxBorder(modeOffset - 40, 28, settingsY - 10, 28, 0x2D2C24);
 			mc.getSurface().drawBoxBorder(modeOffset - 39, 26, settingsY - 9, 26, 0x706452);
-			mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.GUIparts.get(EntityHandler.GUIPARTS.BANK_EQUIP_BAG.id())),
+			mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.GUIPARTS.BANK_EQUIP_BAG.getDef()),
 				modeOffset - 67, settingsY - 10,
 				26,26,0x0,0x0,false,0,0);
-			mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.GUIparts.get(EntityHandler.GUIPARTS.BANK_EQUIP_HELM.id())),
+			mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.GUIPARTS.BANK_EQUIP_HELM.getDef()),
 				modeOffset - 39, settingsY - 10,
 				26,26,0x0,0x0,false,0,0);
 		}
@@ -444,7 +499,7 @@ public final class CustomBankInterface extends BankInterface {
 						todraw.getWidth(), todraw.getHeight(),
 						0, 0, false, 0, 0, 0x80FFFFFF);
 				} else {
-					todraw = mc.spriteSelect(EntityHandler.GUIparts.get(EntityHandler.GUIPARTS.EQUIPSLOT_HIGHLIGHT.id()));
+					todraw = mc.spriteSelect(EntityHandler.GUIPARTS.EQUIPSLOT_HIGHLIGHT.getDef());
 					mc.getSurface().drawSpriteClipping(
 						todraw,
 						xOffset,
@@ -616,7 +671,7 @@ public final class CustomBankInterface extends BankInterface {
 			int menuWidth = mc.getSurface().stringWidth(fontSize, "Withdraw-All-But-1") + 8;
 			if (equipmentMode)
 				menuHeight = fontSizeHeight + 5;
-			if (selectedBankSlot > -1) {
+			if (selectedBankSlot > -1 && selectedBankSlot < bankItems.size()) {
 				int checkMenuWidth = mc.getSurface().stringWidth(fontSize, EntityHandler.getItemDef(bankItems.get(selectedBankSlot).itemID).getName()) + 8;
 				if (menuWidth < checkMenuWidth) {
 					menuWidth = checkMenuWidth;
@@ -996,11 +1051,16 @@ public final class CustomBankInterface extends BankInterface {
 	}
 
 	public boolean keyDown(int key) {
-		if (bank.focusOn(bankSearch) && mc.inputX_Action == InputXAction.ACT_0) {
-			if (mc.bankPage != 0)
-				mc.bankPage = 0;
-			bank.keyPress(key);
+		if (mc.inputX_Action == InputXAction.ACT_0) {
+			if (bank.focusOn(bankSearch)) {
+				if (mc.bankPage != 0)
+					mc.bankPage = 0;
+				bank.keyPress(key);
+			} else {
+				this.hotkey = key;
+			}
 		}
+
 		return true;
 	}
 
@@ -1016,5 +1076,209 @@ public final class CustomBankInterface extends BankInterface {
 		FIRST_ITEM_IN_TAB,
 		DIGIT;
 	}
+	public void initPresets() {
+		for (int p = 0; p < presetCount; p++)
+			presets[p] = new Preset();
 
+	}
+
+	public void updatePreset(int id, Item[] inventoryItems, Item[] equipmentItems) {
+		for (int i = 0; i < Config.S_PLAYER_INVENTORY_SLOTS; i++)
+		{
+			if (inventoryItems[i] != null) {
+				presets[id].inventory[i].setID(inventoryItems[i].getID());
+				presets[id].inventory[i].setAmount(inventoryItems[i].getAmount());
+			} else {
+				presets[id].inventory[i].setID(-1);
+				presets[id].inventory[i].setAmount(0);
+			}
+		}
+
+		for (int i = 0; i < S_PLAYER_SLOT_COUNT; i++)
+		{
+			if (equipmentItems[i] != null) {
+				presets[id].equipment[i].setID(equipmentItems[i].getID());
+				presets[id].equipment[i].setAmount(equipmentItems[i].getAmount());
+			} else {
+				presets[id].equipment[i].setID(-1);
+				presets[id].equipment[i].setAmount(0);
+			}
+		}
+	}
+
+	private void saveSetup(int slot) {
+		Item[] inventoryItems = new Item[S_PLAYER_INVENTORY_SLOTS];
+		Item[] equipmentItems = new Item[S_PLAYER_SLOT_COUNT];
+		for (int i = 0; i < S_PLAYER_INVENTORY_SLOTS; i++) {
+			if (i < mc.getInventoryItemCount())
+				inventoryItems[i] = new Item(mc.getInventoryItemID(i), mc.getInventoryItemSize(i));
+			else
+				inventoryItems[i] = new Item(-1, 0);
+		}
+		for (int i = 0; i < S_PLAYER_SLOT_COUNT; i++) {
+			if (mc.equippedItems[i] != null) {
+				equipmentItems[i] = new Item(mc.equippedItems[i].id, mc.equippedItemAmount[i]);
+			}
+		}
+		updatePreset(slot, inventoryItems, equipmentItems);
+		mc.packetHandler.getClientStream().newPacket(27);
+		mc.packetHandler.getClientStream().writeBuffer1.putShort(slot);
+		mc.packetHandler.getClientStream().finishPacket();
+	}
+
+	private void loadPreset(int slot) {
+		if (! S_WANT_BANK_PRESETS)
+			return;
+		mc.packetHandler.getClientStream().newPacket(28);
+		mc.packetHandler.getClientStream().writeBuffer1.putShort(slot);
+		mc.packetHandler.getClientStream().finishPacket();
+	}
+
+	private void renderPresetEdit() {
+		int invcolumns = 5;
+		int invrows = (int)(Config.S_PLAYER_INVENTORY_SLOTS / invcolumns);
+		int inventoryXOffset = x + width - invcolumns * 49 -2;
+		int inventoryYOffset = y + 21;
+		int presetButtonWidth = width / presetCount;
+		mc.getSurface().drawBox(x, y, width, 21, 192);
+		mc.getSurface().drawBoxAlpha(x, y + 21, width, 309, 0x989898, 160);
+		mc.getSurface().drawBoxBorder(x, width, y, 331, 0x000000);
+		drawString("Assign Presets", x + 208, y + 15, 1, 0xFFFFFF);
+		int color = 0xFFFFFFFF;
+		if (mc.getMouseX() > x + width || mc.getMouseX() < x
+		|| mc.getMouseY() > y + height || mc.getMouseY() < y) {
+			if (mc.mouseButtonClick != 0)
+				presetMode = false;
+		} else if (mc.getMouseX() >= x + 420 && mc.getMouseX() <= x + 420 + mc.getSurface().stringWidth(1, "Close Window")
+		&& mc.getMouseY() >= y && mc.getMouseY() < y+15) {
+			if (mc.mouseButtonClick != 0) {
+				presetMode = false;
+			} else
+				color = 0xFFFF0000;
+		} else if (mc.getMouseY() >= inventoryYOffset + invrows * 34 + 1
+			&& mc.getMouseY() < inventoryYOffset + invrows * 34 + 35) {
+			if (mc.mouseButtonClick != 0) {
+				selectedPresetSlot = (mc.getMouseX() - x) / presetButtonWidth;
+			}
+		} else if (mc.getMouseY() >= inventoryYOffset + invrows * 34 + 35) {
+			if (mc.mouseButtonClick != 0) {
+				saveSetup(selectedPresetSlot);
+			}
+		}
+		drawString("Close Window", x + 420, y + 15, 1, color);
+		for (int i = 0; i < presetCount; i++) {
+			mc.getSurface().drawBoxAlpha(x + i * presetButtonWidth, inventoryYOffset + invrows * 34 + 1, presetButtonWidth, 33, selectedPresetSlot == i ? 0x7E1F1C :0x989898, 160);
+			mc.getSurface().drawBoxBorder(x + i * presetButtonWidth, presetButtonWidth, inventoryYOffset + invrows * 34, 34, 0x000000);
+			drawString("Preset Slot " + (i + 1), x + presetButtonWidth / 2 + presetButtonWidth * i - mc.getSurface().stringWidth(1, "Preset Slot 1") / 2, inventoryYOffset + invrows * 34 + 21, 1, 0xFFFFFF);
+		}
+
+		drawString("Save current setup to this preset slot", x, inventoryYOffset + invrows * 34 + 50,1,0x0);
+		//Draw the inventory panel on the screen
+		for (int i = 0; i < invcolumns; i++) {
+			mc.getSurface().drawLineVert(inventoryXOffset + i * 49, inventoryYOffset, 0, invrows * 34);
+		}
+		for (int i = 0; i < invrows + 1; i++) {
+			mc.getSurface().drawLineHoriz(inventoryXOffset, inventoryYOffset + i * 34, invcolumns * 49, 0);
+		}
+		int row = 0, col = 0;
+		for (int i = 0; i < Config.S_PLAYER_INVENTORY_SLOTS; i++) {
+			mc.getSurface().drawBoxAlpha(inventoryXOffset + col * 49 +1, inventoryYOffset + row * 34+1, 48, 33, GenUtil.buildColor(181, 181, 181), 128);
+			ItemDef def = presets[selectedPresetSlot].inventory[i].getDef();
+			if (def != null) {
+				mc.getSurface().drawSpriteClipping(
+					mc.spriteSelect(def),
+					inventoryXOffset + col * 49 +1, inventoryYOffset + row * 34+1,
+					48, 32, def.getPictureMask(), 0,
+					false, 0, 0);
+
+				if (def.getNotedFormOf() >= 0) {
+					ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
+					mc.getSurface().drawSpriteClipping(mc.spriteSelect(originalDef),
+						inventoryXOffset + col * 49 +1,inventoryYOffset + row * 34+1, 33, 23,
+						originalDef.getPictureMask(), 0, false, 0, 1);
+				}
+				if (def.isStackable()) {
+					mc.getSurface().drawString("" + presets[selectedPresetSlot].inventory[i].getAmount(),
+						inventoryXOffset + col * 49 +1,inventoryYOffset + row * 34+1 + fontSizeHeight,
+						0xFFFF00, 1);
+				}
+			}
+			col++;
+			if (col >= invcolumns) {
+				col = 0;
+				row++;
+			}
+		}
+
+		//draw the equipment tab on the screen
+		ItemDef equipDef;
+		Sprite todraw;
+		for (int i = 0; i < Config.S_PLAYER_SLOT_COUNT; i++) {
+			equipDef = presets[selectedPresetSlot].equipment[i].getDef();
+			if (equipDef == null) {
+				todraw = mc.spriteSelect(EntityHandler.GUIparts.get(EntityHandler.GUIPARTS.EQUIPSLOT_HELM.id() + i));
+				mc.getSurface().drawSpriteClipping(todraw
+					, x + mc.equipIconXLocations[i]
+					, y + 21 + mc.equipIconYLocations[i],
+					todraw.getWidth(), todraw.getHeight(),
+					0, 0, false, 0, 0, 0x80FFFFFF);
+			} else {
+				todraw = mc.spriteSelect(EntityHandler.GUIPARTS.EQUIPSLOT_HIGHLIGHT.getDef());
+				mc.getSurface().drawSpriteClipping(
+					todraw,
+					x + mc.equipIconXLocations[i],
+					y + 21 + mc.equipIconYLocations[i],
+					todraw.getWidth(), todraw.getHeight(),
+					0, 0, false, 0, 0, 0xC0FFFFFF);
+				todraw = mc.spriteSelect(presets[selectedPresetSlot].equipment[i].getDef());
+				mc.getSurface().drawSpriteClipping(
+					todraw,
+					x + mc.equipIconXLocations[i],
+					y + 21 + mc.equipIconYLocations[i],
+					todraw.getSomething1(), todraw.getSomething2(),
+					presets[selectedPresetSlot].equipment[i].getDef().getPictureMask(), 0, false, 0, 0 ^ -15251);
+				if (presets[selectedPresetSlot].equipment[i].getDef().isStackable())
+					mc.getSurface().drawString("" + presets[selectedPresetSlot].equipment[i].getAmount(),
+						x + mc.equipIconXLocations[i] + 2,
+						y + 21 + mc.equipIconYLocations[i] + 11, 0xFFFF00, 1);
+			}
+		}
+
+	}
+
+	public static class Item{
+		private int id;
+		private int amount;
+
+		public Item() {
+			this.id = -1;
+			this.amount = 0;
+		}
+
+		public Item(int id, int amount) {
+			this.id = id;
+			this.amount = amount;
+		}
+
+		public ItemDef getDef() { return EntityHandler.getItemDef(id); }
+		public void setAmount(int amount) { this.amount = amount; }
+		public void setID(int id) { this.id = id; }
+		public int getAmount() { return this.amount; }
+		public int getID() { return this.id; }
+	}
+
+	public static class Preset{
+		public Item[] inventory;
+		public Item[] equipment;
+
+		public Preset() {
+			inventory = new Item[Config.S_PLAYER_INVENTORY_SLOTS];
+			equipment = new Item[Config.S_PLAYER_SLOT_COUNT];
+
+			for (int i = 0; i < inventory.length; i++)
+				inventory[i] = new Item();
+			for (int i = 0; i < equipment.length; i++)
+				equipment[i] = new Item();
+		}
+	}
 }

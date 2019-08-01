@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Properties;
@@ -257,7 +258,8 @@ public final class Constants {
 		public static boolean WANT_DISCORD_UPDATES = false;
 		public static String DISCORD_WEBHOOK_URL = "";
 		public static boolean WANT_EQUIPMENT_TAB = false;
-		
+		public static boolean WANT_BANK_PRESETS = false;
+
 		public static int MAX_TICKS_UNTIL_FULL_WALKING_SPEED = 5;
 		//strict check on level requirements for "glitched" validations on rsc
 		public static boolean STRICT_CHECK_ALL = false;
@@ -387,6 +389,7 @@ public final class Constants {
 			WANT_DISCORD_UPDATES = Boolean.parseBoolean(props.getProperty("want_discord_updates"));
 			DISCORD_WEBHOOK_URL = props.getProperty("discord_webhook_url");
 			WANT_EQUIPMENT_TAB = Boolean.parseBoolean(props.getProperty("want_equipment_tab"));
+			WANT_BANK_PRESETS = Boolean.parseBoolean(props.getProperty("want_bank_presets"));
 
 			NPC_KILL_LIST = Boolean.parseBoolean(props.getProperty("npc_kill_list"));
 			NPC_KILL_MESSAGES = Boolean.parseBoolean(props.getProperty("npc_kill_messages"));

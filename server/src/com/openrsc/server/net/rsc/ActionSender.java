@@ -9,6 +9,7 @@ import com.openrsc.server.content.clan.ClanPlayer;
 import com.openrsc.server.content.market.Market;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.Shop;
+import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
@@ -29,6 +30,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 
@@ -292,7 +294,10 @@ public class ActionSender {
 	/**
 	 * Updates the equipment status
 	 */
-	public static void sendEquipmentStats(Player player) { sendEquipmentStats(player, -1); }
+	public static void sendEquipmentStats(Player player) {
+		sendEquipmentStats(player, -1);
+	}
+
 	public static void sendEquipmentStats(Player player, int slot) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_EQUIPMENT_STATS.opcode);
@@ -323,12 +328,14 @@ public class ActionSender {
 		s.writeShort(player.getFatigue() / 750);
 		player.write(s.toPacket());
 	}
+
 	public static void sendPetFatigue(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_PET_FATIGUE.opcode);
 		s.writeShort(player.getPetFatigue() / 750);
 		player.write(s.toPacket());
 	}
+
 	public static void sendKills2(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_KILLS2.opcode);
@@ -513,6 +520,7 @@ public class ActionSender {
 			LOGGER.info(WANT_RUNECRAFTING + " 60");
 			LOGGER.info(WANT_CUSTOM_LANDSCAPE + " 61");
 			LOGGER.info(WANT_EQUIPMENT_TAB + " 62");
+			LOGGER.info(WANT_BANK_PRESETS + " 63");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs();
 		ConnectionAttachment attachment = new ConnectionAttachment();
@@ -591,6 +599,7 @@ public class ActionSender {
 		s.writeByte((byte) (WANT_RUNECRAFTING ? 1 : 0)); //60
 		s.writeByte((byte) (WANT_CUSTOM_LANDSCAPE ? 1 : 0)); //61
 		s.writeByte((byte) (WANT_EQUIPMENT_TAB ? 1 : 0)); //62
+		s.writeByte((byte) (WANT_BANK_PRESETS ? 1 : 0)); //63
 		return s;
 	}
 
@@ -621,8 +630,7 @@ public class ActionSender {
 	}
 
 	/**
-	 * @param player
-	 * sends the player inventory
+	 * @param player sends the player inventory
 	 */
 	public static void sendInventory(Player player) {
 		if (player == null)
@@ -635,6 +643,34 @@ public class ActionSender {
 			s.writeByte((byte) (item.isWielded() ? 1 : 0));
 			if (item.getDef().isStackable())
 				s.writeInt(item.getAmount());
+		}
+		player.write(s.toPacket());
+	}
+
+	//Sends the player a bank preset
+	public static void sendBankPreset(Player player, int slot) {
+		if (player == null)
+			return;
+		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+		s.setID(Opcode.SEND_BANK_PRESET.opcode);
+		s.writeShort(slot);
+		for (Item item : player.getBank().presets[slot].inventory) {
+			if (item.getID() == -1)
+				s.writeByte(-1);
+			else
+				s.writeShort(item.getID());
+
+			if (item.getDef() != null && item.getDef().isStackable())
+				s.writeInt(item.getAmount());
+		}
+		for (Item item : player.getBank().presets[slot].equipment) {
+			if (item.getID() == -1)
+				s.writeByte(-1);
+			else
+				s.writeShort(item.getID());
+			if (item.getDef() != null && item.getDef().isStackable())
+				s.writeInt(item.getAmount());
+
 		}
 		player.write(s.toPacket());
 	}
@@ -664,16 +700,15 @@ public class ActionSender {
 		s.setID(Opcode.SEND_EQUIPMENT_UPDATE.opcode);
 		s.writeByte(slot);
 		Item item = player.getEquipment().list[slot];
-			if (item != null) {
-				s.writeShort(item.getID());
-				if (item.getDef().isStackable())
-					s.writeInt(item.getAmount());
-			} else {
-				s.writeShort(0xFFFF);
-			}
+		if (item != null) {
+			s.writeShort(item.getID());
+			if (item.getDef().isStackable())
+				s.writeInt(item.getAmount());
+		} else {
+			s.writeShort(0xFFFF);
+		}
 		player.write(s.toPacket());
 	}
-
 
 
 	/**
@@ -1104,7 +1139,7 @@ public class ActionSender {
 		s.writeByte((byte) repeatFor);
 		player.write(s.toPacket());
 	}
-	
+
 	public static void sendUpdateProgressBar(Player player, int repeatFor) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_UPDATE_PROGRESS_BAR.opcode);
@@ -1196,6 +1231,9 @@ public class ActionSender {
 
 				sendInventory(p);
 				p.checkEquipment();
+
+				if (WANT_BANK_PRESETS)
+					sendBankPresets(p);
 
 				/*if (!Constants.GameServer.MEMBER_WORLD) {
 					p.unwieldMembersItems();
@@ -1350,6 +1388,12 @@ public class ActionSender {
 		player.write(pb.toPacket());
 	}
 
+	public static void sendBankPresets(Player player) {
+		for (int i = 0; i < Bank.PRESET_COUNT; i++) {
+			sendBankPreset(player, i);
+		}
+	}
+
 	public enum Opcode {
 		/**
 		 * int slot = this.packetsIncoming.getUnsignedByte();
@@ -1409,6 +1453,7 @@ public class ActionSender {
 		SEND_ONLINE_LIST(136),
 		SEND_SHOP_CLOSE(137),
 		SEND_FRIEND_UPDATE(149),
+		SEND_BANK_PRESET(150),
 		SEND_EQUIPMENT_STATS(153),
 		SEND_STATS(156),
 		SEND_PRIVACY_SETTINGS(158),

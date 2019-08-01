@@ -102,6 +102,8 @@ public class PacketHandlerLookup {
 		bind(OpcodeIn.BANK_DEPOSIT.getOpcode(), BankHandler.class);
 		bind(OpcodeIn.BANK_DEPOSIT_ALL_FROM_INVENTORY.getOpcode(), BankHandler.class);
 		bind(OpcodeIn.BANK_DEPOSIT_ALL_FROM_EQUIPMENT.getOpcode(), BankHandler.class);
+		bind(OpcodeIn.BANK_SAVE_PRESET.getOpcode(), BankHandler.class);
+		bind(OpcodeIn.BANK_LOAD_PRESET.getOpcode(), BankHandler.class);
 
 		bind(OpcodeIn.INTERFACE_OPTIONS.getOpcode(), InterfaceOptionHandler.class);
 		bind(OpcodeIn.BLINK.getOpcode(), BlinkHandler.class);

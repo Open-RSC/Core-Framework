@@ -637,7 +637,7 @@ public final class Panel {
 			if (MiscFunctions.drawBackgroundArrow) {
 				for (int xi = x - (y & 63); xi < width + x; xi += 128) {
 					for (int yi = y - (31 & y); y + height > yi; yi += 128) {
-						this.graphics.a(this.graphics.spriteSelect(EntityHandler.GUIparts.get(EntityHandler.GUIPARTS.LEFTARROW.id())), 0, xi, 128, (int) yi);
+						this.graphics.a(this.graphics.spriteSelect(EntityHandler.GUIPARTS.LEFTARROW.getDef()), 0, xi, 128, (int) yi);
 					}
 				}
 			}
@@ -715,10 +715,10 @@ public final class Panel {
 			this.graphics.drawBoxBorder(1 + x, width - 2, 1 + y, height - 2, this.colorG);
 			this.graphics.drawBoxBorder(x + 2, width - 4, 2 + y, height - 4, this.colorH);
 
-			this.graphics.drawSprite(this.graphics.spriteSelect(EntityHandler.GUIparts.get(EntityHandler.GUIPARTS.DECORATEDBOXUL.id())), x, y);
-			this.graphics.drawSprite(this.graphics.spriteSelect(EntityHandler.GUIparts.get(EntityHandler.GUIPARTS.DECORATEDBOXUR.id())), width + x - 7, y);
-			this.graphics.drawSprite(this.graphics.spriteSelect(EntityHandler.GUIparts.get(EntityHandler.GUIPARTS.DECORATEDBOXLL.id())), x, y - (7 - height));
-			this.graphics.drawSprite(this.graphics.spriteSelect(EntityHandler.GUIparts.get(EntityHandler.GUIPARTS.DECORATEDBOXLR.id())), x + width - 7, height - 7 + y);
+			this.graphics.drawSprite(this.graphics.spriteSelect(EntityHandler.GUIPARTS.DECORATEDBOXUL.getDef()), x, y);
+			this.graphics.drawSprite(this.graphics.spriteSelect(EntityHandler.GUIPARTS.DECORATEDBOXUR.getDef()), width + x - 7, y);
+			this.graphics.drawSprite(this.graphics.spriteSelect(EntityHandler.GUIPARTS.DECORATEDBOXLL.getDef()), x, y - (7 - height));
+			this.graphics.drawSprite(this.graphics.spriteSelect(EntityHandler.GUIPARTS.DECORATEDBOXLR.getDef()), x + width - 7, height - 7 + y);
 		} catch (RuntimeException var7) {
 			throw GenUtil.makeThrowable(var7, "qa.V(" + y + ',' + width + ',' + "true" + ',' + x + ',' + height + ')');
 		}
@@ -795,8 +795,8 @@ public final class Panel {
 
 			int barX = x + width - 12;
 			this.graphics.drawBoxBorder(barX, 12, y, height, 0);
-			this.graphics.drawSprite(this.graphics.spriteSelect(EntityHandler.GUIparts.get(EntityHandler.GUIPARTS.MINIARROWUP.id())), 1 + barX, y + 1);
-			this.graphics.drawSprite(this.graphics.spriteSelect(EntityHandler.GUIparts.get(EntityHandler.GUIPARTS.MINIARROWDOWN.id())), 1 + barX, height - 12 + y);
+			this.graphics.drawSprite(this.graphics.spriteSelect(EntityHandler.GUIPARTS.MINIARROWUP.getDef()), 1 + barX, y + 1);
+			this.graphics.drawSprite(this.graphics.spriteSelect(EntityHandler.GUIPARTS.MINIARROWDOWN.getDef()), 1 + barX, height - 12 + y);
 			this.graphics.drawLineHoriz(barX, 13 + y, 12, 0);
 			this.graphics.drawLineHoriz(barX, y - 13 + height, 12, 0);
 			this.graphics.drawVerticalGradient(1 + barX, 14 + y, 11, height - 27, this.colorB, this.colorA);

@@ -21,6 +21,11 @@ import com.openrsc.server.util.rsc.LoginResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -76,6 +81,51 @@ public class DatabasePlayerLoader {
 					statement.addBatch();
 				}
 				statement.executeBatch();
+			}
+
+			if (Constants.GameServer.WANT_BANK_PRESETS) {
+				statement = conn.prepareStatement(Statements.save_AddBankPreset);
+				for (int k = 0; k < Bank.PRESET_COUNT; k++) {
+					if (s.getBank().presets[k].changed)
+					{
+						updateLongs(Statements.save_DeleteBankPresets, s.getDatabaseID(), k);
+						ByteArrayOutputStream inventoryBuffer = new ByteArrayOutputStream();
+						DataOutputStream inventoryWriter = new DataOutputStream(inventoryBuffer);
+						for (Item inventoryItem : s.getBank().presets[k].inventory) {
+							if (inventoryItem.getID() == -1)
+								inventoryWriter.writeByte(-1);
+							else {
+								inventoryWriter.writeShort(inventoryItem.getID());
+								if (inventoryItem.getDef() != null && inventoryItem.getDef().isStackable())
+									inventoryWriter.writeInt(inventoryItem.getAmount());
+							}
+
+						}
+						inventoryWriter.close();
+						Blob inventoryBlob = new javax.sql.rowset.serial.SerialBlob(inventoryBuffer.toByteArray());
+
+						ByteArrayOutputStream equipmentBuffer = new ByteArrayOutputStream();
+						DataOutputStream equipmentWriter = new DataOutputStream(equipmentBuffer);
+						for (Item equipmentItem : s.getBank().presets[k].equipment) {
+							if (equipmentItem.getID() == -1)
+								equipmentWriter.writeByte(-1);
+							else {
+								equipmentWriter.writeShort(equipmentItem.getID());
+								if (equipmentItem.getDef() != null && equipmentItem.getDef().isStackable())
+									equipmentWriter.writeInt(equipmentItem.getAmount());
+							}
+
+						}
+						equipmentWriter.close();
+						Blob equipmentBlob = new javax.sql.rowset.serial.SerialBlob(equipmentBuffer.toByteArray());
+						statement.setInt(1, s.getDatabaseID());
+						statement.setInt(2, k);
+						statement.setBlob(3, inventoryBlob);
+						statement.setBlob(4, equipmentBlob);
+						statement.addBatch();
+						statement.executeBatch();
+					}
+				}
 			}
 
 			updateLongs(Statements.save_DeleteInv, s.getDatabaseID());
@@ -520,6 +570,15 @@ public class DatabasePlayerLoader {
 			while (result.next()) {
 				bank.add(new Item(result.getInt("id"), result.getInt("amount")));
 			}
+			if (Constants.GameServer.WANT_BANK_PRESETS) {
+				result = resultSetFromInteger(Statements.playerBankPresets, save.getDatabaseID());
+				while (result.next()) {
+					int slot = result.getInt("slot");
+					Blob inventoryItems = result.getBlob("inventory");
+					Blob equipmentItems = result.getBlob("equipment");
+					bank.loadPreset(slot, inventoryItems, equipmentItems);
+				}
+			}
 			save.setBank(bank);
 
 			save.getSocial().addFriends(longListFromResultSet(
@@ -896,6 +955,9 @@ public class DatabasePlayerLoader {
 		private static final String playerBankItems = "SELECT `id`, `amount` FROM `" + PREFIX
 			+ "bank` WHERE `playerID`=? ORDER BY `slot` ASC";
 
+		private static final String playerBankPresets = "SELECT `slot`, `inventory`, `equipment` FROM `" + PREFIX
+			+ "bankpresets` WHERE `playerID`=?";
+
 		private static final String playerFriends = "SELECT `friend` FROM `" + PREFIX + "friends` WHERE `playerID`=?";
 
 		private static final String playerIngored = "SELECT `ignore` FROM `" + PREFIX + "ignores` WHERE `playerID`=?";
@@ -911,8 +973,13 @@ public class DatabasePlayerLoader {
 
 		private static final String save_DeleteBank = "DELETE FROM `" + PREFIX + "bank` WHERE `playerID`=?";
 
+		private static final String save_DeleteBankPresets = "DELETE FROM `" + PREFIX + "bankpresets` WHERE `playerID`=? AND `slot`=?";
+
 		private static final String save_AddBank = "INSERT INTO `" + PREFIX
 			+ "bank`(`playerID`, `id`, `amount`, `slot`) VALUES(?, ?, ?, ?)";
+
+		private static final String save_AddBankPreset = "INSERT INTO `" + PREFIX
+			+ "bankpresets`(`playerID`, `slot`, `inventory`, `equipment`) VALUES(?, ?, ?, ?)";
 
 		private static final String save_DeleteInv = "DELETE FROM `" + PREFIX + "invitems` WHERE `playerID`=?";
 

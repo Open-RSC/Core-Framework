@@ -87,6 +87,7 @@ public class Config {
 	public static boolean S_WANT_CUSTOM_RANK_DISPLAY = false;
 	public static boolean S_RIGHT_CLICK_BANK = false;
 	public static boolean S_WANT_EQUIPMENT_TAB = false;
+	public static boolean S_WANT_BANK_PRESETS = false;
 	// if you change these, and the config file,
 	// they will also change the options menu to
 	// 2-tabs (3 on android). (Not enough room for
