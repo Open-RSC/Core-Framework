@@ -39,6 +39,7 @@ public class ItemUseOnGroundItem implements PacketHandler {
 		player.resetAll();
 		Point location = Point.location(p.readShort(), p.readShort());
 		final int id = p.readShort();
+		final int groundItemId = p.readShort();
 		if (Constants.GameServer.WANT_EQUIPMENT_TAB && id > Inventory.MAX_SIZE) {
 			player.message("Please unequip your item and try again.");
 			return;
@@ -47,7 +48,7 @@ public class ItemUseOnGroundItem implements PacketHandler {
 		if (myItem == null)
 			return;
 
-		final GroundItem item = getItem(id, location, player);
+		final GroundItem item = getItem(groundItemId, location, player);
 
 		if (item == null || myItem == null) {
 			player.setSuspiciousPlayer(true);
@@ -60,7 +61,7 @@ public class ItemUseOnGroundItem implements PacketHandler {
 			public void execute() {
 				if (player.isBusy()
 					|| player.isRanging()
-					|| getItem(id, location, player) == null
+					|| getItem(groundItemId, location, player) == null
 					|| !player.canReach(item)
 					|| player.getStatus() != Action.USING_Item_ON_GITEM) {
 					return;
