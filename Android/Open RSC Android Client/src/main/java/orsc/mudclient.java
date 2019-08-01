@@ -13,11 +13,58 @@ import com.openrsc.data.DataFileDecrypter;
 import com.openrsc.data.DataOperations;
 import com.openrsc.interfaces.NComponent;
 import com.openrsc.interfaces.NCustomComponent;
-import com.openrsc.interfaces.misc.*;
+import com.openrsc.interfaces.misc.AchievementGUI;
+import com.openrsc.interfaces.misc.AuctionHouse;
+import com.openrsc.interfaces.misc.BankPinInterface;
+import com.openrsc.interfaces.misc.CustomBankInterface;
+import com.openrsc.interfaces.misc.DoSkillInterface;
+import com.openrsc.interfaces.misc.ExperienceConfigInterface;
+import com.openrsc.interfaces.misc.FishingTrawlerInterface;
+import com.openrsc.interfaces.misc.IronManInterface;
+import com.openrsc.interfaces.misc.LostOnDeathInterface;
+import com.openrsc.interfaces.misc.OnlineListInterface;
+import com.openrsc.interfaces.misc.ProgressBarInterface;
+import com.openrsc.interfaces.misc.QuestGuideInterface;
+import com.openrsc.interfaces.misc.SkillGuideInterface;
+import com.openrsc.interfaces.misc.TerritorySignupInterface;
 import com.openrsc.interfaces.misc.clan.Clan;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
 import orsc.buffers.RSBufferUtils;
-import orsc.enumerations.*;
-import orsc.graphics.gui.*;
+import orsc.enumerations.GameMode;
+import orsc.enumerations.InputXAction;
+import orsc.enumerations.MenuItemAction;
+import orsc.enumerations.MessageTab;
+import orsc.enumerations.MessageType;
+import orsc.enumerations.ORSCharacterDirection;
+import orsc.enumerations.PasswordChangeMode;
+import orsc.enumerations.SocialPopupMode;
+import orsc.graphics.gui.InputXPrompt;
+import orsc.graphics.gui.KillAnnouncer;
+import orsc.graphics.gui.KillAnnouncerQueue;
+import orsc.graphics.gui.Menu;
+import orsc.graphics.gui.MessageHistory;
+import orsc.graphics.gui.Panel;
+import orsc.graphics.gui.SocialLists;
 import orsc.graphics.three.CollisionFlag;
 import orsc.graphics.three.RSModel;
 import orsc.graphics.three.Scene;
@@ -31,18 +78,101 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
 
-import java.io.*;
-import java.security.SecureRandom;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-
-import static orsc.Config.*;
+import static orsc.Config.CLIENT_VERSION;
+import static orsc.Config.C_BATCH_PROGRESS_BAR;
+import static orsc.Config.C_EXPERIENCE_CONFIG_SUBMENU;
+import static orsc.Config.C_EXPERIENCE_COUNTER;
+import static orsc.Config.C_EXPERIENCE_COUNTER_COLOR;
+import static orsc.Config.C_EXPERIENCE_COUNTER_MODE;
+import static orsc.Config.C_EXPERIENCE_DROPS;
+import static orsc.Config.C_EXPERIENCE_DROP_SPEED;
+import static orsc.Config.C_FIGHT_MENU;
+import static orsc.Config.C_HIDE_FOG;
+import static orsc.Config.C_HIDE_ROOFS;
+import static orsc.Config.C_HOLD_AND_CHOOSE;
+import static orsc.Config.C_INV_COUNT;
+import static orsc.Config.C_KILL_FEED;
+import static orsc.Config.C_LAST_ZOOM;
+import static orsc.Config.C_LONG_PRESS_TIMER;
+import static orsc.Config.C_MENU_SIZE;
+import static orsc.Config.C_MESSAGE_TAB_SWITCH;
+import static orsc.Config.C_NAME_CLAN_TAG_OVERLAY;
+import static orsc.Config.C_SHOW_GROUND_ITEMS;
+import static orsc.Config.C_SIDE_MENU_OVERLAY;
+import static orsc.Config.C_SWIPE_TO_ROTATE;
+import static orsc.Config.C_SWIPE_TO_SCROLL;
+import static orsc.Config.C_SWIPE_TO_ZOOM;
+import static orsc.Config.C_VOLUME_TO_ROTATE;
+import static orsc.Config.DEBUG;
+import static orsc.Config.DISPLAY_LOGO_SPRITE;
+import static orsc.Config.F_CACHE_DIR;
+import static orsc.Config.F_SHOWING_KEYBOARD;
+import static orsc.Config.MEMBER_WORLD;
+import static orsc.Config.Remember;
+import static orsc.Config.SERVER_NAME;
+import static orsc.Config.SERVER_NAME_WELCOME;
+import static orsc.Config.S_AUTO_MESSAGE_SWITCH_TOGGLE;
+import static orsc.Config.S_BATCH_PROGRESSION;
+import static orsc.Config.S_CUSTOM_FIREMAKING;
+import static orsc.Config.S_EXPERIENCE_COUNTER_TOGGLE;
+import static orsc.Config.S_EXPERIENCE_DROPS_TOGGLE;
+import static orsc.Config.S_FIGHTMODE_SELECTOR_TOGGLE;
+import static orsc.Config.S_FOG_TOGGLE;
+import static orsc.Config.S_GROUND_ITEM_TOGGLE;
+import static orsc.Config.S_INVENTORY_COUNT_TOGGLE;
+import static orsc.Config.S_ITEMS_ON_DEATH_MENU;
+import static orsc.Config.S_MAX_WALKING_SPEED;
+import static orsc.Config.S_MENU_COMBAT_STYLE_TOGGLE;
+import static orsc.Config.S_PLAYER_INVENTORY_SLOTS;
+import static orsc.Config.S_PLAYER_LEVEL_LIMIT;
+import static orsc.Config.S_PLAYER_SLOT_COUNT;
+import static orsc.Config.S_RIGHT_CLICK_BANK;
+import static orsc.Config.S_SHOW_FLOATING_NAMETAGS;
+import static orsc.Config.S_SHOW_ROOF_TOGGLE;
+import static orsc.Config.S_SIDE_MENU_TOGGLE;
+import static orsc.Config.S_SPAWN_AUCTION_NPCS;
+import static orsc.Config.S_SPAWN_IRON_MAN_NPCS;
+import static orsc.Config.S_WANT_BANK_NOTES;
+import static orsc.Config.S_WANT_BANK_PINS;
+import static orsc.Config.S_WANT_BANK_PRESETS;
+import static orsc.Config.S_WANT_CERTS_TO_BANK;
+import static orsc.Config.S_WANT_CERT_DEPOSIT;
+import static orsc.Config.S_WANT_CLANS;
+import static orsc.Config.S_WANT_CUSTOM_BANKS;
+import static orsc.Config.S_WANT_CUSTOM_LANDSCAPE;
+import static orsc.Config.S_WANT_CUSTOM_RANK_DISPLAY;
+import static orsc.Config.S_WANT_DECANTING;
+import static orsc.Config.S_WANT_DROP_X;
+import static orsc.Config.S_WANT_EQUIPMENT_TAB;
+import static orsc.Config.S_WANT_EXPERIENCE_ELIXIRS;
+import static orsc.Config.S_WANT_EXP_INFO;
+import static orsc.Config.S_WANT_FIXED_OVERHEAD_CHAT;
+import static orsc.Config.S_WANT_GLOBAL_CHAT;
+import static orsc.Config.S_WANT_HIDE_IP;
+import static orsc.Config.S_WANT_KEYBOARD_SHORTCUTS;
+import static orsc.Config.S_WANT_KILL_FEED;
+import static orsc.Config.S_WANT_QUEST_MENUS;
+import static orsc.Config.S_WANT_REMEMBER;
+import static orsc.Config.S_WANT_RUNECRAFTING;
+import static orsc.Config.S_WANT_SKILL_MENUS;
+import static orsc.Config.S_WANT_WOODCUTTING_GUILD;
+import static orsc.Config.S_ZOOM_VIEW_TOGGLE;
+import static orsc.Config.WELCOME_TEXT;
+import static orsc.Config.getFPS;
+import static orsc.Config.getServerName;
+import static orsc.Config.getServerNameWelcome;
+import static orsc.Config.getWelcomeText;
+import static orsc.Config.initConfig;
+import static orsc.Config.isAndroid;
+import static orsc.Config.isLenientContactDetails;
+import static orsc.Config.wantEmail;
+import static orsc.Config.wantMembers;
 import static orsc.multiclient.ClientPort.saveHideIp;
 
 //import javax.sound.sampled.AudioSystem;
 //import javax.sound.sampled.Clip;
+//import javax.sound.sampled.LineEvent;
+//import javax.sound.sampled.LineListener;
 
 public final class mudclient implements Runnable {
 
@@ -67,9 +197,9 @@ public final class mudclient implements Runnable {
             {3, 4, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5}, {3, 4, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5},
             {4, 3, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5}, {11, 4, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3},
             {11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 4, 3}};
-	public final int[] equipIconXLocations = new int[]{98, 98, 98, 153, 43, 98, 98, 43, 43, 153, 153};
-	public final int[] equipIconYLocations = new int[]{5, 85, 125, 85, 85, 45, 165, 165, 45, 45, 165};
-	private final int[] animFrameToSprite_CombatA = new int[]{0, 1, 2, 1, 0, 0, 0, 0};
+    public final int[] equipIconXLocations = new int[]{98, 98, 98, 153, 43, 98, 98, 43, 43, 153, 153};
+    public final int[] equipIconYLocations = new int[]{5, 85, 125, 85, 85, 45, 165, 165, 45, 45, 165};
+    private final int[] animFrameToSprite_CombatA = new int[]{0, 1, 2, 1, 0, 0, 0, 0};
     private final int[] animFrameToSprite_CombatB = new int[]{0, 0, 0, 0, 0, 1, 2, 1};
     private final int[] bankItemID = new int[500];
     private final int[] bankItemSize = new int[500];
@@ -105,9 +235,9 @@ public final class mudclient implements Runnable {
     private final int[] inventoryItemEquipped = new int[S_PLAYER_INVENTORY_SLOTS];
     private final int[] inventoryItemID = new int[S_PLAYER_INVENTORY_SLOTS];
     private final int[] inventoryItemSize = new int[S_PLAYER_INVENTORY_SLOTS];
-	public ItemDef[] equippedItems = new ItemDef[S_PLAYER_SLOT_COUNT];
-	public int[] equippedItemAmount = new int[S_PLAYER_SLOT_COUNT];
-	private final ORSCharacter[] knownPlayers = new ORSCharacter[500];
+    public ItemDef[] equippedItems = new ItemDef[S_PLAYER_SLOT_COUNT];
+    public int[] equippedItemAmount = new int[S_PLAYER_SLOT_COUNT];
+    private final ORSCharacter[] knownPlayers = new ORSCharacter[500];
     private final String[] optionsMenuText = new String[20];
     private final int[] groundItemHeight = new int[5000];
     private final int character2Colour = 2;
@@ -341,8 +471,8 @@ public final class mudclient implements Runnable {
     private String m_ig = "";
     private int questPoints = 0;
     private int m_Ji = 0;
-	private int tabEquipmentIndex = 0;
-	private int settingTab = 0;
+    private int tabEquipmentIndex = 0;
+    private int settingTab = 0;
     private int loginButtonExistingUser;
     private int m_Kj;
     private int m_ld = 2;
@@ -563,8 +693,8 @@ public final class mudclient implements Runnable {
     private ArrayList<XPNotification> xpNotifications = new ArrayList<XPNotification>();
     private int amountToZoom = 0;
     private Panel panelLoginOptions;
-	int clearBox = GenUtil.buildColor(181, 181, 181);
-	int selectedBox = GenUtil.buildColor(220, 220, 220);
+    int clearBox = GenUtil.buildColor(181, 181, 181);
+    int selectedBox = GenUtil.buildColor(220, 220, 220);
     int instructContactDetails;
     int controlContactName;
     int controlContactZipCode;
@@ -2588,496 +2718,496 @@ public final class mudclient implements Runnable {
         }
     }
 
-	private void drawDialogDuel() {
-		try {
+    private void drawDialogDuel() {
+        try {
 
-			int clickedIndex = -1;
-			if (this.mouseButtonClick != 0 && this.menuDuel_Visible) {
-				clickedIndex = this.menuDuel.handleClick(this.mouseX, this.menuDuelX, this.menuDuelY, this.mouseY);
-			}
+            int clickedIndex = -1;
+            if (this.mouseButtonClick != 0 && this.menuDuel_Visible) {
+                clickedIndex = this.menuDuel.handleClick(this.mouseX, this.menuDuelX, this.menuDuelY, this.mouseY);
+            }
 
-			if (clickedIndex >= 0) {
-				this.mouseButtonClick = 0;
-				this.menuDuel_Visible = false;
-				MenuItemAction act = this.menuDuel.getItemAction(clickedIndex);
-				int itemID = this.menuDuel.getItemIndexOrX(clickedIndex);
-				int firstItemIndex = -1;
-				int itemCount = 0;
-				if (act != MenuItemAction.DUEL_STAKE) {
-					for (int duelIdx = 0; this.duelOfferItemCount > duelIdx; ++duelIdx) {
-						if (this.duelOfferItemID[duelIdx] == itemID) {
-							if (firstItemIndex < 0) {
-								firstItemIndex = duelIdx;
-							}
+            if (clickedIndex >= 0) {
+                this.mouseButtonClick = 0;
+                this.menuDuel_Visible = false;
+                MenuItemAction act = this.menuDuel.getItemAction(clickedIndex);
+                int itemID = this.menuDuel.getItemIndexOrX(clickedIndex);
+                int firstItemIndex = -1;
+                int itemCount = 0;
+                if (act != MenuItemAction.DUEL_STAKE) {
+                    for (int duelIdx = 0; this.duelOfferItemCount > duelIdx; ++duelIdx) {
+                        if (this.duelOfferItemID[duelIdx] == itemID) {
+                            if (firstItemIndex < 0) {
+                                firstItemIndex = duelIdx;
+                            }
 
-							if (EntityHandler.getItemDef(itemID).isStackable()) {
-								itemCount = this.duelOfferItemSize[duelIdx];
-								break;
-							}
+                            if (EntityHandler.getItemDef(itemID).isStackable()) {
+                                itemCount = this.duelOfferItemSize[duelIdx];
+                                break;
+                            }
 
-							++itemCount;
-						}
-					}
-				} else {
-					for (int invIdx = 0; this.inventoryItemCount > invIdx; ++invIdx) {
-						if (itemID == this.inventoryItemID[invIdx]) {
-							if (firstItemIndex < 0) {
-								firstItemIndex = invIdx;
-							}
+                            ++itemCount;
+                        }
+                    }
+                } else {
+                    for (int invIdx = 0; this.inventoryItemCount > invIdx; ++invIdx) {
+                        if (itemID == this.inventoryItemID[invIdx]) {
+                            if (firstItemIndex < 0) {
+                                firstItemIndex = invIdx;
+                            }
 
-							if (EntityHandler.getItemDef(itemID).isStackable()) {
-								itemCount = this.inventoryItemSize[invIdx];
-								break;
-							}
+                            if (EntityHandler.getItemDef(itemID).isStackable()) {
+                                itemCount = this.inventoryItemSize[invIdx];
+                                break;
+                            }
 
-							++itemCount;
-						}
-					}
-				}
+                            ++itemCount;
+                        }
+                    }
+                }
 
-				if (firstItemIndex >= 0) {
-					int doCount = this.menuDuel.getItemIdOrZ(clickedIndex);
-					if (doCount != -2) {
-						if (doCount == -1) {
-							doCount = itemCount;
-						}
+                if (firstItemIndex >= 0) {
+                    int doCount = this.menuDuel.getItemIdOrZ(clickedIndex);
+                    if (doCount != -2) {
+                        if (doCount == -1) {
+                            doCount = itemCount;
+                        }
 
-						if (act == MenuItemAction.DUEL_STAKE) {
-							this.duelStakeItem(doCount, firstItemIndex);
-						} else {
-							this.duelRemoveItem(firstItemIndex, doCount);
-						}
-						clickedIndex = -1;
-					} else {
-						this.duelDoX_Slot = firstItemIndex;
-						if (act == MenuItemAction.DUEL_STAKE) {
-							this.showItemModX(InputXPrompt.duelStakeX, InputXAction.DUEL_STAKE, true);
-						} else {
-							this.showItemModX(InputXPrompt.duelRemoveX, InputXAction.DUEL_REMOVE, true);
-						}
-					}
-				}
-			} else if (this.inputX_Action == InputXAction.ACT_0) {
-				if (this.mouseButtonClick == 1 && this.mouseButtonItemCountIncrement == 0) {
-					this.mouseButtonItemCountIncrement = 1;
-				}
-				if (getMouseY() >= 239 + 36 && getMouseY() <= 257 + 36) {
-					if (mouseButtonClick != 0 && S_WANT_EQUIPMENT_TAB) {
-						if (getMouseX() >= 22 + 320 && getMouseX() <= 22 + 348) {
-							stakeOfferEquipMode = false;
-						} else if (getMouseX() >= 22 + 348 && getMouseX() <= 22 + 376)
-							stakeOfferEquipMode = true;
-						mouseButtonClick = 0;
-					}
-				}
-				int mouseX_Local = this.mouseX - 22;
-				int mouseY_Local = this.mouseY - 36;
-				if (mouseX_Local >= 0 && mouseY_Local >= 0 && mouseX_Local < 468 && mouseY_Local < 262) {
-					if (this.mouseButtonItemCountIncrement > 0) {
-						if (mouseX_Local > 216 && mouseY_Local > 30 && mouseX_Local < 462 && mouseY_Local < 235) {
-							int slot = (mouseX_Local - 217) / 49 + (mouseY_Local - 31) / 34 * 5;
-							if (slot >= 0) {
-								if (stakeOfferEquipMode) {
-									this.duelStakeItem(-1, slot);
-								} else if (this.inventoryItemCount > slot) {
-									this.duelStakeItem(-1, slot);
-								}
-								clickedIndex = -1;
-							}
-						}
+                        if (act == MenuItemAction.DUEL_STAKE) {
+                            this.duelStakeItem(doCount, firstItemIndex);
+                        } else {
+                            this.duelRemoveItem(firstItemIndex, doCount);
+                        }
+                        clickedIndex = -1;
+                    } else {
+                        this.duelDoX_Slot = firstItemIndex;
+                        if (act == MenuItemAction.DUEL_STAKE) {
+                            this.showItemModX(InputXPrompt.duelStakeX, InputXAction.DUEL_STAKE, true);
+                        } else {
+                            this.showItemModX(InputXPrompt.duelRemoveX, InputXAction.DUEL_REMOVE, true);
+                        }
+                    }
+                }
+            } else if (this.inputX_Action == InputXAction.ACT_0) {
+                if (this.mouseButtonClick == 1 && this.mouseButtonItemCountIncrement == 0) {
+                    this.mouseButtonItemCountIncrement = 1;
+                }
+                if (getMouseY() >= 239 + 36 && getMouseY() <= 257 + 36) {
+                    if (mouseButtonClick != 0 && S_WANT_EQUIPMENT_TAB) {
+                        if (getMouseX() >= 22 + 320 && getMouseX() <= 22 + 348) {
+                            stakeOfferEquipMode = false;
+                        } else if (getMouseX() >= 22 + 348 && getMouseX() <= 22 + 376)
+                            stakeOfferEquipMode = true;
+                        mouseButtonClick = 0;
+                    }
+                }
+                int mouseX_Local = this.mouseX - 22;
+                int mouseY_Local = this.mouseY - 36;
+                if (mouseX_Local >= 0 && mouseY_Local >= 0 && mouseX_Local < 468 && mouseY_Local < 262) {
+                    if (this.mouseButtonItemCountIncrement > 0) {
+                        if (mouseX_Local > 216 && mouseY_Local > 30 && mouseX_Local < 462 && mouseY_Local < 235) {
+                            int slot = (mouseX_Local - 217) / 49 + (mouseY_Local - 31) / 34 * 5;
+                            if (slot >= 0) {
+                                if (stakeOfferEquipMode) {
+                                    this.duelStakeItem(-1, slot);
+                                } else if (this.inventoryItemCount > slot) {
+                                    this.duelStakeItem(-1, slot);
+                                }
+                                clickedIndex = -1;
+                            }
+                        }
 
-						if (mouseX_Local > 8 && mouseY_Local > 30 && mouseX_Local < 205 && mouseY_Local < 129) {
-							int slot = (mouseX_Local - 9) / 49 + (mouseY_Local - 31) / 34 * 4;
-							if (slot >= 0 && slot < this.duelOfferItemCount) {
-								this.duelRemoveItem(slot, -1);
-							}
-						}
+                        if (mouseX_Local > 8 && mouseY_Local > 30 && mouseX_Local < 205 && mouseY_Local < 129) {
+                            int slot = (mouseX_Local - 9) / 49 + (mouseY_Local - 31) / 34 * 4;
+                            if (slot >= 0 && slot < this.duelOfferItemCount) {
+                                this.duelRemoveItem(slot, -1);
+                            }
+                        }
 
-						boolean settingsChanged = false;
-						if (mouseX_Local >= 93 && mouseY_Local >= 221 && mouseX_Local <= 104 && mouseY_Local <= 232) {
-							settingsChanged = true;
-							this.duelSettingsRetreat = !this.duelSettingsRetreat;
-						}
+                        boolean settingsChanged = false;
+                        if (mouseX_Local >= 93 && mouseY_Local >= 221 && mouseX_Local <= 104 && mouseY_Local <= 232) {
+                            settingsChanged = true;
+                            this.duelSettingsRetreat = !this.duelSettingsRetreat;
+                        }
 
-						if (mouseX_Local >= 93 && mouseY_Local >= 240 && mouseX_Local <= 104 && mouseY_Local <= 251) {
-							this.duelSettingsMagic = !this.duelSettingsMagic;
-							settingsChanged = true;
-						}
+                        if (mouseX_Local >= 93 && mouseY_Local >= 240 && mouseX_Local <= 104 && mouseY_Local <= 251) {
+                            this.duelSettingsMagic = !this.duelSettingsMagic;
+                            settingsChanged = true;
+                        }
 
-						if (mouseX_Local >= 191 && mouseY_Local >= 221 && mouseX_Local <= 202 && mouseY_Local <= 232) {
-							this.duelSettingsPrayer = !this.duelSettingsPrayer;
-							settingsChanged = true;
-						}
+                        if (mouseX_Local >= 191 && mouseY_Local >= 221 && mouseX_Local <= 202 && mouseY_Local <= 232) {
+                            this.duelSettingsPrayer = !this.duelSettingsPrayer;
+                            settingsChanged = true;
+                        }
 
-						if (mouseX_Local >= 191 && mouseY_Local >= 240 && mouseX_Local <= 202 && mouseY_Local <= 251) {
-							settingsChanged = true;
-							this.duelSettingsWeapons = !this.duelSettingsWeapons;
-						}
+                        if (mouseX_Local >= 191 && mouseY_Local >= 240 && mouseX_Local <= 202 && mouseY_Local <= 251) {
+                            settingsChanged = true;
+                            this.duelSettingsWeapons = !this.duelSettingsWeapons;
+                        }
 
-						if (settingsChanged) {
-							this.packetHandler.getClientStream().newPacket(8);
-							this.packetHandler.getClientStream().writeBuffer1.putByte(!this.duelSettingsRetreat ? 0 : 1);
-							this.packetHandler.getClientStream().writeBuffer1.putByte(this.duelSettingsMagic ? 1 : 0);
-							this.packetHandler.getClientStream().writeBuffer1.putByte(!this.duelSettingsPrayer ? 0 : 1);
-							this.packetHandler.getClientStream().writeBuffer1.putByte(!this.duelSettingsWeapons ? 0 : 1);
-							this.packetHandler.getClientStream().finishPacket();
-							this.duelOffsetOpponentAccepted = false;
-							this.duelOfferAccepted = false;
-						}
+                        if (settingsChanged) {
+                            this.packetHandler.getClientStream().newPacket(8);
+                            this.packetHandler.getClientStream().writeBuffer1.putByte(!this.duelSettingsRetreat ? 0 : 1);
+                            this.packetHandler.getClientStream().writeBuffer1.putByte(this.duelSettingsMagic ? 1 : 0);
+                            this.packetHandler.getClientStream().writeBuffer1.putByte(!this.duelSettingsPrayer ? 0 : 1);
+                            this.packetHandler.getClientStream().writeBuffer1.putByte(!this.duelSettingsWeapons ? 0 : 1);
+                            this.packetHandler.getClientStream().finishPacket();
+                            this.duelOffsetOpponentAccepted = false;
+                            this.duelOfferAccepted = false;
+                        }
 
-						if (mouseX_Local >= 217 && mouseY_Local >= 238 && mouseX_Local <= 286 && mouseY_Local <= 259) {
-							this.duelOfferAccepted = true;
-							this.packetHandler.getClientStream().newPacket(176);
-							this.packetHandler.getClientStream().finishPacket();
-						}
+                        if (mouseX_Local >= 217 && mouseY_Local >= 238 && mouseX_Local <= 286 && mouseY_Local <= 259) {
+                            this.duelOfferAccepted = true;
+                            this.packetHandler.getClientStream().newPacket(176);
+                            this.packetHandler.getClientStream().finishPacket();
+                        }
 
-						if (mouseX_Local >= 394 && mouseY_Local >= 238 && mouseX_Local < 463 && mouseY_Local < 259) {
-							this.showDialogDuel = false;
-							this.packetHandler.getClientStream().newPacket(197);
-							this.packetHandler.getClientStream().finishPacket();
-						}
+                        if (mouseX_Local >= 394 && mouseY_Local >= 238 && mouseX_Local < 463 && mouseY_Local < 259) {
+                            this.showDialogDuel = false;
+                            this.packetHandler.getClientStream().newPacket(197);
+                            this.packetHandler.getClientStream().finishPacket();
+                        }
 
-						this.mouseButtonItemCountIncrement = 0;
-						this.mouseButtonClick = 0;
-					}
+                        this.mouseButtonItemCountIncrement = 0;
+                        this.mouseButtonClick = 0;
+                    }
 
-					if (this.mouseButtonClick == 2) {
-						if (mouseX_Local > 216 && mouseY_Local > 30 && mouseX_Local < 462 && mouseY_Local < 235) {
-							int w = this.menuCommon.getWidth();
-							int h = this.menuCommon.getHeight();
-							this.menuX = this.mouseX - w / 2;
-							this.menuY = this.mouseY - 7;
-							this.topMouseMenuVisible = true;
-							if (this.menuY < 0) {
-								this.menuY = 0;
-							}
+                    if (this.mouseButtonClick == 2) {
+                        if (mouseX_Local > 216 && mouseY_Local > 30 && mouseX_Local < 462 && mouseY_Local < 235) {
+                            int w = this.menuCommon.getWidth();
+                            int h = this.menuCommon.getHeight();
+                            this.menuX = this.mouseX - w / 2;
+                            this.menuY = this.mouseY - 7;
+                            this.topMouseMenuVisible = true;
+                            if (this.menuY < 0) {
+                                this.menuY = 0;
+                            }
 
-							if (this.menuX < 0) {
-								this.menuX = 0;
-							}
+                            if (this.menuX < 0) {
+                                this.menuX = 0;
+                            }
 
-							if (w + this.menuX > 510) {
-								this.menuX = 510 - w;
-							}
+                            if (w + this.menuX > 510) {
+                                this.menuX = 510 - w;
+                            }
 
-							if (h + this.menuY > 315) {
-								this.menuY = 315 - h;
-							}
+                            if (h + this.menuY > 315) {
+                                this.menuY = 315 - h;
+                            }
 
-							int invIndex = (mouseX_Local - 217) / 49 + (mouseY_Local - 31) / 34 * 5;
-							if (invIndex >= 0) {
-								if (stakeOfferEquipMode) {
-									Object[] equipment = getEquipmentItems();
-									if (invIndex < ((int[])equipment[0]).length) {
-										int itemID = ((int[])equipment[0])[invIndex];
-										this.menuDuel_Visible = true;
-										this.menuDuel.recalculateSize(0);
-										this.menuDuel.addCharacterItem_WithID(itemID,
-											"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
-											"Stake", 1);
-									}
-								} else {
-									if (this.inventoryItemCount > invIndex) {
-										int itemID = this.inventoryItemID[invIndex];
-										this.menuDuel_Visible = true;
-										this.menuDuel.recalculateSize(0);
-										this.menuDuel.addCharacterItem_WithID(itemID,
-											"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
-											"Stake 1", 1);
-										this.menuDuel.addCharacterItem_WithID(itemID,
-											"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
-											"Stake 5", 5);
-										this.menuDuel.addCharacterItem_WithID(itemID,
-											"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
-											"Stake 10", 10);
-										this.menuDuel.addCharacterItem_WithID(itemID,
-											"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
-											"Stake All", -1);
-										this.menuDuel.addCharacterItem_WithID(itemID,
-											"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
-											"Stake X", -2);
-									}
-								}
-								int width = this.menuDuel.getWidth();
-								int height = this.menuDuel.getHeight();
-								this.menuDuelY = this.mouseY - 7;
-								this.menuDuelX = this.mouseX - width / 2;
-								if (this.menuDuelX < 0) {
-									this.menuDuelX = 0;
-								}
+                            int invIndex = (mouseX_Local - 217) / 49 + (mouseY_Local - 31) / 34 * 5;
+                            if (invIndex >= 0) {
+                                if (stakeOfferEquipMode) {
+                                    Object[] equipment = getEquipmentItems();
+                                    if (invIndex < ((int[])equipment[0]).length) {
+                                        int itemID = ((int[])equipment[0])[invIndex];
+                                        this.menuDuel_Visible = true;
+                                        this.menuDuel.recalculateSize(0);
+                                        this.menuDuel.addCharacterItem_WithID(itemID,
+                                                "@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
+                                                "Stake", 1);
+                                    }
+                                } else {
+                                    if (this.inventoryItemCount > invIndex) {
+                                        int itemID = this.inventoryItemID[invIndex];
+                                        this.menuDuel_Visible = true;
+                                        this.menuDuel.recalculateSize(0);
+                                        this.menuDuel.addCharacterItem_WithID(itemID,
+                                                "@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
+                                                "Stake 1", 1);
+                                        this.menuDuel.addCharacterItem_WithID(itemID,
+                                                "@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
+                                                "Stake 5", 5);
+                                        this.menuDuel.addCharacterItem_WithID(itemID,
+                                                "@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
+                                                "Stake 10", 10);
+                                        this.menuDuel.addCharacterItem_WithID(itemID,
+                                                "@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
+                                                "Stake All", -1);
+                                        this.menuDuel.addCharacterItem_WithID(itemID,
+                                                "@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
+                                                "Stake X", -2);
+                                    }
+                                }
+                                int width = this.menuDuel.getWidth();
+                                int height = this.menuDuel.getHeight();
+                                this.menuDuelY = this.mouseY - 7;
+                                this.menuDuelX = this.mouseX - width / 2;
+                                if (this.menuDuelX < 0) {
+                                    this.menuDuelX = 0;
+                                }
 
-								if (this.menuDuelY < 0) {
-									this.menuDuelY = 0;
-								}
+                                if (this.menuDuelY < 0) {
+                                    this.menuDuelY = 0;
+                                }
 
-								if (this.menuDuelX + width > 510) {
-									this.menuDuelX = 510 - width;
-								}
+                                if (this.menuDuelX + width > 510) {
+                                    this.menuDuelX = 510 - width;
+                                }
 
-								if (this.menuDuelY + height > 315) {
-									this.menuDuelY = 315 - height;
-								}
-							}
-						}
+                                if (this.menuDuelY + height > 315) {
+                                    this.menuDuelY = 315 - height;
+                                }
+                            }
+                        }
 
-						if (mouseX_Local > 8 && mouseY_Local > 30 && mouseX_Local < 205 && mouseY_Local < 133) {
-							int slot = (mouseX_Local - 9) / 49 + (mouseY_Local - 31) / 34 * 4;
-							if (slot >= 0 && this.duelOfferItemCount > slot) {
-								int id = this.duelOfferItemID[slot];
-								this.menuDuel_Visible = true;
-								this.menuDuel.recalculateSize(0);
-								this.menuDuel.addCharacterItem_WithID(id,
-									"@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.DUEL_REMOVE,
-									"Remove 1", 1);
-								this.menuDuel.addCharacterItem_WithID(id,
-									"@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.DUEL_REMOVE,
-									"Remove 5", 5);
-								this.menuDuel.addCharacterItem_WithID(id,
-									"@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.DUEL_REMOVE,
-									"Remove 10", 10);
-								this.menuDuel.addCharacterItem_WithID(id,
-									"@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.DUEL_REMOVE,
-									"Remove All", -1);
-								this.menuDuel.addCharacterItem_WithID(id,
-									"@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.DUEL_REMOVE,
-									"Remove X", -2);
-								int w = this.menuDuel.getWidth();
-								int h = this.menuDuel.getHeight();
-								this.menuDuelY = this.mouseY - 7;
-								this.menuDuelX = this.mouseX - w / 2;
-								if (this.menuDuelX < 0) {
-									this.menuDuelX = 0;
-								}
+                        if (mouseX_Local > 8 && mouseY_Local > 30 && mouseX_Local < 205 && mouseY_Local < 133) {
+                            int slot = (mouseX_Local - 9) / 49 + (mouseY_Local - 31) / 34 * 4;
+                            if (slot >= 0 && this.duelOfferItemCount > slot) {
+                                int id = this.duelOfferItemID[slot];
+                                this.menuDuel_Visible = true;
+                                this.menuDuel.recalculateSize(0);
+                                this.menuDuel.addCharacterItem_WithID(id,
+                                        "@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.DUEL_REMOVE,
+                                        "Remove 1", 1);
+                                this.menuDuel.addCharacterItem_WithID(id,
+                                        "@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.DUEL_REMOVE,
+                                        "Remove 5", 5);
+                                this.menuDuel.addCharacterItem_WithID(id,
+                                        "@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.DUEL_REMOVE,
+                                        "Remove 10", 10);
+                                this.menuDuel.addCharacterItem_WithID(id,
+                                        "@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.DUEL_REMOVE,
+                                        "Remove All", -1);
+                                this.menuDuel.addCharacterItem_WithID(id,
+                                        "@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.DUEL_REMOVE,
+                                        "Remove X", -2);
+                                int w = this.menuDuel.getWidth();
+                                int h = this.menuDuel.getHeight();
+                                this.menuDuelY = this.mouseY - 7;
+                                this.menuDuelX = this.mouseX - w / 2;
+                                if (this.menuDuelX < 0) {
+                                    this.menuDuelX = 0;
+                                }
 
-								if (this.menuDuelY < 0) {
-									this.menuDuelY = 0;
-								}
+                                if (this.menuDuelY < 0) {
+                                    this.menuDuelY = 0;
+                                }
 
-								if (this.menuDuelX + w > 510) {
-									this.menuDuelX = 510 - w;
-								}
+                                if (this.menuDuelX + w > 510) {
+                                    this.menuDuelX = 510 - w;
+                                }
 
-								if (h + this.menuDuelY > 315) {
-									this.menuDuelY = 315 - h;
-								}
-							}
-						}
+                                if (h + this.menuDuelY > 315) {
+                                    this.menuDuelY = 315 - h;
+                                }
+                            }
+                        }
 
-						this.mouseButtonClick = 0;
-					}
+                        this.mouseButtonClick = 0;
+                    }
 
-					if (this.menuDuel_Visible) {
-						int w = this.menuDuel.getWidth();
-						int h = this.menuDuel.getHeight();
-						if (this.menuDuelX - 10 > this.mouseX || this.mouseY < this.menuDuelY - 10
-							|| this.mouseX > this.menuDuelX + w + 10 || this.mouseY > 10 + h + this.menuDuelY) {
-							this.menuDuel_Visible = false;
-						}
-					}
-				} else if (this.mouseButtonClick != 0) {
-					this.showDialogDuel = false;
-					this.packetHandler.getClientStream().newPacket(197);
-					this.packetHandler.getClientStream().finishPacket();
-				}
-			}
+                    if (this.menuDuel_Visible) {
+                        int w = this.menuDuel.getWidth();
+                        int h = this.menuDuel.getHeight();
+                        if (this.menuDuelX - 10 > this.mouseX || this.mouseY < this.menuDuelY - 10
+                                || this.mouseX > this.menuDuelX + w + 10 || this.mouseY > 10 + h + this.menuDuelY) {
+                            this.menuDuel_Visible = false;
+                        }
+                    }
+                } else if (this.mouseButtonClick != 0) {
+                    this.showDialogDuel = false;
+                    this.packetHandler.getClientStream().newPacket(197);
+                    this.packetHandler.getClientStream().finishPacket();
+                }
+            }
 
-			if (this.showDialogDuel) {
-				byte xr = 22;
-				byte yr = 36;
-				this.getSurface().drawBox(xr, yr, 468, 12, 13175581);
-				int colorA = 10000536;
-				this.getSurface().drawBoxAlpha(xr, 12 + yr, 468, 18, colorA, 160);
-				this.getSurface().drawBoxAlpha(xr, 30 + yr, 8, 248, colorA, 160);
-				this.getSurface().drawBoxAlpha(xr + 205, 30 + yr, 11, 248, colorA, 160);
-				this.getSurface().drawBoxAlpha(xr + 462, 30 + yr, 6, 248, colorA, 160);
-				this.getSurface().drawBoxAlpha(xr + 8, yr + 99, 197, 24, colorA, 160);
-				this.getSurface().drawBoxAlpha(8 + xr, 192 + yr, 197, 23, colorA, 160);
-				this.getSurface().drawBoxAlpha(xr + 8, yr + 258, 197, 20, colorA, 160);
-				this.getSurface().drawBoxAlpha(xr + 216, yr + 235, 246, 43, colorA, 160);
-				int colorB = 13684944;
-				this.getSurface().drawBoxAlpha(8 + xr, yr + 30, 197, 69, colorB, 160);
-				this.getSurface().drawBoxAlpha(xr + 8, 123 + yr, 197, 69, colorB, 160);
-				this.getSurface().drawBoxAlpha(8 + xr, yr + 215, 197, 43, colorB, 160);
-				this.getSurface().drawBoxAlpha(216 + xr, yr + 30, 246, 205, colorB, 160);
+            if (this.showDialogDuel) {
+                byte xr = 22;
+                byte yr = 36;
+                this.getSurface().drawBox(xr, yr, 468, 12, 13175581);
+                int colorA = 10000536;
+                this.getSurface().drawBoxAlpha(xr, 12 + yr, 468, 18, colorA, 160);
+                this.getSurface().drawBoxAlpha(xr, 30 + yr, 8, 248, colorA, 160);
+                this.getSurface().drawBoxAlpha(xr + 205, 30 + yr, 11, 248, colorA, 160);
+                this.getSurface().drawBoxAlpha(xr + 462, 30 + yr, 6, 248, colorA, 160);
+                this.getSurface().drawBoxAlpha(xr + 8, yr + 99, 197, 24, colorA, 160);
+                this.getSurface().drawBoxAlpha(8 + xr, 192 + yr, 197, 23, colorA, 160);
+                this.getSurface().drawBoxAlpha(xr + 8, yr + 258, 197, 20, colorA, 160);
+                this.getSurface().drawBoxAlpha(xr + 216, yr + 235, 246, 43, colorA, 160);
+                int colorB = 13684944;
+                this.getSurface().drawBoxAlpha(8 + xr, yr + 30, 197, 69, colorB, 160);
+                this.getSurface().drawBoxAlpha(xr + 8, 123 + yr, 197, 69, colorB, 160);
+                this.getSurface().drawBoxAlpha(8 + xr, yr + 215, 197, 43, colorB, 160);
+                this.getSurface().drawBoxAlpha(216 + xr, yr + 30, 246, 205, colorB, 160);
 
-				for (int i = 0; i < 3; ++i) {
-					this.getSurface().drawLineHoriz(xr + 8, yr + 30 + i * 34, 197, 0);
-				}
+                for (int i = 0; i < 3; ++i) {
+                    this.getSurface().drawLineHoriz(xr + 8, yr + 30 + i * 34, 197, 0);
+                }
 
-				for (int i = 0; i < 3; ++i) {
-					this.getSurface().drawLineHoriz(8 + xr, i * 34 + yr + 123, 197, 0);
-				}
+                for (int i = 0; i < 3; ++i) {
+                    this.getSurface().drawLineHoriz(8 + xr, i * 34 + yr + 123, 197, 0);
+                }
 
-				for (int i = 0; i < 7; ++i) {
-					this.getSurface().drawLineHoriz(216 + xr, i * 34 + yr + 30, 246, 0);
-				}
+                for (int i = 0; i < 7; ++i) {
+                    this.getSurface().drawLineHoriz(216 + xr, i * 34 + yr + 30, 246, 0);
+                }
 
-				for (int i = 0; i < 6; ++i) {
-					if (i < 5) {
-						this.getSurface().drawLineVert(i * 49 + 8 + xr, yr + 30, 0, 69);
-						this.getSurface().drawLineVert(i * 49 + xr + 8, yr + 123, 0, 69);
-					}
+                for (int i = 0; i < 6; ++i) {
+                    if (i < 5) {
+                        this.getSurface().drawLineVert(i * 49 + 8 + xr, yr + 30, 0, 69);
+                        this.getSurface().drawLineVert(i * 49 + xr + 8, yr + 123, 0, 69);
+                    }
 
-					this.getSurface().drawLineVert(i * 49 + xr + 216, yr + 30, 0, 205);
-				}
+                    this.getSurface().drawLineVert(i * 49 + xr + 216, yr + 30, 0, 205);
+                }
 
-				this.getSurface().drawLineHoriz(xr + 8, 215 + yr, 197, 0);
-				this.getSurface().drawLineHoriz(xr + 8, yr + 257, 197, 0);
-				this.getSurface().drawLineVert(8 + xr, yr + 215, 0, 43);
-				this.getSurface().drawLineVert(xr + 204, yr + 215, 0, 43);
-				this.getSurface().drawString("Preparing to duel with: " + this.duelConfirmOpponentName, 1 + xr, yr + 10,
-					0xFFFFFF, 1);
-				this.getSurface().drawString("Your Stake", xr + 9, 27 + yr, 0xFFFFFF, 4);
-				this.getSurface().drawString("Opponent\'s Stake", 9 + xr, 120 + yr, 0xFFFFFF, 4);
-				this.getSurface().drawString("Duel Options", xr + 9, yr + 212, 0xFFFFFF, 4);
-				this.getSurface().drawString("Your Inventory", xr + 216, yr + 27, 0xFFFFFF, 4);
-				this.getSurface().drawString("No retreating", 1 + 8 + xr, 215 + yr + 16, 0xFFFF00, 3);
-				this.getSurface().drawString("No magic", 1 + 8 + xr, 250 + yr, 0xFFFF00, 3);
-				this.getSurface().drawString("No prayer", 8 + xr + 102, yr + 231, 0xFFFF00, 3);
-				this.getSurface().drawString("No weapons", 102 + 8 + xr, 35 + yr + 215, 0xFFFF00, 3);
+                this.getSurface().drawLineHoriz(xr + 8, 215 + yr, 197, 0);
+                this.getSurface().drawLineHoriz(xr + 8, yr + 257, 197, 0);
+                this.getSurface().drawLineVert(8 + xr, yr + 215, 0, 43);
+                this.getSurface().drawLineVert(xr + 204, yr + 215, 0, 43);
+                this.getSurface().drawString("Preparing to duel with: " + this.duelConfirmOpponentName, 1 + xr, yr + 10,
+                        0xFFFFFF, 1);
+                this.getSurface().drawString("Your Stake", xr + 9, 27 + yr, 0xFFFFFF, 4);
+                this.getSurface().drawString("Opponent\'s Stake", 9 + xr, 120 + yr, 0xFFFFFF, 4);
+                this.getSurface().drawString("Duel Options", xr + 9, yr + 212, 0xFFFFFF, 4);
+                this.getSurface().drawString("Your Inventory", xr + 216, yr + 27, 0xFFFFFF, 4);
+                this.getSurface().drawString("No retreating", 1 + 8 + xr, 215 + yr + 16, 0xFFFF00, 3);
+                this.getSurface().drawString("No magic", 1 + 8 + xr, 250 + yr, 0xFFFF00, 3);
+                this.getSurface().drawString("No prayer", 8 + xr + 102, yr + 231, 0xFFFF00, 3);
+                this.getSurface().drawString("No weapons", 102 + 8 + xr, 35 + yr + 215, 0xFFFF00, 3);
 
-				if (S_WANT_EQUIPMENT_TAB) {
-					this.getSurface().drawBoxAlpha(xr + 320, 239 + yr, 28, 28, stakeOfferEquipMode ? clearBox : selectedBox, 160);
-					this.getSurface().drawBoxAlpha(xr + 348, 239 + yr, 28, 28, stakeOfferEquipMode ? selectedBox : clearBox, 160);
-					this.getSurface().drawSpriteClipping(spriteSelect(GUIPARTS.BANK_EQUIP_BAG.getDef()), xr + 320, 239 + yr, 28, 28, 0, 0, false, 0, 0);
-					this.getSurface().drawSpriteClipping(spriteSelect(GUIPARTS.BANK_EQUIP_HELM.getDef()), xr + 348, 239 + yr, 28, 28, 0, 0, false, 0, 0);
-				}
-				if (stakeOfferEquipMode) {
-					int count = 0;
-					for (ItemDef item : equippedItems) {
-						if (item == null)
-							continue;
-						int xI = 217 + xr + (count % 5) * 49;
-						int yI = yr + 31 + (count / 5) * 34;
-						this.getSurface().drawSpriteClipping(
-							spriteSelect(item), xI,
-							yI, 48, 32, item.getPictureMask(), 0, false,
-							0, 1);
-						if (item.isStackable()) {
-							this.getSurface().drawString("" + this.inventoryItemSize[count], xI + 1,
-								10 + yI, 0xFFFF00, 1);
-						}
-						count++;
-					}
-				} else {
-					for (int itm = 0; this.inventoryItemCount > itm; ++itm) {
-						int xI = 217 + xr + (itm % 5) * 49;
-						int yI = yr + 31 + (itm / 5) * 34;
-						this.getSurface().drawSpriteClipping(
-							spriteSelect(EntityHandler.getItemDef(this.inventoryItemID[itm])), xI,
-							yI, 48, 32, EntityHandler.getItemDef(this.inventoryItemID[itm]).getPictureMask(), 0, false,
-							0, 1);
+                if (S_WANT_EQUIPMENT_TAB) {
+                    this.getSurface().drawBoxAlpha(xr + 320, 239 + yr, 28, 28, stakeOfferEquipMode ? clearBox : selectedBox, 160);
+                    this.getSurface().drawBoxAlpha(xr + 348, 239 + yr, 28, 28, stakeOfferEquipMode ? selectedBox : clearBox, 160);
+                    this.getSurface().drawSpriteClipping(spriteSelect(GUIPARTS.BANK_EQUIP_BAG.getDef()), xr + 320, 239 + yr, 28, 28, 0, 0, false, 0, 0);
+                    this.getSurface().drawSpriteClipping(spriteSelect(GUIPARTS.BANK_EQUIP_HELM.getDef()), xr + 348, 239 + yr, 28, 28, 0, 0, false, 0, 0);
+                }
+                if (stakeOfferEquipMode) {
+                    int count = 0;
+                    for (ItemDef item : equippedItems) {
+                        if (item == null)
+                            continue;
+                        int xI = 217 + xr + (count % 5) * 49;
+                        int yI = yr + 31 + (count / 5) * 34;
+                        this.getSurface().drawSpriteClipping(
+                                spriteSelect(item), xI,
+                                yI, 48, 32, item.getPictureMask(), 0, false,
+                                0, 1);
+                        if (item.isStackable()) {
+                            this.getSurface().drawString("" + this.inventoryItemSize[count], xI + 1,
+                                    10 + yI, 0xFFFF00, 1);
+                        }
+                        count++;
+                    }
+                } else {
+                    for (int itm = 0; this.inventoryItemCount > itm; ++itm) {
+                        int xI = 217 + xr + (itm % 5) * 49;
+                        int yI = yr + 31 + (itm / 5) * 34;
+                        this.getSurface().drawSpriteClipping(
+                                spriteSelect(EntityHandler.getItemDef(this.inventoryItemID[itm])), xI,
+                                yI, 48, 32, EntityHandler.getItemDef(this.inventoryItemID[itm]).getPictureMask(), 0, false,
+                                0, 1);
 
-						ItemDef def = EntityHandler.getItemDef(this.inventoryItemID[itm]);
-						if (def.getNotedFormOf() >= 0) {
-							ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-							getSurface().drawSpriteClipping(spriteSelect(originalDef), xI + 7, yI + 4,
-								33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
-						}
-						if (EntityHandler.getItemDef(this.inventoryItemID[itm]).isStackable()) {
-							this.getSurface().drawString("" + this.inventoryItemSize[itm], xI + 1,
-								10 + yI, 0xFFFF00, 1);
-						}
-					}
-				}
-				this.getSurface().drawBoxBorder(xr + 93, 11, 215 + yr + 6, 11, 0xFFFF00);
-				if (this.duelSettingsRetreat) {
-					this.getSurface().drawBox(xr + 95, 8 + 215 + yr, 7, 7, 0xFFFF00);
-				}
+                        ItemDef def = EntityHandler.getItemDef(this.inventoryItemID[itm]);
+                        if (def.getNotedFormOf() >= 0) {
+                            ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
+                            getSurface().drawSpriteClipping(spriteSelect(originalDef), xI + 7, yI + 4,
+                                    33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
+                        }
+                        if (EntityHandler.getItemDef(this.inventoryItemID[itm]).isStackable()) {
+                            this.getSurface().drawString("" + this.inventoryItemSize[itm], xI + 1,
+                                    10 + yI, 0xFFFF00, 1);
+                        }
+                    }
+                }
+                this.getSurface().drawBoxBorder(xr + 93, 11, 215 + yr + 6, 11, 0xFFFF00);
+                if (this.duelSettingsRetreat) {
+                    this.getSurface().drawBox(xr + 95, 8 + 215 + yr, 7, 7, 0xFFFF00);
+                }
 
-				this.getSurface().drawBoxBorder(93 + xr, 11, 25 + yr + 215, 11, 0xFFFF00);
-				if (this.duelSettingsMagic) {
-					this.getSurface().drawBox(xr + 95, 215 + yr + 27, 7, 7, 0xFFFF00);
-				}
+                this.getSurface().drawBoxBorder(93 + xr, 11, 25 + yr + 215, 11, 0xFFFF00);
+                if (this.duelSettingsMagic) {
+                    this.getSurface().drawBox(xr + 95, 215 + yr + 27, 7, 7, 0xFFFF00);
+                }
 
-				this.getSurface().drawBoxBorder(191 + xr, 11, 6 + 215 + yr, 11, 0xFFFF00);
-				if (this.duelSettingsPrayer) {
-					this.getSurface().drawBox(xr + 193, 8 + yr + 215, 7, 7, 0xFFFF00);
-				}
-				this.getSurface().drawBoxBorder(xr + 191, 11, yr + 215 + 25, 11, 0xFFFF00);
-				if (this.duelSettingsWeapons) {
-					this.getSurface().drawBox(193 + xr, 215 + yr + 27, 7, 7, 0xFFFF00);
-				}
+                this.getSurface().drawBoxBorder(191 + xr, 11, 6 + 215 + yr, 11, 0xFFFF00);
+                if (this.duelSettingsPrayer) {
+                    this.getSurface().drawBox(xr + 193, 8 + yr + 215, 7, 7, 0xFFFF00);
+                }
+                this.getSurface().drawBoxBorder(xr + 191, 11, yr + 215 + 25, 11, 0xFFFF00);
+                if (this.duelSettingsWeapons) {
+                    this.getSurface().drawBox(193 + xr, 215 + yr + 27, 7, 7, 0xFFFF00);
+                }
 
-				if (!this.duelOfferAccepted) {
-					this.getSurface().drawSprite(spriteSelect(GUIPARTS.ACCEPTBUTTON.getDef()), 217 + xr, yr + 238);
-				}
+                if (!this.duelOfferAccepted) {
+                    this.getSurface().drawSprite(spriteSelect(GUIPARTS.ACCEPTBUTTON.getDef()), 217 + xr, yr + 238);
+                }
 
-				this.getSurface().drawSprite(spriteSelect(GUIPARTS.DECLINEBUTTON.getDef()), xr + 394, yr + 238);
-				if (this.duelOffsetOpponentAccepted) {
-					this.getSurface().drawColoredStringCentered(xr + 341, "Other player", 0xFFFFFF, 0, 1, 246 + yr);
-					this.getSurface().drawColoredStringCentered(341 + xr, "has accepted", 0xFFFFFF, 0, 1, 256 + yr);
-				}
+                this.getSurface().drawSprite(spriteSelect(GUIPARTS.DECLINEBUTTON.getDef()), xr + 394, yr + 238);
+                if (this.duelOffsetOpponentAccepted) {
+                    this.getSurface().drawColoredStringCentered(xr + 341, "Other player", 0xFFFFFF, 0, 1, 246 + yr);
+                    this.getSurface().drawColoredStringCentered(341 + xr, "has accepted", 0xFFFFFF, 0, 1, 256 + yr);
+                }
 
-				if (this.duelOfferAccepted) {
-					this.getSurface().drawColoredStringCentered(35 + 217 + xr, "Waiting for", 0xFFFFFF, 0, 1, yr + 246);
-					this.getSurface().drawColoredStringCentered(252 + xr, "other player", 0xFFFFFF, 0, 1, 256 + yr);
-				}
+                if (this.duelOfferAccepted) {
+                    this.getSurface().drawColoredStringCentered(35 + 217 + xr, "Waiting for", 0xFFFFFF, 0, 1, yr + 246);
+                    this.getSurface().drawColoredStringCentered(252 + xr, "other player", 0xFFFFFF, 0, 1, 256 + yr);
+                }
 
 
 
-				for (int itmOffer = 0; this.duelOfferItemCount > itmOffer; ++itmOffer) {
-					int xI = xr + 9 + itmOffer % 4 * 49;
-					int yI = yr + 31 + itmOffer / 4 * 34;
-					this.getSurface().drawSpriteClipping(
-						spriteSelect(EntityHandler.getItemDef(this.duelOfferItemID[itmOffer])),
-						xI, yI, 48, 32, EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]).getPictureMask(),
-						0, false, 0, 1);
+                for (int itmOffer = 0; this.duelOfferItemCount > itmOffer; ++itmOffer) {
+                    int xI = xr + 9 + itmOffer % 4 * 49;
+                    int yI = yr + 31 + itmOffer / 4 * 34;
+                    this.getSurface().drawSpriteClipping(
+                            spriteSelect(EntityHandler.getItemDef(this.duelOfferItemID[itmOffer])),
+                            xI, yI, 48, 32, EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]).getPictureMask(),
+                            0, false, 0, 1);
 
-					ItemDef def = EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]);
-					if (def.getNotedFormOf() >= 0) {
-						ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-						getSurface().drawSpriteClipping(spriteSelect(originalDef), xI + 7, yI + 4,
-							33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
-					}
+                    ItemDef def = EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]);
+                    if (def.getNotedFormOf() >= 0) {
+                        ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
+                        getSurface().drawSpriteClipping(spriteSelect(originalDef), xI + 7, yI + 4,
+                                33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
+                    }
 
-					if (EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]).isStackable()) {
-						this.getSurface().drawString("" + this.duelOfferItemSize[itmOffer], 1 + xI, 10 + yI, 0xFFFF00,
-							1);
-					}
+                    if (EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]).isStackable()) {
+                        this.getSurface().drawString("" + this.duelOfferItemSize[itmOffer], 1 + xI, 10 + yI, 0xFFFF00,
+                                1);
+                    }
 
-					if (xI < this.mouseX && this.mouseX < 48 + xI && yI < this.mouseY && 32 + yI > this.mouseY) {
-						this.getSurface().drawString(
-							EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]).getName() + ": @whi@"
-								+ EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]).getDescription(),
-							8 + xr, yr + 273, 0xFFFF00, 1);
-					}
-				}
+                    if (xI < this.mouseX && this.mouseX < 48 + xI && yI < this.mouseY && 32 + yI > this.mouseY) {
+                        this.getSurface().drawString(
+                                EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]).getName() + ": @whi@"
+                                        + EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]).getDescription(),
+                                8 + xr, yr + 273, 0xFFFF00, 1);
+                    }
+                }
 
-				for (int itmOffer = 0; itmOffer < this.duelOffsetOpponentItemCount; ++itmOffer) {
-					int xI = itmOffer % 4 * 49 + 9 + xr;
-					int yI = itmOffer / 4 * 34 + 124 + yr;
-					this.getSurface().drawSpriteClipping(
-						spriteSelect(EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer])),
-						xI, yI, 48, 32,
-						EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).getPictureMask(), 0, false, 0,
-						1);
+                for (int itmOffer = 0; itmOffer < this.duelOffsetOpponentItemCount; ++itmOffer) {
+                    int xI = itmOffer % 4 * 49 + 9 + xr;
+                    int yI = itmOffer / 4 * 34 + 124 + yr;
+                    this.getSurface().drawSpriteClipping(
+                            spriteSelect(EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer])),
+                            xI, yI, 48, 32,
+                            EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).getPictureMask(), 0, false, 0,
+                            1);
 
-					ItemDef def = EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]);
-					if (def.getNotedFormOf() >= 0) {
-						ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-						getSurface().drawSpriteClipping(spriteSelect(originalDef), xI + 7, yI + 4,
-							33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
-					}
+                    ItemDef def = EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]);
+                    if (def.getNotedFormOf() >= 0) {
+                        ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
+                        getSurface().drawSpriteClipping(spriteSelect(originalDef), xI + 7, yI + 4,
+                                33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
+                    }
 
-					if (EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).isStackable()) {
-						this.getSurface().drawString("" + this.duelOpponentItemCount[itmOffer], 1 + xI, 10 + yI,
-							0xFFFF00, 1);
-					}
+                    if (EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).isStackable()) {
+                        this.getSurface().drawString("" + this.duelOpponentItemCount[itmOffer], 1 + xI, 10 + yI,
+                                0xFFFF00, 1);
+                    }
 
-					if (this.mouseX > xI && 48 + xI > this.mouseX && yI < this.mouseY && this.mouseY < yI + 32) {
-						this.getSurface().drawString(
-							EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).getName() + ": @whi@"
-								+ EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).getDescription(),
-							xr + 8, 273 + yr, 0xFFFF00, 1);
-					}
-				}
+                    if (this.mouseX > xI && 48 + xI > this.mouseX && yI < this.mouseY && this.mouseY < yI + 32) {
+                        this.getSurface().drawString(
+                                EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).getName() + ": @whi@"
+                                        + EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).getDescription(),
+                                xr + 8, 273 + yr, 0xFFFF00, 1);
+                    }
+                }
 
-				if (this.menuDuel_Visible) {
-					this.menuDuel.render(this.menuDuelY, this.menuDuelX, this.mouseY, (byte) -12, this.mouseX);
-				}
+                if (this.menuDuel_Visible) {
+                    this.menuDuel.render(this.menuDuelY, this.menuDuelX, this.mouseY, (byte) -12, this.mouseX);
+                }
 
-			}
+            }
         } catch (RuntimeException var11) {
             throw GenUtil.makeThrowable(var11, "client.TD(" + "dummy" + ')');
         }
@@ -6880,240 +7010,240 @@ public final class mudclient implements Runnable {
     }
 
     // inventory right click menu definitions
-	private void drawUiTab1(int var1, boolean var2) {
-		try {
-			if (var1 != -15252) {
-				this.packetHandler.handlePacket2(-79, -83);
-			}
+    private void drawUiTab1(int var1, boolean var2) {
+        try {
+            if (var1 != -15252) {
+                this.packetHandler.handlePacket2(-79, -83);
+            }
 
-			int var3 = this.getSurface().width2 - 248;
-			int xOffset = var3;
-			this.getSurface().drawSprite(spriteSelect(GUIPARTS.BAGTAB.getDef()), var3, 3);
+            int var3 = this.getSurface().width2 - 248;
+            int xOffset = var3;
+            this.getSurface().drawSprite(spriteSelect(GUIPARTS.BAGTAB.getDef()), var3, 3);
 
-			int var4;
-			int var5;
-			int id;
-			int yOffset = 36;
+            int var4;
+            int var5;
+            int id;
+            int yOffset = 36;
 
-			if (this.tabEquipmentIndex == 0) //inventory tab
-			{
-				for (var4 = 0; this.m_cl > var4; ++var4) {
-					var5 = var3 + var4 % 5 * 49;
-					id = var4 / 5 * 34 + yOffset;
-					if (!S_WANT_EQUIPMENT_TAB && this.inventoryItemCount > var4 && this.inventoryItemEquipped[var4] == 1) {
-						this.getSurface().drawBoxAlpha(var5, id, 49, 34, 0xFF0000, 128);
-					} else {
-						this.getSurface().drawBoxAlpha(var5, id, 49, 34, GenUtil.buildColor(181, 181, 181), 128);
-					}
+            if (this.tabEquipmentIndex == 0) //inventory tab
+            {
+                for (var4 = 0; this.m_cl > var4; ++var4) {
+                    var5 = var3 + var4 % 5 * 49;
+                    id = var4 / 5 * 34 + yOffset;
+                    if (!S_WANT_EQUIPMENT_TAB && this.inventoryItemCount > var4 && this.inventoryItemEquipped[var4] == 1) {
+                        this.getSurface().drawBoxAlpha(var5, id, 49, 34, 0xFF0000, 128);
+                    } else {
+                        this.getSurface().drawBoxAlpha(var5, id, 49, 34, GenUtil.buildColor(181, 181, 181), 128);
+                    }
 
-					if (var4 < this.inventoryItemCount) {
-						this.getSurface().drawSpriteClipping(
-							spriteSelect(EntityHandler.getItemDef(this.inventoryItemID[var4])),
-							var5, id, 48, 32, EntityHandler.getItemDef(this.inventoryItemID[var4]).getPictureMask(), 0,
-							false, 0, var1 ^ -15251);
+                    if (var4 < this.inventoryItemCount) {
+                        this.getSurface().drawSpriteClipping(
+                                spriteSelect(EntityHandler.getItemDef(this.inventoryItemID[var4])),
+                                var5, id, 48, 32, EntityHandler.getItemDef(this.inventoryItemID[var4]).getPictureMask(), 0,
+                                false, 0, var1 ^ -15251);
 
-						ItemDef def = EntityHandler.getItemDef(this.inventoryItemID[var4]);
-						if (def.getNotedFormOf() >= 0) {
-							ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-							getSurface().drawSpriteClipping(spriteSelect(originalDef), var5 + 7,
-								id + 4, 33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
-						}
-						if (EntityHandler.getItemDef(this.inventoryItemID[var4]).isStackable()) {
-							this.getSurface().drawString("" + this.inventoryItemSize[var4], 1 + var5,
-								id + 10, 0xFFFF00, 1);
-						}
-					}
-				}
+                        ItemDef def = EntityHandler.getItemDef(this.inventoryItemID[var4]);
+                        if (def.getNotedFormOf() >= 0) {
+                            ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
+                            getSurface().drawSpriteClipping(spriteSelect(originalDef), var5 + 7,
+                                    id + 4, 33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
+                        }
+                        if (EntityHandler.getItemDef(this.inventoryItemID[var4]).isStackable()) {
+                            this.getSurface().drawString("" + this.inventoryItemSize[var4], 1 + var5,
+                                    id + 10, 0xFFFF00, 1);
+                        }
+                    }
+                }
 
-				for (var4 = 1; var4 <= 4; ++var4) {
-					this.getSurface().drawLineVert(var3 + var4 * 49, yOffset, 0, this.m_cl / 5 * 34);
-				}
+                for (var4 = 1; var4 <= 4; ++var4) {
+                    this.getSurface().drawLineVert(var3 + var4 * 49, yOffset, 0, this.m_cl / 5 * 34);
+                }
 
-				for (var4 = 1; this.m_cl / 5 - 1 >= var4; ++var4) {
-					this.getSurface().drawLineHoriz(var3, yOffset + var4 * 34, 245, 0);
-				}
-				if (var2) {
-					var3 = 248 + (this.mouseX - this.getSurface().width2);
-					var4 = this.mouseY - yOffset;
-					if (var3 >= 0 && var4 >= 0 && var3 < 248 && this.m_cl / 5 * 34 > var4) {
-						var5 = var4 / 34 * 5 + var3 / 49;
-						if (this.inventoryItemCount > var5) {
-							id = this.inventoryItemID[var5];
-							if (this.selectedSpell >= 0) {
-								if (EntityHandler.getSpellDef(selectedSpell).getSpellType() == 3) {
-									this.menuCommon.addCharacterItem_WithID(var5,
-										"@lre@" + EntityHandler.getItemDef(id).getName(),
-										MenuItemAction.ITEM_CAST_SPELL,
-										"Cast " + EntityHandler.getSpellDef(selectedSpell).getName() + " on",
-										this.selectedSpell);
-								}
-							} else if (this.selectedItemInventoryIndex < 0) {
-								if (this.inventoryItemEquipped[var5] == 1 && !S_WANT_EQUIPMENT_TAB) {
-									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_REMOVE_EQUIPPED, "Remove",
-										"@lre@" + EntityHandler.getItemDef(id).getName());
-								} else if (EntityHandler.getItemDef(id).wearableID != 0) {
-									String equipCommand;
-									if ((24 & EntityHandler.getItemDef(id).wearableID) == 0) {
-										equipCommand = "Wear";
-									} else {
-										equipCommand = "Wield";
-									}
+                for (var4 = 1; this.m_cl / 5 - 1 >= var4; ++var4) {
+                    this.getSurface().drawLineHoriz(var3, yOffset + var4 * 34, 245, 0);
+                }
+                if (var2) {
+                    var3 = 248 + (this.mouseX - this.getSurface().width2);
+                    var4 = this.mouseY - yOffset;
+                    if (var3 >= 0 && var4 >= 0 && var3 < 248 && this.m_cl / 5 * 34 > var4) {
+                        var5 = var4 / 34 * 5 + var3 / 49;
+                        if (this.inventoryItemCount > var5) {
+                            id = this.inventoryItemID[var5];
+                            if (this.selectedSpell >= 0) {
+                                if (EntityHandler.getSpellDef(selectedSpell).getSpellType() == 3) {
+                                    this.menuCommon.addCharacterItem_WithID(var5,
+                                            "@lre@" + EntityHandler.getItemDef(id).getName(),
+                                            MenuItemAction.ITEM_CAST_SPELL,
+                                            "Cast " + EntityHandler.getSpellDef(selectedSpell).getName() + " on",
+                                            this.selectedSpell);
+                                }
+                            } else if (this.selectedItemInventoryIndex < 0) {
+                                if (this.inventoryItemEquipped[var5] == 1 && !S_WANT_EQUIPMENT_TAB) {
+                                    this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_REMOVE_EQUIPPED, "Remove",
+                                            "@lre@" + EntityHandler.getItemDef(id).getName());
+                                } else if (EntityHandler.getItemDef(id).wearableID != 0) {
+                                    String equipCommand;
+                                    if ((24 & EntityHandler.getItemDef(id).wearableID) == 0) {
+                                        equipCommand = "Wear";
+                                    } else {
+                                        equipCommand = "Wield";
+                                    }
 
-									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_EQUIP, equipCommand,
-										"@lre@" + EntityHandler.getItemDef(id).getName());
-								}
+                                    this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_EQUIP, equipCommand,
+                                            "@lre@" + EntityHandler.getItemDef(id).getName());
+                                }
 
-								if (!EntityHandler.getItemDef(id).getCommand().equals("")
-									&& EntityHandler.getItemDef(id).getNotedFormOf() == -1) {
-									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_COMMAND,
-										EntityHandler.getItemDef(id).getCommand(),
-										"@lre@" + EntityHandler.getItemDef(id).getName());
-								}
+                                if (!EntityHandler.getItemDef(id).getCommand().equals("")
+                                        && EntityHandler.getItemDef(id).getNotedFormOf() == -1) {
+                                    this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_COMMAND,
+                                            EntityHandler.getItemDef(id).getCommand(),
+                                            "@lre@" + EntityHandler.getItemDef(id).getName());
+                                }
 
-								if (S_WANT_DROP_X && EntityHandler.getItemDef(id).getCommand().equals("Bury")
-									&& EntityHandler.getItemDef(id).getNotedFormOf() == -1) {
-									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_COMMAND_ALL,
-										//EntityHandler.getItemDef(id).getCommand(), -- generic label.
-										"Bury All",
-										"@lre@" + EntityHandler.getItemDef(id).getName());
-								}
+                                if (S_WANT_DROP_X && EntityHandler.getItemDef(id).getCommand().equals("Bury")
+                                        && EntityHandler.getItemDef(id).getNotedFormOf() == -1) {
+                                    this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_COMMAND_ALL,
+                                            //EntityHandler.getItemDef(id).getCommand(), -- generic label.
+                                            "Bury All",
+                                            "@lre@" + EntityHandler.getItemDef(id).getName());
+                                }
 
-								this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_USE, "Use",
-									"@lre@" + EntityHandler.getItemDef(id).getName());
-								this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP, "Drop",
-									"@lre@" + EntityHandler.getItemDef(id).getName());
-								if (S_WANT_DROP_X) {
-									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP_X, "Drop X",
-										"@lre@" + EntityHandler.getItemDef(id).getName());
-									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP_ALL, "Drop All",
-										"@lre@" + EntityHandler.getItemDef(id).getName());
-								}
-								this.menuCommon.addCharacterItem(id, MenuItemAction.ITEM_EXAMINE, "Examine",
-									"@lre@" + EntityHandler.getItemDef(id).getName()
-										+ (localPlayer.isDev() ? " @or1@(" + id + ")" : ""));
-							} else {
-								this.menuCommon.addCharacterItem_WithID(var5,
-									"@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.ITEM_USE_ITEM,
-									"Use " + this.m_ig + " with", this.selectedItemInventoryIndex);
-							}
-						}
-					}
+                                this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_USE, "Use",
+                                        "@lre@" + EntityHandler.getItemDef(id).getName());
+                                this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP, "Drop",
+                                        "@lre@" + EntityHandler.getItemDef(id).getName());
+                                if (S_WANT_DROP_X) {
+                                    this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP_X, "Drop X",
+                                            "@lre@" + EntityHandler.getItemDef(id).getName());
+                                    this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP_ALL, "Drop All",
+                                            "@lre@" + EntityHandler.getItemDef(id).getName());
+                                }
+                                this.menuCommon.addCharacterItem(id, MenuItemAction.ITEM_EXAMINE, "Examine",
+                                        "@lre@" + EntityHandler.getItemDef(id).getName()
+                                                + (localPlayer.isDev() ? " @or1@(" + id + ")" : ""));
+                            } else {
+                                this.menuCommon.addCharacterItem_WithID(var5,
+                                        "@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.ITEM_USE_ITEM,
+                                        "Use " + this.m_ig + " with", this.selectedItemInventoryIndex);
+                            }
+                        }
+                    }
 
-				}
-			} else if (this.tabEquipmentIndex == 1) //equipment tab
-			{
-				this.getSurface().drawBoxAlpha(xOffset, yOffset, 245, 204, this.clearBox, 128);
-				this.getSurface().drawBoxAlpha(xOffset, yOffset + 228, 245, 45, this.clearBox, 128);
-				Sprite todraw = null;
-				for (int i = 0; i < S_PLAYER_SLOT_COUNT; i++) {
-					if (this.equippedItems[i] == null) {
-						todraw = spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.EQUIPSLOT_HELM.id() + i));
-						this.getSurface().drawSpriteClipping(todraw
-							, xOffset + equipIconXLocations[i]
-							, yOffset + equipIconYLocations[i],
-							todraw.getWidth(), todraw.getHeight(),
-							0, 0, false, 0, var1 ^ -15251, 0x80FFFFFF);
-					} else {
-						todraw = spriteSelect(GUIPARTS.EQUIPSLOT_HIGHLIGHT.getDef());
-						this.getSurface().drawSpriteClipping(
-							todraw,
-							xOffset + equipIconXLocations[i],
-							yOffset + equipIconYLocations[i],
-							todraw.getWidth(), todraw.getHeight(),
-							equippedItems[i].getPictureMask(), 0, false, 0, var1 ^ -15251, 0xC0FFFFFF);
-						todraw = spriteSelect(equippedItems[i]);
-						this.getSurface().drawSpriteClipping(
-							todraw,
-							xOffset + equipIconXLocations[i],
-							yOffset + equipIconYLocations[i],
-							todraw.getSomething1(), todraw.getSomething2(),
-							equippedItems[i].getPictureMask(), 0, false, 0, var1 ^ -15251);
-						if (equippedItems[i].isStackable())
-							this.getSurface().drawString("" + equippedItemAmount[i],
-								xOffset + equipIconXLocations[i] + 2,
-								yOffset + equipIconYLocations[i] + 11, 0xFFFF00, 1);
-					}
-				}
-				for (int currSkill = 0; currSkill < 3; ++currSkill) {
-					this.getSurface().drawString(this.equipmentStatNames[currSkill] + ":@yel@" + this.playerStatEquipment[currSkill],
-						xOffset + 42, yOffset + 243 + currSkill * 13, 0xFFFFFF, 1);
-					if (2 > currSkill) {
-						this.getSurface().drawString(
-							this.equipmentStatNames[currSkill + 3] + ":@yel@" + this.playerStatEquipment[3 + currSkill],
-							244 / 2 + xOffset + 35, yOffset + 243 + currSkill * 13, 0xFFFFFF, 1);
-					}
-					this.getSurface().drawLineHoriz(xOffset, yOffset+228, 245, 0);
-				}
-				//handle equipment clicks
-				if ((this.mouseButtonClick == 1 || this.mouseButtonClick == 2) && this.mouseY > yOffset) {
-					for (int j = 0; j < S_PLAYER_SLOT_COUNT; j++) {
-						if (this.mouseX >= xOffset + equipIconXLocations[j] && this.mouseX < xOffset + equipIconXLocations[j] + 48) {
-							if (this.mouseY >= yOffset + equipIconYLocations[j] && this.mouseY < yOffset + equipIconYLocations[j] + 32) {
-								//Send a packet to the server to unequip the item.
-								if (equippedItems[j] != null) {
-									if (this.mouseButtonClick == 1 && !this.topMouseMenuVisible) {
-										this.packetHandler.getClientStream().newPacket(170);
-										this.packetHandler.getClientStream().writeBuffer1.putShort(equippedItems[j].id);
-										this.packetHandler.getClientStream().finishPacket();
-										break;
-									} else {
-										if (!equippedItems[j].getCommand().equalsIgnoreCase(""))
-											this.menuCommon.addCharacterItem(j, MenuItemAction.ITEM_COMMAND_EQUIPTAB, equippedItems[j].getCommand(),
-												"@lre@" + equippedItems[j].getName());
-										this.menuCommon.addCharacterItem(j, MenuItemAction.ITEM_USE_EQUIPTAB, "Use",
-											"@lre@" + equippedItems[j].getName());
-										this.menuCommon.addCharacterItem(equippedItems[j].id, MenuItemAction.ITEM_DROP_EQUIPTAB, "Drop",
-											"@lre@" + equippedItems[j].getName());
-										this.menuCommon.addCharacterItem(equippedItems[j].id, MenuItemAction.ITEM_EXAMINE, "Examine",
-											"@lre@" + equippedItems[j].getName()
-												+ (localPlayer.isDev() ? " @or1@(" + equippedItems[j].id + ")" : ""));
-										break;
-									}
+                }
+            } else if (this.tabEquipmentIndex == 1) //equipment tab
+            {
+                this.getSurface().drawBoxAlpha(xOffset, yOffset, 245, 204, this.clearBox, 128);
+                this.getSurface().drawBoxAlpha(xOffset, yOffset + 228, 245, 45, this.clearBox, 128);
+                Sprite todraw = null;
+                for (int i = 0; i < S_PLAYER_SLOT_COUNT; i++) {
+                    if (this.equippedItems[i] == null) {
+                        todraw = spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.EQUIPSLOT_HELM.id() + i));
+                        this.getSurface().drawSpriteClipping(todraw
+                                , xOffset + equipIconXLocations[i]
+                                , yOffset + equipIconYLocations[i],
+                                todraw.getWidth(), todraw.getHeight(),
+                                0, 0, false, 0, var1 ^ -15251, 0x80FFFFFF);
+                    } else {
+                        todraw = spriteSelect(GUIPARTS.EQUIPSLOT_HIGHLIGHT.getDef());
+                        this.getSurface().drawSpriteClipping(
+                                todraw,
+                                xOffset + equipIconXLocations[i],
+                                yOffset + equipIconYLocations[i],
+                                todraw.getWidth(), todraw.getHeight(),
+                                0, 0, false, 0, var1 ^ -15251, 0xC0FFFFFF);
+                        todraw = spriteSelect(equippedItems[i]);
+                        this.getSurface().drawSpriteClipping(
+                                todraw,
+                                xOffset + equipIconXLocations[i],
+                                yOffset + equipIconYLocations[i],
+                                todraw.getSomething1(), todraw.getSomething2(),
+                                equippedItems[i].getPictureMask(), 0, false, 0, var1 ^ -15251);
+                        if (equippedItems[i].isStackable())
+                            this.getSurface().drawString("" + equippedItemAmount[i],
+                                    xOffset + equipIconXLocations[i] + 2,
+                                    yOffset + equipIconYLocations[i] + 11, 0xFFFF00, 1);
+                    }
+                }
+                for (int currSkill = 0; currSkill < 3; ++currSkill) {
+                    this.getSurface().drawString(this.equipmentStatNames[currSkill] + ":@yel@" + this.playerStatEquipment[currSkill],
+                            xOffset + 42, yOffset + 243 + currSkill * 13, 0xFFFFFF, 1);
+                    if (2 > currSkill) {
+                        this.getSurface().drawString(
+                                this.equipmentStatNames[currSkill + 3] + ":@yel@" + this.playerStatEquipment[3 + currSkill],
+                                244 / 2 + xOffset + 35, yOffset + 243 + currSkill * 13, 0xFFFFFF, 1);
+                    }
+                    this.getSurface().drawLineHoriz(xOffset, yOffset + 228, 245, 0);
+                }
+                //handle equipment clicks
+                if ((this.mouseButtonClick == 1 || this.mouseButtonClick == 2) && this.mouseY > yOffset) {
+                    for (int j = 0; j < S_PLAYER_SLOT_COUNT; j++) {
+                        if (this.mouseX >= xOffset + equipIconXLocations[j] && this.mouseX < xOffset + equipIconXLocations[j] + 48) {
+                            if (this.mouseY >= yOffset + equipIconYLocations[j] && this.mouseY < yOffset + equipIconYLocations[j] + 32) {
+                                //Send a packet to the server to unequip the item.
+                                if (equippedItems[j] != null) {
+                                    if (this.mouseButtonClick == 1 && !this.topMouseMenuVisible) {
+                                        this.packetHandler.getClientStream().newPacket(170);
+                                        this.packetHandler.getClientStream().writeBuffer1.putShort(equippedItems[j].id);
+                                        this.packetHandler.getClientStream().finishPacket();
+                                        break;
+                                    } else {
+                                        if (!equippedItems[j].getCommand().equalsIgnoreCase(""))
+                                            this.menuCommon.addCharacterItem(j, MenuItemAction.ITEM_COMMAND_EQUIPTAB, equippedItems[j].getCommand(),
+                                                    "@lre@" + equippedItems[j].getName());
+                                        this.menuCommon.addCharacterItem(j, MenuItemAction.ITEM_USE_EQUIPTAB, "Use",
+                                                "@lre@" + equippedItems[j].getName());
+                                        this.menuCommon.addCharacterItem(equippedItems[j].id, MenuItemAction.ITEM_DROP_EQUIPTAB, "Drop",
+                                                "@lre@" + equippedItems[j].getName());
+                                        this.menuCommon.addCharacterItem(equippedItems[j].id, MenuItemAction.ITEM_EXAMINE, "Examine",
+                                                "@lre@" + equippedItems[j].getName()
+                                                        + (localPlayer.isDev() ? " @or1@(" + equippedItems[j].id + ")" : ""));
+                                        break;
+                                    }
 
-								}
-							}
-						}
+                                }
+                            }
+                        }
 
-					}
-				}
+                    }
+                }
 
-			}
+            }
 
-			if (S_WANT_EQUIPMENT_TAB) {
+            if (S_WANT_EQUIPMENT_TAB) {
 
-				yOffset += 228;
-				this.getSurface().drawBoxAlpha(xOffset, yOffset-24, 122, 24, this.tabEquipmentIndex == 1 ? selectedBox : clearBox, 128);
-				this.getSurface().drawBoxAlpha(xOffset + 122, yOffset-24, 123, 24, this.tabEquipmentIndex == 0 ? selectedBox : clearBox, 128);
-				this.getSurface().drawColoredStringCentered(xOffset + 60, "Equipment", 0, 0, 4, yOffset - 7);
-				this.getSurface().drawColoredStringCentered(xOffset + 183, "Inventory", 0, 0, 4, yOffset - 7);
+                yOffset += 228;
+                this.getSurface().drawBoxAlpha(xOffset, yOffset - 24, 122, 24, this.tabEquipmentIndex == 1 ? selectedBox : clearBox, 128);
+                this.getSurface().drawBoxAlpha(xOffset + 122, yOffset - 24, 123, 24, this.tabEquipmentIndex == 0 ? selectedBox : clearBox, 128);
+                this.getSurface().drawColoredStringCentered(xOffset + 60, "Equipment", 0, 0, 4, yOffset - 7);
+                this.getSurface().drawColoredStringCentered(xOffset + 183, "Inventory", 0, 0, 4, yOffset - 7);
 
-				this.getSurface().drawLineHoriz(xOffset, yOffset-24, 245, 0);
-				this.getSurface().drawLineVert(xOffset + 122, yOffset-24, 0, 24);
+                this.getSurface().drawLineHoriz(xOffset, yOffset - 24, 245, 0);
+                this.getSurface().drawLineVert(xOffset + 122, yOffset - 24, 0, 24);
 
-				//Handle ui clicks
-				if (this.mouseButtonClick == 1) {
-					if (this.mouseX >= xOffset) {
-						if (this.mouseY <= yOffset) {
-							if (this.mouseY >= yOffset-24) {
-								if (this.mouseX <= xOffset + 245) {
-									if (this.tabEquipmentIndex == 0) {
-										if (this.mouseX < xOffset + 122)
-											this.tabEquipmentIndex = 1;
-									} else if (this.tabEquipmentIndex == 1) {
-										if (this.mouseX >= xOffset + 122)
-											this.tabEquipmentIndex = 0;
-									}
-								}
-							}
-						}
-					}
-				}
-			}
+                //Handle ui clicks
+                if (this.mouseButtonClick == 1) {
+                    if (this.mouseX >= xOffset) {
+                        if (this.mouseY <= yOffset) {
+                            if (this.mouseY >= yOffset - 24) {
+                                if (this.mouseX <= xOffset + 245) {
+                                    if (this.tabEquipmentIndex == 0) {
+                                        if (this.mouseX < xOffset + 122)
+                                            this.tabEquipmentIndex = 1;
+                                    } else if (this.tabEquipmentIndex == 1) {
+                                        if (this.mouseX >= xOffset + 122)
+                                            this.tabEquipmentIndex = 0;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
-		} catch (RuntimeException var8) {
-			throw GenUtil.makeThrowable(var8, "client.EB(" + var1 + ',' + var2 + ')');
-		}
-	}
+        } catch (RuntimeException var8) {
+            throw GenUtil.makeThrowable(var8, "client.EB(" + var1 + ',' + var2 + ')');
+        }
+    }
 
     // social tab
     private void drawUiTab5(boolean var1, boolean var2) {
@@ -9376,171 +9506,171 @@ public final class mudclient implements Runnable {
         }
     }
 
-	private void duelRemoveItem(int itemIndex, int removeCount) {
-		try {
+    private void duelRemoveItem(int itemIndex, int removeCount) {
+        try {
 
-			int itemID = this.duelOfferItemID[itemIndex];
-			int count = removeCount >= 0 ? removeCount : this.mouseButtonItemCountIncrement;
-			if (EntityHandler.getItemDef(itemID).isStackable()) {
-				this.duelOfferItemSize[itemIndex] -= count;
-				if (this.duelOfferItemSize[itemIndex] <= 0) {
-					--this.duelOfferItemCount;
+            int itemID = this.duelOfferItemID[itemIndex];
+            int count = removeCount >= 0 ? removeCount : this.mouseButtonItemCountIncrement;
+            if (EntityHandler.getItemDef(itemID).isStackable()) {
+                this.duelOfferItemSize[itemIndex] -= count;
+                if (this.duelOfferItemSize[itemIndex] <= 0) {
+                    --this.duelOfferItemCount;
 
-					for (int i = itemIndex; i < this.duelOfferItemCount; ++i) {
-						this.duelOfferItemID[i] = this.duelOfferItemID[i + 1];
-						this.duelOfferItemSize[i] = this.duelOfferItemSize[i + 1];
-					}
-				}
-			} else {
-				int removed = 0;
+                    for (int i = itemIndex; i < this.duelOfferItemCount; ++i) {
+                        this.duelOfferItemID[i] = this.duelOfferItemID[i + 1];
+                        this.duelOfferItemSize[i] = this.duelOfferItemSize[i + 1];
+                    }
+                }
+            } else {
+                int removed = 0;
 
-				for (int j = 0; j < this.duelOfferItemCount && removed < count; ++j) {
-					if (this.duelOfferItemID[j] == itemID) {
-						--this.duelOfferItemCount;
-						++removed;
+                for (int j = 0; j < this.duelOfferItemCount && removed < count; ++j) {
+                    if (this.duelOfferItemID[j] == itemID) {
+                        --this.duelOfferItemCount;
+                        ++removed;
 
-						for (int i = j; this.duelOfferItemCount > i; ++i) {
-							this.duelOfferItemID[i] = this.duelOfferItemID[1 + i];
-							this.duelOfferItemSize[i] = this.duelOfferItemSize[1 + i];
-						}
+                        for (int i = j; this.duelOfferItemCount > i; ++i) {
+                            this.duelOfferItemID[i] = this.duelOfferItemID[1 + i];
+                            this.duelOfferItemSize[i] = this.duelOfferItemSize[1 + i];
+                        }
 
-						--j;
-					}
-				}
-			}
+                        --j;
+                    }
+                }
+            }
 
-			this.packetHandler.getClientStream().newPacket(33);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(this.duelOfferItemCount);
+            this.packetHandler.getClientStream().newPacket(33);
+            this.packetHandler.getClientStream().writeBuffer1.putByte(this.duelOfferItemCount);
 
-			for (int i = 0; this.duelOfferItemCount > i; ++i) {
-				this.packetHandler.getClientStream().writeBuffer1.putShort(this.duelOfferItemID[i]);
-				this.packetHandler.getClientStream().writeBuffer1.putInt(this.duelOfferItemSize[i]);
-			}
+            for (int i = 0; this.duelOfferItemCount > i; ++i) {
+                this.packetHandler.getClientStream().writeBuffer1.putShort(this.duelOfferItemID[i]);
+                this.packetHandler.getClientStream().writeBuffer1.putInt(this.duelOfferItemSize[i]);
+            }
 
-			this.packetHandler.getClientStream().finishPacket();
-			this.duelOfferAccepted = false;
-			this.duelOffsetOpponentAccepted = false;
-		} catch (RuntimeException var9) {
-			throw GenUtil.makeThrowable(var9, "client.IC(" + itemIndex + ',' + removeCount + ',' + "dummy" + ')');
-		}
-	}
+            this.packetHandler.getClientStream().finishPacket();
+            this.duelOfferAccepted = false;
+            this.duelOffsetOpponentAccepted = false;
+        } catch (RuntimeException var9) {
+            throw GenUtil.makeThrowable(var9, "client.IC(" + itemIndex + ',' + removeCount + ',' + "dummy" + ')');
+        }
+    }
 
-	private void duelStakeItem(int andStakeCount, int andStakeInvIndex) {
-		try {
-			boolean andStakeSuccess = false;
+    private void duelStakeItem(int andStakeCount, int andStakeInvIndex) {
+        try {
+            boolean andStakeSuccess = false;
 
-			int hitStakeStacks = 0;
-			int[] itemIdArray, itemAmountArray;
-			Object[] thang = getEquipmentItems();
-			if (stakeOfferEquipMode) {
-				itemIdArray = ((int[])thang[0]);
-				itemAmountArray = ((int[])thang[1]);
-				if (andStakeInvIndex >= itemIdArray.length)
-					return;
-			} else {
-				itemIdArray = this.inventoryItemID;
-				itemAmountArray = this.inventoryItemSize;
+            int hitStakeStacks = 0;
+            int[] itemIdArray, itemAmountArray;
+            Object[] thang = getEquipmentItems();
+            if (stakeOfferEquipMode) {
+                itemIdArray = ((int[])thang[0]);
+                itemAmountArray = ((int[])thang[1]);
+                if (andStakeInvIndex >= itemIdArray.length)
+                    return;
+            } else {
+                itemIdArray = this.inventoryItemID;
+                itemAmountArray = this.inventoryItemSize;
 
-			}
-			int invCount = this.getInventoryCount(itemIdArray[andStakeInvIndex]);
-			if (S_WANT_EQUIPMENT_TAB) {
-				for (int itemid : ((int[])thang[0])) {
-					if (itemid == itemIdArray[andStakeInvIndex]) {
-						invCount++;
-						break;
-					}
-				}
-			}
+            }
+            int invCount = this.getInventoryCount(itemIdArray[andStakeInvIndex]);
+            if (S_WANT_EQUIPMENT_TAB) {
+                for (int itemid : ((int[])thang[0])) {
+                    if (itemid == itemIdArray[andStakeInvIndex]) {
+                        invCount++;
+                        break;
+                    }
+                }
+            }
 
-			int andStakeInvID = itemIdArray[andStakeInvIndex];
-			if (S_WANT_EQUIPMENT_TAB && EntityHandler.getItemDef(andStakeInvID).isStackable() && stakeOfferEquipMode) {
-				this.showMessage(false, null, "You can't stake stackables from your equipment.",MessageType.GAME,0,null);
-				return;
-			}
-
-
-			for (int duelIdx = 0; duelIdx < this.duelOfferItemCount; ++duelIdx) {
-				if (this.duelOfferItemID[duelIdx] == andStakeInvID) {
-					if (EntityHandler.getItemDef(andStakeInvID).isStackable()) {
-						if (andStakeCount < 0) {
-							for (int invIdx = 0; invIdx < this.mouseButtonItemCountIncrement; ++invIdx) {
-								if (this.duelOfferItemSize[duelIdx] < itemAmountArray[andStakeInvIndex]) {
-									++this.duelOfferItemSize[duelIdx];
-								}
-
-								andStakeSuccess = true;
-							}
-						} else {
-							this.duelOfferItemSize[duelIdx] += andStakeCount;
-							if (itemAmountArray[andStakeInvIndex] < this.duelOfferItemSize[duelIdx]) {
-								this.duelOfferItemSize[duelIdx] = itemAmountArray[andStakeInvIndex];
-							}
-
-							andStakeSuccess = true;
-						}
-					} else {
-						++hitStakeStacks;
-					}
-				}
-			}
+            int andStakeInvID = itemIdArray[andStakeInvIndex];
+            if (S_WANT_EQUIPMENT_TAB && EntityHandler.getItemDef(andStakeInvID).isStackable() && stakeOfferEquipMode) {
+                this.showMessage(false, null, "You can't stake stackables from your equipment.",MessageType.GAME,0,null);
+                return;
+            }
 
 
+            for (int duelIdx = 0; duelIdx < this.duelOfferItemCount; ++duelIdx) {
+                if (this.duelOfferItemID[duelIdx] == andStakeInvID) {
+                    if (EntityHandler.getItemDef(andStakeInvID).isStackable()) {
+                        if (andStakeCount < 0) {
+                            for (int invIdx = 0; invIdx < this.mouseButtonItemCountIncrement; ++invIdx) {
+                                if (this.duelOfferItemSize[duelIdx] < itemAmountArray[andStakeInvIndex]) {
+                                    ++this.duelOfferItemSize[duelIdx];
+                                }
 
-			if (hitStakeStacks >= invCount) {
-				andStakeSuccess = true;
-			}
+                                andStakeSuccess = true;
+                            }
+                        } else {
+                            this.duelOfferItemSize[duelIdx] += andStakeCount;
+                            if (itemAmountArray[andStakeInvIndex] < this.duelOfferItemSize[duelIdx]) {
+                                this.duelOfferItemSize[duelIdx] = itemAmountArray[andStakeInvIndex];
+                            }
 
-			if (EntityHandler.getItemDef(andStakeInvID).quest && !localPlayer.isAdmin()) {
-				andStakeSuccess = true;
-				this.showMessage(false, null, "This object cannot be added to a duel offer", MessageType.GAME,
-					0, null);
-			}
+                            andStakeSuccess = true;
+                        }
+                    } else {
+                        ++hitStakeStacks;
+                    }
+                }
+            }
 
-			if (!andStakeSuccess) {
-				if (andStakeCount < 0) {
-					if (this.duelOfferItemCount < 8) {
-						this.duelOfferItemID[this.duelOfferItemCount] = andStakeInvID;
-						this.duelOfferItemSize[this.duelOfferItemCount] = 1;
-						++this.duelOfferItemCount;
-						andStakeSuccess = true;
-					}
-				} else {
-					for (int var8 = 0; andStakeCount > var8 && this.duelOfferItemCount < 8
-						&& hitStakeStacks < invCount; ++var8) {
-						this.duelOfferItemID[this.duelOfferItemCount] = andStakeInvID;
-						this.duelOfferItemSize[this.duelOfferItemCount] = 1;
-						++hitStakeStacks;
-						++this.duelOfferItemCount;
-						andStakeSuccess = true;
-						if (var8 == 0 && EntityHandler.getItemDef(andStakeInvID).isStackable()) {
-							this.duelOfferItemSize[this.duelOfferItemCount
-								- 1] = itemAmountArray[andStakeInvIndex] < andStakeCount
-								? itemAmountArray[andStakeInvIndex] : andStakeCount;
-							break;
-						}
-					}
-				}
-			}
 
-			if (andStakeSuccess) {
-				this.packetHandler.getClientStream().newPacket(33);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.duelOfferItemCount);
 
-				for (int i = 0; this.duelOfferItemCount > i; ++i) {
-					this.packetHandler.getClientStream().writeBuffer1.putShort(this.duelOfferItemID[i]);
-					this.packetHandler.getClientStream().writeBuffer1.putInt(this.duelOfferItemSize[i]);
-				}
+            if (hitStakeStacks >= invCount) {
+                andStakeSuccess = true;
+            }
 
-				this.packetHandler.getClientStream().finishPacket();
-				this.duelOffsetOpponentAccepted = false;
-				this.duelOfferAccepted = false;
-			}
+            if (EntityHandler.getItemDef(andStakeInvID).quest && !localPlayer.isAdmin()) {
+                andStakeSuccess = true;
+                this.showMessage(false, null, "This object cannot be added to a duel offer", MessageType.GAME,
+                        0, null);
+            }
 
-		} catch (RuntimeException var9) {
-			throw GenUtil.makeThrowable(var9,
-				"client.C(" + "dummy" + ',' + andStakeCount + ',' + andStakeInvIndex + ')');
-		}
-	}
+            if (!andStakeSuccess) {
+                if (andStakeCount < 0) {
+                    if (this.duelOfferItemCount < 8) {
+                        this.duelOfferItemID[this.duelOfferItemCount] = andStakeInvID;
+                        this.duelOfferItemSize[this.duelOfferItemCount] = 1;
+                        ++this.duelOfferItemCount;
+                        andStakeSuccess = true;
+                    }
+                } else {
+                    for (int var8 = 0; andStakeCount > var8 && this.duelOfferItemCount < 8
+                            && hitStakeStacks < invCount; ++var8) {
+                        this.duelOfferItemID[this.duelOfferItemCount] = andStakeInvID;
+                        this.duelOfferItemSize[this.duelOfferItemCount] = 1;
+                        ++hitStakeStacks;
+                        ++this.duelOfferItemCount;
+                        andStakeSuccess = true;
+                        if (var8 == 0 && EntityHandler.getItemDef(andStakeInvID).isStackable()) {
+                            this.duelOfferItemSize[this.duelOfferItemCount
+                                    - 1] = itemAmountArray[andStakeInvIndex] < andStakeCount
+                                    ? itemAmountArray[andStakeInvIndex] : andStakeCount;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (andStakeSuccess) {
+                this.packetHandler.getClientStream().newPacket(33);
+                this.packetHandler.getClientStream().writeBuffer1.putByte(this.duelOfferItemCount);
+
+                for (int i = 0; this.duelOfferItemCount > i; ++i) {
+                    this.packetHandler.getClientStream().writeBuffer1.putShort(this.duelOfferItemID[i]);
+                    this.packetHandler.getClientStream().writeBuffer1.putInt(this.duelOfferItemSize[i]);
+                }
+
+                this.packetHandler.getClientStream().finishPacket();
+                this.duelOffsetOpponentAccepted = false;
+                this.duelOfferAccepted = false;
+            }
+
+        } catch (RuntimeException var9) {
+            throw GenUtil.makeThrowable(var9,
+                    "client.C(" + "dummy" + ',' + andStakeCount + ',' + andStakeInvIndex + ')');
+        }
+    }
 
     private void fetchContainerSize() {
         try {
@@ -10475,8 +10605,8 @@ public final class mudclient implements Runnable {
                         auctionHouse.keyDown(key);
                         return;
                     }
-					if (S_WANT_CUSTOM_BANKS && this.isShowDialogBank() && this.combatTimeout == 0) {
-						bank.keyDown(key);
+                    if (S_WANT_CUSTOM_BANKS && this.isShowDialogBank() && this.combatTimeout == 0) {
+                        bank.keyDown(key);
                         return;
                     }
                     if (clan.getClanInterface().isVisible() && (clan.getClanInterface().clanSetupPanel.focusOn(clan.getClanInterface().clanName_field)
@@ -10513,7 +10643,6 @@ public final class mudclient implements Runnable {
                         this.panelMessageTabs.keyPress(key);
                     }
                 }
-
             }
         } catch (RuntimeException var4) {
             throw GenUtil.makeThrowable(var4, "client.AD(" + var1 + ',' + key + ')');
@@ -10951,13 +11080,13 @@ public final class mudclient implements Runnable {
                     break;
                 }
                 case GROUND_ITEM_USE_ITEM: {
-					if (S_WANT_EQUIPMENT_TAB && tileID > S_PLAYER_INVENTORY_SLOTS) {
-						//they used an item from the equiptab on the ground item - we don't want to handle this yet.
-						this.showMessage(false, null, "Please unequip your item and try again.",
-							MessageType.GAME, 0, null);
-						return;
-					}
-					this.walkToGroundItem(this.playerLocalX, this.playerLocalZ, indexOrX, idOrZ, true);
+                    if (S_WANT_EQUIPMENT_TAB && tileID > S_PLAYER_INVENTORY_SLOTS) {
+                        //they used an item from the equiptab on the ground item - we don't want to handle this yet.
+                        this.showMessage(false, null, "Please unequip your item and try again.",
+                                MessageType.GAME, 0, null);
+                        return;
+                    }
+                    this.walkToGroundItem(this.playerLocalX, this.playerLocalZ, indexOrX, idOrZ, true);
                     this.packetHandler.getClientStream().newPacket(53);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseX + indexOrX);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + idOrZ);
@@ -11012,11 +11141,11 @@ public final class mudclient implements Runnable {
                     this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX + this.midRegionBaseX);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ + this.midRegionBaseZ);
                     this.packetHandler.getClientStream().writeBuffer1.putByte(dir);
-					if (tileID > S_PLAYER_INVENTORY_SLOTS) {
-						this.packetHandler.getClientStream().writeBuffer1.putShort(0xFFFF);
-						this.packetHandler.getClientStream().writeBuffer1.putShort(equippedItems[tileID-S_PLAYER_INVENTORY_SLOTS].id);
-					} else
-						this.packetHandler.getClientStream().writeBuffer1.putShort(tileID);
+                    if (tileID > S_PLAYER_INVENTORY_SLOTS) {
+                        this.packetHandler.getClientStream().writeBuffer1.putShort(0xFFFF);
+                        this.packetHandler.getClientStream().writeBuffer1.putShort(equippedItems[tileID - S_PLAYER_INVENTORY_SLOTS].id);
+                    } else
+                        this.packetHandler.getClientStream().writeBuffer1.putShort(tileID);
                     this.packetHandler.getClientStream().finishPacket();
                     this.selectedItemInventoryIndex = -1;
                     break;
@@ -11098,16 +11227,16 @@ public final class mudclient implements Runnable {
                     break;
                 }
                 case ITEM_USE_ITEM: {
-					if (S_WANT_EQUIPMENT_TAB && (indexOrX > S_PLAYER_INVENTORY_SLOTS || idOrZ > S_PLAYER_INVENTORY_SLOTS)) {
-						//they used an item from the equiptab on the item - we don't want to handle this yet.
-						this.showMessage(false, null, "Please unequip your item and try again.",
-							MessageType.GAME, 0, null);
-						return;
-					}
-
-					this.packetHandler.getClientStream().newPacket(91);
+                    if (S_WANT_EQUIPMENT_TAB && (indexOrX > S_PLAYER_INVENTORY_SLOTS || idOrZ > S_PLAYER_INVENTORY_SLOTS)) {
+                        //they used an item from the equiptab on the item - we don't want to handle this yet.
+                        this.showMessage(false, null, "Please unequip your item and try again.",
+                                MessageType.GAME, 0, null);
+                        return;
+                    }
+                    this.packetHandler.getClientStream().newPacket(91);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ);
+
                     this.packetHandler.getClientStream().finishPacket();
                     this.selectedItemInventoryIndex = -1;
                     break;
@@ -11140,34 +11269,33 @@ public final class mudclient implements Runnable {
                     this.packetHandler.getClientStream().finishPacket();
                     break;
                 }
-				case ITEM_COMMAND_EQUIPTAB: {
-					int commandQuantity = 1;
-					this.packetHandler.getClientStream().newPacket(90);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(0xFFFF);
-					this.packetHandler.getClientStream().writeBuffer1.putInt(commandQuantity);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(equippedItems[indexOrX].id);
-					this.packetHandler.getClientStream().finishPacket();
-					break;
-				}
-				case ITEM_USE: {
+                case ITEM_COMMAND_EQUIPTAB: {
+                    int commandQuantity = 1;
+                    this.packetHandler.getClientStream().newPacket(90);
+                    this.packetHandler.getClientStream().writeBuffer1.putShort(0xFFFF);
+                    this.packetHandler.getClientStream().writeBuffer1.putInt(commandQuantity);
+                    this.packetHandler.getClientStream().writeBuffer1.putShort(equippedItems[indexOrX].id);
+                    this.packetHandler.getClientStream().finishPacket();
+                    break;
+                }
+                case ITEM_USE: {
                     this.selectedItemInventoryIndex = indexOrX;
                     if (!isAndroid())
                         this.showUiTab = 0;
-					this.m_ig = EntityHandler.getItemDef(this.inventoryItemID[this.selectedItemInventoryIndex]).getName();
-					break;
+                    this.m_ig = EntityHandler.getItemDef(this.inventoryItemID[this.selectedItemInventoryIndex]).getName();
+                    break;
                 }
-				case ITEM_USE_EQUIPTAB: {
-					this.selectedItemInventoryIndex = indexOrX + S_PLAYER_INVENTORY_SLOTS;
-					if (!isAndroid())
-						this.showUiTab = 0;
-					this.m_ig = equippedItems[indexOrX].getName();
-					break;
-				}
-				case ITEM_DROP: {
+                case ITEM_USE_EQUIPTAB:
+                    this.selectedItemInventoryIndex = indexOrX + S_PLAYER_INVENTORY_SLOTS;
+                    if (!isAndroid())
+                        this.showUiTab = 0;
+                    this.m_ig = equippedItems[indexOrX].getName();
+                    break;
+                case ITEM_DROP: {
                     this.packetHandler.getClientStream().newPacket(246);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
-					int amount = this.inventoryItemSize[indexOrX];
-					this.packetHandler.getClientStream().writeBuffer1.putInt(amount);
+                    int amount = this.inventoryItemSize[indexOrX];
+                    this.packetHandler.getClientStream().writeBuffer1.putInt(amount);
                     this.packetHandler.getClientStream().finishPacket();
                     if (!isAndroid())
                         this.showUiTab = 0;
@@ -11198,25 +11326,24 @@ public final class mudclient implements Runnable {
                                 MessageType.INVENTORY, 0, null);
                     break;
                 }
-				case ITEM_DROP_EQUIPTAB: {
-					this.packetHandler.getClientStream().newPacket(246);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(0xFFFF);
-					int slot;
-					for (slot = 0; slot < S_PLAYER_SLOT_COUNT; slot++)
-					{
-						if (equippedItems[slot] != null && equippedItems[slot].id == indexOrX)
-							break;
-					}
-					int amount = this.equippedItemAmount[slot];
-					this.packetHandler.getClientStream().writeBuffer1.putInt(amount);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
-					this.packetHandler.getClientStream().finishPacket();
-					this.showMessage(false, null,
-						"Dropping " + this.equippedItems[slot].getName(),
-						MessageType.INVENTORY, 0, null);
-					break;
-				}
-				case NPC_CAST_SPELL: {
+                case ITEM_DROP_EQUIPTAB: {
+                    this.packetHandler.getClientStream().newPacket(246);
+                    this.packetHandler.getClientStream().writeBuffer1.putShort(0xFFFF);
+                    int slot;
+                    for (slot = 0; slot < S_PLAYER_SLOT_COUNT; slot++) {
+                        if (equippedItems[slot] != null && equippedItems[slot].id == indexOrX)
+                            break;
+                    }
+                    int amount = this.equippedItemAmount[slot];
+                    this.packetHandler.getClientStream().writeBuffer1.putInt(amount);
+                    this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+                    this.packetHandler.getClientStream().finishPacket();
+                    this.showMessage(false, null,
+                            "Dropping " + this.equippedItems[slot].getName(),
+                            MessageType.INVENTORY, 0, null);
+                    break;
+                }
+                case NPC_CAST_SPELL: {
                     character = this.getServerNPC(indexOrX);
                     if (character == null) {
                         return;
@@ -11237,13 +11364,13 @@ public final class mudclient implements Runnable {
                     if (character == null) {
                         return;
                     }
-					if (S_WANT_EQUIPMENT_TAB && idOrZ > S_PLAYER_INVENTORY_SLOTS) {
-						//they used an item from the equiptab on the npc - we don't want to handle this yet.
-						this.showMessage(false, null, "Please unequip your item and try again.",
-							MessageType.GAME, 0, null);
-						return;
-					}
-					cTileX = (character.currentX - 64) / this.tileSize;
+                    if (S_WANT_EQUIPMENT_TAB && idOrZ > S_PLAYER_INVENTORY_SLOTS) {
+                        //they used an item from the equiptab on the npc - we don't want to handle this yet.
+                        this.showMessage(false, null, "Please unequip your item and try again.",
+                                MessageType.GAME, 0, null);
+                        return;
+                    }
+                    cTileX = (character.currentX - 64) / this.tileSize;
                     cTileZ = (character.currentZ - 64) / this.tileSize;
                     this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, cTileZ, true);
                     this.packetHandler.getClientStream().newPacket(135);
@@ -11332,13 +11459,13 @@ public final class mudclient implements Runnable {
                     if (character == null) {
                         return;
                     }
-					if (S_WANT_EQUIPMENT_TAB && idOrZ > S_PLAYER_INVENTORY_SLOTS) {
-						//they used an item from their equipment tab on a player- don't handle this yet
-						this.showMessage(false, null, "Please unequip your item and try again.",
-							MessageType.GAME, 0, null);
-						return;
-					}
-					cTileX = (character.currentX - 64) / this.tileSize;
+                    if (S_WANT_EQUIPMENT_TAB && idOrZ > S_PLAYER_INVENTORY_SLOTS) {
+                        //they used an item from their equipment tab on a player- don't handle this yet
+                        this.showMessage(false, null, "Please unequip your item and try again.",
+                                MessageType.GAME, 0, null);
+                        return;
+                    }
+                    cTileX = (character.currentX - 64) / this.tileSize;
                     cTileZ = (character.currentZ - 64) / this.tileSize;
                     this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, cTileZ, true);
                     this.packetHandler.getClientStream().newPacket(113);
@@ -11901,20 +12028,20 @@ public final class mudclient implements Runnable {
                 this.showUiTab = 6;
             }
 
-			if (!S_WANT_EQUIPMENT_TAB) {
-				if (this.showUiTab == 1
-					&& (this.mouseX < this.getSurface().width2 - 248 || 36 + this.m_cl / 5 * 34 < this.mouseY)) {
-					this.showUiTab = 0;
-				}
-			} else {
-				if (this.showUiTab == 1 && this.tabEquipmentIndex == 0
-					&& (this.mouseX < this.getSurface().width2 - 248 || 90 + this.m_cl / 5 * 34 < this.mouseY)) {
-					this.showUiTab = 0;
-				} else if (this.showUiTab == 1 && this.tabEquipmentIndex == 1
-					&& (this.mouseX < this.getSurface().width2 - 248 || 90 + this.m_cl / 5 * 34 < this.mouseY)) {
-					this.showUiTab = 0;
-				}
-			}
+            if (!S_WANT_EQUIPMENT_TAB) {
+                if (this.showUiTab == 1
+                        && (this.mouseX < this.getSurface().width2 - 248 || 36 + this.m_cl / 5 * 34 < this.mouseY)) {
+                    this.showUiTab = 0;
+                }
+            } else {
+                if (this.showUiTab == 1 && this.tabEquipmentIndex == 0
+                        && (this.mouseX < this.getSurface().width2 - 248 || 90 + this.m_cl / 5 * 34 < this.mouseY)) {
+                    this.showUiTab = 0;
+                } else if (this.showUiTab == 1 && this.tabEquipmentIndex == 1
+                        && (this.mouseX < this.getSurface().width2 - 248 || 90 + this.m_cl / 5 * 34 < this.mouseY)) {
+                    this.showUiTab = 0;
+                }
+            }
 
             if (this.showUiTab == 3 && (this.getSurface().width2 - 199 > this.mouseX || this.mouseY > 324)) {
                 this.showUiTab = 0;
@@ -11958,17 +12085,17 @@ public final class mudclient implements Runnable {
 
     private boolean isEquipped(int id) {
         try {
-			if (S_WANT_EQUIPMENT_TAB) {
-				for (int i = 0; i < S_PLAYER_SLOT_COUNT; i++) {
-					if (this.equippedItems[i] != null && this.equippedItems[i].id == id) {
-						return true;
-					}
-				}
-			} else {
-				for (int i = 0; this.inventoryItemCount > i; ++i) {
-					if (id == this.inventoryItemID[i] && this.inventoryItemEquipped[i] == 1) {
-						return true;
-					}
+            if (S_WANT_EQUIPMENT_TAB) {
+                for (int i = 0; i < S_PLAYER_SLOT_COUNT; i++) {
+                    if (this.equippedItems[i] != null && this.equippedItems[i].id == id) {
+                        return true;
+                    }
+                }
+            } else {
+                for (int i = 0; this.inventoryItemCount > i; ++i) {
+                    if (id == this.inventoryItemID[i] && this.inventoryItemEquipped[i] == 1) {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -12075,7 +12202,7 @@ public final class mudclient implements Runnable {
                                     }
                                 }
                             }
-                            getSurface().spriteTree.replace(entry.getName(), defaultSprites);
+                            getSurface().spriteTree.put(entry.getName(), defaultSprites);
                         }
 
                     }
@@ -12751,10 +12878,15 @@ public final class mudclient implements Runnable {
                     return;
                 try {
                     // PC sound code:
-                    //Clip clip = AudioSystem.getClip();
-                    //clip.open(AudioSystem.getAudioInputStream(sound));
-                    //clip.start();
-
+                    /*final Clip clip = AudioSystem.getClip();
+                    clip.addLineListener(new LineListener() {
+                        public void update(LineEvent myLineEvent) {
+                            if (myLineEvent.getType() == LineEvent.Type.STOP)
+                                clip.close();
+                        }
+                    });
+                    clip.open(AudioSystem.getAudioInputStream(sound));
+                    clip.start();*/
                     // Android sound code:
                     //int dataLength = DataOperations.getDataFileLength(key + ".pcm", soundData);
                     //int offset = DataOperations.getDataFileOffset(key + ".pcm", soundData);
@@ -14444,7 +14576,7 @@ public final class mudclient implements Runnable {
             System.out.println(Config.S_WANT_FATIGUE + " 51");
             System.out.println(Config.S_WANT_RUNECRAFTING + " 60");
             System.out.println(S_WANT_CUSTOM_LANDSCAPE + " 61");
-			System.out.println(S_WANT_EQUIPMENT_TAB + " 62");
+            System.out.println(S_WANT_EQUIPMENT_TAB + " 62");
         }
         try {
             this.loadGameConfig(false);
@@ -14471,8 +14603,8 @@ public final class mudclient implements Runnable {
                 this.xpGainedStartTime = new long[skillCount];
 
                 bank = new CustomBankInterface(this);
-				if (S_WANT_BANK_PRESETS)
-					bank.initPresets();
+                if (S_WANT_BANK_PRESETS)
+                    bank.initPresets();
                 auctionHouse = new AuctionHouse(this);
                 skillGuideInterface = new SkillGuideInterface(this);
                 questGuideInterface = new QuestGuideInterface(this);
@@ -15185,28 +15317,28 @@ public final class mudclient implements Runnable {
         return inventoryItemID;
     }
 
-	public Object[] getEquipmentItems() {
-		int count = 0;
-		for (ItemDef item : equippedItems) {
-			if (item != null)
-				count ++;
-		}
-		if (count == 0)
-			return null;
-		int[] equipmentIDs = new int[count];
-		int[] equipmentAmounts = new int[count];
-		count = 0;
-		for (int i = 0; i < S_PLAYER_SLOT_COUNT; i ++) {
-			ItemDef item = equippedItems[i];
-			if (item != null) {
-				equipmentIDs[count] = item.id;
-				equipmentAmounts[count++] = equippedItemAmount[i];
-			}
-		}
-		return new Object[]{equipmentIDs, equipmentAmounts};
-	}
+    public Object[] getEquipmentItems() {
+        int count = 0;
+        for (ItemDef item : equippedItems) {
+            if (item != null)
+                count++;
+        }
+        if (count == 0)
+            return null;
+        int[] equipmentIDs = new int[count];
+        int[] equipmentAmounts = new int[count];
+        count = 0;
+        for (int i = 0; i < S_PLAYER_SLOT_COUNT; i++) {
+            ItemDef item = equippedItems[i];
+            if (item != null) {
+                equipmentIDs[count] = item.id;
+                equipmentAmounts[count++] = equippedItemAmount[i];
+            }
+        }
+        return new Object[]{equipmentIDs, equipmentAmounts};
+    }
 
-	public ArrayList<Integer> getInventoryItemsArray() {
+    public ArrayList<Integer> getInventoryItemsArray() {
         ArrayList<Integer> toReturn = new ArrayList<>();
         for (int i : getInventoryItems())
             toReturn.add(i);
