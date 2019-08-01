@@ -12117,7 +12117,7 @@ public final class mudclient implements Runnable {
 									}
 								}
 							}
-							getSurface().spriteTree.replace(entry.getName(), defaultSprites);
+							getSurface().spriteTree.put(entry.getName(), defaultSprites);
 						}
 
 					}

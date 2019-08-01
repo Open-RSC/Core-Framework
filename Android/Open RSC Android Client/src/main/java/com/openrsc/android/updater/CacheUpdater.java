@@ -216,7 +216,7 @@ public class CacheUpdater extends Activity {
                         String port_cabbage = "43595";
                         FileOutputStream fileout_cabbage;
 
-                        String pack = "cabbagemenus:1";
+                        String pack = "Menus:1";
                         FileOutputStream fileout_cabbage2;
                         try {
                             fileout_cabbage = new FileOutputStream(realPath.get() + "ip.txt");
