@@ -10961,9 +10961,8 @@ public final class mudclient implements Runnable {
                     this.packetHandler.getClientStream().newPacket(53);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseX + indexOrX);
                     this.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + idOrZ);
-                    this.packetHandler.getClientStream().writeBuffer1.putShort(dir);
-                    this.packetHandler.getClientStream().writeBuffer1.putShort(tileID); // inventory
-                    // item
+					this.packetHandler.getClientStream().writeBuffer1.putShort(tileID); // inventory slot
+					this.packetHandler.getClientStream().writeBuffer1.putShort(dir);// ground item
 
                     this.packetHandler.getClientStream().finishPacket();
                     this.selectedItemInventoryIndex = -1;
