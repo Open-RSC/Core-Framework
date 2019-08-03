@@ -48,8 +48,8 @@ public final class Server implements Runnable {
 					"org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
 
 			LOGGER = LogManager.getLogger();
-		} catch (Throwable e) {
-			throw new ExceptionInInitializerError(e);
+		} catch (Throwable t) {
+			throw new ExceptionInInitializerError(t);
 		}
 	}
 
@@ -94,8 +94,8 @@ public final class Server implements Runnable {
 				server = new Server();
 				server.initialize();
 				server.start();
-			} catch (Throwable e) {
-				LOGGER.catching(e);
+			} catch (Throwable t) {
+				LOGGER.catching(t);
 			}
 
 		}
@@ -164,8 +164,8 @@ public final class Server implements Runnable {
 				LOGGER.catching(e);
 			}
 
-		} catch (Throwable e) {
-			LOGGER.catching(e);
+		} catch (Throwable t) {
+			LOGGER.catching(t);
 			System.exit(1);
 		}
 
@@ -253,8 +253,8 @@ public final class Server implements Runnable {
 				p.sendOutgoingPackets();
 			}
 
-		} catch (Throwable e) {
-			LOGGER.catching(e);
+		} catch (Throwable t) {
+			LOGGER.catching(t);
 		}
 	}
 
