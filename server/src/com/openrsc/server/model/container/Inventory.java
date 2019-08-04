@@ -329,9 +329,26 @@ public class Inventory {
 	}
 
 	public void replace(int i, int j) {
-		remove(i, 1, false);
-		add(new Item(j));
-	}
+        Item old = new Item(i);
+        Item newitem = new Item(j);
+        if (old.getDef() != null && newitem.getDef() != null
+            && Constants.GameServer.WANT_EQUIPMENT_TAB
+            && old.getDef().isWieldable() && newitem.getDef().isWieldable()
+        && Functions.isWielding(player, i)) {
+            newitem.setWielded(false);
+            player.getEquipment().list[old.getDef().getWieldPosition()] = null;
+            player.getEquipment().list[newitem.getDef().getWieldPosition()] = newitem;
+            player.updateWornItems(old.getDef().getWieldPosition(),
+                player.getSettings().getAppearance().getSprite(old.getDef().getWieldPosition()),
+                old.getDef().getWearableId(), false);
+            player.updateWornItems(newitem.getDef().getWieldPosition(),
+                newitem.getDef().getAppearanceId(), newitem.getDef().getWearableId(), true);
+            ActionSender.sendEquipmentStats(player);
+        } else {
+            remove(i, 1, false);
+            add(new Item(j));
+        }
+    }
 
 	public int getFreeSlots() {
 		return MAX_SIZE - size();
