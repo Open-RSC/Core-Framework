@@ -480,11 +480,9 @@ public class Bank {
 			for (int i = 0; i < presets[slot].equipment.length; i++) {
 				Item presetEquipment = presets[slot].equipment[i];
 				if (presetEquipment.getDef() == null) {
-					wearableId = player.getEquipment().list[i].getDef().getWearableId();
 					player.getEquipment().list[i] = null;
 					player.updateWornItems(i,
-						player.getSettings().getAppearance().getSprite(i),
-						wearableId, false);
+						player.getSettings().getAppearance().getSprite(i));
 					continue;
 				}
 				presetEquipment.setWielded(false);
