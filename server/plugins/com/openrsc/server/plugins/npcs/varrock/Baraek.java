@@ -19,13 +19,13 @@ public final class Baraek implements TalkToNpcExecutiveListener,
 		int menu;
 		boolean bargained = false;
 		boolean hasFur = p.getInventory().hasItemId(ItemId.FUR.id());
-		if (p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == 2 && hasFur) {
+		if (canGetInfoGang(p) && hasFur) {
 			menu = showMenu(p, n, false, //do not send over 
 				"Can you tell me where I can find the phoenix gang?",
 				"Can you sell me some furs?",
 				"Hello. I am in search of a quest",
 				"Would you like to buy my fur?");
-		} else if (p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == 2 && !hasFur) {
+		} else if (canGetInfoGang(p) && !hasFur) {
 			menu = showMenu(p, n, false, //do not send over 
 				"Can you tell me where I can find the phoenix gang?",
 				"Can you sell me some furs?",
@@ -74,8 +74,9 @@ public final class Baraek implements TalkToNpcExecutiveListener,
 						"Be careful",
 						"The phoenix gang ain't the types to be messed with");
 					playerTalk(p, n, "Thanks");
-					p.updateQuestStage(
-						Constants.Quests.SHIELD_OF_ARRAV, 3);
+					if (p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == 2) {
+						p.updateQuestStage(Constants.Quests.SHIELD_OF_ARRAV, 3);
+					}
 				}
 			} else if (sub_menu == 1) {
 				npcTalk(p, n, "Heh, if you wanna deal with the phoenix gang",
@@ -145,6 +146,11 @@ public final class Baraek implements TalkToNpcExecutiveListener,
 				npcTalk(p, n, "It's your loss mate");
 			}
 		}
+	}
+	
+	private boolean canGetInfoGang(Player p) {
+		return p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == 2 
+				|| (p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == 3 && !p.getCache().hasKey("arrav_mission"));
 	}
 
 	@Override
