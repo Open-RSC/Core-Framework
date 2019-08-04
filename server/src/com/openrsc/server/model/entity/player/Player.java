@@ -8,15 +8,16 @@ import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanInvite;
 import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
+import com.openrsc.server.content.party.Party;
+import com.openrsc.server.content.party.PartyInvite;
+import com.openrsc.server.content.party.PartyManager;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.event.rsc.impl.*;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.login.LoginRequest;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.*;
-
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.Equipment;
@@ -26,7 +27,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
-import com.openrsc.server.model.entity.update.ChatMessage;
+import com.openrsc.server.model.entity.update.HpUpdate;
 import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
@@ -68,7 +69,6 @@ public final class Player extends Mob {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 	public final int MAX_FATIGUE = 75000;
-	public final int MAX_PET_FATIGUE = 75000;
 	public final String MEMBER_MESSAGE = "This feature is only available for members only";
 	/**
 	 * Players cache is used to store various objects into database
@@ -145,7 +145,6 @@ public final class Player extends Mob {
 	 * Amount of fatigue - 0 to 75000
 	 */
 	private int fatigue = 0, sleepStateFatigue = 0;
-	private int petFatigue = 0;
 	/**
 	 * The main accounts group is
 	 */
@@ -340,15 +339,15 @@ public final class Player extends Mob {
 	 **/
 	private int kills = 0;
 	private int kills2 = 0;
-	private int pet = 0;
-	private int pets = 0;
 	private int deaths = 0;
 	private int npcDeaths = 0;
 	private WalkToAction walkToAction;
 	private Trade trade;
 	private int databaseID;
 	private Clan clan;
+	private Party party;
 	private ClanInvite activeClanInvitation;
+	private PartyInvite activePartyInvitation;
 
 	/**
 	 * Constructs a new Player instance from LoginRequest
@@ -535,12 +534,22 @@ public final class Player extends Mob {
 				@Override
 				public void run() {
 					removeSkull();
+					for (Player p : World.getWorld().getPlayers()) {
+						if (getParty() == p.getParty() && getParty() != null) {
+							ActionSender.sendParty(p);
+						}
+					}
 				}
 			};
 			Server.getServer().getEventHandler().add(skullEvent);
 			getUpdateFlags().setAppearanceChanged(true);
 		}
 		skullEvent.setLastRun(System.currentTimeMillis() - (1200000 - timeLeft));
+		for (Player p : World.getWorld().getPlayers()) {
+			if (getParty() == p.getParty() && getParty() != null) {
+				ActionSender.sendParty(p);
+			}
+		}
 	}
 
 	private void removeCharge() {
@@ -642,12 +651,12 @@ public final class Player extends Mob {
 			}
 			if (getRangeEquip() < 0 && victim.getID() == 210) {
 				if (System.currentTimeMillis() - victim.getCombatTimer() > 3000) {
-			return true;
+					return true;
 				} else
 					return false;
+			}
+			return true;
 		}
-		return true;
-	}
 		return true;
 	}
 
@@ -776,13 +785,12 @@ public final class Player extends Mob {
 				getInventory().unwieldItem(item, false);
 				//check to make sure their item was actually unequipped.
 				//it might not have if they have a full inventory.
-				if (getEquipment().list[slot] != null)
-				{
+				if (getEquipment().list[slot] != null) {
 					ItemDropHandler doit = new ItemDropHandler();
 					if (item.getDef().isStackable())
-						doit.dropStackable(this,item,item.getAmount(),false);
+						doit.dropStackable(this, item, item.getAmount(), false);
 					else
-						doit.dropUnstackable(this, item,1, false);
+						doit.dropUnstackable(this, item, 1, false);
 				}
 			}
 
@@ -808,8 +816,8 @@ public final class Player extends Mob {
 				boolean bypass = !Constants.GameServer.STRICT_CHECK_ALL &&
 					(itemLower.startsWith("poisoned") &&
 						((itemLower.endsWith("throwing dart") && !Constants.GameServer.STRICT_PDART_CHECK) ||
-						(itemLower.endsWith("throwing knife") && !Constants.GameServer.STRICT_PKNIFE_CHECK) ||
-						(itemLower.endsWith("spear") && !Constants.GameServer.STRICT_PSPEAR_CHECK))
+							(itemLower.endsWith("throwing knife") && !Constants.GameServer.STRICT_PKNIFE_CHECK) ||
+							(itemLower.endsWith("spear") && !Constants.GameServer.STRICT_PSPEAR_CHECK))
 					);
 				if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
 					optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
@@ -960,29 +968,12 @@ public final class Player extends Mob {
 		}
 	}
 
-	public int getPetFatigue() {
-		if (Constants.GameServer.WANT_FATIGUE) {
-			return petFatigue;
-		} else {
-			return 0;
-		}
-	}
-
 	public void setFatigue(int fatigue) {
 		if (Constants.GameServer.WANT_FATIGUE) {
 			this.fatigue = fatigue;
 			ActionSender.sendFatigue(this);
 		} else {
 			this.fatigue = 0;
-		}
-	}
-
-	public void setPetFatigue(int petFatigue) {
-		if (Constants.GameServer.WANT_FATIGUE) {
-			this.petFatigue = petFatigue;
-			ActionSender.sendPetFatigue(this);
-		} else {
-			this.petFatigue = 0;
 		}
 	}
 
@@ -1150,8 +1141,7 @@ public final class Player extends Mob {
 	}
 
 	public int getRangeEquip() {
-		if (Constants.GameServer.WANT_EQUIPMENT_TAB)
-		{
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
 			for (Item item : getEquipment().list) {
 				if (item != null && (DataConversions.inArray(Formulae.bowIDs, item.getID())
 					|| DataConversions.inArray(Formulae.xbowIDs, item.getID()))) {
@@ -1170,7 +1160,7 @@ public final class Player extends Mob {
 	}
 
 	public int getThrowingEquip() {
-		if (Constants.GameServer.WANT_EQUIPMENT_TAB){
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
 			for (Item item : getEquipment().list) {
 				if (item != null && DataConversions.inArray(Formulae.throwingIDs, item.getID())) {
 					return item.getID();
@@ -1324,8 +1314,7 @@ public final class Player extends Mob {
 					points += item.getDef().getWeaponAimBonus();
 				}
 			}
-		} else
-		{
+		} else {
 			points = this.getEquipment().getWeaponAim();
 		}
 
@@ -1371,7 +1360,7 @@ public final class Player extends Mob {
 		/*
 		  Skilling Experience Rate
 		 */
-		if (skill >= 4 && skill <= Skills.getSkillCount()-1) {
+		if (skill >= 4 && skill <= Skills.getSkillCount() - 1) {
 			multiplier = Constants.GameServer.SKILLING_EXP_RATE;
 			if (getLocation().inWilderness() && !getLocation().inBounds(220, 108, 225, 111)) {
 				multiplier += Constants.GameServer.WILDERNESS_BOOST;
@@ -1455,37 +1444,6 @@ public final class Player extends Mob {
 		skillXP *= getExperienceRate(skill);
 		skills.addExperience(skill, (int) skillXP);
 		// ActionSender.sendExperience(this, skill);
-	}
-
-	public void incPet1Exp(int skill, int skillXP, boolean usePetFatigue) {
-		if (Constants.GameServer.WANT_FATIGUE) {
-			if (isExperienceFrozen()) {
-				//ActionSender.sendMessage(this, "You can not gain experience right now!");
-				return;
-			}
-		}
-
-		if (Constants.GameServer.WANT_FATIGUE) {
-			if (usePetFatigue) {
-				if (fatigue >= this.MAX_PET_FATIGUE) {
-					ActionSender.sendMessage(this, "@gre@Your companion is too tired to gain experience.");
-					return;
-				}
-				//if (fatigue >= 69750) {
-				//	ActionSender.sendMessage(this, "@gre@You start to feel tired, maybe you should rest soon.");
-				//}
-				if (skill >= 3 && usePetFatigue) {
-					petFatigue += skillXP * 4;
-					if (petFatigue > this.MAX_PET_FATIGUE) {
-						petFatigue = this.MAX_PET_FATIGUE;
-					}
-					ActionSender.sendPetFatigue(this);
-				}
-			}
-		}
-		skillXP *= getExperienceRate(skill);
-		/*skills.addPetExperience(skill, (int) skillXP);
-		ActionSender.sendPetExperience(this, skill);*/
 	}
 
 	public void incQuestPoints(int amount) {
@@ -1744,9 +1702,20 @@ public final class Player extends Mob {
 		ActionSender.sendInventory(this);
 
 		resetPath();
+		for (Player p : World.getWorld().getPlayers()) {
+			if (this.getParty() == p.getParty() && this.getParty() != null) {
+				ActionSender.sendParty(p);
+			}
+		}
 		this.cure();
 		prayers.resetPrayers();
 		skills.normalize();
+		getUpdateFlags().setHpUpdate(new HpUpdate(this, 0));
+		for (Player p : World.getWorld().getPlayers()) {
+			if (this.getParty() == p.getParty() && this.getParty() != null) {
+				ActionSender.sendParty(p);
+			}
+		}
 	}
 
 	private int getEquippedWeaponID() {
@@ -2008,6 +1977,9 @@ public final class Player extends Mob {
 		if (getLocation().inMageArena()) {
 			teleport(228, 109);
 		}
+		if (getParty() != null) {
+			getParty().removePlayer(this.getUsername());
+		}
 		// store kitten growth progress
 		getCache().set("kitten_events", getAttribute("kitten_events", 0));
 		getCache().set("kitten_hunger", getAttribute("kitten_hunger", 0));
@@ -2029,6 +2001,7 @@ public final class Player extends Mob {
 		}
 
 		ClanManager.checkAndUnattachFromClan(this);
+		PartyManager.checkAndUnattachFromParty(this);
 
 		Server.getPlayerDataProcessor().addRemoveRequest(this);
 	}
@@ -2228,7 +2201,7 @@ public final class Player extends Mob {
 		}
 		return true;
 	}
-	
+
 	public void updateWornItems(int indexPosition, int appearanceId) {
 		this.updateWornItems(indexPosition, appearanceId, 0, false);
 	}
@@ -2240,8 +2213,7 @@ public final class Player extends Mob {
 			else wornItems[2] = 3;
 		}
 		//Don't need to show arrows or rings
-		if (indexPosition <= 11)
-		{
+		if (indexPosition <= 11) {
 			wornItems[indexPosition] = appearanceId;
 			getUpdateFlags().setAppearanceChanged(true);
 		}
@@ -2275,14 +2247,6 @@ public final class Player extends Mob {
 		return kills2;
 	}
 
-	public int getPet() {
-		return pet;
-	}
-
-	public int getPets() {
-		return pets;
-	}
-
 	public void setDeaths(int i) {
 		this.deaths = i;
 	}
@@ -2296,22 +2260,8 @@ public final class Player extends Mob {
 		ActionSender.sendKills2(this);
 	}
 
-	public void setPet(int i) {
-		this.pet = i;
-		//ActionSender.sendKills2(this);
-	}
-
-	public void setPets(int i) {
-		this.pets = i;
-		//ActionSender.sendKills2(this);
-	}
-
 	private void incDeaths() {
 		deaths++;
-	}
-
-	private void incPets() {
-		pets++;
 	}
 
 	private void incNpcDeaths() {
@@ -2569,6 +2519,21 @@ public final class Player extends Mob {
 		}
 	}
 
+	public boolean getPartyInviteSetting() {
+		if (Constants.GameServer.WANT_PARTIES) {
+		if (getCache().hasKey("party_block_invites")) {
+			return getCache().getBoolean("party_block_invites");
+		}
+		return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean getPartyLootSetting() {
+		return getPartyInviteSetting();
+	}
+
 	public boolean isPlayer() {
 		return true;
 	}
@@ -2641,6 +2606,23 @@ public final class Player extends Mob {
 
 	public void setDatabaseID(int i) {
 		this.databaseID = i;
+	}
+
+	public Party getParty() {
+		return party;
+	}
+
+	public void setParty(Party party) {
+		this.party = party;
+		getUpdateFlags().setAppearanceChanged(true);
+	}
+
+	public PartyInvite getActivePartyInvite() {
+		return activePartyInvitation;
+	}
+
+	public void setActivePartyInvite(PartyInvite inv) {
+		activePartyInvitation = inv;
 	}
 
 	public Clan getClan() {

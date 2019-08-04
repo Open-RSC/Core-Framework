@@ -113,6 +113,8 @@ public class PacketHandler {
 				// Clan Options
 			else if (opcode == 112) updateClan();
 
+			else if (opcode == 116) updateParty();
+
         /*else if(opcode == 50) { // Achievements
           int achievementStatus = this.packetsIncoming.getByte();
           if (achievementStatus == 1) {
@@ -376,7 +378,7 @@ public class PacketHandler {
 
 		} catch (RuntimeException var17) {
 			String var5 = "T2 - " + opcode + " - " + length + " rx:" + mc.getLocalPlayerX() + " ry:" + mc.getLocalPlayerZ()
-					+ " num3l:" + mc.getGameObjectInstanceCount() + " - ";
+				+ " num3l:" + mc.getGameObjectInstanceCount() + " - ";
 
 			for (int var6 = 0; length > var6 && var6 < 50; ++var6) {
 				var5 = var5 + packetsIncoming.getByte() + ",";
@@ -424,8 +426,8 @@ public class PacketHandler {
 		int combatModel = packetsIncoming.getByte() & 0xff;
 		int combatSprite = packetsIncoming.getByte() & 0xff;
 		com.openrsc.client.entityhandling.defs.NPCDef newNpc = new com.openrsc.client.entityhandling.defs.NPCDef(name, description, optionCommand, attack, strength, hits, defense,
-				attackable, sprites, hairColour, topColour, bottomColour, skinColour, camera1, camera2,
-				walkModel, combatModel, combatSprite, id);
+			attackable, sprites, hairColour, topColour, bottomColour, skinColour, camera1, camera2,
+			walkModel, combatModel, combatSprite, id);
 		com.openrsc.client.entityhandling.EntityHandler.npcs.set(id, newNpc);
 	}
 
@@ -514,7 +516,7 @@ public class PacketHandler {
 				break;
 			case 1:
 				mc.getFishingTrawlerInterface().setVariables(packetsIncoming.getShort(), packetsIncoming.getShort(),
-						packetsIncoming.getByte(), packetsIncoming.getByte() == 1);
+					packetsIncoming.getByte(), packetsIncoming.getByte() == 1);
 				break;
 			case 2:
 				mc.getFishingTrawlerInterface().hide();
@@ -572,6 +574,61 @@ public class PacketHandler {
 		}
 	}
 
+	private void updateParty() {
+		int actionType = packetsIncoming.getByte();
+		switch (actionType) {
+			case 0: // Send party
+				mc.party.setPartyName(packetsIncoming.readString());
+				mc.party.setPartyTag(packetsIncoming.readString());
+				mc.party.setPartyLeaderUsername(packetsIncoming.readString());
+				boolean isLeader = packetsIncoming.getByte() == 1;
+				mc.party.setPartyLeader(isLeader);
+				SocialLists.partyListCount = packetsIncoming.getByte();
+				for (int id = 0; id < SocialLists.partyListCount; id++) {
+					mc.party.username[id] = packetsIncoming.readString();
+					mc.party.partyRank[id] = packetsIncoming.getByte();
+					mc.party.onlinePartyMember[id] = packetsIncoming.getByte();
+					mc.party.curHp[id] = packetsIncoming.getByte();
+					mc.party.maxHp[id] = packetsIncoming.getByte();
+					mc.party.cbLvl[id] = packetsIncoming.getByte();
+					mc.party.skull[id] = packetsIncoming.getByte();
+					mc.party.pMemD[id] = packetsIncoming.getByte();
+					mc.party.shareLoot[id] = packetsIncoming.getByte();
+				}
+				mc.party.putParty(true);
+
+				break;
+			case 1: // Leave party
+				mc.party.putParty(false);
+				mc.party.update();
+				break;
+			case 2: // Sent invitation
+				mc.party.getPartyInterface().initializeInvite(packetsIncoming.readString(), packetsIncoming.readString());
+				break;
+			case 3: // Settings
+				mc.party.setPartySetting(0, packetsIncoming.getByte());
+				mc.party.setPartySetting(1, packetsIncoming.getByte());
+				mc.party.setPartySetting(2, packetsIncoming.getByte());
+				mc.party.allowed[0] = packetsIncoming.getByte() == 1;
+				mc.party.allowed[1] = packetsIncoming.getByte() == 1;
+				break;
+			case 4: // Party search visual
+				mc.party.getPartyInterface().resetPartys();
+				int partyCount = packetsIncoming.getShort();
+				for (int i = 0; i < partyCount; i++) {
+					int partyID = packetsIncoming.getShort();
+					String partyName = packetsIncoming.readString();
+					String partyTag = packetsIncoming.readString();
+					int members = packetsIncoming.getByte();
+					int canJoin = packetsIncoming.getByte();
+					int partyPoints = packetsIncoming.get32();
+					int partyRank = packetsIncoming.getShort();
+					mc.party.getPartyInterface().addParty(partyID, partyName, partyTag, members, canJoin, partyPoints, partyRank);
+				}
+				break;
+		}
+	}
+
 	private void announceKill() {
 		if (!Config.S_WANT_KILL_FEED) return;
 		String killed = packetsIncoming.readString();
@@ -614,13 +671,13 @@ public class PacketHandler {
 			if (!rename) {
 				if (SocialLists.friendList[i].equals(currentName)) {
 					if (SocialLists.friendListArgS[i] == null && online) {
-						mc.showMessage(false, (String) null, currentName + " has logged in",
-								MessageType.FRIEND_STATUS, 0, (String) null);
+						mc.showMessage(false, null, currentName + " has logged in",
+							MessageType.FRIEND_STATUS, 0, null);
 					}
 
 					if (null != SocialLists.friendListArgS[i] && !online) {
-						mc.showMessage(false, (String) null, currentName + " has logged out",
-								MessageType.FRIEND_STATUS, 0, (String) null);
+						mc.showMessage(false, null, currentName + " has logged out",
+							MessageType.FRIEND_STATUS, 0, null);
 					}
 
 					SocialLists.friendListOld[i] = formerName;
@@ -631,13 +688,13 @@ public class PacketHandler {
 				}
 			} else if (SocialLists.friendList[i].equals(formerName)) {
 				if (SocialLists.friendListArgS[i] == null && online) {
-					mc.showMessage(false, (String) null, currentName + " has logged in",
-							MessageType.FRIEND_STATUS, 0, (String) null);
+					mc.showMessage(false, null, currentName + " has logged in",
+						MessageType.FRIEND_STATUS, 0, null);
 				}
 
 				if (SocialLists.friendListArgS[i] != null && !online) {
-					mc.showMessage(false, (String) null, currentName + " has logged out",
-							MessageType.FRIEND_STATUS, 0, (String) null);
+					mc.showMessage(false, null, currentName + " has logged out",
+						MessageType.FRIEND_STATUS, 0, null);
 				}
 
 				SocialLists.friendList[i] = currentName;
@@ -651,7 +708,7 @@ public class PacketHandler {
 
 		if (rename) {
 			System.out.println("Error: friend display name change packet received, but old name \'" + formerName
-					+ "\' is not on friend list");
+				+ "\' is not on friend list");
 			return;
 		}
 
@@ -694,7 +751,7 @@ public class PacketHandler {
 
 		if (rename) {
 			System.out.println("Error: ignore display name change packet received, but old name \'" + find
-					+ "\' is not on ignore list");
+				+ "\' is not on ignore list");
 			return;
 		}
 
@@ -753,7 +810,7 @@ public class PacketHandler {
 		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank, wantPlayerCommands;
 		int getFPS, wantEmail, wantRegistrationLimit, allowResize, lenientContactDetails, wantFatigue, wantCustomSprites;
 		int fishingSpotsDepletable, properMagicTreeName, wantRunecrafting, wantCustomLandscape, wantEquipmentTab;
-		int wantBankPresets;
+		int wantBankPresets, wantParties;
 		String logoSpriteID;
 
 		if (!mc.gotInitialConfigs) {
@@ -820,6 +877,7 @@ public class PacketHandler {
 			wantCustomLandscape = this.getClientStream().getUnsignedByte(); //61
 			wantEquipmentTab = this.getClientStream().getUnsignedByte(); //62
 			wantBankPresets = this.getClientStream().getUnsignedByte(); //63
+			wantParties = this.getClientStream().getUnsignedByte(); // 64
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -884,73 +942,75 @@ public class PacketHandler {
 			wantCustomLandscape = packetsIncoming.getUnsignedByte(); //61
 			wantEquipmentTab = packetsIncoming.getUnsignedByte(); //62
 			wantBankPresets = packetsIncoming.getUnsignedByte(); //63
+			wantParties = packetsIncoming.getUnsignedByte(); // 64
 		}
 
 		if (Config.DEBUG) {
 			System.out.println(
-					"SERVER_NAME " + serverName + // 1
-							"\nSERVER_NAME_WELCOME " + serverNameWelcome + // 2
-							"\nS_PLAYER_LEVEL_LIMIT " + playerLevelLimit + // 3
-							"\nS_SPAWN_AUCTION_NPCS " + spawnAuctionNpcs + // 4
-							"\nS_SPAWN_IRON_MAN_NPCS " + spawnIronManNpcs + // 5
-							"\nS_SHOW_FLOATING_NAMETAGS " + showFloatingNametags + // 6
-							"\nS_WANT_CLANS " + wantClans + // 7
-							"\nS_WANT_KILL_FEED " + wantKillFeed + // 8
-							"\nS_FOG_TOGGLE " + fogToggle + // 9
-							"\nS_GROUND_ITEM_TOGGLE " + groundItemToggle + // 10
-							"\nS_AUTO_MESSAGE_SWITCH_TOGGLE " + autoMessageSwitchToggle + // 11
-							"\nS_BATCH_PROGRESSION " + batchProgression + // 12
-							"\nS_SIDE_MENU_TOGGLE " + sideMenuToggle + // 13
-							"\nS_INVENTORY_COUNT_TOGGLE " + inventoryCountToggle + // 14
-							"\nS_ZOOM_VIEW_TOGGLE " + zoomViewToggle + // 15
-							"\nS_MENU_COMBAT_STYLE_TOGGLE " + menuCombatStyleToggle + // 16
-							"\nS_FIGHTMODE_SELECTOR_TOGGLE " + fightmodeSelectorToggle + // 17
-							"\nS_EXPERIENCE_COUNTER_TOGGLE " + experienceCounterToggle + // 18
-							"\nS_EXPERIENCE_DROPS_TOGGLE " + experienceDropsToggle + // 19
-							"\nS_ITEMS_ON_DEATH_MENU " + itemsOnDeathMenu + // 20
-							"\nS_SHOW_ROOF_TOGGLE " + showRoofToggle + // 21
-							"\nS_WANT_HIDE_IP " + wantHideIp + // 22
-							"\nS_WANT_REMEMBER " + wantRemember + // 23
-							"\nS_WANT_GLOBAL_CHAT " + wantGlobalChat + // 24
-							"\nS_WANT_SKILL_MENUS " + wantSkillMenus + // 25
-							"\nS_WANT_QUEST_MENUS " + wantQuestMenus + // 26
-							"\nS_WANT_EXPERIENCE_ELIXIRS " + wantExperienceElixirs + // 27
-							"\nS_WANT_KEYBOARD_SHORTCUTS " + wantKeyboardShortcuts + // 28
-							"\nS_WANT_CUSTOM_BANKS " + wantCustomBanks + // 29
-							"\nS_WANT_BANK_PINS " + wantBankPins + // 30
-							"\nS_WANT_BANK_NOTES " + wantBankNotes + // 31
-							"\nS_WANT_CERT_DEPOSIT " + wantCertDeposit + // 32
-							"\nS_CUSTOM_FIREMAKING " + customFiremaking + // 33
-							"\nS_WANT_DROP_X " + wantDropX + // 34
-							"\nS_WANT_EXP_INFO " + wantExpInfo + // 35
-							"\nS_WANT_WOODCUTTING_GUILD " + wantWoodcuttingGuild + // 36
-							"\nS_WANT_DECANTING " + wantDecanting + // 37
-							"\nS_WANT_CERTS_TO_BANK " + wantCertsToBank + // 38
-							"\nS_WANT_CUSTOM_RANK_DISPLAY " + wantCustomRankDisplay + // 39
-							"\nS_RIGHT_CLICK_BANK " + wantRightClickBank + // 40
-							"\nS_WANT_FIXED_OVERHEAD_CHAT " + wantFixedOverheadChat + // 41
-							"\nWELCOME_TEXT " + welcomeText + // 42
-							"\nMEMBERS_FEATURES " + wantMembers + // 43
-							"\nDISPLAY_LOGO_SPRITE " + displayLogoSprite + // 44
-							"\nC_LOGO_SPRITE_ID " + logoSpriteID + // 45
-							"\nC_FPS " + getFPS + // 46
-							"\nC_WANT_EMAIL " + wantEmail + // 47
-							"\nS_WANT_REGISTRATION_LIMIT " + wantRegistrationLimit + // 48
-							"\nS_ALLOW_RESIZE " + allowResize + // 49
-							"\nS_LENIENT_CONTACT_DETAILS " + lenientContactDetails + // 50
-							"\nS_WANT_FATIGUE " + wantFatigue + // 51
-							"\nS_WANT_CUSTOM_SPRITES " + wantCustomSprites + // 52
-							"\nS_WANT_PLAYER_COMMANDS " + wantPlayerCommands + // 53
-							"\nS_WANT_PETS " + wantPets + // 54
-							"\nS_MAX_RUNNING_SPEED " + maxWalkingSpeed + //55
-							"\nS_SHOW_UNIDENTIFIED_HERB_NAMES " + showUnidentifiedHerbNames + // 56
-							"\nS_WANT_QUEST_STARTED_INDICATOR  " + wantQuestStartedIndicator + // 57
-							"\nS_FISHING_SPOTS_DEPLETABLE " + fishingSpotsDepletable + // 58
-							"\nS_PROPER_MAGIC_TREE_NAME  " + properMagicTreeName +// 59
-							"\nS_WANT_RUNECRAFTING  "   + wantRunecrafting +// 60
-							"\nS_WANT_CUSTOM_LANDSCAPE  "   + wantCustomLandscape +// 61
-						"\nS_WANT_EQUIPMENT_TAB  "   + wantEquipmentTab +// 62
-						"\nS_WANT_BANK_PRESETS  "   + wantEquipmentTab// 63
+				"SERVER_NAME " + serverName + // 1
+					"\nSERVER_NAME_WELCOME " + serverNameWelcome + // 2
+					"\nS_PLAYER_LEVEL_LIMIT " + playerLevelLimit + // 3
+					"\nS_SPAWN_AUCTION_NPCS " + spawnAuctionNpcs + // 4
+					"\nS_SPAWN_IRON_MAN_NPCS " + spawnIronManNpcs + // 5
+					"\nS_SHOW_FLOATING_NAMETAGS " + showFloatingNametags + // 6
+					"\nS_WANT_CLANS " + wantClans + // 7
+					"\nS_WANT_KILL_FEED " + wantKillFeed + // 8
+					"\nS_FOG_TOGGLE " + fogToggle + // 9
+					"\nS_GROUND_ITEM_TOGGLE " + groundItemToggle + // 10
+					"\nS_AUTO_MESSAGE_SWITCH_TOGGLE " + autoMessageSwitchToggle + // 11
+					"\nS_BATCH_PROGRESSION " + batchProgression + // 12
+					"\nS_SIDE_MENU_TOGGLE " + sideMenuToggle + // 13
+					"\nS_INVENTORY_COUNT_TOGGLE " + inventoryCountToggle + // 14
+					"\nS_ZOOM_VIEW_TOGGLE " + zoomViewToggle + // 15
+					"\nS_MENU_COMBAT_STYLE_TOGGLE " + menuCombatStyleToggle + // 16
+					"\nS_FIGHTMODE_SELECTOR_TOGGLE " + fightmodeSelectorToggle + // 17
+					"\nS_EXPERIENCE_COUNTER_TOGGLE " + experienceCounterToggle + // 18
+					"\nS_EXPERIENCE_DROPS_TOGGLE " + experienceDropsToggle + // 19
+					"\nS_ITEMS_ON_DEATH_MENU " + itemsOnDeathMenu + // 20
+					"\nS_SHOW_ROOF_TOGGLE " + showRoofToggle + // 21
+					"\nS_WANT_HIDE_IP " + wantHideIp + // 22
+					"\nS_WANT_REMEMBER " + wantRemember + // 23
+					"\nS_WANT_GLOBAL_CHAT " + wantGlobalChat + // 24
+					"\nS_WANT_SKILL_MENUS " + wantSkillMenus + // 25
+					"\nS_WANT_QUEST_MENUS " + wantQuestMenus + // 26
+					"\nS_WANT_EXPERIENCE_ELIXIRS " + wantExperienceElixirs + // 27
+					"\nS_WANT_KEYBOARD_SHORTCUTS " + wantKeyboardShortcuts + // 28
+					"\nS_WANT_CUSTOM_BANKS " + wantCustomBanks + // 29
+					"\nS_WANT_BANK_PINS " + wantBankPins + // 30
+					"\nS_WANT_BANK_NOTES " + wantBankNotes + // 31
+					"\nS_WANT_CERT_DEPOSIT " + wantCertDeposit + // 32
+					"\nS_CUSTOM_FIREMAKING " + customFiremaking + // 33
+					"\nS_WANT_DROP_X " + wantDropX + // 34
+					"\nS_WANT_EXP_INFO " + wantExpInfo + // 35
+					"\nS_WANT_WOODCUTTING_GUILD " + wantWoodcuttingGuild + // 36
+					"\nS_WANT_DECANTING " + wantDecanting + // 37
+					"\nS_WANT_CERTS_TO_BANK " + wantCertsToBank + // 38
+					"\nS_WANT_CUSTOM_RANK_DISPLAY " + wantCustomRankDisplay + // 39
+					"\nS_RIGHT_CLICK_BANK " + wantRightClickBank + // 40
+					"\nS_WANT_FIXED_OVERHEAD_CHAT " + wantFixedOverheadChat + // 41
+					"\nWELCOME_TEXT " + welcomeText + // 42
+					"\nMEMBERS_FEATURES " + wantMembers + // 43
+					"\nDISPLAY_LOGO_SPRITE " + displayLogoSprite + // 44
+					"\nC_LOGO_SPRITE_ID " + logoSpriteID + // 45
+					"\nC_FPS " + getFPS + // 46
+					"\nC_WANT_EMAIL " + wantEmail + // 47
+					"\nS_WANT_REGISTRATION_LIMIT " + wantRegistrationLimit + // 48
+					"\nS_ALLOW_RESIZE " + allowResize + // 49
+					"\nS_LENIENT_CONTACT_DETAILS " + lenientContactDetails + // 50
+					"\nS_WANT_FATIGUE " + wantFatigue + // 51
+					"\nS_WANT_CUSTOM_SPRITES " + wantCustomSprites + // 52
+					"\nS_WANT_PLAYER_COMMANDS " + wantPlayerCommands + // 53
+					"\nS_WANT_PETS " + wantPets + // 54
+					"\nS_MAX_RUNNING_SPEED " + maxWalkingSpeed + //55
+					"\nS_SHOW_UNIDENTIFIED_HERB_NAMES " + showUnidentifiedHerbNames + // 56
+					"\nS_WANT_QUEST_STARTED_INDICATOR  " + wantQuestStartedIndicator + // 57
+					"\nS_FISHING_SPOTS_DEPLETABLE " + fishingSpotsDepletable + // 58
+					"\nS_PROPER_MAGIC_TREE_NAME  " + properMagicTreeName + // 59
+					"\nS_WANT_RUNECRAFTING  "   + wantRunecrafting + // 60
+					"\nS_WANT_CUSTOM_LANDSCAPE  "   + wantCustomLandscape + // 61
+					"\nS_WANT_EQUIPMENT_TAB  "   + wantEquipmentTab + // 62
+					"\nS_WANT_BANK_PRESETS  "   + wantEquipmentTab + // 63
+					"\nS_WANT_PARTIES " + wantClans // 64
 			);
 		}
 
@@ -1019,18 +1079,19 @@ public class PacketHandler {
 		props.setProperty("S_WANT_CUSTOM_LANDSCAPE", wantCustomLandscape == 1 ? "true" : "false"); //61
 		props.setProperty("S_WANT_EQUIPMENT_TAB", wantEquipmentTab == 1 ? "true" : "false"); //62
 		props.setProperty("S_WANT_BANK_PRESETS", wantBankPresets == 1 ? "true" : "false"); //63
+		props.setProperty("S_WANT_PARTIES", wantParties == 1 ? "true" : "false"); //64
 		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(
-				Config.isAndroid() ||
-						Config.S_WANT_CLANS || Config.S_WANT_KILL_FEED
-						|| Config.S_FOG_TOGGLE || Config.S_GROUND_ITEM_TOGGLE
-						|| Config.S_AUTO_MESSAGE_SWITCH_TOGGLE || Config.S_BATCH_PROGRESSION
-						|| Config.S_SIDE_MENU_TOGGLE || Config.S_INVENTORY_COUNT_TOGGLE
-						|| Config.S_MENU_COMBAT_STYLE_TOGGLE
-						|| Config.S_FIGHTMODE_SELECTOR_TOGGLE || Config.S_SHOW_ROOF_TOGGLE
-						|| Config.S_EXPERIENCE_COUNTER_TOGGLE || Config.S_WANT_GLOBAL_CHAT
-						|| Config.S_EXPERIENCE_DROPS_TOGGLE || Config.S_ITEMS_ON_DEATH_MENU);
+			Config.isAndroid() ||
+				Config.S_WANT_CLANS || Config.S_WANT_KILL_FEED
+				|| Config.S_FOG_TOGGLE || Config.S_GROUND_ITEM_TOGGLE
+				|| Config.S_AUTO_MESSAGE_SWITCH_TOGGLE || Config.S_BATCH_PROGRESSION
+				|| Config.S_SIDE_MENU_TOGGLE || Config.S_INVENTORY_COUNT_TOGGLE
+				|| Config.S_MENU_COMBAT_STYLE_TOGGLE
+				|| Config.S_FIGHTMODE_SELECTOR_TOGGLE || Config.S_SHOW_ROOF_TOGGLE
+				|| Config.S_EXPERIENCE_COUNTER_TOGGLE || Config.S_WANT_GLOBAL_CHAT
+				|| Config.S_EXPERIENCE_DROPS_TOGGLE || Config.S_ITEMS_ON_DEATH_MENU);
 
 
 		if (!mc.gotInitialConfigs) {
@@ -1070,9 +1131,9 @@ public class PacketHandler {
 		}
 
 		mc.setLocalPlayer(
-				mc.createPlayer(currentZ, mc.getLocalPlayerServerIndex(), currentX, 1,
-						ORSCharacterDirection.lookup(direction)
-				)
+			mc.createPlayer(currentZ, mc.getLocalPlayerServerIndex(), currentX, 1,
+				ORSCharacterDirection.lookup(direction)
+			)
 		);
 
 		int dir = packetsIncoming.getBitMask(8);
@@ -1153,7 +1214,7 @@ public class PacketHandler {
 					if (mc.getGameObjectInstanceX(i) == xTile && zTile == mc.getGameObjectInstanceZ(i)) {
 						mc.getScene().removeModel(mc.getGameObjectInstanceModel(i));
 						mc.getWorld().removeGameObject_CollisonFlags(mc.getGameObjectInstanceID(i),
-								mc.getGameObjectInstanceX(i), mc.getGameObjectInstanceZ(i));
+							mc.getGameObjectInstanceX(i), mc.getGameObjectInstanceZ(i));
 					} else {
 						if (count != i) {
 							mc.setGameObjectInstanceModel(count, mc.getGameObjectInstanceModel(i));
@@ -1214,8 +1275,8 @@ public class PacketHandler {
 					if (dxTile == 0 && dzTile == 0) {
 						mc.getScene().removeModel(mc.getGameObjectInstanceModel(localIndex));
 						mc.getWorld().removeGameObject_CollisonFlags(mc.getGameObjectInstanceID(localIndex),
-								mc.getGameObjectInstanceX(localIndex),
-								mc.getGameObjectInstanceZ(localIndex));
+							mc.getGameObjectInstanceX(localIndex),
+							mc.getGameObjectInstanceZ(localIndex));
 					} else {
 						if (localIndex != id) {
 							mc.setGameObjectInstanceModel(id, mc.getGameObjectInstanceModel(localIndex));
@@ -1323,10 +1384,10 @@ public class PacketHandler {
 					if (dir == 0 && var9 == 0) {
 						mc.getScene().removeModel(mc.getWallObjectInstanceModel(wallInstance));
 						mc.getWorld().removeWallObject_CollisionFlags(true,
-								mc.getWallObjectInstanceDir(wallInstance),
-								mc.getWallObjectInstanceZ(wallInstance),
-								mc.getWallObjectInstanceX(wallInstance),
-								mc.getWallObjectInstanceID(wallInstance));
+							mc.getWallObjectInstanceDir(wallInstance),
+							mc.getWallObjectInstanceZ(wallInstance),
+							mc.getWallObjectInstanceX(wallInstance),
+							mc.getWallObjectInstanceID(wallInstance));
 					} else {
 						if (wallID != wallInstance) {
 							mc.setWallObjectInstanceModel(wallID, mc.getWallObjectInstanceModel(wallInstance));
@@ -1352,14 +1413,14 @@ public class PacketHandler {
 
 				for (int var9 = 0; var9 < mc.getWallObjectInstanceCount(); ++var9) {
 					if (mc.getWallObjectInstanceX(var9) == x
-							&& mc.getWallObjectInstanceZ(var9) == y
-							&& direction == mc.getWallObjectInstanceDir(var9)) {
+						&& mc.getWallObjectInstanceZ(var9) == y
+						&& direction == mc.getWallObjectInstanceDir(var9)) {
 						mc.getScene().removeModel(mc.getWallObjectInstanceModel(var9));
 						mc.getWorld().removeWallObject_CollisionFlags(true,
-								mc.getWallObjectInstanceDir(var9),
-								mc.getWallObjectInstanceZ(var9),
-								mc.getWallObjectInstanceX(var9),
-								mc.getWallObjectInstanceID(var9));
+							mc.getWallObjectInstanceDir(var9),
+							mc.getWallObjectInstanceZ(var9),
+							mc.getWallObjectInstanceX(var9),
+							mc.getWallObjectInstanceID(var9));
 					} else {
 						if (var9 != localIndex) {
 							mc.setWallObjectInstanceModel(localIndex, mc.getWallObjectInstanceModel(var9));
@@ -1377,7 +1438,7 @@ public class PacketHandler {
 				if (id != 60000) {
 					mc.getWorld().applyWallToCollisionFlags(id, x, y, direction);
 					RSModel model = mc.createWallObjectModel(x, y, id, direction,
-							mc.getWallObjectInstanceCount());
+						mc.getWallObjectInstanceCount());
 					mc.setWallObjectInstanceModel(mc.getWallObjectInstanceCount(), model);
 					mc.setWallObjectInstanceX(mc.getWallObjectInstanceCount(), x);
 					mc.setWallObjectInstanceZ(mc.getWallObjectInstanceCount(), y);
@@ -1413,7 +1474,7 @@ public class PacketHandler {
 						continue;
 					}
 					npc.animationNext = (nextSpriteOffset << 2)
-							+ packetsIncoming.getBitMask(2);
+						+ packetsIncoming.getBitMask(2);
 				} else {
 					rsDir = packetsIncoming.getBitMask(3);
 					waypointCurrentIndex = npc.waypointIndexCurrent;
@@ -1480,9 +1541,9 @@ public class PacketHandler {
 					npc.messageTimeout = 150;
 					npc.message = message;
 					if (mc.getLocalPlayer().serverIndex == chatRecipient) {
-						mc.showMessage(false, (String) null,
-								com.openrsc.client.entityhandling.EntityHandler.getNpcDef(npc.npcId).getName() + ": " + npc.message,
-								MessageType.QUEST, 0, (String) null, "@yel@");
+						mc.showMessage(false, null,
+							com.openrsc.client.entityhandling.EntityHandler.getNpcDef(npc.npcId).getName() + ": " + npc.message,
+							MessageType.QUEST, 0, null, "@yel@");
 					}
 				}
 
@@ -1592,9 +1653,9 @@ public class PacketHandler {
 				if (var10 == 0 && var11 == 0) {
 					mc.getScene().removeModel(mc.getGameObjectInstanceModel(j));
 					mc.getWorld().removeGameObject_CollisonFlags(
-							mc.getGameObjectInstanceID(j),
-							mc.getGameObjectInstanceX(j),
-							mc.getGameObjectInstanceZ(j));
+						mc.getGameObjectInstanceID(j),
+						mc.getGameObjectInstanceX(j),
+						mc.getGameObjectInstanceZ(j));
 				} else {
 					if (j != count) {
 						mc.setGameObjectInstanceModel(count, mc.getGameObjectInstanceModel(j));
@@ -1618,10 +1679,10 @@ public class PacketHandler {
 				if (wallX == 0 && wallZ == 0) {
 					mc.getScene().removeModel(mc.getWallObjectInstanceModel(n));
 					mc.getWorld().removeWallObject_CollisionFlags(true,
-							mc.getWallObjectInstanceDir(n),
-							mc.getWallObjectInstanceZ(n),
-							mc.getWallObjectInstanceX(n),
-							mc.getWallObjectInstanceID(n));
+						mc.getWallObjectInstanceDir(n),
+						mc.getWallObjectInstanceZ(n),
+						mc.getWallObjectInstanceX(n),
+						mc.getWallObjectInstanceID(n));
 				} else {
 					if (n != count) {
 						mc.setWallObjectInstanceModel(count, mc.getWallObjectInstanceModel(n));
@@ -1702,16 +1763,17 @@ public class PacketHandler {
 		mc.setExperienceCounterToggle(packetsIncoming.getUnsignedByte()); // 33
 		mc.setHideInventoryCount(packetsIncoming.getUnsignedByte() == 1); // 34
 		mc.setHideNameTag(packetsIncoming.getUnsignedByte() == 1); // 35
+		mc.setPartyInviteBlockSetting(packetsIncoming.getUnsignedByte() == 1); // 36
 	}
 
 	private void togglePrayer(int length) {
 		for (int i = 0; length - 1 > i; ++i) {
 			boolean enabled = packetsIncoming.getByte() == 1;
 			if (!mc.checkPrayerOn(i) && enabled) {
-				mc.playSoundFile((String) "prayeron");
+				mc.playSoundFile("prayeron");
 			}
 			if (mc.checkPrayerOn(i) && !enabled) {
-				mc.playSoundFile((String) "prayeroff");
+				mc.playSoundFile("prayeroff");
 			}
 
 			mc.togglePrayer(i, enabled);
@@ -1854,7 +1916,7 @@ public class PacketHandler {
 
 		int receivedXp = mc.getPlayerExperience(skill) - oldXp;
 		receivedXp = receivedXp < 0 ? 0 : receivedXp;
-		mc.setPlayerStatXpGained(skill, (long) mc.getPlayerStatXpGained(skill) + receivedXp);
+		mc.setPlayerStatXpGained(skill, mc.getPlayerStatXpGained(skill) + receivedXp);
 		if (mc.getXpGainedStartTime(skill) == 0) {
 			mc.setXpGainedStartTime(skill, System.currentTimeMillis());
 		}
@@ -1908,7 +1970,7 @@ public class PacketHandler {
 
 	private void playSound() {
 		String filename = packetsIncoming.readString();
-		mc.playSoundFile((String) filename);
+		mc.playSoundFile(filename);
 	}
 
 	private void showLoginDialog() {
@@ -2022,7 +2084,7 @@ public class PacketHandler {
 			int var6 = 39;
 
 			for (int inventoryIndex = 0; inventoryIndex < mc.getInventoryItemCount()
-					&& shopItemCount <= var6; ++inventoryIndex) {
+				&& shopItemCount <= var6; ++inventoryIndex) {
 				boolean var25 = false;
 
 				for (int var9 = 0; var9 < 40; ++var9) {
@@ -2046,7 +2108,7 @@ public class PacketHandler {
 		}
 
 		if (mc.getShopSelectedItemIndex() >= 0 && 40 > mc.getShopSelectedItemIndex()
-				&& mc.getShopSelectedItemType() != mc.getShopItemID(mc.getShopSelectedItemIndex())) {
+			&& mc.getShopSelectedItemType() != mc.getShopItemID(mc.getShopSelectedItemIndex())) {
 			mc.setShopSelectedItemIndex(-1);
 			mc.setShopSelectedItemType(-2);
 		}
@@ -2108,7 +2170,7 @@ public class PacketHandler {
 						if (null != displayName) {
 							for (int modelIndex = 0; modelIndex < SocialLists.ignoreListCount; ++modelIndex) {
 								if (displayName.equals(
-										StringUtil.displayNameToKey(SocialLists.ignoreList[modelIndex]))) {
+									StringUtil.displayNameToKey(SocialLists.ignoreList[modelIndex]))) {
 									var29 = true;
 									break;
 								}
@@ -2119,17 +2181,17 @@ public class PacketHandler {
 							player.messageTimeout = 150;
 							player.message = message;
 							mc.showMessage(
-									/*!Config.S_WANT_CUSTOM_RANK_DISPLAY*/ true,
-									(
-											((updateType == 7 && muted) ? "@whi@[MUTED]@yel@ " : "") +
-													((updateType == 7 && onTutorial) ? "@whi@[TUTORIAL]@yel@ " : "") +
-													(player.clanTag != null ? "@whi@[@cla@" + player.clanTag + "@whi@]@yel@ " : "") +
-													player.getStaffName()
-									),
-									player.message,
-									MessageType.CHAT,
-									crownID,
-									player.accountName
+								/*!Config.S_WANT_CUSTOM_RANK_DISPLAY*/ true,
+								(
+									((updateType == 7 && muted) ? "@whi@[MUTED]@yel@ " : "") +
+										((updateType == 7 && onTutorial) ? "@whi@[TUTORIAL]@yel@ " : "") +
+										(player.clanTag != null ? "@whi@[@cla@" + player.clanTag + "@whi@]@yel@ " : "") +
+										player.getStaffName()
+								),
+								player.message,
+								MessageType.CHAT,
+								crownID,
+								player.accountName
 							);
 						}
 					}
@@ -2226,10 +2288,39 @@ public class PacketHandler {
 						player.clanTag = null;
 					}
 
-					player.isInvisible = packetsIncoming.getByte() > 0 ? true : false;
-					player.isInvulnerable = packetsIncoming.getByte() > 0 ? true : false;
+					player.isInvisible = packetsIncoming.getByte() > 0;
+					player.isInvulnerable = packetsIncoming.getByte() > 0;
 					player.groupID = packetsIncoming.getByte();
 					player.icon = packetsIncoming.get32();
+				}
+			} else if (updateType == 8) {
+				int heal = packetsIncoming.getUnsignedByte();
+				int curhp = packetsIncoming.getUnsignedByte();
+				int maxhp = packetsIncoming.getUnsignedByte();
+				if (player != null) {
+					player.healthMax = maxhp;
+					player.healthCurrent = curhp;
+					player.healTaken = heal;
+					if (mc.getLocalPlayer() == player) {
+						mc.setPlayerStatCurrent(3, curhp);
+						mc.setPlayerStatBase(3, maxhp);
+						mc.setShowDialogServerMessage(false);
+						mc.setShowDialogMessage(false);
+					}
+					player.healTimeout = 200;
+				}
+			} else if (updateType == 9) {
+				int curhp = packetsIncoming.getUnsignedByte();
+				int maxhp = packetsIncoming.getUnsignedByte();
+				if (player != null) {
+					player.healthMax = maxhp;
+					player.healthCurrent = curhp;
+					if (mc.getLocalPlayer() == player) {
+						mc.setPlayerStatCurrent(3, curhp);
+						mc.setPlayerStatBase(3, maxhp);
+						mc.setShowDialogServerMessage(false);
+						mc.setShowDialogMessage(false);
+					}
 				}
 			}
 		}
@@ -2248,7 +2339,7 @@ public class PacketHandler {
 
 					for (int dir = 0; dir < mc.getGroundItemCount(); ++dir) {
 						if (mc.getGroundItemX(dir) == var19 && mc.getGroundItemZ(dir) == var6
-								&& mc.getGroundItemID(dir) == groundItemID) {
+							&& mc.getGroundItemID(dir) == groundItemID) {
 							groundItemID = -123;
 						} else {
 							if (var7 != dir) {
@@ -2272,10 +2363,10 @@ public class PacketHandler {
 
 					for (int var7 = 0; mc.getGameObjectInstanceCount() > var7; ++var7) {
 						if (mc.getGameObjectInstanceX(var7) == var19
-								&& mc.getGameObjectInstanceZ(var7) == var6) {
+							&& mc.getGameObjectInstanceZ(var7) == var6) {
 							mc.setGroundItemHeight(mc.getGroundItemCount(),
-									com.openrsc.client.entityhandling.EntityHandler.getObjectDef(
-											mc.getGameObjectInstanceID(var7)).getGroundItemVar());
+								com.openrsc.client.entityhandling.EntityHandler.getObjectDef(
+									mc.getGameObjectInstanceID(var7)).getGroundItemVar());
 							break;
 						}
 					}

@@ -13,65 +13,12 @@ import com.openrsc.data.DataFileDecrypter;
 import com.openrsc.data.DataOperations;
 import com.openrsc.interfaces.NComponent;
 import com.openrsc.interfaces.NCustomComponent;
-import com.openrsc.interfaces.misc.AchievementGUI;
-import com.openrsc.interfaces.misc.AuctionHouse;
-import com.openrsc.interfaces.misc.BankPinInterface;
-import com.openrsc.interfaces.misc.CustomBankInterface;
-import com.openrsc.interfaces.misc.DoSkillInterface;
-import com.openrsc.interfaces.misc.ExperienceConfigInterface;
-import com.openrsc.interfaces.misc.FishingTrawlerInterface;
-import com.openrsc.interfaces.misc.IronManInterface;
-import com.openrsc.interfaces.misc.LostOnDeathInterface;
-import com.openrsc.interfaces.misc.OnlineListInterface;
-import com.openrsc.interfaces.misc.ProgressBarInterface;
-import com.openrsc.interfaces.misc.QuestGuideInterface;
-import com.openrsc.interfaces.misc.SkillGuideInterface;
-import com.openrsc.interfaces.misc.TerritorySignupInterface;
+import com.openrsc.interfaces.misc.*;
 import com.openrsc.interfaces.misc.clan.Clan;
-
-import java.awt.*;
-import java.awt.geom.Point2D;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.LineListener;
-
+import com.openrsc.interfaces.misc.party.Party;
 import orsc.buffers.RSBufferUtils;
-import orsc.enumerations.GameMode;
-import orsc.enumerations.InputXAction;
-import orsc.enumerations.MenuItemAction;
-import orsc.enumerations.MessageTab;
-import orsc.enumerations.MessageType;
-import orsc.enumerations.ORSCharacterDirection;
-import orsc.enumerations.PasswordChangeMode;
-import orsc.enumerations.SocialPopupMode;
-import orsc.graphics.gui.InputXPrompt;
-import orsc.graphics.gui.KillAnnouncer;
-import orsc.graphics.gui.KillAnnouncerQueue;
-import orsc.graphics.gui.Menu;
-import orsc.graphics.gui.MessageHistory;
-import orsc.graphics.gui.Panel;
-import orsc.graphics.gui.SocialLists;
+import orsc.enumerations.*;
+import orsc.graphics.gui.*;
 import orsc.graphics.three.CollisionFlag;
 import orsc.graphics.three.RSModel;
 import orsc.graphics.three.Scene;
@@ -84,6 +31,16 @@ import orsc.net.Network_Socket;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
+
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineEvent;
+import java.io.*;
+import java.security.SecureRandom;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import static orsc.Config.*;
 import static orsc.multiclient.ClientPort.saveHideIp;
@@ -266,10 +223,12 @@ public final class mudclient implements Runnable {
 	public int resizeWidth;
 	public int resizeHeight;
 	public Clan clan;
+	public Party party;
 	public boolean PAUSED;
 	public boolean gotInitialConfigs = false;
 	public ArrayList<String> skillGuideChosenTabs;
 	public String clanKickPlayer;
+	public String partyKickPlayer;
 	private long lastFPSUpdate = 0;
 	private int currentFPS = 0;
 	private long[] m_F = new long[10];
@@ -448,6 +407,9 @@ public final class mudclient implements Runnable {
 	private boolean optionMouseButtonOne = false;
 	private boolean optionSoundDisabled = true;
 	private boolean clanInviteBlockSetting = false;
+	private boolean partyInviteBlockSetting = false;
+	private int controlPartyPanel;
+	private Panel panelParty;
 	private Panel panelAppearance;
 	private Panel panelLogin;
 	private Panel panelLoginWelcome;
@@ -1048,6 +1010,28 @@ public final class mudclient implements Runnable {
 		}
 	}
 
+	public final void addPartyInv(String player) {
+		try {
+			String var3 = StringUtil.displayNameToKey(player);
+			if (null != var3) {
+				int var4;
+
+				if (!var3.equals(StringUtil.displayNameToKey(this.localPlayer.accountName))) {
+					this.packetHandler.getClientStream().newPacket(199);
+					this.packetHandler.getClientStream().writeBuffer1.putByte(12);
+					this.packetHandler.getClientStream().writeBuffer1.putByte(9);
+					this.packetHandler.getClientStream().writeBuffer1.putString(player);
+					this.packetHandler.getClientStream().finishPacket();
+				} else {
+					this.showMessage(false, null, "You can\'t invite yourself to a party.",
+						MessageType.GAME, 0, null);
+				}
+			}
+		} catch (RuntimeException var5) {
+			throw GenUtil.makeThrowable(var5, "client.PC(" + "dummy" + ',' + (player != null ? "{...}" : "null") + ')');
+		}
+	}
+
 	public final void addIgnore(String player) {
 		try {
 
@@ -1220,6 +1204,9 @@ public final class mudclient implements Runnable {
 				this.menuCommon.addCharacterItem(player.serverIndex, MenuItemAction.PLAYER_TRADE, "Trade with",
 					"@whi@" + name + level);
 				this.menuCommon.addCharacterItem(player.serverIndex, MenuItemAction.PLAYER_FOLLOW, "Follow",
+					"@whi@" + name + level);
+				if (S_WANT_PARTIES)
+				this.menuCommon.addCharacterItem(player.serverIndex, MenuItemAction.PLAYER_PARTY_INVITE, "Invite to party",
 					"@whi@" + name + level);
 				this.menuCommon.addItem_With2Strings("Report abuse", "@whi@" + name + level, player.getStaffName(),
 					MenuItemAction.REPORT_ABUSE, player.accountName);
@@ -2812,8 +2799,8 @@ public final class mudclient implements Runnable {
 							if (invIndex >= 0) {
 								if (stakeOfferEquipMode) {
 									Object[] equipment = getEquipmentItems();
-									if (invIndex < ((int[])equipment[0]).length) {
-										int itemID = ((int[])equipment[0])[invIndex];
+									if (invIndex < ((int[]) equipment[0]).length) {
+										int itemID = ((int[]) equipment[0])[invIndex];
 										this.menuDuel_Visible = true;
 										this.menuDuel.recalculateSize(0);
 										this.menuDuel.addCharacterItem_WithID(itemID,
@@ -3057,7 +3044,6 @@ public final class mudclient implements Runnable {
 					this.getSurface().drawColoredStringCentered(35 + 217 + xr, "Waiting for", 0xFFFFFF, 0, 1, yr + 246);
 					this.getSurface().drawColoredStringCentered(252 + xr, "other player", 0xFFFFFF, 0, 1, 256 + yr);
 				}
-
 
 
 				for (int itmOffer = 0; this.duelOfferItemCount > itmOffer; ++itmOffer) {
@@ -4887,6 +4873,457 @@ public final class mudclient implements Runnable {
 						}
 					}
 					if (S_SIDE_MENU_TOGGLE && C_SIDE_MENU_OVERLAY) {
+						int i2 = 75;
+						int index;
+						int var12;
+						if (party.inParty()) {
+							for (index = 0; index < SocialLists.partyListCount; ++index) {
+								String partyIsh = party.username[index];
+								var12 = 100;
+								int var777;
+								var777 = GenUtil.buildColor(220, 220, 220);
+								for (int var13 = party.username[index].length(); this.getSurface().stringWidth(1, partyIsh) > 120; partyIsh = party.username[index].substring(0, var13 - var12) + "...") {
+									++var12;
+								}
+								if(SocialLists.partyListCount == 1){
+									if (this.mouseX > 4 && this.mouseX < 109 && this.mouseY > 37 && this.mouseY < 59) {
+										if (getMouseClick() == 2) {
+											party.showPartySetupInterface(party.inParty());
+											this.showUiTab = 0;
+											setMouseClick(0);
+										}
+									}
+									if(party.skull[0] > 0){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 84,
+											38, 14, 14, 5924);
+									}
+									if(party.pMemD[0] > 0){
+										party.pMemDTimeout[0] = 500;
+									}
+									if(party.pMemDTimeout[0] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
+											38, 14, 14, 5924);
+									}
+									this.getSurface().drawBoxAlpha(5, 38, 108, 20, var777, 128);
+									this.getSurface().drawString("" + party.username[0] + "@whi@-" + party.cbLvl[0], 7, 50, 0xffffff, 1);
+									if(party.partyRank[0] == 1){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 38, 14, 14, 5924);
+									}
+									int hpMissing = 0;
+									double prog1 = 0;
+									double prog2 = 0;
+									hpMissing = party.maxHp[0] - party.curHp[0];
+									prog1 = ((double) hpMissing / party.maxHp[0]);
+									prog2 = ((double) prog1 * 100);
+									int prog3 = (int) Math.round(prog2);
+									this.getSurface().drawBox(7, 52, 100, 4, 0xFF0000);
+									if(party.pMemDTimeout[0] < 1) {
+										this.getSurface().drawBox(7, 52, 100 - prog3, 4, 0x00FF00);
+									}
+								} else if(SocialLists.partyListCount == 2){
+									if (this.mouseX > 4 && this.mouseX < 109 && this.mouseY > 37 && this.mouseY < 79) {
+										if (getMouseClick() == 2) {
+											party.showPartySetupInterface(party.inParty());
+											this.showUiTab = 0;
+											setMouseClick(0);
+										}
+									}
+									this.getSurface().drawBoxAlpha(5, 38, 108, 40, var777, 128);
+									if(party.partyRank[0] == 1){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 38, 14, 14, 5924);
+									}
+									if(party.partyRank[1] == 1){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 53, 14, 14, 5924);
+									}
+									if(party.skull[0] > 0){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 84,
+											38, 14, 14, 5924);
+									}
+									if(party.skull[1] > 0){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
+											57, 14, 14, 5924);
+									}
+									if(party.pMemD[0] > 0){
+										party.pMemDTimeout[0] = 500;
+									}
+									if(party.pMemD[1] > 0){
+										party.pMemDTimeout[1] = 500;
+									}
+									if(party.pMemDTimeout[0] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
+											38, 14, 14, 5924);
+									}
+									if(party.pMemDTimeout[1] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
+											58, 14, 14, 5924);
+									}
+									this.getSurface().drawString("@yel@" + party.username[0] + "@whi@-" + party.cbLvl[0], 7, 50, 0xffffff, 1);
+									int hpMissing = 0;
+									double prog1 = 0;
+									double prog2 = 0;
+									hpMissing = party.maxHp[0] - party.curHp[0];
+									prog1 = ((double) hpMissing / party.maxHp[0]);
+									prog2 = ((double) prog1 * 100);
+									int prog3 = (int) Math.round(prog2); // 3
+									this.getSurface().drawBox(7, 52, 100, 4, 0xFF0000);
+									if(party.pMemDTimeout[0] < 1) {
+										this.getSurface().drawBox(7, 52, 100 - prog3, 4, 0x00FF00);
+									}
+									this.getSurface().drawString("@yel@" + party.username[1] + "@whi@-" + party.cbLvl[1], 7, 70, 0xffffff, 1);
+									int hpMissing1 = 0;
+									double prog11 = 0;
+									double prog22 = 0;
+									hpMissing1 = party.maxHp[1] - party.curHp[1];
+									prog11 = ((double) hpMissing1 / party.maxHp[1]);
+									prog22 = ((double) prog11 * 100);
+									int prog33 = (int) Math.round(prog22); // 3
+									this.getSurface().drawBox(7, 72, 100, 4, 0xFF0000);
+									if(party.pMemDTimeout[1] < 1) {
+										this.getSurface().drawBox(7, 72, 100 - prog33, 4, 0x00FF00);
+									}
+								} else if(SocialLists.partyListCount == 3){
+									if (this.mouseX > 4 && this.mouseX < 109 && this.mouseY > 37 && this.mouseY < 99) {
+										if (getMouseClick() == 2) {
+											party.showPartySetupInterface(party.inParty());
+											this.showUiTab = 0;
+											setMouseClick(0);
+										}
+									}
+									if(party.pMemD[0] > 0){
+										party.pMemDTimeout[0] = 500;
+									}
+									if(party.pMemD[1] > 0){
+										party.pMemDTimeout[1] = 500;
+									}
+									if(party.pMemD[2] > 0){
+										party.pMemDTimeout[2] = 500;
+									}
+									if(party.pMemDTimeout[0] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
+											38, 14, 14, 5924);
+									}
+									if(party.pMemDTimeout[1] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
+											58, 14, 14, 5924);
+									}
+									if(party.pMemDTimeout[2] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
+											78, 14, 14, 5924);
+									}
+									int hpMissing1 = 0;
+									double prog111 = 0;
+									double prog222 = 0;
+									hpMissing1 = party.maxHp[0] - party.curHp[0];
+									prog111 = ((double) hpMissing1 / party.maxHp[0]);
+									prog222 = ((double) prog111 * 100);
+									int prog333 = (int) Math.round(prog222); // 3
+									this.getSurface().drawBox(7, 52, 100, 4, 0xFF0000);
+									if(party.pMemDTimeout[0] < 1) {
+										this.getSurface().drawBox(7, 52, 100 - prog333, 4, 0x00FF00);
+									}
+									this.getSurface().drawBoxAlpha(5, 38, 108, 60, var777, 128);
+									int hpMissing111 = 0;
+									double prog1111 = 0;
+									double prog2222 = 0;
+									hpMissing111 = party.maxHp[1] - party.curHp[1];
+									prog1111 = ((double) hpMissing111 / party.maxHp[1]);
+									prog2222 = ((double) prog1111 * 100);
+									int prog3333 = (int) Math.round(prog2222);
+									this.getSurface().drawBox(7, 72, 100, 4, 0xFF0000);
+									if(party.pMemDTimeout[1] < 1) {
+										this.getSurface().drawBox(7, 72, 100 - prog3333, 4, 0x00FF00);
+									}
+									int hpMissing1111 = 0;
+									double prog11111 = 0;
+									double prog22222 = 0;
+									hpMissing1111 = party.maxHp[2] - party.curHp[2];
+									prog11111 = ((double) hpMissing1111 / party.maxHp[2]);
+									prog22222 = ((double) prog11111 * 100);
+									int prog33333 = (int) Math.round(prog22222);
+									this.getSurface().drawBox(7, 92, 100, 4, 0xFF0000);
+									if(party.pMemDTimeout[2] < 1) {
+										this.getSurface().drawBox(7, 92, 100 - prog33333, 4, 0x00FF00);
+									}
+									if(party.partyRank[0] == 1){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 38, 14, 14, 5924);
+									}
+									if(party.partyRank[1] == 1){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 53, 14, 14, 5924);
+									}
+									if(party.partyRank[2] == 1){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 68, 14, 14, 5924);
+									}
+									if(party.skull[0] > 0){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 84,
+											38, 14, 14, 5924);
+									}
+									if(party.skull[1] > 0){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
+											57, 14, 14, 5924);
+									}
+									if(party.skull[2] > 0){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
+											76, 14, 14, 5924);
+									}
+									this.getSurface().drawString("" + party.username[0] + "@whi@-" + party.cbLvl[0], 7, 50, 0xffffff, 1);
+									this.getSurface().drawString("" + party.username[1] + "@whi@-" + party.cbLvl[1], 7, 70, 0xffffff, 1);
+									this.getSurface().drawString("" + party.username[2] + "@whi@-" + party.cbLvl[2], 7, 90, 0xffffff, 1);
+								} else if(SocialLists.partyListCount == 4){
+									if (this.mouseX > 4 && this.mouseX < 109 && this.mouseY > 37 && this.mouseY < 119) {
+										if (getMouseClick() == 2) {
+											party.showPartySetupInterface(party.inParty());
+											this.showUiTab = 0;
+											setMouseClick(0);
+										}
+									}
+									if(party.pMemD[0] > 0){
+										party.pMemDTimeout[0] = 500;
+									}
+									if(party.pMemD[1] > 0){
+										party.pMemDTimeout[1] = 500;
+									}
+									if(party.pMemD[2] > 0){
+										party.pMemDTimeout[2] = 500;
+									}
+									if(party.pMemD[3] > 0){
+										party.pMemDTimeout[3] = 500;
+									}
+									if(party.pMemDTimeout[0] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
+											38, 14, 14, 5924);
+									}
+									if(party.pMemDTimeout[1] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
+											58, 14, 14, 5924);
+									}
+									if(party.pMemDTimeout[2] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
+											78, 14, 14, 5924);
+									}
+									if(party.pMemDTimeout[3] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
+											98, 14, 14, 5924);
+									}
+									int hpMissing1212 = 0;
+									double prog111111 = 0;
+									double prog222222 = 0;
+									hpMissing1212 = party.maxHp[0] - party.curHp[0];
+									prog111111 = ((double) hpMissing1212 / party.maxHp[0]);
+									prog222222 = ((double) prog111111 * 100);
+									int prog333333 = (int) Math.round(prog222222); // 3
+									this.getSurface().drawBox(7, 52, 100, 4, 0xFF0000);
+									if(party.pMemDTimeout[0] < 1) {
+										this.getSurface().drawBox(7, 52, 100 - prog333333, 4, 0x00FF00);
+									}
+									this.getSurface().drawBoxAlpha(5, 38, 108, 80, var777, 128);
+									int hpMissing111222 = 0;
+									double prog1111222 = 0;
+									double prog2222333 = 0;
+									hpMissing111222 = party.maxHp[1] - party.curHp[1];
+									prog1111222 = ((double) hpMissing111222 / party.maxHp[1]);
+									prog2222333 = ((double) prog1111222 * 100);
+									int prog33332222 = (int) Math.round(prog2222333);
+									this.getSurface().drawBox(7, 72, 100, 4, 0xFF0000);
+									if(party.pMemDTimeout[1] < 1) {
+										this.getSurface().drawBox(7, 72, 100 - prog33332222, 4, 0x00FF00);
+									}
+									int hpMissing11116767 = 0;
+									double prog111117878 = 0;
+									double prog222228888 = 0;
+									hpMissing11116767 = party.maxHp[2] - party.curHp[2];
+									prog111117878 = ((double) hpMissing11116767 / party.maxHp[2]);
+									prog222228888 = ((double) prog111117878 * 100);
+									int prog333331111 = (int) Math.round(prog222228888);
+									this.getSurface().drawBox(7, 92, 100, 4, 0xFF0000);
+									if(party.pMemDTimeout[2] < 1) {
+										this.getSurface().drawBox(7, 92, 100 - prog333331111, 4, 0x00FF00);
+									}
+									int hphphphphphp = 0;
+									double pgpg = 0;
+									double pgpg2 = 0;
+									hphphphphphp = party.maxHp[3] - party.curHp[3];
+									pgpg = ((double) hphphphphphp / party.maxHp[3]);
+									pgpg2 = ((double) pgpg * 100);
+									int pgpg3 = (int) Math.round(pgpg2);
+									this.getSurface().drawBox(7, 112, 100, 4, 0xFF0000);
+									if(party.pMemDTimeout[3] < 1) {
+										this.getSurface().drawBox(7, 112, 100 - pgpg3, 4, 0x00FF00);
+									}
+									if(party.partyRank[0] == 1){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 38, 14, 14, 5924);
+									}
+									if(party.partyRank[1] == 1){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 53, 14, 14, 5924);
+									}
+									if(party.partyRank[2] == 1){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 68, 14, 14, 5924);
+									}
+									if(party.partyRank[3] == 1){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 83, 14, 14, 5924);
+									}
+									if(party.skull[0] > 0){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 84,
+											38, 14, 14, 5924);
+									}
+									if(party.skull[1] > 0){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
+											57, 14, 14, 5924);
+									}
+									if(party.skull[2] > 0){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
+											76, 14, 14, 5924);
+									}
+									if(party.skull[3] > 0){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
+											95, 14, 14, 5924);
+									}
+									this.getSurface().drawString("" + party.username[0] + "@whi@-" + party.cbLvl[0], 7, 50, 0xffffff, 1);
+									this.getSurface().drawString("" + party.username[1] + "@whi@-" + party.cbLvl[1], 7, 70, 0xffffff, 1);
+									this.getSurface().drawString("" + party.username[2] + "@whi@-" + party.cbLvl[2], 7, 90, 0xffffff, 1);
+									this.getSurface().drawString("" + party.username[3] + "@whi@-" + party.cbLvl[3], 7, 110, 0xffffff, 1);
+								} else if(SocialLists.partyListCount == 5){
+									if(party.pMemD[0] > 0){
+										party.pMemDTimeout[0] = 500;
+									}
+									if(party.pMemD[1] > 0){
+										party.pMemDTimeout[1] = 500;
+									}
+									if(party.pMemD[2] > 0){
+										party.pMemDTimeout[2] = 500;
+									}
+									if(party.pMemD[3] > 0){
+										party.pMemDTimeout[3] = 500;
+									}
+									if(party.pMemD[4] > 0){
+										party.pMemDTimeout[4] = 500;
+									}
+									if(party.pMemDTimeout[0] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
+											38, 14, 14, 5924);
+									}
+									if(party.pMemDTimeout[1] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
+											58, 14, 14, 5924);
+									}
+									if(party.pMemDTimeout[2] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
+											78, 14, 14, 5924);
+									}
+									if(party.pMemDTimeout[3] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
+											98, 14, 14, 5924);
+									}
+									if(party.pMemDTimeout[4] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
+											118, 14, 14, 5924);
+									}
+									if (this.mouseX > 4 && this.mouseX < 109 && this.mouseY > 37 && this.mouseY < 139) {
+										if (getMouseClick() == 2) {
+											party.showPartySetupInterface(party.inParty());
+											this.showUiTab = 0;
+											setMouseClick(0);
+										}
+									}
+									int hphphp = 0;
+									double p1p1p1 = 0;
+									double p2p2p2 = 0;
+									hphphp = party.maxHp[0] - party.curHp[0];
+									p1p1p1 = ((double) hphphp / party.maxHp[0]);
+									p2p2p2 = ((double) p1p1p1 * 100);
+									int p3p3p3 = (int) Math.round(p2p2p2); // 3
+									this.getSurface().drawBox(7, 52, 100, 4, 0xFF0000);
+									if(party.pMemDTimeout[0] < 1) {
+										this.getSurface().drawBox(7, 52, 100 - p3p3p3, 4, 0x00FF00);
+									}
+									this.getSurface().drawBoxAlpha(5, 38, 108, 100, var777, 128);
+									int hphphphp = 0;
+									double p1p1p1p1 = 0;
+									double p2p2p2p2 = 0;
+									hphphphp = party.maxHp[1] - party.curHp[1];
+									p1p1p1p1 = ((double) hphphphp / party.maxHp[1]);
+									p2p2p2p2 = ((double) p1p1p1p1 * 100);
+									int p3p3p3p3 = (int) Math.round(p2p2p2p2);
+									this.getSurface().drawBox(7, 72, 100, 4, 0xFF0000);
+									if(party.pMemDTimeout[1] < 1) {
+										this.getSurface().drawBox(7, 72, 100 - p3p3p3p3, 4, 0x00FF00);
+									}
+									int hphp = 0;
+									double p1p1 = 0;
+									double p2p2 = 0;
+									hphp = party.maxHp[2] - party.curHp[2];
+									p1p1 = ((double) hphp / party.maxHp[2]);
+									p2p2 = ((double) p1p1 * 100);
+									int p3p3 = (int) Math.round(p2p2);
+									this.getSurface().drawBox(7, 92, 100, 4, 0xFF0000);
+									if(party.pMemDTimeout[2] < 1) {
+										this.getSurface().drawBox(7, 92, 100 - p3p3, 4, 0x00FF00);
+									}
+									int hphphphphphphp = 0;
+									double gpgp = 0;
+									double gpgp2 = 0;
+									hphphphphphphp = party.maxHp[3] - party.curHp[3];
+									gpgp = ((double) hphphphphphphp / party.maxHp[3]);
+									gpgp2 = ((double) gpgp * 100);
+									int gppg = (int) Math.round(gpgp2);
+									this.getSurface().drawBox(7, 112, 100, 4, 0xFF0000);
+									if(party.pMemDTimeout[3] < 1) {
+										this.getSurface().drawBox(7, 112, 100 - gppg, 4, 0x00FF00);
+									}
+									int hphphphphphp1 = 0;
+									double pgpggpgp = 0;
+									double pgpg22 = 0;
+									hphphphphphp1 = party.maxHp[4] - party.curHp[4];
+									pgpggpgp = ((double) hphphphphphp1 / party.maxHp[4]);
+									pgpg22 = ((double) pgpggpgp * 100);
+									int pgpg33 = (int) Math.round(pgpg22);
+									this.getSurface().drawBox(7, 132, 100, 4, 0xFF0000);
+									if(party.pMemDTimeout[4] < 1) {
+										this.getSurface().drawBox(7, 132, 100 - pgpg33, 4, 0x00FF00);
+									}
+									if(party.partyRank[0] == 1){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 38, 14, 14, 5924);
+									}
+									if(party.partyRank[1] == 1){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 53, 14, 14, 5924);
+									}
+									if(party.partyRank[2] == 1){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 68, 14, 14, 5924);
+									}
+									if(party.partyRank[3] == 1){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 83, 14, 14, 5924);
+									}
+									if(party.partyRank[4] == 1){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 98, 14, 14, 5924);
+									}
+									if(party.skull[0] > 0){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 84,
+											38, 14, 14, 5924);
+									}
+									if(party.skull[1] > 0){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
+											57, 14, 14, 5924);
+									}
+									if(party.skull[2] > 0){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
+											76, 14, 14, 5924);
+									}
+									if(party.skull[3] > 0){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
+											95, 14, 14, 5924);
+									}
+									if(party.skull[4] > 0){
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
+											114, 14, 14, 5924);
+									}
+									this.getSurface().drawString("" + party.username[0] + "@whi@-" + party.cbLvl[0], 7, 50, 0xffffff, 1);
+									this.getSurface().drawString("" + party.username[1] + "@whi@-" + party.cbLvl[1], 7, 70, 0xffffff, 1);
+									this.getSurface().drawString("" + party.username[2] + "@whi@-" + party.cbLvl[2], 7, 90, 0xffffff, 1);
+									this.getSurface().drawString("" + party.username[3] + "@whi@-" + party.cbLvl[3], 7, 110, 0xffffff, 1);
+									this.getSurface().drawString("" + party.username[4] + "@whi@-" + party.cbLvl[4], 7, 130, 0xffffff, 1);
+								}
+							}
+						}
+
 						int i = 130;
 						if (localPlayer.isDev()) {
 							this.getSurface().drawString("Tile: @gre@(@whi@" + (playerLocalX + midRegionBaseX)
@@ -5310,6 +5747,27 @@ public final class mudclient implements Runnable {
 					this.packetHandler.getClientStream().finishPacket();
 				} else if (this.inputX_Action == InputXAction.CLAN_LEAVE) {
 					clan.getClanInterface().sendClanLeave();
+				} else if (this.inputX_Action == InputXAction.INVITE_PARTY_PLAYER) {
+					this.packetHandler.getClientStream().newPacket(199);
+					this.packetHandler.getClientStream().writeBuffer1.putByte(12);
+					this.packetHandler.getClientStream().writeBuffer1.putByte(9);
+					this.packetHandler.getClientStream().writeBuffer1.putString(str);
+					this.packetHandler.getClientStream().finishPacket();
+				} else if (this.inputX_Action == InputXAction.KICK_PARTY_PLAYER) {
+					this.packetHandler.getClientStream().newPacket(199);
+					this.packetHandler.getClientStream().writeBuffer1.putByte(12);
+					this.packetHandler.getClientStream().writeBuffer1.putByte(5);
+					this.packetHandler.getClientStream().writeBuffer1.putString(partyKickPlayer);
+					this.packetHandler.getClientStream().finishPacket();
+				} else if (this.inputX_Action == InputXAction.PARTY_DELEGATE_LEADERSHIP) {
+					this.packetHandler.getClientStream().newPacket(199);
+					this.packetHandler.getClientStream().writeBuffer1.putByte(12);
+					this.packetHandler.getClientStream().writeBuffer1.putByte(6);
+					this.packetHandler.getClientStream().writeBuffer1.putString(partyKickPlayer);
+					this.packetHandler.getClientStream().writeBuffer1.putByte(1);
+					this.packetHandler.getClientStream().finishPacket();
+				} else if (this.inputX_Action == InputXAction.PARTY_LEAVE) {
+					party.getPartyInterface().sendPartyLeave();
 				}
 				this.inputX_Action = InputXAction.ACT_0;
 			}
@@ -6404,6 +6862,8 @@ public final class mudclient implements Runnable {
 					achievementInterface.onRender(getSurface());
 				} else if (clan.getClanInterface().isVisible()) {
 					clan.getClanInterface().onRender(getSurface());
+				} else if (party.getPartyInterface().isVisible()) {
+					party.getPartyInterface().onRender(getSurface());
 				} else if (this.showDialogShop && this.combatTimeout == 0) {
 					this.drawDialogShop();
 				} else if (S_WANT_SKILL_MENUS && skillGuideInterface.isVisible()) {
@@ -7304,7 +7764,7 @@ public final class mudclient implements Runnable {
 							clanIsh) > 120; clanIsh = clan.username[index].substring(0, var13 - var12) + "...") {
 							++var12;
 						}
-						this.panelClan.setListEntry(this.controlClanPanel, index, (clan.clanRank[index] == 0 ? "     " : "") + colorKey + clanIsh + "          ", (clan.clanRank[index] == 1 ? 3 : clan.clanRank[index] == 2 ? 4 : 0),
+						this.panelClan.setListEntry(this.controlClanPanel, index, (clan.clanRank[index] == 0 ? "     " : "") + colorKey + clanIsh + "          ", 0,
 							null, null);
 					}
 					if (this.mouseX > var3 + 20 && this.mouseX < var3 + 94 && this.mouseY > var6 + (var4 + 26)
@@ -7466,7 +7926,7 @@ public final class mudclient implements Runnable {
 				if (var3 >= 0 && var15 >= 0 && var3 < 196 && var15 < 225 && (this.panelSocialTab == 0 || this.panelSocialTab == 2)) {
 					this.panelSocial.handleMouse(var3 - 199 + this.getSurface().width2, var15 + 36,
 						this.currentMouseButtonDown, this.lastMouseButtonDown);
-					if (this.mouseButtonClick >= 1 && this.panelSocialTab == 0) {
+					if (this.mouseButtonClick == 1 && this.panelSocialTab == 0) {
 						index = this.panelSocial.getControlSelectedListIndex(this.controlSocialPanel);
 						if (index >= 0 && this.mouseX < maxWidth) {
 							if (this.mouseX > minWidth) { // Remove Friend
@@ -7848,6 +8308,15 @@ public final class mudclient implements Runnable {
 							surface.drawCircle(var12 + var3 + var4 / 2, 36 - mZ + var5 / 2, 2, var15, 255, 0);
 						}
 					}
+					for (int var17 = 0; var17 < SocialLists.partyListCount; ++var17) {
+						if (var16.equals(StringUtil.displayNameToKey(party.username[var17]))
+							&& (party.onlinePartyMember[var17]) == 1) {
+							if(party.inParty()){
+								var15 = 0x0B5394;
+								surface.drawCircle(var12 + var3 + var4 / 2, 36 - mZ + var5 / 2, 2, var15, 255, 0);
+							}
+						}
+					}
 				}
 
 				this.drawMinimapEntity(var15, var12 + var3 + var4 / 2, (byte) -67, 36 - mZ + var5 / 2);
@@ -8151,7 +8620,19 @@ public final class mudclient implements Runnable {
 				&& this.mouseY < y + 4) {
 				textColor = 0xFFFF00;
 			}
+			if (S_WANT_PLAYER_COMMANDS)
 			this.getSurface().drawString("Display online list", (baseX + 3), y, textColor, 1);
+		}
+		if (party.inParty()) {
+			if (!this.insideTutorial) {
+				y += 14;
+				int textColor = 0xFFFFFF;
+				if (this.mouseX > x && this.mouseX < x + boxWidth && this.mouseY > y - 12
+					&& this.mouseY < y + 4) {
+					textColor = 0xFFFF00;
+				}
+				this.getSurface().drawString("Leave Party", (baseX + 3), y, textColor, 1);
+			}
 		}
 
 		// skip tutorial or exit the black hole menu option
@@ -8358,6 +8839,17 @@ public final class mudclient implements Runnable {
 			// report abuse
 			this.panelSettings.setListEntry(this.controlSettingPanel, index,
 				"@whi@Report Abuse", 18, null, null);
+
+			if (this.partyInviteBlockSetting) {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+					"@whi@Party Invitation - @red@Block", 19, null, null);
+			} else if(!this.partyInviteBlockSetting) {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+					"@whi@Party Invitation - @gre@Receive", 19, null, null);
+			} else {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+					"@whi@Party Invitation - @gre@Receive this", 19, null, null);
+			}
 		}
 
 		// items on death menu option OR logout text if not enabled
@@ -8666,6 +9158,14 @@ public final class mudclient implements Runnable {
 				this.reportAbuse_State = 1;
 			}
 
+			if (settingIndex == 19 && this.mouseButtonClick == 1) {
+				this.partyInviteBlockSetting = !this.partyInviteBlockSetting;
+				this.packetHandler.getClientStream().newPacket(111);
+				this.packetHandler.getClientStream().writeBuffer1.putByte(36);
+				this.packetHandler.getClientStream().writeBuffer1.putByte(this.partyInviteBlockSetting ? 1 : 0);
+				this.packetHandler.getClientStream().finishPacket();
+			}
+
 			// batch progress bar - byte index 24
 			if (S_BATCH_PROGRESSION) {
 				if (settingIndex == 24 && this.mouseButtonClick == 1) {
@@ -8790,11 +9290,23 @@ public final class mudclient implements Runnable {
 				this.settingsBlockTrade, this.settingsBlockDuel);
 		}
 
-		//Handle online list click
-		yFromTopDistance += 25;
-		if (this.mouseX > var6 && this.mouseX < var6 + var5
-			&& yFromTopDistance - 12 < this.mouseY && this.mouseY < yFromTopDistance + 4 && this.mouseButtonClick == 1) {
-			this.sendCommandString("onlinelist");
+		if (S_WANT_PLAYER_COMMANDS) {
+			//Handle online list click
+			yFromTopDistance += 25;
+			if (this.mouseX > var6 && this.mouseX < var6 + var5
+				&& yFromTopDistance - 12 < this.mouseY && this.mouseY < yFromTopDistance + 4 && this.mouseButtonClick == 1) {
+				this.sendCommandString("onlinelist");
+			}
+		}
+
+		if (S_WANT_PARTIES) {
+			if (party.inParty()) {
+				yFromTopDistance += 14;
+				if (this.mouseX > var6 && this.mouseX < var6 + var5
+					&& yFromTopDistance - 5 < this.mouseY && this.mouseY < yFromTopDistance + 10 && this.mouseButtonClick == 1) {
+					this.sendCommandString("leaveparty");
+				}
+			}
 		}
 
 		// skip tutorial button or exit blackhole button
@@ -9477,8 +9989,8 @@ public final class mudclient implements Runnable {
 			int[] itemIdArray, itemAmountArray;
 			Object[] thang = getEquipmentItems();
 			if (stakeOfferEquipMode) {
-				itemIdArray = ((int[])thang[0]);
-				itemAmountArray = ((int[])thang[1]);
+				itemIdArray = ((int[]) thang[0]);
+				itemAmountArray = ((int[]) thang[1]);
 				if (andStakeInvIndex >= itemIdArray.length)
 					return;
 			} else {
@@ -9488,7 +10000,7 @@ public final class mudclient implements Runnable {
 			}
 			int invCount = this.getInventoryCount(itemIdArray[andStakeInvIndex]);
 			if (S_WANT_EQUIPMENT_TAB) {
-				for (int itemid : ((int[])thang[0])) {
+				for (int itemid : ((int[]) thang[0])) {
 					if (itemid == itemIdArray[andStakeInvIndex]) {
 						invCount++;
 						break;
@@ -9498,7 +10010,7 @@ public final class mudclient implements Runnable {
 
 			int andStakeInvID = itemIdArray[andStakeInvIndex];
 			if (S_WANT_EQUIPMENT_TAB && EntityHandler.getItemDef(andStakeInvID).isStackable() && stakeOfferEquipMode) {
-				this.showMessage(false, null, "You can't stake stackables from your equipment.",MessageType.GAME,0,null);
+				this.showMessage(false, null, "You can't stake stackables from your equipment.", MessageType.GAME, 0, null);
 				return;
 			}
 
@@ -9527,7 +10039,6 @@ public final class mudclient implements Runnable {
 					}
 				}
 			}
-
 
 
 			if (hitStakeStacks >= invCount) {
@@ -9829,6 +10340,22 @@ public final class mudclient implements Runnable {
 
 			if (this.combatTimeout > 0) {
 				--this.combatTimeout;
+			}
+
+			if (party.pMemDTimeout[0] > 0) {
+				--party.pMemDTimeout[0];
+			}
+			if (party.pMemDTimeout[1] > 0) {
+				--party.pMemDTimeout[1];
+			}
+			if (party.pMemDTimeout[2] > 0) {
+				--party.pMemDTimeout[2];
+			}
+			if (party.pMemDTimeout[3] > 0) {
+				--party.pMemDTimeout[3];
+			}
+			if (party.pMemDTimeout[4] > 0) {
+				--party.pMemDTimeout[4];
 			}
 
 			if (this.showAppearanceChange) {
@@ -10189,6 +10716,8 @@ public final class mudclient implements Runnable {
 						this.currentMouseButtonDown, this.lastMouseButtonDown);
 					clan.getClanInterface().clanSetupPanel.handleMouse(this.mouseX, this.mouseY,
 						this.currentMouseButtonDown, this.lastMouseButtonDown);
+					party.getPartyInterface().partySetupPanel.handleMouse(this.mouseX, this.mouseY,
+						this.currentMouseButtonDown, this.lastMouseButtonDown);
 					bank.bank.handleMouse(this.mouseX, this.mouseY,
 						this.currentMouseButtonDown, this.lastMouseButtonDown);
 					if (this.messageTabSelected != MessageTab.ALL && this.mouseX >= 494
@@ -10520,13 +11049,19 @@ public final class mudclient implements Runnable {
 						return;
 					}
 					if (S_WANT_CUSTOM_BANKS && this.isShowDialogBank() && this.combatTimeout == 0) {
-							bank.keyDown(key);
+						bank.keyDown(key);
 						return;
 					}
 					if (clan.getClanInterface().isVisible() && (clan.getClanInterface().clanSetupPanel.focusOn(clan.getClanInterface().clanName_field)
 						|| clan.getClanInterface().clanSetupPanel.focusOn(clan.getClanInterface().clanTag_field)
 						|| clan.getClanInterface().clanSetupPanel.focusOn(clan.getClanInterface().clanSearch_field))) {
 						clan.getClanInterface().keyDown(key);
+						return;
+					}
+					if (party.getPartyInterface().isVisible() && (party.getPartyInterface().partySetupPanel.focusOn(party.getPartyInterface().partyName_field)
+						|| party.getPartyInterface().partySetupPanel.focusOn(party.getPartyInterface().partyTag_field)
+						|| party.getPartyInterface().partySetupPanel.focusOn(party.getPartyInterface().partySearch_field))) {
+						party.getPartyInterface().keyDown(key);
 						return;
 					}
 					if (mainComponent.checkKeyPress(key)) {
@@ -11415,6 +11950,14 @@ public final class mudclient implements Runnable {
 					this.packetHandler.getClientStream().finishPacket();
 					break;
 				}
+				case PLAYER_PARTY_INVITE: {
+					this.packetHandler.getClientStream().newPacket(199);
+					this.packetHandler.getClientStream().writeBuffer1.putByte(12);
+					this.packetHandler.getClientStream().writeBuffer1.putByte(2);
+					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.packetHandler.getClientStream().finishPacket();
+					break;
+				}
 				case PLAYER_FOLLOW: {
 					this.packetHandler.getClientStream().newPacket(165);
 					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
@@ -11553,6 +12096,15 @@ public final class mudclient implements Runnable {
 					kickClanPlayer(playerName);
 					String[] kickMessage = new String[]{"Are you sure you want to kick " + playerName + " from clan?"};
 					this.showItemModX(kickMessage, InputXAction.KICK_CLAN_PLAYER, false);
+					this.showUiTab = 0;
+					break;
+				}
+				case PARTY_MENU_KICK: {
+					String playerName = var9;
+					playerName = playerName.replaceAll(" ", "_");
+					kickPartyPlayer(playerName);
+					String[] kickMessage = new String[]{"Are you sure you want to kick " + playerName + " from party?"};
+					this.showItemModX(kickMessage, InputXAction.KICK_PARTY_PLAYER, false);
 					this.showUiTab = 0;
 					break;
 				}
@@ -12792,15 +13344,13 @@ public final class mudclient implements Runnable {
 					return;
 				try {
 					// PC sound code:
-					final Clip clip = AudioSystem.getClip();
-					clip.addLineListener(new LineListener() {
-						public void update(LineEvent myLineEvent) {
-							if (myLineEvent.getType() == LineEvent.Type.STOP)
-								clip.close();
-						}
+                    final Clip clip = AudioSystem.getClip();
+                    clip.addLineListener(myLineEvent -> {
+						if (myLineEvent.getType() == LineEvent.Type.STOP)
+							clip.close();
 					});
-					clip.open(AudioSystem.getAudioInputStream(sound));
-					clip.start();
+                    clip.open(AudioSystem.getAudioInputStream(sound));
+                    clip.start();
 					// Android sound code:
 					//int dataLength = DataOperations.getDataFileLength(key + ".pcm", soundData);
 					//int offset = DataOperations.getDataFileOffset(key + ".pcm", soundData);
@@ -13027,6 +13577,7 @@ public final class mudclient implements Runnable {
 				n.setVisible(false);
 
 			clan.putClan(false);
+			party.putParty(false);
 			if (S_EXPERIENCE_DROPS_TOGGLE)
 				experienceOverlay.setVisible(true);
 			this.getSurface().blackScreen(true);
@@ -13083,8 +13634,10 @@ public final class mudclient implements Runnable {
 			this.auctionHouse.setVisible(false);
 			this.achievementInterface.setVisible(false);
 			clan.getClanInterface().setVisible(false);
+			party.getPartyInterface().setVisible(false);
 			SocialLists.friendListCount = 0;
 			SocialLists.clanListCount = 0;
+			SocialLists.partyListCount = 0;
 			this.reportAbuse_State = 0;
 
 			for (int j = 0; j < messagesArray.length; ++j) {
@@ -14007,6 +14560,10 @@ public final class mudclient implements Runnable {
 		this.clanInviteBlockSetting = block;
 	}
 
+	public void setPartyInviteBlockSetting(boolean block) {
+		this.partyInviteBlockSetting = block;
+	}
+
 	public boolean checkPrayerOn(int i) {
 		return this.prayerOn[i];
 	}
@@ -14549,6 +15106,7 @@ public final class mudclient implements Runnable {
 
 				achievementInterface = new AchievementGUI(this);
 				clan = new Clan(this);
+				party = new Party(this);
 
 				if (S_EXPERIENCE_DROPS_TOGGLE) {
 					experienceOverlay = new NCustomComponent(this) {
@@ -15523,6 +16081,12 @@ public final class mudclient implements Runnable {
 			} else {
 				clan.getClanInterface().clanSetupPanel.scrollMethodList(clan.getClanInterface().clanGUIScroll, x);
 			}
+		} else if (party.getPartyInterface().isVisible()) {
+			if (party.getPartyInterface().partyActivePanel == 3) {
+				party.getPartyInterface().partySetupPanel.scrollMethodList(party.getPartyInterface().partySearchScroll, x);
+			} else {
+				party.getPartyInterface().partySetupPanel.scrollMethodList(party.getPartyInterface().partyGUIScroll, x);
+			}
 		} else if (experienceConfigInterface.isVisible() && experienceConfigInterface.selectSkillMenu) {
 			experienceConfigInterface.experienceConfig.scrollMethodList(experienceConfigInterface.experienceConfigScroll, x);
 		} else if (messageTabSelected == MessageTab.QUEST && !this.controlPressed)
@@ -15557,6 +16121,10 @@ public final class mudclient implements Runnable {
 
 	private void kickClanPlayer(String player) {
 		this.clanKickPlayer = player;
+	}
+
+	private void kickPartyPlayer(String player) {
+		this.partyKickPlayer = player;
 	}
 
 	public void setVolumeToRotate(boolean b) {

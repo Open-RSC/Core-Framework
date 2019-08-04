@@ -17,14 +17,11 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.LoginResponse;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
-import java.io.OutputStream;
-import java.nio.ByteBuffer;
 import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -86,8 +83,7 @@ public class DatabasePlayerLoader {
 			if (Constants.GameServer.WANT_BANK_PRESETS) {
 				statement = conn.prepareStatement(Statements.save_AddBankPreset);
 				for (int k = 0; k < Bank.PRESET_COUNT; k++) {
-					if (s.getBank().presets[k].changed)
-					{
+					if (s.getBank().presets[k].changed) {
 						updateLongs(Statements.save_DeleteBankPresets, s.getDatabaseID(), k);
 						ByteArrayOutputStream inventoryBuffer = new ByteArrayOutputStream();
 						DataOutputStream inventoryWriter = new DataOutputStream(inventoryBuffer);
@@ -143,8 +139,7 @@ public class DatabasePlayerLoader {
 				statement.executeBatch();
 			}
 
-			if (Constants.GameServer.WANT_EQUIPMENT_TAB)
-			{
+			if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
 				updateLongs(Statements.save_DeleteEquip, s.getDatabaseID());
 				statement = conn.prepareStatement(Statements.save_SaveEquip);
 				for (Item item : s.getEquipment().list) {
@@ -239,29 +234,27 @@ public class DatabasePlayerLoader {
 			statement.setInt(3, s.getX());
 			statement.setInt(4, s.getY());
 			statement.setInt(5, s.getFatigue());
-			statement.setInt(6, s.getPetFatigue());
-			statement.setInt(7, s.getKills());
-			statement.setInt(8, s.getDeaths());
-			statement.setInt(9, s.getKills2());
-			statement.setInt(10, s.getPets());
-			statement.setInt(11, s.getIronMan());
-			statement.setInt(12, s.getIronManRestriction());
-			statement.setInt(13, s.getHCIronmanDeath());
-			statement.setInt(14, s.calculateQuestPoints());
-			statement.setInt(15, s.getSettings().getAppearance().getHairColour());
-			statement.setInt(16, s.getSettings().getAppearance().getTopColour());
-			statement.setInt(17, s.getSettings().getAppearance().getTrouserColour());
-			statement.setInt(18, s.getSettings().getAppearance().getSkinColour());
-			statement.setInt(19, s.getSettings().getAppearance().getHead());
-			statement.setInt(20, s.getSettings().getAppearance().getBody());
-			statement.setInt(21, s.isMale() ? 1 : 0);
-			statement.setLong(22, s.getSkullTime());
-			statement.setLong(23, s.getChargeTime());
-			statement.setInt(24, s.getCombatStyle());
-			statement.setLong(25, s.getMuteExpires());
-			statement.setLong(26, s.getBankSize());
-			statement.setLong(27, s.getGroupID());
-			statement.setInt(28, s.getDatabaseID());
+			statement.setInt(6, s.getKills());
+			statement.setInt(7, s.getDeaths());
+			statement.setInt(8, s.getKills2());
+			statement.setInt(9, s.getIronMan());
+			statement.setInt(10, s.getIronManRestriction());
+			statement.setInt(11, s.getHCIronmanDeath());
+			statement.setInt(12, s.calculateQuestPoints());
+			statement.setInt(13, s.getSettings().getAppearance().getHairColour());
+			statement.setInt(14, s.getSettings().getAppearance().getTopColour());
+			statement.setInt(15, s.getSettings().getAppearance().getTrouserColour());
+			statement.setInt(16, s.getSettings().getAppearance().getSkinColour());
+			statement.setInt(17, s.getSettings().getAppearance().getHead());
+			statement.setInt(18, s.getSettings().getAppearance().getBody());
+			statement.setInt(19, s.isMale() ? 1 : 0);
+			statement.setLong(20, s.getSkullTime());
+			statement.setLong(21, s.getChargeTime());
+			statement.setInt(22, s.getCombatStyle());
+			statement.setLong(23, s.getMuteExpires());
+			statement.setLong(24, s.getBankSize());
+			statement.setLong(25, s.getGroupID());
+			statement.setInt(26, s.getDatabaseID());
 			statement.executeUpdate();
 
 			// PRIVACY SETTINGS
@@ -477,11 +470,9 @@ public class DatabasePlayerLoader {
 			save.setInitialLocation(new Point(result.getInt("x"), result.getInt("y")));
 
 			save.setFatigue(result.getInt("fatigue"));
-			save.setPetFatigue(result.getInt("petfatigue"));
 			save.setKills(result.getInt("kills"));
 			save.setDeaths(result.getInt("deaths"));
 			save.setKills2(result.getInt("kills2"));
-			save.setPets(result.getInt("pets"));
 			save.setIronMan(result.getInt("iron_man"));
 			save.setIronManRestriction(result.getInt("iron_man_restriction"));
 			save.setHCIronmanDeath(result.getInt("hc_ironman_death"));
@@ -518,7 +509,7 @@ public class DatabasePlayerLoader {
 			save.getSkills().loadExp(fetchExperience(save.getDatabaseID()));
 
 			save.getSkills().loadLevels(fetchLevels(save.getDatabaseID()));
-			
+
 			result = resultSetFromInteger(Statements.playerPendingRecovery, save.getDatabaseID());
 			if (result.next()) {
 				save.setLastRecoveryChangeRequest(result.getLong("date_set"));
@@ -538,13 +529,12 @@ public class DatabasePlayerLoader {
 					if (itemDef != null) {
 						if (Constants.GameServer.WANT_EQUIPMENT_TAB)
 							equipment.list[itemDef.getWieldPosition()] = item;
-						else
-						{
+						else {
 							item.setWielded(true);
-							inv.add(item,false);
+							inv.add(item, false);
 						}
 						save.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(),
-								itemDef.getWearableId(), true);
+							itemDef.getWearableId(), true);
 
 					}
 				} else
@@ -557,10 +547,10 @@ public class DatabasePlayerLoader {
 				while (result.next()) {
 					Item item = new Item(result.getInt("id"), result.getInt("amount"));
 					ItemDefinition itemDef = item.getDef();
-					if (item.isWieldable()){
+					if (item.isWieldable()) {
 						equipment.list[itemDef.getWieldPosition()] = item;
 						save.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(),
-								itemDef.getWearableId(), true);
+							itemDef.getWearableId(), true);
 					}
 				}
 
@@ -622,8 +612,7 @@ public class DatabasePlayerLoader {
 
 			try {
 				save.setCastTimer(save.getCache().getLong("last_spell_cast"));
-			}
-			catch (Throwable t) {
+			} catch (Throwable t) {
 				save.setCastTimer();
 			}
 
@@ -892,8 +881,7 @@ public class DatabasePlayerLoader {
 			playerExp = "SELECT ";
 			playerCurExp = "SELECT ";
 
-			for (SkillDef skill : Skills.skills)
-			{
+			for (SkillDef skill : Skills.skills) {
 				updateExperience = updateExperience + "`exp_" + skill.getShortName().toLowerCase() + "`=?, ";
 				updateStats = updateStats + "`cur_" + skill.getShortName().toLowerCase() + "`=?, ";
 				playerExp = playerExp + "`exp_" + skill.getShortName().toLowerCase() + "`, ";
@@ -910,7 +898,6 @@ public class DatabasePlayerLoader {
 			playerExp = playerExp + "FROM `" + PREFIX + "experience` WHERE `playerID`=?";
 			playerCurExp = playerCurExp + "FROM `" + PREFIX + "curstats` WHERE `playerID`=?";
 		}
-
 
 
 		//private static final String unreadMessages = "SELECT COUNT(*) FROM `messages` WHERE showed=0 AND show_message=1 AND owner=?";
@@ -940,8 +927,8 @@ public class DatabasePlayerLoader {
 		private static final String basicInfo = "SELECT 1 FROM `" + PREFIX + "players` WHERE `id` = ?";
 
 		private static final String playerData = "SELECT `id`, `group_id`, "
-			+ "`combatstyle`, `login_date`, `login_ip`, `x`, `y`, `fatigue`,  `petfatigue`, `kills`,"
-			+ "`deaths`, `kills2`, `pets`, `iron_man`, `iron_man_restriction`,`hc_ironman_death`, `quest_points`, `block_chat`, `block_private`,"
+			+ "`combatstyle`, `login_date`, `login_ip`, `x`, `y`, `fatigue`,  `kills`,"
+			+ "`deaths`, `kills2`, `iron_man`, `iron_man_restriction`,`hc_ironman_death`, `quest_points`, `block_chat`, `block_private`,"
 			+ "`block_trade`, `block_duel`, `cameraauto`,"
 			+ "`onemouse`, `soundoff`, `haircolour`, `topcolour`,"
 			+ "`trousercolour`, `skincolour`, `headsprite`, `bodysprite`, `male`,"
@@ -994,7 +981,7 @@ public class DatabasePlayerLoader {
 			+ "equipped`(`playerID`, `id`, `amount`) VALUES(?, ?, ?)";
 
 		private static final String save_UpdateBasicInfo = "UPDATE `" + PREFIX
-			+ "players` SET `combat`=?, skill_total=?, `x`=?, `y`=?, `fatigue`=?,  `petfatigue`=?, `kills`=?, `deaths`=?, `kills2`=?, `pets`=?, `iron_man`=?, `iron_man_restriction`=?, `hc_ironman_death`=?, `quest_points`=?, `haircolour`=?, `topcolour`=?, `trousercolour`=?, `skincolour`=?, `headsprite`=?, `bodysprite`=?, `male`=?, `skulled`=?, `charged`=?, `combatstyle`=?, `muted`=?, `bank_size`=?, `group_id`=? WHERE `id`=?";
+			+ "players` SET `combat`=?, skill_total=?, `x`=?, `y`=?, `fatigue`=?, `kills`=?, `deaths`=?, `kills2`=?, `iron_man`=?, `iron_man_restriction`=?, `hc_ironman_death`=?, `quest_points`=?, `haircolour`=?, `topcolour`=?, `trousercolour`=?, `skincolour`=?, `headsprite`=?, `bodysprite`=?, `male`=?, `skulled`=?, `charged`=?, `combatstyle`=?, `muted`=?, `bank_size`=?, `group_id`=? WHERE `id`=?";
 
 		private static final String save_DeleteQuests = "DELETE FROM `" + PREFIX + "quests` WHERE `playerID`=?";
 
@@ -1011,7 +998,7 @@ public class DatabasePlayerLoader {
 		private static final String playerLoginData = "SELECT `group_id`, `pass`, `salt`, `banned` FROM `" + PREFIX + "players` WHERE `username`=?";
 
 		private static final String playerPendingRecovery = "SELECT `username`, `question1`, `answer1`, `question2`, `answer2`, `question3`, `answer3`, `question4`, `answer4`, `question5`, `answer5`, `date_set`, `ip_set` FROM `"
-		+ PREFIX + "player_change_recovery` WHERE `playerID`=?";
+			+ PREFIX + "player_change_recovery` WHERE `playerID`=?";
 
 		private static final String userToId = "SELECT DISTINCT `id` FROM `" + PREFIX + "players` WHERE `username`=?";
 

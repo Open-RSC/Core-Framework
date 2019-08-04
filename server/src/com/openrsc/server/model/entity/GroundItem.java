@@ -6,9 +6,11 @@ import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.ItemLoc;
+import com.openrsc.server.content.party.PartyPlayer;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 
 public class GroundItem extends Entity {
 	/**
@@ -77,6 +79,19 @@ public class GroundItem extends Entity {
 	}
 
 	public boolean belongsTo(Player p) {
+		if (p.getParty() != null) {
+			for (Player p2 : World.getWorld().getPlayers()) {
+				if (p.getParty().getPlayers().size() > 1 && p.getParty() != null && p.getParty() == p2.getParty()) {
+					PartyPlayer p3 = p2.getParty().getLeader();
+					if (p3.getShareLoot() > 0) {
+						p = p2;
+						p.getUsernameHash();
+						p2.getUsernameHash();
+						return true;
+					}
+				}
+			}
+		}
 		return p.getUsernameHash() == ownerUsernameHash || ownerUsernameHash == 0;
 	}
 
@@ -117,11 +132,11 @@ public class GroundItem extends Entity {
 		return loc;
 	}
 
-	public long getSpawnedTime() {
+	private long getSpawnedTime() {
 		return spawnedTime;
 	}
 
-	public boolean isOn(int x, int y) {
+	boolean isOn(int x, int y) {
 		return x == getX() && y == getY();
 	}
 

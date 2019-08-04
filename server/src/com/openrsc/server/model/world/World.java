@@ -5,6 +5,7 @@ import com.openrsc.server.Server;
 import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler.TrawlerBoat;
+import com.openrsc.server.content.party.PartyManager;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.external.NPCLoc;
@@ -32,18 +33,10 @@ import com.openrsc.server.util.SimpleSubscriber;
 import com.openrsc.server.util.ThreadSafeIPTracker;
 import com.openrsc.server.util.rsc.CollisionFlag;
 import com.openrsc.server.util.rsc.MessageType;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public final class World implements SimpleSubscriber<FishingTrawler> {
 
@@ -208,7 +201,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 			}
 		});
 	}
-	
+
 	public void delayedSpawnObject(final GameObjectLoc loc, final int respawnTime) {
 		this.delayedSpawnObject(loc, respawnTime, false);
 	}
@@ -387,6 +380,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	public void load() {
 		try {
 			ClanManager.init();
+			PartyManager.init();
 			worldInstance.wl = new WorldLoader();
 			worldInstance.wl.loadWorld(worldInstance);
 			WorldPopulation.populateWorld(worldInstance);
@@ -560,6 +554,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 				other.getSocial().alertOfLogin(player);
 			}
 			ClanManager.checkAndAttachToClan(player);
+			PartyManager.checkAndAttachToParty(player);
 			LOGGER.info("Registered " + player.getUsername() + " to server");
 			return true;
 		}
