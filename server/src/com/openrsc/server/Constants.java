@@ -281,6 +281,9 @@ public final class Constants {
 		public static boolean WANT_BLURBERRY_BADGE = false;
 		public static boolean WANT_SHOW_KITTENS_CIVILLIAN = false;
 		public static boolean WANT_BARTER_WORMBRAINS = false;
+		public static final int RING_OF_WEALTH_REROLLS = 10;
+		public static final int RING_OF_RECOIL_LIMIT = 40;
+		public static final int RING_OF_FORGING_USES = 75;
 
 		public static ImmutableList<String> IGNORED_NETWORK_EXCEPTIONS =
             ImmutableList.of("An existing connection was forcibly closed by the remote host",

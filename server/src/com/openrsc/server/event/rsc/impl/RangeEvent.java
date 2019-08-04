@@ -145,9 +145,18 @@ public class RangeEvent extends GameTickEvent {
 				if (Constants.GameServer.WANT_EQUIPMENT_TAB)
 				{
 					Item ammo = getPlayerOwner().getEquipment().getAmmoItem();
-					if (ammo == null)
+					if (ammo == null || ammo.getDef() == null)
 					{
 						getPlayerOwner().message("you don't have any ammo equipped");
+						getPlayerOwner().resetRange();
+						return;
+					}
+					if (xbow && ammo.getDef().getWearableId() == 1000) {
+						getPlayerOwner().message("You can't fire arrows with a crossbow");
+						getPlayerOwner().resetRange();
+						return;
+					} else if (!xbow && ammo.getDef().getWearableId() == 1001) {
+						getPlayerOwner().message("You can't fire bolts with a bow");
 						getPlayerOwner().resetRange();
 						return;
 					}

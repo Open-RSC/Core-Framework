@@ -3551,6 +3551,19 @@ public class EntityHandler {
 		items.add(new ItemDef("Blood talisman", "Swap this note at any bank for the equivalent item.", "", 0, -1, "items:438",true, false, 0, 0, false, false, -1, 2282, 2283));
 		items.add(new ItemDef("Research package", "This contains some vital research results.", "", 0, -1, "items:330",false, false, 0, 0, true, true, -1, -1, 2284));
 		items.add(new ItemDef("Research notes", "These make no sense at all.", "", 0, -1, "items:427",false, false, 0, 0, true, true, -1, -1, 2285));
+
+		items.add(new ItemDef("Ring of Recoil", "An enchanted ring.", "", 900, -1, "items:500",false, true, 1200, 0, true, false, 2287, -1, 2286));
+		items.add(new ItemDef("Ring of Recoil", "Swap this note at any bank for the equivalent item.", "", 900, -1, "items:438",false, false, 0, 0, true, false, -1, 2286, 2287));
+		items.add(new ItemDef("Ring of Duelling", "An enchanted ring.", "", 1275, -1, "items:500",false, true, 1200, 0, true, false, 2289, -1, 2288));
+		items.add(new ItemDef("Ring of Duelling", "Swap this note at any bank for the equivalent item.", "", 1275, -1, "items:438",false, false, 0, 0, true, false, -1, 2288, 2289));
+		items.add(new ItemDef("Ring of Forging", "An enchanted ring.", "", 2025, -1, "items:500",false, true, 1200, 0, true, false, 2291, -1, 2290));
+		items.add(new ItemDef("Ring of Forging", "Swap this note at any bank for the equivalent item.", "", 2025, -1, "items:438",false, false, 0, 0, true, false, -1, 2290, 2291));
+		items.add(new ItemDef("Ring of Life", "An enchanted ring.", "", 3525, -1, "items:500",false, true, 1200, 0, true, false, 2293, -1, 2292));
+		items.add(new ItemDef("Ring of Life", "Swap this note at any bank for the equivalent item.", "", 3525, -1, "items:438",false, false, 0, 0, true, false, -1, 2292, 2293));
+		items.add(new ItemDef("Ring of Wealth", "An enchanted ring.", "", 17625, -1, "items:500",false, true, 1200, 0, true, false, 2295, -1, 2294));
+		items.add(new ItemDef("Ring of Wealth", "Swap this note at any bank for the equivalent item.", "", 17625, -1, "items:438",false, false, 0, 0, true, false, -1, 2294, 2295));
+
+
 	}
 
 	private static void loadNoteDefinitions() {
@@ -4645,8 +4658,8 @@ public class EntityHandler {
 		runes.clear();
 		runes.put(32, 1);
 		runes.put(46, 1);
-		spells.add(new SpellDef("Enchant lvl-1 amulet",
-			"For use on sapphire amulets", 7, 3, 2,
+		spells.add(new SpellDef(Config.S_WANT_EQUIPMENT_TAB ? "Enchant lvl-1 jewelry" : "Enchant lvl-1 amulet",
+			Config.S_WANT_EQUIPMENT_TAB ? "For use on sapphire jewelry" : "For use on sapphire amulets", 7, 3, 2,
 			(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 2);
@@ -4707,8 +4720,8 @@ public class EntityHandler {
 		runes.clear();
 		runes.put(33, 3);
 		runes.put(46, 1);
-		spells.add(new SpellDef("Enchant lvl-2 amulet",
-			"For use on emerald amulets", 27, 3, 2,
+		spells.add(new SpellDef(Config.S_WANT_EQUIPMENT_TAB ? "Enchant lvl-2 jewelry" : "Enchant lvl-2 amulet",
+			Config.S_WANT_EQUIPMENT_TAB ? "For use on emerald jewelry" : "For use on emerald amulets", 27, 3, 2,
 			(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 3);
@@ -4773,8 +4786,8 @@ public class EntityHandler {
 		runes.clear();
 		runes.put(31, 5);
 		runes.put(46, 1);
-		spells.add(new SpellDef("Enchant lvl-3 amulet",
-			"For use on ruby amulets", 49, 3, 2,
+		spells.add(new SpellDef(Config.S_WANT_EQUIPMENT_TAB ? "Enchant lvl-3 jewelry" : "Enchant lvl-3 amulet",
+			Config.S_WANT_EQUIPMENT_TAB ? "For use on ruby jewelry" : "For use on ruby amulets", 49, 3, 2,
 			(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 5);
@@ -4809,8 +4822,8 @@ public class EntityHandler {
 		runes.clear();
 		runes.put(34, 10);
 		runes.put(46, 1);
-		spells.add(new SpellDef("Enchant lvl-4 amulet",
-			"For use on diamond amulets", 57, 3, 2,
+		spells.add(new SpellDef(Config.S_WANT_EQUIPMENT_TAB ? "Enchant lvl-4 jewelry" : "Enchant lvl-4 amulet",
+			Config.S_WANT_EQUIPMENT_TAB ? "For use on diamond jewelry" : "For use on diamond amulets", 57, 3, 2,
 			(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 2);
@@ -4888,8 +4901,8 @@ public class EntityHandler {
 		runes.put(32, 15);
 		runes.put(34, 15);
 		runes.put(46, 1);
-		spells.add(new SpellDef("Enchant lvl-5 amulet",
-			"For use on dragonstone amulets", 68, 3, 3,
+		spells.add(new SpellDef(Config.S_WANT_EQUIPMENT_TAB ? "Enchant lvl-5 jewelry" : "Enchant lvl-5 amulet",
+			Config.S_WANT_EQUIPMENT_TAB ? "For use on dragonstone jewelry" : "For use on dragonstone amulets", 68, 3, 3,
 			(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 7);
@@ -6619,6 +6632,8 @@ public class EntityHandler {
 			objects.add(new GameObjectDef("Portal", "This portal helps you navigate the maze.", "Take", "Examine", 1, 1, 1, 0, "portal", i++));//Runeessence portal
 		}
 
+		objects.add(new GameObjectDef("pipe", "a dirty sewer pipe", "enter", "Examine", 1, 1, 1, 0, "obstical_pipe", i++)); //yanille agility shortcut
+		objects.add(new GameObjectDef("pipe", "a dirty sewer pipe", "enter", "Examine", 1, 1, 1, 0, "obstical_pipe", i++)); //yanille agility shortcut
 	}
 
 	public static void load(boolean loadMembers) {

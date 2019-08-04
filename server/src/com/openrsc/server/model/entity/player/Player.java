@@ -37,6 +37,7 @@ import com.openrsc.server.net.rsc.PacketHandlerLookup;
 import com.openrsc.server.net.rsc.handlers.ItemDropHandler;
 import com.openrsc.server.net.rsc.handlers.Ping;
 import com.openrsc.server.net.rsc.handlers.WalkRequest;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.menu.Menu;
@@ -2873,5 +2874,27 @@ public final class Player extends Mob {
 			+ item.getAmount() + " at " + this.getLocation().toString()));
 
 		return true;
+	}
+	
+	public boolean checkRingOfLife(Mob hitter) {
+		if (this.isPlayer() && Functions.isWielding(this, ItemId.RING_OF_LIFE.id())
+			&& (!this.getLocation().inWilderness()
+			|| (this.getLocation().inWilderness() && this.getLocation().wildernessLevel() <= World.GLORY_TELEPORT_LIMIT))) {
+			if (((float) this.getSkills().getLevel(3)) / ((float) this.getSkills().getMaxStat(3)) <= 0.1f) {
+				this.resetCombatEvent();
+				this.resetRange();
+				this.resetAll();
+				hitter.resetCombatEvent();
+				hitter.resetRange();
+				if (hitter.isPlayer()) {
+					((Player) hitter).resetAll();
+				}
+				this.teleport(122, 647, false);
+				this.message("Your ring of Life shines brightly");
+				this.getInventory().shatter(ItemId.RING_OF_LIFE.id());
+				return true;
+			}
+		}
+		return false;
 	}
 }

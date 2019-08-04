@@ -284,20 +284,20 @@ public final class Admins implements CommandListener {
 
 				if (dropID == 10) {
 					for (int g : GoldDrops.drops.getOrDefault(npcID, new int[]{1}))
-						hmap.put("Coins " + g, 0);
+						hmap.put("coins " + g, 0);
 				} else if (dropID == 160) {
 					int[] rares = {160, 159, 158, 157, 526, 527, 1277};
 					String[] rareNames = {"uncut sapphire", "uncut emerald",
 						"uncut ruby", "uncut diamond", "Half of a key", "Half of a key", "Half Dragon Square Shield"};
 					for (int r = 0; r < rares.length; r++)
-						hmap.put(rareNames[r] + " " + rares[r], 0);
+						hmap.put(rareNames[r].toLowerCase() + " " + rares[r], 0);
 				} else if (dropID == 165) {
 					int[] herbs = {165, 435, 436, 437, 438, 439, 440, 441, 442, 443};
 					for (int h : herbs)
-						hmap.put("Herb " + h, 0);
+						hmap.put("herb " + h, 0);
 				} else {
 					ItemDefinition def = EntityHandler.getItemDef(dropID);
-					hmap.put(def.getName() + " " + dropID, 0);
+					hmap.put(def.getName().toLowerCase() + " " + dropID, 0);
 				}
 			}
 			int originalTotal = 0;
@@ -324,17 +324,17 @@ public final class Admins implements CommandListener {
 							if (dropID == 10) {
 								int d = Formulae.calculateGoldDrop(GoldDrops.drops.getOrDefault(npcID, new int[]{1}));
 								try {
-									hmap.put("Coins " + d, hmap.get("Coins " + d) + 1);
+									hmap.put("coins " + d, hmap.get("coins " + d) + 1);
 								} catch (NullPointerException n) { // No coin value for npc
 								}
 							} else {
 								if (dropID == 160)
-									dropID = Formulae.calculateGemDrop();
+									dropID = Formulae.calculateGemDrop(player);
 								else if (dropID == 165)
 									dropID = Formulae.calculateHerbDrop();
 								ItemDefinition def = EntityHandler.getItemDef(dropID);
 								try {
-									hmap.put(def.getName() + " " + dropID, hmap.get(def.getName() + " " + dropID) + 1);
+									hmap.put(def.getName().toLowerCase() + " " + dropID, hmap.get(def.getName().toLowerCase() + " " + dropID) + 1);
 								} catch (NullPointerException n) {
 								}
 							}

@@ -434,6 +434,30 @@ public class Inventory {
 		return true;
 	}
 
+	public void shatter(int itemID) {
+		if (EntityHandler.getItemDef(itemID) == null
+			|| !EntityHandler.getItemDef(itemID).isWieldable() || !Functions.isWielding(player, itemID)) {
+			return;
+		}
+
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			int index = player.getEquipment().hasEquipped(itemID);
+			player.getEquipment().list[index] = null;
+		} else {
+			for (int i = 0; i < player.getInventory().size(); i++) {
+				Item item = player.getInventory().get(i);
+				if (item != null && item.isWieldable()
+					&& item.getID() == itemID && item.isWielded()) {
+					player.getInventory().remove(i);
+					break;
+				}
+			}
+		}
+		player.updateWornItems(EntityHandler.getItemDef(itemID).getWieldPosition(), 0);
+		player.message("Your " + EntityHandler.getItemDef(itemID).getName() + " shatters");
+		ActionSender.sendEquipmentStats(player, EntityHandler.getItemDef(itemID).getWieldPosition());
+	}
+
 	public boolean wieldItem(Item item, boolean sound) {
 
 		int requiredLevel = item.getDef().getRequiredLevel();

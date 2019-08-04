@@ -1,5 +1,6 @@
 package com.openrsc.server.util.rsc;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.FiremakingDef;
 import com.openrsc.server.external.GameObjectLoc;
@@ -12,11 +13,11 @@ import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.Mob;
+import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
 
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.getMaxLevel;
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class Formulae {
 
@@ -918,16 +919,28 @@ public final class Formulae {
 		return weightedRandomChoice(goldValues, weights, goldValues[0]);
 	}
 
-	public static int calculateGemDrop() {
+	public static int calculateGemDrop(Player p) {
 		int roll1 = weightedRandomChoice(gemDropIDs, gemDropWeights, ItemId.NOTHING.id());
 		if (roll1 != ItemId.NOTHING_REROLL.id())
 			return roll1;
-		int roll2 = calculateRareDrop();
+		int roll2 = calculateRareDrop(p);
 		return roll2;
 	}
 
-	public static int calculateRareDrop() {
-		return weightedRandomChoice(rareDropIDs, rareDropWeights, ItemId.NOTHING.id());
+	public static int calculateRareDrop(Player p) {
+		int roll1 = weightedRandomChoice(rareDropIDs, rareDropWeights, ItemId.NOTHING.id());
+
+		if (isWielding(p, ItemId.RING_OF_WEALTH.id()) && roll1 == ItemId.NOTHING.id()) {
+			for (int i = 0; i < Constants.GameServer.RING_OF_WEALTH_REROLLS; i++) {
+				roll1 = weightedRandomChoice(rareDropIDs, rareDropWeights, ItemId.NOTHING.id());
+				if (roll1 != ItemId.NOTHING.id()) {
+					p.message("Your ring of wealth shines brightly!");
+					break;
+				}
+
+			}
+		}
+		return roll1;
 	}
 
 	public static int calculateHerbDrop() {
