@@ -543,7 +543,8 @@ public class DatabasePlayerLoader {
 							item.setWielded(true);
 							inv.add(item,false);
 						}
-						save.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId());
+						save.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(),
+								itemDef.getWearableId(), true);
 
 					}
 				} else
@@ -558,7 +559,8 @@ public class DatabasePlayerLoader {
 					ItemDefinition itemDef = item.getDef();
 					if (item.isWieldable()){
 						equipment.list[itemDef.getWieldPosition()] = item;
-						save.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId());
+						save.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(),
+								itemDef.getWearableId(), true);
 					}
 				}
 
