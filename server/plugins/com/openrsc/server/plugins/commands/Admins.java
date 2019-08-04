@@ -53,6 +53,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.ListIterator;
 import java.util.Objects;
 
 import static com.openrsc.server.plugins.Functions.sleep;
@@ -843,17 +844,20 @@ public final class Admins implements CommandListener {
 							wearableId, false);
 				}
 			}
-
-			for (Item i : p.getInventory().getItems()) {
-				if (p.getInventory().get(i).isWielded()) {
-					p.getInventory().get(i).setWielded(false);
+			
+			ListIterator<Item> iterator = p.getInventory().iterator();
+			
+			for (; iterator.hasNext(); ) {
+				Item i = iterator.next();
+				if (i.isWielded()) {
+					i.setWielded(false);
 					p.updateWornItems(i.getDef().getWieldPosition(), i.getDef().getAppearanceId(),
 							i.getDef().getWearableId(), false);
 				}
-
-				p.getInventory().remove(i);
+				iterator.remove();
 			}
-
+			
+			ActionSender.sendInventory(p);
 			ActionSender.sendEquipmentStats(p);
 			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "Your inventory has been wiped by an admin");
