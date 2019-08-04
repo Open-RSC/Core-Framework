@@ -314,7 +314,8 @@ public class Bank {
 		if (sound)
 			player.playSound("click");
 
-		player.updateWornItems(item.getDef().getWieldPosition(), item.getDef().getAppearanceId());
+		player.updateWornItems(item.getDef().getWieldPosition(), item.getDef().getAppearanceId(),
+				item.getDef().getWearableId(), true);
 		player.getEquipment().list[item.getDef().getWieldPosition()] = new Item(item.getID(), amountToRemove);
 		ActionSender.sendEquipmentStats(player);
 	}
@@ -342,7 +343,8 @@ public class Bank {
 			player.playSound("click");
 		}
 		player.updateWornItems(affectedItem.getDef().getWieldPosition(),
-			player.getSettings().getAppearance().getSprite(affectedItem.getDef().getWieldPosition()));
+			player.getSettings().getAppearance().getSprite(affectedItem.getDef().getWieldPosition()),
+			affectedItem.getDef().getWearableId(), false);
 		player.getEquipment().list[affectedItem.getDef().getWieldPosition()] = null;
 		add(affectedItem);
 		return true;
@@ -474,12 +476,15 @@ public class Bank {
 
 		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
 			//Attempt to equip the preset equipment
+			int wearableId;
 			for (int i = 0; i < presets[slot].equipment.length; i++) {
 				Item presetEquipment = presets[slot].equipment[i];
 				if (presetEquipment.getDef() == null) {
+					wearableId = player.getEquipment().list[i].getDef().getWearableId();
 					player.getEquipment().list[i] = null;
 					player.updateWornItems(i,
-						player.getSettings().getAppearance().getSprite(i));
+						player.getSettings().getAppearance().getSprite(i),
+						wearableId, false);
 					continue;
 				}
 				presetEquipment.setWielded(false);
@@ -497,8 +502,10 @@ public class Bank {
 							continue;
 						}
 						player.getEquipment().list[presetEquipment.getDef().getWieldPosition()] = presetEquipment;
+						wearableId = presetEquipment.getDef().getWearableId();
 						player.updateWornItems(i,
-							presetEquipment.getDef().getAppearanceId());
+							presetEquipment.getDef().getAppearanceId(),
+							wearableId, true);
 						if (presetAmount == ownedAmount) {
 							itemsOwned.remove(presetEquipment.getID());
 						} else {

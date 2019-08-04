@@ -97,6 +97,14 @@ public class BuyMarketItemTask extends MarketTask {
 
 		if (item.getAmountLeft() == 0) MarketDatabase.setSoldOut(item);
 		else MarketDatabase.update(item);
+
+		for (MarketItem marketItem : Market.getInstance().getAuctionItems()) {
+			if (marketItem.getAuctionID() == item.getAuctionID()) {
+				marketItem.setAmountLeft(item.getAmountLeft());
+				marketItem.setPrice(item.getPrice());
+			}
+		}
+
 		Market.getInstance().addRequestOpenAuctionHouseTask(playerBuyer);
 
 		if (updateDiscord && Constants.GameServer.WANT_DISCORD_UPDATES) {
