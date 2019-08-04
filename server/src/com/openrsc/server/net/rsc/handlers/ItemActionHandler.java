@@ -41,9 +41,11 @@ public class ItemActionHandler implements PacketHandler {
 		//User wants to use the item from equipment tab
 		if (idx == -1)
 		{
-			idx = (int) p.readShort();
-			if (player.getEquipment().hasEquipped(idx) != -1)
-				tempitem = new Item(idx);
+			player.message("Please unequip it first.");
+			return;
+			//idx = (int) p.readShort();
+			//if (player.getEquipment().hasEquipped(idx) != -1)
+			//	tempitem = new Item(idx);
 		} else {
 		tempitem = player.getInventory().get(idx);
 		}
