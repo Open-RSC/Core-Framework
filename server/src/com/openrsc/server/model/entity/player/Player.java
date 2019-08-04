@@ -844,7 +844,8 @@ public final class Player extends Mob {
 				if (unWield) {
 					item.setWielded(false);
 					updateWornItems(item.getDef().getWieldPosition(),
-						getSettings().getAppearance().getSprite(item.getDef().getWieldPosition()));
+						getSettings().getAppearance().getSprite(item.getDef().getWieldPosition()),
+						item.getDef().getWearableId(), false);
 					ActionSender.sendInventoryUpdateItem(this, slot);
 				}
 			}
@@ -2227,12 +2228,21 @@ public final class Player extends Mob {
 		}
 		return true;
 	}
+	
+	public void updateWornItems(int indexPosition, int appearanceId) {
+		this.updateWornItems(indexPosition, appearanceId, 0, false);
+	}
 
-	public void updateWornItems(int index, int id) {
+	public void updateWornItems(int indexPosition, int appearanceId, int wearableId, boolean isEquipped) {
+		// metal skirts (ideally all !full pants should update pants appearance to minishorts when that anim exists)
+		if (Constants.GameServer.WANT_CUSTOM_SPRITES && wearableId == 640) {
+			if (isEquipped) wornItems[2] = 0;
+			else wornItems[2] = 3;
+		}
 		//Don't need to show arrows or rings
-		if (index <= 11)
+		if (indexPosition <= 11)
 		{
-			wornItems[index] = id;
+			wornItems[indexPosition] = appearanceId;
 			getUpdateFlags().setAppearanceChanged(true);
 		}
 	}

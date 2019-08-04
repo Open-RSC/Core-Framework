@@ -289,7 +289,14 @@ public final class AvatarGenerator {
 			new AnimationDef("kiteshield", 48059, 0, true, false, 0),
 			new AnimationDef("kiteshield", 0x232323, 0, true, false, 0),
 			new AnimationDef("dragonshield", 0, 0, true, false, 0), //244
-			new AnimationDef("dragonmedhelm", 0, 0, true, false, 0) //245
+			new AnimationDef("dragonmedhelm", 0, 0, true, false, 0), //245
+			new AnimationDef("armorskirt", 0xBB4B12, 0, true, false, 0), //246
+			new AnimationDef("armorskirt", 0xAFA2A2, 0, true, false, 0),
+			new AnimationDef("armorskirt", 0xAFAFAF, 0, true, false, 0),
+			new AnimationDef("armorskirt", 0x708396, 0, true, false, 0),
+			new AnimationDef("armorskirt", 0x839670, 0, true, false, 0),
+			new AnimationDef("armorskirt", 48059, 0, true, false, 0),
+			new AnimationDef("armorskirt", 0x232323, 0, true, false, 0)
 			};
 		/// A helper array for rendering
 		private final static int characterSkinColours[] = {0xecded0, 0xccb366, 0xb38c40, 0x997326, 0x906020};

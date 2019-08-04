@@ -182,7 +182,8 @@ public final class ItemDropHandler implements PacketHandler {
 					player.getEquipment().list[slot] = null;
 					ActionSender.sendEquipmentStats(player);
 					player.updateWornItems(item.getDef().getWieldPosition(),
-						player.getSettings().getAppearance().getSprite(item.getDef().getWieldPosition()));
+						player.getSettings().getAppearance().getSprite(item.getDef().getWieldPosition()),
+						item.getDef().getWearableId(), false);
 				}
 				GroundItem groundItem = new GroundItem(item.getID(), owner.getX(), owner.getY(), amount,
 					owner);

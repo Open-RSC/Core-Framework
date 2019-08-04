@@ -833,18 +833,22 @@ public final class Admins implements CommandListener {
 			}
 
 			if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+				int wearableId;
 				for (int i = 0; i < Equipment.slots; i++) {
 					if (p.getEquipment().list[i] == null)
 						continue;
+					wearableId = p.getEquipment().list[i].getDef().getWearableId();
 					p.getEquipment().list[i] = null;
-					p.updateWornItems(i, p.getSettings().getAppearance().getSprite(i));
+					p.updateWornItems(i, p.getSettings().getAppearance().getSprite(i),
+							wearableId, false);
 				}
 			}
 
 			for (Item i : p.getInventory().getItems()) {
 				if (p.getInventory().get(i).isWielded()) {
 					p.getInventory().get(i).setWielded(false);
-					p.updateWornItems(i.getDef().getWieldPosition(), i.getDef().getAppearanceId());
+					p.updateWornItems(i.getDef().getWieldPosition(), i.getDef().getAppearanceId(),
+							i.getDef().getWearableId(), false);
 				}
 
 				p.getInventory().remove(i);

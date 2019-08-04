@@ -19,7 +19,6 @@ import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.DeathLog;
 import com.openrsc.server.sql.query.logs.GenericLog;
 
-import java.io.ObjectInputFilter;
 import java.util.*;
 
 import static com.openrsc.server.external.EntityHandler.getItemDef;
@@ -421,8 +420,9 @@ public class Inventory {
 			player.playSound("click");
 		}
 		player.updateWornItems(affectedItem.getDef().getWieldPosition(),
-			player.getSettings().getAppearance().getSprite(affectedItem.getDef().getWieldPosition()));
-
+			player.getSettings().getAppearance().getSprite(affectedItem.getDef().getWieldPosition()),
+			affectedItem.getDef().getWearableId(), false);
+		
 		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
 			if (player.getEquipment().hasEquipped(affectedItem.getID()) != -1) {
 				player.getEquipment().list[affectedItem.getDef().getWieldPosition()] = null;
@@ -601,8 +601,9 @@ public class Inventory {
 			player.playSound("click");
 
 		item.setWielded(true);
-		player.updateWornItems(item.getDef().getWieldPosition(), item.getDef().getAppearanceId());
-
+		player.updateWornItems(item.getDef().getWieldPosition(), item.getDef().getAppearanceId(),
+				item.getDef().getWearableId(), true);
+		
 		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
 			item.setWielded(false);
 			player.getEquipment().list[item.getDef().getWieldPosition()] = item;
@@ -620,7 +621,8 @@ public class Inventory {
 				if (equipped != null) {
 					add(equipped, false);
 					player.updateWornItems(equipped.getDef().getWieldPosition(),
-						player.getSettings().getAppearance().getSprite(equipped.getDef().getWieldPosition()));
+						player.getSettings().getAppearance().getSprite(equipped.getDef().getWieldPosition()),
+						equipped.getDef().getWearableId(), false);
 					player.getEquipment().list[i] = null;
 				}
 			}
@@ -647,7 +649,8 @@ public class Inventory {
 			Item item = iterator.next();
 			if (item.isWielded()) {
 				player.updateWornItems(item.getDef().getWieldPosition(),
-					player.getSettings().getAppearance().getSprite(item.getDef().getWieldPosition()));
+					player.getSettings().getAppearance().getSprite(item.getDef().getWieldPosition()),
+					item.getDef().getWearableId(), false);
 				item.setWielded(false);
 			}
 			iterator.remove();
