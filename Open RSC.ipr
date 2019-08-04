@@ -52,9 +52,12 @@
     <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/merged_manifests/release/AndroidManifest.xml" />
     <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/split-apk/debug/resources/AndroidManifest.xml" />
   </component>
+  <component name="GradleMigrationSettings" migrationVersion="1" />
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
+        <option name="delegatedBuild" value="false" />
+        <option name="testRunner" value="PLATFORM" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/Android/Open RSC Android Client" />
         <option name="gradleHome" value="/usr/local/opt/gradle/libexec" />
@@ -67,6 +70,8 @@
         <option name="useQualifiedModuleNames" value="true" />
       </GradleProjectSettings>
       <GradleProjectSettings>
+        <option name="delegatedBuild" value="false" />
+        <option name="testRunner" value="PLATFORM" />
         <option name="distributionType" value="WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/android" />
         <option name="modules">
@@ -78,6 +83,8 @@
         <option name="resolveModulePerSourceSet" value="false" />
       </GradleProjectSettings>
       <GradleProjectSettings>
+        <option name="delegatedBuild" value="false" />
+        <option name="testRunner" value="PLATFORM" />
         <option name="distributionType" value="WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/ios" />
         <option name="resolveModulePerSourceSet" value="false" />
@@ -220,7 +227,7 @@
       <module fileurl="file://$PROJECT_DIR$/Tools/Sprite Editor/Sprite Editor.iml" filepath="$PROJECT_DIR$/Tools/Sprite Editor/Sprite Editor.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" project-jdk-name="1.11" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" project-jdk-name="12" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="VcsDirectoryMappings">
