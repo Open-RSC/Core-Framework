@@ -167,7 +167,7 @@ public final class ClanInterface {
 				color = 0x232220;
 			}
 			graphics.drawBoxBorder(newX, 400, newY, boxHeight, 0x343434);
-			graphics.drawColoredString(newX + 3, newY + 16, mc.clan.username[i], 2, 0xffffff, (mc.clan.clanRank[i] == 1 ? 3 : mc.clan.clanRank[i] == 2 ? 4 : 0));
+			graphics.drawColoredString(newX + 3, newY + 16, mc.clan.username[i], 2, 0xffffff, (mc.clan.clanRank[i] == 1 ? 3 : mc.clan.clanRank[i] == 2 ? 4 : 0) << 24);
 			graphics.drawColoredString(newX + 3 + 137, newY + 16, "" + mc.clan.getClanRankNames(mc.clan.clanRank[i]), 2, 0xffffff, 0);
 			graphics.drawColoredString(newX + 3 + 135 + 67, newY + 16, "" + mc.clan.getPlayerKills(i), 2, 0xffffff, 0);
 			graphics.drawColoredString(newX + 3 + 135 + 67 + 67, newY + 16, "" + mc.clan.getPlayerDeaths(i), 2, 0xffffff, 0);
