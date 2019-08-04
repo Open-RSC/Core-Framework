@@ -28,6 +28,10 @@ public class UpdateFlags {
 	 */
 	private AtomicReference<Damage> damage = new AtomicReference<Damage>();
 	/**
+	 * Do we need to get hp update for players around?
+	 */
+	private AtomicReference<HpUpdate> hpUpdate = new AtomicReference<HpUpdate>();
+	/**
 	 * Has this player fired a projectile?
 	 */
 	private AtomicReference<Projectile> projectile = new AtomicReference<Projectile>();
@@ -35,7 +39,7 @@ public class UpdateFlags {
 	public AtomicReference<Bubble> getActionBubble() {
 		return actionBubble;
 	}
-	
+
 	public AtomicReference<BubbleNpc> getActionBubbleNpc() {
 		return actionBubbleNpc;
 	}
@@ -43,12 +47,12 @@ public class UpdateFlags {
 	public void setActionBubble(Bubble bubble) {
 		this.actionBubble.set(bubble);
 	}
-	
+
 	public void setActionBubbleNpc(BubbleNpc bubble) {
 		this.actionBubbleNpc.set(bubble);
 	}
 
-	public AtomicBoolean getAppearanceChanged() {
+	private AtomicBoolean getAppearanceChanged() {
 		return appearanceChanged;
 	}
 
@@ -68,8 +72,16 @@ public class UpdateFlags {
 		return damage;
 	}
 
+	public AtomicReference<HpUpdate> getHpUpdate() {
+		return hpUpdate;
+	}
+
 	public void setDamage(Damage damage) {
 		this.damage.set(damage);
+	}
+
+	public void setHpUpdate(HpUpdate hpUpdate) {
+		this.hpUpdate.set(hpUpdate);
 	}
 
 	public AtomicReference<Projectile> getProjectile() {
@@ -100,6 +112,10 @@ public class UpdateFlags {
 		return getDamage().get() != null;
 	}
 
+	public boolean hasTakenHpUpdate() {
+		return getHpUpdate().get() != null;
+	}
+
 	/**
 	 * Resets all update flags
 	 */
@@ -107,6 +123,7 @@ public class UpdateFlags {
 		projectile.set(null);
 		actionBubble.set(null);
 		damage.set(null);
+		hpUpdate.set(null);
 		projectile.set(null);
 		chatMessage.set(null);
 

@@ -1,7 +1,6 @@
 package com.openrsc.server.model.entity.npc;
 
 import com.openrsc.server.Constants;
-import com.openrsc.server.event.rsc.impl.HealEventNpc;
 import com.openrsc.server.event.rsc.impl.RangeEventNpc;
 import com.openrsc.server.event.rsc.impl.StrPotEventNpc;
 import com.openrsc.server.event.rsc.impl.combat.AggroEvent;
@@ -89,7 +88,7 @@ public class NpcBehavior {
 							if (npc.getHitsMade() >= 3 && npc.inCombat() && npc.getLocation().inWilderness()) {
 								retreat();
 								lastRetreat = System.currentTimeMillis();
-								npc.setHealEventNpc(new HealEventNpc(npc));
+								//npc.setHealEventNpc(new HealEventNpc(npc));
 								setRoaming();
 							}
 							if (npc.inCombat() && npc.getID() == 210) {
@@ -99,7 +98,7 @@ public class NpcBehavior {
 								}
 							}
 							if (npc.getLocation().inWilderness() && npc.getID() == 210 && npc.getSkills().getLevel(SKILLS.HITS.id()) < npc.getSkills().getMaxStat(SKILLS.HITS.id()) * 0.67) {
-								npc.setHealEventNpc(new HealEventNpc(npc));
+								//npc.setHealEventNpc(new HealEventNpc(npc));
 								//lastHeal = System.currentTimeMillis();
 								return;
 							}
@@ -198,7 +197,7 @@ public class NpcBehavior {
 					if (npc.inCombat() && npc.getOpponent().getHitsMade() >= 3 && npc.getSkills().getLevel(SKILLS.HITS.id()) < npc.getOpponent().getSkills().getLevel(SKILLS.HITS.id())) {
 						retreat();
 						lastRetreat = System.currentTimeMillis();
-						npc.setHealEventNpc(new HealEventNpc(npc));
+						//npc.setHealEventNpc(new HealEventNpc(npc));
 					}
 					if (target == null) {
 						if (!npc.inCombat() && System.currentTimeMillis() - lastMovement > 3250 && System.currentTimeMillis() - npc.getCombatTimer() > 3250 && npc.finishedPath()) {
@@ -227,7 +226,7 @@ public class NpcBehavior {
 								}
 							}
 							if (npc.getLocation().inWilderness() && npc.getID() == 236 && npc.getSkills().getLevel(SKILLS.HITS.id()) < npc.getSkills().getMaxStat(SKILLS.HITS.id()) * 0.67) {
-								npc.setHealEventNpc(new HealEventNpc(npc));
+								//npc.setHealEventNpc(new HealEventNpc(npc));
 								return;
 							}
 							int combDiff = Math.abs(npc.getCombatLevel() - target.getCombatLevel());
@@ -262,12 +261,6 @@ public class NpcBehavior {
 
 						}
 				}
-			}
-		} else if (npc.getPetNpc() > 0 && npc.getID() != 210 && npc.getID() != 236) {
-			Mob p28x = npc.getPetOwnerA2();
-			if (!p28x.inCombat()) {
-				npc.setFollowing(p28x);
-				npc.resetRange();
 			}
 		} else if (state == State.ROAM) {
 
@@ -319,7 +312,7 @@ public class NpcBehavior {
 							break;
 					}
 
-					if (!canAggro(p) || !p.withinRange(npc, range) || (npc.getPetNpc() > 0 && npc.getID() != 210 && npc.getID() != 236))
+					if (!canAggro(p) || !p.withinRange(npc, range))
 						continue; // Can't aggro or is not in range.
 
 					state = State.AGGRO;
@@ -353,7 +346,7 @@ public class NpcBehavior {
 		} else if (state == State.AGGRO) {
 
 			// There should not be combat or aggro. Let's resume roaming.
-			if ((target == null || npc.isRespawning() || npc.isRemoved() || target.isRemoved() || (npc.getID() != 210 && npc.getID() != 236 && npc.getPetNpc() == 0 && target.inCombat())) && !npc.isFollowing()) {
+			if ((target == null || npc.isRespawning() || npc.isRemoved() || target.isRemoved() || (npc.getID() != 210 && npc.getID() != 236 && target.inCombat())) && !npc.isFollowing()) {
 				setRoaming();
 			}
 
@@ -376,7 +369,7 @@ public class NpcBehavior {
 					npc.walkToEntity(target.getX(), target.getY());
 					if (npc.withinRange(target, 1)
 						&& npc.canReach(target)
-						&& !target.inCombat() && (npc.getPetNpc() == 0 && npc.getID() != 210 && npc.getID() != 236)) {
+						&& !target.inCombat() && (npc.getID() != 210 && npc.getID() != 236)) {
 						setFighting(target);
 					}
 				}

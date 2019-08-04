@@ -7,6 +7,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.Damage;
 import com.openrsc.server.model.entity.update.Projectile;
+import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.PluginHandler;
 
@@ -86,6 +87,11 @@ public class ProjectileEvent extends SingleTickEvent {
 		} else if (opponent.isPlayer()) {
 			Player affectedPlayer = (Player) opponent;
 			ActionSender.sendStat(affectedPlayer, 3);
+			for (Player p : World.getWorld().getPlayers()) {
+				if (affectedPlayer.getParty() == p.getParty()) {
+					ActionSender.sendParty(p);
+				}
+			}
 		}
 		if (opponent.getSkills().getLevel(SKILLS.HITS.id()) <= 0) {
 			if (caster.isPlayer()) {

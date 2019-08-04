@@ -1,11 +1,14 @@
 package com.openrsc.server.event.rsc.impl;
 
 import com.openrsc.server.event.rsc.GameTickEvent;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
+import com.openrsc.server.model.entity.update.HpUpdate;
+import com.openrsc.server.model.world.World;
+import com.openrsc.server.net.rsc.ActionSender;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -54,6 +57,14 @@ public class StatRestorationEvent extends GameTickEvent {
 			if (System.currentTimeMillis() - this.lastRestoration > delay) {
 				normalizeLevel(stat);
 				restored = true;
+				owner.getUpdateFlags().setHpUpdate(new HpUpdate(owner, 0));
+				if(owner.isPlayer()){
+					for (Player p : World.getWorld().getPlayers()) {
+						if(((Player) owner).getParty() == p.getParty()){
+							ActionSender.sendParty(p);
+						}
+					}
+				}
 				if (restoringStats.get(stat) == 0) {
 					it.remove();
 					if (owner.isPlayer() && stat != 3) {

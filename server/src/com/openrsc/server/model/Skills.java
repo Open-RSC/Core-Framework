@@ -37,23 +37,26 @@ public class Skills {
 		}
 		experienceCurves.put(SkillDef.EXP_CURVE.ORIGINAL, experienceArray);
 	}
+
 	private static String[] SKILL_NAME() {
 		if (WANT_RUNECRAFTING)
-			return new String[] {"attack", "defense", "strength", "hits", "ranged", "prayer", "magic",
+			return new String[]{"attack", "defense", "strength", "hits", "ranged", "prayer", "magic",
 				"cooking", "woodcut", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblaw",
 				"agility", "thieving", "runecraft"};
 		else
-			return new String[] {"attack", "defense", "strength", "hits", "ranged", "prayer", "magic",
+			return new String[]{"attack", "defense", "strength", "hits", "ranged", "prayer", "magic",
 				"cooking", "woodcut", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblaw",
 				"agility", "thieving"};
 	}
+
 	public static final int ATTACK = 0, DEFENSE = 1, STRENGTH = 2, HITPOINTS = 3, RANGED = 4, PRAYER = 5, MAGIC = 6,
 		COOKING = 7, WOODCUT = 8, FLETCHING = 9, FISHING = 10, FIREMAKING = 11, CRAFTING = 12, SMITHING = 13,
 		MINING = 14, HERBLAW = 15, AGILITY = 16, THIEVING = 17, RUNECRAFTING = 18, SLAYER = 19, FARMING = 20, PETMELEE = 21, PETMAGIC = 22, PETRANGED = 23;
+
 	//public static final ArrayList<String> STAT_LIST = new ArrayList<String>(){{ for(int i = 0; i < SKILL_COUNT; i++) { add(SKILL_NAME()[i]); } }};
 	// old, check: Global Experience Calculations (Some NPCs have levels > PLAYER_LEVEL_LIMIT)
 	// to truly have 1000 global level limit, needs changing int to long, otherwise caps to 135
-	public enum SKILLS{
+	public enum SKILLS {
 		ATTACK(0),
 		DEFENSE(1),
 		STRENGTH(2),
@@ -74,9 +77,18 @@ public class Skills {
 		THIEVING(17),
 		RUNECRAFT(18);
 		int value;
-		SKILLS(int value) { this.value = value;}
-		public void setValue(int value) { this.value = value; }
-		public int id() { return this.value; }
+
+		SKILLS(int value) {
+			this.value = value;
+		}
+
+		public void setValue(int value) {
+			this.value = value;
+		}
+
+		public int id() {
+			return this.value;
+		}
 	}
 
 
@@ -103,7 +115,7 @@ public class Skills {
 			if (skill.getMinLevel() == 1)
 				exps[i] = 0;
 			else
-				exps[i] = experienceCurves.get(skill.getExpCurve())[skill.getMinLevel()-2];
+				exps[i] = experienceCurves.get(skill.getExpCurve())[skill.getMinLevel() - 2];
 		}
 	}
 
@@ -245,29 +257,6 @@ public class Skills {
 
 		sendUpdate(skill);
 	}
-	public void addPetExperience(int skill, int exp) {
-		int oldLevel = getMaxStat(skill);
-		exps[skill] += exp;
-		if (exps[skill] > MAXIMUM_EXP) {
-			exps[skill] = MAXIMUM_EXP;
-		}
-		int newLevel = getMaxStat(skill);
-		int levelDiff = newLevel - oldLevel;
-		String skillName;
-
-		if (levelDiff > 0) {
-			levels[skill] += levelDiff;
-				Player p28x = mob.getPetOwnerA2();
-				skillName = skills.get(skill).getShortName().toLowerCase();
-				p28x.message("@gre@You just advanced " + levelDiff + " " + skillName + " level"
-					/*+ (levelDiff > 1 ? "s" : "")*/ + "!");
-				ActionSender.sendSound(p28x, "advance");
-
-			mob.getUpdateFlags().setAppearanceChanged(true);
-		}
-
-		sendUpdate(skill);
-	}
 
 	private void sendUpdate(int skill) {
 		if (mob.isPlayer()) {
@@ -303,7 +292,7 @@ public class Skills {
 
 	private void normalize(int skill, boolean sendUpdate) {
 		levels[skill] = getMaxStat(skill);
-		if(sendUpdate)
+		if (sendUpdate)
 			sendUpdate(skill);
 	}
 
@@ -315,7 +304,7 @@ public class Skills {
 		for (int i = 0; i < skills.size(); i++) {
 			normalize(i, false);
 		}
-		if(sendUpdate)
+		if (sendUpdate)
 			sendUpdateAll();
 	}
 
@@ -344,44 +333,47 @@ public class Skills {
 		this.levels = lv;
 	}
 
-	public static String getSkillName(int skillIndex) { return skills.get(skillIndex).getShortName(); }
+	public static String getSkillName(int skillIndex) {
+		return skills.get(skillIndex).getShortName();
+	}
 
-	public static int getSkillCount() { return skills.size(); }
+	public static int getSkillCount() {
+		return skills.size();
+	}
 
 	public static int getSkillIndex(String skillName) {
 		int i = 0;
-		for (SkillDef skill : skills)
-		{
+		for (SkillDef skill : skills) {
 			if (skill.getShortName().equalsIgnoreCase(skillName))
 				return i;
 			i++;
 		}
 		return -1;
 	}
+
 	public static void loadSkills() {
 		int i = 0;
-		skills.add(new SkillDef("Attack", "Attack", 1,99, SkillDef.EXP_CURVE.ORIGINAL,i++)) ;
-		skills.add(new SkillDef("Defense", "Defense", 1,99, SkillDef.EXP_CURVE.ORIGINAL,i++));
-		skills.add(new SkillDef("Strength", "Strength", 1,99, SkillDef.EXP_CURVE.ORIGINAL,i++));
-		skills.add(new SkillDef("Hits", "Hits", 10,99, SkillDef.EXP_CURVE.ORIGINAL,i++));
-		skills.add(new SkillDef("Ranged", "Ranged", 1,99, SkillDef.EXP_CURVE.ORIGINAL,i++));
-		skills.add(new SkillDef("Prayer", "Prayer", 1,99, SkillDef.EXP_CURVE.ORIGINAL,i++));
-		skills.add(new SkillDef("Magic", "Magic", 1,99, SkillDef.EXP_CURVE.ORIGINAL,i++));
-		skills.add(new SkillDef("Cooking", "Cooking", 1,99, SkillDef.EXP_CURVE.ORIGINAL,i++));
-		skills.add(new SkillDef("Woodcutting", "Woodcut", 1,99, SkillDef.EXP_CURVE.ORIGINAL,i++));
-		skills.add(new SkillDef("Fletching", "Fletching", 1,99, SkillDef.EXP_CURVE.ORIGINAL,i++));
-		skills.add(new SkillDef("Fishing", "Fishing", 1,99, SkillDef.EXP_CURVE.ORIGINAL,i++));
-		skills.add(new SkillDef("Firemaking", "Firemaking", 1,99, SkillDef.EXP_CURVE.ORIGINAL,i++));
-		skills.add(new SkillDef("Crafting", "Crafting", 1,99, SkillDef.EXP_CURVE.ORIGINAL,i++));
-		skills.add(new SkillDef("Smithing", "Smithing", 1,99, SkillDef.EXP_CURVE.ORIGINAL,i++));
-		skills.add(new SkillDef("Mining", "Mining", 1,99, SkillDef.EXP_CURVE.ORIGINAL,i++));
-		skills.add(new SkillDef("Herblaw", "Herblaw", 1,99, SkillDef.EXP_CURVE.ORIGINAL,i++));
-		skills.add(new SkillDef("Agility", "Agility", 1,99, SkillDef.EXP_CURVE.ORIGINAL,i++));
-		skills.add(new SkillDef("Thieving", "Thieving", 1,99, SkillDef.EXP_CURVE.ORIGINAL,i++));
+		skills.add(new SkillDef("Attack", "Attack", 1, 99, SkillDef.EXP_CURVE.ORIGINAL, i++));
+		skills.add(new SkillDef("Defense", "Defense", 1, 99, SkillDef.EXP_CURVE.ORIGINAL, i++));
+		skills.add(new SkillDef("Strength", "Strength", 1, 99, SkillDef.EXP_CURVE.ORIGINAL, i++));
+		skills.add(new SkillDef("Hits", "Hits", 10, 99, SkillDef.EXP_CURVE.ORIGINAL, i++));
+		skills.add(new SkillDef("Ranged", "Ranged", 1, 99, SkillDef.EXP_CURVE.ORIGINAL, i++));
+		skills.add(new SkillDef("Prayer", "Prayer", 1, 99, SkillDef.EXP_CURVE.ORIGINAL, i++));
+		skills.add(new SkillDef("Magic", "Magic", 1, 99, SkillDef.EXP_CURVE.ORIGINAL, i++));
+		skills.add(new SkillDef("Cooking", "Cooking", 1, 99, SkillDef.EXP_CURVE.ORIGINAL, i++));
+		skills.add(new SkillDef("Woodcutting", "Woodcut", 1, 99, SkillDef.EXP_CURVE.ORIGINAL, i++));
+		skills.add(new SkillDef("Fletching", "Fletching", 1, 99, SkillDef.EXP_CURVE.ORIGINAL, i++));
+		skills.add(new SkillDef("Fishing", "Fishing", 1, 99, SkillDef.EXP_CURVE.ORIGINAL, i++));
+		skills.add(new SkillDef("Firemaking", "Firemaking", 1, 99, SkillDef.EXP_CURVE.ORIGINAL, i++));
+		skills.add(new SkillDef("Crafting", "Crafting", 1, 99, SkillDef.EXP_CURVE.ORIGINAL, i++));
+		skills.add(new SkillDef("Smithing", "Smithing", 1, 99, SkillDef.EXP_CURVE.ORIGINAL, i++));
+		skills.add(new SkillDef("Mining", "Mining", 1, 99, SkillDef.EXP_CURVE.ORIGINAL, i++));
+		skills.add(new SkillDef("Herblaw", "Herblaw", 1, 99, SkillDef.EXP_CURVE.ORIGINAL, i++));
+		skills.add(new SkillDef("Agility", "Agility", 1, 99, SkillDef.EXP_CURVE.ORIGINAL, i++));
+		skills.add(new SkillDef("Thieving", "Thieving", 1, 99, SkillDef.EXP_CURVE.ORIGINAL, i++));
 
-		if (Constants.GameServer.WANT_RUNECRAFTING)
-		{
-			skills.add(new SkillDef("Runecrafting", "Runecraft", 1,99, SkillDef.EXP_CURVE.ORIGINAL,i));
+		if (Constants.GameServer.WANT_RUNECRAFTING) {
+			skills.add(new SkillDef("Runecrafting", "Runecraft", 1, 99, SkillDef.EXP_CURVE.ORIGINAL, i));
 			SKILLS.RUNECRAFT.setValue(i++);
 		}
 	}

@@ -71,6 +71,8 @@ public final class GameSettingHandler implements PacketHandler {
 				player.getCache().store("setting_inventory_count", p.readByte() == 1);
 			} else if (idx == 35) {
 				player.getCache().store("setting_floating_nametags", p.readByte() == 1);
+			} else if (idx == 36) {
+				player.getCache().store("party_block_invites", p.readByte() == 1);
 			}
 			return;
 		}

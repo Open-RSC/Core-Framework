@@ -11,6 +11,7 @@ import com.openrsc.server.model.entity.player.Prayers;
 import com.openrsc.server.model.entity.update.Damage;
 import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.states.CombatState;
+import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -32,9 +33,9 @@ public class CombatEvent extends GameTickEvent {
 		this.defenderMob = defender;
 		CombatScriptLoader.checkAndExecuteOnStartCombatScript(attacker, defender);
 		if (attacker.isNpc()) {
-			((Npc)attacker).setExecutedAggroScript(false);
+			((Npc) attacker).setExecutedAggroScript(false);
 		} else if (defender.isNpc()) {
-			((Npc)defender).setExecutedAggroScript(false);
+			((Npc) defender).setExecutedAggroScript(false);
 		}
 	}
 
@@ -93,11 +94,7 @@ public class CombatEvent extends GameTickEvent {
 			target.setLastCombatState(CombatState.ERROR);
 			resetCombat();
 		} else {
-			//if(hitter.isNpc() && target.isPlayer() || target.isNpc() && hitter.isPlayer()) {
 			inflictDamage(hitter, target, MeleeFormula.getDamage(hitter, target));
-			//} else {
-			//	inflictDamage(hitter, target, PVPCombatFormula.calcFightHit(hitter, target));
-			//}
 		}
 	}
 
@@ -134,6 +131,11 @@ public class CombatEvent extends GameTickEvent {
 					combatSound = damage > 0 ? "combat1b" : "combat1a";
 				}
 			}
+			for (Player p : World.getWorld().getPlayers()) {
+				if (((Player) target).getParty() == p.getParty() && ((Player) target).getParty() != null) {
+					ActionSender.sendParty(p);
+				}
+			}
 			Player opponentPlayer = ((Player) target);
 			ActionSender.sendSound(opponentPlayer, combatSound);
 		}
@@ -168,8 +170,7 @@ public class CombatEvent extends GameTickEvent {
 					player.setStatus(Action.IDLE);
 					player.resetAll();
 				} else {
-					if (defenderMob.getID() != 210 && defenderMob.getCombatState() == CombatState.RUNNING)
-						delayedAggro = 17000; // 17 + 3 second aggro timer for npds running
+					delayedAggro = 17000; // 17 + 3 second aggro timer for npds running
 				}
 
 				defenderMob.setBusy(false);

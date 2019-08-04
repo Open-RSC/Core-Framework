@@ -10,10 +10,12 @@ import com.openrsc.server.event.rsc.impl.StatRestorationEvent;
 import com.openrsc.server.event.rsc.impl.combat.CombatEvent;
 import com.openrsc.server.model.*;
 import com.openrsc.server.model.Path.PathType;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.action.WalkToActionNpc;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.Damage;
+import com.openrsc.server.model.entity.update.HpUpdate;
 import com.openrsc.server.model.entity.update.UpdateFlags;
 import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.states.CombatState;
@@ -25,8 +27,6 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import com.openrsc.server.util.rsc.DataConversions;
-import com.openrsc.server.model.Skills.SKILLS;
 
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -39,6 +39,7 @@ public abstract class Mob extends Entity {
 	 * The asynchronous logger.
 	 */
 	private DelayedEventNpc skullEventNpc = null;
+
 	public void addSkull(long timeLeft) {
 		if (skullEventNpc == null) {
 			skullEventNpc = new DelayedEventNpc(this, 1200000, "NPC Add Skull") {
@@ -53,6 +54,7 @@ public abstract class Mob extends Entity {
 		}
 		skullEventNpc.setLastRun(System.currentTimeMillis() - (1200000 - timeLeft));
 	}
+
 	public DelayedEventNpc getSkullEventNpc() {
 		return skullEventNpc;
 	}
@@ -60,16 +62,18 @@ public abstract class Mob extends Entity {
 	public void setSkullEventNpc(DelayedEventNpc skullEventNpc) {
 		this.skullEventNpc = skullEventNpc;
 	}
-	
+
 	public int getSkullTime() {
 		if (isSkulled() && getSkullType() == 1) {
 			return skullEventNpc.timeTillNextRun();
 		}
 		return 0;
 	}
+
 	public boolean isSkulled() {
 		return skullEventNpc != null;
 	}
+
 	public int getSkullType() {
 		int type = 0;
 		if (isSkulled()) {
@@ -77,6 +81,7 @@ public abstract class Mob extends Entity {
 		}
 		return type;
 	}
+
 	public void removeSkull() {
 		if (skullEventNpc == null) {
 			return;
@@ -85,13 +90,15 @@ public abstract class Mob extends Entity {
 		skullEventNpc = null;
 		getUpdateFlags().setAppearanceChanged(true);
 	}
+
 	public void setSkulledOn(Mob mob) {
 		//mob.getSettings().addAttackedBy(this);
 		//if (System.currentTimeMillis() - getSettings().lastAttackedBy(mob) > 1200000) {
-			addSkull(1200000);
+		addSkull(1200000);
 		//}
 		mob.getUpdateFlags().setAppearanceChanged(true);
 	}
+
 	private static final Logger LOGGER = LogManager.getLogger();
 	protected final Skills skills = new Skills(this);
 	/**
@@ -103,12 +110,15 @@ public abstract class Mob extends Entity {
 	 * The path we are walking
 	 */
 	private WalkToActionNpc walkToActionNpc;
+
 	public WalkToActionNpc getWalkToActionNpc() {
 		return walkToActionNpc;
 	}
+
 	public void setWalkToActionNpc(WalkToActionNpc action) {
 		this.walkToActionNpc = action;
 	}
+
 	private final WalkingQueue walkingQueue = new WalkingQueue(this);
 	public int poisonDamage = 0;
 	/**
@@ -116,7 +126,7 @@ public abstract class Mob extends Entity {
 	 */
 	private ViewArea viewArea = new ViewArea(this);
 	private int killType = 0;
-	
+
 	/**
 	 * RANGED
 	 */
@@ -176,14 +186,19 @@ public abstract class Mob extends Entity {
 		}
 		return true;
 	}
+
 	private Action status = Action.IDLE;
+
 	public void setStatus(Action a) {
 		status = a;
 	}
+
 	private RangeEventNpc rangeEventNpc;
+
 	public RangeEventNpc getRangeEventNpc() {
 		return rangeEventNpc;
 	}
+
 	public void resetRange() {
 		if (rangeEventNpc != null) {
 			rangeEventNpc.stop();
@@ -191,6 +206,7 @@ public abstract class Mob extends Entity {
 		}
 		setStatus(Action.IDLE);
 	}
+
 	public void setRangeEventNpc(RangeEventNpc event) {
 		if (rangeEventNpc != null) {
 			rangeEventNpc.stop();
@@ -199,16 +215,7 @@ public abstract class Mob extends Entity {
 		setStatus(Action.RANGING_MOB);
 		Server.getServer().getGameEventHandler().add(rangeEventNpc);
 	}
-		public boolean isRanging() {
-		return rangeEventNpc != null;
-	}
-	private long healTimer = 0;
-	public boolean cantHeal() {
-		return healTimer - System.currentTimeMillis() > 0;
-	}
-	public void setHealTimer(long l) {
-		healTimer = System.currentTimeMillis() + l;
-	}
+
 	/**
 	 * Flag to indicate that this mob will be needed to be unregistered after
 	 * next update tick.
@@ -318,22 +325,20 @@ public abstract class Mob extends Entity {
 		int highYDiff = Math.abs(getY() - high.getY());
 
 		//Runecrafting objects need to be accessible from all angles
-		if (o.getID() >= 1190 && o.getID() <= 1225)	{
+		if (o.getID() >= 1190 && o.getID() <= 1225) {
 			if ((lowXDiff <= 2 || highXDiff <= 2) && (lowYDiff <= 2 || highYDiff <= 2))
 				return true;
-		}
-		else if (o.getID() == 1227)
+		} else if (o.getID() == 1227)
 			if ((lowXDiff <= 2 || highXDiff <= 2) && (highYDiff <= 3))
 				return true;
 			else if (o.getID() >= 1228 && o.getID() <= 1232)
 				if ((lowXDiff <= 2 || highXDiff <= 2) && (lowYDiff <= 2 || highYDiff <= 2))
 					return true;
 
-		else if (o.getID() == 953)
-		{
-			if ((lowXDiff <= 1 || highXDiff <= 1) &&(lowYDiff <= 1 || highYDiff <= 1))
-				return true;
-		}
+				else if (o.getID() == 953) {
+					if ((lowXDiff <= 1 || highXDiff <= 1) && (lowYDiff <= 1 || highYDiff <= 1))
+						return true;
+				}
 		return false;
 	}
 
@@ -356,6 +361,7 @@ public abstract class Mob extends Entity {
 		return minX <= getX() && getX() <= maxX && minY <= getY() + 1 && maxY >= getY() + 1
 			&& (CollisionFlag.WALL_NORTH & World.getWorld().getTile(getX(), getY() + 1).traversalMask) == 0;
 	}
+
 	private boolean canReachx(int minX, int maxX, int minY, int maxY) {
 		if (getX() >= minX && getX() <= maxX && getY() >= minY && getY() <= maxY) {
 			return true;
@@ -386,6 +392,7 @@ public abstract class Mob extends Entity {
 		}
 		return true;
 	}
+
 	public final boolean canReachx(Entity e) {
 		int[] currentCoords = {getX(), getY()};
 		while (currentCoords[0] != e.getX() || currentCoords[1] != e.getY()) {
@@ -505,6 +512,16 @@ public abstract class Mob extends Entity {
 		getUpdateFlags().setDamage(new Damage(this, damage));
 	}
 
+	public void hpUpdate(int hpUpdate) {
+		int newHp = skills.getLevel(Skills.HITPOINTS) + hpUpdate;
+		skills.setLevel(3, newHp);
+		if (this.isPlayer()) {
+			Player p = (Player) this;
+			ActionSender.sendStat(p, 3);
+		}
+		getUpdateFlags().setHpUpdate(new HpUpdate(this, hpUpdate));
+	}
+
 	public void face(Entity entity) {
 		if (entity != null && entity.getLocation() != null) {
 			final int dir = Formulae.getDirection(this, entity.getX(), entity.getY());
@@ -548,8 +565,9 @@ public abstract class Mob extends Entity {
 	}
 
 	public abstract int getCombatStyle();
-	
+
 	private int combatStyle = 0;
+
 	public void setCombatStyle(int style) {
 		combatStyle = style;
 	}
@@ -676,32 +694,6 @@ public abstract class Mob extends Entity {
 	}
 
 	public abstract void killedBy(Mob mob);
-	private int petNpc = 0;
-	private int petNpcType = 0;
-	public int getPetNpc() {
-		return petNpc;
-	}
-	public int getPetNpcType() {
-		return petNpcType;
-	}
-	public void setPetNpc(int i) {
-		this.petNpc = i;
-		//ActionSender.sendPetNpc(this);
-	}
-	public void setPetNpcType(int i) {
-		this.petNpcType = i;
-		//ActionSender.sendPetNpc(this);
-	}
-	public void incPetNpc() {
-		petNpc++;
-	}
-	public Player petOwnerA2;
-	public Player getPetOwnerA2() {
-			return petOwnerA2;
-	}
-	public void setPetOwnerA2(Player petOwnerA3) {
-		petOwnerA2 = petOwnerA3;
-	}
 
 	public void resetCombatEvent() {
 		if (combatEvent != null) {
@@ -751,64 +743,16 @@ public abstract class Mob extends Entity {
 		following = mob;
 		followEvent = new GameTickEvent(null, 1, "Player Following Mob") {
 			public void run() {
-				//if(me.isNpc()) {
-				//Npc meX = (Npc) me;
-				if(me.getPetNpc() > 0){
-				for (Player p282828 : World.getWorld().getPlayers()) {
-				for (Player p22 : World.getWorld().getPlayers()) {
-				String userN = p22.getUsername();
-				Player p2828 = world.getPlayer(DataConversions.usernameToHash(userN));
-				Mob p28x = me.getPetOwnerA2();
-				if(p28x.inCombat()) {
-				if(me.isNpc()){
-					resetFollowing();
-					((Npc) me).setRangeEventNpc(new RangeEventNpc(((Npc) me), p28x.getOpponent()));
-					//p282828.message("Pet ranging @ " + p28x.getOpponent());
-				}
-				}
-				if ((!me.withinRange(p28x, radius) && (System.currentTimeMillis() - me.getLastMoved() > 1000 || System.currentTimeMillis() - p28x.getLastMoved() > 1000)) && !me.isPlayer()) { // keeps Rover on a tight leash
-					//if (Constants.GameServer.DEBUG)
-					System.out.println("Pet teleported to owner");
-					me.setLocation(Point.location(p28x.getX() + 1, p28x.getY()), true);
-					me.face(p28x);
-					me.resetPath();
-					//me.resetRange();
-					//p282828.message(p22.getUsername() + "    1");
-				} /*else if (!me.isFollowing()) { // not working yet
-					if (Constants.GameServer.DEBUG)
-						System.out.println("Pet despawning");
-					me.setUnregistering(true);
-					me.remove();
-					removeItem((Player) mob, ItemId.A_GLOWING_RED_CRYSTAL.id(), 1);
-					addItem((Player) mob, ItemId.A_RED_CRYSTAL.id(), 1);
-					p282828.message(p22.getUsername() + "    2");
-				}*/
-				}
-				}
-				}
-				//}
-				for (Player p282828 : World.getWorld().getPlayers()) {
 				if (!me.withinRange(mob) || mob.isRemoved()
 					|| (me.isPlayer() && !((Player) me).getDuel().isDuelActive() && me.isBusy())) {
 					if (!mob.isFollowing())
 						resetFollowing();
-					//p282828.message("TEST 123456789");
-					if(me.getPetNpc() > 0) {
-					me.setPetNpc(0);
-					me.setUnregistering(true);
-					me.remove();
-					}
-				} else if (!me.finishedPath() && me.withinRange(mob, radius) && me.getPetNpc() == 0) {
+				} else if (!me.finishedPath() && me.withinRange(mob, radius)) {
 					me.resetPath();
-					//p282828.message("TEST 44444444");
-					//me.resetRange();
 				} else if (me.finishedPath() && !me.withinRange(mob, radius)) {
-					//p282828.message("TEST 33333333");
 					me.walkToEntity(mob.getX(), mob.getY());
 				} else if (mob.isRemoved()) {
 					resetFollowing();
-					//p282828.message("TEST 00000000");
-				}
 				}
 			}
 		};
@@ -818,7 +762,7 @@ public abstract class Mob extends Entity {
 	public void setLastCombatState(CombatState lastCombatState) {
 		this.lastCombatState = lastCombatState;
 	}
-	
+
 	public void useNormalPotionNpc(final int affectedStat, final int percentageIncrease, final int modifier, final int left) {
 		//mob.message("You drink some of your " + item.getDef().getName().toLowerCase());
 		int baseStat = this.getSkills().getLevel(affectedStat) > this.getSkills().getMaxStat(affectedStat) ? this.getSkills().getMaxStat(affectedStat) : this.getSkills().getLevel(affectedStat);
@@ -835,6 +779,7 @@ public abstract class Mob extends Entity {
 			//player.message("You have " + left + " dose" + (left == 1 ? "" : "s") + " of potion left");
 		}
 	}
+
 	private void setLastMoved() {
 		lastMovement = System.currentTimeMillis();
 	}

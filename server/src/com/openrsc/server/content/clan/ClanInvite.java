@@ -10,7 +10,7 @@ public class ClanInvite {
 	public Player inviter, invited;
 	private SingleEvent timeOutEvent;
 
-	public ClanInvite(Player inviter, Player invited) {
+	private ClanInvite(Player inviter, Player invited) {
 		this.inviter = inviter;
 		this.invited = invited;
 	}
@@ -33,6 +33,15 @@ public class ClanInvite {
 			if (blockInvites) {
 				player.message("This player has clan invitations blocked");
 				invited.message(player.getUsername() + " tried to send you an invite, you have clans invite setting blocked");
+				return;
+			}
+		} else {
+			if (invited.getClanInviteSetting()) {
+				ActionSender.sendBox(player,
+					"@lre@Clan: %"
+						+ " %"
+						+ invited.getUsername() + " has clan invitations blocked %"
+					, true);
 				return;
 			}
 		}
@@ -60,7 +69,7 @@ public class ClanInvite {
 		}
 	}
 
-	public void startTimeoutCounter() {
+	private void startTimeoutCounter() {
 		timeOutEvent = new SingleEvent(null, 60000, "Clan Invite") {
 			@Override
 			public void action() {

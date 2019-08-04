@@ -18,7 +18,11 @@ public enum InputXAction {
 	INVITE_CLAN_PLAYER(14),
 	KICK_CLAN_PLAYER(15),
 	CLAN_DELEGATE_LEADERSHIP(16),
-	CLAN_LEAVE(17);
+	CLAN_LEAVE(17),
+	INVITE_PARTY_PLAYER(18),
+	KICK_PARTY_PLAYER(19),
+	PARTY_DELEGATE_LEADERSHIP(20),
+	PARTY_LEAVE(21);
 
 	public final int id;
 
@@ -27,8 +31,8 @@ public enum InputXAction {
 	}
 
 	public boolean requiresNumeric() {
-		return (id >= TRADE_OFFER.id && id <= DUEL_REMOVE.id) 
-				|| id == EXIT_BLACK_HOLE.id
-				|| id == DROP_X.id;
+		return (id >= TRADE_OFFER.id && id <= DUEL_REMOVE.id)
+			|| id == EXIT_BLACK_HOLE.id
+			|| id == DROP_X.id;
 	}
 }

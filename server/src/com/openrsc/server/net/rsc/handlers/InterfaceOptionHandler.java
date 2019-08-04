@@ -3,6 +3,7 @@ package com.openrsc.server.net.rsc.handlers;
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.content.clan.*;
+import com.openrsc.server.content.party.*;
 import com.openrsc.server.content.market.Market;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -16,7 +17,7 @@ import com.openrsc.server.util.rsc.DataConversions;
 public class InterfaceOptionHandler implements PacketHandler {
 
 
-	public static String[] badWords = {
+	private static String[] badWords = {
 		"fuck", "ass", "bitch", "admin", "mod", "dev", "developer", "nigger", "niger",
 		"whore", "pussy", "porn", "penis", "chink", "faggot", "cunt", "clit", "cock"};
 
@@ -306,10 +307,10 @@ public class InterfaceOptionHandler implements PacketHandler {
 					case 2:
 						String playerInvited = p.readString();
 						Player invited = World.getWorld().getPlayer(DataConversions.usernameToHash(playerInvited));
-						if (!player.getClan().isAllowed(1, player)) {
+						/*if (!player.getClan().isAllowed(1, player)) {
 							player.message("You are not allowed to invite into clan.");
 							return;
-						}
+						}*/
 						if (invited != null) {
 							ClanInvite.createClanInvite(player, invited);
 						} else {
@@ -398,6 +399,240 @@ public class InterfaceOptionHandler implements PacketHandler {
 						break;
 					case 9:
 
+						break;
+				}
+				break;
+			case 12: // Party
+				if (!Constants.GameServer.WANT_PARTIES) return;
+				int actionType2 = p.readByte();
+				switch (actionType2) {
+					case 0: // CREATE PARTY
+						if (player.getParty() != null) {
+							ActionSender.sendBox(player, "Leave your current party before joining another", false);
+							return;
+						}
+
+						Party party = new Party();
+						//party.setPartyName(partyName);
+						//party.setPartyTag(partyTag);
+
+						PartyPlayer partyMember = party.addPlayer(player);
+						partyMember.setRank(PartyRank.LEADER);
+						party.setLeader(partyMember);
+
+						PartyManager.createParty(party);
+						player.message("You have created a party: ");
+
+						break;
+					case 1:
+						if (player.getParty() != null) {
+							player.getParty().removePlayer(player.getUsername());
+						}
+						break;
+					case 2:
+						Player invited = World.getWorld().getPlayer(p.readShort());
+						/*if (!player.getParty().isAllowed(1, player)) {
+							player.message("You are not allowed to invite others into this party");
+							return;
+						}*/
+						if (player.getParty() == null) {
+							String partyName = p.readString();
+							String partyTag = p.readString();
+							Party party1 = new Party();
+							party1.setPartyName(partyName);
+							party1.setPartyTag(partyTag);
+
+							PartyPlayer partyMember1 = party1.addPlayer(player);
+							partyMember1.setRank(PartyRank.LEADER);
+							party1.setLeader(partyMember1);
+
+							PartyManager.createParty(party1);
+							player.message("You have created a party: ");
+						}
+						if (player.getParty().getInviteSetting() == 1 && !player.getParty().getLeader().getUsername().equalsIgnoreCase(player.getUsername())) {
+							player.message("Only the party owner can invite players to this party");
+							return;
+						}
+						if (player.getParty().getInviteSetting() == 2 && !player.getParty().getPlayer(player.getUsername()).getRank().equals(PartyRank.GENERAL) && !player.getParty().getPlayer(player.getUsername()).getRank().equals(PartyRank.LEADER)) {
+							player.message("Only the party owner can invite players to this party");
+							return;
+						}
+						if (invited.getParty() != null) {
+							if (player.getParty() == invited.getParty()) {
+								player.message(invited.getUsername() + " is already in your party");
+								return;
+							} else {
+								invited.message("@yel@" + player.getUsername() + " + " + player.getParty().getPlayers().size() + " tried to send you a party invite, but you are already in a party");
+								player.message(invited.getUsername() + " is already in a party");
+								return;
+							}
+						}
+						if (invited != null) {
+							PartyInvite.createPartyInvite(player, invited);
+							//ActionSender.sendBox(player, "Yay " + invited.getUsername(), false);
+						} else {
+							ActionSender.sendBox(player, "Player is not online or could not be found!", false);
+							return;
+						}
+						break;
+					case 3:
+						if (player.getActivePartyInvite() != null) {
+							player.getActivePartyInvite().accept();
+						}
+						break;
+					case 4:
+						if (player.getActivePartyInvite() != null) {
+							player.getActivePartyInvite().decline();
+						}
+						break;
+					case 5: // kick
+						if (player.getParty() != null) {
+							String playerToKick = p.readString();
+							/*if (!player.getParty().isAllowed(0, player)) {
+								player.message("You are not allowed to kick from this party.");
+								return;
+							}*/
+							if (player.getParty().getLeader().getUsername().equals(playerToKick)) {
+								player.message("You can't kick the leader of the party.");
+								return;
+							}
+							player.getParty().removePlayer(playerToKick);
+						}
+						break;
+					case 6: // rank
+						if (player.getParty() != null) {
+							String playerRank = p.readString();
+							int rank = p.readByte();
+							if (rank >= 3) {
+								rank = 0;
+							}
+							if (!player.getParty().getLeader().getUsername().equals(player.getUsername().replaceAll("_", " "))) {
+								player.message("You are not the leader of this party");
+								return;
+							}
+							if (player.getParty().getLeader().getUsername().equals(playerRank)) {
+								player.message("You are already the leader of the party");
+								return;
+							}
+							player.getParty().updateRankPlayer(player, playerRank, rank);
+						}
+						break;
+					case 7: // Party SETTINGS
+						if (player.getParty() != null) {
+							int settingPreference = p.readByte();
+							if (settingPreference > 3) {
+								return;
+							}
+							int state = p.readByte();
+							if (state >= 3) {
+								state = 0;
+							}
+							if (!player.getParty().getLeader().getUsername().equals(player.getUsername())) {
+								player.message("You are not the leader of this party");
+								return;
+							}
+							if (settingPreference == 0) {
+								if (player.getParty().getKickSetting() == state) {
+									return;
+								}
+								player.getParty().setKickSetting(state);
+							} else if (settingPreference == 1) {
+								if (player.getParty().getInviteSetting() == state) {
+									return;
+								}
+								player.getParty().setInviteSetting(state);
+							} else if (settingPreference == 2) {
+								if (player.getParty().getAllowSearchJoin() == state) {
+									return;
+								}
+								player.getParty().setAllowSearchJoin(state);
+							}
+							player.message("[PARTY]: You have updated party settings");
+							player.getParty().updatePartySettings();
+
+						}
+						break;
+					case 8:
+						ActionSender.sendParties(player);
+						break;
+					case 9:
+						String playerInvited2 = p.readString();
+						Player invited2 = World.getWorld().getPlayer(DataConversions.usernameToHash(playerInvited2));
+						if (player.getParty() == null) {
+							if (invited2 == null) {
+								ActionSender.sendBox(player,
+									"@lre@Party: %"
+										+ " %"
+										+ "This player is not online or does not exist %"
+									, true);
+								return;
+							}
+							if (invited2.equals(player)) {
+								ActionSender.sendBox(player,
+									"@lre@Party: %"
+										+ " %"
+										+ "You cannot invite yourself %"
+									, true);
+								return;
+							}
+							if (invited2.getParty() != null) {
+								if (player.getParty() == invited2.getParty()) {
+									player.message(invited2.getUsername() + " is already in your party");
+									return;
+								} else {
+									invited2.message("@yel@" + player.getUsername() + " tried to send you a party invite, but you are already in a party");
+									ActionSender.sendBox(player,
+										"@lre@Party: %"
+											+ " %"
+											+ invited2.getUsername() + " is already in a party %"
+										, true);
+									return;
+								}
+							} else {
+								String partyName = p.readString();
+								String partyTag = p.readString();
+								Party party1 = new Party();
+								party1.setPartyName(partyName);
+								party1.setPartyTag(partyTag);
+
+								PartyPlayer partyMember1 = party1.addPlayer(player);
+								partyMember1.setRank(PartyRank.LEADER);
+								party1.setLeader(partyMember1);
+
+								PartyManager.createParty(party1);
+								player.message("You have created a party: ");
+							}
+						} else {
+							if (invited2 == null) {
+								ActionSender.sendBox(player,
+									"@lre@Party: %"
+										+ " %"
+										+ "This player is not online or does not exist %"
+									, true);
+								return;
+							}
+							if (invited2.getParty() != null) {
+								if (player.getParty() == invited2.getParty()) {
+									player.message(invited2.getUsername() + " is already in your party");
+									return;
+								} else {
+									invited2.message("@yel@" + player.getUsername() + " tried to send you a party invite, but you are already in a party");
+									ActionSender.sendBox(player,
+										"@lre@Party: %"
+											+ " %"
+											+ invited2.getUsername() + " is already in a party %"
+										, true);
+									return;
+								}
+							}
+						}
+						if (invited2 != null) {
+							PartyInvite.createPartyInvite(player, invited2);
+							//ActionSender.sendBox(player, "Yay " + invited2.getUsername(), false);
+						} else {
+							ActionSender.sendBox(player, "Player is not online or could not be found!", false);
+							return;
+						}
 						break;
 				}
 				break;

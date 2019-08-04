@@ -9,6 +9,7 @@ import com.openrsc.server.model.snapshot.Chatlog;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
+import com.openrsc.server.content.party.*;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.GameLogging;
@@ -117,6 +118,13 @@ public final class RegularPlayer implements CommandListener {
 			}
 			player.getActiveClanInvite().accept();
 			player.message(messagePrefix + "You have joined clan " + player.getClan().getClanName());
+		} else if (cmd.equalsIgnoreCase("partyaccept")) {
+			if (player.getActivePartyInvite() == null) {
+				//player.message(messagePrefix + "You have not been invited to a party.");
+				return;
+			}
+			player.getActivePartyInvite().accept();
+			player.message(messagePrefix + "You have joined the party");
 		} else if (cmd.equalsIgnoreCase("claninvite") && Constants.GameServer.WANT_CLANS) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
@@ -257,6 +265,65 @@ public final class RegularPlayer implements CommandListener {
 				GameLogging.addQuery(new ChatLog(player.getUsername(), "(PKing) " + newStr));
 				World.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(PKing) " + newStr));
 			}
+		} else if (cmd.equalsIgnoreCase("party")) {
+			if (!Constants.GameServer.WANT_GLOBAL_CHAT) return;
+			if (player.isMuted()) {
+				player.message(messagePrefix + "You are muted, you cannot send messages");
+				return;
+			}
+			if (player.getCache().hasKey("global_mute") && (player.getCache().getLong("global_mute") - System.currentTimeMillis() > 0 || player.getCache().getLong("global_mute") == -1) && cmd.equals("g")) {
+				long globalMuteDelay = player.getCache().getLong("global_mute");
+				player.message(messagePrefix + "You are " + (globalMuteDelay == -1 ? "permanently muted" : "temporary muted for " + (int) ((player.getCache().getLong("global_mute") - System.currentTimeMillis()) / 1000 / 60) + " minutes") + " from the ::g chat.");
+				return;
+			}
+			long sayDelay = 0;
+			if (player.getCache().hasKey("say_delay")) {
+				sayDelay = player.getCache().getLong("say_delay");
+			}
+
+			long waitTime = 1200;
+
+			if (player.isMod()) {
+				waitTime = 0;
+			}
+
+			if (System.currentTimeMillis() - sayDelay < waitTime) {
+				player.message(messagePrefix + "You can only use this command every " + (waitTime / 1000) + " seconds");
+				return;
+			}
+
+			if (player.getLocation().onTutorialIsland() && !player.isMod()) {
+				return;
+			}
+			if (player.getParty() == null) {
+				return;
+			}
+
+			player.getCache().store("say_delay", System.currentTimeMillis());
+
+			StringBuilder newStr = new StringBuilder();
+			for (String arg : args) {
+				newStr.append(arg).append(" ");
+			}
+			newStr = new StringBuilder(newStr.toString().replace('~', ' '));
+			newStr = new StringBuilder(newStr.toString().replace('@', ' '));
+			String channelPrefix = "@whi@[@or1@Party@whi@] ";
+			int channel = cmd.equalsIgnoreCase("p") ? 1 : 2;
+			for (Player p : World.getWorld().getPlayers()) {
+				if (p.getSocial().isIgnoring(player.getUsernameHash()))
+					continue;
+				if (p.getParty() == player.getParty()) {
+					//ActionSender.sendMessage(p, player, 1, MessageType.GAME, "@whi@" + newStr, player.getIcon());
+					p.message(channelPrefix + "" + player.getUsername() + ": @or1@" + newStr);
+				}
+			}
+			if (cmd.equalsIgnoreCase("g")) {
+				GameLogging.addQuery(new ChatLog(player.getUsername(), "(Global) " + newStr));
+				World.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(Global) " + newStr));
+			} else {
+				GameLogging.addQuery(new ChatLog(player.getUsername(), "(PKing) " + newStr));
+				World.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(PKing) " + newStr));
+			}
 		} else if (cmd.equalsIgnoreCase("online")) {
 			int players = (int) (World.getWorld().getPlayers().size());
 			for (Player p : World.getWorld().getPlayers()) {
@@ -272,6 +339,20 @@ public final class RegularPlayer implements CommandListener {
 					IP_ADDRESSES.add(p.getCurrentIP());
 			}
 			player.message(messagePrefix + "There are " + IP_ADDRESSES.size() + " unique players online");
+		} else if (cmd.equalsIgnoreCase("leaveparty")) {
+			player.getParty().removePlayer(player.getUsername());
+		} else if (cmd.equalsIgnoreCase("shareloot")) {
+			if (player.getParty().getPlayer(player.getUsername()).getRank().equals(PartyRank.LEADER)) {
+				for (PartyPlayer m : player.getParty().getPlayers()) {
+					if (m.getShareLoot() > 0) {
+						m.setShareLoot(0);
+						ActionSender.sendParty(player);
+					} else {
+						m.setShareLoot(1);
+						ActionSender.sendParty(player);
+					}
+				}
+			}
 		} else if (cmd.equals("onlinelist")) { // modern onlinelist display using ActionSender.SendOnlineList()
 			ActionSender.sendOnlineList(player);
 		/*} else if (cmd.equalsIgnoreCase("onlinelist")) { // this is the old onlinelist display using ActionSender.sendBox()
@@ -303,7 +384,7 @@ public final class RegularPlayer implements CommandListener {
 		} else if (cmd.equalsIgnoreCase("time") || cmd.equalsIgnoreCase("date") || cmd.equalsIgnoreCase("datetime")) {
 			player.message(messagePrefix + " the current time/date is:@gre@ " + new java.util.Date().toString());
 		} else if (Constants.GameServer.NPC_KILL_LIST && cmd.equalsIgnoreCase("kills")) {
-			String kills = "NPC Kill List for " + player.getUsername() + " % %";
+			StringBuilder kills = new StringBuilder("NPC Kill List for " + player.getUsername() + " % %");
 			try {
 				PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement(
 					"SELECT * FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "npckills` WHERE playerID = ? ORDER BY killCount DESC LIMIT 16");
@@ -314,10 +395,10 @@ public final class RegularPlayer implements CommandListener {
 					int npcID = result.getInt("npcID");
 					n.setID(npcID);
 					int killCount = result.getInt("killCount");
-					kills += "NPC: " + n.getDef().getName() + " - Kill Count: " + killCount + "%";
+					kills.append("NPC: ").append(n.getDef().getName()).append(" - Kill Count: ").append(killCount).append("%");
 				}
 				result.close();
-				ActionSender.sendBox(player, kills, true);
+				ActionSender.sendBox(player, kills.toString(), true);
 			} catch (SQLException e) {
 				LOGGER.catching(e);
 			}

@@ -234,15 +234,10 @@ public class SpellHandler implements PacketHandler {
 					player.resetPath();
 					return;
 				}
-				if (affectedNpc.getPetNpc() > 0 ) {
-				player.message("This pet belongs too " + affectedNpc.getPetOwnerA2() + ". You may not attack it.");
-				player.resetPath();
-				return;
-				}
-				if (affectedNpc.getLocation().inWilderness() && !player.getLocation().inWilderness() && (affectedNpc.getID() == 210 || affectedNpc.getID() == 236)){
-				player.message("You must be in the wilderness to attack this NPC");
-				player.resetPath();
-				return;
+				if (affectedNpc.getLocation().inWilderness() && !player.getLocation().inWilderness() && (affectedNpc.getID() == 210 || affectedNpc.getID() == 236)) {
+					player.message("You must be in the wilderness to attack this NPC");
+					player.resetPath();
+					return;
 				}
 				if (affectedNpc.getID() == NpcId.DELRITH.id()) {
 					player.message("Delrith can not be attacked without the Silverlight sword");
@@ -256,9 +251,9 @@ public class SpellHandler implements PacketHandler {
 				}
 				if (affectedNpc.getID() == NpcId.LUCIEN_EDGE.id() && !player.getInventory().wielding(ItemId.PENDANT_OF_ARMADYL.id())) {
 					npcTalk(player, affectedNpc, "I'm sure you don't want to attack me really",
-							"I am your friend");
+						"I am your friend");
 					message(player, "You decide you don't want to attack Lucien really",
-							"He is your friend");
+						"He is your friend");
 					return;
 				}
 
@@ -866,7 +861,7 @@ public class SpellHandler implements PacketHandler {
 						}
 						fireDamage = (int) Math.floor(getCurrentLevel(player, SKILLS.HITS.id()) * percentage / 100.0);
 						player.damage(fireDamage);
-						
+
 						//reduce ranged level (case for KBD)
 						if (n.getID() == NpcId.KING_BLACK_DRAGON.id()) {
 							int newLevel = getCurrentLevel(player, SKILLS.RANGED.id()) - Formulae.getLevelsToReduceAttackKBD(player);
@@ -1081,6 +1076,13 @@ public class SpellHandler implements PacketHandler {
 								public void action() {
 									affectedMob.getSkills().subtractLevel(3, secondAdditionalDamage, false);
 									affectedMob.getUpdateFlags().setDamage(new Damage(affectedMob, secondAdditionalDamage));
+									if (affectedMob.isPlayer()) {
+										for (Player p : World.getWorld().getPlayers()) {
+											if (player.getParty() == p.getParty()) {
+												ActionSender.sendParty(p);
+											}
+										}
+									}
 									if (affectedMob.getSkills().getLevel(SKILLS.HITS.id()) <= 0) {
 										affectedMob.killedBy(player);
 									}
@@ -1118,8 +1120,8 @@ public class SpellHandler implements PacketHandler {
 
 	private void handleTeleport(Player player, SpellDef spell, int id) {
 		if (player.getLocation().wildernessLevel() >= 20 || player.getLocation().isInFisherKingRealm()
-				|| player.getLocation().isInsideGrandTreeGround()
-				|| (player.getLocation().inModRoom() && !player.isAdmin())) {
+			|| player.getLocation().isInsideGrandTreeGround()
+			|| (player.getLocation().inModRoom() && !player.isAdmin())) {
 			player.message("A mysterious force blocks your teleport spell!");
 			player.message("You can't use teleport after level 20 wilderness");
 			return;

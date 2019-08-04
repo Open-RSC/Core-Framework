@@ -1,7 +1,7 @@
 package orsc;
 
 import com.openrsc.client.entityhandling.defs.SpriteDef;
-import com.openrsc.client.model.Sprite;
+
 import orsc.enumerations.ORSCharacterDirection;
 
 public final class ORSCharacter {
@@ -16,9 +16,11 @@ public final class ORSCharacter {
 	public int colourSkin;
 	public int colourTop;
 	public int combatTimeout = 0;
+	int healTimeout = 0;
 	public int currentX;
 	public int currentZ;
 	public int damageTaken = 0;
+	int healTaken = 0;
 	public String displayName;
 	public int[] layerAnimation = new int[12];
 	public int healthCurrent = 0;
@@ -37,6 +39,7 @@ public final class ORSCharacter {
 	public int[] waypointsX = new int[10];
 	public int[] waypointsZ = new int[10];
 	public String clanTag;
+	public String partyTag;
 	public boolean isInvisible = false;
 	public boolean isInvulnerable = false;
 	int icon = 0;
