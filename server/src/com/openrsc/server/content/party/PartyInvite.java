@@ -11,7 +11,7 @@ public class PartyInvite {
 	public Player inviter, invited;
 	private SingleEvent timeOutEvent;
 
-	public PartyInvite(Player inviter, Player invited) {
+	private PartyInvite(Player inviter, Player invited) {
 		this.inviter = inviter;
 		this.invited = invited;
 	}
@@ -93,7 +93,12 @@ public class PartyInvite {
 				+ " %"
 				+ "You have successfully invited " + invited.getUsername() + " to the Party %"
 			, true);
-		invited.message("@whi@[@gre@Party@whi@] - @yel@" + player.getParty().getPlayers().size() + " members");
+		PartyPlayer p3 = player.getParty().getLeader();
+		if(p3.getShareLoot() > 0){
+			invited.message("@whi@[@gre@Party@whi@]@yel@" + player.getParty().getPlayers().size() + " @whi@members. (Loot Sharing) - @gre@YES");
+		} else {
+			invited.message("@whi@[@gre@Party@whi@]@yel@" + player.getParty().getPlayers().size() + " @whi@members. (Loot Sharing) - @red@NO");
+		}
 		for (Player p : World.getWorld().getPlayers()) {
 			if (p.getParty() == player.getParty()) {
 				invited.message("@gre@[Party]@whi@" + p + "");
@@ -108,7 +113,7 @@ public class PartyInvite {
 		}
 	}
 
-	public void startTimeoutCounter() {
+	private void startTimeoutCounter() {
 		timeOutEvent = new SingleEvent(null, 60000, "Party Invite") {
 			@Override
 			public void action() {

@@ -175,6 +175,11 @@ public final class PartyInterface {
 
 
 		graphics.drawString("Total partymates: (" + showing + " / 5)", newX, y + 55, 0xEFB063, 0);
+		if(mc.party.shareLoot[0] == 0){
+			graphics.drawString("Share Loot: @red@OFF", newX + 175, y + 55, 0xEFB063, 0);
+		} else {
+			graphics.drawString("Share Loot: @gre@ON", newX + 175, y + 55, 0xEFB063, 0);
+		}
 		if (selectedPartyMate != -1 && mc.party.isAllowed(0)) {
 			graphics.drawString("Settings for: " + mc.party.username[selectedPartyMate], newX, y + 180, 0xB39684, 0);
 			drawSubmitButton(graphics, newX + 250, y + 194, 130, 28, 18, 1, "Kick user", false, new ButtonHandler() {
@@ -476,7 +481,7 @@ public final class PartyInterface {
 			graphics.drawBoxAlpha(x + 3 + 196 + 10, y + 48, leftBoxW, leftBoxH, 0x1D1915, 192); //5F5147
 			graphics.drawBoxBorder(x + 3 + 196 + 10, leftBoxW, y + 48, leftBoxH, 0x5F5147);
 
-			drawSubmitButton(graphics, x + 9, y + 59, 184, 32, 14, 1, "Share Loot", true, new ButtonHandler() {
+			drawSubmitButton(graphics, x + 9, y + 59, 184, 32, 14, 1, "Share Loot", false, new ButtonHandler() {
 				@Override
 				void handle() {
 					getClient().sendCommandString("shareloot");
@@ -485,7 +490,7 @@ public final class PartyInterface {
 			if (mc.party.shareLoot[0] > 0) {
 				graphics.drawWrappedCenteredString("Yes ", x + 98, y + 86, 184, 1, 0xD9CD98, false);
 			} else {
-				graphics.drawWrappedCenteredString("No ", x + 98, y + 86, 184, 1, 0xD9CD98, false);
+				graphics.drawWrappedCenteredString("No", x + 98, y + 86, 184, 1, 0xD9CD98, false);
 			}
 
 			drawSelectButton(graphics, x + 9, y + 96, 184, 32, 14, 14, 1, 1, "Who can kick in party?", mc.party.getPartySettingByName(mc.party.getPartySetting(0)), new ButtonHandler() {

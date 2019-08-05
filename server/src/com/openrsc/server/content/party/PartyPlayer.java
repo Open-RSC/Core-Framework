@@ -29,7 +29,7 @@ public class PartyPlayer {
 		this.username = player;
 	}
 
-	Player getPlayerReference() {
+	public Player getPlayerReference() {
 		return playerReference;
 	}
 
