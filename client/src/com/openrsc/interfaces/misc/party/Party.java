@@ -32,12 +32,9 @@ public class Party {
 	}
 
 	public boolean isAllowed(int setting) {
-		if (allowed[setting] == true) {
+		if (allowed[setting]) {
 			return true;
-		} else if (allowed[setting] == true) {
-			return true;
-		}
-		return false;
+		} else return allowed[setting];
 	}
 
 	public int getPlayerKills(int user) {
@@ -48,7 +45,7 @@ public class Party {
 		this.playerKills[user] = kills;
 	}
 
-	public int getPlayerDeaths(int user) {
+	int getPlayerDeaths(int user) {
 		return playerDeaths[user];
 	}
 
@@ -56,7 +53,7 @@ public class Party {
 		this.playerDeaths[user] = deaths;
 	}
 
-	public double getKDR(int user) {
+	double getKDR(int user) {
 		double kdRatio = 0.0;
 		if (playerDeaths[user] != 0)
 			kdRatio = (double) playerKills[user] / playerDeaths[user];
@@ -66,7 +63,7 @@ public class Party {
 		return kdRatio;
 	}
 
-	public String getPartyRankNames(int i) {
+	String getPartyRankNames(int i) {
 		return partyByName[i];
 	}
 
@@ -121,7 +118,7 @@ public class Party {
 		return partyInterface;
 	}
 
-	public boolean isPartyLeader() {
+	boolean isPartyLeader() {
 		return isPartyLeader;
 	}
 
@@ -135,7 +132,7 @@ public class Party {
 		}
 	}
 
-	public String getPartySettingByName(int i) {
+	String getPartySettingByName(int i) {
 		return partySettingOptions[i];
 	}
 
@@ -143,7 +140,7 @@ public class Party {
 		this.partySetting[setting] = state;
 	}
 
-	public int getPartySetting(int setting) {
+	int getPartySetting(int setting) {
 		return partySetting[setting];
 	}
 

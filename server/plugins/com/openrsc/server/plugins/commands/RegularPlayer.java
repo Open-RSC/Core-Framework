@@ -346,10 +346,13 @@ public final class RegularPlayer implements CommandListener {
 				for (PartyPlayer m : player.getParty().getPlayers()) {
 					if (m.getShareLoot() > 0) {
 						m.setShareLoot(0);
-						ActionSender.sendParty(player);
+						m.getPlayerReference().message("@whi@[@blu@Party@whi@] - @whi@LOOT SHARING is now @red@OFF");
+						ActionSender.sendParty(m.getPlayerReference());
 					} else {
 						m.setShareLoot(1);
-						ActionSender.sendParty(player);
+						ActionSender.sendParty(m.getPlayerReference());
+						m.getPlayerReference().message("@whi@[@blu@Party@whi@] - @whi@LOOT SHARING is now @gre@ON");
+
 					}
 				}
 			}

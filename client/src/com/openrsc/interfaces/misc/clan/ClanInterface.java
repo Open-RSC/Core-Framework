@@ -548,6 +548,14 @@ public final class ClanInterface {
 				}
 			});
 			graphics.drawLineHoriz(x + 210, y + 87, 194, 0x5F5147);
+			drawSubmitButton(graphics, x + 235, y + 92, 146, 28, 18, 1, "Leave Party", false, new ButtonHandler() {
+				@Override
+				void handle() {
+					getClient().sendCommandString("leaveparty");
+					setVisible(false);
+				}
+			});
+			graphics.drawLineHoriz(x + 210, y + 125, 194, 0x5F5147);
 		} else {
 			clanSetupPanel.show(clanName_field);
 			clanSetupPanel.show(clanTag_field);
