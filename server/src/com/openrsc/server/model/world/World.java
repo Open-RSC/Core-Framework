@@ -399,8 +399,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 			worldInstance.wl.loadWorld(worldInstance);
 			WorldPopulation.populateWorld(worldInstance);
 			shutdownCheck();
-			if (true)
-				initializeDropTables();
+			if (Constants.GameServer.WANT_NEW_RARE_DROP_TABLES)
+				initializeRareDropTables();
 			//AchievementSystem.loadAchievements();
 			// Server.getServer().getEventHandler().add(new WildernessCycleEvent());
 			//setFishingTrawler(new FishingTrawler());
@@ -825,7 +825,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		return npcUnderAttackMap;
 	}
 
-	private void initializeDropTables() {
+	private void initializeRareDropTables() {
 		gemTable = new DropTable();
 		rareTable = new DropTable();
 		ultraTable = new DropTable();
@@ -838,7 +838,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		gemTable.addItemDrop(ItemId.UNCUT_DIAMOND.id(), 1, 4);
 		gemTable.addItemDrop(ItemId.TOOTH_KEY_HALF.id(), 1, 2);
 		gemTable.addItemDrop(ItemId.LOOP_KEY_HALF.id(), 1, 2);
-		gemTable.addTableDrop(ultraTable, 1);
+		gemTable.addTableDrop(ultraTable, 1000);
 
 		rareTable.addItemDrop(ItemId.NATURE_RUNE.id(),50,3);
 		rareTable.addItemDrop(ItemId.LAW_RUNE.id(),40,2);
@@ -903,7 +903,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		gemTable.addAccessor(NpcId.CHAOS_DWARF.id(),14,256);
 		gemTable.addAccessor(NpcId.WHITE_KNIGHT.id(),14,256);
 		gemTable.addAccessor(NpcId.JOGRE.id(),15,256);
-		gemTable.addAccessor(NpcId.MOSS_GIANT.id(),15,256)
+		gemTable.addAccessor(NpcId.MOSS_GIANT.id(),15,256);
 		gemTable.addAccessor(594,15,256);//moss giant
 		gemTable.addAccessor(NpcId.SHADOW_WARRIOR.id(),16,256);
 		gemTable.addAccessor(NpcId.OTHERWORLDLY_BEING.id(),17,256);

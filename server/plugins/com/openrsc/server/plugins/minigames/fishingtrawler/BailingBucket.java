@@ -14,7 +14,7 @@ import com.openrsc.server.external.ItemId;
 public class BailingBucket implements InvActionExecutiveListener, InvActionListener {
 
 	@Override
-	public void onInvAction(Item item, Player player) {
+	public void onInvAction(Item item, Player player, String command) {
 		if (player.isBusy())
 			return;
 		FishingTrawler trawler = World.getWorld().getFishingTrawler(player);
@@ -36,7 +36,7 @@ public class BailingBucket implements InvActionExecutiveListener, InvActionListe
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player player) {
+	public boolean blockInvAction(Item item, Player p, String command) {
 		return item.getID() == ItemId.BAILING_BUCKET.id();
 	}
 

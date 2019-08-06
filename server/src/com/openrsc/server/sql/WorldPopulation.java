@@ -109,10 +109,10 @@ public final class WorldPopulation {
 				+ "itemdef` order by id asc");
 			ArrayList<ItemDefinition> itemDefinitions = new ArrayList<ItemDefinition>();
 			while (result.next()) {
-				itemDefinitions.add(new ItemDefinition(
+				ItemDefinition toAdd = new ItemDefinition(
 					result.getString("name"), result
 					.getString("description"), result
-					.getString("command"), result
+					.getString("command").split(","), result
 					.getInt("isFemaleOnly") == 1, result
 					.getInt("isMembersOnly") == 1, result
 					.getInt("isStackable") == 1, result
@@ -128,7 +128,12 @@ public final class WorldPopulation {
 					.getInt("weaponPowerBonus"), result
 					.getInt("magicBonus"), result
 					.getInt("prayerBonus"), result
-					.getInt("basePrice"), result.getInt("bankNoteID"), result.getInt("originalItemID")));
+					.getInt("basePrice"), result.getInt("bankNoteID"), result.getInt("originalItemID"));
+
+				if (toAdd.getCommand().length == 1 && toAdd.getCommand()[0] == "") {
+					toAdd.nullCommand();
+				}
+				itemDefinitions.add(toAdd);
 			}
 			EntityHandler.items = itemDefinitions.toArray(new ItemDefinition[]{});
 			LOGGER.info("\t Loaded {}", box(itemDefinitions.size()) + " item definitions");

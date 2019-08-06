@@ -7,11 +7,7 @@ import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.impl.*;
 import com.openrsc.server.event.custom.NpcLootEvent;
 import com.openrsc.server.event.rsc.ImmediateEvent;
-import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.external.ItemDropDef;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NPCDef;
-import com.openrsc.server.external.NPCLoc;
+import com.openrsc.server.external.*;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.Skills;
@@ -582,20 +578,22 @@ public class Npc extends Mob {
 				//Determine if the RDT is hit first
 				boolean rdtHit = false;
 				Item rare = null;
-				if (true && mob.isPlayer()) {
-					if (world.rareTable.rollAccess(this.id)) {
+				if (WANT_NEW_RARE_DROP_TABLES && mob.isPlayer()) {
+					if (world.rareTable.rollAccess(this.id,Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()))) {
 						rdtHit = true;
-						rare = world.rareTable.rollItem(Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()), ((Player)mob));
-					} else if (world.gemTable.rollAccess(this.id)) {
+						rare = world.rareTable.rollItem(Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()), ((Player) mob));
+					} else if (world.gemTable.rollAccess(this.id,Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()))) {
 						rdtHit = true;
-						rare = world.gemTable.rollItem(Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()), ((Player)mob));
+						rare = world.gemTable.rollItem(Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()), ((Player) mob));
 					}
 				}
 
 				if (rare != null) {
-					GroundItem groundItem = new GroundItem(rare.getID(), getX(), getY(), rare.getAmount(), owner);
-					groundItem.setAttribute("npcdrop", true);
-					world.registerItem(groundItem);
+					if (!handleRingOfAvarice(owner, rare)) {
+						GroundItem groundItem = new GroundItem(rare.getID(), getX(), getY(), rare.getAmount(), owner);
+						groundItem.setAttribute("npcdrop", true);
+						world.registerItem(groundItem);
+					}
 				}
 
 				ItemDropDef[] drops = def.getDrops();
@@ -606,9 +604,11 @@ public class Npc extends Mob {
 					total += drop.getWeight();
 					weightTotal += drop.getWeight();
 					if (drop.getWeight() == 0 && drop.getID() != -1) {
-						GroundItem groundItem = new GroundItem(drop.getID(), getX(), getY(), drop.getAmount(), owner);
-						groundItem.setAttribute("npcdrop", true);
-						world.registerItem(groundItem);
+						if (!handleRingOfAvarice(owner, new Item(drop.getID(), drop.getAmount()))) {
+							GroundItem groundItem = new GroundItem(drop.getID(), getX(), getY(), drop.getAmount(), owner);
+							groundItem.setAttribute("npcdrop", true);
+							world.registerItem(groundItem);
+						}
 						continue;
 					}
 
@@ -665,9 +665,11 @@ public class Npc extends Mob {
 										if (dropID != ItemId.NOTHING.id() && EntityHandler.getItemDef(dropID).isMembersOnly() && !Constants.GameServer.MEMBER_WORLD) {
 											continue;
 										} else if (dropID != ItemId.NOTHING.id()) {
-											groundItem = new GroundItem(dropID, getX(), getY(), 1, owner);
-											groundItem.setAttribute("npcdrop", true);
-											world.registerItem(groundItem);
+											if (!handleRingOfAvarice(owner, new Item(drop.getID(), drop.getAmount()))) {
+												groundItem = new GroundItem(dropID, getX(), getY(), 1, owner);
+												groundItem.setAttribute("npcdrop", true);
+												world.registerItem(groundItem);
+											}
 										}
 									}
 
@@ -678,14 +680,19 @@ public class Npc extends Mob {
 										amount = Formulae.calculateGoldDrop(
 											GoldDrops.drops.getOrDefault(this.getID(), new int[]{1})
 										);
+										if (Functions.isWielding(((Player) mob), ItemId.RING_OF_SPLENDOR.id())) {
+											amount += Formulae.getSplendorBoost(amount);
+											((Player) mob).message("Your ring of splendor shines brightly!");
+										}
 									}
 
 									Server.getPlayerDataProcessor().getDatabase().addNpcDrop(
 										owner, this, dropID, amount);
-									GroundItem groundItem = new GroundItem(dropID, getX(), getY(), amount, owner);
-									groundItem.setAttribute("npcdrop", true);
-
-									world.registerItem(groundItem);
+									if (!handleRingOfAvarice(owner, new Item(drop.getID(), amount))) {
+										GroundItem groundItem = new GroundItem(dropID, getX(), getY(), amount, owner);
+										groundItem.setAttribute("npcdrop", true);
+										world.registerItem(groundItem);
+									}
 								}
 
 								// Check if we have a "valuable drop" (configurable)
@@ -734,21 +741,24 @@ public class Npc extends Mob {
 				//Determine if the RDT is hit first
 				boolean rdtHit = false;
 				Item rare = null;
-				if (true && mob.isPlayer()) {
-					if (world.rareTable.rollAccess(this.id)) {
+				if (WANT_NEW_RARE_DROP_TABLES && mob.isPlayer()) {
+					if (world.rareTable.rollAccess(this.id,Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()))) {
 						rdtHit = true;
-						rare = world.rareTable.rollItem(Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()), ((Player)mob));
-					} else if (world.gemTable.rollAccess(this.id)) {
+						rare = world.rareTable.rollItem(Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()), ((Player) mob));
+					} else if (world.gemTable.rollAccess(this.id,Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()))) {
 						rdtHit = true;
-						rare = world.gemTable.rollItem(Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()), ((Player)mob));
+						rare = world.gemTable.rollItem(Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()), ((Player) mob));
 					}
 				}
 
 				if (rare != null) {
-					GroundItem groundItem = new GroundItem(rare.getID(), getX(), getY(), rare.getAmount(), owner);
-					groundItem.setAttribute("npcdrop", true);
-					world.registerItem(groundItem);
+					if (!handleRingOfAvarice((Player)mob, rare)) {
+						GroundItem groundItem = new GroundItem(rare.getID(), getX(), getY(), rare.getAmount(), owner);
+						groundItem.setAttribute("npcdrop", true);
+						world.registerItem(groundItem);
+					}
 				}
+
 				ItemDropDef[] drops = def.getDrops();
 
 				int total = 0;
@@ -757,9 +767,11 @@ public class Npc extends Mob {
 					total += drop.getWeight();
 					weightTotal += drop.getWeight();
 					if (drop.getWeight() == 0 && drop.getID() != -1) {
-						GroundItem groundItem = new GroundItem(drop.getID(), getX(), getY(), drop.getAmount(), owner);
-						groundItem.setAttribute("npcdrop", true);
-						world.registerItem(groundItem);
+						if (!handleRingOfAvarice((Player)mob, new Item(drop.getID(), drop.getAmount()))) {
+							GroundItem groundItem = new GroundItem(drop.getID(), getX(), getY(), drop.getAmount(), owner);
+							groundItem.setAttribute("npcdrop", true);
+							world.registerItem(groundItem);
+						}
 						continue;
 					}
 				}
@@ -809,9 +821,11 @@ public class Npc extends Mob {
 										if (dropID != ItemId.NOTHING.id() && EntityHandler.getItemDef(dropID).isMembersOnly() && !Constants.GameServer.MEMBER_WORLD) {
 											continue;
 										} else if (dropID != ItemId.NOTHING.id()) {
-											groundItem = new GroundItem(dropID, getX(), getY(), 1, owner);
-											groundItem.setAttribute("npcdrop", true);
-											world.registerItem(groundItem);
+											if (!handleRingOfAvarice((Player)mob, new Item(drop.getID(), drop.getAmount()))) {
+												groundItem = new GroundItem(dropID, getX(), getY(), 1, owner);
+												groundItem.setAttribute("npcdrop", true);
+												world.registerItem(groundItem);
+											}
 										}
 									}
 								} else {
@@ -820,11 +834,17 @@ public class Npc extends Mob {
 										amount = Formulae.calculateGoldDrop(
 											GoldDrops.drops.getOrDefault(this.getID(), new int[]{1})
 										);
+										if (Functions.isWielding(((Player) mob), ItemId.RING_OF_SPLENDOR.id())) {
+											amount += Formulae.getSplendorBoost(amount);
+											((Player) mob).message("Your ring of splendor shines brightly!");
+										}
 									}
 
-									GroundItem groundItem = new GroundItem(dropID, getX(), getY(), amount, owner);
-									groundItem.setAttribute("npcdrop", true);
-									world.registerItem(groundItem);
+									if (!handleRingOfAvarice((Player) mob, new Item(drop.getID(), amount))) {
+										GroundItem groundItem = new GroundItem(dropID, getX(), getY(), amount, owner);
+										groundItem.setAttribute("npcdrop", true);
+										world.registerItem(groundItem);
+									}
 								}
 							}
 							break;
@@ -1404,5 +1424,32 @@ public class Npc extends Mob {
 
 	public boolean executedAggroScript() {
 		return this.executedAggroScript;
+	}
+
+	public static boolean handleRingOfAvarice(Player p, Item item) {
+		int slot = -1;
+		if (Functions.isWielding(p, ItemId.RING_OF_AVARICE.id())) {
+			ItemDefinition itemDef = EntityHandler.getItemDef(item.getID());
+			if (itemDef != null && itemDef.isStackable()) {
+				if (p.getInventory().hasInInventory(item.getID())) {
+					p.getInventory().add(item);
+					return true;
+				} else if (WANT_EQUIPMENT_TAB && (slot = p.getEquipment().hasEquipped(item.getID())) != -1) {
+					Item equipped = p.getEquipment().list[slot];
+					equipped.setAmount(equipped.getAmount() + item.getAmount());
+					p.getEquipment().list[slot] = equipped;
+					return true;
+				} else {
+					if (p.getInventory().getFreeSlots() > 0) {
+						p.getInventory().add(item);
+						return true;
+					} else {
+						p.message("Your ring of Avarice tried to activate, but your inventory was full.");
+						return false;
+					}
+				}
+			}
+		}
+		return false;
 	}
 }

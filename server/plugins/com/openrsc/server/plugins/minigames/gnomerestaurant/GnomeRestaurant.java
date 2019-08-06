@@ -517,12 +517,12 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, Ta
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player p) {
+	public boolean blockInvAction(Item item, Player p, String command) {
 		return item.getID() == ItemId.GIANNE_COOK_BOOK.id();
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p) {
+	public void onInvAction(Item item, Player p, String command) {
 		if (item.getID() == ItemId.GIANNE_COOK_BOOK.id()) {
 			p.message("you open aluft's cook book");
 			p.message("inside are various gnome dishes");

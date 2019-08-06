@@ -16,7 +16,7 @@ import com.openrsc.server.util.rsc.DataConversions;
 public class InvAction extends Functions implements InvActionListener, InvActionExecutiveListener {
 
 	@Override
-	public boolean blockInvAction(Item item, Player player) {
+	public boolean blockInvAction(Item item, Player player, String command) {
 		return inArray(item.getID(),
 			ItemId.BARCRAWL_CARD.id(), ItemId.INSTRUCTION_MANUAL.id(), ItemId.DIARY.id(),
 			ItemId.DRY_STICKS.id(), ItemId.SCRUFFY_NOTE.id(), ItemId.MAGIC_SCROLL.id(),
@@ -32,7 +32,7 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 	}
 
 	@Override
-	public void onInvAction(Item item, Player player) {
+	public void onInvAction(Item item, Player player, String command) {
 		int id = item.getID();
 		if (id == ItemId.OYSTER.id()) {
 			handleOyster(player, id);

@@ -641,7 +641,7 @@ public final class AuctionHouse {
 
 			String itemName = def.getName().toLowerCase();
 			String exactItemName = def.getName().toLowerCase();
-			String command = def.getCommand().toLowerCase();
+			String[] command = def.getCommand();
 
 			String[] commandFilter = null;
 			String[] nameFilter = null;
@@ -659,7 +659,8 @@ public final class AuctionHouse {
 			} else if (selectedFilter == 5) {
 				nameFilter = new String[]{"uncut", "sapphire", "emerald", "ruby", "diamond", "dragonstone"};
 				exactNameFilter = new String[]{"opal", "jade", "amulet of accuracy", "gold amulet", "brass necklace",
-					"gold necklace", "holy symbol of saradomin", "unblessed holy symbol"};
+					"gold necklace", "holy symbol of saradomin", "unblessed holy symbol", "ring of wealth",
+				"ring of avarice", "ring of recoil", "ring of forging", "ring of splendor"};
 			} else if (selectedFilter == 6) {
 				nameFilter = new String[]{" ore", "coal", "bar", "clay"};
 				exactNameFilter = new String[]{"gold", "silver", "silver certificate", "gold certificate"};
@@ -705,13 +706,21 @@ public final class AuctionHouse {
 					}
 				}
 			}
-
+			boolean breakit = false;
 			if (commandFilter != null && skip) {
 				for (String c : commandFilter) {
-					if (command.contains(c)) {
-						skip = false;
-						break;
+					if (command != null) {
+						for (String comm : command) {
+							if (comm.toLowerCase().contains(c)) {
+								skip = false;
+								breakit = true;
+								break;
+							}
+							if (breakit)
+								break;
+						}
 					}
+
 				}
 			}
 

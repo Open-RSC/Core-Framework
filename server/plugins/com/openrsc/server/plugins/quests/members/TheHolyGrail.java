@@ -321,12 +321,12 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player p) {
+	public boolean blockInvAction(Item item, Player p, String command) {
 		return item.getID() == ItemId.MAGIC_WHISTLE.id() || item.getID() == ItemId.BELL.id() || item.getID() == ItemId.MAGIC_GOLDEN_FEATHER.id();
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p) {
+	public void onInvAction(Item item, Player p, String command) {
 		if (item.getID() == ItemId.MAGIC_WHISTLE.id()) {
 			if (p.getLocation().inBounds(490, 652, 491, 653)) { // SQUARE PLOT
 				if (p.getQuestStage(this) == 5 || p.getQuestStage(this) == -1) {

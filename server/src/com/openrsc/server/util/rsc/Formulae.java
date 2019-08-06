@@ -919,6 +919,11 @@ public final class Formulae {
 		return weightedRandomChoice(goldValues, weights, goldValues[0]);
 	}
 
+	public static int getSplendorBoost(int amount) {
+		int boost = amount * 9;
+		return boost > 1000 ? 1000 : boost;
+	}
+
 	public static int calculateGemDrop(Player p) {
 		int roll1 = weightedRandomChoice(gemDropIDs, gemDropWeights, ItemId.NOTHING.id());
 		if (roll1 != ItemId.NOTHING_REROLL.id())
@@ -928,19 +933,7 @@ public final class Formulae {
 	}
 
 	public static int calculateRareDrop(Player p) {
-		int roll1 = weightedRandomChoice(rareDropIDs, rareDropWeights, ItemId.NOTHING.id());
-
-		if (isWielding(p, ItemId.RING_OF_WEALTH.id()) && roll1 == ItemId.NOTHING.id()) {
-			for (int i = 0; i < Constants.GameServer.RING_OF_WEALTH_REROLLS; i++) {
-				roll1 = weightedRandomChoice(rareDropIDs, rareDropWeights, ItemId.NOTHING.id());
-				if (roll1 != ItemId.NOTHING.id()) {
-					p.message("Your ring of wealth shines brightly!");
-					break;
-				}
-
-			}
-		}
-		return roll1;
+		return weightedRandomChoice(rareDropIDs, rareDropWeights, ItemId.NOTHING.id());
 	}
 
 	public static int calculateHerbDrop() {

@@ -62,7 +62,7 @@ public final class Menu {
 		}
 	}
 
-	private void addItem(int id_or_z, String label, int dir, int var4, String actor, int index_or_x,
+	public void addItem(int id_or_z, String label, int dir, int var4, String actor, int index_or_x,
 						 String dropped2, MenuItemAction actionID, int tile_id, String dropped, String strB) {
 		try {
 			if (this.menuItems.length == this.itemCount) {

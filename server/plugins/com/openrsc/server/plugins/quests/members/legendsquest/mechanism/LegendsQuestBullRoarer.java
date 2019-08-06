@@ -23,12 +23,12 @@ public class LegendsQuestBullRoarer implements InvActionListener, InvActionExecu
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player p) {
+	public boolean blockInvAction(Item item, Player p, String command) {
 		return item.getID() == ItemId.BULL_ROARER.id();
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p) {
+	public void onInvAction(Item item, Player p, String command) {
 		if (item.getID() == ItemId.BULL_ROARER.id()) {
 			message(p, 1300, "You start to swing the bullroarer above your head.",
 				"You feel a bit silly at first, but soon it makes an interesting sound.");

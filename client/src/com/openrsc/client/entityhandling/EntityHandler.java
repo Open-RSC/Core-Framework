@@ -3552,18 +3552,20 @@ public class EntityHandler {
 		items.add(new ItemDef("Research package", "This contains some vital research results.", "", 0, -1, "items:330",false, false, 0, 0, true, true, -1, -1, 2284));
 		items.add(new ItemDef("Research notes", "These make no sense at all.", "", 0, -1, "items:427",false, false, 0, 0, true, true, -1, -1, 2285));
 
-		items.add(new ItemDef("Ring of Recoil", "An enchanted ring.", "", 900, -1, "items:500",false, true, 1200, 0, true, false, 2287, -1, 2286));
-		items.add(new ItemDef("Ring of Recoil", "Swap this note at any bank for the equivalent item.", "", 900, -1, "items:438",false, false, 0, 0, true, false, -1, 2286, 2287));
-		items.add(new ItemDef("Ring of Duelling", "An enchanted ring.", "", 1275, -1, "items:500",false, true, 1200, 0, true, false, 2289, -1, 2288));
-		items.add(new ItemDef("Ring of Duelling", "Swap this note at any bank for the equivalent item.", "", 1275, -1, "items:438",false, false, 0, 0, true, false, -1, 2288, 2289));
-		items.add(new ItemDef("Ring of Forging", "An enchanted ring.", "", 2025, -1, "items:500",false, true, 1200, 0, true, false, 2291, -1, 2290));
-		items.add(new ItemDef("Ring of Forging", "Swap this note at any bank for the equivalent item.", "", 2025, -1, "items:438",false, false, 0, 0, true, false, -1, 2290, 2291));
-		items.add(new ItemDef("Ring of Life", "An enchanted ring.", "", 3525, -1, "items:500",false, true, 1200, 0, true, false, 2293, -1, 2292));
-		items.add(new ItemDef("Ring of Life", "Swap this note at any bank for the equivalent item.", "", 3525, -1, "items:438",false, false, 0, 0, true, false, -1, 2292, 2293));
-		items.add(new ItemDef("Ring of Wealth", "An enchanted ring.", "", 17625, -1, "items:500",false, true, 1200, 0, true, false, 2295, -1, 2294));
-		items.add(new ItemDef("Ring of Wealth", "Swap this note at any bank for the equivalent item.", "", 17625, -1, "items:438",false, false, 0, 0, true, false, -1, 2294, 2295));
-
-
+		items.add(new ItemDef("Ring of Recoil", "An enchanted ring.", "Check,Break", 900, -1, "items:502",false, true, 1200, 19711, true, false, 2287, -1, 2286));
+		items.add(new ItemDef("Ring of Recoil", "Swap this note at any bank for the equivalent item.", "", 900, -1, "items:438",true, false, 0, 0, true, false, -1, 2286, 2287));
+		items.add(new ItemDef("Ring of Splendor", "An enchanted ring.", "", 1275, -1, "items:502",false, true, 1200, 3394611, true, false, 2289, -1, 2288));
+		items.add(new ItemDef("Ring of Splendor", "Swap this note at any bank for the equivalent item.", "", 1275, -1, "items:438",true, false, 0, 0, true, false, -1, 2288, 2289));
+		items.add(new ItemDef("Ring of Forging", "An enchanted ring.", "Check,Break", 2025, -1, "items:502",false, true, 1200, 16724736, true, false, 2291, -1, 2290));
+		items.add(new ItemDef("Ring of Forging", "Swap this note at any bank for the equivalent item.", "", 2025, -1, "items:438",true, false, 0, 0, true, false, -1, 2290, 2291));
+		items.add(new ItemDef("Ring of Life", "An enchanted ring.", "", 3525, -1, "items:502",false, true, 1200, 0xFFFFFF, true, false, 2293, -1, 2292));
+		items.add(new ItemDef("Ring of Life", "Swap this note at any bank for the equivalent item.", "", 3525, -1, "items:438",true, false, 0, 0, true, false, -1, 2292, 2293));
+		items.add(new ItemDef("Ring of Wealth", "An enchanted ring.", "", 17625, -1, "items:502",false, true, 1200, 12255487, true, false, 2295, -1, 2294));
+		items.add(new ItemDef("Ring of Wealth", "Swap this note at any bank for the equivalent item.", "", 17625, -1, "items:438",true, false, 0, 0, true, false, -1, 2294, 2295));
+		items.add(new ItemDef("Ring of Avarice", "An enchanted ring.", "", 17625, -1, "items:503",false, true, 1200, 12255487, true, false, 2297, -1, 2296));
+		items.add(new ItemDef("Ring of Avarice", "Swap this note at any bank for the equivalent item.", "", 17625, -1, "items:438",true, false, 0, 0, true, false, -1, 2296, 2297));
+		items.add(new ItemDef("Quartet Ring", "An enchanted ring.", "Check,Break", 400, -1, "items:503",false, true, 1200, 16777124, true, false, 2299, -1, 2298));
+		items.add(new ItemDef("Quartet Ring", "Swap this note at any bank for the equivalent item.", "", 400, -1, "items:438",true, false, 0, 0, true, false, -1, 2298, 2299));
 	}
 
 	private static void loadNoteDefinitions() {
@@ -6668,7 +6670,7 @@ public class EntityHandler {
 					item.name = "Members object";
 					item.description = "You need to be a member to use this object";
 					item.basePrice = 0;
-					item.command = "";
+					item.command = null;
 					item.wieldable = false;
 					item.wearableID = 0;
 					item.quest = true;

@@ -340,7 +340,7 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player p) {
+	public boolean blockInvAction(Item item, Player p, String command) {
 		return (p.getY() == 548 && p.getX() > 287 && p.getX() < 291)
 			&& item.getID() == ItemId.SPADE.id();
 	}
@@ -354,7 +354,7 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p) {
+	public void onInvAction(Item item, Player p, String command) {
 		if (p.getQuestStage(this) != 3)
 			return;
 		if (p.isBusy())

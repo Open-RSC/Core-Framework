@@ -9,7 +9,7 @@ public final class ItemDefinition extends EntityDef {
 	 * or a <code>GroundItem</code> represented by
 	 * this <code>ItemDefinition</code>.
 	 */
-	private String command;
+	private String[] command;
 
 	/**
 	 * The description for an <code>InventoryItem</code>,
@@ -177,7 +177,7 @@ public final class ItemDefinition extends EntityDef {
 	 * @param name
 	 * @param command
 	 */
-	public ItemDefinition(String name, String description, String command, boolean isFemaleOnly, boolean isMembersOnly,
+	public ItemDefinition(String name, String description, String[] command, boolean isFemaleOnly, boolean isMembersOnly,
 						  boolean isStackable, boolean isUntradable, boolean isWearable, int appearanceID, int wearableID,
 						  int wearSlot, int requiredLevel, int requiredSkillID, int armourBonus, int weaponAimBonus,
 						  int weaponPowerBonus, int magicBonus, int prayerBonus, int basePrice, int noted, int original) {
@@ -211,7 +211,7 @@ public final class ItemDefinition extends EntityDef {
 	 *
 	 * @return Returns the command.
 	 */
-	public final String getCommand() {
+	public final String[] getCommand() {
 		return command;
 	}
 
@@ -424,4 +424,5 @@ public final class ItemDefinition extends EntityDef {
 		return noteID;
 	}
 
+	public void nullCommand() { this.command = null; }
 }

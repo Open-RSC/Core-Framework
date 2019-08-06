@@ -16,5 +16,5 @@ public interface InvActionListener {
 	 * @param item
 	 * @param player
 	 */
-	public void onInvAction(Item item, Player player);
+	public void onInvAction(Item item, Player player, String command);
 }

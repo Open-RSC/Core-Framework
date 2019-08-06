@@ -31,7 +31,7 @@ import static com.openrsc.server.plugins.Functions.spawnNpc;
 public class LegendsQuestInvAction implements InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener {
 
 	@Override
-	public boolean blockInvAction(Item item, Player p) {
+	public boolean blockInvAction(Item item, Player p, String command) {
 		return inArray(item.getID(),
 			ItemId.SCRIBBLED_NOTES.id(), ItemId.SCRAWLED_NOTES.id(), ItemId.SCATCHED_NOTES.id(),
 			ItemId.ROUGH_SKETCH_OF_A_BOWL.id(), ItemId.SHAMANS_TOME.id(), ItemId.BOOKING_OF_BINDING.id(),
@@ -40,7 +40,7 @@ public class LegendsQuestInvAction implements InvActionListener, InvActionExecut
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p) {
+	public void onInvAction(Item item, Player p, String command) {
 		if (item.getID() == ItemId.GILDED_TOTEM_POLE.id()) {
 			message(p, 1300, "This totem pole is utterly awe inspiring.",
 				"Perhaps you should show it to Radimus Erkle...");

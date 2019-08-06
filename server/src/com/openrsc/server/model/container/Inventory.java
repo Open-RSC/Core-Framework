@@ -198,6 +198,15 @@ public class Inventory {
 		return requiredSlots;
 	}
 
+	public boolean hasInInventory(int id) {
+		synchronized (list) {
+			for (Item i : list) {
+				if (i.getID() == id)
+					return true;
+			}
+		}
+		return false;
+	}
 	public boolean hasItemId(int id) {
 		synchronized (list) {
 			for (Item i : list) {
@@ -329,8 +338,24 @@ public class Inventory {
 	}
 
 	public void replace(int i, int j) {
-		remove(i, 1, false);
-		add(new Item(j));
+		Item old = new Item(i);
+		Item newitem = new Item(j);
+		if (old.getDef() != null && newitem.getDef() != null
+			&& Constants.GameServer.WANT_EQUIPMENT_TAB
+			&& old.getDef().isWieldable() && newitem.getDef().isWieldable()
+		&& Functions.isWielding(player, i)) {
+			newitem.setWielded(false);
+			player.getEquipment().list[old.getDef().getWieldPosition()] = null;
+			player.getEquipment().list[newitem.getDef().getWieldPosition()] = newitem;
+			player.updateWornItems(old.getDef().getWieldPosition(),
+				player.getSettings().getAppearance().getSprite(old.getDef().getWieldPosition()));
+			player.updateWornItems(newitem.getDef().getWieldPosition(),
+				newitem.getDef().getAppearanceId());
+			ActionSender.sendEquipmentStats(player);
+		} else {
+			remove(i, 1, false);
+			add(new Item(j));
+		}
 	}
 
 	public int getFreeSlots() {
@@ -435,27 +460,30 @@ public class Inventory {
 	}
 
 	public void shatter(int itemID) {
-		if (EntityHandler.getItemDef(itemID) == null
-			|| !EntityHandler.getItemDef(itemID).isWieldable() || !Functions.isWielding(player, itemID)) {
+		if (EntityHandler.getItemDef(itemID) == null) {
 			return;
 		}
-
-		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
-			int index = player.getEquipment().hasEquipped(itemID);
+		boolean shattered = false;
+		int index = -1;
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB
+		&& (index = player.getEquipment().hasEquipped(itemID)) != -1) {
 			player.getEquipment().list[index] = null;
+			shattered = true;
 		} else {
 			for (int i = 0; i < player.getInventory().size(); i++) {
 				Item item = player.getInventory().get(i);
-				if (item != null && item.isWieldable()
-					&& item.getID() == itemID && item.isWielded()) {
+				if (item != null && item.getID() == itemID) {
 					player.getInventory().remove(i);
+					shattered = true;
 					break;
 				}
 			}
 		}
-		player.updateWornItems(EntityHandler.getItemDef(itemID).getWieldPosition(), 0);
-		player.message("Your " + EntityHandler.getItemDef(itemID).getName() + " shatters");
-		ActionSender.sendEquipmentStats(player, EntityHandler.getItemDef(itemID).getWieldPosition());
+		if (shattered) {
+			player.updateWornItems(EntityHandler.getItemDef(itemID).getWieldPosition(), 0);
+			player.message("Your " + EntityHandler.getItemDef(itemID).getName() + " shatters");
+			ActionSender.sendEquipmentStats(player, EntityHandler.getItemDef(itemID).getWieldPosition());
+		}
 	}
 
 	public boolean wieldItem(Item item, boolean sound) {

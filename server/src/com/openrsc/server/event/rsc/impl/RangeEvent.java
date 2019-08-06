@@ -287,11 +287,13 @@ public class RangeEvent extends GameTickEvent {
 				}
 				if (Formulae.looseArrow(damage)) {
 					GroundItem arrows = getArrows(arrowID);
-					if (arrows == null) {
-						World.getWorld().registerItem(
-							new GroundItem(arrowID, target.getX(), target.getY(), 1, getPlayerOwner()));
-					} else {
-						arrows.setAmount(arrows.getAmount() + 1);
+					if (!Npc.handleRingOfAvarice(getPlayerOwner(), new Item(arrowID, 1))) {
+						if (arrows == null) {
+							World.getWorld().registerItem(
+								new GroundItem(arrowID, target.getX(), target.getY(), 1, getPlayerOwner()));
+						} else {
+							arrows.setAmount(arrows.getAmount() + 1);
+						}
 					}
 				}
 				if (target.isPlayer()) {

@@ -32,6 +32,7 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.GenericLog;
@@ -45,9 +46,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class SpellHandler implements PacketHandler {
 	/**
@@ -294,6 +293,10 @@ public class SpellHandler implements PacketHandler {
 					player.resetPath();
 					return;
 				}
+				if (PluginHandler.getPluginHandler().blockDefaultAction("PlayerMageItem",
+					new Object[]{player, (Integer)item.getID(), (Integer)idx})) {
+					return;
+				}
 				handleItemCast(player, spell, idx, item);
 			}
 		} else if (pID == CAST_ON_DOOR) { // Cast on door - type 4
@@ -392,7 +395,7 @@ public class SpellHandler implements PacketHandler {
 		player.setCastTimer();
 	}
 
-	private void finalizeSpell(Player player, SpellDef spell) {
+	public static void finalizeSpell(Player player, SpellDef spell) {
 		player.lastCast = System.currentTimeMillis();
 		player.playSound("spellok");
 		player.message("Cast spell successfully");
@@ -577,7 +580,7 @@ public class SpellHandler implements PacketHandler {
 						itemID = ItemId.EMERALD_AMULET_OF_PROTECTION.id();
 						break;
 					case EMERALD_RING:
-						itemID = ItemId.RING_OF_DUELLING.id();
+						itemID = ItemId.RING_OF_SPLENDOR.id();
 						break;
 					case EMERALD_NECKLACE:
 						break;
@@ -681,8 +684,7 @@ public class SpellHandler implements PacketHandler {
 				}
 				break;
 			case 30: // Enchant lvl-4 diamond amulet
-				if (affectedItem.getID() == ItemId.DIAMOND_AMULET.id()
-					|| (Constants.GameServer.WANT_EQUIPMENT_TAB && affectedItem.getID() == ItemId.DIAMOND_RING.id())) {
+				if (affectedItem.getID() == ItemId.DIAMOND_AMULET.id()){
 					if (!checkAndRemoveRunes(player, spell)) {
 						return;
 					}
@@ -706,19 +708,16 @@ public class SpellHandler implements PacketHandler {
 			case 42: // Enchant lvl-5 dragonstone amulet
 				if (affectedItem.getID() == ItemId.DRAGONSTONE_AMULET.id()
 					|| (Constants.GameServer.WANT_EQUIPMENT_TAB && affectedItem.getID() == ItemId.DRAGONSTONE_RING.id())) {
-					if (!checkAndRemoveRunes(player, spell)) {
-						return;
-					}
 					int itemID = 0;
 					switch(ItemId.getById(affectedItem.getID())) {
 						case DRAGONSTONE_AMULET:
 							itemID = ItemId.CHARGED_DRAGONSTONE_AMULET.id();
 							break;
-						case DRAGONSTONE_RING:
-							itemID = ItemId.RING_OF_WEALTH.id();
-							break;
 						case DRAGONSTONE_NECKLACE:
 							break;
+					}
+					if (!checkAndRemoveRunes(player, spell)) {
+						return;
 					}
 					player.getInventory().remove(affectedItem);
 					player.getInventory().add(new Item(itemID));

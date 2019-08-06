@@ -3301,16 +3301,21 @@ INSERT INTO `openrsc_itemdef` (`id`, `bankNoteID`, `originalItemID`, `name`, `de
 (2283, -1, 2282, 'Blood Talisman', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (2284, -1, -1, 'Research package', 'This contains some vital research results. bank for the equivalent item.', '', 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (2285, -1, -1, 'Research notes', 'These make no sense at all.', '', 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(2286, -1, 2287, 'Ring of Recoil', 'An uncharged ring.', '', 0, 1, 0, 0, 1, 0, 1200, 13, 0, 0, 0, 0, 0, 0, 0, 900),
-(2287, 2286, -1, 'Ring of Recoil', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 900),
-(2288, -1, 2289, 'Ring of Duelling', 'An uncharged ring.', '', 0, 1, 0, 0, 1, 0, 1200, 13, 0, 0, 0, 0, 0, 0, 0, 1275),
-(2289, 2288, -1, 'Ring of Duelling', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1275),
-(2290, -1, 2291, 'Ring of Forging', 'An uncharged ring.', '', 0, 1, 0, 0, 1, 0, 1200, 13, 0, 0, 0, 0, 0, 0, 0, 2025),
-(2291, 2290, -1, 'Ring of Forging', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2025),
-(2292, -1, 2293, 'Ring of Life', 'An uncharged ring.', '', 0, 1, 0, 0, 1, 0, 1200, 13, 0, 0, 0, 0, 0, 0, 0, 3525),
-(2293, 2292, -1, 'Ring of Life', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3525),
-(2294, -1, 2295, 'Ring of Wealth', 'An uncharged ring.', '', 0, 1, 0, 0, 1, 0, 1200, 13, 0, 0, 0, 0, 0, 0, 0, 17625),
-(2295, 2294, -1, 'Ring of Wealth', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17625);
+(2286, 2287, -1, 'Ring of Recoil', 'An uncharged ring.', 'Check,Break', 0, 1, 0, 0, 1, 0, 1200, 13, 0, 0, 0, 0, 0, 0, 0, 900),
+(2287, -1, 2286, 'Ring of Recoil', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 900),
+(2288, 2289, -1, 'Ring of Splendor', 'An uncharged ring.', '', 0, 1, 0, 0, 1, 0, 1200, 13, 0, 0, 0, 0, 0, 0, 0, 1275),
+(2289, -1, 2288, 'Ring of Splendor', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1275),
+(2290, 2291, -1, 'Ring of Forging', 'An uncharged ring.', 'Check,Break', 0, 1, 0, 0, 1, 0, 1200, 13, 0, 0, 0, 0, 0, 0, 0, 2025),
+(2291, -1, 2290, 'Ring of Forging', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2025),
+(2292, 2293, -1, 'Ring of Life', 'An uncharged ring.', '', 0, 1, 0, 0, 1, 0, 1200, 13, 0, 0, 0, 0, 0, 0, 0, 3525),
+(2293, -1, 2292, 'Ring of Life', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3525),
+(2294, 2295, -1, 'Ring of Wealth', 'An uncharged ring.', '', 0, 1, 0, 0, 1, 0, 1200, 13, 0, 0, 0, 0, 0, 0, 0, 17625),
+(2295, -1, 2294, 'Ring of Wealth', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17625),
+(2296, 2297, -1, 'Ring of Avarice', 'An uncharged ring.', '', 0, 1, 0, 0, 1, 0, 1200, 13, 0, 0, 0, 0, 0, 0, 0, 17625),
+(2297, -1, 2296, 'Ring of Avarice', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17625),
+(2298, 2297, -1, 'Quartet Ring', 'An uncharged ring.', 'Check,Break', 0, 1, 0, 0, 1, 0, 1200, 13, 0, 0, 0, 0, 0, 0, 0, 400),
+(2299, -1, 2296, 'Quartet Ring', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 400);
+
 
 DROP TABLE IF EXISTS `openrsc_npcdef`;
 CREATE TABLE IF NOT EXISTS `openrsc_npcdef` (

@@ -7007,19 +7007,17 @@ public final class mudclient implements Runnable {
 										"@lre@" + EntityHandler.getItemDef(id).getName());
 								}
 
-								if (!EntityHandler.getItemDef(id).getCommand().equals("")
+								if (EntityHandler.getItemDef(id).getCommand() != null
 									&& EntityHandler.getItemDef(id).getNotedFormOf() == -1) {
-									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_COMMAND,
-										EntityHandler.getItemDef(id).getCommand(),
-										"@lre@" + EntityHandler.getItemDef(id).getName());
+									for (int p = EntityHandler.getItemDef(id).getCommand().length - 1; p >= 0; p--) {
+										this.menuCommon.addItem(0, EntityHandler.getItemDef(id).getCommand()[p], p, 0, "@lre@" + EntityHandler.getItemDef(id).getName(), var5, (String) null, MenuItemAction.ITEM_COMMAND, 0, (String) null, (String) null);
+									}
 								}
 
-								if (S_WANT_DROP_X && EntityHandler.getItemDef(id).getCommand().equals("Bury")
+								if (S_WANT_DROP_X && EntityHandler.getItemDef(id).getCommand() != null
+								&&EntityHandler.getItemDef(id).getCommand()[0].equalsIgnoreCase("bury")
 									&& EntityHandler.getItemDef(id).getNotedFormOf() == -1) {
-									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_COMMAND_ALL,
-										//EntityHandler.getItemDef(id).getCommand(), -- generic label.
-										"Bury All",
-										"@lre@" + EntityHandler.getItemDef(id).getName());
+									this.menuCommon.addItem(0, "Bury All", 0, 0, "@lre@" + EntityHandler.getItemDef(id).getName(), var5, (String) null, MenuItemAction.ITEM_COMMAND_ALL, 0, (String) null, (String) null);
 								}
 
 								this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_USE, "Use",
@@ -7101,9 +7099,12 @@ public final class mudclient implements Runnable {
 										this.packetHandler.getClientStream().finishPacket();
 										break;
 									} else {
-										if (!equippedItems[j].getCommand().equalsIgnoreCase(""))
-											this.menuCommon.addCharacterItem(j, MenuItemAction.ITEM_COMMAND_EQUIPTAB, equippedItems[j].getCommand(),
-												"@lre@" + equippedItems[j].getName());
+										if (equippedItems[j].getCommand() != null)
+											for (int p = 0; p < equippedItems[j].getCommand().length; p++) {
+												this.menuCommon.addItem(0, equippedItems[j].getCommand()[p], p, 0, "@lre@" + equippedItems[j].getName(), j, (String) null, MenuItemAction.ITEM_COMMAND_EQUIPTAB, 0, (String) null, (String) null);
+											}
+											//this.menuCommon.addCharacterItem(j, MenuItemAction.ITEM_COMMAND_EQUIPTAB, equippedItems[j].getCommand(),
+											//	"@lre@" + equippedItems[j].getName());
 										this.menuCommon.addCharacterItem(j, MenuItemAction.ITEM_USE_EQUIPTAB, "Use",
 											"@lre@" + equippedItems[j].getName());
 										this.menuCommon.addCharacterItem(equippedItems[j].id, MenuItemAction.ITEM_DROP_EQUIPTAB, "Drop",
@@ -11172,6 +11173,7 @@ public final class mudclient implements Runnable {
 					this.packetHandler.getClientStream().newPacket(90);
 					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
 					this.packetHandler.getClientStream().writeBuffer1.putInt(commandQuantity);
+					this.packetHandler.getClientStream().writeBuffer1.putByte(dir);
 					this.packetHandler.getClientStream().finishPacket();
 					break;
 				}
@@ -11180,6 +11182,7 @@ public final class mudclient implements Runnable {
 					this.packetHandler.getClientStream().newPacket(90);
 					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
 					this.packetHandler.getClientStream().writeBuffer1.putInt(commandQuantity);
+					this.packetHandler.getClientStream().writeBuffer1.putByte(dir);
 					this.packetHandler.getClientStream().finishPacket();
 					break;
 				}
@@ -11189,6 +11192,7 @@ public final class mudclient implements Runnable {
 					this.packetHandler.getClientStream().writeBuffer1.putShort(0xFFFF);
 					this.packetHandler.getClientStream().writeBuffer1.putInt(commandQuantity);
 					this.packetHandler.getClientStream().writeBuffer1.putShort(equippedItems[indexOrX].id);
+					this.packetHandler.getClientStream().writeBuffer1.putByte(dir);
 					this.packetHandler.getClientStream().finishPacket();
 					break;
 				}
@@ -14491,6 +14495,7 @@ public final class mudclient implements Runnable {
 			System.out.println(Config.S_WANT_RUNECRAFTING + " 60");
 			System.out.println(S_WANT_CUSTOM_LANDSCAPE + " 61");
 			System.out.println(S_WANT_EQUIPMENT_TAB + " 62");
+			System.out.println(S_WANT_BANK_PRESETS + " 63");
 		}
 		try {
 			this.loadGameConfig(false);

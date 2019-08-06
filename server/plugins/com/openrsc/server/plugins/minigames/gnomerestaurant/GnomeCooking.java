@@ -173,14 +173,14 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p) {
+	public void onInvAction(Item item, Player p, String command) {
 		if (item.getID() == ItemId.GIANNE_DOUGH.id()) {
 			mouldDough(item, p);
 		}
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player p) {
+	public boolean blockInvAction(Item item, Player p, String command) {
 		return item.getID() == ItemId.GIANNE_DOUGH.id();
 	}
 

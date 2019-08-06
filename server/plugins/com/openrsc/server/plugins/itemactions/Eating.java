@@ -19,12 +19,12 @@ import static com.openrsc.server.plugins.Functions.sleep;
 public class Eating implements InvActionListener, InvActionExecutiveListener {
 
 	@Override
-	public boolean blockInvAction(Item item, Player p) {
+	public boolean blockInvAction(Item item, Player p, String command) {
 		return item.isEdible() || item.getID() == ItemId.ROTTEN_APPLES.id();
 	}
 
 	@Override
-	public void onInvAction(Item item, Player player) {
+	public void onInvAction(Item item, Player player, String command) {
 		if (item.isEdible() || item.getID() == ItemId.ROTTEN_APPLES.id()) {
 			if (player.cantConsume()) {
 				return;

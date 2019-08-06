@@ -52,12 +52,12 @@ public class LegendsQuestHolyWater implements InvActionListener, InvActionExecut
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player player) {
+	public boolean blockInvAction(Item item, Player p, String command) {
 		return item.getID() == ItemId.HOLY_WATER_VIAL.id();
 	}
 
 	@Override
-	public void onInvAction(Item item, Player player) {
+	public void onInvAction(Item item, Player player, String command) {
 		if (!player.getInventory().wielding(ItemId.HOLY_WATER_VIAL.id())) {
 			player.message("You need to equip this item to throw it.");
 		}

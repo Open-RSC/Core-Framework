@@ -20,12 +20,12 @@ import static com.openrsc.server.plugins.Functions.sleep;
 public class Drinkables implements InvActionListener, InvActionExecutiveListener {
 
 	@Override
-	public boolean blockInvAction(Item item, Player player) {
-		return item.getDef().getCommand().equalsIgnoreCase("drink");
+	public boolean blockInvAction(Item item, Player p, String command) {
+		return command.equalsIgnoreCase("drink");
 	}
 
 	@Override
-	public void onInvAction(Item item, Player player) {
+	public void onInvAction(Item item, Player player, String command) {
 		if (player.cantConsume()) {
 			return;
 		}

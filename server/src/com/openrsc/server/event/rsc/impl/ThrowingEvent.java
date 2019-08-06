@@ -192,10 +192,12 @@ public class ThrowingEvent extends GameTickEvent {
 
 				if (Formulae.looseArrow(damage)) {
 					GroundItem knivesOrDarts = getFloorItem(throwingID);
-					if (knivesOrDarts == null) {
-						World.getWorld().registerItem(new GroundItem(throwingID, target.getX(), target.getY(), 1, getPlayerOwner()));
-					} else {
-						knivesOrDarts.setAmount(knivesOrDarts.getAmount() + 1);
+					if (!Npc.handleRingOfAvarice(getPlayerOwner(), new Item(throwingID, 1))) {
+						if (knivesOrDarts == null) {
+							World.getWorld().registerItem(new GroundItem(throwingID, target.getX(), target.getY(), 1, getPlayerOwner()));
+						} else {
+							knivesOrDarts.setAmount(knivesOrDarts.getAmount() + 1);
+						}
 					}
 				}
 				ActionSender.sendSound(getPlayerOwner(), "shoot");

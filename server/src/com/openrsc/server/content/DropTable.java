@@ -97,11 +97,12 @@ public class DropTable {
 		}
 	}
 
-	public boolean rollAccess(int id) {
+	public boolean rollAccess(int id, boolean ringOfWealth) {
+		int boost = ringOfWealth ? 2 : 0;
 		for (Accessor mob : accessors) {
 			if (mob.id == id) {
 				int hit = DataConversions.random(1,mob.denominator);
-				if (hit <= mob.numerator) {
+				if (hit <= (mob.numerator + boost)) {
 					return true;
 				} else
 					return false;

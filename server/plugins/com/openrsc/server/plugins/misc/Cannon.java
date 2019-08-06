@@ -98,8 +98,8 @@ public class Cannon implements ObjectActionListener,
 		}
 	}
 
-	private void handleBase(Player player, Item item) {
-		if (item.getDef().getCommand().equalsIgnoreCase("set down")) {
+	private void handleBase(Player player, Item item, String command) {
+		if (command.equalsIgnoreCase("set down")) {
 			if (player.getQuestStage(Constants.Quests.DWARF_CANNON) != -1) {
 				player.message("you can't set up this cannon...");
 				sleep(1500);
@@ -250,14 +250,14 @@ public class Cannon implements ObjectActionListener,
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player player) {
+	public boolean blockInvAction(Item item, Player player, String command) {
 		return item.getID() == ItemId.DWARF_CANNON_BASE.id();
 	}
 
 	@Override
-	public void onInvAction(Item item, Player player) {
+	public void onInvAction(Item item, Player player, String command) {
 		if (item.getID() == ItemId.DWARF_CANNON_BASE.id()) {
-			handleBase(player, item);
+			handleBase(player, item, command);
 		}
 	}
 

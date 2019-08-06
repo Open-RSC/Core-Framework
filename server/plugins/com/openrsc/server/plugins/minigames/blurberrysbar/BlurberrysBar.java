@@ -294,12 +294,12 @@ public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, Talk
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player p) {
+	public boolean blockInvAction(Item item, Player p, String command) {
 		return item.getID() == ItemId.GNOME_COCKTAIL_GUIDE.id();
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p) {
+	public void onInvAction(Item item, Player p, String command) {
 		if (item.getID() == ItemId.GNOME_COCKTAIL_GUIDE.id()) {
 			p.message("you open blurberry's cocktail book");
 			p.message("inside are a list of cocktails");

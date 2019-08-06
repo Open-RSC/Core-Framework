@@ -521,6 +521,7 @@ public class ActionSender {
 			LOGGER.info(WANT_CUSTOM_LANDSCAPE + " 61");
 			LOGGER.info(WANT_EQUIPMENT_TAB + " 62");
 			LOGGER.info(WANT_BANK_PRESETS + " 63");
+			LOGGER.info(WANT_NEW_RARE_DROP_TABLES + " 64");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs();
 		ConnectionAttachment attachment = new ConnectionAttachment();

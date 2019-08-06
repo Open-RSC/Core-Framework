@@ -259,6 +259,7 @@ public final class Constants {
 		public static String DISCORD_WEBHOOK_URL = "";
 		public static boolean WANT_EQUIPMENT_TAB = false;
 		public static boolean WANT_BANK_PRESETS = false;
+		public static boolean WANT_NEW_RARE_DROP_TABLES = false;
 
 		public static int MAX_TICKS_UNTIL_FULL_WALKING_SPEED = 5;
 		//strict check on level requirements for "glitched" validations on rsc
@@ -281,9 +282,10 @@ public final class Constants {
 		public static boolean WANT_BLURBERRY_BADGE = false;
 		public static boolean WANT_SHOW_KITTENS_CIVILLIAN = false;
 		public static boolean WANT_BARTER_WORMBRAINS = false;
-		public static final int RING_OF_WEALTH_REROLLS = 10;
 		public static final int RING_OF_RECOIL_LIMIT = 40;
 		public static final int RING_OF_FORGING_USES = 75;
+		public static final int QUARTET_RING_USES = 29;
+
 
 		public static ImmutableList<String> IGNORED_NETWORK_EXCEPTIONS =
             ImmutableList.of("An existing connection was forcibly closed by the remote host",
@@ -393,6 +395,7 @@ public final class Constants {
 			DISCORD_WEBHOOK_URL = props.getProperty("discord_webhook_url");
 			WANT_EQUIPMENT_TAB = Boolean.parseBoolean(props.getProperty("want_equipment_tab"));
 			WANT_BANK_PRESETS = Boolean.parseBoolean(props.getProperty("want_bank_presets"));
+			WANT_NEW_RARE_DROP_TABLES = Boolean.parseBoolean(props.getProperty("want_new_rare_drop_tables"));
 
 			NPC_KILL_LIST = Boolean.parseBoolean(props.getProperty("npc_kill_list"));
 			NPC_KILL_MESSAGES = Boolean.parseBoolean(props.getProperty("npc_kill_messages"));

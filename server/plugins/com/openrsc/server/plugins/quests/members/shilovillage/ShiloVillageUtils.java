@@ -268,13 +268,13 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player p) {
+	public boolean blockInvAction(Item item, Player p, String command) {
 		return inArray(item.getID(), ItemId.ZADIMUS_CORPSE.id(), ItemId.CRUMPLED_SCROLL.id(), ItemId.TATTERED_SCROLL.id(), ItemId.STONE_PLAQUE.id(),
 				ItemId.BONE_SHARD.id(), ItemId.BERVIRIUS_TOMB_NOTES.id(), ItemId.LOCATING_CRYSTAL.id(), ItemId.BONE_KEY.id(), ItemId.RASHILIYA_CORPSE.id());
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p) { // bury corpse
+	public void onInvAction(Item item, Player p, String command) { // bury corpse
 		if (item.getID() == ItemId.RASHILIYA_CORPSE.id()) {
 			p.message("Nothing interesting happens");
 		}

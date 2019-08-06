@@ -44,7 +44,7 @@ public class LegendsQuestMapJungle implements InvActionListener, InvActionExecut
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p) {
+	public void onInvAction(Item item, Player p, String command) {
 		if (item.getID() == ItemId.RADIMUS_SCROLLS_COMPLETE.id()) {
 			p.message("The map of Kharazi Jungle is complete, Sir Radimus will be pleased.");
 			int menu = showMenu(p, "Read Mission Briefing", "Close");
@@ -190,7 +190,7 @@ public class LegendsQuestMapJungle implements InvActionListener, InvActionExecut
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player p) {
+	public boolean blockInvAction(Item item, Player p, String command) {
 		return item.getID() == ItemId.RADIMUS_SCROLLS.id() || item.getID() == ItemId.RADIMUS_SCROLLS_COMPLETE.id();
 	}
 }
