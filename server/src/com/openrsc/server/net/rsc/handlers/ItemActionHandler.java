@@ -20,15 +20,10 @@ public class ItemActionHandler implements PacketHandler {
 	 */
 	public static final World world = World.getWorld();
 
-	public static Player player;
-
-	public void handlePacket(Packet p, Player packetPlayer) throws Exception {
+	public void handlePacket(Packet p, Player player) throws Exception {
 
 		int idx = (int) p.readShort();
 		int amount = p.readInt();
-		int commandIndex;
-
-		player = packetPlayer;
 
 		if (player == null || player.getInventory() == null) {
 			return;
@@ -266,7 +261,7 @@ public class ItemActionHandler implements PacketHandler {
 				owner.incExp(Skills.PRAYER, 240, true); // 60
 				break;
 			default:
-				player.message("Nothing interesting happens");
+				owner.message("Nothing interesting happens");
 				break;
 		}
 	}
