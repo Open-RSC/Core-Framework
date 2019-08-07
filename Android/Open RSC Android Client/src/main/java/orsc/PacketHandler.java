@@ -1763,7 +1763,7 @@ public class PacketHandler {
 		mc.setExperienceCounterToggle(packetsIncoming.getUnsignedByte()); // 33
 		mc.setHideInventoryCount(packetsIncoming.getUnsignedByte() == 1); // 34
 		mc.setHideNameTag(packetsIncoming.getUnsignedByte() == 1); // 35
-		mc.setPartyInviteBlockSetting(packetsIncoming.getUnsignedByte() == 1); // 36
+		mc.setBlockPartyInv(packetsIncoming.getUnsignedByte() == 1); // 36
 	}
 
 	private void togglePrayer(int length) {

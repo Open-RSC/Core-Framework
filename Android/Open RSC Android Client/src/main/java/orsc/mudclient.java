@@ -8972,15 +8972,12 @@ public final class mudclient implements Runnable {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index,
 				"@whi@Report Abuse", 18, null, null);
 
-			if (this.partyInviteBlockSetting) {
+			if (C_PARTY_INV) {
 				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 					"@whi@Party Invitation - @red@Block", 19, null, null);
-			} else if(!this.partyInviteBlockSetting) {
-				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-					"@whi@Party Invitation - @gre@Receive", 19, null, null);
 			} else {
 				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-					"@whi@Party Invitation - @gre@Receive this", 19, null, null);
+					"@whi@Party Invitation - @gre@Receive", 19, null, null);
 			}
 		}
 
@@ -9292,6 +9289,7 @@ public final class mudclient implements Runnable {
 
 			if (settingIndex == 19 && this.mouseButtonClick == 1) {
 				this.partyInviteBlockSetting = !this.partyInviteBlockSetting;
+				C_PARTY_INV = !C_PARTY_INV;
 				this.packetHandler.getClientStream().newPacket(111);
 				this.packetHandler.getClientStream().writeBuffer1.putByte(36);
 				this.packetHandler.getClientStream().writeBuffer1.putByte(this.partyInviteBlockSetting ? 1 : 0);
@@ -16334,6 +16332,10 @@ public final class mudclient implements Runnable {
 
 	public void setHideInventoryCount(boolean b) {
 		Config.C_INV_COUNT = b;
+	}
+	
+	public void setBlockPartyInv(boolean b) {
+		Config.C_PARTY_INV = b;
 	}
 
 	public void setHideNameTag(boolean b) {
