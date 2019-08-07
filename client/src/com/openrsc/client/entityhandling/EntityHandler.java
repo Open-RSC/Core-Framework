@@ -3566,6 +3566,8 @@ public class EntityHandler {
 		items.add(new ItemDef("Ring of Avarice", "Swap this note at any bank for the equivalent item.", "", 17625, -1, "items:438",true, false, 0, 0, true, false, -1, 2296, 2297));
 		items.add(new ItemDef("Dwarven Ring", "An enchanted ring.", "Check,Break", 400, -1, "items:503",false, true, 1200, 16777124, true, false, 2299, -1, 2298));
 		items.add(new ItemDef("Dwarven Ring", "Swap this note at any bank for the equivalent item.", "", 400, -1, "items:438",true, false, 0, 0, true, false, -1, 2298, 2299));
+		items.add(new ItemDef("Opal ring", "A valuable ring", "", 1050, -1, "items:123", false, false, 0, 16777124, false, false, 2301, -1, 2300));
+		items.add(new ItemDef("Opal Ring", "Swap this note at any bank for the equivalent item.", "", 1050, -1, "items:438",true, false, 0, 0, true, false, -1, 2300, 2301));
 	}
 
 	private static void loadNoteDefinitions() {
@@ -4668,7 +4670,7 @@ public class EntityHandler {
 		runes.put(32, 1);
 		runes.put(46, 1);
 		spells.add(new SpellDef(Config.S_WANT_EQUIPMENT_TAB ? "Enchant lvl-1 jewelry" : "Enchant lvl-1 amulet",
-			Config.S_WANT_EQUIPMENT_TAB ? "For use on sapphire jewelry" : "For use on sapphire amulets", 7, 3, 2,
+			Config.S_WANT_EQUIPMENT_TAB ? "For use on sapphire and opal jewelry" : "For use on sapphire amulets", 7, 3, 2,
 			(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 2);

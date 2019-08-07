@@ -3314,7 +3314,9 @@ INSERT INTO `openrsc_itemdef` (`id`, `bankNoteID`, `originalItemID`, `name`, `de
 (2296, 2297, -1, 'Ring of Avarice', 'An uncharged ring.', '', 0, 1, 0, 0, 1, 0, 1200, 13, 0, 0, 0, 0, 0, 0, 0, 17625),
 (2297, -1, 2296, 'Ring of Avarice', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17625),
 (2298, 2297, -1, 'Dwarven Ring', 'An uncharged ring.', 'Check,Break', 0, 1, 0, 0, 1, 0, 1200, 13, 0, 0, 0, 0, 0, 0, 0, 400),
-(2299, -1, 2296, 'Dwarven Ring', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 400);
+(2299, -1, 2296, 'Dwarven Ring', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 400),
+(2300, 2301, -1, 'Opal ring', 'A valuable ring', '', 0, 0, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1050),
+(2301, -1, 2300, 'Opal Ring', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1050);
 
 
 DROP TABLE IF EXISTS `openrsc_npcdef`;

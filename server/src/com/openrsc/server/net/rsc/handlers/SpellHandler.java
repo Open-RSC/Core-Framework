@@ -517,7 +517,8 @@ public class SpellHandler implements PacketHandler {
 		switch (id) {
 			case 3: // Enchant lvl-1 Sapphire amulet
 				if (affectedItem.getID() == ItemId.SAPPHIRE_AMULET.id()
-				|| (Constants.GameServer.WANT_EQUIPMENT_TAB && affectedItem.getID() == ItemId.SAPPHIRE_RING.id())) {
+				|| (Constants.GameServer.WANT_EQUIPMENT_TAB
+					&& (affectedItem.getID() == ItemId.SAPPHIRE_RING.id() || affectedItem.getID() == ItemId.OPAL_RING.id()))) {
 					if (!checkAndRemoveRunes(player, spell)) {
 						return;
 					}
@@ -531,12 +532,15 @@ public class SpellHandler implements PacketHandler {
 							break;
 						case SAPPHIRE_NECKLACE:
 							break;
+						case OPAL_RING:
+							itemID = ItemId.DWARVEN_RING.id();
+							break;
 					}
 					player.getInventory().remove(affectedItem);
 					player.getInventory().add(new Item(itemID));
 					finalizeSpell(player, spell);
 				} else
-					player.message("This spell can only be used on unenchanted sapphire " + (Constants.GameServer.WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
+					player.message("This spell can only be used on unenchanted sapphire " + (Constants.GameServer.WANT_EQUIPMENT_TAB ? " rings/amulets or opal rings" : "amulets"));
 				break;
 			case 10: // Low level alchemy
 				if (affectedItem.getID() == ItemId.COINS.id()) {
