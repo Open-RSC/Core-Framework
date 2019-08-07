@@ -2213,6 +2213,38 @@ public final class mudclient implements Runnable {
 					}
 
 					String var11 = null;
+										if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell == 3) && var3 == 1) {
+						var11 = "Choose a target";
+						this.showUiTab = 1;
+					} else
+					if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell == 10) && var3 == 1) {
+						var11 = "Choose a target";
+						this.showUiTab = 1;
+					} else
+					if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell == 13) && var3 == 1) {
+						var11 = "Choose a target";
+						this.showUiTab = 1;
+					} else
+					if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell == 21) && var3 == 1) {
+						var11 = "Choose a target";
+						this.showUiTab = 1;
+					} else
+					if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell == 24) && var3 == 1) {
+						var11 = "Choose a target";
+						this.showUiTab = 1;
+					} else
+					if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell == 28) && var3 == 1) {
+						var11 = "Choose a target";
+						this.showUiTab = 1;
+					} else
+					if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell == 30) && var3 == 1) {
+						var11 = "Choose a target";
+						this.showUiTab = 1;
+					} else
+					if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell == 42) && var3 == 1) {
+						var11 = "Choose a target";
+						this.showUiTab = 1;
+					} else
 					if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell >= 0) && var3 == 1) {
 						var11 = "Choose a target";
 					} else if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell >= 0) && var3 > 1) {
