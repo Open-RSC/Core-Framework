@@ -4,6 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.states.Action;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
@@ -58,9 +59,10 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 					return;
 				}
 			}
-
 			p.message("You squeeze through the pipe");
-			sleep(1000);
+			p.setBusy(true);
+			sleep(2200);
+			p.setBusy(false);
 			if (p.getY() <= 551) {
 				movePlayer(p, 487, 554);
 			} else {
