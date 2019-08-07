@@ -1,12 +1,14 @@
 package com.openrsc.server.net.rsc;
 
-import com.openrsc.server.Constants;
 import com.openrsc.server.GameStateUpdater;
 import com.openrsc.server.Server;
 import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.content.clan.ClanPlayer;
 import com.openrsc.server.content.market.Market;
+import com.openrsc.server.content.party.Party;
+import com.openrsc.server.content.party.PartyManager;
+import com.openrsc.server.content.party.PartyPlayer;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Bank;
@@ -22,8 +24,7 @@ import com.openrsc.server.util.rsc.CaptchaGenerator;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFutureListener;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,7 +35,71 @@ import java.util.Map.Entry;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 
-import static com.openrsc.server.Constants.GameServer.*;
+import static com.openrsc.server.Constants.GameServer.ALLOW_RESIZE;
+import static com.openrsc.server.Constants.GameServer.AUTO_MESSAGE_SWITCH_TOGGLE;
+import static com.openrsc.server.Constants.GameServer.BATCH_PROGRESSION;
+import static com.openrsc.server.Constants.GameServer.CUSTOM_FIREMAKING;
+import static com.openrsc.server.Constants.GameServer.DEBUG;
+import static com.openrsc.server.Constants.GameServer.DISPLAY_LOGO_SPRITE;
+import static com.openrsc.server.Constants.GameServer.EXPERIENCE_COUNTER_TOGGLE;
+import static com.openrsc.server.Constants.GameServer.EXPERIENCE_DROPS_TOGGLE;
+import static com.openrsc.server.Constants.GameServer.FIGHTMODE_SELECTOR_TOGGLE;
+import static com.openrsc.server.Constants.GameServer.FISHING_SPOTS_DEPLETABLE;
+import static com.openrsc.server.Constants.GameServer.FIX_OVERHEAD_CHAT;
+import static com.openrsc.server.Constants.GameServer.FOG_TOGGLE;
+import static com.openrsc.server.Constants.GameServer.FPS;
+import static com.openrsc.server.Constants.GameServer.GROUND_ITEM_TOGGLE;
+import static com.openrsc.server.Constants.GameServer.INVENTORY_COUNT_TOGGLE;
+import static com.openrsc.server.Constants.GameServer.ITEMS_ON_DEATH_MENU;
+import static com.openrsc.server.Constants.GameServer.LENIENT_CONTACT_DETAILS;
+import static com.openrsc.server.Constants.GameServer.LOGO_SPRITE_ID;
+import static com.openrsc.server.Constants.GameServer.MAX_WALKING_SPEED;
+import static com.openrsc.server.Constants.GameServer.MEMBER_WORLD;
+import static com.openrsc.server.Constants.GameServer.MENU_COMBAT_STYLE_TOGGLE;
+import static com.openrsc.server.Constants.GameServer.PLAYER_COMMANDS;
+import static com.openrsc.server.Constants.GameServer.PLAYER_LEVEL_LIMIT;
+import static com.openrsc.server.Constants.GameServer.PROPER_MAGIC_TREE_NAME;
+import static com.openrsc.server.Constants.GameServer.RIGHT_CLICK_BANK;
+import static com.openrsc.server.Constants.GameServer.SERVER_NAME;
+import static com.openrsc.server.Constants.GameServer.SERVER_NAME_WELCOME;
+import static com.openrsc.server.Constants.GameServer.SHOW_FLOATING_NAMETAGS;
+import static com.openrsc.server.Constants.GameServer.SHOW_ROOF_TOGGLE;
+import static com.openrsc.server.Constants.GameServer.SHOW_UNIDENTIFIED_HERB_NAMES;
+import static com.openrsc.server.Constants.GameServer.SIDE_MENU_TOGGLE;
+import static com.openrsc.server.Constants.GameServer.SPAWN_AUCTION_NPCS;
+import static com.openrsc.server.Constants.GameServer.SPAWN_IRON_MAN_NPCS;
+import static com.openrsc.server.Constants.GameServer.WANT_BANK_NOTES;
+import static com.openrsc.server.Constants.GameServer.WANT_BANK_PINS;
+import static com.openrsc.server.Constants.GameServer.WANT_BANK_PRESETS;
+import static com.openrsc.server.Constants.GameServer.WANT_CERTER_BANK_EXCHANGE;
+import static com.openrsc.server.Constants.GameServer.WANT_CERT_DEPOSIT;
+import static com.openrsc.server.Constants.GameServer.WANT_CLANS;
+import static com.openrsc.server.Constants.GameServer.WANT_CUSTOM_BANKS;
+import static com.openrsc.server.Constants.GameServer.WANT_CUSTOM_LANDSCAPE;
+import static com.openrsc.server.Constants.GameServer.WANT_CUSTOM_RANK_DISPLAY;
+import static com.openrsc.server.Constants.GameServer.WANT_CUSTOM_SPRITES;
+import static com.openrsc.server.Constants.GameServer.WANT_DECANTING;
+import static com.openrsc.server.Constants.GameServer.WANT_DROP_X;
+import static com.openrsc.server.Constants.GameServer.WANT_EMAIL;
+import static com.openrsc.server.Constants.GameServer.WANT_EQUIPMENT_TAB;
+import static com.openrsc.server.Constants.GameServer.WANT_EXPERIENCE_ELIXIRS;
+import static com.openrsc.server.Constants.GameServer.WANT_EXP_INFO;
+import static com.openrsc.server.Constants.GameServer.WANT_FATIGUE;
+import static com.openrsc.server.Constants.GameServer.WANT_GLOBAL_CHAT;
+import static com.openrsc.server.Constants.GameServer.WANT_HIDE_IP;
+import static com.openrsc.server.Constants.GameServer.WANT_KEYBOARD_SHORTCUTS;
+import static com.openrsc.server.Constants.GameServer.WANT_KILL_FEED;
+import static com.openrsc.server.Constants.GameServer.WANT_PARTIES;
+import static com.openrsc.server.Constants.GameServer.WANT_PETS;
+import static com.openrsc.server.Constants.GameServer.WANT_QUEST_MENUS;
+import static com.openrsc.server.Constants.GameServer.WANT_QUEST_STARTED_INDICATOR;
+import static com.openrsc.server.Constants.GameServer.WANT_REGISTRATION_LIMIT;
+import static com.openrsc.server.Constants.GameServer.WANT_REMEMBER;
+import static com.openrsc.server.Constants.GameServer.WANT_RUNECRAFTING;
+import static com.openrsc.server.Constants.GameServer.WANT_SKILL_MENUS;
+import static com.openrsc.server.Constants.GameServer.WANT_WOODCUTTING_GUILD;
+import static com.openrsc.server.Constants.GameServer.WELCOME_TEXT;
+import static com.openrsc.server.Constants.GameServer.ZOOM_VIEW_TOGGLE;
 
 /**
  * @author n0m
@@ -329,13 +394,6 @@ public class ActionSender {
 		player.write(s.toPacket());
 	}
 
-	public static void sendPetFatigue(Player player) {
-		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
-		s.setID(Opcode.SEND_PET_FATIGUE.opcode);
-		s.writeShort(player.getPetFatigue() / 750);
-		player.write(s.toPacket());
-	}
-
 	public static void sendKills2(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_KILLS2.opcode);
@@ -451,6 +509,7 @@ public class ActionSender {
 		s.writeByte(player.getExperienceCounterToggle()); // 33
 		s.writeByte((byte) (player.getHideInventoryCount() ? 1 : 0)); // 34
 		s.writeByte((byte) (player.getHideNameTag() ? 1 : 0)); // 35
+		s.writeByte((byte) (player.getPartyInviteSetting() ? 1 : 0)); // 36
 		player.write(s.toPacket());
 	}
 
@@ -521,6 +580,7 @@ public class ActionSender {
 			LOGGER.info(WANT_CUSTOM_LANDSCAPE + " 61");
 			LOGGER.info(WANT_EQUIPMENT_TAB + " 62");
 			LOGGER.info(WANT_BANK_PRESETS + " 63");
+			LOGGER.info(WANT_PARTIES + " 64");
 			LOGGER.info(WANT_NEW_RARE_DROP_TABLES + " 64");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs();
@@ -601,6 +661,7 @@ public class ActionSender {
 		s.writeByte((byte) (WANT_CUSTOM_LANDSCAPE ? 1 : 0)); //61
 		s.writeByte((byte) (WANT_EQUIPMENT_TAB ? 1 : 0)); //62
 		s.writeByte((byte) (WANT_BANK_PRESETS ? 1 : 0)); //63
+		s.writeByte((byte) (WANT_PARTIES ? 1 : 0)); //64
 		return s;
 	}
 
@@ -1134,7 +1195,7 @@ public class ActionSender {
 	public static void sendProgressBar(Player player, int delay, int repeatFor) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_PROGRESS_BAR.opcode);
-		s.writeByte(1); // interface ID then it writes a byte of 1 which it shouldnt...
+		s.writeByte(1); // interface ID
 		//s.writeByte((byte) 1);
 		s.writeShort(delay);
 		s.writeByte((byte) repeatFor);
@@ -1224,7 +1285,6 @@ public class ActionSender {
 				sendStats(p);
 				sendEquipmentStats(p);
 				sendFatigue(p);
-				sendPetFatigue(p);
 				sendKills2(p);
 
 				sendCombatStyle(p);
@@ -1323,6 +1383,28 @@ public class ActionSender {
 		p.write(pb.toPacket());
 	}
 
+	public static void sendParty(Player p) {
+		PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
+		pb.writeByte(0);
+		pb.writeString(p.getParty().getPartyName());
+		pb.writeString(p.getParty().getPartyTag());
+		pb.writeString(p.getParty().getLeader().getUsername());
+		pb.writeByte(p.getParty().getLeader().getUsername().equalsIgnoreCase(p.getUsername()) ? 1 : 0);
+		pb.writeByte(p.getParty().getPlayers().size());
+		for (PartyPlayer m : p.getParty().getPlayers()) {
+			pb.writeString(m.getUsername());
+			pb.writeByte(m.getRank().getRankIndex());
+			pb.writeByte(m.isOnline() ? 1 : 0);
+			pb.writeByte(m.getCurHp());
+			pb.writeByte(m.getMaxHp());
+			pb.writeByte(m.getCbLvl());
+			pb.writeByte(m.getSkull());
+			pb.writeByte(m.getPartyMemberDead());
+			pb.writeByte(m.getShareLoot());
+		}
+		p.write(pb.toPacket());
+	}
+
 	public static void sendClans(Player p) {
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
 		pb.writeByte(4);
@@ -1341,14 +1423,46 @@ public class ActionSender {
 		p.write(pb.toPacket());
 	}
 
+	public static void sendParties(Player p) {
+		PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
+		pb.writeByte(4);
+		pb.writeShort(PartyManager.parties.size());
+		int rank = 1;
+		PartyManager.parties.sort(PartyManager.PARTY_COMPERATOR);
+		for (Party c : PartyManager.parties) {
+			pb.writeShort(c.getPartyID());
+			pb.writeString(c.getPartyName());
+			pb.writeString(c.getPartyTag());
+			pb.writeByte(c.getPlayers().size());
+			pb.writeByte(c.getAllowSearchJoin());
+			pb.writeInt(c.getPartyPoints());
+			pb.writeShort(rank++);
+		}
+		p.write(pb.toPacket());
+	}
+
 	public static void sendLeaveClan(Player playerReference) {
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
 		pb.writeByte(1);
 		playerReference.write(pb.toPacket());
 	}
 
+	public static void sendLeaveParty(Player playerReference) {
+		PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
+		pb.writeByte(1);
+		playerReference.write(pb.toPacket());
+	}
+
 	public static void sendClanInvitationGUI(Player invited, String name, String username) {
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
+		pb.writeByte(2);
+		pb.writeString(username);
+		pb.writeString(name);
+		invited.write(pb.toPacket());
+	}
+
+	public static void sendPartyInvitationGUI(Player invited, String name, String username) {
+		PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
 		pb.writeByte(2);
 		pb.writeString(username);
 		pb.writeString(name);
@@ -1363,6 +1477,17 @@ public class ActionSender {
 		pb.writeByte(p.getClan().getAllowSearchJoin());
 		pb.writeByte(p.getClan().isAllowed(0, p) ? 1 : 0);
 		pb.writeByte(p.getClan().isAllowed(1, p) ? 1 : 0);
+		p.write(pb.toPacket());
+	}
+
+	public static void sendPartySetting(Player p) {
+		PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
+		pb.writeByte(3);
+		pb.writeByte(p.getParty().getKickSetting());
+		pb.writeByte(p.getParty().getInviteSetting());
+		pb.writeByte(p.getParty().getAllowSearchJoin());
+		pb.writeByte(p.getParty().isAllowed(0, p) ? 1 : 0);
+		pb.writeByte(p.getParty().isAllowed(1, p) ? 1 : 0);
 		p.write(pb.toPacket());
 	}
 
@@ -1433,10 +1558,10 @@ public class ActionSender {
 		SEND_INPUT_BOX(110),
 		SEND_ON_TUTORIAL(111),
 		SEND_CLAN(112),
+		SEND_PARTY(116),
 		SEND_IRONMAN(113),
 		SEND_KILLS2(147),
 		SEND_FATIGUE(114),
-		SEND_PET_FATIGUE(140),
 		SEND_ON_BLACK_HOLE(115),
 		SEND_SLEEPSCREEN(117),
 		SEND_KILL_ANNOUNCEMENT(118),

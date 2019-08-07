@@ -68,15 +68,10 @@ public class AttackHandler implements PacketHandler {
 		}
 		if (affectedMob.isNpc()) {
 			Npc n = (Npc) affectedMob;
-			if (n.getLocation().inWilderness() && !player.getLocation().inWilderness() && (n.getID() == 210 || n.getID() == 236)){
+			if (n.getLocation().inWilderness() && !player.getLocation().inWilderness() && (n.getID() == 210 || n.getID() == 236)) {
 				player.message("You must be in the wilderness to attack this NPC");
 				player.resetPath();
 				return;
-			}
-			if(n.getPetNpc() > 0) {
-			player.message("This npc belongs too " + n.getPetOwnerA2() + ". You may not attack it.");
-			player.resetPath();
-			return;
 			}
 			if (n.getX() == 0 && n.getY() == 0)
 				return;

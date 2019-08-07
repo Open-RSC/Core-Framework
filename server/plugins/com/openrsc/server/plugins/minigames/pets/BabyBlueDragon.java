@@ -24,10 +24,6 @@ public class BabyBlueDragon implements InvUseOnNpcListener, InvUseOnNpcExecutive
 	@Override
 	public void onInvUseOnNpc(Player player, Npc npc, Item item) {
 		if (Constants.GameServer.WANT_PETS) {
-			if (npc.getPetOwnerA2() != player) {
-				player.message("That's someone elses pet!");
-				return;
-			}
 			npc.resetPath();
 			//npc.resetRange();
 			player.setBusy(true);
@@ -39,10 +35,6 @@ public class BabyBlueDragon implements InvUseOnNpcListener, InvUseOnNpcExecutive
 
 			Server.getServer().getEventHandler().add(new ShortEvent(player, "Baby Blue Dragon Pet") {
 				public void action() {
-					if (npc.getPetOwnerA2() != player) {
-						//player.message("That's someone elses pet!");
-						return;
-					}
 					/*Npc nearbyNpc = getMultipleNpcsInArea(player, 5, NpcId.BABY_BLUE_DRAGON.id(), NpcId.BLUE_DRAGON.id(), NpcId.RED_DRAGON.id(), NpcId.DRAGON.id());
 					if (nearbyNpc != null) {
 						int selected = npc.getRandom().nextInt(5);
@@ -66,9 +58,6 @@ public class BabyBlueDragon implements InvUseOnNpcListener, InvUseOnNpcExecutive
 					}*/
 					if (random(0, 4) != 0) {
 						player.message("You catch the baby blue dragon in the crystal.");
-						player.setPet(0);
-						npc.setPetNpcType(0);
-						npc.setPetNpc(0);
 						removeItem(player, ItemId.A_GLOWING_RED_CRYSTAL.id(), 1);
 						addItem(player, ItemId.A_RED_CRYSTAL.id(), 1);
 						ActionSender.sendInventory(player);

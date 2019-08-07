@@ -14,7 +14,7 @@ public class Areas {
 		return areas.get(name.toLowerCase());
 	}
 
-	public static void addArea(Area area) {
+	private static void addArea(Area area) {
 		if (area.getName() == null) {
 			throw new IllegalStateException("Area must have a name before adding it to the hashmap");
 		}

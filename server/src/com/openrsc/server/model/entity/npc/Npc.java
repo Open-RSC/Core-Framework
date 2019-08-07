@@ -4,13 +4,15 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.event.DelayedEvent;
-import com.openrsc.server.event.rsc.impl.*;
 import com.openrsc.server.event.custom.NpcLootEvent;
 import com.openrsc.server.event.rsc.ImmediateEvent;
+import com.openrsc.server.event.rsc.impl.BankEventNpc;
+import com.openrsc.server.event.rsc.impl.RangeEventNpc;
+import com.openrsc.server.event.rsc.impl.StrPotEventNpc;
+import com.openrsc.server.event.rsc.impl.ThrowingEvent;
 import com.openrsc.server.external.*;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills.SKILLS;
-import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
@@ -50,48 +52,10 @@ public class Npc extends Mob {
 	 */
 	private Action status = Action.IDLE;
 
-	/*private int petNpc = 0;
-	public int getPetNpc() {
-		return petNpc;
-	}
-	public void setPetNpc(int i) {
-		this.petNpc = i;
-		//ActionSender.sendPetNpc(this);
-	}
-	public void incPetNpc() {
-		petNpc++;
-	}*/
-	private int petNpcType = 0;
-
-	public int getPetNpcType() {
-		return petNpcType;
-	}
-
-	public void setPetNpcType(int i) {
-		this.petNpcType = i;
-		//ActionSender.sendPetNpc(this);
-	}
-
-	/**
-	 * HEALING
-	 */
-	private HealEventNpc healEventNpc;
 	private StrPotEventNpc strPotEventNpc;
-
-	public HealEventNpc getHealEventNpc() {
-		return healEventNpc;
-	}
 
 	public StrPotEventNpc getStrPotEventNpc() {
 		return strPotEventNpc;
-	}
-
-	public void setHealEventNpc(HealEventNpc event) {
-		if (healEventNpc != null) {
-			healEventNpc.stop();
-		}
-		healEventNpc = event;
-		Server.getServer().getGameEventHandler().add(healEventNpc);
 	}
 
 	public void setStrPotEventNpc(StrPotEventNpc event) {
@@ -102,36 +66,6 @@ public class Npc extends Mob {
 		Server.getServer().getGameEventHandler().add(strPotEventNpc);
 	}
 
-	public boolean isHealing() {
-		return healEventNpc != null;
-	}
-
-	public void resetHealing() {
-		if (healEventNpc != null) {
-			healEventNpc.stop();
-			healEventNpc = null;
-		}
-		setStatus(Action.IDLE);
-	}
-
-	private long healTimer = 0;
-
-	public boolean cantHeal() {
-		return healTimer - System.currentTimeMillis() > 0;
-	}
-
-	public void setHealTimer(long l) {
-		healTimer = System.currentTimeMillis() + l;
-	}
-	
-	
-	/*public Player petOwnerA2;
-	public Player getPetOwnerA2() {
-			return petOwnerA2;
-	}
-	public void setPetOwnerA2(Player petOwnerA3) {
-		petOwnerA2 = petOwnerA3;
-	}*/
 	/**
 	 * RANGED
 	 */
@@ -759,6 +693,7 @@ public class Npc extends Mob {
 					}
 				}
 
+
 				ItemDropDef[] drops = def.getDrops();
 
 				int total = 0;
@@ -865,15 +800,6 @@ public class Npc extends Mob {
 				}
 				deathListeners.clear();
 				remove();
-			}
-		}
-	}
-
-	public void petOwner(Mob mob) {
-		if (!mob.isNpc()) {
-			Player owner = mob instanceof Player ? (Player) mob : null;
-			if (owner != null) {
-				//this = mob;
 			}
 		}
 	}
@@ -1042,9 +968,6 @@ public class Npc extends Mob {
 			if (n == null)
 				continue;
 
-			Player p28x = attacker.getPetOwnerA2();
-			if (p28x == null)
-				continue;
 			final int dmgDoneByNpc = getCombatDamageDoneBy(n);
 
 			if (dmgDoneByNpc > currentHighestDamage) {
@@ -1073,9 +996,6 @@ public class Npc extends Mob {
 			if (n == null)
 				continue;
 
-			Player p28x = attacker.getPetOwnerA2();
-			if (p28x == null)
-				continue;
 			if (dmgDoneByNpc > currentHighestDamage) {
 				npcWithMostDamage = n;
 				currentHighestDamage = dmgDoneByNpc;
@@ -1101,11 +1021,6 @@ public class Npc extends Mob {
 			int dmgDoneByNpc = getMageDamageDoneBy(n);
 			if (n == null)
 				continue;
-			Player p28x = attacker.getPetOwnerA2();
-			if (dmgDoneByNpc > currentHighestDamage) {
-				npcWithMostDamage = n;
-				currentHighestDamage = dmgDoneByNpc;
-			}
 			/*
 			if(attacker.getPetNpc() > 0) {
 			newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByNpc));
@@ -1121,96 +1036,9 @@ public class Npc extends Mob {
 		return npcWithMostDamage;
 	}
 
-
 	private Npc handleLootAndXpDistribution(Npc attacker) {
-
 		Npc npcWithMostDamage = attacker;
 		int currentHighestDamage = 0;
-
-		// Melee damagers
-		for (int npcID : getCombatDamagers()) {
-
-			final Npc n = World.getWorld().getNpcById(npcID);
-			if (n == null)
-				continue;
-			final int dmgDoneByNpc = getCombatDamageDoneBy(n);
-
-			if (dmgDoneByNpc > currentHighestDamage) {
-				npcWithMostDamage = n;
-				currentHighestDamage = dmgDoneByNpc;
-			}
-		}
-
-		// Ranged damagers
-		for (int npcID : getRangeDamagers()) {
-			int newXP = 0;
-			Npc n = World.getWorld().getNpcById(npcID);
-			int dmgDoneByNpc = getRangeDamageDoneBy(n);
-			if (n == null)
-				continue;
-
-			if (dmgDoneByNpc > currentHighestDamage) {
-				npcWithMostDamage = n;
-				currentHighestDamage = dmgDoneByNpc;
-			}
-		}
-
-		// Magic damagers
-		for (int npcID : getMageDamagers()) {
-
-			Npc n = World.getWorld().getNpcById(npcID);
-
-			int dmgDoneByNpc = getMageDamageDoneBy(n);
-			if (n == null)
-				continue;
-
-			if (dmgDoneByNpc > currentHighestDamage) {
-				npcWithMostDamage = n;
-				currentHighestDamage = dmgDoneByNpc;
-			}
-		}
-		return npcWithMostDamage;
-	}
-
-	private Npc handleLootAndXpDistributionPet(Npc attacker) {
-
-		Npc npcWithMostDamage = attacker;
-		int currentHighestDamage = 0;
-		int totalCombatXP = Formulae.combatExperience(this);
-		// Melee damagers
-		for (int npcID : getCombatDamagers()) {
-
-			//final Player p = World.getWorld().getPlayerID(playerID);
-			final Npc n = World.getWorld().getNpcById(npcID);
-			if (n == null)
-				continue;
-			final int damageDoneByNpc = getCombatDamageDoneBy(n);
-
-			if (damageDoneByNpc > currentHighestDamage) {
-				npcWithMostDamage = n;
-				currentHighestDamage = damageDoneByNpc;
-			}
-
-			// Give the player their share of the experience.
-			/*
-			int totalXP = (int) (((double) (totalCombatXP) / (double) (getDef().hits)) * (double) (damageDoneByNpc));
-			Player p28x = n.getPetOwnerA2();
-
-			switch (n.getPetNpcType()) {
-				case 1: //Melee
-					p28x.incPet1Exp(Skills.PETMELEE, totalXP * 3, true);
-					break;
-				case 2: //Magic
-					p28x.incPet1Exp(Skills.PETMAGIC, totalXP * 3, true);
-					break;
-				case 3: //Ranged
-					p28x.incPet1Exp(Skills.PETRANGED, totalXP * 3, true);
-					break;
-			}
-
-			 */
-			//p.incExp(SKILLS.HITS.id(), totalXP, true);
-		}
 
 		// Melee damagers
 		for (int npcID : getCombatDamagers()) {
@@ -1373,10 +1201,6 @@ public class Npc extends Mob {
 	public Player getChasedPlayer() {
 		return npcBehavior.getChasedPlayer();
 	}
-
-	//public Player getPetOwnerA() {
-	//	return BabyBlueDragonCrystal.getPetOwnerA();
-	//}
 
 	public Npc getChasedNpc() {
 		return npcBehavior.getChasedNpc();

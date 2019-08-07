@@ -9,11 +9,7 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
-import com.openrsc.server.model.entity.update.Bubble;
-import com.openrsc.server.model.entity.update.ChatMessage;
-import com.openrsc.server.model.entity.update.Damage;
-import com.openrsc.server.model.entity.update.Projectile;
-import com.openrsc.server.model.entity.update.UpdateFlags;
+import com.openrsc.server.model.entity.update.*;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.PacketBuilder;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -21,7 +17,6 @@ import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.PMLog;
 import com.openrsc.server.util.EntityList;
 import com.openrsc.server.util.rsc.DataConversions;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -210,9 +205,9 @@ public final class GameStateUpdater {
 	}
 
 	public static void updateNpcAppearances(Player player) {
-		ConcurrentLinkedQueue<Damage> npcsNeedingHitsUpdate = new ConcurrentLinkedQueue<Damage>();
-		ConcurrentLinkedQueue<ChatMessage> npcMessagesNeedingDisplayed = new ConcurrentLinkedQueue<ChatMessage>();
-		ConcurrentLinkedQueue<Projectile> npcProjectilesNeedingDisplayed = new ConcurrentLinkedQueue<Projectile>();
+		ConcurrentLinkedQueue<Damage> npcsNeedingHitsUpdate = new ConcurrentLinkedQueue<>();
+		ConcurrentLinkedQueue<ChatMessage> npcMessagesNeedingDisplayed = new ConcurrentLinkedQueue<>();
+		ConcurrentLinkedQueue<Projectile> npcProjectilesNeedingDisplayed = new ConcurrentLinkedQueue<>();
 
 		for (Npc npc : player.getLocalNpcs()) {
 			UpdateFlags updateFlags = npc.getUpdateFlags();
@@ -277,11 +272,12 @@ public final class GameStateUpdater {
 	 */
 	public static void updatePlayerAppearances(Player player) {
 
-		ArrayDeque<Bubble> bubblesNeedingDisplayed = new ArrayDeque<Bubble>();
-		ArrayDeque<ChatMessage> chatMessagesNeedingDisplayed = new ArrayDeque<ChatMessage>();
-		ArrayDeque<Projectile> projectilesNeedingDisplayed = new ArrayDeque<Projectile>();
-		ArrayDeque<Damage> playersNeedingDamageUpdate = new ArrayDeque<Damage>();
-		ArrayDeque<Player> playersNeedingAppearanceUpdate = new ArrayDeque<Player>();
+		ArrayDeque<Bubble> bubblesNeedingDisplayed = new ArrayDeque<>();
+		ArrayDeque<ChatMessage> chatMessagesNeedingDisplayed = new ArrayDeque<>();
+		ArrayDeque<Projectile> projectilesNeedingDisplayed = new ArrayDeque<>();
+		ArrayDeque<Damage> playersNeedingDamageUpdate = new ArrayDeque<>();
+		ArrayDeque<HpUpdate> playersNeedingHpUpdate = new ArrayDeque<HpUpdate>();
+		ArrayDeque<Player> playersNeedingAppearanceUpdate = new ArrayDeque<>();
 
 		if (player.getUpdateFlags().hasBubble()) {
 			Bubble bubble = player.getUpdateFlags().getActionBubble().get();
@@ -298,6 +294,10 @@ public final class GameStateUpdater {
 		if (player.getUpdateFlags().hasTakenDamage()) {
 			Damage damage = player.getUpdateFlags().getDamage().get();
 			playersNeedingDamageUpdate.add(damage);
+		}
+		if (player.getUpdateFlags().hasTakenHpUpdate()) {
+			HpUpdate hpUpdate = player.getUpdateFlags().getHpUpdate().get();
+			playersNeedingHpUpdate.add(hpUpdate);
 		}
 		if (player.getUpdateFlags().hasAppearanceChanged()) {
 			playersNeedingAppearanceUpdate.add(player);
@@ -322,21 +322,25 @@ public final class GameStateUpdater {
 				Damage damage = updateFlags.getDamage().get();
 				playersNeedingDamageUpdate.add(damage);
 			}
+			if (updateFlags.hasTakenHpUpdate()) {
+				HpUpdate hpUpdate = updateFlags.getHpUpdate().get();
+				playersNeedingHpUpdate.add(hpUpdate);
+			}
 			if (player.requiresAppearanceUpdateFor(otherPlayer))
 				playersNeedingAppearanceUpdate.add(otherPlayer);
 
 		}
 		issuePlayerAppearanceUpdatePacket(player, bubblesNeedingDisplayed, chatMessagesNeedingDisplayed,
-			projectilesNeedingDisplayed, playersNeedingDamageUpdate, playersNeedingAppearanceUpdate);
+			projectilesNeedingDisplayed, playersNeedingDamageUpdate, playersNeedingHpUpdate, playersNeedingAppearanceUpdate);
 	}
 
 	private static void issuePlayerAppearanceUpdatePacket(Player player, Queue<Bubble> bubblesNeedingDisplayed,
 														  Queue<ChatMessage> chatMessagesNeedingDisplayed, Queue<Projectile> projectilesNeedingDisplayed,
-														  Queue<Damage> playersNeedingDamageUpdate, Queue<Player> playersNeedingAppearanceUpdate) {
+														  Queue<Damage> playersNeedingDamageUpdate, Queue<HpUpdate> playersNeedingHpUpdate, Queue<Player> playersNeedingAppearanceUpdate) {
 		if (player.loggedIn()) {
 			int updateSize = bubblesNeedingDisplayed.size() + chatMessagesNeedingDisplayed.size()
 				+ playersNeedingDamageUpdate.size() + projectilesNeedingDisplayed.size()
-				+ playersNeedingAppearanceUpdate.size();
+				+ playersNeedingAppearanceUpdate.size() + playersNeedingHpUpdate.size();
 
 			if (updateSize > 0) {
 				PacketBuilder appearancePacket = new PacketBuilder();
@@ -427,6 +431,13 @@ public final class GameStateUpdater {
 					appearancePacket.writeByte(playerNeedingAppearanceUpdate.stateIsInvulnerable() ? 1 : 0);
 					appearancePacket.writeByte(playerNeedingAppearanceUpdate.getGroupID());
 					appearancePacket.writeInt(playerNeedingAppearanceUpdate.getIcon());
+				}
+				HpUpdate playerNeedingHpUpdate;
+				while ((playerNeedingHpUpdate = playersNeedingHpUpdate.poll()) != null) {
+					appearancePacket.writeShort(playerNeedingHpUpdate.getIndex());
+					appearancePacket.writeByte((byte) 9);
+					appearancePacket.writeByte((byte) playerNeedingHpUpdate.getCurHits());
+					appearancePacket.writeByte((byte) playerNeedingHpUpdate.getMaxHits());
 				}
 
 				player.write(appearancePacket.toPacket());

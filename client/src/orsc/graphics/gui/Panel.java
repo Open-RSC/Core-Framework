@@ -900,7 +900,7 @@ public final class Panel {
 					color = 16711680;
 				}
 
-				this.graphics.drawColoredString(x + 2, lineY, entriesString[line], font, color, entriesCrowns[line]);
+				this.graphics.drawColoredString(x + 2, lineY, entriesString[line], font, color, entriesCrowns[line] << 24);
 				lineY += this.graphics.fontHeight(font);
 				if (lineY >= height + y) {
 					break;

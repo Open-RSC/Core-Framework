@@ -13,6 +13,7 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
 
 public class AlfonseTheWaiter implements ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
 
@@ -26,7 +27,7 @@ public class AlfonseTheWaiter implements ShopInterface, TalkToNpcExecutiveListen
 			npcTalk(p, n, "Welcome to the shrimp and parrot",
 				"Would you like to order sir?");
 			int menu;
-			if (p.getQuestStage(Constants.Quests.HEROS_QUEST) != 1 && p.getQuestStage(Constants.Quests.HEROS_QUEST) != 2 && !p.getCache().hasKey("pheonix_mission") && !p.getCache().hasKey("pheonix_alf")) {
+			if (isBlackArmGang(p) || (p.getQuestStage(Constants.Quests.HEROS_QUEST) != 1 && p.getQuestStage(Constants.Quests.HEROS_QUEST) != 2 && !p.getCache().hasKey("pheonix_mission") && !p.getCache().hasKey("pheonix_alf"))) {
 				menu = showMenu(p, n,
 					"Yes please",
 					"No thankyou");

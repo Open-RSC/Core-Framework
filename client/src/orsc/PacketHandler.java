@@ -3,13 +3,6 @@ package orsc;
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
 import com.openrsc.client.model.Sprite;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.util.Properties;
-
 import com.openrsc.interfaces.misc.CustomBankInterface;
 import orsc.buffers.RSBufferUtils;
 import orsc.buffers.RSBuffer_Bits;
@@ -24,6 +17,11 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.Properties;
 public class PacketHandler {
 
 	private final RSBuffer_Bits packetsIncoming = new RSBuffer_Bits(30000);
@@ -115,6 +113,8 @@ public class PacketHandler {
 				// Clan Options
 			else if (opcode == 112) updateClan();
 
+			else if (opcode == 116) updateParty();
+
         /*else if(opcode == 50) { // Achievements
           int achievementStatus = this.packetsIncoming.getByte();
           if (achievementStatus == 1) {
@@ -199,8 +199,9 @@ public class PacketHandler {
 				//All Equipment sent
 			else if (opcode == 254) updateEquipment();
 
-			//Only update one slot
+				//Only update one slot
 			else if (opcode == 255) updateEquipmentSlot();
+
 				// Show Walls
 			else if (opcode == 91) showWalls(length);
 
@@ -573,6 +574,61 @@ public class PacketHandler {
 		}
 	}
 
+	private void updateParty() {
+		int actionType = packetsIncoming.getByte();
+		switch (actionType) {
+			case 0: // Send party
+				mc.party.setPartyName(packetsIncoming.readString());
+				mc.party.setPartyTag(packetsIncoming.readString());
+				mc.party.setPartyLeaderUsername(packetsIncoming.readString());
+				boolean isLeader = packetsIncoming.getByte() == 1;
+				mc.party.setPartyLeader(isLeader);
+				SocialLists.partyListCount = packetsIncoming.getByte();
+				for (int id = 0; id < SocialLists.partyListCount; id++) {
+					mc.party.username[id] = packetsIncoming.readString();
+					mc.party.partyRank[id] = packetsIncoming.getByte();
+					mc.party.onlinePartyMember[id] = packetsIncoming.getByte();
+					mc.party.curHp[id] = packetsIncoming.getByte();
+					mc.party.maxHp[id] = packetsIncoming.getByte();
+					mc.party.cbLvl[id] = packetsIncoming.getByte();
+					mc.party.skull[id] = packetsIncoming.getByte();
+					mc.party.pMemD[id] = packetsIncoming.getByte();
+					mc.party.shareLoot[id] = packetsIncoming.getByte();
+				}
+				mc.party.putParty(true);
+
+				break;
+			case 1: // Leave party
+				mc.party.putParty(false);
+				mc.party.update();
+				break;
+			case 2: // Sent invitation
+				mc.party.getPartyInterface().initializeInvite(packetsIncoming.readString(), packetsIncoming.readString());
+				break;
+			case 3: // Settings
+				mc.party.setPartySetting(0, packetsIncoming.getByte());
+				mc.party.setPartySetting(1, packetsIncoming.getByte());
+				mc.party.setPartySetting(2, packetsIncoming.getByte());
+				mc.party.allowed[0] = packetsIncoming.getByte() == 1;
+				mc.party.allowed[1] = packetsIncoming.getByte() == 1;
+				break;
+			case 4: // Party search visual
+				mc.party.getPartyInterface().resetPartys();
+				int partyCount = packetsIncoming.getShort();
+				for (int i = 0; i < partyCount; i++) {
+					int partyID = packetsIncoming.getShort();
+					String partyName = packetsIncoming.readString();
+					String partyTag = packetsIncoming.readString();
+					int members = packetsIncoming.getByte();
+					int canJoin = packetsIncoming.getByte();
+					int partyPoints = packetsIncoming.get32();
+					int partyRank = packetsIncoming.getShort();
+					mc.party.getPartyInterface().addParty(partyID, partyName, partyTag, members, canJoin, partyPoints, partyRank);
+				}
+				break;
+		}
+	}
+
 	private void announceKill() {
 		if (!Config.S_WANT_KILL_FEED) return;
 		String killed = packetsIncoming.readString();
@@ -615,13 +671,13 @@ public class PacketHandler {
 			if (!rename) {
 				if (SocialLists.friendList[i].equals(currentName)) {
 					if (SocialLists.friendListArgS[i] == null && online) {
-						mc.showMessage(false, (String) null, currentName + " has logged in",
-							MessageType.FRIEND_STATUS, 0, (String) null);
+						mc.showMessage(false, null, currentName + " has logged in",
+							MessageType.FRIEND_STATUS, 0, null);
 					}
 
 					if (null != SocialLists.friendListArgS[i] && !online) {
-						mc.showMessage(false, (String) null, currentName + " has logged out",
-							MessageType.FRIEND_STATUS, 0, (String) null);
+						mc.showMessage(false, null, currentName + " has logged out",
+							MessageType.FRIEND_STATUS, 0, null);
 					}
 
 					SocialLists.friendListOld[i] = formerName;
@@ -632,13 +688,13 @@ public class PacketHandler {
 				}
 			} else if (SocialLists.friendList[i].equals(formerName)) {
 				if (SocialLists.friendListArgS[i] == null && online) {
-					mc.showMessage(false, (String) null, currentName + " has logged in",
-						MessageType.FRIEND_STATUS, 0, (String) null);
+					mc.showMessage(false, null, currentName + " has logged in",
+						MessageType.FRIEND_STATUS, 0, null);
 				}
 
 				if (SocialLists.friendListArgS[i] != null && !online) {
-					mc.showMessage(false, (String) null, currentName + " has logged out",
-						MessageType.FRIEND_STATUS, 0, (String) null);
+					mc.showMessage(false, null, currentName + " has logged out",
+						MessageType.FRIEND_STATUS, 0, null);
 				}
 
 				SocialLists.friendList[i] = currentName;
@@ -754,7 +810,7 @@ public class PacketHandler {
 		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank, wantPlayerCommands;
 		int getFPS, wantEmail, wantRegistrationLimit, allowResize, lenientContactDetails, wantFatigue, wantCustomSprites;
 		int fishingSpotsDepletable, properMagicTreeName, wantRunecrafting, wantCustomLandscape, wantEquipmentTab;
-		int wantBankPresets;
+		int wantBankPresets, wantParties;
 		String logoSpriteID;
 
 		if (!mc.gotInitialConfigs) {
@@ -821,6 +877,7 @@ public class PacketHandler {
 			wantCustomLandscape = this.getClientStream().getUnsignedByte(); //61
 			wantEquipmentTab = this.getClientStream().getUnsignedByte(); //62
 			wantBankPresets = this.getClientStream().getUnsignedByte(); //63
+			wantParties = this.getClientStream().getUnsignedByte(); // 64
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -885,6 +942,7 @@ public class PacketHandler {
 			wantCustomLandscape = packetsIncoming.getUnsignedByte(); //61
 			wantEquipmentTab = packetsIncoming.getUnsignedByte(); //62
 			wantBankPresets = packetsIncoming.getUnsignedByte(); //63
+			wantParties = packetsIncoming.getUnsignedByte(); // 64
 		}
 
 		if (Config.DEBUG) {
@@ -947,11 +1005,12 @@ public class PacketHandler {
 					"\nS_SHOW_UNIDENTIFIED_HERB_NAMES " + showUnidentifiedHerbNames + // 56
 					"\nS_WANT_QUEST_STARTED_INDICATOR  " + wantQuestStartedIndicator + // 57
 					"\nS_FISHING_SPOTS_DEPLETABLE " + fishingSpotsDepletable + // 58
-					"\nS_PROPER_MAGIC_TREE_NAME  " + properMagicTreeName +// 59
-					"\nS_WANT_RUNECRAFTING  "   + wantRunecrafting +// 60
-					"\nS_WANT_CUSTOM_LANDSCAPE  "   + wantCustomLandscape +// 61
-					"\nS_WANT_EQUIPMENT_TAB  "   + wantEquipmentTab +// 61
-					"\nS_WANT_BANK_PRESETS  "   + wantEquipmentTab// 62
+					"\nS_PROPER_MAGIC_TREE_NAME  " + properMagicTreeName + // 59
+					"\nS_WANT_RUNECRAFTING  "   + wantRunecrafting + // 60
+					"\nS_WANT_CUSTOM_LANDSCAPE  "   + wantCustomLandscape + // 61
+					"\nS_WANT_EQUIPMENT_TAB  "   + wantEquipmentTab + // 62
+					"\nS_WANT_BANK_PRESETS  "   + wantEquipmentTab + // 63
+					"\nS_WANT_PARTIES " + wantClans // 64
 			);
 		}
 
@@ -1020,7 +1079,7 @@ public class PacketHandler {
 		props.setProperty("S_WANT_CUSTOM_LANDSCAPE", wantCustomLandscape == 1 ? "true" : "false"); //61
 		props.setProperty("S_WANT_EQUIPMENT_TAB", wantEquipmentTab == 1 ? "true" : "false"); //62
 		props.setProperty("S_WANT_BANK_PRESETS", wantBankPresets == 1 ? "true" : "false"); //63
-
+		props.setProperty("S_WANT_PARTIES", wantParties == 1 ? "true" : "false"); //64
 		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(
@@ -1253,6 +1312,7 @@ public class PacketHandler {
 			}
 		}
 	}
+
 	private void updateEquipmentSlot() {
 		int slot = packetsIncoming.getByte();
 		int id = packetsIncoming.getShort();
@@ -1310,7 +1370,6 @@ public class PacketHandler {
 				mc.equippedItemAmount[equipslot] = 1;
 		}
 	}
-
 
 	private void showWalls(int length) {
 		while (length > packetsIncoming.packetEnd) {
@@ -1482,9 +1541,9 @@ public class PacketHandler {
 					npc.messageTimeout = 150;
 					npc.message = message;
 					if (mc.getLocalPlayer().serverIndex == chatRecipient) {
-						mc.showMessage(false, (String) null,
+						mc.showMessage(false, null,
 							com.openrsc.client.entityhandling.EntityHandler.getNpcDef(npc.npcId).getName() + ": " + npc.message,
-							MessageType.QUEST, 0, (String) null, "@yel@");
+							MessageType.QUEST, 0, null, "@yel@");
 					}
 				}
 
@@ -1704,16 +1763,17 @@ public class PacketHandler {
 		mc.setExperienceCounterToggle(packetsIncoming.getUnsignedByte()); // 33
 		mc.setHideInventoryCount(packetsIncoming.getUnsignedByte() == 1); // 34
 		mc.setHideNameTag(packetsIncoming.getUnsignedByte() == 1); // 35
+		mc.setPartyInviteBlockSetting(packetsIncoming.getUnsignedByte() == 1); // 36
 	}
 
 	private void togglePrayer(int length) {
 		for (int i = 0; length - 1 > i; ++i) {
 			boolean enabled = packetsIncoming.getByte() == 1;
 			if (!mc.checkPrayerOn(i) && enabled) {
-				mc.playSoundFile((String) "prayeron");
+				mc.playSoundFile("prayeron");
 			}
 			if (mc.checkPrayerOn(i) && !enabled) {
-				mc.playSoundFile((String) "prayeroff");
+				mc.playSoundFile("prayeroff");
 			}
 
 			mc.togglePrayer(i, enabled);
@@ -1856,7 +1916,7 @@ public class PacketHandler {
 
 		int receivedXp = mc.getPlayerExperience(skill) - oldXp;
 		receivedXp = receivedXp < 0 ? 0 : receivedXp;
-		mc.setPlayerStatXpGained(skill, (long) mc.getPlayerStatXpGained(skill) + receivedXp);
+		mc.setPlayerStatXpGained(skill, mc.getPlayerStatXpGained(skill) + receivedXp);
 		if (mc.getXpGainedStartTime(skill) == 0) {
 			mc.setXpGainedStartTime(skill, System.currentTimeMillis());
 		}
@@ -1910,7 +1970,7 @@ public class PacketHandler {
 
 	private void playSound() {
 		String filename = packetsIncoming.readString();
-		mc.playSoundFile((String) filename);
+		mc.playSoundFile(filename);
 	}
 
 	private void showLoginDialog() {
@@ -2228,10 +2288,39 @@ public class PacketHandler {
 						player.clanTag = null;
 					}
 
-					player.isInvisible = packetsIncoming.getByte() > 0 ? true : false;
-					player.isInvulnerable = packetsIncoming.getByte() > 0 ? true : false;
+					player.isInvisible = packetsIncoming.getByte() > 0;
+					player.isInvulnerable = packetsIncoming.getByte() > 0;
 					player.groupID = packetsIncoming.getByte();
 					player.icon = packetsIncoming.get32();
+				}
+			} else if (updateType == 8) {
+				int heal = packetsIncoming.getUnsignedByte();
+				int curhp = packetsIncoming.getUnsignedByte();
+				int maxhp = packetsIncoming.getUnsignedByte();
+				if (player != null) {
+					player.healthMax = maxhp;
+					player.healthCurrent = curhp;
+					player.healTaken = heal;
+					if (mc.getLocalPlayer() == player) {
+						mc.setPlayerStatCurrent(3, curhp);
+						mc.setPlayerStatBase(3, maxhp);
+						mc.setShowDialogServerMessage(false);
+						mc.setShowDialogMessage(false);
+					}
+					player.healTimeout = 200;
+				}
+			} else if (updateType == 9) {
+				int curhp = packetsIncoming.getUnsignedByte();
+				int maxhp = packetsIncoming.getUnsignedByte();
+				if (player != null) {
+					player.healthMax = maxhp;
+					player.healthCurrent = curhp;
+					if (mc.getLocalPlayer() == player) {
+						mc.setPlayerStatCurrent(3, curhp);
+						mc.setPlayerStatBase(3, maxhp);
+						mc.setShowDialogServerMessage(false);
+						mc.setShowDialogMessage(false);
+					}
 				}
 			}
 		}
@@ -2308,7 +2397,6 @@ public class PacketHandler {
 			}
 		}
 	}
-
 	private void updatePreset() {
 		int slot = packetsIncoming.getShort();
 		int itemID, amount;
@@ -2358,5 +2446,4 @@ public class PacketHandler {
 		}
 		mc.getBank().updatePreset(slot, inventoryItems, equipmentItems);
 	}
-
 }

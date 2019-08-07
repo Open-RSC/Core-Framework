@@ -118,10 +118,6 @@ public class CombatEvent extends GameTickEvent {
 					inflictDamage(target, hitter, reflectedDamage);
 				}
 			}
-
-			//} else {
-			//	inflictDamage(hitter, target, PVPCombatFormula.calcFightHit(hitter, target));
-			//}
 		}
 	}
 
@@ -156,6 +152,11 @@ public class CombatEvent extends GameTickEvent {
 					combatSound = damage > 0 ? "combat3b" : "combat3a";
 				} else {
 					combatSound = damage > 0 ? "combat1b" : "combat1a";
+				}
+			}
+			for (Player p : World.getWorld().getPlayers()) {
+				if (((Player) target).getParty() == p.getParty() && ((Player) target).getParty() != null) {
+					ActionSender.sendParty(p);
 				}
 			}
 			Player opponentPlayer = ((Player) target);
@@ -193,8 +194,7 @@ public class CombatEvent extends GameTickEvent {
 					player.setStatus(Action.IDLE);
 					player.resetAll();
 				} else {
-					if (defenderMob.getID() != 210 && defenderMob.getCombatState() == CombatState.RUNNING)
-						delayedAggro = 17000; // 17 + 3 second aggro timer for npds running
+					delayedAggro = 17000; // 17 + 3 second aggro timer for npds running
 				}
 
 				defenderMob.setBusy(false);
