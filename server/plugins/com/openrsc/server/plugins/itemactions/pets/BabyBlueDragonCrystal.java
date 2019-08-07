@@ -35,7 +35,7 @@ public class BabyBlueDragonCrystal implements InvActionListener, InvActionExecut
 		System.out.println("Pet spawn attempt");
 		if (Constants.GameServer.WANT_PETS){
 			if (player.getInventory().hasItemId(ItemId.A_RED_CRYSTAL.id())) {
-				if (item.getDef().getCommand().equalsIgnoreCase("inspect")) {
+				if (command.equalsIgnoreCase("inspect")) {
 					if (player.getInventory().hasItemId(ItemId.A_GLOWING_RED_CRYSTAL.id())) {
 
 						player.message("You may only summon one pet at a time!");
