@@ -667,11 +667,13 @@ public class Inventory {
 	}
 
 	public void dropOnDeath(Mob opponent) {
+		ArrayList<Item> deathItems = new ArrayList<>();
+
 		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
 			for (int i = 0; i < Equipment.slots; i++) {
 				Item equipped = player.getEquipment().list[i];
 				if (equipped != null) {
-					add(equipped, false);
+					deathItems.add(equipped);
 					player.updateWornItems(equipped.getDef().getWieldPosition(),
 						player.getSettings().getAppearance().getSprite(equipped.getDef().getWieldPosition()),
 						equipped.getDef().getWearableId(), false);
@@ -679,8 +681,12 @@ public class Inventory {
 				}
 			}
 		}
-		sort();
-		ListIterator<Item> iterator = iterator();
+		for (Item invItem : list) {
+			deathItems.add(invItem);
+		}
+
+		Collections.sort(deathItems);
+		ListIterator<Item> iterator = deathItems.listIterator();
 		if (!player.isIronMan(2)) {
 			if (!player.isSkulled()) {
 				for (int i = 0; i < 3 && iterator.hasNext(); i++) {
@@ -742,9 +748,17 @@ public class Inventory {
 				fam_gloves = ItemId.STEEL_GAUNTLETS.id();
 				break;
 		}
-		if (player.getQuestStage(Constants.Quests.FAMILY_CREST) == -1 && !player.getBank().hasItemId(fam_gloves)) {
-			player.getInventory().add(new Item(fam_gloves, 1));
+		//Add the remaining items to the players inventory
+		list.clear();
+		for (Item returnItem : deathItems) {
+			add(returnItem, false);
 		}
+		if (player.getQuestStage(Constants.Quests.FAMILY_CREST) == -1 && !player.getBank().hasItemId(fam_gloves)
+		&& !player.getInventory().hasItemId(fam_gloves)) {
+			add(new Item(fam_gloves, 1));
+		}
+		ActionSender.sendInventory(player);
+		ActionSender.sendEquipmentStats(player);
 		log.build();
 		GameLogging.addQuery(log);
 	}

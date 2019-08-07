@@ -14,7 +14,7 @@ public class ItemDurability implements InvActionListener, InvActionExecutiveList
 	@Override
 	public boolean blockInvAction(Item item, Player player, String command) {
 		return (item.getID() == ItemId.RING_OF_RECOIL.id() || item.getID() == ItemId.RING_OF_FORGING.id()
-			|| item.getID() == ItemId.QUARTET_RING.id())
+			|| item.getID() == ItemId.DWARVEN_RING.id())
 			&& (command.equalsIgnoreCase("check") || command.equalsIgnoreCase("break"));
 	}
 
@@ -36,13 +36,13 @@ public class ItemDurability implements InvActionListener, InvActionExecutiveList
 					charges = Constants.GameServer.RING_OF_FORGING_USES;
 				player.message("Your Ring of Forging has " + charges + "/" +
 					Constants.GameServer.RING_OF_FORGING_USES + " charges remaining.");
-			} else if (item.getID() == ItemId.QUARTET_RING.id()) {
-				if (player.getCache().hasKey("quartetring"))
-					charges = Constants.GameServer.QUARTET_RING_USES - player.getCache().getInt("quartetring");
+			} else if (item.getID() == ItemId.DWARVEN_RING.id()) {
+				if (player.getCache().hasKey("dwarvenring"))
+					charges = Constants.GameServer.DWARVEN_RING_USES - player.getCache().getInt("dwarvenring");
 				else
-					charges = Constants.GameServer.QUARTET_RING_USES;
-				player.message("Your Quartet Ring has " + charges + "/" +
-					Constants.GameServer.QUARTET_RING_USES + " charges remaining.");
+					charges = Constants.GameServer.DWARVEN_RING_USES;
+				player.message("Your Dwarven Ring has " + charges + "/" +
+					Constants.GameServer.DWARVEN_RING_USES + " charges remaining.");
 			}
 		} else if (command.equalsIgnoreCase("break")) {
 			player.message("Are you sure you want to break your " + item.getDef().getName() + "?");
@@ -56,8 +56,8 @@ public class ItemDurability implements InvActionListener, InvActionExecutiveList
 			} else if (item.getID() == ItemId.RING_OF_FORGING.id()) {
 				player.getCache().remove("ringofforging");
 				player.getInventory().shatter(item.getID());
-			} else if (item.getID() == ItemId.QUARTET_RING.id()) {
-				player.getCache().remove("quartetring");
+			} else if (item.getID() == ItemId.DWARVEN_RING.id()) {
+				player.getCache().remove("dwarvenring");
 				player.getInventory().shatter(item.getID());
 			}
 		}

@@ -45,19 +45,19 @@ public class Smelting implements InvUseOnObjectListener,
 							p.incExp(SKILLS.SMITHING.id(), 100, true);
 							p.getInventory().replace(ItemId.STEEL_BAR.id(), ItemId.MULTI_CANNON_BALL.id());
 							int amount = 1;
-							if (Functions.isWielding(p, ItemId.QUARTET_RING.id())) {
+							if (Functions.isWielding(p, ItemId.DWARVEN_RING.id())) {
 								amount += 2;
 								int charges;
-								if (p.getCache().hasKey("quartetring")) {
-									charges = p.getCache().getInt("quartetring") + 1;
-									if (charges >= Constants.GameServer.QUARTET_RING_USES) {
-										p.getCache().remove("quartetring");
-										p.getInventory().shatter(ItemId.QUARTET_RING.id());
+								if (p.getCache().hasKey("dwarvenring")) {
+									charges = p.getCache().getInt("dwarvenring") + 1;
+									if (charges >= Constants.GameServer.DWARVEN_RING_USES) {
+										p.getCache().remove("dwarvenring");
+										p.getInventory().shatter(ItemId.DWARVEN_RING.id());
 									} else
-										p.getCache().put("quartetring", charges);
+										p.getCache().put("dwarvenring", charges);
 								}
 								else
-									p.getCache().put("quartetring", 1);
+									p.getCache().put("dwarvenring", 1);
 
 							}
 							addItem(p, ItemId.MULTI_CANNON_BALL.id(), amount);

@@ -896,8 +896,6 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		gemTable.addAccessor(NpcId.JAILER.id(),13,256);
 		gemTable.addAccessor(NpcId.RENEGADE_KNIGHT.id(),13,256);
 		gemTable.addAccessor(195,13,256);//lvl 54 skeletons
-		gemTable.addAccessor(NpcId.BLACK_DEMON.id(),13,256);//lvl 54 skeletons
-		gemTable.addAccessor(NpcId.BLACK_DEMON_GRANDTREE.id(),13,256);
 		gemTable.addAccessor(NpcId.EARTH_WARRIOR.id(),13,256);
 		gemTable.addAccessor(NpcId.ICE_WARRIOR.id(),14,256);
 		gemTable.addAccessor(NpcId.CHAOS_DWARF.id(),14,256);
@@ -910,12 +908,17 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		gemTable.addAccessor(NpcId.ICE_GIANT.id(),18,256);
 		gemTable.addAccessor(NpcId.PALADIN.id(),18,256);
 		gemTable.addAccessor(NpcId.LORD_DARQUARIUS.id(),19,256);
-		gemTable.addAccessor(NpcId.BLACK_DRAGON.id(),21,256);
 		gemTable.addAccessor(NpcId.ICE_QUEEN.id(),22,256);
-		gemTable.addAccessor(NpcId.BLUE_DRAGON.id(),22,256);
-		gemTable.addAccessor(NpcId.FIRE_GIANT.id(),22,256);
-		gemTable.addAccessor(NpcId.RED_DRAGON.id(),22,256);
-		gemTable.addAccessor(NpcId.KING_BLACK_DRAGON.id(),47,256);
+
+		rareTable.addAccessor(NpcId.BLUE_DRAGON.id(),1,256);
+		rareTable.addAccessor(NpcId.FIRE_GIANT.id(),1,256);
+		rareTable.addAccessor(NpcId.HELLHOUND.id(),2,256);
+		rareTable.addAccessor(NpcId.RED_DRAGON.id(),2,256);
+		rareTable.addAccessor(NpcId.BLACK_DEMON.id(),3,256);//lvl 54 skeletons
+		rareTable.addAccessor(NpcId.BLACK_DEMON_GRANDTREE.id(),3,256);
+		rareTable.addAccessor(NpcId.BLACK_DRAGON.id(),4,256);
+		rareTable.addAccessor(NpcId.KING_BLACK_DRAGON.id(),8,256);
+
 	}
 
 

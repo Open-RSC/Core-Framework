@@ -660,7 +660,7 @@ public final class AuctionHouse {
 				nameFilter = new String[]{"uncut", "sapphire", "emerald", "ruby", "diamond", "dragonstone"};
 				exactNameFilter = new String[]{"opal", "jade", "amulet of accuracy", "gold amulet", "brass necklace",
 					"gold necklace", "holy symbol of saradomin", "unblessed holy symbol", "ring of wealth",
-				"ring of avarice", "ring of recoil", "ring of forging", "ring of splendor"};
+				"ring of avarice", "ring of recoil", "ring of forging", "ring of splendor", "dwarven ring"};
 			} else if (selectedFilter == 6) {
 				nameFilter = new String[]{" ore", "coal", "bar", "clay"};
 				exactNameFilter = new String[]{"gold", "silver", "silver certificate", "gold certificate"};

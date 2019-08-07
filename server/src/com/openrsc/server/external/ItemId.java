@@ -1330,7 +1330,7 @@ public enum ItemId {
 	RING_OF_LIFE(2292),
 	RING_OF_WEALTH(2294),
 	RING_OF_AVARICE(2296),
-	QUARTET_RING(2298);
+	DWARVEN_RING(2298);
 	private int itemId;
 
 	private static final Map<Integer, ItemId> byId = new HashMap<Integer, ItemId>();

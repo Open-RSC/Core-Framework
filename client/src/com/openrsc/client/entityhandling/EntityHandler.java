@@ -3564,8 +3564,8 @@ public class EntityHandler {
 		items.add(new ItemDef("Ring of Wealth", "Swap this note at any bank for the equivalent item.", "", 17625, -1, "items:438",true, false, 0, 0, true, false, -1, 2294, 2295));
 		items.add(new ItemDef("Ring of Avarice", "An enchanted ring.", "", 17625, -1, "items:503",false, true, 1200, 12255487, true, false, 2297, -1, 2296));
 		items.add(new ItemDef("Ring of Avarice", "Swap this note at any bank for the equivalent item.", "", 17625, -1, "items:438",true, false, 0, 0, true, false, -1, 2296, 2297));
-		items.add(new ItemDef("Quartet Ring", "An enchanted ring.", "Check,Break", 400, -1, "items:503",false, true, 1200, 16777124, true, false, 2299, -1, 2298));
-		items.add(new ItemDef("Quartet Ring", "Swap this note at any bank for the equivalent item.", "", 400, -1, "items:438",true, false, 0, 0, true, false, -1, 2298, 2299));
+		items.add(new ItemDef("Dwarven Ring", "An enchanted ring.", "Check,Break", 400, -1, "items:503",false, true, 1200, 16777124, true, false, 2299, -1, 2298));
+		items.add(new ItemDef("Dwarven Ring", "Swap this note at any bank for the equivalent item.", "", 400, -1, "items:438",true, false, 0, 0, true, false, -1, 2298, 2299));
 	}
 
 	private static void loadNoteDefinitions() {
