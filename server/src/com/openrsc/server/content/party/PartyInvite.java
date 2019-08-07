@@ -21,13 +21,33 @@ public class PartyInvite {
 		if (player.getParty() == null) {
 			return;
 		}
+		if (player.getParty().getPlayers().size() >= PartyManager.MAX_PARTY_SIZE) {
+			player.message("Your party has reached the maximum party members limit");
+			return;
+		}
+		if(player.getSocial().isIgnoring(invited.getUsernameHash())){
+			ActionSender.sendBox(player,
+				"@lre@Party: %"
+					+ " % Remove "
+					+ invited.getUsername() + " from your ignore list and try again. %"
+				, true);
+				return;
+		}
+		if(invited.getSocial().isIgnoring(player.getUsernameHash())){
+			ActionSender.sendBox(player,
+				"@lre@Party: %"
+					+ " %"
+					+ invited.getUsername() + " is not accepting party invitations right now. %"
+				, true);
+				return;
+		}
 		if (invited.getCache().hasKey("party_block_invites")) {
 			boolean blockInvites = invited.getCache().getBoolean("party_block_invites");
 			if (blockInvites) {
 				ActionSender.sendBox(player,
 					"@lre@Party: %"
 						+ " %"
-						+ invited.getUsername() + " has party invitations blocked %"
+						+ invited.getUsername() + " is not accepting party invitations right now. %"
 					, true);
 				//invited.message(player.getUsername() + " tried to send you a party invite, but you have party invite settings blocked");
 				return;
@@ -37,14 +57,14 @@ public class PartyInvite {
 				ActionSender.sendBox(player,
 					"@lre@Party: %"
 						+ " %"
-						+ invited.getUsername() + " has party invitations blocked %"
+						+ invited.getUsername() + " is not accepting party invitations right now. %"
 					, true);
 				return;
 			}
 
 		}
 		if (invited.getActivePartyInvite() != null) {
-			player.message(invited.getUsername() + " has already and active party invitation, please try again later.");
+			//player.message(invited.getUsername() + " has already and active party invitation, please try again later.");
 			ActionSender.sendBox(player,
 				"@lre@Party: %"
 					+ " %"
@@ -67,11 +87,6 @@ public class PartyInvite {
 					+ invited.getUsername() + " is already in a party %"
 				, true);
 			invited.message(player.getUsername() + " tried to send you a party invite, but you are already in a party");
-			return;
-		}
-
-		if (player.getParty().getPlayers().size() >= PartyManager.MAX_PARTY_SIZE) {
-			player.message("Your party has reached the maximum party members limit");
 			return;
 		}
 		if (invited.equals(player)) {
