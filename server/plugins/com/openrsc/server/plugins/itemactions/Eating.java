@@ -10,6 +10,8 @@ import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
+import com.openrsc.server.model.world.World;
+import com.openrsc.server.model.entity.update.HpUpdate;
 
 import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.playerTalk;
@@ -178,6 +180,12 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 			sleep(325);
 			if (heals && !isKebabVariant) {
 				player.message("It heals some health");
+				player.getUpdateFlags().setHpUpdate(new HpUpdate(player, 0));
+				for (Player p : World.getWorld().getPlayers()) {
+					if(player.getParty() == p.getParty()){
+						ActionSender.sendParty(p);
+					}
+				}
 			}
 			player.getInventory().remove(item);
 

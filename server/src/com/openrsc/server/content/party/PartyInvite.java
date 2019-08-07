@@ -106,7 +106,7 @@ public class PartyInvite {
 		}
 		invited.setActivePartyInvite(PartyInvite);
 
-		if (invited.getLocation().inWilderness()) {
+		if (invited.getLocation().inWilderness() || invited.inCombat()) {
 			invited.message("Type ::partyaccept to accept your invitation");
 		} else {
 			ActionSender.sendPartyInvitationGUI(invited, player.getParty().getPartyName(), player.getUsername());
