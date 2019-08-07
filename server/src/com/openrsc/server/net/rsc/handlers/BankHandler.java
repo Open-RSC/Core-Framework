@@ -150,7 +150,7 @@ public final class BankHandler implements PacketHandler {
 		} else if (pID == packetFive && Constants.GameServer.WANT_EQUIPMENT_TAB) {
 			//deposit all from equipment
 			for (int k = Equipment.slots - 1; k >= 0; k--) {
-				Item depoItem = player.getEquipment().list[k];
+				Item depoItem = player.getEquipment().get(k);
 				if (depoItem == null)
 					continue;
 				if (PluginHandler.getPluginHandler().blockDefaultAction("Deposit",
@@ -177,7 +177,7 @@ public final class BankHandler implements PacketHandler {
 					player.getBank().presets[presetSlot].inventory[k] = new Item(-1,0);
 			}
 			for (int k = 0; k < Equipment.slots; k++) {
-				Item equipmentItem = player.getEquipment().list[k];
+				Item equipmentItem = player.getEquipment().get(k);
 				if (equipmentItem != null)
 					player.getBank().presets[presetSlot].equipment[k] = equipmentItem;
 				else

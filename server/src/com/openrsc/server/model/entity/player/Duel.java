@@ -169,7 +169,7 @@ public class Duel implements ContainerListener {
 					player.updateWornItems(item.getDef().getWieldPosition(),
 						player.getSettings().getAppearance().getSprite(item.getDef().getWieldPosition()),
 						item.getDef().getWearableId(), false);
-					player.getEquipment().list[item.getDef().getWieldPosition()] = null;
+					player.getEquipment().equip(item.getDef().getWieldPosition(),null);
 					log.addDroppedItem(item);
 					World.getWorld().registerItem(new GroundItem(item.getID(), player.getX(), player.getY(), item.getAmount(), duelOpponent));
 				}

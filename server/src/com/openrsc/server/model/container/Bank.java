@@ -265,8 +265,8 @@ public class Bank {
 		if (item.getDef() == null)
 			return;
 
-		if ( !item.getDef().isStackable() && player.getEquipment().list[item.getDef().getWieldPosition()] != null
-			&& item.getID() == player.getEquipment().list[item.getDef().getWieldPosition()].getID())
+		if ( !item.getDef().isStackable() && player.getEquipment().get(item.getDef().getWieldPosition()) != null
+			&& item.getID() == player.getEquipment().get(item.getDef().getWieldPosition()).getID())
 			return;
 
 		if (!Functions.canWield(player, item) || !item.getDef().isWieldable()) {
@@ -277,7 +277,9 @@ public class Bank {
 
 		//Do an inventory count check
 		int count = 0;
-		for (Item i : player.getEquipment().list) {
+		Item i;
+		for (int p = 0; p < Equipment.slots; p++) {
+			i = player.getEquipment().get(p);
 			if (i != null && item.wieldingAffectsItem(i)) {
 				if (item.getDef().isStackable()) {
 					if (item.getID() == i.getID())
@@ -297,7 +299,8 @@ public class Bank {
 
 		int amountToRemove = item.getDef().isStackable() ? item.getAmount() : 1;
 		remove(item.getID(), amountToRemove);
-		for (Item i : player.getEquipment().list) {
+		for (int p = 0; p < Equipment.slots; p++) {
+			i = player.getEquipment().get(p);
 			if (i != null && item.wieldingAffectsItem(i)) {
 				if (item.getDef().isStackable()) {
 					if (item.getID() == i.getID()) {
@@ -308,7 +311,6 @@ public class Bank {
 				}
 				unwieldItem(i, false);
 			}
-
 		}
 
 		if (sound)
@@ -316,7 +318,7 @@ public class Bank {
 
 		player.updateWornItems(item.getDef().getWieldPosition(), item.getDef().getAppearanceId(),
 				item.getDef().getWearableId(), true);
-		player.getEquipment().list[item.getDef().getWieldPosition()] = new Item(item.getID(), amountToRemove);
+		player.getEquipment().equip(item.getDef().getWieldPosition(), new Item(item.getID(), amountToRemove));
 		ActionSender.sendEquipmentStats(player);
 	}
 
@@ -345,7 +347,7 @@ public class Bank {
 		player.updateWornItems(affectedItem.getDef().getWieldPosition(),
 			player.getSettings().getAppearance().getSprite(affectedItem.getDef().getWieldPosition()),
 			affectedItem.getDef().getWearableId(), false);
-		player.getEquipment().list[affectedItem.getDef().getWieldPosition()] = null;
+		player.getEquipment().equip(affectedItem.getDef().getWieldPosition(), null);
 		add(affectedItem);
 		return true;
 	}
@@ -455,8 +457,8 @@ public class Bank {
 
 		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
 			//Loop through their equipment and add it to the hashmap
-			for (int i = 0; i < player.getEquipment().list.length; i++) {
-				tempItem = player.getEquipment().list[i];
+			for (int i = 0; i < Equipment.slots; i++) {
+				tempItem = player.getEquipment().get(i);
 				if (tempItem != null) {
 					if (!itemsOwned.containsKey(tempItem.getID())) {
 						itemsOwned.put(tempItem.getID(), 0);
@@ -480,7 +482,7 @@ public class Bank {
 			for (int i = 0; i < presets[slot].equipment.length; i++) {
 				Item presetEquipment = presets[slot].equipment[i];
 				if (presetEquipment.getDef() == null) {
-					player.getEquipment().list[i] = null;
+					player.getEquipment().equip(i,null);
 					player.updateWornItems(i,
 						player.getSettings().getAppearance().getSprite(i));
 					continue;
@@ -499,7 +501,7 @@ public class Bank {
 							player.message("Unable to equip " + presetEquipment.getDef().getName() + " due to lack of skill.");
 							continue;
 						}
-						player.getEquipment().list[presetEquipment.getDef().getWieldPosition()] = presetEquipment;
+						player.getEquipment().equip(presetEquipment.getDef().getWieldPosition(), presetEquipment);
 						wearableId = presetEquipment.getDef().getWearableId();
 						player.updateWornItems(i,
 							presetEquipment.getDef().getAppearanceId(),

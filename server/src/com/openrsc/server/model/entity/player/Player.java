@@ -737,7 +737,7 @@ public final class Player extends Mob {
 
 	public void checkEquipment2() {
 		for (int slot = 0; slot < Equipment.slots; slot++) {
-			Item item = getEquipment().list[slot];
+			Item item = getEquipment().get(slot);
 			if (item == null)
 				continue;
 			int requiredLevel = item.getDef().getRequiredLevel();
@@ -786,7 +786,7 @@ public final class Player extends Mob {
 				getInventory().unwieldItem(item, false);
 				//check to make sure their item was actually unequipped.
 				//it might not have if they have a full inventory.
-				if (getEquipment().list[slot] != null) {
+				if (getEquipment().get(slot) != null) {
 					ItemDropHandler doit = new ItemDropHandler();
 					if (item.getDef().isStackable())
 						doit.dropStackable(this, item, item.getAmount(), false);
@@ -1143,7 +1143,9 @@ public final class Player extends Mob {
 
 	public int getRangeEquip() {
 		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
-			for (Item item : getEquipment().list) {
+			Item item;
+			for (int i = 0; i < Equipment.slots; i++) {
+				item = getEquipment().get(i);
 				if (item != null && (DataConversions.inArray(Formulae.bowIDs, item.getID())
 					|| DataConversions.inArray(Formulae.xbowIDs, item.getID()))) {
 					return item.getID();
@@ -1162,7 +1164,9 @@ public final class Player extends Mob {
 
 	public int getThrowingEquip() {
 		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
-			for (Item item : getEquipment().list) {
+			Item item;
+			for (int i = 0; i < Equipment.slots; i++) {
+				item = getEquipment().get(i);
 				if (item != null && DataConversions.inArray(Formulae.throwingIDs, item.getID())) {
 					return item.getID();
 				}
@@ -1721,7 +1725,7 @@ public final class Player extends Mob {
 
 	private int getEquippedWeaponID() {
 		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
-			Item i = getEquipment().list[4];
+			Item i = getEquipment().get(4);
 			if (i != null)
 				return i.getID();
 		} else {

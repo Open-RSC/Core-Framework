@@ -180,10 +180,10 @@ public class RangeEvent extends GameTickEvent {
 						return;
 					}
 					if (ammo.getAmount() == 1) {
-						getPlayerOwner().getEquipment().list[12] = null;
+						getPlayerOwner().getEquipment().equip(12, null);
 					} else {
 						ammo.setAmount(ammo.getAmount() - 1);
-						getPlayerOwner().getEquipment().list[12] = ammo;
+						getPlayerOwner().getEquipment().equip(12,ammo);
 					}
 					ActionSender.updateEquipmentSlot(getPlayerOwner(), 12);
 				} else {

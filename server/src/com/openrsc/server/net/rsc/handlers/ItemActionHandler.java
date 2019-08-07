@@ -24,6 +24,7 @@ public class ItemActionHandler implements PacketHandler {
 
 		int idx = (int) p.readShort();
 		int amount = p.readInt();
+		int commandIndex;
 
 		if (player == null || player.getInventory() == null) {
 			return;

@@ -42,7 +42,7 @@ public final class ItemDropHandler implements PacketHandler {
 			int realid = (int) p.readShort();
 			int slot = player.getEquipment().hasEquipped(realid);
 			if (slot != -1)
-				tempitem = player.getEquipment().list[slot];
+				tempitem = player.getEquipment().get(slot);
 		} else {
 			tempitem = player.getInventory().get(idx);
 		}
@@ -115,11 +115,11 @@ public final class ItemDropHandler implements PacketHandler {
 			}
 		} else {
 			int slot = player.getEquipment().hasEquipped(item.getID());
-			if (slot == -1 || player.getEquipment().list[slot].getAmount() != amount) {
+			if (slot == -1 || player.getEquipment().get(slot).getAmount() != amount) {
 				player.setStatus(Action.IDLE);
 				return;
 			}
-			player.getEquipment().list[slot] = null;
+			player.getEquipment().equip(slot, null);
 			ActionSender.sendEquipmentStats(player);
 			if (item.getDef().getWieldPosition() < 12)
 				player.updateWornItems(item.getDef().getWieldPosition(), player.getSettings().getAppearance().getSprite(item.getDef().getWieldPosition()));
@@ -179,7 +179,7 @@ public final class ItemDropHandler implements PacketHandler {
 						return;
 					}
 				} else {
-					player.getEquipment().list[slot] = null;
+					player.getEquipment().equip(slot, null);
 					ActionSender.sendEquipmentStats(player);
 					player.updateWornItems(item.getDef().getWieldPosition(),
 						player.getSettings().getAppearance().getSprite(item.getDef().getWieldPosition()),

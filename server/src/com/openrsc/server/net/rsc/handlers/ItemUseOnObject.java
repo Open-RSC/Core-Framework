@@ -123,7 +123,7 @@ public class ItemUseOnObject implements PacketHandler {
 				int realSlot = player.getEquipment().hasEquipped(itemID);
 				if (realSlot == -1)
 					return;
-				item = player.getEquipment().list[realSlot];
+				item = player.getEquipment().get(realSlot);
 				if (item == null)
 					return;
 			} else
@@ -142,7 +142,7 @@ public class ItemUseOnObject implements PacketHandler {
 			}
 			int slotID = p.readShort();
 			if (Constants.GameServer.WANT_EQUIPMENT_TAB && slotID > Inventory.MAX_SIZE) {
-				item = player.getEquipment().list[slotID - Inventory.MAX_SIZE];
+				item = player.getEquipment().get(slotID - Inventory.MAX_SIZE);
 			} else
 				item = player.getInventory().get(slotID);
 			if (object == null || object.getType() == 1 || item == null) { // This

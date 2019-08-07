@@ -2,6 +2,7 @@ package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScript;
+import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
@@ -32,7 +33,9 @@ public class PlayerPoisonScript implements CombatScript {
 				return false;
 			}
 			if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
-				for (Item i : p.getEquipment().list) {
+				Item i;
+				for (int q = 0; q < Equipment.slots; q++) {
+					i = p.getEquipment().get(q);
 					if (i == null)
 						continue;
 					if (i.getDef().getName().toLowerCase().contains("poisoned"))

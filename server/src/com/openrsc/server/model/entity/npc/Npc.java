@@ -1259,9 +1259,9 @@ public class Npc extends Mob {
 					p.getInventory().add(item);
 					return true;
 				} else if (WANT_EQUIPMENT_TAB && (slot = p.getEquipment().hasEquipped(item.getID())) != -1) {
-					Item equipped = p.getEquipment().list[slot];
+					Item equipped = p.getEquipment().get(slot);
 					equipped.setAmount(equipped.getAmount() + item.getAmount());
-					p.getEquipment().list[slot] = equipped;
+					p.getEquipment().equip(slot, equipped);
 					return true;
 				} else {
 					if (p.getInventory().getFreeSlots() > 0) {

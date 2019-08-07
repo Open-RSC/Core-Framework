@@ -48,7 +48,7 @@ public class PlayerAppearanceUpdater implements PacketHandler {
 
 		if (player.isMale()) {
 			if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
-				Item top = player.getEquipment().list[1];
+				Item top = player.getEquipment().get(1);
 				if (top != null && top.getDef().isFemaleOnly()) {
 					player.getInventory().unwieldItem(top, false);
 					ActionSender.sendEquipmentStats(player, 1);

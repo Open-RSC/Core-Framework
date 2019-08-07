@@ -8,77 +8,116 @@ public class Equipment {
 
 	//Number of equipment slots the player has
 	public static final int slots = 14;
-	public Item[] list = new Item[slots];
+	private final Item[] list = new Item[slots];
 	private Player player = null;
 
 
 	public Equipment(Player p) {
-		this.player = p;
-		for (int i = 0; i < slots; i ++)
-			list[i] = null;
+		synchronized (list) {
+			this.player = p;
+			for (int i = 0; i < slots; i ++)
+				list[i] = null;
+		}
 	}
 
 	public int getWeaponAim() {
-		int total = 1;
-		for (Item item : list)
-			total += item == null ? 0 : item.getDef().getWeaponAimBonus();
-		return total;
+		synchronized (list) {
+			int total = 1;
+			for (Item item : list)
+				total += item == null ? 0 : item.getDef().getWeaponAimBonus();
+			return total;
+		}
 	}
 
 	public int getWeaponPower() {
-		int total = 1;
-		for (Item item : list)
-			total += item == null ? 0 : item.getDef().getWeaponPowerBonus();
-		return total;
+		synchronized (list) {
+			int total = 1;
+			for (Item item : list)
+				total += item == null ? 0 : item.getDef().getWeaponPowerBonus();
+			return total;
+		}
 	}
 
 	public int getArmour() {
-		int total = 1;
-		for (Item item : list)
-			total += item == null ? 0 : item.getDef().getArmourBonus();
-		return total;
+		synchronized (list) {
+			int total = 1;
+			for (Item item : list)
+				total += item == null ? 0 : item.getDef().getArmourBonus();
+			return total;
+		}
 	}
 
 	public int getMagic() {
-		int total = 1;
-		for (Item item : list)
-			total += item == null ? 0 : item.getDef().getMagicBonus();
-		return total;
+		synchronized (list) {
+			int total = 1;
+			for (Item item : list)
+				total += item == null ? 0 : item.getDef().getMagicBonus();
+			return total;
+		}
 	}
 
 	public int getPrayer() {
-		int total = 1;
-		for (Item item : list)
-			total += item == null ? 0 : item.getDef().getPrayerBonus();
-		return total;
+		synchronized (list) {
+			int total = 1;
+			for (Item item : list)
+				total += item == null ? 0 : item.getDef().getPrayerBonus();
+			return total;
+		}
 	}
 
 	public int equipCount() {
-		int total = 0;
-		for (Item item : list) {
-			if (item != null)
-				total++;
+		synchronized (list) {
+			int total = 0;
+			for (Item item : list) {
+				if (item != null)
+					total++;
+			}
+			return total;
 		}
-		return total;
 	}
 
 	public int hasEquipped(int id) {
-		Item item;
-		for (int i = 0; i < slots; i++) {
-			item = list[i];
-			if (item != null && item.getID() == id)
-				return i;
+		synchronized (list) {
+			Item item;
+			for (int i = 0; i < slots; i++) {
+				item = list[i];
+				if (item != null && item.getID() == id)
+					return i;
+			}
+			return -1;
 		}
-		return -1;
 	}
 
 	public Item getAmmoItem() {
-		return list[12];
+		synchronized (list) {
+			return list[12];
+		}
 	}
 
 	public void clearList() {
-		for (int i = 0; i < list.length; i++) {
-			list[i] = null;
+		synchronized (list) {
+			for (int i = 0; i < list.length; i++) {
+				list[i] = null;
+			}
 		}
 	}
+
+	public Item get(int index) {
+		synchronized (list) {
+			if (index < 0 || index >= slots) {
+				return null;
+			}
+			return list[index];
+		}
+	}
+
+	public void equip(int slot, int itemID, int amount) { this.equip(slot, new Item(itemID, amount)); }
+
+	public void equip(int slot, Item item) {
+		synchronized (list) {
+			list[slot] = item;
+		}
+	}
+
+
 }

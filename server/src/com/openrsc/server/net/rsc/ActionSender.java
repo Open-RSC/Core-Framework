@@ -12,6 +12,7 @@ import com.openrsc.server.content.party.PartyPlayer;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Bank;
+import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
@@ -681,7 +682,9 @@ public class ActionSender {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_EQUIPMENT.opcode);
 		s.writeByte(player.getEquipment().equipCount());
-		for (Item item : player.getEquipment().list) {
+		Item item;
+		for (int i = 0; i < Equipment.slots; i++) {
+			item = player.getEquipment().get(i);
 			if (item != null) {
 				s.writeByte(item.getDef().getWieldPosition());
 				s.writeShort(item.getID());
@@ -698,7 +701,7 @@ public class ActionSender {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_EQUIPMENT_UPDATE.opcode);
 		s.writeByte(slot);
-		Item item = player.getEquipment().list[slot];
+		Item item = player.getEquipment().get(slot);
 		if (item != null) {
 			s.writeShort(item.getID());
 			if (item.getDef().isStackable())

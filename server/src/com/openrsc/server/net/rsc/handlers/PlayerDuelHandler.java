@@ -5,6 +5,7 @@ import com.openrsc.server.Server;
 import com.openrsc.server.event.rsc.impl.combat.CombatEvent;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.action.WalkToMobAction;
+import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
@@ -183,15 +184,13 @@ public class PlayerDuelHandler implements PacketHandler {
 				affectedPlayer.setBusy(true);
 				affectedPlayer.setStatus(Action.DUELING_PLAYER);
 
-				//				player.getDuel().resetAll();
-				//
-				//				return;
 				if (player.getDuel().getDuelSetting(3)) {
 					if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
-						for (Item item : player.getEquipment().list)
-						{
-							if (item != null)
-								if (!player.getInventory().unwieldItem(item,false)) {
+						Item item;
+						for (int i = 0; i < Equipment.slots; i++) {
+							item = player.getEquipment().get(i);
+							if (item != null) {
+								if (!player.getInventory().unwieldItem(item, false)) {
 									player.getDuel().resetAll();
 									player.setBusy(false);
 									player.setStatus(Action.IDLE);
@@ -201,11 +200,13 @@ public class PlayerDuelHandler implements PacketHandler {
 									affectedPlayer.message("Your opponent needs to clear his inventory. Cancelling duel.");
 									return;
 								}
+							}
 						}
-						for (Item item : affectedPlayer.getEquipment().list)
-						{
-							if (item != null)
-								if (!affectedPlayer.getInventory().unwieldItem(item,false)) {
+
+						for (int i = 0; i < Equipment.slots; i++) {
+							item = affectedPlayer.getEquipment().get(i);
+							if (item != null) {
+								if (!affectedPlayer.getInventory().unwieldItem(item, false)) {
 									affectedPlayer.getDuel().resetAll();
 									player.setBusy(false);
 									player.setStatus(Action.IDLE);
@@ -215,6 +216,7 @@ public class PlayerDuelHandler implements PacketHandler {
 									player.message("Your opponent needs to clear his inventory. Cancelling duel.");
 									return;
 								}
+							}
 						}
 					} else {
 						for (Item item : player.getInventory().getItems()) {

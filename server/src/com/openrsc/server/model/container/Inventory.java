@@ -215,19 +215,10 @@ public class Inventory {
 			}
 		}
 
-		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
-			ItemDefinition itemDef = EntityHandler.getItemDef(id);
-			if (itemDef != null && itemDef.isWieldable()) {
-				for (Item i : player.getEquipment().list) {
-					if (i == null)
-						continue;
-					if (i.getID() == id)
-						return true;
-				}
-			}
-		}
-
-		return false;
+		if (Constants.GameServer.WANT_EQUIPMENT_TAB)
+			return player.getEquipment().hasEquipped(id) != -1;
+		else
+			return false;
 	}
 
 	public ListIterator<Item> iterator() {
@@ -345,8 +336,8 @@ public class Inventory {
             && old.getDef().isWieldable() && newitem.getDef().isWieldable()
         && Functions.isWielding(player, i)) {
             newitem.setWielded(false);
-            player.getEquipment().list[old.getDef().getWieldPosition()] = null;
-            player.getEquipment().list[newitem.getDef().getWieldPosition()] = newitem;
+            player.getEquipment().equip(old.getDef().getWieldPosition(), null);
+            player.getEquipment().equip(newitem.getDef().getWieldPosition(), newitem);
             player.updateWornItems(old.getDef().getWieldPosition(),
                 player.getSettings().getAppearance().getSprite(old.getDef().getWieldPosition()),
                 old.getDef().getWearableId(), false);
@@ -452,7 +443,7 @@ public class Inventory {
 		
 		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
 			if (player.getEquipment().hasEquipped(affectedItem.getID()) != -1) {
-				player.getEquipment().list[affectedItem.getDef().getWieldPosition()] = null;
+				player.getEquipment().equip(affectedItem.getDef().getWieldPosition(),null);
 				add(affectedItem, false);
 			}
 		}
@@ -469,7 +460,7 @@ public class Inventory {
 		int index = -1;
 		if (Constants.GameServer.WANT_EQUIPMENT_TAB
 		&& (index = player.getEquipment().hasEquipped(itemID)) != -1) {
-			player.getEquipment().list[index] = null;
+			player.getEquipment().equip(index, null);
 			shattered = true;
 		} else {
 			for (int i = 0; i < player.getInventory().size(); i++) {
@@ -611,7 +602,9 @@ public class Inventory {
 		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
 			//Do an inventory count check
 			int count = 0;
-			for (Item i : player.getEquipment().list) {
+			Item i;
+			for (int p = 0; p < Equipment.slots; p++) {
+				i = player.getEquipment().get(p);
 				if (i != null && item.wieldingAffectsItem(i)) {
 					if (item.getDef().isStackable()) {
 						if (item.getID() == i.getID())
@@ -626,7 +619,8 @@ public class Inventory {
 			}
 
 			player.getInventory().remove(item);
-			for (Item i : player.getEquipment().list) {
+			for (int p = 0; p < Equipment.slots; p++) {
+				i = player.getEquipment().get(p);
 				if (i != null && item.wieldingAffectsItem(i)) {
 					if (item.getDef().isStackable()) {
 						if (item.getID() == i.getID()) {
@@ -637,10 +631,7 @@ public class Inventory {
 					}
 					unwieldItem(i, false);
 				}
-
 			}
-
-			//Check requirements for ammo/bow compatibility here??
 		} else {
 			ArrayList<Item> items = getItems();
 
@@ -660,7 +651,7 @@ public class Inventory {
 		
 		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
 			item.setWielded(false);
-			player.getEquipment().list[item.getDef().getWieldPosition()] = item;
+			player.getEquipment().equip(item.getDef().getWieldPosition(),item);
 		}
 
 		ActionSender.sendInventory(player);
@@ -673,13 +664,13 @@ public class Inventory {
 
 		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
 			for (int i = 0; i < Equipment.slots; i++) {
-				Item equipped = player.getEquipment().list[i];
+				Item equipped = player.getEquipment().get(i);
 				if (equipped != null) {
 					deathItems.add(equipped);
 					player.updateWornItems(equipped.getDef().getWieldPosition(),
 						player.getSettings().getAppearance().getSprite(equipped.getDef().getWieldPosition()),
 						equipped.getDef().getWearableId(), false);
-					player.getEquipment().list[i] = null;
+					player.getEquipment().equip(i,null);
 				}
 			}
 		}

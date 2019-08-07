@@ -146,6 +146,12 @@ public class EntityHandler {
 
 	public static GameObjectDef getObjectDef(int id) {
 		if (id < 0 || id >= objects.size()) {
+			//There may be a gap in the object definitions that causes this. Check for that.
+			for (int i = objects.size()-1; i>=0; i--) {
+
+				if (objects.get(i).id == id)
+					return objects.get(i);
+			}
 			return null;
 		}
 		return objects.get(id);
@@ -6643,8 +6649,8 @@ public class EntityHandler {
 			objects.add(new GameObjectDef("Portal", "This portal helps you navigate the maze.", "Take", "Examine", 1, 1, 1, 0, "portal", i++));//Runeessence portal
 		}
 
-		objects.add(new GameObjectDef("pipe", "a dirty sewer pipe", "enter", "Examine", 1, 1, 1, 0, "obstical_pipe", i++)); //yanille agility shortcut
-		objects.add(new GameObjectDef("pipe", "a dirty sewer pipe", "enter", "Examine", 1, 1, 1, 0, "obstical_pipe", i++)); //yanille agility shortcut
+		objects.add(new GameObjectDef("pipe", "a dirty sewer pipe", "enter", "Examine", 1, 1, 1, 0, "obstical_pipe", i=1236)); //yanille agility shortcut
+		objects.add(new GameObjectDef("pipe", "a dirty sewer pipe", "enter", "Examine", 1, 1, 1, 0, "obstical_pipe", ++i)); //yanille agility shortcut
 	}
 
 	public static void load(boolean loadMembers) {

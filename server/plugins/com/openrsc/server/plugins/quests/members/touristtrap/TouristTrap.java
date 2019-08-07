@@ -7,6 +7,7 @@ import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -3006,7 +3007,9 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 		boolean hasWeapon = false;
 		int wieldpos;
 		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
-			for (Item item : p.getEquipment().list) {
+			Item item;
+			for (int i = 0; i < Equipment.slots; i++) {
+				item = p.getEquipment().get(i);
 				if (item == null)
 					continue;
 				if (item.getDef().getWieldPosition() > 5 && allowed.contains(item.getID()))
@@ -3023,7 +3026,6 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 						hasArmour = true;
 					}
 				}
-
 			}
 		} else {
 			for (Item item : p.getInventory().getItems()) {

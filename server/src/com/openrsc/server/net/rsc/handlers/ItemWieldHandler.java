@@ -2,6 +2,7 @@ package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
@@ -40,7 +41,9 @@ public final class ItemWieldHandler implements PacketHandler {
 		Item item = null;
 
 		if (pID == packetTwo && Constants.GameServer.WANT_EQUIPMENT_TAB) {
-			for (Item loop : player.getEquipment().list) {
+			Item loop;
+			for (int i = 0; i < Equipment.slots; i++) {
+				loop = player.getEquipment().get(i);
 				if (loop != null && loop.getID() == idx) {
 					item = loop;
 					item.setWielded(true);
@@ -57,7 +60,7 @@ public final class ItemWieldHandler implements PacketHandler {
 			item = player.getBank().get(idx);
 		} else if (pID == packetFour) {
 			int wieldPos = EntityHandler.getItemDef(idx).getWieldPosition();
-			item = player.getEquipment().list[wieldPos];
+			item = player.getEquipment().get(wieldPos);
 			if (item.getID() != idx)
 				item = null;
 
