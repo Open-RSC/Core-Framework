@@ -426,7 +426,7 @@ public class Bank {
 	}
 
 	public void attemptPresetLoadout(int slot) {
-		Map<Integer, Integer> itemsOwned = new HashMap<>();
+		Map<Integer, Integer> itemsOwned = new LinkedHashMap<>();
 		Item tempItem;
 
 		//Loop through their bank and add it to the hashmap
@@ -494,14 +494,13 @@ public class Bank {
 					if (presetAmount > ownedAmount) {
 						player.message("Preset error: Requested item missing " + presetEquipment.getDef().getName());
 						presetAmount = ownedAmount;
-						presetEquipment.setAmount(presetAmount);
 					}
 					if (presetAmount > 0) {
 						if (player.getSkills().getMaxStat(presetEquipment.getDef().getRequiredSkillIndex()) < presetEquipment.getDef().getRequiredLevel()) {
 							player.message("Unable to equip " + presetEquipment.getDef().getName() + " due to lack of skill.");
 							continue;
 						}
-						player.getEquipment().equip(presetEquipment.getDef().getWieldPosition(), presetEquipment);
+						player.getEquipment().equip(presetEquipment.getDef().getWieldPosition(), new Item(presetEquipment.getID(), presetAmount));
 						wearableId = presetEquipment.getDef().getWearableId();
 						player.updateWornItems(i,
 							presetEquipment.getDef().getAppearanceId(),
@@ -532,10 +531,9 @@ public class Bank {
 				if (presetAmount > ownedAmount) {
 					player.message("Preset error: Requested item missing " + presetInventory.getDef().getName());
 					presetAmount = ownedAmount;
-					presetInventory.setAmount(presetAmount);
 				}
 				if (presetAmount > 0) {
-					player.getInventory().add(presetInventory, false);
+					player.getInventory().add(new Item(presetInventory.getID(), presetAmount), false);
 					if (presetAmount == ownedAmount) {
 						itemsOwned.remove(presetInventory.getID());
 					} else {
