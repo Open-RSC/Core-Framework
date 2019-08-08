@@ -6154,6 +6154,8 @@ public final class mudclient implements Runnable {
 							if (colorVariant == 1) {
 								baseColor = def.getSkinColour();// CacheValues.npcColourSkin[npc.npcId];
 								colorVariant = def.getHairColour();// CacheValues.npcColourHair[npc.npcId];
+							} else if (animID >= 230 && Config.S_WANT_CUSTOM_SPRITES) {
+								baseColor = def.getSkinColour();// CacheValues.npcColourSkin[npc.npcId];
 							} else if (colorVariant != 2) {
 								if (colorVariant == 3) {
 									baseColor = def.getSkinColour();// CacheValues.npcColourSkin[npc.npcId];
