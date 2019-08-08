@@ -7543,18 +7543,18 @@ public final class mudclient implements Runnable {
 								}
 
 								if (EntityHandler.getItemDef(id).getCommand() != null
-									&& EntityHandler.getItemDef(id).getNotedFormOf() == -1) {
-									for (int p = 0; p < EntityHandler.getItemDef(id).getCommand().length; p++) {
+										&& EntityHandler.getItemDef(id).getNotedFormOf() == -1) {
+									for (int p = EntityHandler.getItemDef(id).getCommand().length - 1; p >= 0; p--) {
 										this.menuCommon.addItem(0, EntityHandler.getItemDef(id).getCommand()[p], p, 0, "@lre@" + EntityHandler.getItemDef(id).getName(), var5, (String) null, MenuItemAction.ITEM_COMMAND, 0, (String) null, (String) null);
 									}
 								}
 
 								if (S_WANT_DROP_X && EntityHandler.getItemDef(id).getCommand() != null
-									&& EntityHandler.getItemDef(id).getCommand()[0].equalsIgnoreCase("bury")
-									&& EntityHandler.getItemDef(id).getNotedFormOf() == -1) {
+										&&EntityHandler.getItemDef(id).getCommand()[0].equalsIgnoreCase("bury")
+										&& EntityHandler.getItemDef(id).getNotedFormOf() == -1) {
 									this.menuCommon.addItem(0, "Bury All", 0, 0, "@lre@" + EntityHandler.getItemDef(id).getName(), var5, (String) null, MenuItemAction.ITEM_COMMAND_ALL, 0, (String) null, (String) null);
-
 								}
+
 								this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_USE, "Use",
 										"@lre@" + EntityHandler.getItemDef(id).getName());
 								this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP, "Drop",
@@ -7634,11 +7634,12 @@ public final class mudclient implements Runnable {
 										this.packetHandler.getClientStream().finishPacket();
 										break;
 									} else {
-<<<<<<< HEAD
 										if (equippedItems[j].getCommand() != null)
 											for (int p = 0; p < equippedItems[j].getCommand().length; p++) {
 												this.menuCommon.addItem(0, equippedItems[j].getCommand()[p], p, 0, "@lre@" + equippedItems[j].getName(), j, (String) null, MenuItemAction.ITEM_COMMAND_EQUIPTAB, 0, (String) null, (String) null);
 											}
+										//this.menuCommon.addCharacterItem(j, MenuItemAction.ITEM_COMMAND_EQUIPTAB, equippedItems[j].getCommand(),
+										//	"@lre@" + equippedItems[j].getName());
 										this.menuCommon.addCharacterItem(j, MenuItemAction.ITEM_USE_EQUIPTAB, "Use",
 												"@lre@" + equippedItems[j].getName());
 										this.menuCommon.addCharacterItem(equippedItems[j].id, MenuItemAction.ITEM_DROP_EQUIPTAB, "Drop",
