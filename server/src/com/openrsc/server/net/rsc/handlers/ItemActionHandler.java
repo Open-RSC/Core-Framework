@@ -24,6 +24,7 @@ public class ItemActionHandler implements PacketHandler {
 
 		int idx = (int) p.readShort();
 		int amount = p.readInt();
+		int commandIndex;
 
 		if (player == null || player.getInventory() == null) {
 			return;
@@ -41,12 +42,16 @@ public class ItemActionHandler implements PacketHandler {
 			idx = (int) p.readShort();
 			if (player.getEquipment().hasEquipped(idx) != -1)
 				tempitem = new Item(idx);
+			commandIndex = p.readByte();
+
 		} else {
-		tempitem = player.getInventory().get(idx);
+			tempitem = player.getInventory().get(idx);
+			commandIndex = p.readByte();
 		}
 
 		final Item item = tempitem;
-		if (item == null || item.getDef().getCommand().equals("")) {
+		if (item == null || item.getDef().getCommand() == null
+		|| commandIndex < 0 || commandIndex >= item.getDef().getCommand().length) {
 			player.setSuspiciousPlayer(true);
 			return;
 		}
@@ -66,7 +71,7 @@ public class ItemActionHandler implements PacketHandler {
 		player.resetAll();
 
 		if (PluginHandler.getPluginHandler().blockDefaultAction("InvAction",
-			new Object[]{item, player})) {
+			new Object[]{item, player, item.getDef().getCommand()[commandIndex]})) {
 			return;
 		}
 
@@ -77,7 +82,7 @@ public class ItemActionHandler implements PacketHandler {
 			return;
 		}
 
-		if (item.getDef().getCommand().equalsIgnoreCase("bury")) {
+		if (item.getDef().getCommand()[commandIndex].equalsIgnoreCase("bury")) {
 			if (item.getID() == 1308 || item.getID() == 1648 || item.getID() == 1793 || item.getID() == 1871 || item.getID() == 2257) {
 				player.message("You can't bury noted bones");
 				return;
@@ -113,31 +118,31 @@ public class ItemActionHandler implements PacketHandler {
 					}
 					break;
 				case BURNTPIE:
-					if (item.getDef().getCommand().equalsIgnoreCase("empty dish")) {
+					if (item.getDef().getCommand()[commandIndex].equalsIgnoreCase("empty dish")) {
 						player.message("you remove the burnt pie from the pie dish");
 						player.getInventory().replace(item.getID(), ItemId.PIE_DISH.id());
 					}
 					break;
 				case BURNT_STEW:
-					if (item.getDef().getCommand().equalsIgnoreCase("empty")) {
+					if (item.getDef().getCommand()[commandIndex].equalsIgnoreCase("empty")) {
 						player.message("you remove the burnt stew from the bowl");
 						player.getInventory().replace(item.getID(), ItemId.BOWL.id());
 					}
 					break;
 				case BURNT_CURRY:
-					if (item.getDef().getCommand().equalsIgnoreCase("empty")) {
+					if (item.getDef().getCommand()[commandIndex].equalsIgnoreCase("empty")) {
 						player.message("you remove the burnt curry from the bowl");
 						player.getInventory().replace(item.getID(), ItemId.BOWL.id());
 					}
 					break;
 				case BLESSED_GOLDEN_BOWL_WITH_PLAIN_WATER:
-					if (item.getDef().getCommand().equalsIgnoreCase("empty")) {
+					if (item.getDef().getCommand()[commandIndex].equalsIgnoreCase("empty")) {
 						player.message("You empty the plain water out of the Blessed Golden Bowl.");
 						player.getInventory().replace(item.getID(), ItemId.BLESSED_GOLDEN_BOWL.id());
 					}
 					break;
 				case GOLDEN_BOWL_WITH_PLAIN_WATER:
-					if (item.getDef().getCommand().equalsIgnoreCase("empty")) {
+					if (item.getDef().getCommand()[commandIndex].equalsIgnoreCase("empty")) {
 						player.message("You empty the plain water out of the Golden Bowl.");
 						player.getInventory().replace(item.getID(), ItemId.GOLDEN_BOWL.id());
 					}
@@ -157,7 +162,7 @@ public class ItemActionHandler implements PacketHandler {
 				case LAW_TALISMAN:
 				case DEATH_TALISMAN:
 				case BLOOD_TALISMAN:
-					if (item.getDef().getCommand().equalsIgnoreCase("locate")) {
+					if (item.getDef().getCommand()[commandIndex].equalsIgnoreCase("locate")) {
 						if (player.getQuestStage(Constants.Quests.RUNE_MYSTERIES) != -1) {
 							player.message("You can't understand what the talisman is trying to tell you.");
 							return;

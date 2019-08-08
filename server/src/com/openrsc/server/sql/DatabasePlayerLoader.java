@@ -142,7 +142,9 @@ public class DatabasePlayerLoader {
 			if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
 				updateLongs(Statements.save_DeleteEquip, s.getDatabaseID());
 				statement = conn.prepareStatement(Statements.save_SaveEquip);
-				for (Item item : s.getEquipment().list) {
+				Item item;
+				for (int i = 0; i < Equipment.slots; i++) {
+					item = s.getEquipment().get(i);
 					if (item != null) {
 						statement.setInt(1, s.getDatabaseID());
 						statement.setInt(2, item.getID());
@@ -528,7 +530,7 @@ public class DatabasePlayerLoader {
 				if (item.isWieldable() && result.getInt("wielded") == 1) {
 					if (itemDef != null) {
 						if (Constants.GameServer.WANT_EQUIPMENT_TAB)
-							equipment.list[itemDef.getWieldPosition()] = item;
+							equipment.equip(itemDef.getWieldPosition(), item);
 						else {
 							item.setWielded(true);
 							inv.add(item, false);
@@ -548,7 +550,7 @@ public class DatabasePlayerLoader {
 					Item item = new Item(result.getInt("id"), result.getInt("amount"));
 					ItemDefinition itemDef = item.getDef();
 					if (item.isWieldable()) {
-						equipment.list[itemDef.getWieldPosition()] = item;
+						equipment.equip(itemDef.getWieldPosition(), item);
 						save.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(),
 							itemDef.getWearableId(), true);
 					}

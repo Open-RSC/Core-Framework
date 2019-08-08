@@ -32,6 +32,7 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.GenericLog;
@@ -45,9 +46,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class SpellHandler implements PacketHandler {
 	/**
@@ -289,6 +288,10 @@ public class SpellHandler implements PacketHandler {
 					player.resetPath();
 					return;
 				}
+				if (PluginHandler.getPluginHandler().blockDefaultAction("PlayerMageItem",
+					new Object[]{player, (Integer)item.getID(), (Integer)idx})) {
+					return;
+				}
 				handleItemCast(player, spell, idx, item);
 			}
 		} else if (pID == CAST_ON_DOOR) { // Cast on door - type 4
@@ -387,7 +390,7 @@ public class SpellHandler implements PacketHandler {
 		player.setCastTimer();
 	}
 
-	private void finalizeSpell(Player player, SpellDef spell) {
+	public static void finalizeSpell(Player player, SpellDef spell) {
 		player.lastCast = System.currentTimeMillis();
 		player.playSound("spellok");
 		player.message("Cast spell successfully");
@@ -513,16 +516,31 @@ public class SpellHandler implements PacketHandler {
 	private void handleItemCast(Player player, SpellDef spell, int id, Item affectedItem) {
 		switch (id) {
 			case 3: // Enchant lvl-1 Sapphire amulet
-				if (affectedItem.getID() == ItemId.SAPPHIRE_AMULET.id()) {
+				if (affectedItem.getID() == ItemId.SAPPHIRE_AMULET.id()
+				|| (Constants.GameServer.WANT_EQUIPMENT_TAB
+					&& (affectedItem.getID() == ItemId.SAPPHIRE_RING.id() || affectedItem.getID() == ItemId.OPAL_RING.id()))) {
 					if (!checkAndRemoveRunes(player, spell)) {
 						return;
 					}
+					int itemID = 0;
+					switch(ItemId.getById(affectedItem.getID())) {
+						case SAPPHIRE_AMULET:
+							itemID = ItemId.SAPPHIRE_AMULET_OF_MAGIC.id();
+							break;
+						case SAPPHIRE_RING:
+							itemID = ItemId.RING_OF_RECOIL.id();
+							break;
+						case SAPPHIRE_NECKLACE:
+							break;
+						case OPAL_RING:
+							itemID = ItemId.DWARVEN_RING.id();
+							break;
+					}
 					player.getInventory().remove(affectedItem);
-					player.getInventory().add(new Item(ItemId.SAPPHIRE_AMULET_OF_MAGIC.id()));
+					player.getInventory().add(new Item(itemID));
 					finalizeSpell(player, spell);
-				} else {
-					player.message("This spell can only be used on unenchanted sapphire amulets");
-				}
+				} else
+					player.message("This spell can only be used on unenchanted sapphire " + (Constants.GameServer.WANT_EQUIPMENT_TAB ? " rings/amulets or opal rings" : "amulets"));
 				break;
 			case 10: // Low level alchemy
 				if (affectedItem.getID() == ItemId.COINS.id()) {
@@ -550,17 +568,28 @@ public class SpellHandler implements PacketHandler {
 
 				break;
 			case 13: // Enchant lvl-2 emerald amulet
-				if (affectedItem.getID() == ItemId.EMERALD_AMULET.id()) {
-					if (!checkAndRemoveRunes(player, spell)) {
-						return;
-					}
-					player.getInventory().remove(affectedItem);
-					player.getInventory().add(new Item(ItemId.EMERALD_AMULET_OF_PROTECTION.id()));
-					finalizeSpell(player, spell);
-				} else {
-					player.message("This spell can only be used on unenchanted emerald amulets");
+			if (affectedItem.getID() == ItemId.EMERALD_AMULET.id()
+				|| (Constants.GameServer.WANT_EQUIPMENT_TAB && affectedItem.getID() == ItemId.EMERALD_RING.id())) {
+				if (!checkAndRemoveRunes(player, spell)) {
+					return;
 				}
-				break;
+				int itemID = 0;
+				switch(ItemId.getById(affectedItem.getID())) {
+					case EMERALD_AMULET:
+						itemID = ItemId.EMERALD_AMULET_OF_PROTECTION.id();
+						break;
+					case EMERALD_RING:
+						itemID = ItemId.RING_OF_SPLENDOR.id();
+						break;
+					case EMERALD_NECKLACE:
+						break;
+				}
+				player.getInventory().remove(affectedItem);
+				player.getInventory().add(new Item(itemID));
+				finalizeSpell(player, spell);
+			} else
+				player.message("This spell can only be used on unenchanted emerald " + (Constants.GameServer.WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
+			break;
 			case 21: // Superheat item
 				ItemSmeltingDef smeltingDef = affectedItem.getSmeltingDef();
 				if (smeltingDef == null || affectedItem.getID() == ItemId.COAL.id()) {
@@ -607,16 +636,27 @@ public class SpellHandler implements PacketHandler {
 				finalizeSpell(player, spell);
 				break;
 			case 24: // Enchant lvl-3 ruby amulet
-				if (affectedItem.getID() == ItemId.RUBY_AMULET.id()) {
+				if (affectedItem.getID() == ItemId.RUBY_AMULET.id()
+					|| (Constants.GameServer.WANT_EQUIPMENT_TAB && affectedItem.getID() == ItemId.RUBY_RING.id())) {
 					if (!checkAndRemoveRunes(player, spell)) {
 						return;
 					}
+					int itemID = 0;
+					switch(ItemId.getById(affectedItem.getID())) {
+						case RUBY_AMULET:
+							itemID = ItemId.RUBY_AMULET_OF_STRENGTH.id();
+							break;
+						case RUBY_RING:
+							itemID = ItemId.RING_OF_FORGING.id();
+							break;
+						case RUBY_NECKLACE:
+							break;
+					}
 					player.getInventory().remove(affectedItem);
-					player.getInventory().add(new Item(ItemId.RUBY_AMULET_OF_STRENGTH.id()));
+					player.getInventory().add(new Item(itemID));
 					finalizeSpell(player, spell);
-				} else {
-					player.message("This spell can only be used on unenchanted ruby amulets");
-				}
+				} else
+					player.message("This spell can only be used on unenchanted ruby " + (Constants.GameServer.WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
 				break;
 			case 28: // High level alchemy
 				if (affectedItem.getID() == ItemId.COINS.id()) {
@@ -643,28 +683,46 @@ public class SpellHandler implements PacketHandler {
 				}
 				break;
 			case 30: // Enchant lvl-4 diamond amulet
-				if (affectedItem.getID() == ItemId.DIAMOND_AMULET.id()) {
+				if (affectedItem.getID() == ItemId.DIAMOND_AMULET.id()){
 					if (!checkAndRemoveRunes(player, spell)) {
 						return;
 					}
+					int itemID = 0;
+					switch(ItemId.getById(affectedItem.getID())) {
+						case DIAMOND_AMULET:
+							itemID = ItemId.DIAMOND_AMULET_OF_POWER.id();
+							break;
+						case DIAMOND_RING:
+							itemID = ItemId.RING_OF_LIFE.id();
+							break;
+						case DIAMOND_NECKLACE:
+							break;
+					}
 					player.getInventory().remove(affectedItem);
-					player.getInventory().add(new Item(ItemId.DIAMOND_AMULET_OF_POWER.id()));
+					player.getInventory().add(new Item(itemID));
 					finalizeSpell(player, spell);
-				} else {
-					player.message("This spell can only be used on unenchanted diamond amulets");
-				}
+				} else
+					player.message("This spell can only be used on unenchanted diamond " + (Constants.GameServer.WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
 				break;
 			case 42: // Enchant lvl-5 dragonstone amulet
-				if (affectedItem.getID() == ItemId.UNENCHANTED_DRAGONSTONE_AMULET.id()) {
+				if (affectedItem.getID() == ItemId.DRAGONSTONE_AMULET.id()
+					|| (Constants.GameServer.WANT_EQUIPMENT_TAB && affectedItem.getID() == ItemId.DRAGONSTONE_RING.id())) {
+					int itemID = 0;
+					switch(ItemId.getById(affectedItem.getID())) {
+						case DRAGONSTONE_AMULET:
+							itemID = ItemId.CHARGED_DRAGONSTONE_AMULET.id();
+							break;
+						case DRAGONSTONE_NECKLACE:
+							break;
+					}
 					if (!checkAndRemoveRunes(player, spell)) {
 						return;
 					}
 					player.getInventory().remove(affectedItem);
-					player.getInventory().add(new Item(ItemId.DRAGONSTONE_AMULET.id()));
+					player.getInventory().add(new Item(itemID));
 					finalizeSpell(player, spell);
-				} else {
-					player.message("This spell can only be used on unenchanted dragonstone amulets");
-				}
+				} else
+					player.message("This spell can only be used on unenchanted dragonstone " + (Constants.GameServer.WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
 				break;
 
 		}

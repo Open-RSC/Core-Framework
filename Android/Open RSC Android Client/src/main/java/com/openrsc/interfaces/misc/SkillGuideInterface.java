@@ -2,6 +2,7 @@ package com.openrsc.interfaces.misc;
 
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
+import orsc.Config;
 import orsc.graphics.gui.Panel;
 import orsc.graphics.two.GraphicsController;
 import orsc.mudclient;
@@ -336,7 +337,7 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(35, "1", "Wind strike - A strength 1 missile attack"));
 				skillItems.add(new SkillItem(36, "3", "Confuse - Reduces your opponents attack by 5%"));
 				skillItems.add(new SkillItem(35, "5", "Water strike - A strength 2 missile attack"));
-				skillItems.add(new SkillItem(46, "7", "Enchant lvl-1 amulet - For use on sapphire amulets"));
+				skillItems.add(new SkillItem(46, "7", "Enchant lvl-1 amulet - For use on sapphire " + (Config.S_WANT_EQUIPMENT_TAB ? " and opal jewelry" : "amulets")));
 				skillItems.add(new SkillItem(35, "9", "Earth strike - A strength 3 missile attack"));
 				skillItems.add(new SkillItem(36, "11", "Weaken - Reduces your opponents strength by 5%"));
 				skillItems.add(new SkillItem(35, "13", "Fire strike - A strength 4 missile attack"));
@@ -346,7 +347,7 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(40, "21", "Low level alchemy - Converts an item into gold"));
 				skillItems.add(new SkillItem(41, "23", "Water Bolt - A strength 6 missile attack"));
 				skillItems.add(new SkillItem(42, "25", "Varrock teleport - Teleports you to Varrock"));
-				skillItems.add(new SkillItem(46, "27", "Enchant lvl-2 amulet - For use on emerald amulets"));
+				skillItems.add(new SkillItem(46, "27", "Enchant lvl-2 amulet - For use on emerald " + (Config.S_WANT_EQUIPMENT_TAB ? "jewelry" : "amulets")));
 				skillItems.add(new SkillItem(41, "29", "Earth Bolt - A strength 7 missile attack"));
 				skillItems.add(new SkillItem(42, "31", "Lumbridge teleport - Teleports you to Lumbridge"));
 				skillItems.add(new SkillItem(42, "33", "Telekinetic grab - Take an item you can see but can't reach"));
@@ -357,13 +358,13 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(40, "43", "Superheat item - Smelt 1 ore without a furnace"));
 				skillItems.add(new SkillItem(42, "45", "Camelot teleport - Teleports you to Camelot"));
 				skillItems.add(new SkillItem(38, "47", "Water blast - A strength 10 missile attack"));
-				skillItems.add(new SkillItem(46, "49", "Enchant lvl-3 amulet - For use on ruby amulets"));
+				skillItems.add(new SkillItem(46, "49", "Enchant lvl-3 amulet - For use on ruby " + (Config.S_WANT_EQUIPMENT_TAB ? "jewelry" : "amulets")));
 				skillItems.add(new SkillItem(38, "50", "Iban blast - A strength 25 missile attack!"));
 				skillItems.add(new SkillItem(42, "51", "Ardougne teleport - Teleports you to Ardougne"));
 				skillItems.add(new SkillItem(38, "53", "Earth blast - A strength 11 missile attack"));
 				skillItems.add(new SkillItem(40, "55", "High level alchemy - Converts an item into more gold"));
 				skillItems.add(new SkillItem(46, "56", "Charge water orb - Needs to be cast on a water obelisk"));
-				skillItems.add(new SkillItem(46, "57", "Enchant lvl-4 amulet - For use on diamond amulets"));
+				skillItems.add(new SkillItem(46, "57", "Enchant lvl-4 amulet - For use on diamond " + (Config.S_WANT_EQUIPMENT_TAB ? "jewelry" : "amulets")));
 				skillItems.add(new SkillItem(42, "58", "Watchtower teleport - Teleports you to the watchtower"));
 				skillItems.add(new SkillItem(38, "59", "Fire blast - A strength 12 missile attack"));
 				skillItems.add(new SkillItem(46, "60", "Charge earth orb - Needs to be cast on a earth obelisk"));
@@ -375,7 +376,7 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(619, "65", "Water wave - A strength 14 missile attack"));
 				skillItems.add(new SkillItem(825, "66", "Vulnerability - Reduces your opponents defense by 10%"));
 				skillItems.add(new SkillItem(46, "66", "Charge air orb - Needs to be cast on a air obelisk"));
-				skillItems.add(new SkillItem(46, "68", "Enchant lvl-5 amulet - For use on dragonstone amulets"));
+				skillItems.add(new SkillItem(46, "68", "Enchant lvl-5 amulet - For use on dragonstone " + (Config.S_WANT_EQUIPMENT_TAB ? "jewelry" : "amulets")));
 				skillItems.add(new SkillItem(619, "70", "Earth wave - A strength 15 missile attack"));
 				skillItems.add(new SkillItem(825, "73", "Enfeeble - Reduces your opponents strength by 10%"));
 				skillItems.add(new SkillItem(619, "75", "Fire wave - A strength 16 missile attack"));

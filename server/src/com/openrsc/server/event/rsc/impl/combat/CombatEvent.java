@@ -3,6 +3,7 @@ package com.openrsc.server.event.rsc.impl.combat;
 import com.openrsc.server.Constants;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScriptLoader;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -13,6 +14,7 @@ import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -94,7 +96,28 @@ public class CombatEvent extends GameTickEvent {
 			target.setLastCombatState(CombatState.ERROR);
 			resetCombat();
 		} else {
-			inflictDamage(hitter, target, MeleeFormula.getDamage(hitter, target));
+			//if(hitter.isNpc() && target.isPlayer() || target.isNpc() && hitter.isPlayer()) {
+			int damage = MeleeFormula.getDamage(hitter, target);
+			inflictDamage(hitter, target, damage);
+			if (target.isPlayer()) {
+				if (Functions.isWielding((Player) target, ItemId.RING_OF_RECOIL.id())) {
+					int reflectedDamage = damage/10 + 1;
+					if (((Player) target).getCache().hasKey("ringofrecoil")) {
+						int ringCheck = ((Player) target).getCache().getInt("ringofrecoil");
+						if (Constants.GameServer.RING_OF_RECOIL_LIMIT - ringCheck <= reflectedDamage) {
+							reflectedDamage = Constants.GameServer.RING_OF_RECOIL_LIMIT - ringCheck;
+							((Player) target).getCache().remove("ringofrecoil");
+							((Player) target).getInventory().shatter(ItemId.RING_OF_RECOIL.id());
+						} else {
+							((Player) target).getCache().set("ringofrecoil", ringCheck + reflectedDamage);
+						}
+					} else {
+						((Player) target).getCache().put("ringofrecoil", reflectedDamage);
+						((Player) target).message("You start a new ring of recoil");
+					}
+					inflictDamage(target, hitter, reflectedDamage);
+				}
+			}
 		}
 	}
 
@@ -155,7 +178,8 @@ public class CombatEvent extends GameTickEvent {
 		}
 
 		if (target.getSkills().getLevel(3) > 0) {
-			CombatScriptLoader.checkAndExecuteCombatScript(hitter, target);
+			if (!(target.isPlayer() && ((Player)target).checkRingOfLife(hitter)))
+				CombatScriptLoader.checkAndExecuteCombatScript(hitter, target);
 		} else {
 			onDeath(target, hitter);
 		}

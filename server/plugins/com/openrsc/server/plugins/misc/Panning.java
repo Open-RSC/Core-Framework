@@ -147,13 +147,13 @@ public class Panning implements ObjectActionListener, ObjectActionExecutiveListe
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player p) {
+	public boolean blockInvAction(Item item, Player p, String command) {
 		return item.getID() == ItemId.PANNING_TRAY.id() || item.getID() == ItemId.PANNING_TRAY_FULL.id() || item.getID() == ItemId.PANNING_TRAY_GOLD_NUGGET.id();
 	}
 
 
 	@Override
-	public void onInvAction(Item item, Player p) {
+	public void onInvAction(Item item, Player p, String command) {
 		if (item.getID() == ItemId.PANNING_TRAY.id()) {
 			p.playerServerMessage(MessageType.QUEST, "You search the contents of the tray");
 			playerTalk(p, null, "Err, why am I searching an empty tray ?");

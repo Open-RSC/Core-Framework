@@ -156,7 +156,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 							}
 						});
 
-					owner.incExp(SKILLS.FIREMAKING.id(), getExp(owner.getSkills().getMaxStat(SKILLS.FIREMAKING.id()), 25), true);
+					owner.incExp(SKILLS.FIREMAKING.id(), def.getExp(), true);
 					interrupt();
 
 				} else {

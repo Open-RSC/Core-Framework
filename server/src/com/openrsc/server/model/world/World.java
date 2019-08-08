@@ -2,13 +2,16 @@ package com.openrsc.server.model.world;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
+import com.openrsc.server.content.DropTable;
 import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler.TrawlerBoat;
 import com.openrsc.server.content.party.PartyManager;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.external.GameObjectLoc;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NPCLoc;
+import com.openrsc.server.external.NpcId;
 import com.openrsc.server.io.WorldLoader;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Shop;
@@ -62,6 +65,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	public static int membersWildMax = 56;
 	public static int godSpellsStart = 1;
 	public static int godSpellsMax = 5;
+	public static final int GLORY_TELEPORT_LIMIT = 30;
 	public static boolean EVENT = false;
 	public static int EVENT_X = -1, EVENT_Y = -1;
 	public static int EVENT_COMBAT_MIN, EVENT_COMBAT_MAX;
@@ -79,6 +83,10 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 	private Map<Player, Boolean> playerUnderAttackMap = new HashMap<Player, Boolean>();
 	private Map<Npc, Boolean> npcUnderAttackMap = new HashMap<Npc, Boolean>();
+
+	public DropTable gemTable;
+	public DropTable standardTable;
+	public DropTable ultraTable;
 
 	/**
 	 * Double ended queue to store snapshots into
@@ -385,7 +393,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 			worldInstance.wl.loadWorld(worldInstance);
 			WorldPopulation.populateWorld(worldInstance);
 			shutdownCheck();
-
+			if (Constants.GameServer.WANT_NEW_RARE_DROP_TABLES)
+				initializeRareDropTables();
 			//AchievementSystem.loadAchievements();
 			// Server.getServer().getEventHandler().add(new WildernessCycleEvent());
 			//setFishingTrawler(new FishingTrawler());
@@ -809,6 +818,104 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 	public synchronized Map<Npc, Boolean> getNpcsUnderAttack() {
 		return npcUnderAttackMap;
+	}
+
+	private void initializeRareDropTables() {
+		gemTable = new DropTable();
+		standardTable = new DropTable();
+		ultraTable = new DropTable();
+
+		//ITEMS
+		gemTable.addEmptyDrop(45);
+		gemTable.addItemDrop(ItemId.FEATHER.id(), 1, 18);
+		gemTable.addItemDrop(ItemId.UNCUT_SAPPHIRE.id(), 1, 32);
+		gemTable.addItemDrop(ItemId.UNCUT_EMERALD.id(), 1, 16);
+		gemTable.addItemDrop(ItemId.UNCUT_RUBY.id(), 1, 8);
+		gemTable.addItemDrop(ItemId.UNCUT_DIAMOND.id(), 1, 4);
+		gemTable.addItemDrop(ItemId.TOOTH_KEY_HALF.id(), 1, 2);
+		gemTable.addItemDrop(ItemId.LOOP_KEY_HALF.id(), 1, 2);
+		gemTable.addTableDrop(ultraTable, 1);
+
+		standardTable.addItemDrop(ItemId.NATURE_RUNE.id(),50,3);
+		standardTable.addItemDrop(ItemId.LAW_RUNE.id(),40,2);
+		standardTable.addItemDrop(ItemId.DEATH_RUNE.id(),50,2);
+		standardTable.addItemDrop(ItemId.STEEL_ARROWS.id(),150,2);
+		standardTable.addItemDrop(ItemId.RUNE_ARROWS.id(),40,2);
+		standardTable.addItemDrop(ItemId.FIRE_RUNE.id(),150,2);
+		standardTable.addItemDrop(ItemId.IRON_ARROWS.id(),200,1);
+		standardTable.addItemDrop(ItemId.RUNE_2_HANDED_SWORD.id(),1,3);
+		standardTable.addItemDrop(ItemId.RUNE_BATTLE_AXE.id(),1,2);
+		standardTable.addItemDrop(ItemId.RUNE_SQUARE_SHIELD.id(),1,2);
+		standardTable.addItemDrop(ItemId.RUNE_KITE_SHIELD.id(),1,1);
+		standardTable.addItemDrop(ItemId.DRAGON_MEDIUM_HELMET.id(),1,1);
+		standardTable.addItemDrop(ItemId.COINS.id(),3000,22);
+		standardTable.addItemDrop(ItemId.RUNITE_BAR.id(),1,5);
+		standardTable.addItemDrop(ItemId.DRAGONSTONE.id(),1,2);
+		standardTable.addItemDrop(1624,100,2); //noted silver ore
+		standardTable.addItemDrop(ItemId.LOOP_KEY_HALF.id(), 1, 20);
+		standardTable.addItemDrop(ItemId.TOOTH_KEY_HALF.id(), 1, 19);
+		standardTable.addTableDrop(gemTable, 20);
+		standardTable.addTableDrop(ultraTable, 15);
+
+		ultraTable.addEmptyDrop(105);
+		ultraTable.addItemDrop(ItemId.COAL.id(), 1, 19);
+		ultraTable.addItemDrop(ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id(), 1, 4);
+
+		//MOBS
+		gemTable.addAccessor(NpcId.LESSER_DEMON.id(),3,256);
+		gemTable.addAccessor(NpcId.LESSER_DEMON_WMAZEKEY.id(),4,256);
+		gemTable.addAccessor(NpcId.DWARF.id(),5,256);
+		gemTable.addAccessor(NpcId.THUG.id(),5,256);
+		gemTable.addAccessor(NpcId.GREATER_DEMON.id(),5,256);
+		gemTable.addAccessor(NpcId.ZOMBIE_LVL19.id(),6,256);
+		gemTable.addAccessor(NpcId.TARGET_PRACTICE_ZOMBIE.id(),6,256);
+		gemTable.addAccessor(NpcId.SKELETON_LVL21.id(),6,256);
+		gemTable.addAccessor(NpcId.CHAOS_DRUID.id(),6,256);
+		gemTable.addAccessor(137,7,256);//lower level pirates
+		gemTable.addAccessor(NpcId.TRIBESMAN.id(),7,256);
+		gemTable.addAccessor(NpcId.MOUNTAIN_DWARF.id(),7,256);
+		gemTable.addAccessor(NpcId.BANDIT_AGGRESSIVE.id(),7,256);
+		gemTable.addAccessor(NpcId.BANDIT_AGGRESSIVE.id(),7,256);
+		gemTable.addAccessor(NpcId.PIRATE.id(),8,256);
+		gemTable.addAccessor(NpcId.HOBGOBLIN_LVL32.id(),8,256);
+		gemTable.addAccessor(NpcId.SKELETON_LVL25.id(),8,256);
+		gemTable.addAccessor(NpcId.SKELETON_LVL31.id(),8,256);
+		gemTable.addAccessor(NpcId.ZOMBIE_LVL24_GEN.id(),8,256);
+		gemTable.addAccessor(NpcId.ZOMBIE_LVL32.id(),8,256);
+		gemTable.addAccessor(NpcId.ZOMBIE_WMAZEKEY.id(),8,256);
+		gemTable.addAccessor(NpcId.CHAOS_DRUID_WARRIOR.id(),9,256);
+		gemTable.addAccessor(NpcId.GIANT.id(),9,256);
+		gemTable.addAccessor(NpcId.GUNTHOR_THE_BRAVE.id(),9,256);
+		gemTable.addAccessor(NpcId.BLACK_KNIGHT.id(),9,256);
+		gemTable.addAccessor(NpcId.BLACK_KNIGHT_AGGRESSIVE.id(),10,256);
+		gemTable.addAccessor(NpcId.BLACK_KNIGHT_FORTRESS.id(),12,256);
+		gemTable.addAccessor(NpcId.HOBGOBLIN_LVL48.id(),11,256);
+		gemTable.addAccessor(NpcId.JAILER.id(),13,256);
+		gemTable.addAccessor(NpcId.RENEGADE_KNIGHT.id(),13,256);
+		gemTable.addAccessor(195,13,256);//lvl 54 skeletons
+		gemTable.addAccessor(NpcId.EARTH_WARRIOR.id(),13,256);
+		gemTable.addAccessor(NpcId.ICE_WARRIOR.id(),14,256);
+		gemTable.addAccessor(NpcId.CHAOS_DWARF.id(),14,256);
+		gemTable.addAccessor(NpcId.WHITE_KNIGHT.id(),14,256);
+		gemTable.addAccessor(NpcId.JOGRE.id(),15,256);
+		gemTable.addAccessor(NpcId.MOSS_GIANT.id(),15,256);
+		gemTable.addAccessor(594,15,256);//moss giant
+		gemTable.addAccessor(NpcId.SHADOW_WARRIOR.id(),16,256);
+		gemTable.addAccessor(NpcId.OTHERWORLDLY_BEING.id(),17,256);
+		gemTable.addAccessor(NpcId.ICE_GIANT.id(),18,256);
+		gemTable.addAccessor(NpcId.PALADIN.id(),18,256);
+		gemTable.addAccessor(NpcId.LORD_DARQUARIUS.id(),19,256);
+		gemTable.addAccessor(NpcId.ICE_QUEEN.id(),22,256);
+
+		standardTable.addAccessor(NpcId.BLUE_DRAGON.id(),3,256);
+		standardTable.addAccessor(NpcId.FIRE_GIANT.id(),3,256);
+		standardTable.addAccessor(NpcId.HELLHOUND.id(),3,256);
+		standardTable.addAccessor(NpcId.RED_DRAGON.id(),4,256);
+		standardTable.addAccessor(NpcId.BLACK_DEMON.id(),4,256);
+		standardTable.addAccessor(NpcId.BLACK_DEMON_GRANDTREE.id(),4,256);
+		standardTable.addAccessor(NpcId.BLACK_DRAGON.id(),5,256);
+		standardTable.addAccessor(NpcId.KING_BLACK_DRAGON.id(),12,256);
+
 	}
 
 

@@ -1322,8 +1322,16 @@ public enum ItemId {
 	DEATH_TALISMAN(2280),
 	BLOOD_TALISMAN(2282),
 	RESEARCH_PACKAGE(2284),
-	RESEARCH_NOTES(2285);
+	RESEARCH_NOTES(2285),
 	//----------------------------
+	RING_OF_RECOIL(2286),
+	RING_OF_SPLENDOR(2288),
+	RING_OF_FORGING(2290),
+	RING_OF_LIFE(2292),
+	RING_OF_WEALTH(2294),
+	RING_OF_AVARICE(2296),
+	DWARVEN_RING(2298),
+	OPAL_RING(2300);
 	private int itemId;
 
 	private static final Map<Integer, ItemId> byId = new HashMap<Integer, ItemId>();

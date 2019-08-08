@@ -92,7 +92,7 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 	}
 	
 	@Override
-	public void onInvAction(Item item, Player player) {
+	public void onInvAction(Item item, Player player, String command) {
 		Zone playerZone = GnomeField.getInstance().resolvePositionToZone(player);
 		if (playerZone == Zone.ZONE_NO_PASS) {
 			player.message("you can't make the pass from here");
@@ -243,7 +243,7 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player player) {
+	public boolean blockInvAction(Item item, Player p, String command) {
 		return item.getID() == ItemId.GNOME_BALL.id();
 	}
 

@@ -21,6 +21,7 @@ import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -50,9 +51,7 @@ public class Npc extends Mob {
 	 * The current status of the player
 	 */
 	private Action status = Action.IDLE;
-	/**
-	 * HEALING
-	 */
+
 	private StrPotEventNpc strPotEventNpc;
 
 	public StrPotEventNpc getStrPotEventNpc() {
@@ -510,6 +509,29 @@ public class Npc extends Mob {
 
 				//owner = handleLootAndXpDistribution((Player) mob);
 
+				//Determine if the RDT is hit first
+				boolean rdtHit = false;
+				Item rare = null;
+				if (WANT_NEW_RARE_DROP_TABLES && mob.isPlayer()) {
+					if (world.standardTable.rollAccess(this.id,Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()))) {
+						rdtHit = true;
+						rare = world.standardTable.rollItem(Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()), ((Player) mob));
+					} else if (world.gemTable.rollAccess(this.id,Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()))) {
+						rdtHit = true;
+						rare = world.gemTable.rollItem(Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()), ((Player) mob));
+					}
+				}
+
+				if (rare != null) {
+					if (!handleRingOfAvarice(owner, rare)) {
+						GroundItem groundItem = new GroundItem(rare.getID(), getX(), getY(), rare.getAmount(), owner);
+						groundItem.setAttribute("npcdrop", true);
+						world.registerItem(groundItem);
+					}
+					Server.getPlayerDataProcessor().getDatabase().addNpcDrop(
+						owner, this, rare.getID(), rare.getAmount());
+				}
+
 				ItemDropDef[] drops = def.getDrops();
 
 				int total = 0;
@@ -518,102 +540,114 @@ public class Npc extends Mob {
 					total += drop.getWeight();
 					weightTotal += drop.getWeight();
 					if (drop.getWeight() == 0 && drop.getID() != -1) {
-						GroundItem groundItem = new GroundItem(drop.getID(), getX(), getY(), drop.getAmount(), owner);
-						groundItem.setAttribute("npcdrop", true);
-						world.registerItem(groundItem);
+						if (!handleRingOfAvarice(owner, new Item(drop.getID(), drop.getAmount()))) {
+							GroundItem groundItem = new GroundItem(drop.getID(), getX(), getY(), drop.getAmount(), owner);
+							groundItem.setAttribute("npcdrop", true);
+							world.registerItem(groundItem);
+						}
 						continue;
 					}
 
 				}
 
-				int hit = DataConversions.random(0, total);
-				total = 0;
+				if (!rdtHit) {
+					int hit = DataConversions.random(0, total);
+					total = 0;
 
-				for (ItemDropDef drop : drops) {
-					if (drop.getID() == ItemId.UNHOLY_SYMBOL_MOULD.id() && owner.getQuestStage(Constants.Quests.OBSERVATORY_QUEST) > -1) {
-						continue;
-					}
+					for (ItemDropDef drop : drops) {
+						if (drop.getID() == ItemId.UNHOLY_SYMBOL_MOULD.id() && owner.getQuestStage(Constants.Quests.OBSERVATORY_QUEST) > -1) {
+							continue;
+						}
 
-					Item temp = new Item();
-					temp.setID(drop.getID());
+						Item temp = new Item();
+						temp.setID(drop.getID());
 
-					if (drop == null) {
-						continue;
-					}
+						if (drop == null) {
+							continue;
+						}
 
-					int dropID = drop.getID();
-					int amount = drop.getAmount();
-					int weight = drop.getWeight();
+						int dropID = drop.getID();
+						int amount = drop.getAmount();
+						int weight = drop.getWeight();
 
-					double currentRatio = (double) weight / (double) weightTotal;
-					if (hit >= total && hit < (total + weight)) {
-						if (dropID != -1) {
-							if (EntityHandler.getItemDef(dropID).isMembersOnly()
-								&& !Constants.GameServer.MEMBER_WORLD) {
-								continue;
-							}
+						double currentRatio = (double) weight / (double) weightTotal;
+						if (hit >= total && hit < (total + weight)) {
+							if (dropID != -1) {
+								if (EntityHandler.getItemDef(dropID).isMembersOnly()
+									&& !Constants.GameServer.MEMBER_WORLD) {
+									continue;
+								}
 
-							if (!EntityHandler.getItemDef(dropID).isStackable()) {
+								if (!EntityHandler.getItemDef(dropID).isStackable()) {
 
-								Server.getPlayerDataProcessor().getDatabase().addNpcDrop(
-									owner, this, dropID, amount);
-								GroundItem groundItem;
+									Server.getPlayerDataProcessor().getDatabase().addNpcDrop(
+										owner, this, dropID, amount);
+									GroundItem groundItem;
 
-								// We need to drop multiple counts of "1" item if it's not a stack
-								for (int count = 0; count < amount; count++) {
+									// We need to drop multiple counts of "1" item if it's not a stack
+									for (int count = 0; count < amount; count++) {
 
-									// Gem Drop Table + 1/128 chance to roll into very rare item
-									if (drop.getID() == ItemId.UNCUT_SAPPHIRE.id()) {
-										dropID = Formulae.calculateGemDrop();
-										amount = 1;
+										// Gem Drop Table + 1/128 chance to roll into very rare item
+										if (drop.getID() == ItemId.UNCUT_SAPPHIRE.id()) {
+											dropID = Formulae.calculateGemDrop((Player) mob);
+											amount = 1;
+										}
+
+										// Herb Drop Table
+										else if (drop.getID() == ItemId.UNIDENTIFIED_GUAM_LEAF.id()) {
+											dropID = Formulae.calculateHerbDrop();
+										}
+
+										if (dropID != ItemId.NOTHING.id() && EntityHandler.getItemDef(dropID).isMembersOnly() && !Constants.GameServer.MEMBER_WORLD) {
+											continue;
+										} else if (dropID != ItemId.NOTHING.id()) {
+											if (!handleRingOfAvarice(owner, new Item(drop.getID(), drop.getAmount()))) {
+												groundItem = new GroundItem(dropID, getX(), getY(), 1, owner);
+												groundItem.setAttribute("npcdrop", true);
+												world.registerItem(groundItem);
+											}
+										}
 									}
 
-									// Herb Drop Table
-									else if (drop.getID() == ItemId.UNIDENTIFIED_GUAM_LEAF.id()) {
-										dropID = Formulae.calculateHerbDrop();
+								} else {
+
+									// Gold Drops
+									if (drop.getID() == ItemId.COINS.id()) {
+										amount = Formulae.calculateGoldDrop(
+											GoldDrops.drops.getOrDefault(this.getID(), new int[]{1})
+										);
+										if (Functions.isWielding(((Player) mob), ItemId.RING_OF_SPLENDOR.id())) {
+											amount += Formulae.getSplendorBoost(amount);
+											((Player) mob).message("Your ring of splendor shines brightly!");
+										}
 									}
 
-									if (dropID != ItemId.NOTHING.id() && EntityHandler.getItemDef(dropID).isMembersOnly() && !Constants.GameServer.MEMBER_WORLD) {
-										continue;
-									} else if (dropID != ItemId.NOTHING.id()) {
-										groundItem = new GroundItem(dropID, getX(), getY(), 1, owner);
+									Server.getPlayerDataProcessor().getDatabase().addNpcDrop(
+										owner, this, dropID, amount);
+									if (!handleRingOfAvarice(owner, new Item(drop.getID(), amount))) {
+										GroundItem groundItem = new GroundItem(dropID, getX(), getY(), amount, owner);
 										groundItem.setAttribute("npcdrop", true);
 										world.registerItem(groundItem);
 									}
 								}
 
-							} else {
-
-								// Gold Drops
-								if (drop.getID() == ItemId.COINS.id()) {
-									amount = Formulae.calculateGoldDrop(
-										GoldDrops.drops.getOrDefault(this.getID(), new int[]{1})
-									);
-								}
-
-								Server.getPlayerDataProcessor().getDatabase().addNpcDrop(
-									owner, this, dropID, amount);
-								GroundItem groundItem = new GroundItem(dropID, getX(), getY(), amount, owner);
-								groundItem.setAttribute("npcdrop", true);
-
-								world.registerItem(groundItem);
-							}
-
-							// Check if we have a "valuable drop" (configurable)
-							if (dropID != ItemId.NOTHING.id() && amount > 0 && VALUABLE_DROP_MESSAGES && (currentRatio > VALUABLE_DROP_RATIO || (VALUABLE_DROP_EXTRAS && valuableDrops.contains(temp.getDef().getName())))) {
-								if (amount > 1) {
-									owner.message("@red@Valuable drop: " + amount + " x " + temp.getDef().getName() + " (" +
-										(temp.getDef().getDefaultPrice() * amount) + " coins)");
-								} else {
-									owner.message("@red@Valuable drop: " + temp.getDef().getName() + " (" +
-										(temp.getDef().getDefaultPrice()) + " coins)");
+								// Check if we have a "valuable drop" (configurable)
+								if (dropID != ItemId.NOTHING.id() && amount > 0 && VALUABLE_DROP_MESSAGES && (currentRatio > VALUABLE_DROP_RATIO || (VALUABLE_DROP_EXTRAS && valuableDrops.contains(temp.getDef().getName())))) {
+									if (amount > 1) {
+										owner.message("@red@Valuable drop: " + amount + " x " + temp.getDef().getName() + " (" +
+											(temp.getDef().getDefaultPrice() * amount) + " coins)");
+									} else {
+										owner.message("@red@Valuable drop: " + temp.getDef().getName() + " (" +
+											(temp.getDef().getDefaultPrice()) + " coins)");
+									}
 								}
 							}
+							break;
 						}
-						break;
+						total += weight;
 					}
-					total += weight;
 				}
+
 				if (mob instanceof Player) {
 					for (NpcLootEvent e : deathListeners) {
 						e.onLootNpcDeath((Player) mob, this);
@@ -640,6 +674,28 @@ public class Npc extends Mob {
 				//owner2 = handleLootAndXpDistribution((Player) mob);
 				//}
 
+				//Determine if the RDT is hit first
+				boolean rdtHit = false;
+				Item rare = null;
+				if (WANT_NEW_RARE_DROP_TABLES && mob.isPlayer()) {
+					if (world.standardTable.rollAccess(this.id,Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()))) {
+						rdtHit = true;
+						rare = world.standardTable.rollItem(Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()), ((Player) mob));
+					} else if (world.gemTable.rollAccess(this.id,Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()))) {
+						rdtHit = true;
+						rare = world.gemTable.rollItem(Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()), ((Player) mob));
+					}
+				}
+
+				if (rare != null) {
+					if (!handleRingOfAvarice((Player)mob, rare)) {
+						GroundItem groundItem = new GroundItem(rare.getID(), getX(), getY(), rare.getAmount(), owner);
+						groundItem.setAttribute("npcdrop", true);
+						world.registerItem(groundItem);
+					}
+				}
+
+
 				ItemDropDef[] drops = def.getDrops();
 
 				int total = 0;
@@ -648,79 +704,92 @@ public class Npc extends Mob {
 					total += drop.getWeight();
 					weightTotal += drop.getWeight();
 					if (drop.getWeight() == 0 && drop.getID() != -1) {
-						GroundItem groundItem = new GroundItem(drop.getID(), getX(), getY(), drop.getAmount(), owner);
-						groundItem.setAttribute("npcdrop", true);
-						world.registerItem(groundItem);
+						if (!handleRingOfAvarice((Player)mob, new Item(drop.getID(), drop.getAmount()))) {
+							GroundItem groundItem = new GroundItem(drop.getID(), getX(), getY(), drop.getAmount(), owner);
+							groundItem.setAttribute("npcdrop", true);
+							world.registerItem(groundItem);
+						}
 						continue;
 					}
 				}
 
-				int hit = DataConversions.random(0, total);
-				total = 0;
+				if (!rdtHit) {
+					int hit = DataConversions.random(0, total);
+					total = 0;
 
-				for (ItemDropDef drop : drops) {
+					for (ItemDropDef drop : drops) {
 
-					Item temp = new Item();
-					temp.setID(drop.getID());
+						Item temp = new Item();
+						temp.setID(drop.getID());
 
-					if (drop == null) {
-						continue;
-					}
+						if (drop == null) {
+							continue;
+						}
 
-					int dropID = drop.getID();
-					int amount = drop.getAmount();
-					int weight = drop.getWeight();
+						int dropID = drop.getID();
+						int amount = drop.getAmount();
+						int weight = drop.getWeight();
 
-					double currentRatio = (double) weight / (double) weightTotal;
-					if (hit >= total && hit < (total + weight)) {
-						if (dropID != -1) {
-							if (EntityHandler.getItemDef(dropID).isMembersOnly()
-								&& !Constants.GameServer.MEMBER_WORLD) {
-								continue;
-							}
+						double currentRatio = (double) weight / (double) weightTotal;
+						if (hit >= total && hit < (total + weight)) {
+							if (dropID != -1) {
+								if (EntityHandler.getItemDef(dropID).isMembersOnly()
+									&& !Constants.GameServer.MEMBER_WORLD) {
+									continue;
+								}
 
-							if (!EntityHandler.getItemDef(dropID).isStackable()) {
-								GroundItem groundItem;
+								if (!EntityHandler.getItemDef(dropID).isStackable()) {
+									GroundItem groundItem;
 
-								// We need to drop multiple counts of "1" item if it's not a stack
-								for (int count = 0; count < amount; count++) {
+									// We need to drop multiple counts of "1" item if it's not a stack
+									for (int count = 0; count < amount; count++) {
 
-									// Gem Drop Table + 1/128 chance to roll into very rare item
-									if (drop.getID() == ItemId.UNCUT_SAPPHIRE.id()) {
-										dropID = Formulae.calculateGemDrop();
-										amount = 1;
+										// Gem Drop Table + 1/128 chance to roll into very rare item
+										if (drop.getID() == ItemId.UNCUT_SAPPHIRE.id()) {
+											dropID = Formulae.calculateGemDrop((Player) mob);
+											amount = 1;
+										}
+
+										// Herb Drop Table
+										else if (drop.getID() == ItemId.UNIDENTIFIED_GUAM_LEAF.id()) {
+											dropID = Formulae.calculateHerbDrop();
+										}
+
+										if (dropID != ItemId.NOTHING.id() && EntityHandler.getItemDef(dropID).isMembersOnly() && !Constants.GameServer.MEMBER_WORLD) {
+											continue;
+										} else if (dropID != ItemId.NOTHING.id()) {
+											if (!handleRingOfAvarice((Player)mob, new Item(drop.getID(), drop.getAmount()))) {
+												groundItem = new GroundItem(dropID, getX(), getY(), 1, owner);
+												groundItem.setAttribute("npcdrop", true);
+												world.registerItem(groundItem);
+											}
+										}
+									}
+								} else {
+									// Gold Drops
+									if (drop.getID() == ItemId.COINS.id()) {
+										amount = Formulae.calculateGoldDrop(
+											GoldDrops.drops.getOrDefault(this.getID(), new int[]{1})
+										);
+										if (Functions.isWielding(((Player) mob), ItemId.RING_OF_SPLENDOR.id())) {
+											amount += Formulae.getSplendorBoost(amount);
+											((Player) mob).message("Your ring of splendor shines brightly!");
+										}
 									}
 
-									// Herb Drop Table
-									else if (drop.getID() == ItemId.UNIDENTIFIED_GUAM_LEAF.id()) {
-										dropID = Formulae.calculateHerbDrop();
-									}
-
-									if (dropID != ItemId.NOTHING.id() && EntityHandler.getItemDef(dropID).isMembersOnly() && !Constants.GameServer.MEMBER_WORLD) {
-										continue;
-									} else if (dropID != ItemId.NOTHING.id()) {
-										groundItem = new GroundItem(dropID, getX(), getY(), 1, owner);
+									if (!handleRingOfAvarice((Player) mob, new Item(drop.getID(), amount))) {
+										GroundItem groundItem = new GroundItem(dropID, getX(), getY(), amount, owner);
 										groundItem.setAttribute("npcdrop", true);
 										world.registerItem(groundItem);
 									}
 								}
-							} else {
-								// Gold Drops
-								if (drop.getID() == ItemId.COINS.id()) {
-									amount = Formulae.calculateGoldDrop(
-										GoldDrops.drops.getOrDefault(this.getID(), new int[]{1})
-									);
-								}
-
-								GroundItem groundItem = new GroundItem(dropID, getX(), getY(), amount, owner);
-								groundItem.setAttribute("npcdrop", true);
-								world.registerItem(groundItem);
 							}
+							break;
 						}
-						break;
+						total += weight;
 					}
-					total += weight;
 				}
+
 				if (mob instanceof Npc) {
 					for (NpcLootEvent e : deathListeners) {
 						e.onLootNpcDeath((Npc) mob, this);
@@ -969,9 +1038,7 @@ public class Npc extends Mob {
 		return npcWithMostDamage;
 	}
 
-
 	private Npc handleLootAndXpDistribution(Npc attacker) {
-
 		Npc npcWithMostDamage = attacker;
 		int currentHighestDamage = 0;
 
@@ -1183,5 +1250,32 @@ public class Npc extends Mob {
 
 	public boolean executedAggroScript() {
 		return this.executedAggroScript;
+	}
+
+	public static boolean handleRingOfAvarice(Player p, Item item) {
+		int slot = -1;
+		if (Functions.isWielding(p, ItemId.RING_OF_AVARICE.id())) {
+			ItemDefinition itemDef = EntityHandler.getItemDef(item.getID());
+			if (itemDef != null && itemDef.isStackable()) {
+				if (p.getInventory().hasInInventory(item.getID())) {
+					p.getInventory().add(item);
+					return true;
+				} else if (WANT_EQUIPMENT_TAB && (slot = p.getEquipment().hasEquipped(item.getID())) != -1) {
+					Item equipped = p.getEquipment().get(slot);
+					equipped.setAmount(equipped.getAmount() + item.getAmount());
+					p.getEquipment().equip(slot, equipped);
+					return true;
+				} else {
+					if (p.getInventory().getFreeSlots() > 0) {
+						p.getInventory().add(item);
+						return true;
+					} else {
+						p.message("Your ring of Avarice tried to activate, but your inventory was full.");
+						return false;
+					}
+				}
+			}
+		}
+		return false;
 	}
 }

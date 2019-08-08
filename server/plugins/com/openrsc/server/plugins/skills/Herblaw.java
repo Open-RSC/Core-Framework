@@ -26,14 +26,14 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 	InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 
 	@Override
-	public void onInvAction(final Item item, Player player) {
-		if (item.getDef().getCommand().equalsIgnoreCase("Identify")) {
+	public void onInvAction(final Item item, Player player, String command) {
+		if (command.equalsIgnoreCase("Identify")) {
 			handleHerbIdentify(item, player);
 		}
 	}
 
-	public boolean blockInvAction(final Item i, Player p) {
-		return i.getDef().getCommand().equalsIgnoreCase("Identify");
+	public boolean blockInvAction(final Item i, Player p, String command) {
+		return command.equalsIgnoreCase("Identify");
 	}
 
 	private boolean handleHerbIdentify(final Item item, Player player) {

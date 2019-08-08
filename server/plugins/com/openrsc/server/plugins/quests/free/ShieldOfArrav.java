@@ -426,12 +426,12 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player player) {
+	public boolean blockInvAction(Item item, Player player, String command) {
 		return item.getID() == ItemId.BOOK.id();
 	}
 
 	@Override
-	public void onInvAction(Item item, Player player) {
+	public void onInvAction(Item item, Player player, String command) {
 		switch (ItemId.getById(item.getID())) {
 			case BOOK:
 				message(player,

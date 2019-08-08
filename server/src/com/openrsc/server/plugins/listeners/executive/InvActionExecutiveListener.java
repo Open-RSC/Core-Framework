@@ -7,5 +7,5 @@ public interface InvActionExecutiveListener {
 	/**
 	 * Return true to prevent inventory action
 	 */
-	public boolean blockInvAction(Item item, Player player);
+	public boolean blockInvAction(Item item, Player player, String command);
 }

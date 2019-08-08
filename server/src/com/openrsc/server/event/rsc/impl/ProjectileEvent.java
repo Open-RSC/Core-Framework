@@ -1,6 +1,8 @@
 package com.openrsc.server.event.rsc.impl;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.event.rsc.SingleTickEvent;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -9,6 +11,7 @@ import com.openrsc.server.model.entity.update.Damage;
 import com.openrsc.server.model.entity.update.Projectile;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.PluginHandler;
 
 /**
@@ -58,10 +61,58 @@ public class ProjectileEvent extends SingleTickEvent {
 			// cancel the damage
 			// out on death.
 			projectileDamage();
+			if (opponent.isPlayer()) {
+				if (Functions.isWielding((Player)opponent, ItemId.RING_OF_RECOIL.id())) {
+					recoilDamage((Player)opponent, caster, damage);
+				} else if (opponent.getSkills().getLevel(3) > 0) {
+					if (((Player) opponent).checkRingOfLife(caster))
+						return;
+				}
+			}
 		}
 		if (caster.isPlayer() && opponent.isPlayer()) {
 			caster.removeAttribute("projectile");
 			opponent.removeAttribute("projectile");
+		}
+	}
+
+	private void recoilDamage(Player opponent, Mob caster, int damage) {
+			int reflectedDamage = damage/10 + 1;
+			if (opponent.getCache().hasKey("ringofrecoil")) {
+				int ringCheck = opponent.getCache().getInt("ringofrecoil");
+				if (Constants.GameServer.RING_OF_RECOIL_LIMIT - ringCheck <= reflectedDamage) {
+					reflectedDamage = Constants.GameServer.RING_OF_RECOIL_LIMIT - ringCheck;
+					opponent.getCache().remove("ringofrecoil");
+					opponent.getInventory().shatter(ItemId.RING_OF_RECOIL.id());
+				} else {
+					opponent.getCache().set("ringofrecoil", ringCheck + reflectedDamage);
+				}
+			} else {
+				opponent.getCache().put("ringofrecoil", reflectedDamage);
+				opponent.message("You start a new ring of recoil");
+			}
+
+		caster.getSkills().subtractLevel(3, reflectedDamage, false);
+		caster.getUpdateFlags().setDamage(new Damage(caster, reflectedDamage));
+
+		if (caster.getSkills().getLevel(SKILLS.HITS.id()) <= 0) {
+			if (opponent.isPlayer()) {
+				Player player = (Player) opponent;
+				if (type == 2 || type == 5) {
+					player.resetRange();
+				}
+			}
+			if (caster.isNpc()) {
+				if (PluginHandler.getPluginHandler().blockDefaultAction("PlayerKilledNpc",
+					new Object[]{(Player) opponent, (Npc) caster})) {
+					return;
+				}
+			}
+			caster.killedBy(opponent);
+		} else {
+			if (caster.isPlayer()) {
+				((Player)caster).checkRingOfLife(opponent);
+			}
 		}
 	}
 
@@ -74,6 +125,7 @@ public class ProjectileEvent extends SingleTickEvent {
 
 		opponent.getSkills().subtractLevel(3, damage, false);
 		opponent.getUpdateFlags().setDamage(new Damage(opponent, damage));
+
 
 		if (caster.isPlayer()) {
 			Player casterPlayer = (Player) caster;

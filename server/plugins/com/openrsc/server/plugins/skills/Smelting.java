@@ -9,6 +9,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -43,7 +44,23 @@ public class Smelting implements InvUseOnObjectListener,
 						public void action() {
 							p.incExp(SKILLS.SMITHING.id(), 100, true);
 							p.getInventory().replace(ItemId.STEEL_BAR.id(), ItemId.MULTI_CANNON_BALL.id());
-							addItem(p, ItemId.MULTI_CANNON_BALL.id(), 1);
+							int amount = 1;
+							if (Functions.isWielding(p, ItemId.DWARVEN_RING.id())) {
+								amount += 2;
+								int charges;
+								if (p.getCache().hasKey("dwarvenring")) {
+									charges = p.getCache().getInt("dwarvenring") + 1;
+									if (charges >= Constants.GameServer.DWARVEN_RING_USES) {
+										p.getCache().remove("dwarvenring");
+										p.getInventory().shatter(ItemId.DWARVEN_RING.id());
+									} else
+										p.getCache().put("dwarvenring", charges);
+								}
+								else
+									p.getCache().put("dwarvenring", 1);
+
+							}
+							addItem(p, ItemId.MULTI_CANNON_BALL.id(), amount);
 							ActionSender.sendInventory(p);
 							sleep(1800);
 							p.message("it's very heavy");
@@ -163,7 +180,24 @@ public class Smelting implements InvUseOnObjectListener,
 						p.getInventory().remove(smelt.getReqOreId(), smelt.getReqOreAmount());
 
 					if (smelt.getID() == Smelt.IRON_ORE.getID() && DataConversions.random(0, 1) == 1) {
-						p.message("The ore is too impure and you fail to refine it");
+						if (Functions.isWielding(p, ItemId.RING_OF_FORGING.id())) {
+							p.message("Your ring of forging shines brightly");
+							addItem(p, smelt.getSmeltBarId(), 1);
+							if (p.getCache().hasKey("ringofforging")) {
+								int ringCheck = p.getCache().getInt("ringofforging");
+								if (ringCheck + 1 == Constants.GameServer.RING_OF_FORGING_USES) {
+									p.getCache().remove("ringofforging");
+									p.getInventory().shatter(ItemId.RING_OF_FORGING.id());
+								} else {
+									p.getCache().set("ringofforging", ringCheck + 1);
+								}
+							} else {
+								p.getCache().put("ringofforging", 1);
+								p.message("You start a new ring of forging");
+							}
+						} else {
+							p.message("The ore is too impure and you fail to refine it");
+						}
 					} else {
 						if (item.getID() == ItemId.GOLD_FAMILYCREST.id())
 							addItem(p, ItemId.GOLD_BAR_FAMILYCREST.id(), 1);

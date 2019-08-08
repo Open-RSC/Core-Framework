@@ -15,12 +15,12 @@ public class TeleportStone implements InvActionListener, InvActionExecutiveListe
 	private final int TELEPORT_STONE = 2107;
 
 	@Override
-	public boolean blockInvAction(Item item, Player player) {
+	public boolean blockInvAction(Item item, Player p, String command) {
 		return item.getID() == TELEPORT_STONE;
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p) {
+	public void onInvAction(Item item, Player p, String command) {
 		if (item.getID() == TELEPORT_STONE) {
 			message(p, "the stone starts shaking...");
 			p.message("a magical portal opens up, where would you like to go?");

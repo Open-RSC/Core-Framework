@@ -1,5 +1,6 @@
 package com.openrsc.server.util.rsc;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.FiremakingDef;
 import com.openrsc.server.external.GameObjectLoc;
@@ -12,11 +13,11 @@ import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.Mob;
+import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
 
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.getMaxLevel;
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class Formulae {
 
@@ -918,15 +919,20 @@ public final class Formulae {
 		return weightedRandomChoice(goldValues, weights, goldValues[0]);
 	}
 
-	public static int calculateGemDrop() {
+	public static int getSplendorBoost(int amount) {
+		int boost = amount * 9;
+		return boost > 1000 ? 1000 : boost;
+	}
+
+	public static int calculateGemDrop(Player p) {
 		int roll1 = weightedRandomChoice(gemDropIDs, gemDropWeights, ItemId.NOTHING.id());
 		if (roll1 != ItemId.NOTHING_REROLL.id())
 			return roll1;
-		int roll2 = calculateRareDrop();
+		int roll2 = calculateRareDrop(p);
 		return roll2;
 	}
 
-	public static int calculateRareDrop() {
+	public static int calculateRareDrop(Player p) {
 		return weightedRandomChoice(rareDropIDs, rareDropWeights, ItemId.NOTHING.id());
 	}
 

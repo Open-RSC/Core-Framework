@@ -13,12 +13,12 @@ import static com.openrsc.server.plugins.Functions.*;
 public class Casket implements InvActionListener, InvActionExecutiveListener {
 
 	@Override
-	public boolean blockInvAction(Item item, Player p) {
+	public boolean blockInvAction(Item item, Player p, String command) {
 		return item.getID() == ItemId.CASKET.id();
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p) {
+	public void onInvAction(Item item, Player p, String command) {
 		if (item.getID() == ItemId.CASKET.id()) {
 			p.setBusyTimer(1300);
 

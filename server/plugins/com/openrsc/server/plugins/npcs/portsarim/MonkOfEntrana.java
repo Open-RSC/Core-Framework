@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.npcs.portsarim;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.Point;
+import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -28,13 +29,15 @@ public final class MonkOfEntrana implements ObjectActionExecutiveListener, Objec
 				|| (name.contains("sword")
 				&& !name.equalsIgnoreCase("Swordfish") && !name.equalsIgnoreCase("Burnt Swordfish") && !name.equalsIgnoreCase("Raw Swordfish"))
 				|| name.contains("mace") || name.contains("helmet")
-				|| name.contains("axe")) {
+				|| name.contains("axe") || name.contains("recoil")) {
 				return true;
 			}
 		}
 
 		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
-			for (Item item : p.getEquipment().list) {
+			Item item;
+			for (int i = 0; i < Equipment.slots; i++) {
+				item = p.getEquipment().get(i);
 				if (item == null)
 					continue;
 				String name = item.getDef().getName().toLowerCase();
@@ -43,7 +46,7 @@ public final class MonkOfEntrana implements ObjectActionExecutiveListener, Objec
 					|| (name.contains("sword")
 					&& !name.equalsIgnoreCase("Swordfish") && !name.equalsIgnoreCase("Burnt Swordfish") && !name.equalsIgnoreCase("Raw Swordfish"))
 					|| name.contains("mace") || name.contains("helmet")
-					|| name.contains("axe")) {
+					|| name.contains("axe") || name.contains("recoil")) {
 					return true;
 				}
 			}

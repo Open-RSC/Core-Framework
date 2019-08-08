@@ -41,6 +41,9 @@ public class AgilityShortcuts implements ObjectActionListener,
 	private static final int EAST_KARAMJA_LOG = 692;
 	private static final int EAST_KARAMJA_STONES = 701;
 	private static final int YANILLE_WATCHTOWER_HANDHOLDS = 658;
+	private static final int TAVERLY_PIPE = 1236;
+	private static final int TAVERLY_PIPE_RETURN = 1237;
+
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command,
@@ -62,7 +65,9 @@ public class AgilityShortcuts implements ObjectActionListener,
 			EAST_KARAMJA_STONES,
 			YANILLE_WATCHTOWER_HANDHOLDS,
 			SHILO_VILLAGE_ROCKS_TO_BRIDGE,
-			SHILO_VILLAGE_BRIDGE_BLOCKADE_JUMP);
+			SHILO_VILLAGE_BRIDGE_BLOCKADE_JUMP,
+			TAVERLY_PIPE,
+			TAVERLY_PIPE_RETURN);
 	}
 
 	@Override
@@ -517,6 +522,42 @@ public class AgilityShortcuts implements ObjectActionListener,
 				p.teleport(637, 1680);
 				p.message("And climb in through the window");
 				p.incExp(SKILLS.AGILITY.id(), 50, true);
+				break;
+			case TAVERLY_PIPE_RETURN:
+				if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 70) {
+					p.message("You need an agility level of 70 to attempt to squeeze through the pipe");
+					p.setBusy(false);
+					return;
+				}
+				if (Constants.GameServer.WANT_FATIGUE) {
+					if (p.getFatigue() >= 69750) {
+						p.message("You are too tired to squeeze through the pipe");
+						p.setBusy(false);
+						return;
+					}
+				}
+				p.message("You squeeze through the pipe");
+				sleep(2200);
+				movePlayer(p, 372, 3352);
+				p.incExp(SKILLS.AGILITY.id(), 30, true);
+				break;
+			case TAVERLY_PIPE:
+				if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 70) {
+					p.message("You need an agility level of 70 to attempt to squeeze through the pipe");
+					p.setBusy(false);
+					return;
+				}
+				if (Constants.GameServer.WANT_FATIGUE) {
+					if (p.getFatigue() >= 69750) {
+						p.message("You are too tired to squeeze through the pipe");
+						p.setBusy(false);
+						return;
+					}
+				}
+				p.message("You squeeze through the pipe");
+				sleep(2200);
+				movePlayer(p, 375, 3352);
+				p.incExp(SKILLS.AGILITY.id(), 30, true);
 				break;
 		}
 		p.setBusy(false);

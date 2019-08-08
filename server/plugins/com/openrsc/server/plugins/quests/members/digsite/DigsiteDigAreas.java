@@ -145,7 +145,8 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 		Npc workmanCheck = getNearestNpc(p, NpcId.WORKMAN.id(), 15);
 		if (workmanCheck != null) {
 			Npc workman = spawnNpc(NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
-			if (item.getID() == ItemId.SPADE.id() && item.getDef().getCommand().equalsIgnoreCase("Dig") && obj == null) {
+			if (item.getID() == ItemId.SPADE.id() && item.getDef().getCommand() != null
+				&& item.getDef().getCommand()[0].equalsIgnoreCase("Dig") && obj == null) {
 				if (workman != null) {
 					npcTalk(p, workman, "Oi! what do you think you are doing ?");
 					npcWalkFromPlayer(p, workman);
@@ -381,12 +382,12 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player p) {
+	public boolean blockInvAction(Item item, Player p, String command) {
 		return item.getID() == ItemId.SPADE.id() && getDigsite(p);
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p) {
+	public void onInvAction(Item item, Player p, String command) {
 		if (item.getID() == ItemId.SPADE.id() && getDigsite(p)) {
 			doSpade(p, item, null);
 		}

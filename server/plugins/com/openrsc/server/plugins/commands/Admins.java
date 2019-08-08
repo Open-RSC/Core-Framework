@@ -42,11 +42,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.ListIterator;
-import java.util.Objects;
+import java.util.*;
+
+import static com.openrsc.server.Constants.GameServer.*;
+import static com.openrsc.server.Constants.GameServer.VALUABLE_DROP_EXTRAS;
 
 public final class Admins implements CommandListener {
 	private static final Logger LOGGER = LogManager.getLogger(Admins.class);
@@ -240,6 +239,57 @@ public final class Admins implements CommandListener {
 			}
 			System.out.println(Arrays.toString(allLoot.entrySet().toArray()));
 		} */
+		else if (cmd.equalsIgnoreCase("simrdt")) {
+			if (args.length < 2 || args.length == 3) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [max_attempts]");
+				return;
+			}
+
+			int npcID;
+			try {
+				npcID = Integer.parseInt(args[0]);
+			} catch (NumberFormatException ex) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [max_attempts]");
+				return;
+			}
+
+			int maxAttempts;
+			try {
+				maxAttempts = Integer.parseInt(args[1]);
+			} catch (NumberFormatException ex) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [max_attempts]");
+				return;
+			}
+
+			HashMap<String, Integer> rareDrops = new HashMap<>();
+			for (int i = 0; i < maxAttempts; i++) {
+				boolean rdtHit = false;
+				Item rare = null;
+
+				if (world.standardTable.rollAccess(npcID, Functions.isWielding(player, ItemId.RING_OF_WEALTH.id()))) {
+					rdtHit = true;
+					rare = world.standardTable.rollItem(Functions.isWielding(player, ItemId.RING_OF_WEALTH.id()), player);
+				} else if (world.gemTable.rollAccess(npcID, Functions.isWielding(player, ItemId.RING_OF_WEALTH.id()))) {
+					rdtHit = true;
+					rare = world.gemTable.rollItem(Functions.isWielding(player, ItemId.RING_OF_WEALTH.id()), player);
+				}
+				if (rdtHit) {
+					if (rareDrops.containsKey(rare.getDef().getName().toLowerCase())) {
+						int amount = rareDrops.get(rare.getDef().getName().toLowerCase());
+						rareDrops.put(rare.getDef().getName().toLowerCase(), amount + rare.getAmount());
+					} else
+					{
+						rareDrops.put(rare.getDef().getName().toLowerCase(), rare.getAmount());
+					}
+				}
+			}
+
+			Iterator<Map.Entry<String, Integer>> itr = rareDrops.entrySet().iterator();
+			while (itr.hasNext()) {
+				Map.Entry<String, Integer> entry = itr.next();
+				System.out.println(entry.getKey() + ": " + entry.getValue());
+			}
+		}
 		else if (cmd.equalsIgnoreCase("simulatedrop")) {
 			if (args.length < 2 || args.length == 3) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [max_attempts]");
@@ -274,20 +324,20 @@ public final class Admins implements CommandListener {
 
 				if (dropID == 10) {
 					for (int g : GoldDrops.drops.getOrDefault(npcID, new int[]{1}))
-						hmap.put("Coins " + g, 0);
+						hmap.put("coins " + g, 0);
 				} else if (dropID == 160) {
 					int[] rares = {160, 159, 158, 157, 526, 527, 1277};
 					String[] rareNames = {"uncut sapphire", "uncut emerald",
 						"uncut ruby", "uncut diamond", "Half of a key", "Half of a key", "Half Dragon Square Shield"};
 					for (int r = 0; r < rares.length; r++)
-						hmap.put(rareNames[r] + " " + rares[r], 0);
+						hmap.put(rareNames[r].toLowerCase() + " " + rares[r], 0);
 				} else if (dropID == 165) {
 					int[] herbs = {165, 435, 436, 437, 438, 439, 440, 441, 442, 443};
 					for (int h : herbs)
-						hmap.put("Herb " + h, 0);
+						hmap.put("herb " + h, 0);
 				} else {
 					ItemDefinition def = EntityHandler.getItemDef(dropID);
-					hmap.put(def.getName() + " " + dropID, 0);
+					hmap.put(def.getName().toLowerCase() + " " + dropID, 0);
 				}
 			}
 			int originalTotal = 0;
@@ -314,17 +364,17 @@ public final class Admins implements CommandListener {
 							if (dropID == 10) {
 								int d = Formulae.calculateGoldDrop(GoldDrops.drops.getOrDefault(npcID, new int[]{1}));
 								try {
-									hmap.put("Coins " + d, hmap.get("Coins " + d) + 1);
+									hmap.put("coins " + d, hmap.get("coins " + d) + 1);
 								} catch (NullPointerException n) { // No coin value for npc
 								}
 							} else {
 								if (dropID == 160)
-									dropID = Formulae.calculateGemDrop();
+									dropID = Formulae.calculateGemDrop(player);
 								else if (dropID == 165)
 									dropID = Formulae.calculateHerbDrop();
 								ItemDefinition def = EntityHandler.getItemDef(dropID);
 								try {
-									hmap.put(def.getName() + " " + dropID, hmap.get(def.getName() + " " + dropID) + 1);
+									hmap.put(def.getName().toLowerCase() + " " + dropID, hmap.get(def.getName().toLowerCase() + " " + dropID) + 1);
 								} catch (NullPointerException n) {
 								}
 							}
@@ -825,10 +875,10 @@ public final class Admins implements CommandListener {
 			if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
 				int wearableId;
 				for (int i = 0; i < Equipment.slots; i++) {
-					if (p.getEquipment().list[i] == null)
+					if (p.getEquipment().get(i) == null)
 						continue;
-					wearableId = p.getEquipment().list[i].getDef().getWearableId();
-					p.getEquipment().list[i] = null;
+					wearableId = p.getEquipment().get(i).getDef().getWearableId();
+					p.getEquipment().equip(i, null);
 					p.updateWornItems(i, p.getSettings().getAppearance().getSprite(i),
 							wearableId, false);
 				}

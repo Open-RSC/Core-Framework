@@ -145,9 +145,18 @@ public class RangeEvent extends GameTickEvent {
 				if (Constants.GameServer.WANT_EQUIPMENT_TAB)
 				{
 					Item ammo = getPlayerOwner().getEquipment().getAmmoItem();
-					if (ammo == null)
+					if (ammo == null || ammo.getDef() == null)
 					{
 						getPlayerOwner().message("you don't have any ammo equipped");
+						getPlayerOwner().resetRange();
+						return;
+					}
+					if (xbow && ammo.getDef().getWearableId() == 1000) {
+						getPlayerOwner().message("You can't fire arrows with a crossbow");
+						getPlayerOwner().resetRange();
+						return;
+					} else if (!xbow && ammo.getDef().getWearableId() == 1001) {
+						getPlayerOwner().message("You can't fire bolts with a bow");
 						getPlayerOwner().resetRange();
 						return;
 					}
@@ -171,10 +180,10 @@ public class RangeEvent extends GameTickEvent {
 						return;
 					}
 					if (ammo.getAmount() == 1) {
-						getPlayerOwner().getEquipment().list[12] = null;
+						getPlayerOwner().getEquipment().equip(12, null);
 					} else {
 						ammo.setAmount(ammo.getAmount() - 1);
-						getPlayerOwner().getEquipment().list[12] = ammo;
+						getPlayerOwner().getEquipment().equip(12,ammo);
 					}
 					ActionSender.updateEquipmentSlot(getPlayerOwner(), 12);
 				} else {
@@ -278,11 +287,13 @@ public class RangeEvent extends GameTickEvent {
 				}
 				if (Formulae.looseArrow(damage)) {
 					GroundItem arrows = getArrows(arrowID);
-					if (arrows == null) {
-						World.getWorld().registerItem(
-							new GroundItem(arrowID, target.getX(), target.getY(), 1, getPlayerOwner()));
-					} else {
-						arrows.setAmount(arrows.getAmount() + 1);
+					if (!Npc.handleRingOfAvarice(getPlayerOwner(), new Item(arrowID, 1))) {
+						if (arrows == null) {
+							World.getWorld().registerItem(
+								new GroundItem(arrowID, target.getX(), target.getY(), 1, getPlayerOwner()));
+						} else {
+							arrows.setAmount(arrows.getAmount() + 1);
+						}
 					}
 				}
 				if (target.isPlayer()) {

@@ -130,7 +130,7 @@ public class ThrowingEvent extends GameTickEvent {
 					slot = getPlayerOwner().getEquipment().hasEquipped(throwingID);
 					if (slot < 0)
 						return;
-					rangeType = getPlayerOwner().getEquipment().list[slot];
+					rangeType = getPlayerOwner().getEquipment().get(slot);
 					if (rangeType == null)
 						return;
 					rangeType.setAmount(rangeType.getAmount()-1);
@@ -138,8 +138,7 @@ public class ThrowingEvent extends GameTickEvent {
 						getPlayerOwner().updateWornItems(rangeType.getDef().getWieldPosition(), getPlayerOwner().getSettings().getAppearance().getSprite(rangeType.getDef().getWieldPosition()));
 						rangeType = null;
 					}
-
-					getPlayerOwner().getEquipment().list[slot] = rangeType;
+					getPlayerOwner().getEquipment().equip(slot, rangeType);
 
 					ActionSender.sendEquipmentStats(getPlayerOwner());
 
@@ -192,10 +191,12 @@ public class ThrowingEvent extends GameTickEvent {
 
 				if (Formulae.looseArrow(damage)) {
 					GroundItem knivesOrDarts = getFloorItem(throwingID);
-					if (knivesOrDarts == null) {
-						World.getWorld().registerItem(new GroundItem(throwingID, target.getX(), target.getY(), 1, getPlayerOwner()));
-					} else {
-						knivesOrDarts.setAmount(knivesOrDarts.getAmount() + 1);
+					if (!Npc.handleRingOfAvarice(getPlayerOwner(), new Item(throwingID, 1))) {
+						if (knivesOrDarts == null) {
+							World.getWorld().registerItem(new GroundItem(throwingID, target.getX(), target.getY(), 1, getPlayerOwner()));
+						} else {
+							knivesOrDarts.setAmount(knivesOrDarts.getAmount() + 1);
+						}
 					}
 				}
 				ActionSender.sendSound(getPlayerOwner(), "shoot");

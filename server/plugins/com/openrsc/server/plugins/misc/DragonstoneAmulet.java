@@ -1,11 +1,14 @@
 package com.openrsc.server.plugins.misc;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
@@ -24,12 +27,12 @@ public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveL
 	private static int FOUNTAIN_OF_HEROES = 282;
 
 	@Override
-	public boolean blockInvAction(Item item, Player p) {
+	public boolean blockInvAction(Item item, Player p, String command) {
 		return item.getID() == ItemId.CHARGED_DRAGONSTONE_AMULET.id();
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p) {
+	public void onInvAction(Item item, Player p, String command) {
 		if (item.getID() == ItemId.CHARGED_DRAGONSTONE_AMULET.id()) {
 			p.message("You rub the amulet");
 			sleep(600);
@@ -39,7 +42,7 @@ public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveL
 			//	p.message("You need to stay out of combat for 10 seconds before using a teleport.");
 			//	return;
 			//}
-			if (p.getLocation().wildernessLevel() >= 30 || p.getLocation().isInFisherKingRealm()
+			if (p.getLocation().wildernessLevel() >= World.GLORY_TELEPORT_LIMIT || p.getLocation().isInFisherKingRealm()
 					|| p.getLocation().isInsideGrandTreeGround()
 					|| (p.getLocation().inModRoom() && !p.isAdmin())) {
 				p.message("A mysterious force blocks your teleport!");

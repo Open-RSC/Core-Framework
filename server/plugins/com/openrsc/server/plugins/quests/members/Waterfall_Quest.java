@@ -759,12 +759,12 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player player) {
+	public boolean blockInvAction(Item item, Player p, String command) {
 		return item.getID() == ItemId.BOOK_ON_BAXTORIAN.id() || item.getID() == ItemId.MITHRIL_SEED.id();
 	}
 
 	@Override
-	public void onInvAction(Item i, Player p) {
+	public void onInvAction(Item i, Player p, String command) {
 		if (i.getID() == ItemId.MITHRIL_SEED.id()) {
 			message(p, "you open the small mithril case");
 			if (p.getViewArea().getGameObject(p.getLocation()) != null) {
