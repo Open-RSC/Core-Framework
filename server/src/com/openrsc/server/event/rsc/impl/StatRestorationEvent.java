@@ -57,8 +57,8 @@ public class StatRestorationEvent extends GameTickEvent {
 			if (System.currentTimeMillis() - this.lastRestoration > delay) {
 				normalizeLevel(stat);
 				restored = true;
-				owner.getUpdateFlags().setHpUpdate(new HpUpdate(owner, 0));
-				if(owner.isPlayer()){
+				if(owner.isPlayer() && ((Player) owner).getParty() != null){
+					owner.getUpdateFlags().setHpUpdate(new HpUpdate(owner, 0));
 					for (Player p : World.getWorld().getPlayers()) {
 						if(((Player) owner).getParty() == p.getParty()){
 							ActionSender.sendParty(p);

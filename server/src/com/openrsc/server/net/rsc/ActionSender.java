@@ -38,7 +38,6 @@ import io.netty.channel.ChannelFutureListener;
 
 import static com.openrsc.server.Constants.GameServer.*;
 
-
 /**
  * @author n0m
  */
@@ -519,7 +518,9 @@ public class ActionSender {
 			LOGGER.info(WANT_EQUIPMENT_TAB + " 62");
 			LOGGER.info(WANT_BANK_PRESETS + " 63");
 			LOGGER.info(WANT_PARTIES + " 64");
-			LOGGER.info(WANT_NEW_RARE_DROP_TABLES + " 64");
+			LOGGER.info(MINING_ROCKS_EXTENDED + " 65");
+			LOGGER.info(WANT_NEW_RARE_DROP_TABLES + " 66");
+
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs();
 		ConnectionAttachment attachment = new ConnectionAttachment();
@@ -600,6 +601,7 @@ public class ActionSender {
 		s.writeByte((byte) (WANT_EQUIPMENT_TAB ? 1 : 0)); //62
 		s.writeByte((byte) (WANT_BANK_PRESETS ? 1 : 0)); //63
 		s.writeByte((byte) (WANT_PARTIES ? 1 : 0)); //64
+		s.writeByte((byte) (MINING_ROCKS_EXTENDED ? 1 : 0)); //65
 		return s;
 	}
 

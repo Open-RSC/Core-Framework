@@ -258,6 +258,7 @@ public final class Constants {
 		public static boolean WANT_EQUIPMENT_TAB = false;
 		public static boolean WANT_BANK_PRESETS = false;
 		public static boolean WANT_PARTIES = false;
+		public static boolean MINING_ROCKS_EXTENDED = false;
 		public static boolean WANT_NEW_RARE_DROP_TABLES = false;
 
 		public static int MAX_TICKS_UNTIL_FULL_WALKING_SPEED = 5;
@@ -395,6 +396,7 @@ public final class Constants {
 			WANT_EQUIPMENT_TAB = Boolean.parseBoolean(props.getProperty("want_equipment_tab"));
 			WANT_BANK_PRESETS = Boolean.parseBoolean(props.getProperty("want_bank_presets"));
 			WANT_PARTIES = Boolean.parseBoolean(props.getProperty("want_parties"));
+			MINING_ROCKS_EXTENDED = Boolean.parseBoolean(props.getProperty("mining_rocks_extended"));
 			WANT_NEW_RARE_DROP_TABLES = Boolean.parseBoolean(props.getProperty("want_new_rare_drop_tables"));
 
 			NPC_KILL_LIST = Boolean.parseBoolean(props.getProperty("npc_kill_list"));

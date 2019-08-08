@@ -230,14 +230,16 @@ public final class Mining implements ObjectActionListener,
 							owner.message("You manage to obtain some " + ore.getDef().getName().toLowerCase());
 							owner.incExp(SKILLS.MINING.id(), def.getExp(), true);
 						}
-						interrupt();
-						if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
-							GameObject newObject = new GameObject(object.getLocation(), 98, object.getDirection(), object.getType());
-							World.getWorld().replaceGameObject(object, newObject);
-							World.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
-						}
 						if (object.getID() == 496 && owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 51)
 							owner.getCache().set("tutorial", 52);
+						if (!Constants.GameServer.MINING_ROCKS_EXTENDED || DataConversions.random(1, 100) <= def.getDepletion()) {
+							interrupt();
+							if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
+								GameObject newObject = new GameObject(object.getLocation(), 98, object.getDirection(), object.getType());
+								World.getWorld().replaceGameObject(object, newObject);
+								World.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
+							}
+						}
 					}
 				} else {
 					if (object.getID() == 496) {

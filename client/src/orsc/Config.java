@@ -37,6 +37,7 @@ public class Config {
 	public static boolean C_KILL_FEED = false;
 	public static int C_FIGHT_MENU = 1;
 	public static boolean C_INV_COUNT = false;
+	public static boolean C_PARTY_INV = false;
 	public static int C_ZOOM;
 
 	/* Android: */
@@ -44,7 +45,7 @@ public class Config {
 	public static final String DL_URL = "game.openrsc.com"; // needs to be set as public for the Android client to use
 	public static final String ANDROID_DOWNLOAD_PATH = "https://" + DL_URL + "/downloads/";
 	public static final String CACHE_URL = "https://" + DL_URL + "/downloads/cache/";
-	public static final int ANDROID_CLIENT_VERSION = 53; // Important! Depends on web server android_version.txt to check for an updated version
+	public static final int ANDROID_CLIENT_VERSION = 55; // Important! Depends on web server android_version.txt to check for an updated version
 	public static boolean F_SHOWING_KEYBOARD = false;
 	public static boolean C_HOLD_AND_CHOOSE = true;
 	public static int C_LONG_PRESS_TIMER = 5; // default hold timer setting
@@ -128,6 +129,7 @@ public class Config {
 	public static boolean S_FISHING_SPOTS_DEPLETABLE = false;
 	public static boolean S_PROPER_MAGIC_TREE_NAME = false;
 	public static boolean S_WANT_PARTIES = false;
+	public static boolean S_MINING_ROCKS_EXTENDED = false;
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());

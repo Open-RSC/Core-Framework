@@ -94,6 +94,7 @@ public class PacketHandlerLookup {
 		bind(OpcodeIn.SOCIAL_ADD_IGNORE.getOpcode(), FriendHandler.class);
 		bind(OpcodeIn.SOCIAL_REMOVE_IGNORE.getOpcode(), FriendHandler.class);
 		bind(OpcodeIn.SOCIAL_SEND_PRIVATE_MESSAGE.getOpcode(), FriendHandler.class);
+		bind(OpcodeIn.SOCIAL_ADD_DELAYED_IGNORE.getOpcode(), FriendHandler.class);
 
 		bind(OpcodeIn.REPORT_ABUSE.getOpcode(), ReportHandler.class);
 

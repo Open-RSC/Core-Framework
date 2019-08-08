@@ -14,6 +14,10 @@ public class ObjectMiningDef {
 	 */
 	public int requiredLvl;
 	/**
+	 * Percent chance the rock will deplete
+	 */
+	private int depletion;
+	/**
 	 * How long the rock takes to respawn afterwards
 	 */
 	public int respawnTime;
@@ -32,6 +36,10 @@ public class ObjectMiningDef {
 
 	public int getReqLevel() {
 		return requiredLvl;
+	}
+	
+	public int getDepletion() {
+		return depletion;
 	}
 
 	public int getRespawnTime() {
