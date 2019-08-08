@@ -457,19 +457,8 @@ public class InterfaceOptionHandler implements PacketHandler {
 							player.message("Only the party owner can invite players to this party");
 							return;
 						}
-						if (invited.getParty() != null) {
-							if (player.getParty() == invited.getParty()) {
-								player.message(invited.getUsername() + " is already in your party");
-								return;
-							} else {
-								invited.message("@yel@" + player.getUsername() + " + " + player.getParty().getPlayers().size() + " tried to send you a party invite, but you are already in a party");
-								player.message(invited.getUsername() + " is already in a party");
-								return;
-							}
-						}
 						if (invited != null) {
 							PartyInvite.createPartyInvite(player, invited);
-							//ActionSender.sendBox(player, "Yay " + invited.getUsername(), false);
 						} else {
 							ActionSender.sendBox(player, "Player is not online or could not be found!", false);
 							return;
@@ -611,24 +600,9 @@ public class InterfaceOptionHandler implements PacketHandler {
 									, true);
 								return;
 							}
-							if (invited2.getParty() != null) {
-								if (player.getParty() == invited2.getParty()) {
-									player.message(invited2.getUsername() + " is already in your party");
-									return;
-								} else {
-									invited2.message("@yel@" + player.getUsername() + " tried to send you a party invite, but you are already in a party");
-									ActionSender.sendBox(player,
-										"@lre@Party: %"
-											+ " %"
-											+ invited2.getUsername() + " is already in a party %"
-										, true);
-									return;
-								}
-							}
 						}
 						if (invited2 != null) {
 							PartyInvite.createPartyInvite(player, invited2);
-							//ActionSender.sendBox(player, "Yay " + invited2.getUsername(), false);
 						} else {
 							ActionSender.sendBox(player, "Player is not online or could not be found!", false);
 							return;
