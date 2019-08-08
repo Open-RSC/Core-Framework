@@ -2,17 +2,16 @@ package com.openrsc.interfaces.misc;
 
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-
 import orsc.Config;
 import orsc.enumerations.MessageType;
 import orsc.graphics.gui.Panel;
 import orsc.graphics.two.GraphicsController;
 import orsc.mudclient;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
 
 public final class AuctionHouse {
 	public int auctionScrollHandle;
@@ -641,7 +640,7 @@ public final class AuctionHouse {
 
 			String itemName = def.getName().toLowerCase();
 			String exactItemName = def.getName().toLowerCase();
-			String command = def.getCommand().toLowerCase();
+			String[] command = def.getCommand();
 
 			String[] commandFilter = null;
 			String[] nameFilter = null;
@@ -659,7 +658,8 @@ public final class AuctionHouse {
 			} else if (selectedFilter == 5) {
 				nameFilter = new String[]{"uncut", "sapphire", "emerald", "ruby", "diamond", "dragonstone"};
 				exactNameFilter = new String[]{"opal", "jade", "amulet of accuracy", "gold amulet", "brass necklace",
-						"gold necklace", "holy symbol of saradomin", "unblessed holy symbol"};
+					"gold necklace", "holy symbol of saradomin", "unblessed holy symbol", "ring of wealth",
+					"ring of avarice", "ring of recoil", "ring of forging", "ring of splendor", "dwarven ring"};
 			} else if (selectedFilter == 6) {
 				nameFilter = new String[]{" ore", "coal", "bar", "clay"};
 				exactNameFilter = new String[]{"gold", "silver", "silver certificate", "gold certificate"};
@@ -667,8 +667,8 @@ public final class AuctionHouse {
 				commandFilter = new String[]{"identify"};
 				nameFilter = new String[]{"unfinished", "vial", "weed", "ground", "root", "scale"};
 				exactNameFilter = new String[]{"Guam Leaf", "Marrentill", "Tarromin", "Harralander", "Irit leaf",
-						"Avantoe", "Kwuarm", "Cadantine", "Torstol", "Pestle and mortar", "Eye of newt", "Jangerberries",
-						"Red spiders eggs", "White berries", "Snape grass", "Wine of zamorak"};
+					"Avantoe", "Kwuarm", "Cadantine", "Torstol", "Pestle and mortar", "Eye of newt", "Jangerberries",
+					"Red spiders eggs", "White berries", "Snape grass", "Wine of zamorak"};
 			} else if (selectedFilter == 8) {
 				nameFilter = new String[]{"halloween", "bunny", "party", "pumpkin", "easter", "scythe", "cracker"};
 				exactNameFilter = new String[]{"Disc of returning", "santa's hat"};
@@ -676,14 +676,14 @@ public final class AuctionHouse {
 			if (selectedFilter == 9) {
 				nameFilter = resources;
 				exactNameFilter = new String[]{
-						"fur", "leather", "wool", "bow string", "flax", "cow hide",
-						"knife", "egg", "bucket", "milk", "flour", "skull", "grain",
-						"needle", "thread", "holy", "water", "cadavaberries",
-						"pot", "jug", "grapes", "shears", "tinderbox",
-						"chisel", "hammer", "ashes", "apron", "chef's hat", "skirt", "silk",
-						"flier", "garlic", "redberries", "rope", "bad wine", "cape",
-						"eye of newt", "lobster pot", "net", "fishing rod", "fly fishing rod", "harpoon",
-						"fishing bait", "feather"
+					"fur", "leather", "wool", "bow string", "flax", "cow hide",
+					"knife", "egg", "bucket", "milk", "flour", "skull", "grain",
+					"needle", "thread", "holy", "water", "cadavaberries",
+					"pot", "jug", "grapes", "shears", "tinderbox",
+					"chisel", "hammer", "ashes", "apron", "chef's hat", "skirt", "silk",
+					"flier", "garlic", "redberries", "rope", "bad wine", "cape",
+					"eye of newt", "lobster pot", "net", "fishing rod", "fly fishing rod", "harpoon",
+					"fishing bait", "feather"
 				};
 			}
 			boolean skip = true;
@@ -705,13 +705,21 @@ public final class AuctionHouse {
 					}
 				}
 			}
-
+			boolean breakit = false;
 			if (commandFilter != null && skip) {
 				for (String c : commandFilter) {
-					if (command.contains(c)) {
-						skip = false;
-						break;
+					if (command != null) {
+						for (String comm : command) {
+							if (comm.toLowerCase().contains(c)) {
+								skip = false;
+								breakit = true;
+								break;
+							}
+							if (breakit)
+								break;
+						}
 					}
+
 				}
 			}
 

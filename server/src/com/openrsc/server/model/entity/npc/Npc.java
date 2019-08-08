@@ -513,9 +513,9 @@ public class Npc extends Mob {
 				boolean rdtHit = false;
 				Item rare = null;
 				if (WANT_NEW_RARE_DROP_TABLES && mob.isPlayer()) {
-					if (world.rareTable.rollAccess(this.id,Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()))) {
+					if (world.standardTable.rollAccess(this.id,Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()))) {
 						rdtHit = true;
-						rare = world.rareTable.rollItem(Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()), ((Player) mob));
+						rare = world.standardTable.rollItem(Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()), ((Player) mob));
 					} else if (world.gemTable.rollAccess(this.id,Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()))) {
 						rdtHit = true;
 						rare = world.gemTable.rollItem(Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()), ((Player) mob));
@@ -676,9 +676,9 @@ public class Npc extends Mob {
 				boolean rdtHit = false;
 				Item rare = null;
 				if (WANT_NEW_RARE_DROP_TABLES && mob.isPlayer()) {
-					if (world.rareTable.rollAccess(this.id,Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()))) {
+					if (world.standardTable.rollAccess(this.id,Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()))) {
 						rdtHit = true;
-						rare = world.rareTable.rollItem(Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()), ((Player) mob));
+						rare = world.standardTable.rollItem(Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()), ((Player) mob));
 					} else if (world.gemTable.rollAccess(this.id,Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()))) {
 						rdtHit = true;
 						rare = world.gemTable.rollItem(Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()), ((Player) mob));

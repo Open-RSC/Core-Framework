@@ -85,7 +85,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	private Map<Npc, Boolean> npcUnderAttackMap = new HashMap<Npc, Boolean>();
 
 	public DropTable gemTable;
-	public DropTable rareTable;
+	public DropTable standardTable;
 	public DropTable ultraTable;
 
 	/**
@@ -822,41 +822,43 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 	private void initializeRareDropTables() {
 		gemTable = new DropTable();
-		rareTable = new DropTable();
+		standardTable = new DropTable();
 		ultraTable = new DropTable();
 
 		//ITEMS
-		gemTable.addEmptyDrop(63);
+		gemTable.addEmptyDrop(45);
+		gemTable.addItemDrop(ItemId.FEATHER.id(), 1, 18);
 		gemTable.addItemDrop(ItemId.UNCUT_SAPPHIRE.id(), 1, 32);
 		gemTable.addItemDrop(ItemId.UNCUT_EMERALD.id(), 1, 16);
 		gemTable.addItemDrop(ItemId.UNCUT_RUBY.id(), 1, 8);
 		gemTable.addItemDrop(ItemId.UNCUT_DIAMOND.id(), 1, 4);
 		gemTable.addItemDrop(ItemId.TOOTH_KEY_HALF.id(), 1, 2);
 		gemTable.addItemDrop(ItemId.LOOP_KEY_HALF.id(), 1, 2);
-		gemTable.addTableDrop(ultraTable, 1000);
+		gemTable.addTableDrop(ultraTable, 1);
 
-		rareTable.addItemDrop(ItemId.NATURE_RUNE.id(),50,3);
-		rareTable.addItemDrop(ItemId.LAW_RUNE.id(),40,2);
-		rareTable.addItemDrop(ItemId.DEATH_RUNE.id(),50,2);
-		rareTable.addItemDrop(ItemId.STEEL_ARROWS.id(),150,2);
-		rareTable.addItemDrop(ItemId.RUNE_ARROWS.id(),40,2);
-		rareTable.addItemDrop(ItemId.FIRE_RUNE.id(),150,2);
-		rareTable.addItemDrop(ItemId.IRON_ARROWS.id(),200,1);
-		rareTable.addItemDrop(ItemId.RUNE_2_HANDED_SWORD.id(),1,3);
-		rareTable.addItemDrop(ItemId.RUNE_BATTLE_AXE.id(),1,2);
-		rareTable.addItemDrop(ItemId.RUNE_SQUARE_SHIELD.id(),1,2);
-		rareTable.addItemDrop(ItemId.RUNE_KITE_SHIELD.id(),1,1);
-		rareTable.addItemDrop(ItemId.DRAGON_MEDIUM_HELMET.id(),1,1);
-		rareTable.addItemDrop(ItemId.COINS.id(),3000,22);
-		rareTable.addItemDrop(ItemId.RUNITE_BAR.id(),1,5);
-		rareTable.addItemDrop(ItemId.DRAGONSTONE.id(),1,2);
-		rareTable.addItemDrop(1624,100,2); //noted silver ore
-		rareTable.addItemDrop(ItemId.LOOP_KEY_HALF.id(), 1, 20);
-		rareTable.addItemDrop(ItemId.TOOTH_KEY_HALF.id(), 1, 19);
-		rareTable.addTableDrop(gemTable, 20);
-		rareTable.addTableDrop(ultraTable, 15);
+		standardTable.addItemDrop(ItemId.NATURE_RUNE.id(),50,3);
+		standardTable.addItemDrop(ItemId.LAW_RUNE.id(),40,2);
+		standardTable.addItemDrop(ItemId.DEATH_RUNE.id(),50,2);
+		standardTable.addItemDrop(ItemId.STEEL_ARROWS.id(),150,2);
+		standardTable.addItemDrop(ItemId.RUNE_ARROWS.id(),40,2);
+		standardTable.addItemDrop(ItemId.FIRE_RUNE.id(),150,2);
+		standardTable.addItemDrop(ItemId.IRON_ARROWS.id(),200,1);
+		standardTable.addItemDrop(ItemId.RUNE_2_HANDED_SWORD.id(),1,3);
+		standardTable.addItemDrop(ItemId.RUNE_BATTLE_AXE.id(),1,2);
+		standardTable.addItemDrop(ItemId.RUNE_SQUARE_SHIELD.id(),1,2);
+		standardTable.addItemDrop(ItemId.RUNE_KITE_SHIELD.id(),1,1);
+		standardTable.addItemDrop(ItemId.DRAGON_MEDIUM_HELMET.id(),1,1);
+		standardTable.addItemDrop(ItemId.COINS.id(),3000,22);
+		standardTable.addItemDrop(ItemId.RUNITE_BAR.id(),1,5);
+		standardTable.addItemDrop(ItemId.DRAGONSTONE.id(),1,2);
+		standardTable.addItemDrop(1624,100,2); //noted silver ore
+		standardTable.addItemDrop(ItemId.LOOP_KEY_HALF.id(), 1, 20);
+		standardTable.addItemDrop(ItemId.TOOTH_KEY_HALF.id(), 1, 19);
+		standardTable.addTableDrop(gemTable, 20);
+		standardTable.addTableDrop(ultraTable, 15);
 
-		ultraTable.addEmptyDrop(124);
+		ultraTable.addEmptyDrop(105);
+		ultraTable.addItemDrop(ItemId.COAL.id(), 1, 19);
 		ultraTable.addItemDrop(ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id(), 1, 4);
 
 		//MOBS
@@ -905,14 +907,14 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		gemTable.addAccessor(NpcId.LORD_DARQUARIUS.id(),19,256);
 		gemTable.addAccessor(NpcId.ICE_QUEEN.id(),22,256);
 
-		rareTable.addAccessor(NpcId.BLUE_DRAGON.id(),1,256);
-		rareTable.addAccessor(NpcId.FIRE_GIANT.id(),1,256);
-		rareTable.addAccessor(NpcId.HELLHOUND.id(),2,256);
-		rareTable.addAccessor(NpcId.RED_DRAGON.id(),2,256);
-		rareTable.addAccessor(NpcId.BLACK_DEMON.id(),3,256);//lvl 54 skeletons
-		rareTable.addAccessor(NpcId.BLACK_DEMON_GRANDTREE.id(),3,256);
-		rareTable.addAccessor(NpcId.BLACK_DRAGON.id(),4,256);
-		rareTable.addAccessor(NpcId.KING_BLACK_DRAGON.id(),8,256);
+		standardTable.addAccessor(NpcId.BLUE_DRAGON.id(),3,256);
+		standardTable.addAccessor(NpcId.FIRE_GIANT.id(),3,256);
+		standardTable.addAccessor(NpcId.HELLHOUND.id(),3,256);
+		standardTable.addAccessor(NpcId.RED_DRAGON.id(),4,256);
+		standardTable.addAccessor(NpcId.BLACK_DEMON.id(),4,256);
+		standardTable.addAccessor(NpcId.BLACK_DEMON_GRANDTREE.id(),4,256);
+		standardTable.addAccessor(NpcId.BLACK_DRAGON.id(),5,256);
+		standardTable.addAccessor(NpcId.KING_BLACK_DRAGON.id(),12,256);
 
 	}
 

@@ -12,6 +12,9 @@ public class DropTable {
 	ArrayList<Drop> drops;
 	ArrayList<Accessor> accessors;
 	int totalWeight;
+	private static int RING_OF_WEALTH_BOOST_NUMERATOR = 1;
+	private static int RING_OF_WEALTH_BOOST_DENOMINATOR = 128;
+
 
 	public DropTable() {
 		drops = new ArrayList<>();
@@ -56,8 +59,7 @@ public class DropTable {
 					if (ringOfWealth)
 						p.message("Your ring of wealth shines brightly!");
 					return new Item(drop.id, drop.amount);
-				}
-				else if (drop.type == dropType.TABLE) {
+				} else if (drop.type == dropType.TABLE) {
 					return drop.table.rollItem(ringOfWealth, p);
 				}
 			}
@@ -85,6 +87,7 @@ public class DropTable {
 		ITEM,
 		TABLE;
 	}
+
 	public class Accessor {
 		int id;
 		int numerator;
@@ -98,11 +101,13 @@ public class DropTable {
 	}
 
 	public boolean rollAccess(int id, boolean ringOfWealth) {
-		int boost = ringOfWealth ? 2 : 0;
+		int numerator, denominator;
 		for (Accessor mob : accessors) {
 			if (mob.id == id) {
-				int hit = DataConversions.random(1,mob.denominator);
-				if (hit <= (mob.numerator + boost)) {
+				numerator = ringOfWealth ? (RING_OF_WEALTH_BOOST_NUMERATOR * mob.denominator) + (RING_OF_WEALTH_BOOST_DENOMINATOR * mob.numerator) : mob.numerator;
+				denominator = ringOfWealth ? RING_OF_WEALTH_BOOST_DENOMINATOR * mob.denominator : mob.denominator;
+				int hit = DataConversions.random(1, denominator);
+				if (hit <= numerator) {
 					return true;
 				} else
 					return false;

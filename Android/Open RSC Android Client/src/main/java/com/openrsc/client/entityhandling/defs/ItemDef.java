@@ -1,7 +1,7 @@
 package com.openrsc.client.entityhandling.defs;
 
 public class ItemDef extends EntityDef {
-	public String command;
+	public String[] command;
 	public int basePrice;
 	public int authenticSpriteID;
 	public String spriteLocation;
@@ -24,7 +24,7 @@ public class ItemDef extends EntityDef {
 	public ItemDef(String name, String description, String command, int basePrice, int authenticSpriteID, boolean stackable,
 				   boolean wieldable, int wearableID, int pictureMask, boolean membersItem, boolean quest, int id) {
 		super(name, description, id);
-		this.command = command;
+		this.command = command.split(",");
 		this.basePrice = basePrice;
 		this.authenticSpriteID = authenticSpriteID;
 		this.stackable = stackable;
@@ -34,13 +34,15 @@ public class ItemDef extends EntityDef {
 		this.membersItem = membersItem;
 		this.quest = quest;
 		this.id = id;
+		if (this.command.length == 1 && this.command[0] == "")
+			this.command = null;
 	}
 
 	public ItemDef(String name, String description, String command, int basePrice, int authenticSpriteID, String spriteLocation,
 				   boolean stackable, boolean wieldable, int wearableID, int pictureMask, boolean membersItem,
 				   boolean quest, int notedForm, int notedFormOf, int id) {
 		super(name, description, id);
-		this.command = command;
+		this.command = command.split(",");
 		this.basePrice = basePrice;
 		this.authenticSpriteID = authenticSpriteID;
 		this.stackable = stackable;
@@ -53,6 +55,9 @@ public class ItemDef extends EntityDef {
 		this.notedFormID = notedForm;
 		this.isNotedFormOf = notedFormOf;
 		this.spriteLocation = spriteLocation;
+
+		if (this.command.length == 1 && this.command[0] == "")
+			this.command = null;
 	}
 
 	public ItemDef(int i, ItemDef item) {
@@ -67,9 +72,11 @@ public class ItemDef extends EntityDef {
 		this.quest = item.quest;
 		this.setNotedFormOf(item.id);
 		this.id = i;
+		if (this.command.length == 1 && this.command[0] == "")
+			this.command = null;
 	}
 
-	public String getCommand() {
+	public String[] getCommand() {
 		return command;
 	}
 

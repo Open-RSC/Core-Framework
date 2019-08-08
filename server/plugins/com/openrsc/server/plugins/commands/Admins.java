@@ -42,11 +42,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.ListIterator;
-import java.util.Objects;
+import java.util.*;
+
+import static com.openrsc.server.Constants.GameServer.*;
+import static com.openrsc.server.Constants.GameServer.VALUABLE_DROP_EXTRAS;
 
 public final class Admins implements CommandListener {
 	private static final Logger LOGGER = LogManager.getLogger(Admins.class);
@@ -240,6 +239,57 @@ public final class Admins implements CommandListener {
 			}
 			System.out.println(Arrays.toString(allLoot.entrySet().toArray()));
 		} */
+		else if (cmd.equalsIgnoreCase("simrdt")) {
+			if (args.length < 2 || args.length == 3) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [max_attempts]");
+				return;
+			}
+
+			int npcID;
+			try {
+				npcID = Integer.parseInt(args[0]);
+			} catch (NumberFormatException ex) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [max_attempts]");
+				return;
+			}
+
+			int maxAttempts;
+			try {
+				maxAttempts = Integer.parseInt(args[1]);
+			} catch (NumberFormatException ex) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [max_attempts]");
+				return;
+			}
+
+			HashMap<String, Integer> rareDrops = new HashMap<>();
+			for (int i = 0; i < maxAttempts; i++) {
+				boolean rdtHit = false;
+				Item rare = null;
+
+				if (world.standardTable.rollAccess(npcID, Functions.isWielding(player, ItemId.RING_OF_WEALTH.id()))) {
+					rdtHit = true;
+					rare = world.standardTable.rollItem(Functions.isWielding(player, ItemId.RING_OF_WEALTH.id()), player);
+				} else if (world.gemTable.rollAccess(npcID, Functions.isWielding(player, ItemId.RING_OF_WEALTH.id()))) {
+					rdtHit = true;
+					rare = world.gemTable.rollItem(Functions.isWielding(player, ItemId.RING_OF_WEALTH.id()), player);
+				}
+				if (rdtHit) {
+					if (rareDrops.containsKey(rare.getDef().getName().toLowerCase())) {
+						int amount = rareDrops.get(rare.getDef().getName().toLowerCase());
+						rareDrops.put(rare.getDef().getName().toLowerCase(), amount + rare.getAmount());
+					} else
+					{
+						rareDrops.put(rare.getDef().getName().toLowerCase(), rare.getAmount());
+					}
+				}
+			}
+
+			Iterator<Map.Entry<String, Integer>> itr = rareDrops.entrySet().iterator();
+			while (itr.hasNext()) {
+				Map.Entry<String, Integer> entry = itr.next();
+				System.out.println(entry.getKey() + ": " + entry.getValue());
+			}
+		}
 		else if (cmd.equalsIgnoreCase("simulatedrop")) {
 			if (args.length < 2 || args.length == 3) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [max_attempts]");

@@ -15,7 +15,6 @@ public class EntityHandler {
 
 	public static ArrayList<NPCDef> npcs = new ArrayList<>();
 	private static ArrayList<ItemDef> items = new ArrayList<>();
-	//public static ArrayList<ItemDef> specificSprites = new ArrayList<ItemDef>();
 	private static ArrayList<TextureDef> textures = new ArrayList<>();
 	private static ArrayList<AnimationDef> animations = new ArrayList<>();
 	public static ArrayList<SpriteDef> projectiles = new ArrayList<>();
@@ -145,10 +144,9 @@ public class EntityHandler {
 	}
 
 	public static GameObjectDef getObjectDef(int id) {
-		if (id < 0 || id >= objects.size()) {
+		if (id < 0 || id >= objects.size() || (objects.get(id) != null && objects.get(id).id != id)) {
 			//There may be a gap in the object definitions that causes this. Check for that.
 			for (int i = objects.size()-1; i>=0; i--) {
-
 				if (objects.get(i).id == id)
 					return objects.get(i);
 			}
@@ -5798,7 +5796,7 @@ public class EntityHandler {
 	}
 
 	private static void loadGameObjectDefinitionsB() {
-		int i = objects.size() - 1;
+		int i = objects.size();
 		objects.add(new GameObjectDef("gate", "The gate is closed", "talk through", "Examine", 2, 1, 2, 0, "metalgateclosed", i++));
 		objects.add(new GameObjectDef("wall", "A damaged wall", "climb", "Examine", 1, 3, 1, 0, "khazardwall", i++));
 		objects.add(new GameObjectDef("tree", "An exotic looking tree", "WalkTo", "Examine", 1, 1, 1, 0, "jungle tree 2", i++));
