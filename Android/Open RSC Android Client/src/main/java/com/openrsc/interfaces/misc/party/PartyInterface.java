@@ -230,7 +230,7 @@ public final class PartyInterface {
 		drawSubmitButton(graphics, x + 133, y + 40, 142, 28, 18, 1, "Ignore this player", false, new ButtonHandler() {
 			@Override
 			void handle() {
-				getClient().addIgnore(invitationBy);
+				getClient().addDelayedIgnore(invitationBy);
 				sendPartyDecline();
 				setVisible(false);
 			}

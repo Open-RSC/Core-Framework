@@ -9,6 +9,8 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.event.DelayedEvent;
+import com.openrsc.server.Server;
 
 public final class FriendHandler implements PacketHandler {
 
@@ -26,6 +28,7 @@ public final class FriendHandler implements PacketHandler {
 		int packetThree = OpcodeIn.SOCIAL_ADD_IGNORE.getOpcode();
 		int packetFour = OpcodeIn.SOCIAL_REMOVE_IGNORE.getOpcode();
 		int packetFive = OpcodeIn.SOCIAL_SEND_PRIVATE_MESSAGE.getOpcode();
+		int packetSix = OpcodeIn.SOCIAL_ADD_DELAYED_IGNORE.getOpcode();
 
 		Player affectedPlayer = World.getWorld().getPlayer(friend);
 		if (pID == packetOne) { // Add friend
@@ -77,6 +80,23 @@ public final class FriendHandler implements PacketHandler {
 				DataConversions.stripBadCharacters(
 					DataConversions.getEncryptedString(p, 32576)));
 			player.addPrivateMessage(new PrivateMessage(player, message, friend));
+		} else if (pID == packetSix) {
+			int maxFriends = Constants.GameServer.MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
+				: MAX_FRIENDS;
+			if (player.getSocial().ignoreCount() >= maxFriends) {
+				player.message("Ignore list full");
+				return;
+			}
+			boolean added = player.getSocial().addIgnore(friend, 0, DataConversions.hashToUsername(friend));
+			if (added){
+				ActionSender.sendIgnoreList(player);
+				Server.getServer().getEventHandler().add(new DelayedEvent(null, 150000, "Delayed ignore") {
+				public void run() {
+					player.getSocial().removeIgnore(friend);
+					ActionSender.sendIgnoreList(player);
+				}
+			});
+			}
 		}
 	}
 }
