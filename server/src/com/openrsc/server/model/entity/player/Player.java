@@ -1710,10 +1710,12 @@ public final class Player extends Mob {
 		this.cure();
 		prayers.resetPrayers();
 		skills.normalize();
-		getUpdateFlags().setHpUpdate(new HpUpdate(this, 0));
 		for (Player p : World.getWorld().getPlayers()) {
-			if (this.getParty() == p.getParty() && this.getParty() != null) {
-				ActionSender.sendParty(p);
+			if(this.getParty() != null){
+				getUpdateFlags().setHpUpdate(new HpUpdate(this, 0));
+				if (this.getParty() == p.getParty() && this.getParty() != null) {
+					ActionSender.sendParty(p);
+				}
 			}
 		}
 	}
