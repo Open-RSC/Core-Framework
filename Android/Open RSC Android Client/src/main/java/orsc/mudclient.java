@@ -7473,7 +7473,7 @@ public final class mudclient implements Runnable {
 
 								if (EntityHandler.getItemDef(id).getCommand() != null
 									&& EntityHandler.getItemDef(id).getNotedFormOf() == -1) {
-									for (int p = EntityHandler.getItemDef(id).getCommand().length - 1; p >= 0; p--) {
+									for (int p = 0; p < EntityHandler.getItemDef(id).getCommand().length; p++) {
 										this.menuCommon.addItem(0, EntityHandler.getItemDef(id).getCommand()[p], p, 0, "@lre@" + EntityHandler.getItemDef(id).getName(), var5, (String) null, MenuItemAction.ITEM_COMMAND, 0, (String) null, (String) null);
 									}
 								}
@@ -11728,8 +11728,8 @@ public final class mudclient implements Runnable {
 					this.packetHandler.getClientStream().newPacket(90);
 					this.packetHandler.getClientStream().writeBuffer1.putShort(0xFFFF);
 					this.packetHandler.getClientStream().writeBuffer1.putInt(commandQuantity);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(dir);
 					this.packetHandler.getClientStream().writeBuffer1.putShort(equippedItems[indexOrX].id);
+					this.packetHandler.getClientStream().writeBuffer1.putByte(dir);
 					this.packetHandler.getClientStream().finishPacket();
 					break;
 				}
