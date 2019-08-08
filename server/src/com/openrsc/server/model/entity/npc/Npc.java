@@ -528,6 +528,8 @@ public class Npc extends Mob {
 						groundItem.setAttribute("npcdrop", true);
 						world.registerItem(groundItem);
 					}
+					Server.getPlayerDataProcessor().getDatabase().addNpcDrop(
+						owner, this, rare.getID(), rare.getAmount());
 				}
 
 				ItemDropDef[] drops = def.getDrops();
