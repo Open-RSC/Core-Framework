@@ -2520,14 +2520,12 @@ public final class Player extends Mob {
 	}
 
 	public boolean getPartyInviteSetting() {
-		if (Constants.GameServer.WANT_PARTIES) {
-		if (getCache().hasKey("party_block_invites")) {
-			return getCache().getBoolean("party_block_invites");
-		}
-		return true;
-		} else {
+		//if (Constants.GameServer.WANT_PARTIES) {
+			if (getCache().hasKey("party_block_invites")) {
+				return getCache().getBoolean("party_block_invites");
+			}
 			return false;
-		}
+		//}
 	}
 
 	public boolean getPartyLootSetting() {

@@ -230,14 +230,210 @@ public final class Mining implements ObjectActionListener,
 							owner.message("You manage to obtain some " + ore.getDef().getName().toLowerCase());
 							owner.incExp(SKILLS.MINING.id(), def.getExp(), true);
 						}
-						interrupt();
-						if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
-							GameObject newObject = new GameObject(object.getLocation(), 98, object.getDirection(), object.getType());
-							World.getWorld().replaceGameObject(object, newObject);
-							World.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
+						if(object.getID() == 210){
+							if (DataConversions.random(1, 100) <= def.getReqLevel()) {
+								interrupt();
+								if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
+									GameObject newObject = new GameObject(object.getLocation(), 98, object.getDirection(), object.getType());
+									World.getWorld().replaceGameObject(object, newObject);
+									World.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
+								}
+								if (object.getID() == 496 && owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 51)
+									owner.getCache().set("tutorial", 52);
+							}	
+						} else
+						if(object.getID() == 110){
+							if (DataConversions.random(1, 150) <= def.getReqLevel()) {
+								interrupt();
+								if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
+									GameObject newObject = new GameObject(object.getLocation(), 98, object.getDirection(), object.getType());
+									World.getWorld().replaceGameObject(object, newObject);
+									World.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
+								}
+								if (object.getID() == 496 && owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 51)
+									owner.getCache().set("tutorial", 52);
+							}	
+						} else
+						if(object.getID() == 111){
+							if (DataConversions.random(1, 150) <= def.getReqLevel()) {
+								interrupt();
+								if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
+									GameObject newObject = new GameObject(object.getLocation(), 98, object.getDirection(), object.getType());
+									World.getWorld().replaceGameObject(object, newObject);
+									World.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
+								}
+								if (object.getID() == 496 && owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 51)
+									owner.getCache().set("tutorial", 52);
+							}	
+						} else
+						if(object.getID() == 100){
+							if (DataConversions.random(1, 150) <= 14) {
+								interrupt();
+								if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
+									GameObject newObject = new GameObject(object.getLocation(), 98, object.getDirection(), object.getType());
+									World.getWorld().replaceGameObject(object, newObject);
+									World.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
+								}
+								if (object.getID() == 496 && owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 51)
+									owner.getCache().set("tutorial", 52);
+							}	
+						} else
+						if(object.getID() == 101){
+							if (DataConversions.random(1, 150) <= 14) {
+								interrupt();
+								if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
+									GameObject newObject = new GameObject(object.getLocation(), 98, object.getDirection(), object.getType());
+									World.getWorld().replaceGameObject(object, newObject);
+									World.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
+								}
+								if (object.getID() == 496 && owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 51)
+									owner.getCache().set("tutorial", 52);
+							}	
+						} else
+						if(object.getID() == 102){
+							if (DataConversions.random(1, 150) <= 22) {
+								interrupt();
+								if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
+									GameObject newObject = new GameObject(object.getLocation(), 98, object.getDirection(), object.getType());
+									World.getWorld().replaceGameObject(object, newObject);
+									World.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
+								}
+								if (object.getID() == 496 && owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 51)
+									owner.getCache().set("tutorial", 52);
+							}	
+						} else
+						if(object.getID() == 103){
+							if (DataConversions.random(1, 150) <= 22) {
+								interrupt();
+								if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
+									GameObject newObject = new GameObject(object.getLocation(), 98, object.getDirection(), object.getType());
+									World.getWorld().replaceGameObject(object, newObject);
+									World.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
+								}
+								if (object.getID() == 496 && owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 51)
+									owner.getCache().set("tutorial", 52);
+							}	
+						} else
+						if(object.getID() == 104){
+							if (DataConversions.random(1, 150) <= 14) {
+								interrupt();
+								if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
+									GameObject newObject = new GameObject(object.getLocation(), 98, object.getDirection(), object.getType());
+									World.getWorld().replaceGameObject(object, newObject);
+									World.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
+								}
+								if (object.getID() == 496 && owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 51)
+									owner.getCache().set("tutorial", 52);
+							}	
+						} else
+						if(object.getID() == 105){
+							if (DataConversions.random(1, 150) <= 14) {
+								interrupt();
+								if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
+									GameObject newObject = new GameObject(object.getLocation(), 98, object.getDirection(), object.getType());
+									World.getWorld().replaceGameObject(object, newObject);
+									World.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
+								}
+								if (object.getID() == 496 && owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 51)
+									owner.getCache().set("tutorial", 52);
+							}	
+						} else
+						if(object.getID() == 106){
+							if (DataConversions.random(1, 120) <= def.getReqLevel()) {
+								interrupt();
+								if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
+									GameObject newObject = new GameObject(object.getLocation(), 98, object.getDirection(), object.getType());
+									World.getWorld().replaceGameObject(object, newObject);
+									World.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
+								}
+								if (object.getID() == 496 && owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 51)
+									owner.getCache().set("tutorial", 52);
+							}	
+						} else
+						if(object.getID() == 107){
+							if (DataConversions.random(1, 120) <= def.getReqLevel()) {
+								interrupt();
+								if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
+									GameObject newObject = new GameObject(object.getLocation(), 98, object.getDirection(), object.getType());
+									World.getWorld().replaceGameObject(object, newObject);
+									World.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
+								}
+								if (object.getID() == 496 && owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 51)
+									owner.getCache().set("tutorial", 52);
+							}	
+						} else
+						if(object.getID() == 108){
+							if (DataConversions.random(1, 135) <= def.getReqLevel()) {
+								interrupt();
+								if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
+									GameObject newObject = new GameObject(object.getLocation(), 98, object.getDirection(), object.getType());
+									World.getWorld().replaceGameObject(object, newObject);
+									World.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
+								}
+								if (object.getID() == 496 && owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 51)
+									owner.getCache().set("tutorial", 52);
+							}	
+						} else
+						if(object.getID() == 109){
+							if (DataConversions.random(1, 135) <= def.getReqLevel()) {
+								interrupt();
+								if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
+									GameObject newObject = new GameObject(object.getLocation(), 98, object.getDirection(), object.getType());
+									World.getWorld().replaceGameObject(object, newObject);
+									World.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
+								}
+								if (object.getID() == 496 && owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 51)
+									owner.getCache().set("tutorial", 52);
+							}	
+						} else
+						if(object.getID() == 176){
+							if (DataConversions.random(1, 150) <= 14) {
+								interrupt();
+								if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
+									GameObject newObject = new GameObject(object.getLocation(), 98, object.getDirection(), object.getType());
+									World.getWorld().replaceGameObject(object, newObject);
+									World.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
+								}
+								if (object.getID() == 496 && owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 51)
+									owner.getCache().set("tutorial", 52);
+							}	
+						} else
+						if(object.getID() == 195){
+							if (DataConversions.random(1, 150) <= 25) {
+								interrupt();
+								if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
+									GameObject newObject = new GameObject(object.getLocation(), 98, object.getDirection(), object.getType());
+									World.getWorld().replaceGameObject(object, newObject);
+									World.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
+								}
+								if (object.getID() == 496 && owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 51)
+									owner.getCache().set("tutorial", 52);
+							}	
+						} else
+						if(object.getID() == 196){
+							if (DataConversions.random(1, 150) <= 25) {
+								interrupt();
+								if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
+									GameObject newObject = new GameObject(object.getLocation(), 98, object.getDirection(), object.getType());
+									World.getWorld().replaceGameObject(object, newObject);
+									World.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
+								}
+								if (object.getID() == 496 && owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 51)
+									owner.getCache().set("tutorial", 52);
+							}	
+						} else
+						if(object.getID() == 315){
+							if (DataConversions.random(1, 160) <= 40) {
+								interrupt();
+								if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
+									GameObject newObject = new GameObject(object.getLocation(), 98, object.getDirection(), object.getType());
+									World.getWorld().replaceGameObject(object, newObject);
+									World.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
+								}
+								if (object.getID() == 496 && owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 51)
+									owner.getCache().set("tutorial", 52);
+							}	
 						}
-						if (object.getID() == 496 && owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 51)
-							owner.getCache().set("tutorial", 52);
 					}
 				} else {
 					if (object.getID() == 496) {

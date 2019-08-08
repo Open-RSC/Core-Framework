@@ -1088,6 +1088,47 @@ public final class mudclient implements Runnable {
 			throw GenUtil.makeThrowable(var5, "client.MC(" + (player != null ? "{...}" : "null") + ',' + "dummy" + ')');
 		}
 	}
+	public final void addDelayedIgnore(String player) {
+		try {
+
+			if (SocialLists.ignoreListCount >= 100) {
+				this.showMessage(false, null, "Ignore list full", MessageType.GAME, 0, null
+				);
+			} else {
+				String var3 = StringUtil.displayNameToKey(player);
+				if (var3 != null) {
+					int var4;
+					for (var4 = 0; var4 < SocialLists.friendListCount; ++var4) {
+						if (var3.equals(StringUtil.displayNameToKey(SocialLists.friendList[var4]))) {
+							this.showMessage(false, null,
+								"Please remove " + player + " from your friends list first", MessageType.GAME, 0,
+								null);
+							return;
+						}
+
+						if (SocialLists.friendListOld[var4] != null
+							&& var3.equals(StringUtil.displayNameToKey(SocialLists.friendListOld[var4]))) {
+							this.showMessage(false, null,
+								"Please remove " + player + " from your friends list first", MessageType.GAME, 0,
+								null);
+							return;
+						}
+					}
+
+					if (!var3.equals(StringUtil.displayNameToKey(this.localPlayer.accountName))) {
+						this.packetHandler.getClientStream().newPacket(194);
+						this.packetHandler.getClientStream().writeBuffer1.putString(player);
+						this.packetHandler.getClientStream().finishPacket();
+					} else {
+						this.showMessage(false, null, "You can\'t add yourself to your ignore list",
+							MessageType.GAME, 0, null);
+					}
+				}
+			}
+		} catch (RuntimeException var5) {
+			throw GenUtil.makeThrowable(var5, "client.MC(" + (player != null ? "{...}" : "null") + ',' + "dummy" + ')');
+		}
+	}
 
 	public final void addMouseClick(int button, int x, int y) {
 		try {
@@ -2213,6 +2254,38 @@ public final class mudclient implements Runnable {
 					}
 
 					String var11 = null;
+					if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell == 3) && var3 == 1) {
+						var11 = "Choose a target";
+						this.showUiTab = 1;
+					} else
+					if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell == 10) && var3 == 1) {
+						var11 = "Choose a target";
+						this.showUiTab = 1;
+					} else
+					if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell == 13) && var3 == 1) {
+						var11 = "Choose a target";
+						this.showUiTab = 1;
+					} else
+					if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell == 21) && var3 == 1) {
+						var11 = "Choose a target";
+						this.showUiTab = 1;
+					} else
+					if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell == 24) && var3 == 1) {
+						var11 = "Choose a target";
+						this.showUiTab = 1;
+					} else
+					if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell == 28) && var3 == 1) {
+						var11 = "Choose a target";
+						this.showUiTab = 1;
+					} else
+					if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell == 30) && var3 == 1) {
+						var11 = "Choose a target";
+						this.showUiTab = 1;
+					} else
+					if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell == 42) && var3 == 1) {
+						var11 = "Choose a target";
+						this.showUiTab = 1;
+					} else
 					if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell >= 0) && var3 == 1) {
 						var11 = "Choose a target";
 					} else if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell >= 0) && var3 > 1) {
@@ -8842,15 +8915,12 @@ public final class mudclient implements Runnable {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index,
 				"@whi@Report Abuse", 18, null, null);
 
-			if (this.partyInviteBlockSetting) {
+			if (C_PARTY_INV) {
 				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 					"@whi@Party Invitation - @red@Block", 19, null, null);
-			} else if(!this.partyInviteBlockSetting) {
-				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-					"@whi@Party Invitation - @gre@Receive", 19, null, null);
 			} else {
 				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-					"@whi@Party Invitation - @gre@Receive this", 19, null, null);
+					"@whi@Party Invitation - @gre@Receive", 19, null, null);
 			}
 		}
 
@@ -9162,6 +9232,7 @@ public final class mudclient implements Runnable {
 
 			if (settingIndex == 19 && this.mouseButtonClick == 1) {
 				this.partyInviteBlockSetting = !this.partyInviteBlockSetting;
+				C_PARTY_INV = !C_PARTY_INV;
 				this.packetHandler.getClientStream().newPacket(111);
 				this.packetHandler.getClientStream().writeBuffer1.putByte(36);
 				this.packetHandler.getClientStream().writeBuffer1.putByte(this.partyInviteBlockSetting ? 1 : 0);
@@ -16204,6 +16275,10 @@ public final class mudclient implements Runnable {
 
 	public void setHideInventoryCount(boolean b) {
 		Config.C_INV_COUNT = b;
+	}
+	
+	public void setBlockPartyInv(boolean b) {
+		Config.C_PARTY_INV = b;
 	}
 
 	public void setHideNameTag(boolean b) {
