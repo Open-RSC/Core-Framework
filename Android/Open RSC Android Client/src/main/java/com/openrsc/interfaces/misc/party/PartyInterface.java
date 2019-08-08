@@ -226,7 +226,16 @@ public final class PartyInterface {
 		graphics.drawColoredStringCentered(width / 2 + x, invitationBy, 0xf1f1f1, 0, 1, y + 28);
 		//graphics.drawColoredStringCentered(width / 2 + x, "" + SocialLists.partyListCount, 0xffffff, 0, 5, y + 58);
 		graphics.drawColoredStringCentered(width / 2 + x, "Would you like to join this party?", 0xf1f1f1, 0, 1, y + 90);
-
+		
+		drawSubmitButton(graphics, x + 133, y + 40, 142, 28, 18, 1, "Ignore this player", false, new ButtonHandler() {
+			@Override
+			void handle() {
+				getClient().addIgnore(invitationBy);
+				sendPartyDecline();
+				setVisible(false);
+			}
+		});
+		
 		drawSubmitButton(graphics, x + 55, y + 110, 142, 28, 18, 1, "Accept", false, new ButtonHandler() {
 			@Override
 			void handle() {
@@ -824,6 +833,7 @@ public final class PartyInterface {
 
 	public void initializeInvite(String byPlayer, String byParty) {
 		invitationBy = "@yel@" + byPlayer + " @whi@has sent you a party invitation:";
+		invitationBy = byPlayer;
 		if (byParty != null) {
 			this.setVisible(true);
 			this.partyActiveInterface = 2;
