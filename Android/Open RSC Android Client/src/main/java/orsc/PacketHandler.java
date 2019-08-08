@@ -810,7 +810,7 @@ public class PacketHandler {
 		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank, wantPlayerCommands;
 		int getFPS, wantEmail, wantRegistrationLimit, allowResize, lenientContactDetails, wantFatigue, wantCustomSprites;
 		int fishingSpotsDepletable, properMagicTreeName, wantRunecrafting, wantCustomLandscape, wantEquipmentTab;
-		int wantBankPresets, wantParties;
+		int wantBankPresets, wantParties, miningRocksExtended;
 		String logoSpriteID;
 
 		if (!mc.gotInitialConfigs) {
@@ -878,6 +878,7 @@ public class PacketHandler {
 			wantEquipmentTab = this.getClientStream().getUnsignedByte(); //62
 			wantBankPresets = this.getClientStream().getUnsignedByte(); //63
 			wantParties = this.getClientStream().getUnsignedByte(); // 64
+			miningRocksExtended = this.getClientStream().getUnsignedByte(); //65
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -943,6 +944,7 @@ public class PacketHandler {
 			wantEquipmentTab = packetsIncoming.getUnsignedByte(); //62
 			wantBankPresets = packetsIncoming.getUnsignedByte(); //63
 			wantParties = packetsIncoming.getUnsignedByte(); // 64
+			miningRocksExtended = packetsIncoming.getUnsignedByte(); //65
 		}
 
 		if (Config.DEBUG) {
@@ -1010,7 +1012,8 @@ public class PacketHandler {
 					"\nS_WANT_CUSTOM_LANDSCAPE  "   + wantCustomLandscape + // 61
 					"\nS_WANT_EQUIPMENT_TAB  "   + wantEquipmentTab + // 62
 					"\nS_WANT_BANK_PRESETS  "   + wantEquipmentTab + // 63
-					"\nS_WANT_PARTIES " + wantClans // 64
+					"\nS_WANT_PARTIES " + wantClans + // 64
+					"\nS_MINING_ROCKS_EXTENDED " + miningRocksExtended // 65
 			);
 		}
 
@@ -1080,6 +1083,7 @@ public class PacketHandler {
 		props.setProperty("S_WANT_EQUIPMENT_TAB", wantEquipmentTab == 1 ? "true" : "false"); //62
 		props.setProperty("S_WANT_BANK_PRESETS", wantBankPresets == 1 ? "true" : "false"); //63
 		props.setProperty("S_WANT_PARTIES", wantParties == 1 ? "true" : "false"); //64
+		props.setProperty("S_MINING_ROCKS_EXTENDED", miningRocksExtended == 1 ? "true" : "false"); //65
 		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(

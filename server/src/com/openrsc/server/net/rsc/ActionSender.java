@@ -56,6 +56,7 @@ import static com.openrsc.server.Constants.GameServer.LOGO_SPRITE_ID;
 import static com.openrsc.server.Constants.GameServer.MAX_WALKING_SPEED;
 import static com.openrsc.server.Constants.GameServer.MEMBER_WORLD;
 import static com.openrsc.server.Constants.GameServer.MENU_COMBAT_STYLE_TOGGLE;
+import static com.openrsc.server.Constants.GameServer.MINING_ROCKS_EXTENDED;
 import static com.openrsc.server.Constants.GameServer.PLAYER_COMMANDS;
 import static com.openrsc.server.Constants.GameServer.PLAYER_LEVEL_LIMIT;
 import static com.openrsc.server.Constants.GameServer.PROPER_MAGIC_TREE_NAME;
@@ -581,6 +582,7 @@ public class ActionSender {
 			LOGGER.info(WANT_EQUIPMENT_TAB + " 62");
 			LOGGER.info(WANT_BANK_PRESETS + " 63");
 			LOGGER.info(WANT_PARTIES + " 64");
+			LOGGER.info(MINING_ROCKS_EXTENDED + " 65");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs();
 		ConnectionAttachment attachment = new ConnectionAttachment();
@@ -661,6 +663,7 @@ public class ActionSender {
 		s.writeByte((byte) (WANT_EQUIPMENT_TAB ? 1 : 0)); //62
 		s.writeByte((byte) (WANT_BANK_PRESETS ? 1 : 0)); //63
 		s.writeByte((byte) (WANT_PARTIES ? 1 : 0)); //64
+		s.writeByte((byte) (MINING_ROCKS_EXTENDED ? 1 : 0)); //65
 		return s;
 	}
 
