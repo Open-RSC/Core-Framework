@@ -1,13 +1,22 @@
 package com.openrsc.client.entityhandling;
 
-import com.openrsc.client.entityhandling.defs.*;
+import com.openrsc.client.entityhandling.defs.DoorDef;
+import com.openrsc.client.entityhandling.defs.ElevationDef;
+import com.openrsc.client.entityhandling.defs.GameObjectDef;
+import com.openrsc.client.entityhandling.defs.ItemDef;
+import com.openrsc.client.entityhandling.defs.NPCDef;
+import com.openrsc.client.entityhandling.defs.PrayerDef;
+import com.openrsc.client.entityhandling.defs.SpellDef;
+import com.openrsc.client.entityhandling.defs.SpriteDef;
+import com.openrsc.client.entityhandling.defs.TileDef;
 import com.openrsc.client.entityhandling.defs.extras.AnimationDef;
 import com.openrsc.client.entityhandling.defs.extras.TextureDef;
-import orsc.Config;
-import orsc.mudclient;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+
+import orsc.Config;
+import orsc.mudclient;
 
 public class EntityHandler {
 
@@ -25,6 +34,7 @@ public class EntityHandler {
 	private static ArrayList<ElevationDef> elevation = new ArrayList<>();
 	private static ArrayList<GameObjectDef> objects = new ArrayList<>();
 	private static ArrayList<String> models = new ArrayList<>();
+
 
 	private static int invPictureCount = 0;
 
@@ -59,6 +69,7 @@ public class EntityHandler {
 	}
 
 	public static ItemDef getItemDef(int id) {
+
 		if (id < 0 || id >= items.size()) {
 			return null;
 		}
@@ -2104,12 +2115,12 @@ public class EntityHandler {
 			npcs.add(new NPCDef("Wizard Sedridor", "An old wizard", "", 0, 0, 0, 0, false, sprites, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, i++));
 		}
 
-        if (Config.S_WANT_CUSTOM_SPRITES) {
-            // Ranael
-            npcs.get(103).sprites = new int[]{3, 4, -1, -1, -1, -1, -1, 247, -1, -1, -1, -1};
-            // Zenesha
-            npcs.get(331).sprites = new int[]{3, 4, -1, -1, -1, -1, 56, 247, -1, -1, -1, -1};
-        }
+		if (Config.S_WANT_CUSTOM_SPRITES) {
+			// Ranael
+			npcs.get(103).sprites = new int[]{3, 4, -1, -1, -1, -1, -1, 247, -1, -1, -1, -1};
+			// Zenesha
+			npcs.get(331).sprites = new int[]{3, 4, -1, -1, -1, -1, 56, 247, -1, -1, -1, -1};
+		}
 		/*try {
 			PrintWriter printWriter = new PrintWriter(new FileOutputStream("NpcType.txt"), true);
 			int count = 0;
@@ -2142,6 +2153,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Coins", "Lovely money!", "", 1, 10, "items:10", true, false, 0, 0, false, false, -1, -1, 10));
 		items.add(new ItemDef("Bronze Arrows", "Arrows with bronze heads", "", 2, 11, "items:11", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1000 : 0, 16737817, false, false, -1, -1, 11));
 		items.add(new ItemDef("Iron Axe", "A woodcutters axe", "", 56, 12, "items:12", false, true, 16, 15654365, false, false, 1300, -1, 12));
+
 		items.add(new ItemDef("Knife", "A dangerous looking knife", "", 6, 13, "items:13", false, false, 0, 0, false, false, 1301, -1, 13));
 		items.add(new ItemDef("Logs", "A number of wooden logs", "", 4, 14, "items:14", false, false, 0, 0, false, false, 1302, -1, 14));
 		items.add(new ItemDef("Leather Armour", "Better than no armour!", "", 21, 15, "items:15", false, true, 64, 0, false, false, 1303, -1, 15));
@@ -3422,6 +3434,7 @@ public class EntityHandler {
 		loadNoteDefinitions();
 
 		//Load custom sprites
+
 		if (Config.S_WANT_CUSTOM_SPRITES)
 			loadCustomItemAndNoteDefinitions();
 
@@ -4657,301 +4670,301 @@ public class EntityHandler {
 		runes.put(33, 1);
 		runes.put(35, 1);
 		spells.add(new SpellDef("Wind strike", "A strength 1 missile attack",
-			1, 2, 2, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				1, 2, 2, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(32, 3);
 		runes.put(34, 2);
 		runes.put(36, 1);
 		spells.add(new SpellDef("Confuse",
-			"Reduces your opponents attack by 5%", 3, 2, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Reduces your opponents attack by 5%", 3, 2, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(32, 1);
 		runes.put(33, 1);
 		runes.put(35, 1);
 		spells.add(new SpellDef("Water Strike", "A strength 2 missile attack",
-			5, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				5, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(32, 1);
 		runes.put(46, 1);
 		spells.add(new SpellDef(Config.S_WANT_EQUIPMENT_TAB ? "Enchant lvl-1 jewelry" : "Enchant lvl-1 amulet",
-			Config.S_WANT_EQUIPMENT_TAB ? "For use on sapphire and opal jewelry" : "For use on sapphire amulets", 7, 3, 2,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				Config.S_WANT_EQUIPMENT_TAB ? "For use on sapphire and opal jewelry" : "For use on sapphire amulets", 7, 3, 2,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 2);
 		runes.put(33, 1);
 		runes.put(35, 1);
 		spells.add(new SpellDef("Earth Strike", "A strength 3 missile attack",
-			9, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				9, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(32, 3);
 		runes.put(34, 2);
 		runes.put(36, 1);
 		spells.add(new SpellDef("Weaken",
-			"Reduces your opponents strength by 5%", 11, 2, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Reduces your opponents strength by 5%", 11, 2, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 3);
 		runes.put(33, 2);
 		runes.put(35, 1);
 		spells.add(new SpellDef("Fire Strike", "A strength 4 missile attack",
-			13, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				13, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 2);
 		runes.put(32, 2);
 		runes.put(40, 1);
 		spells.add(new SpellDef("Bones to bananas",
-			"Changes all held bones into bananas!", 15, 0, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Changes all held bones into bananas!", 15, 0, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(33, 2);
 		runes.put(41, 1);
 		spells.add(new SpellDef("Wind Bolt", "A strength 5 missile attack", 17,
-			2, 2, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				2, 2, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(32, 2);
 		runes.put(34, 3);
 		runes.put(36, 1);
 		spells.add(new SpellDef("Curse",
-			"Reduces your opponents defense by 5%", 19, 2, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Reduces your opponents defense by 5%", 19, 2, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 3);
 		runes.put(40, 1);
 		spells.add(new SpellDef("Low level alchemy",
-			"Converts an item into gold", 21, 3, 2,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Converts an item into gold", 21, 3, 2,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(32, 2);
 		runes.put(33, 2);
 		runes.put(41, 1);
 		spells.add(new SpellDef("Water bolt", "A strength 6 missle attack", 23,
-			2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 1);
 		runes.put(33, 3);
 		runes.put(42, 1);
 		spells.add(new SpellDef("Varrock teleport", "Teleports you to Varrock",
-			25, 0, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				25, 0, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(33, 3);
 		runes.put(46, 1);
 		spells.add(new SpellDef(Config.S_WANT_EQUIPMENT_TAB ? "Enchant lvl-2 jewelry" : "Enchant lvl-2 amulet",
-			Config.S_WANT_EQUIPMENT_TAB ? "For use on emerald jewelry" : "For use on emerald amulets", 27, 3, 2,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				Config.S_WANT_EQUIPMENT_TAB ? "For use on emerald jewelry" : "For use on emerald amulets", 27, 3, 2,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 3);
 		runes.put(33, 2);
 		runes.put(41, 1);
 		spells.add(new SpellDef("Earth bolt", "A strength 7 missile attack",
-			29, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				29, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 1);
 		runes.put(33, 3);
 		runes.put(42, 1);
 		spells.add(new SpellDef("Lumbridge teleport",
-			"Teleports you to Lumbridge", 31, 0, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Teleports you to Lumbridge", 31, 0, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(33, 1);
 		runes.put(42, 1);
 		spells.add(new SpellDef("Telekinetic grab",
-			"Take an item you can see but can't reach", 33, 3, 2,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Take an item you can see but can't reach", 33, 3, 2,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 4);
 		runes.put(33, 3);
 		runes.put(41, 1);
 		spells.add(new SpellDef("Fire bolt", "A strength 8 missile attack", 35,
-			2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(32, 1);
 		runes.put(33, 3);
 		runes.put(42, 1);
 		spells.add(new SpellDef("Falador teleport", "Teleports you to Falador",
-			37, 0, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				37, 0, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 2);
 		runes.put(33, 2);
 		runes.put(41, 1);
 		spells.add(new SpellDef("Crumble undead",
-			"Hits skeleton, ghosts & zombies hard!", 39, 2, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Hits skeleton, ghosts & zombies hard!", 39, 2, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(33, 3);
 		runes.put(38, 1);
 		spells.add(new SpellDef("Wind blast", "A strength 9 missile attack",
-			41, 2, 2, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				41, 2, 2, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 4);
 		runes.put(40, 1);
 		spells.add(new SpellDef("Superheat item",
-			"Smelt 1 ore without a furnace", 43, 3, 2,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Smelt 1 ore without a furnace", 43, 3, 2,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(33, 5);
 		runes.put(42, 1);
 		spells.add(new SpellDef("Camelot teleport", "Teleports you to Camelot",
-			45, 0, 2, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				45, 0, 2, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(32, 3);
 		runes.put(33, 3);
 		runes.put(38, 1);
 		spells.add(new SpellDef("Water blast", "A strength 10 missile attack",
-			47, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				47, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 5);
 		runes.put(46, 1);
 		spells.add(new SpellDef(Config.S_WANT_EQUIPMENT_TAB ? "Enchant lvl-3 jewelry" : "Enchant lvl-3 amulet",
-			Config.S_WANT_EQUIPMENT_TAB ? "For use on ruby jewelry" : "For use on ruby amulets", 49, 3, 2,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				Config.S_WANT_EQUIPMENT_TAB ? "For use on ruby jewelry" : "For use on ruby amulets", 49, 3, 2,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 5);
 		runes.put(38, 1);
 		spells.add(new SpellDef("Iban blast", "A strength 25 missile attack!",
-			50, 2, 2, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				50, 2, 2, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(32, 2);
 		runes.put(42, 2);
 		spells.add(new SpellDef("Ardougne teleport",
-			"Teleports you to Ardougne", 51, 0, 2,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Teleports you to Ardougne", 51, 0, 2,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 4);
 		runes.put(33, 3);
 		runes.put(38, 1);
 		spells.add(new SpellDef("Earth blast", "A strength 11 missile attack",
-			53, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				53, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 5);
 		runes.put(40, 1);
 		spells.add(new SpellDef("High level alchemy",
-			"Convert an item into more gold", 55, 3, 2,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Convert an item into more gold", 55, 3, 2,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(32, 30);
 		runes.put(46, 3);
 		runes.put(611, 1);
 		spells.add(new SpellDef("Charge Water Orb",
-			"Needs to be cast on a water obelisk", 56, 5, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Needs to be cast on a water obelisk", 56, 5, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 10);
 		runes.put(46, 1);
 		spells.add(new SpellDef(Config.S_WANT_EQUIPMENT_TAB ? "Enchant lvl-4 jewelry" : "Enchant lvl-4 amulet",
-			Config.S_WANT_EQUIPMENT_TAB ? "For use on diamond jewelry" : "For use on diamond amulets", 57, 3, 2,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				Config.S_WANT_EQUIPMENT_TAB ? "For use on diamond jewelry" : "For use on diamond amulets", 57, 3, 2,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 2);
 		runes.put(42, 2);
 		spells.add(new SpellDef("Watchtower teleport",
-			"Teleports you to the watchtower", 58, 0, 2,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Teleports you to the watchtower", 58, 0, 2,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 5);
 		runes.put(33, 4);
 		runes.put(38, 1);
 		spells.add(new SpellDef("Fire blast", "A strength 12 missile attack",
-			59, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				59, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 1);
 		runes.put(33, 4);
 		runes.put(619, 2);
 		spells.add(new SpellDef("Claws of Guthix",
-			"Summons the power of Guthix", 60, 2, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Summons the power of Guthix", 60, 2, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 2);
 		runes.put(33, 4);
 		runes.put(619, 2);
 		spells.add(new SpellDef("Saradomin strike",
-			"Summons the power of Saradomin", 60, 2, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Summons the power of Saradomin", 60, 2, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 4);
 		runes.put(33, 1);
 		runes.put(619, 2);
 		spells.add(new SpellDef("Flames of Zamorak",
-			"Summons the power of Zamorak", 60, 2, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Summons the power of Zamorak", 60, 2, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 30);
 		runes.put(46, 3);
 		runes.put(611, 1);
 		spells.add(new SpellDef("Charge earth Orb",
-			"Needs to be cast on an earth obelisk", 60, 5, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Needs to be cast on an earth obelisk", 60, 5, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(33, 5);
 		runes.put(619, 1);
 		spells.add(new SpellDef("Wind wave", "A strength 13 missile attack",
-			62, 2, 2, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				62, 2, 2, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 30);
 		runes.put(46, 3);
 		runes.put(611, 1);
 		spells.add(new SpellDef("Charge Fire Orb",
-			"Needs to be cast on a fire obelisk", 63, 5, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Needs to be cast on a fire obelisk", 63, 5, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(32, 7);
 		runes.put(33, 5);
 		runes.put(619, 1);
 		spells.add(new SpellDef("Water wave", "A strength 14 missile attack",
-			65, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				65, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(33, 30);
 		runes.put(46, 3);
 		runes.put(611, 1);
 		spells.add(new SpellDef("Charge air Orb",
-			"Needs to be cast on an air obelisk", 66, 5, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Needs to be cast on an air obelisk", 66, 5, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 5);
 		runes.put(32, 5);
 		runes.put(825, 1);
 		spells.add(new SpellDef("Vulnerability",
-			"Reduces your opponents defense by 10%", 66, 2, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Reduces your opponents defense by 10%", 66, 2, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(32, 15);
 		runes.put(34, 15);
 		runes.put(46, 1);
 		spells.add(new SpellDef(Config.S_WANT_EQUIPMENT_TAB ? "Enchant lvl-5 jewelry" : "Enchant lvl-5 amulet",
-			Config.S_WANT_EQUIPMENT_TAB ? "For use on dragonstone jewelry" : "For use on dragonstone amulets", 68, 3, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				Config.S_WANT_EQUIPMENT_TAB ? "For use on dragonstone jewelry" : "For use on dragonstone amulets", 68, 3, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 7);
 		runes.put(33, 5);
 		runes.put(619, 1);
 		spells.add(new SpellDef("Earth wave", "A strength 15 missile attack",
-			70, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				70, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 8);
 		runes.put(32, 8);
 		runes.put(825, 1);
 		spells.add(new SpellDef("Enfeeble",
-			"Reduces your opponents strength by 10%", 73, 2, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Reduces your opponents strength by 10%", 73, 2, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 7);
 		runes.put(33, 5);
 		runes.put(619, 1);
 		spells.add(new SpellDef("Fire wave", "A strength 16 missile attack", 75,
-			2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(34, 12);
 		runes.put(32, 12);
 		runes.put(825, 1);
 		spells.add(new SpellDef("Stun", "Reduces your opponents attack by 10%",
-			80, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
+				80, 2, 3, (LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes.clear();
 		runes.put(31, 3);
 		runes.put(33, 3);
 		runes.put(619, 3);
 		spells.add(new SpellDef("Charge",
-			"Increase your mage arena spells damage", 80, 0, 3,
-			(LinkedHashMap<Integer, Integer>) runes.clone()));
+				"Increase your mage arena spells damage", 80, 0, 3,
+				(LinkedHashMap<Integer, Integer>) runes.clone()));
 		runes = null;
 	}
 
@@ -5436,7 +5449,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Target", "Coming soon archery practice", "Practice", "Examine", 1, 1, 1, 0, "target", i++));
 		objects.add(new GameObjectDef("PalmTree", "A nice palm tree", "WalkTo", "Examine", 1, 1, 1, 0, "palm2", i++));
 		objects.add(new GameObjectDef("PalmTree", "A shady palm tree", "WalkTo", "Examine", 1, 1, 1, 0, "palm", i++));
-		objects.add(new GameObjectDef("Fern", "A leafy plant", "WalkTo", "Examine", 0, 1, 1, 0, "fern", i++));
+		objects.add(new GameObjectDef("Fern", "A leafy plant", "WalkTo", "Examine", 0, 1, 1, 0, "fern", i++));//34
 		objects.add(new GameObjectDef("Cactus", "It looks very spikey", "WalkTo", "Examine", 1, 1, 1, 0, "cactus", i++));
 		objects.add(new GameObjectDef("Bullrushes", "I wonder why it's called a bullrush", "WalkTo", "Examine", 0, 1, 1, 0, "bullrushes", i++));
 		objects.add(new GameObjectDef("Flower", "Ooh thats pretty", "WalkTo", "Examine", 0, 1, 1, 0, "flower", i++));
@@ -6650,7 +6663,6 @@ public class EntityHandler {
 
 		objects.add(new GameObjectDef("pipe", "a dirty sewer pipe", "enter", "Examine", 1, 1, 1, 0, "obstical_pipe", i=1236)); //yanille agility shortcut
 		objects.add(new GameObjectDef("pipe", "a dirty sewer pipe", "enter", "Examine", 1, 1, 1, 0, "obstical_pipe", ++i)); //yanille agility shortcut
-
 	}
 
 	public static void load(boolean loadMembers) {

@@ -13,12 +13,59 @@ import com.openrsc.data.DataFileDecrypter;
 import com.openrsc.data.DataOperations;
 import com.openrsc.interfaces.NComponent;
 import com.openrsc.interfaces.NCustomComponent;
-import com.openrsc.interfaces.misc.*;
+import com.openrsc.interfaces.misc.AchievementGUI;
+import com.openrsc.interfaces.misc.AuctionHouse;
+import com.openrsc.interfaces.misc.BankPinInterface;
+import com.openrsc.interfaces.misc.CustomBankInterface;
+import com.openrsc.interfaces.misc.DoSkillInterface;
+import com.openrsc.interfaces.misc.ExperienceConfigInterface;
+import com.openrsc.interfaces.misc.FishingTrawlerInterface;
+import com.openrsc.interfaces.misc.IronManInterface;
+import com.openrsc.interfaces.misc.LostOnDeathInterface;
+import com.openrsc.interfaces.misc.OnlineListInterface;
+import com.openrsc.interfaces.misc.ProgressBarInterface;
+import com.openrsc.interfaces.misc.QuestGuideInterface;
+import com.openrsc.interfaces.misc.SkillGuideInterface;
+import com.openrsc.interfaces.misc.TerritorySignupInterface;
 import com.openrsc.interfaces.misc.clan.Clan;
 import com.openrsc.interfaces.misc.party.Party;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
 import orsc.buffers.RSBufferUtils;
-import orsc.enumerations.*;
-import orsc.graphics.gui.*;
+import orsc.enumerations.GameMode;
+import orsc.enumerations.InputXAction;
+import orsc.enumerations.MenuItemAction;
+import orsc.enumerations.MessageTab;
+import orsc.enumerations.MessageType;
+import orsc.enumerations.ORSCharacterDirection;
+import orsc.enumerations.PasswordChangeMode;
+import orsc.enumerations.SocialPopupMode;
+import orsc.graphics.gui.InputXPrompt;
+import orsc.graphics.gui.KillAnnouncer;
+import orsc.graphics.gui.KillAnnouncerQueue;
+import orsc.graphics.gui.Menu;
+import orsc.graphics.gui.MessageHistory;
+import orsc.graphics.gui.Panel;
+import orsc.graphics.gui.SocialLists;
 import orsc.graphics.three.CollisionFlag;
 import orsc.graphics.three.RSModel;
 import orsc.graphics.three.Scene;
@@ -32,18 +79,103 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
 
+import static orsc.Config.CLIENT_VERSION;
+import static orsc.Config.C_BATCH_PROGRESS_BAR;
+import static orsc.Config.C_EXPERIENCE_CONFIG_SUBMENU;
+import static orsc.Config.C_EXPERIENCE_COUNTER;
+import static orsc.Config.C_EXPERIENCE_COUNTER_COLOR;
+import static orsc.Config.C_EXPERIENCE_COUNTER_MODE;
+import static orsc.Config.C_EXPERIENCE_DROPS;
+import static orsc.Config.C_EXPERIENCE_DROP_SPEED;
+import static orsc.Config.C_FIGHT_MENU;
+import static orsc.Config.C_HIDE_FOG;
+import static orsc.Config.C_HIDE_ROOFS;
+import static orsc.Config.C_HOLD_AND_CHOOSE;
+import static orsc.Config.C_INV_COUNT;
+import static orsc.Config.C_KILL_FEED;
+import static orsc.Config.C_LAST_ZOOM;
+import static orsc.Config.C_LONG_PRESS_TIMER;
+import static orsc.Config.C_MENU_SIZE;
+import static orsc.Config.C_MESSAGE_TAB_SWITCH;
+import static orsc.Config.C_NAME_CLAN_TAG_OVERLAY;
+import static orsc.Config.C_PARTY_INV;
+import static orsc.Config.C_SHOW_GROUND_ITEMS;
+import static orsc.Config.C_SIDE_MENU_OVERLAY;
+import static orsc.Config.C_SWIPE_TO_ROTATE;
+import static orsc.Config.C_SWIPE_TO_SCROLL;
+import static orsc.Config.C_SWIPE_TO_ZOOM;
+import static orsc.Config.C_VOLUME_TO_ROTATE;
+import static orsc.Config.DEBUG;
+import static orsc.Config.DISPLAY_LOGO_SPRITE;
+import static orsc.Config.F_CACHE_DIR;
+import static orsc.Config.F_SHOWING_KEYBOARD;
+import static orsc.Config.MEMBER_WORLD;
+import static orsc.Config.Remember;
+import static orsc.Config.SERVER_NAME;
+import static orsc.Config.SERVER_NAME_WELCOME;
+import static orsc.Config.S_AUTO_MESSAGE_SWITCH_TOGGLE;
+import static orsc.Config.S_BATCH_PROGRESSION;
+import static orsc.Config.S_CUSTOM_FIREMAKING;
+import static orsc.Config.S_EXPERIENCE_COUNTER_TOGGLE;
+import static orsc.Config.S_EXPERIENCE_DROPS_TOGGLE;
+import static orsc.Config.S_FIGHTMODE_SELECTOR_TOGGLE;
+import static orsc.Config.S_FOG_TOGGLE;
+import static orsc.Config.S_GROUND_ITEM_TOGGLE;
+import static orsc.Config.S_INVENTORY_COUNT_TOGGLE;
+import static orsc.Config.S_ITEMS_ON_DEATH_MENU;
+import static orsc.Config.S_MAX_WALKING_SPEED;
+import static orsc.Config.S_MENU_COMBAT_STYLE_TOGGLE;
+import static orsc.Config.S_PLAYER_INVENTORY_SLOTS;
+import static orsc.Config.S_PLAYER_LEVEL_LIMIT;
+import static orsc.Config.S_PLAYER_SLOT_COUNT;
+import static orsc.Config.S_RIGHT_CLICK_BANK;
+import static orsc.Config.S_SHOW_FLOATING_NAMETAGS;
+import static orsc.Config.S_SHOW_ROOF_TOGGLE;
+import static orsc.Config.S_SIDE_MENU_TOGGLE;
+import static orsc.Config.S_SPAWN_AUCTION_NPCS;
+import static orsc.Config.S_SPAWN_IRON_MAN_NPCS;
+import static orsc.Config.S_WANT_BANK_NOTES;
+import static orsc.Config.S_WANT_BANK_PINS;
+import static orsc.Config.S_WANT_BANK_PRESETS;
+import static orsc.Config.S_WANT_CERTS_TO_BANK;
+import static orsc.Config.S_WANT_CERT_DEPOSIT;
+import static orsc.Config.S_WANT_CLANS;
+import static orsc.Config.S_WANT_CUSTOM_BANKS;
+import static orsc.Config.S_WANT_CUSTOM_LANDSCAPE;
+import static orsc.Config.S_WANT_CUSTOM_RANK_DISPLAY;
+import static orsc.Config.S_WANT_DECANTING;
+import static orsc.Config.S_WANT_DROP_X;
+import static orsc.Config.S_WANT_EQUIPMENT_TAB;
+import static orsc.Config.S_WANT_EXPERIENCE_ELIXIRS;
+import static orsc.Config.S_WANT_EXP_INFO;
+import static orsc.Config.S_WANT_FIXED_OVERHEAD_CHAT;
+import static orsc.Config.S_WANT_GLOBAL_CHAT;
+import static orsc.Config.S_WANT_HIDE_IP;
+import static orsc.Config.S_WANT_KEYBOARD_SHORTCUTS;
+import static orsc.Config.S_WANT_KILL_FEED;
+import static orsc.Config.S_WANT_PARTIES;
+import static orsc.Config.S_WANT_PLAYER_COMMANDS;
+import static orsc.Config.S_WANT_QUEST_MENUS;
+import static orsc.Config.S_WANT_REMEMBER;
+import static orsc.Config.S_WANT_RUNECRAFTING;
+import static orsc.Config.S_WANT_SKILL_MENUS;
+import static orsc.Config.S_WANT_WOODCUTTING_GUILD;
+import static orsc.Config.S_ZOOM_VIEW_TOGGLE;
+import static orsc.Config.WELCOME_TEXT;
+import static orsc.Config.getFPS;
+import static orsc.Config.getServerName;
+import static orsc.Config.getServerNameWelcome;
+import static orsc.Config.getWelcomeText;
+import static orsc.Config.initConfig;
+import static orsc.Config.isAndroid;
+import static orsc.Config.isLenientContactDetails;
+import static orsc.Config.wantEmail;
+import static orsc.Config.wantMembers;
+import static orsc.multiclient.ClientPort.saveHideIp;
+
 //import javax.sound.sampled.AudioSystem;
 //import javax.sound.sampled.Clip;
 //import javax.sound.sampled.LineEvent;
-import java.io.*;
-import java.security.SecureRandom;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-
-import static orsc.Config.*;
-import static orsc.multiclient.ClientPort.saveHideIp;
 
 public final class mudclient implements Runnable {
 
@@ -7512,18 +7644,18 @@ public final class mudclient implements Runnable {
 								}
 
 								if (EntityHandler.getItemDef(id).getCommand() != null
-									&& EntityHandler.getItemDef(id).getNotedFormOf() == -1) {
+										&& EntityHandler.getItemDef(id).getNotedFormOf() == -1) {
 									for (int p = 0; p < EntityHandler.getItemDef(id).getCommand().length; p++) {
 										this.menuCommon.addItem(0, EntityHandler.getItemDef(id).getCommand()[p], p, 0, "@lre@" + EntityHandler.getItemDef(id).getName(), var5, (String) null, MenuItemAction.ITEM_COMMAND, 0, (String) null, (String) null);
 									}
 								}
 
 								if (S_WANT_DROP_X && EntityHandler.getItemDef(id).getCommand() != null
-									&& EntityHandler.getItemDef(id).getCommand()[0].equalsIgnoreCase("bury")
-									&& EntityHandler.getItemDef(id).getNotedFormOf() == -1) {
+										&&EntityHandler.getItemDef(id).getCommand()[0].equalsIgnoreCase("bury")
+										&& EntityHandler.getItemDef(id).getNotedFormOf() == -1) {
 									this.menuCommon.addItem(0, "Bury All", 0, 0, "@lre@" + EntityHandler.getItemDef(id).getName(), var5, (String) null, MenuItemAction.ITEM_COMMAND_ALL, 0, (String) null, (String) null);
-
 								}
+
 								this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_USE, "Use",
 										"@lre@" + EntityHandler.getItemDef(id).getName());
 								this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP, "Drop",
@@ -7603,11 +7735,12 @@ public final class mudclient implements Runnable {
 										this.packetHandler.getClientStream().finishPacket();
 										break;
 									} else {
-<<<<<<< HEAD
 										if (equippedItems[j].getCommand() != null)
 											for (int p = 0; p < equippedItems[j].getCommand().length; p++) {
 												this.menuCommon.addItem(0, equippedItems[j].getCommand()[p], p, 0, "@lre@" + equippedItems[j].getName(), j, (String) null, MenuItemAction.ITEM_COMMAND_EQUIPTAB, 0, (String) null, (String) null);
 											}
+										//this.menuCommon.addCharacterItem(j, MenuItemAction.ITEM_COMMAND_EQUIPTAB, equippedItems[j].getCommand(),
+										//	"@lre@" + equippedItems[j].getName());
 										this.menuCommon.addCharacterItem(j, MenuItemAction.ITEM_USE_EQUIPTAB, "Use",
 												"@lre@" + equippedItems[j].getName());
 										this.menuCommon.addCharacterItem(equippedItems[j].id, MenuItemAction.ITEM_DROP_EQUIPTAB, "Drop",
