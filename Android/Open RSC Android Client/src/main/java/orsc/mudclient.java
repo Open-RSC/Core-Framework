@@ -587,6 +587,7 @@ public final class mudclient implements Runnable {
 	boolean attemptedRecovery = false;
 	String[] jfb = new String[5];
 	int recoveryQAindices[] = {0, 1, 2, 3, 4};
+	private final int[] inventorySpellList = new int[]{3,10,13,21,24,28,30,42};
 	int instructPassRecovery1;
 	int instructPassRecovery2;
 	int controlPreviousPassword;
@@ -2254,38 +2255,6 @@ public final class mudclient implements Runnable {
 					}
 
 					String var11 = null;
-					if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell == 3) && var3 == 1) {
-						var11 = "Choose a target";
-						this.showUiTab = 1;
-					} else
-					if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell == 10) && var3 == 1) {
-						var11 = "Choose a target";
-						this.showUiTab = 1;
-					} else
-					if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell == 13) && var3 == 1) {
-						var11 = "Choose a target";
-						this.showUiTab = 1;
-					} else
-					if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell == 21) && var3 == 1) {
-						var11 = "Choose a target";
-						this.showUiTab = 1;
-					} else
-					if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell == 24) && var3 == 1) {
-						var11 = "Choose a target";
-						this.showUiTab = 1;
-					} else
-					if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell == 28) && var3 == 1) {
-						var11 = "Choose a target";
-						this.showUiTab = 1;
-					} else
-					if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell == 30) && var3 == 1) {
-						var11 = "Choose a target";
-						this.showUiTab = 1;
-					} else
-					if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell == 42) && var3 == 1) {
-						var11 = "Choose a target";
-						this.showUiTab = 1;
-					} else
 					if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell >= 0) && var3 == 1) {
 						var11 = "Choose a target";
 					} else if ((this.selectedItemInventoryIndex >= 0 || this.selectedSpell >= 0) && var3 > 1) {
@@ -8260,6 +8229,8 @@ public final class mudclient implements Runnable {
 										this.selectedSpell = var9;
 										lastSelectedSpell = var9;
 										this.selectedItemInventoryIndex = -1;
+										if (openInventorySpell(var9))
+											this.showUiTab = 1;
 										//if (EntityHandler.getSpellDef(var9).getSpellType() == 3 && var9 != 16) {
 										//	showUiTab = 1;
 										//}
@@ -16291,6 +16262,13 @@ public final class mudclient implements Runnable {
 
 	public void updateQuestRewards() {
 		questGuideRewards = new String[][]{{"3 Quest Points", "2500 coins"}, {"1 Quest Point", "Lvl*50 + 250 Cooking experience", "Access to the Cook's range"}, {"3 Quest Points", "Silverlight"}, {"1 Quest Point", "Lvl*75 + 175 Mining experience", "Ability to use Doric's anvils", "180 coins"}, {"1 Quest Point", "Lvl*62.5 + 500 Prayer experience", "Amulet of Ghostspeak"}, {"5 Quest Points", "Lvl*15 + 125 Crafting experience", "1 Gold bar"}, {"4 Quest Points", "300 coins"}, {"1 Quest Point", "Lvl*100 + 375 Magic experience", "An amulet of accuracy"}, {"2 Quest Points", "450 coins", "A gold ring", "An emerald"}, {"3 Quest points", "Free passage through the Al-Kharid tollgate", "700 coins"}, {"5 Quest Points"}, {"1 Quest Point", "Lvl*25 + 125 Crafting experience", "180 coins"}, {"1 Quest Point", "600 coins"}, {"1 Quest Point", "Lvl*375 + 350 Smithing experience"}, {"3 Quest Points", "Lvl*150 + 325 Attack experience"}, {"1 Quest Point", "Lvl*50 + 225 Magic experience"}, {"2 Quest Points", "Lvl*300 + 650 Defense experience", "Lvl*300 + 650 Strength experience", "The ability to wear a Rune plate mail body"}, {"4 Quest Points", "Lvl*150 + 325 Hits experience"}, {"3 Quest Points", "Ability to enter the city of Zanaris", "Ability to wield a Dragon sword"}, {"1 Quest Point", "Lvl*50 + 75 experience in the following skills: Attack, Defense, Hits, Strength, Cooking, Fishing, Mining, Smithing, Ranged, Firemaking, Woodcutting, and Herblaw", "Access to the Heroes' Guild", "Ability to wield the Dragon axe"}, {"4 Quest Points", "250 Herblaw experience", "Ability to use the Herblaw skill"}, {"6 Quest Points", "Excalibur"}, {"1 Quest Point", "Lvl*125 + 375 Strength experience", "Thormac will enchant your battlestaves for 40000 coins"}, {"1 Quest Point", "A pair of Steel gauntlets"}, {"1 Quest Point", "Lvl*75 + 200 Thieving experience", "5 swordfish"}, {"1 Quest Point", this.playerStatBase[10] < 24 ? "(Lvl - 10)*75 + 975 Fishing experience" : "(Lvl - 24)*75 + 2225 Fishing experience", "Access to the underground tunnel beneath White Wolf Mountain"}, {"1 Quest Point", "(Lvl + 1)*125 Woodcutting experience", "8 Law-Runes"}, {"1 Quest Point", "Lvl*250 + 500 experience in Ranged and Fletching"}, {"1 Quest Point", "500 coins"}, {"2 Quest Points", "(Lvl + 1)*300 Defense experience", "(Lvl + 1)*250 Prayer experience"}, {"2 Quest Points", "Lvl*200 + 175 experience in Attack and Thieving", "1000 coins"}, {"2 Quest Points", "Lvl*225 + 200 Attack experience", "A Gnome amulet of protection", "Ability to use Spirit Trees"}, {"1 Quest Point", "Lvl*50 + 500 Thieving experience", "2000 coins"}, {"4 Quest Points", "3100 coins"}, {"1 Quest Point", "Lvl*75 + 175 Mining experience", "A magic scroll granting the ability to cast Ardougne teleport"}, {"1 Quest Point", "Lvl*200 + 175 Fishing experience", "1 Oyster pearls"}, {"1 Quest Point", "Lvl*225 + 250 experience in Attack and Strength", "40 Mithril seeds", "2 Diamonds", "2 Gold bars"}, {"3 Quest Points", "Lvl*50 + 500 Thieving experience", "Ability to use King Lathas' Combat Training Camp", "Ability to travel freely between eastern and western Ardougne gate"}, {"1 Quest Point", "Lvl*125 + 400 Herblaw experience"}, {"5 Quest Points", "Lvl*300 + 400 experience in Agility and Attack", "Lvl*50 + 150 Magic experience", "Access to the Grand Tree mines", "Ability to use the Spirit Tree at the Grand Tree", "Ability to use the Gnome Gliders"}, {"2 Quest Points", "(Lvl + 1)*125 Crafting experience", "Access to Shilo Village"}, {"5 Quest Points", "Lvl*50 + 500 experience in Agility and Attack", "A Staff of Iban", "15 Death-Runes", "30 Fire-Runes"}, {"2 Quest Points", "Lvl*100 + 250 Crafting experience", "Another reward based on your constellation"}, {"2 Quest Points", "(Lvl + 1)*150 experience twice in a choice of Agility, Fletching, Thieving, Smithing", "Ability to make throwing darts", "Access to the Desert Mining Camp"}, {"4 Quest Points", "(Lvl + 1)*250 Magic experience", "A spell scroll granting the ability to cast the Watchtower teleport", "5000 coins"}, {"1 Quest Point", "Lvl*50 + 250 Crafting experience", "Ability to buy a dwarf cannon", "Ability to make cannon balls"}, {"3 Quest Points", "Lvl*37.5 + 187.5 Crafting experience", "2000 coins"}, {"2 Quest Points", "(Lvl + 1)*300 Mining experience", "(Lvl + 1)*125 Herblaw experience", "2 Gold bars"}, {"1 Quest Point", "Lvl*45 + 175 Cooking experience", "A Kitten", "A Chocolate cake and stew"}, {"4 Quest Points", "(Lvl + 1)*150 experience in 4 of these skills of your choice: Attack, Strength, Defense, Hits, Prayer, Magic, Woodcutting, Crafting, Smithing, Herblaw, Agility, and Thieving", "Access to the Legend's Guild", "Ability to wear the Dragon Square Shield and Cape of Legends", "Ability to make Oomlie meat parcels and Blessed golden bowls"}, {"1 Quest Point", "1 air talisman", "The ability to mine rune essence", "The ability to enter mysterious ruins with the proper talisman"}};
+	}
+
+	public boolean openInventorySpell(int spellID) {
+		for (int spell : this.inventorySpellList)
+			if (spell == spellID)
+				return true;
+		return false;
 	}
 
 	class XPNotification {
