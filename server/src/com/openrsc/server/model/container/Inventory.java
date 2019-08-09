@@ -12,6 +12,7 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
+import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
@@ -347,7 +348,9 @@ public class Inventory {
             ActionSender.sendEquipmentStats(player);
         } else {
             remove(i, 1, false);
-            add(new Item(j), sendInventory);
+            add(new Item(j), false);
+            if (sendInventory)
+				ActionSender.sendInventory(player);
         }
     }
 
