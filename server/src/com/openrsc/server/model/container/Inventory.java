@@ -328,7 +328,8 @@ public class Inventory {
 		return false;
 	}
 
-	public void replace(int i, int j) {
+	public void replace(int i, int j) { this.replace(i, j, true); }
+	public void replace(int i, int j, boolean sendInventory) {
         Item old = new Item(i);
         Item newitem = new Item(j);
         if (old.getDef() != null && newitem.getDef() != null
@@ -346,7 +347,7 @@ public class Inventory {
             ActionSender.sendEquipmentStats(player);
         } else {
             remove(i, 1, false);
-            add(new Item(j));
+            add(new Item(j), sendInventory);
         }
     }
 

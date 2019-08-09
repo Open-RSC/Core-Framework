@@ -8,6 +8,7 @@ import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.states.Action;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
@@ -35,18 +36,20 @@ public class Smelting implements InvUseOnObjectListener,
 						p.message("You need to complete the dwarf cannon quest");
 						return;
 					}
-					showBubble(p, item);
-					message(p, 1200, "you heat the steel bar into a liquid state",
+					showBubble(p, new Item(ItemId.MULTI_CANNON_BALL.id(), 1));
+					int messagedelay = Constants.GameServer.BATCH_PROGRESSION ? 200 : 1700;
+					int delay = Constants.GameServer.BATCH_PROGRESSION ? 7200: 2100;
+					message(p, messagedelay, "you heat the steel bar into a liquid state",
 						"and pour it into your cannon ball mould",
 						"you then leave it to cool for a short while");
-					p.setBatchEvent(new BatchEvent(p, 1800, "Smelting", Formulae.getRepeatTimes(p, SKILLS.SMITHING.id()), false) {
+
+					p.setBatchEvent(new BatchEvent(p, delay, "Smelting", p.getInventory().countId(item.getID()), false) {
 
 						public void action() {
 							p.incExp(SKILLS.SMITHING.id(), 100, true);
-							p.getInventory().replace(ItemId.STEEL_BAR.id(), ItemId.MULTI_CANNON_BALL.id());
-							int amount = 1;
+							p.getInventory().replace(ItemId.STEEL_BAR.id(), ItemId.MULTI_CANNON_BALL.id(),false);
 							if (Functions.isWielding(p, ItemId.DWARVEN_RING.id())) {
-								amount += 2;
+								p.getInventory().add(new Item(ItemId.MULTI_CANNON_BALL.id(), Constants.GameServer.DWARVEN_RING_BONUS),false);
 								int charges;
 								if (p.getCache().hasKey("dwarvenring")) {
 									charges = p.getCache().getInt("dwarvenring") + 1;
@@ -60,13 +63,12 @@ public class Smelting implements InvUseOnObjectListener,
 									p.getCache().put("dwarvenring", 1);
 
 							}
-							addItem(p, ItemId.MULTI_CANNON_BALL.id(), amount);
 							ActionSender.sendInventory(p);
-							sleep(1800);
 							p.message("it's very heavy");
 
 							if (!isCompleted()) {
-								showBubble(p, item);
+								p.message("you repeat the process");
+								showBubble(p, new Item(ItemId.MULTI_CANNON_BALL.id(), 1));
 							}
 							if (Constants.GameServer.WANT_FATIGUE) {
 								if (p.getFatigue() >= p.MAX_FATIGUE) {

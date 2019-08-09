@@ -2598,7 +2598,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Unfinished potion", "I need another ingredient to finish this Kwuarm potion", "", 54, 48, "items:48", false, false, 0, 11974326, true, false, 1691, -1, 461));
 		items.add(new ItemDef("Unfinished potion", "I need another ingredient to finish this Cadantine potion", "", 65, 48, "items:48", false, false, 0, 13743769, true, false, 1692, -1, 462));
 		items.add(new ItemDef("Unfinished potion", "I need another ingredient to finish this Dwarfweed potion", "", 70, 48, "items:48", false, false, 0, 10073809, true, false, 1693, -1, 463));
-		items.add(new ItemDef("Vial", "It's full of water", "", 2, 48, "items:48", false, false, 0, 11197951, false, false, 1694, -1, 464));
+		items.add(new ItemDef(Config.S_PROPER_MAGIC_TREE_NAME ? "Vial of Water" : "Vial", "It's full of water", "", 2, 48, "items:48", false, false, 0, 11197951, false, false, 1694, -1, 464));
 		items.add(new ItemDef("Vial", "This vial is empty", "", 2, 144, "items:144", false, false, 0, 0, false, false, 1695, -1, 465));
 		items.add(new ItemDef("Unicorn horn", "Poor unicorn", "", 20, 145, "items:145", false, false, 0, 0, true, false, 1696, -1, 466));
 		items.add(new ItemDef("Blue dragon scale", "A large shiny scale", "", 50, 146, "items:146", false, false, 0, 0, true, false, 1697, -1, 467));

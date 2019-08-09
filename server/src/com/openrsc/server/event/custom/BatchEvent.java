@@ -65,7 +65,9 @@ public abstract class BatchEvent extends DelayedEvent {
 		return repeatFor;
 	}
 
+
 	public void setRepeatFor(int i) {
 		repeatFor = i;
 	}
+	public int getRepeated() { return this.repeated; }
 }

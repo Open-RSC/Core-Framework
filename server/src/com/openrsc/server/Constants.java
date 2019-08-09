@@ -285,6 +285,7 @@ public final class Constants {
 		public static final int RING_OF_RECOIL_LIMIT = 40;
 		public static final int RING_OF_FORGING_USES = 75;
 		public static final int DWARVEN_RING_USES = 29;
+		public static final int DWARVEN_RING_BONUS = 3;
 
 
 		public static ImmutableList<String> IGNORED_NETWORK_EXCEPTIONS =
