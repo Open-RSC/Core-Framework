@@ -587,7 +587,7 @@ public final class mudclient implements Runnable {
 	boolean attemptedRecovery = false;
 	String[] jfb = new String[5];
 	int recoveryQAindices[] = {0, 1, 2, 3, 4};
-	private final int[] inventorySpellList = new int[]{3,10,13,21,24,28,30,42};
+	private final int[] inventorySpellList = new int[]{3, 10, 13, 21, 24, 28, 30, 42};
 	int instructPassRecovery1;
 	int instructPassRecovery2;
 	int controlPreviousPassword;
@@ -1089,6 +1089,7 @@ public final class mudclient implements Runnable {
 			throw GenUtil.makeThrowable(var5, "client.MC(" + (player != null ? "{...}" : "null") + ',' + "dummy" + ')');
 		}
 	}
+
 	public final void addDelayedIgnore(String player) {
 		try {
 
@@ -1248,8 +1249,8 @@ public final class mudclient implements Runnable {
 				this.menuCommon.addCharacterItem(player.serverIndex, MenuItemAction.PLAYER_FOLLOW, "Follow",
 					"@whi@" + name + level);
 				if (S_WANT_PARTIES)
-				this.menuCommon.addCharacterItem(player.serverIndex, MenuItemAction.PLAYER_PARTY_INVITE, "Invite to party",
-					"@whi@" + name + level);
+					this.menuCommon.addCharacterItem(player.serverIndex, MenuItemAction.PLAYER_PARTY_INVITE, "Invite to party",
+						"@whi@" + name + level);
 				this.menuCommon.addItem_With2Strings("Report abuse", "@whi@" + name + level, player.getStaffName(),
 					MenuItemAction.REPORT_ABUSE, player.accountName);
 				if (modMenu) {
@@ -4927,7 +4928,7 @@ public final class mudclient implements Runnable {
 								for (int var13 = party.username[index].length(); this.getSurface().stringWidth(1, partyIsh) > 120; partyIsh = party.username[index].substring(0, var13 - var12) + "...") {
 									++var12;
 								}
-								if(SocialLists.partyListCount == 1){
+								if (SocialLists.partyListCount == 1) {
 									if (this.mouseX > 4 && this.mouseX < 109 && this.mouseY > 37 && this.mouseY < 59) {
 										if (getMouseClick() == 2) {
 											party.showPartySetupInterface(party.inParty());
@@ -4935,20 +4936,20 @@ public final class mudclient implements Runnable {
 											setMouseClick(0);
 										}
 									}
-									if(party.skull[0] > 0){
+									if (party.skull[0] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 84,
 											38, 14, 14, 5924);
 									}
-									if(party.pMemD[0] > 0){
+									if (party.pMemD[0] > 0) {
 										party.pMemDTimeout[0] = 500;
 									}
-									if(party.pMemDTimeout[0] > 0) {
+									if (party.pMemDTimeout[0] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
 											38, 14, 14, 5924);
 									}
 									this.getSurface().drawBoxAlpha(5, 38, 108, 20, var777, 128);
 									this.getSurface().drawString("" + party.username[0] + "@whi@-" + party.cbLvl[0], 7, 50, 0xffffff, 1);
-									if(party.partyRank[0] == 1){
+									if (party.partyRank[0] == 1) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 38, 14, 14, 5924);
 									}
 									int hpMissing = 0;
@@ -4959,10 +4960,10 @@ public final class mudclient implements Runnable {
 									prog2 = ((double) prog1 * 100);
 									int prog3 = (int) Math.round(prog2);
 									this.getSurface().drawBox(7, 52, 100, 4, 0xFF0000);
-									if(party.pMemDTimeout[0] < 1) {
+									if (party.pMemDTimeout[0] < 1) {
 										this.getSurface().drawBox(7, 52, 100 - prog3, 4, 0x00FF00);
 									}
-								} else if(SocialLists.partyListCount == 2){
+								} else if (SocialLists.partyListCount == 2) {
 									if (this.mouseX > 4 && this.mouseX < 109 && this.mouseY > 37 && this.mouseY < 79) {
 										if (getMouseClick() == 2) {
 											party.showPartySetupInterface(party.inParty());
@@ -4971,31 +4972,31 @@ public final class mudclient implements Runnable {
 										}
 									}
 									this.getSurface().drawBoxAlpha(5, 38, 108, 40, var777, 128);
-									if(party.partyRank[0] == 1){
+									if (party.partyRank[0] == 1) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 38, 14, 14, 5924);
 									}
-									if(party.partyRank[1] == 1){
+									if (party.partyRank[1] == 1) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 53, 14, 14, 5924);
 									}
-									if(party.skull[0] > 0){
+									if (party.skull[0] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 84,
 											38, 14, 14, 5924);
 									}
-									if(party.skull[1] > 0){
+									if (party.skull[1] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
 											57, 14, 14, 5924);
 									}
-									if(party.pMemD[0] > 0){
+									if (party.pMemD[0] > 0) {
 										party.pMemDTimeout[0] = 500;
 									}
-									if(party.pMemD[1] > 0){
+									if (party.pMemD[1] > 0) {
 										party.pMemDTimeout[1] = 500;
 									}
-									if(party.pMemDTimeout[0] > 0) {
+									if (party.pMemDTimeout[0] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
 											38, 14, 14, 5924);
 									}
-									if(party.pMemDTimeout[1] > 0) {
+									if (party.pMemDTimeout[1] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
 											58, 14, 14, 5924);
 									}
@@ -5008,7 +5009,7 @@ public final class mudclient implements Runnable {
 									prog2 = ((double) prog1 * 100);
 									int prog3 = (int) Math.round(prog2); // 3
 									this.getSurface().drawBox(7, 52, 100, 4, 0xFF0000);
-									if(party.pMemDTimeout[0] < 1) {
+									if (party.pMemDTimeout[0] < 1) {
 										this.getSurface().drawBox(7, 52, 100 - prog3, 4, 0x00FF00);
 									}
 									this.getSurface().drawString("@yel@" + party.username[1] + "@whi@-" + party.cbLvl[1], 7, 70, 0xffffff, 1);
@@ -5020,10 +5021,10 @@ public final class mudclient implements Runnable {
 									prog22 = ((double) prog11 * 100);
 									int prog33 = (int) Math.round(prog22); // 3
 									this.getSurface().drawBox(7, 72, 100, 4, 0xFF0000);
-									if(party.pMemDTimeout[1] < 1) {
+									if (party.pMemDTimeout[1] < 1) {
 										this.getSurface().drawBox(7, 72, 100 - prog33, 4, 0x00FF00);
 									}
-								} else if(SocialLists.partyListCount == 3){
+								} else if (SocialLists.partyListCount == 3) {
 									if (this.mouseX > 4 && this.mouseX < 109 && this.mouseY > 37 && this.mouseY < 99) {
 										if (getMouseClick() == 2) {
 											party.showPartySetupInterface(party.inParty());
@@ -5031,24 +5032,24 @@ public final class mudclient implements Runnable {
 											setMouseClick(0);
 										}
 									}
-									if(party.pMemD[0] > 0){
+									if (party.pMemD[0] > 0) {
 										party.pMemDTimeout[0] = 500;
 									}
-									if(party.pMemD[1] > 0){
+									if (party.pMemD[1] > 0) {
 										party.pMemDTimeout[1] = 500;
 									}
-									if(party.pMemD[2] > 0){
+									if (party.pMemD[2] > 0) {
 										party.pMemDTimeout[2] = 500;
 									}
-									if(party.pMemDTimeout[0] > 0) {
+									if (party.pMemDTimeout[0] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
 											38, 14, 14, 5924);
 									}
-									if(party.pMemDTimeout[1] > 0) {
+									if (party.pMemDTimeout[1] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
 											58, 14, 14, 5924);
 									}
-									if(party.pMemDTimeout[2] > 0) {
+									if (party.pMemDTimeout[2] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
 											78, 14, 14, 5924);
 									}
@@ -5060,7 +5061,7 @@ public final class mudclient implements Runnable {
 									prog222 = ((double) prog111 * 100);
 									int prog333 = (int) Math.round(prog222); // 3
 									this.getSurface().drawBox(7, 52, 100, 4, 0xFF0000);
-									if(party.pMemDTimeout[0] < 1) {
+									if (party.pMemDTimeout[0] < 1) {
 										this.getSurface().drawBox(7, 52, 100 - prog333, 4, 0x00FF00);
 									}
 									this.getSurface().drawBoxAlpha(5, 38, 108, 60, var777, 128);
@@ -5072,7 +5073,7 @@ public final class mudclient implements Runnable {
 									prog2222 = ((double) prog1111 * 100);
 									int prog3333 = (int) Math.round(prog2222);
 									this.getSurface().drawBox(7, 72, 100, 4, 0xFF0000);
-									if(party.pMemDTimeout[1] < 1) {
+									if (party.pMemDTimeout[1] < 1) {
 										this.getSurface().drawBox(7, 72, 100 - prog3333, 4, 0x00FF00);
 									}
 									int hpMissing1111 = 0;
@@ -5083,34 +5084,34 @@ public final class mudclient implements Runnable {
 									prog22222 = ((double) prog11111 * 100);
 									int prog33333 = (int) Math.round(prog22222);
 									this.getSurface().drawBox(7, 92, 100, 4, 0xFF0000);
-									if(party.pMemDTimeout[2] < 1) {
+									if (party.pMemDTimeout[2] < 1) {
 										this.getSurface().drawBox(7, 92, 100 - prog33333, 4, 0x00FF00);
 									}
-									if(party.partyRank[0] == 1){
+									if (party.partyRank[0] == 1) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 38, 14, 14, 5924);
 									}
-									if(party.partyRank[1] == 1){
+									if (party.partyRank[1] == 1) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 53, 14, 14, 5924);
 									}
-									if(party.partyRank[2] == 1){
+									if (party.partyRank[2] == 1) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 68, 14, 14, 5924);
 									}
-									if(party.skull[0] > 0){
+									if (party.skull[0] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 84,
 											38, 14, 14, 5924);
 									}
-									if(party.skull[1] > 0){
+									if (party.skull[1] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
 											57, 14, 14, 5924);
 									}
-									if(party.skull[2] > 0){
+									if (party.skull[2] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
 											76, 14, 14, 5924);
 									}
 									this.getSurface().drawString("" + party.username[0] + "@whi@-" + party.cbLvl[0], 7, 50, 0xffffff, 1);
 									this.getSurface().drawString("" + party.username[1] + "@whi@-" + party.cbLvl[1], 7, 70, 0xffffff, 1);
 									this.getSurface().drawString("" + party.username[2] + "@whi@-" + party.cbLvl[2], 7, 90, 0xffffff, 1);
-								} else if(SocialLists.partyListCount == 4){
+								} else if (SocialLists.partyListCount == 4) {
 									if (this.mouseX > 4 && this.mouseX < 109 && this.mouseY > 37 && this.mouseY < 119) {
 										if (getMouseClick() == 2) {
 											party.showPartySetupInterface(party.inParty());
@@ -5118,31 +5119,31 @@ public final class mudclient implements Runnable {
 											setMouseClick(0);
 										}
 									}
-									if(party.pMemD[0] > 0){
+									if (party.pMemD[0] > 0) {
 										party.pMemDTimeout[0] = 500;
 									}
-									if(party.pMemD[1] > 0){
+									if (party.pMemD[1] > 0) {
 										party.pMemDTimeout[1] = 500;
 									}
-									if(party.pMemD[2] > 0){
+									if (party.pMemD[2] > 0) {
 										party.pMemDTimeout[2] = 500;
 									}
-									if(party.pMemD[3] > 0){
+									if (party.pMemD[3] > 0) {
 										party.pMemDTimeout[3] = 500;
 									}
-									if(party.pMemDTimeout[0] > 0) {
+									if (party.pMemDTimeout[0] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
 											38, 14, 14, 5924);
 									}
-									if(party.pMemDTimeout[1] > 0) {
+									if (party.pMemDTimeout[1] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
 											58, 14, 14, 5924);
 									}
-									if(party.pMemDTimeout[2] > 0) {
+									if (party.pMemDTimeout[2] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
 											78, 14, 14, 5924);
 									}
-									if(party.pMemDTimeout[3] > 0) {
+									if (party.pMemDTimeout[3] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
 											98, 14, 14, 5924);
 									}
@@ -5154,7 +5155,7 @@ public final class mudclient implements Runnable {
 									prog222222 = ((double) prog111111 * 100);
 									int prog333333 = (int) Math.round(prog222222); // 3
 									this.getSurface().drawBox(7, 52, 100, 4, 0xFF0000);
-									if(party.pMemDTimeout[0] < 1) {
+									if (party.pMemDTimeout[0] < 1) {
 										this.getSurface().drawBox(7, 52, 100 - prog333333, 4, 0x00FF00);
 									}
 									this.getSurface().drawBoxAlpha(5, 38, 108, 80, var777, 128);
@@ -5166,7 +5167,7 @@ public final class mudclient implements Runnable {
 									prog2222333 = ((double) prog1111222 * 100);
 									int prog33332222 = (int) Math.round(prog2222333);
 									this.getSurface().drawBox(7, 72, 100, 4, 0xFF0000);
-									if(party.pMemDTimeout[1] < 1) {
+									if (party.pMemDTimeout[1] < 1) {
 										this.getSurface().drawBox(7, 72, 100 - prog33332222, 4, 0x00FF00);
 									}
 									int hpMissing11116767 = 0;
@@ -5177,7 +5178,7 @@ public final class mudclient implements Runnable {
 									prog222228888 = ((double) prog111117878 * 100);
 									int prog333331111 = (int) Math.round(prog222228888);
 									this.getSurface().drawBox(7, 92, 100, 4, 0xFF0000);
-									if(party.pMemDTimeout[2] < 1) {
+									if (party.pMemDTimeout[2] < 1) {
 										this.getSurface().drawBox(7, 92, 100 - prog333331111, 4, 0x00FF00);
 									}
 									int hphphphphphp = 0;
@@ -5188,34 +5189,34 @@ public final class mudclient implements Runnable {
 									pgpg2 = ((double) pgpg * 100);
 									int pgpg3 = (int) Math.round(pgpg2);
 									this.getSurface().drawBox(7, 112, 100, 4, 0xFF0000);
-									if(party.pMemDTimeout[3] < 1) {
+									if (party.pMemDTimeout[3] < 1) {
 										this.getSurface().drawBox(7, 112, 100 - pgpg3, 4, 0x00FF00);
 									}
-									if(party.partyRank[0] == 1){
+									if (party.partyRank[0] == 1) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 38, 14, 14, 5924);
 									}
-									if(party.partyRank[1] == 1){
+									if (party.partyRank[1] == 1) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 53, 14, 14, 5924);
 									}
-									if(party.partyRank[2] == 1){
+									if (party.partyRank[2] == 1) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 68, 14, 14, 5924);
 									}
-									if(party.partyRank[3] == 1){
+									if (party.partyRank[3] == 1) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 83, 14, 14, 5924);
 									}
-									if(party.skull[0] > 0){
+									if (party.skull[0] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 84,
 											38, 14, 14, 5924);
 									}
-									if(party.skull[1] > 0){
+									if (party.skull[1] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
 											57, 14, 14, 5924);
 									}
-									if(party.skull[2] > 0){
+									if (party.skull[2] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
 											76, 14, 14, 5924);
 									}
-									if(party.skull[3] > 0){
+									if (party.skull[3] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
 											95, 14, 14, 5924);
 									}
@@ -5223,39 +5224,39 @@ public final class mudclient implements Runnable {
 									this.getSurface().drawString("" + party.username[1] + "@whi@-" + party.cbLvl[1], 7, 70, 0xffffff, 1);
 									this.getSurface().drawString("" + party.username[2] + "@whi@-" + party.cbLvl[2], 7, 90, 0xffffff, 1);
 									this.getSurface().drawString("" + party.username[3] + "@whi@-" + party.cbLvl[3], 7, 110, 0xffffff, 1);
-								} else if(SocialLists.partyListCount == 5){
-									if(party.pMemD[0] > 0){
+								} else if (SocialLists.partyListCount == 5) {
+									if (party.pMemD[0] > 0) {
 										party.pMemDTimeout[0] = 500;
 									}
-									if(party.pMemD[1] > 0){
+									if (party.pMemD[1] > 0) {
 										party.pMemDTimeout[1] = 500;
 									}
-									if(party.pMemD[2] > 0){
+									if (party.pMemD[2] > 0) {
 										party.pMemDTimeout[2] = 500;
 									}
-									if(party.pMemD[3] > 0){
+									if (party.pMemD[3] > 0) {
 										party.pMemDTimeout[3] = 500;
 									}
-									if(party.pMemD[4] > 0){
+									if (party.pMemD[4] > 0) {
 										party.pMemDTimeout[4] = 500;
 									}
-									if(party.pMemDTimeout[0] > 0) {
+									if (party.pMemDTimeout[0] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
 											38, 14, 14, 5924);
 									}
-									if(party.pMemDTimeout[1] > 0) {
+									if (party.pMemDTimeout[1] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
 											58, 14, 14, 5924);
 									}
-									if(party.pMemDTimeout[2] > 0) {
+									if (party.pMemDTimeout[2] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
 											78, 14, 14, 5924);
 									}
-									if(party.pMemDTimeout[3] > 0) {
+									if (party.pMemDTimeout[3] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
 											98, 14, 14, 5924);
 									}
-									if(party.pMemDTimeout[4] > 0) {
+									if (party.pMemDTimeout[4] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
 											118, 14, 14, 5924);
 									}
@@ -5274,7 +5275,7 @@ public final class mudclient implements Runnable {
 									p2p2p2 = ((double) p1p1p1 * 100);
 									int p3p3p3 = (int) Math.round(p2p2p2); // 3
 									this.getSurface().drawBox(7, 52, 100, 4, 0xFF0000);
-									if(party.pMemDTimeout[0] < 1) {
+									if (party.pMemDTimeout[0] < 1) {
 										this.getSurface().drawBox(7, 52, 100 - p3p3p3, 4, 0x00FF00);
 									}
 									this.getSurface().drawBoxAlpha(5, 38, 108, 100, var777, 128);
@@ -5286,7 +5287,7 @@ public final class mudclient implements Runnable {
 									p2p2p2p2 = ((double) p1p1p1p1 * 100);
 									int p3p3p3p3 = (int) Math.round(p2p2p2p2);
 									this.getSurface().drawBox(7, 72, 100, 4, 0xFF0000);
-									if(party.pMemDTimeout[1] < 1) {
+									if (party.pMemDTimeout[1] < 1) {
 										this.getSurface().drawBox(7, 72, 100 - p3p3p3p3, 4, 0x00FF00);
 									}
 									int hphp = 0;
@@ -5297,7 +5298,7 @@ public final class mudclient implements Runnable {
 									p2p2 = ((double) p1p1 * 100);
 									int p3p3 = (int) Math.round(p2p2);
 									this.getSurface().drawBox(7, 92, 100, 4, 0xFF0000);
-									if(party.pMemDTimeout[2] < 1) {
+									if (party.pMemDTimeout[2] < 1) {
 										this.getSurface().drawBox(7, 92, 100 - p3p3, 4, 0x00FF00);
 									}
 									int hphphphphphphp = 0;
@@ -5308,7 +5309,7 @@ public final class mudclient implements Runnable {
 									gpgp2 = ((double) gpgp * 100);
 									int gppg = (int) Math.round(gpgp2);
 									this.getSurface().drawBox(7, 112, 100, 4, 0xFF0000);
-									if(party.pMemDTimeout[3] < 1) {
+									if (party.pMemDTimeout[3] < 1) {
 										this.getSurface().drawBox(7, 112, 100 - gppg, 4, 0x00FF00);
 									}
 									int hphphphphphp1 = 0;
@@ -5319,41 +5320,41 @@ public final class mudclient implements Runnable {
 									pgpg22 = ((double) pgpggpgp * 100);
 									int pgpg33 = (int) Math.round(pgpg22);
 									this.getSurface().drawBox(7, 132, 100, 4, 0xFF0000);
-									if(party.pMemDTimeout[4] < 1) {
+									if (party.pMemDTimeout[4] < 1) {
 										this.getSurface().drawBox(7, 132, 100 - pgpg33, 4, 0x00FF00);
 									}
-									if(party.partyRank[0] == 1){
+									if (party.partyRank[0] == 1) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 38, 14, 14, 5924);
 									}
-									if(party.partyRank[1] == 1){
+									if (party.partyRank[1] == 1) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 53, 14, 14, 5924);
 									}
-									if(party.partyRank[2] == 1){
+									if (party.partyRank[2] == 1) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 68, 14, 14, 5924);
 									}
-									if(party.partyRank[3] == 1){
+									if (party.partyRank[3] == 1) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 83, 14, 14, 5924);
 									}
-									if(party.partyRank[4] == 1){
+									if (party.partyRank[4] == 1) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 98, 14, 14, 5924);
 									}
-									if(party.skull[0] > 0){
+									if (party.skull[0] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 84,
 											38, 14, 14, 5924);
 									}
-									if(party.skull[1] > 0){
+									if (party.skull[1] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
 											57, 14, 14, 5924);
 									}
-									if(party.skull[2] > 0){
+									if (party.skull[2] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
 											76, 14, 14, 5924);
 									}
-									if(party.skull[3] > 0){
+									if (party.skull[3] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
 											95, 14, 14, 5924);
 									}
-									if(party.skull[4] > 0){
+									if (party.skull[4] > 0) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
 											114, 14, 14, 5924);
 									}
@@ -7519,7 +7520,7 @@ public final class mudclient implements Runnable {
 								}
 
 								if (S_WANT_DROP_X && EntityHandler.getItemDef(id).getCommand() != null
-								&&EntityHandler.getItemDef(id).getCommand()[0].equalsIgnoreCase("bury")
+									&& EntityHandler.getItemDef(id).getCommand()[0].equalsIgnoreCase("bury")
 									&& EntityHandler.getItemDef(id).getNotedFormOf() == -1) {
 									this.menuCommon.addItem(0, "Bury All", 0, 0, "@lre@" + EntityHandler.getItemDef(id).getName(), var5, (String) null, MenuItemAction.ITEM_COMMAND_ALL, 0, (String) null, (String) null);
 								}
@@ -7607,8 +7608,8 @@ public final class mudclient implements Runnable {
 											for (int p = 0; p < equippedItems[j].getCommand().length; p++) {
 												this.menuCommon.addItem(0, equippedItems[j].getCommand()[p], p, 0, "@lre@" + equippedItems[j].getName(), j, (String) null, MenuItemAction.ITEM_COMMAND_EQUIPTAB, 0, (String) null, (String) null);
 											}
-											//this.menuCommon.addCharacterItem(j, MenuItemAction.ITEM_COMMAND_EQUIPTAB, equippedItems[j].getCommand(),
-											//	"@lre@" + equippedItems[j].getName());
+										//this.menuCommon.addCharacterItem(j, MenuItemAction.ITEM_COMMAND_EQUIPTAB, equippedItems[j].getCommand(),
+										//	"@lre@" + equippedItems[j].getName());
 										this.menuCommon.addCharacterItem(j, MenuItemAction.ITEM_USE_EQUIPTAB, "Use",
 											"@lre@" + equippedItems[j].getName());
 										this.menuCommon.addCharacterItem(equippedItems[j].id, MenuItemAction.ITEM_DROP_EQUIPTAB, "Drop",
@@ -8358,7 +8359,7 @@ public final class mudclient implements Runnable {
 					for (int var17 = 0; var17 < SocialLists.partyListCount; ++var17) {
 						if (var16.equals(StringUtil.displayNameToKey(party.username[var17]))
 							&& (party.onlinePartyMember[var17]) == 1) {
-							if(party.inParty()){
+							if (party.inParty()) {
 								var15 = 0x0B5394;
 								surface.drawCircle(var12 + var3 + var4 / 2, 36 - mZ + var5 / 2, 2, var15, 255, 0);
 							}
@@ -8668,7 +8669,7 @@ public final class mudclient implements Runnable {
 				textColor = 0xFFFF00;
 			}
 			if (S_WANT_PLAYER_COMMANDS)
-			this.getSurface().drawString("Display online list", (baseX + 3), y, textColor, 1);
+				this.getSurface().drawString("Display online list", (baseX + 3), y, textColor, 1);
 		}
 		if (party.inParty()) {
 			if (!this.insideTutorial) {
@@ -13392,13 +13393,13 @@ public final class mudclient implements Runnable {
 					return;
 				try {
 					// PC sound code:
-                    final Clip clip = AudioSystem.getClip();
-                    clip.addLineListener(myLineEvent -> {
+					final Clip clip = AudioSystem.getClip();
+					clip.addLineListener(myLineEvent -> {
 						if (myLineEvent.getType() == LineEvent.Type.STOP)
 							clip.close();
 					});
-                    clip.open(AudioSystem.getAudioInputStream(sound));
-                    clip.start();
+					clip.open(AudioSystem.getAudioInputStream(sound));
+					clip.start();
 					// Android sound code:
 					//int dataLength = DataOperations.getDataFileLength(key + ".pcm", soundData);
 					//int offset = DataOperations.getDataFileOffset(key + ".pcm", soundData);
@@ -16264,6 +16265,7 @@ public final class mudclient implements Runnable {
 	public void updateQuestRewards() {
 		questGuideRewards = new String[][]{{"3 Quest Points", "2500 coins"}, {"1 Quest Point", "Lvl*50 + 250 Cooking experience", "Access to the Cook's range"}, {"3 Quest Points", "Silverlight"}, {"1 Quest Point", "Lvl*75 + 175 Mining experience", "Ability to use Doric's anvils", "180 coins"}, {"1 Quest Point", "Lvl*62.5 + 500 Prayer experience", "Amulet of Ghostspeak"}, {"5 Quest Points", "Lvl*15 + 125 Crafting experience", "1 Gold bar"}, {"4 Quest Points", "300 coins"}, {"1 Quest Point", "Lvl*100 + 375 Magic experience", "An amulet of accuracy"}, {"2 Quest Points", "450 coins", "A gold ring", "An emerald"}, {"3 Quest points", "Free passage through the Al-Kharid tollgate", "700 coins"}, {"5 Quest Points"}, {"1 Quest Point", "Lvl*25 + 125 Crafting experience", "180 coins"}, {"1 Quest Point", "600 coins"}, {"1 Quest Point", "Lvl*375 + 350 Smithing experience"}, {"3 Quest Points", "Lvl*150 + 325 Attack experience"}, {"1 Quest Point", "Lvl*50 + 225 Magic experience"}, {"2 Quest Points", "Lvl*300 + 650 Defense experience", "Lvl*300 + 650 Strength experience", "The ability to wear a Rune plate mail body"}, {"4 Quest Points", "Lvl*150 + 325 Hits experience"}, {"3 Quest Points", "Ability to enter the city of Zanaris", "Ability to wield a Dragon sword"}, {"1 Quest Point", "Lvl*50 + 75 experience in the following skills: Attack, Defense, Hits, Strength, Cooking, Fishing, Mining, Smithing, Ranged, Firemaking, Woodcutting, and Herblaw", "Access to the Heroes' Guild", "Ability to wield the Dragon axe"}, {"4 Quest Points", "250 Herblaw experience", "Ability to use the Herblaw skill"}, {"6 Quest Points", "Excalibur"}, {"1 Quest Point", "Lvl*125 + 375 Strength experience", "Thormac will enchant your battlestaves for 40000 coins"}, {"1 Quest Point", "A pair of Steel gauntlets"}, {"1 Quest Point", "Lvl*75 + 200 Thieving experience", "5 swordfish"}, {"1 Quest Point", this.playerStatBase[10] < 24 ? "(Lvl - 10)*75 + 975 Fishing experience" : "(Lvl - 24)*75 + 2225 Fishing experience", "Access to the underground tunnel beneath White Wolf Mountain"}, {"1 Quest Point", "(Lvl + 1)*125 Woodcutting experience", "8 Law-Runes"}, {"1 Quest Point", "Lvl*250 + 500 experience in Ranged and Fletching"}, {"1 Quest Point", "500 coins"}, {"2 Quest Points", "(Lvl + 1)*300 Defense experience", "(Lvl + 1)*250 Prayer experience"}, {"2 Quest Points", "Lvl*200 + 175 experience in Attack and Thieving", "1000 coins"}, {"2 Quest Points", "Lvl*225 + 200 Attack experience", "A Gnome amulet of protection", "Ability to use Spirit Trees"}, {"1 Quest Point", "Lvl*50 + 500 Thieving experience", "2000 coins"}, {"4 Quest Points", "3100 coins"}, {"1 Quest Point", "Lvl*75 + 175 Mining experience", "A magic scroll granting the ability to cast Ardougne teleport"}, {"1 Quest Point", "Lvl*200 + 175 Fishing experience", "1 Oyster pearls"}, {"1 Quest Point", "Lvl*225 + 250 experience in Attack and Strength", "40 Mithril seeds", "2 Diamonds", "2 Gold bars"}, {"3 Quest Points", "Lvl*50 + 500 Thieving experience", "Ability to use King Lathas' Combat Training Camp", "Ability to travel freely between eastern and western Ardougne gate"}, {"1 Quest Point", "Lvl*125 + 400 Herblaw experience"}, {"5 Quest Points", "Lvl*300 + 400 experience in Agility and Attack", "Lvl*50 + 150 Magic experience", "Access to the Grand Tree mines", "Ability to use the Spirit Tree at the Grand Tree", "Ability to use the Gnome Gliders"}, {"2 Quest Points", "(Lvl + 1)*125 Crafting experience", "Access to Shilo Village"}, {"5 Quest Points", "Lvl*50 + 500 experience in Agility and Attack", "A Staff of Iban", "15 Death-Runes", "30 Fire-Runes"}, {"2 Quest Points", "Lvl*100 + 250 Crafting experience", "Another reward based on your constellation"}, {"2 Quest Points", "(Lvl + 1)*150 experience twice in a choice of Agility, Fletching, Thieving, Smithing", "Ability to make throwing darts", "Access to the Desert Mining Camp"}, {"4 Quest Points", "(Lvl + 1)*250 Magic experience", "A spell scroll granting the ability to cast the Watchtower teleport", "5000 coins"}, {"1 Quest Point", "Lvl*50 + 250 Crafting experience", "Ability to buy a dwarf cannon", "Ability to make cannon balls"}, {"3 Quest Points", "Lvl*37.5 + 187.5 Crafting experience", "2000 coins"}, {"2 Quest Points", "(Lvl + 1)*300 Mining experience", "(Lvl + 1)*125 Herblaw experience", "2 Gold bars"}, {"1 Quest Point", "Lvl*45 + 175 Cooking experience", "A Kitten", "A Chocolate cake and stew"}, {"4 Quest Points", "(Lvl + 1)*150 experience in 4 of these skills of your choice: Attack, Strength, Defense, Hits, Prayer, Magic, Woodcutting, Crafting, Smithing, Herblaw, Agility, and Thieving", "Access to the Legend's Guild", "Ability to wear the Dragon Square Shield and Cape of Legends", "Ability to make Oomlie meat parcels and Blessed golden bowls"}, {"1 Quest Point", "1 air talisman", "The ability to mine rune essence", "The ability to enter mysterious ruins with the proper talisman"}};
 	}
+
 	public boolean openInventorySpell(int spellID) {
 		for (int spell : this.inventorySpellList)
 			if (spell == spellID)
