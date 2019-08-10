@@ -75,7 +75,9 @@ public final class Player extends Mob {
 	 * Players cache is used to store various objects into database
 	 */
 	private final Cache cache = new Cache();
-	private final Cache killCache = new Cache();
+	private final Map<Integer, Integer> killCache = new HashMap<>();
+
+	private boolean killCacheUpdated = false;
 	/**
 	 * Received packets from this player yet to be processed.
 	 */
@@ -886,8 +888,16 @@ public final class Player extends Mob {
 		return cache;
 	}
 
-	public Cache getKillCache() {
+	public Map<Integer, Integer> getKillCache() {
 		return killCache;
+	}
+
+	public boolean getKillCacheUpdated() {
+		return killCacheUpdated;
+	}
+
+	public void setKillCacheUpdated(boolean value) {
+		killCacheUpdated = value;
 	}
 
 	public long getCastTimer() {
@@ -2654,14 +2664,13 @@ public final class Player extends Mob {
 	}
 
 	public void addNpcKill(Npc n, boolean sendUpdate) {
-		int kills = 0;
-		String n_id = String.valueOf(n.getID());
-		if (getKillCache().hasKey(n_id)) {
-			getKillCache().put(n_id, getKillCache().getInt(n_id) + 1);
-		} else {
-			getKillCache().set(n_id, 1);
+		int kills = 1;
+		if (getKillCache().containsKey(n.getID())) {
+			kills = getKillCache().get(n.getID()) + 1;
+
 		}
-		kills = getKillCache().getInt(n_id);
+		getKillCache().put(n.getID(), kills);
+		setKillCacheUpdated(true);
 		if (sendUpdate) {
 			message("Your " + n.getDef().getName() + " kill count is: @red@" + kills + "@whi@.");
 		}

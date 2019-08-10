@@ -1,6 +1,8 @@
 package com.openrsc.server.sql;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.event.DelayedEvent;
+import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.SkillDef;
 import com.openrsc.server.login.LoginRequest;
@@ -26,9 +28,7 @@ import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class DatabasePlayerLoader {
 
@@ -224,10 +224,8 @@ public class DatabasePlayerLoader {
 				}
 			}
 
-			if (s.getKillCache().getCacheMap().size() > 0) {
-				for (String key : s.getKillCache().getCacheMap().keySet()) {
-					addNpcKill(s.getDatabaseID(), Integer.valueOf(key));
-				}
+			if (s.getKillCacheUpdated()) {
+				savePlayersNPCKills(s);
 			}
 
 			statement = conn.prepareStatement(Statements.save_UpdateBasicInfo);
@@ -384,6 +382,7 @@ public class DatabasePlayerLoader {
 		updateIntsLongs(Statements.duelBlock, new int[]{on}, new long[]{user});
 	}
 
+	/*
 	private void addNpcKill(int player, int npc) {
 		try {
 			// Find an existing entry for this NPC/Player combo
@@ -418,6 +417,8 @@ public class DatabasePlayerLoader {
 			LOGGER.catching(e);
 		}
 	}
+
+	 */
 
 	public void addNpcDrop(Player player, Npc npc, int dropId, int dropAmount) {
 		try {
@@ -455,6 +456,43 @@ public class DatabasePlayerLoader {
 		conn.executeUpdate("UPDATE `users` SET teleport_stone="
 			+ stones + " WHERE id='" + user + "'");
 	}*/
+
+	private void savePlayersNPCKills(Player player) {
+		Map<Integer, Integer> uniqueIDMap = new HashMap<>();
+
+
+		try {
+			ResultSet result = resultSetFromInteger(Statements.npcKillSelectAll, player.getDatabaseID());
+			while (result.next()) {
+				int key = result.getInt("npcID");
+				int value = result.getInt("ID");
+				uniqueIDMap.put(key, value);
+			}
+
+			PreparedStatement statement = conn.prepareStatement(Statements.npcKillUpdate);
+			PreparedStatement statementInsert = conn.prepareStatement(Statements.npcKillInsert);
+			for (Iterator<Map.Entry<Integer, Integer>> it = player.getKillCache().entrySet().iterator(); it.hasNext();) {
+				Map.Entry<Integer, Integer> e = it.next();
+				if (!uniqueIDMap.containsKey(e.getKey())) {
+					statementInsert.setInt(1, e.getValue());
+					statementInsert.setInt(2, e.getKey());
+					statementInsert.setInt(3, player.getDatabaseID());
+					statementInsert.addBatch();
+				} else {
+					statement.setInt(1, e.getValue());
+					statement.setInt(2, uniqueIDMap.get(e.getKey()));
+					statement.setInt(3, e.getKey());
+					statement.setInt(4, player.getDatabaseID());
+					statement.addBatch();
+				}
+			}
+			statement.executeBatch();
+			statementInsert.executeBatch();
+			} catch (SQLException a) {
+				LOGGER.catching(a);
+			}
+		player.setKillCacheUpdated(false);
+	}
 
 	public Player loadPlayer(LoginRequest rq) {
 		Player save = new Player(rq);
@@ -622,7 +660,7 @@ public class DatabasePlayerLoader {
 			while (result.next()) {
 				int key = result.getInt("npcID");
 				int value = result.getInt("killCount");
-				save.getKillCache().put(String.valueOf(key), value);
+				save.getKillCache().put(key, value);
 			}
 
 			/*result = resultSetFromInteger(Statements.unreadMessages, save.getOwner());
@@ -1006,8 +1044,8 @@ public class DatabasePlayerLoader {
 
 		private static final String npcKillSelectAll = "SELECT * FROM `" + PREFIX + "npckills` WHERE playerID = ?";
 		private static final String npcKillSelect = "SELECT * FROM `" + PREFIX + "npckills` WHERE npcID = ? AND playerID = ?";
-		private static final String npcKillInsert = "INSERT INTO `" + PREFIX + "npckills`(npcID, playerID) VALUES (?, ?)";
-		private static final String npcKillUpdate = "UPDATE `" + PREFIX + "npckills` SET killCount = ? WHERE npcID = ? AND playerID = ?";
+		private static final String npcKillInsert = "INSERT INTO `" + PREFIX + "npckills`(killCount, npcID, playerID) VALUES (?, ?, ?)";
+		private static final String npcKillUpdate = "UPDATE `" + PREFIX + "npckills` SET killCount = ? WHERE ID = ? AND npcID = ? AND playerID =?";
 
 		private static final String npcDropSelect = "SELECT * FROM `" + PREFIX + "droplogs` WHERE itemID = ? AND playerID = ?";
 		private static final String npcDropInsert = "INSERT INTO `" + PREFIX + "droplogs`(itemID, playerID, dropAmount, npcId) VALUES (?, ?, ?, ?)";
