@@ -40,6 +40,8 @@ public abstract class Mob extends Entity {
 	 */
 	private GameTickEvent skullEventNpc = null;
 
+	private long lastMovementTime		= 0;
+
 	public void addSkull(int timeLeft) {
 		if (skullEventNpc == null) {
 			skullEventNpc = new GameTickEvent(this, timeLeft, "NPC Add Skull") {
@@ -939,7 +941,13 @@ public abstract class Mob extends Entity {
 	}
 
 	public void updatePosition() {
-		getWalkingQueue().processNextMovement();
+		final long now		= System.currentTimeMillis();
+		boolean doWalk		= Constants.GameServer.WANT_CUSTOM_WALK_SPEED ? now >= lastMovementTime + getWalkingTick() : true;
+
+		if(doWalk) {
+			getWalkingQueue().processNextMovement();
+			lastMovementTime = now;
+		}
 	}
 
 	private void updateSprite(Point newLocation) {
@@ -1053,5 +1061,9 @@ public abstract class Mob extends Entity {
 							((Player) this).isAdmin()
 					)
 			);
+	}
+
+	public int getWalkingTick() {
+		return Constants.GameServer.WALKING_TICK;
 	}
 }
