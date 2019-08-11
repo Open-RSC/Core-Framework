@@ -2,7 +2,7 @@ package com.openrsc.server.model.entity;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
-import com.openrsc.server.event.DelayedEventNpc;
+import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.PoisonEvent;
 import com.openrsc.server.event.rsc.impl.RangeEventNpc;
@@ -38,32 +38,31 @@ public abstract class Mob extends Entity {
 	/**
 	 * The asynchronous logger.
 	 */
-	private DelayedEventNpc skullEventNpc = null;
+	private GameTickEvent skullEventNpc = null;
 
-	public void addSkull(long timeLeft) {
+	public void addSkull(int timeLeft) {
 		if (skullEventNpc == null) {
-			skullEventNpc = new DelayedEventNpc(this, 1200000, "NPC Add Skull") {
+			skullEventNpc = new GameTickEvent(this, timeLeft, "NPC Add Skull") {
 
 				@Override
 				public void run() {
 					removeSkull();
 				}
 			};
-			Server.getServer().getEventHandlerNpc().add(skullEventNpc);
+			Server.getServer().getGameEventHandler().add(skullEventNpc);
 			getUpdateFlags().setAppearanceChanged(true);
 		}
-		skullEventNpc.setLastRun(System.currentTimeMillis() - (1200000 - timeLeft));
 	}
 
-	public DelayedEventNpc getSkullEventNpc() {
+	public GameTickEvent getSkullEventNpc() {
 		return skullEventNpc;
 	}
 
-	public void setSkullEventNpc(DelayedEventNpc skullEventNpc) {
+	public void setSkullEventNpc(DelayedEvent skullEventNpc) {
 		this.skullEventNpc = skullEventNpc;
 	}
 
-	public int getSkullTime() {
+	public long getSkullTime() {
 		if (isSkulled() && getSkullType() == 1) {
 			return skullEventNpc.timeTillNextRun();
 		}
@@ -334,11 +333,6 @@ public abstract class Mob extends Entity {
 			else if (o.getID() >= 1228 && o.getID() <= 1232)
 				if ((lowXDiff <= 2 || highXDiff <= 2) && (lowYDiff <= 2 || highYDiff <= 2))
 					return true;
-
-				else if (o.getID() == 953) {
-					if ((lowXDiff <= 1 || highXDiff <= 1) && (lowYDiff <= 1 || highYDiff <= 1))
-						return true;
-				}
 		return false;
 	}
 
@@ -358,8 +352,27 @@ public abstract class Mob extends Entity {
 			&& (CollisionFlag.WALL_SOUTH & World.getWorld().getTile(getX(), getY() - 1).traversalMask) == 0) {
 			return true;
 		}
-		return minX <= getX() && getX() <= maxX && minY <= getY() + 1 && maxY >= getY() + 1
-			&& (CollisionFlag.WALL_NORTH & World.getWorld().getTile(getX(), getY() + 1).traversalMask) == 0;
+		if (minX <= getX() && getX() <= maxX && minY <= getY() + 1 && maxY >= getY() + 1
+			&& (CollisionFlag.WALL_NORTH & World.getWorld().getTile(getX(), getY() + 1).traversalMask) == 0) {
+			return true;
+		}
+		if (minX <= getX() - 1 && maxX >= getX() - 1 && minY <= getY() - 1 && maxY >= getY() - 1
+			&& (World.getWorld().getTile(getX() - 1, getY() - 1).traversalMask & CollisionFlag.WALL_SOUTH_WEST) == 0) {
+			return true;
+		}
+		if (1 + getX() >= minX && getX() + 1 <= maxX && getY() - 1 >= minY && maxY >= getY() - 1
+			&& (CollisionFlag.WALL_SOUTH_EAST & World.getWorld().getTile(getX() + 1, getY() - 1).traversalMask) == 0) {
+			return true;
+		}
+		if (minX <= getX() - 1 && maxX >= getX() - 1 && minY <= getY() + 1 && maxY >= getY() + 1
+			&& (World.getWorld().getTile(getX() - 1, getY() + 1).traversalMask & CollisionFlag.WALL_NORTH_WEST) == 0) {
+			return true;
+		}
+		if (1 + getX() >= minX && getX() + 1 <= maxX && getY() + 1 >= minY && maxY >= getY() + 1
+			&& (CollisionFlag.WALL_NORTH_EAST & World.getWorld().getTile(getX() + 1, getY() + 1).traversalMask) == 0) {
+			return true;
+		}
+		return false;
 	}
 
 	private boolean canReachx(int minX, int maxX, int minY, int maxY) {

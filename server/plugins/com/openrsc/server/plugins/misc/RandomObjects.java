@@ -107,7 +107,7 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 				owner.setBusy(true);
 				owner.message("You twist the stone tile to one side");
 				if (owner.getQuestStage(Constants.Quests.GRAND_TREE) == -1) {
-					Server.getServer().getEventHandler().add(
+					Server.getServer().getGameEventHandler().add(
 						new ShortEvent(owner, "Gnome Tree Stone") {
 							public void action() {
 								owner.message("It reveals a ladder, you climb down");

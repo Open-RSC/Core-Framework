@@ -144,11 +144,11 @@ public class Ladders {
 							player.message("You climb up the ladder");
 						} else {
 							npcTalk(player, abbot, "No I feel you are not devout enough");
-							Server.getServer().getEventHandler().add(
+							Server.getServer().getGameEventHandler().add(
 								new ShortEvent(player, "Prayer Guild Ladder") {
 									public void action() {
-										owner.setBusy(false);
-										owner.message(
+										getOwner().setBusy(false);
+										getOwner().message(
 											"You need a prayer level of 31");
 									}
 								}
@@ -174,11 +174,11 @@ public class Ladders {
 					npcYell(player, dwarf,
 						"Sorry only the top miners are allowed in there");
 				}
-				Server.getServer().getEventHandler().add(
+				Server.getServer().getGameEventHandler().add(
 					new ShortEvent(player, "Mining Guild Ladder") {
 						public void action() {
-							owner.setBusy(false);
-							owner.message(
+							getOwner().setBusy(false);
+							getOwner().message(
 								"You need a mining level of 60 to enter");
 						}
 					});

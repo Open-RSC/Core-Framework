@@ -1,6 +1,5 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.container.Item;
@@ -68,19 +67,19 @@ public final class ItemDropHandler implements PacketHandler {
 
 		final int finalAmount = amount;
 
-		Server.getServer().getEventHandler().add(new DelayedEvent(player, 0, "Player Drop Item") {
+		Server.getServer().getGameEventHandler().add(new DelayedEvent(player, 0, "Player Drop Item") {
 			int dropTickCount = 0;
 
 			@Override
 			public void run() {
-				setDelay(500);
+				setDelayTicks(1);
 				if (dropTickCount > 20) {
 					dropTickCount = 0;
 					stop();
 					return;
 				}
 				dropTickCount++;
-				if (owner.finishedPath()) {
+				if (getOwner().finishedPath()) {
 					stop();
 					if (item.getDef().isStackable()) {
 						dropStackable(player, item, finalAmount, idx != -1);
@@ -140,22 +139,22 @@ public final class ItemDropHandler implements PacketHandler {
 		}
 
 		player.setStatus(Action.DROPPING_GITEM);
-		Server.getServer().getEventHandler().add(new DelayedEvent(player, 500, "Player Drop Unstackable") {
+		Server.getServer().getGameEventHandler().add(new DelayedEvent(player, 500, "Player Drop Unstackable") {
 			int dropCount = 0;
 
 			public void run() {
-				if ((!owner.getInventory().contains(item) && fromInventory) || owner.getStatus() != Action.DROPPING_GITEM) {
-					matchRunning = false;
+				if ((!getOwner().getInventory().contains(item) && fromInventory) || getOwner().getStatus() != Action.DROPPING_GITEM) {
+					running = false;
 					player.setStatus(Action.IDLE);
 					return;
 				}
-				if (owner.hasMoved()) {
+				if (getOwner().hasMoved()) {
 					this.stop();
 					player.setStatus(Action.IDLE);
 					return;
 				}
 				if (dropCount >= amount) {
-					matchRunning = false;
+					running = false;
 					player.setStatus(Action.IDLE);
 					return;
 				}
@@ -163,18 +162,18 @@ public final class ItemDropHandler implements PacketHandler {
 				if ((fromInventory && !player.getInventory().hasItemId(item.getID())) ||
 					(!fromInventory && (slot=player.getEquipment().hasEquipped(item.getID())) == -1)) {
 					player.message("You don't have the entered amount to drop");
-					matchRunning = false;
+					running = false;
 					player.setStatus(Action.IDLE);
 					return;
 				}
-				ActionSender.sendSound(owner, "dropobject");
+				ActionSender.sendSound(getOwner(), "dropobject");
 				if (PluginHandler.getPluginHandler().blockDefaultAction("Drop", new Object[]{player, item})) {
 					stop();
 					player.setStatus(Action.IDLE);
 					return;
 				}
 				if (fromInventory) {
-					if (owner.getInventory().remove(item) < 0) {
+					if (getOwner().getInventory().remove(item) < 0) {
 						player.setStatus(Action.IDLE);
 						return;
 					}
@@ -185,11 +184,11 @@ public final class ItemDropHandler implements PacketHandler {
 						player.getSettings().getAppearance().getSprite(item.getDef().getWieldPosition()),
 						item.getDef().getWearableId(), false);
 				}
-				GroundItem groundItem = new GroundItem(item.getID(), owner.getX(), owner.getY(), amount,
-					owner);
+				GroundItem groundItem = new GroundItem(item.getID(), getOwner().getX(), getOwner().getY(), amount,
+					getOwner());
 				World.getWorld().registerItem(groundItem, 188000);
-				GameLogging.addQuery(new GenericLog(owner.getUsername() + " dropped " + item.getDef().getName()
-					+ " at " + owner.getLocation().toString()));
+				GameLogging.addQuery(new GenericLog(getOwner().getUsername() + " dropped " + item.getDef().getName()
+					+ " at " + getOwner().getLocation().toString()));
 				dropCount++;
 				if (amount > 1)
 					player.message("Dropped " + dropCount + "/" + amount);

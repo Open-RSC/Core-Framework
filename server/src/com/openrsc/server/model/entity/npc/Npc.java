@@ -1117,13 +1117,13 @@ public class Npc extends Mob {
 		if (!isRemoved() && shouldRespawn && def.respawnTime() > 0) {
 			startRespawning();
 			teleport(0, 0);
-			Server.getServer().getEventHandler().add(new DelayedEvent(null, def.respawnTime() * 1000, "Respawn NPC") {
+			Server.getServer().getGameEventHandler().add(new DelayedEvent(null, def.respawnTime() * 1000, "Respawn NPC") {
 				public void run() {
 					setRespawning(false);
 					teleport(loc.startX, loc.startY);
 					getSkills().normalize();
 
-					matchRunning = false;
+					running = false;
 					mageDamagers.clear();
 					rangeDamagers.clear();
 					combatDamagers.clear();

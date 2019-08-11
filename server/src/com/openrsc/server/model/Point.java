@@ -313,7 +313,9 @@ public class Point {
 	}
 
 	public boolean isAroundTotemPole() {
-		return inBounds(360, 881, 374, 895);
+		return inBounds(360, 881, 374, 895)
+				|| inBounds(388, 889, 402, 903)
+				|| inBounds(456, 882, 470, 896);
 	}
 
 	public boolean inArea(Area area) {

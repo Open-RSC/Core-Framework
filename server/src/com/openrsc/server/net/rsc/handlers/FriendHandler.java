@@ -90,7 +90,7 @@ public final class FriendHandler implements PacketHandler {
 			boolean added = player.getSocial().addIgnore(friend, 0, DataConversions.hashToUsername(friend));
 			if (added){
 				ActionSender.sendIgnoreList(player);
-				Server.getServer().getEventHandler().add(new DelayedEvent(null, 150000, "Delayed ignore") {
+				Server.getServer().getGameEventHandler().add(new DelayedEvent(null, 150000, "Delayed ignore") {
 				public void run() {
 					player.getSocial().removeIgnore(friend);
 					ActionSender.sendIgnoreList(player);

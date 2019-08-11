@@ -50,9 +50,9 @@ public class Crafting implements InvUseOnItemListener,
 			case 118:
 			case 813: // Furnace
 				if (item.getID() == ItemId.GOLD_BAR.id() || item.getID() == ItemId.GOLD_BAR_FAMILYCREST.id()) {
-					Server.getServer().getEventHandler().add(new MiniEvent(owner, "Craft Jewelry") {
+					Server.getServer().getGameEventHandler().add(new MiniEvent(owner, "Craft Jewelry") {
 						public void action() {
-							owner.message("What would you like to make?");
+							getOwner().message("What would you like to make?");
 							String[] options = new String[]{
 								"Ring",
 								"Necklace",
@@ -172,7 +172,7 @@ public class Crafting implements InvUseOnItemListener,
 					return;
 				}
 				if (item.getID() == ItemId.SILVER_BAR.id()) {
-					Server.getServer().getEventHandler().add(new MiniEvent(owner, "Craft Silver") {
+					Server.getServer().getGameEventHandler().add(new MiniEvent(owner, "Craft Silver") {
 						public void action() {
 							owner.message("What would you like to make?");
 							String[] options = new String[]{
@@ -237,8 +237,6 @@ public class Crafting implements InvUseOnItemListener,
 					repeatTimes = owner.getInventory().countId(otherItem) < repeatTimes ? owner.getInventory().countId(otherItem) : repeatTimes;
 						owner.message("you heat the sand and soda ash in the furnace to make glass");
 					owner.setBatchEvent(new BatchEvent(owner, Constants.GameServer.GAME_TICK, "Craft Molten Glass", repeatTimes, false) {
-
-						@Override
 						public void action() {
 							if (owner.getInventory().countId(otherItem) < 1 ||
 							owner.getInventory().countId(item.getID()) < 1) {
@@ -383,7 +381,7 @@ public class Crafting implements InvUseOnItemListener,
 							} else {
 								owner.message("the "
 									+ potteryItem + " hardens in the oven");
-								Server.getServer().getEventHandler().add(new SingleEvent(owner, 1800, "Remove Clay From Oven") {
+								Server.getServer().getGameEventHandler().add(new SingleEvent(owner, 1800, "Remove Clay From Oven") {
 									@Override
 									public void action() {
 										owner.message("You remove a "
@@ -452,35 +450,35 @@ public class Crafting implements InvUseOnItemListener,
 		player.setBatchEvent(new BatchEvent(player, 600, "Cut Gem", player.getInventory().countId(gem.getID()), false) {
 
 			public void action() {
-
-				if (owner.getSkills().getLevel(SKILLS.CRAFTING.id()) < gemDef.getReqLevel()) {
+				if (getOwner().getSkills().getLevel(SKILLS.CRAFTING.id()) < gemDef.getReqLevel()) {
 					boolean pluralize = gemDef.getGemID() <= ItemId.UNCUT_DRAGONSTONE.id();
-					owner.message(
+					getOwner().message(
 						"you need a crafting level of " + gemDef.getReqLevel()
 							+ " to cut " + (gem.getDef().getName().contains("ruby") ? "rubies" : gem.getDef().getName().replaceFirst("(?i)uncut ", "") + (pluralize ? "s" : "")));
 					interrupt();
 					return;
 				}
-				if (owner.getInventory().remove(gem.getID(), 1, false) > -1) {
+				if (getOwner().getInventory().remove(gem.getID(), 1, false) > -1) {
 					Item cutGem = new Item(gemDef.getGemID(), 1);
 					// Jade, Opal and red topaz fail handler - 25% chance to fail
 
 					if (DataConversions.inArray(gemsThatFail, gem.getID()) &&
-						Formulae.smashGem(gem.getID(), gemDef.getReqLevel(), owner.getSkills().getLevel(SKILLS.CRAFTING.id()))) {
-						owner.message("You miss hit the chisel and smash the " + cutGem.getDef().getName() + " to pieces!");
-						owner.getInventory().add(new Item(ItemId.CRUSHED_GEMSTONE.id()));
+						Formulae.smashGem(gem.getID(), gemDef.getReqLevel(), getOwner().getSkills().getLevel(SKILLS.CRAFTING.id()))) {
+						getOwner().message("You miss hit the chisel and smash the " + cutGem.getDef().getName() + " to pieces!");
+						getOwner().getInventory().add(new Item(ItemId.CRUSHED_GEMSTONE.id()));
+
 						if (gem.getID() == ItemId.UNCUT_RED_TOPAZ.id()) {
-							owner.incExp(SKILLS.CRAFTING.id(), 25, true);
+							getOwner().incExp(SKILLS.CRAFTING.id(), 25, true);
 						} else if (gem.getID() == ItemId.UNCUT_JADE.id()) {
-							owner.incExp(SKILLS.CRAFTING.id(), 20, true);
+							getOwner().incExp(SKILLS.CRAFTING.id(), 20, true);
 						} else {
-							owner.incExp(SKILLS.CRAFTING.id(), 15, true);
+							getOwner().incExp(SKILLS.CRAFTING.id(), 15, true);
 						}
 					} else {
-						owner.getInventory().add(cutGem, true);
-						owner.message("You cut the " + cutGem.getDef().getName().toLowerCase());
-						owner.playSound("chisel");
-						owner.incExp(SKILLS.CRAFTING.id(), gemDef.getExp(), true);
+						getOwner().getInventory().add(cutGem, true);
+						getOwner().message("You cut the " + cutGem.getDef().getName().toLowerCase());
+						getOwner().playSound("chisel");
+						getOwner().incExp(SKILLS.CRAFTING.id(), gemDef.getExp(), true);
 					}
 				}
 				else {
@@ -496,14 +494,14 @@ public class Crafting implements InvUseOnItemListener,
 			return false;
 		}
 		player.message("what would you like to make?");
-		Server.getServer().getEventHandler().add(new MiniEvent(player, "Craft Glass Blowing") {
+		Server.getServer().getGameEventHandler().add(new MiniEvent(player, "Craft Glass Blowing") {
 			public void action() {
 				String[] options = new String[]{
 					"Vial",
 					"orb",
 					"Beer glass"
 				};
-				owner.setMenuHandler(new MenuOptionListener(options) {
+				getOwner().setMenuHandler(new MenuOptionListener(options) {
 					public void handleReply(final int option, final String reply) {
 						Item result;
 						int reqLvl, exp;
@@ -555,7 +553,7 @@ public class Crafting implements InvUseOnItemListener,
 						});
 					}
 				});
-				ActionSender.sendMenu(owner, options);
+				ActionSender.sendMenu(getOwner(), options);
 			}
 		});
 		return true;
@@ -569,7 +567,7 @@ public class Crafting implements InvUseOnItemListener,
 			player.message("You need some thread to make anything out of leather");
 			return true;
 		}
-		Server.getServer().getEventHandler().add(new MiniEvent(player, "Craft Leather") {
+		Server.getServer().getGameEventHandler().add(new MiniEvent(player, "Craft Leather") {
 			public void action() {
 				String[] options = new String[]{
 					"Armour",
@@ -577,7 +575,7 @@ public class Crafting implements InvUseOnItemListener,
 					"Boots",
 					"Cancel"
 				};
-				owner.setMenuHandler(new MenuOptionListener(options) {
+				getOwner().setMenuHandler(new MenuOptionListener(options) {
 					public void handleReply(final int option, final String reply) {
 						Item result;
 						int reqLvl, exp;
@@ -636,7 +634,7 @@ public class Crafting implements InvUseOnItemListener,
 						});
 					}
 				});
-				ActionSender.sendMenu(owner, options);
+				ActionSender.sendMenu(getOwner(), options);
 			}
 		});
 		return true;
@@ -680,13 +678,13 @@ public class Crafting implements InvUseOnItemListener,
 			woolAmount < amuletAmount ? woolAmount : amuletAmount, false) {
 
 			public void action() {
-				if (owner.getInventory().countId(item.getID()) <= 0 || owner.getInventory().countId(ItemId.BALL_OF_WOOL.id()) <= 0) {
+				if (getOwner().getInventory().countId(item.getID()) <= 0 || getOwner().getInventory().countId(ItemId.BALL_OF_WOOL.id()) <= 0) {
 					interrupt();
 					return;
 				}
-				if (owner.getInventory().remove(woolBall) > -1 && owner.getInventory().remove(item) > -1) {
-					owner.message("You put some string on your " + item.getDef().getName().toLowerCase());
-					owner.getInventory().add(new Item(newId, 1));
+				if (getOwner().getInventory().remove(woolBall) > -1 && getOwner().getInventory().remove(item) > -1) {
+					getOwner().message("You put some string on your " + item.getDef().getName().toLowerCase());
+					getOwner().getInventory().add(new Item(newId, 1));
 				} else {
 					interrupt();
 					return;

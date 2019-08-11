@@ -1,14 +1,12 @@
 package com.openrsc.server;
 
+import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
+import com.openrsc.server.model.entity.player.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GameTickEventHandler {
@@ -32,13 +30,27 @@ public class GameTickEventHandler {
 		}
 	}
 
+	public void add(DelayedEvent event) {
+		String className = String.valueOf(event.getClass());
+		UUID uuid = UUID.randomUUID();
+		if (event.isUniqueEvent() || !event.hasOwner()) {
+			toAdd.putIfAbsent(className + uuid, event);
+		} else {
+			if (event.getOwner().isPlayer())
+				toAdd.putIfAbsent(className + event.getOwner().getUUID() + "p", event);
+			else
+				toAdd.putIfAbsent(className + event.getOwner().getUUID() + "n", event);
+		}
+	}
+
 	public boolean contains(GameTickEvent event) {
 		if (event.getOwner() != null)
 			return events.containsKey(String.valueOf(event.getOwner().getID()));
 		return false;
 	}
 
-	void doGameEvents() {
+	public long doGameEvents() {
+		final long eventsStart	= System.currentTimeMillis();
 		if (toAdd.size() > 0) {
 			for(Iterator<Map.Entry<String, GameTickEvent>> iter = toAdd.entrySet().iterator(); iter.hasNext(); ) {
 			    Map.Entry<String, GameTickEvent> e = iter.next();
@@ -55,7 +67,7 @@ public class GameTickEventHandler {
 			try {
 				event.countdown();
 				if (event.shouldRun()) {
-					event.run();
+					event.doRun();
 					event.resetCountdown();
 				}
 			} catch (Exception e) {
@@ -66,6 +78,8 @@ public class GameTickEventHandler {
 				it.remove();
 			}
 		}
+		final long eventsEnd		= System.currentTimeMillis();
+		return eventsEnd - eventsStart;
 	}
 
 	public HashMap<String, GameTickEvent> getEvents() {
@@ -74,5 +88,19 @@ public class GameTickEventHandler {
 
 	public void remove(GameTickEvent event) {
 		events.remove(event);
+	}
+
+	public void removePlayersEvents(Player player) {
+		try {
+			Iterator<Map.Entry<String, GameTickEvent>> iterator = events.entrySet().iterator();
+			while (iterator.hasNext()) {
+				GameTickEvent event = iterator.next().getValue();
+				if (event.belongsTo(player)) {
+					iterator.remove();
+				}
+			}
+		} catch (Exception e) {
+			LOGGER.catching(e);
+		}
 	}
 }

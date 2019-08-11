@@ -66,7 +66,7 @@ public class RangeEventNpc extends GameTickEvent {
 	public boolean equals(Object o) {
 		if (o instanceof RangeEventNpc) {
 			RangeEventNpc e = (RangeEventNpc) o;
-			return e.belongsTo(owner);
+			return e.belongsTo(getOwner());
 		}
 		return false;
 	}
@@ -82,71 +82,71 @@ public class RangeEventNpc extends GameTickEvent {
 
 	public void run() {
 		for (Player p22 : World.getWorld().getPlayers()) {
-			int combDiff = Math.abs(owner.getCombatLevel() - target.getCombatLevel());
+			int combDiff = Math.abs(getOwner().getCombatLevel() - target.getCombatLevel());
 			int targetWildLvl = target.getLocation().wildernessLevel();
-			int myWildLvl = owner.getLocation().wildernessLevel();
-			if ((target.isPlayer() && !((Player) target).loggedIn()) || target.getSkills().getLevel(SKILLS.HITS.id()) <= 0 || !owner.withinRange(target)) {
-				owner.resetRange();
+			int myWildLvl = getOwner().getLocation().wildernessLevel();
+			if ((target.isPlayer() && !((Player) target).loggedIn()) || target.getSkills().getLevel(SKILLS.HITS.id()) <= 0 || !getOwner().withinRange(target)) {
+				getOwner().resetRange();
 				stop();
 				return;
 			}
-			if (owner.inCombat()) {
-				owner.resetRange();
+			if (getOwner().inCombat()) {
+				getOwner().resetRange();
 				stop();
 				return;
 			}
-			if (!target.getLocation().inBounds(((Npc) owner).getLoc().minX - 9, ((Npc) owner).getLoc().minY - 9,
-				((Npc) owner).getLoc().maxX + 9, ((Npc) owner).getLoc().maxY + 9) && ((Npc) owner).isNpc()) {
-				owner.resetRange();
+			if (!target.getLocation().inBounds(((Npc) getOwner()).getLoc().minX - 9, ((Npc) getOwner()).getLoc().minY - 9,
+				((Npc) getOwner()).getLoc().maxX + 9, ((Npc) getOwner()).getLoc().maxY + 9) && ((Npc) getOwner()).isNpc()) {
+				getOwner().resetRange();
 				stop();
 				return;
 			}
-			if (owner.getLocation().inWilderness() && target.getLocation().inWilderness() && !canReach(target)) {
-				owner.walkToEntity(target.getX(), target.getY());
-				if (owner.nextStep(owner.getX(), owner.getY(), target) == null) {
+			if (getOwner().getLocation().inWilderness() && target.getLocation().inWilderness() && !canReach(target)) {
+				getOwner().walkToEntity(target.getX(), target.getY());
+				if (getOwner().nextStep(getOwner().getX(), getOwner().getY(), target) == null) {
 					Player playerTarget = (Player) target;
 					playerTarget.message("You got away");
-					owner.resetRange();
+					getOwner().resetRange();
 					stop();
 				}
-			} else if (!owner.getLocation().inWilderness() && !target.getLocation().inWilderness() && !canReach(target)) {
-				owner.walkToEntity(target.getX(), target.getY());
-				if (owner.nextStep(owner.getX(), owner.getY(), target) == null) {
+			} else if (!getOwner().getLocation().inWilderness() && !target.getLocation().inWilderness() && !canReach(target)) {
+				getOwner().walkToEntity(target.getX(), target.getY());
+				if (getOwner().nextStep(getOwner().getX(), getOwner().getY(), target) == null) {
 					Player playerTarget = (Player) target;
 					playerTarget.message("You got away");
-					owner.resetRange();
+					getOwner().resetRange();
 					stop();
 					return;
 				}
-			} else if (!owner.getLocation().inWilderness() && !target.getLocation().inWilderness() && !canReach(target)) {
+			} else if (!getOwner().getLocation().inWilderness() && !target.getLocation().inWilderness() && !canReach(target)) {
 				Player playerTarget = (Player) target;
 				playerTarget.message("You got away");
-				owner.resetRange();
+				getOwner().resetRange();
 				stop();
 				return;
 			} else {
-				owner.resetPath();
+				getOwner().resetPath();
 
-				boolean canShoot = System.currentTimeMillis() - owner.getAttribute("rangedTimeout", 0L) > 1900;
+				boolean canShoot = System.currentTimeMillis() - getOwner().getAttribute("rangedTimeout", 0L) > 1900;
 				if (canShoot) {
-					if (!PathValidation.checkPath(owner.getLocation(), target.getLocation())) {
-						owner.resetRange();
+					if (!PathValidation.checkPath(getOwner().getLocation(), target.getLocation())) {
+						getOwner().resetRange();
 						stop();
 						return;
 					}
-					owner.face(target);
-					owner.setAttribute("rangedTimeout", System.currentTimeMillis());
+					getOwner().face(target);
+					getOwner().setAttribute("rangedTimeout", System.currentTimeMillis());
 
 					if (target.isPlayer()) {
 						Player playerTarget = (Player) target;
 						if (playerTarget.getPrayers().isPrayerActivated(Prayers.PROTECT_FROM_MISSILES)) {
-							playerTarget.message(owner + " is trying to shoot you!");
+							playerTarget.message(getOwner() + " is trying to shoot you!");
 							stop();
 							return;
 						}
 					}
 					int arrowID = -1;
-					int damage = Formulae.calcRangeHitNpc(owner, owner.getSkills().getLevel(SKILLS.RANGED.id()), target.getArmourPoints(), 11);
+					int damage = Formulae.calcRangeHitNpc(getOwner(), getOwner().getSkills().getLevel(SKILLS.RANGED.id()), target.getArmourPoints(), 11);
 					if (Formulae.looseArrow(damage)) {
 						GroundItem arrows = getArrows(11);
 						if (arrows == null) {
@@ -157,8 +157,8 @@ public class RangeEventNpc extends GameTickEvent {
 							arrows.setAmount(arrows.getAmount() + 1);
 						}
 					}
-					if (target.isPlayer() && owner.isNpc()) {
-						((Player) target).message(owner + " is shooting at you!");
+					if (target.isPlayer() && getOwner().isNpc()) {
+						((Player) target).message(getOwner() + " is shooting at you!");
 					}
 					if (EntityHandler.getItemDef(11).getName().toLowerCase().contains("poison") && target.isPlayer()) {
 						if (DataConversions.random(0, 100) <= 10) {
@@ -166,8 +166,8 @@ public class RangeEventNpc extends GameTickEvent {
 							target.startPoisonEvent();
 						}
 					}
-					Server.getServer().getGameEventHandler().add(new ProjectileEvent(owner, target, damage, 2));
-					owner.setKillType(2);
+					Server.getServer().getGameEventHandler().add(new ProjectileEvent(getOwner(), target, damage, 2));
+					getOwner().setKillType(2);
 					deliveredFirstProjectile = true;
 				}
 			}
@@ -176,11 +176,11 @@ public class RangeEventNpc extends GameTickEvent {
 
 	private boolean canReach(Mob mob) {
 		int radius = 5;
-		return owner.withinRange(mob, radius);
+		return getOwner().withinRange(mob, radius);
 	}
 
 	private boolean canReachx(Mob mob) {
 		int radius = 4;
-		return owner.withinRange(mob, radius);
+		return getOwner().withinRange(mob, radius);
 	}
 }

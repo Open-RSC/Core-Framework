@@ -1,11 +1,10 @@
 package com.openrsc.server.content.market.task;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.content.market.Market;
 import com.openrsc.server.content.market.MarketDatabase;
 import com.openrsc.server.content.market.MarketItem;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.DiscordSender;
 import com.openrsc.server.net.rsc.ActionSender;
 
 public class ModeratorDeleteAuctionTask extends MarketTask {
@@ -37,8 +36,8 @@ public class ModeratorDeleteAuctionTask extends MarketTask {
 					ActionSender.sendBox(player, "@red@[Auction House - Error] % @whi@ Unable to remove auction", false);
 			}
 			Market.getInstance().addRequestOpenAuctionHouseTask(player);
-			if (updateDiscord && Constants.GameServer.WANT_DISCORD_UPDATES) {
-				DiscordSender.auctionModDelete(item);
+			if (updateDiscord) {
+				Server.getServer().getDiscordSender().auctionModDelete(item);
 			}
 		}
 	}

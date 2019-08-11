@@ -1,6 +1,6 @@
 package com.openrsc.server.content.market.task;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.content.market.Market;
 import com.openrsc.server.content.market.MarketDatabase;
 import com.openrsc.server.content.market.MarketItem;
@@ -9,7 +9,6 @@ import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
-import com.openrsc.server.net.DiscordSender;
 import com.openrsc.server.net.rsc.ActionSender;
 
 public class BuyMarketItemTask extends MarketTask {
@@ -107,8 +106,8 @@ public class BuyMarketItemTask extends MarketTask {
 
 		Market.getInstance().addRequestOpenAuctionHouseTask(playerBuyer);
 
-		if (updateDiscord && Constants.GameServer.WANT_DISCORD_UPDATES) {
-			DiscordSender.auctionBuy(item);
+		if (updateDiscord) {
+			Server.getServer().getDiscordSender().auctionBuy(item);
 		}
 	}
 

@@ -22,7 +22,6 @@ import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.message;
 
 /**
  * @author n0m
@@ -80,7 +79,7 @@ public class RangeEvent extends GameTickEvent {
 	public boolean equals(Object o) {
 		if (o instanceof RangeEvent) {
 			RangeEvent e = (RangeEvent) o;
-			return e.belongsTo(owner);
+			return e.belongsTo(getOwner());
 		}
 		return false;
 	}
@@ -105,7 +104,7 @@ public class RangeEvent extends GameTickEvent {
 		}
 		if (!canReach(target)) {
 			getPlayerOwner().walkToEntity(target.getX(), target.getY());
-			if (owner.nextStep(owner.getX(), owner.getY(), target) == null && bowID != -1) {
+			if (getOwner().nextStep(getOwner().getX(), getOwner().getY(), target) == null && bowID != -1) {
 				getPlayerOwner().message("I can't get close enough");
 				getPlayerOwner().resetRange();
 				stop();
@@ -134,7 +133,7 @@ public class RangeEvent extends GameTickEvent {
 
 				if (target.isNpc()) {
 					if (PluginHandler.getPluginHandler().blockDefaultAction("PlayerRangeNpc",
-						new Object[]{owner, target})) {
+						new Object[]{getOwner(), target})) {
 						getPlayerOwner().resetRange();
 						stop();
 						return;
@@ -307,7 +306,7 @@ public class RangeEvent extends GameTickEvent {
 					}
 				}
 				Server.getServer().getGameEventHandler().add(new ProjectileEvent(getPlayerOwner(), target, damage, 2));
-				owner.setKillType(2);
+				getOwner().setKillType(2);
 				deliveredFirstProjectile = true;
 			}
 		}

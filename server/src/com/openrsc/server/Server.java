@@ -4,9 +4,11 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.SingleEvent;
+import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScriptLoader;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
+import com.openrsc.server.net.DiscordSender;
 import com.openrsc.server.net.RSCConnectionHandler;
 import com.openrsc.server.net.RSCProtocolDecoder;
 import com.openrsc.server.net.RSCProtocolEncoder;
@@ -14,6 +16,7 @@ import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.util.NamedThreadFactory;
+import com.openrsc.server.util.rsc.MessageType;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -24,6 +27,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -57,12 +61,15 @@ public final class Server implements Runnable {
 		.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat("GameThread").build());
 	private final GameStateUpdater gameUpdater = new GameStateUpdater();
 	private final GameTickEventHandler tickEventHandler = new GameTickEventHandler();
-	private final ServerEventHandler eventHandler = new ServerEventHandler();
-	private final ServerEventHandlerNpc eventHandlerNpc = new ServerEventHandlerNpc();
+	private final DiscordSender discordSender = new DiscordSender();
 	private long lastClientUpdate;
 	private boolean running;
 	private DelayedEvent updateEvent;
 	private ChannelFuture serverChannel;
+
+	private long lastGameStateDuration	= 0;
+	private long lastEventsDuration		= 0;
+	private long lastTickDuration		= 0;
 
 	public Server() {
 		running = true;
@@ -193,7 +200,7 @@ public final class Server implements Runnable {
 				saveAndShutdown();
 			}
 		};
-		Server.getServer().getEventHandler().add(updateEvent);
+		getGameEventHandler().add(updateEvent);
 		return true;
 	}
 
@@ -209,10 +216,10 @@ public final class Server implements Runnable {
 				DatabaseConnection.getDatabase().close();
 			}
 		};
-		Server.getServer().getEventHandler().add(up);
+		getGameEventHandler().add(up);
 	}
 
-	public int timeTillShutdown() {
+	public long timeTillShutdown() {
 		if (updateEvent == null) {
 			return -1;
 		}
@@ -228,42 +235,64 @@ public final class Server implements Runnable {
 
 	public void run() {
 	    try {
-    		for (Player p : World.getWorld().getPlayers()) {
-    			p.processIncomingPackets();
-    		}
-    		getEventHandler().doEvents();
-		
 			long timeLate = System.currentTimeMillis() - lastClientUpdate - Constants.GameServer.GAME_TICK;
 			if (timeLate >= 0) {
-				lastClientUpdate += Constants.GameServer.GAME_TICK;
-				tickEventHandler.doGameEvents();
-				gameUpdater.doUpdates();
+				for (Player p : World.getWorld().getPlayers()) {
+					p.processIncomingPackets();
+				}
 
-				// Server fell behind, skip ticks
-				if (timeLate >= Constants.GameServer.GAME_TICK) {
-					long ticksLate = timeLate / Constants.GameServer.GAME_TICK;
-					lastClientUpdate += ticksLate * Constants.GameServer.GAME_TICK;
-					if (Constants.GameServer.DEBUG) {
-						LOGGER.warn("Can't keep up, we are " + timeLate + "ms behind; Skipping " + ticksLate + " ticks");
+				lastClientUpdate 		+= Constants.GameServer.GAME_TICK;
+
+				lastEventsDuration		= getGameEventHandler().doGameEvents();
+				lastGameStateDuration	= getGameUpdater().doUpdates();
+
+				lastTickDuration		= lastEventsDuration + lastGameStateDuration;
+				final long ticksLate	= timeLate / Constants.GameServer.GAME_TICK;
+				final boolean isServerLate	= ticksLate >= 1;
+
+				// Processing game events and state took longer than the tick
+				if(lastTickDuration >= Constants.GameServer.GAME_TICK) {
+					final String message = "Can't keep up: " + lastTickDuration + "ms " + lastEventsDuration + "ms " + lastGameStateDuration + "ms";
+
+					// Warn logged in developers
+					for (Player p : World.getWorld().getPlayers()) {
+						if(!p.isDev()) {
+							continue;
+						}
+
+						p.playerServerMessage(MessageType.QUEST, Constants.GameServer.MESSAGE_PREFIX + message);
 					}
 				}
-			}
 
-			for (Player p : World.getWorld().getPlayers()) {
-				p.sendOutgoingPackets();
+				// Server fell behind, skip ticks
+				if (isServerLate) {
+					lastClientUpdate 			+= ticksLate * Constants.GameServer.GAME_TICK;
+					final String message		= "Can't keep up, we are " + timeLate + "ms behind; Skipping " + ticksLate + " ticks";
+
+					// Warn logged in developers
+					for (Player p : World.getWorld().getPlayers()) {
+						if(!p.isDev()) {
+							continue;
+						}
+
+						p.playerServerMessage(MessageType.QUEST, Constants.GameServer.MESSAGE_PREFIX + message);
+					}
+
+					getDiscordSender().monitoringSendServerBehind(message);
+
+					if (Constants.GameServer.DEBUG) {
+						LOGGER.warn(message);
+					}
+				}
+
+				for (Player p : World.getWorld().getPlayers()) {
+					p.sendOutgoingPackets();
+				}
 			}
 
 		} catch (Throwable t) {
 			LOGGER.catching(t);
 		}
-	}
-
-	public ServerEventHandler getEventHandler() {
-		return eventHandler;
-	}
-
-	public ServerEventHandlerNpc getEventHandlerNpc() {
-		return eventHandlerNpc;
 	}
 
 	public GameTickEventHandler getGameEventHandler() {
@@ -285,7 +314,7 @@ public final class Server implements Runnable {
 				saveAndShutdown();
 			}
 		};
-		Server.getServer().getEventHandler().add(updateEvent);
+		getGameEventHandler().add(updateEvent);
 		return true;
 	}
 
@@ -308,10 +337,96 @@ public final class Server implements Runnable {
 				}
 			}
 		};
-		Server.getServer().getEventHandler().add(up);
+		getGameEventHandler().add(up);
+	}
+
+	public final String buildProfilingDebugInformation(boolean forInGame) {
+		HashMap<String, Integer> eventsCount 	= new HashMap<String, Integer>();
+		HashMap<String, Long> eventsDuration	= new HashMap<String, Long>();
+		int countEvents							= 0;
+		long durationEvents						= 0;
+		String newLine							= forInGame ? "%" : "\r\n";
+
+		// Show info for game tick events
+		for (Map.Entry<String, GameTickEvent> eventEntry : getGameEventHandler().getEvents().entrySet()) {
+			GameTickEvent e = eventEntry.getValue();
+			String eventName = e.getDescriptor();
+			//if (e.getOwner() != null && e.getOwner().isUnregistering()) {
+			if (!eventsCount.containsKey(eventName)) {
+				eventsCount.put(eventName, 1);
+			} else {
+				eventsCount.put(eventName, eventsCount.get(eventName) + 1);
+			}
+
+			if (!eventsDuration.containsKey(eventName)) {
+				eventsDuration.put(eventName, e.getLastEventDuration());
+			} else {
+				eventsDuration.put(eventName, eventsDuration.get(eventName) + e.getLastEventDuration());
+			}
+			//}
+
+			// Update Totals
+			++countEvents;
+			durationEvents	+= e.getLastEventDuration();
+		}
+
+		// Sort the Events Hashmap
+		List list = new LinkedList(eventsCount.entrySet());
+		Collections.sort(list, new Comparator() {
+			public int compare(Object o1, Object o2) {
+				return ((Comparable) ((Map.Entry) (o2)).getValue())
+					.compareTo(((Map.Entry) (o1)).getValue());
+			}
+		});
+		HashMap sortedHashMap = new LinkedHashMap();
+		for (Iterator it = list.iterator(); it.hasNext();) {
+			Map.Entry entry = (Map.Entry) it.next();
+			sortedHashMap.put(entry.getKey(), entry.getValue());
+		}
+		eventsCount	= sortedHashMap;
+
+		int i = 0;
+		StringBuilder s = new StringBuilder();
+		for (Map.Entry<String, Integer> entry : eventsCount.entrySet()) {
+			if(forInGame && i >= 17) // Only display first 17 elements of the hashmap
+				break;
+
+			String name		= entry.getKey();
+			Integer time	= entry.getValue();
+			Long duration	= eventsDuration.get(entry.getKey());
+			s.append(name).append(": ").append(time).append(" : ").append(duration).append("ms").append(newLine);
+			++i;
+		}
+
+		return
+			"Tick: " + Constants.GameServer.GAME_TICK + "ms, Server: " + getLastTickDuration() + "ms " + getLastEventsDuration() + "ms " + getLastGameStateDuration() + "ms" + newLine +
+			"Game Updater: " + getGameUpdater().getLastProcessPlayersDuration() + "ms " + getGameUpdater().getLastProcessNpcsDuration() + "ms " + getGameUpdater().getLastProcessMessageQueuesDuration() + "ms " + getGameUpdater().getLastUpdateClientsDuration() + "ms " + getGameUpdater().getLastDoCleanupDuration() + "ms " + getGameUpdater().getLastExecuteWalkToActionsDuration() + "ms " + newLine +
+			"Events: " + countEvents + ", NPCs: " + World.getWorld().getNpcs().size() + ", Players: " + World.getWorld().getPlayers().size() + ", Shops: " + World.getWorld().getShops().size() + newLine +
+			/*"Player Atk Map: " + World.getWorld().getPlayersUnderAttack().size() + ", NPC Atk Map: " + World.getWorld().getNpcsUnderAttack().size() + ", Quests: " + World.getWorld().getQuests().size() + ", Mini Games: " + World.getWorld().getMiniGames().size() + newLine +*/
+			s;
 	}
 
 	public void start() {
-		scheduledExecutor.scheduleAtFixedRate(this, 0, 50, TimeUnit.MILLISECONDS);
+		scheduledExecutor.scheduleAtFixedRate(this, 0, 1, TimeUnit.MILLISECONDS);
+	}
+
+	public long getLastGameStateDuration() {
+		return lastGameStateDuration;
+	}
+
+	public long getLastEventsDuration() {
+		return lastEventsDuration;
+	}
+
+	public long getLastTickDuration() {
+		return lastTickDuration;
+	}
+
+	public GameStateUpdater getGameUpdater() {
+		return gameUpdater;
+	}
+
+	public DiscordSender getDiscordSender() {
+		return discordSender;
 	}
 }

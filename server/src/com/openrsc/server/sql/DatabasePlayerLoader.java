@@ -1,8 +1,6 @@
 package com.openrsc.server.sql;
 
 import com.openrsc.server.Constants;
-import com.openrsc.server.event.DelayedEvent;
-import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.SkillDef;
 import com.openrsc.server.login.LoginRequest;
@@ -536,12 +534,12 @@ public class DatabasePlayerLoader {
 			save.getSettings().setAppearance(pa);
 			save.setMale(result.getInt("male") == 1);
 			save.setWornItems(save.getSettings().getAppearance().getSprites());
-			long skulled = result.getInt("skulled");
+			int skulled = result.getInt("skulled");
 			if (skulled > 0) {
 				save.addSkull(skulled);
 			}
 
-			long charged = result.getInt("charged");
+			int charged = result.getInt("charged");
 			if (charged > 0) {
 				save.addCharge(charged);
 			}

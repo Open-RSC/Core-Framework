@@ -1,6 +1,6 @@
 package com.openrsc.server.content.market.task;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.content.market.Market;
 import com.openrsc.server.content.market.MarketDatabase;
 import com.openrsc.server.content.market.MarketItem;
@@ -8,7 +8,6 @@ import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.DiscordSender;
 import com.openrsc.server.net.rsc.ActionSender;
 
 public class CancelMarketItemTask extends MarketTask {
@@ -47,8 +46,8 @@ public class CancelMarketItemTask extends MarketTask {
 				ActionSender.sendBox(owner, "@red@[Auction House - Error] % @whi@ Unable to cancel auction! % % @red@Reason: @whi@No space left in your bank or inventory.", false);
 		}
 		Market.getInstance().addRequestOpenAuctionHouseTask(owner);
-		if (updateDiscord && Constants.GameServer.WANT_DISCORD_UPDATES) {
-			DiscordSender.auctionCancel(item);
+		if (updateDiscord) {
+			Server.getServer().getDiscordSender().auctionCancel(item);
 		}
 	}
 

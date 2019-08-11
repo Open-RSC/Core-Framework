@@ -104,7 +104,7 @@ public class LegendsQuestHolyWater implements InvActionListener, InvActionExecut
 					if (!player.getCache().hasKey("holy_water_neiz")) {
 						player.getCache().store("holy_water_neiz", true);
 					}
-					Server.getServer().getEventHandler().add(playerEvent);
+					Server.getServer().getGameEventHandler().add(playerEvent);
 				} else {
 					playerEvent.reset();
 				}

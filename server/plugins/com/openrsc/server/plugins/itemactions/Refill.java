@@ -37,17 +37,17 @@ public class Refill implements InvUseOnObjectListener,
 				player.setBatchEvent(new BatchEvent(player, 600, "Refill Water Jug", player.getInventory().countId(itemID), false) {
 					@Override
 					public void action() {
-						if (owner.getInventory().hasInInventory(itemID)) {
-							showBubble(owner, item);
-							owner.playSound("filljug");
+						if (getOwner().getInventory().hasInInventory(itemID)) {
+							showBubble(getOwner(), item);
+							getOwner().playSound("filljug");
 							sleep(300);
-							owner.message(
+							getOwner().message(
 								"You fill the "
 								+ item.getDef().getName().toLowerCase()
 								+ " from the "
 								+ obj.getGameObjectDef().getName().toLowerCase()
 							);
-							owner.getInventory().replace(itemID, refilledID,true);
+							getOwner().getInventory().replace(itemID, refilledID,true);
 						} else {
 							interrupt();
 						}

@@ -1,5 +1,6 @@
 package com.openrsc.server.event.rsc;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -7,11 +8,12 @@ import com.openrsc.server.model.entity.player.Player;
 public abstract class GameTickEvent {
 
 	protected boolean running = true;
-	protected Mob owner;
+	private Mob owner;
 	private int delayTicks;
 	private boolean immediate;
 	private int ticksBeforeRun = -1;
 	private String descriptor;
+	private long lastEventDuration = 0;
 
 	public GameTickEvent(Mob owner, int ticks, String descriptor) {
 		this.owner = owner;
@@ -33,6 +35,15 @@ public abstract class GameTickEvent {
 	}
 
 	public abstract void run();
+
+	public final long doRun() {
+		final long eventStart	= System.currentTimeMillis();
+		run();
+		final long eventEnd		= System.currentTimeMillis();
+		final long eventTime	= eventEnd - eventStart;
+		lastEventDuration		= eventTime;
+		return eventTime;
+	}
 
 	public final boolean shouldRemove() {
 		return !running;
@@ -84,5 +95,13 @@ public abstract class GameTickEvent {
 
 	public void countdown() {
 		ticksBeforeRun--;
+	}
+
+	public long timeTillNextRun() {
+		return System.currentTimeMillis() + (ticksBeforeRun * Constants.GameServer.GAME_TICK);
+	}
+
+	public final long getLastEventDuration() {
+		return lastEventDuration;
 	}
 }

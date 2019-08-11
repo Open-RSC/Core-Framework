@@ -55,13 +55,13 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 				player.setBatchEvent(new BatchEvent(player, 3000, "Cook Wine", 1, false) {
 					@Override
 					public void action() {
-						if (Formulae.goodWine(owner.getSkills().getLevel(SKILLS.COOKING.id()))) {
-							owner.message("You make some nice wine");
-							owner.getInventory().add(new Item(ItemId.WINE.id()));
-							owner.incExp(SKILLS.COOKING.id(), 440, true);
+						if (Formulae.goodWine(getOwner().getSkills().getLevel(SKILLS.COOKING.id()))) {
+							getOwner().message("You make some nice wine");
+							getOwner().getInventory().add(new Item(ItemId.WINE.id()));
+							getOwner().incExp(SKILLS.COOKING.id(), 440, true);
 						} else {
-							owner.message("You accidentally make some bad wine");
-							owner.getInventory().add(new Item(ItemId.BAD_WINE.id()));
+							getOwner().message("You accidentally make some bad wine");
+							getOwner().getInventory().add(new Item(ItemId.BAD_WINE.id()));
 						}
 					}
 				});

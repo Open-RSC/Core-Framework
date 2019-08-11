@@ -46,8 +46,8 @@ public class StatRestorationEvent extends GameTickEvent {
 			int stat = set.getKey();
 
 			long delay = 60000; // 60 seconds
-			if (owner.isPlayer()) {
-				Player player = (Player) owner;
+			if (getOwner().isPlayer()) {
+				Player player = (Player) getOwner();
 				if (player.getPrayers().isPrayerActivated(Prayers.RAPID_HEAL) && stat == 3) {
 					delay = 30000;
 				} else if (player.getPrayers().isPrayerActivated(Prayers.RAPID_RESTORE) && stat != 3) {
@@ -57,18 +57,18 @@ public class StatRestorationEvent extends GameTickEvent {
 			if (System.currentTimeMillis() - this.lastRestoration > delay) {
 				normalizeLevel(stat);
 				restored = true;
-				if(owner.isPlayer() && ((Player) owner).getParty() != null){
-					owner.getUpdateFlags().setHpUpdate(new HpUpdate(owner, 0));
+				if(getOwner().isPlayer() && ((Player) getOwner()).getParty() != null){
+					getOwner().getUpdateFlags().setHpUpdate(new HpUpdate(getOwner(), 0));
 					for (Player p : World.getWorld().getPlayers()) {
-						if(((Player) owner).getParty() == p.getParty()){
+						if(((Player) getOwner()).getParty() == p.getParty()){
 							ActionSender.sendParty(p);
 						}
 					}
 				}
 				if (restoringStats.get(stat) == 0) {
 					it.remove();
-					if (owner.isPlayer() && stat != 3) {
-						Player p = (Player) owner;
+					if (getOwner().isPlayer() && stat != 3) {
+						Player p = (Player) getOwner();
 						p.message("Your " + Skills.getSkillName(stat) + " ability has returned to normal.");
 					}
 				}
@@ -76,7 +76,7 @@ public class StatRestorationEvent extends GameTickEvent {
 		}
 		if (restored)
 			this.lastRestoration = System.currentTimeMillis();
-		owner.getSkills().sendUpdateAll();
+		getOwner().getSkills().sendUpdateAll();
 	}
 
 	/**
@@ -86,13 +86,13 @@ public class StatRestorationEvent extends GameTickEvent {
 	 * @return true if action done, false if skill is already normal
 	 */
 	private void normalizeLevel(int skill) {
-		int cur = owner.getSkills().getLevel(skill);
-		int norm = owner.getSkills().getMaxStat(skill);
+		int cur = getOwner().getSkills().getLevel(skill);
+		int norm = getOwner().getSkills().getMaxStat(skill);
 
 		if (cur > norm) {
-			owner.getSkills().setLevel(skill, cur - 1);
+			getOwner().getSkills().setLevel(skill, cur - 1);
 		} else if (cur < norm) {
-			owner.getSkills().setLevel(skill, cur + 1);
+			getOwner().getSkills().setLevel(skill, cur + 1);
 		}
 
 		if (cur == norm)
@@ -100,8 +100,8 @@ public class StatRestorationEvent extends GameTickEvent {
 	}
 
 	private void checkAndStartRestoration(int id) {
-		int curStat = owner.getSkills().getLevel(id);
-		int maxStat = owner.getSkills().getMaxStat(id);
+		int curStat = getOwner().getSkills().getLevel(id);
+		int maxStat = getOwner().getSkills().getMaxStat(id);
 		if (restoringStats.containsKey(id)) {
 			return;
 		}

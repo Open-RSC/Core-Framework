@@ -3,11 +3,11 @@ package com.openrsc.server.plugins.commands;
 import com.openrsc.server.Constants;
 import com.openrsc.server.GameStateUpdater;
 import com.openrsc.server.Server;
-import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.HolidayDropEvent;
 import com.openrsc.server.event.custom.HourlyNpcLootEvent;
 import com.openrsc.server.event.custom.NpcLootEvent;
+import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.BankEventNpc;
 import com.openrsc.server.event.rsc.impl.ProjectileEvent;
 import com.openrsc.server.event.rsc.impl.RangeEventNpc;
@@ -43,9 +43,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
-
-import static com.openrsc.server.Constants.GameServer.*;
-import static com.openrsc.server.Constants.GameServer.VALUABLE_DROP_EXTRAS;
 
 public final class Admins implements CommandListener {
 	private static final Logger LOGGER = LogManager.getLogger(Admins.class);
@@ -144,20 +141,20 @@ public final class Admins implements CommandListener {
 				items.add(itemId);
 			}
 
-			HashMap<String, DelayedEvent> events = Server.getServer().getEventHandler().getEvents();
-			for (DelayedEvent event : events.values()) {
+			HashMap<String, GameTickEvent> events = Server.getServer().getGameEventHandler().getEvents();
+			for (GameTickEvent event : events.values()) {
 				if (!(event instanceof HolidayDropEvent)) continue;
 
 				player.message(messagePrefix + "There is already a holiday drop running!");
 				return;
 			}
 
-			Server.getServer().getEventHandler().add(new HolidayDropEvent(executionCount, player, items));
+			Server.getServer().getGameEventHandler().add(new HolidayDropEvent(executionCount, player, items));
 			player.message(messagePrefix + "Starting holiday drop!");
 			GameLogging.addQuery(new StaffLog(player, 21, messagePrefix + "Started holiday drop"));
 		} else if (cmd.equalsIgnoreCase("stopholidaydrop") || cmd.equalsIgnoreCase("cancelholidaydrop")) {
-			HashMap<String, DelayedEvent> events = Server.getServer().getEventHandler().getEvents();
-			for (DelayedEvent event : events.values()) {
+			HashMap<String, GameTickEvent> events = Server.getServer().getGameEventHandler().getEvents();
+			for (GameTickEvent event : events.values()) {
 				if (!(event instanceof HolidayDropEvent)) continue;
 
 				event.stop();
@@ -166,8 +163,8 @@ public final class Admins implements CommandListener {
 				return;
 			}
 		} else if (cmd.equalsIgnoreCase("getholidaydrop") || cmd.equalsIgnoreCase("checkholidaydrop")) {
-			HashMap<String, DelayedEvent> events = Server.getServer().getEventHandler().getEvents();
-			for (DelayedEvent event : events.values()) {
+			HashMap<String, GameTickEvent> events = Server.getServer().getGameEventHandler().getEvents();
+			for (GameTickEvent event : events.values()) {
 				if (!(event instanceof HolidayDropEvent)) continue;
 
 				HolidayDropEvent holidayEvent = (HolidayDropEvent) event;
@@ -1103,7 +1100,7 @@ public final class Admins implements CommandListener {
 								final Npc n = new Npc(id, baseX + x, baseY + y, baseX + x - 20, baseX + x + 20, baseY + y - 20, baseY + y + 20);
 								n.setShouldRespawn(false);
 								World.getWorld().registerNpc(n);
-								Server.getServer().getEventHandler().add(new SingleEvent(null, duration * 60000, "Spawn Multi NPC Command") {
+								Server.getServer().getGameEventHandler().add(new SingleEvent(null, duration * 60000, "Spawn Multi NPC Command") {
 									@Override
 									public void action() {
 										n.remove();
@@ -1256,7 +1253,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			Server.getServer().getEventHandler().add(new NpcLootEvent(player.getLocation(), npcID, npcAmt, itemID, itemAmt, duration));
+			Server.getServer().getGameEventHandler().add(new NpcLootEvent(player.getLocation(), npcID, npcAmt, itemID, itemAmt, duration));
 			player.message(messagePrefix + "Spawned " + npcAmt + " " + npcDef.getName());
 			player.message(messagePrefix + "Loot is " + itemAmt + " " + itemDef.getName());
 		} else if (cmd.equalsIgnoreCase("chickenevent")) {
@@ -1308,19 +1305,19 @@ public final class Admins implements CommandListener {
 				npcLifeTime = 10;
 			}
 
-			HashMap<String, DelayedEvent> events = Server.getServer().getEventHandler().getEvents();
-			for (DelayedEvent event : events.values()) {
+			HashMap<String, GameTickEvent> events = Server.getServer().getGameEventHandler().getEvents();
+			for (GameTickEvent event : events.values()) {
 				if (!(event instanceof HourlyNpcLootEvent)) continue;
 
 				player.message(messagePrefix + "Hourly NPC Loot Event is already running");
 				return;
 			}
 
-			Server.getServer().getEventHandler().add(new HourlyNpcLootEvent(hours, "Oh no! Chickens are invading Lumbridge!", player.getLocation(), 3, npcAmount, 10, itemAmount, npcLifeTime));
+			Server.getServer().getGameEventHandler().add(new HourlyNpcLootEvent(hours, "Oh no! Chickens are invading Lumbridge!", player.getLocation(), 3, npcAmount, 10, itemAmount, npcLifeTime));
 			player.message(messagePrefix + "Chicken event started.");
 		} else if (cmd.equalsIgnoreCase("stopnpcevent") || cmd.equalsIgnoreCase("cancelnpcevent")) {
-			HashMap<String, DelayedEvent> events = Server.getServer().getEventHandler().getEvents();
-			for (DelayedEvent event : events.values()) {
+			HashMap<String, GameTickEvent> events = Server.getServer().getGameEventHandler().getEvents();
+			for (GameTickEvent event : events.values()) {
 				if (!(event instanceof HourlyNpcLootEvent)) continue;
 
 				event.stop();
@@ -1328,8 +1325,8 @@ public final class Admins implements CommandListener {
 				return;
 			}
 		} else if (cmd.equalsIgnoreCase("getnpcevent") || cmd.equalsIgnoreCase("checknpcevent")) {
-			HashMap<String, DelayedEvent> events = Server.getServer().getEventHandler().getEvents();
-			for (DelayedEvent event : events.values()) {
+			HashMap<String, GameTickEvent> events = Server.getServer().getGameEventHandler().getEvents();
+			for (GameTickEvent event : events.values()) {
 				if (!(event instanceof HourlyNpcLootEvent)) continue;
 
 				HourlyNpcLootEvent lootEvent = (HourlyNpcLootEvent) event;
@@ -1884,7 +1881,7 @@ public final class Admins implements CommandListener {
 				player.getY() - radius, player.getY() + radius);
 			n.setShouldRespawn(false);
 			World.getWorld().registerNpc(n);
-			Server.getServer().getEventHandler().add(new SingleEvent(null, time * 60000, "Spawn NPC Command") {
+			Server.getServer().getGameEventHandler().add(new SingleEvent(null, time * 60000, "Spawn NPC Command") {
 				@Override
 				public void action() {
 					n.remove();

@@ -108,16 +108,16 @@ public class GemMining implements ObjectActionListener,
 		p.setBatchEvent(new BatchEvent(p, 1800, "Gem Mining", 1000 + retrytimes, true) {
 			@Override
 			public void action() {
-				if (getGem(p, 40, owner.getSkills().getLevel(SKILLS.MINING.id()), axeId) && mineLvl >= 40) { // always 40 required mining.
+				if (getGem(p, 40, getOwner().getSkills().getLevel(SKILLS.MINING.id()), axeId) && mineLvl >= 40) { // always 40 required mining.
 					Item gem = new Item(getGemFormula(p.getInventory().wielding(ItemId.CHARGED_DRAGONSTONE_AMULET.id())), 1);
 					//check if there is still gem at the rock
-					GameObject object = owner.getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
+					GameObject object = getOwner().getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
 					if (object == null) {
-						owner.message("You only succeed in scratching the rock");
+						getOwner().message("You only succeed in scratching the rock");
 					} else {
-						owner.message(minedString(gem.getID()));
-						owner.incExp(SKILLS.MINING.id(), 200, true); // always 50XP
-						owner.getInventory().add(gem);
+						getOwner().message(minedString(gem.getID()));
+						getOwner().incExp(SKILLS.MINING.id(), 200, true); // always 50XP
+						getOwner().getInventory().add(gem);
 					}
 					interrupt();
 					
@@ -127,17 +127,17 @@ public class GemMining implements ObjectActionListener,
 						World.getWorld().delayedSpawnObject(object.getLoc(), 120 * 1000); // 2 minute respawn time
 					}
 				} else {
-					owner.message("You only succeed in scratching the rock");
+					getOwner().message("You only succeed in scratching the rock");
 					if (getRepeatFor() > 1) {
-						GameObject checkObj = owner.getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
+						GameObject checkObj = getOwner().getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
 						if (checkObj == null) {
 							interrupt();
 						}
 					}
 				}
 				if (!isCompleted()) {
-					showBubble(owner, new Item(ItemId.IRON_PICKAXE.id()));
-					owner.message("You have a swing at the rock!");
+					showBubble(getOwner(), new Item(ItemId.IRON_PICKAXE.id()));
+					getOwner().message("You have a swing at the rock!");
 				}
 			}
 		});

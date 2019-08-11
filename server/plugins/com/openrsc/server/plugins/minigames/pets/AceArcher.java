@@ -33,7 +33,7 @@ public class AceArcher implements InvUseOnNpcListener, InvUseOnNpcExecutiveListe
 			player.message("You attempt to put the baby blue dragon in the crystal.");
 			npc.setBusyTimer(1600);
 
-			Server.getServer().getEventHandler().add(new ShortEvent(player, "Ace Archer Pet") {
+			Server.getServer().getGameEventHandler().add(new ShortEvent(player, "Ace Archer Pet") {
 				public void action() {
 					/*Npc nearbyNpc = getMultipleNpcsInArea(player, 5, NpcId.BABY_BLUE_DRAGON.id(), NpcId.BLUE_DRAGON.id(), NpcId.RED_DRAGON.id(), NpcId.DRAGON.id());
 					if (nearbyNpc != null) {

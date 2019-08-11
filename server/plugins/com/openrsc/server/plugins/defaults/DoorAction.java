@@ -559,7 +559,7 @@ public class DoorAction {
 						if (masterFisher != null) {
 							npcTalk(p, masterFisher, "Hello only the top fishers are allowed in here");
 						}
-						Server.getServer().getEventHandler().add(
+						Server.getServer().getGameEventHandler().add(
 							new ShortEvent(p, "Fishing Guild Door") {
 								public void action() {
 									p.setBusy(false);
@@ -1128,11 +1128,11 @@ public class DoorAction {
 							if (forester != null) {
 								npcTalk(player, forester, "Hello only the top woodcutters are allowed in here");
 							}
-							Server.getServer().getEventHandler().add(
+							Server.getServer().getGameEventHandler().add(
 								new ShortEvent(player, "Woodcutting Guild Door") {
 									public void action() {
-										owner.setBusy(false);
-										owner.message(
+										getOwner().setBusy(false);
+										getOwner().message(
 											"You need a woodcutting level of 70 to enter");
 									}
 								});

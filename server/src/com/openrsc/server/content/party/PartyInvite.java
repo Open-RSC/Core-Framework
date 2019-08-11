@@ -138,7 +138,7 @@ public class PartyInvite {
 				inviter.message(invited.getUsername() + "'s Party invitation is no longer active");
 			}
 		};
-		Server.getServer().getEventHandler().add(timeOutEvent);
+		Server.getServer().getGameEventHandler().add(timeOutEvent);
 	}
 
 	public void accept() {
