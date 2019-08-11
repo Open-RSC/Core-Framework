@@ -13,8 +13,8 @@ public abstract class DelayedEvent extends GameTickEvent {
 		super(owner, (int)Math.ceil((double)delayMs / (double)Constants.GameServer.GAME_TICK), descriptor);
 	}
 
-	public DelayedEvent(Player owner, int delay, String descriptor, boolean uniqueEvent) {
-		this(owner, delay, descriptor);
+	public DelayedEvent(Player owner, int delayMs, String descriptor, boolean uniqueEvent) {
+		this(owner, delayMs, descriptor);
 		this.uniqueEvent = uniqueEvent;
 	}
 
