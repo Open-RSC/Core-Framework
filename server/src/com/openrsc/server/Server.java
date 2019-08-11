@@ -226,12 +226,12 @@ public final class Server implements Runnable {
 
 	public void run() {
 	    try {
-    		for (Player p : World.getWorld().getPlayers()) {
-    			p.processIncomingPackets();
-    		}
-
 			long timeLate = System.currentTimeMillis() - lastClientUpdate - Constants.GameServer.GAME_TICK;
 			if (timeLate >= 0) {
+				for (Player p : World.getWorld().getPlayers()) {
+					p.processIncomingPackets();
+				}
+
 				lastClientUpdate += Constants.GameServer.GAME_TICK;
 				tickEventHandler.doGameEvents();
 				gameUpdater.doUpdates();
@@ -244,10 +244,10 @@ public final class Server implements Runnable {
 						LOGGER.warn("Can't keep up, we are " + timeLate + "ms behind; Skipping " + ticksLate + " ticks");
 					}
 				}
-			}
 
-			for (Player p : World.getWorld().getPlayers()) {
-				p.sendOutgoingPackets();
+				for (Player p : World.getWorld().getPlayers()) {
+					p.sendOutgoingPackets();
+				}
 			}
 
 		} catch (Throwable t) {
@@ -301,6 +301,6 @@ public final class Server implements Runnable {
 	}
 
 	public void start() {
-		scheduledExecutor.scheduleAtFixedRate(this, 0, 50, TimeUnit.MILLISECONDS);
+		scheduledExecutor.scheduleAtFixedRate(this, 0, 1, TimeUnit.MILLISECONDS);
 	}
 }
