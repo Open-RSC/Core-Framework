@@ -394,7 +394,7 @@ public final class Server implements Runnable {
 		int i = 0;
 		StringBuilder s = new StringBuilder();
 		for (Map.Entry<String, Integer> entry : eventsCount.entrySet()) {
-			if(i >= 18) // Only display first 18 elements of the hashmap
+			if(forInGame && i >= 18) // Only display first 18 elements of the hashmap
 				break;
 
 			String name		= entry.getKey();
