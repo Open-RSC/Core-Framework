@@ -333,11 +333,6 @@ public abstract class Mob extends Entity {
 			else if (o.getID() >= 1228 && o.getID() <= 1232)
 				if ((lowXDiff <= 2 || highXDiff <= 2) && (lowYDiff <= 2 || highYDiff <= 2))
 					return true;
-
-				else if (o.getID() == 953) {
-					if ((lowXDiff <= 1 || highXDiff <= 1) && (lowYDiff <= 1 || highYDiff <= 1))
-						return true;
-				}
 		return false;
 	}
 
@@ -357,8 +352,27 @@ public abstract class Mob extends Entity {
 			&& (CollisionFlag.WALL_SOUTH & World.getWorld().getTile(getX(), getY() - 1).traversalMask) == 0) {
 			return true;
 		}
-		return minX <= getX() && getX() <= maxX && minY <= getY() + 1 && maxY >= getY() + 1
-			&& (CollisionFlag.WALL_NORTH & World.getWorld().getTile(getX(), getY() + 1).traversalMask) == 0;
+		if (minX <= getX() && getX() <= maxX && minY <= getY() + 1 && maxY >= getY() + 1
+			&& (CollisionFlag.WALL_NORTH & World.getWorld().getTile(getX(), getY() + 1).traversalMask) == 0) {
+			return true;
+		}
+		if (minX <= getX() - 1 && maxX >= getX() - 1 && minY <= getY() - 1 && maxY >= getY() - 1
+			&& (World.getWorld().getTile(getX() - 1, getY() - 1).traversalMask & CollisionFlag.WALL_SOUTH_WEST) == 0) {
+			return true;
+		}
+		if (1 + getX() >= minX && getX() + 1 <= maxX && getY() - 1 >= minY && maxY >= getY() - 1
+			&& (CollisionFlag.WALL_SOUTH_EAST & World.getWorld().getTile(getX() + 1, getY() - 1).traversalMask) == 0) {
+			return true;
+		}
+		if (minX <= getX() - 1 && maxX >= getX() - 1 && minY <= getY() + 1 && maxY >= getY() + 1
+			&& (World.getWorld().getTile(getX() - 1, getY() + 1).traversalMask & CollisionFlag.WALL_NORTH_WEST) == 0) {
+			return true;
+		}
+		if (1 + getX() >= minX && getX() + 1 <= maxX && getY() + 1 >= minY && maxY >= getY() + 1
+			&& (CollisionFlag.WALL_NORTH_EAST & World.getWorld().getTile(getX() + 1, getY() + 1).traversalMask) == 0) {
+			return true;
+		}
+		return false;
 	}
 
 	private boolean canReachx(int minX, int maxX, int minY, int maxY) {

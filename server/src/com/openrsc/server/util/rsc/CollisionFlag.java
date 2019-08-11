@@ -6,10 +6,10 @@ public class CollisionFlag {
 	public static final int WALL_SOUTH = 4;
 	public static final int WALL_WEST = 8;
 
-	private static final int WALL_NORTH_EAST = WALL_NORTH | WALL_EAST;
-	private static final int WALL_NORTH_WEST = WALL_NORTH | WALL_WEST;
-	private static final int WALL_SOUTH_EAST = WALL_SOUTH | WALL_EAST;
-	private static final int WALL_SOUTH_WEST = WALL_SOUTH | WALL_WEST;
+	public static final int WALL_NORTH_EAST = WALL_NORTH | WALL_EAST;
+	public static final int WALL_NORTH_WEST = WALL_NORTH | WALL_WEST;
+	public static final int WALL_SOUTH_EAST = WALL_SOUTH | WALL_EAST;
+	public static final int WALL_SOUTH_WEST = WALL_SOUTH | WALL_WEST;
 
 	public static final int FULL_BLOCK_A = 16;
 	public static final int FULL_BLOCK_B = 32;
