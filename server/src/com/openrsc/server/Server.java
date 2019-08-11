@@ -8,6 +8,7 @@ import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScriptLoader;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
+import com.openrsc.server.net.DiscordSender;
 import com.openrsc.server.net.RSCConnectionHandler;
 import com.openrsc.server.net.RSCProtocolDecoder;
 import com.openrsc.server.net.RSCProtocolEncoder;
@@ -60,6 +61,7 @@ public final class Server implements Runnable {
 		.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat("GameThread").build());
 	private final GameStateUpdater gameUpdater = new GameStateUpdater();
 	private final GameTickEventHandler tickEventHandler = new GameTickEventHandler();
+	private final DiscordSender discordSender = new DiscordSender();
 	private long lastClientUpdate;
 	private boolean running;
 	private DelayedEvent updateEvent;
@@ -245,10 +247,12 @@ public final class Server implements Runnable {
 				lastGameStateDuration	= getGameUpdater().doUpdates();
 
 				lastTickDuration		= lastEventsDuration + lastGameStateDuration;
+				final long ticksLate	= timeLate / Constants.GameServer.GAME_TICK;
+				final boolean isServerLate	= ticksLate >= 1;
 
 				// Processing game events and state took longer than the tick
 				if(lastTickDuration >= Constants.GameServer.GAME_TICK) {
-					final String message = "Can't keep up, tick took " + lastTickDuration + "ms, events took " + lastEventsDuration + "ms, game state took " + lastGameStateDuration + "ms";
+					final String message = "Can't keep up: " + lastTickDuration + "ms " + lastEventsDuration + "ms " + lastGameStateDuration + "ms";
 
 					// Warn logged in developers
 					for (Player p : World.getWorld().getPlayers()) {
@@ -258,16 +262,11 @@ public final class Server implements Runnable {
 
 						p.playerServerMessage(MessageType.QUEST, Constants.GameServer.MESSAGE_PREFIX + message);
 					}
-
-					if (Constants.GameServer.DEBUG) {
-						LOGGER.warn(message);
-					}
 				}
 
 				// Server fell behind, skip ticks
-				if (timeLate >= Constants.GameServer.GAME_TICK) {
-					final long ticksLate 		= timeLate / Constants.GameServer.GAME_TICK;
-					lastClientUpdate 	+= ticksLate * Constants.GameServer.GAME_TICK;
+				if (isServerLate) {
+					lastClientUpdate 			+= ticksLate * Constants.GameServer.GAME_TICK;
 					final String message		= "Can't keep up, we are " + timeLate + "ms behind; Skipping " + ticksLate + " ticks";
 
 					// Warn logged in developers
@@ -278,6 +277,8 @@ public final class Server implements Runnable {
 
 						p.playerServerMessage(MessageType.QUEST, Constants.GameServer.MESSAGE_PREFIX + message);
 					}
+
+					getDiscordSender().monitoringSendServerBehind(message);
 
 					if (Constants.GameServer.DEBUG) {
 						LOGGER.warn(message);
@@ -339,7 +340,7 @@ public final class Server implements Runnable {
 		getGameEventHandler().add(up);
 	}
 
-	public String buildProfilingDebugInformation(boolean forInGame) {
+	public final String buildProfilingDebugInformation(boolean forInGame) {
 		HashMap<String, Integer> eventsCount 	= new HashMap<String, Integer>();
 		HashMap<String, Long> eventsDuration	= new HashMap<String, Long>();
 		int countEvents							= 0;
@@ -423,5 +424,9 @@ public final class Server implements Runnable {
 
 	public GameStateUpdater getGameUpdater() {
 		return gameUpdater;
+	}
+
+	public DiscordSender getDiscordSender() {
+		return discordSender;
 	}
 }

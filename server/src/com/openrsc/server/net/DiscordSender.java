@@ -1,11 +1,12 @@
 package com.openrsc.server.net;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.content.market.MarketItem;
 import com.openrsc.server.external.EntityHandler;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.util.JsonUtils;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -14,9 +15,10 @@ import java.nio.charset.StandardCharsets;
 
 public class DiscordSender {
 
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER	= LogManager.getLogger();
+	private long monitoringLastUpdate	= 0;
 
-	public static void auctionAdd(MarketItem addItem) {
+	public void auctionAdd(MarketItem addItem) {
 		String pluralHandlerMessage = addItem.getAmount() > 1
 				? "%d x %s, priced at %d coins each, auctioned by %s.  %d hours left."
 				: "%d x %s, priced at %d coins, auctioned by %s.  %d hours left.";
@@ -29,56 +31,81 @@ public class DiscordSender {
 				addItem.getHoursLeft()
 		);
 		try {
-			sendToDiscord(addMessage);
+			auctionSendToDiscord(addMessage);
 		} catch(Exception e) {
 			LOGGER.catching(e);
 		}
 	}
 
-	public static void auctionBuy(MarketItem buyItem) {
+	public void auctionBuy(MarketItem buyItem) {
 		String buyMessage = String.format("%s purchased from %s.  %d left in auction.",
 				EntityHandler.getItemDef(buyItem.getItemID()).getName(),
 				buyItem.getSellerName(),
 				buyItem.getAmountLeft()
 		);
 		try {
-			sendToDiscord(buyMessage);
+			auctionSendToDiscord(buyMessage);
 		} catch(Exception e) {
 			LOGGER.catching(e);
 		}
 	}
 
-	public static void auctionCancel(MarketItem cancelItem) {
+	public void auctionCancel(MarketItem cancelItem) {
 		String cancelMessage = String.format("%d x %s cancelled from auction by %s.",
 				cancelItem.getAmount(),
 				EntityHandler.getItemDef(cancelItem.getItemID()).getName(),
 				cancelItem.getSellerName()
 		);
 		try {
-			sendToDiscord(cancelMessage);
+			auctionSendToDiscord(cancelMessage);
 		} catch(Exception e) {
 			LOGGER.catching(e);
 		}
 	}
 
-	public static void auctionModDelete(MarketItem deleteItem) {
+	public void auctionModDelete(MarketItem deleteItem) {
 		String cancelMessage = String.format("%d x %s, auctioned by %s, has been deleted by moderator.",
 				deleteItem.getAmount(),
 				EntityHandler.getItemDef(deleteItem.getItemID()).getName(),
 				deleteItem.getSellerName()
 		);
 		try {
-			sendToDiscord(cancelMessage);
+			auctionSendToDiscord(cancelMessage);
 		} catch(Exception e) {
 			LOGGER.catching(e);
 		}
 	}
 
-	private static void sendToDiscord(String auctionMessage) throws Exception {
+	public void monitoringSendServerBehind(String message) {
+		try {
+			monitoringSendToDiscord(message + "\r\n" + Server.getServer().buildProfilingDebugInformation(false));
+		} catch(Exception e) {
+			LOGGER.catching(e);
+		}
+	}
 
-		String jsonPostBody = String.format("{\"content\": \"%s\"}", auctionMessage);
+	private void auctionSendToDiscord(String message) throws Exception {
+		if(Constants.GameServer.WANT_DISCORD_AUCTION_UPDATES) {
+			sendToDiscord(Constants.GameServer.DISCORD_MONITORING_WEBHOOK_URL, message);
+		}
+	}
 
-		java.net.URL url = new java.net.URL(Constants.GameServer.DISCORD_WEBHOOK_URL);
+	private void monitoringSendToDiscord(String message) throws Exception {
+		final long now 				= System.currentTimeMillis();
+
+		if(now >= (monitoringLastUpdate + 3600) && Constants.GameServer.WANT_DISCORD_MONITORING_UPDATES) {
+			sendToDiscord(Constants.GameServer.DISCORD_MONITORING_WEBHOOK_URL, message);
+			monitoringLastUpdate	= now;
+		}
+	}
+
+	private static void sendToDiscord(String webhookUrl, String message) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		JsonUtils.quoteAsString(message, sb);
+
+		String jsonPostBody = String.format("{\"content\": \"%s\"}", sb);
+
+		java.net.URL url = new java.net.URL(webhookUrl);
 
 		URLConnection con = url.openConnection();
 		HttpURLConnection http = (HttpURLConnection) con;

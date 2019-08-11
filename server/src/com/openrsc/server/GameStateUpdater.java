@@ -618,6 +618,7 @@ public final class GameStateUpdater {
 		lastUpdateClientsDuration			= updateClients();
 		lastDoCleanupDuration				= doCleanup();
 		lastExecuteWalkToActionsDuration	= executeWalkToActions();
+		Thread.sleep(700);
 		final long gameStateEnd				= System.currentTimeMillis();
 
 		return gameStateEnd - gameStateStart;

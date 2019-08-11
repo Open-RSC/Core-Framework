@@ -253,8 +253,10 @@ public final class Constants {
 		public static boolean CRYSTAL_KEY_GIVES_XP = false;
 		public static boolean LOOTED_CHESTS_STUCK = false;
 		public static boolean WANT_RUNECRAFTING = false;
-		public static boolean WANT_DISCORD_UPDATES = false;
-		public static String DISCORD_WEBHOOK_URL = "";
+		public static boolean WANT_DISCORD_AUCTION_UPDATES = false;
+		public static String DISCORD_AUCTION_WEBHOOK_URL = "";
+		public static boolean WANT_DISCORD_MONITORING_UPDATES = false;
+		public static String DISCORD_MONITORING_WEBHOOK_URL = "";
 		public static boolean WANT_EQUIPMENT_TAB = false;
 		public static boolean WANT_BANK_PRESETS = false;
 		public static boolean WANT_PARTIES = false;
@@ -392,8 +394,10 @@ public final class Constants {
 			CRYSTAL_KEY_GIVES_XP = Boolean.parseBoolean(props.getProperty("crystal_key_gives_xp"));
 			LOOTED_CHESTS_STUCK = Boolean.parseBoolean(props.getProperty("looted_chests_stuck"));
 			WANT_RUNECRAFTING = Boolean.parseBoolean(props.getProperty("want_runecrafting"));
-			WANT_DISCORD_UPDATES = Boolean.parseBoolean(props.getProperty("want_discord_updates"));
-			DISCORD_WEBHOOK_URL = props.getProperty("discord_webhook_url");
+			WANT_DISCORD_AUCTION_UPDATES = Boolean.parseBoolean(props.getProperty("want_discord_auction_updates"));
+			DISCORD_AUCTION_WEBHOOK_URL = props.getProperty("discord_auction_webhook_url");
+			WANT_DISCORD_MONITORING_UPDATES = Boolean.parseBoolean(props.getProperty("want_discord_monitoring_updates"));
+			DISCORD_MONITORING_WEBHOOK_URL = props.getProperty("discord_monitoring_webhook_url");
 			WANT_EQUIPMENT_TAB = Boolean.parseBoolean(props.getProperty("want_equipment_tab"));
 			WANT_BANK_PRESETS = Boolean.parseBoolean(props.getProperty("want_bank_presets"));
 			WANT_PARTIES = Boolean.parseBoolean(props.getProperty("want_parties"));
