@@ -49,7 +49,8 @@ public class GameTickEventHandler {
 		return false;
 	}
 
-	void doGameEvents() {
+	public long doGameEvents() {
+		final long eventsStart	= System.currentTimeMillis();
 		if (toAdd.size() > 0) {
 			for(Iterator<Map.Entry<String, GameTickEvent>> iter = toAdd.entrySet().iterator(); iter.hasNext(); ) {
 			    Map.Entry<String, GameTickEvent> e = iter.next();
@@ -77,6 +78,8 @@ public class GameTickEventHandler {
 				it.remove();
 			}
 		}
+		final long eventsEnd		= System.currentTimeMillis();
+		return eventsEnd - eventsStart;
 	}
 
 	public HashMap<String, GameTickEvent> getEvents() {

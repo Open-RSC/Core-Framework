@@ -39,6 +39,13 @@ public final class GameStateUpdater {
 	private final EntityList<Player> players = World.getWorld().getPlayers();
 	private final EntityList<Npc> npcs = World.getWorld().getNpcs();
 
+	private long lastProcessPlayersDuration			= 0;
+	private long lastProcessNpcsDuration			= 0;
+	private long lastProcessMessageQueuesDuration	= 0;
+	private long lastUpdateClientsDuration			= 0;
+	private long lastDoCleanupDuration				= 0;
+	private long lastExecuteWalkToActionsDuration	= 0;
+
 	// private static final int PACKET_UPDATETIMEOUTS = 0;
 	public static void sendUpdatePackets(Player p) {
 		try {
@@ -603,13 +610,17 @@ public final class GameStateUpdater {
 		}
 	}
 
-	void doUpdates() throws Exception {
-		processPlayers();
-		processNpcs();
-		processMessageQueues();
-		updateClients();
-		doCleanup();
-		executeWalkToActions();
+	public long doUpdates() throws Exception {
+		final long gameStateStart			= System.currentTimeMillis();
+		lastProcessPlayersDuration			= processPlayers();
+		lastProcessNpcsDuration				= processNpcs();
+		lastProcessMessageQueuesDuration	= processMessageQueues();
+		lastUpdateClientsDuration			= updateClients();
+		lastDoCleanupDuration				= doCleanup();
+		lastExecuteWalkToActionsDuration	= executeWalkToActions();
+		final long gameStateEnd				= System.currentTimeMillis();
+
+		return gameStateEnd - gameStateStart;
 		/*final int HORIZONTAL_PLANES = (World.MAX_WIDTH / RegionManager.REGION_SIZE) + 1;
 		final int VERTICAL_PLANES = (World.MAX_HEIGHT / RegionManager.REGION_SIZE) + 1;
 		for (int x = 0; x < HORIZONTAL_PLANES; ++x)
@@ -623,25 +634,30 @@ public final class GameStateUpdater {
 			}*/
 	}
 
-	private void updateClients() {
+	private final long updateClients() {
+		final long updateClientsStart	= System.currentTimeMillis();
 		for (Player p : players) {
 			sendUpdatePackets(p);
 			p.process();
 		}
+		final long updateClientsEnd		= System.currentTimeMillis();
+		return updateClientsEnd - updateClientsStart;
 	}
 
-	private void doCleanup() {// it can do the teleport at this time.
+	private final long doCleanup() {// it can do the teleport at this time.
+		final long doCleanupStart	= System.currentTimeMillis();
+
 		/*
 		 * Reset the update related flags and unregister npcs flagged as
 		 * unregistering
 		 */
-
 		for (Npc npc : npcs) {
 			npc.resetMoved();
 			npc.resetSpriteChanged();
 			npc.getUpdateFlags().reset();
 			npc.setTeleporting(false);
 		}
+
 		/*
 		 * Reset the update related flags and unregister players that are
 		 * flagged as unregistered
@@ -652,9 +668,14 @@ public final class GameStateUpdater {
 			player.getUpdateFlags().reset();
 			player.resetMoved();
 		}
+
+		final long doCleanupEnd	= System.currentTimeMillis();
+
+		return doCleanupEnd - doCleanupStart;
 	}
 
-	private void executeWalkToActions() {
+	private final long executeWalkToActions() {
+		final long executeWalkToActionsStart	= System.currentTimeMillis();
 		for (Player p : players) {
 			if (p.getWalkToAction() != null) {
 				if (p.getWalkToAction().shouldExecute()) {
@@ -663,9 +684,13 @@ public final class GameStateUpdater {
 				}
 			}
 		}
+		final long executeWalkToActionsEnd	= System.currentTimeMillis();
+
+		return executeWalkToActionsEnd - executeWalkToActionsStart;
 	}
 
-	private void processNpcs() {
+	private final long processNpcs() {
+		final long processNpcsStart	= System.currentTimeMillis();
 		for (Npc n : npcs) {
 			try {
 				if (n.isUnregistering()) {
@@ -679,12 +704,15 @@ public final class GameStateUpdater {
 				LOGGER.catching(e);
 			}
 		}
+		final long processNpcsEnd	= System.currentTimeMillis();
+		return processNpcsEnd - processNpcsStart;
 	}
 
 	/**
 	 * Updates the messages queues for each player
 	 */
-	private void processMessageQueues() {
+	private final long processMessageQueues() {
+		final long processMessageQueuesStart	= System.currentTimeMillis();
 		for (Player p : players) {
 			PrivateMessage pm = p.getNextPrivateMessage();
 			if (pm != null) {
@@ -708,13 +736,16 @@ public final class GameStateUpdater {
 				p.setRequiresOfferUpdate(false);
 			}
 		}
+		final long processMessageQueuesEnd	= System.currentTimeMillis();
+		return processMessageQueuesEnd - processMessageQueuesStart;
 	}
 
 	/**
 	 * Update the position of players, and check if who (and what) they are
 	 * aware of needs updated
 	 */
-	private void processPlayers() {
+	private final long processPlayers() {
+		final long processPlayersStart	= System.currentTimeMillis();
 		for (Player p : players) {
 			// Checking login because we don't want to unregister more than once
 			if (p.isUnregistering() && p.isLoggedIn()) {
@@ -726,5 +757,31 @@ public final class GameStateUpdater {
 				p.incAppearanceID();
 			}
 		}
+		final long processPlayersEnd	= System.currentTimeMillis();
+		return processPlayersEnd - processPlayersStart;
+	}
+
+	public long getLastProcessPlayersDuration() {
+		return lastProcessPlayersDuration;
+	}
+
+	public long getLastProcessNpcsDuration() {
+		return lastProcessNpcsDuration;
+	}
+
+	public long getLastProcessMessageQueuesDuration() {
+		return lastProcessMessageQueuesDuration;
+	}
+
+	public long getLastUpdateClientsDuration() {
+		return lastUpdateClientsDuration;
+	}
+
+	public long getLastDoCleanupDuration() {
+		return lastDoCleanupDuration;
+	}
+
+	public long getLastExecuteWalkToActionsDuration() {
+		return lastExecuteWalkToActionsDuration;
 	}
 }

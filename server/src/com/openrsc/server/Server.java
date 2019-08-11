@@ -239,19 +239,12 @@ public final class Server implements Runnable {
 					p.processIncomingPackets();
 				}
 
-				lastClientUpdate += Constants.GameServer.GAME_TICK;
+				lastClientUpdate 		+= Constants.GameServer.GAME_TICK;
 
-				final long eventsStart	= System.currentTimeMillis();
-				tickEventHandler.doGameEvents();
-				final long eventsEnd		= System.currentTimeMillis();
+				lastEventsDuration		= getGameEventHandler().doGameEvents();
+				lastGameStateDuration	= getGameUpdater().doUpdates();
 
-				final long gameStateStart	= System.currentTimeMillis();
-				gameUpdater.doUpdates();
-				final long gameStateEnd	= System.currentTimeMillis();
-
-				lastEventsDuration			= eventsEnd - eventsStart;
-				lastGameStateDuration		= gameStateEnd - gameStateStart;
-				lastTickDuration			= lastEventsDuration + lastGameStateDuration;
+				lastTickDuration		= lastEventsDuration + lastGameStateDuration;
 
 				// Processing game events and state took longer than the tick
 				if(lastTickDuration >= Constants.GameServer.GAME_TICK) {
@@ -394,7 +387,7 @@ public final class Server implements Runnable {
 		int i = 0;
 		StringBuilder s = new StringBuilder();
 		for (Map.Entry<String, Integer> entry : eventsCount.entrySet()) {
-			if(forInGame && i >= 18) // Only display first 18 elements of the hashmap
+			if(forInGame && i >= 17) // Only display first 17 elements of the hashmap
 				break;
 
 			String name		= entry.getKey();
@@ -406,6 +399,7 @@ public final class Server implements Runnable {
 
 		return
 			"Total: " + countEvents + " : " + durationEvents + "ms, Server Stats: " + getLastTickDuration() + "ms " + getLastEventsDuration() + "ms " + getLastGameStateDuration() + "ms, Tick: " + Constants.GameServer.GAME_TICK + "ms" + newLine +
+			"Game Updater Stats: " + getGameUpdater().getLastProcessPlayersDuration() + "ms " + getGameUpdater().getLastProcessNpcsDuration() + "ms " + getGameUpdater().getLastProcessMessageQueuesDuration() + "ms " + getGameUpdater().getLastUpdateClientsDuration() + "ms " + getGameUpdater().getLastDoCleanupDuration() + "ms " + getGameUpdater().getLastExecuteWalkToActionsDuration() + "ms " + newLine +
 			" NPCs: " + World.getWorld().getNpcs().size() + ", Players: " + World.getWorld().getPlayers().size() + ", Shops: " + World.getWorld().getShops().size() + newLine +
 			/*"Player Atk Map: " + World.getWorld().getPlayersUnderAttack().size() + ", NPC Atk Map: " + World.getWorld().getNpcsUnderAttack().size() + ", Quests: " + World.getWorld().getQuests().size() + ", Mini Games: " + World.getWorld().getMiniGames().size() + newLine +*/
 			s;
@@ -425,5 +419,9 @@ public final class Server implements Runnable {
 
 	public long getLastTickDuration() {
 		return lastTickDuration;
+	}
+
+	public GameStateUpdater getGameUpdater() {
+		return gameUpdater;
 	}
 }
