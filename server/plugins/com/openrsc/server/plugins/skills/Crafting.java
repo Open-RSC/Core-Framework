@@ -85,15 +85,27 @@ public class Crafting implements InvUseOnItemListener,
 										"Diamond"
 									};
 									if (Constants.GameServer.MEMBER_WORLD) {
-										options = new String[]{
-											"Gold",
-											"Sapphire",
-											"Emerald",
-											"Ruby",
-											"Diamond",
-											"Dragonstone",
-											Constants.GameServer.WANT_EQUIPMENT_TAB ? "Opal" : null
-										};
+										if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+											options = new String[]{
+												"Gold",
+												"Sapphire",
+												"Emerald",
+												"Ruby",
+												"Diamond",
+												"Dragonstone",
+												"Opal"
+											};
+										} else {
+											options = new String[]{
+												"Gold",
+												"Sapphire",
+												"Emerald",
+												"Ruby",
+												"Diamond",
+												"Dragonstone"
+											};
+										}
+
 									}
 									final int craftType = option;
 									if (owner.getInventory().countId(moulds[craftType]) < 1) {
