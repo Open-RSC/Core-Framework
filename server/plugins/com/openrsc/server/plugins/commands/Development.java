@@ -445,7 +445,7 @@ public final class Development implements CommandListener {
 			}
 
 			ActionSender.sendBox(player,
-				"Total: " + countEvents + " : " + durationEvents + "ms, Server Stats: " + Server.getServer().getLastTickDuration() + "ms, " + Server.getServer().getLastEventsDuration() + "ms, " + Server.getServer().getLastGameStateDuration() + "ms%" +
+				"Total: " + countEvents + " : " + durationEvents + "ms, Server Stats: " + Server.getServer().getLastTickDuration() + "ms " + Server.getServer().getLastEventsDuration() + "ms " + Server.getServer().getLastGameStateDuration() + ", Tick: " + Constants.GameServer.GAME_TICK + "ms%" +
 				" NPCs: " + World.getWorld().getNpcs().size() + ", Players: " + World.getWorld().getPlayers().size() + ", Shops: " + World.getWorld().getShops().size() + "%" +
 				/*"Player Atk Map: " + World.getWorld().getPlayersUnderAttack().size() + ", NPC Atk Map: " + World.getWorld().getNpcsUnderAttack().size() + ", Quests: " + World.getWorld().getQuests().size() + ", Mini Games: " + World.getWorld().getMiniGames().size() + "%" +*/
 				s,
