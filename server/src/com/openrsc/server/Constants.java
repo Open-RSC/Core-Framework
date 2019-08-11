@@ -60,7 +60,7 @@ public final class Constants {
 		/**
 		 * RSC GAME TICK.
 		 */
-		public static int GAME_TICK = 600;
+		public static int GAME_TICK = 640;
 		/**
 		 * the servers name
 		 */
