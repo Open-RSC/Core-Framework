@@ -62,6 +62,10 @@ public final class Constants {
 		 */
 		public static int GAME_TICK = 640;
 		/**
+		 * Walking tick
+		 */
+		public static int WALKING_TICK = 640;
+		/**
 		 * the servers name
 		 */
 		public static String SERVER_NAME = "Runescape";
@@ -262,6 +266,7 @@ public final class Constants {
 		public static boolean WANT_PARTIES = false;
 		public static boolean MINING_ROCKS_EXTENDED = false;
 		public static boolean WANT_NEW_RARE_DROP_TABLES = false;
+		public static boolean WANT_CUSTOM_WALK_SPEED = false;
 
 		public static int MAX_TICKS_UNTIL_FULL_WALKING_SPEED = 5;
 		//strict check on level requirements for "glitched" validations on rsc
@@ -311,6 +316,8 @@ public final class Constants {
 
 			// Initialization confs
 			GAME_TICK = Integer.parseInt(props.getProperty("game_tick"));
+			WALKING_TICK = Integer.parseInt(props.getProperty("walking_tick"));
+			WANT_CUSTOM_WALK_SPEED = Boolean.parseBoolean(props.getProperty("want_custom_walking_speed"));
 			IDLE_TIMER = Integer.parseInt(props.getProperty("idle_timer"));
 			AUTO_SAVE = Integer.parseInt(props.getProperty("auto_save"));
 			CLIENT_VERSION = Integer.parseInt(props.getProperty("client_version"));

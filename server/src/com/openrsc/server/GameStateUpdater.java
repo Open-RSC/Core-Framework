@@ -618,7 +618,6 @@ public final class GameStateUpdater {
 		lastUpdateClientsDuration			= updateClients();
 		lastDoCleanupDuration				= doCleanup();
 		lastExecuteWalkToActionsDuration	= executeWalkToActions();
-		Thread.sleep(700);
 		final long gameStateEnd				= System.currentTimeMillis();
 
 		return gameStateEnd - gameStateStart;
@@ -698,7 +697,11 @@ public final class GameStateUpdater {
 					World.getWorld().unregisterNpc(n);
 					continue;
 				}
-				n.updatePosition();
+
+				// Only do the walking tick here if the NPC's walking tick matches the game tick
+				if(!Constants.GameServer.WANT_CUSTOM_WALK_SPEED) {
+					n.updatePosition();
+				}
 			} catch (Exception e) {
 				LOGGER.error(
 					"Error while updating " + n + " at position " + n.getLocation() + " loc: " + n.getLoc());
@@ -753,7 +756,12 @@ public final class GameStateUpdater {
 				World.getWorld().unregisterPlayer(p);
 				continue;
 			}
-			p.updatePosition();
+
+			// Only do the walking tick here if the Players' walking tick matches the game tick
+			if(!Constants.GameServer.WANT_CUSTOM_WALK_SPEED) {
+				p.updatePosition();
+			}
+
 			if (p.getUpdateFlags().hasAppearanceChanged()) {
 				p.incAppearanceID();
 			}

@@ -6,6 +6,7 @@ import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScriptLoader;
+import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.DiscordSender;
@@ -287,6 +288,21 @@ public final class Server implements Runnable {
 
 				for (Player p : World.getWorld().getPlayers()) {
 					p.sendOutgoingPackets();
+				}
+			}
+			else {
+				if(Constants.GameServer.WANT_CUSTOM_WALK_SPEED) {
+					for (Player p : World.getWorld().getPlayers()) {
+						p.updatePosition();
+					}
+
+					for (Npc n : World.getWorld().getNpcs()) {
+						n.updatePosition();
+					}
+
+					for (Player p : World.getWorld().getPlayers()) {
+						p.sendOutgoingPackets();
+					}
 				}
 			}
 
