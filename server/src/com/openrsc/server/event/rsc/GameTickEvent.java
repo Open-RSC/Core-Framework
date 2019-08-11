@@ -13,6 +13,7 @@ public abstract class GameTickEvent {
 	private boolean immediate;
 	private int ticksBeforeRun = -1;
 	private String descriptor;
+	private long lastEventDuration = 0;
 
 	public GameTickEvent(Mob owner, int ticks, String descriptor) {
 		this.owner = owner;
@@ -34,6 +35,15 @@ public abstract class GameTickEvent {
 	}
 
 	public abstract void run();
+
+	public final long doRun() {
+		final long eventStart	= System.currentTimeMillis();
+		run();
+		final long eventEnd		= System.currentTimeMillis();
+		final long eventTime	= eventEnd - eventStart;
+		lastEventDuration		= eventTime;
+		return eventTime;
+	}
 
 	public final boolean shouldRemove() {
 		return !running;
@@ -89,5 +99,9 @@ public abstract class GameTickEvent {
 
 	public long timeTillNextRun() {
 		return System.currentTimeMillis() + (ticksBeforeRun * Constants.GameServer.GAME_TICK);
+	}
+
+	public final long getLastEventDuration() {
+		return lastEventDuration;
 	}
 }

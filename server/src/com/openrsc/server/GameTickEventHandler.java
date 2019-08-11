@@ -66,7 +66,7 @@ public class GameTickEventHandler {
 			try {
 				event.countdown();
 				if (event.shouldRun()) {
-					event.run();
+					event.doRun();
 					event.resetCountdown();
 				}
 			} catch (Exception e) {

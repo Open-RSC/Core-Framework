@@ -389,25 +389,36 @@ public final class Development implements CommandListener {
 				player.message(messagePrefix + "Invalid name or player is not online");
 		}
 		else if (cmd.equalsIgnoreCase("events") || cmd.equalsIgnoreCase("serverstats")) {
-			String total	= "Total Events: " + Server.getServer().getGameEventHandler().getEvents().size();
-			player.message(messagePrefix + total);
-			HashMap<String, Integer> events = new HashMap<String, Integer>();
+			HashMap<String, Integer> eventsCount 	= new HashMap<String, Integer>();
+			HashMap<String, Long> eventsDuration	= new HashMap<String, Long>();
+			int countEvents							= 0;
+			long durationEvents						= 0;
 
 			// Show info for game tick events
 			for (Map.Entry<String, GameTickEvent> eventEntry : Server.getServer().getGameEventHandler().getEvents().entrySet()) {
 				GameTickEvent e = eventEntry.getValue();
 				String eventName = e.getDescriptor();
 				//if (e.getOwner() != null && e.getOwner().isUnregistering()) {
-				if (!events.containsKey(eventName)) {
-					events.put(eventName, 1);
+				if (!eventsCount.containsKey(eventName)) {
+					eventsCount.put(eventName, 1);
 				} else {
-					events.put(eventName, events.get(eventName) + 1);
+					eventsCount.put(eventName, eventsCount.get(eventName) + 1);
+				}
+
+				if (!eventsDuration.containsKey(eventName)) {
+					eventsDuration.put(eventName, e.getLastEventDuration());
+				} else {
+					eventsDuration.put(eventName, eventsDuration.get(eventName) + e.getLastEventDuration());
 				}
 				//}
+
+				// Update Totals
+				++countEvents;
+				durationEvents	+= e.getLastEventDuration();
 			}
 
 			// Sort the Events Hashmap
-			List list = new LinkedList(events.entrySet());
+			List list = new LinkedList(eventsCount.entrySet());
 			Collections.sort(list, new Comparator() {
 				public int compare(Object o1, Object o2) {
 					return ((Comparable) ((Map.Entry) (o2)).getValue())
@@ -419,22 +430,24 @@ public final class Development implements CommandListener {
 				Map.Entry entry = (Map.Entry) it.next();
 				sortedHashMap.put(entry.getKey(), entry.getValue());
 			}
-			events	= sortedHashMap;
+			eventsCount	= sortedHashMap;
 
 			int i = 0;
 			StringBuilder s = new StringBuilder();
-			for (Map.Entry<String, Integer> entry : events.entrySet()) {
+			for (Map.Entry<String, Integer> entry : eventsCount.entrySet()) {
 				if(i >= 18) // Only display first 18 elements of the hashmap
 					break;
 
-				String name = entry.getKey();
-				Integer value = entry.getValue();
-				s.append(name).append(": ").append(value).append("%");
+				String name		= entry.getKey();
+				Integer time	= entry.getValue();
+				Long duration	= eventsDuration.get(entry.getKey());
+				s.append(name).append(": ").append(time).append(" : ").append(duration).append("ms%");
 			}
 
 			ActionSender.sendBox(player,
-				total + ", NPCs: " + World.getWorld().getNpcs().size() + ", Players: " + World.getWorld().getPlayers().size() + ", Shops: " + World.getWorld().getShops().size() + "%" +
-				"Player Atk Map: " + World.getWorld().getPlayersUnderAttack().size() + ", NPC Atk Map: " + World.getWorld().getNpcsUnderAttack().size() + ", Quests: " + World.getWorld().getQuests().size() + ", Mini Games: " + World.getWorld().getMiniGames().size() + "%" +
+				"Total: " + countEvents + " : " + durationEvents + "ms, Server Stats: " + Server.getServer().getLastTickDuration() + "ms, " + Server.getServer().getLastEventsDuration() + "ms, " + Server.getServer().getLastGameStateDuration() + "ms%" +
+				" NPCs: " + World.getWorld().getNpcs().size() + ", Players: " + World.getWorld().getPlayers().size() + ", Shops: " + World.getWorld().getShops().size() + "%" +
+				/*"Player Atk Map: " + World.getWorld().getPlayersUnderAttack().size() + ", NPC Atk Map: " + World.getWorld().getNpcsUnderAttack().size() + ", Quests: " + World.getWorld().getQuests().size() + ", Mini Games: " + World.getWorld().getMiniGames().size() + "%" +*/
 				s,
 				true
 			);

@@ -14,6 +14,7 @@ import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.util.NamedThreadFactory;
+import com.openrsc.server.util.rsc.MessageType;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -61,6 +62,10 @@ public final class Server implements Runnable {
 	private boolean running;
 	private DelayedEvent updateEvent;
 	private ChannelFuture serverChannel;
+
+	private long lastGameStateDuration	= 0;
+	private long lastEventsDuration		= 0;
+	private long lastTickDuration		= 0;
 
 	public Server() {
 		running = true;
@@ -233,15 +238,54 @@ public final class Server implements Runnable {
 				}
 
 				lastClientUpdate += Constants.GameServer.GAME_TICK;
+
+				final long eventsStart	= System.currentTimeMillis();
 				tickEventHandler.doGameEvents();
+				final long eventsEnd		= System.currentTimeMillis();
+
+				final long gameStateStart	= System.currentTimeMillis();
 				gameUpdater.doUpdates();
+				final long gameStateEnd	= System.currentTimeMillis();
+
+				lastEventsDuration			= eventsEnd - eventsStart;
+				lastGameStateDuration		= gameStateEnd - gameStateStart;
+				lastTickDuration			= lastEventsDuration + lastGameStateDuration;
+
+				// Processing game events and state took longer than the tick
+				if(lastTickDuration >= Constants.GameServer.GAME_TICK) {
+					final String message = "Can't keep up, tick took " + lastTickDuration + "ms, events took " + lastEventsDuration + "ms, game state took " + lastGameStateDuration + "ms";
+
+					// Warn logged in developers
+					for (Player p : World.getWorld().getPlayers()) {
+						if(!p.isDev()) {
+							continue;
+						}
+
+						p.playerServerMessage(MessageType.QUEST, Constants.GameServer.MESSAGE_PREFIX + message);
+					}
+
+					if (Constants.GameServer.DEBUG) {
+						LOGGER.warn(message);
+					}
+				}
 
 				// Server fell behind, skip ticks
 				if (timeLate >= Constants.GameServer.GAME_TICK) {
-					long ticksLate = timeLate / Constants.GameServer.GAME_TICK;
-					lastClientUpdate += ticksLate * Constants.GameServer.GAME_TICK;
+					final long ticksLate 		= timeLate / Constants.GameServer.GAME_TICK;
+					lastClientUpdate 	+= ticksLate * Constants.GameServer.GAME_TICK;
+					final String message		= "Can't keep up, we are " + timeLate + "ms behind; Skipping " + ticksLate + " ticks";
+
+					// Warn logged in developers
+					for (Player p : World.getWorld().getPlayers()) {
+						if(!p.isDev()) {
+							continue;
+						}
+
+						p.playerServerMessage(MessageType.QUEST, Constants.GameServer.MESSAGE_PREFIX + message);
+					}
+
 					if (Constants.GameServer.DEBUG) {
-						LOGGER.warn("Can't keep up, we are " + timeLate + "ms behind; Skipping " + ticksLate + " ticks");
+						LOGGER.warn(message);
 					}
 				}
 
@@ -302,5 +346,17 @@ public final class Server implements Runnable {
 
 	public void start() {
 		scheduledExecutor.scheduleAtFixedRate(this, 0, 1, TimeUnit.MILLISECONDS);
+	}
+
+	public long getLastGameStateDuration() {
+		return lastGameStateDuration;
+	}
+
+	public long getLastEventsDuration() {
+		return lastEventsDuration;
+	}
+
+	public long getLastTickDuration() {
+		return lastTickDuration;
 	}
 }
