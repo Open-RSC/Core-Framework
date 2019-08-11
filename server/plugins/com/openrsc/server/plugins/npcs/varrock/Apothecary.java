@@ -69,7 +69,12 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 					"Well give me them and 5 gold and I'll make you your potion");
 				int sub_option = showMenu(p, n, "Yes ok", "No thanks");
 				if (sub_option == 0) {
-					p.setBatchEvent(new BatchEvent(p, 600, "Apothecary Brews Potion", 14, false) {
+					int cointimes = p.getInventory().countId(ItemId.COINS.id()) / 5;
+					int roottimes = p.getInventory().countId(ItemId.LIMPWURT_ROOT.id());
+					int eggtimes = p.getInventory().countId(ItemId.RED_SPIDERS_EGGS.id());
+					int repeattimes = (cointimes < roottimes) ? cointimes : roottimes;
+					repeattimes = (eggtimes < repeattimes) ? eggtimes : repeattimes;
+					p.setBatchEvent(new BatchEvent(p, 600, "Apothecary Brews Potion", repeattimes, false) {
 						@Override
 						public void action() {
 							if (p.getInventory().countId(ItemId.COINS.id()) < 5) {

@@ -178,7 +178,7 @@ public class CombatEvent extends GameTickEvent {
 		}
 
 		if (target.getSkills().getLevel(3) > 0) {
-			if (!(target.isPlayer() && ((Player)target).checkRingOfLife(hitter)))
+			if (!(target.isPlayer() && !((Player)target).getDuel().isDuelActive() && ((Player)target).checkRingOfLife(hitter)))
 				CombatScriptLoader.checkAndExecuteCombatScript(hitter, target);
 		} else {
 			onDeath(target, hitter);

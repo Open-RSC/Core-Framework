@@ -55,24 +55,16 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			return false;
 		}
 
-		player.setBatchEvent(new BatchEvent(player, 600, "Herblaw Identify Herb", Formulae
-			.getRepeatTimes(player, SKILLS.HERBLAW.id()), false) {
+		player.setBatchEvent(new BatchEvent(player, 600, "Herblaw Identify Herb", player.getInventory().countId(item.getID()), false) {
 
 			public void action() {
-				if (!getOwner().getInventory().hasItemId(item.getID())) {
-					interrupt();
-					return;
-				}
-				if (getOwner().inCombat()) {
-					interrupt();
-					return;
-				}
 				ItemUnIdentHerbDef herb = item.getUnIdentHerbDef();
 				Item newItem = new Item(herb.getNewId());
-				getOwner().getInventory().remove(item);
-				getOwner().getInventory().add(newItem);
-				getOwner().message("This herb is " + newItem.getDef().getName());
-				getOwner().incExp(SKILLS.HERBLAW.id(), herb.getExp(), true);
+				if (getOwner().getInventory().remove(item.getID(),1,false) > -1) {
+					getOwner().getInventory().add(newItem,true);
+					getOwner().message("This herb is " + newItem.getDef().getName());
+					getOwner().incExp(SKILLS.HERBLAW.id(), herb.getExp(), true);
+				}
 				getOwner().setBusy(false);
 			}
 		});
@@ -290,8 +282,9 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 		if (herbDef == null) {
 			return false;
 		}
-		player.setBatchEvent(new BatchEvent(player, 1200, "Herblaw Make Potion", Formulae
-			.getRepeatTimes(player, SKILLS.HERBLAW.id()), false) {
+		int repeatTimes = player.getInventory().countId(ItemId.VIAL.id());
+		repeatTimes = player.getInventory().countId(herb.getID()) < repeatTimes ? player.getInventory().countId(herb.getID()): repeatTimes;
+		player.setBatchEvent(new BatchEvent(player, 1200, "Herblaw Make Potion", repeatTimes, false) {
 
 			@Override
 			public void action() {
@@ -346,8 +339,9 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 				bubbleItem.set(second);
 			}
 		}
-		player.setBatchEvent(new BatchEvent(player, 1200, "Herblaw Make Potion", Formulae
-			.getRepeatTimes(player, SKILLS.HERBLAW.id()), false) {
+		int repeatTimes = player.getInventory().countId(unfinished.getID());
+		repeatTimes = player.getInventory().countId(second.getID()) < repeatTimes ? player.getInventory().countId(second.getID()) : repeatTimes;
+		player.setBatchEvent(new BatchEvent(player, 1200, "Herblaw Make Potion", player.getInventory().countId(unfinished.getID()), false) {
 
 			public void action() {
 				if (getOwner().getSkills().getLevel(SKILLS.HERBLAW.id()) < def.getReqLevel()) {

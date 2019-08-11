@@ -11,6 +11,7 @@ import com.openrsc.server.external.ItemDartTipDef;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.ItemLogCutDef;
 import com.openrsc.server.model.MenuOptionListener;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
@@ -85,7 +86,8 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 		player.message("You attach feathers to some of your "
 			+ item.getDef().getName());
 		final int exp = experience;
-		player.setBatchEvent(new BatchEvent(player, 40, "Fletching Attach Feathers", 1000 + amount, false) {
+		int retrytimes = Constants.GameServer.BATCH_PROGRESSION ? Formulae.getRepeatTimes(player, SKILLS.FLETCHING.id()) : 1000 + amount;
+		player.setBatchEvent(new BatchEvent(player, 40, "Fletching Attach Feathers", retrytimes, false) {
 			@Override
 			public void action() {
 				if (getOwner().getInventory().countId(feathers.getID()) < 1) {
@@ -131,7 +133,8 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 		player.message("You attach "
 			+ arrowHeads.getDef().getName().toLowerCase()
 			+ " to some of your arrows");
-		player.setBatchEvent(new BatchEvent(player, 40, "Fletching Attach Arrowheads", 1000 + amount, false) {
+		int retrytimes = Constants.GameServer.BATCH_PROGRESSION ? Formulae.getRepeatTimes(player, SKILLS.FLETCHING.id()) : 1000 + amount;
+		player.setBatchEvent(new BatchEvent(player, 40, "Fletching Attach Arrowheads", retrytimes, false) {
 			@Override
 			public void action() {
 				if (getOwner().getSkills().getLevel(SKILLS.FLETCHING.id()) < headDef.getReqLevel()) {
@@ -171,8 +174,11 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 		if (stringDef == null) {
 			return false;
 		}
-		player.setBatchEvent(new BatchEvent(player, 600, "Fletching String Bow", Formulae
-			.getRepeatTimes(player, SKILLS.FLETCHING.id()), false) {
+		int bowtimes = player.getInventory().countId(bow.getID());
+		int stringtimes = player.getInventory().countId(bowString.getID());
+
+		player.setBatchEvent(new BatchEvent(player, 600, "Fletching String Bow",
+			bowtimes < stringtimes ? bowtimes : stringtimes, false) {
 
 			@Override
 			public void action() {
@@ -253,8 +259,9 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 							final int requiredLvl = reqLvl;
 							final int experience = exp;
 							final String cutMessages = cutMessage;
-							player.setBatchEvent(new BatchEvent(player, 600, "Fletching Make Bow", Formulae
-								.getRepeatTimes(player, SKILLS.FLETCHING.id()), false) {
+
+							player.setBatchEvent(new BatchEvent(player, 600, "Fletching Make Bow",
+								player.getInventory().countId(log.getID()), false) {
 
 
 								@Override
@@ -304,8 +311,8 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 						final int requiredLvl = reqLvl;
 						final int experience = exp;
 						final String cutMessages = cutMessage;
-						player.setBatchEvent(new BatchEvent(player, 600, "Fletching Make Bow", Formulae
-							.getRepeatTimes(player, SKILLS.FLETCHING.id()), false) {
+						player.setBatchEvent(new BatchEvent(player, 600, "Fletching Make Bow",
+							player.getInventory().countId(log.getID()), false) {
 
 
 							@Override
@@ -351,8 +358,8 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 		final int amt = amount;
 		final int exp = 25;
 		final int pearlID = pearl.getID();
-		player.setBatchEvent(new BatchEvent(player, 600, "Fletching Pearl Cut", Formulae
-			.getRepeatTimes(player, SKILLS.FLETCHING.id()), false) {
+		player.setBatchEvent(new BatchEvent(player, 600, "Fletching Pearl Cut",
+			player.getInventory().countId(pearlID), false) {
 
 			@Override
 			public void action() {
@@ -389,8 +396,8 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 			amount = player.getInventory().countId(bolt);
 		if (player.getInventory().countId(tip) < amount)
 			amount = player.getInventory().countId(tip);
-
-		player.setBatchEvent(new BatchEvent(player, 40, "Fletching Make Bolt", 1000 + amount, false) {
+		int retrytimes = Constants.GameServer.BATCH_PROGRESSION ? Formulae.getRepeatTimes(player, SKILLS.FLETCHING.id()) : 1000 + amount;
+		player.setBatchEvent(new BatchEvent(player, 40, "Fletching Make Bolt", retrytimes, false) {
 			@Override
 			public void action() {
 				if (getOwner().getSkills().getLevel(SKILLS.FLETCHING.id()) < 34) {
