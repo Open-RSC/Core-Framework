@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.SingleEvent;
+import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScriptLoader;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
@@ -25,6 +26,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -196,7 +198,7 @@ public final class Server implements Runnable {
 				saveAndShutdown();
 			}
 		};
-		Server.getServer().getGameEventHandler().add(updateEvent);
+		getGameEventHandler().add(updateEvent);
 		return true;
 	}
 
@@ -212,7 +214,7 @@ public final class Server implements Runnable {
 				DatabaseConnection.getDatabase().close();
 			}
 		};
-		Server.getServer().getGameEventHandler().add(up);
+		getGameEventHandler().add(up);
 	}
 
 	public long timeTillShutdown() {
@@ -318,7 +320,7 @@ public final class Server implements Runnable {
 				saveAndShutdown();
 			}
 		};
-		Server.getServer().getGameEventHandler().add(updateEvent);
+		getGameEventHandler().add(updateEvent);
 		return true;
 	}
 
@@ -341,7 +343,72 @@ public final class Server implements Runnable {
 				}
 			}
 		};
-		Server.getServer().getGameEventHandler().add(up);
+		getGameEventHandler().add(up);
+	}
+
+	public String buildProfilingDebugInformation(boolean forInGame) {
+		HashMap<String, Integer> eventsCount 	= new HashMap<String, Integer>();
+		HashMap<String, Long> eventsDuration	= new HashMap<String, Long>();
+		int countEvents							= 0;
+		long durationEvents						= 0;
+		String newLine							= forInGame ? "%" : "\r\n";
+
+		// Show info for game tick events
+		for (Map.Entry<String, GameTickEvent> eventEntry : getGameEventHandler().getEvents().entrySet()) {
+			GameTickEvent e = eventEntry.getValue();
+			String eventName = e.getDescriptor();
+			//if (e.getOwner() != null && e.getOwner().isUnregistering()) {
+			if (!eventsCount.containsKey(eventName)) {
+				eventsCount.put(eventName, 1);
+			} else {
+				eventsCount.put(eventName, eventsCount.get(eventName) + 1);
+			}
+
+			if (!eventsDuration.containsKey(eventName)) {
+				eventsDuration.put(eventName, e.getLastEventDuration());
+			} else {
+				eventsDuration.put(eventName, eventsDuration.get(eventName) + e.getLastEventDuration());
+			}
+			//}
+
+			// Update Totals
+			++countEvents;
+			durationEvents	+= e.getLastEventDuration();
+		}
+
+		// Sort the Events Hashmap
+		List list = new LinkedList(eventsCount.entrySet());
+		Collections.sort(list, new Comparator() {
+			public int compare(Object o1, Object o2) {
+				return ((Comparable) ((Map.Entry) (o2)).getValue())
+					.compareTo(((Map.Entry) (o1)).getValue());
+			}
+		});
+		HashMap sortedHashMap = new LinkedHashMap();
+		for (Iterator it = list.iterator(); it.hasNext();) {
+			Map.Entry entry = (Map.Entry) it.next();
+			sortedHashMap.put(entry.getKey(), entry.getValue());
+		}
+		eventsCount	= sortedHashMap;
+
+		int i = 0;
+		StringBuilder s = new StringBuilder();
+		for (Map.Entry<String, Integer> entry : eventsCount.entrySet()) {
+			if(i >= 18) // Only display first 18 elements of the hashmap
+				break;
+
+			String name		= entry.getKey();
+			Integer time	= entry.getValue();
+			Long duration	= eventsDuration.get(entry.getKey());
+			s.append(name).append(": ").append(time).append(" : ").append(duration).append("ms").append(newLine);
+			++i;
+		}
+
+		return
+			"Total: " + countEvents + " : " + durationEvents + "ms, Server Stats: " + getLastTickDuration() + "ms " + getLastEventsDuration() + "ms " + getLastGameStateDuration() + "ms, Tick: " + Constants.GameServer.GAME_TICK + "ms" + newLine +
+			" NPCs: " + World.getWorld().getNpcs().size() + ", Players: " + World.getWorld().getPlayers().size() + ", Shops: " + World.getWorld().getShops().size() + newLine +
+			/*"Player Atk Map: " + World.getWorld().getPlayersUnderAttack().size() + ", NPC Atk Map: " + World.getWorld().getNpcsUnderAttack().size() + ", Quests: " + World.getWorld().getQuests().size() + ", Mini Games: " + World.getWorld().getMiniGames().size() + newLine +*/
+			s;
 	}
 
 	public void start() {
