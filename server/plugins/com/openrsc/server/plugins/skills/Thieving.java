@@ -380,7 +380,7 @@ public class Thieving extends Functions
 					player.face(npc);
 					player.setBusyTimer(0);
 					npc.setBusyTimer(0);
-					setDelay(600);
+					setDelayTicks(1);
 					player.playerServerMessage(MessageType.QUEST, "You fail to pick the " + thievedMobSt + "'s pocket");
 					npc.getUpdateFlags()
 						.setChatMessage(new ChatMessage(npc, pickpocket.shoutMessage, player));
@@ -388,7 +388,7 @@ public class Thieving extends Functions
 					npc.startCombat(player);
 				}
 				if (!isCompleted()) {
-					owner.playerServerMessage(MessageType.QUEST, "You attempt to pick the " + thievedMobSt + "'s pocket");
+					getOwner().playerServerMessage(MessageType.QUEST, "You attempt to pick the " + thievedMobSt + "'s pocket");
 				}
 			}
 		});

@@ -144,27 +144,27 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 				public void action() {
 					Item cookedFood = new Item(cookingDef.getCookedId());
 					if (Constants.GameServer.WANT_FATIGUE) {
-						if (owner.getFatigue() >= owner.MAX_FATIGUE) {
-							owner.message("You are too tired to cook this food");
+						if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+							getOwner().message("You are too tired to cook this food");
 							interrupt();
 							return;
 						}
 					}
-					showBubble(owner, item);
-					owner.playSound("cooking");
-					if (owner.getInventory().remove(item) > -1) {
-						if (!Formulae.burnFood(owner, item.getID(), owner.getSkills().getLevel(SKILLS.COOKING.id())) || item.getID() == ItemId.RAW_LAVA_EEL.id()) {
-							owner.getInventory().add(cookedFood);
-							owner.message(cookedMessage(p, cookedFood, isOvenFood(item)));
-							owner.incExp(SKILLS.COOKING.id(), cookingDef.getExp(), true);
+					showBubble(getOwner(), item);
+					getOwner().playSound("cooking");
+					if (getOwner().getInventory().remove(item) > -1) {
+						if (!Formulae.burnFood(getOwner(), item.getID(), getOwner().getSkills().getLevel(SKILLS.COOKING.id())) || item.getID() == ItemId.RAW_LAVA_EEL.id()) {
+							getOwner().getInventory().add(cookedFood);
+							getOwner().message(cookedMessage(p, cookedFood, isOvenFood(item)));
+							getOwner().incExp(SKILLS.COOKING.id(), cookingDef.getExp(), true);
 						} else {
-							owner.getInventory().add(new Item(cookingDef.getBurnedId()));
+							getOwner().getInventory().add(new Item(cookingDef.getBurnedId()));
 							if (cookedFood.getID() == ItemId.COOKEDMEAT.id()) {
-								owner.message("You accidentally burn the meat");
+								getOwner().message("You accidentally burn the meat");
 							} else {
 								String food = cookedFood.getDef().getName().toLowerCase();
 								food = food.contains("pie") ? "pie" : food;
-								owner.message("You accidentally burn the " + food);
+								getOwner().message("You accidentally burn the " + food);
 							}
 						}
 					} else {

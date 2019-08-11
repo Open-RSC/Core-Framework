@@ -21,7 +21,7 @@ public abstract class SingleEvent extends DelayedEvent {
 
 	public void run() {
 		action();
-		super.matchRunning = false;
+		super.running = false;
 	}
 
 }

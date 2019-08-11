@@ -1,5 +1,6 @@
 package com.openrsc.server.event.rsc;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -7,7 +8,7 @@ import com.openrsc.server.model.entity.player.Player;
 public abstract class GameTickEvent {
 
 	protected boolean running = true;
-	protected Mob owner;
+	private Mob owner;
 	private int delayTicks;
 	private boolean immediate;
 	private int ticksBeforeRun = -1;
@@ -84,5 +85,9 @@ public abstract class GameTickEvent {
 
 	public void countdown() {
 		ticksBeforeRun--;
+	}
+
+	public long timeTillNextRun() {
+		return System.currentTimeMillis() + (ticksBeforeRun * Constants.GameServer.GAME_TICK);
 	}
 }

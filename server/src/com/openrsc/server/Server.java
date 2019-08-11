@@ -57,8 +57,6 @@ public final class Server implements Runnable {
 		.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat("GameThread").build());
 	private final GameStateUpdater gameUpdater = new GameStateUpdater();
 	private final GameTickEventHandler tickEventHandler = new GameTickEventHandler();
-	private final ServerEventHandler eventHandler = new ServerEventHandler();
-	private final ServerEventHandlerNpc eventHandlerNpc = new ServerEventHandlerNpc();
 	private long lastClientUpdate;
 	private boolean running;
 	private DelayedEvent updateEvent;
@@ -193,7 +191,7 @@ public final class Server implements Runnable {
 				saveAndShutdown();
 			}
 		};
-		Server.getServer().getEventHandler().add(updateEvent);
+		Server.getServer().getGameEventHandler().add(updateEvent);
 		return true;
 	}
 
@@ -209,10 +207,10 @@ public final class Server implements Runnable {
 				DatabaseConnection.getDatabase().close();
 			}
 		};
-		Server.getServer().getEventHandler().add(up);
+		Server.getServer().getGameEventHandler().add(up);
 	}
 
-	public int timeTillShutdown() {
+	public long timeTillShutdown() {
 		if (updateEvent == null) {
 			return -1;
 		}
@@ -231,8 +229,7 @@ public final class Server implements Runnable {
     		for (Player p : World.getWorld().getPlayers()) {
     			p.processIncomingPackets();
     		}
-    		getEventHandler().doEvents();
-		
+
 			long timeLate = System.currentTimeMillis() - lastClientUpdate - Constants.GameServer.GAME_TICK;
 			if (timeLate >= 0) {
 				lastClientUpdate += Constants.GameServer.GAME_TICK;
@@ -258,14 +255,6 @@ public final class Server implements Runnable {
 		}
 	}
 
-	public ServerEventHandler getEventHandler() {
-		return eventHandler;
-	}
-
-	public ServerEventHandlerNpc getEventHandlerNpc() {
-		return eventHandlerNpc;
-	}
-
 	public GameTickEventHandler getGameEventHandler() {
 		return tickEventHandler;
 	}
@@ -285,7 +274,7 @@ public final class Server implements Runnable {
 				saveAndShutdown();
 			}
 		};
-		Server.getServer().getEventHandler().add(updateEvent);
+		Server.getServer().getGameEventHandler().add(updateEvent);
 		return true;
 	}
 
@@ -308,7 +297,7 @@ public final class Server implements Runnable {
 				}
 			}
 		};
-		Server.getServer().getEventHandler().add(up);
+		Server.getServer().getGameEventHandler().add(up);
 	}
 
 	public void start() {

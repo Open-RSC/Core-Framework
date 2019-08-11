@@ -88,10 +88,10 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 			if (player.getInventory().remove(new Item(ItemId.DAMP_STICKS.id())) > -1) {
 				player.message("you hold the glass to the sun");
 				player.message("above the damp sticks");
-				Server.getServer().getEventHandler().add(new ShortEvent(player, "Dry Sticks with Lens") {
+				Server.getServer().getGameEventHandler().add(new ShortEvent(player, "Dry Sticks with Lens") {
 					public void action() {
-						owner.message("the glass acts like a lens");
-						owner.message("and drys the sticks out");
+						getOwner().message("the glass acts like a lens");
+						getOwner().message("and drys the sticks out");
 					}
 				});
 				player.getInventory().add(new Item(ItemId.DRY_STICKS.id()));

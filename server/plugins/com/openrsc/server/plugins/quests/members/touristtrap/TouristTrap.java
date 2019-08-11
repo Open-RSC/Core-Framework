@@ -3057,7 +3057,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 	
 	private void delayedReturnSlave(Player p, Npc n) {
 		try {
-			Server.getServer().getEventHandler().add(new DelayedEvent(null, 30000, "Tourist Trap Delayed Return Slave") {
+			Server.getServer().getGameEventHandler().add(new DelayedEvent(null, 30000, "Tourist Trap Delayed Return Slave") {
 				@Override
 				public void run() {
 					transform(n, NpcId.MINING_SLAVE.id(), true);

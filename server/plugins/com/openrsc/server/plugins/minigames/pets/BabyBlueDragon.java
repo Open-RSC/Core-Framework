@@ -33,7 +33,7 @@ public class BabyBlueDragon implements InvUseOnNpcListener, InvUseOnNpcExecutive
 			player.message("You attempt to put the baby blue dragon in the crystal.");
 			npc.setBusyTimer(1600);
 
-			Server.getServer().getEventHandler().add(new ShortEvent(player, "Baby Blue Dragon Pet") {
+			Server.getServer().getGameEventHandler().add(new ShortEvent(player, "Baby Blue Dragon Pet") {
 				public void action() {
 					/*Npc nearbyNpc = getMultipleNpcsInArea(player, 5, NpcId.BABY_BLUE_DRAGON.id(), NpcId.BLUE_DRAGON.id(), NpcId.RED_DRAGON.id(), NpcId.DRAGON.id());
 					if (nearbyNpc != null) {

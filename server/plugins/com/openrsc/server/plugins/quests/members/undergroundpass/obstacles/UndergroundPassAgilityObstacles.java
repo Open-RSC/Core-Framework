@@ -112,7 +112,7 @@ public class UndergroundPassAgilityObstacles implements ObjectActionListener, Ob
 			} else {
 				failBlackAreaObstacle(p, obj);
 			}
-			Server.getServer().getEventHandler()
+			Server.getServer().getGameEventHandler()
 				.add(new UndergroundPassMessages(p, DataConversions.random(3000, 15000)));
 		}
 	}

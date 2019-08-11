@@ -62,20 +62,20 @@ public class SpinningWheel implements InvUseOnObjectListener,
 
 			@Override
 			public void action() {
-				if (owner.getSkills().getLevel(SKILLS.CRAFTING.id()) < requirement) {
-					message(owner, "You need to have a crafting of level "
+				if (getOwner().getSkills().getLevel(SKILLS.CRAFTING.id()) < requirement) {
+					message(getOwner(), "You need to have a crafting of level "
 						+ requirement + " or higher to make a "
 						+ new Item(produce).getDef().getName().toLowerCase());
 					interrupt();
 					return;
 				}
-				if (owner.getInventory().remove(item.getID(), 1) > -1) {
-					showBubble(owner, item);
-					owner.playSound("mechanical");
-					owner.message("You " + verb + " the "
+				if (getOwner().getInventory().remove(item.getID(), 1) > -1) {
+					showBubble(getOwner(), item);
+					getOwner().playSound("mechanical");
+					getOwner().message("You " + verb + " the "
 						+ consumedItem + " into a " + producedItem);
-					owner.getInventory().add(new Item(produce, 1));
-					owner.incExp(SKILLS.CRAFTING.id(), exp, true);
+					getOwner().getInventory().add(new Item(produce, 1));
+					getOwner().incExp(SKILLS.CRAFTING.id(), exp, true);
 				} else {
 					interrupt();
 				}

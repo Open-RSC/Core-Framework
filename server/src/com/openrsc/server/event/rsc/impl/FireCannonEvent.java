@@ -28,8 +28,8 @@ public class FireCannonEvent extends GameTickEvent {
 
 		ArrayList<Npc> possibleTargets = new ArrayList<Npc>();
 		for (Npc n : npcsInView) {
-			if ((n.getLocation().inBounds(owner.getX() - 8, owner.getY() - 8, owner.getX() + 8, owner.getY() + 8))
-				&& (n.getDef().isAttackable()) && PathValidation.checkPath(owner.getLocation(), n.getLocation())) {
+			if ((n.getLocation().inBounds(getOwner().getX() - 8, getOwner().getY() - 8, getOwner().getX() + 8, getOwner().getY() + 8))
+				&& (n.getDef().isAttackable()) && PathValidation.checkPath(getOwner().getLocation(), n.getLocation())) {
 				possibleTargets.add(n);
 			}
 		}
@@ -44,9 +44,9 @@ public class FireCannonEvent extends GameTickEvent {
 
 		getPlayerOwner().face(target);
 		//35 at level 99 per wayback tip.it
-		int max = owner.getSkills().getMaxStat(SKILLS.RANGED.id()) / 3 + 2;
+		int max = getOwner().getSkills().getMaxStat(SKILLS.RANGED.id()) / 3 + 2;
 		int cannonBallDamage = DataConversions.random(0, max);
-		Server.getServer().getGameEventHandler().add(new ProjectileEvent(owner, target, cannonBallDamage, 5));
+		Server.getServer().getGameEventHandler().add(new ProjectileEvent(getOwner(), target, cannonBallDamage, 5));
 		getPlayerOwner().playSound("shoot");
 		getPlayerOwner().getInventory().remove(ItemId.MULTI_CANNON_BALL.id(), 1);
 

@@ -5,7 +5,6 @@ import com.openrsc.server.Server;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
-import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.ConnectionAttachment;
 import com.openrsc.server.net.Packet;
@@ -19,16 +18,14 @@ import com.openrsc.server.sql.query.logs.SecurityChangeLog;
 import com.openrsc.server.sql.query.logs.SecurityChangeLog.ChangeEvent;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.LoginResponse;
-
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.Channel;
 
 /**
  * @author n0m
@@ -75,7 +72,7 @@ public class LoginPacketHandler {
 					channel.close();
 					return;
 				}
-				int i = Server.getServer().timeTillShutdown();
+				long i = Server.getServer().timeTillShutdown();
 				if (i > 0 && i < 30000) {
 					channel.writeAndFlush(new PacketBuilder().writeByte((byte) LoginResponse.WORLD_DOES_NOT_ACCEPT_NEW_PLAYERS).toPacket());
 					channel.close();
@@ -296,8 +293,8 @@ public class LoginPacketHandler {
 					String newPass = getString(p.getBuffer()).trim();
 					Long uid = p.getBuffer().readLong();
 					String answers[] = new String[5];
-					for (i=0; i<5; i++) {
-						answers[i] = normalize(getString(p.getBuffer()).trim(), 50);
+					for (int j=0; j<5; j++) {
+						answers[j] = normalize(getString(p.getBuffer()).trim(), 50);
 					}
 					
 					int pid = -1;
@@ -326,14 +323,14 @@ public class LoginPacketHandler {
 						String currDBPass = res.getString("pass");
 						oldPass = DataConversions.hashPassword(oldPass, salt);
 						newPass = DataConversions.hashPassword(newPass, salt);
-						for (i=0; i<5; i++) {
-							answers[i] = DataConversions.hashPassword(answers[i], salt);
+						for (int j=0; j<5; j++) {
+							answers[j] = DataConversions.hashPassword(answers[j], salt);
 						}
 						
 						int numCorrect = (oldPass.equals(res2.getString("previous_pass"))
 								|| oldPass.equals(res2.getString("earlier_pass"))) ? 1 : 0;
-						for (i=0; i<5; i++) {
-							numCorrect += (answers[i].equals(res2.getString("answer"+(i+1))) ? 1 : 0);
+						for (int j=0; j<5; j++) {
+							numCorrect += (answers[j].equals(res2.getString("answer"+(j+1))) ? 1 : 0);
 						}
 						
 						PreparedStatement attempt = DatabaseConnection.getDatabase().prepareStatement("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX

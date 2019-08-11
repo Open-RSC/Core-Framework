@@ -2,11 +2,6 @@ package com.openrsc.server.event.rsc.impl;
 
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.action.WalkToPointActionNpc;
-import com.openrsc.server.model.action.WalkToActionNpc;
-import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills.SKILLS;
-import com.openrsc.server.model.container.Item;
-
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -29,7 +24,7 @@ public class BankEventNpc extends GameTickEvent {
 	public boolean equals(Object o) {
 		if (o instanceof BankEventNpc) {
 			BankEventNpc e = (BankEventNpc) o;
-			return e.belongsTo(owner);
+			return e.belongsTo(getOwner());
 		}
 		return false;
 	}
@@ -40,8 +35,8 @@ public class BankEventNpc extends GameTickEvent {
 
 	public void run() {
 		int targetWildLvl = target.getLocation().wildernessLevel();
-		int myWildLvl = owner.getLocation().wildernessLevel();
-		if (owner.inCombat()) {
+		int myWildLvl = getOwner().getLocation().wildernessLevel();
+		if (getOwner().inCombat()) {
 			//owner.resetRange();
 			stop();
 			return;
@@ -53,8 +48,8 @@ public class BankEventNpc extends GameTickEvent {
 				//stop();
 				//return;
 				//} else {
-					owner.walk(target.getX(), target.getY());
-				owner.setWalkToActionNpc(new WalkToPointActionNpc(owner, target.getLocation(), 1) {
+			getOwner().walk(target.getX(), target.getY());
+			getOwner().setWalkToActionNpc(new WalkToPointActionNpc(getOwner(), target.getLocation(), 1) {
 			public void execute() {
 			}
 		});
@@ -77,23 +72,23 @@ public class BankEventNpc extends GameTickEvent {
 				//walkMob(owner, new Point(219, 450));
 			//}
 		} else {
-			owner.resetPath();
+			getOwner().resetPath();
 				/*if (!PathValidation.checkPath(owner.getLocation(), target.getLocation())) {
 					//getPlayerOwner().message("I can't get a clear shot from here");
 					owner.resetRange();
 					stop();
 					return;
 				}*/
-				owner.face(target);
+			getOwner().face(target);
 			for (Player p : World.getWorld().getPlayers()) 
 			{
-			World.getWorld().registerItem(new GroundItem(465, owner.getX(), owner.getY(), 1, p));
+			World.getWorld().registerItem(new GroundItem(465, getOwner().getX(), getOwner().getY(), 1, p));
 			}
 		}
 	}
 	private boolean canReach(Npc npc) {
 		int radius = 1;
-		return owner.withinRange(npc, radius);
+		return getOwner().withinRange(npc, radius);
 	}
 
 }

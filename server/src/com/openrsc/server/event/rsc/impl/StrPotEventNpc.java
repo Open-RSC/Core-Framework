@@ -2,15 +2,6 @@ package com.openrsc.server.event.rsc.impl;
 
 import com.openrsc.server.Server;
 import com.openrsc.server.event.rsc.GameTickEvent;
-import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.PathValidation;
-import com.openrsc.server.model.Skills.SKILLS;
-import com.openrsc.server.model.container.Item;
-import com.openrsc.server.model.entity.GroundItem;
-import com.openrsc.server.model.entity.Mob;
-
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
@@ -39,17 +30,17 @@ public class StrPotEventNpc extends GameTickEvent {
 
 		boolean restored = false;
 
-			if (!owner.inCombat() && owner.getLocation().inWilderness())
+			if (!getOwner().inCombat() && getOwner().getLocation().inWilderness())
 			{
-				int baseStat = owner.getSkills().getLevel(2) > owner.getSkills().getMaxStat(2) ? owner.getSkills().getMaxStat(2) : owner.getSkills().getLevel(2);
+				int baseStat = getOwner().getSkills().getLevel(2) > getOwner().getSkills().getMaxStat(2) ? getOwner().getSkills().getMaxStat(2) : getOwner().getSkills().getLevel(2);
 				int newStat = baseStat
-				+ DataConversions.roundUp((owner.getSkills().getMaxStat(2) / 100D) * 10)
+				+ DataConversions.roundUp((getOwner().getSkills().getMaxStat(2) / 100D) * 10)
 				+ 3;
-			if (newStat > owner.getSkills().getLevel(2)) {
+			if (newStat > getOwner().getSkills().getLevel(2)) {
 				for (Player p22 : World.getWorld().getPlayers()) {
 					//p22.message("TEST 00000000");				
 				}
-				owner.getSkills().setLevel(2, newStat);
+				getOwner().getSkills().setLevel(2, newStat);
 				sleep(1200);
 				//break;
 			} else {
@@ -59,7 +50,7 @@ public class StrPotEventNpc extends GameTickEvent {
 				//break;
 			return;
 			}
-				Server.getServer().getGameEventHandler().add(new StatRestorationEvent(owner));
+				Server.getServer().getGameEventHandler().add(new StatRestorationEvent(getOwner()));
 			}
 	}
 }

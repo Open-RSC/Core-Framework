@@ -222,7 +222,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 	public void handleGateSounds(Player player) {
         player.playSound("opendoor");
 
-	   Server.getServer().getEventHandler().add(new PluginsUseThisEvent(3000, "Sheep Herder Gate Sounds") {
+	   Server.getServer().getGameEventHandler().add(new PluginsUseThisEvent(3000, "Sheep Herder Gate Sounds") {
            @Override
            public void action() {
                player.playSound("opendoor");
@@ -286,7 +286,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 							}
 						};
 						npcEventMap.put(plagueSheep, npcEvent);
-						Server.getServer().getEventHandler().add(npcEvent);
+						Server.getServer().getGameEventHandler().add(npcEvent);
 					} else {
 						npcEvent.reset();
 					}

@@ -29,11 +29,11 @@ InvUseOnObjectExecutiveListener {
 		player.setBatchEvent(new BatchEvent(player, 600, "Fill Bucket with Sand", player.getInventory().countId(itemID), true) {
 			@Override
 			public void action() {
-				if (removeItem(owner, itemID, 1)) {
-					showBubble(owner, item);
+				if (removeItem(getOwner(), itemID, 1)) {
+					showBubble(getOwner(), item);
 					sleep(300);
-					owner.message("you fill the bucket with sand");
-					addItem(owner, refilledID, 1);
+					getOwner().message("you fill the bucket with sand");
+					addItem(getOwner(), refilledID, 1);
 				} else {
 					interrupt();
 				}

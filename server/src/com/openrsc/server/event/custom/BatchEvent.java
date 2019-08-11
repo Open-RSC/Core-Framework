@@ -32,7 +32,7 @@ public abstract class BatchEvent extends DelayedEvent {
 			action();
 			repeated++;
 			if (repeated < getRepeatFor()) {
-				ActionSender.sendUpdateProgressBar(owner, repeated);
+				ActionSender.sendUpdateProgressBar(getOwner(), repeated);
 			} else {
 				interrupt();
 			}
@@ -40,7 +40,7 @@ public abstract class BatchEvent extends DelayedEvent {
 				interrupt();
 				if (Constants.GameServer.BATCH_PROGRESSION) owner.message("Your Inventory is too full to continue.");
 			}*/
-			if (owner.hasMoved()) { // If the player walks away, stop batching
+			if (getOwner().hasMoved()) { // If the player walks away, stop batching
 				//this.stop();
 				//owner.setStatus(Action.IDLE);
 				interrupt();
@@ -51,23 +51,23 @@ public abstract class BatchEvent extends DelayedEvent {
 	public abstract void action();
 
 	public boolean isCompleted() {
-		return (repeated + 1) >= getRepeatFor() || !matchRunning;
+		return (repeated + 1) >= getRepeatFor() || !running;
 	}
 
 	public void interrupt() {
-		ActionSender.sendRemoveProgressBar(owner);
-		owner.setBusyTimer(0);
-		owner.setBatchEvent(null);
-		matchRunning = false;
+		ActionSender.sendRemoveProgressBar(getOwner());
+		getOwner().setBusyTimer(0);
+		getOwner().setBatchEvent(null);
+		running = false;
 	}
 
 	protected long getRepeatFor() {
 		return repeatFor;
 	}
 
-
 	public void setRepeatFor(int i) {
 		repeatFor = i;
 	}
+
 	public int getRepeated() { return this.repeated; }
 }

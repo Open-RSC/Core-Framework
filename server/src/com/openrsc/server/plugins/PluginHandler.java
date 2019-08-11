@@ -290,7 +290,7 @@ public final class PluginHandler {
 
 					for (final Shop s : it.getShops()) {
 						World.getWorld().getShops().add(s);
-						Server.getServer().getEventHandler().add(new ShopRestockEvent(s));
+						Server.getServer().getGameEventHandler().add(new ShopRestockEvent(s));
 					}
 				}
 				if (loadedPlugins.containsKey(instance.getClass().getName())) {

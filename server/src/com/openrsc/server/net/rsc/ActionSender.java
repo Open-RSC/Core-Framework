@@ -25,16 +25,14 @@ import com.openrsc.server.util.rsc.CaptchaGenerator;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
-
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFutureListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
-
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFutureListener;
 
 import static com.openrsc.server.Constants.GameServer.*;
 
@@ -357,7 +355,7 @@ public class ActionSender {
 	 * @param player
 	 */
 	public static void sendFriendList(Player player) {
-		Server.getServer().getEventHandler().add(new DelayedEvent(player, 50, "Send Friends List") {
+		Server.getServer().getGameEventHandler().add(new DelayedEvent(player, 50, "Send Friends List") {
 			int currentFriend = 0;
 
 			@Override
@@ -1190,9 +1188,9 @@ public class ActionSender {
 				sendWorldInfo(p);
 				GameStateUpdater.sendUpdatePackets(p);
 
-				int timeTillShutdown = Server.getServer().timeTillShutdown();
+				long timeTillShutdown = Server.getServer().timeTillShutdown();
 				if (timeTillShutdown > -1)
-					startShutdown(p, (timeTillShutdown / 1000));
+					startShutdown(p, (int)(timeTillShutdown / 1000));
 
 				int elixir = p.getElixir();
 				if (elixir > -1)

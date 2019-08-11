@@ -36,11 +36,11 @@ public class SeersPartyChest implements InvUseOnObjectExecutiveListener, InvUseO
 		}
 
 		ActionSender.sendMessage(player, null, 0, MessageType.QUEST, "You place the item into the chest...", 0);
-		Server.getServer().getEventHandler().add(new SingleEvent(player, DataConversions.random(0,5000), "Seers Party Hall Drop Delay", true) {
+		Server.getServer().getGameEventHandler().add(new SingleEvent(player, DataConversions.random(0,5000), "Seers Party Hall Drop Delay", true) {
 			@Override
 			public void action() {
 				Random rand = DataConversions.getRandom();
-				boolean upstairs = owner.getLocation().isInSeersPartyHallUpstairs();
+				boolean upstairs = getOwner().getLocation().isInSeersPartyHallUpstairs();
 
 				while(true) {
 					Point location = upstairs ?
@@ -57,7 +57,7 @@ public class SeersPartyChest implements InvUseOnObjectExecutiveListener, InvUseO
 
 				for (Player p : World.getWorld().getPlayers()) {
 					if((upstairs && p.getLocation().isInSeersPartyHallUpstairs()) || (!upstairs && p.getLocation().isInSeersPartyHallDownstairs())) {
-						ActionSender.sendMessage(p, null, 0, MessageType.QUEST, owner.getStaffName() + "@whi@ just dropped: @gre@" + item.getDef().getName() + (item.getAmount() > 1 ? " @whi@(" + DataConversions.numberFormat(item.getAmount()) + ")" : ""), 0);
+						ActionSender.sendMessage(p, null, 0, MessageType.QUEST, getOwner().getStaffName() + "@whi@ just dropped: @gre@" + item.getDef().getName() + (item.getAmount() > 1 ? " @whi@(" + DataConversions.numberFormat(item.getAmount()) + ")" : ""), 0);
 					}
 				}
 			}

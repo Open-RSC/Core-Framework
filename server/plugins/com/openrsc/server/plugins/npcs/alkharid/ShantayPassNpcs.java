@@ -96,7 +96,7 @@ public class ShantayPassNpcs implements ShopInterface,
 						final Npc npc = new Npc(719, 63, 731);
 						npc.setShouldRespawn(false);
 						World.getWorld().registerNpc(npc);
-						Server.getServer().getEventHandler().add(
+						Server.getServer().getGameEventHandler().add(
 							new SingleEvent(null, 60000, "Shantay Pass Talk Delay") {
 								public void action() {
 									npcTalk(p, npc, "Right, time for dinner!");

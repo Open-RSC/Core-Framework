@@ -5,7 +5,6 @@ import com.openrsc.server.Server;
 import com.openrsc.server.event.PluginsUseThisEvent;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.UndergroundPassMessages;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.MenuOptionListener;
@@ -337,7 +336,7 @@ public class Functions {
 			npc.setShouldRespawn(false);
 			npc.setAttribute("spawnedFor", spawnedFor);
 			World.getWorld().registerNpc(npc);
-			Server.getServer().getEventHandler().add(new SingleEvent(null, time, "Spawn Pet NPC Timed") {
+			Server.getServer().getGameEventHandler().add(new SingleEvent(null, time, "Spawn Pet NPC Timed") {
 				public void action() {
 					npc.remove();
 				}
@@ -361,7 +360,7 @@ public class Functions {
 		post(() -> {
 			npc.setShouldRespawn(false);
 			World.getWorld().registerNpc(npc);
-			Server.getServer().getEventHandler().add(new SingleEvent(null, time, "Spawn Radius NPC Timed") {
+			Server.getServer().getGameEventHandler().add(new SingleEvent(null, time, "Spawn Radius NPC Timed") {
 				public void action() {
 					npc.remove();
 				}
@@ -376,7 +375,7 @@ public class Functions {
 		post(() -> {
 			npc.setShouldRespawn(false);
 			World.getWorld().registerNpc(npc);
-			Server.getServer().getEventHandler().add(new SingleEvent(null, time, "Spawn NPC Timed") {
+			Server.getServer().getGameEventHandler().add(new SingleEvent(null, time, "Spawn NPC Timed") {
 				public void action() {
 					npc.remove();
 				}
@@ -422,7 +421,7 @@ public class Functions {
 	public static void createGroundItemDelayedRemove(final GroundItem i, int time) {
 		post(() -> {
 			if (i.getLoc() == null) {
-				Server.getServer().getEventHandler().add(new SingleEvent(null, time, "Spawn Ground Item Timed") {
+				Server.getServer().getGameEventHandler().add(new SingleEvent(null, time, "Spawn Ground Item Timed") {
 					public void action() {
 						World.getWorld().unregisterItem(i);
 					}
@@ -959,7 +958,7 @@ public class Functions {
 			playerTalk(p, null, "aargh");
 		}
 		if (eventMessage) {
-			Server.getServer().getEventHandler()
+			Server.getServer().getGameEventHandler()
 				.add(new UndergroundPassMessages(p, DataConversions.random(2000, 10000)));
 		}
 	}
@@ -1639,7 +1638,7 @@ public class Functions {
 	}
 
 	private static void post(Runnable r, String descriptor) {
-		Server.getServer().getEventHandler().add(new PluginsUseThisEvent(descriptor) {
+		Server.getServer().getGameEventHandler().add(new PluginsUseThisEvent(descriptor) {
 			@Override
 			public void action() {
 				try {

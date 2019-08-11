@@ -530,9 +530,9 @@ public final class Player extends Mob {
 		return privateMessageQueue.poll();
 	}
 
-	public void addSkull(long timeLeft) {
+	public void addSkull(int timeLeft) {
 		if (skullEvent == null) {
-			skullEvent = new DelayedEvent(this, 1200000, "Player Add Skull") {
+			skullEvent = new DelayedEvent(this, timeLeft, "Player Add Skull") {
 
 				@Override
 				public void run() {
@@ -544,10 +544,9 @@ public final class Player extends Mob {
 					}
 				}
 			};
-			Server.getServer().getEventHandler().add(skullEvent);
+			Server.getServer().getGameEventHandler().add(skullEvent);
 			getUpdateFlags().setAppearanceChanged(true);
 		}
-		skullEvent.setLastRun(System.currentTimeMillis() - (1200000 - timeLeft));
 		for (Player p : World.getWorld().getPlayers()) {
 			if (getParty() == p.getParty() && getParty() != null) {
 				ActionSender.sendParty(p);
@@ -563,21 +562,20 @@ public final class Player extends Mob {
 		chargeEvent = null;
 	}
 
-	public void addCharge(long timeLeft) {
+	public void addCharge(int timeLeft) {
 		if (chargeEvent == null) {
-			chargeEvent = new DelayedEvent(this, 6 * 60000, "Charge Spell Removal") {
+			chargeEvent = new DelayedEvent(this, timeLeft, "Charge Spell Removal") {
 				// 6 minutes taken from RS2.
 				// the charge spell in RSC seem to be bugged, but 10 minutes most of the times.
 				// sometimes you are charged for 1 hour lol.
 				@Override
 				public void run() {
 					removeCharge();
-					owner.message("@red@Your magic charge fades");
+					getOwner().message("@red@Your magic charge fades");
 				}
 			};
-			Server.getServer().getEventHandler().add(chargeEvent);
+			Server.getServer().getGameEventHandler().add(chargeEvent);
 		}
-		chargeEvent.setLastRun(System.currentTimeMillis() - (6 * 60000 - timeLeft));
 	}
 
 	public void close() {
@@ -706,14 +704,17 @@ public final class Player extends Mob {
 			unregisterEvent = new DelayedEvent(this, 500, "Unregister Player") {
 				@Override
 				public void run() {
-					if (owner.canLogout() || (!(owner.inCombat() && owner.getDuel().isDuelActive())
+					if (getOwner().canLogout() || (!(getOwner().inCombat() && getOwner().getDuel().isDuelActive())
 						&& System.currentTimeMillis() - startDestroy > 60000)) {
-						owner.unregister(true, reason);
-						matchRunning = false;
+						getOwner().unregister(true, reason);
+						running = false;
+					}
+					else {
+						running = false;
 					}
 				}
 			};
-			Server.getServer().getEventHandler().add(unregisterEvent);
+			Server.getServer().getGameEventHandler().add(unregisterEvent);
 		}
 	}
 
@@ -1250,14 +1251,14 @@ public final class Player extends Mob {
 		this.chargeEvent = chargeEvent;
 	}
 
-	public int getSkullTime() {
+	public long getSkullTime() {
 		if (isSkulled() && getSkullType() == 1) {
 			return skullEvent.timeTillNextRun();
 		}
 		return 0;
 	}
 
-	public int getChargeTime() {
+	public long getChargeTime() {
 		if (isCharged()) {
 			return chargeEvent.timeTillNextRun();
 		}
@@ -2055,10 +2056,11 @@ public final class Player extends Mob {
 	}
 
 	public void setBatchEvent(BatchEvent batchEvent) {
-		if (batchEvent != null) {
-			batchEvent.getOwner().checkAndInterruptBatchEvent();
+		if (batchEvent != null && batchEvent.getOwner() instanceof Player) {
+			Player player = (Player)batchEvent.getOwner();
+			player.checkAndInterruptBatchEvent();
 			this.batchEvent = batchEvent;
-			Server.getServer().getEventHandler().add(batchEvent);
+			Server.getServer().getGameEventHandler().add(batchEvent);
 		}
 	}
 
@@ -2135,26 +2137,26 @@ public final class Player extends Mob {
 		sleepEvent = new DelayedEvent(this, 600, "Start Sleep Event") {
 			@Override
 			public void run() {
-				if (owner.isRemoved() || sleepStateFatigue == 0 || !sleeping) {
-					matchRunning = false;
+				if (getOwner().isRemoved() || sleepStateFatigue == 0 || !sleeping) {
+					running = false;
 					return;
 				}
 
 				if (bed) {
-					owner.sleepStateFatigue -= 16500;
+					getOwner().sleepStateFatigue -= 16500;
 				} else {
-					owner.sleepStateFatigue -= 4125;
+					getOwner().sleepStateFatigue -= 4125;
 				}
 
-				if (owner.sleepStateFatigue < 0) {
-					owner.sleepStateFatigue = 0;
+				if (getOwner().sleepStateFatigue < 0) {
+					getOwner().sleepStateFatigue = 0;
 				}
-				ActionSender.sendSleepFatigue(owner, owner.sleepStateFatigue);
+				ActionSender.sendSleepFatigue(getOwner(), getOwner().sleepStateFatigue);
 			}
 		};
 		sleepStateFatigue = fatigue;
 		ActionSender.sendSleepFatigue(this, sleepStateFatigue);
-		Server.getServer().getEventHandler().add(sleepEvent);
+		Server.getServer().getGameEventHandler().add(sleepEvent);
 	}
 
 	public void teleport(int x, int y, boolean bubble) {

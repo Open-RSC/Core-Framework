@@ -77,7 +77,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 
 		if (Formulae.lightLogs(player.getSkills().getLevel(SKILLS.FIREMAKING.id()))) {
 
-			Server.getServer().getEventHandler().add(
+			Server.getServer().getGameEventHandler().add(
 				new SingleEvent(null, 1200, "Light Logs") {
 					@Override
 					public void action() {
@@ -87,7 +87,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 						final GameObject fire = new GameObject(gItem.getLocation(), 97, 0, 0);
 						World.getWorld().registerGameObject(fire);
 
-						Server.getServer().getEventHandler().add(
+						Server.getServer().getGameEventHandler().add(
 							new SingleEvent(null, def.getLength(), "Light Logs Fire Removal") {
 								@Override
 								public void action() {
@@ -135,14 +135,14 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 
 			@Override
 			public void action() {
-				if (Formulae.lightCustomLogs(def, owner.getSkills().getLevel(SKILLS.FIREMAKING.id()))) {
-					owner.message("The fire catches and the logs begin to burn");
+				if (Formulae.lightCustomLogs(def, getOwner().getSkills().getLevel(SKILLS.FIREMAKING.id()))) {
+					getOwner().message("The fire catches and the logs begin to burn");
 					World.getWorld().unregisterItem(gItem);
 
 					final GameObject fire = new GameObject(gItem.getLocation(), 97, 0, 0);
 					World.getWorld().registerGameObject(fire);
 
-					Server.getServer().getEventHandler().add(
+					Server.getServer().getGameEventHandler().add(
 						new SingleEvent(null, def.getLength(), "Firemaking Logs Lit") {
 							@Override
 							public void action() {
@@ -156,12 +156,12 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 							}
 						});
 
-					owner.incExp(SKILLS.FIREMAKING.id(), def.getExp(), true);
+					getOwner().incExp(SKILLS.FIREMAKING.id(), def.getExp(), true);
 					interrupt();
 
 				} else {
-					owner.message("You fail to light a fire");
-					owner.getUpdateFlags().setActionBubble(new Bubble(owner, TINDERBOX));
+					getOwner().message("You fail to light a fire");
+					getOwner().getUpdateFlags().setActionBubble(new Bubble((getOwner()), TINDERBOX));
 				}
 			}
 		});

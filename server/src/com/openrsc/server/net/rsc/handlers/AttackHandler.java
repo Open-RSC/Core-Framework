@@ -121,13 +121,13 @@ public class AttackHandler implements PacketHandler {
 			player.resetPath();
 			player.resetAll();
 			/* To skip the walk packet resetAll() */
-			Server.getServer().getEventHandler().add(new MiniEvent(player, "Handle Attack") {
+			Server.getServer().getGameEventHandler().add(new MiniEvent(player, "Handle Attack") {
 				@Override
 				public void action() {
-					owner.setStatus(Action.RANGING_MOB);
+					getOwner().setStatus(Action.RANGING_MOB);
 					if (target.isPlayer()) {
 						Player affectedPlayer = (Player) target;
-						owner.setSkulledOn(affectedPlayer);
+						getOwner().setSkulledOn(affectedPlayer);
 						affectedPlayer.getTrade().resetAll();
 						if (affectedPlayer.getMenuHandler() != null) {
 							affectedPlayer.resetMenuHandler();
@@ -140,9 +140,9 @@ public class AttackHandler implements PacketHandler {
 						}
 					}
 					if (player.getRangeEquip() > 0) {
-						owner.setRangeEvent(new RangeEvent(owner, target));
+						getOwner().setRangeEvent(new RangeEvent(getOwner(), target));
 					} else {
-						owner.setThrowingEvent(new ThrowingEvent(owner, target));
+						getOwner().setThrowingEvent(new ThrowingEvent(getOwner(), target));
 					}
 				}
 			});

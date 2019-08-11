@@ -19,12 +19,12 @@ public final class SleepHandler implements PacketHandler {
 			player.incrementSleepTries();
 
 			Server.getServer()
-				.getEventHandler()
+				.getGameEventHandler()
 				.add(new SingleEvent(player, player
 					.getIncorrectSleepTimes() * 1000, "Guess Sleep Word") {
 					@Override
 					public void action() {
-						ActionSender.sendEnterSleep(owner);
+						ActionSender.sendEnterSleep(getOwner());
 					}
 				});
 		} else {
@@ -45,12 +45,12 @@ public final class SleepHandler implements PacketHandler {
 					GameLogging.addQuery(new GenericLog(player.getUsername() + " has failed sleeping captcha " + player.getIncorrectSleepTimes() + " times!"));
 				}
 
-				Server.getServer().getEventHandler()
+				Server.getServer().getGameEventHandler()
 					.add(new SingleEvent(player, player
 						.getIncorrectSleepTimes() * 1000, "Guess Sleep Word") {
 						@Override
 						public void action() {
-							ActionSender.sendEnterSleep(owner);
+							ActionSender.sendEnterSleep(getOwner());
 						}
 					});
 			}

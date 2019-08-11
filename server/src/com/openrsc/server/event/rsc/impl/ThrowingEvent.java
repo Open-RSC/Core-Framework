@@ -35,7 +35,7 @@ public class ThrowingEvent extends GameTickEvent {
 	public boolean equals(Object o) {
 		if (o instanceof ThrowingEvent) {
 			ThrowingEvent e = (ThrowingEvent) o;
-			return e.belongsTo(owner);
+			return e.belongsTo(getOwner());
 		}
 		return false;
 	}
@@ -81,7 +81,7 @@ public class ThrowingEvent extends GameTickEvent {
 
 		if (!canReach(target)) {
 			getPlayerOwner().walkToEntity(target.getX(), target.getY());
-			if (owner.nextStep(owner.getX(), owner.getY(), target) == null && throwingID != -1) {
+			if (getOwner().nextStep(getOwner().getX(), getOwner().getY(), target) == null && throwingID != -1) {
 				getPlayerOwner().message("I can't get close enough");
 				getPlayerOwner().resetRange();
 				stop();
@@ -111,7 +111,7 @@ public class ThrowingEvent extends GameTickEvent {
 
 				if (target.isNpc()) {
 					if (PluginHandler.getPluginHandler().blockDefaultAction("PlayerRangeNpc",
-						new Object[]{owner, target})) {
+						new Object[]{getOwner(), target})) {
 						getPlayerOwner().resetRange();
 						stop();
 						return;
@@ -207,7 +207,7 @@ public class ThrowingEvent extends GameTickEvent {
 					}
 				}
 				Server.getServer().getGameEventHandler().add(new ProjectileEvent(getPlayerOwner(), target, damage, 2));
-				owner.setKillType(2);
+				getOwner().setKillType(2);
 			}
 		}
 	}

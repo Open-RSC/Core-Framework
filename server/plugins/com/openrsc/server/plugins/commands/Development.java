@@ -2,8 +2,6 @@ package com.openrsc.server.plugins.commands;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
-import com.openrsc.server.event.DelayedEvent;
-import com.openrsc.server.event.DelayedEventNpc;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.Point;
@@ -391,39 +389,13 @@ public final class Development implements CommandListener {
 				player.message(messagePrefix + "Invalid name or player is not online");
 		}
 		else if (cmd.equalsIgnoreCase("events") || cmd.equalsIgnoreCase("serverstats")) {
-			String total	= "Total Events: " + (Server.getServer().getGameEventHandler().getEvents().size() + Server.getServer().getEventHandler().getEvents().size() + Server.getServer().getEventHandlerNpc().getEvents().size());
+			String total	= "Total Events: " + Server.getServer().getGameEventHandler().getEvents().size();
 			player.message(messagePrefix + total);
 			HashMap<String, Integer> events = new HashMap<String, Integer>();
 
 			// Show info for game tick events
 			for (Map.Entry<String, GameTickEvent> eventEntry : Server.getServer().getGameEventHandler().getEvents().entrySet()) {
 				GameTickEvent e = eventEntry.getValue();
-				String eventName = e.getDescriptor();
-				//if (e.getOwner() != null && e.getOwner().isUnregistering()) {
-				if (!events.containsKey(eventName)) {
-					events.put(eventName, 1);
-				} else {
-					events.put(eventName, events.get(eventName) + 1);
-				}
-				//}
-			}
-
-			// Show info for general server events
-			for (Map.Entry<String, DelayedEvent> eventEntry : Server.getServer().getEventHandler().getEvents().entrySet()) {
-				DelayedEvent e = eventEntry.getValue();
-				String eventName = e.getDescriptor();
-				//if (e.getOwner() != null && e.getOwner().isUnregistering()) {
-				if (!events.containsKey(eventName)) {
-					events.put(eventName, 1);
-				} else {
-					events.put(eventName, events.get(eventName) + 1);
-				}
-				//}
-			}
-
-			// Show info for game NPC events
-			for (Map.Entry<String, DelayedEventNpc> eventEntry : Server.getServer().getEventHandlerNpc().getEvents().entrySet()) {
-				DelayedEventNpc e = eventEntry.getValue();
 				String eventName = e.getDescriptor();
 				//if (e.getOwner() != null && e.getOwner().isUnregistering()) {
 				if (!events.containsKey(eventName)) {

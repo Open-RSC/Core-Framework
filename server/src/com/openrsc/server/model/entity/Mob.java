@@ -2,7 +2,7 @@ package com.openrsc.server.model.entity;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
-import com.openrsc.server.event.DelayedEventNpc;
+import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.PoisonEvent;
 import com.openrsc.server.event.rsc.impl.RangeEventNpc;
@@ -38,32 +38,31 @@ public abstract class Mob extends Entity {
 	/**
 	 * The asynchronous logger.
 	 */
-	private DelayedEventNpc skullEventNpc = null;
+	private GameTickEvent skullEventNpc = null;
 
-	public void addSkull(long timeLeft) {
+	public void addSkull(int timeLeft) {
 		if (skullEventNpc == null) {
-			skullEventNpc = new DelayedEventNpc(this, 1200000, "NPC Add Skull") {
+			skullEventNpc = new GameTickEvent(this, timeLeft, "NPC Add Skull") {
 
 				@Override
 				public void run() {
 					removeSkull();
 				}
 			};
-			Server.getServer().getEventHandlerNpc().add(skullEventNpc);
+			Server.getServer().getGameEventHandler().add(skullEventNpc);
 			getUpdateFlags().setAppearanceChanged(true);
 		}
-		skullEventNpc.setLastRun(System.currentTimeMillis() - (1200000 - timeLeft));
 	}
 
-	public DelayedEventNpc getSkullEventNpc() {
+	public GameTickEvent getSkullEventNpc() {
 		return skullEventNpc;
 	}
 
-	public void setSkullEventNpc(DelayedEventNpc skullEventNpc) {
+	public void setSkullEventNpc(DelayedEvent skullEventNpc) {
 		this.skullEventNpc = skullEventNpc;
 	}
 
-	public int getSkullTime() {
+	public long getSkullTime() {
 		if (isSkulled() && getSkullType() == 1) {
 			return skullEventNpc.timeTillNextRun();
 		}

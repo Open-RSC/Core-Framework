@@ -1,14 +1,12 @@
 package com.openrsc.server;
 
+import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
+import com.openrsc.server.model.entity.player.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GameTickEventHandler {
@@ -29,6 +27,19 @@ public class GameTickEventHandler {
 				toAdd.merge(className + event.getOwner().getUUID() + "p", event, (oldEvent, newEvent) -> newEvent);
 			else
 				toAdd.merge(className + event.getOwner().getUUID() + "n", event, (oldEvent, newEvent) -> newEvent);
+		}
+	}
+
+	public void add(DelayedEvent event) {
+		String className = String.valueOf(event.getClass());
+		UUID uuid = UUID.randomUUID();
+		if (event.isUniqueEvent() || !event.hasOwner()) {
+			toAdd.putIfAbsent(className + uuid, event);
+		} else {
+			if (event.getOwner().isPlayer())
+				toAdd.putIfAbsent(className + event.getOwner().getUUID() + "p", event);
+			else
+				toAdd.putIfAbsent(className + event.getOwner().getUUID() + "n", event);
 		}
 	}
 
@@ -74,5 +85,19 @@ public class GameTickEventHandler {
 
 	public void remove(GameTickEvent event) {
 		events.remove(event);
+	}
+
+	public void removePlayersEvents(Player player) {
+		try {
+			Iterator<Map.Entry<String, GameTickEvent>> iterator = events.entrySet().iterator();
+			while (iterator.hasNext()) {
+				GameTickEvent event = iterator.next().getValue();
+				if (event.belongsTo(player)) {
+					iterator.remove();
+				}
+			}
+		} catch (Exception e) {
+			LOGGER.catching(e);
+		}
 	}
 }

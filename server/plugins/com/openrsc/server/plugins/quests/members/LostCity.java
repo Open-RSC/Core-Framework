@@ -94,7 +94,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 						p.setBusyTimer(1800);
 						lepr.walk(173, 661);
 						try {
-							Server.getServer().getEventHandler().add(new DelayedEvent(null, 600, "Lost City Leprechaun") {
+							Server.getServer().getGameEventHandler().add(new DelayedEvent(null, 600, "Lost City Leprechaun") {
 								@Override
 								public void run() {
 									lepr.walk(177, 661 + DataConversions.random(0, 10) - 5);

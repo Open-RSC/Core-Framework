@@ -59,21 +59,21 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			.getRepeatTimes(player, SKILLS.HERBLAW.id()), false) {
 
 			public void action() {
-				if (!owner.getInventory().hasItemId(item.getID())) {
+				if (!getOwner().getInventory().hasItemId(item.getID())) {
 					interrupt();
 					return;
 				}
-				if (owner.inCombat()) {
+				if (getOwner().inCombat()) {
 					interrupt();
 					return;
 				}
 				ItemUnIdentHerbDef herb = item.getUnIdentHerbDef();
 				Item newItem = new Item(herb.getNewId());
-				owner.getInventory().remove(item);
-				owner.getInventory().add(newItem);
-				owner.message("This herb is " + newItem.getDef().getName());
-				owner.incExp(SKILLS.HERBLAW.id(), herb.getExp(), true);
-				owner.setBusy(false);
+				getOwner().getInventory().remove(item);
+				getOwner().getInventory().add(newItem);
+				getOwner().message("This herb is " + newItem.getDef().getName());
+				getOwner().incExp(SKILLS.HERBLAW.id(), herb.getExp(), true);
+				getOwner().setBusy(false);
 			}
 		});
 		return true;
@@ -295,8 +295,8 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 
 			@Override
 			public void action() {
-				if (owner.getSkills().getLevel(SKILLS.HERBLAW.id()) < herbDef.getReqLevel()) {
-					owner.message("you need level " + herbDef.getReqLevel()
+				if (getOwner().getSkills().getLevel(SKILLS.HERBLAW.id()) < herbDef.getReqLevel()) {
+					getOwner().message("you need level " + herbDef.getReqLevel()
 						+ " herblaw to make this potion");
 					interrupt();
 					return;
@@ -305,14 +305,14 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 					player.message("You need to complete Druidic ritual quest first");
 					return;
 				}
-				if (owner.getInventory().hasItemId(vial.getID())
-					&& owner.getInventory().hasItemId(herb.getID())) {
-					owner.getInventory().remove(vial.getID(), 1);
-					owner.getInventory().remove(herb.getID(), 1);
-					owner.playSound("mix");
-					owner.message("You put the " + herb.getDef().getName()
+				if (getOwner().getInventory().hasItemId(vial.getID())
+					&& getOwner().getInventory().hasItemId(herb.getID())) {
+					getOwner().getInventory().remove(vial.getID(), 1);
+					getOwner().getInventory().remove(herb.getID(), 1);
+					getOwner().playSound("mix");
+					getOwner().message("You put the " + herb.getDef().getName()
 						+ " into the vial of water");
-					owner.getInventory().add(
+					getOwner().getInventory().add(
 						new Item(herbDef.getPotionId(), 1));
 				} else {
 					interrupt();
@@ -350,8 +350,8 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			.getRepeatTimes(player, SKILLS.HERBLAW.id()), false) {
 
 			public void action() {
-				if (owner.getSkills().getLevel(SKILLS.HERBLAW.id()) < def.getReqLevel()) {
-					owner.message("You need a herblaw level of "
+				if (getOwner().getSkills().getLevel(SKILLS.HERBLAW.id()) < def.getReqLevel()) {
+					getOwner().message("You need a herblaw level of "
 						+ def.getReqLevel() + " to make this potion");
 					interrupt();
 					return;
@@ -360,18 +360,18 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 					player.message("You need to complete Druidic ritual quest first");
 					return;
 				}
-				if (owner.getInventory().hasItemId(second.getID())
-					&& owner.getInventory().hasItemId(unfinished.getID())) {
+				if (getOwner().getInventory().hasItemId(second.getID())
+					&& getOwner().getInventory().hasItemId(unfinished.getID())) {
 					if (bubbleItem.get() != null) {
-						showBubble(owner, bubbleItem.get());
+						showBubble(getOwner(), bubbleItem.get());
 					}
-					owner.playSound("mix");
-					owner.message("You mix the " + second.getDef().getName()
+					getOwner().playSound("mix");
+					getOwner().message("You mix the " + second.getDef().getName()
 						+ " into your potion");
-					owner.getInventory().remove(second.getID(), 1);
-					owner.getInventory().remove(unfinished.getID(), 1);
-					owner.getInventory().add(new Item(def.getPotionID(), 1));
-					owner.incExp(SKILLS.HERBLAW.id(), def.getExp(), true);
+					getOwner().getInventory().remove(second.getID(), 1);
+					getOwner().getInventory().remove(unfinished.getID(), 1);
+					getOwner().getInventory().add(new Item(def.getPotionID(), 1));
+					getOwner().incExp(SKILLS.HERBLAW.id(), def.getExp(), true);
 				} else
 					interrupt();
 			}

@@ -212,48 +212,48 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 			@Override
 			public void run() {
 				/* Player logged out. */
-				if (!owner.isLoggedIn() || owner.isRemoved()) {
+				if (!getOwner().isLoggedIn() || getOwner().isRemoved()) {
 					stop();
 					return;
 				}
-				if (!owner.getLocation().inMageArena()) {
+				if (!getOwner().getLocation().inMageArena()) {
 					stop();
 					return;
 				}
-				if (owner.inCombat()) {
+				if (getOwner().inCombat()) {
 					return;
 				}
-				if (owner.getSkills().getLevel(SKILLS.ATTACK.id()) > 0 || owner.getSkills().getLevel(SKILLS.STRENGTH.id()) > 0) {
-					owner.getSkills().setLevel(SKILLS.ATTACK.id(), 0);
-					owner.getSkills().setLevel(SKILLS.STRENGTH.id(), 0);
+				if (getOwner().getSkills().getLevel(SKILLS.ATTACK.id()) > 0 || getOwner().getSkills().getLevel(SKILLS.STRENGTH.id()) > 0) {
+					getOwner().getSkills().setLevel(SKILLS.ATTACK.id(), 0);
+					getOwner().getSkills().setLevel(SKILLS.STRENGTH.id(), 0);
 				}
 				Npc Guthix = getNearestNpc(p, NpcId.BATTLE_MAGE_GUTHIX.id(), 2);
 				Npc Zamorak = getNearestNpc(p, NpcId.BATTLE_MAGE_ZAMAROK.id(), 2);
 				Npc Saradomin = getNearestNpc(p, NpcId.BATTLE_MAGE_SARADOMIN.id(), 2);
 				String[] randomMessage = {"@yel@zamorak mage: feel the wrath of zamarok", "@yel@Saradomin mage: feel the wrath of Saradomin", "@yel@guthix mage: feel the wrath of guthix"};
-				if (Guthix != null && Guthix.withinRange(owner, 1)) {
-					godSpellObject(owner, 33);
+				if (Guthix != null && Guthix.withinRange(getOwner(), 1)) {
+					godSpellObject(getOwner(), 33);
 					p.message(randomMessage[2]);
-					if (getCurrentLevel(owner, SKILLS.HITS.id()) < 20) {
-						owner.damage(2);
+					if (getCurrentLevel(getOwner(), SKILLS.HITS.id()) < 20) {
+						getOwner().damage(2);
 					} else {
-						owner.damage(getCurrentLevel(owner, SKILLS.HITS.id()) / 10);
+						getOwner().damage(getCurrentLevel(getOwner(), SKILLS.HITS.id()) / 10);
 					}
-				} else if (Zamorak != null && Zamorak.withinRange(owner, 1)) {
-					godSpellObject(owner, 35);
+				} else if (Zamorak != null && Zamorak.withinRange(getOwner(), 1)) {
+					godSpellObject(getOwner(), 35);
 					p.message(randomMessage[0]);
-					if (getCurrentLevel(owner, SKILLS.HITS.id()) < 20) {
-						owner.damage(2);
+					if (getCurrentLevel(getOwner(), SKILLS.HITS.id()) < 20) {
+						getOwner().damage(2);
 					} else {
-						owner.damage(getCurrentLevel(owner, SKILLS.HITS.id()) / 10);
+						getOwner().damage(getCurrentLevel(getOwner(), SKILLS.HITS.id()) / 10);
 					}
-				} else if (Saradomin != null && Saradomin.withinRange(owner, 1)) {
-					godSpellObject(owner, 34);
+				} else if (Saradomin != null && Saradomin.withinRange(getOwner(), 1)) {
+					godSpellObject(getOwner(), 34);
 					p.message(randomMessage[1]);
-					if (getCurrentLevel(owner, SKILLS.HITS.id()) < 20) {
-						owner.damage(2);
+					if (getCurrentLevel(getOwner(), SKILLS.HITS.id()) < 20) {
+						getOwner().damage(2);
 					} else {
-						owner.damage(getCurrentLevel(owner, SKILLS.HITS.id()) / 10);
+						getOwner().damage(getCurrentLevel(getOwner(), SKILLS.HITS.id()) / 10);
 					}
 				}
 			}
@@ -261,11 +261,11 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 		if (mageArena != null) {
 			if (mageArena.shouldRemove()) {
 				p.setAttribute("mageArenaEvent", mageArenaEvent);
-				Server.getServer().getEventHandler().add(mageArenaEvent);
+				Server.getServer().getGameEventHandler().add(mageArenaEvent);
 			}
 		} else {
 			p.setAttribute("mageArenaEvent", mageArenaEvent);
-			Server.getServer().getEventHandler().add(mageArenaEvent);
+			Server.getServer().getGameEventHandler().add(mageArenaEvent);
 		}
 	}
 
@@ -274,12 +274,12 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 		DelayedEvent kolodionEvent = new DelayedEvent(p, 650, "Mage Arena Kolodion Event") {
 			@Override
 			public void run() {
-				Npc npc = owner.getAttribute("spawned_kolodion");
+				Npc npc = getOwner().getAttribute("spawned_kolodion");
 				if (npc == null) {
 					return;
 				}
 				/* Player logged out. */
-				if (!owner.isLoggedIn() || owner.isRemoved()) {
+				if (!getOwner().isLoggedIn() || getOwner().isRemoved()) {
 					npc.remove();
 					stop();
 					return;
@@ -290,15 +290,15 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 					return;
 				}
 				/* Player has left the area */
-				if (!npc.withinRange(owner)) {
+				if (!npc.withinRange(getOwner())) {
 					npc.remove();
 					stop();
 					return;
 				}
-				if (owner.inCombat()) {
+				if (getOwner().inCombat()) {
 					return;
 				}
-				if (!npc.withinRange(owner, 8)) {
+				if (!npc.withinRange(getOwner(), 8)) {
 					return;
 				}
 				if (random(0, 5) != 2) {
@@ -307,29 +307,29 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 				int spell_type = random(0, 2);
 				switch (spell_type) {
 					case 0:
-						godSpellObject(owner, 33);
+						godSpellObject(getOwner(), 33);
 						break;
 					case 1:
-						godSpellObject(owner, 34);
+						godSpellObject(getOwner(), 34);
 						break;
 					case 2:
-						godSpellObject(owner, 35);
+						godSpellObject(getOwner(), 35);
 						break;
 				}
 				String[] randomMessage = {"roooaar", "die you foolish mortal", "feel the power of the elements", "the bigger the better", "aaarrgghhh"};
-				npcYell(owner, npc, randomMessage[random(0, randomMessage.length - 1)]);
-				owner.damage(random(3, 13));
+				npcYell(getOwner(), npc, randomMessage[random(0, randomMessage.length - 1)]);
+				getOwner().damage(random(3, 13));
 
 			}
 		};
 		if (kolE != null) {
 			if (kolE.shouldRemove()) {
 				p.setAttribute("kolodionEvent", kolodionEvent);
-				Server.getServer().getEventHandler().add(kolodionEvent);
+				Server.getServer().getGameEventHandler().add(kolodionEvent);
 			}
 		} else {
 			p.setAttribute("kolodionEvent", kolodionEvent);
-			Server.getServer().getEventHandler().add(kolodionEvent);
+			Server.getServer().getGameEventHandler().add(kolodionEvent);
 		}
 	}
 

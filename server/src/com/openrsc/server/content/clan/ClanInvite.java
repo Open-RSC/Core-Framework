@@ -79,7 +79,7 @@ public class ClanInvite {
 				inviter.message(invited.getUsername() + "'s Clan invitation is no longer active");
 			}
 		};
-		Server.getServer().getEventHandler().add(timeOutEvent);
+		Server.getServer().getGameEventHandler().add(timeOutEvent);
 	}
 
 	public void accept() {

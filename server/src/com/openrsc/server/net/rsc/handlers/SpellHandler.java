@@ -6,16 +6,11 @@ import com.openrsc.server.event.MiniEvent;
 import com.openrsc.server.event.rsc.impl.CustomProjectileEvent;
 import com.openrsc.server.event.rsc.impl.ObjectRemover;
 import com.openrsc.server.event.rsc.impl.ProjectileEvent;
-import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.ItemSmeltingDef;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.external.ReqOreDef;
-import com.openrsc.server.external.SpellDef;
+import com.openrsc.server.external.*;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.action.WalkToPointAction;
 import com.openrsc.server.model.container.Item;
@@ -32,7 +27,6 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.GenericLog;
@@ -1129,7 +1123,7 @@ public class SpellHandler implements PacketHandler {
 							// Deal first damage
 							Server.getServer().getGameEventHandler().add(new ProjectileEvent(player, affectedMob, firstDamage, 1));
 							// Deal Second Damage
-							Server.getServer().getEventHandler().add(new MiniEvent(player, 600, "Salarin the Twisted Strike") {
+							Server.getServer().getGameEventHandler().add(new MiniEvent(player, 600, "Salarin the Twisted Strike") {
 								@Override
 								public void action() {
 									affectedMob.getSkills().subtractLevel(3, secondAdditionalDamage, false);
