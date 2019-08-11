@@ -86,7 +86,7 @@ public class DiscordSender {
 
 	private void auctionSendToDiscord(String message) throws Exception {
 		if(Constants.GameServer.WANT_DISCORD_AUCTION_UPDATES) {
-			sendToDiscord(Constants.GameServer.DISCORD_MONITORING_WEBHOOK_URL, message);
+			sendToDiscord(Constants.GameServer.DISCORD_AUCTION_WEBHOOK_URL, message);
 		}
 	}
 
