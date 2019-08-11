@@ -518,6 +518,13 @@ public final class SkillGuideInterface {
 		}
 		if (mc.getSkillGuideChosen().equals("Firemaking")) {
 			skillItems.add(new SkillItem(14, "1", "Normal logs"));
+			if (Config.S_CUSTOM_FIREMAKING) {
+				skillItems.add(new SkillItem(632, "15", "Oak logs"));
+				skillItems.add(new SkillItem(633, "30", "Willow logs"));
+				skillItems.add(new SkillItem(634, "45", "Maple logs"));
+				skillItems.add(new SkillItem(635, "60", "Yew logs"));
+				skillItems.add(new SkillItem(636, "75", "Magic logs"));
+			}
 		}
 		if (mc.getSkillGuideChosen().equals("Crafting")) {
 			if (curTab == 0) {

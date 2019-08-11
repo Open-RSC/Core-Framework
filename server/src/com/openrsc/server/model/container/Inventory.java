@@ -95,7 +95,7 @@ public class Inventory {
 			}
 			list.add(itemToAdd);
 			if (sendInventory)
-				ActionSender.sendInventoryUpdateItem(player, list.size() - 1);
+				ActionSender.sendInventory(player);
 		}
 	}
 
@@ -259,7 +259,6 @@ public class Inventory {
 						// Exact amount, remove all.
 						if (i.isWielded()) {
 							unwieldItem(i, false);
-							//ActionSender.sendEquipmentStats(player);
 						}
 						iterator.remove();
 						//ActionSender.sendRemoveItem(player, index);
@@ -270,7 +269,6 @@ public class Inventory {
 						// Remove 1.
 						if (i.isWielded()) {
 							unwieldItem(i, false);
-							//ActionSender.sendEquipmentStats(player);
 						}
 						iterator.remove();
 						//ActionSender.sendRemoveItem(player, index);
@@ -279,9 +277,7 @@ public class Inventory {
 						if (amount > 0)
 							return remove(id, amount, sendInventory);
 					}
-
 					if (sendInventory) ActionSender.sendInventory(player);
-
 					return index;
 				}
 			}

@@ -2059,6 +2059,8 @@ public final class Player extends Mob {
 			batchEvent.getOwner().checkAndInterruptBatchEvent();
 			this.batchEvent = batchEvent;
 			Server.getServer().getEventHandler().add(batchEvent);
+		} else {
+			this.batchEvent = null;
 		}
 	}
 
