@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.quests.members;
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.Server;
-import com.openrsc.server.event.DelayedEvent;
+import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Skills.SKILLS;
@@ -94,9 +94,9 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 						p.setBusyTimer(1800);
 						lepr.walk(173, 661);
 						try {
-							Server.getServer().getGameEventHandler().add(new DelayedEvent(null, 600, "Lost City Leprechaun") {
+							Server.getServer().getGameEventHandler().add(new SingleEvent(null, 600, "Lost City Leprechaun", true) {
 								@Override
-								public void run() {
+								public void action() {
 									lepr.walk(177, 661 + DataConversions.random(0, 10) - 5);
 								}
 							});
