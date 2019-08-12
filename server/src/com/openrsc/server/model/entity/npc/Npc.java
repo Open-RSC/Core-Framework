@@ -528,7 +528,7 @@ public class Npc extends Mob {
 						groundItem.setAttribute("npcdrop", true);
 						world.registerItem(groundItem);
 					}
-					Server.getPlayerDataProcessor().getDatabase().addNpcDrop(
+					Server.getServer().getPlayerDataProcessor().getDatabase().addNpcDrop(
 						owner, this, rare.getID(), rare.getAmount());
 				}
 
@@ -580,7 +580,7 @@ public class Npc extends Mob {
 
 								if (!EntityHandler.getItemDef(dropID).isStackable()) {
 
-									Server.getPlayerDataProcessor().getDatabase().addNpcDrop(
+									Server.getServer().getPlayerDataProcessor().getDatabase().addNpcDrop(
 										owner, this, dropID, amount);
 									GroundItem groundItem;
 
@@ -622,7 +622,7 @@ public class Npc extends Mob {
 										}
 									}
 
-									Server.getPlayerDataProcessor().getDatabase().addNpcDrop(
+									Server.getServer().getPlayerDataProcessor().getDatabase().addNpcDrop(
 										owner, this, dropID, amount);
 									if (!handleRingOfAvarice(owner, new Item(drop.getID(), amount))) {
 										GroundItem groundItem = new GroundItem(dropID, getX(), getY(), amount, owner);

@@ -26,14 +26,14 @@ public class Social {
 	}
 
 	public boolean addFriend(long id, int world, String friendName) {
-		boolean added = Server.getPlayerDataProcessor().getDatabase().addFriend(player.getDatabaseID(), id, friendName);
+		boolean added = Server.getServer().getPlayerDataProcessor().getDatabase().addFriend(player.getDatabaseID(), id, friendName);
 		if (added)
 			friendList.put(id, world);
 		return added;
 	}
 
 	public boolean addIgnore(long id, int i, String friendName) {
-		boolean added = Server.getPlayerDataProcessor().getDatabase().addIgnore(player.getDatabaseID(), id, friendName);
+		boolean added = Server.getServer().getPlayerDataProcessor().getDatabase().addIgnore(player.getDatabaseID(), id, friendName);
 		if (added)
 			ignoreList.add(id);
 		return added;
@@ -41,12 +41,12 @@ public class Social {
 
 	public void removeFriend(long id) {
 		friendList.remove(id);
-		Server.getPlayerDataProcessor().getDatabase().removeFriend(player.getDatabaseID(), id);
+		Server.getServer().getPlayerDataProcessor().getDatabase().removeFriend(player.getDatabaseID(), id);
 	}
 
 	public void removeIgnore(long id) {
 		ignoreList.remove(id);
-		Server.getPlayerDataProcessor().getDatabase().removeIgnore(player.getDatabaseID(), id);
+		Server.getServer().getPlayerDataProcessor().getDatabase().removeIgnore(player.getDatabaseID(), id);
 	}
 
 	public boolean isFriendsWith(long usernameHash) {

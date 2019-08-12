@@ -37,20 +37,6 @@ import static org.apache.logging.log4j.util.Unbox.box;
 
 public final class Server implements Runnable {
 
-	static {
-		try {
-			Thread.currentThread().setName("InitializationThread");
-			System.setProperty("log4j.configurationFile", "conf/server/log4j2.xml");
-			/* Enables asynchronous, garbage-free logging. */
-			System.setProperty("Log4jContextSelector",
-					"org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
-
-			LOGGER = LogManager.getLogger();
-		} catch (Throwable t) {
-			throw new ExceptionInInitializerError(t);
-		}
-	}
-
 	private final ScheduledExecutorService scheduledExecutor = Executors
 		.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat("GameThread").build());
 
@@ -58,29 +44,38 @@ public final class Server implements Runnable {
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER;
-	private static PlayerDatabaseExecutor playerDataProcessor;
 	private static Server server = null;
 
 	private final GameStateUpdater gameUpdater = new GameStateUpdater();
 	private final GameTickEventHandler tickEventHandler = new GameTickEventHandler();
 	private final DiscordSender discordSender = new DiscordSender();
 	private final GameTickEvent monitoring = new MonitoringEvent();
+	private final PlayerDatabaseExecutor playerDataProcessor = new PlayerDatabaseExecutor();
 
-	private long lastClientUpdate;
-	private boolean running;
 	private DelayedEvent updateEvent;
 	private ChannelFuture serverChannel;
 
-	private long lastIncomingPacketsDuration	= 0;
-	private long lastGameStateDuration			= 0;
-	private long lastEventsDuration				= 0;
-	private long lastOutgoingPacketsDuration	= 0;
-	private long lastTickDuration				= 0;
-	private long timeLate						= 0;
+	private boolean running = true;
+	private long lastIncomingPacketsDuration = 0;
+	private long lastGameStateDuration = 0;
+	private long lastEventsDuration = 0;
+	private long lastOutgoingPacketsDuration = 0;
+	private long lastTickDuration = 0;
+	private long timeLate = 0;
+	private long lastClientUpdate = 0;
 
-	public Server() {
-		running = true;
-		playerDataProcessor = new PlayerDatabaseExecutor();
+	static {
+		try {
+			Thread.currentThread().setName("InitializationThread");
+			System.setProperty("log4j.configurationFile", "conf/server/log4j2.xml");
+			/* Enables asynchronous, garbage-free logging. */
+			System.setProperty("Log4jContextSelector",
+				"org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
+
+			LOGGER = LogManager.getLogger();
+		} catch (Throwable t) {
+			throw new ExceptionInInitializerError(t);
+		}
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -119,7 +114,7 @@ public final class Server implements Runnable {
 		return server;
 	}
 
-	public static PlayerDatabaseExecutor getPlayerDataProcessor() {
+	public PlayerDatabaseExecutor getPlayerDataProcessor() {
 		return playerDataProcessor;
 	}
 

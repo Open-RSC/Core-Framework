@@ -1971,7 +1971,7 @@ public final class Player extends Mob {
 	}
 
 	public void save() {
-		Server.getPlayerDataProcessor().addSaveRequest(this);
+		Server.getServer().getPlayerDataProcessor().addSaveRequest(this);
 	}
 
 	public void logout() {
@@ -2019,7 +2019,7 @@ public final class Player extends Mob {
 		ClanManager.checkAndUnattachFromClan(this);
 		PartyManager.checkAndUnattachFromParty(this);
 
-		Server.getPlayerDataProcessor().addRemoveRequest(this);
+		Server.getServer().getPlayerDataProcessor().addRemoveRequest(this);
 	}
 
 	public void sendMemberErrorMessage() {
