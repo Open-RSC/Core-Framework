@@ -294,7 +294,6 @@ public class PlayerDuelHandler implements PacketHandler {
 						CombatEvent combatEvent = new CombatEvent(attacker, opponent);
 						attacker.setCombatEvent(combatEvent);
 						opponent.setCombatEvent(combatEvent);
-						combatEvent.setImmediate(true);
 						Server.getServer().getGameEventHandler().add(combatEvent);
 					}
 				});

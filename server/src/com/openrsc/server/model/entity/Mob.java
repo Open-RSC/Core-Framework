@@ -935,7 +935,6 @@ public abstract class Mob extends Entity {
 			cure();
 		}
 		PoisonEvent poisonEvent = new PoisonEvent(this, poisonDamage);
-		poisonEvent.setImmediate(true);
 		setAttribute("poisonEvent", poisonEvent);
 		Server.getServer().getGameEventHandler().add(poisonEvent);
 	}

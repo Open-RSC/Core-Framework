@@ -10,7 +10,6 @@ public abstract class GameTickEvent {
 	protected boolean running = true;
 	private Mob owner;
 	private int delayTicks;
-	private boolean immediate;
 	private int ticksBeforeRun = -1;
 	private String descriptor;
 	private long lastEventDuration = 0;
@@ -71,14 +70,6 @@ public abstract class GameTickEvent {
 
 	protected void setDelayTicks(int delayTicks) {
 		this.delayTicks = delayTicks;
-	}
-
-	public boolean isImmediate() {
-		return immediate;
-	}
-
-	public void setImmediate(boolean b) {
-		this.immediate = b;
 	}
 
 	protected Player getPlayerOwner() {

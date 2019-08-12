@@ -58,7 +58,6 @@ public class RangeEventNpc extends GameTickEvent {
 
 	public RangeEventNpc(Npc owner, Mob victim) {
 		super(owner, 1, "Range Event NPC");
-		this.setImmediate(true);
 		this.target = victim;
 		this.deliveredFirstProjectile = false;
 	}
