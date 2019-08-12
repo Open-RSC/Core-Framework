@@ -254,8 +254,8 @@ public final class Server implements Runnable {
 				// Doing the set in two stages here such that the whole tick has access to the same values for profiling information.
 				final long tickStart = System.currentTimeMillis();
 				final long lastIncomingPacketsDuration = processIncomingPackets();
-				final long lastEventsDuration = getGameEventHandler().doGameEvents();
-				final long lastGameStateDuration = getGameUpdater().doUpdates();
+				final long lastEventsDuration = runGameEvents();
+				final long lastGameStateDuration = runGameStateUpdate();
 				final long lastOutgoingPacketsDuration = processOutgoingPackets();
 				final long tickEnd = System.currentTimeMillis();
 				final long lastTickDuration = tickEnd - tickStart;
@@ -282,6 +282,14 @@ public final class Server implements Runnable {
 		} catch (Throwable t) {
 			LOGGER.catching(t);
 		}
+	}
+
+	protected final long runGameEvents() {
+		return getGameEventHandler().doGameEvents();
+	}
+
+	protected final long runGameStateUpdate() throws Exception {
+		return getGameUpdater().doUpdates();
 	}
 
 	protected final long processIncomingPackets() {
