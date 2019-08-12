@@ -5,6 +5,7 @@ import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.ObjectMiningDef;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -12,6 +13,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -105,7 +107,8 @@ public class GemMining implements ObjectActionListener,
 		p.playSound("mine");
 		showBubble(p, new Item(ItemId.IRON_PICKAXE.id()));
 		p.message("You have a swing at the rock!");
-		p.setBatchEvent(new BatchEvent(p, 1800, "Gem Mining", 1000 + retrytimes, true) {
+		retrytimes = Constants.GameServer.BATCH_PROGRESSION ? Formulae.getRepeatTimes(p, Skills.MINING) : retrytimes + 1000;
+		p.setBatchEvent(new BatchEvent(p, 1800, "Gem Mining", retrytimes, true) {
 			@Override
 			public void action() {
 				if (getGem(p, 40, getOwner().getSkills().getLevel(SKILLS.MINING.id()), axeId) && mineLvl >= 40) { // always 40 required mining.
@@ -119,12 +122,14 @@ public class GemMining implements ObjectActionListener,
 						getOwner().incExp(SKILLS.MINING.id(), 200, true); // always 50XP
 						getOwner().getInventory().add(gem);
 					}
-					interrupt();
 					
-					if (object != null && object.getID() == obj.getID()) {
-						GameObject newObject = new GameObject(obj.getLocation(), 98, obj.getDirection(), obj.getType());
-						World.getWorld().replaceGameObject(obj, newObject);
-						World.getWorld().delayedSpawnObject(object.getLoc(), 120 * 1000); // 2 minute respawn time
+					if (!Constants.GameServer.MINING_ROCKS_EXTENDED || DataConversions.random(1, 100) <= 39) {
+						interrupt();
+						if (object != null && object.getID() == obj.getID()) {
+							GameObject newObject = new GameObject(obj.getLocation(), 98, obj.getDirection(), obj.getType());
+							World.getWorld().replaceGameObject(obj, newObject);
+							World.getWorld().delayedSpawnObject(object.getLoc(), 120 * 1000); // 2 minute respawn time
+						}
 					}
 				} else {
 					getOwner().message("You only succeed in scratching the rock");
