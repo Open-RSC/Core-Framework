@@ -357,11 +357,11 @@ public final class Server implements Runnable {
 	}
 
 	public final String buildProfilingDebugInformation(boolean forInGame) {
-		HashMap<String, Integer> eventsCount 	= new HashMap<String, Integer>();
-		HashMap<String, Long> eventsDuration	= new HashMap<String, Long>();
-		int countEvents							= 0;
-		long durationEvents						= 0;
-		String newLine							= forInGame ? "%" : "\r\n";
+		final HashMap<String, Integer> eventsCount 	= new HashMap<String, Integer>();
+		final HashMap<String, Long> eventsDuration	= new HashMap<String, Long>();
+		int countEvents								= 0;
+		long durationEvents							= 0;
+		String newLine								= forInGame ? "%" : "\r\n";
 
 		// Show info for game tick events
 		for (Map.Entry<String, GameTickEvent> eventEntry : getGameEventHandler().getEvents().entrySet()) {
@@ -390,8 +390,9 @@ public final class Server implements Runnable {
 		List list = new LinkedList(eventsDuration.entrySet());
 		Collections.sort(list, new Comparator() {
 			public int compare(Object o1, Object o2) {
-				return ((Comparable) ((Map.Entry) (o2)).getValue())
-					.compareTo(((Map.Entry) (o1)).getValue());
+				return
+					String.format("%025d%025d", eventsDuration.get(( (Map.Entry) (o2) ).getKey()), eventsCount.get(( (Map.Entry) (o2) ).getKey()))
+					.compareTo(String.format("%025d%025d", eventsDuration.get(( (Map.Entry) (o1) ).getKey()), eventsCount.get(( (Map.Entry) (o1) ).getKey())));
 			}
 		});
 		HashMap sortedHashMap = new LinkedHashMap();
@@ -399,7 +400,8 @@ public final class Server implements Runnable {
 			Map.Entry entry = (Map.Entry) it.next();
 			sortedHashMap.put(entry.getKey(), entry.getValue());
 		}
-		eventsDuration	= sortedHashMap;
+		eventsDuration.clear();
+		eventsDuration.putAll(sortedHashMap);
 
 		int i = 0;
 		StringBuilder s = new StringBuilder();
