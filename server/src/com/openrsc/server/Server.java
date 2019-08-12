@@ -191,9 +191,8 @@ public final class Server implements Runnable {
 	}
 
 	public void kill() {
-		scheduledExecutor.shutdown();
+		stop();
 		LOGGER.fatal(Constants.GameServer.SERVER_NAME + " shutting down...");
-		running = false;
 		System.exit(0);
 	}
 
