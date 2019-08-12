@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.SingleEvent;
+import com.openrsc.server.event.custom.MonitoringEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScriptLoader;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -17,7 +18,6 @@ import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.util.NamedThreadFactory;
-import com.openrsc.server.util.rsc.MessageType;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -37,13 +37,6 @@ import static org.apache.logging.log4j.util.Unbox.box;
 
 public final class Server implements Runnable {
 
-	/**
-	 * The asynchronous logger.
-	 */
-	private static final Logger LOGGER;
-	private static PlayerDatabaseExecutor playerDataProcessor;
-	private static Server server = null;
-
 	static {
 		try {
 			Thread.currentThread().setName("InitializationThread");
@@ -60,9 +53,19 @@ public final class Server implements Runnable {
 
 	private final ScheduledExecutorService scheduledExecutor = Executors
 		.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat("GameThread").build());
+
+	/**
+	 * The asynchronous logger.
+	 */
+	private static final Logger LOGGER;
+	private static PlayerDatabaseExecutor playerDataProcessor;
+	private static Server server = null;
+
 	private final GameStateUpdater gameUpdater = new GameStateUpdater();
 	private final GameTickEventHandler tickEventHandler = new GameTickEventHandler();
 	private final DiscordSender discordSender = new DiscordSender();
+	private final GameTickEvent monitoring = new MonitoringEvent();
+
 	private long lastClientUpdate;
 	private boolean running;
 	private DelayedEvent updateEvent;
@@ -73,6 +76,7 @@ public final class Server implements Runnable {
 	private long lastEventsDuration				= 0;
 	private long lastOutgoingPacketsDuration	= 0;
 	private long lastTickDuration				= 0;
+	private long timeLate						= 0;
 
 	public Server() {
 		running = true;
@@ -140,6 +144,11 @@ public final class Server implements Runnable {
 			LOGGER.info("Loading World...");
 			World.getWorld().load();
 			LOGGER.info("\t World Completed");
+
+			LOGGER.info("Loading profiling monitoring...");
+			// Send monitoring info as a game event so that it can be profiled.
+			getGameEventHandler().add(monitoring);
+			LOGGER.info("Profiling Completed");
 
 			LOGGER.info("Starting database loader...");
 			playerDataProcessor.start();
@@ -238,54 +247,24 @@ public final class Server implements Runnable {
 
 	public void run() {
 	    try {
-			long timeLate = System.currentTimeMillis() - lastClientUpdate - Constants.GameServer.GAME_TICK;
-			if (timeLate >= 0) {
-				lastClientUpdate 			+= Constants.GameServer.GAME_TICK;
+			timeLate = System.currentTimeMillis() - lastClientUpdate - Constants.GameServer.GAME_TICK;
+			if (getTimeLate() >= 0) {
+				lastClientUpdate += Constants.GameServer.GAME_TICK;
 
-				lastIncomingPacketsDuration	= processIncomingPackets();
-				lastEventsDuration			= getGameEventHandler().doGameEvents();
-				lastGameStateDuration		= getGameUpdater().doUpdates();
-				lastOutgoingPacketsDuration	= processOutgoingPackets();
+				// Doing the set in two stages here such that the whole tick has access to the same values for profiling information.
+				final long tickStart = System.currentTimeMillis();
+				final long lastIncomingPacketsDuration = processIncomingPackets();
+				final long lastEventsDuration = getGameEventHandler().doGameEvents();
+				final long lastGameStateDuration = getGameUpdater().doUpdates();
+				final long lastOutgoingPacketsDuration = processOutgoingPackets();
+				final long tickEnd = System.currentTimeMillis();
+				final long lastTickDuration = tickEnd - tickStart;
 
-				lastTickDuration			= lastEventsDuration + lastGameStateDuration;
-
-				final long ticksLate		= timeLate / Constants.GameServer.GAME_TICK;
-				final boolean isServerLate	= ticksLate >= 1;
-
-				// Processing game events and state took longer than the tick
-				if(lastTickDuration >= Constants.GameServer.GAME_TICK) {
-					final String message = "Can't keep up: " + getLastTickDuration() + "ms " + getLastEventsDuration() + "ms " + getLastGameStateDuration() + "ms";
-
-					// Warn logged in developers
-					for (Player p : World.getWorld().getPlayers()) {
-						if(!p.isDev()) {
-							continue;
-						}
-
-						p.playerServerMessage(MessageType.QUEST, Constants.GameServer.MESSAGE_PREFIX + message);
-					}
-				}
-
-				// Server fell behind, skip ticks
-				if (isServerLate) {
-					lastClientUpdate 			+= ticksLate * Constants.GameServer.GAME_TICK;
-					final String message		= "Can't keep up, we are " + timeLate + "ms behind; Skipping " + ticksLate + " ticks";
-
-					// Warn logged in developers
-					for (Player p : World.getWorld().getPlayers()) {
-						if(!p.isDev()) {
-							continue;
-						}
-
-						p.playerServerMessage(MessageType.QUEST, Constants.GameServer.MESSAGE_PREFIX + message);
-					}
-
-					getDiscordSender().monitoringSendServerBehind(message);
-
-					if (Constants.GameServer.DEBUG) {
-						LOGGER.warn(message);
-					}
-				}
+				this.lastIncomingPacketsDuration = lastIncomingPacketsDuration;
+				this.lastEventsDuration = lastEventsDuration;
+				this.lastGameStateDuration = lastGameStateDuration;
+				this.lastOutgoingPacketsDuration = lastOutgoingPacketsDuration;
+				this.lastTickDuration = lastTickDuration;
 			}
 			else {
 				if(Constants.GameServer.WANT_CUSTOM_WALK_SPEED) {
@@ -468,5 +447,13 @@ public final class Server implements Runnable {
 
 	public long getLastOutgoingPacketsDuration() {
 		return lastOutgoingPacketsDuration;
+	}
+
+	public long getTimeLate() {
+		return timeLate;
+	}
+
+	public void skipTicks(final long ticks) {
+		lastClientUpdate += ticks * Constants.GameServer.GAME_TICK;
 	}
 }
