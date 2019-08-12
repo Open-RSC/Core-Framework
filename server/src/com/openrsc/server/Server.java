@@ -145,9 +145,6 @@ public final class Server implements Runnable {
 			getGameEventHandler().add(monitoring);
 			LOGGER.info("Profiling Completed");
 
-			LOGGER.info("Starting database loader...");
-			playerDataProcessor.start();
-			LOGGER.info("\t Database Loader Completed");
 			//Never run ResourceLeakDetector PARANOID in production.
 			//ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.PARANOID);
 			final EventLoopGroup bossGroup = new NioEventLoopGroup(0, new NamedThreadFactory("IOBossThread"));
@@ -422,11 +419,15 @@ public final class Server implements Runnable {
 	public void start() {
 		running = true;
 		scheduledExecutor.scheduleAtFixedRate(this, 0, 1, TimeUnit.MILLISECONDS);
+		playerDataProcessor.start();
+		discordSender.start();
 	}
 
 	public void stop() {
 		running = false;
 		scheduledExecutor.shutdown();
+		discordSender.stop();
+		playerDataProcessor.stop();
 	}
 
 	public long getLastGameStateDuration() {
