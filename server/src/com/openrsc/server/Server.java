@@ -387,7 +387,7 @@ public final class Server implements Runnable {
 		}
 
 		// Sort the Events Hashmap
-		List list = new LinkedList(eventsCount.entrySet());
+		List list = new LinkedList(eventsDuration.entrySet());
 		Collections.sort(list, new Comparator() {
 			public int compare(Object o1, Object o2) {
 				return ((Comparable) ((Map.Entry) (o2)).getValue())
@@ -399,18 +399,18 @@ public final class Server implements Runnable {
 			Map.Entry entry = (Map.Entry) it.next();
 			sortedHashMap.put(entry.getKey(), entry.getValue());
 		}
-		eventsCount	= sortedHashMap;
+		eventsDuration	= sortedHashMap;
 
 		int i = 0;
 		StringBuilder s = new StringBuilder();
-		for (Map.Entry<String, Integer> entry : eventsCount.entrySet()) {
+		for (Map.Entry<String, Long> entry : eventsDuration.entrySet()) {
 			if(forInGame && i >= 17) // Only display first 17 elements of the hashmap
 				break;
 
 			String name		= entry.getKey();
-			Integer time	= entry.getValue();
-			Long duration	= eventsDuration.get(entry.getKey());
-			s.append(name).append(": ").append(time).append(" : ").append(duration).append("ms").append(newLine);
+			Long duration	= entry.getValue();
+			Integer count	= eventsCount.get(entry.getKey());
+			s.append(name).append(" : ").append(duration).append("ms").append(" : ").append(count).append(newLine);
 			++i;
 		}
 
