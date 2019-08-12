@@ -68,9 +68,11 @@ public final class Server implements Runnable {
 	private DelayedEvent updateEvent;
 	private ChannelFuture serverChannel;
 
-	private long lastGameStateDuration	= 0;
-	private long lastEventsDuration		= 0;
-	private long lastTickDuration		= 0;
+	private long lastIncomingPacketsDuration	= 0;
+	private long lastGameStateDuration			= 0;
+	private long lastEventsDuration				= 0;
+	private long lastOutgoingPacketsDuration	= 0;
+	private long lastTickDuration				= 0;
 
 	public Server() {
 		running = true;
@@ -238,22 +240,21 @@ public final class Server implements Runnable {
 	    try {
 			long timeLate = System.currentTimeMillis() - lastClientUpdate - Constants.GameServer.GAME_TICK;
 			if (timeLate >= 0) {
-				for (Player p : World.getWorld().getPlayers()) {
-					p.processIncomingPackets();
-				}
+				lastClientUpdate 			+= Constants.GameServer.GAME_TICK;
 
-				lastClientUpdate 		+= Constants.GameServer.GAME_TICK;
+				lastIncomingPacketsDuration	= processIncomingPackets();
+				lastEventsDuration			= getGameEventHandler().doGameEvents();
+				lastGameStateDuration		= getGameUpdater().doUpdates();
+				lastOutgoingPacketsDuration	= processOutgoingPackets();
 
-				lastEventsDuration		= getGameEventHandler().doGameEvents();
-				lastGameStateDuration	= getGameUpdater().doUpdates();
+				lastTickDuration			= lastEventsDuration + lastGameStateDuration;
 
-				lastTickDuration		= lastEventsDuration + lastGameStateDuration;
-				final long ticksLate	= timeLate / Constants.GameServer.GAME_TICK;
+				final long ticksLate		= timeLate / Constants.GameServer.GAME_TICK;
 				final boolean isServerLate	= ticksLate >= 1;
 
 				// Processing game events and state took longer than the tick
 				if(lastTickDuration >= Constants.GameServer.GAME_TICK) {
-					final String message = "Can't keep up: " + lastTickDuration + "ms " + lastEventsDuration + "ms " + lastGameStateDuration + "ms";
+					final String message = "Can't keep up: " + getLastTickDuration() + "ms " + getLastEventsDuration() + "ms " + getLastGameStateDuration() + "ms";
 
 					// Warn logged in developers
 					for (Player p : World.getWorld().getPlayers()) {
@@ -285,10 +286,6 @@ public final class Server implements Runnable {
 						LOGGER.warn(message);
 					}
 				}
-
-				for (Player p : World.getWorld().getPlayers()) {
-					p.sendOutgoingPackets();
-				}
 			}
 			else {
 				if(Constants.GameServer.WANT_CUSTOM_WALK_SPEED) {
@@ -300,15 +297,32 @@ public final class Server implements Runnable {
 						n.updatePosition();
 					}
 
-					for (Player p : World.getWorld().getPlayers()) {
-						p.sendOutgoingPackets();
-					}
+					processOutgoingPackets();
 				}
 			}
-
 		} catch (Throwable t) {
 			LOGGER.catching(t);
 		}
+	}
+
+	protected final long processIncomingPackets() {
+		final long processPacketsStart	= System.currentTimeMillis();
+		for (Player p : World.getWorld().getPlayers()) {
+			p.processIncomingPackets();
+		}
+		final long processPacketsEnd	= System.currentTimeMillis();
+
+		return processPacketsEnd - processPacketsStart;
+	}
+
+	protected long processOutgoingPackets() {
+		final long processPacketsStart	= System.currentTimeMillis();
+		for (Player p : World.getWorld().getPlayers()) {
+			p.sendOutgoingPackets();
+		}
+		final long processPacketsEnd	= System.currentTimeMillis();
+
+		return processPacketsEnd - processPacketsStart;
 	}
 
 	public GameTickEventHandler getGameEventHandler() {
@@ -417,7 +431,7 @@ public final class Server implements Runnable {
 		}
 
 		return
-			"Tick: " + Constants.GameServer.GAME_TICK + "ms, Server: " + getLastTickDuration() + "ms " + getLastEventsDuration() + "ms " + getLastGameStateDuration() + "ms" + newLine +
+			"Tick: " + Constants.GameServer.GAME_TICK + "ms, Server: " + getLastTickDuration() + "ms " + getLastIncomingPacketsDuration() + "ms " + getLastEventsDuration() + "ms " + getLastGameStateDuration() + "ms " + getLastOutgoingPacketsDuration() + "ms" + newLine +
 			"Game Updater: " + getGameUpdater().getLastProcessPlayersDuration() + "ms " + getGameUpdater().getLastProcessNpcsDuration() + "ms " + getGameUpdater().getLastProcessMessageQueuesDuration() + "ms " + getGameUpdater().getLastUpdateClientsDuration() + "ms " + getGameUpdater().getLastDoCleanupDuration() + "ms " + getGameUpdater().getLastExecuteWalkToActionsDuration() + "ms " + newLine +
 			"Events: " + countEvents + ", NPCs: " + World.getWorld().getNpcs().size() + ", Players: " + World.getWorld().getPlayers().size() + ", Shops: " + World.getWorld().getShops().size() + newLine +
 			/*"Player Atk Map: " + World.getWorld().getPlayersUnderAttack().size() + ", NPC Atk Map: " + World.getWorld().getNpcsUnderAttack().size() + ", Quests: " + World.getWorld().getQuests().size() + ", Mini Games: " + World.getWorld().getMiniGames().size() + newLine +*/
@@ -446,5 +460,13 @@ public final class Server implements Runnable {
 
 	public DiscordSender getDiscordSender() {
 		return discordSender;
+	}
+
+	public long getLastIncomingPacketsDuration() {
+		return lastIncomingPacketsDuration;
+	}
+
+	public long getLastOutgoingPacketsDuration() {
+		return lastOutgoingPacketsDuration;
 	}
 }
