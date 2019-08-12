@@ -55,7 +55,7 @@ public final class Server implements Runnable {
 	private DelayedEvent updateEvent;
 	private ChannelFuture serverChannel;
 
-	private boolean running = true;
+	private boolean running = false;
 	private long lastIncomingPacketsDuration = 0;
 	private long lastGameStateDuration = 0;
 	private long lastEventsDuration = 0;
@@ -421,7 +421,13 @@ public final class Server implements Runnable {
 	}
 
 	public void start() {
+		running = true;
 		scheduledExecutor.scheduleAtFixedRate(this, 0, 1, TimeUnit.MILLISECONDS);
+	}
+
+	public void stop() {
+		running = false;
+		scheduledExecutor.shutdown();
 	}
 
 	public long getLastGameStateDuration() {
