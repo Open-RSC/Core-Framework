@@ -1,5 +1,6 @@
 package com.openrsc.server.net;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.content.market.MarketItem;
@@ -12,11 +13,23 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
-public class DiscordSender {
+public class DiscordSender implements Runnable{
+
+	private final ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat("PlayerDataProcessorThread").build());
+
+	private Queue<String> auctionRequests = new ConcurrentLinkedQueue<String>();
+	private Queue<String> monitoringRequests = new ConcurrentLinkedQueue<String>();
+
 
 	private static final Logger LOGGER	= LogManager.getLogger();
 	private long monitoringLastUpdate	= 0;
+	private boolean running				= false;
 
 	public void auctionAdd(MarketItem addItem) {
 		String pluralHandlerMessage = addItem.getAmount() > 1
@@ -30,11 +43,8 @@ public class DiscordSender {
 				addItem.getSellerName(),
 				addItem.getHoursLeft()
 		);
-		try {
-			auctionSendToDiscord(addMessage);
-		} catch(Exception e) {
-			LOGGER.catching(e);
-		}
+
+		auctionSendToDiscord(addMessage);
 	}
 
 	public void auctionBuy(MarketItem buyItem) {
@@ -43,11 +53,8 @@ public class DiscordSender {
 				buyItem.getSellerName(),
 				buyItem.getAmountLeft()
 		);
-		try {
-			auctionSendToDiscord(buyMessage);
-		} catch(Exception e) {
-			LOGGER.catching(e);
-		}
+
+		auctionSendToDiscord(buyMessage);
 	}
 
 	public void auctionCancel(MarketItem cancelItem) {
@@ -56,11 +63,8 @@ public class DiscordSender {
 				EntityHandler.getItemDef(cancelItem.getItemID()).getName(),
 				cancelItem.getSellerName()
 		);
-		try {
-			auctionSendToDiscord(cancelMessage);
-		} catch(Exception e) {
-			LOGGER.catching(e);
-		}
+
+		auctionSendToDiscord(cancelMessage);
 	}
 
 	public void auctionModDelete(MarketItem deleteItem) {
@@ -69,11 +73,8 @@ public class DiscordSender {
 				EntityHandler.getItemDef(deleteItem.getItemID()).getName(),
 				deleteItem.getSellerName()
 		);
-		try {
-			auctionSendToDiscord(cancelMessage);
-		} catch(Exception e) {
-			LOGGER.catching(e);
-		}
+
+		auctionSendToDiscord(cancelMessage);
 	}
 
 	public void monitoringSendServerBehind(String message) {
@@ -84,18 +85,18 @@ public class DiscordSender {
 		}
 	}
 
-	private void auctionSendToDiscord(String message) throws Exception {
+	private void auctionSendToDiscord(String message) {
 		if(Constants.GameServer.WANT_DISCORD_AUCTION_UPDATES) {
-			sendToDiscord(Constants.GameServer.DISCORD_MONITORING_WEBHOOK_URL, message);
+			auctionRequests.add(message);
 		}
 	}
 
-	private void monitoringSendToDiscord(String message) throws Exception {
-		final long now 				= System.currentTimeMillis();
+	private void monitoringSendToDiscord(String message) {
+		final long now = System.currentTimeMillis();
 
-		if(now >= (monitoringLastUpdate + 3600) && Constants.GameServer.WANT_DISCORD_MONITORING_UPDATES) {
-			sendToDiscord(Constants.GameServer.DISCORD_MONITORING_WEBHOOK_URL, message);
-			monitoringLastUpdate	= now;
+		if(Constants.GameServer.WANT_DISCORD_MONITORING_UPDATES && now >= (monitoringLastUpdate + 3600)) {
+			monitoringRequests.add(message);
+			monitoringLastUpdate = now;
 		}
 	}
 
@@ -121,5 +122,36 @@ public class DiscordSender {
 		try (OutputStream os = http.getOutputStream()) {
 			os.write(out);
 		}
+	}
+
+	@Override
+	public void run()  {
+		String message = null;
+
+		try {
+			while ((message = auctionRequests.poll()) != null) {
+				sendToDiscord(Constants.GameServer.DISCORD_AUCTION_WEBHOOK_URL, message);
+			}
+
+			while ((message = monitoringRequests.poll()) != null) {
+				sendToDiscord(Constants.GameServer.DISCORD_MONITORING_WEBHOOK_URL, message);
+			}
+		} catch(Exception e) {
+			LOGGER.catching(e);
+		}
+	}
+
+	public void start() {
+		running = true;
+		scheduledExecutor.scheduleAtFixedRate(this, 0, 50, TimeUnit.MILLISECONDS);
+	}
+
+	public void stop() {
+		running = false;
+		scheduledExecutor.shutdown();
+	}
+
+	public boolean isRunning() {
+		return running;
 	}
 }

@@ -463,7 +463,7 @@ public final class SuperModerator implements CommandListener {
 				GameLogging.addQuery(new StaffLog(player, 11, p, player.getUsername() + " was banned by " + player.getUsername() + " " + (time == -1 ? "permanently" : " for " + time + " minutes")));
 			}
 
-			player.message(messagePrefix + Server.getPlayerDataProcessor().getDatabase().banPlayer(usernameToBan, time)); // Disabled as it doesn't compile with PlayerDatabaseExecutor extending ThrottleFilter
+			player.message(messagePrefix + Server.getServer().getPlayerDataProcessor().getDatabase().banPlayer(usernameToBan, time)); // Disabled as it doesn't compile with PlayerDatabaseExecutor extending ThrottleFilter
 		} else if (cmd.equalsIgnoreCase("ipcount")) {
 			Player p = args.length > 0 ?
 				world.getPlayer(DataConversions.usernameToHash(args[0])) :

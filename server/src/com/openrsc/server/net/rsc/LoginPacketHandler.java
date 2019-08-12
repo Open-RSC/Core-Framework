@@ -111,7 +111,7 @@ public class LoginPacketHandler {
 						ActionSender.sendLogin(loadedPlayer);
 					}
 				};
-				Server.getPlayerDataProcessor().addLoginRequest(request);
+				Server.getServer().getPlayerDataProcessor().addLoginRequest(request);
 				break;
 
 			/* Registering */

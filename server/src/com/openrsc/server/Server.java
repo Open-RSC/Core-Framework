@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.SingleEvent;
+import com.openrsc.server.event.custom.MonitoringEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScriptLoader;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -17,7 +18,6 @@ import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.util.NamedThreadFactory;
-import com.openrsc.server.util.rsc.MessageType;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -37,12 +37,32 @@ import static org.apache.logging.log4j.util.Unbox.box;
 
 public final class Server implements Runnable {
 
+	private final ScheduledExecutorService scheduledExecutor = Executors
+		.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat("GameThread").build());
+
 	/**
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER;
-	private static PlayerDatabaseExecutor playerDataProcessor;
 	private static Server server = null;
+
+	private final GameStateUpdater gameUpdater = new GameStateUpdater();
+	private final GameTickEventHandler tickEventHandler = new GameTickEventHandler();
+	private final DiscordSender discordSender = new DiscordSender();
+	private final GameTickEvent monitoring = new MonitoringEvent();
+	private final PlayerDatabaseExecutor playerDataProcessor = new PlayerDatabaseExecutor();
+
+	private DelayedEvent updateEvent;
+	private ChannelFuture serverChannel;
+
+	private boolean running = false;
+	private long lastIncomingPacketsDuration = 0;
+	private long lastGameStateDuration = 0;
+	private long lastEventsDuration = 0;
+	private long lastOutgoingPacketsDuration = 0;
+	private long lastTickDuration = 0;
+	private long timeLate = 0;
+	private long lastClientUpdate = 0;
 
 	static {
 		try {
@@ -50,31 +70,12 @@ public final class Server implements Runnable {
 			System.setProperty("log4j.configurationFile", "conf/server/log4j2.xml");
 			/* Enables asynchronous, garbage-free logging. */
 			System.setProperty("Log4jContextSelector",
-					"org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
+				"org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
 
 			LOGGER = LogManager.getLogger();
 		} catch (Throwable t) {
 			throw new ExceptionInInitializerError(t);
 		}
-	}
-
-	private final ScheduledExecutorService scheduledExecutor = Executors
-		.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat("GameThread").build());
-	private final GameStateUpdater gameUpdater = new GameStateUpdater();
-	private final GameTickEventHandler tickEventHandler = new GameTickEventHandler();
-	private final DiscordSender discordSender = new DiscordSender();
-	private long lastClientUpdate;
-	private boolean running;
-	private DelayedEvent updateEvent;
-	private ChannelFuture serverChannel;
-
-	private long lastGameStateDuration	= 0;
-	private long lastEventsDuration		= 0;
-	private long lastTickDuration		= 0;
-
-	public Server() {
-		running = true;
-		playerDataProcessor = new PlayerDatabaseExecutor();
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -113,7 +114,7 @@ public final class Server implements Runnable {
 		return server;
 	}
 
-	public static PlayerDatabaseExecutor getPlayerDataProcessor() {
+	public PlayerDatabaseExecutor getPlayerDataProcessor() {
 		return playerDataProcessor;
 	}
 
@@ -139,9 +140,11 @@ public final class Server implements Runnable {
 			World.getWorld().load();
 			LOGGER.info("\t World Completed");
 
-			LOGGER.info("Starting database loader...");
-			playerDataProcessor.start();
-			LOGGER.info("\t Database Loader Completed");
+			LOGGER.info("Loading profiling monitoring...");
+			// Send monitoring info as a game event so that it can be profiled.
+			getGameEventHandler().add(monitoring);
+			LOGGER.info("Profiling Completed");
+
 			//Never run ResourceLeakDetector PARANOID in production.
 			//ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.PARANOID);
 			final EventLoopGroup bossGroup = new NioEventLoopGroup(0, new NamedThreadFactory("IOBossThread"));
@@ -185,9 +188,8 @@ public final class Server implements Runnable {
 	}
 
 	public void kill() {
-		scheduledExecutor.shutdown();
+		stop();
 		LOGGER.fatal(Constants.GameServer.SERVER_NAME + " shutting down...");
-		running = false;
 		System.exit(0);
 	}
 
@@ -236,59 +238,24 @@ public final class Server implements Runnable {
 
 	public void run() {
 	    try {
-			long timeLate = System.currentTimeMillis() - lastClientUpdate - Constants.GameServer.GAME_TICK;
-			if (timeLate >= 0) {
-				for (Player p : World.getWorld().getPlayers()) {
-					p.processIncomingPackets();
-				}
+			timeLate = System.currentTimeMillis() - lastClientUpdate - Constants.GameServer.GAME_TICK;
+			if (getTimeLate() >= 0) {
+				lastClientUpdate += Constants.GameServer.GAME_TICK;
 
-				lastClientUpdate 		+= Constants.GameServer.GAME_TICK;
+				// Doing the set in two stages here such that the whole tick has access to the same values for profiling information.
+				final long tickStart = System.currentTimeMillis();
+				final long lastIncomingPacketsDuration = processIncomingPackets();
+				final long lastEventsDuration = runGameEvents();
+				final long lastGameStateDuration = runGameStateUpdate();
+				final long lastOutgoingPacketsDuration = processOutgoingPackets();
+				final long tickEnd = System.currentTimeMillis();
+				final long lastTickDuration = tickEnd - tickStart;
 
-				lastEventsDuration		= getGameEventHandler().doGameEvents();
-				lastGameStateDuration	= getGameUpdater().doUpdates();
-
-				lastTickDuration		= lastEventsDuration + lastGameStateDuration;
-				final long ticksLate	= timeLate / Constants.GameServer.GAME_TICK;
-				final boolean isServerLate	= ticksLate >= 1;
-
-				// Processing game events and state took longer than the tick
-				if(lastTickDuration >= Constants.GameServer.GAME_TICK) {
-					final String message = "Can't keep up: " + lastTickDuration + "ms " + lastEventsDuration + "ms " + lastGameStateDuration + "ms";
-
-					// Warn logged in developers
-					for (Player p : World.getWorld().getPlayers()) {
-						if(!p.isDev()) {
-							continue;
-						}
-
-						p.playerServerMessage(MessageType.QUEST, Constants.GameServer.MESSAGE_PREFIX + message);
-					}
-				}
-
-				// Server fell behind, skip ticks
-				if (isServerLate) {
-					lastClientUpdate 			+= ticksLate * Constants.GameServer.GAME_TICK;
-					final String message		= "Can't keep up, we are " + timeLate + "ms behind; Skipping " + ticksLate + " ticks";
-
-					// Warn logged in developers
-					for (Player p : World.getWorld().getPlayers()) {
-						if(!p.isDev()) {
-							continue;
-						}
-
-						p.playerServerMessage(MessageType.QUEST, Constants.GameServer.MESSAGE_PREFIX + message);
-					}
-
-					getDiscordSender().monitoringSendServerBehind(message);
-
-					if (Constants.GameServer.DEBUG) {
-						LOGGER.warn(message);
-					}
-				}
-
-				for (Player p : World.getWorld().getPlayers()) {
-					p.sendOutgoingPackets();
-				}
+				this.lastIncomingPacketsDuration = lastIncomingPacketsDuration;
+				this.lastEventsDuration = lastEventsDuration;
+				this.lastGameStateDuration = lastGameStateDuration;
+				this.lastOutgoingPacketsDuration = lastOutgoingPacketsDuration;
+				this.lastTickDuration = lastTickDuration;
 			}
 			else {
 				if(Constants.GameServer.WANT_CUSTOM_WALK_SPEED) {
@@ -300,15 +267,40 @@ public final class Server implements Runnable {
 						n.updatePosition();
 					}
 
-					for (Player p : World.getWorld().getPlayers()) {
-						p.sendOutgoingPackets();
-					}
+					processOutgoingPackets();
 				}
 			}
-
 		} catch (Throwable t) {
 			LOGGER.catching(t);
 		}
+	}
+
+	protected final long runGameEvents() {
+		return getGameEventHandler().doGameEvents();
+	}
+
+	protected final long runGameStateUpdate() throws Exception {
+		return getGameUpdater().doUpdates();
+	}
+
+	protected final long processIncomingPackets() {
+		final long processPacketsStart	= System.currentTimeMillis();
+		for (Player p : World.getWorld().getPlayers()) {
+			p.processIncomingPackets();
+		}
+		final long processPacketsEnd	= System.currentTimeMillis();
+
+		return processPacketsEnd - processPacketsStart;
+	}
+
+	protected long processOutgoingPackets() {
+		final long processPacketsStart	= System.currentTimeMillis();
+		for (Player p : World.getWorld().getPlayers()) {
+			p.sendOutgoingPackets();
+		}
+		final long processPacketsEnd	= System.currentTimeMillis();
+
+		return processPacketsEnd - processPacketsStart;
 	}
 
 	public GameTickEventHandler getGameEventHandler() {
@@ -357,11 +349,11 @@ public final class Server implements Runnable {
 	}
 
 	public final String buildProfilingDebugInformation(boolean forInGame) {
-		HashMap<String, Integer> eventsCount 	= new HashMap<String, Integer>();
-		HashMap<String, Long> eventsDuration	= new HashMap<String, Long>();
-		int countEvents							= 0;
-		long durationEvents						= 0;
-		String newLine							= forInGame ? "%" : "\r\n";
+		final HashMap<String, Integer> eventsCount 	= new HashMap<String, Integer>();
+		final HashMap<String, Long> eventsDuration	= new HashMap<String, Long>();
+		int countEvents								= 0;
+		long durationEvents							= 0;
+		String newLine								= forInGame ? "%" : "\r\n";
 
 		// Show info for game tick events
 		for (Map.Entry<String, GameTickEvent> eventEntry : getGameEventHandler().getEvents().entrySet()) {
@@ -387,11 +379,12 @@ public final class Server implements Runnable {
 		}
 
 		// Sort the Events Hashmap
-		List list = new LinkedList(eventsCount.entrySet());
+		List list = new LinkedList(eventsDuration.entrySet());
 		Collections.sort(list, new Comparator() {
 			public int compare(Object o1, Object o2) {
-				return ((Comparable) ((Map.Entry) (o2)).getValue())
-					.compareTo(((Map.Entry) (o1)).getValue());
+				return
+					String.format("%025d%025d", eventsDuration.get(( (Map.Entry) (o2) ).getKey()), eventsCount.get(( (Map.Entry) (o2) ).getKey()))
+					.compareTo(String.format("%025d%025d", eventsDuration.get(( (Map.Entry) (o1) ).getKey()), eventsCount.get(( (Map.Entry) (o1) ).getKey())));
 			}
 		});
 		HashMap sortedHashMap = new LinkedHashMap();
@@ -399,23 +392,24 @@ public final class Server implements Runnable {
 			Map.Entry entry = (Map.Entry) it.next();
 			sortedHashMap.put(entry.getKey(), entry.getValue());
 		}
-		eventsCount	= sortedHashMap;
+		eventsDuration.clear();
+		eventsDuration.putAll(sortedHashMap);
 
 		int i = 0;
 		StringBuilder s = new StringBuilder();
-		for (Map.Entry<String, Integer> entry : eventsCount.entrySet()) {
+		for (Map.Entry<String, Long> entry : eventsDuration.entrySet()) {
 			if(forInGame && i >= 17) // Only display first 17 elements of the hashmap
 				break;
 
 			String name		= entry.getKey();
-			Integer time	= entry.getValue();
-			Long duration	= eventsDuration.get(entry.getKey());
-			s.append(name).append(": ").append(time).append(" : ").append(duration).append("ms").append(newLine);
+			Long duration	= entry.getValue();
+			Integer count	= eventsCount.get(entry.getKey());
+			s.append(name).append(" : ").append(duration).append("ms").append(" : ").append(count).append(newLine);
 			++i;
 		}
 
 		return
-			"Tick: " + Constants.GameServer.GAME_TICK + "ms, Server: " + getLastTickDuration() + "ms " + getLastEventsDuration() + "ms " + getLastGameStateDuration() + "ms" + newLine +
+			"Tick: " + Constants.GameServer.GAME_TICK + "ms, Server: " + getLastTickDuration() + "ms " + getLastIncomingPacketsDuration() + "ms " + getLastEventsDuration() + "ms " + getLastGameStateDuration() + "ms " + getLastOutgoingPacketsDuration() + "ms" + newLine +
 			"Game Updater: " + getGameUpdater().getLastProcessPlayersDuration() + "ms " + getGameUpdater().getLastProcessNpcsDuration() + "ms " + getGameUpdater().getLastProcessMessageQueuesDuration() + "ms " + getGameUpdater().getLastUpdateClientsDuration() + "ms " + getGameUpdater().getLastDoCleanupDuration() + "ms " + getGameUpdater().getLastExecuteWalkToActionsDuration() + "ms " + newLine +
 			"Events: " + countEvents + ", NPCs: " + World.getWorld().getNpcs().size() + ", Players: " + World.getWorld().getPlayers().size() + ", Shops: " + World.getWorld().getShops().size() + newLine +
 			/*"Player Atk Map: " + World.getWorld().getPlayersUnderAttack().size() + ", NPC Atk Map: " + World.getWorld().getNpcsUnderAttack().size() + ", Quests: " + World.getWorld().getQuests().size() + ", Mini Games: " + World.getWorld().getMiniGames().size() + newLine +*/
@@ -423,7 +417,17 @@ public final class Server implements Runnable {
 	}
 
 	public void start() {
+		running = true;
 		scheduledExecutor.scheduleAtFixedRate(this, 0, 1, TimeUnit.MILLISECONDS);
+		playerDataProcessor.start();
+		discordSender.start();
+	}
+
+	public void stop() {
+		running = false;
+		scheduledExecutor.shutdown();
+		discordSender.stop();
+		playerDataProcessor.stop();
 	}
 
 	public long getLastGameStateDuration() {
@@ -444,5 +448,21 @@ public final class Server implements Runnable {
 
 	public DiscordSender getDiscordSender() {
 		return discordSender;
+	}
+
+	public long getLastIncomingPacketsDuration() {
+		return lastIncomingPacketsDuration;
+	}
+
+	public long getLastOutgoingPacketsDuration() {
+		return lastOutgoingPacketsDuration;
+	}
+
+	public long getTimeLate() {
+		return timeLate;
+	}
+
+	public void skipTicks(final long ticks) {
+		lastClientUpdate += ticks * Constants.GameServer.GAME_TICK;
 	}
 }

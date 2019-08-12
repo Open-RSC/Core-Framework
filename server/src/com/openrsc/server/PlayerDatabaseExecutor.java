@@ -35,6 +35,8 @@ public class PlayerDatabaseExecutor extends ThrottleFilter implements Runnable {
 
 	private DatabasePlayerLoader database = new DatabasePlayerLoader();
 
+	private boolean running	= false;
+
 	@Override
 	public void run() {
 		try {
@@ -94,7 +96,16 @@ public class PlayerDatabaseExecutor extends ThrottleFilter implements Runnable {
 	}
 
 	public void start() {
-		scheduledExecutor.scheduleAtFixedRate(this, 50, 50, TimeUnit.MILLISECONDS);
+		running = true;
+		scheduledExecutor.scheduleAtFixedRate(this, 0, 50, TimeUnit.MILLISECONDS);
 	}
 
+	public void stop() {
+		running = false;
+		scheduledExecutor.shutdown();
+	}
+
+	public boolean isRunning() {
+		return running;
+	}
 }
