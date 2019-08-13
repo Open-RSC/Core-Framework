@@ -38112,7 +38112,8 @@ INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALU
 (79, 505, 59, 0, 0, 29320),
 (857, 53, 1205, 0, 0, 29321),
 (855, 52, 1221, 0, 0, 29322),
-(373, 3352, 1236, 2, 0, 29323);
+(373, 3352, 1236, 2, 0, 29323),
+(605, 505, 942, 2, 0, 29324);
 
 DROP TABLE IF EXISTS `openrsc_recovery_questions`;
 CREATE TABLE IF NOT EXISTS `openrsc_recovery_questions` (
