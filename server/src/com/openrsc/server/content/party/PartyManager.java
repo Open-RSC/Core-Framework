@@ -1,15 +1,13 @@
 package com.openrsc.server.content.party;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.sql.DatabaseConnection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -63,7 +61,7 @@ public class PartyManager {
 	}
 
 	/*private static void loadParties() throws SQLException {
-		PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT `id`, `name`, `tag`, `kick_setting`, `invite_setting`, `allow_search_join`, `party_points` FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "party`");
+		PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT `id`, `name`, `tag`, `kick_setting`, `invite_setting`, `allow_search_join`, `party_points` FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "party`");
 		ResultSet result = statement.executeQuery();
 		while (result.next()) {
 			Party party = new Party();
@@ -76,7 +74,7 @@ public class PartyManager {
 			party.setPartyPoints(result.getInt("party_points"));
 
 			PreparedStatement fetchPlayers = DatabaseConnection.getDatabase()
-				.prepareStatement("SELECT `username`, `rank`, `kills`, `deaths` FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "party_players` WHERE `party_id`=?");
+				.prepareStatement("SELECT `username`, `rank`, `kills`, `deaths` FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "party_players` WHERE `party_id`=?");
 			fetchPlayers.setInt(1, party.getPartyID());
 			ResultSet playersResult = fetchPlayers.executeQuery();
 
@@ -103,7 +101,7 @@ public class PartyManager {
 
 	/*private static void databaseCreateParty(Party party) throws SQLException {
 		PreparedStatement statement = DatabaseConnection.getDatabase().getConnection().prepareStatement(
-			"INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "party`(`name`, `tag`, `leader`) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
+			"INSERT INTO `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "party`(`name`, `tag`, `leader`) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
 		statement.setString(1, party.getPartyName());
 		statement.setString(2, party.getPartyTag());
 		statement.setString(3, party.getLeader().getUsername());
@@ -117,7 +115,7 @@ public class PartyManager {
 		statement.close();
 
 		statement = DatabaseConnection.getDatabase()
-			.prepareStatement("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "party_players`(`party_id`, `username`, `rank`) VALUES (?,?,?)");
+			.prepareStatement("INSERT INTO `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "party_players`(`party_id`, `username`, `rank`) VALUES (?,?,?)");
 		for (PartyPlayer member : party.getPlayers()) {
 			statement.setInt(1, party.getPartyID());
 			statement.setString(2, member.getUsername());
@@ -128,9 +126,9 @@ public class PartyManager {
 	}*/
 
 	/*private static void databaseDeleteParty(Party party) throws SQLException {
-		PreparedStatement deleteParty = DatabaseConnection.getDatabase().prepareStatement("DELETE FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "party` WHERE `id`=?");
+		PreparedStatement deleteParty = DatabaseConnection.getDatabase().prepareStatement("DELETE FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "party` WHERE `id`=?");
 		PreparedStatement deletePartyPlayers = DatabaseConnection.getDatabase()
-			.prepareStatement("DELETE FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "party_players` WHERE `party_id`=?");
+			.prepareStatement("DELETE FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "party_players` WHERE `party_id`=?");
 
 		deleteParty.setInt(1, party.getPartyID());
 		deleteParty.executeUpdate();
@@ -141,7 +139,7 @@ public class PartyManager {
 	/*private static void savePartyPlayer(Party party) {
 		try {
 			PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement(
-				"INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "party_players`(`party_id`, `username`, `rank`, `kills`, `deaths`) VALUES (?,?,?,?,?)");
+				"INSERT INTO `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "party_players`(`party_id`, `username`, `rank`, `kills`, `deaths`) VALUES (?,?,?,?,?)");
 			for (PartyPlayer member : party.getPlayers()) {
 				statement.setInt(1, party.getPartyID());
 				statement.setString(2, member.getUsername());
@@ -160,7 +158,7 @@ public class PartyManager {
 	/*private static void deletePartyPlayer(Party party) {
 		try {
 			PreparedStatement statement = DatabaseConnection.getDatabase()
-				.prepareStatement("DELETE FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "party_players` WHERE `party_id`=?");
+				.prepareStatement("DELETE FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "party_players` WHERE `party_id`=?");
 			statement.setInt(1, party.getPartyID());
 			statement.executeUpdate();
 		} catch (SQLException e) {
@@ -172,7 +170,7 @@ public class PartyManager {
 	/*private static void updateParty(Party party) {
 		try {
 			PreparedStatement statement = DatabaseConnection.getDatabase()
-				.prepareStatement("UPDATE `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "party` SET `name`=?, `tag`=?, `leader`=?, `kick_setting`=?, `invite_setting`=?, `allow_search_join`=?, `party_points`=? WHERE `id`=?");
+				.prepareStatement("UPDATE `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "party` SET `name`=?, `tag`=?, `leader`=?, `kick_setting`=?, `invite_setting`=?, `allow_search_join`=?, `party_points`=? WHERE `id`=?");
 			statement.setString(1, party.getPartyName());
 			statement.setString(2, party.getPartyTag());
 			statement.setString(3, party.getLeader().getUsername());
@@ -193,7 +191,7 @@ public class PartyManager {
 	static void updatePartyRankPlayer(PartyPlayer cp) {
 		try {
 			PreparedStatement statement = DatabaseConnection.getDatabase()
-				.prepareStatement("UPDATE `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "party_players` SET `rank`=? WHERE `username`=?");
+				.prepareStatement("UPDATE `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "party_players` SET `rank`=? WHERE `username`=?");
 			statement.setInt(1, cp.getRank().getRankIndex());
 			statement.setString(2, cp.getUsername());
 			statement.executeUpdate();

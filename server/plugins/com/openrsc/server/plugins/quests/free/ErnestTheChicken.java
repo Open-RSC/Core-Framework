@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.quests.free;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.Cache;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -29,7 +28,7 @@ public class ErnestTheChicken implements QuestInterface,
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.ERNEST_THE_CHICKEN;
+		return Quests.ERNEST_THE_CHICKEN;
 	}
 
 	@Override
@@ -46,7 +45,7 @@ public class ErnestTheChicken implements QuestInterface,
 	public void handleReward(Player p) {
 		p.getInventory().add(new Item(ItemId.COINS.id(), 300));
 		p.message("Well done. You have completed the Ernest the chicken quest");
-		incQuestReward(p, Quests.questData.get(Quests.ERNEST_THE_CHICKEN), true);
+		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.ERNEST_THE_CHICKEN), true);
 		p.message("@gre@You haved gained 4 quest points!");
 	}
 

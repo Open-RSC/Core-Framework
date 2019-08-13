@@ -1,10 +1,9 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.content.clan.*;
-import com.openrsc.server.content.party.*;
 import com.openrsc.server.content.market.Market;
+import com.openrsc.server.content.party.*;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
@@ -250,7 +249,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 				}
 				break;
 			case 11: // Clan Actions
-				if (!Constants.GameServer.WANT_CLANS) return;
+				if (!Server.getServer().getConfig().WANT_CLANS) return;
 				int actionType = p.readByte();
 				switch (actionType) {
 					case 0: // CREATE CLAN
@@ -403,7 +402,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 				}
 				break;
 			case 12: // Party
-				if (!Constants.GameServer.WANT_PARTIES) return;
+				if (!Server.getServer().getConfig().WANT_PARTIES) return;
 				int actionType2 = p.readByte();
 				switch (actionType2) {
 					case 0: // CREATE PARTY

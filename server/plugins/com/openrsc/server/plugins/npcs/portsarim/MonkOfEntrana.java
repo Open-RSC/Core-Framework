@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.npcs.portsarim;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
@@ -15,8 +16,6 @@ import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
 import static com.openrsc.server.plugins.Functions.*;
-
-import com.openrsc.server.external.NpcId;
 
 public final class MonkOfEntrana implements ObjectActionExecutiveListener, ObjectActionListener, TalkToNpcExecutiveListener,
 	TalkToNpcListener {
@@ -34,7 +33,7 @@ public final class MonkOfEntrana implements ObjectActionExecutiveListener, Objec
 			}
 		}
 
-		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+		if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			Item item;
 			for (int i = 0; i < Equipment.slots; i++) {
 				item = p.getEquipment().get(i);

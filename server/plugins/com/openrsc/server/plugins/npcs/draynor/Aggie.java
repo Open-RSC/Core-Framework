@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.npcs.draynor;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -34,7 +34,7 @@ public final class Aggie implements TalkToNpcListener,
 	public void aggieDialogue(Player p, Npc n, int cID) {
 		if (cID == -1) {
 			npcTalk(p, n, "What can I help you with?");
-			if (p.getQuestStage(Constants.Quests.PRINCE_ALI_RESCUE) == 2) {
+			if (p.getQuestStage(Quests.PRINCE_ALI_RESCUE) == 2) {
 				int choice = showMenu(p, n,
 					"Could you think of a way to make pink skin paste",
 					"What could you make for me",

@@ -1,9 +1,10 @@
 package com.openrsc.server.plugins.minigames.gnomeball;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Minigames;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.impl.BallProjectileEvent;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -23,17 +24,7 @@ import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
 import com.openrsc.server.plugins.minigames.gnomeball.GnomeField.Zone;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.doGate;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showBubble;
-
-import com.openrsc.server.Constants;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class GnomeBall implements MiniGameInterface, InvUseOnPlayerListener, InvUseOnPlayerExecutiveListener, PickupListener, PickupExecutiveListener,
 InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener {
@@ -42,7 +33,7 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 
 	@Override
 	public int getMiniGameId() {
-		return Constants.Minigames.GNOME_BALL;
+		return Minigames.GNOME_BALL;
 	}
 
 	@Override
@@ -200,8 +191,8 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 	private void handleScore(Player p, int score_zone) {
 		loadIfNotMemory(p, "gnomeball_goals");
 		int prev_goalCount = p.getAttribute("gnomeball_goals", 0);
-		p.incExp(SKILLS.RANGED.id(), SCORES_XP[score_zone][prev_goalCount], true);
-		p.incExp(SKILLS.AGILITY.id(), SCORES_XP[score_zone][prev_goalCount], true);
+		p.incExp(Skills.RANGED, SCORES_XP[score_zone][prev_goalCount], true);
+		p.incExp(Skills.AGILITY, SCORES_XP[score_zone][prev_goalCount], true);
 		showScoreWindow(p, prev_goalCount+1);
 		if (prev_goalCount+1 == 5) {
 			ActionSender.sendTeleBubble(p, p.getX(), p.getY(), true);

@@ -1,6 +1,6 @@
 package com.openrsc.server.sql.web;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.model.PlayerAppearance;
 
 import javax.imageio.ImageIO;
@@ -372,7 +372,7 @@ public final class AvatarGenerator {
 					img.setRGB(i % AVATAR_WIDTH, i / AVATAR_WIDTH, pixels[i] | 0xFF000000);
 				}
 			}
-			ImageIO.write(img, "png", new File(Constants.GameServer.AVATAR_DIR + playerID + ".png"));
+			ImageIO.write(img, "png", new File(Server.getServer().getConfig().AVATAR_DIR + playerID + ".png"));
 		}
 
 		/// A helper function to load a single sprite

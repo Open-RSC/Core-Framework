@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.misc;
 
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -62,7 +62,7 @@ public class Panning implements ObjectActionListener, ObjectActionExecutiveListe
 		showBubble(p, new Item(ItemId.PANNING_TRAY_FULL.id()));
 		p.playerServerMessage(MessageType.QUEST, "You lift the full tray from the water");
 		p.getInventory().replace(ItemId.PANNING_TRAY.id(), ItemId.PANNING_TRAY_FULL.id());
-		p.incExp(SKILLS.MINING.id(), 20, true);
+		p.incExp(Skills.MINING, 20, true);
 		p.setBusy(false);
 		return false;
 	}
@@ -73,7 +73,7 @@ public class Panning implements ObjectActionListener, ObjectActionExecutiveListe
 			if (item.getID() == ItemId.PANNING_TRAY.id()) {
 				Npc guide = getNearestNpc(p, NpcId.DIGSITE_GUIDE.id(), 15);
 				if (guide != null) {
-					// NOT SURE? if(p.getQuestStage(Constants.Quests.DIGSITE) < 2) {
+					// NOT SURE? if(p.getQuestStage(Quests.DIGSITE) < 2) {
 					if (!p.getCache().hasKey("unlocked_panning")) {
 						npcTalk(p, guide, "Hey! you can't pan yet!");
 						playerTalk(p, guide, "Why not ?");

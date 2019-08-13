@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.misc;
 
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
@@ -14,8 +15,6 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
-
-import com.openrsc.server.external.NpcId;
 
 /**
  * @author Fate
@@ -33,7 +32,7 @@ public class Necromancer implements PlayerAttackNpcListener, PlayerAttackNpcExec
 			if (!p.getCache().hasKey("necroSpawn") || (p.getCache().hasKey("necroSpawn") && p.getCache().getInt("necroSpawn") < 7) || (p.getCache().hasKey("killedZomb") && p.getCache().getInt("killedZomb") != 0 && zombie == null)) {
 				npcTalk(p, necromancer, "I summon the undead to smite you down");
 				p.setBusyTimer(3000);
-				zombie = World.getWorld().registerNpc(new Npc(NpcId.ZOMBIE_INVOKED.id(), necromancer.getX(), necromancer.getY()));
+				zombie = World.getWorld().registerNpc(new Npc(necromancer.getWorld(), NpcId.ZOMBIE_INVOKED.id(), necromancer.getX(), necromancer.getY()));
 				zombie.setShouldRespawn(false);
 				sleep(1600);
 				if (!p.inCombat()) {
@@ -65,7 +64,7 @@ public class Necromancer implements PlayerAttackNpcListener, PlayerAttackNpcExec
 			n.killedBy(p);
 			p.getCache().remove("necroSpawn");
 			p.getCache().remove("killedZomb");
-			Npc newZombie = World.getWorld().registerNpc(new Npc(NpcId.ZOMBIE_INVOKED.id(), p.getX(), p.getY()));
+			Npc newZombie = World.getWorld().registerNpc(new Npc(n.getWorld(), NpcId.ZOMBIE_INVOKED.id(), p.getX(), p.getY()));
 			newZombie.setShouldRespawn(false);
 			newZombie.setChasing(p);
 		}

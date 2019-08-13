@@ -1,16 +1,13 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.npcs;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
 import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.inArray;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class UndergroundPassDemons implements PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener {
 
@@ -23,7 +20,7 @@ public class UndergroundPassDemons implements PlayerKilledNpcListener, PlayerKil
 	public void onPlayerKilledNpc(Player p, Npc n) {
 		if (inArray(n.getID(), NpcId.OTHAINIAN.id(), NpcId.DOOMION.id(), NpcId.HOLTHION.id())) {
 			n.killedBy(p);
-			if (!p.getCache().hasKey("doll_of_iban") && p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) != 6) {
+			if (!p.getCache().hasKey("doll_of_iban") && p.getQuestStage(Quests.UNDERGROUND_PASS) != 6) {
 				p.message("the demon slumps to the floor");
 				teleportPlayer(p, n);
 			} else {

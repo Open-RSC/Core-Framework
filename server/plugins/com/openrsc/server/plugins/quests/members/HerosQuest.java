@@ -1,10 +1,6 @@
 package com.openrsc.server.plugins.quests.members;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -59,7 +55,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 	
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.HEROS_QUEST;
+		return Quests.HEROS_QUEST;
 	}
 
 	@Override
@@ -82,11 +78,12 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 		player.getCache().remove("blackarm_mission");
 		player.getCache().remove("garv_door");
 		player.getCache().remove("armband");
-		int[] questData = Quests.questData.get(Quests.HEROS_QUEST);
+		int[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.HEROS_QUEST);
 		//keep order kosher
-		int[] skillIDs = {SKILLS.STRENGTH.id(), SKILLS.DEFENSE.id(), SKILLS.HITS.id(),
-			SKILLS.ATTACK.id(), SKILLS.RANGED.id(), SKILLS.HERBLAW.id(),
-			SKILLS.FISHING.id(), SKILLS.COOKING.id(), SKILLS.FIREMAKING.id(), SKILLS.WOODCUT.id(), SKILLS.MINING.id(), SKILLS.SMITHING.id()};
+		int[] skillIDs = {Skills.STRENGTH, Skills.DEFENSE, Skills.HITS,
+			Skills.ATTACK, Skills.RANGED, Skills.HERBLAW,
+			Skills.FISHING, Skills.COOKING, Skills.FIREMAKING,
+			Skills.WOODCUT, Skills.MINING, Skills.SMITHING};
 		for (int i = 0; i < skillIDs.length; i++) {
 			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
 			incQuestReward(player, questData, i == (skillIDs.length - 1));
@@ -278,11 +275,11 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 						"I'm a hero, may I apply to join?",
 						"Good for the foremost hero's of the land");
 					if (opt == 0) {
-						if ((p.getQuestStage(Constants.Quests.LOST_CITY) == -1 &&
-							(p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == -1 ||
-								p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == -2 ) &&
-							p.getQuestStage(Constants.Quests.MERLINS_CRYSTAL) == -1 &&
-							p.getQuestStage(Constants.Quests.DRAGON_SLAYER) == -1)
+						if ((p.getQuestStage(Quests.LOST_CITY) == -1 &&
+							(p.getQuestStage(Quests.SHIELD_OF_ARRAV) == -1 ||
+								p.getQuestStage(Quests.SHIELD_OF_ARRAV) == -2 ) &&
+							p.getQuestStage(Quests.MERLINS_CRYSTAL) == -1 &&
+							p.getQuestStage(Quests.DRAGON_SLAYER) == -1)
 							&& p.getQuestPoints() >= 55) {
 							npcTalk(p, n, "Ok you may begin the tasks for joining the hero's guild",
 								"You need the feather of an Entrana firebird",
@@ -322,7 +319,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 						removeItem(p, ItemId.MASTER_THIEF_ARMBAND.id(), 1);
 						removeItem(p, ItemId.LAVA_EEL.id(), 1);
 						removeItem(p, ItemId.RED_FIREBIRD_FEATHER.id(), 1);
-						p.sendQuestComplete(Constants.Quests.HEROS_QUEST);
+						p.sendQuestComplete(Quests.HEROS_QUEST);
 					} else {
 						playerTalk(p, n, "It's tough, I've not done it yet");
 						npcTalk(p, n, "Remember you need the feather of an Entrana firebird",
@@ -361,7 +358,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 			} else {
 				p.message("Ouch that is too hot to take");
 				p.message("I need something cold to pick it up with");
-				int damage = (int) Math.round((p.getSkills().getLevel(SKILLS.HITS.id())) * 0.15D);
+				int damage = (int) Math.round((p.getSkills().getLevel(Skills.HITS)) * 0.15D);
 				p.damage(damage);
 				return true;
 			}
@@ -596,7 +593,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 	public void onPlayerKilledNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.GRIP.id()) {
 			World.getWorld().registerItem(
-					new GroundItem(ItemId.BUNCH_OF_KEYS.id(), n.getX(), n.getY(), 1, (Player) null));
+					new GroundItem(p.getWorld(), ItemId.BUNCH_OF_KEYS.id(), n.getX(), n.getY(), 1, (Player) null));
 		}
 		n.killedBy(p);
 	}

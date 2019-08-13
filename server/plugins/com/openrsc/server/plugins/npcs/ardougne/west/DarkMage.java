@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.npcs.ardougne.west;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -20,7 +20,7 @@ public class DarkMage implements TalkToNpcExecutiveListener, TalkToNpcListener {
 			playerTalk(p, n, "i just wondered what you're doing?");
 			npcTalk(p, n, "i experiment with dark magic",
 				"it's a dangerous craft");
-			if (hasItem(p, ItemId.STAFF_OF_IBAN_BROKEN.id()) && p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == -1) {
+			if (hasItem(p, ItemId.STAFF_OF_IBAN_BROKEN.id()) && p.getQuestStage(Quests.UNDERGROUND_PASS) == -1) {
 				playerTalk(p, n, "could you fix this staff?");
 				p.message("you show the mage your staff of iban");
 				npcTalk(p, n, "almighty zamorak! the staff of iban!");

@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.quests.free;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
@@ -21,7 +20,7 @@ public class CooksAssistant implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.COOKS_ASSISTANT;
+		return Quests.COOKS_ASSISTANT;
 	}
 
 	@Override
@@ -37,7 +36,7 @@ public class CooksAssistant implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done. You have completed the cook's assistant quest");
-		incQuestReward(player, Quests.questData.get(Quests.COOKS_ASSISTANT), true);
+		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.COOKS_ASSISTANT), true);
 		player.message("@gre@You haved gained 1 quest point!");
 	}
 
@@ -82,7 +81,7 @@ public class CooksAssistant implements QuestInterface, TalkToNpcListener,
 						p.getInventory().remove(ItemId.EGG.id(), 1);
 						p.getInventory().remove(ItemId.POT_OF_FLOUR.id(), 1);
 						p.getInventory().remove(ItemId.MILK.id(), 1);
-						p.sendQuestComplete(Constants.Quests.COOKS_ASSISTANT);
+						p.sendQuestComplete(Quests.COOKS_ASSISTANT);
 						p.updateQuestStage(getQuestId(), -1);
 
 					} else if (p.getInventory().hasItemId(ItemId.EGG.id())

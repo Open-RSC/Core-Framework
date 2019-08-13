@@ -1,6 +1,6 @@
 package com.openrsc.server.plugins.npcs.ardougne.west;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -22,7 +22,7 @@ public class Mourner implements TalkToNpcExecutiveListener, TalkToNpcListener {
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		if (n.getID() == MOURNER_444) {
-			if (p.getQuestStage(Constants.Quests.PLAGUE_CITY) != -1) {
+			if (p.getQuestStage(Quests.PLAGUE_CITY) != -1) {
 				playerTalk(p, n, "hello there");
 				npcTalk(p, n, "Do you a have problem traveller?");
 				playerTalk(p, n, "no i just wondered why your wearing that outfit",
@@ -30,8 +30,8 @@ public class Mourner implements TalkToNpcExecutiveListener, TalkToNpcListener {
 				npcTalk(p, n, "no it's for protection");
 				playerTalk(p, n, "protection from what");
 				npcTalk(p, n, "the plague of course");
-			} else if (p.getQuestStage(Constants.Quests.PLAGUE_CITY) == -1
-				&& p.getQuestStage(Constants.Quests.BIOHAZARD) == -1) {
+			} else if (p.getQuestStage(Quests.PLAGUE_CITY) == -1
+				&& p.getQuestStage(Quests.BIOHAZARD) == -1) {
 				playerTalk(p, n, "hello");
 				npcTalk(p, n, "what are you up to?");
 				playerTalk(p, n, "nothing");
@@ -42,7 +42,7 @@ public class Mourner implements TalkToNpcExecutiveListener, TalkToNpcListener {
 			}
 		}
 		if (n.getID() == 451) {
-			if (p.getQuestStage(Constants.Quests.PLAGUE_CITY) != -1) {
+			if (p.getQuestStage(Quests.PLAGUE_CITY) != -1) {
 				playerTalk(p, n, "hello there");
 				npcTalk(p, n, "can I help you?");
 				playerTalk(p, n, "what are you doing?");
@@ -84,8 +84,8 @@ public class Mourner implements TalkToNpcExecutiveListener, TalkToNpcListener {
 				} else if (menu == 2) {
 					npcTalk(p, n, "maybe");
 				}
-			} else if (p.getQuestStage(Constants.Quests.PLAGUE_CITY) == -1
-				&& p.getQuestStage(Constants.Quests.BIOHAZARD) == -1) {
+			} else if (p.getQuestStage(Quests.PLAGUE_CITY) == -1
+				&& p.getQuestStage(Quests.BIOHAZARD) == -1) {
 				playerTalk(p, n, "hi");
 				npcTalk(p, n, "what are you up to?");
 				playerTalk(p, n, "just sight seeing");
@@ -190,7 +190,7 @@ public class Mourner implements TalkToNpcExecutiveListener, TalkToNpcListener {
 			}
 		}
 		if (n.getID() == ILL_MOURNER) {
-			if (p.getQuestStage(Constants.Quests.BIOHAZARD) > 4) {
+			if (p.getQuestStage(Quests.BIOHAZARD) > 4) {
 				message(p, "the mourner is sick",
 					"he doesn't feel like talking");
 				return;

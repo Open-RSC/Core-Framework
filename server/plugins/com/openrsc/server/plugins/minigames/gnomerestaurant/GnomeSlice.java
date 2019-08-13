@@ -9,7 +9,7 @@ import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.compareItemsIds;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.constants.ItemId;
 
 public class GnomeSlice implements InvUseOnItemListener, InvUseOnItemExecutiveListener {
 

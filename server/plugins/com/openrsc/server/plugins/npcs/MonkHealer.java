@@ -1,6 +1,6 @@
 package com.openrsc.server.plugins.npcs;
 
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -8,7 +8,7 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.*;
 
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.NpcId;
 
 public class MonkHealer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 	@Override
@@ -20,11 +20,11 @@ public class MonkHealer implements TalkToNpcListener, TalkToNpcExecutiveListener
 			playerTalk(p, n, "Can you heal me?", "I'm injured");
 			npcTalk(p, n, "Ok");
 			message(p, "The monk places his hands on your head", "You feel a little better");
-			int newHp = getCurrentLevel(p, SKILLS.HITS.id()) + 5;
-			if (newHp > getMaxLevel(p, SKILLS.HITS.id())) {
-				newHp = getMaxLevel(p, SKILLS.HITS.id());
+			int newHp = getCurrentLevel(p, Skills.HITS) + 5;
+			if (newHp > getMaxLevel(p, Skills.HITS)) {
+				newHp = getMaxLevel(p, Skills.HITS);
 			}
-			p.getSkills().setLevel(SKILLS.HITS.id(), newHp);
+			p.getSkills().setLevel(Skills.HITS, newHp);
 		} else if (option == 1) {
 			playerTalk(p, n, "Isn't this place built a bit out the way?");
 			npcTalk(p, n, "We like it that way",

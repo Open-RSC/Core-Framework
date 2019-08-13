@@ -1,48 +1,22 @@
 package com.openrsc.server.plugins.quests.members.grandtree;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.action.PlayerAttackNpcListener;
-import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.closeCupboard;
-import static com.openrsc.server.plugins.Functions.doGate;
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.incQuestReward;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.movePlayer;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.npcYell;
-import static com.openrsc.server.plugins.Functions.openCupboard;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.replaceObjectDelayed;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
-import static com.openrsc.server.plugins.Functions.spawnNpc;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
@@ -74,7 +48,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.GRAND_TREE;
+		return Quests.GRAND_TREE;
 	}
 
 	@Override
@@ -90,9 +64,9 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 	@Override
 	public void handleReward(Player p) {
 		p.message("well done you have completed the grand tree quest");
-		int[] questData = Quests.questData.get(Quests.GRAND_TREE);
+		int[] questData = p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.GRAND_TREE);
 		//keep order kosher
-		int[] skillIDs = {SKILLS.AGILITY.id(), SKILLS.ATTACK.id(), SKILLS.MAGIC.id()};
+		int[] skillIDs = {Skills.AGILITY, Skills.ATTACK, Skills.MAGIC};
 		//1600 for agility, 1600 for attack, 600 for magic
 		int[] baseAmounts = {1600, 1600, 600};
 		//1200 for agility, 1200 for attack, 200 for magic
@@ -942,7 +916,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 						playerTalk(p, n, "all that matters now is that man...",
 							"...and gnome can live together in peace");
 						npcTalk(p, n, "i'll drink to that");
-						p.sendQuestComplete(Constants.Quests.GRAND_TREE);
+						p.sendQuestComplete(Quests.GRAND_TREE);
 						npcTalk(p, n, "from now on i vow to make this stronghold",
 							"a welcome place for all no matter what their creed",
 							"i'll grant you access to all our facilities");
@@ -1321,10 +1295,10 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 				"...you need a key");
 		}
 		else if (obj.getID() == WATCH_TOWER_UP) {
-			if (getCurrentLevel(p, SKILLS.AGILITY.id()) >= 25) {
+			if (getCurrentLevel(p, Skills.AGILITY) >= 25) {
 				p.message("you jump up and grab hold of the platform");
 				p.teleport(710, 2364);
-				p.incExp(SKILLS.AGILITY.id(), 30, true);
+				p.incExp(Skills.AGILITY, 30, true);
 				sleep(3000);
 				p.message("and pull yourself up");
 			} else {

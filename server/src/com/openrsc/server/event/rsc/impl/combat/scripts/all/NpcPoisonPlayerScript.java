@@ -1,8 +1,7 @@
 package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScript;
-import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -15,7 +14,7 @@ public class NpcPoisonPlayerScript implements CombatScript {
 	@Override
 	public void executeScript(Mob attacker, Mob victim) {
 
-		victim.poisonDamage = Constants.Poison.npcData.getOrDefault(attacker.getID(), 38);
+		victim.poisonDamage = attacker.getWorld().getServer().getConstants().getPoison().npcData.getOrDefault(attacker.getID(), 38);
 		victim.startPoisonEvent();
 	}
 

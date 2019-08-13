@@ -1,10 +1,9 @@
 package com.openrsc.server.plugins.quests.members;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -21,19 +20,7 @@ import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveLi
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.closeCupboard;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.incQuestReward;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.openCupboard;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
-import static com.openrsc.server.plugins.Functions.spawnNpc;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class FightArena implements QuestInterface, TalkToNpcListener,
 	TalkToNpcExecutiveListener, ObjectActionListener,
@@ -46,7 +33,7 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 	
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.FIGHT_ARENA;
+		return Quests.FIGHT_ARENA;
 	}
 
 	@Override
@@ -66,9 +53,9 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 			"you gain two quest points");
 		addItem(p, 10, 1000);
 		p.message("@gre@You haved gained 2 quest points!");
-		int[] questData = Quests.questData.get(Quests.FIGHT_ARENA);
+		int[] questData = p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.FIGHT_ARENA);
 		//keep order kosher
-		int[] skillIDs = {SKILLS.ATTACK.id(), SKILLS.THIEVING.id()};
+		int[] skillIDs = {Skills.ATTACK, Skills.THIEVING};
 		for (int i = 0; i < skillIDs.length; i++) {
 			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
 			incQuestReward(p, questData, i == (skillIDs.length - 1));
@@ -395,7 +382,7 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 						"I am truly grateful for your service",
 						"all i can offer in return is material wealth",
 						"please take these coins and enjoy");
-					p.sendQuestComplete(Constants.Quests.FIGHT_ARENA);
+					p.sendQuestComplete(Quests.FIGHT_ARENA);
 					break;
 				case -1:
 					playerTalk(p, n, "Hello lady Servil");
@@ -471,7 +458,7 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 						"The gate swings open");
 					p.playSound("opendoor");
 					World.getWorld().replaceGameObject(obj,
-						new GameObject(obj.getLocation(), 181, obj
+						new GameObject(obj.getWorld(), obj.getLocation(), 181, obj
 							.getDirection(), obj.getType()));
 					World.getWorld().delayedSpawnObject(obj.getLoc(), 3000);
 					servil.teleport(605, 718);

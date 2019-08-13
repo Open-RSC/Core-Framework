@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.npcs.alkharid;
 
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;

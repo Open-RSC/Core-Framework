@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.commands;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.GameStateUpdater;
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.HolidayDropEvent;
 import com.openrsc.server.event.custom.HourlyNpcLootEvent;
@@ -13,7 +13,6 @@ import com.openrsc.server.event.rsc.impl.ProjectileEvent;
 import com.openrsc.server.event.rsc.impl.RangeEventNpc;
 import com.openrsc.server.external.*;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.Entity;
@@ -263,10 +262,10 @@ public final class Admins implements CommandListener {
 				boolean rdtHit = false;
 				Item rare = null;
 
-				if (world.standardTable.rollAccess(npcID, Functions.isWielding(player, ItemId.RING_OF_WEALTH.id()))) {
+				if (world.standardTable.rollAccess(npcID, Functions.isWielding(player, com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
 					rdtHit = true;
-					rare = world.standardTable.rollItem(Functions.isWielding(player, ItemId.RING_OF_WEALTH.id()), player);
-				} else if (world.gemTable.rollAccess(npcID, Functions.isWielding(player, ItemId.RING_OF_WEALTH.id()))) {
+					rare = world.standardTable.rollItem(Functions.isWielding(player, com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), player);
+				} else if (world.gemTable.rollAccess(npcID, Functions.isWielding(player, com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
 					rdtHit = true;
 					rare = world.gemTable.rollItem(Functions.isWielding(player, ItemId.RING_OF_WEALTH.id()), player);
 				}
@@ -464,11 +463,11 @@ public final class Admins implements CommandListener {
 
 			ItemLoc item = new ItemLoc(id, x, y, amount, respawnTime);
 			DatabaseConnection.getDatabase()
-				.executeUpdate("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX
+				.executeUpdate("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "grounditems`(`id`, `x`, `y`, `amount`, `respawn`) VALUES ('"
 					+ item.getId() + "','" + item.getX() + "','" + item.getY() + "','" + item.getAmount()
 					+ "','" + item.getRespawnTime() + "')");
-			World.getWorld().registerItem(new GroundItem(item));
+			World.getWorld().registerItem(new GroundItem(player.getWorld(), item));
 			player.message(messagePrefix + "Added ground item to database: " + EntityHandler.getItemDef(item.getId()).getName() + " with item ID " + item.getId() + " at " + itemLocation);
 		} else if (cmd.equalsIgnoreCase("rgi") || cmd.equalsIgnoreCase("rgitem") || cmd.equalsIgnoreCase("rgrounditem") || cmd.equalsIgnoreCase("removegi") || cmd.equalsIgnoreCase("removegitem") || cmd.equalsIgnoreCase("removegrounditem")) {
 			if (args.length == 1) {
@@ -515,7 +514,7 @@ public final class Admins implements CommandListener {
 
 			player.message(messagePrefix + "Removed ground item from database: " + itemr.getDef().getName() + " with item ID " + itemr.getID());
 			DatabaseConnection.getDatabase()
-				.executeUpdate("DELETE FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX
+				.executeUpdate("DELETE FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "grounditems` WHERE `x` = '" + itemr.getX() + "' AND `y` =  '" + itemr.getY()
 					+ "' AND `id` = '" + itemr.getID() + "'");
 			World.getWorld().unregisterItem(itemr);
@@ -688,8 +687,8 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(SKILLS.HITS.id()) - p.getSkills().getMaxStat(SKILLS.HITS.id())));
-			p.getSkills().normalize(SKILLS.HITS.id());
+			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(Skills.HITS) - p.getSkills().getMaxStat(Skills.HITS)));
+			p.getSkills().normalize(Skills.HITS);
 			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "You have been healed by an admin");
 			}
@@ -704,7 +703,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			p.getSkills().normalize(SKILLS.PRAYER.id());
+			p.getSkills().normalize(Skills.PRAYER);
 			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "Your prayer has been recharged by an admin");
 			}
@@ -737,14 +736,14 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			if (newHits > p.getSkills().getMaxStat(SKILLS.HITS.id()))
-				newHits = p.getSkills().getMaxStat(SKILLS.HITS.id());
+			if (newHits > p.getSkills().getMaxStat(Skills.HITS))
+				newHits = p.getSkills().getMaxStat(Skills.HITS);
 			if (newHits < 0)
 				newHits = 0;
 
-			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(SKILLS.HITS.id()) - newHits));
-			p.getSkills().setLevel(SKILLS.HITS.id(), newHits);
-			if (p.getSkills().getLevel(SKILLS.HITS.id()) <= 0)
+			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(Skills.HITS) - newHits));
+			p.getSkills().setLevel(Skills.HITS, newHits);
+			if (p.getSkills().getLevel(Skills.HITS) <= 0)
 				p.killedBy(player);
 
 			if (p.getUsernameHash() != player.getUsernameHash()) {
@@ -779,13 +778,13 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			if (newPrayer > p.getSkills().getMaxStat(SKILLS.HITS.id()))
-				newPrayer = p.getSkills().getMaxStat(SKILLS.HITS.id());
+			if (newPrayer > p.getSkills().getMaxStat(Skills.HITS))
+				newPrayer = p.getSkills().getMaxStat(Skills.HITS);
 			if (newPrayer < 0)
 				newPrayer = 0;
 
-			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(SKILLS.HITS.id()) - newPrayer));
-			p.getSkills().setLevel(SKILLS.HITS.id(), newPrayer);
+			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(Skills.HITS) - newPrayer));
+			p.getSkills().setLevel(Skills.HITS, newPrayer);
 
 			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "Your prayer has been set to " + newPrayer + " by an admin");
@@ -809,8 +808,8 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(SKILLS.HITS.id())));
-			p.getSkills().setLevel(SKILLS.HITS.id(), 0);
+			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(Skills.HITS)));
+			p.getSkills().setLevel(Skills.HITS, 0);
 			p.killedBy(player);
 			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "You have been killed by an admin");
@@ -843,8 +842,8 @@ public final class Admins implements CommandListener {
 			}
 
 			p.getUpdateFlags().setDamage(new Damage(player, damage));
-			p.getSkills().subtractLevel(SKILLS.HITS.id(), damage);
-			if (p.getSkills().getLevel(SKILLS.HITS.id()) <= 0)
+			p.getSkills().subtractLevel(Skills.HITS, damage);
+			if (p.getSkills().getLevel(Skills.HITS) <= 0)
 				p.killedBy(player);
 
 			if (p.getUsernameHash() != player.getUsernameHash()) {
@@ -869,7 +868,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
 				int wearableId;
 				for (int i = 0; i < Equipment.slots; i++) {
 					if (p.getEquipment().get(i) == null)
@@ -1002,7 +1001,7 @@ public final class Admins implements CommandListener {
 
 						if (world.withinWorld(baseX + x, baseY + y)) {
 							if ((world.getTile(new Point(baseX + x, baseY + y)).traversalMask & 64) == 0) {
-								world.registerItem(new GroundItem(id, baseX + x, baseY + y, amount, (Player) null));
+								world.registerItem(new GroundItem(player.getWorld(), id, baseX + x, baseY + y, amount, (Player) null));
 							}
 						}
 					}
@@ -1097,7 +1096,7 @@ public final class Admins implements CommandListener {
 						}
 						if (world.withinWorld(baseX + x, baseY + y)) {
 							if ((world.getTile(new Point(baseX + x, baseY + y)).traversalMask & 64) == 0) {
-								final Npc n = new Npc(id, baseX + x, baseY + y, baseX + x - 20, baseX + x + 20, baseY + y - 20, baseY + y + 20);
+								final Npc n = new Npc(player.getWorld(), id, baseX + x, baseY + y, baseX + x - 20, baseX + x + 20, baseY + y - 20, baseY + y + 20);
 								n.setShouldRespawn(false);
 								World.getWorld().registerNpc(n);
 								Server.getServer().getGameEventHandler().add(new SingleEvent(null, duration * 60000, "Spawn Multi NPC Command") {
@@ -1134,9 +1133,9 @@ public final class Admins implements CommandListener {
 
 				if (npc != null) {
 					for (Player playerToChat : npc.getViewArea().getPlayersInView()) {
-						GameStateUpdater.updateNpcAppearances(playerToChat); // First call is to flush any NPC chat that is generated by other server processes
+						Server.getServer().getGameUpdater().updateNpcAppearances(playerToChat); // First call is to flush any NPC chat that is generated by other server processes
 						npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, message, playerToChat));
-						GameStateUpdater.updateNpcAppearances(playerToChat);
+						Server.getServer().getGameUpdater().updateNpcAppearances(playerToChat);
 						npc.getUpdateFlags().setChatMessage(null);
 					}
 				} else {
@@ -1172,11 +1171,11 @@ public final class Admins implements CommandListener {
 			ChatMessage chatMessage = new ChatMessage(p, message);
 			// First of second call to updatePlayerAppearance is to send out messages generated by other server processes so they don't get overwritten
 			for (Player playerToChat : p.getViewArea().getPlayersInView()) {
-				GameStateUpdater.updatePlayerAppearances(playerToChat);
+				Server.getServer().getGameUpdater().updatePlayerAppearances(playerToChat);
 			}
 			p.getUpdateFlags().setChatMessage(chatMessage);
 			for (Player playerToChat : p.getViewArea().getPlayersInView()) {
-				GameStateUpdater.updatePlayerAppearances(playerToChat);
+				Server.getServer().getGameUpdater().updatePlayerAppearances(playerToChat);
 			}
 			p.getUpdateFlags().setChatMessage(null);
 			GameLogging.addQuery(new ChatLog(p.getUsername(), chatMessage.getMessageString()));
@@ -1214,12 +1213,12 @@ public final class Admins implements CommandListener {
 				damage = 9999;
 			}
 
-			GameObject sara = new GameObject(n.getLocation(), 1031, 0, 0);
+			GameObject sara = new GameObject(player.getWorld(), n.getLocation(), 1031, 0, 0);
 			world.registerGameObject(sara);
 			world.delayedRemoveObject(sara, 600);
 			n.getUpdateFlags().setDamage(new Damage(player, damage));
-			n.getSkills().subtractLevel(SKILLS.HITS.id(), damage);
-			if (n.getSkills().getLevel(SKILLS.HITS.id()) < 1)
+			n.getSkills().subtractLevel(Skills.HITS, damage);
+			if (n.getSkills().getLevel(Skills.HITS) < 1)
 				n.killedBy(player);
 		} else if (cmd.equalsIgnoreCase("npcevent")) {
 			if (args.length < 3) {
@@ -1466,9 +1465,9 @@ public final class Admins implements CommandListener {
 
 			String message = "Die " + player.getUsername() + "!";
 			for (Player playerToChat : n.getViewArea().getPlayersInView()) {
-				GameStateUpdater.updateNpcAppearances(playerToChat); // First call is to flush any NPC chat that is generated by other server processes
+				Server.getServer().getGameUpdater().updateNpcAppearances(playerToChat); // First call is to flush any NPC chat that is generated by other server processes
 				n.getUpdateFlags().setChatMessage(new ChatMessage(n, message, playerToChat));
-				GameStateUpdater.updateNpcAppearances(playerToChat);
+				Server.getServer().getGameUpdater().updateNpcAppearances(playerToChat);
 				n.getUpdateFlags().setChatMessage(null);
 			}
 
@@ -1515,9 +1514,9 @@ public final class Admins implements CommandListener {
 
 			String message = "Die " + player.getUsername() + "!";
 			for (Player playerToChat : n.getViewArea().getPlayersInView()) {
-				GameStateUpdater.updateNpcAppearances(playerToChat); // First call is to flush any NPC chat that is generated by other server processes
+				Server.getServer().getGameUpdater().updateNpcAppearances(playerToChat); // First call is to flush any NPC chat that is generated by other server processes
 				n.getUpdateFlags().setChatMessage(new ChatMessage(n, message, playerToChat));
-				GameStateUpdater.updateNpcAppearances(playerToChat);
+				Server.getServer().getGameUpdater().updateNpcAppearances(playerToChat);
 				n.getUpdateFlags().setChatMessage(null);
 			}
 
@@ -1876,7 +1875,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			final Npc n = new Npc(id, player.getX(), player.getY(),
+			final Npc n = new Npc(player.getWorld(), id, player.getX(), player.getY(),
 				player.getX() - radius, player.getX() + radius,
 				player.getY() - radius, player.getY() + radius);
 			n.setShouldRespawn(false);

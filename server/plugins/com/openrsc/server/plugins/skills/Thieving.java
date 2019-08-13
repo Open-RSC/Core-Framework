@@ -1,12 +1,11 @@
 package com.openrsc.server.plugins.skills;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.GameServer;
+import com.openrsc.server.Server;
 import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -36,12 +35,12 @@ public class Thieving extends Functions
 
 	public static boolean succeedPickLockThieving(Player player, int req_level) {
 		//lockpick said to make picking a bit easier
-		int effectiveLevel = player.getSkills().getLevel(SKILLS.THIEVING.id()) + (hasItem(player, ItemId.LOCKPICK.id()) ? 10 : 0);
+		int effectiveLevel = player.getSkills().getLevel(Skills.THIEVING) + (hasItem(player, ItemId.LOCKPICK.id()) ? 10 : 0);
 		return Formulae.calcGatheringSuccessful(req_level, effectiveLevel);
 	}
 
 	private static boolean succeedThieving(Player player, int req_level) {
-		return Formulae.calcGatheringSuccessful(req_level, player.getSkills().getLevel(SKILLS.THIEVING.id()), 40);
+		return Formulae.calcGatheringSuccessful(req_level, player.getSkills().getLevel(Skills.THIEVING), 40);
 	}
 
 	public void stallThieving(Player player, GameObject object, Stall stall) {
@@ -68,7 +67,7 @@ public class Thieving extends Functions
 		if (!failNoun.endsWith("s")) {
 			failNoun += "s";
 		}
-		if (player.getSkills().getLevel(SKILLS.THIEVING.id()) < stall.getRequiredLevel()) {
+		if (player.getSkills().getLevel(Skills.THIEVING) < stall.getRequiredLevel()) {
 			player.message("You are not a high enough level to steal the " + failNoun);
 			return;
 		}
@@ -115,7 +114,7 @@ public class Thieving extends Functions
 			selectedLoot = new Item(stall.lootTable.get(0).getId(), stall.lootTable.get(0).getAmount());
 			return;
 		}
-		if (Constants.GameServer.WANT_FATIGUE) {
+		if (Server.getServer().getConfig().WANT_FATIGUE) {
 			if (player.getFatigue() >= player.MAX_FATIGUE)
 				player.message("@gre@You are too tired to gain experience, get some rest");
 		}
@@ -124,7 +123,7 @@ public class Thieving extends Functions
 		String loot = stall.equals(Stall.GEMS_STALL) ? "gem" : selectedLoot.getDef().getName().toLowerCase();
 		player.message("You steal a " + stall.getLootPrefix() + loot);
 
-		player.incExp(SKILLS.THIEVING.id(), stall.getXp(), true);
+		player.incExp(Skills.THIEVING, stall.getXp(), true);
 
 		if (stall.equals(Stall.BAKERS_STALL)) { // Cake
 			player.getCache().put("cakeStolen", Instant.now().getEpochSecond());
@@ -142,7 +141,7 @@ public class Thieving extends Functions
 
 		// Replace stall with empty version
 		World.getWorld().replaceGameObject(object,
-			new GameObject(object.getLocation(), 341, object.getDirection(), object.getType()));
+			new GameObject(player.getWorld(), object.getLocation(), 341, object.getDirection(), object.getType()));
 		World.getWorld().delayedSpawnObject(object.getLoc(), stall.getRespawnTime());
 	}
 
@@ -196,11 +195,11 @@ public class Thieving extends Functions
 
 		player.message("You search the chest for traps");
 		sleep(1200);
-		if (player.getSkills().getLevel(SKILLS.THIEVING.id()) < req) {
+		if (player.getSkills().getLevel(Skills.THIEVING) < req) {
 			player.message("You find nothing");
 			return;
 		}
-		if (Constants.GameServer.WANT_FATIGUE) {
+		if (Server.getServer().getConfig().WANT_FATIGUE) {
 			if (player.getFatigue() >= player.MAX_FATIGUE) {
 				player.message("You are too tired to thieve here");
 				return;
@@ -213,12 +212,12 @@ public class Thieving extends Functions
 			return;
 		}
 		
-		boolean makeChestStuck = Constants.GameServer.LOOTED_CHESTS_STUCK;
+		boolean makeChestStuck = Server.getServer().getConfig().LOOTED_CHESTS_STUCK;
 
 		player.message("You find a trap on the chest");
 		GameObject tempChest = null;
 		if (!makeChestStuck) {
-			tempChest = new GameObject(obj.getLocation(), 340, obj.getDirection(), obj.getType());
+			tempChest = new GameObject(player.getWorld(), obj.getLocation(), 340, obj.getDirection(), obj.getType());
 			replaceObject(obj, tempChest);
 		}
 		sleep(1200);
@@ -237,7 +236,7 @@ public class Thieving extends Functions
 				player.getInventory().add(new Item(l.getId(), l.getAmount()));
 			}
 		}
-		player.incExp(SKILLS.THIEVING.id(), xp, true);
+		player.incExp(Skills.THIEVING, xp, true);
 		message(player, "You find treasure inside!");
 		if (!makeChestStuck) {
 			replaceObjectDelayed(obj, respawnTime, 340);
@@ -264,7 +263,7 @@ public class Thieving extends Functions
 			if (obj.getGameObjectDef().getName().equalsIgnoreCase("empty stall")) {
 				return false;
 			}
-			if (!GameServer.MEMBER_WORLD) {
+			if (!Server.getServer().getConfig().MEMBER_WORLD) {
 				player.message(player.MEMBER_MESSAGE);
 				return false;
 			}
@@ -273,7 +272,7 @@ public class Thieving extends Functions
 				return true;
 			}
 		} else if (obj.getID() >= 334 && obj.getID() <= 339) {
-			if (!GameServer.MEMBER_WORLD) {
+			if (!Server.getServer().getConfig().MEMBER_WORLD) {
 				player.message(player.MEMBER_MESSAGE);
 				return false;
 			}
@@ -298,7 +297,7 @@ public class Thieving extends Functions
 			}
 
 			if (pickpocket != null) {
-				if (!GameServer.MEMBER_WORLD) {
+				if (!Server.getServer().getConfig().MEMBER_WORLD) {
 					p.message(p.MEMBER_MESSAGE);
 					return false;
 				}
@@ -326,12 +325,12 @@ public class Thieving extends Functions
 		final String thievedMobSt = (thievedMobName.contains("gnome") || thievedMobName.contains("blurberry")) ? "gnome" :
 			thievedMobName.contains("watchman") ? "watchman" : thievedMobName;
 		player.playerServerMessage(MessageType.QUEST, "You attempt to pick the " + thievedMobSt + "'s pocket");
-		if (player.getSkills().getLevel(SKILLS.THIEVING.id()) < pickpocket.getRequiredLevel()) {
+		if (player.getSkills().getLevel(Skills.THIEVING) < pickpocket.getRequiredLevel()) {
 			sleep(1800);
 			player.message("You need to be a level " + pickpocket.getRequiredLevel() + " thief to pick the " + thievedMobSt + "'s pocket");
 			return;
 		}
-		player.setBatchEvent(new BatchEvent(player, 1200, "Thieving Pickpocket", Formulae.getRepeatTimes(player, SKILLS.THIEVING.id()), true) {
+		player.setBatchEvent(new BatchEvent(player, 1200, "Thieving Pickpocket", Formulae.getRepeatTimes(player, Skills.THIEVING), true) {
 
 			@Override
 			public void action() {
@@ -344,12 +343,12 @@ public class Thieving extends Functions
 				}
 				boolean succeededPickpocket = succeedThieving(player, pickpocket.getRequiredLevel());
 				if (succeededPickpocket) {
-					if (Constants.GameServer.WANT_FATIGUE) {
+					if (Server.getServer().getConfig().WANT_FATIGUE) {
 						if (player.getFatigue() >= player.MAX_FATIGUE)
 							player.message("@gre@You are too tired to gain experience, get some rest");
 					}
 
-					player.incExp(SKILLS.THIEVING.id(), pickpocket.getXp(), true);
+					player.incExp(Skills.THIEVING, pickpocket.getXp(), true);
 					Item selectedLoot = null;
 					int total = 0;
 					for (LootItem loot : lootTable) {
@@ -418,14 +417,14 @@ public class Thieving extends Functions
 			} else {
 				player.setBusyTimer(3000);
 				player.message("you attempt to pick the lock");
-				if (Constants.GameServer.WANT_FATIGUE) {
+				if (Server.getServer().getConfig().WANT_FATIGUE) {
 					if (player.getFatigue() >= player.MAX_FATIGUE) {
 						player.message("You are too tired to thieve here");
 						player.setBusyTimer(0);
 						return;
 					}
 				}
-				if (player.getSkills().getLevel(SKILLS.THIEVING.id()) < 47) {
+				if (player.getSkills().getLevel(Skills.THIEVING) < 47) {
 					player.message("You are not a high enough level to pick this lock");
 					player.setBusyTimer(0);
 					return;
@@ -442,12 +441,12 @@ public class Thieving extends Functions
 
 				message(player, "You find a treasure inside!");
 
-				player.incExp(SKILLS.THIEVING.id(), 600, true);
+				player.incExp(Skills.THIEVING, 600, true);
 				addItem(player, ItemId.COINS.id(), 20);
 				addItem(player, ItemId.STEEL_ARROW_HEADS.id(), 5);
 
 				World.getWorld().replaceGameObject(obj,
-					new GameObject(obj.getLocation(), 340, obj.getDirection(), obj.getType()));
+					new GameObject(player.getWorld(), obj.getLocation(), 340, obj.getDirection(), obj.getType()));
 				World.getWorld().delayedSpawnObject(obj.getLoc(), 150000);
 			}
 		}
@@ -502,7 +501,7 @@ public class Thieving extends Functions
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click, Player player) {
 		if (obj.getID() >= 93 && obj.getID() <= 97 || obj.getID() >= 99 & obj.getID() <= 100 || obj.getID() == 162) {
-			if (!GameServer.MEMBER_WORLD) {
+			if (!Server.getServer().getConfig().MEMBER_WORLD) {
 				player.message(player.MEMBER_MESSAGE);
 				return false;
 			}
@@ -596,7 +595,7 @@ public class Thieving extends Functions
 			}
 			message(player, 1200, "you attempt to pick the lock");
 
-			if (getCurrentLevel(player, SKILLS.THIEVING.id()) < req) {
+			if (getCurrentLevel(player, Skills.THIEVING) < req) {
 				player.message("You are not a high enough level to pick this lock");
 				return;
 			}
@@ -608,13 +607,13 @@ public class Thieving extends Functions
 				player.message("You manage to pick the lock");
 				doDoor(obj, player);
 				player.message("You go through the door");
-				if (Constants.GameServer.WANT_FATIGUE) {
+				if (Server.getServer().getConfig().WANT_FATIGUE) {
 					if (player.getFatigue() >= player.MAX_FATIGUE) {
 						player.message("@gre@You are too tired to gain experience, get some rest");
 						return;
 					}
 				}
-				player.incExp(SKILLS.THIEVING.id(), (int) exp, true);
+				player.incExp(Skills.THIEVING, (int) exp, true);
 			} else {
 				player.message("You fail to pick the lock");
 			}

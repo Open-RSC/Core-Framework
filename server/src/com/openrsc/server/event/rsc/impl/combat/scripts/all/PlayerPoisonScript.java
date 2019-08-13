@@ -1,6 +1,6 @@
 package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScript;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
@@ -32,7 +32,7 @@ public class PlayerPoisonScript implements CombatScript {
 			if (p.getDuel().isDuelActive()) {
 				return false;
 			}
-			if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
 				Item i;
 				for (int q = 0; q < Equipment.slots; q++) {
 					i = p.getEquipment().get(q);

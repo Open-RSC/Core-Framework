@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.npcs.alkharid;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -18,8 +18,8 @@ public final class BorderGuard implements TalkToNpcExecutiveListener,
 
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
-		if (p.getQuestStage(Constants.Quests.PRINCE_ALI_RESCUE) == -1
-			|| p.getQuestStage(Constants.Quests.PRINCE_ALI_RESCUE) == 3) {
+		if (p.getQuestStage(Quests.PRINCE_ALI_RESCUE) == -1
+			|| p.getQuestStage(Quests.PRINCE_ALI_RESCUE) == 3) {
 			playerTalk(p, n, "Can I come through this gate?");
 			npcTalk(p, n,
 				"You may pass for free, you are a friend of Al Kharid");

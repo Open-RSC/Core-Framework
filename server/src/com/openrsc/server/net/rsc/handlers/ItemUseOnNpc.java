@@ -1,6 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
@@ -28,7 +28,7 @@ public class ItemUseOnNpc implements PacketHandler {
 		int npcIndex = p.readShort();
 		final Npc affectedNpc = world.getNpc(npcIndex);
 		int itemID = p.readShort();
-		if (Constants.GameServer.WANT_EQUIPMENT_TAB && itemID > Inventory.MAX_SIZE) {
+		if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB && itemID > Inventory.MAX_SIZE) {
 			player.message("Please unequip your item and try again.");
 			return;
 		}
@@ -62,7 +62,7 @@ public class ItemUseOnNpc implements PacketHandler {
 						break;
 				}
 				if (item.getDef().isMembersOnly()
-					&& !Constants.GameServer.MEMBER_WORLD) {
+					&& !Server.getServer().getConfig().MEMBER_WORLD) {
 					player.message(player.MEMBER_MESSAGE);
 					return;
 				}

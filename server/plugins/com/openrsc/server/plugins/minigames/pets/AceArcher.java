@@ -1,10 +1,9 @@
 package com.openrsc.server.plugins.minigames.pets;
 
-import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.ShortEvent;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -23,7 +22,7 @@ public class AceArcher implements InvUseOnNpcListener, InvUseOnNpcExecutiveListe
 
 	@Override
 	public void onInvUseOnNpc(Player player, Npc npc, Item item) {
-		if (Constants.GameServer.WANT_PETS) {
+		if (Server.getServer().getConfig().WANT_PETS) {
 			npc.resetPath();
 			//npc.resetRange();
 			player.setBusy(true);

@@ -1,9 +1,6 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.obstacles;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -54,7 +51,7 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == ANCIENT_WALL) {
 			if (click == USE) {
-				if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
+				if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
 					message(p, 1300, "You walk into the darkness of the magical doorway.",
 						"You walk for a short way before pushing open another door.");
 					if (obj.getX() == 464 && obj.getY() == 3721) {
@@ -71,7 +68,7 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 				}
 			} else if (click == SEARCH) {
 				message(p, 1300, "You search the wall...");
-				if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
+				if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
 					message(p, 1300, "You find the word 'SMELL' marked on the wall.",
 						"The outline of a door appears on the wall.");
 					p.message("What would you like to do?.");
@@ -100,7 +97,7 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 			}
 		}
 		else if (obj.getID() == RUINED_WALL) {
-			if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 50) {
+			if (getCurrentLevel(p, Skills.AGILITY) < 50) {
 				p.message("You need an agility level of 50 to jump this wall");
 				p.setBusy(false);
 				return;
@@ -132,7 +129,7 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 					message(p, "You walk blindly into the intense heat of the supernatural flames.");
 					if (DataConversions.random(0, 9) <= 3) {
 						message(p, 1300, "The heat is so intense that it burns you.");
-						p.damage((int) Math.ceil((double) p.getSkills().getLevel(SKILLS.HITS.id()) / 10 + 1));
+						p.damage((int) Math.ceil((double) p.getSkills().getLevel(Skills.HITS) / 10 + 1));
 						playerTalk(p, null, "Owwww!");
 					} else {
 						message(p, 1300, "The heat is intense and just before you burn yourself,",
@@ -140,7 +137,7 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 						playerTalk(p, null, "Whew!");
 					}
 				} else if (click == INVESTIGATE) {
-					switch (p.getQuestStage(Constants.Quests.LEGENDS_QUEST)) {
+					switch (p.getQuestStage(Quests.LEGENDS_QUEST)) {
 						case 2:
 						case 3:
 						case 4:
@@ -258,14 +255,14 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 				case BODY_RUNE:
 				case LIFE_RUNE:
 				case CHAOS_RUNE:
-					if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
+					if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
 						ancientDoorWalkThrough(p, obj);
 					} else {
 						runesFail(p, item);
 					}
 					break;
 				case SOUL_RUNE:
-					if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
+					if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
 						ancientDoorWalkThrough(p, obj);
 					} else if (!p.getCache().hasKey("ancient_wall_runes")) {
 						removeItem(p, ItemId.SOUL_RUNE.id(), 1);
@@ -278,7 +275,7 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 					}
 					break;
 				case MIND_RUNE:
-					if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
+					if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
 						ancientDoorWalkThrough(p, obj);
 					} else if (p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 1) {
 						removeItem(p, ItemId.MIND_RUNE.id(), 1);
@@ -291,7 +288,7 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 					}
 					break;
 				case EARTH_RUNE:
-					if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
+					if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
 						ancientDoorWalkThrough(p, obj);
 					} else if (p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 2) {
 						removeItem(p, ItemId.EARTH_RUNE.id(), 1);
@@ -304,7 +301,7 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 					}
 					break;
 				case LAW_RUNE:
-					if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
+					if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
 						ancientDoorWalkThrough(p, obj);
 					} else if (p.getCache().hasKey("ancient_wall_runes") && (p.getCache().getInt("ancient_wall_runes") == 3 || p.getCache().getInt("ancient_wall_runes") == 4)) {
 						int getRuneCount = p.getCache().getInt("ancient_wall_runes");

@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.npcs.portsarim;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -46,7 +46,7 @@ public final class GerrantsFishingGear implements
 			"We'll also buy anything you catch off you");
 
 		String[] options;
-		if (p.getQuestStage(Constants.Quests.HEROS_QUEST) >= 1) {
+		if (p.getQuestStage(Quests.HEROS_QUEST) >= 1) {
 			options = new String[]{"Let's see what you've got then",
 				"Sorry, I'm not interested",
 				"I want to find out how to catch a lava eel"};

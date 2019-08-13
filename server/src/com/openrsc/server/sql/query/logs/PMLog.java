@@ -1,6 +1,6 @@
 package com.openrsc.server.sql.query.logs;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.sql.query.Query;
 
 import java.sql.Connection;
@@ -12,7 +12,7 @@ public final class PMLog extends Query {
 	private final String sender, message, reciever;
 
 	public PMLog(String sender, String message, String reciever) {
-		super("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "private_message_logs`(`sender`, `message`, `reciever`, `time`) VALUES(?, ?, ?, ?)");
+		super("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "private_message_logs`(`sender`, `message`, `reciever`, `time`) VALUES(?, ?, ?, ?)");
 		this.sender = sender;
 		this.message = message;
 		this.reciever = reciever;

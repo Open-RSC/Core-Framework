@@ -10,7 +10,7 @@ import com.openrsc.server.util.rsc.DataConversions;
 import static com.openrsc.server.plugins.Functions.*;
 
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.constants.ItemId;
 
 public class InspectNet implements ObjectActionListener, ObjectActionExecutiveListener {
 

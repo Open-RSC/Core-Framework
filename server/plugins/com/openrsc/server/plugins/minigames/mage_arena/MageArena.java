@@ -1,12 +1,9 @@
 package com.openrsc.server.plugins.minigames.mage_arena;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.impl.ObjectRemover;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -37,7 +34,7 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 	
 	@Override
 	public int getMiniGameId() {
-		return Constants.Minigames.MAGE_ARENA;
+		return Minigames.MAGE_ARENA;
 	}
 
 	@Override
@@ -57,7 +54,7 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 	
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
-		if (getMaxLevel(p, SKILLS.MAGIC.id()) < 60) { // TODO: Enter the arena game.
+		if (getMaxLevel(p, Skills.MAGIC) < 60) { // TODO: Enter the arena game.
 			playerTalk(p, n, "hello there", "what is this place?");
 			npcTalk(p, n, "do not waste my time with trivial questions!",
 				"i am the great kolodion, master of battle magic", "i have an arena to run");
@@ -194,8 +191,8 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 					p.getCache().set("mage_arena", 1);
 				}
 				movePlayer(p, 229, 130);
-				setCurrentLevel(p, SKILLS.ATTACK.id(), 0);
-				setCurrentLevel(p, SKILLS.STRENGTH.id(), 0);
+				setCurrentLevel(p, Skills.ATTACK, 0);
+				setCurrentLevel(p, Skills.STRENGTH, 0);
 
 				startKolodionEvent(p);
 				spawnKolodion(p, NpcId.KOLODION_HUMAN.id());
@@ -223,9 +220,9 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 				if (getOwner().inCombat()) {
 					return;
 				}
-				if (getOwner().getSkills().getLevel(SKILLS.ATTACK.id()) > 0 || getOwner().getSkills().getLevel(SKILLS.STRENGTH.id()) > 0) {
-					getOwner().getSkills().setLevel(SKILLS.ATTACK.id(), 0);
-					getOwner().getSkills().setLevel(SKILLS.STRENGTH.id(), 0);
+				if (getOwner().getSkills().getLevel(Skills.ATTACK) > 0 || getOwner().getSkills().getLevel(Skills.STRENGTH) > 0) {
+					getOwner().getSkills().setLevel(Skills.ATTACK, 0);
+					getOwner().getSkills().setLevel(Skills.STRENGTH, 0);
 				}
 				Npc Guthix = getNearestNpc(p, NpcId.BATTLE_MAGE_GUTHIX.id(), 2);
 				Npc Zamorak = getNearestNpc(p, NpcId.BATTLE_MAGE_ZAMAROK.id(), 2);
@@ -234,26 +231,26 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 				if (Guthix != null && Guthix.withinRange(getOwner(), 1)) {
 					godSpellObject(getOwner(), 33);
 					p.message(randomMessage[2]);
-					if (getCurrentLevel(getOwner(), SKILLS.HITS.id()) < 20) {
+					if (getCurrentLevel(getOwner(), Skills.HITS) < 20) {
 						getOwner().damage(2);
 					} else {
-						getOwner().damage(getCurrentLevel(getOwner(), SKILLS.HITS.id()) / 10);
+						getOwner().damage(getCurrentLevel(getOwner(), Skills.HITS) / 10);
 					}
 				} else if (Zamorak != null && Zamorak.withinRange(getOwner(), 1)) {
 					godSpellObject(getOwner(), 35);
 					p.message(randomMessage[0]);
-					if (getCurrentLevel(getOwner(), SKILLS.HITS.id()) < 20) {
+					if (getCurrentLevel(getOwner(), Skills.HITS) < 20) {
 						getOwner().damage(2);
 					} else {
-						getOwner().damage(getCurrentLevel(getOwner(), SKILLS.HITS.id()) / 10);
+						getOwner().damage(getCurrentLevel(getOwner(), Skills.HITS) / 10);
 					}
 				} else if (Saradomin != null && Saradomin.withinRange(getOwner(), 1)) {
 					godSpellObject(getOwner(), 34);
 					p.message(randomMessage[1]);
-					if (getCurrentLevel(getOwner(), SKILLS.HITS.id()) < 20) {
+					if (getCurrentLevel(getOwner(), Skills.HITS) < 20) {
 						getOwner().damage(2);
 					} else {
-						getOwner().damage(getCurrentLevel(getOwner(), SKILLS.HITS.id()) / 10);
+						getOwner().damage(getCurrentLevel(getOwner(), Skills.HITS) / 10);
 					}
 				}
 			}
@@ -436,22 +433,22 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 	public void godSpellObject(Mob affectedMob, int spell) {
 		switch (spell) {
 			case 33:
-				GameObject guthix = new GameObject(affectedMob.getLocation(), 1142, 0, 0);
+				GameObject guthix = new GameObject(affectedMob.getWorld(), affectedMob.getLocation(), 1142, 0, 0);
 				World.getWorld().registerGameObject(guthix);
 				Server.getServer().getGameEventHandler().add(new ObjectRemover(guthix, 2));
 				break;
 			case 34:
-				GameObject sara = new GameObject(affectedMob.getLocation(), 1031, 0, 0);
+				GameObject sara = new GameObject(affectedMob.getWorld(), affectedMob.getLocation(), 1031, 0, 0);
 				World.getWorld().registerGameObject(sara);
 				Server.getServer().getGameEventHandler().add(new ObjectRemover(sara, 2));
 				break;
 			case 35:
-				GameObject zammy = new GameObject(affectedMob.getLocation(), 1036, 0, 0);
+				GameObject zammy = new GameObject(affectedMob.getWorld(), affectedMob.getLocation(), 1036, 0, 0);
 				World.getWorld().registerGameObject(zammy);
 				Server.getServer().getGameEventHandler().add(new ObjectRemover(zammy, 2));
 				break;
 			case 47:
-				GameObject charge = new GameObject(affectedMob.getLocation(), 1147, 0, 0);
+				GameObject charge = new GameObject(affectedMob.getWorld(), affectedMob.getLocation(), 1147, 0, 0);
 				World.getWorld().registerGameObject(charge);
 				Server.getServer().getGameEventHandler().add(new ObjectRemover(charge, 2));
 				break;

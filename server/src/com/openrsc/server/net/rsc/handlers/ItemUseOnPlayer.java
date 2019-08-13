@@ -1,7 +1,7 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
@@ -53,7 +53,7 @@ public class ItemUseOnPlayer implements PacketHandler {
 				player.resetAll();
 				player.face(affectedPlayer);
 				if (item.getDef().isMembersOnly()
-					&& !Constants.GameServer.MEMBER_WORLD) {
+					&& !Server.getServer().getConfig().MEMBER_WORLD) {
 					player.message(player.MEMBER_MESSAGE);
 					return;
 				}

@@ -2,8 +2,8 @@ package com.openrsc.server.plugins.itemactions;
 
 import com.openrsc.server.Server;
 import com.openrsc.server.event.ShortEvent;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
@@ -12,8 +12,6 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.compareItemsIds;
 import static com.openrsc.server.plugins.Functions.hasItem;
-
-import static com.openrsc.server.Constants.GameServer.CRYSTAL_KEY_GIVES_XP;
 
 public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutiveListener {
 	private int[] capes = {
@@ -188,8 +186,8 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 			if (player.getInventory().remove(item1) > -1 && player.getInventory().remove(item2) > -1) {
 				player.message("You join the two halves of the key together");
 				player.getInventory().add(new Item(ItemId.CRYSTAL_KEY.id(), 1));
-				if (CRYSTAL_KEY_GIVES_XP) {
-					player.incExp(SKILLS.CRAFTING.id(), 40, true);
+				if (Server.getServer().getConfig().CRYSTAL_KEY_GIVES_XP) {
+					player.incExp(Skills.CRAFTING, 40, true);
 				}
 			}
 		}
@@ -234,7 +232,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 								&& player.getInventory().remove(new Item(item2.getID())) > -1) {
 							player.message("You dye the Cape");
 							player.getInventory().add(new Item(newCapes[i]));
-							player.incExp(SKILLS.CRAFTING.id(), 10, true);
+							player.incExp(Skills.CRAFTING, 10, true);
 							return;
 						}
 					}
@@ -248,7 +246,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 								&& player.getInventory().remove(new Item(item2.getID())) > -1) {
 							player.message("You dye the Cape");
 							player.getInventory().add(new Item(newCapes[i]));
-							player.incExp(SKILLS.CRAFTING.id(), 10, true);
+							player.incExp(Skills.CRAFTING, 10, true);
 							return;
 						}
 					}

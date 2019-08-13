@@ -1,6 +1,6 @@
 package com.openrsc.server.plugins.itemactions;
 
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;

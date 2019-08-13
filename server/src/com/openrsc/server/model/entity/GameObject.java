@@ -6,6 +6,7 @@ import com.openrsc.server.external.GameObjectDef;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 
 public class GameObject extends Entity {
 	/**
@@ -31,7 +32,9 @@ public class GameObject extends Entity {
 
 	private VisibleCondition statement;
 
-	public GameObject(GameObjectLoc loc, VisibleCondition statement) {
+	public GameObject(World world, GameObjectLoc loc, VisibleCondition statement) {
+		super(world);
+
 		direction = loc.direction;
 		type = loc.type;
 		this.loc = loc;
@@ -39,21 +42,22 @@ public class GameObject extends Entity {
 		this.statement = statement;
 	}
 
-	public GameObject(GameObjectLoc loc) {
+	public GameObject(World world, GameObjectLoc loc) {
+		super(world);
 		direction = loc.direction;
 		type = loc.type;
 		this.loc = loc;
 		super.setID(loc.id);
 	}
 
-	public GameObject(Point location, int id, int direction, int type) {
-		this(new GameObjectLoc(id, location.getX(), location.getY(), direction,
+	public GameObject(World world, Point location, int id, int direction, int type) {
+		this(world, new GameObjectLoc(id, location.getX(), location.getY(), direction,
 			type));
 	}
 
-	public GameObject(Point location, int id, int direction, int type,
+	public GameObject(World world, Point location, int id, int direction, int type,
 					  String owner) {
-		this(new GameObjectLoc(id, location.getX(), location.getY(), direction,
+		this(world, new GameObjectLoc(id, location.getX(), location.getY(), direction,
 			type, owner));
 	}
 

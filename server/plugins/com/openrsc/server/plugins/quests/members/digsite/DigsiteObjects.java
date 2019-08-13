@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.quests.members.digsite;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.model.Skills.SKILLS;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -15,16 +14,7 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.closeCupboard;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.openCupboard;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.replaceObject;
-import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class DigsiteObjects implements ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
@@ -91,7 +81,7 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 				p.message("You find some unusual powder inside...");
 				addItem(p, ItemId.UNIDENTIFIED_POWDER.id(), 1);
 				World.getWorld().registerGameObject(
-						new GameObject(obj.getLocation(), TENT_CHEST_LOCKED, obj.getDirection(),
+						new GameObject(obj.getWorld(), obj.getLocation(), TENT_CHEST_LOCKED, obj.getDirection(),
 							obj.getType()));
 			}
 			//kosher special case - chest does not close on that command, player must search the chest
@@ -111,7 +101,7 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 		}
 		else if (obj.getID() == SPECIMEN_TRAY) {
 			int[] TRAY_ITEMS = {ItemId.NOTHING.id(), ItemId.BONES.id(), ItemId.CRACKED_ROCK_SAMPLE.id(), ItemId.IRON_DAGGER.id(), ItemId.BROKEN_ARROW.id(), ItemId.BROKEN_GLASS.id(), ItemId.CERAMIC_REMAINS.id(), ItemId.COINS.id(), ItemId.A_LUMP_OF_CHARCOAL.id()};
-			p.incExp(SKILLS.MINING.id(), 4, true);
+			p.incExp(Skills.MINING, 4, true);
 			message(p, "You sift through the earth in the tray");
 			int randomize = DataConversions.random(0, (TRAY_ITEMS.length - 1));
 			int chosenItem = TRAY_ITEMS[randomize];
@@ -147,14 +137,14 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 		}
 		else if (obj.getID() == HOUSE_EAST_CHEST_CLOSED) {
 			p.message("You open the chest");
-			replaceObject(obj, new GameObject(obj.getLocation(), HOUSE_EAST_CHEST_OPEN, obj.getDirection(), obj.getType()));
+			replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), HOUSE_EAST_CHEST_OPEN, obj.getDirection(), obj.getType()));
 		}
 		else if (obj.getID() == HOUSE_EAST_CHEST_OPEN) {
 			if (command.equalsIgnoreCase("Search")) {
 				p.message("You search the chest");
 				p.message("You find a rock sample");
 				addItem(p, ItemId.CRACKED_ROCK_SAMPLE.id(), 1);
-				replaceObject(obj, new GameObject(obj.getLocation(), HOUSE_EAST_CHEST_CLOSED, obj.getDirection(), obj.getType()));
+				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), HOUSE_EAST_CHEST_CLOSED, obj.getDirection(), obj.getType()));
 			}
 		}
 		else if (obj.getID() == HOUSE_BOOKCASE) {
@@ -179,10 +169,10 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 		else if (obj.getID() == HOUSE_WEST_CHESTS_OPEN || obj.getID() == HOUSE_WEST_CHESTS_CLOSED) {
 			if (command.equalsIgnoreCase("Open")) {
 				p.message("You open the chest");
-				replaceObject(obj, new GameObject(obj.getLocation(), HOUSE_WEST_CHESTS_OPEN, obj.getDirection(), obj.getType()));
+				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), HOUSE_WEST_CHESTS_OPEN, obj.getDirection(), obj.getType()));
 			} else if (command.equalsIgnoreCase("Close")) {
 				p.message("You close the chest");
-				replaceObject(obj, new GameObject(obj.getLocation(), HOUSE_WEST_CHESTS_CLOSED, obj.getDirection(), obj.getType()));
+				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), HOUSE_WEST_CHESTS_CLOSED, obj.getDirection(), obj.getType()));
 			} else if (command.equalsIgnoreCase("Search")) {
 				p.message("You search the chest, but find nothing");
 			}
@@ -198,7 +188,7 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == TENT_CHEST_LOCKED && item.getID() == ItemId.DIGSITE_CHEST_KEY.id()) {
-			replaceObject(obj, new GameObject(obj.getLocation(), TENT_CHEST_OPEN, obj.getDirection(), obj.getType()));
+			replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), TENT_CHEST_OPEN, obj.getDirection(), obj.getType()));
 			p.message("you use the key in the chest");
 			p.message("you open the chest");
 			removeItem(p, ItemId.DIGSITE_CHEST_KEY.id(), 1);
@@ -223,7 +213,7 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 					playerTalk(p, null, "It nearly fits, just a little too thin");
 					break;
 				case TROWEL:
-					replaceObject(obj, new GameObject(obj.getLocation(), X_BARREL_OPEN, obj.getDirection(), obj.getType()));
+					replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), X_BARREL_OPEN, obj.getDirection(), obj.getType()));
 					playerTalk(p, null, "Great, it's opened it!");
 					break;
 				default:
@@ -247,7 +237,7 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 					p.message("You fill the vial with the liquid");
 					p.message("You close the barrel");
 					p.getInventory().replace(ItemId.EMPTY_VIAL.id(), ItemId.UNIDENTIFIED_LIQUID.id());
-					replaceObject(obj, new GameObject(obj.getLocation(), X_BARREL, obj.getDirection(), obj.getType()));
+					replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), X_BARREL, obj.getDirection(), obj.getType()));
 					playerTalk(p, null, "I'm not sure what this stuff is",
 						"I had better be very careful with it",
 						"I had better not spill any I think...");
@@ -276,7 +266,7 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 							"I'd better run!");
 						sleep(1500);
 						p.teleport(22, 3379);
-						p.updateQuestStage(Constants.Quests.DIGSITE, 6);
+						p.updateQuestStage(Quests.DIGSITE, 6);
 						p.getCache().remove("brick_ignite");
 						message(p, "\"Bang!!!\"");
 						playerTalk(p, null, "Wow that was a big explosion!",

@@ -7,7 +7,7 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.*;
 
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.constants.ItemId;
 
 public class Thordur implements TalkToNpcExecutiveListener, TalkToNpcListener {
 

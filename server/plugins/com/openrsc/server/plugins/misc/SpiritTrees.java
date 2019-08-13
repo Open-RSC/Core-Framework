@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.misc;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -28,7 +28,7 @@ public class SpiritTrees implements ObjectActionListener, ObjectActionExecutiveL
 		 *  NOTE: If you complete Tree gnome village quest you can use all spirit trees without completing grand tree quest.
 		 * **/
 		if (obj.getID() == STRONGHOLD_SPIRIT_TREE) {
-			if (p.getQuestStage(Constants.Quests.TREE_GNOME_VILLAGE) == -1 || p.getQuestStage(Constants.Quests.GRAND_TREE) == -1) {
+			if (p.getQuestStage(Quests.TREE_GNOME_VILLAGE) == -1 || p.getQuestStage(Quests.GRAND_TREE) == -1) {
 				message(p, "The tree talks in an old tired voice...",
 					"@yel@Spirit Tree: You friend of gnome people, you friend of mine",
 					"@yel@Spirit Tree: Would you like me to take you somewhere?");
@@ -60,7 +60,7 @@ public class SpiritTrees implements ObjectActionListener, ObjectActionExecutiveL
 		}
 		/** GRAND SPIRIT TREE - TREE GNOME VILLAGE **/
 		else if (obj.getID() == TREE_GNOME_VILLAGE_SPIRIT_TREE) {
-			if (p.getQuestStage(Constants.Quests.TREE_GNOME_VILLAGE) == -1) {
+			if (p.getQuestStage(Quests.TREE_GNOME_VILLAGE) == -1) {
 				message(p,
 					"The tree talks in an old tired voice...",
 					"@yel@Spirit Tree: You friend of gnome people, you friend of mine",
@@ -94,7 +94,7 @@ public class SpiritTrees implements ObjectActionListener, ObjectActionExecutiveL
 		/** EDGEVILLE VARROCK tree **/
 		/** Battle field of Khazard tree **/
 		else if (obj.getID() == YOUNG_SPIRIT_TREES) {
-			if (p.getQuestStage(Constants.Quests.TREE_GNOME_VILLAGE) == -1) {
+			if (p.getQuestStage(Quests.TREE_GNOME_VILLAGE) == -1) {
 				p.message("The young spirit tree talks..");
 				message(p, "@yel@Young Spirit Tree: Hello gnome friend",
 					"@yel@Young Spirit Tree: Would you like to travel to the home of the tree gnomes?");

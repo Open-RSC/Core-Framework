@@ -1,10 +1,9 @@
 package com.openrsc.server.plugins.quests.members;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -13,35 +12,11 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.action.PickupListener;
-import com.openrsc.server.plugins.listeners.action.PlayerAttackNpcListener;
-import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
-import com.openrsc.server.plugins.listeners.action.PlayerMageNpcListener;
-import com.openrsc.server.plugins.listeners.action.PlayerRangeNpcListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerMageNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerRangeNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.getMultipleNpcsInArea;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.incQuestReward;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 	TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, PickupListener, PickupExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener {
@@ -57,7 +32,7 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.TEMPLE_OF_IKOV;
+		return Quests.TEMPLE_OF_IKOV;
 	}
 
 	@Override
@@ -75,9 +50,9 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 		p.getCache().remove("openSpiderDoor");
 		p.getCache().remove("completeLever");
 		p.getCache().remove("killedLesarkus");
-		int[] questData = Quests.questData.get(Quests.TEMPLE_OF_IKOV);
+		int[] questData = p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.TEMPLE_OF_IKOV);
 		//keep order kosher
-		int[] skillIDs = {SKILLS.RANGED.id(), SKILLS.FLETCHING.id()};
+		int[] skillIDs = {Skills.RANGED, Skills.FLETCHING};
 		for (int i = 0; i < skillIDs.length; i++) {
 			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
 			incQuestReward(p, questData, i == (skillIDs.length - 1));
@@ -459,7 +434,7 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 						"I suppose you would like a reward now",
 						"I shall grant you much power");
 					p.message("A glow eminates from Lucien's helmet");
-					p.sendQuestComplete(Constants.Quests.TEMPLE_OF_IKOV);
+					p.sendQuestComplete(Quests.TEMPLE_OF_IKOV);
 					p.updateQuestStage(this, -2);
 					npcTalk(p, n, "I must be away now to make preparations for my conquest",
 						"Muhahahaha");
@@ -507,7 +482,7 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 			if (command.equals("pull")) {
 				if (!p.getCache().hasKey("ikovLever")) {
 					p.message("You have activated a trap on the lever");
-					p.damage(DataConversions.roundUp(p.getSkills().getLevel(SKILLS.HITS.id()) / 5));
+					p.damage(DataConversions.roundUp(p.getSkills().getLevel(Skills.HITS) / 5));
 				} else {
 					message(p, "You pull the lever",
 						"You hear a clunk",
@@ -521,7 +496,7 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 				}
 			} else if (command.equals("searchfortraps")) {
 				p.message("You search the lever for traps");
-				if (getCurrentLevel(p, SKILLS.THIEVING.id()) < 42) {
+				if (getCurrentLevel(p, Skills.THIEVING) < 42) {
 					p.message("You have not high thieving enough to disable this trap");
 					return;
 				}
@@ -600,7 +575,7 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 			p.message("You fit the lever into the bracket");
 			removeItem(p, ItemId.LEVER.id(), 1);
 			World.getWorld().replaceGameObject(obj,
-				new GameObject(obj.getLocation(), COMPLETE_LEVER, obj.getDirection(), obj
+				new GameObject(obj.getWorld(), obj.getLocation(), COMPLETE_LEVER, obj.getDirection(), obj
 					.getType()));
 			World.getWorld().delayedSpawnObject(obj.getLoc(), 15000);
 		}
@@ -638,13 +613,13 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 		else if (n.getID() == NpcId.LUCIEN_EDGE.id()) {
 			if (p.getQuestStage(this) == -1 || p.getQuestStage(this) == -2) {
 				p.message("You have already completed this quest");
-				n.getSkills().setLevel(SKILLS.HITS.id(), n.getSkills().getMaxStat(SKILLS.HITS.id()));
+				n.getSkills().setLevel(Skills.HITS, n.getSkills().getMaxStat(Skills.HITS));
 				return;
 			}
-			n.getSkills().setLevel(SKILLS.HITS.id(), n.getSkills().getMaxStat(SKILLS.HITS.id()));
+			n.getSkills().setLevel(Skills.HITS, n.getSkills().getMaxStat(Skills.HITS));
 			npcTalk(p, n, "You may have defeated me for now",
 				"But I will be back");
-			p.sendQuestComplete(Constants.Quests.TEMPLE_OF_IKOV);
+			p.sendQuestComplete(Quests.TEMPLE_OF_IKOV);
 			n.displayNpcTeleportBubble(n.getX(), n.getY());
 			n.remove();
 		}
@@ -675,10 +650,10 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockPlayerRangeNpc(Player p, Npc n) {
-		if (n.getID() == NpcId.LUCIEN_EDGE.id() && (p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -1 || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -2 || !p.getInventory().wielding(ItemId.PENDANT_OF_ARMADYL.id()))) {
+		if (n.getID() == NpcId.LUCIEN_EDGE.id() && (p.getQuestStage(Quests.TEMPLE_OF_IKOV) == -1 || p.getQuestStage(Quests.TEMPLE_OF_IKOV) == -2 || !p.getInventory().wielding(ItemId.PENDANT_OF_ARMADYL.id()))) {
 			return true;
 		}
-		if (n.getID() == NpcId.THE_FIRE_WARRIOR_OF_LESARKUS.id() && (p.getCache().hasKey("killedLesarkus") || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -1 || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -2)) {
+		if (n.getID() == NpcId.THE_FIRE_WARRIOR_OF_LESARKUS.id() && (p.getCache().hasKey("killedLesarkus") || p.getQuestStage(Quests.TEMPLE_OF_IKOV) == -1 || p.getQuestStage(Quests.TEMPLE_OF_IKOV) == -2)) {
 			return true;
 		} else {
 			if (n.getID() == NpcId.THE_FIRE_WARRIOR_OF_LESARKUS.id() && ((p.getInventory().hasItemId(ItemId.ICE_ARROWS.id()) && hasGoodBow(p)) || p.getCache().hasKey("shot_ice"))) {
@@ -707,7 +682,7 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onPlayerRangeNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.LUCIEN_EDGE.id()) {
-			if (p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -1 || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -2) {
+			if (p.getQuestStage(Quests.TEMPLE_OF_IKOV) == -1 || p.getQuestStage(Quests.TEMPLE_OF_IKOV) == -2) {
 				p.message("You have already completed this quest");
 				return;
 			}
@@ -720,7 +695,7 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 			}
 		}
 		else if (n.getID() == NpcId.THE_FIRE_WARRIOR_OF_LESARKUS.id()) {
-			if ((p.getCache().hasKey("killedLesarkus") || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -1 || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -2)) {
+			if ((p.getCache().hasKey("killedLesarkus") || p.getQuestStage(Quests.TEMPLE_OF_IKOV) == -1 || p.getQuestStage(Quests.TEMPLE_OF_IKOV) == -2)) {
 				p.message("You have already killed the fire warrior");
 				return;
 			}

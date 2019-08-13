@@ -1,18 +1,15 @@
 package com.openrsc.server.model.container;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.Gauntlets;
-import com.openrsc.server.external.ItemDefinition;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.model.Skills.SKILLS;
-import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
@@ -21,8 +18,6 @@ import com.openrsc.server.sql.query.logs.DeathLog;
 import com.openrsc.server.sql.query.logs.GenericLog;
 
 import java.util.*;
-
-import static com.openrsc.server.external.EntityHandler.getItemDef;
 
 public class Inventory {
 
@@ -83,11 +78,11 @@ public class Inventory {
 			}
 
 			if (this.full()) {
-				if (Constants.GameServer.MESSAGE_FULL_INVENTORY) {
+				if (Server.getServer().getConfig().MESSAGE_FULL_INVENTORY) {
 					player.message("Your Inventory is full, the " + itemToAdd.getDef().getName() + " drops to the ground!");
 				}
 				world.registerItem(
-					new GroundItem(itemToAdd.getID(), player.getX(), player.getY(), itemToAdd.getAmount(), player),
+					new GroundItem(player.getWorld(), itemToAdd.getID(), player.getX(), player.getY(), itemToAdd.getAmount(), player),
 					94000);
 				GameLogging.addQuery(new GenericLog(player.getUsername() + " dropped(inventory full) "
 					+ itemToAdd.getID() + " x" + itemToAdd.getAmount() + " at " + player.getLocation().toString()));
@@ -216,7 +211,7 @@ public class Inventory {
 			}
 		}
 
-		if (Constants.GameServer.WANT_EQUIPMENT_TAB)
+		if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB)
 			return player.getEquipment().hasEquipped(id) != -1;
 		else
 			return false;
@@ -310,7 +305,7 @@ public class Inventory {
 	}
 
 	public boolean wielding(int id) {
-		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+		if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			if (player.getEquipment().hasEquipped(id) != -1)
 				return true;
 		} else {
@@ -330,7 +325,7 @@ public class Inventory {
         Item old = new Item(i);
         Item newitem = new Item(j);
         if (old.getDef() != null && newitem.getDef() != null
-            && Constants.GameServer.WANT_EQUIPMENT_TAB
+            && Server.getServer().getConfig().WANT_EQUIPMENT_TAB
             && old.getDef().isWieldable() && newitem.getDef().isWieldable()
         && Functions.isWielding(player, i)) {
             newitem.setWielded(false);
@@ -428,7 +423,7 @@ public class Inventory {
 		}
 
 		//Can't unequip something if inventory is full
-		if (player.getInventory().full() && Constants.GameServer.WANT_EQUIPMENT_TAB) {
+		if (player.getInventory().full() && Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			player.message("You need more inventory space to unequip that.");
 			return false;
 		}
@@ -441,7 +436,7 @@ public class Inventory {
 			player.getSettings().getAppearance().getSprite(affectedItem.getDef().getWieldPosition()),
 			affectedItem.getDef().getWearableId(), false);
 		
-		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+		if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			if (player.getEquipment().hasEquipped(affectedItem.getID()) != -1) {
 				player.getEquipment().equip(affectedItem.getDef().getWieldPosition(),null);
 				add(affectedItem, false);
@@ -458,7 +453,7 @@ public class Inventory {
 		}
 		boolean shattered = false;
 		int index = -1;
-		if (Constants.GameServer.WANT_EQUIPMENT_TAB
+		if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB
 		&& (index = player.getEquipment().hasEquipped(itemID)) != -1) {
 			player.getEquipment().equip(index, null);
 			shattered = true;
@@ -487,39 +482,39 @@ public class Inventory {
 		Optional<Integer> optionalLevel = Optional.empty();
 		Optional<Integer> optionalSkillIndex = Optional.empty();
 		boolean ableToWield = true;
-		boolean bypass = !Constants.GameServer.STRICT_CHECK_ALL &&
+		boolean bypass = !Server.getServer().getConfig().STRICT_CHECK_ALL &&
 			(itemLower.startsWith("poisoned") &&
-				((itemLower.endsWith("throwing dart") && !Constants.GameServer.STRICT_PDART_CHECK) ||
-					(itemLower.endsWith("throwing knife") && !Constants.GameServer.STRICT_PKNIFE_CHECK) ||
-					(itemLower.endsWith("spear") && !Constants.GameServer.STRICT_PSPEAR_CHECK))
+				((itemLower.endsWith("throwing dart") && !Server.getServer().getConfig().STRICT_PDART_CHECK) ||
+					(itemLower.endsWith("throwing knife") && !Server.getServer().getConfig().STRICT_PKNIFE_CHECK) ||
+					(itemLower.endsWith("spear") && !Server.getServer().getConfig().STRICT_PSPEAR_CHECK))
 			);
 
 		if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
 			optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
-			optionalSkillIndex = Optional.of(SKILLS.ATTACK.id());
+			optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
 		}
 		//staff of iban (usable)
 		if (item.getID() == ItemId.STAFF_OF_IBAN.id()) {
 			optionalLevel = Optional.of(requiredLevel);
-			optionalSkillIndex = Optional.of(SKILLS.ATTACK.id());
+			optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
 		}
 		//battlestaves (incl. enchanted version)
 		if (itemLower.contains("battlestaff")) {
 			optionalLevel = Optional.of(requiredLevel);
-			optionalSkillIndex = Optional.of(SKILLS.ATTACK.id());
+			optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
 		}
 
 		if (player.getSkills().getMaxStat(requiredSkillIndex) < requiredLevel) {
 			if (!bypass) {
 				player.message("You are not a high enough level to use this item");
-				player.message("You need to have a " + Skills.getSkillName(requiredSkillIndex) + " level of " + requiredLevel);
+				player.message("You need to have a " + player.getWorld().getServer().getConstants().getSkills().getSkillName(requiredSkillIndex) + " level of " + requiredLevel);
 				ableToWield = false;
 			}
 		}
 		if (optionalSkillIndex.isPresent() && player.getSkills().getMaxStat(optionalSkillIndex.get()) < optionalLevel.get()) {
 			if (!bypass) {
 				player.message("You are not a high enough level to use this item");
-				player.message("You need to have a " + Skills.getSkillName(optionalSkillIndex.get()) + " level of " + optionalLevel.get());
+				player.message("You need to have a " + player.getWorld().getServer().getConstants().getSkills().getSkillName(optionalSkillIndex.get()) + " level of " + optionalLevel.get());
 				ableToWield = false;
 			}
 		}
@@ -529,19 +524,19 @@ public class Inventory {
 			ableToWield = false;
 		}
 		if ((item.getID() == ItemId.RUNE_PLATE_MAIL_BODY.id() || item.getID() == ItemId.RUNE_PLATE_MAIL_TOP.id())
-			&& (player.getQuestStage(Constants.Quests.DRAGON_SLAYER) != -1)) {
+			&& (player.getQuestStage(Quests.DRAGON_SLAYER) != -1)) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the dragon slayer quest");
 			return false;
-		} else if (item.getID() == ItemId.DRAGON_SWORD.id() && player.getQuestStage(Constants.Quests.LOST_CITY) != -1) {
+		} else if (item.getID() == ItemId.DRAGON_SWORD.id() && player.getQuestStage(Quests.LOST_CITY) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Lost city of zanaris quest");
 			return false;
-		} else if (item.getID() == ItemId.DRAGON_AXE.id() && player.getQuestStage(Constants.Quests.HEROS_QUEST) != -1) {
+		} else if (item.getID() == ItemId.DRAGON_AXE.id() && player.getQuestStage(Quests.HEROS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Hero's guild entry quest");
 			return false;
-		} else if (item.getID() == ItemId.DRAGON_SQUARE_SHIELD.id() && player.getQuestStage(Constants.Quests.LEGENDS_QUEST) != -1) {
+		} else if (item.getID() == ItemId.DRAGON_SQUARE_SHIELD.id() && player.getQuestStage(Quests.LEGENDS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the legend's guild quest");
 			return false;
@@ -591,7 +586,7 @@ public class Inventory {
 		} else if ((item.getID() == 2141 || item.getID() == 2142 || item.getID() == 2143) && !player.isIronMan(3)) {
 			player.message("You need to be a Hardcore Iron Man to wear this");
 			return false;
-		} else if (item.getID() == 2254 && player.getQuestStage(Constants.Quests.LEGENDS_QUEST) != -1) {
+		} else if (item.getID() == 2254 && player.getQuestStage(Quests.LEGENDS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Legends Quest");
 			return false;
@@ -599,7 +594,7 @@ public class Inventory {
 		if (!ableToWield)
 			return false;
 
-		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+		if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			//Do an inventory count check
 			int count = 0;
 			Item i;
@@ -649,7 +644,7 @@ public class Inventory {
 		player.updateWornItems(item.getDef().getWieldPosition(), item.getDef().getAppearanceId(),
 				item.getDef().getWearableId(), true);
 		
-		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+		if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			item.setWielded(false);
 			player.getEquipment().equip(item.getDef().getWieldPosition(),item);
 		}
@@ -662,7 +657,7 @@ public class Inventory {
 	public void dropOnDeath(Mob opponent) {
 		ArrayList<Item> deathItems = new ArrayList<>();
 
-		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+		if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			for (int i = 0; i < Equipment.slots; i++) {
 				Item equipped = player.getEquipment().get(i);
 				if (equipped != null) {
@@ -708,10 +703,10 @@ public class Inventory {
 
 			log.addDroppedItem(item);
 			if (item.getDef().isUntradable()) {
-				world.registerItem(new GroundItem(item.getID(), player.getX(), player.getY(), item.getAmount(), player));
+				world.registerItem(new GroundItem(player.getWorld(), item.getID(), player.getX(), player.getY(), item.getAmount(), player));
 			} else {
 				Player dropOwner = (opponent == null || !opponent.isPlayer()) ? player : (Player) opponent;
-				GroundItem groundItem = new GroundItem(item.getID(), player.getX(), player.getY(), item.getAmount(), dropOwner);
+				GroundItem groundItem = new GroundItem(player.getWorld(), item.getID(), player.getX(), player.getY(), item.getAmount(), dropOwner);
 				if (dropOwner.getIronMan() != 0) {
 					groundItem.setAttribute("playerKill", true);
 				}
@@ -746,7 +741,7 @@ public class Inventory {
 		for (Item returnItem : deathItems) {
 			add(returnItem, false);
 		}
-		if (player.getQuestStage(Constants.Quests.FAMILY_CREST) == -1 && !player.getBank().hasItemId(fam_gloves)
+		if (player.getQuestStage(Quests.FAMILY_CREST) == -1 && !player.getBank().hasItemId(fam_gloves)
 		&& !player.getInventory().hasItemId(fam_gloves)) {
 			add(new Item(fam_gloves, 1));
 		}

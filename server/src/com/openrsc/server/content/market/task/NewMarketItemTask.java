@@ -83,7 +83,7 @@ public class NewMarketItemTask extends MarketTask {
 		}
 		Market.getInstance().addRequestOpenAuctionHouseTask(owner);
 		if (updateDiscord) {
-			Server.getServer().getDiscordSender().auctionAdd(newItem);
+			Server.getServer().getDiscordService().auctionAdd(newItem);
 		}
 	}
 }

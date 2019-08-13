@@ -1,9 +1,9 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.mechanism;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -14,11 +14,7 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class UndergroundPassMechanismMap1 implements InvUseOnItemListener, InvUseOnItemExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
@@ -71,7 +67,7 @@ public class UndergroundPassMechanismMap1 implements InvUseOnItemListener, InvUs
 		else if (item.getID() == ItemId.LIT_ARROW.id() && obj.getID() == OLD_BRIDGE) {
 			if (hasABow(player)) {
 				removeItem(player, ItemId.LIT_ARROW.id(), 1);
-				if ((getCurrentLevel(player, SKILLS.RANGED.id()) < 25) || (player.getY() != 3417 && player.getX() < 701)) {
+				if ((getCurrentLevel(player, Skills.RANGED) < 25) || (player.getY() != 3417 && player.getX() < 701)) {
 					message(player, "you fire the lit arrow at the bridge",
 						"it burns out and has little effect");
 				} else {
@@ -79,14 +75,14 @@ public class UndergroundPassMechanismMap1 implements InvUseOnItemListener, InvUs
 					if (DataConversions.getRandom().nextInt(5) == 1) {
 						player.message("the arrow just misses the rope");
 					} else {
-						if (player.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == 2) {
-							player.updateQuestStage(Constants.Quests.UNDERGROUND_PASS, 3);
+						if (player.getQuestStage(Quests.UNDERGROUND_PASS) == 2) {
+							player.updateQuestStage(Quests.UNDERGROUND_PASS, 3);
 						}
 						message(player, "the arrow impales the wooden bridge, just below the rope support",
 							"the rope catches alight and begins to burn",
 							"the bridge swings down creating a walkway");
 						World.getWorld().replaceGameObject(obj,
-							new GameObject(obj.getLocation(), 727, obj.getDirection(), obj
+							new GameObject(obj.getWorld(), obj.getLocation(), 727, obj.getDirection(), obj
 								.getType()));
 						World.getWorld().delayedSpawnObject(obj.getLoc(), 10000);
 						player.teleport(702, 3420);
@@ -117,7 +113,7 @@ public class UndergroundPassMechanismMap1 implements InvUseOnItemListener, InvUs
 			message(player, "you throw the rocks onto the swamp");
 			player.message("and carefully tread from one to another");
 			removeItem(player, ItemId.ROCKS.id(), 1);
-			GameObject object = new GameObject(Point.location(697, 3441), 774, 2, 0);
+			GameObject object = new GameObject(player.getWorld(), Point.location(697, 3441), 774, 2, 0);
 			World.getWorld().registerGameObject(object);
 			World.getWorld().delayedRemoveObject(object, 10000);
 			if (player.getX() <= 695) {

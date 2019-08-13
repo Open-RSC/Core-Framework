@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.quests.members;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -34,7 +33,7 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.SCORPION_CATCHER;
+		return Quests.SCORPION_CATCHER;
 	}
 
 	@Override
@@ -51,7 +50,7 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 	public void handleReward(Player p) {
 		p.message("Well done you have completed the scorpion catcher quest");
 		p.message("@gre@You haved gained 1 quest point!");
-		incQuestReward(p, Quests.questData.get(Quests.SCORPION_CATCHER), true);
+		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.SCORPION_CATCHER), true);
 	}
 
 	@Override
@@ -243,7 +242,7 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 						playerTalk(p, n, "I have retrieved all your scorpions");
 						npcTalk(p, n, "aha my little scorpions home at last");
 						removeItem(p, ItemId.SCORPION_CAGE_ONE_TWO_THREE.id(), 1);
-						p.sendQuestComplete(Constants.Quests.SCORPION_CATCHER);
+						p.sendQuestComplete(Quests.SCORPION_CATCHER);
 					} else {
 						playerTalk(p, n, "I've not caught all the scorpions yet");
 						npcTalk(p, n, "Well remember, go speak to the seers north of here if you need any help");

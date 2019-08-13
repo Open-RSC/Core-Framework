@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.quests.members.digsite;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -23,7 +23,7 @@ public class DigsiteWorkman implements TalkToNpcListener, TalkToNpcExecutiveList
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.WORKMAN.id()) {
-			switch (p.getQuestStage(Constants.Quests.DIGSITE)) {
+			switch (p.getQuestStage(Quests.DIGSITE)) {
 				case -1:
 					playerTalk(p, n, "Hello there");
 					npcTalk(p, n, "Ah it's the great archaeologist!",
@@ -176,7 +176,7 @@ public class DigsiteWorkman implements TalkToNpcListener, TalkToNpcExecutiveList
 				"I'll hang onto this scroll shall I ?");
 			playerTalk(p, n, "Thanks");
 			removeItem(p, ItemId.DIGSITE_SCROLL.id(), 1);
-			if (!p.getCache().hasKey("digsite_winshaft") && p.getQuestStage(Constants.Quests.DIGSITE) == 5) {
+			if (!p.getCache().hasKey("digsite_winshaft") && p.getQuestStage(Quests.DIGSITE) == 5) {
 				p.getCache().store("digsite_winshaft", true);
 			}
 		}

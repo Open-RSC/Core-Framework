@@ -1,13 +1,12 @@
 package com.openrsc.server.event.rsc.impl;
 
-import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.PathValidation;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
@@ -95,7 +94,7 @@ public class RangeEvent extends GameTickEvent {
 		int bowID = getPlayerOwner().getRangeEquip();
 		if (!getPlayerOwner().loggedIn() || getPlayerOwner().inCombat()
 			|| (target.isPlayer() && !((Player) target).loggedIn())
-			|| target.getSkills().getLevel(SKILLS.HITS.id()) <= 0 || !getPlayerOwner().checkAttack(target, true)
+			|| target.getSkills().getLevel(Skills.HITS) <= 0 || !getPlayerOwner().checkAttack(target, true)
 			|| !getPlayerOwner().withinRange(target) || bowID < 0) {
 			getPlayerOwner().resetRange();
 			stop();
@@ -140,7 +139,7 @@ public class RangeEvent extends GameTickEvent {
 				}
 				boolean xbow = DataConversions.inArray(Formulae.xbowIDs, bowID);
 				int arrowID = -1;
-				if (Constants.GameServer.WANT_EQUIPMENT_TAB)
+				if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB)
 				{
 					Item ammo = getPlayerOwner().getEquipment().getAmmoItem();
 					if (ammo == null || ammo.getDef() == null)
@@ -195,7 +194,7 @@ public class RangeEvent extends GameTickEvent {
 							continue;
 						}
 						arrowID = aID;
-						if (!Constants.GameServer.MEMBER_WORLD) {
+						if (!Server.getServer().getConfig().MEMBER_WORLD) {
 							if (arrowID != 11 && arrowID != 190) {
 								getPlayerOwner().message("You don't have enough ammo in your quiver");
 								getPlayerOwner().resetRange();
@@ -255,7 +254,7 @@ public class RangeEvent extends GameTickEvent {
 					return;
 				}
 				int damage = Formulae.calcRangeHit(getPlayerOwner(),
-					getPlayerOwner().getSkills().getLevel(SKILLS.RANGED.id()), target.getArmourPoints(), arrowID);
+					getPlayerOwner().getSkills().getLevel(Skills.RANGED), target.getArmourPoints(), arrowID);
 
 				if (target.isNpc()) {
 					Npc npc = (Npc) target;
@@ -273,13 +272,13 @@ public class RangeEvent extends GameTickEvent {
 							}
 							getPlayerOwner().playerServerMessage(MessageType.QUEST, "Your shield prevents some of the damage from the flames");
 						}
-						fireDamage = (int) Math.floor(getCurrentLevel(getPlayerOwner(), SKILLS.HITS.id()) * percentage / 100.0);
+						fireDamage = (int) Math.floor(getCurrentLevel(getPlayerOwner(), Skills.HITS) * percentage / 100.0);
 						getPlayerOwner().damage(fireDamage);
 						
 						//reduce ranged level (case for KBD)
 						if (npc.getID() == NpcId.KING_BLACK_DRAGON.id()) {
-							int newLevel = getCurrentLevel(getPlayerOwner(), SKILLS.RANGED.id()) - Formulae.getLevelsToReduceAttackKBD(getPlayerOwner());
-							getPlayerOwner().getSkills().setLevel(SKILLS.RANGED.id(), newLevel);
+							int newLevel = getCurrentLevel(getPlayerOwner(), Skills.RANGED) - Formulae.getLevelsToReduceAttackKBD(getPlayerOwner());
+							getPlayerOwner().getSkills().setLevel(Skills.RANGED, newLevel);
 						}
 					}
 				}
@@ -288,7 +287,7 @@ public class RangeEvent extends GameTickEvent {
 					if (!Npc.handleRingOfAvarice(getPlayerOwner(), new Item(arrowID, 1))) {
 						if (arrows == null) {
 							World.getWorld().registerItem(
-								new GroundItem(arrowID, target.getX(), target.getY(), 1, getPlayerOwner()));
+								new GroundItem(getPlayerOwner().getWorld(), arrowID, target.getX(), target.getY(), 1, getPlayerOwner()));
 						} else {
 							arrows.setAmount(arrows.getAmount() + 1);
 						}
@@ -300,7 +299,7 @@ public class RangeEvent extends GameTickEvent {
 				ActionSender.sendSound(getPlayerOwner(), "shoot");
 				if (EntityHandler.getItemDef(arrowID).getName().toLowerCase().contains("poison") && target.isPlayer()) {
 					if (DataConversions.random(0, 100) <= 10) {
-						target.poisonDamage = target.getSkills().getMaxStat(SKILLS.HITS.id());
+						target.poisonDamage = target.getSkills().getMaxStat(Skills.HITS);
 						target.startPoisonEvent();
 					}
 				}

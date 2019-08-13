@@ -1,10 +1,11 @@
 package com.openrsc.server.event.rsc.impl.combat;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.constants.Constants;
+import com.openrsc.server.Server;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScriptLoader;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -104,8 +105,8 @@ public class CombatEvent extends GameTickEvent {
 					int reflectedDamage = damage/10 + 1;
 					if (((Player) target).getCache().hasKey("ringofrecoil")) {
 						int ringCheck = ((Player) target).getCache().getInt("ringofrecoil");
-						if (Constants.GameServer.RING_OF_RECOIL_LIMIT - ringCheck <= reflectedDamage) {
-							reflectedDamage = Constants.GameServer.RING_OF_RECOIL_LIMIT - ringCheck;
+						if (Server.getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck <= reflectedDamage) {
+							reflectedDamage = Server.getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck;
 							((Player) target).getCache().remove("ringofrecoil");
 							((Player) target).getInventory().shatter(ItemId.RING_OF_RECOIL.id());
 						} else {
@@ -132,7 +133,7 @@ public class CombatEvent extends GameTickEvent {
 			}
 		}
 
-		target.getSkills().subtractLevel(SKILLS.HITS.id(), damage, false);
+		target.getSkills().subtractLevel(Skills.HITS, damage, false);
 		target.getUpdateFlags().setDamage(new Damage(target, damage));
 		if (target.isNpc() && hitter.isPlayer()) {
 			Npc n = (Npc) target;
@@ -146,9 +147,9 @@ public class CombatEvent extends GameTickEvent {
 		if (target.isPlayer()) {
 			if (hitter.isNpc()) {
 				Npc n = (Npc) hitter;
-				if (DataConversions.inArray(Constants.GameServer.ARMOR_NPCS, n.getID())) {
+				if (DataConversions.inArray(Constants.ARMOR_NPCS, n.getID())) {
 					combatSound = damage > 0 ? "combat2b" : "combat2a";
-				} else if (DataConversions.inArray(Constants.GameServer.UNDEAD_NPCS, n.getID())) {
+				} else if (DataConversions.inArray(Constants.UNDEAD_NPCS, n.getID())) {
 					combatSound = damage > 0 ? "combat3b" : "combat3a";
 				} else {
 					combatSound = damage > 0 ? "combat1b" : "combat1a";
@@ -165,9 +166,9 @@ public class CombatEvent extends GameTickEvent {
 		if (hitter.isPlayer()) {
 			if (target.isNpc()) {
 				Npc n = (Npc) target;
-				if (DataConversions.inArray(Constants.GameServer.ARMOR_NPCS, n.getID())) {
+				if (DataConversions.inArray(Constants.ARMOR_NPCS, n.getID())) {
 					combatSound = damage > 0 ? "combat2b" : "combat2a";
-				} else if (DataConversions.inArray(Constants.GameServer.UNDEAD_NPCS, n.getID())) {
+				} else if (DataConversions.inArray(Constants.UNDEAD_NPCS, n.getID())) {
 					combatSound = damage > 0 ? "combat3b" : "combat3a";
 				} else {
 					combatSound = damage > 0 ? "combat1b" : "combat1a";

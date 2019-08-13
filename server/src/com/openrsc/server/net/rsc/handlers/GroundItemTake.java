@@ -1,6 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.action.WalkToPointAction;
 import com.openrsc.server.model.entity.GroundItem;
@@ -57,7 +57,7 @@ public class GroundItemTake implements PacketHandler {
 					return;
 				}
 
-				if (item.getDef().isMembersOnly() && !Constants.GameServer.MEMBER_WORLD) {
+				if (item.getDef().isMembersOnly() && !Server.getServer().getConfig().MEMBER_WORLD) {
 					player.sendMemberErrorMessage();
 					return;
 				}

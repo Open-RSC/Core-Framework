@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.quests.members.shilovillage;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -22,7 +21,7 @@ public class ShiloVillageTombDolmen implements QuestInterface, ObjectActionListe
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.SHILO_VILLAGE;
+		return Quests.SHILO_VILLAGE;
 	}
 
 	@Override
@@ -72,7 +71,7 @@ public class ShiloVillageTombDolmen implements QuestInterface, ObjectActionListe
 		player.message("You have completed the Shilo Village Quest.");
 		player.message("You gain some experience in crafting.");
 		player.message("@gre@You haved gained 2 quest points!");
-		incQuestReward(player, Quests.questData.get(Quests.SHILO_VILLAGE), true);
+		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.SHILO_VILLAGE), true);
 	}
 
 	@Override
@@ -83,14 +82,14 @@ public class ShiloVillageTombDolmen implements QuestInterface, ObjectActionListe
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if (obj.getID() == TOMB_DOLMEN) {
-			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
+			if (p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 				p.message("You find nothing on the Dolmen.");
 				return;
 			}
 			if (command.equalsIgnoreCase("Look")) {
 				message(p, "The Dolmen is intricately decorated with the family",
 					"symbol of two crossed palm trees .");
-				if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == 8) {
+				if (p.getQuestStage(Quests.SHILO_VILLAGE) == 8) {
 					p.message("There is nothing on the Dolmen.");
 					return;
 				}
@@ -161,7 +160,7 @@ public class ShiloVillageTombDolmen implements QuestInterface, ObjectActionListe
 					}
 					break;
 				case RASHILIYA_CORPSE: // COMPLETE QUEST - RASHILIYIA CORPSE
-					if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == 8) {
+					if (p.getQuestStage(Quests.SHILO_VILLAGE) == 8) {
 						p.setBusy(true);
 						p.message("You carefully place Rashiliyia's remains on the Dolmen.");
 						sleep(1200);
@@ -179,7 +178,7 @@ public class ShiloVillageTombDolmen implements QuestInterface, ObjectActionListe
 							rash.remove();
 						}
 						removeItem(p, ItemId.RASHILIYA_CORPSE.id(), 1);
-						p.sendQuestComplete(Constants.Quests.SHILO_VILLAGE);
+						p.sendQuestComplete(Quests.SHILO_VILLAGE);
 						p.setBusy(false);
 					}
 					break;

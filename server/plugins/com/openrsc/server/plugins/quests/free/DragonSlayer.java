@@ -1,11 +1,10 @@
 package com.openrsc.server.plugins.quests.free;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -13,32 +12,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
-import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
+import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.closeGenericObject;
-import static com.openrsc.server.plugins.Functions.doDoor;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.incQuestReward;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.openGenericObject;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.*;
 
 /**
  * @author n0m
@@ -70,7 +49,7 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.DRAGON_SLAYER;
+		return Quests.DRAGON_SLAYER;
 	}
 
 	@Override
@@ -88,9 +67,9 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 		p.teleport(410, 3481, false);
 		p.message("Well done you have completed the dragon slayer quest!");
 		p.message("@gre@You haved gained 2 quest points!");
-		int[] questData = Quests.questData.get(Quests.DRAGON_SLAYER);
+		int[] questData = p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.DRAGON_SLAYER);
 		//keep order kosher
-		int[] skillIDs = {SKILLS.STRENGTH.id(), SKILLS.DEFENSE.id()};
+		int[] skillIDs = {Skills.STRENGTH, Skills.DEFENSE};
 		for (int i = 0; i < skillIDs.length; i++) {
 			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
 			incQuestReward(p, questData, i == (skillIDs.length - 1));
@@ -414,26 +393,26 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.WORMBRAIN.id() && p.getQuestStage(this) >= 2) {
 			World.getWorld().registerItem(
-				new GroundItem(ItemId.MAP_PIECE_1.id(), n.getX(), n.getY(), 1, p));
+				new GroundItem(p.getWorld(), ItemId.MAP_PIECE_1.id(), n.getX(), n.getY(), 1, p));
 		}
 		if (n.getID() == NpcId.RAT_WMAZEKEY.id()) {
 			World.getWorld().registerItem(
-				new GroundItem(ItemId.RED_KEY.id(), n.getX(), n.getY(), 1, p));
+				new GroundItem(p.getWorld(), ItemId.RED_KEY.id(), n.getX(), n.getY(), 1, p));
 		} else if (n.getID() == NpcId.GHOST_WMAZEKEY.id()) {
 			World.getWorld().registerItem(
-				new GroundItem(ItemId.ORANGE_KEY.id(), n.getX(), n.getY(), 1, p));
+				new GroundItem(p.getWorld(), ItemId.ORANGE_KEY.id(), n.getX(), n.getY(), 1, p));
 		} else if (n.getID() == NpcId.SKELETON_WMAZEKEY.id()) {
 			World.getWorld().registerItem(
-				new GroundItem(ItemId.YELLOW_KEY.id(), n.getX(), n.getY(), 1, p));
+				new GroundItem(p.getWorld(), ItemId.YELLOW_KEY.id(), n.getX(), n.getY(), 1, p));
 		} else if (n.getID() == NpcId.ZOMBIE_WMAZEKEY.id()) {
 			World.getWorld().registerItem(
-				new GroundItem(ItemId.BLUE_KEY.id(), n.getX(), n.getY(), 1, p));
+				new GroundItem(p.getWorld(), ItemId.BLUE_KEY.id(), n.getX(), n.getY(), 1, p));
 		} else if (n.getID() == NpcId.MELZAR_THE_MAD.id()) {
 			World.getWorld().registerItem(
-				new GroundItem(ItemId.MAGENTA_KEY.id(), n.getX(), n.getY(), 1, p));
+				new GroundItem(p.getWorld(), ItemId.MAGENTA_KEY.id(), n.getX(), n.getY(), 1, p));
 		} else if (n.getID() == NpcId.LESSER_DEMON_WMAZEKEY.id()) {
 			World.getWorld().registerItem(
-				new GroundItem(ItemId.BLACK_KEY.id(), n.getX(), n.getY(), 1, p));
+				new GroundItem(p.getWorld(), ItemId.BLACK_KEY.id(), n.getX(), n.getY(), 1, p));
 		} else if (n.getID() == NpcId.DRAGON.id() && p.getQuestStage(this) == 3) {
 			p.sendQuestComplete(getQuestId());
 		}

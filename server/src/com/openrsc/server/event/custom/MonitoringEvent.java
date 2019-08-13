@@ -1,6 +1,5 @@
 package com.openrsc.server.event.custom;
 
-import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.entity.player.Player;
@@ -23,7 +22,7 @@ public class MonitoringEvent extends GameTickEvent {
 
 	public void run() {
 		// Processing game events and state took longer than the tick
-		if(Server.getServer().getLastTickDuration() >= Constants.GameServer.GAME_TICK) {
+		if(Server.getServer().getLastTickDuration() >= Server.getServer().getConfig().GAME_TICK) {
 			final String message = "Can't keep up: " +
 				Server.getServer().getLastTickDuration() + "ms " +
 				Server.getServer().getLastIncomingPacketsDuration() + "ms " +
@@ -37,11 +36,11 @@ public class MonitoringEvent extends GameTickEvent {
 					continue;
 				}
 
-				p.playerServerMessage(MessageType.QUEST, Constants.GameServer.MESSAGE_PREFIX + message);
+				p.playerServerMessage(MessageType.QUEST, Server.getServer().getConfig().MESSAGE_PREFIX + message);
 			}
 		}
 
-		final long ticksLate = Server.getServer().getTimeLate() / Constants.GameServer.GAME_TICK;
+		final long ticksLate = Server.getServer().getTimeLate() / Server.getServer().getConfig().GAME_TICK;
 		final boolean isServerLate = ticksLate >= 1;
 
 		// Server fell behind, skip ticks
@@ -59,16 +58,16 @@ public class MonitoringEvent extends GameTickEvent {
 							continue;
 						}
 
-						p.playerServerMessage(MessageType.QUEST, Constants.GameServer.MESSAGE_PREFIX + message);
+						p.playerServerMessage(MessageType.QUEST, Server.getServer().getConfig().MESSAGE_PREFIX + message);
 					}
 
-					Server.getServer().getDiscordSender().monitoringSendServerBehind(message);
+					Server.getServer().getDiscordService().monitoringSendServerBehind(message);
 
 					stop();
 				}
 			});
 
-			if (Constants.GameServer.DEBUG) {
+			if (Server.getServer().getConfig().DEBUG) {
 				LOGGER.warn(message);
 			}
 		}

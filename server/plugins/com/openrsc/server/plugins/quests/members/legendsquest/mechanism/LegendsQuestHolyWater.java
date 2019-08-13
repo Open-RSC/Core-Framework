@@ -1,11 +1,11 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.mechanism;
 
-import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.event.RestartableDelayedEvent;
 import com.openrsc.server.event.rsc.impl.CustomProjectileEvent;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -63,7 +63,7 @@ public class LegendsQuestHolyWater implements InvActionListener, InvActionExecut
 		}
 		else {
 			Npc ungadulu = getNearestNpc(player, NpcId.UNGADULU.id(), 4);
-			if (ungadulu == null || player.getQuestStage(Constants.Quests.LEGENDS_QUEST) > 3) {
+			if (ungadulu == null || player.getQuestStage(Quests.LEGENDS_QUEST) > 3) {
 				player.message("You see no one suitable to throw it at.");
 			}
 			else {

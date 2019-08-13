@@ -1,9 +1,9 @@
 package com.openrsc.server.plugins.npcs;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.external.CerterDef;
 import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -11,9 +11,7 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
@@ -28,7 +26,7 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
 		// Forester (Log certer; custom)
 		if ((n.getID() == NpcId.FORESTER.id())
-			&& !Constants.GameServer.WANT_WOODCUTTING_GUILD) {
+			&& !Server.getServer().getConfig().WANT_WOODCUTTING_GUILD) {
 			return;
 		}
 
@@ -107,7 +105,7 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 		final String[] names = certerDef.getCertNames();
 		p.message("How many certificates do you wish to trade in?");
 		int certAmount;
-		if (Constants.GameServer.WANT_CERTER_BANK_EXCHANGE) {
+		if (Server.getServer().getConfig().WANT_CERTER_BANK_EXCHANGE) {
 			certAmount = showMenu(p, n, false, "One", "two", "Three", "four",
 				"five", "All to bank");
 		} else {
@@ -161,7 +159,7 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 		p.message("How many " + certerDef.getType() + ending
 			+ " do you wish to trade in?");
 		int certAmount;
-		if (Constants.GameServer.WANT_CERTER_BANK_EXCHANGE) {
+		if (Server.getServer().getConfig().WANT_CERTER_BANK_EXCHANGE) {
 			certAmount = showMenu(p, n, false, "five", "ten", "Fifteen", "Twenty", "Twentyfive",
 					"All from bank");
 		} else {
@@ -240,6 +238,6 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return (DataConversions.inArray(certers, n.getID())) || (n.getID() == NpcId.FORESTER.id() && Constants.GameServer.WANT_WOODCUTTING_GUILD);
+		return (DataConversions.inArray(certers, n.getID())) || (n.getID() == NpcId.FORESTER.id() && Server.getServer().getConfig().WANT_WOODCUTTING_GUILD);
 	}
 }

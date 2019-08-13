@@ -1,10 +1,11 @@
 package com.openrsc.server.plugins.skills;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ItemCookingDef;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -22,7 +23,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 	@Override
 	public void onInvUseOnObject(GameObject object, Item item, Player owner) {
 		Npc cook = getNearestNpc(owner, 7, 20);
-		if (cook != null && owner.getQuestStage(Constants.Quests.COOKS_ASSISTANT) != -1
+		if (cook != null && owner.getQuestStage(Quests.COOKS_ASSISTANT) != -1
 			&& object.getID() == 119) {
 			cook.face(owner);
 			owner.face(cook);
@@ -52,7 +53,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 					final ItemCookingDef cookingDef = item.getCookingDef();
 					p.message("The meat is now nicely cooked");
 					message(p, "Now speak to the cooking instructor again");
-					p.incExp(SKILLS.COOKING.id(), cookingDef.getExp(), true);
+					p.incExp(Skills.COOKING, cookingDef.getExp(), true);
 					p.getCache().set("tutorial", 31);
 					p.getInventory().replace(ItemId.RAW_RAT_MEAT.id(), ItemId.COOKEDMEAT.id());
 
@@ -82,11 +83,11 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 
 		// Poison (Hazeel Cult)
 		else if (item.getID() == ItemId.POISON.id() && object.getID() == 435 && object.getX() == 618 && object.getY() == 3453) {
-			if (p.getQuestStage(Constants.Quests.THE_HAZEEL_CULT) == 3 && p.getCache().hasKey("evil_side")) {
+			if (p.getQuestStage(Quests.THE_HAZEEL_CULT) == 3 && p.getCache().hasKey("evil_side")) {
 				message(p, "you poor the poison into the hot pot",
 					"the poison desolves into the soup");
 				removeItem(p, ItemId.POISON.id(), 1);
-				p.updateQuestStage(Constants.Quests.THE_HAZEEL_CULT, 4);
+				p.updateQuestStage(Quests.THE_HAZEEL_CULT, 4);
 			} else {
 				p.message("nothing interesting happens");
 			}
@@ -96,7 +97,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 			cookMethod(p, ItemId.SEAWEED.id(), ItemId.SODA_ASH.id(), true, "You put the seaweed on the "
 				+ object.getGameObjectDef().getName().toLowerCase(), "The seaweed burns to ashes");
 		} else if (item.getID() == ItemId.COOKEDMEAT.id()) { // Cooked meat to get burnt meat
-			if (p.getQuestStage(Constants.Quests.WITCHS_POTION) != -1) {
+			if (p.getQuestStage(Quests.WITCHS_POTION) != -1) {
 				showBubble(p, item);
 				message(p, 1800, cookingOnMessage(p, item, object, false));
 				removeItem(p, ItemId.COOKEDMEAT.id(), 1);
@@ -111,7 +112,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 				p.message("Nothing interesting happens");
 				return;
 			}
-			if (p.getSkills().getLevel(SKILLS.COOKING.id()) < cookingDef.getReqLevel()) {
+			if (p.getSkills().getLevel(Skills.COOKING) < cookingDef.getReqLevel()) {
 				String itemName = item.getDef().getName().toLowerCase();
 				itemName = itemName.startsWith("raw ") ? itemName.substring(4) :
 					itemName.startsWith("uncooked ") ? itemName.substring(9) : itemName;
@@ -138,12 +139,12 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 			else
 				p.message(cookingOnMessage(p, item, object, needOven));
 			showBubble(p, item);
-			p.setBatchEvent(new BatchEvent(p, timeToCook, "Cooking on Object", Formulae.getRepeatTimes(p, SKILLS.COOKING.id()), false) {
+			p.setBatchEvent(new BatchEvent(p, timeToCook, "Cooking on Object", Formulae.getRepeatTimes(p, Skills.COOKING), false) {
 
 				@Override
 				public void action() {
 					Item cookedFood = new Item(cookingDef.getCookedId());
-					if (Constants.GameServer.WANT_FATIGUE) {
+					if (Server.getServer().getConfig().WANT_FATIGUE) {
 						if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
 							getOwner().message("You are too tired to cook this food");
 							interrupt();
@@ -153,10 +154,10 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 					showBubble(getOwner(), item);
 					getOwner().playSound("cooking");
 					if (getOwner().getInventory().remove(item) > -1) {
-						if (!Formulae.burnFood(getOwner(), item.getID(), getOwner().getSkills().getLevel(SKILLS.COOKING.id())) || item.getID() == ItemId.RAW_LAVA_EEL.id()) {
+						if (!Formulae.burnFood(getOwner(), item.getID(), getOwner().getSkills().getLevel(Skills.COOKING)) || item.getID() == ItemId.RAW_LAVA_EEL.id()) {
 							getOwner().getInventory().add(cookedFood);
 							getOwner().message(cookedMessage(p, cookedFood, isOvenFood(item)));
-							getOwner().incExp(SKILLS.COOKING.id(), cookingDef.getExp(), true);
+							getOwner().incExp(Skills.COOKING, cookingDef.getExp(), true);
 						} else {
 							getOwner().getInventory().add(new Item(cookingDef.getBurnedId()));
 							if (cookedFood.getID() == ItemId.COOKEDMEAT.id()) {

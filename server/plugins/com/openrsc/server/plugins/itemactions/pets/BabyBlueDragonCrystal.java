@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.itemactions.pets;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
@@ -19,21 +19,21 @@ public class BabyBlueDragonCrystal implements InvActionListener, InvActionExecut
 
 	@Override
 	public void onInvAction(Item item, Player player, String command) {
-		//if (Constants.GameServer.DEBUG)
+		//if (getConfig().DEBUG)
 		System.out.println("Pet item clicked");
 		int id = item.getID();
 
 		if (id == ItemId.A_RED_CRYSTAL.id())
-			if (Constants.GameServer.WANT_PETS)
+			if (Server.getServer().getConfig().WANT_PETS)
 				handleBabyBlueDragon(player, item, command);
 			else
 				player.message("Nothing interesting happens");
 	}
 
 	private void handleBabyBlueDragon(Player player, Item item, String command) {
-		if (Constants.GameServer.DEBUG)
+		if (Server.getServer().getConfig().DEBUG)
 		System.out.println("Pet spawn attempt");
-		if (Constants.GameServer.WANT_PETS){
+		if (Server.getServer().getConfig().WANT_PETS){
 			if (player.getInventory().hasItemId(ItemId.A_RED_CRYSTAL.id())) {
 				if (command.equalsIgnoreCase("inspect")) {
 					if (player.getInventory().hasItemId(ItemId.A_GLOWING_RED_CRYSTAL.id())) {

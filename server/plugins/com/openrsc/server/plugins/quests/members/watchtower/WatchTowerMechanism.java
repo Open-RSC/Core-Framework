@@ -1,9 +1,6 @@
 package com.openrsc.server.plugins.quests.members.watchtower;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -78,21 +75,21 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 			"And once again Yanille will be safe",
 			"From the threat of the ogres",
 			"Throw the lever to activate the system...");
-		if (p.getQuestStage(Constants.Quests.WATCHTOWER) == 9) {
-			p.updateQuestStage(Constants.Quests.WATCHTOWER, 10);
+		if (p.getQuestStage(Quests.WATCHTOWER) == 9) {
+			p.updateQuestStage(Quests.WATCHTOWER, 10);
 		}
 	}
 
 	@Override
 	public void onInvUseOnNpc(Player p, Npc npc, Item item) {
 		if (npc.getID() == NpcId.WATCHTOWER_WIZARD.id()) {
-			if (p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
+			if (p.getQuestStage(Quests.WATCHTOWER) == -1) {
 				p.message("The wizard has no need for more evidence");
 				return;
 			}
 			switch (ItemId.getById(item.getID())) {
 				case POWERING_CRYSTAL1:
-					if (p.getQuestStage(Constants.Quests.WATCHTOWER) == 10) {
+					if (p.getQuestStage(Quests.WATCHTOWER) == 10) {
 						npcTalk(p, npc, "More crystals ?",
 							"I don't need any more now...");
 						return;
@@ -111,7 +108,7 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 					}
 					break;
 				case POWERING_CRYSTAL2:
-					if (p.getQuestStage(Constants.Quests.WATCHTOWER) == 10) {
+					if (p.getQuestStage(Quests.WATCHTOWER) == 10) {
 						npcTalk(p, npc, "More crystals ?",
 							"I don't need any more now...");
 						return;
@@ -129,7 +126,7 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 					}
 					break;
 				case POWERING_CRYSTAL3:
-					if (p.getQuestStage(Constants.Quests.WATCHTOWER) == 10) {
+					if (p.getQuestStage(Quests.WATCHTOWER) == 10) {
 						npcTalk(p, npc, "More crystals ?",
 							"I don't need any more now...");
 						return;
@@ -147,7 +144,7 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 					}
 					break;
 				case POWERING_CRYSTAL4:
-					if (p.getQuestStage(Constants.Quests.WATCHTOWER) == 10) {
+					if (p.getQuestStage(Quests.WATCHTOWER) == 10) {
 						npcTalk(p, npc, "More crystals ?",
 							"I don't need any more now...");
 						return;
@@ -210,8 +207,8 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 					npcTalk(p, npc, "Here it is, a dangerous substance",
 						"I must remind you that this potion can only be used",
 						"If your magic ability is high enough");
-					if (p.getQuestStage(Constants.Quests.WATCHTOWER) == 7) {
-						p.updateQuestStage(Constants.Quests.WATCHTOWER, 8);
+					if (p.getQuestStage(Quests.WATCHTOWER) == 7) {
+						p.updateQuestStage(Quests.WATCHTOWER, 8);
 					}
 					break;
 				case MAGIC_OGRE_POTION:
@@ -224,13 +221,13 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 			}
 		}
 		else if (npc.getID() == NpcId.CITY_GUARD.id() && item.getID() == ItemId.DEATH_RUNE.id()) {
-			if (p.getCache().hasKey("city_guard_riddle") || p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
+			if (p.getCache().hasKey("city_guard_riddle") || p.getQuestStage(Quests.WATCHTOWER) == -1) {
 				p.message("The guard is not listening to you");
 			} else {
 				removeItem(p, ItemId.DEATH_RUNE.id(), 1);
 				addItem(p, ItemId.SKAVID_MAP.id(), 1);
-				if (p.getQuestStage(Constants.Quests.WATCHTOWER) == 3) {
-					p.updateQuestStage(Constants.Quests.WATCHTOWER, 4);
+				if (p.getQuestStage(Quests.WATCHTOWER) == 3) {
+					p.updateQuestStage(Quests.WATCHTOWER, 4);
 				}
 				p.getCache().store("city_guard_riddle", true);
 				playerTalk(p, npc, "I worked it out!");
@@ -241,7 +238,7 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 			}
 		}
 		else if (npc.getID() == NpcId.OGRE_GUARD_CAVE_ENTRANCE.id() && item.getID() == ItemId.NIGHTSHADE.id()) {
-			if (p.getQuestStage(Constants.Quests.WATCHTOWER) < 5) {
+			if (p.getQuestStage(Quests.WATCHTOWER) < 5) {
 				p.message("The guard is occupied at the moment");
 			} else {
 				p.playerServerMessage(MessageType.QUEST, "You give the guard some nightshade");
@@ -265,8 +262,8 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 				"Then this is the item to have!");
 			p.message("The wizard gives you a complete statue");
 			addItem(p, ItemId.OGRE_RELIC.id(), 1);
-			if (p.getQuestStage(Constants.Quests.WATCHTOWER) == 2) {
-				p.updateQuestStage(Constants.Quests.WATCHTOWER, 3);
+			if (p.getQuestStage(Quests.WATCHTOWER) == 2) {
+				p.updateQuestStage(Quests.WATCHTOWER, 3);
 			}
 		} else {
 			npcTalk(p, n, "There may be more parts to find...",
@@ -287,19 +284,19 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 			p.message("You take the robe");
 			addItem(p, ItemId.SHAMAN_ROBE.id(), 1);
 			i.remove();
-			if (p.getQuestStage(Constants.Quests.WATCHTOWER) == 5) {
-				p.updateQuestStage(Constants.Quests.WATCHTOWER, 6);
+			if (p.getQuestStage(Quests.WATCHTOWER) == 5) {
+				p.updateQuestStage(Quests.WATCHTOWER, 6);
 			}
 		}
 		else if (i.getID() == ItemId.POWERING_CRYSTAL1.id() || i.getID() == ItemId.POWERING_CRYSTAL2.id()
 				|| i.getID() == ItemId.POWERING_CRYSTAL3.id() || i.getID() == ItemId.POWERING_CRYSTAL4.id()) {
-			if (p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
+			if (p.getQuestStage(Quests.WATCHTOWER) == -1) {
 				message(p, "You try and take the crystal but its stuck solid!",
 					"You feel magic power coursing through the crystal...",
 					"The force renews your magic level");
-				int maxMagic = getMaxLevel(p, SKILLS.MAGIC.id());
-				if (getCurrentLevel(p, SKILLS.MAGIC.id()) < maxMagic) {
-					p.getSkills().setLevel(SKILLS.MAGIC.id(), maxMagic);
+				int maxMagic = getMaxLevel(p, Skills.MAGIC);
+				if (getCurrentLevel(p, Skills.MAGIC) < maxMagic) {
+					p.getSkills().setLevel(Skills.MAGIC, maxMagic);
 				}
 			} else {
 				p.message("You take the crystal");

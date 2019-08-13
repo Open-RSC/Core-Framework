@@ -61,9 +61,13 @@ public class FishingTrawler extends DelayedEvent {
 		"check those nets"};
 	
 	private List<SimpleSubscriber<FishingTrawler>> subscribers = new ArrayList<SimpleSubscriber<FishingTrawler>>();
+
+	private final World world;
 	
-	public FishingTrawler(TrawlerBoat selectedBoat) {
+	public FishingTrawler(World world, TrawlerBoat selectedBoat) {
 		super(null, 600, "Fishing Trawler Event");
+
+		this.world = world;
 		
 		if (selectedBoat == TrawlerBoat.EAST) {
 			shipArea = new Area(270, 278, 740, 744, "FishingTrawler: Fine");
@@ -390,11 +394,11 @@ public class FishingTrawler extends DelayedEvent {
 			int southSide = currentStage == State.FIRST_SHIP ? spawnLocation.getY() - 1 : shipAreaWaterSpawn.getY() - 1;
 			int northSide = currentStage == State.FIRST_SHIP ? spawnLocation.getY() + 1 : shipAreaWaterSpawn.getY() + 1;
 			if (y == southSide) {
-				GameObject newHoleNorth = new GameObject(new Point(x, y), LEAK1, 0, 0);
+				GameObject newHoleNorth = new GameObject(world, new Point(x, y), LEAK1, 0, 0);
 				World.getWorld().registerGameObject(newHoleNorth);
 				leaks[getFreeLeakIndex()] = newHoleNorth;
 			} else if (y == northSide) {
-				GameObject newHoleSouth = new GameObject(new Point(x, y), LEAK1, 4, 0);
+				GameObject newHoleSouth = new GameObject(world, new Point(x, y), LEAK1, 4, 0);
 				World.getWorld().registerGameObject(newHoleSouth);
 				leaks[getFreeLeakIndex()] = newHoleSouth;
 			}

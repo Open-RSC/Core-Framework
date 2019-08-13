@@ -1,11 +1,11 @@
 package com.openrsc.server.event.rsc.impl;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.PathValidation;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -84,7 +84,7 @@ public class RangeEventNpc extends GameTickEvent {
 			int combDiff = Math.abs(getOwner().getCombatLevel() - target.getCombatLevel());
 			int targetWildLvl = target.getLocation().wildernessLevel();
 			int myWildLvl = getOwner().getLocation().wildernessLevel();
-			if ((target.isPlayer() && !((Player) target).loggedIn()) || target.getSkills().getLevel(SKILLS.HITS.id()) <= 0 || !getOwner().withinRange(target)) {
+			if ((target.isPlayer() && !((Player) target).loggedIn()) || target.getSkills().getLevel(Skills.HITS) <= 0 || !getOwner().withinRange(target)) {
 				getOwner().resetRange();
 				stop();
 				return;
@@ -145,12 +145,12 @@ public class RangeEventNpc extends GameTickEvent {
 						}
 					}
 					int arrowID = -1;
-					int damage = Formulae.calcRangeHitNpc(getOwner(), getOwner().getSkills().getLevel(SKILLS.RANGED.id()), target.getArmourPoints(), 11);
+					int damage = Formulae.calcRangeHitNpc(getOwner(), getOwner().getSkills().getLevel(Skills.RANGED), target.getArmourPoints(), 11);
 					if (Formulae.looseArrow(damage)) {
 						GroundItem arrows = getArrows(11);
 						if (arrows == null) {
 							for (Player p : World.getWorld().getPlayers()) {
-								World.getWorld().registerItem(new GroundItem(11, target.getX(), target.getY(), 1, p));
+								World.getWorld().registerItem(new GroundItem(p.getWorld(), 11, target.getX(), target.getY(), 1, p));
 							}
 						} else {
 							arrows.setAmount(arrows.getAmount() + 1);
@@ -161,7 +161,7 @@ public class RangeEventNpc extends GameTickEvent {
 					}
 					if (EntityHandler.getItemDef(11).getName().toLowerCase().contains("poison") && target.isPlayer()) {
 						if (DataConversions.random(0, 100) <= 10) {
-							target.poisonDamage = target.getSkills().getMaxStat(SKILLS.HITS.id());
+							target.poisonDamage = target.getSkills().getMaxStat(Skills.HITS);
 							target.startPoisonEvent();
 						}
 					}

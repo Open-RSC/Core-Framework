@@ -1,18 +1,12 @@
 package com.openrsc.server.plugins.skills;
 
-import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.event.MiniEvent;
 import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.external.ItemArrowHeadDef;
-import com.openrsc.server.external.ItemBowStringDef;
-import com.openrsc.server.external.ItemDartTipDef;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.ItemLogCutDef;
+import com.openrsc.server.external.*;
 import com.openrsc.server.model.MenuOptionListener;
-import com.openrsc.server.model.Skills;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -25,29 +19,29 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 
 	@Override
 	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
-		if (item1.getID() == ItemId.FEATHER.id() && attachFeathers(player, item1, item2)) {
+		if (item1.getID() == com.openrsc.server.constants.ItemId.FEATHER.id() && attachFeathers(player, item1, item2)) {
 			return true;
-		} else if (item2.getID() == ItemId.FEATHER.id() && attachFeathers(player, item2, item1)) {
+		} else if (item2.getID() == com.openrsc.server.constants.ItemId.FEATHER.id() && attachFeathers(player, item2, item1)) {
 			return true;
-		} else if (item1.getID() == ItemId.BOW_STRING.id() && doBowString(player, item1, item2)) {
+		} else if (item1.getID() == com.openrsc.server.constants.ItemId.BOW_STRING.id() && doBowString(player, item1, item2)) {
 			return true;
-		} else if (item2.getID() == ItemId.BOW_STRING.id() && doBowString(player, item2, item1)) {
+		} else if (item2.getID() == com.openrsc.server.constants.ItemId.BOW_STRING.id() && doBowString(player, item2, item1)) {
 			return true;
-		} else if (item1.getID() == ItemId.HEADLESS_ARROWS.id() && doArrowHeads(player, item1, item2)) {
+		} else if (item1.getID() == com.openrsc.server.constants.ItemId.HEADLESS_ARROWS.id() && doArrowHeads(player, item1, item2)) {
 			return true;
-		} else if (item2.getID() == ItemId.HEADLESS_ARROWS.id() && doArrowHeads(player, item2, item1)) {
+		} else if (item2.getID() == com.openrsc.server.constants.ItemId.HEADLESS_ARROWS.id() && doArrowHeads(player, item2, item1)) {
 			return true;
-		} else if (item1.getID() == ItemId.KNIFE.id() && doLogCut(player, item1, item2)) {
+		} else if (item1.getID() == com.openrsc.server.constants.ItemId.KNIFE.id() && doLogCut(player, item1, item2)) {
 			return true;
-		} else if (item2.getID() == ItemId.KNIFE.id() && doLogCut(player, item2, item1)) {
+		} else if (item2.getID() == com.openrsc.server.constants.ItemId.KNIFE.id() && doLogCut(player, item2, item1)) {
 			return true;
-		} else if (item1.getID() == ItemId.CHISEL.id() && (item2.getID() == ItemId.QUEST_OYSTER_PEARLS.id() || item2.getID() == ItemId.OYSTER_PEARLS.id()) && doPearlCut(player, item1, item2)) {
+		} else if (item1.getID() == com.openrsc.server.constants.ItemId.CHISEL.id() && (item2.getID() == com.openrsc.server.constants.ItemId.QUEST_OYSTER_PEARLS.id() || item2.getID() == com.openrsc.server.constants.ItemId.OYSTER_PEARLS.id()) && doPearlCut(player, item1, item2)) {
 			return true;
-		} else if (item2.getID() == ItemId.CHISEL.id() && (item1.getID() == ItemId.QUEST_OYSTER_PEARLS.id() || item1.getID() == ItemId.OYSTER_PEARLS.id()) && doPearlCut(player, item2, item1)) {
+		} else if (item2.getID() == com.openrsc.server.constants.ItemId.CHISEL.id() && (item1.getID() == com.openrsc.server.constants.ItemId.QUEST_OYSTER_PEARLS.id() || item1.getID() == com.openrsc.server.constants.ItemId.OYSTER_PEARLS.id()) && doPearlCut(player, item2, item1)) {
 			return true;
-		} else if (item1.getID() == ItemId.OYSTER_PEARL_BOLT_TIPS.id() && doBoltMake(player, item2, item1)) {
+		} else if (item1.getID() == com.openrsc.server.constants.ItemId.OYSTER_PEARL_BOLT_TIPS.id() && doBoltMake(player, item2, item1)) {
 			return true;
-		} else if (item2.getID() == ItemId.OYSTER_PEARL_BOLT_TIPS.id() && doBoltMake(player, item1, item2)) {
+		} else if (item2.getID() == com.openrsc.server.constants.ItemId.OYSTER_PEARL_BOLT_TIPS.id() && doBoltMake(player, item1, item2)) {
 			return true;
 		}
 		return false;
@@ -56,7 +50,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 
 	private boolean attachFeathers(Player player, final Item feathers,
 								   final Item item) {
-		if (!Constants.GameServer.MEMBER_WORLD) {
+		if (!Server.getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return true;
 		}
@@ -74,8 +68,8 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 		final int itemID;
 		int experience = 4;
 		ItemDartTipDef tipDef = null;
-		if (item.getID() == ItemId.ARROW_SHAFTS.id()) {
-			itemID = ItemId.HEADLESS_ARROWS.id();
+		if (item.getID() == com.openrsc.server.constants.ItemId.ARROW_SHAFTS.id()) {
+			itemID = com.openrsc.server.constants.ItemId.HEADLESS_ARROWS.id();
 		} else if ((tipDef = EntityHandler.getItemDartTipDef(item.getID())) != null) {
 			itemID = tipDef.getDartID(); // Dart ID
 			experience = (int) (tipDef.getExp());
@@ -86,7 +80,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 		player.message("You attach feathers to some of your "
 			+ item.getDef().getName());
 		final int exp = experience;
-		int retrytimes = Constants.GameServer.BATCH_PROGRESSION ? Formulae.getRepeatTimes(player, SKILLS.FLETCHING.id()) : 1000 + amount;
+		int retrytimes = Server.getServer().getConfig().BATCH_PROGRESSION ? Formulae.getRepeatTimes(player, Skills.FLETCHING) : 1000 + amount;
 		player.setBatchEvent(new BatchEvent(player, 40, "Fletching Attach Feathers", retrytimes, false) {
 			@Override
 			public void action() {
@@ -100,7 +94,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 				}
 				if (getOwner().getInventory().remove(feathers.getID(), 1) > -1
 					&& getOwner().getInventory().remove(item.getID(), 1) > -1) {
-					getOwner().incExp(SKILLS.FLETCHING.id(), exp, true);
+					getOwner().incExp(Skills.FLETCHING, exp, true);
 					addItem(getOwner(), itemID, 1);
 				} else {
 					interrupt();
@@ -112,7 +106,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 
 	private boolean doArrowHeads(Player player, final Item headlessArrows,
 								 final Item arrowHeads) {
-		if (!Constants.GameServer.MEMBER_WORLD) {
+		if (!Server.getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return true;
 		}
@@ -133,11 +127,11 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 		player.message("You attach "
 			+ arrowHeads.getDef().getName().toLowerCase()
 			+ " to some of your arrows");
-		int retrytimes = Constants.GameServer.BATCH_PROGRESSION ? Formulae.getRepeatTimes(player, SKILLS.FLETCHING.id()) : 1000 + amount;
+		int retrytimes = Server.getServer().getConfig().BATCH_PROGRESSION ? Formulae.getRepeatTimes(player, Skills.FLETCHING) : 1000 + amount;
 		player.setBatchEvent(new BatchEvent(player, 40, "Fletching Attach Arrowheads", retrytimes, false) {
 			@Override
 			public void action() {
-				if (getOwner().getSkills().getLevel(SKILLS.FLETCHING.id()) < headDef.getReqLevel()) {
+				if (getOwner().getSkills().getLevel(Skills.FLETCHING) < headDef.getReqLevel()) {
 					getOwner().message("You need a fletching skill of "
 						+ headDef.getReqLevel() + " or above to do that");
 					interrupt();
@@ -153,7 +147,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 				}
 				if (getOwner().getInventory().remove(headlessArrows.getID(), 1) > -1
 					&& getOwner().getInventory().remove(arrowHeads.getID(), 1) > -1) {
-					getOwner().incExp(SKILLS.FLETCHING.id(), headDef.getExp(), true);
+					getOwner().incExp(Skills.FLETCHING, headDef.getExp(), true);
 					getOwner().getInventory().add(new Item(headDef.getArrowID(), 1));
 				} else {
 					interrupt();
@@ -165,7 +159,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 
 	private boolean doBowString(Player player, final Item bowString,
 								final Item bow) {
-		if (!Constants.GameServer.MEMBER_WORLD) {
+		if (!Server.getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return true;
 		}
@@ -182,7 +176,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 
 			@Override
 			public void action() {
-				if (getOwner().getSkills().getLevel(SKILLS.FLETCHING.id()) < stringDef.getReqLevel()) {
+				if (getOwner().getSkills().getLevel(Skills.FLETCHING) < stringDef.getReqLevel()) {
 					getOwner().message("You need a fletching skill of "
 						+ stringDef.getReqLevel() + " or above to do that");
 					interrupt();
@@ -200,7 +194,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 					&& getOwner().getInventory().remove(bow) > -1) {
 					getOwner().message("You add a string to the bow");
 					getOwner().getInventory().add(new Item(stringDef.getBowID(), 1));
-					getOwner().incExp(SKILLS.FLETCHING.id(), stringDef.getExp(), true);
+					getOwner().incExp(Skills.FLETCHING, stringDef.getExp(), true);
 				} else
 					interrupt();
 			}
@@ -210,7 +204,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 
 	private boolean doLogCut(final Player player, final Item knife,
 							 final Item log) {
-		if (!Constants.GameServer.MEMBER_WORLD) {
+		if (!Server.getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return true;
 		}
@@ -225,7 +219,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 					"Make shortbow", "Make longbow"};
 				String[] options = new String[]{"Make shortbow",
 					"Make longbow"};
-				if (log.getID() == ItemId.LOGS.id()) {
+				if (log.getID() == com.openrsc.server.constants.ItemId.LOGS.id()) {
 					getOwner().setMenuHandler(new MenuOptionListener(option) {
 						public void handleReply(final int option,
 												final String reply) {
@@ -266,7 +260,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 
 								@Override
 								public void action() {
-									if (owner.getSkills().getLevel(SKILLS.FLETCHING.id()) < requiredLvl) {
+									if (owner.getSkills().getLevel(Skills.FLETCHING) < requiredLvl) {
 										owner.message("You need a fletching skill of "
 											+ requiredLvl + " or above to do that");
 										interrupt();
@@ -275,7 +269,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 									if (owner.getInventory().remove(log) > -1) {
 										owner.message(cutMessages);
 										addItem(owner, itemID, amount);
-										owner.incExp(SKILLS.FLETCHING.id(), experience, true);
+										owner.incExp(Skills.FLETCHING, experience, true);
 									} else
 										interrupt();
 								}
@@ -317,7 +311,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 
 							@Override
 							public void action() {
-								if (owner.getSkills().getLevel(SKILLS.FLETCHING.id()) < requiredLvl) {
+								if (owner.getSkills().getLevel(Skills.FLETCHING) < requiredLvl) {
 									owner.message("You need a fletching skill of "
 										+ requiredLvl + " or above to do that");
 									interrupt();
@@ -326,7 +320,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 								if (owner.getInventory().remove(log) > -1) {
 									owner.message(cutMessages);
 									addItem(owner, itemID, amount);
-									owner.incExp(SKILLS.FLETCHING.id(), experience, true);
+									owner.incExp(Skills.FLETCHING, experience, true);
 								} else
 									interrupt();
 							}
@@ -340,15 +334,15 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 	}
 
 	private boolean doPearlCut(final Player player, final Item chisel, final Item pearl) {
-		if (!Constants.GameServer.MEMBER_WORLD) {
+		if (!Server.getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return true;
 		}
 
 		int amount;
-		if (pearl.getID() == ItemId.QUEST_OYSTER_PEARLS.id()) {
+		if (pearl.getID() == com.openrsc.server.constants.ItemId.QUEST_OYSTER_PEARLS.id()) {
 			amount = 25;
-		} else if (pearl.getID() == ItemId.OYSTER_PEARLS.id()) {
+		} else if (pearl.getID() == com.openrsc.server.constants.ItemId.OYSTER_PEARLS.id()) {
 			amount = 2;
 		} else {
 			player.message("Nothing interesting happens");
@@ -363,15 +357,15 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 
 			@Override
 			public void action() {
-				if (getOwner().getSkills().getLevel(SKILLS.FLETCHING.id()) < 34) {
+				if (getOwner().getSkills().getLevel(Skills.FLETCHING) < 34) {
 					getOwner().message("You need a fletching skill of 34 to do that");
 					interrupt();
 					return;
 				}
 				if (getOwner().getInventory().remove(pearlID, 1) > -1) {
 					getOwner().message("");
-					getOwner().incExp(SKILLS.FLETCHING.id(), exp, true);
-					addItem(getOwner(), ItemId.OYSTER_PEARL_BOLT_TIPS.id(), amt);
+					getOwner().incExp(Skills.FLETCHING, exp, true);
+					addItem(getOwner(), com.openrsc.server.constants.ItemId.OYSTER_PEARL_BOLT_TIPS.id(), amt);
 				} else interrupt();
 			}
 		});
@@ -379,12 +373,12 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 	}
 
 	private boolean doBoltMake(final Player player, final Item bolts, final Item tips) {
-		if (!Constants.GameServer.MEMBER_WORLD) {
+		if (!Server.getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return true;
 		}
 
-		if (tips.getID() != ItemId.OYSTER_PEARL_BOLT_TIPS.id()) { // not pearl tips
+		if (tips.getID() != com.openrsc.server.constants.ItemId.OYSTER_PEARL_BOLT_TIPS.id()) { // not pearl tips
 			player.message("Nothing interesting happens");
 			return false;
 		}
@@ -396,11 +390,11 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 			amount = player.getInventory().countId(bolt);
 		if (player.getInventory().countId(tip) < amount)
 			amount = player.getInventory().countId(tip);
-		int retrytimes = Constants.GameServer.BATCH_PROGRESSION ? Formulae.getRepeatTimes(player, SKILLS.FLETCHING.id()) : 1000 + amount;
+		int retrytimes = Server.getServer().getConfig().BATCH_PROGRESSION ? Formulae.getRepeatTimes(player, Skills.FLETCHING) : 1000 + amount;
 		player.setBatchEvent(new BatchEvent(player, 40, "Fletching Make Bolt", retrytimes, false) {
 			@Override
 			public void action() {
-				if (getOwner().getSkills().getLevel(SKILLS.FLETCHING.id()) < 34) {
+				if (getOwner().getSkills().getLevel(Skills.FLETCHING) < 34) {
 					getOwner().message("You need a fletching skill of 34 to do that");
 					interrupt();
 					return;
@@ -416,7 +410,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 				if (getOwner().getInventory().remove(bolt, 1) > -1
 					&& getOwner().getInventory().remove(tip, 1) > -1) {
 					getOwner().message("");
-					getOwner().incExp(SKILLS.FLETCHING.id(), 25, true);
+					getOwner().incExp(Skills.FLETCHING, 25, true);
 					addItem(getOwner(), ItemId.OYSTER_PEARL_BOLTS.id(), 1);
 				} else interrupt();
 			}

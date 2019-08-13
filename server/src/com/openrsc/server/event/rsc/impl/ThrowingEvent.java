@@ -1,11 +1,10 @@
 package com.openrsc.server.event.rsc.impl;
 
-import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.PathValidation;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
@@ -71,7 +70,7 @@ public class ThrowingEvent extends GameTickEvent {
 		int throwingID = getPlayerOwner().getThrowingEquip();
 		if (!getPlayerOwner().loggedIn() || getPlayerOwner().inCombat()
 			|| (target.isPlayer() && !((Player) target).loggedIn())
-			|| target.getSkills().getLevel(SKILLS.HITS.id()) <= 0 || !getPlayerOwner().checkAttack(target, true)
+			|| target.getSkills().getLevel(Skills.HITS) <= 0 || !getPlayerOwner().checkAttack(target, true)
 			|| !getPlayerOwner().withinRange(target)) {
 			getPlayerOwner().resetRange();
 			stop();
@@ -125,7 +124,7 @@ public class ThrowingEvent extends GameTickEvent {
 				}
 				Item rangeType;
 				int slot;
-				if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+				if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
 					slot = getPlayerOwner().getEquipment().hasEquipped(throwingID);
 					if (slot < 0)
 						return;
@@ -171,7 +170,7 @@ public class ThrowingEvent extends GameTickEvent {
 
 
 
-				int damage = Formulae.calcRangeHit(getPlayerOwner(), getPlayerOwner().getSkills().getLevel(SKILLS.RANGED.id()), target.getArmourPoints(), throwingID);
+				int damage = Formulae.calcRangeHit(getPlayerOwner(), getPlayerOwner().getSkills().getLevel(Skills.RANGED), target.getArmourPoints(), throwingID);
 
 				if (target.isNpc()) {
 					Npc npc = (Npc) target;
@@ -192,7 +191,7 @@ public class ThrowingEvent extends GameTickEvent {
 					GroundItem knivesOrDarts = getFloorItem(throwingID);
 					if (!Npc.handleRingOfAvarice(getPlayerOwner(), new Item(throwingID, 1))) {
 						if (knivesOrDarts == null) {
-							World.getWorld().registerItem(new GroundItem(throwingID, target.getX(), target.getY(), 1, getPlayerOwner()));
+							World.getWorld().registerItem(new GroundItem(getPlayerOwner().getWorld(), throwingID, target.getX(), target.getY(), 1, getPlayerOwner()));
 						} else {
 							knivesOrDarts.setAmount(knivesOrDarts.getAmount() + 1);
 						}
@@ -201,7 +200,7 @@ public class ThrowingEvent extends GameTickEvent {
 				ActionSender.sendSound(getPlayerOwner(), "shoot");
 				if (EntityHandler.getItemDef(throwingID).getName().toLowerCase().contains("poison") && target.isPlayer()) {
 					if (DataConversions.random(0, 100) <= 10) {
-						target.poisonDamage = target.getSkills().getMaxStat(SKILLS.HITS.id());
+						target.poisonDamage = target.getSkills().getMaxStat(Skills.HITS);
 						target.startPoisonEvent();
 					}
 				}

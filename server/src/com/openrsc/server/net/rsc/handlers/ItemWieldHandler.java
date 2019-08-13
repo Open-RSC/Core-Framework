@@ -1,6 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
@@ -40,7 +40,7 @@ public final class ItemWieldHandler implements PacketHandler {
 
 		Item item = null;
 
-		if (pID == packetTwo && Constants.GameServer.WANT_EQUIPMENT_TAB) {
+		if (pID == packetTwo && Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			Item loop;
 			for (int i = 0; i < Equipment.slots; i++) {
 				loop = player.getEquipment().get(i);
@@ -76,7 +76,7 @@ public final class ItemWieldHandler implements PacketHandler {
 						+ World.membersWildMax);
 			return;
 		}*/
-		if (!Constants.GameServer.MEMBER_WORLD && item.getDef().isMembersOnly()) {
+		if (!Server.getServer().getConfig().MEMBER_WORLD && item.getDef().isMembersOnly()) {
 			player.message("You need to be a member to use this object");
 			return;
 		}
@@ -95,14 +95,14 @@ public final class ItemWieldHandler implements PacketHandler {
 					return;
 				player.getInventory().unwieldItem(item, true);
 			}
-		} else if (Constants.GameServer.WANT_EQUIPMENT_TAB && pID == packetThree) {
+		} else if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB && pID == packetThree) {
 			if (PluginHandler.getPluginHandler().blockDefaultAction(
 				"Wield", new Object[]{player, item})) {
 				return;
 			}
 			player.getBank().wieldItem(idx, true);
 			ActionSender.showBank(player);
-		} else if (Constants.GameServer.WANT_EQUIPMENT_TAB && pID == packetFour) {
+		} else if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB && pID == packetFour) {
 			if (PluginHandler.getPluginHandler().blockDefaultAction(
 				"UnWield", new Object[]{player, item}))
 				return;

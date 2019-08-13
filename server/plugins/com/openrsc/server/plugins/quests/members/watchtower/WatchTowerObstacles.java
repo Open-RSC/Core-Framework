@@ -1,11 +1,11 @@
 package com.openrsc.server.plugins.quests.members.watchtower;
 
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -15,23 +15,7 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.coordModifier;
-import static com.openrsc.server.plugins.Functions.delayedSpawnObject;
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.incQuestReward;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.openChest;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.replaceObject;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
-import static com.openrsc.server.plugins.Functions.spawnNpc;
+import static com.openrsc.server.plugins.Functions.*;
 
 /**
  * @author Imposter/Fate
@@ -89,7 +73,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 			p.teleport(636, 1684);
 		}
 		else if (obj.getID() == TOWER_SECOND_FLOOR_LADDER) {
-			if (p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
+			if (p.getQuestStage(Quests.WATCHTOWER) == -1) {
 				p.teleport(492, 3524);
 			} else {
 				p.teleport(636, 2628);
@@ -97,7 +81,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 		}
 		else if (obj.getID() == TOWER_FIRST_FLOOR_LADDER) {
 			Npc t_guard = getNearestNpc(p, NpcId.TOWER_GUARD.id(), 5);
-			switch (p.getQuestStage(Constants.Quests.WATCHTOWER)) {
+			switch (p.getQuestStage(Quests.WATCHTOWER)) {
 				case 0:
 					if (t_guard != null) {
 						npcTalk(p, t_guard, "You can't go up there",
@@ -129,10 +113,10 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 			p.message("The lever is stuck in the down position");
 		}
 		else if (obj.getID() == WATCHTOWER_LEVER) {
-			replaceObject(obj, new GameObject(obj.getLocation(), 1015, obj.getDirection(), obj.getType()));
+			replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), 1015, obj.getDirection(), obj.getType()));
 			delayedSpawnObject(obj.getLoc(), 2000);
 			p.message("You pull the lever");
-			if (p.getQuestStage(Constants.Quests.WATCHTOWER) == 10) {
+			if (p.getQuestStage(Quests.WATCHTOWER) == 10) {
 				p.message("The magic forcefield activates");
 				p.teleport(492, 3521);
 				removeItem(p, ItemId.POWERING_CRYSTAL1.id(), 1);
@@ -142,7 +126,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 				Npc wizard = getNearestNpc(p, NpcId.WATCHTOWER_WIZARD.id(), 6);
 				if (wizard != null) {
 					p.message("@gre@You haved gained 4 quest points!");
-					incQuestReward(p, Quests.questData.get(Quests.WATCHTOWER), true);
+					incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.WATCHTOWER), true);
 					npcTalk(p, wizard, "Marvellous! it works!",
 						"The town will now be safe",
 						"Your help was invaluable",
@@ -158,7 +142,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 						"Read the scroll and you will be able",
 						"To teleport yourself to here magically...");
 					p.message("Congratulations, you have finished the watchtower quest");
-					p.sendQuestComplete(Constants.Quests.WATCHTOWER);
+					p.sendQuestComplete(Quests.WATCHTOWER);
 					/* TODO REMOVE ALL CACHES AND USE QUEST -1 */
 				} else {
 					p.message("Seems like the wizards were busy, please go back and complete again");
@@ -168,14 +152,14 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 			}
 		}
 		else if (inArray(obj.getID(), WRONG_BUSHES)) {
-			if (p.getQuestStage(Constants.Quests.WATCHTOWER) == 0) {
+			if (p.getQuestStage(Quests.WATCHTOWER) == 0) {
 				playerTalk(p, null, "I am not sure why I am searching this bush...");
 				return;
 			}
 			playerTalk(p, null, "Hmmm, nothing here");
 		}
 		else if (inArray(obj.getID(), CORRECT_BUSHES)) {
-			if (p.getQuestStage(Constants.Quests.WATCHTOWER) == 0) {
+			if (p.getQuestStage(Quests.WATCHTOWER) == 0) {
 				playerTalk(p, null, "I am not sure why I am searching this bush...");
 				return;
 			}
@@ -283,7 +267,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 			p.message("You find nothing to steal");
 		}
 		else if (obj.getID() == OGRE_CAVE_ENCLAVE) {
-			if (p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
+			if (p.getQuestStage(Quests.WATCHTOWER) == -1) {
 				p.message("The ogres have blocked this entrance now");
 				// TODO should we sell this entrance for 100,000 coins or etc?
 				return;
@@ -300,14 +284,14 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 				npcTalk(p, ogre_trader, "Grr! get your hands off those cakes");
 				ogre_trader.startCombat(p);
 			} else {
-				if (getCurrentLevel(p, SKILLS.THIEVING.id()) < 15) {
+				if (getCurrentLevel(p, Skills.THIEVING) < 15) {
 					p.message("You need a thieving level of 15 to steal from this stall");
 					return;
 				}
 				p.message("You cautiously grab a cake from the stall");
 				addItem(p, ItemId.ROCK_CAKE.id(), 1);
-				p.incExp(SKILLS.THIEVING.id(), 64, true);
-				replaceObject(obj, new GameObject(obj.getLocation(), ROCK_CAKE_COUNTER_EMPTY, obj.getDirection(), obj.getType()));
+				p.incExp(Skills.THIEVING, 64, true);
+				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), ROCK_CAKE_COUNTER_EMPTY, obj.getDirection(), obj.getType()));
 				delayedSpawnObject(obj.getLoc(), 5000);
 			}
 		}
@@ -332,7 +316,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 				p.message("The bridge has collapsed");
 				p.message("It seems this rock is placed here to jump from");
 			} else if (command.equalsIgnoreCase("jump over")) {
-				if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 30) {
+				if (getCurrentLevel(p, Skills.AGILITY) < 30) {
 					p.message("You need agility level of 30 to attempt this jump");
 					return;
 				}
@@ -356,7 +340,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 									"Do you want to get hurt or something ?");
 							} else {
 								removeItem(p, ItemId.COINS.id(), 20);
-								if (Constants.GameServer.WANT_FATIGUE) {
+								if (Server.getServer().getConfig().WANT_FATIGUE) {
 									if (p.getFatigue() >= 7500) {
 										p.message("You are too tired to attempt this jump");
 										return;
@@ -364,7 +348,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 								}
 								p.message("You daringly jump across the chasm");
 								p.teleport(647, 799);
-								p.incExp(SKILLS.AGILITY.id(), 50, true);
+								p.incExp(Skills.AGILITY, 50, true);
 								playerTalk(p, null, "Phew! I just made it");
 							}
 						} else if (menu == 1) {
@@ -372,7 +356,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 							p.message("The guard blocks your path");
 						}
 					} else {
-						if (Constants.GameServer.WANT_FATIGUE) {
+						if (Server.getServer().getConfig().WANT_FATIGUE) {
 							if (p.getFatigue() >= 7500) {
 								p.message("You are too tired to attempt this jump");
 								return;
@@ -380,7 +364,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 						}
 						p.message("You daringly jump across the chasm");
 						p.teleport(647, 799);
-						p.incExp(SKILLS.AGILITY.id(), 50, true);
+						p.incExp(Skills.AGILITY, 50, true);
 						playerTalk(p, null, "Phew! I just made it");
 					}
 				}
@@ -446,11 +430,11 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 						"This time we will let it go...");
 					p.teleport(p.getX() - 1, p.getY());
 					p.message("You climb over the battlement");
-				} else if (p.getCache().hasKey("get_ogre_gift") || p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
+				} else if (p.getCache().hasKey("get_ogre_gift") || p.getQuestStage(Quests.WATCHTOWER) == -1) {
 					if (ogre_guard != null) {
 						npcTalk(p, ogre_guard, "Stop creature!... Oh its you",
 							"Well what have you got for us then ?");
-						if (p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
+						if (p.getQuestStage(Quests.WATCHTOWER) == -1) {
 							playerTalk(p, ogre_guard, "I didn't bring anything");
 							npcTalk(p, ogre_guard, "Didn't bring anything!",
 								"In that case shove off!");

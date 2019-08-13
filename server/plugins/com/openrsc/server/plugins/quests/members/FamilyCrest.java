@@ -1,11 +1,10 @@
 package com.openrsc.server.plugins.quests.members;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.external.Gauntlets;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -27,7 +26,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 	
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.FAMILY_CREST;
+		return Quests.FAMILY_CREST;
 	}
 
 	@Override
@@ -42,7 +41,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void handleReward(Player player) {
-		incQuestReward(player, Quests.questData.get(Quests.FAMILY_CREST), true);
+		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.FAMILY_CREST), true);
 		player.message("@gre@You haved gained 1 quest point!");
 		player.message("Well done you have completed the family crest quest");
 	}
@@ -661,12 +660,12 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 				}
 			}
 			if (regenerate) {
-				n.getSkills().setLevel(SKILLS.HITS.id(), n.getDef().hits);
+				n.getSkills().setLevel(Skills.HITS, n.getDef().hits);
 				p.message("Chronozon regenerates");
 			} else {
 				if (p.getQuestStage(this) == 8) {
 					World.getWorld().registerItem(
-						new GroundItem(ItemId.CREST_FRAGMENT_THREE.id(), n.getX(), n.getY(), 1, p));
+						new GroundItem(p.getWorld(), ItemId.CREST_FRAGMENT_THREE.id(), n.getX(), n.getY(), 1, p));
 				}
 				n.killedBy(p);
 				n.remove();

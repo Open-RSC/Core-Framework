@@ -1,10 +1,9 @@
 package com.openrsc.server.plugins.quests.members;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -32,7 +31,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.MERLINS_CRYSTAL;
+		return Quests.MERLINS_CRYSTAL;
 	}
 
 	@Override
@@ -49,7 +48,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 	public void handleReward(Player player) {
 		player.getCache().remove("magic_words");
 		player.message("Well done you have completed the Merlin's crystal quest");
-		incQuestReward(player, Quests.questData.get(Quests.MERLINS_CRYSTAL), true);
+		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.MERLINS_CRYSTAL), true);
 		player.message("You haved gained 6 quest points!");
 	}
 
@@ -129,7 +128,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 		if (n.getCombatEvent() != null) {
 			n.getCombatEvent().resetCombat();
 		}
-		n.getSkills().setLevel(SKILLS.HITS.id(), 5);
+		n.getSkills().setLevel(Skills.HITS, 5);
 		Npc leFaye = spawnNpc(NpcId.MORGAN_LE_FAYE.id(), 461, 2407, 60000);
 		sleep(500);
 		npcTalk(p, leFaye, "Please spare my son");
@@ -336,7 +335,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.KING_ARTHUR.id() && !p.getLocation().inVarrock()) {
-			switch (p.getQuestStage(Constants.Quests.THE_HOLY_GRAIL)) {
+			switch (p.getQuestStage(Quests.THE_HOLY_GRAIL)) {
 				case 1:
 				case 2:
 				case 3:
@@ -346,13 +345,13 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 						playerTalk(p, n, "I have retrieved the grail");
 						npcTalk(p, n, "wow incredible you truly are a splendid knight");
 						removeItem(p, ItemId.HOLY_GRAIL.id(), 1);
-						p.sendQuestComplete(Constants.Quests.THE_HOLY_GRAIL);
+						p.sendQuestComplete(Quests.THE_HOLY_GRAIL);
 					} else {
 						playerTalk(p, n, "I am making progress",
 							"But I have not recovered the grail yet");
 						npcTalk(p, n, "Well the grail is very elusive",
 							"It may take some perserverance");
-						if (p.getQuestStage(Constants.Quests.THE_HOLY_GRAIL) == 1) {
+						if (p.getQuestStage(Quests.THE_HOLY_GRAIL) == 1) {
 							npcTalk(p, n, "As I said before speak to Merlin",
 								"in the workshop by the library");
 						}
@@ -409,7 +408,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 						playerTalk(p, n, "I will see what I can do then");
 						npcTalk(p, n, "Talk to my knights if you need any help");
 						if (p.getQuestStage(this) == 0) {
-							p.updateQuestStage(Constants.Quests.MERLINS_CRYSTAL, 1);
+							p.updateQuestStage(Quests.MERLINS_CRYSTAL, 1);
 						}
 					} else if (option == 1) {
 						playerTalk(p, n, "So what are you doing in Runescape");
@@ -427,7 +426,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 					playerTalk(p, n, "I have freed Merlin from his crystal");
 					npcTalk(p, n, "Ah a good job well done", "I knight thee",
 						"You are now a knight of the round table");
-					p.sendQuestComplete(Constants.Quests.MERLINS_CRYSTAL);
+					p.sendQuestComplete(Quests.MERLINS_CRYSTAL);
 					break;
 				case -1:
 					playerTalk(p, n, "Now i am a knight of the round table",
@@ -457,7 +456,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 								"He may be able to give a better clue as to where it is",
 								"Now you have freed him from the crystal",
 								"He has set up his workshop in the room next to the library");
-							p.updateQuestStage(Constants.Quests.THE_HOLY_GRAIL, 1);
+							p.updateQuestStage(Quests.THE_HOLY_GRAIL, 1);
 						} else if (startHoly == 1) {
 							npcTalk(p, n, "Be sure that you come speak to me soon then");
 						}
@@ -583,7 +582,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 								"There are two ways in that I know of, the large heavy front doors",
 								"And the sea entrance, only penetrable by boat",
 								"They take all their deliveries by boat");
-							p.updateQuestStage(Constants.Quests.MERLINS_CRYSTAL, 2);
+							p.updateQuestStage(Quests.MERLINS_CRYSTAL, 2);
 							p.getCache().remove("talked_to_gawain");
 						}
 					} else {

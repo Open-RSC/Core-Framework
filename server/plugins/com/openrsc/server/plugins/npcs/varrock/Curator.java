@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -24,7 +24,7 @@ public class Curator implements TalkToNpcExecutiveListener, TalkToNpcListener, I
 	public void onTalkToNpc(final Player p, final Npc n) {
 		npcTalk(p, n, "Welcome to the museum of Varrock");
 		if (p.getInventory().hasItemId(ItemId.BROKEN_SHIELD_ARRAV_1.id()) && p.getInventory().hasItemId(ItemId.BROKEN_SHIELD_ARRAV_2.id())) {
-			if (p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == 5) {
+			if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5) {
 				playerTalk(p, n,
 					"I have retrieved the shield of Arrav and I would like to claim my reward");
 				npcTalk(p, n, "The shield of Arrav?", "Let me see that");

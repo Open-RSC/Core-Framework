@@ -1,6 +1,6 @@
 package com.openrsc.server.event.custom;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -27,11 +27,11 @@ public class UndergroundPassMessages extends DelayedEvent {
 			p.message("@red@iban will save you....he'll save us all");
 		} else if (random == 1) {
 			p.message("@red@join us...join us...embrace the mysery");
-		} else if (random == 2 && p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) >= 4) {
+		} else if (random == 2 && p.getQuestStage(Quests.UNDERGROUND_PASS) >= 4) {
 			p.message("@red@I see you adventurer...you can't hide");
-		} else if (random == 3 && p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) >= 4) {
+		} else if (random == 3 && p.getQuestStage(Quests.UNDERGROUND_PASS) >= 4) {
 			p.message("@red@Come taste the pleasure of evil");
-		} else if (random == 4 && p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) >= 4) {
+		} else if (random == 4 && p.getQuestStage(Quests.UNDERGROUND_PASS) >= 4) {
 			p.message("@red@Death is only the beginning");
 		} else if (random == 5) {
 			stop();

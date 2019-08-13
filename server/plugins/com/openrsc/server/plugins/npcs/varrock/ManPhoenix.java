@@ -1,9 +1,9 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.Constants;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -168,7 +168,7 @@ public class ManPhoenix implements TalkToNpcExecutiveListener,
 			n,
 			"Heh you can't go in there",
 			"Only authorised personnel of the VTAM corporation are allowed beyond this point");
-		if (p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == 3) {
+		if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 3) {
 			defaultMenu.addOption(new Option("I know who you are") {
 				public void action() {
 					npcTalk(p, n, "I see", "Carry on");

@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.Constants;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -45,7 +45,7 @@ public class Guildmaster implements TalkToNpcListener,
 					"I have a friend called Oziach who lives by the cliffs",
 					"He has a supply of rune plate mail",
 					"He may sell you some if you're lucky, he can be a little strange sometimes though");
-				if (p.getQuestStage(Constants.Quests.DRAGON_SLAYER) == 0) {
+				if (p.getQuestStage(Quests.DRAGON_SLAYER) == 0) {
 					p.updateQuestStage(Quests.DRAGON_SLAYER, 1);
 				}
 			}

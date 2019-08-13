@@ -1,12 +1,11 @@
 package com.openrsc.server.plugins.quests.members;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.DelayedEvent;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -45,7 +44,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 	 */
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.LOST_CITY;
+		return Quests.LOST_CITY;
 	}
 
 	@Override
@@ -60,7 +59,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void handleReward(Player player) {
-		incQuestReward(player, Quests.questData.get(Quests.LOST_CITY), true);
+		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.LOST_CITY), true);
 		player.message("@gre@You haved gained 3 quest points!");
 		player.message("Well done you have completed the Lost City of Zanaris quest");
 	}
@@ -111,7 +110,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 				break;
 			case 245:
 				if (atQuestStages(p, this, 4, 3, 2, -1)) {
-					if (getCurrentLevel(p, SKILLS.WOODCUT.id()) < 36) {
+					if (getCurrentLevel(p, Skills.WOODCUT) < 36) {
 						message(p,
 							"You are not a high enough woodcutting level to chop down this tree",
 							"You need a woodcutting level of 36");
@@ -332,12 +331,12 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 				sleep(1000);
 				movePlayer(p, 427, 3380, true);
 				/* What is the point of this? */
-				if (getCurrentLevel(p, SKILLS.PRAYER.id()) <= 3)
-					setCurrentLevel(p, SKILLS.PRAYER.id(), 1);
-				else if (getCurrentLevel(p, SKILLS.PRAYER.id()) <= 39)
-					setCurrentLevel(p, SKILLS.PRAYER.id(), 2);
+				if (getCurrentLevel(p, Skills.PRAYER) <= 3)
+					setCurrentLevel(p, Skills.PRAYER, 1);
+				else if (getCurrentLevel(p, Skills.PRAYER) <= 39)
+					setCurrentLevel(p, Skills.PRAYER, 2);
 				else
-					setCurrentLevel(p, SKILLS.PRAYER.id(), 3);
+					setCurrentLevel(p, Skills.PRAYER, 3);
 			}
 		}
 	}
@@ -414,7 +413,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onInvUseOnItem(Player p, Item item1, Item item2) {
 		if (hasItem(p, ItemId.DRAMEN_BRANCH.id(), 1)) {
-			if (getCurrentLevel(p, SKILLS.CRAFTING.id()) < 31) {
+			if (getCurrentLevel(p, Skills.CRAFTING) < 31) {
 				message(p,
 					"You are not a high enough crafting level to craft this staff",
 					"You need a crafting level of 31");

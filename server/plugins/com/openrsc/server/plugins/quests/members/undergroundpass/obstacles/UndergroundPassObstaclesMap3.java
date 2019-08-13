@@ -1,9 +1,9 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.Area;
@@ -45,7 +45,7 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 					if (p.getInventory().wielding(ItemId.KLANKS_GAUNTLETS.id())) {
 						p.message("klanks gaunlett protects you");
 					} else {
-						p.damage(((int) getCurrentLevel(p, SKILLS.HITS.id()) / 10) + 5);
+						p.damage(((int) getCurrentLevel(p, Skills.HITS) / 10) + 5);
 						playerTalk(p, null, "aaarrgghh");
 					}
 				}
@@ -71,7 +71,7 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 					p.message("klanks gaunlett protects you");
 					p.message("but you find find nothing");
 				} else {
-					p.damage(((int) getCurrentLevel(p, SKILLS.HITS.id()) / 10) + 5);
+					p.damage(((int) getCurrentLevel(p, Skills.HITS) / 10) + 5);
 					playerTalk(p, null, "aaarrgghh");
 					p.message("you find nothing");
 				}
@@ -85,7 +85,7 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 				removeItem(p, ItemId.AMULET_OF_DOOMION.id(), 1);
 				removeItem(p, ItemId.AMULET_OF_HOLTHION.id(), 1);
 				p.message("you place them on the chest and the chest opens");
-				replaceObject(obj, new GameObject(obj.getLocation(), DEMONS_CHEST_OPEN, obj.getDirection(), obj.getType()));
+				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), DEMONS_CHEST_OPEN, obj.getDirection(), obj.getType()));
 				delayedSpawnObject(obj.getLoc(), 2000);
 				sleep(1000);
 				p.message("inside you find a strange dark liquid");
@@ -96,24 +96,24 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 		}
 		else if (obj.getID() == ZAMORAKIAN_TEMPLE_DOOR) {
 			if (p.getX() <= 792) {
-				if (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == -1) {
+				if (p.getQuestStage(Quests.UNDERGROUND_PASS) == -1) {
 					message(p, "the temple is in ruins...");
 					p.message("...you cannot enter");
 					return;
 				}
 				if (p.getInventory().wielding(ItemId.ROBE_OF_ZAMORAK_TOP.id())
 					&& p.getInventory().wielding(ItemId.ROBE_OF_ZAMORAK_BOTTOM.id())) {
-					replaceObject(obj, new GameObject(obj.getLocation(), 914, obj.getDirection(), obj.getType()));
+					replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), 914, obj.getDirection(), obj.getType()));
 					delayedSpawnObject(obj.getLoc(), 3000);
 					p.teleport(792, 3469);
 					sleep(600);
 					p.teleport(795, 3469);
 					message(p, "you pull open the large doors");
 					p.message("and walk into the temple");
-					if (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == 7 || (p.getCache().hasKey("poison_on_doll") && p.getCache().hasKey("cons_on_doll")
+					if (p.getQuestStage(Quests.UNDERGROUND_PASS) == 7 || (p.getCache().hasKey("poison_on_doll") && p.getCache().hasKey("cons_on_doll")
 						&& p.getCache().hasKey("ash_on_doll") && p.getCache().hasKey("shadow_on_doll"))) {
-						if (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == 6) {
-							p.updateQuestStage(Constants.Quests.UNDERGROUND_PASS, 7);
+						if (p.getQuestStage(Quests.UNDERGROUND_PASS) == 6) {
+							p.updateQuestStage(Quests.UNDERGROUND_PASS, 7);
 						}
 						p.message("Iban seems to sense danger");
 						message(p, "@yel@Iban: who dares bring the witches magic into my temple");
@@ -125,7 +125,7 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 						message(p, "a blast of energy comes from ibans staff");
 						p.message("you are hit by ibans magic bolt");
 						displayTeleportBubble(p, p.getX() + 1, p.getY(), true);
-						p.damage(((int) getCurrentLevel(p, SKILLS.HITS.id()) / 7) + 1);
+						p.damage(((int) getCurrentLevel(p, Skills.HITS) / 7) + 1);
 						playerTalk(p, null, "aarrgh");
 						message(p, "@yel@Iban:die foolish mortal");
 						long start = System.currentTimeMillis();
@@ -154,7 +154,7 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 								ActionSender.sendTeleBubble(p, blastPosition.getX(), blastPosition.getY(), true);
 								if (p.getLocation().withinRange(blastPosition, 1)) {
 									/* Blast hit */
-									p.damage(((int) getCurrentLevel(p, SKILLS.HITS.id()) / 6) + 2);
+									p.damage(((int) getCurrentLevel(p, Skills.HITS) / 6) + 2);
 									p.teleport(795, 3469); // insert the coords
 									playerTalk(p, null, "aarrgh");
 									p.message("you're blasted back to the door");
@@ -172,7 +172,7 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 					p.message("only followers of zamorak may enter");
 				}
 			} else {
-				replaceObject(obj, new GameObject(obj.getLocation(), 914, obj.getDirection(), obj.getType()));
+				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), 914, obj.getDirection(), obj.getType()));
 				delayedSpawnObject(obj.getLoc(), 3000);
 				p.teleport(794, 3469);
 				sleep(600);

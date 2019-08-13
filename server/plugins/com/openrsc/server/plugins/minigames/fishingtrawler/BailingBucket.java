@@ -9,7 +9,7 @@ import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener
 import static com.openrsc.server.plugins.Functions.sleep;
 
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.constants.ItemId;
 
 public class BailingBucket implements InvActionExecutiveListener, InvActionListener {
 

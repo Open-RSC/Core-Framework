@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.quests.free;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -18,7 +17,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.ROMEO_N_JULIET;
+		return Quests.ROMEO_N_JULIET;
 	}
 
 	@Override
@@ -34,7 +33,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void handleReward(Player player) {
 		player.message("You have completed the quest of Romeo and Juliet");
-		incQuestReward(player, Quests.questData.get(Quests.ROMEO_N_JULIET), true);
+		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.ROMEO_N_JULIET), true);
 		player.message("@gre@You haved gained 5 quest points!");
 	}
 
@@ -145,7 +144,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 				playerTalk(p, n, "The one to get her to the crypt.");
 				npcTalk(p, n, "Ah right", "So she is dead then. Ah thats a shame",
 					"Thanks for your help anyway.");
-				p.sendQuestComplete(Constants.Quests.ROMEO_N_JULIET);
+				p.sendQuestComplete(Quests.ROMEO_N_JULIET);
 				break;
 			case -1:
 				npcTalk(p, n, "I heard Juliet had died. Terrible business",

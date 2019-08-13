@@ -1,6 +1,6 @@
 package com.openrsc.server.sql.query.logs;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.Mob;
@@ -24,7 +24,7 @@ public class DeathLog extends Query {
 	private boolean duel;
 
 	public DeathLog(Player killed, Mob killer, boolean duel) {
-		super("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "generic_logs`(`message`, `time`) VALUES(?, ?)");
+		super("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "generic_logs`(`message`, `time`) VALUES(?, ?)");
 		this.killed = killed.getUsername();
 		this.killer = killer == null ? "null" : killer.toString();
 		this.location = killed.getLocation();

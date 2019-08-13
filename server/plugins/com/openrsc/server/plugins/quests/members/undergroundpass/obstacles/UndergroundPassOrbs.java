@@ -1,9 +1,9 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -53,10 +53,10 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 					p.teleport(728, 3436);
 				}
 				World.getWorld().replaceGameObject(obj,
-					new GameObject(obj.getLocation(), 826, obj.getDirection(), obj
+					new GameObject(obj.getWorld(), obj.getLocation(), 826, obj.getDirection(), obj
 						.getType()));
 				World.getWorld().delayedSpawnObject(obj.getLoc(), 5000);
-				p.damage((int) (getCurrentLevel(p, SKILLS.HITS.id()) / 5) + 5);
+				p.damage((int) (getCurrentLevel(p, Skills.HITS) / 5) + 5);
 				playerTalk(p, null, "aaarghh");
 			} else {
 				message(p, "you search the rocks",
@@ -115,7 +115,7 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 			} else {
 				p.teleport(709, 3472);
 				p.message("throwing you onto a pit of spikes");
-				p.damage((int) (getCurrentLevel(p, SKILLS.HITS.id()) / 5) + 5);
+				p.damage((int) (getCurrentLevel(p, Skills.HITS) / 5) + 5);
 				playerTalk(p, null, "aaarrrgh");
 			}
 		}
@@ -124,7 +124,7 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 			if (DataConversions.getRandom().nextInt(10) <= 2) { // fail
 				message(p, "but you fall back to the floor");
 				p.message("impailing yourself on the spike's once more");
-				p.damage((int) (getCurrentLevel(p, SKILLS.HITS.id()) / 5) + 5);
+				p.damage((int) (getCurrentLevel(p, Skills.HITS) / 5) + 5);
 				playerTalk(p, null, "aaarrrgh");
 			} else { // succeed
 				p.teleport(737, 3453);
@@ -166,7 +166,7 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 			player.message("you carefully place the planks over the pressure triggers");
 			player.message("you walk across the wooden planks");
 			removeItem(player, ItemId.PLANK.id(), 1);
-			GameObject object = new GameObject(Point.location(728, 3435), 827, 0, 0);
+			GameObject object = new GameObject(player.getWorld(), Point.location(728, 3435), 827, 0, 0);
 			World.getWorld().registerGameObject(object);
 			World.getWorld().delayedRemoveObject(object, 3000);
 			player.teleport(728, 3438);
@@ -191,7 +191,7 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 			message(player, "its light quickly dims and then dies");
 			player.message("you feel a cold shudder run down your spine");
 			removeItem(player, item.getID(), 1);
-			if (!atQuestStages(player, Constants.Quests.UNDERGROUND_PASS, 7, 8, -1)) {
+			if (!atQuestStages(player, Quests.UNDERGROUND_PASS, 7, 8, -1)) {
 				if (item.getID() == ItemId.ORB_OF_LIGHT_WHITE.id()) {
 					if (!player.getCache().hasKey("orb_of_light1")) {
 						player.getCache().store("orb_of_light1", true);
@@ -262,46 +262,46 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 			damageOfTrap(p, old, null, -1);
 			p.teleport(738, 3446);
 			sleep(2000);
-			damageOfTrap(p, old, new GameObject(Point.location(739, 3446), 773, 2, 0), 820);
+			damageOfTrap(p, old, new GameObject(p.getWorld(), Point.location(739, 3446), 773, 2, 0), 820);
 			p.teleport(735, 3446);
 			firstFallbackTrap(p, old);
 		} else if (old.getID() == WEST_PASSAGE[3]) {
 			damageOfTrap(p, old, null, -1);
 			p.teleport(741, 3446);
 			sleep(2000);
-			damageOfTrap(p, old, new GameObject(Point.location(742, 3446), 773, 2, 0), 821);
+			damageOfTrap(p, old, new GameObject(p.getWorld(), Point.location(742, 3446), 773, 2, 0), 821);
 			p.teleport(738, 3446);
 			sleep(2000);
-			damageOfTrap(p, old, new GameObject(Point.location(739, 3446), 773, 2, 0), 820);
+			damageOfTrap(p, old, new GameObject(p.getWorld(), Point.location(739, 3446), 773, 2, 0), 820);
 			p.teleport(735, 3446);
 			firstFallbackTrap(p, old);
 		} else if (old.getID() == WEST_PASSAGE[4]) {
 			damageOfTrap(p, old, null, -1);
 			p.teleport(744, 3446);
 			sleep(2000);
-			damageOfTrap(p, old, new GameObject(Point.location(745, 3446), 773, 2, 0), 822);
+			damageOfTrap(p, old, new GameObject(p.getWorld(), Point.location(745, 3446), 773, 2, 0), 822);
 			p.teleport(741, 3446);
 			sleep(2000);
-			damageOfTrap(p, old, new GameObject(Point.location(742, 3446), 773, 2, 0), 821);
+			damageOfTrap(p, old, new GameObject(p.getWorld(), Point.location(742, 3446), 773, 2, 0), 821);
 			p.teleport(738, 3446);
 			sleep(2000);
-			damageOfTrap(p, old, new GameObject(Point.location(739, 3446), 773, 2, 0), 820);
+			damageOfTrap(p, old, new GameObject(p.getWorld(), Point.location(739, 3446), 773, 2, 0), 820);
 			p.teleport(735, 3446);
 			firstFallbackTrap(p, old);
 		} else if (old.getID() == WEST_PASSAGE[5]) {
 			damageOfTrap(p, old, null, -1);
 			p.teleport(747, 3446);
 			sleep(2000);
-			damageOfTrap(p, old, new GameObject(Point.location(748, 3446), 773, 2, 0), 823);
+			damageOfTrap(p, old, new GameObject(p.getWorld(), Point.location(748, 3446), 773, 2, 0), 823);
 			p.teleport(744, 3446);
 			sleep(2000);
-			damageOfTrap(p, old, new GameObject(Point.location(745, 3446), 773, 2, 0), 822);
+			damageOfTrap(p, old, new GameObject(p.getWorld(), Point.location(745, 3446), 773, 2, 0), 822);
 			p.teleport(741, 3446);
 			sleep(2000);
-			damageOfTrap(p, old, new GameObject(Point.location(742, 3446), 773, 2, 0), 821);
+			damageOfTrap(p, old, new GameObject(p.getWorld(), Point.location(742, 3446), 773, 2, 0), 821);
 			p.teleport(738, 3446);
 			sleep(2000);
-			damageOfTrap(p, old, new GameObject(Point.location(739, 3446), 773, 2, 0), 820);
+			damageOfTrap(p, old, new GameObject(p.getWorld(), Point.location(739, 3446), 773, 2, 0), 820);
 			p.teleport(735, 3446);
 			firstFallbackTrap(p, old);
 		}
@@ -310,23 +310,23 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 	private void firstFallbackTrap(Player p, GameObject old) {
 		sleep(2000);
 		p.message("you hear a strange mechanical sound");
-		damageOfTrap(p, old, new GameObject(Point.location(736, 3446), 773, 2, 0), 819);
+		damageOfTrap(p, old, new GameObject(p.getWorld(), Point.location(736, 3446), 773, 2, 0), 819);
 		sleep(1600);
 		p.message("You've triggered a trap");
 	}
 
 	private void damageOfTrap(Player p, GameObject obj, GameObject _new, int objectID) {
-		p.damage((int) ((getCurrentLevel(p, SKILLS.HITS.id()) / 16) + 2));
+		p.damage((int) ((getCurrentLevel(p, Skills.HITS) / 16) + 2));
 		if (_new == null) {
 			World.getWorld().replaceGameObject(obj,
-				new GameObject(obj.getLocation(), 773, obj.getDirection(), obj
+				new GameObject(obj.getWorld(), obj.getLocation(), 773, obj.getDirection(), obj
 					.getType()));
 			World.getWorld().delayedSpawnObject(obj.getLoc(), 3000);
 			playerTalk(p, null, "aaarrghhh");
 		} else {
 			World.getWorld().registerGameObject(_new);
 			playerTalk(p, null, "aaarrghhh");
-			World.getWorld().registerGameObject(new GameObject(Point.location(p.getX() + 1, p.getY()), objectID, 2, 0));
+			World.getWorld().registerGameObject(new GameObject(p.getWorld(), Point.location(p.getX() + 1, p.getY()), objectID, 2, 0));
 		}
 	}
 }

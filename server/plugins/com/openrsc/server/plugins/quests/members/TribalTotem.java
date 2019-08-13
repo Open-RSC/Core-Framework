@@ -1,11 +1,10 @@
 package com.openrsc.server.plugins.quests.members;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -22,18 +21,7 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.closeGenericObject;
-import static com.openrsc.server.plugins.Functions.doDoor;
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.incQuestReward;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.openGenericObject;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class TribalTotem implements QuestInterface, TalkToNpcListener,
 	TalkToNpcExecutiveListener, ObjectActionListener,
@@ -49,7 +37,7 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.TRIBAL_TOTEM;
+		return Quests.TRIBAL_TOTEM;
 	}
 
 	@Override
@@ -65,7 +53,7 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void handleReward(Player p) {
 		p.message("Well done you have completed the tribal totem quest");
-		incQuestReward(p, Quests.questData.get(Quests.TRIBAL_TOTEM), true);
+		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.TRIBAL_TOTEM), true);
 		p.message("@gre@You haved gained 1 quest point!");
 	}
 
@@ -186,7 +174,7 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 					if (p.getInventory().countId(ItemId.TRIBAL_TOTEM.id()) >= 1) {
 						playerTalk(p, n, "Yes I have");
 						npcTalk(p, n, "Thank you brave adventurer");
-						p.sendQuestComplete(Constants.Quests.TRIBAL_TOTEM);
+						p.sendQuestComplete(Quests.TRIBAL_TOTEM);
 						npcTalk(p, n, "Here have some freshly cooked Karamja fish",
 							"Caught specially by our people");
 						removeItem(p, ItemId.TRIBAL_TOTEM.id(), 1);
@@ -382,7 +370,7 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 		}
 		else if (obj.getID() == 331 && obj.getX() == 563 && obj.getY() == 587) {
 			if (command.equalsIgnoreCase("Search for traps")) {
-				if (getCurrentLevel(p, SKILLS.THIEVING.id()) < 21) {
+				if (getCurrentLevel(p, Skills.THIEVING) < 21) {
 					message(p, "You don't find anything interesting");
 				} else {
 					message(p, "You find a trap in the stairs",

@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.quests.free;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -27,7 +26,7 @@ public class KnightsSword implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.THE_KNIGHTS_SWORD;
+		return Quests.THE_KNIGHTS_SWORD;
 	}
 
 	@Override
@@ -43,7 +42,7 @@ public class KnightsSword implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done you have completed the knight's sword quest");
-		incQuestReward(player, Quests.questData.get(Quests.THE_KNIGHTS_SWORD), true);
+		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.THE_KNIGHTS_SWORD), true);
 		player.message("@gre@You haved gained 1 quest point!");
 	}
 

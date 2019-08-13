@@ -1,6 +1,5 @@
 package com.openrsc.server.model.entity;
 
-import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.EntityHandler;
@@ -32,13 +31,15 @@ public class GroundItem extends Entity {
 	 */
 	private long spawnedTime = 0L;
 
-	public GroundItem(int id, Point location) { // used for ::masks
+	public GroundItem(World world, int id, Point location) { // used for ::masks
+		super(world);
 		super.id = id;
 		super.location.set(location);
 		amount = 1;
 	}
 
-	public GroundItem(int id, int x, int y, int amount, Player owner) {
+	public GroundItem(World world, int id, int x, int y, int amount, Player owner) {
+		super(world);
 		setID(id);
 		setAmount(amount);
 		this.ownerUsernameHash = owner == null ? 0 : owner.getUsernameHash();
@@ -46,7 +47,8 @@ public class GroundItem extends Entity {
 		setLocation(Point.location(x, y));
 	}
 
-	public GroundItem(int id, int x, int y, int amount, Npc owner) {
+	public GroundItem(World world, int id, int x, int y, int amount, Npc owner) {
+		super(world);
 		setID(id);
 		setAmount(amount);
 		//this.ownerUsernameHash = owner == null ? 0 : owner.getUsernameHash();
@@ -54,7 +56,8 @@ public class GroundItem extends Entity {
 		setLocation(Point.location(x, y));
 	}
 
-	public GroundItem(int id, int x, int y, int amount, Player owner, long spawntime) {
+	public GroundItem(World world, int id, int x, int y, int amount, Player owner, long spawntime) {
+		super(world);
 		setID(id);
 		setAmount(amount);
 		this.ownerUsernameHash = owner == null ? 0 : owner.getUsernameHash();
@@ -62,7 +65,8 @@ public class GroundItem extends Entity {
 		setLocation(Point.location(x, y));
 	}
 
-	public GroundItem(int id, int x, int y, int amount, Npc owner, long spawntime) {
+	public GroundItem(World world, int id, int x, int y, int amount, Npc owner, long spawntime) {
+		super(world);
 		setID(id);
 		setAmount(amount);
 		//this.ownerUsernameHash = owner == null ? 0 : owner.getUsernameHash();
@@ -70,7 +74,8 @@ public class GroundItem extends Entity {
 		setLocation(Point.location(x, y));
 	}
 
-	public GroundItem(ItemLoc loc) {
+	public GroundItem(World world, ItemLoc loc) {
+		super(world);
 		this.loc = loc;
 		setID(loc.id);
 		setAmount(loc.amount);
@@ -144,7 +149,7 @@ public class GroundItem extends Entity {
 		if (!removed && loc != null && loc.getRespawnTime() > 0) {
 			Server.getServer().getGameEventHandler().add(new GameTickEvent(null, loc.getRespawnTime(), "Respawn Ground Item") {
 				public void run() {
-					world.registerItem(new GroundItem(loc));
+					getWorld().registerItem(new GroundItem(getWorld(), loc));
 					stop();
 				}
 			});
@@ -156,7 +161,7 @@ public class GroundItem extends Entity {
 		if (belongsTo(p)) {
 			return true;
 		}
-		if (getDef().isMembersOnly() && !Constants.GameServer.MEMBER_WORLD) {
+		if (getDef().isMembersOnly() && !Server.getServer().getConfig().MEMBER_WORLD) {
 			return false;
 		}
 		if (getDef().isUntradable())

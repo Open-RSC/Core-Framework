@@ -1,22 +1,22 @@
 package com.openrsc.server.plugins.commands;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.content.clan.ClanInvite;
-import com.openrsc.server.model.entity.npc.Npc;
+import com.openrsc.server.content.party.PartyPlayer;
+import com.openrsc.server.content.party.PartyRank;
+import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.snapshot.Chatlog;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.content.party.*;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.ChatLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,7 +39,7 @@ public final class RegularPlayer implements CommandListener {
 	}
 
 	public boolean isCommandAllowed(Player player, String cmd) {
-		return Constants.GameServer.PLAYER_COMMANDS || player.isMod();
+		return Server.getServer().getConfig().PLAYER_COMMANDS || player.isMod();
 	}
 
 	public void handleCommand(String cmd, String[] args, Player player) {
@@ -64,7 +64,7 @@ public final class RegularPlayer implements CommandListener {
 				return;
 			}
 			try {
-				PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Constants.GameServer.MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+				PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 				statement.setString(1, player.getUsername());
 				ResultSet result = statement.executeQuery();
 				if (result.next()) {
@@ -101,7 +101,7 @@ public final class RegularPlayer implements CommandListener {
 					+ "P2P wilderness(Wild Lvl. 48-56) : @dre@" + PLAYERS_IN_P2P_WILD + "@whi@ player" + (PLAYERS_IN_P2P_WILD == 1 ? "" : "s") + " %"
 					+ "Edge dungeon wilderness(Wild Lvl. 1-9) : @dre@" + EDGE_DUNGEON + "@whi@ player" + (EDGE_DUNGEON == 1 ? "" : "s") + " %"
 				, false);
-		} else if (cmd.equalsIgnoreCase("c") && Constants.GameServer.WANT_CLANS) {
+		} else if (cmd.equalsIgnoreCase("c") && Server.getServer().getConfig().WANT_CLANS) {
 			if (player.getClan() == null) {
 				player.message(messagePrefix + "You are not in a clan.");
 				return;
@@ -111,7 +111,7 @@ public final class RegularPlayer implements CommandListener {
 				message = message + arg + " ";
 			}
 			player.getClan().messageChat(player, "@cya@" + player.getUsername() + ":@whi@ " + message);
-		} else if (cmd.equalsIgnoreCase("clanaccept") && Constants.GameServer.WANT_CLANS) {
+		} else if (cmd.equalsIgnoreCase("clanaccept") && Server.getServer().getConfig().WANT_CLANS) {
 			if (player.getActiveClanInvite() == null) {
 				player.message(messagePrefix + "You have not been invited to a clan.");
 				return;
@@ -125,7 +125,7 @@ public final class RegularPlayer implements CommandListener {
 			}
 			player.getActivePartyInvite().accept();
 			player.message(messagePrefix + "You have joined the party");
-		} else if (cmd.equalsIgnoreCase("claninvite") && Constants.GameServer.WANT_CLANS) {
+		} else if (cmd.equalsIgnoreCase("claninvite") && Server.getServer().getConfig().WANT_CLANS) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
@@ -145,7 +145,7 @@ public final class RegularPlayer implements CommandListener {
 
 			ClanInvite.createClanInvite(player, invited);
 			player.message(messagePrefix + invited.getUsername() + " has been invited into clan " + player.getClan().getClanName());
-		} else if (cmd.equalsIgnoreCase("clankick") && Constants.GameServer.WANT_CLANS) {
+		} else if (cmd.equalsIgnoreCase("clankick") && Server.getServer().getConfig().WANT_CLANS) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
@@ -203,7 +203,7 @@ public final class RegularPlayer implements CommandListener {
 			}
 			player.teleport(World.EVENT_X, World.EVENT_Y);
 		} else if (cmd.equalsIgnoreCase("g") || cmd.equalsIgnoreCase("p")) {
-			if (!Constants.GameServer.WANT_GLOBAL_CHAT) return;
+			if (!Server.getServer().getConfig().WANT_GLOBAL_CHAT) return;
 			if (player.isMuted()) {
 				player.message(messagePrefix + "You are muted, you cannot send messages");
 				return;
@@ -266,7 +266,7 @@ public final class RegularPlayer implements CommandListener {
 				World.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(PKing) " + newStr));
 			}
 		} else if (cmd.equalsIgnoreCase("party")) {
-			if (!Constants.GameServer.WANT_GLOBAL_CHAT) return;
+			if (!Server.getServer().getConfig().WANT_GLOBAL_CHAT) return;
 			if (player.isMuted()) {
 				player.message(messagePrefix + "You are muted, you cannot send messages");
 				return;
@@ -386,19 +386,17 @@ public final class RegularPlayer implements CommandListener {
 			ActionSender.sendBox(player, "@whi@Server Groups:%" + StringUtils.join(groups, "%"), true);
 		} else if (cmd.equalsIgnoreCase("time") || cmd.equalsIgnoreCase("date") || cmd.equalsIgnoreCase("datetime")) {
 			player.message(messagePrefix + " the current time/date is:@gre@ " + new java.util.Date().toString());
-		} else if (Constants.GameServer.NPC_KILL_LIST && cmd.equalsIgnoreCase("kills")) {
+		} else if (Server.getServer().getConfig().NPC_KILL_LIST && cmd.equalsIgnoreCase("kills")) {
 			StringBuilder kills = new StringBuilder("NPC Kill List for " + player.getUsername() + " % %");
 			try {
 				PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement(
-					"SELECT * FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "npckills` WHERE playerID = ? ORDER BY killCount DESC LIMIT 16");
+					"SELECT * FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "npckills` WHERE playerID = ? ORDER BY killCount DESC LIMIT 16");
 				statement.setInt(1, player.getDatabaseID());
 				ResultSet result = statement.executeQuery();
-				Npc n = new Npc();
 				while (result.next()) {
 					int npcID = result.getInt("npcID");
-					n.setID(npcID);
 					int killCount = result.getInt("killCount");
-					kills.append("NPC: ").append(n.getDef().getName()).append(" - Kill Count: ").append(killCount).append("%");
+					kills.append("NPC: ").append(EntityHandler.getNpcDef(npcID).getName()).append(" - Kill Count: ").append(killCount).append("%");
 				}
 				result.close();
 				ActionSender.sendBox(player, kills.toString(), true);

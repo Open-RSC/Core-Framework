@@ -1,6 +1,6 @@
 package com.openrsc.server.model.entity.player;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 
 import java.util.HashMap;
 
@@ -31,7 +31,7 @@ public class Group {
 	}
 
 	public static String getNameColour(int groupID) {
-		if (!Constants.GameServer.WANT_CUSTOM_RANK_DISPLAY)
+		if (!Server.getServer().getConfig().WANT_CUSTOM_RANK_DISPLAY)
 			return "";
 
 		switch (groupID) {
@@ -55,7 +55,7 @@ public class Group {
 	public static String getNameSprite(int groupID) {
 		return "";
 
-		/*if (!Constants.GameServer.WANT_CUSTOM_RANK_DISPLAY)
+		/*if (!getServer().getConfig().WANT_CUSTOM_RANK_DISPLAY)
 			return "";
 
 		switch (groupID) {

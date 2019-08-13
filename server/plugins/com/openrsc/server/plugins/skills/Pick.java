@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.skills;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
@@ -21,7 +21,7 @@ public final class Pick implements ObjectActionExecutiveListener,
 	}
 
 	private void handleCropPickup(final Player owner, int objID, String pickMessage) {
-		int delaytime = Constants.GameServer.GAME_TICK;
+		int delaytime = Server.getServer().getConfig().GAME_TICK;
 
 		if (delaytime == 600)
 			delaytime = 300;//openrsc

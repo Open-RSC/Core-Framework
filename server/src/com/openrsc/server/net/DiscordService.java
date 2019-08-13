@@ -1,7 +1,6 @@
 package com.openrsc.server.net;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.content.market.MarketItem;
 import com.openrsc.server.external.EntityHandler;
@@ -19,17 +18,26 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class DiscordSender implements Runnable{
+public class DiscordService implements Runnable{
 
-	private final ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat("PlayerDataProcessorThread").build());
+	private final ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat("DiscordServiceThread").build());
 
 	private Queue<String> auctionRequests = new ConcurrentLinkedQueue<String>();
 	private Queue<String> monitoringRequests = new ConcurrentLinkedQueue<String>();
 
-
 	private static final Logger LOGGER	= LogManager.getLogger();
 	private long monitoringLastUpdate	= 0;
 	private boolean running				= false;
+
+	private final Server server;
+
+	public DiscordService(Server server) {
+		this.server = server;
+	}
+
+	public final Server getServer() {
+		return server;
+	}
 
 	public void auctionAdd(MarketItem addItem) {
 		String pluralHandlerMessage = addItem.getAmount() > 1
@@ -79,14 +87,14 @@ public class DiscordSender implements Runnable{
 
 	public void monitoringSendServerBehind(String message) {
 		try {
-			monitoringSendToDiscord(message + "\r\n" + Server.getServer().buildProfilingDebugInformation(false));
+			monitoringSendToDiscord(message + "\r\n" + getServer().buildProfilingDebugInformation(false));
 		} catch(Exception e) {
 			LOGGER.catching(e);
 		}
 	}
 
 	private void auctionSendToDiscord(String message) {
-		if(Constants.GameServer.WANT_DISCORD_AUCTION_UPDATES) {
+		if(getServer().getConfig().WANT_DISCORD_AUCTION_UPDATES) {
 			auctionRequests.add(message);
 		}
 	}
@@ -94,7 +102,7 @@ public class DiscordSender implements Runnable{
 	private void monitoringSendToDiscord(String message) {
 		final long now = System.currentTimeMillis();
 
-		if(Constants.GameServer.WANT_DISCORD_MONITORING_UPDATES && now >= (monitoringLastUpdate + 3600)) {
+		if(getServer().getConfig().WANT_DISCORD_MONITORING_UPDATES && now >= (monitoringLastUpdate + 3600)) {
 			monitoringRequests.add(message);
 			monitoringLastUpdate = now;
 		}
@@ -130,11 +138,11 @@ public class DiscordSender implements Runnable{
 
 		try {
 			while ((message = auctionRequests.poll()) != null) {
-				sendToDiscord(Constants.GameServer.DISCORD_AUCTION_WEBHOOK_URL, message);
+				sendToDiscord(Server.getServer().getConfig().DISCORD_AUCTION_WEBHOOK_URL, message);
 			}
 
 			while ((message = monitoringRequests.poll()) != null) {
-				sendToDiscord(Constants.GameServer.DISCORD_MONITORING_WEBHOOK_URL, message);
+				sendToDiscord(Server.getServer().getConfig().DISCORD_MONITORING_WEBHOOK_URL, message);
 			}
 		} catch(Exception e) {
 			LOGGER.catching(e);

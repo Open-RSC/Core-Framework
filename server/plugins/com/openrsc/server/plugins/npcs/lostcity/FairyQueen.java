@@ -7,7 +7,7 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.*;
 
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.NpcId;
 
 public class FairyQueen implements TalkToNpcListener,
 	TalkToNpcExecutiveListener {

@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.skills;
 
 import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -66,12 +66,12 @@ public class WoodcutJungle implements ObjectActionListener,
 			}
 		}
 
-		//if(!hasItem(p, 1163) && !hasItem(p, 1233) && p.getQuestStage(Constants.Quests.LEGENDS_QUEST) != -1) { // the radimus scrolls.
+		//if(!hasItem(p, 1163) && !hasItem(p, 1233) && p.getQuestStage(Quests.LEGENDS_QUEST) != -1) { // the radimus scrolls.
 		//	message(p, 1900, "This jungle is far too thick, you'll need a special map to go further.");
 		//	return;
 		//}
 
-		if (getCurrentLevel(p, SKILLS.WOODCUT.id()) < 50) {
+		if (getCurrentLevel(p, Skills.WOODCUT) < 50) {
 			p.message("You need a woodcutting level of 50 to axe this tree");
 			return;
 		}
@@ -110,7 +110,7 @@ public class WoodcutJungle implements ObjectActionListener,
 	}
 
 	private void cutJungle(int axeId, GameObject obj, Player p, boolean force) {
-		if (force || getLog(50, p.getSkills().getLevel(SKILLS.WOODCUT.id()), axeId)) {
+		if (force || getLog(50, p.getSkills().getLevel(Skills.WOODCUT), axeId)) {
 			GameObject jungleObject = p.getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
 			if (jungleObject != null && jungleObject.getID() == obj.getID()) {
 				if (obj.getID() == JUNGLE_VINE) {
@@ -119,12 +119,12 @@ public class WoodcutJungle implements ObjectActionListener,
 					if (!force)
 						message(p, 1200, "You hack your way through the jungle.");
 				} else {
-					World.getWorld().replaceGameObject(obj, new GameObject(obj.getLocation(), JUNGLE_TREE_STUMP, obj.getDirection(), obj.getType()));
+					World.getWorld().replaceGameObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), JUNGLE_TREE_STUMP, obj.getDirection(), obj.getType()));
 					World.getWorld().delayedSpawnObject(obj.getLoc(), 60 * 1000); // 1 minute.
 				}
 
 				if (!force)
-					p.incExp(SKILLS.WOODCUT.id(), 20, true);
+					p.incExp(Skills.WOODCUT, 20, true);
 			}
 			if (DataConversions.random(0, 10) == 8) {
 				final Item log = new Item(ItemId.LOGS.id());

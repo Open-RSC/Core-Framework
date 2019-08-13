@@ -33,9 +33,19 @@ public class PlayerDatabaseExecutor extends ThrottleFilter implements Runnable {
 
 	private Queue<Player> removeRequests = new ConcurrentLinkedQueue<Player>();
 
-	private DatabasePlayerLoader database = new DatabasePlayerLoader();
+	private DatabasePlayerLoader database;
 
 	private boolean running	= false;
+
+	private final Server server;
+	public final Server getServer() {
+		return server;
+	}
+
+	public PlayerDatabaseExecutor(Server server) {
+		this.server = server;
+		this.database = new DatabasePlayerLoader(getServer());
+	}
 
 	@Override
 	public void run() {
@@ -48,7 +58,7 @@ public class PlayerDatabaseExecutor extends ThrottleFilter implements Runnable {
 					final Player loadedPlayer = database.loadPlayer(loginRequest);
 
 					LoginTask loginTask = new LoginTask(loginRequest, loadedPlayer);
-					Server.getServer().getGameEventHandler().add(new ImmediateEvent("Login Player") {
+					getServer().getGameEventHandler().add(new ImmediateEvent("Login Player") {
 						@Override
 						public void action() {
 							loginTask.run();

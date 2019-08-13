@@ -1,6 +1,6 @@
 package com.openrsc.server.util;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.thoughtworks.xstream.XStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,7 +26,7 @@ public final class PersistenceManager {
 
 	public static Object load(String filename) {
 		try {
-			InputStream is = new FileInputStream(new File(Constants.GameServer.CONFIG_DIR, filename));
+			InputStream is = new FileInputStream(new File(Server.getServer().getConfig().CONFIG_DIR, filename));
 			if (filename.endsWith(".gz")) {
 				is = new GZIPInputStream(is);
 			}
@@ -41,7 +41,7 @@ public final class PersistenceManager {
 	private static void setupAliases() {
 		try {
 			Properties aliases = new Properties();
-			FileInputStream fis = new FileInputStream(new File(Constants.GameServer.CONFIG_DIR, "aliases.xml"));
+			FileInputStream fis = new FileInputStream(new File(Server.getServer().getConfig().CONFIG_DIR, "aliases.xml"));
 			aliases.loadFromXML(fis);
 			for (Enumeration<?> e = aliases.propertyNames(); e.hasMoreElements(); ) {
 				String alias = (String) e.nextElement();
@@ -55,7 +55,7 @@ public final class PersistenceManager {
 
 	public static void write(String filename, Object o) {
 		try {
-			OutputStream os = new FileOutputStream(new File(Constants.GameServer.CONFIG_DIR, filename));
+			OutputStream os = new FileOutputStream(new File(Server.getServer().getConfig().CONFIG_DIR, filename));
 			if (filename.endsWith(".gz")) {
 				os = new GZIPOutputStream(os);
 			}

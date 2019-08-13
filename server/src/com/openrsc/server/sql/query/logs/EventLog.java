@@ -1,6 +1,6 @@
 package com.openrsc.server.sql.query.logs;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.sql.query.Query;
 
 import java.sql.Connection;
@@ -12,7 +12,7 @@ public final class EventLog extends Query {
 	private final String message;
 
 	public EventLog(String message) {
-		super("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "event_logs`(`message`, `time`) VALUES(?, ?)");
+		super("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "event_logs`(`message`, `time`) VALUES(?, ?)");
 		this.message = message;
 	}
 

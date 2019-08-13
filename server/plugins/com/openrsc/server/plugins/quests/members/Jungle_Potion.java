@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.quests.members;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -41,7 +40,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 	public void handleReward(Player player) {
 		player.message("You gain experience in Herblaw !");
 		player.message("@gre@You haved gained 1 quest point!");
-		incQuestReward(player, Quests.questData.get(Quests.JUNGLE_POTION), true);
+		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.JUNGLE_POTION), true);
 		player.getCache().store("jungle_completed", true);
 	}
 
@@ -355,7 +354,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 							p.getCache().remove("jungle_completed");
 							return;
 						}
-						if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
+						if (p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 							playerTalk(p, n, "Greetings");
 							npcTalk(p, n, "Hello Bwana.",
 								"I conclude that you have been succesful.",
@@ -363,7 +362,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 								"You have done us all a great dead!",
 								"Why not go and visit him and have a look around Shilo",
 								"village. You may find some interesting things there!");
-						} else if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == 1 || p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == 2) {
+						} else if (p.getQuestStage(Quests.SHILO_VILLAGE) == 1 || p.getQuestStage(Quests.SHILO_VILLAGE) == 2) {
 							/*
 							 * Handle shilo village start.
 							 */
@@ -393,14 +392,14 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 							} else if (menu == 2) {
 								trufitisChat(p, n, Trufitus.WHAT_DO_YOU_KNOW_ABOUT_MOSEL_REI);
 							}
-						} else if (atQuestStages(p, Constants.Quests.SHILO_VILLAGE, 3, 4, 5)) {
+						} else if (atQuestStages(p, Quests.SHILO_VILLAGE, 3, 4, 5)) {
 							playerTalk(p, n, "Greetings...");
 							npcTalk(p, n, "Greetings Bwana, you have been away!",
 								"The situation with Rashiliyia is worsening!",
 								"I pray that you have some good news for me.");
 							playerTalk(p, n, "I think I found the temple of Ah Za Rhoon.");
 							int menu;
-							if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == 4 || p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == 5) {
+							if (p.getQuestStage(Quests.SHILO_VILLAGE) == 4 || p.getQuestStage(Quests.SHILO_VILLAGE) == 5) {
 								menu = showMenu(p, n,
 									"I have some items that I need help with.",
 									"I need some help with the Temple of Ah Za Rhoon.",
@@ -418,7 +417,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 									"thoroughly and see if there are any clues about",
 									"Rashiliyia.");
 								trufitisChat(p, n, Trufitus.SHOW_ME_TEMPLE_ITEMS);
-							} else if (menu == 2 && (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == 4 || p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == 5)) {
+							} else if (menu == 2 && (p.getQuestStage(Quests.SHILO_VILLAGE) == 4 || p.getQuestStage(Quests.SHILO_VILLAGE) == 5)) {
 								npcTalk(p, n, "Something seems different about you. You look like ",
 									"you have seen a ghost?");
 								playerTalk(p, n, "It just so happens that I have!");
@@ -433,7 +432,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 									npcTalk(p, n, "Oh, so it most likely was not very important then?");
 								}
 							}
-						} else if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == 6) {
+						} else if (p.getQuestStage(Quests.SHILO_VILLAGE) == 6) {
 							playerTalk(p, n, "Greetings...");
 							npcTalk(p, n, "Greetings Bwana, did you find the tomb of Bervirius?");
 							int chat = showMenu(p, n,
@@ -481,7 +480,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 							} else if (chat == 2) {
 								trufitisChat(p, n, Trufitus.ACTUALLY_NEED_HELP_WITH_SOMETHING_ELSE);
 							}
-						} else if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == 7) {
+						} else if (p.getQuestStage(Quests.SHILO_VILLAGE) == 7) {
 							npcTalk(p, n, "You may want to start looking for Rashiliyia's Tomb.",
 								"Do you need extra help with locating it?");
 							int off = showMenu(p, n,
@@ -508,7 +507,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 							} else if (off == 2) {
 								trufitisChat(p, n, Trufitus.ACTUALLY_NEED_HELP_WITH_SOMETHING_ELSE);
 							}
-						} else if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == 8) {
+						} else if (p.getQuestStage(Quests.SHILO_VILLAGE) == 8) {
 							if (p.getCache().hasKey("dolmen_zombie")
 								&& p.getCache().hasKey("dolmen_skeleton")
 								&& p.getCache().hasKey("dolmen_ghost")) {
@@ -829,8 +828,8 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 					"And most likely between large bodies of water, for example large lakes.",
 					"However, many people have searched for the temple, and have failed.",
 					"I would hate to see you waste your time on a pointless search like that.");
-				if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == 1) {
-					p.updateQuestStage(Constants.Quests.SHILO_VILLAGE, 2);
+				if (p.getQuestStage(Quests.SHILO_VILLAGE) == 1) {
+					p.updateQuestStage(Quests.SHILO_VILLAGE, 2);
 				}
 				int opt5 = showMenu(p, n,
 					"Thanks for the information!",
@@ -903,7 +902,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 				break;
 			case Trufitus.SHOW_ME_TEMPLE_ITEMS:
 				npcTalk(p, n, "Well, just let me see the item and I'll help as much as I can.");
-				if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) >= 6) {
+				if (p.getQuestStage(Quests.SHILO_VILLAGE) >= 6) {
 					int optTemp = showMenu(p, n, "I need help with Zadimus.",
 							"I need help with Bervirius.",
 							"I need help with Rashliyia.",
@@ -953,8 +952,8 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 					"But I think we must take this clue literally",
 					"and get some item that belonged to Bervirius",
 					"as it may be the only way to approach Rashiliyia.");
-				if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == 4) {
-					p.updateQuestStage(Constants.Quests.SHILO_VILLAGE, 5);
+				if (p.getQuestStage(Quests.SHILO_VILLAGE) == 4) {
+					p.updateQuestStage(Quests.SHILO_VILLAGE, 5);
 				}
 				break;
 		}
@@ -982,16 +981,16 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if (isObject(obj, QuestObjects.Snake_Jungle_Vine)) {
-			if (!atQuestStage(p, this, 1) && p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 0) {
+			if (!atQuestStage(p, this, 1) && p.getQuestStage(Quests.LEGENDS_QUEST) == 0) {
 				p.message("Yep, it looks like a vine...");
 				return;
 			}
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 1 && p.getQuestStage(Constants.Quests.LEGENDS_QUEST) <= 6) {
+			if (p.getQuestStage(Quests.LEGENDS_QUEST) >= 1 && p.getQuestStage(Quests.LEGENDS_QUEST) <= 6) {
 				p.message("Yep, it looks like a vine...");
 				return;
 			}
 			if (!hasItem(p, ItemId.UNIDENTIFIED_SNAKE_WEED.id())
-				&& !hasItem(p, ItemId.SNAKE_WEED.id()) && (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 6 || 
+				&& !hasItem(p, ItemId.SNAKE_WEED.id()) && (p.getQuestStage(Quests.LEGENDS_QUEST) >= 6 ||
 						(!hasCacheKeySetTrue(p, "got_snake_weed") && atQuestStage(p, this, 1)) )) {
 				message(p, "Small amounts of a herb are growing near this vine");
 				createGroundItem(ItemId.UNIDENTIFIED_SNAKE_WEED.id(), 1, obj.getX(), obj
@@ -1003,15 +1002,15 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 				p.message("Yep, it looks like a vine...");
 			}
 		} else if (isObject(obj, QuestObjects.Ardrigal_Palm_Tree)) {
-			if (p.getQuestStage(this) < 1 && p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 0) {
+			if (p.getQuestStage(this) < 1 && p.getQuestStage(Quests.LEGENDS_QUEST) == 0) {
 				p.message("You find nothing of interest this time, sorry!");
 				return;
 			}
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 1 && p.getQuestStage(Constants.Quests.LEGENDS_QUEST) <= 6) {
+			if (p.getQuestStage(Quests.LEGENDS_QUEST) >= 1 && p.getQuestStage(Quests.LEGENDS_QUEST) <= 6) {
 				p.message("You find nothing of interest this time, sorry!");
 				return;
 			}
-			if (!hasItem(p, ItemId.UNIDENTIFIED_ARDRIGAL.id()) && !hasItem(p, ItemId.ARDRIGAL.id()) && (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 6 || 
+			if (!hasItem(p, ItemId.UNIDENTIFIED_ARDRIGAL.id()) && !hasItem(p, ItemId.ARDRIGAL.id()) && (p.getQuestStage(Quests.LEGENDS_QUEST) >= 6 ||
 					(!hasCacheKeySetTrue(p, "got_ardigal") && atQuestStage(p, this, 2)) )) {
 				message(p, "You find a herb plant growing at the base of the palm");
 				createGroundItem(ItemId.UNIDENTIFIED_ARDRIGAL.id(), 1, obj.getX(), obj.getY(), p);

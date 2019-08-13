@@ -18,6 +18,13 @@ public class GameTickEventHandler {
 	private ConcurrentHashMap<String, GameTickEvent> events = new ConcurrentHashMap<String, GameTickEvent>();
 	private ConcurrentHashMap<String, GameTickEvent> toAdd = new ConcurrentHashMap<String, GameTickEvent>();
 
+	private final Server server;
+	public final Server getServer() { return server; }
+
+	public GameTickEventHandler(Server server) {
+		this.server = server;
+	}
+
 	public void add(GameTickEvent event) {
 		String className = String.valueOf(event.getClass());
 		if (event.getOwner() == null) { // Server events, no owner.

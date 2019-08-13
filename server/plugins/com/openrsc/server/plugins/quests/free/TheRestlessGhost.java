@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.quests.free;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -32,7 +31,7 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.THE_RESTLESS_GHOST;
+		return Quests.THE_RESTLESS_GHOST;
 	}
 
 	@Override
@@ -48,7 +47,7 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 	@Override
 	public void handleReward(Player player) {
 		player.message("You have completed the restless ghost quest");
-		incQuestReward(player, Quests.questData.get(Quests.THE_RESTLESS_GHOST), true);
+		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.THE_RESTLESS_GHOST), true);
 		player.message("@gre@You haved gained 1 quest point!");
 
 	}
@@ -196,7 +195,7 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 							n,
 							"Ooh thank you. That would be such a great relief",
 							"It is so dull being a ghost");
-						p.updateQuestStage(Constants.Quests.THE_RESTLESS_GHOST, 3);
+						p.updateQuestStage(Quests.THE_RESTLESS_GHOST, 3);
 					} else if (choice == 1) {
 						playerTalk(p, n, "No");
 						npcTalk(p, n,
@@ -278,7 +277,7 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 					npcTalk(p, n,
 						"Ooh thank you. That would be such a great relief",
 						"It is so dull being a ghost");
-					p.updateQuestStage(Constants.Quests.THE_RESTLESS_GHOST, 3);
+					p.updateQuestStage(Quests.THE_RESTLESS_GHOST, 3);
 					break;
 				case Ghost.SCARY:
 					break;
@@ -327,7 +326,7 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 			}
 			message(player, "The ghost has vanished",
 				"You think you hear a faint voice in the air", "Thank you");
-			player.sendQuestComplete(Constants.Quests.THE_RESTLESS_GHOST);
+			player.sendQuestComplete(Quests.THE_RESTLESS_GHOST);
 			return;
 		}
 	}

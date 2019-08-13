@@ -1,8 +1,6 @@
 package com.openrsc.server.event.rsc.impl;
 
 import com.openrsc.server.event.rsc.GameTickEvent;
-import com.openrsc.server.model.Skills;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
@@ -33,7 +31,7 @@ public class StatRestorationEvent extends GameTickEvent {
 
 		// Add new skills to the restoration cycle
 		for (int skillIndex = 0; skillIndex < 18; skillIndex++) {
-			if (skillIndex != SKILLS.PRAYER.id()) {
+			if (skillIndex != com.openrsc.server.constants.Skills.PRAYER) {
 				checkAndStartRestoration(skillIndex);
 			}
 		}
@@ -69,7 +67,7 @@ public class StatRestorationEvent extends GameTickEvent {
 					it.remove();
 					if (getOwner().isPlayer() && stat != 3) {
 						Player p = (Player) getOwner();
-						p.message("Your " + Skills.getSkillName(stat) + " ability has returned to normal.");
+						p.message("Your " + getOwner().getWorld().getServer().getConstants().getSkills().getSkillName(stat) + " ability has returned to normal.");
 					}
 				}
 			}

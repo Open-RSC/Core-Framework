@@ -1,6 +1,6 @@
 package com.openrsc.server.plugins.npcs.tutorial;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -29,7 +29,7 @@ public class IronMan implements TalkToNpcExecutiveListener,
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (!Constants.GameServer.SPAWN_IRON_MAN_NPCS) return;
+		if (!Server.getServer().getConfig().SPAWN_IRON_MAN_NPCS) return;
 
 		if (n.getID() == IRON_MAN || n.getID() == ULTIMATE_IRON_MAN || n.getID() == HARDCORE_IRON_MAN) {
 			if (p.getAttribute("ironman_delete", false)) {
@@ -40,7 +40,7 @@ public class IronMan implements TalkToNpcExecutiveListener,
 						return;
 					}
 					try {
-						PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Constants.GameServer.MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+						PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 						statement.setString(1, p.getUsername());
 						ResultSet result = statement.executeQuery();
 						if (result.next()) {
@@ -81,7 +81,7 @@ public class IronMan implements TalkToNpcExecutiveListener,
 								return;
 							}
 							try {
-								PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Constants.GameServer.MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+								PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 								statement.setString(1, p.getUsername());
 								ResultSet result = statement.executeQuery();
 								if (result.next()) {
@@ -169,7 +169,7 @@ public class IronMan implements TalkToNpcExecutiveListener,
 
 	@Override
 	public void onNpcCommand(Npc n, String command, Player p) {
-		if (!Constants.GameServer.SPAWN_IRON_MAN_NPCS) return;
+		if (!Server.getServer().getConfig().SPAWN_IRON_MAN_NPCS) return;
 		if (n.getID() == IRON_MAN || n.getID() == ULTIMATE_IRON_MAN || n.getID() == HARDCORE_IRON_MAN && command.equalsIgnoreCase("Armour")) {
 			armourOption(p, n);
 		}

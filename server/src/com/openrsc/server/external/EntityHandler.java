@@ -1,6 +1,5 @@
 package com.openrsc.server.external;
 
-import com.openrsc.server.Constants;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.TelePoint;
 import com.openrsc.server.util.PersistenceManager;

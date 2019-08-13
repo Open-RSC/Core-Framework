@@ -1,6 +1,6 @@
 package com.openrsc.server.content.achievement;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.content.achievement.Achievement.TaskReward;
 import com.openrsc.server.content.achievement.Achievement.TaskType;
 import com.openrsc.server.external.EntityHandler;
@@ -33,11 +33,11 @@ public class AchievementSystem {
 
 		try {
 			PreparedStatement fetchAchievement = DatabaseConnection.getDatabase()
-				.prepareStatement("SELECT `id`, `name`, `description`, `extra`, `added` FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "achievements` ORDER BY `id` ASC");
+				.prepareStatement("SELECT `id`, `name`, `description`, `extra`, `added` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "achievements` ORDER BY `id` ASC");
 			PreparedStatement fetchRewards = DatabaseConnection.getDatabase()
-				.prepareStatement("SELECT `item_id`, `amount`, `guaranteed`, `reward_type` FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "achievement_reward` WHERE `achievement_id` = ?");
+				.prepareStatement("SELECT `item_id`, `amount`, `guaranteed`, `reward_type` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "achievement_reward` WHERE `achievement_id` = ?");
 			PreparedStatement fetchTasks = DatabaseConnection.getDatabase()
-				.prepareStatement("SELECT `type`, `do_id`, `do_amount` FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "achievement_task` WHERE `achievement_id` = ?");
+				.prepareStatement("SELECT `type`, `do_id`, `do_amount` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "achievement_task` WHERE `achievement_id` = ?");
 
 			ResultSet result = fetchAchievement.executeQuery();
 			while (result.next()) {

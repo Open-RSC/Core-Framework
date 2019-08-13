@@ -1,9 +1,7 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.mechanism;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.*;
+import com.openrsc.server.Server;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -47,7 +45,7 @@ public class LegendsQuestInvAction implements InvActionListener, InvActionExecut
 		}
 		else if (item.getID() == ItemId.HOLY_FORCE_SPELL.id()) {
 			Npc n = getNearestNpc(p, NpcId.ECHNED_ZEKIN.id(), 5);
-			if (n != null && p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 7) {
+			if (n != null && p.getQuestStage(Quests.LEGENDS_QUEST) == 7) {
 				message(p, "You thrust the Holy Force spell in front of the spirit.");
 				message(p, n, 1300, "A bright, holy light streams out from the paper spell.");
 				if (p.getCache().hasKey("already_cast_holy_spell")) {
@@ -64,22 +62,22 @@ public class LegendsQuestInvAction implements InvActionListener, InvActionExecut
 				Npc second_nezikchened = spawnNpc(NpcId.NEZIKCHENED.id(), formerNpcX, formerNpcY, 60000 * 15, p);
 				if (second_nezikchened != null) {
 					message(p, second_nezikchened, 600, "The spell seems to weaken the Demon.");
-					second_nezikchened.getSkills().setLevel(SKILLS.DEFENSE.id(), n.getSkills().getLevel(SKILLS.DEFENSE.id()) - 5);
+					second_nezikchened.getSkills().setLevel(Skills.DEFENSE, n.getSkills().getLevel(Skills.DEFENSE) - 5);
 					if (p.getCache().hasKey("ran_from_2nd_nezi")) {
 						second_nezikchened.getUpdateFlags().setChatMessage(new ChatMessage(second_nezikchened, "So you have returned and I am prepared for you now!", p));
 					} else {
 						second_nezikchened.getUpdateFlags().setChatMessage(new ChatMessage(second_nezikchened, "Now I am revealed to you Vacu, so shall ye perish.", p));
 					}
 					second_nezikchened.startCombat(p);
-					int newPray = (int) Math.ceil((double) p.getSkills().getLevel(SKILLS.PRAYER.id()) / 2);
-					if (p.getSkills().getLevel(SKILLS.PRAYER.id()) - newPray < 30) {
+					int newPray = (int) Math.ceil((double) p.getSkills().getLevel(Skills.PRAYER) / 2);
+					if (p.getSkills().getLevel(Skills.PRAYER) - newPray < 30) {
 						message(p, 1300, "A sense of fear comes over you ",
 							"You feel a sense of loss...");
 					} else {
 						message(p, 1300, "An intense sense of fear comes over you ",
 							"You feel a great sense of loss...");
 					}
-					p.getSkills().setLevel(SKILLS.PRAYER.id(), newPray);
+					p.getSkills().setLevel(Skills.PRAYER, newPray);
 					if (p.getCache().hasKey("ran_from_2nd_nezi")) {
 						sleep(7000);
 						message(p, 1300, "The Demon takes out a dark dagger and throws it at you...");
@@ -96,7 +94,7 @@ public class LegendsQuestInvAction implements InvActionListener, InvActionExecut
 				message(p, 600, "There is no suitable candidate to cast this spell on.");
 			}
 		}
-		else if (item.getID() == ItemId.A_RED_CRYSTAL.id() && !Constants.GameServer.WANT_PETS) {
+		else if (item.getID() == ItemId.A_RED_CRYSTAL.id() && !Server.getServer().getConfig().WANT_PETS) {
 			message(p, 1300, "As the crystal touches your hands a voice inside of your head says..",
 				"@gre@Voice in head: Bring life to the dragons eye.");
 		}
@@ -133,11 +131,11 @@ public class LegendsQuestInvAction implements InvActionListener, InvActionExecut
 				//authentic, didn't matter option chosen
 				if (opt == 0 || opt == 1) 
 				{
-					if (getCurrentLevel(p, SKILLS.PRAYER.id()) < 10) {
+					if (getCurrentLevel(p, Skills.PRAYER) < 10) {
 						p.message("You need at least ten prayer points to cast this spell.");
 						return;
 					}
-					if (getCurrentLevel(p, SKILLS.MAGIC.id()) < 10) {
+					if (getCurrentLevel(p, Skills.MAGIC) < 10) {
 						p.message("You need at least ten magic points to cast this spell.");
 						return;
 					}
@@ -188,8 +186,8 @@ public class LegendsQuestInvAction implements InvActionListener, InvActionExecut
 			p.getInventory().replace(ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.BLESSED_GOLDEN_BOWL.id());
 			message(p, 1300, "The pure water in the golden bowl has run out...");
 			p.message("You start to see little shoots growing on the seeds.");
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 4) {
-				p.setQuestStage(Constants.Quests.LEGENDS_QUEST, 5);
+			if (p.getQuestStage(Quests.LEGENDS_QUEST) == 4) {
+				p.setQuestStage(Quests.LEGENDS_QUEST, 5);
 			}
 		}
 	}

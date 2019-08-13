@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.quests.members;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -37,7 +36,7 @@ public class DwarfCannon
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.DWARF_CANNON;
+		return Quests.DWARF_CANNON;
 	}
 
 	@Override
@@ -52,7 +51,7 @@ public class DwarfCannon
 
 	@Override
 	public void handleReward(Player p) {
-		incQuestReward(p, Quests.questData.get(Quests.DWARF_CANNON), true);
+		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.DWARF_CANNON), true);
 		p.message("@gre@You haved gained 1 quest point!");
 		message(p, "well done", "you have completed the dwarf cannon quest");
 	}
@@ -407,7 +406,7 @@ public class DwarfCannon
 						npcTalk(p, n, "take care of yourself traveller, and thanks again");
 						playerTalk(p, n, "you take care too");
 						p.getCache().remove("spoken_nulodion");
-						p.sendQuestComplete(Constants.Quests.DWARF_CANNON);
+						p.sendQuestComplete(Quests.DWARF_CANNON);
 					} else if (p.getCache().hasKey("spoken_nulodion")) {
 						playerTalk(p, n, "hi");
 						npcTalk(p, n, "hello traveller, any word from the Cannon engineer?");

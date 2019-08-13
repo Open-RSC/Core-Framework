@@ -1,7 +1,8 @@
 package com.openrsc.server.plugins.minigames.barcrawl;
 
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Minigames;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -12,11 +13,9 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import java.util.Optional;
 
-import com.openrsc.server.Constants;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class AlfredGrimhandBarCrawl implements MiniGameInterface, TalkToNpcListener,
 	TalkToNpcExecutiveListener, ObjectActionListener,
@@ -24,7 +23,7 @@ public class AlfredGrimhandBarCrawl implements MiniGameInterface, TalkToNpcListe
 	
 	@Override
 	public int getMiniGameId() {
-		return Constants.Minigames.ALFRED_GRIMHANDS_BARCRAWL;
+		return Minigames.ALFRED_GRIMHANDS_BARCRAWL;
 	}
 
 	@Override

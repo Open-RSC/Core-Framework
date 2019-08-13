@@ -1,7 +1,10 @@
 package com.openrsc.server.model.entity.npc;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.constants.Constants;
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.NpcLootEvent;
@@ -12,7 +15,6 @@ import com.openrsc.server.event.rsc.impl.StrPotEventNpc;
 import com.openrsc.server.event.rsc.impl.ThrowingEvent;
 import com.openrsc.server.external.*;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
@@ -31,21 +33,13 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
-import static com.openrsc.server.Constants.GameServer.*;
-
 public class Npc extends Mob {
-
-
-	/**
-	 * World instance
-	 */
-	protected static final World world = World.getWorld();
 	/**
 	 * Logger instance
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final List<String> valuableDrops = Arrays.asList(
-		VALUABLE_DROP_ITEMS.split(",")
+		Server.getServer().getConfig().VALUABLE_DROP_ITEMS.split(",")
 	);
 	/**
 	 * The current status of the player
@@ -227,29 +221,32 @@ public class Npc extends Mob {
 	private NpcBehavior npcBehavior;
 	private ArrayList<NpcLootEvent> deathListeners = new ArrayList<NpcLootEvent>(1); // TODO: Should use a more generic class. Maybe PlayerKilledNpcListener, but that is in plugins jar.
 
-	public Npc(int id, int x, int y) {
-		this(new NPCLoc(id, x, y, x - 5, x + 5, y - 5, y + 5));
+	public Npc(World world, int id, int x, int y) {
+		this(world, new NPCLoc(id, x, y, x - 5, x + 5, y - 5, y + 5));
 	}
 
-	public Npc(int id, int x, int y, int radius) {
-		this(new NPCLoc(id, x, y, x - radius, x + radius, y - radius, y + radius));
+	public Npc(World world, int id, int x, int y, int radius) {
+		this(world, new NPCLoc(id, x, y, x - radius, x + radius, y - radius, y + radius));
 	}
 
-	public Npc(int id, int startX, int startY, int minX, int maxX, int minY, int maxY) {
-		this(new NPCLoc(id, startX, startY, minX, maxX, minY, maxY));
+	public Npc(World world, int id, int startX, int startY, int minX, int maxX, int minY, int maxY) {
+		this(world, new NPCLoc(id, startX, startY, minX, maxX, minY, maxY));
 	}
 
-	public Npc(Point location, int x, String username) {
+	public Npc(World world, Point location, int x, String username) {
+		super(world);
 		//Default constructor for NPC, this is useful for finding the name of an NPC without having to spawn an NPC.
 	}
 
-	public Npc(NPCLoc loc) {
-		for (int i : Constants.GameServer.UNDEAD_NPCS) {
+	public Npc(World world, NPCLoc loc) {
+		super(world);
+
+		for (int i : Constants.UNDEAD_NPCS) {
 			if (loc.getId() == i) {
 				setAttribute("isUndead", true);
 			}
 		}
-		for (int i : Constants.GameServer.ARMOR_NPCS) {
+		for (int i : Constants.ARMOR_NPCS) {
 			if (loc.getId() == i) {
 				setAttribute("hasArmor", true);
 			}
@@ -264,11 +261,11 @@ public class Npc extends Mob {
 		super.setID(loc.getId());
 		super.setLocation(Point.location(loc.startX(), loc.startY()), true);
 
-		getSkills().setLevelTo(SKILLS.ATTACK.id(), def.getAtt());
-		getSkills().setLevelTo(SKILLS.DEFENSE.id(), def.getDef());
-		getSkills().setLevelTo(SKILLS.RANGED.id(), def.getRanged());
-		getSkills().setLevelTo(SKILLS.STRENGTH.id(), def.getStr());
-		getSkills().setLevelTo(SKILLS.HITS.id(), def.getHits());
+		getSkills().setLevelTo(Skills.ATTACK, def.getAtt());
+		getSkills().setLevelTo(Skills.DEFENSE, def.getDef());
+		getSkills().setLevelTo(Skills.RANGED, def.getRanged());
+		getSkills().setLevelTo(Skills.STRENGTH, def.getStr());
+		getSkills().setLevelTo(Skills.HITS, def.getHits());
 
 		/*
 		  Unique ID for event tracking.
@@ -276,10 +273,6 @@ public class Npc extends Mob {
 		setUUID(UUID.randomUUID().toString());
 
 		Server.getServer().getGameEventHandler().add(statRestorationEvent);
-	}
-
-	public Npc() {
-
 	}
 
 	/**
@@ -494,15 +487,15 @@ public class Npc extends Mob {
 				//If NPC kill messages are enabled and the filter is enabled and the NPC is in the list of NPCs, display the messages,
 				//otherwise we will display the message for all NPCs if NPC kill messages are enabled if there is no filter.
 				//Also, if we don't have NPC kill logging enabled, we can't have NPC kill messages.
-				if (NPC_KILL_LOGGING) {
-					if (NPC_KILL_MESSAGES && NPC_KILL_MESSAGES_FILTER) {
-						if (NPC_KILL_MESSAGES_NPCs.contains(this.getDef().getName())) {
+				if (Server.getServer().getConfig().NPC_KILL_LOGGING) {
+					if (Server.getServer().getConfig().NPC_KILL_MESSAGES && Server.getServer().getConfig().NPC_KILL_MESSAGES_FILTER) {
+						if (Server.getServer().getConfig().NPC_KILL_MESSAGES_NPCs.contains(this.getDef().getName())) {
 							owner.addNpcKill(this, true);
 						} else {
 							owner.addNpcKill(this, false);
 						}
 					} else {
-						owner.addNpcKill(this, NPC_KILL_MESSAGES);
+						owner.addNpcKill(this, Server.getServer().getConfig().NPC_KILL_MESSAGES);
 					}
 				}
 
@@ -512,21 +505,21 @@ public class Npc extends Mob {
 				//Determine if the RDT is hit first
 				boolean rdtHit = false;
 				Item rare = null;
-				if (WANT_NEW_RARE_DROP_TABLES && mob.isPlayer()) {
-					if (world.standardTable.rollAccess(this.id,Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()))) {
+				if (Server.getServer().getConfig().WANT_NEW_RARE_DROP_TABLES && mob.isPlayer()) {
+					if (getWorld().standardTable.rollAccess(this.id,Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
 						rdtHit = true;
-						rare = world.standardTable.rollItem(Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()), ((Player) mob));
-					} else if (world.gemTable.rollAccess(this.id,Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()))) {
+						rare = getWorld().standardTable.rollItem(Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), ((Player) mob));
+					} else if (getWorld().gemTable.rollAccess(this.id,Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
 						rdtHit = true;
-						rare = world.gemTable.rollItem(Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()), ((Player) mob));
+						rare = getWorld().gemTable.rollItem(Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), ((Player) mob));
 					}
 				}
 
 				if (rare != null) {
 					if (!handleRingOfAvarice(owner, rare)) {
-						GroundItem groundItem = new GroundItem(rare.getID(), getX(), getY(), rare.getAmount(), owner);
+						GroundItem groundItem = new GroundItem(owner.getWorld(), rare.getID(), getX(), getY(), rare.getAmount(), owner);
 						groundItem.setAttribute("npcdrop", true);
-						world.registerItem(groundItem);
+						getWorld().registerItem(groundItem);
 					}
 					Server.getServer().getPlayerDataProcessor().getDatabase().addNpcDrop(
 						owner, this, rare.getID(), rare.getAmount());
@@ -541,9 +534,9 @@ public class Npc extends Mob {
 					weightTotal += drop.getWeight();
 					if (drop.getWeight() == 0 && drop.getID() != -1) {
 						if (!handleRingOfAvarice(owner, new Item(drop.getID(), drop.getAmount()))) {
-							GroundItem groundItem = new GroundItem(drop.getID(), getX(), getY(), drop.getAmount(), owner);
+							GroundItem groundItem = new GroundItem(owner.getWorld(), drop.getID(), getX(), getY(), drop.getAmount(), owner);
 							groundItem.setAttribute("npcdrop", true);
-							world.registerItem(groundItem);
+							getWorld().registerItem(groundItem);
 						}
 						continue;
 					}
@@ -555,7 +548,7 @@ public class Npc extends Mob {
 					total = 0;
 
 					for (ItemDropDef drop : drops) {
-						if (drop.getID() == ItemId.UNHOLY_SYMBOL_MOULD.id() && owner.getQuestStage(Constants.Quests.OBSERVATORY_QUEST) > -1) {
+						if (drop.getID() == com.openrsc.server.constants.ItemId.UNHOLY_SYMBOL_MOULD.id() && owner.getQuestStage(Quests.OBSERVATORY_QUEST) > -1) {
 							continue;
 						}
 
@@ -574,7 +567,7 @@ public class Npc extends Mob {
 						if (hit >= total && hit < (total + weight)) {
 							if (dropID != -1) {
 								if (EntityHandler.getItemDef(dropID).isMembersOnly()
-									&& !Constants.GameServer.MEMBER_WORLD) {
+									&& !Server.getServer().getConfig().MEMBER_WORLD) {
 									continue;
 								}
 
@@ -588,23 +581,23 @@ public class Npc extends Mob {
 									for (int count = 0; count < amount; count++) {
 
 										// Gem Drop Table + 1/128 chance to roll into very rare item
-										if (drop.getID() == ItemId.UNCUT_SAPPHIRE.id()) {
+										if (drop.getID() == com.openrsc.server.constants.ItemId.UNCUT_SAPPHIRE.id()) {
 											dropID = Formulae.calculateGemDrop((Player) mob);
 											amount = 1;
 										}
 
 										// Herb Drop Table
-										else if (drop.getID() == ItemId.UNIDENTIFIED_GUAM_LEAF.id()) {
+										else if (drop.getID() == com.openrsc.server.constants.ItemId.UNIDENTIFIED_GUAM_LEAF.id()) {
 											dropID = Formulae.calculateHerbDrop();
 										}
 
-										if (dropID != ItemId.NOTHING.id() && EntityHandler.getItemDef(dropID).isMembersOnly() && !Constants.GameServer.MEMBER_WORLD) {
+										if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id() && EntityHandler.getItemDef(dropID).isMembersOnly() && !Server.getServer().getConfig().MEMBER_WORLD) {
 											continue;
-										} else if (dropID != ItemId.NOTHING.id()) {
+										} else if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id()) {
 											if (!handleRingOfAvarice(owner, new Item(drop.getID(), drop.getAmount()))) {
-												groundItem = new GroundItem(dropID, getX(), getY(), 1, owner);
+												groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), 1, owner);
 												groundItem.setAttribute("npcdrop", true);
-												world.registerItem(groundItem);
+												getWorld().registerItem(groundItem);
 											}
 										}
 									}
@@ -612,11 +605,11 @@ public class Npc extends Mob {
 								} else {
 
 									// Gold Drops
-									if (drop.getID() == ItemId.COINS.id()) {
+									if (drop.getID() == com.openrsc.server.constants.ItemId.COINS.id()) {
 										amount = Formulae.calculateGoldDrop(
 											GoldDrops.drops.getOrDefault(this.getID(), new int[]{1})
 										);
-										if (Functions.isWielding(((Player) mob), ItemId.RING_OF_SPLENDOR.id())) {
+										if (Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_SPLENDOR.id())) {
 											amount += Formulae.getSplendorBoost(amount);
 											((Player) mob).message("Your ring of splendor shines brightly!");
 										}
@@ -625,14 +618,14 @@ public class Npc extends Mob {
 									Server.getServer().getPlayerDataProcessor().getDatabase().addNpcDrop(
 										owner, this, dropID, amount);
 									if (!handleRingOfAvarice(owner, new Item(drop.getID(), amount))) {
-										GroundItem groundItem = new GroundItem(dropID, getX(), getY(), amount, owner);
+										GroundItem groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), amount, owner);
 										groundItem.setAttribute("npcdrop", true);
-										world.registerItem(groundItem);
+										getWorld().registerItem(groundItem);
 									}
 								}
 
 								// Check if we have a "valuable drop" (configurable)
-								if (dropID != ItemId.NOTHING.id() && amount > 0 && VALUABLE_DROP_MESSAGES && (currentRatio > VALUABLE_DROP_RATIO || (VALUABLE_DROP_EXTRAS && valuableDrops.contains(temp.getDef().getName())))) {
+								if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id() && amount > 0 && Server.getServer().getConfig().VALUABLE_DROP_MESSAGES && (currentRatio > Server.getServer().getConfig().VALUABLE_DROP_RATIO || (Server.getServer().getConfig().VALUABLE_DROP_EXTRAS && valuableDrops.contains(temp.getDef().getName())))) {
 									if (amount > 1) {
 										owner.message("@red@Valuable drop: " + amount + " x " + temp.getDef().getName() + " (" +
 											(temp.getDef().getDefaultPrice() * amount) + " coins)");
@@ -677,21 +670,21 @@ public class Npc extends Mob {
 				//Determine if the RDT is hit first
 				boolean rdtHit = false;
 				Item rare = null;
-				if (WANT_NEW_RARE_DROP_TABLES && mob.isPlayer()) {
-					if (world.standardTable.rollAccess(this.id,Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()))) {
+				if (Server.getServer().getConfig().WANT_NEW_RARE_DROP_TABLES && mob.isPlayer()) {
+					if (getWorld().standardTable.rollAccess(this.id,Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
 						rdtHit = true;
-						rare = world.standardTable.rollItem(Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()), ((Player) mob));
-					} else if (world.gemTable.rollAccess(this.id,Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()))) {
+						rare = getWorld().standardTable.rollItem(Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), ((Player) mob));
+					} else if (getWorld().gemTable.rollAccess(this.id,Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
 						rdtHit = true;
-						rare = world.gemTable.rollItem(Functions.isWielding(((Player) mob), ItemId.RING_OF_WEALTH.id()), ((Player) mob));
+						rare = getWorld().gemTable.rollItem(Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), ((Player) mob));
 					}
 				}
 
 				if (rare != null) {
 					if (!handleRingOfAvarice((Player)mob, rare)) {
-						GroundItem groundItem = new GroundItem(rare.getID(), getX(), getY(), rare.getAmount(), owner);
+						GroundItem groundItem = new GroundItem(owner.getWorld(), rare.getID(), getX(), getY(), rare.getAmount(), owner);
 						groundItem.setAttribute("npcdrop", true);
-						world.registerItem(groundItem);
+						getWorld().registerItem(groundItem);
 					}
 				}
 
@@ -705,9 +698,9 @@ public class Npc extends Mob {
 					weightTotal += drop.getWeight();
 					if (drop.getWeight() == 0 && drop.getID() != -1) {
 						if (!handleRingOfAvarice((Player)mob, new Item(drop.getID(), drop.getAmount()))) {
-							GroundItem groundItem = new GroundItem(drop.getID(), getX(), getY(), drop.getAmount(), owner);
+							GroundItem groundItem = new GroundItem(owner.getWorld(), drop.getID(), getX(), getY(), drop.getAmount(), owner);
 							groundItem.setAttribute("npcdrop", true);
-							world.registerItem(groundItem);
+							getWorld().registerItem(groundItem);
 						}
 						continue;
 					}
@@ -734,7 +727,7 @@ public class Npc extends Mob {
 						if (hit >= total && hit < (total + weight)) {
 							if (dropID != -1) {
 								if (EntityHandler.getItemDef(dropID).isMembersOnly()
-									&& !Constants.GameServer.MEMBER_WORLD) {
+									&& !Server.getServer().getConfig().MEMBER_WORLD) {
 									continue;
 								}
 
@@ -745,42 +738,42 @@ public class Npc extends Mob {
 									for (int count = 0; count < amount; count++) {
 
 										// Gem Drop Table + 1/128 chance to roll into very rare item
-										if (drop.getID() == ItemId.UNCUT_SAPPHIRE.id()) {
+										if (drop.getID() == com.openrsc.server.constants.ItemId.UNCUT_SAPPHIRE.id()) {
 											dropID = Formulae.calculateGemDrop((Player) mob);
 											amount = 1;
 										}
 
 										// Herb Drop Table
-										else if (drop.getID() == ItemId.UNIDENTIFIED_GUAM_LEAF.id()) {
+										else if (drop.getID() == com.openrsc.server.constants.ItemId.UNIDENTIFIED_GUAM_LEAF.id()) {
 											dropID = Formulae.calculateHerbDrop();
 										}
 
-										if (dropID != ItemId.NOTHING.id() && EntityHandler.getItemDef(dropID).isMembersOnly() && !Constants.GameServer.MEMBER_WORLD) {
+										if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id() && EntityHandler.getItemDef(dropID).isMembersOnly() && !Server.getServer().getConfig().MEMBER_WORLD) {
 											continue;
-										} else if (dropID != ItemId.NOTHING.id()) {
+										} else if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id()) {
 											if (!handleRingOfAvarice((Player)mob, new Item(drop.getID(), drop.getAmount()))) {
-												groundItem = new GroundItem(dropID, getX(), getY(), 1, owner);
+												groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), 1, owner);
 												groundItem.setAttribute("npcdrop", true);
-												world.registerItem(groundItem);
+												getWorld().registerItem(groundItem);
 											}
 										}
 									}
 								} else {
 									// Gold Drops
-									if (drop.getID() == ItemId.COINS.id()) {
+									if (drop.getID() == com.openrsc.server.constants.ItemId.COINS.id()) {
 										amount = Formulae.calculateGoldDrop(
 											GoldDrops.drops.getOrDefault(this.getID(), new int[]{1})
 										);
-										if (Functions.isWielding(((Player) mob), ItemId.RING_OF_SPLENDOR.id())) {
+										if (Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_SPLENDOR.id())) {
 											amount += Formulae.getSplendorBoost(amount);
 											((Player) mob).message("Your ring of splendor shines brightly!");
 										}
 									}
 
 									if (!handleRingOfAvarice((Player) mob, new Item(drop.getID(), amount))) {
-										GroundItem groundItem = new GroundItem(dropID, getX(), getY(), amount, owner);
+										GroundItem groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), amount, owner);
 										groundItem.setAttribute("npcdrop", true);
-										world.registerItem(groundItem);
+										getWorld().registerItem(groundItem);
 									}
 								}
 							}
@@ -841,16 +834,16 @@ public class Npc extends Mob {
 					}
 					break;
 				case 1: //AGGRESSIVE
-					p.incExp(SKILLS.STRENGTH.id(), totalXP * 3, true);
+					p.incExp(Skills.STRENGTH, totalXP * 3, true);
 					break;
 				case 2: //ACCURATE
-					p.incExp(SKILLS.ATTACK.id(), totalXP * 3, true);
+					p.incExp(Skills.ATTACK, totalXP * 3, true);
 					break;
 				case 3: //DEFENSIVE
-					p.incExp(SKILLS.DEFENSE.id(), totalXP * 3, true);
+					p.incExp(Skills.DEFENSE, totalXP * 3, true);
 					break;
 			}
-			p.incExp(SKILLS.HITS.id(), totalXP, true);
+			p.incExp(Skills.HITS, totalXP, true);
 		}
 
 		// Ranged damagers
@@ -866,8 +859,8 @@ public class Npc extends Mob {
 				currentHighestDamage = dmgDoneByPlayer;
 			}
 			newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByPlayer));
-			p.incExp(SKILLS.RANGED.id(), newXP * 4, true);
-			ActionSender.sendStat(p, SKILLS.RANGED.id());
+			p.incExp(Skills.RANGED, newXP * 4, true);
+			ActionSender.sendStat(p, Skills.RANGED);
 		}
 
 		// Magic damagers
@@ -915,16 +908,16 @@ public class Npc extends Mob {
 					}
 					break;
 				case 1: //AGGRESSIVE
-					p.incExp(SKILLS.STRENGTH.id(), totalXP * 3, true);
+					p.incExp(Skills.STRENGTH, totalXP * 3, true);
 					break;
 				case 2: //ACCURATE
-					p.incExp(SKILLS.ATTACK.id(), totalXP * 3, true);
+					p.incExp(Skills.ATTACK, totalXP * 3, true);
 					break;
 				case 3: //DEFENSIVE
-					p.incExp(SKILLS.DEFENSE.id(), totalXP * 3, true);
+					p.incExp(Skills.DEFENSE, totalXP * 3, true);
 					break;
 			}
-			p.incExp(SKILLS.HITS.id(), totalXP, true);
+			p.incExp(Skills.HITS, totalXP, true);
 		}
 
 		// Ranged damagers
@@ -940,8 +933,8 @@ public class Npc extends Mob {
 				currentHighestDamage = dmgDoneByPlayer;
 			}
 			newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByPlayer));
-			p.incExp(SKILLS.RANGED.id(), newXP * 4, true);
-			ActionSender.sendStat(p, SKILLS.RANGED.id());
+			p.incExp(Skills.RANGED, newXP * 4, true);
+			ActionSender.sendStat(p, Skills.RANGED);
 		}
 
 		// Magic damagers
@@ -1260,7 +1253,7 @@ public class Npc extends Mob {
 				if (p.getInventory().hasInInventory(item.getID())) {
 					p.getInventory().add(item);
 					return true;
-				} else if (WANT_EQUIPMENT_TAB && (slot = p.getEquipment().hasEquipped(item.getID())) != -1) {
+				} else if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB && (slot = p.getEquipment().hasEquipped(item.getID())) != -1) {
 					Item equipped = p.getEquipment().get(slot);
 					equipped.setAmount(equipped.getAmount() + item.getAmount());
 					p.getEquipment().equip(slot, equipped);

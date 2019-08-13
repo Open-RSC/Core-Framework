@@ -1,6 +1,9 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -10,14 +13,9 @@ import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
-
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-
 import java.util.ArrayList;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class AuburysRunes implements ShopInterface,
 	TalkToNpcExecutiveListener, TalkToNpcListener {
@@ -47,12 +45,12 @@ public final class AuburysRunes implements ShopInterface,
 		menu.add("Yes please");
 		menu.add("Oh it's a rune shop. No thank you, then.");
 
-		if (Constants.GameServer.WANT_RUNECRAFTING)
-			if (p.getQuestStage(Constants.Quests.RUNE_MYSTERIES) == 2)
+		if (Server.getServer().getConfig().WANT_RUNECRAFTING)
+			if (p.getQuestStage(Quests.RUNE_MYSTERIES) == 2)
 				menu.add("I've been sent here with a package for you.");
-			else if (p.getQuestStage(Constants.Quests.RUNE_MYSTERIES) == 3)
+			else if (p.getQuestStage(Quests.RUNE_MYSTERIES) == 3)
 				menu.add("Rune mysteries");
-			else if (p.getQuestStage(Constants.Quests.RUNE_MYSTERIES) == -1)
+			else if (p.getQuestStage(Quests.RUNE_MYSTERIES) == -1)
 				menu.add("Teleport to rune essence");
 
 		npcTalk(p, n, "Do you want to buy some runes?");

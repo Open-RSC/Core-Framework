@@ -37,7 +37,7 @@ public class ModeratorDeleteAuctionTask extends MarketTask {
 			}
 			Market.getInstance().addRequestOpenAuctionHouseTask(player);
 			if (updateDiscord) {
-				Server.getServer().getDiscordSender().auctionModDelete(item);
+				Server.getServer().getDiscordService().auctionModDelete(item);
 			}
 		}
 	}

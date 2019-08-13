@@ -1,6 +1,5 @@
 package com.openrsc.server.model.entity;
 
-import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
@@ -10,7 +9,6 @@ import com.openrsc.server.event.rsc.impl.StatRestorationEvent;
 import com.openrsc.server.event.rsc.impl.combat.CombatEvent;
 import com.openrsc.server.model.*;
 import com.openrsc.server.model.Path.PathType;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.action.WalkToActionNpc;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -41,6 +39,10 @@ public abstract class Mob extends Entity {
 	private GameTickEvent skullEventNpc = null;
 
 	private long lastMovementTime		= 0;
+
+	public Mob (World world) {
+		super(world);
+	}
 
 	public void addSkull(int timeLeft) {
 		if (skullEventNpc == null) {
@@ -478,7 +480,7 @@ public abstract class Mob extends Entity {
 	}
 
 	private boolean isBlocking(Entity e, int x, int y, int bit) {
-		int val = world.getTile(x, y).traversalMask;
+		int val = getWorld().getTile(x, y).traversalMask;
 		if ((val & bit) != 0) {
 			return true;
 		}
@@ -508,7 +510,7 @@ public abstract class Mob extends Entity {
 	}
 
 	public void damage(int damage) {
-		int newHp = skills.getLevel(SKILLS.HITS.id()) - damage;
+		int newHp = skills.getLevel(com.openrsc.server.constants.Skills.HITS) - damage;
 		if (newHp <= 0) {
 			if (this.isPlayer()) {
 				((Player) this).setStatus(Action.DIED_FROM_DAMAGE);
@@ -528,7 +530,7 @@ public abstract class Mob extends Entity {
 	}
 
 	public void hpUpdate(int hpUpdate) {
-		int newHp = skills.getLevel(Skills.HITPOINTS) + hpUpdate;
+		int newHp = skills.getLevel(com.openrsc.server.constants.Skills.HITPOINTS) + hpUpdate;
 		skills.setLevel(3, newHp);
 		if (this.isPlayer()) {
 			Player p = (Player) this;
@@ -941,7 +943,7 @@ public abstract class Mob extends Entity {
 
 	public void updatePosition() {
 		final long now		= System.currentTimeMillis();
-		boolean doWalk		= Constants.GameServer.WANT_CUSTOM_WALK_SPEED ? now >= lastMovementTime + getWalkingTick() : true;
+		boolean doWalk		= Server.getServer().getConfig().WANT_CUSTOM_WALK_SPEED ? now >= lastMovementTime + getWalkingTick() : true;
 
 		if(doWalk) {
 			getWalkingQueue().processNextMovement();
@@ -986,14 +988,14 @@ public abstract class Mob extends Entity {
 
 	public boolean withinRange(Entity e) {
 		if (e != null) {
-			return getLocation().withinRange(e.getLocation(), Constants.GameServer.VIEW_DISTANCE * 8);
+			return getLocation().withinRange(e.getLocation(), Server.getServer().getConfig().VIEW_DISTANCE * 8);
 		}
 		return false;
 	}
 
 	public boolean withinGridRange(Entity e) {
 		if (e != null) {
-			return getLocation().withinGridRange(e.getLocation(), Constants.GameServer.VIEW_DISTANCE);
+			return getLocation().withinGridRange(e.getLocation(), Server.getServer().getConfig().VIEW_DISTANCE);
 		}
 		return false;
 	}
@@ -1063,6 +1065,6 @@ public abstract class Mob extends Entity {
 	}
 
 	public int getWalkingTick() {
-		return Constants.GameServer.WALKING_TICK;
+		return Server.getServer().getConfig().WALKING_TICK;
 	}
 }

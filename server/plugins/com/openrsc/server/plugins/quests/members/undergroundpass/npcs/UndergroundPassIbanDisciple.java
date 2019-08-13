@@ -1,17 +1,14 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.npcs;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
 import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.createGroundItem;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class UndergroundPassIbanDisciple implements PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener {
 
@@ -24,7 +21,7 @@ public class UndergroundPassIbanDisciple implements PlayerKilledNpcListener, Pla
 	public void onPlayerKilledNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.IBAN_DISCIPLE.id()) {
 			n.killedBy(p);
-			if (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == -1) {
+			if (p.getQuestStage(Quests.UNDERGROUND_PASS) == -1) {
 				message(p, "you search the diciples remains");
 				if (!hasItem(p, ItemId.STAFF_OF_IBAN.id()) && !hasItem(p, ItemId.STAFF_OF_IBAN_BROKEN.id())) {
 					p.message("and find a staff of iban");

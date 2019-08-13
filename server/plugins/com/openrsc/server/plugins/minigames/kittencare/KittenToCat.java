@@ -1,32 +1,20 @@
 package com.openrsc.server.plugins.minigames.kittencare;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Minigames;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.MiniGameInterface;
-import com.openrsc.server.plugins.listeners.action.CatGrowthListener;
-import com.openrsc.server.plugins.listeners.action.DropListener;
-import com.openrsc.server.plugins.listeners.action.InvActionListener;
-import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
-import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
-import com.openrsc.server.plugins.listeners.executive.CatGrowthExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.DropExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
-
-import static com.openrsc.server.plugins.Functions.compareItemsIds;
-import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.sleep;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class KittenToCat implements MiniGameInterface, CatGrowthListener, CatGrowthExecutiveListener, DropListener, DropExecutiveListener,
 InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
@@ -35,7 +23,7 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 	
 	@Override
 	public int getMiniGameId() {
-		return Constants.Minigames.KITTEN_CARE;
+		return Minigames.KITTEN_CARE;
 	}
 
 	@Override

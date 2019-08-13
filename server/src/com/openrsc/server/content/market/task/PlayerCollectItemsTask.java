@@ -1,11 +1,12 @@
 package com.openrsc.server.content.market.task;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.content.market.CollectableItem;
 import com.openrsc.server.content.market.MarketDatabase;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.sql.DatabaseConnection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,8 +38,8 @@ public class PlayerCollectItemsTask extends MarketTask {
 
 		StringBuilder items = new StringBuilder("Following items have been inserted to your bank: % ");
 		try {
-			PreparedStatement setCollected = MarketDatabase.databaseInstance
-				.prepareStatement("UPDATE `" + Constants.GameServer.MYSQL_TABLE_PREFIX
+			PreparedStatement setCollected = DatabaseConnection.getDatabase()
+				.prepareStatement("UPDATE `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "expired_auctions` SET `claim_time`= '" + System.currentTimeMillis()
 					+ "',`claimed`='1' WHERE `claim_id`=?");
 			for (CollectableItem i : list) {

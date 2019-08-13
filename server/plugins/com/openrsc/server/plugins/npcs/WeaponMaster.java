@@ -1,5 +1,8 @@
 package com.openrsc.server.plugins.npcs;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -11,12 +14,8 @@ import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
-import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.*;
 import static com.openrsc.server.plugins.Functions.*;
-
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.*;
 
 
 public class WeaponMaster implements TalkToNpcListener, TalkToNpcExecutiveListener,

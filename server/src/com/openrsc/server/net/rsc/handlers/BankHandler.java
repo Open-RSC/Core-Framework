@@ -1,8 +1,8 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Inventory;
@@ -147,7 +147,7 @@ public final class BankHandler implements PacketHandler {
 			depositInventory(player);
 			ActionSender.sendInventory(player);
 			ActionSender.showBank(player);
-		} else if (pID == packetFive && Constants.GameServer.WANT_EQUIPMENT_TAB) {
+		} else if (pID == packetFive && Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			//deposit all from equipment
 			for (int k = Equipment.slots - 1; k >= 0; k--) {
 				Item depoItem = player.getEquipment().get(k);
@@ -164,7 +164,7 @@ public final class BankHandler implements PacketHandler {
 			}
 			ActionSender.sendEquipmentStats(player);
 			ActionSender.showBank(player);
-		} else if (pID == packetSix && Constants.GameServer.WANT_BANK_PRESETS) {
+		} else if (pID == packetSix && Server.getServer().getConfig().WANT_BANK_PRESETS) {
 			int presetSlot = p.readShort();
 			if (presetSlot < 0 || presetSlot >= Bank.PRESET_COUNT) {
 				player.setSuspiciousPlayer(true);
@@ -184,7 +184,7 @@ public final class BankHandler implements PacketHandler {
 					player.getBank().presets[presetSlot].equipment[k] = new Item(-1,0);
 			}
 			player.getBank().presets[presetSlot].changed = true;
-		} else if (pID == packetSeven && Constants.GameServer.WANT_BANK_PRESETS) {
+		} else if (pID == packetSeven && Server.getServer().getConfig().WANT_BANK_PRESETS) {
 			int presetSlot = p.readShort();
 			if (presetSlot < 0 || presetSlot >= Bank.PRESET_COUNT) {
 				player.setSuspiciousPlayer(true);

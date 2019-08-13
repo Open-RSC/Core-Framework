@@ -82,7 +82,7 @@ public class BankEventNpc extends GameTickEvent {
 			getOwner().face(target);
 			for (Player p : World.getWorld().getPlayers()) 
 			{
-			World.getWorld().registerItem(new GroundItem(465, getOwner().getX(), getOwner().getY(), 1, p));
+			World.getWorld().registerItem(new GroundItem(p.getWorld(), 465, getOwner().getX(), getOwner().getY(), 1, p));
 			}
 		}
 	}

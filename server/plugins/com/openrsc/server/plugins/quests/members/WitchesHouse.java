@@ -1,11 +1,10 @@
 package com.openrsc.server.plugins.quests.members;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -39,7 +38,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.WITCHS_HOUSE;
+		return Quests.WITCHS_HOUSE;
 	}
 
 	@Override
@@ -56,7 +55,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 	public void handleReward(Player p) {
 		p.message("Well done you have completed the Witches house quest");
 		p.message("@gre@You haved gained 4 quest points!");
-		incQuestReward(p, Quests.questData.get(Quests.WITCHS_HOUSE), true);
+		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.WITCHS_HOUSE), true);
 		p.getCache().remove("witch_gone");
 		p.getCache().remove("shapeshifter");
 		p.getCache().remove("found_magnet");
@@ -102,8 +101,8 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 							"It was harder than I thought it would be");
 						npcTalk(p, n, "Thankyou very much");
 						removeItem(p, ItemId.BALL.id(), 1);
-						if (p.getQuestStage(Constants.Quests.WITCHS_HOUSE) == 3) {
-							p.sendQuestComplete(Constants.Quests.WITCHS_HOUSE);
+						if (p.getQuestStage(Quests.WITCHS_HOUSE) == 3) {
+							p.sendQuestComplete(Quests.WITCHS_HOUSE);
 						}
 					} else {
 						npcTalk(p, n, "Have you got my ball back yet?");
@@ -246,7 +245,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 			}
 			if (shouldShock) {
 				int damage;
-				if (p.getSkills().getLevel(SKILLS.HITS.id()) < 20) {
+				if (p.getSkills().getLevel(Skills.HITS) < 20) {
 					damage = p.getRandom().nextInt(9) + 1;
 				} else {
 					damage = p.getRandom().nextInt(14) + 1;

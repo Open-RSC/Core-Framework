@@ -1,6 +1,6 @@
 package com.openrsc.server.event.rsc;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -89,7 +89,7 @@ public abstract class GameTickEvent {
 	}
 
 	public long timeTillNextRun() {
-		return System.currentTimeMillis() + (ticksBeforeRun * Constants.GameServer.GAME_TICK);
+		return System.currentTimeMillis() + (ticksBeforeRun * Server.getServer().getConfig().GAME_TICK);
 	}
 
 	public final long getLastEventDuration() {

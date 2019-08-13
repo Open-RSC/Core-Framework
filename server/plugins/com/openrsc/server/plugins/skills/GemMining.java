@@ -1,12 +1,11 @@
 package com.openrsc.server.plugins.skills;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.external.ObjectMiningDef;
-import com.openrsc.server.model.Skills;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -45,7 +44,7 @@ public class GemMining implements ObjectActionListener,
 		final ObjectMiningDef def = EntityHandler.getObjectMiningDef(obj.getID());
 		final int axeId = getAxe(p);
 		int retrytimes;
-		final int mineLvl = p.getSkills().getLevel(SKILLS.MINING.id());
+		final int mineLvl = p.getSkills().getLevel(com.openrsc.server.constants.Skills.MINING);
 		int reqlvl = 1;
 		switch (ItemId.getById(axeId)) {
 			case BRONZE_PICKAXE:
@@ -97,7 +96,7 @@ public class GemMining implements ObjectActionListener,
 			return;
 		}
 
-		if (Constants.GameServer.WANT_FATIGUE) {
+		if (Server.getServer().getConfig().WANT_FATIGUE) {
 			if (p.getFatigue() >= p.MAX_FATIGUE) {
 				p.message("You are too tired to mine this rock");
 				return;
@@ -107,11 +106,11 @@ public class GemMining implements ObjectActionListener,
 		p.playSound("mine");
 		showBubble(p, new Item(ItemId.IRON_PICKAXE.id()));
 		p.message("You have a swing at the rock!");
-		retrytimes = Constants.GameServer.BATCH_PROGRESSION ? Formulae.getRepeatTimes(p, Skills.MINING) : retrytimes + 1000;
+		retrytimes = Server.getServer().getConfig().BATCH_PROGRESSION ? Formulae.getRepeatTimes(p, com.openrsc.server.constants.Skills.MINING) : retrytimes + 1000;
 		p.setBatchEvent(new BatchEvent(p, 1800, "Gem Mining", retrytimes, true) {
 			@Override
 			public void action() {
-				if (getGem(p, 40, getOwner().getSkills().getLevel(SKILLS.MINING.id()), axeId) && mineLvl >= 40) { // always 40 required mining.
+				if (getGem(p, 40, getOwner().getSkills().getLevel(com.openrsc.server.constants.Skills.MINING), axeId) && mineLvl >= 40) { // always 40 required mining.
 					Item gem = new Item(getGemFormula(p.getInventory().wielding(ItemId.CHARGED_DRAGONSTONE_AMULET.id())), 1);
 					//check if there is still gem at the rock
 					GameObject object = getOwner().getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
@@ -119,14 +118,14 @@ public class GemMining implements ObjectActionListener,
 						getOwner().message("You only succeed in scratching the rock");
 					} else {
 						getOwner().message(minedString(gem.getID()));
-						getOwner().incExp(SKILLS.MINING.id(), 200, true); // always 50XP
+						getOwner().incExp(com.openrsc.server.constants.Skills.MINING, 200, true); // always 50XP
 						getOwner().getInventory().add(gem);
 					}
 					
-					if (!Constants.GameServer.MINING_ROCKS_EXTENDED || DataConversions.random(1, 100) <= 39) {
+					if (!Server.getServer().getConfig().MINING_ROCKS_EXTENDED || DataConversions.random(1, 100) <= 39) {
 						interrupt();
 						if (object != null && object.getID() == obj.getID()) {
-							GameObject newObject = new GameObject(obj.getLocation(), 98, obj.getDirection(), obj.getType());
+							GameObject newObject = new GameObject(obj.getWorld(), obj.getLocation(), 98, obj.getDirection(), obj.getType());
 							World.getWorld().replaceGameObject(obj, newObject);
 							World.getWorld().delayedSpawnObject(object.getLoc(), 120 * 1000); // 2 minute respawn time
 						}
@@ -161,7 +160,7 @@ public class GemMining implements ObjectActionListener,
 	}
 
 	private int getAxe(Player p) {
-		int lvl = p.getSkills().getLevel(SKILLS.MINING.id());
+		int lvl = p.getSkills().getLevel(com.openrsc.server.constants.Skills.MINING);
 		for (int i = 0; i < Formulae.miningAxeIDs.length; i++) {
 			if (p.getInventory().countId(Formulae.miningAxeIDs[i]) > 0) {
 				if (lvl >= Formulae.miningAxeLvls[i]) {

@@ -1,10 +1,10 @@
 package com.openrsc.server.plugins.misc;
 
-import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.ShortEvent;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -12,15 +12,7 @@ import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.replaceObject;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class RandomObjects implements ObjectActionExecutiveListener, ObjectActionListener {
 
@@ -36,7 +28,7 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 				if (command.equals("close")) {
 					owner.setBusyTimer(600);
 					owner.playerServerMessage(MessageType.QUEST, "You slide the cover back over the manhole");
-					replaceObject(object, new GameObject(object.getLocation(), 78, object.getDirection(), object.getType()));
+					replaceObject(object, new GameObject(object.getWorld(), object.getLocation(), 78, object.getDirection(), object.getType()));
 				} else {
 					owner.message("Nothing interesting happens");
 				}
@@ -45,17 +37,17 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 				if (command.equals("open")) {
 					owner.setBusyTimer(600);
 					owner.playerServerMessage(MessageType.QUEST, "You slide open the manhole cover");
-					replaceObject(object, new GameObject(object.getLocation(), 79, object.getDirection(), object.getType()));
+					replaceObject(object, new GameObject(object.getWorld(), object.getLocation(), 79, object.getDirection(), object.getType()));
 				}
 				break;
 			case 203:
 				if (command.equals("close"))
-					replaceObject(object, new GameObject(object.getLocation(), 202, object.getDirection(), object.getType()));
+					replaceObject(object, new GameObject(object.getWorld(), object.getLocation(), 202, object.getDirection(), object.getType()));
 				else
 					owner.message("the coffin is empty.");
 				break;
 			case 202:
-				replaceObject(object, new GameObject(object.getLocation(), 203, object.getDirection(), object.getType()));
+				replaceObject(object, new GameObject(object.getWorld(), object.getLocation(), 203, object.getDirection(), object.getType()));
 				break;
 			case 613: // Shilo cart
 				if (object.getX() != 384 || object.getY() != 851) {
@@ -68,7 +60,7 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 					owner.playerServerMessage(MessageType.QUEST, "...to the other and climb down again.");
 					return;
 				}
-				if (command.toLowerCase().equals("search") || owner.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
+				if (command.toLowerCase().equals("search") || owner.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 					message(owner, "It looks as if you can climb across.",
 							"You search the cart.");
 					if (owner.getFatigue() >= owner.MAX_FATIGUE) {
@@ -106,7 +98,7 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 				}
 				owner.setBusy(true);
 				owner.message("You twist the stone tile to one side");
-				if (owner.getQuestStage(Constants.Quests.GRAND_TREE) == -1) {
+				if (owner.getQuestStage(Quests.GRAND_TREE) == -1) {
 					Server.getServer().getGameEventHandler().add(
 						new ShortEvent(owner, "Gnome Tree Stone") {
 							public void action() {
@@ -141,7 +133,7 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 		// ARDOUGNE WALL GATEWAY FOR BIOHAZARD ETC...
 		if (object.getID() == 450) {
 			message(owner, "you pull on the large wooden doors");
-			if (owner.getQuestStage(Constants.Quests.BIOHAZARD) == -1) {
+			if (owner.getQuestStage(Quests.BIOHAZARD) == -1) {
 				owner.message("you open it and walk through");
 				Npc gateMourner = getNearestNpc(owner, NpcId.MOURNER_BYENTRANCE.id(), 15);
 				if (gateMourner != null) {
@@ -158,7 +150,7 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 		}
 		if (object.getID() == 400) {
 			owner.playerServerMessage(MessageType.QUEST, "The plant takes a bite at you!");
-			owner.damage(getCurrentLevel(owner, SKILLS.HITS.id()) / 10 + 2);
+			owner.damage(getCurrentLevel(owner, Skills.HITS) / 10 + 2);
 		}
 	}
 
@@ -177,7 +169,7 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 			return true;
 		if (obj.getLocation().getX() == 94 && obj.getLocation().getY() == 521
 			&& obj.getID() == 60) {
-			if (Constants.GameServer.MEMBER_WORLD) {
+			if (Server.getServer().getConfig().MEMBER_WORLD) {
 				return true;
 			}
 		}

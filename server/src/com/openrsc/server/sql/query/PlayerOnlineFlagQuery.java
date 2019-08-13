@@ -1,6 +1,6 @@
 package com.openrsc.server.sql.query;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,14 +13,14 @@ public class PlayerOnlineFlagQuery extends Query {
 	private String loginIP;
 
 	public PlayerOnlineFlagQuery(int playerID, String loginIP, boolean online) {
-		super("UPDATE `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "players` SET `online`=?, `login_date`=?, `login_ip`=? WHERE `id`=?");
+		super("UPDATE `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players` SET `online`=?, `login_date`=?, `login_ip`=? WHERE `id`=?");
 		this.playerID = playerID;
 		this.loginIP = loginIP;
 		this.online = online;
 	}
 
 	public PlayerOnlineFlagQuery(int playerID, boolean online) {
-		super("UPDATE `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "players` SET `online`=? WHERE `id`=?");
+		super("UPDATE `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players` SET `online`=? WHERE `id`=?");
 		this.playerID = playerID;
 		this.online = online;
 		loginIP = null;

@@ -1,10 +1,9 @@
 package com.openrsc.server.plugins.quests.members.digsite;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -15,20 +14,13 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListen
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.incQuestReward;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class DigsiteExpert implements QuestInterface, TalkToNpcListener, TalkToNpcExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.DIGSITE;
+		return Quests.DIGSITE;
 	}
 
 	@Override
@@ -45,9 +37,9 @@ public class DigsiteExpert implements QuestInterface, TalkToNpcListener, TalkToN
 	public void handleReward(Player player) {
 		player.message("Congratulations, you have finished the digsite quest");
 		player.message("@gre@You haved gained 2 quest points!");
-		int[] questData = Quests.questData.get(Quests.DIGSITE);
+		int[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.DIGSITE);
 		//keep order kosher
-		int[] skillIDs = {SKILLS.MINING.id(), SKILLS.HERBLAW.id()};
+		int[] skillIDs = {Skills.MINING, Skills.HERBLAW};
 		//1200 for mining, 500 for herblaw
 		int[] amounts = {1200, 500};
 		for (int i = 0; i < skillIDs.length; i++) {
@@ -69,7 +61,7 @@ public class DigsiteExpert implements QuestInterface, TalkToNpcListener, TalkToN
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.ARCHAEOLOGICAL_EXPERT.id()) {
-			switch (p.getQuestStage(Constants.Quests.DIGSITE)) {
+			switch (p.getQuestStage(Quests.DIGSITE)) {
 				case -1:
 					npcTalk(p, n, "Hello again",
 						"I am now studying this mysterious altar and its inhabitants",
@@ -232,12 +224,12 @@ public class DigsiteExpert implements QuestInterface, TalkToNpcListener, TalkToN
 					playerTalk(p, n, "I'll find a use for it");
 					break;
 				case STONE_TABLET: // QUEST COMPLETION!!
-					if (p.getQuestStage(Constants.Quests.DIGSITE) == -1) {
+					if (p.getQuestStage(Quests.DIGSITE) == -1) {
 						npcTalk(p, n, "I don't need another tablet",
 							"One is enough thank you!");
 						return;
 					}
-					if (p.getQuestStage(Constants.Quests.DIGSITE) == 6) {
+					if (p.getQuestStage(Quests.DIGSITE) == 6) {
 						playerTalk(p, n, "I found this in a hidden cavern beneath the digsite");
 						removeItem(p, ItemId.STONE_TABLET.id(), 1);
 						npcTalk(p, n, "Incredible!");
@@ -255,7 +247,7 @@ public class DigsiteExpert implements QuestInterface, TalkToNpcListener, TalkToN
 							"Here, take this as your reward");
 						p.message("The expert gives you 2 gold bars as payment");
 						addItem(p, ItemId.GOLD_BAR.id(), 2);
-						p.sendQuestComplete(Constants.Quests.DIGSITE);
+						p.sendQuestComplete(Quests.DIGSITE);
 					}
 					break;
 				case BELT_BUCKLE:

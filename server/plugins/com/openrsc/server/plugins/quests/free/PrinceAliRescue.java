@@ -1,16 +1,21 @@
 package com.openrsc.server.plugins.quests.free;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
+import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
+import com.openrsc.server.plugins.listeners.action.InvUseOnWallObjectListener;
+import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
+import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
+import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.InvUseOnWallObjectExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -22,7 +27,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.PRINCE_ALI_RESCUE;
+		return Quests.PRINCE_ALI_RESCUE;
 	}
 
 	@Override
@@ -46,7 +51,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 			addItem(p, ItemId.COINS.id(), 700);
 		}
 		p.message("You have completed the quest of the Prince of Al Kharid");
-		incQuestReward(p, Quests.questData.get(Quests.PRINCE_ALI_RESCUE), true);
+		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.PRINCE_ALI_RESCUE), true);
 		p.message("@gre@You haved gained 3 quest points!");
 	}
 	

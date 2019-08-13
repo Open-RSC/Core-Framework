@@ -1,12 +1,11 @@
 package com.openrsc.server.plugins.quests.members.touristtrap;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.DelayedEvent;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -57,7 +56,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.TOURIST_TRAP;
+		return Quests.TOURIST_TRAP;
 	}
 
 	@Override
@@ -84,7 +83,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 		sleep(650);
 		p.message("@gre@***********************************************************");
 		sleep(650);
-		incQuestReward(p, Quests.questData.get(Quests.TOURIST_TRAP), true);
+		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.TOURIST_TRAP), true);
 		p.message("@gre@You haved gained 2 quest points!");
 	}
 
@@ -289,41 +288,41 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				"I would like to reward you for your bravery and daring.",
 				"I can offer you increased knowledge in one of the following areas.");
 		}
-		int[] questData = Quests.questData.get(Quests.TOURIST_TRAP);
+		int[] questData = p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.TOURIST_TRAP);
 		int lastRewardMenu = showMenu(p, n, false, //do not send over
 			"Fletching.",
 			"Agility.",
 			"Smithing.",
 			"Thieving");
 		if (lastRewardMenu == 0) {
-			questData[Quests.MAPIDX_SKILL] = SKILLS.FLETCHING.id();
+			questData[Quests.MAPIDX_SKILL] = Skills.FLETCHING;
 			incQuestReward(p, questData, false);
 			message(p, "You advance your stat in Fletching.");
-			p.sendQuestComplete(Constants.Quests.TOURIST_TRAP);
+			p.sendQuestComplete(Quests.TOURIST_TRAP);
 			if (p.getCache().hasKey("advanced1")) {
 				p.getCache().remove("advanced1");
 			}
 		} else if (lastRewardMenu == 1) {
-			questData[Quests.MAPIDX_SKILL] = SKILLS.AGILITY.id();
+			questData[Quests.MAPIDX_SKILL] = Skills.AGILITY;
 			incQuestReward(p, questData, false);
 			message(p, "You advance your stat in Agility.");
-			p.sendQuestComplete(Constants.Quests.TOURIST_TRAP);
+			p.sendQuestComplete(Quests.TOURIST_TRAP);
 			if (p.getCache().hasKey("advanced1")) {
 				p.getCache().remove("advanced1");
 			}
 		} else if (lastRewardMenu == 2) {
-			questData[Quests.MAPIDX_SKILL] = SKILLS.SMITHING.id();
+			questData[Quests.MAPIDX_SKILL] = Skills.SMITHING;
 			incQuestReward(p, questData, false);
 			message(p, "You advance your stat in Smithing.");
-			p.sendQuestComplete(Constants.Quests.TOURIST_TRAP);
+			p.sendQuestComplete(Quests.TOURIST_TRAP);
 			if (p.getCache().hasKey("advanced1")) {
 				p.getCache().remove("advanced1");
 			}
 		} else if (lastRewardMenu == 3) {
-			questData[Quests.MAPIDX_SKILL] = SKILLS.THIEVING.id();
+			questData[Quests.MAPIDX_SKILL] = Skills.THIEVING;
 			incQuestReward(p, questData, false);
 			message(p, "You advance your stat in Thieving.");
-			p.sendQuestComplete(Constants.Quests.TOURIST_TRAP);
+			p.sendQuestComplete(Quests.TOURIST_TRAP);
 			if (p.getCache().hasKey("advanced1")) {
 				p.getCache().remove("advanced1");
 			}
@@ -335,14 +334,14 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			"I'm really very grateful...",
 			"I would like to reward you for your bravery and daring.",
 			"I can offer you increased knowledge in two of the following areas.");
-		int[] questData = Quests.questData.get(Quests.TOURIST_TRAP);
+		int[] questData = p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.TOURIST_TRAP);
 		int rewardMenu = showMenu(p, n, false, //do not send over
 			"Fletching.",
 			"Agility.",
 			"Smithing.",
 			"Thieving");
 		if (rewardMenu == 0) {
-			questData[Quests.MAPIDX_SKILL] = SKILLS.FLETCHING.id();
+			questData[Quests.MAPIDX_SKILL] = Skills.FLETCHING;
 			incQuestReward(p, questData, false);
 			message(p, "You advance your stat in Fletching.",
 				"Ok, now choose your second skil.");
@@ -351,7 +350,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			}
 			lastRewardMenu(p, n, false);
 		} else if (rewardMenu == 1) {
-			questData[Quests.MAPIDX_SKILL] = SKILLS.AGILITY.id();
+			questData[Quests.MAPIDX_SKILL] = Skills.AGILITY;
 			incQuestReward(p, questData, false);
 			message(p, "You advance your stat in Agility.",
 				"Ok, now choose your second skil.");
@@ -360,7 +359,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			}
 			lastRewardMenu(p, n, false);
 		} else if (rewardMenu == 2) {
-			questData[Quests.MAPIDX_SKILL] = SKILLS.SMITHING.id();
+			questData[Quests.MAPIDX_SKILL] = Skills.SMITHING;
 			incQuestReward(p, questData, false);
 			message(p, "You advance your stat in Smithing.",
 				"Ok, now choose your second skil.");
@@ -369,7 +368,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			}
 			lastRewardMenu(p, n, false);
 		} else if (rewardMenu == 3) {
-			questData[Quests.MAPIDX_SKILL] = SKILLS.THIEVING.id();
+			questData[Quests.MAPIDX_SKILL] = Skills.THIEVING;
 			incQuestReward(p, questData, false);
 			message(p, "You advance your stat in Thieving.",
 				"Ok, now choose your second skil.");
@@ -2956,7 +2955,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					failWindowAnaInBarrel(p, null);
 				} else {
 					message(p, "You manage to bend the bar and climb out of the window.");
-					p.incExp(SKILLS.STRENGTH.id(), 40, true);
+					p.incExp(Skills.STRENGTH, 40, true);
 					p.teleport(90, 802);
 					p.message("You land near some rough rocks, which you may be able to climb.");
 				}
@@ -2979,7 +2978,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					failWindowAnaInBarrel(p, null);
 				} else {
 					message(p, "You manage to bend the bar !");
-					p.incExp(SKILLS.STRENGTH.id(), 40, true);
+					p.incExp(Skills.STRENGTH, 40, true);
 					p.teleport(89, 802);
 					p.message("You climb back inside the cell.");
 				}
@@ -3006,7 +3005,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 		boolean hasArmour = false;
 		boolean hasWeapon = false;
 		int wieldpos;
-		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+		if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			Item item;
 			for (int i = 0; i < Equipment.slots; i++) {
 				item = p.getEquipment().get(i);

@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -74,8 +74,8 @@ public final class Baraek implements TalkToNpcExecutiveListener,
 						"Be careful",
 						"The phoenix gang ain't the types to be messed with");
 					playerTalk(p, n, "Thanks");
-					if (p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == 2) {
-						p.updateQuestStage(Constants.Quests.SHIELD_OF_ARRAV, 3);
+					if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 2) {
+						p.updateQuestStage(Quests.SHIELD_OF_ARRAV, 3);
 					}
 				}
 			} else if (sub_menu == 1) {
@@ -149,8 +149,8 @@ public final class Baraek implements TalkToNpcExecutiveListener,
 	}
 	
 	private boolean canGetInfoGang(Player p) {
-		return p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == 2 
-				|| (p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == 3 && !p.getCache().hasKey("arrav_mission"));
+		return p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 2
+				|| (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 3 && !p.getCache().hasKey("arrav_mission"));
 	}
 
 	@Override

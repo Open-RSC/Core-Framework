@@ -9,7 +9,7 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListe
 
 import static com.openrsc.server.plugins.Functions.*;
 
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.constants.ItemId;
 
 public class DrinkMixing implements InvUseOnItemListener, InvUseOnItemExecutiveListener, InvActionListener, InvActionExecutiveListener {
 

@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.quests.members;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -29,7 +28,7 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.SEA_SLUG;
+		return Quests.SEA_SLUG;
 	}
 
 	@Override
@@ -45,7 +44,7 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void handleReward(Player p) {
 		p.message("@gre@You haved gained 1 quest point!");
-		incQuestReward(p, Quests.questData.get(Quests.SEA_SLUG), true);
+		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.SEA_SLUG), true);
 		p.message("well done, you have completed the sea slug quest");
 	}
 
@@ -311,7 +310,7 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 						"here, take these oyster pearls as a reward",
 						"they're worth a fair bit",
 						"and can be used to make lethal crossbow bolts");
-					p.sendQuestComplete(Constants.Quests.SEA_SLUG);
+					p.sendQuestComplete(Quests.SEA_SLUG);
 					playerTalk(p, n, "thanks");
 					npcTalk(p, n, "thank you", "take care of yourself adventurer");
 					addItem(p, ItemId.QUEST_OYSTER_PEARLS.id(), 1);
@@ -627,20 +626,20 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 		else if (obj.getID() == 453) {
 			if (p.getQuestStage(getQuestId()) == 5) {
 				message(p, "you rotate the crane around", "to the far platform");
-				GameObject firstRotation = new GameObject(obj.getLocation(),
+				GameObject firstRotation = new GameObject(obj.getWorld(), obj.getLocation(),
 					453, 5, 0);
 				World.getWorld().replaceGameObject(obj, firstRotation);
 				sleep(500);
-				GameObject secondRotation = new GameObject(obj.getLocation(),
+				GameObject secondRotation = new GameObject(obj.getWorld(), obj.getLocation(),
 					453, 6, 0);
 				World.getWorld().replaceGameObject(obj, secondRotation);
 				playerTalk(p, null, "jump on kennith!");
 				p.message("kennith comes out through the broken panal");
-				GameObject thirdRotation = new GameObject(obj.getLocation(),
+				GameObject thirdRotation = new GameObject(obj.getWorld(), obj.getLocation(),
 					453, 5, 0);
 				World.getWorld().replaceGameObject(obj, thirdRotation);
 				sleep(500);
-				GameObject fourthRotation = new GameObject(obj.getLocation(),
+				GameObject fourthRotation = new GameObject(obj.getWorld(), obj.getLocation(),
 					453, 4, 0);
 				World.getWorld().replaceGameObject(obj, fourthRotation);
 				message(p, "he climbs onto the fishing net",

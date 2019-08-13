@@ -13,8 +13,8 @@ import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 
 public final class HerquinGems implements ShopInterface,
 	TalkToNpcExecutiveListener, TalkToNpcListener {

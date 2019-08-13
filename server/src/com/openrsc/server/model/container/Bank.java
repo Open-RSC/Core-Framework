@@ -1,13 +1,10 @@
 package com.openrsc.server.model.container;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemDefinition;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.net.rsc.handlers.BankHandler;
 import com.openrsc.server.plugins.Functions;
 
 import java.io.ByteArrayOutputStream;
@@ -455,7 +452,7 @@ public class Bank {
 			}
 		}
 
-		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+		if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			//Loop through their equipment and add it to the hashmap
 			for (int i = 0; i < Equipment.slots; i++) {
 				tempItem = player.getEquipment().get(i);
@@ -476,7 +473,7 @@ public class Bank {
 			return;
 		}
 
-		if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+		if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			//Attempt to equip the preset equipment
 			int wearableId;
 			for (int i = 0; i < presets[slot].equipment.length; i++) {

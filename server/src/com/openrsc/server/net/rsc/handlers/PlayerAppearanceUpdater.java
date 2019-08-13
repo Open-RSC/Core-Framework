@@ -1,6 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.model.PlayerAppearance;
 import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
@@ -47,7 +47,7 @@ public class PlayerAppearanceUpdater implements PacketHandler {
 		player.setMale(headGender == 1);
 
 		if (player.isMale()) {
-			if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+			if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
 				Item top = player.getEquipment().get(1);
 				if (top != null && top.getDef().isFemaleOnly()) {
 					player.getInventory().unwieldItem(top, false);

@@ -2,18 +2,16 @@ package com.openrsc.server.net;
 
 import com.google.common.collect.ConcurrentHashMultiset;
 import com.google.common.collect.Multiset;
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.util.rsc.LoginResponse;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.net.InetSocketAddress;
-
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.net.InetSocketAddress;
 
 /**
  * The {@link ChannelInboundHandlerAdapter} implementation that will filter out
@@ -54,7 +52,7 @@ public class RSCChannelFilter extends ChannelInboundHandlerAdapter {
 		connections.add(host);
 
 		// evaluate the amount of connections from this host.
-		if (connections.count(host) > Constants.GameServer.CONNECTION_LIMIT) {
+		if (connections.count(host) > Server.getServer().getConfig().CONNECTION_LIMIT) {
 			LOGGER.info("Blocked new connection on host {}", host);
 			ctx.writeAndFlush(new PacketBuilder().writeByte((byte) LoginResponse.LOGIN_ATTEMPTS_EXCEEDED).toPacket());
 			ctx.close();

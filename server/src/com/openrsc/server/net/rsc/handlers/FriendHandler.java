@@ -1,6 +1,7 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
+import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.PrivateMessage;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
@@ -9,8 +10,6 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.util.rsc.DataConversions;
-import com.openrsc.server.event.DelayedEvent;
-import com.openrsc.server.Server;
 
 public final class FriendHandler implements PacketHandler {
 
@@ -32,7 +31,7 @@ public final class FriendHandler implements PacketHandler {
 
 		Player affectedPlayer = World.getWorld().getPlayer(friend);
 		if (pID == packetOne) { // Add friend
-			int maxFriends = Constants.GameServer.MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
+			int maxFriends = Server.getServer().getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
 				: MAX_FRIENDS;
 			if (player.getSocial().friendCount() >= maxFriends) {
 				player.message("Friend list is full");
@@ -60,7 +59,7 @@ public final class FriendHandler implements PacketHandler {
 				}
 			}
 		} else if (pID == packetThree) { // Add ignore
-			int maxFriends = Constants.GameServer.MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
+			int maxFriends = Server.getServer().getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
 				: MAX_FRIENDS;
 			if (player.getSocial().ignoreCount() >= maxFriends) {
 				player.message("Ignore list full");
@@ -81,7 +80,7 @@ public final class FriendHandler implements PacketHandler {
 					DataConversions.getEncryptedString(p, 32576)));
 			player.addPrivateMessage(new PrivateMessage(player, message, friend));
 		} else if (pID == packetSix) {
-			int maxFriends = Constants.GameServer.MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
+			int maxFriends = Server.getServer().getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
 				: MAX_FRIENDS;
 			if (player.getSocial().ignoreCount() >= maxFriends) {
 				player.message("Ignore list full");

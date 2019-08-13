@@ -1,12 +1,11 @@
 package com.openrsc.server.plugins.quests.members;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.event.PluginsUseThisEvent;
 import com.openrsc.server.event.RestartableDelayedEvent;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -41,7 +40,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.SHEEP_HERDER;
+		return Quests.SHEEP_HERDER;
 	}
 
 	@Override
@@ -57,7 +56,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void handleReward(Player p) {
 		p.message("well done, you have completed the Plaguesheep quest");
-		incQuestReward(p, Quests.questData.get(Quests.SHEEP_HERDER), true);
+		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.SHEEP_HERDER), true);
 		p.message("@gre@You haved gained 4 quest points!");
 	}
 
@@ -161,7 +160,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 						p.getCache().remove("plagueremain2nd");
 						p.getCache().remove("plagueremain3th");
 						p.getCache().remove("plagueremain4th");
-						p.sendQuestComplete(Constants.Quests.SHEEP_HERDER);
+						p.sendQuestComplete(Quests.SHEEP_HERDER);
 						addItem(p, ItemId.COINS.id(), 3100);
 						npcTalk(p, n, "here take one hundred coins to cover the price of your protective clothing");
 						message(p, "halgrive gives you 100 coins");
@@ -234,7 +233,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 		handleGateSounds(player);
 		player.message("you open the gate and walk through");
 		World.getWorld().replaceGameObject(object,
-			new GameObject(object.getLocation(), 442,
+			new GameObject(object.getWorld(), object.getLocation(), 442,
 				object.getDirection(), object.getType()));
 		World.getWorld().delayedSpawnObject(object.getLoc(), 3000);
 	}

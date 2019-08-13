@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.npcs.shop;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -23,7 +23,7 @@ public final class SiegfriedErkel implements ShopInterface, TalkToNpcExecutiveLi
 
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
-		if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) != -1) {
+		if (p.getQuestStage(Quests.LEGENDS_QUEST) != -1) {
 			npcTalk(p, n, "I'm sorry but the services of this shop are only for ",
 				"the pleasure of those who are rightfull members of the ",
 				"Legends Guild. I would get into serious trouble if I sold ",

@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
@@ -30,7 +30,7 @@ public class UndergroundPassSmearDollOfIban implements InvUseOnItemListener, Inv
 		if (Functions.compareItemsIds(item1, item2, ItemId.IBANS_ASHES.id(), ItemId.A_DOLL_OF_IBAN.id())) {
 			p.message("you rub the ashes into the doll");
 			removeItem(p, ItemId.IBANS_ASHES.id(), 1);
-			if (!p.getCache().hasKey("ash_on_doll") && p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == 6) {
+			if (!p.getCache().hasKey("ash_on_doll") && p.getQuestStage(Quests.UNDERGROUND_PASS) == 6) {
 				p.getCache().store("ash_on_doll", true);
 			}
 		}
@@ -38,7 +38,7 @@ public class UndergroundPassSmearDollOfIban implements InvUseOnItemListener, Inv
 			message(p, "you crumble the doves skeleton into dust");
 			p.message("and rub it into the doll");
 			removeItem(p, ItemId.IBANS_CONSCIENCE.id(), 1);
-			if (!p.getCache().hasKey("cons_on_doll") && p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == 6) {
+			if (!p.getCache().hasKey("cons_on_doll") && p.getQuestStage(Quests.UNDERGROUND_PASS) == 6) {
 				p.getCache().store("cons_on_doll", true);
 			}
 		}
@@ -46,7 +46,7 @@ public class UndergroundPassSmearDollOfIban implements InvUseOnItemListener, Inv
 			message(p, "you pour the strange liquid over the doll");
 			p.message("it seeps into the cotton");
 			removeItem(p, ItemId.IBANS_SHADOW.id(), 1);
-			if (!p.getCache().hasKey("shadow_on_doll") && p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == 6) {
+			if (!p.getCache().hasKey("shadow_on_doll") && p.getQuestStage(Quests.UNDERGROUND_PASS) == 6) {
 				p.getCache().store("shadow_on_doll", true);
 			}
 		}

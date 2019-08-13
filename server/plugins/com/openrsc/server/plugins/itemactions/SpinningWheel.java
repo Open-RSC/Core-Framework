@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.itemactions;
 
 import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -58,11 +58,11 @@ public class SpinningWheel implements InvUseOnObjectListener,
 			return;
 		}
 		player.setBatchEvent(new BatchEvent(player, 600, "Spinning Wheel", Formulae
-			.getRepeatTimes(player, SKILLS.CRAFTING.id()), false) {
+			.getRepeatTimes(player, Skills.CRAFTING), false) {
 
 			@Override
 			public void action() {
-				if (getOwner().getSkills().getLevel(SKILLS.CRAFTING.id()) < requirement) {
+				if (getOwner().getSkills().getLevel(Skills.CRAFTING) < requirement) {
 					message(getOwner(), "You need to have a crafting of level "
 						+ requirement + " or higher to make a "
 						+ new Item(produce).getDef().getName().toLowerCase());
@@ -75,7 +75,7 @@ public class SpinningWheel implements InvUseOnObjectListener,
 					getOwner().message("You " + verb + " the "
 						+ consumedItem + " into a " + producedItem);
 					getOwner().getInventory().add(new Item(produce, 1));
-					getOwner().incExp(SKILLS.CRAFTING.id(), exp, true);
+					getOwner().incExp(Skills.CRAFTING, exp, true);
 				} else {
 					interrupt();
 				}

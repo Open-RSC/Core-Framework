@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class Entity {
 
-	public static final World world = World.getWorld();
+	private final World world;
 
 	protected final Map<String, Object> attributes = new HashMap<String, Object>();
 	
@@ -31,6 +31,12 @@ public abstract class Entity {
 	protected AtomicReference<Region> region = new AtomicReference<Region>();
 
 	protected boolean removed = false;
+
+	public Entity(World world) {
+		this.world = world;
+	}
+
+	public final World getWorld() { return world; }
 
 	@SuppressWarnings("unchecked")
 	public <T> T getAttribute(String string) {

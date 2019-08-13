@@ -1,6 +1,6 @@
 package com.openrsc.server.sql.query.logs;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.sql.query.Query;
 
@@ -13,7 +13,7 @@ public class LiveFeedLog extends Query {
 	private String username;
 
 	public LiveFeedLog(Player player, String feedText) {
-		super("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX
+		super("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 			+ "live_feeds`(`username`,`message`,`time`) VALUES(?, ?, ?)");
 		this.username = player.getUsername();
 		this.feedText = feedText;

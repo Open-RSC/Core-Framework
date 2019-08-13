@@ -1,11 +1,11 @@
 package com.openrsc.server.plugins.skills;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.external.ObjectWoodcuttingDef;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -42,17 +42,17 @@ public class Woodcutting implements ObjectActionListener,
 			owner.message("Nothing interesting happens");
 			return;
 		}
-		if (def.getReqLevel() > 1 && !Constants.GameServer.MEMBER_WORLD) {
+		if (def.getReqLevel() > 1 && !Server.getServer().getConfig().MEMBER_WORLD) {
 			owner.message(owner.MEMBER_MESSAGE);
 			return;
 		}
-		if (Constants.GameServer.WANT_FATIGUE) {
+		if (Server.getServer().getConfig().WANT_FATIGUE) {
 			if (owner.getFatigue() >= owner.MAX_FATIGUE) {
 				owner.message("You are too tired to cut the tree");
 				return;
 			}
 		}
-		if (owner.getSkills().getLevel(SKILLS.WOODCUT.id()) < def.getReqLevel()) {
+		if (owner.getSkills().getLevel(Skills.WOODCUT) < def.getReqLevel()) {
 			owner.message("You need a woodcutting level of " + def.getReqLevel() + " to axe this tree");
 			return;
 		}
@@ -75,7 +75,7 @@ public class Woodcutting implements ObjectActionListener,
 			@Override
 			public void action() {
 				final Item log = new Item(def.getLogId());
-				if (Constants.GameServer.WANT_FATIGUE) {
+				if (Server.getServer().getConfig().WANT_FATIGUE) {
 					if (owner.getFatigue() >= owner.MAX_FATIGUE) {
 						owner.message("You are too tired to cut the tree");
 						interrupt();
@@ -83,7 +83,7 @@ public class Woodcutting implements ObjectActionListener,
 					}
 				}
 				
-				if (getLog(def.getReqLevel(), owner.getSkills().getLevel(SKILLS.WOODCUT.id()), axeID)) {
+				if (getLog(def.getReqLevel(), owner.getSkills().getLevel(Skills.WOODCUT), axeID)) {
 					//check if the tree is still up
 					GameObject obj = owner.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 					if (obj == null) {
@@ -92,7 +92,7 @@ public class Woodcutting implements ObjectActionListener,
 					} else {
 						owner.getInventory().add(log);
 						owner.message("You get some wood");
-						owner.incExp(SKILLS.WOODCUT.id(), def.getExp(), true);
+						owner.incExp(Skills.WOODCUT, def.getExp(), true);
 					}
 					if (DataConversions.random(1, 100) <= def.getFell()) {
 						obj = owner.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
@@ -104,7 +104,7 @@ public class Woodcutting implements ObjectActionListener,
 						}
 						interrupt();
 						if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
-							GameObject newObject = new GameObject(object.getLocation(), stumpId, object.getDirection(), object.getType());
+							GameObject newObject = new GameObject(owner.getWorld(), object.getLocation(), stumpId, object.getDirection(), object.getType());
 							World.getWorld().replaceGameObject(object, newObject);
 							World.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
 						}

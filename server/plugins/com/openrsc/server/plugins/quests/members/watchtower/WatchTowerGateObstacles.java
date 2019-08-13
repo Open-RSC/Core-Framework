@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.quests.members.watchtower;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -38,7 +38,7 @@ public class WatchTowerGateObstacles implements ObjectActionListener, ObjectActi
 				p.teleport(630, 792);
 			} else {
 				if (ogre_guard != null) {
-					if (p.getCache().hasKey("has_gold_ogre") || p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
+					if (p.getCache().hasKey("has_gold_ogre") || p.getQuestStage(Quests.WATCHTOWER) == -1) {
 						if (ogre_guard != null) {
 							npcTalk(p, ogre_guard, "I know you creature, you may pass");
 							p.teleport(630, 795);
@@ -87,7 +87,7 @@ public class WatchTowerGateObstacles implements ObjectActionListener, ObjectActi
 				p.teleport(665, 773);
 			} else {
 				if (ogre_guard != null) {
-					if (p.getCache().hasKey("has_ogre_companionship") || p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
+					if (p.getCache().hasKey("has_ogre_companionship") || p.getQuestStage(Quests.WATCHTOWER) == -1) {
 						if (ogre_guard != null) {
 							npcTalk(p, ogre_guard, "It's the small creature",
 								"You may pass");

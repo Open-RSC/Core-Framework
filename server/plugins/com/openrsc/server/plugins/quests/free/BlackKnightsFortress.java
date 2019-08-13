@@ -1,10 +1,9 @@
 package com.openrsc.server.plugins.quests.free;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.event.rsc.impl.combat.AggroEvent;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -21,9 +20,9 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import java.util.Collection;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 	ObjectActionListener, ObjectActionExecutiveListener,
@@ -43,7 +42,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.BLACK_KNIGHTS_FORTRESS;
+		return Quests.BLACK_KNIGHTS_FORTRESS;
 	}
 
 	@Override
@@ -61,7 +60,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 		p.message("Sir Amik hands you 2500 coins");
 		addItem(p, ItemId.COINS.id(), 2500);
 		p.message("Well done. You have completed the Black Knights Fortress quest");
-		incQuestReward(p, Quests.questData.get(Quests.BLACK_KNIGHTS_FORTRESS), true);
+		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.BLACK_KNIGHTS_FORTRESS), true);
 		p.message("@gre@You haved gained 3 quest points!");
 	}
 

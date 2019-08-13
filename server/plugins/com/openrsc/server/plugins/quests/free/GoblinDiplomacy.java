@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.quests.free;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -19,7 +18,7 @@ public class GoblinDiplomacy implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.GOBLIN_DIPLOMACY;
+		return Quests.GOBLIN_DIPLOMACY;
 	}
 
 	@Override
@@ -36,7 +35,7 @@ public class GoblinDiplomacy implements QuestInterface, TalkToNpcListener,
 	public void handleReward(Player player) {
 		player.message("Well done you have completed the goblin diplomacy quest");
 		player.message("@gre@You haved gained 5 quest points!");
-		incQuestReward(player, Quests.questData.get(Quests.GOBLIN_DIPLOMACY), true);
+		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.GOBLIN_DIPLOMACY), true);
 		player.message("general wartface gives you a gold bar as thanks");
 		player.getInventory().add(new Item(ItemId.GOLD_BAR.id(), 1));
 	}
@@ -140,7 +139,7 @@ public class GoblinDiplomacy implements QuestInterface, TalkToNpcListener,
 					npcTalk(p, n, "It' a deal then", "Light blue it is",
 						"Thank you for sorting our argument");
 
-					p.sendQuestComplete(Constants.Quests.GOBLIN_DIPLOMACY);
+					p.sendQuestComplete(Quests.GOBLIN_DIPLOMACY);
 				} else {
 					npcTalk(p, n, "Have you got some Light Blue goblin armour yet?");
 					playerTalk(p, n, "Err no");

@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.quests.free;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
@@ -17,7 +16,7 @@ public class ImpCatcher implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.IMP_CATCHER;
+		return Quests.IMP_CATCHER;
 	}
 
 	@Override
@@ -33,7 +32,7 @@ public class ImpCatcher implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void handleReward(Player p) {
 		p.message("Well done. You have completed the Imp catcher quest");
-		incQuestReward(p, Quests.questData.get(Quests.IMP_CATCHER), true);
+		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.IMP_CATCHER), true);
 		p.message("@gre@You haved gained 1 quest point!");
 	}
 
@@ -70,7 +69,7 @@ public class ImpCatcher implements QuestInterface, TalkToNpcListener,
 						"An Amulet of accuracy");
 					message(p, "The Wizard hands you an amulet");
 					addItem(p, ItemId.AMULET_OF_ACCURACY.id(), 1);
-					p.sendQuestComplete(Constants.Quests.IMP_CATCHER);
+					p.sendQuestComplete(Quests.IMP_CATCHER);
 				} else if (hasItem(p, ItemId.RED_BEAD.id()) || hasItem(p, ItemId.YELLOW_BEAD.id())
 					|| hasItem(p, ItemId.BLACK_BEAD.id()) || hasItem(p, ItemId.WHITE_BEAD.id())) {
 					playerTalk(p, n, "I have found some of your beads");
@@ -107,7 +106,7 @@ public class ImpCatcher implements QuestInterface, TalkToNpcListener,
 							"These imps have now spread out all over the kingdom",
 							"Could you get my beads back for me");
 						playerTalk(p, n, "I'll try");
-						p.updateQuestStage(Constants.Quests.IMP_CATCHER, 1);
+						p.updateQuestStage(Quests.IMP_CATCHER, 1);
 					} else if (choice2 == 1) {
 						npcTalk(p, n, "Or else what? You'll attack me?",
 							"Hahaha");

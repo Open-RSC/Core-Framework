@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.skills.agility;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -75,7 +75,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 		p.setBusy(true);
 		switch (obj.getID()) {
 			case SHILO_VILLAGE_BRIDGE_BLOCKADE_JUMP:
-				if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 32) {
+				if (getCurrentLevel(p, Skills.AGILITY) < 32) {
 					p.message("You need an agility level of 32 to climb the rocks");
 					p.setBusy(false);
 					return;
@@ -104,10 +104,10 @@ public class AgilityShortcuts implements ObjectActionListener,
 						p.message("...slip and fall incompetently into the river below!");
 						p.teleport(458, 832);
 						playerTalk(p, null, "* Ahhhhhhhhhh! *");
-						p.damage((getCurrentLevel(p, SKILLS.HITS.id()) / 10));
+						p.damage((getCurrentLevel(p, Skills.HITS) / 10));
 						sleep(500);
 						p.teleport(458, 836);
-						p.damage((getCurrentLevel(p, SKILLS.HITS.id()) / 10));
+						p.damage((getCurrentLevel(p, Skills.HITS) / 10));
 						sleep(1000);
 						playerTalk(p, null, "* Gulp! *");
 						sleep(1500);
@@ -116,14 +116,14 @@ public class AgilityShortcuts implements ObjectActionListener,
 						sleep(1000);
 						p.message("You just manage to drag your pitiful frame onto the river bank.");
 						playerTalk(p, null, "* Gasp! *");
-						p.damage((getCurrentLevel(p, SKILLS.HITS.id()) / 10));
+						p.damage((getCurrentLevel(p, Skills.HITS) / 10));
 						sleep(1000);
 						p.message("Though you nearly drowned in the river!");
 					}
 				}
 				break;
 			case SHILO_VILLAGE_ROCKS_TO_BRIDGE:
-				if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 32) {
+				if (getCurrentLevel(p, Skills.AGILITY) < 32) {
 					p.message("You need an agility level of 32 to climb the rocks");
 					p.setBusy(false);
 					return;
@@ -147,7 +147,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 					} else {
 						p.teleport(450, 828);
 						message(p, "You fall and hurt yourself.");
-						p.damage((getCurrentLevel(p, SKILLS.HITS.id()) / 10));
+						p.damage((getCurrentLevel(p, Skills.HITS) / 10));
 						sleep(500);
 						p.teleport(449, 828);
 					}
@@ -156,17 +156,17 @@ public class AgilityShortcuts implements ObjectActionListener,
 				}
 				break;
 			case SHORTCUT_FALADOR_HANDHOLD:
-				if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 5) {
+				if (getCurrentLevel(p, Skills.AGILITY) < 5) {
 					p.message("You need an agility level of 5 to climb the wall");
 					p.setBusy(false);
 					return;
 				}
 				p.message("You climb over the wall");
 				movePlayer(p, 338, 555);
-				p.incExp(SKILLS.AGILITY.id(), 50, true);
+				p.incExp(Skills.AGILITY, 50, true);
 				break;
 			case SHORTCUT_BRIMHAVEN_SWING:
-				if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 10) {
+				if (getCurrentLevel(p, Skills.AGILITY) < 10) {
 					p.message("You need an agility level of 10 to attempt to swing on this vine");
 					p.setBusy(false);
 					return;
@@ -176,10 +176,10 @@ public class AgilityShortcuts implements ObjectActionListener,
 				movePlayer(p, 511, 669);
 				p.message("You skillfully swing across the stream");
 				playerTalk(p, null, "Aaaaahahah");
-				p.incExp(SKILLS.AGILITY.id(), 20, true);
+				p.incExp(Skills.AGILITY, 20, true);
 				break;
 			case SHORTCUT_BRIMHAVEN_BACK_SWING:
-				if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 10) {
+				if (getCurrentLevel(p, Skills.AGILITY) < 10) {
 					p.message("You need an agility level of 10 to attempt to swing on this vine");
 					p.setBusy(false);
 					return;
@@ -189,10 +189,10 @@ public class AgilityShortcuts implements ObjectActionListener,
 				movePlayer(p, 508, 668);
 				p.message("You skillfully swing across the stream");
 				playerTalk(p, null, "Aaaaahahah");
-				p.incExp(SKILLS.AGILITY.id(), 20, true);
+				p.incExp(Skills.AGILITY, 20, true);
 				break;
 			case SHORTCUT_EDGE_DUNGEON_SWING:
-				if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 15) {
+				if (getCurrentLevel(p, Skills.AGILITY) < 15) {
 					p.message("You need an agility level of 15 to attempt to swing on this rope");
 					p.setBusy(false);
 					return;
@@ -200,10 +200,10 @@ public class AgilityShortcuts implements ObjectActionListener,
 				sleep(1000);
 				movePlayer(p, 207, 3221);
 				p.message("You skillfully swing across the hole");
-				p.incExp(SKILLS.AGILITY.id(), 40, true);
+				p.incExp(Skills.AGILITY, 40, true);
 				break;
 			case SHORTCUT_EDGE_DUNGEON_BACK_SWING:
-				if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 15) {
+				if (getCurrentLevel(p, Skills.AGILITY) < 15) {
 					p.message("You need an agility level of 15 to attempt to swing on this rope");
 					p.setBusy(false);
 					return;
@@ -211,10 +211,10 @@ public class AgilityShortcuts implements ObjectActionListener,
 				sleep(1000);
 				movePlayer(p, 206, 3225);
 				p.message("You skillfully swing across the hole");
-				p.incExp(SKILLS.AGILITY.id(), 40, true);
+				p.incExp(Skills.AGILITY, 40, true);
 				break;
 			case SHORTCUT_WEST_COALTRUCKS_LOG:
-				if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 20) {
+				if (getCurrentLevel(p, Skills.AGILITY) < 20) {
 					p.message("You need an agility level of 20 to attempt balancing along this log");
 					p.setBusy(false);
 					return;
@@ -225,10 +225,10 @@ public class AgilityShortcuts implements ObjectActionListener,
 					sleep(650);
 				}
 				p.message("and you walk across");
-				p.incExp(SKILLS.AGILITY.id(), 34, true);
+				p.incExp(Skills.AGILITY, 34, true);
 				break;
 			case SHORTCUT_EAST_COALTRUCKS_LOG:
-				if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 20) {
+				if (getCurrentLevel(p, Skills.AGILITY) < 20) {
 					p.message("You need an agility level of 20 to attempt balancing along this log");
 					p.setBusy(false);
 					return;
@@ -239,16 +239,16 @@ public class AgilityShortcuts implements ObjectActionListener,
 					sleep(650);
 				}
 				p.message("and you walk across");
-				p.incExp(SKILLS.AGILITY.id(), 34, true);
+				p.incExp(Skills.AGILITY, 34, true);
 				break;
 			// CONTINUE SHORTCUTS.
 			case SHORTCUT_YANILLE_AGILITY_ROPESWING:
-				if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 57) {
+				if (getCurrentLevel(p, Skills.AGILITY) < 57) {
 					p.message("You need an agility level of 57 to attempt to swing on this rope");
 					p.setBusy(false);
 					return;
 				}
-				if (Constants.GameServer.WANT_FATIGUE) {
+				if (Server.getServer().getConfig().WANT_FATIGUE) {
 					if (p.getFatigue() >= 69750) {
 						p.message("You are too tired to swing on the rope");
 						p.setBusy(false);
@@ -265,15 +265,15 @@ public class AgilityShortcuts implements ObjectActionListener,
 				sleep(2200);
 				movePlayer(p, 596, 3581);
 				p.message("You skillfully swing across the hole");
-				p.incExp(SKILLS.AGILITY.id(), 110, true);
+				p.incExp(Skills.AGILITY, 110, true);
 				break;
 			case SHORTCUT_YANILLE_AGILITY_ROPESWING_BACK:
-				if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 57) {
+				if (getCurrentLevel(p, Skills.AGILITY) < 57) {
 					p.message("You need an agility level of 57 to attempt to swing on this rope");
 					p.setBusy(false);
 					return;
 				}
-				if (Constants.GameServer.WANT_FATIGUE) {
+				if (Server.getServer().getConfig().WANT_FATIGUE) {
 					if (p.getFatigue() >= 69750) {
 						p.message("You are too tired to swing on the rope");
 						p.setBusy(false);
@@ -290,16 +290,16 @@ public class AgilityShortcuts implements ObjectActionListener,
 				sleep(2200);
 				movePlayer(p, 598, 3585);
 				p.message("You skillfully swing across the hole");
-				p.incExp(SKILLS.AGILITY.id(), 110, true);
+				p.incExp(Skills.AGILITY, 110, true);
 				break;
 
 			case SHORTCUT_YANILLE_AGILITY_LEDGE:
-				if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 40) {
+				if (getCurrentLevel(p, Skills.AGILITY) < 40) {
 					p.message("You need an agility level of 40 to attempt balancing along this log");
 					p.setBusy(false);
 					return;
 				}
-				if (Constants.GameServer.WANT_FATIGUE) {
+				if (Server.getServer().getConfig().WANT_FATIGUE) {
 					if (p.getFatigue() >= 69750) {
 						p.message("You are too tired to balance on the ledge");
 						p.setBusy(false);
@@ -317,15 +317,15 @@ public class AgilityShortcuts implements ObjectActionListener,
 				movePlayer(p, 601, 3563);
 				p.setBusyTimer(1000);
 				p.message("You skillfully balance across the hole");
-				p.incExp(SKILLS.AGILITY.id(), 90, true);
+				p.incExp(Skills.AGILITY, 90, true);
 				break;
 			case SHORTCUT_YANILLE_AGILITY_LEDGE_BACK:
-				if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 40) {
+				if (getCurrentLevel(p, Skills.AGILITY) < 40) {
 					p.message("You need an agility level of 40 to attempt balancing along this log");
 					p.setBusy(false);
 					return;
 				}
-				if (Constants.GameServer.WANT_FATIGUE) {
+				if (Server.getServer().getConfig().WANT_FATIGUE) {
 					if (p.getFatigue() >= 69750) {
 						p.message("You are too tired to balance on the ledge");
 						p.setBusy(false);
@@ -343,11 +343,11 @@ public class AgilityShortcuts implements ObjectActionListener,
 				p.setBusyTimer(1000);
 				movePlayer(p, 601, 3557);
 				p.message("You skillfully balance across the hole");
-				p.incExp(SKILLS.AGILITY.id(), 90, true);
+				p.incExp(Skills.AGILITY, 90, true);
 				break;
 
 			case SHORTCUT_YANILLE_PILE_OF_RUBBLE:
-				if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 67) {
+				if (getCurrentLevel(p, Skills.AGILITY) < 67) {
 					p.message("You need an agility level of 67 to attempt to climb down the rubble");
 					p.setBusy(false);
 					return;
@@ -356,12 +356,12 @@ public class AgilityShortcuts implements ObjectActionListener,
 				p.message("You climb down the pile of rubble");
 				break;
 			case SHORTCUT_YANILLE_PILE_OF_RUBBLE_UP:
-				if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 67) {
+				if (getCurrentLevel(p, Skills.AGILITY) < 67) {
 					p.message("You need an agility level of 67 to attempt to climb up the rubble");
 					p.setBusy(false);
 					return;
 				}
-				if (Constants.GameServer.WANT_FATIGUE) {
+				if (Server.getServer().getConfig().WANT_FATIGUE) {
 					if (p.getFatigue() >= 69750) {
 						p.message("You are too tired to climb up the rubble");
 						p.setBusy(false);
@@ -370,16 +370,16 @@ public class AgilityShortcuts implements ObjectActionListener,
 				}
 				movePlayer(p, 582, 3573);
 				p.message("You climb up the pile of rubble");
-				p.incExp(SKILLS.AGILITY.id(), 54, true);
+				p.incExp(Skills.AGILITY, 54, true);
 				break;
 
 			case SHORTCUT_YANILLE_PIPE:
-				if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 49) {
+				if (getCurrentLevel(p, Skills.AGILITY) < 49) {
 					p.message("You need an agility level of 49 to attempt to squeeze through the pipe");
 					p.setBusy(false);
 					return;
 				}
-				if (Constants.GameServer.WANT_FATIGUE) {
+				if (Server.getServer().getConfig().WANT_FATIGUE) {
 					if (p.getFatigue() >= 69750) {
 						p.message("You are too tired to squeeze through the pipe");
 						p.setBusy(false);
@@ -389,15 +389,15 @@ public class AgilityShortcuts implements ObjectActionListener,
 				p.message("You squeeze through the pipe");
 				sleep(2200);
 				movePlayer(p, 608, 3568);
-				p.incExp(SKILLS.AGILITY.id(), 30, true);
+				p.incExp(Skills.AGILITY, 30, true);
 				break;
 			case SHORTCUT_YANILLE_PIPE_BACK:
-				if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 49) {
+				if (getCurrentLevel(p, Skills.AGILITY) < 49) {
 					p.message("You need an agility level of 49 to attempt to squeeze through the pipe");
 					p.setBusy(false);
 					return;
 				}
-				if (Constants.GameServer.WANT_FATIGUE) {
+				if (Server.getServer().getConfig().WANT_FATIGUE) {
 					if (p.getFatigue() >= 69750) {
 						p.message("You are too tired to squeeze through the pipe");
 						p.setBusy(false);
@@ -407,10 +407,10 @@ public class AgilityShortcuts implements ObjectActionListener,
 				p.message("You squeeze through the pipe");
 				sleep(2200);
 				movePlayer(p, 605, 3568);
-				p.incExp(SKILLS.AGILITY.id(), 30, true);
+				p.incExp(Skills.AGILITY, 30, true);
 				break;
 			case GREW_ISLAND_ROPE_ATTACHED:
-				if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 30) {
+				if (getCurrentLevel(p, Skills.AGILITY) < 30) {
 					p.message("You need an agility level of 30 to attempt to swing across the stream");
 					p.setBusy(false);
 					return;
@@ -419,17 +419,17 @@ public class AgilityShortcuts implements ObjectActionListener,
 				sleep(2200);
 				movePlayer(p, 664, 755);
 				p.message("You skillfully swing across the stream");
-				p.incExp(SKILLS.AGILITY.id(), 50, true);
+				p.incExp(Skills.AGILITY, 50, true);
 				break;
 			case GREW_ISLAND_SWING_BACK:
 				p.message("You grab the rope and try and swing across");
 				sleep(2200);
 				movePlayer(p, 666, 755);
 				p.message("You skillfully swing across the stream");
-				p.incExp(SKILLS.AGILITY.id(), 50, true);
+				p.incExp(Skills.AGILITY, 50, true);
 				break;
 			case EAST_KARAMJA_LOG:
-				if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 32) {
+				if (getCurrentLevel(p, Skills.AGILITY) < 32) {
 					p.message("You need an agility level of 32 to attempt balancing along this log");
 					p.setBusy(false);
 					return;
@@ -456,16 +456,16 @@ public class AgilityShortcuts implements ObjectActionListener,
 					movePlayer(p, 366, 781);
 				}
 				p.message("...and make it without any problems!");
-				p.incExp(SKILLS.AGILITY.id(), 10, true);
+				p.incExp(Skills.AGILITY, 10, true);
 				break;
 			case EAST_KARAMJA_STONES:
 				p.setBusyTimer(1500);
-				if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 32) {
+				if (getCurrentLevel(p, Skills.AGILITY) < 32) {
 					p.message("You need an agility level of 32 to step on these stones");
 					p.setBusy(false);
 					return;
 				}
-				if (Constants.GameServer.WANT_FATIGUE) {
+				if (Server.getServer().getConfig().WANT_FATIGUE) {
 					if (p.getFatigue() >= p.MAX_FATIGUE) {
 						p.message("You are too fatigued to continue.");
 						p.setBusy(false);
@@ -482,7 +482,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 						p.message("@red@!!! You Fall !!!");
 						message(p, "You get washed up on the other side of the river...",
 							"After being nearly half drowned");
-						p.damage((int) (p.getSkills().getLevel(SKILLS.HITS.id()) / 4) + 2);
+						p.damage((int) (p.getSkills().getLevel(Skills.HITS) / 4) + 2);
 						p.setBusy(false);
 						return;
 					}
@@ -496,24 +496,24 @@ public class AgilityShortcuts implements ObjectActionListener,
 						p.message("@red@!!! You Fall !!!");
 						message(p, "You get washed up on the other side of the river...",
 							"After being nearly half drowned");
-						p.damage((int) (p.getSkills().getLevel(SKILLS.HITS.id()) / 4) + 2);
+						p.damage((int) (p.getSkills().getLevel(Skills.HITS) / 4) + 2);
 						p.setBusy(false);
 						return;
 					}
 					movePlayer(p, 347, 805);
 				}
 				p.message("And cross the water without problems.");
-				p.incExp(SKILLS.AGILITY.id(), 10, true);
+				p.incExp(Skills.AGILITY, 10, true);
 				break;
 			case YANILLE_WATCHTOWER_HANDHOLDS:
-				if (Constants.GameServer.WANT_FATIGUE) {
+				if (Server.getServer().getConfig().WANT_FATIGUE) {
 					if (p.getFatigue() >= p.MAX_FATIGUE) {
 						p.message("You are too tired to climb up the wall");
 						p.setBusy(false);
 						return;
 					}
 				}
-				if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 18) {
+				if (getCurrentLevel(p, Skills.AGILITY) < 18) {
 					p.message("You need an agility level of 18 to climb the wall");
 					p.setBusy(false);
 					return;
@@ -521,15 +521,15 @@ public class AgilityShortcuts implements ObjectActionListener,
 				p.message("You climb up the wall");
 				p.teleport(637, 1680);
 				p.message("And climb in through the window");
-				p.incExp(SKILLS.AGILITY.id(), 50, true);
+				p.incExp(Skills.AGILITY, 50, true);
 				break;
 			case TAVERLY_PIPE_RETURN:
-				if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 70) {
+				if (getCurrentLevel(p, Skills.AGILITY) < 70) {
 					p.message("You need an agility level of 70 to attempt to squeeze through the pipe");
 					p.setBusy(false);
 					return;
 				}
-				if (Constants.GameServer.WANT_FATIGUE) {
+				if (Server.getServer().getConfig().WANT_FATIGUE) {
 					if (p.getFatigue() >= 69750) {
 						p.message("You are too tired to squeeze through the pipe");
 						p.setBusy(false);
@@ -539,15 +539,15 @@ public class AgilityShortcuts implements ObjectActionListener,
 				p.message("You squeeze through the pipe");
 				sleep(2200);
 				movePlayer(p, 372, 3352);
-				p.incExp(SKILLS.AGILITY.id(), 30, true);
+				p.incExp(Skills.AGILITY, 30, true);
 				break;
 			case TAVERLY_PIPE:
-				if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 70) {
+				if (getCurrentLevel(p, Skills.AGILITY) < 70) {
 					p.message("You need an agility level of 70 to attempt to squeeze through the pipe");
 					p.setBusy(false);
 					return;
 				}
-				if (Constants.GameServer.WANT_FATIGUE) {
+				if (Server.getServer().getConfig().WANT_FATIGUE) {
 					if (p.getFatigue() >= 69750) {
 						p.message("You are too tired to squeeze through the pipe");
 						p.setBusy(false);
@@ -557,7 +557,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 				p.message("You squeeze through the pipe");
 				sleep(2200);
 				movePlayer(p, 375, 3352);
-				p.incExp(SKILLS.AGILITY.id(), 30, true);
+				p.incExp(Skills.AGILITY, 30, true);
 				break;
 		}
 		p.setBusy(false);
@@ -565,11 +565,11 @@ public class AgilityShortcuts implements ObjectActionListener,
 	// you tie the rope to the tree
 
 	boolean succeed(Player player, int req) {
-		return Formulae.calcProductionSuccessful(req, getCurrentLevel(player, SKILLS.AGILITY.id()), false, req + 30);
+		return Formulae.calcProductionSuccessful(req, getCurrentLevel(player, Skills.AGILITY), false, req + 30);
 	}
 	
 	boolean succeed(Player player, int req, int lvlStopFail) {
-		return Formulae.calcProductionSuccessful(req, getCurrentLevel(player, SKILLS.AGILITY.id()), true, lvlStopFail);
+		return Formulae.calcProductionSuccessful(req, getCurrentLevel(player, Skills.AGILITY), true, lvlStopFail);
 	}
 
 	@Override
@@ -583,7 +583,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 			p.message("you tie the rope to the tree");
 			removeItem(p, ItemId.ROPE.id(), 1);
 			World.getWorld().replaceGameObject(obj,
-				new GameObject(obj.getLocation(), 663, obj.getDirection(), obj
+				new GameObject(p.getWorld(), obj.getLocation(), 663, obj.getDirection(), obj
 					.getType()));
 			World.getWorld().delayedSpawnObject(obj.getLoc(), 60000);
 		}

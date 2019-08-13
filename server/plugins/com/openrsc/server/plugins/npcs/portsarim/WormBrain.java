@@ -1,8 +1,9 @@
 package com.openrsc.server.plugins.npcs.portsarim;
 
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -13,19 +14,17 @@ import com.openrsc.server.plugins.menu.Option;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-import com.openrsc.server.Constants;
-
 public final class WormBrain implements WallObjectActionListener, WallObjectActionExecutiveListener {
 
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click, Player p) {
-		return Constants.GameServer.WANT_BARTER_WORMBRAINS && obj.getID() == 30
+		return Server.getServer().getConfig().WANT_BARTER_WORMBRAINS && obj.getID() == 30
 				&& obj.getX() == 283 && obj.getY() == 665;
 	}
 
 	@Override
 	public void onWallObjectAction(GameObject obj, Integer click, final Player p) {
-		if (Constants.GameServer.WANT_BARTER_WORMBRAINS && obj.getID() == 30
+		if (Server.getServer().getConfig().WANT_BARTER_WORMBRAINS && obj.getID() == 30
 				&& obj.getX() == 283 && obj.getY() == 665) {
 			final Npc n = getNearestNpc(p, NpcId.WORMBRAIN.id(), 10);
 			message(p, "...you knock on the cell door");

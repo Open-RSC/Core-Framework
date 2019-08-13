@@ -1,9 +1,9 @@
 package com.openrsc.server.plugins.npcs.alkharid;
 
-import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.event.SingleEvent;
-import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -93,7 +93,7 @@ public class ShantayPassNpcs implements ShopInterface,
 							"No, I'm having serious second thoughts now.");
 					}
 					if (menus == 0) {
-						final Npc npc = new Npc(719, 63, 731);
+						final Npc npc = new Npc(n.getWorld(), 719, 63, 731);
 						npc.setShouldRespawn(false);
 						World.getWorld().registerNpc(npc);
 						Server.getServer().getGameEventHandler().add(
@@ -136,7 +136,7 @@ public class ShantayPassNpcs implements ShopInterface,
 		}
 		if (n.getID() == SHANTAY) {
 			if (DataConversions.random(0, 25) == 0) { // 1 in 25 chance to drop kebab recipe
-				GroundItem groundItem = new GroundItem(1120, n.getX(), n.getY(), 1, p);
+				GroundItem groundItem = new GroundItem(p.getWorld(), 1120, n.getX(), n.getY(), 1, p);
 				World.getWorld().registerItem(groundItem);
 			}
 
@@ -145,7 +145,7 @@ public class ShantayPassNpcs implements ShopInterface,
 				npcTalk(p, n, "I see you're new!",
 					"Make sure you read the poster before going into the desert.");
 			}
-			if (p.getQuestStage(Constants.Quests.TOURIST_TRAP) == 0) {
+			if (p.getQuestStage(Quests.TOURIST_TRAP) == 0) {
 				npcTalk(p, n, "There is a heartbroken Mother just past the gates and in the Desert.",
 					"Her name is Irena and she mourns her lost Daughter. Such a shame.");
 			}
@@ -398,7 +398,7 @@ public class ShantayPassNpcs implements ShopInterface,
 					return;
 				}
 				try {
-					PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Constants.GameServer.MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+					PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 					statement.setString(1, p.getUsername());
 					ResultSet result = statement.executeQuery();
 					if (result.next()) {

@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.commands;
 
-import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemDropDef;
@@ -232,7 +231,7 @@ public final class SuperModerator implements CommandListener {
 		} else if (cmd.equalsIgnoreCase("reloaddrops")) {
 			try {
 				PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement(
-					"SELECT * FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "npcdrops` WHERE npcdef_id = ?");
+					"SELECT * FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "npcdrops` WHERE npcdef_id = ?");
 				for (int i = 0; i < EntityHandler.npcs.size(); i++) {
 					statement.setInt(1, i);
 					ResultSet dropResult = statement.executeQuery();

@@ -1,6 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.snapshot.Snapshot;
 import com.openrsc.server.model.world.World;
@@ -52,7 +52,7 @@ public final class ReportHandler implements PacketHandler {
 			return;
 		}
 
-		ResultSet result = DatabaseConnection.getDatabase().executeQuery("SELECT `username` FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "players` WHERE username='" + hash + "'");
+		ResultSet result = DatabaseConnection.getDatabase().executeQuery("SELECT `username` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players` WHERE username='" + hash + "'");
 
 		if (!result.next()) {
 			player.message("Invalid player name.");

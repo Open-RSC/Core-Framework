@@ -1,12 +1,11 @@
 package com.openrsc.server.plugins.defaults;
 
-import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.TelePoint;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -33,7 +32,7 @@ public class Ladders {
 
 	public void onObjectAction(GameObject obj, String command, Player player) {
 		player.setBusyTimer(650);
-		if (obj.getID() == 487 && !Constants.GameServer.MEMBER_WORLD) {
+		if (obj.getID() == 487 && !Server.getServer().getConfig().MEMBER_WORLD) {
 			player.message(player.MEMBER_MESSAGE);
 			return;
 		} else if (obj.getID() == 79 && obj.getX() == 243 && obj.getY() == 95) {
@@ -136,7 +135,7 @@ public class Ladders {
 						"Oh sorry");
 					if (op == 0) {
 						playerTalk(player, abbot, "Well can I join your order?");
-						if (getCurrentLevel(player, SKILLS.PRAYER.id()) >= 31) {
+						if (getCurrentLevel(player, Skills.PRAYER) >= 31) {
 							npcTalk(player, abbot, "Ok I see you are someone suitable for our order",
 								"You may join");
 							player.getCache().set("prayer_guild", 1);
@@ -167,7 +166,7 @@ public class Ladders {
 		} else if (obj.getID() == 223 && obj.getX() == 274 && obj.getY() == 566) { // Mining
 			// Guild
 			// Ladder
-			if (getCurrentLevel(player, SKILLS.MINING.id()) < 60) {
+			if (getCurrentLevel(player, Skills.MINING) < 60) {
 				player.setBusy(true);
 				Npc dwarf = World.getWorld().getNpc(NpcId.DWARF_MINING_GUILD.id(), 272, 277, 563, 567);
 				if (dwarf != null) {
@@ -227,7 +226,7 @@ public class Ladders {
 			player.teleport(222, 110, false);
 		} else if (obj.getID() == 331 && obj.getX() == 150 && obj.getY() == 558) {
 			player.teleport(151, 1505, false);
-		} else if (obj.getID() == 6 && obj.getX() == 282 && obj.getY() == 185 && !Constants.GameServer.MEMBER_WORLD) {
+		} else if (obj.getID() == 6 && obj.getX() == 282 && obj.getY() == 185 && !Server.getServer().getConfig().MEMBER_WORLD) {
 			player.message(player.MEMBER_MESSAGE);
 		} else if (obj.getID() == 6 && obj.getX() == 148 && obj.getY() == 1507) {
 			player.teleport(148, 563, false);

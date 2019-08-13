@@ -1,13 +1,13 @@
 package com.openrsc.server.model.entity.npc;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.impl.RangeEventNpc;
 import com.openrsc.server.event.rsc.impl.StrPotEventNpc;
 import com.openrsc.server.event.rsc.impl.combat.AggroEvent;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
@@ -17,12 +17,7 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.npcYell;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showBubble;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class NpcBehavior {
 
@@ -97,7 +92,7 @@ public class NpcBehavior {
 									npc.setRangeEventNpc(new RangeEventNpc(npc, target));
 								}
 							}
-							if (npc.getLocation().inWilderness() && npc.getID() == 210 && npc.getSkills().getLevel(SKILLS.HITS.id()) < npc.getSkills().getMaxStat(SKILLS.HITS.id()) * 0.67) {
+							if (npc.getLocation().inWilderness() && npc.getID() == 210 && npc.getSkills().getLevel(Skills.HITS) < npc.getSkills().getMaxStat(Skills.HITS) * 0.67) {
 								//npc.setHealEventNpc(new HealEventNpc(npc));
 								//lastHeal = System.currentTimeMillis();
 								return;
@@ -194,7 +189,7 @@ public class NpcBehavior {
 						npc5.setStrPotEventNpc(new StrPotEventNpc(npc5));
 						target = null;
 					}
-					if (npc.inCombat() && npc.getOpponent().getHitsMade() >= 3 && npc.getSkills().getLevel(SKILLS.HITS.id()) < npc.getOpponent().getSkills().getLevel(SKILLS.HITS.id())) {
+					if (npc.inCombat() && npc.getOpponent().getHitsMade() >= 3 && npc.getSkills().getLevel(Skills.HITS) < npc.getOpponent().getSkills().getLevel(Skills.HITS)) {
 						retreat();
 						lastRetreat = System.currentTimeMillis();
 						//npc.setHealEventNpc(new HealEventNpc(npc));
@@ -225,7 +220,7 @@ public class NpcBehavior {
 									npc.walkToEntity(target.getX(), target.getY());
 								}
 							}
-							if (npc.getLocation().inWilderness() && npc.getID() == 236 && npc.getSkills().getLevel(SKILLS.HITS.id()) < npc.getSkills().getMaxStat(SKILLS.HITS.id()) * 0.67) {
+							if (npc.getLocation().inWilderness() && npc.getID() == 236 && npc.getSkills().getLevel(Skills.HITS) < npc.getSkills().getMaxStat(Skills.HITS) * 0.67) {
 								//npc.setHealEventNpc(new HealEventNpc(npc));
 								return;
 							}
@@ -300,7 +295,7 @@ public class NpcBehavior {
 				// We loop through all players in view.
 				for (Player p : npc.getViewArea().getPlayersInView()) {
 
-					int range = Constants.GameServer.AGGRO_RANGE;
+					int range = Server.getServer().getConfig().AGGRO_RANGE;
 					switch (NpcId.getById(npc.getID())) {
 						case BANDIT_AGGRESSIVE:
 							range = 5;
@@ -382,7 +377,7 @@ public class NpcBehavior {
 				setRoaming();
 			}
 			if (npc.inCombat()) {
-				if (shouldRetreat(npc) && npc.getSkills().getLevel(SKILLS.HITS.id()) > 0
+				if (shouldRetreat(npc) && npc.getSkills().getLevel(Skills.HITS) > 0
 					&& npc.getOpponent().getHitsMade() >= 3) {
 					retreat();
 					lastRetreat = System.currentTimeMillis();
@@ -469,7 +464,7 @@ public class NpcBehavior {
 			//successful avoiding tackles gives agility xp
 			p.playerServerMessage(MessageType.QUEST, "You manage to push him away");
 			npcYell(p, npc, "grrrrr");
-			p.incExp(SKILLS.AGILITY.id(), TACKLING_XP[DataConversions.random(0, 3)], true);
+			p.incExp(Skills.AGILITY, TACKLING_XP[DataConversions.random(0, 3)], true);
 		} else {
 			if (!inArray(p.getSyncAttribute("gnomeball_npc", -1), -1, 0) || p.getSyncAttribute("throwing_ball_game", false)) {
 				// some other gnome beat here or player is shooting at goal
@@ -479,7 +474,7 @@ public class NpcBehavior {
 			removeItem(p, ItemId.GNOME_BALL.id(), 1);
 			p.playerServerMessage(MessageType.QUEST, "he takes the ball...");
 			p.playerServerMessage(MessageType.QUEST, "and pushes you to the floor");
-			p.damage((int) (Math.ceil(p.getSkills().getLevel(SKILLS.HITS.id()) * 0.05)));
+			p.damage((int) (Math.ceil(p.getSkills().getLevel(Skills.HITS) * 0.05)));
 			playerTalk(p, null, "ouch");
 			npcYell(p, npc, "yeah");
 		}
@@ -557,7 +552,7 @@ public class NpcBehavior {
 
 	private boolean shouldRetreat2(Npc npc) {
 		if (npc.getID() == 236) {
-			return npc.getSkills().getLevel(SKILLS.HITS.id()) <= Math.ceil(npc.getSkills().getMaxStat(SKILLS.HITS.id()) * 0.20);
+			return npc.getSkills().getLevel(Skills.HITS) <= Math.ceil(npc.getSkills().getMaxStat(Skills.HITS) * 0.20);
 		}
 		return false;
 	}
@@ -640,13 +635,13 @@ public class NpcBehavior {
 	}
 
 	private boolean shouldRetreat(Npc npc) {
-		if (!Constants.GameServer.NPC_DONT_RETREAT) {
-			if (DataConversions.inArray(Constants.GameServer.NPCS_THAT_RETREAT_NORM, npc.getID())) {
-				return npc.getSkills().getLevel(SKILLS.HITS.id()) <=
-					Math.ceil(npc.getSkills().getMaxStat(SKILLS.HITS.id()) * 0.20);
-			} else if (DataConversions.inArray(Constants.GameServer.NPCS_THAT_RETREAT_LOW, npc.getID())) {
-				return npc.getSkills().getLevel(SKILLS.HITS.id()) <=
-					Math.ceil(npc.getSkills().getMaxStat(SKILLS.HITS.id()) * 0.05);
+		if (!Server.getServer().getConfig().NPC_DONT_RETREAT) {
+			if (DataConversions.inArray(npc.getWorld().getServer().getConstants().NPCS_THAT_RETREAT_NORM, npc.getID())) {
+				return npc.getSkills().getLevel(Skills.HITS) <=
+					Math.ceil(npc.getSkills().getMaxStat(Skills.HITS) * 0.20);
+			} else if (DataConversions.inArray(npc.getWorld().getServer().getConstants().NPCS_THAT_RETREAT_LOW, npc.getID())) {
+				return npc.getSkills().getLevel(Skills.HITS) <=
+					Math.ceil(npc.getSkills().getMaxStat(Skills.HITS) * 0.05);
 			}
 		}
 

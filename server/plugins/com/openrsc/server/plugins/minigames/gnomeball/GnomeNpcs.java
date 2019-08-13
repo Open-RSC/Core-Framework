@@ -1,38 +1,19 @@
 package com.openrsc.server.plugins.minigames.gnomeball;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showBubble;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
-
 import com.openrsc.server.Server;
 import com.openrsc.server.event.rsc.impl.BallProjectileEvent;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.IndirectTalkToNpcListener;
-import com.openrsc.server.plugins.listeners.action.NpcCommandListener;
-import com.openrsc.server.plugins.listeners.action.PlayerAttackNpcListener;
-import com.openrsc.server.plugins.listeners.action.PlayerMageNpcListener;
-import com.openrsc.server.plugins.listeners.action.PlayerRangeNpcListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.IndirectTalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.NpcCommandExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerMageNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerRangeNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.plugins.minigames.gnomeball.GnomeField.Zone;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class GnomeNpcs implements PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener,
 TalkToNpcListener, TalkToNpcExecutiveListener, NpcCommandListener, NpcCommandExecutiveListener, IndirectTalkToNpcListener, IndirectTalkToNpcExecutiveListener {
@@ -296,12 +277,12 @@ TalkToNpcListener, TalkToNpcExecutiveListener, NpcCommandListener, NpcCommandExe
 				p.playerServerMessage(MessageType.QUEST, "and push the gnome to the floor");
 				npcTalk(p, n, "grrrr");
 				addItem(p, ItemId.GNOME_BALL.id(), 1);
-				p.incExp(SKILLS.AGILITY.id(), TACKLING_XP[DataConversions.random(0,1)], true);
+				p.incExp(Skills.AGILITY, TACKLING_XP[DataConversions.random(0,1)], true);
 				p.setSyncAttribute("gnomeball_npc", 0);
 			} else {
 				p.playerServerMessage(MessageType.QUEST, "You're pushed away by the gnome");
 				playerTalk(p, n, "ouch");
-				p.damage((int)(Math.ceil(p.getSkills().getLevel(SKILLS.HITS.id())*0.05)));
+				p.damage((int)(Math.ceil(p.getSkills().getLevel(Skills.HITS)*0.05)));
 				npcTalk(p, n, "hee hee");
 			}
 		}

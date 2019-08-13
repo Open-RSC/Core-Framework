@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.npcs;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
@@ -22,7 +22,7 @@ public class UndergroundPassPaladin implements TalkToNpcListener,
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		switch (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS)) {
+		switch (p.getQuestStage(Quests.UNDERGROUND_PASS)) {
 			case 4:
 				playerTalk(p, n, "hello paladin");
 				if (!p.getCache().hasKey("paladin_food")) {

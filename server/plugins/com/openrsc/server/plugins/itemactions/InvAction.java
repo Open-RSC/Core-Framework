@@ -1,10 +1,9 @@
 package com.openrsc.server.plugins.itemactions;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.MenuOptionListener;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -346,7 +345,7 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 
 	private void handleDrySticks(Player player) {
 		player.message("you rub together the dry sticks");
-		if (getCurrentLevel(player, SKILLS.FIREMAKING.id()) < 30) {
+		if (getCurrentLevel(player, Skills.FIREMAKING) < 30) {
 			player.message("you need a firemaking level of 30 or above");
 			player.message("the sticks smoke momentarily then die out");
 			return;
@@ -356,7 +355,7 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 			player.message("you place the smouldering twigs to your torch");
 			player.message("your torch lights");
 			player.getInventory().add(new Item(ItemId.LIT_TORCH.id()));
-			player.incExp(SKILLS.FIREMAKING.id(), 450, true);
+			player.incExp(Skills.FIREMAKING, 450, true);
 			if (player.getQuestStage(Quests.SEA_SLUG) == 5 && !player.getCache().hasKey("lit_torch")) {
 				player.getCache().store("lit_torch", true);
 			}
@@ -377,7 +376,7 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 	}
 
 	private void handleMagicScroll(Player player) {
-		if (player.getCache().hasKey("ardougne_scroll") && player.getQuestStage(Constants.Quests.PLAGUE_CITY) == -1) {
+		if (player.getCache().hasKey("ardougne_scroll") && player.getQuestStage(Quests.PLAGUE_CITY) == -1) {
 			message(player, "The scroll crumbles to dust");
 		} else {
 			message(player, "You memorise what is written on the scroll",
@@ -392,7 +391,7 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 	}
 
 	private void handleSpellScroll(Player player) {
-		if (player.getCache().hasKey("watchtower_scroll") && player.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
+		if (player.getCache().hasKey("watchtower_scroll") && player.getQuestStage(Quests.WATCHTOWER) == -1) {
 			message(player, "The scroll crumbles to dust");
 		} else {
 			message(player, "You memorise what is written on the scroll",
@@ -458,13 +457,13 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 		/* Biohazard quest */
 		player.message("you open the cage");
 		if ((player.getCache().hasKey("bird_feed")
-			|| player.getQuestStage(Constants.Quests.BIOHAZARD) == 3)
+			|| player.getQuestStage(Quests.BIOHAZARD) == 3)
 				&& player.getLocation().inBounds(617, 582, 622, 590)) {
 			message(player, "the pigeons fly towards the watch tower",
 				"they begin pecking at the bird feed",
 				"the mourners are frantically trying to scare the pigeons away");
-			if (player.getQuestStage(Constants.Quests.BIOHAZARD) == 2) {
-				player.updateQuestStage(Constants.Quests.BIOHAZARD, 3);
+			if (player.getQuestStage(Quests.BIOHAZARD) == 2) {
+				player.updateQuestStage(Quests.BIOHAZARD, 3);
 			}
 			if (player.getCache().hasKey("bird_feed")) {
 				player.getCache().remove("bird_feed");
@@ -478,24 +477,24 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 	private void handleJangerberries(Player player) {
 		message(player, "You eat the Jangerberries");
 		removeItem(player, ItemId.JANGERBERRIES.id(), 1);
-		int Attack = player.getSkills().getMaxStat(SKILLS.ATTACK.id()) + 2;
-		int Strength = player.getSkills().getMaxStat(SKILLS.STRENGTH.id()) + 1;
-		if (player.getSkills().getLevel(SKILLS.HITS.id()) < player.getSkills().getMaxStat(SKILLS.HITS.id())) {
-			player.getSkills().setLevel(SKILLS.HITS.id(), player.getSkills().getLevel(SKILLS.HITS.id()) + 2);
+		int Attack = player.getSkills().getMaxStat(Skills.ATTACK) + 2;
+		int Strength = player.getSkills().getMaxStat(Skills.STRENGTH) + 1;
+		if (player.getSkills().getLevel(Skills.HITS) < player.getSkills().getMaxStat(Skills.HITS)) {
+			player.getSkills().setLevel(Skills.HITS, player.getSkills().getLevel(Skills.HITS) + 2);
 		}
-		if (player.getSkills().getLevel(SKILLS.PRAYER.id()) < player.getSkills().getMaxStat(SKILLS.PRAYER.id())) {
-			player.getSkills().setLevel(SKILLS.PRAYER.id(), player.getSkills().getLevel(SKILLS.PRAYER.id()) + 1);
+		if (player.getSkills().getLevel(Skills.PRAYER) < player.getSkills().getMaxStat(Skills.PRAYER)) {
+			player.getSkills().setLevel(Skills.PRAYER, player.getSkills().getLevel(Skills.PRAYER) + 1);
 		}
-		if (player.getSkills().getLevel(SKILLS.DEFENSE.id()) < 1) {
-			player.getSkills().setLevel(SKILLS.DEFENSE.id(), 0);
+		if (player.getSkills().getLevel(Skills.DEFENSE) < 1) {
+			player.getSkills().setLevel(Skills.DEFENSE, 0);
 		} else {
-			player.getSkills().setLevel(SKILLS.DEFENSE.id(), player.getSkills().getLevel(SKILLS.DEFENSE.id()) - 1);
+			player.getSkills().setLevel(Skills.DEFENSE, player.getSkills().getLevel(Skills.DEFENSE) - 1);
 		}
-		if (player.getSkills().getLevel(SKILLS.ATTACK.id()) < Attack) {
-			player.getSkills().setLevel(SKILLS.ATTACK.id(), player.getSkills().getLevel(SKILLS.ATTACK.id()) + 1);
+		if (player.getSkills().getLevel(Skills.ATTACK) < Attack) {
+			player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) + 1);
 		}
-		if (player.getSkills().getLevel(SKILLS.STRENGTH.id()) < Strength) {
-			player.getSkills().setLevel(SKILLS.STRENGTH.id(), player.getSkills().getLevel(SKILLS.STRENGTH.id()) + 1);
+		if (player.getSkills().getLevel(Skills.STRENGTH) < Strength) {
+			player.getSkills().setLevel(Skills.STRENGTH, player.getSkills().getLevel(Skills.STRENGTH) + 1);
 		}
 		player.message("They taste very bitter");
 	}
@@ -571,7 +570,7 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 		player.message("You eat the nightshade...");
 		removeItem(player, ItemId.NIGHTSHADE.id(), 1);
 		playerTalk(player, null, "Ahhhh! what have I done !");
-		player.damage((int) ((getCurrentLevel(player, SKILLS.HITS.id()) * 0.2D) + 10));
+		player.damage((int) ((getCurrentLevel(player, Skills.HITS) * 0.2D) + 10));
 		player.message("The nightshade was highly poisonous");
 	}
 

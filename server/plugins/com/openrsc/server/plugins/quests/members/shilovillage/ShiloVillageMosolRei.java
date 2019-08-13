@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.quests.members.shilovillage;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -33,7 +33,7 @@ public class ShiloVillageMosolRei implements TalkToNpcListener, TalkToNpcExecuti
 	private void moselReiDialogue(Player p, Npc n, int cID) {
 		if (n.getID() == NpcId.MOSOL.id()) {
 			if (cID == -1) {
-				switch (p.getQuestStage(Constants.Quests.SHILO_VILLAGE)) {
+				switch (p.getQuestStage(Quests.SHILO_VILLAGE)) {
 					case -1:
 						playerTalk(p, n, "Greetings!");
 						npcTalk(p, n, "Hello Effendi,",
@@ -83,7 +83,7 @@ public class ShiloVillageMosolRei implements TalkToNpcListener, TalkToNpcExecuti
 									/**
 									 * STARTED SHILO VILLAGE QUEST!
 									 */
-									p.updateQuestStage(Constants.Quests.SHILO_VILLAGE, 1);
+									p.updateQuestStage(Quests.SHILO_VILLAGE, 1);
 								} else if (menu4 == 1) {
 									message(p, "Mosol casts a disaproving glance at you");
 									npcTalk(p, n, "Quite right, bwana, please make all haste!",

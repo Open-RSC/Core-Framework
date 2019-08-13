@@ -1,10 +1,10 @@
 package com.openrsc.server.plugins.quests.members;
 
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -79,9 +79,9 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 		addItem(p, ItemId.MITHRIL_SEED.id(), 40);
 		addItem(p, ItemId.GOLD_BAR.id(), 2);
 		addItem(p, ItemId.DIAMOND.id(), 2);
-		int[] questData = Quests.questData.get(Quests.WATERFALL_QUEST);
+		int[] questData = p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.WATERFALL_QUEST);
 		//keep order kosher
-		int[] skillIDs = {SKILLS.STRENGTH.id(), SKILLS.ATTACK.id()};
+		int[] skillIDs = {Skills.STRENGTH, Skills.ATTACK};
 		for (int i = 0; i < skillIDs.length; i++) {
 			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
 			incQuestReward(p, questData, i == (skillIDs.length - 1));
@@ -773,7 +773,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 			}
 			removeItem(p, ItemId.MITHRIL_SEED.id(), 1);
 			message(p, "and drop a seed by your feet");
-			GameObject object = new GameObject(Point.location(p.getX(), p.getY()), 490, 0, 0);
+			GameObject object = new GameObject(p.getWorld(), Point.location(p.getX(), p.getY()), 490, 0, 0);
 			World.getWorld().registerGameObject(object);
 			World.getWorld().delayedRemoveObject(object, 60000);
 			p.message("a tree magically sprouts around you");

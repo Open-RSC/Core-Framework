@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.quests.free;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -23,7 +22,7 @@ public class Dorics implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.DORICS_QUEST;
+		return Quests.DORICS_QUEST;
 	}
 
 	@Override
@@ -39,7 +38,7 @@ public class Dorics implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void handleReward(Player player) {
 		player.message("You have completed Dorics quest");
-		incQuestReward(player, Quests.questData.get(Quests.DORICS_QUEST), true);
+		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.DORICS_QUEST), true);
 		player.message("@gre@You haved gained 1 quest points!");
 	}
 
@@ -111,7 +110,7 @@ public class Dorics implements QuestInterface, TalkToNpcListener,
 					p.getInventory().add(new Item(ItemId.COINS.id(), 180));
 
 					npcTalk(p, n, "Please use my anvils any time you want");
-					p.sendQuestComplete(Constants.Quests.DORICS_QUEST);
+					p.sendQuestComplete(Quests.DORICS_QUEST);
 					p.updateQuestStage(getQuestId(), -1);
 
 				} else {

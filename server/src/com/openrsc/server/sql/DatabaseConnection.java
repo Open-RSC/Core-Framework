@@ -1,6 +1,6 @@
 package com.openrsc.server.sql;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,18 +16,27 @@ public class DatabaseConnection {
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
-	private static DatabaseConnection singleton = new DatabaseConnection("Singleton Connection");
+	private static DatabaseConnection singleton;
 	private Map<String, PreparedStatement> statements = new HashMap<String, PreparedStatement>();
 	private Connection connection;
 	private Statement statement;
+	private GameQueries gameQueries;
+
+	private final Server server;
+	public final Server getServer() {
+		return server;
+	}
 
 	/**
 	 * Instantiates a new database connection
 	 */
-	public DatabaseConnection(String string) {
+	public DatabaseConnection(Server server, String string) {
+		this.server = server;
+		this.gameQueries = new GameQueries(getServer());
+
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			if (createConnection(Constants.GameServer.MYSQL_DB)) {
+			if (createConnection(getServer().getConfig().MYSQL_DB)) {
 				LOGGER.info(string + " - Connected to MySQL!");
 			} else {
 				LOGGER.info("Unable to connect to MySQL");
@@ -39,6 +48,9 @@ public class DatabaseConnection {
 	}
 
 	public static DatabaseConnection getDatabase() {
+		if(singleton == null){
+			singleton = new DatabaseConnection(Server.getServer(), "Singleton Connection");
+		}
 		return singleton;
 	}
 
@@ -57,9 +69,9 @@ public class DatabaseConnection {
 	private boolean createConnection(String database) {
 		try {
 			connection = DriverManager.getConnection("jdbc:mysql://"
-					+ Constants.GameServer.MYSQL_HOST + "/" + database + "?autoReconnect=true&useSSL=false&rewriteBatchedStatements=true&serverTimezone=UTC",
-				Constants.GameServer.MYSQL_USER,
-				Constants.GameServer.MYSQL_PASS);
+					+ getServer().getConfig().MYSQL_HOST + "/" + database + "?autoReconnect=true&useSSL=false&rewriteBatchedStatements=true&serverTimezone=UTC",
+				getServer().getConfig().MYSQL_USER,
+				getServer().getConfig().MYSQL_PASS);
 			statement = connection.createStatement();
 			statement.setEscapeProcessing(true);
 			return isConnected();
@@ -136,4 +148,7 @@ public class DatabaseConnection {
 		return ps;
 	}
 
+	public GameQueries getGameQueries() {
+		return gameQueries;
+	}
 }

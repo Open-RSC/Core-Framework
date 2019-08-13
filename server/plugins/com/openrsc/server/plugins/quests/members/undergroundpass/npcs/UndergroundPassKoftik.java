@@ -1,24 +1,16 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.npcs;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.incQuestReward;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class UndergroundPassKoftik implements QuestInterface, TalkToNpcListener,
 	TalkToNpcExecutiveListener {
@@ -28,7 +20,7 @@ public class UndergroundPassKoftik implements QuestInterface, TalkToNpcListener,
 	
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.UNDERGROUND_PASS;
+		return Quests.UNDERGROUND_PASS;
 	}
 
 	@Override
@@ -44,9 +36,9 @@ public class UndergroundPassKoftik implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void handleReward(Player p) {
 		p.message("@gre@You haved gained 5 quest points!");
-		int[] questData = Quests.questData.get(Quests.UNDERGROUND_PASS);
+		int[] questData = p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.UNDERGROUND_PASS);
 		//keep order kosher
-		int[] skillIDs = {SKILLS.AGILITY.id(), SKILLS.ATTACK.id()};
+		int[] skillIDs = {Skills.AGILITY, Skills.ATTACK};
 		for (int i = 0; i < skillIDs.length; i++) {
 			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
 			incQuestReward(p, questData, i == (skillIDs.length - 1));
@@ -70,7 +62,7 @@ public class UndergroundPassKoftik implements QuestInterface, TalkToNpcListener,
 			"an icy chill that penetrate's the very fabric of your being",
 			"not so many travellers come down here these days...",
 			"...but there are some who are still foolhardy enough");
-		p.updateQuestStage(Constants.Quests.UNDERGROUND_PASS, 2);
+		p.updateQuestStage(Quests.UNDERGROUND_PASS, 2);
 		int menu = showMenu(p, n,
 			"i'll take my chances",
 			"tell me more");

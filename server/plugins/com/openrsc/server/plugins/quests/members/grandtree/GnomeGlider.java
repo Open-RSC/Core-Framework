@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.quests.members.grandtree;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -28,7 +28,7 @@ public class GnomeGlider implements TalkToNpcListener, TalkToNpcExecutiveListene
 				"sorry but you'll have to walk");
 		}
 		else if (n.getID() == NpcId.GNOME_PILOT_KARAMJA.id() || n.getID() == NpcId.GNOME_PILOT_ALKHARID.id() || n.getID() == NpcId.GNOME_PILOT_WHITEMOUNTAIN.id()) {
-			if (p.getQuestStage(Constants.Quests.GRAND_TREE) == -1) {
+			if (p.getQuestStage(Quests.GRAND_TREE) == -1) {
 				playerTalk(p, n, "hello again");
 				npcTalk(p, n, "well hello adventurer");
 				npcTalk(p, n, "would you like to go to the tree gnome stronghold?");
@@ -51,7 +51,7 @@ public class GnomeGlider implements TalkToNpcListener, TalkToNpcExecutiveListene
 		}
 		else if (n.getID() == NpcId.GNOME_PILOT_GRANDTREE.id()) {
 			playerTalk(p, n, "hello");
-			if (p.getQuestStage(Constants.Quests.GRAND_TREE) == -1) {
+			if (p.getQuestStage(Quests.GRAND_TREE) == -1) {
 				npcTalk(p, n, "well hello again traveller");
 				npcTalk(p, n, "can i take you somewhere?");
 				npcTalk(p, n, "i can fly like the birds");
@@ -110,7 +110,7 @@ public class GnomeGlider implements TalkToNpcListener, TalkToNpcExecutiveListene
 					npcTalk(p, n, "no worries, let me know if you change your mind");
 				}
 				return;
-			} else if (p.getQuestStage(Constants.Quests.GRAND_TREE) >= 8 && p.getQuestStage(Constants.Quests.GRAND_TREE) <= 9) {
+			} else if (p.getQuestStage(Quests.GRAND_TREE) >= 8 && p.getQuestStage(Quests.GRAND_TREE) <= 9) {
 				npcTalk(p, n, "hi, the king said that you need to leave");
 				playerTalk(p, n, "yes, apparently humans are invading");
 				npcTalk(p, n, "i find that hard to believe",

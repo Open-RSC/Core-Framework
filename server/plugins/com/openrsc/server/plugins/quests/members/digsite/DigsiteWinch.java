@@ -1,9 +1,6 @@
 package com.openrsc.server.plugins.quests.members.digsite;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -34,7 +31,7 @@ public class DigsiteWinch implements ObjectActionListener, ObjectActionExecutive
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if (inArray(obj.getID(), WINCH)) {
-			switch (p.getQuestStage(Constants.Quests.DIGSITE)) {
+			switch (p.getQuestStage(Quests.DIGSITE)) {
 				case -1:
 					p.playerServerMessage(MessageType.QUEST, "You find yourself in a cavern...");
 					p.teleport(19, 3385);
@@ -53,14 +50,14 @@ public class DigsiteWinch implements ObjectActionListener, ObjectActionExecutive
 							p.message("The bucket descends, but does not reach the bottom");
 							playerTalk(p, null, "Hey I think I could fit down here...", "I need something to help me get all the way down");
 						} else {
-							if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 10) {
+							if (getCurrentLevel(p, Skills.AGILITY) < 10) {
 								p.message("You need an agility level of 10 to do this");
 								p.setBusy(false);
 								return;
 							}
 							message(p, "You try to climb down the rope",
 								"You lower yourself into the shaft");
-							p.incExp(SKILLS.AGILITY.id(), 20, true);
+							p.incExp(Skills.AGILITY, 20, true);
 							p.teleport(26, 3346);
 							p.playerServerMessage(MessageType.QUEST, "You find yourself in a cavern...");
 						}
@@ -75,15 +72,15 @@ public class DigsiteWinch implements ObjectActionListener, ObjectActionExecutive
 							p.message("The bucket descends, but does not reach the bottom");
 							playerTalk(p, null, "Hey I think I could fit down here...", "I need something to help me get all the way down");
 						} else {
-							if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 10) {
+							if (getCurrentLevel(p, Skills.AGILITY) < 10) {
 								p.message("You need an agility level of 10 to do this");
 								p.setBusy(false);
 								return;
 							}
 							message(p, "You try to climb down the rope",
 								"You lower yourself into the shaft");
-							p.incExp(SKILLS.AGILITY.id(), 20, true);
-							if (p.getQuestStage(Constants.Quests.DIGSITE) >= 6) {
+							p.incExp(Skills.AGILITY, 20, true);
+							if (p.getQuestStage(Quests.DIGSITE) >= 6) {
 								p.teleport(19, 3385);
 							} else {
 								p.teleport(19, 3337);

@@ -1,27 +1,15 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.PickupListener;
-import com.openrsc.server.plugins.listeners.action.PlayerAttackNpcListener;
-import com.openrsc.server.plugins.listeners.action.PlayerMageNpcListener;
-import com.openrsc.server.plugins.listeners.action.PlayerRangeNpcListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerMageNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerRangeNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.listeners.executive.*;
 
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.sleep;
-import static com.openrsc.server.plugins.Functions.spawnNpc;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestViyeldi implements TalkToNpcListener, TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener {
 
@@ -33,7 +21,7 @@ public class LegendsQuestViyeldi implements TalkToNpcListener, TalkToNpcExecutiv
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.VIYELDI.id()) {
-			switch (p.getQuestStage(Constants.Quests.LEGENDS_QUEST)) {
+			switch (p.getQuestStage(Quests.LEGENDS_QUEST)) {
 				case 7:
 					message(p, n, 1300, "The headless, spirit of Viyeldi animates and walks towards you.");
 					if (!p.getCache().hasKey("killed_viyeldi")) {
@@ -71,7 +59,7 @@ public class LegendsQuestViyeldi implements TalkToNpcListener, TalkToNpcExecutiv
 		if (i.getID() == ItemId.A_BLUE_WIZARDS_HAT.id() && i.getX() == 426 && i.getY() == 3708) {
 			p.teleport(i.getX(), i.getY());
 			message(p, 1300, "Your hand passes through the hat as if it wasn't there.");
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 8) {
+			if (p.getQuestStage(Quests.LEGENDS_QUEST) >= 8) {
 				return;
 			}
 			p.teleport(i.getX(), i.getY() - 1);

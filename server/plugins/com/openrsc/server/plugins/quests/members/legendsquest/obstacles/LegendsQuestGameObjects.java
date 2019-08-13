@@ -1,13 +1,13 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.obstacles;
 
-import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -25,25 +25,7 @@ import com.openrsc.server.plugins.skills.Thieving;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.atQuestStages;
-import static com.openrsc.server.plugins.Functions.createGroundItemDelayedRemove;
-import static com.openrsc.server.plugins.Functions.delayedSpawnObject;
-import static com.openrsc.server.plugins.Functions.displayTeleportBubble;
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcWalkFromPlayer;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.replaceObject;
-import static com.openrsc.server.plugins.Functions.replaceObjectDelayed;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
-import static com.openrsc.server.plugins.Functions.spawnNpc;
-import static com.openrsc.server.plugins.Functions.spawnNpcWithRadius;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
@@ -97,7 +79,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if (obj.getID() == ECHNED_ZEKIN_ROCK) {
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 8) {
+			if (p.getQuestStage(Quests.LEGENDS_QUEST) == 8) {
 				message(p, 1300, "The rock moves quite easily.");
 				p.message("And the spirit of Echned Zekin seems to have disapeared.");
 				replaceObjectDelayed(obj, 10000, SHALLOW_WATER);
@@ -167,7 +149,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 			p.teleport(471, 3707);
 		}
 		else if (obj.getID() == WOODEN_BEAM + 1) {
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 9 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
+			if (p.getQuestStage(Quests.LEGENDS_QUEST) >= 9 || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
 				message(p, 1300, "The rope snaps as you're about to climb down it.",
 					"Perhaps you need a new rope.");
 				return;
@@ -274,7 +256,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					"Yes, I'm very strong, I'll force them open.",
 					"No, I'm having second thoughts.");
 				if (menu == 0) {
-					if (getCurrentLevel(p, SKILLS.STRENGTH.id()) < 50) {
+					if (getCurrentLevel(p, Skills.STRENGTH) < 50) {
 						p.message("You need a Strength of at least 50 to affect these gates.");
 						return;
 					}
@@ -286,7 +268,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					playerTalk(p, null, "Arghhhhhhh!");
 					message(p, 1300, "You push and push,");
 					playerTalk(p, null, "Shhhhhhhshshehshsh");
-					if (Formulae.failCalculation(p, SKILLS.STRENGTH.id(), 50)) {
+					if (Formulae.failCalculation(p, Skills.STRENGTH, 50)) {
 						message(p, 1300, "You just manage to force the gates open slightly, ",
 							"just enough to force yourself through.");
 						replaceObjectDelayed(obj, 2000, 181);
@@ -298,7 +280,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					} else {
 						message(p, 1300, "but run out of steam before you're able to force the gates open.");
 						p.message("The effort of trying to force the gates reduces your strength temporarily");
-						p.getSkills().decrementLevel(SKILLS.STRENGTH.id());
+						p.getSkills().decrementLevel(Skills.STRENGTH);
 					}
 				} else if (menu == 1) {
 					p.message("You decide against forcing the gates.");
@@ -307,11 +289,11 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 		}
 		else if (inArray(obj.getID(), SMASH_BOULDERS)) {
 			if (hasItem(p, Mining.getAxe(p))) {
-				if (getCurrentLevel(p, SKILLS.MINING.id()) < 52) {
+				if (getCurrentLevel(p, Skills.MINING) < 52) {
 					p.message("You need a mining ability of at least 52 to affect these boulders.");
 					return;
 				}
-				if (Formulae.failCalculation(p, SKILLS.MINING.id(), 50)) {
+				if (Formulae.failCalculation(p, Skills.MINING, 50)) {
 					message(p, 1300, "You take a good swing at the rock with your pick...");
 					replaceObjectDelayed(obj, 2000, 1143);
 					if (obj.getID() == SMASH_BOULDERS[0] && p.getY() <= 3704) {
@@ -333,7 +315,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					p.message("You fail to make a mark on the rocks.");
 					p.message("You miss hit the rock and the vibration shakes your bones.");
 					p.message("Your mining ability suffers...");
-					p.getSkills().decrementLevel(SKILLS.MINING.id());
+					p.getSkills().decrementLevel(Skills.MINING);
 				}
 			} else {
 				message(p, "You'll need a pickaxe to smash your way through these boulders.");
@@ -360,7 +342,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					message(p, 1300, "You walk through the door.");
 					p.message("The doors make a satisfying 'CLICK' sound as they close.");
 				} else {
-					if (getCurrentLevel(p, SKILLS.THIEVING.id()) < 50) {
+					if (getCurrentLevel(p, Skills.THIEVING) < 50) {
 						p.message("You need a thieving level of at least 50 to attempt this.");
 						return;
 					}
@@ -380,7 +362,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 							playerTalk(p, null, "Easy as pie...");
 							sleep(1300);
 							message(p, 1300, "You tumble the lock mechanism and the door opens easily.");
-							p.incExp(SKILLS.THIEVING.id(), 100, true);
+							p.incExp(Skills.THIEVING, 100, true);
 							replaceObjectDelayed(obj, 2000, 497);
 							p.teleport(441, 3703);
 						} else {
@@ -468,11 +450,11 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 			p.teleport(452, 874);
 		}
 		else if (obj.getID() == SHALLOW_WATER) {
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 8 && p.getY() >= 3723 && p.getY() <= 3740) {
+			if (p.getQuestStage(Quests.LEGENDS_QUEST) == 8 && p.getY() >= 3723 && p.getY() <= 3740) {
 				p.message("A magical looking pool.");
 				return;
 			}
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 5 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
+			if (p.getQuestStage(Quests.LEGENDS_QUEST) >= 5 || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
 				p.message("A disgusting sess pit of filth and stench...");
 				return;
 			}
@@ -484,8 +466,8 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 			message(p, 0, "They reach all the way down to the water.");
 		}
 		else if (obj.getID() == ROCK) {
-			if (p.getCache().hasKey("legends_cavern") || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 2 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
-				if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 1) {
+			if (p.getCache().hasKey("legends_cavern") || p.getQuestStage(Quests.LEGENDS_QUEST) >= 2 || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
+				if (p.getQuestStage(Quests.LEGENDS_QUEST) == 1) {
 					message(p, 1200, "You see nothing significant...",
 						"At first....");
 				}
@@ -495,21 +477,21 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					"Yes, I'll crawl through, I'm very athletic.",
 					"No, I'm pretty scared of enclosed areas.");
 				if (menu == 0) {
-					if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 50) {
+					if (getCurrentLevel(p, Skills.AGILITY) < 50) {
 						p.message("You need an agility of 50 to even attempt this.");
 						p.setBusy(false);
 						return;
 					}
 					message(p, 1300, "You try to crawl through...",
 						"You contort your body to fit the crevice.");
-					if (Formulae.failCalculation(p, SKILLS.AGILITY.id(), 50)) {
+					if (Formulae.failCalculation(p, Skills.AGILITY, 50)) {
 						message(p, 1300, "You adroitely squeeze serpent like into the crevice.",
 							"You find a small narrow tunnel that goes for some distance.",
 							"After some time, you find a small cave opening...and walk through.");
 						p.teleport(461, 3700);
 						if (p.getCache().hasKey("legends_cavern")) {
 							p.getCache().remove("legends_cavern");
-							p.updateQuestStage(Constants.Quests.LEGENDS_QUEST, 2);
+							p.updateQuestStage(Quests.LEGENDS_QUEST, 2);
 						}
 					} else {
 						message(p, 3200, "You get cramped into a tiny space and start to suffocate.",
@@ -529,7 +511,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 			}
 		}
 		else if (obj.getID() == TOTEM_POLE) { // BLACK
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 10 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
+			if (p.getQuestStage(Quests.LEGENDS_QUEST) >= 10 || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
 				replaceObjectDelayed(obj, 10000, 1170);
 				message(p, 1300, "This totem pole is truly awe inspiring.",
 					"It depicts powerful Karamja jungle animals.",
@@ -537,7 +519,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					"and spiritual fullfilment to anyone who looks at it.");
 				return;
 			}
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 9) {
+			if (p.getQuestStage(Quests.LEGENDS_QUEST) == 9) {
 				replaceTotemPole(p, obj, false);
 				return;
 			}
@@ -547,18 +529,18 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 
 		}
 		else if (obj.getID() == TOTEM_POLE + 1) { // RED
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 10 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
+			if (p.getQuestStage(Quests.LEGENDS_QUEST) >= 10 || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
 				message(p, 1300, "This totem pole is truly awe inspiring.",
 					"It depicts powerful Karamja jungle animals.",
 					"It is very well carved and brings a sense of power ",
 					"and spiritual fullfilment to anyone who looks at it.");
 				return;
 			}
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 9) {
+			if (p.getQuestStage(Quests.LEGENDS_QUEST) == 9) {
 				replaceTotemPole(p, obj, false);
 				return;
 			}
-			replaceObject(obj, new GameObject(obj.getLocation(), TOTEM_POLE, obj.getDirection(), obj.getType()));
+			replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), TOTEM_POLE, obj.getDirection(), obj.getType()));
 			message(p, 1300, "This totem pole looks very corrupted,",
 				"there is a darkness about it that seems quite unnatural.",
 				"You don't like to look at it for too long.");
@@ -576,7 +558,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 			}
 		}
 		else if (obj.getID() == LEGENDS_CUPBOARD) {
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 1 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
+			if (p.getQuestStage(Quests.LEGENDS_QUEST) >= 1 || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
 				if (hasItem(p, ItemId.MACHETTE.id())) {
 					p.message("The cupboard is empty.");
 				} else {
@@ -591,13 +573,13 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 		else if (obj.getID() == CRAFTED_TOTEM_POLE) {
 			if (obj.getOwner().equals(p.getUsername())) {
 				message(p, 1300, "This totem pole looks very heavy...");
-				replaceObject(obj, new GameObject(obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
+				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
 				addItem(p, ItemId.TOTEM_POLE.id(), 1);
 				if (!p.getCache().hasKey("crafted_totem_pole")) {
 					p.getCache().store("crafted_totem_pole", true);
 				}
 				p.message("Carrying this totem pole saps your strength...");
-				p.getSkills().setLevel(SKILLS.STRENGTH.id(), (int) (p.getSkills().getLevel(SKILLS.STRENGTH.id()) * 0.9));
+				p.getSkills().setLevel(Skills.STRENGTH, (int) (p.getSkills().getLevel(Skills.STRENGTH) * 0.9));
 			} else {
 				p.message("This is not your totem pole to carry.");
 			}
@@ -622,16 +604,16 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == TOTEM_POLE && item.getID() == ItemId.TOTEM_POLE.id()) {
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 10 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
+			if (p.getQuestStage(Quests.LEGENDS_QUEST) >= 10 || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
 				message(p, "You have already replaced the evil totem pole with your own.",
 						"You feel a great sense of accomplishment");
 				return;
 			}
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 9) {
+			if (p.getQuestStage(Quests.LEGENDS_QUEST) == 9) {
 				replaceTotemPole(p, obj, true);
 				return;
 			}
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 8) {
+			if (p.getQuestStage(Quests.LEGENDS_QUEST) == 8) {
 				if (p.getCache().hasKey("killed_viyeldi") && !p.getCache().hasKey("viyeldi_companions")) {
 					p.getCache().set("viyeldi_companions", 1);
 				}
@@ -646,12 +628,12 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				int objectX = obj.getX();
 				int objectY = obj.getY();
 				message(p, 1300, "You craft a totem pole out of the Yommi tree.");
-				replaceObject(obj, new GameObject(obj.getLocation(), CRAFTED_TOTEM_POLE, obj.getDirection(), obj.getType(), p.getUsername()));
+				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), CRAFTED_TOTEM_POLE, obj.getDirection(), obj.getType(), p.getUsername()));
 				Server.getServer().getGameEventHandler().add(new SingleEvent(null, 60000, "Legends Quest Craft Totem Pole") {
 					public void action() {
 						GameObject whatObject = RegionManager.getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
 						if (whatObject != null && whatObject.getID() == CRAFTED_TOTEM_POLE) {
-							World.getWorld().registerGameObject(new GameObject(obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
+							World.getWorld().registerGameObject(new GameObject(obj.getWorld(), obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
 						}
 					}
 				});
@@ -665,12 +647,12 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				int objectY = obj.getY();
 				message(p, 1300, "You professionally wield your Rune Axe...",
 					"As you trim the branches from the Yommi tree.");
-				replaceObject(obj, new GameObject(obj.getLocation(), TRIMMED_YOMMI_TREE, obj.getDirection(), obj.getType(), p.getUsername()));
+				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), TRIMMED_YOMMI_TREE, obj.getDirection(), obj.getType(), p.getUsername()));
 				Server.getServer().getGameEventHandler().add(new SingleEvent(null, 60000, "Legend Quest Trim Yommi Tree") {
 					public void action() {
 						GameObject whatObject = RegionManager.getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
 						if (whatObject != null && whatObject.getID() == TRIMMED_YOMMI_TREE) {
-							World.getWorld().registerGameObject(new GameObject(obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
+							World.getWorld().registerGameObject(new GameObject(obj.getWorld(), obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
 						}
 					}
 				});
@@ -683,12 +665,12 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				int objectX = obj.getX();
 				int objectY = obj.getY();
 				message(p, 1300, "You wield the Rune Axe and prepare to chop the Yommi tree.");
-				replaceObject(obj, new GameObject(obj.getLocation(), CHOPPED_YOMMI_TREE, obj.getDirection(), obj.getType(), p.getUsername()));
+				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), CHOPPED_YOMMI_TREE, obj.getDirection(), obj.getType(), p.getUsername()));
 				Server.getServer().getGameEventHandler().add(new SingleEvent(null, 60000, "Legend Quest Chop Yommi Tree") {
 					public void action() {
 						GameObject whatObject = RegionManager.getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
 						if (whatObject != null && whatObject.getID() == CHOPPED_YOMMI_TREE) {
-							World.getWorld().registerGameObject(new GameObject(obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
+							World.getWorld().registerGameObject(new GameObject(obj.getWorld(), obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
 						}
 					}
 				});
@@ -701,7 +683,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 		else if ((obj.getID() == DEAD_YOMMI_TREE || obj.getID() == ROTTEN_YOMMI_TREE) && item.getID() == ItemId.RUNE_AXE.id()) {
 			message(p, 0, "You chop the dead Yommi Tree down.");
 			message(p, 1300, "You gain some logs..");
-			replaceObject(obj, new GameObject(obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
+			replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
 			addItem(p, ItemId.LOGS.id(), 1);
 		}
 		else if (obj.getID() == YOMMI_TREE && item.getID() == ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id()) {
@@ -711,12 +693,12 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 			displayTeleportBubble(p, obj.getX(), obj.getY(), true);
 			message(p, 1300, "You water the Yommi tree from the golden bowl...",
 				"It grows at a remarkable rate.");
-			replaceObject(obj, new GameObject(obj.getLocation(), GROWN_YOMMI_TREE, obj.getDirection(), obj.getType(), p.getUsername()));
+			replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), GROWN_YOMMI_TREE, obj.getDirection(), obj.getType(), p.getUsername()));
 			Server.getServer().getGameEventHandler().add(new SingleEvent(null, 15000, "Legend Quest Water Yommi Tree") {
 				public void action() {
 					GameObject whatObject = RegionManager.getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
 					if (whatObject != null && whatObject.getID() == GROWN_YOMMI_TREE) {
-						World.getWorld().registerGameObject(new GameObject(obj.getLocation(), ROTTEN_YOMMI_TREE, obj.getDirection(), obj.getType()));
+						World.getWorld().registerGameObject(new GameObject(obj.getWorld(), obj.getLocation(), ROTTEN_YOMMI_TREE, obj.getDirection(), obj.getType()));
 						if (p.isLoggedIn()) {
 							p.message("The Yommi tree is past it's prime and dies .");
 						}
@@ -732,7 +714,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 			p.message("can be planted in the fertile soil.");
 		}
 		else if (obj.getID() == FERTILE_EARTH && item.getID() == ItemId.GERMINATED_YOMMI_TREE_SEED.id()) {
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) != 8 || !hasItem(p, ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id())) {
+			if (p.getQuestStage(Quests.LEGENDS_QUEST) != 8 || !hasItem(p, ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id())) {
 				p.message("You'll need some sacred water to feed ");
 				p.message("the tree when it starts growing.");
 				return;
@@ -742,12 +724,12 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				p.message("fell the tree once it is grown.");
 				return;
 			}
-			if (getCurrentLevel(p, SKILLS.WOODCUT.id()) < 50) {
+			if (getCurrentLevel(p, Skills.WOODCUT) < 50) {
 				p.message("You need an woodcut level of 50 to");
 				p.message("fell the tree once it is grown.");
 				return;
 			}
-			if (getCurrentLevel(p, SKILLS.HERBLAW.id()) < 45) {
+			if (getCurrentLevel(p, Skills.HERBLAW) < 45) {
 				p.message("You need a herblaw skill of at least 45 to complete this task.");
 				return;
 			}
@@ -757,15 +739,15 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 			if (DataConversions.random(0, 1) != 1) {
 				int objectX = obj.getX();
 				int objectY = obj.getY();
-				replaceObject(obj, new GameObject(obj.getLocation(), BABY_YOMMI_TREE, obj.getDirection(), obj.getType()));
+				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), BABY_YOMMI_TREE, obj.getDirection(), obj.getType()));
 				message(p, 1300, "You bury the Germinated Yommi tree seed in the fertile earth...",
 					"You start to see something growing.");
-				replaceObject(obj, new GameObject(obj.getLocation(), YOMMI_TREE, obj.getDirection(), obj.getType()));
+				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), YOMMI_TREE, obj.getDirection(), obj.getType()));
 				Server.getServer().getGameEventHandler().add(new SingleEvent(null, 15000, "Legends Quest Grow Yommi Tree") {
 					public void action() {
 						GameObject whatObject = RegionManager.getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
 						if (whatObject != null && whatObject.getID() == YOMMI_TREE) {
-							World.getWorld().registerGameObject(new GameObject(obj.getLocation(), DEAD_YOMMI_TREE, obj.getDirection(), obj.getType(), p.getUsername()));
+							World.getWorld().registerGameObject(new GameObject(obj.getWorld(), obj.getLocation(), DEAD_YOMMI_TREE, obj.getDirection(), obj.getType(), p.getUsername()));
 							if (p.isLoggedIn()) {
 								p.message("The Sapling dies.");
 							}
@@ -799,7 +781,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				case A_CHUNK_OF_CRYSTAL:
 				case A_LUMP_OF_CRYSTAL:
 				case A_HUNK_OF_CRYSTAL:
-					if (getCurrentLevel(p, SKILLS.CRAFTING.id()) < 50) {
+					if (getCurrentLevel(p, Skills.CRAFTING) < 50) {
 						//message possibly non kosher
 						p.message("You need a crafting ability of at least 50 to perform this task.");
 						return;
@@ -872,7 +854,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					}
 					if (alreadyAttached) {
 						p.message("You have already placed an " + item.getDef().getName() + " above this rock.");
-						createGroundItemDelayedRemove(new GroundItem(item.getID(), obj.getX(), obj.getY(), 1, p), 5000);
+						createGroundItemDelayedRemove(new GroundItem(p.getWorld(), item.getID(), obj.getX(), obj.getY(), 1, p), 5000);
 						message(p, 1300, "A barely visible " + item.getDef().getName() + " becomes clear again, spinning above the rock.");
 						p.message("And then fades again...");
 					} else {
@@ -880,7 +862,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 							removeItem(p, item.getID(), 1);
 							p.message("You carefully move the gem closer to the rock.");
 							p.message("The " + item.getDef().getName() + " glows and starts spinning as it hovers above the rock.");
-							createGroundItemDelayedRemove(new GroundItem(item.getID(), obj.getX(), obj.getY(), 1, p), 5000);
+							createGroundItemDelayedRemove(new GroundItem(p.getWorld(), item.getID(), obj.getX(), obj.getY(), 1, p), 5000);
 							if (!p.getCache().hasKey("legends_attach_" + attachmentMode)) {
 								p.getCache().store("legends_attach_" + attachmentMode, true);
 							}
@@ -921,7 +903,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				"You cut it into a length of pipe.");
 		}
 		else if (item.getID() == ItemId.BLESSED_GOLDEN_BOWL.id()) {
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 8 && p.getY() >= 3723 && p.getY() <= 3740) {
+			if (p.getQuestStage(Quests.LEGENDS_QUEST) == 8 && p.getY() >= 3723 && p.getY() <= 3740) {
 				p.message("You fill the bowl up with water..");
 				p.getInventory().replace(ItemId.BLESSED_GOLDEN_BOWL.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id());
 				return;
@@ -930,18 +912,18 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				"The gap to the water is too narrow.");
 		}
 		else if (item.getID() == ItemId.CUT_REED_PLANT.id() && obj.getID() == SHALLOW_WATER) {
-			if (atQuestStages(p, Constants.Quests.LEGENDS_QUEST, 5, 6, 7)) {
+			if (atQuestStages(p, Quests.LEGENDS_QUEST, 5, 6, 7)) {
 				message(p, 1300, "It looks as if this pool has dried up...",
 					"A thick black sludge has replaced the sparkling pure water...",
 					"There is a disgusting stench of death that emanates from this area...",
 					"Maybe Gujuo knows what's happened...");
-				if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 5) {
-					p.updateQuestStage(Constants.Quests.LEGENDS_QUEST, 6);
+				if (p.getQuestStage(Quests.LEGENDS_QUEST) == 5) {
+					p.updateQuestStage(Quests.LEGENDS_QUEST, 6);
 				}
 				return;
 			}
-			if((p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 9 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) 
-					&& !Constants.GameServer.LOOSE_SHALLOW_WATER_CHECK) {
+			if((p.getQuestStage(Quests.LEGENDS_QUEST) >= 9 || p.getQuestStage(Quests.LEGENDS_QUEST) == -1)
+					&& !Server.getServer().getConfig().LOOSE_SHALLOW_WATER_CHECK) {
 				message(p, 1300, "You use the cut reed plant to syphon some water from the pool.",
 						"You take a refreshing drink from the pool.",
 						"The cut reed is soaked through with water and is now all soggy.");
@@ -982,8 +964,8 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 
 	private void replaceTotemPole(Player p, GameObject obj, boolean calledGujuo) {
 		if (hasItem(p, ItemId.TOTEM_POLE.id())) {
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 9) {
-				p.updateQuestStage(Constants.Quests.LEGENDS_QUEST, 10);
+			if (p.getQuestStage(Quests.LEGENDS_QUEST) == 9) {
+				p.updateQuestStage(Quests.LEGENDS_QUEST, 10);
 			}
 			replaceObjectDelayed(obj, 10000, 1170);
 			removeItem(p, ItemId.TOTEM_POLE.id(), 1);

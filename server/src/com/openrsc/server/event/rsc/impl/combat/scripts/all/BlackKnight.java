@@ -3,7 +3,7 @@ package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 import static com.openrsc.server.plugins.Functions.npcYell;
 
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatAggroScript;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;

@@ -36,8 +36,8 @@ public final class GameStateUpdater {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private final EntityList<Player> players = World.getWorld().getPlayers();
-	private final EntityList<Npc> npcs = World.getWorld().getNpcs();
+	private final EntityList<Player> players;
+	private final EntityList<Npc> npcs;
 
 	private long lastProcessPlayersDuration			= 0;
 	private long lastProcessNpcsDuration			= 0;
@@ -46,8 +46,19 @@ public final class GameStateUpdater {
 	private long lastDoCleanupDuration				= 0;
 	private long lastExecuteWalkToActionsDuration	= 0;
 
+	private final Server server;
+	public final Server getServer() {
+		return server;
+	}
+
+	public GameStateUpdater(Server server) {
+		this.server = server;
+		this.players = getServer().getWorld().getPlayers();
+		this.npcs = getServer().getWorld().getNpcs();
+	}
+
 	// private static final int PACKET_UPDATETIMEOUTS = 0;
-	public static void sendUpdatePackets(Player p) {
+	public void sendUpdatePackets(Player p) {
 		try {
 			updatePlayers(p);
 			updatePlayerAppearances(p);
@@ -67,10 +78,10 @@ public final class GameStateUpdater {
 	/**
 	 * Checks if the player has moved within the last X minutes
 	 */
-	private static void updateTimeouts(Player player) {
+	private void updateTimeouts(Player player) {
 		long curTime = System.currentTimeMillis();
-		int timeoutLimit = Constants.GameServer.IDLE_TIMER; // 5 minute idle log out
-		int autoSave = Constants.GameServer.AUTO_SAVE; // 30 second autosave
+		int timeoutLimit = getServer().getConfig().IDLE_TIMER; // 5 minute idle log out
+		int autoSave = getServer().getConfig().AUTO_SAVE; // 30 second autosave
 		if (player.isRemoved() || player.getAttribute("dummyplayer", false)) {
 			return;
 		}
@@ -98,7 +109,7 @@ public final class GameStateUpdater {
 		}
 	}
 
-	private static void updateNpcs(Player playerToUpdate) throws Exception {
+	private void updateNpcs(Player playerToUpdate) throws Exception {
 		com.openrsc.server.net.PacketBuilder packet = new com.openrsc.server.net.PacketBuilder();
 		packet.setID(79);
 		packet.startBitAccess();
@@ -128,7 +139,7 @@ public final class GameStateUpdater {
 		for (Npc newNPC : playerToUpdate.getViewArea().getNpcsInView()) {
 			if (playerToUpdate.getLocalNpcs().contains(newNPC) || newNPC.equals(playerToUpdate) || newNPC.isRemoved()
 				|| newNPC.getID() == 194 && !playerToUpdate.getCache().hasKey("ned_hired")
-				|| !playerToUpdate.withinRange(newNPC, (Constants.GameServer.VIEW_DISTANCE * 8) - 1)) {
+				|| !playerToUpdate.withinRange(newNPC, (getServer().getConfig().VIEW_DISTANCE * 8) - 1)) {
 				continue;
 			} else if (playerToUpdate.getLocalNpcs().size() >= 255) {
 				break;
@@ -146,7 +157,7 @@ public final class GameStateUpdater {
 		playerToUpdate.write(packet.toPacket());
 	}
 
-	private static void updatePlayers(Player playerToUpdate) throws Exception {
+	private void updatePlayers(Player playerToUpdate) throws Exception {
 
 		com.openrsc.server.net.PacketBuilder positionBuilder = new com.openrsc.server.net.PacketBuilder();
 		positionBuilder.setID(191);
@@ -211,7 +222,7 @@ public final class GameStateUpdater {
 		playerToUpdate.write(positionBuilder.toPacket());
 	}
 
-	public static void updateNpcAppearances(Player player) {
+	public void updateNpcAppearances(Player player) {
 		ConcurrentLinkedQueue<Damage> npcsNeedingHitsUpdate = new ConcurrentLinkedQueue<>();
 		ConcurrentLinkedQueue<ChatMessage> npcMessagesNeedingDisplayed = new ConcurrentLinkedQueue<>();
 		ConcurrentLinkedQueue<Projectile> npcProjectilesNeedingDisplayed = new ConcurrentLinkedQueue<>();
@@ -277,7 +288,7 @@ public final class GameStateUpdater {
 	 *
 	 * @param player
 	 */
-	public static void updatePlayerAppearances(Player player) {
+	public void updatePlayerAppearances(Player player) {
 
 		ArrayDeque<Bubble> bubblesNeedingDisplayed = new ArrayDeque<>();
 		ArrayDeque<ChatMessage> chatMessagesNeedingDisplayed = new ArrayDeque<>();
@@ -341,7 +352,7 @@ public final class GameStateUpdater {
 			projectilesNeedingDisplayed, playersNeedingDamageUpdate, playersNeedingHpUpdate, playersNeedingAppearanceUpdate);
 	}
 
-	private static void issuePlayerAppearanceUpdatePacket(Player player, Queue<Bubble> bubblesNeedingDisplayed,
+	private void issuePlayerAppearanceUpdatePacket(Player player, Queue<Bubble> bubblesNeedingDisplayed,
 														  Queue<ChatMessage> chatMessagesNeedingDisplayed, Queue<Projectile> projectilesNeedingDisplayed,
 														  Queue<Damage> playersNeedingDamageUpdate, Queue<HpUpdate> playersNeedingHpUpdate, Queue<Player> playersNeedingAppearanceUpdate) {
 		if (player.loggedIn()) {
@@ -452,7 +463,7 @@ public final class GameStateUpdater {
 		}
 	}
 
-	private static void updateGameObjects(Player playerToUpdate) throws Exception {
+	private void updateGameObjects(Player playerToUpdate) throws Exception {
 		boolean changed = false;
 		PacketBuilder packet = new PacketBuilder();
 		packet.setID(48);
@@ -500,7 +511,7 @@ public final class GameStateUpdater {
 			playerToUpdate.write(packet.toPacket());
 	}
 
-	private static void updateGroundItems(Player playerToUpdate) throws Exception {
+	private void updateGroundItems(Player playerToUpdate) throws Exception {
 		boolean changed = false;
 		PacketBuilder packet = new PacketBuilder();
 		packet.setID(99);
@@ -552,7 +563,7 @@ public final class GameStateUpdater {
 			playerToUpdate.write(packet.toPacket());
 	}
 
-	private static void updateWallObjects(Player playerToUpdate) throws Exception {
+	private void updateWallObjects(Player playerToUpdate) throws Exception {
 		boolean changed = false;
 		PacketBuilder packet = new PacketBuilder();
 		packet.setID(91);
@@ -596,7 +607,7 @@ public final class GameStateUpdater {
 			playerToUpdate.write(packet.toPacket());
 	}
 
-	private static void sendClearLocations(Player p) {
+	private void sendClearLocations(Player p) {
 		if (p.getLocationsToClear().size() > 0) {
 			PacketBuilder packetBuilder = new PacketBuilder(211);
 			for (Point point : p.getLocationsToClear()) {
@@ -699,7 +710,7 @@ public final class GameStateUpdater {
 				}
 
 				// Only do the walking tick here if the NPC's walking tick matches the game tick
-				if(!Constants.GameServer.WANT_CUSTOM_WALK_SPEED) {
+				if(!getServer().getConfig().WANT_CUSTOM_WALK_SPEED) {
 					n.updatePosition();
 				}
 			} catch (Exception e) {
@@ -758,7 +769,7 @@ public final class GameStateUpdater {
 			}
 
 			// Only do the walking tick here if the Players' walking tick matches the game tick
-			if(!Constants.GameServer.WANT_CUSTOM_WALK_SPEED) {
+			if(!getServer().getConfig().WANT_CUSTOM_WALK_SPEED) {
 				p.updatePosition();
 			}
 

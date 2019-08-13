@@ -124,7 +124,7 @@ public final class ItemDropHandler implements PacketHandler {
 				player.updateWornItems(item.getDef().getWieldPosition(), player.getSettings().getAppearance().getSprite(item.getDef().getWieldPosition()));
 		}
 
-		GroundItem groundItem = new GroundItem(item.getID(), player.getX(), player.getY(), amount,
+		GroundItem groundItem = new GroundItem(player.getWorld(), item.getID(), player.getX(), player.getY(), amount,
 			player);
 		ActionSender.sendSound(player, "dropobject");
 		World.getWorld().registerItem(groundItem, 188000);
@@ -184,7 +184,7 @@ public final class ItemDropHandler implements PacketHandler {
 						player.getSettings().getAppearance().getSprite(item.getDef().getWieldPosition()),
 						item.getDef().getWearableId(), false);
 				}
-				GroundItem groundItem = new GroundItem(item.getID(), getOwner().getX(), getOwner().getY(), amount,
+				GroundItem groundItem = new GroundItem(getOwner().getWorld(), item.getID(), getOwner().getX(), getOwner().getY(), amount,
 					getOwner());
 				World.getWorld().registerItem(groundItem, 188000);
 				GameLogging.addQuery(new GenericLog(getOwner().getUsername() + " dropped " + item.getDef().getName()

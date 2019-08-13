@@ -1,11 +1,9 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -28,7 +26,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.LEGENDS_QUEST;
+		return Quests.LEGENDS_QUEST;
 	}
 
 	@Override
@@ -44,7 +42,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 	@Override
 	public void handleReward(Player p) {
 		p.message("@gre@Well done - you have completed the Legends Guild Quest!");
-		incQuestReward(p, Quests.questData.get(Quests.LEGENDS_QUEST), true);
+		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.LEGENDS_QUEST), true);
 		message(p, "@gre@You haved gained 4 quest points!");
 		/** REMOVE QUEST CACHES **/
 		String[] caches =
@@ -80,7 +78,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 	private void radimusInGuildDialogue(Player p, Npc n, int cID) {
 		if (n.getID() == NpcId.SIR_RADIMUS_ERKLE_GUILD.id()) {
 			if (cID == -1) {
-				switch (p.getQuestStage(Constants.Quests.LEGENDS_QUEST)) {
+				switch (p.getQuestStage(Quests.LEGENDS_QUEST)) {
 					case 11:
 						if (!p.getCache().hasKey("legends_choose_reward")) {
 							npcTalk(p, n, "Welcome to the Legends Guild Main Hall.",
@@ -128,11 +126,11 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 						"* Strength * ",
 						"--- Go to Skill Menu 2 ----");
 					if (menu_one == 0) {
-						skillReward(p, n, SKILLS.ATTACK.id());
+						skillReward(p, n, Skills.ATTACK);
 					} else if (menu_one == 1) {
-						skillReward(p, n, SKILLS.DEFENSE.id());
+						skillReward(p, n, Skills.DEFENSE);
 					} else if (menu_one == 2) {
-						skillReward(p, n, SKILLS.STRENGTH.id());
+						skillReward(p, n, Skills.STRENGTH);
 					} else if (menu_one == 3) {
 						radimusInGuildDialogue(p, n, RadimusInGuild.SKILL_MENU_TWO);
 					}
@@ -144,11 +142,11 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 						"* Magic *",
 						"--- Go to Skill Menu 3  ----");
 					if (menu_two == 0) {
-						skillReward(p, n, SKILLS.HITS.id());
+						skillReward(p, n, Skills.HITS);
 					} else if (menu_two == 1) {
-						skillReward(p, n, SKILLS.PRAYER.id());
+						skillReward(p, n, Skills.PRAYER);
 					} else if (menu_two == 2) {
-						skillReward(p, n, SKILLS.MAGIC.id());
+						skillReward(p, n, Skills.MAGIC);
 					} else if (menu_two == 3) {
 						radimusInGuildDialogue(p, n, RadimusInGuild.SKILL_MENU_THREE);
 					}
@@ -160,11 +158,11 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 						"* Smithing * ",
 						"--- Go to Skill Menu 4 ----");
 					if (menu_three == 0) {
-						skillReward(p, n, SKILLS.WOODCUT.id());
+						skillReward(p, n, Skills.WOODCUT);
 					} else if (menu_three == 1) {
-						skillReward(p, n, SKILLS.CRAFTING.id());
+						skillReward(p, n, Skills.CRAFTING);
 					} else if (menu_three == 2) {
-						skillReward(p, n, SKILLS.SMITHING.id());
+						skillReward(p, n, Skills.SMITHING);
 					} else if (menu_three == 3) {
 						radimusInGuildDialogue(p, n, RadimusInGuild.SKILL_MENU_FOUR);
 					}
@@ -176,11 +174,11 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 						"* Thieving *",
 						"--- Go to Skill Menu 1 ----");
 					if (menu_four == 0) {
-						skillReward(p, n, SKILLS.HERBLAW.id());
+						skillReward(p, n, Skills.HERBLAW);
 					} else if (menu_four == 1) {
-						skillReward(p, n, SKILLS.AGILITY.id());
+						skillReward(p, n, Skills.AGILITY);
 					} else if (menu_four == 2) {
-						skillReward(p, n, SKILLS.THIEVING.id());
+						skillReward(p, n, Skills.THIEVING);
 					} else if (menu_four == 3) {
 						radimusInGuildDialogue(p, n, RadimusInGuild.SKILL_MENU_ONE);
 					}
@@ -207,17 +205,17 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 	}
 
 	private void skillReward(Player p, Npc n, int skill) {
-		int[] questData = Quests.questData.get(Quests.LEGENDS_QUEST);
+		int[] questData = p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.LEGENDS_QUEST);
 		questData[Quests.MAPIDX_SKILL] = skill;
 		incQuestReward(p, questData, false);
 		updateRewardClaimCount(p);
-		p.message("You receive some training and increase experience to your " + Skills.getSkillName(skill) + ".");
+		p.message("You receive some training and increase experience to your " + p.getWorld().getServer().getConstants().getSkills().getSkillName(skill) + ".");
 		if (getRewardClaimCount(p) == 0) {
 			npcTalk(p, n, "Right, that's all the training I can offer.! ",
 				"Hope you're happy with your new skills.",
 				"Excuse me now won't you ?",
 				"Do feel free to explore the rest of the building.");
-			p.sendQuestComplete(Constants.Quests.LEGENDS_QUEST);
+			p.sendQuestComplete(Quests.LEGENDS_QUEST);
 		} else {
 			npcTalk(p, n, "You can choose " + getRewardClaimCount(p) + " areas to increase your abilities in.");
 			radimusInGuildDialogue(p, n, RadimusInGuild.SKILL_MENU_ONE);
@@ -227,7 +225,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 	private void radimusInHouseDialogue(Player p, Npc n, int cID) {
 		if (n.getID() == NpcId.SIR_RADIMUS_ERKLE_HOUSE.id()) {
 			if (cID == -1) {
-				switch (p.getQuestStage(Constants.Quests.LEGENDS_QUEST)) {
+				switch (p.getQuestStage(Quests.LEGENDS_QUEST)) {
 					case 0:
 						npcTalk(p, n, "Good day to you " + (p.isMale() ? "Sir" : "my Lady") + " !",
 							"No doubt you are keen to become a member of the Legends Guild ?");
@@ -306,7 +304,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 							"cupboard before you leave. Bring back some sort of token ",
 							"which we can display in the Guild.",
 							"And very good luck to you !");
-						p.updateQuestStage(Constants.Quests.LEGENDS_QUEST, 1);
+						p.updateQuestStage(Quests.LEGENDS_QUEST, 1);
 					} else if (questMenu == 1) {
 						npcTalk(p, n, "Very well, if you change your mind, please come back and see me.");
 					}
@@ -462,11 +460,11 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 	@Override
 	public void onInvUseOnNpc(Player p, Npc n, Item item) {
 		if (n.getID() == NpcId.SIR_RADIMUS_ERKLE_HOUSE.id() && item.getID() == ItemId.GILDED_TOTEM_POLE.id()) {
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 11) {
+			if (p.getQuestStage(Quests.LEGENDS_QUEST) == 11) {
 				npcTalk(p, n, "Go through to the main Legends Guild and I will join you.");
 				return;
 			}
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 10) {
+			if (p.getQuestStage(Quests.LEGENDS_QUEST) == 10) {
 				npcTalk(p, n, (p.isMale() ? "Sir" : "Madam") + ", this is truly amazing...");
 				if (!hasItem(p, ItemId.RADIMUS_SCROLLS_COMPLETE.id())) {
 					npcTalk(p, n, "However, I need you to complete the map of the ,",
@@ -483,7 +481,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 						"Congratulations, welcome to the Legends Guild.",
 						"Go through to the main Legends Guild building ",
 						"and I will join you shortly.");
-					p.updateQuestStage(Constants.Quests.LEGENDS_QUEST, 11);
+					p.updateQuestStage(Quests.LEGENDS_QUEST, 11);
 				}
 			} else {
 				p.message("You have not completed this quest - submitting bug abuse.");

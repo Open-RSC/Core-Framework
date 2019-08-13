@@ -1,6 +1,5 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.rsc.impl.combat.CombatEvent;
 import com.openrsc.server.model.PathValidation;
@@ -185,7 +184,7 @@ public class PlayerDuelHandler implements PacketHandler {
 				affectedPlayer.setStatus(Action.DUELING_PLAYER);
 
 				if (player.getDuel().getDuelSetting(3)) {
-					if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
+					if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
 						Item item;
 						for (int i = 0; i < Equipment.slots; i++) {
 							item = player.getEquipment().get(i);
@@ -351,7 +350,7 @@ public class PlayerDuelHandler implements PacketHandler {
 					continue;
 				}
 				if (tItem.getAmount() > player.getInventory().countId(tItem.getID())) {
-					if (!(Constants.GameServer.WANT_EQUIPMENT_TAB && tItem.getAmount() == 1 && Functions.isWielding(player, tItem.getID()))) {
+					if (!(Server.getServer().getConfig().WANT_EQUIPMENT_TAB && tItem.getAmount() == 1 && Functions.isWielding(player, tItem.getID()))) {
 						player.setSuspiciousPlayer(true);
 						return;
 					}

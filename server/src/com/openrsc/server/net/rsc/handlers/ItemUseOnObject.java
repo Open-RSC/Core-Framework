@@ -1,7 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.Server;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.action.WalkToObjectAction;
 import com.openrsc.server.model.container.Inventory;
@@ -38,7 +37,7 @@ public class ItemUseOnObject implements PacketHandler {
 				player.resetAll();
 
 				if (item.getDef().isMembersOnly()
-					&& !Constants.GameServer.MEMBER_WORLD) {
+					&& !Server.getServer().getConfig().MEMBER_WORLD) {
 					player.message(player.MEMBER_MESSAGE);
 					return;
 				}
@@ -74,7 +73,7 @@ public class ItemUseOnObject implements PacketHandler {
 				player.resetAll();
 
 				if (item.getDef().isMembersOnly()
-					&& !Constants.GameServer.MEMBER_WORLD) {
+					&& !Server.getServer().getConfig().MEMBER_WORLD) {
 					player.message(player.MEMBER_MESSAGE);
 					return;
 				}
@@ -116,7 +115,7 @@ public class ItemUseOnObject implements PacketHandler {
 			}
 			int dir = object.getDirection();
 			int slotID = p.readShort();
-			if (Constants.GameServer.WANT_EQUIPMENT_TAB && slotID == -1)
+			if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB && slotID == -1)
 			{
 				//they used the item from their equipment slot
 				int itemID = p.readShort();
@@ -141,7 +140,7 @@ public class ItemUseOnObject implements PacketHandler {
 				return;
 			}
 			int slotID = p.readShort();
-			if (Constants.GameServer.WANT_EQUIPMENT_TAB && slotID > Inventory.MAX_SIZE) {
+			if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB && slotID > Inventory.MAX_SIZE) {
 				item = player.getEquipment().get(slotID - Inventory.MAX_SIZE);
 			} else
 				item = player.getInventory().get(slotID);

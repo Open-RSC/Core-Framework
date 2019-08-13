@@ -1,11 +1,8 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.SingleEvent;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -29,7 +26,7 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 	private void GujuoDialogue(Player p, Npc n, int cID) {
 		if (n.getID() == NpcId.GUJUO.id()) {
 			if (cID == -1) {
-				switch (p.getQuestStage(Constants.Quests.LEGENDS_QUEST)) {
+				switch (p.getQuestStage(Quests.LEGENDS_QUEST)) {
 					case 1:
 						npcTalk(p, n, "Grettings Bwana...",
 							"Why do you make such strange sounds and disturb the peace of the jungle?");
@@ -173,7 +170,7 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 					case 10:
 					case 11:
 					case -1:
-						if (!p.getCache().hasKey("rewarded_totem") && p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 10) {
+						if (!p.getCache().hasKey("rewarded_totem") && p.getQuestStage(Quests.LEGENDS_QUEST) >= 10) {
 							n.resetPath();
 							sleep(650);
 							npcWalkFromPlayer(p, n);
@@ -199,7 +196,7 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 								"The Kharazi jungle is especially beautifull today isn't it?",
 								"My village people pass on their thanks to you.");
 						String[] menuOpts;
-						if (hasItem(p, ItemId.GILDED_TOTEM_POLE.id()) || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
+						if (hasItem(p, ItemId.GILDED_TOTEM_POLE.id()) || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
 							menuOpts = new String[]{ "Do you have any news?",
 									"Where are all your people.",
 									"Ok thanks for your help."};
@@ -462,8 +459,8 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 						"He created a powerfull spell in the caves,",
 						"Now, all those who venture near are overcome by a supernatural fear...",
 						"With all my heart Bwana, I would never go near such a place.");
-					if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 6) {
-						p.updateQuestStage(Constants.Quests.LEGENDS_QUEST, 7);
+					if (p.getQuestStage(Quests.LEGENDS_QUEST) == 6) {
+						p.updateQuestStage(Quests.LEGENDS_QUEST, 7);
 					}
 					int opt23 = showMenu(p, n,
 						"Ok, I won't go...",
@@ -929,7 +926,7 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 					}
 					break;
 				case Gujuo.BLESS_THE_BOWL:
-					if (getCurrentLevel(p, SKILLS.PRAYER.id()) < 42) {
+					if (getCurrentLevel(p, Skills.PRAYER) < 42) {
 						npcTalk(p, n, "Bwana, I am very sorry,",
 							"But you are too inexperienced to bless this bowl.");
 						p.message("You need a prayer ability of 42 to complete this task.");
@@ -942,7 +939,7 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 						npcTalk(p, n, 3000, "Ohhhhhmmmmmm");
 						playerTalk(p, n, "Oooooohhhhmmmmmmmmmm");
 						npcTalk(p, n, 3000, "Ohhhhhmmmmmm");
-						if (Formulae.failCalculation(p, SKILLS.PRAYER.id(), 42)) {
+						if (Formulae.failCalculation(p, Skills.PRAYER, 42)) {
 							message(p, 1300, "A totally peacefull aura surrounds you and you ",
 								"bring down the blessings of your god on the bowl.");
 							if (hasItem(p, ItemId.GOLDEN_BOWL.id())) {
@@ -954,7 +951,7 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 						} else {
 							message(p, 1300, "You were not able to go into a deep enough trance.",
 								"You lose some prayer...");
-							p.getSkills().setLevel(SKILLS.PRAYER.id(), p.getSkills().getLevel(SKILLS.PRAYER.id()) - 5);
+							p.getSkills().setLevel(Skills.PRAYER, p.getSkills().getLevel(Skills.PRAYER) - 5);
 							npcTalk(p, n, "Would you like to try again.");
 							int failMenu = showMenu(p, n, false, //do not send over
 								"Yes, I'd like to bless my golden bowl.",

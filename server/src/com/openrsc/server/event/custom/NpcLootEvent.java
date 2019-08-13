@@ -54,10 +54,10 @@ public class NpcLootEvent extends SingleEvent {
 		ItemDefinition itemDef = EntityHandler.getItemDef(itemId);
 
 		if(itemDef.isStackable()) {
-			World.getWorld().registerItem(new GroundItem(itemId, n.getX(), n.getY(), itemAmount, p));
+			World.getWorld().registerItem(new GroundItem(p.getWorld(), itemId, n.getX(), n.getY(), itemAmount, p));
 		} else {
 			for (int i = 0; i < itemAmount; i++) {
-				World.getWorld().registerItem(new GroundItem(itemId, n.getX(), n.getY(), itemAmount, p));
+				World.getWorld().registerItem(new GroundItem(p.getWorld(), itemId, n.getX(), n.getY(), itemAmount, p));
 			}
 		}
 
@@ -78,10 +78,10 @@ public class NpcLootEvent extends SingleEvent {
 		ItemDefinition itemDef = EntityHandler.getItemDef(itemId);
 
 		if(itemDef.isStackable()) {
-			World.getWorld().registerItem(new GroundItem(itemId, n.getX(), n.getY(), itemAmount, n2));
+			World.getWorld().registerItem(new GroundItem(n2.getWorld(), itemId, n.getX(), n.getY(), itemAmount, n2));
 		} else {
 			for (int i = 0; i < itemAmount; i++) {
-				World.getWorld().registerItem(new GroundItem(itemId, n.getX(), n.getY(), itemAmount, n2));
+				World.getWorld().registerItem(new GroundItem(n2.getWorld(), itemId, n.getX(), n.getY(), itemAmount, n2));
 			}
 		}
 
@@ -157,7 +157,7 @@ public class NpcLootEvent extends SingleEvent {
 			}
 			if(World.getWorld().withinWorld(baseX + x, baseY + y)) {
 				if ((World.getWorld().getTile(new Point(baseX + x, baseY + y)).traversalMask & 64) == 0) {
-					final Npc n = new Npc(npcId, baseX + x, baseY + y, baseX + x - 20, baseX + x + 20, baseY + y - 20, baseY + y + 20);
+					final Npc n = new Npc(World.getWorld(), npcId, baseX + x, baseY + y, baseX + x - 20, baseX + x + 20, baseY + y - 20, baseY + y + 20);
 					n.setShouldRespawn(false);
 					World.getWorld().registerNpc(n);
 					Server.getServer().getGameEventHandler().add(new SingleEvent(null, npcLifetime * 60000, "NPC Loot Delayed Remover") {

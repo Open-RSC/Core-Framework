@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -12,12 +12,7 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.replaceObjectDelayed;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestGuildGuard implements TalkToNpcListener, TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener {
 
@@ -26,7 +21,7 @@ public class LegendsQuestGuildGuard implements TalkToNpcListener, TalkToNpcExecu
 	private void legendsGuardDialogue(Player p, Npc n, int cID) {
 		if (n.getID() == NpcId.LEGENDS_GUILD_GUARD.id()) {
 			if (cID == -1) {
-				switch (p.getQuestStage(Constants.Quests.LEGENDS_QUEST)) {
+				switch (p.getQuestStage(Quests.LEGENDS_QUEST)) {
 					case 0: /* Not started Legends Quest */
 						npcTalk(p, n, "Yes " + (p.isMale() ? "Sir" : "Ma'am") + ", how can I help you?");
 						int menu = showMenu(p, n,
@@ -119,11 +114,11 @@ public class LegendsQuestGuildGuard implements TalkToNpcListener, TalkToNpcExecu
 				case LegendsGuard.CAN_I_GO_ON_THE_QUEST:
 					message(p, "The guard gets out a scroll of paper and starts looking through it.");
 					if (p.getQuestPoints() >= 107
-						&& p.getQuestStage(Constants.Quests.HEROS_QUEST) == -1
-						&& p.getQuestStage(Constants.Quests.FAMILY_CREST) == -1
-						&& p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1
-						&& p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == -1
-						&& p.getQuestStage(Constants.Quests.WATERFALL_QUEST) == -1) {
+						&& p.getQuestStage(Quests.HEROS_QUEST) == -1
+						&& p.getQuestStage(Quests.FAMILY_CREST) == -1
+						&& p.getQuestStage(Quests.SHILO_VILLAGE) == -1
+						&& p.getQuestStage(Quests.UNDERGROUND_PASS) == -1
+						&& p.getQuestStage(Quests.WATERFALL_QUEST) == -1) {
 						npcTalk(p, n, "Well, it looks as if you are eligable for the quest.",
 							"Grand Vizier Erkle will give you the details about the quest.",
 							"You can go and talk to him about it if you like?");
@@ -145,19 +140,19 @@ public class LegendsQuestGuildGuard implements TalkToNpcListener, TalkToNpcExecu
 							"Ok thanks.");
 						if (denyMenu == 0) {
 							npcTalk(p, n, "You need to complete the...");
-							if (p.getQuestStage(Constants.Quests.HEROS_QUEST) != -1) {
+							if (p.getQuestStage(Quests.HEROS_QUEST) != -1) {
 								npcTalk(p, n, "Hero's Quest.");
 							}
-							if (p.getQuestStage(Constants.Quests.FAMILY_CREST) != -1) {
+							if (p.getQuestStage(Quests.FAMILY_CREST) != -1) {
 								npcTalk(p, n, "Family Crest Quest.");
 							}
-							if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) != -1) {
+							if (p.getQuestStage(Quests.SHILO_VILLAGE) != -1) {
 								npcTalk(p, n, "Shilo Village Quest.");
 							}
-							if (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) != -1) {
+							if (p.getQuestStage(Quests.UNDERGROUND_PASS) != -1) {
 								npcTalk(p, n, "Underground Pass Quest.");
 							}
-							if (p.getQuestStage(Constants.Quests.WATERFALL_QUEST) != -1) {
+							if (p.getQuestStage(Quests.WATERFALL_QUEST) != -1) {
 								npcTalk(p, n, "Waterfall Quest.");
 							}
 							if (p.getQuestPoints() < 107) {
@@ -225,7 +220,7 @@ public class LegendsQuestGuildGuard implements TalkToNpcListener, TalkToNpcExecu
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.LEGENDS_GUILD_GUARD.id()) {
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 0) {
+			if (p.getQuestStage(Quests.LEGENDS_QUEST) == 0) {
 				message(p, 1200, "You approach a nearby guard...");
 			}
 			legendsGuardDialogue(p, n, -1);
@@ -247,7 +242,7 @@ public class LegendsQuestGuildGuard implements TalkToNpcListener, TalkToNpcExecu
 					return;
 				}
 				Npc legends_guard = getNearestNpc(p, NpcId.LEGENDS_GUILD_GUARD.id(), 5);
-				switch (p.getQuestStage(Constants.Quests.LEGENDS_QUEST)) {
+				switch (p.getQuestStage(Quests.LEGENDS_QUEST)) {
 					case 0:
 						if (legends_guard != null) {
 							message(p, 1200, "A nearby guard approaches you...");

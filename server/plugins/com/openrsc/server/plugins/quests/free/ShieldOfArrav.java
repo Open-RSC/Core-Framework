@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.quests.free;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -40,7 +39,7 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.SHIELD_OF_ARRAV;
+		return Quests.SHIELD_OF_ARRAV;
 	}
 
 	@Override
@@ -56,19 +55,19 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 	@Override
 	public void handleReward(Player p) {
 		p.message("Well done, you have completed the shield of Arrav quest");
-		incQuestReward(p, Quests.questData.get(Quests.SHIELD_OF_ARRAV), true);
+		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.SHIELD_OF_ARRAV), true);
 		p.message("@gre@You haved gained 1 quest point!");
 		addItem(p, ItemId.COINS.id(), 600);
 	}
 	
 	public static boolean isBlackArmGang(Player p) {
 		return (p.getCache().hasKey("arrav_gang") && p.getCache().getInt("arrav_gang") == BLACK_ARM)
-			|| p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == BLACK_ARM_COMPLETE;
+			|| p.getQuestStage(Quests.SHIELD_OF_ARRAV) == BLACK_ARM_COMPLETE;
 	}
 
 	public static boolean isPhoenixGang(Player p) {
 		return (p.getCache().hasKey("arrav_gang") && p.getCache().getInt("arrav_gang") == PHOENIX_GANG)
-			|| p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == PHOENIX_COMPLETE;
+			|| p.getQuestStage(Quests.SHIELD_OF_ARRAV) == PHOENIX_COMPLETE;
 	}
 
 	@Override
@@ -206,7 +205,7 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 						"Is a building on the south side of the road");
 				}
 			} else if ((p.getQuestStage(Quests.SHIELD_OF_ARRAV) >= 5 || p.getQuestStage(Quests.SHIELD_OF_ARRAV) < 0) && isBlackArmGang(p)) {
-				if (p.getQuestStage(Constants.Quests.HEROS_QUEST) > 0) {
+				if (p.getQuestStage(Quests.HEROS_QUEST) > 0) {
 					if (!hasItem(p, ItemId.MASTER_THIEF_ARMBAND.id()) && p.getCache().hasKey("armband")) {
 						playerTalk(p, n, "I have lost my master thief armband");
 						npcTalk(p, n, "Well I have a spare", "Don't lose it again");

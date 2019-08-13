@@ -1,6 +1,7 @@
 package com.openrsc.server;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.openrsc.server.constants.Constants;
 import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.SingleEvent;
@@ -10,7 +11,7 @@ import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScriptLoader;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
-import com.openrsc.server.net.DiscordSender;
+import com.openrsc.server.net.DiscordService;
 import com.openrsc.server.net.RSCConnectionHandler;
 import com.openrsc.server.net.RSCProtocolDecoder;
 import com.openrsc.server.net.RSCProtocolEncoder;
@@ -37,25 +38,26 @@ import static org.apache.logging.log4j.util.Unbox.box;
 
 public final class Server implements Runnable {
 
-	private final ScheduledExecutorService scheduledExecutor = Executors
-		.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat("GameThread").build());
-
 	/**
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER;
 	private static Server server = null;
 
-	private final GameStateUpdater gameUpdater = new GameStateUpdater();
-	private final GameTickEventHandler tickEventHandler = new GameTickEventHandler();
-	private final DiscordSender discordSender = new DiscordSender();
-	private final GameTickEvent monitoring = new MonitoringEvent();
-	private final PlayerDatabaseExecutor playerDataProcessor = new PlayerDatabaseExecutor();
+	private final GameStateUpdater gameUpdater;
+	private final GameTickEventHandler tickEventHandler;
+	private final DiscordService discordService;
+	private final GameTickEvent monitoring;
+	private final PlayerDatabaseExecutor playerDataProcessor;
+	private final ServerConfiguration config;
+	private final ScheduledExecutorService scheduledExecutor;
+	private final World world;
 
 	private DelayedEvent updateEvent;
 	private ChannelFuture serverChannel;
 
 	private boolean running = false;
+	private boolean initialized = false;
 	private long lastIncomingPacketsDuration = 0;
 	private long lastGameStateDuration = 0;
 	private long lastEventsDuration = 0;
@@ -63,6 +65,8 @@ public final class Server implements Runnable {
 	private long lastTickDuration = 0;
 	private long timeLate = 0;
 	private long lastClientUpdate = 0;
+
+	private com.openrsc.server.constants.Constants constants;
 
 	static {
 		try {
@@ -78,35 +82,48 @@ public final class Server implements Runnable {
 		}
 	}
 
+	public Server (String configFile) throws IOException{
+		config = new ServerConfiguration();
+		getConfig().initConfig(configFile);
+		LOGGER.info("Server configuration loaded");
+
+		constants = new Constants(this);
+		discordService = new DiscordService(this);
+		playerDataProcessor = new PlayerDatabaseExecutor(this);
+		world = new World(this);
+		tickEventHandler = new GameTickEventHandler(this);
+		gameUpdater = new GameStateUpdater(this);
+		monitoring = new MonitoringEvent();
+		scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat("GameThread").build());
+	}
+
 	public static void main(String[] args) throws IOException {
 		LOGGER.info("Launching Game Server...");
 		if (args.length == 0) {
 			LOGGER.info("Server Configuration file not provided. Loading from default.conf or local.conf.");
-			Constants.GameServer.initConfig("default.conf");
+			server = new Server("default.conf");
 		} else {
-			Constants.GameServer.initConfig(args[0]);
-			if (Constants.GameServer.DEBUG) {
+			server = new Server(args[0]);
+			if (getServer().getConfig().DEBUG) {
 				LOGGER.info("Server Configuration file: " + args[0]);
-				LOGGER.info("\t Game Tick Cycle: {}", box(Constants.GameServer.GAME_TICK));
-				LOGGER.info("\t Client Version: {}", box(Constants.GameServer.CLIENT_VERSION));
-				LOGGER.info("\t Server type: " + (Constants.GameServer.MEMBER_WORLD ? "MEMBER" : "FREE" + " world."));
-				LOGGER.info("\t Combat Experience Rate: {}", box(Constants.GameServer.COMBAT_EXP_RATE));
-				LOGGER.info("\t Skilling Experience Rate: {}", box(Constants.GameServer.SKILLING_EXP_RATE));
-				LOGGER.info("\t Wilderness Experience Boost: {}", box(Constants.GameServer.WILDERNESS_BOOST));
-				LOGGER.info("\t Skull Experience Boost: {}", box(Constants.GameServer.SKULL_BOOST));
-				LOGGER.info("\t Double experience: " + (Constants.GameServer.IS_DOUBLE_EXP ? "Enabled" : "Disabled"));
-				LOGGER.info("\t View Distance: {}", box(Constants.GameServer.VIEW_DISTANCE));
+				LOGGER.info("\t Game Tick Cycle: {}", box(getServer().getConfig().GAME_TICK));
+				LOGGER.info("\t Client Version: {}", box(getServer().getConfig().CLIENT_VERSION));
+				LOGGER.info("\t Server type: " + (getServer().getConfig().MEMBER_WORLD ? "MEMBER" : "FREE" + " world."));
+				LOGGER.info("\t Combat Experience Rate: {}", box(getServer().getConfig().COMBAT_EXP_RATE));
+				LOGGER.info("\t Skilling Experience Rate: {}", box(getServer().getConfig().SKILLING_EXP_RATE));
+				LOGGER.info("\t Wilderness Experience Boost: {}", box(getServer().getConfig().WILDERNESS_BOOST));
+				LOGGER.info("\t Skull Experience Boost: {}", box(getServer().getConfig().SKULL_BOOST));
+				LOGGER.info("\t Double experience: " + (getServer().getConfig().IS_DOUBLE_EXP ? "Enabled" : "Disabled"));
+				LOGGER.info("\t View Distance: {}", box(getServer().getConfig().VIEW_DISTANCE));
 			}
 		}
-		if (server == null) {
-			try {
-				server = new Server();
-				server.initialize();
-				server.start();
-			} catch (Throwable t) {
-				LOGGER.catching(t);
-			}
 
+		try {
+			if(!server.isRunning()) {
+				server.start();
+			}
+		} catch (Throwable t) {
+			LOGGER.catching(t);
 		}
 	}
 
@@ -125,7 +142,7 @@ public final class Server implements Runnable {
 			LOGGER.info("\t Database connection created");
 
 			LOGGER.info("Loading game logging manager...");
-			GameLogging.load();
+			GameLogging.load(this);
 			LOGGER.info("\t Logging Manager Completed");
 
 			LOGGER.info("Loading Plugins...");
@@ -137,7 +154,7 @@ public final class Server implements Runnable {
 			LOGGER.info("\t Combat Scripts Completed");
 
 			LOGGER.info("Loading World...");
-			World.getWorld().load();
+			getWorld().load();
 			LOGGER.info("\t World Completed");
 
 			LOGGER.info("Loading profiling monitoring...");
@@ -169,11 +186,13 @@ public final class Server implements Runnable {
 			bootstrap.childOption(ChannelOption.SO_SNDBUF, 10000);
 			try {
 				PluginHandler.getPluginHandler().handleAction("Startup", new Object[]{});
-				serverChannel = bootstrap.bind(new InetSocketAddress(Constants.GameServer.SERVER_PORT)).sync();
-				LOGGER.info("Game world is now online on port {}!", box(Constants.GameServer.SERVER_PORT));
+				serverChannel = bootstrap.bind(new InetSocketAddress(getServer().getConfig().SERVER_PORT)).sync();
+				LOGGER.info("Game world is now online on port {}!", box(getServer().getConfig().SERVER_PORT));
 			} catch (final InterruptedException e) {
 				LOGGER.catching(e);
 			}
+
+			initialized = true;
 
 		} catch (Throwable t) {
 			LOGGER.catching(t);
@@ -183,13 +202,9 @@ public final class Server implements Runnable {
 		lastClientUpdate = System.currentTimeMillis();
 	}
 
-	public boolean isRunning() {
-		return running;
-	}
-
 	public void kill() {
 		stop();
-		LOGGER.fatal(Constants.GameServer.SERVER_NAME + " shutting down...");
+		LOGGER.fatal(getServer().getConfig().SERVER_NAME + " shutting down...");
 		System.exit(0);
 	}
 
@@ -238,9 +253,9 @@ public final class Server implements Runnable {
 
 	public void run() {
 	    try {
-			timeLate = System.currentTimeMillis() - lastClientUpdate - Constants.GameServer.GAME_TICK;
+			timeLate = System.currentTimeMillis() - lastClientUpdate - getServer().getConfig().GAME_TICK;
 			if (getTimeLate() >= 0) {
-				lastClientUpdate += Constants.GameServer.GAME_TICK;
+				lastClientUpdate += getServer().getConfig().GAME_TICK;
 
 				// Doing the set in two stages here such that the whole tick has access to the same values for profiling information.
 				final long tickStart = System.currentTimeMillis();
@@ -258,7 +273,7 @@ public final class Server implements Runnable {
 				this.lastTickDuration = lastTickDuration;
 			}
 			else {
-				if(Constants.GameServer.WANT_CUSTOM_WALK_SPEED) {
+				if(getServer().getConfig().WANT_CUSTOM_WALK_SPEED) {
 					for (Player p : World.getWorld().getPlayers()) {
 						p.updatePosition();
 					}
@@ -409,7 +424,7 @@ public final class Server implements Runnable {
 		}
 
 		return
-			"Tick: " + Constants.GameServer.GAME_TICK + "ms, Server: " + getLastTickDuration() + "ms " + getLastIncomingPacketsDuration() + "ms " + getLastEventsDuration() + "ms " + getLastGameStateDuration() + "ms " + getLastOutgoingPacketsDuration() + "ms" + newLine +
+			"Tick: " + getServer().getConfig().GAME_TICK + "ms, Server: " + getLastTickDuration() + "ms " + getLastIncomingPacketsDuration() + "ms " + getLastEventsDuration() + "ms " + getLastGameStateDuration() + "ms " + getLastOutgoingPacketsDuration() + "ms" + newLine +
 			"Game Updater: " + getGameUpdater().getLastProcessPlayersDuration() + "ms " + getGameUpdater().getLastProcessNpcsDuration() + "ms " + getGameUpdater().getLastProcessMessageQueuesDuration() + "ms " + getGameUpdater().getLastUpdateClientsDuration() + "ms " + getGameUpdater().getLastDoCleanupDuration() + "ms " + getGameUpdater().getLastExecuteWalkToActionsDuration() + "ms " + newLine +
 			"Events: " + countEvents + ", NPCs: " + World.getWorld().getNpcs().size() + ", Players: " + World.getWorld().getPlayers().size() + ", Shops: " + World.getWorld().getShops().size() + newLine +
 			/*"Player Atk Map: " + World.getWorld().getPlayersUnderAttack().size() + ", NPC Atk Map: " + World.getWorld().getNpcsUnderAttack().size() + ", Quests: " + World.getWorld().getQuests().size() + ", Mini Games: " + World.getWorld().getMiniGames().size() + newLine +*/
@@ -417,52 +432,76 @@ public final class Server implements Runnable {
 	}
 
 	public void start() {
+		if(!isInitialized()) {
+			initialize();
+		}
+
 		running = true;
 		scheduledExecutor.scheduleAtFixedRate(this, 0, 1, TimeUnit.MILLISECONDS);
 		playerDataProcessor.start();
-		discordSender.start();
+		discordService.start();
 	}
 
 	public void stop() {
 		running = false;
 		scheduledExecutor.shutdown();
-		discordSender.stop();
+		discordService.stop();
 		playerDataProcessor.stop();
 	}
 
-	public long getLastGameStateDuration() {
+	public final long getLastGameStateDuration() {
 		return lastGameStateDuration;
 	}
 
-	public long getLastEventsDuration() {
+	public final long getLastEventsDuration() {
 		return lastEventsDuration;
 	}
 
-	public long getLastTickDuration() {
+	public final long getLastTickDuration() {
 		return lastTickDuration;
 	}
 
-	public GameStateUpdater getGameUpdater() {
+	public final GameStateUpdater getGameUpdater() {
 		return gameUpdater;
 	}
 
-	public DiscordSender getDiscordSender() {
-		return discordSender;
+	public final DiscordService getDiscordService() {
+		return discordService;
 	}
 
-	public long getLastIncomingPacketsDuration() {
+	public final long getLastIncomingPacketsDuration() {
 		return lastIncomingPacketsDuration;
 	}
 
-	public long getLastOutgoingPacketsDuration() {
+	public final long getLastOutgoingPacketsDuration() {
 		return lastOutgoingPacketsDuration;
 	}
 
-	public long getTimeLate() {
+	public final long getTimeLate() {
 		return timeLate;
 	}
 
 	public void skipTicks(final long ticks) {
-		lastClientUpdate += ticks * Constants.GameServer.GAME_TICK;
+		lastClientUpdate += ticks * getServer().getConfig().GAME_TICK;
+	}
+
+	public final ServerConfiguration getConfig() {
+		return config;
+	}
+
+	public final boolean isInitialized() {
+		return initialized;
+	}
+
+	public final boolean isRunning() {
+		return running;
+	}
+
+	public final Constants getConstants() {
+		return constants;
+	}
+
+	public World getWorld() {
+		return world;
 	}
 }

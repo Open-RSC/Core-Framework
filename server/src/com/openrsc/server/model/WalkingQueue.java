@@ -1,6 +1,6 @@
 package com.openrsc.server.model;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -195,21 +195,21 @@ public class WalkingQueue {
 		/*
 		 * NPC blocking config controlled
 		 */
-		if (Constants.GameServer.NPC_BLOCKING == 0) { // No NPC blocks
+		if (Server.getServer().getConfig().NPC_BLOCKING == 0) { // No NPC blocks
 			return false;
-		} else if (Constants.GameServer.NPC_BLOCKING == 1) { // 2 * combat level + 1 blocks AND aggressive
+		} else if (Server.getServer().getConfig().NPC_BLOCKING == 1) { // 2 * combat level + 1 blocks AND aggressive
 			if (npc != null && mob.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1) && npc.getDef().isAggressive()) {
 				return true;
 			}
-		} else if (Constants.GameServer.NPC_BLOCKING == 2) { // Any aggressive NPC blocks
+		} else if (Server.getServer().getConfig().NPC_BLOCKING == 2) { // Any aggressive NPC blocks
 			if (npc != null && npc.getDef().isAggressive()) {
 				return true;
 			}
-		} else if (Constants.GameServer.NPC_BLOCKING == 3) { // Any attackable NPC blocks
+		} else if (Server.getServer().getConfig().NPC_BLOCKING == 3) { // Any attackable NPC blocks
 			if (npc != null && npc.getDef().isAttackable()) {
 				return true;
 			}
-		} else if (Constants.GameServer.NPC_BLOCKING == 4) { // All NPCs block
+		} else if (Server.getServer().getConfig().NPC_BLOCKING == 4) { // All NPCs block
 			if (npc != null) {
 				return true;
 			}

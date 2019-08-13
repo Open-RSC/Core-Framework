@@ -1,6 +1,6 @@
 package com.openrsc.server.model.entity.update;
 
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.Mob;
 
 public class Heal {

@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.quests.members.digsite;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -24,7 +24,7 @@ public class DigsiteStudents implements TalkToNpcListener, TalkToNpcExecutiveLis
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.STUDENT_ORANGE.id()) {
-			switch (p.getQuestStage(Constants.Quests.DIGSITE)) {
+			switch (p.getQuestStage(Quests.DIGSITE)) {
 				case 0:
 				case 1:
 					playerTalk(p, n, "Hello there");
@@ -112,7 +112,7 @@ public class DigsiteStudents implements TalkToNpcListener, TalkToNpcExecutiveLis
 			}
 		}
 		else if (n.getID() == NpcId.STUDENT_GREEN.id()) {
-			switch (p.getQuestStage(Constants.Quests.DIGSITE)) {
+			switch (p.getQuestStage(Quests.DIGSITE)) {
 				case 0:
 				case 1:
 					playerTalk(p, n, "Hello there");
@@ -205,7 +205,7 @@ public class DigsiteStudents implements TalkToNpcListener, TalkToNpcExecutiveLis
 			}
 		}
 		else if (n.getID() == NpcId.STUDENT_PURPLE.id()) {
-			switch (p.getQuestStage(Constants.Quests.DIGSITE)) {
+			switch (p.getQuestStage(Quests.DIGSITE)) {
 				case 0:
 				case 1:
 					playerTalk(p, n, "Hello there");

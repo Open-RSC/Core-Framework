@@ -1,5 +1,8 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
+import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -12,14 +15,10 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-
 public final class ZaffsStaffs implements ShopInterface,
 	TalkToNpcExecutiveListener, TalkToNpcListener {
 	
-	private final Shop shop = (Constants.GameServer.MEMBER_WORLD) ? 
+	private final Shop shop = (Server.getServer().getConfig().MEMBER_WORLD) ?
 			new Shop(false, 30000, 100, 55, 2, new Item(ItemId.BATTLESTAFF.id(), 5), 
 					new Item(ItemId.STAFF.id(), 5), new Item(ItemId.MAGIC_STAFF.id(), 5), new Item(ItemId.STAFF_OF_AIR.id(), 2),
 					new Item(ItemId.STAFF_OF_WATER.id(), 2), new Item(ItemId.STAFF_OF_EARTH.id(), 2), new Item(ItemId.STAFF_OF_FIRE.id(), 2)) :

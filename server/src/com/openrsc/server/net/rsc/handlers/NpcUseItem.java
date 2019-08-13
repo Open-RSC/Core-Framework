@@ -1,6 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -56,7 +56,7 @@ public class NpcUseItem implements PacketHandler {
 						break;
 				}
 				if (item.getDef().isMembersOnly()
-					&& !Constants.GameServer.MEMBER_WORLD) {
+					&& !Server.getServer().getConfig().MEMBER_WORLD) {
 					player.message(player.MEMBER_MESSAGE);
 					return;
 				}

@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.skills.agility;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.Server;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
@@ -12,13 +12,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.movePlayer;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.random;
-import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class WildernessAgilityCourse implements ObjectActionListener,
 	ObjectActionExecutiveListener {
@@ -43,7 +37,7 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		int failRate;
 		if (obj.getID() == GATE) {
-			if (getCurrentLevel(p, SKILLS.AGILITY.id()) < 52) {
+			if (getCurrentLevel(p, Skills.AGILITY) < 52) {
 				p.message("You need an agility level of 52 to attempt balancing along the ridge");
 				p.setBusy(false);
 				return;
@@ -61,7 +55,7 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 			} else {
 				message(p, "You skillfully balance across the ridge");
 				movePlayer(p, 298, 125);
-				p.incExp(SKILLS.AGILITY.id(), 50, true);
+				p.incExp(Skills.AGILITY, 50, true);
 			}
 			return;
 		}
@@ -81,11 +75,11 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 			} else {
 				message(p, "You skillfully balance across the ridge");
 				movePlayer(p, 298, 134);
-				p.incExp(SKILLS.AGILITY.id(), 50, true);
+				p.incExp(Skills.AGILITY, 50, true);
 			}
 			return;
 		}
-		if (Constants.GameServer.WANT_FATIGUE) {
+		if (Server.getServer().getConfig().WANT_FATIGUE) {
 			if (p.getFatigue() >= p.MAX_FATIGUE && !inArray(obj.getID(), WILD_PIPE, WILD_ROPESWING, STONE, LEDGE)) {
 				p.message("you are too tired to train");
 				return;
@@ -98,17 +92,17 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 				p.message("You squeeze through the pipe");
 				sleep(1000);
 				movePlayer(p, 294, 112);
-				p.incExp(SKILLS.AGILITY.id(), 50, true);
+				p.incExp(Skills.AGILITY, 50, true);
 				AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 1500);
 				break;
 			case WILD_ROPESWING:
 				p.message("You grab the rope and try and swing across");
 				sleep(1000);
-				int damage = (int) Math.round((p.getSkills().getLevel(SKILLS.HITS.id())) * 0.15D);
+				int damage = (int) Math.round((p.getSkills().getLevel(Skills.AGILITY)) * 0.15D);
 				if (passObstacle) {
 					message(p, "You skillfully swing across the hole");
 					movePlayer(p, 292, 108);
-					p.incExp(SKILLS.AGILITY.id(), 100, true);
+					p.incExp(Skills.AGILITY, 100, true);
 					AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 1500);
 				} else { // 13 damage on 85hp.
 					// 11 damage on 73hp.
@@ -135,19 +129,19 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 					movePlayer(p, 296, 105);
 					sleep(600);
 					movePlayer(p, 297, 106);
-					p.incExp(SKILLS.AGILITY.id(), 80, true);
+					p.incExp(Skills.AGILITY, 80, true);
 					AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 1500);
 				} else {
 					p.message("Your lose your footing and land in the lava");
 					movePlayer(p, 292, 104);
-					int lavaDamage = (int) Math.round((p.getSkills().getLevel(SKILLS.HITS.id())) * 0.21D);
+					int lavaDamage = (int) Math.round((p.getSkills().getLevel(Skills.AGILITY)) * 0.21D);
 					p.damage(lavaDamage);
 				}
 				break;
 			case LEDGE:
 				p.message("you stand on the ledge");
 				sleep(1000);
-				int ledgeDamage = (int) Math.round((p.getSkills().getLevel(SKILLS.HITS.id())) * 0.25D);
+				int ledgeDamage = (int) Math.round((p.getSkills().getLevel(Skills.AGILITY)) * 0.25D);
 				if (passObstacle) {
 					movePlayer(p, 296, 112);
 					sleep(600);
@@ -161,7 +155,7 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 					movePlayer(p, 300, 111);
 					sleep(600);
 					movePlayer(p, 301, 111);
-					p.incExp(SKILLS.AGILITY.id(), 80, true);
+					p.incExp(Skills.AGILITY, 80, true);
 					AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 1500);
 				} else {
 					p.message("you lose your footing and fall to the level below");
@@ -179,7 +173,7 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 				movePlayer(p, 304, 119);
 				sleep(600);
 				movePlayer(p, 304, 120);
-				p.incExp(SKILLS.AGILITY.id(), 80, true); // COMPLETION OF THE COURSE.
+				p.incExp(Skills.AGILITY, 80, true); // COMPLETION OF THE COURSE.
 				AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 1500);
 				break;
 		}
@@ -187,7 +181,7 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 	}
 
 	private boolean succeed(Player player) {
-		return Formulae.calcProductionSuccessful(52, getCurrentLevel(player, SKILLS.AGILITY.id()), true, 102);
+		return Formulae.calcProductionSuccessful(52, getCurrentLevel(player, Skills.AGILITY), true, 102);
 	}
 
 	private int failRate() {

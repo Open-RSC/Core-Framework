@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.npcs.ardougne.west;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -25,7 +25,7 @@ public class SpiritOfScorpius implements TalkToNpcListener, TalkToNpcExecutiveLi
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.SPIRIT_OF_SCORPIUS.id()) {
-			if (p.getQuestStage(Constants.Quests.OBSERVATORY_QUEST) != -1) {
+			if (p.getQuestStage(Quests.OBSERVATORY_QUEST) != -1) {
 				npcTalk(p, n, "How dare you disturb me!");
 			} else {
 				if (p.getCache().hasKey("scorpius_mould")) {

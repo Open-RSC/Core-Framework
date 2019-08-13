@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.mechanism;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -63,13 +63,13 @@ public class UndergroundPassMechanismMap2 implements InvUseOnObjectListener, Inv
 			removeObject(obj);
 			delayedSpawnObject(obj.getLoc(), 5000);
 			p.message("it tumbles down the slope");
-			if (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == 3) {
-				p.updateQuestStage(Constants.Quests.UNDERGROUND_PASS, 4);
+			if (p.getQuestStage(Quests.UNDERGROUND_PASS) == 3) {
+				p.updateQuestStage(Quests.UNDERGROUND_PASS, 4);
 			}
 		}
 		else if (obj.getID() == UndergroundPassObstaclesMap2.FLAMES_OF_ZAMORAK && inArray(item.getID(), ITEMS_TO_FLAMES)) {
 			message(p, "you throw the " + item.getDef().getName().toLowerCase() + " into the flames");
-			if (!atQuestStages(p, Constants.Quests.UNDERGROUND_PASS, 7, 8, -1)) {
+			if (!atQuestStages(p, Quests.UNDERGROUND_PASS, 7, 8, -1)) {
 				if (!p.getCache().hasKey("flames_of_zamorak1") && item.getID() == ItemId.UNDERGROUND_PASS_UNICORN_HORN.id()) {
 					p.getCache().store("flames_of_zamorak1", true);
 				}

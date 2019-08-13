@@ -1,10 +1,8 @@
 package com.openrsc.server.plugins.commands;
 
-import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
@@ -332,7 +330,7 @@ public final class Event implements CommandListener {
 					messagePrefix + "No online character found named '" + targetUsername + "'.. checking database..");
 				try {
 					PreparedStatement statement = DatabaseConnection.getDatabase()
-						.prepareStatement("SELECT `login_ip` FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "players` WHERE `username`=?");
+						.prepareStatement("SELECT `login_ip` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players` WHERE `username`=?");
 					statement.setString(1, targetUsername);
 					ResultSet result = statement.executeQuery();
 					if (!result.next()) {
@@ -358,7 +356,7 @@ public final class Event implements CommandListener {
 
 			try {
 				PreparedStatement statement = DatabaseConnection.getDatabase()
-					.prepareStatement("SELECT `username`, `group_id` FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "players` WHERE `login_ip` LIKE ?");
+					.prepareStatement("SELECT `username`, `group_id` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players` WHERE `login_ip` LIKE ?");
 				statement.setString(1, currentIp);
 				ResultSet result = statement.executeQuery();
 
@@ -438,7 +436,7 @@ public final class Event implements CommandListener {
 				World.getWorld().unregisterGameObject(existingObject);
 				player.message(messagePrefix + "Seers party hall " + (upstairs ? "upstairs" : "downstairs") + " has been disabled.");
 			} else {
-				GameObject newObject = new GameObject(objectLoc, 18, 0, 0);
+				GameObject newObject = new GameObject(player.getWorld(), objectLoc, 18, 0, 0);
 				World.getWorld().registerGameObject(newObject);
 				Server.getServer().getGameEventHandler().add(new SingleEvent(null, time * 60000, "Unregister Seers Party Hall") {
 					@Override
@@ -601,7 +599,7 @@ public final class Event implements CommandListener {
 						stat = Integer.parseInt(args[1]);
 					}
 					catch (NumberFormatException ex) {
-						stat = Skills.getSkillIndex(args[1].toLowerCase());
+						stat = player.getWorld().getServer().getConstants().getSkills().getSkillIndex(args[1].toLowerCase());
 
 						if(stat == -1) {
 							player.message(messagePrefix + "Invalid stat");
@@ -610,7 +608,7 @@ public final class Event implements CommandListener {
 					}
 
 					try {
-						statName = Skills.getSkillName(stat);
+						statName = player.getWorld().getServer().getConstants().getSkills().getSkillName(stat);
 					}
 					catch (IndexOutOfBoundsException ex) {
 						player.message(messagePrefix + "Invalid stat");
@@ -658,7 +656,7 @@ public final class Event implements CommandListener {
 						stat = Integer.parseInt(args[2]);
 					}
 					catch (NumberFormatException e) {
-						stat = Skills.getSkillIndex(args[2].toLowerCase());
+						stat = player.getWorld().getServer().getConstants().getSkills().getSkillIndex(args[2].toLowerCase());
 
 						if(stat == -1) {
 							player.message(messagePrefix + "Invalid stat");
@@ -667,7 +665,7 @@ public final class Event implements CommandListener {
 					}
 
 					try {
-						statName = Skills.getSkillName(stat);
+						statName = player.getWorld().getServer().getConstants().getSkills().getSkillName(stat);
 					}
 					catch (IndexOutOfBoundsException e) {
 						player.message(messagePrefix + "Invalid stat");
@@ -694,8 +692,8 @@ public final class Event implements CommandListener {
 			if(stat != -1) {
 				if(level < 1)
 					level = 1;
-				if(level > Constants.GameServer.PLAYER_LEVEL_LIMIT)
-					level = Constants.GameServer.PLAYER_LEVEL_LIMIT;
+				if(level > Server.getServer().getConfig().PLAYER_LEVEL_LIMIT)
+					level = Server.getServer().getConfig().PLAYER_LEVEL_LIMIT;
 
 				p.getSkills().setLevelTo(stat, level);
 				p.checkEquipment();
@@ -705,7 +703,7 @@ public final class Event implements CommandListener {
 				}
 			}
 			else {
-				for(int i = 0; i < Skills.getSkillCount(); i++) {
+				for(int i = 0; i < player.getWorld().getServer().getConstants().getSkills().getSkillsCount(); i++) {
 					p.getSkills().setLevelTo(i, level);
 				}
 
@@ -742,7 +740,7 @@ public final class Event implements CommandListener {
 						stat = Integer.parseInt(args[1]);
 					}
 					catch (NumberFormatException ex) {
-						stat = Skills.getSkillIndex(args[1].toLowerCase());
+						stat = player.getWorld().getServer().getConstants().getSkills().getSkillIndex(args[1].toLowerCase());
 
 						if(stat == -1) {
 							player.message(messagePrefix + "Invalid stat");
@@ -751,7 +749,7 @@ public final class Event implements CommandListener {
 					}
 
 					try {
-						statName = Skills.getSkillName(stat);
+						statName = player.getWorld().getServer().getConstants().getSkills().getSkillName(stat);
 					}
 					catch (IndexOutOfBoundsException ex) {
 						player.message(messagePrefix + "Invalid stat");
@@ -799,7 +797,7 @@ public final class Event implements CommandListener {
 						stat = Integer.parseInt(args[2]);
 					}
 					catch (NumberFormatException e) {
-						stat = Skills.getSkillIndex(args[2].toLowerCase());
+						stat = player.getWorld().getServer().getConstants().getSkills().getSkillIndex(args[2].toLowerCase());
 
 						if(stat == -1) {
 							player.message(messagePrefix + "Invalid stat");
@@ -808,7 +806,7 @@ public final class Event implements CommandListener {
 					}
 
 					try {
-						statName = Skills.getSkillName(stat);
+						statName = player.getWorld().getServer().getConstants().getSkills().getSkillName(stat);
 					}
 					catch (IndexOutOfBoundsException e) {
 						player.message(messagePrefix + "Invalid stat");
@@ -846,7 +844,7 @@ public final class Event implements CommandListener {
 				}
 			}
 			else {
-				for(int i = 0; i < Skills.getSkillCount(); i++) {
+				for(int i = 0; i < player.getWorld().getServer().getConstants().getSkills().getSkillsCount(); i++) {
 					p.getSkills().setLevel(i, level);
 				}
 

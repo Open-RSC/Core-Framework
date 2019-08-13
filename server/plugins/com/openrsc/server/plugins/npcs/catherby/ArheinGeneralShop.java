@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.npcs.catherby;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -12,9 +12,7 @@ import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class ArheinGeneralShop implements ShopInterface,
 	TalkToNpcListener, TalkToNpcExecutiveListener {
@@ -54,7 +52,7 @@ public class ArheinGeneralShop implements ShopInterface,
 				"These crates here are all ready for my next trip");
 			
 			String[] menuOptions = new String[] {"Where do you deliver too?", "Are you rich then?"};
-			if (p.getQuestStage(Constants.Quests.MERLINS_CRYSTAL) == 2) {
+			if (p.getQuestStage(Quests.MERLINS_CRYSTAL) == 2) {
 				menuOptions = new String[] {"Do you deliver to the fort just down the coast?",
 						"Where do you deliver too?",
 						"Are you rich then?"};

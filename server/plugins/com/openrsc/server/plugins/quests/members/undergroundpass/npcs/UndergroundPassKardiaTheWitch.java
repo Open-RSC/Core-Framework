@@ -1,9 +1,6 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.npcs;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -54,7 +51,7 @@ public class UndergroundPassKardiaTheWitch implements ObjectActionListener, Obje
 					sleep(1000);
 					p.message("the witch raises her hands above her");
 					displayTeleportBubble(p, p.getX(), p.getY(), true);
-					p.damage(((int) getCurrentLevel(p, SKILLS.HITS.id()) / 5) + 5); // 6 lowest, 25 max.
+					p.damage(((int) getCurrentLevel(p, Skills.HITS) / 5) + 5); // 6 lowest, 25 max.
 					npcTalk(p, witch, "haa haa.. die mortal");
 				}
 			} else if (click == 1) {
@@ -124,7 +121,7 @@ public class UndergroundPassKardiaTheWitch implements ObjectActionListener, Obje
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if (obj.getID() == WITCH_CHEST) {
 			message(p, "you search the chest");
-			if (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == 6 && !p.getCache().hasKey("doll_of_iban")) {
+			if (p.getQuestStage(Quests.UNDERGROUND_PASS) == 6 && !p.getCache().hasKey("doll_of_iban")) {
 				p.message("..inside you find a book a wooden doll..");
 				p.message("...and two potions");
 				addItem(p, ItemId.A_DOLL_OF_IBAN.id(), 1);

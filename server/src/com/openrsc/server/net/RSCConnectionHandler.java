@@ -1,7 +1,7 @@
 package com.openrsc.server.net;
 
 import com.google.common.base.Objects;
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.LoginPacketHandler;
@@ -78,7 +78,7 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 
 	@Override
 	public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable e) throws Exception {
-		if (!Constants.GameServer.IGNORED_NETWORK_EXCEPTIONS.stream().anyMatch($it -> Objects.equal($it, e.getMessage()))) {
+		if (!Server.getServer().getConfig().IGNORED_NETWORK_EXCEPTIONS.stream().anyMatch($it -> Objects.equal($it, e.getMessage()))) {
 			 System.out.println("Exception caught in thread!\n" + e);
 
 			 for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {

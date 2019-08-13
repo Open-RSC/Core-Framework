@@ -1,6 +1,5 @@
 package com.openrsc.server.net.rsc;
 
-import com.openrsc.server.GameStateUpdater;
 import com.openrsc.server.Server;
 import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanManager;
@@ -33,8 +32,6 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
-
-import static com.openrsc.server.Constants.GameServer.*;
 
 /**
  * @author n0m
@@ -308,7 +305,7 @@ public class ActionSender {
 		s.writeByte(player.getPrayerPoints());
 		player.write(s.toPacket());
 
-		if (WANT_EQUIPMENT_TAB) {
+		if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			if (slot == -1)
 				sendEquipment(player);
 			else
@@ -450,74 +447,74 @@ public class ActionSender {
 
 	public static void sendInitialServerConfigs(Channel channel) {
 		LOGGER.info("Sending initial configs to: " + channel.remoteAddress());
-		if (DEBUG) {
+		if (Server.getServer().getConfig().DEBUG) {
 			LOGGER.info("Debug server configs being sent:");
-			LOGGER.info(SERVER_NAME + " 1");
-			LOGGER.info(SERVER_NAME_WELCOME + " 2");
-			LOGGER.info(PLAYER_LEVEL_LIMIT + " 3");
-			LOGGER.info(SPAWN_AUCTION_NPCS + " 4");
-			LOGGER.info(SPAWN_IRON_MAN_NPCS + " 5");
-			LOGGER.info(SHOW_FLOATING_NAMETAGS + " 6");
-			LOGGER.info(WANT_CLANS + " 7");
-			LOGGER.info(WANT_KILL_FEED + " 8");
-			LOGGER.info(FOG_TOGGLE + " 9");
-			LOGGER.info(GROUND_ITEM_TOGGLE + " 10");
-			LOGGER.info(AUTO_MESSAGE_SWITCH_TOGGLE + " 11");
-			LOGGER.info(BATCH_PROGRESSION + " 12");
-			LOGGER.info(SIDE_MENU_TOGGLE + " 13");
-			LOGGER.info(INVENTORY_COUNT_TOGGLE + " 14");
-			LOGGER.info(ZOOM_VIEW_TOGGLE + " 15");
-			LOGGER.info(MENU_COMBAT_STYLE_TOGGLE + " 16");
-			LOGGER.info(FIGHTMODE_SELECTOR_TOGGLE + " 17");
-			LOGGER.info(EXPERIENCE_COUNTER_TOGGLE + " 18");
-			LOGGER.info(EXPERIENCE_DROPS_TOGGLE + " 19");
-			LOGGER.info(ITEMS_ON_DEATH_MENU + " 20");
-			LOGGER.info(SHOW_ROOF_TOGGLE + " 21");
-			LOGGER.info(WANT_HIDE_IP + " 22");
-			LOGGER.info(WANT_REMEMBER + " 23");
-			LOGGER.info(WANT_GLOBAL_CHAT + " 24");
-			LOGGER.info(WANT_SKILL_MENUS + " 25");
-			LOGGER.info(WANT_QUEST_MENUS + " 26");
-			LOGGER.info(WANT_EXPERIENCE_ELIXIRS + " 27");
-			LOGGER.info(WANT_KEYBOARD_SHORTCUTS + " 28");
-			LOGGER.info(WANT_CUSTOM_BANKS + " 29");
-			LOGGER.info(WANT_BANK_PINS + " 30");
-			LOGGER.info(WANT_BANK_NOTES + " 31");
-			LOGGER.info(WANT_CERT_DEPOSIT + " 32");
-			LOGGER.info(CUSTOM_FIREMAKING + " 33");
-			LOGGER.info(WANT_DROP_X + " 34");
-			LOGGER.info(WANT_EXP_INFO + " 35");
-			LOGGER.info(WANT_WOODCUTTING_GUILD + " 36");
-			LOGGER.info(WANT_DECANTING + " 37");
-			LOGGER.info(WANT_CERTER_BANK_EXCHANGE + " 38");
-			LOGGER.info(WANT_CUSTOM_RANK_DISPLAY + " 39");
-			LOGGER.info(RIGHT_CLICK_BANK + " 40");
-			LOGGER.info(FIX_OVERHEAD_CHAT + " 41");
-			LOGGER.info(WELCOME_TEXT + " 42");
-			LOGGER.info(MEMBER_WORLD + " 43");
-			LOGGER.info(DISPLAY_LOGO_SPRITE + " 44");
-			LOGGER.info(LOGO_SPRITE_ID + " 45");
-			LOGGER.info(FPS + " 46");
-			LOGGER.info(WANT_EMAIL + " 47");
-			LOGGER.info(WANT_REGISTRATION_LIMIT + " 48");
-			LOGGER.info(ALLOW_RESIZE + " 49");
-			LOGGER.info(LENIENT_CONTACT_DETAILS + " 50");
-			LOGGER.info(WANT_FATIGUE + " 51");
-			LOGGER.info(WANT_CUSTOM_SPRITES + " 52");
-			LOGGER.info(PLAYER_COMMANDS + " 53");
-			LOGGER.info(WANT_PETS + " 54");
-			LOGGER.info(MAX_WALKING_SPEED + " 55");
-			LOGGER.info(SHOW_UNIDENTIFIED_HERB_NAMES + " 56");
-			LOGGER.info(WANT_QUEST_STARTED_INDICATOR + " 57");
-			LOGGER.info(FISHING_SPOTS_DEPLETABLE + " 58");
-			LOGGER.info(PROPER_MAGIC_TREE_NAME + " 59");
-			LOGGER.info(WANT_RUNECRAFTING + " 60");
-			LOGGER.info(WANT_CUSTOM_LANDSCAPE + " 61");
-			LOGGER.info(WANT_EQUIPMENT_TAB + " 62");
-			LOGGER.info(WANT_BANK_PRESETS + " 63");
-			LOGGER.info(WANT_PARTIES + " 64");
-			LOGGER.info(MINING_ROCKS_EXTENDED + " 65");
-			LOGGER.info(WANT_NEW_RARE_DROP_TABLES + " 66");
+			LOGGER.info(Server.getServer().getConfig().SERVER_NAME + " 1");
+			LOGGER.info(Server.getServer().getConfig().SERVER_NAME_WELCOME + " 2");
+			LOGGER.info(Server.getServer().getConfig().PLAYER_LEVEL_LIMIT + " 3");
+			LOGGER.info(Server.getServer().getConfig().SPAWN_AUCTION_NPCS + " 4");
+			LOGGER.info(Server.getServer().getConfig().SPAWN_IRON_MAN_NPCS + " 5");
+			LOGGER.info(Server.getServer().getConfig().SHOW_FLOATING_NAMETAGS + " 6");
+			LOGGER.info(Server.getServer().getConfig().WANT_CLANS + " 7");
+			LOGGER.info(Server.getServer().getConfig().WANT_KILL_FEED + " 8");
+			LOGGER.info(Server.getServer().getConfig().FOG_TOGGLE + " 9");
+			LOGGER.info(Server.getServer().getConfig().GROUND_ITEM_TOGGLE + " 10");
+			LOGGER.info(Server.getServer().getConfig().AUTO_MESSAGE_SWITCH_TOGGLE + " 11");
+			LOGGER.info(Server.getServer().getConfig().BATCH_PROGRESSION + " 12");
+			LOGGER.info(Server.getServer().getConfig().SIDE_MENU_TOGGLE + " 13");
+			LOGGER.info(Server.getServer().getConfig().INVENTORY_COUNT_TOGGLE + " 14");
+			LOGGER.info(Server.getServer().getConfig().ZOOM_VIEW_TOGGLE + " 15");
+			LOGGER.info(Server.getServer().getConfig().MENU_COMBAT_STYLE_TOGGLE + " 16");
+			LOGGER.info(Server.getServer().getConfig().FIGHTMODE_SELECTOR_TOGGLE + " 17");
+			LOGGER.info(Server.getServer().getConfig().EXPERIENCE_COUNTER_TOGGLE + " 18");
+			LOGGER.info(Server.getServer().getConfig().EXPERIENCE_DROPS_TOGGLE + " 19");
+			LOGGER.info(Server.getServer().getConfig().ITEMS_ON_DEATH_MENU + " 20");
+			LOGGER.info(Server.getServer().getConfig().SHOW_ROOF_TOGGLE + " 21");
+			LOGGER.info(Server.getServer().getConfig().WANT_HIDE_IP + " 22");
+			LOGGER.info(Server.getServer().getConfig().WANT_REMEMBER + " 23");
+			LOGGER.info(Server.getServer().getConfig().WANT_GLOBAL_CHAT + " 24");
+			LOGGER.info(Server.getServer().getConfig().WANT_SKILL_MENUS + " 25");
+			LOGGER.info(Server.getServer().getConfig().WANT_QUEST_MENUS + " 26");
+			LOGGER.info(Server.getServer().getConfig().WANT_EXPERIENCE_ELIXIRS + " 27");
+			LOGGER.info(Server.getServer().getConfig().WANT_KEYBOARD_SHORTCUTS + " 28");
+			LOGGER.info(Server.getServer().getConfig().WANT_CUSTOM_BANKS + " 29");
+			LOGGER.info(Server.getServer().getConfig().WANT_BANK_PINS + " 30");
+			LOGGER.info(Server.getServer().getConfig().WANT_BANK_NOTES + " 31");
+			LOGGER.info(Server.getServer().getConfig().WANT_CERT_DEPOSIT + " 32");
+			LOGGER.info(Server.getServer().getConfig().CUSTOM_FIREMAKING + " 33");
+			LOGGER.info(Server.getServer().getConfig().WANT_DROP_X + " 34");
+			LOGGER.info(Server.getServer().getConfig().WANT_EXP_INFO + " 35");
+			LOGGER.info(Server.getServer().getConfig().WANT_WOODCUTTING_GUILD + " 36");
+			LOGGER.info(Server.getServer().getConfig().WANT_DECANTING + " 37");
+			LOGGER.info(Server.getServer().getConfig().WANT_CERTER_BANK_EXCHANGE + " 38");
+			LOGGER.info(Server.getServer().getConfig().WANT_CUSTOM_RANK_DISPLAY + " 39");
+			LOGGER.info(Server.getServer().getConfig().RIGHT_CLICK_BANK + " 40");
+			LOGGER.info(Server.getServer().getConfig().FIX_OVERHEAD_CHAT + " 41");
+			LOGGER.info(Server.getServer().getConfig().WELCOME_TEXT + " 42");
+			LOGGER.info(Server.getServer().getConfig().MEMBER_WORLD + " 43");
+			LOGGER.info(Server.getServer().getConfig().DISPLAY_LOGO_SPRITE + " 44");
+			LOGGER.info(Server.getServer().getConfig().LOGO_SPRITE_ID + " 45");
+			LOGGER.info(Server.getServer().getConfig().FPS + " 46");
+			LOGGER.info(Server.getServer().getConfig().WANT_EMAIL + " 47");
+			LOGGER.info(Server.getServer().getConfig().WANT_REGISTRATION_LIMIT + " 48");
+			LOGGER.info(Server.getServer().getConfig().ALLOW_RESIZE + " 49");
+			LOGGER.info(Server.getServer().getConfig().LENIENT_CONTACT_DETAILS + " 50");
+			LOGGER.info(Server.getServer().getConfig().WANT_FATIGUE + " 51");
+			LOGGER.info(Server.getServer().getConfig().WANT_CUSTOM_SPRITES + " 52");
+			LOGGER.info(Server.getServer().getConfig().PLAYER_COMMANDS + " 53");
+			LOGGER.info(Server.getServer().getConfig().WANT_PETS + " 54");
+			LOGGER.info(Server.getServer().getConfig().MAX_WALKING_SPEED + " 55");
+			LOGGER.info(Server.getServer().getConfig().SHOW_UNIDENTIFIED_HERB_NAMES + " 56");
+			LOGGER.info(Server.getServer().getConfig().WANT_QUEST_STARTED_INDICATOR + " 57");
+			LOGGER.info(Server.getServer().getConfig().FISHING_SPOTS_DEPLETABLE + " 58");
+			LOGGER.info(Server.getServer().getConfig().PROPER_MAGIC_TREE_NAME + " 59");
+			LOGGER.info(Server.getServer().getConfig().WANT_RUNECRAFTING + " 60");
+			LOGGER.info(Server.getServer().getConfig().WANT_CUSTOM_LANDSCAPE + " 61");
+			LOGGER.info(Server.getServer().getConfig().WANT_EQUIPMENT_TAB + " 62");
+			LOGGER.info(Server.getServer().getConfig().WANT_BANK_PRESETS + " 63");
+			LOGGER.info(Server.getServer().getConfig().WANT_PARTIES + " 64");
+			LOGGER.info(Server.getServer().getConfig().MINING_ROCKS_EXTENDED + " 65");
+			LOGGER.info(Server.getServer().getConfig().WANT_NEW_RARE_DROP_TABLES + " 66");
 
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs();
@@ -535,71 +532,71 @@ public class ActionSender {
 	private static com.openrsc.server.net.PacketBuilder prepareServerConfigs() {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_SERVER_CONFIGS.opcode);
-		s.writeString(SERVER_NAME); // 1
-		s.writeString(SERVER_NAME_WELCOME); // 2
-		s.writeByte((byte) PLAYER_LEVEL_LIMIT); // 3
-		s.writeByte((byte) (SPAWN_AUCTION_NPCS ? 1 : 0)); // 4
-		s.writeByte((byte) (SPAWN_IRON_MAN_NPCS ? 1 : 0)); // 5
-		s.writeByte((byte) (SHOW_FLOATING_NAMETAGS ? 1 : 0)); // 6
-		s.writeByte((byte) (WANT_CLANS ? 1 : 0)); // 7
-		s.writeByte((byte) (WANT_KILL_FEED ? 1 : 0)); // 8
-		s.writeByte((byte) (FOG_TOGGLE ? 1 : 0)); // 9
-		s.writeByte((byte) (GROUND_ITEM_TOGGLE ? 1 : 0)); // 10
-		s.writeByte((byte) (AUTO_MESSAGE_SWITCH_TOGGLE ? 1 : 0)); // 11
-		s.writeByte((byte) (BATCH_PROGRESSION ? 1 : 0)); // 12
-		s.writeByte((byte) (SIDE_MENU_TOGGLE ? 1 : 0)); // 13
-		s.writeByte((byte) (INVENTORY_COUNT_TOGGLE ? 1 : 0)); // 14
-		s.writeByte((byte) (ZOOM_VIEW_TOGGLE ? 1 : 0)); // 15
-		s.writeByte((byte) (MENU_COMBAT_STYLE_TOGGLE ? 1 : 0)); // 16
-		s.writeByte((byte) (FIGHTMODE_SELECTOR_TOGGLE ? 1 : 0)); // 17
-		s.writeByte((byte) (EXPERIENCE_COUNTER_TOGGLE ? 1 : 0)); // 18
-		s.writeByte((byte) (EXPERIENCE_DROPS_TOGGLE ? 1 : 0)); // 19
-		s.writeByte((byte) (ITEMS_ON_DEATH_MENU ? 1 : 0)); // 20
-		s.writeByte((byte) (SHOW_ROOF_TOGGLE ? 1 : 0)); // 21
-		s.writeByte((byte) (WANT_HIDE_IP ? 1 : 0)); // 22
-		s.writeByte((byte) (WANT_REMEMBER ? 1 : 0)); // 23
-		s.writeByte((byte) (WANT_GLOBAL_CHAT ? 1 : 0)); // 24
-		s.writeByte((byte) (WANT_SKILL_MENUS ? 1 : 0)); // 25
-		s.writeByte((byte) (WANT_QUEST_MENUS ? 1 : 0)); // 26
-		s.writeByte((byte) (WANT_EXPERIENCE_ELIXIRS ? 1 : 0)); // 27
-		s.writeByte((byte) WANT_KEYBOARD_SHORTCUTS); // 28
-		s.writeByte((byte) (WANT_CUSTOM_BANKS ? 1 : 0)); // 29
-		s.writeByte((byte) (WANT_BANK_PINS ? 1 : 0)); // 30
-		s.writeByte((byte) (WANT_BANK_NOTES ? 1 : 0)); // 31
-		s.writeByte((byte) (WANT_CERT_DEPOSIT ? 1 : 0)); // 32
-		s.writeByte((byte) (CUSTOM_FIREMAKING ? 1 : 0)); // 33
-		s.writeByte((byte) (WANT_DROP_X ? 1 : 0)); // 34
-		s.writeByte((byte) (WANT_EXP_INFO ? 1 : 0)); // 35
-		s.writeByte((byte) (WANT_WOODCUTTING_GUILD ? 1 : 0)); // 36
-		s.writeByte((byte) (WANT_DECANTING ? 1 : 0)); // 37
-		s.writeByte((byte) (WANT_CERTER_BANK_EXCHANGE ? 1 : 0)); // 38
-		s.writeByte((byte) (WANT_CUSTOM_RANK_DISPLAY ? 1 : 0)); // 39
-		s.writeByte((byte) (RIGHT_CLICK_BANK ? 1 : 0)); // 40
-		s.writeByte((byte) (FIX_OVERHEAD_CHAT ? 1 : 0)); // 41
-		s.writeString(WELCOME_TEXT); // 42
-		s.writeByte((byte) (MEMBER_WORLD ? 1 : 0)); // 43
-		s.writeByte((byte) (DISPLAY_LOGO_SPRITE ? 1 : 0)); // 44
-		s.writeString(LOGO_SPRITE_ID); // 45
-		s.writeByte((byte) FPS); // 46
-		s.writeByte((byte) (WANT_EMAIL ? 1 : 0)); // 47
-		s.writeByte((byte) (WANT_REGISTRATION_LIMIT ? 1 : 0)); // 48
-		s.writeByte((byte) (ALLOW_RESIZE ? 1 : 0)); // 49
-		s.writeByte((byte) (LENIENT_CONTACT_DETAILS ? 1 : 0)); // 50
-		s.writeByte((byte) (WANT_FATIGUE ? 1 : 0)); // 51
-		s.writeByte((byte) (WANT_CUSTOM_SPRITES ? 1 : 0)); // 52
-		s.writeByte((byte) (PLAYER_COMMANDS ? 1 : 0)); // 53
-		s.writeByte((byte) (WANT_PETS ? 1 : 0)); // 54
-		s.writeByte((byte) MAX_WALKING_SPEED); // 55
-		s.writeByte((byte) (SHOW_UNIDENTIFIED_HERB_NAMES ? 1 : 0)); // 56
-		s.writeByte((byte) (WANT_QUEST_STARTED_INDICATOR ? 1 : 0)); // 57
-		s.writeByte((byte) (FISHING_SPOTS_DEPLETABLE ? 1 : 0)); // 58
-		s.writeByte((byte) (PROPER_MAGIC_TREE_NAME ? 1 : 0)); // 59
-		s.writeByte((byte) (WANT_RUNECRAFTING ? 1 : 0)); //60
-		s.writeByte((byte) (WANT_CUSTOM_LANDSCAPE ? 1 : 0)); //61
-		s.writeByte((byte) (WANT_EQUIPMENT_TAB ? 1 : 0)); //62
-		s.writeByte((byte) (WANT_BANK_PRESETS ? 1 : 0)); //63
-		s.writeByte((byte) (WANT_PARTIES ? 1 : 0)); //64
-		s.writeByte((byte) (MINING_ROCKS_EXTENDED ? 1 : 0)); //65
+		s.writeString(Server.getServer().getConfig().SERVER_NAME); // 1
+		s.writeString(Server.getServer().getConfig().SERVER_NAME_WELCOME); // 2
+		s.writeByte((byte) Server.getServer().getConfig().PLAYER_LEVEL_LIMIT); // 3
+		s.writeByte((byte) (Server.getServer().getConfig().SPAWN_AUCTION_NPCS ? 1 : 0)); // 4
+		s.writeByte((byte) (Server.getServer().getConfig().SPAWN_IRON_MAN_NPCS ? 1 : 0)); // 5
+		s.writeByte((byte) (Server.getServer().getConfig().SHOW_FLOATING_NAMETAGS ? 1 : 0)); // 6
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_CLANS ? 1 : 0)); // 7
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_KILL_FEED ? 1 : 0)); // 8
+		s.writeByte((byte) (Server.getServer().getConfig().FOG_TOGGLE ? 1 : 0)); // 9
+		s.writeByte((byte) (Server.getServer().getConfig().GROUND_ITEM_TOGGLE ? 1 : 0)); // 10
+		s.writeByte((byte) (Server.getServer().getConfig().AUTO_MESSAGE_SWITCH_TOGGLE ? 1 : 0)); // 11
+		s.writeByte((byte) (Server.getServer().getConfig().BATCH_PROGRESSION ? 1 : 0)); // 12
+		s.writeByte((byte) (Server.getServer().getConfig().SIDE_MENU_TOGGLE ? 1 : 0)); // 13
+		s.writeByte((byte) (Server.getServer().getConfig().INVENTORY_COUNT_TOGGLE ? 1 : 0)); // 14
+		s.writeByte((byte) (Server.getServer().getConfig().ZOOM_VIEW_TOGGLE ? 1 : 0)); // 15
+		s.writeByte((byte) (Server.getServer().getConfig().MENU_COMBAT_STYLE_TOGGLE ? 1 : 0)); // 16
+		s.writeByte((byte) (Server.getServer().getConfig().FIGHTMODE_SELECTOR_TOGGLE ? 1 : 0)); // 17
+		s.writeByte((byte) (Server.getServer().getConfig().EXPERIENCE_COUNTER_TOGGLE ? 1 : 0)); // 18
+		s.writeByte((byte) (Server.getServer().getConfig().EXPERIENCE_DROPS_TOGGLE ? 1 : 0)); // 19
+		s.writeByte((byte) (Server.getServer().getConfig().ITEMS_ON_DEATH_MENU ? 1 : 0)); // 20
+		s.writeByte((byte) (Server.getServer().getConfig().SHOW_ROOF_TOGGLE ? 1 : 0)); // 21
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_HIDE_IP ? 1 : 0)); // 22
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_REMEMBER ? 1 : 0)); // 23
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_GLOBAL_CHAT ? 1 : 0)); // 24
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_SKILL_MENUS ? 1 : 0)); // 25
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_QUEST_MENUS ? 1 : 0)); // 26
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_EXPERIENCE_ELIXIRS ? 1 : 0)); // 27
+		s.writeByte((byte) Server.getServer().getConfig().WANT_KEYBOARD_SHORTCUTS); // 28
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_CUSTOM_BANKS ? 1 : 0)); // 29
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_BANK_PINS ? 1 : 0)); // 30
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_BANK_NOTES ? 1 : 0)); // 31
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_CERT_DEPOSIT ? 1 : 0)); // 32
+		s.writeByte((byte) (Server.getServer().getConfig().CUSTOM_FIREMAKING ? 1 : 0)); // 33
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_DROP_X ? 1 : 0)); // 34
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_EXP_INFO ? 1 : 0)); // 35
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_WOODCUTTING_GUILD ? 1 : 0)); // 36
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_DECANTING ? 1 : 0)); // 37
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_CERTER_BANK_EXCHANGE ? 1 : 0)); // 38
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_CUSTOM_RANK_DISPLAY ? 1 : 0)); // 39
+		s.writeByte((byte) (Server.getServer().getConfig().RIGHT_CLICK_BANK ? 1 : 0)); // 40
+		s.writeByte((byte) (Server.getServer().getConfig().FIX_OVERHEAD_CHAT ? 1 : 0)); // 41
+		s.writeString(Server.getServer().getConfig().WELCOME_TEXT); // 42
+		s.writeByte((byte) (Server.getServer().getConfig().MEMBER_WORLD ? 1 : 0)); // 43
+		s.writeByte((byte) (Server.getServer().getConfig().DISPLAY_LOGO_SPRITE ? 1 : 0)); // 44
+		s.writeString(Server.getServer().getConfig().LOGO_SPRITE_ID); // 45
+		s.writeByte((byte) Server.getServer().getConfig().FPS); // 46
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_EMAIL ? 1 : 0)); // 47
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_REGISTRATION_LIMIT ? 1 : 0)); // 48
+		s.writeByte((byte) (Server.getServer().getConfig().ALLOW_RESIZE ? 1 : 0)); // 49
+		s.writeByte((byte) (Server.getServer().getConfig().LENIENT_CONTACT_DETAILS ? 1 : 0)); // 50
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_FATIGUE ? 1 : 0)); // 51
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_CUSTOM_SPRITES ? 1 : 0)); // 52
+		s.writeByte((byte) (Server.getServer().getConfig().PLAYER_COMMANDS ? 1 : 0)); // 53
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_PETS ? 1 : 0)); // 54
+		s.writeByte((byte) Server.getServer().getConfig().MAX_WALKING_SPEED); // 55
+		s.writeByte((byte) (Server.getServer().getConfig().SHOW_UNIDENTIFIED_HERB_NAMES ? 1 : 0)); // 56
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_QUEST_STARTED_INDICATOR ? 1 : 0)); // 57
+		s.writeByte((byte) (Server.getServer().getConfig().FISHING_SPOTS_DEPLETABLE ? 1 : 0)); // 58
+		s.writeByte((byte) (Server.getServer().getConfig().PROPER_MAGIC_TREE_NAME ? 1 : 0)); // 59
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_RUNECRAFTING ? 1 : 0)); //60
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_CUSTOM_LANDSCAPE ? 1 : 0)); //61
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_EQUIPMENT_TAB ? 1 : 0)); //62
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_BANK_PRESETS ? 1 : 0)); //63
+		s.writeByte((byte) (Server.getServer().getConfig().WANT_PARTIES ? 1 : 0)); //64
+		s.writeByte((byte) (Server.getServer().getConfig().MINING_ROCKS_EXTENDED ? 1 : 0)); //65
 		return s;
 	}
 
@@ -1105,7 +1102,7 @@ public class ActionSender {
 	 * Sends the elixir timer
 	 */
 	public static void sendElixirTimer(Player player, int seconds) {
-		if (!WANT_EXPERIENCE_ELIXIRS) return;
+		if (!Server.getServer().getConfig().WANT_EXPERIENCE_ELIXIRS) return;
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_ELIXIR.opcode);
 		s.writeShort((int) (((double) seconds / 32D) * 50));
@@ -1186,7 +1183,7 @@ public class ActionSender {
 			if (World.getWorld().registerPlayer(p)) {
 
 				sendWorldInfo(p);
-				GameStateUpdater.sendUpdatePackets(p);
+				Server.getServer().getGameUpdater().sendUpdatePackets(p);
 
 				long timeTillShutdown = Server.getServer().timeTillShutdown();
 				if (timeTillShutdown > -1)
@@ -1209,14 +1206,14 @@ public class ActionSender {
 
 				sendWakeUp(p, false, true);
 				sendLoginBox(p);
-				sendMessage(p, null, 0, MessageType.QUEST, "Welcome to " + SERVER_NAME + "!", 0);
+				sendMessage(p, null, 0, MessageType.QUEST, "Welcome to " + Server.getServer().getConfig().SERVER_NAME + "!", 0);
 				if (p.isMuted()) {
 					sendMessage(p, "You are muted for "
 						+ (double) (System.currentTimeMillis() - p.getMuteExpires()) / 3600000D + " hours.");
 				}
 
 				if (p.getLocation().inTutorialLanding()) {
-					sendBox(p, "@gre@Welcome to the " + SERVER_NAME + " tutorial.% %Most actions are performed with the mouse. To walk around left click on the ground where you want to walk. To interact with something, first move your mouse pointer over it. Then left click or right click to perform different actions% %Try left clicking on one of the guides to talk to her. She will tell you more about how to play", true);
+					sendBox(p, "@gre@Welcome to the " + Server.getServer().getConfig().SERVER_NAME + " tutorial.% %Most actions are performed with the mouse. To walk around left click on the ground where you want to walk. To interact with something, first move your mouse pointer over it. Then left click or right click to perform different actions% %Try left clicking on one of the guides to talk to her. She will tell you more about how to play", true);
 				}
 
 				sendGameSettings(p);
@@ -1233,15 +1230,15 @@ public class ActionSender {
 				sendInventory(p);
 				p.checkEquipment();
 
-				if (WANT_BANK_PRESETS)
+				if (Server.getServer().getConfig().WANT_BANK_PRESETS)
 					sendBankPresets(p);
 
-				/*if (!Constants.GameServer.MEMBER_WORLD) {
+				/*if (!getServer().getConfig().MEMBER_WORLD) {
 					p.unwieldMembersItems();
 				}*/
 
 				if (!p.getLocation().inWilderness()) {
-					if (SPAWN_AUCTION_NPCS) {
+					if (Server.getServer().getConfig().SPAWN_AUCTION_NPCS) {
 						Market.getInstance().addCollectableItemsNotificationTask(p);
 					}
 				}
@@ -1295,7 +1292,7 @@ public class ActionSender {
 	}
 
 	public static void sendKillUpdate(Player player, long killedHash, long killerHash, int type) {
-		if (!WANT_KILL_FEED) return;
+		if (!Server.getServer().getConfig().WANT_KILL_FEED) return;
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_KILL_ANNOUNCEMENT.opcode);
 		pb.writeString(DataConversions.hashToUsername(killedHash));
 		pb.writeString(DataConversions.hashToUsername(killerHash));

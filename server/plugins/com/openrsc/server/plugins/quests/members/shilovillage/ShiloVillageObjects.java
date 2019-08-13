@@ -1,9 +1,10 @@
 package com.openrsc.server.plugins.quests.members.shilovillage;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -77,7 +78,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 			}
 		}
 		else if (obj.getID() == CLIMB_CAVE_ROCKS) {
-			if (Constants.GameServer.WANT_FATIGUE) {
+			if (Server.getServer().getConfig().WANT_FATIGUE) {
 				if (p.getFatigue() >= p.MAX_FATIGUE) {
 					p.message("You are too fatigued to go any further.");
 					return;
@@ -118,7 +119,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				p.damage(0);
 				playerTalk(p, null, "Ooooff!");
 			}
-			p.incExp(SKILLS.AGILITY.id(), 5, true);
+			p.incExp(Skills.AGILITY, 5, true);
 			p.setBusy(false);
 		}
 		else if (obj.getID() == METALLIC_DUNGEON_GATE) {
@@ -137,7 +138,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 					if (!p.getInventory().wielding(ItemId.BEADS_OF_THE_DEAD.id())) {
 						replaceObjectDelayed(obj, 1800, 181);
 						p.teleport(348, 3616);
-						p.damage(getCurrentLevel(p, SKILLS.HITS.id()) / 2 + 1);
+						p.damage(getCurrentLevel(p, Skills.HITS) / 2 + 1);
 						if (p.getStatus() != Action.DIED_FROM_DAMAGE) {
 							message(p, "@red@You feel invisible hands starting to choke you...");
 							p.teleport(348, 3614);
@@ -184,27 +185,27 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 			if (command.equalsIgnoreCase("Open")) {
 				message(p, "There seems to be some sort of recepticle,");
 				p.message("perhaps it needs a key?");
-				if (!p.getCache().hasKey("can_chisel_bone") && p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == 7) {
+				if (!p.getCache().hasKey("can_chisel_bone") && p.getQuestStage(Quests.SHILO_VILLAGE) == 7) {
 					p.getCache().store("can_chisel_bone", true);
 				}
 			} else if (command.equalsIgnoreCase("Search")) {
 				message(p, "Examining the door, you see that it has a very strange lock.");
 				p.message("Ewww...it seems to be made out of bone!");
-				if (!p.getCache().hasKey("can_chisel_bone") && p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == 7) {
+				if (!p.getCache().hasKey("can_chisel_bone") && p.getQuestStage(Quests.SHILO_VILLAGE) == 7) {
 					p.getCache().store("can_chisel_bone", true);
 				}
 			}
 		}
 		else if (obj.getID() == SEARCH_TREE_FOR_ENTRANCE) {
-			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
+			if (p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 				p.message("You find nothing significant.");
 				return;
 			}
 			message(p, "You pull the trees apart...");
 			p.message("...and reveal an ancient doorway set into the side of the hill!");
-			GameObject ENTRANCE = new GameObject(Point.location(350, 782), HILLSIDE_ENTRANCE, 2, 0);
+			GameObject ENTRANCE = new GameObject(p.getWorld(), Point.location(350, 782), HILLSIDE_ENTRANCE, 2, 0);
 			registerObject(ENTRANCE);
-			delayedSpawnObject(new GameObject(Point.location(350, 782), 398, 2, 0).getLoc(), 15000);
+			delayedSpawnObject(new GameObject(p.getWorld(), Point.location(350, 782), 398, 2, 0).getLoc(), 15000);
 		}
 		else if (obj.getID() == TOMB_DOLMEN_HANDHOLDS) {
 			message(p, "You start to climb up the side of the rock wall using the hand holds");
@@ -218,9 +219,9 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				message(p, "You fall back to the floor.");
 				p.teleport(380, 3692);
 				playerTalk(p, null, "Ahhhhh!");
-				p.damage(getCurrentLevel(p, SKILLS.HITS.id()) / 10);
+				p.damage(getCurrentLevel(p, Skills.HITS) / 10);
 				message(p, "And it knocks the wind out of you.");
-				p.damage(getCurrentLevel(p, SKILLS.HITS.id()) / 10);
+				p.damage(getCurrentLevel(p, Skills.HITS) / 10);
 				p.teleport(467, 3674);
 				playerTalk(p, null, "Oooff!");
 			}
@@ -229,10 +230,10 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 			if (command.equalsIgnoreCase("Investigate")) {
 				p.message("Rocks that have been stacked uniformly.");
 			} else if (command.equalsIgnoreCase("Search")) {
-				if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
+				if (p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 					p.message("This tomb entrance seems to be completely flooded.");
 					p.message("A great sense of peace pervades in this area.");
-				} else if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) >= 5) {
+				} else if (p.getQuestStage(Quests.SHILO_VILLAGE) >= 5) {
 					message(p, "You investigate the rocks and find a dank,narrow crawl-way.",
 						"Do you want to crawl into this dank, dark, narrow,",
 						"possibly dangerous hole?");
@@ -245,8 +246,8 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 							message(p, "You struggle through the narrow crevice in the rocks");
 							p.teleport(471, 3658);
 							p.message("and drop to your feet into a narrow underground corridor");
-							if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == 5) {
-								p.updateQuestStage(Constants.Quests.SHILO_VILLAGE, 6);
+							if (p.getQuestStage(Quests.SHILO_VILLAGE) == 5) {
+								p.updateQuestStage(Quests.SHILO_VILLAGE, 6);
 							}
 						}
 						else {
@@ -291,12 +292,12 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 						if (!p.getCache().hasKey("obtained_shilo_info")) {
 							p.getCache().store("obtained_shilo_info", true);
 						}
-						p.incExp(SKILLS.AGILITY.id(), 15, true);
+						p.incExp(Skills.AGILITY, 15, true);
 					} else {
 						message(p, "You acidently knock some rocks and the ceiling starts to cave in.");
 						message(p, "Some rocks fall on you.");
-						p.damage((int) (getCurrentLevel(p, SKILLS.HITS.id()) * 0.1D + 1));
-						p.incExp(SKILLS.AGILITY.id(), 5, true);
+						p.damage((int) (getCurrentLevel(p, Skills.HITS) * 0.1D + 1));
+						p.incExp(Skills.AGILITY, 5, true);
 					}
 				}
 			} else if (menu == 1) {
@@ -308,7 +309,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 			if (command.equalsIgnoreCase("Look")) {
 				message(p, "You take a look at the Gallows.",
 					"The gallows look pretty eerie.");
-				if (hasItem(p, ItemId.ZADIMUS_CORPSE.id()) || p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
+				if (hasItem(p, ItemId.ZADIMUS_CORPSE.id()) || p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 					message(p, "An empty noose swings eerily in the half light of the tomb.");
 				} else {
 					message(p, "A grisly sight meets your eyes. A human corpse hangs from the noose.",
@@ -316,7 +317,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				}
 			} else if (command.equalsIgnoreCase("Search")) {
 				message(p, "You search the gallows.");
-				if (hasItem(p, ItemId.ZADIMUS_CORPSE.id()) || p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
+				if (hasItem(p, ItemId.ZADIMUS_CORPSE.id()) || p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 					p.message("The gallows look pretty eerie. You search but find nothing.");
 				} else {
 					message(p, "You find a human corpse hanging in the noose.",
@@ -372,15 +373,15 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 					p.teleport(339, 808);
 					message(p, "You are washed onto the waterfall river bank");
 					p.message("barely alive!");
-					p.damage((int) (getCurrentLevel(p, SKILLS.HITS.id()) * 0.2D + 4));
-					p.incExp(SKILLS.AGILITY.id(), 5, true);
+					p.damage((int) (getCurrentLevel(p, Skills.HITS) * 0.2D + 4));
+					p.incExp(Skills.AGILITY, 5, true);
 				} else {
 					message(p, "You manage to work your way along the slippery wall");
 					message(p, "and avoid falling into the water below.");
 					p.teleport(344, 808);
 					message(p, "You make it out of the cave");
 					p.message("and into the warmth of the jungle.");
-					p.incExp(SKILLS.AGILITY.id(), 100, true);
+					p.incExp(Skills.AGILITY, 100, true);
 				}
 			} else if (m == 1) {
 				message(p, "You decide to have another look around.");
@@ -409,7 +410,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 					message(p, "You see that this table already looks very sea worthy",
 						"it takes virtually no time at all to help fix it into.");
 					message(p, "a crude raft.");
-					GameObject RAFT_ONE = new GameObject(Point.location(353, 3669), 698, 0, 0);
+					GameObject RAFT_ONE = new GameObject(p.getWorld(), Point.location(353, 3669), 698, 0, 0);
 					registerObject(RAFT_ONE);
 					p.teleport(353, 3669);
 					message(p, "You place it carefully on the water!",
@@ -417,33 +418,33 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 						"You push off!");
 					removeObject(RAFT_ONE);
 
-					GameObject RAFT_TWO = new GameObject(Point.location(357, 3673), 698, 0, 0);
+					GameObject RAFT_TWO = new GameObject(p.getWorld(), Point.location(357, 3673), 698, 0, 0);
 					registerObject(RAFT_TWO);
 					p.teleport(357, 3673);
 					playerTalk(p, null, "Weeeeeeee!");
 					sleep(500);
 					removeObject(RAFT_TWO);
 
-					GameObject RAFT_THREE = new GameObject(Point.location(356, 3678), 698, 0, 0);
+					GameObject RAFT_THREE = new GameObject(p.getWorld(), Point.location(356, 3678), 698, 0, 0);
 					registerObject(RAFT_THREE);
 					p.teleport(356, 3678);
 					sleep(1000);
 					removeObject(RAFT_THREE);
 
-					GameObject RAFT_FOUR = new GameObject(Point.location(353, 3682), 698, 0, 0);
+					GameObject RAFT_FOUR = new GameObject(p.getWorld(), Point.location(353, 3682), 698, 0, 0);
 					registerObject(RAFT_FOUR);
 					p.teleport(353, 3682);
 					playerTalk(p, null, "Weeeeeeee!");
 					sleep(500);
 					removeObject(RAFT_FOUR);
 
-					GameObject RAFT_FIVE = new GameObject(Point.location(349, 3685), 698, 0, 0);
+					GameObject RAFT_FIVE = new GameObject(p.getWorld(), Point.location(349, 3685), 698, 0, 0);
 					registerObject(RAFT_FIVE);
 					p.teleport(349, 3685);
 					sleep(500);
 					removeObject(RAFT_FIVE);
 
-					GameObject RAFT_SIX = new GameObject(Point.location(345, 3686), 698, 0, 0);
+					GameObject RAFT_SIX = new GameObject(p.getWorld(), Point.location(345, 3686), 698, 0, 0);
 					registerObject(RAFT_SIX);
 					p.teleport(345, 3686);
 					p.message("You come to a huge waterfall...");
@@ -451,7 +452,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 					sleep(500);
 					removeObject(RAFT_SIX);
 
-					GameObject RAFT_FINAL = new GameObject(Point.location(341, 3686), 698, 0, 0);
+					GameObject RAFT_FINAL = new GameObject(p.getWorld(), Point.location(341, 3686), 698, 0, 0);
 					registerObject(RAFT_FINAL);
 					p.teleport(341, 3686);
 					message(p, "...and plough through it!");
@@ -481,15 +482,15 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				} else if (obj.getX() == 357 && obj.getY() == 3668) {
 					p.teleport(347, 3709);
 				}
-				p.incExp(SKILLS.AGILITY.id(), 10, true);
+				p.incExp(Skills.AGILITY, 10, true);
 			} else if (menu == 1) {
 				p.message("You decide to stay where you are");
 			}
 		}
 		else if (obj.getID() == BUMPY_DIRT) {
-			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
+			if (p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 				p.message("The entrance seems to have caved in.");
-			} else if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) >= 2) {
+			} else if (p.getQuestStage(Quests.SHILO_VILLAGE) >= 2) {
 				if (p.getCache().hasKey("SV_DIG_BUMP")) {
 					message(p, "You see a small fissure in the granite",
 							"that you might just be able to crawl through.");
@@ -558,7 +559,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 		else if (obj.getID() == RASH_EXIT_DOOR && item.getID() == ItemId.BONE_KEY.id()) {
 			if (!p.getInventory().wielding(ItemId.BEADS_OF_THE_DEAD.id())) {
 				message(p, "@red@You feel invisible hands starting to choke you...");
-				p.damage(getCurrentLevel(p, SKILLS.HITS.id()) / 2);
+				p.damage(getCurrentLevel(p, Skills.HITS) / 2);
 			}
 			message(p, "You insert the key into the lock and it merges with the door.",
 					"The doors creak open revealing bright day light.");
@@ -581,8 +582,8 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 			message(p, "You feel a strange force pulling you inside.",
 				"The doors close behind you with the sound of crunching bone.",
 				"Before you stretches a winding tunnel blocked by an ancient gate.");
-			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == 7) {
-				p.updateQuestStage(Constants.Quests.SHILO_VILLAGE, 8);
+			if (p.getQuestStage(Quests.SHILO_VILLAGE) == 7) {
+				p.updateQuestStage(Quests.SHILO_VILLAGE, 8);
 			}
 		}
 		else if (obj.getID() == HILLSIDE_ENTRANCE && item.getID() == ItemId.BONE_SHARD.id()) {
@@ -591,9 +592,9 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 			p.message("you find that it just doesn't fit the delicate lock mechanism.");
 		}
 		else if (obj.getID() == BUMPY_DIRT && item.getID() == ItemId.ROPE.id()) {
-			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
+			if (p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 				p.message("The entrance seems to have caved in.");
-			} else if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) >= 2) {
+			} else if (p.getQuestStage(Quests.SHILO_VILLAGE) >= 2) {
 				// player has not lit place on bumpy dirt
 				if (!p.getCache().hasKey("SV_DIG_LIT")) {
 					p.message("It's too dark to see where to attach it.");
@@ -614,9 +615,9 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 			}
 		}
 		else if (obj.getID() == BUMPY_DIRT && item.getID() == ItemId.LIT_CANDLE.id()) {
-			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
+			if (p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 				p.message("The entrance seems to have caved in.");
-			} else if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) >= 2) {
+			} else if (p.getQuestStage(Quests.SHILO_VILLAGE) >= 2) {
 				// player has not lit place on bumpy dirt
 				if (!p.getCache().hasKey("SV_DIG_LIT")) {
 					message(p, "You hold the candle to the fissure and see that",
@@ -640,9 +641,9 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 			}
 		}
 		else if (obj.getID() == BUMPY_DIRT && item.getID() == ItemId.SPADE.id()) {
-			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
+			if (p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 				p.message("The entrance seems to have caved in.");
-			} else if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) >= 2) {
+			} else if (p.getQuestStage(Quests.SHILO_VILLAGE) >= 2) {
 				if (!p.getCache().hasKey("SV_DIG_BUMP")) {
 					message(p, "You dig a small hole and almost immediately hit granite",
 						"You excavate the hole a bit more and see that there is a small fissure",
@@ -666,7 +667,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 			message(p, "You cleanly cut the plaque of letters away from the rock.",
 					"You place it carefully into your inventory.");
 			addItem(p, ItemId.STONE_PLAQUE.id(), 1);
-			p.incExp(SKILLS.CRAFTING.id(), 10, true);
+			p.incExp(Skills.CRAFTING, 10, true);
 		}
 	}
 

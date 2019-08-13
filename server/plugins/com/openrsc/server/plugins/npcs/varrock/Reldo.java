@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.Constants;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -42,7 +42,7 @@ public final class Reldo implements TalkToNpcListener,
 		}
 		playerTalk(p, n, "Hello");
 		npcTalk(p, n, "Hello stranger");
-		if (p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == 0) {
+		if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 0) {
 			defaultMenu.addOption(new Option("I'm in search of a quest") {
 				@Override
 				public void action() {
@@ -55,7 +55,7 @@ public final class Reldo implements TalkToNpcListener,
 						"I'm not sure where the book is mind you",
 						"I'm sure it's somewhere in here");
 					playerTalk(p, n, "Thankyou");
-					p.updateQuestStage(Constants.Quests.SHIELD_OF_ARRAV, 1);
+					p.updateQuestStage(Quests.SHIELD_OF_ARRAV, 1);
 				}
 			});
 		}

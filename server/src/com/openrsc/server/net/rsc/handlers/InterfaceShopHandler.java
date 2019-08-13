@@ -1,6 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.Shop;
@@ -46,7 +46,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 		int shopAmount = p.readShort();
 		int amount = p.readShort();
 		ItemDefinition def = EntityHandler.getItemDef(itemID);
-		if (def.isMembersOnly() && !Constants.GameServer.MEMBER_WORLD) {
+		if (def.isMembersOnly() && !Server.getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return;
 		}

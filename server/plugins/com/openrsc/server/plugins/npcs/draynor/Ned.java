@@ -1,9 +1,9 @@
 package com.openrsc.server.plugins.npcs.draynor;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.Constants;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -30,7 +30,7 @@ public final class Ned implements TalkToNpcExecutiveListener, TalkToNpcListener 
 			"No thanks Ned, I don't need any"
 		};
 		if (p.getQuestStage(Quests.DRAGON_SLAYER) == 2 && !p.getCache().hasKey("ned_hired")) {
-			if (p.getQuestStage(Constants.Quests.PRINCE_ALI_RESCUE) == 2) {
+			if (p.getQuestStage(Quests.PRINCE_ALI_RESCUE) == 2) {
 				menu = new String[]{ // Dragon Slayer + Prince Ali Rescue
 					"You're a sailor? Could you take me to the Isle of Crandor",
 					"Yes, I would like some Rope",
@@ -51,7 +51,7 @@ public final class Ned implements TalkToNpcExecutiveListener, TalkToNpcListener 
 				else
 					makeChoice(p, n, choice);
 			}
-		} else if (p.getQuestStage(Constants.Quests.PRINCE_ALI_RESCUE) == 2) {
+		} else if (p.getQuestStage(Quests.PRINCE_ALI_RESCUE) == 2) {
 			menu = new String[]{ // Prince Ali Rescue
 				"Yes, I would like some Rope",
 				"Ned, could you make other things from wool?",

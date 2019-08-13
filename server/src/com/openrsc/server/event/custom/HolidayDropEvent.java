@@ -1,6 +1,6 @@
 package com.openrsc.server.event.custom;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.ViewArea;
 import com.openrsc.server.model.entity.GroundItem;
@@ -55,7 +55,7 @@ public class HolidayDropEvent extends HourlyEvent  {
 							(traversal & 64) != 0    // water or black,  etc.
 					);
 					if (!containsObject && !isBlocking) { // Nothing in the way.
-						World.getWorld().registerItem(new GroundItem(getItems().get(DataConversions.random(0, getItems().size() - 1)), x, y, 1, (Player) null));
+						World.getWorld().registerItem(new GroundItem(executor.getWorld(), getItems().get(DataConversions.random(0, getItems().size() - 1)), x, y, 1, (Player) null));
 						totalItemsDropped++;
 					}
 				}
@@ -69,7 +69,7 @@ public class HolidayDropEvent extends HourlyEvent  {
 				continue;
 			}
 
-			p.playerServerMessage(MessageType.QUEST, Constants.GameServer.MESSAGE_PREFIX + "Dropped " + totalItemsDropped + " of item IDs: " + StringUtils.join(getItems(), ", "));
+			p.playerServerMessage(MessageType.QUEST, Server.getServer().getConfig().MESSAGE_PREFIX + "Dropped " + totalItemsDropped + " of item IDs: " + StringUtils.join(getItems(), ", "));
 		}
 
 		if(getEventMessage() != null) {

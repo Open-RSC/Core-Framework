@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.npcs.ardougne.east;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -21,7 +21,7 @@ public class DoctorOrbon implements TalkToNpcListener,
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.DOCTOR_ORBON.id()) {
-			if (p.getQuestStage(Constants.Quests.SHEEP_HERDER) == -1) {
+			if (p.getQuestStage(Quests.SHEEP_HERDER) == -1) {
 				npcTalk(p,
 					n,
 					"well hello again",
@@ -29,7 +29,7 @@ public class DoctorOrbon implements TalkToNpcListener,
 					"Now the town is safe");
 				return;
 			}
-			if (p.getQuestStage(Constants.Quests.SHEEP_HERDER) == 2) {
+			if (p.getQuestStage(Quests.SHEEP_HERDER) == 2) {
 				playerTalk(p, n, "hello again");
 				npcTalk(p, n, "have you managed to get rid of those sheep?");
 				playerTalk(p, n, "not yet");
@@ -63,7 +63,7 @@ public class DoctorOrbon implements TalkToNpcListener,
 				}
 				return;
 			}
-			if (p.getQuestStage(Constants.Quests.SHEEP_HERDER) == 1) {
+			if (p.getQuestStage(Quests.SHEEP_HERDER) == 1) {
 				playerTalk(p, n, "hi doctor",
 					"I need to aquire some protective clothing",
 					"so i can recapture some escaped sheep who have the plague");
@@ -86,7 +86,7 @@ public class DoctorOrbon implements TalkToNpcListener,
 						addItem(p, ItemId.PROTECTIVE_JACKET.id(), 1);
 						npcTalk(p, n,
 							"these will keep you safe from the plague");
-						p.updateQuestStage(Constants.Quests.SHEEP_HERDER, 2);
+						p.updateQuestStage(Quests.SHEEP_HERDER, 2);
 					} else {
 						playerTalk(p, n, "oops, I don't have enough money");
 						npcTalk(p, n,

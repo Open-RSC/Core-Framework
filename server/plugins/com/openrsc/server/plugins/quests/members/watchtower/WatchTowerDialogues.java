@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.quests.members.watchtower;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
@@ -25,7 +25,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.WATCHTOWER;
+		return Quests.WATCHTOWER;
 	}
 
 	@Override
@@ -53,11 +53,11 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.SKAVID_FINALQUIZ.id()) {
-			if (p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
+			if (p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Quests.WATCHTOWER) == -1) {
 				npcTalk(p, n, "What, you gots the crystal...");
 				int lastMenu = showMenu(p, n, "But I've lost it!", "Oh okay then");
 				if (lastMenu == 0) {
-					if (hasItem(p, ItemId.POWERING_CRYSTAL2.id()) || p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
+					if (hasItem(p, ItemId.POWERING_CRYSTAL2.id()) || p.getQuestStage(Quests.WATCHTOWER) == -1) {
 						npcTalk(p, n, "I have no more for you!");
 					} else {
 						npcTalk(p, n, "All right, take this one then...");
@@ -123,28 +123,28 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 		}
 		else if (inArray(n.getID(), NpcId.SKAVID_IG.id(), NpcId.SKAVID_AR.id(), NpcId.SKAVID_CUR.id(), NpcId.SKAVID_NOD.id())) {
 			if (n.getID() == NpcId.SKAVID_IG.id()) {
-				if (p.getCache().hasKey("language_ig") || p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
+				if (p.getCache().hasKey("language_ig") || p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Quests.WATCHTOWER) == -1) {
 					npcTalk(p, n, "Bidith Ig...");
 					p.message("You have already talked to this skavid");
 					return;
 				}
 				npcTalk(p, n, "Cur bidith...");
 			} else if (n.getID() == NpcId.SKAVID_AR.id()) {
-				if (p.getCache().hasKey("language_ar") || p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
+				if (p.getCache().hasKey("language_ar") || p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Quests.WATCHTOWER) == -1) {
 					npcTalk(p, n, "Ar cur...");
 					p.message("You have already talked to this skavid");
 					return;
 				}
 				npcTalk(p, n, "Gor cur...");
 			} else if (n.getID() == NpcId.SKAVID_CUR.id()) {
-				if (p.getCache().hasKey("language_cur") || p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
+				if (p.getCache().hasKey("language_cur") || p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Quests.WATCHTOWER) == -1) {
 					npcTalk(p, n, "Cur tanath...");
 					p.message("You have already talked to this skavid");
 					return;
 				}
 				npcTalk(p, n, "Bidith tanath...");
 			} else if (n.getID() == NpcId.SKAVID_NOD.id()) {
-				if (p.getCache().hasKey("language_nod") || p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
+				if (p.getCache().hasKey("language_nod") || p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Quests.WATCHTOWER) == -1) {
 					npcTalk(p, n, "Gor nod...");
 					p.message("You have already talked to this skavid");
 					return;
@@ -201,7 +201,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 		}
 
 		else if (n.getID() == NpcId.SKAVID_INITIAL.id()) {
-			if (p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
+			if (p.getQuestStage(Quests.WATCHTOWER) == -1) {
 				npcTalk(p, n, "Ah master...",
 					"You did well to master our language...");
 				return;
@@ -253,7 +253,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 						"Cur",
 						"That will gets you started...");
 					p.getCache().store("skavid_started_language", true);
-					p.updateQuestStage(Constants.Quests.WATCHTOWER, 5);
+					p.updateQuestStage(Quests.WATCHTOWER, 5);
 				}
 			}
 		}
@@ -269,7 +269,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 			n.startCombat(p);
 		}
 		else if (n.getID() == NpcId.OGRE_GUARD_CAVE_ENTRANCE.id()) {
-			if (p.getQuestStage(Constants.Quests.WATCHTOWER) != -1) {
+			if (p.getQuestStage(Quests.WATCHTOWER) != -1) {
 				npcTalk(p, n, "What do you want ?");
 				int menu = showMenu(p, n,
 					"I want to go in there",
@@ -884,8 +884,8 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 							p.message("The wizard mutters strange words over the liquid");
 							removeItem(p, ItemId.OGRE_POTION.id(), 1);
 							addItem(p, ItemId.MAGIC_OGRE_POTION.id(), 1);
-							if (p.getQuestStage(Constants.Quests.WATCHTOWER) == 7) {
-								p.updateQuestStage(Constants.Quests.WATCHTOWER, 8);
+							if (p.getQuestStage(Quests.WATCHTOWER) == 7) {
+								p.updateQuestStage(Quests.WATCHTOWER, 8);
 							}
 							npcTalk(p, n, "Here it is, a dangerous substance",
 								"I must remind you that this potion can only be used",

@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.quests.members;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -26,7 +25,7 @@ public class DruidicRitual implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.DRUIDIC_RITUAL;
+		return Quests.DRUIDIC_RITUAL;
 	}
 
 	@Override
@@ -43,7 +42,7 @@ public class DruidicRitual implements QuestInterface, TalkToNpcListener,
 	public void handleReward(Player p) {
 		p.message("Well done you have completed the druidic ritual quest");
 		p.message("@gre@You haved gained 4 quest points!");
-		incQuestReward(p, Quests.questData.get(Quests.DRUIDIC_RITUAL), true);
+		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.DRUIDIC_RITUAL), true);
 	}
 
 	@Override
@@ -113,7 +112,7 @@ public class DruidicRitual implements QuestInterface, TalkToNpcListener,
 					npcTalk(p, n, "I've heard you were very helpful to Sanfew");
 					npcTalk(p, n,
 						"I will teach you the herblaw you need to know now");
-					p.sendQuestComplete(Constants.Quests.DRUIDIC_RITUAL);
+					p.sendQuestComplete(Quests.DRUIDIC_RITUAL);
 					break;
 				case -1:
 					npcTalk(p, n, "Hello how is the herblaw going?");

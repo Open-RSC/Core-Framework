@@ -9,8 +9,8 @@ import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isPhoenixGang;
 
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 
 public class Tramp implements TalkToNpcExecutiveListener, TalkToNpcListener {
 	public boolean blockTalkToNpc(final Player player, final Npc npc) {

@@ -4,9 +4,9 @@ package com.openrsc.server.plugins.itemactions;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.event.SingleEvent;
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -50,7 +50,7 @@ InvUseOnObjectExecutiveListener {
 							boolean fail = Formulae.cutCacti();
 							if (fail) {
 								getOwner().message("You make a mistake and fail to fill your waterskin.");
-								getOwner().incExp(SKILLS.WOODCUT.id(), 4, true);
+								getOwner().incExp(Skills.WOODCUT, 4, true);
 								getOwner().getInventory().add(new Item(s, 1));
 								getOwner().setBusy(false);
 								return;
@@ -66,12 +66,12 @@ InvUseOnObjectExecutiveListener {
 
 							// Add dried cacti
 							Point loc = object.getLocation();
-							final GameObject cacti = new GameObject(loc, 1028, 0, 0);
+							final GameObject cacti = new GameObject(getOwner().getWorld(), loc, 1028, 0, 0);
 							world.registerGameObject(cacti);
 
 							// Remove healthy cacti
 							world.unregisterGameObject(object);
-							getOwner().incExp(SKILLS.WOODCUT.id(), 100, true); // Woodcutting XP
+							getOwner().incExp(Skills.WOODCUT, 100, true); // Woodcutting XP
 
 							// Swap cacti back after 30 seconds.
 							Server.getServer().getGameEventHandler().add(
@@ -80,7 +80,7 @@ InvUseOnObjectExecutiveListener {
 									@Override
 									public void action() {
 										if (cacti != null) {
-											World.getWorld().registerGameObject(new GameObject(loc, 35, 0, 0));
+											World.getWorld().registerGameObject(new GameObject(getOwner().getWorld(), loc, 35, 0, 0));
 											World.getWorld().unregisterGameObject(cacti);
 										}
 									}

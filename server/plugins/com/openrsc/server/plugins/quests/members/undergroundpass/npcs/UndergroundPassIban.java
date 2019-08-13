@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.npcs;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -10,12 +10,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.atQuestStages;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class UndergroundPassIban implements InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
@@ -30,7 +25,7 @@ public class UndergroundPassIban implements InvUseOnObjectListener, InvUseOnObje
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == PIT_OF_THE_DAMNED) {
 			//iban has been killed (+ doesn't matter status of doll)
-			if(atQuestStages(p, Constants.Quests.UNDERGROUND_PASS, 8, -1)) {
+			if(atQuestStages(p, Quests.UNDERGROUND_PASS, 8, -1)) {
 				p.message("iban is already dead");
 				return;
 			}
@@ -72,7 +67,7 @@ public class UndergroundPassIban implements InvUseOnObjectListener, InvUseOnObje
 
 						/*player may teleport out after defeating iban
 						 * without talking to koftik (very likely and logic)*/
-						p.updateQuestStage(Constants.Quests.UNDERGROUND_PASS, 8);
+						p.updateQuestStage(Quests.UNDERGROUND_PASS, 8);
 						//REMOVE CACHES
 						p.getCache().remove("orb_of_light1");
 						p.getCache().remove("orb_of_light2");

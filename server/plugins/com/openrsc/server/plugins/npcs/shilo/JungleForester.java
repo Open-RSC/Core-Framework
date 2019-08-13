@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.npcs.shilo;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -27,7 +27,7 @@ public class JungleForester implements TalkToNpcListener, TalkToNpcExecutiveList
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.JUNGLE_FORESTER.id()) {
-			switch (p.getQuestStage(Constants.Quests.LEGENDS_QUEST)) {
+			switch (p.getQuestStage(Quests.LEGENDS_QUEST)) {
 				case 0:
 					defaultJungleForesterDialogue(p, n, -1);
 					break;
@@ -52,7 +52,7 @@ public class JungleForester implements TalkToNpcListener, TalkToNpcExecutiveList
 	private void LegendsQuest_jungleForesterDialogue(Player p, Npc n, int cID) {
 		if (n.getID() == NpcId.JUNGLE_FORESTER.id()) {
 			if (cID == -1) {
-				switch (p.getQuestStage(Constants.Quests.LEGENDS_QUEST)) {
+				switch (p.getQuestStage(Quests.LEGENDS_QUEST)) {
 					case 1:
 					case 2:
 					case 3:

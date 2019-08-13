@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.commands;
 
-import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.Point;
@@ -76,7 +75,7 @@ public final class Development implements CommandListener {
 			}
 
 			Point npcLoc = new Point(x,y);
-			final Npc n = new Npc(id, x, y, x - radius, x + radius, y - radius, y + radius);
+			final Npc n = new Npc(player.getWorld(), id, x, y, x - radius, x + radius, y - radius, y + radius);
 
 			if (EntityHandler.getNpcDef(id) == null) {
 				player.message(messagePrefix + "Invalid npc id");
@@ -86,7 +85,7 @@ public final class Development implements CommandListener {
 			World.getWorld().registerNpc(n);
 			n.setShouldRespawn(true);
 			player.message(messagePrefix + "Added NPC to database: " + n.getDef().getName() + " at " + npcLoc + " with radius " + radius);
-			DatabaseConnection.getDatabase().executeUpdate("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX
+			DatabaseConnection.getDatabase().executeUpdate("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 				+ "npclocs`(`id`,`startX`,`minX`,`maxX`,`startY`,`minY`,`maxY`) VALUES('" + n.getLoc().getId()
 				+ "', '" + n.getLoc().startX() + "', '" + n.getLoc().minX() + "', '" + n.getLoc().maxX() + "','"
 				+ n.getLoc().startY() + "','" + n.getLoc().minY() + "','" + n.getLoc().maxY() + "')");
@@ -115,7 +114,7 @@ public final class Development implements CommandListener {
 
 			player.message(messagePrefix + "Removed NPC from database: " + npc.getDef().getName() + " with instance ID " + id);
 			DatabaseConnection.getDatabase()
-				.executeUpdate("DELETE FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX
+				.executeUpdate("DELETE FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "npclocs` WHERE `id` = '" + npc.getID() + "' AND startX='" + npc.getLoc().startX
 					+ "' AND startY='" + npc.getLoc().startY + "' AND minX='" + npc.getLoc().minX
 					+ "' AND maxX = '" + npc.getLoc().maxX + "' AND minY='" + npc.getLoc().minY
@@ -169,7 +168,7 @@ public final class Development implements CommandListener {
 
 			player.message(messagePrefix + "Removed object from database: " + object.getGameObjectDef().getName() + " with instance ID " + object.getID());
 			DatabaseConnection.getDatabase()
-				.executeUpdate("DELETE FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX
+				.executeUpdate("DELETE FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "objects` WHERE `x` = '" + object.getX() + "' AND `y` =  '" + object.getY()
 					+ "' AND `id` = '" + object.getID() + "' AND `direction` = '" + object.getDirection()
 					+ "' AND `type` = '" + object.getType() + "'");
@@ -225,11 +224,11 @@ public final class Development implements CommandListener {
 				return;
 			}
 
-			GameObject newObject = new GameObject(Point.location(x, y), id, 0, 0);
+			GameObject newObject = new GameObject(player.getWorld(), Point.location(x, y), id, 0, 0);
 			World.getWorld().registerGameObject(newObject);
 			player.message(messagePrefix + "Added object to database: " + newObject.getGameObjectDef().getName() + " with instance ID " + newObject.getID() + " at " + newObject.getLocation());
 			DatabaseConnection.getDatabase()
-				.executeUpdate("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX
+				.executeUpdate("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "objects`(`x`, `y`, `id`, `direction`, `type`) VALUES ('"
 					+ newObject.getX() + "', '" + newObject.getY() + "', '" + newObject.getID() + "', '"
 					+ newObject.getDirection() + "', '" + newObject.getType() + "')");
@@ -301,17 +300,17 @@ public final class Development implements CommandListener {
 			}
 
 			DatabaseConnection.getDatabase()
-				.executeUpdate("DELETE FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "objects` WHERE `x` = '"
+				.executeUpdate("DELETE FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "objects` WHERE `x` = '"
 					+ object.getX() + "' AND `y` =  '" + object.getY() + "' AND `id` = '" + object.getID()
 					+ "' AND `direction` = '" + object.getDirection() + "' AND `type` = '" + object.getType()
 					+ "'");
 			World.getWorld().unregisterGameObject(object);
 
-			GameObject newObject = new GameObject(Point.location(x, y), object.getID(), direction, object.getType());
+			GameObject newObject = new GameObject(player.getWorld(), Point.location(x, y), object.getID(), direction, object.getType());
 			World.getWorld().registerGameObject(newObject);
 
 			DatabaseConnection.getDatabase()
-				.executeUpdate("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX
+				.executeUpdate("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "objects`(`x`, `y`, `id`, `direction`, `type`) VALUES ('" + newObject.getX() + "', '"
 					+ newObject.getY() + "', '" + newObject.getID() + "', '" + newObject.getDirection() + "', '"
 					+ newObject.getType() + "')");

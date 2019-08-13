@@ -1,9 +1,6 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -37,7 +34,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 	private static void ungaduluTalkToDialogue(Player p, Npc n, int cID) {
 		if (n.getID() == NpcId.UNGADULU.id()) {
 			if (cID == -1) {
-				switch (p.getQuestStage(Constants.Quests.LEGENDS_QUEST)) {
+				switch (p.getQuestStage(Quests.LEGENDS_QUEST)) {
 					case 2:
 					case 3:
 						npcTalk(p, n, "Please run for your life...");
@@ -668,9 +665,9 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 		npcTalk(p, n, "Iles Resti Yam Darkus Spiritus Possesi Yanai..");
 		message(p, n, 1300, "You feel a strange power coming over you...");
 		p.damage(5);
-		p.getSkills().setLevel(SKILLS.ATTACK.id(), p.getSkills().getLevel(SKILLS.ATTACK.id()) - 5);
-		p.getSkills().setLevel(SKILLS.DEFENSE.id(), p.getSkills().getLevel(SKILLS.DEFENSE.id()) - 5);
-		p.getSkills().setLevel(SKILLS.STRENGTH.id(), p.getSkills().getLevel(SKILLS.STRENGTH.id()) - 5);
+		p.getSkills().setLevel(Skills.ATTACK, p.getSkills().getLevel(Skills.ATTACK) - 5);
+		p.getSkills().setLevel(Skills.DEFENSE, p.getSkills().getLevel(Skills.DEFENSE) - 5);
+		p.getSkills().setLevel(Skills.STRENGTH, p.getSkills().getLevel(Skills.STRENGTH) - 5);
 		message(p, n, 1300, "The Shaman seems to get stronger...",
 			"The Shaman seems to return to normal...");
 		n = transform(n, NpcId.UNGADULU.id(), true);
@@ -681,7 +678,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 	public static void ungaduluWallDialogue(Player p, Npc n, int cID) {
 		if (n.getID() == NpcId.UNGADULU.id()) {
 			if (cID == -1) {
-				switch (p.getQuestStage(Constants.Quests.LEGENDS_QUEST)) {
+				switch (p.getQuestStage(Quests.LEGENDS_QUEST)) {
 					case 2:
 					case 3:
 						p.message("You see a white robed figure gesturing to you.");
@@ -753,8 +750,8 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 					npcTalk(p, n, "Hurry, Vacu, the heat kills me...ha ha ha");
 					n = transform(n, NpcId.UNGADULU.id(), true);
 					p.message("The Shaman throws himself down on the floor and starts shaking.");
-					if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 2) {
-						p.updateQuestStage(Constants.Quests.LEGENDS_QUEST, 3);
+					if (p.getQuestStage(Quests.LEGENDS_QUEST) == 2) {
+						p.updateQuestStage(Quests.LEGENDS_QUEST, 3);
 					}
 					break;
 			}
@@ -786,9 +783,9 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 		if (affectedmob.getID() == NpcId.UNGADULU.id()) {
 			p.message("You feel a strange force coming over you...");
 			p.message("You feel weakened....");
-			p.getSkills().setLevel(SKILLS.ATTACK.id(), 0);
-			p.getSkills().setLevel(SKILLS.STRENGTH.id(), 0);
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 9 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
+			p.getSkills().setLevel(Skills.ATTACK, 0);
+			p.getSkills().setLevel(Skills.STRENGTH, 0);
+			if (p.getQuestStage(Quests.LEGENDS_QUEST) >= 9 || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
 				message(p, 1300, "The Shaman casts a debilitating spell on you..",
 					"You're sent reeling backwards through the flames..");
 				p.teleport(454, 3702);
@@ -815,9 +812,9 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 		if (affectedmob.getID() == NpcId.UNGADULU.id()) {
 			p.message("You feel a strange force coming over you...");
 			p.message("You feel weakened....");
-			p.getSkills().setLevel(SKILLS.ATTACK.id(), 0);
-			p.getSkills().setLevel(SKILLS.STRENGTH.id(), 0);
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 9 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
+			p.getSkills().setLevel(Skills.ATTACK, 0);
+			p.getSkills().setLevel(Skills.STRENGTH, 0);
+			if (p.getQuestStage(Quests.LEGENDS_QUEST) >= 9 || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
 				message(p, 1300, "The Shaman casts a debilitating spell on you..",
 					"You're sent reeling backwards through the flames..");
 				p.teleport(454, 3702);
@@ -844,8 +841,8 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 		if (affectedmob.getID() == NpcId.UNGADULU.id()) {
 			p.message("You feel a strange force coming over you...");
 			p.message("You feel weakened....");
-			p.getSkills().setLevel(SKILLS.ATTACK.id(), 0);
-			p.getSkills().setLevel(SKILLS.STRENGTH.id(), 0);
+			p.getSkills().setLevel(Skills.ATTACK, 0);
+			p.getSkills().setLevel(Skills.STRENGTH, 0);
 			p.message("The spell fizzles and dies...");
 			p.message("Some sort of magical effect seems to be protecting the Shaman.");
 			return;
@@ -869,8 +866,8 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 			sleep(650);
 			npcTalk(p, n, "Run then....run away....",
 				"Save yourself....");
-			p.getSkills().setLevel(SKILLS.ATTACK.id(), (p.getSkills().getMaxStat(SKILLS.ATTACK.id()) - 19) + p.getSkills().getLevel(SKILLS.ATTACK.id()));
-			p.getSkills().setLevel(SKILLS.STRENGTH.id(), (p.getSkills().getMaxStat(SKILLS.STRENGTH.id()) - 19) + p.getSkills().getLevel(SKILLS.STRENGTH.id()));
+			p.getSkills().setLevel(Skills.ATTACK, (p.getSkills().getMaxStat(Skills.ATTACK) - 19) + p.getSkills().getLevel(Skills.ATTACK));
+			p.getSkills().setLevel(Skills.STRENGTH, (p.getSkills().getMaxStat(Skills.STRENGTH) - 19) + p.getSkills().getLevel(Skills.STRENGTH));
 			p.message("Strangely, you start to feel better.");
 		}
 	}
@@ -947,7 +944,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 				"And it will also be vulerable to normal attacks.");
 		}
 		else if (npc.getID() == NpcId.UNGADULU.id() && item.getID() == ItemId.BOOKING_OF_BINDING.id()) {
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 3) {
+			if (p.getQuestStage(Quests.LEGENDS_QUEST) == 3) {
 				message(p, npc, 1900, "You open the book of binding in front of Ungadulu.",
 					"A blinding light fills the room...",
 					"A supernatural light falls on Ungadulu...",
@@ -956,7 +953,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 				if (nez != null) {
 					npcTalk(p, nez, "Curse you foul intruder...your faith will help you little here.");
 					nez.startCombat(p);
-					p.getSkills().setLevel(SKILLS.PRAYER.id(), (int) Math.ceil((double) p.getSkills().getLevel(SKILLS.PRAYER.id()) / 4));
+					p.getSkills().setLevel(Skills.PRAYER, (int) Math.ceil((double) p.getSkills().getLevel(Skills.PRAYER) / 4));
 					message(p, 1300, "A sense of hopelessness fills your body...");
 					npcTalk(p, nez, "'Ere near to death ye comes now that ye has meddled in my dealings..");
 					if (p.getCache().hasKey("holy_water_neiz")) {

@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.itemactions;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
@@ -29,7 +29,7 @@ public class CombinePotions implements InvUseOnItemListener, InvUseOnItemExecuti
 	public void onInvUseOnItem(Player p, Item item1, Item item2) {
 
 		// No Decanting without the config set to true!
-		if (!Constants.GameServer.WANT_DECANTING) {
+		if (!Server.getServer().getConfig().WANT_DECANTING) {
 			p.message("Nothing interesting happens");
 			return;
 		}

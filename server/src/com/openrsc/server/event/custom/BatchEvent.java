@@ -1,6 +1,6 @@
 package com.openrsc.server.event.custom;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -14,7 +14,7 @@ public abstract class BatchEvent extends DelayedEvent {
 	public BatchEvent(Player owner, int delay, String descriptor, int repeatFor, boolean gathering) {
 		super(owner, delay, descriptor);
 		this.gathering = gathering;
-		if (Constants.GameServer.BATCH_PROGRESSION) this.repeatFor = repeatFor;
+		if (Server.getServer().getConfig().BATCH_PROGRESSION) this.repeatFor = repeatFor;
 		else if (repeatFor > 1000) this.repeatFor = repeatFor - 1000; // Mining default
 		else this.repeatFor = 1; // Always 1, otherwise.
 		ActionSender.sendProgressBar(owner, delay, repeatFor);
@@ -38,7 +38,7 @@ public abstract class BatchEvent extends DelayedEvent {
 			}
 			/*if (owner.getInventory().full() && gathering) { // this is a PITA to have to drop inventory items too keep going so Marwolf comments this out
 				interrupt();
-				if (Constants.GameServer.BATCH_PROGRESSION) owner.message("Your Inventory is too full to continue.");
+				if (getServer().getConfig().BATCH_PROGRESSION) owner.message("Your Inventory is too full to continue.");
 			}*/
 			if (getOwner().hasMoved()) { // If the player walks away, stop batching
 				//this.stop();

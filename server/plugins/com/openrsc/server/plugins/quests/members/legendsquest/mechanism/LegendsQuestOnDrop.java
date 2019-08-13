@@ -10,7 +10,7 @@ import static com.openrsc.server.plugins.Functions.inArray;
 import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.removeItem;
 
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.constants.ItemId;
 
 public class LegendsQuestOnDrop implements DropListener, DropExecutiveListener {
 

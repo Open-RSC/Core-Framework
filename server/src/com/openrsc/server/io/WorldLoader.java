@@ -1,6 +1,6 @@
 package com.openrsc.server.io;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.TileValue;
@@ -140,8 +140,8 @@ public class WorldLoader {
 	public void loadWorld(World world) {
 		final long start = System.currentTimeMillis();
 		try {
-			if (Constants.GameServer.MEMBER_WORLD) {
-				if (Constants.GameServer.WANT_CUSTOM_LANDSCAPE)
+			if (Server.getServer().getConfig().MEMBER_WORLD) {
+				if (Server.getServer().getConfig().WANT_CUSTOM_LANDSCAPE)
 					tileArchive = new ZipFile(new File("./conf/server/data/Custom_P2PLandscape.orsc")); // Members landscape
 				else
 					tileArchive = new ZipFile(new File("./conf/server/data/Authentic_P2PLandscape.orsc")); // Members landscape

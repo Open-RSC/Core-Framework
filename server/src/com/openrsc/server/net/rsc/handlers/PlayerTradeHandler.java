@@ -1,6 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
@@ -250,7 +250,7 @@ public class PlayerTradeHandler implements PacketHandler {
 					player.setRequiresOfferUpdate(true);
 					continue;
 				}
-				if (tItem.getDef().isMembersOnly() && !Constants.GameServer.MEMBER_WORLD) {
+				if (tItem.getDef().isMembersOnly() && !Server.getServer().getConfig().MEMBER_WORLD) {
 					player.setRequiresOfferUpdate(true);
 					continue;
 				}

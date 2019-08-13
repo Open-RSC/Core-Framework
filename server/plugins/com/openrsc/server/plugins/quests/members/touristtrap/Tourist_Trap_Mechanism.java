@@ -1,10 +1,10 @@
 package com.openrsc.server.plugins.quests.members.touristtrap;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.Constants;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -59,7 +59,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 
 	@Override
 	public void onUnWield(Player player, Item item) {
-		if ((item.getID() == ItemId.SLAVES_ROBE_BOTTOM.id() || item.getID() == ItemId.SLAVES_ROBE_TOP.id()) && (player.getLocation().inTouristTrapCave()) && player.getQuestStage(Constants.Quests.TOURIST_TRAP) != -1) {
+		if ((item.getID() == ItemId.SLAVES_ROBE_BOTTOM.id() || item.getID() == ItemId.SLAVES_ROBE_TOP.id()) && (player.getLocation().inTouristTrapCave()) && player.getQuestStage(Quests.TOURIST_TRAP) != -1) {
 			Npc n = getNearestNpc(player, NpcId.MERCENARY.id(), 5);
 			if (n != null) {
 				n.teleport(player.getX(), player.getY());
@@ -90,15 +90,15 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 	@Override
 	public void onInvUseOnNpc(Player p, Npc npc, Item item) {
 		if (item.getID() == ItemId.TECHNICAL_PLANS.id() && npc.getID() == NpcId.BEDABIN_NOMAD_GUARD.id()) {
-			if (p.getQuestStage(Constants.Quests.TOURIST_TRAP) > 7
-				|| p.getQuestStage(Constants.Quests.TOURIST_TRAP) == -1) {
+			if (p.getQuestStage(Quests.TOURIST_TRAP) > 7
+				|| p.getQuestStage(Quests.TOURIST_TRAP) == -1) {
 				npcTalk(p, npc, "Sorry, but you can't use the tent without permission.",
 					"But thanks for all your help with the Bedabin people.",
 					"And we'll take those plans off your hands as well!");
-			} else if (p.getQuestStage(Constants.Quests.TOURIST_TRAP) == 6 || p.getQuestStage(Constants.Quests.TOURIST_TRAP) == 7) {
+			} else if (p.getQuestStage(Quests.TOURIST_TRAP) == 6 || p.getQuestStage(Quests.TOURIST_TRAP) == 7) {
 				npcTalk(p, npc, "Ok, you can go in, Al Shabim has told me about you.");
 				p.teleport(171, 792);
-			} else if (p.getQuestStage(Constants.Quests.TOURIST_TRAP) >= 0) {
+			} else if (p.getQuestStage(Quests.TOURIST_TRAP) >= 0) {
 				npcTalk(p, npc, "Hmm, those plans look interesting.",
 					"Go and show them to Al Shabim...",
 					"I'm sure he'll be pleased to see them.");
@@ -114,12 +114,12 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 				"Oh, this is soo nice!",
 				"Mmmmm, *SLURP*",
 				"Yummmm....Oh yes, this is great.");
-			if (p.getQuestStage(Constants.Quests.TOURIST_TRAP) == 8) {
-				p.updateQuestStage(Constants.Quests.TOURIST_TRAP, 9);
+			if (p.getQuestStage(Quests.TOURIST_TRAP) == 8) {
+				p.updateQuestStage(Quests.TOURIST_TRAP, 9);
 			}
 		}
 		else if (item.getID() == ItemId.MINING_BARREL.id() && npc.getID() == NpcId.ANA.id()) {
-			if (p.getQuestStage(Constants.Quests.TOURIST_TRAP) == -1) {
+			if (p.getQuestStage(Quests.TOURIST_TRAP) == -1) {
 				p.message("You have already completed this quest.");
 				npcTalk(p, npc, "I think you might have me confused with someone else.");
 				return;
@@ -171,7 +171,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 					p.message("You need a hammer to work anything on the anvil.");
 					return;
 				}
-				if (getCurrentLevel(p, SKILLS.SMITHING.id()) < 20) {
+				if (getCurrentLevel(p, Skills.SMITHING) < 20) {
 					p.message("You need level 20 in smithing before you can attempt this.");
 					return;
 				}
@@ -202,7 +202,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 				p.message("You need at least ten feathers to make this item.");
 				return;
 			}
-			if (getCurrentLevel(p, SKILLS.FLETCHING.id()) < 10) {
+			if (getCurrentLevel(p, Skills.FLETCHING) < 10) {
 				p.message("You need a fletching level of at least 10 to complete this.");
 				return;
 			}
@@ -213,7 +213,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 				message(p, "You succesfully attach the feathers to the dart tip.");
 				p.getInventory().replace(ItemId.PROTOTYPE_DART_TIP.id(), ItemId.PROTOTYPE_THROWING_DART.id());
 				//kosher: dependent on fletching level!
-				p.incExp(SKILLS.FLETCHING.id(), getMaxLevel(p, SKILLS.FLETCHING.id()) * 50, true);
+				p.incExp(Skills.FLETCHING, getMaxLevel(p, Skills.FLETCHING) * 50, true);
 			} else {
 				message(p, "An unlucky accident causes you to waste the feathers.",
 					"But you feel that you're close to making this item though.");
@@ -293,7 +293,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 		}
 		else if (obj.getID() == MINING_CAVE) {
 			Npc n = getNearestNpc(p, NpcId.MERCENARY_ESCAPEGATES.id(), 10);
-			if (!p.getInventory().wielding(ItemId.SLAVES_ROBE_BOTTOM.id()) && !p.getInventory().wielding(ItemId.SLAVES_ROBE_TOP.id()) && p.getQuestStage(Constants.Quests.TOURIST_TRAP) != -1) {
+			if (!p.getInventory().wielding(ItemId.SLAVES_ROBE_BOTTOM.id()) && !p.getInventory().wielding(ItemId.SLAVES_ROBE_TOP.id()) && p.getQuestStage(Quests.TOURIST_TRAP) != -1) {
 				p.message("This guard looks as if he's been down here a while.");
 				npcTalk(p, n, "Hey, you're no slave!");
 				npcTalk(p, n, "What are you doing down here?");
@@ -304,7 +304,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 				p.teleport(89, 801);
 				return;
 			}
-			if (p.getQuestStage(Constants.Quests.TOURIST_TRAP) >= 9 || p.getQuestStage(Constants.Quests.TOURIST_TRAP) == -1) {
+			if (p.getQuestStage(Quests.TOURIST_TRAP) >= 9 || p.getQuestStage(Quests.TOURIST_TRAP) == -1) {
 				message(p, "You walk into the dark of the cavern...");
 				p.message("And emerge in a different part of this huge underground complex.");
 				p.teleport(76, 3640);
@@ -960,7 +960,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 	@Override
 	public void onDrop(Player p, Item i) {
 		if (i.getID() == ItemId.ANA_IN_A_BARREL.id()) {
-			if (p.getQuestStage(Constants.Quests.TOURIST_TRAP) == -1) {
+			if (p.getQuestStage(Quests.TOURIST_TRAP) == -1) {
 				removeItem(p, ItemId.ANA_IN_A_BARREL.id(), 1);
 				return;
 			}
@@ -1017,7 +1017,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 	public void onTalkToNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.MINING_CART_DRIVER.id()) {
 			if (n.getID() == NpcId.MINING_CART_DRIVER.id()) {
-				if (p.getQuestStage(Constants.Quests.TOURIST_TRAP) == -1) {
+				if (p.getQuestStage(Quests.TOURIST_TRAP) == -1) {
 					npcTalk(p, n, "Don't trouble me, can't you see I'm busy?");
 					return;
 				}

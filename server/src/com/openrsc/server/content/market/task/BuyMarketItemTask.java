@@ -107,7 +107,7 @@ public class BuyMarketItemTask extends MarketTask {
 		Market.getInstance().addRequestOpenAuctionHouseTask(playerBuyer);
 
 		if (updateDiscord) {
-			Server.getServer().getDiscordSender().auctionBuy(item);
+			Server.getServer().getDiscordService().auctionBuy(item);
 		}
 	}
 

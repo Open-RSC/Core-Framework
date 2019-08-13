@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.quests.members.digsite;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -29,7 +29,7 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 	private void digsiteExaminerDialogue(Player p, Npc n, int cID) {
 		if (n.getID() == NpcId.EXAMINER.id()) {
 			if (cID == -1) {
-				switch (p.getQuestStage(Constants.Quests.DIGSITE)) {
+				switch (p.getQuestStage(Quests.DIGSITE)) {
 					case -1:
 						npcTalk(p, n, "Hi there",
 							"My colleague tells me you helped to uncover",
@@ -70,7 +70,7 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 								"By the curator of varrock museum");
 							playerTalk(p, n, "Oh right, I'll see what I can do");
 							addItem(p, ItemId.UNSTAMPED_LETTER_OF_RECOMMENDATION.id(), 1);
-							p.updateQuestStage(Constants.Quests.DIGSITE, 1);
+							p.updateQuestStage(Quests.DIGSITE, 1);
 						} else if (menu == 1) {
 							npcTalk(p, n, "You could gain much with an understanding of the world below");
 						}
@@ -81,7 +81,7 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 						if (hasItem(p, ItemId.STAMPED_LETTER_OF_RECOMMENDATION.id())) {
 							playerTalk(p, n, "Here is the stamped letter you asked for");
 							removeItem(p, ItemId.STAMPED_LETTER_OF_RECOMMENDATION.id(), 1);
-							p.updateQuestStage(Constants.Quests.DIGSITE, 2);
+							p.updateQuestStage(Quests.DIGSITE, 2);
 							npcTalk(p, n, "Good good, we will begin the exam...");
 							digsiteExaminerDialogue(p, n, ExaminerNPC.START_EXAM_AND_MENU_ONE);
 						} else {
@@ -318,7 +318,7 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 						p.message("The examiner hands you a trowel");
 						addItem(p, ItemId.TROWEL.id(), 1);
 						addItem(p, ItemId.LEVEL_1_CERTIFICATE.id(), 1);
-						p.setQuestStage(Constants.Quests.DIGSITE, 3);
+						p.setQuestStage(Quests.DIGSITE, 3);
 						/* Remove the caches from students, and begin stage 3 + caches. */
 						p.getCache().remove("student_orange_c");
 						p.getCache().remove("student_green_c");
@@ -449,7 +449,7 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 						npcTalk(p, n, "You have now passed the Earth sciences level 2 intermediate exam",
 							"Here is your certificate");
 						addItem(p, ItemId.LEVEL_2_CERTIFICATE.id(), 1);
-						p.setQuestStage(Constants.Quests.DIGSITE, 4);
+						p.setQuestStage(Quests.DIGSITE, 4);
 						/* Remove caches from exam 2 by students npcs */
 						p.getCache().remove("student_orange_exam2");
 						p.getCache().remove("student_green_exam2");
@@ -585,7 +585,7 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 						p.getCache().remove("student_orange_exam3");
 						p.getCache().remove("student_green_exam3");
 						p.getCache().remove("student_purple_exam3");
-						p.setQuestStage(Constants.Quests.DIGSITE, 5);
+						p.setQuestStage(Quests.DIGSITE, 5);
 					} else {
 						if (CORRECT_ANSWERS == 0) {
 							npcTalk(p, n, "I cannot believe this!",

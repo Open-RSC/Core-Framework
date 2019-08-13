@@ -1,11 +1,10 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.event.MiniEvent;
 import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
@@ -56,7 +55,7 @@ public class ItemActionHandler implements PacketHandler {
 			return;
 		}
 
-		if (item.getDef().isMembersOnly() && !Constants.GameServer.MEMBER_WORLD) {
+		if (item.getDef().isMembersOnly() && !Server.getServer().getConfig().MEMBER_WORLD) {
 			player.message("You need to be a member to use this object");
 			return;
 		}
@@ -163,7 +162,7 @@ public class ItemActionHandler implements PacketHandler {
 				case DEATH_TALISMAN:
 				case BLOOD_TALISMAN:
 					if (item.getDef().getCommand()[commandIndex].equalsIgnoreCase("locate")) {
-						if (player.getQuestStage(Constants.Quests.RUNE_MYSTERIES) != -1) {
+						if (player.getQuestStage(Quests.RUNE_MYSTERIES) != -1) {
 							player.message("You can't understand what the talisman is trying to tell you.");
 							return;
 						}
@@ -250,16 +249,16 @@ public class ItemActionHandler implements PacketHandler {
 		owner.getInventory().remove(item);
 		switch (ItemId.getById(item.getID())) {
 			case BONES:
-				owner.incExp(Skills.PRAYER, 15, true); // 3.75
+				owner.incExp(com.openrsc.server.constants.Skills.PRAYER, 15, true); // 3.75
 				break;
 			case BAT_BONES:
-				owner.incExp(Skills.PRAYER, 18, true); // 4.5
+				owner.incExp(com.openrsc.server.constants.Skills.PRAYER, 18, true); // 4.5
 				break;
 			case BIG_BONES:
-				owner.incExp(Skills.PRAYER, 50, true); // 12.5
+				owner.incExp(com.openrsc.server.constants.Skills.PRAYER, 50, true); // 12.5
 				break;
 			case DRAGON_BONES:
-				owner.incExp(Skills.PRAYER, 240, true); // 60
+				owner.incExp(com.openrsc.server.constants.Skills.PRAYER, 240, true); // 60
 				break;
 			default:
 				owner.message("Nothing interesting happens");

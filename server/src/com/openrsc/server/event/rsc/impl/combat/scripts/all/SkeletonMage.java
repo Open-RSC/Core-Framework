@@ -2,8 +2,8 @@ package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatAggroScript;
 import com.openrsc.server.event.rsc.impl.combat.scripts.OnCombatStartScript;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -21,7 +21,7 @@ public class SkeletonMage implements CombatAggroScript, OnCombatStartScript {
 
 			player.message("You feel slightly weakened");
 			
-			int[] stats = {SKILLS.ATTACK.id(), SKILLS.DEFENSE.id(), SKILLS.STRENGTH.id()};
+			int[] stats = {Skills.ATTACK, Skills.DEFENSE, Skills.STRENGTH};
 			for(int affectedStat : stats) {
 				/* How much to lower the stat */
 				int lowerBy = (int) Math.ceil(((player.getSkills().getMaxStat(affectedStat) + 20) * 0.05));

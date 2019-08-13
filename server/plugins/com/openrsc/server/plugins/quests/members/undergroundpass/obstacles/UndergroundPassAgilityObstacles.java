@@ -1,10 +1,10 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 
-import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.custom.UndergroundPassMessages;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -39,19 +39,19 @@ public class UndergroundPassAgilityObstacles implements ObjectActionListener, Ob
 						p.teleport(730, 3494);
 						break;
 					case 864:
-						p.teleport((p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) >= 4) || (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == -1) ? 751 : 734, 3496);
+						p.teleport((p.getQuestStage(Quests.UNDERGROUND_PASS) >= 4) || (p.getQuestStage(Quests.UNDERGROUND_PASS) == -1) ? 751 : 734, 3496);
 						break;
 					case 863:
 						p.teleport(763, 3442);
 						break;
 					case 872:
-						p.teleport((p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) >= 4) || (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == -1) ? 765 : 748, 3497);
+						p.teleport((p.getQuestStage(Quests.UNDERGROUND_PASS) >= 4) || (p.getQuestStage(Quests.UNDERGROUND_PASS) == -1) ? 765 : 748, 3497);
 						break;
 					case 865:
 						p.teleport(728, 3499);
 						break;
 					case 866:
-						p.teleport((p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) >= 4) || (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == -1) ? 755 : 738, 3501);
+						p.teleport((p.getQuestStage(Quests.UNDERGROUND_PASS) >= 4) || (p.getQuestStage(Quests.UNDERGROUND_PASS) == -1) ? 755 : 738, 3501);
 						break;
 				}
 				p.message("you drop down to the cave floor");
@@ -62,7 +62,7 @@ public class UndergroundPassAgilityObstacles implements ObjectActionListener, Ob
 			}
 		}
 		else if (obj.getID() == NORTH_STONE_STEP) {
-			if (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == 4) {
+			if (p.getQuestStage(Quests.UNDERGROUND_PASS) == 4) {
 				failBlackAreaObstacle(p, obj); // fail directly, to get stage 5.
 			} else {
 				message(p, "you walk down the stone steps");
@@ -77,7 +77,7 @@ public class UndergroundPassAgilityObstacles implements ObjectActionListener, Ob
 		}
 		else if (obj.getID() == FIRST_REMAINING_BRIDGE) {
 			message(p, "you attempt to walk over the remaining bridge..");
-			if (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == 4) {
+			if (p.getQuestStage(Quests.UNDERGROUND_PASS) == 4) {
 				failBlackAreaObstacle(p, obj); // fail directly, to get stage 5.
 			} else {
 				if (succeed(p, 1)) {
@@ -118,7 +118,7 @@ public class UndergroundPassAgilityObstacles implements ObjectActionListener, Ob
 	}
 
 	boolean succeed(Player player, int req) {
-		int level_difference = getCurrentLevel(player, SKILLS.AGILITY.id()) - req;
+		int level_difference = getCurrentLevel(player, Skills.AGILITY) - req;
 		int percent = random(1, 100);
 
 		if (level_difference < 0)
@@ -136,11 +136,11 @@ public class UndergroundPassAgilityObstacles implements ObjectActionListener, Ob
 	private void failBlackAreaObstacle(Player p, GameObject obj) {
 		p.message("..but you slip and tumble into the darkness");
 		fallTeleportLocation(p, obj);
-		p.damage(((int) getCurrentLevel(p, SKILLS.HITS.id()) / 5) + 5); // 6 lowest, 25 max.
+		p.damage(((int) getCurrentLevel(p, Skills.HITS) / 5) + 5); // 6 lowest, 25 max.
 		playerTalk(p, null, "ouch!");
-		if (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) >= 4) {
-			if (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == 4) {
-				p.updateQuestStage(Constants.Quests.UNDERGROUND_PASS, 5);
+		if (p.getQuestStage(Quests.UNDERGROUND_PASS) >= 4) {
+			if (p.getQuestStage(Quests.UNDERGROUND_PASS) == 4) {
+				p.updateQuestStage(Quests.UNDERGROUND_PASS, 5);
 			}
 			//only on "first-time" fail at stages 5, 8
 			Npc koftik = getNearestNpc(p, NpcId.KOFTIK_RECOVERED.id(), 10);

@@ -1,5 +1,6 @@
 package com.openrsc.server.sql;
 
+import com.openrsc.server.Server;
 import com.openrsc.server.sql.query.Query;
 import com.openrsc.server.sql.query.ResultQuery;
 import org.apache.logging.log4j.LogManager;
@@ -29,8 +30,18 @@ public final class GameLogging implements Runnable {
 		return singleton;
 	}
 
-	public static void load() {
-		singleton = new GameLogging();
+	private final Server server;
+
+	public GameLogging(Server server) {
+		this.server = server;
+	}
+
+	public final Server getServer() {
+		return server;
+	}
+
+	public static void load(Server server) {
+		singleton = new GameLogging(server);
 		singleton.start();
 	}
 
@@ -45,7 +56,7 @@ public final class GameLogging implements Runnable {
 	}
 
 	public synchronized void start() {
-		loggingConnection = new DatabaseConnection("game-logging");
+		loggingConnection = new DatabaseConnection(getServer(), "game-logging");
 		running.set(true);
 		thread.start();
 	}

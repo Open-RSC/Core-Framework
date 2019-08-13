@@ -47,7 +47,7 @@ public class CancelMarketItemTask extends MarketTask {
 		}
 		Market.getInstance().addRequestOpenAuctionHouseTask(owner);
 		if (updateDiscord) {
-			Server.getServer().getDiscordSender().auctionCancel(item);
+			Server.getServer().getDiscordService().auctionCancel(item);
 		}
 	}
 

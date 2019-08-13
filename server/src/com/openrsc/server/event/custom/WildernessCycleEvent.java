@@ -1,6 +1,6 @@
 package com.openrsc.server.event.custom;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.sql.GameLogging;
@@ -34,7 +34,7 @@ public class WildernessCycleEvent extends DelayedEvent {
 		try {
 			long now = System.currentTimeMillis() / 1000;
 
-			GameLogging.addQuery(new ResultQuery("SELECT `key`, `value` FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "player_cache` WHERE `playerID`=-1") {
+			GameLogging.addQuery(new ResultQuery("SELECT `key`, `value` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "player_cache` WHERE `playerID`=-1") {
 				@Override
 				public void onResult(ResultSet result) throws SQLException {
 					if (!result.next()) {
@@ -70,7 +70,7 @@ public class WildernessCycleEvent extends DelayedEvent {
 				World.getWorld().sendWorldMessage("Wilderness rules changed: " + getFriendlyString(lastWildernessType)
 					+ ". Next change in " + timeUntilChange() + " hours.");
 
-				GameLogging.addQuery(new Query("UPDATE `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "player_cache` SET `value`=?, `key`=? WHERE `playerID`='-1'") {
+				GameLogging.addQuery(new Query("UPDATE `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "player_cache` SET `value`=?, `key`=? WHERE `playerID`='-1'") {
 
 					@Override
 					public Query build() {

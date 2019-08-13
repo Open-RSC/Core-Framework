@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.quests.members;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -46,7 +45,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.BIOHAZARD;
+		return Quests.BIOHAZARD;
 	}
 
 	@Override
@@ -62,7 +61,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void handleReward(Player p) {
 		p.message("@gre@You haved gained 3 quest points!");
-		incQuestReward(p, Quests.questData.get(Quests.BIOHAZARD), true);
+		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.BIOHAZARD), true);
 		p.message("you have completed the biohazard quest");
 	}
 
@@ -749,7 +748,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 		else if (n.getID() == NpcId.KING_LATHAS.id()) {
 			/** START UNDERGROUND PASS QUEST!!! **/
 			if (p.getQuestStage(this) == -1) {
-				switch (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS)) {
+				switch (p.getQuestStage(Quests.UNDERGROUND_PASS)) {
 					case 0:
 					case 1:
 					case 2:
@@ -770,8 +769,8 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 						npcTalk(p, n, "a warning traveller the ungerground pass..",
 							"is lethal, we lost many men exploring those caverns",
 							"go preparred with food and armour or you won't last long");
-						if (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == 0) {
-							p.updateQuestStage(Constants.Quests.UNDERGROUND_PASS, 1);
+						if (p.getQuestStage(Quests.UNDERGROUND_PASS) == 0) {
+							p.updateQuestStage(Quests.UNDERGROUND_PASS, 1);
 						}
 						break;
 					case 3:
@@ -795,7 +794,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 							"to head into west runescape and stop tryas");
 						playerTalk(p, n, "i will be ready and waiting");
 						npcTalk(p, n, "your loyalty is appreiciated traveller");
-						p.sendQuestComplete(Constants.Quests.UNDERGROUND_PASS);
+						p.sendQuestComplete(Quests.UNDERGROUND_PASS);
 						break;
 					case -1:
 						playerTalk(p, n, "hello king lathas");
@@ -853,7 +852,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 						"He was my brother");
 					p.message("king lathas gives you a magic amulet");
 					addItem(p, ItemId.KING_LATHAS_AMULET.id(), 1);
-					p.sendQuestComplete(Constants.Quests.BIOHAZARD);
+					p.sendQuestComplete(Quests.BIOHAZARD);
 				} else if (menu == 1) {
 					npcTalk(p, n, "No time is ever wasted- thanks for all you've done");
 				}
@@ -991,7 +990,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 	}
 
 	private void ropeLadderBackFunction(final Player p) {
-		GameObject ropeLadder = new GameObject(Point.location(622, 611), VISUAL_ROPELADDER, 0, 0);
+		GameObject ropeLadder = new GameObject(p.getWorld(), Point.location(622, 611), VISUAL_ROPELADDER, 0, 0);
 		World.getWorld().registerGameObject(ropeLadder);
 		message(p, "you climb up the rope ladder");
 		p.teleport(622, 611);
@@ -1001,7 +1000,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 	}
 
 	private void ropeLadderInFunction(final Player p) {
-		GameObject ropeLadder = new GameObject(Point.location(622, 611), VISUAL_ROPELADDER, 0, 0);
+		GameObject ropeLadder = new GameObject(p.getWorld(), Point.location(622, 611), VISUAL_ROPELADDER, 0, 0);
 		World.getWorld().registerGameObject(ropeLadder);
 		message(p, "you climb up the rope ladder");
 		p.teleport(624, 606);
@@ -1018,7 +1017,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == ELENAS_DOOR) {
-			if (p.getQuestStage(Constants.Quests.PLAGUE_CITY) == -1) {
+			if (p.getQuestStage(Quests.PLAGUE_CITY) == -1) {
 				doDoor(obj, p);
 				p.message("You go through the door");
 			} else {

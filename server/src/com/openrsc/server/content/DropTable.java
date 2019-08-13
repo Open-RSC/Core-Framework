@@ -1,10 +1,9 @@
 package com.openrsc.server.content;
 
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.util.rsc.DataConversions;
-import org.apache.logging.log4j.spi.NoOpThreadContextMap;
 
 import java.util.ArrayList;
 

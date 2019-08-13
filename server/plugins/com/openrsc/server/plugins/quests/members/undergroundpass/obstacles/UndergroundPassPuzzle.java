@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
@@ -46,8 +46,8 @@ public class UndergroundPassPuzzle implements ObjectActionListener, ObjectAction
 		else if (obj.getID() == LEVER) {
 			message(p, "you pull on the lever",
 				"you hear a loud mechanical churning");
-			GameObject cage_closed = new GameObject(Point.location(690, 3449), CAGE, 6, 0);
-			GameObject cage_open = new GameObject(Point.location(690, 3449), CAGE + 1, 6, 0);
+			GameObject cage_closed = new GameObject(p.getWorld(), Point.location(690, 3449), CAGE, 6, 0);
+			GameObject cage_open = new GameObject(p.getWorld(), Point.location(690, 3449), CAGE + 1, 6, 0);
 			World.getWorld().registerGameObject(cage_open);
 			World.getWorld().delayedSpawnObject(cage_closed.getLoc(), 5000);
 			p.message("as the huge railing raises to the cave roof");
@@ -63,10 +63,10 @@ public class UndergroundPassPuzzle implements ObjectActionListener, ObjectAction
 		sleep(1600);
 		message(p, "you fall onto a pit of spikes");
 		p.teleport(679, 3448);
-		p.damage((int) (getCurrentLevel(p, SKILLS.HITS.id()) * 0.2D));
+		p.damage((int) (getCurrentLevel(p, Skills.HITS) * 0.2D));
 		p.message("you crawl out of the pit");
 		World.getWorld().replaceGameObject(obj,
-			new GameObject(obj.getLocation(), 778, obj.getDirection(), obj
+			new GameObject(obj.getWorld(), obj.getLocation(), 778, obj.getDirection(), obj
 				.getType()));
 		World.getWorld().delayedSpawnObject(obj.getLoc(), 1000);
 		sleep(1600);

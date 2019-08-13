@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.quests.free;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -26,7 +25,7 @@ public class WitchesPotion implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.WITCHS_POTION;
+		return Quests.WITCHS_POTION;
 	}
 
 	@Override
@@ -42,7 +41,7 @@ public class WitchesPotion implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done you have completed the witches potion quest");
-		incQuestReward(player, Quests.questData.get(Quests.WITCHS_POTION), true);
+		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.WITCHS_POTION), true);
 		player.message("@gre@You haved gained 1 quest point!");
 	}
 
@@ -166,7 +165,7 @@ public class WitchesPotion implements QuestInterface, TalkToNpcListener,
 			} else {
 				message(player, "You drink from the cauldron",
 					"You feel yourself imbued with power");
-				player.sendQuestComplete(Constants.Quests.WITCHS_POTION);
+				player.sendQuestComplete(Quests.WITCHS_POTION);
 			}
 		}
 	}
@@ -190,7 +189,7 @@ public class WitchesPotion implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
 		if (p.getQuestStage(this) >= 1) {
-			World.getWorld().registerItem(new GroundItem(ItemId.RATS_TAIL.id(), n.getX(), n.getY(), 1, p));
+			World.getWorld().registerItem(new GroundItem(p.getWorld(), ItemId.RATS_TAIL.id(), n.getX(), n.getY(), 1, p));
 			n.killedBy(p);
 		} else {
 			n.killedBy(p);

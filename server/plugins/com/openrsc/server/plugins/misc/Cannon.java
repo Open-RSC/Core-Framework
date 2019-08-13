@@ -1,9 +1,9 @@
 package com.openrsc.server.plugins.misc;
 
-import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.event.rsc.impl.FireCannonEvent;
-import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -100,7 +100,7 @@ public class Cannon implements ObjectActionListener,
 
 	private void handleBase(Player player, Item item, String command) {
 		if (command.equalsIgnoreCase("set down")) {
-			if (player.getQuestStage(Constants.Quests.DWARF_CANNON) != -1) {
+			if (player.getQuestStage(Quests.DWARF_CANNON) != -1) {
 				player.message("you can't set up this cannon...");
 				sleep(1500);
 				player.message("...you need to complete the dwarf cannon quest");
@@ -131,6 +131,7 @@ public class Cannon implements ObjectActionListener,
 			player.getInventory().remove(ItemId.DWARF_CANNON_BASE.id(), 1);
 
 			GameObject cannonBase = new GameObject(
+				player.getWorld(),
 				player.getLocation(),
 				cannonObjectIDs[0],
 				0,
@@ -156,7 +157,7 @@ public class Cannon implements ObjectActionListener,
 
 			player.getCache().set("cannon_stage", 2);
 			World.getWorld().unregisterGameObject(object);
-			GameObject cannonStand = new GameObject(object.getLocation(),
+			GameObject cannonStand = new GameObject(player.getWorld(), object.getLocation(),
 				cannonObjectIDs[1], 0, 0, player.getUsername());
 			World.getWorld().registerGameObject(cannonStand);
 			player.setBusy(false);
@@ -172,7 +173,7 @@ public class Cannon implements ObjectActionListener,
 			player.getInventory().remove(ItemId.DWARF_CANNON_BARRELS.id(), 1);
 
 			World.getWorld().unregisterGameObject(object);
-			GameObject cannonBarrels = new GameObject(object.getLocation(),
+			GameObject cannonBarrels = new GameObject(player.getWorld(), object.getLocation(),
 				cannonObjectIDs[2], 0, 0, player.getUsername());
 			World.getWorld().registerGameObject(cannonBarrels);
 
@@ -190,7 +191,7 @@ public class Cannon implements ObjectActionListener,
 			player.getInventory().remove(ItemId.DWARF_CANNON_FURNACE.id(), 1);
 
 			World.getWorld().unregisterGameObject(object);
-			GameObject cannonFurnace = new GameObject(object.getLocation(),
+			GameObject cannonFurnace = new GameObject(player.getWorld(), object.getLocation(),
 				cannonObjectIDs[3], 0, 0, player.getUsername());
 			World.getWorld().registerGameObject(cannonFurnace);
 			player.getCache().set("cannon_stage", 4);

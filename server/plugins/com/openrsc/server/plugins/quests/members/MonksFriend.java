@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.quests.members;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -21,7 +20,7 @@ public class MonksFriend implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.MONKS_FRIEND;
+		return Quests.MONKS_FRIEND;
 	}
 
 	@Override
@@ -37,7 +36,7 @@ public class MonksFriend implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void handleReward(Player p) {
 		p.message("Well done you have completed the monks friend quest");
-		incQuestReward(p, Quests.questData.get(Quests.MONKS_FRIEND), true);
+		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.MONKS_FRIEND), true);
 		p.message("@gre@You haved gained 1 quest point!");
 	}
 
@@ -158,7 +157,7 @@ public class MonksFriend implements QuestInterface, TalkToNpcListener,
 				case 6:
 					playerTalk(p, n, "Hi Omad, Brother Cedric is on his way");
 					npcTalk(p, n, "good,good,good", "now we can party");
-					p.sendQuestComplete(Constants.Quests.MONKS_FRIEND);
+					p.sendQuestComplete(Quests.MONKS_FRIEND);
 					npcTalk(p, n, "I have little to repay you with",
 						"but please, take these runestones");
 					addItem(p, ItemId.LAW_RUNE.id(), 8);

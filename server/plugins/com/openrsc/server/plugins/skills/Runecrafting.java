@@ -1,11 +1,11 @@
 package com.openrsc.server.plugins.skills;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.external.ItemId;
 import com.openrsc.server.external.ObjectRunecraftingDef;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -53,7 +53,7 @@ public class Runecrafting implements ObjectActionListener, ObjectActionExecutive
 			return;
 		}
 
-		if (player.getQuestStage(Constants.Quests.RUNE_MYSTERIES) != -1)
+		if (player.getQuestStage(Quests.RUNE_MYSTERIES) != -1)
 		{
 			player.message("You need to complete Rune Mysteries first. How did you get here?");
 			return;
@@ -64,7 +64,7 @@ public class Runecrafting implements ObjectActionListener, ObjectActionExecutive
 			return;
 		}
 		else {
-			if (player.getSkills().getLevel(SKILLS.RUNECRAFT.id()) < def.getRequiredLvl()) {
+			if (player.getSkills().getLevel(Skills.RUNECRAFTING) < def.getRequiredLvl()) {
 				player.message("You require more skill to use this altar.");
 				return;
 			}
@@ -78,7 +78,7 @@ public class Runecrafting implements ObjectActionListener, ObjectActionExecutive
 				}
 				removeItem(player, ItemId.RUNE_ESSENCE.id(), 1);
 				addItem(player, def.getRuneId(), getRuneMultiplier(player,def.getRuneId()));
-				player.incExp(SKILLS.RUNECRAFT.id(), def.getExp(), true);
+				player.incExp(Skills.RUNECRAFTING, def.getExp(), true);
 			}
 		});
 
@@ -117,7 +117,7 @@ public class Runecrafting implements ObjectActionListener, ObjectActionExecutive
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 
-		if (p.getQuestStage(Constants.Quests.RUNE_MYSTERIES) != -1)
+		if (p.getQuestStage(Quests.RUNE_MYSTERIES) != -1)
 		{
 			p.message("You need to complete Rune Mysteries first.");
 			return;
@@ -171,43 +171,43 @@ public class Runecrafting implements ObjectActionListener, ObjectActionExecutive
 
 		switch(ItemId.getById(runeId)) {
 			case AIR_RUNE:
-				retVal =  (int)Math.floor(getCurrentLevel(p, SKILLS.RUNECRAFT.id())/11.0)+1;
+				retVal =  (int)Math.floor(getCurrentLevel(p, Skills.RUNECRAFTING)/11.0)+1;
 				if (retVal > 10)
 					retVal = 10;
 				break;
 			case MIND_RUNE:
-				retVal = (int)Math.floor(getCurrentLevel(p, SKILLS.RUNECRAFT.id())/14.0)+1;
+				retVal = (int)Math.floor(getCurrentLevel(p, Skills.RUNECRAFTING)/14.0)+1;
 				if (retVal > 8)
 					retVal = 8;
 				break;
 			case WATER_RUNE:
-				retVal = (int)Math.floor(getCurrentLevel(p, SKILLS.RUNECRAFT.id())/19.0)+1;
+				retVal = (int)Math.floor(getCurrentLevel(p, Skills.RUNECRAFTING)/19.0)+1;
 				if (retVal > 6)
 					retVal = 6;
 				break;
 			case EARTH_RUNE:
-				retVal = (int)Math.floor(getCurrentLevel(p, SKILLS.RUNECRAFT.id())/26.0)+1;
+				retVal = (int)Math.floor(getCurrentLevel(p, Skills.RUNECRAFTING)/26.0)+1;
 				if (retVal > 4)
 					retVal = 4;
 				break;
 			case FIRE_RUNE:
-				retVal = (int)Math.floor(getCurrentLevel(p, SKILLS.RUNECRAFT.id())/35.0)+1;
+				retVal = (int)Math.floor(getCurrentLevel(p, Skills.RUNECRAFTING)/35.0)+1;
 				if (retVal > 3)
 					retVal = 3;
 				break;
 			case BODY_RUNE:
-				retVal = (int)Math.floor(getCurrentLevel(p, SKILLS.RUNECRAFT.id())/46.0)+1;
+				retVal = (int)Math.floor(getCurrentLevel(p, Skills.RUNECRAFTING)/46.0)+1;
 				if (retVal > 2)
 					retVal = 2;
 				break;
 			case COSMIC_RUNE:
-				retVal = getCurrentLevel(p,SKILLS.RUNECRAFT.id()) >= 59 ? 2 : 1;
+				retVal = getCurrentLevel(p,Skills.RUNECRAFTING) >= 59 ? 2 : 1;
 				break;
 			case CHAOS_RUNE:
-				retVal = getCurrentLevel(p,SKILLS.RUNECRAFT.id()) >= 74 ? 2 : 1;
+				retVal = getCurrentLevel(p,Skills.RUNECRAFTING) >= 74 ? 2 : 1;
 				break;
 			case NATURE_RUNE:
-				retVal = getCurrentLevel(p,SKILLS.RUNECRAFT.id()) >= 91 ? 2 : 1;
+				retVal = getCurrentLevel(p, Skills.RUNECRAFTING) >= 91 ? 2 : 1;
 				break;
 		}
 

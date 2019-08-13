@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.npcs;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
@@ -24,7 +24,7 @@ public class UndergroundPassKalrag implements PlayerKilledNpcListener, PlayerKil
 			n.killedBy(p);
 			message(p, "kalrag slumps to the floor",
 				"poison flows from the corpse over the soil");
-			if (!p.getCache().hasKey("poison_on_doll") && p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == 6) {
+			if (!p.getCache().hasKey("poison_on_doll") && p.getQuestStage(Quests.UNDERGROUND_PASS) == 6) {
 				if (hasItem(p, ItemId.A_DOLL_OF_IBAN.id())) {
 					message(p, "you smear the doll of iban in the poisoned blood");
 					p.message("it smells horrific");

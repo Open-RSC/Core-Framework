@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.quests.free;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -24,7 +23,7 @@ public class SheepShearer implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.SHEEP_SHEARER;
+		return Quests.SHEEP_SHEARER;
 	}
 
 	@Override
@@ -41,7 +40,7 @@ public class SheepShearer implements QuestInterface, TalkToNpcListener,
 	public void handleReward(Player player) {
 		player.getInventory().add(new Item(ItemId.COINS.id(), 60));
 		player.message("Well done you have completed the sheep shearer quest");
-		incQuestReward(player, Quests.questData.get(Quests.SHEEP_SHEARER), true);
+		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.SHEEP_SHEARER), true);
 		player.message("@gre@You haved gained 1 quest point!");
 	}
 
@@ -151,7 +150,7 @@ public class SheepShearer implements QuestInterface, TalkToNpcListener,
 							playerTalk(p, n, "Thats all of them");
 							npcTalk(p, n, "I guess I'd better pay you then");
 							p.message("The farmer hands you some coins");
-							p.sendQuestComplete(Constants.Quests.SHEEP_SHEARER);
+							p.sendQuestComplete(Quests.SHEEP_SHEARER);
 							p.updateQuestStage(getQuestId(), -1);
 							p.getCache().remove("sheep_shearer_wool_count");
 						} else {

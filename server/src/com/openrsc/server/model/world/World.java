@@ -1,6 +1,5 @@
 package com.openrsc.server.model.world;
 
-import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.content.DropTable;
 import com.openrsc.server.content.clan.ClanManager;
@@ -9,9 +8,9 @@ import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler.Trawler
 import com.openrsc.server.content.party.PartyManager;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.external.GameObjectLoc;
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.external.NPCLoc;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.io.WorldLoader;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Shop;
@@ -98,10 +97,18 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		return wildernessIPTracker;
 	}
 
+	private final Server server;
+	public final Server getServer() {
+		return server;
+	}
+
+	public World(Server server) {
+		this.server = server;
+	}
+
 	public static synchronized World getWorld() {
 		if (worldInstance == null) {
-			worldInstance = new World();
-
+			worldInstance = Server.getServer().getWorld();
 		}
 		return worldInstance;
 	}
@@ -110,10 +117,10 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		Server.getServer().getGameEventHandler().add(new SingleEvent(null, 1000, "Shutdown Check") {
 			public void action() {
 				int currSecond = (int) (System.currentTimeMillis() / 1000.0 - (4 * 3600));
-				if (Constants.GameServer.AUTO_SERVER_RESTART) {
-					if ((int) ((currSecond / 3600.0) % 24) == Constants.GameServer.RESTART_HOUR
-						&& (int) ((currSecond / 60.0) % 60) >= Constants.GameServer.RESTART_MINUTE) {
-						int seconds = Constants.GameServer.RESTART_DELAY;
+				if (Server.getServer().getConfig().AUTO_SERVER_RESTART) {
+					if ((int) ((currSecond / 3600.0) % 24) == Server.getServer().getConfig().RESTART_HOUR
+						&& (int) ((currSecond / 60.0) % 60) >= Server.getServer().getConfig().RESTART_MINUTE) {
+						int seconds = Server.getServer().getConfig().RESTART_DELAY;
 						int minutes = seconds / 60;
 						int remainder = seconds % 60;
 						if (Server.getServer().restart(seconds)) {
@@ -123,10 +130,10 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 						}
 					}
 				}
-				if (Constants.GameServer.AUTO_SERVER_RESTART_2) {
-					if ((int) ((currSecond / 3600.0) % 24) == Constants.GameServer.RESTART_HOUR_2
-						&& (int) ((currSecond / 60.0) % 60) >= Constants.GameServer.RESTART_MINUTE_2) {
-						int seconds = Constants.GameServer.RESTART_DELAY_2;
+				if (Server.getServer().getConfig().AUTO_SERVER_RESTART_2) {
+					if ((int) ((currSecond / 3600.0) % 24) == Server.getServer().getConfig().RESTART_HOUR_2
+						&& (int) ((currSecond / 60.0) % 60) >= Server.getServer().getConfig().RESTART_MINUTE_2) {
+						int seconds = Server.getServer().getConfig().RESTART_DELAY_2;
 						int minutes = seconds / 60;
 						int remainder = seconds % 60;
 						if (Server.getServer().restart(seconds)) {
@@ -202,7 +209,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	public void delayedSpawnObject(final GameObjectLoc loc, final int respawnTime, final boolean forceFullBlock) {
 		Server.getServer().getGameEventHandler().add(new SingleEvent(null, respawnTime, "Delayed Spawn Object") {
 			public void action() {
-				registerGameObject(new GameObject(loc));
+				registerGameObject(new GameObject(World.getWorld(), loc));
 				if (forceFullBlock) {
 					getTile(loc.getX(), loc.getY()).traversalMask |= 64;
 				}
@@ -393,7 +400,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 			worldInstance.wl.loadWorld(worldInstance);
 			WorldPopulation.populateWorld(worldInstance);
 			shutdownCheck();
-			if (Constants.GameServer.WANT_NEW_RARE_DROP_TABLES)
+			if (Server.getServer().getConfig().WANT_NEW_RARE_DROP_TABLES)
 				initializeRareDropTables();
 			//AchievementSystem.loadAchievements();
 			// Server.getServer().getEventHandler().add(new WildernessCycleEvent());
@@ -625,7 +632,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	}
 
 	public void sendWorldAnnouncement(String msg) {
-		if (Constants.GameServer.WANT_GLOBAL_CHAT) {
+		if (Server.getServer().getConfig().WANT_GLOBAL_CHAT) {
 			for (Player p : getPlayers()) {
 				p.playerServerMessage(MessageType.QUEST, "@gre@[Global] @whi@" + msg);
 			}
@@ -723,7 +730,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		try {
 			if (Server.getServer().getPlayerDataProcessor() != null) {
 				GameLogging.addQuery(new PlayerOnlineFlagQuery(player.getDatabaseID(), false));
-				if (Constants.GameServer.AVATAR_GENERATOR)
+				if (Server.getServer().getConfig().AVATAR_GENERATOR)
 					avatarGenerator.generateAvatar(player.getDatabaseID(), player.getSettings().getAppearance(), player.getWornItems());
 			}
 			player.logout();
@@ -758,7 +765,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		if (trawlerInstance != null && !trawlerInstance.shouldRemove()) {
 			return trawlerInstance;
 		} else {
-			trawlerInstance = new FishingTrawler(boat);
+			trawlerInstance = new FishingTrawler(World.getWorld(), boat);
 			trawlerInstance.register(this);
 			fishingTrawler.put(boat, trawlerInstance);
 			Server.getServer().getGameEventHandler().add(trawlerInstance);

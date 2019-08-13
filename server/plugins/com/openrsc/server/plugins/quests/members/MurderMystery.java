@@ -1,10 +1,9 @@
 package com.openrsc.server.plugins.quests.members;
 
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -28,7 +27,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.MURDER_MYSTERY;
+		return Quests.MURDER_MYSTERY;
 	}
 
 	@Override
@@ -44,7 +43,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void handleReward(Player p) {
 		p.message("@gre@You haved gained 3 quest points!");
-		incQuestReward(p, Quests.questData.get(Quests.MURDER_MYSTERY), true);
+		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.MURDER_MYSTERY), true);
 		p.message("You have completed the Murder Mystery Quest");
 	}
 	
@@ -544,7 +543,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 								amt = Math.max(p.getInventory().countId(itemId), 0);
 								p.getInventory().remove(itemId, amt);
 							}
-							p.sendQuestComplete(Constants.Quests.MURDER_MYSTERY);
+							p.sendQuestComplete(Quests.MURDER_MYSTERY);
 							npcTalk(p, n, "Please accept this reward from the family!");
 							p.message("You received 2000 gold!");
 							addItem(p, ItemId.COINS.id(), 2000);

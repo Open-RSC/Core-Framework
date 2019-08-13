@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.quests.free;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -31,7 +30,7 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 	
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.PIRATES_TREASURE;
+		return Quests.PIRATES_TREASURE;
 	}
 
 	@Override
@@ -54,7 +53,7 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 		addItem(p, ItemId.EMERALD.id(), 1);
 		addItem(p, ItemId.COINS.id(), 450);
 		p.message("Well done you have completed the pirate treasure quest");
-		incQuestReward(p, Quests.questData.get(Quests.PIRATES_TREASURE), true);
+		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.PIRATES_TREASURE), true);
 		p.message("@gre@You haved gained 2 quest points!");
 		p.updateQuestStage(this, -1);
 	}
@@ -99,7 +98,7 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 		} else if (item.getID() == ItemId.CHEST_KEY.id() && obj.getID() == HECTORS_CHEST_CLOSED) {
 			p.message("You unlock the chest");
 			World.getWorld().replaceGameObject(obj,
-				new GameObject(obj.getLocation(), HECTORS_CHEST_OPEN, obj.getDirection(),
+				new GameObject(obj.getWorld(), obj.getLocation(), HECTORS_CHEST_OPEN, obj.getDirection(),
 					obj.getType()));
 			World.getWorld().delayedSpawnObject(obj.getLoc(), 3000);
 			removeItem(p, ItemId.CHEST_KEY.id(), 1);

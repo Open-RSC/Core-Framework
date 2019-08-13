@@ -1,4 +1,4 @@
-package com.openrsc.server.external;
+package com.openrsc.server.constants;
 
 import java.util.HashMap;
 import java.util.Map;

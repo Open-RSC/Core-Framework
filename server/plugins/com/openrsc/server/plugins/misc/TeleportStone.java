@@ -7,7 +7,7 @@ import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.*;
 
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.constants.ItemId;
 
 public class TeleportStone implements InvActionListener, InvActionExecutiveListener {
 

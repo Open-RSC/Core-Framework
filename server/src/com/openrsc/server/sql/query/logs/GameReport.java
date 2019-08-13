@@ -1,6 +1,6 @@
 package com.openrsc.server.sql.query.logs;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.snapshot.Chatlog;
 import com.openrsc.server.model.snapshot.Snapshot;
@@ -22,7 +22,7 @@ public final class GameReport extends Query {
 	private boolean suggestsOrMutes, triedApplyAction;
 
 	public GameReport(Player reporter, String reported, byte reason, boolean suggestsOrMutes, boolean triedApplyAction) {
-		super("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "game_reports`(`time`, `reporter`, `reported`, `reason`, `chatlog`, `reporter_x`, `reporter_y`, `reported_x`, `reported_y`, `suggests_or_mutes`, `tried_apply_action`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		super("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "game_reports`(`time`, `reporter`, `reported`, `reason`, `chatlog`, `reporter_x`, `reporter_y`, `reported_x`, `reported_y`, `suggests_or_mutes`, `tried_apply_action`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		this.reason = reason;
 		this.reported = reported;
 		this.reporterPlayer = reporter;

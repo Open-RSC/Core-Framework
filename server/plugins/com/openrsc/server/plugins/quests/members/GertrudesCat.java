@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.quests.members;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -28,7 +27,7 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.GERTRUDES_CAT;
+		return Quests.GERTRUDES_CAT;
 	}
 
 	@Override
@@ -43,7 +42,7 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 	
 	@Override
 	public void handleReward(final Player p) {
-		incQuestReward(p, Quests.questData.get(Quests.GERTRUDES_CAT), true);
+		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.GERTRUDES_CAT), true);
 		p.message("@gre@You haved gained 1 quest point!");
 		p.message("well done, you have completed gertrudes cat quest");
 	}
@@ -170,7 +169,7 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 					addItem(p, ItemId.KITTEN.id(), 1);
 					addItem(p, ItemId.CHOCOLATE_CAKE.id(), 1);
 					addItem(p, ItemId.STEW.id(), 1);
-					p.sendQuestComplete(Constants.Quests.GERTRUDES_CAT);
+					p.sendQuestComplete(Quests.GERTRUDES_CAT);
 					break;
 				case -1:
 					playerTalk(p, n, "hello again gertrude");
@@ -310,8 +309,8 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == 199 && obj.getY() == 438) {
-			if (p.getQuestStage(Constants.Quests.GERTRUDES_CAT) >= 2
-				|| p.getQuestStage(Constants.Quests.GERTRUDES_CAT) == -1) {
+			if (p.getQuestStage(Quests.GERTRUDES_CAT) >= 2
+				|| p.getQuestStage(Quests.GERTRUDES_CAT) == -1) {
 				p.message("you find a crack in the fence");
 				p.message("you walk through");
 				if (p.getX() <= 50) {
@@ -341,8 +340,8 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 			p.damage(damage);
 
 			playerTalk(p, null, "ouch");
-			if (p.getQuestStage(Constants.Quests.GERTRUDES_CAT) >= 3
-				|| p.getQuestStage(Constants.Quests.GERTRUDES_CAT) == -1) {
+			if (p.getQuestStage(Quests.GERTRUDES_CAT) >= 3
+				|| p.getQuestStage(Quests.GERTRUDES_CAT) == -1) {
 				return;
 			}
 

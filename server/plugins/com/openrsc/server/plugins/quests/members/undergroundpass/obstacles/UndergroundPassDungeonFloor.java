@@ -1,9 +1,9 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -44,9 +44,9 @@ public class UndergroundPassDungeonFloor implements ObjectActionListener, Object
 			p.message("but the door refuses to open");
 			message(p, "you hear a noise from below");
 			p.message("@red@leave me be");
-			GameObject claws_of_iban = new GameObject(Point.location(p.getX(), p.getY()), 879, 0, 0);
+			GameObject claws_of_iban = new GameObject(p.getWorld(), Point.location(p.getX(), p.getY()), 879, 0, 0);
 			registerObject(claws_of_iban);
-			p.damage(((int) getCurrentLevel(p, SKILLS.HITS.id()) / 5) + 5);
+			p.damage(((int) getCurrentLevel(p, Skills.HITS) / 5) + 5);
 			playerTalk(p, null, "aaarrgghhh");
 			sleep(1000);
 			removeObject(claws_of_iban);
@@ -74,7 +74,7 @@ public class UndergroundPassDungeonFloor implements ObjectActionListener, Object
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == TOMB_OF_IBAN && item.getID() == ItemId.DWARF_BREW.id()) {
-			if (p.getCache().hasKey("doll_of_iban") && p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == 6) {
+			if (p.getCache().hasKey("doll_of_iban") && p.getQuestStage(Quests.UNDERGROUND_PASS) == 6) {
 				p.message("you pour the strong alcohol over the tomb");
 				if (!p.getCache().hasKey("brew_on_tomb") && !p.getCache().hasKey("ash_on_doll")) {
 					p.getCache().store("brew_on_tomb", true);
@@ -89,7 +89,7 @@ public class UndergroundPassDungeonFloor implements ObjectActionListener, Object
 			message(p, "you try to set alight to the tomb");
 			if (p.getCache().hasKey("brew_on_tomb") && !p.getCache().hasKey("ash_on_doll")) {
 				message(p, "it bursts into flames");
-				replaceObject(obj, new GameObject(obj.getLocation(), 97, obj.getDirection(), obj
+				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), 97, obj.getDirection(), obj
 					.getType()));
 				delayedSpawnObject(obj.getLoc(), 10000);
 				message(p, "you search through the remains");
@@ -115,7 +115,7 @@ public class UndergroundPassDungeonFloor implements ObjectActionListener, Object
 	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == SPIDER_NEST_RAILING) {
 			message(p, "you search the bars");
-			if (p.getCache().hasKey("doll_of_iban") || p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) >= 7 || p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == -1) {
+			if (p.getCache().hasKey("doll_of_iban") || p.getQuestStage(Quests.UNDERGROUND_PASS) >= 7 || p.getQuestStage(Quests.UNDERGROUND_PASS) == -1) {
 				message(p, "there's a gap big enough to squeeze through");
 				p.message("would you like to try");
 				int menu = showMenu(p,

@@ -1,6 +1,6 @@
 package com.openrsc.server.sql.query.logs;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.sql.query.Query;
 
@@ -43,7 +43,7 @@ public final class StaffLog extends Query {
 	private int action, staffX, staffY, affectedX, affectedY;
 
 	public StaffLog(Player staffMember, int action, Player affectedPlayer) {
-		super("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX
+		super("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 			+ "staff_logs`(`staff_username`, `action`, `affected_player`, `time`, `staff_x`, `staff_y`, `affected_x`, `affected_y`, `staff_ip`, `affected_ip`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		this.action = action;
 		this.staffUsername = staffMember == null ? "" : staffMember.getUsername();
@@ -57,7 +57,7 @@ public final class StaffLog extends Query {
 	}
 
 	public StaffLog(Player staffMember, int action, String extra) {
-		super("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX
+		super("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 			+ "staff_logs`(`staff_username`, `action`, `affected_player`, `time`, `staff_x`, `staff_y`, `affected_x`, `affected_y`, `staff_ip`, `affected_ip`, `extra`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		this.action = action;
 		this.staffUsername = staffMember == null ? "" : staffMember.getUsername();
@@ -68,7 +68,7 @@ public final class StaffLog extends Query {
 	}
 
 	public StaffLog(Player staffMember, int action) {
-		super("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX
+		super("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 			+ "staff_logs`(`staff_username`, `action`, `affected_player`, `time`, `staff_x`, `staff_y`, `affected_x`, `affected_y`, `staff_ip`, `affected_ip`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		this.action = action;
 		this.staffUsername = staffMember == null ? "" : staffMember.getUsername();
@@ -78,7 +78,7 @@ public final class StaffLog extends Query {
 	}
 
 	public StaffLog(Player staffMember, int action, Player affectedPlayer, String extra) {
-		super("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX
+		super("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 			+ "staff_logs`(`staff_username`, `action`, `affected_player`, `time`, `staff_x`, `staff_y`, `affected_x`, `affected_y`, `staff_ip`, `affected_ip`, `extra`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		this.action = action;
 		this.staffUsername = staffMember == null ? "" : staffMember.getUsername();

@@ -1,6 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.action.WalkToPointAction;
 import com.openrsc.server.model.container.Inventory;
@@ -40,7 +40,7 @@ public class ItemUseOnGroundItem implements PacketHandler {
 		Point location = Point.location(p.readShort(), p.readShort());
 		final int id = p.readShort();
 		final int groundItemId = p.readShort();
-		if (Constants.GameServer.WANT_EQUIPMENT_TAB && id > Inventory.MAX_SIZE) {
+		if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB && id > Inventory.MAX_SIZE) {
 			player.message("Please unequip your item and try again.");
 			return;
 		}
@@ -71,7 +71,7 @@ public class ItemUseOnGroundItem implements PacketHandler {
 
 				if ((myItem.getDef().isMembersOnly() || item.getDef()
 					.isMembersOnly())
-					&& !Constants.GameServer.MEMBER_WORLD) {
+					&& !Server.getServer().getConfig().MEMBER_WORLD) {
 					player.message(player.MEMBER_MESSAGE);
 					return;
 				}

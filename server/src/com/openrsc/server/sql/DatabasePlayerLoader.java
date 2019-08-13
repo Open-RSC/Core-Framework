@@ -1,12 +1,10 @@
 package com.openrsc.server.sql;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.external.ItemDefinition;
-import com.openrsc.server.external.SkillDef;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.model.PlayerAppearance;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Inventory;
@@ -40,8 +38,14 @@ public class DatabasePlayerLoader {
 	private final DatabaseConnection conn;
 	private boolean useTransactions = false;
 
-	public DatabasePlayerLoader() {
-		conn = new DatabaseConnection("PlayerLoader");
+	private final Server server;
+	public final Server getServer() {
+		return server;
+	}
+
+	public DatabasePlayerLoader(Server server) {
+		this.server = server;
+		conn = new DatabaseConnection(getServer(), "PlayerLoader");
 		/**
 		 * This prevents the connection from committing automatically every
 		 * query. It's here so we can cache update queries, enabling us to
@@ -50,7 +54,7 @@ public class DatabasePlayerLoader {
 		 * query will commit all of the update queries made after the last
 		 * `START TRANSACTION' query.
 		 */
-		conn.executeUpdate("UPDATE `" + Statements.PREFIX + "players` SET `online`='0' WHERE online='1'");
+		conn.executeUpdate("UPDATE `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "players` SET `online`='0' WHERE online='1'");
 	}
 
 	public boolean savePlayer(Player s) {
@@ -64,9 +68,9 @@ public class DatabasePlayerLoader {
 			if (useTransactions)
 				conn.executeQuery("START TRANSACTION");
 
-			updateLongs(Statements.save_DeleteBank, s.getDatabaseID());
+			updateLongs(conn.getGameQueries().save_DeleteBank, s.getDatabaseID());
 			if (s.getBank().size() > 0) {
-				statement = conn.prepareStatement(Statements.save_AddBank);
+				statement = conn.prepareStatement(conn.getGameQueries().save_AddBank);
 				int slot = 0;
 				for (Item item : s.getBank().getItems()) {
 					statement.setInt(1, s.getDatabaseID());
@@ -78,11 +82,11 @@ public class DatabasePlayerLoader {
 				statement.executeBatch();
 			}
 
-			if (Constants.GameServer.WANT_BANK_PRESETS) {
-				statement = conn.prepareStatement(Statements.save_AddBankPreset);
+			if (getServer().getConfig().WANT_BANK_PRESETS) {
+				statement = conn.prepareStatement(conn.getGameQueries().save_AddBankPreset);
 				for (int k = 0; k < Bank.PRESET_COUNT; k++) {
 					if (s.getBank().presets[k].changed) {
-						updateLongs(Statements.save_DeleteBankPresets, s.getDatabaseID(), k);
+						updateLongs(conn.getGameQueries().save_DeleteBankPresets, s.getDatabaseID(), k);
 						ByteArrayOutputStream inventoryBuffer = new ByteArrayOutputStream();
 						DataOutputStream inventoryWriter = new DataOutputStream(inventoryBuffer);
 						for (Item inventoryItem : s.getBank().presets[k].inventory) {
@@ -122,9 +126,9 @@ public class DatabasePlayerLoader {
 				}
 			}
 
-			updateLongs(Statements.save_DeleteInv, s.getDatabaseID());
+			updateLongs(conn.getGameQueries().save_DeleteInv, s.getDatabaseID());
 			if (s.getInventory().size() > 0) {
-				statement = conn.prepareStatement(Statements.save_AddInvItem);
+				statement = conn.prepareStatement(conn.getGameQueries().save_AddInvItem);
 				int slot = 0;
 				for (Item item : s.getInventory().getItems()) {
 					statement.setInt(1, s.getDatabaseID());
@@ -137,9 +141,9 @@ public class DatabasePlayerLoader {
 				statement.executeBatch();
 			}
 
-			if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
-				updateLongs(Statements.save_DeleteEquip, s.getDatabaseID());
-				statement = conn.prepareStatement(Statements.save_SaveEquip);
+			if (getServer().getConfig().WANT_EQUIPMENT_TAB) {
+				updateLongs(conn.getGameQueries().save_DeleteEquip, s.getDatabaseID());
+				statement = conn.prepareStatement(conn.getGameQueries().save_SaveEquip);
 				Item item;
 				for (int i = 0; i < Equipment.slots; i++) {
 					item = s.getEquipment().get(i);
@@ -154,9 +158,9 @@ public class DatabasePlayerLoader {
 			}
 
 
-			updateLongs(Statements.save_DeleteQuests, s.getDatabaseID());
+			updateLongs(conn.getGameQueries().save_DeleteQuests, s.getDatabaseID());
 			if (s.getQuestStages().size() > 0) {
-				statement = conn.prepareStatement(Statements.save_AddQuest);
+				statement = conn.prepareStatement(conn.getGameQueries().save_AddQuest);
 				Set<Integer> keys = s.getQuestStages().keySet();
 				for (int id : keys) {
 					statement.setInt(1, s.getDatabaseID());
@@ -167,9 +171,9 @@ public class DatabasePlayerLoader {
 				statement.executeBatch();
 			}
 
-			/*updateLongs(Statements.save_DeleteAchievements, s.getDatabaseID());
+			/*updateLongs(conn.getGameQueries().save_DeleteAchievements, s.getDatabaseID());
 			if (s.getAchievements().size() > 0) {
-				statement = conn.prepareStatement(Statements.save_AddAchievement);
+				statement = conn.prepareStatement(conn.getGameQueries().save_AddAchievement);
 				Set<Integer> keys = s.getAchievements().keySet();
 				for (int achid : keys) {
 					statement.setInt(1, s.getDatabaseID());
@@ -182,10 +186,10 @@ public class DatabasePlayerLoader {
 
 			s.getCache().store("last_spell_cast", s.getCastTimer());
 
-			updateLongs(Statements.save_DeleteCache, s.getDatabaseID());
+			updateLongs(conn.getGameQueries().save_DeleteCache, s.getDatabaseID());
 			if (s.getCache().getCacheMap().size() > 0) {
 				statement = conn.prepareStatement(
-					"INSERT INTO `" + Statements.PREFIX + "player_cache` (`playerID`, `type`, `key`, `value`) VALUES(?,?,?,?)");
+					"INSERT INTO `" + conn.getGameQueries().PREFIX + "player_cache` (`playerID`, `type`, `key`, `value`) VALUES(?,?,?,?)");
 
 				for (String key : s.getCache().getCacheMap().keySet()) {
 					Object o = s.getCache().getCacheMap().get(key);
@@ -226,7 +230,7 @@ public class DatabasePlayerLoader {
 				savePlayersNPCKills(s);
 			}
 
-			statement = conn.prepareStatement(Statements.save_UpdateBasicInfo);
+			statement = conn.prepareStatement(conn.getGameQueries().save_UpdateBasicInfo);
 			statement.setInt(1, s.getCombatLevel());
 			statement.setInt(2, s.getSkills().getTotalLevel());
 			statement.setInt(3, s.getX());
@@ -261,15 +265,15 @@ public class DatabasePlayerLoader {
 			// GAME SETTINGS
 			setGameSettings(s.getSettings().getGameSettings(), s.getDatabaseID());
 
-			statement = conn.prepareStatement(Statements.updateExperience);
-			statement.setInt(Skills.getSkillCount() + 1, s.getDatabaseID());
-			for (int index = 0; index < Skills.getSkillCount(); index++)
+			statement = conn.prepareStatement(conn.getGameQueries().updateExperience);
+			statement.setInt(getServer().getConstants().getSkills().getSkillsCount() + 1, s.getDatabaseID());
+			for (int index = 0; index < getServer().getConstants().getSkills().getSkillsCount(); index++)
 				statement.setInt(index + 1, s.getSkills().getExperience(index));
 			statement.executeUpdate();
 
-			statement = conn.prepareStatement(Statements.updateStats);
-			statement.setInt(Skills.getSkillCount() + 1, s.getDatabaseID());
-			for (int index = 0; index < Skills.getSkillCount(); index++)
+			statement = conn.prepareStatement(conn.getGameQueries().updateStats);
+			statement.setInt(getServer().getConstants().getSkills().getSkillsCount() + 1, s.getDatabaseID());
+			for (int index = 0; index < getServer().getConstants().getSkills().getSkillsCount(); index++)
 				statement.setInt(index + 1, s.getSkills().getLevel(index));
 			statement.executeUpdate();
 
@@ -287,7 +291,7 @@ public class DatabasePlayerLoader {
 		try {
 			if (useTransactions)
 				conn.executeQuery("START TRANSACTION");
-			result = resultSetFromString(Statements.userToId, username);
+			result = resultSetFromString(conn.getGameQueries().userToId, username);
 			if (useTransactions)
 				conn.executeQuery("COMMIT");
 			return result.isBeforeFirst();
@@ -302,7 +306,7 @@ public class DatabasePlayerLoader {
 		try {
 			if (useTransactions)
 				conn.executeQuery("START TRANSACTION");
-			PreparedStatement prepared = conn.prepareStatement(Statements.addFriend);
+			PreparedStatement prepared = conn.prepareStatement(conn.getGameQueries().addFriend);
 			prepared.setInt(1, playerID);
 			prepared.setLong(2, friend);
 			prepared.setString(3, friendName);
@@ -320,7 +324,7 @@ public class DatabasePlayerLoader {
 		try {
 			if (useTransactions)
 				conn.executeQuery("START TRANSACTION");
-			PreparedStatement prepared = conn.prepareStatement(Statements.removeFriend);
+			PreparedStatement prepared = conn.prepareStatement(conn.getGameQueries().removeFriend);
 			prepared.setInt(1, playerID);
 			prepared.setLong(2, friend);
 			prepared.executeUpdate();
@@ -336,7 +340,7 @@ public class DatabasePlayerLoader {
 		try {
 			if (useTransactions)
 				conn.executeQuery("START TRANSACTION");
-			PreparedStatement prepared = conn.prepareStatement(Statements.addIgnore);
+			PreparedStatement prepared = conn.prepareStatement(conn.getGameQueries().addIgnore);
 			prepared.setInt(1, playerID);
 			prepared.setLong(2, friend);
 			prepared.executeUpdate();
@@ -353,7 +357,7 @@ public class DatabasePlayerLoader {
 		try {
 			if (useTransactions)
 				conn.executeQuery("START TRANSACTION");
-			PreparedStatement prepared = conn.prepareStatement(Statements.removeIgnore);
+			PreparedStatement prepared = conn.prepareStatement(conn.getGameQueries().removeIgnore);
 			prepared.setInt(1, playerID);
 			prepared.setLong(2, friend);
 			prepared.executeUpdate();
@@ -365,19 +369,19 @@ public class DatabasePlayerLoader {
 	}
 
 	public void chatBlock(int on, long user) {
-		updateIntsLongs(Statements.chatBlock, new int[]{on}, new long[]{user});
+		updateIntsLongs(conn.getGameQueries().chatBlock, new int[]{on}, new long[]{user});
 	}
 
 	public void privateBlock(int on, long user) {
-		updateIntsLongs(Statements.privateBlock, new int[]{on}, new long[]{user});
+		updateIntsLongs(conn.getGameQueries().privateBlock, new int[]{on}, new long[]{user});
 	}
 
 	public void tradeBlock(int on, long user) {
-		updateIntsLongs(Statements.tradeBlock, new int[]{on}, new long[]{user});
+		updateIntsLongs(conn.getGameQueries().tradeBlock, new int[]{on}, new long[]{user});
 	}
 
 	public void duelBlock(int on, long user) {
-		updateIntsLongs(Statements.duelBlock, new int[]{on}, new long[]{user});
+		updateIntsLongs(conn.getGameQueries().duelBlock, new int[]{on}, new long[]{user});
 	}
 
 	/*
@@ -385,7 +389,7 @@ public class DatabasePlayerLoader {
 		try {
 			// Find an existing entry for this NPC/Player combo
 			PreparedStatement statementSelect = DatabaseConnection.getDatabase().prepareStatement(
-				Statements.npcKillSelect);
+				conn.getGameQueries().npcKillSelect);
 			statementSelect.setInt(1, npc);
 			statementSelect.setInt(2, player);
 			ResultSet selectResult = statementSelect.executeQuery();
@@ -395,7 +399,7 @@ public class DatabasePlayerLoader {
 			}
 			if (kills == -1) {
 				PreparedStatement statementInsert = DatabaseConnection.getDatabase().prepareStatement(
-					Statements.npcKillInsert);
+					conn.getGameQueries().npcKillInsert);
 				statementInsert.setInt(1, npc);
 				statementInsert.setInt(2, player);
 				int insertResult = statementInsert.executeUpdate();
@@ -405,7 +409,7 @@ public class DatabasePlayerLoader {
 			}
 
 			PreparedStatement statementUpdate = DatabaseConnection.getDatabase().prepareStatement(
-				Statements.npcKillUpdate);
+				conn.getGameQueries().npcKillUpdate);
 			statementUpdate.setInt(1, kills);
 			statementUpdate.setInt(2, npc);
 			statementUpdate.setInt(3, player);
@@ -421,7 +425,7 @@ public class DatabasePlayerLoader {
 	public void addNpcDrop(Player player, Npc npc, int dropId, int dropAmount) {
 		try {
 			PreparedStatement statementInsert = DatabaseConnection.getDatabase().prepareStatement(
-				Statements.npcDropInsert);
+				conn.getGameQueries().npcDropInsert);
 			statementInsert.setInt(1, dropId);
 			statementInsert.setInt(2, player.getDatabaseID());
 			statementInsert.setInt(3, dropAmount);
@@ -433,19 +437,19 @@ public class DatabasePlayerLoader {
 	}
 
 	private boolean playerExists(int user) {
-		return hasNextFromInt(Statements.basicInfo, user);
+		return hasNextFromInt(conn.getGameQueries().basicInfo, user);
 	}
 
 	private void setGameSettings(boolean settings[], int user) {
 		for (int i = 0; i < settings.length; i++) {
-			conn.executeUpdate("UPDATE `" + Statements.PREFIX + "players` SET " + gameSettings[i] + "="
+			conn.executeUpdate("UPDATE `" + conn.getGameQueries().PREFIX + "players` SET " + gameSettings[i] + "="
 				+ (settings[i] ? 1 : 0) + " WHERE id='" + user + "'");
 		}
 	}
 
 	private void setPrivacySettings(boolean settings[], int user) {
 		for (int i = 0; i < settings.length; i++) {
-			conn.executeUpdate("UPDATE `" + Statements.PREFIX + "players` SET " + privacySettings[i] + "="
+			conn.executeUpdate("UPDATE `" + conn.getGameQueries().PREFIX + "players` SET " + privacySettings[i] + "="
 				+ (settings[i] ? 1 : 0) + " WHERE id='" + user + "'");
 		}
 	}
@@ -460,15 +464,15 @@ public class DatabasePlayerLoader {
 
 
 		try {
-			ResultSet result = resultSetFromInteger(Statements.npcKillSelectAll, player.getDatabaseID());
+			ResultSet result = resultSetFromInteger(conn.getGameQueries().npcKillSelectAll, player.getDatabaseID());
 			while (result.next()) {
 				int key = result.getInt("npcID");
 				int value = result.getInt("ID");
 				uniqueIDMap.put(key, value);
 			}
 
-			PreparedStatement statement = conn.prepareStatement(Statements.npcKillUpdate);
-			PreparedStatement statementInsert = conn.prepareStatement(Statements.npcKillInsert);
+			PreparedStatement statement = conn.prepareStatement(conn.getGameQueries().npcKillUpdate);
+			PreparedStatement statementInsert = conn.prepareStatement(conn.getGameQueries().npcKillInsert);
 			for (Iterator<Map.Entry<Integer, Integer>> it = player.getKillCache().entrySet().iterator(); it.hasNext();) {
 				Map.Entry<Integer, Integer> e = it.next();
 				if (!uniqueIDMap.containsKey(e.getKey())) {
@@ -493,8 +497,8 @@ public class DatabasePlayerLoader {
 	}
 
 	public Player loadPlayer(LoginRequest rq) {
-		Player save = new Player(rq);
-		ResultSet result = resultSetFromString(Statements.playerData, save.getUsername());
+		Player save = new Player(getServer().getWorld(), rq);
+		ResultSet result = resultSetFromString(conn.getGameQueries().playerData, save.getUsername());
 		try {
 			if (!result.next()) {
 				return save;
@@ -548,12 +552,12 @@ public class DatabasePlayerLoader {
 
 			save.getSkills().loadLevels(fetchLevels(save.getDatabaseID()));
 
-			result = resultSetFromInteger(Statements.playerPendingRecovery, save.getDatabaseID());
+			result = resultSetFromInteger(conn.getGameQueries().playerPendingRecovery, save.getDatabaseID());
 			if (result.next()) {
 				save.setLastRecoveryChangeRequest(result.getLong("date_set"));
 			}
 
-			result = resultSetFromInteger(Statements.playerInvItems, save.getDatabaseID());
+			result = resultSetFromInteger(conn.getGameQueries().playerInvItems, save.getDatabaseID());
 
 			Inventory inv = new Inventory(save);
 			Equipment equipment = new Equipment(save);
@@ -565,7 +569,7 @@ public class DatabasePlayerLoader {
 				item.setWielded(false);
 				if (item.isWieldable() && result.getInt("wielded") == 1) {
 					if (itemDef != null) {
-						if (Constants.GameServer.WANT_EQUIPMENT_TAB)
+						if (getServer().getConfig().WANT_EQUIPMENT_TAB)
 							equipment.equip(itemDef.getWieldPosition(), item);
 						else {
 							item.setWielded(true);
@@ -580,8 +584,8 @@ public class DatabasePlayerLoader {
 			}
 			save.setInventory(inv);
 
-			if (Constants.GameServer.WANT_EQUIPMENT_TAB) {
-				result = resultSetFromInteger(Statements.playerEquipped, save.getDatabaseID());
+			if (getServer().getConfig().WANT_EQUIPMENT_TAB) {
+				result = resultSetFromInteger(conn.getGameQueries().playerEquipped, save.getDatabaseID());
 				while (result.next()) {
 					Item item = new Item(result.getInt("id"), result.getInt("amount"));
 					ItemDefinition itemDef = item.getDef();
@@ -595,13 +599,13 @@ public class DatabasePlayerLoader {
 				save.setEquipment(equipment);
 			}
 
-			result = resultSetFromInteger(Statements.playerBankItems, save.getDatabaseID());
+			result = resultSetFromInteger(conn.getGameQueries().playerBankItems, save.getDatabaseID());
 			Bank bank = new Bank(save);
 			while (result.next()) {
 				bank.add(new Item(result.getInt("id"), result.getInt("amount")));
 			}
-			if (Constants.GameServer.WANT_BANK_PRESETS) {
-				result = resultSetFromInteger(Statements.playerBankPresets, save.getDatabaseID());
+			if (getServer().getConfig().WANT_BANK_PRESETS) {
+				result = resultSetFromInteger(conn.getGameQueries().playerBankPresets, save.getDatabaseID());
 				while (result.next()) {
 					int slot = result.getInt("slot");
 					Blob inventoryItems = result.getBlob("inventory");
@@ -612,24 +616,24 @@ public class DatabasePlayerLoader {
 			save.setBank(bank);
 
 			save.getSocial().addFriends(longListFromResultSet(
-				resultSetFromInteger(Statements.playerFriends, save.getDatabaseID()), "friend"));
+				resultSetFromInteger(conn.getGameQueries().playerFriends, save.getDatabaseID()), "friend"));
 
 			save.getSocial().addIgnore(longListFromResultSet(
-				resultSetFromInteger(Statements.playerIngored, save.getDatabaseID()), "ignore"));
+				resultSetFromInteger(conn.getGameQueries().playerIngored, save.getDatabaseID()), "ignore"));
 
-			result = resultSetFromInteger(Statements.playerQuests, save.getDatabaseID());
+			result = resultSetFromInteger(conn.getGameQueries().playerQuests, save.getDatabaseID());
 			while (result.next()) {
 				save.setQuestStage(result.getInt("id"), result.getInt("stage"));
 			}
 
 			save.setQuestPoints(save.calculateQuestPoints());
 
-			/*result = resultSetFromInteger(Statements.playerAchievements, save.getDatabaseID());
+			/*result = resultSetFromInteger(conn.getGameQueries().playerAchievements, save.getDatabaseID());
 			while (result.next()) {
 				save.setAchievementStatus(result.getInt("id"), result.getInt("status"));
 			}*/
 
-			result = resultSetFromInteger(Statements.playerCache, save.getDatabaseID());
+			result = resultSetFromInteger(conn.getGameQueries().playerCache, save.getDatabaseID());
 			while (result.next()) {
 				int identifier = result.getInt("type");
 
@@ -654,19 +658,19 @@ public class DatabasePlayerLoader {
 				save.setCastTimer();
 			}
 
-			result = resultSetFromInteger(Statements.npcKillSelectAll, save.getDatabaseID());
+			result = resultSetFromInteger(conn.getGameQueries().npcKillSelectAll, save.getDatabaseID());
 			while (result.next()) {
 				int key = result.getInt("npcID");
 				int value = result.getInt("killCount");
 				save.getKillCache().put(key, value);
 			}
 
-			/*result = resultSetFromInteger(Statements.unreadMessages, save.getOwner());
+			/*result = resultSetFromInteger(conn.getGameQueries().unreadMessages, save.getOwner());
 			while (result.next()) {
 				save.setUnreadMessages(result.getInt(1));
 			}*/
 
-			/*result = resultSetFromInteger(Statements.teleportStones, save.getOwner());
+			/*result = resultSetFromInteger(conn.getGameQueries().teleportStones, save.getOwner());
 			while (result.next()) {
 				save.setTeleportStones(result.getInt(1));
 			}*/
@@ -753,13 +757,13 @@ public class DatabasePlayerLoader {
 		String query;
 		String replyMessage;
 		if (time == -1) {
-			query = "UPDATE `" + Statements.PREFIX + "players` SET `banned`='" + time + "' WHERE `username` LIKE '" + user + "'";
+			query = "UPDATE `" + conn.getGameQueries().PREFIX + "players` SET `banned`='" + time + "' WHERE `username` LIKE '" + user + "'";
 			replyMessage = user + " has been banned permanently";
 		} else if (time == 0) {
-			query = "UPDATE `" + Statements.PREFIX + "players` SET `banned`='" + time + "' WHERE `username` LIKE '" + user + "'";
+			query = "UPDATE `" + conn.getGameQueries().PREFIX + "players` SET `banned`='" + time + "' WHERE `username` LIKE '" + user + "'";
 			replyMessage = user + " has been unbanned.";
 		} else {
-			query = "UPDATE `" + Statements.PREFIX + "players` SET `banned`='" + (System.currentTimeMillis() + (time * 60000))
+			query = "UPDATE `" + conn.getGameQueries().PREFIX + "players` SET `banned`='" + (System.currentTimeMillis() + (time * 60000))
 				+ "', offences = offences + 1 WHERE `username` LIKE '" + user + "'";
 			replyMessage = user + " has been banned for " + time + " minutes";
 		}
@@ -772,17 +776,17 @@ public class DatabasePlayerLoader {
 	}
 
 	private int[] fetchLevels(int playerID) {
-		ResultSet result = resultSetFromInteger(Statements.playerCurExp, playerID);
+		ResultSet result = resultSetFromInteger(conn.getGameQueries().playerCurExp, playerID);
 		try {
 			result.next();
 		} catch (SQLException e1) {
 			LOGGER.catching(e1);
 			return null;
 		}
-		int[] data = new int[Skills.getSkillCount()];
+		int[] data = new int[getServer().getConstants().getSkills().getSkillsCount()];
 		for (int i = 0; i < data.length; i++) {
 			try {
-				data[i] = result.getInt("cur_" + Skills.getSkillName(i));
+				data[i] = result.getInt("cur_" + getServer().getConstants().getSkills().getSkillName(i));
 			} catch (SQLException e) {
 				LOGGER.catching(e);
 				return null;
@@ -792,15 +796,15 @@ public class DatabasePlayerLoader {
 	}
 
 	private int[] fetchExperience(int playerID) {
-		int[] data = new int[Skills.getSkillCount()];
+		int[] data = new int[getServer().getConstants().getSkills().getSkillsCount()];
 		try {
-			PreparedStatement statement = conn.prepareStatement(Statements.playerExp);
+			PreparedStatement statement = conn.prepareStatement(conn.getGameQueries().playerExp);
 			statement.setInt(1, playerID);
 			ResultSet result = statement.executeQuery();
 			result.next();
 			for (int i = 0; i < data.length; i++) {
 				try {
-					data[i] = result.getInt("exp_" + Skills.getSkillName(i));
+					data[i] = result.getInt("exp_" + getServer().getConstants().getSkills().getSkillName(i));
 				} catch (SQLException e) {
 					LOGGER.catching(e);
 					return null;
@@ -874,7 +878,7 @@ public class DatabasePlayerLoader {
 		ResultSet playerSet = null;
 		int groupId = Group.USER;
 		try {
-			statement = conn.prepareStatement(Statements.playerLoginData);
+			statement = conn.prepareStatement(conn.getGameQueries().playerLoginData);
 			statement.setString(1, request.getUsername());
 			playerSet = statement.executeQuery();
 			if (!playerSet.next()) {
@@ -905,149 +909,4 @@ public class DatabasePlayerLoader {
 		}
 		return (byte) LoginResponse.LOGIN_SUCCESSFUL[groupId];
 	}
-
-	public static class Statements {
-		public static String updateExperience = "";
-		public static String updateStats = "";
-		public static String playerExp = "";
-		public static String playerCurExp = "";
-		private static final String PREFIX = Constants.GameServer.MYSQL_TABLE_PREFIX;
-
-		static {
-			updateExperience = "UPDATE `" + PREFIX + "experience` SET ";
-			updateStats = "UPDATE `" + PREFIX + "curstats` SET ";
-			playerExp = "SELECT ";
-			playerCurExp = "SELECT ";
-
-			for (SkillDef skill : Skills.skills) {
-				updateExperience = updateExperience + "`exp_" + skill.getShortName().toLowerCase() + "`=?, ";
-				updateStats = updateStats + "`cur_" + skill.getShortName().toLowerCase() + "`=?, ";
-				playerExp = playerExp + "`exp_" + skill.getShortName().toLowerCase() + "`, ";
-				playerCurExp = playerCurExp + "`cur_" + skill.getShortName().toLowerCase() + "`, ";
-			}
-
-			updateExperience = updateExperience.substring(0, updateExperience.length() - 2) + " ";
-			updateStats = updateStats.substring(0, updateStats.length() - 2) + " ";
-			playerExp = playerExp.substring(0, playerExp.length() - 2) + " ";
-			playerCurExp = playerCurExp.substring(0, playerCurExp.length() - 2) + " ";
-
-			updateExperience = updateExperience + "WHERE `playerID`=?";
-			updateStats = updateStats + "WHERE `playerID`=?";
-			playerExp = playerExp + "FROM `" + PREFIX + "experience` WHERE `playerID`=?";
-			playerCurExp = playerCurExp + "FROM `" + PREFIX + "curstats` WHERE `playerID`=?";
-		}
-
-
-		//private static final String unreadMessages = "SELECT COUNT(*) FROM `messages` WHERE showed=0 AND show_message=1 AND owner=?";
-
-		//private static final String teleportStones = "SELECT `teleport_stone` FROM `users` WHERE id=?";
-
-		private static final String addFriend = "INSERT INTO `" + PREFIX
-			+ "friends`(`playerID`, `friend`, `friendName`) VALUES(?, ?, ?)";
-
-		private static final String removeFriend = "DELETE FROM `" + PREFIX
-			+ "friends` WHERE `playerID` LIKE ? AND `friend` LIKE ?";
-
-		private static final String addIgnore = "INSERT INTO `" + PREFIX
-			+ "ignores`(`playerID`, `ignore`) VALUES(?, ?)";
-
-		private static final String removeIgnore = "DELETE FROM `" + PREFIX
-			+ "ignores` WHERE `playerID` LIKE ? AND `ignore` LIKE ?";
-
-		private static final String chatBlock = "UPDATE `" + PREFIX + "players` SET block_chat=? WHERE playerID=?";
-
-		private static final String privateBlock = "UPDATE `" + PREFIX + "players` SET block_private=? WHERE id=?";
-
-		private static final String tradeBlock = "UPDATE `" + PREFIX + "id` SET block_trade=? WHERE playerID=?";
-
-		private static final String duelBlock = "UPDATE `" + PREFIX + "players` SET block_duel=? WHERE playerID=?";
-
-		private static final String basicInfo = "SELECT 1 FROM `" + PREFIX + "players` WHERE `id` = ?";
-
-		private static final String playerData = "SELECT `id`, `group_id`, "
-			+ "`combatstyle`, `login_date`, `login_ip`, `x`, `y`, `fatigue`,  `kills`,"
-			+ "`deaths`, `kills2`, `iron_man`, `iron_man_restriction`,`hc_ironman_death`, `quest_points`, `block_chat`, `block_private`,"
-			+ "`block_trade`, `block_duel`, `cameraauto`,"
-			+ "`onemouse`, `soundoff`, `haircolour`, `topcolour`,"
-			+ "`trousercolour`, `skincolour`, `headsprite`, `bodysprite`, `male`,"
-			+ "`skulled`, `charged`, `pass`, `salt`, `banned`, `bank_size` FROM `" + PREFIX + "players` WHERE `username`=?";
-
-
-		private static final String playerInvItems = "SELECT `id`,`amount`,`wielded` FROM `" + PREFIX
-			+ "invitems` WHERE `playerID`=? ORDER BY `slot` ASC";
-
-		private static final String playerEquipped = "SELECT `id`,`amount` FROM `" + PREFIX
-			+ "equipped` WHERE `playerID`=?";
-
-		private static final String playerBankItems = "SELECT `id`, `amount` FROM `" + PREFIX
-			+ "bank` WHERE `playerID`=? ORDER BY `slot` ASC";
-
-		private static final String playerBankPresets = "SELECT `slot`, `inventory`, `equipment` FROM `" + PREFIX
-			+ "bankpresets` WHERE `playerID`=?";
-
-		private static final String playerFriends = "SELECT `friend` FROM `" + PREFIX + "friends` WHERE `playerID`=?";
-
-		private static final String playerIngored = "SELECT `ignore` FROM `" + PREFIX + "ignores` WHERE `playerID`=?";
-
-		private static final String playerQuests = "SELECT `id`, `stage` FROM `" + PREFIX
-			+ "quests` WHERE `playerID`=?";
-
-		private static final String playerAchievements = "SELECT `id`, `status` FROM `" + PREFIX
-			+ "achievement_status` WHERE `playerID`=?";
-
-		private static final String playerCache = "SELECT `type`, `key`, `value` FROM `" + PREFIX
-			+ "player_cache` WHERE `playerID`=?";
-
-		private static final String save_DeleteBank = "DELETE FROM `" + PREFIX + "bank` WHERE `playerID`=?";
-
-		private static final String save_DeleteBankPresets = "DELETE FROM `" + PREFIX + "bankpresets` WHERE `playerID`=? AND `slot`=?";
-
-		private static final String save_AddBank = "INSERT INTO `" + PREFIX
-			+ "bank`(`playerID`, `id`, `amount`, `slot`) VALUES(?, ?, ?, ?)";
-
-		private static final String save_AddBankPreset = "INSERT INTO `" + PREFIX
-			+ "bankpresets`(`playerID`, `slot`, `inventory`, `equipment`) VALUES(?, ?, ?, ?)";
-
-		private static final String save_DeleteInv = "DELETE FROM `" + PREFIX + "invitems` WHERE `playerID`=?";
-
-		private static final String save_AddInvItem = "INSERT INTO `" + PREFIX
-			+ "invitems`(`playerID`, `id`, `amount`, `wielded`, `slot`) VALUES(?, ?, ?, ?, ?)";
-
-		private static final String save_DeleteEquip = "DELETE FROM `" + PREFIX + "equipped` WHERE `playerID`=?";
-
-		private static final String save_SaveEquip = "INSERT INTO `" + PREFIX
-			+ "equipped`(`playerID`, `id`, `amount`) VALUES(?, ?, ?)";
-
-		private static final String save_UpdateBasicInfo = "UPDATE `" + PREFIX
-			+ "players` SET `combat`=?, skill_total=?, `x`=?, `y`=?, `fatigue`=?, `kills`=?, `deaths`=?, `kills2`=?, `iron_man`=?, `iron_man_restriction`=?, `hc_ironman_death`=?, `quest_points`=?, `haircolour`=?, `topcolour`=?, `trousercolour`=?, `skincolour`=?, `headsprite`=?, `bodysprite`=?, `male`=?, `skulled`=?, `charged`=?, `combatstyle`=?, `muted`=?, `bank_size`=?, `group_id`=? WHERE `id`=?";
-
-		private static final String save_DeleteQuests = "DELETE FROM `" + PREFIX + "quests` WHERE `playerID`=?";
-
-		private static final String save_DeleteAchievements = "DELETE FROM `" + PREFIX + "achievement_status` WHERE `playerID`=?";
-
-		private static final String save_DeleteCache = "DELETE FROM `" + PREFIX + "player_cache` WHERE `playerID`=?";
-
-		private static final String save_AddQuest = "INSERT INTO `" + PREFIX
-			+ "quests` (`playerID`, `id`, `stage`) VALUES(?, ?, ?)";
-
-		private static final String save_AddAchievement = "INSERT INTO `" + PREFIX
-			+ "achievement_status` (`playerID`, `id`, `status`) VALUES(?, ?, ?)";
-
-		private static final String playerLoginData = "SELECT `group_id`, `pass`, `salt`, `banned` FROM `" + PREFIX + "players` WHERE `username`=?";
-
-		private static final String playerPendingRecovery = "SELECT `username`, `question1`, `answer1`, `question2`, `answer2`, `question3`, `answer3`, `question4`, `answer4`, `question5`, `answer5`, `date_set`, `ip_set` FROM `"
-			+ PREFIX + "player_change_recovery` WHERE `playerID`=?";
-
-		private static final String userToId = "SELECT DISTINCT `id` FROM `" + PREFIX + "players` WHERE `username`=?";
-
-		private static final String npcKillSelectAll = "SELECT * FROM `" + PREFIX + "npckills` WHERE playerID = ?";
-		private static final String npcKillSelect = "SELECT * FROM `" + PREFIX + "npckills` WHERE npcID = ? AND playerID = ?";
-		private static final String npcKillInsert = "INSERT INTO `" + PREFIX + "npckills`(killCount, npcID, playerID) VALUES (?, ?, ?)";
-		private static final String npcKillUpdate = "UPDATE `" + PREFIX + "npckills` SET killCount = ? WHERE ID = ? AND npcID = ? AND playerID =?";
-
-		private static final String npcDropSelect = "SELECT * FROM `" + PREFIX + "droplogs` WHERE itemID = ? AND playerID = ?";
-		private static final String npcDropInsert = "INSERT INTO `" + PREFIX + "droplogs`(itemID, playerID, dropAmount, npcId) VALUES (?, ?, ?, ?)";
-		private static final String npcDropUpdate = "UPDATE `" + PREFIX + "droplogs` SET dropAmount = ? WHERE itemID = ? AND playerID = ?";
-	}
-
 }

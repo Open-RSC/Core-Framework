@@ -1,9 +1,9 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -67,9 +67,9 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 	@Override
 	public void onObjectAction(GameObject obj, String cmd, Player p) {
 		if (obj.getID() == UNDERGROUND_CAVE) {
-			switch (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS)) {
+			switch (p.getQuestStage(Quests.UNDERGROUND_PASS)) {
 				case 0:
-					if (p.getQuestStage(Constants.Quests.BIOHAZARD) != -1) {
+					if (p.getQuestStage(Quests.BIOHAZARD) != -1) {
 						p.message("You must first complete the biohazard quest...");
 						p.message("...before you can enter");
 					}
@@ -120,7 +120,7 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 			}
 		}
 		else if (inArray(obj.getID(), MAIN_ROCKS)) {
-			doRock(obj, p, (int) (getCurrentLevel(p, SKILLS.HITS.id()) / 42) + 1, true, -1);
+			doRock(obj, p, (int) (getCurrentLevel(p, Skills.HITS) / 42) + 1, true, -1);
 		}
 		else if (obj.getID() == FIRST_SWAMP) {
 			message(p, "you try to cross but you're unable to",
@@ -129,7 +129,7 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 			playerTalk(p, null, "gulp!");
 			p.teleport(674, 3462);
 			playerTalk(p, null, "aargh");
-			p.damage((int) (getCurrentLevel(p, SKILLS.HITS.id()) / 42) + 1);
+			p.damage((int) (getCurrentLevel(p, Skills.HITS) / 42) + 1);
 			sleep(2000);
 			p.teleport(677, 3462);
 			sleep(650);
@@ -144,13 +144,13 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 			p.teleport(687, 3462);
 			sleep(650);
 			playerTalk(p, null, "aargh");
-			p.damage((int) (getCurrentLevel(p, SKILLS.HITS.id()) / 42) + 1);
+			p.damage((int) (getCurrentLevel(p, Skills.HITS) / 42) + 1);
 			p.teleport(690, 3461);
 			message(p, "you tumble deep into the cravass",
 				"and land battered and bruised at the base");
 		}
 		else if (inArray(obj.getID(), FAIL_SWAMP_ROCKS)) {
-			doRock(obj, p, (int) (getCurrentLevel(p, SKILLS.HITS.id()) / 42) + 1, true, -1);
+			doRock(obj, p, (int) (getCurrentLevel(p, Skills.HITS) / 42) + 1, true, -1);
 		}
 		else if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_1) {
 			message(p, "you climb up the mud pile");
@@ -159,13 +159,13 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 				"you surface by the swamp, covered in muck");
 		}
 		else if (inArray(obj.getID(), MAIN_LEDGE)) {
-			doLedge(obj, p, (int) (getCurrentLevel(p, SKILLS.HITS.id()) / 42) + 1);
+			doLedge(obj, p, (int) (getCurrentLevel(p, Skills.HITS) / 42) + 1);
 		}
 		else if (obj.getID() == LEVER) {
 			message(p, "you pull back on the old lever",
 				"the bridge slowly lowers");
-			GameObject bridge_open = new GameObject(Point.location(704, 3417), 727, 2, 0);
-			GameObject bridge_closed = new GameObject(Point.location(704, 3417), 726, 2, 0);
+			GameObject bridge_open = new GameObject(obj.getWorld(), Point.location(704, 3417), 727, 2, 0);
+			GameObject bridge_closed = new GameObject(obj.getWorld(), Point.location(704, 3417), 726, 2, 0);
 			World.getWorld().registerGameObject(bridge_open);
 			World.getWorld().delayedSpawnObject(bridge_closed.getLoc(), 10000);
 			p.teleport(709, 3420);
@@ -187,10 +187,10 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 			message(p, "you move the rocks from your path");
 			p.message("you hear a strange mechanical sound");
 			World.getWorld().replaceGameObject(obj,
-				new GameObject(obj.getLocation(), CLEAR_ROCKS + 1, obj.getDirection(), obj
+				new GameObject(obj.getWorld(), obj.getLocation(), CLEAR_ROCKS + 1, obj.getDirection(), obj
 					.getType()));
 			World.getWorld().delayedSpawnObject(obj.getLoc(), 3000);
-			p.damage((int) (getCurrentLevel(p, SKILLS.HITS.id()) * 0.2D));
+			p.damage((int) (getCurrentLevel(p, Skills.HITS) * 0.2D));
 			playerTalk(p, null, "aaarrghhh");
 			message(p, "You've triggered a trap");
 		}
@@ -201,10 +201,10 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 				p.message("it's a trap");
 				p.teleport(obj.getX(), obj.getY());
 				World.getWorld().replaceGameObject(obj,
-					new GameObject(obj.getLocation(), 805, obj.getDirection(), obj
+					new GameObject(obj.getWorld(), obj.getLocation(), 805, obj.getDirection(), obj
 						.getType()));
 				World.getWorld().delayedSpawnObject(obj.getLoc(), 5000);
-				p.damage((int) (getCurrentLevel(p, SKILLS.HITS.id()) / 6) + 1);
+				p.damage((int) (getCurrentLevel(p, Skills.HITS) / 6) + 1);
 				playerTalk(p, null, "aaarghh");
 			} else {
 				message(p, "you search the rock",
@@ -225,10 +225,10 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 						p.message("but the trap activates");
 						p.teleport(obj.getX(), obj.getY());
 						World.getWorld().replaceGameObject(obj,
-							new GameObject(obj.getLocation(), 805, obj.getDirection(), obj
+							new GameObject(obj.getWorld(), obj.getLocation(), 805, obj.getDirection(), obj
 								.getType()));
 						World.getWorld().delayedSpawnObject(obj.getLoc(), 5000);
-						p.damage((int) (getCurrentLevel(p, SKILLS.HITS.id()) / 6) + 1);
+						p.damage((int) (getCurrentLevel(p, Skills.HITS) / 6) + 1);
 						playerTalk(p, null, "aaarghh");
 					}
 
@@ -244,7 +244,7 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 	}
 
 	boolean succeed(Player player, int req) {
-		int level_difference = getCurrentLevel(player, SKILLS.THIEVING.id()) - req;
+		int level_difference = getCurrentLevel(player, Skills.THIEVING) - req;
 		int percent = random(1, 100);
 
 		if (level_difference < 0)

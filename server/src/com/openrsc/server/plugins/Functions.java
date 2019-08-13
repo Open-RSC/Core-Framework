@@ -1,17 +1,16 @@
 package com.openrsc.server.plugins;
 
-import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.event.PluginsUseThisEvent;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.UndergroundPassMessages;
 import com.openrsc.server.external.GameObjectLoc;
-import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.MenuOptionListener;
 import com.openrsc.server.model.Path;
 import com.openrsc.server.model.Path.PathType;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -202,7 +201,7 @@ public class Functions {
 		int baseXP = questData[2];
 		int varXP = questData[3];
 		if (skillId >= 0 && baseXP > 0 && varXP >= 0) {
-			p.incQuestExp(skillId, (int) Math.round(Constants.GameServer.SKILLING_EXP_RATE * (p.getSkills().getMaxStat(skillId) * varXP + baseXP)));
+			p.incQuestExp(skillId, (int) Math.round(Server.getServer().getConfig().SKILLING_EXP_RATE * (p.getSkills().getMaxStat(skillId) * varXP + baseXP)));
 		}
 		if (applyQP) {
 			p.incQuestPoints(qp);
@@ -331,7 +330,7 @@ public class Functions {
 	}
 
 	public static Npc spawnNpc(int id, int x, int y, final int time, final Player spawnedFor) {
-		final Npc npc = new Npc(id, x, y);
+		final Npc npc = new Npc(spawnedFor.getWorld(), id, x, y);
 		post(() -> {
 			npc.setShouldRespawn(false);
 			npc.setAttribute("spawnedFor", spawnedFor);
@@ -346,7 +345,7 @@ public class Functions {
 	}
 
 	public static Npc spawnNpc(int id, int x, int y) {
-		final Npc npc = new Npc(id, x, y);
+		final Npc npc = new Npc(World.getWorld(), id, x, y);
 		post(() -> {
 			npc.setShouldRespawn(false);
 			World.getWorld().registerNpc(npc);
@@ -356,7 +355,7 @@ public class Functions {
 
 	public static Npc spawnNpcWithRadius(Player p, int id, int x, int y, int radius, final int time) {
 
-		final Npc npc = new Npc(id, x, y, radius);
+		final Npc npc = new Npc(p.getWorld(), id, x, y, radius);
 		post(() -> {
 			npc.setShouldRespawn(false);
 			World.getWorld().registerNpc(npc);
@@ -371,7 +370,7 @@ public class Functions {
 
 	public static Npc spawnNpc(int id, int x, int y, final int time) {
 
-		final Npc npc = new Npc(id, x, y);
+		final Npc npc = new Npc(World.getWorld(), id, x, y);
 		post(() -> {
 			npc.setShouldRespawn(false);
 			World.getWorld().registerNpc(npc);
@@ -402,7 +401,7 @@ public class Functions {
 	 * @param owner
 	 */
 	public static void createGroundItem(int id, int amount, int x, int y, Player owner) {
-		World.getWorld().registerItem(new GroundItem(id, x, y, amount, owner));
+		World.getWorld().registerItem(new GroundItem(World.getWorld(), id, x, y, amount, owner));
 	}
 
 
@@ -505,14 +504,14 @@ public class Functions {
 	}
 
 	public static void openChest(GameObject obj, int delay, int chestID) {
-		GameObject chest = new GameObject(obj.getLocation(), chestID, obj.getDirection(), obj.getType());
+		GameObject chest = new GameObject(obj.getWorld(), obj.getLocation(), chestID, obj.getDirection(), obj.getType());
 		replaceObject(obj, chest);
 		delayedSpawnObject(obj.getLoc(), delay);
 
 	}
 
 	public static void replaceObjectDelayed(GameObject obj, int delay, int replaceID) {
-		GameObject replaceObj = new GameObject(obj.getLocation(), replaceID, obj.getDirection(), obj.getType());
+		GameObject replaceObj = new GameObject(obj.getWorld(), obj.getLocation(), replaceID, obj.getDirection(), obj.getType());
 		replaceObject(obj, replaceObj);
 		delayedSpawnObject(obj.getLoc(), delay);
 	}
@@ -526,24 +525,24 @@ public class Functions {
 	}
 
 	public static void closeCupboard(GameObject obj, Player p, int cupboardID) {
-		replaceObject(obj, new GameObject(obj.getLocation(), cupboardID, obj.getDirection(), obj.getType()));
+		replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), cupboardID, obj.getDirection(), obj.getType()));
 		p.message("You close the cupboard");
 	}
 
 	public static void openCupboard(GameObject obj, Player p, int cupboardID) {
-		replaceObject(obj, new GameObject(obj.getLocation(), cupboardID, obj.getDirection(), obj.getType()));
+		replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), cupboardID, obj.getDirection(), obj.getType()));
 		p.message("You open the cupboard");
 	}
 
 	public static void closeGenericObject(GameObject obj, Player p, int objectID, String... messages) {
-		replaceObject(obj, new GameObject(obj.getLocation(), objectID, obj.getDirection(), obj.getType()));
+		replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), objectID, obj.getDirection(), obj.getType()));
 		for (String message : messages) {
 			p.message(message);
 		}
 	}
 
 	public static void openGenericObject(GameObject obj, Player p, int objectID, String... messages) {
-		replaceObject(obj, new GameObject(obj.getLocation(), objectID, obj.getDirection(), obj.getType()));
+		replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), objectID, obj.getDirection(), obj.getType()));
 		for (String message : messages) {
 			p.message(message);
 		}
@@ -655,7 +654,7 @@ public class Functions {
 		p.setBusyTimer(650);
 		/* For the odd looking walls. */
 		if (removeObject) {
-			GameObject newObject = new GameObject(object.getLocation(), replaceID, object.getDirection(), object.getType());
+			GameObject newObject = new GameObject(object.getWorld(), object.getLocation(), replaceID, object.getDirection(), object.getType());
 			if (object.getID() == replaceID) {
 				p.message("Nothing interesting happens");
 				return;
@@ -726,7 +725,7 @@ public class Functions {
 
 		p.setBusyTimer(650);
 		/* For the odd looking walls. */
-		GameObject newObject = new GameObject(object.getLocation(), replaceID, object.getDirection(), object.getType());
+		GameObject newObject = new GameObject(object.getWorld(), object.getLocation(), replaceID, object.getDirection(), object.getType());
 		if (object.getID() == replaceID) {
 			p.message("Nothing interesting happens");
 			return;
@@ -1004,7 +1003,7 @@ public class Functions {
 		// 8 - N->S
 		p.playSound("opendoor");
 		removeObject(object);
-		registerObject(new GameObject(object.getLocation(), replaceID, object.getDirection(), object.getType()));
+		registerObject(new GameObject(object.getWorld(), object.getLocation(), replaceID, object.getDirection(), object.getType()));
 
 		int dir = object.getDirection();
 		if (destination != null && Math.abs(p.getX() - destination.getX()) <= 5 && Math.abs(p.getY() - destination.getY()) <= 5) {
@@ -1037,7 +1036,7 @@ public class Functions {
 			p.message("Failure - Contact an administrator");
 		}
 		sleep(1000);
-		registerObject(new GameObject(object.getLoc()));
+		registerObject(new GameObject(object.getWorld(), object.getLoc()));
 	}
 
 	/**
@@ -1110,39 +1109,39 @@ public class Functions {
 		Optional<Integer> optionalLevel = Optional.empty();
 		Optional<Integer> optionalSkillIndex = Optional.empty();
 		boolean ableToWield = true;
-		boolean bypass = !Constants.GameServer.STRICT_CHECK_ALL &&
+		boolean bypass = !Server.getServer().getConfig().STRICT_CHECK_ALL &&
 			(itemLower.startsWith("poisoned") &&
-				((itemLower.endsWith("throwing dart") && !Constants.GameServer.STRICT_PDART_CHECK) ||
-					(itemLower.endsWith("throwing knife") && !Constants.GameServer.STRICT_PKNIFE_CHECK) ||
-					(itemLower.endsWith("spear") && !Constants.GameServer.STRICT_PSPEAR_CHECK))
+				((itemLower.endsWith("throwing dart") && !Server.getServer().getConfig().STRICT_PDART_CHECK) ||
+					(itemLower.endsWith("throwing knife") && !Server.getServer().getConfig().STRICT_PKNIFE_CHECK) ||
+					(itemLower.endsWith("spear") && !Server.getServer().getConfig().STRICT_PSPEAR_CHECK))
 			);
 
 		if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
 			optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
-			optionalSkillIndex = Optional.of(Skills.SKILLS.ATTACK.id());
+			optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
 		}
 		//staff of iban (usable)
 		if (item.getID() == ItemId.STAFF_OF_IBAN.id()) {
 			optionalLevel = Optional.of(requiredLevel);
-			optionalSkillIndex = Optional.of(Skills.SKILLS.ATTACK.id());
+			optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
 		}
 		//battlestaves (incl. enchanted version)
 		if (itemLower.contains("battlestaff")) {
 			optionalLevel = Optional.of(requiredLevel);
-			optionalSkillIndex = Optional.of(Skills.SKILLS.ATTACK.id());
+			optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
 		}
 
 		if (player.getSkills().getMaxStat(requiredSkillIndex) < requiredLevel) {
 			if (!bypass) {
 				player.message("You are not a high enough level to use this item");
-				player.message("You need to have a " + Skills.getSkillName(requiredSkillIndex) + " level of " + requiredLevel);
+				player.message("You need to have a " + player.getWorld().getServer().getConstants().getSkills().getSkillName(requiredSkillIndex) + " level of " + requiredLevel);
 				ableToWield = false;
 			}
 		}
 		if (optionalSkillIndex.isPresent() && player.getSkills().getMaxStat(optionalSkillIndex.get()) < optionalLevel.get()) {
 			if (!bypass) {
 				player.message("You are not a high enough level to use this item");
-				player.message("You need to have a " + Skills.getSkillName(optionalSkillIndex.get()) + " level of " + optionalLevel.get());
+				player.message("You need to have a " + player.getWorld().getServer().getConstants().getSkills().getSkillName(optionalSkillIndex.get()) + " level of " + optionalLevel.get());
 				ableToWield = false;
 			}
 		}
@@ -1152,19 +1151,19 @@ public class Functions {
 			ableToWield = false;
 		}
 		if ((item.getID() == ItemId.RUNE_PLATE_MAIL_BODY.id() || item.getID() == ItemId.RUNE_PLATE_MAIL_TOP.id())
-			&& (player.getQuestStage(Constants.Quests.DRAGON_SLAYER) != -1)) {
+			&& (player.getQuestStage(Quests.DRAGON_SLAYER) != -1)) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the dragon slayer quest");
 			return false;
-		} else if (item.getID() == ItemId.DRAGON_SWORD.id() && player.getQuestStage(Constants.Quests.LOST_CITY) != -1) {
+		} else if (item.getID() == ItemId.DRAGON_SWORD.id() && player.getQuestStage(Quests.LOST_CITY) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Lost city of zanaris quest");
 			return false;
-		} else if (item.getID() == ItemId.DRAGON_AXE.id() && player.getQuestStage(Constants.Quests.HEROS_QUEST) != -1) {
+		} else if (item.getID() == ItemId.DRAGON_AXE.id() && player.getQuestStage(Quests.HEROS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Hero's guild entry quest");
 			return false;
-		} else if (item.getID() == ItemId.DRAGON_SQUARE_SHIELD.id() && player.getQuestStage(Constants.Quests.LEGENDS_QUEST) != -1) {
+		} else if (item.getID() == ItemId.DRAGON_SQUARE_SHIELD.id() && player.getQuestStage(Quests.LEGENDS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the legend's guild quest");
 			return false;
@@ -1214,7 +1213,7 @@ public class Functions {
 		} else if ((item.getID() == 2141 || item.getID() == 2142 || item.getID() == 2143) && !player.isIronMan(3)) {
 			player.message("You need to be a Hardcore Iron Man to wear this");
 			return false;
-		} else if (item.getID() == 2254 && player.getQuestStage(Constants.Quests.LEGENDS_QUEST) != -1) {
+		} else if (item.getID() == 2254 && player.getQuestStage(Quests.LEGENDS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Legends Quest");
 			return false;
@@ -1589,7 +1588,7 @@ public class Functions {
 			if (Thread.currentThread().getName().toLowerCase().contains("gameengine"))
 				return;
 
-			Thread.sleep(Constants.GameServer.GAME_TICK);
+			Thread.sleep(Server.getServer().getConfig().GAME_TICK);
 		} catch (final InterruptedException e) {
 		}
 	}
@@ -1618,7 +1617,7 @@ public class Functions {
 	 * @return
 	 */
 	public static Npc transform(final Npc n, final int newID, boolean onlyShift) {
-		final Npc newNpc = new Npc(newID, n.getX(), n.getY());
+		final Npc newNpc = new Npc(n.getWorld(), newID, n.getX(), n.getY());
 		post(() -> {
 			newNpc.setShouldRespawn(false);
 			World.getWorld().registerNpc(newNpc);

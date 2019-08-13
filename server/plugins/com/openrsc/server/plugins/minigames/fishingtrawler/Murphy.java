@@ -1,5 +1,9 @@
 package com.openrsc.server.plugins.minigames.fishingtrawler;
 
+import com.openrsc.server.constants.Minigames;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
+import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler.TrawlerBoat;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
@@ -12,11 +16,6 @@ import com.openrsc.server.plugins.menu.Option;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
-
-import com.openrsc.server.Constants;
-import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
-import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler.TrawlerBoat;
-import com.openrsc.server.external.NpcId;
 
 public class Murphy implements MiniGameInterface, TalkToNpcListener, TalkToNpcExecutiveListener {
 
@@ -33,7 +32,7 @@ public class Murphy implements MiniGameInterface, TalkToNpcListener, TalkToNpcEx
 	
 	@Override
 	public int getMiniGameId() {
-		return Constants.Minigames.FISHING_TRAWLER;
+		return Minigames.FISHING_TRAWLER;
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package com.openrsc.server.sql.query.logs;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.sql.query.Query;
 
@@ -14,7 +14,7 @@ public final class SecurityChangeLog extends Query {
 	private String eventAlias, eventIp, eventMessage;
 
 	public SecurityChangeLog(Player player, ChangeEvent event, String message) {
-		super("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX
+		super("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 			+ "player_security_changes`(`playerID`, `eventAlias`, `date`, `ip`, `message`) VALUES(?, ?, ?, ?, ?)");
 		this.playerId = player.getDatabaseID();
 		this.eventAlias = event.toString();
@@ -27,7 +27,7 @@ public final class SecurityChangeLog extends Query {
 	}
 	
 	public SecurityChangeLog(int playerId, ChangeEvent event, String ip, String message) {
-		super("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX
+		super("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 			+ "player_security_changes`(`playerID`, `eventAlias`, `date`, `ip`, `message`) VALUES(?, ?, ?, ?, ?)");
 		this.playerId = playerId;
 		this.eventAlias = event.toString();

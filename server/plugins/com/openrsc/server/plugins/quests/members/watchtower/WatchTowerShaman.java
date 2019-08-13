@@ -1,9 +1,6 @@
 package com.openrsc.server.plugins.quests.members.watchtower;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -31,7 +28,7 @@ public class WatchTowerShaman implements TalkToNpcListener, TalkToNpcExecutiveLi
 				"We will destroy you!");
 			p.message("A magic blast comes from the shaman");
 			n.displayNpcTeleportBubble(n.getX(), n.getY());
-			p.damage((int) (getCurrentLevel(p, SKILLS.HITS.id()) * 0.2D + 10));
+			p.damage((int) (getCurrentLevel(p, Skills.HITS) * 0.2D + 10));
 			p.message("You are badly injured by the blast");
 		}
 	}
@@ -46,7 +43,7 @@ public class WatchTowerShaman implements TalkToNpcListener, TalkToNpcExecutiveLi
 	public void onInvUseOnNpc(Player p, Npc n, Item item) {
 		if (n.getID() == NpcId.OGRE_SHAMAN.id() && item.getID() == ItemId.MAGIC_OGRE_POTION.id()) {
 			p.setBusy(true);
-			if (getCurrentLevel(p, SKILLS.MAGIC.id()) < 14) {
+			if (getCurrentLevel(p, Skills.MAGIC) < 14) {
 				p.message("You need a level of 14 magic first");
 				p.setBusy(false);
 				return;
@@ -76,8 +73,8 @@ public class WatchTowerShaman implements TalkToNpcListener, TalkToNpcExecutiveLi
 					removeItem(p, ItemId.MAGIC_OGRE_POTION.id(), 1);
 					addItem(p, ItemId.EMPTY_VIAL.id(), 1);
 					addItem(p, ItemId.POWERING_CRYSTAL3.id(), 1);
-					if (p.getQuestStage(Constants.Quests.WATCHTOWER) == 8) {
-						p.updateQuestStage(Constants.Quests.WATCHTOWER, 9);
+					if (p.getQuestStage(Quests.WATCHTOWER) == 8) {
+						p.updateQuestStage(Quests.WATCHTOWER, 9);
 					}
 				}
 			} else {

@@ -1,6 +1,6 @@
 package com.openrsc.server.sql.query.logs;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.sql.query.Query;
 
@@ -23,7 +23,7 @@ public final class TradeLog extends Query {
 	private List<Item> player1Offer, player2Offer;
 
 	public TradeLog(String player1, String player2, List<Item> player1Offer, List<Item> player2Offer, String player1_ip, String player2_ip) {
-		super("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "trade_logs`(`player1`, `player2`, `player1_items`, `player2_items`, `player1_ip`, `player2_ip`, `time`) VALUES(?, ?, ?, ?, ?, ?, ?)");
+		super("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "trade_logs`(`player1`, `player2`, `player1_items`, `player2_items`, `player1_ip`, `player2_ip`, `time`) VALUES(?, ?, ?, ?, ?, ?, ?)");
 		this.player1 = player1;
 		this.player2 = player2;
 		this.player1Offer = player1Offer;

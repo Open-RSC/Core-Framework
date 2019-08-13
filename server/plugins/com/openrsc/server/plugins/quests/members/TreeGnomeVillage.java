@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.quests.members;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -31,7 +30,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 	
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.TREE_GNOME_VILLAGE;
+		return Quests.TREE_GNOME_VILLAGE;
 	}
 
 	@Override
@@ -48,7 +47,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 	public void handleReward(Player p) {
 		p.message("Well done you have completed the treequest");
 		p.message("@gre@You haved gained 2 quest points!");
-		incQuestReward(p, Quests.questData.get(Quests.TREE_GNOME_VILLAGE), true);
+		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.TREE_GNOME_VILLAGE), true);
 		addItem(p, ItemId.GNOME_EMERALD_AMULET_OF_PROTECTION.id(), 1);
 	}
 
@@ -517,7 +516,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 							"magic to teleport to other trees",
 							"grown from related seeds");
 						p.getCache().remove("looted_orbs_protect");
-						p.sendQuestComplete(Constants.Quests.TREE_GNOME_VILLAGE);
+						p.sendQuestComplete(Quests.TREE_GNOME_VILLAGE);
 					} else if (p.getCache().hasKey("looted_orbs_protect")) {
 						playerTalk(p, n, "bolren, i have returned");
 						npcTalk(p, n, "you made it back", "do you have the orbs?");

@@ -1,10 +1,9 @@
 package com.openrsc.server.plugins.quests.free;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -26,7 +25,7 @@ public class DemonSlayer implements QuestInterface,
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.DEMON_SLAYER;
+		return Quests.DEMON_SLAYER;
 	}
 
 	@Override
@@ -42,7 +41,7 @@ public class DemonSlayer implements QuestInterface,
 	@Override
 	public void handleReward(Player p) {
 		p.message("You have completed the demonslayer quest");
-		incQuestReward(p, Quests.questData.get(Quests.DEMON_SLAYER), true);
+		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.DEMON_SLAYER), true);
 		p.message("@gre@You haved gained 3 quest points!");
 	}
 
@@ -72,7 +71,7 @@ public class DemonSlayer implements QuestInterface,
 							"I'd better go down and get it before someone else finds it");
 						player.getInventory().replace(ItemId.BUCKET_OF_WATER.id(), ItemId.BUCKET.id());
 						World.getWorld().registerItem(
-							new GroundItem(ItemId.SILVERLIGHT_KEY_3.id(), 117, 3294, 1, player));
+							new GroundItem(player.getWorld(), ItemId.SILVERLIGHT_KEY_3.id(), 117, 3294, 1, player));
 					}
 					break;
 			}
@@ -1088,7 +1087,7 @@ public class DemonSlayer implements QuestInterface,
 						return true;
 					} else {
 						// silverlight effect shared in its own file
-						n.getSkills().setLevel(SKILLS.HITS.id(), n.getDef().getHits());
+						n.getSkills().setLevel(Skills.HITS, n.getDef().getHits());
 						p.resetMenuHandler();
 						p.setOption(-1);
 						p.setAttribute("delrith", false);
@@ -1103,7 +1102,7 @@ public class DemonSlayer implements QuestInterface,
 	}
 
 	public void onPlayerKilledNpc(Player p, Npc n) {
-		n.getSkills().setLevel(SKILLS.HITS.id(), n.getDef().getHits());
+		n.getSkills().setLevel(Skills.HITS, n.getDef().getHits());
 		if (p.getMenuHandler() == null && !p.getAttribute("delrith", false)) {
 			p.setAttribute("delrith", true);
 			message(p, "As you strike Delrith a vortex opens up");
@@ -1119,7 +1118,7 @@ public class DemonSlayer implements QuestInterface,
 						message(p, 1300, "Delrith is sucked back into the dark demension from which he came");
 						n.killedBy(p);
 						n.remove();
-						if (p.getQuestStage(Constants.Quests.DEMON_SLAYER) != -1) {
+						if (p.getQuestStage(Quests.DEMON_SLAYER) != -1) {
 							//remove flags in case they are present with drop trick
 							p.getCache().remove("done_bone_task");
 							p.getCache().remove("traiborn_bones");

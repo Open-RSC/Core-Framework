@@ -1,12 +1,13 @@
 package com.openrsc.server.content.market;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.content.market.task.*;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
+import com.openrsc.server.sql.DatabaseConnection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,7 +38,7 @@ public class Market implements Runnable {
 	}
 
 	public static Market getInstance() {
-		if (!Constants.GameServer.SPAWN_AUCTION_NPCS) return null;
+		if (!Server.getServer().getConfig().SPAWN_AUCTION_NPCS) return null;
 		if (instance == null) {
 			instance = new Market();
 
@@ -85,8 +86,8 @@ public class Market implements Runnable {
 				if (auction.hasExpired()) expiredItems.add(auction);
 
 			if (expiredItems.size() != 0) {
-				PreparedStatement expiredItemsStatement = MarketDatabase.databaseInstance.prepareStatement(
-					"INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX
+				PreparedStatement expiredItemsStatement = DatabaseConnection.getDatabase().prepareStatement(
+					"INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 						+ "expired_auctions`(`item_id`, `item_amount`, `time`, `playerID`, `explanation`) VALUES (?,?,?,?,?)");
 				for (MarketItem expiredItem : expiredItems) {
 

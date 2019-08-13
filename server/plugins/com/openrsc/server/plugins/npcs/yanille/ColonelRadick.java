@@ -9,7 +9,7 @@ import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.NpcId;
 
 public class ColonelRadick implements TalkToNpcListener, TalkToNpcExecutiveListener {
 

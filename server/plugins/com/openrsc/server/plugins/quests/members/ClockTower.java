@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.quests.members;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -28,7 +27,7 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.CLOCK_TOWER;
+		return Quests.CLOCK_TOWER;
 	}
 
 	@Override
@@ -43,7 +42,7 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void handleReward(Player p) {
-		incQuestReward(p, Quests.questData.get(Quests.CLOCK_TOWER), true);
+		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.CLOCK_TOWER), true);
 		p.message("@gre@You haved gained 1 quest point!");
 		p.getCache().remove("rats_dead");
 		p.getCache().remove("1st_cog");
@@ -106,7 +105,7 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 						p.message("You have completed the clock tower quest");
 						npcTalk(p, n, "That will please the village folk",
 							"Please take these coins as a reward");
-						p.sendQuestComplete(Constants.Quests.CLOCK_TOWER);
+						p.sendQuestComplete(Quests.CLOCK_TOWER);
 						return;
 					}
 					playerTalk(p, n, "Hello again");
@@ -185,13 +184,13 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 			//gate closed
 			if (dynGate.getID() == 371) {
 				p.message("The gate swings open");
-				newGate = new GameObject(dynGate.getLocation(), 372, 0, 0);
+				newGate = new GameObject(p.getWorld(), dynGate.getLocation(), 372, 0, 0);
 				World.getWorld().registerGameObject(newGate);
 			}
 			//gate open
 			else {
 				p.message("The gate creaks shut");
-				newGate = new GameObject(dynGate.getLocation(), 371, 0, 0);
+				newGate = new GameObject(p.getWorld(), dynGate.getLocation(), 371, 0, 0);
 				World.getWorld().registerGameObject(newGate);
 			}
 			

@@ -1,14 +1,14 @@
 package com.openrsc.server.plugins.skills;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
@@ -28,17 +28,17 @@ public class Smelting implements InvUseOnObjectListener,
 		if (obj.getID() == FURNACE && !DataConversions.inArray(new int[]{ItemId.GOLD_BAR.id(), ItemId.SILVER_BAR.id(), ItemId.SAND.id(), ItemId.GOLD_BAR_FAMILYCREST.id()}, item.getID())) {
 			if (item.getID() == ItemId.STEEL_BAR.id()) {
 				if (p.getInventory().hasItemId(ItemId.CANNON_AMMO_MOULD.id())) {
-					if (getCurrentLevel(p, SKILLS.SMITHING.id()) < 30) {
+					if (getCurrentLevel(p, Skills.SMITHING) < 30) {
 						p.message("You need at least level 30 smithing to make cannon balls");
 						return;
 					}
-					if (p.getQuestStage(Constants.Quests.DWARF_CANNON) != -1) {
+					if (p.getQuestStage(Quests.DWARF_CANNON) != -1) {
 						p.message("You need to complete the dwarf cannon quest");
 						return;
 					}
 					showBubble(p, new Item(ItemId.MULTI_CANNON_BALL.id(), 1));
-					int messagedelay = Constants.GameServer.BATCH_PROGRESSION ? 200 : 1700;
-					int delay = Constants.GameServer.BATCH_PROGRESSION ? 7200: 2100;
+					int messagedelay = Server.getServer().getConfig().BATCH_PROGRESSION ? 200 : 1700;
+					int delay = Server.getServer().getConfig().BATCH_PROGRESSION ? 7200: 2100;
 					message(p, messagedelay, "you heat the steel bar into a liquid state",
 						"and pour it into your cannon ball mould",
 						"you then leave it to cool for a short while");
@@ -46,14 +46,14 @@ public class Smelting implements InvUseOnObjectListener,
 					p.setBatchEvent(new BatchEvent(p, delay, "Smelting", p.getInventory().countId(item.getID()), false) {
 
 						public void action() {
-							p.incExp(SKILLS.SMITHING.id(), 100, true);
+							p.incExp(Skills.SMITHING, 100, true);
 							p.getInventory().replace(ItemId.STEEL_BAR.id(), ItemId.MULTI_CANNON_BALL.id(),false);
 							if (Functions.isWielding(p, ItemId.DWARVEN_RING.id())) {
-								p.getInventory().add(new Item(ItemId.MULTI_CANNON_BALL.id(), Constants.GameServer.DWARVEN_RING_BONUS),false);
+								p.getInventory().add(new Item(ItemId.MULTI_CANNON_BALL.id(), Server.getServer().getConfig().DWARVEN_RING_BONUS),false);
 								int charges;
 								if (p.getCache().hasKey("dwarvenring")) {
 									charges = p.getCache().getInt("dwarvenring") + 1;
-									if (charges >= Constants.GameServer.DWARVEN_RING_USES) {
+									if (charges >= Server.getServer().getConfig().DWARVEN_RING_USES) {
 										p.getCache().remove("dwarvenring");
 										p.getInventory().shatter(ItemId.DWARVEN_RING.id());
 									} else
@@ -70,7 +70,7 @@ public class Smelting implements InvUseOnObjectListener,
 								p.message("you repeat the process");
 								showBubble(p, new Item(ItemId.MULTI_CANNON_BALL.id(), 1));
 							}
-							if (Constants.GameServer.WANT_FATIGUE) {
+							if (Server.getServer().getConfig().WANT_FATIGUE) {
 								if (p.getFatigue() >= p.MAX_FATIGUE) {
 									p.message("You are too tired to smelt cannon ball");
 									interrupt();
@@ -100,7 +100,7 @@ public class Smelting implements InvUseOnObjectListener,
 		}
 		String formattedName = item.getDef().getName().toUpperCase().replaceAll(" ", "_");
 		Smelt smelt;
-		if (item.getID() == Smelt.IRON_ORE.getID() && getCurrentLevel(p, SKILLS.SMITHING.id()) >= 30 && p.getInventory().countId(Smelt.COAL.getID()) >= 2) {
+		if (item.getID() == Smelt.IRON_ORE.getID() && getCurrentLevel(p, Skills.SMITHING) >= 30 && p.getInventory().countId(Smelt.COAL.getID()) >= 2) {
 			String coalChange = EntityHandler.getItemDef(Smelt.COAL.getID()).getName().toUpperCase();
 			smelt = Smelt.valueOf(coalChange);
 		} else {
@@ -114,13 +114,13 @@ public class Smelting implements InvUseOnObjectListener,
 		if (!p.withinRange(obj, 2)) {
 			return;
 		}
-		if (Constants.GameServer.WANT_FATIGUE) {
+		if (Server.getServer().getConfig().WANT_FATIGUE) {
 			if (p.getFatigue() >= p.MAX_FATIGUE) {
 				p.message("You are too tired to smelt this ore");
 				return;
 			}
 		}
-		if (getCurrentLevel(p, SKILLS.SMITHING.id()) < smelt.getRequiredLevel()) {
+		if (getCurrentLevel(p, Skills.SMITHING) < smelt.getRequiredLevel()) {
 			p.message("You need to be at least level-" + smelt.getRequiredLevel() + " smithing to " + (smelt.getSmeltBarId() == ItemId.SILVER_BAR.id() || smelt.getSmeltBarId() == ItemId.GOLD_BAR.id() || smelt.getSmeltBarId() == ItemId.GOLD_BAR_FAMILYCREST.id() ? "work " : "smelt ") + EntityHandler.getItemDef(smelt.getSmeltBarId()).getName().toLowerCase().replaceAll("bar", ""));
 			if (smelt.getSmeltBarId() == ItemId.IRON_BAR.id())
 				p.message("Practice your smithing using tin and copper to make bronze");
@@ -143,10 +143,10 @@ public class Smelting implements InvUseOnObjectListener,
 		}
 
 		p.message(smeltString(smelt, item));
-		p.setBatchEvent(new BatchEvent(p, 1800, "Smelt", Formulae.getRepeatTimes(p, SKILLS.SMITHING.id()), false) {
+		p.setBatchEvent(new BatchEvent(p, 1800, "Smelt", Formulae.getRepeatTimes(p, Skills.SMITHING), false) {
 
 			public void action() {
-				if (Constants.GameServer.WANT_FATIGUE) {
+				if (Server.getServer().getConfig().WANT_FATIGUE) {
 					if (p.getFatigue() >= p.MAX_FATIGUE) {
 						p.message("You are too tired to smelt this ore");
 						interrupt();
@@ -187,7 +187,7 @@ public class Smelting implements InvUseOnObjectListener,
 							addItem(p, smelt.getSmeltBarId(), 1);
 							if (p.getCache().hasKey("ringofforging")) {
 								int ringCheck = p.getCache().getInt("ringofforging");
-								if (ringCheck + 1 == Constants.GameServer.RING_OF_FORGING_USES) {
+								if (ringCheck + 1 == Server.getServer().getConfig().RING_OF_FORGING_USES) {
 									p.getCache().remove("ringofforging");
 									p.getInventory().shatter(ItemId.RING_OF_FORGING.id());
 								} else {
@@ -210,9 +210,9 @@ public class Smelting implements InvUseOnObjectListener,
 
 						/** Gauntlets of Goldsmithing provide an additional 23 experience when smelting gold ores **/
 						if (p.getInventory().wielding(ItemId.GAUNTLETS_OF_GOLDSMITHING.id()) && new Item(smelt.getSmeltBarId()).getID() == ItemId.GOLD_BAR.id()) {
-							p.incExp(SKILLS.SMITHING.id(), smelt.getXp() + 45, true);
+							p.incExp(Skills.SMITHING, smelt.getXp() + 45, true);
 						} else {
-							p.incExp(SKILLS.SMITHING.id(), smelt.getXp(), true);
+							p.incExp(Skills.SMITHING, smelt.getXp(), true);
 						}
 					}
 				} else {

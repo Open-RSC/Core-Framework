@@ -1,13 +1,8 @@
 package com.openrsc.server.plugins.defaults;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.GameServer;
-import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.ShortEvent;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -207,7 +202,7 @@ public class DoorAction {
 				break;
 
 			case 161: // Karamja: shipyard gate (401, 762)
-				if (p.getQuestStage(Constants.Quests.GRAND_TREE) >= 8) {
+				if (p.getQuestStage(Quests.GRAND_TREE) >= 8) {
 					if (p.getX() >= 407) {
 						doDoor(obj, p);
 						p.message("you open the door");
@@ -219,11 +214,11 @@ public class DoorAction {
 				break;
 
 			case 74: // Hero's Guild: main door
-				if (p.getQuestStage(Constants.Quests.HEROS_QUEST) == -1) {
+				if (p.getQuestStage(Quests.HEROS_QUEST) == -1) {
 					doDoor(obj, p);
 				} else {
 					Npc achetties = getNearestNpc(p, NpcId.ACHETTIES.id(), 10);
-					switch (p.getQuestStage(Constants.Quests.HEROS_QUEST)) {
+					switch (p.getQuestStage(Quests.HEROS_QUEST)) {
 						case 0:
 							achetties.initializeTalkScript(p);
 							break;
@@ -234,7 +229,7 @@ public class DoorAction {
 								"How goes thy quest?");
 							if (hasItem(p, ItemId.RED_FIREBIRD_FEATHER.id()) && hasItem(p, ItemId.MASTER_THIEF_ARMBAND.id()) && hasItem(p, ItemId.LAVA_EEL.id())) {
 								playerTalk(p, achetties, "I have all the things needed");
-								p.sendQuestComplete(Constants.Quests.HEROS_QUEST);
+								p.sendQuestComplete(Quests.HEROS_QUEST);
 							} else {
 								playerTalk(p, achetties,
 									"It's tough, I've not done it yet");
@@ -290,7 +285,7 @@ public class DoorAction {
 
 			/** TEMPLE OF IKOV DOORS **/
 			case 109: //
-				if (p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) >= 1 || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -1 || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -2) {
+				if (p.getQuestStage(Quests.TEMPLE_OF_IKOV) >= 1 || p.getQuestStage(Quests.TEMPLE_OF_IKOV) == -1 || p.getQuestStage(Quests.TEMPLE_OF_IKOV) == -2) {
 					p.message("You go through the door");
 					doDoor(obj, p);
 				} else {
@@ -300,7 +295,7 @@ public class DoorAction {
 				break;
 
 			case 108: // Temple of Ikov: Jail door near Fire Warrior (546, 3302)
-				if (p.getCache().hasKey("killedLesarkus") || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -1 || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -2) {
+				if (p.getCache().hasKey("killedLesarkus") || p.getQuestStage(Quests.TEMPLE_OF_IKOV) == -1 || p.getQuestStage(Quests.TEMPLE_OF_IKOV) == -2) {
 					p.message("You go through the door");
 					doDoor(obj, p);
 				} else {
@@ -311,7 +306,7 @@ public class DoorAction {
 				break;
 
 			case 107: // Temple of Ikov: Door deeper into tunnel (545, 3307)
-				if (p.getCache().hasKey("completeLever") || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -1 || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -2) {
+				if (p.getCache().hasKey("completeLever") || p.getQuestStage(Quests.TEMPLE_OF_IKOV) == -1 || p.getQuestStage(Quests.TEMPLE_OF_IKOV) == -2) {
 					p.message("You go through the door");
 					doDoor(obj, p);
 				} else {
@@ -320,7 +315,7 @@ public class DoorAction {
 				break;
 
 			case 106: // Temple of Ikov: Door to Ice Spiders (536, 3349)
-				if (p.getCache().hasKey("openSpiderDoor") || p.getX() >= 536 || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -1 || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -2) {
+				if (p.getCache().hasKey("openSpiderDoor") || p.getX() >= 536 || p.getQuestStage(Quests.TEMPLE_OF_IKOV) == -1 || p.getQuestStage(Quests.TEMPLE_OF_IKOV) == -2) {
 					p.message("You go through the door");
 					doDoor(obj, p);
 				} else {
@@ -350,7 +345,7 @@ public class DoorAction {
 					p.message("You fall through the bridge");
 					sleep(1000);
 					p.message("The lava singes you");
-					p.damage(DataConversions.roundUp(p.getSkills().getLevel(SKILLS.HITS.id()) / 5));
+					p.damage(DataConversions.roundUp(p.getSkills().getLevel(Skills.HITS) / 5));
 				}
 				break;
 
@@ -384,7 +379,7 @@ public class DoorAction {
 					doDoor(obj, p);
 				}
 				if (stop && guard != null) {
-					if (p.getQuestStage(Constants.Quests.FIGHT_ARENA) == 0) {
+					if (p.getQuestStage(Quests.FIGHT_ARENA) == 0) {
 						npcTalk(p, guard, "you there! halt!",
 								"this is General Khazard's private lodgings",
 								"what's your business here?");
@@ -402,8 +397,8 @@ public class DoorAction {
 
 			case 114: // Fight Arena (615, 715), (619, 711)
 				if (p.getCache().hasKey("freed_servil")
-					|| p.getQuestStage(Constants.Quests.FIGHT_ARENA) == -1
-					|| p.getQuestStage(Constants.Quests.FIGHT_ARENA) == 3) {
+					|| p.getQuestStage(Quests.FIGHT_ARENA) == -1
+					|| p.getQuestStage(Quests.FIGHT_ARENA) == 3) {
 					doDoor(obj, p);
 					return;
 				}
@@ -428,8 +423,8 @@ public class DoorAction {
 				break;
 
 			case 122: // Plague City
-				if (p.getQuestStage(Constants.Quests.PLAGUE_CITY) >= 6
-					|| p.getQuestStage(Constants.Quests.PLAGUE_CITY) == -1) {
+				if (p.getQuestStage(Quests.PLAGUE_CITY) >= 6
+					|| p.getQuestStage(Quests.PLAGUE_CITY) == -1) {
 					if (p.getY() >= 569) {
 						doDoor(obj, p);
 						p.message("You go through the door");
@@ -449,7 +444,7 @@ public class DoorAction {
 								"I have come to return a book from Jethick");
 							npcTalk(p, ted, "Ok I guess you can come in then");
 							doDoor(obj, p);
-							p.updateQuestStage(Constants.Quests.PLAGUE_CITY, 6);
+							p.updateQuestStage(Quests.PLAGUE_CITY, 6);
 						}
 					}
 				}
@@ -457,8 +452,8 @@ public class DoorAction {
 
 			case 123: // Plague City
 				Npc mourner = getNearestNpc(p, NpcId.MOURNER_WESTARDOUGNE.id(), 8);
-				if (p.getQuestStage(Constants.Quests.PLAGUE_CITY) == 11
-					|| p.getQuestStage(Constants.Quests.PLAGUE_CITY) == -1) {
+				if (p.getQuestStage(Quests.PLAGUE_CITY) == 11
+					|| p.getQuestStage(Quests.PLAGUE_CITY) == -1) {
 					doDoor(obj, p);
 					return;
 				}
@@ -477,7 +472,7 @@ public class DoorAction {
 							doDoor(obj, p);
 							return;
 						}
-						if (p.getQuestStage(Constants.Quests.PLAGUE_CITY) == 7) {
+						if (p.getQuestStage(Quests.PLAGUE_CITY) == 7) {
 							int menu = showMenu(p, mourner, false, //do not send over
 								"but I think a kidnap victim is in here",
 								"I fear not a mere plague",
@@ -500,7 +495,7 @@ public class DoorAction {
 										"Well you'd need to apply to the head mourner",
 										"Or I suppose Bravek the city warder",
 										"I wouldn't get your hopes up though");
-									p.updateQuestStage(Constants.Quests.PLAGUE_CITY, 8);
+									p.updateQuestStage(Quests.PLAGUE_CITY, 8);
 								}
 							} else if (menu == 1) {
 								playerTalk(p, mourner, "I fear not a mere plague");
@@ -512,7 +507,7 @@ public class DoorAction {
 									"Well you'd need to apply to the head mourner",
 									"Or I suppose Bravek the city warder",
 									"I wouldn't get your hopes up though");
-								p.updateQuestStage(Constants.Quests.PLAGUE_CITY, 8);
+								p.updateQuestStage(Quests.PLAGUE_CITY, 8);
 
 							} else if (menu == 2) {
 								playerTalk(p, mourner, "thanks for the warning");
@@ -526,8 +521,8 @@ public class DoorAction {
 
 			case 121: // Plague City
 				Npc Bravek = getNearestNpc(p, NpcId.BRAVEK.id(), 8);
-				if (p.getQuestStage(Constants.Quests.PLAGUE_CITY) >= 9
-					|| p.getQuestStage(Constants.Quests.PLAGUE_CITY) == -1) {
+				if (p.getQuestStage(Quests.PLAGUE_CITY) >= 9
+					|| p.getQuestStage(Quests.PLAGUE_CITY) == -1) {
 					doDoor(obj, p);
 					return;
 				}
@@ -552,7 +547,7 @@ public class DoorAction {
 					break;
 				}
 				if (p.getY() > 523) {
-					if (getCurrentLevel(p, SKILLS.FISHING.id()) < 68) {
+					if (getCurrentLevel(p, Skills.FISHING) < 68) {
 						p.setBusy(true);
 						Npc masterFisher = World.getWorld().getNpc(NpcId.MASTER_FISHER.id(), 582, 588,
 							524, 527);
@@ -579,7 +574,7 @@ public class DoorAction {
 				if (obj.getX() != 268 || obj.getY() != 3381) {
 					break;
 				}
-				if (getCurrentLevel(p, SKILLS.MINING.id()) < 60) {
+				if (getCurrentLevel(p, Skills.MINING) < 60) {
 					Npc dwarf = World.getWorld().getNpc(NpcId.DWARF_MINING_GUILD.id(), 265, 270, 3379, 3380);
 					if (dwarf != null) {
 						npcTalk(p, dwarf, "Sorry only the top miners are allowed in there");
@@ -595,7 +590,7 @@ public class DoorAction {
 				if (obj.getX() != 347 || obj.getY() != 601) {
 					return;
 				}
-				if (getCurrentLevel(p, SKILLS.CRAFTING.id()) < 40) {
+				if (getCurrentLevel(p, Skills.CRAFTING) < 40) {
 					p.setBusy(true);
 					Npc master = World.getWorld().getNpc(NpcId.MASTER_CRAFTER.id(), 341, 349, 599, 612);
 					if (master != null) {
@@ -619,7 +614,7 @@ public class DoorAction {
 				if (obj.getX() != 179 || obj.getY() != 488) {
 					break;
 				}
-				if (getCurrentLevel(p, SKILLS.COOKING.id()) < 32) {
+				if (getCurrentLevel(p, Skills.COOKING) < 32) {
 					Npc chef = World.getWorld().getNpc(NpcId.HEAD_CHEF.id(), 176, 181, 480, 487);
 					if (chef != null) {
 						npcTalk(p, chef, "Sorry. Only the finest chefs are allowed in here");
@@ -641,7 +636,7 @@ public class DoorAction {
 				if (obj.getX() != 599 || obj.getY() != 757) {
 					break;
 				}
-				if (getCurrentLevel(p, SKILLS.MAGIC.id()) < 66) {
+				if (getCurrentLevel(p, Skills.MAGIC) < 66) {
 					Npc wizard = World.getWorld().getNpc(NpcId.HEAD_WIZARD.id(), 596, 597, 755, 758);
 					if (wizard != null) {
 						npcTalk(p, wizard, "You need a magic level of 66 to get in here",
@@ -769,11 +764,11 @@ public class DoorAction {
 				break;
 
 			case 138: // Biohazard
-				if (!p.getCache().hasKey("rotten_apples") && p.getQuestStage(Constants.Quests.BIOHAZARD) == 4) {
+				if (!p.getCache().hasKey("rotten_apples") && p.getQuestStage(Quests.BIOHAZARD) == 4) {
 					message(p, "the door is locked",
 						"inside you can hear the mourners eating",
 						"you need to distract them from their stew");
-				} else if (p.getCache().hasKey("rotten_apples") || p.getQuestStage(Constants.Quests.BIOHAZARD) == 5) {
+				} else if (p.getCache().hasKey("rotten_apples") || p.getQuestStage(Quests.BIOHAZARD) == 5) {
 					if (p.getY() <= 572) {
 						doDoor(obj, p);
 						p.playerServerMessage(MessageType.QUEST, "you open the door");
@@ -793,7 +788,7 @@ public class DoorAction {
 								"we're waiting for a doctor");
 						}
 					}
-				} else if ((p.getQuestStage(Constants.Quests.BIOHAZARD) > 5 || p.getQuestStage(Constants.Quests.BIOHAZARD) == -1) &&
+				} else if ((p.getQuestStage(Quests.BIOHAZARD) > 5 || p.getQuestStage(Quests.BIOHAZARD) == -1) &&
 					p.getInventory().wielding(802)) {
 					doDoor(obj, p);
 				} else {
@@ -816,7 +811,7 @@ public class DoorAction {
 				break;
 
 			case 145: // Biohazard
-				if (p.getQuestStage(Constants.Quests.BIOHAZARD) == 7 || p.getQuestStage(Constants.Quests.BIOHAZARD) == 8 || p.getQuestStage(Constants.Quests.BIOHAZARD) == 9 || p.getQuestStage(Constants.Quests.BIOHAZARD) == -1) {
+				if (p.getQuestStage(Quests.BIOHAZARD) == 7 || p.getQuestStage(Quests.BIOHAZARD) == 8 || p.getQuestStage(Quests.BIOHAZARD) == 9 || p.getQuestStage(Quests.BIOHAZARD) == -1) {
 					if (p.getX() <= 82) {
 						p.playerServerMessage(MessageType.QUEST, "You go through the door");
 						doDoor(obj, p);
@@ -1031,7 +1026,7 @@ public class DoorAction {
 
 			case 57: // Brimhaven Gate (434, 682)
 				if (obj.getX() == 434 && obj.getY() == 682) {
-					if (!Constants.GameServer.MEMBER_WORLD) {
+					if (!Server.getServer().getConfig().MEMBER_WORLD) {
 						player.message(
 							"You need to be a member to use this gate");
 						return;
@@ -1114,14 +1109,14 @@ public class DoorAction {
 					return;
 				}
 				if (player.getY() <= 472) {
-					if (Constants.GameServer.WANT_WOODCUTTING_GUILD) {
+					if (Server.getServer().getConfig().WANT_WOODCUTTING_GUILD) {
 						doGate(player, obj);
 					} else { // deny exit if not woodcut guild
 						player.playerServerMessage(MessageType.QUEST, "the gate is locked");
 					}
 				} else {
-					if (Constants.GameServer.WANT_WOODCUTTING_GUILD) {
-						if (getCurrentLevel(player, SKILLS.WOODCUT.id()) < 70) {
+					if (Server.getServer().getConfig().WANT_WOODCUTTING_GUILD) {
+						if (getCurrentLevel(player, Skills.WOODCUT) < 70) {
 							player.setBusy(true);
 							final Npc forester = World.getWorld().getNpc(NpcId.FORESTER.id(), 562, 565,
 								468, 472);
@@ -1172,7 +1167,7 @@ public class DoorAction {
 				if (obj.getX() != 388 || obj.getY() != 851) {
 					return;
 				}
-				if (player.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
+				if (player.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 					player.teleport(395, 851);
 					player.message("You open the gates and make your way through into");
 					player.message("the village.");
@@ -1206,13 +1201,13 @@ public class DoorAction {
 				if (obj.getX() != 93 || obj.getY() != 521) {
 					return;
 				}
-				if (!Constants.GameServer.MEMBER_WORLD) {
+				if (!Server.getServer().getConfig().MEMBER_WORLD) {
 					player.message(
 						"You need to be a member to use this gate");
 					return;
 				}
 				if (player.getX() >= 94) {
-					if (player.getQuestStage(Constants.Quests.BIOHAZARD) == 7) {
+					if (player.getQuestStage(Quests.BIOHAZARD) == 7) {
 						Npc guard = getNearestNpc(player, NpcId.GUARD_VARROCKGATE.id(), 10);
 						if (guard != null) {
 							npcTalk(player, guard, "Halt. I need to conduct a search on you",
@@ -1260,7 +1255,7 @@ public class DoorAction {
 
 			case 563: // King Lathas Training Area (660, 551)
 				Npc lathasGuard = getNearestNpc(player, NpcId.GUARD_GATE_TRAINING_CAMP.id(), 10);
-				if (player.getQuestStage(Constants.Quests.BIOHAZARD) == -1) {
+				if (player.getQuestStage(Quests.BIOHAZARD) == -1) {
 					if (player.getY() <= 551) {
 						doGate(player, obj);
 					} else {
@@ -1278,7 +1273,7 @@ public class DoorAction {
 				return;
 
 			case 626: // Gnome Stronghold Gate (703, 531)
-				if (player.getY() != 532 && player.getQuestStage(Constants.Quests.GRAND_TREE) == 8) {
+				if (player.getY() != 532 && player.getQuestStage(Quests.GRAND_TREE) == 8) {
 					Npc n = getNearestNpc(player, NpcId.GNOME_GUARD.id(), 15);
 					if (n != null) {
 						npcTalk(player, n, "halt human");
@@ -1307,7 +1302,7 @@ public class DoorAction {
 					}
 					return;
 
-				} else if (player.getY() >= 532 && player.getQuestStage(Constants.Quests.GRAND_TREE) == 10) {
+				} else if (player.getY() >= 532 && player.getQuestStage(Quests.GRAND_TREE) == 10) {
 					Npc n = getNearestNpc(player, NpcId.GNOME_GUARD.id(), 15);
 					npcTalk(player, n, "i'm afraid that we have orders not to let you in");
 					playerTalk(player, n, "orders from who?");
@@ -1342,7 +1337,7 @@ public class DoorAction {
 
 				return;
 		}
-		if (members && !GameServer.MEMBER_WORLD) {
+		if (members && !Server.getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return;
 		}
@@ -1357,7 +1352,7 @@ public class DoorAction {
 	private void replaceGameObject(final int newID, final boolean open,
 								   final Player p, final GameObject object) {
 		World.getWorld().replaceGameObject(object,
-			new GameObject(object.getLocation(), newID, object
+			new GameObject(object.getWorld(), object.getLocation(), newID, object
 				.getDirection(), object.getType()));
 		p.playSound(open ? "opendoor" : "closedoor");
 	}
@@ -1373,7 +1368,7 @@ public class DoorAction {
 				owner.setBusyTimer(650);
 			}
 			owner.playSound(open ? "opendoor" : "closedoor");
-			World.getWorld().replaceGameObject(obj, new GameObject(obj.getLocation(), newID, obj.getDirection(), obj.getType()));
+			World.getWorld().replaceGameObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), newID, obj.getDirection(), obj.getType()));
 		}
 	}
 }

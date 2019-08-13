@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.quests.members;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -32,7 +31,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.PLAGUE_CITY;
+		return Quests.PLAGUE_CITY;
 	}
 
 	@Override
@@ -48,7 +47,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void handleReward(Player p) {
 		p.message("Well done you have completed the plague city quest");
-		incQuestReward(p, Quests.questData.get(Quests.PLAGUE_CITY), true);
+		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.PLAGUE_CITY), true);
 		p.message("@gre@You haved gained 1 quest point!");
 	}
 
@@ -659,7 +658,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 					npcTalk(p, n, "Thank you thank you",
 						"Elena beat you back by minutes",
 						"now I said I'd give you a reward");
-					p.sendQuestComplete(Constants.Quests.PLAGUE_CITY);
+					p.sendQuestComplete(Quests.PLAGUE_CITY);
 					npcTalk(p, n, "What can I give you as a reward I wonder?",
 						"Here take this magic scroll",
 						"I have little use for it, but it may help you");
@@ -865,7 +864,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 		}
 		else if (obj.getID() == 449) {
 			//gasmask no longer needed only if plague city and biohazard are done
-			if (p.getQuestStage(this) == -1 && p.getQuestStage(Constants.Quests.BIOHAZARD) == -1) {
+			if (p.getQuestStage(this) == -1 && p.getQuestStage(Quests.BIOHAZARD) == -1) {
 				p.message("you climb through the sewer pipe");
 				p.teleport(632, 589, false);
 				return;
@@ -903,7 +902,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 			}
 			if (p.getY() >= 3448) {
 				World.getWorld().replaceGameObject(obj,
-					new GameObject(obj.getLocation(), 181, obj
+					new GameObject(obj.getWorld(), obj.getLocation(), 181, obj
 						.getDirection(), obj.getType()));
 				World.getWorld().delayedSpawnObject(obj.getLoc(), 2000);
 				p.message("you go through the gate");

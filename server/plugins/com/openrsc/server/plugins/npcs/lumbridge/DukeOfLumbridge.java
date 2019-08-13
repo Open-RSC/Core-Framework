@@ -1,9 +1,9 @@
 package com.openrsc.server.plugins.npcs.lumbridge;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -23,7 +23,7 @@ public final class DukeOfLumbridge implements TalkToNpcExecutiveListener,
 		ArrayList<String> menu = new ArrayList<String>();
 		menu.add("Have you any quests for me?");
 		menu.add("Where can I find money?");
-		if (Constants.GameServer.WANT_RUNECRAFTING)
+		if (Server.getServer().getConfig().WANT_RUNECRAFTING)
 			if (p.getQuestStage(Quests.RUNE_MYSTERIES) > 0)
 				menu.add("Rune mysteries");
 
@@ -53,7 +53,7 @@ public final class DukeOfLumbridge implements TalkToNpcExecutiveListener,
 		} else if (option == 1) {
 			playerTalk(p, n, "Have you any quests for me?");
 
-			if (!Constants.GameServer.WANT_RUNECRAFTING) {
+			if (!Server.getServer().getConfig().WANT_RUNECRAFTING) {
 				npcTalk(p, n, "All is well for me");
 				return;
 			}

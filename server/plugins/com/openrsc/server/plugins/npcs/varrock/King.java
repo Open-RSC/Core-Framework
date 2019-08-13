@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -23,7 +23,7 @@ public class King implements TalkToNpcListener, TalkToNpcExecutiveListener {
 		if (hasItem(p, ItemId.CERTIFICATE.id())) {
 			playerTalk(p, n, "Your majesty", "I have come to claim the reward",
 				"For the return of the shield of Arrav");
-			if (p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == 5) {
+			if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5) {
 				message(p, "You show the certificate to the king");
 				npcTalk(p, n, "My goodness",
 					"This is the claim for a reward put out by my father",
@@ -33,11 +33,11 @@ public class King implements TalkToNpcListener, TalkToNpcExecutiveListener {
 				message(p, "You hand over a certificate",
 					"The king gives you 600 coins");
 				removeItem(p, ItemId.CERTIFICATE.id(), 1);
-				p.sendQuestComplete(Constants.Quests.SHIELD_OF_ARRAV);
+				p.sendQuestComplete(Quests.SHIELD_OF_ARRAV);
 				if (isBlackArmGang(p))
-					p.updateQuestStage(Constants.Quests.SHIELD_OF_ARRAV, -2);
+					p.updateQuestStage(Quests.SHIELD_OF_ARRAV, -2);
 				return;
-			} else if (p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) >= 0) {
+			} else if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) >= 0) {
 				npcTalk(p, n, "The name on this certificate isn't yours!",
 					"I can't give you the reward",
 					"Unless you do the quest yourself");

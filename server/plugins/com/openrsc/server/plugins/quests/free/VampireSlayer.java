@@ -1,10 +1,9 @@
 package com.openrsc.server.plugins.quests.free;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -32,7 +31,7 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 	
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.VAMPIRE_SLAYER;
+		return Quests.VAMPIRE_SLAYER;
 	}
 
 	@Override
@@ -48,7 +47,7 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done you have completed the vampire slayer quest");
-		incQuestReward(player, Quests.questData.get(Quests.VAMPIRE_SLAYER), true);
+		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.VAMPIRE_SLAYER), true);
 		player.message("@gre@You haved gained 3 quest points!");
 
 	}
@@ -122,7 +121,7 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 				String[] options;
 				npcTalk(p, n, "Buy me a drrink pleassh");
 				if (!hasItem(p, ItemId.STAKE.id())
-					&& p.getQuestStage(Constants.Quests.VAMPIRE_SLAYER) != -1) {
+					&& p.getQuestStage(Quests.VAMPIRE_SLAYER) != -1) {
 					options = new String[]{"No you've had enough", "Ok mate",
 						"Morgan needs your help"};
 				} else {
@@ -265,10 +264,10 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 				n.remove();
 				// Completed Vampire Slayer Quest.
 				if (p.getQuestStage(this) == 2) {
-					p.sendQuestComplete(Constants.Quests.VAMPIRE_SLAYER);
+					p.sendQuestComplete(Quests.VAMPIRE_SLAYER);
 				}
 			} else {
-				n.getSkills().setLevel(SKILLS.HITS.id(), 35);
+				n.getSkills().setLevel(Skills.HITS, 35);
 				p.message("The vampire seems to regenerate");
 			}
 		}

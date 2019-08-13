@@ -1,9 +1,9 @@
 package com.openrsc.server.event.rsc.impl;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.SingleTickEvent;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -80,8 +80,8 @@ public class ProjectileEvent extends SingleTickEvent {
 			int reflectedDamage = damage/10 + 1;
 			if (opponent.getCache().hasKey("ringofrecoil")) {
 				int ringCheck = opponent.getCache().getInt("ringofrecoil");
-				if (Constants.GameServer.RING_OF_RECOIL_LIMIT - ringCheck <= reflectedDamage) {
-					reflectedDamage = Constants.GameServer.RING_OF_RECOIL_LIMIT - ringCheck;
+				if (Server.getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck <= reflectedDamage) {
+					reflectedDamage = Server.getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck;
 					opponent.getCache().remove("ringofrecoil");
 					opponent.getInventory().shatter(ItemId.RING_OF_RECOIL.id());
 				} else {
@@ -95,7 +95,7 @@ public class ProjectileEvent extends SingleTickEvent {
 		caster.getSkills().subtractLevel(3, reflectedDamage, false);
 		caster.getUpdateFlags().setDamage(new Damage(caster, reflectedDamage));
 
-		if (caster.getSkills().getLevel(SKILLS.HITS.id()) <= 0) {
+		if (caster.getSkills().getLevel(Skills.HITS) <= 0) {
 			if (opponent.isPlayer()) {
 				Player player = (Player) opponent;
 				if (type == 2 || type == 5) {
@@ -145,7 +145,7 @@ public class ProjectileEvent extends SingleTickEvent {
 				}
 			}
 		}
-		if (opponent.getSkills().getLevel(SKILLS.HITS.id()) <= 0) {
+		if (opponent.getSkills().getLevel(Skills.HITS) <= 0) {
 			if (caster.isPlayer()) {
 				Player player = (Player) caster;
 				if (type == 2 || type == 5) {

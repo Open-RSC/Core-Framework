@@ -1,12 +1,11 @@
 package com.openrsc.server.plugins.quests.members;
 
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.QuestDecoy;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -353,6 +352,6 @@ public class RuneMysteries implements QuestInterface, QuestDecoy {
 		p.message("Well done you have completed the rune mysteries quest");
 		p.message("@gre@You haved gained 1 quest point!");
 		p.message("You now have access to the Runecrafting skill!");
-		incQuestReward(p, Quests.questData.get(Quests.RUNE_MYSTERIES), true);
+		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.RUNE_MYSTERIES), true);
 	}
 }

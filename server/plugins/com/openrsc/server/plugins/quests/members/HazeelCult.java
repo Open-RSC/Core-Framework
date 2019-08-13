@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.quests.members;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -33,7 +32,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.THE_HAZEEL_CULT;
+		return Quests.THE_HAZEEL_CULT;
 	}
 
 	@Override
@@ -50,14 +49,14 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 	public void handleReward(Player p) {
 		if (p.getCache().hasKey("good_side")) {
 			p.message("Well done you have completed the Hazeel cult quest");
-			incQuestReward(p, Quests.questData.get(Quests.THE_HAZEEL_CULT), true);
+			incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.THE_HAZEEL_CULT), true);
 			p.message("@gre@You haved gained 1 quest point!");
 			p.message("ceril gives you 2000 gold coins");
 			addItem(p, ItemId.COINS.id(), 2000);
 		} else if (p.getCache().hasKey("evil_side")) {
 			p.message("Hazeel gives you some coins");
 			addItem(p, ItemId.COINS.id(), 2000);
-			incQuestReward(p, Quests.questData.get(Quests.THE_HAZEEL_CULT), true);
+			incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.THE_HAZEEL_CULT), true);
 			p.message("@gre@You haved gained 1 quest point!");
 			p.message("you have completed the hazeel cult quest");
 		}
@@ -1159,7 +1158,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 						npcTalk(p, lord_hazeel, "hmm, fair enough for now",
 							"I shall reward you with money",
 							"But your reward of Zamorak's approval is far greater");
-						p.sendQuestComplete(Constants.Quests.THE_HAZEEL_CULT);
+						p.sendQuestComplete(Quests.THE_HAZEEL_CULT);
 						npcTalk(p, lord_hazeel, "now i must leave you",
 							"i have much business to attend to with my brothers in the north",
 							"i will see you all again but be aware",
@@ -1261,7 +1260,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 					npcTalk(player, ceril, "if it wasn't for you he could have poisoned my whole family",
 						"i'm sorry for the way i spoke to you",
 						"the least i can do is give you a proper reward");
-					player.sendQuestComplete(Constants.Quests.THE_HAZEEL_CULT);
+					player.sendQuestComplete(Quests.THE_HAZEEL_CULT);
 					playerTalk(player, ceril, "thanks ceril");
 					npcTalk(player, ceril, "thankyou, you're welcome here any time traveller");
 				} else {

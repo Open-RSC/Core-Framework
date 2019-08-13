@@ -1,10 +1,9 @@
 package com.openrsc.server.plugins.quests.members;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
-import com.openrsc.server.model.Skills.SKILLS;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -20,16 +19,7 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.incQuestReward;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.spawnNpc;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Observatory implements QuestInterface, TalkToNpcListener,
 	TalkToNpcExecutiveListener, ObjectActionListener,
@@ -40,7 +30,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public int getQuestId() {
-		return Constants.Quests.OBSERVATORY_QUEST;
+		return Quests.OBSERVATORY_QUEST;
 	}
 
 	@Override
@@ -56,8 +46,8 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void handleReward(Player p) {
 		p.message("@gre@You haved gained 2 quest points!");
-		int[] questData = Quests.questData.get(Quests.OBSERVATORY_QUEST);
-		questData[Quests.MAPIDX_SKILL] = SKILLS.CRAFTING.id();
+		int[] questData = p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.OBSERVATORY_QUEST);
+		questData[Quests.MAPIDX_SKILL] = Skills.CRAFTING;
 		incQuestReward(p, questData, true);
 		p.getCache().remove("keep_key_gate");
 	}
@@ -462,20 +452,20 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 		else if (obj.getID() == 937) {
 			p.message("You open the chest");
 			World.getWorld().replaceGameObject(obj,
-				new GameObject(obj.getLocation(), 936, obj.getDirection(),
+				new GameObject(obj.getWorld(), obj.getLocation(), 936, obj.getDirection(),
 					obj.getType()));
 		}
 		else if (obj.getID() == 936) {
 			p.message("You search the chest");
 			p.message("The chest contains nothing");
 			World.getWorld().replaceGameObject(obj,
-				new GameObject(obj.getLocation(), 937, obj.getDirection(),
+				new GameObject(obj.getWorld(), obj.getLocation(), 937, obj.getDirection(),
 					obj.getType()));
 		}
 		else if (obj.getID() == 929) {
 			p.message("You open the chest");
 			World.getWorld().replaceGameObject(obj,
-				new GameObject(obj.getLocation(), 917, obj.getDirection(),
+				new GameObject(obj.getWorld(), obj.getLocation(), 917, obj.getDirection(),
 					obj.getType()));
 		}
 		else if (obj.getID() == 917) {
@@ -484,13 +474,13 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 			Npc spider = spawnNpc(NpcId.DUNGEON_SPIDER.id(), obj.getX(), obj.getY(), 120000);
 			spider.setChasing(p);
 			World.getWorld().registerGameObject(
-				new GameObject(obj.getLocation(), 929, obj.getDirection(),
+				new GameObject(obj.getWorld(), obj.getLocation(), 929, obj.getDirection(),
 					obj.getType()));
 		}
 		else if (obj.getID() == 930) {
 			p.message("You open the chest");
 			World.getWorld().registerGameObject(
-				new GameObject(obj.getLocation(), 919, obj.getDirection(),
+				new GameObject(obj.getWorld(), obj.getLocation(), 919, obj.getDirection(),
 					obj.getType()));
 		}
 		else if (obj.getID() == 919) { // KEY CHEST FOUND!
@@ -503,13 +493,13 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 				addItem(p, ItemId.KEEP_KEY.id(), 1);
 			}
 			World.getWorld().registerGameObject(
-				new GameObject(obj.getLocation(), 930, obj.getDirection(),
+				new GameObject(obj.getWorld(), obj.getLocation(), 930, obj.getDirection(),
 					obj.getType()));
 		}
 		else if (obj.getID() == 935) {
 			p.message("You open the chest");
 			World.getWorld().registerGameObject(
-				new GameObject(obj.getLocation(), 934, obj.getDirection(),
+				new GameObject(obj.getWorld(), obj.getLocation(), 934, obj.getDirection(),
 					obj.getType()));
 		}
 		else if (obj.getID() == 934) { // POISON CURE FOUND!
@@ -517,7 +507,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 			p.message("The chest contains some poison cure");
 			addItem(p, ItemId.ONE_CURE_POISON_POTION.id(), 1);
 			World.getWorld().registerGameObject(
-				new GameObject(obj.getLocation(), 935, obj.getDirection(),
+				new GameObject(obj.getWorld(), obj.getLocation(), 935, obj.getDirection(),
 					obj.getType()));
 		}
 		else if (obj.getID() == 926 && obj.getX() == 689 && obj.getY() == 3513) { // 690
@@ -577,7 +567,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 							"The heavens are opened to us...",
 							"The constellation you saw was");
 						constellationNameAndReward(p, professor);
-						p.sendQuestComplete(Constants.Quests.OBSERVATORY_QUEST);
+						p.sendQuestComplete(Quests.OBSERVATORY_QUEST);
 						npcTalk(p, professor, "By Saradomin's earlobes!",
 							"You must be a friend of the gods indeed");
 						p.message("Well done, you have completed the Observatory quest");
@@ -590,7 +580,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 					} else if (telescop == 1) {
 						npcTalk(p, professor, "This is the revealed sky",
 							"The constellation you saw was");
-						p.sendQuestComplete(Constants.Quests.OBSERVATORY_QUEST);
+						p.sendQuestComplete(Quests.OBSERVATORY_QUEST);
 						npcTalk(p, professor, "By Saradomin's earlobes!",
 							"You must be a friend of the gods indeed");
 						p.message("Well done, you have completed the Observatory quest");
@@ -612,13 +602,13 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 	private void constellationNameAndReward(Player p, Npc n) {
 		int baseReductor = 2;
 		int varReductor = 4;
-		int[] questData = Quests.questData.get(Quests.OBSERVATORY_QUEST);
+		int[] questData = p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.OBSERVATORY_QUEST);
 		questData[Quests.MAPIDX_BASE] /= baseReductor;
 		questData[Quests.MAPIDX_VAR] /= varReductor;
 		if (selectedNumber == 0) {
 			npcTalk(p, n, "Virgo the virtuous",
 				"The strong and peaceful nature of virgo boosts your defence");
-			questData[Quests.MAPIDX_SKILL] = SKILLS.DEFENSE.id();
+			questData[Quests.MAPIDX_SKILL] = Skills.DEFENSE;
 			incQuestReward(p, questData, false);
 		} else if (selectedNumber == 1) {
 			npcTalk(p, n, "Libra the scales",
@@ -647,7 +637,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 		} else if (selectedNumber == 7) {
 			npcTalk(p, n, "Aries the ram",
 				"The ram's strength improves your attack abilities");
-			questData[Quests.MAPIDX_SKILL] = SKILLS.ATTACK.id();
+			questData[Quests.MAPIDX_SKILL] = Skills.ATTACK;
 			incQuestReward(p, questData, false);
 		} else if (selectedNumber == 8) {
 			npcTalk(p, n, "Sagittarius the Centaur",
@@ -656,12 +646,12 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 		} else if (selectedNumber == 9) {
 			npcTalk(p, n, "Leo the lion",
 				"The power of the lion has increased your hitpoints");
-			questData[Quests.MAPIDX_SKILL] = SKILLS.HITS.id();
+			questData[Quests.MAPIDX_SKILL] = Skills.HITS;
 			incQuestReward(p, questData, false);
 		} else if (selectedNumber == 10) {
 			npcTalk(p, n, "Capricorn the goat",
 				"you are granted an increase in strength");
-			questData[Quests.MAPIDX_SKILL] = SKILLS.STRENGTH.id();
+			questData[Quests.MAPIDX_SKILL] = Skills.STRENGTH;
 			incQuestReward(p, questData, false);
 		} else if (selectedNumber == 11) {
 			npcTalk(p, n, "Cancer the crab",

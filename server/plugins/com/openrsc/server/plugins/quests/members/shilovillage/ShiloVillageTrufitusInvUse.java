@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.quests.members.shilovillage;
 
-import com.openrsc.server.Constants;
-import com.openrsc.server.external.ItemId;
-import com.openrsc.server.external.NpcId;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -38,8 +38,8 @@ public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOn
 					"But I think we must take this clue literally",
 					"and get some item that belonged to Bervirius",
 					"as it may be the only way to approach Rashiliyia.");
-				if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == 4) {
-					p.updateQuestStage(Constants.Quests.SHILO_VILLAGE, 5);
+				if (p.getQuestStage(Quests.SHILO_VILLAGE) == 4) {
+					p.updateQuestStage(Quests.SHILO_VILLAGE, 5);
 				}
 			} else if (opt == 1) {
 				npcTalk(p, n, "Oh, so it most likely was not very important then?");
@@ -112,7 +112,7 @@ public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOn
 	@Override
 	public void onInvUseOnNpc(Player p, Npc n, Item item) {
 		if (n.getID() == NpcId.TRUFITUS.id() && item.getID() == ItemId.RASHILIYA_CORPSE.id()) {
-			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
+			if (p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 				playerTalk(p, n, "Have a look at this.");
 				npcTalk(p, n, "Hmmm, I'm not sure you will get much use out of this.",
 					"Why not see if you can sell it in Shilo Village.");
@@ -133,7 +133,7 @@ public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOn
 			}
 		}
 		else if (n.getID() == NpcId.TRUFITUS.id() && item.getID() == ItemId.SWORD_POMMEL.id()) {
-			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
+			if (p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 				playerTalk(p, n, "Have a look at this.");
 				npcTalk(p, n, "Hmmm, I'm not sure you will get much use out of this.",
 					"Why not see if you can sell it in Shilo Village.");
@@ -157,7 +157,7 @@ public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOn
 			}
 		}
 		else if (n.getID() == NpcId.TRUFITUS.id() && item.getID() == ItemId.BERVIRIUS_TOMB_NOTES.id()) {
-			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
+			if (p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 				playerTalk(p, n, "Have a look at this.");
 				npcTalk(p, n, "Hmmm, I'm not sure you will get much use out of this.",
 					"Why not see if you can sell it in Shilo Village.");
@@ -169,12 +169,12 @@ public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOn
 				"and some information on how to use the crystal.",
 				"The information is quite specific, North of Ah Za Rhoon!",
 				"That's a great place to start looking!");
-			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == 6) {
-				p.updateQuestStage(Constants.Quests.SHILO_VILLAGE, 7);
+			if (p.getQuestStage(Quests.SHILO_VILLAGE) == 6) {
+				p.updateQuestStage(Quests.SHILO_VILLAGE, 7);
 			}
 		}
 		else if (n.getID() == NpcId.TRUFITUS.id() && item.getID() == ItemId.LOCATING_CRYSTAL.id()) {
-			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
+			if (p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 				playerTalk(p, n, "Have a look at this.");
 				npcTalk(p, n, "Hmmm, I'm not sure you will get much use out of this.",
 					"Why not see if you can sell it in Shilo Village.");
@@ -189,7 +189,7 @@ public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOn
 				"glow different colours to show how near you are.");
 		}
 		else if (n.getID() == NpcId.TRUFITUS.id() && item.getID() == ItemId.BONE_SHARD.id()) {
-			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
+			if (p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 				playerTalk(p, n, "Have a look at this.");
 				npcTalk(p, n, "Hmmm, I'm not sure you will get much use out of this.",
 					"Why not see if you can sell it in Shilo Village.");
@@ -218,7 +218,7 @@ public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOn
 			}
 		}
 		else if (n.getID() == NpcId.TRUFITUS.id() && item.getID() == ItemId.CRUMPLED_SCROLL.id()) {
-			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
+			if (p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 				playerTalk(p, n, "Have a look at this.");
 				npcTalk(p, n, "Hmmm, I'm not sure you will get much use out of this.",
 					"Why not see if you can sell it in Shilo Village.");
@@ -252,7 +252,7 @@ public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOn
 			}
 		}
 		else if (n.getID() == NpcId.TRUFITUS.id() && item.getID() == ItemId.TATTERED_SCROLL.id()) {
-			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
+			if (p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 				playerTalk(p, n, "Have a look at this.");
 				npcTalk(p, n, "Hmmm, I'm not sure you will get much use out of this.",
 					"Why not see if you can sell it in Shilo Village.");
@@ -266,7 +266,7 @@ public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOn
 			p.message("Trufitus hands the Tattered scroll back to you.");
 		}
 		else if (n.getID() == NpcId.TRUFITUS.id() && item.getID() == ItemId.ZADIMUS_CORPSE.id()) {
-			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
+			if (p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 				playerTalk(p, n, "Have a look at this.");
 				npcTalk(p, n, "Hmmm, I'm not sure you will get much use out of this.",
 					"Why not see if you can sell it in Shilo Village.");
@@ -294,7 +294,7 @@ public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOn
 			}
 		}
 		else if (n.getID() == NpcId.TRUFITUS.id() && item.getID() == ItemId.STONE_PLAQUE.id()) {
-			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
+			if (p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 				playerTalk(p, n, "Have a look at this.");
 				npcTalk(p, n, "Hmmm, I'm not sure you will get much use out of this.",
 					"Why not see if you can sell it in Shilo Village.");

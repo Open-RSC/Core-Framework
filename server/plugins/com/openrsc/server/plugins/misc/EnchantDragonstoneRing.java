@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.misc;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
 import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.external.ItemId;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.external.SpellDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
@@ -16,7 +16,7 @@ import static com.openrsc.server.plugins.Functions.sleep;
 public class EnchantDragonstoneRing implements PlayerMageItemListener, PlayerMageItemExecutiveListener {
 	@Override
 	public boolean blockPlayerMageItem(Player p, Integer itemID, Integer spellID) {
-		return (Constants.GameServer.WANT_EQUIPMENT_TAB && itemID.intValue() == ItemId.DRAGONSTONE_RING.id() && spellID.intValue() == 42);
+		return (Server.getServer().getConfig().WANT_EQUIPMENT_TAB && itemID.intValue() == ItemId.DRAGONSTONE_RING.id() && spellID.intValue() == 42);
 	}
 
 	@Override

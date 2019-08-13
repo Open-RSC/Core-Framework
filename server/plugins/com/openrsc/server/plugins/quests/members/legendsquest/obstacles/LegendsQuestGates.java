@@ -1,6 +1,6 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.obstacles;
 
-import com.openrsc.server.Constants;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
@@ -22,7 +22,7 @@ public class LegendsQuestGates implements ObjectActionListener, ObjectActionExec
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if (obj.getID() == LEGENDS_HALL_DOOR) {
 			if (command.equalsIgnoreCase("open")) {
-				if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 11 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
+				if (p.getQuestStage(Quests.LEGENDS_QUEST) >= 11 || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
 					doDoor(obj, p, 497);
 					p.message("You open the impressive wooden doors.");
 					if (p.getY() <= 539) {
