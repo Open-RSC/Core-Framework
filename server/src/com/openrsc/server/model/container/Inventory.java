@@ -277,7 +277,10 @@ public class Inventory {
 				}
 			}
 		}
-		return -1;
+		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB)
+			return player.getEquipment().remove(id, amount);
+		else
+			return -1;
 	}
 
 	public int remove(int id, int amount) {

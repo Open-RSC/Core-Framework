@@ -5,7 +5,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
-import com.openrsc.server.event.DelayedEvent;
+import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -1214,12 +1214,12 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 	private void succeedFreeSlave(Player p, Npc n) {
 		message(p, "You hear a satisfying 'click' as you tumble the lock mechanism.");
 		npcTalk(p, n, "Great! You did it!");
-		
+
 		necessaryStuffSlave(p, n);
 	}
-	
+
 	private void necessaryStuffSlave(Player p, Npc n) {
-		if (hasItem(p, ItemId.DESERT_SHIRT.id()) && hasItem(p, ItemId.DESERT_ROBE.id()) && 
+		if (hasItem(p, ItemId.DESERT_SHIRT.id()) && hasItem(p, ItemId.DESERT_ROBE.id()) &&
 				hasItem(p, ItemId.DESERT_BOOTS.id())) {
 			npcTalk(p, n, "Great! You have the Desert Clothes!");
 			message(p, "The slave starts getting undressed right in front of you.");
@@ -1238,30 +1238,30 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				p.updateQuestStage(this, 4);
 			return;
 		}
-		
-		if (!hasItem(p, ItemId.DESERT_SHIRT.id()) && !hasItem(p, ItemId.DESERT_ROBE.id()) && 
-				!hasItem(p, ItemId.DESERT_BOOTS.id())) {
+
+		if (!hasItem(p, ItemId.DESERT_SHIRT.id()) && !hasItem(p, ItemId.DESERT_ROBE.id()) &&
+			!hasItem(p, ItemId.DESERT_BOOTS.id())) {
 			npcTalk(p, n, "I need a desert shirt, robe and boots if you want these clothes off me.");
-		} else if (!hasItem(p, ItemId.DESERT_SHIRT.id()) && !hasItem(p, ItemId.DESERT_ROBE.id()) && 
-				hasItem(p, ItemId.DESERT_BOOTS.id())) {
+		} else if (!hasItem(p, ItemId.DESERT_SHIRT.id()) && !hasItem(p, ItemId.DESERT_ROBE.id()) &&
+			hasItem(p, ItemId.DESERT_BOOTS.id())) {
 			npcTalk(p, n, "I need desert robe and shirt if you want these clothes off me.");
-		} else if (!hasItem(p, ItemId.DESERT_SHIRT.id()) && hasItem(p, ItemId.DESERT_ROBE.id()) && 
-				!hasItem(p, ItemId.DESERT_BOOTS.id())) {
+		} else if (!hasItem(p, ItemId.DESERT_SHIRT.id()) && hasItem(p, ItemId.DESERT_ROBE.id()) &&
+			!hasItem(p, ItemId.DESERT_BOOTS.id())) {
 			npcTalk(p, n, "I need a desert shirt and boots if you want these clothes off me.");
-		} else if (hasItem(p, ItemId.DESERT_SHIRT.id()) && !hasItem(p, ItemId.DESERT_ROBE.id()) && 
-				!hasItem(p, ItemId.DESERT_BOOTS.id())) {
+		} else if (hasItem(p, ItemId.DESERT_SHIRT.id()) && !hasItem(p, ItemId.DESERT_ROBE.id()) &&
+			!hasItem(p, ItemId.DESERT_BOOTS.id())) {
 			npcTalk(p, n, "I need desert robe and boots if you want these clothes off me.");
-		} else if (!hasItem(p, ItemId.DESERT_SHIRT.id()) && hasItem(p, ItemId.DESERT_ROBE.id()) && 
-				hasItem(p, ItemId.DESERT_BOOTS.id())) {
+		} else if (!hasItem(p, ItemId.DESERT_SHIRT.id()) && hasItem(p, ItemId.DESERT_ROBE.id()) &&
+			hasItem(p, ItemId.DESERT_BOOTS.id())) {
 			npcTalk(p, n, "I need a desert shirt if you want these clothes off me.");
-		} else if (hasItem(p, ItemId.DESERT_SHIRT.id()) && !hasItem(p, ItemId.DESERT_ROBE.id()) && 
-				hasItem(p, ItemId.DESERT_BOOTS.id())) {
+		} else if (hasItem(p, ItemId.DESERT_SHIRT.id()) && !hasItem(p, ItemId.DESERT_ROBE.id()) &&
+			hasItem(p, ItemId.DESERT_BOOTS.id())) {
 			npcTalk(p, n, "I need desert robe if you want these clothes off me.");
-		} else if (hasItem(p, ItemId.DESERT_SHIRT.id()) && hasItem(p, ItemId.DESERT_ROBE.id()) && 
-				!hasItem(p, ItemId.DESERT_BOOTS.id())) {
+		} else if (hasItem(p, ItemId.DESERT_SHIRT.id()) && hasItem(p, ItemId.DESERT_ROBE.id()) &&
+			!hasItem(p, ItemId.DESERT_BOOTS.id())) {
 			npcTalk(p, n, "I need desert boots if you want these clothes off me.");
 		}
-		
+
 		if (p.getQuestStage(this) == 2)
 			p.updateQuestStage(this, 3);
 	}
@@ -2308,23 +2308,17 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 	public void onTalkToNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.IRENA.id()) {
 			irenaDialogue(p, n, -1);
-		}
-		else if (n.getID() == NpcId.MERCENARY.id()) {
+		} else if (n.getID() == NpcId.MERCENARY.id()) {
 			mercenaryDialogue(p, n, -1);
-		}
-		else if (n.getID() == NpcId.MERCENARY_CAPTAIN.id()) {
+		} else if (n.getID() == NpcId.MERCENARY_CAPTAIN.id()) {
 			mercenaryCaptainDialogue(p, n, -1);
-		}
-		else if (n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()) {
+		} else if (n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()) {
 			mercenaryInsideDialogue(p, n, -1);
-		}
-		else if (n.getID() == NpcId.MINING_SLAVE.id()) {
+		} else if (n.getID() == NpcId.MINING_SLAVE.id()) {
 			slaveDialogue(p, n, -1);
-		}
-		else if (n.getID() == NpcId.BEDABIN_NOMAD.id()) {
+		} else if (n.getID() == NpcId.BEDABIN_NOMAD.id()) {
 			bedabinNomadDialogue(p, n, -1);
-		}
-		else if (n.getID() == NpcId.BEDABIN_NOMAD_GUARD.id()) {
+		} else if (n.getID() == NpcId.BEDABIN_NOMAD_GUARD.id()) {
 			switch (p.getQuestStage(this)) {
 				case 8:
 				case 9:
@@ -2342,14 +2336,11 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 						"Orders of Al Shabim...");
 					break;
 			}
-		}
-		else if (n.getID() == NpcId.AL_SHABIM.id()) {
+		} else if (n.getID() == NpcId.AL_SHABIM.id()) {
 			alShabimDialogue(p, n, -1);
-		}
-		else if (n.getID() == NpcId.CAPTAIN_SIAD.id()) {
+		} else if (n.getID() == NpcId.CAPTAIN_SIAD.id()) {
 			captainSiadDialogue(p, n, -1, null);
-		}
-		else if (n.getID() == NpcId.MERCENARY_LIFTPLATFORM.id()) {
+		} else if (n.getID() == NpcId.MERCENARY_LIFTPLATFORM.id()) {
 			if (p.getQuestStage(this) == -1) {
 				npcTalk(p, n, "Move along please, don't want any trouble today!");
 				return;
@@ -2369,8 +2360,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				p.message("The guards rough you up a bit and then drag you to a cell.");
 				p.teleport(76, 3625);
 			}
-		}
-		else if (n.getID() == NpcId.ANA.id()) {
+		} else if (n.getID() == NpcId.ANA.id()) {
 			anaDialogue(p, n, -1);
 		}
 	}
@@ -2440,8 +2430,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					"@gre@If anything bad should happen to you in any circumstances whatsoever.",
 					"Despite this warning lots of people seem to pass through the gate.");
 			}
-		}
-		else if (obj.getID() == IRON_GATE) {
+		} else if (obj.getID() == IRON_GATE) {
 			if (command.equals("open")) {
 				if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
 					failEscapeAnaInBarrel(p, null);
@@ -2494,16 +2483,14 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					"Guards patrol the area extensively.",
 					"But you might be able to sneak past them if you try to blend in.");
 			}
-		}
-		else if (obj.getID() == ROCK_1) {
+		} else if (obj.getID() == ROCK_1) {
 			p.message("You start climbing the rocky elevation.");
 			if (!succeedRate(p)) {
 				p.message("You slip a little and tumble the rest of the way down the slope.");
 				p.damage(7);
 			}
 			p.teleport(93, 799);
-		}
-		else if (obj.getID() == WOODEN_DOORS) {
+		} else if (obj.getID() == WOODEN_DOORS) {
 			if (command.equals("open")) {
 				message(p, "You push the door.");
 				playerTalk(p, null, "Ugh!");
@@ -2550,8 +2537,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 						"You might be able to sneak down if you pass as a slave.");
 				}
 			}
-		}
-		else if (obj.getID() == DESK) {
+		} else if (obj.getID() == DESK) {
 			message(p, "You search the captains desk while he's not looking.");
 			if (hasItem(p, ItemId.CELL_DOOR_KEY.id()) && hasItem(p, ItemId.METAL_KEY.id()) &&
 				((p.getQuestStage(this) >= 0 && p.getQuestStage(this) <= 9) ? true : hasItem(p, ItemId.WROUGHT_IRON_KEY.id()))) {
@@ -2571,8 +2557,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				message(p, "You find a large wrought iron key.");
 				addItem(p, ItemId.WROUGHT_IRON_KEY.id(), 1);
 			}
-		}
-		else if (obj.getID() == BOOKCASE) {
+		} else if (obj.getID() == BOOKCASE) {
 			if (command.equals("search")) {
 				p.message("You notice several books on the subject of Sailing.");
 				if (!p.getCache().hasKey("sailing")) {
@@ -2581,8 +2566,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			} else if (command.equals("look")) {
 				p.message("The captain seems to collect lots of books!");
 			}
-		}
-		else if (obj.getID() == CAPTAINS_CHEST) {
+		} else if (obj.getID() == CAPTAINS_CHEST) {
 			if (p.getCache().hasKey("tourist_chest") || p.getQuestStage(this) == -1) {
 				if (hasItem(p, ItemId.BEDOBIN_COPY_KEY.id())) {
 					if (!hasItem(p, ItemId.TECHNICAL_PLANS.id())) {
@@ -2849,8 +2833,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				message(p, "You decide to stay in the cell.",
 					"Maybe they'll let you out soon?");
 			}
-		}
-		else if (obj.getID() == JAIL_DOOR && obj.getX() == 88 && obj.getY() == 801) {
+		} else if (obj.getID() == JAIL_DOOR && obj.getX() == 88 && obj.getY() == 801) {
 			if (hasItem(p, ItemId.CELL_DOOR_KEY.id())) {
 				p.message("You unlock the door and walk through.");
 				doDoor(obj, p);
@@ -2858,8 +2841,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				message(p, "You need a key to unlock this door,",
 					"And you don't seem to have one that fits.");
 			}
-		}
-		else if (obj.getID() == TENT_DOOR_1) {
+		} else if (obj.getID() == TENT_DOOR_1) {
 			if (p.getY() <= 793) {
 				p.teleport(171, 795);
 			} else {
@@ -2887,16 +2869,14 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 						break;
 				}
 			}
-		}
-		else if (obj.getID() == TENT_DOOR_2) {
+		} else if (obj.getID() == TENT_DOOR_2) {
 			/*if(p.getY() >= 805) {
 				p.teleport(169, 804);
 			} else {
 				p.teleport(171, 806);
 			}*/
 			doTentDoor(obj, p);
-		}
-		else if (obj.getID() == CAVE_JAIL_DOOR) {
+		} else if (obj.getID() == CAVE_JAIL_DOOR) {
 			Npc n = getNearestNpc(p, NpcId.MERCENARY_JAILDOOR.id(), 5);
 			if (n != null) {
 				if (p.getX() >= 72) {
@@ -2918,8 +2898,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					npcTalk(p, n, "Hey, move away from that gate!");
 				}
 			}
-		}
-		else if (obj.getID() == STURDY_IRON_GATE) {
+		} else if (obj.getID() == STURDY_IRON_GATE) {
 			if (p.getY() >= 3617) {
 				if (hasItem(p, ItemId.WROUGHT_IRON_KEY.id())) {
 					p.message("You use the wrought iron key to unlock the gate.");
@@ -3053,12 +3032,12 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 		else if (hasArmour) return Armed.ARMOUR;
 		else return Armed.NONE;
 	}
-	
+
 	private void delayedReturnSlave(Player p, Npc n) {
 		try {
-			Server.getServer().getGameEventHandler().add(new DelayedEvent(null, 30000, "Tourist Trap Delayed Return Slave") {
+			Server.getServer().getGameEventHandler().add(new SingleEvent(null, 30000, "Tourist Trap Delayed Return Slave", true) {
 				@Override
-				public void run() {
+				public void action() {
 					transform(n, NpcId.MINING_SLAVE.id(), true);
 				}
 			});

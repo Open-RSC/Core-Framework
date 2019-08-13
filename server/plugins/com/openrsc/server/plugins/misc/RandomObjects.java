@@ -109,6 +109,7 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 					});
 				} else {
 					owner.message("but nothing happens");
+					owner.setBusy(false);
 				}
 				break;
 			case 417: // CAVE ENTRANCE HAZEEL CULT

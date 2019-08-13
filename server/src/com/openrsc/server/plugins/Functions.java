@@ -1245,7 +1245,14 @@ public class Functions {
 	 * @return
 	 */
 	public static boolean hasItem(final Player p, final int id, final int amt) {
-		return p.getInventory().countId(id) >= amt;
+		int amount = p.getInventory().countId(id);
+		int equipslot = -1;
+		if (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+			if ((equipslot = p.getEquipment().hasEquipped(id))!=-1) {
+				amount += p.getEquipment().get(equipslot).getAmount();
+			}
+		}
+		return amount >= amt;
 	}
 	
 	/**

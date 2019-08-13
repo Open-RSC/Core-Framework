@@ -466,9 +466,9 @@ public class Npc extends Mob {
 	}
 
 	public int getWeaponPowerPoints() {
-		if (this.getID() == 236) {
+		/*if (this.getID() == 236) {
 			return 81;
-		} else
+		} else*/
 			return weaponPowerPoints;
 	}
 
@@ -500,7 +500,7 @@ public class Npc extends Mob {
 				}
 
 
-				//owner = handleLootAndXpDistribution((Player) mob);
+				owner = handleLootAndXpDistribution(((Player) mob));
 
 				//Determine if the RDT is hit first
 				boolean rdtHit = false;
@@ -954,8 +954,6 @@ public class Npc extends Mob {
 		//return playerWithMostDamage;
 
 		Mob npcWithMostDamage = attacker;
-		for (Player p282828 : World.getWorld().getPlayers()) {
-		}
 		// Melee damagers
 		for (int npcID : getCombatDamagers()) {
 			int newXP = 0;
@@ -969,17 +967,6 @@ public class Npc extends Mob {
 				npcWithMostDamage = n;
 				currentHighestDamage = dmgDoneByNpc;
 			}
-			/*
-			if(attacker.getPetNpc() > 0) {
-			newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByNpc));
-			p28x.incPet1Exp(Skills.PETRANGED, newXP * 4, true);
-			//ActionSender.sendStat(p28x, Skills.PETRANGED);
-			for (Player p282828 : World.getWorld().getPlayers()) {
-				p282828.message("TEST 28");
-			}
-			}
-
-			 */
 
 		}
 
@@ -995,17 +982,6 @@ public class Npc extends Mob {
 				npcWithMostDamage = n;
 				currentHighestDamage = dmgDoneByNpc;
 			}
-			/*
-			if(attacker.getPetNpc() > 0) {
-			newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByNpc));
-			p28x.incPet1Exp(Skills.PETRANGED, newXP * 4, true);
-			//ActionSender.sendStat(p28x, Skills.PETRANGED);
-			for (Player p282828 : World.getWorld().getPlayers()) {
-				p282828.message("TEST 28282828");
-			}
-			}
-
-			 */
 		}
 
 		// Magic damagers
@@ -1016,19 +992,82 @@ public class Npc extends Mob {
 			int dmgDoneByNpc = getMageDamageDoneBy(n);
 			if (n == null)
 				continue;
-			/*
-			if(attacker.getPetNpc() > 0) {
-			newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByNpc));
-			p28x.incPet1Exp(Skills.PETRANGED, newXP * 4, true);
-			//ActionSender.sendStat(p28x, Skills.PETRANGED);
-			for (Player p282828 : World.getWorld().getPlayers()) {
-				p282828.message("TEST 28111128");
-			}
-			}
-
-			 */
 		}
 		return npcWithMostDamage;
+	}
+	private Player handleLootAndXpDistribution(Player attacker) {
+
+		Player playerWithMostDamage = attacker;
+		int currentHighestDamage = 0;
+
+		int totalCombatXP = Formulae.combatExperience(this);
+		// Melee damagers
+		for (int playerID : getCombatDamagers()) {
+
+			final Player p = World.getWorld().getPlayerID(playerID);
+			if (p == null)
+				continue;
+			final int damageDoneByPlayer = getCombatDamageDoneBy(p);
+
+			if (damageDoneByPlayer > currentHighestDamage) {
+				playerWithMostDamage = p;
+				currentHighestDamage = damageDoneByPlayer;
+			}
+
+			// Give the player their share of the experience.
+			int totalXP = (int) (((double) (totalCombatXP) / (double) (getDef().hits)) * (double) (damageDoneByPlayer));
+
+			switch (p.getCombatStyle()) {
+				case 0: //CONTROLLED
+					for (int x = 0; x < 3; x++) {
+						p.incExp(x, totalXP, true);
+					}
+					break;
+				case 1: //AGGRESSIVE
+					p.incExp(Skills.STRENGTH, totalXP * 3, true);
+					break;
+				case 2: //ACCURATE
+					p.incExp(Skills.ATTACK, totalXP * 3, true);
+					break;
+				case 3: //DEFENSIVE
+					p.incExp(Skills.DEFENSE, totalXP * 3, true);
+					break;
+			}
+			p.incExp(Skills.HITS, totalXP, true);
+		}
+
+		// Ranged damagers
+		for (int playerID : getRangeDamagers()) {
+			int newXP = 0;
+			Player p = World.getWorld().getPlayerID(playerID);
+			int dmgDoneByPlayer = getRangeDamageDoneBy(p);
+			if (p == null)
+				continue;
+
+			if (dmgDoneByPlayer > currentHighestDamage) {
+				playerWithMostDamage = p;
+				currentHighestDamage = dmgDoneByPlayer;
+			}
+			newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByPlayer));
+			p.incExp(Skills.RANGED, newXP * 4, true);
+			ActionSender.sendStat(p, Skills.RANGED);
+		}
+
+		// Magic damagers
+		for (int playerID : getMageDamagers()) {
+
+			Player p = World.getWorld().getPlayerID(playerID);
+
+			int dmgDoneByPlayer = getMageDamageDoneBy(p);
+			if (p == null)
+				continue;
+
+			if (dmgDoneByPlayer > currentHighestDamage) {
+				playerWithMostDamage = p;
+				currentHighestDamage = dmgDoneByPlayer;
+			}
+		}
+		return playerWithMostDamage;
 	}
 
 	private Npc handleLootAndXpDistribution(Npc attacker) {

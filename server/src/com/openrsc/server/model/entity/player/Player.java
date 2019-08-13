@@ -1425,6 +1425,8 @@ public final class Player extends Mob {
 				ActionSender.sendMessage(this, "You can not gain experience right now!");
 				return;
 			}
+		} else if (isExperienceFrozen()) {
+			return;
 		}
 
 		if (Server.getServer().getConfig().WANT_FATIGUE) {
@@ -2729,7 +2731,7 @@ public final class Player extends Mob {
 		return setCacheInvulnerable(!cacheIsInvulnerable());
 	}
 
-	private boolean isExperienceFrozen() {
+	public boolean isExperienceFrozen() {
 		if (!getCache().hasKey("freezexp"))
 			return false;
 

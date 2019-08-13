@@ -1,6 +1,8 @@
 package com.openrsc.server.model.container;
 
+import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.net.rsc.ActionSender;
 
 import java.util.ArrayList;
 
@@ -118,6 +120,38 @@ public class Equipment {
 			list[slot] = item;
 		}
 	}
+
+	public int remove(int id, int amount) {
+		synchronized (list) {
+			for (int i = 0; i < slots; i++) {
+				Item curEquip = list[i];
+				if (curEquip == null || curEquip.getDef() == null)
+					continue;
+				ItemDefinition curEquipDef = curEquip.getDef();
+
+				if (curEquip.getID() == id) {
+					int curAmount = curEquip.getAmount();
+					if (!curEquipDef.isStackable() && amount > 1)
+						return -1;
+
+					if (curAmount > amount) {
+						list[i].setAmount(curAmount - amount);
+					} else if(curAmount < amount) {
+						return -1;
+					} else {
+						list[i] = null;
+						player.updateWornItems(curEquipDef.getWieldPosition(),
+							player.getSettings().getAppearance().getSprite(curEquipDef.getWieldPosition()));
+					}
+
+					ActionSender.sendEquipmentStats(player);
+					return i;
+				}
+			}
+			return -1;
+		}
+	}
+
 
 
 }

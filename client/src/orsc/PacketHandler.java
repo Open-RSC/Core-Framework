@@ -374,6 +374,9 @@ public class PacketHandler {
 				// Draw Ground Items
 			else if (opcode == 99) drawGroundItems(length);
 
+				//toggle experience freeze
+			else if (opcode == 34) mc.toggleExperienceFreeze(packetsIncoming.getByte());
+
 			else mc.closeConnection(true);
 
 		} catch (RuntimeException var17) {

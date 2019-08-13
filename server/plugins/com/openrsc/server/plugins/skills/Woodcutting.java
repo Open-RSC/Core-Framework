@@ -71,7 +71,7 @@ public class Woodcutting implements ObjectActionListener,
 		final int axeID = axeId;
 		owner.message("You swing your " + EntityHandler.getItemDef(axeId).getName().toLowerCase() + " at the tree...");
 		showBubble(owner, new Item(axeId));
-		owner.setBatchEvent(new BatchEvent(owner, 1800, "Woodcutting", 5, true) {
+		owner.setBatchEvent(new BatchEvent(owner, 1800, "Woodcutting", Formulae.getRepeatTimes(owner,Skills.WOODCUT), true) {
 			@Override
 			public void action() {
 				final Item log = new Item(def.getLogId());

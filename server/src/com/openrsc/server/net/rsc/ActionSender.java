@@ -898,6 +898,13 @@ public class ActionSender {
 		p.write(s.toPacket());
 	}
 
+	public static void sendExperienceToggle(Player p, boolean expOff) {
+		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+		s.setID(Opcode.SEND_EXPERIENCE_TOGGLE.opcode);
+		s.writeByte((byte) (expOff ? 1 : 0));
+		p.write(s.toPacket());
+	}
+
 	/**
 	 * Updates the users stats
 	 */
@@ -1477,6 +1484,7 @@ public class ActionSender {
 		SEND_WORLD_INFO(25),
 		SEND_DUEL_SETTINGS(30),
 		SEND_EXPERIENCE(33),
+		SEND_EXPERIENCE_TOGGLE(34),
 		SEND_BUBBLE(36),
 		SEND_BANK_OPEN(42),
 		SEND_SYSTEM_UPDATE(52),
