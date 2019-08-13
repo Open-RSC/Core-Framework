@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.entity.player.Player;
@@ -37,6 +38,11 @@ public final class SleepHandler implements PacketHandler {
 				// Advance the fatigue expert part of tutorial island
 				if(player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 85)
 					player.getCache().set("tutorial", 86);
+
+				//Handle exp toggle for servers without fatigue
+				if (!Constants.GameServer.WANT_FATIGUE) {
+					handleExpToggle(player);
+				}
 			} else {
 				ActionSender.sendIncorrectSleepword(player);
 				player.incrementSleepTries();
@@ -55,5 +61,14 @@ public final class SleepHandler implements PacketHandler {
 					});
 			}
 		}
+	}
+
+	private void handleExpToggle(Player player) {
+		player.toggleFreezeXp();
+		ActionSender.sendExperienceToggle(player, player.isExperienceFrozen());
+		if (player.isExperienceFrozen())
+			player.message("You have @red@DISABLED@whi@ experience gain!");
+		else
+			player.message("You have @gre@ENABLED@whi@ experience gain!");
 	}
 }

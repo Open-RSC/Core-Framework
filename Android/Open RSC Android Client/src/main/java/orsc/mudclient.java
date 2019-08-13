@@ -7153,17 +7153,6 @@ public final class mudclient implements Runnable {
 					this.drawMenu();
 				}
 			}
-			//draw experience freeze message
-			if (this.experienceOff) {
-				this.getSurface().drawColoredString(
-					this.getSurface().width2 - 218 - getSurface().stringWidth(1,"YOUR EXPERIENCE GAIN IS DISABLED"),
-					25,
-					"YOUR EXPERIENCE GAIN IS DISABLED",
-					1,
-					0x00FF0000,
-					-1
-				);
-			}
 			this.mouseButtonClick = 0;
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "client.DC(" + var1 + ')');
@@ -10037,8 +10026,13 @@ public final class mudclient implements Runnable {
 					heightMargin += 12;
 					this.getSurface().drawString("Combat level: " + this.localPlayer.level, 5 + x, heightMargin, textColour, 1);
 					heightMargin += 12;
-					//if there is a skill hovered over
-				} else {
+
+					//exp freeze notification
+					if (experienceOff)
+						this.getSurface().drawString("XP GAIN OFF", 122+x, yOffset + 8, 0x00FF0000, 1);
+					else
+						this.getSurface().drawString("XP GAIN ON", 124+x, yOffset + 8, 0x0000FF00, 1);
+				} else {//if there is a skill hovered over
 					this.getSurface().drawString(this.skillNameLong[currentlyHoveredSkill] + " skill", 5 + x, heightMargin, textColourHeading, 1);
 					heightMargin += 12;
 					int nextLevelExp = this.experienceArray[0];
