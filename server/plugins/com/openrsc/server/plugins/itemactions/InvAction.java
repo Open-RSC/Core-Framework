@@ -28,7 +28,8 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 			ItemId.SHAMAN_ROBE.id(), ItemId.SPELL_SCROLL.id(), ItemId.BOOK_OF_EXPERIMENTAL_CHEMISTRY.id(),
 			ItemId.LEVEL_1_CERTIFICATE.id(), ItemId.LEVEL_2_CERTIFICATE.id(), ItemId.LEVEL_3_CERTIFICATE.id(),
 			ItemId.DIGSITE_SCROLL.id(), ItemId.ASTROLOGY_BOOK.id(), ItemId.STONE_TABLET.id(),
-			ItemId.OYSTER.id(), ItemId.SCRUMPLED_PIECE_OF_PAPER.id());
+			ItemId.OYSTER.id(), ItemId.SCRUMPLED_PIECE_OF_PAPER.id())
+			|| (item.getID() == ItemId.SLEEPING_BAG.id() && !Constants.GameServer.WANT_FATIGUE);
 	}
 
 	@Override
@@ -130,8 +131,20 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 
 		else if (id == ItemId.STONE_TABLET.id())
 			handleStoneTablet(player);
+		else if (id == ItemId.SLEEPING_BAG.id())
+			handleSleepingBag(player);
 	}
 
+	private void handleSleepingBag(Player player) {
+		ActionSender.sendEnterSleep(player);
+		player.startSleepEvent(false);
+		player.toggleFreezeXp();
+		ActionSender.sendExperienceToggle(player, player.isExperienceFrozen());
+		if (player.isExperienceFrozen())
+			player.message("@red@You have DISABLED experience gain!");
+		else
+			player.message("@gre@You have ENABLED experience gain!");
+	}
 	private void handleOyster(Player player, int oyster) {
 		player.message("you open the oyster shell");
 		if (DataConversions.random(0, 10) == 1) {

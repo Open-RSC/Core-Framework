@@ -3397,7 +3397,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Mithril Pickaxe", "Requires level 21 mining to use", "", 1300, 72, "items:72", false, false, 0, 10072780, false, false, 2077, -1, 1260));
 		items.add(new ItemDef("Adamantite Pickaxe", "Requires level 31 mining to use", "", 3200, 72, "items:72", false, false, 0, 11717785, false, false, 2078, -1, 1261));
 		items.add(new ItemDef("Rune Pickaxe", "Requires level 41 mining to use", "", 32000, 72, "items:72", false, false, 0, 65535, false, false, 2079, -1, 1262));
-		items.add(new ItemDef("Sleeping Bag", "Not as comfy as a bed but better than nothing", "sleep", 30, 422, "items:422", false, false, 0, 0, false, false, 2080, -1, 1263));
+		items.add(new ItemDef("Sleeping Bag", "Not as comfy as a bed but better than nothing", Config.S_WANT_FATIGUE ? "sleep" : "toggle exp", 30, 422, "items:422", false, false, 0, 0, false, false, 2080, -1, 1263));
 		items.add(new ItemDef("A blue wizards hat", "An ancient wizards hat.", "", 2, 86, "items:86", false, true, 32, 255, true, true, -1, -1, 1264));
 		items.add(new ItemDef("Gilded Totem Pole", "A well crafted totem pole - given to you as a gift from Gujuo", "Inspect", 20, 403, "items:403", false, false, 0, 65280, true, true, -1, -1, 1265));
 		items.add(new ItemDef("Blessed Golden Bowl", "A specially made bowl constructed out of pure gold - it looks magical somehow", "", 1000, 404, "items:404", false, false, 0, 0, true, true, -1, -1, 1266));

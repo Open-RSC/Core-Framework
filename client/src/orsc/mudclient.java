@@ -134,6 +134,7 @@ public final class mudclient implements Runnable {
 	private final int[] playerSkinColors = new int[]{15523536, 13415270, 11766848, 10056486, 9461792};
 	private int[] playerStatBase;
 	private int[] playerExperience;
+	private boolean experienceOff = false;
 	public final int[] playerStatEquipment = new int[5];
 	private final boolean[] prayerOn = new boolean[50];
 	private final int projectileMaxRange = 40;
@@ -7021,6 +7022,17 @@ public final class mudclient implements Runnable {
 				}
 			}
 
+			//draw experience freeze message
+			if (this.experienceOff) {
+				this.getSurface().drawColoredString(
+				this.getSurface().width2 - 218 - getSurface().stringWidth(1,"YOUR EXPERIENCE GAIN IS DISABLED"),
+					25,
+					"YOUR EXPERIENCE GAIN IS DISABLED",
+					1,
+					0x00FF0000,
+					-1
+				);
+			}
 			this.mouseButtonClick = 0;
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "client.DC(" + var1 + ')');
@@ -7514,7 +7526,7 @@ public final class mudclient implements Runnable {
 
 								if (EntityHandler.getItemDef(id).getCommand() != null
 									&& EntityHandler.getItemDef(id).getNotedFormOf() == -1) {
-									for (int p = 0; p < EntityHandler.getItemDef(id).getCommand().length; p++) {
+									for (int p = EntityHandler.getItemDef(id).getCommand().length-1; p >= 0; p--) {
 										this.menuCommon.addItem(0, EntityHandler.getItemDef(id).getCommand()[p], p, 0, "@lre@" + EntityHandler.getItemDef(id).getName(), var5, (String) null, MenuItemAction.ITEM_COMMAND, 0, (String) null, (String) null);
 									}
 								}
@@ -14427,6 +14439,14 @@ public final class mudclient implements Runnable {
 
 	public int getPlayerExperience(int stat) {
 		return this.playerExperience[stat];
+	}
+
+	public void toggleExperienceFreeze(byte expOff) {
+		if (expOff == 1) {
+			experienceOff = true;
+		} else if (expOff == 0) {
+			experienceOff = false;
+		}
 	}
 
 	public void setQuestPoints(int p) {

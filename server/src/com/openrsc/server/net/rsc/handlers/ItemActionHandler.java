@@ -75,7 +75,7 @@ public class ItemActionHandler implements PacketHandler {
 			return;
 		}
 
-		if (item.getID() == ItemId.SLEEPING_BAG.id() && !player.isSleeping()) {
+		if (item.getID() == ItemId.SLEEPING_BAG.id() && Constants.GameServer.WANT_FATIGUE && !player.isSleeping()) {
 			ActionSender.sendEnterSleep(player);
 			player.startSleepEvent(false);
 			// player.resetPath(); - real rsc.
