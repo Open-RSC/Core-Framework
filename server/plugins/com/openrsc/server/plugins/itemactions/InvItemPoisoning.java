@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.itemactions;
 
-import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.external.ItemDefinition;
+import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
@@ -66,8 +66,8 @@ public class InvItemPoisoning implements InvUseOnItemListener, InvUseOnItemExecu
 	private Item getPoisonedItem(String name) {
 		String poisonedVersion = "Poisoned " + name;
 		String poisonedVersion2 = "Poison " + name;
-		for (int i = 0; i < EntityHandler.items.length; i++) {
-			ItemDefinition def = EntityHandler.getItemDef(i);
+		for (int i = 0; i < Server.getServer().getEntityHandler().items.length; i++) {
+			ItemDefinition def = Server.getServer().getEntityHandler().getItemDef(i);
 			if (def.getName().equalsIgnoreCase(poisonedVersion) || def.getName().equalsIgnoreCase(poisonedVersion2)) {
 				return new Item(i);
 			}

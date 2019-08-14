@@ -3,7 +3,6 @@ package com.openrsc.server.net;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.Server;
 import com.openrsc.server.content.market.MarketItem;
-import com.openrsc.server.external.EntityHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.util.JsonUtils;
@@ -48,7 +47,7 @@ public class DiscordService implements Runnable{
 
 		String addMessage = String.format(pluralHandlerMessage,
 				addItem.getAmount(),
-				EntityHandler.getItemDef(addItem.getItemID()).getName(),
+				getServer().getEntityHandler().getItemDef(addItem.getItemID()).getName(),
 				addItem.getPrice() / addItem.getAmount(),
 				addItem.getSellerName(),
 				addItem.getHoursLeft()
@@ -59,7 +58,7 @@ public class DiscordService implements Runnable{
 
 	public void auctionBuy(MarketItem buyItem) {
 		String buyMessage = String.format("%s purchased from %s.  %d left in auction.",
-				EntityHandler.getItemDef(buyItem.getItemID()).getName(),
+			getServer().getEntityHandler().getItemDef(buyItem.getItemID()).getName(),
 				buyItem.getSellerName(),
 				buyItem.getAmountLeft()
 		);
@@ -70,7 +69,7 @@ public class DiscordService implements Runnable{
 	public void auctionCancel(MarketItem cancelItem) {
 		String cancelMessage = String.format("%d x %s cancelled from auction by %s.",
 				cancelItem.getAmount(),
-				EntityHandler.getItemDef(cancelItem.getItemID()).getName(),
+				getServer().getEntityHandler().getItemDef(cancelItem.getItemID()).getName(),
 				cancelItem.getSellerName()
 		);
 
@@ -80,7 +79,7 @@ public class DiscordService implements Runnable{
 	public void auctionModDelete(MarketItem deleteItem) {
 		String cancelMessage = String.format("%d x %s, auctioned by %s, has been deleted by moderator.",
 				deleteItem.getAmount(),
-				EntityHandler.getItemDef(deleteItem.getItemID()).getName(),
+				getServer().getEntityHandler().getItemDef(deleteItem.getItemID()).getName(),
 				deleteItem.getSellerName()
 		);
 

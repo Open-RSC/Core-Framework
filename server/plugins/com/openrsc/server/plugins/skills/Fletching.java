@@ -70,7 +70,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 		ItemDartTipDef tipDef = null;
 		if (item.getID() == com.openrsc.server.constants.ItemId.ARROW_SHAFTS.id()) {
 			itemID = com.openrsc.server.constants.ItemId.HEADLESS_ARROWS.id();
-		} else if ((tipDef = EntityHandler.getItemDartTipDef(item.getID())) != null) {
+		} else if ((tipDef = player.getWorld().getServer().getEntityHandler().getItemDartTipDef(item.getID())) != null) {
 			itemID = tipDef.getDartID(); // Dart ID
 			experience = (int) (tipDef.getExp());
 		} else {
@@ -110,7 +110,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 			player.sendMemberErrorMessage();
 			return true;
 		}
-		final ItemArrowHeadDef headDef = EntityHandler
+		final ItemArrowHeadDef headDef = player.getWorld().getServer().getEntityHandler()
 			.getItemArrowHeadDef(arrowHeads.getID());
 		if (headDef == null) {
 			return false;
@@ -163,7 +163,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 			player.sendMemberErrorMessage();
 			return true;
 		}
-		final ItemBowStringDef stringDef = EntityHandler
+		final ItemBowStringDef stringDef = player.getWorld().getServer().getEntityHandler()
 			.getItemBowStringDef(bow.getID());
 		if (stringDef == null) {
 			return false;
@@ -208,7 +208,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 			player.sendMemberErrorMessage();
 			return true;
 		}
-		final ItemLogCutDef cutDef = EntityHandler.getItemLogCutDef(log.getID());
+		final ItemLogCutDef cutDef = player.getWorld().getServer().getEntityHandler().getItemLogCutDef(log.getID());
 		if (cutDef == null) {
 			return false;
 		}

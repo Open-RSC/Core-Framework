@@ -6,7 +6,6 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.SingleEvent;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -949,7 +948,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					p.getInventory().replace(ItemId.BLESSED_GOLDEN_BOWL.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id());
 					message(p, 1300, "The water seems to bubble and sparkle as if alive.");
 				} else {
-					message(p, 1300, "You put some water in the " + EntityHandler.getItemDef(emptyID).getName().toLowerCase() + ".");
+					message(p, 1300, "You put some water in the " + p.getWorld().getServer().getEntityHandler().getItemDef(emptyID).getName().toLowerCase() + ".");
 					p.getInventory().replace(emptyID, refilledID);
 				}
 				removeItem(p, ItemId.CUT_REED_PLANT.id(), 1);

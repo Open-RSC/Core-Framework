@@ -1,12 +1,11 @@
 package com.openrsc.server.plugins.skills;
 
 import com.openrsc.server.Server;
-import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Skills;
+import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ObjectFishDef;
 import com.openrsc.server.external.ObjectFishingDef;
-import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -50,7 +49,7 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 
 	private void handleFishing(final GameObject object, Player owner, final int click, final String command) {
 
-		final ObjectFishingDef def = EntityHandler.getObjectFishingDef(object.getID(), click);
+		final ObjectFishingDef def = owner.getWorld().getServer().getEntityHandler().getObjectFishingDef(object.getID(), click);
 
 		if (owner.isBusy()) {
 			return;
@@ -76,7 +75,7 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 			owner.playerServerMessage(MessageType.QUEST, "You need at least level " + def.getReqLevel() + " "
 				+ fishingRequirementString(object, command) + " "
 				+ (!command.contains("cage") ? "these fish"
-				: EntityHandler.getItemDef(def.getFishDefs()[0].getId()).getName().toLowerCase()
+				: owner.getWorld().getServer().getEntityHandler().getItemDef(def.getFishDefs()[0].getId()).getName().toLowerCase()
 				.substring(4) + "s"));
 			return;
 		}
@@ -84,13 +83,13 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 		if (owner.getInventory().countId(netId) <= 0) {
 			owner.playerServerMessage(MessageType.QUEST,
 				"You need a "
-					+ EntityHandler
+					+ owner.getWorld().getServer().getEntityHandler()
 					.getItemDef(
 						netId)
 					.getName().toLowerCase()
 					+ " to " + (command.equals("lure") || command.equals("bait") ? command : def.getBaitId() > 0 ? "bait" : "catch") + " "
 					+ (!command.contains("cage") ? "these fish"
-					: EntityHandler.getItemDef(def.getFishDefs()[0].getId()).getName().toLowerCase()
+					: owner.getWorld().getServer().getEntityHandler().getItemDef(def.getFishDefs()[0].getId()).getName().toLowerCase()
 					.substring(4) + "s"));
 			return;
 		}
@@ -98,7 +97,7 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 		if (baitId >= 0) {
 			if (owner.getInventory().countId(baitId) <= 0) {
 				owner.playerServerMessage(MessageType.QUEST,
-					"You don't have any " + EntityHandler.getItemDef(baitId).getName().toLowerCase() + " left");
+					"You don't have any " + owner.getWorld().getServer().getEntityHandler().getItemDef(baitId).getName().toLowerCase() + " left");
 				return;
 			}
 		}
@@ -111,7 +110,7 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 				final int baitId = def.getBaitId();
 				if (baitId >= 0) {
 					if (owner.getInventory().countId(baitId) <= 0) {
-						owner.playerServerMessage(MessageType.QUEST, "You don't have any " + EntityHandler.getItemDef(baitId).getName().toLowerCase()
+						owner.playerServerMessage(MessageType.QUEST, "You don't have any " + owner.getWorld().getServer().getEntityHandler().getItemDef(baitId).getName().toLowerCase()
 							+ " left");
 						interrupt();
 						return;

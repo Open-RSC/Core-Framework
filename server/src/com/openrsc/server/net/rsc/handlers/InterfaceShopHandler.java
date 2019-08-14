@@ -1,7 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.Server;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
@@ -44,7 +43,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 		int itemID = p.readShort();
 		int shopAmount = p.readShort();
 		int amount = p.readShort();
-		ItemDefinition def = EntityHandler.getItemDef(itemID);
+		ItemDefinition def = player.getWorld().getServer().getEntityHandler().getItemDef(itemID);
 		if (def.isMembersOnly() && !Server.getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return;
@@ -134,7 +133,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 					/* if we are selling noted item, calculate price from the original item */
 					if (def.getOriginalItemID() != -1) {
 						sellAmount += shop.getItemSellPrice(def.getOriginalItemID(),
-							EntityHandler.getItemDef(def.getOriginalItemID()).getDefaultPrice(), 1);
+							player.getWorld().getServer().getEntityHandler().getItemDef(def.getOriginalItemID()).getDefaultPrice(), 1);
 					} else {
 						sellAmount += shop.getItemSellPrice(itemID, def.getDefaultPrice(), 1);
 					}

@@ -1,8 +1,7 @@
 package com.openrsc.server.plugins.minigames.fishingtrawler;
 
-import com.openrsc.server.constants.Skills;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -102,15 +101,15 @@ public class TrawlerCatch implements ObjectActionListener, ObjectActionExecutive
 							if (randomJunkItem == ItemId.BROKEN_GLASS_DIGSITE_LVL_2.id() || randomJunkItem == ItemId.BUTTONS.id()
 								|| randomJunkItem == ItemId.DAMAGED_ARMOUR_1.id() || randomJunkItem == ItemId.DAMAGED_ARMOUR_2.id()
 								|| randomJunkItem == ItemId.CERAMIC_REMAINS.id()) {
-								message(p, 1200, "..some " + EntityHandler.getItemDef(randomJunkItem).getName());
+								message(p, 1200, "..some " + p.getWorld().getServer().getEntityHandler().getItemDef(randomJunkItem).getName());
 							}
 							// Old boot
 							else if (randomJunkItem == ItemId.OLD_BOOT.id()) {
-								message(p, 1200, "..an " + EntityHandler.getItemDef(randomJunkItem).getName());
+								message(p, 1200, "..an " + p.getWorld().getServer().getEntityHandler().getItemDef(randomJunkItem).getName());
 							}
 							// broken arrow, broken staff, Rusty sword, vase
 							else {
-								message(p, 1200, "..a " + EntityHandler.getItemDef(randomJunkItem).getName());
+								message(p, 1200, "..a " + p.getWorld().getServer().getEntityHandler().getItemDef(randomJunkItem).getName());
 							}
 							addItem(p, randomJunkItem, 1);
 							p.incExp(Skills.FISHING, 5, false);

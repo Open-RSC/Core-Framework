@@ -2,7 +2,6 @@ package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Inventory;
@@ -70,7 +69,7 @@ public final class BankHandler implements PacketHandler {
 				return;
 			}
 			slot = bank.getFirstIndexById(itemID);
-			if (EntityHandler.getItemDef(itemID).isStackable()) {
+			if (player.getWorld().getServer().getEntityHandler().getItemDef(itemID).isStackable()) {
 				item = new Item(itemID, amount);
 				if (inventory.canHold(item) && bank.remove(item) > -1) {
 					inventory.add(item, false);
@@ -214,7 +213,7 @@ public final class BankHandler implements PacketHandler {
 		Item item = null;
 		Bank bank = player.getBank();
 		Inventory inventory = player.getInventory();
-		if (EntityHandler.getItemDef(itemID).isStackable()) {
+		if (player.getWorld().getServer().getEntityHandler().getItemDef(itemID).isStackable()) {
 			if (!player.getAttribute("swap_cert", false) || !isCert(itemID)) {
 				item = new Item(itemID, amount);
 				Item originalItem = null;

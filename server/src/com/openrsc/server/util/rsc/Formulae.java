@@ -1,21 +1,17 @@
 package com.openrsc.server.util.rsc;
 
-import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.external.FiremakingDef;
-import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.external.ItemLoc;
-import com.openrsc.server.external.NPCLoc;
-import com.openrsc.server.external.SpellDef;
-import com.openrsc.server.model.Point;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.external.*;
+import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
+import static com.openrsc.server.plugins.Functions.getMaxLevel;
 
 public final class Formulae {
 
@@ -285,11 +281,11 @@ public final class Formulae {
 			(foodId == ItemId.RAW_SWORDFISH.id() ? 6 :
 				foodId == ItemId.RAW_LOBSTER.id() || foodId == ItemId.RAW_SHARK.id() ? 11 : 0) : 0;
 		int effectiveLevel = cookingLevel + bonusLevel;
-		int levelReq = EntityHandler.getItemCookingDef(foodId).getReqLevel();
+		int levelReq = p.getWorld().getServer().getEntityHandler().getItemCookingDef(foodId).getReqLevel();
 		//if not on def file from cooking training table, level stop failing
 		//is usually 35 since player can cook item
-		int levelStopFail = EntityHandler.getItemPerfectCookingDef(foodId) != null ?
-			EntityHandler.getItemPerfectCookingDef(foodId).getReqLevel() : levelReq + 35;
+		int levelStopFail = p.getWorld().getServer().getEntityHandler().getItemPerfectCookingDef(foodId) != null ?
+			p.getWorld().getServer().getEntityHandler().getItemPerfectCookingDef(foodId).getReqLevel() : levelReq + 35;
 		return !Formulae.calcProductionSuccessful(levelReq, effectiveLevel, true, levelStopFail);
 	}
 

@@ -1,6 +1,5 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.PrayerDef;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
@@ -77,7 +76,7 @@ public class PrayerHandler implements PacketHandler {
 			return;
 		}
 
-		PrayerDef prayer = EntityHandler.getPrayerDef(prayerID);
+		PrayerDef prayer = player.getWorld().getServer().getEntityHandler().getPrayerDef(prayerID);
 		int packetOne = OpcodeIn.PRAYER_ACTIVATED.getOpcode();
 		int packetTwo = OpcodeIn.PRAYER_DEACTIVATED.getOpcode();
 		if (pID == packetOne) {

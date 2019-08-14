@@ -1,5 +1,6 @@
 package com.openrsc.server.model.container;
 
+import com.openrsc.server.Server;
 import com.openrsc.server.external.*;
 
 import java.util.HashMap;
@@ -76,7 +77,7 @@ public class Item implements Comparable<Item> {
 		if (!isEdible()) {
 			return 0;
 		}
-		return EntityHandler.getItemEdibleHeals(id);
+		return Server.getServer().getEntityHandler().getItemEdibleHeals(id);
 	}
 
 	public boolean equals(Object o) {
@@ -99,27 +100,27 @@ public class Item implements Comparable<Item> {
 	}
 
 	public ItemCookingDef getCookingDef() {
-		return EntityHandler.getItemCookingDef(id);
+		return Server.getServer().getEntityHandler().getItemCookingDef(id);
 	}
 	
 	public ItemPerfectCookingDef getPerfectCookingDef() {
-		return EntityHandler.getItemPerfectCookingDef(id);
+		return Server.getServer().getEntityHandler().getItemPerfectCookingDef(id);
 	}
 
 	public ItemDefinition getDef() {
-		return EntityHandler.getItemDef(id);
+		return Server.getServer().getEntityHandler().getItemDef(id);
 	}
 
 	public ItemSmeltingDef getSmeltingDef() {
-		return EntityHandler.getItemSmeltingDef(id);
+		return Server.getServer().getEntityHandler().getItemSmeltingDef(id);
 	}
 
 	public ItemUnIdentHerbDef getUnIdentHerbDef() {
-		return EntityHandler.getItemUnIdentHerbDef(id);
+		return Server.getServer().getEntityHandler().getItemUnIdentHerbDef(id);
 	}
 
 	public boolean isEdible() {
-		return EntityHandler.getItemEdibleHeals(id) > 0;
+		return Server.getServer().getEntityHandler().getItemEdibleHeals(id) > 0;
 	}
 
 	public boolean isWieldable() {
@@ -138,7 +139,7 @@ public class Item implements Comparable<Item> {
 		if (!i.isWieldable() || !isWieldable()) {
 			return false;
 		}
-		for (int affected : EntityHandler.getAffectedTypes(getDef().getWearableId())) {
+		for (int affected : Server.getServer().getEntityHandler().getAffectedTypes(getDef().getWearableId())) {
 			if (i.getDef().getWearableId() == affected) {
 				return true;
 			}

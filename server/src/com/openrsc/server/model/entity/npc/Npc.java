@@ -250,7 +250,7 @@ public class Npc extends Mob {
 				setAttribute("hasArmor", true);
 			}
 		}
-		def = EntityHandler.getNpcDef(loc.getId());
+		def = getWorld().getServer().getEntityHandler().getNpcDef(loc.getId());
 		if (def == null) {
 			throw new NullPointerException("NPC definition is invalid for NPC ID: " + loc.getId() + ", coordinates: " + "("
 				+ loc.startX() + ", " + loc.startY() + ")");
@@ -388,7 +388,7 @@ public class Npc extends Mob {
 	}
 
 	public NPCDef getDef() {
-		return EntityHandler.getNpcDef(getID());
+		return getWorld().getServer().getEntityHandler().getNpcDef(getID());
 	}
 
 	public NPCLoc getLoc() {
@@ -565,12 +565,12 @@ public class Npc extends Mob {
 						double currentRatio = (double) weight / (double) weightTotal;
 						if (hit >= total && hit < (total + weight)) {
 							if (dropID != -1) {
-								if (EntityHandler.getItemDef(dropID).isMembersOnly()
+								if (getWorld().getServer().getEntityHandler().getItemDef(dropID).isMembersOnly()
 									&& !Server.getServer().getConfig().MEMBER_WORLD) {
 									continue;
 								}
 
-								if (!EntityHandler.getItemDef(dropID).isStackable()) {
+								if (!getWorld().getServer().getEntityHandler().getItemDef(dropID).isStackable()) {
 
 									Server.getServer().getPlayerDataProcessor().getDatabase().addNpcDrop(
 										owner, this, dropID, amount);
@@ -590,7 +590,7 @@ public class Npc extends Mob {
 											dropID = Formulae.calculateHerbDrop();
 										}
 
-										if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id() && EntityHandler.getItemDef(dropID).isMembersOnly() && !Server.getServer().getConfig().MEMBER_WORLD) {
+										if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id() && getWorld().getServer().getEntityHandler().getItemDef(dropID).isMembersOnly() && !Server.getServer().getConfig().MEMBER_WORLD) {
 											continue;
 										} else if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id()) {
 											if (!handleRingOfAvarice(owner, new Item(drop.getID(), drop.getAmount()))) {
@@ -725,12 +725,12 @@ public class Npc extends Mob {
 						double currentRatio = (double) weight / (double) weightTotal;
 						if (hit >= total && hit < (total + weight)) {
 							if (dropID != -1) {
-								if (EntityHandler.getItemDef(dropID).isMembersOnly()
+								if (getWorld().getServer().getEntityHandler().getItemDef(dropID).isMembersOnly()
 									&& !Server.getServer().getConfig().MEMBER_WORLD) {
 									continue;
 								}
 
-								if (!EntityHandler.getItemDef(dropID).isStackable()) {
+								if (!getWorld().getServer().getEntityHandler().getItemDef(dropID).isStackable()) {
 									GroundItem groundItem;
 
 									// We need to drop multiple counts of "1" item if it's not a stack
@@ -747,7 +747,7 @@ public class Npc extends Mob {
 											dropID = Formulae.calculateHerbDrop();
 										}
 
-										if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id() && EntityHandler.getItemDef(dropID).isMembersOnly() && !Server.getServer().getConfig().MEMBER_WORLD) {
+										if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id() && getWorld().getServer().getEntityHandler().getItemDef(dropID).isMembersOnly() && !Server.getServer().getConfig().MEMBER_WORLD) {
 											continue;
 										} else if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id()) {
 											if (!handleRingOfAvarice((Player)mob, new Item(drop.getID(), drop.getAmount()))) {
@@ -1191,9 +1191,9 @@ public class Npc extends Mob {
 	@Override
 	public String toString() {
 		if (this.getID() == 210 || this.getID() == 236) {
-			return "Warning! @yel@" + EntityHandler.getNpcDef(id).getName() + "@red@WILD@whi@";
+			return "Warning! @yel@" + getWorld().getServer().getEntityHandler().getNpcDef(id).getName() + "@red@WILD@whi@";
 		} else {
-			return "Warning! @yel@" + EntityHandler.getNpcDef(id).getName() + "@whi@";
+			return "Warning! @yel@" + getWorld().getServer().getEntityHandler().getNpcDef(id).getName() + "@whi@";
 		}
 	}
 
@@ -1286,7 +1286,7 @@ public class Npc extends Mob {
 	public static boolean handleRingOfAvarice(Player p, Item item) {
 		int slot = -1;
 		if (Functions.isWielding(p, ItemId.RING_OF_AVARICE.id())) {
-			ItemDefinition itemDef = EntityHandler.getItemDef(item.getID());
+			ItemDefinition itemDef = p.getWorld().getServer().getEntityHandler().getItemDef(item.getID());
 			if (itemDef != null && itemDef.isStackable()) {
 				if (p.getInventory().hasInInventory(item.getID())) {
 					p.getInventory().add(item);

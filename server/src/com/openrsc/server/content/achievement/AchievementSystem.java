@@ -3,7 +3,6 @@ package com.openrsc.server.content.achievement;
 import com.openrsc.server.Server;
 import com.openrsc.server.content.achievement.Achievement.TaskReward;
 import com.openrsc.server.content.achievement.Achievement.TaskType;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
@@ -241,11 +240,11 @@ public class AchievementSystem {
 		for (AchievementTask task : quest.getTasks()) {
 			String taskHeader = "";
 			if (task.getTask() == TaskType.KILL_NPC) {
-				taskHeader = "Slay " + task.getAmount() + " of monster " + EntityHandler.getNpcDef(task.getId()).name
+				taskHeader = "Slay " + task.getAmount() + " of monster " + p.getWorld().getServer().getEntityHandler().getNpcDef(task.getId()).name
 					+ ": ";
 			} else if (task.getTask() == TaskType.GATHER_ITEM) {
 				taskHeader = "Gather " + task.getAmount() + " of item "
-					+ EntityHandler.getItemDef(task.getId()).getName() + ": ";
+					+ p.getWorld().getServer().getEntityHandler().getItemDef(task.getId()).getName() + ": ";
 			} else if (task.getTask() == TaskType.DO_QUEST) {
 				taskHeader = "Complete Quest " + World.getWorld().getQuest(task.getId()).getQuestName() + ": ";
 			}

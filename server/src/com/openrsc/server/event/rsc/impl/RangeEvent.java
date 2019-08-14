@@ -5,7 +5,6 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.GameTickEvent;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
@@ -296,7 +295,7 @@ public class RangeEvent extends GameTickEvent {
 					((Player) target).message(getPlayerOwner().getUsername() + " is shooting at you!");
 				}
 				ActionSender.sendSound(getPlayerOwner(), "shoot");
-				if (EntityHandler.getItemDef(arrowID).getName().toLowerCase().contains("poison") && target.isPlayer()) {
+				if (getOwner().getWorld().getServer().getEntityHandler().getItemDef(arrowID).getName().toLowerCase().contains("poison") && target.isPlayer()) {
 					if (DataConversions.random(0, 100) <= 10) {
 						target.poisonDamage = target.getSkills().getMaxStat(Skills.HITS);
 						target.startPoisonEvent();

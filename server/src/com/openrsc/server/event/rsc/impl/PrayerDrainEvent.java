@@ -2,7 +2,6 @@ package com.openrsc.server.event.rsc.impl;
 
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.GameTickEvent;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.PrayerDef;
 import com.openrsc.server.model.entity.player.Player;
 
@@ -48,7 +47,7 @@ public class PrayerDrainEvent extends GameTickEvent {
 
 	private void refreshActivePrayers() {
 		for (int x = 0; x <= 13; x++) {
-			PrayerDef prayer = EntityHandler.getPrayerDef(x);
+			PrayerDef prayer = getPlayerOwner().getWorld().getServer().getEntityHandler().getPrayerDef(x);
 			if (getPlayerOwner().getPrayers().isPrayerActivated(x) && !activePrayers.containsKey(prayer)) {
 				activePrayers.put(prayer, System.currentTimeMillis());
 			} else if (!getPlayerOwner().getPrayers().isPrayerActivated(x) && activePrayers.containsKey(prayer)) {

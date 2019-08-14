@@ -1,7 +1,6 @@
 package com.openrsc.server.model.entity;
 
 import com.openrsc.server.external.DoorDef;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.GameObjectDef;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.model.Point;
@@ -93,11 +92,11 @@ public class GameObject extends Entity {
 	}
 
 	public DoorDef getDoorDef() {
-		return EntityHandler.getDoorDef(super.getID());
+		return getWorld().getServer().getEntityHandler().getDoorDef(super.getID());
 	}
 
 	public GameObjectDef getGameObjectDef() {
-		return EntityHandler.getGameObjectDef(super.getID());
+		return getWorld().getServer().getEntityHandler().getGameObjectDef(super.getID());
 	}
 
 	public GameObjectLoc getLoc() {
@@ -136,7 +135,7 @@ public class GameObject extends Entity {
 	}
 
 	public boolean isTelePoint() {
-		return EntityHandler.getObjectTelePoint(getLocation(), null) != null;
+		return getWorld().getServer().getEntityHandler().getObjectTelePoint(getLocation(), null) != null;
 	}
 
 	public void remove() {

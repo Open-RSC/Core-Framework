@@ -5,7 +5,6 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -101,7 +100,7 @@ public class Smelting implements InvUseOnObjectListener,
 		String formattedName = item.getDef().getName().toUpperCase().replaceAll(" ", "_");
 		Smelt smelt;
 		if (item.getID() == Smelt.IRON_ORE.getID() && getCurrentLevel(p, Skills.SMITHING) >= 30 && p.getInventory().countId(Smelt.COAL.getID()) >= 2) {
-			String coalChange = EntityHandler.getItemDef(Smelt.COAL.getID()).getName().toUpperCase();
+			String coalChange = p.getWorld().getServer().getEntityHandler().getItemDef(Smelt.COAL.getID()).getName().toUpperCase();
 			smelt = Smelt.valueOf(coalChange);
 		} else {
 			smelt = Smelt.valueOf(formattedName);
@@ -121,7 +120,7 @@ public class Smelting implements InvUseOnObjectListener,
 			}
 		}
 		if (getCurrentLevel(p, Skills.SMITHING) < smelt.getRequiredLevel()) {
-			p.message("You need to be at least level-" + smelt.getRequiredLevel() + " smithing to " + (smelt.getSmeltBarId() == ItemId.SILVER_BAR.id() || smelt.getSmeltBarId() == ItemId.GOLD_BAR.id() || smelt.getSmeltBarId() == ItemId.GOLD_BAR_FAMILYCREST.id() ? "work " : "smelt ") + EntityHandler.getItemDef(smelt.getSmeltBarId()).getName().toLowerCase().replaceAll("bar", ""));
+			p.message("You need to be at least level-" + smelt.getRequiredLevel() + " smithing to " + (smelt.getSmeltBarId() == ItemId.SILVER_BAR.id() || smelt.getSmeltBarId() == ItemId.GOLD_BAR.id() || smelt.getSmeltBarId() == ItemId.GOLD_BAR_FAMILYCREST.id() ? "work " : "smelt ") + p.getWorld().getServer().getEntityHandler().getItemDef(smelt.getSmeltBarId()).getName().toLowerCase().replaceAll("bar", ""));
 			if (smelt.getSmeltBarId() == ItemId.IRON_BAR.id())
 				p.message("Practice your smithing using tin and copper to make bronze");
 			return;
@@ -135,7 +134,7 @@ public class Smelting implements InvUseOnObjectListener,
 				p.message("You need 1 iron-ore and 2 coal to make steel");
 				return;
 			} else {
-				p.message("You need " + smelt.getReqOreAmount() + " heaps of " + EntityHandler.getItemDef(smelt.getReqOreId()).getName().toLowerCase()
+				p.message("You need " + smelt.getReqOreAmount() + " heaps of " + p.getWorld().getServer().getEntityHandler().getItemDef(smelt.getReqOreId()).getName().toLowerCase()
 					+ " to smelt "
 					+ item.getDef().getName().toLowerCase().replaceAll("ore", ""));
 				return;
@@ -164,7 +163,7 @@ public class Smelting implements InvUseOnObjectListener,
 						interrupt();
 						return;
 					} else {
-						p.message("You need " + smelt.getReqOreAmount() + " heaps of " + EntityHandler.getItemDef(smelt.getReqOreId()).getName().toLowerCase()
+						p.message("You need " + smelt.getReqOreAmount() + " heaps of " + p.getWorld().getServer().getEntityHandler().getItemDef(smelt.getReqOreId()).getName().toLowerCase()
 							+ " to smelt "
 							+ item.getDef().getName().toLowerCase().replaceAll("ore", ""));
 						interrupt();
@@ -227,7 +226,7 @@ public class Smelting implements InvUseOnObjectListener,
 		if (smelt.getSmeltBarId() == ItemId.BRONZE_BAR.id()) {
 			message = "You smelt the copper and tin together in the furnace";
 		} else if (smelt.getSmeltBarId() == ItemId.MITHRIL_BAR.id() || smelt.getSmeltBarId() == ItemId.ADAMANTITE_BAR.id()|| smelt.getSmeltBarId() == ItemId.RUNITE_BAR.id()) {
-			message = "You place the " + item.getDef().getName().toLowerCase().replaceAll(" ore", "") + " and " + smelt.getReqOreAmount() + " heaps of " + EntityHandler.getItemDef(smelt.getReqOreId()).getName().toLowerCase() + " into the furnace";
+			message = "You place the " + item.getDef().getName().toLowerCase().replaceAll(" ore", "") + " and " + smelt.getReqOreAmount() + " heaps of " + Server.getServer().getEntityHandler().getItemDef(smelt.getReqOreId()).getName().toLowerCase() + " into the furnace";
 		} else if (smelt.getSmeltBarId() == ItemId.STEEL_BAR.id()) {
 			message = "You place the iron and 2 heaps of coal into the furnace";
 		} else if (smelt.getSmeltBarId() == ItemId.IRON_BAR.id()) {

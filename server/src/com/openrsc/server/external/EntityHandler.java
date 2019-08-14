@@ -1,11 +1,20 @@
 package com.openrsc.server.external;
 
+import com.openrsc.server.Server;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.TelePoint;
+import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.util.PersistenceManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static org.apache.logging.log4j.util.Unbox.box;
 
 /**
  * This class handles the loading of entities from the conf files, and provides
@@ -14,80 +23,250 @@ import java.util.HashMap;
 @SuppressWarnings("unchecked")
 public final class EntityHandler {
 
-	public static ItemDefinition[] items;
-	public static ArrayList<NPCDef> npcs;
-	public static SpellDef[] spells;
-	private static HashMap<Integer, ItemArrowHeadDef> arrowHeads;
-	private static HashMap<Integer, ItemBowStringDef> bowString;
-	private static HashMap<Integer, CerterDef> certers;
-	private static HashMap<Integer, ItemDartTipDef> dartTips;
-	private static DoorDef[] doors;
-	private static HashMap<Integer, FiremakingDef> firemaking;
-	private static GameObjectDef[] gameObjects;
-	private static HashMap<Integer, ItemGemDef> gems;
-	private static ItemHerbSecond[] herbSeconds;
-	private static HashMap<Integer, int[]> itemAffectedTypes;
-	private static HashMap<Integer, ItemCookingDef> itemCooking;
-	private static HashMap<Integer, ItemPerfectCookingDef> itemPerfectCooking;
-	private static ItemCraftingDef[] itemCrafting;
-	private static HashMap<Integer, Integer> itemEdibleHeals;
-	private static HashMap<Integer, ItemHerbDef> itemHerb;
-	private static HashMap<Integer, ItemSmeltingDef> itemSmelting;
-	private static ItemSmithingDef[] itemSmithing;
-	private static HashMap<Integer, ItemUnIdentHerbDef> itemUnIdentHerb;
-	private static HashMap<Integer, ItemLogCutDef> logCut;
-	private static HashMap<Integer, ObjectFishingDef[]> objectFishing;
-	private static HashMap<Integer, ObjectMiningDef> objectMining;
-	private static HashMap<Point, TelePoint> objectTelePoints;
-	private static HashMap<Integer, ObjectWoodcuttingDef> objectWoodcutting;
-	private static HashMap<Integer, ObjectRunecraftingDef> objectRunecrafting;
-	private static PrayerDef[] prayers;
-	private static TileDef[] tiles;
+	/**
+	 * The asynchronous logger.
+	 */
+	private static final Logger LOGGER = LogManager.getLogger();
 
-	static {
+	private final Server server;
+	private final PersistenceManager persistenceManager;
 
-		doors = (DoorDef[]) PersistenceManager.load("defs/DoorDef.xml.gz");
-		gameObjects = (GameObjectDef[]) PersistenceManager.load("defs/GameObjectDef.xml.gz");
-		prayers = (PrayerDef[]) PersistenceManager.load("defs/PrayerDef.xml.gz");
-		spells = (SpellDef[]) PersistenceManager.load("defs/SpellDef.xml.gz");
-		tiles = (TileDef[]) PersistenceManager.load("defs/TileDef.xml.gz");
+	public ItemDefinition[] items;
+	public ArrayList<NPCDef> npcs;
+	public SpellDef[] spells;
+	private HashMap<Integer, ItemArrowHeadDef> arrowHeads;
+	private HashMap<Integer, ItemBowStringDef> bowString;
+	private HashMap<Integer, CerterDef> certers;
+	private HashMap<Integer, ItemDartTipDef> dartTips;
+	private DoorDef[] doors;
+	private HashMap<Integer, FiremakingDef> firemaking;
+	private GameObjectDef[] gameObjects;
+	private HashMap<Integer, ItemGemDef> gems;
+	private ItemHerbSecond[] herbSeconds;
+	private HashMap<Integer, int[]> itemAffectedTypes;
+	private HashMap<Integer, ItemCookingDef> itemCooking;
+	private HashMap<Integer, ItemPerfectCookingDef> itemPerfectCooking;
+	private ItemCraftingDef[] itemCrafting;
+	private HashMap<Integer, Integer> itemEdibleHeals;
+	private HashMap<Integer, ItemHerbDef> itemHerb;
+	private HashMap<Integer, ItemSmeltingDef> itemSmelting;
+	private ItemSmithingDef[] itemSmithing;
+	private HashMap<Integer, ItemUnIdentHerbDef> itemUnIdentHerb;
+	private HashMap<Integer, ItemLogCutDef> logCut;
+	private HashMap<Integer, ObjectFishingDef[]> objectFishing;
+	private HashMap<Integer, ObjectMiningDef> objectMining;
+	private HashMap<Point, TelePoint> objectTelePoints;
+	private HashMap<Integer, ObjectWoodcuttingDef> objectWoodcutting;
+	private HashMap<Integer, ObjectRunecraftingDef> objectRunecrafting;
+	private PrayerDef[] prayers;
+	private TileDef[] tiles;
 
-		herbSeconds = (ItemHerbSecond[]) PersistenceManager.load("defs/extras/ItemHerbSecond.xml.gz");
-		dartTips = (HashMap<Integer, ItemDartTipDef>) PersistenceManager.load("defs/extras/ItemDartTipDef.xml.gz");
-		gems = (HashMap<Integer, ItemGemDef>) PersistenceManager.load("defs/extras/ItemGemDef.xml.gz");
-		logCut = (HashMap<Integer, ItemLogCutDef>) PersistenceManager.load("defs/extras/ItemLogCutDef.xml.gz");
-		bowString = (HashMap<Integer, ItemBowStringDef>) PersistenceManager.load("defs/extras/ItemBowStringDef.xml.gz");
-		arrowHeads = (HashMap<Integer, ItemArrowHeadDef>) PersistenceManager.load("defs/extras/ItemArrowHeadDef.xml.gz");
-		firemaking = (HashMap<Integer, FiremakingDef>) PersistenceManager.load("defs/extras/FiremakingDef.xml.gz");
-		itemAffectedTypes = (HashMap<Integer, int[]>) PersistenceManager.load("defs/extras/ItemAffectedTypes.xml.gz");
-		itemUnIdentHerb = (HashMap<Integer, ItemUnIdentHerbDef>) PersistenceManager.load("defs/extras/ItemUnIdentHerbDef.xml.gz");
-		itemHerb = (HashMap<Integer, ItemHerbDef>) PersistenceManager.load("defs/extras/ItemHerbDef.xml.gz");
-		itemEdibleHeals = (HashMap<Integer, Integer>) PersistenceManager.load("defs/extras/ItemEdibleHeals.xml.gz");
-		itemCooking = (HashMap<Integer, ItemCookingDef>) PersistenceManager.load("defs/extras/ItemCookingDef.xml.gz");
-		itemPerfectCooking = (HashMap<Integer, ItemPerfectCookingDef>) PersistenceManager.load("defs/extras/ItemPerfectCookingDef.xml.gz");
-		itemSmelting = (HashMap<Integer, ItemSmeltingDef>) PersistenceManager.load("defs/extras/ItemSmeltingDef.xml.gz");
-		itemSmithing = (ItemSmithingDef[]) PersistenceManager.load("defs/extras/ItemSmithingDef.xml.gz");
-		itemCrafting = (ItemCraftingDef[]) PersistenceManager.load("defs/extras/ItemCraftingDef.xml.gz");
-		objectMining = (HashMap<Integer, ObjectMiningDef>) PersistenceManager.load("defs/extras/ObjectMining.xml.gz");
-		objectWoodcutting = (HashMap<Integer, ObjectWoodcuttingDef>) PersistenceManager.load("defs/extras/ObjectWoodcutting.xml.gz");
-		objectRunecrafting = (HashMap<Integer, ObjectRunecraftingDef>) PersistenceManager.load("defs/extras/ObjectRunecrafting.xml.gz");
-		objectFishing = (HashMap<Integer, ObjectFishingDef[]>) PersistenceManager.load("defs/extras/ObjectFishing.xml.gz");
-		objectTelePoints = (HashMap<Point, TelePoint>) PersistenceManager.load("locs/extras/ObjectTelePoints.xml.gz");
-		certers = (HashMap<Integer, CerterDef>) PersistenceManager.load("defs/extras/NpcCerters.xml.gz");
+	public EntityHandler(Server server) {
+		this.server = server;
+		this.persistenceManager = new PersistenceManager(getServer());
+	}
+	
+	public void load() {
+		setupFileDefinitions();
+		setupDbDefinitions();
+	}
+	
+	public void unload() {
+		npcs = null;
+		items = null;
+
+		doors = null;
+		gameObjects = null;
+		prayers = null;
+		spells = null;
+		tiles = null;
+
+		herbSeconds = null;
+		dartTips = null;
+		gems = null;
+		logCut = null;
+		bowString = null;
+		arrowHeads = null;
+		firemaking = null;
+		itemAffectedTypes = null;
+		itemUnIdentHerb = null;
+		itemHerb = null;
+		itemEdibleHeals = null;
+		itemCooking = null;
+		itemPerfectCooking = null;
+		itemSmelting = null;
+		itemSmithing = null;
+		itemCrafting = null;
+		objectMining = null;
+		objectWoodcutting = null;
+		objectRunecrafting = null;
+		objectFishing = null;
+		objectTelePoints = null;
+		certers = null;
+	}
+
+	protected void setupFileDefinitions() {
+		doors = (DoorDef[]) getPersistenceManager().load("defs/DoorDef.xml.gz");
+		gameObjects = (GameObjectDef[]) getPersistenceManager().load("defs/GameObjectDef.xml.gz");
+		prayers = (PrayerDef[]) getPersistenceManager().load("defs/PrayerDef.xml.gz");
+		spells = (SpellDef[]) getPersistenceManager().load("defs/SpellDef.xml.gz");
+		tiles = (TileDef[]) getPersistenceManager().load("defs/TileDef.xml.gz");
+
+		herbSeconds = (ItemHerbSecond[]) getPersistenceManager().load("defs/extras/ItemHerbSecond.xml.gz");
+		dartTips = (HashMap<Integer, ItemDartTipDef>) getPersistenceManager().load("defs/extras/ItemDartTipDef.xml.gz");
+		gems = (HashMap<Integer, ItemGemDef>) getPersistenceManager().load("defs/extras/ItemGemDef.xml.gz");
+		logCut = (HashMap<Integer, ItemLogCutDef>) getPersistenceManager().load("defs/extras/ItemLogCutDef.xml.gz");
+		bowString = (HashMap<Integer, ItemBowStringDef>) getPersistenceManager().load("defs/extras/ItemBowStringDef.xml.gz");
+		arrowHeads = (HashMap<Integer, ItemArrowHeadDef>) getPersistenceManager().load("defs/extras/ItemArrowHeadDef.xml.gz");
+		firemaking = (HashMap<Integer, FiremakingDef>) getPersistenceManager().load("defs/extras/FiremakingDef.xml.gz");
+		itemAffectedTypes = (HashMap<Integer, int[]>) getPersistenceManager().load("defs/extras/ItemAffectedTypes.xml.gz");
+		itemUnIdentHerb = (HashMap<Integer, ItemUnIdentHerbDef>) getPersistenceManager().load("defs/extras/ItemUnIdentHerbDef.xml.gz");
+		itemHerb = (HashMap<Integer, ItemHerbDef>) getPersistenceManager().load("defs/extras/ItemHerbDef.xml.gz");
+		itemEdibleHeals = (HashMap<Integer, Integer>) getPersistenceManager().load("defs/extras/ItemEdibleHeals.xml.gz");
+		itemCooking = (HashMap<Integer, ItemCookingDef>) getPersistenceManager().load("defs/extras/ItemCookingDef.xml.gz");
+		itemPerfectCooking = (HashMap<Integer, ItemPerfectCookingDef>) getPersistenceManager().load("defs/extras/ItemPerfectCookingDef.xml.gz");
+		itemSmelting = (HashMap<Integer, ItemSmeltingDef>) getPersistenceManager().load("defs/extras/ItemSmeltingDef.xml.gz");
+		itemSmithing = (ItemSmithingDef[]) getPersistenceManager().load("defs/extras/ItemSmithingDef.xml.gz");
+		itemCrafting = (ItemCraftingDef[]) getPersistenceManager().load("defs/extras/ItemCraftingDef.xml.gz");
+		objectMining = (HashMap<Integer, ObjectMiningDef>) getPersistenceManager().load("defs/extras/ObjectMining.xml.gz");
+		objectWoodcutting = (HashMap<Integer, ObjectWoodcuttingDef>) getPersistenceManager().load("defs/extras/ObjectWoodcutting.xml.gz");
+		objectRunecrafting = (HashMap<Integer, ObjectRunecraftingDef>) getPersistenceManager().load("defs/extras/ObjectRunecrafting.xml.gz");
+		objectFishing = (HashMap<Integer, ObjectFishingDef[]>) getPersistenceManager().load("defs/extras/ObjectFishing.xml.gz");
+		objectTelePoints = (HashMap<Point, TelePoint>) getPersistenceManager().load("locs/extras/ObjectTelePoints.xml.gz");
+		certers = (HashMap<Integer, CerterDef>) getPersistenceManager().load("defs/extras/NpcCerters.xml.gz");
+	}
+
+	protected void setupDbDefinitions() {
+		Connection connection = DatabaseConnection.getDatabase().getConnection();
+		Statement statement = null;
+		ResultSet result = null;
+		try {
+			statement = connection.createStatement();
+
+			/* LOAD NPC DEFS */
+			ArrayList<NPCDef> npcDefinitions = new ArrayList<NPCDef>();
+			result = statement.executeQuery("SELECT `id`, `name`, `description`, `command`, `command2`, "
+				+ "`attack`, `strength`, `hits`, `defense`, `ranged`, `combatlvl`, `isMembers`, `attackable`, `aggressive`, `respawnTime`, "
+				+ "`sprites1`, `sprites2`, `sprites3`, `sprites4`, `sprites5`, `sprites6`, `sprites7`, `sprites8`, `sprites9`, "
+				+ "`sprites10`, `sprites11`, `sprites12`, `hairColour`, `topColour`, `bottomColour`, `skinColour`, `camera1`, "
+				+ "`camera2`, `walkModel`, `combatModel`, `combatSprite` FROM `"
+				+ Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "npcdef`");
+			while (result.next()) {
+				NPCDef def = new NPCDef();
+				def.name = result.getString("name");
+				def.description = result.getString("description");
+				def.command1 = result.getString("command");
+				def.command2 = result.getString("command2");
+				def.attack = result.getInt("attack");
+				def.strength = result.getInt("strength");
+				def.hits = result.getInt("hits");
+				def.defense = result.getInt("defense");
+				def.ranged = result.getInt("ranged");
+				def.combatLevel = result.getInt("combatlvl");
+				def.members = result.getBoolean("isMembers");
+				def.attackable = result.getBoolean("attackable");
+				def.aggressive = result.getBoolean("aggressive");
+				def.respawnTime = result.getInt("respawnTime");
+				for (int i = 0; i < 12; i++) {
+					def.sprites[i] = result.getInt("sprites" + (i + 1));
+				}
+				def.hairColour = result.getInt("hairColour");
+				def.topColour = result.getInt("topColour");
+				def.bottomColour = result.getInt("bottomColour");
+				def.skinColour = result.getInt("skinColour");
+				def.camera1 = result.getInt("camera1");
+				def.camera2 = result.getInt("camera2");
+				def.walkModel = result.getInt("walkModel");
+				def.combatModel = result.getInt("combatModel");
+				def.combatSprite = result.getInt("combatSprite");
+
+				ArrayList<ItemDropDef> drops = new ArrayList<ItemDropDef>();
+
+				Statement dropStatement = connection.createStatement();
+				ResultSet dropResult = dropStatement
+					.executeQuery("SELECT `amount`, `id`, `weight` FROM `"
+						+ Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+						+ "npcdrops` WHERE npcdef_id = '"
+						+ result.getInt("id") + "' ORDER BY `weight` DESC");
+				while (dropResult.next()) {
+					ItemDropDef drop = new ItemDropDef(dropResult.getInt("id"),
+						dropResult.getInt("amount"),
+						dropResult.getInt("weight"));
+					drops.add(drop);
+				}
+				dropResult.close();
+				dropStatement.close();
+
+				def.drops = drops.toArray(new ItemDropDef[]{});
+
+				npcDefinitions.add(def);
+			}
+
+			LOGGER.info("\t Loaded {}", box(npcDefinitions.size()) + " NPC definitions");
+			npcs = (ArrayList<NPCDef>) npcDefinitions.clone();
+			/*for (NPCDef n : npcs) {
+				if (n.isAttackable()) {
+					n.respawnTime -= (n.respawnTime / 3);
+				}
+			}*/
+
+			/* LOAD ITEM DEFS */
+			result = statement.executeQuery("SELECT `name`, `description`, `command`, `isFemaleOnly`, `isMembersOnly`, `isStackable`, "
+				+ "`isUntradable`, `isWearable`, `appearanceID`, `wearableID`, `wearSlot`, `requiredLevel`, `requiredSkillID`, "
+				+ "`armourBonus`, `weaponAimBonus`, `weaponPowerBonus`, `magicBonus`, `prayerBonus`, `basePrice`, `bankNoteID`, "
+				+ "originalItemID FROM `"
+				+ Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+				+ "itemdef` order by id asc");
+			ArrayList<ItemDefinition> itemDefinitions = new ArrayList<ItemDefinition>();
+			while (result.next()) {
+				ItemDefinition toAdd = new ItemDefinition(
+					result.getString("name"), result
+					.getString("description"), result
+					.getString("command").split(","), result
+					.getInt("isFemaleOnly") == 1, result
+					.getInt("isMembersOnly") == 1, result
+					.getInt("isStackable") == 1, result
+					.getInt("isUntradable") == 1, result
+					.getInt("isWearable") == 1, result
+					.getInt("appearanceID"), result
+					.getInt("wearableID"), result
+					.getInt("wearSlot"), result
+					.getInt("requiredLevel"), result
+					.getInt("requiredSkillID"), result
+					.getInt("armourBonus"), result
+					.getInt("weaponAimBonus"), result
+					.getInt("weaponPowerBonus"), result
+					.getInt("magicBonus"), result
+					.getInt("prayerBonus"), result
+					.getInt("basePrice"), result.getInt("bankNoteID"), result.getInt("originalItemID"));
+
+				if (toAdd.getCommand().length == 1 && toAdd.getCommand()[0] == "") {
+					toAdd.nullCommand();
+				}
+				itemDefinitions.add(toAdd);
+			}
+			items = itemDefinitions.toArray(new ItemDefinition[]{});
+			LOGGER.info("\t Loaded {}", box(itemDefinitions.size()) + " item definitions");
+			result.close();
+			statement.close();
+		} catch (Exception e) {
+			LOGGER.catching(e);
+			System.exit(1);
+		}
 	}
 
 	/**
 	 * @param id the npcs ID
 	 * @return the CerterDef for the given npc
 	 */
-	public static CerterDef getCerterDef(int id) {
+	public CerterDef getCerterDef(int id) {
 		return certers.get(id);
 	}
 
 	/**
 	 * @return the ItemCraftingDef for the requested item
 	 */
-	public static ItemCraftingDef getCraftingDef(int id) {
+	public ItemCraftingDef getCraftingDef(int id) {
 		if (id < 0 || id >= itemCrafting.length) {
 			return null;
 		}
@@ -98,7 +277,7 @@ public final class EntityHandler {
 	 * @param id the entities ID
 	 * @return the DoorDef with the given ID
 	 */
-	public static DoorDef getDoorDef(int id) {
+	public DoorDef getDoorDef(int id) {
 		if (id < 0 || id >= doors.length) {
 			return null;
 		}
@@ -108,7 +287,7 @@ public final class EntityHandler {
 	/**
 	 * @return the FiremakingDef for the given log
 	 */
-	public static FiremakingDef getFiremakingDef(int id) {
+	public FiremakingDef getFiremakingDef(int id) {
 		return firemaking.get(id);
 	}
 
@@ -116,7 +295,7 @@ public final class EntityHandler {
 	 * @param id the entities ID
 	 * @return the GameObjectDef with the given ID
 	 */
-	public static GameObjectDef getGameObjectDef(int id) {
+	public GameObjectDef getGameObjectDef(int id) {
 		if (id < 0 || id >= gameObjects.length) {
 			return null;
 		}
@@ -127,7 +306,7 @@ public final class EntityHandler {
 	 * @param the items type
 	 * @return the types of items affected
 	 */
-	public static int[] getAffectedTypes(int type) {
+	public int[] getAffectedTypes(int type) {
 		int[] affectedTypes = itemAffectedTypes.get(type);
 		if (affectedTypes != null) {
 			return affectedTypes;
@@ -139,14 +318,14 @@ public final class EntityHandler {
 	/**
 	 * @return the ItemArrowHeadDef for the given arrow
 	 */
-	public static ItemArrowHeadDef getItemArrowHeadDef(int id) {
+	public ItemArrowHeadDef getItemArrowHeadDef(int id) {
 		return arrowHeads.get(id);
 	}
 
 	/**
 	 * @return the ItemBowStringDef for the given bow
 	 */
-	public static ItemBowStringDef getItemBowStringDef(int id) {
+	public ItemBowStringDef getItemBowStringDef(int id) {
 		return bowString.get(id);
 	}
 
@@ -154,7 +333,7 @@ public final class EntityHandler {
 	 * @param id the entities ID
 	 * @return the ItemCookingDef with the given ID
 	 */
-	public static ItemCookingDef getItemCookingDef(int id) {
+	public ItemCookingDef getItemCookingDef(int id) {
 		return itemCooking.get(id);
 	}
 	
@@ -162,14 +341,14 @@ public final class EntityHandler {
 	 * @param id the entities ID
 	 * @return the ItemPerfectCookingDef with the given ID
 	 */
-	public static ItemPerfectCookingDef getItemPerfectCookingDef(int id) {
+	public ItemPerfectCookingDef getItemPerfectCookingDef(int id) {
 		return itemPerfectCooking.get(id);
 	}
 
 	/**
 	 * @return the ItemDartTipDef for the given tip
 	 */
-	public static ItemDartTipDef getItemDartTipDef(int id) {
+	public ItemDartTipDef getItemDartTipDef(int id) {
 		return dartTips.get(id);
 	}
 
@@ -177,7 +356,7 @@ public final class EntityHandler {
 	 * @param id the entities ID
 	 * @return the ItemDef with the given ID
 	 */
-	public static ItemDefinition getItemDef(int id) {
+	public ItemDefinition getItemDef(int id) {
 		if (id < 0 || id >= items.length) {
 			return null;
 		}
@@ -188,7 +367,7 @@ public final class EntityHandler {
 	 * @param the items id
 	 * @return the amount eating the item should heal
 	 */
-	public static int getItemEdibleHeals(int id) {
+	public int getItemEdibleHeals(int id) {
 		Integer heals = itemEdibleHeals.get(id);
 		if (heals != null) {
 			return heals;
@@ -199,7 +378,7 @@ public final class EntityHandler {
 	/**
 	 * @return the ItemGemDef for the given gem
 	 */
-	public static ItemGemDef getItemGemDef(int id) {
+	public ItemGemDef getItemGemDef(int id) {
 		return gems.get(id);
 	}
 
@@ -207,14 +386,14 @@ public final class EntityHandler {
 	 * @param id the entities ID
 	 * @return the ItemHerbDef with the given ID
 	 */
-	public static ItemHerbDef getItemHerbDef(int id) {
+	public ItemHerbDef getItemHerbDef(int id) {
 		return itemHerb.get(id);
 	}
 
 	/**
 	 * @return the ItemHerbSecond for the given second ingredient
 	 */
-	public static ItemHerbSecond getItemHerbSecond(int secondID, int unfinishedID) {
+	public ItemHerbSecond getItemHerbSecond(int secondID, int unfinishedID) {
 		for (ItemHerbSecond def : herbSeconds) {
 			if (def.getSecondID() == secondID && def.getUnfinishedID() == unfinishedID) {
 				return def;
@@ -226,7 +405,7 @@ public final class EntityHandler {
 	/**
 	 * @return the ItemLogCutDef for the given log
 	 */
-	public static ItemLogCutDef getItemLogCutDef(int id) {
+	public ItemLogCutDef getItemLogCutDef(int id) {
 		return logCut.get(id);
 	}
 
@@ -234,7 +413,7 @@ public final class EntityHandler {
 	 * @param id the entities ID
 	 * @return the ItemSmeltingDef with the given ID
 	 */
-	public static ItemSmeltingDef getItemSmeltingDef(int id) {
+	public ItemSmeltingDef getItemSmeltingDef(int id) {
 		return itemSmelting.get(id);
 	}
 
@@ -242,7 +421,7 @@ public final class EntityHandler {
 	 * @param id the entities ID
 	 * @return the ItemUnIdentHerbDef with the given ID
 	 */
-	public static ItemUnIdentHerbDef getItemUnIdentHerbDef(int id) {
+	public ItemUnIdentHerbDef getItemUnIdentHerbDef(int id) {
 		return itemUnIdentHerb.get(id);
 	}
 
@@ -250,7 +429,7 @@ public final class EntityHandler {
 	 * @param id the entities ID
 	 * @return the NPCDef with the given ID
 	 */
-	public static NPCDef getNpcDef(int id) {
+	public NPCDef getNpcDef(int id) {
 		if (id < 0 || id >= npcs.size()) {
 			return null;
 		}
@@ -261,7 +440,7 @@ public final class EntityHandler {
 	 * @param id the entities ID
 	 * @return the ObjectFishingDef with the given ID
 	 */
-	public static ObjectFishingDef getObjectFishingDef(int id, int click) {
+	public ObjectFishingDef getObjectFishingDef(int id, int click) {
 		ObjectFishingDef[] defs = objectFishing.get(id);
 		if (defs == null) {
 			return null;
@@ -273,7 +452,7 @@ public final class EntityHandler {
 	 * @param id the entities ID
 	 * @return the ObjectMiningDef with the given ID
 	 */
-	public static ObjectMiningDef getObjectMiningDef(int id) {
+	public ObjectMiningDef getObjectMiningDef(int id) {
 		return objectMining.get(id);
 	}
 
@@ -281,7 +460,7 @@ public final class EntityHandler {
 	 * @param the point we are currently at
 	 * @return the point we should be teleported to
 	 */
-	public static TelePoint getObjectTelePoint(Point location, String command) {
+	public TelePoint getObjectTelePoint(Point location, String command) {
 		TelePoint point = objectTelePoints.get(location);
 		if (point == null) {
 			return null;
@@ -292,14 +471,14 @@ public final class EntityHandler {
 		return null;
 	}
 
-	public static ObjectRunecraftingDef getObjectRunecraftingDef(int id) {
+	public ObjectRunecraftingDef getObjectRunecraftingDef(int id) {
 		return objectRunecrafting.get(id);
 	}
 	/**
 	 * @param id the entities ID
 	 * @return the ObjectWoodcuttingDef with the given ID
 	 */
-	public static ObjectWoodcuttingDef getObjectWoodcuttingDef(int id) {
+	public ObjectWoodcuttingDef getObjectWoodcuttingDef(int id) {
 		return objectWoodcutting.get(id);
 	}
 
@@ -307,7 +486,7 @@ public final class EntityHandler {
 	 * @param id the entities ID
 	 * @return the PrayerDef with the given ID
 	 */
-	public static PrayerDef getPrayerDef(int id) {
+	public PrayerDef getPrayerDef(int id) {
 		if (id < 0 || id >= prayers.length) {
 			return null;
 		}
@@ -317,7 +496,7 @@ public final class EntityHandler {
 	/**
 	 * @return the ItemSmithingDef for the requested item
 	 */
-	public static ItemSmithingDef getSmithingDef(int id) {
+	public ItemSmithingDef getSmithingDef(int id) {
 		if (id < 0 || id >= itemSmithing.length) {
 			return null;
 		}
@@ -327,7 +506,7 @@ public final class EntityHandler {
 	/**
 	 * @return the ItemSmithingDef for the requested item
 	 */
-	public static ItemSmithingDef getSmithingDefbyID(int itemID) {
+	public ItemSmithingDef getSmithingDefbyID(int itemID) {
 		for (ItemSmithingDef i : itemSmithing) {
 			if (i.itemID == itemID)
 				return i;
@@ -339,7 +518,7 @@ public final class EntityHandler {
 	 * @param id the entities ID
 	 * @return the SpellDef with the given ID
 	 */
-	public static SpellDef getSpellDef(int id) {
+	public SpellDef getSpellDef(int id) {
 		if (id < 0 || id >= spells.length) {
 			return null;
 		}
@@ -350,14 +529,22 @@ public final class EntityHandler {
 	 * @param id the entities ID
 	 * @return the TileDef with the given ID
 	 */
-	public static TileDef getTileDef(int id) {
+	public TileDef getTileDef(int id) {
 		if (id < 0 || id >= tiles.length) {
 			return null;
 		}
 		return tiles[id];
 	}
 
-	public static SkillDef getSkillDef(String skillName) {
+	public SkillDef getSkillDef(String skillName) {
 		return null;
+	}
+
+	public Server getServer() {
+		return server;
+	}
+
+	public PersistenceManager getPersistenceManager() {
+		return persistenceManager;
 	}
 }

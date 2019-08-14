@@ -5,7 +5,6 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ObjectMiningDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -117,7 +116,7 @@ public final class Mining implements ObjectActionListener,
 			return;
 		}
 
-		final ObjectMiningDef def = EntityHandler.getObjectMiningDef(object.getID());
+		final ObjectMiningDef def = owner.getWorld().getServer().getEntityHandler().getObjectMiningDef(object.getID());
 		final int axeId = getAxe(owner);
 		int retrytimes = -1;
 		final int mineLvl = owner.getSkills().getLevel(com.openrsc.server.constants.Skills.MINING);

@@ -1,9 +1,9 @@
 package com.openrsc.server.io;
 
 import com.openrsc.server.Server;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.TileValue;
+import com.openrsc.server.sql.WorldPopulator;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,9 +22,11 @@ public class WorldLoader {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private ZipFile tileArchive;
 	private final World world;
+	private final WorldPopulator worldPopulator;
 
 	public WorldLoader(World world) {
 		this.world = world;
+		this.worldPopulator = new WorldPopulator(getWorld());
 	}
 
 	private static boolean projectileClipAllowed(int wallID) {
@@ -56,11 +58,11 @@ public class WorldLoader {
 			for (int x = 0; x < Sector.WIDTH; x++) {
 				int bx = bigX + x;
 				int by = bigY + y;
-				if (!world.withinWorld(bx, by)) {
+				if (!getWorld().withinWorld(bx, by)) {
 					continue;
 				}
 				Tile sectorTile = s.getTile(x, y);
-				TileValue tile = world.getTile(bx, by);
+				TileValue tile = getWorld().getTile(bx, by);
 
 				tile.overlay = sectorTile.groundOverlay;
 				tile.diagWallVal = sectorTile.diagonalWalls;
@@ -74,46 +76,46 @@ public class WorldLoader {
 
 				byte groundOverlay = sectorTile.groundOverlay;
 				if (groundOverlay > 0
-					&& EntityHandler.getTileDef(groundOverlay - 1)
+					&& getWorld().getServer().getEntityHandler().getTileDef(groundOverlay - 1)
 					.getObjectType() != 0) {
 					tile.traversalMask |= 0x40; // 64
 				}
 
 				byte verticalWall = sectorTile.verticalWall;
 				if (verticalWall > 0
-					&& EntityHandler.getDoorDef(verticalWall - 1)
+					&& getWorld().getServer().getEntityHandler().getDoorDef(verticalWall - 1)
 					.getUnknown() == 0
-					&& EntityHandler.getDoorDef(verticalWall - 1)
+					&& getWorld().getServer().getEntityHandler().getDoorDef(verticalWall - 1)
 					.getDoorType() != 0) {
-					world.getTile(bx, by).traversalMask |= 1; // 1
-					world.getTile(bx, by - 1).traversalMask |= 4; // 4
+					getWorld().getTile(bx, by).traversalMask |= 1; // 1
+					getWorld().getTile(bx, by - 1).traversalMask |= 4; // 4
 
 					if (projectileClipAllowed(verticalWall)) {
 						tile.projectileAllowed = true;
-						world.getTile(bx, by - 1).projectileAllowed = true;
+						getWorld().getTile(bx, by - 1).projectileAllowed = true;
 					}
 				}
 
 				byte horizontalWall = sectorTile.horizontalWall;
 				if (horizontalWall > 0
-					&& EntityHandler.getDoorDef(horizontalWall - 1)
+					&& getWorld().getServer().getEntityHandler().getDoorDef(horizontalWall - 1)
 					.getUnknown() == 0
-					&& EntityHandler.getDoorDef(horizontalWall - 1)
+					&& getWorld().getServer().getEntityHandler().getDoorDef(horizontalWall - 1)
 					.getDoorType() != 0) {
 					tile.traversalMask |= 2; // 2
-					world.getTile(bx - 1, by).traversalMask |= 8; // 8
+					getWorld().getTile(bx - 1, by).traversalMask |= 8; // 8
 					if (projectileClipAllowed(horizontalWall)) {
 						tile.projectileAllowed = true;
-						world.getTile(bx - 1, by).projectileAllowed = true;
+						getWorld().getTile(bx - 1, by).projectileAllowed = true;
 					}
 				}
 
 				int diagonalWalls = sectorTile.diagonalWalls;
 				if (diagonalWalls > 0
 					&& diagonalWalls < 12000
-					&& EntityHandler.getDoorDef(diagonalWalls - 1)
+					&& getWorld().getServer().getEntityHandler().getDoorDef(diagonalWalls - 1)
 					.getUnknown() == 0
-					&& EntityHandler.getDoorDef(diagonalWalls - 1)
+					&& getWorld().getServer().getEntityHandler().getDoorDef(diagonalWalls - 1)
 					.getDoorType() != 0) {
 					tile.traversalMask |= 0x20; // 32
 					if (projectileClipAllowed(diagonalWalls)) {
@@ -122,9 +124,9 @@ public class WorldLoader {
 				}
 				if (diagonalWalls > 12000
 					&& diagonalWalls < 24000
-					&& EntityHandler.getDoorDef(diagonalWalls - 12001)
+					&& getWorld().getServer().getEntityHandler().getDoorDef(diagonalWalls - 12001)
 					.getUnknown() == 0
-					&& EntityHandler.getDoorDef(diagonalWalls - 12001)
+					&& getWorld().getServer().getEntityHandler().getDoorDef(diagonalWalls - 12001)
 					.getDoorType() != 0) {
 					tile.traversalMask |= 0x10; // 16
 
@@ -133,8 +135,8 @@ public class WorldLoader {
 					}
 				}
 
-				if (world.getTile(bx, by).overlay == 2 || world.getTile(bx, by).overlay == 11)
-					world.getTile(bx, by).projectileAllowed = true;
+				if (getWorld().getTile(bx, by).overlay == 2 || getWorld().getTile(bx, by).overlay == 11)
+					getWorld().getTile(bx, by).projectileAllowed = true;
 			}
 		}
 		return true;
@@ -171,5 +173,13 @@ public class WorldLoader {
 			}
 		}
 		LOGGER.info(((System.currentTimeMillis() - start) / 1000) + "s to load landscape with " + sectors + " regions.");
+	}
+
+	public World getWorld() {
+		return world;
+	}
+
+	public WorldPopulator getWorldPopulator() {
+		return worldPopulator;
 	}
 }

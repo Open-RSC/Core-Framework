@@ -1,11 +1,10 @@
 package com.openrsc.server.model.entity;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.content.party.PartyPlayer;
 import com.openrsc.server.event.rsc.GameTickEvent;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.ItemLoc;
-import com.openrsc.server.content.party.PartyPlayer;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -130,7 +129,7 @@ public class GroundItem extends Entity {
 	}
 
 	public ItemDefinition getDef() {
-		return EntityHandler.getItemDef(id);
+		return getWorld().getServer().getEntityHandler().getItemDef(id);
 	}
 
 	public ItemLoc getLoc() {

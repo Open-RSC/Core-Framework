@@ -1,7 +1,6 @@
 package com.openrsc.server.plugins.misc;
 
 import com.openrsc.server.Server;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.external.SpellDef;
 import com.openrsc.server.model.container.Item;
@@ -21,7 +20,7 @@ public class EnchantDragonstoneRing implements PlayerMageItemListener, PlayerMag
 
 	@Override
 	public void onPlayerMageItem(Player p, Integer itemID, Integer spellID) {
-		SpellDef spellDef = EntityHandler.getSpellDef(spellID.intValue());
+		SpellDef spellDef = p.getWorld().getServer().getEntityHandler().getSpellDef(spellID.intValue());
 		if (spellDef == null)
 			return;
 

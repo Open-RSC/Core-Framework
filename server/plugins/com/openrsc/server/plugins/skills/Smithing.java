@@ -5,7 +5,6 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemSmithingDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -179,7 +178,7 @@ public class Smithing implements InvUseOnObjectListener,
 			return;
 		}
 
-		final ItemSmithingDef def = EntityHandler.getSmithingDef((getBarType(item.getID()) * 21) + toMake);
+		final ItemSmithingDef def = player.getWorld().getServer().getEntityHandler().getSmithingDef((getBarType(item.getID()) * 21) + toMake);
 
 		if (def == null) {
 			// No definition found
@@ -218,14 +217,14 @@ public class Smithing implements InvUseOnObjectListener,
 				}
 
 				showBubble(player, item);
-				if (EntityHandler.getItemDef(def.getItemID()).isStackable()) {
+				if (player.getWorld().getServer().getEntityHandler().getItemDef(def.getItemID()).isStackable()) {
 					player.message("You hammer the metal and make " + def.getAmount() + " "
-						+ EntityHandler.getItemDef(def.getItemID()).getName().toLowerCase());
+						+ player.getWorld().getServer().getEntityHandler().getItemDef(def.getItemID()).getName().toLowerCase());
 					player.getInventory().add(
 						new Item(def.getItemID(), def.getAmount()));
 				} else {
 					player.message("You hammer the metal and make a "
-						+ EntityHandler.getItemDef(def.getItemID()).getName().toLowerCase());
+						+ player.getWorld().getServer().getEntityHandler().getItemDef(def.getItemID()).getName().toLowerCase());
 					for (int x = 0; x < def.getAmount(); x++) {
 						player.getInventory().add(new Item(def.getItemID(), 1));
 					}

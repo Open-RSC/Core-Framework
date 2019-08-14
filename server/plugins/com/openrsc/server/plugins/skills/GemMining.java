@@ -1,10 +1,8 @@
 package com.openrsc.server.plugins.skills;
 
 import com.openrsc.server.Server;
-import com.openrsc.server.constants.Skills;
-import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ObjectMiningDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -41,7 +39,7 @@ public class GemMining implements ObjectActionListener,
 		if (!p.withinRange(obj, 1)) {
 			return;
 		}
-		final ObjectMiningDef def = EntityHandler.getObjectMiningDef(obj.getID());
+		final ObjectMiningDef def = p.getWorld().getServer().getEntityHandler().getObjectMiningDef(obj.getID());
 		final int axeId = getAxe(p);
 		int retrytimes;
 		final int mineLvl = p.getSkills().getLevel(com.openrsc.server.constants.Skills.MINING);

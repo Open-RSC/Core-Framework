@@ -1,7 +1,6 @@
 package com.openrsc.server.plugins.commands;
 
 import com.openrsc.server.Server;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -77,7 +76,7 @@ public final class Development implements CommandListener {
 			Point npcLoc = new Point(x,y);
 			final Npc n = new Npc(player.getWorld(), id, x, y, x - radius, x + radius, y - radius, y + radius);
 
-			if (EntityHandler.getNpcDef(id) == null) {
+			if (player.getWorld().getServer().getEntityHandler().getNpcDef(id) == null) {
 				player.message(messagePrefix + "Invalid npc id");
 				return;
 			}
@@ -219,7 +218,7 @@ public final class Development implements CommandListener {
 				return;
 			}
 
-			if (EntityHandler.getGameObjectDef(id) == null) {
+			if (player.getWorld().getServer().getEntityHandler().getGameObjectDef(id) == null) {
 				player.message(messagePrefix + "Invalid object id");
 				return;
 			}

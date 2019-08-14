@@ -4,7 +4,6 @@ import com.openrsc.server.Server;
 import com.openrsc.server.content.clan.ClanInvite;
 import com.openrsc.server.content.party.PartyPlayer;
 import com.openrsc.server.content.party.PartyRank;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.snapshot.Chatlog;
@@ -395,7 +394,7 @@ public final class RegularPlayer implements CommandListener {
 				while (result.next()) {
 					int npcID = result.getInt("npcID");
 					int killCount = result.getInt("killCount");
-					kills.append("NPC: ").append(EntityHandler.getNpcDef(npcID).getName()).append(" - Kill Count: ").append(killCount).append("%");
+					kills.append("NPC: ").append(player.getWorld().getServer().getEntityHandler().getNpcDef(npcID).getName()).append(" - Kill Count: ").append(killCount).append("%");
 				}
 				result.close();
 				ActionSender.sendBox(player, kills.toString(), true);

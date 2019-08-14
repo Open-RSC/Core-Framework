@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.skills;
 
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
@@ -14,12 +13,7 @@ import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveL
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.showBubble;
-import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class WoodcutJungle implements ObjectActionListener,
 	ObjectActionExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener {
@@ -99,7 +93,7 @@ public class WoodcutJungle implements ObjectActionListener,
 
 		p.setBusy(true);
 		showBubble(p, new Item(axeId));
-		message(p, 1300, "You swing your " + EntityHandler.getItemDef(axeId).getName().toLowerCase() + " at the " + (obj.getID() == JUNGLE_VINE ? "jungle vines" : "tree") + "...");
+		message(p, 1300, "You swing your " + p.getWorld().getServer().getEntityHandler().getItemDef(axeId).getName().toLowerCase() + " at the " + (obj.getID() == JUNGLE_VINE ? "jungle vines" : "tree") + "...");
 		if (p.getFatigue() >= 74920) {
 			if (p.getFatigue() < p.MAX_FATIGUE) {
 				p.message("You are getting very tired, you may get stuck if you continue into the jungle.");

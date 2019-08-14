@@ -312,7 +312,7 @@ public final class Admins implements CommandListener {
 
 			HashMap<String, Integer> hmap = new HashMap<>();
 
-			ItemDropDef[] drops = Objects.requireNonNull(EntityHandler.getNpcDef(npcID)).getDrops();
+			ItemDropDef[] drops = Objects.requireNonNull(player.getWorld().getServer().getEntityHandler().getNpcDef(npcID)).getDrops();
 			for (ItemDropDef drop : drops) {
 				dropID = drop.getID();
 				if (dropID == -1) continue;
@@ -331,7 +331,7 @@ public final class Admins implements CommandListener {
 					for (int h : herbs)
 						hmap.put("herb " + h, 0);
 				} else {
-					ItemDefinition def = EntityHandler.getItemDef(dropID);
+					ItemDefinition def = player.getWorld().getServer().getEntityHandler().getItemDef(dropID);
 					hmap.put(def.getName().toLowerCase() + " " + dropID, 0);
 				}
 			}
@@ -367,7 +367,7 @@ public final class Admins implements CommandListener {
 									dropID = Formulae.calculateGemDrop(player);
 								else if (dropID == 165)
 									dropID = Formulae.calculateHerbDrop();
-								ItemDefinition def = EntityHandler.getItemDef(dropID);
+								ItemDefinition def = player.getWorld().getServer().getEntityHandler().getItemDef(dropID);
 								try {
 									hmap.put(def.getName().toLowerCase() + " " + dropID, hmap.get(def.getName().toLowerCase() + " " + dropID) + 1);
 								} catch (NullPointerException n) {
@@ -450,7 +450,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			if (EntityHandler.getItemDef(id) == null) {
+			if (player.getWorld().getServer().getEntityHandler().getItemDef(id) == null) {
 				player.message(messagePrefix + "Invalid item id");
 				return;
 			}
@@ -467,7 +467,7 @@ public final class Admins implements CommandListener {
 					+ item.getId() + "','" + item.getX() + "','" + item.getY() + "','" + item.getAmount()
 					+ "','" + item.getRespawnTime() + "')");
 			World.getWorld().registerItem(new GroundItem(player.getWorld(), item));
-			player.message(messagePrefix + "Added ground item to database: " + EntityHandler.getItemDef(item.getId()).getName() + " with item ID " + item.getId() + " at " + itemLocation);
+			player.message(messagePrefix + "Added ground item to database: " + player.getWorld().getServer().getEntityHandler().getItemDef(item.getId()).getName() + " with item ID " + item.getId() + " at " + itemLocation);
 		} else if (cmd.equalsIgnoreCase("rgi") || cmd.equalsIgnoreCase("rgitem") || cmd.equalsIgnoreCase("rgrounditem") || cmd.equalsIgnoreCase("removegi") || cmd.equalsIgnoreCase("removegitem") || cmd.equalsIgnoreCase("removegrounditem")) {
 			if (args.length == 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (x) (y)");
@@ -570,7 +570,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			if (EntityHandler.getItemDef(id) == null) {
+			if (player.getWorld().getServer().getEntityHandler().getItemDef(id) == null) {
 				player.message(messagePrefix + "Invalid item id");
 				return;
 			}
@@ -594,11 +594,11 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			if (EntityHandler.getItemDef(id).isStackable()) {
+			if (player.getWorld().getServer().getEntityHandler().getItemDef(id).isStackable()) {
 				player.getInventory().add(new Item(id, amount));
 			} else {
 				for (int i = 0; i < amount; i++) {
-					if (!EntityHandler.getItemDef(id).isStackable()) {
+					if (!player.getWorld().getServer().getEntityHandler().getItemDef(id).isStackable()) {
 						if (amount > 30) { // Prevents too many un-stackable items from being spawned and crashing clients in the local area.
 							player.message(messagePrefix + "Invalid amount specified. Please spawn 30 or less of that item.");
 							return;
@@ -608,9 +608,9 @@ public final class Admins implements CommandListener {
 				}
 			}
 
-			player.message(messagePrefix + "You have spawned " + amount + " " + EntityHandler.getItemDef(id).getName() + " to " + p.getUsername());
+			player.message(messagePrefix + "You have spawned " + amount + " " + player.getWorld().getServer().getEntityHandler().getItemDef(id).getName() + " to " + p.getUsername());
 			if (p.getUsernameHash() != player.getUsernameHash()) {
-				p.message(messagePrefix + "A staff member has given you " + amount + " " + EntityHandler.getItemDef(id).getName());
+				p.message(messagePrefix + "A staff member has given you " + amount + " " + player.getWorld().getServer().getEntityHandler().getItemDef(id).getName());
 			}
 		} else if (cmd.equalsIgnoreCase("bankitem") || cmd.equalsIgnoreCase("bitem") || cmd.equalsIgnoreCase("addbank")) {
 			if (args.length < 1) {
@@ -626,7 +626,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			if (EntityHandler.getItemDef(id) == null) {
+			if (player.getWorld().getServer().getEntityHandler().getItemDef(id) == null) {
 				player.message(messagePrefix + "Invalid item id");
 				return;
 			}
@@ -652,9 +652,9 @@ public final class Admins implements CommandListener {
 
 			p.getBank().add(new Item(id, amount));
 
-			player.message(messagePrefix + "You have spawned to bank " + amount + " " + EntityHandler.getItemDef(id).getName() + " to " + p.getUsername());
+			player.message(messagePrefix + "You have spawned to bank " + amount + " " + player.getWorld().getServer().getEntityHandler().getItemDef(id).getName() + " to " + p.getUsername());
 			if (p.getUsernameHash() != player.getUsernameHash()) {
-				p.message(messagePrefix + "A staff member has added to your bank " + amount + " " + EntityHandler.getItemDef(id).getName());
+				p.message(messagePrefix + "A staff member has added to your bank " + amount + " " + player.getWorld().getServer().getEntityHandler().getItemDef(id).getName());
 			}
 		} else if (cmd.equals("fillbank")) {
 			for (int i = 0; i < 1289; i++) {
@@ -929,7 +929,7 @@ public final class Admins implements CommandListener {
 			try {
 				int id = Integer.parseInt(args[0]);
 				int amount = Integer.parseInt(args[1]);
-				ItemDefinition itemDef = EntityHandler.getItemDef(id);
+				ItemDefinition itemDef = player.getWorld().getServer().getEntityHandler().getItemDef(id);
 				if (itemDef != null) {
 					int x = 0;
 					int y = 0;
@@ -1021,14 +1021,14 @@ public final class Admins implements CommandListener {
 				int id = Integer.parseInt(args[0]);
 				int amount = Integer.parseInt(args[1]);
 				int duration = args.length >= 3 ? Integer.parseInt(args[2]) : 10;
-				NPCDef npcDef = EntityHandler.getNpcDef(id);
+				NPCDef npcDef = player.getWorld().getServer().getEntityHandler().getNpcDef(id);
 
 				if (npcDef == null) {
 					player.message(messagePrefix + "Invalid ID");
 					return;
 				}
 
-				if (EntityHandler.getNpcDef(id) != null) {
+				if (player.getWorld().getServer().getEntityHandler().getNpcDef(id) != null) {
 					int x = 0;
 					int y = 0;
 					int baseX = player.getX();
@@ -1234,8 +1234,8 @@ public final class Admins implements CommandListener {
 				itemID = Integer.parseInt(args[2]);
 				itemAmt = args.length >= 4 ? Integer.parseInt(args[3]) : 1;
 				duration = args.length >= 5 ? Integer.parseInt(args[4]) : 10;
-				itemDef = EntityHandler.getItemDef(itemID);
-				npcDef = EntityHandler.getNpcDef(npcID);
+				itemDef = player.getWorld().getServer().getEntityHandler().getItemDef(itemID);
+				npcDef = player.getWorld().getServer().getEntityHandler().getNpcDef(npcID);
 			} catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [npc_amount] [item_id] (item_amount) (duration)");
 				return;
@@ -1869,7 +1869,7 @@ public final class Admins implements CommandListener {
 				time = 10;
 			}
 
-			if (EntityHandler.getNpcDef(id) == null) {
+			if (player.getWorld().getServer().getEntityHandler().getNpcDef(id) == null) {
 				player.message(messagePrefix + "Invalid spawn npc id");
 				return;
 			}
@@ -1886,8 +1886,7 @@ public final class Admins implements CommandListener {
 				}
 			});
 
-			player.message(messagePrefix + "You have spawned " + EntityHandler.getNpcDef(id).getName() + ", radius: " + radius + " for " + time + " minutes");
+			player.message(messagePrefix + "You have spawned " + player.getWorld().getServer().getEntityHandler().getNpcDef(id).getName() + ", radius: " + radius + " for " + time + " minutes");
 		}
-
 	}
 }

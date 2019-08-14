@@ -1,7 +1,9 @@
 package com.openrsc.server.sql;
 
 import com.openrsc.server.Server;
-import com.openrsc.server.external.*;
+import com.openrsc.server.external.GameObjectLoc;
+import com.openrsc.server.external.ItemLoc;
+import com.openrsc.server.external.NPCLoc;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -14,7 +16,6 @@ import org.apache.logging.log4j.Logger;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
 
 import static org.apache.logging.log4j.util.Unbox.box;
 
@@ -25,119 +26,19 @@ public final class WorldPopulator {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
+	private final World world;
+
+	public WorldPopulator(World world) {
+		this.world = world;
+	}
+
 	@SuppressWarnings("unchecked")
-	public static void populateWorld(World world) {
+	public void populateWorld() {
 		Connection connection = DatabaseConnection.getDatabase().getConnection();
 		Statement statement = null;
 		ResultSet result = null;
 		try {
 			statement = connection.createStatement();
-
-			/* LOAD NPC DEFS */
-			ArrayList<NPCDef> npcDefinitions = new ArrayList<NPCDef>();
-			result = statement.executeQuery("SELECT `id`, `name`, `description`, `command`, `command2`, "
-				+ "`attack`, `strength`, `hits`, `defense`, `ranged`, `combatlvl`, `isMembers`, `attackable`, `aggressive`, `respawnTime`, "
-				+ "`sprites1`, `sprites2`, `sprites3`, `sprites4`, `sprites5`, `sprites6`, `sprites7`, `sprites8`, `sprites9`, "
-				+ "`sprites10`, `sprites11`, `sprites12`, `hairColour`, `topColour`, `bottomColour`, `skinColour`, `camera1`, "
-				+ "`camera2`, `walkModel`, `combatModel`, `combatSprite` FROM `"
-				+ Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "npcdef`");
-			while (result.next()) {
-				NPCDef def = new NPCDef();
-				def.name = result.getString("name");
-				def.description = result.getString("description");
-				def.command1 = result.getString("command");
-				def.command2 = result.getString("command2");
-				def.attack = result.getInt("attack");
-				def.strength = result.getInt("strength");
-				def.hits = result.getInt("hits");
-				def.defense = result.getInt("defense");
-				def.ranged = result.getInt("ranged");
-				def.combatLevel = result.getInt("combatlvl");
-				def.members = result.getBoolean("isMembers");
-				def.attackable = result.getBoolean("attackable");
-				def.aggressive = result.getBoolean("aggressive");
-				def.respawnTime = result.getInt("respawnTime");
-				for (int i = 0; i < 12; i++) {
-					def.sprites[i] = result.getInt("sprites" + (i + 1));
-				}
-				def.hairColour = result.getInt("hairColour");
-				def.topColour = result.getInt("topColour");
-				def.bottomColour = result.getInt("bottomColour");
-				def.skinColour = result.getInt("skinColour");
-				def.camera1 = result.getInt("camera1");
-				def.camera2 = result.getInt("camera2");
-				def.walkModel = result.getInt("walkModel");
-				def.combatModel = result.getInt("combatModel");
-				def.combatSprite = result.getInt("combatSprite");
-
-				ArrayList<ItemDropDef> drops = new ArrayList<ItemDropDef>();
-
-				Statement dropStatement = connection.createStatement();
-				ResultSet dropResult = dropStatement
-					.executeQuery("SELECT `amount`, `id`, `weight` FROM `"
-						+ Server.getServer().getConfig().MYSQL_TABLE_PREFIX
-						+ "npcdrops` WHERE npcdef_id = '"
-						+ result.getInt("id") + "' ORDER BY `weight` DESC");
-				while (dropResult.next()) {
-					ItemDropDef drop = new ItemDropDef(dropResult.getInt("id"),
-						dropResult.getInt("amount"),
-						dropResult.getInt("weight"));
-					drops.add(drop);
-				}
-				dropResult.close();
-				dropStatement.close();
-
-				def.drops = drops.toArray(new ItemDropDef[]{});
-
-				npcDefinitions.add(def);
-			}
-
-			LOGGER.info("\t Loaded {}", box(npcDefinitions.size()) + " NPC definitions");
-			EntityHandler.npcs = (ArrayList<NPCDef>) npcDefinitions.clone();
-			for (NPCDef n : EntityHandler.npcs) {
-				if (n.isAttackable()) {
-					n.respawnTime -= (n.respawnTime / 3);
-				}
-			}
-
-			/* LOAD ITEM DEFS */
-			result = statement.executeQuery("SELECT `name`, `description`, `command`, `isFemaleOnly`, `isMembersOnly`, `isStackable`, "
-				+ "`isUntradable`, `isWearable`, `appearanceID`, `wearableID`, `wearSlot`, `requiredLevel`, `requiredSkillID`, "
-				+ "`armourBonus`, `weaponAimBonus`, `weaponPowerBonus`, `magicBonus`, `prayerBonus`, `basePrice`, `bankNoteID`, "
-				+ "originalItemID FROM `"
-				+ Server.getServer().getConfig().MYSQL_TABLE_PREFIX
-				+ "itemdef` order by id asc");
-			ArrayList<ItemDefinition> itemDefinitions = new ArrayList<ItemDefinition>();
-			while (result.next()) {
-				ItemDefinition toAdd = new ItemDefinition(
-					result.getString("name"), result
-					.getString("description"), result
-					.getString("command").split(","), result
-					.getInt("isFemaleOnly") == 1, result
-					.getInt("isMembersOnly") == 1, result
-					.getInt("isStackable") == 1, result
-					.getInt("isUntradable") == 1, result
-					.getInt("isWearable") == 1, result
-					.getInt("appearanceID"), result
-					.getInt("wearableID"), result
-					.getInt("wearSlot"), result
-					.getInt("requiredLevel"), result
-					.getInt("requiredSkillID"), result
-					.getInt("armourBonus"), result
-					.getInt("weaponAimBonus"), result
-					.getInt("weaponPowerBonus"), result
-					.getInt("magicBonus"), result
-					.getInt("prayerBonus"), result
-					.getInt("basePrice"), result.getInt("bankNoteID"), result.getInt("originalItemID"));
-
-				if (toAdd.getCommand().length == 1 && toAdd.getCommand()[0] == "") {
-					toAdd.nullCommand();
-				}
-				itemDefinitions.add(toAdd);
-			}
-			EntityHandler.items = itemDefinitions.toArray(new ItemDefinition[]{});
-			LOGGER.info("\t Loaded {}", box(itemDefinitions.size()) + " item definitions");
-			result.close();
 
 			/* LOAD OBJECTS */
 			result = statement.executeQuery("SELECT `x`, `y`, `id`, `direction`, `type` FROM `"
@@ -149,10 +50,10 @@ public final class WorldPopulator {
 					&& !Server.getServer().getConfig().MEMBER_WORLD) {
 					continue;
 				}
-				GameObject obj = new GameObject(world, p, result.getInt("id"),
+				GameObject obj = new GameObject(getWorld(), p, result.getInt("id"),
 					result.getInt("direction"), result.getInt("type"));
 
-				world.registerGameObject(obj);
+				getWorld().registerGameObject(obj);
 				countOBJ++;
 			}
 			result.close();
@@ -176,7 +77,7 @@ public final class WorldPopulator {
 					result.getInt("minY"), result.getInt("maxY"));
 
 				if (!Server.getServer().getConfig().MEMBER_WORLD) {
-					if (EntityHandler.getNpcDef(n.id).isMembers()) {
+					if (getWorld().getServer().getEntityHandler().getNpcDef(n.id).isMembers()) {
 						continue;
 					}
 				}
@@ -189,7 +90,7 @@ public final class WorldPopulator {
 					for(int i = 0; i < 1; i++)
 						world.registerNpc(new Npc(n));
 				}*/
-				world.registerNpc(new Npc(world, n));
+				getWorld().registerNpc(new Npc(getWorld(), n));
 			}
 			result.close();
 			LOGGER.info("\t Loaded {}", box(World.getWorld().countNpcs()) + " NPC spawns");
@@ -203,7 +104,7 @@ public final class WorldPopulator {
 					result.getInt("x"), result.getInt("y"),
 					result.getInt("amount"), result.getInt("respawn"));
 				if (!Server.getServer().getConfig().MEMBER_WORLD) {
-					if (EntityHandler.getItemDef(i.id).isMembersOnly()) {
+					if (getWorld().getServer().getEntityHandler().getItemDef(i.id).isMembersOnly()) {
 						continue;
 					}
 				}
@@ -213,7 +114,7 @@ public final class WorldPopulator {
 					continue;
 				}
 
-				world.registerItem(new GroundItem(world, i));
+				getWorld().registerItem(new GroundItem(getWorld(), i));
 				countGI++;
 			}
 			result.close();
@@ -285,5 +186,9 @@ public final class WorldPopulator {
 				+ npc.getLoc().maxX + "' AND minY='"
 				+ npc.getLoc().minY + "' AND maxY = '"
 				+ npc.getLoc().maxY + "'");
+	}
+
+	public World getWorld() {
+		return world;
 	}
 }

@@ -4,7 +4,6 @@ import com.openrsc.server.Server;
 import com.openrsc.server.content.market.Market;
 import com.openrsc.server.content.market.MarketDatabase;
 import com.openrsc.server.content.market.MarketItem;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
@@ -22,7 +21,7 @@ public class NewMarketItemTask extends MarketTask {
 
 	@Override
 	public void doTask() {
-		ItemDefinition def = EntityHandler.getItemDef(newItem.getItemID());
+		ItemDefinition def = owner.getWorld().getServer().getEntityHandler().getItemDef(newItem.getItemID());
 		boolean updateDiscord = false;
 
 		if (newItem.getItemID() == 10 || def.isUntradable()) {

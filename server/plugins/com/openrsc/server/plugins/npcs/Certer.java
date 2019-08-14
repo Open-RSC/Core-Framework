@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.npcs;
 
 import com.openrsc.server.Server;
-import com.openrsc.server.external.CerterDef;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.external.CerterDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -30,7 +29,7 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 			return;
 		}
 
-		final CerterDef certerDef = EntityHandler.getCerterDef(n.getID());
+		final CerterDef certerDef = p.getWorld().getServer().getEntityHandler().getCerterDef(n.getID());
 		if (certerDef == null) {
 			return;
 		}
@@ -186,7 +185,7 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 			if (p.getBank().remove(itemID, itemAmount) > -1) {
 				p.message("You exchange the " + certerDef.getType() + ", "
 					+ itemAmount + " "
-					+ EntityHandler.getItemDef(itemID).getName()
+					+ p.getWorld().getServer().getEntityHandler().getItemDef(itemID).getName()
 					+ " is taken from your bank");
 				p.getInventory().add(new Item(certID, certAmount));
 			}

@@ -3,7 +3,6 @@ package com.openrsc.server.event.rsc.impl;
 import com.openrsc.server.Server;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.GameTickEvent;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
@@ -197,7 +196,7 @@ public class ThrowingEvent extends GameTickEvent {
 					}
 				}
 				ActionSender.sendSound(getPlayerOwner(), "shoot");
-				if (EntityHandler.getItemDef(throwingID).getName().toLowerCase().contains("poison") && target.isPlayer()) {
+				if (getOwner().getWorld().getServer().getEntityHandler().getItemDef(throwingID).getName().toLowerCase().contains("poison") && target.isPlayer()) {
 					if (DataConversions.random(0, 100) <= 10) {
 						target.poisonDamage = target.getSkills().getMaxStat(Skills.HITS);
 						target.startPoisonEvent();

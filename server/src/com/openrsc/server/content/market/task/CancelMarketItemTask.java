@@ -4,7 +4,6 @@ import com.openrsc.server.Server;
 import com.openrsc.server.content.market.Market;
 import com.openrsc.server.content.market.MarketDatabase;
 import com.openrsc.server.content.market.MarketItem;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
@@ -27,7 +26,7 @@ public class CancelMarketItemTask extends MarketTask {
 		if (item != null) {
 			int itemIndex = item.getItemID();
 			int amount = item.getAmountLeft();
-			ItemDefinition def = EntityHandler.getItemDef(itemIndex);
+			ItemDefinition def = owner.getWorld().getServer().getEntityHandler().getItemDef(itemIndex);
 			if (!owner.getInventory().full() && (!def.isStackable() && owner.getInventory().size() + amount <= 30)) {
 				if (MarketDatabase.cancel(item)) {
 					if (!def.isStackable()) for (int i = 0; i < amount; i++)

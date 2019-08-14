@@ -1,7 +1,6 @@
 package com.openrsc.server.plugins.commands;
 
 import com.openrsc.server.Server;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemDropDef;
 import com.openrsc.server.external.NPCDef;
 import com.openrsc.server.model.Point;
@@ -231,11 +230,11 @@ public final class SuperModerator implements CommandListener {
 			try {
 				PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement(
 					"SELECT * FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "npcdrops` WHERE npcdef_id = ?");
-				for (int i = 0; i < EntityHandler.npcs.size(); i++) {
+				for (int i = 0; i < player.getWorld().getServer().getEntityHandler().npcs.size(); i++) {
 					statement.setInt(1, i);
 					ResultSet dropResult = statement.executeQuery();
 
-					NPCDef def = EntityHandler.getNpcDef(i);
+					NPCDef def = player.getWorld().getServer().getEntityHandler().getNpcDef(i);
 					def.drops = null;
 					ArrayList<ItemDropDef> drops = new ArrayList<>();
 					while (dropResult.next()) {

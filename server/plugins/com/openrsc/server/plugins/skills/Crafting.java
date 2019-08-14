@@ -1,15 +1,14 @@
 package com.openrsc.server.plugins.skills;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.MiniEvent;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemCraftingDef;
 import com.openrsc.server.external.ItemGemDef;
-import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.MenuOptionListener;
-import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -105,7 +104,7 @@ public class Crafting implements InvUseOnItemListener,
 									}
 									final int craftType = option;
 									if (owner.getInventory().countId(moulds[craftType]) < 1) {
-										owner.message("You need a " + EntityHandler.getItemDef(moulds[craftType]).getName() + " to make a " + reply);
+										owner.message("You need a " + owner.getWorld().getServer().getEntityHandler().getItemDef(moulds[craftType]).getName() + " to make a " + reply);
 										return;
 									}
 									owner.message("What type of " + reply + " would you like to make?");
@@ -133,7 +132,7 @@ public class Crafting implements InvUseOnItemListener,
 														interrupt();
 														return;
 													}
-													ItemCraftingDef def = EntityHandler.getCraftingDef((option * 3) + craftType);
+													ItemCraftingDef def = owner.getWorld().getServer().getEntityHandler().getCraftingDef((option * 3) + craftType);
 													if (def == null) {
 														owner.message("Nothing interesting happens");
 														interrupt();
@@ -201,7 +200,7 @@ public class Crafting implements InvUseOnItemListener,
 										ItemId.UNSTRUNG_UNHOLY_SYMBOL_OF_ZAMORAK.id()
 									};
 									if (owner.getInventory().countId(moulds[option]) < 1) {
-										owner.message("You need a " + EntityHandler.getItemDef(moulds[option]).getName() + " to make a " + reply + "!");
+										owner.message("You need a " + owner.getWorld().getServer().getEntityHandler().getItemDef(moulds[option]).getName() + " to make a " + reply + "!");
 										return;
 									}
 
@@ -450,7 +449,7 @@ public class Crafting implements InvUseOnItemListener,
 	}
 
 	private boolean doCutGem(Player player, final Item chisel, final Item gem) {
-		final ItemGemDef gemDef = EntityHandler.getItemGemDef(gem.getID());
+		final ItemGemDef gemDef = player.getWorld().getServer().getEntityHandler().getItemGemDef(gem.getID());
 		if (gemDef == null) {
 			return false;
 		}
@@ -732,8 +731,8 @@ public class Crafting implements InvUseOnItemListener,
 
 	@Override
 	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
-		ItemGemDef gemDef = EntityHandler.getItemGemDef(item1.getID());
-		ItemGemDef gemDef2 = EntityHandler.getItemGemDef(item2.getID());
+		ItemGemDef gemDef = player.getWorld().getServer().getEntityHandler().getItemGemDef(item1.getID());
+		ItemGemDef gemDef2 = player.getWorld().getServer().getEntityHandler().getItemGemDef(item2.getID());
 		if (item1.getID() == ItemId.CHISEL.id() && (gemDef != null || gemDef2 != null)) {
 			return true;
 		} else if (item2.getID() == ItemId.CHISEL.id() && (gemDef != null || gemDef2 != null)) {

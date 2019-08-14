@@ -4,7 +4,6 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ObjectRunecraftingDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -20,7 +19,7 @@ public class Runecrafting implements ObjectActionListener, ObjectActionExecutive
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
-		final ObjectRunecraftingDef def = EntityHandler.getObjectRunecraftingDef(obj.getID());
+		final ObjectRunecraftingDef def = player.getWorld().getServer().getEntityHandler().getObjectRunecraftingDef(obj.getID());
 		if (def == null)
 			return false;
 
@@ -47,7 +46,7 @@ public class Runecrafting implements ObjectActionListener, ObjectActionExecutive
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player player) {
 
-		final ObjectRunecraftingDef def = EntityHandler.getObjectRunecraftingDef(obj.getID());
+		final ObjectRunecraftingDef def = player.getWorld().getServer().getEntityHandler().getObjectRunecraftingDef(obj.getID());
 
 		if (def == null) {
 			return;

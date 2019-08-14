@@ -5,7 +5,6 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemHerbDef;
 import com.openrsc.server.external.ItemHerbSecond;
 import com.openrsc.server.external.ItemUnIdentHerbDef;
@@ -73,10 +72,10 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 	@Override
 	public void onInvUseOnItem(Player player, Item item, Item usedWith) {
 		ItemHerbSecond secondDef = null;
-		if ((secondDef = EntityHandler.getItemHerbSecond(item.getID(), usedWith
+		if ((secondDef = player.getWorld().getServer().getEntityHandler().getItemHerbSecond(item.getID(), usedWith
 			.getID())) != null) {
 			doHerbSecond(player, item, usedWith, secondDef, false);
-		} else if ((secondDef = EntityHandler.getItemHerbSecond(usedWith
+		} else if ((secondDef = player.getWorld().getServer().getEntityHandler().getItemHerbSecond(usedWith
 			.getID(), item.getID())) != null) {
 			doHerbSecond(player, usedWith, item, secondDef, true);
 		} else if (item.getID() == com.openrsc.server.constants.ItemId.PESTLE_AND_MORTAR.id()) {
@@ -202,8 +201,8 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 	}
 
 	public boolean blockInvUseOnItem(Player p, Item item, Item usedWith) {
-		if ((EntityHandler.getItemHerbSecond(item.getID(), usedWith.getID())) != null
-			|| (EntityHandler.getItemHerbSecond(usedWith.getID(), item
+		if ((p.getWorld().getServer().getEntityHandler().getItemHerbSecond(item.getID(), usedWith.getID())) != null
+			|| (p.getWorld().getServer().getEntityHandler().getItemHerbSecond(usedWith.getID(), item
 			.getID())) != null) {
 			return true;
 		} else if (item.getID() == com.openrsc.server.constants.ItemId.PESTLE_AND_MORTAR.id() || usedWith.getID() == com.openrsc.server.constants.ItemId.PESTLE_AND_MORTAR.id()) {
@@ -277,7 +276,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			player.getInventory().add(new Item(com.openrsc.server.constants.ItemId.SNAKES_WEED_SOLUTION.id(), 1));
 			return false;
 		}
-		final ItemHerbDef herbDef = EntityHandler.getItemHerbDef(herb.getID());
+		final ItemHerbDef herbDef = player.getWorld().getServer().getEntityHandler().getItemHerbDef(herb.getID());
 		if (herbDef == null) {
 			return false;
 		}

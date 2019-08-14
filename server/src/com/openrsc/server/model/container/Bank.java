@@ -1,7 +1,6 @@
 package com.openrsc.server.model.container;
 
 import com.openrsc.server.Server;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -368,7 +367,7 @@ public class Bank {
 					continue;
 				itemID[1] = blobData.get();
 				int itemIDreal = (((int) itemID[0] << 8) & 0xFF00) | (int) itemID[1] & 0xFF;
-				ItemDefinition item = EntityHandler.getItemDef(itemIDreal);
+				ItemDefinition item = player.getWorld().getServer().getEntityHandler().getItemDef(itemIDreal);
 				if (item == null)
 					continue;
 
@@ -393,7 +392,7 @@ public class Bank {
 					continue;
 				itemID[1] = blobData.get();
 				int itemIDreal = (((int) itemID[0] << 8) & 0xFF00) | (int) itemID[1] & 0xFF;
-				ItemDefinition item = EntityHandler.getItemDef(itemIDreal);
+				ItemDefinition item = player.getWorld().getServer().getEntityHandler().getItemDef(itemIDreal);
 				if (item == null)
 					continue;
 

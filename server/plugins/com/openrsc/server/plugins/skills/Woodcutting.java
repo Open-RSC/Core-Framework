@@ -1,11 +1,10 @@
 package com.openrsc.server.plugins.skills;
 
 import com.openrsc.server.Server;
-import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.external.ObjectWoodcuttingDef;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.event.custom.BatchEvent;
+import com.openrsc.server.external.ObjectWoodcuttingDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -24,14 +23,13 @@ public class Woodcutting implements ObjectActionListener,
 	@Override
 	public boolean blockObjectAction(final GameObject obj,
 									 final String command, final Player player) {
-		final ObjectWoodcuttingDef def = EntityHandler.getObjectWoodcuttingDef(obj.getID());
+		final ObjectWoodcuttingDef def = player.getWorld().getServer().getEntityHandler().getObjectWoodcuttingDef(obj.getID());
 		return (command.equals("chop") && def != null && obj.getID() != 245 && obj.getID() != 204);
 	}
 
 	private void handleWoodcutting(final GameObject object, final Player owner,
 								   final int click) {
-		final ObjectWoodcuttingDef def = EntityHandler
-			.getObjectWoodcuttingDef(object.getID());
+		final ObjectWoodcuttingDef def = owner.getWorld().getServer().getEntityHandler().getObjectWoodcuttingDef(object.getID());
 		if (owner.isBusy()) {
 			return;
 		}
@@ -69,7 +67,7 @@ public class Woodcutting implements ObjectActionListener,
 		}
 
 		final int axeID = axeId;
-		owner.message("You swing your " + EntityHandler.getItemDef(axeId).getName().toLowerCase() + " at the tree...");
+		owner.message("You swing your " + owner.getWorld().getServer().getEntityHandler().getItemDef(axeId).getName().toLowerCase() + " at the tree...");
 		showBubble(owner, new Item(axeId));
 		owner.setBatchEvent(new BatchEvent(owner, 1800, "Woodcutting", Formulae.getRepeatTimes(owner,Skills.WOODCUT), true) {
 			@Override
@@ -120,7 +118,7 @@ public class Woodcutting implements ObjectActionListener,
 				}
 				if (!isCompleted()) {
 					showBubble(owner, new Item(axeID));
-					owner.message("You swing your " + EntityHandler.getItemDef(axeID).getName().toLowerCase() + " at the tree...");
+					owner.message("You swing your " + owner.getWorld().getServer().getEntityHandler().getItemDef(axeID).getName().toLowerCase() + " at the tree...");
 				}
 			}
 		});
@@ -128,7 +126,7 @@ public class Woodcutting implements ObjectActionListener,
 
 	@Override
 	public void onObjectAction(final GameObject object, final String command, final Player owner) {
-		final ObjectWoodcuttingDef def = EntityHandler.getObjectWoodcuttingDef(object.getID());
+		final ObjectWoodcuttingDef def = owner.getWorld().getServer().getEntityHandler().getObjectWoodcuttingDef(object.getID());
 		if (command.equals("chop") && def != null && object.getID() != 245 && object.getID() != 204) {
 			handleWoodcutting(object, owner, owner.click);
 		}

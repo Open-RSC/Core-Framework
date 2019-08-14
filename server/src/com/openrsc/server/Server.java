@@ -8,6 +8,7 @@ import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.MonitoringEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScriptLoader;
+import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
@@ -55,6 +56,7 @@ public final class Server implements Runnable {
 	private final PluginHandler pluginHandler;
 	private final CombatScriptLoader combatScriptLoader;
 	private final GameLogger gameLogger;
+	private final EntityHandler entityHandler;
 	private final World world;
 
 	private DelayedEvent updateEvent;
@@ -105,6 +107,7 @@ public final class Server implements Runnable {
 		tickEventHandler = new GameTickEventHandler(this);
 		gameUpdater = new GameStateUpdater(this);
 		gameLogger = new GameLogger(this);
+		entityHandler = new EntityHandler(this);
 		monitoring = new MonitoringEvent();
 		scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getName()+" : GameThread").build());
 	}
@@ -139,6 +142,10 @@ public final class Server implements Runnable {
 			LOGGER.info("Creating database connection...");
 			DatabaseConnection.getDatabase();
 			LOGGER.info("\t Database connection created");
+
+			LOGGER.info("Loading Game Definitions...");
+			getEntityHandler().load();
+			LOGGER.info("\t Definitions Completed");
 
 			LOGGER.info("Loading Plugins...");
 			getPluginHandler().load();
@@ -530,5 +537,9 @@ public final class Server implements Runnable {
 
 	public GameLogger getGameLogger() {
 		return gameLogger;
+	}
+
+	public EntityHandler getEntityHandler() {
+		return entityHandler;
 	}
 }

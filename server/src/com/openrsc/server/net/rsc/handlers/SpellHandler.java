@@ -9,7 +9,6 @@ import com.openrsc.server.event.MiniEvent;
 import com.openrsc.server.event.rsc.impl.CustomProjectileEvent;
 import com.openrsc.server.event.rsc.impl.ObjectRemover;
 import com.openrsc.server.event.rsc.impl.ProjectileEvent;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemSmeltingDef;
 import com.openrsc.server.external.ReqOreDef;
 import com.openrsc.server.external.SpellDef;
@@ -156,7 +155,7 @@ public class SpellHandler implements PacketHandler {
 			player.setSuspiciousPlayer(true);
 			return;
 		}
-		SpellDef spell = EntityHandler.getSpellDef(idx);
+		SpellDef spell = player.getWorld().getServer().getEntityHandler().getSpellDef(idx);
 		if (spell.isMembers() && !Server.getServer().getConfig().MEMBER_WORLD) {
 			player.message("You need to login to a members world to use this spell");
 			player.resetPath();
@@ -595,7 +594,7 @@ public class SpellHandler implements PacketHandler {
 				for (ReqOreDef reqOre : smeltingDef.getReqOres()) {
 					if (player.getInventory().countId(reqOre.getId()) < reqOre.getAmount()) {
 						if (affectedItem.getID() == com.openrsc.server.constants.ItemId.IRON_ORE.id()) {
-							smeltingDef = EntityHandler.getItemSmeltingDef(9999);
+							smeltingDef = player.getWorld().getServer().getEntityHandler().getItemSmeltingDef(9999);
 							break;
 						}
 						if (affectedItem.getID() == com.openrsc.server.constants.ItemId.TIN_ORE.id() || affectedItem.getID() == com.openrsc.server.constants.ItemId.COPPER_ORE.id()) {
@@ -604,7 +603,7 @@ public class SpellHandler implements PacketHandler {
 							return;
 						}
 						player.message("You need " + reqOre.getAmount() + " heaps of "
-							+ EntityHandler.getItemDef(reqOre.getId()).getName().toLowerCase() + " to smelt "
+							+ player.getWorld().getServer().getEntityHandler().getItemDef(reqOre.getId()).getName().toLowerCase() + " to smelt "
 							+ affectedItem.getDef().getName().toLowerCase().replaceAll("ore", ""));
 						return;
 					}
@@ -612,7 +611,7 @@ public class SpellHandler implements PacketHandler {
 
 				if (player.getSkills().getLevel(com.openrsc.server.constants.Skills.SMITHING) < smeltingDef.getReqLevel()) {
 					player.message("You need to be at least level-" + smeltingDef.getReqLevel() + " smithing to smelt "
-						+ EntityHandler.getItemDef(smeltingDef.barId).getName().toLowerCase().replaceAll("bar", ""));
+						+ player.getWorld().getServer().getEntityHandler().getItemDef(smeltingDef.barId).getName().toLowerCase().replaceAll("bar", ""));
 					return;
 				}
 				if (!checkAndRemoveRunes(player, spell)) {
@@ -883,7 +882,7 @@ public class SpellHandler implements PacketHandler {
 				}
 				player.resetFollowing();
 				player.resetPath();
-				SpellDef spell = EntityHandler.getSpellDef(spellID);
+				SpellDef spell = player.getWorld().getServer().getEntityHandler().getSpellDef(spellID);
 				if (!canCast(player) || affectedMob.getSkills().getLevel(com.openrsc.server.constants.Skills.HITS) <= 0 || player.getStatus() != Action.CASTING_MOB) {
 					player.resetPath();
 					return;

@@ -1,11 +1,10 @@
 package com.openrsc.server.plugins.defaults;
 
 import com.openrsc.server.Server;
-import com.openrsc.server.event.ShortEvent;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.model.TelePoint;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -60,7 +59,7 @@ public class Ladders {
 			player.message("You go up the stairs");
 			return;
 		}
-		TelePoint telePoint = EntityHandler.getObjectTelePoint(obj
+		TelePoint telePoint = player.getWorld().getServer().getEntityHandler().getObjectTelePoint(obj
 			.getLocation(), command);
 		if (telePoint != null) {
 			player.teleport(telePoint.getX(), telePoint.getY(), false);

@@ -4,7 +4,6 @@ import com.openrsc.server.Server;
 import com.openrsc.server.content.market.Market;
 import com.openrsc.server.content.market.MarketDatabase;
 import com.openrsc.server.content.market.MarketItem;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
@@ -53,7 +52,7 @@ public class BuyMarketItemTask extends MarketTask {
 			return;
 		}
 
-		ItemDefinition def = EntityHandler.getItemDef(item.getItemID());
+		ItemDefinition def = playerBuyer.getWorld().getServer().getEntityHandler().getItemDef(item.getItemID());
 		if (!playerBuyer.getInventory().full()
 			&& (!def.isStackable() && playerBuyer.getInventory().size() + amount <= 30)) {
 			if (!def.isStackable()) {

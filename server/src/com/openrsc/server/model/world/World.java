@@ -24,7 +24,6 @@ import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.sql.WorldPopulator;
 import com.openrsc.server.sql.query.PlayerOnlineFlagQuery;
 import com.openrsc.server.sql.query.logs.LoginLog;
 import com.openrsc.server.sql.web.AvatarGenerator;
@@ -401,7 +400,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 			ClanManager.init();
 			PartyManager.init();
 			worldInstance.getWorldLoader().loadWorld();
-			WorldPopulator.populateWorld(worldInstance);
+			worldInstance.getWorldLoader().getWorldPopulator().populateWorld();
 			shutdownCheck();
 			if (Server.getServer().getConfig().WANT_NEW_RARE_DROP_TABLES)
 				initializeRareDropTables();

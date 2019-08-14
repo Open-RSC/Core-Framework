@@ -1,12 +1,11 @@
 package com.openrsc.server.plugins.skills;
 
 import com.openrsc.server.Server;
-import com.openrsc.server.event.SingleEvent;
-import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.external.FiremakingDef;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.event.SingleEvent;
+import com.openrsc.server.event.custom.BatchEvent;
+import com.openrsc.server.external.FiremakingDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -60,7 +59,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 	}
 
 	private void handleFiremaking(final GroundItem gItem, Player player) {
-		final FiremakingDef def = EntityHandler.getFiremakingDef(gItem.getID());
+		final FiremakingDef def = player.getWorld().getServer().getEntityHandler().getFiremakingDef(gItem.getID());
 		if (def == null) {
 			player.message("Nothing interesting happens.");
 			return;
@@ -113,7 +112,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 	}
 
 	private void handleCustomFiremaking(final GroundItem gItem, Player player) {
-		final FiremakingDef def = EntityHandler.getFiremakingDef(gItem.getID());
+		final FiremakingDef def = player.getWorld().getServer().getEntityHandler().getFiremakingDef(gItem.getID());
 
 		if (def == null) {
 			player.message("Nothing interesting happens");

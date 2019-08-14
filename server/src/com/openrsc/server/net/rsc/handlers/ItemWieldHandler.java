@@ -1,7 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.Server;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
@@ -58,7 +57,7 @@ public final class ItemWieldHandler implements PacketHandler {
 		} else if (pID == packetThree) {
 			item = player.getBank().get(idx);
 		} else if (pID == packetFour) {
-			int wieldPos = EntityHandler.getItemDef(idx).getWieldPosition();
+			int wieldPos = player.getWorld().getServer().getEntityHandler().getItemDef(idx).getWieldPosition();
 			item = player.getEquipment().get(wieldPos);
 			if (item.getID() != idx)
 				item = null;

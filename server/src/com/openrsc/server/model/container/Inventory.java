@@ -4,7 +4,6 @@ import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.content.achievement.AchievementSystem;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.Gauntlets;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
@@ -450,7 +449,7 @@ public class Inventory {
 	}
 
 	public void shatter(int itemID) {
-		if (EntityHandler.getItemDef(itemID) == null) {
+		if (player.getWorld().getServer().getEntityHandler().getItemDef(itemID) == null) {
 			return;
 		}
 		boolean shattered = false;
@@ -470,9 +469,9 @@ public class Inventory {
 			}
 		}
 		if (shattered) {
-			player.updateWornItems(EntityHandler.getItemDef(itemID).getWieldPosition(), 0);
-			player.message("Your " + EntityHandler.getItemDef(itemID).getName() + " shatters");
-			ActionSender.sendEquipmentStats(player, EntityHandler.getItemDef(itemID).getWieldPosition());
+			player.updateWornItems(player.getWorld().getServer().getEntityHandler().getItemDef(itemID).getWieldPosition(), 0);
+			player.message("Your " + player.getWorld().getServer().getEntityHandler().getItemDef(itemID).getName() + " shatters");
+			ActionSender.sendEquipmentStats(player, player.getWorld().getServer().getEntityHandler().getItemDef(itemID).getWieldPosition());
 		}
 	}
 

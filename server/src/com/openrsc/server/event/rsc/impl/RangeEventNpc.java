@@ -1,10 +1,9 @@
 package com.openrsc.server.event.rsc.impl;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.GameTickEvent;
-import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
@@ -159,7 +158,7 @@ public class RangeEventNpc extends GameTickEvent {
 					if (target.isPlayer() && getOwner().isNpc()) {
 						((Player) target).message(getOwner() + " is shooting at you!");
 					}
-					if (EntityHandler.getItemDef(11).getName().toLowerCase().contains("poison") && target.isPlayer()) {
+					if (getOwner().getWorld().getServer().getEntityHandler().getItemDef(11).getName().toLowerCase().contains("poison") && target.isPlayer()) {
 						if (DataConversions.random(0, 100) <= 10) {
 							target.poisonDamage = target.getSkills().getMaxStat(Skills.HITS);
 							target.startPoisonEvent();

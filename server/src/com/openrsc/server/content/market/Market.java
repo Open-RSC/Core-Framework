@@ -3,7 +3,6 @@ package com.openrsc.server.content.market;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.Server;
 import com.openrsc.server.content.market.task.*;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
@@ -103,7 +102,7 @@ public class Market implements Runnable {
 					expiredItemsStatement.setString(5, "Expired");
 					expiredItemsStatement.addBatch();
 
-					ItemDefinition def = EntityHandler.getItemDef(itemIndex);
+					ItemDefinition def = sellerPlayer.getWorld().getServer().getEntityHandler().getItemDef(itemIndex);
 					if (sellerPlayer != null) {
 						sellerPlayer.message("@gre@[Auction House] @whi@Your auction - @lre@" + def.getName() + " x" + amount
 							+ "@whi@ has expired!");

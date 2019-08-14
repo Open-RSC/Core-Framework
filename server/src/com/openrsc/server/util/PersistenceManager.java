@@ -20,13 +20,17 @@ public final class PersistenceManager {
 
 	private static final XStream xstream = new XStream();
 
-	static {
+	private final Server server;
+
+	public PersistenceManager(Server server) {
+		this.server = server;
+
 		setupAliases();
 	}
 
-	public static Object load(String filename) {
+	public Object load(String filename) {
 		try {
-			InputStream is = new FileInputStream(new File(Server.getServer().getConfig().CONFIG_DIR, filename));
+			InputStream is = new FileInputStream(new File(getServer().getConfig().CONFIG_DIR, filename));
 			if (filename.endsWith(".gz")) {
 				is = new GZIPInputStream(is);
 			}
@@ -38,10 +42,10 @@ public final class PersistenceManager {
 		return null;
 	}
 
-	private static void setupAliases() {
+	protected void setupAliases() {
 		try {
 			Properties aliases = new Properties();
-			FileInputStream fis = new FileInputStream(new File(Server.getServer().getConfig().CONFIG_DIR, "aliases.xml"));
+			FileInputStream fis = new FileInputStream(new File(getServer().getConfig().CONFIG_DIR, "aliases.xml"));
 			aliases.loadFromXML(fis);
 			for (Enumeration<?> e = aliases.propertyNames(); e.hasMoreElements(); ) {
 				String alias = (String) e.nextElement();
@@ -53,9 +57,9 @@ public final class PersistenceManager {
 		}
 	}
 
-	public static void write(String filename, Object o) {
+	public void write(String filename, Object o) {
 		try {
-			OutputStream os = new FileOutputStream(new File(Server.getServer().getConfig().CONFIG_DIR, filename));
+			OutputStream os = new FileOutputStream(new File(getServer().getConfig().CONFIG_DIR, filename));
 			if (filename.endsWith(".gz")) {
 				os = new GZIPOutputStream(os);
 			}
@@ -63,5 +67,9 @@ public final class PersistenceManager {
 		} catch (IOException ioe) {
 			LOGGER.catching(ioe);
 		}
+	}
+
+	public Server getServer() {
+		return server;
 	}
 }

@@ -2,7 +2,6 @@ package com.openrsc.server.event.custom;
 
 import com.openrsc.server.Server;
 import com.openrsc.server.event.SingleEvent;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GroundItem;
@@ -51,7 +50,7 @@ public class NpcLootEvent extends SingleEvent {
 		}
 
 		String npcName  = n.getDef().getName();
-		ItemDefinition itemDef = EntityHandler.getItemDef(itemId);
+		ItemDefinition itemDef = p.getWorld().getServer().getEntityHandler().getItemDef(itemId);
 
 		if(itemDef.isStackable()) {
 			World.getWorld().registerItem(new GroundItem(p.getWorld(), itemId, n.getX(), n.getY(), itemAmount, p));
@@ -75,7 +74,7 @@ public class NpcLootEvent extends SingleEvent {
 		}
 
 		String npcName  = n.getDef().getName();
-		ItemDefinition itemDef = EntityHandler.getItemDef(itemId);
+		ItemDefinition itemDef = n.getWorld().getServer().getEntityHandler().getItemDef(itemId);
 
 		if(itemDef.isStackable()) {
 			World.getWorld().registerItem(new GroundItem(n2.getWorld(), itemId, n.getX(), n.getY(), itemAmount, n2));
