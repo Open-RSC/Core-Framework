@@ -161,21 +161,21 @@ public final class Server implements Runnable {
 
 			//Never run ResourceLeakDetector PARANOID in production.
 			//ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.PARANOID);
-			final EventLoopGroup bossGroup = new NioEventLoopGroup(0, new NamedThreadFactory("IOBossThread"));
-			final EventLoopGroup workerGroup = new NioEventLoopGroup(0, new NamedThreadFactory("IOWorkerThread"));
+			final EventLoopGroup bossGroup = new NioEventLoopGroup(0, new NamedThreadFactory(getName()+" : IOBossThread"));
+			final EventLoopGroup workerGroup = new NioEventLoopGroup(0, new NamedThreadFactory(getName()+" : IOWorkerThread"));
 			final ServerBootstrap bootstrap = new ServerBootstrap();
 
-			bootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
-				.childHandler(new ChannelInitializer<SocketChannel>() {
+			bootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(
+				new ChannelInitializer<SocketChannel>() {
 					@Override
-					protected void initChannel(final SocketChannel channel) throws Exception {
+					protected void initChannel(final SocketChannel channel) {
 						final ChannelPipeline pipeline = channel.pipeline();
 						pipeline.addLast("decoder", new RSCProtocolDecoder());
 						pipeline.addLast("encoder", new RSCProtocolEncoder());
 						pipeline.addLast("handler", new RSCConnectionHandler());
-
 					}
-				});
+				}
+			);
 
 			bootstrap.childOption(ChannelOption.TCP_NODELAY, true);
 			bootstrap.childOption(ChannelOption.SO_KEEPALIVE, false);
