@@ -1,6 +1,7 @@
 package com.openrsc.server.model.entity.player;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.Constants;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.content.achievement.Achievement;
 import com.openrsc.server.content.achievement.AchievementSystem;
@@ -2883,7 +2884,7 @@ public final class Player extends Mob {
 	public boolean checkRingOfLife(Mob hitter) {
 		if (this.isPlayer() && Functions.isWielding(this, ItemId.RING_OF_LIFE.id())
 			&& (!this.getLocation().inWilderness()
-			|| (this.getLocation().inWilderness() && this.getLocation().wildernessLevel() <= World.GLORY_TELEPORT_LIMIT))) {
+			|| (this.getLocation().inWilderness() && this.getLocation().wildernessLevel() <= Constants.GLORY_TELEPORT_LIMIT))) {
 			if (((float) this.getSkills().getLevel(3)) / ((float) this.getSkills().getMaxStat(3)) <= 0.1f) {
 				this.resetCombatEvent();
 				this.resetRange();

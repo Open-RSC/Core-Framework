@@ -89,25 +89,25 @@ public class WildernessCycleEvent extends DelayedEvent {
 			switch (lastWildernessType) {
 				case 0:
 				case 1:
-					World.godSpellsStart = 60;
-					World.godSpellsMax = 60;
+					Server.getServer().getWorld().godSpellsStart = 60;
+					Server.getServer().getWorld().godSpellsMax = 60;
 
-					World.membersWildStart = 48;
-					World.membersWildMax = 60;
+					Server.getServer().getWorld().membersWildStart = 48;
+					Server.getServer().getWorld().membersWildMax = 60;
 					break;
 				case 2:
-					World.godSpellsStart = 0;
-					World.godSpellsMax = 60;
+					Server.getServer().getWorld().godSpellsStart = 0;
+					Server.getServer().getWorld().godSpellsMax = 60;
 
-					World.membersWildStart = 0;
-					World.membersWildMax = 60;
+					Server.getServer().getWorld().membersWildStart = 0;
+					Server.getServer().getWorld().membersWildMax = 60;
 					break;
 				case 3:
-					World.godSpellsStart = 60;
-					World.godSpellsMax = 60;
+					Server.getServer().getWorld().godSpellsStart = 60;
+					Server.getServer().getWorld().godSpellsMax = 60;
 
-					World.membersWildStart = 0;
-					World.membersWildMax = 60;
+					Server.getServer().getWorld().membersWildStart = 0;
+					Server.getServer().getWorld().membersWildMax = 60;
 					break;
 			}
 

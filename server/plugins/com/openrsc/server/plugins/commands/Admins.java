@@ -102,8 +102,8 @@ public final class Admins implements CommandListener {
 			player.message(messagePrefix + "Saved " + count + " players on server!");
 		} else if (cmd.equalsIgnoreCase("cleanregions")) {
 			Server.getServer().submitTask(() -> {
-				final int HORIZONTAL_PLANES = (World.MAX_WIDTH / Constants.REGION_SIZE) + 1;
-				final int VERTICAL_PLANES = (World.MAX_HEIGHT / Constants.REGION_SIZE) + 1;
+				final int HORIZONTAL_PLANES = (Constants.MAX_WIDTH / Constants.REGION_SIZE) + 1;
+				final int VERTICAL_PLANES = (Constants.MAX_HEIGHT / Constants.REGION_SIZE) + 1;
 				for (int x = 0; x < HORIZONTAL_PLANES; ++x) {
 					for (int y = 0; y < VERTICAL_PLANES; ++y) {
 						Region r = player.getWorld().getRegionManager().getRegion(x * Constants.REGION_SIZE,
@@ -1365,17 +1365,17 @@ public final class Admins implements CommandListener {
 			if (rule.equalsIgnoreCase("god")) {
 				int start = Integer.parseInt(args[1]);
 				int end = Integer.parseInt(args[2]);
-				World.godSpellsStart = startLevel;
-				World.godSpellsMax = endLevel;
-				player.message(messagePrefix + "Wilderness rule for god spells set to [" + World.godSpellsStart + " -> "
-					+ World.godSpellsMax + "]");
+				player.getWorld().godSpellsStart = startLevel;
+				player.getWorld().godSpellsMax = endLevel;
+				player.message(messagePrefix + "Wilderness rule for god spells set to [" + player.getWorld().godSpellsStart + " -> "
+					+ player.getWorld().godSpellsMax + "]");
 			} else if (rule.equalsIgnoreCase("members")) {
 				int start = Integer.parseInt(args[1]);
 				int end = Integer.parseInt(args[2]);
-				World.membersWildStart = startLevel;
-				World.membersWildMax = endLevel;
-				player.message(messagePrefix + "Wilderness rule for members set to [" + World.membersWildStart + " -> "
-					+ World.membersWildMax + "]");
+				player.getWorld().membersWildStart = startLevel;
+				player.getWorld().membersWildMax = endLevel;
+				player.message(messagePrefix + "Wilderness rule for members set to [" + player.getWorld().membersWildStart + " -> "
+					+ player.getWorld().membersWildMax + "]");
 			} else {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [god/members] [startLevel] [endLevel]");
 			}

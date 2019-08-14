@@ -17,9 +17,9 @@ import java.util.LinkedHashSet;
 
 public class RegionManager {
 
-	private static final int HORIZONTAL_PLANES = (World.MAX_WIDTH / Constants.REGION_SIZE) + 1;
+	private static final int HORIZONTAL_PLANES = (Constants.MAX_WIDTH / Constants.REGION_SIZE) + 1;
 
-	private static final int VERTICAL_PLANES = (World.MAX_HEIGHT / Constants.REGION_SIZE) + 1;
+	private static final int VERTICAL_PLANES = (Constants.MAX_HEIGHT / Constants.REGION_SIZE) + 1;
 
 	private final Region[][] regions;
 

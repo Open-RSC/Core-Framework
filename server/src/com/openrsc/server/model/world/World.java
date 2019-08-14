@@ -1,6 +1,7 @@
 package com.openrsc.server.model.world;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.Constants;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.content.DropTable;
@@ -41,9 +42,6 @@ import java.util.*;
 
 public final class World implements SimpleSubscriber<FishingTrawler> {
 
-	public static final int MAX_HEIGHT = 4032; // 3776
-	public static final int MAX_WIDTH = 1008; // 944
-
 	/**
 	 * The asynchronous logger.
 	 */
@@ -59,18 +57,16 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	 */
 	private final static IPTracker<String> wildernessIPTracker = new ThreadSafeIPTracker<String>();
 
-	private static final String[] objectsProjectileClipAllowed = {"gravestone", "sign", "broken pillar", "bone",
-		"animalskull", "skull", "egg", "eggs", "ladder", "torch", "rock", "treestump", "railing",
-		"railings", "gate", "fence", "table", "smashed chair", "smashed table", "longtable", "fence", "chair"};
-	public static int membersWildStart = 48;
-	public static int membersWildMax = 56;
-	public static int godSpellsStart = 1;
-	public static int godSpellsMax = 5;
-	public static final int GLORY_TELEPORT_LIMIT = 30;
-	public static boolean EVENT = false;
-	public static int EVENT_X = -1, EVENT_Y = -1;
-	public static int EVENT_COMBAT_MIN, EVENT_COMBAT_MAX;
-	public static boolean WORLD_TELEGRAB_TOGGLE = false;
+	private boolean telegrabEnabled = true;
+
+	public boolean EVENT = false;
+	public int EVENT_X = -1, EVENT_Y = -1;
+	public int EVENT_COMBAT_MIN, EVENT_COMBAT_MAX;
+	public int membersWildStart = 48;
+	public int membersWildMax = 56;
+	public int godSpellsStart = 1;
+	public int godSpellsMax = 5;
+
 	private static World worldInstance;
 
 	private final RegionManager regionManager;
@@ -114,7 +110,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		npcUnderAttackMap = new HashMap<Npc, Boolean>();
 		fishingTrawler = new HashMap<TrawlerBoat, FishingTrawler>();
 		snapshots = new LinkedList<Snapshot>();
-		tiles = new TileValue[MAX_WIDTH][MAX_HEIGHT];
+		tiles = new TileValue[Constants.MAX_WIDTH][Constants.MAX_HEIGHT];
 		worldLoader = new WorldLoader(this);
 		regionManager = new RegionManager(this);
 		clanManager = new ClanManager(this);
@@ -507,7 +503,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	}
 
 	private boolean isProjectileClipAllowed(GameObject o) {
-		for (String s : objectsProjectileClipAllowed) {
+		for (String s : com.openrsc.server.constants.Constants.objectsProjectileClipAllowed) {
 			if (o.getType() == 0) {
 				// there are many of the objects that need to
 				// have clip enabled.
@@ -769,7 +765,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	 * Are the given coords within the world boundaries
 	 */
 	public boolean withinWorld(int x, int y) {
-		return x >= 0 && x < MAX_WIDTH && y >= 0 && y < MAX_HEIGHT;
+		return x >= 0 && x < Constants.MAX_WIDTH && y >= 0 && y < Constants.MAX_HEIGHT;
 	}
 
 	public FishingTrawler getFishingTrawler(TrawlerBoat boat) {
@@ -963,5 +959,9 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 	public ClanManager getClanManager() {
 		return clanManager;
+	}
+
+	public boolean isTelegrabEnabled() {
+		return telegrabEnabled;
 	}
 }

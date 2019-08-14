@@ -182,7 +182,7 @@ public final class RegularPlayer implements CommandListener {
 					+ "@gre@Total Time Played:@whi@ " + DataConversions.getDateFromMsec(timePlayed) + " %"
 				, true);
 		} else if (cmd.equalsIgnoreCase("event")) {
-			if (!World.EVENT) {
+			if (!player.getWorld().EVENT) {
 				player.message(messagePrefix + "There is no event running at the moment");
 				return;
 			}
@@ -193,12 +193,12 @@ public final class RegularPlayer implements CommandListener {
 				player.message(messagePrefix + "You can't participate in events while you are jailed.");
 				return;
 			}
-			if (player.getCombatLevel() > World.EVENT_COMBAT_MAX || player.getCombatLevel() < World.EVENT_COMBAT_MIN) {
-				player.message(messagePrefix + "This event is only for combat level range: " + World.EVENT_COMBAT_MIN + " - "
-					+ World.EVENT_COMBAT_MAX);
+			if (player.getCombatLevel() > player.getWorld().EVENT_COMBAT_MAX || player.getCombatLevel() < player.getWorld().EVENT_COMBAT_MIN) {
+				player.message(messagePrefix + "This event is only for combat level range: " + player.getWorld().EVENT_COMBAT_MIN + " - "
+					+ player.getWorld().EVENT_COMBAT_MAX);
 				return;
 			}
-			player.teleport(World.EVENT_X, World.EVENT_Y);
+			player.teleport(player.getWorld().EVENT_X, player.getWorld().EVENT_Y);
 		} else if (cmd.equalsIgnoreCase("g") || cmd.equalsIgnoreCase("p")) {
 			if (!Server.getServer().getConfig().WANT_GLOBAL_CHAT) return;
 			if (player.isMuted()) {

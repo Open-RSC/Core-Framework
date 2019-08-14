@@ -87,6 +87,24 @@ public final class Constants {
 	 * Maximum number of users of a party
 	 */
 	public static final int MAX_PARTY_SIZE = 5;
+	/**
+	 * How far in the Wilderness can you teleport with Charged Dragonstone Amulet of Glory
+	 */
+	public static final int GLORY_TELEPORT_LIMIT = 30;
+	/**
+	 * Objects that block projectiles
+	 */
+	public static final String[] objectsProjectileClipAllowed = {"gravestone", "sign", "broken pillar", "bone",
+		"animalskull", "skull", "egg", "eggs", "ladder", "torch", "rock", "treestump", "railing",
+		"railings", "gate", "fence", "table", "smashed chair", "smashed table", "longtable", "fence", "chair"};
+	/**
+	 * Maximum world height
+	 */
+	public static final int MAX_HEIGHT = 4032; // 3776
+	/**
+	 * Maximum world width
+	 */
+	public static final int MAX_WIDTH = 1008; // 944
 
 	//public static final class Skillcapes {
 	//	public static final int ATTACK_CAPE = 2111;

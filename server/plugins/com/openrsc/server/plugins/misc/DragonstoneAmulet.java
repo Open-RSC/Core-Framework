@@ -1,19 +1,17 @@
 package com.openrsc.server.plugins.misc;
 
-import com.openrsc.server.event.custom.BatchEvent;
+import com.openrsc.server.constants.Constants;
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
@@ -38,7 +36,7 @@ public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveL
 			//	p.message("You need to stay out of combat for 10 seconds before using a teleport.");
 			//	return;
 			//}
-			if (p.getLocation().wildernessLevel() >= World.GLORY_TELEPORT_LIMIT || p.getLocation().isInFisherKingRealm()
+			if (p.getLocation().wildernessLevel() >= Constants.GLORY_TELEPORT_LIMIT || p.getLocation().isInFisherKingRealm()
 					|| p.getLocation().isInsideGrandTreeGround()
 					|| (p.getLocation().inModRoom() && !p.isAdmin())) {
 				p.message("A mysterious force blocks your teleport!");

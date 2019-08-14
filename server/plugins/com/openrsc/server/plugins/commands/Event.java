@@ -446,11 +446,11 @@ public final class Event implements CommandListener {
 			}
 		}
 		else if (cmd.equalsIgnoreCase("stopevent")) {
-			World.EVENT_X = -1;
-			World.EVENT_Y = -1;
-			World.EVENT = false;
-			World.EVENT_COMBAT_MIN = -1;
-			World.EVENT_COMBAT_MAX = -1;
+			player.getWorld().EVENT_X = -1;
+			player.getWorld().EVENT_Y = -1;
+			player.getWorld().EVENT = false;
+			player.getWorld().EVENT_COMBAT_MIN = -1;
+			player.getWorld().EVENT_COMBAT_MAX = -1;
 			player.message(messagePrefix + "Event disabled");
 			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 8, "Stopped an ongoing event"));
 		}
@@ -496,14 +496,14 @@ public final class Event implements CommandListener {
 				return;
 			}
 
-			World.EVENT_X = x;
-			World.EVENT_Y = y;
-			World.EVENT = true;
-			World.EVENT_COMBAT_MIN = cbMin;
-			World.EVENT_COMBAT_MAX = cbMax;
-			player.message(messagePrefix + "Event enabled: " + x + ", " + y + ", Combat level range: " + World.EVENT_COMBAT_MIN + " - "
-				+ World.EVENT_COMBAT_MAX + "");
-			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 9, "Created event at: (" + x + ", " + y + ") cb-min: " + World.EVENT_COMBAT_MIN + " cb-max: " + World.EVENT_COMBAT_MAX + ""));
+			player.getWorld().EVENT_X = x;
+			player.getWorld().EVENT_Y = y;
+			player.getWorld().EVENT = true;
+			player.getWorld().EVENT_COMBAT_MIN = cbMin;
+			player.getWorld().EVENT_COMBAT_MAX = cbMax;
+			player.message(messagePrefix + "Event enabled: " + x + ", " + y + ", Combat level range: " + player.getWorld().EVENT_COMBAT_MIN + " - "
+				+ player.getWorld().EVENT_COMBAT_MAX + "");
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 9, "Created event at: (" + x + ", " + y + ") cb-min: " + player.getWorld().EVENT_COMBAT_MIN + " cb-max: " + player.getWorld().EVENT_COMBAT_MAX + ""));
 		}
 		else if (cmd.equalsIgnoreCase("setgroup") || cmd.equalsIgnoreCase("setrank") || cmd.equalsIgnoreCase("group") || cmd.equalsIgnoreCase("rank")) {
 			if (args.length < 1) {

@@ -783,8 +783,8 @@ public class SpellHandler implements PacketHandler {
 							return;
 						}
 
-						if (World.WORLD_TELEGRAB_TOGGLE) {
-							player.message("Telegrab has been disabled due to an running global event, please try again later");
+						if (player.getWorld().isTelegrabEnabled()) {
+							player.message("Telegrab has been disabled");
 							return;
 						}
 						if (affectedItem.getLocation().isInSeersPartyHall()) {
