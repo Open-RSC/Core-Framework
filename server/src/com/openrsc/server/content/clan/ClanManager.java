@@ -14,7 +14,6 @@ import java.util.Comparator;
 
 
 public class ClanManager {
-	static final int MAX_CLAN_SIZE = 150;
 	public final static ClanRankComparator CLAN_COMPERATOR = new ClanRankComparator();
 	/**
 	 * The asynchronous logger.

@@ -10,7 +10,6 @@ import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.content.party.Party;
 import com.openrsc.server.content.party.PartyInvite;
-import com.openrsc.server.content.party.PartyManager;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.event.rsc.impl.*;
@@ -39,7 +38,6 @@ import com.openrsc.server.net.rsc.handlers.WalkRequest;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.menu.Menu;
-import com.openrsc.server.sql.GameLogger;
 import com.openrsc.server.sql.query.logs.GenericLog;
 import com.openrsc.server.sql.query.logs.LiveFeedLog;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -2017,7 +2015,7 @@ public final class Player extends Mob {
 		}
 
 		ClanManager.checkAndUnattachFromClan(this);
-		PartyManager.checkAndUnattachFromParty(this);
+		getWorld().getPartyManager().checkAndUnattachFromParty(this);
 
 		Server.getServer().getPlayerDataProcessor().addRemoveRequest(this);
 	}

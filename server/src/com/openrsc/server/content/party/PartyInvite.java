@@ -1,6 +1,7 @@
 package com.openrsc.server.content.party;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.Constants;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -21,7 +22,7 @@ public class PartyInvite {
 		if (player.getParty() == null) {
 			return;
 		}
-		if (player.getParty().getPlayers().size() >= PartyManager.MAX_PARTY_SIZE) {
+		if (player.getParty().getPlayers().size() >= Constants.MAX_PARTY_SIZE) {
 			player.message("Your party has reached the maximum party members limit");
 			return;
 		}

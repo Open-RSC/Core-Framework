@@ -2,6 +2,7 @@ package com.openrsc.server.content.party;
 
 import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,31 +13,47 @@ import java.util.Comparator;
 
 
 public class PartyManager {
-	static final int MAX_PARTY_SIZE = 5;
+
+	private static class PartyRankComparator implements Comparator<Party> {
+		public int compare(Party o1, Party o2) {
+			if (o1.getPartyPoints() == o2.getPartyPoints()) {
+				return o1.getPartyName().compareTo(o2.getPartyName());
+			}
+			return o1.getPartyPoints() > o2.getPartyPoints() ? -1 : 1;
+		}
+	}
+
 	public final static PartyRankComparator PARTY_COMPERATOR = new PartyRankComparator();
 	/**
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
-	public static ArrayList<Party> parties = new ArrayList<>();
 
-	public static void createParty(Party party) {
+	public ArrayList<Party> parties = new ArrayList<>();
+
+	private final World world;
+
+	public PartyManager (World world) {
+		this.world = world;
+	}
+
+	public void createParty(Party party) {
 		parties.add(party);
 		//databaseCreateParty(party);
 	}
 
-	static void deleteParty(Party party) {
+	public void deleteParty(Party party) {
 		//databaseDeleteParty(party);
 		parties.remove(party);
 	}
 
-	public static void init() {
+	public void initialize() {
 		//LOGGER.info("Loading Partys...");
 		//loadParties();
 		//LOGGER.info("Loaded " + partys.size() + " partys");
 	}
 
-	public static Party getParty(String exist) {
+	public Party getParty(String exist) {
 		for (Party t : parties) {
 			if (t.getPartyName().equalsIgnoreCase(exist))
 				return t;
@@ -46,7 +63,7 @@ public class PartyManager {
 		return null;
 	}
 
-	public static void checkAndAttachToParty(Player player) {
+	public void checkAndAttachToParty(Player player) {
 		for (Party p : parties) {
 			PartyPlayer partyMember = p.getPlayer(player.getUsername());
 			if (partyMember != null) {
@@ -57,6 +74,50 @@ public class PartyManager {
 				break;
 			}
 		}
+	}
+
+	public void updatePartyRankPlayer(PartyPlayer cp) {
+		try {
+			PreparedStatement statement = cp.getPlayerReference().getWorld().getServer().getDatabaseConnection()
+				.prepareStatement("UPDATE `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "party_players` SET `rank`=? WHERE `username`=?");
+			statement.setInt(1, cp.getRank().getRankIndex());
+			statement.setString(2, cp.getUsername());
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			LOGGER.error("Unable to update rank for party player: " + cp.getUsername());
+			LOGGER.catching(e);
+		}
+
+	}
+
+	public void checkAndUnattachFromParty(Player player) {
+		for (Party p : parties) {
+			PartyPlayer cp = p.getPlayer(player.getUsername());
+			if (cp != null) {
+				cp.setPlayerReference(null);
+				p.updatePartyGUI();
+				break;
+			}
+		}
+	}
+
+	public void saveParties() {
+		for (Party t : parties) {
+			savePartyChanges(t);
+		}
+	}
+
+	public void savePartyChanges(Party party) {
+		//updateParty(party);
+
+		//deletePartyPlayer(party);
+		//savePartyPlayer(party);
+
+		//saveBank(team);
+	}
+
+	public World getWorld() {
+		return world;
 	}
 
 	/*private static void loadParties() throws SQLException {
@@ -186,53 +247,4 @@ public class PartyManager {
 			LOGGER.catching(e);
 		}
 	}*/
-
-	static void updatePartyRankPlayer(PartyPlayer cp) {
-		try {
-			PreparedStatement statement = cp.getPlayerReference().getWorld().getServer().getDatabaseConnection()
-				.prepareStatement("UPDATE `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "party_players` SET `rank`=? WHERE `username`=?");
-			statement.setInt(1, cp.getRank().getRankIndex());
-			statement.setString(2, cp.getUsername());
-			statement.executeUpdate();
-		} catch (SQLException e) {
-			LOGGER.error("Unable to update rank for party player: " + cp.getUsername());
-			LOGGER.catching(e);
-		}
-
-	}
-
-	public static void checkAndUnattachFromParty(Player player) {
-		for (Party p : parties) {
-			PartyPlayer cp = p.getPlayer(player.getUsername());
-			if (cp != null) {
-				cp.setPlayerReference(null);
-				p.updatePartyGUI();
-				break;
-			}
-		}
-	}
-
-	public static void saveParties() {
-		for (Party t : parties) {
-			savePartyChanges(t);
-		}
-	}
-
-	static void savePartyChanges(Party party) {
-		//updateParty(party);
-
-		//deletePartyPlayer(party);
-		//savePartyPlayer(party);
-
-		//saveBank(team);
-	}
-
-	private static class PartyRankComparator implements Comparator<Party> {
-		public int compare(Party o1, Party o2) {
-			if (o1.getPartyPoints() == o2.getPartyPoints()) {
-				return o1.getPartyName().compareTo(o2.getPartyName());
-			}
-			return o1.getPartyPoints() > o2.getPartyPoints() ? -1 : 1;
-		}
-	}
 }

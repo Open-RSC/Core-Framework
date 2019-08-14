@@ -1,6 +1,7 @@
 package com.openrsc.server.content.clan;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.Constants;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -46,7 +47,7 @@ public class ClanInvite {
 			}
 		}
 
-		if (player.getClan().getPlayers().size() >= ClanManager.MAX_CLAN_SIZE) {
+		if (player.getClan().getPlayers().size() >= Constants.MAX_CLAN_SIZE) {
 			player.message("Your clan has reached the maximum clan members limit");
 			return;
 		}

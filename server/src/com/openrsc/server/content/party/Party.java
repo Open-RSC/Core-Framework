@@ -1,6 +1,8 @@
 package com.openrsc.server.content.party;
 
+import com.openrsc.server.constants.Constants;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.MessageType;
 
@@ -16,8 +18,14 @@ public class Party {
 	private int[] partySetting = new int[3];
 	private int partyPoints;
 
+	private final World world;
+
+	public Party (World world) {
+		this.world = world;
+	}
+
 	public PartyPlayer addPlayer(Player player) {
-		if (getPlayers().size() < PartyManager.MAX_PARTY_SIZE) {
+		if (getPlayers().size() < Constants.MAX_PARTY_SIZE) {
 			player.setParty(this);
 
 			PartyPlayer partyMember = new PartyPlayer(player.getUsername());
@@ -37,7 +45,7 @@ public class Party {
 			ActionSender.sendPartySetting(partyMember.getPlayerReference());
 
 			if (getPlayers().size() > 1) {
-				PartyManager.savePartyChanges(this);
+				getWorld().getPartyManager().savePartyChanges(this);
 			}
 			return partyMember;
 		}
@@ -69,9 +77,9 @@ public class Party {
 				ActionSender.sendParty(getPlayers().get(0).getPlayerReference());
 				getPlayers().get(0).getPlayerReference().getParty().updatePartySettings();
 			}
-			PartyManager.savePartyChanges(this);
+			getWorld().getPartyManager().savePartyChanges(this);
 		} else if (getPlayers().size() == 0) {
-			PartyManager.deleteParty(this);
+			getWorld().getPartyManager().deleteParty(this);
 		}
 		updatePartyGUI();
 	}
@@ -94,7 +102,7 @@ public class Party {
 				getLeader().setRank(PartyRank.LEADER);
 				messagePartyInfo("@red@Your party leader has passed the leadership!");
 				messagePartyInfo("@yel@" + getLeader().getUsername() + " is the new party leader!");
-				PartyManager.savePartyChanges(this);
+				getWorld().getPartyManager().savePartyChanges(this);
 				ActionSender.sendPartySetting(player);
 			} else {
 				if (newRank == 2) {
@@ -103,7 +111,7 @@ public class Party {
 					messagePartyInfo(member.getUsername() + " has been put back to " + PartyRank.getRankFor(newRank).name().toLowerCase() + " rank.");
 				}
 				member.setRank(setRank);
-				PartyManager.updatePartyRankPlayer(member);
+				getWorld().getPartyManager().updatePartyRankPlayer(member);
 			}
 			updatePartyGUI();
 			if (member.isOnline()) {
@@ -238,5 +246,9 @@ public class Party {
 
 	public void setPartyPoints(int p) {
 		this.partyPoints = p;
+	}
+
+	public World getWorld() {
+		return world;
 	}
 }

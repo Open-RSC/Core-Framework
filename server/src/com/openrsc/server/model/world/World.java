@@ -82,12 +82,13 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	private final List<Shop> shops;
 	private final Map<TrawlerBoat, FishingTrawler> fishingTrawler;
 	private final TileValue[][] tiles;
+	private final PartyManager partyManager;
 	private final Market market;
 
 	private final WorldLoader worldLoader;
 
-	private Map<Player, Boolean> playerUnderAttackMap = new HashMap<Player, Boolean>();
-	private Map<Npc, Boolean> npcUnderAttackMap = new HashMap<Npc, Boolean>();
+	private Map<Player, Boolean> playerUnderAttackMap;
+	private Map<Npc, Boolean> npcUnderAttackMap;
 
 	public DropTable gemTable;
 	public DropTable standardTable;
@@ -108,11 +109,14 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		minigames = new LinkedList<MiniGameInterface>();
 		shopData = new ArrayList<Shop>();
 		shops = new ArrayList<Shop>();
+		playerUnderAttackMap = new HashMap<Player, Boolean>();
+		npcUnderAttackMap = new HashMap<Npc, Boolean>();
 		fishingTrawler = new HashMap<TrawlerBoat, FishingTrawler>();
-		tiles = new TileValue[MAX_WIDTH][MAX_HEIGHT];
 		snapshots = new LinkedList<Snapshot>();
+		tiles = new TileValue[MAX_WIDTH][MAX_HEIGHT];
 		worldLoader = new WorldLoader(this);
 		regionManager = new RegionManager(this);
+		partyManager = new PartyManager(this);
 		market = getServer().getConfig().SPAWN_AUCTION_NPCS ? new Market(this) : null;
 	}
 
@@ -401,7 +405,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	public void load() {
 		try {
 			ClanManager.init();
-			PartyManager.init();
+			getWorld().getPartyManager().initialize();
+
 			worldInstance.getWorldLoader().loadWorld();
 			worldInstance.getWorldLoader().getWorldPopulator().populateWorld();
 			shutdownCheck();
@@ -575,7 +580,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 				other.getSocial().alertOfLogin(player);
 			}
 			ClanManager.checkAndAttachToClan(player);
-			PartyManager.checkAndAttachToParty(player);
+			getWorld().getPartyManager().checkAndAttachToParty(player);
 			LOGGER.info("Registered " + player.getUsername() + " to server");
 			return true;
 		}
@@ -948,5 +953,9 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 	public Market getMarket() {
 		return market;
+	}
+
+	public PartyManager getPartyManager() {
+		return partyManager;
 	}
 }

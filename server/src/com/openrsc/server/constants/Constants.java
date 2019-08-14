@@ -79,6 +79,14 @@ public final class Constants {
 	 * Size of Regions in RegionManager
 	 */
 	public static final int REGION_SIZE = 48;
+	/**
+	 * Maximum number of clan members
+	 */
+	public static final int MAX_CLAN_SIZE = 150;
+	/**
+	 * Maximum number of users of a party
+	 */
+	public static final int MAX_PARTY_SIZE = 5;
 
 	//public static final class Skillcapes {
 	//	public static final int ATTACK_CAPE = 2111;

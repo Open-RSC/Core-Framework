@@ -1369,10 +1369,10 @@ public class ActionSender {
 	public static void sendParties(Player p) {
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
 		pb.writeByte(4);
-		pb.writeShort(PartyManager.parties.size());
+		pb.writeShort(p.getWorld().getPartyManager().parties.size());
 		int rank = 1;
-		PartyManager.parties.sort(PartyManager.PARTY_COMPERATOR);
-		for (Party c : PartyManager.parties) {
+		p.getWorld().getPartyManager().parties.sort(PartyManager.PARTY_COMPERATOR);
+		for (Party c : p.getWorld().getPartyManager().parties) {
 			pb.writeShort(c.getPartyID());
 			pb.writeString(c.getPartyName());
 			pb.writeString(c.getPartyTag());

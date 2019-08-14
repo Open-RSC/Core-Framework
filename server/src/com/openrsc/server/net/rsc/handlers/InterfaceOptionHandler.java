@@ -410,7 +410,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 							return;
 						}
 
-						Party party = new Party();
+						Party party = new Party(player.getWorld());
 						//party.setPartyName(partyName);
 						//party.setPartyTag(partyTag);
 
@@ -418,7 +418,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 						partyMember.setRank(PartyRank.LEADER);
 						party.setLeader(partyMember);
 
-						PartyManager.createParty(party);
+						player.getWorld().getPartyManager().createParty(party);
 						player.message("You have created a party: ");
 
 						break;
@@ -436,7 +436,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 						if (player.getParty() == null) {
 							String partyName = p.readString();
 							String partyTag = p.readString();
-							Party party1 = new Party();
+							Party party1 = new Party(player.getWorld());
 							party1.setPartyName(partyName);
 							party1.setPartyTag(partyTag);
 
@@ -444,7 +444,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 							partyMember1.setRank(PartyRank.LEADER);
 							party1.setLeader(partyMember1);
 
-							PartyManager.createParty(party1);
+							player.getWorld().getPartyManager().createParty(party1);
 							player.message("You have created a party: ");
 						}
 						if (player.getParty().getInviteSetting() == 1 && !player.getParty().getLeader().getUsername().equalsIgnoreCase(player.getUsername())) {
@@ -578,7 +578,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 							} else {
 								String partyName = p.readString();
 								String partyTag = p.readString();
-								Party party1 = new Party();
+								Party party1 = new Party(player.getWorld());
 								party1.setPartyName(partyName);
 								party1.setPartyTag(partyTag);
 
@@ -586,7 +586,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 								partyMember1.setRank(PartyRank.LEADER);
 								party1.setLeader(partyMember1);
 
-								PartyManager.createParty(party1);
+								player.getWorld().getPartyManager().createParty(party1);
 								player.message("You have created a party: ");
 							}
 						} else {

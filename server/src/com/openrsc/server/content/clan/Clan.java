@@ -1,5 +1,6 @@
 package com.openrsc.server.content.clan;
 
+import com.openrsc.server.constants.Constants;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.MessageType;
@@ -17,7 +18,7 @@ public class Clan {
 	private int clanPoints;
 
 	public ClanPlayer addPlayer(Player player) {
-		if (getPlayers().size() < ClanManager.MAX_CLAN_SIZE) {
+		if (getPlayers().size() < Constants.MAX_CLAN_SIZE) {
 			player.setClan(this);
 
 			ClanPlayer clanMember = new ClanPlayer(player.getUsername());
