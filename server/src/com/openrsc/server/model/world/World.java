@@ -43,19 +43,22 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 	public static final int MAX_HEIGHT = 4032; // 3776
 	public static final int MAX_WIDTH = 1008; // 944
+
 	/**
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
-	/**
-	 * IP filtering for wilderness entry
-	 */
 
-	private final static IPTracker<String> wildernessIPTracker = new ThreadSafeIPTracker<String>();
 	/**
 	 * Avatar generator upon logout save to PNG.
 	 */
 	private final static AvatarGenerator avatarGenerator = new AvatarGenerator();
+
+	/**
+	 * IP filtering for wilderness entry
+	 */
+	private final static IPTracker<String> wildernessIPTracker = new ThreadSafeIPTracker<String>();
+
 	private static final String[] objectsProjectileClipAllowed = {"gravestone", "sign", "broken pillar", "bone",
 		"animalskull", "skull", "egg", "eggs", "ladder", "torch", "rock", "treestump", "railing",
 		"railings", "gate", "fence", "table", "smashed chair", "smashed table", "longtable", "fence", "chair"};
@@ -69,14 +72,18 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	public static int EVENT_COMBAT_MIN, EVENT_COMBAT_MAX;
 	public static boolean WORLD_TELEGRAB_TOGGLE = false;
 	private static World worldInstance;
-	private final EntityList<Npc> npcs = new EntityList<Npc>(4000);
-	private final EntityList<Player> players = new EntityList<Player>(2000);
-	private final List<QuestInterface> quests = new LinkedList<QuestInterface>();
-	private final List<MiniGameInterface> minigames = new LinkedList<MiniGameInterface>();
-	private final List<Shop> shopData = new ArrayList<Shop>();
-	private final List<Shop> shops = new ArrayList<Shop>();
-	private final TileValue[][] tiles = new TileValue[MAX_WIDTH][MAX_HEIGHT];
-	private WorldLoader worldLoader;
+
+	//private final RegionManager regionManager;
+	private final EntityList<Npc> npcs;
+	private final EntityList<Player> players;
+	private final List<QuestInterface> quests;
+	private final List<MiniGameInterface> minigames;
+	private final List<Shop> shopData;
+	private final List<Shop> shops;
+	private final Map<TrawlerBoat, FishingTrawler> fishingTrawler;
+	private final TileValue[][] tiles;
+
+	private final WorldLoader worldLoader;
 
 	private Map<Player, Boolean> playerUnderAttackMap = new HashMap<Player, Boolean>();
 	private Map<Npc, Boolean> npcUnderAttackMap = new HashMap<Npc, Boolean>();
@@ -88,20 +95,22 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	/**
 	 * Double ended queue to store snapshots into
 	 */
-	private Deque<Snapshot> snapshots = new LinkedList<Snapshot>();
-	private Map<TrawlerBoat, FishingTrawler> fishingTrawler = new HashMap<TrawlerBoat, FishingTrawler>();
-
-	public static IPTracker<String> getWildernessIPTracker() {
-		return wildernessIPTracker;
-	}
+	private Deque<Snapshot> snapshots;
 
 	private final Server server;
-	public final Server getServer() {
-		return server;
-	}
 
 	public World(Server server) {
 		this.server = server;
+		npcs = new EntityList<Npc>(4000);
+		players = new EntityList<Player>(2000);
+		quests = new LinkedList<QuestInterface>();
+		minigames = new LinkedList<MiniGameInterface>();
+		shopData = new ArrayList<Shop>();
+		shops = new ArrayList<Shop>();
+		fishingTrawler = new HashMap<TrawlerBoat, FishingTrawler>();
+		tiles = new TileValue[MAX_WIDTH][MAX_HEIGHT];
+		snapshots = new LinkedList<Snapshot>();
+		worldLoader = new WorldLoader(this);
 	}
 
 	public static synchronized World getWorld() {
@@ -390,8 +399,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		try {
 			ClanManager.init();
 			PartyManager.init();
-			worldInstance.worldLoader = new WorldLoader();
-			worldInstance.getWorldLoader().loadWorld(worldInstance);
+			worldInstance.getWorldLoader().loadWorld();
 			WorldPopulation.populateWorld(worldInstance);
 			shutdownCheck();
 			if (Server.getServer().getConfig().WANT_NEW_RARE_DROP_TABLES)
@@ -919,8 +927,15 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 	}
 
-
 	public WorldLoader getWorldLoader() {
 		return worldLoader;
+	}
+
+	public final Server getServer() {
+		return server;
+	}
+
+	public static IPTracker<String> getWildernessIPTracker() {
+		return wildernessIPTracker;
 	}
 }

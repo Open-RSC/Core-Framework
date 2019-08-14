@@ -21,6 +21,11 @@ public class WorldLoader {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 	private ZipFile tileArchive;
+	private final World world;
+
+	public WorldLoader(World world) {
+		this.world = world;
+	}
 
 	private static boolean projectileClipAllowed(int wallID) {
 		for (int allowedWallIdType : ALLOWED_WALL_ID_TYPES) {
@@ -31,8 +36,7 @@ public class WorldLoader {
 		return false;
 	}
 
-	private boolean loadSection(int sectionX, int sectionY, int height,
-								World world, int bigX, int bigY) {
+	private boolean loadSection(int sectionX, int sectionY, int height, int bigX, int bigY) {
 		Sector s = null;
 		try {
 			String filename = "h" + height + "x" + sectionX + "y" + sectionY;
@@ -137,7 +141,7 @@ public class WorldLoader {
 
 	}
 
-	public void loadWorld(World world) {
+	public void loadWorld() {
 		final long start = System.currentTimeMillis();
 		try {
 			if (Server.getServer().getConfig().MEMBER_WORLD) {
@@ -159,8 +163,8 @@ public class WorldLoader {
 				for (int sy = 0; sy < 944; sy += 48) {
 					int x = (sx + wildX) / 48;
 					int y = (sy + (lvl * 944) + wildY) / 48;
-					if (loadSection(x, y, lvl, world, sx, sy + (944 * lvl))) {
-						loadSection(x, y, lvl, world, sx, sy + (944 * lvl));
+					if (loadSection(x, y, lvl, sx, sy + (944 * lvl))) {
+						loadSection(x, y, lvl, sx, sy + (944 * lvl));
 						sectors++;
 					}
 				}
