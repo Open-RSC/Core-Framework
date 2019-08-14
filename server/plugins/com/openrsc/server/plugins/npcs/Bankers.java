@@ -9,7 +9,6 @@ import com.openrsc.server.plugins.listeners.action.NpcCommandListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.NpcCommandExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -70,7 +69,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 					return;
 				}
 				try {
-						PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+						PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 						statement.setString(1, player.getUsername());
 						ResultSet result = statement.executeQuery();
 						if (result.next()) {
@@ -111,7 +110,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 						return;
 					}
 					try {
-						PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+						PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 						statement.setString(1, player.getUsername());
 						ResultSet result = statement.executeQuery();
 						if (result.next()) {
@@ -132,7 +131,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 						return;
 					}
 					try {
-						PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+						PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 						statement.setString(1, player.getUsername());
 						ResultSet result = statement.executeQuery();
 						if (result.next()) {
@@ -147,7 +146,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 					}
 					String changeTo = getBankPinInput(player);
 					try {
-						PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+						PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 						statement.setString(1, player.getUsername());
 						ResultSet result = statement.executeQuery();
 						if (result.next()) {
@@ -170,7 +169,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 						return;
 					}
 					try {
-						PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+						PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 						statement.setString(1, player.getUsername());
 						ResultSet result = statement.executeQuery();
 						if (result.next()) {
@@ -214,7 +213,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 					return;
 				}
 				try {
-					PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+					PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 					statement.setString(1, player.getUsername());
 					ResultSet result = statement.executeQuery();
 					if (result.next()) {
@@ -263,7 +262,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 				return;
 			}
 			try {
-				PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+				PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 				statement.setString(1, player.getUsername());
 				ResultSet result = statement.executeQuery();
 				if (result.next()) {

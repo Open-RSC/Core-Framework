@@ -54,7 +54,7 @@ public final class GameLogger implements Runnable {
 	public void run() {
 		while (running.get()) {
 			synchronized(running) {
-				if (queries.size() > 0 && DatabaseConnection.getDatabase().isConnected()) {
+				if (queries.size() > 0 && getServer().getDatabaseConnection().isConnected()) {
 					pollNextQuery();
 				}
 			}
@@ -65,7 +65,7 @@ public final class GameLogger implements Runnable {
 			}
 		}
 		LOGGER.info("Shutting down database thread.. executing remaining queries");
-		while (queries.size() > 0 && DatabaseConnection.getDatabase().isConnected()) {
+		while (queries.size() > 0 && getServer().getDatabaseConnection().isConnected()) {
 			pollNextQuery();
 		}
 	}
@@ -77,12 +77,12 @@ public final class GameLogger implements Runnable {
 				if (log instanceof ResultQuery) {
 					ResultQuery rq = (ResultQuery) log;
 					try {
-						rq.onResult(rq.prepareStatement(DatabaseConnection.getDatabase().getConnection()).executeQuery());
+						rq.onResult(rq.prepareStatement(getServer().getDatabaseConnection().getConnection()).executeQuery());
 					} catch (SQLException e) {
 						LOGGER.catching(e);
 					}
 				} else {
-					log.prepareStatement(DatabaseConnection.getDatabase().getConnection()).execute();
+					log.prepareStatement(getServer().getDatabaseConnection().getConnection()).execute();
 				}
 			}
 		} catch (Exception e) {

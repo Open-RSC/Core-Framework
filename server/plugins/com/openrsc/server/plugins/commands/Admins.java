@@ -12,7 +12,10 @@ import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.BankEventNpc;
 import com.openrsc.server.event.rsc.impl.ProjectileEvent;
 import com.openrsc.server.event.rsc.impl.RangeEventNpc;
-import com.openrsc.server.external.*;
+import com.openrsc.server.external.ItemDefinition;
+import com.openrsc.server.external.ItemDropDef;
+import com.openrsc.server.external.ItemLoc;
+import com.openrsc.server.external.NPCDef;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
@@ -30,7 +33,6 @@ import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
-import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.query.logs.ChatLog;
 import com.openrsc.server.sql.query.logs.StaffLog;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -461,7 +463,7 @@ public final class Admins implements CommandListener {
 			}
 
 			ItemLoc item = new ItemLoc(id, x, y, amount, respawnTime);
-			DatabaseConnection.getDatabase()
+			player.getWorld().getServer().getDatabaseConnection()
 				.executeUpdate("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "grounditems`(`id`, `x`, `y`, `amount`, `respawn`) VALUES ('"
 					+ item.getId() + "','" + item.getX() + "','" + item.getY() + "','" + item.getAmount()
@@ -512,7 +514,7 @@ public final class Admins implements CommandListener {
 			}
 
 			player.message(messagePrefix + "Removed ground item from database: " + itemr.getDef().getName() + " with item ID " + itemr.getID());
-			DatabaseConnection.getDatabase()
+			player.getWorld().getServer().getDatabaseConnection()
 				.executeUpdate("DELETE FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "grounditems` WHERE `x` = '" + itemr.getX() + "' AND `y` =  '" + itemr.getY()
 					+ "' AND `id` = '" + itemr.getID() + "'");

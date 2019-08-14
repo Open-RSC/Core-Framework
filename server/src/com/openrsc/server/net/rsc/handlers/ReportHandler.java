@@ -6,7 +6,6 @@ import com.openrsc.server.model.snapshot.Snapshot;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.query.logs.GameReport;
 
 import java.sql.ResultSet;
@@ -50,7 +49,7 @@ public final class ReportHandler implements PacketHandler {
 			return;
 		}
 
-		ResultSet result = DatabaseConnection.getDatabase().executeQuery("SELECT `username` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players` WHERE username='" + hash + "'");
+		ResultSet result = player.getWorld().getServer().getDatabaseConnection().executeQuery("SELECT `username` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players` WHERE username='" + hash + "'");
 
 		if (!result.next()) {
 			player.message("Invalid player name.");

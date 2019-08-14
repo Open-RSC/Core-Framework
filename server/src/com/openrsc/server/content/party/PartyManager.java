@@ -2,7 +2,6 @@ package com.openrsc.server.content.party;
 
 import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.sql.DatabaseConnection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -190,7 +189,7 @@ public class PartyManager {
 
 	static void updatePartyRankPlayer(PartyPlayer cp) {
 		try {
-			PreparedStatement statement = DatabaseConnection.getDatabase()
+			PreparedStatement statement = cp.getPlayerReference().getWorld().getServer().getDatabaseConnection()
 				.prepareStatement("UPDATE `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "party_players` SET `rank`=? WHERE `username`=?");
 			statement.setInt(1, cp.getRank().getRankIndex());
 			statement.setString(2, cp.getUsername());

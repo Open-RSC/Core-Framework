@@ -10,7 +10,6 @@ import com.openrsc.server.net.ConnectionAttachment;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.PacketBuilder;
 import com.openrsc.server.net.RSCConnectionHandler;
-import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.query.logs.SecurityChangeLog;
 import com.openrsc.server.sql.query.logs.SecurityChangeLog.ChangeEvent;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -144,7 +143,7 @@ public class LoginPacketHandler {
 				}
 
 
-				ResultSet set = DatabaseConnection.getDatabase().executeQuery("SELECT 1 FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE creation_ip='" + IP
+				ResultSet set = Server.getServer().getDatabaseConnection().executeQuery("SELECT 1 FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE creation_ip='" + IP
 					+ "' AND creation_date>'" + ((System.currentTimeMillis() / 1000) - 60) + "'"); // Checks to see if the player has been registered by the same IP address in the past 1 minute
 
 				if (Server.getServer().getConfig().WANT_REGISTRATION_LIMIT) {
@@ -157,7 +156,7 @@ public class LoginPacketHandler {
 					}
 				}
 
-				set = DatabaseConnection.getDatabase().executeQuery("SELECT 1 FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`='" + user + "'");
+				set = Server.getServer().getDatabaseConnection().executeQuery("SELECT 1 FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`='" + user + "'");
 				if (set.next()) {
 					set.close();
 					LOGGER.info(IP + " - Registration failed: Forum Username already in use.");
@@ -166,7 +165,7 @@ public class LoginPacketHandler {
 					return;
 				}
 
-				set = DatabaseConnection.getDatabase().executeQuery("SELECT 1 FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`='" + user + "'");
+				set = Server.getServer().getDatabaseConnection().executeQuery("SELECT 1 FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`='" + user + "'");
 				if (set.next()) {
 					set.close();
 					LOGGER.info(IP + " - Android registration failed: Character Username already in use.");
@@ -179,7 +178,7 @@ public class LoginPacketHandler {
 
 				/* Create the game character */
 				try {
-					PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement(
+					PreparedStatement statement = Server.getServer().getDatabaseConnection().prepareStatement(
 						"INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players` (`username`, email, `pass`, `salt`, `creation_date`, `creation_ip`) VALUES (?, ?, ?, ?, ?, ?)");
 					statement.setString(1, user);
 					statement.setString(2, email);
@@ -191,7 +190,7 @@ public class LoginPacketHandler {
 					statement = null;
 
 					/* PlayerID of the player account */
-					statement = DatabaseConnection.getDatabase().prepareStatement("SELECT id FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE username=?");
+					statement = Server.getServer().getDatabaseConnection().prepareStatement("SELECT id FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE username=?");
 					statement.setString(1, user);
 
 					set = statement.executeQuery();
@@ -204,17 +203,17 @@ public class LoginPacketHandler {
 
 					int playerID = set.getInt("id");
 
-					statement = DatabaseConnection.getDatabase().prepareStatement("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "curstats` (`playerID`) VALUES (?)");
+					statement = Server.getServer().getDatabaseConnection().prepareStatement("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "curstats` (`playerID`) VALUES (?)");
 					statement.setInt(1, playerID);
 					statement.executeUpdate();
 
-					statement = DatabaseConnection.getDatabase().prepareStatement("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "experience` (`playerID`) VALUES (?)");
+					statement = Server.getServer().getDatabaseConnection().prepareStatement("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "experience` (`playerID`) VALUES (?)");
 					statement.setInt(1, playerID);
 					statement.executeUpdate();
 
 					//Don't rely on the default values of the database.
 					//Update the stats based on their StatDef-----------------------------------------------
-					statement = DatabaseConnection.getDatabase().prepareStatement(DatabaseConnection.getDatabase().getGameQueries().updateExperience);
+					statement = Server.getServer().getDatabaseConnection().prepareStatement(Server.getServer().getDatabaseConnection().getGameQueries().updateExperience);
 					statement.setInt(World.getWorld().getServer().getConstants().getSkills().getSkillsCount() + 1, playerID);
 					Skills newGuy = new Skills(null);
 
@@ -222,7 +221,7 @@ public class LoginPacketHandler {
 						statement.setInt(index + 1, newGuy.getExperience(index));
 					statement.executeUpdate();
 
-					statement = DatabaseConnection.getDatabase().prepareStatement(DatabaseConnection.getDatabase().getGameQueries().updateStats);
+					statement = Server.getServer().getDatabaseConnection().prepareStatement(Server.getServer().getDatabaseConnection().getGameQueries().updateStats);
 					statement.setInt(World.getWorld().getServer().getConstants().getSkills().getSkillsCount() + 1, playerID);
 					for (int index = 0; index < World.getWorld().getServer().getConstants().getSkills().getSkillsCount(); index++)
 						statement.setInt(index + 1, newGuy.getLevel(index));
@@ -244,14 +243,14 @@ public class LoginPacketHandler {
 					user = getString(p.getBuffer()).trim();
 					user = user.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ");
 					
-					PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT id FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE username=?");
+					PreparedStatement statement = Server.getServer().getDatabaseConnection().prepareStatement("SELECT id FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE username=?");
 					statement.setString(1, user);
 					ResultSet res = statement.executeQuery();
 					ResultSet res2 = null;
 					boolean foundAndHasRecovery = false;
 					
 					if (res.next()) {
-						statement = DatabaseConnection.getDatabase().prepareStatement("SELECT * FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery WHERE playerID=?");
+						statement = Server.getServer().getDatabaseConnection().prepareStatement("SELECT * FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery WHERE playerID=?");
 						statement.setInt(1, res.getInt("id"));
 						res2 = statement.executeQuery();
 						if (res2.next()) {
@@ -296,7 +295,7 @@ public class LoginPacketHandler {
 					
 					int pid = -1;
 					
-					PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT id, pass, salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE username=?");
+					PreparedStatement statement = Server.getServer().getDatabaseConnection().prepareStatement("SELECT id, pass, salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE username=?");
 					statement.setString(1, user);
 					ResultSet res = statement.executeQuery();
 					ResultSet res2 = null;
@@ -304,7 +303,7 @@ public class LoginPacketHandler {
 					
 					if (res.next()) {
 						pid = res.getInt("id");
-						statement = DatabaseConnection.getDatabase().prepareStatement("SELECT * FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery WHERE playerID=?");
+						statement = Server.getServer().getDatabaseConnection().prepareStatement("SELECT * FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery WHERE playerID=?");
 						statement.setInt(1, pid);
 						res2 = statement.executeQuery();
 						if (res2.next()) {
@@ -330,7 +329,7 @@ public class LoginPacketHandler {
 							numCorrect += (answers[j].equals(res2.getString("answer"+(j+1))) ? 1 : 0);
 						}
 						
-						PreparedStatement attempt = DatabaseConnection.getDatabase().prepareStatement("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+						PreparedStatement attempt = Server.getServer().getDatabaseConnection().prepareStatement("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 						+ "recovery_attempts`(`playerID`, `username`, `time`, `ip`) VALUES(?, ?, ?, ?)", new String[]{"dbid"});
 						attempt.setInt(1, pid);
 						attempt.setString(2, user);
@@ -348,7 +347,7 @@ public class LoginPacketHandler {
 						
 						//enough treshold to allow pass change for recovery
 						if (numCorrect >= 4) {
-							innerStatement = DatabaseConnection.getDatabase().prepareStatement(
+							innerStatement = Server.getServer().getDatabaseConnection().prepareStatement(
 									"UPDATE `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players` SET `pass`=?, `lastRecoveryTryId`=? WHERE `id`=?");
 							innerStatement.setString(1, newPass);
 							innerStatement.setInt(2, tryID);
@@ -362,7 +361,7 @@ public class LoginPacketHandler {
 							channel.writeAndFlush(new PacketBuilder().writeByte((byte) 1).toPacket());
 							channel.close();
 						} else {
-							innerStatement = DatabaseConnection.getDatabase().prepareStatement(
+							innerStatement = Server.getServer().getDatabaseConnection().prepareStatement(
 									"UPDATE `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players` SET `lastRecoveryTryId`=? WHERE `id`=?");
 							innerStatement.setInt(1, tryID);
 							innerStatement.setInt(2, pid);

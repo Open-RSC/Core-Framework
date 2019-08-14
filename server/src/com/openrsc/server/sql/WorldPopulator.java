@@ -34,7 +34,7 @@ public final class WorldPopulator {
 
 	@SuppressWarnings("unchecked")
 	public void populateWorld() {
-		Connection connection = DatabaseConnection.getDatabase().getConnection();
+		Connection connection = getWorld().getServer().getDatabaseConnection().getConnection();
 		Statement statement = null;
 		ResultSet result = null;
 		try {
@@ -127,7 +127,7 @@ public final class WorldPopulator {
 	}
 
 	public boolean storeGroundItemToDatabase(ItemLoc item) {
-		DatabaseConnection.getDatabase()
+		getWorld().getServer().getDatabaseConnection()
 			.executeUpdate(
 				"INSERT INTO `"
 					+ Server.getServer().getConfig().MYSQL_TABLE_PREFIX
@@ -140,7 +140,7 @@ public final class WorldPopulator {
 
 	public void storeGameObjectToDatabase(GameObject obj) {
 		GameObjectLoc gameObject = obj.getLoc();
-		DatabaseConnection.getDatabase()
+		getWorld().getServer().getDatabaseConnection()
 			.executeUpdate(
 				"INSERT INTO `"
 					+ Server.getServer().getConfig().MYSQL_TABLE_PREFIX
@@ -154,7 +154,7 @@ public final class WorldPopulator {
 
 	public void deleteGameObjectFromDatabase(GameObject obj) {
 		GameObjectLoc gameObject = obj.getLoc();
-		DatabaseConnection.getDatabase().executeUpdate(
+		getWorld().getServer().getDatabaseConnection().executeUpdate(
 			"DELETE FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 				+ "objects` WHERE `x` = '" + gameObject.getX()
 				+ "' AND `y` =  '" + gameObject.getY()
@@ -165,7 +165,7 @@ public final class WorldPopulator {
 
 	public void storeNpcToDatabase(Npc n) {
 		NPCLoc npc = n.getLoc();
-		DatabaseConnection.getDatabase()
+		getWorld().getServer().getDatabaseConnection()
 			.executeUpdate(
 				"INSERT INTO `"
 					+ Server.getServer().getConfig().MYSQL_TABLE_PREFIX
@@ -177,7 +177,7 @@ public final class WorldPopulator {
 	}
 
 	public void deleteNpc(Npc npc) {
-		DatabaseConnection.getDatabase().executeUpdate(
+		getWorld().getServer().getDatabaseConnection().executeUpdate(
 			"DELETE FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 				+ "npclocs` WHERE `id` = '" + npc.getID()
 				+ "' AND startX='" + npc.getLoc().startX

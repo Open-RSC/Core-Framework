@@ -1,7 +1,6 @@
 package com.openrsc.server.content.market;
 
 import com.openrsc.server.Server;
-import com.openrsc.server.sql.DatabaseConnection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,7 +18,7 @@ public class MarketDatabase {
 
 	public static boolean add(MarketItem item) {
 		try {
-			PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement(
+			PreparedStatement statement = Server.getServer().getDatabaseConnection().prepareStatement(
 				"INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "auctions`(`itemID`, `amount`, `amount_left`, `price`, `seller`, `seller_username`, `buyer_info`, `time`) VALUES (?,?,?,?,?,?,?,?)");
 			statement.setInt(1, item.getItemID());
@@ -43,7 +42,7 @@ public class MarketDatabase {
 
 		final String finalExplanation = explanation.replaceAll("'", "");
 		try {
-			PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement(
+			PreparedStatement statement = Server.getServer().getDatabaseConnection().prepareStatement(
 				"INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "expired_auctions`(`item_id`, `item_amount`, `time`, `playerID`, `explanation`) VALUES (?,?,?,?,?)");
 			statement.setInt(1, itemIndex);
@@ -61,7 +60,7 @@ public class MarketDatabase {
 
 	public static boolean cancel(MarketItem item) {
 		try {
-			PreparedStatement statement = DatabaseConnection.getDatabase()
+			PreparedStatement statement = Server.getServer().getDatabaseConnection()
 				.prepareStatement("UPDATE `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "auctions` SET  `sold-out`='1', `was_cancel`='1' WHERE `auctionID`=?");
 			statement.setInt(1, item.getAuctionID());
@@ -75,7 +74,7 @@ public class MarketDatabase {
 
 	static int getAuctionCount() {
 		try {
-			PreparedStatement statement = DatabaseConnection.getDatabase()
+			PreparedStatement statement = Server.getServer().getDatabaseConnection()
 				.prepareStatement("SELECT count(*) as auction_count FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "auctions` WHERE `sold-out`='0'");
 			ResultSet result = statement.executeQuery();
@@ -91,7 +90,7 @@ public class MarketDatabase {
 
 	public static int getMyAuctionsCount(int ownerID) {
 		try {
-			PreparedStatement statement = DatabaseConnection.getDatabase()
+			PreparedStatement statement = Server.getServer().getDatabaseConnection()
 				.prepareStatement("SELECT count(*) as my_slots FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "auctions` WHERE `seller`='" + ownerID + "' AND `sold-out`='0'");
 			ResultSet result = statement.executeQuery();
@@ -107,7 +106,7 @@ public class MarketDatabase {
 
 	public static MarketItem getAuctionItem(int auctionID) {
 		try {
-			PreparedStatement statement = DatabaseConnection.getDatabase()
+			PreparedStatement statement = Server.getServer().getDatabaseConnection()
 				.prepareStatement("SELECT `auctionID`, `itemID`, `amount`, `amount_left`, `price`, `seller`, `seller_username`, `buyer_info`, `time` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "auctions` WHERE `auctionID`= ? AND `sold-out` = '0'");
 			statement.setInt(1, auctionID);
@@ -127,7 +126,7 @@ public class MarketDatabase {
 	static ArrayList<MarketItem> getAuctionItemsOnSale() {
 		ArrayList<MarketItem> auctionItems = new ArrayList<>();
 		try {
-			PreparedStatement statement = DatabaseConnection.getDatabase()
+			PreparedStatement statement = Server.getServer().getDatabaseConnection()
 				.prepareStatement("SELECT `auctionID`, `itemID`, `amount`, `amount_left`, `price`, `seller`, `seller_username`, `buyer_info`, `time` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "auctions` WHERE `sold-out`='0'");
 			ResultSet result = statement.executeQuery();
@@ -145,7 +144,7 @@ public class MarketDatabase {
 
 	public static boolean setSoldOut(MarketItem item) {
 		try {
-			PreparedStatement statement = DatabaseConnection.getDatabase()
+			PreparedStatement statement = Server.getServer().getDatabaseConnection()
 				.prepareStatement("UPDATE `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "auctions` SET `amount_left`=?, `sold-out`=?, `buyer_info`=? WHERE `auctionID`=?");
 			statement.setInt(1, item.getAmountLeft());
@@ -162,7 +161,7 @@ public class MarketDatabase {
 
 	public static boolean update(MarketItem item) {
 		try {
-			PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement(
+			PreparedStatement statement = Server.getServer().getDatabaseConnection().prepareStatement(
 				"UPDATE `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "auctions` SET `amount_left`=?, `price` = ?, `buyer_info`=? WHERE `auctionID`= ?");
 			statement.setInt(1, item.getAmountLeft());
@@ -180,7 +179,7 @@ public class MarketDatabase {
 	public static ArrayList<CollectableItem> getCollectableItemsFor(int player) {
 		ArrayList<CollectableItem> list = new ArrayList<>();
 		try {
-			PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT `claim_id`, `item_id`, `item_amount`, `playerID`, `explanation` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+			PreparedStatement statement = Server.getServer().getDatabaseConnection().prepareStatement("SELECT `claim_id`, `item_id`, `item_amount`, `playerID`, `explanation` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 				+ "expired_auctions` WHERE `playerID` = ?  AND `claimed`= '0'");
 			statement.setInt(1, player);
 			ResultSet result = statement.executeQuery();

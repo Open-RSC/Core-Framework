@@ -424,7 +424,7 @@ public class DatabasePlayerLoader {
 
 	public void addNpcDrop(Player player, Npc npc, int dropId, int dropAmount) {
 		try {
-			PreparedStatement statementInsert = DatabaseConnection.getDatabase().prepareStatement(
+			PreparedStatement statementInsert = getServer().getDatabaseConnection().prepareStatement(
 				conn.getGameQueries().npcDropInsert);
 			statementInsert.setInt(1, dropId);
 			statementInsert.setInt(2, player.getDatabaseID());
@@ -768,7 +768,7 @@ public class DatabasePlayerLoader {
 			replyMessage = user + " has been banned for " + time + " minutes";
 		}
 		try {
-			DatabaseConnection.getDatabase().executeUpdate(query);
+			getServer().getDatabaseConnection().executeUpdate(query);
 		} catch (Exception e) {
 			return "There is not an account by that username";
 		}

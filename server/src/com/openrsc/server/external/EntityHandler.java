@@ -3,7 +3,6 @@ package com.openrsc.server.external;
 import com.openrsc.server.Server;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.TelePoint;
-import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.util.PersistenceManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -137,7 +136,7 @@ public final class EntityHandler {
 	}
 
 	protected void setupDbDefinitions() {
-		Connection connection = DatabaseConnection.getDatabase().getConnection();
+		Connection connection = getServer().getDatabaseConnection().getConnection();
 		Statement statement = null;
 		ResultSet result = null;
 		try {

@@ -57,6 +57,8 @@ public final class Server implements Runnable {
 	private final CombatScriptLoader combatScriptLoader;
 	private final GameLogger gameLogger;
 	private final EntityHandler entityHandler;
+	private final DatabaseConnection databaseConnection;
+
 	private final World world;
 
 	private DelayedEvent updateEvent;
@@ -77,6 +79,10 @@ public final class Server implements Runnable {
 
 	private Constants constants;
 
+	public static Server getServer() {
+		return server;
+	}
+
 	static {
 		try {
 			Thread.currentThread().setName("InitializationThread");
@@ -89,27 +95,6 @@ public final class Server implements Runnable {
 		} catch (Throwable t) {
 			throw new ExceptionInInitializerError(t);
 		}
-	}
-
-	public Server (String configFile) throws IOException{
-		config = new ServerConfiguration();
-		getConfig().initConfig(configFile);
-		LOGGER.info("Server configuration loaded: " + configFile);
-
-		name = getConfig().SERVER_NAME;
-
-		pluginHandler = new PluginHandler(this);
-		combatScriptLoader = new CombatScriptLoader(this);
-		constants = new Constants(this);
-		discordService = new DiscordService(this);
-		playerDataProcessor = new PlayerDatabaseExecutor(this);
-		world = new World(this);
-		tickEventHandler = new GameTickEventHandler(this);
-		gameUpdater = new GameStateUpdater(this);
-		gameLogger = new GameLogger(this);
-		entityHandler = new EntityHandler(this);
-		monitoring = new MonitoringEvent();
-		scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getName()+" : GameThread").build());
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -133,15 +118,31 @@ public final class Server implements Runnable {
 		}
 	}
 
-	public static Server getServer() {
-		return server;
+	public Server (String configFile) throws IOException{
+		config = new ServerConfiguration();
+		getConfig().initConfig(configFile);
+		LOGGER.info("Server configuration loaded: " + configFile);
+
+		name = getConfig().SERVER_NAME;
+
+		pluginHandler = new PluginHandler(this);
+		combatScriptLoader = new CombatScriptLoader(this);
+		constants = new Constants(this);
+		databaseConnection = new DatabaseConnection(this, getName()+" : Database Connection");
+		discordService = new DiscordService(this);
+		playerDataProcessor = new PlayerDatabaseExecutor(this);
+		world = new World(this);
+		tickEventHandler = new GameTickEventHandler(this);
+		gameUpdater = new GameStateUpdater(this);
+		gameLogger = new GameLogger(this);
+		entityHandler = new EntityHandler(this);
+		monitoring = new MonitoringEvent();
+		scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getName()+" : GameThread").build());
 	}
 
 	private void initialize() {
 		try {
-			LOGGER.info("Creating database connection...");
-			DatabaseConnection.getDatabase();
-			LOGGER.info("\t Database connection created");
+			// TODO: We need an uninitialize process. Unloads all of these classes.
 
 			LOGGER.info("Loading Game Definitions...");
 			getEntityHandler().load();
@@ -341,7 +342,7 @@ public final class Server implements Runnable {
 		SingleEvent up = new SingleEvent(null, 6000, "Save and Shutdown") {
 			public void action() {
 				kill();
-				DatabaseConnection.getDatabase().close();
+				getDatabaseConnection().close();
 			}
 		};
 		getGameEventHandler().add(up);
@@ -541,5 +542,9 @@ public final class Server implements Runnable {
 
 	public EntityHandler getEntityHandler() {
 		return entityHandler;
+	}
+
+	public DatabaseConnection getDatabaseConnection() {
+		return databaseConnection;
 	}
 }

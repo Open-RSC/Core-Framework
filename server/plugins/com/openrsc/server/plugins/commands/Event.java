@@ -9,7 +9,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
-import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.query.logs.StaffLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
@@ -328,7 +327,7 @@ public final class Event implements CommandListener {
 				player.message(
 					messagePrefix + "No online character found named '" + targetUsername + "'.. checking database..");
 				try {
-					PreparedStatement statement = DatabaseConnection.getDatabase()
+					PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection()
 						.prepareStatement("SELECT `login_ip` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players` WHERE `username`=?");
 					statement.setString(1, targetUsername);
 					ResultSet result = statement.executeQuery();
@@ -354,7 +353,7 @@ public final class Event implements CommandListener {
 			}
 
 			try {
-				PreparedStatement statement = DatabaseConnection.getDatabase()
+				PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection()
 					.prepareStatement("SELECT `username`, `group_id` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players` WHERE `login_ip` LIKE ?");
 				statement.setString(1, currentIp);
 				ResultSet result = statement.executeQuery();

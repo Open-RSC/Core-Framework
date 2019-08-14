@@ -10,7 +10,6 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
-import com.openrsc.server.sql.DatabaseConnection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,11 +30,11 @@ public class AchievementSystem {
 		loadedAchievements.clear();
 
 		try {
-			PreparedStatement fetchAchievement = DatabaseConnection.getDatabase()
+			PreparedStatement fetchAchievement = Server.getServer().getDatabaseConnection()
 				.prepareStatement("SELECT `id`, `name`, `description`, `extra`, `added` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "achievements` ORDER BY `id` ASC");
-			PreparedStatement fetchRewards = DatabaseConnection.getDatabase()
+			PreparedStatement fetchRewards = Server.getServer().getDatabaseConnection()
 				.prepareStatement("SELECT `item_id`, `amount`, `guaranteed`, `reward_type` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "achievement_reward` WHERE `achievement_id` = ?");
-			PreparedStatement fetchTasks = DatabaseConnection.getDatabase()
+			PreparedStatement fetchTasks = Server.getServer().getDatabaseConnection()
 				.prepareStatement("SELECT `type`, `do_id`, `do_amount` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "achievement_task` WHERE `achievement_id` = ?");
 
 			ResultSet result = fetchAchievement.executeQuery();

@@ -7,7 +7,6 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
-import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.query.logs.StaffLog;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -228,7 +227,7 @@ public final class SuperModerator implements CommandListener {
 			player.message(messagePrefix + p.getUsername() + " has stage " + p.getQuestStage(quest) + " for quest " + quest);
 		} else if (cmd.equalsIgnoreCase("reloaddrops")) {
 			try {
-				PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement(
+				PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement(
 					"SELECT * FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "npcdrops` WHERE npcdef_id = ?");
 				for (int i = 0; i < player.getWorld().getServer().getEntityHandler().npcs.size(); i++) {
 					statement.setInt(1, i);

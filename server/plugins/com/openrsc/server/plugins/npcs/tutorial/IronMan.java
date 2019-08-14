@@ -8,7 +8,6 @@ import com.openrsc.server.plugins.listeners.action.NpcCommandListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.NpcCommandExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 import org.apache.logging.log4j.LogManager;
@@ -40,7 +39,7 @@ public class IronMan implements TalkToNpcExecutiveListener,
 						return;
 					}
 					try {
-						PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+						PreparedStatement statement = p.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 						statement.setString(1, p.getUsername());
 						ResultSet result = statement.executeQuery();
 						if (result.next()) {
@@ -81,7 +80,7 @@ public class IronMan implements TalkToNpcExecutiveListener,
 								return;
 							}
 							try {
-								PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+								PreparedStatement statement = p.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 								statement.setString(1, p.getUsername());
 								ResultSet result = statement.executeQuery();
 								if (result.next()) {

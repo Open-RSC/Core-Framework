@@ -9,7 +9,6 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
-import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.util.rsc.DataConversions;
 
 public final class Development implements CommandListener {
@@ -84,7 +83,7 @@ public final class Development implements CommandListener {
 			World.getWorld().registerNpc(n);
 			n.setShouldRespawn(true);
 			player.message(messagePrefix + "Added NPC to database: " + n.getDef().getName() + " at " + npcLoc + " with radius " + radius);
-			DatabaseConnection.getDatabase().executeUpdate("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+			player.getWorld().getServer().getDatabaseConnection().executeUpdate("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 				+ "npclocs`(`id`,`startX`,`minX`,`maxX`,`startY`,`minY`,`maxY`) VALUES('" + n.getLoc().getId()
 				+ "', '" + n.getLoc().startX() + "', '" + n.getLoc().minX() + "', '" + n.getLoc().maxX() + "','"
 				+ n.getLoc().startY() + "','" + n.getLoc().minY() + "','" + n.getLoc().maxY() + "')");
@@ -112,7 +111,7 @@ public final class Development implements CommandListener {
 			}
 
 			player.message(messagePrefix + "Removed NPC from database: " + npc.getDef().getName() + " with instance ID " + id);
-			DatabaseConnection.getDatabase()
+			player.getWorld().getServer().getDatabaseConnection()
 				.executeUpdate("DELETE FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "npclocs` WHERE `id` = '" + npc.getID() + "' AND startX='" + npc.getLoc().startX
 					+ "' AND startY='" + npc.getLoc().startY + "' AND minX='" + npc.getLoc().minX
@@ -166,7 +165,7 @@ public final class Development implements CommandListener {
 			}
 
 			player.message(messagePrefix + "Removed object from database: " + object.getGameObjectDef().getName() + " with instance ID " + object.getID());
-			DatabaseConnection.getDatabase()
+			player.getWorld().getServer().getDatabaseConnection()
 				.executeUpdate("DELETE FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "objects` WHERE `x` = '" + object.getX() + "' AND `y` =  '" + object.getY()
 					+ "' AND `id` = '" + object.getID() + "' AND `direction` = '" + object.getDirection()
@@ -226,7 +225,7 @@ public final class Development implements CommandListener {
 			GameObject newObject = new GameObject(player.getWorld(), Point.location(x, y), id, 0, 0);
 			World.getWorld().registerGameObject(newObject);
 			player.message(messagePrefix + "Added object to database: " + newObject.getGameObjectDef().getName() + " with instance ID " + newObject.getID() + " at " + newObject.getLocation());
-			DatabaseConnection.getDatabase()
+			player.getWorld().getServer().getDatabaseConnection()
 				.executeUpdate("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "objects`(`x`, `y`, `id`, `direction`, `type`) VALUES ('"
 					+ newObject.getX() + "', '" + newObject.getY() + "', '" + newObject.getID() + "', '"
@@ -298,7 +297,7 @@ public final class Development implements CommandListener {
 				direction = 8;
 			}
 
-			DatabaseConnection.getDatabase()
+			player.getWorld().getServer().getDatabaseConnection()
 				.executeUpdate("DELETE FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "objects` WHERE `x` = '"
 					+ object.getX() + "' AND `y` =  '" + object.getY() + "' AND `id` = '" + object.getID()
 					+ "' AND `direction` = '" + object.getDirection() + "' AND `type` = '" + object.getType()
@@ -308,7 +307,7 @@ public final class Development implements CommandListener {
 			GameObject newObject = new GameObject(player.getWorld(), Point.location(x, y), object.getID(), direction, object.getType());
 			World.getWorld().registerGameObject(newObject);
 
-			DatabaseConnection.getDatabase()
+			player.getWorld().getServer().getDatabaseConnection()
 				.executeUpdate("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "objects`(`x`, `y`, `id`, `direction`, `type`) VALUES ('" + newObject.getX() + "', '"
 					+ newObject.getY() + "', '" + newObject.getID() + "', '" + newObject.getDirection() + "', '"

@@ -16,7 +16,7 @@ public class DatabaseConnection {
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
-	private static DatabaseConnection singleton;
+
 	private Map<String, PreparedStatement> statements = new HashMap<String, PreparedStatement>();
 	private Connection connection;
 	private Statement statement;
@@ -45,13 +45,6 @@ public class DatabaseConnection {
 			LOGGER.catching(e);
 			System.exit(1);
 		}
-	}
-
-	public static DatabaseConnection getDatabase() {
-		if(singleton == null){
-			singleton = new DatabaseConnection(Server.getServer(), "Singleton Connection");
-		}
-		return singleton;
 	}
 
 	public static void closeIfNotNull(ResultSet result, Statement statement) {

@@ -2,7 +2,6 @@ package com.openrsc.server.content.clan;
 
 import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.sql.DatabaseConnection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -75,7 +74,7 @@ public class ClanManager {
 	}
 
 	private static void loadClans() throws SQLException {
-		PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT `id`, `name`, `tag`, `kick_setting`, `invite_setting`, `allow_search_join`, `clan_points` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "clan`");
+		PreparedStatement statement = Server.getServer().getDatabaseConnection().prepareStatement("SELECT `id`, `name`, `tag`, `kick_setting`, `invite_setting`, `allow_search_join`, `clan_points` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "clan`");
 		ResultSet result = statement.executeQuery();
 		while (result.next()) {
 			Clan clan = new Clan();
@@ -87,7 +86,7 @@ public class ClanManager {
 			clan.setAllowSearchJoin(result.getInt("allow_search_join"));
 			clan.setClanPoints(result.getInt("clan_points"));
 
-			PreparedStatement fetchPlayers = DatabaseConnection.getDatabase()
+			PreparedStatement fetchPlayers = Server.getServer().getDatabaseConnection()
 				.prepareStatement("SELECT `username`, `rank`, `kills`, `deaths` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "clan_players` WHERE `clan_id`=?");
 			fetchPlayers.setInt(1, clan.getClanID());
 			ResultSet playersResult = fetchPlayers.executeQuery();
@@ -114,7 +113,7 @@ public class ClanManager {
 	}
 
 	private static void databaseCreateClan(Clan clan) throws SQLException {
-		PreparedStatement statement = DatabaseConnection.getDatabase().getConnection().prepareStatement(
+		PreparedStatement statement = Server.getServer().getDatabaseConnection().getConnection().prepareStatement(
 			"INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "clan`(`name`, `tag`, `leader`) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
 		statement.setString(1, clan.getClanName());
 		statement.setString(2, clan.getClanTag());
@@ -128,7 +127,7 @@ public class ClanManager {
 
 		statement.close();
 
-		statement = DatabaseConnection.getDatabase()
+		statement = Server.getServer().getDatabaseConnection()
 			.prepareStatement("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "clan_players`(`clan_id`, `username`, `rank`) VALUES (?,?,?)");
 		for (ClanPlayer member : clan.getPlayers()) {
 			statement.setInt(1, clan.getClanID());
@@ -140,8 +139,8 @@ public class ClanManager {
 	}
 
 	private static void databaseDeleteClan(Clan clan) throws SQLException {
-		PreparedStatement deleteClan = DatabaseConnection.getDatabase().prepareStatement("DELETE FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "clan` WHERE `id`=?");
-		PreparedStatement deleteClanPlayers = DatabaseConnection.getDatabase()
+		PreparedStatement deleteClan = Server.getServer().getDatabaseConnection().prepareStatement("DELETE FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "clan` WHERE `id`=?");
+		PreparedStatement deleteClanPlayers = Server.getServer().getDatabaseConnection()
 			.prepareStatement("DELETE FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "clan_players` WHERE `clan_id`=?");
 
 		deleteClan.setInt(1, clan.getClanID());
@@ -152,7 +151,7 @@ public class ClanManager {
 
 	private static void saveClanPlayer(Clan clan) {
 		try {
-			PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement(
+			PreparedStatement statement = Server.getServer().getDatabaseConnection().prepareStatement(
 				"INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "clan_players`(`clan_id`, `username`, `rank`, `kills`, `deaths`) VALUES (?,?,?,?,?)");
 			for (ClanPlayer member : clan.getPlayers()) {
 				statement.setInt(1, clan.getClanID());
@@ -171,7 +170,7 @@ public class ClanManager {
 
 	private static void deleteClanPlayer(Clan clan) {
 		try {
-			PreparedStatement statement = DatabaseConnection.getDatabase()
+			PreparedStatement statement = Server.getServer().getDatabaseConnection()
 				.prepareStatement("DELETE FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "clan_players` WHERE `clan_id`=?");
 			statement.setInt(1, clan.getClanID());
 			statement.executeUpdate();
@@ -183,7 +182,7 @@ public class ClanManager {
 
 	private static void updateClan(Clan clan) {
 		try {
-			PreparedStatement statement = DatabaseConnection.getDatabase()
+			PreparedStatement statement = Server.getServer().getDatabaseConnection()
 				.prepareStatement("UPDATE `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "clan` SET `name`=?, `tag`=?, `leader`=?, `kick_setting`=?, `invite_setting`=?, `allow_search_join`=?, `clan_points`=? WHERE `id`=?");
 			statement.setString(1, clan.getClanName());
 			statement.setString(2, clan.getClanTag());
@@ -204,7 +203,7 @@ public class ClanManager {
 
 	static void updateClanRankPlayer(ClanPlayer cp) {
 		try {
-			PreparedStatement statement = DatabaseConnection.getDatabase()
+			PreparedStatement statement = Server.getServer().getDatabaseConnection()
 				.prepareStatement("UPDATE `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "clan_players` SET `rank`=? WHERE `username`=?");
 			statement.setInt(1, cp.getRank().getRankIndex());
 			statement.setString(2, cp.getUsername());

@@ -6,7 +6,6 @@ import com.openrsc.server.content.market.task.*;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
-import com.openrsc.server.sql.DatabaseConnection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -84,7 +83,7 @@ public class Market implements Runnable {
 				if (auction.hasExpired()) expiredItems.add(auction);
 
 			if (expiredItems.size() != 0) {
-				PreparedStatement expiredItemsStatement = DatabaseConnection.getDatabase().prepareStatement(
+				PreparedStatement expiredItemsStatement = Server.getServer().getDatabaseConnection().prepareStatement(
 					"INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
 						+ "expired_auctions`(`item_id`, `item_amount`, `time`, `playerID`, `explanation`) VALUES (?,?,?,?,?)");
 				for (MarketItem expiredItem : expiredItems) {

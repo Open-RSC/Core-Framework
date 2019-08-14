@@ -11,7 +11,6 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
-import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.query.logs.ChatLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
@@ -62,7 +61,7 @@ public final class RegularPlayer implements CommandListener {
 				return;
 			}
 			try {
-				PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+				PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 				statement.setString(1, player.getUsername());
 				ResultSet result = statement.executeQuery();
 				if (result.next()) {
@@ -387,7 +386,7 @@ public final class RegularPlayer implements CommandListener {
 		} else if (Server.getServer().getConfig().NPC_KILL_LIST && cmd.equalsIgnoreCase("kills")) {
 			StringBuilder kills = new StringBuilder("NPC Kill List for " + player.getUsername() + " % %");
 			try {
-				PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement(
+				PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement(
 					"SELECT * FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "npckills` WHERE playerID = ? ORDER BY killCount DESC LIMIT 16");
 				statement.setInt(1, player.getDatabaseID());
 				ResultSet result = statement.executeQuery();

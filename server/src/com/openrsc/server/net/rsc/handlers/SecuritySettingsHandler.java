@@ -5,7 +5,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.query.logs.SecurityChangeLog;
 import com.openrsc.server.sql.query.logs.SecurityChangeLog.ChangeEvent;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -33,7 +32,7 @@ public class SecuritySettingsHandler implements PacketHandler {
 			LOGGER.info("Password change attempt from: " + player.getCurrentIP());
 			String oldPass = p.readString().trim();
 			String newPass = p.readString().trim();
-			statement = DatabaseConnection.getDatabase().prepareStatement("SELECT id, pass, salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE username=?");
+			statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT id, pass, salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE username=?");
 			statement.setString(1, player.getUsername());
 			result = statement.executeQuery();
 			if (!result.next()) {
@@ -51,13 +50,13 @@ public class SecuritySettingsHandler implements PacketHandler {
 			}
 			newDBPass = DataConversions.hashPassword(newPass, DBsalt);
 			
-			statement = DatabaseConnection.getDatabase().prepareStatement(
+			statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement(
 					"UPDATE `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players` SET `pass`=? WHERE `id`=?");
 			statement.setString(1, newDBPass);
 			statement.setInt(2, playerID);
 			statement.executeUpdate();
 			
-			statement = DatabaseConnection.getDatabase().prepareStatement("SELECT previous_pass FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery WHERE playerID=?");
+			statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT previous_pass FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery WHERE playerID=?");
 			statement.setInt(1, playerID);
 			result = statement.executeQuery();
 			String lastPw, earlierPw;
@@ -70,7 +69,7 @@ public class SecuritySettingsHandler implements PacketHandler {
 				}
 				lastPw = lastDBPass;
 				
-				statement = DatabaseConnection.getDatabase().prepareStatement(
+				statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement(
 						"UPDATE `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery` SET `previous_pass`=?, `earlier_pass`=? WHERE `playerID`=?");
 				statement.setString(1, lastPw);
 				statement.setString(2, earlierPw);
@@ -91,7 +90,7 @@ public class SecuritySettingsHandler implements PacketHandler {
 				LOGGER.info(player.getCurrentIP() + " - Cancel recovery failed: Could not find player info in database.");
 				return;
 			}
-			statement = DatabaseConnection.getDatabase().prepareStatement(
+			statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement(
 					"DELETE FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "player_change_recovery` WHERE `playerID`=?");
 			statement.setInt(1, playerID);
 			statement.executeUpdate();
@@ -101,7 +100,7 @@ public class SecuritySettingsHandler implements PacketHandler {
 			
 			break;
 		case 200: //send recovery questions screen
-			statement = DatabaseConnection.getDatabase().prepareStatement("SELECT playerID, date_set FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "player_change_recovery WHERE username=?");
+			statement =player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT playerID, date_set FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "player_change_recovery WHERE username=?");
 			statement.setString(1, player.getUsername());
 			result = statement.executeQuery();
 			if (!result.next() || getDaysSinceTime(result.getLong("date_set")) >= 14) {
@@ -113,7 +112,7 @@ public class SecuritySettingsHandler implements PacketHandler {
 			
 			break;
 		case 201: //send contact details screen
-			statement = DatabaseConnection.getDatabase().prepareStatement("SELECT playerID, date_modified FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "player_contact_details WHERE username=?");
+			statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT playerID, date_modified FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "player_contact_details WHERE username=?");
 			statement.setString(1, player.getUsername());
 			result = statement.executeQuery();
 			if (!result.next() || getDaysSinceTime(result.getLong("date_modified")) >= 1) {
@@ -143,7 +142,7 @@ public class SecuritySettingsHandler implements PacketHandler {
 				LOGGER.info(player.getCurrentIP() + " - Set recovery questions failed: Could not find player info in database.");
 				return;
 			}
-			statement = DatabaseConnection.getDatabase().prepareStatement("SELECT 1 FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery WHERE playerID=?");
+			statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT 1 FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery WHERE playerID=?");
 			statement.setInt(1, playerID);
 			result = statement.executeQuery();
 			String table_suffix;
@@ -151,7 +150,7 @@ public class SecuritySettingsHandler implements PacketHandler {
 				//player has not set recovery questions
 				table_suffix = "player_recovery";
 			} else {
-				statement = DatabaseConnection.getDatabase().prepareStatement("SELECT date_set FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "player_change_recovery WHERE playerID=?");
+				statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT date_set FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "player_change_recovery WHERE playerID=?");
 				statement.setInt(1, playerID);
 				result = statement.executeQuery();
 				if (!result.next() || getDaysSinceTime(result.getLong("date_set")) >= 14) {
@@ -169,7 +168,7 @@ public class SecuritySettingsHandler implements PacketHandler {
 				return;
 			}
 			
-			statement = DatabaseConnection.getDatabase().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE id=?");
+			statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE id=?");
 			statement.setInt(1, playerID);
 			result = statement.executeQuery();
 			result.next();
@@ -179,7 +178,7 @@ public class SecuritySettingsHandler implements PacketHandler {
 				answers[i] = DataConversions.hashPassword(answers[i], salt);
 			}
 			
-			statement = DatabaseConnection.getDatabase().prepareStatement(
+			statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement(
 					"INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + table_suffix + "` (`playerID`, `username`, `question1`, `answer1`, `question2`, `answer2`, `question3`, `answer3`, `question4`, `answer4`, `question5`, `answer5`, `date_set`, `ip_set`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			statement.setInt(1, playerID);
 			statement.setString(2, player.getUsername());
@@ -232,14 +231,14 @@ public class SecuritySettingsHandler implements PacketHandler {
 				return;
 			}
 			
-			statement = DatabaseConnection.getDatabase().prepareStatement("SELECT fullname, zipCode, country, email FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "player_contact_details WHERE playerID=?");
+			statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT fullname, zipCode, country, email FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "player_contact_details WHERE playerID=?");
 			statement.setInt(1, playerID);
 			result = statement.executeQuery();
 			boolean isFirstSet = !result.next();
 			
 			PreparedStatement innerStatement;
 			if (isFirstSet) {
-				innerStatement = DatabaseConnection.getDatabase().prepareStatement(
+				innerStatement = player.getWorld().getServer().getDatabaseConnection().prepareStatement(
 						"INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "player_contact_details` (`playerID`, `username`, `fullname`, `zipCode`, `country`, `email`, `date_modified`, `ip`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 				innerStatement.setInt(1, playerID);
 				innerStatement.setString(2, player.getUsername());
@@ -257,7 +256,7 @@ public class SecuritySettingsHandler implements PacketHandler {
 				country = updateIfEmpty(country, result.getString("country"));
 				email = updateIfEmpty(email, result.getString("email"));
 				
-				innerStatement = DatabaseConnection.getDatabase().prepareStatement(
+				innerStatement = player.getWorld().getServer().getDatabaseConnection().prepareStatement(
 						"UPDATE `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "player_contact_details`" +
 						"SET `fullname`=?, `zipCode`=?, `country`=?, `email`=?, `date_modified`=?, `ip`=? WHERE `playerID`=?");
 				innerStatement.setString(1, maxLenString(fullName, 100, true));
