@@ -66,7 +66,9 @@ public final class Server implements Runnable {
 	private long timeLate = 0;
 	private long lastClientUpdate = 0;
 
-	private com.openrsc.server.constants.Constants constants;
+	private String name;
+
+	private Constants constants;
 
 	static {
 		try {
@@ -86,6 +88,8 @@ public final class Server implements Runnable {
 		config = new ServerConfiguration();
 		getConfig().initConfig(configFile);
 		LOGGER.info("Server configuration loaded");
+
+		name = getConfig().SERVER_NAME;
 
 		constants = new Constants(this);
 		discordService = new DiscordService(this);
@@ -503,5 +507,9 @@ public final class Server implements Runnable {
 
 	public World getWorld() {
 		return world;
+	}
+
+	public String getName() {
+		return name;
 	}
 }
