@@ -6,7 +6,6 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.sql.DatabaseConnection;
-import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.SecurityChangeLog;
 import com.openrsc.server.sql.query.logs.SecurityChangeLog.ChangeEvent;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -78,8 +77,8 @@ public class SecuritySettingsHandler implements PacketHandler {
 				statement.setInt(3, playerID);
 				statement.executeUpdate();
 			}
-			
-			GameLogging.addQuery(new SecurityChangeLog(player, ChangeEvent.PASSWORD_CHANGE,
+
+			player.getWorld().getServer().getGameLogger().addQuery(new SecurityChangeLog(player, ChangeEvent.PASSWORD_CHANGE,
 					"From: " + lastDBPass + ", To: " + newDBPass));
 			ActionSender.sendMessage(player, "Your password was successfully changed!");
 			LOGGER.info(player.getCurrentIP() + " - Password change successful");
@@ -96,7 +95,7 @@ public class SecuritySettingsHandler implements PacketHandler {
 					"DELETE FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "player_change_recovery` WHERE `playerID`=?");
 			statement.setInt(1, playerID);
 			statement.executeUpdate();
-			GameLogging.addQuery(new SecurityChangeLog(player, ChangeEvent.RECOVERY_QUESTIONS_CHANGE, "Player canceled pending request"));
+			player.getWorld().getServer().getGameLogger().addQuery(new SecurityChangeLog(player, ChangeEvent.RECOVERY_QUESTIONS_CHANGE, "Player canceled pending request"));
 			ActionSender.sendMessage(player, "You no longer have pending recovery question changes.");
 			LOGGER.info(player.getCurrentIP() + " - Cancel recovery request successful");
 			
@@ -202,8 +201,8 @@ public class SecuritySettingsHandler implements PacketHandler {
 			for (int i=0; i<5; i++) {
 				sb.append("(").append(questions[i]).append(",").append(answers[i]).append("), ");
 			}
-			
-			GameLogging.addQuery(new SecurityChangeLog(player, ChangeEvent.RECOVERY_QUESTIONS_CHANGE,
+
+			player.getWorld().getServer().getGameLogger().addQuery(new SecurityChangeLog(player, ChangeEvent.RECOVERY_QUESTIONS_CHANGE,
 					"Added questions/answers {" + sb.toString() + "}"));
 			if (table_suffix.equals("player_recovery")) {
 				ActionSender.sendMessage(player, "Recovery questions set successfully!");
@@ -271,7 +270,7 @@ public class SecuritySettingsHandler implements PacketHandler {
 				innerStatement.executeUpdate();
 				ActionSender.sendMessage(player, "Your contact details were successfully updated!");
 			}
-			GameLogging.addQuery(new SecurityChangeLog(player, ChangeEvent.CONTACT_DETAILS_CHANGE));
+			player.getWorld().getServer().getGameLogger().addQuery(new SecurityChangeLog(player, ChangeEvent.CONTACT_DETAILS_CHANGE));
 			LOGGER.info(player.getCurrentIP() + " - Contact details change successful");
 			break;
 		}

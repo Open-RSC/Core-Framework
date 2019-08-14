@@ -13,7 +13,6 @@ import com.openrsc.server.model.entity.update.*;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.PacketBuilder;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.PMLog;
 import com.openrsc.server.util.EntityList;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -741,7 +740,7 @@ public final class GameStateUpdater {
 						ActionSender.sendPrivateMessageReceived(affectedPlayer, p, pm.getMessage());
 					}
 
-					GameLogging.addQuery(new PMLog(p.getUsername(), pm.getMessage(),
+					p.getWorld().getServer().getGameLogger().addQuery(new PMLog(p.getUsername(), pm.getMessage(),
 						DataConversions.hashToUsername(pm.getFriend())));
 				}
 			}

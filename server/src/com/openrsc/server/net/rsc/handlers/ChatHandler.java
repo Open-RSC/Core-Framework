@@ -7,7 +7,6 @@ import com.openrsc.server.model.snapshot.Chatlog;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.ChatLog;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -34,7 +33,7 @@ public final class ChatHandler implements PacketHandler {
 			return;
 		}
 
-		GameLogging.addQuery(new ChatLog(sender.getUsername(), chatMessage.getMessageString()));
+		sender.getWorld().getServer().getGameLogger().addQuery(new ChatLog(sender.getUsername(), chatMessage.getMessageString()));
 		World.getWorld().addEntryToSnapshots(new Chatlog(sender.getUsername(), chatMessage.getMessageString()));
 	}
 }

@@ -39,7 +39,7 @@ import com.openrsc.server.net.rsc.handlers.WalkRequest;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.menu.Menu;
-import com.openrsc.server.sql.GameLogging;
+import com.openrsc.server.sql.GameLogger;
 import com.openrsc.server.sql.query.logs.GenericLog;
 import com.openrsc.server.sql.query.logs.LiveFeedLog;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -1686,9 +1686,9 @@ public final class Player extends Mob {
 				getWorld().sendKilledUpdate(this.getUsernameHash(), player.getUsernameHash(), id);
 				player.incKills();
 				this.incDeaths();
-				GameLogging.addQuery(new LiveFeedLog(player, "has PKed <strong>" + this.getUsername() + "</strong>"));
+				getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(player, "has PKed <strong>" + this.getUsername() + "</strong>"));
 			} else if (stake) {
-				GameLogging.addQuery(new LiveFeedLog(player,
+				getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(player,
 					"has just won a stake against <strong>" + this.getUsername() + "</strong>"));
 			}
 		}
@@ -1701,7 +1701,7 @@ public final class Player extends Mob {
 		if (isIronMan(3)) {
 			updateHCIronman(1);
 			ActionSender.sendIronManMode(this);
-			GameLogging.addQuery(new LiveFeedLog(this, "has died and lost the HC Iron Man Rank!"));
+			getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(this, "has died and lost the HC Iron Man Rank!"));
 		}
 		removeSkull(); // destroy
 		resetCombatEvent();
@@ -2031,7 +2031,7 @@ public final class Player extends Mob {
 			getWorld().getQuest(questId).handleReward(this);
 			updateQuestStage(questId, -1);
 			ActionSender.sendStats(this);
-			GameLogging.addQuery(new LiveFeedLog(this,
+			getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(this,
 				"just completed <strong><font color=#00FF00>" + getWorld().getQuest(questId).getQuestName()
 					+ "</font></strong> quest! They now have <strong><font color=#E1E100>" + this.getQuestPoints()
 					+ "</font></strong> quest points"));
@@ -2040,7 +2040,7 @@ public final class Player extends Mob {
 
 	public void sendMiniGameComplete(int miniGameId, Optional<String> message) {
 		getWorld().getMiniGame(miniGameId).handleReward(this);
-		GameLogging.addQuery(new LiveFeedLog(this, "just completed <strong><font color=#00FF00>" + getWorld().getMiniGame(miniGameId).getMiniGameName()
+		getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(this, "just completed <strong><font color=#00FF00>" + getWorld().getMiniGame(miniGameId).getMiniGameName()
 			+ "</font></strong> minigame! " + (message.isPresent() ? message.get() : "")));
 	}
 
@@ -2877,7 +2877,7 @@ public final class Player extends Mob {
 		getWorld().unregisterItem(item);
 		this.playSound("takeobject");
 		this.getInventory().add(itemFinal);
-		GameLogging.addQuery(new GenericLog(this.getUsername() + " picked up " + item.getDef().getName() + " x"
+		getWorld().getServer().getGameLogger().addQuery(new GenericLog(this.getUsername() + " picked up " + item.getDef().getName() + " x"
 			+ item.getAmount() + " at " + this.getLocation().toString()));
 
 		return true;

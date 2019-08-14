@@ -5,7 +5,6 @@ import com.openrsc.server.external.SkillDef;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.LiveFeedLog;
 import com.openrsc.server.util.rsc.Formulae;
 
@@ -159,10 +158,10 @@ public class Skills {
 				Player player = (Player) mob;
 				skillName = mob.getWorld().getServer().getConstants().getSkills().getSkill(skill).getShortName().toLowerCase();
 				if (newLevel >= Server.getServer().getConfig().PLAYER_LEVEL_LIMIT - 5 && newLevel <= Server.getServer().getConfig().PLAYER_LEVEL_LIMIT - 1) {
-					GameLogging.addQuery(new LiveFeedLog(player,
+					player.getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(player,
 						"has achieved level-" + newLevel + " in " + skillName + "!"));
 				} else if (newLevel == Server.getServer().getConfig().PLAYER_LEVEL_LIMIT) {
-					GameLogging.addQuery(new LiveFeedLog(player, "has achieved the maximum level of " + newLevel
+					player.getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(player, "has achieved the maximum level of " + newLevel
 						+ " in " + skillName + ", congratulations!"));
 				}
 				player.message("@gre@You just advanced " + levelDiff + " " + skillName + " level"

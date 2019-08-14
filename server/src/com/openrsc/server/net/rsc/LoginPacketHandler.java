@@ -11,7 +11,6 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.PacketBuilder;
 import com.openrsc.server.net.RSCConnectionHandler;
 import com.openrsc.server.sql.DatabaseConnection;
-import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.SecurityChangeLog;
 import com.openrsc.server.sql.query.logs.SecurityChangeLog.ChangeEvent;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -357,7 +356,7 @@ public class LoginPacketHandler {
 							innerStatement.executeUpdate();
 							
 							//log password change
-							GameLogging.addQuery(new SecurityChangeLog(pid, ChangeEvent.PASSWORD_CHANGE, IP,
+							Server.getServer().getGameLogger().addQuery(new SecurityChangeLog(pid, ChangeEvent.PASSWORD_CHANGE, IP,
 								"(@Recovery) From: " + currDBPass + ", To: " + newPass));
 							
 							channel.writeAndFlush(new PacketBuilder().writeByte((byte) 1).toPacket());

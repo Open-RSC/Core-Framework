@@ -31,7 +31,6 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.GenericLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -834,7 +833,7 @@ public class SpellHandler implements PacketHandler {
 
 						world.unregisterItem(affectedItem);
 						finalizeSpell(player, spell);
-						GameLogging.addQuery(
+						player.getWorld().getServer().getGameLogger().addQuery(
 							new GenericLog(player.getUsername() + " telegrabbed " + affectedItem.getDef().getName()
 								+ " x" + affectedItem.getAmount() + " from " + affectedItem.getLocation().toString()
 								+ " while standing at " + player.getLocation().toString()));

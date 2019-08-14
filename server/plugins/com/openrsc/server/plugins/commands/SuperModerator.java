@@ -9,7 +9,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
 import com.openrsc.server.sql.DatabaseConnection;
-import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.StaffLog;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -305,7 +304,7 @@ public final class SuperModerator implements CommandListener {
 			}
 
 			player.message(messagePrefix + "You have summoned all players to " + player.getLocation());
-			GameLogging.addQuery(new StaffLog(player, 15, player.getUsername() + " has summoned all players to " + player.getLocation()));
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 15, player.getUsername() + " has summoned all players to " + player.getLocation()));
 		} else if (cmd.equalsIgnoreCase("returnall")) {
 			for (Player p : world.getPlayers()) {
 				if (p == null)
@@ -354,7 +353,7 @@ public final class SuperModerator implements CommandListener {
 				p.message(messagePrefix + "Your fatigue has been set to " + ((p.getFatigue() / 25) * 100 / 750) + "% by a staff member");
 			}
 			player.message(messagePrefix + p.getUsername() + "'s fatigue has been set to " + ((p.getFatigue() / 25) * 100 / 750 / 4) + "%");
-			GameLogging.addQuery(new StaffLog(player, 12, p, p.getUsername() + "'s fatigue percentage was set to " + fatigue + "% by " + player.getUsername()));
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 12, p, p.getUsername() + "'s fatigue percentage was set to " + fatigue + "% by " + player.getUsername()));
 		} else if (cmd.equalsIgnoreCase("jail")) {
 			if (args.length != 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
@@ -379,7 +378,7 @@ public final class SuperModerator implements CommandListener {
 			}
 
 			Point originalLocation = p.jail();
-			GameLogging.addQuery(new StaffLog(player, 5, player.getUsername() + " has summoned " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation));
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 5, player.getUsername() + " has summoned " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation));
 			player.message(messagePrefix + "You have jailed " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation);
 			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "You have been jailed to " + p.getLocation() + " from " + originalLocation + " by " + player.getStaffName());
@@ -405,7 +404,7 @@ public final class SuperModerator implements CommandListener {
 			}
 
 			Point originalLocation = p.releaseFromJail();
-			GameLogging.addQuery(new StaffLog(player, 5, player.getUsername() + " has returned " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation));
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 5, player.getUsername() + " has returned " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation));
 			player.message(messagePrefix + "You have released " + p.getUsername() + " from jail to " + p.getLocation() + " from " + originalLocation);
 			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "You have been released from jail to " + p.getLocation() + " from " + originalLocation + " by " + player.getStaffName());
@@ -457,9 +456,9 @@ public final class SuperModerator implements CommandListener {
 			}
 
 			if (time == 0) {
-				GameLogging.addQuery(new StaffLog(player, 11, p, player.getUsername() + " was unbanned by " + player.getUsername()));
+				player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 11, p, player.getUsername() + " was unbanned by " + player.getUsername()));
 			} else {
-				GameLogging.addQuery(new StaffLog(player, 11, p, player.getUsername() + " was banned by " + player.getUsername() + " " + (time == -1 ? "permanently" : " for " + time + " minutes")));
+				player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 11, p, player.getUsername() + " was banned by " + player.getUsername() + " " + (time == -1 ? "permanently" : " for " + time + " minutes")));
 			}
 
 			player.message(messagePrefix + Server.getServer().getPlayerDataProcessor().getDatabase().banPlayer(usernameToBan, time)); // Disabled as it doesn't compile with PlayerDatabaseExecutor extending ThrottleFilter

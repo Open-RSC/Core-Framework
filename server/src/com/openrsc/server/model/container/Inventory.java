@@ -13,7 +13,6 @@ import com.openrsc.server.model.entity.player.Prayers;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.DeathLog;
 import com.openrsc.server.sql.query.logs.GenericLog;
 
@@ -84,7 +83,7 @@ public class Inventory {
 				world.registerItem(
 					new GroundItem(player.getWorld(), itemToAdd.getID(), player.getX(), player.getY(), itemToAdd.getAmount(), player),
 					94000);
-				GameLogging.addQuery(new GenericLog(player.getUsername() + " dropped(inventory full) "
+				player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getUsername() + " dropped(inventory full) "
 					+ itemToAdd.getID() + " x" + itemToAdd.getAmount() + " at " + player.getLocation().toString()));
 				return;
 			}
@@ -751,7 +750,7 @@ public class Inventory {
 		ActionSender.sendInventory(player);
 		ActionSender.sendEquipmentStats(player);
 		log.build();
-		GameLogging.addQuery(log);
+		player.getWorld().getServer().getGameLogger().addQuery(log);
 	}
 
 	public ArrayList getList() { return list;}

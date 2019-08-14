@@ -1,6 +1,8 @@
 package com.openrsc.server.model.world;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.content.DropTable;
 import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
@@ -8,9 +10,7 @@ import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler.Trawler
 import com.openrsc.server.content.party.PartyManager;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.external.GameObjectLoc;
-import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.external.NPCLoc;
-import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.io.WorldLoader;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Shop;
@@ -24,7 +24,6 @@ import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.WorldPopulation;
 import com.openrsc.server.sql.query.PlayerOnlineFlagQuery;
 import com.openrsc.server.sql.query.logs.LoginLog;
@@ -563,8 +562,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 			players.add(player);
 			player.updateRegion();
 			if (Server.getServer().getPlayerDataProcessor() != null) {
-				GameLogging.addQuery(new PlayerOnlineFlagQuery(player.getDatabaseID(), player.getCurrentIP(), true));
-				GameLogging.addQuery(new LoginLog(player.getDatabaseID(), player.getCurrentIP()));
+				getServer().getGameLogger().addQuery(new PlayerOnlineFlagQuery(player.getDatabaseID(), player.getCurrentIP(), true));
+				getServer().getGameLogger().addQuery(new LoginLog(player.getDatabaseID(), player.getCurrentIP()));
 			}
 			for (Player other : getPlayers()) {
 				other.getSocial().alertOfLogin(player);
@@ -729,7 +728,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	public void unregisterPlayer(final Player player) {
 		try {
 			if (Server.getServer().getPlayerDataProcessor() != null) {
-				GameLogging.addQuery(new PlayerOnlineFlagQuery(player.getDatabaseID(), false));
+				getServer().getGameLogger().addQuery(new PlayerOnlineFlagQuery(player.getDatabaseID(), false));
 				if (Server.getServer().getConfig().AVATAR_GENERATOR)
 					avatarGenerator.generateAvatar(player.getDatabaseID(), player.getSettings().getAppearance(), player.getWornItems());
 			}

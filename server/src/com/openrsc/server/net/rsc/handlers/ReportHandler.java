@@ -7,7 +7,6 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.sql.DatabaseConnection;
-import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.GameReport;
 
 import java.sql.ResultSet;
@@ -60,7 +59,7 @@ public final class ReportHandler implements PacketHandler {
 		}
 
 		player.message("Thank-you, your abuse report has been received.");
-		GameLogging.addQuery(new GameReport(player, hash, reason, suggestsOrMutes != 0, player.isMod()));
+		player.getWorld().getServer().getGameLogger().addQuery(new GameReport(player, hash, reason, suggestsOrMutes != 0, player.isMod()));
 		player.setLastReport();
 		
 		if (suggestsOrMutes != 0 && player.isMod()) {

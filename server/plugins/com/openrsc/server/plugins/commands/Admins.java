@@ -31,7 +31,6 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
 import com.openrsc.server.sql.DatabaseConnection;
-import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.ChatLog;
 import com.openrsc.server.sql.query.logs.StaffLog;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -150,7 +149,7 @@ public final class Admins implements CommandListener {
 
 			Server.getServer().getGameEventHandler().add(new HolidayDropEvent(executionCount, player, items));
 			player.message(messagePrefix + "Starting holiday drop!");
-			GameLogging.addQuery(new StaffLog(player, 21, messagePrefix + "Started holiday drop"));
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 21, messagePrefix + "Started holiday drop"));
 		} else if (cmd.equalsIgnoreCase("stopholidaydrop") || cmd.equalsIgnoreCase("cancelholidaydrop")) {
 			HashMap<String, GameTickEvent> events = Server.getServer().getGameEventHandler().getEvents();
 			for (GameTickEvent event : events.values()) {
@@ -158,7 +157,7 @@ public final class Admins implements CommandListener {
 
 				event.stop();
 				player.message(messagePrefix + "Stopping holiday drop!");
-				GameLogging.addQuery(new StaffLog(player, 21, messagePrefix + "Stopped holiday drop"));
+				player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 21, messagePrefix + "Stopped holiday drop"));
 				return;
 			}
 		} else if (cmd.equalsIgnoreCase("getholidaydrop") || cmd.equalsIgnoreCase("checkholidaydrop")) {
@@ -1178,7 +1177,7 @@ public final class Admins implements CommandListener {
 				Server.getServer().getGameUpdater().updatePlayerAppearances(playerToChat);
 			}
 			p.getUpdateFlags().setChatMessage(null);
-			GameLogging.addQuery(new ChatLog(p.getUsername(), chatMessage.getMessageString()));
+			player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(p.getUsername(), chatMessage.getMessageString()));
 			World.getWorld().addEntryToSnapshots(new Chatlog(p.getUsername(), chatMessage.getMessageString()));
 		} else if ((cmd.equalsIgnoreCase("smitenpc") || cmd.equalsIgnoreCase("damagenpc") || cmd.equalsIgnoreCase("dmgnpc"))) {
 			if (args.length < 1) {

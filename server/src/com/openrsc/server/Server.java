@@ -17,7 +17,7 @@ import com.openrsc.server.net.RSCProtocolDecoder;
 import com.openrsc.server.net.RSCProtocolEncoder;
 import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.sql.DatabaseConnection;
-import com.openrsc.server.sql.GameLogging;
+import com.openrsc.server.sql.GameLogger;
 import com.openrsc.server.util.NamedThreadFactory;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
@@ -54,12 +54,13 @@ public final class Server implements Runnable {
 	private final ScheduledExecutorService scheduledExecutor;
 	private final PluginHandler pluginHandler;
 	private final CombatScriptLoader combatScriptLoader;
+	private final GameLogger gameLogger;
 	private final World world;
 
 	private DelayedEvent updateEvent;
 	private ChannelFuture serverChannel;
 
-	private boolean running = false;
+	private Boolean running = false;
 	private boolean initialized = false;
 
 	private long lastIncomingPacketsDuration = 0;
@@ -103,6 +104,7 @@ public final class Server implements Runnable {
 		world = new World(this);
 		tickEventHandler = new GameTickEventHandler(this);
 		gameUpdater = new GameStateUpdater(this);
+		gameLogger = new GameLogger(this);
 		monitoring = new MonitoringEvent();
 		scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getName()+" : GameThread").build());
 	}
@@ -137,10 +139,6 @@ public final class Server implements Runnable {
 			LOGGER.info("Creating database connection...");
 			DatabaseConnection.getDatabase();
 			LOGGER.info("\t Database connection created");
-
-			LOGGER.info("Loading game logging manager...");
-			GameLogging.load(this);
-			LOGGER.info("\t Game Logging Manager Completed");
 
 			LOGGER.info("Loading Plugins...");
 			getPluginHandler().load();
@@ -200,28 +198,38 @@ public final class Server implements Runnable {
 	}
 
 	public void start() {
-		if(!isInitialized()) {
-			initialize();
-		}
+		synchronized (running) {
+			if (!isInitialized()) {
+				initialize();
+			}
 
-		running = true;
-		scheduledExecutor.scheduleAtFixedRate(this, 0, 1, TimeUnit.MILLISECONDS);
-		playerDataProcessor.start();
-		discordService.start();
+			running = true;
+			scheduledExecutor.scheduleAtFixedRate(this, 0, 1, TimeUnit.MILLISECONDS);
+
+			playerDataProcessor.start();
+			discordService.start();
+			gameLogger.start();
+		}
 	}
 
 	public void stop() {
-		running = false;
-		scheduledExecutor.shutdown();
-		discordService.stop();
-		playerDataProcessor.stop();
+		synchronized(running) {
+			running = false;
+			scheduledExecutor.shutdown();
+
+			playerDataProcessor.stop();
+			discordService.stop();
+			gameLogger.stop();
+		}
 	}
 
 	public void kill() {
-		// TODO: Uninitialize server
-		stop();
-		LOGGER.fatal(getName() + " shutting down...");
-		System.exit(0);
+		synchronized(running) {
+			// TODO: Uninitialize server
+			stop();
+			LOGGER.fatal(getName() + " shutting down...");
+			System.exit(0);
+		}
 	}
 
 	public void submitTask(Runnable r) {
@@ -236,41 +244,42 @@ public final class Server implements Runnable {
 	}
 
 	public void run() {
-	    try {
-			timeLate = System.currentTimeMillis() - lastClientUpdate - getServer().getConfig().GAME_TICK;
-			if (getTimeLate() >= 0) {
-				lastClientUpdate += getServer().getConfig().GAME_TICK;
+		synchronized(running) {
+			try {
+				timeLate = System.currentTimeMillis() - lastClientUpdate - getServer().getConfig().GAME_TICK;
+				if (getTimeLate() >= 0) {
+					lastClientUpdate += getServer().getConfig().GAME_TICK;
 
-				// Doing the set in two stages here such that the whole tick has access to the same values for profiling information.
-				final long tickStart = System.currentTimeMillis();
-				final long lastIncomingPacketsDuration = processIncomingPackets();
-				final long lastEventsDuration = runGameEvents();
-				final long lastGameStateDuration = runGameStateUpdate();
-				final long lastOutgoingPacketsDuration = processOutgoingPackets();
-				final long tickEnd = System.currentTimeMillis();
-				final long lastTickDuration = tickEnd - tickStart;
+					// Doing the set in two stages here such that the whole tick has access to the same values for profiling information.
+					final long tickStart = System.currentTimeMillis();
+					final long lastIncomingPacketsDuration = processIncomingPackets();
+					final long lastEventsDuration = runGameEvents();
+					final long lastGameStateDuration = runGameStateUpdate();
+					final long lastOutgoingPacketsDuration = processOutgoingPackets();
+					final long tickEnd = System.currentTimeMillis();
+					final long lastTickDuration = tickEnd - tickStart;
 
-				this.lastIncomingPacketsDuration = lastIncomingPacketsDuration;
-				this.lastEventsDuration = lastEventsDuration;
-				this.lastGameStateDuration = lastGameStateDuration;
-				this.lastOutgoingPacketsDuration = lastOutgoingPacketsDuration;
-				this.lastTickDuration = lastTickDuration;
-			}
-			else {
-				if(getServer().getConfig().WANT_CUSTOM_WALK_SPEED) {
-					for (Player p : World.getWorld().getPlayers()) {
-						p.updatePosition();
+					this.lastIncomingPacketsDuration = lastIncomingPacketsDuration;
+					this.lastEventsDuration = lastEventsDuration;
+					this.lastGameStateDuration = lastGameStateDuration;
+					this.lastOutgoingPacketsDuration = lastOutgoingPacketsDuration;
+					this.lastTickDuration = lastTickDuration;
+				} else {
+					if (getServer().getConfig().WANT_CUSTOM_WALK_SPEED) {
+						for (Player p : World.getWorld().getPlayers()) {
+							p.updatePosition();
+						}
+
+						for (Npc n : World.getWorld().getNpcs()) {
+							n.updatePosition();
+						}
+
+						getGameUpdater().executeWalkToActions();
 					}
-
-					for (Npc n : World.getWorld().getNpcs()) {
-						n.updatePosition();
-					}
-
-					getGameUpdater().executeWalkToActions();
 				}
+			} catch (Throwable t) {
+				LOGGER.catching(t);
 			}
-		} catch (Throwable t) {
-			LOGGER.catching(t);
 		}
 	}
 
@@ -517,5 +526,9 @@ public final class Server implements Runnable {
 
 	public CombatScriptLoader getCombatScriptLoader() {
 		return combatScriptLoader;
+	}
+
+	public GameLogger getGameLogger() {
+		return gameLogger;
 	}
 }

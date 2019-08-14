@@ -10,7 +10,6 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.GenericLog;
 
 public final class InterfaceShopHandler implements PacketHandler {
@@ -105,7 +104,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 			}
 			
 			player.playSound("coins");
-			GameLogging.addQuery(new GenericLog(player.getUsername() + " bought " + def.getName() + " x" + correctItemsBought + " for " + totalMoneySpent + "gp" + " at " + player.getLocation().toString()));
+			player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getUsername() + " bought " + def.getName() + " x" + correctItemsBought + " for " + totalMoneySpent + "gp" + " at " + player.getLocation().toString()));
 
 		} else if (pID == packetThree) { // Sell item
 			if (def.isUntradable() || !shop.shouldStock(itemID)) {
@@ -159,7 +158,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 			}
 
 			player.playSound("coins");
-			GameLogging.addQuery(new GenericLog(player.getUsername() + " sold " + def.getName() + " x" + totalSold
+			player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getUsername() + " sold " + def.getName() + " x" + totalSold
 				+ " for " + totalMoney + "gp" + " at " + player.getLocation().toString()));
 		}
 	}

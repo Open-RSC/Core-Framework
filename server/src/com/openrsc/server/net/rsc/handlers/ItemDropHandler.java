@@ -10,7 +10,6 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.GenericLog;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -127,7 +126,7 @@ public final class ItemDropHandler implements PacketHandler {
 			player);
 		ActionSender.sendSound(player, "dropobject");
 		World.getWorld().registerItem(groundItem, 188000);
-		GameLogging.addQuery(new GenericLog(player.getUsername() + " dropped " + item.getDef().getName() + " x"
+		player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getUsername() + " dropped " + item.getDef().getName() + " x"
 			+ DataConversions.numberFormat(groundItem.getAmount()) + " at " + player.getLocation().toString()));
 		player.setStatus(Action.IDLE);
 	}
@@ -186,7 +185,7 @@ public final class ItemDropHandler implements PacketHandler {
 				GroundItem groundItem = new GroundItem(getOwner().getWorld(), item.getID(), getOwner().getX(), getOwner().getY(), amount,
 					getOwner());
 				World.getWorld().registerItem(groundItem, 188000);
-				GameLogging.addQuery(new GenericLog(getOwner().getUsername() + " dropped " + item.getDef().getName()
+				player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(getOwner().getUsername() + " dropped " + item.getDef().getName()
 					+ " at " + getOwner().getLocation().toString()));
 				dropCount++;
 				if (amount > 1)

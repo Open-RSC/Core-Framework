@@ -7,7 +7,6 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.GenericLog;
 
 public final class SleepHandler implements PacketHandler {
@@ -47,7 +46,7 @@ public final class SleepHandler implements PacketHandler {
 				player.incrementSleepTries();
 				if (player.getIncorrectSleepTimes() > 5) {
 					World.getWorld().sendModAnnouncement(player.getUsername() + " has failed sleeping captcha " + player.getIncorrectSleepTimes() + " times!");
-					GameLogging.addQuery(new GenericLog(player.getUsername() + " has failed sleeping captcha " + player.getIncorrectSleepTimes() + " times!"));
+					player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getUsername() + " has failed sleeping captcha " + player.getIncorrectSleepTimes() + " times!"));
 				}
 
 				Server.getServer().getGameEventHandler()

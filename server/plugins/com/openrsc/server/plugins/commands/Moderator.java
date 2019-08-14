@@ -7,11 +7,9 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
-import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.StaffLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
-
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
@@ -80,7 +78,7 @@ public final class Moderator implements CommandListener {
 				}
 				p.getCache().store("global_mute", (System.currentTimeMillis() + (minutes * 60000)));
 			}
-			GameLogging.addQuery(new StaffLog(player, 0, p, p.getUsername() + " was given a " + (minutes == -1 ? "permanent mute" : " temporary mute for " + minutes + " minutes in (::g) chat.")));
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 0, p, p.getUsername() + " was given a " + (minutes == -1 ? "permanent mute" : " temporary mute for " + minutes + " minutes in (::g) chat.")));
 		} else if (cmd.equalsIgnoreCase("mute")) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] (time in minutes, -1 for permanent)");
@@ -132,7 +130,7 @@ public final class Moderator implements CommandListener {
 				}
 				p.setMuteExpires((System.currentTimeMillis() + (minutes * 60000)));
 			}
-			GameLogging.addQuery(new StaffLog(player, 0, p, p.getUsername() + " was given a " + (minutes == -1 ? "permanent mute" : " temporary mute for " + minutes + " minutes")));
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 0, p, p.getUsername() + " was given a " + (minutes == -1 ? "permanent mute" : " temporary mute for " + minutes + " minutes")));
 		} else if (cmd.equalsIgnoreCase("kick")) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
@@ -147,7 +145,7 @@ public final class Moderator implements CommandListener {
 				player.message(messagePrefix + "You can not kick a staff member of equal or greater rank.");
 				return;
 			}
-			GameLogging.addQuery(new StaffLog(player, 6, p, p.getUsername() + " has been kicked by " + player.getUsername()));
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 6, p, p.getUsername() + " has been kicked by " + player.getUsername()));
 			p.unregister(true, "You have been kicked by " + player.getUsername());
 			player.message(p.getUsername() + " has been kicked.");
 		} else if (cmd.equalsIgnoreCase("alert")) {
@@ -187,7 +185,7 @@ public final class Moderator implements CommandListener {
 				return;
 			}
 			Point originalLocation = p.summon(player);
-			GameLogging.addQuery(new StaffLog(player, 15, player.getUsername() + " has summoned " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation));
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 15, player.getUsername() + " has summoned " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation));
 			player.message(messagePrefix + "You have summoned " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation);
 			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "You have been summoned by " + player.getStaffName());
@@ -198,7 +196,7 @@ public final class Moderator implements CommandListener {
 			for (String arg : args) {
 				newStr.append(arg).append(" ");
 			}
-			GameLogging.addQuery(new StaffLog(player, 13, newStr.toString()));
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 13, newStr.toString()));
 			newStr.insert(0, player.getStaffName() + ": ");
 			for (Player p : World.getWorld().getPlayers()) {
 				ActionSender.sendMessage(p, player, 1, MessageType.GLOBAL_CHAT, newStr.toString(), player.getIcon());
@@ -260,7 +258,7 @@ public final class Moderator implements CommandListener {
 			for (String arg : args) {
 				newStr.append(arg).append(" ");
 			}
-			GameLogging.addQuery(new StaffLog(player, 13, newStr.toString()));
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 13, newStr.toString()));
 			newStr.insert(0, player.getStaffName() + ": ");
 			for (Player p : World.getWorld().getPlayers()) {
 				ActionSender.sendMessage(p, player, 1, MessageType.GLOBAL_CHAT, "ANNOUNCEMENT: @whi@" + newStr.toString(), player.getIcon());

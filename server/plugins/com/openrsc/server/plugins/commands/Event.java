@@ -10,7 +10,6 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
 import com.openrsc.server.sql.DatabaseConnection;
-import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.StaffLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
@@ -179,7 +178,7 @@ public final class Event implements CommandListener {
 				p.message(messagePrefix + "You have been teleported to " + p.getLocation() + " from " + originalLocation);
 			}
 
-			GameLogging.addQuery(new StaffLog(player, 15, player.getUsername() + " has teleported " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation));
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 15, player.getUsername() + " has teleported " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation));
 		}
 		else if (cmd.equalsIgnoreCase("return")) {
 			Player p = args.length > 0 ?
@@ -207,7 +206,7 @@ public final class Event implements CommandListener {
 			}
 
 			Point originalLocation = p.returnFromSummon();
-			GameLogging.addQuery(new StaffLog(player, 15, player.getUsername() + " has returned " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation));
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 15, player.getUsername() + " has returned " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation));
 			player.message(messagePrefix + "You have returned " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation);
 			if(p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "You have been returned by " + player.getStaffName());
@@ -216,7 +215,7 @@ public final class Event implements CommandListener {
 		else if (cmd.equalsIgnoreCase("blink")) {
 			player.setAttribute("blink", !player.getAttribute("blink", false));
 			player.message(messagePrefix + "Your blink status is now " + player.getAttribute("blink", false));
-			GameLogging.addQuery(new StaffLog(player, 10, "Blink was set - " + player.getAttribute("blink", false)));
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 10, "Blink was set - " + player.getAttribute("blink", false)));
 		}
 		else if (cmd.equalsIgnoreCase("invisible") || cmd.equalsIgnoreCase("invis")) {
 			Player p = args.length > 0 ?
@@ -265,7 +264,7 @@ public final class Event implements CommandListener {
 			if(p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "A staff member has made you " + invisibleText);
 			}
-			GameLogging.addQuery(new StaffLog(player, 14, player.getUsername() + " has made " + p.getUsername() + " " + invisibleText));
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 14, player.getUsername() + " has made " + p.getUsername() + " " + invisibleText));
 		}
 		else if (cmd.equalsIgnoreCase("invulnerable") || cmd.equalsIgnoreCase("invul")) {
 			Player p = args.length > 0 ?
@@ -314,7 +313,7 @@ public final class Event implements CommandListener {
 			if(p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "A staff member has made you " + invulnerbleText);
 			}
-			GameLogging.addQuery(new StaffLog(player, 22, player.getUsername() + " has made " + p.getUsername() + " " + invulnerbleText));
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 22, player.getUsername() + " has made " + p.getUsername() + " " + invulnerbleText));
 		}
 		else if (cmd.equalsIgnoreCase("check")) {
 			if(args.length < 1) {
@@ -400,7 +399,7 @@ public final class Event implements CommandListener {
 					}
 				}
 
-				GameLogging.addQuery(new StaffLog(player, 18, target));
+				player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 18, target));
 				ActionSender.sendBox(player, builder.toString(), names.size() > 10);
 				result.close();
 			} catch (SQLException e) {
@@ -454,7 +453,7 @@ public final class Event implements CommandListener {
 			World.EVENT_COMBAT_MIN = -1;
 			World.EVENT_COMBAT_MAX = -1;
 			player.message(messagePrefix + "Event disabled");
-			GameLogging.addQuery(new StaffLog(player, 8, "Stopped an ongoing event"));
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 8, "Stopped an ongoing event"));
 		}
 		else if (cmd.equalsIgnoreCase("setevent") || cmd.equalsIgnoreCase("startevent")) {
 			if (args.length < 4) {
@@ -505,7 +504,7 @@ public final class Event implements CommandListener {
 			World.EVENT_COMBAT_MAX = cbMax;
 			player.message(messagePrefix + "Event enabled: " + x + ", " + y + ", Combat level range: " + World.EVENT_COMBAT_MIN + " - "
 				+ World.EVENT_COMBAT_MAX + "");
-			GameLogging.addQuery(new StaffLog(player, 9, "Created event at: (" + x + ", " + y + ") cb-min: " + World.EVENT_COMBAT_MIN + " cb-max: " + World.EVENT_COMBAT_MAX + ""));
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 9, "Created event at: (" + x + ", " + y + ") cb-min: " + World.EVENT_COMBAT_MIN + " cb-max: " + World.EVENT_COMBAT_MAX + ""));
 		}
 		else if (cmd.equalsIgnoreCase("setgroup") || cmd.equalsIgnoreCase("setrank") || cmd.equalsIgnoreCase("group") || cmd.equalsIgnoreCase("rank")) {
 			if (args.length < 1) {
@@ -566,7 +565,7 @@ public final class Event implements CommandListener {
 				}
 				player.message(messagePrefix + "Set " + p.getStaffName() + "@whi@ to group " + Group.getStaffPrefix(newGroup) + newGroupName + (player.isDev() ? " (" + newGroup + ")" : ""));
 
-				GameLogging.addQuery(new StaffLog(player, 23, player.getUsername() + " has changed " + p.getUsername() + "'s group to " + newGroupName + " from " + oldGroupName));
+				player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 23, player.getUsername() + " has changed " + p.getUsername() + "'s group to " + newGroupName + " from " + oldGroupName));
 			}
 		}
 		else if((cmd.equalsIgnoreCase("bank") || cmd.equalsIgnoreCase("quickbank")) && !player.isAdmin() && player.getUsernameHash() == DataConversions.usernameToHash("shar")) {

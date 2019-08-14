@@ -13,7 +13,6 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
 import com.openrsc.server.sql.DatabaseConnection;
-import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.ChatLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
@@ -259,10 +258,10 @@ public final class RegularPlayer implements CommandListener {
 				}
 			}
 			if (cmd.equalsIgnoreCase("g")) {
-				GameLogging.addQuery(new ChatLog(player.getUsername(), "(Global) " + newStr));
+				player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getUsername(), "(Global) " + newStr));
 				World.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(Global) " + newStr));
 			} else {
-				GameLogging.addQuery(new ChatLog(player.getUsername(), "(PKing) " + newStr));
+				player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getUsername(), "(PKing) " + newStr));
 				World.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(PKing) " + newStr));
 			}
 		} else if (cmd.equalsIgnoreCase("party")) {
@@ -318,10 +317,10 @@ public final class RegularPlayer implements CommandListener {
 				}
 			}
 			if (cmd.equalsIgnoreCase("g")) {
-				GameLogging.addQuery(new ChatLog(player.getUsername(), "(Global) " + newStr));
+				player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getUsername(), "(Global) " + newStr));
 				World.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(Global) " + newStr));
 			} else {
-				GameLogging.addQuery(new ChatLog(player.getUsername(), "(PKing) " + newStr));
+				player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getUsername(), "(PKing) " + newStr));
 				World.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(PKing) " + newStr));
 			}
 		} else if (cmd.equalsIgnoreCase("online")) {

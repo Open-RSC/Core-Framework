@@ -10,7 +10,6 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.TradeLog;
 import com.openrsc.server.util.rsc.MessageType;
 
@@ -197,7 +196,7 @@ public class PlayerTradeHandler implements PacketHandler {
 					player.getInventory().add(item);
 				}
 
-				GameLogging.addQuery(
+				player.getWorld().getServer().getGameLogger().addQuery(
 					new TradeLog(player.getUsername(), affectedPlayer.getUsername(), myOffer, theirOffer, player.getCurrentIP(), affectedPlayer.getCurrentIP()).build());
 				player.save();
 				affectedPlayer.save();
