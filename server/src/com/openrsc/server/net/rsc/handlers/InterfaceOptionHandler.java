@@ -281,8 +281,8 @@ public class InterfaceOptionHandler implements PacketHandler {
 							return;
 						}
 
-						if (ClanManager.getClan(clanName) == null && ClanManager.getClan(clanTag) == null) {
-							Clan clan = new Clan();
+						if (player.getWorld().getClanManager().getClan(clanName) == null && player.getWorld().getClanManager().getClan(clanTag) == null) {
+							Clan clan = new Clan(player.getWorld());
 							clan.setClanName(clanName);
 							clan.setClanTag(clanTag);
 
@@ -290,7 +290,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 							clanMember.setRank(ClanRank.LEADER);
 							clan.setLeader(clanMember);
 
-							ClanManager.createClan(clan);
+							player.getWorld().getClanManager().createClan(clan);
 							player.message("You have created clan: " + clanName);
 						} else {
 							ActionSender.sendBox(player, "There is already a clan with this Clan Name or Clan Tag", false);

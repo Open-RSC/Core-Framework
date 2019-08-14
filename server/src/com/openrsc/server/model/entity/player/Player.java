@@ -6,7 +6,6 @@ import com.openrsc.server.content.achievement.Achievement;
 import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanInvite;
-import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.content.party.Party;
 import com.openrsc.server.content.party.PartyInvite;
@@ -2014,7 +2013,7 @@ public final class Player extends Mob {
 			other.getSocial().alertOfLogout(this);
 		}
 
-		ClanManager.checkAndUnattachFromClan(this);
+		getWorld().getClanManager().checkAndUnattachFromClan(this);
 		getWorld().getPartyManager().checkAndUnattachFromParty(this);
 
 		Server.getServer().getPlayerDataProcessor().addRemoveRequest(this);

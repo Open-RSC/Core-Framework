@@ -2,6 +2,7 @@ package com.openrsc.server.content.clan;
 
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.MessageType;
 
@@ -16,6 +17,12 @@ public class Clan {
 	private ArrayList<ClanPlayer> players = new ArrayList<ClanPlayer>();
 	private int[] clanSetting = new int[3];
 	private int clanPoints;
+
+	private final World world;
+
+	public Clan (World world) {
+		this.world = world;
+	}
 
 	public ClanPlayer addPlayer(Player player) {
 		if (getPlayers().size() < Constants.MAX_CLAN_SIZE) {
@@ -36,7 +43,7 @@ public class Clan {
 			ActionSender.sendClanSetting(clanMember.getPlayerReference());
 
 			if (getPlayers().size() > 1) {
-				ClanManager.saveClanChanges(this);
+				getWorld().getClanManager().saveClanChanges(this);
 			}
 			return clanMember;
 		}
@@ -65,9 +72,9 @@ public class Clan {
 				messageClanInfo("@red@Your clan leader has left the clan!");
 				messageClanInfo("@yel@" + getLeader().getUsername() + " is the new clan leader!");
 			}
-			ClanManager.saveClanChanges(this);
+			getWorld().getClanManager().saveClanChanges(this);
 		} else if (getPlayers().size() == 0) {
-			ClanManager.deleteClan(this);
+			getWorld().getClanManager().deleteClan(this);
 		}
 		updateClanGUI();
 	}
@@ -90,7 +97,7 @@ public class Clan {
 				getLeader().setRank(ClanRank.LEADER);
 				messageClanInfo("@red@Your clan leader has passed the leadership!");
 				messageClanInfo("@yel@" + getLeader().getUsername() + " is the new clan leader!");
-				ClanManager.saveClanChanges(this);
+				getWorld().getClanManager().saveClanChanges(this);
 				ActionSender.sendClanSetting(player);
 			} else {
 				if (newRank == 2) {
@@ -99,7 +106,7 @@ public class Clan {
 					messageClanInfo(member.getUsername() + " has been put back to " + ClanRank.getRankFor(newRank).name().toLowerCase() + " rank.");
 				}
 				member.setRank(setRank);
-				ClanManager.updateClanRankPlayer(member);
+				getWorld().getClanManager().updateClanRankPlayer(member);
 			}
 			updateClanGUI();
 			if (member.isOnline()) {
@@ -234,5 +241,9 @@ public class Clan {
 
 	public void setClanPoints(int p) {
 		this.clanPoints = p;
+	}
+
+	public World getWorld() {
+		return world;
 	}
 }

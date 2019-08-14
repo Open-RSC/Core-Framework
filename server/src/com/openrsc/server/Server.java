@@ -2,7 +2,6 @@ package com.openrsc.server;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.constants.Constants;
-import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.MonitoringEvent;
@@ -334,7 +333,7 @@ public final class Server implements Runnable {
 	}
 
 	private void saveAndShutdown() {
-		ClanManager.saveClans();
+		getWorld().getClanManager().saveClans();
 		for (Player p : World.getWorld().getPlayers()) {
 			p.unregister(true, "Server shutting down.");
 		}
@@ -371,7 +370,7 @@ public final class Server implements Runnable {
 	}
 
 	private void saveAndRestart() {
-		ClanManager.saveClans();
+		getWorld().getClanManager().saveClans();
 		LOGGER.info("Saving players...");
 		for (Player p : World.getWorld().getPlayers()) {
 			p.unregister(true, "Server shutting down.");

@@ -83,6 +83,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	private final Map<TrawlerBoat, FishingTrawler> fishingTrawler;
 	private final TileValue[][] tiles;
 	private final PartyManager partyManager;
+	private final ClanManager clanManager;
 	private final Market market;
 
 	private final WorldLoader worldLoader;
@@ -116,6 +117,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		tiles = new TileValue[MAX_WIDTH][MAX_HEIGHT];
 		worldLoader = new WorldLoader(this);
 		regionManager = new RegionManager(this);
+		clanManager = new ClanManager(this);
 		partyManager = new PartyManager(this);
 		market = getServer().getConfig().SPAWN_AUCTION_NPCS ? new Market(this) : null;
 	}
@@ -404,8 +406,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 	public void load() {
 		try {
-			ClanManager.init();
-			getWorld().getPartyManager().initialize();
+			getClanManager().initialize();
+			getPartyManager().initialize();
 
 			worldInstance.getWorldLoader().loadWorld();
 			worldInstance.getWorldLoader().getWorldPopulator().populateWorld();
@@ -579,8 +581,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 			for (Player other : getPlayers()) {
 				other.getSocial().alertOfLogin(player);
 			}
-			ClanManager.checkAndAttachToClan(player);
-			getWorld().getPartyManager().checkAndAttachToParty(player);
+			getClanManager().checkAndAttachToClan(player);
+			getPartyManager().checkAndAttachToParty(player);
 			LOGGER.info("Registered " + player.getUsername() + " to server");
 			return true;
 		}
@@ -957,5 +959,9 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 	public PartyManager getPartyManager() {
 		return partyManager;
+	}
+
+	public ClanManager getClanManager() {
+		return clanManager;
 	}
 }

@@ -120,7 +120,7 @@ public class PartyManager {
 		return world;
 	}
 
-	/*private static void loadParties() throws SQLException {
+	/*private void loadParties() throws SQLException {
 		PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT `id`, `name`, `tag`, `kick_setting`, `invite_setting`, `allow_search_join`, `party_points` FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "party`");
 		ResultSet result = statement.executeQuery();
 		while (result.next()) {
@@ -159,7 +159,7 @@ public class PartyManager {
 		}
 	}*/
 
-	/*private static void databaseCreateParty(Party party) throws SQLException {
+	/*private void databaseCreateParty(Party party) throws SQLException {
 		PreparedStatement statement = DatabaseConnection.getDatabase().getConnection().prepareStatement(
 			"INSERT INTO `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "party`(`name`, `tag`, `leader`) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
 		statement.setString(1, party.getPartyName());
@@ -185,7 +185,7 @@ public class PartyManager {
 		statement.executeBatch();
 	}*/
 
-	/*private static void databaseDeleteParty(Party party) throws SQLException {
+	/*private void databaseDeleteParty(Party party) throws SQLException {
 		PreparedStatement deleteParty = DatabaseConnection.getDatabase().prepareStatement("DELETE FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "party` WHERE `id`=?");
 		PreparedStatement deletePartyPlayers = DatabaseConnection.getDatabase()
 			.prepareStatement("DELETE FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "party_players` WHERE `party_id`=?");
@@ -196,7 +196,7 @@ public class PartyManager {
 		deletePartyPlayers.executeUpdate();
 	}*/
 
-	/*private static void savePartyPlayer(Party party) {
+	/*private void savePartyPlayer(Party party) {
 		try {
 			PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement(
 				"INSERT INTO `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "party_players`(`party_id`, `username`, `rank`, `kills`, `deaths`) VALUES (?,?,?,?,?)");
@@ -215,7 +215,7 @@ public class PartyManager {
 		}
 	}*/
 
-	/*private static void deletePartyPlayer(Party party) {
+	/*private void deletePartyPlayer(Party party) {
 		try {
 			PreparedStatement statement = DatabaseConnection.getDatabase()
 				.prepareStatement("DELETE FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "party_players` WHERE `party_id`=?");
@@ -227,7 +227,7 @@ public class PartyManager {
 		}
 	}*/
 
-	/*private static void updateParty(Party party) {
+	/*private void updateParty(Party party) {
 		try {
 			PreparedStatement statement = DatabaseConnection.getDatabase()
 				.prepareStatement("UPDATE `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "party` SET `name`=?, `tag`=?, `leader`=?, `kick_setting`=?, `invite_setting`=?, `allow_search_join`=?, `party_points`=? WHERE `id`=?");
