@@ -35,7 +35,7 @@ public class PlayerDatabaseExecutor extends ThrottleFilter implements Runnable {
 
 	private DatabasePlayerLoader database;
 
-	private boolean running	= false;
+	private Boolean running	= false;
 
 	private final Server server;
 	public final Server getServer() {
@@ -50,40 +50,42 @@ public class PlayerDatabaseExecutor extends ThrottleFilter implements Runnable {
 
 	@Override
 	public void run() {
-		try {
-			LoginRequest loginRequest = null;
-			while ((loginRequest = loadRequests.poll()) != null) {
-				int loginResponse = database.validateLogin(loginRequest);
-				loginRequest.loginValidated(loginResponse);
-				if ((loginResponse & 0x40) != LoginResponse.LOGIN_INSUCCESSFUL) {
-					final Player loadedPlayer = database.loadPlayer(loginRequest);
+		synchronized(running) {
+			try {
+				LoginRequest loginRequest = null;
+				while ((loginRequest = loadRequests.poll()) != null) {
+					int loginResponse = database.validateLogin(loginRequest);
+					loginRequest.loginValidated(loginResponse);
+					if ((loginResponse & 0x40) != LoginResponse.LOGIN_INSUCCESSFUL) {
+						final Player loadedPlayer = database.loadPlayer(loginRequest);
 
-					LoginTask loginTask = new LoginTask(loginRequest, loadedPlayer);
-					getServer().getGameEventHandler().add(new ImmediateEvent("Login Player") {
-						@Override
-						public void action() {
-							loginTask.run();
-						}
-					});
+						LoginTask loginTask = new LoginTask(loginRequest, loadedPlayer);
+						getServer().getGameEventHandler().add(new ImmediateEvent("Login Player") {
+							@Override
+							public void action() {
+								loginTask.run();
+							}
+						});
 
+					}
+					//LOGGER.info("Processed login request for " + loginRequest.getUsername() + " response: " + loginResponse);
 				}
-				//LOGGER.info("Processed login request for " + loginRequest.getUsername() + " response: " + loginResponse);
-			}
 
-			Player playerToSave = null;
-			while ((playerToSave = saveRequests.poll()) != null) {
-				getDatabase().savePlayer(playerToSave);
-				//LOGGER.info("Saved player " + playerToSave.getUsername() + "");
-			}
+				Player playerToSave = null;
+				while ((playerToSave = saveRequests.poll()) != null) {
+					getDatabase().savePlayer(playerToSave);
+					//LOGGER.info("Saved player " + playerToSave.getUsername() + "");
+				}
 
-			Player playerToRemove = null;
-			while ((playerToRemove = removeRequests.poll()) != null) {
-				playerToRemove.remove();
-				World.getWorld().getPlayers().remove(playerToRemove);
-				//LOGGER.info("Removed player " + playerToRemove.getUsername() + "");
+				Player playerToRemove = null;
+				while ((playerToRemove = removeRequests.poll()) != null) {
+					playerToRemove.remove();
+					World.getWorld().getPlayers().remove(playerToRemove);
+					//LOGGER.info("Removed player " + playerToRemove.getUsername() + "");
+				}
+			} catch (Throwable e) {
+				LOGGER.catching(e);
 			}
-		} catch (Throwable e) {
-			LOGGER.catching(e);
 		}
 	}
 
@@ -107,16 +109,20 @@ public class PlayerDatabaseExecutor extends ThrottleFilter implements Runnable {
 	}
 
 	public void start() {
-		running = true;
-		scheduledExecutor.scheduleAtFixedRate(this, 0, 50, TimeUnit.MILLISECONDS);
+		synchronized (running) {
+			running = true;
+			scheduledExecutor.scheduleAtFixedRate(this, 0, 50, TimeUnit.MILLISECONDS);
+		}
 	}
 
 	public void stop() {
-		running = false;
-		scheduledExecutor.shutdown();
+		synchronized (running) {
+			running = false;
+			scheduledExecutor.shutdown();
+		}
 	}
 
-	public boolean isRunning() {
+	public final boolean isRunning() {
 		return running;
 	}
 }

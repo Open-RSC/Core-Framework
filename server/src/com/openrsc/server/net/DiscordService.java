@@ -27,7 +27,7 @@ public class DiscordService implements Runnable{
 
 	private static final Logger LOGGER	= LogManager.getLogger();
 	private long monitoringLastUpdate	= 0;
-	private boolean running				= false;
+	private Boolean running				= false;
 
 	private final Server server;
 
@@ -136,32 +136,38 @@ public class DiscordService implements Runnable{
 
 	@Override
 	public void run()  {
-		String message = null;
+		synchronized(running) {
+			String message = null;
 
-		try {
-			while ((message = auctionRequests.poll()) != null) {
-				sendToDiscord(Server.getServer().getConfig().DISCORD_AUCTION_WEBHOOK_URL, message);
-			}
+			try {
+				while ((message = auctionRequests.poll()) != null) {
+					sendToDiscord(Server.getServer().getConfig().DISCORD_AUCTION_WEBHOOK_URL, message);
+				}
 
-			while ((message = monitoringRequests.poll()) != null) {
-				sendToDiscord(Server.getServer().getConfig().DISCORD_MONITORING_WEBHOOK_URL, message);
+				while ((message = monitoringRequests.poll()) != null) {
+					sendToDiscord(Server.getServer().getConfig().DISCORD_MONITORING_WEBHOOK_URL, message);
+				}
+			} catch (Exception e) {
+				LOGGER.catching(e);
 			}
-		} catch(Exception e) {
-			LOGGER.catching(e);
 		}
 	}
 
 	public void start() {
-		running = true;
-		scheduledExecutor.scheduleAtFixedRate(this, 0, 50, TimeUnit.MILLISECONDS);
+		synchronized(running) {
+			running = true;
+			scheduledExecutor.scheduleAtFixedRate(this, 0, 50, TimeUnit.MILLISECONDS);
+		}
 	}
 
 	public void stop() {
-		running = false;
-		scheduledExecutor.shutdown();
+		synchronized(running) {
+			running = false;
+			scheduledExecutor.shutdown();
+		}
 	}
 
-	public boolean isRunning() {
+	public final boolean isRunning() {
 		return running;
 	}
 }
