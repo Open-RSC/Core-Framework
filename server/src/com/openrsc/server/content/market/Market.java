@@ -41,7 +41,7 @@ public class Market implements Runnable {
 		this.auctionItems = new ArrayList<>();
 		this.auctionTaskQueue = new LinkedBlockingQueue<>();
 		this.refreshRequestTasks = new LinkedBlockingQueue<>();
-		this.scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(Server.getServer().getName()+" : AuctionHouseThread").build());
+		this.scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getWorld().getServer().getName()+" : AuctionHouseThread").build());
 		this.marketDatabase = new MarketDatabase(this);
 		this.running = false;
 	}
