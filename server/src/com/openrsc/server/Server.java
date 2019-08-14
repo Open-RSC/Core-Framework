@@ -98,7 +98,7 @@ public final class Server implements Runnable {
 		tickEventHandler = new GameTickEventHandler(this);
 		gameUpdater = new GameStateUpdater(this);
 		monitoring = new MonitoringEvent();
-		scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat("GameThread").build());
+		scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getName()+" : GameThread").build());
 	}
 
 	public static void main(String[] args) throws IOException {

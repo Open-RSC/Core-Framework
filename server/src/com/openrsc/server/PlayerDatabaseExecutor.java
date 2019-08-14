@@ -25,7 +25,7 @@ public class PlayerDatabaseExecutor extends ThrottleFilter implements Runnable {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private final ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat("PlayerDataProcessorThread").build());
+	private final ScheduledExecutorService scheduledExecutor;
 
 	private Queue<LoginRequest> loadRequests = new ConcurrentLinkedQueue<LoginRequest>();
 
@@ -45,6 +45,7 @@ public class PlayerDatabaseExecutor extends ThrottleFilter implements Runnable {
 	public PlayerDatabaseExecutor(Server server) {
 		this.server = server;
 		this.database = new DatabasePlayerLoader(getServer());
+		scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getServer().getName()+" : PlayerDataProcessorThread").build());
 	}
 
 	@Override

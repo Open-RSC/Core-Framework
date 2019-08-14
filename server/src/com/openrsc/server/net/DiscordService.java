@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 public class DiscordService implements Runnable{
 
-	private final ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat("DiscordServiceThread").build());
+	private final ScheduledExecutorService scheduledExecutor;
 
 	private Queue<String> auctionRequests = new ConcurrentLinkedQueue<String>();
 	private Queue<String> monitoringRequests = new ConcurrentLinkedQueue<String>();
@@ -33,6 +33,8 @@ public class DiscordService implements Runnable{
 
 	public DiscordService(Server server) {
 		this.server = server;
+
+		scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getServer().getName()+" : DiscordServiceThread").build());
 	}
 
 	public final Server getServer() {

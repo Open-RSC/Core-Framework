@@ -35,16 +35,15 @@ public class Market implements Runnable {
 
 	public Market() {
 		auctionItems = new ArrayList<>();
+		scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(Server.getServer().getName()+" : AuctionHouseThread").build());
+
+		start();
 	}
 
 	public static Market getInstance() {
 		if (!Server.getServer().getConfig().SPAWN_AUCTION_NPCS) return null;
 		if (instance == null) {
 			instance = new Market();
-
-			instance.scheduledExecutor = Executors
-				.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat("AuctionHouseThread").build());
-			instance.start();
 		}
 		return instance;
 	}
