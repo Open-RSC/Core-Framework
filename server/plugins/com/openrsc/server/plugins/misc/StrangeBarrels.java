@@ -1,27 +1,19 @@
 package com.openrsc.server.plugins.misc;
 
 import com.openrsc.server.Server;
-import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.model.Point;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.event.SingleEvent;
+import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.region.RegionManager;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.createGroundItem;
-import static com.openrsc.server.plugins.Functions.delayedSpawnObject;
-import static com.openrsc.server.plugins.Functions.displayTeleportBubble;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.registerObject;
-import static com.openrsc.server.plugins.Functions.removeObject;
-import static com.openrsc.server.plugins.Functions.sleep;
-import static com.openrsc.server.plugins.Functions.spawnNpc;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class StrangeBarrels implements ObjectActionListener, ObjectActionExecutiveListener {
 
@@ -126,7 +118,7 @@ public class StrangeBarrels implements ObjectActionListener, ObjectActionExecuti
 					public void action() {
 						int newObjectX = DataConversions.random(467, 476);
 						int newObjectY = DataConversions.random(3699, 3714);
-						if (RegionManager.getRegion(Point.location(newObjectX, newObjectY)).getGameObject(Point.location(newObjectX, newObjectY)) != null) {
+						if (p.getWorld().getRegionManager().getRegion(Point.location(newObjectX, newObjectY)).getGameObject(Point.location(newObjectX, newObjectY)) != null) {
 							registerObject(new GameObject(obj.getWorld(), obj.getLoc()));
 						} else {
 							registerObject(new GameObject(obj.getWorld(), Point.location(newObjectX, newObjectY), 1178, 0, 0));

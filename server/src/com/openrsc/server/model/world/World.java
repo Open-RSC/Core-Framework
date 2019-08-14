@@ -73,7 +73,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	public static boolean WORLD_TELEGRAB_TOGGLE = false;
 	private static World worldInstance;
 
-	//private final RegionManager regionManager;
+	private final RegionManager regionManager;
 	private final EntityList<Npc> npcs;
 	private final EntityList<Player> players;
 	private final List<QuestInterface> quests;
@@ -111,6 +111,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		tiles = new TileValue[MAX_WIDTH][MAX_HEIGHT];
 		snapshots = new LinkedList<Snapshot>();
 		worldLoader = new WorldLoader(this);
+		regionManager = new RegionManager(this);
 	}
 
 	public static synchronized World getWorld() {
@@ -415,8 +416,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 	public void registerGameObject(GameObject o) {
 		Point objectCoordinates = Point.location(o.getLoc().getX(), o.getLoc().getY());
-		GameObject collidingGameObject = RegionManager.getRegion(objectCoordinates).getGameObject(objectCoordinates);
-		GameObject collidingWallObject = RegionManager.getRegion(objectCoordinates).getWallGameObject(objectCoordinates, o.getLoc().getDirection());
+		GameObject collidingGameObject = getRegionManager().getRegion(objectCoordinates).getGameObject(objectCoordinates);
+		GameObject collidingWallObject = getRegionManager().getRegion(objectCoordinates).getWallGameObject(objectCoordinates, o.getLoc().getDirection());
 		if (collidingGameObject != null && o.getType() == 0) {
 			unregisterGameObject(collidingGameObject);
 		}
@@ -937,5 +938,9 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 	public static IPTracker<String> getWildernessIPTracker() {
 		return wildernessIPTracker;
+	}
+
+	public RegionManager getRegionManager() {
+		return regionManager;
 	}
 }

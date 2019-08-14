@@ -2,11 +2,11 @@ package com.openrsc.server.plugins.quests.members.legendsquest.obstacles;
 
 import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -14,7 +14,6 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
-import com.openrsc.server.model.world.region.RegionManager;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
@@ -631,7 +630,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), CRAFTED_TOTEM_POLE, obj.getDirection(), obj.getType(), p.getUsername()));
 				Server.getServer().getGameEventHandler().add(new SingleEvent(null, 60000, "Legends Quest Craft Totem Pole") {
 					public void action() {
-						GameObject whatObject = RegionManager.getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
+						GameObject whatObject = p.getWorld().getRegionManager().getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
 						if (whatObject != null && whatObject.getID() == CRAFTED_TOTEM_POLE) {
 							World.getWorld().registerGameObject(new GameObject(obj.getWorld(), obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
 						}
@@ -650,7 +649,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), TRIMMED_YOMMI_TREE, obj.getDirection(), obj.getType(), p.getUsername()));
 				Server.getServer().getGameEventHandler().add(new SingleEvent(null, 60000, "Legend Quest Trim Yommi Tree") {
 					public void action() {
-						GameObject whatObject = RegionManager.getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
+						GameObject whatObject = p.getWorld().getRegionManager().getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
 						if (whatObject != null && whatObject.getID() == TRIMMED_YOMMI_TREE) {
 							World.getWorld().registerGameObject(new GameObject(obj.getWorld(), obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
 						}
@@ -668,7 +667,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), CHOPPED_YOMMI_TREE, obj.getDirection(), obj.getType(), p.getUsername()));
 				Server.getServer().getGameEventHandler().add(new SingleEvent(null, 60000, "Legend Quest Chop Yommi Tree") {
 					public void action() {
-						GameObject whatObject = RegionManager.getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
+						GameObject whatObject = p.getWorld().getRegionManager().getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
 						if (whatObject != null && whatObject.getID() == CHOPPED_YOMMI_TREE) {
 							World.getWorld().registerGameObject(new GameObject(obj.getWorld(), obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
 						}
@@ -696,7 +695,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 			replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), GROWN_YOMMI_TREE, obj.getDirection(), obj.getType(), p.getUsername()));
 			Server.getServer().getGameEventHandler().add(new SingleEvent(null, 15000, "Legend Quest Water Yommi Tree") {
 				public void action() {
-					GameObject whatObject = RegionManager.getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
+					GameObject whatObject = p.getWorld().getRegionManager().getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
 					if (whatObject != null && whatObject.getID() == GROWN_YOMMI_TREE) {
 						World.getWorld().registerGameObject(new GameObject(obj.getWorld(), obj.getLocation(), ROTTEN_YOMMI_TREE, obj.getDirection(), obj.getType()));
 						if (p.isLoggedIn()) {
@@ -745,7 +744,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), YOMMI_TREE, obj.getDirection(), obj.getType()));
 				Server.getServer().getGameEventHandler().add(new SingleEvent(null, 15000, "Legends Quest Grow Yommi Tree") {
 					public void action() {
-						GameObject whatObject = RegionManager.getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
+						GameObject whatObject = p.getWorld().getRegionManager().getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
 						if (whatObject != null && whatObject.getID() == YOMMI_TREE) {
 							World.getWorld().registerGameObject(new GameObject(obj.getWorld(), obj.getLocation(), DEAD_YOMMI_TREE, obj.getDirection(), obj.getType(), p.getUsername()));
 							if (p.isLoggedIn()) {

@@ -6,7 +6,6 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.region.RegionManager;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
@@ -207,7 +206,7 @@ public class LegendsQuestGuildGuard implements TalkToNpcListener, TalkToNpcExecu
 	}
 
 	private void openGates(Player p) {
-		GameObject the_gate = RegionManager.getRegion(Point.location(512, 550)).getGameObject(Point.location(512, 550));
+		GameObject the_gate = p.getWorld().getRegionManager().getRegion(Point.location(512, 550)).getGameObject(Point.location(512, 550));
 		replaceObjectDelayed(the_gate, 2500, 181);
 		p.teleport(513, 549);
 	}

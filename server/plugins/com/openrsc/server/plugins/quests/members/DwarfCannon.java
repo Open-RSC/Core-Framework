@@ -10,7 +10,6 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
-import com.openrsc.server.model.world.region.RegionManager;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
@@ -175,7 +174,7 @@ public class DwarfCannon
 							int cannonX = p.getCache().getInt("cannon_x");
 							int cannonY = p.getCache().getInt("cannon_y");
 
-							GameObject cannon = RegionManager.getRegion(cannonX, cannonY).getGameObject(cannonX, cannonY);
+							GameObject cannon = p.getWorld().getRegionManager().getRegion(cannonX, cannonY).getGameObject(cannonX, cannonY);
 							// does not exist or the object there is not a cannon.
 							if (cannon == null || !DataConversions.inArray(Cannon.cannonObjectIDs, cannon.getID())) {
 								message(p, "the dwarf gives you a new cannon");

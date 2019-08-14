@@ -10,7 +10,6 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
-import com.openrsc.server.model.world.region.RegionManager;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
@@ -171,13 +170,13 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 			GameObject dynGate, statGate, newGate;
 			boolean correctSetup = false;
 			if (obj.getID() == 373) {
-				dynGate = RegionManager.getRegion(Point.location(594, 3475)).getGameObject(Point.location(594, 3475));
-				statGate = RegionManager.getRegion(Point.location(590, 3475)).getGameObject(Point.location(590, 3475));
+				dynGate = p.getWorld().getRegionManager().getRegion(Point.location(594, 3475)).getGameObject(Point.location(594, 3475));
+				statGate = p.getWorld().getRegionManager().getRegion(Point.location(590, 3475)).getGameObject(Point.location(590, 3475));
 				//outer gate was open + inner gate is open
 				correctSetup = (dynGate.getID() == 372) && (statGate.getID() == 372);
 			} else {
-				dynGate = RegionManager.getRegion(Point.location(590, 3475)).getGameObject(Point.location(590, 3475));
-				statGate = RegionManager.getRegion(Point.location(594, 3475)).getGameObject(Point.location(594, 3475));
+				dynGate = p.getWorld().getRegionManager().getRegion(Point.location(590, 3475)).getGameObject(Point.location(590, 3475));
+				statGate = p.getWorld().getRegionManager().getRegion(Point.location(594, 3475)).getGameObject(Point.location(594, 3475));
 				//inner gate was closed + outer gate is closed
 				correctSetup = (dynGate.getID() == 371) && (statGate.getID() == 371);
 			}

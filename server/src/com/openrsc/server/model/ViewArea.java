@@ -5,7 +5,6 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.region.RegionManager;
 
 import java.util.Collection;
 
@@ -19,19 +18,19 @@ public class ViewArea {
 	}
 
 	public Collection<GameObject> getGameObjectsInView() {
-		return RegionManager.getLocalObjects(mob);
+		return mob.getWorld().getRegionManager().getLocalObjects(mob);
 	}
 
 	public Collection<GroundItem> getItemsInView() {
-		return RegionManager.getLocalGroundItems(mob);
+		return mob.getWorld().getRegionManager().getLocalGroundItems(mob);
 	}
 
 	public Collection<Npc> getNpcsInView() {
-		return RegionManager.getLocalNpcs(mob);
+		return mob.getWorld().getRegionManager().getLocalNpcs(mob);
 	}
 
 	public Collection<Player> getPlayersInView() {
-		return RegionManager.getLocalPlayers(mob);
+		return mob.getWorld().getRegionManager().getLocalPlayers(mob);
 	}
 
 	public GameObject getGameObject(Point location) {

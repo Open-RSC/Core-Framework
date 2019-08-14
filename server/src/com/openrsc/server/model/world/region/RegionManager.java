@@ -1,6 +1,7 @@
 package com.openrsc.server.model.world.region;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.Constants;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
@@ -16,15 +17,18 @@ import java.util.LinkedHashSet;
 
 public class RegionManager {
 
-	public static final int REGION_SIZE = 48;
+	private static final int HORIZONTAL_PLANES = (World.MAX_WIDTH / Constants.REGION_SIZE) + 1;
 
-	private static final int HORIZONTAL_PLANES = (World.MAX_WIDTH / REGION_SIZE) + 1;
+	private static final int VERTICAL_PLANES = (World.MAX_HEIGHT / Constants.REGION_SIZE) + 1;
 
-	private static final int VERTICAL_PLANES = (World.MAX_HEIGHT / REGION_SIZE) + 1;
+	private final Region[][] regions;
 
-	private static final Region[][] regions = new Region[HORIZONTAL_PLANES][VERTICAL_PLANES];
+	private final World world;
 
-	static {
+	public RegionManager(World world) {
+		this.world = world;
+		regions = new Region[HORIZONTAL_PLANES][VERTICAL_PLANES];
+
 		for (int x = 0; x < HORIZONTAL_PLANES; x++) {
 			for (int y = 0; y < VERTICAL_PLANES; y++) {
 				regions[x][y] = new Region();
@@ -38,7 +42,7 @@ public class RegionManager {
 	 * @param entity The entity.
 	 * @return The collection of local players.
 	 */
-	public static Collection<Player> getLocalPlayers(final Entity entity) {
+	public Collection<Player> getLocalPlayers(final Entity entity) {
 		LinkedHashSet<Player> localPlayers = new LinkedHashSet<Player>();
 		for (Region region : getSurroundingRegions(entity.getLocation())) {
 			for (Player player : region.getPlayers()) {
@@ -56,7 +60,7 @@ public class RegionManager {
 	 * @param entity The entity.
 	 * @return The collection of local NPCs.
 	 */
-	public static Collection<Npc> getLocalNpcs(Entity entity) {
+	public Collection<Npc> getLocalNpcs(Entity entity) {
 		LinkedHashSet<Npc> localNpcs = new LinkedHashSet<Npc>();
 		for (Region region : getSurroundingRegions(entity.getLocation())) {
 			for (Npc npc : region.getNpcs()) {
@@ -68,7 +72,7 @@ public class RegionManager {
 		return localNpcs;
 	}
 
-	public static Collection<GameObject> getLocalObjects(Mob entity) {
+	public Collection<GameObject> getLocalObjects(Mob entity) {
 		LinkedHashSet<GameObject> localObjects = new LinkedHashSet<GameObject>();
 		for (Iterator<Region> region = getSurroundingRegions(entity.getLocation()).iterator(); region.hasNext(); ) {
 			for (Iterator<GameObject> o = region.next().getGameObjects().iterator(); o.hasNext(); ) {
@@ -82,7 +86,7 @@ public class RegionManager {
 		return localObjects;
 	}
 
-	public static Collection<GroundItem> getLocalGroundItems(Mob entity) {
+	public Collection<GroundItem> getLocalGroundItems(Mob entity) {
 		LinkedHashSet<GroundItem> localItems = new LinkedHashSet<GroundItem>();
 		for (Region region : getSurroundingRegions(entity.getLocation())) {
 			for (GroundItem o : region.getGroundItems()) {
@@ -100,9 +104,9 @@ public class RegionManager {
 	 * @param location The location.
 	 * @return The regions surrounding the location.
 	 */
-	public static LinkedHashSet<Region> getSurroundingRegions(Point location) {
-		int regionX = location.getX() / REGION_SIZE;
-		int regionY = location.getY() / REGION_SIZE;
+	public LinkedHashSet<Region> getSurroundingRegions(Point location) {
+		int regionX = location.getX() / Constants.REGION_SIZE;
+		int regionY = location.getY() / Constants.REGION_SIZE;
 
 		LinkedHashSet<Region> surrounding = new LinkedHashSet<Region>();
 		surrounding.add(regions[regionX][regionY]);
@@ -117,21 +121,21 @@ public class RegionManager {
 		return surrounding;
 	}
 
-	private static Region getRegionFromSectorCoordinates(int regionX, int regionY) {
+	private Region getRegionFromSectorCoordinates(int regionX, int regionY) {
 		if (regionX < 0 || regionY < 0 || regionX >= regions.length || regionY >= regions[regionX].length) {
 			return null;
 		}
 		return regions[regionX][regionY];
 	}
 
-	public static Region getRegion(int x, int y) {
-		int regionX = x / REGION_SIZE;
-		int regionY = y / REGION_SIZE;
+	public Region getRegion(int x, int y) {
+		int regionX = x / Constants.REGION_SIZE;
+		int regionY = y / Constants.REGION_SIZE;
 
 		return regions[regionX][regionY];
 	}
 
-	public static Region getRegion(Point objectCoordinates) {
+	public Region getRegion(Point objectCoordinates) {
 		return getRegion(objectCoordinates.getX(), objectCoordinates.getY());
 	}
 }

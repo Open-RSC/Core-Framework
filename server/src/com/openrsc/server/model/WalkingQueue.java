@@ -6,7 +6,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.Region;
-import com.openrsc.server.model.world.region.RegionManager;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.util.rsc.CollisionFlag;
 
@@ -186,7 +185,7 @@ public class WalkingQueue {
 	}
 
 	private boolean isMobBlocking(int x, int y) {
-		Region region = RegionManager.getRegion(Point.location(x, y));
+		Region region = mob.getWorld().getRegionManager().getRegion(Point.location(x, y));
 		if (mob.getX() == x && mob.getY() == y)
 			return false;
 

@@ -4,7 +4,6 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.Region;
-import com.openrsc.server.model.world.region.RegionManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -152,7 +151,7 @@ public abstract class Entity {
 	}
 
 	public void updateRegion() {
-		Region newRegion = RegionManager.getRegion(getLocation());
+		Region newRegion = getWorld().getRegionManager().getRegion(getLocation());
 		if (!newRegion.equals(getRegion())) {
 			if (getRegion() != null) {
 				region.get().removeEntity(this);

@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.commands;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.Constants;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.SingleEvent;
@@ -25,7 +26,6 @@ import com.openrsc.server.model.entity.update.Damage;
 import com.openrsc.server.model.snapshot.Chatlog;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.Region;
-import com.openrsc.server.model.world.region.RegionManager;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
@@ -100,12 +100,12 @@ public final class Admins implements CommandListener {
 			player.message(messagePrefix + "Saved " + count + " players on server!");
 		} else if (cmd.equalsIgnoreCase("cleanregions")) {
 			Server.getServer().submitTask(() -> {
-				final int HORIZONTAL_PLANES = (World.MAX_WIDTH / RegionManager.REGION_SIZE) + 1;
-				final int VERTICAL_PLANES = (World.MAX_HEIGHT / RegionManager.REGION_SIZE) + 1;
+				final int HORIZONTAL_PLANES = (World.MAX_WIDTH / Constants.REGION_SIZE) + 1;
+				final int VERTICAL_PLANES = (World.MAX_HEIGHT / Constants.REGION_SIZE) + 1;
 				for (int x = 0; x < HORIZONTAL_PLANES; ++x) {
 					for (int y = 0; y < VERTICAL_PLANES; ++y) {
-						Region r = RegionManager.getRegion(x * RegionManager.REGION_SIZE,
-							y * RegionManager.REGION_SIZE);
+						Region r = player.getWorld().getRegionManager().getRegion(x * Constants.REGION_SIZE,
+							y * Constants.REGION_SIZE);
 						if (r != null) {
 							r.getPlayers().removeIf(Entity::isRemoved);
 						}

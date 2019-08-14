@@ -8,7 +8,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.world.Area;
 import com.openrsc.server.model.world.World;
-import com.openrsc.server.model.world.region.RegionManager;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.SimpleSubscriber;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -388,7 +387,7 @@ public class FishingTrawler extends DelayedEvent {
 			/* The ship is leaking hardcore. */
 			if (freeLeakIndex == -1) {
 				break;
-			} else if (RegionManager.getRegion(x, y).getGameObject(x, y) != null) {
+			} else if (World.getWorld().getRegionManager().getRegion(x, y).getGameObject(x, y) != null) {
 				continue;
 			}
 			int southSide = currentStage == State.FIRST_SHIP ? spawnLocation.getY() - 1 : shipAreaWaterSpawn.getY() - 1;
