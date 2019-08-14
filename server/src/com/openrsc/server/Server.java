@@ -42,6 +42,7 @@ public final class Server implements Runnable {
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER;
+
 	private static Server server = null;
 
 	private final GameStateUpdater gameUpdater;
@@ -58,6 +59,7 @@ public final class Server implements Runnable {
 
 	private boolean running = false;
 	private boolean initialized = false;
+
 	private long lastIncomingPacketsDuration = 0;
 	private long lastGameStateDuration = 0;
 	private long lastEventsDuration = 0;
@@ -135,10 +137,6 @@ public final class Server implements Runnable {
 		return server;
 	}
 
-	public PlayerDatabaseExecutor getPlayerDataProcessor() {
-		return playerDataProcessor;
-	}
-
 	private void initialize() {
 		try {
 			LOGGER.info("Creating database connection...");
@@ -206,52 +204,38 @@ public final class Server implements Runnable {
 		lastClientUpdate = System.currentTimeMillis();
 	}
 
+	public void start() {
+		if(!isInitialized()) {
+			initialize();
+		}
+
+		running = true;
+		scheduledExecutor.scheduleAtFixedRate(this, 0, 1, TimeUnit.MILLISECONDS);
+		playerDataProcessor.start();
+		discordService.start();
+	}
+
+	public void stop() {
+		running = false;
+		scheduledExecutor.shutdown();
+		discordService.stop();
+		playerDataProcessor.stop();
+	}
+
 	public void kill() {
 		stop();
-		LOGGER.fatal(getServer().getConfig().SERVER_NAME + " shutting down...");
+		LOGGER.fatal(getName() + " shutting down...");
 		System.exit(0);
 	}
 
-	public boolean shutdownForUpdate(int seconds) {
-		if (updateEvent != null) {
-			return false;
-		}
-		updateEvent = new SingleEvent(null, (seconds - 1) * 1000, "Shutdown for Update") {
-			public void action() {
-				unbind();
-				saveAndShutdown();
-			}
-		};
-		getGameEventHandler().add(updateEvent);
-		return true;
-	}
-
-	private void saveAndShutdown() {
-		ClanManager.saveClans();
-		for (Player p : World.getWorld().getPlayers()) {
-			p.unregister(true, "Server shutting down.");
-		}
-
-		SingleEvent up = new SingleEvent(null, 6000, "Save and Shutdown") {
-			public void action() {
-				kill();
-				DatabaseConnection.getDatabase().close();
-			}
-		};
-		getGameEventHandler().add(up);
-	}
-
-	public long timeTillShutdown() {
-		if (updateEvent == null) {
-			return -1;
-		}
-		return updateEvent.timeTillNextRun();
+	public void submitTask(Runnable r) {
+		scheduledExecutor.submit(r);
 	}
 
 	private void unbind() {
 		try {
 			serverChannel.channel().disconnect();
-		} catch (Exception ignored) {
+		} catch (Exception exception) {
 		}
 	}
 
@@ -322,12 +306,40 @@ public final class Server implements Runnable {
 		return processPacketsEnd - processPacketsStart;
 	}
 
-	public GameTickEventHandler getGameEventHandler() {
-		return tickEventHandler;
+	public boolean shutdownForUpdate(int seconds) {
+		if (updateEvent != null) {
+			return false;
+		}
+		updateEvent = new SingleEvent(null, (seconds - 1) * 1000, "Shutdown for Update") {
+			public void action() {
+				unbind();
+				saveAndShutdown();
+			}
+		};
+		getGameEventHandler().add(updateEvent);
+		return true;
 	}
 
-	public void submitTask(Runnable r) {
-		scheduledExecutor.submit(r);
+	private void saveAndShutdown() {
+		ClanManager.saveClans();
+		for (Player p : World.getWorld().getPlayers()) {
+			p.unregister(true, "Server shutting down.");
+		}
+
+		SingleEvent up = new SingleEvent(null, 6000, "Save and Shutdown") {
+			public void action() {
+				kill();
+				DatabaseConnection.getDatabase().close();
+			}
+		};
+		getGameEventHandler().add(up);
+	}
+
+	public long timeTillShutdown() {
+		if (updateEvent == null) {
+			return -1;
+		}
+		return updateEvent.timeTillNextRun();
 	}
 
 	public boolean restart(int seconds) {
@@ -435,22 +447,12 @@ public final class Server implements Runnable {
 			s;
 	}
 
-	public void start() {
-		if(!isInitialized()) {
-			initialize();
-		}
-
-		running = true;
-		scheduledExecutor.scheduleAtFixedRate(this, 0, 1, TimeUnit.MILLISECONDS);
-		playerDataProcessor.start();
-		discordService.start();
+	public GameTickEventHandler getGameEventHandler() {
+		return tickEventHandler;
 	}
 
-	public void stop() {
-		running = false;
-		scheduledExecutor.shutdown();
-		discordService.stop();
-		playerDataProcessor.stop();
+	public PlayerDatabaseExecutor getPlayerDataProcessor() {
+		return playerDataProcessor;
 	}
 
 	public final long getLastGameStateDuration() {
