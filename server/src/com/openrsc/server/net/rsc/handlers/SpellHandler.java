@@ -703,12 +703,12 @@ public class SpellHandler implements PacketHandler {
 					player.message("This spell can only be used on unenchanted diamond " + (Server.getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
 				break;
 			case 42: // Enchant lvl-5 dragonstone amulet
-				if (affectedItem.getID() == com.openrsc.server.constants.ItemId.DRAGONSTONE_AMULET.id()
+				if (affectedItem.getID() == com.openrsc.server.constants.ItemId.UNENCHANTED_DRAGONSTONE_AMULET.id()
 					|| (Server.getServer().getConfig().WANT_EQUIPMENT_TAB && affectedItem.getID() == com.openrsc.server.constants.ItemId.DRAGONSTONE_RING.id())) {
 					int itemID = 0;
 					switch(com.openrsc.server.constants.ItemId.getById(affectedItem.getID())) {
-						case DRAGONSTONE_AMULET:
-							itemID = com.openrsc.server.constants.ItemId.CHARGED_DRAGONSTONE_AMULET.id();
+						case UNENCHANTED_DRAGONSTONE_AMULET:
+							itemID = com.openrsc.server.constants.ItemId.DRAGONSTONE_AMULET.id();
 							break;
 						case DRAGONSTONE_NECKLACE:
 							break;
