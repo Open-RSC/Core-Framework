@@ -105,6 +105,40 @@ public final class Constants {
 	 * Maximum world width
 	 */
 	public static final int MAX_WIDTH = 1008; // 944
+	/**
+	 * Size in width of RSC Player Avatars
+	 */
+	public final static int AVATAR_WIDTH = 65;
+	/**
+	 * Size in height of RSC Player Avatars
+	 */
+	public final static int AVATAR_HEIGHT = 115;
+	/**
+	 * Allowable character skin colours
+	 */
+	public final static int characterSkinColours[] = {0xecded0, 0xccb366, 0xb38c40, 0x997326, 0x906020};
+	/**
+	 * Allowable character hair colours
+	 */
+	public final static int characterHairColours[] = {0xffc030, 0xffa040, 0x805030, 0x604020, 0x303030, 0xff6020, 0xff4000, 0xffffff, 65280, 65535};
+	/**
+	 * Allowable character top and bottom colours
+	 */
+	public final static int characterTopBottomColours[] = {0xff0000, 0xff8000, 0xffe000, 0xa0e000, 57344, 32768, 41088, 45311, 33023, 12528, 0xe000e0, 0x303030, 0x604000, 0x805000, 0xffffff};
+	/**
+	 * Character animation indices
+	 */
+	public final static int npcAnimationArray[][] =
+	{
+		{11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3, 4},
+		{11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3, 4},
+		{11, 3, 2, 9, 7, 1, 6, 10, 0, 5, 8, 4},
+		{3, 4, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5},
+		{3, 4, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5},
+		{4, 3, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5},
+		{11, 4, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3},
+		{11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 4, 3}
+	};
 
 	//public static final class Skillcapes {
 	//	public static final int ATTACK_CAPE = 2111;

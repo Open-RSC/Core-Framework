@@ -50,7 +50,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	/**
 	 * Avatar generator upon logout save to PNG.
 	 */
-	private final static AvatarGenerator avatarGenerator = new AvatarGenerator();
+	private final AvatarGenerator avatarGenerator;
 
 	/**
 	 * IP filtering for wilderness entry
@@ -112,6 +112,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		fishingTrawler = new HashMap<TrawlerBoat, FishingTrawler>();
 		snapshots = new LinkedList<Snapshot>();
 		tiles = new TileValue[Constants.MAX_WIDTH][Constants.MAX_HEIGHT];
+		avatarGenerator = new AvatarGenerator(this);
 		worldLoader = new WorldLoader(this);
 		regionManager = new RegionManager(this);
 		clanManager = new ClanManager(this);

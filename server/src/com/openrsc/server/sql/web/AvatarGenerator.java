@@ -1,7 +1,8 @@
 package com.openrsc.server.sql.web;
 
-import com.openrsc.server.Server;
+import com.openrsc.server.constants.Constants;
 import com.openrsc.server.model.PlayerAppearance;
+import com.openrsc.server.model.world.World;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -15,11 +16,11 @@ import java.util.zip.ZipFile;
 
 public final class AvatarGenerator {
 
-	/// The width of the avatar to generate
-	private final static int AVATAR_WIDTH = 65;
+	private final World world;
 
-	/// The height of the avatar to generate
-	private final static int AVATAR_HEIGHT = 115;
+	public AvatarGenerator(World world) {
+		this.world = world;
+	}
 
 	public void generateAvatar(int playerID, PlayerAppearance appearance, int[] wornItems) throws IOException {
 		if (appearance == null) {
@@ -32,7 +33,11 @@ public final class AvatarGenerator {
 			throw new IllegalArgumentException("The provided worn items array is invalid!");
 		}
 
-		new AvatarTransaction(playerID, appearance, wornItems);
+		new AvatarTransaction(world, playerID, appearance, wornItems);
+	}
+
+	public World getWorld() {
+		return world;
 	}
 
 	/// An internal transaction type
@@ -298,23 +303,7 @@ public final class AvatarGenerator {
 			new AnimationDef("armorskirt", 48059, 0, true, false, 0),
 			new AnimationDef("armorskirt", 0x232323, 0, true, false, 0)
 			};
-		/// A helper array for rendering
-		private final static int characterSkinColours[] = {0xecded0, 0xccb366, 0xb38c40, 0x997326, 0x906020};
-		/// A helper array for rendering
-		private final static int characterHairColours[] = {0xffc030, 0xffa040, 0x805030, 0x604020, 0x303030, 0xff6020, 0xff4000, 0xffffff, 65280, 65535};
-		/// A helper array for rendering
-		private final static int characterTopBottomColours[] = {0xff0000, 0xff8000, 0xffe000, 0xa0e000, 57344, 32768, 41088, 45311, 33023, 12528, 0xe000e0, 0x303030, 0x604000, 0x805000, 0xffffff};
-		private final static int npcAnimationArray[][] =
-			{
-				{11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3, 4},
-				{11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3, 4},
-				{11, 3, 2, 9, 7, 1, 6, 10, 0, 5, 8, 4},
-				{3, 4, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5},
-				{3, 4, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5},
-				{4, 3, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5},
-				{11, 4, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3},
-				{11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 4, 3}
-			};
+
 
 		/// Load the sprites
 		static {
@@ -356,23 +345,26 @@ public final class AvatarGenerator {
 		private final int[] wornItems;
 		/// The pixel array for rendering to
 		private final int[] pixels;
+		/// World Reference used to find the appropriate avatar directory for this world.
+		private final World world;
 
 		/// Sole Constructor
-		AvatarTransaction(int playerID, PlayerAppearance appearance, int[] wornItems) throws IOException {
+		AvatarTransaction(World world, int playerID, PlayerAppearance appearance, int[] wornItems) throws IOException {
+			this.world = world;
 			this.appearance = appearance;
 			this.wornItems = wornItems;
-			this.pixels = new int[AVATAR_WIDTH * AVATAR_HEIGHT];
+			this.pixels = new int[Constants.AVATAR_WIDTH * Constants.AVATAR_HEIGHT];
 
-			drawPlayer(0, 0, AVATAR_WIDTH - 1, AVATAR_HEIGHT - 12, 0);
+			drawPlayer(0, 0, Constants.AVATAR_WIDTH - 1, Constants.AVATAR_HEIGHT - 12, 0);
 
-			BufferedImage img = new BufferedImage(AVATAR_WIDTH, AVATAR_HEIGHT, BufferedImage.TYPE_INT_ARGB);
+			BufferedImage img = new BufferedImage(Constants.AVATAR_WIDTH, Constants.AVATAR_HEIGHT, BufferedImage.TYPE_INT_ARGB);
 
 			for (int i = 0; i < pixels.length; ++i) {
 				if (pixels[i] != 0) {
-					img.setRGB(i % AVATAR_WIDTH, i / AVATAR_WIDTH, pixels[i] | 0xFF000000);
+					img.setRGB(i % Constants.AVATAR_WIDTH, i / Constants.AVATAR_WIDTH, pixels[i] | 0xFF000000);
 				}
 			}
-			ImageIO.write(img, "png", new File(Server.getServer().getConfig().AVATAR_DIR + playerID + ".png"));
+			ImageIO.write(img, "png", new File(getWorld().getServer().getConfig().AVATAR_DIR + playerID + ".png"));
 		}
 
 		/// A helper function to load a single sprite
@@ -434,18 +426,18 @@ public final class AvatarGenerator {
 				k = ((((sprites[i1].getWidth() << 16) - k2) + j3) - 1) / j3;
 				l = ((((sprites[i1].getHeight() << 16) - l2) + k3) - 1) / k3;
 			}
-			int j4 = j * AVATAR_WIDTH;
+			int j4 = j * Constants.AVATAR_WIDTH;
 			i3 += i << 16;
 			if (j < 0) {
 				int l4 = 0 - j;
 				l -= l4;
 				j = 0;
-				j4 += l4 * AVATAR_WIDTH;
+				j4 += l4 * Constants.AVATAR_WIDTH;
 				l2 += k3 * l4;
 				i3 += l3 * l4;
 			}
-			if (j + l >= AVATAR_HEIGHT) {
-				l -= ((j + l) - AVATAR_HEIGHT) + 1;
+			if (j + l >= Constants.AVATAR_HEIGHT) {
+				l -= ((j + l) - Constants.AVATAR_HEIGHT) + 1;
 			}
 			int i5 = 2;
 			if (k1 == 0xffffff) {
@@ -479,8 +471,8 @@ public final class AvatarGenerator {
 					k5 = 0;
 					j += k1 * i6;
 				}
-				if (k5 + l5 >= AVATAR_WIDTH) {
-					int j6 = (k5 + l5) - AVATAR_WIDTH;
+				if (k5 + l5 >= Constants.AVATAR_WIDTH) {
+					int j6 = (k5 + l5) - Constants.AVATAR_WIDTH;
 					l5 -= j6;
 				}
 				i3 = 1 - i3;
@@ -503,7 +495,7 @@ public final class AvatarGenerator {
 				}
 				k += l1;
 				j = l4;
-				l += AVATAR_WIDTH;
+				l += Constants.AVATAR_WIDTH;
 				k2 += l2;
 			}
 		}
@@ -527,8 +519,8 @@ public final class AvatarGenerator {
 					k6 = 0;
 					j += k1 * i7;
 				}
-				if (k6 + l6 >= AVATAR_WIDTH) {
-					int j7 = (k6 + l6) - AVATAR_WIDTH;
+				if (k6 + l6 >= Constants.AVATAR_WIDTH) {
+					int j7 = (k6 + l6) - Constants.AVATAR_WIDTH;
 					l6 -= j7;
 				}
 				j3 = 1 - j3;
@@ -552,7 +544,7 @@ public final class AvatarGenerator {
 				}
 				k += l1;
 				j = l5;
-				l += AVATAR_WIDTH;
+				l += Constants.AVATAR_WIDTH;
 				l2 += i3;
 			}
 		}
@@ -560,7 +552,7 @@ public final class AvatarGenerator {
 		/// A helper function for rendering
 		private void drawPlayer(int x, int y, int scaleX, int scaleY, int unknown) {
 			for (int k2 = 0; k2 < 12; k2++) {
-				int l2 = npcAnimationArray[0][k2];
+				int l2 = Constants.npcAnimationArray[0][k2];
 				int animationIndex = wornItems[l2] - 1;
 				if (animationIndex >= 0) {
 					int k4 = 0;
@@ -572,16 +564,20 @@ public final class AvatarGenerator {
 					int l5 = (scaleX * sprites[k5].getSomething1()) / sprites[animations[animationIndex].getNumber()].getSomething1();
 					k4 -= (l5 - scaleX) / 2;
 					int colour = animations[animationIndex].getCharColour();
-					int skinColour = characterSkinColours[appearance.getSkinColour()];
+					int skinColour = Constants.characterSkinColours[appearance.getSkinColour()];
 					if (colour == 1)
-						colour = characterHairColours[appearance.getHairColour()];
+						colour = Constants.characterHairColours[appearance.getHairColour()];
 					else if (colour == 2)
-						colour = characterTopBottomColours[appearance.getTopColour()];
+						colour = Constants.characterTopBottomColours[appearance.getTopColour()];
 					else if (colour == 3)
-						colour = characterTopBottomColours[appearance.getTrouserColour()];
+						colour = Constants.characterTopBottomColours[appearance.getTrouserColour()];
 					spriteClip4(x + k4, y + i5, l5, scaleY, k5, colour, skinColour, unknown, false);
 				}
 			}
+		}
+
+		public World getWorld() {
+			return world;
 		}
 
 		/// An internal helper class
