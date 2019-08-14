@@ -254,7 +254,7 @@ public final class SuperModerator implements CommandListener {
 			}
 			player.message(messagePrefix + "Drop tables reloaded");
 		} else if (cmd.equalsIgnoreCase("reloadworld") || cmd.equalsIgnoreCase("reloadland")) {
-			World.getWorld().wl.loadWorld(World.getWorld());
+			World.getWorld().getWorldLoader().loadWorld(World.getWorld());
 			player.message(messagePrefix + "World Reloaded");
 		} else if (cmd.equalsIgnoreCase("summonall")) {
 			if (args.length == 1) {

@@ -69,7 +69,6 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	public static int EVENT_COMBAT_MIN, EVENT_COMBAT_MAX;
 	public static boolean WORLD_TELEGRAB_TOGGLE = false;
 	private static World worldInstance;
-	private final WorldLoader db = new WorldLoader();
 	private final EntityList<Npc> npcs = new EntityList<Npc>(4000);
 	private final EntityList<Player> players = new EntityList<Player>(2000);
 	private final List<QuestInterface> quests = new LinkedList<QuestInterface>();
@@ -77,7 +76,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	private final List<Shop> shopData = new ArrayList<Shop>();
 	private final List<Shop> shops = new ArrayList<Shop>();
 	private final TileValue[][] tiles = new TileValue[MAX_WIDTH][MAX_HEIGHT];
-	public WorldLoader wl;
+	private WorldLoader worldLoader;
 
 	private Map<Player, Boolean> playerUnderAttackMap = new HashMap<Player, Boolean>();
 	private Map<Npc, Boolean> npcUnderAttackMap = new HashMap<Npc, Boolean>();
@@ -218,10 +217,6 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 	public void delayedSpawnObject(final GameObjectLoc loc, final int respawnTime) {
 		this.delayedSpawnObject(loc, respawnTime, false);
-	}
-
-	public WorldLoader getDB() {
-		return db;
 	}
 
 	public Npc getNpc(int idx) {
@@ -395,8 +390,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		try {
 			ClanManager.init();
 			PartyManager.init();
-			worldInstance.wl = new WorldLoader();
-			worldInstance.wl.loadWorld(worldInstance);
+			worldInstance.worldLoader = new WorldLoader();
+			worldInstance.getWorldLoader().loadWorld(worldInstance);
 			WorldPopulation.populateWorld(worldInstance);
 			shutdownCheck();
 			if (Server.getServer().getConfig().WANT_NEW_RARE_DROP_TABLES)
@@ -925,4 +920,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	}
 
 
+	public WorldLoader getWorldLoader() {
+		return worldLoader;
+	}
 }
