@@ -1,7 +1,6 @@
 package com.openrsc.server.plugins.npcs;
 
 import com.openrsc.server.Server;
-import com.openrsc.server.content.market.Market;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -229,7 +228,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 				player.setAttribute("bankpin", true);
 				ActionSender.sendBox(player, "Bank pin correct", false);
 			}
-			Market.getInstance().addPlayerCollectItemsTask(player);
+			player.getWorld().getMarket().addPlayerCollectItemsTask(player);
 		}
 	}
 
@@ -279,7 +278,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 			player.message("You have correctly entered your PIN");
 		}
 		if (auction) {
-			Market.getInstance().addPlayerCollectItemsTask(player);
+			player.getWorld().getMarket().addPlayerCollectItemsTask(player);
 		} else {
 			player.setAccessingBank(true);
 			ActionSender.showBank(player);

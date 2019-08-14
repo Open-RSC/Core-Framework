@@ -1,7 +1,6 @@
 package com.openrsc.server.plugins.minigames.mage_arena;
 
 import com.openrsc.server.Server;
-import com.openrsc.server.content.market.Market;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -172,7 +171,7 @@ public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, Np
 							ActionSender.sendBox(player, "Bank pin correct", false);
 						}
 					}
-					Market.getInstance().addPlayerCollectItemsTask(player);
+					player.getWorld().getMarket().addPlayerCollectItemsTask(player);
 				}
 			});
 		}
@@ -239,7 +238,7 @@ public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, Np
 			}
 		}
 		if (Server.getServer().getConfig().SPAWN_AUCTION_NPCS && auction) {
-			Market.getInstance().addPlayerCollectItemsTask(player);
+			player.getWorld().getMarket().addPlayerCollectItemsTask(player);
 		} else {
 			player.setAccessingBank(true);
 			ActionSender.showBank(player);

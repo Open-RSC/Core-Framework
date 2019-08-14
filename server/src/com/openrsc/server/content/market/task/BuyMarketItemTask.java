@@ -1,8 +1,6 @@
 package com.openrsc.server.content.market.task;
 
 import com.openrsc.server.Server;
-import com.openrsc.server.content.market.Market;
-import com.openrsc.server.content.market.MarketDatabase;
 import com.openrsc.server.content.market.MarketItem;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.container.Item;
@@ -24,7 +22,7 @@ public class BuyMarketItemTask extends MarketTask {
 
 	@Override
 	public void doTask() {
-		MarketItem item = MarketDatabase.getAuctionItem(auctionID);
+		MarketItem item = playerBuyer.getWorld().getMarket().getMarketDatabase().getAuctionItem(auctionID);
 		boolean updateDiscord = false;
 
 		if (item == null) {
@@ -85,7 +83,7 @@ public class BuyMarketItemTask extends MarketTask {
 			sellerPlayer.save();
 		}
 
-		MarketDatabase.addCollectableItem("Sold " + def.getName() + "(" + item.getItemID() + ") x" + amount + " for " + auctionPrice + "gp", 10, auctionPrice, sellerUsernameID);
+		playerBuyer.getWorld().getMarket().getMarketDatabase().addCollectableItem("Sold " + def.getName() + "(" + item.getItemID() + ") x" + amount + " for " + auctionPrice + "gp", 10, auctionPrice, sellerUsernameID);
 		item.setBuyers(!item.getBuyers().isEmpty() ? item.getBuyers() + ", \n" + "[" + (System.currentTimeMillis() / 1000) + ": "
 			+ playerBuyer.getUsername() + ": x" + amount + "]" : "[" + (System.currentTimeMillis() / 1000) + ": "
 			+ playerBuyer.getUsername() + ": x" + amount + "]");
@@ -93,17 +91,17 @@ public class BuyMarketItemTask extends MarketTask {
 		item.setAmountLeft(item.getAmountLeft() - amount);
 		item.setPrice(item.getAmountLeft() * priceForEach);
 
-		if (item.getAmountLeft() == 0) MarketDatabase.setSoldOut(item);
-		else MarketDatabase.update(item);
+		if (item.getAmountLeft() == 0) playerBuyer.getWorld().getMarket().getMarketDatabase().setSoldOut(item);
+		else playerBuyer.getWorld().getMarket().getMarketDatabase().update(item);
 
-		for (MarketItem marketItem : Market.getInstance().getAuctionItems()) {
+		for (MarketItem marketItem : playerBuyer.getWorld().getMarket().getAuctionItems()) {
 			if (marketItem.getAuctionID() == item.getAuctionID()) {
 				marketItem.setAmountLeft(item.getAmountLeft());
 				marketItem.setPrice(item.getPrice());
 			}
 		}
 
-		Market.getInstance().addRequestOpenAuctionHouseTask(playerBuyer);
+		playerBuyer.getWorld().getMarket().addRequestOpenAuctionHouseTask(playerBuyer);
 
 		if (updateDiscord) {
 			Server.getServer().getDiscordService().auctionBuy(item);

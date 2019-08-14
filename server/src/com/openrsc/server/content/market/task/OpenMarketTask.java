@@ -1,6 +1,5 @@
 package com.openrsc.server.content.market.task;
 
-import com.openrsc.server.content.market.Market;
 import com.openrsc.server.content.market.MarketItem;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
@@ -23,7 +22,7 @@ public class OpenMarketTask extends MarketTask {
 		owner.write(pb.toPacket());
 
 		@SuppressWarnings("unchecked")
-		ArrayList<MarketItem> items = (ArrayList<MarketItem>) Market.getInstance().getAuctionItems().clone();
+		ArrayList<MarketItem> items = (ArrayList<MarketItem>) owner.getWorld().getMarket().getAuctionItems().clone();
 		System.out.println("There's currently " + items.size() + " auctions. ");
 		Iterator<MarketItem> iterator = items.iterator();
 

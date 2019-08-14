@@ -1,6 +1,5 @@
 package com.openrsc.server.content.market;
 
-import com.openrsc.server.Server;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,10 +15,16 @@ public class MarketDatabase {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	public static boolean add(MarketItem item) {
+	private final Market market;
+
+	public MarketDatabase(Market market) {
+		this.market = market;
+	}
+
+	public boolean add(MarketItem item) {
 		try {
-			PreparedStatement statement = Server.getServer().getDatabaseConnection().prepareStatement(
-				"INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+			PreparedStatement statement = getMarket().getWorld().getServer().getDatabaseConnection().prepareStatement(
+				"INSERT INTO `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "auctions`(`itemID`, `amount`, `amount_left`, `price`, `seller`, `seller_username`, `buyer_info`, `time`) VALUES (?,?,?,?,?,?,?,?)");
 			statement.setInt(1, item.getItemID());
 			statement.setInt(2, item.getAmount());
@@ -37,13 +42,13 @@ public class MarketDatabase {
 		return false;
 	}
 
-	public static boolean addCollectableItem(String explanation, final int itemIndex, final int amount,
+	public boolean addCollectableItem(String explanation, final int itemIndex, final int amount,
 											 final int playerID) {
 
 		final String finalExplanation = explanation.replaceAll("'", "");
 		try {
-			PreparedStatement statement = Server.getServer().getDatabaseConnection().prepareStatement(
-				"INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+			PreparedStatement statement = getMarket().getWorld().getServer().getDatabaseConnection().prepareStatement(
+				"INSERT INTO `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "expired_auctions`(`item_id`, `item_amount`, `time`, `playerID`, `explanation`) VALUES (?,?,?,?,?)");
 			statement.setInt(1, itemIndex);
 			statement.setInt(2, amount);
@@ -58,10 +63,10 @@ public class MarketDatabase {
 		return false;
 	}
 
-	public static boolean cancel(MarketItem item) {
+	public boolean cancel(MarketItem item) {
 		try {
-			PreparedStatement statement = Server.getServer().getDatabaseConnection()
-				.prepareStatement("UPDATE `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+			PreparedStatement statement = getMarket().getWorld().getServer().getDatabaseConnection()
+				.prepareStatement("UPDATE `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "auctions` SET  `sold-out`='1', `was_cancel`='1' WHERE `auctionID`=?");
 			statement.setInt(1, item.getAuctionID());
 			statement.executeUpdate();
@@ -72,10 +77,10 @@ public class MarketDatabase {
 		return false;
 	}
 
-	static int getAuctionCount() {
+	public int getAuctionCount() {
 		try {
-			PreparedStatement statement = Server.getServer().getDatabaseConnection()
-				.prepareStatement("SELECT count(*) as auction_count FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+			PreparedStatement statement = getMarket().getWorld().getServer().getDatabaseConnection()
+				.prepareStatement("SELECT count(*) as auction_count FROM `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "auctions` WHERE `sold-out`='0'");
 			ResultSet result = statement.executeQuery();
 			if (result.next()) {
@@ -88,10 +93,10 @@ public class MarketDatabase {
 		return 0;
 	}
 
-	public static int getMyAuctionsCount(int ownerID) {
+	public int getMyAuctionsCount(int ownerID) {
 		try {
-			PreparedStatement statement = Server.getServer().getDatabaseConnection()
-				.prepareStatement("SELECT count(*) as my_slots FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+			PreparedStatement statement = getMarket().getWorld().getServer().getDatabaseConnection()
+				.prepareStatement("SELECT count(*) as my_slots FROM `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "auctions` WHERE `seller`='" + ownerID + "' AND `sold-out`='0'");
 			ResultSet result = statement.executeQuery();
 			if (result.next()) {
@@ -104,10 +109,10 @@ public class MarketDatabase {
 		return 0;
 	}
 
-	public static MarketItem getAuctionItem(int auctionID) {
+	public MarketItem getAuctionItem(int auctionID) {
 		try {
-			PreparedStatement statement = Server.getServer().getDatabaseConnection()
-				.prepareStatement("SELECT `auctionID`, `itemID`, `amount`, `amount_left`, `price`, `seller`, `seller_username`, `buyer_info`, `time` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+			PreparedStatement statement = getMarket().getWorld().getServer().getDatabaseConnection()
+				.prepareStatement("SELECT `auctionID`, `itemID`, `amount`, `amount_left`, `price`, `seller`, `seller_username`, `buyer_info`, `time` FROM `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "auctions` WHERE `auctionID`= ? AND `sold-out` = '0'");
 			statement.setInt(1, auctionID);
 
@@ -123,11 +128,11 @@ public class MarketDatabase {
 		return null;
 	}
 
-	static ArrayList<MarketItem> getAuctionItemsOnSale() {
+	public ArrayList<MarketItem> getAuctionItemsOnSale() {
 		ArrayList<MarketItem> auctionItems = new ArrayList<>();
 		try {
-			PreparedStatement statement = Server.getServer().getDatabaseConnection()
-				.prepareStatement("SELECT `auctionID`, `itemID`, `amount`, `amount_left`, `price`, `seller`, `seller_username`, `buyer_info`, `time` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+			PreparedStatement statement = getMarket().getWorld().getServer().getDatabaseConnection()
+				.prepareStatement("SELECT `auctionID`, `itemID`, `amount`, `amount_left`, `price`, `seller`, `seller_username`, `buyer_info`, `time` FROM `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "auctions` WHERE `sold-out`='0'");
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
@@ -142,10 +147,10 @@ public class MarketDatabase {
 		return auctionItems;
 	}
 
-	public static boolean setSoldOut(MarketItem item) {
+	public boolean setSoldOut(MarketItem item) {
 		try {
-			PreparedStatement statement = Server.getServer().getDatabaseConnection()
-				.prepareStatement("UPDATE `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+			PreparedStatement statement = getMarket().getWorld().getServer().getDatabaseConnection()
+				.prepareStatement("UPDATE `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "auctions` SET `amount_left`=?, `sold-out`=?, `buyer_info`=? WHERE `auctionID`=?");
 			statement.setInt(1, item.getAmountLeft());
 			statement.setInt(2, 1);
@@ -159,10 +164,10 @@ public class MarketDatabase {
 		return false;
 	}
 
-	public static boolean update(MarketItem item) {
+	public boolean update(MarketItem item) {
 		try {
-			PreparedStatement statement = Server.getServer().getDatabaseConnection().prepareStatement(
-				"UPDATE `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+			PreparedStatement statement = getMarket().getWorld().getServer().getDatabaseConnection().prepareStatement(
+				"UPDATE `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "auctions` SET `amount_left`=?, `price` = ?, `buyer_info`=? WHERE `auctionID`= ?");
 			statement.setInt(1, item.getAmountLeft());
 			statement.setInt(2, item.getPrice());
@@ -176,10 +181,10 @@ public class MarketDatabase {
 		return false;
 	}
 
-	public static ArrayList<CollectableItem> getCollectableItemsFor(int player) {
+	public ArrayList<CollectableItem> getCollectableItemsFor(int player) {
 		ArrayList<CollectableItem> list = new ArrayList<>();
 		try {
-			PreparedStatement statement = Server.getServer().getDatabaseConnection().prepareStatement("SELECT `claim_id`, `item_id`, `item_amount`, `playerID`, `explanation` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+			PreparedStatement statement = getMarket().getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT `claim_id`, `item_id`, `item_amount`, `playerID`, `explanation` FROM `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 				+ "expired_auctions` WHERE `playerID` = ?  AND `claimed`= '0'");
 			statement.setInt(1, player);
 			ResultSet result = statement.executeQuery();
@@ -196,5 +201,9 @@ public class MarketDatabase {
 			LOGGER.catching(e);
 		}
 		return list;
+	}
+
+	public Market getMarket() {
+		return market;
 	}
 }

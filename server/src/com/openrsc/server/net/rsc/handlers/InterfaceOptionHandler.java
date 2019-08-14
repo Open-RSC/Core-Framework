@@ -2,7 +2,6 @@ package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.Server;
 import com.openrsc.server.content.clan.*;
-import com.openrsc.server.content.market.Market;
 import com.openrsc.server.content.party.*;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -216,18 +215,18 @@ public class InterfaceOptionHandler implements PacketHandler {
 						}
 						player.setAttribute("ah_buy_item", System.currentTimeMillis());
 
-						Market.getInstance().addBuyAuctionItemTask(player, auctionBuyID, amountBuy);
+						player.getWorld().getMarket().addBuyAuctionItemTask(player, auctionBuyID, amountBuy);
 						break;
 
 					case 1: /* Create auction */
 						int itemID = p.readInt();
 						int amount = p.readInt();
 						int price = p.readInt();
-						Market.getInstance().addNewAuctionItemTask(player, itemID, amount, price);
+						player.getWorld().getMarket().addNewAuctionItemTask(player, itemID, amount, price);
 						break;
 					case 2:
 						int auctionID = p.readInt();
-						Market.getInstance().addCancelAuctionItemTask(player, auctionID);
+						player.getWorld().getMarket().addCancelAuctionItemTask(player, auctionID);
 						break;
 					case 3:
 						if (System.currentTimeMillis() - player.getAttribute("ah_refresh", (long) 0) < 5000) {
@@ -244,7 +243,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 					case 5:
 						auctionID = p.readInt();
 
-						Market.getInstance().addModeratorDeleteItemTask(player, auctionID);
+						player.getWorld().getMarket().addModeratorDeleteItemTask(player, auctionID);
 						break;
 				}
 				break;

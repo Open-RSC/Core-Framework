@@ -1,7 +1,6 @@
 package com.openrsc.server.content.market.task;
 
 import com.openrsc.server.content.market.CollectableItem;
-import com.openrsc.server.content.market.MarketDatabase;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -27,7 +26,7 @@ public class PlayerCollectItemsTask extends MarketTask {
 
 	@Override
 	public void doTask() {
-		ArrayList<CollectableItem> list = MarketDatabase.getCollectableItemsFor(player.getDatabaseID());
+		ArrayList<CollectableItem> list = player.getWorld().getMarket().getMarketDatabase().getCollectableItemsFor(player.getDatabaseID());
 
 		if (list.size() == 0) {
 			player.message("You have no items to collect.");

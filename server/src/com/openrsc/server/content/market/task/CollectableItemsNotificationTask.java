@@ -1,7 +1,6 @@
 package com.openrsc.server.content.market.task;
 
 import com.openrsc.server.content.market.CollectableItem;
-import com.openrsc.server.content.market.MarketDatabase;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -18,7 +17,7 @@ public class CollectableItemsNotificationTask extends MarketTask {
 
 	@Override
 	public void doTask() {
-		ArrayList<CollectableItem> list = MarketDatabase.getCollectableItemsFor(player.getDatabaseID());
+		ArrayList<CollectableItem> list = player.getWorld().getMarket().getMarketDatabase().getCollectableItemsFor(player.getDatabaseID());
 		StringBuilder items = new StringBuilder("Following items have been removed from market: % ");
 		for (CollectableItem item : list) {
 			ItemDefinition def = player.getWorld().getServer().getEntityHandler().getItemDef(item.item_id);

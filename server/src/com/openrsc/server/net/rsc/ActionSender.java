@@ -4,7 +4,6 @@ import com.openrsc.server.Server;
 import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.content.clan.ClanPlayer;
-import com.openrsc.server.content.market.Market;
 import com.openrsc.server.content.party.Party;
 import com.openrsc.server.content.party.PartyManager;
 import com.openrsc.server.content.party.PartyPlayer;
@@ -1246,7 +1245,7 @@ public class ActionSender {
 
 				if (!p.getLocation().inWilderness()) {
 					if (Server.getServer().getConfig().SPAWN_AUCTION_NPCS) {
-						Market.getInstance().addCollectableItemsNotificationTask(p);
+						p.getWorld().getMarket().addCollectableItemsNotificationTask(p);
 					}
 				}
 
@@ -1308,7 +1307,7 @@ public class ActionSender {
 	}
 
 	public static void sendOpenAuctionHouse(final Player player) {
-		Market.getInstance().addRequestOpenAuctionHouseTask(player);
+		player.getWorld().getMarket().addRequestOpenAuctionHouseTask(player);
 	}
 
 	public static void sendClan(Player p) {

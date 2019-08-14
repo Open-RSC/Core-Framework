@@ -5,6 +5,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.content.DropTable;
 import com.openrsc.server.content.clan.ClanManager;
+import com.openrsc.server.content.market.Market;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler.TrawlerBoat;
 import com.openrsc.server.content.party.PartyManager;
@@ -81,6 +82,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	private final List<Shop> shops;
 	private final Map<TrawlerBoat, FishingTrawler> fishingTrawler;
 	private final TileValue[][] tiles;
+	private final Market market;
 
 	private final WorldLoader worldLoader;
 
@@ -111,6 +113,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		snapshots = new LinkedList<Snapshot>();
 		worldLoader = new WorldLoader(this);
 		regionManager = new RegionManager(this);
+		market = getServer().getConfig().SPAWN_AUCTION_NPCS ? new Market(this) : null;
 	}
 
 	public static synchronized World getWorld() {
@@ -941,5 +944,9 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 	public RegionManager getRegionManager() {
 		return regionManager;
+	}
+
+	public Market getMarket() {
+		return market;
 	}
 }
