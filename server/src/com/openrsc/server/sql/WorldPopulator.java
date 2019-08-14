@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 import static org.apache.logging.log4j.util.Unbox.box;
 
-public final class WorldPopulation {
+public final class WorldPopulator {
 
 	/**
 	 * The asynchronous logger.
