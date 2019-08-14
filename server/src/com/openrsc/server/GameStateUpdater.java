@@ -59,6 +59,7 @@ public final class GameStateUpdater {
 
 	// private static final int PACKET_UPDATETIMEOUTS = 0;
 	public void sendUpdatePackets(Player p) {
+		// TODO: Should be private
 		try {
 			updatePlayers(p);
 			updatePlayerAppearances(p);
@@ -78,7 +79,7 @@ public final class GameStateUpdater {
 	/**
 	 * Checks if the player has moved within the last X minutes
 	 */
-	private void updateTimeouts(Player player) {
+	protected void updateTimeouts(Player player) {
 		long curTime = System.currentTimeMillis();
 		int timeoutLimit = getServer().getConfig().IDLE_TIMER; // 5 minute idle log out
 		int autoSave = getServer().getConfig().AUTO_SAVE; // 30 second autosave
@@ -109,7 +110,7 @@ public final class GameStateUpdater {
 		}
 	}
 
-	private void updateNpcs(Player playerToUpdate) throws Exception {
+	protected void updateNpcs(Player playerToUpdate) throws Exception {
 		com.openrsc.server.net.PacketBuilder packet = new com.openrsc.server.net.PacketBuilder();
 		packet.setID(79);
 		packet.startBitAccess();
@@ -157,7 +158,7 @@ public final class GameStateUpdater {
 		playerToUpdate.write(packet.toPacket());
 	}
 
-	private void updatePlayers(Player playerToUpdate) throws Exception {
+	protected void updatePlayers(Player playerToUpdate) throws Exception {
 
 		com.openrsc.server.net.PacketBuilder positionBuilder = new com.openrsc.server.net.PacketBuilder();
 		positionBuilder.setID(191);
@@ -463,7 +464,7 @@ public final class GameStateUpdater {
 		}
 	}
 
-	private void updateGameObjects(Player playerToUpdate) throws Exception {
+	protected void updateGameObjects(Player playerToUpdate) throws Exception {
 		boolean changed = false;
 		PacketBuilder packet = new PacketBuilder();
 		packet.setID(48);
@@ -511,7 +512,7 @@ public final class GameStateUpdater {
 			playerToUpdate.write(packet.toPacket());
 	}
 
-	private void updateGroundItems(Player playerToUpdate) throws Exception {
+	protected void updateGroundItems(Player playerToUpdate) throws Exception {
 		boolean changed = false;
 		PacketBuilder packet = new PacketBuilder();
 		packet.setID(99);
@@ -563,7 +564,7 @@ public final class GameStateUpdater {
 			playerToUpdate.write(packet.toPacket());
 	}
 
-	private void updateWallObjects(Player playerToUpdate) throws Exception {
+	protected void updateWallObjects(Player playerToUpdate) throws Exception {
 		boolean changed = false;
 		PacketBuilder packet = new PacketBuilder();
 		packet.setID(91);
@@ -607,7 +608,7 @@ public final class GameStateUpdater {
 			playerToUpdate.write(packet.toPacket());
 	}
 
-	private void sendClearLocations(Player p) {
+	protected void sendClearLocations(Player p) {
 		if (p.getLocationsToClear().size() > 0) {
 			PacketBuilder packetBuilder = new PacketBuilder(211);
 			for (Point point : p.getLocationsToClear()) {
@@ -645,7 +646,7 @@ public final class GameStateUpdater {
 			}*/
 	}
 
-	private final long updateClients() {
+	protected final long updateClients() {
 		final long updateClientsStart	= System.currentTimeMillis();
 		for (Player p : players) {
 			sendUpdatePackets(p);
@@ -655,7 +656,7 @@ public final class GameStateUpdater {
 		return updateClientsEnd - updateClientsStart;
 	}
 
-	private final long doCleanup() {// it can do the teleport at this time.
+	protected final long doCleanup() {// it can do the teleport at this time.
 		final long doCleanupStart	= System.currentTimeMillis();
 
 		/*
@@ -685,7 +686,7 @@ public final class GameStateUpdater {
 		return doCleanupEnd - doCleanupStart;
 	}
 
-	private final long executeWalkToActions() {
+	protected final long executeWalkToActions() {
 		final long executeWalkToActionsStart	= System.currentTimeMillis();
 		for (Player p : players) {
 			if (p.getWalkToAction() != null) {
@@ -700,7 +701,7 @@ public final class GameStateUpdater {
 		return executeWalkToActionsEnd - executeWalkToActionsStart;
 	}
 
-	private final long processNpcs() {
+	protected final long processNpcs() {
 		final long processNpcsStart	= System.currentTimeMillis();
 		for (Npc n : npcs) {
 			try {
@@ -726,7 +727,7 @@ public final class GameStateUpdater {
 	/**
 	 * Updates the messages queues for each player
 	 */
-	private final long processMessageQueues() {
+	protected final long processMessageQueues() {
 		final long processMessageQueuesStart	= System.currentTimeMillis();
 		for (Player p : players) {
 			PrivateMessage pm = p.getNextPrivateMessage();
@@ -759,7 +760,7 @@ public final class GameStateUpdater {
 	 * Update the position of players, and check if who (and what) they are
 	 * aware of needs updated
 	 */
-	private final long processPlayers() {
+	protected final long processPlayers() {
 		final long processPlayersStart	= System.currentTimeMillis();
 		for (Player p : players) {
 			// Checking login because we don't want to unregister more than once

@@ -266,7 +266,7 @@ public final class Server implements Runnable {
 						n.updatePosition();
 					}
 
-					processOutgoingPackets();
+					getGameUpdater().executeWalkToActions();
 				}
 			}
 		} catch (Throwable t) {
