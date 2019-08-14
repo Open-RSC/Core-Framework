@@ -121,6 +121,14 @@ public class Equipment {
 		}
 	}
 
+	public void remove(int slot) {
+		synchronized (list) {
+			list[slot] = null;
+			ActionSender.sendEquipmentStats(player, slot);
+			player.updateWornItems(slot,
+				player.getSettings().getAppearance().getSprite(slot));
+		}
+	}
 	public int remove(int id, int amount) {
 		synchronized (list) {
 			for (int i = 0; i < slots; i++) {

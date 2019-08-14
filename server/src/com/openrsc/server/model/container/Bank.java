@@ -473,17 +473,19 @@ public class Bank {
 			return;
 		}
 
+		for (int i = 0; i < Equipment.slots; i++) {
+			if (player.getEquipment().get(i) != null)
+				player.getEquipment().remove(i);
+		}
+
 		if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			//Attempt to equip the preset equipment
 			int wearableId;
 			for (int i = 0; i < presets[slot].equipment.length; i++) {
 				Item presetEquipment = presets[slot].equipment[i];
-				if (presetEquipment.getDef() == null) {
-					player.getEquipment().equip(i,null);
-					player.updateWornItems(i,
-						player.getSettings().getAppearance().getSprite(i));
+				if (presetEquipment.getDef() == null)
 					continue;
-				}
+
 				presetEquipment.setWielded(false);
 				if (itemsOwned.containsKey(presetEquipment.getID())) {
 					int presetAmount = presetEquipment.getAmount();
