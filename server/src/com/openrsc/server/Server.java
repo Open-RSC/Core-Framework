@@ -91,7 +91,7 @@ public final class Server implements Runnable {
 	public Server (String configFile) throws IOException{
 		config = new ServerConfiguration();
 		getConfig().initConfig(configFile);
-		LOGGER.info("Server configuration loaded");
+		LOGGER.info("Server configuration loaded: " + configFile);
 
 		name = getConfig().SERVER_NAME;
 
@@ -243,7 +243,6 @@ public final class Server implements Runnable {
 
 				// Doing the set in two stages here such that the whole tick has access to the same values for profiling information.
 				final long tickStart = System.currentTimeMillis();
-				System.out.println("Starting tick at: " + tickStart + ", lastClientUpdate: " + lastClientUpdate);
 				final long lastIncomingPacketsDuration = processIncomingPackets();
 				final long lastEventsDuration = runGameEvents();
 				final long lastGameStateDuration = runGameStateUpdate();
