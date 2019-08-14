@@ -5,7 +5,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.plugins.PluginHandler;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
@@ -38,6 +37,6 @@ public class MenuReplyHandler implements PacketHandler {
 					return 1;
 				}
 			});
-		PluginHandler.getPluginHandler().getExecutor().execute(task);
+		player.getWorld().getServer().getPluginHandler().getExecutor().execute(task);
 	}
 }

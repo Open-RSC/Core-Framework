@@ -31,7 +31,6 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.GenericLog;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -214,7 +213,7 @@ public class SpellHandler implements PacketHandler {
 				if (player.withinRange(affectedPlayer, 4)) {
 					player.resetPath();
 				}
-				if (PluginHandler.getPluginHandler().blockDefaultAction("PlayerMage",
+				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("PlayerMage",
 					new Object[]{player, affectedPlayer, idx})) {
 					return;
 				}
@@ -268,7 +267,7 @@ public class SpellHandler implements PacketHandler {
 					}
 				}
 
-				if (PluginHandler.getPluginHandler().blockDefaultAction("PlayerMageNpc",
+				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("PlayerMageNpc",
 					new Object[]{player, affectedNpc})) {
 					return;
 				}
@@ -286,7 +285,7 @@ public class SpellHandler implements PacketHandler {
 					player.resetPath();
 					return;
 				}
-				if (PluginHandler.getPluginHandler().blockDefaultAction("PlayerMageItem",
+				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("PlayerMageItem",
 					new Object[]{player, (Integer)item.getID(), (Integer)idx})) {
 					return;
 				}
@@ -310,7 +309,7 @@ public class SpellHandler implements PacketHandler {
 				return;
 			}
 
-			if (PluginHandler.getPluginHandler().blockDefaultAction("PlayerMageObject",
+			if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("PlayerMageObject",
 				new Object[]{player, gameObject, spell})) {
 				return;
 			}

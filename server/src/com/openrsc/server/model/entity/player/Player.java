@@ -37,7 +37,6 @@ import com.openrsc.server.net.rsc.handlers.ItemDropHandler;
 import com.openrsc.server.net.rsc.handlers.Ping;
 import com.openrsc.server.net.rsc.handlers.WalkRequest;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.sql.GameLogging;
@@ -1478,7 +1477,7 @@ public final class Player extends Mob {
 			activity += amount;
 			if (activity >= KITTEN_ACTIVITY_THRESHOLD) {
 				activity -= KITTEN_ACTIVITY_THRESHOLD;
-				PluginHandler.getPluginHandler().blockDefaultAction("CatGrowth", new Object[]{this});
+				getWorld().getServer().getPluginHandler().blockDefaultAction("CatGrowth", new Object[]{this});
 			}
 		}
 	}
@@ -2163,7 +2162,7 @@ public final class Player extends Mob {
 	}
 
 	public void teleport(int x, int y, boolean bubble) {
-		if (bubble && PluginHandler.getPluginHandler().blockDefaultAction("Teleport", new Object[]{this})) {
+		if (bubble && getWorld().getServer().getPluginHandler().blockDefaultAction("Teleport", new Object[]{this})) {
 			return;
 		}
 		if (inCombat()) {

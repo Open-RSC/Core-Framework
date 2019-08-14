@@ -1,9 +1,9 @@
 package com.openrsc.server.event.rsc.impl.combat.scripts;
 
+import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.PluginHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,14 +21,18 @@ public class CombatScriptLoader {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private static final Map<String, CombatScript> combatScripts = new HashMap<String, CombatScript>();
+	private final Map<String, CombatScript> combatScripts = new HashMap<String, CombatScript>();
+	private final Map<String, OnCombatStartScript> combatStartScripts = new HashMap<String, OnCombatStartScript>();
+	private final Map<String, CombatAggroScript> combatAggroScripts = new HashMap<String, CombatAggroScript>();
 
-	private static final Map<String, OnCombatStartScript> combatStartScripts = new HashMap<String, OnCombatStartScript>();
-	
-	private static final Map<String, CombatAggroScript> combatAggroScripts = new HashMap<String, CombatAggroScript>();
+	private final Server server;
 
-	private static void loadCombatScripts() throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-		for (Class<?> c : PluginHandler.loadClasses("com.openrsc.server.event.rsc.impl.combat.scripts.all")) {
+	public CombatScriptLoader (Server server) {
+		this.server = server;
+	}
+
+	private void loadCombatScripts() throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+		for (Class<?> c : getServer().getPluginHandler().loadClasses("com.openrsc.server.event.rsc.impl.combat.scripts.all")) {
 			Object classInstance = c.getConstructor().newInstance();
 			if (classInstance instanceof CombatScript) {
 				CombatScript script = (CombatScript) classInstance;
@@ -45,7 +49,7 @@ public class CombatScriptLoader {
 		}
 	}
 
-	public static void checkAndExecuteCombatScript(final Mob attacker, final Mob victim) {
+	public void checkAndExecuteCombatScript(final Mob attacker, final Mob victim) {
 		for (CombatScript script : combatScripts.values()) {
 			if (script.shouldExecute(attacker, victim)) {
 				script.executeScript(attacker, victim);
@@ -53,7 +57,7 @@ public class CombatScriptLoader {
 		}
 	}
 
-	public static void checkAndExecuteOnStartCombatScript(final Mob attacker, final Mob victim) {
+	public void checkAndExecuteOnStartCombatScript(final Mob attacker, final Mob victim) {
 		try {
 			for (OnCombatStartScript script : combatStartScripts.values()) {
 				if (script.shouldExecute(attacker, victim)) {
@@ -65,7 +69,7 @@ public class CombatScriptLoader {
 		}
 	}
 	
-	public static void checkAndExecuteCombatAggroScript(final Npc npc, final Player player) {
+	public void checkAndExecuteCombatAggroScript(final Npc npc, final Player player) {
 		try {
 			for (CombatAggroScript script : combatAggroScripts.values()) {
 				if (script.shouldExecute(npc, player)) {
@@ -77,7 +81,7 @@ public class CombatScriptLoader {
 		}
 	}
 
-	public static void init() {
+	public void load() {
 		try {
 			loadCombatScripts();
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
@@ -85,5 +89,9 @@ public class CombatScriptLoader {
 		} catch (NoSuchMethodException | InvocationTargetException e) {
 			LOGGER.catching(e);
 		}
+	}
+
+	public Server getServer() {
+		return server;
 	}
 }

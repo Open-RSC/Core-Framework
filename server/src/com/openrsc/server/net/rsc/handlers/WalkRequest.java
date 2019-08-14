@@ -13,7 +13,6 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.plugins.PluginHandler;
 
 public class WalkRequest implements PacketHandler {
 	/**
@@ -52,7 +51,7 @@ public class WalkRequest implements PacketHandler {
 					player.resetCombatEvent();
 
 					if (opponent.isNpc()) {
-						if (PluginHandler.getPluginHandler().blockDefaultAction("PlayerNpcRun",
+						if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("PlayerNpcRun",
 							new Object[]{player, ((Npc) opponent)})) {
 							return;
 						}

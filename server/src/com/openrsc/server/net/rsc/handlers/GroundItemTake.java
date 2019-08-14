@@ -9,7 +9,6 @@ import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.plugins.PluginHandler;
 
 public class GroundItemTake implements PacketHandler {
 	/**
@@ -72,7 +71,7 @@ public class GroundItemTake implements PacketHandler {
 
 				player.resetAll();
 
-				if (PluginHandler.getPluginHandler().blockDefaultAction("Pickup", new Object[]{player, item})) {
+				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("Pickup", new Object[]{player, item})) {
 					return;
 				}
 

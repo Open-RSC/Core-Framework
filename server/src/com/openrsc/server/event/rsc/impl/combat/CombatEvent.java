@@ -1,11 +1,10 @@
 package com.openrsc.server.event.rsc.impl.combat;
 
-import com.openrsc.server.constants.Constants;
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.Constants;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.GameTickEvent;
-import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScriptLoader;
-import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -16,7 +15,6 @@ import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
@@ -34,7 +32,7 @@ public class CombatEvent extends GameTickEvent {
 		super(null, 0, "Combat Event");
 		this.attackerMob = attacker;
 		this.defenderMob = defender;
-		CombatScriptLoader.checkAndExecuteOnStartCombatScript(attacker, defender);
+		attacker.getWorld().getServer().getCombatScriptLoader().checkAndExecuteOnStartCombatScript(attacker, defender);
 		if (attacker.isNpc()) {
 			((Npc) attacker).setExecutedAggroScript(false);
 		} else if (defender.isNpc()) {
@@ -44,7 +42,7 @@ public class CombatEvent extends GameTickEvent {
 
 	private static void onDeath(Mob killed, Mob killer) {
 		if (killer.isPlayer() && killed.isNpc()) {
-			if (PluginHandler.getPluginHandler().blockDefaultAction("PlayerKilledNpc",
+			if (killed.getWorld().getServer().getPluginHandler().blockDefaultAction("PlayerKilledNpc",
 				new Object[]{((Player) killer), ((Npc) killed)})) {
 				return;
 			}
@@ -128,7 +126,7 @@ public class CombatEvent extends GameTickEvent {
 			Player targetPlayer = (Player) target;
 
 			if (targetPlayer.getPrayers().isPrayerActivated(Prayers.PARALYZE_MONSTER)) {
-				CombatScriptLoader.checkAndExecuteCombatScript(hitter, target);
+				hitter.getWorld().getServer().getCombatScriptLoader().checkAndExecuteCombatScript(hitter, target);
 				return;
 			}
 		}
@@ -180,7 +178,7 @@ public class CombatEvent extends GameTickEvent {
 
 		if (target.getSkills().getLevel(3) > 0) {
 			if (!(target.isPlayer() && !((Player)target).getDuel().isDuelActive() && ((Player)target).checkRingOfLife(hitter)))
-				CombatScriptLoader.checkAndExecuteCombatScript(hitter, target);
+				target.getWorld().getServer().getCombatScriptLoader().checkAndExecuteCombatScript(hitter, target);
 		} else {
 			onDeath(target, hitter);
 		}

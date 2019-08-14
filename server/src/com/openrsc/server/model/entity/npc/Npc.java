@@ -1,7 +1,7 @@
 package com.openrsc.server.model.entity.npc;
 
-import com.openrsc.server.constants.Constants;
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.Constants;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
@@ -24,7 +24,6 @@ import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.GoldDrops;
@@ -1125,7 +1124,7 @@ public class Npc extends Mob {
 		Server.getServer().getGameEventHandler().add(new ImmediateEvent("Init Talk Script") {
 			@Override
 			public void action() {
-				PluginHandler.getPluginHandler().blockDefaultAction("TalkToNpc", new Object[]{p, npc});
+				getWorld().getServer().getPluginHandler().blockDefaultAction("TalkToNpc", new Object[]{p, npc});
 			}
 		});
 	}
@@ -1136,7 +1135,7 @@ public class Npc extends Mob {
 		Server.getServer().getGameEventHandler().add(new ImmediateEvent("Init Indirect Talk Script") {
 			@Override
 			public void action() {
-				PluginHandler.getPluginHandler().blockDefaultAction("IndirectTalkToNpc", new Object[]{p, npc});
+				getWorld().getServer().getPluginHandler().blockDefaultAction("IndirectTalkToNpc", new Object[]{p, npc});
 			}
 		});
 	}

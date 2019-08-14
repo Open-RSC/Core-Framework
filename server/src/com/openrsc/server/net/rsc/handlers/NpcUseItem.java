@@ -9,7 +9,6 @@ import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.plugins.PluginHandler;
 
 public class NpcUseItem implements PacketHandler {
 	/**
@@ -44,7 +43,7 @@ public class NpcUseItem implements PacketHandler {
 				}
 				player.resetAll();
 
-				if (PluginHandler.getPluginHandler().blockDefaultAction(
+				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
 					"InvUseOnNpc",
 					new Object[]{player, affectedNpc, item}))
 					return;

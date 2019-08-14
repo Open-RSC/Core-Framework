@@ -52,6 +52,8 @@ public final class Server implements Runnable {
 	private final PlayerDatabaseExecutor playerDataProcessor;
 	private final ServerConfiguration config;
 	private final ScheduledExecutorService scheduledExecutor;
+	private final PluginHandler pluginHandler;
+	private final CombatScriptLoader combatScriptLoader;
 	private final World world;
 
 	private DelayedEvent updateEvent;
@@ -93,6 +95,8 @@ public final class Server implements Runnable {
 
 		name = getConfig().SERVER_NAME;
 
+		pluginHandler = new PluginHandler(this);
+		combatScriptLoader = new CombatScriptLoader(this);
 		constants = new Constants(this);
 		discordService = new DiscordService(this);
 		playerDataProcessor = new PlayerDatabaseExecutor(this);
@@ -105,22 +109,13 @@ public final class Server implements Runnable {
 
 	public static void main(String[] args) throws IOException {
 		LOGGER.info("Launching Game Server...");
+
 		if (args.length == 0) {
 			LOGGER.info("Server Configuration file not provided. Loading from default.conf or local.conf.");
 			server = new Server("default.conf");
 		} else {
-			server = new Server(args[0]);
-			if (getServer().getConfig().DEBUG) {
-				LOGGER.info("Server Configuration file: " + args[0]);
-				LOGGER.info("\t Game Tick Cycle: {}", box(getServer().getConfig().GAME_TICK));
-				LOGGER.info("\t Client Version: {}", box(getServer().getConfig().CLIENT_VERSION));
-				LOGGER.info("\t Server type: " + (getServer().getConfig().MEMBER_WORLD ? "MEMBER" : "FREE" + " world."));
-				LOGGER.info("\t Combat Experience Rate: {}", box(getServer().getConfig().COMBAT_EXP_RATE));
-				LOGGER.info("\t Skilling Experience Rate: {}", box(getServer().getConfig().SKILLING_EXP_RATE));
-				LOGGER.info("\t Wilderness Experience Boost: {}", box(getServer().getConfig().WILDERNESS_BOOST));
-				LOGGER.info("\t Skull Experience Boost: {}", box(getServer().getConfig().SKULL_BOOST));
-				LOGGER.info("\t Double experience: " + (getServer().getConfig().IS_DOUBLE_EXP ? "Enabled" : "Disabled"));
-				LOGGER.info("\t View Distance: {}", box(getServer().getConfig().VIEW_DISTANCE));
+			for (int i = 0; i < args.length; i++) {
+				server = new Server(args[i]);
 			}
 		}
 
@@ -145,14 +140,14 @@ public final class Server implements Runnable {
 
 			LOGGER.info("Loading game logging manager...");
 			GameLogging.load(this);
-			LOGGER.info("\t Logging Manager Completed");
+			LOGGER.info("\t Game Logging Manager Completed");
 
 			LOGGER.info("Loading Plugins...");
-			PluginHandler.getPluginHandler().initPlugins();
+			getPluginHandler().load();
 			LOGGER.info("\t Plugins Completed");
 
 			LOGGER.info("Loading Combat Scripts...");
-			CombatScriptLoader.init();
+			getCombatScriptLoader().load();
 			LOGGER.info("\t Combat Scripts Completed");
 
 			LOGGER.info("Loading World...");
@@ -187,7 +182,7 @@ public final class Server implements Runnable {
 			bootstrap.childOption(ChannelOption.SO_RCVBUF, 10000);
 			bootstrap.childOption(ChannelOption.SO_SNDBUF, 10000);
 			try {
-				PluginHandler.getPluginHandler().handleAction("Startup", new Object[]{});
+				getPluginHandler().handleAction("Startup", new Object[]{});
 				serverChannel = bootstrap.bind(new InetSocketAddress(getServer().getConfig().SERVER_PORT)).sync();
 				LOGGER.info("Game world is now online on port {}!", box(getServer().getConfig().SERVER_PORT));
 			} catch (final InterruptedException e) {
@@ -223,6 +218,7 @@ public final class Server implements Runnable {
 	}
 
 	public void kill() {
+		// TODO: Uninitialize server
 		stop();
 		LOGGER.fatal(getName() + " shutting down...");
 		System.exit(0);
@@ -247,6 +243,7 @@ public final class Server implements Runnable {
 
 				// Doing the set in two stages here such that the whole tick has access to the same values for profiling information.
 				final long tickStart = System.currentTimeMillis();
+				System.out.println("Starting tick at: " + tickStart + ", lastClientUpdate: " + lastClientUpdate);
 				final long lastIncomingPacketsDuration = processIncomingPackets();
 				final long lastEventsDuration = runGameEvents();
 				final long lastGameStateDuration = runGameStateUpdate();
@@ -513,5 +510,13 @@ public final class Server implements Runnable {
 
 	public String getName() {
 		return name;
+	}
+
+	public PluginHandler getPluginHandler() {
+		return pluginHandler;
+	}
+
+	public CombatScriptLoader getCombatScriptLoader() {
+		return combatScriptLoader;
 	}
 }

@@ -7,7 +7,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.plugins.PluginHandler;
 
 public final class ItemUseOnItem implements PacketHandler {
 	/**
@@ -51,7 +50,7 @@ public final class ItemUseOnItem implements PacketHandler {
 		// GenericLog(player.getUsername() + " used item " + item1 + " on item "
 		// + item2 + " at " + player.getLocation()));
 
-		if (PluginHandler.getPluginHandler().blockDefaultAction("InvUseOnItem",
+		if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("InvUseOnItem",
 			new Object[]{player, item1, item2})) {
 			return;
 		}

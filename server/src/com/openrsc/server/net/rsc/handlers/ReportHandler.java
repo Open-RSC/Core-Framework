@@ -6,7 +6,6 @@ import com.openrsc.server.model.snapshot.Snapshot;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.GameReport;
@@ -78,7 +77,7 @@ public final class ReportHandler implements PacketHandler {
 			args = s.substring(firstSpace + 1).trim().split(" ");
 		}
 
-		PluginHandler.getPluginHandler().handleAction("Command",
+		player.getWorld().getServer().getPluginHandler().handleAction("Command",
 			new Object[]{cmd.toLowerCase(), args, player});
 	}
 }

@@ -40,25 +40,51 @@ public final class PluginHandler {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private static PluginHandler pluginHandler = null;
-	private static boolean reloading;
-	private Object defaultHandler = null;
-	private URLClassLoader urlClassLoader;
-	private Map<String, Set<Object>> actionPlugins = new HashMap<String, Set<Object>>();
-	private Map<String, Set<Object>> executivePlugins = new HashMap<String, Set<Object>>();
-	private ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool(new NamedThreadFactory("PluginThread"));
-	private List<Class<?>> knownInterfaces = new ArrayList<Class<?>>();
-	// private ExecutorService executor = Executors.newFixedThreadPool(2);
-	private Map<String, Class<?>> queue = new ConcurrentHashMap<String, Class<?>>();
+	private final Server server;
+	private final String threadName;
 
-	public static PluginHandler getPluginHandler() {
-		if (pluginHandler == null) {
-			pluginHandler = new PluginHandler();
-		}
-		return pluginHandler;
+	private URLClassLoader urlClassLoader;
+	private boolean reloading = true;
+	private ArrayList<Class<?>> loadedClassFiles = new ArrayList<Class<?>>();
+
+	// private ExecutorService executor = Executors.newFixedThreadPool(2);
+	private ThreadPoolExecutor executor;
+
+	private Object defaultHandler = null;
+	private Map<String, Set<Object>> actionPlugins;
+	private Map<String, Set<Object>> executivePlugins;
+	private List<Class<?>> knownInterfaces;
+	private Map<String, Class<?>> queue;
+	private Map<String, Object> loadedPlugins;
+
+	public PluginHandler (Server server) {
+		this.server = server;
+		threadName = getServer().getName()+" : PluginThread";
 	}
 
-	public static List<Class<?>> loadClasses(final String pckgname)
+	public void loadJar() throws Exception {
+		String pathToJar = "./plugins.jar";
+		boolean jarExists = new File(pathToJar).isFile();
+		if (jarExists) {
+			JarFile jarFile = new JarFile(pathToJar);
+			URL[] urls = {new URL("jar:file:" + pathToJar + "!/")};
+			urlClassLoader = URLClassLoader.newInstance(urls, getClass().getClassLoader());
+
+			Enumeration<JarEntry> enumeration = jarFile.entries();
+			while (enumeration.hasMoreElements()) {
+				JarEntry je = enumeration.nextElement();
+				if (je.getName().endsWith(".class") && !je.getName().contains("$")) {
+					String className = je.getName().substring(0,
+						je.getName().length() - 6).replace('/', '.');
+					Class<?> c = urlClassLoader.loadClass(className);
+					loadedClassFiles.add(c);
+				}
+			}
+			jarFile.close();
+		}
+	}
+
+	public List<Class<?>> loadClasses(final String pckgname)
 		throws ClassNotFoundException {
 		final List<Class<?>> classes = new ArrayList<Class<?>>();
 		final ArrayList<File> directories = new ArrayList<File>();
@@ -123,156 +149,7 @@ public final class PluginHandler {
 		return classes;
 	}
 
-	public boolean blockDefaultAction(final String interfce, final Object[] data) {
-		return blockDefaultAction(interfce, data, true);
-	}
-
-	/**
-	 * @param interfce
-	 * @param data
-	 * @param callAction
-	 * @return
-	 */
-
-	public boolean blockDefaultAction(final String interfce,
-									  final Object[] data, final boolean callAction) {
-		if (reloading) {
-			for (Object o : data) {
-				if (o instanceof Player) {
-					((Player) o).message("Plugins are being updated, please wait.");
-				}
-			}
-			return false;
-		}
-		boolean shouldBlock = false, flagStop = false;
-		queue.clear();
-		if (executivePlugins.containsKey(interfce + "ExecutiveListener")) {
-			for (final Object c : executivePlugins.get(interfce
-				+ "ExecutiveListener")) {
-				try {
-					final Class<?>[] dataClasses = new Class<?>[data.length];
-					int i = 0;
-					for (final Object o : data) {
-						dataClasses[i++] = o.getClass();
-					}
-					final Method m = c.getClass().getMethod("block" + interfce,
-						dataClasses);
-					shouldBlock = (Boolean) m.invoke(c, data);
-					if (shouldBlock) {
-						queue.put(interfce, c.getClass());
-						flagStop = true;
-					} else if (queue.size() > 1) {
-
-					} else if (queue.isEmpty()) {
-						queue.put(interfce, defaultHandler.getClass());
-					}
-				} catch (final Exception e) {
-					LOGGER.catching(e);
-				}
-			}
-		}
-
-		if (callAction) {
-			handleAction(interfce, data);
-		}
-		return flagStop; // not sure why it matters if its false or true
-	}
-
-
-	public Map<String, Set<Object>> getActionPlugins() {
-		return actionPlugins;
-	}
-
-	public Map<String, Set<Object>> getExecutivePlugins() {
-		return executivePlugins;
-	}
-
-	public ExecutorService getExecutor() {
-		return executor;
-	}
-
-	public List<Class<?>> getKnownInterfaces() {
-		return knownInterfaces;
-	}
-
-	public void handleAction(final String interfce, final Object[] data) {
-		if (reloading) {
-			return;
-		}
-		if (actionPlugins.containsKey(interfce + "Listener")) {
-			for (final Object c : actionPlugins.get(interfce + "Listener")) {
-				try {
-					final Class<?>[] dataClasses = new Class<?>[data.length];
-					int i = 0;
-					for (final Object o : data) {
-						dataClasses[i++] = o.getClass();
-					}
-
-					final Method m = c.getClass().getMethod("on" + interfce,
-						dataClasses);
-					boolean go = false;
-
-					if (queue.containsKey(interfce)) {
-						for (final Class<?> clz : queue.values()) {
-							if (clz.getName().equalsIgnoreCase(
-								c.getClass().getName())) {
-								go = true;
-								break;
-							}
-						}
-					} else {
-						go = true;
-					}
-
-					if (go) {
-						final FutureTask<Integer> task = new FutureTask<Integer>(
-							new Callable<Integer>() {
-								@Override
-								public Integer call() throws Exception {
-									try {
-										LOGGER.info("Executing with : " + m.getName());
-										m.invoke(c, data);
-									} catch (Exception cme) {
-										LOGGER.catching(cme);
-									}
-									return 1;
-								}
-							});
-						getExecutor().execute(task);
-					}
-				} catch (final Exception e) {
-					System.err.println("Exception at plugin handling: ");
-					LOGGER.catching(e);
-				}
-			}
-		}
-	}
-
 	public void initPlugins() throws Exception {
-
-		final Map<String, Object> loadedPlugins = new HashMap<String, Object>();
-		ArrayList<Class<?>> loadedClassFiles = new ArrayList<Class<?>>();
-
-		String pathToJar = "./plugins.jar";
-		boolean jarExists = new File(pathToJar).isFile();
-		if (jarExists) {
-			JarFile jarFile = new JarFile(pathToJar);
-			URL[] urls = {new URL("jar:file:" + pathToJar + "!/")};
-			urlClassLoader = URLClassLoader.newInstance(urls, getClass().getClassLoader());
-
-			Enumeration<JarEntry> enumeration = jarFile.entries();
-			while (enumeration.hasMoreElements()) {
-				JarEntry je = enumeration.nextElement();
-				if (je.getName().endsWith(".class") && !je.getName().contains("$")) {
-					String className = je.getName().substring(0,
-						je.getName().length() - 6).replace('/', '.');
-					Class<?> c = urlClassLoader.loadClass(className);
-					loadedClassFiles.add(c);
-				}
-			}
-			jarFile.close();
-		}
-
 		for (final Class<?> interfce : loadInterfaces("com.openrsc.server.plugins.listeners.action")) {
 			final String interfceName = interfce.getName().substring(interfce.getName().lastIndexOf(".") + 1);
 			knownInterfaces.add(interfce);
@@ -398,29 +275,174 @@ public final class PluginHandler {
 		return classList;
 	}
 
+	public void load() throws Exception {
+		// TODO: Separate static loading from class based loading.
+		reloading = false;
+
+		actionPlugins = new HashMap<String, Set<Object>>();
+		executivePlugins = new HashMap<String, Set<Object>>();
+		knownInterfaces = new ArrayList<Class<?>>();
+		queue = new ConcurrentHashMap<String, Class<?>>();
+		loadedPlugins = new HashMap<String, Object>();
+		executor = (ThreadPoolExecutor) Executors.newCachedThreadPool(new NamedThreadFactory(threadName));
+		defaultHandler = null;
+
+		loadJar();
+		initPlugins();
+	}
+
 	public void unload() throws IOException {
 		reloading = true;
+
 		urlClassLoader.close();
 		executor.shutdown();
-		World.getWorld().getQuests().clear();
-		World.getWorld().getMiniGames().clear();
-		World.getWorld().getShops().clear();
+
+		getServer().getWorld().getQuests().clear();
+		getServer().getWorld().getMiniGames().clear();
+		getServer().getWorld().getShops().clear();
 
 		queue.clear();
 		actionPlugins.clear();
 		executivePlugins.clear();
 		knownInterfaces.clear();
+		loadedPlugins.clear();
+		loadedClassFiles.clear();
 
-		actionPlugins = new HashMap<String, Set<Object>>();
-		executivePlugins = new HashMap<String, Set<Object>>();
-		executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
-		knownInterfaces = new ArrayList<Class<?>>();
-		queue = new ConcurrentHashMap<String, Class<?>>();
+		actionPlugins = null;
+		executivePlugins = null;
+		knownInterfaces = null;
+		queue = null;
+		executor = null;
+		loadedClassFiles = null;
+
 		defaultHandler = null;
 	}
 
-	public void reload() throws Exception {
-		initPlugins();
-		reloading = false;
+	public boolean blockDefaultAction(final String interfce, final Object[] data) {
+		return blockDefaultAction(interfce, data, true);
+	}
+
+	/**
+	 * @param interfce
+	 * @param data
+	 * @param callAction
+	 * @return
+	 */
+
+	public boolean blockDefaultAction(final String interfce,
+									  final Object[] data, final boolean callAction) {
+		if (reloading) {
+			for (Object o : data) {
+				if (o instanceof Player) {
+					((Player) o).message("Plugins are being updated, please wait.");
+				}
+			}
+			return false;
+		}
+		boolean shouldBlock = false, flagStop = false;
+		queue.clear();
+		if (executivePlugins.containsKey(interfce + "ExecutiveListener")) {
+			for (final Object c : executivePlugins.get(interfce
+				+ "ExecutiveListener")) {
+				try {
+					final Class<?>[] dataClasses = new Class<?>[data.length];
+					int i = 0;
+					for (final Object o : data) {
+						dataClasses[i++] = o.getClass();
+					}
+					final Method m = c.getClass().getMethod("block" + interfce,
+						dataClasses);
+					shouldBlock = (Boolean) m.invoke(c, data);
+					if (shouldBlock) {
+						queue.put(interfce, c.getClass());
+						flagStop = true;
+					} else if (queue.size() > 1) {
+
+					} else if (queue.isEmpty()) {
+						queue.put(interfce, defaultHandler.getClass());
+					}
+				} catch (final Exception e) {
+					LOGGER.catching(e);
+				}
+			}
+		}
+
+		if (callAction) {
+			handleAction(interfce, data);
+		}
+		return flagStop; // not sure why it matters if its false or true
+	}
+
+	public void handleAction(final String interfce, final Object[] data) {
+		if (reloading) {
+			return;
+		}
+		if (actionPlugins.containsKey(interfce + "Listener")) {
+			for (final Object c : actionPlugins.get(interfce + "Listener")) {
+				try {
+					final Class<?>[] dataClasses = new Class<?>[data.length];
+					int i = 0;
+					for (final Object o : data) {
+						dataClasses[i++] = o.getClass();
+					}
+
+					final Method m = c.getClass().getMethod("on" + interfce,
+						dataClasses);
+					boolean go = false;
+
+					if (queue.containsKey(interfce)) {
+						for (final Class<?> clz : queue.values()) {
+							if (clz.getName().equalsIgnoreCase(
+								c.getClass().getName())) {
+								go = true;
+								break;
+							}
+						}
+					} else {
+						go = true;
+					}
+
+					if (go) {
+						final FutureTask<Integer> task = new FutureTask<Integer>(
+							new Callable<Integer>() {
+								@Override
+								public Integer call() throws Exception {
+									try {
+										LOGGER.info("Executing with : " + m.getName());
+										m.invoke(c, data);
+									} catch (Exception cme) {
+										LOGGER.catching(cme);
+									}
+									return 1;
+								}
+							});
+						getExecutor().execute(task);
+					}
+				} catch (final Exception e) {
+					System.err.println("Exception at plugin handling: ");
+					LOGGER.catching(e);
+				}
+			}
+		}
+	}
+
+	public Map<String, Set<Object>> getActionPlugins() {
+		return actionPlugins;
+	}
+
+	public Map<String, Set<Object>> getExecutivePlugins() {
+		return executivePlugins;
+	}
+
+	public ExecutorService getExecutor() {
+		return executor;
+	}
+
+	public List<Class<?>> getKnownInterfaces() {
+		return knownInterfaces;
+	}
+
+	public Server getServer() {
+		return server;
 	}
 }

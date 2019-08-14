@@ -10,7 +10,6 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.plugins.PluginHandler;
 
 public final class ItemWieldHandler implements PacketHandler {
 
@@ -82,7 +81,7 @@ public final class ItemWieldHandler implements PacketHandler {
 		}
 		if (pID == packetOne) {
 			if (!item.isWielded()) {
-				if (PluginHandler.getPluginHandler().blockDefaultAction(
+				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
 					"Wield", new Object[]{player, item})) {
 					return;
 				}
@@ -90,20 +89,20 @@ public final class ItemWieldHandler implements PacketHandler {
 			}
 		} else if (pID == packetTwo) {
 			if (item.isWielded()) {
-				if (PluginHandler.getPluginHandler().blockDefaultAction(
+				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
 					"UnWield", new Object[]{player, item}))
 					return;
 				player.getInventory().unwieldItem(item, true);
 			}
 		} else if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB && pID == packetThree) {
-			if (PluginHandler.getPluginHandler().blockDefaultAction(
+			if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
 				"Wield", new Object[]{player, item})) {
 				return;
 			}
 			player.getBank().wieldItem(idx, true);
 			ActionSender.showBank(player);
 		} else if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB && pID == packetFour) {
-			if (PluginHandler.getPluginHandler().blockDefaultAction(
+			if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
 				"UnWield", new Object[]{player, item}))
 				return;
 			player.getBank().unwieldItem(item, true);

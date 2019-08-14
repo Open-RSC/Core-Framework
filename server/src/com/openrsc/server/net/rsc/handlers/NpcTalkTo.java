@@ -9,7 +9,6 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.plugins.PluginHandler;
 
 public final class NpcTalkTo implements PacketHandler {
 
@@ -64,7 +63,7 @@ public final class NpcTalkTo implements PacketHandler {
 					}
 				}
 				
-				if (PluginHandler.getPluginHandler().blockDefaultAction("TalkToNpc", new Object[]{player, n})) {
+				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("TalkToNpc", new Object[]{player, n})) {
 					player.face(n);
 					n.face(player);
 					player.setInteractingNpc(n);

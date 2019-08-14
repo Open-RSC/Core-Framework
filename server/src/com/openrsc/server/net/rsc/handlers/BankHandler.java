@@ -1,8 +1,8 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.Server;
-import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Inventory;
@@ -13,7 +13,6 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -66,7 +65,7 @@ public final class BankHandler implements PacketHandler {
 				return;
 			}
 
-			if (PluginHandler.getPluginHandler().blockDefaultAction("Withdraw",
+			if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("Withdraw",
 				new Object[]{player, itemID, amount})) {
 				return;
 			}
@@ -131,7 +130,7 @@ public final class BankHandler implements PacketHandler {
 				return;
 			}
 
-			if (PluginHandler.getPluginHandler().blockDefaultAction("Deposit",
+			if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("Deposit",
 				new Object[]{player, itemID, amount})) {
 				return;
 			}
@@ -153,11 +152,11 @@ public final class BankHandler implements PacketHandler {
 				Item depoItem = player.getEquipment().get(k);
 				if (depoItem == null)
 					continue;
-				if (PluginHandler.getPluginHandler().blockDefaultAction("Deposit",
+				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("Deposit",
 					new Object[]{player, depoItem.getID(), depoItem.getAmount()})) {
 					continue;
 				}
-				if (PluginHandler.getPluginHandler().blockDefaultAction(
+				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
 					"UnWield", new Object[]{player, depoItem}))
 					return;
 				player.getBank().unwieldItem(depoItem, false);
@@ -200,7 +199,7 @@ public final class BankHandler implements PacketHandler {
 		boolean retval = true;
 		for (int k = player.getInventory().size() - 1; k >= 0; k--) {
 			Item depoItem = player.getInventory().get(k);
-			if (PluginHandler.getPluginHandler().blockDefaultAction("Deposit",
+			if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("Deposit",
 				new Object[]{player, depoItem.getID(), depoItem.getAmount()})) {
 				continue;
 			}

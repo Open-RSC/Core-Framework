@@ -10,7 +10,6 @@ import com.openrsc.server.net.ConnectionAttachment;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.PacketBuilder;
 import com.openrsc.server.net.RSCConnectionHandler;
-import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.SecurityChangeLog;
@@ -106,7 +105,7 @@ public class LoginPacketHandler {
 							loadedPlayer.setChangingAppearance(true);
 						}
 
-						PluginHandler.getPluginHandler().handleAction("PlayerLogin", new Object[]{loadedPlayer});
+						loadedPlayer.getWorld().getServer().getPluginHandler().handleAction("PlayerLogin", new Object[]{loadedPlayer});
 						ActionSender.sendLogin(loadedPlayer);
 					}
 				};

@@ -10,7 +10,6 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.plugins.PluginHandler;
 
 public class GameObjectAction implements PacketHandler {
 	/**
@@ -47,7 +46,7 @@ public class GameObjectAction implements PacketHandler {
 				String command = (click == 0 ? def.getCommand1() : def
 					.getCommand2()).toLowerCase();
 				player.face(object.getX(), object.getY());
-				if (PluginHandler.getPluginHandler().blockDefaultAction(
+				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
 					"ObjectAction",
 					new Object[]{object, command, player})) {
 

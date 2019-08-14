@@ -13,7 +13,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
@@ -108,7 +107,7 @@ public class ThrowingEvent extends GameTickEvent {
 				}
 
 				if (target.isNpc()) {
-					if (PluginHandler.getPluginHandler().blockDefaultAction("PlayerRangeNpc",
+					if (target.getWorld().getServer().getPluginHandler().blockDefaultAction("PlayerRangeNpc",
 						new Object[]{getOwner(), target})) {
 						getPlayerOwner().resetRange();
 						stop();

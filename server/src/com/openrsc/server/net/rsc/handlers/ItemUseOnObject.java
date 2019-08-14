@@ -12,7 +12,6 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.plugins.PluginHandler;
 
 public class ItemUseOnObject implements PacketHandler {
 	/**
@@ -41,7 +40,7 @@ public class ItemUseOnObject implements PacketHandler {
 					player.message(player.MEMBER_MESSAGE);
 					return;
 				}
-				if (PluginHandler.getPluginHandler().blockDefaultAction(
+				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
 					"InvUseOnWallObject",
 					new Object[]{object, item, player}))
 					return;
@@ -55,7 +54,7 @@ public class ItemUseOnObject implements PacketHandler {
 		if ((object.getID() == 226 || object.getID() == 232) && player.withinRange(object, 2)) {
 			player.resetPath();
 			player.resetAll();
-			if (PluginHandler.getPluginHandler().blockDefaultAction(
+			if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
 				"InvUseOnObject", new Object[]{object, item, player}))
 				return;
 		}
@@ -78,7 +77,7 @@ public class ItemUseOnObject implements PacketHandler {
 					return;
 				}
 
-				if (PluginHandler.getPluginHandler()
+				if (player.getWorld().getServer().getPluginHandler()
 					.blockDefaultAction("InvUseOnObject",
 						new Object[]{(GameObject) object, item, player}))
 					return;

@@ -1,9 +1,9 @@
 package com.openrsc.server.event.rsc.impl;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.SingleTickEvent;
-import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -12,7 +12,6 @@ import com.openrsc.server.model.entity.update.Projectile;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.PluginHandler;
 
 /**
  * @author n0m
@@ -103,7 +102,7 @@ public class ProjectileEvent extends SingleTickEvent {
 				}
 			}
 			if (caster.isNpc()) {
-				if (PluginHandler.getPluginHandler().blockDefaultAction("PlayerKilledNpc",
+				if (caster.getWorld().getServer().getPluginHandler().blockDefaultAction("PlayerKilledNpc",
 					new Object[]{(Player) opponent, (Npc) caster})) {
 					return;
 				}
@@ -155,7 +154,7 @@ public class ProjectileEvent extends SingleTickEvent {
 			if (opponent.isNpc() && caster.isPlayer()) {
 				Player playerCaster = (Player) caster;
 				Npc npcOpponent = (Npc) opponent;
-				if (PluginHandler.getPluginHandler().blockDefaultAction("PlayerKilledNpc",
+				if (caster.getWorld().getServer().getPluginHandler().blockDefaultAction("PlayerKilledNpc",
 					new Object[]{playerCaster, npcOpponent})) {
 					return;
 				}

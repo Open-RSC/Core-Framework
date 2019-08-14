@@ -15,7 +15,6 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -166,7 +165,7 @@ public class PlayerDuelHandler implements PacketHandler {
 			player.getDuel().setDuelConfirmAccepted(true);
 
 			if (affectedPlayer.getDuel().isDuelConfirmAccepted()) {
-				if (PluginHandler.getPluginHandler().blockDefaultAction("Duel",
+				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("Duel",
 					new Object[]{player, affectedPlayer})) {
 					return;
 				}

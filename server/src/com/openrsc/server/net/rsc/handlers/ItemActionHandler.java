@@ -11,7 +11,6 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.plugins.PluginHandler;
 
 public class ItemActionHandler implements PacketHandler {
 	/**
@@ -69,7 +68,7 @@ public class ItemActionHandler implements PacketHandler {
 
 		player.resetAll();
 
-		if (PluginHandler.getPluginHandler().blockDefaultAction("InvAction",
+		if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("InvAction",
 			new Object[]{item, player, item.getDef().getCommand()[commandIndex]})) {
 			return;
 		}

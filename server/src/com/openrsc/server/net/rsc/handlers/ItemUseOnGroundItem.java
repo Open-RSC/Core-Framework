@@ -11,7 +11,6 @@ import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.plugins.PluginHandler;
 
 public class ItemUseOnGroundItem implements PacketHandler {
 	/**
@@ -76,7 +75,7 @@ public class ItemUseOnGroundItem implements PacketHandler {
 					return;
 				}
 
-				if (PluginHandler.getPluginHandler()
+				if (player.getWorld().getServer().getPluginHandler()
 					.blockDefaultAction("InvUseOnGroundItem",
 						new Object[]{myItem, item, player})) {
 					return;

@@ -9,7 +9,6 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.plugins.PluginHandler;
 
 public final class NpcCommand implements PacketHandler {
 
@@ -45,7 +44,7 @@ public final class NpcCommand implements PacketHandler {
 				String command = (click == 0 ? def.getCommand1() : def
 					.getCommand2()).toLowerCase();
 				affectedNpc.resetPath();
-				if (PluginHandler.getPluginHandler().blockDefaultAction(
+				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
 					"NpcCommand", new Object[]{affectedNpc, command, player})) {
 					return;
 				}

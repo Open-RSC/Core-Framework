@@ -4,7 +4,6 @@ import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.plugins.PluginHandler;
 
 public final class CommandHandler implements PacketHandler {
 	public void handlePacket(Packet p, Player player) throws Exception {
@@ -20,7 +19,7 @@ public final class CommandHandler implements PacketHandler {
 				args = s.substring(firstSpace + 1).trim().split(" ");
 			}
 
-			PluginHandler.getPluginHandler().handleAction("Command",
+			player.getWorld().getServer().getPluginHandler().handleAction("Command",
 				new Object[]{cmd.toLowerCase(), args, player});
 		}
 	}
