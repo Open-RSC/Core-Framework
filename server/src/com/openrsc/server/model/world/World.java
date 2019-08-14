@@ -55,7 +55,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	/**
 	 * IP filtering for wilderness entry
 	 */
-	private final static IPTracker<String> wildernessIPTracker = new ThreadSafeIPTracker<String>();
+	private final IPTracker<String> wildernessIPTracker;
 
 	private boolean telegrabEnabled = true;
 
@@ -106,6 +106,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		minigames = new LinkedList<MiniGameInterface>();
 		shopData = new ArrayList<Shop>();
 		shops = new ArrayList<Shop>();
+		wildernessIPTracker = new ThreadSafeIPTracker<String>();
 		playerUnderAttackMap = new HashMap<Player, Boolean>();
 		npcUnderAttackMap = new HashMap<Npc, Boolean>();
 		fishingTrawler = new HashMap<TrawlerBoat, FishingTrawler>();
@@ -941,7 +942,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		return server;
 	}
 
-	public static IPTracker<String> getWildernessIPTracker() {
+	public final IPTracker<String> getWildernessIPTracker() {
 		return wildernessIPTracker;
 	}
 
