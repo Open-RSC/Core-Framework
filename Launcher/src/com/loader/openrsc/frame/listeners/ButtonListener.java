@@ -118,7 +118,7 @@ public class ButtonListener implements ActionListener {
 				return;
 			}
 			case "dev world": {
-				String ip = "dev.openrsc.com";
+				String ip = "game.openrsc.com";
 				String port = "43599";
 				FileOutputStream fileout;
 				try {
