@@ -401,6 +401,10 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 			getClanManager().initialize();
 			getPartyManager().initialize();
 
+			if(getMarket() != null) {
+				getMarket().start();
+			}
+
 			getWorldLoader().loadWorld();
 			getWorldLoader().getWorldPopulator().populateWorld();
 			shutdownCheck();
@@ -410,6 +414,9 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 			// getWorld().getServer().getEventHandler().add(new WildernessCycleEvent());
 			//setFishingTrawler(new FishingTrawler());
 			//getWorld().getServer().getEventHandler().add(getFishingTrawler());
+			if(getMarket() != null) {
+				market.start();
+			}
 		} catch (Exception e) {
 			LOGGER.catching(e);
 		}

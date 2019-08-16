@@ -6,17 +6,18 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.Region;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class Entity {
 
 	private final World world;
 
-	protected final ConcurrentMap<String, Object> attributes = new ConcurrentHashMap<String, Object>();
-	
-	protected final ConcurrentMap<String, Object> syncAttributes = new ConcurrentHashMap<String, Object>();
+	protected final Map<String, Object> attributes = new HashMap<String, Object>();
+
+	protected final Map<String, Object> syncAttributes = new ConcurrentHashMap<String, Object>();
 
 	protected final ArrayList<VisibleCondition> visibleConditions = new ArrayList<VisibleCondition>();
 
@@ -49,7 +50,7 @@ public abstract class Entity {
 		}
 		return fail;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public synchronized <T> T getSyncAttribute(String string) {
 		return (T) syncAttributes.get(string);
@@ -140,7 +141,7 @@ public abstract class Entity {
 	public void setAttribute(String string, Object object) {
 		attributes.put(string, object);
 	}
-	
+
 	public synchronized void setSyncAttribute(String string, Object object) {
 		syncAttributes.put(string, object);
 	}
