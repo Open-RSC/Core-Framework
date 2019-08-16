@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.npcs.wizardtower;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -25,13 +24,13 @@ public class Sedridor implements  TalkToNpcExecutiveListener, TalkToNpcListener 
 
 		ArrayList<String> menu = new ArrayList<>();
 		menu.add("Nothing, thanks. I'm just looking around");
-		if (Server.getServer().getConfig().WANT_RUNECRAFTING && p.getQuestStage(Quests.RUNE_MYSTERIES) == -1)
+		if (p.getWorld().getServer().getConfig().WANT_RUNECRAFTING && p.getQuestStage(Quests.RUNE_MYSTERIES) == -1)
 			menu.add("Teleport me to the rune essence");
-		else if (Server.getServer().getConfig().WANT_RUNECRAFTING && p.getQuestStage(Quests.RUNE_MYSTERIES) < 2)
+		else if (p.getWorld().getServer().getConfig().WANT_RUNECRAFTING && p.getQuestStage(Quests.RUNE_MYSTERIES) < 2)
 			menu.add("What are you doing down here?");
 		else
 			menu.add("Rune Mysteries");
-		if (Server.getServer().getConfig().WANT_RUNECRAFTING && p.getQuestStage(Quests.RUNE_MYSTERIES) == 1)
+		if (p.getWorld().getServer().getConfig().WANT_RUNECRAFTING && p.getQuestStage(Quests.RUNE_MYSTERIES) == 1)
 			menu.add("I'm looking for the head wizard.");
 		int choice = showMenu(p,n, menu.toArray(new String[menu.size()]));
 		if (choice > 0) {

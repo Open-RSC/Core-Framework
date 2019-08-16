@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.npcs.portsarim;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Equipment;
@@ -22,7 +21,7 @@ public final class MonkOfEntrana implements ObjectActionExecutiveListener, Objec
 
 	private boolean CAN_GO(Player p) {
 		for (Item item : p.getInventory().getItems()) {
-			String name = item.getDef().getName().toLowerCase();
+			String name = item.getDef(p.getWorld()).getName().toLowerCase();
 			if (name.contains("dagger") || name.contains("scimitar")
 				|| (name.contains("bow") && !name.contains("unstrung") && !name.contains("string")) || name.contains("mail")
 				|| (name.contains("sword")
@@ -33,13 +32,13 @@ public final class MonkOfEntrana implements ObjectActionExecutiveListener, Objec
 			}
 		}
 
-		if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			Item item;
 			for (int i = 0; i < Equipment.slots; i++) {
 				item = p.getEquipment().get(i);
 				if (item == null)
 					continue;
-				String name = item.getDef().getName().toLowerCase();
+				String name = item.getDef(p.getWorld()).getName().toLowerCase();
 				if (name.contains("dagger") || name.contains("scimitar")
 					|| (name.contains("bow") && !name.contains("unstrung") && !name.contains("string")) || name.contains("mail")
 					|| (name.contains("sword")

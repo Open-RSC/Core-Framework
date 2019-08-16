@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.quests.members.shilovillage;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
@@ -78,7 +77,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 			}
 		}
 		else if (obj.getID() == CLIMB_CAVE_ROCKS) {
-			if (Server.getServer().getConfig().WANT_FATIGUE) {
+			if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
 				if (p.getFatigue() >= p.MAX_FATIGUE) {
 					p.message("You are too fatigued to go any further.");
 					return;
@@ -205,7 +204,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 			p.message("...and reveal an ancient doorway set into the side of the hill!");
 			GameObject ENTRANCE = new GameObject(p.getWorld(), Point.location(350, 782), HILLSIDE_ENTRANCE, 2, 0);
 			registerObject(ENTRANCE);
-			delayedSpawnObject(new GameObject(p.getWorld(), Point.location(350, 782), 398, 2, 0).getLoc(), 15000);
+			delayedSpawnObject(p.getWorld(), new GameObject(p.getWorld(), Point.location(350, 782), 398, 2, 0).getLoc(), 15000);
 		}
 		else if (obj.getID() == TOMB_DOLMEN_HANDHOLDS) {
 			message(p, "You start to climb up the side of the rock wall using the hand holds");

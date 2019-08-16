@@ -110,7 +110,7 @@ public class ShiloVillageNazastarool implements ObjectActionListener, ObjectActi
 
 	// run away coords 379, 3626
 	private void spawnAndMoveAway(Player p, int npcID) {
-		Npc npc = spawnNpc(npcID, 380, 3625, 60000 * 5);
+		Npc npc = spawnNpc(p.getWorld(), npcID, 380, 3625, 60000 * 5);
 		sleep(1000);
 		npc.teleport(381, 3625);
 		if (npc.getID() == NpcId.NAZASTAROOL_ZOMBIE.id()) {

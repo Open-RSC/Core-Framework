@@ -1,7 +1,6 @@
 package com.openrsc.server.plugins.quests.members.digsite;
 
 import com.openrsc.server.constants.*;
-import com.openrsc.server.Server;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -142,9 +141,9 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 	private void doSpade(Player p, Item item, GameObject obj) {
 		Npc workmanCheck = getNearestNpc(p, NpcId.WORKMAN.id(), 15);
 		if (workmanCheck != null) {
-			Npc workman = spawnNpc(NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
-			if (item.getID() == ItemId.SPADE.id() && item.getDef().getCommand() != null
-				&& item.getDef().getCommand()[0].equalsIgnoreCase("Dig") && obj == null) {
+			Npc workman = spawnNpc(p.getWorld(), NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
+			if (item.getID() == ItemId.SPADE.id() && item.getDef(p.getWorld()).getCommand() != null
+				&& item.getDef(p.getWorld()).getCommand()[0].equalsIgnoreCase("Dig") && obj == null) {
 				if (workman != null) {
 					npcTalk(p, workman, "Oi! what do you think you are doing ?");
 					npcWalkFromPlayer(p, workman);
@@ -165,7 +164,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 	private void rockPickOnSite(Player p, Item item, GameObject obj) {
 		if (item.getID() == ItemId.ROCK_PICK.id() && inArray(obj.getID(), SOIL)) {
 			if (!getLevel2Digsite(p)) {
-				Npc workman = spawnNpc(NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
+				Npc workman = spawnNpc(p.getWorld(), NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
 				if (workman != null) {
 					npcTalk(p, workman, "No no, rockpicks should only be used");
 					npcWalkFromPlayer(p, workman);
@@ -175,7 +174,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 				return;
 			}
 			if (p.getQuestStage(Quests.DIGSITE) < 4 && getLevel2Digsite(p)) {
-				Npc workman = spawnNpc(NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
+				Npc workman = spawnNpc(p.getWorld(), NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
 				if (workman != null) {
 					npcTalk(p, workman, "Sorry, you haven't passed level 2 earth sciences exam");
 					npcWalkFromPlayer(p, workman);
@@ -186,13 +185,13 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 			}
 
 			if (p.getQuestStage(Quests.DIGSITE) >= 4 && getLevel2Digsite(p)) {
-				if (Server.getServer().getConfig().WANT_FATIGUE) {
+				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (p.getFatigue() >= 69750) {
 						p.message("You are too tired to do any more digging");
 						return;
 					}
 				}
-				showBubble(p, new Item(ItemId.ROCK_PICK.id()));
+				showBubble(p, new Item());
 				p.incExp(Skills.MINING, 70, true);
 				message(p, "You dig through the earth");
 				sleep(1500);
@@ -209,7 +208,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 	private void trowelOnSite(Player p, Item item, GameObject obj) {
 		if (item.getID() == ItemId.TROWEL.id() && inArray(obj.getID(), SOIL)) {
 			if (getTrainingAreas(p)) {
-				showBubble(p, new Item(ItemId.TROWEL.id()));
+				showBubble(p, new Item());
 				p.incExp(Skills.MINING, 50, true);
 				message(p, "You dig with the trowel...");
 				sleep(1500);
@@ -228,7 +227,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					&& !p.getInventory().wielding(ItemId.GAUNTLETS_OF_CHAOS.id())
 					&& !p.getInventory().wielding(ItemId.GAUNTLETS_OF_COOKING.id())
 					&& !p.getInventory().wielding(ItemId.GAUNTLETS_OF_GOLDSMITHING.id())) {
-					Npc workman = spawnNpc(NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
+					Npc workman = spawnNpc(p.getWorld(), NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
 					if (workman != null) {
 						npcTalk(p, workman, "Hey, where are your gloves ?");
 						npcWalkFromPlayer(p, workman);
@@ -239,7 +238,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					return;
 				}
 				if (!p.getInventory().wielding(ItemId.BOOTS.id())) {
-					Npc workman = spawnNpc(NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
+					Npc workman = spawnNpc(p.getWorld(), NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
 					if (workman != null) {
 						npcTalk(p, workman, "Oi, no boots!");
 						npcWalkFromPlayer(p, workman);
@@ -248,13 +247,13 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					}
 					return;
 				}
-				if (Server.getServer().getConfig().WANT_FATIGUE) {
+				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (p.getFatigue() >= 69750) {
 						p.message("You are too tired to do any more digging");
 						return;
 					}
 				}
-				showBubble(p, new Item(ItemId.TROWEL.id()));
+				showBubble(p, new Item());
 				p.incExp(Skills.MINING, 60, true);
 				message(p, "You dig through the earth");
 				sleep(1500);
@@ -266,7 +265,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 				}
 			}
 			if (getLevel2Digsite(p)) {
-				Npc workman = spawnNpc(NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
+				Npc workman = spawnNpc(p.getWorld(), NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
 				if (workman != null) {
 					npcTalk(p, workman, "Sorry, you must use a rockpick");
 					npcWalkFromPlayer(p, workman);
@@ -278,7 +277,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 			}
 			if (getLevel3Digsite(p)) {
 				if (!hasItem(p, ItemId.SPECIMEN_JAR.id())) { // HAS SPECIMEN JAR
-					Npc workman = spawnNpc(NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
+					Npc workman = spawnNpc(p.getWorld(), NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
 					if (workman != null) {
 						npcTalk(p, workman, "Ahem! I don't see your sample jar");
 						npcWalkFromPlayer(p, workman);
@@ -291,7 +290,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					return;
 				}
 				if (!hasItem(p, ItemId.SPECIMEN_BRUSH.id())) { // HAS SPECIMEN BRUSH
-					Npc workman = spawnNpc(NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
+					Npc workman = spawnNpc(p.getWorld(), NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
 					if (workman != null) {
 						npcTalk(p, workman, "Wait just a minute!");
 						npcWalkFromPlayer(p, workman);
@@ -305,7 +304,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					return;
 				}
 				if (p.getQuestStage(Quests.DIGSITE) < 5) {
-					Npc workman = spawnNpc(NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
+					Npc workman = spawnNpc(p.getWorld(), NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
 					if (workman != null) {
 						npcTalk(p, workman, "Sorry, you haven't passed level 3 earth sciences exam");
 						npcWalkFromPlayer(p, workman);
@@ -314,7 +313,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					}
 					return;
 				}
-				showBubble(p, new Item(ItemId.TROWEL.id()));
+				showBubble(p, new Item());
 				p.incExp(Skills.MINING, 80, true);
 				message(p, "You dig through the earth");
 				sleep(1500);

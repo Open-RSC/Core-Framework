@@ -86,7 +86,7 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 				removeItem(p, ItemId.AMULET_OF_HOLTHION.id(), 1);
 				p.message("you place them on the chest and the chest opens");
 				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), DEMONS_CHEST_OPEN, obj.getDirection(), obj.getType()));
-				delayedSpawnObject(obj.getLoc(), 2000);
+				delayedSpawnObject(obj.getWorld(), obj.getLoc(), 2000);
 				sleep(1000);
 				p.message("inside you find a strange dark liquid");
 				addItem(p, ItemId.IBANS_SHADOW.id(), 1);
@@ -104,7 +104,7 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 				if (p.getInventory().wielding(ItemId.ROBE_OF_ZAMORAK_TOP.id())
 					&& p.getInventory().wielding(ItemId.ROBE_OF_ZAMORAK_BOTTOM.id())) {
 					replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), 914, obj.getDirection(), obj.getType()));
-					delayedSpawnObject(obj.getLoc(), 3000);
+					delayedSpawnObject(obj.getWorld(), obj.getLoc(), 3000);
 					p.teleport(792, 3469);
 					sleep(600);
 					p.teleport(795, 3469);
@@ -173,7 +173,7 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 				}
 			} else {
 				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), 914, obj.getDirection(), obj.getType()));
-				delayedSpawnObject(obj.getLoc(), 3000);
+				delayedSpawnObject(obj.getWorld(), obj.getLoc(), 3000);
 				p.teleport(794, 3469);
 				sleep(600);
 				p.teleport(791, 3469);

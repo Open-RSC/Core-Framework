@@ -1,12 +1,10 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.states.Action;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PacketHandler;
@@ -53,7 +51,7 @@ public final class ItemDropHandler implements PacketHandler {
 			return;
 		}
 
-		if (item.getDef().isStackable()) {
+		if (item.getDef(player.getWorld()).isStackable()) {
 			if (amount > item.getAmount()) {
 				amount = item.getAmount();
 			}
@@ -65,7 +63,7 @@ public final class ItemDropHandler implements PacketHandler {
 
 		final int finalAmount = amount;
 
-		Server.getServer().getGameEventHandler().add(new DelayedEvent(player, 0, "Player Drop Item") {
+		player.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(player.getWorld(), player, 0, "Player Drop Item") {
 			int dropTickCount = 0;
 
 			@Override
@@ -79,7 +77,7 @@ public final class ItemDropHandler implements PacketHandler {
 				dropTickCount++;
 				if (getOwner().finishedPath()) {
 					stop();
-					if (item.getDef().isStackable()) {
+					if (item.getDef(player.getWorld()).isStackable()) {
 						dropStackable(player, item, finalAmount, idx != -1);
 					} else {
 						dropUnstackable(player, item, finalAmount, idx != -1);
@@ -91,7 +89,7 @@ public final class ItemDropHandler implements PacketHandler {
 	}
 	private void dropStackable(final Player player, final Item item, final int amount) { this.dropStackable(player, item, amount, true);}
 	public void dropStackable(final Player player, final Item item, final int amount, boolean fromInventory) {
-		if (!item.getDef().isStackable()) {
+		if (!item.getDef(player.getWorld()).isStackable()) {
 			throw new IllegalArgumentException("Item must be stackable when passed on to dropStackable()");
 		}
 
@@ -118,26 +116,26 @@ public final class ItemDropHandler implements PacketHandler {
 			}
 			player.getEquipment().equip(slot, null);
 			ActionSender.sendEquipmentStats(player);
-			if (item.getDef().getWieldPosition() < 12)
-				player.updateWornItems(item.getDef().getWieldPosition(), player.getSettings().getAppearance().getSprite(item.getDef().getWieldPosition()));
+			if (item.getDef(player.getWorld()).getWieldPosition() < 12)
+				player.updateWornItems(item.getDef(player.getWorld()).getWieldPosition(), player.getSettings().getAppearance().getSprite(item.getDef(player.getWorld()).getWieldPosition()));
 		}
 
 		GroundItem groundItem = new GroundItem(player.getWorld(), item.getID(), player.getX(), player.getY(), amount,
 			player);
 		ActionSender.sendSound(player, "dropobject");
-		World.getWorld().registerItem(groundItem, 188000);
-		player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getUsername() + " dropped " + item.getDef().getName() + " x"
+		player.getWorld().registerItem(groundItem, 188000);
+		player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getWorld(), player.getUsername() + " dropped " + item.getDef(player.getWorld()).getName() + " x"
 			+ DataConversions.numberFormat(groundItem.getAmount()) + " at " + player.getLocation().toString()));
 		player.setStatus(Action.IDLE);
 	}
 	public void dropUnstackable(final Player player, final Item item, final int amount) { this.dropStackable(player, item, amount, true); }
 	public void dropUnstackable(final Player player, final Item item, final int amount, boolean fromInventory) {
-		if (item.getDef().isStackable()) {
+		if (item.getDef(player.getWorld()).isStackable()) {
 			throw new IllegalArgumentException("Item must be unstackable when passed on to dropUnstackable()");
 		}
 
 		player.setStatus(Action.DROPPING_GITEM);
-		Server.getServer().getGameEventHandler().add(new DelayedEvent(player, 500, "Player Drop Unstackable") {
+		player.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(player.getWorld(), player, 500, "Player Drop Unstackable") {
 			int dropCount = 0;
 
 			public void run() {
@@ -178,14 +176,14 @@ public final class ItemDropHandler implements PacketHandler {
 				} else {
 					player.getEquipment().equip(slot, null);
 					ActionSender.sendEquipmentStats(player);
-					player.updateWornItems(item.getDef().getWieldPosition(),
-						player.getSettings().getAppearance().getSprite(item.getDef().getWieldPosition()),
-						item.getDef().getWearableId(), false);
+					player.updateWornItems(item.getDef(player.getWorld()).getWieldPosition(),
+						player.getSettings().getAppearance().getSprite(item.getDef(player.getWorld()).getWieldPosition()),
+						item.getDef(player.getWorld()).getWearableId(), false);
 				}
 				GroundItem groundItem = new GroundItem(getOwner().getWorld(), item.getID(), getOwner().getX(), getOwner().getY(), amount,
 					getOwner());
-				World.getWorld().registerItem(groundItem, 188000);
-				player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(getOwner().getUsername() + " dropped " + item.getDef().getName()
+				getWorld().registerItem(groundItem, 188000);
+				player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(getOwner().getWorld(), getOwner().getUsername() + " dropped " + item.getDef(player.getWorld()).getName()
 					+ " at " + getOwner().getLocation().toString()));
 				dropCount++;
 				if (amount > 1)

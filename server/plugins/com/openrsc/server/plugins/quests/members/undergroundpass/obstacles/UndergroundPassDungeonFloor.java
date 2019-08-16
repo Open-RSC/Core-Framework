@@ -91,7 +91,7 @@ public class UndergroundPassDungeonFloor implements ObjectActionListener, Object
 				message(p, "it bursts into flames");
 				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), 97, obj.getDirection(), obj
 					.getType()));
-				delayedSpawnObject(obj.getLoc(), 10000);
+				delayedSpawnObject(obj.getWorld(), obj.getLoc(), 10000);
 				message(p, "you search through the remains");
 				if (!hasItem(p, ItemId.IBANS_ASHES.id())) {
 					p.message("and find the ashes of ibans corpse");

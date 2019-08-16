@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.mechanism;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
@@ -70,7 +69,7 @@ public class LegendsQuestHolyWater implements InvActionListener, InvActionExecut
 				player.message("You throw the holy watervial at Ungadulu.");
 				removeItem(player, item.getID(), 1);
 				player.playSound("projectile");
-				Server.getServer().getGameEventHandler().add(new CustomProjectileEvent(player, ungadulu, 1) {
+				player.getWorld().getServer().getGameEventHandler().add(new CustomProjectileEvent(player.getWorld(), player, ungadulu, 1) {
 					@Override
 					public void doSpell() {
 					}
@@ -79,7 +78,7 @@ public class LegendsQuestHolyWater implements InvActionListener, InvActionExecut
 				RestartableDelayedEvent playerEvent = playerEventMap.get(player);
 				//rethrowing holy water resets the timer
 				if (playerEvent == null) {
-					playerEvent = new RestartableDelayedEvent(player, 1000, "Legends Quest User Holy Water") {
+					playerEvent = new RestartableDelayedEvent(player.getWorld(), player, 1000, "Legends Quest User Holy Water") {
 						int timesRan = 0;
 
 						@Override
@@ -104,7 +103,7 @@ public class LegendsQuestHolyWater implements InvActionListener, InvActionExecut
 					if (!player.getCache().hasKey("holy_water_neiz")) {
 						player.getCache().store("holy_water_neiz", true);
 					}
-					Server.getServer().getGameEventHandler().add(playerEvent);
+					player.getWorld().getServer().getGameEventHandler().add(playerEvent);
 				} else {
 					playerEvent.reset();
 				}

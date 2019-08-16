@@ -1,6 +1,5 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
@@ -44,7 +43,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 		int shopAmount = p.readShort();
 		int amount = p.readShort();
 		ItemDefinition def = player.getWorld().getServer().getEntityHandler().getItemDef(itemID);
-		if (def.isMembersOnly() && !Server.getServer().getConfig().MEMBER_WORLD) {
+		if (def.isMembersOnly() && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return;
 		}
@@ -82,7 +81,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 					player.message("You can't hold the objects you are trying to buy!");
 					break;
 				}
-				if (player.getInventory().size() + totalBought >= 30 && !itemBeingBought.getDef().isStackable()) {
+				if (player.getInventory().size() + totalBought >= 30 && !itemBeingBought.getDef(player.getWorld()).isStackable()) {
 					break;
 				}
 				totalMoneySpent += price;
@@ -103,7 +102,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 			}
 			
 			player.playSound("coins");
-			player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getUsername() + " bought " + def.getName() + " x" + correctItemsBought + " for " + totalMoneySpent + "gp" + " at " + player.getLocation().toString()));
+			player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getWorld(), player.getUsername() + " bought " + def.getName() + " x" + correctItemsBought + " for " + totalMoneySpent + "gp" + " at " + player.getLocation().toString()));
 
 		} else if (pID == packetThree) { // Sell item
 			if (def.isUntradable() || !shop.shouldStock(itemID)) {
@@ -157,7 +156,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 			}
 
 			player.playSound("coins");
-			player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getUsername() + " sold " + def.getName() + " x" + totalSold
+			player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getWorld(), player.getUsername() + " sold " + def.getName() + " x" + totalSold
 				+ " for " + totalMoney + "gp" + " at " + player.getLocation().toString()));
 		}
 	}

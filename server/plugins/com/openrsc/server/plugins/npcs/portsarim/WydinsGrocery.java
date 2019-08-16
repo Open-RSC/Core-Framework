@@ -1,5 +1,7 @@
 package com.openrsc.server.plugins.npcs.portsarim;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -14,9 +16,6 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
-
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
 
 public final class WydinsGrocery implements ShopInterface,
 	TalkToNpcExecutiveListener, TalkToNpcListener,
@@ -39,7 +38,7 @@ public final class WydinsGrocery implements ShopInterface,
 	}
 
 	@Override
-	public Shop[] getShops() {
+	public Shop[] getShops(World world) {
 		return new Shop[]{shop};
 	}
 
@@ -74,7 +73,7 @@ public final class WydinsGrocery implements ShopInterface,
 	public void onWallObjectAction(final GameObject obj, final Integer click,
 								   final Player p) {
 		if (obj.getID() == 47 && obj.getX() == 277 && obj.getY() == 658) {
-			final Npc n = World.getWorld().getNpcById(NpcId.WYDIN.id());
+			final Npc n = p.getWorld().getNpcById(NpcId.WYDIN.id());
 
 			if (n != null && !p.getCache().hasKey("job_wydin")) {
 				n.face(p);

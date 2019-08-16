@@ -1,10 +1,8 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.PrivateMessage;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
@@ -29,9 +27,9 @@ public final class FriendHandler implements PacketHandler {
 		int packetFive = OpcodeIn.SOCIAL_SEND_PRIVATE_MESSAGE.getOpcode();
 		int packetSix = OpcodeIn.SOCIAL_ADD_DELAYED_IGNORE.getOpcode();
 
-		Player affectedPlayer = World.getWorld().getPlayer(friend);
+		Player affectedPlayer = player.getWorld().getPlayer(friend);
 		if (pID == packetOne) { // Add friend
-			int maxFriends = Server.getServer().getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
+			int maxFriends = player.getWorld().getServer().getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
 				: MAX_FRIENDS;
 			if (player.getSocial().friendCount() >= maxFriends) {
 				player.message("Friend list is full");
@@ -59,7 +57,7 @@ public final class FriendHandler implements PacketHandler {
 				}
 			}
 		} else if (pID == packetThree) { // Add ignore
-			int maxFriends = Server.getServer().getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
+			int maxFriends = player.getWorld().getServer().getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
 				: MAX_FRIENDS;
 			if (player.getSocial().ignoreCount() >= maxFriends) {
 				player.message("Ignore list full");
@@ -80,7 +78,7 @@ public final class FriendHandler implements PacketHandler {
 					DataConversions.getEncryptedString(p, 32576)));
 			player.addPrivateMessage(new PrivateMessage(player, message, friend));
 		} else if (pID == packetSix) {
-			int maxFriends = Server.getServer().getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
+			int maxFriends = player.getWorld().getServer().getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
 				: MAX_FRIENDS;
 			if (player.getSocial().ignoreCount() >= maxFriends) {
 				player.message("Ignore list full");
@@ -89,7 +87,7 @@ public final class FriendHandler implements PacketHandler {
 			boolean added = player.getSocial().addIgnore(friend, 0, DataConversions.hashToUsername(friend));
 			if (added){
 				ActionSender.sendIgnoreList(player);
-				Server.getServer().getGameEventHandler().add(new DelayedEvent(null, 150000, "Delayed ignore") {
+				player.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(player.getWorld(), null, 150000, "Delayed ignore") {
 				public void run() {
 					player.getSocial().removeIgnore(friend);
 					ActionSender.sendIgnoreList(player);

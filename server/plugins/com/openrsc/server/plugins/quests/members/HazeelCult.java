@@ -1134,7 +1134,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 							"the room is silent",
 							"suddenly a shrill scream comes from the coffin of hazeel",
 							"A shadowy figure appears");
-						Npc lord_hazeel = spawnNpc(NpcId.LORD_HAZEEL.id(), 580, 3420, 60000 * 2);
+						Npc lord_hazeel = spawnNpc(p.getWorld(), NpcId.LORD_HAZEEL.id(), 580, 3420, 60000 * 2);
 						ActionSender.sendTeleBubble(p, 580,
 							3420, true);
 						for (Player pe : p.getViewArea().getPlayersInView()) {

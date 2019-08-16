@@ -3,6 +3,7 @@ package com.openrsc.server.event.custom;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 import com.openrsc.server.util.rsc.DataConversions;
 
 /**
@@ -15,8 +16,8 @@ public class UndergroundPassMessages extends DelayedEvent {
 
 	private Player p;
 
-	public UndergroundPassMessages(Player p, int delay) {
-		super(null, delay, "Underground Pass Messages");
+	public UndergroundPassMessages(World world, Player p, int delay) {
+		super(world, null, delay, "Underground Pass Messages");
 		this.p = p;
 	}
 

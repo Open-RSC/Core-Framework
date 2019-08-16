@@ -9,7 +9,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
@@ -252,8 +251,8 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 					n.teleport(558, 616);
 					GameObject obj = p.getViewArea().getGameObject(
 						Point.location(558, 617));
-					World.getWorld().unregisterGameObject(obj);
-					World.getWorld().delayedSpawnObject(obj.getLoc(), 30000);
+					p.getWorld().unregisterGameObject(obj);
+					p.getWorld().delayedSpawnObject(obj.getLoc(), 30000);
 					message(p, "The employee picks up the crate");
 					n.teleport(559, 612);
 					message(p, "And takes it out to be delivered");

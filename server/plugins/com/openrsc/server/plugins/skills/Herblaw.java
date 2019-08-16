@@ -1,7 +1,5 @@
 package com.openrsc.server.plugins.skills;
 
-import com.openrsc.server.Server;
-import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.custom.BatchEvent;
@@ -35,11 +33,11 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 	}
 
 	private boolean handleHerbIdentify(final Item item, Player player) {
-		if (!Server.getServer().getConfig().MEMBER_WORLD) {
+		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return false;
 		}
-		ItemUnIdentHerbDef herb = item.getUnIdentHerbDef();
+		ItemUnIdentHerbDef herb = item.getUnIdentHerbDef(player.getWorld());
 		if (herb == null) {
 			return false;
 		}
@@ -53,14 +51,14 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			return false;
 		}
 
-		player.setBatchEvent(new BatchEvent(player, 600, "Herblaw Identify Herb", player.getInventory().countId(item.getID()), false) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Herblaw Identify Herb", player.getInventory().countId(item.getID()), false) {
 
 			public void action() {
-				ItemUnIdentHerbDef herb = item.getUnIdentHerbDef();
-				Item newItem = new Item(herb.getNewId());
+				ItemUnIdentHerbDef herb = item.getUnIdentHerbDef(getWorld());
+				Item newItem = new Item();
 				if (getOwner().getInventory().remove(item.getID(),1,false) > -1) {
 					getOwner().getInventory().add(newItem,true);
-					getOwner().message("This herb is " + newItem.getDef().getName());
+					getOwner().message("This herb is " + newItem.getDef(getWorld()).getName());
 					getOwner().incExp(Skills.HERBLAW, herb.getExp(), true);
 				}
 				getOwner().setBusy(false);
@@ -107,7 +105,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			player.incExp(Skills.HERBLAW, 20, true);
 			player.playerServerMessage(MessageType.QUEST, "You mix the nitrate powder into the liquid");
 			player.message("It has produced a foul mixture");
-			showBubble(player, new Item(com.openrsc.server.constants.ItemId.AMMONIUM_NITRATE.id()));
+			showBubble(player, new Item());
 			player.getInventory().remove(com.openrsc.server.constants.ItemId.AMMONIUM_NITRATE.id(), 1);
 			player.getInventory().replace(com.openrsc.server.constants.ItemId.NITROGLYCERIN.id(), com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_1.id());
 		} else if (usedWith.getID() == com.openrsc.server.constants.ItemId.GROUND_CHARCOAL.id() && item.getID() == com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_1.id()
@@ -123,7 +121,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			player.incExp(Skills.HERBLAW, 25, true);
 			player.playerServerMessage(MessageType.QUEST, "You mix the charcoal into the liquid");
 			player.message("It has produced an even fouler mixture");
-			showBubble(player, new Item(com.openrsc.server.constants.ItemId.GROUND_CHARCOAL.id()));
+			showBubble(player, new Item());
 			player.getInventory().remove(com.openrsc.server.constants.ItemId.GROUND_CHARCOAL.id(), 1);
 			player.getInventory().replace(com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_1.id(), com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_2.id());
 		} else if (usedWith.getID() == com.openrsc.server.constants.ItemId.ARCENIA_ROOT.id() && item.getID() == com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_2.id()
@@ -139,7 +137,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			player.incExp(Skills.HERBLAW, 30, true);
 			player.message("You mix the root into the mixture");
 			player.message("You produce a potentially explosive compound...");
-			showBubble(player, new Item(com.openrsc.server.constants.ItemId.ARCENIA_ROOT.id()));
+			showBubble(player, new Item());
 			player.getInventory().remove(com.openrsc.server.constants.ItemId.ARCENIA_ROOT.id(), 1);
 			player.getInventory().replace(com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_2.id(), com.openrsc.server.constants.ItemId.EXPLOSIVE_COMPOUND.id());
 			playerTalk(player, null, "Excellent this looks just right");
@@ -239,7 +237,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 
 	private boolean doHerblaw(Player player, final Item vial,
 							  final Item herb) {
-		if (!Server.getServer().getConfig().MEMBER_WORLD) {
+		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return false;
 		}
@@ -282,7 +280,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 		}
 		int repeatTimes = player.getInventory().countId(com.openrsc.server.constants.ItemId.VIAL.id());
 		repeatTimes = player.getInventory().countId(herb.getID()) < repeatTimes ? player.getInventory().countId(herb.getID()): repeatTimes;
-		player.setBatchEvent(new BatchEvent(player, 1200, "Herblaw Make Potion", repeatTimes, false) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1200, "Herblaw Make Potion", repeatTimes, false) {
 
 			@Override
 			public void action() {
@@ -301,7 +299,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 					getOwner().getInventory().remove(vial.getID(), 1);
 					getOwner().getInventory().remove(herb.getID(), 1);
 					getOwner().playSound("mix");
-					getOwner().message("You put the " + herb.getDef().getName()
+					getOwner().message("You put the " + herb.getDef(getWorld()).getName()
 						+ " into the vial of water");
 					getOwner().getInventory().add(
 						new Item(herbDef.getPotionId(), 1));
@@ -315,7 +313,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 
 	private boolean doHerbSecond(Player player, final Item second,
 								 final Item unfinished, final ItemHerbSecond def, final boolean isSwapped) {
-		if (!Server.getServer().getConfig().MEMBER_WORLD) {
+		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return false;
 		}
@@ -339,7 +337,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 		}
 		int repeatTimes = player.getInventory().countId(unfinished.getID());
 		repeatTimes = player.getInventory().countId(second.getID()) < repeatTimes ? player.getInventory().countId(second.getID()) : repeatTimes;
-		player.setBatchEvent(new BatchEvent(player, 1200, "Herblaw Make Potion", player.getInventory().countId(unfinished.getID()), false) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1200, "Herblaw Make Potion", player.getInventory().countId(unfinished.getID()), false) {
 
 			public void action() {
 				if (getOwner().getSkills().getLevel(Skills.HERBLAW) < def.getReqLevel()) {
@@ -358,7 +356,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 						showBubble(getOwner(), bubbleItem.get());
 					}
 					getOwner().playSound("mix");
-					getOwner().message("You mix the " + second.getDef().getName()
+					getOwner().message("You mix the " + second.getDef(getWorld()).getName()
 						+ " into your potion");
 					getOwner().getInventory().remove(second.getID(), 1);
 					getOwner().getInventory().remove(unfinished.getID(), 1);
@@ -373,13 +371,13 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 
 	private boolean makeLiquid(Player p, final Item ingredient,
 							   final Item unfinishedPot, final boolean isSwapped) {
-		if (!Server.getServer().getConfig().MEMBER_WORLD) {
+		if (!p.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			p.sendMemberErrorMessage();
 			return false;
 		}
 		if (unfinishedPot.getID() == com.openrsc.server.constants.ItemId.UNFINISHED_POTION.id() && (ingredient.getID() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id() || ingredient.getID() == com.openrsc.server.constants.ItemId.GUAM_LEAF.id())
 			|| ingredient.getID() == com.openrsc.server.constants.ItemId.UNFINISHED_POTION.id() && (unfinishedPot.getID() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id() || unfinishedPot.getID() == com.openrsc.server.constants.ItemId.GUAM_LEAF.id())) {
-			p.message("You mix the liquid with the " + ingredient.getDef().getName().toLowerCase());
+			p.message("You mix the liquid with the " + ingredient.getDef(p.getWorld()).getName().toLowerCase());
 			p.message("Bang!!!");
 			displayTeleportBubble(p, p.getX(), p.getY(), true);
 			p.damage(8);
@@ -411,7 +409,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 				} else {
 					showBubble(p, ingredient);
 				}
-				p.message("You mix the " + ingredient.getDef().getName().toLowerCase() + " into the liquid");
+				p.message("You mix the " + ingredient.getDef(p.getWorld()).getName().toLowerCase() + " into the liquid");
 				p.message("You produce a strong potion");
 				p.getInventory().remove(ingredient.getID(), 1);
 				p.getInventory().remove(unfinishedPot.getID(), 1);
@@ -425,7 +423,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 
 	private boolean doGrind(Player player, final Item mortar,
 							final Item item) {
-		if (!Server.getServer().getConfig().MEMBER_WORLD) {
+		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return false;
 		}
@@ -456,15 +454,15 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			default:
 				return false;
 		}
-		player.setBatchEvent(new BatchEvent(player, 600, "Herblaw Grind", player.getInventory().countId(item.getID()), false) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Herblaw Grind", player.getInventory().countId(item.getID()), false) {
 			@Override
 			public void action() {
 				if (player.getInventory().remove(item) > -1) {
 					if (item.getID() != com.openrsc.server.constants.ItemId.A_LUMP_OF_CHARCOAL.id()) {
-						player.message("You grind the " + item.getDef().getName()
+						player.message("You grind the " + item.getDef(getWorld()).getName()
 							+ " to dust");
 					}
-					showBubble(player, new Item(ItemId.PESTLE_AND_MORTAR.id()));
+					showBubble(player, new Item());
 					player.getInventory().add(new Item(newID, 1));
 
 				}

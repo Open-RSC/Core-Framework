@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
@@ -8,6 +7,7 @@ import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -30,7 +30,7 @@ public final class AuburysRunes implements ShopInterface,
 	}
 
 	@Override
-	public Shop[] getShops() {
+	public Shop[] getShops(World world) {
 		return new Shop[]{shop};
 	}
 
@@ -45,7 +45,7 @@ public final class AuburysRunes implements ShopInterface,
 		menu.add("Yes please");
 		menu.add("Oh it's a rune shop. No thank you, then.");
 
-		if (Server.getServer().getConfig().WANT_RUNECRAFTING)
+		if (p.getWorld().getServer().getConfig().WANT_RUNECRAFTING)
 			if (p.getQuestStage(Quests.RUNE_MYSTERIES) == 2)
 				menu.add("I've been sent here with a package for you.");
 			else if (p.getQuestStage(Quests.RUNE_MYSTERIES) == 3)

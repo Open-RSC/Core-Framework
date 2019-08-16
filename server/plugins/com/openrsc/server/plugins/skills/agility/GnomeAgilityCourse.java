@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.skills.agility;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
@@ -36,7 +35,7 @@ public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExe
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
-		if (Server.getServer().getConfig().WANT_FATIGUE) {
+		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
 			if (p.getFatigue() >= p.MAX_FATIGUE && !inArray(obj.getID(), WATCH_TOWER, ROPE_SWING, LANDING)) {
 				p.message("you are too tired to train");
 				return;

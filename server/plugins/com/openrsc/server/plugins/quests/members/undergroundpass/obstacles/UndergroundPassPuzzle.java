@@ -48,8 +48,8 @@ public class UndergroundPassPuzzle implements ObjectActionListener, ObjectAction
 				"you hear a loud mechanical churning");
 			GameObject cage_closed = new GameObject(p.getWorld(), Point.location(690, 3449), CAGE, 6, 0);
 			GameObject cage_open = new GameObject(p.getWorld(), Point.location(690, 3449), CAGE + 1, 6, 0);
-			World.getWorld().registerGameObject(cage_open);
-			World.getWorld().delayedSpawnObject(cage_closed.getLoc(), 5000);
+			p.getWorld().registerGameObject(cage_open);
+			p.getWorld().delayedSpawnObject(cage_closed.getLoc(), 5000);
 			p.message("as the huge railing raises to the cave roof");
 			p.message("the cage lowers behind you");
 			p.teleport(690, 3451);
@@ -65,10 +65,10 @@ public class UndergroundPassPuzzle implements ObjectActionListener, ObjectAction
 		p.teleport(679, 3448);
 		p.damage((int) (getCurrentLevel(p, Skills.HITS) * 0.2D));
 		p.message("you crawl out of the pit");
-		World.getWorld().replaceGameObject(obj,
+		p.getWorld().replaceGameObject(obj,
 			new GameObject(obj.getWorld(), obj.getLocation(), 778, obj.getDirection(), obj
 				.getType()));
-		World.getWorld().delayedSpawnObject(obj.getLoc(), 1000);
+		p.getWorld().delayedSpawnObject(obj.getLoc(), 1000);
 		sleep(1600);
 		p.message("and off the metal grill");
 	}

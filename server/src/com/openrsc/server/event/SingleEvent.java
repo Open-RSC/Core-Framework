@@ -1,6 +1,7 @@
 package com.openrsc.server.event;
 
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 
 /**
  * Event which only executes once
@@ -9,12 +10,12 @@ import com.openrsc.server.model.entity.player.Player;
  */
 public abstract class SingleEvent extends DelayedEvent {
 
-	public SingleEvent(Player owner, int delay, String descriptor) {
-		super(owner, delay, descriptor);
+	public SingleEvent(World world, Player owner, int delay, String descriptor) {
+		super(world, owner, delay, descriptor);
 	}
 
-	public SingleEvent(Player owner, int delay, String descriptor, boolean uniqueEvent) {
-		super(owner, delay, descriptor, uniqueEvent);
+	public SingleEvent(World world, Player owner, int delay, String descriptor, boolean uniqueEvent) {
+		super(world, owner, delay, descriptor, uniqueEvent);
 	}
 
 	public abstract void action();

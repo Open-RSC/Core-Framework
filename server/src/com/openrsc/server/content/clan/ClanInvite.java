@@ -1,6 +1,5 @@
 package com.openrsc.server.content.clan;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.entity.player.Player;
@@ -71,7 +70,7 @@ public class ClanInvite {
 	}
 
 	private void startTimeoutCounter() {
-		timeOutEvent = new SingleEvent(null, 60000, "Clan Invite") {
+		timeOutEvent = new SingleEvent(inviter.getWorld(), null, 60000, "Clan Invite") {
 			@Override
 			public void action() {
 				inviter.message(invited.getUsername() + " did not respond to your invitation");
@@ -80,7 +79,7 @@ public class ClanInvite {
 				inviter.message(invited.getUsername() + "'s Clan invitation is no longer active");
 			}
 		};
-		Server.getServer().getGameEventHandler().add(timeOutEvent);
+		inviter.getWorld().getServer().getGameEventHandler().add(timeOutEvent);
 	}
 
 	public void accept() {

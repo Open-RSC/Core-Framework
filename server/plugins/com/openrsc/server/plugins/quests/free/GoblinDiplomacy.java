@@ -6,7 +6,6 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
@@ -41,8 +40,8 @@ public class GoblinDiplomacy implements QuestInterface, TalkToNpcListener,
 	}
 
 	public void onTalkToNpc(Player p, final Npc n) {
-		final Npc otherGoblin = n.getID() == NpcId.GENERAL_WARTFACE.id() ? World.getWorld().getNpc(NpcId.GENERAL_BENTNOZE.id(),
-			314, 330, 441, 457) : World.getWorld().getNpc(NpcId.GENERAL_WARTFACE.id(), 321, 445,
+		final Npc otherGoblin = n.getID() == NpcId.GENERAL_WARTFACE.id() ? p.getWorld().getNpc(NpcId.GENERAL_BENTNOZE.id(),
+			314, 330, 441, 457) : p.getWorld().getNpc(NpcId.GENERAL_WARTFACE.id(), 321, 445,
 			326, 449);
 		if (n.getID() == NpcId.GENERAL_WARTFACE.id() || n.getID() == NpcId.GENERAL_BENTNOZE.id()) {
 			if (p.getQuestStage(this) == 0) {

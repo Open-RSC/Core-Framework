@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.misc;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
@@ -114,7 +113,7 @@ public class StrangeBarrels implements ObjectActionListener, ObjectActionExecuti
 			if (action != 0) {
 				p.message("You smash the barrel open.");
 				removeObject(obj);
-				Server.getServer().getGameEventHandler().add(new SingleEvent(null, 40000, "Smash Strange Barrel") { // 40 seconds
+				p.getWorld().getServer().getGameEventHandler().add(new SingleEvent(p.getWorld(), null, 40000, "Smash Strange Barrel") { // 40 seconds
 					public void action() {
 						int newObjectX = DataConversions.random(467, 476);
 						int newObjectY = DataConversions.random(3699, 3714);
@@ -160,7 +159,7 @@ public class StrangeBarrels implements ObjectActionListener, ObjectActionExecuti
 				if (DataConversions.random(0, 1) != 1) {
 					p.message("You smash the barrel open.");
 					removeObject(obj);
-					delayedSpawnObject(obj.getLoc(), 40000); // 40 seconds
+					delayedSpawnObject(obj.getWorld(), obj.getLoc(), 40000); // 40 seconds
 				} else {
 					if (DataConversions.random(0, 1) != 0) {
 						p.message("You were unable to smash this barrel open.");
@@ -180,7 +179,7 @@ public class StrangeBarrels implements ObjectActionListener, ObjectActionExecuti
 	private void spawnMonster(Player p, int x, int y) {
 		int randomizeMonster = DataConversions.random(0, (MONSTER.length - 1));
 		int selectedMonster = MONSTER[randomizeMonster];
-		Npc monster = spawnNpc(selectedMonster, x, y, 60000 * 3); // 3 minutes
+		Npc monster = spawnNpc(p.getWorld(), selectedMonster, x, y, 60000 * 3); // 3 minutes
 		sleep(600);
 		if (monster != null) {
 			monster.startCombat(p);

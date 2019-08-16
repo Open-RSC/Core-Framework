@@ -6,16 +6,11 @@ import com.openrsc.server.model.action.WalkToObjectAction;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.states.Action;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 
 public class GameObjectAction implements PacketHandler {
-	/**
-	 * World instance
-	 */
-	public static final World world = World.getWorld();
 
 	public void handlePacket(Packet p, Player player) {
 		int pID = p.getID();

@@ -8,7 +8,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
@@ -451,35 +450,35 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 		}
 		else if (obj.getID() == 937) {
 			p.message("You open the chest");
-			World.getWorld().replaceGameObject(obj,
+			p.getWorld().replaceGameObject(obj,
 				new GameObject(obj.getWorld(), obj.getLocation(), 936, obj.getDirection(),
 					obj.getType()));
 		}
 		else if (obj.getID() == 936) {
 			p.message("You search the chest");
 			p.message("The chest contains nothing");
-			World.getWorld().replaceGameObject(obj,
+			p.getWorld().replaceGameObject(obj,
 				new GameObject(obj.getWorld(), obj.getLocation(), 937, obj.getDirection(),
 					obj.getType()));
 		}
 		else if (obj.getID() == 929) {
 			p.message("You open the chest");
-			World.getWorld().replaceGameObject(obj,
+			p.getWorld().replaceGameObject(obj,
 				new GameObject(obj.getWorld(), obj.getLocation(), 917, obj.getDirection(),
 					obj.getType()));
 		}
 		else if (obj.getID() == 917) {
 			p.message("You search the chest");
 			p.message("The chest contains a poisonous spider!");
-			Npc spider = spawnNpc(NpcId.DUNGEON_SPIDER.id(), obj.getX(), obj.getY(), 120000);
+			Npc spider = spawnNpc(p.getWorld(), NpcId.DUNGEON_SPIDER.id(), obj.getX(), obj.getY(), 120000);
 			spider.setChasing(p);
-			World.getWorld().registerGameObject(
+			p.getWorld().registerGameObject(
 				new GameObject(obj.getWorld(), obj.getLocation(), 929, obj.getDirection(),
 					obj.getType()));
 		}
 		else if (obj.getID() == 930) {
 			p.message("You open the chest");
-			World.getWorld().registerGameObject(
+			p.getWorld().registerGameObject(
 				new GameObject(obj.getWorld(), obj.getLocation(), 919, obj.getDirection(),
 					obj.getType()));
 		}
@@ -492,13 +491,13 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 			} else {
 				addItem(p, ItemId.KEEP_KEY.id(), 1);
 			}
-			World.getWorld().registerGameObject(
+			p.getWorld().registerGameObject(
 				new GameObject(obj.getWorld(), obj.getLocation(), 930, obj.getDirection(),
 					obj.getType()));
 		}
 		else if (obj.getID() == 935) {
 			p.message("You open the chest");
-			World.getWorld().registerGameObject(
+			p.getWorld().registerGameObject(
 				new GameObject(obj.getWorld(), obj.getLocation(), 934, obj.getDirection(),
 					obj.getType()));
 		}
@@ -506,7 +505,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 			p.message("You search the chest");
 			p.message("The chest contains some poison cure");
 			addItem(p, ItemId.ONE_CURE_POISON_POTION.id(), 1);
-			World.getWorld().registerGameObject(
+			p.getWorld().registerGameObject(
 				new GameObject(obj.getWorld(), obj.getLocation(), 935, obj.getDirection(),
 					obj.getType()));
 		}

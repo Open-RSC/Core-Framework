@@ -4,7 +4,6 @@ import com.openrsc.server.Server;
 import com.openrsc.server.event.custom.ShopRestockEvent;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.util.NamedThreadFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -165,9 +164,9 @@ public final class PluginHandler {
 				if (instance instanceof ShopInterface) {
 					final ShopInterface it = (ShopInterface) instance;
 
-					for (final Shop s : it.getShops()) {
-						World.getWorld().getShops().add(s);
-						Server.getServer().getGameEventHandler().add(new ShopRestockEvent(s));
+					for (final Shop s : it.getShops(getServer().getWorld())) {
+						getServer().getWorld().getShops().add(s);
+						getServer().getGameEventHandler().add(new ShopRestockEvent(getServer().getWorld(), s));
 					}
 				}
 				if (loadedPlugins.containsKey(instance.getClass().getName())) {
@@ -177,7 +176,7 @@ public final class PluginHandler {
 					if (instance instanceof QuestInterface) {
 						final QuestInterface q = (QuestInterface) instance;
 						try {
-							World.getWorld().registerQuest(q);
+							getServer().getWorld().registerQuest(q);
 						} catch (final Exception e) {
 							LOGGER.error("Error registering quest " + q.getQuestName());
 							LOGGER.catching(e);
@@ -186,7 +185,7 @@ public final class PluginHandler {
 					} else if (instance instanceof MiniGameInterface) {
 						final MiniGameInterface m = (MiniGameInterface) instance;
 						try {
-							World.getWorld().registerMiniGame(m);;
+							getServer().getWorld().registerMiniGame(m);
 						} catch (final Exception e) {
 							LOGGER.error("Error registering minigame " + m.getMiniGameName());
 							LOGGER.catching(e);
@@ -223,7 +222,7 @@ public final class PluginHandler {
 						.contains(QuestInterface.class)) {
 						final QuestInterface q = (QuestInterface) instance;
 						try {
-							World.getWorld().registerQuest(
+							getServer().getWorld().registerQuest(
 								(QuestInterface) instance);
 						} catch (final Exception e) {
 							LOGGER.error(
@@ -236,7 +235,7 @@ public final class PluginHandler {
 							.contains(MiniGameInterface.class)) {
 						final MiniGameInterface m = (MiniGameInterface) instance;
 						try {
-							World.getWorld().registerMiniGame(
+							getServer().getWorld().registerMiniGame(
 								(MiniGameInterface) instance);
 						} catch (final Exception e) {
 							LOGGER.error(
@@ -259,8 +258,8 @@ public final class PluginHandler {
 				}
 			}
 		}
-		LOGGER.info("\t Loaded {}", box(World.getWorld().getQuests().size()) + " Quests.");
-		LOGGER.info("\t Loaded {}", box(World.getWorld().getMiniGames().size()) + " MiniGames.");
+		LOGGER.info("\t Loaded {}", box(getServer().getWorld().getQuests().size()) + " Quests.");
+		LOGGER.info("\t Loaded {}", box(getServer().getWorld().getMiniGames().size()) + " MiniGames.");
 		LOGGER.info("\t Loaded total of {}", box(loadedPlugins.size()) + " plugin handlers.");
 	}
 

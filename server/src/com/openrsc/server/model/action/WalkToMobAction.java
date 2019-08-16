@@ -28,6 +28,6 @@ public abstract class WalkToMobAction extends WalkToAction {
 	public boolean shouldExecute() {
 		return !hasExecuted
 			&& player.withinRange(mob, radius)
-			&& PathValidation.checkAdjacent(player.getLocation(), mob.getLocation(), true);
+			&& PathValidation.checkAdjacent(player.getWorld(), player.getLocation(), mob.getLocation(), true);
 	}
 }

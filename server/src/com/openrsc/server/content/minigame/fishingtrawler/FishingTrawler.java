@@ -61,13 +61,9 @@ public class FishingTrawler extends DelayedEvent {
 	
 	private List<SimpleSubscriber<FishingTrawler>> subscribers = new ArrayList<SimpleSubscriber<FishingTrawler>>();
 
-	private final World world;
-	
 	public FishingTrawler(World world, TrawlerBoat selectedBoat) {
-		super(null, 600, "Fishing Trawler Event");
+		super(world, null, 600, "Fishing Trawler Event");
 
-		this.world = world;
-		
 		if (selectedBoat == TrawlerBoat.EAST) {
 			shipArea = new Area(270, 278, 740, 744, "FishingTrawler: Fine");
 			spawnLocation = new Point(272, 742);
@@ -178,7 +174,7 @@ public class FishingTrawler extends DelayedEvent {
 						}
 						for (int i = 0; i < leaks.length; i++) {
 							if (leaks[i] != null) {
-								World.getWorld().unregisterGameObject(leaks[i]);
+								getWorld().unregisterGameObject(leaks[i]);
 								leaks[i] = null;
 							}
 						}
@@ -293,11 +289,11 @@ public class FishingTrawler extends DelayedEvent {
 		Npc npc = null;
 		String message = "";
 		if (currentStage == State.FIRST_SHIP) {
-			npc = World.getWorld().getNpc(734, shipArea.getMinX(), shipArea.getMaxX(), shipArea.getMinY(),
+			npc = getWorld().getNpc(734, shipArea.getMinX(), shipArea.getMaxX(), shipArea.getMinY(),
 				shipArea.getMaxY());
 			message = murphys_messages_ship1[DataConversions.random(0, murphys_messages_ship1.length - 1)];
 		} else if (currentStage == State.SECOND_SHIP) {
-			npc = World.getWorld().getNpc(734, getShipAreaWater().getMinX(), getShipAreaWater().getMaxX(),
+			npc = getWorld().getNpc(734, getShipAreaWater().getMinX(), getShipAreaWater().getMaxX(),
 				getShipAreaWater().getMinY(), getShipAreaWater().getMaxY());
 			message = murphys_messages_ship2[DataConversions.random(0, murphys_messages_ship2.length - 1)];
 		}
@@ -340,7 +336,7 @@ public class FishingTrawler extends DelayedEvent {
 
 		for (int i = 0; i < leaks.length; i++) {
 			if (leaks[i] != null) {
-				World.getWorld().unregisterGameObject(leaks[i]);
+				getWorld().unregisterGameObject(leaks[i]);
 				leaks[i] = null;
 			}
 		}
@@ -387,18 +383,18 @@ public class FishingTrawler extends DelayedEvent {
 			/* The ship is leaking hardcore. */
 			if (freeLeakIndex == -1) {
 				break;
-			} else if (World.getWorld().getRegionManager().getRegion(x, y).getGameObject(x, y) != null) {
+			} else if (getWorld().getRegionManager().getRegion(x, y).getGameObject(x, y) != null) {
 				continue;
 			}
 			int southSide = currentStage == State.FIRST_SHIP ? spawnLocation.getY() - 1 : shipAreaWaterSpawn.getY() - 1;
 			int northSide = currentStage == State.FIRST_SHIP ? spawnLocation.getY() + 1 : shipAreaWaterSpawn.getY() + 1;
 			if (y == southSide) {
-				GameObject newHoleNorth = new GameObject(world, new Point(x, y), LEAK1, 0, 0);
-				World.getWorld().registerGameObject(newHoleNorth);
+				GameObject newHoleNorth = new GameObject(getWorld(), new Point(x, y), LEAK1, 0, 0);
+				getWorld().registerGameObject(newHoleNorth);
 				leaks[getFreeLeakIndex()] = newHoleNorth;
 			} else if (y == northSide) {
-				GameObject newHoleSouth = new GameObject(world, new Point(x, y), LEAK1, 4, 0);
-				World.getWorld().registerGameObject(newHoleSouth);
+				GameObject newHoleSouth = new GameObject(getWorld(), new Point(x, y), LEAK1, 4, 0);
+				getWorld().registerGameObject(newHoleSouth);
 				leaks[getFreeLeakIndex()] = newHoleSouth;
 			}
 		}

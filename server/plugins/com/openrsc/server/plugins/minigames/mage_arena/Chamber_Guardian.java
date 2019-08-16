@@ -1,18 +1,18 @@
 package com.openrsc.server.plugins.minigames.mage_arena;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
-
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
 
 public class Chamber_Guardian implements ShopInterface, TalkToNpcExecutiveListener,
 	TalkToNpcListener {
@@ -36,8 +36,8 @@ public class Chamber_Guardian implements ShopInterface, TalkToNpcExecutiveListen
 			npcTalk(p, n, "once you're done come back to me...",
 				"...and i'll supply you with a mage staff ready for battle");
 			p.getCache().set("mage_arena", 3);
-		} else if ((p.getCache().hasKey("mage_arena") && p.getCache().getInt("mage_arena") == 3) && 
-				(hasItem(p, ItemId.ZAMORAK_CAPE.id()) || hasItem(p, ItemId.SARADOMIN_CAPE.id()) || hasItem(p, ItemId.GUTHIX_CAPE.id()))) {
+		} else if ((p.getCache().hasKey("mage_arena") && p.getCache().getInt("mage_arena") == 3) &&
+			(hasItem(p, ItemId.ZAMORAK_CAPE.id()) || hasItem(p, ItemId.SARADOMIN_CAPE.id()) || hasItem(p, ItemId.GUTHIX_CAPE.id()))) {
 			npcTalk(p, n, "hello adventurer, have you made your choice?");
 			playerTalk(p, n, "i have");
 			npcTalk(p, n, "good, good .. i hope you chose well",
@@ -84,7 +84,7 @@ public class Chamber_Guardian implements ShopInterface, TalkToNpcExecutiveListen
 	}
 
 	@Override
-	public Shop[] getShops() {
+	public Shop[] getShops(World world) {
 		return new Shop[]{shop};
 	}
 

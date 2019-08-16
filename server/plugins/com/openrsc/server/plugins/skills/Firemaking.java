@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.skills;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.SingleEvent;
@@ -11,7 +10,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.Bubble;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.InvUseOnGroundItemListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnGroundItemExecutiveListener;
@@ -37,7 +35,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 
 	@Override
 	public void onInvUseOnGroundItem(Item myItem, GroundItem item, Player player) {
-		if (Server.getServer().getConfig().CUSTOM_FIREMAKING) {
+		if (player.getWorld().getServer().getConfig().CUSTOM_FIREMAKING) {
 			switch (ItemId.getById(item.getID())) {
 				case LOGS:
 				case OAK_LOGS:
@@ -75,28 +73,28 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 
 		if (Formulae.lightLogs(player.getSkills().getLevel(Skills.FIREMAKING))) {
 
-			Server.getServer().getGameEventHandler().add(
-				new SingleEvent(null, 1200, "Light Logs") {
+			player.getWorld().getServer().getGameEventHandler().add(
+				new SingleEvent(player.getWorld(), null, 1200, "Light Logs") {
 					@Override
 					public void action() {
 						player.message("The fire catches and the logs begin to burn");
-						World.getWorld().unregisterItem(gItem);
+						player.getWorld().unregisterItem(gItem);
 
 						final GameObject fire = new GameObject(player.getWorld(), gItem.getLocation(), 97, 0, 0);
-						World.getWorld().registerGameObject(fire);
+						player.getWorld().registerGameObject(fire);
 
-						Server.getServer().getGameEventHandler().add(
-							new SingleEvent(null, def.getLength(), "Light Logs Fire Removal") {
+						player.getWorld().getServer().getGameEventHandler().add(
+							new SingleEvent(player.getWorld(), null, def.getLength(), "Light Logs Fire Removal") {
 								@Override
 								public void action() {
 									if (fire != null) {
-										World.getWorld().registerItem(new GroundItem(
+										player.getWorld().registerItem(new GroundItem(
 											player.getWorld(),
 											181,
 											fire.getX(),
 											fire.getY(),
 											1, (Player) null));
-										World.getWorld().unregisterGameObject(fire);
+										player.getWorld().unregisterGameObject(fire);
 									}
 								}
 							}
@@ -131,29 +129,29 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 
 		player.getUpdateFlags().setActionBubble(new Bubble(player, TINDERBOX));
 		player.message("You attempt to light the logs");
-		player.setBatchEvent(new BatchEvent(player, 1200, "Firemaking Logs Lit", Formulae.getRepeatTimes(player, Skills.FIREMAKING), false) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1200, "Firemaking Logs Lit", Formulae.getRepeatTimes(player, Skills.FIREMAKING), false) {
 
 			@Override
 			public void action() {
 				if (Formulae.lightCustomLogs(def, getOwner().getSkills().getLevel(Skills.FIREMAKING))) {
 					getOwner().message("The fire catches and the logs begin to burn");
-					World.getWorld().unregisterItem(gItem);
+					getOwner().getWorld().unregisterItem(gItem);
 
 					final GameObject fire = new GameObject(player.getWorld(), gItem.getLocation(), 97, 0, 0);
-					World.getWorld().registerGameObject(fire);
+					getOwner().getWorld().registerGameObject(fire);
 
-					Server.getServer().getGameEventHandler().add(
-						new SingleEvent(null, def.getLength(), "Firemaking Logs Lit") {
+					getOwner().getWorld().getServer().getGameEventHandler().add(
+						new SingleEvent(getOwner().getWorld(), null, def.getLength(), "Firemaking Logs Lit") {
 							@Override
 							public void action() {
 								if (fire != null) {
-									World.getWorld().registerItem(new GroundItem(
+									getOwner().getWorld().registerItem(new GroundItem(
 										player.getWorld(),
 										ItemId.ASHES.id(),
 										fire.getX(),
 										fire.getY(),
 										1, (Player) null));
-									World.getWorld().unregisterGameObject(fire);
+									getOwner().getWorld().unregisterGameObject(fire);
 								}
 							}
 						});

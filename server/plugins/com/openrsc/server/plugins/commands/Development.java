@@ -1,20 +1,31 @@
 package com.openrsc.server.plugins.commands;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
 public final class Development implements CommandListener {
+
+	public static String messagePrefix = null;
+	public static String badSyntaxPrefix = null;
+
 	public void onCommand(String cmd, String[] args, Player player) {
-		if (isCommandAllowed(player, cmd))
+		if (isCommandAllowed(player, cmd)) {
+
+			if(messagePrefix == null) {
+				messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
+			}
+			if(badSyntaxPrefix == null) {
+				badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
+			}
+
 			handleCommand(cmd, args, player);
+		}
 	}
 
 	public boolean isCommandAllowed(Player player, String cmd) {
@@ -66,7 +77,7 @@ public final class Development implements CommandListener {
 				y = player.getY();
 			}
 
-			if(!world.withinWorld(x, y))
+			if(!player.getWorld().withinWorld(x, y))
 			{
 				player.message(messagePrefix + "Invalid coordinates");
 				return;
@@ -80,10 +91,10 @@ public final class Development implements CommandListener {
 				return;
 			}
 
-			World.getWorld().registerNpc(n);
+			player.getWorld().registerNpc(n);
 			n.setShouldRespawn(true);
 			player.message(messagePrefix + "Added NPC to database: " + n.getDef().getName() + " at " + npcLoc + " with radius " + radius);
-			player.getWorld().getServer().getDatabaseConnection().executeUpdate("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+			player.getWorld().getServer().getDatabaseConnection().executeUpdate("INSERT INTO `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 				+ "npclocs`(`id`,`startX`,`minX`,`maxX`,`startY`,`minY`,`maxY`) VALUES('" + n.getLoc().getId()
 				+ "', '" + n.getLoc().startX() + "', '" + n.getLoc().minX() + "', '" + n.getLoc().maxX() + "','"
 				+ n.getLoc().startY() + "','" + n.getLoc().minY() + "','" + n.getLoc().maxY() + "')");
@@ -103,7 +114,7 @@ public final class Development implements CommandListener {
 				return;
 			}
 
-			Npc npc = World.getWorld().getNpc(id);
+			Npc npc = player.getWorld().getNpc(id);
 
 			if(npc == null) {
 				player.message(messagePrefix + "Invalid npc instance id");
@@ -112,12 +123,12 @@ public final class Development implements CommandListener {
 
 			player.message(messagePrefix + "Removed NPC from database: " + npc.getDef().getName() + " with instance ID " + id);
 			player.getWorld().getServer().getDatabaseConnection()
-				.executeUpdate("DELETE FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+				.executeUpdate("DELETE FROM `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "npclocs` WHERE `id` = '" + npc.getID() + "' AND startX='" + npc.getLoc().startX
 					+ "' AND startY='" + npc.getLoc().startY + "' AND minX='" + npc.getLoc().minX
 					+ "' AND maxX = '" + npc.getLoc().maxX + "' AND minY='" + npc.getLoc().minY
 					+ "' AND maxY = '" + npc.getLoc().maxY + "'");
-			World.getWorld().unregisterNpc(npc);
+			player.getWorld().unregisterNpc(npc);
 		}
 		else if (cmd.equalsIgnoreCase("removeobject") || cmd.equalsIgnoreCase("robject")) {
 			if(args.length == 1) {
@@ -149,7 +160,7 @@ public final class Development implements CommandListener {
 				y = player.getY();
 			}
 
-			if(!world.withinWorld(x, y))
+			if(!player.getWorld().withinWorld(x, y))
 			{
 				player.message(messagePrefix + "Invalid coordinates");
 				return;
@@ -166,11 +177,11 @@ public final class Development implements CommandListener {
 
 			player.message(messagePrefix + "Removed object from database: " + object.getGameObjectDef().getName() + " with instance ID " + object.getID());
 			player.getWorld().getServer().getDatabaseConnection()
-				.executeUpdate("DELETE FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+				.executeUpdate("DELETE FROM `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "objects` WHERE `x` = '" + object.getX() + "' AND `y` =  '" + object.getY()
 					+ "' AND `id` = '" + object.getID() + "' AND `direction` = '" + object.getDirection()
 					+ "' AND `type` = '" + object.getType() + "'");
-			World.getWorld().unregisterGameObject(object);
+			player.getWorld().unregisterGameObject(object);
 		}
 		else if (cmd.equalsIgnoreCase("createobject") || cmd.equalsIgnoreCase("cobject") || cmd.equalsIgnoreCase("addobject") || cmd.equalsIgnoreCase("aobject")) {
 			if (args.length < 1 || args.length == 2) {
@@ -203,7 +214,7 @@ public final class Development implements CommandListener {
 				y = player.getY();
 			}
 
-			if(!world.withinWorld(x, y))
+			if(!player.getWorld().withinWorld(x, y))
 			{
 				player.message(messagePrefix + "Invalid coordinates");
 				return;
@@ -223,10 +234,10 @@ public final class Development implements CommandListener {
 			}
 
 			GameObject newObject = new GameObject(player.getWorld(), Point.location(x, y), id, 0, 0);
-			World.getWorld().registerGameObject(newObject);
+			player.getWorld().registerGameObject(newObject);
 			player.message(messagePrefix + "Added object to database: " + newObject.getGameObjectDef().getName() + " with instance ID " + newObject.getID() + " at " + newObject.getLocation());
 			player.getWorld().getServer().getDatabaseConnection()
-				.executeUpdate("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+				.executeUpdate("INSERT INTO `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "objects`(`x`, `y`, `id`, `direction`, `type`) VALUES ('"
 					+ newObject.getX() + "', '" + newObject.getY() + "', '" + newObject.getID() + "', '"
 					+ newObject.getDirection() + "', '" + newObject.getType() + "')");
@@ -263,7 +274,7 @@ public final class Development implements CommandListener {
 			}
 
 
-			if(!world.withinWorld(x, y))
+			if(!player.getWorld().withinWorld(x, y))
 			{
 				player.message(messagePrefix + "Invalid coordinates");
 				return;
@@ -298,17 +309,17 @@ public final class Development implements CommandListener {
 			}
 
 			player.getWorld().getServer().getDatabaseConnection()
-				.executeUpdate("DELETE FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "objects` WHERE `x` = '"
+				.executeUpdate("DELETE FROM `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "objects` WHERE `x` = '"
 					+ object.getX() + "' AND `y` =  '" + object.getY() + "' AND `id` = '" + object.getID()
 					+ "' AND `direction` = '" + object.getDirection() + "' AND `type` = '" + object.getType()
 					+ "'");
-			World.getWorld().unregisterGameObject(object);
+			player.getWorld().unregisterGameObject(object);
 
 			GameObject newObject = new GameObject(player.getWorld(), Point.location(x, y), object.getID(), direction, object.getType());
-			World.getWorld().registerGameObject(newObject);
+			player.getWorld().registerGameObject(newObject);
 
 			player.getWorld().getServer().getDatabaseConnection()
-				.executeUpdate("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+				.executeUpdate("INSERT INTO `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "objects`(`x`, `y`, `id`, `direction`, `type`) VALUES ('" + newObject.getX() + "', '"
 					+ newObject.getY() + "', '" + newObject.getID() + "', '" + newObject.getDirection() + "', '"
 					+ newObject.getType() + "')");
@@ -316,7 +327,7 @@ public final class Development implements CommandListener {
 			player.message(messagePrefix + "Rotated object in database: " + newObject.getGameObjectDef().getName() + " to rotation " + newObject.getDirection() + " with instance ID " + newObject.getID() + " at " + newObject.getLocation());
 		}
 		else if (cmd.equalsIgnoreCase("tile")) {
-			TileValue tv = World.getWorld().getTile(player.getLocation());
+			TileValue tv = player.getWorld().getTile(player.getLocation());
 			player.message(messagePrefix + "traversal: " + tv.traversalMask + ", vertVal:" + (tv.verticalWallVal & 0xff) + ", horiz: "
 				+ (tv.horizontalWallVal & 0xff) + ", diagVal: " + (tv.diagWallVal & 0xff) + ", projectile: " + tv.projectileAllowed);
 		}
@@ -374,7 +385,7 @@ public final class Development implements CommandListener {
 		}
 		else if (cmd.equalsIgnoreCase("coords")) {
 			Player p = args.length > 0 ?
-				world.getPlayer(DataConversions.usernameToHash(args[0])) :
+				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
 			if(p != null)
@@ -383,7 +394,7 @@ public final class Development implements CommandListener {
 				player.message(messagePrefix + "Invalid name or player is not online");
 		}
 		else if (cmd.equalsIgnoreCase("events") || cmd.equalsIgnoreCase("serverstats")) {
-			ActionSender.sendBox(player, Server.getServer().buildProfilingDebugInformation(true),true);
+			ActionSender.sendBox(player, player.getWorld().getServer().buildProfilingDebugInformation(true),true);
 		}
 	}
 }

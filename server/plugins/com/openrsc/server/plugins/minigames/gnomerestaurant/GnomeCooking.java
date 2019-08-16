@@ -108,7 +108,7 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 				}
 				addItem(p, gc.cookedID, 1);
 			} else {
-				p.getInventory().add(new Item(gc.burntID));
+				p.getInventory().add(new Item());
 				p.message(gc.messages[2]);
 			}
 		}

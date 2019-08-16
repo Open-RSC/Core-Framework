@@ -42,12 +42,12 @@ public final class WorldPopulator {
 
 			/* LOAD OBJECTS */
 			result = statement.executeQuery("SELECT `x`, `y`, `id`, `direction`, `type` FROM `"
-				+ Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "objects`");
+				+ getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "objects`");
 			int countOBJ = 0;
 			while (result.next()) {
 				Point p = new Point(result.getInt("x"), result.getInt("y"));
 				if (Formulae.isP2P(false, p.getX(), p.getY())
-					&& !Server.getServer().getConfig().MEMBER_WORLD) {
+					&& !getWorld().getServer().getConfig().MEMBER_WORLD) {
 					continue;
 				}
 				GameObject obj = new GameObject(getWorld(), p, result.getInt("id"),
@@ -61,14 +61,14 @@ public final class WorldPopulator {
 
 			/* LOAD NPC LOCS */
 			result = statement.executeQuery("SELECT `id`, `startX`, `startY`, `minX`, `maxX`, `minY`, `maxY` FROM `"
-				+ Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "npclocs`");
+				+ getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "npclocs`");
 			while (result.next()) {
 				/* Configurable NPCs */
 				int npcID = result.getInt("id");
 				if ((npcID == 794 || npcID == 795)
-					&& !Server.getServer().getConfig().SPAWN_AUCTION_NPCS) continue; // Auctioneers & Auction Clerks
+					&& !getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS) continue; // Auctioneers & Auction Clerks
 				else if ((npcID == 799 || npcID == 800 || npcID == 801)
-					&& !Server.getServer().getConfig().SPAWN_IRON_MAN_NPCS)
+					&& !getWorld().getServer().getConfig().SPAWN_IRON_MAN_NPCS)
 					continue; // Iron Man, Ultimate Iron Man, Hardcore Iron Man
 
 				NPCLoc n = new NPCLoc(npcID,
@@ -76,13 +76,13 @@ public final class WorldPopulator {
 					result.getInt("minX"), result.getInt("maxX"),
 					result.getInt("minY"), result.getInt("maxY"));
 
-				if (!Server.getServer().getConfig().MEMBER_WORLD) {
+				if (!getWorld().getServer().getConfig().MEMBER_WORLD) {
 					if (getWorld().getServer().getEntityHandler().getNpcDef(n.id).isMembers()) {
 						continue;
 					}
 				}
 				if (Formulae.isP2P(false, n)
-					&& !Server.getServer().getConfig().MEMBER_WORLD) {
+					&& !getWorld().getServer().getConfig().MEMBER_WORLD) {
 					n = null;
 					continue;
 				}
@@ -93,23 +93,23 @@ public final class WorldPopulator {
 				getWorld().registerNpc(new Npc(getWorld(), n));
 			}
 			result.close();
-			LOGGER.info("\t Loaded {}", box(World.getWorld().countNpcs()) + " NPC spawns");
+			LOGGER.info("\t Loaded {}", box(getWorld().countNpcs()) + " NPC spawns");
 
 			/* LOAD GROUND ITEMS */
 			result = statement.executeQuery("SELECT `id`, `x`, `y`, `amount`, `respawn` FROM `"
-				+ Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "grounditems`");
+				+ getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "grounditems`");
 			int countGI = 0;
 			while (result.next()) {
 				ItemLoc i = new ItemLoc(result.getInt("id"),
 					result.getInt("x"), result.getInt("y"),
 					result.getInt("amount"), result.getInt("respawn"));
-				if (!Server.getServer().getConfig().MEMBER_WORLD) {
+				if (!getWorld().getServer().getConfig().MEMBER_WORLD) {
 					if (getWorld().getServer().getEntityHandler().getItemDef(i.id).isMembersOnly()) {
 						continue;
 					}
 				}
 				if (Formulae.isP2P(false, i)
-					&& !Server.getServer().getConfig().MEMBER_WORLD) {
+					&& !getWorld().getServer().getConfig().MEMBER_WORLD) {
 					i = null;
 					continue;
 				}
@@ -130,7 +130,7 @@ public final class WorldPopulator {
 		getWorld().getServer().getDatabaseConnection()
 			.executeUpdate(
 				"INSERT INTO `"
-					+ Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+					+ getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "items`(`id`, `x`, `y`, `amount`, `respawn`) VALUES ('"
 					+ item.getId() + "', '" + item.getX() + "', '"
 					+ item.getY() + "', '" + item.getAmount()
@@ -143,7 +143,7 @@ public final class WorldPopulator {
 		getWorld().getServer().getDatabaseConnection()
 			.executeUpdate(
 				"INSERT INTO `"
-					+ Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+					+ getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "objects`(`x`, `y`, `id`, `direction`, `type`) VALUES ('"
 					+ gameObject.getX() + "', '"
 					+ gameObject.getY() + "', '"
@@ -155,7 +155,7 @@ public final class WorldPopulator {
 	public void deleteGameObjectFromDatabase(GameObject obj) {
 		GameObjectLoc gameObject = obj.getLoc();
 		getWorld().getServer().getDatabaseConnection().executeUpdate(
-			"DELETE FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+			"DELETE FROM `" + getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 				+ "objects` WHERE `x` = '" + gameObject.getX()
 				+ "' AND `y` =  '" + gameObject.getY()
 				+ "' AND `id` = '" + gameObject.getId()
@@ -168,7 +168,7 @@ public final class WorldPopulator {
 		getWorld().getServer().getDatabaseConnection()
 			.executeUpdate(
 				"INSERT INTO `"
-					+ Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+					+ getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "npclocs`(`id`,`startX`,`minX`,`maxX`,`startY`,`minY`,`maxY`) VALUES('"
 					+ npc.getId() + "', '" + npc.startX() + "', '"
 					+ npc.minX() + "', '" + npc.maxX() + "','"
@@ -178,7 +178,7 @@ public final class WorldPopulator {
 
 	public void deleteNpc(Npc npc) {
 		getWorld().getServer().getDatabaseConnection().executeUpdate(
-			"DELETE FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+			"DELETE FROM `" + getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 				+ "npclocs` WHERE `id` = '" + npc.getID()
 				+ "' AND startX='" + npc.getLoc().startX
 				+ "' AND startY='" + npc.getLoc().startY

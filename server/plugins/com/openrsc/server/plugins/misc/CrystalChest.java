@@ -88,7 +88,7 @@ public class CrystalChest implements ObjectActionListener, ObjectActionExecutive
 				loot.add(new Item(ItemId.COINS.id(), 2000));
 			}
 			for (Item i : loot) {
-				if (i.getAmount() > 1 && !i.getDef().isStackable()) {
+				if (i.getAmount() > 1 && !i.getDef(player.getWorld()).isStackable()) {
 					for (int x = 0; x < i.getAmount(); x++) {
 						player.getInventory().add(new Item(i.getID(), 1));
 					}

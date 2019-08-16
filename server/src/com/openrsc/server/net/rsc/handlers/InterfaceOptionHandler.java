@@ -1,11 +1,15 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Server;
-import com.openrsc.server.content.clan.*;
-import com.openrsc.server.content.party.*;
+import com.openrsc.server.content.clan.Clan;
+import com.openrsc.server.content.clan.ClanInvite;
+import com.openrsc.server.content.clan.ClanPlayer;
+import com.openrsc.server.content.clan.ClanRank;
+import com.openrsc.server.content.party.Party;
+import com.openrsc.server.content.party.PartyInvite;
+import com.openrsc.server.content.party.PartyPlayer;
+import com.openrsc.server.content.party.PartyRank;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PacketHandler;
@@ -194,7 +198,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 					player.message("As an Iron Man, you cannot use the Auction.");
 					return;
 				}
-				if (Server.getServer().timeTillShutdown() > 0) {
+				if (player.getWorld().getServer().timeTillShutdown() > 0) {
 					player.message("Auction house is disabled until server restart!");
 					return;
 				}
@@ -248,7 +252,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 				}
 				break;
 			case 11: // Clan Actions
-				if (!Server.getServer().getConfig().WANT_CLANS) return;
+				if (!player.getWorld().getServer().getConfig().WANT_CLANS) return;
 				int actionType = p.readByte();
 				switch (actionType) {
 					case 0: // CREATE CLAN
@@ -304,7 +308,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 						break;
 					case 2:
 						String playerInvited = p.readString();
-						Player invited = World.getWorld().getPlayer(DataConversions.usernameToHash(playerInvited));
+						Player invited = player.getWorld().getPlayer(DataConversions.usernameToHash(playerInvited));
 						/*if (!player.getClan().isAllowed(1, player)) {
 							player.message("You are not allowed to invite into clan.");
 							return;
@@ -401,7 +405,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 				}
 				break;
 			case 12: // Party
-				if (!Server.getServer().getConfig().WANT_PARTIES) return;
+				if (!player.getWorld().getServer().getConfig().WANT_PARTIES) return;
 				int actionType2 = p.readByte();
 				switch (actionType2) {
 					case 0: // CREATE PARTY
@@ -428,7 +432,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 						}
 						break;
 					case 2:
-						Player invited = World.getWorld().getPlayer(p.readShort());
+						Player invited = player.getWorld().getPlayer(p.readShort());
 						/*if (!player.getParty().isAllowed(1, player)) {
 							player.message("You are not allowed to invite others into this party");
 							return;
@@ -544,7 +548,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 						break;
 					case 9:
 						String playerInvited2 = p.readString();
-						Player invited2 = World.getWorld().getPlayer(DataConversions.usernameToHash(playerInvited2));
+						Player invited2 = player.getWorld().getPlayer(DataConversions.usernameToHash(playerInvited2));
 						if (player.getParty() == null) {
 							if (invited2 == null) {
 								ActionSender.sendBox(player,

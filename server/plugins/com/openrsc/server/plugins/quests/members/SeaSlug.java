@@ -628,20 +628,20 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 				message(p, "you rotate the crane around", "to the far platform");
 				GameObject firstRotation = new GameObject(obj.getWorld(), obj.getLocation(),
 					453, 5, 0);
-				World.getWorld().replaceGameObject(obj, firstRotation);
+				p.getWorld().replaceGameObject(obj, firstRotation);
 				sleep(500);
 				GameObject secondRotation = new GameObject(obj.getWorld(), obj.getLocation(),
 					453, 6, 0);
-				World.getWorld().replaceGameObject(obj, secondRotation);
+				p.getWorld().replaceGameObject(obj, secondRotation);
 				playerTalk(p, null, "jump on kennith!");
 				p.message("kennith comes out through the broken panal");
 				GameObject thirdRotation = new GameObject(obj.getWorld(), obj.getLocation(),
 					453, 5, 0);
-				World.getWorld().replaceGameObject(obj, thirdRotation);
+				p.getWorld().replaceGameObject(obj, thirdRotation);
 				sleep(500);
 				GameObject fourthRotation = new GameObject(obj.getWorld(), obj.getLocation(),
 					453, 4, 0);
-				World.getWorld().replaceGameObject(obj, fourthRotation);
+				p.getWorld().replaceGameObject(obj, fourthRotation);
 				message(p, "he climbs onto the fishing net",
 					"you rotate the crane back around",
 					"and lower kennith to the row boat waiting below");

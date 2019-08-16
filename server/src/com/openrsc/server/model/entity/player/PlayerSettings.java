@@ -1,7 +1,6 @@
 package com.openrsc.server.model.entity.player;
 
 import com.openrsc.server.model.PlayerAppearance;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 
 import java.util.HashMap;
@@ -34,7 +33,7 @@ public class PlayerSettings {
 	public void setPrivacySetting(int i, boolean b) {
 		if (i == 1) {
 			if (privacySettings[1] && !b) {
-				for (Player pl : World.getWorld().getPlayers()) {
+				for (Player pl : player.getWorld().getPlayers()) {
 					if (!player.getSocial().isFriendsWith(pl.getUsernameHash())
 						&& pl.getSocial().isFriendsWith(player.getUsernameHash())
 						&& pl.getIndex() != player.getIndex()) {
@@ -43,7 +42,7 @@ public class PlayerSettings {
 					}
 				}
 			} else if (!privacySettings[1] && b) {
-				for (Player pl : World.getWorld().getPlayers()) {
+				for (Player pl : player.getWorld().getPlayers()) {
 					if (!player.getSocial().isFriendsWith(pl.getUsernameHash())
 						&& pl.getSocial().isFriendsWith(player.getUsernameHash())
 						&& pl.getIndex() != player.getIndex()) {

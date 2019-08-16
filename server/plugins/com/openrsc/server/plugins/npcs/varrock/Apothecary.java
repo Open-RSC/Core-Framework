@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
@@ -40,7 +39,7 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 				p.message("Which the apothecary shakes up in vial of strange liquid");
 				npcTalk(p, n, "Here is what you need");
 				p.message("The apothecary gives you a Cadava potion");
-				p.getInventory().add(new Item(ItemId.CADAVA.id()));
+				p.getInventory().add(new Item());
 				p.updateQuestStage(Quests.ROMEO_N_JULIET, 6);
 			}
 			return;
@@ -75,7 +74,7 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 					int eggtimes = p.getInventory().countId(ItemId.RED_SPIDERS_EGGS.id());
 					int repeattimes = (cointimes < roottimes) ? cointimes : roottimes;
 					repeattimes = (eggtimes < repeattimes) ? eggtimes : repeattimes;
-					p.setBatchEvent(new BatchEvent(p, 600, "Apothecary Brews Potion", repeattimes, false) {
+					p.setBatchEvent(new BatchEvent(p.getWorld(), p, 600, "Apothecary Brews Potion", repeattimes, false) {
 						@Override
 						public void action() {
 							if (p.getInventory().countId(ItemId.COINS.id()) < 5) {
@@ -125,7 +124,7 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 					npcTalk(p, n, "Sorry, charity is not my strongest point");
 				}
 			}
-		} else if (option == 3 && Server.getServer().getConfig().WANT_EXPERIENCE_ELIXIRS) {
+		} else if (option == 3 && p.getWorld().getServer().getConfig().WANT_EXPERIENCE_ELIXIRS) {
 			npcTalk(p, n, "Yes, it's my most mysterious and special elixir",
 				"It has a strange taste and sure does give you a rush",
 				"I would know..",

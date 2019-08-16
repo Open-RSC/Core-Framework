@@ -1,6 +1,5 @@
 package com.openrsc.server.model;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 
@@ -64,12 +63,12 @@ public class Path {
 
 		// The maximum amount of spaces you can move in one game tick
 		int maxTiles = 1;
-		if(mob instanceof Player && Server.getServer().getConfig().MAX_WALKING_SPEED >= maxTiles) {
+		if(mob instanceof Player && mob.getWorld().getServer().getConfig().MAX_WALKING_SPEED >= maxTiles) {
 			Player player = (Player)mob;
 
 			// Each waypoint is one tick of movement. If there are X waypoints, then that means X ticks will pass before we encounter this waypoints.
-			if(player.canLogout() && waypoints.size() >= Server.getServer().getConfig().MAX_TICKS_UNTIL_FULL_WALKING_SPEED) {
-				maxTiles = Server.getServer().getConfig().MAX_WALKING_SPEED;
+			if(player.canLogout() && waypoints.size() >= mob.getWorld().getServer().getConfig().MAX_TICKS_UNTIL_FULL_WALKING_SPEED) {
+				maxTiles = mob.getWorld().getServer().getConfig().MAX_WALKING_SPEED;
 			}
 		}
 

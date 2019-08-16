@@ -1,6 +1,5 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.event.MiniEvent;
 import com.openrsc.server.event.rsc.impl.RangeEvent;
 import com.openrsc.server.event.rsc.impl.ThrowingEvent;
@@ -9,17 +8,11 @@ import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.states.Action;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 
 public class AttackHandler implements PacketHandler {
-	/**
-	 * World instance
-	 */
-	public static final World world = World.getWorld();
-
 	public void handlePacket(Packet p, Player player) throws Exception {
 		int pID = p.getID();
 		if (player.isBusy()) {
@@ -38,9 +31,9 @@ public class AttackHandler implements PacketHandler {
 		int packetTwo = OpcodeIn.NPC_ATTACK1.getOpcode();
 
 		if (pID == packetOne) {
-			affectedMob = world.getPlayer(serverIndex);
+			affectedMob = player.getWorld().getPlayer(serverIndex);
 		} else if (pID == packetTwo) {
-			affectedMob = world.getNpc(serverIndex);
+			affectedMob = player.getWorld().getNpc(serverIndex);
 		}
 		if (affectedMob == null || affectedMob.equals(player)) {
 			player.resetPath();
@@ -120,7 +113,7 @@ public class AttackHandler implements PacketHandler {
 			player.resetPath();
 			player.resetAll();
 			/* To skip the walk packet resetAll() */
-			Server.getServer().getGameEventHandler().add(new MiniEvent(player, "Handle Attack") {
+			player.getWorld().getServer().getGameEventHandler().add(new MiniEvent(player.getWorld(), player, "Handle Attack") {
 				@Override
 				public void action() {
 					getOwner().setStatus(Action.RANGING_MOB);
@@ -139,9 +132,9 @@ public class AttackHandler implements PacketHandler {
 						}
 					}
 					if (player.getRangeEquip() > 0) {
-						getOwner().setRangeEvent(new RangeEvent(getOwner(), target));
+						getOwner().setRangeEvent(new RangeEvent(getOwner().getWorld(), getOwner(), target));
 					} else {
-						getOwner().setThrowingEvent(new ThrowingEvent(getOwner(), target));
+						getOwner().setThrowingEvent(new ThrowingEvent(getOwner().getWorld(), getOwner(), target));
 					}
 				}
 			});

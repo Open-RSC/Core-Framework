@@ -4,7 +4,6 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.InvUseOnGroundItemListener;
 import com.openrsc.server.plugins.listeners.action.PickupListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnGroundItemExecutiveListener;
@@ -28,7 +27,7 @@ public class PotFlour implements InvUseOnGroundItemListener, InvUseOnGroundItemE
 			if (player.getInventory().remove(myItem) < 0)
 				return;
 			player.message("You put the flour in the pot");
-			World.getWorld().unregisterItem(item);
+			player.getWorld().unregisterItem(item);
 			player.getInventory().add(new Item(ItemId.POT_OF_FLOUR.id()));
 			return;
 		}
@@ -39,7 +38,7 @@ public class PotFlour implements InvUseOnGroundItemListener, InvUseOnGroundItemE
 		if (item.getID() == ItemId.FLOUR.id()) {
 			if (player.getInventory().hasItemId(ItemId.POT.id())) {
 				player.message("You put the flour in the pot");
-				World.getWorld().unregisterItem(item);
+				player.getWorld().unregisterItem(item);
 				player.getInventory().replace(ItemId.POT.id(), ItemId.POT_OF_FLOUR.id());
 			} else {
 				player.message("I can't pick it up!");

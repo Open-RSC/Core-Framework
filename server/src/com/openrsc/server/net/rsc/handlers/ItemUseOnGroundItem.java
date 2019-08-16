@@ -1,6 +1,5 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.action.WalkToPointAction;
 import com.openrsc.server.model.container.Inventory;
@@ -8,15 +7,10 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.states.Action;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
 
 public class ItemUseOnGroundItem implements PacketHandler {
-	/**
-	 * World instance
-	 */
-	public static final World world = World.getWorld();
 
 	private GroundItem getItem(int id, Point location, Player player) {
 		int x = location.getX();
@@ -39,7 +33,7 @@ public class ItemUseOnGroundItem implements PacketHandler {
 		Point location = Point.location(p.readShort(), p.readShort());
 		final int id = p.readShort();
 		final int groundItemId = p.readShort();
-		if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB && id > Inventory.MAX_SIZE) {
+		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && id > Inventory.MAX_SIZE) {
 			player.message("Please unequip your item and try again.");
 			return;
 		}
@@ -68,9 +62,9 @@ public class ItemUseOnGroundItem implements PacketHandler {
 				if (myItem == null || item == null)
 					return;
 
-				if ((myItem.getDef().isMembersOnly() || item.getDef()
+				if ((myItem.getDef(player.getWorld()).isMembersOnly() || item.getDef()
 					.isMembersOnly())
-					&& !Server.getServer().getConfig().MEMBER_WORLD) {
+					&& !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 					player.message(player.MEMBER_MESSAGE);
 					return;
 				}

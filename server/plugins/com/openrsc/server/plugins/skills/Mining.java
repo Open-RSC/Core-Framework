@@ -9,7 +9,6 @@ import com.openrsc.server.external.ObjectMiningDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -169,7 +168,7 @@ public final class Mining implements ObjectActionListener,
 			sleep(1800);
 			if (object.getID() == 496) {
 				// Tutorial Island rock handler
-				message(owner, "This rock contains " + new Item(def.getOreId()).getDef().getName(),
+				message(owner, "This rock contains " + new Item(def.getOreId()).getDef(owner.getWorld()).getName(),
 						"Sometimes you won't find the ore but trying again may find it",
 						"If a rock contains a high level ore",
 						"You will not find it until you increase your mining level");
@@ -179,7 +178,7 @@ public final class Mining implements ObjectActionListener,
 				if (def == null || def.getRespawnTime() < 1) {
 					owner.message("There is currently no ore available in this rock");
 				} else {
-					owner.message("This rock contains " + new Item(def.getOreId()).getDef().getName());
+					owner.message("This rock contains " + new Item(def.getOreId()).getDef(owner.getWorld()).getName());
 				}
 			}
 			return;
@@ -200,17 +199,17 @@ public final class Mining implements ObjectActionListener,
 		owner.playSound("mine");
 		showBubble(owner, new Item(ItemId.IRON_PICKAXE.id()));
 		owner.message("You swing your pick at the rock...");
-		retrytimes = Server.getServer().getConfig().BATCH_PROGRESSION ? Formulae.getRepeatTimes(owner, com.openrsc.server.constants.Skills.MINING) : retrytimes + 1000;
-		owner.setBatchEvent(new BatchEvent(owner, 1800, "Mining", retrytimes, true) {
+		retrytimes = owner.getWorld().getServer().getConfig().BATCH_PROGRESSION ? Formulae.getRepeatTimes(owner, com.openrsc.server.constants.Skills.MINING) : retrytimes + 1000;
+		owner.setBatchEvent(new BatchEvent(owner.getWorld(), owner, 1800, "Mining", retrytimes, true) {
 			@Override
 			public void action() {
 				final Item ore = new Item(def.getOreId());
-				if (getOre(def, owner.getSkills().getLevel(com.openrsc.server.constants.Skills.MINING), axeId) && mineLvl >= def.getReqLevel()) {
+				if (getOre(owner.getWorld().getServer(), def, owner.getSkills().getLevel(com.openrsc.server.constants.Skills.MINING), axeId) && mineLvl >= def.getReqLevel()) {
 					if (DataConversions.random(1, 200) <= (owner.getInventory().wielding(ItemId.CHARGED_DRAGONSTONE_AMULET.id()) ? 2 : 1)) {
 						owner.playSound("foundgem");
 						Item gem = new Item(getGem(), 1);
 						owner.getInventory().add(gem);
-						owner.message("You just found a" + gem.getDef().getName().toLowerCase().replaceAll("uncut", "") + "!");
+						owner.message("You just found a" + gem.getDef(owner.getWorld()).getName().toLowerCase().replaceAll("uncut", "") + "!");
 						interrupt();
 					} else {
 						//check if there is still ore at the rock
@@ -219,17 +218,17 @@ public final class Mining implements ObjectActionListener,
 							owner.message("You only succeed in scratching the rock");
 						} else {
 							owner.getInventory().add(ore);
-							owner.message("You manage to obtain some " + ore.getDef().getName().toLowerCase());
+							owner.message("You manage to obtain some " + ore.getDef(owner.getWorld()).getName().toLowerCase());
 							owner.incExp(com.openrsc.server.constants.Skills.MINING, def.getExp(), true);
 						}
 						if (object.getID() == 496 && owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 51)
 							owner.getCache().set("tutorial", 52);
-						if (!Server.getServer().getConfig().MINING_ROCKS_EXTENDED || DataConversions.random(1, 100) <= def.getDepletion()) {
+						if (!owner.getWorld().getServer().getConfig().MINING_ROCKS_EXTENDED || DataConversions.random(1, 100) <= def.getDepletion()) {
 							interrupt();
 							if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
 								GameObject newObject = new GameObject(object.getWorld(), object.getLocation(), 98, object.getDirection(), object.getType());
-								World.getWorld().replaceGameObject(object, newObject);
-								World.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
+								owner.getWorld().replaceGameObject(object, newObject);
+								owner.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
 							}
 						}
 					}
@@ -276,9 +275,9 @@ public final class Mining implements ObjectActionListener,
 		}
 	}
 
-	private static int calcAxeBonus(int axeId) {
+	private static int calcAxeBonus(Server server, int axeId) {
 			//If server doesn't use batching, pickaxe shouldn't improve gathering chance
-			if (!Server.getServer().getConfig().BATCH_PROGRESSION)
+			if (!server.getConfig().BATCH_PROGRESSION)
 				return 0;
 			int bonus = 0;
 			switch (ItemId.getById(axeId)) {
@@ -307,7 +306,7 @@ public final class Mining implements ObjectActionListener,
 	/**
 	 * Should we can get an ore from the rock?
 	 */
-	private static boolean getOre(ObjectMiningDef def, int miningLevel, int axeId) {
-		return Formulae.calcGatheringSuccessful(def.getReqLevel(), miningLevel, calcAxeBonus(axeId));
+	private static boolean getOre(Server server, ObjectMiningDef def, int miningLevel, int axeId) {
+		return Formulae.calcGatheringSuccessful(def.getReqLevel(), miningLevel, calcAxeBonus(server, axeId));
 	}
 }

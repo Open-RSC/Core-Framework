@@ -166,7 +166,7 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 			"-*- Menu 2 -*-");
 		if (goods == 0) {
 			if (hasItem(p, PRAYER_RESTORE_POT, 5)) {
-				calculateExchangeMenu(p, n, false, new Item(PRAYER_RESTORE_POT), new Item(PRAYER_CERT));
+				calculateExchangeMenu(p, n, false, new Item(), new Item());
 			} else {
 				npcTalk(p, n, "You don't have any Prayer potions to certificate.",
 					"Which goods would you like to certificate?");
@@ -174,14 +174,14 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 			}
 		} else if (goods == 1) {
 			if (hasItem(p, SUPER_ATTACK_POT, 5)) {
-				calculateExchangeMenu(p, n, false, new Item(SUPER_ATTACK_POT), new Item(SUPER_ATTACK_CERT));
+				calculateExchangeMenu(p, n, false, new Item(), new Item());
 			} else {
 				npcTalk(p, n, "You don't have enough Super Attack potions to certificate.");
 				playerTalk(p, n, "Ok thanks.");
 			}
 		} else if (goods == 2) {
 			if (hasItem(p, SUPER_DEFENSE_POT, 5)) {
-				calculateExchangeMenu(p, n, false, new Item(SUPER_DEFENSE_POT), new Item(SUPER_DEFENSE_CERT));
+				calculateExchangeMenu(p, n, false, new Item(), new Item());
 			} else {
 				npcTalk(p, n, "You don't have any Super Defense potions to certificate.",
 					"Which goods would you like to certificate?");
@@ -189,7 +189,7 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 			}
 		} else if (goods == 3) {
 			if (hasItem(p, SUPER_STRENGTH_POT, 5)) {
-				calculateExchangeMenu(p, n, false, new Item(SUPER_STRENGTH_POT), new Item(SUPER_STRENGTH_CERT));
+				calculateExchangeMenu(p, n, false, new Item(), new Item());
 			} else {
 				npcTalk(p, n, "You don't have any Super Strength potions to certificate.",
 					"Which goods would you like to certificate?");
@@ -207,7 +207,7 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 			"-*- Menu 1 -*-");
 		if (goods == 0) {
 			if (hasItem(p, DRAGON_BONES, 5)) {
-				calculateExchangeMenu(p, n, false, new Item(DRAGON_BONES), new Item(DRAGON_BONES_CERT));
+				calculateExchangeMenu(p, n, false, new Item(), new Item());
 			} else {
 				npcTalk(p, n, "You don't have any Dragon Bones to certificate.",
 					"Which goods would you like to certificate?");
@@ -215,7 +215,7 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 			}
 		} else if (goods == 1) {
 			if (hasItem(p, LIMPWURT_ROOT, 5)) {
-				calculateExchangeMenu(p, n, false, new Item(LIMPWURT_ROOT), new Item(LIMPWURT_ROOT_CERT));
+				calculateExchangeMenu(p, n, false, new Item(), new Item());
 			} else {
 				npcTalk(p, n, "You don't have any Limpwurt Roots to certificate.",
 					"Which goods would you like to certificate?");
@@ -235,28 +235,28 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 			"-*- Menu 2 -*-");
 		if (certs == 0) {
 			if (hasItem(p, PRAYER_CERT)) {
-				calculateExchangeMenu(p, n, true, new Item(PRAYER_RESTORE_POT), new Item(PRAYER_CERT));
+				calculateExchangeMenu(p, n, true, new Item(), new Item());
 			} else {
 				npcTalk(p, n, "Sorry, but you don't have any ",
 					"Prayer Restore Potion Certificates to change.");
 			}
 		} else if (certs == 1) {
 			if (hasItem(p, SUPER_ATTACK_CERT)) {
-				calculateExchangeMenu(p, n, true, new Item(SUPER_ATTACK_POT), new Item(SUPER_ATTACK_CERT));
+				calculateExchangeMenu(p, n, true, new Item(), new Item());
 			} else {
 				npcTalk(p, n, "Sorry, but you don't have any ",
 					"Super attack Potion Certificates to change.");
 			}
 		} else if (certs == 2) {
 			if (hasItem(p, SUPER_DEFENSE_CERT)) {
-				calculateExchangeMenu(p, n, true, new Item(SUPER_DEFENSE_POT), new Item(SUPER_DEFENSE_CERT));
+				calculateExchangeMenu(p, n, true, new Item(), new Item());
 			} else {
 				npcTalk(p, n, "Sorry, but you don't have any ",
 					"Super Defense Potion Certificates to change.");
 			}
 		} else if (certs == 3) {
 			if (hasItem(p, SUPER_STRENGTH_CERT)) {
-				calculateExchangeMenu(p, n, true, new Item(SUPER_STRENGTH_POT), new Item(SUPER_STRENGTH_CERT));
+				calculateExchangeMenu(p, n, true, new Item(), new Item());
 			} else {
 				npcTalk(p, n, "Sorry, but you don't have any ",
 					"Super Strength Potion Certificates to change.");
@@ -273,14 +273,14 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 			"-*- Menu 1 -*-");
 		if (menu == 0) {
 			if (hasItem(p, DRAGON_BONES_CERT)) {
-				calculateExchangeMenu(p, n, true, new Item(DRAGON_BONES), new Item(DRAGON_BONES_CERT));
+				calculateExchangeMenu(p, n, true, new Item(), new Item());
 			} else {
 				npcTalk(p, n, "Sorry, but you don't have any ",
 					"Dragon Bone Certificates to change.");
 			}
 		} else if (menu == 1) {
 			if (hasItem(p, LIMPWURT_ROOT_CERT)) {
-				calculateExchangeMenu(p, n, true, new Item(LIMPWURT_ROOT), new Item(LIMPWURT_ROOT_CERT));
+				calculateExchangeMenu(p, n, true, new Item(), new Item());
 			} else {
 				npcTalk(p, n, "Sorry, but you don't have any ",
 					"Limpwurt Root Certificates to change.");
@@ -294,7 +294,7 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 		int count = p.getInventory().countId(useCertificate ? certificate.getID() : i.getID());
 		int mainMenu = -1;
 		if (useCertificate) {
-			npcTalk(p, n, "How many " + i.getDef().getName() + " certificates do you want to change?");
+			npcTalk(p, n, "How many " + i.getDef(p.getWorld()).getName() + " certificates do you want to change?");
 			if (count == 1) {
 				int firstMenu = showMenu(p, "None thanks.", "One Certificate please");
 				if (firstMenu != -1) {
@@ -316,7 +316,7 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 			}
 
 		} else {
-			npcTalk(p, n, "How many " + i.getDef().getName() + " would you like to certificate?");
+			npcTalk(p, n, "How many " + i.getDef(p.getWorld()).getName() + " would you like to certificate?");
 			if (count >= 5 && count < 10) {
 				int firstMenu = showMenu(p, "None", "Five");
 				if (firstMenu != -1) {
@@ -336,14 +336,14 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 			} else if (count >= 25) {
 				mainMenu = showMenu(p, "Five", "Ten", "Fifteen", "Twenty", "Twenty Five");
 			} else {
-				npcTalk(p, n, "Sorry, but you don't have enough " + i.getDef().getName() + ".",
+				npcTalk(p, n, "Sorry, but you don't have enough " + i.getDef(p.getWorld()).getName() + ".",
 					"You need at least five to make a certificate.");
 				return;
 			}
 		}
 		if (mainMenu != -1) {
 			if (useCertificate) {
-				npcTalk(p, n, "Ok, that's your " + i.getDef().getName() + " certificates done.");
+				npcTalk(p, n, "Ok, that's your " + i.getDef(p.getWorld()).getName() + " certificates done.");
 				mainMenu += 1;
 				int itemAmount = mainMenu * 5;
 				if (p.getInventory().remove(certificate.getID(), mainMenu) > -1) {
@@ -353,7 +353,7 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 				}
 				playerTalk(p, n, "Ok thanks.");
 			} else {
-				npcTalk(p, n, "Ok, that's your " + i.getDef().getName() + " certificated.");
+				npcTalk(p, n, "Ok, that's your " + i.getDef(p.getWorld()).getName() + " certificated.");
 				mainMenu += 1;
 				int itemAmount = mainMenu * 5;
 				for (int x = 0; x < itemAmount; x++) {
@@ -381,40 +381,40 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 			SUPER_STRENGTH_CERT, DRAGON_BONES_CERT, LIMPWURT_ROOT_CERT)) {
 			switch (item.getID()) {
 				case PRAYER_RESTORE_POT:
-					calculateExchangeMenu(player, npc, false, item, new Item(PRAYER_CERT));
+					calculateExchangeMenu(player, npc, false, item, new Item());
 					break;
 				case SUPER_ATTACK_POT:
-					calculateExchangeMenu(player, npc, false, item, new Item(SUPER_ATTACK_CERT));
+					calculateExchangeMenu(player, npc, false, item, new Item());
 					break;
 				case SUPER_STRENGTH_POT:
-					calculateExchangeMenu(player, npc, false, item, new Item(SUPER_STRENGTH_CERT));
+					calculateExchangeMenu(player, npc, false, item, new Item());
 					break;
 				case SUPER_DEFENSE_POT:
-					calculateExchangeMenu(player, npc, false, item, new Item(SUPER_DEFENSE_CERT));
+					calculateExchangeMenu(player, npc, false, item, new Item());
 					break;
 				case DRAGON_BONES:
-					calculateExchangeMenu(player, npc, false, item, new Item(DRAGON_BONES_CERT));
+					calculateExchangeMenu(player, npc, false, item, new Item());
 					break;
 				case LIMPWURT_ROOT:
-					calculateExchangeMenu(player, npc, false, item, new Item(LIMPWURT_ROOT_CERT));
+					calculateExchangeMenu(player, npc, false, item, new Item());
 					break;
 				case PRAYER_CERT:
-					calculateExchangeMenu(player, npc, true, new Item(PRAYER_RESTORE_POT), item);
+					calculateExchangeMenu(player, npc, true, new Item(), item);
 					break;
 				case SUPER_ATTACK_CERT:
-					calculateExchangeMenu(player, npc, true, new Item(SUPER_ATTACK_POT), item);
+					calculateExchangeMenu(player, npc, true, new Item(), item);
 					break;
 				case SUPER_STRENGTH_CERT:
-					calculateExchangeMenu(player, npc, true, new Item(SUPER_STRENGTH_POT), item);
+					calculateExchangeMenu(player, npc, true, new Item(), item);
 					break;
 				case SUPER_DEFENSE_CERT:
-					calculateExchangeMenu(player, npc, true, new Item(SUPER_DEFENSE_POT), item);
+					calculateExchangeMenu(player, npc, true, new Item(), item);
 					break;
 				case DRAGON_BONES_CERT:
-					calculateExchangeMenu(player, npc, true, new Item(DRAGON_BONES), item);
+					calculateExchangeMenu(player, npc, true, new Item(), item);
 					break;
 				case LIMPWURT_ROOT_CERT:
-					calculateExchangeMenu(player, npc, true, new Item(LIMPWURT_ROOT), item);
+					calculateExchangeMenu(player, npc, true, new Item(), item);
 					break;
 				default:
 					player.message("Nothing interesting happens");

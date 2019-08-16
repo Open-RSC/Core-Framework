@@ -1,7 +1,9 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 
-import com.openrsc.server.constants.*;
-import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -10,16 +12,7 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.npcWalkFromPlayer;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
@@ -985,7 +978,7 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 			npcTalk(p, n, "I have work to do Bwana, I may see you again...");
 		}
 		npcTalk(p, n, "");
-		Server.getServer().getGameEventHandler().add(new SingleEvent(null, 1900, "Legends Quest Gujuo Disappears") {
+		p.getWorld().getServer().getGameEventHandler().add(new SingleEvent(p.getWorld(), null, 1900, "Legends Quest Gujuo Disappears") {
 			public void action() {
 				p.message("Gujuo disapears into the Kharazi jungle as swiftly as he appeared...");
 				if(n != null) {

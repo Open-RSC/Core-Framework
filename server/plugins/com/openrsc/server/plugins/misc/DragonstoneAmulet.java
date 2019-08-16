@@ -52,7 +52,7 @@ public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveL
 				p.message("the plague sample is too delicate...");
 				p.message("it disintegrates in the crossing");
 				while (p.getInventory().countId(ItemId.PLAGUE_SAMPLE.id()) > 0) {
-					p.getInventory().remove(new Item(ItemId.PLAGUE_SAMPLE.id()));
+					p.getInventory().remove(new Item());
 				}
 			}
 			if (menu != -1) {
@@ -94,7 +94,7 @@ public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveL
 			p.setBusy(true);
 			p.message("You dip the amulet in the fountain");
 			sleep(1000);
-			p.setBatchEvent(new BatchEvent(p, 600, "Charge Dragonstone Ammy", p.getInventory().countId(item.getID()), false) {
+			p.setBatchEvent(new BatchEvent(p.getWorld(), p, 600, "Charge Dragonstone Ammy", p.getInventory().countId(item.getID()), false) {
 
 				@Override
 				public void action() {
@@ -103,7 +103,7 @@ public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveL
 						return;
 					}
 					if (p.getInventory().remove(item) > -1) {
-						p.getInventory().add(new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()));
+						p.getInventory().add(new Item());
 					} else
 						interrupt();
 				}

@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.skills;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
@@ -8,6 +7,7 @@ import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
@@ -36,23 +36,23 @@ public class Smelting implements InvUseOnObjectListener,
 						return;
 					}
 					showBubble(p, new Item(ItemId.MULTI_CANNON_BALL.id(), 1));
-					int messagedelay = Server.getServer().getConfig().BATCH_PROGRESSION ? 200 : 1700;
-					int delay = Server.getServer().getConfig().BATCH_PROGRESSION ? 7200: 2100;
+					int messagedelay = p.getWorld().getServer().getConfig().BATCH_PROGRESSION ? 200 : 1700;
+					int delay = p.getWorld().getServer().getConfig().BATCH_PROGRESSION ? 7200: 2100;
 					message(p, messagedelay, "you heat the steel bar into a liquid state",
 						"and pour it into your cannon ball mould",
 						"you then leave it to cool for a short while");
 
-					p.setBatchEvent(new BatchEvent(p, delay, "Smelting", p.getInventory().countId(item.getID()), false) {
+					p.setBatchEvent(new BatchEvent(p.getWorld(), p, delay, "Smelting", p.getInventory().countId(item.getID()), false) {
 
 						public void action() {
 							p.incExp(Skills.SMITHING, 100, true);
 							p.getInventory().replace(ItemId.STEEL_BAR.id(), ItemId.MULTI_CANNON_BALL.id(),false);
 							if (Functions.isWielding(p, ItemId.DWARVEN_RING.id())) {
-								p.getInventory().add(new Item(ItemId.MULTI_CANNON_BALL.id(), Server.getServer().getConfig().DWARVEN_RING_BONUS),false);
+								p.getInventory().add(new Item(ItemId.MULTI_CANNON_BALL.id(), getWorld().getServer().getConfig().DWARVEN_RING_BONUS),false);
 								int charges;
 								if (p.getCache().hasKey("dwarvenring")) {
 									charges = p.getCache().getInt("dwarvenring") + 1;
-									if (charges >= Server.getServer().getConfig().DWARVEN_RING_USES) {
+									if (charges >= getWorld().getServer().getConfig().DWARVEN_RING_USES) {
 										p.getCache().remove("dwarvenring");
 										p.getInventory().shatter(ItemId.DWARVEN_RING.id());
 									} else
@@ -69,7 +69,7 @@ public class Smelting implements InvUseOnObjectListener,
 								p.message("you repeat the process");
 								showBubble(p, new Item(ItemId.MULTI_CANNON_BALL.id(), 1));
 							}
-							if (Server.getServer().getConfig().WANT_FATIGUE) {
+							if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 								if (p.getFatigue() >= p.MAX_FATIGUE) {
 									p.message("You are too tired to smelt cannon ball");
 									interrupt();
@@ -97,7 +97,7 @@ public class Smelting implements InvUseOnObjectListener,
 			p.message("Nothing interesting happens");
 			return;
 		}
-		String formattedName = item.getDef().getName().toUpperCase().replaceAll(" ", "_");
+		String formattedName = item.getDef(p.getWorld()).getName().toUpperCase().replaceAll(" ", "_");
 		Smelt smelt;
 		if (item.getID() == Smelt.IRON_ORE.getID() && getCurrentLevel(p, Skills.SMITHING) >= 30 && p.getInventory().countId(Smelt.COAL.getID()) >= 2) {
 			String coalChange = p.getWorld().getServer().getEntityHandler().getItemDef(Smelt.COAL.getID()).getName().toUpperCase();
@@ -113,7 +113,7 @@ public class Smelting implements InvUseOnObjectListener,
 		if (!p.withinRange(obj, 2)) {
 			return;
 		}
-		if (Server.getServer().getConfig().WANT_FATIGUE) {
+		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
 			if (p.getFatigue() >= p.MAX_FATIGUE) {
 				p.message("You are too tired to smelt this ore");
 				return;
@@ -136,16 +136,16 @@ public class Smelting implements InvUseOnObjectListener,
 			} else {
 				p.message("You need " + smelt.getReqOreAmount() + " heaps of " + p.getWorld().getServer().getEntityHandler().getItemDef(smelt.getReqOreId()).getName().toLowerCase()
 					+ " to smelt "
-					+ item.getDef().getName().toLowerCase().replaceAll("ore", ""));
+					+ item.getDef(p.getWorld()).getName().toLowerCase().replaceAll("ore", ""));
 				return;
 			}
 		}
 
-		p.message(smeltString(smelt, item));
-		p.setBatchEvent(new BatchEvent(p, 1800, "Smelt", Formulae.getRepeatTimes(p, Skills.SMITHING), false) {
+		p.message(smeltString(p.getWorld(), smelt, item));
+		p.setBatchEvent(new BatchEvent(p.getWorld(), p, 1800, "Smelt", Formulae.getRepeatTimes(p, Skills.SMITHING), false) {
 
 			public void action() {
-				if (Server.getServer().getConfig().WANT_FATIGUE) {
+				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (p.getFatigue() >= p.MAX_FATIGUE) {
 						p.message("You are too tired to smelt this ore");
 						interrupt();
@@ -165,7 +165,7 @@ public class Smelting implements InvUseOnObjectListener,
 					} else {
 						p.message("You need " + smelt.getReqOreAmount() + " heaps of " + p.getWorld().getServer().getEntityHandler().getItemDef(smelt.getReqOreId()).getName().toLowerCase()
 							+ " to smelt "
-							+ item.getDef().getName().toLowerCase().replaceAll("ore", ""));
+							+ item.getDef(p.getWorld()).getName().toLowerCase().replaceAll("ore", ""));
 						interrupt();
 						return;
 					}
@@ -186,7 +186,7 @@ public class Smelting implements InvUseOnObjectListener,
 							addItem(p, smelt.getSmeltBarId(), 1);
 							if (p.getCache().hasKey("ringofforging")) {
 								int ringCheck = p.getCache().getInt("ringofforging");
-								if (ringCheck + 1 == Server.getServer().getConfig().RING_OF_FORGING_USES) {
+								if (ringCheck + 1 == getWorld().getServer().getConfig().RING_OF_FORGING_USES) {
 									p.getCache().remove("ringofforging");
 									p.getInventory().shatter(ItemId.RING_OF_FORGING.id());
 								} else {
@@ -205,10 +205,10 @@ public class Smelting implements InvUseOnObjectListener,
 						else
 							addItem(p, smelt.getSmeltBarId(), 1);
 
-						p.message("You retrieve a bar of " + new Item(smelt.getSmeltBarId()).getDef().getName().toLowerCase().replaceAll("bar", ""));
+						p.message("You retrieve a bar of " + new Item().getDef(p.getWorld()).getName().toLowerCase().replaceAll("bar", ""));
 
 						/** Gauntlets of Goldsmithing provide an additional 23 experience when smelting gold ores **/
-						if (p.getInventory().wielding(ItemId.GAUNTLETS_OF_GOLDSMITHING.id()) && new Item(smelt.getSmeltBarId()).getID() == ItemId.GOLD_BAR.id()) {
+						if (p.getInventory().wielding(ItemId.GAUNTLETS_OF_GOLDSMITHING.id()) && new Item().getID() == ItemId.GOLD_BAR.id()) {
 							p.incExp(Skills.SMITHING, smelt.getXp() + 45, true);
 						} else {
 							p.incExp(Skills.SMITHING, smelt.getXp(), true);
@@ -221,18 +221,18 @@ public class Smelting implements InvUseOnObjectListener,
 		});
 	}
 
-	private String smeltString(Smelt smelt, Item item) {
+	private String smeltString(World world, Smelt smelt, Item item) {
 		String message = null;
 		if (smelt.getSmeltBarId() == ItemId.BRONZE_BAR.id()) {
 			message = "You smelt the copper and tin together in the furnace";
 		} else if (smelt.getSmeltBarId() == ItemId.MITHRIL_BAR.id() || smelt.getSmeltBarId() == ItemId.ADAMANTITE_BAR.id()|| smelt.getSmeltBarId() == ItemId.RUNITE_BAR.id()) {
-			message = "You place the " + item.getDef().getName().toLowerCase().replaceAll(" ore", "") + " and " + smelt.getReqOreAmount() + " heaps of " + Server.getServer().getEntityHandler().getItemDef(smelt.getReqOreId()).getName().toLowerCase() + " into the furnace";
+			message = "You place the " + item.getDef(world).getName().toLowerCase().replaceAll(" ore", "") + " and " + smelt.getReqOreAmount() + " heaps of " + world.getServer().getEntityHandler().getItemDef(smelt.getReqOreId()).getName().toLowerCase() + " into the furnace";
 		} else if (smelt.getSmeltBarId() == ItemId.STEEL_BAR.id()) {
 			message = "You place the iron and 2 heaps of coal into the furnace";
 		} else if (smelt.getSmeltBarId() == ItemId.IRON_BAR.id()) {
-			message = "You smelt the " + item.getDef().getName().toLowerCase().replaceAll(" ore", "") + " in the furnace";
+			message = "You smelt the " + item.getDef(world).getName().toLowerCase().replaceAll(" ore", "") + " in the furnace";
 		} else if (smelt.getSmeltBarId() == ItemId.SILVER_BAR.id() || smelt.getSmeltBarId() == ItemId.GOLD_BAR.id() || smelt.getSmeltBarId() == ItemId.GOLD_BAR_FAMILYCREST.id()) {
-			message = "You place a lump of " + item.getDef().getName().toLowerCase().replaceAll(" ore", "") + " in the furnace";
+			message = "You place a lump of " + item.getDef(world).getName().toLowerCase().replaceAll(" ore", "") + " in the furnace";
 		}
 		return message;
 	}

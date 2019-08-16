@@ -1,11 +1,10 @@
 package com.openrsc.server.plugins.skills;
 
-import com.openrsc.server.Server;
-import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.model.Point;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.event.custom.BatchEvent;
+import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -85,7 +84,7 @@ public class Thieving extends Functions
 		}
 
 		if (shopkeeper != null) {
-			if (canBeSeen(shopkeeper.getX(), shopkeeper.getY(), player.getX(), player.getY())) {
+			if (canBeSeen(player.getWorld(), shopkeeper.getX(), shopkeeper.getY(), player.getX(), player.getY())) {
 				Functions.npcYell(player, shopkeeper, "Hey thats mine");
 				if (!player.getCache().hasKey("stolenFrom" + stall.getOwnerID())) {
 					player.getCache().store("stolenFrom" + stall.getOwnerID(), true);
@@ -94,7 +93,7 @@ public class Thieving extends Functions
 			}
 		}
 		if (guard != null) {
-			if (canBeSeen(guard.getX(), guard.getY(), player.getX(), player.getY())) {
+			if (canBeSeen(player.getWorld(), guard.getX(), guard.getY(), player.getX(), player.getY())) {
 				Functions.npcYell(player, guard, "Hey! Get your hands off there!");
 				player.setAttribute("stolenFrom" + stall.getOwnerID(), true);
 				guard.setChasing(player);
@@ -114,13 +113,13 @@ public class Thieving extends Functions
 			selectedLoot = new Item(stall.lootTable.get(0).getId(), stall.lootTable.get(0).getAmount());
 			return;
 		}
-		if (Server.getServer().getConfig().WANT_FATIGUE) {
+		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
 			if (player.getFatigue() >= player.MAX_FATIGUE)
 				player.message("@gre@You are too tired to gain experience, get some rest");
 		}
 
 		player.getInventory().add(selectedLoot);
-		String loot = stall.equals(Stall.GEMS_STALL) ? "gem" : selectedLoot.getDef().getName().toLowerCase();
+		String loot = stall.equals(Stall.GEMS_STALL) ? "gem" : selectedLoot.getDef(player.getWorld()).getName().toLowerCase();
 		player.message("You steal a " + stall.getLootPrefix() + loot);
 
 		player.incExp(Skills.THIEVING, stall.getXp(), true);
@@ -140,9 +139,9 @@ public class Thieving extends Functions
 		}
 
 		// Replace stall with empty version
-		World.getWorld().replaceGameObject(object,
+		object.getWorld().replaceGameObject(object,
 			new GameObject(player.getWorld(), object.getLocation(), 341, object.getDirection(), object.getType()));
-		World.getWorld().delayedSpawnObject(object.getLoc(), stall.getRespawnTime());
+		object.getWorld().delayedSpawnObject(object.getLoc(), stall.getRespawnTime());
 	}
 
 	public void handleChestThieving(Player player, GameObject obj) {
@@ -199,7 +198,7 @@ public class Thieving extends Functions
 			player.message("You find nothing");
 			return;
 		}
-		if (Server.getServer().getConfig().WANT_FATIGUE) {
+		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
 			if (player.getFatigue() >= player.MAX_FATIGUE) {
 				player.message("You are too tired to thieve here");
 				return;
@@ -212,7 +211,7 @@ public class Thieving extends Functions
 			return;
 		}
 		
-		boolean makeChestStuck = Server.getServer().getConfig().LOOTED_CHESTS_STUCK;
+		boolean makeChestStuck = player.getWorld().getServer().getConfig().LOOTED_CHESTS_STUCK;
 
 		player.message("You find a trap on the chest");
 		GameObject tempChest = null;
@@ -263,7 +262,7 @@ public class Thieving extends Functions
 			if (obj.getGameObjectDef().getName().equalsIgnoreCase("empty stall")) {
 				return false;
 			}
-			if (!Server.getServer().getConfig().MEMBER_WORLD) {
+			if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 				player.message(player.MEMBER_MESSAGE);
 				return false;
 			}
@@ -272,7 +271,7 @@ public class Thieving extends Functions
 				return true;
 			}
 		} else if (obj.getID() >= 334 && obj.getID() <= 339) {
-			if (!Server.getServer().getConfig().MEMBER_WORLD) {
+			if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 				player.message(player.MEMBER_MESSAGE);
 				return false;
 			}
@@ -297,7 +296,7 @@ public class Thieving extends Functions
 			}
 
 			if (pickpocket != null) {
-				if (!Server.getServer().getConfig().MEMBER_WORLD) {
+				if (!p.getWorld().getServer().getConfig().MEMBER_WORLD) {
 					p.message(p.MEMBER_MESSAGE);
 					return false;
 				}
@@ -330,7 +329,7 @@ public class Thieving extends Functions
 			player.message("You need to be a level " + pickpocket.getRequiredLevel() + " thief to pick the " + thievedMobSt + "'s pocket");
 			return;
 		}
-		player.setBatchEvent(new BatchEvent(player, 1200, "Thieving Pickpocket", Formulae.getRepeatTimes(player, Skills.THIEVING), true) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1200, "Thieving Pickpocket", Formulae.getRepeatTimes(player, Skills.THIEVING), true) {
 
 			@Override
 			public void action() {
@@ -343,7 +342,7 @@ public class Thieving extends Functions
 				}
 				boolean succeededPickpocket = succeedThieving(player, pickpocket.getRequiredLevel());
 				if (succeededPickpocket) {
-					if (Server.getServer().getConfig().WANT_FATIGUE) {
+					if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
 						if (player.getFatigue() >= player.MAX_FATIGUE)
 							player.message("@gre@You are too tired to gain experience, get some rest");
 					}
@@ -417,7 +416,7 @@ public class Thieving extends Functions
 			} else {
 				player.setBusyTimer(3000);
 				player.message("you attempt to pick the lock");
-				if (Server.getServer().getConfig().WANT_FATIGUE) {
+				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (player.getFatigue() >= player.MAX_FATIGUE) {
 						player.message("You are too tired to thieve here");
 						player.setBusyTimer(0);
@@ -445,14 +444,14 @@ public class Thieving extends Functions
 				addItem(player, ItemId.COINS.id(), 20);
 				addItem(player, ItemId.STEEL_ARROW_HEADS.id(), 5);
 
-				World.getWorld().replaceGameObject(obj,
+				player.getWorld().replaceGameObject(obj,
 					new GameObject(player.getWorld(), obj.getLocation(), 340, obj.getDirection(), obj.getType()));
-				World.getWorld().delayedSpawnObject(obj.getLoc(), 150000);
+				player.getWorld().delayedSpawnObject(obj.getLoc(), 150000);
 			}
 		}
 	}
 
-	private boolean canBeSeen(int fromX, int fromY, int targetX, int targetY) {
+	private boolean canBeSeen(World world, int fromX, int fromY, int targetX, int targetY) {
 		int count = 0;
 		boolean stop = false;
 		while (!stop) {
@@ -471,7 +470,7 @@ public class Thieving extends Functions
 				fromX++;
 			}
 			/* If there is no unwalkable object in the way */
-			if ((World.getWorld().getTile(fromX, fromY).traversalMask & 64) != 0) {
+			if ((world.getTile(fromX, fromY).traversalMask & 64) != 0) {
 				stop = true;
 				return false;
 			}
@@ -501,7 +500,7 @@ public class Thieving extends Functions
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click, Player player) {
 		if (obj.getID() >= 93 && obj.getID() <= 97 || obj.getID() >= 99 & obj.getID() <= 100 || obj.getID() == 162) {
-			if (!Server.getServer().getConfig().MEMBER_WORLD) {
+			if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 				player.message(player.MEMBER_MESSAGE);
 				return false;
 			}
@@ -607,7 +606,7 @@ public class Thieving extends Functions
 				player.message("You manage to pick the lock");
 				doDoor(obj, player);
 				player.message("You go through the door");
-				if (Server.getServer().getConfig().WANT_FATIGUE) {
+				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (player.getFatigue() >= player.MAX_FATIGUE) {
 						player.message("@gre@You are too tired to gain experience, get some rest");
 						return;

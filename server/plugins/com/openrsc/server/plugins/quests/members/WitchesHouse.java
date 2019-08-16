@@ -10,7 +10,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
@@ -134,7 +133,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 		}
 		else if (obj.getID() == 71 && obj.getY() == 495) {
 			if (p.getCache().hasKey("witch_spawned") && p.getQuestStage(getQuestId()) == 2) {
-				Npc witch = World.getWorld().getNpcById(NpcId.NORA_T_HAG.id());
+				Npc witch = p.getWorld().getNpcById(NpcId.NORA_T_HAG.id());
 				if (witch != null) {
 					witch.teleport(355, 494);
 
@@ -159,14 +158,14 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 		}
 
 		else if (obj.getID() == 73 && obj.getX() == 351) {
-			Npc witch = World.getWorld().getNpcById(NpcId.NORA_T_HAG.id());
+			Npc witch =p. getWorld().getNpcById(NpcId.NORA_T_HAG.id());
 			if (p.getQuestStage(this) == 3 || p.getQuestStage(getQuestId()) == -1) {
 				doDoor(obj, p);
 				return;
 			}
 			if (!p.getCache().hasKey("witch_spawned")) {
 				message(p, "As you reach out to open the door you hear footsteps inside the house", "The footsteps approach the back door");
-				spawnNpc(NpcId.NORA_T_HAG.id(), 356, 494, 60000);
+				spawnNpc(p.getWorld(), NpcId.NORA_T_HAG.id(), 356, 494, 60000);
 				p.getCache().store("witch_spawned", true);
 			} else {
 				message(p, "The shed door is locked");
@@ -188,7 +187,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 			if (p.getX() <= 355) {
 				doDoor(obj, p);
 				if (p.getCache().hasKey("witch_spawned")) {
-					Npc witch = World.getWorld().getNpcById(NpcId.NORA_T_HAG.id());
+					Npc witch = p.getWorld().getNpcById(NpcId.NORA_T_HAG.id());
 					witch.setBusy(true);
 					sleep(2000);
 					p.message("Through a crack in the door, you see a witch enter the garden");
@@ -289,7 +288,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 				return;
 			}
 			message(p, "A rat appears from a hole and eats the cheese");
-			spawnNpc(NpcId.RAT_WITCHES_HOUSE.id(), 356, 494, 60000);
+			spawnNpc(p.getWorld(), NpcId.RAT_WITCHES_HOUSE.id(), 356, 494, 60000);
 		}
 	}
 
@@ -308,7 +307,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 				p.message("You need to get the magnet yourself to do this quest");
 			} else {
 				p.message("You put the magnet on the rat");
-				Npc rat = World.getWorld().getNpcById(NpcId.RAT_WITCHES_HOUSE.id());
+				Npc rat = p.getWorld().getNpcById(NpcId.RAT_WITCHES_HOUSE.id());
 				removeNpc(rat);
 				message(p, "The rat runs back into his hole",
 					"You hear a click and whirr");
@@ -337,7 +336,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 			return;
 		}
 		n.killedBy(p);
-		Npc nextShape = spawnNpc(n.getID() + 1, n.getX(), n.getY(), 300000);
+		Npc nextShape = spawnNpc(p.getWorld(), n.getID() + 1, n.getX(), n.getY(), 300000);
 
 		p.message("The shapeshifer turns into a "
 			+ npcMessage(nextShape.getID()) + "!");

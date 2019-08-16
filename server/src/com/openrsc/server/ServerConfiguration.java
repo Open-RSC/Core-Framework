@@ -7,6 +7,8 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 public class ServerConfiguration {
@@ -38,6 +40,10 @@ public class ServerConfiguration {
 	 * Server prefix for messages
 	 */
 	public String MESSAGE_PREFIX = "@gre@Runescape Classic:@whi@ ";
+	/**
+	 * Server prefix for invalid arguments
+	 */
+	public String BAD_SYNTAX_PREFIX = MESSAGE_PREFIX +" Invalid Syntax: ::";
 	/**
 	 * whether or not this is a members world
 	 */
@@ -256,6 +262,9 @@ public class ServerConfiguration {
 	public final int DWARVEN_RING_USES = 29;
 	public final int DWARVEN_RING_BONUS = 3;
 
+	public List<String> valuableDrops;
+
+
 	public ImmutableList<String> IGNORED_NETWORK_EXCEPTIONS =
 		ImmutableList.of("An existing connection was forcibly closed by the remote host",
 			"An established connection was aborted by the software in your host machine",
@@ -422,5 +431,7 @@ public class ServerConfiguration {
 		// Make sure config doesn't exceed max values
 		if (VIEW_DISTANCE > 4)
 			VIEW_DISTANCE = 4;
+
+		valuableDrops = Arrays.asList(VALUABLE_DROP_ITEMS.split(","));
 	}
 }

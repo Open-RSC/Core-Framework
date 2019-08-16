@@ -21,6 +21,13 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 	public static final AttributeKey<ConnectionAttachment> attachment = AttributeKey.valueOf("conn-attachment");
 	private LoginPacketHandler loginHandler = new LoginPacketHandler();
 	private static final Logger LOGGER = LogManager.getLogger();
+
+	private final Server server;
+
+	public RSCConnectionHandler(Server server) {
+		this.server = server;
+	}
+
 	@Override
 	public void channelInactive(final ChannelHandlerContext ctx) throws Exception {
 		final Channel channel = ctx.channel();
@@ -40,8 +47,8 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 					player = att.player.get();
 				}
 				if (player == null) {
-					if (packet.getID() == 19) ActionSender.sendInitialServerConfigs(channel);
-					else loginHandler.processLogin(packet, channel);
+					if (packet.getID() == 19) ActionSender.sendInitialServerConfigs(getServer(), channel);
+					else loginHandler.processLogin(packet, channel, getServer());
 				} else {
 					if (loginHandler != null) {
 						loginHandler = null;
@@ -78,7 +85,7 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 
 	@Override
 	public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable e) throws Exception {
-		if (!Server.getServer().getConfig().IGNORED_NETWORK_EXCEPTIONS.stream().anyMatch($it -> Objects.equal($it, e.getMessage()))) {
+		if (!getServer().getConfig().IGNORED_NETWORK_EXCEPTIONS.stream().anyMatch($it -> Objects.equal($it, e.getMessage()))) {
 			 System.out.println("Exception caught in thread!\n" + e);
 
 			 for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
@@ -94,5 +101,9 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 	@Override
 	public void channelReadComplete(ChannelHandlerContext ctx) {
 		ctx.flush();
+	}
+
+	public Server getServer() {
+		return server;
 	}
 }

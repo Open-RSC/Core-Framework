@@ -1,10 +1,8 @@
 package com.openrsc.server.sql.query.logs;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.snapshot.Chatlog;
 import com.openrsc.server.model.snapshot.Snapshot;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.sql.query.Query;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -22,7 +20,7 @@ public final class GameReport extends Query {
 	private boolean suggestsOrMutes, triedApplyAction;
 
 	public GameReport(Player reporter, String reported, byte reason, boolean suggestsOrMutes, boolean triedApplyAction) {
-		super("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "game_reports`(`time`, `reporter`, `reported`, `reason`, `chatlog`, `reporter_x`, `reporter_y`, `reported_x`, `reported_y`, `suggests_or_mutes`, `tried_apply_action`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		super("INSERT INTO `" + reporter.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "game_reports`(`time`, `reporter`, `reported`, `reason`, `chatlog`, `reporter_x`, `reporter_y`, `reported_x`, `reported_y`, `suggests_or_mutes`, `tried_apply_action`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		this.reason = reason;
 		this.reported = reported;
 		this.reporterPlayer = reporter;
@@ -30,12 +28,12 @@ public final class GameReport extends Query {
 		this.triedApplyAction = triedApplyAction;
 
 		long playerish = DataConversions.usernameToHash(reported);
-		Player reportedPlayer = World.getWorld().getPlayer(playerish);
+		Player reportedPlayer = reporter.getWorld().getPlayer(playerish);
 		if (reportedPlayer != null) {
 			this.reported_x = reportedPlayer.getX();
 			this.reported_y = reportedPlayer.getY();
 		}
-		Iterator<Snapshot> i = World.getWorld().getSnapshots().descendingIterator();
+		Iterator<Snapshot> i = reporter.getWorld().getSnapshots().descendingIterator();
 		while (i.hasNext()) {
 			Snapshot s = i.next();
 			if (s instanceof Chatlog) {

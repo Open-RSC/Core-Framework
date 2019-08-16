@@ -1,11 +1,9 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
@@ -16,10 +14,6 @@ import com.openrsc.server.util.rsc.MessageType;
 import java.util.ArrayList;
 
 public class PlayerTradeHandler implements PacketHandler {
-	/**
-	 * World instance
-	 */
-	public static final World world = World.getWorld();
 
 	private boolean busy(Player player) {
 		return player.isBusy() || player.isRanging() || player.accessingBank() || player.getDuel().isDuelActive();
@@ -42,8 +36,8 @@ public class PlayerTradeHandler implements PacketHandler {
 		}
 
 		if (pID == packetOne) { // Sending trade request
-			if (world != null) {
-				affectedPlayer = world.getPlayer(p.readShort());
+			if (player.getWorld() != null) {
+				affectedPlayer = player.getWorld().getPlayer(p.readShort());
 			}
 
 			if (affectedPlayer == null) {
@@ -85,7 +79,7 @@ public class PlayerTradeHandler implements PacketHandler {
 				return;
 			}
 
-			if (!PathValidation.checkPath(player.getLocation(), affectedPlayer.getLocation())) {
+			if (!PathValidation.checkPath(player.getWorld(), player.getLocation(), affectedPlayer.getLocation())) {
 				player.message("There is an obstacle in the way");
 				player.getTrade().resetAll();
 				player.resetPath();
@@ -197,7 +191,7 @@ public class PlayerTradeHandler implements PacketHandler {
 				}
 
 				player.getWorld().getServer().getGameLogger().addQuery(
-					new TradeLog(player.getUsername(), affectedPlayer.getUsername(), myOffer, theirOffer, player.getCurrentIP(), affectedPlayer.getCurrentIP()).build());
+					new TradeLog(player.getWorld(), player.getUsername(), affectedPlayer.getUsername(), myOffer, theirOffer, player.getCurrentIP(), affectedPlayer.getCurrentIP()).build());
 				player.save();
 				affectedPlayer.save();
 				player.message("Trade completed successfully");
@@ -244,12 +238,12 @@ public class PlayerTradeHandler implements PacketHandler {
 					player.setRequiresOfferUpdate(true);
 					continue;
 				}
-				if (tItem.getDef().isUntradable() && !player.isAdmin()) {
+				if (tItem.getDef(player.getWorld()).isUntradable() && !player.isAdmin()) {
 					player.message("This object cannot be traded with other players");
 					player.setRequiresOfferUpdate(true);
 					continue;
 				}
-				if (tItem.getDef().isMembersOnly() && !Server.getServer().getConfig().MEMBER_WORLD) {
+				if (tItem.getDef(player.getWorld()).isMembersOnly() && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 					player.setRequiresOfferUpdate(true);
 					continue;
 				}

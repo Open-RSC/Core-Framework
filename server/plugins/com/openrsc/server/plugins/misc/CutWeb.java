@@ -22,7 +22,7 @@ public class CutWeb implements InvUseOnWallObjectListener, InvUseOnWallObjectExe
 	@Override
 	public void onInvUseOnWallObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == WEB) {
-			if (item.getDef().getWieldPosition() != 4 && item.getID() != ItemId.KNIFE.id()) {
+			if (item.getDef(p.getWorld()).getWieldPosition() != 4 && item.getID() != ItemId.KNIFE.id()) {
 				p.message("Nothing interesting happens");
 				return;
 			}
@@ -30,7 +30,7 @@ public class CutWeb implements InvUseOnWallObjectListener, InvUseOnWallObjectExe
 			if (Formulae.cutWeb()) {
 				p.message("You slice through the web");
 				removeObject(obj);
-				delayedSpawnObject(obj.getLoc(), 30000);
+				delayedSpawnObject(obj.getWorld(), obj.getLoc(), 30000);
 			} else {
 				p.message("You fail to cut through it");
 			}

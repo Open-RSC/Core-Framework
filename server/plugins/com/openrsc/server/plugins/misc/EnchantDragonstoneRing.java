@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.misc;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.external.SpellDef;
 import com.openrsc.server.model.container.Item;
@@ -15,7 +14,7 @@ import static com.openrsc.server.plugins.Functions.sleep;
 public class EnchantDragonstoneRing implements PlayerMageItemListener, PlayerMageItemExecutiveListener {
 	@Override
 	public boolean blockPlayerMageItem(Player p, Integer itemID, Integer spellID) {
-		return (Server.getServer().getConfig().WANT_EQUIPMENT_TAB && itemID.intValue() == ItemId.DRAGONSTONE_RING.id() && spellID.intValue() == 42);
+		return (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && itemID.intValue() == ItemId.DRAGONSTONE_RING.id() && spellID.intValue() == 42);
 	}
 
 	@Override
@@ -38,7 +37,7 @@ public class EnchantDragonstoneRing implements PlayerMageItemListener, PlayerMag
 			}
 			SpellHandler.checkAndRemoveRunes(p,spellDef);
 			p.getInventory().remove(ItemId.DRAGONSTONE_RING.id(),1, false);
-			p.getInventory().add(new Item(item));
+			p.getInventory().add(new Item());
 			SpellHandler.finalizeSpell(p, spellDef);
 		}
 	}

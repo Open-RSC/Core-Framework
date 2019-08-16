@@ -8,7 +8,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
@@ -97,10 +96,10 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 			}
 		} else if (item.getID() == ItemId.CHEST_KEY.id() && obj.getID() == HECTORS_CHEST_CLOSED) {
 			p.message("You unlock the chest");
-			World.getWorld().replaceGameObject(obj,
+			p.getWorld().replaceGameObject(obj,
 				new GameObject(obj.getWorld(), obj.getLocation(), HECTORS_CHEST_OPEN, obj.getDirection(),
 					obj.getType()));
-			World.getWorld().delayedSpawnObject(obj.getLoc(), 3000);
+			p.getWorld().delayedSpawnObject(obj.getLoc(), 3000);
 			removeItem(p, ItemId.CHEST_KEY.id(), 1);
 			message(p, "All that is in the chest is a message");
 			message(p, "You take the message from the chest");
@@ -324,13 +323,13 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 				if (p.getCache().hasKey("rum_delivered") && p.getCache().getBoolean("rum_delivered")) {
 					message(p, "There are a lot of bananas in the crate",
 							"You find your bottle of rum in amoungst the bananas");
-					p.getInventory().add(new Item(ItemId.KARAMJA_RUM.id()));
+					p.getInventory().add(new Item());
 					p.getCache().remove("rum_delivered");
 				}
 				message(p, "Do you want to take a banana?");
 				int wantabanana = showMenu(p, "Yes", "No");
 				if (wantabanana == 0) {
-					p.getInventory().add(new Item(ItemId.BANANA.id()));
+					p.getInventory().add(new Item());
 					p.playerServerMessage(MessageType.QUEST, "you take a banana");
 				}
 				break;

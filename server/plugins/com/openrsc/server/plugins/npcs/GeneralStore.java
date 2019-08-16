@@ -1,10 +1,12 @@
 package com.openrsc.server.plugins.npcs;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -12,8 +14,6 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
-
-import com.openrsc.server.constants.ItemId;
 
 public final class GeneralStore implements ShopInterface,
 	TalkToNpcExecutiveListener, TalkToNpcListener {
@@ -44,7 +44,7 @@ public final class GeneralStore implements ShopInterface,
 	}
 
 	@Override
-	public Shop[] getShops() {
+	public Shop[] getShops(World world) {
 		if (shops == null) {
 			shops = new Shop[9];
 			shops[0] = new Shop(baseShop, "Dwarven Mine", 143);

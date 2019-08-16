@@ -1,6 +1,5 @@
 package com.openrsc.server.content.market.task;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.content.market.MarketItem;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.container.Item;
@@ -69,7 +68,7 @@ public class NewMarketItemTask extends MarketTask {
 			updateDiscord = true;
 		} else {
 			Item item = new Item(newItem.getItemID(), newItem.getAmount());
-			if (item.getDef().isStackable()) {
+			if (item.getDef(owner.getWorld()).isStackable()) {
 				for (int i = 0; i < newItem.getAmount(); i++) {
 					owner.getInventory().add(new Item(newItem.getItemID(), 1));
 				}
@@ -80,7 +79,7 @@ public class NewMarketItemTask extends MarketTask {
 		}
 		owner.getWorld().getMarket().addRequestOpenAuctionHouseTask(owner);
 		if (updateDiscord) {
-			Server.getServer().getDiscordService().auctionAdd(newItem);
+			owner.getWorld().getServer().getDiscordService().auctionAdd(newItem);
 		}
 	}
 }

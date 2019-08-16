@@ -1,8 +1,8 @@
 package com.openrsc.server.event.custom;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 
 public abstract class BatchEvent extends DelayedEvent {
@@ -11,18 +11,18 @@ public abstract class BatchEvent extends DelayedEvent {
 	private int repeated;
 	private boolean gathering;
 
-	public BatchEvent(Player owner, int delay, String descriptor, int repeatFor, boolean gathering) {
-		super(owner, delay, descriptor);
+	public BatchEvent(World world, Player owner, int delay, String descriptor, int repeatFor, boolean gathering) {
+		super(world, owner, delay, descriptor);
 		this.gathering = gathering;
-		if (Server.getServer().getConfig().BATCH_PROGRESSION) this.repeatFor = repeatFor;
+		if (getWorld().getServer().getConfig().BATCH_PROGRESSION) this.repeatFor = repeatFor;
 		else if (repeatFor > 1000) this.repeatFor = repeatFor - 1000; // Mining default
 		else this.repeatFor = 1; // Always 1, otherwise.
 		ActionSender.sendProgressBar(owner, delay, repeatFor);
 		owner.setBusyTimer(delay + 200);
 	}
 	
-	public BatchEvent(Player owner, int delay, String descriptor, int repeatFor) {
-		this(owner, delay, descriptor, repeatFor, true);
+	public BatchEvent(World world, Player owner, int delay, String descriptor, int repeatFor) {
+		this(world, owner, delay, descriptor, repeatFor, true);
 	}
 
 	@Override

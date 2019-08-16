@@ -1,6 +1,5 @@
 package com.openrsc.server.event.rsc.impl;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.PathValidation;
@@ -23,8 +22,8 @@ public class ThrowingEvent extends GameTickEvent {
 
 	private Mob target;
 
-	public ThrowingEvent(Player owner, Mob victim) {
-		super(owner, 1, "Throwing Event");
+	public ThrowingEvent(World world, Player owner, Mob victim) {
+		super(world, owner, 1, "Throwing Event");
 		this.target = victim;
 	}
 
@@ -87,7 +86,7 @@ public class ThrowingEvent extends GameTickEvent {
 
 			boolean canShoot = System.currentTimeMillis() - getPlayerOwner().getAttribute("rangedTimeout", 0L) > 1900;
 			if (canShoot) {
-				if (!PathValidation.checkPath(getPlayerOwner().getLocation(), target.getLocation())) {
+				if (!PathValidation.checkPath(getWorld(), getPlayerOwner().getLocation(), target.getLocation())) {
 					getPlayerOwner().message("I can't get a clear shot from here");
 					getPlayerOwner().resetRange();
 					stop();
@@ -122,7 +121,7 @@ public class ThrowingEvent extends GameTickEvent {
 				}
 				Item rangeType;
 				int slot;
-				if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
+				if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 					slot = getPlayerOwner().getEquipment().hasEquipped(throwingID);
 					if (slot < 0)
 						return;
@@ -131,7 +130,7 @@ public class ThrowingEvent extends GameTickEvent {
 						return;
 					rangeType.setAmount(rangeType.getAmount()-1);
 					if (rangeType.getAmount() <= 0) {
-						getPlayerOwner().updateWornItems(rangeType.getDef().getWieldPosition(), getPlayerOwner().getSettings().getAppearance().getSprite(rangeType.getDef().getWieldPosition()));
+						getPlayerOwner().updateWornItems(rangeType.getDef(getWorld()).getWieldPosition(), getPlayerOwner().getSettings().getAppearance().getSprite(rangeType.getDef(getWorld()).getWieldPosition()));
 						rangeType = null;
 					}
 					getPlayerOwner().getEquipment().equip(slot, rangeType);
@@ -189,7 +188,7 @@ public class ThrowingEvent extends GameTickEvent {
 					GroundItem knivesOrDarts = getFloorItem(throwingID);
 					if (!Npc.handleRingOfAvarice(getPlayerOwner(), new Item(throwingID, 1))) {
 						if (knivesOrDarts == null) {
-							World.getWorld().registerItem(new GroundItem(getPlayerOwner().getWorld(), throwingID, target.getX(), target.getY(), 1, getPlayerOwner()));
+							getWorld().registerItem(new GroundItem(getPlayerOwner().getWorld(), throwingID, target.getX(), target.getY(), 1, getPlayerOwner()));
 						} else {
 							knivesOrDarts.setAmount(knivesOrDarts.getAmount() + 1);
 						}
@@ -202,7 +201,7 @@ public class ThrowingEvent extends GameTickEvent {
 						target.startPoisonEvent();
 					}
 				}
-				Server.getServer().getGameEventHandler().add(new ProjectileEvent(getPlayerOwner(), target, damage, 2));
+				getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getWorld(), getPlayerOwner(), target, damage, 2));
 				getOwner().setKillType(2);
 			}
 		}

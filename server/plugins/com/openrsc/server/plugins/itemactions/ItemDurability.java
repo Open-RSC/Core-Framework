@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.itemactions;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
@@ -24,28 +23,28 @@ public class ItemDurability implements InvActionListener, InvActionExecutiveList
 			int charges;
 			if (item.getID() == ItemId.RING_OF_RECOIL.id()) {
 				if (player.getCache().hasKey("ringofrecoil"))
-					charges = Server.getServer().getConfig().RING_OF_RECOIL_LIMIT - player.getCache().getInt("ringofrecoil");
+					charges = player.getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT - player.getCache().getInt("ringofrecoil");
 				else
-					charges = Server.getServer().getConfig().RING_OF_RECOIL_LIMIT;
+					charges = player.getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT;
 				player.message("Your Ring of Recoil has " + charges + "/" +
-					Server.getServer().getConfig().RING_OF_RECOIL_LIMIT + " charges remaining.");
+					player.getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT + " charges remaining.");
 			} else if (item.getID() == ItemId.RING_OF_FORGING.id()) {
 				if (player.getCache().hasKey("ringofforging"))
-					charges = Server.getServer().getConfig().RING_OF_RECOIL_LIMIT - player.getCache().getInt("ringofforging");
+					charges = player.getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT - player.getCache().getInt("ringofforging");
 				else
-					charges = Server.getServer().getConfig().RING_OF_FORGING_USES;
+					charges = player.getWorld().getServer().getConfig().RING_OF_FORGING_USES;
 				player.message("Your Ring of Forging has " + charges + "/" +
-					Server.getServer().getConfig().RING_OF_FORGING_USES + " charges remaining.");
+					player.getWorld().getServer().getConfig().RING_OF_FORGING_USES + " charges remaining.");
 			} else if (item.getID() == ItemId.DWARVEN_RING.id()) {
 				if (player.getCache().hasKey("dwarvenring"))
-					charges = Server.getServer().getConfig().DWARVEN_RING_USES - player.getCache().getInt("dwarvenring");
+					charges = player.getWorld().getServer().getConfig().DWARVEN_RING_USES - player.getCache().getInt("dwarvenring");
 				else
-					charges = Server.getServer().getConfig().DWARVEN_RING_USES;
+					charges = player.getWorld().getServer().getConfig().DWARVEN_RING_USES;
 				player.message("Your Dwarven Ring has " + charges + "/" +
-					Server.getServer().getConfig().DWARVEN_RING_USES + " charges remaining.");
+					player.getWorld().getServer().getConfig().DWARVEN_RING_USES + " charges remaining.");
 			}
 		} else if (command.equalsIgnoreCase("break")) {
-			player.message("Are you sure you want to break your " + item.getDef().getName() + "?");
+			player.message("Are you sure you want to break your " + item.getDef(player.getWorld()).getName() + "?");
 			sleep(300);
 			int choice = Functions.showMenu(player, "Yes", "No");
 			if (choice != 0)

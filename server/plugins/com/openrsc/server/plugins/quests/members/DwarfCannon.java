@@ -9,7 +9,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
@@ -185,22 +184,22 @@ public class DwarfCannon
 
 								switch (cannonStage) {
 									case 1:
-										p.getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id()));
+										p.getInventory().add(new Item());
 										break;
 									case 2:
-										p.getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id()));
-										p.getInventory().add(new Item(ItemId.DWARF_CANNON_STAND.id()));
+										p.getInventory().add(new Item());
+										p.getInventory().add(new Item());
 										break;
 									case 3:
-										p.getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id()));
-										p.getInventory().add(new Item(ItemId.DWARF_CANNON_STAND.id()));
-										p.getInventory().add(new Item(ItemId.DWARF_CANNON_BARRELS.id()));
+										p.getInventory().add(new Item());
+										p.getInventory().add(new Item());
+										p.getInventory().add(new Item());
 										break;
 									case 4:
-										p.getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id()));
-										p.getInventory().add(new Item(ItemId.DWARF_CANNON_STAND.id()));
-										p.getInventory().add(new Item(ItemId.DWARF_CANNON_BARRELS.id()));
-										p.getInventory().add(new Item(ItemId.DWARF_CANNON_FURNACE.id()));
+										p.getInventory().add(new Item());
+										p.getInventory().add(new Item());
+										p.getInventory().add(new Item());
+										p.getInventory().add(new Item());
 										break;
 								}
 								p.getCache().remove("cannon_stage");
@@ -572,7 +571,7 @@ public class DwarfCannon
 			// only allow at quest stage and before being rescued
 			if (player.getQuestStage(this) == 3 && !player.getCache().hasKey("savedlollk")) {
 				message(player, "you search the crate", "inside you see a dwarf child tied up", "you untie the child");
-				Npc lollk = spawnNpc(NpcId.LOLLK.id(), 619, 3314, 60000);
+				Npc lollk = spawnNpc(player.getWorld(), NpcId.LOLLK.id(), 619, 3314, 60000);
 				lollk.face(player);
 				player.face(lollk);
 				npcTalk(player, lollk, "thank the heavens, you saved me", "i thought i'd be goblin lunch for sure");
@@ -617,7 +616,7 @@ public class DwarfCannon
 						return;
 					}
 					message(player, "you use your tool kit and attempt to fix the pipe");
-					showBubble(player, new Item(ItemId.TOOL_KIT.id()));
+					showBubble(player, new Item());
 					if (failToMultiCannon()) {
 						message(player, "it's too hard, you fail to fix it", "maybe you should try again");
 					} else {
@@ -630,7 +629,7 @@ public class DwarfCannon
 						return;
 					}
 					message(player, "you use your tool kit and attempt to fix the barrel");
-					showBubble(player, new Item(ItemId.TOOL_KIT.id()));
+					showBubble(player, new Item());
 					if (failToMultiCannon()) {
 						message(player, "it's too hard, you fail to fix it", "maybe you should try again");
 					} else {
@@ -643,7 +642,7 @@ public class DwarfCannon
 						return;
 					}
 					message(player, "you use your tool kit and attempt to fix the axle");
-					showBubble(player, new Item(ItemId.TOOL_KIT.id()));
+					showBubble(player, new Item());
 					if (failToMultiCannon()) {
 						message(player, "it's too hard, you fail to fix it", "maybe you should try again");
 					} else {
@@ -656,7 +655,7 @@ public class DwarfCannon
 						return;
 					}
 					message(player, "you use your tool kit and attempt to fix the shaft");
-					showBubble(player, new Item(ItemId.TOOL_KIT.id()));
+					showBubble(player, new Item());
 					if (failToMultiCannon()) {
 						message(player, "it's too hard, you fail to fix it", "maybe you should try again");
 					} else {
@@ -686,7 +685,7 @@ public class DwarfCannon
 			if (p.getQuestStage(this) == 2 && !p.getCache().hasKey("grabed_dwarf_remains")) {
 				p.getCache().store("grabed_dwarf_remains", true);
 			}
-			World.getWorld().unregisterItem(i);
+			p.getWorld().unregisterItem(i);
 			addItem(p, ItemId.DWARF_REMAINS.id(), 1);
 		}
 	}

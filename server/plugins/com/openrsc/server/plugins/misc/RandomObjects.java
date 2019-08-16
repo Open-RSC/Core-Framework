@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.misc;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
@@ -99,8 +98,8 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 				owner.setBusy(true);
 				owner.message("You twist the stone tile to one side");
 				if (owner.getQuestStage(Quests.GRAND_TREE) == -1) {
-					Server.getServer().getGameEventHandler().add(
-						new ShortEvent(owner, "Gnome Tree Stone") {
+					owner.getWorld().getServer().getGameEventHandler().add(
+						new ShortEvent(owner.getWorld(), owner, "Gnome Tree Stone") {
 							public void action() {
 								owner.message("It reveals a ladder, you climb down");
 								owner.teleport(703, 3284, false);
@@ -170,7 +169,7 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 			return true;
 		if (obj.getLocation().getX() == 94 && obj.getLocation().getY() == 521
 			&& obj.getID() == 60) {
-			if (Server.getServer().getConfig().MEMBER_WORLD) {
+			if (player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 				return true;
 			}
 		}

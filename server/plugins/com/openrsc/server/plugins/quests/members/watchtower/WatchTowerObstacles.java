@@ -1,7 +1,6 @@
 package com.openrsc.server.plugins.quests.members.watchtower;
 
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
@@ -114,7 +113,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 		}
 		else if (obj.getID() == WATCHTOWER_LEVER) {
 			replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), 1015, obj.getDirection(), obj.getType()));
-			delayedSpawnObject(obj.getLoc(), 2000);
+			delayedSpawnObject(obj.getWorld(), obj.getLoc(), 2000);
 			p.message("You pull the lever");
 			if (p.getQuestStage(Quests.WATCHTOWER) == 10) {
 				p.message("The magic forcefield activates");
@@ -292,7 +291,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 				addItem(p, ItemId.ROCK_CAKE.id(), 1);
 				p.incExp(Skills.THIEVING, 64, true);
 				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), ROCK_CAKE_COUNTER_EMPTY, obj.getDirection(), obj.getType()));
-				delayedSpawnObject(obj.getLoc(), 5000);
+				delayedSpawnObject(obj.getWorld(), obj.getLoc(), 5000);
 			}
 		}
 		else if (obj.getID() == ROCK_CAKE_COUNTER_EMPTY) {
@@ -306,7 +305,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 			openChest(obj, 2000, 1002);
 			p.message("Ahh! there is a poison spider inside");
 			p.message("Someone's idea of a joke...");
-			Npc spider = spawnNpc(NpcId.POISON_SPIDER.id(), obj.getX(), obj.getY() + 1, 60000 * 5);
+			Npc spider = spawnNpc(p.getWorld(), NpcId.POISON_SPIDER.id(), obj.getX(), obj.getY() + 1, 60000 * 5);
 			spider.startCombat(p);
 			sleep(1600);
 			p.message("The chest snaps shut");
@@ -340,7 +339,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 									"Do you want to get hurt or something ?");
 							} else {
 								removeItem(p, ItemId.COINS.id(), 20);
-								if (Server.getServer().getConfig().WANT_FATIGUE) {
+								if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
 									if (p.getFatigue() >= 7500) {
 										p.message("You are too tired to attempt this jump");
 										return;
@@ -356,7 +355,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 							p.message("The guard blocks your path");
 						}
 					} else {
-						if (Server.getServer().getConfig().WANT_FATIGUE) {
+						if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
 							if (p.getFatigue() >= 7500) {
 								p.message("You are too tired to attempt this jump");
 								return;
@@ -502,19 +501,19 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 		int choosenReward = (int) (Math.random() * randomChestReward.length);
 		if (choosenReward == 0) {
 			playerTalk(p, null, "Hey! a scorpion is in here!");
-			Npc scorp = spawnNpc(NpcId.POISON_SCORPION.id(), o.getX() - 1, o.getY(), 60000 * 5);
+			Npc scorp = spawnNpc(p.getWorld(), NpcId.POISON_SCORPION.id(), o.getX() - 1, o.getY(), 60000 * 5);
 			scorp.startCombat(p);
 		} else if (choosenReward == 1) {
 			playerTalk(p, null, "Oh no, not one of these spider things!");
-			Npc spider = spawnNpc(NpcId.POISON_SPIDER.id(), o.getX() - 1, o.getY(), 60000 * 5);
+			Npc spider = spawnNpc(p.getWorld(), NpcId.POISON_SPIDER.id(), o.getX() - 1, o.getY(), 60000 * 5);
 			spider.startCombat(p);
 		} else if (choosenReward == 2) {
 			playerTalk(p, null, "How on earth did this dwarf get in here ?");
-			Npc dwarf = spawnNpc(NpcId.CHAOS_DWARF.id(), o.getX() - 1, o.getY(), 60000 * 5);
+			Npc dwarf = spawnNpc(p.getWorld(), NpcId.CHAOS_DWARF.id(), o.getX() - 1, o.getY(), 60000 * 5);
 			dwarf.startCombat(p);
 		} else if (choosenReward == 3) {
 			playerTalk(p, null, "Ugh! a dirty rat!");
-			spawnNpc(NpcId.RAT_LVL8.id(), o.getX() - 1, o.getY(), 60000 * 5);
+			spawnNpc(p.getWorld(), NpcId.RAT_LVL8.id(), o.getX() - 1, o.getY(), 60000 * 5);
 		} else if (choosenReward == 4) {
 			playerTalk(p, null, "Oh dear, I bet these apples taste disgusting");
 			addItem(p, ItemId.ROTTEN_APPLES.id(), 1);

@@ -341,7 +341,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 							Npc n = Functions.getNearestNpc(player, NpcId.BLACK_KNIGHT.id(), 7);
 							if (!n.isChasing()) {
 								n.setChasing(player);
-								new AggroEvent(n, player);
+								new AggroEvent(n.getWorld(), n, player);
 							}
 						}
 					}
@@ -360,7 +360,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 						for (Npc n : npcs) {
 							if (!n.isChasing()) {
 								n.setChasing(player);
-								new AggroEvent(n, player);
+								new AggroEvent(n.getWorld(), n, player);
 							} else {
 								countNotAbleChase++;
 							}

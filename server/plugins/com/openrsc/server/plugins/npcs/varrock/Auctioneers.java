@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -48,14 +47,14 @@ public class Auctioneers implements TalkToNpcExecutiveListener, TalkToNpcListene
 				player.message("As an Iron Man, you cannot use the Auction.");
 				return;
 			}
-			if (Server.getServer().getConfig().WANT_BANK_PINS) {
+			if (player.getWorld().getServer().getConfig().WANT_BANK_PINS) {
 				if (player.getCache().hasKey("bank_pin") && !player.getAttribute("bankpin", false)) {
 					String pin = getBankPinInput(player);
 					if (pin == null) {
 						return;
 					}
 					try {
-						PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+						PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 						statement.setString(1, player.getUsername());
 						ResultSet result = statement.executeQuery();
 						if (result.next()) {
@@ -109,14 +108,14 @@ public class Auctioneers implements TalkToNpcExecutiveListener, TalkToNpcListene
 					p.message("As an Iron Man, you cannot use the Auction.");
 					return;
 				}
-				if (Server.getServer().getConfig().WANT_BANK_PINS) {
+				if (p.getWorld().getServer().getConfig().WANT_BANK_PINS) {
 					if (p.getCache().hasKey("bank_pin") && !p.getAttribute("bankpin", false)) {
 						String pin = getBankPinInput(p);
 						if (pin == null) {
 							return;
 						}
 						try {
-							PreparedStatement statement = p.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+							PreparedStatement statement = p.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + p.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 							statement.setString(1, p.getUsername());
 							ResultSet result = statement.executeQuery();
 							if (result.next()) {
@@ -143,14 +142,14 @@ public class Auctioneers implements TalkToNpcExecutiveListener, TalkToNpcListene
 					p.message("As an Iron Man, you cannot use the Auction.");
 					return;
 				}
-				if (Server.getServer().getConfig().WANT_BANK_PINS) {
+				if (p.getWorld().getServer().getConfig().WANT_BANK_PINS) {
 					if (p.getCache().hasKey("bank_pin") && !p.getAttribute("bankpin", false)) {
 						String pin = getBankPinInput(p);
 						if (pin == null) {
 							return;
 						}
 						try {
-							PreparedStatement statement = p.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+							PreparedStatement statement = p.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + p.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 							statement.setString(1, p.getUsername());
 							ResultSet result = statement.executeQuery();
 							if (result.next()) {

@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.misc;
 
-import com.openrsc.server.Server;
-import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
@@ -28,7 +27,7 @@ public class RawEssence implements ObjectActionListener, ObjectActionExecutiveLi
 			return;
 		}
 
-		player.setBatchEvent(new BatchEvent(player, Server.getServer().getConfig().GAME_TICK, "Mining rune essence", player.getInventory().getFreeSlots(), true) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Mining rune essence", player.getInventory().getFreeSlots(), true) {
 			public void action() {
 				addItem(player, ItemId.RUNE_ESSENCE.id(), 1);
 				player.incExp(Skills.MINING, 20, true);

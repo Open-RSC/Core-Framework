@@ -1,12 +1,10 @@
 package com.openrsc.server.plugins.commands;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
 import com.openrsc.server.sql.query.logs.StaffLog;
@@ -23,6 +21,10 @@ import java.util.List;
 
 public final class Event implements CommandListener {
 	public static final Logger LOGGER = LogManager.getLogger(Event.class);
+
+	public static String messagePrefix = null;
+	public static String badSyntaxPrefix = null;
+
 	private static final String[] towns = {"varrock", "falador", "draynor", "portsarim", "karamja", "alkharid",
 		"lumbridge", "edgeville", "castle", "taverly", "clubhouse", "seers", "barbarian", "rimmington", "catherby",
 		"ardougne", "yanille", "lostcity", "gnome", "shilovillage", "tutorial", "modroom", "entrana"};
@@ -35,8 +37,17 @@ public final class Event implements CommandListener {
 		Point.location(703, 527), Point.location(400, 850), Point.location(217, 740), Point.location(75, 1641), Point.location(425,564)};
 
 	public void onCommand(String cmd, String[] args, Player player) {
-		if (isCommandAllowed(player, cmd))
+		if (isCommandAllowed(player, cmd)) {
+
+			if(messagePrefix == null) {
+				messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
+			}
+			if(badSyntaxPrefix == null) {
+				badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
+			}
+
 			handleCommand(cmd, args, player);
+		}
 	}
 
 	public boolean isCommandAllowed(Player player, String cmd) {
@@ -86,13 +97,13 @@ public final class Event implements CommandListener {
 					}
 				}
 				catch(NumberFormatException ex) {
-					p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+					p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 					town = args[1];
 					isTown = true;
 				}
 			}
 			else if(args.length >= 3) {
-				p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+				p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 				try {
 					x = Integer.parseInt(args[1]);
 				}
@@ -139,7 +150,7 @@ public final class Event implements CommandListener {
 				// townFound will == -1 when not found
 				if(townIndex == -1) {
 					// townIndex to find a town, look for a player instead...
-					Player tpTo = world.getPlayer(DataConversions.usernameToHash(town));
+					Player tpTo = player.getWorld().getPlayer(DataConversions.usernameToHash(town));
 
 					if (tpTo == null) {
 						player.message(messagePrefix + "Invalid target");
@@ -157,7 +168,7 @@ public final class Event implements CommandListener {
 				}
 			}
 			else {
-				if(!world.withinWorld(x, y)) {
+				if(!player.getWorld().withinWorld(x, y)) {
 					player.message(messagePrefix + "Invalid coordinates");
 					return;
 				}
@@ -181,7 +192,7 @@ public final class Event implements CommandListener {
 		}
 		else if (cmd.equalsIgnoreCase("return")) {
 			Player p = args.length > 0 ?
-				world.getPlayer(DataConversions.usernameToHash(args[0])) :
+				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
 			if(p == null) {
@@ -218,7 +229,7 @@ public final class Event implements CommandListener {
 		}
 		else if (cmd.equalsIgnoreCase("invisible") || cmd.equalsIgnoreCase("invis")) {
 			Player p = args.length > 0 ?
-				world.getPlayer(DataConversions.usernameToHash(args[0])) :
+				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
 			if(p == null) {
@@ -267,7 +278,7 @@ public final class Event implements CommandListener {
 		}
 		else if (cmd.equalsIgnoreCase("invulnerable") || cmd.equalsIgnoreCase("invul")) {
 			Player p = args.length > 0 ?
-				world.getPlayer(DataConversions.usernameToHash(args[0])) :
+				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
 			if(p == null) {
@@ -320,7 +331,7 @@ public final class Event implements CommandListener {
 			}
 
 			String targetUsername	= args[0];
-			Player target			= world.getPlayer(DataConversions.usernameToHash(targetUsername));
+			Player target			= player.getWorld().getPlayer(DataConversions.usernameToHash(targetUsername));
 
 			String currentIp = null;
 			if (target == null) {
@@ -328,7 +339,7 @@ public final class Event implements CommandListener {
 					messagePrefix + "No online character found named '" + targetUsername + "'.. checking database..");
 				try {
 					PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection()
-						.prepareStatement("SELECT `login_ip` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players` WHERE `username`=?");
+						.prepareStatement("SELECT `login_ip` FROM `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players` WHERE `username`=?");
 					statement.setString(1, targetUsername);
 					ResultSet result = statement.executeQuery();
 					if (!result.next()) {
@@ -354,7 +365,7 @@ public final class Event implements CommandListener {
 
 			try {
 				PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection()
-					.prepareStatement("SELECT `username`, `group_id` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players` WHERE `login_ip` LIKE ?");
+					.prepareStatement("SELECT `username`, `group_id` FROM `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players` WHERE `login_ip` LIKE ?");
 				statement.setString(1, currentIp);
 				ResultSet result = statement.executeQuery();
 
@@ -390,7 +401,7 @@ public final class Event implements CommandListener {
 				}
 				for (int i = 0; i < names.size(); i++) {
 
-					builder.append("@yel@").append(World.getWorld().getPlayer(DataConversions.usernameToHash(names.get(i))) != null
+					builder.append("@yel@").append(player.getWorld().getPlayer(DataConversions.usernameToHash(names.get(i))) != null
 						? "@gre@" : "@red@").append(names.get(i));
 
 					if (i != names.size() - 1) {
@@ -431,15 +442,15 @@ public final class Event implements CommandListener {
 				player.message(messagePrefix + "Could not enable seers party hall " + (upstairs ? "upstairs" : "downstairs") + " object exists: " + existingObject.getGameObjectDef().getName());
 			}
 			else if(existingObject != null && existingObject.getType() != 1 && (existingObject.getID() == 18 || existingObject.getID() == 17)) {
-				World.getWorld().unregisterGameObject(existingObject);
+				player.getWorld().unregisterGameObject(existingObject);
 				player.message(messagePrefix + "Seers party hall " + (upstairs ? "upstairs" : "downstairs") + " has been disabled.");
 			} else {
 				GameObject newObject = new GameObject(player.getWorld(), objectLoc, 18, 0, 0);
-				World.getWorld().registerGameObject(newObject);
-				Server.getServer().getGameEventHandler().add(new SingleEvent(null, time * 60000, "Unregister Seers Party Hall") {
+				player.getWorld().registerGameObject(newObject);
+				player.getWorld().getServer().getGameEventHandler().add(new SingleEvent(player.getWorld(), null, time * 60000, "Unregister Seers Party Hall") {
 					@Override
 					public void action() {
-						World.getWorld().unregisterGameObject(newObject);
+						player.getWorld().unregisterGameObject(newObject);
 					}
 				});
 				player.message(messagePrefix + "Seers party hall " + (upstairs ? "upstairs" : "downstairs") + " has been enabled.");
@@ -512,13 +523,13 @@ public final class Event implements CommandListener {
 				return;
 			}
 
-			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 			if (args.length == 1) {
-				player.message(messagePrefix + p.getStaffName() + "@whi@ has group " + Group.getStaffPrefix(p.getGroupID()) + Group.GROUP_NAMES.get(p.getGroupID()) + (player.isDev() ? " (" + p.getGroupID() + ")" : ""));
+				player.message(messagePrefix + p.getStaffName() + "@whi@ has group " + Group.getStaffPrefix(p.getWorld(), p.getGroupID()) + Group.GROUP_NAMES.get(p.getGroupID()) + (player.isDev() ? " (" + p.getGroupID() + ")" : ""));
 			} else if (args.length >= 2){
 				if (!player.isAdmin()) {
 					player.message(messagePrefix + "You do not have permission to modify users' group.");
@@ -554,15 +565,15 @@ public final class Event implements CommandListener {
 				}
 
 				if (player.getGroupID() >= newGroup || player.getGroupID() >= p.getGroupID()) {
-					player.message(messagePrefix + "You can't to set " + p.getStaffName() + "@whi@ to group " + Group.getStaffPrefix(newGroup) + newGroupName + (player.isDev() ? " (" + newGroup + ")" : ""));
+					player.message(messagePrefix + "You can't to set " + p.getStaffName() + "@whi@ to group " + Group.getStaffPrefix(p.getWorld(), newGroup) + newGroupName + (player.isDev() ? " (" + newGroup + ")" : ""));
 					return;
 				}
 
 				p.setGroupID(newGroup);
 				if(p.getUsernameHash() != player.getUsernameHash()) {
-					p.message(messagePrefix + player.getStaffName() + "@whi@ has set your group to " + Group.getStaffPrefix(newGroup) + newGroupName + (p.isDev() ? " (" + newGroup + ")" : ""));
+					p.message(messagePrefix + player.getStaffName() + "@whi@ has set your group to " + Group.getStaffPrefix(p.getWorld(), newGroup) + newGroupName + (p.isDev() ? " (" + newGroup + ")" : ""));
 				}
-				player.message(messagePrefix + "Set " + p.getStaffName() + "@whi@ to group " + Group.getStaffPrefix(newGroup) + newGroupName + (player.isDev() ? " (" + newGroup + ")" : ""));
+				player.message(messagePrefix + "Set " + p.getStaffName() + "@whi@ to group " + Group.getStaffPrefix(p.getWorld(), newGroup) + newGroupName + (player.isDev() ? " (" + newGroup + ")" : ""));
 
 				player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 23, player.getUsername() + " has changed " + p.getUsername() + "'s group to " + newGroupName + " from " + oldGroupName));
 			}
@@ -617,7 +628,7 @@ public final class Event implements CommandListener {
 				p = player;
 			}
 			catch(NumberFormatException ex) {
-				p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+				p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
 				if (args.length < 2) {
 					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [level] OR ");
@@ -690,8 +701,8 @@ public final class Event implements CommandListener {
 			if(stat != -1) {
 				if(level < 1)
 					level = 1;
-				if(level > Server.getServer().getConfig().PLAYER_LEVEL_LIMIT)
-					level = Server.getServer().getConfig().PLAYER_LEVEL_LIMIT;
+				if(level > player.getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT)
+					level = player.getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT;
 
 				p.getSkills().setLevelTo(stat, level);
 				p.checkEquipment();
@@ -758,7 +769,7 @@ public final class Event implements CommandListener {
 				p = player;
 			}
 			catch(NumberFormatException ex) {
-				p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+				p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
 				if (args.length < 2) {
 					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [level] OR ");

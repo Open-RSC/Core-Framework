@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.minigames.gnomeball;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.event.rsc.impl.BallProjectileEvent;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
@@ -233,7 +232,7 @@ TalkToNpcListener, TalkToNpcExecutiveListener, NpcCommandListener, NpcCommandExe
 				}
 				else {
 					p.setSyncAttribute("throwing_ball_game", true);
-					Server.getServer().getGameEventHandler().add(new BallProjectileEvent(p, n, 3) {
+					p.getWorld().getServer().getGameEventHandler().add(new BallProjectileEvent(p.getWorld(), p, n, 3) {
 						@Override
 						public void doSpell() {
 						}
@@ -269,7 +268,7 @@ TalkToNpcListener, TalkToNpcExecutiveListener, NpcCommandListener, NpcCommandExe
 			p.message("the gnome isn't carrying the ball");
 		}
 		else {
-			showBubble(p, new Item(ItemId.GNOME_BALL.id()));
+			showBubble(p, new Item());
 			message(p, "you attempt to tackle the gnome");
 			if (DataConversions.random(0, 1) == 0) {
 				//successful tackles gives agility xp

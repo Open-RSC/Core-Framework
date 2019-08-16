@@ -134,7 +134,7 @@ public class DigsiteWinch implements ObjectActionListener, ObjectActionExecutive
 
 		Npc workman = getNearestNpc(p, NpcId.WORKMAN.id(), 5);
 		if (workman == null) {
-			workman = spawnNpc(NpcId.WORKMAN.id(), p.getX(), p.getY(), 60000);
+			workman = spawnNpc(p.getWorld(), NpcId.WORKMAN.id(), p.getX(), p.getY(), 60000);
 			workmanWasSpawned = true;
 		} else {
 			workmanWasSpawned = false;

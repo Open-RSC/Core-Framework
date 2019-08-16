@@ -8,7 +8,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
@@ -196,7 +195,7 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 								playerTalk(p, n, "thanks");
 								message(p, "gertrude gives you another kitten");
 								p.getInventory().remove(ItemId.COINS.id(), 100);
-								p.getInventory().add(new Item(ItemId.KITTEN.id()));
+								p.getInventory().add(new Item());
 							} else {
 								playerTalk(p, n,
 									"oops, looks like i'm a bit short",
@@ -407,7 +406,7 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 			p.updateQuestStage(getQuestId(), 3);
 			p.getCache().remove("cat_milk");
 			p.getCache().remove("cat_sardine");
-			World.getWorld().unregisterItem(item);
+			p.getWorld().unregisterItem(item);
 		}
 	}
 

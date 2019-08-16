@@ -1,10 +1,9 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.mechanism;
 
-import com.openrsc.server.Server;
-import com.openrsc.server.event.DelayedEvent;
-import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.event.DelayedEvent;
+import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -54,7 +53,7 @@ public class LegendsQuestBullRoarer implements InvActionListener, InvActionExecu
 			message(p, 1300, "...and a tall, dark, charismatic looking native approaches you.");
 			Npc gujuo = getNearestNpc(p, NpcId.GUJUO.id(), 15);
 			if (gujuo == null) {
-				gujuo = spawnNpc(NpcId.GUJUO.id(), p.getX(), p.getY());
+				gujuo = spawnNpc(p.getWorld(), NpcId.GUJUO.id(), p.getX(), p.getY());
 				delayedRemoveGujuo(p, gujuo);
 			}
 			if (gujuo != null) {
@@ -78,7 +77,7 @@ public class LegendsQuestBullRoarer implements InvActionListener, InvActionExecu
 
 	private void delayedRemoveGujuo(Player p, Npc n) {
 		try {
-			Server.getServer().getGameEventHandler().add(new DelayedEvent(null, 60000 * 3, "Delayed Remove Gujuo") {
+			p.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(p.getWorld(), null, 60000 * 3, "Delayed Remove Gujuo") {
 				@Override
 				public void run() {
 					if (!p.isLoggedIn() || p.isRemoved()) {
@@ -108,7 +107,7 @@ public class LegendsQuestBullRoarer implements InvActionListener, InvActionExecu
 					} else {
 						npcTalk(p, n, "I have work to do Bwana, I may see you again...");
 					}
-					Server.getServer().getGameEventHandler().add(new SingleEvent(null, 1900, "Legends Quest Gujuo Disappears") {
+					getWorld().getServer().getGameEventHandler().add(new SingleEvent(p.getWorld(), null, 1900, "Legends Quest Gujuo Disappears") {
 						public void action() {
 							p.message("Gujuo disapears into the Kharazi jungle as swiftly as he appeared...");
 							n.remove();

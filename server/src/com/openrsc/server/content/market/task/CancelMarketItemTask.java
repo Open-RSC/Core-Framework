@@ -1,6 +1,5 @@
 package com.openrsc.server.content.market.task;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.content.market.MarketItem;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.container.Item;
@@ -44,7 +43,7 @@ public class CancelMarketItemTask extends MarketTask {
 		}
 		owner.getWorld().getMarket().addRequestOpenAuctionHouseTask(owner);
 		if (updateDiscord) {
-			Server.getServer().getDiscordService().auctionCancel(item);
+			owner.getWorld().getServer().getDiscordService().auctionCancel(item);
 		}
 	}
 

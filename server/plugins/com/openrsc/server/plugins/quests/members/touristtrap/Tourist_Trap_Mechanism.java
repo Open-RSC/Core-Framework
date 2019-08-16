@@ -1,47 +1,20 @@
 package com.openrsc.server.plugins.quests.members.touristtrap;
 
-import com.openrsc.server.constants.Constants;
-import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.action.DropListener;
-import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
-import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
-import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.action.PickupListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.action.UnWieldListener;
-import com.openrsc.server.plugins.listeners.executive.DropExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.getMaxLevel;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
-import static com.openrsc.server.plugins.Functions.spawnNpc;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener, PickupListener,
 PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener, TalkToNpcExecutiveListener {
@@ -70,7 +43,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 				n.startCombat(player);
 			} else {
 				player.teleport(player.getX(), player.getY());
-				Npc newNpc = spawnNpc(NpcId.MERCENARY.id(), player.getX(), player.getY(), 30000);
+				Npc newNpc = spawnNpc(player.getWorld(), NpcId.MERCENARY.id(), player.getX(), player.getY(), 30000);
 				sleep(650);
 				npcTalk(player, newNpc, "Oi! What are you doing down here?",
 					"You're no slave!");
@@ -765,7 +738,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 			message(p, "Some guards notice you and come over.");
 			Npc mercenary = getNearestNpc(p, NpcId.MERCENARY.id(), 15);
 			if (mercenary != null) {
-				mercenary = spawnNpc(NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
+				mercenary = spawnNpc(p.getWorld(), NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
 				sleep(1000);
 			}
 			npcTalk(p, mercenary, "Oi, what are you two doing?");
@@ -811,7 +784,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 
 	private void failCaveAnaInBarrel(Player p, Npc n) {
 		if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
-			n = spawnNpc(NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
+			n = spawnNpc(p.getWorld(), NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
 			sleep(650);
 			npcTalk(p, n, "Hey, where d'ya think you're going with that Barrel?");
 			p.message("A guard comes over and takes the barrel off you.");
@@ -822,7 +795,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 			message(p, "@gre@Ana: How rude! Why I ought to teach you a lesson.");
 			npcTalk(p, n, "What was that!");
 			p.message("The guards kick the barrel open.!");
-			Npc ana = spawnNpc(NpcId.ANA.id(), p.getX(), p.getY(), 30000);
+			Npc ana = spawnNpc(p.getWorld(), NpcId.ANA.id(), p.getX(), p.getY(), 30000);
 			sleep(650);
 			npcTalk(p, ana, "How dare you say that I'm as heavy as lead?");
 			p.message("The guards drag Ana of and then throw you into a cell.");
@@ -947,7 +920,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 			player.message("@gre@Ana: Don't think for one minute ...");
 			player.message("@gre@Ana: You can just come back and pick me up");
 			player.message("Ana goes out running away");
-			World.getWorld().unregisterItem(item);
+			player.getWorld().unregisterItem(item);
 			return;
 		}
 	}
@@ -983,13 +956,13 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 				}
 				message(p, "You drop the barrel to the floor and Ana gets out.");
 				removeItem(p, ItemId.ANA_IN_A_BARREL.id(), 1);
-				Npc Ana = spawnNpc(NpcId.ANA.id(), p.getX(), p.getY(), 20000);
+				Npc Ana = spawnNpc(p.getWorld(), NpcId.ANA.id(), p.getX(), p.getY(), 20000);
 				sleep(650);
 				npcTalk(p, Ana, "How dare you put me in that barrel you barbarian!");
 				message(p, "Ana's outburst attracts the guards, they come running over.");
 				Npc guard = getNearestNpc(p, NpcId.MERCENARY.id(), 15);
 				if (guard == null || guard.inCombat()) {
-					guard = spawnNpc(NpcId.MERCENARY.id(), p.getX() + diffX, p.getY(), 30000);
+					guard = spawnNpc(p.getWorld(), NpcId.MERCENARY.id(), p.getX() + diffX, p.getY(), 30000);
 				}
 				sleep(650);
 				npcTalk(p, guard, "Hey! What's going on here then?");

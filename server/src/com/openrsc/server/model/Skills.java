@@ -1,6 +1,5 @@
 package com.openrsc.server.model;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.external.SkillDef;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
@@ -157,11 +156,11 @@ public class Skills {
 			if (mob.isPlayer()) {
 				Player player = (Player) mob;
 				skillName = mob.getWorld().getServer().getConstants().getSkills().getSkill(skill).getShortName().toLowerCase();
-				if (newLevel >= Server.getServer().getConfig().PLAYER_LEVEL_LIMIT - 5 && newLevel <= Server.getServer().getConfig().PLAYER_LEVEL_LIMIT - 1) {
-					player.getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(player,
+				if (newLevel >= mob.getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT - 5 && newLevel <= mob.getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT - 1) {
+					mob.getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(player,
 						"has achieved level-" + newLevel + " in " + skillName + "!"));
-				} else if (newLevel == Server.getServer().getConfig().PLAYER_LEVEL_LIMIT) {
-					player.getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(player, "has achieved the maximum level of " + newLevel
+				} else if (newLevel == mob.getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT) {
+					mob.getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(player, "has achieved the maximum level of " + newLevel
 						+ " in " + skillName + ", congratulations!"));
 				}
 				player.message("@gre@You just advanced " + levelDiff + " " + skillName + " level"
@@ -197,7 +196,7 @@ public class Skills {
 
 	public int getMaxStat(int skill) {
 		if (mob instanceof Player) {
-			return getLevelForExperience(getExperience(skill), Server.getServer().getConfig().PLAYER_LEVEL_LIMIT);
+			return getLevelForExperience(getExperience(skill), mob.getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT);
 		} else {
 			return maxStatsMob[skill];
 		}

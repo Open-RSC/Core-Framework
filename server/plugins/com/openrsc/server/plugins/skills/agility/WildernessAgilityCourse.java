@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.skills.agility;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -79,7 +78,7 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 			}
 			return;
 		}
-		if (Server.getServer().getConfig().WANT_FATIGUE) {
+		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
 			if (p.getFatigue() >= p.MAX_FATIGUE && !inArray(obj.getID(), WILD_PIPE, WILD_ROPESWING, STONE, LEDGE)) {
 				p.message("you are too tired to train");
 				return;

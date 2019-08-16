@@ -50,8 +50,8 @@ public class ChristmasCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 
 			int phatId = Formulae.weightedRandomChoice(phatIds, phatWeights);
 			int prizeId = Formulae.weightedRandomChoice(prizeIds, prizeWeights);
-			Item phat = new Item(phatId);
-			Item prize = new Item(prizeId);
+			Item phat = new Item();
+			Item prize = new Item();
 
 			if (DataConversions.random(0, 1) == 1) {
 				otherPlayer.message("The person you pull the cracker with gets the prize");

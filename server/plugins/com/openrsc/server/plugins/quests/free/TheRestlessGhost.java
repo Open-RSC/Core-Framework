@@ -8,7 +8,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
@@ -315,7 +314,7 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
 		if (obj.getID() == GHOST_COFFIN_OPEN && player.getQuestStage(this) == 3
 			&& item.getID() == ItemId.QUEST_SKULL.id()) {
-			spawnNpc(NpcId.GHOST_RESTLESS.id(), 102, 675, 30);
+			spawnNpc(player.getWorld(), NpcId.GHOST_RESTLESS.id(), 102, 675, 30);
 			message(player, "You put the skull in the coffin");
 			removeItem(player, ItemId.QUEST_SKULL.id(), 1);
 			//on completion cache key no longer needed
@@ -364,12 +363,12 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 					return;
 				} else if (!p.getCache().hasKey("tried_grab_skull")) {
 					p.getCache().store("tried_grab_skull", true);
-					World.getWorld().unregisterItem(i);
+					p.getWorld().unregisterItem(i);
 					addItem(p, ItemId.QUEST_SKULL.id(), 1);
 					if (skeleton == null) {
 						//spawn skeleton and give message
 						p.message("Out of nowhere a skeleton appears");
-						skeleton = spawnNpc(NpcId.SKELETON_RESTLESS.id(), 217, 3520, 100);
+						skeleton = spawnNpc(p.getWorld(), NpcId.SKELETON_RESTLESS.id(), 217, 3520, 100);
 						skeleton.setChasing(p);
 					} else {
 						skeleton.setChasing(p);
@@ -378,14 +377,14 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 				}
 				// allow if player had at least one time tried grab skull
 				else {
-					World.getWorld().unregisterItem(i);
+					p.getWorld().unregisterItem(i);
 					addItem(p, ItemId.QUEST_SKULL.id(), 1);
 				}
 
 			}
 			// allow wild if post-quest
 			else if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == -1 && i.getY() <= 425) {
-				World.getWorld().unregisterItem(i);
+				p.getWorld().unregisterItem(i);
 				addItem(p, ItemId.QUEST_SKULL.id(), 1);
 			} else {
 				playerTalk(p, null, "That skull is scary", "I've got no reason to take it", "I think I'll leave it alone");

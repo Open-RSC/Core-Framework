@@ -1,10 +1,8 @@
 package com.openrsc.server.model;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.Region;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.util.rsc.CollisionFlag;
@@ -171,13 +169,13 @@ public class WalkingQueue {
 		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 13");
 
 		// if (mob.isPlayer()) // for debugging
-		return !PathValidation.checkDiagonalPassThroughCollisions(curPoint, nextPoint);
+		return !PathValidation.checkDiagonalPassThroughCollisions(mob.getWorld(), curPoint, nextPoint);
 		// return true; // for debugging
 
 	}
 
 	private boolean checkBlocking(int x, int y, int bit, boolean isCurrentTile) {
-		TileValue t = World.getWorld().getTile(x, y);
+		TileValue t = mob.getWorld().getTile(x, y);
 		/*boolean inFisherKingdom = (mob.getLocation().inBounds(415, 976, 423, 984)
 			|| mob.getLocation().inBounds(511, 976, 519, 984));*/
 		boolean blockedPath = PathValidation.isBlocking(t.traversalMask, (byte) bit, isCurrentTile);
@@ -194,21 +192,21 @@ public class WalkingQueue {
 		/*
 		 * NPC blocking config controlled
 		 */
-		if (Server.getServer().getConfig().NPC_BLOCKING == 0) { // No NPC blocks
+		if (mob.getWorld().getServer().getConfig().NPC_BLOCKING == 0) { // No NPC blocks
 			return false;
-		} else if (Server.getServer().getConfig().NPC_BLOCKING == 1) { // 2 * combat level + 1 blocks AND aggressive
+		} else if (mob.getWorld().getServer().getConfig().NPC_BLOCKING == 1) { // 2 * combat level + 1 blocks AND aggressive
 			if (npc != null && mob.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1) && npc.getDef().isAggressive()) {
 				return true;
 			}
-		} else if (Server.getServer().getConfig().NPC_BLOCKING == 2) { // Any aggressive NPC blocks
+		} else if (mob.getWorld().getServer().getConfig().NPC_BLOCKING == 2) { // Any aggressive NPC blocks
 			if (npc != null && npc.getDef().isAggressive()) {
 				return true;
 			}
-		} else if (Server.getServer().getConfig().NPC_BLOCKING == 3) { // Any attackable NPC blocks
+		} else if (mob.getWorld().getServer().getConfig().NPC_BLOCKING == 3) { // Any attackable NPC blocks
 			if (npc != null && npc.getDef().isAttackable()) {
 				return true;
 			}
-		} else if (Server.getServer().getConfig().NPC_BLOCKING == 4) { // All NPCs block
+		} else if (mob.getWorld().getServer().getConfig().NPC_BLOCKING == 4) { // All NPCs block
 			if (npc != null) {
 				return true;
 			}

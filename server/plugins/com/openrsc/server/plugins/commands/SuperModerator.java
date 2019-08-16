@@ -1,11 +1,9 @@
 package com.openrsc.server.plugins.commands;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.external.ItemDropDef;
 import com.openrsc.server.external.NPCDef;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
 import com.openrsc.server.sql.query.logs.StaffLog;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -20,9 +18,21 @@ import static com.openrsc.server.plugins.commands.Event.LOGGER;
 
 public final class SuperModerator implements CommandListener {
 
+	public static String messagePrefix = null;
+	public static String badSyntaxPrefix = null;
+
 	public void onCommand(String cmd, String[] args, Player player) {
-		if (isCommandAllowed(player, cmd))
+		if (isCommandAllowed(player, cmd)) {
+
+			if(messagePrefix == null) {
+				messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
+			}
+			if(badSyntaxPrefix == null) {
+				badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
+			}
+
 			handleCommand(cmd, args, player);
+		}
 	}
 
 	public boolean isCommandAllowed(Player player, String cmd) {
@@ -41,7 +51,7 @@ public final class SuperModerator implements CommandListener {
 			int valArg = args.length >= 3 ? 2 : 1;
 
 			Player p = args.length >= 3 ?
-				world.getPlayer(DataConversions.usernameToHash(args[0])) :
+				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
 			if (p == null) {
@@ -86,7 +96,7 @@ public final class SuperModerator implements CommandListener {
 			int keyArg = args.length >= 2 ? 1 : 0;
 
 			Player p = args.length >= 2 ?
-				world.getPlayer(DataConversions.usernameToHash(args[0])) :
+				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
 			if (p == null) {
@@ -109,7 +119,7 @@ public final class SuperModerator implements CommandListener {
 			int keyArg = args.length >= 2 ? 1 : 0;
 
 			Player p = args.length >= 2 ?
-				world.getPlayer(DataConversions.usernameToHash(args[0])) :
+				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
 			if (p == null) {
@@ -135,7 +145,7 @@ public final class SuperModerator implements CommandListener {
 				return;
 			}
 
-			Player p = World.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
 			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
@@ -178,7 +188,7 @@ public final class SuperModerator implements CommandListener {
 				return;
 			}
 
-			Player p = World.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
 			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
@@ -209,7 +219,7 @@ public final class SuperModerator implements CommandListener {
 				return;
 			}
 
-			Player p = World.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
 			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
@@ -228,7 +238,7 @@ public final class SuperModerator implements CommandListener {
 		} else if (cmd.equalsIgnoreCase("reloaddrops")) {
 			try {
 				PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement(
-					"SELECT * FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "npcdrops` WHERE npcdef_id = ?");
+					"SELECT * FROM `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "npcdrops` WHERE npcdef_id = ?");
 				for (int i = 0; i < player.getWorld().getServer().getEntityHandler().npcs.size(); i++) {
 					statement.setInt(1, i);
 					ResultSet dropResult = statement.executeQuery();
@@ -252,7 +262,7 @@ public final class SuperModerator implements CommandListener {
 			}
 			player.message(messagePrefix + "Drop tables reloaded");
 		} else if (cmd.equalsIgnoreCase("reloadworld") || cmd.equalsIgnoreCase("reloadland")) {
-			World.getWorld().getWorldLoader().loadWorld();
+			player.getWorld().getWorldLoader().loadWorld();
 			player.message(messagePrefix + "World Reloaded");
 		} else if (cmd.equalsIgnoreCase("summonall")) {
 			if (args.length == 1) {
@@ -261,7 +271,7 @@ public final class SuperModerator implements CommandListener {
 			}
 
 			if (args.length == 0) {
-				for (Player p : world.getPlayers()) {
+				for (Player p : player.getWorld().getPlayers()) {
 					if (p == null)
 						continue;
 
@@ -282,7 +292,7 @@ public final class SuperModerator implements CommandListener {
 					return;
 				}
 				Random rand = DataConversions.getRandom();
-				for (Player p : world.getPlayers()) {
+				for (Player p : player.getWorld().getPlayers()) {
 					if (p != player) {
 						int x = rand.nextInt(width);
 						int y = rand.nextInt(height);
@@ -304,7 +314,7 @@ public final class SuperModerator implements CommandListener {
 			player.message(messagePrefix + "You have summoned all players to " + player.getLocation());
 			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 15, player.getUsername() + " has summoned all players to " + player.getLocation()));
 		} else if (cmd.equalsIgnoreCase("returnall")) {
-			for (Player p : world.getPlayers()) {
+			for (Player p : player.getWorld().getPlayers()) {
 				if (p == null)
 					continue;
 
@@ -321,7 +331,7 @@ public final class SuperModerator implements CommandListener {
 				return;
 			}
 
-			Player p = World.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
 			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
@@ -358,7 +368,7 @@ public final class SuperModerator implements CommandListener {
 				return;
 			}
 
-			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
 			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
@@ -383,7 +393,7 @@ public final class SuperModerator implements CommandListener {
 			}
 		} else if (cmd.equalsIgnoreCase("release")) {
 			Player p = args.length > 0 ?
-				world.getPlayer(DataConversions.usernameToHash(args[0])) :
+				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
 			if (p == null) {
@@ -415,7 +425,7 @@ public final class SuperModerator implements CommandListener {
 
 			long userToBan = DataConversions.usernameToHash(args[0]);
 			String usernameToBan = DataConversions.hashToUsername(userToBan);
-			Player p = World.getWorld().getPlayer(userToBan);
+			Player p = player.getWorld().getPlayer(userToBan);
 
 			int time;
 			if (args.length >= 2) {
@@ -459,10 +469,10 @@ public final class SuperModerator implements CommandListener {
 				player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 11, p, player.getUsername() + " was banned by " + player.getUsername() + " " + (time == -1 ? "permanently" : " for " + time + " minutes")));
 			}
 
-			player.message(messagePrefix + Server.getServer().getPlayerDataProcessor().getDatabase().banPlayer(usernameToBan, time)); // Disabled as it doesn't compile with PlayerDatabaseExecutor extending ThrottleFilter
+			player.message(messagePrefix + player.getWorld().getServer().getPlayerDataProcessor().getDatabase().banPlayer(usernameToBan, time)); // Disabled as it doesn't compile with PlayerDatabaseExecutor extending ThrottleFilter
 		} else if (cmd.equalsIgnoreCase("ipcount")) {
 			Player p = args.length > 0 ?
-				world.getPlayer(DataConversions.usernameToHash(args[0])) :
+				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
 			if (p == null) {
@@ -471,7 +481,7 @@ public final class SuperModerator implements CommandListener {
 			}
 
 			int count = 0;
-			for (Player worldPlayer : world.getPlayers()) {
+			for (Player worldPlayer : player.getWorld().getPlayers()) {
 				if (worldPlayer.getCurrentIP().equals(p.getCurrentIP()))
 					count++;
 			}

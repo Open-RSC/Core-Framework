@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.skills;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
@@ -11,7 +10,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.util.rsc.Formulae;
@@ -40,7 +38,7 @@ public class Smithing implements InvUseOnObjectListener,
 
 	private boolean allowDorics(Player player) {
 		if (player.getQuestStage(Quests.DORICS_QUEST) > -1) {
-			Npc doric = World.getWorld().getNpc(144, 323, 327, 487, 492,
+			Npc doric = player.getWorld().getNpc(144, 323, 327, 487, 492,
 				true);
 			doric.getUpdateFlags().setChatMessage(new ChatMessage(doric,
 				"Heh who said you could use that?", player));
@@ -72,7 +70,7 @@ public class Smithing implements InvUseOnObjectListener,
 		if (player.getSkills().getLevel(Skills.SMITHING) < minSmithingLevel) {
 			player.message("You need at least level "
 				+ minSmithingLevel + " smithing to work with "
-				+ item.getDef().getName().toLowerCase().replaceAll("bar", ""));
+				+ item.getDef(player.getWorld()).getName().toLowerCase().replaceAll("bar", ""));
 			return false;
 		}
 
@@ -196,7 +194,7 @@ public class Smithing implements InvUseOnObjectListener,
 
 		if (makeCount == -1) return;
 
-		player.setBatchEvent(new BatchEvent(player, 600, "Smithing", makeCount, false) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Smithing", makeCount, false) {
 			@Override
 			public void action() {
 				if (player.getInventory().countId(item.getID()) < def.getRequiredBars()) {
@@ -204,7 +202,7 @@ public class Smithing implements InvUseOnObjectListener,
 					interrupt();
 					return;
 				}
-				if (Server.getServer().getConfig().WANT_FATIGUE) {
+				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (player.getFatigue() >= player.MAX_FATIGUE) {
 						player.message("You are too tired to smith");
 						interrupt();
@@ -293,7 +291,7 @@ public class Smithing implements InvUseOnObjectListener,
 		offset += 3;
 
 		if (firstType == 2) {
-			if (!Server.getServer().getConfig().MEMBER_WORLD) {
+			if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 				player.message("This feature is members only");
 				return -1;
 			}
@@ -380,7 +378,7 @@ public class Smithing implements InvUseOnObjectListener,
 
 			// Throwing Knife
 		else if (secondType == 1) {
-			if (!Server.getServer().getConfig().MEMBER_WORLD) {
+			if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 				player.message("This feature is members only");
 				return -1;
 			}
@@ -469,7 +467,7 @@ public class Smithing implements InvUseOnObjectListener,
 
 	private int getCount(ItemSmithingDef def, Item item, Player player) {
 		int count = 1;
-		if (Server.getServer().getConfig().BATCH_PROGRESSION) {
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			String[] options = {
 				"Make 1",
 				"Make 5",

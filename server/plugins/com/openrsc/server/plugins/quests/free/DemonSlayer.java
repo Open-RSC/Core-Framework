@@ -9,7 +9,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
@@ -70,7 +69,7 @@ public class DemonSlayer implements QuestInterface,
 						message(player, "Ok I think I've washed the key down into the sewer",
 							"I'd better go down and get it before someone else finds it");
 						player.getInventory().replace(ItemId.BUCKET_OF_WATER.id(), ItemId.BUCKET.id());
-						World.getWorld().registerItem(
+						player.getWorld().registerItem(
 							new GroundItem(player.getWorld(), ItemId.SILVERLIGHT_KEY_3.id(), 117, 3294, 1, player));
 					}
 					break;
@@ -311,7 +310,7 @@ public class DemonSlayer implements QuestInterface,
 							boneCount = p.getCache().getInt("traiborn_bones");
 
 						while (p.getInventory().countId(ItemId.BONES.id()) > 0) {
-							p.getInventory().remove(new Item(ItemId.BONES.id()));
+							p.getInventory().remove(new Item());
 							p.message("You give Traiborn a set of bones");
 							boneCount++;
 							sleep(600);

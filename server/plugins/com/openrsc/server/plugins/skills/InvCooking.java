@@ -22,12 +22,12 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 	@Override
 	public void onInvUseOnItem(Player player, Item item1, Item item2) {
 		if (item1.getID() == ItemId.CAKE_TIN.id() || item2.getID() == ItemId.CAKE_TIN.id()) {
-			if (player.getInventory().remove(new Item(ItemId.EGG.id())) > -1
-				&& player.getInventory().remove(new Item(ItemId.MILK.id())) > -1
-				&& player.getInventory().remove(new Item(ItemId.POT_OF_FLOUR.id())) > -1
-				&& player.getInventory().remove(new Item(ItemId.CAKE_TIN.id())) > -1) {
-				player.getInventory().add(new Item(ItemId.POT.id()));
-				player.getInventory().add(new Item(ItemId.UNCOOKED_CAKE.id()));
+			if (player.getInventory().remove(new Item()) > -1
+				&& player.getInventory().remove(new Item()) > -1
+				&& player.getInventory().remove(new Item()) > -1
+				&& player.getInventory().remove(new Item()) > -1) {
+				player.getInventory().add(new Item());
+				player.getInventory().add(new Item());
 				player.message("You mix some milk, flour, and egg together into a cake mixture");
 				return;
 			} else {
@@ -52,16 +52,16 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 				player.getInventory().remove(ItemId.JUG_OF_WATER.id(), 1);
 				player.getInventory().remove(ItemId.GRAPES.id(), 1);
 
-				player.setBatchEvent(new BatchEvent(player, 3000, "Cook Wine", 1, false) {
+				player.setBatchEvent(new BatchEvent(player.getWorld(), player, 3000, "Cook Wine", 1, false) {
 					@Override
 					public void action() {
 						if (Formulae.goodWine(getOwner().getSkills().getLevel(Skills.COOKING))) {
 							getOwner().message("You make some nice wine");
-							getOwner().getInventory().add(new Item(ItemId.WINE.id()));
+							getOwner().getInventory().add(new Item());
 							getOwner().incExp(Skills.COOKING, 440, true);
 						} else {
 							getOwner().message("You accidentally make some bad wine");
-							getOwner().getInventory().add(new Item(ItemId.BAD_WINE.id()));
+							getOwner().getInventory().add(new Item());
 						}
 					}
 				});
@@ -85,7 +85,7 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 			} else if (option == 3) {
 				productID = ItemId.UNCOOKED_PITTA_BREAD.id();
 			}
-			if (removeItem(player, new Item(waterContainer), new Item(ItemId.POT_OF_FLOUR.id())) && productID > -1) {
+			if (removeItem(player, new Item(), new Item()) && productID > -1) {
 				int emptyContainer = 0;
 
 				if (waterContainer == ItemId.BUCKET_OF_WATER.id())
@@ -97,7 +97,7 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 				addItem(player, emptyContainer, 1);
 				addItem(player, productID, 1);
 
-				player.message("You mix the water and flour to make some " + new Item(productID, 1).getDef().getName().toLowerCase());
+				player.message("You mix the water and flour to make some " + new Item(productID, 1).getDef(player.getWorld()).getName().toLowerCase());
 			}
 		} else if (isValidCooking(item1, item2)) {
 			handleCombineCooking(player, item1, item2);

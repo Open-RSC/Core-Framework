@@ -1,20 +1,14 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.action.WalkToPointAction;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.states.Action;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
 
 public class GroundItemTake implements PacketHandler {
-	/**
-	 * World instance
-	 */
-	public static final World world = World.getWorld();
 
 	private GroundItem getItem(int id, Point location, Player player) {
 		int x = location.getX();
@@ -56,7 +50,7 @@ public class GroundItemTake implements PacketHandler {
 					return;
 				}
 
-				if (item.getDef().isMembersOnly() && !Server.getServer().getConfig().MEMBER_WORLD) {
+				if (item.getDef().isMembersOnly() && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 					player.sendMemberErrorMessage();
 					return;
 				}

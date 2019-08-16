@@ -5,7 +5,6 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
@@ -108,13 +107,13 @@ public class WoodcutJungle implements ObjectActionListener,
 			GameObject jungleObject = p.getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
 			if (jungleObject != null && jungleObject.getID() == obj.getID()) {
 				if (obj.getID() == JUNGLE_VINE) {
-					World.getWorld().unregisterGameObject(jungleObject);
-					World.getWorld().delayedSpawnObject(obj.getLoc(), 5500); // 5.5 seconds.
+					p.getWorld().unregisterGameObject(jungleObject);
+					p.getWorld().delayedSpawnObject(obj.getLoc(), 5500); // 5.5 seconds.
 					if (!force)
 						message(p, 1200, "You hack your way through the jungle.");
 				} else {
-					World.getWorld().replaceGameObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), JUNGLE_TREE_STUMP, obj.getDirection(), obj.getType()));
-					World.getWorld().delayedSpawnObject(obj.getLoc(), 60 * 1000); // 1 minute.
+					p.getWorld().replaceGameObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), JUNGLE_TREE_STUMP, obj.getDirection(), obj.getType()));
+					p.getWorld().delayedSpawnObject(obj.getLoc(), 60 * 1000); // 1 minute.
 				}
 
 				if (!force)

@@ -8,7 +8,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
@@ -991,22 +990,22 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 
 	private void ropeLadderBackFunction(final Player p) {
 		GameObject ropeLadder = new GameObject(p.getWorld(), Point.location(622, 611), VISUAL_ROPELADDER, 0, 0);
-		World.getWorld().registerGameObject(ropeLadder);
+		p.getWorld().registerGameObject(ropeLadder);
 		message(p, "you climb up the rope ladder");
 		p.teleport(622, 611);
 		message(p, "and drop down on the other side");
 		sleep(2000);
-		World.getWorld().unregisterGameObject(ropeLadder);
+		p.getWorld().unregisterGameObject(ropeLadder);
 	}
 
 	private void ropeLadderInFunction(final Player p) {
 		GameObject ropeLadder = new GameObject(p.getWorld(), Point.location(622, 611), VISUAL_ROPELADDER, 0, 0);
-		World.getWorld().registerGameObject(ropeLadder);
+		p.getWorld().registerGameObject(ropeLadder);
 		message(p, "you climb up the rope ladder");
 		p.teleport(624, 606);
 		message(p, "and drop down on the other side");
 		sleep(2000);
-		World.getWorld().unregisterGameObject(ropeLadder);
+		p.getWorld().unregisterGameObject(ropeLadder);
 	}
 
 	@Override

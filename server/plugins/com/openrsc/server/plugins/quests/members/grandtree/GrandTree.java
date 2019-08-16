@@ -509,7 +509,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 						"guards...guards");
 					p.message("gnome guards hurry up the ladder");
 					// 418, 2992
-					Npc gnome_guard = spawnNpc(NpcId.GNOME_GUARD_PRISON.id(), 714, 1421, 12000);
+					Npc gnome_guard = spawnNpc(p.getWorld(), NpcId.GNOME_GUARD_PRISON.id(), 714, 1421, 12000);
 					npcTalk(p, n, "take him away");
 					p.face(gnome_guard);
 					gnome_guard.face(p);
@@ -539,7 +539,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 						"the sea men use the pass word ka-lu-min");
 					playerTalk(p, jailCharlie, "thanks charlie");
 					sleep(5000);
-					Npc narnode = spawnNpc(NpcId.KING_NARNODE_SHAREEN.id(), 419, 2993, 36000);
+					Npc narnode = spawnNpc(p.getWorld(), NpcId.KING_NARNODE_SHAREEN.id(), 419, 2993, 36000);
 					npcTalk(p, narnode, "adventurer please accept my apologies",
 						"glough had no right to arrest you",
 						"i just think he's scared of humans",
@@ -1347,7 +1347,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 					message(p, "around you, you can see piles of strange looking rocks",
 						"you here the sound of small footsteps coming from the darkness");
 					//glough despawns in 1 minute
-					Npc n = spawnNpc(NpcId.GLOUGH_UNDERGROUND.id(), 709, 3306, 60000);
+					Npc n = spawnNpc(p.getWorld(), NpcId.GLOUGH_UNDERGROUND.id(), 709, 3306, 60000);
 					npcTalk(p, n, "you really are becoming a headache",
 						"well, at least now you can die knowing you were right",
 						"it will save me having to hunt you down",
@@ -1363,7 +1363,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 						"fool.....meet my little friend");
 					message(p, "from the darkness you hear a deep growl",
 						"and the sound of heavy footsteps");
-					Npc demon = spawnNpc(NpcId.BLACK_DEMON_GRANDTREE.id(), 707, 3306, 60000 * 10);
+					Npc demon = spawnNpc(p.getWorld(), NpcId.BLACK_DEMON_GRANDTREE.id(), 707, 3306, 60000 * 10);
 					if (demon != null) {
 						npcYell(p, demon, "grrrrr");
 						demon.setChasing(p);

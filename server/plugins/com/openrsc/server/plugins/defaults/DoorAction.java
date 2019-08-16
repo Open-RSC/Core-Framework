@@ -1,30 +1,18 @@
 package com.openrsc.server.plugins.defaults;
 
-import com.openrsc.server.constants.*;
-import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.doDoor;
-import static com.openrsc.server.plugins.Functions.doGate;
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.replaceObjectDelayed;
-import static com.openrsc.server.plugins.Functions.showBubble;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
-import static com.openrsc.server.plugins.Functions.spawnNpc;
+import static com.openrsc.server.plugins.Functions.*;
 
 /**
  * Does default action to unhandled(non-quest related) doors.
@@ -549,13 +537,13 @@ public class DoorAction {
 				if (p.getY() > 523) {
 					if (getCurrentLevel(p, Skills.FISHING) < 68) {
 						p.setBusy(true);
-						Npc masterFisher = World.getWorld().getNpc(NpcId.MASTER_FISHER.id(), 582, 588,
+						Npc masterFisher = p.getWorld().getNpc(NpcId.MASTER_FISHER.id(), 582, 588,
 							524, 527);
 						if (masterFisher != null) {
 							npcTalk(p, masterFisher, "Hello only the top fishers are allowed in here");
 						}
-						Server.getServer().getGameEventHandler().add(
-							new ShortEvent(p, "Fishing Guild Door") {
+						p.getWorld().getServer().getGameEventHandler().add(
+							new ShortEvent(p.getWorld(), p, "Fishing Guild Door") {
 								public void action() {
 									p.setBusy(false);
 									p.message(
@@ -575,7 +563,7 @@ public class DoorAction {
 					break;
 				}
 				if (getCurrentLevel(p, Skills.MINING) < 60) {
-					Npc dwarf = World.getWorld().getNpc(NpcId.DWARF_MINING_GUILD.id(), 265, 270, 3379, 3380);
+					Npc dwarf = p.getWorld().getNpc(NpcId.DWARF_MINING_GUILD.id(), 265, 270, 3379, 3380);
 					if (dwarf != null) {
 						npcTalk(p, dwarf, "Sorry only the top miners are allowed in there");
 					}
@@ -592,7 +580,7 @@ public class DoorAction {
 				}
 				if (getCurrentLevel(p, Skills.CRAFTING) < 40) {
 					p.setBusy(true);
-					Npc master = World.getWorld().getNpc(NpcId.MASTER_CRAFTER.id(), 341, 349, 599, 612);
+					Npc master = p.getWorld().getNpc(NpcId.MASTER_CRAFTER.id(), 341, 349, 599, 612);
 					if (master != null) {
 						npcTalk(p, master, "Sorry only experienced craftsmen are allowed in here");
 					}
@@ -600,7 +588,7 @@ public class DoorAction {
 					p.setBusy(false);
 					p.message("You need a crafting level of 40 to enter the guild");
 				} else if (!p.getInventory().wielding(ItemId.BROWN_APRON.id())) {
-					Npc master = World.getWorld().getNpc(NpcId.MASTER_CRAFTER.id(), 341, 349, 599, 612);
+					Npc master = p.getWorld().getNpc(NpcId.MASTER_CRAFTER.id(), 341, 349, 599, 612);
 					if (master != null) {
 						npcTalk(p, master, "Where's your brown apron?",
 							"You can't come in here unless you're wearing a brown apron");
@@ -615,14 +603,14 @@ public class DoorAction {
 					break;
 				}
 				if (getCurrentLevel(p, Skills.COOKING) < 32) {
-					Npc chef = World.getWorld().getNpc(NpcId.HEAD_CHEF.id(), 176, 181, 480, 487);
+					Npc chef = p.getWorld().getNpc(NpcId.HEAD_CHEF.id(), 176, 181, 480, 487);
 					if (chef != null) {
 						npcTalk(p, chef, "Sorry. Only the finest chefs are allowed in here");
 					}
 					sleep(600);
 					p.message("You need a cooking level of 32 to enter");
 				} else if (!p.getInventory().wielding(ItemId.CHEFS_HAT.id())) {
-					Npc chef = World.getWorld().getNpc(NpcId.HEAD_CHEF.id(), 176, 181, 480, 487);
+					Npc chef = p.getWorld().getNpc(NpcId.HEAD_CHEF.id(), 176, 181, 480, 487);
 					if (chef != null) {
 						npcTalk(p, chef, "Where's your chef's hat",
 							"You can't come in here unless you're wearing a chef's hat");
@@ -637,7 +625,7 @@ public class DoorAction {
 					break;
 				}
 				if (getCurrentLevel(p, Skills.MAGIC) < 66) {
-					Npc wizard = World.getWorld().getNpc(NpcId.HEAD_WIZARD.id(), 596, 597, 755, 758);
+					Npc wizard = p.getWorld().getNpc(NpcId.HEAD_WIZARD.id(), 596, 597, 755, 758);
 					if (wizard != null) {
 						npcTalk(p, wizard, "You need a magic level of 66 to get in here",
 							"The magical energy in here is unsafe for those below that level");
@@ -710,7 +698,7 @@ public class DoorAction {
 
 			case 67: // Lost City Market Door (117, 3539), (116, 3537) NPC: 221
 				if (p.getLocation().getX() == 115 || p.getLocation().getY() == 3539) {
-					Npc n = World.getWorld().getNpc(NpcId.DOORMAN.id(), 105, 116, 3536, 3547);
+					Npc n = p.getWorld().getNpc(NpcId.DOORMAN.id(), 105, 116, 3536, 3547);
 					if (n != null) {
 						npcTalk(p, n,
 							"You cannot go through this door without paying the trading tax");
@@ -734,7 +722,7 @@ public class DoorAction {
 					break;
 				}
 				if (p.getLocation().getX() == 116 || p.getLocation().getY() == 3538) {
-					Npc n = World.getWorld().getNpc(NpcId.DOORMAN.id(), 117, 125, 3531, 3538);
+					Npc n = p.getWorld().getNpc(NpcId.DOORMAN.id(), 117, 125, 3531, 3538);
 
 					if (n != null) {
 						npcTalk(p, n,
@@ -971,7 +959,7 @@ public class DoorAction {
 			doDoor(obj, player);
 			player.message("you go through the door");
 			if (remove) {
-				player.message("Your " + item.getDef().getName().toLowerCase() + " has gone!");
+				player.message("Your " + item.getDef(player.getWorld()).getName().toLowerCase() + " has gone!");
 				player.getInventory().remove(keyItem, 1);
 				if (obj.getID() == 52) {
 					player.getCache().store("melzar_unlocked", true);
@@ -1026,7 +1014,7 @@ public class DoorAction {
 
 			case 57: // Brimhaven Gate (434, 682)
 				if (obj.getX() == 434 && obj.getY() == 682) {
-					if (!Server.getServer().getConfig().MEMBER_WORLD) {
+					if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 						player.message(
 							"You need to be a member to use this gate");
 						return;
@@ -1109,22 +1097,22 @@ public class DoorAction {
 					return;
 				}
 				if (player.getY() <= 472) {
-					if (Server.getServer().getConfig().WANT_WOODCUTTING_GUILD) {
+					if (player.getWorld().getServer().getConfig().WANT_WOODCUTTING_GUILD) {
 						doGate(player, obj);
 					} else { // deny exit if not woodcut guild
 						player.playerServerMessage(MessageType.QUEST, "the gate is locked");
 					}
 				} else {
-					if (Server.getServer().getConfig().WANT_WOODCUTTING_GUILD) {
+					if (player.getWorld().getServer().getConfig().WANT_WOODCUTTING_GUILD) {
 						if (getCurrentLevel(player, Skills.WOODCUT) < 70) {
 							player.setBusy(true);
-							final Npc forester = World.getWorld().getNpc(NpcId.FORESTER.id(), 562, 565,
+							final Npc forester = player.getWorld().getNpc(NpcId.FORESTER.id(), 562, 565,
 								468, 472);
 							if (forester != null) {
 								npcTalk(player, forester, "Hello only the top woodcutters are allowed in here");
 							}
-							Server.getServer().getGameEventHandler().add(
-								new ShortEvent(player, "Woodcutting Guild Door") {
+							player.getWorld().getServer().getGameEventHandler().add(
+								new ShortEvent(player.getWorld(), player, "Woodcutting Guild Door") {
 									public void action() {
 										getOwner().setBusy(false);
 										getOwner().message(
@@ -1135,7 +1123,7 @@ public class DoorAction {
 							doGate(player, obj);
 						}
 					} else { // Deny Entry
-						final Npc forester = World.getWorld().getNpc(NpcId.FORESTER.id(), 562, 565,
+						final Npc forester = player.getWorld().getNpc(NpcId.FORESTER.id(), 562, 565,
 							468, 472);
 						if (forester != null) {
 							npcTalk(player, forester, "Hey you can't come through here", "This is private land");
@@ -1201,7 +1189,7 @@ public class DoorAction {
 				if (obj.getX() != 93 || obj.getY() != 521) {
 					return;
 				}
-				if (!Server.getServer().getConfig().MEMBER_WORLD) {
+				if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 					player.message(
 						"You need to be a member to use this gate");
 					return;
@@ -1287,7 +1275,7 @@ public class DoorAction {
 						npcTalk(player, n, "maybe, but that's the orders, I'm sorry");
 						message(player, "the gnome refuses to open the gate");
 					} else {
-						Npc newN = spawnNpc(NpcId.GNOME_GUARD.id(), 705, 530, 30000);
+						Npc newN = spawnNpc(player.getWorld(), NpcId.GNOME_GUARD.id(), 705, 530, 30000);
 						npcTalk(player, newN, "halt human");
 						playerTalk(player, newN, "what?, why?");
 						npcTalk(player, newN, "from order of the head tree guardian...",
@@ -1337,7 +1325,7 @@ public class DoorAction {
 
 				return;
 		}
-		if (members && !Server.getServer().getConfig().MEMBER_WORLD) {
+		if (members && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return;
 		}
@@ -1351,7 +1339,7 @@ public class DoorAction {
 
 	private void replaceGameObject(final int newID, final boolean open,
 								   final Player p, final GameObject object) {
-		World.getWorld().replaceGameObject(object,
+		p.getWorld().replaceGameObject(object,
 			new GameObject(object.getWorld(), object.getLocation(), newID, object
 				.getDirection(), object.getType()));
 		p.playSound(open ? "opendoor" : "closedoor");
@@ -1368,7 +1356,7 @@ public class DoorAction {
 				owner.setBusyTimer(650);
 			}
 			owner.playSound(open ? "opendoor" : "closedoor");
-			World.getWorld().replaceGameObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), newID, obj.getDirection(), obj.getType()));
+			owner.getWorld().replaceGameObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), newID, obj.getDirection(), obj.getType()));
 		}
 	}
 }

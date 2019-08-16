@@ -1,19 +1,19 @@
 package com.openrsc.server.plugins.minigames.gnomerestaurant;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-import com.openrsc.server.constants.ItemId;
-
 public class GnomeMixing implements InvUseOnItemListener, InvUseOnItemExecutiveListener {
 
-	private boolean canMix(Item itemOne, Item itemTwo) {
+	private boolean canMix(World world, Item itemOne, Item itemTwo) {
 		for (GnomeMix gm : GnomeMix.values()) {
-			if (gm.isValid(itemOne.getID(), itemTwo.getID())) {
+			if (gm.isValid(world, itemOne.getID(), itemTwo.getID())) {
 				return true;
 			}
 		}
@@ -22,14 +22,14 @@ public class GnomeMixing implements InvUseOnItemListener, InvUseOnItemExecutiveL
 
 	@Override
 	public boolean blockInvUseOnItem(Player p, Item item1, Item item2) {
-		return canMix(item1, item2);
+		return canMix(p.getWorld(), item1, item2);
 	}
 
 	@Override
 	public void onInvUseOnItem(Player p, Item item1, Item item2) {
 		GnomeMix gm = null;
 		for (GnomeMix mix : GnomeMix.values()) {
-			if (mix.isValid(item1.getID(), item2.getID())) {
+			if (mix.isValid(p.getWorld(), item1.getID(), item2.getID())) {
 				gm = mix;
 			}
 		}
@@ -216,7 +216,7 @@ public class GnomeMixing implements InvUseOnItemListener, InvUseOnItemExecutiveL
 			this.messages = messages;
 		}
 
-		public boolean isValid(int i, int is) {
+		public boolean isValid(World world, int i, int is) {
 			return compareItemsIds(new Item(itemID), new Item(itemIDOther), i, is);
 		}
 	}

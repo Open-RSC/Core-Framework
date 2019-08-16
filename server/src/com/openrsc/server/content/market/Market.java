@@ -1,7 +1,6 @@
 package com.openrsc.server.content.market;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.openrsc.server.Server;
 import com.openrsc.server.content.market.task.*;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
@@ -83,15 +82,15 @@ public class Market implements Runnable {
 				if (auction.hasExpired()) expiredItems.add(auction);
 
 			if (expiredItems.size() != 0) {
-				PreparedStatement expiredItemsStatement = Server.getServer().getDatabaseConnection().prepareStatement(
-					"INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+				PreparedStatement expiredItemsStatement = getWorld().getServer().getDatabaseConnection().prepareStatement(
+					"INSERT INTO `" + getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 						+ "expired_auctions`(`item_id`, `item_amount`, `time`, `playerID`, `explanation`) VALUES (?,?,?,?,?)");
 				for (MarketItem expiredItem : expiredItems) {
 
 					int itemIndex = expiredItem.getItemID();
 					int amount = expiredItem.getAmountLeft();
 
-					Player sellerPlayer = World.getWorld().getPlayerID(expiredItem.getSeller());
+					Player sellerPlayer = getWorld().getPlayerID(expiredItem.getSeller());
 					getMarketDatabase().setSoldOut(expiredItem);
 
 					expiredItemsStatement.setInt(1, itemIndex);

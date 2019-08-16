@@ -1,6 +1,5 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.event.rsc.impl.combat.CombatEvent;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.action.WalkToMobAction;
@@ -9,7 +8,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
 import com.openrsc.server.model.states.Action;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
@@ -20,10 +18,6 @@ import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
 public class PlayerDuelHandler implements PacketHandler {
-	/**
-	 * World instance
-	 */
-	public static final World world = World.getWorld();
 
 	private boolean busy(Player player) {
 		return player.isBusy() || player.isRanging() || player.accessingBank() || player.getTrade().isTradeActive();
@@ -72,7 +66,7 @@ public class PlayerDuelHandler implements PacketHandler {
 		int packetSix = OpcodeIn.DUEL_FIRST_ACCEPTED.getOpcode();
 
 		if (pID == packetFour) { // Sending duel request
-			affectedPlayer = world.getPlayer(p.readShort());
+			affectedPlayer = player.getWorld().getPlayer(p.readShort());
 			if (affectedPlayer == null || affectedPlayer.getDuel().isDuelActive()
 				|| !player.withinRange(affectedPlayer, 8) || player.getDuel().isDuelActive()) {
 				player.getDuel().setDuelRecipient(null);
@@ -99,7 +93,7 @@ public class PlayerDuelHandler implements PacketHandler {
 				return;
 			}
 
-			if (!PathValidation.checkPath(player.getLocation(), affectedPlayer.getLocation())) {
+			if (!PathValidation.checkPath(player.getWorld(), player.getLocation(), affectedPlayer.getLocation())) {
 				player.message("There is an obstacle in the way");
 				player.getDuel().resetAll();
 				return;
@@ -183,7 +177,7 @@ public class PlayerDuelHandler implements PacketHandler {
 				affectedPlayer.setStatus(Action.DUELING_PLAYER);
 
 				if (player.getDuel().getDuelSetting(3)) {
-					if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
+					if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 						Item item;
 						for (int i = 0; i < Equipment.slots; i++) {
 							item = player.getEquipment().get(i);
@@ -289,10 +283,10 @@ public class PlayerDuelHandler implements PacketHandler {
 						attacker.getDuel().setDuelActive(true);
 						opponent.getDuel().setDuelActive(true);
 
-						CombatEvent combatEvent = new CombatEvent(attacker, opponent);
+						CombatEvent combatEvent = new CombatEvent(player.getWorld(), attacker, opponent);
 						attacker.setCombatEvent(combatEvent);
 						opponent.setCombatEvent(combatEvent);
-						Server.getServer().getGameEventHandler().add(combatEvent);
+						player.getWorld().getServer().getGameEventHandler().add(combatEvent);
 					}
 				});
 			}
@@ -334,12 +328,12 @@ public class PlayerDuelHandler implements PacketHandler {
 					player.setSuspiciousPlayer(true);
 					continue;
 				}
-				if (tItem.getDef().isUntradable()) {
+				if (tItem.getDef(player.getWorld()).isUntradable()) {
 					player.message("This object cannot be added to a duel offer");
 					ActionSender.sendDuelOpponentItems(player);
 					continue;
 				}
-				if (tItem.getDef().getName().toLowerCase().contains("-rune") && !player.getDuel().getDuelSetting(1)) {
+				if (tItem.getDef(player.getWorld()).getName().toLowerCase().contains("-rune") && !player.getDuel().getDuelSetting(1)) {
 					player.getDuel().setDuelSetting(1, true);
 					affectedPlayer.getDuel().setDuelSetting(1, true);
 					player.message("When runes are staked, magic can't be used during the duel");
@@ -349,7 +343,7 @@ public class PlayerDuelHandler implements PacketHandler {
 					continue;
 				}
 				if (tItem.getAmount() > player.getInventory().countId(tItem.getID())) {
-					if (!(Server.getServer().getConfig().WANT_EQUIPMENT_TAB && tItem.getAmount() == 1 && Functions.isWielding(player, tItem.getID()))) {
+					if (!(player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && tItem.getAmount() == 1 && Functions.isWielding(player, tItem.getID()))) {
 						player.setSuspiciousPlayer(true);
 						return;
 					}
@@ -387,7 +381,7 @@ public class PlayerDuelHandler implements PacketHandler {
 				affectedPlayer.getDuel().setDuelSetting(i, b);
 			}
 			for (Item item : player.getDuel().getDuelOffer().getItems()) {
-				if (item.getDef().getName().toLowerCase().contains("-rune") && !player.getDuel().getDuelSetting(1)) {
+				if (item.getDef(player.getWorld()).getName().toLowerCase().contains("-rune") && !player.getDuel().getDuelSetting(1)) {
 					player.getDuel().setDuelSetting(1, true);
 					affectedPlayer.getDuel().setDuelSetting(1, true);
 					player.message("When runes are staked, magic can't be used during the duel");
@@ -396,7 +390,7 @@ public class PlayerDuelHandler implements PacketHandler {
 				}
 			}
 			for (Item item : affectedPlayer.getDuel().getDuelOffer().getItems()) {
-				if (item.getDef().getName().toLowerCase().contains("-rune") && !player.getDuel().getDuelSetting(1)) {
+				if (item.getDef(player.getWorld()).getName().toLowerCase().contains("-rune") && !player.getDuel().getDuelSetting(1)) {
 					player.getDuel().setDuelSetting(1, true);
 					affectedPlayer.getDuel().setDuelSetting(1, true);
 					player.message("When runes are staked, magic can't be used during the duel");

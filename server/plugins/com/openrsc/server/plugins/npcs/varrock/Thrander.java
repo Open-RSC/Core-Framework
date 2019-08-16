@@ -1,5 +1,7 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -9,9 +11,6 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListen
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
-
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
 
 public class Thrander implements TalkToNpcListener, TalkToNpcExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
 
@@ -46,21 +45,21 @@ public class Thrander implements TalkToNpcListener, TalkToNpcExecutiveListener, 
 			ItemId.BRONZE_PLATE_MAIL_LEGS.id(), ItemId.IRON_PLATE_MAIL_LEGS.id(), ItemId.STEEL_PLATE_MAIL_LEGS.id(),
 			ItemId.BLACK_PLATE_MAIL_LEGS.id(), ItemId.MITHRIL_PLATE_MAIL_LEGS.id(), ItemId.ADAMANTITE_PLATE_MAIL_LEGS.id(), ItemId.RUNE_PLATE_MAIL_LEGS.id())) {
 			int newID = getNewID(item);
-			Item changedItem = getItem(newID);
+			Item changedItem = getItem();
 			String itemLower, changedItemLower;
-			itemLower = item.getDef().getName().toLowerCase();
-			changedItemLower = changedItem.getDef().getName().toLowerCase();
+			itemLower = item.getDef(player.getWorld()).getName().toLowerCase();
+			changedItemLower = changedItem.getDef(player.getWorld()).getName().toLowerCase();
 			if (removeItem(player, item.getID(), 1)) {
 				if (itemLower.contains("top") || itemLower.contains("body")) {
 					message(player, npc, 1300, "You give Thrander a " + itemLower,
 							"Thrander hammers it for a bit");
 					player.message("Thrander gives you a " + changedItemLower);
-				} else if (item.getDef().getName().toLowerCase().contains("skirt")) {
+				} else if (item.getDef(player.getWorld()).getName().toLowerCase().contains("skirt")) {
 					String metal = itemLower.substring(0, itemLower.indexOf(' '));
 					message(player, npc, 1300, "You give Thrander a " + metal + " plated skirt",
 							"Thrander hammers it for a bit");
 					player.message("Thrander gives you some " + changedItemLower);
-				} else if (item.getDef().getName().toLowerCase().contains("legs")) {
+				} else if (item.getDef(player.getWorld()).getName().toLowerCase().contains("legs")) {
 					String metal = itemLower.substring(0, itemLower.indexOf(' '));
 					message(player, npc, 1300, "You give Thrander some " + itemLower,
 							"Thrander hammers it for a bit");

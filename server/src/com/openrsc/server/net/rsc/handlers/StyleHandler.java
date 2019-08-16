@@ -6,10 +6,6 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
 
 public class StyleHandler implements PacketHandler {
-	/**
-	 * World instance
-	 */
-	public static final World world = World.getWorld();
 
 	public void handlePacket(Packet p, Player player) throws Exception {
 

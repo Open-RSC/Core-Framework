@@ -1,6 +1,5 @@
 package com.openrsc.server.event.custom;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.Point;
@@ -9,7 +8,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.listeners.action.CommandListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
 /****
@@ -25,16 +23,16 @@ public class NpcLootEvent extends SingleEvent {
 	private int npcLifetime;
 	private Npc lootNpc;
 
-	public NpcLootEvent(Point location, int npcId, int npcAmount, int itemId) {
-		this(location, npcId, npcAmount, itemId, 1, 10);
+	public NpcLootEvent(World world, Point location, int npcId, int npcAmount, int itemId) {
+		this(world, location, npcId, npcAmount, itemId, 1, 10);
 	}
 
-	public NpcLootEvent(Point location, int npcId, int npcAmount, int itemId, int itemAmount) {
-		this(location, npcId, npcAmount, itemId, itemAmount, 10);
+	public NpcLootEvent(World world, Point location, int npcId, int npcAmount, int itemId, int itemAmount) {
+		this(world, location, npcId, npcAmount, itemId, itemAmount, 10);
 	}
 
-	public NpcLootEvent(Point location, int npcId, int npcAmount, int itemId, int itemAmount, int npcLifeTime) {
-		super(null, 0, "NPC Loot Event");
+	public NpcLootEvent(World world, Point location, int npcId, int npcAmount, int itemId, int itemAmount, int npcLifeTime) {
+		super(world, null, 0, "NPC Loot Event");
 		this.location = location;
 		this.npcId = npcId;
 		this.npcAmount = npcAmount;
@@ -53,15 +51,15 @@ public class NpcLootEvent extends SingleEvent {
 		ItemDefinition itemDef = p.getWorld().getServer().getEntityHandler().getItemDef(itemId);
 
 		if(itemDef.isStackable()) {
-			World.getWorld().registerItem(new GroundItem(p.getWorld(), itemId, n.getX(), n.getY(), itemAmount, p));
+			getWorld().registerItem(new GroundItem(p.getWorld(), itemId, n.getX(), n.getY(), itemAmount, p));
 		} else {
 			for (int i = 0; i < itemAmount; i++) {
-				World.getWorld().registerItem(new GroundItem(p.getWorld(), itemId, n.getX(), n.getY(), itemAmount, p));
+				getWorld().registerItem(new GroundItem(p.getWorld(), itemId, n.getX(), n.getY(), itemAmount, p));
 			}
 		}
 
-		for (Player informee : World.getWorld().getPlayers())
-			informee.message(CommandListener.messagePrefix + p.getUsername() + " has killed the special " + npcName + " and won: " + itemDef.getName() +  " x" + itemAmount);
+		for (Player informee : getWorld().getPlayers())
+			informee.message(p.getWorld().getServer().getConfig().MESSAGE_PREFIX + p.getUsername() + " has killed the special " + npcName + " and won: " + itemDef.getName() +  " x" + itemAmount);
 
 		ActionSender.sendBox(p, "You have killed the special " + npcName + "! % Remember to loot your winnings of " + itemAmount + " " + itemDef.getName(),false);
 		lootNpc = null;
@@ -77,10 +75,10 @@ public class NpcLootEvent extends SingleEvent {
 		ItemDefinition itemDef = n.getWorld().getServer().getEntityHandler().getItemDef(itemId);
 
 		if(itemDef.isStackable()) {
-			World.getWorld().registerItem(new GroundItem(n2.getWorld(), itemId, n.getX(), n.getY(), itemAmount, n2));
+			getWorld().registerItem(new GroundItem(n2.getWorld(), itemId, n.getX(), n.getY(), itemAmount, n2));
 		} else {
 			for (int i = 0; i < itemAmount; i++) {
-				World.getWorld().registerItem(new GroundItem(n2.getWorld(), itemId, n.getX(), n.getY(), itemAmount, n2));
+				getWorld().registerItem(new GroundItem(n2.getWorld(), itemId, n.getX(), n.getY(), itemAmount, n2));
 			}
 		}
 
@@ -154,12 +152,12 @@ public class NpcLootEvent extends SingleEvent {
 					nextX = 1;
 				}
 			}
-			if(World.getWorld().withinWorld(baseX + x, baseY + y)) {
-				if ((World.getWorld().getTile(new Point(baseX + x, baseY + y)).traversalMask & 64) == 0) {
-					final Npc n = new Npc(World.getWorld(), npcId, baseX + x, baseY + y, baseX + x - 20, baseX + x + 20, baseY + y - 20, baseY + y + 20);
+			if(getWorld().withinWorld(baseX + x, baseY + y)) {
+				if ((getWorld().getTile(new Point(baseX + x, baseY + y)).traversalMask & 64) == 0) {
+					final Npc n = new Npc(getWorld(), npcId, baseX + x, baseY + y, baseX + x - 20, baseX + x + 20, baseY + y - 20, baseY + y + 20);
 					n.setShouldRespawn(false);
-					World.getWorld().registerNpc(n);
-					Server.getServer().getGameEventHandler().add(new SingleEvent(null, npcLifetime * 60000, "NPC Loot Delayed Remover") {
+					getWorld().registerNpc(n);
+					getWorld().getServer().getGameEventHandler().add(new SingleEvent(getWorld(), null, npcLifetime * 60000, "NPC Loot Delayed Remover") {
 						@Override
 						public void action() {
 							n.remove();
@@ -173,7 +171,7 @@ public class NpcLootEvent extends SingleEvent {
 			}
 		}
 
-		Server.getServer().getGameEventHandler().add(new SingleEvent(null, npcLifetime * 60000, "NPC Loot Stop Event") {
+		getWorld().getServer().getGameEventHandler().add(new SingleEvent(getWorld(), null, npcLifetime * 60000, "NPC Loot Stop Event") {
 			@Override
 			public void action() {
 				lootNpc = null;

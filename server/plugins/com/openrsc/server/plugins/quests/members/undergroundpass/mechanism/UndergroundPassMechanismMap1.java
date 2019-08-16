@@ -7,7 +7,6 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
@@ -29,16 +28,16 @@ public class UndergroundPassMechanismMap1 implements InvUseOnItemListener, InvUs
 
 	@Override
 	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
-		String itemArrow1 = item1.getDef().getName().toLowerCase();
-		String itemArrow2 = item2.getDef().getName().toLowerCase();
+		String itemArrow1 = item1.getDef(player.getWorld()).getName().toLowerCase();
+		String itemArrow2 = item2.getDef(player.getWorld()).getName().toLowerCase();
 		return (item1.getID() == ItemId.DAMP_CLOTH.id() && itemArrow2.contains("arrows"))
 				|| (itemArrow1.contains("arrows") && item2.getID() == ItemId.DAMP_CLOTH.id());
 	}
 
 	@Override
 	public void onInvUseOnItem(Player player, Item item1, Item item2) {
-		String itemArrow1 = item1.getDef().getName().toLowerCase();
-		String itemArrow2 = item2.getDef().getName().toLowerCase();
+		String itemArrow1 = item1.getDef(player.getWorld()).getName().toLowerCase();
+		String itemArrow2 = item2.getDef(player.getWorld()).getName().toLowerCase();
 		if ((item1.getID() == ItemId.DAMP_CLOTH.id() && itemArrow2.contains("arrows"))
 				|| (itemArrow1.contains("arrows") && item2.getID() == ItemId.DAMP_CLOTH.id())) {
 			int idArrow = itemArrow2.contains("arrows") ? item2.getID() : item1.getID();
@@ -81,10 +80,10 @@ public class UndergroundPassMechanismMap1 implements InvUseOnItemListener, InvUs
 						message(player, "the arrow impales the wooden bridge, just below the rope support",
 							"the rope catches alight and begins to burn",
 							"the bridge swings down creating a walkway");
-						World.getWorld().replaceGameObject(obj,
+						player.getWorld().replaceGameObject(obj,
 							new GameObject(obj.getWorld(), obj.getLocation(), 727, obj.getDirection(), obj
 								.getType()));
-						World.getWorld().delayedSpawnObject(obj.getLoc(), 10000);
+						player.getWorld().delayedSpawnObject(obj.getLoc(), 10000);
 						player.teleport(702, 3420);
 						sleep(1000);
 						player.teleport(706, 3420);
@@ -114,8 +113,8 @@ public class UndergroundPassMechanismMap1 implements InvUseOnItemListener, InvUs
 			player.message("and carefully tread from one to another");
 			removeItem(player, ItemId.ROCKS.id(), 1);
 			GameObject object = new GameObject(player.getWorld(), Point.location(697, 3441), 774, 2, 0);
-			World.getWorld().registerGameObject(object);
-			World.getWorld().delayedRemoveObject(object, 10000);
+			player.getWorld().registerGameObject(object);
+			player.getWorld().delayedRemoveObject(object, 10000);
 			if (player.getX() <= 695) {
 				player.teleport(698, 3441);
 				sleep(850);
@@ -130,7 +129,7 @@ public class UndergroundPassMechanismMap1 implements InvUseOnItemListener, InvUs
 
 	private boolean hasABow(Player p) {
 		for (Item bow : p.getInventory().getItems()) {
-			String bowName = bow.getDef().getName().toLowerCase();
+			String bowName = bow.getDef(p.getWorld()).getName().toLowerCase();
 			if (bowName.contains("bow")) {
 				return true;
 			}

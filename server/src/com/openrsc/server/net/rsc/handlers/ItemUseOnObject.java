@@ -1,6 +1,5 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.action.WalkToObjectAction;
 import com.openrsc.server.model.container.Inventory;
@@ -8,16 +7,11 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.states.Action;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 
 public class ItemUseOnObject implements PacketHandler {
-	/**
-	 * World instance
-	 */
-	public static final World world = World.getWorld();
 
 	private void handleDoor(final Player player, final Point location,
 							final GameObject object, final int dir, final Item item) {
@@ -35,8 +29,8 @@ public class ItemUseOnObject implements PacketHandler {
 				}
 				player.resetAll();
 
-				if (item.getDef().isMembersOnly()
-					&& !Server.getServer().getConfig().MEMBER_WORLD) {
+				if (item.getDef(player.getWorld()).isMembersOnly()
+					&& !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 					player.message(player.MEMBER_MESSAGE);
 					return;
 				}
@@ -71,8 +65,8 @@ public class ItemUseOnObject implements PacketHandler {
 				}
 				player.resetAll();
 
-				if (item.getDef().isMembersOnly()
-					&& !Server.getServer().getConfig().MEMBER_WORLD) {
+				if (item.getDef(player.getWorld()).isMembersOnly()
+					&& !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 					player.message(player.MEMBER_MESSAGE);
 					return;
 				}
@@ -114,7 +108,7 @@ public class ItemUseOnObject implements PacketHandler {
 			}
 			int dir = object.getDirection();
 			int slotID = p.readShort();
-			if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB && slotID == -1)
+			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && slotID == -1)
 			{
 				//they used the item from their equipment slot
 				int itemID = p.readShort();
@@ -139,7 +133,7 @@ public class ItemUseOnObject implements PacketHandler {
 				return;
 			}
 			int slotID = p.readShort();
-			if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB && slotID > Inventory.MAX_SIZE) {
+			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && slotID > Inventory.MAX_SIZE) {
 				item = player.getEquipment().get(slotID - Inventory.MAX_SIZE);
 			} else
 				item = player.getInventory().get(slotID);

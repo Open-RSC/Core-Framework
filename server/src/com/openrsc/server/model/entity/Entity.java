@@ -6,18 +6,17 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.Region;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class Entity {
 
 	private final World world;
 
-	protected final Map<String, Object> attributes = new HashMap<String, Object>();
+	protected final ConcurrentMap<String, Object> attributes = new ConcurrentHashMap<String, Object>();
 	
-	protected final Map<String, Object> syncAttributes = new ConcurrentHashMap<String, Object>();
+	protected final ConcurrentMap<String, Object> syncAttributes = new ConcurrentHashMap<String, Object>();
 
 	protected final ArrayList<VisibleCondition> visibleConditions = new ArrayList<VisibleCondition>();
 

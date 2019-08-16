@@ -1,10 +1,10 @@
 package com.openrsc.server.sql.query.logs;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 import com.openrsc.server.sql.query.Query;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -20,11 +20,14 @@ public class DeathLog extends Query {
 	private String killer;
 	private String killed;
 
+	private final World world;
+
 	private String message;
 	private boolean duel;
 
 	public DeathLog(Player killed, Mob killer, boolean duel) {
-		super("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "generic_logs`(`message`, `time`) VALUES(?, ?)");
+		super("INSERT INTO `" + killed.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "generic_logs`(`message`, `time`) VALUES(?, ?)");
+		this.world = killed.getWorld();
 		this.killed = killed.getUsername();
 		this.killer = killer == null ? "null" : killer.toString();
 		this.location = killed.getLocation();
@@ -39,7 +42,7 @@ public class DeathLog extends Query {
 	public Query build() {
 		StringBuilder droppedString = new StringBuilder();
 		for (Item item : droppedLoot) {
-			droppedString.append("([id:").append(item.getID()).append("] ").append(item.getDef().getName()).append(" x ").append(DataConversions.numberFormat(item.getAmount())).append("),");
+			droppedString.append("([id:").append(item.getID()).append("] ").append(item.getDef(world).getName()).append(" x ").append(DataConversions.numberFormat(item.getAmount())).append("),");
 		}
 		if (droppedString.length() > 0)
 			droppedString.substring(0, droppedString.length() - 1);

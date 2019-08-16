@@ -49,8 +49,8 @@ public class IronManInvUseOnPlayer implements InvUseOnPlayerListener, InvUseOnPl
 			otherPlayer.resetPath();
 			removeItem(player, item.getID(), 1);
 			addItem(otherPlayer, item.getID(), 1);
-			message(player, 0, "You give the " + item.getDef().getName() + " to " + otherPlayer.getUsername());
-			message(otherPlayer, 0, player.getUsername() + " has given you a " + item.getDef().getName());
+			message(player, 0, "You give the " + item.getDef(player.getWorld()).getName() + " to " + otherPlayer.getUsername());
+			message(otherPlayer, 0, player.getUsername() + " has given you a " + item.getDef(player.getWorld()).getName());
 		}
 	}
 }

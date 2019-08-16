@@ -5,14 +5,11 @@ import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 
 public final class NpcCommand implements PacketHandler {
-
-	public static final World world = World.getWorld();
 
 	public void handlePacket(Packet p, Player player) throws Exception {
 		int pID = p.getID();
@@ -25,7 +22,7 @@ public final class NpcCommand implements PacketHandler {
 		}
 		final int click = pID == OpcodeIn.NPC_COMMAND1.getOpcode() ? 0 : 1;
 		player.click = click;
-		final Mob affectedMob = world.getNpc(serverIndex);
+		final Mob affectedMob = player.getWorld().getNpc(serverIndex);
 		final Npc affectedNpc = (Npc) affectedMob;
 		if (affectedNpc == null || affectedMob == null || player == null)
 			return;

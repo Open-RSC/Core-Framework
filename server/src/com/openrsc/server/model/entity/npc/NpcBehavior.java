@@ -1,18 +1,16 @@
 package com.openrsc.server.model.entity.npc;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.impl.RangeEventNpc;
 import com.openrsc.server.event.rsc.impl.StrPotEventNpc;
 import com.openrsc.server.event.rsc.impl.combat.AggroEvent;
-import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.states.CombatState;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
@@ -50,7 +48,7 @@ public class NpcBehavior {
 						//setRoaming();
 					} else if (npc5.getID() != 210 && npc5.getID() != 236 && npc5.getCombatLevel() == npc.getCombatLevel() && npc5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
 						npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && npc.withinRange(npc5, 10) && npc.getLocation().inWilderness() && npc5.getLocation().inWilderness() && npc.getID() == 210) {
-						for (Player p22 : World.getWorld().getPlayers()) {
+						for (Player p22 : npc.getWorld().getPlayers()) {
 							if (npc5.inCombat()) {
 								target = npc5;
 							} else {
@@ -89,7 +87,7 @@ public class NpcBehavior {
 							if (npc.inCombat() && npc.getID() == 210) {
 								target = npc.getOpponent();
 								if (npc.getLocation().inWilderness()) {
-									npc.setRangeEventNpc(new RangeEventNpc(npc, target));
+									npc.setRangeEventNpc(new RangeEventNpc(npc.getWorld(), npc, target));
 								}
 							}
 							if (npc.getLocation().inWilderness() && npc.getID() == 210 && npc.getSkills().getLevel(Skills.HITS) < npc.getSkills().getMaxStat(Skills.HITS) * 0.67) {
@@ -105,9 +103,9 @@ public class NpcBehavior {
 								if (p5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
 									npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && System.currentTimeMillis() - lastRetreat > 3000 && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && target != null && !npc.isRespawning() && !npc.isRemoved() && !target.isRemoved()) {
 									if (p5.inCombat()) {
-										npc.setRangeEventNpc(new RangeEventNpc(npc, target));
+										npc.setRangeEventNpc(new RangeEventNpc(npc.getWorld(), npc, target));
 									} else {
-										npc.setRangeEventNpc(new RangeEventNpc(npc, target));
+										npc.setRangeEventNpc(new RangeEventNpc(npc.getWorld(), npc, target));
 									}
 								} else {
 									setRoaming();
@@ -130,9 +128,9 @@ public class NpcBehavior {
 								if (npc5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
 									npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && System.currentTimeMillis() - lastRetreat > 3000 && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && target != null && !npc.isRespawning() && !npc.isRemoved() && !target.isRemoved()) {
 									if (npc5.inCombat()) {
-										npc.setRangeEventNpc(new RangeEventNpc(npc, target));
+										npc.setRangeEventNpc(new RangeEventNpc(npc.getWorld(), npc, target));
 									} else {
-										npc.setRangeEventNpc(new RangeEventNpc(npc, target));
+										npc.setRangeEventNpc(new RangeEventNpc(npc.getWorld(), npc, target));
 									}
 								} else {
 									setRoaming();
@@ -186,7 +184,7 @@ public class NpcBehavior {
 					} else if (npc5.getID() != 236 && npc5.getID() != 210 && System.currentTimeMillis() - npc5.getCombatTimer() > 1000 && System.currentTimeMillis() - npc.getCombatTimer() > 1000 && !npc.inCombat() && !npc5.inCombat() && npc5.getLocation().inWilderness() && npc5.getCombatLevel() == npc.getCombatLevel() && npc.withinRange(npc5, 10) && npc.getLocation().inWilderness() && npc.getID() == 236) {
 						target = npc5;
 					} else {
-						npc5.setStrPotEventNpc(new StrPotEventNpc(npc5));
+						npc5.setStrPotEventNpc(new StrPotEventNpc(npc.getWorld(), npc5));
 						target = null;
 					}
 					if (npc.inCombat() && npc.getOpponent().getHitsMade() >= 3 && npc.getSkills().getLevel(Skills.HITS) < npc.getOpponent().getSkills().getLevel(Skills.HITS)) {
@@ -295,7 +293,7 @@ public class NpcBehavior {
 				// We loop through all players in view.
 				for (Player p : npc.getViewArea().getPlayersInView()) {
 
-					int range = Server.getServer().getConfig().AGGRO_RANGE;
+					int range = npc.getWorld().getServer().getConfig().AGGRO_RANGE;
 					switch (NpcId.getById(npc.getID())) {
 						case BANDIT_AGGRESSIVE:
 							range = 5;
@@ -318,7 +316,7 @@ public class NpcBehavior {
 						setRoaming();
 					} else {
 						//aggro behavior if any
-						new AggroEvent(npc, p);
+						new AggroEvent(npc.getWorld(), npc, p);
 					}
 
 					break;
@@ -635,7 +633,7 @@ public class NpcBehavior {
 	}
 
 	private boolean shouldRetreat(Npc npc) {
-		if (!Server.getServer().getConfig().NPC_DONT_RETREAT) {
+		if (!npc.getWorld().getServer().getConfig().NPC_DONT_RETREAT) {
 			if (DataConversions.inArray(npc.getWorld().getServer().getConstants().NPCS_THAT_RETREAT_NORM, npc.getID())) {
 				return npc.getSkills().getLevel(Skills.HITS) <=
 					Math.ceil(npc.getSkills().getMaxStat(Skills.HITS) * 0.20);

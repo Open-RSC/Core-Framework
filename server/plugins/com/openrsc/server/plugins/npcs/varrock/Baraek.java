@@ -99,7 +99,7 @@ public final class Baraek implements TalkToNpcExecutiveListener,
 					playerTalk(p, n, "Yeah okay here you go");
 					p.getInventory().remove(ItemId.COINS.id(), 20);
 					p.message("You buy a fur from Baraek");
-					p.getInventory().add(new Item(ItemId.FUR.id()));
+					p.getInventory().add(new Item());
 				}
 			} else if (opts == 1) {
 				playerTalk(p, n, "20 gold coins that's an outrage");
@@ -139,7 +139,7 @@ public final class Baraek implements TalkToNpcExecutiveListener,
 					playerTalk(p, n, "Okay here you go");
 					p.getInventory().remove(ItemId.COINS.id(), 18);
 					p.message("You buy a fur from Baraek");
-					p.getInventory().add(new Item(ItemId.FUR.id()));
+					p.getInventory().add(new Item());
 				}
 			} else if (sub_opts == 1) {
 				playerTalk(p, n, "No thanks, I'll leave it");

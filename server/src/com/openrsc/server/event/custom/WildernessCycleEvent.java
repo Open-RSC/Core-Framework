@@ -1,6 +1,5 @@
 package com.openrsc.server.event.custom;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.sql.query.Query;
@@ -24,8 +23,8 @@ public class WildernessCycleEvent extends DelayedEvent {
 
 	private int lastWildernessType;
 
-	public WildernessCycleEvent() {
-		super(null, 1000, "Wilderness Cycle Event");
+	public WildernessCycleEvent(World world) {
+		super(world, null, 1000, "Wilderness Cycle Event");
 	}
 
 	@Override
@@ -33,7 +32,7 @@ public class WildernessCycleEvent extends DelayedEvent {
 		try {
 			long now = System.currentTimeMillis() / 1000;
 
-			Server.getServer().getGameLogger().addQuery(new ResultQuery("SELECT `key`, `value` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "player_cache` WHERE `playerID`=-1") {
+			getWorld().getServer().getGameLogger().addQuery(new ResultQuery("SELECT `key`, `value` FROM `" + getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "player_cache` WHERE `playerID`=-1") {
 				@Override
 				public void onResult(ResultSet result) throws SQLException {
 					if (!result.next()) {
@@ -43,7 +42,7 @@ public class WildernessCycleEvent extends DelayedEvent {
 					lastWildernessChange = result.getLong("value");
 					if (lastWildernessType != databaseWildType) {
 						lastWildernessType = databaseWildType;
-						World.getWorld()
+						getWorld()
 							.sendWorldMessage("Wilderness rules changed: " + getFriendlyString(lastWildernessType)
 								+ ". Next change in " + timeUntilChange() + " hours.");
 					}
@@ -66,10 +65,10 @@ public class WildernessCycleEvent extends DelayedEvent {
 				if (lastWildernessType == 4) {
 					lastWildernessType = 0;
 				}
-				World.getWorld().sendWorldMessage("Wilderness rules changed: " + getFriendlyString(lastWildernessType)
+				getWorld().sendWorldMessage("Wilderness rules changed: " + getFriendlyString(lastWildernessType)
 					+ ". Next change in " + timeUntilChange() + " hours.");
 
-				Server.getServer().getGameLogger().addQuery(new Query("UPDATE `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "player_cache` SET `value`=?, `key`=? WHERE `playerID`='-1'") {
+				getWorld().getServer().getGameLogger().addQuery(new Query("UPDATE `" + getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "player_cache` SET `value`=?, `key`=? WHERE `playerID`='-1'") {
 
 					@Override
 					public Query build() {
@@ -89,25 +88,25 @@ public class WildernessCycleEvent extends DelayedEvent {
 			switch (lastWildernessType) {
 				case 0:
 				case 1:
-					Server.getServer().getWorld().godSpellsStart = 60;
-					Server.getServer().getWorld().godSpellsMax = 60;
+					getWorld().godSpellsStart = 60;
+					getWorld().godSpellsMax = 60;
 
-					Server.getServer().getWorld().membersWildStart = 48;
-					Server.getServer().getWorld().membersWildMax = 60;
+					getWorld().membersWildStart = 48;
+					getWorld().membersWildMax = 60;
 					break;
 				case 2:
-					Server.getServer().getWorld().godSpellsStart = 0;
-					Server.getServer().getWorld().godSpellsMax = 60;
+					getWorld().godSpellsStart = 0;
+					getWorld().godSpellsMax = 60;
 
-					Server.getServer().getWorld().membersWildStart = 0;
-					Server.getServer().getWorld().membersWildMax = 60;
+					getWorld().membersWildStart = 0;
+					getWorld().membersWildMax = 60;
 					break;
 				case 3:
-					Server.getServer().getWorld().godSpellsStart = 60;
-					Server.getServer().getWorld().godSpellsMax = 60;
+					getWorld().godSpellsStart = 60;
+					getWorld().godSpellsMax = 60;
 
-					Server.getServer().getWorld().membersWildStart = 0;
-					Server.getServer().getWorld().membersWildMax = 60;
+					getWorld().membersWildStart = 0;
+					getWorld().membersWildMax = 60;
 					break;
 			}
 

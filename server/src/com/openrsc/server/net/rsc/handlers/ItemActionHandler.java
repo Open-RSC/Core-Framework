@@ -1,22 +1,16 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.event.MiniEvent;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PacketHandler;
 
 public class ItemActionHandler implements PacketHandler {
-	/**
-	 * World instance
-	 */
-	public static final World world = World.getWorld();
 
 	public void handlePacket(Packet p, Player player) throws Exception {
 
@@ -39,7 +33,7 @@ public class ItemActionHandler implements PacketHandler {
 		{
 			idx = (int) p.readShort();
 			if (player.getEquipment().hasEquipped(idx) != -1)
-				tempitem = new Item(idx);
+				tempitem = new Item();
 			commandIndex = p.readByte();
 
 		} else {
@@ -48,13 +42,13 @@ public class ItemActionHandler implements PacketHandler {
 		}
 
 		final Item item = tempitem;
-		if (item == null || item.getDef().getCommand() == null
-		|| commandIndex < 0 || commandIndex >= item.getDef().getCommand().length) {
+		if (item == null || item.getDef(player.getWorld()).getCommand() == null
+		|| commandIndex < 0 || commandIndex >= item.getDef(player.getWorld()).getCommand().length) {
 			player.setSuspiciousPlayer(true);
 			return;
 		}
 
-		if (item.getDef().isMembersOnly() && !Server.getServer().getConfig().MEMBER_WORLD) {
+		if (item.getDef(player.getWorld()).isMembersOnly() && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.message("You need to be a member to use this object");
 			return;
 		}
@@ -69,7 +63,7 @@ public class ItemActionHandler implements PacketHandler {
 		player.resetAll();
 
 		if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("InvAction",
-			new Object[]{item, player, item.getDef().getCommand()[commandIndex]})) {
+			new Object[]{item, player, item.getDef(player.getWorld()).getCommand()[commandIndex]})) {
 			return;
 		}
 
@@ -80,14 +74,14 @@ public class ItemActionHandler implements PacketHandler {
 			return;
 		}
 
-		if (item.getDef().getCommand()[commandIndex].equalsIgnoreCase("bury")) {
+		if (item.getDef(player.getWorld()).getCommand()[commandIndex].equalsIgnoreCase("bury")) {
 			if (item.getID() == 1308 || item.getID() == 1648 || item.getID() == 1793 || item.getID() == 1871 || item.getID() == 2257) {
 				player.message("You can't bury noted bones");
 				return;
 			}
 			if (amount > 1) { // bury all
 				player.message("You dig a hole in the ground");
-				player.setBatchEvent(new BatchEvent(player, 650, String.format("Bury %s", item.getDef().getName()), amount, false) {
+				player.setBatchEvent(new BatchEvent(player.getWorld(), player, 650, String.format("Bury %s", item.getDef(player.getWorld()).getName()), amount, false) {
 					@Override
 					public void action() {
 						buryBonesHelper(player, item);
@@ -97,8 +91,8 @@ public class ItemActionHandler implements PacketHandler {
 			} else {
 				player.setBusyTimer(650);
 				player.message("You dig a hole in the ground");
-				Server.getServer().getGameEventHandler()
-					.add(new MiniEvent(player, "Bury Bones") {
+				player.getWorld().getServer().getGameEventHandler()
+					.add(new MiniEvent(player.getWorld(), player, "Bury Bones") {
 						public void action() {
 							buryBonesHelper(player, item);
 						}
@@ -116,31 +110,31 @@ public class ItemActionHandler implements PacketHandler {
 					}
 					break;
 				case BURNTPIE:
-					if (item.getDef().getCommand()[commandIndex].equalsIgnoreCase("empty dish")) {
+					if (item.getDef(player.getWorld()).getCommand()[commandIndex].equalsIgnoreCase("empty dish")) {
 						player.message("you remove the burnt pie from the pie dish");
 						player.getInventory().replace(item.getID(), ItemId.PIE_DISH.id());
 					}
 					break;
 				case BURNT_STEW:
-					if (item.getDef().getCommand()[commandIndex].equalsIgnoreCase("empty")) {
+					if (item.getDef(player.getWorld()).getCommand()[commandIndex].equalsIgnoreCase("empty")) {
 						player.message("you remove the burnt stew from the bowl");
 						player.getInventory().replace(item.getID(), ItemId.BOWL.id());
 					}
 					break;
 				case BURNT_CURRY:
-					if (item.getDef().getCommand()[commandIndex].equalsIgnoreCase("empty")) {
+					if (item.getDef(player.getWorld()).getCommand()[commandIndex].equalsIgnoreCase("empty")) {
 						player.message("you remove the burnt curry from the bowl");
 						player.getInventory().replace(item.getID(), ItemId.BOWL.id());
 					}
 					break;
 				case BLESSED_GOLDEN_BOWL_WITH_PLAIN_WATER:
-					if (item.getDef().getCommand()[commandIndex].equalsIgnoreCase("empty")) {
+					if (item.getDef(player.getWorld()).getCommand()[commandIndex].equalsIgnoreCase("empty")) {
 						player.message("You empty the plain water out of the Blessed Golden Bowl.");
 						player.getInventory().replace(item.getID(), ItemId.BLESSED_GOLDEN_BOWL.id());
 					}
 					break;
 				case GOLDEN_BOWL_WITH_PLAIN_WATER:
-					if (item.getDef().getCommand()[commandIndex].equalsIgnoreCase("empty")) {
+					if (item.getDef(player.getWorld()).getCommand()[commandIndex].equalsIgnoreCase("empty")) {
 						player.message("You empty the plain water out of the Golden Bowl.");
 						player.getInventory().replace(item.getID(), ItemId.GOLDEN_BOWL.id());
 					}
@@ -160,7 +154,7 @@ public class ItemActionHandler implements PacketHandler {
 				case LAW_TALISMAN:
 				case DEATH_TALISMAN:
 				case BLOOD_TALISMAN:
-					if (item.getDef().getCommand()[commandIndex].equalsIgnoreCase("locate")) {
+					if (item.getDef(player.getWorld()).getCommand()[commandIndex].equalsIgnoreCase("locate")) {
 						if (player.getQuestStage(Quests.RUNE_MYSTERIES) != -1) {
 							player.message("You can't understand what the talisman is trying to tell you.");
 							return;
@@ -244,7 +238,7 @@ public class ItemActionHandler implements PacketHandler {
 
 	private void buryBonesHelper(Player owner, Item item) {
 		owner.message("You bury the "
-			+ item.getDef().getName().toLowerCase());
+			+ item.getDef(owner.getWorld()).getName().toLowerCase());
 		owner.getInventory().remove(item);
 		switch (ItemId.getById(item.getID())) {
 			case BONES:

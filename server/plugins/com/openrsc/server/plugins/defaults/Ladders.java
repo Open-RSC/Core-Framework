@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.defaults;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
@@ -9,7 +8,6 @@ import com.openrsc.server.model.TelePoint;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -31,7 +29,7 @@ public class Ladders {
 
 	public void onObjectAction(GameObject obj, String command, Player player) {
 		player.setBusyTimer(650);
-		if (obj.getID() == 487 && !Server.getServer().getConfig().MEMBER_WORLD) {
+		if (obj.getID() == 487 && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.message(player.MEMBER_MESSAGE);
 			return;
 		} else if (obj.getID() == 79 && obj.getX() == 243 && obj.getY() == 95) {
@@ -127,7 +125,7 @@ public class Ladders {
 			// Ladder
 			if (!player.getCache().hasKey("prayer_guild")) {
 				player.setBusy(true);
-				Npc abbot = World.getWorld().getNpc(NpcId.ABBOT_LANGLEY.id(), 249, 252, 458, 468);
+				Npc abbot = player.getWorld().getNpc(NpcId.ABBOT_LANGLEY.id(), 249, 252, 458, 468);
 				if (abbot != null) {
 					npcTalk(player, abbot, "Only members of our order can go up there");
 					int op = showMenu(player, abbot, false, "Well can i join your order?",
@@ -142,8 +140,8 @@ public class Ladders {
 							player.message("You climb up the ladder");
 						} else {
 							npcTalk(player, abbot, "No I feel you are not devout enough");
-							Server.getServer().getGameEventHandler().add(
-								new ShortEvent(player, "Prayer Guild Ladder") {
+							player.getWorld().getServer().getGameEventHandler().add(
+								new ShortEvent(player.getWorld(), player, "Prayer Guild Ladder") {
 									public void action() {
 										getOwner().setBusy(false);
 										getOwner().message(
@@ -167,13 +165,13 @@ public class Ladders {
 			// Ladder
 			if (getCurrentLevel(player, Skills.MINING) < 60) {
 				player.setBusy(true);
-				Npc dwarf = World.getWorld().getNpc(NpcId.DWARF_MINING_GUILD.id(), 272, 277, 563, 567);
+				Npc dwarf = player.getWorld().getNpc(NpcId.DWARF_MINING_GUILD.id(), 272, 277, 563, 567);
 				if (dwarf != null) {
 					npcYell(player, dwarf,
 						"Sorry only the top miners are allowed in there");
 				}
-				Server.getServer().getGameEventHandler().add(
-					new ShortEvent(player, "Mining Guild Ladder") {
+				player.getWorld().getServer().getGameEventHandler().add(
+					new ShortEvent(player.getWorld(), player, "Mining Guild Ladder") {
 						public void action() {
 							getOwner().setBusy(false);
 							getOwner().message(
@@ -209,7 +207,7 @@ public class Ladders {
 						+ obj.getGameObjectDef().getName().toLowerCase());
 			}
 		} else if (obj.getID() == 249 && obj.getX() == 98 && obj.getY() == 3537) { // lost city (Zanaris) ladder
-			Npc ladderAttendant = World.getWorld().getNpc(NpcId.FAIRY_LADDER_ATTENDANT.id(), 99, 99, 3537, 3537);
+			Npc ladderAttendant = player.getWorld().getNpc(NpcId.FAIRY_LADDER_ATTENDANT.id(), 99, 99, 3537, 3537);
 			if (ladderAttendant != null) {
 				npcTalk(player, ladderAttendant, "This ladder leaves Zanaris",
 					"It leads to near Al Kharid in your mortal realm",
@@ -225,7 +223,7 @@ public class Ladders {
 			player.teleport(222, 110, false);
 		} else if (obj.getID() == 331 && obj.getX() == 150 && obj.getY() == 558) {
 			player.teleport(151, 1505, false);
-		} else if (obj.getID() == 6 && obj.getX() == 282 && obj.getY() == 185 && !Server.getServer().getConfig().MEMBER_WORLD) {
+		} else if (obj.getID() == 6 && obj.getX() == 282 && obj.getY() == 185 && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.message(player.MEMBER_MESSAGE);
 		} else if (obj.getID() == 6 && obj.getX() == 148 && obj.getY() == 1507) {
 			player.teleport(148, 563, false);

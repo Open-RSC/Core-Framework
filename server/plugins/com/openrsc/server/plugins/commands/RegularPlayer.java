@@ -1,13 +1,11 @@
 package com.openrsc.server.plugins.commands;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.content.clan.ClanInvite;
 import com.openrsc.server.content.party.PartyPlayer;
 import com.openrsc.server.content.party.PartyRank;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.snapshot.Chatlog;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
@@ -30,13 +28,25 @@ import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isPhoenixGang
 public final class RegularPlayer implements CommandListener {
 	private static final Logger LOGGER = LogManager.getLogger(RegularPlayer.class);
 
+	public static String messagePrefix = null;
+	public static String badSyntaxPrefix = null;
+
 	public void onCommand(String cmd, String[] args, Player player) {
-		if (isCommandAllowed(player, cmd))
+		if (isCommandAllowed(player, cmd)) {
+
+			if(messagePrefix == null) {
+				messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
+			}
+			if(badSyntaxPrefix == null) {
+				badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
+			}
+
 			handleCommand(cmd, args, player);
+		}
 	}
 
 	public boolean isCommandAllowed(Player player, String cmd) {
-		return Server.getServer().getConfig().PLAYER_COMMANDS || player.isMod();
+		return player.getWorld().getServer().getConfig().PLAYER_COMMANDS || player.isMod();
 	}
 
 	public void handleCommand(String cmd, String[] args, Player player) {
@@ -49,7 +59,7 @@ public final class RegularPlayer implements CommandListener {
 				player.message(messagePrefix + "You are not in a gang - you need to start the shield of arrav quest");
 			}
 		} else if (cmd.equalsIgnoreCase("bankpin")) {
-			Player p = args.length > 0 && player.isAdmin() ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
+			Player p = args.length > 0 && player.isAdmin() ? player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
 			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
@@ -61,7 +71,7 @@ public final class RegularPlayer implements CommandListener {
 				return;
 			}
 			try {
-				PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+				PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 				statement.setString(1, player.getUsername());
 				ResultSet result = statement.executeQuery();
 				if (result.next()) {
@@ -78,7 +88,7 @@ public final class RegularPlayer implements CommandListener {
 			int PLAYERS_IN_F2P_WILD = 0;
 			int PLAYERS_IN_P2P_WILD = 0;
 			int EDGE_DUNGEON = 0;
-			for (Player p : World.getWorld().getPlayers()) {
+			for (Player p : player.getWorld().getPlayers()) {
 				if (p.getLocation().inWilderness()) {
 					TOTAL_PLAYERS_IN_WILDERNESS++;
 				}
@@ -98,7 +108,7 @@ public final class RegularPlayer implements CommandListener {
 					+ "P2P wilderness(Wild Lvl. 48-56) : @dre@" + PLAYERS_IN_P2P_WILD + "@whi@ player" + (PLAYERS_IN_P2P_WILD == 1 ? "" : "s") + " %"
 					+ "Edge dungeon wilderness(Wild Lvl. 1-9) : @dre@" + EDGE_DUNGEON + "@whi@ player" + (EDGE_DUNGEON == 1 ? "" : "s") + " %"
 				, false);
-		} else if (cmd.equalsIgnoreCase("c") && Server.getServer().getConfig().WANT_CLANS) {
+		} else if (cmd.equalsIgnoreCase("c") && player.getWorld().getServer().getConfig().WANT_CLANS) {
 			if (player.getClan() == null) {
 				player.message(messagePrefix + "You are not in a clan.");
 				return;
@@ -108,7 +118,7 @@ public final class RegularPlayer implements CommandListener {
 				message = message + arg + " ";
 			}
 			player.getClan().messageChat(player, "@cya@" + player.getUsername() + ":@whi@ " + message);
-		} else if (cmd.equalsIgnoreCase("clanaccept") && Server.getServer().getConfig().WANT_CLANS) {
+		} else if (cmd.equalsIgnoreCase("clanaccept") && player.getWorld().getServer().getConfig().WANT_CLANS) {
 			if (player.getActiveClanInvite() == null) {
 				player.message(messagePrefix + "You have not been invited to a clan.");
 				return;
@@ -122,14 +132,14 @@ public final class RegularPlayer implements CommandListener {
 			}
 			player.getActivePartyInvite().accept();
 			player.message(messagePrefix + "You have joined the party");
-		} else if (cmd.equalsIgnoreCase("claninvite") && Server.getServer().getConfig().WANT_CLANS) {
+		} else if (cmd.equalsIgnoreCase("claninvite") && player.getWorld().getServer().getConfig().WANT_CLANS) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
 			}
 
 			long invitePlayer = DataConversions.usernameToHash(args[0]);
-			Player invited = World.getWorld().getPlayer(invitePlayer);
+			Player invited = player.getWorld().getPlayer(invitePlayer);
 			if (!player.getClan().isAllowed(1, player)) {
 				player.message(messagePrefix + "You are not allowed to invite into clan " + player.getClan().getClanName());
 				return;
@@ -142,7 +152,7 @@ public final class RegularPlayer implements CommandListener {
 
 			ClanInvite.createClanInvite(player, invited);
 			player.message(messagePrefix + invited.getUsername() + " has been invited into clan " + player.getClan().getClanName());
-		} else if (cmd.equalsIgnoreCase("clankick") && Server.getServer().getConfig().WANT_CLANS) {
+		} else if (cmd.equalsIgnoreCase("clankick") && player.getWorld().getServer().getConfig().WANT_CLANS) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
@@ -155,7 +165,7 @@ public final class RegularPlayer implements CommandListener {
 
 			String playerToKick = args[0].replace("_", " ");
 			long kickedHash = DataConversions.usernameToHash(args[0]);
-			Player kicked = World.getWorld().getPlayer(kickedHash);
+			Player kicked = player.getWorld().getPlayer(kickedHash);
 			if (!player.getClan().isAllowed(3, player)) {
 				player.message(messagePrefix + "You are not allowed to kick that player.");
 				return;
@@ -200,7 +210,7 @@ public final class RegularPlayer implements CommandListener {
 			}
 			player.teleport(player.getWorld().EVENT_X, player.getWorld().EVENT_Y);
 		} else if (cmd.equalsIgnoreCase("g") || cmd.equalsIgnoreCase("p")) {
-			if (!Server.getServer().getConfig().WANT_GLOBAL_CHAT) return;
+			if (!player.getWorld().getServer().getConfig().WANT_GLOBAL_CHAT) return;
 			if (player.isMuted()) {
 				player.message(messagePrefix + "You are muted, you cannot send messages");
 				return;
@@ -240,7 +250,7 @@ public final class RegularPlayer implements CommandListener {
 			newStr = new StringBuilder(newStr.toString().replace('@', ' '));
 			String channelPrefix = cmd.equals("g") ? "@gr2@[General] " : "@or1@[PKing] ";
 			int channel = cmd.equalsIgnoreCase("g") ? 1 : 2;
-			for (Player p : World.getWorld().getPlayers()) {
+			for (Player p : player.getWorld().getPlayers()) {
 				if (p.getSocial().isIgnoring(player.getUsernameHash()))
 					continue;
 				if (p.getGlobalBlock() == 3 && channel == 2) {
@@ -256,14 +266,14 @@ public final class RegularPlayer implements CommandListener {
 				}
 			}
 			if (cmd.equalsIgnoreCase("g")) {
-				player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getUsername(), "(Global) " + newStr));
-				World.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(Global) " + newStr));
+				player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getWorld(), player.getUsername(), "(Global) " + newStr));
+				player.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(Global) " + newStr));
 			} else {
-				player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getUsername(), "(PKing) " + newStr));
-				World.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(PKing) " + newStr));
+				player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getWorld(), player.getUsername(), "(PKing) " + newStr));
+				player.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(PKing) " + newStr));
 			}
 		} else if (cmd.equalsIgnoreCase("party")) {
-			if (!Server.getServer().getConfig().WANT_GLOBAL_CHAT) return;
+			if (!player.getWorld().getServer().getConfig().WANT_GLOBAL_CHAT) return;
 			if (player.isMuted()) {
 				player.message(messagePrefix + "You are muted, you cannot send messages");
 				return;
@@ -306,7 +316,7 @@ public final class RegularPlayer implements CommandListener {
 			newStr = new StringBuilder(newStr.toString().replace('@', ' '));
 			String channelPrefix = "@whi@[@or1@Party@whi@] ";
 			int channel = cmd.equalsIgnoreCase("p") ? 1 : 2;
-			for (Player p : World.getWorld().getPlayers()) {
+			for (Player p : player.getWorld().getPlayers()) {
 				if (p.getSocial().isIgnoring(player.getUsernameHash()))
 					continue;
 				if (p.getParty() == player.getParty()) {
@@ -315,15 +325,15 @@ public final class RegularPlayer implements CommandListener {
 				}
 			}
 			if (cmd.equalsIgnoreCase("g")) {
-				player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getUsername(), "(Global) " + newStr));
-				World.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(Global) " + newStr));
+				player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getWorld(), player.getUsername(), "(Global) " + newStr));
+				player.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(Global) " + newStr));
 			} else {
-				player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getUsername(), "(PKing) " + newStr));
-				World.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(PKing) " + newStr));
+				player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getWorld(), player.getUsername(), "(PKing) " + newStr));
+				player.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(PKing) " + newStr));
 			}
 		} else if (cmd.equalsIgnoreCase("online")) {
-			int players = (int) (World.getWorld().getPlayers().size());
-			for (Player p : World.getWorld().getPlayers()) {
+			int players = (int) (player.getWorld().getPlayers().size());
+			for (Player p : player.getWorld().getPlayers()) {
 				if (p.isMod() && p.getSettings().getPrivacySetting(1)) {
 					players--;
 				}
@@ -331,7 +341,7 @@ public final class RegularPlayer implements CommandListener {
 			player.message(messagePrefix + "Players Online: " + players);
 		} else if (cmd.equalsIgnoreCase("uniqueonline")) {
 			ArrayList<String> IP_ADDRESSES = new ArrayList<>();
-			for (Player p : World.getWorld().getPlayers()) {
+			for (Player p : player.getWorld().getPlayers()) {
 				if (!IP_ADDRESSES.contains(p.getCurrentIP()))
 					IP_ADDRESSES.add(p.getCurrentIP());
 			}
@@ -356,14 +366,14 @@ public final class RegularPlayer implements CommandListener {
 		} else if (cmd.equals("onlinelist")) { // modern onlinelist display using ActionSender.SendOnlineList()
 			ActionSender.sendOnlineList(player);
 		/*} else if (cmd.equalsIgnoreCase("onlinelist")) { // this is the old onlinelist display using ActionSender.sendBox()
-			int players = World.getWorld().getPlayers().size();
-			for (Player p : World.getWorld().getPlayers()) {
+			int players = player.getWorld().getPlayers().size();
+			for (Player p : player.getWorld().getPlayers()) {
 				if (p.isMod() && p.getSettings().getPrivacySetting(1)) {
 					players--;
 				}
 			}
 			StringBuilder boxTextPlayerNames = new StringBuilder();
-			for (Player p : World.getWorld().getPlayers()) {
+			for (Player p : player.getWorld().getPlayers()) {
 				boxTextPlayerNames
 					.append(Group.getNameSprite(p.getGroupID()) + Group.getNameColour(p.getGroupID())) // displays group color for player username
 					.append(p.getUsername()) // displays player username
@@ -378,16 +388,16 @@ public final class RegularPlayer implements CommandListener {
 		} else if (cmd.equalsIgnoreCase("groups") || cmd.equalsIgnoreCase("ranks")) {
 			ArrayList<String> groups = new ArrayList<>();
 			for (HashMap.Entry<Integer, String> entry : Group.GROUP_NAMES.entrySet()) {
-				groups.add(Group.getStaffPrefix(entry.getKey()) + entry.getValue() + (player.isDev() ? " (" + entry.getKey() + ")" : ""));
+				groups.add(Group.getStaffPrefix(player.getWorld(), entry.getKey()) + entry.getValue() + (player.isDev() ? " (" + entry.getKey() + ")" : ""));
 			}
 			ActionSender.sendBox(player, "@whi@Server Groups:%" + StringUtils.join(groups, "%"), true);
 		} else if (cmd.equalsIgnoreCase("time") || cmd.equalsIgnoreCase("date") || cmd.equalsIgnoreCase("datetime")) {
 			player.message(messagePrefix + " the current time/date is:@gre@ " + new java.util.Date().toString());
-		} else if (Server.getServer().getConfig().NPC_KILL_LIST && cmd.equalsIgnoreCase("kills")) {
+		} else if (player.getWorld().getServer().getConfig().NPC_KILL_LIST && cmd.equalsIgnoreCase("kills")) {
 			StringBuilder kills = new StringBuilder("NPC Kill List for " + player.getUsername() + " % %");
 			try {
 				PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement(
-					"SELECT * FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "npckills` WHERE playerID = ? ORDER BY killCount DESC LIMIT 16");
+					"SELECT * FROM `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "npckills` WHERE playerID = ? ORDER BY killCount DESC LIMIT 16");
 				statement.setInt(1, player.getDatabaseID());
 				ResultSet result = statement.executeQuery();
 				while (result.next()) {

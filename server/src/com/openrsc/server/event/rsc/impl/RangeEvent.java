@@ -1,6 +1,5 @@
 package com.openrsc.server.event.rsc.impl;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
@@ -66,8 +65,8 @@ public class RangeEvent extends GameTickEvent {
 	};
 	private Mob target;
 
-	public RangeEvent(Player owner, Mob victim) {
-		super(owner, 1, "Range Event");
+	public RangeEvent(World world, Player owner, Mob victim) {
+		super(world, owner, 1, "Range Event");
 		this.target = victim;
 		this.deliveredFirstProjectile = false;
 	}
@@ -110,7 +109,7 @@ public class RangeEvent extends GameTickEvent {
 
 			boolean canShoot = System.currentTimeMillis() - getPlayerOwner().getAttribute("rangedTimeout", 0L) > 1900;
 			if (canShoot) {
-				if (!PathValidation.checkPath(getPlayerOwner().getLocation(), target.getLocation())) {
+				if (!PathValidation.checkPath(getPlayerOwner().getWorld(), getPlayerOwner().getLocation(), target.getLocation())) {
 					getPlayerOwner().message("I can't get a clear shot from here");
 					getPlayerOwner().resetRange();
 					stop();
@@ -137,20 +136,20 @@ public class RangeEvent extends GameTickEvent {
 				}
 				boolean xbow = DataConversions.inArray(Formulae.xbowIDs, bowID);
 				int arrowID = -1;
-				if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB)
+				if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB)
 				{
 					Item ammo = getPlayerOwner().getEquipment().getAmmoItem();
-					if (ammo == null || ammo.getDef() == null)
+					if (ammo == null || ammo.getDef(getOwner().getWorld()) == null)
 					{
 						getPlayerOwner().message("you don't have any ammo equipped");
 						getPlayerOwner().resetRange();
 						return;
 					}
-					if (xbow && ammo.getDef().getWearableId() == 1000) {
+					if (xbow && ammo.getDef(getOwner().getWorld()).getWearableId() == 1000) {
 						getPlayerOwner().message("You can't fire arrows with a crossbow");
 						getPlayerOwner().resetRange();
 						return;
-					} else if (!xbow && ammo.getDef().getWearableId() == 1001) {
+					} else if (!xbow && ammo.getDef(getOwner().getWorld()).getWearableId() == 1001) {
 						getPlayerOwner().message("You can't fire bolts with a bow");
 						getPlayerOwner().resetRange();
 						return;
@@ -192,7 +191,7 @@ public class RangeEvent extends GameTickEvent {
 							continue;
 						}
 						arrowID = aID;
-						if (!Server.getServer().getConfig().MEMBER_WORLD) {
+						if (!getWorld().getServer().getConfig().MEMBER_WORLD) {
 							if (arrowID != 11 && arrowID != 190) {
 								getPlayerOwner().message("You don't have enough ammo in your quiver");
 								getPlayerOwner().resetRange();
@@ -284,7 +283,7 @@ public class RangeEvent extends GameTickEvent {
 					GroundItem arrows = getArrows(arrowID);
 					if (!Npc.handleRingOfAvarice(getPlayerOwner(), new Item(arrowID, 1))) {
 						if (arrows == null) {
-							World.getWorld().registerItem(
+							getWorld().registerItem(
 								new GroundItem(getPlayerOwner().getWorld(), arrowID, target.getX(), target.getY(), 1, getPlayerOwner()));
 						} else {
 							arrows.setAmount(arrows.getAmount() + 1);
@@ -301,7 +300,7 @@ public class RangeEvent extends GameTickEvent {
 						target.startPoisonEvent();
 					}
 				}
-				Server.getServer().getGameEventHandler().add(new ProjectileEvent(getPlayerOwner(), target, damage, 2));
+				getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getWorld(), getPlayerOwner(), target, damage, 2));
 				getOwner().setKillType(2);
 				deliveredFirstProjectile = true;
 			}

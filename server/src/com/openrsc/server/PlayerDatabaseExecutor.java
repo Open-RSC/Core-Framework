@@ -5,7 +5,6 @@ import com.openrsc.server.event.rsc.ImmediateEvent;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.login.LoginTask;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.ThrottleFilter;
 import com.openrsc.server.sql.DatabasePlayerLoader;
 import com.openrsc.server.util.rsc.LoginResponse;
@@ -60,7 +59,7 @@ public class PlayerDatabaseExecutor extends ThrottleFilter implements Runnable {
 						final Player loadedPlayer = database.loadPlayer(loginRequest);
 
 						LoginTask loginTask = new LoginTask(loginRequest, loadedPlayer);
-						getServer().getGameEventHandler().add(new ImmediateEvent("Login Player") {
+						getServer().getGameEventHandler().add(new ImmediateEvent(getServer().getWorld(), "Login Player") {
 							@Override
 							public void action() {
 								loginTask.run();
@@ -80,7 +79,7 @@ public class PlayerDatabaseExecutor extends ThrottleFilter implements Runnable {
 				Player playerToRemove = null;
 				while ((playerToRemove = removeRequests.poll()) != null) {
 					playerToRemove.remove();
-					World.getWorld().getPlayers().remove(playerToRemove);
+					getServer().getWorld().getPlayers().remove(playerToRemove);
 					//LOGGER.info("Removed player " + playerToRemove.getUsername() + "");
 				}
 			} catch (Throwable e) {

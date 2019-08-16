@@ -89,7 +89,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 		if (p.getLocation().inBounds(445, 749, 449, 753)) {
 			message(p, "You hear an unearthly moaning sound as you see",
 				"an apparition materialises right in front of you.");
-			Npc zadimus = spawnNpc(NpcId.ZADIMUS.id(), p.getX(), p.getY(), 60000);
+			Npc zadimus = spawnNpc(p.getWorld(), NpcId.ZADIMUS.id(), p.getX(), p.getY(), 60000);
 			sleep(500);
 			if (zadimus != null) {
 				npcTalk(p, zadimus, "You have released me from my torture, and now I shall aid you");
@@ -146,7 +146,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				removeItem(p, ItemId.RASHILIYA_CORPSE.id(), 1);
 				message(p, "You drop Rashiliyias remains on the ground.",
 					"The bones turn to dust and forms into the shape of a human figure.");
-				Npc rash = spawnNpc(NpcId.RASHILIYIA.id(), p.getX(), p.getY(), 30000);
+				Npc rash = spawnNpc(p.getWorld(), NpcId.RASHILIYIA.id(), p.getX(), p.getY(), 30000);
 				message(p, "The figure turns to you and you hear a cackling, croaky voice on the air.");
 				if (rash != null) {
 					npcTalk(p, rash, "Many thanks for releasing me!",
@@ -460,11 +460,11 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				p.message("against stone as you see skeletons and ");
 				sleep(1000);
 				p.message("Zombies rising up out of the ground.");
-				spawnNpc(40, p.getX() - 1, p.getY() + 1, 60000);
-				spawnNpc(40, p.getX() - 1, p.getY() - 1, 60000);
+				spawnNpc(p.getWorld(), 40, p.getX() - 1, p.getY() + 1, 60000);
+				spawnNpc(p.getWorld(), 40, p.getX() - 1, p.getY() - 1, 60000);
 
-				spawnNpc(542, p.getX() + 2, p.getY() + 1, 60000);
-				spawnNpc(542, p.getX() + 1, p.getY() - 1, 60000);
+				spawnNpc(p.getWorld(), 542, p.getX() + 2, p.getY() + 1, 60000);
+				spawnNpc(p.getWorld(), 542, p.getX() + 1, p.getY() - 1, 60000);
 				p.message("The coins turn to dust in your hands.");
 				p.getCache().store("coins_shilo_cave", true);
 			}

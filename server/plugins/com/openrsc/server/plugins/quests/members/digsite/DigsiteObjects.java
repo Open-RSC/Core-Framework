@@ -6,7 +6,6 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
@@ -80,7 +79,7 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 				message(p, "You search the chest");
 				p.message("You find some unusual powder inside...");
 				addItem(p, ItemId.UNIDENTIFIED_POWDER.id(), 1);
-				World.getWorld().registerGameObject(
+				p.getWorld().registerGameObject(
 						new GameObject(obj.getWorld(), obj.getLocation(), TENT_CHEST_LOCKED, obj.getDirection(),
 							obj.getType()));
 			}

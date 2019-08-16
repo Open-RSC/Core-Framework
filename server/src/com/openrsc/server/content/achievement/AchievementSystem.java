@@ -9,7 +9,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,21 +20,28 @@ import java.util.LinkedList;
 
 public class AchievementSystem {
 	private static final Logger LOGGER = LogManager.getLogger();
+
 	private static final int ACHIEVEMENT_COMPLETED = 2;
 	private static final int ACHIEVEMENT_STARTED = 1;
 
-	private static final LinkedList<Achievement> loadedAchievements = new LinkedList<Achievement>();
+	private final LinkedList<Achievement> loadedAchievements = new LinkedList<Achievement>();
 
-	public static void loadAchievements() {
+	private final Server server;
+
+	public AchievementSystem(Server server) {
+		this.server = server;
+	}
+
+	public void load() {
 		loadedAchievements.clear();
 
 		try {
-			PreparedStatement fetchAchievement = Server.getServer().getDatabaseConnection()
-				.prepareStatement("SELECT `id`, `name`, `description`, `extra`, `added` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "achievements` ORDER BY `id` ASC");
-			PreparedStatement fetchRewards = Server.getServer().getDatabaseConnection()
-				.prepareStatement("SELECT `item_id`, `amount`, `guaranteed`, `reward_type` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "achievement_reward` WHERE `achievement_id` = ?");
-			PreparedStatement fetchTasks = Server.getServer().getDatabaseConnection()
-				.prepareStatement("SELECT `type`, `do_id`, `do_amount` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "achievement_task` WHERE `achievement_id` = ?");
+			PreparedStatement fetchAchievement = getServer().getDatabaseConnection()
+				.prepareStatement("SELECT `id`, `name`, `description`, `extra`, `added` FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "achievements` ORDER BY `id` ASC");
+			PreparedStatement fetchRewards = getServer().getDatabaseConnection()
+				.prepareStatement("SELECT `item_id`, `amount`, `guaranteed`, `reward_type` FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "achievement_reward` WHERE `achievement_id` = ?");
+			PreparedStatement fetchTasks = getServer().getDatabaseConnection()
+				.prepareStatement("SELECT `type`, `do_id`, `do_amount` FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "achievement_task` WHERE `achievement_id` = ?");
 
 			ResultSet result = fetchAchievement.executeQuery();
 			while (result.next()) {
@@ -69,11 +75,11 @@ public class AchievementSystem {
 		}
 	}
 
-	public static LinkedList<Achievement> getAchievements() {
+	public LinkedList<Achievement> getAchievements() {
 		return loadedAchievements;
 	}
 
-	public static ArrayList<Achievement> getAvailableQuestsForEntity(Player player, Entity e) {
+	public ArrayList<Achievement> getAvailableQuestsForEntity(Player player, Entity e) {
 		ArrayList<Achievement> tasksAvailable = new ArrayList<Achievement>();
 		for (Achievement task : loadedAchievements) {
 			if (e.getID() == task.getStartID()) {
@@ -110,7 +116,7 @@ public class AchievementSystem {
 		return tasksAvailable;
 	}
 
-	public static boolean isPlayerCanStartQuest(Player player, Achievement task) {
+	public boolean isPlayerCanStartQuest(Player player, Achievement task) {
 		if (playerCompletedQuest(player, task)) {
 			return false;
 		}
@@ -229,7 +235,7 @@ public class AchievementSystem {
 		}
 	}*/
 
-	public static String getTaskProgressText(Player p, int id) {
+	public String getTaskProgressText(Player p, int id) {
 		String questInfo = "Task Progress: %";
 
 		Achievement quest = loadedAchievements.get(id);
@@ -245,7 +251,7 @@ public class AchievementSystem {
 				taskHeader = "Gather " + task.getAmount() + " of item "
 					+ p.getWorld().getServer().getEntityHandler().getItemDef(task.getId()).getName() + ": ";
 			} else if (task.getTask() == TaskType.DO_QUEST) {
-				taskHeader = "Complete Quest " + World.getWorld().getQuest(task.getId()).getQuestName() + ": ";
+				taskHeader = "Complete Quest " + p.getWorld().getQuest(task.getId()).getQuestName() + ": ";
 			}
 			int taskProgress = getTaskProgress(p, task);
 			questInfo += (taskProgress == task.getAmount() ? "@gre@" : "@red@") + taskHeader + " "
@@ -254,7 +260,7 @@ public class AchievementSystem {
 		return questInfo;
 	}
 
-	public static int getTaskProgress(Player p, AchievementTask task) {
+	public int getTaskProgress(Player p, AchievementTask task) {
 		if (task.getTask() == TaskType.DO_QUEST) {
 			return p.getQuestStage(task.getId()) == -1 ? 1 : 0;
 		}
@@ -264,29 +270,29 @@ public class AchievementSystem {
 		return p.getCache().getInt("simpletask[" + task.getId() + "]_task_" + task.getTask().toString());
 	}
 
-	public static void setQuestStage(Player p, int questID, int stage) {
+	public void setQuestStage(Player p, int questID, int stage) {
 		p.getCache().set("simpletask[" + questID + "]_stage", (int) stage);
 	}
 
-	public static void setQuestStage(Player p, Achievement quest, int stage) {
+	public void setQuestStage(Player p, Achievement quest, int stage) {
 		p.getCache().set("simpletask[" + quest.getId() + "]_stage", (int) stage);
 	}
 
-	public static boolean playerCompletedQuest(Player p, Achievement quest) {
+	public boolean playerCompletedQuest(Player p, Achievement quest) {
 		if (p.getCache().hasKey("simpletask[" + quest.getId() + "]_stage")) {
 			return p.getCache().getInt("simpletask[" + quest.getId() + "]_stage") == ACHIEVEMENT_COMPLETED;
 		}
 		return false;
 	}
 
-	public static boolean playerCompletedQuest(Player p, int id) {
+	public boolean playerCompletedQuest(Player p, int id) {
 		if (p.getCache().hasKey("simpletask[" + id + "]_stage")) {
 			return p.getCache().getInt("simpletask[" + id + "]_stage") == ACHIEVEMENT_COMPLETED;
 		}
 		return false;
 	}
 
-	public static boolean playerCanFinishQuest(Player p, Achievement quest) {
+	public boolean playerCanFinishQuest(Player p, Achievement quest) {
 		int completedTasks = 0;
 		for (AchievementTask task : quest.getTasks()) {
 			if (getTaskProgress(p, task) >= task.getAmount()) {
@@ -299,14 +305,14 @@ public class AchievementSystem {
 		return false;
 	}
 
-	private static boolean playerStartedQuest(Player p, Achievement quest) {
+	private boolean playerStartedQuest(Player p, Achievement quest) {
 		if (p.getCache().hasKey("simpletask[" + quest.getId() + "]_stage")) {
 			return p.getCache().getInt("simpletask[" + quest.getId() + "]_stage") == ACHIEVEMENT_STARTED;
 		}
 		return false;
 	}
 
-	public static void checkAndIncGatherItemTasks(Player p, Item item) {
+	public void checkAndIncGatherItemTasks(Player p, Item item) {
 		for (Achievement quest : loadedAchievements) {
 			if (!playerStartedQuest(p, quest))
 				continue;
@@ -318,7 +324,7 @@ public class AchievementSystem {
 						p.getCache().set("simpletask[" + task.getId() + "]_task_" + task.getTask().toString(),
 							newAmount);
 						if (newAmount == task.getAmount()) {
-							p.message("@gre@You have completed task gather item " + item.getDef().getName() + "x"
+							p.message("@gre@You have completed task gather item " + item.getDef(p.getWorld()).getName() + "x"
 								+ newAmount + "!");
 						}
 					}
@@ -327,7 +333,7 @@ public class AchievementSystem {
 		}
 	}
 
-	public static void checkAndIncSlayNpcTasks(Player p, Npc npc) {
+	public void checkAndIncSlayNpcTasks(Player p, Npc npc) {
 		for (Achievement quest : loadedAchievements) {
 			if (!playerStartedQuest(p, quest))
 				continue;
@@ -348,7 +354,7 @@ public class AchievementSystem {
 		}
 	}
 
-	public static void achievementListGUI(Player p, int achievement, int status) {
+	public void achievementListGUI(Player p, int achievement, int status) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(50);
 		s.writeByte((byte) 2);
@@ -357,10 +363,10 @@ public class AchievementSystem {
 		p.write(s.toPacket());
 	}
 
-	public static void achievementListGUI(Player p) {
+	public  void achievementListGUI(Player p) {
 		try {
 			com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
-			LinkedList<Achievement> availableTasks = AchievementSystem.getAchievements();
+			LinkedList<Achievement> availableTasks = getAchievements();
 			s.setID(50);
 			s.writeByte((byte) 1);
 			s.writeShort(availableTasks.size());
@@ -376,5 +382,9 @@ public class AchievementSystem {
 		} catch (Exception e) {
 			LOGGER.catching(e);
 		}
+	}
+
+	public Server getServer() {
+		return server;
 	}
 }

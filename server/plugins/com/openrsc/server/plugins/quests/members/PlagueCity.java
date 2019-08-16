@@ -7,7 +7,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
@@ -901,10 +900,10 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 				return;
 			}
 			if (p.getY() >= 3448) {
-				World.getWorld().replaceGameObject(obj,
+				p.getWorld().replaceGameObject(obj,
 					new GameObject(obj.getWorld(), obj.getLocation(), 181, obj
 						.getDirection(), obj.getType()));
-				World.getWorld().delayedSpawnObject(obj.getLoc(), 2000);
+				p.getWorld().delayedSpawnObject(obj.getLoc(), 2000);
 				p.message("you go through the gate");
 				p.teleport(637, 3447, false);
 			} else {

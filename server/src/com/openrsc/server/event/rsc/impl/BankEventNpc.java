@@ -16,8 +16,8 @@ public class BankEventNpc extends GameTickEvent {
 	
 	private Npc target;
 
-	public BankEventNpc(Npc owner, Npc banker) {
-		super(owner, 1, "Bank Event NPC");
+	public BankEventNpc(World world, Npc owner, Npc banker) {
+		super(world, owner, 1, "Bank Event NPC");
 		this.target = banker;
 	}
 
@@ -80,9 +80,9 @@ public class BankEventNpc extends GameTickEvent {
 					return;
 				}*/
 			getOwner().face(target);
-			for (Player p : World.getWorld().getPlayers()) 
+			for (Player p : getWorld().getPlayers())
 			{
-			World.getWorld().registerItem(new GroundItem(p.getWorld(), 465, getOwner().getX(), getOwner().getY(), 1, p));
+			getWorld().registerItem(new GroundItem(p.getWorld(), 465, getOwner().getX(), getOwner().getY(), 1, p));
 			}
 		}
 	}

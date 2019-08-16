@@ -163,9 +163,9 @@ public class Murphy implements MiniGameInterface, TalkToNpcListener, TalkToNpcEx
 		FishingTrawler instance = null;
 		if (choice == 0 || choice == 1) {
 			if (choice == 0) {
-				instance = World.getWorld().getFishingTrawler(TrawlerBoat.EAST);
+				instance = p.getWorld().getFishingTrawler(TrawlerBoat.EAST);
 			} else if (choice == 1) {
-				instance = World.getWorld().getFishingTrawler(TrawlerBoat.WEST);
+				instance = p.getWorld().getFishingTrawler(TrawlerBoat.WEST);
 			}
 			if (instance != null && instance.isAvailable()) {
 				npcTalk(p, n, "good stuff, jump aboard",
@@ -196,8 +196,8 @@ public class Murphy implements MiniGameInterface, TalkToNpcListener, TalkToNpcEx
 				playerTalk(p, n, "i insist murphy, take me back");
 				npcTalk(p, n, "ok, ok, i'll try, but don't say i didn't warn you");
 				message(p, 1900, "murphy sharply turns the large ship", "the boats gone under", "you're lost at sea!");
-				if (World.getWorld().getFishingTrawler(p) != null) {
-					World.getWorld().getFishingTrawler(p).quitPlayer(p);
+				if (p.getWorld().getFishingTrawler(p) != null) {
+					p.getWorld().getFishingTrawler(p).quitPlayer(p);
 				}
 				else {
 					p.teleport(302, 759, false);

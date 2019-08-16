@@ -1,6 +1,5 @@
 package com.openrsc.server.model.entity.player;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.net.rsc.ActionSender;
 
 import java.util.ArrayList;
@@ -26,14 +25,14 @@ public class Social {
 	}
 
 	public boolean addFriend(long id, int world, String friendName) {
-		boolean added = Server.getServer().getPlayerDataProcessor().getDatabase().addFriend(player.getDatabaseID(), id, friendName);
+		boolean added = player.getWorld().getServer().getPlayerDataProcessor().getDatabase().addFriend(player.getDatabaseID(), id, friendName);
 		if (added)
 			friendList.put(id, world);
 		return added;
 	}
 
 	public boolean addIgnore(long id, int i, String friendName) {
-		boolean added = Server.getServer().getPlayerDataProcessor().getDatabase().addIgnore(player.getDatabaseID(), id, friendName);
+		boolean added = player.getWorld().getServer().getPlayerDataProcessor().getDatabase().addIgnore(player.getDatabaseID(), id, friendName);
 		if (added)
 			ignoreList.add(id);
 		return added;
@@ -41,12 +40,12 @@ public class Social {
 
 	public void removeFriend(long id) {
 		friendList.remove(id);
-		Server.getServer().getPlayerDataProcessor().getDatabase().removeFriend(player.getDatabaseID(), id);
+		player.getWorld().getServer().getPlayerDataProcessor().getDatabase().removeFriend(player.getDatabaseID(), id);
 	}
 
 	public void removeIgnore(long id) {
 		ignoreList.remove(id);
-		Server.getServer().getPlayerDataProcessor().getDatabase().removeIgnore(player.getDatabaseID(), id);
+		player.getWorld().getServer().getPlayerDataProcessor().getDatabase().removeIgnore(player.getDatabaseID(), id);
 	}
 
 	public boolean isFriendsWith(long usernameHash) {

@@ -1,12 +1,10 @@
 package com.openrsc.server.model.entity.player;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.model.container.ContainerListener;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.container.ItemContainer;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.states.Action;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.sql.query.logs.DeathLog;
@@ -164,13 +162,13 @@ public class Duel implements ContainerListener {
 		for (Item item : getDuelOffer().getItems()) {
 			Item affectedItem = player.getInventory().get(item);
 			if (affectedItem == null) {
-				if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB && item.getAmount() == 1 && Functions.isWielding(player, item.getID())) {
-					player.updateWornItems(item.getDef().getWieldPosition(),
-						player.getSettings().getAppearance().getSprite(item.getDef().getWieldPosition()),
-						item.getDef().getWearableId(), false);
-					player.getEquipment().equip(item.getDef().getWieldPosition(),null);
+				if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && item.getAmount() == 1 && Functions.isWielding(player, item.getID())) {
+					player.updateWornItems(item.getDef(player.getWorld()).getWieldPosition(),
+						player.getSettings().getAppearance().getSprite(item.getDef(player.getWorld()).getWieldPosition()),
+						item.getDef(player.getWorld()).getWearableId(), false);
+					player.getEquipment().equip(item.getDef(player.getWorld()).getWieldPosition(),null);
 					log.addDroppedItem(item);
-					World.getWorld().registerItem(new GroundItem(duelOpponent.getWorld(), item.getID(), player.getX(), player.getY(), item.getAmount(), duelOpponent));
+					player.getWorld().registerItem(new GroundItem(duelOpponent.getWorld(), item.getID(), player.getX(), player.getY(), item.getAmount(), duelOpponent));
 				}
 				LOGGER.info("Missing staked item [" + item.getID() + ", " + item.getAmount()
 					+ "] from = " + player.getUsername() + "; to = " + duelRecipient.getUsername() + ";");
@@ -178,7 +176,7 @@ public class Duel implements ContainerListener {
 			} else {
 				player.getInventory().remove(item);
 				log.addDroppedItem(item);
-				World.getWorld().registerItem(new GroundItem(duelOpponent.getWorld(), item.getID(), player.getX(), player.getY(), item.getAmount(), duelOpponent));
+				player.getWorld().registerItem(new GroundItem(duelOpponent.getWorld(), item.getID(), player.getX(), player.getY(), item.getAmount(), duelOpponent));
 			}
 		}
 		log.build();

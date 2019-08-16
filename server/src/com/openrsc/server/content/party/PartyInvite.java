@@ -1,11 +1,9 @@
 package com.openrsc.server.content.party;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.model.world.World;
 
 public class PartyInvite {
 
@@ -115,7 +113,7 @@ public class PartyInvite {
 		} else {
 			invited.message("@whi@[@gre@Party@whi@]@yel@" + player.getParty().getPlayers().size() + " @whi@members. (Loot Sharing) - @red@NO");
 		}
-		for (Player p : World.getWorld().getPlayers()) {
+		for (Player p : player.getWorld().getPlayers()) {
 			if (p.getParty() == player.getParty()) {
 				invited.message("@gre@[Party]@whi@" + p + "");
 			}
@@ -130,7 +128,7 @@ public class PartyInvite {
 	}
 
 	private void startTimeoutCounter() {
-		timeOutEvent = new SingleEvent(null, 60000, "Party Invite") {
+		timeOutEvent = new SingleEvent(invited.getWorld(), null, 60000, "Party Invite") {
 			@Override
 			public void action() {
 				inviter.message(invited.getUsername() + " did not respond to your invitation");
@@ -139,7 +137,7 @@ public class PartyInvite {
 				inviter.message(invited.getUsername() + "'s Party invitation is no longer active");
 			}
 		};
-		Server.getServer().getGameEventHandler().add(timeOutEvent);
+		invited.getWorld().getServer().getGameEventHandler().add(timeOutEvent);
 	}
 
 	public void accept() {

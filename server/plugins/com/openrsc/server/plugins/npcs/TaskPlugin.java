@@ -1,7 +1,6 @@
 package com.openrsc.server.plugins.npcs;
 
 import com.openrsc.server.content.achievement.Achievement;
-import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -18,7 +17,7 @@ public class TaskPlugin implements TalkToNpcListener, TalkToNpcExecutiveListener
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player player) {
-		ArrayList<Achievement> availableTasks = AchievementSystem.getAvailableQuestsForEntity(player, obj);
+		ArrayList<Achievement> availableTasks = player.getWorld().getServer().getAchievementSystem().getAvailableQuestsForEntity(player, obj);
 		if (availableTasks.size() > 1) {
 			player.message("You can get multiple tasks from this object");
 			Menu menu = new Menu();
@@ -39,7 +38,7 @@ public class TaskPlugin implements TalkToNpcListener, TalkToNpcExecutiveListener
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		ArrayList<Achievement> availableTasks = AchievementSystem.getAvailableQuestsForEntity(p, n);
+		ArrayList<Achievement> availableTasks = p.getWorld().getServer().getAchievementSystem().getAvailableQuestsForEntity(p, n);
 		if (availableTasks.size() > 1) {
 			p.message("You can get multiple tasks from this character");
 			Menu menu = new Menu();
@@ -59,11 +58,11 @@ public class TaskPlugin implements TalkToNpcListener, TalkToNpcExecutiveListener
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
-		return AchievementSystem.getAvailableQuestsForEntity(player, obj).size() > 0;
+		return player.getWorld().getServer().getAchievementSystem().getAvailableQuestsForEntity(player, obj).size() > 0;
 	}
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return AchievementSystem.getAvailableQuestsForEntity(p, n).size() > 0;
+		return p.getWorld().getServer().getAchievementSystem().getAvailableQuestsForEntity(p, n).size() > 0;
 	}
 }

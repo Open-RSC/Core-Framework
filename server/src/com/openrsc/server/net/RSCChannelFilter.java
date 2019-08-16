@@ -41,6 +41,12 @@ public class RSCChannelFilter extends ChannelInboundHandlerAdapter {
 		return ((InetSocketAddress) channel.remoteAddress()).getAddress().getHostAddress();
 	}
 
+	private final Server server;
+
+	public RSCChannelFilter(Server server) {
+		this.server = server;
+	}
+
 	@Override
 	public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
 		String host = getHost(ctx.channel());
@@ -52,7 +58,7 @@ public class RSCChannelFilter extends ChannelInboundHandlerAdapter {
 		connections.add(host);
 
 		// evaluate the amount of connections from this host.
-		if (connections.count(host) > Server.getServer().getConfig().CONNECTION_LIMIT) {
+		if (connections.count(host) > getServer().getConfig().CONNECTION_LIMIT) {
 			LOGGER.info("Blocked new connection on host {}", host);
 			ctx.writeAndFlush(new PacketBuilder().writeByte((byte) LoginResponse.LOGIN_ATTEMPTS_EXCEEDED).toPacket());
 			ctx.close();
@@ -81,4 +87,7 @@ public class RSCChannelFilter extends ChannelInboundHandlerAdapter {
 		ctx.fireChannelUnregistered();
 	}
 
+	public Server getServer() {
+		return server;
+	}
 }

@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.skills;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.custom.BatchEvent;
@@ -8,7 +7,6 @@ import com.openrsc.server.external.ObjectWoodcuttingDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -40,11 +38,11 @@ public class Woodcutting implements ObjectActionListener,
 			owner.message("Nothing interesting happens");
 			return;
 		}
-		if (def.getReqLevel() > 1 && !Server.getServer().getConfig().MEMBER_WORLD) {
+		if (def.getReqLevel() > 1 && !owner.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			owner.message(owner.MEMBER_MESSAGE);
 			return;
 		}
-		if (Server.getServer().getConfig().WANT_FATIGUE) {
+		if (owner.getWorld().getServer().getConfig().WANT_FATIGUE) {
 			if (owner.getFatigue() >= owner.MAX_FATIGUE) {
 				owner.message("You are too tired to cut the tree");
 				return;
@@ -69,11 +67,11 @@ public class Woodcutting implements ObjectActionListener,
 		final int axeID = axeId;
 		owner.message("You swing your " + owner.getWorld().getServer().getEntityHandler().getItemDef(axeId).getName().toLowerCase() + " at the tree...");
 		showBubble(owner, new Item(axeId));
-		owner.setBatchEvent(new BatchEvent(owner, 1800, "Woodcutting", Formulae.getRepeatTimes(owner,Skills.WOODCUT), true) {
+		owner.setBatchEvent(new BatchEvent(owner.getWorld(), owner, 1800, "Woodcutting", Formulae.getRepeatTimes(owner,Skills.WOODCUT), true) {
 			@Override
 			public void action() {
 				final Item log = new Item(def.getLogId());
-				if (Server.getServer().getConfig().WANT_FATIGUE) {
+				if (owner.getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (owner.getFatigue() >= owner.MAX_FATIGUE) {
 						owner.message("You are too tired to cut the tree");
 						interrupt();
@@ -103,8 +101,8 @@ public class Woodcutting implements ObjectActionListener,
 						interrupt();
 						if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
 							GameObject newObject = new GameObject(owner.getWorld(), object.getLocation(), stumpId, object.getDirection(), object.getType());
-							World.getWorld().replaceGameObject(object, newObject);
-							World.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
+							getOwner().getWorld().replaceGameObject(object, newObject);
+							getOwner().getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
 						}
 					}
 				} else {

@@ -4,6 +4,7 @@ import com.openrsc.server.event.rsc.SingleTickEvent;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.Projectile;
+import com.openrsc.server.model.world.World;
 
 public class BenignProjectileEvent extends SingleTickEvent {
 
@@ -12,8 +13,8 @@ public class BenignProjectileEvent extends SingleTickEvent {
 	protected int type;
 	boolean canceled;
 
-	BenignProjectileEvent(Mob caster, Mob opponent, int damage, int type) {
-		super(caster, 1, "Benign Projectile Event");
+	BenignProjectileEvent(World world, Mob caster, Mob opponent, int damage, int type) {
+		super(world, caster, 1, "Benign Projectile Event");
 		this.caster = caster;
 		this.opponent = opponent;
 		this.damage = damage;

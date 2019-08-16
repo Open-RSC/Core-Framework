@@ -7,11 +7,10 @@ import com.openrsc.server.model.world.World;
 
 public class ObjectRemover extends GameTickEvent {
 
-	public static final World world = World.getWorld();
 	private GameObject object;
 
-	public ObjectRemover(GameObject object, int ticks) {
-		super(null, ticks, "Object Remover");
+	public ObjectRemover(World world, GameObject object, int ticks) {
+		super(world,null, ticks, "Object Remover");
 		this.object = object;
 	}
 
@@ -27,7 +26,7 @@ public class ObjectRemover extends GameTickEvent {
 	}
 
 	public void run() {
-		world.unregisterGameObject(object);
+		getWorld().unregisterGameObject(object);
 		stop();
 	}
 
