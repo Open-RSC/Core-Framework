@@ -134,7 +134,7 @@ public final class Server implements Runnable {
 		pluginHandler = new PluginHandler(this);
 		combatScriptLoader = new CombatScriptLoader(this);
 		constants = new Constants(this);
-		databaseConnection = new DatabaseConnection(this, getName()+" : Database Connection");
+		databaseConnection = new DatabaseConnection(this, "Database Connection");
 		discordService = new DiscordService(this);
 		playerDataProcessor = new PlayerDatabaseExecutor(this);
 		world = new World(this);
