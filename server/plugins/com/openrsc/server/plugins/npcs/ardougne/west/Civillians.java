@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.npcs.ardougne.west;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -20,7 +19,7 @@ public class Civillians implements TalkToNpcExecutiveListener, TalkToNpcListener
 		boolean hasGertrudesCat = p.getInventory().hasItemId(ItemId.GERTRUDES_CAT.id());
 		boolean hasFluffsKittens = p.getInventory().hasItemId(ItemId.KITTENS.id());
 		boolean hasAnyCat = hasCat || hasKitten || hasKardiasCat || hasGertrudesCat 
-				|| (hasFluffsKittens && Server.getServer().getConfig().WANT_SHOW_KITTENS_CIVILLIAN);
+				|| (hasFluffsKittens && p.getWorld().getServer().getConfig().WANT_SHOW_KITTENS_CIVILLIAN);
 		switch(NpcId.getById(n.getID())) {
 		case CIVILLIAN_APRON:
 			playerTalk(p, n, "hi");
@@ -38,7 +37,7 @@ public class Civillians implements TalkToNpcExecutiveListener, TalkToNpcListener
 				else if (hasKitten) civilianShowKittenDialogue(p, n);
 				else if (hasKardiasCat) civilianShowKardiasCatDialogue(p, n);
 				else if (hasGertrudesCat) civilianShowGertrudesCatDialogue(p, n);
-				else if (hasFluffsKittens && Server.getServer().getConfig().WANT_SHOW_KITTENS_CIVILLIAN)
+				else if (hasFluffsKittens && p.getWorld().getServer().getConfig().WANT_SHOW_KITTENS_CIVILLIAN)
 					civilianShowFluffsKittensDialogue(p, n);
 			}
 			break;
@@ -55,7 +54,7 @@ public class Civillians implements TalkToNpcExecutiveListener, TalkToNpcListener
 				else if (hasKitten) civilianShowKittenDialogue(p, n);
 				else if (hasKardiasCat) civilianShowKardiasCatDialogue(p, n);
 				else if (hasGertrudesCat) civilianShowGertrudesCatDialogue(p, n);
-				else if (hasFluffsKittens && Server.getServer().getConfig().WANT_SHOW_KITTENS_CIVILLIAN)
+				else if (hasFluffsKittens && p.getWorld().getServer().getConfig().WANT_SHOW_KITTENS_CIVILLIAN)
 					civilianShowFluffsKittensDialogue(p, n);
 			}
 			break;
@@ -72,7 +71,7 @@ public class Civillians implements TalkToNpcExecutiveListener, TalkToNpcListener
 				else if (hasKitten) civilianShowKittenDialogue(p, n);
 				else if (hasKardiasCat) civilianShowKardiasCatDialogue(p, n);
 				else if (hasGertrudesCat) civilianShowGertrudesCatDialogue(p, n);
-				else if (hasFluffsKittens && Server.getServer().getConfig().WANT_SHOW_KITTENS_CIVILLIAN)
+				else if (hasFluffsKittens && p.getWorld().getServer().getConfig().WANT_SHOW_KITTENS_CIVILLIAN)
 					civilianShowFluffsKittensDialogue(p, n);
 			}
 			break;

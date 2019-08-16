@@ -1,7 +1,9 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.mechanism;
 
-import com.openrsc.server.constants.*;
-import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -14,17 +16,7 @@ import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
-import static com.openrsc.server.plugins.Functions.spawnNpc;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestInvAction implements InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener {
 
@@ -94,7 +86,7 @@ public class LegendsQuestInvAction implements InvActionListener, InvActionExecut
 				message(p, 600, "There is no suitable candidate to cast this spell on.");
 			}
 		}
-		else if (item.getID() == ItemId.A_RED_CRYSTAL.id() && !Server.getServer().getConfig().WANT_PETS) {
+		else if (item.getID() == ItemId.A_RED_CRYSTAL.id() && !p.getWorld().getServer().getConfig().WANT_PETS) {
 			message(p, 1300, "As the crystal touches your hands a voice inside of your head says..",
 				"@gre@Voice in head: Bring life to the dragons eye.");
 		}

@@ -1,12 +1,10 @@
 package com.openrsc.server.plugins.itemactions;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.HpUpdate;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
@@ -19,30 +17,30 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 
 	@Override
 	public boolean blockInvAction(Item item, Player p, String command) {
-		return item.isEdible() || item.getID() == ItemId.ROTTEN_APPLES.id();
+		return item.isEdible(p.getWorld()) || item.getID() == ItemId.ROTTEN_APPLES.id();
 	}
 
 	@Override
 	public void onInvAction(Item item, Player player, String command) {
-		if (item.isEdible() || item.getID() == ItemId.ROTTEN_APPLES.id()) {
+		if (item.isEdible(player.getWorld()) || item.getID() == ItemId.ROTTEN_APPLES.id()) {
 			if (player.cantConsume()) {
 				return;
 			}
-			player.setConsumeTimer(Server.getServer().getConfig().GAME_TICK); // eat speed is same as tick speed setting
+			player.setConsumeTimer(player.getWorld().getServer().getConfig().GAME_TICK); // eat speed is same as tick speed setting
 			ActionSender.sendSound(player, "eat");
 
 			int id = item.getID();
 			boolean isKebabVariant = false;
 			if (id == ItemId.SPECIAL_DEFENSE_CABBAGE.id() || id == ItemId.CABBAGE.id()) {
 				if (id == ItemId.SPECIAL_DEFENSE_CABBAGE.id()) {
-					player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef().getName());
+					player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef(player.getWorld()).getName());
 					player.playerServerMessage(MessageType.QUEST, "It seems to taste nicer than normal");
 					int lv = player.getSkills().getMaxStat(Skills.DEFENSE);
 					int newStat = player.getSkills().getLevel(Skills.DEFENSE) + 1;
 					if (newStat <= (lv + 1))
 						player.getSkills().setLevel(Skills.DEFENSE, newStat);
 				} else {
-					player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef().getName()
+					player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef(player.getWorld()).getName()
 							+ ". Yuck!");
 				}
 			} else if (id == ItemId.KEBAB.id()) {
@@ -58,14 +56,14 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 				message(player, "You eat the veg ball");
 				player.message("it tastes quite good");
 			} else if (id == ItemId.WORM_HOLE.id() || id == ItemId.GNOME_WAITER_WORM_HOLE.id()) {
-				message(player, "You eat the " + item.getDef().getName().toLowerCase());
+				message(player, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase());
 				playerTalk(player, null, "yuck");
 				player.message("that was awful");
 			} else if (id == ItemId.TANGLED_TOADS_LEGS.id() || id == ItemId.GNOME_WAITER_TANGLED_TOADS_LEGS.id()) {
 				message(player, "You eat the tangled toads legs");
 				player.message("it tastes.....slimey");
 			} else if (id == ItemId.ROCK_CAKE.id()) {
-				message(player, "You eat the " + item.getDef().getName().toLowerCase());
+				message(player, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase());
 				playerTalk(player, null, "Ow! I nearly broke a tooth!");
 				player.message("You feel strangely heavier and more tired");
 			} else if (id == ItemId.EQUA_LEAVES.id())
@@ -75,7 +73,7 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 				player.message("You eat the lemon. Yuck!");
 
 			else if (id == ItemId.LEMON_SLICES.id() || id == ItemId.DICED_LEMON.id()) {
-				player.message("You eat the " + item.getDef().getName().toLowerCase() + " ..they're very sour");
+				player.message("You eat the " + item.getDef(player.getWorld()).getName().toLowerCase() + " ..they're very sour");
 			} else if (id == ItemId.DWELLBERRIES.id())
 				player.message("You eat the berrys..quite tasty");
 
@@ -83,7 +81,7 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 				player.message("You eat the lime ..it's quite sour");
 
 			else if (id == ItemId.LIME_SLICES.id() || id == ItemId.LIME_CHUNKS.id())
-				player.message("You eat the " + item.getDef().getName().toLowerCase() + "..they're quite sour");
+				player.message("You eat the " + item.getDef(player.getWorld()).getName().toLowerCase() + "..they're quite sour");
 
 			else if (id == ItemId.ORANGE_SLICES.id())
 				player.message("You eat the orange slices ...yum");
@@ -113,22 +111,22 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 				player.message("it's quite tasty");
 			} else if (id == ItemId.TOAD_BATTA.id() || id == ItemId.GNOME_WAITER_TOAD_BATTA.id()
 				|| id == ItemId.WORM_BATTA.id() || id == ItemId.GNOME_WAITER_WORM_BATTA.id()) {
-				message(player, "You eat the " + item.getDef().getName().toLowerCase());
+				message(player, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase());
 				player.message("it's a bit chewy");
 			} else if (id == ItemId.FRUIT_BATTA.id() || id == ItemId.GNOME_WAITER_FRUIT_BATTA.id()
 				|| id == ItemId.VEG_BATTA.id() || id == ItemId.GNOME_WAITER_VEG_BATTA.id()) {
-				message(player, "You eat the " + item.getDef().getName().toLowerCase());
+				message(player, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase());
 				player.message("it's tastes pretty good");
 			} else if (id == ItemId.CHOC_CRUNCHIES.id() || id == ItemId.GNOME_WAITER_CHOC_CRUNCHIES.id()
 				|| id == ItemId.SPICE_CRUNCHIES.id() || id == ItemId.GNOME_WAITER_SPICE_CRUNCHIES.id()) {
-				message(player, "You eat the " + item.getDef().getName().toLowerCase());
+				message(player, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase());
 				player.message("they're very tasty");
 			} else if (id == ItemId.WORM_CRUNCHIES.id() || id == ItemId.GNOME_WAITER_WORM_CRUNCHIES.id()
 				|| id == ItemId.TOAD_CRUNCHIES.id() || id == ItemId.GNOME_WAITER_TOAD_CRUNCHIES.id()) {
-				message(player, "You eat the " + item.getDef().getName().toLowerCase());
+				message(player, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase());
 				player.message("they're a bit chewy");
-			} else if (eatenByParts(item)) {
-				String itemName = item.getDef().getName().toLowerCase();
+			} else if (eatenByParts(player, item)) {
+				String itemName = item.getDef(player.getWorld()).getName().toLowerCase();
 				String message = "";
 				String needleSt = "half a";
 				String origName;
@@ -164,11 +162,11 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 				playerTalk(player, null, "yuck");
 				player.message("it's rotten, you spit it out");
 			} else
-				player.message("You eat the " + item.getDef().getName().toLowerCase());
+				player.message("You eat the " + item.getDef(player.getWorld()).getName().toLowerCase());
 
 			final boolean heals = player.getSkills().getLevel(Skills.HITS) < player.getSkills().getMaxStat(Skills.HITS);
 			if (heals) {
-				int newHp = player.getSkills().getLevel(Skills.HITS) + item.eatingHeals();
+				int newHp = player.getSkills().getLevel(Skills.HITS) + item.eatingHeals(player.getWorld());
 				if (newHp > player.getSkills().getMaxStat(Skills.HITS)) {
 					newHp = player.getSkills().getMaxStat(Skills.HITS);
 				}
@@ -177,7 +175,7 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 			sleep(325);
 			if (heals && !isKebabVariant) {
 				player.message("It heals some health");
-				for (Player p : World.getWorld().getPlayers()) {
+				for (Player p : player.getWorld().getPlayers()) {
 					if(player.getParty() != null){
 						player.getUpdateFlags().setHpUpdate(new HpUpdate(player, 0));
 						if(player.getParty() == p.getParty()){
@@ -236,7 +234,7 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 	}
 	
 	private void handleTastyKebab(Player player, Item item) {
-		player.message("You eat the " + item.getDef().getName());
+		player.message("You eat the " + item.getDef(player.getWorld()).getName());
 		player.message("It heals some health");
 		// restores up to 19
 		int newStat = player.getSkills().getLevel(Skills.HITS) + 19;
@@ -258,8 +256,8 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 	}
 	
 	// cakes, pies and pizzas (except plain pizza) are eaten partially
-	private boolean eatenByParts(Item item) {
-		String itemName = item.getDef().getName().toLowerCase();
+	private boolean eatenByParts(Player player, Item item) {
+		String itemName = item.getDef(player.getWorld()).getName().toLowerCase();
 		return itemName.contains("cake") || itemName.contains("pie")
 				|| (itemName.contains("pizza") && !itemName.contains("plain pizza"));
 	}

@@ -4,6 +4,7 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.PrayerDef;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,8 +14,8 @@ public class PrayerDrainEvent extends GameTickEvent {
 	private ConcurrentHashMap<PrayerDef, Long> activePrayers = new ConcurrentHashMap<PrayerDef, Long>();
 	private double partialPoints = 0.0;
 
-	public PrayerDrainEvent(Player owner, int delay) {
-		super(owner, 1, "Prayer Drain Event");
+	public PrayerDrainEvent(World world, Player owner, int delay) {
+		super(world, owner, 1, "Prayer Drain Event");
 	}
 
 	@Override

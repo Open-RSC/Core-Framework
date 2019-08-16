@@ -12,7 +12,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.LoginResponse;
 import org.apache.logging.log4j.LogManager;
@@ -94,7 +93,7 @@ public class DatabasePlayerLoader {
 								inventoryWriter.writeByte(-1);
 							else {
 								inventoryWriter.writeShort(inventoryItem.getID());
-								if (inventoryItem.getDef() != null && inventoryItem.getDef().isStackable())
+								if (inventoryItem.getDef(s.getWorld()) != null && inventoryItem.getDef(s.getWorld()).isStackable())
 									inventoryWriter.writeInt(inventoryItem.getAmount());
 							}
 
@@ -109,7 +108,7 @@ public class DatabasePlayerLoader {
 								equipmentWriter.writeByte(-1);
 							else {
 								equipmentWriter.writeShort(equipmentItem.getID());
-								if (equipmentItem.getDef() != null && equipmentItem.getDef().isStackable())
+								if (equipmentItem.getDef(s.getWorld()) != null && equipmentItem.getDef(s.getWorld()).isStackable())
 									equipmentWriter.writeInt(equipmentItem.getAmount());
 							}
 
@@ -565,9 +564,9 @@ public class DatabasePlayerLoader {
 
 			while (result.next()) {
 				Item item = new Item(result.getInt("id"), result.getInt("amount"));
-				ItemDefinition itemDef = item.getDef();
+				ItemDefinition itemDef = item.getDef(save.getWorld());
 				item.setWielded(false);
-				if (item.isWieldable() && result.getInt("wielded") == 1) {
+				if (item.isWieldable(save.getWorld()) && result.getInt("wielded") == 1) {
 					if (itemDef != null) {
 						if (getServer().getConfig().WANT_EQUIPMENT_TAB)
 							equipment.equip(itemDef.getWieldPosition(), item);
@@ -588,8 +587,8 @@ public class DatabasePlayerLoader {
 				result = resultSetFromInteger(conn.getGameQueries().playerEquipped, save.getDatabaseID());
 				while (result.next()) {
 					Item item = new Item(result.getInt("id"), result.getInt("amount"));
-					ItemDefinition itemDef = item.getDef();
-					if (item.isWieldable()) {
+					ItemDefinition itemDef = item.getDef(save.getWorld());
+					if (item.isWieldable(save.getWorld())) {
 						equipment.equip(itemDef.getWieldPosition(), item);
 						save.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(),
 							itemDef.getWearableId(), true);
@@ -892,7 +891,7 @@ public class DatabasePlayerLoader {
 			if (!hashedPassword.equals(playerSet.getString("pass"))) {
 				return (byte) LoginResponse.INVALID_CREDENTIALS;
 			}
-			if (World.getWorld().getPlayer(request.getUsernameHash()) != null) {
+			if (getServer().getWorld().getPlayer(request.getUsernameHash()) != null) {
 				return (byte) LoginResponse.ACCOUNT_LOGGEDIN;
 			}
 			long banExpires = playerSet.getLong("banned");

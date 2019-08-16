@@ -1,16 +1,14 @@
 package com.openrsc.server.plugins.itemactions;
 
 
-import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.event.SingleEvent;
-import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.util.rsc.Formulae;
@@ -19,11 +17,6 @@ import static com.openrsc.server.plugins.Functions.showBubble;
 
 public class Cactus implements InvUseOnObjectListener,
 InvUseOnObjectExecutiveListener {
-	
-	/**
-	 * World instance
-	 */
-	public static final World world = World.getWorld();
 	
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
@@ -41,9 +34,9 @@ InvUseOnObjectExecutiveListener {
 				ItemId.WATER_SKIN_MOUTHFUL_LEFT.id(), ItemId.EMPTY_WATER_SKIN.id()};
 		showBubble(player, item);
 		player.setBusy(true);
-		Server.getServer().getGameEventHandler()
+		player.getWorld().getServer().getGameEventHandler()
 
-			.add(new ShortEvent(player, "Cactus Fill Waterskin") {
+			.add(new ShortEvent(player.getWorld(), player, "Cactus Fill Waterskin") {
 				public void action() {
 					for (int s : skins) {
 						if (getOwner().getInventory().remove(s, 1) > -1) {
@@ -67,21 +60,21 @@ InvUseOnObjectExecutiveListener {
 							// Add dried cacti
 							Point loc = object.getLocation();
 							final GameObject cacti = new GameObject(getOwner().getWorld(), loc, 1028, 0, 0);
-							world.registerGameObject(cacti);
+							getOwner().getWorld().registerGameObject(cacti);
 
 							// Remove healthy cacti
-							world.unregisterGameObject(object);
+							getOwner().getWorld().unregisterGameObject(object);
 							getOwner().incExp(Skills.WOODCUT, 100, true); // Woodcutting XP
 
 							// Swap cacti back after 30 seconds.
-							Server.getServer().getGameEventHandler().add(
-								new SingleEvent(null, 30000, "Cactus Respawn") {
+							getOwner().getWorld().getServer().getGameEventHandler().add(
+								new SingleEvent(getOwner().getWorld(), null, 30000, "Cactus Respawn") {
 
 									@Override
 									public void action() {
 										if (cacti != null) {
-											World.getWorld().registerGameObject(new GameObject(getOwner().getWorld(), loc, 35, 0, 0));
-											World.getWorld().unregisterGameObject(cacti);
+											getOwner().getWorld().registerGameObject(new GameObject(getOwner().getWorld(), loc, 35, 0, 0));
+											getOwner().getWorld().unregisterGameObject(cacti);
 										}
 									}
 								}

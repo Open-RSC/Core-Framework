@@ -1,6 +1,6 @@
 package com.openrsc.server.sql.query.logs;
 
-import com.openrsc.server.Server;
+import com.openrsc.server.model.world.World;
 import com.openrsc.server.sql.query.Query;
 
 import java.sql.Connection;
@@ -11,8 +11,8 @@ public final class GenericLog extends Query {
 
 	private final String message;
 
-	public GenericLog(String message) {
-		super("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "generic_logs`(`message`, `time`) VALUES(?, ?)");
+	public GenericLog(World world, String message) {
+		super("INSERT INTO `" + world.getServer().getConfig().MYSQL_TABLE_PREFIX + "generic_logs`(`message`, `time`) VALUES(?, ?)");
 		this.message = message;
 	}
 

@@ -412,7 +412,7 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 			if (p.getQuestStage(this) == 4) {
 				message(p, "You hear muffled noises from the sack");
 				p.message("You open the sack");
-				Npc percival = spawnNpc(NpcId.SIR_PERCIVAL.id(), 328, 446, 120000);
+				Npc percival = spawnNpc(p.getWorld(), NpcId.SIR_PERCIVAL.id(), 328, 446, 120000);
 				npcTalk(p, percival, "Wow thankyou",
 					"I could hardly breathe in there");
 				int menu = showMenu(p, percival,

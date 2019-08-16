@@ -46,7 +46,7 @@ public class PlayerCollectItemsTask extends MarketTask {
 					break;
 				}
 				player.getBank().add(item);
-				items.append(" @lre@").append(item.getDef().getName()).append(" @whi@x @cya@").append(item.getAmount()).append("@whi@ ").append(i.explanation).append(" %");
+				items.append(" @lre@").append(item.getDef(player.getWorld()).getName()).append(" @whi@x @cya@").append(item.getAmount()).append("@whi@ ").append(i.explanation).append(" %");
 				setCollected.setInt(1, i.claim_id);
 				setCollected.addBatch();
 			}

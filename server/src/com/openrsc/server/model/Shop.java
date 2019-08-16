@@ -7,10 +7,11 @@ import com.openrsc.server.net.rsc.ActionSender;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+// TODO: This class should use a thread safe container rather than synchronized blocks
+
 public final class Shop {
 
 	private final boolean general;
-
 	private final int respawnRate, buyModifier, sellModifier, priceModifier;
 	private final Item[] items;
 	private final ArrayList<Item> shopItems = new ArrayList<Item>();

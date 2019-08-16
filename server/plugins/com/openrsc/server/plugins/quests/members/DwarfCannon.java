@@ -9,7 +9,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
@@ -572,7 +571,7 @@ public class DwarfCannon
 			// only allow at quest stage and before being rescued
 			if (player.getQuestStage(this) == 3 && !player.getCache().hasKey("savedlollk")) {
 				message(player, "you search the crate", "inside you see a dwarf child tied up", "you untie the child");
-				Npc lollk = spawnNpc(NpcId.LOLLK.id(), 619, 3314, 60000);
+				Npc lollk = spawnNpc(player.getWorld(), NpcId.LOLLK.id(), 619, 3314, 60000);
 				lollk.face(player);
 				player.face(lollk);
 				npcTalk(player, lollk, "thank the heavens, you saved me", "i thought i'd be goblin lunch for sure");
@@ -686,7 +685,7 @@ public class DwarfCannon
 			if (p.getQuestStage(this) == 2 && !p.getCache().hasKey("grabed_dwarf_remains")) {
 				p.getCache().store("grabed_dwarf_remains", true);
 			}
-			World.getWorld().unregisterItem(i);
+			p.getWorld().unregisterItem(i);
 			addItem(p, ItemId.DWARF_REMAINS.id(), 1);
 		}
 	}

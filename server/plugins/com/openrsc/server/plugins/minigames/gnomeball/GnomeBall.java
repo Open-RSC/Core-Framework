@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.minigames.gnomeball;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Minigames;
 import com.openrsc.server.constants.Skills;
@@ -10,7 +9,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
@@ -59,7 +57,7 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 			} else {
 				// does not matter where the players are at, neither in the field or wild,
 				// nor if they have free inventory space
-				Server.getServer().getGameEventHandler().add(new BallProjectileEvent(player, otherPlayer, 3) {
+				player.getWorld().getServer().getGameEventHandler().add(new BallProjectileEvent(player.getWorld(), player, otherPlayer, 3) {
 					@Override
 					public void doSpell() {
 						if (otherPlayer.isPlayer()) {
@@ -102,7 +100,7 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 			player.setSyncAttribute("throwing_ball_game", true);
 			Npc goalie = getNearestNpc(player, GnomeNpcs.GOALIE, 15);
 			player.setBusyTimer(600);
-			Server.getServer().getGameEventHandler().add(new BallProjectileEvent(player, goalie, 3) {
+			player.getWorld().getServer().getGameEventHandler().add(new BallProjectileEvent(player.getWorld(), player, goalie, 3) {
 				@Override
 				public void doSpell() {
 					//logic to try to score from 1xp
@@ -131,7 +129,7 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 			player.setSyncAttribute("throwing_ball_game", true);
 			Npc goalie = getNearestNpc(player, GnomeNpcs.GOALIE, 15);
 			player.setBusyTimer(600);
-			Server.getServer().getGameEventHandler().add(new BallProjectileEvent(player, goalie, 3) {
+			player.getWorld().getServer().getGameEventHandler().add(new BallProjectileEvent(player.getWorld(), player, goalie, 3) {
 				@Override
 				public void doSpell() {
 					//logic to try to score from 2xp
@@ -217,7 +215,7 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 			if (hasItem(p, ItemId.GNOME_BALL.id())) {
 				message(p, 1200, "you can only carry one ball at a time", "otherwise it would be too easy");
 			} else {
-				World.getWorld().unregisterItem(item);
+				p.getWorld().unregisterItem(item);
 				addItem(p, ItemId.GNOME_BALL.id(), 1);
 			}
 		}

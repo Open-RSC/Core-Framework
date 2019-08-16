@@ -6,7 +6,6 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -387,7 +386,7 @@ public class KnightsSword implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
-		final Npc n = World.getWorld().getNpc(138, 316, 320, 2454, 2459);
+		final Npc n = p.getWorld().getNpc(138, 316, 320, 2454, 2459);
 		if ((obj.getID() == VYVINS_CUPBOARD_OPEN || obj.getID() == VYVINS_CUPBOARD_CLOSED) && obj.getY() == CUPBOARD_Y
 			&& obj.getX() == 318) {
 			if (command.equalsIgnoreCase("open")) {

@@ -3,14 +3,11 @@ package com.openrsc.server.plugins.npcs.tutorial;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class boatman implements TalkToNpcExecutiveListener, TalkToNpcListener {
 	/**
@@ -33,7 +30,7 @@ public class boatman implements TalkToNpcExecutiveListener, TalkToNpcListener {
 			}
 			sleep(2000);
 			p.message("The boat arrives in Lumbridge");
-			World.getWorld().sendWorldAnnouncement("New adventurer @gre@" + p.getUsername() + "@whi@ has arrived in lumbridge!");
+			p.getWorld().sendWorldAnnouncement("New adventurer @gre@" + p.getUsername() + "@whi@ has arrived in lumbridge!");
 			ActionSender.sendPlayerOnTutorial(p);
 		} else if (menu == 1) {
 			npcTalk(p, n, "Ok come back when you are ready");

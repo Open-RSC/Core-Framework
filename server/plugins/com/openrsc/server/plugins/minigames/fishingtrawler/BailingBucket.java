@@ -1,15 +1,13 @@
 package com.openrsc.server.plugins.minigames.fishingtrawler;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.sleep;
-
-import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
-import com.openrsc.server.constants.ItemId;
 
 public class BailingBucket implements InvActionExecutiveListener, InvActionListener {
 
@@ -17,7 +15,7 @@ public class BailingBucket implements InvActionExecutiveListener, InvActionListe
 	public void onInvAction(Item item, Player player, String command) {
 		if (player.isBusy())
 			return;
-		FishingTrawler trawler = World.getWorld().getFishingTrawler(player);
+		FishingTrawler trawler = player.getWorld().getFishingTrawler(player);
 		if (trawler != null && (trawler.getShipAreaWater().inBounds(player.getLocation())
 			|| trawler.getShipArea().inBounds(player.getLocation()))) {
 			player.setBusyTimer(650);

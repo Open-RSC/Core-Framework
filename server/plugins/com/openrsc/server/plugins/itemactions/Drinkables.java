@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.itemactions;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
@@ -25,7 +24,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 			return;
 		}
 		int id = item.getID();
-		player.setConsumeTimer(Server.getServer().getConfig().GAME_TICK); // drink speed is same as tick speed setting
+		player.setConsumeTimer(player.getWorld().getServer().getConfig().GAME_TICK); // drink speed is same as tick speed setting
 		if (id == ItemId.GUJUO_POTION.id())
 			handleGujouPotion(player);
 
@@ -209,7 +208,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 	}
 
 	private void useFishingPotion(Player player, final Item item, final int newItem, final int left) {
-		player.message("You drink some of your " + item.getDef().getName().toLowerCase());
+		player.message("You drink some of your " + item.getDef(player.getWorld()).getName().toLowerCase());
 		player.getInventory().remove(item);
 		player.getInventory().add(new Item(newItem));
 		player.getSkills().setLevel(Skills.FISHING, player.getSkills().getMaxStat(Skills.FISHING) + 3);
@@ -222,7 +221,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 	}
 
 	private void useCurePotion(Player player, final Item item, final int newItem, final int dosesLeft) {
-		player.message("You drink some of your " + item.getDef().getName().toLowerCase());
+		player.message("You drink some of your " + item.getDef(player.getWorld()).getName().toLowerCase());
 		player.getInventory().remove(item);
 		player.getInventory().add(new Item(newItem));
 		player.cure();
@@ -235,7 +234,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 	}
 
 	private void usePoisonAntidotePotion(Player player, final Item item, final int newItem, final int dosesLeft) {
-		player.message("You drink some of your " + item.getDef().getName().toLowerCase() + " potion");
+		player.message("You drink some of your " + item.getDef(player.getWorld()).getName().toLowerCase() + " potion");
 		player.getInventory().remove(item);
 		player.getInventory().add(new Item(newItem));
 		player.cure();
@@ -249,7 +248,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 	}
 
 	private void useNormalPotion(Player player, final Item item, final int affectedStat, final int percentageIncrease, final int modifier, final int newItem, final int left) {
-		player.message("You drink some of your " + item.getDef().getName().toLowerCase());
+		player.message("You drink some of your " + item.getDef(player.getWorld()).getName().toLowerCase());
 		int baseStat = player.getSkills().getLevel(affectedStat) > player.getSkills().getMaxStat(affectedStat) ? player.getSkills().getMaxStat(affectedStat) : player.getSkills().getLevel(affectedStat);
 		int newStat = baseStat
 			+ DataConversions.roundUp((player.getSkills().getMaxStat(affectedStat) / 100D) * percentageIncrease)
@@ -337,7 +336,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 	}
 
 	private void usePrayerPotion(Player player, final Item item, final int newItem, final int left) {
-		player.message("You drink some of your " + item.getDef().getName().toLowerCase());
+		player.message("You drink some of your " + item.getDef(player.getWorld()).getName().toLowerCase());
 		player.getInventory().remove(item);
 		player.getInventory().add(new Item(newItem));
 		int newPrayer = player.getSkills().getLevel(Skills.PRAYER) + (int) ((player.getSkills().getMaxStat(Skills.PRAYER) * 0.25) + 7);
@@ -354,7 +353,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 	}
 
 	private void useStatRestorePotion(Player player, final Item item, final int newItem, final int left) {
-		player.message("You drink some of your " + item.getDef().getName().toLowerCase());
+		player.message("You drink some of your " + item.getDef(player.getWorld()).getName().toLowerCase());
 		player.getInventory().remove(item);
 		player.getInventory().add(new Item(newItem));
 		for (int i = Skills.ATTACK; i < Skills.COOKING; i++) {
@@ -406,7 +405,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 	}
 
 	private void handleSpirits(Player player, Item item) {
-		player.playerServerMessage(MessageType.QUEST, "You drink the " + item.getDef().getName().toLowerCase());
+		player.playerServerMessage(MessageType.QUEST, "You drink the " + item.getDef(player.getWorld()).getName().toLowerCase());
 		player.playerServerMessage(MessageType.QUEST, "You feel slightly reinvigorated");
 		player.playerServerMessage(MessageType.QUEST, "And slightly dizzy too");
 		if (item.getID() == ItemId.WHISKY.id())
@@ -508,7 +507,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 
 	private void handleChocolatyMilk(Player player, Item item) {
 		showBubble(player, item);
-		player.message("You drink the " + item.getDef().getName().toLowerCase());
+		player.message("You drink the " + item.getDef(player.getWorld()).getName().toLowerCase());
 		player.getInventory().remove(item);
 		player.getInventory().add(new Item(ItemId.BUCKET.id()));
 		if (player.getSkills().getLevel(Skills.HITS) < player.getSkills().getMaxStat(Skills.HITS)) {
@@ -522,7 +521,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 
 	private void handleTea(Player player, Item item) {
 		showBubble(player, item);
-		player.message("You drink the " + item.getDef().getName().toLowerCase());
+		player.message("You drink the " + item.getDef(player.getWorld()).getName().toLowerCase());
 		player.getInventory().remove(item);
 		int changeHp = (player.getSkills().getMaxStat(Skills.HITS) > 55 ? 3 : 2);
 		if (player.getSkills().getLevel(Skills.HITS) < player.getSkills().getMaxStat(Skills.HITS)) {
@@ -565,7 +564,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 
 	private void handleGreenmansAle(Player player, Item item) {
 		showBubble(player, item);
-		player.message("You drink the " + item.getDef().getName() + ".");
+		player.message("You drink the " + item.getDef(player.getWorld()).getName() + ".");
 		player.getInventory().remove(item);
 		player.getInventory().add(new Item(ItemId.BEER_GLASS.id()));
 		sleep(1200);
@@ -580,7 +579,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 
 	private void handleWizardsMindBomb(Player player, Item item) {
 		showBubble(player, item);
-		player.message("You drink the " + item.getDef().getName() + ".");
+		player.message("You drink the " + item.getDef(player.getWorld()).getName() + ".");
 		player.getInventory().remove(item);
 		player.getInventory().add(new Item(ItemId.BEER_GLASS.id()));
 		sleep(1200);
@@ -602,7 +601,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 
 	private void handleDwarvenStout(Player player, Item item) {
 		showBubble(player, item);
-		player.message("You drink the " + item.getDef().getName() + ".");
+		player.message("You drink the " + item.getDef(player.getWorld()).getName() + ".");
 		player.message("It tastes foul.");
 		player.getInventory().remove(item);
 		player.getInventory().add(new Item(ItemId.BEER_GLASS.id()));
@@ -620,7 +619,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 	}
 
 	private void handleAsgarnianAle(Player player, Item item) {
-		player.message("You drink the " + item.getDef().getName() + ".");
+		player.message("You drink the " + item.getDef(player.getWorld()).getName() + ".");
 		showBubble(player, item);
 		player.getInventory().remove(item);
 		player.getInventory().add(new Item(ItemId.BEER_GLASS.id()));
@@ -641,7 +640,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 	}
 
 	private void handleDragonBitter(Player player, Item item) {
-		player.message("You drink the " + item.getDef().getName() + ".");
+		player.message("You drink the " + item.getDef(player.getWorld()).getName() + ".");
 		player.getInventory().remove(item);
 		player.getInventory().add(new Item(ItemId.BEER_GLASS.id()));
 		showBubble(player, item);
@@ -654,7 +653,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 	}
 	
 	private void handleGrog(Player player, Item item) {
-		player.message("You drink the " + item.getDef().getName() + ".");
+		player.message("You drink the " + item.getDef(player.getWorld()).getName() + ".");
 		showBubble(player, item);
 		player.getInventory().remove(item);
 		player.getInventory().add(new Item(ItemId.BEER_GLASS.id()));

@@ -10,7 +10,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
 import com.openrsc.server.model.entity.update.*;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.PacketBuilder;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.sql.query.logs.PMLog;
@@ -705,7 +704,7 @@ public final class GameStateUpdater {
 		for (Npc n : npcs) {
 			try {
 				if (n.isUnregistering()) {
-					World.getWorld().unregisterNpc(n);
+					getServer().getWorld().unregisterNpc(n);
 					continue;
 				}
 
@@ -731,7 +730,7 @@ public final class GameStateUpdater {
 		for (Player p : players) {
 			PrivateMessage pm = p.getNextPrivateMessage();
 			if (pm != null) {
-				Player affectedPlayer = World.getWorld().getPlayer(pm.getFriend());
+				Player affectedPlayer = getServer().getWorld().getPlayer(pm.getFriend());
 				if (affectedPlayer != null) {
 					if ((affectedPlayer.getSocial().isFriendsWith(p.getUsernameHash()) || !affectedPlayer.getSettings()
 						.getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES))
@@ -740,7 +739,7 @@ public final class GameStateUpdater {
 						ActionSender.sendPrivateMessageReceived(affectedPlayer, p, pm.getMessage());
 					}
 
-					p.getWorld().getServer().getGameLogger().addQuery(new PMLog(p.getUsername(), pm.getMessage(),
+					p.getWorld().getServer().getGameLogger().addQuery(new PMLog(p.getWorld(), p.getUsername(), pm.getMessage(),
 						DataConversions.hashToUsername(pm.getFriend())));
 				}
 			}
@@ -764,7 +763,7 @@ public final class GameStateUpdater {
 		for (Player p : players) {
 			// Checking login because we don't want to unregister more than once
 			if (p.isUnregistering() && p.isLoggedIn()) {
-				World.getWorld().unregisterPlayer(p);
+				getServer().getWorld().unregisterPlayer(p);
 				continue;
 			}
 

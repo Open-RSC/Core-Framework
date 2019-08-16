@@ -1,8 +1,9 @@
 package com.openrsc.server.model;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Player cache
@@ -17,7 +18,7 @@ public class Cache {
 	/**
 	 * Where we store the data.
 	 */
-	private Map<String, Object> storage = new HashMap<String, Object>();
+	private ConcurrentMap<String, Object> storage = new ConcurrentHashMap<String, Object>();
 
 	public Map<String, Object> getCacheMap() {
 		return storage;
@@ -70,7 +71,7 @@ public class Cache {
 	 * Store a long in the cache
 	 *
 	 * @param key
-	 * @param b
+	 * @param l
 	 * @throws IllegalArgumentException when the key is already used in the database
 	 */
 	public void store(String key, long l) {

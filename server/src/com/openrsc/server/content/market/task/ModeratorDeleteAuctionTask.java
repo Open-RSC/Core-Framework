@@ -1,6 +1,5 @@
 package com.openrsc.server.content.market.task;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.content.market.MarketItem;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -35,7 +34,7 @@ public class ModeratorDeleteAuctionTask extends MarketTask {
 			}
 			player.getWorld().getMarket().addRequestOpenAuctionHouseTask(player);
 			if (updateDiscord) {
-				Server.getServer().getDiscordService().auctionModDelete(item);
+				player.getWorld().getServer().getDiscordService().auctionModDelete(item);
 			}
 		}
 	}

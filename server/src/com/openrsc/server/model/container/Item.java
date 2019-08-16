@@ -1,7 +1,7 @@
 package com.openrsc.server.model.container;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.external.*;
+import com.openrsc.server.model.world.World;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,12 +34,8 @@ public class Item implements Comparable<Item> {
 		}
 	}
 
-	public Item() {
-	}
-
 	public Item(int id) {
-		setID(id);
-		setAmount(1);
+		this(id, 1);
 	}
 
 	public Item(int id, int amount) {
@@ -64,20 +60,24 @@ public class Item implements Comparable<Item> {
 	}
 
 	public int compareTo(Item item) {
-		if (item.getDef().isStackable()) {
+		/*if (item.getDef().isStackable()) {
 			return -1;
 		}
 		if (getDef().isStackable()) {
 			return 1;
 		}
-		return item.getDef().getDefaultPrice() - getDef().getDefaultPrice();
+		return item.getDef().getDefaultPrice() - getDef().getDefaultPrice();*/
+
+		// TODO: The original bank sorting had to be broken for now because the Item doesn't have a reference to the World.
+		// TODO: Said reference is not trivial to add due to static initializers in plugins. Whenever we have a solution, the getDef() calls should no longer require a world.
+		return item.getID() - getID();
 	}
 
-	public int eatingHeals() {
-		if (!isEdible()) {
+	public int eatingHeals(World world) {
+		if (!isEdible(world)) {
 			return 0;
 		}
-		return Server.getServer().getEntityHandler().getItemEdibleHeals(id);
+		return world.getServer().getEntityHandler().getItemEdibleHeals(id);
 	}
 
 	public boolean equals(Object o) {
@@ -99,32 +99,32 @@ public class Item implements Comparable<Item> {
 		this.amount = amount;
 	}
 
-	public ItemCookingDef getCookingDef() {
-		return Server.getServer().getEntityHandler().getItemCookingDef(id);
+	public ItemCookingDef getCookingDef(World world) {
+		return world.getServer().getEntityHandler().getItemCookingDef(id);
 	}
 	
-	public ItemPerfectCookingDef getPerfectCookingDef() {
-		return Server.getServer().getEntityHandler().getItemPerfectCookingDef(id);
+	public ItemPerfectCookingDef getPerfectCookingDef(World world) {
+		return world.getServer().getEntityHandler().getItemPerfectCookingDef(id);
 	}
 
-	public ItemDefinition getDef() {
-		return Server.getServer().getEntityHandler().getItemDef(id);
+	public ItemDefinition getDef(World world) {
+		return world.getServer().getEntityHandler().getItemDef(id);
 	}
 
-	public ItemSmeltingDef getSmeltingDef() {
-		return Server.getServer().getEntityHandler().getItemSmeltingDef(id);
+	public ItemSmeltingDef getSmeltingDef(World world) {
+		return world.getServer().getEntityHandler().getItemSmeltingDef(id);
 	}
 
-	public ItemUnIdentHerbDef getUnIdentHerbDef() {
-		return Server.getServer().getEntityHandler().getItemUnIdentHerbDef(id);
+	public ItemUnIdentHerbDef getUnIdentHerbDef(World world) {
+		return world.getServer().getEntityHandler().getItemUnIdentHerbDef(id);
 	}
 
-	public boolean isEdible() {
-		return Server.getServer().getEntityHandler().getItemEdibleHeals(id) > 0;
+	public boolean isEdible(World world) {
+		return world.getServer().getEntityHandler().getItemEdibleHeals(id) > 0;
 	}
 
-	public boolean isWieldable() {
-		return getDef().isWieldable();
+	public boolean isWieldable(World world) {
+		return getDef(world).isWieldable();
 	}
 
 	public boolean isWielded() {
@@ -135,12 +135,12 @@ public class Item implements Comparable<Item> {
 		this.wielded = wielded;
 	}
 
-	public boolean wieldingAffectsItem(Item i) {
-		if (!i.isWieldable() || !isWieldable()) {
+	public boolean wieldingAffectsItem(World world, Item i) {
+		if (!i.isWieldable(world) || !isWieldable(world)) {
 			return false;
 		}
-		for (int affected : Server.getServer().getEntityHandler().getAffectedTypes(getDef().getWearableId())) {
-			if (i.getDef().getWearableId() == affected) {
+		for (int affected : world.getServer().getEntityHandler().getAffectedTypes(getDef(world).getWearableId())) {
+			if (i.getDef(world).getWearableId() == affected) {
 				return true;
 			}
 		}

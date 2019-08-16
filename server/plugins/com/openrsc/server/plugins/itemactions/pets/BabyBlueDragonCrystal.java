@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.itemactions.pets;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
@@ -24,16 +23,16 @@ public class BabyBlueDragonCrystal implements InvActionListener, InvActionExecut
 		int id = item.getID();
 
 		if (id == ItemId.A_RED_CRYSTAL.id())
-			if (Server.getServer().getConfig().WANT_PETS)
+			if (player.getWorld().getServer().getConfig().WANT_PETS)
 				handleBabyBlueDragon(player, item, command);
 			else
 				player.message("Nothing interesting happens");
 	}
 
 	private void handleBabyBlueDragon(Player player, Item item, String command) {
-		if (Server.getServer().getConfig().DEBUG)
+		if (player.getWorld().getServer().getConfig().DEBUG)
 		System.out.println("Pet spawn attempt");
-		if (Server.getServer().getConfig().WANT_PETS){
+		if (player.getWorld().getServer().getConfig().WANT_PETS){
 			if (player.getInventory().hasItemId(ItemId.A_RED_CRYSTAL.id())) {
 				if (command.equalsIgnoreCase("inspect")) {
 					if (player.getInventory().hasItemId(ItemId.A_GLOWING_RED_CRYSTAL.id())) {

@@ -2,7 +2,9 @@ package com.openrsc.server;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.constants.Constants;
+import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.event.DelayedEvent;
+import com.openrsc.server.event.PluginsUseThisEvent;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.MonitoringEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
@@ -43,8 +45,6 @@ public final class Server implements Runnable {
 	 */
 	private static final Logger LOGGER;
 
-	private static Server server = null;
-
 	private final GameStateUpdater gameUpdater;
 	private final GameTickEventHandler tickEventHandler;
 	private final DiscordService discordService;
@@ -57,6 +57,7 @@ public final class Server implements Runnable {
 	private final GameLogger gameLogger;
 	private final EntityHandler entityHandler;
 	private final DatabaseConnection databaseConnection;
+	private final AchievementSystem achievementSystem;
 
 	private final World world;
 
@@ -78,10 +79,6 @@ public final class Server implements Runnable {
 
 	private Constants constants;
 
-	public static Server getServer() {
-		return server;
-	}
-
 	static {
 		try {
 			Thread.currentThread().setName("InitializationThread");
@@ -99,21 +96,31 @@ public final class Server implements Runnable {
 	public static void main(String[] args) throws IOException {
 		LOGGER.info("Launching Game Server...");
 
+		Server server = null;
+
 		if (args.length == 0) {
 			LOGGER.info("Server Configuration file not provided. Loading from default.conf or local.conf.");
 			server = new Server("default.conf");
+
+			try {
+				if(!server.isRunning()) {
+					server.start();
+				}
+			} catch (Throwable t) {
+				LOGGER.catching(t);
+			}
 		} else {
 			for (int i = 0; i < args.length; i++) {
 				server = new Server(args[i]);
-			}
-		}
 
-		try {
-			if(!server.isRunning()) {
-				server.start();
+				try {
+					if(!server.isRunning()) {
+						server.start();
+					}
+				} catch (Throwable t) {
+					LOGGER.catching(t);
+				}
 			}
-		} catch (Throwable t) {
-			LOGGER.catching(t);
 		}
 	}
 
@@ -127,7 +134,7 @@ public final class Server implements Runnable {
 		pluginHandler = new PluginHandler(this);
 		combatScriptLoader = new CombatScriptLoader(this);
 		constants = new Constants(this);
-		databaseConnection = new DatabaseConnection(this, getName()+" : Database Connection");
+		databaseConnection = new DatabaseConnection(this, "Database Connection");
 		discordService = new DiscordService(this);
 		playerDataProcessor = new PlayerDatabaseExecutor(this);
 		world = new World(this);
@@ -135,7 +142,8 @@ public final class Server implements Runnable {
 		gameUpdater = new GameStateUpdater(this);
 		gameLogger = new GameLogger(this);
 		entityHandler = new EntityHandler(this);
-		monitoring = new MonitoringEvent();
+		achievementSystem = new AchievementSystem(this);
+		monitoring = new MonitoringEvent(getWorld());
 		scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getName()+" : GameThread").build());
 	}
 
@@ -159,6 +167,10 @@ public final class Server implements Runnable {
 			getWorld().load();
 			LOGGER.info("\t World Completed");
 
+			/*LOGGER.info("Loading Achievements...");
+			getAchievementSystem().load();
+			LOGGER.info("\t Achievements Completed");*/
+
 			LOGGER.info("Loading profiling monitoring...");
 			// Send monitoring info as a game event so that it can be profiled.
 			getGameEventHandler().add(monitoring);
@@ -169,6 +181,7 @@ public final class Server implements Runnable {
 			final EventLoopGroup bossGroup = new NioEventLoopGroup(0, new NamedThreadFactory(getName()+" : IOBossThread"));
 			final EventLoopGroup workerGroup = new NioEventLoopGroup(0, new NamedThreadFactory(getName()+" : IOWorkerThread"));
 			final ServerBootstrap bootstrap = new ServerBootstrap();
+			final Server gameServer = this;
 
 			bootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(
 				new ChannelInitializer<SocketChannel>() {
@@ -177,7 +190,7 @@ public final class Server implements Runnable {
 						final ChannelPipeline pipeline = channel.pipeline();
 						pipeline.addLast("decoder", new RSCProtocolDecoder());
 						pipeline.addLast("encoder", new RSCProtocolEncoder());
-						pipeline.addLast("handler", new RSCConnectionHandler());
+						pipeline.addLast("handler", new RSCConnectionHandler(gameServer));
 					}
 				}
 			);
@@ -188,8 +201,8 @@ public final class Server implements Runnable {
 			bootstrap.childOption(ChannelOption.SO_SNDBUF, 10000);
 			try {
 				getPluginHandler().handleAction("Startup", new Object[]{});
-				serverChannel = bootstrap.bind(new InetSocketAddress(getServer().getConfig().SERVER_PORT)).sync();
-				LOGGER.info("Game world is now online on port {}!", box(getServer().getConfig().SERVER_PORT));
+				serverChannel = bootstrap.bind(new InetSocketAddress(getConfig().SERVER_PORT)).sync();
+				LOGGER.info("Game world is now online on port {}!", box(getConfig().SERVER_PORT));
 			} catch (final InterruptedException e) {
 				LOGGER.catching(e);
 			}
@@ -239,10 +252,6 @@ public final class Server implements Runnable {
 		}
 	}
 
-	public void submitTask(Runnable r) {
-		scheduledExecutor.submit(r);
-	}
-
 	private void unbind() {
 		try {
 			serverChannel.channel().disconnect();
@@ -250,12 +259,29 @@ public final class Server implements Runnable {
 		}
 	}
 
+	public void submitTask(Runnable r) {
+		scheduledExecutor.submit(r);
+	}
+
+	public void post(Runnable r, String descriptor) {
+		getGameEventHandler().add(new PluginsUseThisEvent(getWorld(), descriptor) {
+			@Override
+			public void action() {
+				try {
+					r.run();
+				} catch (Throwable e) {
+					LOGGER.catching(e);
+				}
+			}
+		});
+	}
+
 	public void run() {
 		synchronized(running) {
 			try {
-				timeLate = System.currentTimeMillis() - lastClientUpdate - getServer().getConfig().GAME_TICK;
+				timeLate = System.currentTimeMillis() - lastClientUpdate - getConfig().GAME_TICK;
 				if (getTimeLate() >= 0) {
-					lastClientUpdate += getServer().getConfig().GAME_TICK;
+					lastClientUpdate += getConfig().GAME_TICK;
 
 					// Doing the set in two stages here such that the whole tick has access to the same values for profiling information.
 					final long tickStart = System.currentTimeMillis();
@@ -272,12 +298,12 @@ public final class Server implements Runnable {
 					this.lastOutgoingPacketsDuration = lastOutgoingPacketsDuration;
 					this.lastTickDuration = lastTickDuration;
 				} else {
-					if (getServer().getConfig().WANT_CUSTOM_WALK_SPEED) {
-						for (Player p : World.getWorld().getPlayers()) {
+					if (getConfig().WANT_CUSTOM_WALK_SPEED) {
+						for (Player p : getWorld().getPlayers()) {
 							p.updatePosition();
 						}
 
-						for (Npc n : World.getWorld().getNpcs()) {
+						for (Npc n : getWorld().getNpcs()) {
 							n.updatePosition();
 						}
 
@@ -300,7 +326,7 @@ public final class Server implements Runnable {
 
 	protected final long processIncomingPackets() {
 		final long processPacketsStart	= System.currentTimeMillis();
-		for (Player p : World.getWorld().getPlayers()) {
+		for (Player p : getWorld().getPlayers()) {
 			p.processIncomingPackets();
 		}
 		final long processPacketsEnd	= System.currentTimeMillis();
@@ -310,7 +336,7 @@ public final class Server implements Runnable {
 
 	protected long processOutgoingPackets() {
 		final long processPacketsStart	= System.currentTimeMillis();
-		for (Player p : World.getWorld().getPlayers()) {
+		for (Player p : getWorld().getPlayers()) {
 			p.sendOutgoingPackets();
 		}
 		final long processPacketsEnd	= System.currentTimeMillis();
@@ -322,7 +348,7 @@ public final class Server implements Runnable {
 		if (updateEvent != null) {
 			return false;
 		}
-		updateEvent = new SingleEvent(null, (seconds - 1) * 1000, "Shutdown for Update") {
+		updateEvent = new SingleEvent(getWorld(), null, (seconds - 1) * 1000, "Shutdown for Update") {
 			public void action() {
 				unbind();
 				saveAndShutdown();
@@ -334,11 +360,11 @@ public final class Server implements Runnable {
 
 	private void saveAndShutdown() {
 		getWorld().getClanManager().saveClans();
-		for (Player p : World.getWorld().getPlayers()) {
+		for (Player p : getWorld().getPlayers()) {
 			p.unregister(true, "Server shutting down.");
 		}
 
-		SingleEvent up = new SingleEvent(null, 6000, "Save and Shutdown") {
+		SingleEvent up = new SingleEvent(getWorld(), null, 6000, "Save and Shutdown") {
 			public void action() {
 				kill();
 				getDatabaseConnection().close();
@@ -358,7 +384,7 @@ public final class Server implements Runnable {
 		if (updateEvent != null) {
 			return false;
 		}
-		updateEvent = new SingleEvent(null, (seconds - 1) * 1000, "Restart") {
+		updateEvent = new SingleEvent(getWorld(), null, (seconds - 1) * 1000, "Restart") {
 			public void action() {
 				unbind();
 				//saveAndRestart();
@@ -372,12 +398,12 @@ public final class Server implements Runnable {
 	private void saveAndRestart() {
 		getWorld().getClanManager().saveClans();
 		LOGGER.info("Saving players...");
-		for (Player p : World.getWorld().getPlayers()) {
+		for (Player p : getWorld().getPlayers()) {
 			p.unregister(true, "Server shutting down.");
 			LOGGER.info("Players saved...");
 		}
 
-		SingleEvent up = new SingleEvent(null, 6000, "Save and Restart") {
+		SingleEvent up = new SingleEvent(getWorld(), null, 6000, "Save and Restart") {
 			public void action() {
 				LOGGER.info("Trying to run restart script...");
 				try {
@@ -452,10 +478,10 @@ public final class Server implements Runnable {
 		}
 
 		return
-			"Tick: " + getServer().getConfig().GAME_TICK + "ms, Server: " + getLastTickDuration() + "ms " + getLastIncomingPacketsDuration() + "ms " + getLastEventsDuration() + "ms " + getLastGameStateDuration() + "ms " + getLastOutgoingPacketsDuration() + "ms" + newLine +
+			"Tick: " + getConfig().GAME_TICK + "ms, Server: " + getLastTickDuration() + "ms " + getLastIncomingPacketsDuration() + "ms " + getLastEventsDuration() + "ms " + getLastGameStateDuration() + "ms " + getLastOutgoingPacketsDuration() + "ms" + newLine +
 			"Game Updater: " + getGameUpdater().getLastProcessPlayersDuration() + "ms " + getGameUpdater().getLastProcessNpcsDuration() + "ms " + getGameUpdater().getLastProcessMessageQueuesDuration() + "ms " + getGameUpdater().getLastUpdateClientsDuration() + "ms " + getGameUpdater().getLastDoCleanupDuration() + "ms " + getGameUpdater().getLastExecuteWalkToActionsDuration() + "ms " + newLine +
-			"Events: " + countEvents + ", NPCs: " + World.getWorld().getNpcs().size() + ", Players: " + World.getWorld().getPlayers().size() + ", Shops: " + World.getWorld().getShops().size() + newLine +
-			/*"Player Atk Map: " + World.getWorld().getPlayersUnderAttack().size() + ", NPC Atk Map: " + World.getWorld().getNpcsUnderAttack().size() + ", Quests: " + World.getWorld().getQuests().size() + ", Mini Games: " + World.getWorld().getMiniGames().size() + newLine +*/
+			"Events: " + countEvents + ", NPCs: " + getWorld().getNpcs().size() + ", Players: " + getWorld().getPlayers().size() + ", Shops: " + getWorld().getShops().size() + newLine +
+			/*"Player Atk Map: " + getWorld().getPlayersUnderAttack().size() + ", NPC Atk Map: " + getWorld().getNpcsUnderAttack().size() + ", Quests: " + getWorld().getQuests().size() + ", Mini Games: " + getWorld().getMiniGames().size() + newLine +*/
 			s;
 	}
 
@@ -500,7 +526,7 @@ public final class Server implements Runnable {
 	}
 
 	public void skipTicks(final long ticks) {
-		lastClientUpdate += ticks * getServer().getConfig().GAME_TICK;
+		lastClientUpdate += ticks * getConfig().GAME_TICK;
 	}
 
 	public final ServerConfiguration getConfig() {
@@ -519,7 +545,7 @@ public final class Server implements Runnable {
 		return constants;
 	}
 
-	public World getWorld() {
+	public synchronized World getWorld() {
 		return world;
 	}
 
@@ -545,5 +571,9 @@ public final class Server implements Runnable {
 
 	public DatabaseConnection getDatabaseConnection() {
 		return databaseConnection;
+	}
+
+	public AchievementSystem getAchievementSystem() {
+		return achievementSystem;
 	}
 }

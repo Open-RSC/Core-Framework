@@ -10,7 +10,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
@@ -664,7 +663,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 				p.message("Chronozon regenerates");
 			} else {
 				if (p.getQuestStage(this) == 8) {
-					World.getWorld().registerItem(
+					p.getWorld().registerItem(
 						new GroundItem(p.getWorld(), ItemId.CREST_FRAGMENT_THREE.id(), n.getX(), n.getY(), 1, p));
 				}
 				n.killedBy(p);

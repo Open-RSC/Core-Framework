@@ -166,8 +166,8 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 				"the bridge slowly lowers");
 			GameObject bridge_open = new GameObject(obj.getWorld(), Point.location(704, 3417), 727, 2, 0);
 			GameObject bridge_closed = new GameObject(obj.getWorld(), Point.location(704, 3417), 726, 2, 0);
-			World.getWorld().registerGameObject(bridge_open);
-			World.getWorld().delayedSpawnObject(bridge_closed.getLoc(), 10000);
+			bridge_open.getWorld().registerGameObject(bridge_open);
+			bridge_closed.getWorld().delayedSpawnObject(bridge_closed.getLoc(), 10000);
 			p.teleport(709, 3420);
 			sleep(650);
 			p.teleport(706, 3420);
@@ -186,10 +186,10 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 			}
 			message(p, "you move the rocks from your path");
 			p.message("you hear a strange mechanical sound");
-			World.getWorld().replaceGameObject(obj,
+			obj.getWorld().replaceGameObject(obj,
 				new GameObject(obj.getWorld(), obj.getLocation(), CLEAR_ROCKS + 1, obj.getDirection(), obj
 					.getType()));
-			World.getWorld().delayedSpawnObject(obj.getLoc(), 3000);
+			obj.getWorld().delayedSpawnObject(obj.getLoc(), 3000);
 			p.damage((int) (getCurrentLevel(p, Skills.HITS) * 0.2D));
 			playerTalk(p, null, "aaarrghhh");
 			message(p, "You've triggered a trap");
@@ -200,10 +200,10 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 				p.message("you feel a thread tug at your boot");
 				p.message("it's a trap");
 				p.teleport(obj.getX(), obj.getY());
-				World.getWorld().replaceGameObject(obj,
+				obj.getWorld().replaceGameObject(obj,
 					new GameObject(obj.getWorld(), obj.getLocation(), 805, obj.getDirection(), obj
 						.getType()));
-				World.getWorld().delayedSpawnObject(obj.getLoc(), 5000);
+				obj.getWorld().delayedSpawnObject(obj.getLoc(), 5000);
 				p.damage((int) (getCurrentLevel(p, Skills.HITS) / 6) + 1);
 				playerTalk(p, null, "aaarghh");
 			} else {
@@ -224,10 +224,10 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 					else {
 						p.message("but the trap activates");
 						p.teleport(obj.getX(), obj.getY());
-						World.getWorld().replaceGameObject(obj,
+						obj.getWorld().replaceGameObject(obj,
 							new GameObject(obj.getWorld(), obj.getLocation(), 805, obj.getDirection(), obj
 								.getType()));
-						World.getWorld().delayedSpawnObject(obj.getLoc(), 5000);
+						obj.getWorld().delayedSpawnObject(obj.getLoc(), 5000);
 						p.damage((int) (getCurrentLevel(p, Skills.HITS) / 6) + 1);
 						playerTalk(p, null, "aaarghh");
 					}

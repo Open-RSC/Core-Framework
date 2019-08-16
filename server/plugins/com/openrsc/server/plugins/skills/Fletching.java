@@ -1,12 +1,14 @@
 package com.openrsc.server.plugins.skills;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.MiniEvent;
 import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.external.*;
+import com.openrsc.server.external.ItemArrowHeadDef;
+import com.openrsc.server.external.ItemBowStringDef;
+import com.openrsc.server.external.ItemDartTipDef;
+import com.openrsc.server.external.ItemLogCutDef;
 import com.openrsc.server.model.MenuOptionListener;
-import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -50,7 +52,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 
 	private boolean attachFeathers(Player player, final Item feathers,
 								   final Item item) {
-		if (!Server.getServer().getConfig().MEMBER_WORLD) {
+		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return true;
 		}
@@ -78,10 +80,10 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 		}
 
 		player.message("You attach feathers to some of your "
-			+ item.getDef().getName());
+			+ item.getDef(player.getWorld()).getName());
 		final int exp = experience;
-		int retrytimes = Server.getServer().getConfig().BATCH_PROGRESSION ? Formulae.getRepeatTimes(player, Skills.FLETCHING) : 1000 + amount;
-		player.setBatchEvent(new BatchEvent(player, 40, "Fletching Attach Feathers", retrytimes, false) {
+		int retrytimes = player.getWorld().getServer().getConfig().BATCH_PROGRESSION ? Formulae.getRepeatTimes(player, Skills.FLETCHING) : 1000 + amount;
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 40, "Fletching Attach Feathers", retrytimes, false) {
 			@Override
 			public void action() {
 				if (getOwner().getInventory().countId(feathers.getID()) < 1) {
@@ -106,7 +108,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 
 	private boolean doArrowHeads(Player player, final Item headlessArrows,
 								 final Item arrowHeads) {
-		if (!Server.getServer().getConfig().MEMBER_WORLD) {
+		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return true;
 		}
@@ -125,10 +127,10 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 		}
 
 		player.message("You attach "
-			+ arrowHeads.getDef().getName().toLowerCase()
+			+ arrowHeads.getDef(player.getWorld()).getName().toLowerCase()
 			+ " to some of your arrows");
-		int retrytimes = Server.getServer().getConfig().BATCH_PROGRESSION ? Formulae.getRepeatTimes(player, Skills.FLETCHING) : 1000 + amount;
-		player.setBatchEvent(new BatchEvent(player, 40, "Fletching Attach Arrowheads", retrytimes, false) {
+		int retrytimes = player.getWorld().getServer().getConfig().BATCH_PROGRESSION ? Formulae.getRepeatTimes(player, Skills.FLETCHING) : 1000 + amount;
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 40, "Fletching Attach Arrowheads", retrytimes, false) {
 			@Override
 			public void action() {
 				if (getOwner().getSkills().getLevel(Skills.FLETCHING) < headDef.getReqLevel()) {
@@ -159,7 +161,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 
 	private boolean doBowString(Player player, final Item bowString,
 								final Item bow) {
-		if (!Server.getServer().getConfig().MEMBER_WORLD) {
+		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return true;
 		}
@@ -171,7 +173,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 		int bowtimes = player.getInventory().countId(bow.getID());
 		int stringtimes = player.getInventory().countId(bowString.getID());
 
-		player.setBatchEvent(new BatchEvent(player, 600, "Fletching String Bow",
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Fletching String Bow",
 			bowtimes < stringtimes ? bowtimes : stringtimes, false) {
 
 			@Override
@@ -204,7 +206,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 
 	private boolean doLogCut(final Player player, final Item knife,
 							 final Item log) {
-		if (!Server.getServer().getConfig().MEMBER_WORLD) {
+		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return true;
 		}
@@ -213,7 +215,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 			return false;
 		}
 		player.message("What would you like to make?");
-		Server.getServer().getGameEventHandler().add(new MiniEvent(player, "Fletching Make Bow") {
+		player.getWorld().getServer().getGameEventHandler().add(new MiniEvent(player.getWorld(), player, "Fletching Make Bow") {
 			public void action() {
 				String[] option = new String[]{"Make arrow shafts",
 					"Make shortbow", "Make longbow"};
@@ -254,7 +256,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 							final int experience = exp;
 							final String cutMessages = cutMessage;
 
-							player.setBatchEvent(new BatchEvent(player, 600, "Fletching Make Bow",
+							player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Fletching Make Bow",
 								player.getInventory().countId(log.getID()), false) {
 
 
@@ -305,7 +307,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 						final int requiredLvl = reqLvl;
 						final int experience = exp;
 						final String cutMessages = cutMessage;
-						player.setBatchEvent(new BatchEvent(player, 600, "Fletching Make Bow",
+						player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Fletching Make Bow",
 							player.getInventory().countId(log.getID()), false) {
 
 
@@ -334,7 +336,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 	}
 
 	private boolean doPearlCut(final Player player, final Item chisel, final Item pearl) {
-		if (!Server.getServer().getConfig().MEMBER_WORLD) {
+		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return true;
 		}
@@ -352,7 +354,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 		final int amt = amount;
 		final int exp = 25;
 		final int pearlID = pearl.getID();
-		player.setBatchEvent(new BatchEvent(player, 600, "Fletching Pearl Cut",
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Fletching Pearl Cut",
 			player.getInventory().countId(pearlID), false) {
 
 			@Override
@@ -373,7 +375,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 	}
 
 	private boolean doBoltMake(final Player player, final Item bolts, final Item tips) {
-		if (!Server.getServer().getConfig().MEMBER_WORLD) {
+		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return true;
 		}
@@ -390,8 +392,8 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 			amount = player.getInventory().countId(bolt);
 		if (player.getInventory().countId(tip) < amount)
 			amount = player.getInventory().countId(tip);
-		int retrytimes = Server.getServer().getConfig().BATCH_PROGRESSION ? Formulae.getRepeatTimes(player, Skills.FLETCHING) : 1000 + amount;
-		player.setBatchEvent(new BatchEvent(player, 40, "Fletching Make Bolt", retrytimes, false) {
+		int retrytimes = player.getWorld().getServer().getConfig().BATCH_PROGRESSION ? Formulae.getRepeatTimes(player, Skills.FLETCHING) : 1000 + amount;
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 40, "Fletching Make Bolt", retrytimes, false) {
 			@Override
 			public void action() {
 				if (getOwner().getSkills().getLevel(Skills.FLETCHING) < 34) {

@@ -182,10 +182,10 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 			} else if (obj.getX() == 733) {
 				p.teleport(733, 3489);
 			}
-			World.getWorld().replaceGameObject(obj,
+			p.getWorld().replaceGameObject(obj,
 				new GameObject(obj.getWorld(), obj.getLocation(), 826, obj.getDirection(), obj
 					.getType()));
-			World.getWorld().delayedSpawnObject(obj.getLoc(), 5000);
+			p.getWorld().delayedSpawnObject(obj.getLoc(), 5000);
 			p.damage((int) (getCurrentLevel(p, Skills.HITS) / 5) + 5);
 			playerTalk(p, null, "aaarghh");
 		}
@@ -210,7 +210,7 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 				p.message("the door slowly creeks open");
 				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), 723, obj.getDirection(), obj
 					.getType()));
-				delayedSpawnObject(obj.getLoc(), 3000);
+				delayedSpawnObject(obj.getWorld(), obj.getLoc(), 3000);
 				p.teleport(766, 3417);
 				sleep(1000);
 				p.teleport(770, 3417);
@@ -222,7 +222,7 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 		else if (obj.getID() == GATE_OF_ZAMORAK) {
 			replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), 723, obj.getDirection(), obj
 				.getType()));
-			delayedSpawnObject(obj.getLoc(), 3000);
+			delayedSpawnObject(obj.getWorld(), obj.getLoc(), 3000);
 			p.teleport(766, 3417);
 			message(p, "you open the huge wooden door");
 			p.teleport(763, 3417);

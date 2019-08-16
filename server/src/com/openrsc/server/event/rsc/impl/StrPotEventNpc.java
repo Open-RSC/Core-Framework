@@ -1,6 +1,5 @@
 package com.openrsc.server.event.rsc.impl;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -21,8 +20,8 @@ public class StrPotEventNpc extends GameTickEvent {
 
 	private long lastRestoration = System.currentTimeMillis();
 
-	public StrPotEventNpc(Npc npc) {
-		super(npc, 1, "Str Pot Event NPC");
+	public StrPotEventNpc(World world, Npc npc) {
+		super(world, npc, 1, "Str Pot Event NPC");
 	}
 
 	@Override
@@ -37,20 +36,20 @@ public class StrPotEventNpc extends GameTickEvent {
 				+ DataConversions.roundUp((getOwner().getSkills().getMaxStat(2) / 100D) * 10)
 				+ 3;
 			if (newStat > getOwner().getSkills().getLevel(2)) {
-				for (Player p22 : World.getWorld().getPlayers()) {
+				for (Player p22 : getWorld().getPlayers()) {
 					//p22.message("TEST 00000000");				
 				}
 				getOwner().getSkills().setLevel(2, newStat);
 				sleep(1200);
 				//break;
 			} else {
-				for (Player p22 : World.getWorld().getPlayers()) {
+				for (Player p22 : getWorld().getPlayers()) {
 					//p22.message("TEST 111111");				
 				}
 				//break;
 			return;
 			}
-				Server.getServer().getGameEventHandler().add(new StatRestorationEvent(getOwner()));
+				getWorld().getServer().getGameEventHandler().add(new StatRestorationEvent(getWorld(), getOwner()));
 			}
 	}
 }

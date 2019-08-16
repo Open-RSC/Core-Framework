@@ -3,6 +3,7 @@ package com.openrsc.server.event.rsc.impl;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 
 /**
  * @author n0m
@@ -13,8 +14,8 @@ public class PoisonEvent extends GameTickEvent {
 
 	private int poisonPower;
 
-	public PoisonEvent(Mob owner, int poisonPower) {
-		super((Player) (owner.isPlayer() ? owner : null), 32, "Poison Event");
+	public PoisonEvent(World world, Mob owner, int poisonPower) {
+		super(world, (Player) (owner.isPlayer() ? owner : null), 32, "Poison Event");
 		this.mob = owner;
 		this.poisonPower = poisonPower;
 	}

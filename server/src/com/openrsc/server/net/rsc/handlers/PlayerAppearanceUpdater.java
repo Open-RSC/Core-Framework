@@ -1,20 +1,14 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.model.PlayerAppearance;
 import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PacketHandler;
 
 public class PlayerAppearanceUpdater implements PacketHandler {
-	/**
-	 * World instance
-	 */
-	public static final World world = World.getWorld();
 
 	public void handlePacket(Packet p, Player player) throws Exception {
 
@@ -47,9 +41,9 @@ public class PlayerAppearanceUpdater implements PacketHandler {
 		player.setMale(headGender == 1);
 
 		if (player.isMale()) {
-			if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
+			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 				Item top = player.getEquipment().get(1);
-				if (top != null && top.getDef().isFemaleOnly()) {
+				if (top != null && top.getDef(player.getWorld()).isFemaleOnly()) {
 					player.getInventory().unwieldItem(top, false);
 					ActionSender.sendEquipmentStats(player, 1);
 				}
@@ -57,8 +51,8 @@ public class PlayerAppearanceUpdater implements PacketHandler {
 				Inventory inv = player.getInventory();
 				for (int slot = 0; slot < inv.size(); slot++) {
 					Item i = inv.get(slot);
-					if (i.isWieldable() && i.getDef().getWieldPosition() == 1
-						&& i.isWielded() && i.getDef().isFemaleOnly()) {
+					if (i.isWieldable(player.getWorld()) && i.getDef(player.getWorld()).getWieldPosition() == 1
+						&& i.isWielded() && i.getDef(player.getWorld()).isFemaleOnly()) {
 						player.getInventory().unwieldItem(i, false);
 						ActionSender.sendInventoryUpdateItem(player, slot);
 						break;

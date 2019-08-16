@@ -140,11 +140,11 @@ public class DiscordService implements Runnable{
 
 			try {
 				while ((message = auctionRequests.poll()) != null) {
-					sendToDiscord(Server.getServer().getConfig().DISCORD_AUCTION_WEBHOOK_URL, message);
+					sendToDiscord(getServer().getConfig().DISCORD_AUCTION_WEBHOOK_URL, message);
 				}
 
 				while ((message = monitoringRequests.poll()) != null) {
-					sendToDiscord(Server.getServer().getConfig().DISCORD_MONITORING_WEBHOOK_URL, message);
+					sendToDiscord(getServer().getConfig().DISCORD_MONITORING_WEBHOOK_URL, message);
 				}
 			} catch (Exception e) {
 				LOGGER.catching(e);

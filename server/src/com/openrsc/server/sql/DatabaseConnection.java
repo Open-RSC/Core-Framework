@@ -37,7 +37,7 @@ public class DatabaseConnection {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			if (createConnection(getServer().getConfig().MYSQL_DB)) {
-				LOGGER.info(string + " - Connected to MySQL!");
+				LOGGER.info(getServer().getName()+" : "+string + " - Connected to MySQL!");
 			} else {
 				LOGGER.info("Unable to connect to MySQL");
 			}

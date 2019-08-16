@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.itemactions;
 
-import com.openrsc.server.Server;
-import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
@@ -86,7 +85,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 			if (player.getInventory().remove(new Item(ItemId.DAMP_STICKS.id())) > -1) {
 				player.message("you hold the glass to the sun");
 				player.message("above the damp sticks");
-				Server.getServer().getGameEventHandler().add(new ShortEvent(player, "Dry Sticks with Lens") {
+				player.getWorld().getServer().getGameEventHandler().add(new ShortEvent(player.getWorld(), player, "Dry Sticks with Lens") {
 					public void action() {
 						getOwner().message("the glass acts like a lens");
 						getOwner().message("and drys the sticks out");
@@ -186,7 +185,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 			if (player.getInventory().remove(item1) > -1 && player.getInventory().remove(item2) > -1) {
 				player.message("You join the two halves of the key together");
 				player.getInventory().add(new Item(ItemId.CRYSTAL_KEY.id(), 1));
-				if (Server.getServer().getConfig().CRYSTAL_KEY_GIVES_XP) {
+				if (player.getWorld().getServer().getConfig().CRYSTAL_KEY_GIVES_XP) {
 					player.incExp(Skills.CRAFTING, 40, true);
 				}
 			}

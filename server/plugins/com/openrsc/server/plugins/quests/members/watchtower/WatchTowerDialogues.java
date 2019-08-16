@@ -970,7 +970,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 	}
 
 	private void ogreSpawnAndAttack(Player p, Npc n) {
-		spawnNpc(NpcId.OGRE_GENERAL.id(), p.getX(), p.getY(), 60000 * 3);
+		spawnNpc(p.getWorld(), NpcId.OGRE_GENERAL.id(), p.getX(), p.getY(), 60000 * 3);
 		sleep(1600);
 		Npc ogre = getNearestNpc(p, NpcId.OGRE_GENERAL.id(), 4);
 		if (ogre != null) {

@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.obstacles;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
@@ -12,7 +11,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
@@ -627,11 +625,11 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				int objectY = obj.getY();
 				message(p, 1300, "You craft a totem pole out of the Yommi tree.");
 				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), CRAFTED_TOTEM_POLE, obj.getDirection(), obj.getType(), p.getUsername()));
-				Server.getServer().getGameEventHandler().add(new SingleEvent(null, 60000, "Legends Quest Craft Totem Pole") {
+				obj.getWorld().getServer().getGameEventHandler().add(new SingleEvent(obj.getWorld(), null, 60000, "Legends Quest Craft Totem Pole") {
 					public void action() {
 						GameObject whatObject = p.getWorld().getRegionManager().getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
 						if (whatObject != null && whatObject.getID() == CRAFTED_TOTEM_POLE) {
-							World.getWorld().registerGameObject(new GameObject(obj.getWorld(), obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
+							obj.getWorld().registerGameObject(new GameObject(obj.getWorld(), obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
 						}
 					}
 				});
@@ -646,11 +644,11 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				message(p, 1300, "You professionally wield your Rune Axe...",
 					"As you trim the branches from the Yommi tree.");
 				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), TRIMMED_YOMMI_TREE, obj.getDirection(), obj.getType(), p.getUsername()));
-				Server.getServer().getGameEventHandler().add(new SingleEvent(null, 60000, "Legend Quest Trim Yommi Tree") {
+				obj.getWorld().getServer().getGameEventHandler().add(new SingleEvent(obj.getWorld(), null, 60000, "Legend Quest Trim Yommi Tree") {
 					public void action() {
 						GameObject whatObject = p.getWorld().getRegionManager().getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
 						if (whatObject != null && whatObject.getID() == TRIMMED_YOMMI_TREE) {
-							World.getWorld().registerGameObject(new GameObject(obj.getWorld(), obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
+							obj.getWorld().registerGameObject(new GameObject(obj.getWorld(), obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
 						}
 					}
 				});
@@ -664,11 +662,11 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				int objectY = obj.getY();
 				message(p, 1300, "You wield the Rune Axe and prepare to chop the Yommi tree.");
 				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), CHOPPED_YOMMI_TREE, obj.getDirection(), obj.getType(), p.getUsername()));
-				Server.getServer().getGameEventHandler().add(new SingleEvent(null, 60000, "Legend Quest Chop Yommi Tree") {
+				obj.getWorld().getServer().getGameEventHandler().add(new SingleEvent(obj.getWorld(), null, 60000, "Legend Quest Chop Yommi Tree") {
 					public void action() {
 						GameObject whatObject = p.getWorld().getRegionManager().getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
 						if (whatObject != null && whatObject.getID() == CHOPPED_YOMMI_TREE) {
-							World.getWorld().registerGameObject(new GameObject(obj.getWorld(), obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
+							obj.getWorld().registerGameObject(new GameObject(obj.getWorld(), obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
 						}
 					}
 				});
@@ -692,15 +690,15 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 			message(p, 1300, "You water the Yommi tree from the golden bowl...",
 				"It grows at a remarkable rate.");
 			replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), GROWN_YOMMI_TREE, obj.getDirection(), obj.getType(), p.getUsername()));
-			Server.getServer().getGameEventHandler().add(new SingleEvent(null, 15000, "Legend Quest Water Yommi Tree") {
+			obj.getWorld().getServer().getGameEventHandler().add(new SingleEvent(obj.getWorld(), null, 15000, "Legend Quest Water Yommi Tree") {
 				public void action() {
 					GameObject whatObject = p.getWorld().getRegionManager().getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
 					if (whatObject != null && whatObject.getID() == GROWN_YOMMI_TREE) {
-						World.getWorld().registerGameObject(new GameObject(obj.getWorld(), obj.getLocation(), ROTTEN_YOMMI_TREE, obj.getDirection(), obj.getType()));
+						obj.getWorld().registerGameObject(new GameObject(obj.getWorld(), obj.getLocation(), ROTTEN_YOMMI_TREE, obj.getDirection(), obj.getType()));
 						if (p.isLoggedIn()) {
 							p.message("The Yommi tree is past it's prime and dies .");
 						}
-						delayedSpawnObject(obj.getLoc(), 60000);
+						delayedSpawnObject(obj.getWorld(), obj.getLoc(), 60000);
 					}
 				}
 			});
@@ -741,15 +739,15 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				message(p, 1300, "You bury the Germinated Yommi tree seed in the fertile earth...",
 					"You start to see something growing.");
 				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), YOMMI_TREE, obj.getDirection(), obj.getType()));
-				Server.getServer().getGameEventHandler().add(new SingleEvent(null, 15000, "Legends Quest Grow Yommi Tree") {
+				obj.getWorld().getServer().getGameEventHandler().add(new SingleEvent(obj.getWorld(), null, 15000, "Legends Quest Grow Yommi Tree") {
 					public void action() {
 						GameObject whatObject = p.getWorld().getRegionManager().getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
 						if (whatObject != null && whatObject.getID() == YOMMI_TREE) {
-							World.getWorld().registerGameObject(new GameObject(obj.getWorld(), obj.getLocation(), DEAD_YOMMI_TREE, obj.getDirection(), obj.getType(), p.getUsername()));
+							obj.getWorld().registerGameObject(new GameObject(obj.getWorld(), obj.getLocation(), DEAD_YOMMI_TREE, obj.getDirection(), obj.getType(), p.getUsername()));
 							if (p.isLoggedIn()) {
 								p.message("The Sapling dies.");
 							}
-							delayedSpawnObject(obj.getLoc(), 60000);
+							delayedSpawnObject(obj.getWorld(), obj.getLoc(), 60000);
 						}
 					}
 				});
@@ -784,8 +782,8 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 						p.message("You need a crafting ability of at least 50 to perform this task.");
 						return;
 					}
-					if (!p.getCache().hasKey(item.getDef().getName().toLowerCase().replace(" ", "_"))) {
-						p.getCache().store(item.getDef().getName().toLowerCase().replace(" ", "_"), true);
+					if (!p.getCache().hasKey(item.getDef(p.getWorld()).getName().toLowerCase().replace(" ", "_"))) {
+						p.getCache().store(item.getDef(p.getWorld()).getName().toLowerCase().replace(" ", "_"), true);
 						removeItem(p, item.getID(), 1);
 						message(p, 1300, "You carefully place the piece of crystal into ",
 							"a specially shaped compartment in the furnace.");
@@ -851,15 +849,15 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 						attachmentMode = -1;
 					}
 					if (alreadyAttached) {
-						p.message("You have already placed an " + item.getDef().getName() + " above this rock.");
+						p.message("You have already placed an " + item.getDef(p.getWorld()).getName() + " above this rock.");
 						createGroundItemDelayedRemove(new GroundItem(p.getWorld(), item.getID(), obj.getX(), obj.getY(), 1, p), 5000);
-						message(p, 1300, "A barely visible " + item.getDef().getName() + " becomes clear again, spinning above the rock.");
+						message(p, 1300, "A barely visible " + item.getDef(p.getWorld()).getName() + " becomes clear again, spinning above the rock.");
 						p.message("And then fades again...");
 					} else {
 						if (attachmentMode != -1 && !hasItem(p, ItemId.BOOKING_OF_BINDING.id())) {
 							removeItem(p, item.getID(), 1);
 							p.message("You carefully move the gem closer to the rock.");
-							p.message("The " + item.getDef().getName() + " glows and starts spinning as it hovers above the rock.");
+							p.message("The " + item.getDef(p.getWorld()).getName() + " glows and starts spinning as it hovers above the rock.");
 							createGroundItemDelayedRemove(new GroundItem(p.getWorld(), item.getID(), obj.getX(), obj.getY(), 1, p), 5000);
 							if (!p.getCache().hasKey("legends_attach_" + attachmentMode)) {
 								p.getCache().store("legends_attach_" + attachmentMode, true);
@@ -921,7 +919,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				return;
 			}
 			if((p.getQuestStage(Quests.LEGENDS_QUEST) >= 9 || p.getQuestStage(Quests.LEGENDS_QUEST) == -1)
-					&& !Server.getServer().getConfig().LOOSE_SHALLOW_WATER_CHECK) {
+					&& !p.getWorld().getServer().getConfig().LOOSE_SHALLOW_WATER_CHECK) {
 				message(p, 1300, "You use the cut reed plant to syphon some water from the pool.",
 						"You take a refreshing drink from the pool.",
 						"The cut reed is soaked through with water and is now all soggy.");
@@ -973,7 +971,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 			p.message("almost as if the Kharazi jungle were sighing.");
 			p.message("Perhaps Gujuo would like to see the totem pole.");
 			if (calledGujuo) {
-				Npc gujuo = spawnNpc(NpcId.GUJUO.id(), p.getX(), p.getY(), 60000 * 3);
+				Npc gujuo = spawnNpc(obj.getWorld(), NpcId.GUJUO.id(), p.getX(), p.getY(), 60000 * 3);
 				if (gujuo != null) {
 					gujuo.initializeTalkScript(p);
 				}

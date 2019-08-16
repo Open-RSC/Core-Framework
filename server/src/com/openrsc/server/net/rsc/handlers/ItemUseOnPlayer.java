@@ -1,20 +1,14 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.states.Action;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
 
 public class ItemUseOnPlayer implements PacketHandler {
-	/**
-	 * World instance
-	 */
-	public static final World world = World.getWorld();
 
 	public void handlePacket(Packet p, Player player) throws Exception {
 
@@ -23,7 +17,7 @@ public class ItemUseOnPlayer implements PacketHandler {
 			return;
 		}
 		player.resetAll();
-		final Player affectedPlayer = world.getPlayer(p.readShort());
+		final Player affectedPlayer = player.getWorld().getPlayer(p.readShort());
 		final Item item = player.getInventory().get(p.readShort());
 		if (affectedPlayer == null || item == null) {
 			return;
@@ -51,8 +45,8 @@ public class ItemUseOnPlayer implements PacketHandler {
 				}
 				player.resetAll();
 				player.face(affectedPlayer);
-				if (item.getDef().isMembersOnly()
-					&& !Server.getServer().getConfig().MEMBER_WORLD) {
+				if (item.getDef(player.getWorld()).isMembersOnly()
+					&& !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 					player.message(player.MEMBER_MESSAGE);
 					return;
 				}

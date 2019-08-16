@@ -6,7 +6,6 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.PickupListener;
 import com.openrsc.server.plugins.listeners.action.PlayerAttackNpcListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -52,7 +51,7 @@ public class WeaponMaster implements TalkToNpcListener, TalkToNpcExecutiveListen
 		if ((i.getX() == 107 || i.getX() == 105) && i.getY() == 1476 && i.getID() == ItemId.PHOENIX_CROSSBOW.id()) {
 			Npc weaponMaster = getNearestNpc(p, NpcId.WEAPONSMASTER.id(), 20);
 			if (weaponMaster == null) {
-				World.getWorld().unregisterItem(i);
+				p.getWorld().unregisterItem(i);
 				addItem(p, ItemId.PHOENIX_CROSSBOW.id(), 1);
 				if (p.getCache().hasKey("arrav_mission") && (p.getCache().getInt("arrav_mission") & 1) == BLACKARM_MISSION) {
 					p.getCache().set("arrav_gang", BLACK_ARM);

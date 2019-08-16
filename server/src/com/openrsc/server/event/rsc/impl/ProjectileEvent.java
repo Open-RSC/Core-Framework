@@ -1,6 +1,5 @@
 package com.openrsc.server.event.rsc.impl;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.SingleTickEvent;
@@ -23,8 +22,8 @@ public class ProjectileEvent extends SingleTickEvent {
 	protected int type;
 	boolean canceled;
 
-	public ProjectileEvent(Mob caster, Mob opponent, int damage, int type) {
-		super(caster, 1, "Projectile Event");
+	public ProjectileEvent(World world, Mob caster, Mob opponent, int damage, int type) {
+		super(world, caster, 1, "Projectile Event");
 		this.caster = caster;
 		this.opponent = opponent;
 		this.damage = damage;
@@ -79,8 +78,8 @@ public class ProjectileEvent extends SingleTickEvent {
 			int reflectedDamage = damage/10 + 1;
 			if (opponent.getCache().hasKey("ringofrecoil")) {
 				int ringCheck = opponent.getCache().getInt("ringofrecoil");
-				if (Server.getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck <= reflectedDamage) {
-					reflectedDamage = Server.getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck;
+				if (getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck <= reflectedDamage) {
+					reflectedDamage = getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck;
 					opponent.getCache().remove("ringofrecoil");
 					opponent.getInventory().shatter(ItemId.RING_OF_RECOIL.id());
 				} else {
@@ -138,7 +137,7 @@ public class ProjectileEvent extends SingleTickEvent {
 		} else if (opponent.isPlayer()) {
 			Player affectedPlayer = (Player) opponent;
 			ActionSender.sendStat(affectedPlayer, 3);
-			for (Player p : World.getWorld().getPlayers()) {
+			for (Player p : getWorld().getPlayers()) {
 				if (affectedPlayer.getParty() == p.getParty()) {
 					ActionSender.sendParty(p);
 				}

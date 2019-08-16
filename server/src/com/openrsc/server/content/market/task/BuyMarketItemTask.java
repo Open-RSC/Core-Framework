@@ -1,11 +1,9 @@
 package com.openrsc.server.content.market.task;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.content.market.MarketItem;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 
 public class BuyMarketItemTask extends MarketTask {
@@ -75,7 +73,7 @@ public class BuyMarketItemTask extends MarketTask {
 		}
 
 		int sellerUsernameID = item.getSeller();
-		Player sellerPlayer = World.getWorld().getPlayerID(sellerUsernameID);
+		Player sellerPlayer = playerBuyer.getWorld().getPlayerID(sellerUsernameID);
 
 		if (sellerPlayer != null) {
 			sellerPlayer.message("@gre@[Auction House]@lre@ " + amount + "x " + def.getName() + "@whi@ has been sold!");
@@ -104,7 +102,7 @@ public class BuyMarketItemTask extends MarketTask {
 		playerBuyer.getWorld().getMarket().addRequestOpenAuctionHouseTask(playerBuyer);
 
 		if (updateDiscord) {
-			Server.getServer().getDiscordService().auctionBuy(item);
+			playerBuyer.getWorld().getServer().getDiscordService().auctionBuy(item);
 		}
 	}
 

@@ -1,6 +1,5 @@
 package com.openrsc.server.model.world.region;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.Entity;
@@ -31,7 +30,7 @@ public class RegionManager {
 
 		for (int x = 0; x < HORIZONTAL_PLANES; x++) {
 			for (int y = 0; y < VERTICAL_PLANES; y++) {
-				regions[x][y] = new Region();
+				getRegions()[x][y] = new Region();
 			}
 		}
 	}
@@ -78,7 +77,7 @@ public class RegionManager {
 			for (Iterator<GameObject> o = region.next().getGameObjects().iterator(); o.hasNext(); ) {
 				if (o == null) continue;
 				GameObject gameObject = o.next();
-				if (gameObject.getLocation().withinGridRange(entity.getLocation(), Server.getServer().getConfig().VIEW_DISTANCE)) {
+				if (gameObject.getLocation().withinGridRange(entity.getLocation(), getWorld().getServer().getConfig().VIEW_DISTANCE)) {
 					localObjects.add(gameObject);
 				}
 			}
@@ -90,7 +89,7 @@ public class RegionManager {
 		LinkedHashSet<GroundItem> localItems = new LinkedHashSet<GroundItem>();
 		for (Region region : getSurroundingRegions(entity.getLocation())) {
 			for (GroundItem o : region.getGroundItems()) {
-				if (o.getLocation().withinGridRange(entity.getLocation(), Server.getServer().getConfig().VIEW_DISTANCE)) {
+				if (o.getLocation().withinGridRange(entity.getLocation(), getWorld().getServer().getConfig().VIEW_DISTANCE)) {
 					localItems.add(o);
 				}
 			}
@@ -109,7 +108,7 @@ public class RegionManager {
 		int regionY = location.getY() / Constants.REGION_SIZE;
 
 		LinkedHashSet<Region> surrounding = new LinkedHashSet<Region>();
-		surrounding.add(regions[regionX][regionY]);
+		surrounding.add(getRegions()[regionX][regionY]);
 		int[] xMod = {-1, +1, -1, 0, +1, 0, -1, +1};
 		int[] yMod = {-1, +1, 0, -1, 0, +1, +1, -1};
 		for (int i = 0; i < xMod.length; i++) {
@@ -122,20 +121,30 @@ public class RegionManager {
 	}
 
 	private Region getRegionFromSectorCoordinates(int regionX, int regionY) {
-		if (regionX < 0 || regionY < 0 || regionX >= regions.length || regionY >= regions[regionX].length) {
+		if (regionX < 0 || regionY < 0 || regionX >= getRegions().length || regionY >= getRegions()[regionX].length) {
 			return null;
 		}
-		return regions[regionX][regionY];
+		return getRegions()[regionX][regionY];
 	}
 
 	public Region getRegion(int x, int y) {
 		int regionX = x / Constants.REGION_SIZE;
 		int regionY = y / Constants.REGION_SIZE;
 
-		return regions[regionX][regionY];
+		return getRegions()[regionX][regionY];
 	}
 
 	public Region getRegion(Point objectCoordinates) {
 		return getRegion(objectCoordinates.getX(), objectCoordinates.getY());
+	}
+
+	public Region[][] getRegions() {
+		synchronized(regions) {
+			return regions;
+		}
+	}
+
+	public World getWorld() {
+		return world;
 	}
 }

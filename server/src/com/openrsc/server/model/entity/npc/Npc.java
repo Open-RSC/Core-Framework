@@ -1,11 +1,9 @@
 package com.openrsc.server.model.entity.npc;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
-import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.NpcLootEvent;
 import com.openrsc.server.event.rsc.ImmediateEvent;
@@ -13,7 +11,10 @@ import com.openrsc.server.event.rsc.impl.BankEventNpc;
 import com.openrsc.server.event.rsc.impl.RangeEventNpc;
 import com.openrsc.server.event.rsc.impl.StrPotEventNpc;
 import com.openrsc.server.event.rsc.impl.ThrowingEvent;
-import com.openrsc.server.external.*;
+import com.openrsc.server.external.ItemDefinition;
+import com.openrsc.server.external.ItemDropDef;
+import com.openrsc.server.external.NPCDef;
+import com.openrsc.server.external.NPCLoc;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
@@ -30,16 +31,17 @@ import com.openrsc.server.util.rsc.GoldDrops;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class Npc extends Mob {
 	/**
 	 * Logger instance
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
-	private static final List<String> valuableDrops = Arrays.asList(
-		Server.getServer().getConfig().VALUABLE_DROP_ITEMS.split(",")
-	);
+
 	/**
 	 * The current status of the player
 	 */
@@ -56,7 +58,7 @@ public class Npc extends Mob {
 			strPotEventNpc.stop();
 		}
 		strPotEventNpc = event;
-		Server.getServer().getGameEventHandler().add(strPotEventNpc);
+		getWorld().getServer().getGameEventHandler().add(strPotEventNpc);
 	}
 
 	/**
@@ -80,7 +82,7 @@ public class Npc extends Mob {
 		}
 		rangeEventNpc = event;
 		setStatus(Action.RANGING_MOB);
-		Server.getServer().getGameEventHandler().add(rangeEventNpc);
+		getWorld().getServer().getGameEventHandler().add(rangeEventNpc);
 	}
 
 	public void setBankEventNpc(BankEventNpc event) {
@@ -88,7 +90,7 @@ public class Npc extends Mob {
 			bankEventNpc.stop();
 		}
 		bankEventNpc = event;
-		Server.getServer().getGameEventHandler().add(bankEventNpc);
+		getWorld().getServer().getGameEventHandler().add(bankEventNpc);
 	}
 
 	public boolean isRanging() {
@@ -271,7 +273,7 @@ public class Npc extends Mob {
 		 */
 		setUUID(UUID.randomUUID().toString());
 
-		Server.getServer().getGameEventHandler().add(statRestorationEvent);
+		getWorld().getServer().getGameEventHandler().add(statRestorationEvent);
 	}
 
 	/**
@@ -479,22 +481,22 @@ public class Npc extends Mob {
 			Player owner = mob instanceof Player ? (Player) mob : null;
 			if (owner != null) {
 				ActionSender.sendSound(owner, "victory");
-				AchievementSystem.checkAndIncSlayNpcTasks(owner, this);
+				owner.getWorld().getServer().getAchievementSystem().checkAndIncSlayNpcTasks(owner, this);
 				owner.incKills2();
 				ActionSender.sendKills2(owner);
 
 				//If NPC kill messages are enabled and the filter is enabled and the NPC is in the list of NPCs, display the messages,
 				//otherwise we will display the message for all NPCs if NPC kill messages are enabled if there is no filter.
 				//Also, if we don't have NPC kill logging enabled, we can't have NPC kill messages.
-				if (Server.getServer().getConfig().NPC_KILL_LOGGING) {
-					if (Server.getServer().getConfig().NPC_KILL_MESSAGES && Server.getServer().getConfig().NPC_KILL_MESSAGES_FILTER) {
-						if (Server.getServer().getConfig().NPC_KILL_MESSAGES_NPCs.contains(this.getDef().getName())) {
+				if (getWorld().getServer().getConfig().NPC_KILL_LOGGING) {
+					if (getWorld().getServer().getConfig().NPC_KILL_MESSAGES && getWorld().getServer().getConfig().NPC_KILL_MESSAGES_FILTER) {
+						if (getWorld().getServer().getConfig().NPC_KILL_MESSAGES_NPCs.contains(this.getDef().getName())) {
 							owner.addNpcKill(this, true);
 						} else {
 							owner.addNpcKill(this, false);
 						}
 					} else {
-						owner.addNpcKill(this, Server.getServer().getConfig().NPC_KILL_MESSAGES);
+						owner.addNpcKill(this, getWorld().getServer().getConfig().NPC_KILL_MESSAGES);
 					}
 				}
 
@@ -504,7 +506,7 @@ public class Npc extends Mob {
 				//Determine if the RDT is hit first
 				boolean rdtHit = false;
 				Item rare = null;
-				if (Server.getServer().getConfig().WANT_NEW_RARE_DROP_TABLES && mob.isPlayer()) {
+				if (getWorld().getServer().getConfig().WANT_NEW_RARE_DROP_TABLES && mob.isPlayer()) {
 					if (getWorld().standardTable.rollAccess(this.id,Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
 						rdtHit = true;
 						rare = getWorld().standardTable.rollItem(Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), ((Player) mob));
@@ -520,7 +522,7 @@ public class Npc extends Mob {
 						groundItem.setAttribute("npcdrop", true);
 						getWorld().registerItem(groundItem);
 					}
-					Server.getServer().getPlayerDataProcessor().getDatabase().addNpcDrop(
+					getWorld().getServer().getPlayerDataProcessor().getDatabase().addNpcDrop(
 						owner, this, rare.getID(), rare.getAmount());
 				}
 
@@ -551,8 +553,7 @@ public class Npc extends Mob {
 							continue;
 						}
 
-						Item temp = new Item();
-						temp.setID(drop.getID());
+						Item temp = new Item(drop.getID());
 
 						if (drop == null) {
 							continue;
@@ -566,13 +567,13 @@ public class Npc extends Mob {
 						if (hit >= total && hit < (total + weight)) {
 							if (dropID != -1) {
 								if (getWorld().getServer().getEntityHandler().getItemDef(dropID).isMembersOnly()
-									&& !Server.getServer().getConfig().MEMBER_WORLD) {
+									&& !getWorld().getServer().getConfig().MEMBER_WORLD) {
 									continue;
 								}
 
 								if (!getWorld().getServer().getEntityHandler().getItemDef(dropID).isStackable()) {
 
-									Server.getServer().getPlayerDataProcessor().getDatabase().addNpcDrop(
+									getWorld().getServer().getPlayerDataProcessor().getDatabase().addNpcDrop(
 										owner, this, dropID, amount);
 									GroundItem groundItem;
 
@@ -590,7 +591,7 @@ public class Npc extends Mob {
 											dropID = Formulae.calculateHerbDrop();
 										}
 
-										if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id() && getWorld().getServer().getEntityHandler().getItemDef(dropID).isMembersOnly() && !Server.getServer().getConfig().MEMBER_WORLD) {
+										if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id() && getWorld().getServer().getEntityHandler().getItemDef(dropID).isMembersOnly() && !getWorld().getServer().getConfig().MEMBER_WORLD) {
 											continue;
 										} else if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id()) {
 											if (!handleRingOfAvarice(owner, new Item(drop.getID(), drop.getAmount()))) {
@@ -614,7 +615,7 @@ public class Npc extends Mob {
 										}
 									}
 
-									Server.getServer().getPlayerDataProcessor().getDatabase().addNpcDrop(
+									getWorld().getServer().getPlayerDataProcessor().getDatabase().addNpcDrop(
 										owner, this, dropID, amount);
 									if (!handleRingOfAvarice(owner, new Item(drop.getID(), amount))) {
 										GroundItem groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), amount, owner);
@@ -624,13 +625,23 @@ public class Npc extends Mob {
 								}
 
 								// Check if we have a "valuable drop" (configurable)
-								if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id() && amount > 0 && Server.getServer().getConfig().VALUABLE_DROP_MESSAGES && (currentRatio > Server.getServer().getConfig().VALUABLE_DROP_RATIO || (Server.getServer().getConfig().VALUABLE_DROP_EXTRAS && valuableDrops.contains(temp.getDef().getName())))) {
+								if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id() &&
+									amount > 0 &&
+									getWorld().getServer().getConfig().VALUABLE_DROP_MESSAGES &&
+									(
+										currentRatio > getWorld().getServer().getConfig().VALUABLE_DROP_RATIO ||
+										(
+											getWorld().getServer().getConfig().VALUABLE_DROP_EXTRAS &&
+											getWorld().getServer().getConfig().valuableDrops.contains(temp.getDef(getWorld()).getName())
+										)
+									)
+								) {
 									if (amount > 1) {
-										owner.message("@red@Valuable drop: " + amount + " x " + temp.getDef().getName() + " (" +
-											(temp.getDef().getDefaultPrice() * amount) + " coins)");
+										owner.message("@red@Valuable drop: " + amount + " x " + temp.getDef(getWorld()).getName() + " (" +
+											(temp.getDef(getWorld()).getDefaultPrice() * amount) + " coins)");
 									} else {
-										owner.message("@red@Valuable drop: " + temp.getDef().getName() + " (" +
-											(temp.getDef().getDefaultPrice()) + " coins)");
+										owner.message("@red@Valuable drop: " + temp.getDef(getWorld()).getName() + " (" +
+											(temp.getDef(getWorld()).getDefaultPrice()) + " coins)");
 									}
 								}
 							}
@@ -669,7 +680,7 @@ public class Npc extends Mob {
 				//Determine if the RDT is hit first
 				boolean rdtHit = false;
 				Item rare = null;
-				if (Server.getServer().getConfig().WANT_NEW_RARE_DROP_TABLES && mob.isPlayer()) {
+				if (getWorld().getServer().getConfig().WANT_NEW_RARE_DROP_TABLES && mob.isPlayer()) {
 					if (getWorld().standardTable.rollAccess(this.id,Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
 						rdtHit = true;
 						rare = getWorld().standardTable.rollItem(Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), ((Player) mob));
@@ -711,8 +722,7 @@ public class Npc extends Mob {
 
 					for (ItemDropDef drop : drops) {
 
-						Item temp = new Item();
-						temp.setID(drop.getID());
+						Item temp = new Item(drop.getID());
 
 						if (drop == null) {
 							continue;
@@ -726,7 +736,7 @@ public class Npc extends Mob {
 						if (hit >= total && hit < (total + weight)) {
 							if (dropID != -1) {
 								if (getWorld().getServer().getEntityHandler().getItemDef(dropID).isMembersOnly()
-									&& !Server.getServer().getConfig().MEMBER_WORLD) {
+									&& !getWorld().getServer().getConfig().MEMBER_WORLD) {
 									continue;
 								}
 
@@ -747,7 +757,7 @@ public class Npc extends Mob {
 											dropID = Formulae.calculateHerbDrop();
 										}
 
-										if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id() && getWorld().getServer().getEntityHandler().getItemDef(dropID).isMembersOnly() && !Server.getServer().getConfig().MEMBER_WORLD) {
+										if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id() && getWorld().getServer().getEntityHandler().getItemDef(dropID).isMembersOnly() && !getWorld().getServer().getConfig().MEMBER_WORLD) {
 											continue;
 										} else if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id()) {
 											if (!handleRingOfAvarice((Player)mob, new Item(drop.getID(), drop.getAmount()))) {
@@ -813,7 +823,7 @@ public class Npc extends Mob {
 		// Melee damagers
 		for (int playerID : getCombatDamagers()) {
 
-			final Player p = World.getWorld().getPlayerID(playerID);
+			final Player p = getWorld().getPlayerID(playerID);
 			if (p == null)
 				continue;
 			final int damageDoneByPlayer = getCombatDamageDoneBy(p);
@@ -848,7 +858,7 @@ public class Npc extends Mob {
 		// Ranged damagers
 		for (int playerID : getRangeDamagers()) {
 			int newXP = 0;
-			Player p = World.getWorld().getPlayerID(playerID);
+			Player p = getWorld().getPlayerID(playerID);
 			int dmgDoneByPlayer = getRangeDamageDoneBy(p);
 			if (p == null)
 				continue;
@@ -865,7 +875,7 @@ public class Npc extends Mob {
 		// Magic damagers
 		for (int playerID : getMageDamagers()) {
 
-			Player p = World.getWorld().getPlayerID(playerID);
+			Player p = getWorld().getPlayerID(playerID);
 
 			int dmgDoneByPlayer = getMageDamageDoneBy(p);
 			if (p == null)
@@ -887,7 +897,7 @@ public class Npc extends Mob {
 		// Melee damagers
 		for (int playerID : getCombatDamagers()) {
 
-			final Player p = World.getWorld().getPlayerID(playerID);
+			final Player p = getWorld().getPlayerID(playerID);
 			if (p == null)
 				continue;
 			final int damageDoneByPlayer = getCombatDamageDoneBy(p);
@@ -922,7 +932,7 @@ public class Npc extends Mob {
 		// Ranged damagers
 		for (int playerID : getRangeDamagers()) {
 			int newXP = 0;
-			Player p = World.getWorld().getPlayerID(playerID);
+			Player p = getWorld().getPlayerID(playerID);
 			int dmgDoneByPlayer = getRangeDamageDoneBy(p);
 			if (p == null)
 				continue;
@@ -939,7 +949,7 @@ public class Npc extends Mob {
 		// Magic damagers
 		for (int playerID : getMageDamagers()) {
 
-			Player p = World.getWorld().getPlayerID(playerID);
+			Player p = getWorld().getPlayerID(playerID);
 
 			int dmgDoneByPlayer = getMageDamageDoneBy(p);
 			if (p == null)
@@ -956,7 +966,7 @@ public class Npc extends Mob {
 		// Melee damagers
 		for (int npcID : getCombatDamagers()) {
 			int newXP = 0;
-			final Npc n = World.getWorld().getNpcById(npcID);
+			final Npc n = getWorld().getNpcById(npcID);
 			if (n == null)
 				continue;
 
@@ -972,7 +982,7 @@ public class Npc extends Mob {
 		// Ranged damagers
 		for (int npcID : getRangeDamagers()) {
 			int newXP = 0;
-			Npc n = World.getWorld().getNpcById(npcID);
+			Npc n = getWorld().getNpcById(npcID);
 			int dmgDoneByNpc = getRangeDamageDoneBy(n);
 			if (n == null)
 				continue;
@@ -986,7 +996,7 @@ public class Npc extends Mob {
 		// Magic damagers
 		for (int npcID : getMageDamagers()) {
 			int newXP = 0;
-			Npc n = World.getWorld().getNpcById(npcID);
+			Npc n = getWorld().getNpcById(npcID);
 
 			int dmgDoneByNpc = getMageDamageDoneBy(n);
 			if (n == null)
@@ -1003,7 +1013,7 @@ public class Npc extends Mob {
 		// Melee damagers
 		for (int playerID : getCombatDamagers()) {
 
-			final Player p = World.getWorld().getPlayerID(playerID);
+			final Player p = getWorld().getPlayerID(playerID);
 			if (p == null)
 				continue;
 			final int damageDoneByPlayer = getCombatDamageDoneBy(p);
@@ -1038,7 +1048,7 @@ public class Npc extends Mob {
 		// Ranged damagers
 		for (int playerID : getRangeDamagers()) {
 			int newXP = 0;
-			Player p = World.getWorld().getPlayerID(playerID);
+			Player p = getWorld().getPlayerID(playerID);
 			int dmgDoneByPlayer = getRangeDamageDoneBy(p);
 			if (p == null)
 				continue;
@@ -1055,7 +1065,7 @@ public class Npc extends Mob {
 		// Magic damagers
 		for (int playerID : getMageDamagers()) {
 
-			Player p = World.getWorld().getPlayerID(playerID);
+			Player p = getWorld().getPlayerID(playerID);
 
 			int dmgDoneByPlayer = getMageDamageDoneBy(p);
 			if (p == null)
@@ -1076,7 +1086,7 @@ public class Npc extends Mob {
 		// Melee damagers
 		for (int npcID : getCombatDamagers()) {
 
-			final Npc n = World.getWorld().getNpcById(npcID);
+			final Npc n = getWorld().getNpcById(npcID);
 			if (n == null)
 				continue;
 			final int dmgDoneByNpc = getCombatDamageDoneBy(n);
@@ -1090,7 +1100,7 @@ public class Npc extends Mob {
 		// Ranged damagers
 		for (int npcID : getRangeDamagers()) {
 			int newXP = 0;
-			Npc n = World.getWorld().getNpcById(npcID);
+			Npc n = getWorld().getNpcById(npcID);
 			int dmgDoneByNpc = getRangeDamageDoneBy(n);
 			if (n == null)
 				continue;
@@ -1104,7 +1114,7 @@ public class Npc extends Mob {
 		// Magic damagers
 		for (int npcID : getMageDamagers()) {
 
-			Npc n = World.getWorld().getNpcById(npcID);
+			Npc n = getWorld().getNpcById(npcID);
 
 			int dmgDoneByNpc = getMageDamageDoneBy(n);
 			if (n == null)
@@ -1121,7 +1131,7 @@ public class Npc extends Mob {
 	public void initializeTalkScript(final Player p) {
 		final Npc npc = this;
 		//p.setBusyTimer(600);
-		Server.getServer().getGameEventHandler().add(new ImmediateEvent("Init Talk Script") {
+		getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(getWorld(), "Init Talk Script") {
 			@Override
 			public void action() {
 				getWorld().getServer().getPluginHandler().blockDefaultAction("TalkToNpc", new Object[]{p, npc});
@@ -1132,7 +1142,7 @@ public class Npc extends Mob {
 	public void initializeIndirectTalkScript(final Player p) {
 		final Npc npc = this;
 		//p.setBusyTimer(600);
-		Server.getServer().getGameEventHandler().add(new ImmediateEvent("Init Indirect Talk Script") {
+		getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(getWorld(), "Init Indirect Talk Script") {
 			@Override
 			public void action() {
 				getWorld().getServer().getPluginHandler().blockDefaultAction("IndirectTalkToNpc", new Object[]{p, npc});
@@ -1148,7 +1158,7 @@ public class Npc extends Mob {
 		if (!isRemoved() && shouldRespawn && def.respawnTime() > 0) {
 			startRespawning();
 			teleport(0, 0);
-			Server.getServer().getGameEventHandler().add(new DelayedEvent(null, def.respawnTime() * 1000, "Respawn NPC") {
+			getWorld().getServer().getGameEventHandler().add(new DelayedEvent(getWorld(), null, def.respawnTime() * 1000, "Respawn NPC") {
 				public void run() {
 					setRespawning(false);
 					teleport(loc.startX, loc.startY);
@@ -1204,15 +1214,15 @@ public class Npc extends Mob {
 	}
 
 	public void produceUnderAttack() {
-		World.getWorld().produceUnderAttack(this);
+		getWorld().produceUnderAttack(this);
 	}
 
 	public boolean checkUnderAttack() {
-		return World.getWorld().checkUnderAttack(this);
+		return getWorld().checkUnderAttack(this);
 	}
 
 	public void releaseUnderAttack() {
-		World.getWorld().releaseUnderAttack(this);
+		getWorld().releaseUnderAttack(this);
 	}
 
 	public void setStatus(Action a) {
@@ -1291,7 +1301,7 @@ public class Npc extends Mob {
 				if (p.getInventory().hasInInventory(item.getID())) {
 					p.getInventory().add(item);
 					return true;
-				} else if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB && (slot = p.getEquipment().hasEquipped(item.getID())) != -1) {
+				} else if (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && (slot = p.getEquipment().hasEquipped(item.getID())) != -1) {
 					Item equipped = p.getEquipment().get(slot);
 					equipped.setAmount(equipped.getAmount() + item.getAmount());
 					p.getEquipment().equip(slot, equipped);

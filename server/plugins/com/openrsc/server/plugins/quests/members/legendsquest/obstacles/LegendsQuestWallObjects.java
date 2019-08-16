@@ -183,7 +183,7 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 								} else if (leave == 1) {
 									Npc ungadulu = getNearestNpc(p, NpcId.UNGADULU.id(), 8);
 									if (ungadulu == null) {
-										spawnNpc(NpcId.UNGADULU.id(), 453, 3707);
+										spawnNpc(p.getWorld(), NpcId.UNGADULU.id(), 453, 3707);
 									}
 									LegendsQuestUngadulu.ungaduluWallDialogue(p, ungadulu, -1);
 								}
@@ -191,7 +191,7 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 								message(p, 1300, "You see a white clad figure in the midst of the flames...");
 								Npc ungadulu = getNearestNpc(p, NpcId.UNGADULU.id(), 8);
 								if (ungadulu == null) {
-									spawnNpc(NpcId.UNGADULU.id(), 453, 3707);
+									spawnNpc(p.getWorld(), NpcId.UNGADULU.id(), 453, 3707);
 								}
 								LegendsQuestUngadulu.ungaduluWallDialogue(p, ungadulu, -1);
 							}

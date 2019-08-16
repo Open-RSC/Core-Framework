@@ -34,6 +34,8 @@ public final class Constants {
 		return quests;
 	}
 
+	public final int[] STARTER_ITEMS = {87, 166, 132};
+
 	/**
 	 * Strikes, Bolts & Blast Spells.
 	 * <p/>

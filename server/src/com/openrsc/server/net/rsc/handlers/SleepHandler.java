@@ -1,9 +1,7 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PacketHandler;
@@ -17,9 +15,9 @@ public final class SleepHandler implements PacketHandler {
 		if (sleepword.equalsIgnoreCase("-null-")) {
 			player.incrementSleepTries();
 
-			Server.getServer()
+			player.getWorld().getServer()
 				.getGameEventHandler()
-				.add(new SingleEvent(player, player
+				.add(new SingleEvent(player.getWorld(), player, player
 					.getIncorrectSleepTimes() * 1000, "Guess Sleep Word") {
 					@Override
 					public void action() {
@@ -45,12 +43,12 @@ public final class SleepHandler implements PacketHandler {
 				ActionSender.sendIncorrectSleepword(player);
 				player.incrementSleepTries();
 				if (player.getIncorrectSleepTimes() > 5) {
-					World.getWorld().sendModAnnouncement(player.getUsername() + " has failed sleeping captcha " + player.getIncorrectSleepTimes() + " times!");
-					player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getUsername() + " has failed sleeping captcha " + player.getIncorrectSleepTimes() + " times!"));
+					player.getWorld().sendModAnnouncement(player.getUsername() + " has failed sleeping captcha " + player.getIncorrectSleepTimes() + " times!");
+					player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getWorld(), player.getUsername() + " has failed sleeping captcha " + player.getIncorrectSleepTimes() + " times!"));
 				}
 
-				Server.getServer().getGameEventHandler()
-					.add(new SingleEvent(player, player
+				player.getWorld().getServer().getGameEventHandler()
+					.add(new SingleEvent(player.getWorld(), player, player
 						.getIncorrectSleepTimes() * 1000, "Guess Sleep Word") {
 						@Override
 						public void action() {

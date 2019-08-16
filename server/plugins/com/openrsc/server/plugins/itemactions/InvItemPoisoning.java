@@ -1,10 +1,10 @@
 package com.openrsc.server.plugins.itemactions;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 
@@ -29,10 +29,10 @@ public class InvItemPoisoning implements InvUseOnItemListener, InvUseOnItemExecu
 
 	private void applyPoison(Player player, Item item) {
 		int makeAmount = 1, maxAmount;
-		String rawItemName = item.getDef().getName().toLowerCase();
+		String rawItemName = item.getDef(player.getWorld()).getName().toLowerCase();
 		String procItemName;
 
-		if (item.getDef().isStackable()) {
+		if (item.getDef(player.getWorld()).isStackable()) {
 			//6 darts or 5 bolts/arrows
 			maxAmount = rawItemName.contains("dart") ? 6 : 5;
 			makeAmount = hasItem(player, item.getID(), maxAmount) ? maxAmount : player.getInventory().countId(item.getID());
@@ -52,7 +52,7 @@ public class InvItemPoisoning implements InvUseOnItemListener, InvUseOnItemExecu
 		else {
 			procItemName = "a " + rawItemName + ".";
 		}
-		Item poisonedItem = getPoisonedItem(item.getDef().getName());
+		Item poisonedItem = getPoisonedItem(player.getWorld(), item.getDef(player.getWorld()).getName());
 		if (poisonedItem != null) {
 			if (removeItem(player, ItemId.WEAPON_POISON.id(), 1) && removeItem(player, item.getID(), makeAmount)) {
 				player.message("You poison " + procItemName);
@@ -63,11 +63,11 @@ public class InvItemPoisoning implements InvUseOnItemListener, InvUseOnItemExecu
 		}
 	}
 
-	private Item getPoisonedItem(String name) {
+	private Item getPoisonedItem(World world, String name) {
 		String poisonedVersion = "Poisoned " + name;
 		String poisonedVersion2 = "Poison " + name;
-		for (int i = 0; i < Server.getServer().getEntityHandler().items.length; i++) {
-			ItemDefinition def = Server.getServer().getEntityHandler().getItemDef(i);
+		for (int i = 0; i < world.getServer().getEntityHandler().items.length; i++) {
+			ItemDefinition def = world.getServer().getEntityHandler().getItemDef(i);
 			if (def.getName().equalsIgnoreCase(poisonedVersion) || def.getName().equalsIgnoreCase(poisonedVersion2)) {
 				return new Item(i);
 			}

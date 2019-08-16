@@ -1,12 +1,10 @@
 package com.openrsc.server.plugins.skills.agility;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
@@ -248,7 +246,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 					p.setBusy(false);
 					return;
 				}
-				if (Server.getServer().getConfig().WANT_FATIGUE) {
+				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (p.getFatigue() >= 69750) {
 						p.message("You are too tired to swing on the rope");
 						p.setBusy(false);
@@ -273,7 +271,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 					p.setBusy(false);
 					return;
 				}
-				if (Server.getServer().getConfig().WANT_FATIGUE) {
+				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (p.getFatigue() >= 69750) {
 						p.message("You are too tired to swing on the rope");
 						p.setBusy(false);
@@ -299,7 +297,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 					p.setBusy(false);
 					return;
 				}
-				if (Server.getServer().getConfig().WANT_FATIGUE) {
+				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (p.getFatigue() >= 69750) {
 						p.message("You are too tired to balance on the ledge");
 						p.setBusy(false);
@@ -325,7 +323,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 					p.setBusy(false);
 					return;
 				}
-				if (Server.getServer().getConfig().WANT_FATIGUE) {
+				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (p.getFatigue() >= 69750) {
 						p.message("You are too tired to balance on the ledge");
 						p.setBusy(false);
@@ -361,7 +359,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 					p.setBusy(false);
 					return;
 				}
-				if (Server.getServer().getConfig().WANT_FATIGUE) {
+				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (p.getFatigue() >= 69750) {
 						p.message("You are too tired to climb up the rubble");
 						p.setBusy(false);
@@ -379,7 +377,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 					p.setBusy(false);
 					return;
 				}
-				if (Server.getServer().getConfig().WANT_FATIGUE) {
+				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (p.getFatigue() >= 69750) {
 						p.message("You are too tired to squeeze through the pipe");
 						p.setBusy(false);
@@ -397,7 +395,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 					p.setBusy(false);
 					return;
 				}
-				if (Server.getServer().getConfig().WANT_FATIGUE) {
+				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (p.getFatigue() >= 69750) {
 						p.message("You are too tired to squeeze through the pipe");
 						p.setBusy(false);
@@ -465,7 +463,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 					p.setBusy(false);
 					return;
 				}
-				if (Server.getServer().getConfig().WANT_FATIGUE) {
+				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (p.getFatigue() >= p.MAX_FATIGUE) {
 						p.message("You are too fatigued to continue.");
 						p.setBusy(false);
@@ -506,7 +504,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 				p.incExp(Skills.AGILITY, 10, true);
 				break;
 			case YANILLE_WATCHTOWER_HANDHOLDS:
-				if (Server.getServer().getConfig().WANT_FATIGUE) {
+				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (p.getFatigue() >= p.MAX_FATIGUE) {
 						p.message("You are too tired to climb up the wall");
 						p.setBusy(false);
@@ -529,7 +527,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 					p.setBusy(false);
 					return;
 				}
-				if (Server.getServer().getConfig().WANT_FATIGUE) {
+				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (p.getFatigue() >= 69750) {
 						p.message("You are too tired to squeeze through the pipe");
 						p.setBusy(false);
@@ -547,7 +545,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 					p.setBusy(false);
 					return;
 				}
-				if (Server.getServer().getConfig().WANT_FATIGUE) {
+				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (p.getFatigue() >= 69750) {
 						p.message("You are too tired to squeeze through the pipe");
 						p.setBusy(false);
@@ -582,10 +580,10 @@ public class AgilityShortcuts implements ObjectActionListener,
 		if (obj.getID() == GREW_ISLAND_ROPE_ATTACH && item.getID() == ItemId.ROPE.id()) {
 			p.message("you tie the rope to the tree");
 			removeItem(p, ItemId.ROPE.id(), 1);
-			World.getWorld().replaceGameObject(obj,
+			p.getWorld().replaceGameObject(obj,
 				new GameObject(p.getWorld(), obj.getLocation(), 663, obj.getDirection(), obj
 					.getType()));
-			World.getWorld().delayedSpawnObject(obj.getLoc(), 60000);
+			p.getWorld().delayedSpawnObject(obj.getLoc(), 60000);
 		}
 	}
 

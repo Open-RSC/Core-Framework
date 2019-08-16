@@ -1,8 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.Constants;
-import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.event.MiniEvent;
@@ -25,7 +23,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.entity.update.Damage;
 import com.openrsc.server.model.states.Action;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
@@ -44,10 +41,7 @@ import java.util.TreeMap;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class SpellHandler implements PacketHandler {
-	/**
-	 * World instance
-	 */
-	public static final World world = World.getWorld();
+
 	private static TreeMap<Integer, Item[]> staffs = new TreeMap<Integer, Item[]>();
 
 	static {
@@ -69,7 +63,7 @@ public class SpellHandler implements PacketHandler {
 	public static boolean checkAndRemoveRunes(Player player, SpellDef spell) {
 		for (Entry<Integer, Integer> e : spell.getRunesRequired()) {
 			boolean skipRune = false;
-			if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
+			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 				for (Item staff : getStaffs(e.getKey())) {
 					if (player.getEquipment().hasEquipped(staff.getID()) != -1) {
 						skipRune = true;
@@ -156,7 +150,7 @@ public class SpellHandler implements PacketHandler {
 			return;
 		}
 		SpellDef spell = player.getWorld().getServer().getEntityHandler().getSpellDef(idx);
-		if (spell.isMembers() && !Server.getServer().getConfig().MEMBER_WORLD) {
+		if (spell.isMembers() && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.message("You need to login to a members world to use this spell");
 			player.resetPath();
 			return;
@@ -191,7 +185,7 @@ public class SpellHandler implements PacketHandler {
 			handleGroundCast(player, spell, idx);
 		} else if (pID == CAST_ON_PLAYER) { // Cast on player
 			if (spell.getSpellType() == 1 || spell.getSpellType() == 2) {
-				Player affectedPlayer = world.getPlayer(p.readShort());
+				Player affectedPlayer = player.getWorld().getPlayer(p.readShort());
 
 				if (player.getDuel().isDuelActive() && player.getDuel().getDuelSetting(1)) {
 					player.message("Magic cannot be used during this duel!");
@@ -223,7 +217,7 @@ public class SpellHandler implements PacketHandler {
 				return;
 			}
 			if (spell.getSpellType() == 2) {
-				Npc affectedNpc = world.getNpc(p.readShort());
+				Npc affectedNpc = player.getWorld().getNpc(p.readShort());
 				if (affectedNpc == null) { // This shouldn't happen
 					player.resetPath();
 					return;
@@ -397,23 +391,23 @@ public class SpellHandler implements PacketHandler {
 		switch (spell) {
 			case 33:
 				GameObject guthix = new GameObject(affectedMob.getWorld(), affectedMob.getLocation(), 1142, 0, 0);
-				world.registerGameObject(guthix);
-				Server.getServer().getGameEventHandler().add(new ObjectRemover(guthix, 2));
+				player.getWorld().registerGameObject(guthix);
+				player.getWorld().getServer().getGameEventHandler().add(new ObjectRemover(player.getWorld(), guthix, 2));
 				break;
 			case 34:
 				GameObject sara = new GameObject(affectedMob.getWorld(), affectedMob.getLocation(), 1031, 0, 0);
-				world.registerGameObject(sara);
-				Server.getServer().getGameEventHandler().add(new ObjectRemover(sara, 2));
+				player.getWorld().registerGameObject(sara);
+				player.getWorld().getServer().getGameEventHandler().add(new ObjectRemover(player.getWorld(), sara, 2));
 				break;
 			case 35:
 				GameObject zammy = new GameObject(affectedMob.getWorld(), affectedMob.getLocation(), 1036, 0, 0);
-				world.registerGameObject(zammy);
-				Server.getServer().getGameEventHandler().add(new ObjectRemover(zammy, 2));
+				player.getWorld().registerGameObject(zammy);
+				player.getWorld().getServer().getGameEventHandler().add(new ObjectRemover(player.getWorld(), zammy, 2));
 				break;
 			case 47:
 				GameObject charge = new GameObject(affectedMob.getWorld(), affectedMob.getLocation(), 1147, 0, 0);
-				world.registerGameObject(charge);
-				Server.getServer().getGameEventHandler().add(new ObjectRemover(charge, 2));
+				player.getWorld().registerGameObject(charge);
+				player.getWorld().getServer().getGameEventHandler().add(new ObjectRemover(player.getWorld(), charge, 2));
 				break;
 		}
 		if (spell != 47) {
@@ -512,7 +506,7 @@ public class SpellHandler implements PacketHandler {
 		switch (id) {
 			case 3: // Enchant lvl-1 Sapphire amulet
 				if (affectedItem.getID() == com.openrsc.server.constants.ItemId.SAPPHIRE_AMULET.id()
-				|| (Server.getServer().getConfig().WANT_EQUIPMENT_TAB
+				|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB
 					&& (affectedItem.getID() == com.openrsc.server.constants.ItemId.SAPPHIRE_RING.id() || affectedItem.getID() == com.openrsc.server.constants.ItemId.OPAL_RING.id()))) {
 					if (!checkAndRemoveRunes(player, spell)) {
 						return;
@@ -535,14 +529,14 @@ public class SpellHandler implements PacketHandler {
 					player.getInventory().add(new Item(itemID));
 					finalizeSpell(player, spell);
 				} else
-					player.message("This spell can only be used on unenchanted sapphire " + (Server.getServer().getConfig().WANT_EQUIPMENT_TAB ? " rings/amulets or opal rings" : "amulets"));
+					player.message("This spell can only be used on unenchanted sapphire " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? " rings/amulets or opal rings" : "amulets"));
 				break;
 			case 10: // Low level alchemy
 				if (affectedItem.getID() == com.openrsc.server.constants.ItemId.COINS.id()) {
 					player.message("That's already made of gold!");
 					return;
 				}
-				if (affectedItem.getDef().getOriginalItemID() != com.openrsc.server.constants.ItemId.NOTHING.id()) {
+				if (affectedItem.getDef(player.getWorld()).getOriginalItemID() != com.openrsc.server.constants.ItemId.NOTHING.id()) {
 					player.message("You can't alch noted items");
 					return;
 				}
@@ -555,7 +549,7 @@ public class SpellHandler implements PacketHandler {
 					finalizeSpellNoMessage(player, spell);
 				} else {
 					if (player.getInventory().remove(affectedItem.getID(), 1) > -1) {
-						int value = (int) (affectedItem.getDef().getDefaultPrice() * 0.4D);
+						int value = (int) (affectedItem.getDef(player.getWorld()).getDefaultPrice() * 0.4D);
 						player.getInventory().add(new Item(com.openrsc.server.constants.ItemId.COINS.id(), value)); // 40%
 					}
 					finalizeSpell(player, spell);
@@ -564,7 +558,7 @@ public class SpellHandler implements PacketHandler {
 				break;
 			case 13: // Enchant lvl-2 emerald amulet
 			if (affectedItem.getID() == com.openrsc.server.constants.ItemId.EMERALD_AMULET.id()
-				|| (Server.getServer().getConfig().WANT_EQUIPMENT_TAB && affectedItem.getID() == com.openrsc.server.constants.ItemId.EMERALD_RING.id())) {
+				|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && affectedItem.getID() == com.openrsc.server.constants.ItemId.EMERALD_RING.id())) {
 				if (!checkAndRemoveRunes(player, spell)) {
 					return;
 				}
@@ -583,10 +577,10 @@ public class SpellHandler implements PacketHandler {
 				player.getInventory().add(new Item(itemID));
 				finalizeSpell(player, spell);
 			} else
-				player.message("This spell can only be used on unenchanted emerald " + (Server.getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
+				player.message("This spell can only be used on unenchanted emerald " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
 			break;
 			case 21: // Superheat item
-				ItemSmeltingDef smeltingDef = affectedItem.getSmeltingDef();
+				ItemSmeltingDef smeltingDef = affectedItem.getSmeltingDef(player.getWorld());
 				if (smeltingDef == null || affectedItem.getID() == com.openrsc.server.constants.ItemId.COAL.id()) {
 					player.message("This spell can only be used on ore");
 					return;
@@ -604,7 +598,7 @@ public class SpellHandler implements PacketHandler {
 						}
 						player.message("You need " + reqOre.getAmount() + " heaps of "
 							+ player.getWorld().getServer().getEntityHandler().getItemDef(reqOre.getId()).getName().toLowerCase() + " to smelt "
-							+ affectedItem.getDef().getName().toLowerCase().replaceAll("ore", ""));
+							+ affectedItem.getDef(player.getWorld()).getName().toLowerCase().replaceAll("ore", ""));
 						return;
 					}
 				}
@@ -624,7 +618,7 @@ public class SpellHandler implements PacketHandler {
 							player.getInventory().remove(new Item(reqOre.getId()));
 						}
 					}
-					player.message("You make a bar of " + bar.getDef().getName().replace("bar", "").toLowerCase());
+					player.message("You make a bar of " + bar.getDef(player.getWorld()).getName().replace("bar", "").toLowerCase());
 					player.getInventory().add(bar);
 					player.incExp(com.openrsc.server.constants.Skills.SMITHING, smeltingDef.getExp(), true);
 				}
@@ -632,7 +626,7 @@ public class SpellHandler implements PacketHandler {
 				break;
 			case 24: // Enchant lvl-3 ruby amulet
 				if (affectedItem.getID() == com.openrsc.server.constants.ItemId.RUBY_AMULET.id()
-					|| (Server.getServer().getConfig().WANT_EQUIPMENT_TAB && affectedItem.getID() == com.openrsc.server.constants.ItemId.RUBY_RING.id())) {
+					|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && affectedItem.getID() == com.openrsc.server.constants.ItemId.RUBY_RING.id())) {
 					if (!checkAndRemoveRunes(player, spell)) {
 						return;
 					}
@@ -651,14 +645,14 @@ public class SpellHandler implements PacketHandler {
 					player.getInventory().add(new Item(itemID));
 					finalizeSpell(player, spell);
 				} else
-					player.message("This spell can only be used on unenchanted ruby " + (Server.getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
+					player.message("This spell can only be used on unenchanted ruby " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
 				break;
 			case 28: // High level alchemy
 				if (affectedItem.getID() == com.openrsc.server.constants.ItemId.COINS.id()) {
 					player.message("That's already made of gold!");
 					return;
 				}
-				if (affectedItem.getDef().getOriginalItemID() != com.openrsc.server.constants.ItemId.NOTHING.id()) {
+				if (affectedItem.getDef(player.getWorld()).getOriginalItemID() != com.openrsc.server.constants.ItemId.NOTHING.id()) {
 					player.message("You can't alch noted items");
 					return;
 				}
@@ -671,7 +665,7 @@ public class SpellHandler implements PacketHandler {
 					finalizeSpellNoMessage(player, spell);
 				} else {
 					if (player.getInventory().remove(affectedItem.getID(), 1) > -1) {
-						int value = (int) (affectedItem.getDef().getDefaultPrice() * 0.6D);
+						int value = (int) (affectedItem.getDef(player.getWorld()).getDefaultPrice() * 0.6D);
 						player.getInventory().add(new Item(com.openrsc.server.constants.ItemId.COINS.id(), value)); // 60%
 					}
 					finalizeSpell(player, spell);
@@ -697,11 +691,11 @@ public class SpellHandler implements PacketHandler {
 					player.getInventory().add(new Item(itemID));
 					finalizeSpell(player, spell);
 				} else
-					player.message("This spell can only be used on unenchanted diamond " + (Server.getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
+					player.message("This spell can only be used on unenchanted diamond " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
 				break;
 			case 42: // Enchant lvl-5 dragonstone amulet
 				if (affectedItem.getID() == com.openrsc.server.constants.ItemId.UNENCHANTED_DRAGONSTONE_AMULET.id()
-					|| (Server.getServer().getConfig().WANT_EQUIPMENT_TAB && affectedItem.getID() == com.openrsc.server.constants.ItemId.DRAGONSTONE_RING.id())) {
+					|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && affectedItem.getID() == com.openrsc.server.constants.ItemId.DRAGONSTONE_RING.id())) {
 					int itemID = 0;
 					switch(com.openrsc.server.constants.ItemId.getById(affectedItem.getID())) {
 						case UNENCHANTED_DRAGONSTONE_AMULET:
@@ -717,7 +711,7 @@ public class SpellHandler implements PacketHandler {
 					player.getInventory().add(new Item(itemID));
 					finalizeSpell(player, spell);
 				} else
-					player.message("This spell can only be used on unenchanted dragonstone " + (Server.getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
+					player.message("This spell can only be used on unenchanted dragonstone " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
 				break;
 
 		}
@@ -736,7 +730,7 @@ public class SpellHandler implements PacketHandler {
 					|| player.getStatus() != Action.CASTING_GITEM || affectedItem.isRemoved()) {
 					return;
 				}
-				if (!PathValidation.checkPath(player.getLocation(), affectedItem.getLocation())) {
+				if (!PathValidation.checkPath(player.getWorld(), player.getLocation(), affectedItem.getLocation())) {
 					player.message("I can't see the object from here");
 					player.resetPath();
 					return;
@@ -830,10 +824,10 @@ public class SpellHandler implements PacketHandler {
 							ActionSender.sendTeleBubble(p, location.getX(), location.getY(), true);
 						}
 
-						world.unregisterItem(affectedItem);
+						player.getWorld().unregisterItem(affectedItem);
 						finalizeSpell(player, spell);
 						player.getWorld().getServer().getGameLogger().addQuery(
-							new GenericLog(player.getUsername() + " telegrabbed " + affectedItem.getDef().getName()
+							new GenericLog(player.getWorld(), player.getUsername() + " telegrabbed " + affectedItem.getDef().getName()
 								+ " x" + affectedItem.getAmount() + " from " + affectedItem.getLocation().toString()
 								+ " while standing at " + player.getLocation().toString()));
 						Item item = new Item(affectedItem.getID(), affectedItem.getAmount());
@@ -855,7 +849,7 @@ public class SpellHandler implements PacketHandler {
 				.equals(aff.getUsername().toLowerCase()))
 				return;
 		}
-		if (!PathValidation.checkPath(player.getLocation(), affectedMob.getLocation())) {
+		if (!PathValidation.checkPath(player.getWorld(), player.getLocation(), affectedMob.getLocation())) {
 			player.message("I can't get a clear shot from here");
 			player.resetPath();
 			return;
@@ -875,7 +869,7 @@ public class SpellHandler implements PacketHandler {
 		player.setStatus(Action.CASTING_MOB);
 		player.setWalkToAction(new WalkToMobAction(player, affectedMob, 4) {
 			public void execute() {
-				if (!PathValidation.checkPath(player.getLocation(), affectedMob.getLocation())) {
+				if (!PathValidation.checkPath(player.getWorld(), player.getLocation(), affectedMob.getLocation())) {
 					player.message("I can't get a clear shot from here");
 					player.resetPath();
 					return;
@@ -975,7 +969,7 @@ public class SpellHandler implements PacketHandler {
 							return;
 						}
 						final int stat = affectsStat;
-						Server.getServer().getGameEventHandler().add(new CustomProjectileEvent(player, affectedMob, 1) {
+						player.getWorld().getServer().getGameEventHandler().add(new CustomProjectileEvent(player.getWorld(), player, affectedMob, 1) {
 							@Override
 							public void doSpell() {
 								affectedMob.getSkills().setLevel(stat, newStat);
@@ -1003,7 +997,7 @@ public class SpellHandler implements PacketHandler {
 						if (DataConversions.random(0, 8) == 2)
 							damaga = 0;
 
-						Server.getServer().getGameEventHandler().add(new ProjectileEvent(player, affectedMob, damaga, 1));
+						player.getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(player.getWorld(), player, affectedMob, damaga, 1));
 						finalizeSpell(player, spell);
 						return;
 
@@ -1029,7 +1023,7 @@ public class SpellHandler implements PacketHandler {
 							int casts = player.getCache().getInt(spell.getName() + "_casts");
 							player.getCache().set(spell.getName() + "_casts", casts - 1);
 						}
-						Server.getServer().getGameEventHandler().add(new ProjectileEvent(player, affectedMob, Formulae.calcGodSpells(player, affectedMob, true), 1));
+						player.getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(player.getWorld(), player, affectedMob, Formulae.calcGodSpells(player, affectedMob, true), 1));
 						finalizeSpell(player, spell);
 						break;
 					case 33: // Guthix cast
@@ -1084,7 +1078,7 @@ public class SpellHandler implements PacketHandler {
 						if (affectedMob.getRegion().getGameObject(affectedMob.getX(), affectedMob.getY()) == null) {
 							godSpellObject(player, affectedMob, spellID);
 						}
-						Server.getServer().getGameEventHandler().add(new ProjectileEvent(player, affectedMob, Formulae.calcGodSpells(player, affectedMob, false), 1));
+						player.getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(player.getWorld(), player, affectedMob, Formulae.calcGodSpells(player, affectedMob, false), 1));
 
 						finalizeSpell(player, spell);
 						break;
@@ -1122,15 +1116,15 @@ public class SpellHandler implements PacketHandler {
 							// Shout message from NPC when being maged
 							affectedMob.getUpdateFlags().setChatMessage(new ChatMessage(affectedMob, "Aaarrgh my head", player));
 							// Deal first damage
-							Server.getServer().getGameEventHandler().add(new ProjectileEvent(player, affectedMob, firstDamage, 1));
+							player.getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(player.getWorld(), player, affectedMob, firstDamage, 1));
 							// Deal Second Damage
-							Server.getServer().getGameEventHandler().add(new MiniEvent(player, 600, "Salarin the Twisted Strike") {
+							player.getWorld().getServer().getGameEventHandler().add(new MiniEvent(player.getWorld(), player, 600, "Salarin the Twisted Strike") {
 								@Override
 								public void action() {
 									affectedMob.getSkills().subtractLevel(3, secondAdditionalDamage, false);
 									affectedMob.getUpdateFlags().setDamage(new Damage(affectedMob, secondAdditionalDamage));
 									if (affectedMob.isPlayer()) {
-										for (Player p : World.getWorld().getPlayers()) {
+										for (Player p : getWorld().getPlayers()) {
 											if (player.getParty() == p.getParty()) {
 												ActionSender.sendParty(p);
 											}
@@ -1162,7 +1156,7 @@ public class SpellHandler implements PacketHandler {
 
 						int damage = Formulae.calcSpellHit(max, player.getMagicPoints());
 
-						Server.getServer().getGameEventHandler().add(new ProjectileEvent(player, affectedMob, damage, 1));
+						player.getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(player.getWorld(), player, affectedMob, damage, 1));
 						player.setKillType(1);
 						finalizeSpell(player, spell);
 						break;
@@ -1213,7 +1207,7 @@ public class SpellHandler implements PacketHandler {
 			player.message("the plague sample is too delicate...");
 			player.message("it disintegrates in the crossing");
 			while (player.getInventory().countId(com.openrsc.server.constants.ItemId.PLAGUE_SAMPLE.id()) > 0) {
-				player.getInventory().remove(new Item(ItemId.PLAGUE_SAMPLE.id()));
+				player.getInventory().remove(new Item(com.openrsc.server.constants.ItemId.PLAGUE_SAMPLE.id()));
 			}
 		}
 		switch (id) {

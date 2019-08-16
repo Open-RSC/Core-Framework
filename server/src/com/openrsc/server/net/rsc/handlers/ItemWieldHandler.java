@@ -1,18 +1,14 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 
 public final class ItemWieldHandler implements PacketHandler {
-
-	public static final World world = World.getWorld();
 
 	public void handlePacket(Packet p, Player player) throws Exception {
 		int pID = p.getID();
@@ -38,7 +34,7 @@ public final class ItemWieldHandler implements PacketHandler {
 
 		Item item = null;
 
-		if (pID == packetTwo && Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (pID == packetTwo && player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			Item loop;
 			for (int i = 0; i < Equipment.slots; i++) {
 				loop = player.getEquipment().get(i);
@@ -65,7 +61,7 @@ public final class ItemWieldHandler implements PacketHandler {
 
 		}
 
-		if (item == null || !item.isWieldable()) {
+		if (item == null || !item.isWieldable(player.getWorld())) {
 			player.setSuspiciousPlayer(true);
 			return;
 		}
@@ -74,7 +70,7 @@ public final class ItemWieldHandler implements PacketHandler {
 						+ World.membersWildMax);
 			return;
 		}*/
-		if (!Server.getServer().getConfig().MEMBER_WORLD && item.getDef().isMembersOnly()) {
+		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD && item.getDef(player.getWorld()).isMembersOnly()) {
 			player.message("You need to be a member to use this object");
 			return;
 		}
@@ -93,20 +89,20 @@ public final class ItemWieldHandler implements PacketHandler {
 					return;
 				player.getInventory().unwieldItem(item, true);
 			}
-		} else if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB && pID == packetThree) {
+		} else if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && pID == packetThree) {
 			if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
 				"Wield", new Object[]{player, item})) {
 				return;
 			}
 			player.getBank().wieldItem(idx, true);
 			ActionSender.showBank(player);
-		} else if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB && pID == packetFour) {
+		} else if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && pID == packetFour) {
 			if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
 				"UnWield", new Object[]{player, item}))
 				return;
 			player.getBank().unwieldItem(item, true);
 			ActionSender.showBank(player);
-			ActionSender.sendEquipmentStats(player, item.getDef().getWieldPosition());
+			ActionSender.sendEquipmentStats(player, item.getDef(player.getWorld()).getWieldPosition());
 		}
 	}
 }

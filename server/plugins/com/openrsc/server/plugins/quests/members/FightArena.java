@@ -8,7 +8,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
@@ -91,7 +90,7 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 				npcTalk(p, justin, "You saved my life and my son's",
 					"I am eternally in your debt brave traveller");
 			}
-			spawnNpc(NpcId.GENERAL_KHAZARD.id(), 613, 708, 60000);
+			spawnNpc(p.getWorld(), NpcId.GENERAL_KHAZARD.id(), 613, 708, 60000);
 			sleep(1000);
 			Npc general = getNearestNpc(p, NpcId.GENERAL_KHAZARD.id(), 8);
 			if (general != null) {
@@ -115,7 +114,7 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 		}
 		else if (n.getID() == NpcId.KHAZARD_SCORPION.id()) {
 			p.message("You defeat the scorpion");
-			spawnNpc(NpcId.GENERAL_KHAZARD.id(), 613, 708, 30000);
+			spawnNpc(p.getWorld(), NpcId.GENERAL_KHAZARD.id(), 613, 708, 30000);
 			sleep(1000);
 			Npc generalAgain = getNearestNpc(p, NpcId.GENERAL_KHAZARD.id(), 15);
 			if (generalAgain != null) {
@@ -125,16 +124,16 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 			}
 			message(p, "From above you hear a voice...",
 				"Ladies and gentlemen!", "Todays second round");
-			spawnNpc(NpcId.BOUNCER.id(), 613, 708, 240000);
+			spawnNpc(p.getWorld(), NpcId.BOUNCER.id(), 613, 708, 240000);
 			p.message("between the Outsider and bouncer");
-			Npc bouncer = World.getWorld().getNpcById(NpcId.BOUNCER.id());
+			Npc bouncer = p.getWorld().getNpcById(NpcId.BOUNCER.id());
 			if (bouncer != null) {
 				bouncer.setChasing(p);
 			}
 		}
 		else if (n.getID() == NpcId.BOUNCER.id()) {
 			p.message("You defeat bouncer");
-			spawnNpc(NpcId.GENERAL_KHAZARD.id(), 613, 708, 60000 * 2);
+			spawnNpc(p.getWorld(), NpcId.GENERAL_KHAZARD.id(), 613, 708, 60000 * 2);
 			sleep(1000);
 			Npc generalAgainAgain = getNearestNpc(p, NpcId.GENERAL_KHAZARD.id(), 15);
 			if (generalAgainAgain != null) {
@@ -185,8 +184,8 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 					"Ladies and gentlemen!",
 					"Todays first fight between the outsider",
 					"And everyone's favorite scorpion has begun");
-				spawnNpc(NpcId.KHAZARD_SCORPION.id(), 613, 708, 120000);
-				Npc scorp = World.getWorld().getNpcById(NpcId.KHAZARD_SCORPION.id());
+				spawnNpc(p.getWorld(), NpcId.KHAZARD_SCORPION.id(), 613, 708, 120000);
+				Npc scorp = p.getWorld().getNpcById(NpcId.KHAZARD_SCORPION.id());
 				if (scorp != null) {
 					scorp.setChasing(p);
 				}
@@ -206,7 +205,7 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 				message(p, "You see Jeremy's father Justin",
 					"Trying to escape an ogre");
 				npcTalk(p, n, "Please help him!");
-				spawnNpc(NpcId.KHAZARD_OGRE.id(), 613, 708, 60000 * 2);
+				spawnNpc(p.getWorld(), NpcId.KHAZARD_OGRE.id(), 613, 708, 60000 * 2);
 			}
 		}
 		else if (n.getID() == NpcId.GUARD_KHAZARD_MACE.id()) {
@@ -457,10 +456,10 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 					message(p, "You use your key to open the cell door",
 						"The gate swings open");
 					p.playSound("opendoor");
-					World.getWorld().replaceGameObject(obj,
+					p.getWorld().replaceGameObject(obj,
 						new GameObject(obj.getWorld(), obj.getLocation(), 181, obj
 							.getDirection(), obj.getType()));
-					World.getWorld().delayedSpawnObject(obj.getLoc(), 3000);
+					p.getWorld().delayedSpawnObject(obj.getLoc(), 3000);
 					servil.teleport(605, 718);
 					playerTalk(p, servil,
 						"There you go, now we need to find your father");

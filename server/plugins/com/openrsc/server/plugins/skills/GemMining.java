@@ -1,13 +1,11 @@
 package com.openrsc.server.plugins.skills;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ObjectMiningDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -94,7 +92,7 @@ public class GemMining implements ObjectActionListener,
 			return;
 		}
 
-		if (Server.getServer().getConfig().WANT_FATIGUE) {
+		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
 			if (p.getFatigue() >= p.MAX_FATIGUE) {
 				p.message("You are too tired to mine this rock");
 				return;
@@ -104,8 +102,8 @@ public class GemMining implements ObjectActionListener,
 		p.playSound("mine");
 		showBubble(p, new Item(ItemId.IRON_PICKAXE.id()));
 		p.message("You have a swing at the rock!");
-		retrytimes = Server.getServer().getConfig().BATCH_PROGRESSION ? Formulae.getRepeatTimes(p, com.openrsc.server.constants.Skills.MINING) : retrytimes + 1000;
-		p.setBatchEvent(new BatchEvent(p, 1800, "Gem Mining", retrytimes, true) {
+		retrytimes = p.getWorld().getServer().getConfig().BATCH_PROGRESSION ? Formulae.getRepeatTimes(p, com.openrsc.server.constants.Skills.MINING) : retrytimes + 1000;
+		p.setBatchEvent(new BatchEvent(p.getWorld(), p, 1800, "Gem Mining", retrytimes, true) {
 			@Override
 			public void action() {
 				if (getGem(p, 40, getOwner().getSkills().getLevel(com.openrsc.server.constants.Skills.MINING), axeId) && mineLvl >= 40) { // always 40 required mining.
@@ -120,12 +118,12 @@ public class GemMining implements ObjectActionListener,
 						getOwner().getInventory().add(gem);
 					}
 					
-					if (!Server.getServer().getConfig().MINING_ROCKS_EXTENDED || DataConversions.random(1, 100) <= 39) {
+					if (!getOwner().getWorld().getServer().getConfig().MINING_ROCKS_EXTENDED || DataConversions.random(1, 100) <= 39) {
 						interrupt();
 						if (object != null && object.getID() == obj.getID()) {
 							GameObject newObject = new GameObject(obj.getWorld(), obj.getLocation(), 98, obj.getDirection(), obj.getType());
-							World.getWorld().replaceGameObject(obj, newObject);
-							World.getWorld().delayedSpawnObject(object.getLoc(), 120 * 1000); // 2 minute respawn time
+							getOwner().getWorld().replaceGameObject(obj, newObject);
+							getOwner().getWorld().delayedSpawnObject(object.getLoc(), 120 * 1000); // 2 minute respawn time
 						}
 					}
 				} else {

@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.quests.members;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
@@ -89,11 +88,11 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 						p.message("There is nothing in this tree");
 					} else {
 						p.message("A Leprechaun jumps down from the tree and runs off");
-						final Npc lepr = spawnNpc(NpcId.LEPRECHAUN.id(), 172, 661, 60000 * 3);
+						final Npc lepr = spawnNpc(p.getWorld(), NpcId.LEPRECHAUN.id(), 172, 661, 60000 * 3);
 						p.setBusyTimer(1800);
 						lepr.walk(173, 661);
 						try {
-							Server.getServer().getGameEventHandler().add(new SingleEvent(null, 600, "Lost City Leprechaun", true) {
+							p.getWorld().getServer().getGameEventHandler().add(new SingleEvent(p.getWorld(),null, 600, "Lost City Leprechaun", true) {
 								@Override
 								public void action() {
 									lepr.walk(177, 661 + DataConversions.random(0, 10) - 5);

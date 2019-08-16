@@ -3,11 +3,12 @@ package com.openrsc.server.event.rsc.impl;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 
 public abstract class CustomProjectileEvent extends ProjectileEvent {
 
-	protected CustomProjectileEvent(Mob caster, Mob opponent, int type) {
-		super(caster, opponent, 0, type);
+	protected CustomProjectileEvent(World world, Mob caster, Mob opponent, int type) {
+		super(world, caster, opponent, 0, type);
 	}
 
 	@Override

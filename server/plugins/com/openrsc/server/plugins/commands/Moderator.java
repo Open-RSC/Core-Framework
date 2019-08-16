@@ -4,7 +4,6 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
 import com.openrsc.server.sql.query.logs.StaffLog;
@@ -16,9 +15,21 @@ import java.util.ArrayList;
 
 public final class Moderator implements CommandListener {
 
+	public static String messagePrefix = null;
+	public static String badSyntaxPrefix = null;
+
 	public void onCommand(String cmd, String[] args, Player player) {
-		if (isCommandAllowed(player, cmd))
+		if (isCommandAllowed(player, cmd)) {
+
+			if(messagePrefix == null) {
+				messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
+			}
+			if(badSyntaxPrefix == null) {
+				badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
+			}
+
 			handleCommand(cmd, args, player);
+		}
 	}
 
 	public boolean isCommandAllowed(Player player, String cmd) {
@@ -33,7 +44,7 @@ public final class Moderator implements CommandListener {
 				return;
 			}
 
-			Player p = World.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
 			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
@@ -85,7 +96,7 @@ public final class Moderator implements CommandListener {
 				return;
 			}
 
-			Player p = World.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
 			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
@@ -136,7 +147,7 @@ public final class Moderator implements CommandListener {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
 				return;
 			}
-			Player p = World.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
@@ -151,7 +162,7 @@ public final class Moderator implements CommandListener {
 		} else if (cmd.equalsIgnoreCase("alert")) {
 			StringBuilder message = new StringBuilder();
 			if (args.length > 0) {
-				Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+				Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
 				if (p != null) {
 					for (int i = 1; i < args.length; i++)
@@ -167,7 +178,7 @@ public final class Moderator implements CommandListener {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
 			}
-			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
@@ -198,11 +209,11 @@ public final class Moderator implements CommandListener {
 			}
 			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 13, newStr.toString()));
 			newStr.insert(0, player.getStaffName() + ": ");
-			for (Player p : World.getWorld().getPlayers()) {
+			for (Player p : player.getWorld().getPlayers()) {
 				ActionSender.sendMessage(p, player, 1, MessageType.GLOBAL_CHAT, newStr.toString(), player.getIcon());
 			}
 		} else if (cmd.equalsIgnoreCase("info") || cmd.equalsIgnoreCase("about")) {
-			Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
+			Player p = args.length > 0 ? player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
 			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
@@ -228,7 +239,7 @@ public final class Moderator implements CommandListener {
 					+ "@gre@Total Time Played:@whi@ " + DataConversions.getDateFromMsec(timePlayed) + " %"
 				, true);
 		} else if (cmd.equalsIgnoreCase("inventory")) {
-			Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
+			Player p = args.length > 0 ? player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
 			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
@@ -236,12 +247,12 @@ public final class Moderator implements CommandListener {
 			ArrayList<Item> inventory = p.getInventory().getItems();
 			ArrayList<String> itemStrings = new ArrayList<>();
 			for (Item invItem : inventory)
-				itemStrings.add("@gre@" + invItem.getAmount() + " @whi@" + invItem.getDef().getName());
+				itemStrings.add("@gre@" + invItem.getAmount() + " @whi@" + invItem.getDef(player.getWorld()).getName());
 
 			ActionSender.sendBox(player, "@lre@Inventory of " + p.getUsername() + ":%"
 				+ "@whi@" + StringUtils.join(itemStrings, ", "), true);
 		} else if (cmd.equalsIgnoreCase("bank")) {
-			Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
+			Player p = args.length > 0 ? player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
 			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
@@ -249,7 +260,7 @@ public final class Moderator implements CommandListener {
 			ArrayList<Item> inventory = p.getBank().getItems();
 			ArrayList<String> itemStrings = new ArrayList<>();
 			for (Item bankItem : inventory)
-				itemStrings.add("@gre@" + bankItem.getAmount() + " @whi@" + bankItem.getDef().getName());
+				itemStrings.add("@gre@" + bankItem.getAmount() + " @whi@" + bankItem.getDef(player.getWorld()).getName());
 			ActionSender.sendBox(player, "@lre@Bank of " + p.getUsername() + ":%"
 				+ "@whi@" + StringUtils.join(itemStrings, ", "), true);
 		} else if (cmd.equalsIgnoreCase("announcement") || cmd.equalsIgnoreCase("announce") || cmd.equalsIgnoreCase("anouncement") || cmd.equalsIgnoreCase("anounce")) {
@@ -259,8 +270,8 @@ public final class Moderator implements CommandListener {
 				newStr.append(arg).append(" ");
 			}
 			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 13, newStr.toString()));
-			newStr.insert(0, player.getStaffName() + ": ");
-			for (Player p : World.getWorld().getPlayers()) {
+			newStr.insert(0, player.getStaffName() + ":@whi@ ");
+			for (Player p : player.getWorld().getPlayers()) {
 				ActionSender.sendMessage(p, player, 1, MessageType.GLOBAL_CHAT, "ANNOUNCEMENT: @whi@" + newStr.toString(), player.getIcon());
 			}
 		}

@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.npcs;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.external.CerterDef;
 import com.openrsc.server.model.container.Item;
@@ -25,7 +24,7 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
 		// Forester (Log certer; custom)
 		if ((n.getID() == NpcId.FORESTER.id())
-			&& !Server.getServer().getConfig().WANT_WOODCUTTING_GUILD) {
+			&& !p.getWorld().getServer().getConfig().WANT_WOODCUTTING_GUILD) {
 			return;
 		}
 
@@ -104,7 +103,7 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 		final String[] names = certerDef.getCertNames();
 		p.message("How many certificates do you wish to trade in?");
 		int certAmount;
-		if (Server.getServer().getConfig().WANT_CERTER_BANK_EXCHANGE) {
+		if (p.getWorld().getServer().getConfig().WANT_CERTER_BANK_EXCHANGE) {
 			certAmount = showMenu(p, n, false, "One", "two", "Three", "four",
 				"five", "All to bank");
 		} else {
@@ -132,7 +131,7 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 			if (p.getInventory().remove(new Item(certID, certAmount)) > -1) {
 				p.message("You exchange the certificates, "
 					+ bankItem.getAmount() + " "
-					+ bankItem.getDef().getName()
+					+ bankItem.getDef(p.getWorld()).getName()
 					+ " is added to your bank");
 				p.getBank().add(bankItem);
 			}
@@ -158,7 +157,7 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 		p.message("How many " + certerDef.getType() + ending
 			+ " do you wish to trade in?");
 		int certAmount;
-		if (Server.getServer().getConfig().WANT_CERTER_BANK_EXCHANGE) {
+		if (p.getWorld().getServer().getConfig().WANT_CERTER_BANK_EXCHANGE) {
 			certAmount = showMenu(p, n, false, "five", "ten", "Fifteen", "Twenty", "Twentyfive",
 					"All from bank");
 		} else {
@@ -237,6 +236,6 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return (DataConversions.inArray(certers, n.getID())) || (n.getID() == NpcId.FORESTER.id() && Server.getServer().getConfig().WANT_WOODCUTTING_GUILD);
+		return (DataConversions.inArray(certers, n.getID())) || (n.getID() == NpcId.FORESTER.id() && p.getWorld().getServer().getConfig().WANT_WOODCUTTING_GUILD);
 	}
 }

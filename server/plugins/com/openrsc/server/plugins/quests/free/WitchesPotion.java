@@ -7,7 +7,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
@@ -189,7 +188,7 @@ public class WitchesPotion implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
 		if (p.getQuestStage(this) >= 1) {
-			World.getWorld().registerItem(new GroundItem(p.getWorld(), ItemId.RATS_TAIL.id(), n.getX(), n.getY(), 1, p));
+			p.getWorld().registerItem(new GroundItem(p.getWorld(), ItemId.RATS_TAIL.id(), n.getX(), n.getY(), 1, p));
 			n.killedBy(p);
 		} else {
 			n.killedBy(p);

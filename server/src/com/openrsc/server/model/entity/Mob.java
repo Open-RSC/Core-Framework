@@ -1,6 +1,5 @@
 package com.openrsc.server.model.entity;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.PoisonEvent;
@@ -42,18 +41,19 @@ public abstract class Mob extends Entity {
 
 	public Mob (World world) {
 		super(world);
+		statRestorationEvent = new StatRestorationEvent(getWorld(), this);
 	}
 
 	public void addSkull(int timeLeft) {
 		if (skullEventNpc == null) {
-			skullEventNpc = new GameTickEvent(this, timeLeft, "NPC Add Skull") {
+			skullEventNpc = new GameTickEvent(getWorld(), this, timeLeft, "NPC Add Skull") {
 
 				@Override
 				public void run() {
 					removeSkull();
 				}
 			};
-			Server.getServer().getGameEventHandler().add(skullEventNpc);
+			getWorld().getServer().getGameEventHandler().add(skullEventNpc);
 			getUpdateFlags().setAppearanceChanged(true);
 		}
 	}
@@ -216,7 +216,7 @@ public abstract class Mob extends Entity {
 		}
 		rangeEventNpc = event;
 		setStatus(Action.RANGING_MOB);
-		Server.getServer().getGameEventHandler().add(rangeEventNpc);
+		getWorld().getServer().getGameEventHandler().add(rangeEventNpc);
 	}
 
 	/**
@@ -244,7 +244,7 @@ public abstract class Mob extends Entity {
 	/**
 	 * The stat restore event
 	 */
-	protected StatRestorationEvent statRestorationEvent = new StatRestorationEvent(this);
+	protected StatRestorationEvent statRestorationEvent;
 	/**
 	 * If we are warned to move
 	 */
@@ -345,35 +345,35 @@ public abstract class Mob extends Entity {
 			return true;
 		}
 		if (minX <= getX() - 1 && maxX >= getX() - 1 && minY <= getY() && maxY >= getY()
-			&& (World.getWorld().getTile(getX() - 1, getY()).traversalMask & CollisionFlag.WALL_WEST) == 0) {
+			&& (getWorld().getTile(getX() - 1, getY()).traversalMask & CollisionFlag.WALL_WEST) == 0) {
 			return true;
 		}
 		if (1 + getX() >= minX && getX() + 1 <= maxX && getY() >= minY && maxY >= getY()
-			&& (CollisionFlag.WALL_EAST & World.getWorld().getTile(getX() + 1, getY()).traversalMask) == 0) {
+			&& (CollisionFlag.WALL_EAST & getWorld().getTile(getX() + 1, getY()).traversalMask) == 0) {
 			return true;
 		}
 		if (minX <= getX() && maxX >= getX() && getY() - 1 >= minY && maxY >= getY() - 1
-			&& (CollisionFlag.WALL_SOUTH & World.getWorld().getTile(getX(), getY() - 1).traversalMask) == 0) {
+			&& (CollisionFlag.WALL_SOUTH & getWorld().getTile(getX(), getY() - 1).traversalMask) == 0) {
 			return true;
 		}
 		if (minX <= getX() && getX() <= maxX && minY <= getY() + 1 && maxY >= getY() + 1
-			&& (CollisionFlag.WALL_NORTH & World.getWorld().getTile(getX(), getY() + 1).traversalMask) == 0) {
+			&& (CollisionFlag.WALL_NORTH & getWorld().getTile(getX(), getY() + 1).traversalMask) == 0) {
 			return true;
 		}
 		if (minX <= getX() - 1 && maxX >= getX() - 1 && minY <= getY() - 1 && maxY >= getY() - 1
-			&& (World.getWorld().getTile(getX() - 1, getY() - 1).traversalMask & CollisionFlag.WALL_SOUTH_WEST) == 0) {
+			&& (getWorld().getTile(getX() - 1, getY() - 1).traversalMask & CollisionFlag.WALL_SOUTH_WEST) == 0) {
 			return true;
 		}
 		if (1 + getX() >= minX && getX() + 1 <= maxX && getY() - 1 >= minY && maxY >= getY() - 1
-			&& (CollisionFlag.WALL_SOUTH_EAST & World.getWorld().getTile(getX() + 1, getY() - 1).traversalMask) == 0) {
+			&& (CollisionFlag.WALL_SOUTH_EAST & getWorld().getTile(getX() + 1, getY() - 1).traversalMask) == 0) {
 			return true;
 		}
 		if (minX <= getX() - 1 && maxX >= getX() - 1 && minY <= getY() + 1 && maxY >= getY() + 1
-			&& (World.getWorld().getTile(getX() - 1, getY() + 1).traversalMask & CollisionFlag.WALL_NORTH_WEST) == 0) {
+			&& (getWorld().getTile(getX() - 1, getY() + 1).traversalMask & CollisionFlag.WALL_NORTH_WEST) == 0) {
 			return true;
 		}
 		if (1 + getX() >= minX && getX() + 1 <= maxX && getY() + 1 >= minY && maxY >= getY() + 1
-			&& (CollisionFlag.WALL_NORTH_EAST & World.getWorld().getTile(getX() + 1, getY() + 1).traversalMask) == 0) {
+			&& (CollisionFlag.WALL_NORTH_EAST & getWorld().getTile(getX() + 1, getY() + 1).traversalMask) == 0) {
 			return true;
 		}
 		return false;
@@ -384,19 +384,19 @@ public abstract class Mob extends Entity {
 			return true;
 		}
 		if (minX <= getX() - 1 && maxX >= getX() - 1 && minY <= getY() && maxY >= getY()
-			&& (World.getWorld().getTile(getX() - 1, getY()).traversalMask & CollisionFlag.WALL_WEST) == 0) {
+			&& (getWorld().getTile(getX() - 1, getY()).traversalMask & CollisionFlag.WALL_WEST) == 0) {
 			return true;
 		}
 		if (1 + getX() >= minX && getX() + 1 <= maxX && getY() >= minY && maxY >= getY()
-			&& (CollisionFlag.WALL_EAST & World.getWorld().getTile(getX() + 1, getY()).traversalMask) == 0) {
+			&& (CollisionFlag.WALL_EAST & getWorld().getTile(getX() + 1, getY()).traversalMask) == 0) {
 			return true;
 		}
 		if (minX <= getX() && maxX >= getX() && getY() - 1 >= minY && maxY >= getY() - 1
-			&& (CollisionFlag.WALL_SOUTH & World.getWorld().getTile(getX(), getY() - 1).traversalMask) == 0) {
+			&& (CollisionFlag.WALL_SOUTH & getWorld().getTile(getX(), getY() - 1).traversalMask) == 0) {
 			return true;
 		}
 		return minX <= getX() && getX() <= maxX && minY <= getY() + 1 && maxY >= getY() + 1
-			&& (CollisionFlag.WALL_NORTH & World.getWorld().getTile(getX(), getY() + 1).traversalMask) == 0;
+			&& (CollisionFlag.WALL_NORTH & getWorld().getTile(getX(), getY() + 1).traversalMask) == 0;
 	}
 
 	public final boolean canReach(Entity e) {
@@ -758,7 +758,7 @@ public abstract class Mob extends Entity {
 		}
 		final Mob me = this;
 		following = mob;
-		followEvent = new GameTickEvent(null, 1, "Player Following Mob") {
+		followEvent = new GameTickEvent(getWorld(), null, 1, "Player Following Mob") {
 			public void run() {
 				if (!me.withinRange(mob) || mob.isRemoved()
 					|| (me.isPlayer() && !((Player) me).getDuel().isDuelActive() && me.isBusy())) {
@@ -773,7 +773,7 @@ public abstract class Mob extends Entity {
 				}
 			}
 		};
-		Server.getServer().getGameEventHandler().add(followEvent);
+		getWorld().getServer().getGameEventHandler().add(followEvent);
 	}
 
 	public void setLastCombatState(CombatState lastCombatState) {
@@ -920,9 +920,9 @@ public abstract class Mob extends Entity {
 			setOpponent(victim);
 			setCombatTimer();
 
-			combatEvent = new CombatEvent(this, victim);
+			combatEvent = new CombatEvent(getWorld(), this, victim);
 			victim.setCombatEvent(combatEvent);
-			Server.getServer().getGameEventHandler().add(combatEvent);
+			getWorld().getServer().getGameEventHandler().add(combatEvent);
 			if (gotUnderAttack) {
 				if (victim.isPlayer()) {
 					ActionSender.sendSound((Player) victim, "underattack");
@@ -936,14 +936,14 @@ public abstract class Mob extends Entity {
 		if (getAttribute("poisonEvent", null) != null) {
 			cure();
 		}
-		PoisonEvent poisonEvent = new PoisonEvent(this, poisonDamage);
+		PoisonEvent poisonEvent = new PoisonEvent(getWorld(), this, poisonDamage);
 		setAttribute("poisonEvent", poisonEvent);
-		Server.getServer().getGameEventHandler().add(poisonEvent);
+		getWorld().getServer().getGameEventHandler().add(poisonEvent);
 	}
 
 	public void updatePosition() {
 		final long now		= System.currentTimeMillis();
-		boolean doWalk		= Server.getServer().getConfig().WANT_CUSTOM_WALK_SPEED ? now >= lastMovementTime + getWalkingTick() : true;
+		boolean doWalk		= getWorld().getServer().getConfig().WANT_CUSTOM_WALK_SPEED ? now >= lastMovementTime + getWalkingTick() : true;
 
 		if(doWalk) {
 			getWalkingQueue().processNextMovement();
@@ -988,14 +988,14 @@ public abstract class Mob extends Entity {
 
 	public boolean withinRange(Entity e) {
 		if (e != null) {
-			return getLocation().withinRange(e.getLocation(), Server.getServer().getConfig().VIEW_DISTANCE * 8);
+			return getLocation().withinRange(e.getLocation(), getWorld().getServer().getConfig().VIEW_DISTANCE * 8);
 		}
 		return false;
 	}
 
 	public boolean withinGridRange(Entity e) {
 		if (e != null) {
-			return getLocation().withinGridRange(e.getLocation(), Server.getServer().getConfig().VIEW_DISTANCE);
+			return getLocation().withinGridRange(e.getLocation(), getWorld().getServer().getConfig().VIEW_DISTANCE);
 		}
 		return false;
 	}
@@ -1065,6 +1065,6 @@ public abstract class Mob extends Entity {
 	}
 
 	public int getWalkingTick() {
-		return Server.getServer().getConfig().WALKING_TICK;
+		return getWorld().getServer().getConfig().WALKING_TICK;
 	}
 }

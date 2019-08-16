@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.quests.members.touristtrap;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
@@ -167,7 +166,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 							message(p, "You show Irena the barrel with Ana in it.");
 							removeItem(p, ItemId.ANA_IN_A_BARREL.id(), 1);
 							p.updateQuestStage(this, 10);
-							Npc Ana = spawnNpc(NpcId.ANA.id(), p.getX(), p.getY(), 60000);
+							Npc Ana = spawnNpc(p.getWorld(), NpcId.ANA.id(), p.getX(), p.getY(), 60000);
 							Ana.teleport(p.getX(), p.getY() + 1);
 							if (Ana != null) {
 								sleep(650);
@@ -1036,7 +1035,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 								p.message("A guard notices you and starts running after you.");
 								Npc npcN = getNearestNpc(p, NpcId.MERCENARY.id(), 10);
 								if (npcN == null) {
-									npcN = spawnNpc(NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
+									npcN = spawnNpc(p.getWorld(), NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
 									sleep(1000);
 								}
 								npcTalk(p, npcN, "Hey! You're no slave!");
@@ -2089,7 +2088,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				p.message("A guard notices you and starts running after you.");
 				Npc npcN = getNearestNpc(p, NpcId.MERCENARY.id(), 10);
 				if (npcN == null) {
-					npcN = spawnNpc(NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
+					npcN = spawnNpc(p.getWorld(), NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
 					sleep(1000);
 				}
 				npcTalk(p, npcN, "Hey! You're no slave!");
@@ -2264,7 +2263,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					"It's a trade secret!");
 				if (gosh == 0) {
 					playerTalk(p, n, "I used a key.");
-					Npc guard = spawnNpc(NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
+					Npc guard = spawnNpc(p.getWorld(), NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
 					if (guard != null) {
 						npcTalk(p, guard, "I heard that! So you used a key did you?! ");
 						if (hasItem(p, ItemId.METAL_KEY.id())) {
@@ -2287,7 +2286,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				}
 				break;
 			case Ana.GUARDSRUBBISH:
-				Npc guard = spawnNpc(NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
+				Npc guard = spawnNpc(p.getWorld(), NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
 				if (guard != null) {
 					npcTalk(p, guard, "I heard that! So you managed to sneak in did you!",
 						"Guards! Guards!");
@@ -2396,7 +2395,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 						message(p, "@gre@Ana: Hey great, we're at the Shantay Pass!");
 						removeItem(p, ItemId.ANA_IN_A_BARREL.id(), 1);
 						p.updateQuestStage(this, 10);
-						Npc Ana = spawnNpc(NpcId.ANA.id(), p.getX(), p.getY(), 60000);
+						Npc Ana = spawnNpc(p.getWorld(), NpcId.ANA.id(), p.getX(), p.getY(), 60000);
 						Ana.teleport(p.getX(), p.getY() + 1);
 						if (Ana != null) {
 							sleep(650);
@@ -2505,7 +2504,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 						"The associated smells of a hundred sweaty miners greets your nostrils.",
 						"And your ears ring with the 'CLANG CLANG CLANG' as metal hits rock.");
 				} else {
-					Npc n = spawnNpc(NpcId.DRAFT_MERCENARY_GUARD.id(), p.getX(), p.getY(), 60000);
+					Npc n = spawnNpc(p.getWorld(), NpcId.DRAFT_MERCENARY_GUARD.id(), p.getX(), p.getY(), 60000);
 					sleep(1000);
 					npcTalk(p, n, "Oi You!");
 					message(p, "A guard notices you and approaches...");
@@ -2595,7 +2594,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			} else {
 				Npc n = getNearestNpc(p, NpcId.CAPTAIN_SIAD.id(), 5);
 				if (n == null) {
-					n = spawnNpc(NpcId.CAPTAIN_SIAD.id(), p.getX(), p.getY(), 60000);
+					n = spawnNpc(p.getWorld(), NpcId.CAPTAIN_SIAD.id(), p.getX(), p.getY(), 60000);
 					n.teleport(86, 1745);
 					sleep(1000);
 				}
@@ -2765,7 +2764,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 
 	private void failEscapeAnaInBarrel(Player p, Npc n) {
 		if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
-			n = spawnNpc(NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
+			n = spawnNpc(p.getWorld(), NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
 			sleep(650);
 			npcTalk(p, n, "Hey, where d'ya think you're going with that barrel?",
 				"You should know that they go out on the cart!",
@@ -2774,7 +2773,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			removeItem(p, ItemId.ANA_IN_A_BARREL.id(), 1);
 			npcTalk(p, n, "Blimey! It's a jail break!",
 				"They're making a break for it!");
-			Npc ana = spawnNpc(NpcId.ANA.id(), p.getX(), p.getY(), 30000);
+			Npc ana = spawnNpc(p.getWorld(), NpcId.ANA.id(), p.getX(), p.getY(), 30000);
 			sleep(650);
 			npcTalk(p, ana, "I could have told you we wouldn't get away with it!",
 				"Now look at the mess you've caused!");
@@ -2847,7 +2846,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			} else {
 				Npc n = getNearestNpc(p, NpcId.BEDABIN_NOMAD_GUARD.id(), 5);
 				if (n == null) {
-					n = spawnNpc(NpcId.BEDABIN_NOMAD_GUARD.id(), p.getX(), p.getY(), 60000);
+					n = spawnNpc(p.getWorld(), NpcId.BEDABIN_NOMAD_GUARD.id(), p.getX(), p.getY(), 60000);
 					sleep(650);
 				}
 				n.teleport(170, 794);
@@ -2984,21 +2983,21 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 		boolean hasArmour = false;
 		boolean hasWeapon = false;
 		int wieldpos;
-		if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			Item item;
 			for (int i = 0; i < Equipment.slots; i++) {
 				item = p.getEquipment().get(i);
 				if (item == null)
 					continue;
-				if (item.getDef().getWieldPosition() > 5 && allowed.contains(item.getID()))
+				if (item.getDef(p.getWorld()).getWieldPosition() > 5 && allowed.contains(item.getID()))
 					continue;
-				if (wieldPos.contains(item.getDef().getWieldPosition())) {
-					if (item.getDef().getWieldPosition() == 3) {
-						if (item.getDef().getName().toLowerCase().contains("shield"))
+				if (wieldPos.contains(item.getDef(p.getWorld()).getWieldPosition())) {
+					if (item.getDef(p.getWorld()).getWieldPosition() == 3) {
+						if (item.getDef(p.getWorld()).getName().toLowerCase().contains("shield"))
 							hasArmour = true;
 						else
 							hasWeapon = true;
-					} else if (item.getDef().getWieldPosition() == 4) {
+					} else if (item.getDef(p.getWorld()).getWieldPosition() == 4) {
 						hasWeapon = true;
 					} else {
 						hasArmour = true;
@@ -3007,13 +3006,13 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			}
 		} else {
 			for (Item item : p.getInventory().getItems()) {
-				if (item.isWielded() && item.getDef().getWieldPosition() > 5 && allowed.contains(item.getID())) {
+				if (item.isWielded() && item.getDef(p.getWorld()).getWieldPosition() > 5 && allowed.contains(item.getID())) {
 					continue;
 				}
-				wieldpos = item.getDef().getWieldPosition();
+				wieldpos = item.getDef(p.getWorld()).getWieldPosition();
 				if (item.isWielded() && wieldPos.contains(wieldpos)) {
 					if (wieldpos == 3) {
-						if (item.getDef().getName().toLowerCase().contains("shield")) {
+						if (item.getDef(p.getWorld()).getName().toLowerCase().contains("shield")) {
 							hasArmour = true;
 						} else {
 							hasWeapon = true;
@@ -3035,7 +3034,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 
 	private void delayedReturnSlave(Player p, Npc n) {
 		try {
-			Server.getServer().getGameEventHandler().add(new SingleEvent(null, 30000, "Tourist Trap Delayed Return Slave", true) {
+			p.getWorld().getServer().getGameEventHandler().add(new SingleEvent(p.getWorld(), null, 30000, "Tourist Trap Delayed Return Slave", true) {
 				@Override
 				public void action() {
 					transform(n, NpcId.MINING_SLAVE.id(), true);

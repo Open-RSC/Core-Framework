@@ -658,7 +658,7 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 			} else {
 				// from player's position
 				Npc dwarf = getNearestNpc(p, NpcId.MOUNTAIN_DWARF.id(), 25);
-				//final Npc dwarf = World.getWorld().getNpc(355, 375, 395, 445,
+				//final Npc dwarf = getWorld().getNpc(355, 375, 395, 445,
 				//		475);
 				if (dwarf != null) {
 					mountainDwarfDialogue(p, dwarf);

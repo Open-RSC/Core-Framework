@@ -9,7 +9,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
@@ -184,13 +183,13 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 			if (dynGate.getID() == 371) {
 				p.message("The gate swings open");
 				newGate = new GameObject(p.getWorld(), dynGate.getLocation(), 372, 0, 0);
-				World.getWorld().registerGameObject(newGate);
+				p.getWorld().registerGameObject(newGate);
 			}
 			//gate open
 			else {
 				p.message("The gate creaks shut");
 				newGate = new GameObject(p.getWorld(), dynGate.getLocation(), 371, 0, 0);
-				World.getWorld().registerGameObject(newGate);
+				p.getWorld().registerGameObject(newGate);
 			}
 			
 			if (p.getCache().hasKey("foodtrough") && correctSetup) {

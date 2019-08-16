@@ -52,7 +52,7 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 				player.getInventory().remove(ItemId.JUG_OF_WATER.id(), 1);
 				player.getInventory().remove(ItemId.GRAPES.id(), 1);
 
-				player.setBatchEvent(new BatchEvent(player, 3000, "Cook Wine", 1, false) {
+				player.setBatchEvent(new BatchEvent(player.getWorld(), player, 3000, "Cook Wine", 1, false) {
 					@Override
 					public void action() {
 						if (Formulae.goodWine(getOwner().getSkills().getLevel(Skills.COOKING))) {
@@ -97,7 +97,7 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 				addItem(player, emptyContainer, 1);
 				addItem(player, productID, 1);
 
-				player.message("You mix the water and flour to make some " + new Item(productID, 1).getDef().getName().toLowerCase());
+				player.message("You mix the water and flour to make some " + new Item(productID, 1).getDef(player.getWorld()).getName().toLowerCase());
 			}
 		} else if (isValidCooking(item1, item2)) {
 			handleCombineCooking(player, item1, item2);

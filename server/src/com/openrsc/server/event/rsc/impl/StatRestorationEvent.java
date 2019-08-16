@@ -20,8 +20,8 @@ public class StatRestorationEvent extends GameTickEvent {
 	private HashMap<Integer, Integer> restoringStats = new HashMap<Integer, Integer>();
 	private long lastRestoration = System.currentTimeMillis();
 
-	public StatRestorationEvent(Mob mob) {
-		super(mob, 1, "Stat Restoration Event");
+	public StatRestorationEvent(World world, Mob mob) {
+		super(world, mob, 1, "Stat Restoration Event");
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class StatRestorationEvent extends GameTickEvent {
 				restored = true;
 				if(getOwner().isPlayer() && ((Player) getOwner()).getParty() != null){
 					getOwner().getUpdateFlags().setHpUpdate(new HpUpdate(getOwner(), 0));
-					for (Player p : World.getWorld().getPlayers()) {
+					for (Player p : getWorld().getPlayers()) {
 						if(((Player) getOwner()).getParty() == p.getParty()){
 							ActionSender.sendParty(p);
 						}

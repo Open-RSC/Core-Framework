@@ -1,6 +1,5 @@
 package com.openrsc.server.model.entity;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.content.party.PartyPlayer;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.ItemDefinition;
@@ -84,7 +83,7 @@ public class GroundItem extends Entity {
 
 	public boolean belongsTo(Player p) {
 		if (p.getParty() != null) {
-			for (Player p2 : World.getWorld().getPlayers()) {
+			for (Player p2 : getWorld().getPlayers()) {
 				if (p.getParty().getPlayers().size() > 1 && p.getParty() != null && p.getParty() == p2.getParty()) {
 					PartyPlayer p3 = p2.getParty().getLeader();
 					if (p3.getShareLoot() > 0) {
@@ -146,7 +145,7 @@ public class GroundItem extends Entity {
 
 	public void remove() {
 		if (!removed && loc != null && loc.getRespawnTime() > 0) {
-			Server.getServer().getGameEventHandler().add(new GameTickEvent(null, loc.getRespawnTime(), "Respawn Ground Item") {
+			getWorld().getServer().getGameEventHandler().add(new GameTickEvent(getWorld(), null, loc.getRespawnTime(), "Respawn Ground Item") {
 				public void run() {
 					getWorld().registerItem(new GroundItem(getWorld(), loc));
 					stop();
@@ -160,7 +159,7 @@ public class GroundItem extends Entity {
 		if (belongsTo(p)) {
 			return true;
 		}
-		if (getDef().isMembersOnly() && !Server.getServer().getConfig().MEMBER_WORLD) {
+		if (getDef().isMembersOnly() && !getWorld().getServer().getConfig().MEMBER_WORLD) {
 			return false;
 		}
 		if (getDef().isUntradable())

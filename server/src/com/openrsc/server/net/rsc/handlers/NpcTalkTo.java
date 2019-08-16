@@ -12,8 +12,6 @@ import com.openrsc.server.net.rsc.PacketHandler;
 
 public final class NpcTalkTo implements PacketHandler {
 
-	public static final World world = World.getWorld();
-
 	public void handlePacket(Packet p, Player player) throws Exception {
 
 		if (player.isBusy()) {
@@ -24,7 +22,7 @@ public final class NpcTalkTo implements PacketHandler {
 			return;
 		}
 		player.resetAll();
-		final Npc n = world.getNpc(p.readShort());
+		final Npc n = player.getWorld().getNpc(p.readShort());
 
 		if (n == null) {
 			return;
@@ -54,7 +52,7 @@ public final class NpcTalkTo implements PacketHandler {
 						for (int y = -1; y <= 1; ++y) {
 							if (x == 0 || y == 0)
 								continue;
-							Point destination = canWalk(player.getX() - x, player.getY() - y);
+							Point destination = canWalk(player.getWorld(), player.getX() - x, player.getY() - y);
 							if (destination != null && destination.inBounds(n.getLoc().minX, n.getLoc().minY, n.getLoc().maxY, n.getLoc().maxY)) {
 								n.teleport(destination.getX(), destination.getY());
 								break;
@@ -71,26 +69,26 @@ public final class NpcTalkTo implements PacketHandler {
 				}
 			}
 
-			private Point canWalk(int x, int y) {
+			private Point canWalk(World world, int x, int y) {
 				int myX = n.getX();
 				int myY = n.getY();
 				int newX = x;
 				int newY = y;
 				boolean myXBlocked = false, myYBlocked = false, newXBlocked = false, newYBlocked = false;
 				if (myX > x) {
-					myXBlocked = checkBlocking(myX - 1, myY, 8); // Check right
+					myXBlocked = checkBlocking(world,myX - 1, myY, 8); // Check right
 					// tiles
 					newX = myX - 1;
 				} else if (myX < x) {
-					myXBlocked = checkBlocking(myX + 1, myY, 2); // Check left
+					myXBlocked = checkBlocking(world,myX + 1, myY, 2); // Check left
 					// tiles
 					newX = myX + 1;
 				}
 				if (myY > y) {
-					myYBlocked = checkBlocking(myX, myY - 1, 4); // Check top tiles
+					myYBlocked = checkBlocking(world, myX, myY - 1, 4); // Check top tiles
 					newY = myY - 1;
 				} else if (myY < y) {
-					myYBlocked = checkBlocking(myX, myY + 1, 1); // Check bottom
+					myYBlocked = checkBlocking(world, myX, myY + 1, 1); // Check bottom
 					// tiles
 					newY = myY + 1;
 				}
@@ -100,15 +98,15 @@ public final class NpcTalkTo implements PacketHandler {
 				}
 
 				if (newX > myX) {
-					newXBlocked = checkBlocking(newX, newY, 2);
+					newXBlocked = checkBlocking(world, newX, newY, 2);
 				} else if (newX < myX) {
-					newXBlocked = checkBlocking(newX, newY, 8);
+					newXBlocked = checkBlocking(world, newX, newY, 8);
 				}
 
 				if (newY > myY) {
-					newYBlocked = checkBlocking(newX, newY, 1);
+					newYBlocked = checkBlocking(world, newX, newY, 1);
 				} else if (newY < myY) {
-					newYBlocked = checkBlocking(newX, newY, 4);
+					newYBlocked = checkBlocking(world, newX, newY, 4);
 				}
 				if ((newXBlocked && newYBlocked) || (newXBlocked && myY == newY) || (myYBlocked && myX == newX)) {
 					return null;
@@ -119,8 +117,8 @@ public final class NpcTalkTo implements PacketHandler {
 				return new Point(newX, newY);
 			}
 
-			private boolean checkBlocking(int x, int y, int bit) {
-				TileValue t = World.getWorld().getTile(x, y);
+			private boolean checkBlocking(World world, int x, int y, int bit) {
+				TileValue t = world.getTile(x, y);
 				Point p = new Point(x, y);
 				for (Npc n : n.getViewArea().getNpcsInView()) {
 					if (n.getLocation().equals(p)) {

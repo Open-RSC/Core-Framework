@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.npcs;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -36,18 +35,18 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 
 		int menu;
 
-		if (Server.getServer().getConfig().SPAWN_AUCTION_NPCS && Server.getServer().getConfig().WANT_BANK_PINS)
+		if (player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS && player.getWorld().getServer().getConfig().WANT_BANK_PINS)
 			menu = showMenu(player, npc,
 				"I'd like to access my bank account please",
 				"What is this place?",
 				"I'd like to talk about bank pin",
 				"I'd like to collect my items from auction");
-		else if (Server.getServer().getConfig().WANT_BANK_PINS)
+		else if (player.getWorld().getServer().getConfig().WANT_BANK_PINS)
 			menu = showMenu(player, npc,
 				"I'd like to access my bank account please",
 				"What is this place?",
 				"I'd like to talk about bank pin");
-		else if (Server.getServer().getConfig().SPAWN_AUCTION_NPCS)
+		else if (player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS)
 			menu = showMenu(player, npc,
 				"I'd like to access my bank account please",
 				"What is this place?",
@@ -68,7 +67,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 					return;
 				}
 				try {
-						PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+						PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 						statement.setString(1, player.getUsername());
 						ResultSet result = statement.executeQuery();
 						if (result.next()) {
@@ -100,7 +99,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 					"And telling us our signs were wrong",
 					"As if we didn't know what town we were in or something!");
 			}
-		} else if (menu == 2 && Server.getServer().getConfig().WANT_BANK_PINS) {
+		} else if (menu == 2 && player.getWorld().getServer().getConfig().WANT_BANK_PINS) {
 			int bankPinMenu = showMenu(player, "Set a bank pin", "Change bank pin", "Delete bank pin");
 			if (bankPinMenu == 0) {
 				if (!player.getCache().hasKey("bank_pin")) {
@@ -109,7 +108,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 						return;
 					}
 					try {
-						PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+						PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 						statement.setString(1, player.getUsername());
 						ResultSet result = statement.executeQuery();
 						if (result.next()) {
@@ -130,7 +129,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 						return;
 					}
 					try {
-						PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+						PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 						statement.setString(1, player.getUsername());
 						ResultSet result = statement.executeQuery();
 						if (result.next()) {
@@ -145,7 +144,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 					}
 					String changeTo = getBankPinInput(player);
 					try {
-						PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+						PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 						statement.setString(1, player.getUsername());
 						ResultSet result = statement.executeQuery();
 						if (result.next()) {
@@ -168,7 +167,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 						return;
 					}
 					try {
-						PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+						PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 						statement.setString(1, player.getUsername());
 						ResultSet result = statement.executeQuery();
 						if (result.next()) {
@@ -205,14 +204,14 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 				}
 			}
 
-		} else if ((menu == 2 || menu == 3) && Server.getServer().getConfig().SPAWN_AUCTION_NPCS) {
+		} else if ((menu == 2 || menu == 3) && player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS) {
 			if (player.getCache().hasKey("bank_pin") && !player.getAttribute("bankpin", false)) {
 				String pin = getBankPinInput(player);
 				if (pin == null) {
 					return;
 				}
 				try {
-					PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+					PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 					statement.setString(1, player.getUsername());
 					ResultSet result = statement.executeQuery();
 					if (result.next()) {
@@ -235,9 +234,9 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 	@Override
 	public void onNpcCommand(Npc n, String command, Player p) {
 		if (inArray(n.getID(), BANKERS)) {
-			if (command.equalsIgnoreCase("Bank") && Server.getServer().getConfig().RIGHT_CLICK_BANK) {
+			if (command.equalsIgnoreCase("Bank") && p.getWorld().getServer().getConfig().RIGHT_CLICK_BANK) {
 				quickFeature(n, p, false);
-			} else if (command.equalsIgnoreCase("Collect") && Server.getServer().getConfig().SPAWN_AUCTION_NPCS) {
+			} else if (command.equalsIgnoreCase("Collect") && p.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS) {
 				quickFeature(n, p, true);
 			}
 		}
@@ -261,7 +260,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 				return;
 			}
 			try {
-				PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+				PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 				statement.setString(1, player.getUsername());
 				ResultSet result = statement.executeQuery();
 				if (result.next()) {

@@ -1,6 +1,7 @@
 package com.openrsc.server.event.custom;
 
 import com.openrsc.server.event.DelayedEvent;
+import com.openrsc.server.model.world.World;
 
 public class HourlyEvent extends DelayedEvent {
 
@@ -9,8 +10,8 @@ public class HourlyEvent extends DelayedEvent {
 	private long timestamp;
 
 	/* Runs every hour, on the hour. */
-	HourlyEvent(int lifeTime, String descriptor) {
-		super(null, 1000, descriptor, true);
+	HourlyEvent(World world, int lifeTime, String descriptor) {
+		super(world,null, 1000, descriptor, true);
 		this.lifeTime = lifeTime; // How many hours it will run for.
 		this.timestamp = (System.currentTimeMillis() / 1000);
 		this.started = this.timestamp - (this.timestamp % 3600); // Exact hour of start time.

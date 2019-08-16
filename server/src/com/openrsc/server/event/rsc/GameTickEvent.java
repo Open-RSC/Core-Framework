@@ -1,20 +1,22 @@
 package com.openrsc.server.event.rsc;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 
 public abstract class GameTickEvent {
 
 	protected boolean running = true;
 	private Mob owner;
+	private final World world;
 	private int delayTicks;
 	private int ticksBeforeRun = -1;
 	private String descriptor;
 	private long lastEventDuration = 0;
 
-	public GameTickEvent(Mob owner, int ticks, String descriptor) {
+	public GameTickEvent(World world, Mob owner, int ticks, String descriptor) {
+		this.world = world;
 		this.owner = owner;
 		this.descriptor = descriptor;
 		this.setDelayTicks(ticks);
@@ -89,10 +91,14 @@ public abstract class GameTickEvent {
 	}
 
 	public long timeTillNextRun() {
-		return System.currentTimeMillis() + (ticksBeforeRun * Server.getServer().getConfig().GAME_TICK);
+		return System.currentTimeMillis() + (ticksBeforeRun * getWorld().getServer().getConfig().GAME_TICK);
 	}
 
 	public final long getLastEventDuration() {
 		return lastEventDuration;
+	}
+
+	public World getWorld() {
+		return world;
 	}
 }

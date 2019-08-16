@@ -9,7 +9,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
@@ -129,7 +128,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 			n.getCombatEvent().resetCombat();
 		}
 		n.getSkills().setLevel(Skills.HITS, 5);
-		Npc leFaye = spawnNpc(NpcId.MORGAN_LE_FAYE.id(), 461, 2407, 60000);
+		Npc leFaye = spawnNpc(p.getWorld(), NpcId.MORGAN_LE_FAYE.id(), 461, 2407, 60000);
 		sleep(500);
 		npcTalk(p, leFaye, "Please spare my son");
 		int option = showMenu(p, n, "Tell me how to untrap Merlin and I might",
@@ -216,8 +215,8 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 		} else if (obj.getID() == 287 && item.getID() == ItemId.EXCALIBUR.id()) {
 			if (p.getQuestStage(this) == 4) {
 				message(p, "The crystal shatters");
-				World.getWorld().unregisterGameObject(obj);
-				World.getWorld().delayedSpawnObject(obj.getLoc(), 30000);
+				p.getWorld().unregisterGameObject(obj);
+				p.getWorld().delayedSpawnObject(obj.getLoc(), 30000);
 				Npc merlin = getNearestNpc(p, NpcId.MERLIN_CRYSTAL.id(), 5);
 				npcTalk(p, merlin, "Thankyou thankyou",
 					"It's not fun being trapped in a giant crystal",
@@ -298,7 +297,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onDrop(Player p, Item i) {
 		p.getInventory().remove(i);
-		Npc n = spawnNpc(NpcId.THRANTAX.id(), p.getX(), p.getY(), 300000);
+		Npc n = spawnNpc(p.getWorld(), NpcId.THRANTAX.id(), p.getX(), p.getY(), 300000);
 		n.displayNpcTeleportBubble(n.getX(), n.getY());
 		p.message("Suddenly a demon appears");
 		playerTalk(p, null, "Now what were those magic words?");

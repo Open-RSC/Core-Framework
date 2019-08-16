@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.minigames.pets;
 
-import com.openrsc.server.Server;
-import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -22,7 +21,7 @@ public class AceArcher implements InvUseOnNpcListener, InvUseOnNpcExecutiveListe
 
 	@Override
 	public void onInvUseOnNpc(Player player, Npc npc, Item item) {
-		if (Server.getServer().getConfig().WANT_PETS) {
+		if (player.getWorld().getServer().getConfig().WANT_PETS) {
 			npc.resetPath();
 			//npc.resetRange();
 			player.setBusy(true);
@@ -32,7 +31,7 @@ public class AceArcher implements InvUseOnNpcListener, InvUseOnNpcExecutiveListe
 			player.message("You attempt to put the baby blue dragon in the crystal.");
 			npc.setBusyTimer(1600);
 
-			Server.getServer().getGameEventHandler().add(new ShortEvent(player, "Ace Archer Pet") {
+			player.getWorld().getServer().getGameEventHandler().add(new ShortEvent(player.getWorld(), player, "Ace Archer Pet") {
 				public void action() {
 					/*Npc nearbyNpc = getMultipleNpcsInArea(player, 5, NpcId.BABY_BLUE_DRAGON.id(), NpcId.BLUE_DRAGON.id(), NpcId.RED_DRAGON.id(), NpcId.DRAGON.id());
 					if (nearbyNpc != null) {

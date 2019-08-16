@@ -1,7 +1,9 @@
 package com.openrsc.server.plugins.minigames.mage_arena;
 
-import com.openrsc.server.constants.*;
-import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Minigames;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.impl.ObjectRemover;
 import com.openrsc.server.model.container.Item;
@@ -10,7 +12,6 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
@@ -205,7 +206,7 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 
 	public void learnSpellEvent(Player p) {
 		DelayedEvent mageArena = p.getAttribute("mageArenaEvent", null);
-		DelayedEvent mageArenaEvent = new DelayedEvent(p, 1900, "Mage Arena Learn Spell Event") {
+		DelayedEvent mageArenaEvent = new DelayedEvent(p.getWorld(), p, 1900, "Mage Arena Learn Spell Event") {
 			@Override
 			public void run() {
 				/* Player logged out. */
@@ -258,17 +259,17 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 		if (mageArena != null) {
 			if (mageArena.shouldRemove()) {
 				p.setAttribute("mageArenaEvent", mageArenaEvent);
-				Server.getServer().getGameEventHandler().add(mageArenaEvent);
+				p.getWorld().getServer().getGameEventHandler().add(mageArenaEvent);
 			}
 		} else {
 			p.setAttribute("mageArenaEvent", mageArenaEvent);
-			Server.getServer().getGameEventHandler().add(mageArenaEvent);
+			p.getWorld().getServer().getGameEventHandler().add(mageArenaEvent);
 		}
 	}
 
 	private void startKolodionEvent(Player p) {
 		DelayedEvent kolE = p.getAttribute("kolodionEvent", null);
-		DelayedEvent kolodionEvent = new DelayedEvent(p, 650, "Mage Arena Kolodion Event") {
+		DelayedEvent kolodionEvent = new DelayedEvent(p.getWorld(), p, 650, "Mage Arena Kolodion Event") {
 			@Override
 			public void run() {
 				Npc npc = getOwner().getAttribute("spawned_kolodion");
@@ -282,7 +283,7 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 					return;
 				}
 				/* Npc has been removed from the world. */
-				if (!World.getWorld().hasNpc(npc)) {
+				if (!p.getWorld().hasNpc(npc)) {
 					stop();
 					return;
 				}
@@ -322,11 +323,11 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 		if (kolE != null) {
 			if (kolE.shouldRemove()) {
 				p.setAttribute("kolodionEvent", kolodionEvent);
-				Server.getServer().getGameEventHandler().add(kolodionEvent);
+				p.getWorld().getServer().getGameEventHandler().add(kolodionEvent);
 			}
 		} else {
 			p.setAttribute("kolodionEvent", kolodionEvent);
-			Server.getServer().getGameEventHandler().add(kolodionEvent);
+			p.getWorld().getServer().getGameEventHandler().add(kolodionEvent);
 		}
 	}
 
@@ -341,7 +342,7 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 
 	private boolean cantGo(Player p) {
 		for (Item item : p.getInventory().getItems()) {
-			String name = item.getDef().getName().toLowerCase();
+			String name = item.getDef(p.getWorld()).getName().toLowerCase();
 			if (name.contains("dagger") || name.contains("scimitar") || name.contains("bow") || name.contains("mail")
 				|| (name.contains("sword") && !name.equalsIgnoreCase("Swordfish")
 				&& !name.equalsIgnoreCase("Burnt Swordfish") && !name.equalsIgnoreCase("Raw Swordfish"))
@@ -434,23 +435,23 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 		switch (spell) {
 			case 33:
 				GameObject guthix = new GameObject(affectedMob.getWorld(), affectedMob.getLocation(), 1142, 0, 0);
-				World.getWorld().registerGameObject(guthix);
-				Server.getServer().getGameEventHandler().add(new ObjectRemover(guthix, 2));
+				affectedMob.getWorld().registerGameObject(guthix);
+				affectedMob.getWorld().getServer().getGameEventHandler().add(new ObjectRemover(affectedMob.getWorld(), guthix, 2));
 				break;
 			case 34:
 				GameObject sara = new GameObject(affectedMob.getWorld(), affectedMob.getLocation(), 1031, 0, 0);
-				World.getWorld().registerGameObject(sara);
-				Server.getServer().getGameEventHandler().add(new ObjectRemover(sara, 2));
+				affectedMob.getWorld().registerGameObject(sara);
+				affectedMob.getWorld().getServer().getGameEventHandler().add(new ObjectRemover(affectedMob.getWorld(), sara, 2));
 				break;
 			case 35:
 				GameObject zammy = new GameObject(affectedMob.getWorld(), affectedMob.getLocation(), 1036, 0, 0);
-				World.getWorld().registerGameObject(zammy);
-				Server.getServer().getGameEventHandler().add(new ObjectRemover(zammy, 2));
+				affectedMob.getWorld().registerGameObject(zammy);
+				affectedMob.getWorld().getServer().getGameEventHandler().add(new ObjectRemover(affectedMob.getWorld(), zammy, 2));
 				break;
 			case 47:
 				GameObject charge = new GameObject(affectedMob.getWorld(), affectedMob.getLocation(), 1147, 0, 0);
-				World.getWorld().registerGameObject(charge);
-				Server.getServer().getGameEventHandler().add(new ObjectRemover(charge, 2));
+				affectedMob.getWorld().registerGameObject(charge);
+				affectedMob.getWorld().getServer().getGameEventHandler().add(new ObjectRemover(affectedMob.getWorld(), charge, 2));
 				break;
 		}
 	}
@@ -606,7 +607,7 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 				p.message("you may only possess one sacred cape at a time");
 			} else {
 				Item Item = new Item(i.getID(), i.getAmount());
-				World.getWorld().unregisterItem(i);
+				p.getWorld().unregisterItem(i);
 				p.playSound("takeobject");
 				p.getInventory().add(Item);
 			}

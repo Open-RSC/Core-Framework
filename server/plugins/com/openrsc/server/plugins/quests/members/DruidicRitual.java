@@ -7,7 +7,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -302,7 +301,7 @@ public class DruidicRitual implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == 63 && obj.getY() == 3332) {
-			Npc suit = World.getWorld().getNpc(NpcId.SUIT_OF_ARMOUR.id(), 374, 374, 3330, 3334);
+			Npc suit = p.getWorld().getNpc(NpcId.SUIT_OF_ARMOUR.id(), 374, 374, 3330, 3334);
 			if (suit != null && !(p.getX() <= 373)) {
 				p.message("Suddenly the suit of armour comes to life!");
 				suit.setChasing(p);

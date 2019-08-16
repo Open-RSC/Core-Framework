@@ -4,8 +4,6 @@ import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 
-import java.util.ArrayList;
-
 public class Equipment {
 
 	//Number of equipment slots the player has
@@ -26,7 +24,7 @@ public class Equipment {
 		synchronized (list) {
 			int total = 1;
 			for (Item item : list)
-				total += item == null ? 0 : item.getDef().getWeaponAimBonus();
+				total += item == null ? 0 : item.getDef(player.getWorld()).getWeaponAimBonus();
 			return total;
 		}
 	}
@@ -35,7 +33,7 @@ public class Equipment {
 		synchronized (list) {
 			int total = 1;
 			for (Item item : list)
-				total += item == null ? 0 : item.getDef().getWeaponPowerBonus();
+				total += item == null ? 0 : item.getDef(player.getWorld()).getWeaponPowerBonus();
 			return total;
 		}
 	}
@@ -44,7 +42,7 @@ public class Equipment {
 		synchronized (list) {
 			int total = 1;
 			for (Item item : list)
-				total += item == null ? 0 : item.getDef().getArmourBonus();
+				total += item == null ? 0 : item.getDef(player.getWorld()).getArmourBonus();
 			return total;
 		}
 	}
@@ -53,7 +51,7 @@ public class Equipment {
 		synchronized (list) {
 			int total = 1;
 			for (Item item : list)
-				total += item == null ? 0 : item.getDef().getMagicBonus();
+				total += item == null ? 0 : item.getDef(player.getWorld()).getMagicBonus();
 			return total;
 		}
 	}
@@ -62,7 +60,7 @@ public class Equipment {
 		synchronized (list) {
 			int total = 1;
 			for (Item item : list)
-				total += item == null ? 0 : item.getDef().getPrayerBonus();
+				total += item == null ? 0 : item.getDef(player.getWorld()).getPrayerBonus();
 			return total;
 		}
 	}
@@ -133,9 +131,9 @@ public class Equipment {
 		synchronized (list) {
 			for (int i = 0; i < slots; i++) {
 				Item curEquip = list[i];
-				if (curEquip == null || curEquip.getDef() == null)
+				if (curEquip == null || curEquip.getDef(player.getWorld()) == null)
 					continue;
-				ItemDefinition curEquipDef = curEquip.getDef();
+				ItemDefinition curEquipDef = curEquip.getDef(player.getWorld());
 
 				if (curEquip.getID() == id) {
 					int curAmount = curEquip.getAmount();

@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.quests.members;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
@@ -11,7 +10,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
@@ -221,7 +219,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 	public void handleGateSounds(Player player) {
         player.playSound("opendoor");
 
-	   Server.getServer().getGameEventHandler().add(new PluginsUseThisEvent(3000, "Sheep Herder Gate Sounds") {
+	   player.getWorld().getServer().getGameEventHandler().add(new PluginsUseThisEvent(player.getWorld(), 3000, "Sheep Herder Gate Sounds") {
            @Override
            public void action() {
                player.playSound("opendoor");
@@ -232,10 +230,10 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 	public void openGatey(GameObject object, Player player) {
 		handleGateSounds(player);
 		player.message("you open the gate and walk through");
-		World.getWorld().replaceGameObject(object,
+		player.getWorld().replaceGameObject(object,
 			new GameObject(object.getWorld(), object.getLocation(), 442,
 				object.getDirection(), object.getType()));
-		World.getWorld().delayedSpawnObject(object.getLoc(), 3000);
+		player.getWorld().delayedSpawnObject(object.getLoc(), 3000);
 	}
 
 	private void sheepYell(Player p) {
@@ -266,7 +264,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 					RestartableDelayedEvent npcEvent = npcEventMap.get(plagueSheep);
 					//nudging outside of pen resets the timer
 					if (npcEvent == null) {
-						npcEvent = new RestartableDelayedEvent(p, 1000, "Sheep Herder Nudge Sheep") {
+						npcEvent = new RestartableDelayedEvent(p.getWorld(), p, 1000, "Sheep Herder Nudge Sheep") {
 							int timesRan = 0;
 
 							@Override
@@ -285,7 +283,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 							}
 						};
 						npcEventMap.put(plagueSheep, npcEvent);
-						Server.getServer().getGameEventHandler().add(npcEvent);
+						p.getWorld().getServer().getGameEventHandler().add(npcEvent);
 					} else {
 						npcEvent.reset();
 					}

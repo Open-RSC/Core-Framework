@@ -58,7 +58,7 @@ public class AlfredGrimhandBarCrawl implements MiniGameInterface, TalkToNpcListe
 				doGate(p, obj);
 				return;
 			}
-			Npc barbarian = World.getWorld().getNpc(NpcId.BARBARIAN_GUARD.id(), 494, 500, 538, 550);
+			Npc barbarian = p.getWorld().getNpc(NpcId.BARBARIAN_GUARD.id(), 494, 500, 538, 550);
 			if (barbarian != null) {
 				barbarian.initializeTalkScript(p);
 			}

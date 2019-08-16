@@ -1,9 +1,7 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.snapshot.Snapshot;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.sql.query.logs.GameReport;
@@ -28,7 +26,7 @@ public final class ReportHandler implements PacketHandler {
 			player.setSuspiciousPlayer(true);
 		}
 		if (reason != 4 && reason != 6) {
-			Iterator<Snapshot> i = World.getWorld().getSnapshots().iterator();
+			Iterator<Snapshot> i = player.getWorld().getSnapshots().iterator();
 			if (i.hasNext()) {
 				Snapshot s = i.next();
 				if (!s.getOwner().equalsIgnoreCase(hash)) {
@@ -49,7 +47,7 @@ public final class ReportHandler implements PacketHandler {
 			return;
 		}
 
-		ResultSet result = player.getWorld().getServer().getDatabaseConnection().executeQuery("SELECT `username` FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players` WHERE username='" + hash + "'");
+		ResultSet result = player.getWorld().getServer().getDatabaseConnection().executeQuery("SELECT `username` FROM `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players` WHERE username='" + hash + "'");
 
 		if (!result.next()) {
 			player.message("Invalid player name.");

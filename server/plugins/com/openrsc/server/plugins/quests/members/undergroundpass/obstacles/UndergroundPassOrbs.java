@@ -52,10 +52,10 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 				} else if (obj.getID() == 829) {
 					p.teleport(728, 3436);
 				}
-				World.getWorld().replaceGameObject(obj,
+				obj.getWorld().replaceGameObject(obj,
 					new GameObject(obj.getWorld(), obj.getLocation(), 826, obj.getDirection(), obj
 						.getType()));
-				World.getWorld().delayedSpawnObject(obj.getLoc(), 5000);
+				obj.getWorld().delayedSpawnObject(obj.getLoc(), 5000);
 				p.damage((int) (getCurrentLevel(p, Skills.HITS) / 5) + 5);
 				playerTalk(p, null, "aaarghh");
 			} else {
@@ -167,8 +167,8 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 			player.message("you walk across the wooden planks");
 			removeItem(player, ItemId.PLANK.id(), 1);
 			GameObject object = new GameObject(player.getWorld(), Point.location(728, 3435), 827, 0, 0);
-			World.getWorld().registerGameObject(object);
-			World.getWorld().delayedRemoveObject(object, 3000);
+			object.getWorld().registerGameObject(object);
+			object.getWorld().delayedRemoveObject(object, 3000);
 			player.teleport(728, 3438);
 			sleep(850);
 			if (obj.getID() == NORTH_PASSAGE[0]) {
@@ -318,15 +318,15 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 	private void damageOfTrap(Player p, GameObject obj, GameObject _new, int objectID) {
 		p.damage((int) ((getCurrentLevel(p, Skills.HITS) / 16) + 2));
 		if (_new == null) {
-			World.getWorld().replaceGameObject(obj,
+			obj.getWorld().replaceGameObject(obj,
 				new GameObject(obj.getWorld(), obj.getLocation(), 773, obj.getDirection(), obj
 					.getType()));
-			World.getWorld().delayedSpawnObject(obj.getLoc(), 3000);
+			obj.getWorld().delayedSpawnObject(obj.getLoc(), 3000);
 			playerTalk(p, null, "aaarrghhh");
 		} else {
-			World.getWorld().registerGameObject(_new);
+			obj.getWorld().registerGameObject(_new);
 			playerTalk(p, null, "aaarrghhh");
-			World.getWorld().registerGameObject(new GameObject(p.getWorld(), Point.location(p.getX() + 1, p.getY()), objectID, 2, 0));
+			obj.getWorld().registerGameObject(new GameObject(p.getWorld(), Point.location(p.getX() + 1, p.getY()), objectID, 2, 0));
 		}
 	}
 }

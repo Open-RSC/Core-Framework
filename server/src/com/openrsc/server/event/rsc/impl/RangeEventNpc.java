@@ -1,6 +1,5 @@
 package com.openrsc.server.event.rsc.impl;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.GameTickEvent;
@@ -55,8 +54,8 @@ public class RangeEventNpc extends GameTickEvent {
 	};
 	private Mob target;
 
-	public RangeEventNpc(Npc owner, Mob victim) {
-		super(owner, 1, "Range Event NPC");
+	public RangeEventNpc(World world, Npc owner, Mob victim) {
+		super(world, owner, 1, "Range Event NPC");
 		this.target = victim;
 		this.deliveredFirstProjectile = false;
 	}
@@ -79,7 +78,7 @@ public class RangeEventNpc extends GameTickEvent {
 
 
 	public void run() {
-		for (Player p22 : World.getWorld().getPlayers()) {
+		for (Player p22 : getWorld().getPlayers()) {
 			int combDiff = Math.abs(getOwner().getCombatLevel() - target.getCombatLevel());
 			int targetWildLvl = target.getLocation().wildernessLevel();
 			int myWildLvl = getOwner().getLocation().wildernessLevel();
@@ -127,7 +126,7 @@ public class RangeEventNpc extends GameTickEvent {
 
 				boolean canShoot = System.currentTimeMillis() - getOwner().getAttribute("rangedTimeout", 0L) > 1900;
 				if (canShoot) {
-					if (!PathValidation.checkPath(getOwner().getLocation(), target.getLocation())) {
+					if (!PathValidation.checkPath(getWorld(), getOwner().getLocation(), target.getLocation())) {
 						getOwner().resetRange();
 						stop();
 						return;
@@ -148,8 +147,8 @@ public class RangeEventNpc extends GameTickEvent {
 					if (Formulae.looseArrow(damage)) {
 						GroundItem arrows = getArrows(11);
 						if (arrows == null) {
-							for (Player p : World.getWorld().getPlayers()) {
-								World.getWorld().registerItem(new GroundItem(p.getWorld(), 11, target.getX(), target.getY(), 1, p));
+							for (Player p : getWorld().getPlayers()) {
+								getWorld().registerItem(new GroundItem(p.getWorld(), 11, target.getX(), target.getY(), 1, p));
 							}
 						} else {
 							arrows.setAmount(arrows.getAmount() + 1);
@@ -164,7 +163,7 @@ public class RangeEventNpc extends GameTickEvent {
 							target.startPoisonEvent();
 						}
 					}
-					Server.getServer().getGameEventHandler().add(new ProjectileEvent(getOwner(), target, damage, 2));
+					getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getWorld(), getOwner(), target, damage, 2));
 					getOwner().setKillType(2);
 					deliveredFirstProjectile = true;
 				}

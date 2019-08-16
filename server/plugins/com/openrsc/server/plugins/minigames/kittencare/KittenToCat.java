@@ -115,10 +115,10 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 		case TUNA:
 			removeItem(p, item.getID(), 1);
 			if(!isGrown) {
-				message(p, "you give the kitten the " + item.getDef().getName(),
+				message(p, "you give the kitten the " + item.getDef(p.getWorld()).getName(),
 						"the kitten quickly eats it up then licks his paws");
 			} else {
-				message(p, "you give the cat the " + item.getDef().getName(),
+				message(p, "you give the cat the " + item.getDef(p.getWorld()).getName(),
 						"it quickly eat's them up and licks its paws");
 			}
 			feeded = true;

@@ -1,6 +1,5 @@
 package com.openrsc.server.constants;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.external.SkillDef;
 
 import java.util.ArrayList;
@@ -23,16 +22,7 @@ public class Skills {
 	public HashMap<SkillDef.EXP_CURVE, int[]> experienceCurves;
 	public ArrayList<SkillDef> skills;
 
-	private String[] SKILL_NAME() {
-		if (Server.getServer().getConfig().WANT_RUNECRAFTING)
-			return new String[]{"attack", "defense", "strength", "hits", "ranged", "prayer", "magic",
-				"cooking", "woodcut", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblaw",
-				"agility", "thieving", "runecraft"};
-		else
-			return new String[]{"attack", "defense", "strength", "hits", "ranged", "prayer", "magic",
-				"cooking", "woodcut", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblaw",
-				"agility", "thieving"};
-	}
+	private final String[] SKILL_NAME;
 
 	private final Constants constants;
 
@@ -75,6 +65,15 @@ public class Skills {
 		if(constants.getServer().getConfig().WANT_RUNECRAFTING) {
 			skills.add(new SkillDef("Runecrafting", "Runecraft", 1, 99, SkillDef.EXP_CURVE.ORIGINAL, skillIndex++));
 		}
+
+		if (constants.getServer().getConfig().WANT_RUNECRAFTING)
+			SKILL_NAME = new String[]{"attack", "defense", "strength", "hits", "ranged", "prayer", "magic",
+				"cooking", "woodcut", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblaw",
+				"agility", "thieving", "runecraft"};
+		else
+			SKILL_NAME = new String[]{"attack", "defense", "strength", "hits", "ranged", "prayer", "magic",
+				"cooking", "woodcut", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblaw",
+				"agility", "thieving"};
 	}
 
 	public String getSkillName(int skillIndex) {

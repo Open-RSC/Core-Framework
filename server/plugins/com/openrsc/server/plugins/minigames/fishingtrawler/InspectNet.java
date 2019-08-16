@@ -1,16 +1,14 @@
 package com.openrsc.server.plugins.minigames.fishingtrawler;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
-
-import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
-import com.openrsc.server.constants.ItemId;
 
 public class InspectNet implements ObjectActionListener, ObjectActionExecutiveListener {
 
@@ -23,7 +21,7 @@ public class InspectNet implements ObjectActionListener, ObjectActionExecutiveLi
 	public void onObjectAction(GameObject obj, String command, Player player) {
 
 		message(player, 1900, "you inspect the net");
-		FishingTrawler trawler = World.getWorld().getFishingTrawler(player);
+		FishingTrawler trawler = player.getWorld().getFishingTrawler(player);
 
 		if (trawler != null && trawler.isNetBroken()) {
 			player.message("it's begining to rip");

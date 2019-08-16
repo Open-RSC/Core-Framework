@@ -165,7 +165,7 @@ public class ShiloVillageTombDolmen implements QuestInterface, ObjectActionListe
 						p.message("You carefully place Rashiliyia's remains on the Dolmen.");
 						sleep(1200);
 						p.message("You feel a strange vibration in the air.");
-						Npc rash = spawnNpc(NpcId.RASHILIYIA.id(), p.getX(), p.getY(), 60000);
+						Npc rash = spawnNpc(p.getWorld(), NpcId.RASHILIYIA.id(), p.getX(), p.getY(), 60000);
 						if (rash != null) {
 							rash.teleport(rash.getX() + 1, rash.getY());
 							npcTalk(p, rash, "You have my gratitude for releasing my spirit.",

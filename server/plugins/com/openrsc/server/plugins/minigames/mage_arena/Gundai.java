@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.minigames.mage_arena;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -31,14 +30,14 @@ public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, Np
 			@Override
 			public void action() {
 				player.setAccessingBank(true);
-				if (Server.getServer().getConfig().WANT_BANK_PINS) {
+				if (player.getWorld().getServer().getConfig().WANT_BANK_PINS) {
 					if (player.getCache().hasKey("bank_pin") && !player.getAttribute("bankpin", false)) {
 						String pin = getBankPinInput(player);
 						if (pin == null) {
 							return;
 						}
 						try {
-							PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+							PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 							statement.setString(1, player.getUsername());
 							ResultSet result = statement.executeQuery();
 							if (result.next()) {
@@ -59,7 +58,7 @@ public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, Np
 				ActionSender.showBank(player);
 			}
 		});
-		if (Server.getServer().getConfig().WANT_BANK_PINS) {
+		if (player.getWorld().getServer().getConfig().WANT_BANK_PINS) {
 			defaultMenu.addOption(new Option("I'd like to talk about bank pin") {
 				@Override
 				public void action() {
@@ -71,7 +70,7 @@ public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, Np
 								return;
 							}
 							try {
-								PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+								PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 								statement.setString(1, player.getUsername());
 								ResultSet result = statement.executeQuery();
 								if (result.next()) {
@@ -93,7 +92,7 @@ public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, Np
 								return;
 							}
 							try {
-								PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+								PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 								statement.setString(1, player.getUsername());
 								ResultSet result = statement.executeQuery();
 								if (result.next()) {
@@ -108,7 +107,7 @@ public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, Np
 							}
 							String changeTo = getBankPinInput(player);
 							try {
-								PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+								PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 								statement.setString(1, player.getUsername());
 								ResultSet result = statement.executeQuery();
 								if (result.next()) {
@@ -143,18 +142,18 @@ public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, Np
 			});
 		}
 
-		if (Server.getServer().getConfig().SPAWN_AUCTION_NPCS) {
+		if (player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS) {
 			defaultMenu.addOption(new Option("I'd like to collect my items from auction") {
 				@Override
 				public void action() {
-					if (Server.getServer().getConfig().WANT_BANK_PINS) {
+					if (player.getWorld().getServer().getConfig().WANT_BANK_PINS) {
 						if (player.getCache().hasKey("bank_pin") && !player.getAttribute("bankpin", false)) {
 							String pin = getBankPinInput(player);
 							if (pin == null) {
 								return;
 							}
 							try {
-								PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+								PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 								statement.setString(1, player.getUsername());
 								ResultSet result = statement.executeQuery();
 								if (result.next()) {
@@ -195,7 +194,7 @@ public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, Np
 		if (n.getID() == 792) {
 			if (command.equalsIgnoreCase("Bank")) {
 				quickFeature(n, p, false);
-			} else if (Server.getServer().getConfig().SPAWN_AUCTION_NPCS && command.equalsIgnoreCase("Collect")) {
+			} else if (p.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS && command.equalsIgnoreCase("Collect")) {
 				quickFeature(n, p, true);
 			}
 		}
@@ -206,21 +205,21 @@ public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, Np
 		if (n.getID() == 792 && command.equalsIgnoreCase("Bank")) {
 			return true;
 		}
-		if (n.getID() == 792 && Server.getServer().getConfig().SPAWN_AUCTION_NPCS && command.equalsIgnoreCase("Collect")) {
+		if (n.getID() == 792 && p.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS && command.equalsIgnoreCase("Collect")) {
 			return true;
 		}
 		return false;
 	}
 
 	private void quickFeature(Npc npc, Player player, boolean auction) {
-		if (Server.getServer().getConfig().WANT_BANK_PINS) {
+		if (player.getWorld().getServer().getConfig().WANT_BANK_PINS) {
 			if (player.getCache().hasKey("bank_pin") && !player.getAttribute("bankpin", false)) {
 				String pin = getBankPinInput(player);
 				if (pin == null) {
 					return;
 				}
 				try {
-					PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+					PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 					statement.setString(1, player.getUsername());
 					ResultSet result = statement.executeQuery();
 					if (result.next()) {
@@ -237,7 +236,7 @@ public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, Np
 				ActionSender.sendBox(player, "Bank pin correct", false);
 			}
 		}
-		if (Server.getServer().getConfig().SPAWN_AUCTION_NPCS && auction) {
+		if (player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS && auction) {
 			player.getWorld().getMarket().addPlayerCollectItemsTask(player);
 		} else {
 			player.setAccessingBank(true);

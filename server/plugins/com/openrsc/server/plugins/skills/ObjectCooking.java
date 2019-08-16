@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.skills;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
@@ -50,7 +49,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 							"Now speak to the cooking instructor again");
 					p.getCache().set("tutorial", 30);
 				} else if (p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 30) {
-					final ItemCookingDef cookingDef = item.getCookingDef();
+					final ItemCookingDef cookingDef = item.getCookingDef(p.getWorld());
 					p.message("The meat is now nicely cooked");
 					message(p, "Now speak to the cooking instructor again");
 					p.incExp(Skills.COOKING, cookingDef.getExp(), true);
@@ -107,13 +106,13 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 				p.message("Nothing interesting happens");
 			}
 		} else {
-			final ItemCookingDef cookingDef = item.getCookingDef();
+			final ItemCookingDef cookingDef = item.getCookingDef(p.getWorld());
 			if (cookingDef == null) {
 				p.message("Nothing interesting happens");
 				return;
 			}
 			if (p.getSkills().getLevel(Skills.COOKING) < cookingDef.getReqLevel()) {
-				String itemName = item.getDef().getName().toLowerCase();
+				String itemName = item.getDef(p.getWorld()).getName().toLowerCase();
 				itemName = itemName.startsWith("raw ") ? itemName.substring(4) :
 					itemName.startsWith("uncooked ") ? itemName.substring(9) : itemName;
 				p.message("You need a cooking level of " + cookingDef.getReqLevel() + " to cook " + itemName);
@@ -139,12 +138,12 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 			else
 				p.message(cookingOnMessage(p, item, object, needOven));
 			showBubble(p, item);
-			p.setBatchEvent(new BatchEvent(p, timeToCook, "Cooking on Object", Formulae.getRepeatTimes(p, Skills.COOKING), false) {
+			p.setBatchEvent(new BatchEvent(p.getWorld(), p, timeToCook, "Cooking on Object", Formulae.getRepeatTimes(p, Skills.COOKING), false) {
 
 				@Override
 				public void action() {
 					Item cookedFood = new Item(cookingDef.getCookedId());
-					if (Server.getServer().getConfig().WANT_FATIGUE) {
+					if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 						if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
 							getOwner().message("You are too tired to cook this food");
 							interrupt();
@@ -163,7 +162,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 							if (cookedFood.getID() == ItemId.COOKEDMEAT.id()) {
 								getOwner().message("You accidentally burn the meat");
 							} else {
-								String food = cookedFood.getDef().getName().toLowerCase();
+								String food = cookedFood.getDef(p.getWorld()).getName().toLowerCase();
 								food = food.contains("pie") ? "pie" : food;
 								getOwner().message("You accidentally burn the " + food);
 							}
@@ -188,7 +187,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 		if (item.getID() == ItemId.POISON.id() && obj.getID() == 435 && obj.getX() == 618 && obj.getY() == 3453) {
 			return true;
 		}
-		final ItemCookingDef cookingDef = item.getCookingDef();
+		final ItemCookingDef cookingDef = item.getCookingDef(player.getWorld());
 		return cookingDef != null && Arrays.binarySearch(ids, obj.getID()) >= 0;
 	}
 
@@ -206,7 +205,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 	}
 
 	private String cookingOnMessage(Player p, Item item, GameObject object, boolean needsOven) {
-		String itemName = item.getDef().getName().toLowerCase();
+		String itemName = item.getDef(p.getWorld()).getName().toLowerCase();
 		itemName = itemName.startsWith("raw ") ? itemName.substring(4) :
 			itemName.contains("pie") ? "pie" :
 				itemName.startsWith("uncooked ") ? itemName.substring(9) : itemName;
@@ -225,12 +224,12 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 	}
 
 	private String cookedMessage(Player p, Item cookedFood, boolean needsOven) {
-		String message = "The " + cookedFood.getDef().getName().toLowerCase() + " is now nicely cooked";
+		String message = "The " + cookedFood.getDef(p.getWorld()).getName().toLowerCase() + " is now nicely cooked";
 		if (cookedFood.getID() == ItemId.COOKEDMEAT.id()) {
 			message = "The meat is now nicely cooked";
 		}
 		if (needsOven) {
-			String cookedPastryFood = cookedFood.getDef().getName().toLowerCase();
+			String cookedPastryFood = cookedFood.getDef(p.getWorld()).getName().toLowerCase();
 			cookedPastryFood = cookedPastryFood.contains("pie") ? "pie" : cookedPastryFood;
 			message = "You remove the " + cookedPastryFood + " from the oven";
 		}

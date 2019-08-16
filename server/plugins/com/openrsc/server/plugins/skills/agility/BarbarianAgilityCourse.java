@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.skills.agility;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -47,7 +46,7 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 				p.setBusy(false);
 				return;
 			}
-			if (Server.getServer().getConfig().WANT_FATIGUE) {
+			if (obj.getWorld().getServer().getConfig().WANT_FATIGUE) {
 				if (p.getFatigue() >= p.MAX_FATIGUE) {
 					p.message("You are too tired to squeeze through the pipe");
 					p.setBusy(false);
@@ -66,7 +65,7 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 			p.incExp(Skills.AGILITY, 20, true);
 			return;
 		}
-		if (Server.getServer().getConfig().WANT_FATIGUE) {
+		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
 			if (p.getFatigue() >= p.MAX_FATIGUE && !inArray(obj.getID(), SWING, LOG, NET)) {
 				p.message("you are too tired to train");
 				return;
@@ -159,7 +158,7 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 
 	@Override
 	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
-		if (Server.getServer().getConfig().WANT_FATIGUE) {
+		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
 			if (p.getFatigue() >= p.MAX_FATIGUE && !inArray(obj.getID(), LOW_WALL, LOW_WALL2)) {
 				p.message("you are too tired to train");
 				return;

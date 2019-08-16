@@ -1,6 +1,5 @@
 package com.openrsc.server.event.rsc.impl.combat;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
@@ -28,8 +27,8 @@ public class CombatEvent extends GameTickEvent {
 	private final Mob attackerMob, defenderMob;
 	private int roundNumber = 0;
 
-	public CombatEvent(Mob attacker, Mob defender) {
-		super(null, 0, "Combat Event");
+	public CombatEvent(World world, Mob attacker, Mob defender) {
+		super(world, null, 0, "Combat Event");
 		this.attackerMob = attacker;
 		this.defenderMob = defender;
 		attacker.getWorld().getServer().getCombatScriptLoader().checkAndExecuteOnStartCombatScript(attacker, defender);
@@ -103,8 +102,8 @@ public class CombatEvent extends GameTickEvent {
 					int reflectedDamage = damage/10 + 1;
 					if (((Player) target).getCache().hasKey("ringofrecoil")) {
 						int ringCheck = ((Player) target).getCache().getInt("ringofrecoil");
-						if (Server.getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck <= reflectedDamage) {
-							reflectedDamage = Server.getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck;
+						if (getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck <= reflectedDamage) {
+							reflectedDamage = getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck;
 							((Player) target).getCache().remove("ringofrecoil");
 							((Player) target).getInventory().shatter(ItemId.RING_OF_RECOIL.id());
 						} else {
@@ -153,7 +152,7 @@ public class CombatEvent extends GameTickEvent {
 					combatSound = damage > 0 ? "combat1b" : "combat1a";
 				}
 			}
-			for (Player p : World.getWorld().getPlayers()) {
+			for (Player p : getWorld().getPlayers()) {
 				if (((Player) target).getParty() == p.getParty() && ((Player) target).getParty() != null) {
 					ActionSender.sendParty(p);
 				}

@@ -1,10 +1,13 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.PickupListener;
@@ -13,9 +16,6 @@ import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
-
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
 
 public final class ThessaliasClothes implements PickupListener, PickupExecutiveListener,
 	ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
@@ -32,7 +32,7 @@ public final class ThessaliasClothes implements PickupListener, PickupExecutiveL
 	}
 
 	@Override
-	public Shop[] getShops() {
+	public Shop[] getShops(World world) {
 		return new Shop[]{shop};
 	}
 

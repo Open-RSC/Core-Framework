@@ -57,7 +57,7 @@ public class SpinningWheel implements InvUseOnObjectListener,
 		if (produce == -1 || requirement == -1 || exp == -1) {
 			return;
 		}
-		player.setBatchEvent(new BatchEvent(player, 600, "Spinning Wheel", Formulae
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Spinning Wheel", Formulae
 			.getRepeatTimes(player, Skills.CRAFTING), false) {
 
 			@Override
@@ -65,7 +65,7 @@ public class SpinningWheel implements InvUseOnObjectListener,
 				if (getOwner().getSkills().getLevel(Skills.CRAFTING) < requirement) {
 					message(getOwner(), "You need to have a crafting of level "
 						+ requirement + " or higher to make a "
-						+ new Item(produce).getDef().getName().toLowerCase());
+						+ new Item(produce).getDef(getWorld()).getName().toLowerCase());
 					interrupt();
 					return;
 				}

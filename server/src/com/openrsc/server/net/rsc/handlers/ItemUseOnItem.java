@@ -1,18 +1,12 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
 
 public final class ItemUseOnItem implements PacketHandler {
-	/**
-	 * World instance
-	 */
-	public static final World world = World.getWorld();
 
 	public void handlePacket(Packet p, Player player) throws Exception {
 
@@ -35,12 +29,12 @@ public final class ItemUseOnItem implements PacketHandler {
 			return;
 		}
 
-		if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB && (itemIndex1 > Inventory.MAX_SIZE || itemIndex2 > Inventory.MAX_SIZE)) {
+		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && (itemIndex1 > Inventory.MAX_SIZE || itemIndex2 > Inventory.MAX_SIZE)) {
 			player.message("Please unequip your item and try again.");
 			return;
 		}
-		if (item1.getDef().isMembersOnly() || item2.getDef().isMembersOnly()) {
-			if (!Server.getServer().getConfig().MEMBER_WORLD) {
+		if (item1.getDef(player.getWorld()).isMembersOnly() || item2.getDef(player.getWorld()).isMembersOnly()) {
+			if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 				player.sendMemberErrorMessage();
 				return;
 			}

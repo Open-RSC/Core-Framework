@@ -1,10 +1,8 @@
 package com.openrsc.server.model.entity.player;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.content.achievement.Achievement;
-import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanInvite;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
@@ -59,7 +57,6 @@ import static com.openrsc.server.plugins.Functions.sleep;
  * A single player.
  */
 public final class Player extends Mob {
-	public final static Item[] STARTER_ITEMS = {new Item(87), new Item(166), new Item(132)};
 	/**
 	 * The asynchronous logger.
 	 */
@@ -528,22 +525,22 @@ public final class Player extends Mob {
 
 	public void addSkull(int timeLeft) {
 		if (skullEvent == null) {
-			skullEvent = new DelayedEvent(this, timeLeft, "Player Add Skull") {
+			skullEvent = new DelayedEvent(getWorld(), this, timeLeft, "Player Add Skull") {
 
 				@Override
 				public void run() {
 					removeSkull();
-					for (Player p : World.getWorld().getPlayers()) {
+					for (Player p : getWorld().getPlayers()) {
 						if (getParty() == p.getParty() && getParty() != null) {
 							ActionSender.sendParty(p);
 						}
 					}
 				}
 			};
-			Server.getServer().getGameEventHandler().add(skullEvent);
+			getWorld().getServer().getGameEventHandler().add(skullEvent);
 			getUpdateFlags().setAppearanceChanged(true);
 		}
-		for (Player p : World.getWorld().getPlayers()) {
+		for (Player p : getWorld().getPlayers()) {
 			if (getParty() == p.getParty() && getParty() != null) {
 				ActionSender.sendParty(p);
 			}
@@ -560,7 +557,7 @@ public final class Player extends Mob {
 
 	public void addCharge(int timeLeft) {
 		if (chargeEvent == null) {
-			chargeEvent = new DelayedEvent(this, timeLeft, "Charge Spell Removal") {
+			chargeEvent = new DelayedEvent(getWorld(), this, timeLeft, "Charge Spell Removal") {
 				// 6 minutes taken from RS2.
 				// the charge spell in RSC seem to be bugged, but 10 minutes most of the times.
 				// sometimes you are charged for 1 hour lol.
@@ -570,7 +567,7 @@ public final class Player extends Mob {
 					getOwner().message("@red@Your magic charge fades");
 				}
 			};
-			Server.getServer().getGameEventHandler().add(chargeEvent);
+			getWorld().getServer().getGameEventHandler().add(chargeEvent);
 		}
 	}
 
@@ -697,7 +694,7 @@ public final class Player extends Mob {
 				return;
 			}
 			final long startDestroy = System.currentTimeMillis();
-			unregisterEvent = new DelayedEvent(this, 500, "Unregister Player") {
+			unregisterEvent = new DelayedEvent(getWorld(), this, 500, "Unregister Player") {
 				@Override
 				public void run() {
 					if (getOwner().canLogout() || (!(getOwner().inCombat() && getOwner().getDuel().isDuelActive())
@@ -710,7 +707,7 @@ public final class Player extends Mob {
 					}
 				}
 			};
-			Server.getServer().getGameEventHandler().add(unregisterEvent);
+			getWorld().getServer().getGameEventHandler().add(unregisterEvent);
 		}
 	}
 
@@ -739,17 +736,17 @@ public final class Player extends Mob {
 			Item item = getEquipment().get(slot);
 			if (item == null)
 				continue;
-			int requiredLevel = item.getDef().getRequiredLevel();
-			int requiredSkillIndex = item.getDef().getRequiredSkillIndex();
-			String itemLower = item.getDef().getName().toLowerCase();
+			int requiredLevel = item.getDef(getWorld()).getRequiredLevel();
+			int requiredSkillIndex = item.getDef(getWorld()).getRequiredSkillIndex();
+			String itemLower = item.getDef(getWorld()).getName().toLowerCase();
 			Optional<Integer> optionalLevel = Optional.empty();
 			Optional<Integer> optionalSkillIndex = Optional.empty();
 			boolean unWield = false;
-			boolean bypass = !Server.getServer().getConfig().STRICT_CHECK_ALL &&
+			boolean bypass = !getWorld().getServer().getConfig().STRICT_CHECK_ALL &&
 				(itemLower.startsWith("poisoned") &&
-					((itemLower.endsWith("throwing dart") && !Server.getServer().getConfig().STRICT_PDART_CHECK) ||
-						(itemLower.endsWith("throwing knife") && !Server.getServer().getConfig().STRICT_PKNIFE_CHECK) ||
-						(itemLower.endsWith("spear") && !Server.getServer().getConfig().STRICT_PSPEAR_CHECK))
+					((itemLower.endsWith("throwing dart") && !getWorld().getServer().getConfig().STRICT_PDART_CHECK) ||
+						(itemLower.endsWith("throwing knife") && !getWorld().getServer().getConfig().STRICT_PKNIFE_CHECK) ||
+						(itemLower.endsWith("spear") && !getWorld().getServer().getConfig().STRICT_PSPEAR_CHECK))
 				);
 			if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
 				optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
@@ -787,7 +784,7 @@ public final class Player extends Mob {
 				//it might not have if they have a full inventory.
 				if (getEquipment().get(slot) != null) {
 					ItemDropHandler doit = new ItemDropHandler();
-					if (item.getDef().isStackable())
+					if (item.getDef(getWorld()).isStackable())
 						doit.dropStackable(this, item, item.getAmount(), false);
 					else
 						doit.dropUnstackable(this, item, 1, false);
@@ -799,7 +796,7 @@ public final class Player extends Mob {
 	}
 
 	public void checkEquipment() {
-		if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			checkEquipment2();
 			return;
 		}
@@ -807,17 +804,17 @@ public final class Player extends Mob {
 		for (int slot = 0; iterator.hasNext(); slot++) {
 			Item item = iterator.next();
 			if (item.isWielded()) {
-				int requiredLevel = item.getDef().getRequiredLevel();
-				int requiredSkillIndex = item.getDef().getRequiredSkillIndex();
-				String itemLower = item.getDef().getName().toLowerCase();
+				int requiredLevel = item.getDef(getWorld()).getRequiredLevel();
+				int requiredSkillIndex = item.getDef(getWorld()).getRequiredSkillIndex();
+				String itemLower = item.getDef(getWorld()).getName().toLowerCase();
 				Optional<Integer> optionalLevel = Optional.empty();
 				Optional<Integer> optionalSkillIndex = Optional.empty();
 				boolean unWield = false;
-				boolean bypass = !Server.getServer().getConfig().STRICT_CHECK_ALL &&
+				boolean bypass = !getWorld().getServer().getConfig().STRICT_CHECK_ALL &&
 					(itemLower.startsWith("poisoned") &&
-						((itemLower.endsWith("throwing dart") && !Server.getServer().getConfig().STRICT_PDART_CHECK) ||
-							(itemLower.endsWith("throwing knife") && !Server.getServer().getConfig().STRICT_PKNIFE_CHECK) ||
-							(itemLower.endsWith("spear") && !Server.getServer().getConfig().STRICT_PSPEAR_CHECK))
+						((itemLower.endsWith("throwing dart") && !getWorld().getServer().getConfig().STRICT_PDART_CHECK) ||
+							(itemLower.endsWith("throwing knife") && !getWorld().getServer().getConfig().STRICT_PKNIFE_CHECK) ||
+							(itemLower.endsWith("spear") && !getWorld().getServer().getConfig().STRICT_PSPEAR_CHECK))
 					);
 				if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
 					optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
@@ -851,9 +848,9 @@ public final class Player extends Mob {
 
 				if (unWield) {
 					item.setWielded(false);
-					updateWornItems(item.getDef().getWieldPosition(),
-						getSettings().getAppearance().getSprite(item.getDef().getWieldPosition()),
-						item.getDef().getWearableId(), false);
+					updateWornItems(item.getDef(getWorld()).getWieldPosition(),
+						getSettings().getAppearance().getSprite(item.getDef(getWorld()).getWieldPosition()),
+						item.getDef(getWorld()).getWearableId(), false);
 					ActionSender.sendInventoryUpdateItem(this, slot);
 				}
 			}
@@ -969,7 +966,7 @@ public final class Player extends Mob {
 	}
 
 	public int getFatigue() {
-		if (Server.getServer().getConfig().WANT_FATIGUE) {
+		if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 			return fatigue;
 		} else {
 			return 0;
@@ -977,7 +974,7 @@ public final class Player extends Mob {
 	}
 
 	public void setFatigue(int fatigue) {
-		if (Server.getServer().getConfig().WANT_FATIGUE) {
+		if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 			this.fatigue = fatigue;
 			ActionSender.sendFatigue(this);
 		} else {
@@ -1036,12 +1033,12 @@ public final class Player extends Mob {
 
 	public int getMagicPoints() {
 		int points = 1;
-		if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			points = getEquipment().getMagic();
 		} else {
 			for (Item item : getInventory().getItems()) {
 				if (item.isWielded()) {
-					points += item.getDef().getMagicBonus();
+					points += item.getDef(getWorld()).getMagicBonus();
 				}
 			}
 		}
@@ -1100,12 +1097,12 @@ public final class Player extends Mob {
 
 	public int getPrayerPoints() {
 		int points = 1;
-		if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			points = getEquipment().getPrayer();
 		} else {
 			for (Item item : getInventory().getItems()) {
 				if (item.isWielded()) {
-					points += item.getDef().getPrayerBonus();
+					points += item.getDef(getWorld()).getPrayerBonus();
 				}
 			}
 		}
@@ -1149,7 +1146,7 @@ public final class Player extends Mob {
 	}
 
 	public int getRangeEquip() {
-		if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			Item item;
 			for (int i = 0; i < Equipment.slots; i++) {
 				item = getEquipment().get(i);
@@ -1170,7 +1167,7 @@ public final class Player extends Mob {
 	}
 
 	public int getThrowingEquip() {
-		if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			Item item;
 			for (int i = 0; i < Equipment.slots; i++) {
 				item = getEquipment().get(i);
@@ -1180,7 +1177,7 @@ public final class Player extends Mob {
 			}
 		} else {
 			for (Item item : getInventory().getItems()) {
-				if (item.isWielded() && (DataConversions.inArray(Formulae.throwingIDs, getEquippedWeaponID()) && item.getDef().getWieldPosition() == 4)) {
+				if (item.isWielded() && (DataConversions.inArray(Formulae.throwingIDs, getEquippedWeaponID()) && item.getDef(getWorld()).getWieldPosition() == 4)) {
 					return item.getID();
 				}
 			}
@@ -1199,7 +1196,7 @@ public final class Player extends Mob {
 		}
 		rangeEvent = event;
 		setStatus(Action.RANGING_MOB);
-		Server.getServer().getGameEventHandler().add(rangeEvent);
+		getWorld().getServer().getGameEventHandler().add(rangeEvent);
 	}
 
 	public ThrowingEvent getThrowingEvent() {
@@ -1212,11 +1209,11 @@ public final class Player extends Mob {
 		}
 		throwingEvent = event;
 		setStatus(Action.RANGING_MOB);
-		Server.getServer().getGameEventHandler().add(throwingEvent);
+		getWorld().getServer().getGameEventHandler().add(throwingEvent);
 	}
 
 	public String getStaffName() {
-		return Group.getStaffPrefix(this.getGroupID()) + getUsername();
+		return Group.getStaffPrefix(getWorld(), getGroupID()) + getUsername();
 	}
 
 	public Channel getChannel() {
@@ -1304,10 +1301,10 @@ public final class Player extends Mob {
 	@Override
 	public int getArmourPoints() {
 		int points = 1;
-		if (!Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (!getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			for (Item item : getInventory().getItems()) {
 				if (item.isWielded()) {
-					points += item.getDef().getArmourBonus();
+					points += item.getDef(getWorld()).getArmourBonus();
 				}
 			}
 		} else {
@@ -1320,10 +1317,10 @@ public final class Player extends Mob {
 	@Override
 	public int getWeaponAimPoints() {
 		int points = 1;
-		if (!Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (!getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			for (Item item : getInventory().getItems()) {
 				if (item.isWielded()) {
-					points += item.getDef().getWeaponAimBonus();
+					points += item.getDef(getWorld()).getWeaponAimBonus();
 				}
 			}
 		} else {
@@ -1337,10 +1334,10 @@ public final class Player extends Mob {
 	@Override
 	public int getWeaponPowerPoints() {
 		int points = 1;
-		if (!Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (!getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			for (Item item : getInventory().getItems()) {
 				if (item.isWielded()) {
-					points += item.getDef().getWeaponPowerBonus();
+					points += item.getDef(getWorld()).getWeaponPowerBonus();
 				}
 			}
 		} else {
@@ -1373,11 +1370,11 @@ public final class Player extends Mob {
 		  Skilling Experience Rate
 		 */
 		if (skill >= 4 && skill <= getWorld().getServer().getConstants().getSkills().getSkillsCount() - 1) {
-			multiplier = Server.getServer().getConfig().SKILLING_EXP_RATE;
+			multiplier = getWorld().getServer().getConfig().SKILLING_EXP_RATE;
 			if (getLocation().inWilderness() && !getLocation().inBounds(220, 108, 225, 111)) {
-				multiplier += Server.getServer().getConfig().WILDERNESS_BOOST;
+				multiplier += getWorld().getServer().getConfig().WILDERNESS_BOOST;
 				if (isSkulled()) {
-					multiplier += Server.getServer().getConfig().SKULL_BOOST;
+					multiplier += getWorld().getServer().getConfig().SKULL_BOOST;
 				}
 			}
 		}
@@ -1385,11 +1382,11 @@ public final class Player extends Mob {
 		  Combat Experience Rate
 		 */
 		else if (skill >= 0 && skill <= 3) { // Attack, Strength, Defense & HP bonus.
-			multiplier = Server.getServer().getConfig().COMBAT_EXP_RATE;
+			multiplier = getWorld().getServer().getConfig().COMBAT_EXP_RATE;
 			if (getLocation().inWilderness()) {
-				multiplier += Server.getServer().getConfig().WILDERNESS_BOOST;
+				multiplier += getWorld().getServer().getConfig().WILDERNESS_BOOST;
 				if (isSkulled()) {
-					multiplier += Server.getServer().getConfig().SKULL_BOOST;
+					multiplier += getWorld().getServer().getConfig().SKULL_BOOST;
 				}
 			}
 		}
@@ -1397,7 +1394,7 @@ public final class Player extends Mob {
 		/*
 		  Double Experience
 		 */
-		if (Server.getServer().getConfig().IS_DOUBLE_EXP) {
+		if (getWorld().getServer().getConfig().IS_DOUBLE_EXP) {
 			multiplier *= 2;
 		}
 
@@ -1417,7 +1414,7 @@ public final class Player extends Mob {
 	}
 
 	public void incExp(int skill, int skillXP, boolean useFatigue) {
-		if (Server.getServer().getConfig().WANT_FATIGUE) {
+		if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 			if (isExperienceFrozen()) {
 				ActionSender.sendMessage(this, "You can not gain experience right now!");
 				return;
@@ -1426,7 +1423,7 @@ public final class Player extends Mob {
 			return;
 		}
 
-		if (Server.getServer().getConfig().WANT_FATIGUE) {
+		if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 			if (useFatigue) {
 				if (fatigue >= this.MAX_FATIGUE) {
 					ActionSender.sendMessage(this, "@gre@You are too tired to gain experience, get some rest!");
@@ -1465,13 +1462,13 @@ public final class Player extends Mob {
 	}
 
 	public void incrementSleepTries() {
-		if (Server.getServer().getConfig().WANT_FATIGUE) {
+		if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 			incorrectSleepTries++;
 		}
 	}
 
 	private void incrementActivity(int amount) {
-		if (Server.getServer().getConfig().WANT_FATIGUE) {
+		if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 			activity += amount;
 			if (activity >= KITTEN_ACTIVITY_THRESHOLD) {
 				activity -= KITTEN_ACTIVITY_THRESHOLD;
@@ -1567,9 +1564,9 @@ public final class Player extends Mob {
 				PoisonEvent poisonEvent = getAttribute("poisonEvent", null);
 				poisonEvent.setPoisonPower(getCache().getInt("poisoned"));
 			}
-			prayerDrainEvent = new PrayerDrainEvent(this, Integer.MAX_VALUE);
-			Server.getServer().getGameEventHandler().add(prayerDrainEvent);
-			Server.getServer().getGameEventHandler().add(statRestorationEvent);
+			prayerDrainEvent = new PrayerDrainEvent(getWorld(), this, Integer.MAX_VALUE);
+			getWorld().getServer().getGameEventHandler().add(prayerDrainEvent);
+			getWorld().getServer().getGameEventHandler().add(statRestorationEvent);
 		}
 		this.loggedIn = loggedIn;
 	}
@@ -1716,7 +1713,7 @@ public final class Player extends Mob {
 		ActionSender.sendInventory(this);
 
 		resetPath();
-		for (Player p : World.getWorld().getPlayers()) {
+		for (Player p : getWorld().getPlayers()) {
 			if (this.getParty() == p.getParty() && this.getParty() != null) {
 				ActionSender.sendParty(p);
 			}
@@ -1725,7 +1722,7 @@ public final class Player extends Mob {
 		prayers.resetPrayers();
 		skills.normalize();
 		getUpdateFlags().setHpUpdate(new HpUpdate(this, 0));
-		for (Player p : World.getWorld().getPlayers()) {
+		for (Player p : getWorld().getPlayers()) {
 			if (this.getParty() == p.getParty() && this.getParty() != null) {
 				ActionSender.sendParty(p);
 			}
@@ -1733,13 +1730,13 @@ public final class Player extends Mob {
 	}
 
 	private int getEquippedWeaponID() {
-		if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			Item i = getEquipment().get(4);
 			if (i != null)
 				return i.getID();
 		} else {
 			for (Item i : getInventory().getItems()) {
-				if (i.isWielded() && (i.getDef().getWieldPosition() == 4))
+				if (i.isWielded() && (i.getDef(getWorld()).getWieldPosition() == 4))
 					return i.getID();
 			}
 		}
@@ -1780,7 +1777,7 @@ public final class Player extends Mob {
 
 	public void addToPacketQueue(Packet e) {
 		ping();
-		if (incomingPackets.size() <= Server.getServer().getConfig().PACKET_LIMIT) {
+		if (incomingPackets.size() <= getWorld().getServer().getConfig().PACKET_LIMIT) {
 			synchronized (incomingPacketLock) {
 				if (!incomingPackets.containsKey(e.getID()))
 					incomingPackets.put(e.getID(), e);
@@ -1806,7 +1803,7 @@ public final class Player extends Mob {
 					+ " actions with mouse still. Mouse was last moved " + String.format("%.02f", minutesFlagged)
 					+ " mins ago";
 
-				for (Player p : World.getWorld().getPlayers()) {
+				for (Player p : getWorld().getPlayers()) {
 					if (p.isMod()) {
 						p.message("@red@Server@whi@: " + string);
 					}
@@ -1969,14 +1966,14 @@ public final class Player extends Mob {
 	}
 
 	public void save() {
-		Server.getServer().getPlayerDataProcessor().addSaveRequest(this);
+		getWorld().getServer().getPlayerDataProcessor().addSaveRequest(this);
 	}
 
 	public void logout() {
 		ActionSender.sendLogoutRequestConfirm(this);
 		setLoggedIn(false);
 
-		FishingTrawler trawlerInstance = World.getWorld().getFishingTrawler(this);
+		FishingTrawler trawlerInstance = getWorld().getFishingTrawler(this);
 
 		resetAll();
 
@@ -2010,14 +2007,14 @@ public final class Player extends Mob {
 			wildernessIPTracker.remove(player.getCurrentIP());
 		}*/
 
-		for (Player other : World.getWorld().getPlayers()) {
+		for (Player other : getWorld().getPlayers()) {
 			other.getSocial().alertOfLogout(this);
 		}
 
 		getWorld().getClanManager().checkAndUnattachFromClan(this);
 		getWorld().getPartyManager().checkAndUnattachFromParty(this);
 
-		Server.getServer().getPlayerDataProcessor().addRemoveRequest(this);
+		getWorld().getServer().getPlayerDataProcessor().addRemoveRequest(this);
 	}
 
 	public void sendMemberErrorMessage() {
@@ -2058,7 +2055,7 @@ public final class Player extends Mob {
 			Player player = (Player)batchEvent.getOwner();
 			player.checkAndInterruptBatchEvent();
 			this.batchEvent = batchEvent;
-			Server.getServer().getGameEventHandler().add(batchEvent);
+			getWorld().getServer().getGameEventHandler().add(batchEvent);
 		} else {
 			this.batchEvent = null;
 		}
@@ -2105,13 +2102,13 @@ public final class Player extends Mob {
 	public void setAchievementStatus(int achid, int status) {
 		getAchievements().put(achid, status);
 
-		AchievementSystem.achievementListGUI(this, achid, status);
+		getWorld().getServer().getAchievementSystem().achievementListGUI(this, achid, status);
 	}
 
 	public void updateAchievementStatus(Achievement ach, int status) {
 		getAchievements().put(ach.getId(), status);
 
-		AchievementSystem.achievementListGUI(this, ach.getId(), status);
+		getWorld().getServer().getAchievementSystem().achievementListGUI(this, ach.getId(), status);
 	}
 
 	public int getAchievementStatus(int id) {
@@ -2134,7 +2131,7 @@ public final class Player extends Mob {
 	}
 
 	public void startSleepEvent(final boolean bed) {
-		sleepEvent = new DelayedEvent(this, 600, "Start Sleep Event") {
+		sleepEvent = new DelayedEvent(getWorld(), this, 600, "Start Sleep Event") {
 			@Override
 			public void run() {
 				if (getOwner().isRemoved() || sleepStateFatigue == 0 || !sleeping) {
@@ -2156,7 +2153,7 @@ public final class Player extends Mob {
 		};
 		sleepStateFatigue = fatigue;
 		ActionSender.sendSleepFatigue(this, sleepStateFatigue);
-		Server.getServer().getGameEventHandler().add(sleepEvent);
+		getWorld().getServer().getGameEventHandler().add(sleepEvent);
 	}
 
 	public void teleport(int x, int y, boolean bubble) {
@@ -2194,15 +2191,15 @@ public final class Player extends Mob {
 	}
 
 	public void produceUnderAttack() {
-		World.getWorld().produceUnderAttack(this);
+		getWorld().produceUnderAttack(this);
 	}
 
 	public boolean checkUnderAttack() {
-		return World.getWorld().checkUnderAttack(this);
+		return getWorld().checkUnderAttack(this);
 	}
 
 	public void releaseUnderAttack() {
-		World.getWorld().releaseUnderAttack(this);
+		getWorld().releaseUnderAttack(this);
 	}
 
 	@Override
@@ -2225,7 +2222,7 @@ public final class Player extends Mob {
 
 	public void updateWornItems(int indexPosition, int appearanceId, int wearableId, boolean isEquipped) {
 		// metal skirts (ideally all !full pants should update pants appearance to minishorts when that anim exists)
-		if (Server.getServer().getConfig().WANT_CUSTOM_SPRITES && wearableId == 640) {
+		if (getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES && wearableId == 640) {
 			if (isEquipped) wornItems[2] = 0;
 			else wornItems[2] = 3;
 		}
@@ -2366,7 +2363,7 @@ public final class Player extends Mob {
 	}
 
 	public Boolean getBatchProgressBar() {
-		if (Server.getServer().getConfig().BATCH_PROGRESSION) {
+		if (getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			if (getCache().hasKey("setting_batch_progressbar")) {
 				return getCache().getBoolean("setting_batch_progressbar");
 			}
@@ -2377,7 +2374,7 @@ public final class Player extends Mob {
 	}
 
 	public Boolean getExperienceDrops() {
-		if (Server.getServer().getConfig().EXPERIENCE_DROPS_TOGGLE) {
+		if (getWorld().getServer().getConfig().EXPERIENCE_DROPS_TOGGLE) {
 			if (getCache().hasKey("setting_experience_drops")) {
 				return getCache().getBoolean("setting_experience_drops");
 			}
@@ -2388,7 +2385,7 @@ public final class Player extends Mob {
 	}
 
 	public Boolean getHideFog() {
-		if (Server.getServer().getConfig().FOG_TOGGLE) {
+		if (getWorld().getServer().getConfig().FOG_TOGGLE) {
 			if (getCache().hasKey("setting_showfog")) {
 				return getCache().getBoolean("setting_showfog");
 			}
@@ -2399,7 +2396,7 @@ public final class Player extends Mob {
 	}
 
 	public Boolean getAutoMessageSwitch() {
-		if (Server.getServer().getConfig().AUTO_MESSAGE_SWITCH_TOGGLE) {
+		if (getWorld().getServer().getConfig().AUTO_MESSAGE_SWITCH_TOGGLE) {
 			if (getCache().hasKey("setting_auto_messageswitch")) {
 				return getCache().getBoolean("setting_auto_messageswitch");
 			}
@@ -2410,7 +2407,7 @@ public final class Player extends Mob {
 	}
 
 	public Boolean getHideSideMenu() {
-		if (Server.getServer().getConfig().SIDE_MENU_TOGGLE) {
+		if (getWorld().getServer().getConfig().SIDE_MENU_TOGGLE) {
 			if (getCache().hasKey("setting_side_menu")) {
 				return getCache().getBoolean("setting_side_menu");
 			}
@@ -2421,7 +2418,7 @@ public final class Player extends Mob {
 	}
 
 	public Boolean getHideKillFeed() {
-		if (Server.getServer().getConfig().WANT_KILL_FEED) {
+		if (getWorld().getServer().getConfig().WANT_KILL_FEED) {
 			if (getCache().hasKey("setting_kill_feed")) {
 				return getCache().getBoolean("setting_kill_feed");
 			}
@@ -2432,7 +2429,7 @@ public final class Player extends Mob {
 	}
 
 	public Boolean getHideInventoryCount() {
-		if (Server.getServer().getConfig().INVENTORY_COUNT_TOGGLE) {
+		if (getWorld().getServer().getConfig().INVENTORY_COUNT_TOGGLE) {
 			if (getCache().hasKey("setting_inventory_count")) {
 				return getCache().getBoolean("setting_inventory_count");
 			}
@@ -2443,7 +2440,7 @@ public final class Player extends Mob {
 	}
 
 	public Boolean getHideNameTag() {
-		if (Server.getServer().getConfig().SHOW_FLOATING_NAMETAGS) {
+		if (getWorld().getServer().getConfig().SHOW_FLOATING_NAMETAGS) {
 			if (getCache().hasKey("setting_floating_nametags")) {
 				return getCache().getBoolean("setting_floating_nametags");
 			}
@@ -2454,7 +2451,7 @@ public final class Player extends Mob {
 	}
 
 	public Boolean getHideRoofs() {
-		if (Server.getServer().getConfig().SHOW_ROOF_TOGGLE) {
+		if (getWorld().getServer().getConfig().SHOW_ROOF_TOGGLE) {
 			if (getCache().hasKey("setting_showroof")) {
 				return getCache().getBoolean("setting_showroof");
 			}
@@ -2465,7 +2462,7 @@ public final class Player extends Mob {
 	}
 
 	public int getGroundItemsToggle() {
-		if (Server.getServer().getConfig().GROUND_ITEM_TOGGLE) {
+		if (getWorld().getServer().getConfig().GROUND_ITEM_TOGGLE) {
 			if (getCache().hasKey("setting_ground_items")) {
 				return getCache().getInt("setting_ground_items");
 			}
@@ -2476,7 +2473,7 @@ public final class Player extends Mob {
 	}
 
 	public int getFightModeSelectorToggle() {
-		if (Server.getServer().getConfig().FIGHTMODE_SELECTOR_TOGGLE) {
+		if (getWorld().getServer().getConfig().FIGHTMODE_SELECTOR_TOGGLE) {
 			if (getCache().hasKey("setting_fightmode_selector")) {
 				return getCache().getInt("setting_fightmode_selector");
 			}
@@ -2487,7 +2484,7 @@ public final class Player extends Mob {
 	}
 
 	public int getExperienceCounterToggle() {
-		if (Server.getServer().getConfig().EXPERIENCE_COUNTER_TOGGLE) {
+		if (getWorld().getServer().getConfig().EXPERIENCE_COUNTER_TOGGLE) {
 			if (getCache().hasKey("setting_experience_counter")) {
 				return getCache().getInt("setting_experience_counter");
 			}
@@ -2526,7 +2523,7 @@ public final class Player extends Mob {
 	}
 
 	public boolean getClanInviteSetting() {
-		if (Server.getServer().getConfig().WANT_CLANS) {
+		if (getWorld().getServer().getConfig().WANT_CLANS) {
 			if (getCache().hasKey("p_block_invites")) {
 				return getCache().getBoolean("p_block_invites");
 			}
@@ -2570,7 +2567,7 @@ public final class Player extends Mob {
 	}
 
 	public int getIcon() {
-		if (Server.getServer().getConfig().WANT_CUSTOM_RANK_DISPLAY) {
+		if (getWorld().getServer().getConfig().WANT_CUSTOM_RANK_DISPLAY) {
 			if (isAdmin())
 				return 0x0100FF00;
 
@@ -2875,7 +2872,7 @@ public final class Player extends Mob {
 		getWorld().unregisterItem(item);
 		this.playSound("takeobject");
 		this.getInventory().add(itemFinal);
-		getWorld().getServer().getGameLogger().addQuery(new GenericLog(this.getUsername() + " picked up " + item.getDef().getName() + " x"
+		getWorld().getServer().getGameLogger().addQuery(new GenericLog(this.getWorld(), this.getUsername() + " picked up " + item.getDef().getName() + " x"
 			+ item.getAmount() + " at " + this.getLocation().toString()));
 
 		return true;

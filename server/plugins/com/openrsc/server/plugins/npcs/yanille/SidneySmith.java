@@ -294,7 +294,7 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 		int count = p.getInventory().countId(useCertificate ? certificate.getID() : i.getID());
 		int mainMenu = -1;
 		if (useCertificate) {
-			npcTalk(p, n, "How many " + i.getDef().getName() + " certificates do you want to change?");
+			npcTalk(p, n, "How many " + i.getDef(p.getWorld()).getName() + " certificates do you want to change?");
 			if (count == 1) {
 				int firstMenu = showMenu(p, "None thanks.", "One Certificate please");
 				if (firstMenu != -1) {
@@ -316,7 +316,7 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 			}
 
 		} else {
-			npcTalk(p, n, "How many " + i.getDef().getName() + " would you like to certificate?");
+			npcTalk(p, n, "How many " + i.getDef(p.getWorld()).getName() + " would you like to certificate?");
 			if (count >= 5 && count < 10) {
 				int firstMenu = showMenu(p, "None", "Five");
 				if (firstMenu != -1) {
@@ -336,14 +336,14 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 			} else if (count >= 25) {
 				mainMenu = showMenu(p, "Five", "Ten", "Fifteen", "Twenty", "Twenty Five");
 			} else {
-				npcTalk(p, n, "Sorry, but you don't have enough " + i.getDef().getName() + ".",
+				npcTalk(p, n, "Sorry, but you don't have enough " + i.getDef(p.getWorld()).getName() + ".",
 					"You need at least five to make a certificate.");
 				return;
 			}
 		}
 		if (mainMenu != -1) {
 			if (useCertificate) {
-				npcTalk(p, n, "Ok, that's your " + i.getDef().getName() + " certificates done.");
+				npcTalk(p, n, "Ok, that's your " + i.getDef(p.getWorld()).getName() + " certificates done.");
 				mainMenu += 1;
 				int itemAmount = mainMenu * 5;
 				if (p.getInventory().remove(certificate.getID(), mainMenu) > -1) {
@@ -353,7 +353,7 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 				}
 				playerTalk(p, n, "Ok thanks.");
 			} else {
-				npcTalk(p, n, "Ok, that's your " + i.getDef().getName() + " certificated.");
+				npcTalk(p, n, "Ok, that's your " + i.getDef(p.getWorld()).getName() + " certificated.");
 				mainMenu += 1;
 				int itemAmount = mainMenu * 5;
 				for (int x = 0; x < itemAmount; x++) {

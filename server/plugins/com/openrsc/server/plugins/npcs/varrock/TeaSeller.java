@@ -1,5 +1,7 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
@@ -15,9 +17,6 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
-
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
 
 public final class TeaSeller implements ShopInterface,
 	TalkToNpcExecutiveListener, TalkToNpcListener, PickupExecutiveListener,
@@ -37,7 +36,7 @@ public final class TeaSeller implements ShopInterface,
 	}
 
 	@Override
-	public Shop[] getShops() {
+	public Shop[] getShops(World world) {
 		return new Shop[]{shop};
 	}
 
@@ -49,7 +48,7 @@ public final class TeaSeller implements ShopInterface,
 	@Override
 	public void onPickup(final Player p, final GroundItem i) {
 		if (i.getID() == ItemId.DISPLAY_TEA.id()) {
-			final Npc n = World.getWorld().getNpcById(NpcId.TEA_SELLER.id());
+			final Npc n = p.getWorld().getNpcById(NpcId.TEA_SELLER.id());
 			if (n == null) {
 				return;
 			}

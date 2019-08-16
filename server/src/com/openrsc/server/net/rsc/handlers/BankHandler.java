@@ -1,13 +1,11 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
@@ -18,7 +16,6 @@ import org.apache.logging.log4j.Logger;
 
 public final class BankHandler implements PacketHandler {
 
-	public static final World world = World.getWorld();
 	/**
 	 * The asynchronous logger.
 	 */
@@ -96,13 +93,13 @@ public final class BankHandler implements PacketHandler {
 							break;
 						}
 						item = new Item(itemID, 1);
-						Item notedItem = new Item(item.getDef().getNoteID());
-						if (notedItem.getDef() == null) {
+						Item notedItem = new Item(item.getDef(player.getWorld()).getNoteID());
+						if (notedItem.getDef(player.getWorld()) == null) {
 							LOGGER.error("Mistake with the notes: " + item.getID() + " - " + notedItem.getID());
 							return;
 						}
 
-						if (notedItem.getDef().getOriginalItemID() != item.getID()) {
+						if (notedItem.getDef(player.getWorld()).getOriginalItemID() != item.getID()) {
 							player.message("There is no equivalent note item for that.");
 							break;
 						}
@@ -145,7 +142,7 @@ public final class BankHandler implements PacketHandler {
 			depositInventory(player);
 			ActionSender.sendInventory(player);
 			ActionSender.showBank(player);
-		} else if (pID == packetFive && Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		} else if (pID == packetFive && player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			//deposit all from equipment
 			for (int k = Equipment.slots - 1; k >= 0; k--) {
 				Item depoItem = player.getEquipment().get(k);
@@ -162,7 +159,7 @@ public final class BankHandler implements PacketHandler {
 			}
 			ActionSender.sendEquipmentStats(player);
 			ActionSender.showBank(player);
-		} else if (pID == packetSix && Server.getServer().getConfig().WANT_BANK_PRESETS) {
+		} else if (pID == packetSix && player.getWorld().getServer().getConfig().WANT_BANK_PRESETS) {
 			int presetSlot = p.readShort();
 			if (presetSlot < 0 || presetSlot >= Bank.PRESET_COUNT) {
 				player.setSuspiciousPlayer(true);
@@ -182,7 +179,7 @@ public final class BankHandler implements PacketHandler {
 					player.getBank().presets[presetSlot].equipment[k] = new Item(-1,0);
 			}
 			player.getBank().presets[presetSlot].changed = true;
-		} else if (pID == packetSeven && Server.getServer().getConfig().WANT_BANK_PRESETS) {
+		} else if (pID == packetSeven && player.getWorld().getServer().getConfig().WANT_BANK_PRESETS) {
 			int presetSlot = p.readShort();
 			if (presetSlot < 0 || presetSlot >= Bank.PRESET_COUNT) {
 				player.setSuspiciousPlayer(true);
@@ -217,8 +214,8 @@ public final class BankHandler implements PacketHandler {
 			if (!player.getAttribute("swap_cert", false) || !isCert(itemID)) {
 				item = new Item(itemID, amount);
 				Item originalItem = null;
-				if (item.getDef().getOriginalItemID() != -1) {
-					originalItem = new Item(item.getDef().getOriginalItemID(), amount);
+				if (item.getDef(player.getWorld()).getOriginalItemID() != -1) {
+					originalItem = new Item(item.getDef(player.getWorld()).getOriginalItemID(), amount);
 					itemID = originalItem.getID();
 				}
 				if (bank.canHold(item) && inventory.remove(item, false) > -1) {
@@ -230,8 +227,8 @@ public final class BankHandler implements PacketHandler {
 			} else {
 				item = new Item(itemID, amount);
 				Item originalItem = null;
-				if (item.getDef().getOriginalItemID() != -1) {
-					originalItem = new Item(item.getDef().getOriginalItemID(), amount);
+				if (item.getDef(player.getWorld()).getOriginalItemID() != -1) {
+					originalItem = new Item(item.getDef(player.getWorld()).getOriginalItemID(), amount);
 					itemID = originalItem.getID();
 				}
 				Item removedItem = originalItem != null ? originalItem : item;

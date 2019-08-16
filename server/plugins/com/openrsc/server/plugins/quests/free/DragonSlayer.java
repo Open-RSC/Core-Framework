@@ -10,7 +10,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
@@ -392,26 +391,26 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.WORMBRAIN.id() && p.getQuestStage(this) >= 2) {
-			World.getWorld().registerItem(
+			p.getWorld().registerItem(
 				new GroundItem(p.getWorld(), ItemId.MAP_PIECE_1.id(), n.getX(), n.getY(), 1, p));
 		}
 		if (n.getID() == NpcId.RAT_WMAZEKEY.id()) {
-			World.getWorld().registerItem(
+			p.getWorld().registerItem(
 				new GroundItem(p.getWorld(), ItemId.RED_KEY.id(), n.getX(), n.getY(), 1, p));
 		} else if (n.getID() == NpcId.GHOST_WMAZEKEY.id()) {
-			World.getWorld().registerItem(
+			p.getWorld().registerItem(
 				new GroundItem(p.getWorld(), ItemId.ORANGE_KEY.id(), n.getX(), n.getY(), 1, p));
 		} else if (n.getID() == NpcId.SKELETON_WMAZEKEY.id()) {
-			World.getWorld().registerItem(
+			p.getWorld().registerItem(
 				new GroundItem(p.getWorld(), ItemId.YELLOW_KEY.id(), n.getX(), n.getY(), 1, p));
 		} else if (n.getID() == NpcId.ZOMBIE_WMAZEKEY.id()) {
-			World.getWorld().registerItem(
+			p.getWorld().registerItem(
 				new GroundItem(p.getWorld(), ItemId.BLUE_KEY.id(), n.getX(), n.getY(), 1, p));
 		} else if (n.getID() == NpcId.MELZAR_THE_MAD.id()) {
-			World.getWorld().registerItem(
+			p.getWorld().registerItem(
 				new GroundItem(p.getWorld(), ItemId.MAGENTA_KEY.id(), n.getX(), n.getY(), 1, p));
 		} else if (n.getID() == NpcId.LESSER_DEMON_WMAZEKEY.id()) {
-			World.getWorld().registerItem(
+			p.getWorld().registerItem(
 				new GroundItem(p.getWorld(), ItemId.BLACK_KEY.id(), n.getX(), n.getY(), 1, p));
 		} else if (n.getID() == NpcId.DRAGON.id() && p.getQuestStage(this) == 3) {
 			p.sendQuestComplete(getQuestId());

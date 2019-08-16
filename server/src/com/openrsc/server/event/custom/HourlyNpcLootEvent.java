@@ -1,6 +1,5 @@
 package com.openrsc.server.event.custom;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
@@ -20,24 +19,24 @@ public class HourlyNpcLootEvent extends HourlyEvent  {
 	private int npcLifetime;
 	private String eventMessage;
 
-	public HourlyNpcLootEvent(int lifeTime, Point location, int npcId, int npcAmount, int itemId) {
-		this(lifeTime, null, location, npcId, npcAmount, itemId, 1, 10);
+	public HourlyNpcLootEvent(World world, int lifeTime, Point location, int npcId, int npcAmount, int itemId) {
+		this(world, lifeTime, null, location, npcId, npcAmount, itemId, 1, 10);
 	}
 
-	public HourlyNpcLootEvent(int lifeTime, Point location, int npcId, int npcAmount, int itemId, int itemAmount) {
-		this(lifeTime, null, location, npcId, npcAmount, itemId, itemAmount, 10);
+	public HourlyNpcLootEvent(World world, int lifeTime, Point location, int npcId, int npcAmount, int itemId, int itemAmount) {
+		this(world, lifeTime, null, location, npcId, npcAmount, itemId, itemAmount, 10);
 	}
 
-	public HourlyNpcLootEvent(int lifeTime, String eventMessage, Point location, int npcId, int npcAmount, int itemId) {
-		this(lifeTime, eventMessage, location, npcId, npcAmount, itemId, 1, 10);
+	public HourlyNpcLootEvent(World world, int lifeTime, String eventMessage, Point location, int npcId, int npcAmount, int itemId) {
+		this(world, lifeTime, eventMessage, location, npcId, npcAmount, itemId, 1, 10);
 	}
 
-	public HourlyNpcLootEvent(int lifeTime, String eventMessage, Point location, int npcId, int npcAmount, int itemId, int itemAmount) {
-		this(lifeTime, eventMessage, location, npcId, npcAmount, itemId, itemAmount, 10);
+	public HourlyNpcLootEvent(World world, int lifeTime, String eventMessage, Point location, int npcId, int npcAmount, int itemId, int itemAmount) {
+		this(world, lifeTime, eventMessage, location, npcId, npcAmount, itemId, itemAmount, 10);
 	}
 
-	public HourlyNpcLootEvent(int lifeTime, String eventMessage, Point location, int npcId, int npcAmount, int itemId, int itemAmount, int npcLifeTime) {
-		super(lifeTime, "Hourly NPC Loot Event");
+	public HourlyNpcLootEvent(World world, int lifeTime, String eventMessage, Point location, int npcId, int npcAmount, int itemId, int itemAmount, int npcLifeTime) {
+		super(world, lifeTime, "Hourly NPC Loot Event");
 		this.location = location;
 		this.npcId = npcId;
 		this.npcAmount = npcAmount;
@@ -48,9 +47,9 @@ public class HourlyNpcLootEvent extends HourlyEvent  {
 	}
 
 	public void action() {
-		Server.getServer().getGameEventHandler().add(new NpcLootEvent(getLocation(), getNpcId(), getNpcAmount(), getItemId(), getItemAmount(), getNpcLifetime()*60*1000));
+		getWorld().getServer().getGameEventHandler().add(new NpcLootEvent(getWorld(), getLocation(), getNpcId(), getNpcAmount(), getItemId(), getItemAmount(), getNpcLifetime()*60*1000));
 		if(getEventMessage() != null) {
-			for (Player p : World.getWorld().getPlayers())
+			for (Player p : getWorld().getPlayers())
 				ActionSender.sendMessage(p, null, 0, MessageType.QUEST, getEventMessage(), 0);
 		}
 	}

@@ -7,6 +7,7 @@ import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -31,7 +32,7 @@ public final class GerrantsFishingGear implements
 	}
 
 	@Override
-	public Shop[] getShops() {
+	public Shop[] getShops(World world) {
 		return new Shop[]{shop};
 	}
 

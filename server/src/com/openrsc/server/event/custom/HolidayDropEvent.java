@@ -1,6 +1,5 @@
 package com.openrsc.server.event.custom;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.ViewArea;
 import com.openrsc.server.model.entity.GroundItem;
@@ -22,12 +21,12 @@ public class HolidayDropEvent extends HourlyEvent  {
 	private String eventMessage;
 	private Player executor;
 
-	public HolidayDropEvent(int lifeTime, Player executor, ArrayList<Integer> items) {
-		this(lifeTime, executor, items, (String)null);
+	public HolidayDropEvent(World world, int lifeTime, Player executor, ArrayList<Integer> items) {
+		this(world, lifeTime, executor, items, (String)null);
 	}
 
-	private HolidayDropEvent(int lifeTime, Player executor, ArrayList<Integer> items, String eventMessage) {
-		super(lifeTime, "Holiday Drop Event");
+	private HolidayDropEvent(World world, int lifeTime, Player executor, ArrayList<Integer> items, String eventMessage) {
+		super(world, lifeTime, "Holiday Drop Event");
 		this.executor = executor;
 		this.items = items;
 		this.eventMessage = eventMessage;
@@ -48,14 +47,14 @@ public class HolidayDropEvent extends HourlyEvent  {
 					view.getGroundItem(Point.location(x + 1, y - 1)) == null) {
 
 					boolean containsObject = view.getGameObject(Point.location(x, y)) != null;
-					int traversal = World.getWorld().getTile(x, y).traversalMask;
+					int traversal = getWorld().getTile(x, y).traversalMask;
 					boolean isBlocking = (
 						(traversal & 16) != 0 || // diagonal wall \
 							(traversal & 32) != 0 || // diagonal wall /
 							(traversal & 64) != 0    // water or black,  etc.
 					);
 					if (!containsObject && !isBlocking) { // Nothing in the way.
-						World.getWorld().registerItem(new GroundItem(executor.getWorld(), getItems().get(DataConversions.random(0, getItems().size() - 1)), x, y, 1, (Player) null));
+						getWorld().registerItem(new GroundItem(executor.getWorld(), getItems().get(DataConversions.random(0, getItems().size() - 1)), x, y, 1, (Player) null));
 						totalItemsDropped++;
 					}
 				}
@@ -64,16 +63,16 @@ public class HolidayDropEvent extends HourlyEvent  {
 			y += DataConversions.random(1, 2);
 		}
 
-		for (Player p : World.getWorld().getPlayers()) {
+		for (Player p : getWorld().getPlayers()) {
 			if(!p.isAdmin()) {
 				continue;
 			}
 
-			p.playerServerMessage(MessageType.QUEST, Server.getServer().getConfig().MESSAGE_PREFIX + "Dropped " + totalItemsDropped + " of item IDs: " + StringUtils.join(getItems(), ", "));
+			p.playerServerMessage(MessageType.QUEST, getWorld().getServer().getConfig().MESSAGE_PREFIX + "Dropped " + totalItemsDropped + " of item IDs: " + StringUtils.join(getItems(), ", "));
 		}
 
 		if(getEventMessage() != null) {
-			for (Player p : World.getWorld().getPlayers())
+			for (Player p : getWorld().getPlayers())
 				ActionSender.sendMessage(p, null, 0, MessageType.QUEST, getEventMessage(), 0);
 		}
 	}

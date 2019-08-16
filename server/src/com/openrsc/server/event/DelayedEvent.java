@@ -1,20 +1,20 @@
 package com.openrsc.server.event;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 
 
 public abstract class DelayedEvent extends GameTickEvent {
 
 	private boolean uniqueEvent = true;
 
-	public DelayedEvent(Player owner, int delayMs, String descriptor) {
-		super(owner, (int)Math.ceil((double)delayMs / (double)Server.getServer().getConfig().GAME_TICK), descriptor);
+	public DelayedEvent(World world, Player owner, int delayMs, String descriptor) {
+		super(world, owner, (int)Math.ceil((double)delayMs / (double)world.getServer().getConfig().GAME_TICK), descriptor);
 	}
 
-	public DelayedEvent(Player owner, int delayMs, String descriptor, boolean uniqueEvent) {
-		this(owner, delayMs, descriptor);
+	public DelayedEvent(World world, Player owner, int delayMs, String descriptor, boolean uniqueEvent) {
+		this(world, owner, delayMs, descriptor);
 		this.uniqueEvent = uniqueEvent;
 	}
 

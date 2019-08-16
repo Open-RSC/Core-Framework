@@ -1,6 +1,6 @@
 package com.openrsc.server.external;
 
-import com.openrsc.server.Server;
+import com.openrsc.server.model.world.World;
 
 /**
  * The definition wrapper for fishing spots
@@ -40,8 +40,8 @@ public class ObjectFishingDef {
 		return netId;
 	}
 
-	public int getReqLevel() {
-		int requiredLevel = Server.getServer().getConfig().PLAYER_LEVEL_LIMIT;
+	public int getReqLevel(World world) {
+		int requiredLevel = world.getServer().getConfig().PLAYER_LEVEL_LIMIT;
 		for (ObjectFishDef def : defs) {
 			if (def.getReqLevel() < requiredLevel) {
 				requiredLevel = def.getReqLevel();

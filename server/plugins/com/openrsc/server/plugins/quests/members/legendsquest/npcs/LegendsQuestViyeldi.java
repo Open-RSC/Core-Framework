@@ -66,7 +66,7 @@ public class LegendsQuestViyeldi implements TalkToNpcListener, TalkToNpcExecutiv
 			message(p, 1300, "Instantly the clothes begin to animate and then walk towards you.");
 			Npc n = getNearestNpc(p, NpcId.VIYELDI.id(), 3);
 			if (n == null)
-				n = spawnNpc(NpcId.VIYELDI.id(), i.getX(), i.getY(), 60000);
+				n = spawnNpc(p.getWorld(), NpcId.VIYELDI.id(), i.getX(), i.getY(), 60000);
 			if (n != null) {
 				n.initializeTalkScript(p);
 			}

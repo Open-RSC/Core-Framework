@@ -149,7 +149,7 @@ public final class EntityHandler {
 				+ "`sprites1`, `sprites2`, `sprites3`, `sprites4`, `sprites5`, `sprites6`, `sprites7`, `sprites8`, `sprites9`, "
 				+ "`sprites10`, `sprites11`, `sprites12`, `hairColour`, `topColour`, `bottomColour`, `skinColour`, `camera1`, "
 				+ "`camera2`, `walkModel`, `combatModel`, `combatSprite` FROM `"
-				+ Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "npcdef`");
+				+ getServer().getConfig().MYSQL_TABLE_PREFIX + "npcdef`");
 			while (result.next()) {
 				NPCDef def = new NPCDef();
 				def.name = result.getString("name");
@@ -184,7 +184,7 @@ public final class EntityHandler {
 				Statement dropStatement = connection.createStatement();
 				ResultSet dropResult = dropStatement
 					.executeQuery("SELECT `amount`, `id`, `weight` FROM `"
-						+ Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+						+ getServer().getConfig().MYSQL_TABLE_PREFIX
 						+ "npcdrops` WHERE npcdef_id = '"
 						+ result.getInt("id") + "' ORDER BY `weight` DESC");
 				while (dropResult.next()) {
@@ -214,7 +214,7 @@ public final class EntityHandler {
 				+ "`isUntradable`, `isWearable`, `appearanceID`, `wearableID`, `wearSlot`, `requiredLevel`, `requiredSkillID`, "
 				+ "`armourBonus`, `weaponAimBonus`, `weaponPowerBonus`, `magicBonus`, `prayerBonus`, `basePrice`, `bankNoteID`, "
 				+ "originalItemID FROM `"
-				+ Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+				+ getServer().getConfig().MYSQL_TABLE_PREFIX
 				+ "itemdef` order by id asc");
 			ArrayList<ItemDefinition> itemDefinitions = new ArrayList<ItemDefinition>();
 			while (result.next()) {
@@ -302,7 +302,7 @@ public final class EntityHandler {
 	}
 
 	/**
-	 * @param the items type
+	 * @param type items type
 	 * @return the types of items affected
 	 */
 	public int[] getAffectedTypes(int type) {
@@ -363,7 +363,7 @@ public final class EntityHandler {
 	}
 
 	/**
-	 * @param the items id
+	 * @param id items id
 	 * @return the amount eating the item should heal
 	 */
 	public int getItemEdibleHeals(int id) {
@@ -456,7 +456,7 @@ public final class EntityHandler {
 	}
 
 	/**
-	 * @param the point we are currently at
+	 * @param location the point we are currently at
 	 * @return the point we should be teleported to
 	 */
 	public TelePoint getObjectTelePoint(Point location, String command) {

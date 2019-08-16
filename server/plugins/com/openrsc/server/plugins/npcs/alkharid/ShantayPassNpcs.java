@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.npcs.alkharid;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.event.SingleEvent;
@@ -94,9 +93,9 @@ public class ShantayPassNpcs implements ShopInterface,
 					if (menus == 0) {
 						final Npc npc = new Npc(n.getWorld(), 719, 63, 731);
 						npc.setShouldRespawn(false);
-						World.getWorld().registerNpc(npc);
-						Server.getServer().getGameEventHandler().add(
-							new SingleEvent(null, 60000, "Shantay Pass Talk Delay") {
+						p.getWorld().registerNpc(npc);
+						p.getWorld().getServer().getGameEventHandler().add(
+							new SingleEvent(p.getWorld(), null, 60000, "Shantay Pass Talk Delay") {
 								public void action() {
 									npcTalk(p, npc, "Right, time for dinner!");
 									npc.remove();
@@ -136,7 +135,7 @@ public class ShantayPassNpcs implements ShopInterface,
 		if (n.getID() == SHANTAY) {
 			if (DataConversions.random(0, 25) == 0) { // 1 in 25 chance to drop kebab recipe
 				GroundItem groundItem = new GroundItem(p.getWorld(), 1120, n.getX(), n.getY(), 1, p);
-				World.getWorld().registerItem(groundItem);
+				p.getWorld().registerItem(groundItem);
 			}
 
 			npcTalk(p, n, "Hello Effendi, I am Shantay.");
@@ -365,7 +364,7 @@ public class ShantayPassNpcs implements ShopInterface,
 	}
 
 	@Override
-	public Shop[] getShops() {
+	public Shop[] getShops(World world) {
 		return new Shop[]{shop};
 	}
 
@@ -397,7 +396,7 @@ public class ShantayPassNpcs implements ShopInterface,
 					return;
 				}
 				try {
-					PreparedStatement statement = p.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + Server.getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+					PreparedStatement statement = p.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + p.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 					statement.setString(1, p.getUsername());
 					ResultSet result = statement.executeQuery();
 					if (result.next()) {

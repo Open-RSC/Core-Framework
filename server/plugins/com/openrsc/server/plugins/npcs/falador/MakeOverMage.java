@@ -1,24 +1,17 @@
 package com.openrsc.server.plugins.npcs.falador;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
-
 public class MakeOverMage implements TalkToNpcListener,
 	TalkToNpcExecutiveListener {
-	/**
-	 * World instance
-	 */
-	public World world = World.getWorld();
-
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
 		npcTalk(p, n, "Are you happy with your looks?",

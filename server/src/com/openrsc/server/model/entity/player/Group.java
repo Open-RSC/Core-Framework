@@ -1,6 +1,6 @@
 package com.openrsc.server.model.entity.player;
 
-import com.openrsc.server.Server;
+import com.openrsc.server.model.world.World;
 
 import java.util.HashMap;
 
@@ -30,8 +30,8 @@ public class Group {
 		GROUP_NAMES.put(USER, "User");
 	}
 
-	public static String getNameColour(int groupID) {
-		if (!Server.getServer().getConfig().WANT_CUSTOM_RANK_DISPLAY)
+	public static String getNameColour(World world, int groupID) {
+		if (!world.getServer().getConfig().WANT_CUSTOM_RANK_DISPLAY)
 			return "";
 
 		switch (groupID) {
@@ -75,7 +75,7 @@ public class Group {
 		}*/
 	}
 
-	public static String getStaffPrefix(int groupID) {
-		return getNameSprite(groupID) + getNameColour(groupID);
+	public static String getStaffPrefix(World world, int groupID) {
+		return getNameSprite(groupID) + getNameColour(world, groupID);
 	}
 }

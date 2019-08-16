@@ -26,7 +26,7 @@ InvUseOnObjectExecutiveListener {
 			player.message("Nothing interesting happens");
 			return;
 		}
-		player.setBatchEvent(new BatchEvent(player, 600, "Fill Bucket with Sand", player.getInventory().countId(itemID), true) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Fill Bucket with Sand", player.getInventory().countId(itemID), true) {
 			@Override
 			public void action() {
 				if (removeItem(getOwner(), itemID, 1)) {

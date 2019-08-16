@@ -1,43 +1,21 @@
 package com.openrsc.server.plugins.quests.members;
 
-import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.model.Point;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.action.InvActionListener;
-import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.action.InvUseOnWallObjectListener;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnWallObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
+import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.closeGenericObject;
-import static com.openrsc.server.plugins.Functions.doDoor;
-import static com.openrsc.server.plugins.Functions.doGate;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.incQuestReward;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.openGenericObject;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 	TalkToNpcExecutiveListener, ObjectActionListener,
@@ -303,7 +281,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 				"the raft is pulled down stream by strong currents",
 				"you crash into a small land mound");
 			p.teleport(662, 463, false);
-			Npc hudon = World.getWorld().getNpc(NpcId.HUDON.id(), 0, 2000, 0, 2000);
+			Npc hudon = p.getWorld().getNpc(NpcId.HUDON.id(), 0, 2000, 0, 2000);
 			if (hudon != null && p.getQuestStage(this) == 1) {
 				playerTalk(p, hudon, "hello son, are you okay?");
 				npcTalk(p, hudon, "it looks like you need the help");
@@ -355,7 +333,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 				p.message("but find nothing");
 			}
 		} else if (obj.getID() == 480) {
-			Npc n = World.getWorld().getNpc(NpcId.GOLRIE.id(), 663, 668, 3520, 3529);
+			Npc n = p.getWorld().getNpc(NpcId.GOLRIE.id(), 663, 668, 3520, 3529);
 			if (p.getQuestStage(this) == 0) {
 				npcTalk(p, n, "what are you doing down here",
 					"leave before you get yourself into trouble");
@@ -709,7 +687,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 			if (!p.getCache().hasKey(
 				"waterfall_" + obj.getID() + "_" + item.getID())) {
 				p.message("you place the "
-					+ item.getDef().getName().toLowerCase()
+					+ item.getDef(p.getWorld()).getName().toLowerCase()
 					+ " on the stand");
 				p.message("the rune stone crumbles into dust");
 				p.getCache().store(
@@ -717,7 +695,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 				p.getInventory().remove(item.getID(), 1);
 
 			} else {
-				p.message("you have already placed " + article(item.getDef().getName()) + item.getDef().getName()
+				p.message("you have already placed " + article(item.getDef(p.getWorld()).getName()) + item.getDef(p.getWorld()).getName()
 					+ " here");
 			}
 		} else if (obj.getID() == 483 && item.getID() == ItemId.GLARIALS_AMULET.id()) {
@@ -774,8 +752,8 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 			removeItem(p, ItemId.MITHRIL_SEED.id(), 1);
 			message(p, "and drop a seed by your feet");
 			GameObject object = new GameObject(p.getWorld(), Point.location(p.getX(), p.getY()), 490, 0, 0);
-			World.getWorld().registerGameObject(object);
-			World.getWorld().delayedRemoveObject(object, 60000);
+			p.getWorld().registerGameObject(object);
+			p.getWorld().delayedRemoveObject(object, 60000);
 			p.message("a tree magically sprouts around you");
 		}
 		else if (i.getID() == ItemId.BOOK_ON_BAXTORIAN.id()) {
@@ -871,7 +849,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 
 	private boolean CANT_GO(Player p) {
 		for (Item item : p.getInventory().getItems()) {
-			String name = item.getDef().getName().toLowerCase();
+			String name = item.getDef(p.getWorld()).getName().toLowerCase();
 			if (name.contains("dagger") || name.contains("scimitar")
 				|| name.contains("bow") || name.contains("mail")
 				|| name.contains("plated") || item.getID() == ItemId.RUNE_SKIRT.id()

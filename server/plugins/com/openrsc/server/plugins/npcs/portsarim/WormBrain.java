@@ -1,9 +1,8 @@
 package com.openrsc.server.plugins.npcs.portsarim;
 
-import com.openrsc.server.constants.Quests;
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -18,13 +17,13 @@ public final class WormBrain implements WallObjectActionListener, WallObjectActi
 
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click, Player p) {
-		return Server.getServer().getConfig().WANT_BARTER_WORMBRAINS && obj.getID() == 30
+		return p.getWorld().getServer().getConfig().WANT_BARTER_WORMBRAINS && obj.getID() == 30
 				&& obj.getX() == 283 && obj.getY() == 665;
 	}
 
 	@Override
 	public void onWallObjectAction(GameObject obj, Integer click, final Player p) {
-		if (Server.getServer().getConfig().WANT_BARTER_WORMBRAINS && obj.getID() == 30
+		if (p.getWorld().getServer().getConfig().WANT_BARTER_WORMBRAINS && obj.getID() == 30
 				&& obj.getX() == 283 && obj.getY() == 665) {
 			final Npc n = getNearestNpc(p, NpcId.WORMBRAIN.id(), 10);
 			message(p, "...you knock on the cell door");

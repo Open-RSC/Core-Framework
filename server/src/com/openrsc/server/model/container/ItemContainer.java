@@ -11,9 +11,12 @@ public class ItemContainer {
 	private ArrayList<Item> list = new ArrayList<Item>();
 	private LinkedList<ContainerListener> listeners = new LinkedList<ContainerListener>();
 
+	private final Player player;
+
 	private boolean alwaysStack;
 
 	public ItemContainer(Player player, int size, boolean alwaysStack) {
+		this.player = player;
 		this.SIZE = size;
 		this.alwaysStack = alwaysStack;
 	}
@@ -24,7 +27,7 @@ public class ItemContainer {
 				return;
 			}
 
-			if (item.getDef().isStackable() || alwaysStack) {
+			if (item.getDef(player.getWorld()).isStackable() || alwaysStack) {
 				for (int index = 0; index < list.size(); index++) {
 					Item existingStack = list.get(index);
 					if (item.equals(existingStack) && existingStack.getAmount() < Integer.MAX_VALUE) {
@@ -33,7 +36,7 @@ public class ItemContainer {
 						return;
 					}
 				}
-			} else if (item.getAmount() > 1 && !item.getDef().isStackable()) {
+			} else if (item.getAmount() > 1 && !item.getDef(player.getWorld()).isStackable()) {
 				item.setAmount(1);
 			}
 

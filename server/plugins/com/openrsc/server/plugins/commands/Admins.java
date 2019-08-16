@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.commands;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
@@ -27,7 +26,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.entity.update.Damage;
 import com.openrsc.server.model.snapshot.Chatlog;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.Region;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -47,32 +45,44 @@ import java.util.*;
 public final class Admins implements CommandListener {
 	private static final Logger LOGGER = LogManager.getLogger(Admins.class);
 
+	public static String messagePrefix = null;
+	public static String badSyntaxPrefix = null;
+
 	private Player petOwnerA;
 
-	private Point getRandomLocation() {
+	private Point getRandomLocation(Player player) {
 		Point location = Point.location(DataConversions.random(48, 91), DataConversions.random(575, 717));
 
 		if (!Formulae.isF2PLocation(location)) {
-			return getRandomLocation();
+			return getRandomLocation(player);
 		}
 
 		/*
-		 * TileValue tile = World.getWorld().getTile(location.getX(),
+		 * TileValue tile = player.getWorld().getTile(location.getX(),
 		 * location.getY()); if (tile.) { return getRandomLocation(); }
 		 */
 
-		TileValue value = World.getWorld().getTile(location.getX(), location.getY());
+		TileValue value = player.getWorld().getTile(location.getX(), location.getY());
 
 		if (value.diagWallVal != 0 || value.horizontalWallVal != 0 || value.verticalWallVal != 0
 			|| value.overlay != 0) {
-			return getRandomLocation();
+			return getRandomLocation(player);
 		}
 		return location;
 	}
 
 	public void onCommand(String cmd, String[] args, Player player) {
-		if (isCommandAllowed(player, cmd))
+		if (isCommandAllowed(player, cmd)) {
+
+			if(messagePrefix == null) {
+				messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
+			}
+			if(badSyntaxPrefix == null) {
+				badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
+			}
+
 			handleCommand(cmd, args, player);
+		}
 	}
 
 	public boolean isCommandAllowed(Player player, String cmd) {
@@ -83,8 +93,8 @@ public final class Admins implements CommandListener {
 	public void handleCommand(String cmd, String[] args, final Player player) {
 		int count1 = 0;
 		if (cmd.equalsIgnoreCase("cleannpcs")) {
-			Server.getServer().submitTask(() -> {
-				for (Npc n : world.getNpcs()) {
+			player.getWorld().getServer().submitTask(() -> {
+				for (Npc n : player.getWorld().getNpcs()) {
 					if (n.getOpponent() instanceof Player) {
 						if (n.getOpponent().isUnregistering()) {
 							n.setOpponent(null);
@@ -95,13 +105,13 @@ public final class Admins implements CommandListener {
 			player.message(messagePrefix + "Cleaned " + count1 + " NPC opponent references.");
 		} else if (cmd.equalsIgnoreCase("saveall")) {
 			int count = 0;
-			for (Player p : World.getWorld().getPlayers()) {
+			for (Player p : player.getWorld().getPlayers()) {
 				p.save();
 				count++;
 			}
 			player.message(messagePrefix + "Saved " + count + " players on server!");
 		} else if (cmd.equalsIgnoreCase("cleanregions")) {
-			Server.getServer().submitTask(() -> {
+			player.getWorld().getServer().submitTask(() -> {
 				final int HORIZONTAL_PLANES = (Constants.MAX_WIDTH / Constants.REGION_SIZE) + 1;
 				final int VERTICAL_PLANES = (Constants.MAX_HEIGHT / Constants.REGION_SIZE) + 1;
 				for (int x = 0; x < HORIZONTAL_PLANES; ++x) {
@@ -141,7 +151,7 @@ public final class Admins implements CommandListener {
 				items.add(itemId);
 			}
 
-			HashMap<String, GameTickEvent> events = Server.getServer().getGameEventHandler().getEvents();
+			HashMap<String, GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
 			for (GameTickEvent event : events.values()) {
 				if (!(event instanceof HolidayDropEvent)) continue;
 
@@ -149,11 +159,11 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			Server.getServer().getGameEventHandler().add(new HolidayDropEvent(executionCount, player, items));
+			player.getWorld().getServer().getGameEventHandler().add(new HolidayDropEvent(player.getWorld(), executionCount, player, items));
 			player.message(messagePrefix + "Starting holiday drop!");
 			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 21, messagePrefix + "Started holiday drop"));
 		} else if (cmd.equalsIgnoreCase("stopholidaydrop") || cmd.equalsIgnoreCase("cancelholidaydrop")) {
-			HashMap<String, GameTickEvent> events = Server.getServer().getGameEventHandler().getEvents();
+			HashMap<String, GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
 			for (GameTickEvent event : events.values()) {
 				if (!(event instanceof HolidayDropEvent)) continue;
 
@@ -163,7 +173,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 		} else if (cmd.equalsIgnoreCase("getholidaydrop") || cmd.equalsIgnoreCase("checkholidaydrop")) {
-			HashMap<String, GameTickEvent> events = Server.getServer().getGameEventHandler().getEvents();
+			HashMap<String, GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
 			for (GameTickEvent event : events.values()) {
 				if (!(event instanceof HolidayDropEvent)) continue;
 
@@ -177,7 +187,7 @@ public final class Admins implements CommandListener {
 
 			player.message(messagePrefix + "There is no running Holiday Drop Event");
 		} else if (cmd.equalsIgnoreCase("kills2")) {
-			Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
+			Player p = args.length > 0 ? player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
 			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
@@ -263,20 +273,20 @@ public final class Admins implements CommandListener {
 				boolean rdtHit = false;
 				Item rare = null;
 
-				if (world.standardTable.rollAccess(npcID, Functions.isWielding(player, com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
+				if (player.getWorld().standardTable.rollAccess(npcID, Functions.isWielding(player, com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
 					rdtHit = true;
-					rare = world.standardTable.rollItem(Functions.isWielding(player, com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), player);
-				} else if (world.gemTable.rollAccess(npcID, Functions.isWielding(player, com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
+					rare = player.getWorld().standardTable.rollItem(Functions.isWielding(player, com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), player);
+				} else if (player.getWorld().gemTable.rollAccess(npcID, Functions.isWielding(player, com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
 					rdtHit = true;
-					rare = world.gemTable.rollItem(Functions.isWielding(player, ItemId.RING_OF_WEALTH.id()), player);
+					rare = player.getWorld().gemTable.rollItem(Functions.isWielding(player, ItemId.RING_OF_WEALTH.id()), player);
 				}
 				if (rdtHit) {
-					if (rareDrops.containsKey(rare.getDef().getName().toLowerCase())) {
-						int amount = rareDrops.get(rare.getDef().getName().toLowerCase());
-						rareDrops.put(rare.getDef().getName().toLowerCase(), amount + rare.getAmount());
+					if (rareDrops.containsKey(rare.getDef(player.getWorld()).getName().toLowerCase())) {
+						int amount = rareDrops.get(rare.getDef(player.getWorld()).getName().toLowerCase());
+						rareDrops.put(rare.getDef(player.getWorld()).getName().toLowerCase(), amount + rare.getAmount());
 					} else
 					{
-						rareDrops.put(rare.getDef().getName().toLowerCase(), rare.getAmount());
+						rareDrops.put(rare.getDef(player.getWorld()).getName().toLowerCase(), rare.getAmount());
 					}
 				}
 			}
@@ -383,7 +393,7 @@ public final class Admins implements CommandListener {
 			}
 			System.out.println(Arrays.toString(hmap.entrySet().toArray()));
 		} else if (cmd.equalsIgnoreCase("restart")) {
-			World.restartCommand();
+			player.getWorld().restartCommand();
 		} else if (cmd.equalsIgnoreCase("gi") || cmd.equalsIgnoreCase("gitem") || cmd.equalsIgnoreCase("grounditem")) {
 			if (args.length < 1 || args.length == 4) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] (respawn_time) (amount) (x) (y)");
@@ -447,7 +457,7 @@ public final class Admins implements CommandListener {
 			}
 
 			Point itemLocation = new Point(x, y);
-			if ((world.getTile(itemLocation).traversalMask & 64) != 0) {
+			if ((player.getWorld().getTile(itemLocation).traversalMask & 64) != 0) {
 				player.message(messagePrefix + "Can not place a ground item here");
 				return;
 			}
@@ -457,18 +467,18 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			if (!world.withinWorld(x, y)) {
+			if (!player.getWorld().withinWorld(x, y)) {
 				player.message(messagePrefix + "Invalid coordinates");
 				return;
 			}
 
 			ItemLoc item = new ItemLoc(id, x, y, amount, respawnTime);
 			player.getWorld().getServer().getDatabaseConnection()
-				.executeUpdate("INSERT INTO `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+				.executeUpdate("INSERT INTO `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "grounditems`(`id`, `x`, `y`, `amount`, `respawn`) VALUES ('"
 					+ item.getId() + "','" + item.getX() + "','" + item.getY() + "','" + item.getAmount()
 					+ "','" + item.getRespawnTime() + "')");
-			World.getWorld().registerItem(new GroundItem(player.getWorld(), item));
+			player.getWorld().registerItem(new GroundItem(player.getWorld(), item));
 			player.message(messagePrefix + "Added ground item to database: " + player.getWorld().getServer().getEntityHandler().getItemDef(item.getId()).getName() + " with item ID " + item.getId() + " at " + itemLocation);
 		} else if (cmd.equalsIgnoreCase("rgi") || cmd.equalsIgnoreCase("rgitem") || cmd.equalsIgnoreCase("rgrounditem") || cmd.equalsIgnoreCase("removegi") || cmd.equalsIgnoreCase("removegitem") || cmd.equalsIgnoreCase("removegrounditem")) {
 			if (args.length == 1) {
@@ -500,7 +510,7 @@ public final class Admins implements CommandListener {
 				y = player.getY();
 			}
 
-			if (!world.withinWorld(x, y)) {
+			if (!player.getWorld().withinWorld(x, y)) {
 				player.message(messagePrefix + "Invalid coordinates");
 				return;
 			}
@@ -515,14 +525,14 @@ public final class Admins implements CommandListener {
 
 			player.message(messagePrefix + "Removed ground item from database: " + itemr.getDef().getName() + " with item ID " + itemr.getID());
 			player.getWorld().getServer().getDatabaseConnection()
-				.executeUpdate("DELETE FROM `" + Server.getServer().getConfig().MYSQL_TABLE_PREFIX
+				.executeUpdate("DELETE FROM `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "grounditems` WHERE `x` = '" + itemr.getX() + "' AND `y` =  '" + itemr.getY()
 					+ "' AND `id` = '" + itemr.getID() + "'");
-			World.getWorld().unregisterItem(itemr);
+			player.getWorld().unregisterItem(itemr);
 		} else if (cmd.equalsIgnoreCase("shutdown")) {
 			int seconds = 0;
-			if (Server.getServer().shutdownForUpdate(seconds)) {
-				for (Player p : world.getPlayers()) {
+			if (player.getWorld().getServer().shutdownForUpdate(seconds)) {
+				for (Player p : player.getWorld().getPlayers()) {
 					ActionSender.startShutdown(p, seconds);
 				}
 			}
@@ -546,12 +556,12 @@ public final class Admins implements CommandListener {
 			int minutes = seconds / 60;
 			int remainder = seconds % 60;
 
-			if (Server.getServer().shutdownForUpdate(seconds)) {
+			if (player.getWorld().getServer().shutdownForUpdate(seconds)) {
 				String message = "The server will be shutting down for updates in "
 					+ (minutes > 0 ? minutes + " minute" + (minutes > 1 ? "s" : "") + " " : "")
 					+ (remainder > 0 ? remainder + " second" + (remainder > 1 ? "s" : "") : "")
 					+ (reason.toString() == "" ? "" : ": % % " + reason);
-				for (Player p : world.getPlayers()) {
+				for (Player p : player.getWorld().getPlayers()) {
 					ActionSender.sendBox(p, message, false);
 					ActionSender.startShutdown(p, seconds);
 				}
@@ -586,7 +596,7 @@ public final class Admins implements CommandListener {
 
 			Player p;
 			if (args.length >= 3) {
-				p = world.getPlayer(DataConversions.usernameToHash(args[2]));
+				p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[2]));
 			} else {
 				p = player;
 			}
@@ -642,7 +652,7 @@ public final class Admins implements CommandListener {
 
 			Player p;
 			if (args.length >= 3) {
-				p = world.getPlayer(DataConversions.usernameToHash(args[2]));
+				p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[2]));
 			} else {
 				p = player;
 			}
@@ -669,7 +679,7 @@ public final class Admins implements CommandListener {
 			}
 			player.message("Removed bank items.");
 		} else if (cmd.equalsIgnoreCase("quickauction")) {
-			Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
+			Player p = args.length > 0 ? player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
 			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
@@ -680,7 +690,7 @@ public final class Admins implements CommandListener {
 			ActionSender.showBank(player);
 		} else if (cmd.equalsIgnoreCase("heal")) {
 			Player p = args.length > 0 ?
-				world.getPlayer(DataConversions.usernameToHash(args[0])) :
+				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
 			if (p == null) {
@@ -696,7 +706,7 @@ public final class Admins implements CommandListener {
 			player.message(messagePrefix + "Healed: " + p.getUsername());
 		} else if (cmd.equalsIgnoreCase("recharge") || cmd.equalsIgnoreCase("healprayer") || cmd.equalsIgnoreCase("healp")) {
 			Player p = args.length > 0 ?
-				world.getPlayer(DataConversions.usernameToHash(args[0])) :
+				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
 			if (p == null) {
@@ -716,7 +726,7 @@ public final class Admins implements CommandListener {
 			}
 
 			Player p = args.length > 1 ?
-				world.getPlayer(DataConversions.usernameToHash(args[0])) :
+				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
 			if (p == null) {
@@ -758,7 +768,7 @@ public final class Admins implements CommandListener {
 			}
 
 			Player p = args.length > 1 ?
-				world.getPlayer(DataConversions.usernameToHash(args[0])) :
+				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
 			if (p == null) {
@@ -797,7 +807,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
 			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
@@ -822,7 +832,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
 			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
@@ -857,7 +867,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
 			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
@@ -869,12 +879,12 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
+			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 				int wearableId;
 				for (int i = 0; i < Equipment.slots; i++) {
 					if (p.getEquipment().get(i) == null)
 						continue;
-					wearableId = p.getEquipment().get(i).getDef().getWearableId();
+					wearableId = p.getEquipment().get(i).getDef(player.getWorld()).getWearableId();
 					p.getEquipment().equip(i, null);
 					p.updateWornItems(i, p.getSettings().getAppearance().getSprite(i),
 							wearableId, false);
@@ -887,8 +897,8 @@ public final class Admins implements CommandListener {
 				Item i = iterator.next();
 				if (i.isWielded()) {
 					i.setWielded(false);
-					p.updateWornItems(i.getDef().getWieldPosition(), i.getDef().getAppearanceId(),
-							i.getDef().getWearableId(), false);
+					p.updateWornItems(i.getDef(player.getWorld()).getWieldPosition(), i.getDef(player.getWorld()).getAppearanceId(),
+							i.getDef(player.getWorld()).getWearableId(), false);
 				}
 				iterator.remove();
 			}
@@ -905,7 +915,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
 			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
@@ -1000,9 +1010,9 @@ public final class Admins implements CommandListener {
 							}
 						}
 
-						if (world.withinWorld(baseX + x, baseY + y)) {
-							if ((world.getTile(new Point(baseX + x, baseY + y)).traversalMask & 64) == 0) {
-								world.registerItem(new GroundItem(player.getWorld(), id, baseX + x, baseY + y, amount, (Player) null));
+						if (player.getWorld().withinWorld(baseX + x, baseY + y)) {
+							if ((player.getWorld().getTile(new Point(baseX + x, baseY + y)).traversalMask & 64) == 0) {
+								player.getWorld().registerItem(new GroundItem(player.getWorld(), id, baseX + x, baseY + y, amount, (Player) null));
 							}
 						}
 					}
@@ -1095,12 +1105,12 @@ public final class Admins implements CommandListener {
 								nextX = 1;
 							}
 						}
-						if (world.withinWorld(baseX + x, baseY + y)) {
-							if ((world.getTile(new Point(baseX + x, baseY + y)).traversalMask & 64) == 0) {
+						if (player.getWorld().withinWorld(baseX + x, baseY + y)) {
+							if ((player.getWorld().getTile(new Point(baseX + x, baseY + y)).traversalMask & 64) == 0) {
 								final Npc n = new Npc(player.getWorld(), id, baseX + x, baseY + y, baseX + x - 20, baseX + x + 20, baseY + y - 20, baseY + y + 20);
 								n.setShouldRespawn(false);
-								World.getWorld().registerNpc(n);
-								Server.getServer().getGameEventHandler().add(new SingleEvent(null, duration * 60000, "Spawn Multi NPC Command") {
+								player.getWorld().registerNpc(n);
+								player.getWorld().getServer().getGameEventHandler().add(new SingleEvent(player.getWorld(), null, duration * 60000, "Spawn Multi NPC Command") {
 									@Override
 									public void action() {
 										n.remove();
@@ -1129,14 +1139,14 @@ public final class Admins implements CommandListener {
 					msg.append(args[i]).append(" ");
 				msg.toString().trim();
 
-				final Npc npc = world.getNpc(npc_id, player.getX() - 10, player.getX() + 10, player.getY() - 10, player.getY() + 10);
+				final Npc npc = player.getWorld().getNpc(npc_id, player.getX() - 10, player.getX() + 10, player.getY() - 10, player.getY() + 10);
 				String message = DataConversions.upperCaseAllFirst(DataConversions.stripBadCharacters(msg.toString()));
 
 				if (npc != null) {
 					for (Player playerToChat : npc.getViewArea().getPlayersInView()) {
-						Server.getServer().getGameUpdater().updateNpcAppearances(playerToChat); // First call is to flush any NPC chat that is generated by other server processes
+						player.getWorld().getServer().getGameUpdater().updateNpcAppearances(playerToChat); // First call is to flush any NPC chat that is generated by other server processes
 						npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, message, playerToChat));
-						Server.getServer().getGameUpdater().updateNpcAppearances(playerToChat);
+						player.getWorld().getServer().getGameUpdater().updateNpcAppearances(playerToChat);
 						npc.getUpdateFlags().setChatMessage(null);
 					}
 				} else {
@@ -1156,7 +1166,7 @@ public final class Admins implements CommandListener {
 				msg.append(args[i]).append(" ");
 			msg.toString().trim();
 
-			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
@@ -1172,15 +1182,15 @@ public final class Admins implements CommandListener {
 			ChatMessage chatMessage = new ChatMessage(p, message);
 			// First of second call to updatePlayerAppearance is to send out messages generated by other server processes so they don't get overwritten
 			for (Player playerToChat : p.getViewArea().getPlayersInView()) {
-				Server.getServer().getGameUpdater().updatePlayerAppearances(playerToChat);
+				player.getWorld().getServer().getGameUpdater().updatePlayerAppearances(playerToChat);
 			}
 			p.getUpdateFlags().setChatMessage(chatMessage);
 			for (Player playerToChat : p.getViewArea().getPlayersInView()) {
-				Server.getServer().getGameUpdater().updatePlayerAppearances(playerToChat);
+				player.getWorld().getServer().getGameUpdater().updatePlayerAppearances(playerToChat);
 			}
 			p.getUpdateFlags().setChatMessage(null);
-			player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(p.getUsername(), chatMessage.getMessageString()));
-			World.getWorld().addEntryToSnapshots(new Chatlog(p.getUsername(), chatMessage.getMessageString()));
+			player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(p.getWorld(), p.getUsername(), chatMessage.getMessageString()));
+			player.getWorld().addEntryToSnapshots(new Chatlog(p.getUsername(), chatMessage.getMessageString()));
 		} else if ((cmd.equalsIgnoreCase("smitenpc") || cmd.equalsIgnoreCase("damagenpc") || cmd.equalsIgnoreCase("dmgnpc"))) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] (damage)");
@@ -1193,7 +1203,7 @@ public final class Admins implements CommandListener {
 
 			try {
 				id = Integer.parseInt(args[0]);
-				n = world.getNpc(id, player.getX() - 10, player.getX() + 10, player.getY() - 10, player.getY() + 10);
+				n = player.getWorld().getNpc(id, player.getX() - 10, player.getX() + 10, player.getY() - 10, player.getY() + 10);
 				if (n == null) {
 					player.message(messagePrefix + "Unable to find the specified NPC");
 					return;
@@ -1215,8 +1225,8 @@ public final class Admins implements CommandListener {
 			}
 
 			GameObject sara = new GameObject(player.getWorld(), n.getLocation(), 1031, 0, 0);
-			world.registerGameObject(sara);
-			world.delayedRemoveObject(sara, 600);
+			player.getWorld().registerGameObject(sara);
+			player.getWorld().delayedRemoveObject(sara, 600);
 			n.getUpdateFlags().setDamage(new Damage(player, damage));
 			n.getSkills().subtractLevel(Skills.HITS, damage);
 			if (n.getSkills().getLevel(Skills.HITS) < 1)
@@ -1253,7 +1263,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			Server.getServer().getGameEventHandler().add(new NpcLootEvent(player.getLocation(), npcID, npcAmt, itemID, itemAmt, duration));
+			player.getWorld().getServer().getGameEventHandler().add(new NpcLootEvent(player.getWorld(), player.getLocation(), npcID, npcAmt, itemID, itemAmt, duration));
 			player.message(messagePrefix + "Spawned " + npcAmt + " " + npcDef.getName());
 			player.message(messagePrefix + "Loot is " + itemAmt + " " + itemDef.getName());
 		} else if (cmd.equalsIgnoreCase("chickenevent")) {
@@ -1305,7 +1315,7 @@ public final class Admins implements CommandListener {
 				npcLifeTime = 10;
 			}
 
-			HashMap<String, GameTickEvent> events = Server.getServer().getGameEventHandler().getEvents();
+			HashMap<String, GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
 			for (GameTickEvent event : events.values()) {
 				if (!(event instanceof HourlyNpcLootEvent)) continue;
 
@@ -1313,10 +1323,10 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			Server.getServer().getGameEventHandler().add(new HourlyNpcLootEvent(hours, "Oh no! Chickens are invading Lumbridge!", player.getLocation(), 3, npcAmount, 10, itemAmount, npcLifeTime));
+			player.getWorld().getServer().getGameEventHandler().add(new HourlyNpcLootEvent(player.getWorld(), hours, "Oh no! Chickens are invading Lumbridge!", player.getLocation(), 3, npcAmount, 10, itemAmount, npcLifeTime));
 			player.message(messagePrefix + "Chicken event started.");
 		} else if (cmd.equalsIgnoreCase("stopnpcevent") || cmd.equalsIgnoreCase("cancelnpcevent")) {
-			HashMap<String, GameTickEvent> events = Server.getServer().getGameEventHandler().getEvents();
+			HashMap<String, GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
 			for (GameTickEvent event : events.values()) {
 				if (!(event instanceof HourlyNpcLootEvent)) continue;
 
@@ -1325,7 +1335,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 		} else if (cmd.equalsIgnoreCase("getnpcevent") || cmd.equalsIgnoreCase("checknpcevent")) {
-			HashMap<String, GameTickEvent> events = Server.getServer().getGameEventHandler().getEvents();
+			HashMap<String, GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
 			for (GameTickEvent event : events.values()) {
 				if (!(event instanceof HourlyNpcLootEvent)) continue;
 
@@ -1385,7 +1395,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
 			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
@@ -1436,8 +1446,8 @@ public final class Admins implements CommandListener {
 
 			try {
 				id = Integer.parseInt(args[0]);
-				n = world.getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
-				j = world.getNpc(11, n.getX() - 5, n.getX() + 5, n.getY() - 10, n.getY() + 10);
+				n = player.getWorld().getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
+				j = player.getWorld().getNpc(11, n.getX() - 5, n.getX() + 5, n.getY() - 10, n.getY() + 10);
 				if (n == null) {
 					player.message(messagePrefix + "Unable to find the specified NPC");
 					return;
@@ -1462,13 +1472,13 @@ public final class Admins implements CommandListener {
 				damage = 1;
 			}
 
-			Server.getServer().getGameEventHandler().add(new ProjectileEvent(n, player, damage, 2));
+			player.getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(player.getWorld(), n, player, damage, 2));
 
 			String message = "Die " + player.getUsername() + "!";
 			for (Player playerToChat : n.getViewArea().getPlayersInView()) {
-				Server.getServer().getGameUpdater().updateNpcAppearances(playerToChat); // First call is to flush any NPC chat that is generated by other server processes
+				player.getWorld().getServer().getGameUpdater().updateNpcAppearances(playerToChat); // First call is to flush any NPC chat that is generated by other server processes
 				n.getUpdateFlags().setChatMessage(new ChatMessage(n, message, playerToChat));
-				Server.getServer().getGameUpdater().updateNpcAppearances(playerToChat);
+				player.getWorld().getServer().getGameUpdater().updateNpcAppearances(playerToChat);
 				n.getUpdateFlags().setChatMessage(null);
 			}
 
@@ -1485,8 +1495,8 @@ public final class Admins implements CommandListener {
 
 			try {
 				id = Integer.parseInt(args[0]);
-				n = world.getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
-				j = world.getNpc(11, n.getX() - 5, n.getX() + 5, n.getY() - 10, n.getY() + 10);
+				n = player.getWorld().getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
+				j = player.getWorld().getNpc(11, n.getX() - 5, n.getX() + 5, n.getY() - 10, n.getY() + 10);
 				if (n == null) {
 					player.message(messagePrefix + "Unable to find the specified NPC");
 					return;
@@ -1511,13 +1521,13 @@ public final class Admins implements CommandListener {
 				type = 1;
 			}
 
-			Server.getServer().getGameEventHandler().add(new ProjectileEvent(n, player, 0, type));
+			player.getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(player.getWorld(), n, player, 0, type));
 
 			String message = "Die " + player.getUsername() + "!";
 			for (Player playerToChat : n.getViewArea().getPlayersInView()) {
-				Server.getServer().getGameUpdater().updateNpcAppearances(playerToChat); // First call is to flush any NPC chat that is generated by other server processes
+				player.getWorld().getServer().getGameUpdater().updateNpcAppearances(playerToChat); // First call is to flush any NPC chat that is generated by other server processes
 				n.getUpdateFlags().setChatMessage(new ChatMessage(n, message, playerToChat));
-				Server.getServer().getGameUpdater().updateNpcAppearances(playerToChat);
+				player.getWorld().getServer().getGameUpdater().updateNpcAppearances(playerToChat);
 				n.getUpdateFlags().setChatMessage(null);
 			}
 
@@ -1534,8 +1544,8 @@ public final class Admins implements CommandListener {
 
 			try {
 				id = Integer.parseInt(args[0]);
-				n = world.getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
-				j = world.getNpc(11, n.getX() - 5, n.getX() + 5, n.getY() - 10, n.getY() + 10);
+				n = player.getWorld().getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
+				j = player.getWorld().getNpc(11, n.getX() - 5, n.getX() + 5, n.getY() - 10, n.getY() + 10);
 				if (n == null) {
 					player.message(messagePrefix + "Unable to find the specified NPC");
 					return;
@@ -1548,7 +1558,7 @@ public final class Admins implements CommandListener {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id] [victim_id]");
 				return;
 			}
-			n.setRangeEventNpc(new RangeEventNpc(n, j));
+			n.setRangeEventNpc(new RangeEventNpc(player.getWorld(), n, j));
 		} else if (cmd.equalsIgnoreCase("npcfightevent")) {
 			if (args.length < 2) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id] [victim_id]");
@@ -1563,8 +1573,8 @@ public final class Admins implements CommandListener {
 			try {
 				id = Integer.parseInt(args[0]);
 				id2 = Integer.parseInt(args[1]);
-				n = world.getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
-				j = world.getNpc(id2, n.getX() - 5, n.getX() + 5, n.getY() - 10, n.getY() + 10);
+				n = player.getWorld().getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
+				j = player.getWorld().getNpc(id2, n.getX() - 5, n.getX() + 5, n.getY() - 10, n.getY() + 10);
 				if (n == null) {
 					player.message(messagePrefix + "Unable to find the specified NPC");
 					return;
@@ -1588,7 +1598,7 @@ public final class Admins implements CommandListener {
 			Npc n;
 			try {
 				id = Integer.parseInt(args[0]);
-				n = world.getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
+				n = player.getWorld().getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
 				if (n == null) {
 					player.message(messagePrefix + "Unable to find the specified NPC");
 					return;
@@ -1608,8 +1618,8 @@ public final class Admins implements CommandListener {
 			Npc n;
 			Npc j;
 			id = Integer.parseInt(args[0]);
-			n = world.getNpc(95, 212, 220, 448, 453);
-			j = world.getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
+			n = player.getWorld().getNpc(95, 212, 220, 448, 453);
+			j = player.getWorld().getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
 			try {
 				if (n == null) {
 					player.message(messagePrefix + "Unable to find the banker");
@@ -1622,7 +1632,7 @@ public final class Admins implements CommandListener {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id]");
 				return;
 			}
-			j.setBankEventNpc(new BankEventNpc(j, n));
+			j.setBankEventNpc(new BankEventNpc(player.getWorld(), j, n));
 		} else if (cmd.equalsIgnoreCase("addskull")) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc id]");
@@ -1632,7 +1642,7 @@ public final class Admins implements CommandListener {
 			int id;
 			Npc j;
 			id = Integer.parseInt(args[0]);
-			j = world.getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
+			j = player.getWorld().getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
 			try {
 				if (j == null) {
 					player.message(messagePrefix + "Unable to find the specified npc");
@@ -1652,7 +1662,7 @@ public final class Admins implements CommandListener {
 			int id;
 			Npc j;
 			id = Integer.parseInt(args[0]);
-			j = world.getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
+			j = player.getWorld().getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
 			try {
 				if (j == null) {
 					player.message(messagePrefix + "Unable to find the specified npc");
@@ -1673,7 +1683,7 @@ public final class Admins implements CommandListener {
 			int id;
 			Npc j;
 			id = Integer.parseInt(args[0]);
-			j = world.getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
+			j = player.getWorld().getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
 			try {
 				if (j == null) {
 					player.message(messagePrefix + "Unable to find the specified npc");
@@ -1695,7 +1705,7 @@ public final class Admins implements CommandListener {
 			int id;
 			Npc j;
 			id = Integer.parseInt(args[0]);
-			j = world.getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
+			j = player.getWorld().getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
 			try {
 				if (j == null) {
 					player.message(messagePrefix + "Unable to find the specified npc");
@@ -1726,7 +1736,7 @@ public final class Admins implements CommandListener {
 			def = Integer.parseInt(args[2]);
 			str = Integer.parseInt(args[3]);
 			hp = Integer.parseInt(args[4]);
-			j = world.getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
+			j = player.getWorld().getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
 			try {
 				if (j == null) {
 					player.message(messagePrefix + "Unable to find the specified npc");
@@ -1747,7 +1757,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
 			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
@@ -1796,7 +1806,7 @@ public final class Admins implements CommandListener {
 
 			try {
 				id = Integer.parseInt(args[0]);
-				n = world.getNpc(id, player.getX() - 7, player.getX() + 7, player.getY() - 10, player.getY() + 10);
+				n = player.getWorld().getNpc(id, player.getX() - 7, player.getX() + 7, player.getY() - 10, player.getY() + 10);
 				if (n == null) {
 					player.message(messagePrefix + "Unable to find the specified NPC");
 					return;
@@ -1805,10 +1815,10 @@ public final class Admins implements CommandListener {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id]");
 				return;
 			}
-			n.setRangeEventNpc(new RangeEventNpc(n, player));
+			n.setRangeEventNpc(new RangeEventNpc(player.getWorld(), n, player));
 		} else if (cmd.equalsIgnoreCase("ip")) {
 			Player p = args.length > 0 ?
-				world.getPlayer(DataConversions.usernameToHash(args[0])) :
+				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
 			if (p == null) {
@@ -1819,7 +1829,7 @@ public final class Admins implements CommandListener {
 			player.message(messagePrefix + p.getUsername() + " IP address: " + p.getCurrentIP());
 		} else if (cmd.equalsIgnoreCase("appearance")) {
 			Player p = args.length > 0 ?
-				world.getPlayer(DataConversions.usernameToHash(args[0])) :
+				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
 			if (p == null) {
@@ -1880,8 +1890,8 @@ public final class Admins implements CommandListener {
 				player.getX() - radius, player.getX() + radius,
 				player.getY() - radius, player.getY() + radius);
 			n.setShouldRespawn(false);
-			World.getWorld().registerNpc(n);
-			Server.getServer().getGameEventHandler().add(new SingleEvent(null, time * 60000, "Spawn NPC Command") {
+			player.getWorld().registerNpc(n);
+			player.getWorld().getServer().getGameEventHandler().add(new SingleEvent(player.getWorld(), null, time * 60000, "Spawn NPC Command") {
 				@Override
 				public void action() {
 					n.remove();

@@ -1,6 +1,5 @@
 package com.openrsc.server.model.container;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -27,20 +26,16 @@ public class Bank {
 		public Item[] equipment;
 		public boolean changed = false;
 
-		public Preset() {
+		public Preset(Player player) {
 			inventory = new Item[Inventory.MAX_SIZE];
 			equipment = new Item[Equipment.slots];
-			for (int i = 0; i < inventory.length; i++)
-				inventory[i] = new Item();
-			for (int i = 0; i < equipment.length; i++)
-				equipment[i] = new Item();
 		}
 	}
 
 	public Bank(Player player) {
 		this.player = player;
 		for (int i = 0; i < this.presets.length; i++) {
-			presets[i] = new Preset();
+			presets[i] = new Preset(player);
 			for (int j = 0; j < presets[i].inventory.length; j++) {
 				this.presets[i].inventory[j] = new Item(-1, 0);
 			}
@@ -258,14 +253,14 @@ public class Bank {
 
 	public void wieldItem(int bankslot, boolean sound) {
 		Item item = get(bankslot);
-		if (item.getDef() == null)
+		if (item.getDef(player.getWorld()) == null)
 			return;
 
-		if ( !item.getDef().isStackable() && player.getEquipment().get(item.getDef().getWieldPosition()) != null
-			&& item.getID() == player.getEquipment().get(item.getDef().getWieldPosition()).getID())
+		if ( !item.getDef(player.getWorld()).isStackable() && player.getEquipment().get(item.getDef(player.getWorld()).getWieldPosition()) != null
+			&& item.getID() == player.getEquipment().get(item.getDef(player.getWorld()).getWieldPosition()).getID())
 			return;
 
-		if (!Functions.canWield(player, item) || !item.getDef().isWieldable()) {
+		if (!Functions.canWield(player, item) || !item.getDef(player.getWorld()).isWieldable()) {
 			return;
 		}
 
@@ -276,8 +271,8 @@ public class Bank {
 		Item i;
 		for (int p = 0; p < Equipment.slots; p++) {
 			i = player.getEquipment().get(p);
-			if (i != null && item.wieldingAffectsItem(i)) {
-				if (item.getDef().isStackable()) {
+			if (i != null && item.wieldingAffectsItem(player.getWorld(), i)) {
+				if (item.getDef(player.getWorld()).isStackable()) {
 					if (item.getID() == i.getID())
 						continue;
 				}
@@ -293,15 +288,15 @@ public class Bank {
 			return;
 		}
 
-		int amountToRemove = item.getDef().isStackable() ? item.getAmount() : 1;
+		int amountToRemove = item.getDef(player.getWorld()).isStackable() ? item.getAmount() : 1;
 		remove(item.getID(), amountToRemove);
 		for (int p = 0; p < Equipment.slots; p++) {
 			i = player.getEquipment().get(p);
-			if (i != null && item.wieldingAffectsItem(i)) {
-				if (item.getDef().isStackable()) {
+			if (i != null && item.wieldingAffectsItem(player.getWorld(), i)) {
+				if (item.getDef(player.getWorld()).isStackable()) {
 					if (item.getID() == i.getID()) {
 						i.setAmount(i.getAmount() + item.getAmount());
-						ActionSender.updateEquipmentSlot(player, i.getDef().getWieldPosition());
+						ActionSender.updateEquipmentSlot(player, i.getDef(player.getWorld()).getWieldPosition());
 						return;
 					}
 				}
@@ -312,15 +307,15 @@ public class Bank {
 		if (sound)
 			player.playSound("click");
 
-		player.updateWornItems(item.getDef().getWieldPosition(), item.getDef().getAppearanceId(),
-				item.getDef().getWearableId(), true);
-		player.getEquipment().equip(item.getDef().getWieldPosition(), new Item(item.getID(), amountToRemove));
+		player.updateWornItems(item.getDef(player.getWorld()).getWieldPosition(), item.getDef(player.getWorld()).getAppearanceId(),
+				item.getDef(player.getWorld()).getWearableId(), true);
+		player.getEquipment().equip(item.getDef(player.getWorld()).getWieldPosition(), new Item(item.getID(), amountToRemove));
 		ActionSender.sendEquipmentStats(player);
 	}
 
 	public boolean unwieldItem(Item affectedItem, boolean sound) {
 
-		if (affectedItem == null || !affectedItem.isWieldable()) {
+		if (affectedItem == null || !affectedItem.isWieldable(player.getWorld())) {
 			return false;
 		}
 
@@ -340,10 +335,10 @@ public class Bank {
 		if (sound) {
 			player.playSound("click");
 		}
-		player.updateWornItems(affectedItem.getDef().getWieldPosition(),
-			player.getSettings().getAppearance().getSprite(affectedItem.getDef().getWieldPosition()),
-			affectedItem.getDef().getWearableId(), false);
-		player.getEquipment().equip(affectedItem.getDef().getWieldPosition(), null);
+		player.updateWornItems(affectedItem.getDef(player.getWorld()).getWieldPosition(),
+			player.getSettings().getAppearance().getSprite(affectedItem.getDef(player.getWorld()).getWieldPosition()),
+			affectedItem.getDef(player.getWorld()).getWearableId(), false);
+		player.getEquipment().equip(affectedItem.getDef(player.getWorld()).getWieldPosition(), null);
 		add(affectedItem);
 		return true;
 	}
@@ -451,7 +446,7 @@ public class Bank {
 			}
 		}
 
-		if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			//Loop through their equipment and add it to the hashmap
 			for (int i = 0; i < Equipment.slots; i++) {
 				tempItem = player.getEquipment().get(i);
@@ -477,12 +472,12 @@ public class Bank {
 				player.getEquipment().remove(i);
 		}
 
-		if (Server.getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			//Attempt to equip the preset equipment
 			int wearableId;
 			for (int i = 0; i < presets[slot].equipment.length; i++) {
 				Item presetEquipment = presets[slot].equipment[i];
-				if (presetEquipment.getDef() == null)
+				if (presetEquipment.getDef(player.getWorld()) == null)
 					continue;
 
 				presetEquipment.setWielded(false);
@@ -490,18 +485,18 @@ public class Bank {
 					int presetAmount = presetEquipment.getAmount();
 					int ownedAmount = itemsOwned.get(presetEquipment.getID());
 					if (presetAmount > ownedAmount) {
-						player.message("Preset error: Requested item missing " + presetEquipment.getDef().getName());
+						player.message("Preset error: Requested item missing " + presetEquipment.getDef(player.getWorld()).getName());
 						presetAmount = ownedAmount;
 					}
 					if (presetAmount > 0) {
-						if (player.getSkills().getMaxStat(presetEquipment.getDef().getRequiredSkillIndex()) < presetEquipment.getDef().getRequiredLevel()) {
-							player.message("Unable to equip " + presetEquipment.getDef().getName() + " due to lack of skill.");
+						if (player.getSkills().getMaxStat(presetEquipment.getDef(player.getWorld()).getRequiredSkillIndex()) < presetEquipment.getDef(player.getWorld()).getRequiredLevel()) {
+							player.message("Unable to equip " + presetEquipment.getDef(player.getWorld()).getName() + " due to lack of skill.");
 							continue;
 						}
-						player.getEquipment().equip(presetEquipment.getDef().getWieldPosition(), new Item(presetEquipment.getID(), presetAmount));
-						wearableId = presetEquipment.getDef().getWearableId();
+						player.getEquipment().equip(presetEquipment.getDef(player.getWorld()).getWieldPosition(), new Item(presetEquipment.getID(), presetAmount));
+						wearableId = presetEquipment.getDef(player.getWorld()).getWearableId();
 						player.updateWornItems(i,
-							presetEquipment.getDef().getAppearanceId(),
+							presetEquipment.getDef(player.getWorld()).getAppearanceId(),
 							wearableId, true);
 						if (presetAmount == ownedAmount) {
 							itemsOwned.remove(presetEquipment.getID());
@@ -510,7 +505,7 @@ public class Bank {
 						}
 					}
 				} else {
-					player.message("Preset error: Requested item missing " + presetEquipment.getDef().getName());
+					player.message("Preset error: Requested item missing " + presetEquipment.getDef(player.getWorld()).getName());
 				}
 			}
 		}
@@ -519,7 +514,7 @@ public class Bank {
 		//Attempt to load the preset inventory
 		for (int i = 0; i < presets[slot].inventory.length; i++) {
 			Item presetInventory = presets[slot].inventory[i];
-			if (presetInventory.getDef() == null) {
+			if (presetInventory.getDef(player.getWorld()) == null) {
 				continue;
 			}
 			presetInventory.setWielded(false);
@@ -527,7 +522,7 @@ public class Bank {
 				int presetAmount = presetInventory.getAmount();
 				int ownedAmount = itemsOwned.get(presetInventory.getID());
 				if (presetAmount > ownedAmount) {
-					player.message("Preset error: Requested item missing " + presetInventory.getDef().getName());
+					player.message("Preset error: Requested item missing " + presetInventory.getDef(player.getWorld()).getName());
 					presetAmount = ownedAmount;
 				}
 				if (presetAmount > 0) {
@@ -539,7 +534,7 @@ public class Bank {
 					}
 				}
 			} else {
-				player.message("Preset error: Requested item missing " + presetInventory.getDef().getName());
+				player.message("Preset error: Requested item missing " + presetInventory.getDef(player.getWorld()).getName());
 			}
 		}
 
