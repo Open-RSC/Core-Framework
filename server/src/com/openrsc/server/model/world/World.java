@@ -401,6 +401,10 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 			getClanManager().initialize();
 			getPartyManager().initialize();
 
+			if(getMarket() != null) {
+				getMarket().start();
+			}
+
 			getWorldLoader().loadWorld();
 			getWorldLoader().getWorldPopulator().populateWorld();
 			shutdownCheck();
