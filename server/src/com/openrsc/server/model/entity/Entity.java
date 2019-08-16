@@ -50,7 +50,7 @@ public abstract class Entity {
 		}
 		return fail;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public synchronized <T> T getSyncAttribute(String string) {
 		return (T) syncAttributes.get(string);
@@ -141,7 +141,7 @@ public abstract class Entity {
 	public void setAttribute(String string, Object object) {
 		attributes.put(string, object);
 	}
-	
+
 	public synchronized void setSyncAttribute(String string, Object object) {
 		syncAttributes.put(string, object);
 	}
