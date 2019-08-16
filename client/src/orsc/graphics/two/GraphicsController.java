@@ -1045,6 +1045,9 @@ public class GraphicsController {
 				this.clipBottom = 29;
 			}
 
+			if (blueMask == 0)
+				blueMask = 0xFFFFFF;
+
 			try {
 				int var27 = srcStartX;
 
@@ -1083,7 +1086,7 @@ public class GraphicsController {
 									spritePixelR = (spritePixelR * mask2R) >> 8;
 									spritePixelG = (spritePixelG * mask2G) >> 8;
 									spritePixelB = (spritePixelB * mask2B) >> 8;
-								} else if (spritePixelR == spritePixelG && spritePixelB != spritePixelG) {
+								} else if (blueMask != 0xFFFFFF && spritePixelR == spritePixelG && spritePixelB != spritePixelG) {
 									int blueMaskR = blueMask >> 16 & 0xFF;
 									int blueMaskG = blueMask >> 8 & 0xFF;
 									int blueMaskB = blueMask & 0xFF;
@@ -2801,7 +2804,7 @@ public class GraphicsController {
 									newR = (spritePixelR * newR) >> 8;
 									newG = (spritePixelG * newG) >> 8;
 									newB = (spritePixelB * newB) >> 8;
-								} else if (newR == newG && newB != newR) {//blue mask?
+								} else if (blueMask != 0xFFFFFF && newR == newG && newB != newR) {//blue mask?
 									int blueMaskR = blueMask >> 16 & 0xFF;
 									int blueMaskG = blueMask >> 8 & 0xFF;
 									int blueMaskB = blueMask & 0xFF;
