@@ -354,7 +354,7 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 		if (removeItem(player, ItemId.UNLIT_TORCH.id(), 1)) {
 			player.message("you place the smouldering twigs to your torch");
 			player.message("your torch lights");
-			player.getInventory().add(new Item());
+			player.getInventory().add(new Item(ItemId.LIT_TORCH.id()));
 			player.incExp(Skills.FIREMAKING, 450, true);
 			if (player.getQuestStage(Quests.SEA_SLUG) == 5 && !player.getCache().hasKey("lit_torch")) {
 				player.getCache().store("lit_torch", true);

@@ -205,10 +205,10 @@ public class Smelting implements InvUseOnObjectListener,
 						else
 							addItem(p, smelt.getSmeltBarId(), 1);
 
-						p.message("You retrieve a bar of " + new Item().getDef(p.getWorld()).getName().toLowerCase().replaceAll("bar", ""));
+						p.message("You retrieve a bar of " + new Item(smelt.getSmeltBarId()).getDef(p.getWorld()).getName().toLowerCase().replaceAll("bar", ""));
 
 						/** Gauntlets of Goldsmithing provide an additional 23 experience when smelting gold ores **/
-						if (p.getInventory().wielding(ItemId.GAUNTLETS_OF_GOLDSMITHING.id()) && new Item().getID() == ItemId.GOLD_BAR.id()) {
+						if (p.getInventory().wielding(ItemId.GAUNTLETS_OF_GOLDSMITHING.id()) && new Item(smelt.getSmeltBarId()).getID() == ItemId.GOLD_BAR.id()) {
 							p.incExp(Skills.SMITHING, smelt.getXp() + 45, true);
 						} else {
 							p.incExp(Skills.SMITHING, smelt.getXp(), true);

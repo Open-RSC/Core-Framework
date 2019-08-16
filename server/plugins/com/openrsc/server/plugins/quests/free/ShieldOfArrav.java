@@ -121,8 +121,8 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 				} else if (command.equalsIgnoreCase("close")) {
 					closeGenericObject(obj, player, PHOENIX_CHEST_CLOSED, "You close the chest");
 				} else {
-					if (player.getBank().contains(new Item())
-							|| player.getInventory().contains(new Item())) {
+					if (player.getBank().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_1.id()))
+							|| player.getInventory().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_1.id()))) {
 							message(player, "You search the chest", "The chest is empty");
 							return;
 					} else if (isPhoenixGang(player)) {
@@ -141,8 +141,8 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 				} else if (command.equalsIgnoreCase("close")) {
 					closeCupboard(obj, player, BARM_CUPBOARD_CLOSED);
 				} else {
-					if (player.getBank().contains(new Item())
-						|| player.getInventory().contains(new Item())) {
+					if (player.getBank().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_2.id()))
+						|| player.getInventory().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_2.id()))) {
 						message(player, "You search the cupboard", "The cupboard is empty");
 						return;
 					} else if (isBlackArmGang(player)) {

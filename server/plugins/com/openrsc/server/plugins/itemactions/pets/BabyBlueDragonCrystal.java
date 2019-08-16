@@ -48,9 +48,9 @@ public class BabyBlueDragonCrystal implements InvActionListener, InvActionExecut
 	@Override
 	public void onPlayerLogin(Player player) {
 		if (player.getInventory().hasItemId(ItemId.A_GLOWING_RED_CRYSTAL.id())) {
-			if (player.getInventory().remove(new Item()) != -1) {
-				player.getInventory().remove(new Item());
-				player.getInventory().add(new Item());
+			if (player.getInventory().remove(new Item(ItemId.A_GLOWING_RED_CRYSTAL.id())) != -1) {
+				player.getInventory().remove(new Item(ItemId.A_GLOWING_RED_CRYSTAL.id()));
+				player.getInventory().add(new Item(ItemId.A_RED_CRYSTAL.id()));
 			}
 		}
 	}

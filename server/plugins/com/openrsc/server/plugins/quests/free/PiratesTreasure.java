@@ -323,13 +323,13 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 				if (p.getCache().hasKey("rum_delivered") && p.getCache().getBoolean("rum_delivered")) {
 					message(p, "There are a lot of bananas in the crate",
 							"You find your bottle of rum in amoungst the bananas");
-					p.getInventory().add(new Item());
+					p.getInventory().add(new Item(ItemId.KARAMJA_RUM.id()));
 					p.getCache().remove("rum_delivered");
 				}
 				message(p, "Do you want to take a banana?");
 				int wantabanana = showMenu(p, "Yes", "No");
 				if (wantabanana == 0) {
-					p.getInventory().add(new Item());
+					p.getInventory().add(new Item(ItemId.BANANA.id()));
 					p.playerServerMessage(MessageType.QUEST, "you take a banana");
 				}
 				break;

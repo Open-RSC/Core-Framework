@@ -163,7 +163,7 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 								"Yes your killing blow must be done with a stake",
 								"I jusht happen to have one on me");
 							p.message("Dr Harlow hands you a stake");
-							p.getInventory().add(new Item());
+							p.getInventory().add(new Item(ItemId.STAKE.id()));
 							npcTalk(p,
 								n,
 								"You'll need a hammer to hand to drive it in properly as well",
@@ -228,7 +228,7 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 				player.message("You search the cupboard");
 				if (!player.getInventory().hasItemId(ItemId.GARLIC.id())) {
 					player.message("You find a clove of garlic that you take");
-					player.getInventory().add(new Item());
+					player.getInventory().add(new Item(ItemId.GARLIC.id()));
 				} else {
 					player.message("The cupboard is empty");
 				}

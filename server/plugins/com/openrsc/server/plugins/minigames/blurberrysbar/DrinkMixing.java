@@ -303,7 +303,7 @@ public class DrinkMixing implements InvUseOnItemListener, InvUseOnItemExecutiveL
 		}
 
 		public boolean isValid(int i, int is) {
-			return compareItemsIds(new Item(), new Item(), i, is);
+			return compareItemsIds(new Item(itemID), new Item(itemIDOther), i, is);
 		}
 	}
 }

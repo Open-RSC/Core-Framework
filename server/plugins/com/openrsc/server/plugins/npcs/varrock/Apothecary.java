@@ -39,7 +39,7 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 				p.message("Which the apothecary shakes up in vial of strange liquid");
 				npcTalk(p, n, "Here is what you need");
 				p.message("The apothecary gives you a Cadava potion");
-				p.getInventory().add(new Item());
+				p.getInventory().add(new Item(ItemId.CADAVA.id()));
 				p.updateQuestStage(Quests.ROMEO_N_JULIET, 6);
 			}
 			return;

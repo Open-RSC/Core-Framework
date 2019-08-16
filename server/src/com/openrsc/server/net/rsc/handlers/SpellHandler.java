@@ -45,10 +45,10 @@ public class SpellHandler implements PacketHandler {
 	private static TreeMap<Integer, Item[]> staffs = new TreeMap<Integer, Item[]>();
 
 	static {
-		staffs.put(com.openrsc.server.constants.ItemId.FIRE_RUNE.id(), new Item[]{new Item(), new Item(), new Item()}); // Fire-Rune
-		staffs.put(com.openrsc.server.constants.ItemId.WATER_RUNE.id(), new Item[]{new Item(), new Item(), new Item()}); // Water-Rune
-		staffs.put(com.openrsc.server.constants.ItemId.AIR_RUNE.id(), new Item[]{new Item(), new Item(), new Item()}); // Air-Rune
-		staffs.put(com.openrsc.server.constants.ItemId.EARTH_RUNE.id(), new Item[]{new Item(), new Item(), new Item()}); // Earth-Rune
+		staffs.put(com.openrsc.server.constants.ItemId.FIRE_RUNE.id(), new Item[]{new Item(com.openrsc.server.constants.ItemId.STAFF_OF_FIRE.id()), new Item(com.openrsc.server.constants.ItemId.BATTLESTAFF_OF_FIRE.id()), new Item(com.openrsc.server.constants.ItemId.ENCHANTED_BATTLESTAFF_OF_FIRE.id())}); // Fire-Rune
+		staffs.put(com.openrsc.server.constants.ItemId.WATER_RUNE.id(), new Item[]{new Item(com.openrsc.server.constants.ItemId.STAFF_OF_WATER.id()), new Item(com.openrsc.server.constants.ItemId.BATTLESTAFF_OF_WATER.id()), new Item(com.openrsc.server.constants.ItemId.ENCHANTED_BATTLESTAFF_OF_WATER.id())}); // Water-Rune
+		staffs.put(com.openrsc.server.constants.ItemId.AIR_RUNE.id(), new Item[]{new Item(com.openrsc.server.constants.ItemId.STAFF_OF_AIR.id()), new Item(com.openrsc.server.constants.ItemId.BATTLESTAFF_OF_AIR.id()), new Item(com.openrsc.server.constants.ItemId.ENCHANTED_BATTLESTAFF_OF_AIR.id())}); // Air-Rune
+		staffs.put(com.openrsc.server.constants.ItemId.EARTH_RUNE.id(), new Item[]{new Item(com.openrsc.server.constants.ItemId.STAFF_OF_EARTH.id()), new Item(com.openrsc.server.constants.ItemId.BATTLESTAFF_OF_EARTH.id()), new Item(com.openrsc.server.constants.ItemId.ENCHANTED_BATTLESTAFF_OF_EARTH.id())}); // Earth-Rune
 	}
 
 	private static boolean canCast(Player player) {
@@ -344,7 +344,7 @@ public class SpellHandler implements PacketHandler {
 			if (!checkAndRemoveRunes(player, spell)) {
 				return;
 			}
-			player.getInventory().add(new Item());
+			player.getInventory().add(new Item(chargedOrb));
 			player.lastCast = System.currentTimeMillis();
 			player.playSound("spellok");
 			player.message("You succesfully charge the orb");
@@ -465,7 +465,7 @@ public class SpellHandler implements PacketHandler {
 					return;
 				}
 				for (int i = 0; i < boneCount; i++) {
-					player.getInventory().add(new Item());
+					player.getInventory().add(new Item(com.openrsc.server.constants.ItemId.BANANA.id()));
 				}
 				finalizeSpell(player, spell);
 				break;
@@ -526,7 +526,7 @@ public class SpellHandler implements PacketHandler {
 							break;
 					}
 					player.getInventory().remove(affectedItem);
-					player.getInventory().add(new Item());
+					player.getInventory().add(new Item(itemID));
 					finalizeSpell(player, spell);
 				} else
 					player.message("This spell can only be used on unenchanted sapphire " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? " rings/amulets or opal rings" : "amulets"));
@@ -574,7 +574,7 @@ public class SpellHandler implements PacketHandler {
 						break;
 				}
 				player.getInventory().remove(affectedItem);
-				player.getInventory().add(new Item());
+				player.getInventory().add(new Item(itemID));
 				finalizeSpell(player, spell);
 			} else
 				player.message("This spell can only be used on unenchanted emerald " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
@@ -611,11 +611,11 @@ public class SpellHandler implements PacketHandler {
 				if (!checkAndRemoveRunes(player, spell)) {
 					return;
 				}
-				Item bar = new Item();
+				Item bar = new Item(smeltingDef.getBarId());
 				if (player.getInventory().remove(affectedItem) > -1) {
 					for (ReqOreDef reqOre : smeltingDef.getReqOres()) {
 						for (int i = 0; i < reqOre.getAmount(); i++) {
-							player.getInventory().remove(new Item());
+							player.getInventory().remove(new Item(reqOre.getId()));
 						}
 					}
 					player.message("You make a bar of " + bar.getDef(player.getWorld()).getName().replace("bar", "").toLowerCase());
@@ -642,7 +642,7 @@ public class SpellHandler implements PacketHandler {
 							break;
 					}
 					player.getInventory().remove(affectedItem);
-					player.getInventory().add(new Item());
+					player.getInventory().add(new Item(itemID));
 					finalizeSpell(player, spell);
 				} else
 					player.message("This spell can only be used on unenchanted ruby " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
@@ -688,7 +688,7 @@ public class SpellHandler implements PacketHandler {
 							break;
 					}
 					player.getInventory().remove(affectedItem);
-					player.getInventory().add(new Item());
+					player.getInventory().add(new Item(itemID));
 					finalizeSpell(player, spell);
 				} else
 					player.message("This spell can only be used on unenchanted diamond " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
@@ -708,7 +708,7 @@ public class SpellHandler implements PacketHandler {
 						return;
 					}
 					player.getInventory().remove(affectedItem);
-					player.getInventory().add(new Item());
+					player.getInventory().add(new Item(itemID));
 					finalizeSpell(player, spell);
 				} else
 					player.message("This spell can only be used on unenchanted dragonstone " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
@@ -1200,14 +1200,14 @@ public class SpellHandler implements PacketHandler {
 		}
 		if (player.getLocation().inKaramja() || player.getLocation().inBrimhaven()) {
 			while (player.getInventory().countId(com.openrsc.server.constants.ItemId.KARAMJA_RUM.id()) > 0) {
-				player.getInventory().remove(new Item());
+				player.getInventory().remove(new Item(com.openrsc.server.constants.ItemId.KARAMJA_RUM.id()));
 			}
 		}
 		if (player.getInventory().hasItemId(com.openrsc.server.constants.ItemId.PLAGUE_SAMPLE.id())) {
 			player.message("the plague sample is too delicate...");
 			player.message("it disintegrates in the crossing");
 			while (player.getInventory().countId(com.openrsc.server.constants.ItemId.PLAGUE_SAMPLE.id()) > 0) {
-				player.getInventory().remove(new Item());
+				player.getInventory().remove(new Item(com.openrsc.server.constants.ItemId.PLAGUE_SAMPLE.id()));
 			}
 		}
 		switch (id) {

@@ -176,7 +176,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 						playerTalk(p, n, "Certinly, I will deliver your message straight away");
 						npcTalk(p, n, "It may be our only hope");
 						p.message("Juliet gives you a message");
-						p.getInventory().add(new Item());
+						p.getInventory().add(new Item(ItemId.MESSAGE.id()));
 						p.getCache().set("romeo_juliet_msgs", 1);
 						p.updateQuestStage(getQuestId(), 2);
 					} else if (sub_choice == 1) {
@@ -195,7 +195,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 						playerTalk(p, n, "Certinly, I will deliver your message straight away");
 						npcTalk(p, n, "It may be our only hope");
 						p.message("Juliet gives you a message");
-						p.getInventory().add(new Item());
+						p.getInventory().add(new Item(ItemId.MESSAGE.id()));
 						p.getCache().set("romeo_juliet_msgs", 1);
 						p.updateQuestStage(getQuestId(), 2);
 					} else if (sub_choice == 1) {
@@ -210,7 +210,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 						"Certinly, I will deliver your message straight away");
 					npcTalk(p, n, "It may be our only hope");
 					p.message("Juliet gives you a message");
-					p.getInventory().add(new Item());
+					p.getInventory().add(new Item(ItemId.MESSAGE.id()));
 					p.getCache().set("romeo_juliet_msgs", 1);
 					p.updateQuestStage(getQuestId(), 2);
 				} else if (choice == 3) {
@@ -227,7 +227,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 					"Certinly, I will deliver your message straight away");
 				npcTalk(p, n, "It may be our only hope");
 				p.message("Juliet gives you a message");
-				p.getInventory().add(new Item());
+				p.getInventory().add(new Item(ItemId.MESSAGE.id()));
 				p.getCache().set("romeo_juliet_msgs", 1);
 				p.updateQuestStage(getQuestId(), 2);
 				break;
@@ -240,7 +240,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 						npcTalk(p, n, "How could you lose this most important message?",
 							"Please, take this message to him, and please don't lose it");
 						p.message("Juliet gives you another message");
-						p.getInventory().add(new Item());
+						p.getInventory().add(new Item(ItemId.MESSAGE.id()));
 						p.getCache().set("romeo_juliet_msgs", 2);
 					} else if (count < 3) {
 						npcTalk(p, n, "It seems I cannot trust you with a simple message",

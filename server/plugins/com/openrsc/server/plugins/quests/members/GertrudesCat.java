@@ -195,7 +195,7 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 								playerTalk(p, n, "thanks");
 								message(p, "gertrude gives you another kitten");
 								p.getInventory().remove(ItemId.COINS.id(), 100);
-								p.getInventory().add(new Item());
+								p.getInventory().add(new Item(ItemId.KITTEN.id()));
 							} else {
 								playerTalk(p, n,
 									"oops, looks like i'm a bit short",

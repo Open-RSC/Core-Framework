@@ -65,7 +65,7 @@ public class SpinningWheel implements InvUseOnObjectListener,
 				if (getOwner().getSkills().getLevel(Skills.CRAFTING) < requirement) {
 					message(getOwner(), "You need to have a crafting of level "
 						+ requirement + " or higher to make a "
-						+ new Item().getDef(getWorld()).getName().toLowerCase());
+						+ new Item(produce).getDef(getWorld()).getName().toLowerCase());
 					interrupt();
 					return;
 				}

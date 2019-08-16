@@ -268,7 +268,7 @@ TalkToNpcListener, TalkToNpcExecutiveListener, NpcCommandListener, NpcCommandExe
 			p.message("the gnome isn't carrying the ball");
 		}
 		else {
-			showBubble(p, new Item());
+			showBubble(p, new Item(ItemId.GNOME_BALL.id()));
 			message(p, "you attempt to tackle the gnome");
 			if (DataConversions.random(0, 1) == 0) {
 				//successful tackles gives agility xp

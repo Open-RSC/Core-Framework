@@ -39,7 +39,7 @@ public class TrawlerCatch implements ObjectActionListener, ObjectActionExecutive
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if (obj.getID() == TRAWLER_CATCH) {
 			message(p, 1900, "you search the smelly net");
-			showBubble(p, new Item());
+			showBubble(p, new Item(ItemId.NET.id()));
 			if (p.getCache().hasKey("fishing_trawler_reward")) {
 				p.message("you find...");
 				int fishCaught = p.getCache().getInt("fishing_trawler_reward");

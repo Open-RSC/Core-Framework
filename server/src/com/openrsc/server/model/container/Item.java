@@ -34,10 +34,6 @@ public class Item implements Comparable<Item> {
 		}
 	}
 
-	public Item() {
-
-	}
-
 	public Item(int id) {
 		this(id, 1);
 	}

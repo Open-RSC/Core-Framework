@@ -191,7 +191,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 						return;
 					}
 				}
-				showBubble(p, new Item());
+				showBubble(p, new Item(ItemId.ROCK_PICK.id()));
 				p.incExp(Skills.MINING, 70, true);
 				message(p, "You dig through the earth");
 				sleep(1500);
@@ -208,7 +208,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 	private void trowelOnSite(Player p, Item item, GameObject obj) {
 		if (item.getID() == ItemId.TROWEL.id() && inArray(obj.getID(), SOIL)) {
 			if (getTrainingAreas(p)) {
-				showBubble(p, new Item());
+				showBubble(p, new Item(ItemId.TROWEL.id()));
 				p.incExp(Skills.MINING, 50, true);
 				message(p, "You dig with the trowel...");
 				sleep(1500);
@@ -253,7 +253,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 						return;
 					}
 				}
-				showBubble(p, new Item());
+				showBubble(p, new Item(ItemId.TROWEL.id()));
 				p.incExp(Skills.MINING, 60, true);
 				message(p, "You dig through the earth");
 				sleep(1500);
@@ -313,7 +313,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					}
 					return;
 				}
-				showBubble(p, new Item());
+				showBubble(p, new Item(ItemId.TROWEL.id()));
 				p.incExp(Skills.MINING, 80, true);
 				message(p, "You dig through the earth");
 				sleep(1500);

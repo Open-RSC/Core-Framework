@@ -553,8 +553,7 @@ public class Npc extends Mob {
 							continue;
 						}
 
-						Item temp = new Item();
-						temp.setID(drop.getID());
+						Item temp = new Item(drop.getID());
 
 						if (drop == null) {
 							continue;
@@ -723,8 +722,7 @@ public class Npc extends Mob {
 
 					for (ItemDropDef drop : drops) {
 
-						Item temp = new Item();
-						temp.setID(drop.getID());
+						Item temp = new Item(drop.getID());
 
 						if (drop == null) {
 							continue;

@@ -54,12 +54,12 @@ public class Panning implements ObjectActionListener, ObjectActionExecutiveListe
 			return false;
 		}
 		p.setBusy(true);
-		showBubble(p, new Item());
+		showBubble(p, new Item(ItemId.PANNING_TRAY.id()));
 		p.playSound("mix");
 		p.playerServerMessage(MessageType.QUEST, "You scrape the tray along the bottom");
 		message(p, "You swirl away the excess water");
 		sleep(1500);
-		showBubble(p, new Item());
+		showBubble(p, new Item(ItemId.PANNING_TRAY_FULL.id()));
 		p.playerServerMessage(MessageType.QUEST, "You lift the full tray from the water");
 		p.getInventory().replace(ItemId.PANNING_TRAY.id(), ItemId.PANNING_TRAY_FULL.id());
 		p.incExp(Skills.MINING, 20, true);

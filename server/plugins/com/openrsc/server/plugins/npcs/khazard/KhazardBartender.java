@@ -21,7 +21,7 @@ public final class KhazardBartender implements TalkToNpcExecutiveListener,
 				"I'd like a khali brew please", "Got any news?");
 			if (bar == 0) {
 				npcTalk(p, n, "There you go, that's one gold coin");
-				p.getInventory().add(new Item());
+				p.getInventory().add(new Item(193));
 				p.getInventory().remove(10, 1);
 			} else if (bar == 1) {
 				npcTalk(p, n, "There you go", "No charge");

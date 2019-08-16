@@ -572,12 +572,12 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 				// fishing using worm gives raw sardine
 				else if (hasItem(p, ItemId.RED_VINE_WORMS.id())) {
 					p.message("You catch a sardine");
-					p.getInventory().add(new Item());
+					p.getInventory().add(new Item(ItemId.RAW_SARDINE.id()));
 					p.getInventory().remove(ItemId.RED_VINE_WORMS.id(), 1);
 					addCatchCache(p, ItemId.RAW_SARDINE.id());
 				} else if (hasItem(p, ItemId.FISHING_BAIT.id())) {
 					p.message("You catch some shrimps");
-					p.getInventory().add(new Item());
+					p.getInventory().add(new Item(ItemId.RAW_SHRIMP.id()));
 					p.getInventory().remove(ItemId.FISHING_BAIT.id(), 1);
 					addCatchCache(p, ItemId.RAW_SHRIMP.id());
 				}
@@ -616,12 +616,12 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 				// fishing using worm gives raw carp
 				else if (hasItem(p, ItemId.RED_VINE_WORMS.id())) {
 					p.message("You catch a giant carp");
-					p.getInventory().add(new Item());
+					p.getInventory().add(new Item(ItemId.RAW_GIANT_CARP.id()));
 					p.getInventory().remove(ItemId.RED_VINE_WORMS.id(), 1);
 					addCatchCache(p, ItemId.RAW_GIANT_CARP.id());
 				} else if (hasItem(p, ItemId.FISHING_BAIT.id())) {
 					p.message("You catch a sardine");
-					p.getInventory().add(new Item());
+					p.getInventory().add(new Item(ItemId.RAW_SARDINE.id()));
 					p.getInventory().remove(ItemId.FISHING_BAIT.id(), 1);
 					addCatchCache(p, ItemId.RAW_SARDINE.id());
 				}

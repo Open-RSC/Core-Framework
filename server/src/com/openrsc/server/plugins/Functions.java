@@ -1602,10 +1602,6 @@ public class Functions {
 		}
 	}
 
-	public static Item getItem() {
-		return new Item();
-	}
-
 	/**
 	 * Transforms npc into another please note that you will need to unregister
 	 * the transformed npc after using this method.

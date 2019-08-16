@@ -310,7 +310,7 @@ public class DemonSlayer implements QuestInterface,
 							boneCount = p.getCache().getInt("traiborn_bones");
 
 						while (p.getInventory().countId(ItemId.BONES.id()) > 0) {
-							p.getInventory().remove(new Item());
+							p.getInventory().remove(new Item(ItemId.BONES.id()));
 							p.message("You give Traiborn a set of bones");
 							boneCount++;
 							sleep(600);

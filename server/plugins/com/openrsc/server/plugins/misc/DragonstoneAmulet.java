@@ -52,7 +52,7 @@ public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveL
 				p.message("the plague sample is too delicate...");
 				p.message("it disintegrates in the crossing");
 				while (p.getInventory().countId(ItemId.PLAGUE_SAMPLE.id()) > 0) {
-					p.getInventory().remove(new Item());
+					p.getInventory().remove(new Item(ItemId.PLAGUE_SAMPLE.id()));
 				}
 			}
 			if (menu != -1) {
@@ -103,7 +103,7 @@ public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveL
 						return;
 					}
 					if (p.getInventory().remove(item) > -1) {
-						p.getInventory().add(new Item());
+						p.getInventory().add(new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()));
 					} else
 						interrupt();
 				}

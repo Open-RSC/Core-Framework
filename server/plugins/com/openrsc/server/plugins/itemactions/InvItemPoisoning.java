@@ -69,7 +69,7 @@ public class InvItemPoisoning implements InvUseOnItemListener, InvUseOnItemExecu
 		for (int i = 0; i < world.getServer().getEntityHandler().items.length; i++) {
 			ItemDefinition def = world.getServer().getEntityHandler().getItemDef(i);
 			if (def.getName().equalsIgnoreCase(poisonedVersion) || def.getName().equalsIgnoreCase(poisonedVersion2)) {
-				return new Item();
+				return new Item(i);
 			}
 		}
 		return null;

@@ -45,7 +45,7 @@ public class Thrander implements TalkToNpcListener, TalkToNpcExecutiveListener, 
 			ItemId.BRONZE_PLATE_MAIL_LEGS.id(), ItemId.IRON_PLATE_MAIL_LEGS.id(), ItemId.STEEL_PLATE_MAIL_LEGS.id(),
 			ItemId.BLACK_PLATE_MAIL_LEGS.id(), ItemId.MITHRIL_PLATE_MAIL_LEGS.id(), ItemId.ADAMANTITE_PLATE_MAIL_LEGS.id(), ItemId.RUNE_PLATE_MAIL_LEGS.id())) {
 			int newID = getNewID(item);
-			Item changedItem = getItem();
+			Item changedItem = new Item(newID);
 			String itemLower, changedItemLower;
 			itemLower = item.getDef(player.getWorld()).getName().toLowerCase();
 			changedItemLower = changedItem.getDef(player.getWorld()).getName().toLowerCase();

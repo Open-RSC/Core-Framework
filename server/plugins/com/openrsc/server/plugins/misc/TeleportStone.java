@@ -46,7 +46,7 @@ public class TeleportStone implements InvActionListener, InvActionExecutiveListe
 				p.message("the plague sample is too delicate...");
 				p.message("it disintegrates in the crossing");
 				while (p.getInventory().countId(ItemId.PLAGUE_SAMPLE.id()) > 0) {
-					p.getInventory().remove(new Item());
+					p.getInventory().remove(new Item(ItemId.PLAGUE_SAMPLE.id()));
 				}
 			}
 			switch (menu) {

@@ -33,7 +33,7 @@ public class ItemActionHandler implements PacketHandler {
 		{
 			idx = (int) p.readShort();
 			if (player.getEquipment().hasEquipped(idx) != -1)
-				tempitem = new Item();
+				tempitem = new Item(idx);
 			commandIndex = p.readByte();
 
 		} else {

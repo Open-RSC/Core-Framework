@@ -184,22 +184,22 @@ public class DwarfCannon
 
 								switch (cannonStage) {
 									case 1:
-										p.getInventory().add(new Item());
+										p.getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id()));
 										break;
 									case 2:
-										p.getInventory().add(new Item());
-										p.getInventory().add(new Item());
+										p.getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id()));
+										p.getInventory().add(new Item(ItemId.DWARF_CANNON_STAND.id()));
 										break;
 									case 3:
-										p.getInventory().add(new Item());
-										p.getInventory().add(new Item());
-										p.getInventory().add(new Item());
+										p.getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id()));
+										p.getInventory().add(new Item(ItemId.DWARF_CANNON_STAND.id()));
+										p.getInventory().add(new Item(ItemId.DWARF_CANNON_BARRELS.id()));
 										break;
 									case 4:
-										p.getInventory().add(new Item());
-										p.getInventory().add(new Item());
-										p.getInventory().add(new Item());
-										p.getInventory().add(new Item());
+										p.getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id()));
+										p.getInventory().add(new Item(ItemId.DWARF_CANNON_STAND.id()));
+										p.getInventory().add(new Item(ItemId.DWARF_CANNON_BARRELS.id()));
+										p.getInventory().add(new Item(ItemId.DWARF_CANNON_FURNACE.id()));
 										break;
 								}
 								p.getCache().remove("cannon_stage");
@@ -616,7 +616,7 @@ public class DwarfCannon
 						return;
 					}
 					message(player, "you use your tool kit and attempt to fix the pipe");
-					showBubble(player, new Item());
+					showBubble(player, new Item(ItemId.TOOL_KIT.id()));
 					if (failToMultiCannon()) {
 						message(player, "it's too hard, you fail to fix it", "maybe you should try again");
 					} else {
@@ -629,7 +629,7 @@ public class DwarfCannon
 						return;
 					}
 					message(player, "you use your tool kit and attempt to fix the barrel");
-					showBubble(player, new Item());
+					showBubble(player, new Item(ItemId.TOOL_KIT.id()));
 					if (failToMultiCannon()) {
 						message(player, "it's too hard, you fail to fix it", "maybe you should try again");
 					} else {
@@ -642,7 +642,7 @@ public class DwarfCannon
 						return;
 					}
 					message(player, "you use your tool kit and attempt to fix the axle");
-					showBubble(player, new Item());
+					showBubble(player, new Item(ItemId.TOOL_KIT.id()));
 					if (failToMultiCannon()) {
 						message(player, "it's too hard, you fail to fix it", "maybe you should try again");
 					} else {
@@ -655,7 +655,7 @@ public class DwarfCannon
 						return;
 					}
 					message(player, "you use your tool kit and attempt to fix the shaft");
-					showBubble(player, new Item());
+					showBubble(player, new Item(ItemId.TOOL_KIT.id()));
 					if (failToMultiCannon()) {
 						message(player, "it's too hard, you fail to fix it", "maybe you should try again");
 					} else {

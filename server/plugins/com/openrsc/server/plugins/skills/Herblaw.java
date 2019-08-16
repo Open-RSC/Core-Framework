@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.skills;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.custom.BatchEvent;
@@ -55,7 +56,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 
 			public void action() {
 				ItemUnIdentHerbDef herb = item.getUnIdentHerbDef(getWorld());
-				Item newItem = new Item();
+				Item newItem = new Item(herb.getNewId());
 				if (getOwner().getInventory().remove(item.getID(),1,false) > -1) {
 					getOwner().getInventory().add(newItem,true);
 					getOwner().message("This herb is " + newItem.getDef(getWorld()).getName());
@@ -105,7 +106,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			player.incExp(Skills.HERBLAW, 20, true);
 			player.playerServerMessage(MessageType.QUEST, "You mix the nitrate powder into the liquid");
 			player.message("It has produced a foul mixture");
-			showBubble(player, new Item());
+			showBubble(player, new Item(com.openrsc.server.constants.ItemId.AMMONIUM_NITRATE.id()));
 			player.getInventory().remove(com.openrsc.server.constants.ItemId.AMMONIUM_NITRATE.id(), 1);
 			player.getInventory().replace(com.openrsc.server.constants.ItemId.NITROGLYCERIN.id(), com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_1.id());
 		} else if (usedWith.getID() == com.openrsc.server.constants.ItemId.GROUND_CHARCOAL.id() && item.getID() == com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_1.id()
@@ -121,7 +122,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			player.incExp(Skills.HERBLAW, 25, true);
 			player.playerServerMessage(MessageType.QUEST, "You mix the charcoal into the liquid");
 			player.message("It has produced an even fouler mixture");
-			showBubble(player, new Item());
+			showBubble(player, new Item(com.openrsc.server.constants.ItemId.GROUND_CHARCOAL.id()));
 			player.getInventory().remove(com.openrsc.server.constants.ItemId.GROUND_CHARCOAL.id(), 1);
 			player.getInventory().replace(com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_1.id(), com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_2.id());
 		} else if (usedWith.getID() == com.openrsc.server.constants.ItemId.ARCENIA_ROOT.id() && item.getID() == com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_2.id()
@@ -137,7 +138,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			player.incExp(Skills.HERBLAW, 30, true);
 			player.message("You mix the root into the mixture");
 			player.message("You produce a potentially explosive compound...");
-			showBubble(player, new Item());
+			showBubble(player, new Item(com.openrsc.server.constants.ItemId.ARCENIA_ROOT.id()));
 			player.getInventory().remove(com.openrsc.server.constants.ItemId.ARCENIA_ROOT.id(), 1);
 			player.getInventory().replace(com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_2.id(), com.openrsc.server.constants.ItemId.EXPLOSIVE_COMPOUND.id());
 			playerTalk(player, null, "Excellent this looks just right");
@@ -462,7 +463,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 						player.message("You grind the " + item.getDef(getWorld()).getName()
 							+ " to dust");
 					}
-					showBubble(player, new Item());
+					showBubble(player, new Item(ItemId.PESTLE_AND_MORTAR.id()));
 					player.getInventory().add(new Item(newID, 1));
 
 				}

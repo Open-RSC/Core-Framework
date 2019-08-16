@@ -142,7 +142,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 
 				@Override
 				public void action() {
-					Item cookedFood = new Item();
+					Item cookedFood = new Item(cookingDef.getCookedId());
 					if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 						if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
 							getOwner().message("You are too tired to cook this food");
@@ -158,7 +158,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 							getOwner().message(cookedMessage(p, cookedFood, isOvenFood(item)));
 							getOwner().incExp(Skills.COOKING, cookingDef.getExp(), true);
 						} else {
-							getOwner().getInventory().add(new Item());
+							getOwner().getInventory().add(new Item(cookingDef.getBurnedId()));
 							if (cookedFood.getID() == ItemId.COOKEDMEAT.id()) {
 								getOwner().message("You accidentally burn the meat");
 							} else {
@@ -194,7 +194,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 	private void cookMethod(Player p, int itemID, int product, boolean hasBubble, String... messages) {
 		if (hasItem(p, itemID, 1)) {
 			if (hasBubble)
-				showBubble(p, new Item());
+				showBubble(p, new Item(itemID));
 			p.playSound("cooking");
 			message(p, messages);
 			removeItem(p, itemID, 1);
