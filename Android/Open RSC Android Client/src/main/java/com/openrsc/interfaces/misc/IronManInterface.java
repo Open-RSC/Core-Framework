@@ -17,18 +17,18 @@ public final class IronManInterface {
 	private mudclient mc;
 	private String[] ironManTitle = {"Standard Iron Man", "Hardcore Iron Man", "Ultimate Iron Man", "None"};
 	private String[] ironManDescription =
-			{
-					"An Iron Man cannot trade, stake, receive PK loot, scavenge dropped items, nor play certain multiplayer minigames.",
-					"In addition to the standard Iron Man rules, a Hardcore Iron Man only has 1 life. A dangerous death will result in being downgraded to a standard Iron Man.",
-					"In addition to the standard Iron Man rules, an Ultimate Iron Man cannot use banks, nor retain any items on death in dangerous areas.",
-					"- No Iron Man restrictions will apply to this account."
-			};
+		{
+			"An Iron Man cannot trade, stake, receive PK loot, scavenge dropped items, nor play certain multiplayer minigames.",
+			"In addition to the standard Iron Man rules, a Hardcore Iron Man only has 1 life. A dangerous death will result in being downgraded to a standard Iron Man.",
+			"In addition to the standard Iron Man rules, an Ultimate Iron Man cannot use banks, nor retain any items on death in dangerous areas.",
+			"- No Iron Man restrictions will apply to this account."
+		};
 	private String[] restrictionTitle = {"PIN", "Permanent"};
 	private String[] restrictionDesc =
-			{
-					"You must enter your Bank Pin to request that Iron Man restrictions be removed.",
-					"- The Iron Man restrictions can never be removed."
-			};
+		{
+			"You must enter your Bank Pin to request that Iron Man restrictions be removed.",
+			"- The Iron Man restrictions can never be removed."
+		};
 	private int[] order = {3, 0, 2, 1};
 	private int[] selectMode = {1, 3, 2, 0};
 
@@ -103,9 +103,9 @@ public final class IronManInterface {
 		graphics.drawString("- " + (getIronManMode() >= 1 ? this.iron_man_restriction == 0 ? "PIN." : "Permanent." : "None."), x + (width / 2) + 49 + 27, y + 243, 0xFF981F, 0);
 
 		// iron helm, plate, legs sprites
-		graphics.drawSpriteClipping(mc.spriteSelect(EntityHandler.getItemDef(8)), x + 410, y + 60, 48, 32, 0, 0, false, 0, 1);
-		graphics.drawSpriteClipping(mc.spriteSelect(EntityHandler.getItemDef(9)), x + 390, y + 100, 48, 32, 0, 0, false, 0, 1);
-		graphics.drawSpriteClipping(mc.spriteSelect(EntityHandler.getItemDef(6)), x + 425, y + 135, 48, 32, 0, 0, true, 0, 1);
+		graphics.drawSpriteClipping(mc.spriteSelect(EntityHandler.getItemDef(8)), x + 410, y + 60, 48, 32, 0, 0, 0, false, 0, 1);
+		graphics.drawSpriteClipping(mc.spriteSelect(EntityHandler.getItemDef(9)), x + 390, y + 100, 48, 32, 0, 0, 0, false, 0, 1);
+		graphics.drawSpriteClipping(mc.spriteSelect(EntityHandler.getItemDef(6)), x + 425, y + 135, 48, 32, 0, 0, 0, true, 0, 1);
 
 
 		drawCloseButton(graphics, x + 457, y + 2, 21, 21, "X", new ButtonHandler() {
@@ -159,7 +159,7 @@ public final class IronManInterface {
 
 			graphics.drawCircle(drawBoxX + 8 + 5, circleY, 8, 0x3A3026, 255, 0);
 			if (i == order[iron_man_mode]) {
-				graphics.drawSpriteClipping(mc.spriteSelect(EntityHandler.GUIparts.get(EntityHandler.GUIPARTS.CHECKMARK.id())), drawBoxX + 8, circleY - 5, 13, 10, 0, 0, false, 0, 1);
+				graphics.drawSpriteClipping(mc.spriteSelect(EntityHandler.GUIparts.get(EntityHandler.GUIPARTS.CHECKMARK.id())), drawBoxX + 8, circleY - 5, 13, 10, 0, 0, 0, false, 0, 1);
 			}
 		}
 
@@ -213,7 +213,7 @@ public final class IronManInterface {
 			});
 			graphics.drawCircle(drawBoxX + 8 + 5, circleY, 8, 0x3A3026, 255, 0);
 			if (i == this.iron_man_restriction) {
-				graphics.drawSpriteClipping(mc.spriteSelect(EntityHandler.GUIparts.get(EntityHandler.GUIPARTS.CHECKMARK.id())), drawBoxX + 8, circleY - 5, 13, 10, 0, 0, false, 0, 1);
+				graphics.drawSpriteClipping(mc.spriteSelect(EntityHandler.GUIparts.get(EntityHandler.GUIPARTS.CHECKMARK.id())), drawBoxX + 8, circleY - 5, 13, 10, 0, 0, 0, false, 0, 1);
 			}
 			drawBoxheight = 20;
 			drawBoxY += 45;

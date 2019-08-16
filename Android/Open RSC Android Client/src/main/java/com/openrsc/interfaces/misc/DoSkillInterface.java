@@ -2,11 +2,10 @@ package com.openrsc.interfaces.misc;
 
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
-
-import java.util.ArrayList;
-
 import orsc.graphics.gui.Panel;
 import orsc.mudclient;
+
+import java.util.ArrayList;
 
 
 public final class DoSkillInterface {
@@ -121,7 +120,8 @@ public final class DoSkillInterface {
 			lotsaText = skillDetail.length() >= 15;
 
 			mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
-					curX, spriteY, 48, 32, def.getPictureMask(), 0, false, 0, 1);
+				curX, spriteY, 48, 32, def.getPictureMask(), 0,
+				def.getBlueMask(),false, 0, 1);
 
 			int stringWidth = drawStringWrapped(skillDetail, curX, textY, 2, textColour);
 
@@ -136,7 +136,7 @@ public final class DoSkillInterface {
 			}
 
 			if (mc.getMouseX() >= curX - (boxWidth - 48) / 2 && mc.getMouseX() <= boxWidth + curX - (boxWidth - 48) / 2 && mc.getMouseY() >= spriteY - 2 && mc.getMouseY() <= spriteY + boxHeight
-					&& !rightClickMenu) {
+				&& !rightClickMenu) {
 				mc.getSurface().drawBoxAlpha(curX - (boxWidth - 48) / 2, spriteY - 2, boxWidth, boxHeight, boxColor, 92);
 				if (mc.mouseButtonClick == 1 && boxColor != 0x000000) {
 					mc.packetHandler.getClientStream().newPacket(212);

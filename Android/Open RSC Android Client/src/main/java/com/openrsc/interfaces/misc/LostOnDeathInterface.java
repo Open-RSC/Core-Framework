@@ -96,11 +96,13 @@ public final class LostOnDeathInterface {
 			}
 
 			mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
-				curX, curY, 48, 32, def.getPictureMask(), 0, false, 0, 1);
+				curX, curY, 48, 32, def.getPictureMask(), 0,
+				def.getBlueMask(), false, 0, 1);
 			if (def.getNotedFormOf() >= 0) {
 				ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
 				mc.getSurface().drawSpriteClipping(mc.spriteSelect(originalDef),
-					curX, curY, 48, 32, originalDef.getPictureMask(), 0, false, 0, 1);
+					curX, curY, 48, 32, originalDef.getPictureMask(), 0,
+					originalDef.getBlueMask(),false, 0, 1);
 			}
 
 			if (def.isStackable()) {

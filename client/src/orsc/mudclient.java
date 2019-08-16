@@ -2434,33 +2434,33 @@ public final class mudclient implements Runnable {
 
 			// body
 			this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.getAnimationDef(m_dk), 0), var5 - 32 - 55, y, 64,
-				102, this.getPlayerClothingColors()[this.m_Wg], this.getPlayerSkinColors()[this.m_hh], false, 0, 1);
+				102, this.getPlayerClothingColors()[this.m_Wg], this.getPlayerSkinColors()[this.m_hh], 0,false, 0, 1);
 
 			this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.getAnimationDef(appearanceHeadType), 0),
 				var5 - 32 - 55, y, 64, 102, this.getPlayerHairColors()[this.m_ld],
-				this.getPlayerSkinColors()[this.m_hh], false, 0, var1 + 13760);
+				this.getPlayerSkinColors()[this.m_hh], 0,false, 0, var1 + 13760);
 
 			this.getSurface().spriteClip3(var5 - 32, this.getPlayerClothingColors()[this.characterBottomColour],
 				spriteSelect(EntityHandler.getAnimationDef(character2Colour), 6), y, 102, (byte) 105, 64);
 
 			this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.getAnimationDef(this.m_dk), 6), var5 - 32, y,
-				64, 102, this.getPlayerClothingColors()[this.m_Wg], this.getPlayerSkinColors()[this.m_hh], false, 0,
+				64, 102, this.getPlayerClothingColors()[this.m_Wg], this.getPlayerSkinColors()[this.m_hh], 0,false, 0,
 				1);
 
 			this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.getAnimationDef(this.appearanceHeadType), 6),
 				var5 - 32, y, 64, 102, this.getPlayerHairColors()[this.m_ld], this.getPlayerSkinColors()[this.m_hh],
-				false, 0, 1);
+				0,false, 0, 1);
 
 			this.getSurface().spriteClip3(var5 + 55 - 32, this.getPlayerClothingColors()[this.characterBottomColour],
 				spriteSelect(EntityHandler.getAnimationDef(this.character2Colour), 12), y, 102, (byte) 110, 64);
 
 			this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.getAnimationDef(this.m_dk), 12),
 				55 + (var5 - 32), y, 64, 102, this.getPlayerClothingColors()[this.m_Wg],
-				this.getPlayerSkinColors()[this.m_hh], false, 0, var1 + 13760);
+				this.getPlayerSkinColors()[this.m_hh], 0,false, 0, var1 + 13760);
 
 			this.getSurface().drawSpriteClipping(
 				spriteSelect(EntityHandler.getAnimationDef(this.appearanceHeadType), 12), var5 + 55 - 32, y, 64, 102,
-				this.getPlayerHairColors()[this.m_ld], this.getPlayerSkinColors()[this.m_hh], false, 0, 1);
+				this.getPlayerHairColors()[this.m_ld], this.getPlayerSkinColors()[this.m_hh], 0,false, 0, 1);
 			this.getSurface().drawSprite(spriteSelect(GUIPARTS.BLUEBAR.getDef()), 0, this.getGameHeight());
 			// this.getSurface().draw(this.graphics, this.screenOffsetX, 256,
 			// this.screenOffsetY);
@@ -2530,7 +2530,7 @@ public final class mudclient implements Runnable {
 				int height = scale * 24 / 100;
 				this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.getItemDef(id)),
 					centerX - width / 2, centerY - (height / 2) + offsetY / 2, width, height,
-					EntityHandler.getItemDef(id).getPictureMask(), 0, false, 0, 1);
+					EntityHandler.getItemDef(id).getPictureMask(), 0, EntityHandler.getItemDef(id).getBlueMask(),false, 0, 1);
 			}
 
 			for (int i = 0; i < this.characterHealthCount; ++i) {
@@ -2548,7 +2548,7 @@ public final class mudclient implements Runnable {
 
 	private void drawChatMessageTabs(int var1) {
 		try {
-			this.getSurface().drawSpriteClipping(spriteSelect(GUIPARTS.BLUEBAR.getDef()), 0, getGameHeight(), getGameWidth(), 10, 0, 0, false, 0, 1);
+			this.getSurface().drawSpriteClipping(spriteSelect(GUIPARTS.BLUEBAR.getDef()), 0, getGameHeight(), getGameWidth(), 10, 0, 0, 0, false, 0, 1);
 			if (S_WANT_CLANS) {
 				this.getSurface().drawSprite(spriteSelect(GUIPARTS.CHATTABS.getDef()), halfGameWidth() - 256,
 					this.getGameHeight() - 4);
@@ -3014,8 +3014,8 @@ public final class mudclient implements Runnable {
 				if (S_WANT_EQUIPMENT_TAB) {
 					this.getSurface().drawBoxAlpha(xr + 320, 239 + yr, 28, 28, stakeOfferEquipMode ? clearBox : selectedBox, 160);
 					this.getSurface().drawBoxAlpha(xr + 348, 239 + yr, 28, 28, stakeOfferEquipMode ? selectedBox : clearBox, 160);
-					this.getSurface().drawSpriteClipping(spriteSelect(GUIPARTS.BANK_EQUIP_BAG.getDef()), xr + 320, 239 + yr, 28, 28, 0, 0, false, 0, 0);
-					this.getSurface().drawSpriteClipping(spriteSelect(GUIPARTS.BANK_EQUIP_HELM.getDef()), xr + 348, 239 + yr, 28, 28, 0, 0, false, 0, 0);
+					this.getSurface().drawSpriteClipping(spriteSelect(GUIPARTS.BANK_EQUIP_BAG.getDef()), xr + 320, 239 + yr, 28, 28, 0, 0, 0, false, 0, 0);
+					this.getSurface().drawSpriteClipping(spriteSelect(GUIPARTS.BANK_EQUIP_HELM.getDef()), xr + 348, 239 + yr, 28, 28, 0, 0, 0, false, 0, 0);
 				}
 				if (stakeOfferEquipMode) {
 					int count = 0;
@@ -3026,7 +3026,8 @@ public final class mudclient implements Runnable {
 						int yI = yr + 31 + (count / 5) * 34;
 						this.getSurface().drawSpriteClipping(
 							spriteSelect(item), xI,
-							yI, 48, 32, item.getPictureMask(), 0, false,
+							yI, 48, 32, item.getPictureMask(), 0,
+							item.getBlueMask(), false,
 							0, 1);
 						if (item.isStackable()) {
 							this.getSurface().drawString("" + this.inventoryItemSize[count], xI + 1,
@@ -3040,14 +3041,16 @@ public final class mudclient implements Runnable {
 						int yI = yr + 31 + (itm / 5) * 34;
 						this.getSurface().drawSpriteClipping(
 							spriteSelect(EntityHandler.getItemDef(this.inventoryItemID[itm])), xI,
-							yI, 48, 32, EntityHandler.getItemDef(this.inventoryItemID[itm]).getPictureMask(), 0, false,
+							yI, 48, 32, EntityHandler.getItemDef(this.inventoryItemID[itm]).getPictureMask(), 0,
+							EntityHandler.getItemDef(this.inventoryItemID[itm]).getBlueMask(),false,
 							0, 1);
 
 						ItemDef def = EntityHandler.getItemDef(this.inventoryItemID[itm]);
 						if (def.getNotedFormOf() >= 0) {
 							ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
 							getSurface().drawSpriteClipping(spriteSelect(originalDef), xI + 7, yI + 4,
-								33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
+								33, 23, originalDef.getPictureMask(), 0,
+								originalDef.getBlueMask(),false, 0, 1);
 						}
 						if (EntityHandler.getItemDef(this.inventoryItemID[itm]).isStackable()) {
 							this.getSurface().drawString("" + this.inventoryItemSize[itm], xI + 1,
@@ -3096,13 +3099,14 @@ public final class mudclient implements Runnable {
 					this.getSurface().drawSpriteClipping(
 						spriteSelect(EntityHandler.getItemDef(this.duelOfferItemID[itmOffer])),
 						xI, yI, 48, 32, EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]).getPictureMask(),
-						0, false, 0, 1);
+						0, EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]).getBlueMask(),false, 0, 1);
 
 					ItemDef def = EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]);
 					if (def.getNotedFormOf() >= 0) {
 						ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
 						getSurface().drawSpriteClipping(spriteSelect(originalDef), xI + 7, yI + 4,
-							33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
+							33, 23, originalDef.getPictureMask(), 0,
+							originalDef.getBlueMask(),false, 0, 1);
 					}
 
 					if (EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]).isStackable()) {
@@ -3124,14 +3128,16 @@ public final class mudclient implements Runnable {
 					this.getSurface().drawSpriteClipping(
 						spriteSelect(EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer])),
 						xI, yI, 48, 32,
-						EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).getPictureMask(), 0, false, 0,
+						EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).getPictureMask(), 0,
+						EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).getBlueMask(),false, 0,
 						1);
 
 					ItemDef def = EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]);
 					if (def.getNotedFormOf() >= 0) {
 						ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
 						getSurface().drawSpriteClipping(spriteSelect(originalDef), xI + 7, yI + 4,
-							33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
+							33, 23, originalDef.getPictureMask(), 0,
+							originalDef.getPictureMask(),false, 0, 1);
 					}
 
 					if (EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).isStackable()) {
@@ -3541,13 +3547,14 @@ public final class mudclient implements Runnable {
 							this.getSurface().drawSpriteClipping(
 								spriteSelect(EntityHandler.getItemDef(this.shopItemID[slot])),
 								sx, sy, 48, 32, EntityHandler.getItemDef(this.shopItemID[slot]).getPictureMask(), 0,
-								false, 0, 1);
+								EntityHandler.getItemDef(this.shopItemID[slot]).getPictureMask(), false, 0, 1);
 
 							ItemDef def = EntityHandler.getItemDef(this.shopItemID[slot]);
 							if (def.getNotedFormOf() >= 0) {
 								ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
 								getSurface().drawSpriteClipping(spriteSelect(originalDef), sx + 7,
-									sy + 4, 33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
+									sy + 4, 33, 23, originalDef.getPictureMask(), 0,
+									originalDef.getPictureMask(),false, 0, 1);
 							}
 
 							this.getSurface().drawString("" + this.shopItemCount[slot], 1 + sx, 10 + sy, '\uff00', 1);
@@ -3979,14 +3986,16 @@ public final class mudclient implements Runnable {
 					int sY = 31 + yr + slot / 5 * 34;
 					this.getSurface().drawSpriteClipping(
 						spriteSelect(EntityHandler.getItemDef(this.inventoryItemID[slot])), sX,
-						sY, 48, 32, EntityHandler.getItemDef(this.inventoryItemID[slot]).getPictureMask(), 0, false,
+						sY, 48, 32, EntityHandler.getItemDef(this.inventoryItemID[slot]).getPictureMask(), 0,
+						EntityHandler.getItemDef(this.inventoryItemID[slot]).getPictureMask(),false,
 						0, 1);
 
 					ItemDef def = EntityHandler.getItemDef(this.inventoryItemID[slot]);
 					if (def.getNotedFormOf() >= 0) {
 						ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
 						getSurface().drawSpriteClipping(spriteSelect(originalDef), sX + 7, sY + 4,
-							33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
+							33, 23, originalDef.getPictureMask(), 0,
+							originalDef.getPictureMask(),false, 0, 1);
 					}
 
 					if (EntityHandler.getItemDef(this.inventoryItemID[slot]).isStackable()) {
@@ -4000,7 +4009,8 @@ public final class mudclient implements Runnable {
 					int sy = slot / 4 * 34 + yr + 31;
 					this.getSurface().drawSpriteClipping(
 						spriteSelect(EntityHandler.getItemDef(this.tradeItemID[slot])), sx, sy,
-						48, 32, EntityHandler.getItemDef(this.tradeItemID[slot]).getPictureMask(), 0, false, 0, 1);
+						48, 32, EntityHandler.getItemDef(this.tradeItemID[slot]).getPictureMask(), 0,
+						EntityHandler.getItemDef(this.tradeItemID[slot]).getPictureMask(),false, 0, 1);
 					if (EntityHandler.getItemDef(this.tradeItemID[slot]).isStackable()) {
 						this.getSurface().drawString("" + this.tradeItemSize[slot], sx + 1, 10 + sy,
 							0xFFFF00, 1);
@@ -4010,7 +4020,8 @@ public final class mudclient implements Runnable {
 					if (def.getNotedFormOf() >= 0) {
 						ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
 						getSurface().drawSpriteClipping(spriteSelect(originalDef), sx + 7, sy + 4,
-							33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
+							33, 23, originalDef.getPictureMask(), 0,
+							originalDef.getBlueMask(),false, 0, 1);
 					}
 
 					if (sx < this.mouseX && 48 + sx > this.mouseX && sy < this.mouseY && this.mouseY < sy + 32) {
@@ -4027,13 +4038,14 @@ public final class mudclient implements Runnable {
 					this.getSurface().drawSpriteClipping(
 						spriteSelect(EntityHandler.getItemDef(this.tradeRecipientItem[slot])),
 						sx, sy, 48, 32, EntityHandler.getItemDef(this.tradeRecipientItem[slot]).getPictureMask(), 0,
-						false, 0, 1);
+						EntityHandler.getItemDef(this.tradeRecipientItem[slot]).getBlueMask(),false, 0, 1);
 
 					ItemDef def = EntityHandler.getItemDef(this.tradeRecipientItem[slot]);
 					if (def.getNotedFormOf() >= 0) {
 						ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
 						getSurface().drawSpriteClipping(spriteSelect(originalDef), sx + 7, sy + 4,
-							33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
+							33, 23, originalDef.getPictureMask(), 0, originalDef.getPictureMask()
+					,false, 0, 1);
 					}
 
 					if (EntityHandler.getItemDef(this.tradeRecipientItem[slot]).isStackable()) {
@@ -4876,15 +4888,16 @@ public final class mudclient implements Runnable {
 							switch (notify.killPicture) {
 								case -1:
 									getSurface().drawSpriteClipping(spriteSelect(EntityHandler.projectiles.get(PROJECTILE_TYPES.RANGED.id())), width_icon, 36 + Offset, picture_width,
-										18, 0, 0, false, 0, 1);
+										18, 0, 0, 0,false, 0, 1);
 									break;
 								case -2:
 									getSurface().drawSpriteClipping(spriteSelect(EntityHandler.projectiles.get(PROJECTILE_TYPES.MAGIC.id())), width_icon, 36 + Offset, picture_width,
-										18, 0, 0, false, 0, 1);
+										18, 0, 0, 0, false, 0, 1);
 									break;
 								default:
 									getSurface().drawSpriteClipping(spriteSelect(EntityHandler.getItemDef(notify.killPicture)), width_icon, 36 + Offset, picture_width,
-										18, EntityHandler.getItemDef(notify.killPicture).getPictureMask(), 0, false, 0, 1);
+										18, EntityHandler.getItemDef(notify.killPicture).getPictureMask(), 0,
+										EntityHandler.getItemDef(notify.killPicture).getBlueMask(),false, 0, 1);
 									break;
 							}
 							this.getSurface().drawString(notify.killedString, width_killed, 50 + Offset, 0xffffff, 1);
@@ -5824,13 +5837,14 @@ public final class mudclient implements Runnable {
 		try {
 			Sprite sprite = spriteSelect(EntityHandler.getItemDef(id));
 			int mask = EntityHandler.getItemDef(id).getPictureMask();
-			this.getSurface().drawSpriteClipping(sprite, x, y, width, height, mask, 0, false, 0, 1);
+			this.getSurface().drawSpriteClipping(sprite, x, y, width, height, mask, 0,
+				EntityHandler.getItemDef(id).getBlueMask(),false, 0, 1);
 
 			ItemDef def = EntityHandler.getItemDef(id);
 			if (def.getNotedFormOf() >= 0) {
 				ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
 				getSurface().drawSpriteClipping(spriteSelect(originalDef), x + 7, y + 4, width / 2 + 5,
-					height / 2 + 4, originalDef.getPictureMask(), 0, false, 0, 1);
+					height / 2 + 4, originalDef.getPictureMask(), 0, originalDef.getBlueMask(),false, 0, 1);
 			}
 
 		} catch (RuntimeException var10) {
@@ -5885,7 +5899,7 @@ public final class mudclient implements Runnable {
 				this.panelRecovery.drawPanel();
 			}
 
-			this.getSurface().drawSpriteClipping(spriteSelect(GUIPARTS.BLUEBAR.getDef()), 0, getGameHeight(), getGameWidth(), 10, 0, 0, false, 0, 1);
+			this.getSurface().drawSpriteClipping(spriteSelect(GUIPARTS.BLUEBAR.getDef()), 0, getGameHeight(), getGameWidth(), 10, 0, 0, 0, false, 0, 1);
 			// this.getSurface().draw(this.graphics, this.screenOffsetX, 256,
 			// this.screenOffsetY);
 			clientPort.draw();
@@ -6079,7 +6093,7 @@ public final class mudclient implements Runnable {
 							}
 
 							this.getSurface().drawSpriteClipping(sprite, xOffset + x, yOffset + y, spriteWidth, height,
-								colorVariant, baseColor, var12, topPixelSkew, 1);
+								colorVariant, baseColor, 0, var12, topPixelSkew, 1);
 						}
 					}
 				}
@@ -6230,6 +6244,7 @@ public final class mudclient implements Runnable {
 								int spriteWidth = (something1 * width) / something3;
 								xOffset -= (spriteWidth - width) / 2;
 								int colorMask1 = EntityHandler.getAnimationDef(animID).getCharColour();
+								int blueScaleColor = EntityHandler.getAnimationDef(animID).getBlueMask();
 								if (colorMask1 == 1) {
 									colorMask1 = this.getPlayerHairColors()[player.colourHair];
 								} else if (colorMask1 == 2) {
@@ -6248,7 +6263,7 @@ public final class mudclient implements Runnable {
 									colourTransform &= 0xFF202020;
 
 								this.getSurface().drawSpriteClipping(sprite, xOffset + x, y + yOffset, spriteWidth,
-									height, colorMask1, colorMask2, mirrorX, topPixelSkew, 1, colourTransform);
+									height, colorMask1, colorMask2, blueScaleColor, mirrorX, topPixelSkew, 1, colourTransform);
 
 									/*if(sprite != 1948 && sprite != 1947 && sprite != 1949) {
 										this.getSurface().drawSpriteClipping(sprite, xOffset + x, y + yOffset, spriteWidth,
@@ -6353,7 +6368,7 @@ public final class mudclient implements Runnable {
 					int destWidth = overlayMovement * 16 / 100;
 					int destHeight = overlayMovement * 16 / 100;
 					getSurface().drawSpriteClipping(spriteSelect(GUIPARTS.SKULL.getDef()), skullX - destWidth / 2,
-						y - destHeight / 2 - overlayMovement * 10 / 100, destWidth, destHeight, 0xFF0000, 0, false,
+						y - destHeight / 2 - overlayMovement * 10 / 100, destWidth, destHeight, 0xFF0000, 0, 0, false,
 						0, 0);
 
 					//
@@ -7459,13 +7474,14 @@ public final class mudclient implements Runnable {
 						this.getSurface().drawSpriteClipping(
 							spriteSelect(EntityHandler.getItemDef(this.inventoryItemID[var4])),
 							var5, id, 48, 32, EntityHandler.getItemDef(this.inventoryItemID[var4]).getPictureMask(), 0,
-							false, 0, var1 ^ -15251);
+							EntityHandler.getItemDef(this.inventoryItemID[var4]).getBlueMask(),false, 0, var1 ^ -15251);
 
 						ItemDef def = EntityHandler.getItemDef(this.inventoryItemID[var4]);
 						if (def.getNotedFormOf() >= 0) {
 							ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
 							getSurface().drawSpriteClipping(spriteSelect(originalDef), var5 + 7,
-								id + 4, 33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
+								id + 4, 33, 23, originalDef.getPictureMask(), 0,
+								originalDef.getBlueMask(),false, 0, 1);
 						}
 						if (EntityHandler.getItemDef(this.inventoryItemID[var4]).isStackable()) {
 							this.getSurface().drawString("" + this.inventoryItemSize[var4], 1 + var5,
@@ -7559,7 +7575,7 @@ public final class mudclient implements Runnable {
 							, xOffset + equipIconXLocations[i]
 							, yOffset + equipIconYLocations[i],
 							todraw.getWidth(), todraw.getHeight(),
-							0, 0, false, 0, var1 ^ -15251, 0x80FFFFFF);
+							0, 0, 0,false, 0, var1 ^ -15251, 0x80FFFFFF);
 					} else {
 						todraw = spriteSelect(GUIPARTS.EQUIPSLOT_HIGHLIGHT.getDef());
 						this.getSurface().drawSpriteClipping(
@@ -7567,14 +7583,15 @@ public final class mudclient implements Runnable {
 							xOffset + equipIconXLocations[i],
 							yOffset + equipIconYLocations[i],
 							todraw.getWidth(), todraw.getHeight(),
-							0, 0, false, 0, var1 ^ -15251, 0xC0FFFFFF);
+							0, 0, 0, false, 0, var1 ^ -15251, 0xC0FFFFFF);
 						todraw = spriteSelect(equippedItems[i]);
 						this.getSurface().drawSpriteClipping(
 							todraw,
 							xOffset + equipIconXLocations[i],
 							yOffset + equipIconYLocations[i],
 							todraw.getSomething1(), todraw.getSomething2(),
-							equippedItems[i].getPictureMask(), 0, false, 0, var1 ^ -15251);
+							equippedItems[i].getPictureMask(), 0,
+							equippedItems[i].getBlueMask(),false, 0, var1 ^ -15251);
 						if (equippedItems[i].isStackable())
 							this.getSurface().drawString("" + equippedItemAmount[i],
 								xOffset + equipIconXLocations[i] + 2,

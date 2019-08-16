@@ -1002,7 +1002,7 @@ public class GraphicsController {
 											   int destColumnSkewPerRow, int destFirstColumn, int dummy1, int dummy2, int mask2, int scaleY, int scaleX,
 											   int srcStartX, int skipEveryOther, int srcStartY, int srcWidth, int mask1, int destHeight,
 											   int destRowHead) {
-		plot_trans_scale_with_2_masks(dest, src, destColumnCount, destColumnSkewPerRow, destFirstColumn, dummy1, dummy2, mask2, scaleY, scaleX, srcStartX, skipEveryOther, srcStartY, srcWidth, mask1, destHeight, destRowHead, 0xFFFFFFFF);
+		plot_trans_scale_with_2_masks(dest, src, destColumnCount, destColumnSkewPerRow, destFirstColumn, dummy1, dummy2, mask2, scaleY, scaleX, srcStartX, skipEveryOther, srcStartY, srcWidth, mask1, destHeight, destRowHead, 0xFFFFFFFF, 0);
 	}
 
 	/**
@@ -1031,7 +1031,7 @@ public class GraphicsController {
 	private void plot_trans_scale_with_2_masks(int[] dest, int[] src, int destColumnCount,
 											   int destColumnSkewPerRow, int destFirstColumn, int dummy1, int spritePixel, int mask2, int scaleY, int scaleX,
 											   int srcStartX, int skipEveryOther, int srcStartY, int srcWidth, int mask1, int destHeight,
-											   int destRowHead, int colourTransform) {
+											   int destRowHead, int colourTransform, int blueMask) {
 		try {
 
 			int mask1R = mask1 >> 16 & 0xFF;
@@ -1083,6 +1083,14 @@ public class GraphicsController {
 									spritePixelR = (spritePixelR * mask2R) >> 8;
 									spritePixelG = (spritePixelG * mask2G) >> 8;
 									spritePixelB = (spritePixelB * mask2B) >> 8;
+								} else if (spritePixelR == spritePixelG && spritePixelB != spritePixelG) {
+									int blueMaskR = blueMask >> 16 & 0xFF;
+									int blueMaskG = blueMask >> 8 & 0xFF;
+									int blueMaskB = blueMask & 0xFF;
+									int shifter = spritePixelR*spritePixelB;
+									spritePixelR = (blueMaskR * shifter) >> 16;
+									spritePixelG = (blueMaskG * shifter) >> 16;
+									spritePixelB = (blueMaskB * shifter) >> 16;
 								}
 
 								int opacity = colourTransform >> 24 & 0xFF;
@@ -1513,6 +1521,7 @@ public class GraphicsController {
 							crown.getHeight(),
 							spriteHeaderMask,
 							0,
+							0,
 							false,
 							0,
 							0
@@ -1617,7 +1626,7 @@ public class GraphicsController {
 								sprites[this.iconSpriteIndex].getHeight(),
 								0x00FF00,
 								0,
-								false,
+								0,false,
 								0,
 								0
 							);
@@ -1632,7 +1641,7 @@ public class GraphicsController {
 								sprites[this.iconSpriteIndex].getHeight(),
 								0x0000FF,
 								0,
-								false,
+								0,false,
 								0,
 								0
 							);
@@ -1647,7 +1656,7 @@ public class GraphicsController {
 								sprites[this.iconSpriteIndex].getHeight(),
 								0xFF0000,
 								0,
-								false,
+								0,false,
 								0,
 								0
 							);
@@ -1662,7 +1671,7 @@ public class GraphicsController {
 								sprites[this.iconSpriteIndex].getHeight(),
 								0x4D33BD,
 								0,
-								false,
+								0,false,
 								0,
 								0
 							);
@@ -2502,12 +2511,12 @@ public class GraphicsController {
 		}
 	}
 
-	public final void drawSpriteClipping(Sprite sprite, int x, int y, int width, int height, int colorMask, int colorMask2,
+	public final void drawSpriteClipping(Sprite sprite, int x, int y, int width, int height, int colorMask, int colorMask2, int blueMask,
 										 boolean mirrorX, int topPixelSkew, int dummy) {
-		drawSpriteClipping(sprite, x, y, width, height, colorMask, colorMask2, mirrorX, topPixelSkew, dummy, 0xFFFFFFFF);
+		drawSpriteClipping(sprite, x, y, width, height, colorMask, colorMask2, blueMask, mirrorX, topPixelSkew, dummy, 0xFFFFFFFF);
 	}
 
-	public final void drawSpriteClipping(Sprite e, int x, int y, int width, int height, int colorMask, int colorMask2,
+	public final void drawSpriteClipping(Sprite e, int x, int y, int width, int height, int colorMask, int colorMask2, int blueMask,
 										 boolean mirrorX, int topPixelSkew, int dummy, int colourTransform) {
 		try {
 			try {
@@ -2587,22 +2596,22 @@ public class GraphicsController {
 							this.plot_tran_scale_with_mask(dummy ^ 74, e.getPixels(), scaleY, 0,
 								srcStartY, (e.getWidth() << 16) - (srcStartX + 1), width,
 								this.pixelData, height, destColumnSkewPerRow, destRowHead, -scaleX, destFirstColumn,
-								spriteWidth, skipEveryOther, colorMask, colourTransform);
+								spriteWidth, skipEveryOther, colorMask, colourTransform, blueMask);
 						} else {
 							this.plot_tran_scale_with_mask(dummy + 89, e.getPixels(), scaleY, 0,
 								srcStartY, srcStartX, width, this.pixelData, height, destColumnSkewPerRow,
-								destRowHead, scaleX, destFirstColumn, spriteWidth, skipEveryOther, colorMask, colourTransform);
+								destRowHead, scaleX, destFirstColumn, spriteWidth, skipEveryOther, colorMask, colourTransform, blueMask);
 						}
 					}
 				} else if (mirrorX) {
 					this.plot_trans_scale_with_2_masks(this.pixelData, e.getPixels(), width,
 						destColumnSkewPerRow, destFirstColumn, dummy + 1603920391, 0, colorMask2, scaleY, -scaleX,
 						(e.getWidth() << 16) - srcStartX - 1, skipEveryOther, srcStartY, spriteWidth,
-						colorMask, height, destRowHead, colourTransform);
+						colorMask, height, destRowHead, colourTransform, blueMask);
 				} else {
 					this.plot_trans_scale_with_2_masks(this.pixelData, e.getPixels(), width,
 						destColumnSkewPerRow, destFirstColumn, 1603920392, 0, colorMask2, scaleY, scaleX, srcStartX,
-						skipEveryOther, srcStartY, spriteWidth, colorMask, height, destRowHead, colourTransform);
+						skipEveryOther, srcStartY, spriteWidth, colorMask, height, destRowHead, colourTransform, blueMask);
 				}
 			} catch (Exception var24) {
 				System.out.println("error in sprite clipping routine");
@@ -2738,12 +2747,20 @@ public class GraphicsController {
 	private void plot_tran_scale_with_mask(int dummy2, int[] src, int scaleY, int dummy1, int srcStartY,
 										   int srcStartX, int destColumnCount, int[] dest, int destHeight, int destColumnSkewPerRow, int destRowHead,
 										   int scaleX, int destFirstColumn, int srcWidth, int skipEveryOther, int spritePixel, int colourTransform) {
+		this.plot_tran_scale_with_mask(dummy2, src, scaleY, dummy1, srcStartY, srcStartX, destColumnCount, dest, destHeight, destColumnSkewPerRow, destRowHead,
+			scaleX, destFirstColumn, srcWidth, skipEveryOther, spritePixel, colourTransform, 0);
+	}
+	private void plot_tran_scale_with_mask(int dummy2, int[] src, int scaleY, int dummy1, int srcStartY,
+										   int srcStartX, int destColumnCount, int[] dest, int destHeight, int destColumnSkewPerRow, int destRowHead,
+										   int scaleX, int destFirstColumn, int srcWidth, int skipEveryOther, int spritePixel, int colourTransform, int blueMask) {
 		try {
 
 			int spritePixelR = spritePixel >> 16 & 0xFF;
 			int spritePixelG = spritePixel >> 8 & 0xFF;
 			int spritePixelB = spritePixel & 0xFF;
 
+			if (blueMask == 0)
+				blueMask = 0xFFFFFF;
 			try {
 				int firstColumn = srcStartX;
 
@@ -2784,6 +2801,14 @@ public class GraphicsController {
 									newR = (spritePixelR * newR) >> 8;
 									newG = (spritePixelG * newG) >> 8;
 									newB = (spritePixelB * newB) >> 8;
+								} else if (newR == newG && newB != newR) {//blue mask?
+									int blueMaskR = blueMask >> 16 & 0xFF;
+									int blueMaskG = blueMask >> 8 & 0xFF;
+									int blueMaskB = blueMask & 0xFF;
+									int shifter = newR*newB;
+									newR = (blueMaskR * shifter) >> 16;
+									newG = (blueMaskG * shifter) >> 16;
+									newB = (blueMaskB * shifter) >> 16;
 								}
 
 								int spriteR = ((newR * transformR) >> 8) * opacity;

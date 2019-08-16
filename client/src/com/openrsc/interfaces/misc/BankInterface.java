@@ -326,11 +326,12 @@ public class BankInterface {
 						mc.spriteSelect(def),
 						slotX, slotY, 48, 32,
 						def.getPictureMask(),
-						0, false, 0, 1);
+						0, def.getBlueMask(),
+						false, 0, 1);
 					if (def.getNotedFormOf() >= 0) { // Noted items
 						ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
 						mc.getSurface().drawSpriteClipping(mc.spriteSelect(originalDef),
-							slotX + 7, slotY + 5, 29, 19, originalDef.getPictureMask(), 0, false,
+							slotX + 7, slotY + 5, 29, 19, originalDef.getPictureMask(), 0, originalDef.getBlueMask(),false,
 							0, 1);
 					}
 

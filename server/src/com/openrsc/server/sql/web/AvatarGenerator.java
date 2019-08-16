@@ -280,28 +280,65 @@ public final class AvatarGenerator {
 				 * Add custom animation below.
 				*/
 				new AnimationDef("hatchet", 16737817, 0, true, false, 0), //230
-			new AnimationDef("hatchet", 15654365, 0, true, false, 0),
-			new AnimationDef("hatchet", 15658734, 0, true, false, 0),
-			new AnimationDef("hatchet", 10072780, 0, true, false, 0),
-			new AnimationDef("hatchet", 11717785, 0, true, false, 0),
-			new AnimationDef("hatchet", 65535, 0, true, false, 0),
-			new AnimationDef("hatchet", 3158064, 0, true, false, 0),
-			new AnimationDef("kiteshield", 0xBB4B12, 0, true, false, 0), //237
-			new AnimationDef("kiteshield", 0xAFA2A2, 0, true, false, 0),
-			new AnimationDef("kiteshield", 0xAFAFAF, 0, true, false, 0),
-			new AnimationDef("kiteshield", 0x708396, 0, true, false, 0),
-			new AnimationDef("kiteshield", 0x839670, 0, true, false, 0),
-			new AnimationDef("kiteshield", 48059, 0, true, false, 0),
-			new AnimationDef("kiteshield", 0x232323, 0, true, false, 0),
-			new AnimationDef("dragonshield", 0, 0, true, false, 0), //244
-			new AnimationDef("dragonmedhelm", 0, 0, true, false, 0), //245
-			new AnimationDef("armorskirt", 0xBB4B12, 0, true, false, 0), //246
-			new AnimationDef("armorskirt", 0xAFA2A2, 0, true, false, 0),
-			new AnimationDef("armorskirt", 0xAFAFAF, 0, true, false, 0),
-			new AnimationDef("armorskirt", 0x708396, 0, true, false, 0),
-			new AnimationDef("armorskirt", 0x839670, 0, true, false, 0),
-			new AnimationDef("armorskirt", 48059, 0, true, false, 0),
-			new AnimationDef("armorskirt", 0x232323, 0, true, false, 0)
+				new AnimationDef("hatchet", 15654365, 0, true, false, 0),
+				new AnimationDef("hatchet", 15658734, 0, true, false, 0),
+				new AnimationDef("hatchet", 10072780, 0, true, false, 0),
+				new AnimationDef("hatchet", 11717785, 0, true, false, 0),
+				new AnimationDef("hatchet", 65535, 0, true, false, 0),
+				new AnimationDef("hatchet", 3158064, 0, true, false, 0),
+				new AnimationDef("kiteshield", 0xBB4B12, 0, true, false, 0), //237
+				new AnimationDef("kiteshield", 0xAFA2A2, 0, true, false, 0),
+				new AnimationDef("kiteshield", 0xAFAFAF, 0, true, false, 0),
+				new AnimationDef("kiteshield", 0x708396, 0, true, false, 0),
+				new AnimationDef("kiteshield", 0x839670, 0, true, false, 0),
+				new AnimationDef("kiteshield", 48059, 0, true, false, 0),
+				new AnimationDef("kiteshield", 0x232323, 0, true, false, 0),
+				new AnimationDef("dragonshield", 0, 0, true, false, 0), //244
+				new AnimationDef("dragonmedhelm", 0, 0, true, false, 0), //245
+				new AnimationDef("armorskirt", 0xBB4B12, 0, true, false, 0), //246
+				new AnimationDef("armorskirt", 0xAFA2A2, 0, true, false, 0),
+				new AnimationDef("armorskirt", 0xAFAFAF, 0, true, false, 0),
+				new AnimationDef("armorskirt", 0x708396, 0, true, false, 0),
+				new AnimationDef("armorskirt", 0x839670, 0, true, false, 0),
+				new AnimationDef("armorskirt", 48059, 0, true, false, 0),
+				new AnimationDef("armorskirt", 0x232323, 0, true, false, 0),
+				new AnimationDef("longbow", 8537122, 0, true, false, 0), //253
+				new AnimationDef("longbow", 11300689, 0, true, false, 0),
+				new AnimationDef("longbow", 8941897, 0, true, false, 0),
+				new AnimationDef("longbow", 9132849, 0, true, false, 0),
+				new AnimationDef("longbow", 10310656, 0, true, false, 0),
+				new AnimationDef("longbow", 37281, 0, true, false, 0),
+				new AnimationDef("shortsword", 16737817, 0, true, false, 0), //259
+				new AnimationDef("shortsword", 15654365, 0, true, false, 0),
+				new AnimationDef("shortsword", 15658734, 0, true, false, 0),
+				new AnimationDef("shortsword", 10072780, 0, true, false, 0),
+				new AnimationDef("shortsword", 11717785, 0, true, false, 0),
+				new AnimationDef("shortsword", 65535, 0, true, false, 0),
+				new AnimationDef("shortsword", 3158064, 0, true, false, 0),
+				new AnimationDef("dagger", 16737817, 0, true, false, 0), //266
+				new AnimationDef("dagger", 15654365, 0, true, false, 0),
+				new AnimationDef("dagger", 15658734, 0, true, false, 0),
+				new AnimationDef("dagger", 10072780, 0, true, false, 0),
+				new AnimationDef("dagger", 11717785, 0, true, false, 0),
+				new AnimationDef("dagger", 65535, 0, true, false, 0),
+				new AnimationDef("dagger", 3158064, 0, true, false, 0),
+				new AnimationDef("poisoneddagger", 16737817, 0, true, false, 0), //273
+				new AnimationDef("poisoneddagger", 15654365, 0, true, false, 0),
+				new AnimationDef("poisoneddagger", 15658734, 0, true, false, 0),
+				new AnimationDef("poisoneddagger", 10072780, 0, true, false, 0),
+				new AnimationDef("poisoneddagger", 11717785, 0, true, false, 0),
+				new AnimationDef("poisoneddagger", 65535, 0, true, false, 0),
+				new AnimationDef("poisoneddagger", 3158064, 0, true, false, 0),
+				new AnimationDef("2hander", 16737817, 0, true, false, 0), //280
+				new AnimationDef("2hander", 15654365, 0, true, false, 0),
+				new AnimationDef("2hander", 15658734, 0, true, false, 0),
+				new AnimationDef("2hander", 10072780, 0, true, false, 0),
+				new AnimationDef("2hander", 11717785, 0, true, false, 0),
+				new AnimationDef("2hander", 65535, 0, true, false, 0),
+				new AnimationDef("2hander", 3158064, 0, true, false, 0),
+				new AnimationDef("unicornmask", 3355443,  0, true, false, 0),
+				new AnimationDef("unicornmask", 16759039,  0, true, false, 0),
+				new AnimationDef("wolfmask", 16752165,  0, true, false, 0)
 			};
 
 

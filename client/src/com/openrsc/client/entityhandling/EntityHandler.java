@@ -2322,8 +2322,8 @@ public class EntityHandler {
 		items.add(new ItemDef("wizardshat", "A silly pointed hat", "", 2, 86, "items:86", false, true, 32, 255, false, false, 1448, -1, 185));
 		items.add(new ItemDef("Brass necklace", "I'd prefer a gold one", "", 30, 57, "items:57", false, true, 1024, 0, false, false, 1449, -1, 186));
 		items.add(new ItemDef("skirt", "A ladies skirt", "", 2, 88, "items:88", false, true, 128, 255, false, false, 1450, -1, 187));
-		items.add(new ItemDef("Longbow", "A Nice sturdy bow", "", 80, 54, "items:54", false, true, 24, 65280, false, false, 1451, -1, 188));
-		items.add(new ItemDef("Shortbow", "Short but effective", "", 50, 55, "items:55", false, true, 24, 65280, false, false, 1452, -1, 189));
+		items.add(new ItemDef("Longbow", "A Nice sturdy bow", "", 80, 54, "items:54", false, true, 24, 65280, 8537122, false, false, 1451, -1, 188));
+		items.add(new ItemDef("Shortbow", "Short but effective", "", 50, 55, "items:55", false, true, 24, 65280, 8537122, false, false, 1452, -1, 189));
 		items.add(new ItemDef("Crossbow bolts", "Good if you have a crossbow!", "", 3, 56, "items:56", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1001 : 0, 0, false, false, -1, -1, 190));
 		items.add(new ItemDef("Apron", "this will help keep my clothes clean", "", 2, 58, "items:58", false, true, 1024, 9789488, false, false, 1453, -1, 191));
 		items.add(new ItemDef("Chef's hat", "What a silly hat", "", 2, 89, "items:89", false, true, 32, 0, false, false, 1454, -1, 192));
@@ -2410,8 +2410,8 @@ public class EntityHandler {
 		items.add(new ItemDef("Goblin Armour", "Armour Designed to fit Goblins", "", 40, 118, "items:118", false, false, 0, 65535, false, false, 1522, -1, 273));
 		items.add(new ItemDef("Goblin Armour", "Armour Designed to fit Goblins", "", 40, 118, "items:118", false, false, 0, 16750912, false, true, -1, -1, 274));
 		items.add(new ItemDef("Goblin Armour", "Armour Designed to fit Goblins", "", 40, 118, "items:118", false, false, 0, 255, false, true, -1, -1, 275));
-		items.add(new ItemDef("unstrung Longbow", "I need to find a string for this", "", 60, 119, "items:119", false, false, 0, 65280, true, false, 1523, -1, 276));
-		items.add(new ItemDef("unstrung shortbow", "I need to find a string for this", "", 23, 120, "items:120", false, false, 0, 65280, true, false, 1524, -1, 277));
+		items.add(new ItemDef("unstrung Longbow", "I need to find a string for this", "", 60, 119, "items:119", false, false, 0, 65280, 8537122, true, false, 1523, -1, 276));
+		items.add(new ItemDef("unstrung shortbow", "I need to find a string for this", "", 23, 120, "items:120", false, false, 0, 65280, 8537122, true, false, 1524, -1, 277));
 		items.add(new ItemDef("Unfired Pie dish", "I need to put this in a pottery oven", "", 3, 110, "items:110", false, false, 0, 15632503, false, false, 1525, -1, 278));
 		items.add(new ItemDef("unfired pot", "I need to put this in a pottery oven", "", 1, 61, "items:61", false, false, 0, 15632503, false, false, 1526, -1, 279));
 		items.add(new ItemDef("arrow shafts", "I need to attach feathers to these", "", 1, 121, "items:121", true, false, 0, 0, true, false, -1, -1, 280));
@@ -2693,13 +2693,13 @@ public class EntityHandler {
 		items.add(new ItemDef("Ice Gloves", "These will keep my hands cold!", "", 6, 17, "items:17", false, true, 256, 11202303, true, true, -1, -1, 556));
 		items.add(new ItemDef("Firebird Feather", "A red hot feather", "", 2, 176, "items:176", false, false, 0, 16711680, true, true, -1, -1, 557));
 		items.add(new ItemDef("Firebird Feather", "This is cool enough to hold now", "", 2, 176, "items:176", false, false, 0, 16768256, true, true, -1, -1, 558));
-		items.add(new ItemDef("Poisoned Iron dagger", "Short but pointy", "", 35, 80, "items:80", false, true, 16, 15654365, true, false, 1763, -1, 559));
-		items.add(new ItemDef("Poisoned bronze dagger", "Short but pointy", "", 10, 80, "items:80", false, true, 16, 16737817, true, false, 1764, -1, 560));
-		items.add(new ItemDef("Poisoned Steel dagger", "Short but pointy", "", 125, 80, "items:80", false, true, 16, 15658734, true, false, 1765, -1, 561));
-		items.add(new ItemDef("Poisoned Mithril dagger", "Short but pointy", "", 325, 80, "items:80", false, true, 16, 10072780, true, false, 1766, -1, 562));
-		items.add(new ItemDef("Poisoned Rune dagger", "Short but pointy", "", 8000, 80, "items:80", false, true, 16, 65535, true, false, 1767, -1, 563));
-		items.add(new ItemDef("Poisoned Adamantite dagger", "Short but pointy", "", 800, 80, "items:80", false, true, 16, 11717785, true, false, 1768, -1, 564));
-		items.add(new ItemDef("Poisoned Black dagger", "Short but pointy", "", 240, 80, "items:80", false, true, 16, 3158064, true, false, 1769, -1, 565));
+		items.add(new ItemDef("Poisoned Iron dagger", "Short but pointy", "", 35, 80, "items:514", false, true, 16, 15654365, true, false, 1763, -1, 559));
+		items.add(new ItemDef("Poisoned bronze dagger", "Short but pointy", "", 10, 80, "items:514", false, true, 16, 16737817, true, false, 1764, -1, 560));
+		items.add(new ItemDef("Poisoned Steel dagger", "Short but pointy", "", 125, 80, "items:514", false, true, 16, 15658734, true, false, 1765, -1, 561));
+		items.add(new ItemDef("Poisoned Mithril dagger", "Short but pointy", "", 325, 80, "items:514", false, true, 16, 10072780, true, false, 1766, -1, 562));
+		items.add(new ItemDef("Poisoned Rune dagger", "Short but pointy", "", 8000, 80, "items:514", false, true, 16, 65535, true, false, 1767, -1, 563));
+		items.add(new ItemDef("Poisoned Adamantite dagger", "Short but pointy", "", 800, 80, "items:514", false, true, 16, 11717785, true, false, 1768, -1, 564));
+		items.add(new ItemDef("Poisoned Black dagger", "Short but pointy", "", 240, 80, "items:514", false, true, 16, 3158064, true, false, 1769, -1, 565));
 		items.add(new ItemDef("Cure poison Potion", "3 doses of cure poison potion", "Drink", 288, 48, "items:48", false, false, 0, 6749969, true, false, 1770, -1, 566));
 		items.add(new ItemDef("Cure poison Potion", "2 doses of cure poison potion", "Drink", 216, 436, "items:436", false, false, 0, 6749969, true, false, 1771, -1, 567));
 		items.add(new ItemDef("Cure poison Potion", "1 dose of cure poison potion", "Drink", 144, 437, "items:437", false, false, 0, 6749969, true, false, 1772, -1, 568));
@@ -2766,11 +2766,11 @@ public class EntityHandler {
 		items.add(new ItemDef("Raw bass certificate", "Each certificate exchangable at Catherby for 5 raw bass", "", 10, 180, "items:180", true, false, 0, 0, true, false, -1, -1, 629));
 		items.add(new ItemDef("shark certificate", "Each certificate exchangable at Catherby for 5 shark", "", 10, 180, "items:180", true, false, 0, 0, true, false, -1, -1, 630));
 		items.add(new ItemDef("Raw shark certificate", "Each certificate exchangable at Catherby for 5 raw shark", "", 10, 180, "items:180", true, false, 0, 0, true, false, -1, -1, 631));
-		items.add(new ItemDef("Oak Logs", "Logs cut from an oak tree", "", 20, 14, "items:14", false, false, 0, 0, true, false, 1814, -1, 632));
-		items.add(new ItemDef("Willow Logs", "Logs cut from a willow tree", "", 40, 14, "items:14", false, false, 0, 0, true, false, 1815, -1, 633));
-		items.add(new ItemDef("Maple Logs", "Logs cut from a maple tree", "", 80, 14, "items:14", false, false, 0, 0, true, false, 1816, -1, 634));
-		items.add(new ItemDef("Yew Logs", "Logs cut from a yew tree", "", 160, 14, "items:14", false, false, 0, 0, true, false, 1817, -1, 635));
-		items.add(new ItemDef("Magic Logs", "Logs made from magical wood", "", 320, 14, "items:14", false, false, 0, 0, true, false, 1818, -1, 636));
+		items.add(new ItemDef("Oak Logs", "Logs cut from an oak tree", "", 20, 14, "items:506", false, false, 0, 0, true, false, 1814, -1, 632));
+		items.add(new ItemDef("Willow Logs", "Logs cut from a willow tree", "", 40, 14, "items:507", false, false, 0, 0, true, false, 1815, -1, 633));
+		items.add(new ItemDef("Maple Logs", "Logs cut from a maple tree", "", 80, 14, "items:505", false, false, 0, 0, true, false, 1816, -1, 634));
+		items.add(new ItemDef("Yew Logs", "Logs cut from a yew tree", "", 160, 14, "items:508", false, false, 0, 0, true, false, 1817, -1, 635));
+		items.add(new ItemDef("Magic Logs", "Logs made from magical wood", "", 320, 14, "items:504", false, false, 0, 0, true, false, 1818, -1, 636));
 		items.add(new ItemDef("Headless Arrows", "I need to attach arrow heads to these", "", 1, 205, "items:205", true, false, 0, 0, true, false, -1, -1, 637));
 		items.add(new ItemDef("Iron Arrows", "Arrows with iron heads", "", 6, 11, "items:11", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1000 : 0, 15654365, true, false, -1, -1, 638));
 		items.add(new ItemDef("Poison Iron Arrows", "Venomous looking arrows", "", 6, 206, "items:206", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1000 : 0, 15654365, true, false, -1, -1, 639));
@@ -2782,26 +2782,26 @@ public class EntityHandler {
 		items.add(new ItemDef("Poison Adamantite Arrows", "Venomous looking arrows", "", 160, 206, "items:206", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1000 : 0, 11717785, true, false, -1, -1, 645));
 		items.add(new ItemDef("Rune Arrows", "Arrows with rune heads", "", 800, 11, "items:11", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1000 : 0, 65535, true, false, -1, -1, 646));
 		items.add(new ItemDef("Poison Rune Arrows", "Venomous looking arrows", "", 800, 206, "items:206", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1000 : 0, 65535, true, false, -1, -1, 647));
-		items.add(new ItemDef("Oak Longbow", "A Nice sturdy bow", "", 160, 54, "items:54", false, true, 24, 255, true, false, 1819, -1, 648));
-		items.add(new ItemDef("Oak Shortbow", "Short but effective", "", 100, 55, "items:55", false, true, 24, 255, true, false, 1820, -1, 649));
-		items.add(new ItemDef("Willow Longbow", "A Nice sturdy bow", "", 320, 54, "items:54", false, true, 24, 16776960, true, false, 1821, -1, 650));
-		items.add(new ItemDef("Willow Shortbow", "Short but effective", "", 200, 55, "items:55", false, true, 24, 16776960, true, false, 1822, -1, 651));
-		items.add(new ItemDef("Maple Longbow", "A Nice sturdy bow", "", 640, 54, "items:54", false, true, 24, 16746496, true, false, 1823, -1, 652));
-		items.add(new ItemDef("Maple Shortbow", "Short but effective", "", 400, 55, "items:55", false, true, 24, 16746496, true, false, 1824, -1, 653));
-		items.add(new ItemDef("Yew Longbow", "A Nice sturdy bow", "", 1280, 54, "items:54", false, true, 24, 16711680, true, false, 1825, -1, 654));
-		items.add(new ItemDef("Yew Shortbow", "Short but effective", "", 800, 55, "items:55", false, true, 24, 16711680, true, false, 1826, -1, 655));
-		items.add(new ItemDef("Magic Longbow", "A Nice sturdy bow", "", 2560, 54, "items:54", false, true, 24, 4210752, true, false, 1827, -1, 656));
-		items.add(new ItemDef("Magic Shortbow", "Short but effective", "", 1600, 55, "items:55", false, true, 24, 4210752, true, false, 1828, -1, 657));
-		items.add(new ItemDef("unstrung Oak Longbow", "I need to find a string for this", "", 80, 119, "items:119", false, false, 0, 255, true, false, 1829, -1, 658));
-		items.add(new ItemDef("unstrung Oak Shortbow", "I need to find a string for this", "", 50, 120, "items:120", false, false, 0, 255, true, false, 1830, -1, 659));
-		items.add(new ItemDef("unstrung Willow Longbow", "I need to find a string for this", "", 160, 119, "items:119", false, false, 0, 16776960, true, false, 1831, -1, 660));
-		items.add(new ItemDef("unstrung Willow Shortbow", "I need to find a string for this", "", 100, 120, "items:120", false, false, 0, 16776960, true, false, 1832, -1, 661));
-		items.add(new ItemDef("unstrung Maple Longbow", "I need to find a string for this", "", 320, 119, "items:119", false, false, 0, 16744448, true, false, 1833, -1, 662));
-		items.add(new ItemDef("unstrung Maple Shortbow", "I need to find a string for this", "", 200, 120, "items:120", false, false, 0, 16744448, true, false, 1834, -1, 663));
-		items.add(new ItemDef("unstrung Yew Longbow", "I need to find a string for this", "", 640, 119, "items:119", false, false, 0, 16711680, true, false, 1835, -1, 664));
-		items.add(new ItemDef("unstrung Yew Shortbow", "I need to find a string for this", "", 400, 120, "items:120", false, false, 0, 16711680, true, false, 1836, -1, 665));
-		items.add(new ItemDef("unstrung Magic Longbow", "I need to find a string for this", "", 1280, 119, "items:119", false, false, 0, 4210752, true, false, 1837, -1, 666));
-		items.add(new ItemDef("unstrung Magic Shortbow", "I need to find a string for this", "", 800, 120, "items:120", false, false, 0, 4210752, true, false, 1838, -1, 667));
+		items.add(new ItemDef("Oak Longbow", "A Nice sturdy bow", "", 160, 54, "items:54", false, true, 24, 255, 11300689, true, false, 1819, -1, 648));
+		items.add(new ItemDef("Oak Shortbow", "Short but effective", "", 100, 55, "items:55", false, true, 24, 255, 11300689, true, false, 1820, -1, 649));
+		items.add(new ItemDef("Willow Longbow", "A Nice sturdy bow", "", 320, 54, "items:54", false, true, 24, 16776960, 8941897, true, false, 1821, -1, 650));
+		items.add(new ItemDef("Willow Shortbow", "Short but effective", "", 200, 55, "items:55", false, true, 24, 16776960, 8941897, true, false, 1822, -1, 651));
+		items.add(new ItemDef("Maple Longbow", "A Nice sturdy bow", "", 640, 54, "items:54", false, true, 24, 16746496, 9132849, true, false, 1823, -1, 652));
+		items.add(new ItemDef("Maple Shortbow", "Short but effective", "", 400, 55, "items:55", false, true, 24, 16746496, 9132849, true, false, 1824, -1, 653));
+		items.add(new ItemDef("Yew Longbow", "A Nice sturdy bow", "", 1280, 54, "items:54", false, true, 24, 16711680, 10310656, true, false, 1825, -1, 654));
+		items.add(new ItemDef("Yew Shortbow", "Short but effective", "", 800, 55, "items:55", false, true, 24, 16711680, 10310656, true, false, 1826, -1, 655));
+		items.add(new ItemDef("Magic Longbow", "A Nice sturdy bow", "", 2560, 54, "items:54", false, true, 24, 4210752, 44737, true, false, 1827, -1, 656));
+		items.add(new ItemDef("Magic Shortbow", "Short but effective", "", 1600, 55, "items:55", false, true, 24, 4210752, 37281, true, false, 1828, -1, 657));
+		items.add(new ItemDef("unstrung Oak Longbow", "I need to find a string for this", "", 80, 119, "items:119", false, false, 0, 255, 11300689, true, false, 1829, -1, 658));
+		items.add(new ItemDef("unstrung Oak Shortbow", "I need to find a string for this", "", 50, 120, "items:120", false, false, 0, 255, 11300689, true, false, 1830, -1, 659));
+		items.add(new ItemDef("unstrung Willow Longbow", "I need to find a string for this", "", 160, 119, "items:119", false, false, 0, 16776960, 8941897, true, false, 1831, -1, 660));
+		items.add(new ItemDef("unstrung Willow Shortbow", "I need to find a string for this", "", 100, 120, "items:120", false, false, 0, 16776960, 8941897, true, false, 1832, -1, 661));
+		items.add(new ItemDef("unstrung Maple Longbow", "I need to find a string for this", "", 320, 119, "items:119", false, false, 0, 16744448, 9132849, true, false, 1833, -1, 662));
+		items.add(new ItemDef("unstrung Maple Shortbow", "I need to find a string for this", "", 200, 120, "items:120", false, false, 0, 16744448, 9132849, true, false, 1834, -1, 663));
+		items.add(new ItemDef("unstrung Yew Longbow", "I need to find a string for this", "", 640, 119, "items:119", false, false, 0, 16711680, 10310656, true, false, 1835, -1, 664));
+		items.add(new ItemDef("unstrung Yew Shortbow", "I need to find a string for this", "", 400, 120, "items:120", false, false, 0, 16711680, 10310656, true, false, 1836, -1, 665));
+		items.add(new ItemDef("unstrung Magic Longbow", "I need to find a string for this", "", 1280, 119, "items:119", false, false, 0, 4210752, 37281,true, false, 1837, -1, 666));
+		items.add(new ItemDef("unstrung Magic Shortbow", "I need to find a string for this", "", 800, 120, "items:120", false, false, 0, 4210752, 37281,true, false, 1838, -1, 667));
 		items.add(new ItemDef("barcrawl card", "The official Alfred Grimhand barcrawl", "read", 10, 180, "items:180", false, false, 0, 0, true, true, -1, -1, 668));
 		items.add(new ItemDef("bronze arrow heads", "Not much use without the rest of the arrow!", "", 1, 207, "items:207", true, false, 0, 16737817, true, false, -1, -1, 669));
 		items.add(new ItemDef("iron arrow heads", "Not much use without the rest of the arrow!", "", 3, 207, "items:207", true, false, 0, 15658717, true, false, -1, -1, 670));
@@ -3579,6 +3579,14 @@ public class EntityHandler {
 		items.add(new ItemDef("Dwarven Ring", "Swap this note at any bank for the equivalent item.", "", 400, -1, "items:438",true, false, 0, 0, true, false, -1, 2298, 2299));
 		items.add(new ItemDef("Opal ring", "A valuable ring", "", 1050, -1, "items:123", false, false, 0, 16777124, false, false, 2301, -1, 2300));
 		items.add(new ItemDef("Opal Ring", "Swap this note at any bank for the equivalent item.", "", 1050, -1, "items:438",true, false, 0, 0, true, false, -1, 2300, 2301));
+		items.add(new ItemDef("Wolf Mask", "Awoooo", "", 0, 86, "items:509", false, true, 32, 16752165, 16777215, false, false, 1448, -1, 2302));
+		items.add(new ItemDef("Wolf Mask", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 185, 2303));
+		items.add(new ItemDef("Unicorn Mask", "I'm so fluffy I'm gonne die!!", "", 0, 86, "items:510", false, true, 32, 3355443, 2139581, false, false, -1, -1, 2304));
+		items.add(new ItemDef("Unicorn Mask", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 185, 2305));
+		items.add(new ItemDef("Unicorn Mask", "I'm so fluffy I'm gonne die!!", "", 0, 86, "items:510", false, true, 32, 16759039, 9098751, false, false, -1, -1, 2306));
+		items.add(new ItemDef("Unicorn Mask", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 185, 2307));
+
+
 	}
 
 	private static void loadNoteDefinitions() {
@@ -4616,7 +4624,6 @@ public class EntityHandler {
 		animations.add(new AnimationDef("boots", 1118481, 0, true, false, 0));
 		animations.add(new AnimationDef("wizardsrobe", 1118481, 0, true, false, 0));
 		animations.add(new AnimationDef("Scythe", 0, 0, true, false, 0));
-
 		/*
 		  Add custom animation below.
 		 */
@@ -4645,6 +4652,43 @@ public class EntityHandler {
 			animations.add(new AnimationDef("armorskirt", 0x839670, 0, true, false, 0));
 			animations.add(new AnimationDef("armorskirt", 48059, 0, true, false, 0));
 			animations.add(new AnimationDef("armorskirt", 0x232323, 0, true, false, 0));
+			animations.add(new AnimationDef("longbow", 8537122, 0, true, false, 0)); //253
+			animations.add(new AnimationDef("longbow", 11300689, 0, true, false, 0));
+			animations.add(new AnimationDef("longbow", 8941897, 0, true, false, 0));
+			animations.add(new AnimationDef("longbow", 9132849, 0, true, false, 0));
+			animations.add(new AnimationDef("longbow", 10310656, 0, true, false, 0));
+			animations.add(new AnimationDef("longbow", 37281, 0, true, false, 0));
+			animations.add(new AnimationDef("shortsword", 16737817, 0, true, false, 0)); //259
+			animations.add(new AnimationDef("shortsword", 15654365, 0, true, false, 0));
+			animations.add(new AnimationDef("shortsword", 15658734, 0, true, false, 0));
+			animations.add(new AnimationDef("shortsword", 10072780, 0, true, false, 0));
+			animations.add(new AnimationDef("shortsword", 11717785, 0, true, false, 0));
+			animations.add(new AnimationDef("shortsword", 65535, 0, true, false, 0));
+			animations.add(new AnimationDef("shortsword", 3158064, 0, true, false, 0));
+			animations.add(new AnimationDef("dagger", 16737817, 0, true, false, 0)); //266
+			animations.add(new AnimationDef("dagger", 15654365, 0, true, false, 0));
+			animations.add(new AnimationDef("dagger", 15658734, 0, true, false, 0));
+			animations.add(new AnimationDef("dagger", 10072780, 0, true, false, 0));
+			animations.add(new AnimationDef("dagger", 11717785, 0, true, false, 0));
+			animations.add(new AnimationDef("dagger", 65535, 0, true, false, 0));
+			animations.add(new AnimationDef("dagger", 3158064, 0, true, false, 0));
+			animations.add(new AnimationDef("poisoneddagger", 16737817, 0, true, false, 0)); //273
+			animations.add(new AnimationDef("poisoneddagger", 15654365, 0, true, false, 0));
+			animations.add(new AnimationDef("poisoneddagger", 15658734, 0, true, false, 0));
+			animations.add(new AnimationDef("poisoneddagger", 10072780, 0, true, false, 0));
+			animations.add(new AnimationDef("poisoneddagger", 11717785, 0, true, false, 0));
+			animations.add(new AnimationDef("poisoneddagger", 65535, 0, true, false, 0));
+			animations.add(new AnimationDef("poisoneddagger", 3158064, 0, true, false, 0));
+			animations.add(new AnimationDef("2hander", 16737817, 0, true, false, 0)); //280
+			animations.add(new AnimationDef("2hander", 15654365, 0, true, false, 0));
+			animations.add(new AnimationDef("2hander", 15658734, 0, true, false, 0));
+			animations.add(new AnimationDef("2hander", 10072780, 0, true, false, 0));
+			animations.add(new AnimationDef("2hander", 11717785, 0, true, false, 0));
+			animations.add(new AnimationDef("2hander", 65535, 0, true, false, 0));
+			animations.add(new AnimationDef("2hander", 3158064, 0, true, false, 0));
+			animations.add(new AnimationDef("unicornmask", 3355443, 2139581,0, true, false, 0));//287
+			animations.add(new AnimationDef("unicornmask", 16759039, 9098751,0, true, false, 0));
+			animations.add(new AnimationDef("wolfmask", 16752165 , 16777215,0, true, false, 0));
 			/*animations.add(new AnimationDef("fullhelm", 11189164, 0, true, false, 0));
 			animations.add(new AnimationDef("platemailtop", 11189164, 0, true, false, 0));
 			animations.add(new AnimationDef("platemaillegs", 11189164, 0, true, false, 0));

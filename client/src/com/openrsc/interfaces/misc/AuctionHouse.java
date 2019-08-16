@@ -212,11 +212,11 @@ public final class AuctionHouse {
 		} else if (newAuctionItem != null) {
 			ItemDef def = EntityHandler.getItemDef(newAuctionItem.getItemID());
 			mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), x + 40, y + 55, 48, 32,
-				def.getPictureMask(), 0, false, 0, 1);
+				def.getPictureMask(), 0, def.getBlueMask(), false, 0, 1);
 			if (def.getNotedFormOf() >= 0) {
 				ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
 				mc.getSurface().drawSpriteClipping(mc.spriteSelect(originalDef), x + 47,
-					y + 59, 33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
+					y + 59, 33, 23, originalDef.getPictureMask(), 0, originalDef.getBlueMask(), false, 0, 1);
 			}
 			//graphics.drawString("Fee: +" + (int) getFee() + "gp", x + 6, y + 101, 0xffffff, 0);
 		}
@@ -280,11 +280,11 @@ public final class AuctionHouse {
 						ItemDef def = EntityHandler.getItemDef(mc.getInventoryItems()[inventorySlot]);
 
 						mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), drawX, drawY, 48,
-							32, def.getPictureMask(), 0, false, 0, 1);
+							32, def.getPictureMask(), 0, def.getBlueMask(),false, 0, 1);
 						if (def.getNotedFormOf() >= 0) {
 							ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
 							mc.getSurface().drawSpriteClipping(mc.spriteSelect(originalDef), drawX + 7,
-								drawY + 4, 33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
+								drawY + 4, 33, 23, originalDef.getPictureMask(), 0, originalDef.getBlueMask(), false, 0, 1);
 						}
 						graphics.drawString(String.valueOf(mc.getInventoryItemsCount()[inventorySlot]), drawX + 1,
 							drawY + 10, 65280, 1);
@@ -395,7 +395,7 @@ public final class AuctionHouse {
 				graphics.drawBoxAlpha(listX - 72, listY - 10, boxWidth + 1, boxHeight - 1, 0xfffffff, 128);
 
 				mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), listX - 72, listY - 10, 48,
-					32, def.getPictureMask(), 0, false, 0, 1);
+					32, def.getPictureMask(), 0, def.getBlueMask(),false, 0, 1);
 
 				graphics.drawString(String.valueOf(ahItem.getAmount()), listX - 72 + 1, listY - 10 + 11, 65280, 3);
 				listY += boxHeight + 2;
@@ -795,7 +795,7 @@ public final class AuctionHouse {
 				graphics.drawBoxAlpha(listX - 3, listY - 4, boxWidth + 1, boxHeight - 1, 0xfffffff, 128);
 
 				mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), listX - 3, listY - 5, 48,
-					32, def.getPictureMask(), 0, false, 0, 1);
+					32, def.getPictureMask(), 0, def.getBlueMask(), false, 0, 1);
 
 				graphics.drawString(String.valueOf(ahItem.getAmount()), listX + 1 - 3, listY + 10 - 4, 65280, 1);
 				listY += boxHeight + 2;
@@ -843,7 +843,7 @@ public final class AuctionHouse {
 			graphics.drawBoxBorder(selectX + 8, 50, selectY + 22, 34, 0);
 
 			mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), selectX + 8, selectY + 22, 48, 32,
-				def.getPictureMask(), 0, false, 0, 1);
+				def.getPictureMask(), 0, def.getBlueMask(),false, 0, 1);
 			graphics.drawString(String.valueOf(ahItem.getAmount()), selectX + 10, selectY + 22 + 11, 65280, 1);
 
 			graphics.drawString(getTime(ahItem) + "h left", selectX + 60, selectY + 32, 0xffffff, 2);

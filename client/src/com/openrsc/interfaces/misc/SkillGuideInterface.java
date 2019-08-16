@@ -156,7 +156,8 @@ public final class SkillGuideInterface {
 				mc.getSurface().drawBoxBorder(detailX - 75, width, allY, 37 + 1, 0);
 			}
 			mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
-				spriteX + 5, allY + 2, 48, 32, def.getPictureMask(), 0, false, 0, 1);
+				spriteX + 5, allY + 2, 48, 32, def.getPictureMask(), 0,
+				def.getBlueMask(), false, 0, 1);
 
 			drawString(skillDetail, detailX + 10, allY + 25, 2, textColour);
 
@@ -849,7 +850,7 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(714, "82", "Yanille Agility Dungeon"));
 			}
 		}
-		if (mc.getSkillGuideChosen().equals("Runecrafting")) {
+		if (mc.getSkillGuideChosen().equalsIgnoreCase("Runecrafting")) {
 			if (curTab == 0) {
 				skillItems.add(new SkillItem(33, "1","Air Rune"));
 				skillItems.add(new SkillItem(35, "1","Mind Rune"));
