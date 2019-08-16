@@ -96,25 +96,7 @@ public final class Server implements Runnable {
 	public static void main(String[] args) throws IOException {
 		LOGGER.info("Launching Game Server...");
 
-		Server server1 = new Server("default.conf");
-		try {
-			if(!server1.isRunning()) {
-				server1.start();
-			}
-		} catch (Throwable t) {
-			LOGGER.catching(t);
-		}
-
-		Server server2 = new Server("default2.conf");
-		try {
-			if(!server2.isRunning()) {
-				server2.start();
-			}
-		} catch (Throwable t) {
-			LOGGER.catching(t);
-		}
-
-		/*Server server = null;
+		Server server = null;
 
 		if (args.length == 0) {
 			LOGGER.info("Server Configuration file not provided. Loading from default.conf or local.conf.");
@@ -139,7 +121,7 @@ public final class Server implements Runnable {
 					LOGGER.catching(t);
 				}
 			}
-		}*/
+		}
 	}
 
 	public Server (String configFile) throws IOException{
