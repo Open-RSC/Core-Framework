@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
@@ -52,7 +53,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 			int totalMoneySpent = 0;
 
 			int price = shop.getItemBuyPrice(itemID, def.getDefaultPrice(), 0);
-			if (player.getInventory().countId(10) == price && player.getInventory().size() == 30 && amount == 1) {
+			if (player.getInventory().countId(ItemId.COINS.id()) == price && player.getInventory().size() == 30 && amount == 1) {
 				if (shop.getItemCount(itemID) - totalBought < 1) {
 					player.message("The shop has ran out of stock");
 					return;
@@ -73,7 +74,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 					break;
 				}
 				price = shop.getItemBuyPrice(itemID, def.getDefaultPrice(), totalBought);
-				if (player.getInventory().countId(10) < (totalMoneySpent + price)) {
+				if (player.getInventory().countId(ItemId.COINS.id()) < (totalMoneySpent + price)) {
 					player.message("You don't have enough coins");
 					break;
 				}
@@ -93,7 +94,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 			}
 			
 			shop.removeShopItem(new Item(itemID, totalBought));
-			player.getInventory().remove(10, totalMoneySpent);
+			player.getInventory().remove(ItemId.COINS.id(), totalMoneySpent);
 			int correctItemsBought = totalBought;
 			for (; totalBought > 0; totalBought--) {
 				player.getInventory().add(new Item(itemID, 1), false);
@@ -140,7 +141,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 					totalMoney += sellAmount;
 				}
 				if (sellAmount > 0) {
-					player.getInventory().add(new Item(10, sellAmount));
+					player.getInventory().add(new Item(ItemId.COINS.id(), sellAmount));
 				}
 				
 				// Determine if we are selling a Noted item

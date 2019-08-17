@@ -191,13 +191,13 @@ public class ShantayPassNpcs implements ShopInterface,
 				if (menu6 == 0) {
 					npcTalk(p, n,
 						"Good, I see that you have come to your senses.");
-					if (p.getInventory().countId(10) >= 5) {
+					if (p.getInventory().countId(ItemId.COINS.id()) >= 5) {
 						message(p, "You hand over five gold pieces to Shantay.");
 						npcTalk(p, n,
 							"Great Effendi, now please try to keep the peace.");
 						message(p,
 							"The assistant unlocks the door to the cell.");
-						removeItem(p, 10, 5);
+						removeItem(p, ItemId.COINS.id(), 5);
 						inJail = false;
 					} else {
 						npcTalk(p,
@@ -238,14 +238,14 @@ public class ShantayPassNpcs implements ShopInterface,
 					if (menu7 == 0) {
 						npcTalk(p, n,
 							"Good, I see that you have come to your senses.");
-						if (p.getInventory().countId(10) >= 5) {
+						if (p.getInventory().countId(ItemId.COINS.id()) >= 5) {
 							message(p,
 								"You hand over five gold pieces to Shantay.");
 							npcTalk(p, n,
 								"Great Effendi, now please try to keep the peace.");
 							message(p,
 								"The assistant unlocks the door to the cell.");
-							removeItem(p, 10, 5);
+							removeItem(p, ItemId.COINS.id(), 5);
 							inJail = false;
 						} else {
 							npcTalk(p,

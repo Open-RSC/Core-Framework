@@ -29,8 +29,9 @@ public class DwarfCannon
 	TalkToNpcListener, TalkToNpcExecutiveListener, WallObjectActionListener,
 	WallObjectActionExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener {
 
-	private final Shop shop = new Shop(false, 3000, 100, 70, 2, new Item(1032, 3), new Item(1033, 3), new Item(1034, 3),
-		new Item(1035, 3), new Item(1073, 7), new Item(1057, 7));
+	private final Shop shop = new Shop(false, 3000, 100, 70, 2, new Item(ItemId.DWARF_CANNON_BASE.id(), 3), new Item(ItemId.DWARF_CANNON_STAND.id(), 3),
+		new Item(ItemId.DWARF_CANNON_BARRELS.id(), 3), new Item(ItemId.DWARF_CANNON_FURNACE.id(), 3),
+		new Item(ItemId.INSTRUCTION_MANUAL.id(), 7), new Item(ItemId.CANNON_AMMO_MOULD.id(), 7));
 
 	@Override
 	public int getQuestId() {

@@ -8,6 +8,7 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.*;
 
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 
 public class Thordur implements TalkToNpcExecutiveListener, TalkToNpcListener {
 
@@ -138,7 +139,7 @@ public class Thordur implements TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 175;
+		return n.getID() == NpcId.THORDUR.id();
 	}
 	
 	static final int WANTED_SAY_HI = 0;

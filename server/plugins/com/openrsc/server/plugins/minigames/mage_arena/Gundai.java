@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.minigames.mage_arena;
 
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -186,12 +187,12 @@ public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, Np
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 792;
+		return n.getID() == NpcId.GUNDAI.id();
 	}
 
 	@Override
 	public void onNpcCommand(Npc n, String command, Player p) {
-		if (n.getID() == 792) {
+		if (n.getID() == NpcId.GUNDAI.id()) {
 			if (command.equalsIgnoreCase("Bank")) {
 				quickFeature(n, p, false);
 			} else if (p.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS && command.equalsIgnoreCase("Collect")) {
@@ -202,10 +203,10 @@ public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, Np
 
 	@Override
 	public boolean blockNpcCommand(Npc n, String command, Player p) {
-		if (n.getID() == 792 && command.equalsIgnoreCase("Bank")) {
+		if (n.getID() == NpcId.GUNDAI.id() && command.equalsIgnoreCase("Bank")) {
 			return true;
 		}
-		if (n.getID() == 792 && p.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS && command.equalsIgnoreCase("Collect")) {
+		if (n.getID() == NpcId.GUNDAI.id() && p.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS && command.equalsIgnoreCase("Collect")) {
 			return true;
 		}
 		return false;

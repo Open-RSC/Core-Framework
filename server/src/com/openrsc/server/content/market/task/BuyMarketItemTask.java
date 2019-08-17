@@ -1,5 +1,6 @@
 package com.openrsc.server.content.market.task;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.content.market.MarketItem;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.container.Item;
@@ -43,7 +44,7 @@ public class BuyMarketItemTask extends MarketTask {
 		int priceForEach = item.getPrice() / item.getAmountLeft();
 		int auctionPrice = amount * priceForEach;
 
-		if (playerBuyer.getInventory().countId(10) < auctionPrice) {
+		if (playerBuyer.getInventory().countId(ItemId.COINS.id()) < auctionPrice) {
 			ActionSender.sendBox(playerBuyer, "@ora@[Auction House - Warning] % @whi@ You don't have enough coins!", false);
 			return;
 		}
@@ -57,13 +58,13 @@ public class BuyMarketItemTask extends MarketTask {
 			} else {
 				playerBuyer.getInventory().add(new Item(item.getItemID(), amount));
 			}
-			playerBuyer.getInventory().remove(10, auctionPrice);
+			playerBuyer.getInventory().remove(ItemId.COINS.id(), auctionPrice);
 			ActionSender.sendBox(playerBuyer, "@gre@[Auction House - Success] % @whi@ The item has been placed to your inventory.", false);
 			updateDiscord = true;
 			playerBuyer.save();
 		} else if (!playerBuyer.getBank().full()) {
 			playerBuyer.getBank().add(new Item(item.getItemID(), amount));
-			playerBuyer.getInventory().remove(10, auctionPrice);
+			playerBuyer.getInventory().remove(ItemId.COINS.id(), auctionPrice);
 			ActionSender.sendBox(playerBuyer, "@gre@[Auction House - Success] % @whi@ The item has been placed to your bank.", false);
 			updateDiscord = true;
 			playerBuyer.save();

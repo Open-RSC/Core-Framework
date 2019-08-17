@@ -1,5 +1,7 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -19,8 +21,8 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class Auctioneers implements TalkToNpcExecutiveListener, TalkToNpcListener, NpcCommandListener, NpcCommandExecutiveListener {
 	private static final Logger LOGGER = LogManager.getLogger(Auctioneers.class);
-	public static int AUCTIONEER = 794;
-	public static int AUCTION_CLERK = 795;
+	public static int AUCTIONEER = NpcId.AUCTIONEER.id();
+	public static int AUCTION_CLERK = NpcId.AUCTION_CLERK.id();
 
 	@Override
 	public boolean blockTalkToNpc(final Player player, final Npc npc) {
@@ -79,8 +81,8 @@ public class Auctioneers implements TalkToNpcExecutiveListener, TalkToNpcListene
 				"the costs is 1,000 coins");
 			int tMenu = showMenu(player, npc, "Teleport me", "I'll stay here");
 			if (tMenu == 0) {
-				if (hasItem(player, 10, 1000)) {
-					removeItem(player, 10, 1000);
+				if (hasItem(player, ItemId.COINS.id(), 1000)) {
+					removeItem(player, ItemId.COINS.id(), 1000);
 					player.teleport(133, 508);
 				} else {
 					player.message("You don't seem to have enough coins");
@@ -175,8 +177,8 @@ public class Auctioneers implements TalkToNpcExecutiveListener, TalkToNpcListene
 				message(p, n, 1300, "Would you like to be teleport to Varrock centre for 1000 gold?");
 				int yesOrNo = showMenu(p, "Yes please!", "No thanks.");
 				if (yesOrNo == 0) {
-					if (hasItem(p, 10, 1000)) {
-						removeItem(p, 10, 1000);
+					if (hasItem(p, ItemId.COINS.id(), 1000)) {
+						removeItem(p, ItemId.COINS.id(), 1000);
 						p.teleport(133, 508);
 						p.message("You have been teleported to the Varrock Centre");
 					} else {

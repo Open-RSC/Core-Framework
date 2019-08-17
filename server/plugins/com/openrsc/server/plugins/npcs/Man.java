@@ -7,6 +7,8 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.*;
 
+import com.openrsc.server.constants.ItemId;
+
 public class Man implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
 	@Override
@@ -30,7 +32,7 @@ public class Man implements TalkToNpcListener, TalkToNpcExecutiveListener {
 			npcTalk(p, n, "Very well, thank you");
 		else if (selected == 4) {
 			npcTalk(p, n, "Have this flier");
-			addItem(p, 201, 1);
+			addItem(p, ItemId.FLIER.id(), 1);
 		} else if (selected == 5)
 			npcTalk(p, n, "I'm a little worried",
 				"I've heard there's lots of people going about,",

@@ -50,7 +50,7 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 		message(p, "you have completed the fight arena quest",
 			"Lady Servil gives you 1000 gold coins",
 			"you gain two quest points");
-		addItem(p, 10, 1000);
+		addItem(p, ItemId.COINS.id(), 1000);
 		p.message("@gre@You haved gained 2 quest points!");
 		int[] questData = p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.FIGHT_ARENA);
 		//keep order kosher

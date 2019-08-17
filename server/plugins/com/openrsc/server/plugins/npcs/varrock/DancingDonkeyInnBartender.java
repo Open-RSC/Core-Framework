@@ -7,9 +7,12 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.*;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+
 public class DancingDonkeyInnBartender implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
-	public static int BARTENDER = 520;
+	public static int BARTENDER = NpcId.BARTENDER_EAST_VARROCK.id();
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
@@ -47,11 +50,11 @@ public class DancingDonkeyInnBartender implements TalkToNpcListener, TalkToNpcEx
 
 	private void buyBeer(Player p, Npc n) {
 		npcTalk(p, n, "ok then, that's two gold coins please");
-		if (hasItem(p, 10, 2)) {
+		if (hasItem(p, ItemId.COINS.id(), 2)) {
 			p.message("you give two coins to the barman");
-			removeItem(p, 10, 2);
+			removeItem(p, ItemId.COINS.id(), 2);
 			p.message("he gives you a cold beer");
-			addItem(p, 193, 1);
+			addItem(p, ItemId.BEER.id(), 1);
 			npcTalk(p, n, "cheers");
 			playerTalk(p, n, "cheers");
 		} else {

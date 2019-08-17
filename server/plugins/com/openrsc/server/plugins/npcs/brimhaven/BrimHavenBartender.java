@@ -1,5 +1,7 @@
 package com.openrsc.server.plugins.npcs.brimhaven;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -13,7 +15,7 @@ public final class BrimHavenBartender implements TalkToNpcExecutiveListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 279;
+		return n.getID() == NpcId.BARTENDER_BRIMHAVEN.id();
 	}
 	
 	@Override
@@ -33,20 +35,20 @@ public final class BrimHavenBartender implements TalkToNpcExecutiveListener,
 		if (firstMenu == 0) {// NOTHING
 		} else if (firstMenu == 1) {
 			npcTalk(p, n, "One grog coming right up", "That'll be 3 gold");
-			if (hasItem(p, 10, 3)) {
+			if (hasItem(p, ItemId.COINS.id(), 3)) {
 				p.message("You buy a pint of Grog");
-				p.getInventory().remove(10, 3);
-				addItem(p, 598, 1);
+				p.getInventory().remove(ItemId.COINS.id(), 3);
+				addItem(p, ItemId.GROG.id(), 1);
 			} else {
 				playerTalk(p, n,
 					"Oh dear. I don't seem to have enough money");
 			}
 		} else if (firstMenu == 2) {
 			npcTalk(p, n, "That'll be 27 gold");
-			if (hasItem(p, 10, 27)) {
+			if (hasItem(p, ItemId.COINS.id(), 27)) {
 				p.message("You buy a bottle of rum");
-				p.getInventory().remove(10, 27);
-				addItem(p, 318, 1);
+				p.getInventory().remove(ItemId.COINS.id(), 27);
+				addItem(p, ItemId.KARAMJA_RUM.id(), 1);
 			} else {
 				playerTalk(p, n,
 					"Oh dear. I don't seem to have enough money");
@@ -54,8 +56,8 @@ public final class BrimHavenBartender implements TalkToNpcExecutiveListener,
 		} else if (firstMenu == 3) {
 			npcTalk(p, n, "Haha time to be breaking out the old supergrog",
 				"That'll be 15 coins please");
-			if (hasItem(p, 10, 15)) {
-				p.getInventory().remove(10, 15);
+			if (hasItem(p, ItemId.COINS.id(), 15)) {
+				p.getInventory().remove(ItemId.COINS.id(), 15);
 				message(p,
 					"The bartender serves you a glass of strange thick dark liquid",
 					"You wince and drink it", "You stagger backwards");

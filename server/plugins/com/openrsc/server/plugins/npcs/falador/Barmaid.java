@@ -1,5 +1,7 @@
 package com.openrsc.server.plugins.npcs.falador;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -15,7 +17,7 @@ public final class Barmaid implements TalkToNpcExecutiveListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 142;
+		return n.getID() == NpcId.BARMAID.id();
 	}
 	
 	@Override
@@ -37,9 +39,9 @@ public final class Barmaid implements TalkToNpcExecutiveListener,
 					"You'll be after our off the menu hand of death cocktail then",
 					"Lots of expensive parts to the cocktail though",
 					"So it will cost you 70 coins");
-				if (hasItem(p, 10, 70)) {
+				if (hasItem(p, ItemId.COINS.id(), 70)) {
 					message(p, "You buy a hand of death cocktail");
-					p.getInventory().remove(10, 70);
+					p.getInventory().remove(ItemId.COINS.id(), 70);
 					message(p, "You drink the cocktail",
 						"You stumble around the room");
 					drinkAle(p);
@@ -69,10 +71,10 @@ public final class Barmaid implements TalkToNpcExecutiveListener,
 			case 0:
 				npcTalk(p, n, "That'll be two gold");
 
-				if (hasItem(p, 10, 2)) {
+				if (hasItem(p, ItemId.COINS.id(), 2)) {
 					p.message("You buy an Asgarnian Ale");
-					p.getInventory().remove(10, 2);
-					p.getInventory().add(new Item(267, 1));
+					p.getInventory().remove(ItemId.COINS.id(), 2);
+					p.getInventory().add(new Item(ItemId.ASGARNIAN_ALE.id(), 1));
 				} else {
 					playerTalk(p, n, notEnoughMoney);
 				}
@@ -80,10 +82,10 @@ public final class Barmaid implements TalkToNpcExecutiveListener,
 			case 1:
 				npcTalk(p, n, "That'll be two gold");
 
-				if (hasItem(p, 10, 2)) {
+				if (hasItem(p, ItemId.COINS.id(), 2)) {
 					p.message("You buy a pint of Wizard's Mind Bomb");
-					p.getInventory().remove(10, 2);
-					p.getInventory().add(new Item(268, 1));
+					p.getInventory().remove(ItemId.COINS.id(), 2);
+					p.getInventory().add(new Item(ItemId.WIZARDS_MIND_BOMB.id(), 1));
 				} else {
 					playerTalk(p, n, notEnoughMoney);
 				}
@@ -91,10 +93,10 @@ public final class Barmaid implements TalkToNpcExecutiveListener,
 			case 2:
 				npcTalk(p, n, "That'll be three gold");
 
-				if (hasItem(p, 10, 3)) {
+				if (hasItem(p, ItemId.COINS.id(), 3)) {
 					p.message("You buy a pint of Dwarven Stout");
-					p.getInventory().remove(10, 3);
-					p.getInventory().add(new Item(269, 1));
+					p.getInventory().remove(ItemId.COINS.id(), 3);
+					p.getInventory().add(new Item(ItemId.DWARVEN_STOUT.id(), 1));
 				} else {
 					playerTalk(p, n, notEnoughMoney);
 				}

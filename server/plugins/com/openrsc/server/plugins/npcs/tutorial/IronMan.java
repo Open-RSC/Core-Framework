@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.npcs.tutorial;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -186,17 +187,17 @@ public class IronMan implements TalkToNpcExecutiveListener,
 					p.playerServerMessage(MessageType.QUEST, "Try to hold on to this armour set.");
 					p.playerServerMessage(MessageType.QUEST, "You won't be able to get another set from the Iron Men.");
 					if (p.getIronMan() == 1) {
-						addItem(p, 2135, 1);
-						addItem(p, 2136, 1);
-						addItem(p, 2137, 1);
+						addItem(p, ItemId.IRONMAN_HELM.id(), 1);
+						addItem(p, ItemId.IRONMAN_PLATEBODY.id(), 1);
+						addItem(p, ItemId.IRONMAN_PLATELEGS.id(), 1);
 					} else if (p.getIronMan() == 2) {
-						addItem(p, 2138, 1);
-						addItem(p, 2139, 1);
-						addItem(p, 2140, 1);
+						addItem(p, ItemId.ULTIMATE_IRONMAN_HELM.id(), 1);
+						addItem(p, ItemId.ULTIMATE_IRONMAN_PLATEBODY.id(), 1);
+						addItem(p, ItemId.ULTIMATE_IRONMAN_PLATELEGS.id(), 1);
 					} else if (p.getIronMan() == 3) {
-						addItem(p, 2141, 1);
-						addItem(p, 2142, 1);
-						addItem(p, 2143, 1);
+						addItem(p, ItemId.HARDCORE_IRONMAN_HELM.id(), 1);
+						addItem(p, ItemId.HARDCORE_IRONMAN_PLATEBODY.id(), 1);
+						addItem(p, ItemId.HARDCORE_IRONMAN_PLATELEGS.id(), 1);
 					}
 					p.getCache().store("iron_man_armour", true);
 				} else {

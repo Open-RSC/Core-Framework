@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.event.MiniEvent;
 import com.openrsc.server.event.rsc.impl.RangeEvent;
 import com.openrsc.server.event.rsc.impl.ThrowingEvent;
@@ -60,14 +61,14 @@ public class AttackHandler implements PacketHandler {
 		}
 		if (affectedMob.isNpc()) {
 			Npc n = (Npc) affectedMob;
-			if (n.getLocation().inWilderness() && !player.getLocation().inWilderness() && (n.getID() == 210 || n.getID() == 236)) {
+			if (n.getLocation().inWilderness() && !player.getLocation().inWilderness() && (n.getID() == NpcId.ADVENTURER_ARCHER.id() || n.getID() == NpcId.DONNY_THE_LAD.id())) {
 				player.message("You must be in the wilderness to attack this NPC");
 				player.resetPath();
 				return;
 			}
 			if (n.getX() == 0 && n.getY() == 0)
 				return;
-			if (n.getID() == 525 && player.getRangeEquip() < 0 && player.getThrowingEquip() < 0) {
+			if (n.getID() == NpcId.OGRE_TRAINING_CAMP.id() && player.getRangeEquip() < 0 && player.getThrowingEquip() < 0) {
 				player.message("these ogres are for range combat training only");
 				return;
 			}

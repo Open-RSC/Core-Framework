@@ -320,7 +320,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, Ta
 				npcTalk(p, n, "they look great, well done",
 					"here's your share of the profit");
 				p.message("mr gianne gives you 30 gold coins");
-				addItem(p, 10, 30);
+				addItem(p, ItemId.COINS.id(), 30);
 			} else {
 				playerTalk(p, n, "i'm not done yet");
 				npcTalk(p, n, "i just need two choc crunchies",

@@ -169,14 +169,14 @@ public final class BankHandler implements PacketHandler {
 				if (k < inventory.size())
 					player.getBank().presets[presetSlot].inventory[k] = inventory.get(k);
 				else
-					player.getBank().presets[presetSlot].inventory[k] = new Item(-1,0);
+					player.getBank().presets[presetSlot].inventory[k] = new Item(ItemId.NOTHING.id(),0);
 			}
 			for (int k = 0; k < Equipment.slots; k++) {
 				Item equipmentItem = player.getEquipment().get(k);
 				if (equipmentItem != null)
 					player.getBank().presets[presetSlot].equipment[k] = equipmentItem;
 				else
-					player.getBank().presets[presetSlot].equipment[k] = new Item(-1,0);
+					player.getBank().presets[presetSlot].equipment[k] = new Item(ItemId.NOTHING.id(),0);
 			}
 			player.getBank().presets[presetSlot].changed = true;
 		} else if (pID == packetSeven && player.getWorld().getServer().getConfig().WANT_BANK_PRESETS) {

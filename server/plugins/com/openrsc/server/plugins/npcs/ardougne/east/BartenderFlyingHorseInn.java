@@ -7,16 +7,16 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.*;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+
 public class BartenderFlyingHorseInn implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
-	public final int BARTENDER = 340;
+	public final int BARTENDER = NpcId.BARTENDER_ARDOUGNE.id();
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == BARTENDER) {
-			return true;
-		}
-		return false;
+		return n.getID() == BARTENDER;
 	}
 
 	@Override
@@ -30,9 +30,9 @@ public class BartenderFlyingHorseInn implements TalkToNpcListener, TalkToNpcExec
 				"I'll not have anything then");
 			if (menu == 0) {
 				npcTalk(p, n, "Ok, that'll be two coins");
-				if (hasItem(p, 10, 2)) {
-					removeItem(p, 10, 2);
-					addItem(p, 193, 1);
+				if (hasItem(p, ItemId.COINS.id(), 2)) {
+					removeItem(p, ItemId.COINS.id(), 2);
+					addItem(p, ItemId.BEER.id(), 1);
 					p.message("You buy a pint of beer");
 				} else {
 					playerTalk(p, n, "Oh dear. I don't seem to have enough money");

@@ -804,6 +804,8 @@ public enum NpcId {
 	BATTLE_MAGE_SARADOMIN(791),
 	GUNDAI(792),
 	LUNDAIL(793),
+	AUCTIONEER(794),
+	AUCTION_CLERK(795),
 	SEDRIDOR(803);
 
 	private int npcId;

@@ -33,14 +33,14 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 			boolean isKebabVariant = false;
 			if (id == ItemId.SPECIAL_DEFENSE_CABBAGE.id() || id == ItemId.CABBAGE.id()) {
 				if (id == ItemId.SPECIAL_DEFENSE_CABBAGE.id()) {
-					player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef(player.getWorld()).getName());
+					player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase());
 					player.playerServerMessage(MessageType.QUEST, "It seems to taste nicer than normal");
 					int lv = player.getSkills().getMaxStat(Skills.DEFENSE);
 					int newStat = player.getSkills().getLevel(Skills.DEFENSE) + 1;
 					if (newStat <= (lv + 1))
 						player.getSkills().setLevel(Skills.DEFENSE, newStat);
 				} else {
-					player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef(player.getWorld()).getName()
+					player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase()
 							+ ". Yuck!");
 				}
 			} else if (id == ItemId.KEBAB.id()) {

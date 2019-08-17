@@ -1,5 +1,7 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -12,7 +14,7 @@ public class Bartender implements TalkToNpcListener, TalkToNpcExecutiveListener 
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 12;
+		return n.getID() == NpcId.BARTENDER_VARROCK.id();
 	}
 
 	@Override
@@ -34,10 +36,10 @@ public class Bartender implements TalkToNpcListener, TalkToNpcExecutiveListener 
 		int reply = showMenu(p, n, options);
 		if (reply == 0) {
 			npcTalk(p, n, "No problemo", "That'll be 2 coins");
-			if (hasItem(p, 10, 2)) {
+			if (hasItem(p, ItemId.COINS.id(), 2)) {
 				p.message("You buy a pint of beer");
-				addItem(p, 193, 1);
-				p.getInventory().remove(10, 2);
+				addItem(p, ItemId.BEER.id(), 1);
+				p.getInventory().remove(ItemId.COINS.id(), 2);
 			} else
 				playerTalk(p, n, "Oh dear. I don't seem to have enough money");
 		} else if (reply == 1) {
@@ -80,8 +82,8 @@ public class Bartender implements TalkToNpcListener, TalkToNpcExecutiveListener 
 				"Oh no not another of you guys",
 				"These barbarian barcrawls cause too much damage to my bar",
 				"You're going to have to pay 50 gold for the Uncle Humphrey's gutrot");
-			if (hasItem(p, 10, 50)) {
-				p.getInventory().remove(10, 50);
+			if (hasItem(p, ItemId.COINS.id(), 50)) {
+				p.getInventory().remove(ItemId.COINS.id(), 50);
 				p.message("You buy some gutrot");
 				sleep(800);
 				p.message("You drink the gutrot");

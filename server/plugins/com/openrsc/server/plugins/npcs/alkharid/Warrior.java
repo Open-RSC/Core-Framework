@@ -7,6 +7,8 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.*;
 
+import com.openrsc.server.constants.ItemId;
+
 public class Warrior implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
 	private final int WARRIOR = 86;
@@ -80,7 +82,7 @@ public class Warrior implements TalkToNpcListener, TalkToNpcExecutiveListener {
 				p.message("The man ignores you");
 			} else if (chatRandom == 15) {
 				npcTalk(p, n, "Have this flier");
-				addItem(p, 201, 1);
+				addItem(p, ItemId.FLIER.id(), 1);
 			} else if (chatRandom == 16) {
 				npcTalk(p, n, "Hello");
 			}

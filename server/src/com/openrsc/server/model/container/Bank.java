@@ -1,5 +1,6 @@
 package com.openrsc.server.model.container;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -37,10 +38,10 @@ public class Bank {
 		for (int i = 0; i < this.presets.length; i++) {
 			presets[i] = new Preset(player);
 			for (int j = 0; j < presets[i].inventory.length; j++) {
-				this.presets[i].inventory[j] = new Item(-1, 0);
+				this.presets[i].inventory[j] = new Item(ItemId.NOTHING.id(), 0);
 			}
 			for (int j = 0; j < presets[i].equipment.length; j++) {
-				this.presets[i].equipment[j] = new Item(-1, 0);
+				this.presets[i].equipment[j] = new Item(ItemId.NOTHING.id(), 0);
 			}
 		}
 	}

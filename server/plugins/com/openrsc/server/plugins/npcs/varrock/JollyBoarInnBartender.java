@@ -1,5 +1,7 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -12,7 +14,7 @@ public class JollyBoarInnBartender implements TalkToNpcListener, TalkToNpcExecut
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 44;
+		return n.getID() == NpcId.BARTENDER_OUTSIDE_VARROCK.id();
 	}
 	
 	@Override
@@ -37,10 +39,10 @@ public class JollyBoarInnBartender implements TalkToNpcListener, TalkToNpcExecut
 		if (reply == 0) {
 			npcTalk(p, n, "Ok, that'll be two coins");
 
-			if (hasItem(p, 10, 2)) {
+			if (hasItem(p, ItemId.COINS.id(), 2)) {
 				p.message("You buy a pint of beer");
-				p.getInventory().remove(10, 2);
-				addItem(p, 193, 1);
+				p.getInventory().remove(ItemId.COINS.id(), 2);
+				addItem(p, ItemId.BEER.id(), 1);
 			} else {
 				playerTalk(p, n, "Oh dear. I don't seem to have enough money");
 			}
@@ -68,8 +70,8 @@ public class JollyBoarInnBartender implements TalkToNpcListener, TalkToNpcExecut
 			npcTalk(p, n, "Ah, there seems to be a fair few doing that one these days",
 				"My supply of Olde Suspiciouse is starting to run low",
 				"It'll cost you 10 coins");
-			if (hasItem(p, 10, 10)) {
-				p.getInventory().remove(10, 10);
+			if (hasItem(p, ItemId.COINS.id(), 10)) {
+				p.getInventory().remove(ItemId.COINS.id(), 10);
 				message(p, "You buy a pint of Olde Suspiciouse",
 					"You gulp it down",
 					"Your head is spinning");

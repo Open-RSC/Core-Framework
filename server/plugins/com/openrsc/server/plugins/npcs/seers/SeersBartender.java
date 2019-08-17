@@ -1,5 +1,7 @@
 package com.openrsc.server.plugins.npcs.seers;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -15,7 +17,7 @@ public final class SeersBartender implements TalkToNpcExecutiveListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 306;
+		return n.getID() == NpcId.BARTENDER_SEERS.id();
 	}
 	
 	@Override
@@ -33,10 +35,10 @@ public final class SeersBartender implements TalkToNpcExecutiveListener,
 					public void action() {
 						npcTalk(p, n, "one beer coming up",
 							"Ok, that'll be two coins");
-						if (hasItem(p, 10, 2)) {
+						if (hasItem(p, ItemId.COINS.id(), 2)) {
 							p.message("You buy a pint of beer");
-							addItem(p, 193, 1);
-							p.getInventory().remove(10, 2);
+							addItem(p, ItemId.BEER.id(), 1);
+							p.getInventory().remove(ItemId.COINS.id(), 2);
 						} else {
 							playerTalk(p, n,
 								"Oh dear. I don't seem to have enough money");
@@ -48,10 +50,10 @@ public final class SeersBartender implements TalkToNpcExecutiveListener,
 					@Override
 					public void action() {
 						npcTalk(p, n, "Ok, that'll be 16 gold");
-						if (hasItem(p, 10, 16)) {
+						if (hasItem(p, ItemId.COINS.id(), 16)) {
 							p.message("You buy a nice hot meat pie");
-							addItem(p, 259, 1);
-							p.getInventory().remove(10, 16);
+							addItem(p, ItemId.MEAT_PIE.id(), 1);
+							p.getInventory().remove(ItemId.COINS.id(), 16);
 						} else {
 							playerTalk(p, n,
 								"Oh dear. I don't seem to have enough money");
@@ -64,10 +66,10 @@ public final class SeersBartender implements TalkToNpcExecutiveListener,
 					public void action() {
 						npcTalk(p, n,
 							"A bowl of stew, that'll be 20 gold please");
-						if (hasItem(p, 10, 20)) {
+						if (hasItem(p, ItemId.COINS.id(), 20)) {
 							p.message("You buy a bowl of home made stew");
-							addItem(p, 346, 1);
-							p.getInventory().remove(10, 20);
+							addItem(p, ItemId.STEW.id(), 1);
+							p.getInventory().remove(ItemId.COINS.id(), 20);
 						} else {
 							playerTalk(p, n,
 								"Oh dear. I don't seem to have enough money");
@@ -89,10 +91,10 @@ public final class SeersBartender implements TalkToNpcExecutiveListener,
 			public void action() {
 				npcTalk(p, n, "one beer coming up",
 					"Ok, that'll be two coins");
-				if (hasItem(p, 10, 2)) {
+				if (hasItem(p, ItemId.COINS.id(), 2)) {
 					p.message("You buy a pint of beer");
-					addItem(p, 193, 1);
-					p.getInventory().remove(10, 2);
+					addItem(p, ItemId.BEER.id(), 1);
+					p.getInventory().remove(ItemId.COINS.id(), 2);
 				} else {
 					playerTalk(p, n,
 						"Oh dear. I don't seem to have enough money");
@@ -110,8 +112,8 @@ public final class SeersBartender implements TalkToNpcExecutiveListener,
 						"Oh you're a barbarian then",
 						"Now which of these was the barrels contained the liverbane ale?",
 						"That'll be 18 coins please");
-					if (hasItem(p, 10, 18)) {
-						p.getInventory().remove(10, 18);
+					if (hasItem(p, ItemId.COINS.id(), 18)) {
+						p.getInventory().remove(ItemId.COINS.id(), 18);
 						message(p,
 							"The bartender gives you a glass of liverbane ale",
 							"You gulp it down",

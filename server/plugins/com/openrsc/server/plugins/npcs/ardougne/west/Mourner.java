@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.npcs.ardougne.west;
 
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -10,14 +11,14 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class Mourner implements TalkToNpcExecutiveListener, TalkToNpcListener {
 
-	public static final int MOURNER_444 = 444;
-	public static final int MOURNER_491 = 491;
-	public static final int MOURNER_451 = 451;
-	public static final int MOURNER_445 = 445;
-	public static final int HEAD_MOURNER = 469;
-	public static final int DOOR_MOURNER = 492;
-	public static final int ATTACK_MOURNER = 502;
-	public static final int ILL_MOURNER = 495;
+	public static final int MOURNER_444 = NpcId.MOURNER_BYALRENA.id();
+	public static final int MOURNER_491 = NpcId.MOURNER_BYENTRANCE2.id();
+	public static final int MOURNER_451 = NpcId.MOURNER_BYENTRANCE.id();
+	public static final int MOURNER_445 = NpcId.MOURNER_WESTARDOUGNE.id();
+	public static final int HEAD_MOURNER = NpcId.HEAD_MOURNER.id();
+	public static final int DOOR_MOURNER = NpcId.MOURNER_DOOR.id();
+	public static final int ATTACK_MOURNER = NpcId.MOURNER_ATTACK.id();
+	public static final int ILL_MOURNER = NpcId.MOURNER_ILL.id();
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
@@ -41,7 +42,7 @@ public class Mourner implements TalkToNpcExecutiveListener, TalkToNpcListener {
 					"I'll make sure you never return");
 			}
 		}
-		if (n.getID() == 451) {
+		if (n.getID() == MOURNER_451) {
 			if (p.getQuestStage(Quests.PLAGUE_CITY) != -1) {
 				playerTalk(p, n, "hello there");
 				npcTalk(p, n, "can I help you?");
