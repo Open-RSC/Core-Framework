@@ -3137,7 +3137,7 @@ public final class mudclient implements Runnable {
 						ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
 						getSurface().drawSpriteClipping(spriteSelect(originalDef), xI + 7, yI + 4,
 							33, 23, originalDef.getPictureMask(), 0,
-							originalDef.getPictureMask(),false, 0, 1);
+							originalDef.getBlueMask(),false, 0, 1);
 					}
 
 					if (EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).isStackable()) {
@@ -3547,14 +3547,14 @@ public final class mudclient implements Runnable {
 							this.getSurface().drawSpriteClipping(
 								spriteSelect(EntityHandler.getItemDef(this.shopItemID[slot])),
 								sx, sy, 48, 32, EntityHandler.getItemDef(this.shopItemID[slot]).getPictureMask(), 0,
-								EntityHandler.getItemDef(this.shopItemID[slot]).getPictureMask(), false, 0, 1);
+								EntityHandler.getItemDef(this.shopItemID[slot]).getBlueMask(), false, 0, 1);
 
 							ItemDef def = EntityHandler.getItemDef(this.shopItemID[slot]);
 							if (def.getNotedFormOf() >= 0) {
 								ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
 								getSurface().drawSpriteClipping(spriteSelect(originalDef), sx + 7,
 									sy + 4, 33, 23, originalDef.getPictureMask(), 0,
-									originalDef.getPictureMask(),false, 0, 1);
+									originalDef.getBlueMask(),false, 0, 1);
 							}
 
 							this.getSurface().drawString("" + this.shopItemCount[slot], 1 + sx, 10 + sy, '\uff00', 1);
@@ -3987,7 +3987,7 @@ public final class mudclient implements Runnable {
 					this.getSurface().drawSpriteClipping(
 						spriteSelect(EntityHandler.getItemDef(this.inventoryItemID[slot])), sX,
 						sY, 48, 32, EntityHandler.getItemDef(this.inventoryItemID[slot]).getPictureMask(), 0,
-						EntityHandler.getItemDef(this.inventoryItemID[slot]).getPictureMask(),false,
+						EntityHandler.getItemDef(this.inventoryItemID[slot]).getBlueMask(),false,
 						0, 1);
 
 					ItemDef def = EntityHandler.getItemDef(this.inventoryItemID[slot]);
@@ -3995,7 +3995,7 @@ public final class mudclient implements Runnable {
 						ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
 						getSurface().drawSpriteClipping(spriteSelect(originalDef), sX + 7, sY + 4,
 							33, 23, originalDef.getPictureMask(), 0,
-							originalDef.getPictureMask(),false, 0, 1);
+							originalDef.getBlueMask(),false, 0, 1);
 					}
 
 					if (EntityHandler.getItemDef(this.inventoryItemID[slot]).isStackable()) {
@@ -4010,7 +4010,7 @@ public final class mudclient implements Runnable {
 					this.getSurface().drawSpriteClipping(
 						spriteSelect(EntityHandler.getItemDef(this.tradeItemID[slot])), sx, sy,
 						48, 32, EntityHandler.getItemDef(this.tradeItemID[slot]).getPictureMask(), 0,
-						EntityHandler.getItemDef(this.tradeItemID[slot]).getPictureMask(),false, 0, 1);
+						EntityHandler.getItemDef(this.tradeItemID[slot]).getBlueMask(),false, 0, 1);
 					if (EntityHandler.getItemDef(this.tradeItemID[slot]).isStackable()) {
 						this.getSurface().drawString("" + this.tradeItemSize[slot], sx + 1, 10 + sy,
 							0xFFFF00, 1);
@@ -4044,7 +4044,7 @@ public final class mudclient implements Runnable {
 					if (def.getNotedFormOf() >= 0) {
 						ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
 						getSurface().drawSpriteClipping(spriteSelect(originalDef), sx + 7, sy + 4,
-							33, 23, originalDef.getPictureMask(), 0, originalDef.getPictureMask()
+							33, 23, originalDef.getPictureMask(), 0, originalDef.getBlueMask()
 							,false, 0, 1);
 					}
 
@@ -10056,6 +10056,8 @@ public final class mudclient implements Runnable {
 			int[] itemIdArray, itemAmountArray;
 			Object[] thang = getEquipmentItems();
 			if (stakeOfferEquipMode) {
+				if (thang == null)
+					return;
 				itemIdArray = ((int[]) thang[0]);
 				itemAmountArray = ((int[]) thang[1]);
 				if (andStakeInvIndex >= itemIdArray.length)
@@ -10066,7 +10068,7 @@ public final class mudclient implements Runnable {
 
 			}
 			int invCount = this.getInventoryCount(itemIdArray[andStakeInvIndex]);
-			if (S_WANT_EQUIPMENT_TAB) {
+			if (S_WANT_EQUIPMENT_TAB && thang != null) {
 				for (int itemid : ((int[]) thang[0])) {
 					if (itemid == itemIdArray[andStakeInvIndex]) {
 						invCount++;
