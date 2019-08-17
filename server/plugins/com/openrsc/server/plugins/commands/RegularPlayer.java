@@ -117,7 +117,7 @@ public final class RegularPlayer implements CommandListener {
 			for (String arg : args) {
 				message = message + arg + " ";
 			}
-			player.getClan().messageChat(player, "@cya@" + player.getUsername() + ":@whi@ " + message);
+			player.getClan().messageChat(player, "@cya@" + player.getStaffName() + ":@whi@ " + message);
 		} else if (cmd.equalsIgnoreCase("clanaccept") && player.getWorld().getServer().getConfig().WANT_CLANS) {
 			if (player.getActiveClanInvite() == null) {
 				player.message(messagePrefix + "You have not been invited to a clan.");
@@ -261,7 +261,7 @@ public final class RegularPlayer implements CommandListener {
 				}
 				if (p.getGlobalBlock() != 2) {
 					String header = "";
-					ActionSender.sendMessage(p, player, 1, MessageType.GLOBAL_CHAT, channelPrefix + "@whi@" + (player.getClan() != null ? "@cla@<" + player.getClan().getClanTag() + "> @whi@" : "") + header + player.getUsername() + ": "
+					ActionSender.sendMessage(p, player, 1, MessageType.GLOBAL_CHAT, channelPrefix + "@whi@" + (player.getClan() != null ? "@cla@<" + player.getClan().getClanTag() + "> @whi@" : "") + header + player.getStaffName() + ": "
 						+ (channel == 1 ? "@gr2@" : "@or1@") + newStr, player.getIcon());
 				}
 			}
@@ -321,7 +321,7 @@ public final class RegularPlayer implements CommandListener {
 					continue;
 				if (p.getParty() == player.getParty()) {
 					//ActionSender.sendMessage(p, player, 1, MessageType.GAME, "@whi@" + newStr, player.getIcon());
-					p.message(channelPrefix + "" + player.getUsername() + ": @or1@" + newStr);
+					p.message(channelPrefix + "" + player.getStaffName() + ": @or1@" + newStr);
 				}
 			}
 			if (cmd.equalsIgnoreCase("g")) {
