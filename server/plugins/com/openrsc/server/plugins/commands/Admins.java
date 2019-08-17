@@ -698,7 +698,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(Skills.HITS) - p.getSkills().getMaxStat(Skills.HITS)));
+			p.getUpdateFlags().setDamage(new Damage(p, p.getSkills().getLevel(Skills.HITS) - p.getSkills().getMaxStat(Skills.HITS)));
 			p.getSkills().normalize(Skills.HITS);
 			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "You have been healed by an admin");
@@ -752,7 +752,7 @@ public final class Admins implements CommandListener {
 			if (newHits < 0)
 				newHits = 0;
 
-			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(Skills.HITS) - newHits));
+			p.getUpdateFlags().setDamage(new Damage(p, p.getSkills().getLevel(Skills.HITS) - newHits));
 			p.getSkills().setLevel(Skills.HITS, newHits);
 			if (p.getSkills().getLevel(Skills.HITS) <= 0)
 				p.killedBy(player);
@@ -789,13 +789,12 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			if (newPrayer > p.getSkills().getMaxStat(Skills.HITS))
-				newPrayer = p.getSkills().getMaxStat(Skills.HITS);
+			if (newPrayer > p.getSkills().getMaxStat(Skills.PRAYER))
+				newPrayer = p.getSkills().getMaxStat(Skills.PRAYER);
 			if (newPrayer < 0)
 				newPrayer = 0;
 
-			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(Skills.HITS) - newPrayer));
-			p.getSkills().setLevel(Skills.HITS, newPrayer);
+			p.getSkills().setLevel(Skills.PRAYER, newPrayer);
 
 			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "Your prayer has been set to " + newPrayer + " by an admin");
@@ -819,7 +818,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(Skills.HITS)));
+			p.getUpdateFlags().setDamage(new Damage(p, p.getSkills().getLevel(Skills.HITS)));
 			p.getSkills().setLevel(Skills.HITS, 0);
 			p.killedBy(player);
 			if (p.getUsernameHash() != player.getUsernameHash()) {
@@ -852,7 +851,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			p.getUpdateFlags().setDamage(new Damage(player, damage));
+			p.getUpdateFlags().setDamage(new Damage(p, damage));
 			p.getSkills().subtractLevel(Skills.HITS, damage);
 			if (p.getSkills().getLevel(Skills.HITS) <= 0)
 				p.killedBy(player);
@@ -1227,7 +1226,7 @@ public final class Admins implements CommandListener {
 			GameObject sara = new GameObject(player.getWorld(), n.getLocation(), 1031, 0, 0);
 			player.getWorld().registerGameObject(sara);
 			player.getWorld().delayedRemoveObject(sara, 600);
-			n.getUpdateFlags().setDamage(new Damage(player, damage));
+			n.getUpdateFlags().setDamage(new Damage(n, damage));
 			n.getSkills().subtractLevel(Skills.HITS, damage);
 			if (n.getSkills().getLevel(Skills.HITS) < 1)
 				n.killedBy(player);
