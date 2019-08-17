@@ -139,9 +139,16 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 				p.message(cookingOnMessage(p, item, object, needOven));
 			showBubble(p, item);
 			p.setBatchEvent(new BatchEvent(p.getWorld(), p, timeToCook, "Cooking on Object", Formulae.getRepeatTimes(p, Skills.COOKING), false) {
-
 				@Override
 				public void action() {
+					if (getOwner().getSkills().getLevel(Skills.COOKING) < cookingDef.getReqLevel()) {
+						String itemName = item.getDef(getWorld()).getName().toLowerCase();
+						itemName = itemName.startsWith("raw ") ? itemName.substring(4) :
+							itemName.startsWith("uncooked ") ? itemName.substring(9) : itemName;
+						getOwner().message("You need a cooking level of " + cookingDef.getReqLevel() + " to cook " + itemName);
+						interrupt();
+						return;
+					}
 					Item cookedFood = new Item(cookingDef.getCookedId());
 					if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 						if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {

@@ -41,85 +41,85 @@ public final class Mining implements ObjectActionListener,
 
 	@Override
 	public void onObjectAction(final GameObject object, String command,
-							   Player owner) {
+							   Player player) {
 		if (object.getID() == 269) {
 			if (command.equalsIgnoreCase("mine")) {
-				if (hasItem(owner, getAxe(owner))) {
-					if (getCurrentLevel(owner, com.openrsc.server.constants.Skills.MINING) >= 50) {
-						owner.message("you manage to dig a way through the rockslide");
-						if (owner.getX() <= 425) {
-							owner.teleport(428, 438);
+				if (hasItem(player, getAxe(player))) {
+					if (getCurrentLevel(player, com.openrsc.server.constants.Skills.MINING) >= 50) {
+						player.message("you manage to dig a way through the rockslide");
+						if (player.getX() <= 425) {
+							player.teleport(428, 438);
 						} else {
-							owner.teleport(425, 438);
+							player.teleport(425, 438);
 						}
 					} else {
-						owner.message("You need a mining level of 50 to clear the rockslide");
+						player.message("You need a mining level of 50 to clear the rockslide");
 					}
 				} else {
-					owner.message("you need a pickaxe to clear the rockslide");
+					player.message("you need a pickaxe to clear the rockslide");
 				}
 			} else if (command.equalsIgnoreCase("prospect")) {
-				owner.message("these rocks contain nothing interesting");
-				owner.message("they are just in the way");
+				player.message("these rocks contain nothing interesting");
+				player.message("they are just in the way");
 			}
 		} else if (object.getID() == 770) {
-			if (hasItem(owner, getAxe(owner))) {
-				owner.setBusyTimer(1600);
-				message(owner, "you mine the rock", "and break of several large chunks");
-				addItem(owner, ItemId.ROCKS.id(), 1);
+			if (hasItem(player, getAxe(player))) {
+				player.setBusyTimer(1600);
+				message(player, "you mine the rock", "and break of several large chunks");
+				addItem(player, ItemId.ROCKS.id(), 1);
 			} else {
-				owner.message("you need a pickaxe to mine this rock");
+				player.message("you need a pickaxe to mine this rock");
 			}
 		} else if (object.getID() == 1026) { // watchtower - rock of dalgroth
 			if (command.equalsIgnoreCase("mine")) {
-				if (owner.getQuestStage(Quests.WATCHTOWER) == 9) {
-					if (!hasItem(owner, getAxe(owner))) {
-						owner.message("You need a pickaxe to mine the rock");
+				if (player.getQuestStage(Quests.WATCHTOWER) == 9) {
+					if (!hasItem(player, getAxe(player))) {
+						player.message("You need a pickaxe to mine the rock");
 						return;
 					}
-					if (getCurrentLevel(owner, com.openrsc.server.constants.Skills.MINING) < 40) {
-						owner.message("You need a mining level of 40 to mine this crystal out");
+					if (getCurrentLevel(player, com.openrsc.server.constants.Skills.MINING) < 40) {
+						player.message("You need a mining level of 40 to mine this crystal out");
 						return;
 					}
-					if (hasItem(owner, ItemId.POWERING_CRYSTAL4.id())) {
-						playerTalk(owner, null, "I already have this crystal",
+					if (hasItem(player, ItemId.POWERING_CRYSTAL4.id())) {
+						playerTalk(player, null, "I already have this crystal",
 							"There is no benefit to getting another");
 						return;
 					}
-					owner.playSound("mine");
+					player.playSound("mine");
 					// special bronze pick bubble for rock of dalgroth - see wiki
-					showBubble(owner, new Item(ItemId.BRONZE_PICKAXE.id()));
-					owner.message("You have a swing at the rock!");
-					message(owner, "You swing your pick at the rock...");
-					owner.message("A crack appears in the rock and you prize a crystal out");
-					addItem(owner, ItemId.POWERING_CRYSTAL4.id(), 1);
+					showBubble(player, new Item(ItemId.BRONZE_PICKAXE.id()));
+					player.message("You have a swing at the rock!");
+					message(player, "You swing your pick at the rock...");
+					player.message("A crack appears in the rock and you prize a crystal out");
+					addItem(player, ItemId.POWERING_CRYSTAL4.id(), 1);
 				} else {
-					playerTalk(owner, null, "I can't touch it...",
+					playerTalk(player, null, "I can't touch it...",
 						"Perhaps it is linked with the shaman some way ?");
 				}
 			} else if (command.equalsIgnoreCase("prospect")) {
-				owner.playSound("prospect");
-				message(owner, "You examine the rock for ores...");
-				owner.message("This rock contains a crystal!");
+				player.playSound("prospect");
+				message(player, "You examine the rock for ores...");
+				player.message("This rock contains a crystal!");
 			}
 		} else {
-			handleMining(object, owner, owner.click);
+			handleMining(object, player, player.click);
 		}
 	}
 
-	private void handleMining(final GameObject object, Player owner, int click) {
-		if (owner.isBusy()) {
+	private void handleMining(final GameObject object, Player player, int click) {
+		if (player.isBusy()) {
 			return;
 		}
-		if (!owner.withinRange(object, 1)) {
+		if (!player.withinRange(object, 1)) {
 			return;
 		}
 
-		final ObjectMiningDef def = owner.getWorld().getServer().getEntityHandler().getObjectMiningDef(object.getID());
-		final int axeId = getAxe(owner);
+		final ObjectMiningDef def = player.getWorld().getServer().getEntityHandler().getObjectMiningDef(object.getID());
+		final int axeId = getAxe(player);
 		int retrytimes = -1;
-		final int mineLvl = owner.getSkills().getLevel(com.openrsc.server.constants.Skills.MINING);
-		final int mineXP = owner.getSkills().getExperience(Skills.MINING);
+		final int mineLvl = player.getSkills().getLevel(com.openrsc.server.constants.Skills.MINING);
+		final int mineXP = player.getSkills().getExperience(Skills.MINING);
 		int reqlvl = 1;
 		switch (ItemId.getById(axeId)) {
 			case BRONZE_PICKAXE:
@@ -149,96 +149,96 @@ public final class Mining implements ObjectActionListener,
 				break;
 		}
 
-		if (owner.click == 0 && (def == null || (def.getRespawnTime() < 1 && object.getID() != 496) || (def.getOreId() == 315 && owner.getQuestStage(Quests.FAMILY_CREST) < 6))) {
+		if (player.click == 0 && (def == null || (def.getRespawnTime() < 1 && object.getID() != 496) || (def.getOreId() == 315 && player.getQuestStage(Quests.FAMILY_CREST) < 6))) {
 			if (axeId < 0 || reqlvl > mineLvl) {
-				message(owner, "You need a pickaxe to mine this rock",
+				message(player, "You need a pickaxe to mine this rock",
 					"You do not have a pickaxe which you have the mining level to use");
 				return;
 			}
-			owner.setBusyTimer(1800);
-			owner.message("You swing your pick at the rock...");
+			player.setBusyTimer(1800);
+			player.message("You swing your pick at the rock...");
 			sleep(1800);
-			owner.message("There is currently no ore available in this rock");
+			player.message("There is currently no ore available in this rock");
 			return;
 		}
-		if (owner.click == 1) {
-			owner.playSound("prospect");
-			owner.setBusyTimer(1800);
-			owner.message("You examine the rock for ores...");
+		if (player.click == 1) {
+			player.playSound("prospect");
+			player.setBusyTimer(1800);
+			player.message("You examine the rock for ores...");
 			sleep(1800);
 			if (object.getID() == 496) {
 				// Tutorial Island rock handler
-				message(owner, "This rock contains " + new Item(def.getOreId()).getDef(owner.getWorld()).getName(),
+				message(player, "This rock contains " + new Item(def.getOreId()).getDef(player.getWorld()).getName(),
 						"Sometimes you won't find the ore but trying again may find it",
 						"If a rock contains a high level ore",
 						"You will not find it until you increase your mining level");
-				if (owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 49)
-					owner.getCache().set("tutorial", 50);
+				if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 49)
+					player.getCache().set("tutorial", 50);
 			} else {
 				if (def == null || def.getRespawnTime() < 1) {
-					owner.message("There is currently no ore available in this rock");
+					player.message("There is currently no ore available in this rock");
 				} else {
-					owner.message("This rock contains " + new Item(def.getOreId()).getDef(owner.getWorld()).getName());
+					player.message("This rock contains " + new Item(def.getOreId()).getDef(player.getWorld()).getName());
 				}
 			}
 			return;
 		}
 		if (axeId < 0 || reqlvl > mineLvl) {
-			message(owner, "You need a pickaxe to mine this rock",
+			message(player, "You need a pickaxe to mine this rock",
 				"You do not have a pickaxe which you have the mining level to use");
 			return;
 		}
-		if (owner.getFatigue() >= owner.MAX_FATIGUE) {
-			owner.message("You are too tired to mine this rock");
+		if (player.getFatigue() >= player.MAX_FATIGUE) {
+			player.message("You are too tired to mine this rock");
 			return;
 		}
 		if (object.getID() == 496 && mineXP >= 210) {
-			owner.message("Thats enough mining for now");
+			player.message("Thats enough mining for now");
 			return;
 		}
-		owner.playSound("mine");
-		showBubble(owner, new Item(ItemId.IRON_PICKAXE.id()));
-		owner.message("You swing your pick at the rock...");
-		retrytimes = owner.getWorld().getServer().getConfig().BATCH_PROGRESSION ? Formulae.getRepeatTimes(owner, com.openrsc.server.constants.Skills.MINING) : retrytimes + 1000;
-		owner.setBatchEvent(new BatchEvent(owner.getWorld(), owner, 1800, "Mining", retrytimes, true) {
+		player.playSound("mine");
+		showBubble(player, new Item(ItemId.IRON_PICKAXE.id()));
+		player.message("You swing your pick at the rock...");
+		retrytimes = player.getWorld().getServer().getConfig().BATCH_PROGRESSION ? Formulae.getRepeatTimes(player, com.openrsc.server.constants.Skills.MINING) : retrytimes + 1000;
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1800, "Mining", retrytimes, true) {
 			@Override
 			public void action() {
 				final Item ore = new Item(def.getOreId());
-				if (getOre(owner.getWorld().getServer(), def, owner.getSkills().getLevel(com.openrsc.server.constants.Skills.MINING), axeId) && mineLvl >= def.getReqLevel()) {
-					if (DataConversions.random(1, 200) <= (owner.getInventory().wielding(ItemId.CHARGED_DRAGONSTONE_AMULET.id()) ? 2 : 1)) {
-						owner.playSound("foundgem");
+				if (getOre(getWorld().getServer(), def, getOwner().getSkills().getLevel(com.openrsc.server.constants.Skills.MINING), axeId) && mineLvl >= def.getReqLevel()) {
+					if (DataConversions.random(1, 200) <= (getOwner().getInventory().wielding(ItemId.CHARGED_DRAGONSTONE_AMULET.id()) ? 2 : 1)) {
+						getOwner().playSound("foundgem");
 						Item gem = new Item(getGem(), 1);
-						owner.getInventory().add(gem);
-						owner.message("You just found a" + gem.getDef(owner.getWorld()).getName().toLowerCase().replaceAll("uncut", "") + "!");
+						getOwner().getInventory().add(gem);
+						getOwner().message("You just found a" + gem.getDef(getWorld()).getName().toLowerCase().replaceAll("uncut", "") + "!");
 						interrupt();
 					} else {
 						//check if there is still ore at the rock
-						GameObject obj = owner.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+						GameObject obj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 						if (obj == null) {
-							owner.message("You only succeed in scratching the rock");
+							getOwner().message("You only succeed in scratching the rock");
 						} else {
-							owner.getInventory().add(ore);
-							owner.message("You manage to obtain some " + ore.getDef(owner.getWorld()).getName().toLowerCase());
-							owner.incExp(com.openrsc.server.constants.Skills.MINING, def.getExp(), true);
+							getOwner().getInventory().add(ore);
+							getOwner().message("You manage to obtain some " + ore.getDef(getWorld()).getName().toLowerCase());
+							getOwner().incExp(com.openrsc.server.constants.Skills.MINING, def.getExp(), true);
 						}
-						if (object.getID() == 496 && owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 51)
-							owner.getCache().set("tutorial", 52);
-						if (!owner.getWorld().getServer().getConfig().MINING_ROCKS_EXTENDED || DataConversions.random(1, 100) <= def.getDepletion()) {
+						if (object.getID() == 496 && getOwner().getCache().hasKey("tutorial") && getOwner().getCache().getInt("tutorial") == 51)
+							getOwner().getCache().set("tutorial", 52);
+						if (!getWorld().getServer().getConfig().MINING_ROCKS_EXTENDED || DataConversions.random(1, 100) <= def.getDepletion()) {
 							interrupt();
 							if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
-								GameObject newObject = new GameObject(object.getWorld(), object.getLocation(), 98, object.getDirection(), object.getType());
-								owner.getWorld().replaceGameObject(object, newObject);
-								owner.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
+								GameObject newObject = new GameObject(getWorld(), object.getLocation(), 98, object.getDirection(), object.getType());
+								getWorld().replaceGameObject(object, newObject);
+								getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
 							}
 						}
 					}
 				} else {
 					if (object.getID() == 496) {
-						owner.message("You fail to make any real impact on the rock");
+						getOwner().message("You fail to make any real impact on the rock");
 					} else {
-						owner.message("You only succeed in scratching the rock");
+						getOwner().message("You only succeed in scratching the rock");
 						if (getRepeatFor() > 1) {
-							GameObject checkObj = owner.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+							GameObject checkObj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 							if (checkObj == null) {
 								interrupt();
 							}
@@ -246,8 +246,8 @@ public final class Mining implements ObjectActionListener,
 					}
 				}
 				if (!isCompleted()) {
-					showBubble(owner, new Item(ItemId.IRON_PICKAXE.id()));
-					owner.message("You swing your pick at the rock...");
+					showBubble(getOwner(), new Item(ItemId.IRON_PICKAXE.id()));
+					getOwner().message("You swing your pick at the rock...");
 				}
 
 			}
@@ -262,7 +262,7 @@ public final class Mining implements ObjectActionListener,
 	/**
 	 * Returns a gem ID
 	 */
-	public static int getGem() {
+	public int getGem() {
 		int rand = DataConversions.random(0, 100);
 		if (rand < 10) {
 			return ItemId.UNCUT_DIAMOND.id();
@@ -275,7 +275,7 @@ public final class Mining implements ObjectActionListener,
 		}
 	}
 
-	private static int calcAxeBonus(Server server, int axeId) {
+	private int calcAxeBonus(Server server, int axeId) {
 			//If server doesn't use batching, pickaxe shouldn't improve gathering chance
 			if (!server.getConfig().BATCH_PROGRESSION)
 				return 0;
@@ -306,7 +306,7 @@ public final class Mining implements ObjectActionListener,
 	/**
 	 * Should we can get an ore from the rock?
 	 */
-	private static boolean getOre(Server server, ObjectMiningDef def, int miningLevel, int axeId) {
+	private boolean getOre(Server server, ObjectMiningDef def, int miningLevel, int axeId) {
 		return Formulae.calcGatheringSuccessful(def.getReqLevel(), miningLevel, calcAxeBonus(server, axeId));
 	}
 }

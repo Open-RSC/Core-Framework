@@ -38,7 +38,7 @@ public class Thieving extends Functions
 		return Formulae.calcGatheringSuccessful(req_level, effectiveLevel);
 	}
 
-	private static boolean succeedThieving(Player player, int req_level) {
+	private boolean succeedThieving(Player player, int req_level) {
 		return Formulae.calcGatheringSuccessful(req_level, player.getSkills().getLevel(Skills.THIEVING), 40);
 	}
 
@@ -330,24 +330,27 @@ public class Thieving extends Functions
 			return;
 		}
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1200, "Thieving Pickpocket", Formulae.getRepeatTimes(player, Skills.THIEVING), true) {
-
 			@Override
 			public void action() {
-
-				player.setBusyTimer(1200);
+				getOwner().setBusyTimer(1200);
 				npc.setBusyTimer(1200 * 2);
 				if (npc.inCombat()) {
 					interrupt();
 					return;
 				}
-				boolean succeededPickpocket = succeedThieving(player, pickpocket.getRequiredLevel());
+				if (getOwner().getSkills().getLevel(Skills.THIEVING) < pickpocket.getRequiredLevel()) {
+					getOwner().message("You need to be a level " + pickpocket.getRequiredLevel() + " thief to pick the " + thievedMobSt + "'s pocket");
+					interrupt();
+					return;
+				}
+				boolean succeededPickpocket = succeedThieving(getOwner(), pickpocket.getRequiredLevel());
 				if (succeededPickpocket) {
-					if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-						if (player.getFatigue() >= player.MAX_FATIGUE)
-							player.message("@gre@You are too tired to gain experience, get some rest");
+					if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+						if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE)
+							getOwner().message("@gre@You are too tired to gain experience, get some rest");
 					}
 
-					player.incExp(Skills.THIEVING, pickpocket.getXp(), true);
+					getOwner().incExp(Skills.THIEVING, pickpocket.getXp(), true);
 					Item selectedLoot = null;
 					int total = 0;
 					for (LootItem loot : lootTable) {
@@ -357,12 +360,12 @@ public class Thieving extends Functions
 					total = 0;
 					for (LootItem loot : lootTable) {
 						if (loot.getChance() >= 100) {
-							player.getInventory().add(new Item(loot.getId(), loot.getAmount()));
+							getOwner().getInventory().add(new Item(loot.getId(), loot.getAmount()));
 							continue;
 						}
 						if (hit >= total && hit < (total + loot.getChance())) {
 							if (loot.getId() == -1) {
-								player.message("You find nothing to steal");
+								getOwner().message("You find nothing to steal");
 								return;
 							}
 							selectedLoot = (new Item(loot.getId(), loot.getAmount()));
@@ -370,20 +373,20 @@ public class Thieving extends Functions
 						}
 						total += loot.getChance();
 					}
-					player.message("You pick the " + thievedMobSt + "'s pocket");
+					getOwner().message("You pick the " + thievedMobSt + "'s pocket");
 					if (selectedLoot != null) {
-						player.getInventory().add(selectedLoot);
+						getOwner().getInventory().add(selectedLoot);
 					}
 				} else {
-					player.face(npc);
-					player.setBusyTimer(0);
+					getOwner().face(npc);
+					getOwner().setBusyTimer(0);
 					npc.setBusyTimer(0);
 					setDelayTicks(1);
-					player.playerServerMessage(MessageType.QUEST, "You fail to pick the " + thievedMobSt + "'s pocket");
+					getOwner().playerServerMessage(MessageType.QUEST, "You fail to pick the " + thievedMobSt + "'s pocket");
 					npc.getUpdateFlags()
-						.setChatMessage(new ChatMessage(npc, pickpocket.shoutMessage, player));
+						.setChatMessage(new ChatMessage(npc, pickpocket.shoutMessage, getOwner()));
 					interrupt();
-					npc.startCombat(player);
+					npc.startCombat(getOwner());
 				}
 				if (!isCompleted()) {
 					getOwner().playerServerMessage(MessageType.QUEST, "You attempt to pick the " + thievedMobSt + "'s pocket");

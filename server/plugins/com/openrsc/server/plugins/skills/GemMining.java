@@ -118,12 +118,12 @@ public class GemMining implements ObjectActionListener,
 						getOwner().getInventory().add(gem);
 					}
 					
-					if (!getOwner().getWorld().getServer().getConfig().MINING_ROCKS_EXTENDED || DataConversions.random(1, 100) <= 39) {
+					if (!getWorld().getServer().getConfig().MINING_ROCKS_EXTENDED || DataConversions.random(1, 100) <= 39) {
 						interrupt();
 						if (object != null && object.getID() == obj.getID()) {
-							GameObject newObject = new GameObject(obj.getWorld(), obj.getLocation(), 98, obj.getDirection(), obj.getType());
-							getOwner().getWorld().replaceGameObject(obj, newObject);
-							getOwner().getWorld().delayedSpawnObject(object.getLoc(), 120 * 1000); // 2 minute respawn time
+							GameObject newObject = new GameObject(getWorld(), obj.getLocation(), 98, obj.getDirection(), obj.getType());
+							getWorld().replaceGameObject(obj, newObject);
+							getWorld().delayedSpawnObject(object.getLoc(), 120 * 1000); // 2 minute respawn time
 						}
 					}
 				} else {
@@ -167,7 +167,7 @@ public class GemMining implements ObjectActionListener,
 		return -1;
 	}
 
-	private static int calcAxeBonus(int axeId) { // No evidence wielding different pickaxes gives a bonus, only more swings
+	private int calcAxeBonus(int axeId) { // No evidence wielding different pickaxes gives a bonus, only more swings
 		/*switch (axeId) {
 			case BRONZE_PICKAXE:
 				bonus = 0;
@@ -191,7 +191,7 @@ public class GemMining implements ObjectActionListener,
 		return 0;
 	}
 
-	private static boolean getGem(Player p, int req, int miningLevel, int axeId) {
+	private boolean getGem(Player p, int req, int miningLevel, int axeId) {
 		return Formulae.calcGatheringSuccessful(req, miningLevel, calcAxeBonus(axeId));
 	}
 
