@@ -514,10 +514,10 @@ public abstract class Mob extends Entity {
 		if (newHp <= 0) {
 			if (this.isPlayer()) {
 				((Player) this).setStatus(Action.DIED_FROM_DAMAGE);
-				killedBy(null);
+				killedBy(combatWith);
 			} else {
 				((Npc) this).setStatus(Action.DIED_FROM_DAMAGE);
-				killedBy(null);
+				killedBy(combatWith);
 			}
 		} else {
 			skills.setLevel(3, newHp);
@@ -975,7 +975,15 @@ public abstract class Mob extends Entity {
 	public void walkToEntity(int x, int y) {
 		getWalkingQueue().reset();
 		Path path = new Path(this, PathType.WALK_TO_ENTITY);
-		{
+		if (true) {
+			Point mobPos = new Point(this.getX(), this.getY());
+			AStarPathfinder pathFinder = new AStarPathfinder(this.getWorld(), mobPos, new Point(x,y), 20);
+			Path newPath = pathFinder.findPath();
+			if (newPath == null)
+				return;
+			else
+				getWalkingQueue().setPath(newPath);
+		} else {
 			path.addStep(x, y);
 			path.finish();
 		}

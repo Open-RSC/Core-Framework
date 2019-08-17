@@ -346,6 +346,7 @@ public class NpcBehavior {
 			// Target is not in range.
 			else if (target.getX() < (npc.getLoc().minX() - 4) || target.getX() > (npc.getLoc().maxX() + 4)
 				|| target.getY() < (npc.getLoc().minY() - 4) || target.getY() > (npc.getLoc().maxY() + 4)) {
+				//TODO: Player has exited their leash range - reset the npc
 				setRoaming();
 			}
 

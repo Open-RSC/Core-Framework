@@ -4,6 +4,7 @@ import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 
 import java.util.Deque;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 public class Path {
@@ -127,6 +128,11 @@ public class Path {
 		}
 	}
 
+	public void addDirect(int x, int y) {
+		if (waypoints.size() > MAXIMUM_SIZE)
+			return;
+		waypoints.add(new Point(x,y));
+	}
 	public void finish() {
 		waypoints.removeFirst();
 	}
@@ -139,6 +145,11 @@ public class Path {
 		return waypoints.poll();
 	}
 
+	public Point element() {
+		return waypoints.element();
+	}
+
+	public Iterator<Point> iterator() {return waypoints.iterator(); }
 	Point getLastPoint() {
 		return waypoints.getLast();
 	}
