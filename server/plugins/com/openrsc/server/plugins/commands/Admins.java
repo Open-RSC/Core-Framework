@@ -1827,7 +1827,7 @@ public final class Admins implements CommandListener {
 			}
 
 			player.message(messagePrefix + p.getUsername() + " IP address: " + p.getCurrentIP());
-		} else if (cmd.equalsIgnoreCase("appearance")) {
+		} else if (cmd.equalsIgnoreCase("appearance") || cmd.equalsIgnoreCase("changeappearance")) {
 			Player p = args.length > 0 ?
 				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
