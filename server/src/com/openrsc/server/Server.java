@@ -10,8 +10,6 @@ import com.openrsc.server.event.custom.MonitoringEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScriptLoader;
 import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.external.TileDef;
-import com.openrsc.server.io.Tile;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.Mob;
@@ -26,7 +24,6 @@ import com.openrsc.server.net.RSCProtocolEncoder;
 import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.GameLogger;
-import com.openrsc.server.util.EntityList;
 
 import com.openrsc.server.util.NamedThreadFactory;
 import com.openrsc.server.util.rsc.CollisionFlag;
@@ -88,10 +85,12 @@ public final class Server implements Runnable {
 	private long lastClientUpdate = 0;
 
 	private String name;
+
+	/*Used for pathfinding view debugger
 	JPanel2 panel = new JPanel2();
 	JFrame frame = new JFrame();
-
 	javax.swing.GroupLayout layout = new javax.swing.GroupLayout(panel);
+	*/
 
 	private Constants constants;
 
@@ -167,12 +166,13 @@ public final class Server implements Runnable {
 		try {
 			// TODO: We need an uninitialize process. Unloads all of these classes.
 
+			/*Used for pathfinding view debugger
 			if (PathValidation.DEBUG) {
 				panel.setLayout(layout);
 				frame.add(panel);
 				frame.setSize(600, 600);
 				frame.setVisible(true);
-			}
+			}*/
 
 			LOGGER.info("Loading Game Definitions...");
 			getEntityHandler().load();
@@ -336,8 +336,8 @@ public final class Server implements Runnable {
 			} catch (Throwable t) {
 				LOGGER.catching(t);
 			}
-			if (PathValidation.DEBUG)
-				panel.repaint();
+			//if (PathValidation.DEBUG)
+			//	panel.repaint();
 		}
 	}
 
@@ -435,111 +435,6 @@ public final class Server implements Runnable {
 					}
 
 				}
-				/*
-				for (int x = -size; x <= size; x++) {
-					for (int y = -size; y <= size; y++) {
-						if (board[x + size][y + size] != null)
-							continue;
-						TileValue tile = world.getTile(centerx - x, centery + y);
-						if (tile == null) {
-							board[x + size][y + size] = Color.white;
-							continue;
-						}
-
-						TileDef tileDef = getEntityHandler().getTileDef(tile.overlay - 1);
-						if (tileDef == null) {
-							setTile(x + size, y + size, Color.white);
-							continue;
-						}
-
-						if (tileDef.getObjectType() == 0 &&
-							tile.verticalWallVal == 0 &&
-							tile.horizontalWallVal == 0 &&
-							tile.diagWallVal == 0) {
-							setTile(x + size, y + size, Color.white);
-						} else if (tileDef.getObjectType() != 0) {
-							setTile(x + size, y + size, Color.black);
-						} else if (tile.verticalWallVal != 0) {
-							setTile(x + size, y + size, Color.CYAN);
-							setTile(x + size, y + size - 1, Color.BLUE);
-
-						} else if (tile.horizontalWallVal != 0) {
-							setTile(x + size, y + size, Color.ORANGE);
-							setTile(x + size+1, y + size, Color.YELLOW);
-
-						} else
-							setTile(x + size, y + size, Color.white);
-					}
-				}
-				setTile(size, size, Color.pink);
-
-				for (int i = 0; i < board[0].length; i++) {
-					for (int j = 0; j < board[0].length; j++) {
-						g.drawRect(i * width, j * width, width, width);
-						g.setColor(board[i][j]);
-						g.fillRect(i * width, j * width, width, width);
-					}
-				}
-
-
-				 */
-				int dudex = 0;
-				int dudey = 0;
-				int dudepathx = 0;
-				int dudepathy = 0;
-				//EntityList<Npc> dudes = world.getNpcs();
-				/*
-				for (Npc npc : dudes) {
-					if (npc.isChasing()) {
-						dudex = npc.getX();
-						dudey = npc.getY();
-						if (npc.getWalkingQueue().path != null && !npc.getWalkingQueue().path.isEmpty()) {
-							Point tmep = npc.getWalkingQueue().path.element();
-							dudepathx = tmep.getX();
-							dudepathy = tmep.getY();
-						}
-					}
-				}
-
-				 */
-				/*
-				for (int horizontal = -size; horizontal < size; horizontal++) {
-					for (int vertical = -size; vertical < size; vertical++) {
-
-						TileValue tile = world.getTile(centerx - horizontal, centery + vertical);
-						TileDef tileDef = getEntityHandler().getTileDef(tile.overlay-1);
-
-						g.setColor(Color.black);
-						if (dudex == centerx - horizontal && dudey == centery + vertical) {
-							g.setColor(Color.red);
-							g.fillRect((horizontal + size) * 20, (vertical + size) * 20, 20, 20);
-						} else if(dudepathx == centerx - horizontal && dudepathy == centery + vertical) {
-							g.setColor(Color.yellow);
-							g.fillRect((horizontal + size) * 20, (vertical + size) * 20, 20, 20);
-						}
-						if (tileDef != null) {
-							if (PathValidation.isBlocking(tile.traversalMask, (byte)0xFF, false)) {
-								g.fillRect((horizontal+size)*20, (vertical+size)*20,20,20);
-							} else {
-								g.drawRect((horizontal+size)*20, (vertical+size)*20,20,20);
-							}
-						} else {
-							g.drawRect((horizontal+size)*20, (vertical+size)*20,20,20);
-						}
-						Point next = null;
-						if (test.getWalkingQueue().path != null && !test.getWalkingQueue().path.isEmpty())
-							next = test.getWalkingQueue().path.element();
-						if (horizontal == 0 && vertical == 0) {
-							g.setColor(Color.orange);
-							g.fillRect((horizontal+size)*20, (vertical+size)*20,20,20);
-
-						} else if (next != null && next.getX() == centerx - horizontal && next.getY() == centery + vertical) {
-							g.setColor(Color.blue);
-							g.fillRect((horizontal+size)*20, (vertical+size)*20,20,20);
-						}
-					}
-				}
-				*/
 			}
 
 

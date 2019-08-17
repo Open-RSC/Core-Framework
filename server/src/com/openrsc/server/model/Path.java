@@ -131,7 +131,7 @@ public class Path {
 	public void addDirect(int x, int y) {
 		if (waypoints.size() > MAXIMUM_SIZE)
 			return;
-		waypoints.add(new Point(x,y));
+		waypoints.addFirst(new Point(x,y));
 	}
 	public void finish() {
 		waypoints.removeFirst();

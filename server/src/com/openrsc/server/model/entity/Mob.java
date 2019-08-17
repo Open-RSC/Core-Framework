@@ -972,21 +972,22 @@ public abstract class Mob extends Entity {
 		getWalkingQueue().setPath(path);
 	}
 
-	public void walkToEntity(int x, int y) {
+	public void walkToEntityAStar(int x, int y) {
 		getWalkingQueue().reset();
-		Path path = new Path(this, PathType.WALK_TO_ENTITY);
-		if (true) {
 			Point mobPos = new Point(this.getX(), this.getY());
 			AStarPathfinder pathFinder = new AStarPathfinder(this.getWorld(), mobPos, new Point(x,y), 20);
+			pathFinder.feedPath(new Path(this, PathType.WALK_TO_ENTITY));
 			Path newPath = pathFinder.findPath();
 			if (newPath == null)
 				return;
 			else
 				getWalkingQueue().setPath(newPath);
-		} else {
-			path.addStep(x, y);
-			path.finish();
-		}
+	}
+	public void walkToEntity(int x, int y) {
+		getWalkingQueue().reset();
+		Path path = new Path(this, PathType.WALK_TO_ENTITY);
+		path.addStep(x, y);
+		path.finish();
 		getWalkingQueue().setPath(path);
 	}
 

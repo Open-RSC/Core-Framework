@@ -6,6 +6,8 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.impl.RangeEventNpc;
 import com.openrsc.server.event.rsc.impl.StrPotEventNpc;
 import com.openrsc.server.event.rsc.impl.combat.AggroEvent;
+import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.external.NPCDef;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.Mob;
@@ -347,6 +349,10 @@ public class NpcBehavior {
 			else if (target.getX() < (npc.getLoc().minX() - 4) || target.getX() > (npc.getLoc().maxX() + 4)
 				|| target.getY() < (npc.getLoc().minY() - 4) || target.getY() > (npc.getLoc().maxY() + 4)) {
 				//TODO: Player has exited their leash range - reset the npc
+				Point origin = new Point(npc.getLoc().startX(), npc.getLoc().startY());
+				npc.walkToEntityAStar(origin.getX(), origin.getY());
+				npc.getSkills().normalize();
+				npc.cure();
 				setRoaming();
 			}
 
@@ -360,7 +366,11 @@ public class NpcBehavior {
 
 				lastMovement = System.currentTimeMillis();
 				if (!checkTargetCombatTimer()) {
-					npc.walkToEntity(target.getX(), target.getY());
+					if (true)
+						npc.walkToEntityAStar(target.getX(), target.getY());
+					else
+						npc.walkToEntity(target.getX(), target.getY());
+
 					if (npc.withinRange(target, 1)
 						&& npc.canReach(target)
 						&& !target.inCombat() && (npc.getID() != 210 && npc.getID() != 236)) {
@@ -623,7 +633,7 @@ public class NpcBehavior {
 		return target;
 	}
 
-	private void setRoaming() {
+	public void setRoaming() {
 		npc.setExecutedAggroScript(false);
 		state = State.ROAM;
 	}
@@ -651,7 +661,7 @@ public class NpcBehavior {
 
 	}
 
-	enum State {
+	public enum State {
 		ROAM, AGGRO, COMBAT, RETREAT, TACKLE, TACKLE_RETREAT, AGGRO2;
 	}
 }
