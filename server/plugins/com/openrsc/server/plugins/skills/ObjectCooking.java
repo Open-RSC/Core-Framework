@@ -118,7 +118,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 				p.message("You need a cooking level of " + cookingDef.getReqLevel() + " to cook " + itemName);
 				return;
 			}
-			if (!p.withinRange(object, 2)) {
+			if (!p.withinRange(object, 1)) {
 				return;
 			}
 			// Some need a RANGE not a FIRE

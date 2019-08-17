@@ -31,7 +31,7 @@ public class Woodcutting implements ObjectActionListener,
 		if (player.isBusy()) {
 			return;
 		}
-		if (!player.withinRange(object, 2)) {
+		if (!player.withinRange(object, 1)) {
 			return;
 		}
 		if (def == null) { // This shouldn't happen

@@ -25,7 +25,7 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 			ItemId.WILLOW_LOGS.id(),
 			ItemId.MAPLE_LOGS.id(),
 			ItemId.YEW_LOGS.id(),
-			ItemId.MAPLE_LOGS.id()
+			ItemId.MAGIC_LOGS.id()
 	};
 
 	@Override

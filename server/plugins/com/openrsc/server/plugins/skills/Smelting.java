@@ -120,7 +120,7 @@ public class Smelting implements InvUseOnObjectListener,
 		if (!p.getInventory().contains(item)) {
 			return;
 		}
-		if (!p.withinRange(obj, 2)) {
+		if (!p.withinRange(obj, 1)) {
 			return;
 		}
 		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
