@@ -269,10 +269,11 @@ public final class Moderator implements CommandListener {
 			for (String arg : args) {
 				newStr.append(arg).append(" ");
 			}
+
 			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 13, newStr.toString()));
-			newStr.insert(0, player.getStaffName() + ":@whi@ ");
+
 			for (Player p : player.getWorld().getPlayers()) {
-				ActionSender.sendMessage(p, player, 1, MessageType.GLOBAL_CHAT, "ANNOUNCEMENT: @whi@" + newStr.toString(), player.getIcon());
+				ActionSender.sendMessage(p, player, 1, MessageType.GLOBAL_CHAT, "ANNOUNCEMENT: " + player.getStaffName() + ":@yel@ " + newStr.toString(), player.getIcon());
 			}
 		}
 	}
