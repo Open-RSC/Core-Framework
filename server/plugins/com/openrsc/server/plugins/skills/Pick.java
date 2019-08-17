@@ -19,20 +19,21 @@ public final class Pick implements ObjectActionExecutiveListener,
 			|| /* Flax */obj.getID() == 313;
 	}
 
-	private void handleCropPickup(final Player owner, int objID, String pickMessage) {
-		int delaytime = owner.getWorld().getServer().getConfig().GAME_TICK;
+	private void handleCropPickup(final Player player, int objID, String pickMessage) {
+		int delaytime = player.getWorld().getServer().getConfig().GAME_TICK;
 
 		if (delaytime == 600)
 			delaytime = 300;//openrsc
 		else if (delaytime == 420)
 			delaytime = 370;//cabbage
 
-		owner.setBatchEvent(new BatchEvent(owner.getWorld(), owner, delaytime, "Pick Vegetal", 30, true) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, delaytime, "Pick Vegetal", 30, true) {
+			@Override
 			public void action() {
-				owner.message(pickMessage);
-				addItem(owner, objID, 1);
-				owner.playSound("potato");
-				if (owner.getInventory().full())
+				getOwner().message(pickMessage);
+				addItem(getOwner(), objID, 1);
+				getOwner().playSound("potato");
+				if (getOwner().getInventory().full())
 					interrupt();
 			}
 		});
@@ -40,19 +41,19 @@ public final class Pick implements ObjectActionExecutiveListener,
 
 	@Override
 	public void onObjectAction(final GameObject object, final String command,
-							   final Player owner) {
+							   final Player player) {
 		switch (object.getID()) {
 			case 72: // Wheat
-				handleCropPickup(owner, ItemId.GRAIN.id(), "You get some grain");
+				handleCropPickup(player, ItemId.GRAIN.id(), "You get some grain");
 				break;
 			case 191: // Potatos
-				handleCropPickup(owner, ItemId.POTATO.id(), "You pick a potato");
+				handleCropPickup(player, ItemId.POTATO.id(), "You pick a potato");
 				break;
 			case 313: // Flax
-				handleCropPickup(owner, ItemId.FLAX.id(), "You uproot a flax plant");
+				handleCropPickup(player, ItemId.FLAX.id(), "You uproot a flax plant");
 				break;
 			default:
-				owner.message("Nothing interesting happens");
+				player.message("Nothing interesting happens");
 				break;
 		}
 	}

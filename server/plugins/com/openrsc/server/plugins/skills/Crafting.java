@@ -2,16 +2,13 @@ package com.openrsc.server.plugins.skills;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
-import com.openrsc.server.event.MiniEvent;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ItemCraftingDef;
 import com.openrsc.server.external.ItemGemDef;
-import com.openrsc.server.model.MenuOptionListener;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
@@ -35,396 +32,37 @@ public class Crafting implements InvUseOnItemListener,
 		ItemId.UNCUT_JADE.id(),
 		ItemId.UNCUT_OPAL.id(),
 	};
-
-	@Override
-	public void onInvUseOnObject(GameObject obj, final Item item, Player owner) {
-		switch (obj.getID()) {
-			case 118:
-			case 813: // Furnace
-				if (item.getID() == ItemId.GOLD_BAR.id() || item.getID() == ItemId.GOLD_BAR_FAMILYCREST.id()) {
-					owner.getWorld().getServer().getGameEventHandler().add(new MiniEvent(owner.getWorld(), owner, "Craft Jewelry") {
-						public void action() {
-							getOwner().message("What would you like to make?");
-							String[] options = new String[]{
-								"Ring",
-								"Necklace",
-								"Amulet"
-							};
-							owner.setMenuHandler(new MenuOptionListener(options) {
-								public void handleReply(int option, String reply) {
-									if (owner.isBusy() || option < 0 || option > 2) {
-										return;
-									}
-									final int[] moulds = {
-										ItemId.RING_MOULD.id(),
-										ItemId.NECKLACE_MOULD.id(),
-										ItemId.AMULET_MOULD.id(),
-									};
-									final int[] gems = {
-										-1,
-										ItemId.SAPPHIRE.id(),
-										ItemId.EMERALD.id(),
-										ItemId.RUBY.id(),
-										ItemId.DIAMOND.id(),
-										ItemId.DRAGONSTONE.id(),
-										ItemId.OPAL.id(),
-									};
-									String[] options = {
-										"Gold",
-										"Sapphire",
-										"Emerald",
-										"Ruby",
-										"Diamond"
-									};
-									if (owner.getWorld().getServer().getConfig().MEMBER_WORLD) {
-										if (owner.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-											options = new String[]{
-												"Gold",
-												"Sapphire",
-												"Emerald",
-												"Ruby",
-												"Diamond",
-												"Dragonstone",
-												"Opal"
-											};
-										} else {
-											options = new String[]{
-												"Gold",
-												"Sapphire",
-												"Emerald",
-												"Ruby",
-												"Diamond",
-												"Dragonstone"
-											};
-										}
-
-									}
-									final int craftType = option;
-									if (owner.getInventory().countId(moulds[craftType]) < 1) {
-										owner.message("You need a " + owner.getWorld().getServer().getEntityHandler().getItemDef(moulds[craftType]).getName() + " to make a " + reply);
-										return;
-									}
-									owner.message("What type of " + reply + " would you like to make?");
-									owner.setMenuHandler(new MenuOptionListener(options) {
-										public void handleReply(final int option, final String reply) {
-											int retrytimes = owner.getInventory().countId(item.getID());
-											if (option != 0)
-												retrytimes = owner.getInventory().countId(gems[option]) < retrytimes ? owner.getInventory().countId(gems[option]) : retrytimes;
-											owner.setBatchEvent(new BatchEvent(owner.getWorld(), owner, 1200, "Craft Jewelry", retrytimes, false) {
-
-												public void action() {
-													if (option < 0 || option > (owner.getWorld().getServer().getConfig().MEMBER_WORLD ? 5 + (owner.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? 1 : 0) : 4)) {
-														interrupt();
-														return;
-													}
-													if (owner.getWorld().getServer().getConfig().WANT_FATIGUE) {
-														if (owner.getFatigue() >= owner.MAX_FATIGUE) {
-															owner.message("You are too tired to craft");
-															interrupt();
-															return;
-														}
-													}
-													if (option != 0 && owner.getInventory().countId(gems[option]) < 1) {
-														owner.message("You don't have a " + reply + ".");
-														interrupt();
-														return;
-													}
-													ItemCraftingDef def = owner.getWorld().getServer().getEntityHandler().getCraftingDef((option * 3) + craftType);
-													if (def == null) {
-														owner.message("Nothing interesting happens");
-														interrupt();
-														return;
-													}
-													if (def.itemID == -1)
-													{
-														owner.message("You have no reason to make that item.");
-														interrupt();
-														return;
-													}
-													if (owner.getSkills().getLevel(Skills.CRAFTING) < def.getReqLevel()) {
-														owner.message("You need a crafting skill of level " + def.getReqLevel() + " to make this");
-														interrupt();
-														return;
-													}
-													if (owner.getInventory().remove(item) > -1 && (option == 0 || owner.getInventory().remove(gems[option], 1) > -1)) {
-														showBubble(owner, item);
-														Item result;
-														if (item.getID() == ItemId.GOLD_BAR_FAMILYCREST.id() && option == 3 && craftType == 0) {
-															result = new Item(ItemId.RUBY_RING_FAMILYCREST.id(), 1);
-														} else if (item.getID() == ItemId.GOLD_BAR_FAMILYCREST.id() && option == 3 && craftType == 1) {
-															result = new Item(ItemId.RUBY_NECKLACE_FAMILYCREST.id(), 1);
-														} else {
-															result = new Item(def.getItemID(), 1);
-														}
-														owner.message("You make a " + result.getDef(owner.getWorld()).getName());
-														owner.getInventory().add(result);
-														owner.incExp(Skills.CRAFTING, def.getExp(), true);
-													} else {
-														owner.message("You don't have a " + reply + ".");
-														interrupt();
-													}
-												}
-											});
-										}
-									});
-									ActionSender.sendMenu(owner, options);
-								}
-							});
-							ActionSender.sendMenu(owner, options);
-						}
-					});
-					return;
-				}
-				if (item.getID() == ItemId.SILVER_BAR.id()) {
-					owner.getWorld().getServer().getGameEventHandler().add(new MiniEvent(owner.getWorld(), owner, "Craft Silver") {
-						public void action() {
-							owner.message("What would you like to make?");
-							String[] options = new String[]{
-								"Holy Symbol of Saradomin",
-								"Unholy symbol of Zamorak"
-							};
-							owner.setMenuHandler(new MenuOptionListener(options) {
-								public void handleReply(final int option, String reply) {
-									if (owner.isBusy() || option < 0 || option > 1) {
-										return;
-									}
-									int[] moulds = {
-										ItemId.HOLY_SYMBOL_MOULD.id(),
-										ItemId.UNHOLY_SYMBOL_MOULD.id(),
-									};
-									final int[] results = {
-										ItemId.UNSTRUNG_HOLY_SYMBOL_OF_SARADOMIN.id(),
-										ItemId.UNSTRUNG_UNHOLY_SYMBOL_OF_ZAMORAK.id()
-									};
-									if (owner.getInventory().countId(moulds[option]) < 1) {
-										owner.message("You need a " + owner.getWorld().getServer().getEntityHandler().getItemDef(moulds[option]).getName() + " to make a " + reply + "!");
-										return;
-									}
-
-									owner.setBatchEvent(new BatchEvent(owner.getWorld(), owner, 1200, "Craft Silver", owner.getInventory().countId(item.getID()), false) {
-
-										@Override
-										public void action() {
-											if (owner.getSkills().getLevel(Skills.CRAFTING) < 16) {
-												owner.message("You need a crafting skill of level 16 to make this");
-												interrupt();
-												return;
-											}
-											if (owner.getInventory().remove(item) > -1) {
-												showBubble(owner, item);
-												Item result = new Item(results[option]);
-												owner.message("You make a " + result.getDef(owner.getWorld()).getName());
-												owner.getInventory().add(result);
-												owner.incExp(Skills.CRAFTING, 200, true);
-											} else {
-												interrupt();
-											}
-										}
-									});
-								}
-							});
-							ActionSender.sendMenu(owner, options);
-						}
-					});
-					return;
-				} else if (item.getID() == ItemId.SODA_ASH.id() || item.getID() == ItemId.SAND.id()) { // Soda Ash or Sand (Glass)
-					if (owner.getInventory().countId(ItemId.SODA_ASH.id()) < 1) {
-						owner.message("You need some soda ash to make glass");
-						return;
-					} else if (owner.getInventory().countId(ItemId.SAND.id()) < 1) {
-						owner.message("You need some sand to make glass");
-						return;
-					}
-					showBubble(owner, item);
-					int otherItem = item.getID() == ItemId.SAND.id() ? ItemId.SODA_ASH.id() : ItemId.SAND.id();
-					int repeatTimes = owner.getInventory().countId(item.getID());
-					repeatTimes = owner.getInventory().countId(otherItem) < repeatTimes ? owner.getInventory().countId(otherItem) : repeatTimes;
-						owner.message("you heat the sand and soda ash in the furnace to make glass");
-					owner.setBatchEvent(new BatchEvent(owner.getWorld(), owner, owner.getWorld().getServer().getConfig().GAME_TICK, "Craft Molten Glass", repeatTimes, false) {
-						public void action() {
-							if (owner.getInventory().countId(otherItem) < 1 ||
-							owner.getInventory().countId(item.getID()) < 1) {
-								interrupt();
-								return;
-							}
-							if (owner.getInventory().remove(otherItem, 1) > -1
-								&& owner.getInventory().remove(item) > -1) {
-								owner.getInventory().add(new Item(ItemId.MOLTEN_GLASS.id(), 1));
-								owner.getInventory().add(new Item(ItemId.BUCKET.id(), 1));
-								owner.incExp(Skills.CRAFTING, 80, true);
-							} else {
-								interrupt();
-								return;
-							}
-
-							if (!isCompleted()) {
-								showBubble(owner, item);
-								owner.message("you heat the sand and soda ash in the furnace to make glass");
-							}
-						}
-					});
-					return;
-				}
-				break;
-			case 179: // Potters Wheel & Soft Clay
-				if (item.getID() != ItemId.SOFT_CLAY.id()) {
-					owner.message("Nothing interesting happens");
-					return;
-				}
-				owner.message("What would you like to make?");
-				String[] options = new String[]{"Pie dish", "Pot", "Bowl"};
-				owner.setMenuHandler(new MenuOptionListener(options) {
-					public void handleReply(int option, String reply) {
-						if (owner.isBusy()) {
-							return;
-						}
-						int reqLvl, exp;
-						Item result;
-						AtomicReference<String> msg = new AtomicReference<String>();
-						switch (option) {
-							case 1:
-								result = new Item(ItemId.UNFIRED_POT.id(), 1);
-								reqLvl = 1;
-								exp = 25;
-								// should not use this, as pot is made at level 1
-								msg.set("a pot");
-								break;
-							case 0:
-								result = new Item(ItemId.UNFIRED_PIE_DISH.id(), 1);
-								reqLvl = 4;
-								exp = 60;
-								msg.set("pie dishes");
-								break;
-							case 2:
-								result = new Item(ItemId.UNFIRED_BOWL.id(), 1);
-								reqLvl = 7;
-								exp = 40;
-								msg.set("a bowl");
-								break;
-							default:
-								owner.message("Nothing interesting happens");
-								return;
-						}
-						owner.setBatchEvent(new BatchEvent(owner.getWorld(), owner, 600, "Craft Clay", owner.getInventory().countId(item.getID()), false) {
-
-							@Override
-							public void action() {
-								if (owner.getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
-									owner.message("You need to have a crafting of level " + reqLvl + " or higher to make " + msg.get());
-									interrupt();
-									return;
-								}
-								if (owner.getInventory().remove(item) > -1) {
-									showBubble(owner, item);
-									owner.message("you make the clay into a " + potteryItemName(result.getDef(owner.getWorld()).getName()));
-									owner.getInventory().add(result);
-									owner.incExp(Skills.CRAFTING, exp, true);
-								} else {
-									interrupt();
-								}
-							}
-						});
-					}
-				});
-				ActionSender.sendMenu(owner, options);
-				break;
-
-			case 178: // Potters Oven & Unfired Clay
-				int reqLvl, xp;
-				Item result;
-				String msg = "";
-				switch (ItemId.getById(item.getID())) {
-					case UNFIRED_POT:
-						result = new Item(ItemId.POT.id(), 1);
-						reqLvl = 1;
-						xp = 25;
-						// should not use this, as pot is made at level 1
-						msg = "a pot";
-						break;
-					case UNFIRED_PIE_DISH:
-						result = new Item(ItemId.PIE_DISH.id(), 1);
-						reqLvl = 4;
-						xp = 40;
-						msg = "pie dishes";
-						break;
-					case UNFIRED_BOWL:
-						result = new Item(ItemId.BOWL.id(), 1);
-						reqLvl = 7;
-						xp = 60;
-						msg = "a bowl";
-						break;
-					default:
-						owner.message("Nothing interesting happens");
-						return;
-				}
-				if (owner.getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
-					owner.message("You need to have a crafting of level " + reqLvl + " or higher to make " + msg);
-					return;
-				}
-				final int exp = xp;
-				final boolean fail = Formulae.crackPot(reqLvl, owner.getSkills().getLevel(Skills.CRAFTING));
-				showBubble(owner, item);
-				String potteryItem = potteryItemName(item.getDef(owner.getWorld()).getName());
-				owner.message("You put the " + potteryItem + " in the oven");
-				owner.setBatchEvent(new BatchEvent(owner.getWorld(), owner, 1800, "Craft Clay", owner.getInventory().countId(item.getID()), false) {
-
-					@Override
-					public void action() {
-						if (owner.getWorld().getServer().getConfig().WANT_FATIGUE) {
-							if (owner.getFatigue() >= owner.MAX_FATIGUE) {
-								owner.message("You are too tired to craft");
-								interrupt();
-								return;
-							}
-						}
-						showBubble(owner, item);
-						if (owner.getInventory().remove(item) > -1) {
-							if (fail) {
-								owner.message("The " // TODO: Check if is authentic message
-									+ potteryItem + " cracks in the oven, you throw it away.");
-							} else {
-								owner.message("the "
-									+ potteryItem + " hardens in the oven");
-								owner.getWorld().getServer().getGameEventHandler().add(new SingleEvent(owner.getWorld(), owner, 1800, "Remove Clay From Oven") {
-									@Override
-									public void action() {
-										owner.message("You remove a "
-											+ result.getDef(owner.getWorld()).getName().toLowerCase()
-											+ " from the oven");
-										owner.getInventory().add(result);
-										owner.incExp(Skills.CRAFTING, exp, true);
-									}
-
-								});
-							}
-						} else {
-							interrupt();
-						}
-					}
-				});
-				break;
-		}
-	}
-
+	private int[] itemsFurnance = new int[]{
+		ItemId.SILVER_BAR.id(),
+		ItemId.GOLD_BAR.id(),
+		ItemId.SODA_ASH.id(),
+		ItemId.SAND.id(),
+		ItemId.GOLD_BAR_FAMILYCREST.id(),
+	};
+	private int[] itemsOven = new int[]{
+		ItemId.UNFIRED_POT.id(),
+		ItemId.UNFIRED_PIE_DISH.id(),
+		ItemId.UNFIRED_BOWL.id()
+	};
+	
 	@Override
 	public void onInvUseOnItem(Player player, Item item1, Item item2) {
-		if (item1.getID() == ItemId.CHISEL.id() && doCutGem(player, item1, item2)) {
-			return;
-		} else if (item2.getID() == ItemId.CHISEL.id() && doCutGem(player, item2, item1)) {
-			return;
-		} else if (item1.getID() == ItemId.GLASSBLOWING_PIPE.id() && doGlassBlowing(player, item1, item2)) {
-			return;
-		} else if (item2.getID() == ItemId.GLASSBLOWING_PIPE.id() && doGlassBlowing(player, item2, item1)) {
-			return;
-		}
-		if (item1.getID() == ItemId.NEEDLE.id() && makeLeather(player, item1, item2)) {
-			return;
-		} else if (item2.getID() == ItemId.NEEDLE.id() && makeLeather(player, item2, item1)) {
-			return;
-		} else if (item1.getID() == ItemId.BALL_OF_WOOL.id() && useWool(player, item1, item2)) {
-			return;
-		} else if (item2.getID() == ItemId.BALL_OF_WOOL.id() && useWool(player, item2, item1)) {
-			return;
+		if (item1.getID() == ItemId.CHISEL.id()) {
+			doCutGem(player, item1, item2);
+		} else if (item2.getID() == ItemId.CHISEL.id()) {
+			doCutGem(player, item2, item1);
+		} else if (item1.getID() == ItemId.GLASSBLOWING_PIPE.id()) {
+			doGlassBlowing(player, item1, item2);
+		} else if (item2.getID() == ItemId.GLASSBLOWING_PIPE.id()) {
+			doGlassBlowing(player, item2, item1);
+		} else if (item1.getID() == ItemId.NEEDLE.id()) {
+			makeLeather(player, item1, item2);
+		} else if (item2.getID() == ItemId.NEEDLE.id()) {
+			makeLeather(player, item2, item1);
+		} else if (item1.getID() == ItemId.BALL_OF_WOOL.id()) {
+			useWool(player, item1, item2);
+		} else if (item2.getID() == ItemId.BALL_OF_WOOL.id()) {
+			useWool(player, item2, item1);
 		} else if ((item1.getID() == ItemId.BUCKET_OF_WATER.id() || item1.getID() == ItemId.JUG_OF_WATER.id() || item1.getID() == ItemId.BOWL_OF_WATER.id()) && useWater(player, item1, item2)) {
 			return;
 		} else if ((item2.getID() == ItemId.BUCKET_OF_WATER.id() || item2.getID() == ItemId.JUG_OF_WATER.id() || item2.getID() == ItemId.BOWL_OF_WATER.id()) && useWater(player, item2, item1)) {
@@ -444,21 +82,443 @@ public class Crafting implements InvUseOnItemListener,
 		}
 		player.message("Nothing interesting happens");
 	}
+	
+	@Override
+	public void onInvUseOnObject(GameObject obj, final Item item, final Player player) {
 
-	private boolean doCutGem(Player player, final Item chisel, final Item gem) {
+		if (!craftingChecks(obj, item, player)) return;
+
+		beginCrafting(item, player);
+	}
+	
+	private boolean craftingChecks(final GameObject obj, final Item item, final Player player) {
+		// allowed item on crafting game objects
+		if (!craftingTypeChecks(obj, item, player)) return false;
+		
+		if (item.getID() == ItemId.SODA_ASH.id() || item.getID() == ItemId.SAND.id()) { // Soda Ash or Sand (Glass)
+			if (player.getInventory().countId(ItemId.SODA_ASH.id()) < 1) {
+				player.message("You need some soda ash to make glass");
+				return false;
+			} else if (player.getInventory().countId(ItemId.SAND.id()) < 1) {
+				player.message("You need some sand to make glass");
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	private boolean craftingTypeChecks(final GameObject obj, final Item item, final Player player) {
+		return ((obj.getID() == 118 || obj.getID() == 813) && DataConversions.inArray(itemsFurnance, item.getID()))
+				|| (obj.getID() == 178 && DataConversions.inArray(itemsOven, item.getID()))
+				|| (obj.getID() == 179 && item.getID() == ItemId.SOFT_CLAY.id());
+	}
+	
+	private void beginCrafting(final Item item, final Player player) {
+		if (item.getID() == ItemId.SODA_ASH.id() || item.getID() == ItemId.SAND.id()) {
+			doGlassMaking(item, player);
+			return;
+		} else if (DataConversions.inArray(itemsOven, item.getID())) {
+			doPotteryFiring(item, player);
+			return;
+		}
+		
+		player.message("What would you like to make?");
+		
+		if (item.getID() == ItemId.GOLD_BAR.id() || item.getID() == ItemId.GOLD_BAR_FAMILYCREST.id()) {
+			doGoldJewelry(item, player);
+		} else if (item.getID() == ItemId.SILVER_BAR.id()) {
+			doSilverJewelry(item, player);
+		} else if (item.getID() == ItemId.SOFT_CLAY.id()) {
+			doPotteryMolding(item, player);
+		}
+	}
+	
+	private void doGoldJewelry(final Item item, final Player player) {
+		AtomicReference<String> reply = new AtomicReference<String>();
+		
+		// select type
+		String[] options = new String[]{
+				"Ring",
+				"Necklace",
+				"Amulet"
+		};
+		int type = showMenu(player, options);
+		if (player.isBusy() || type < 0 || type > 2) {
+			return;
+		}
+		reply.set(options[type]);
+
+		final int[] moulds = {
+				ItemId.RING_MOULD.id(),
+				ItemId.NECKLACE_MOULD.id(),
+				ItemId.AMULET_MOULD.id(),
+		};
+		final int[] gems = {
+				ItemId.NOTHING.id(),
+				ItemId.SAPPHIRE.id(),
+				ItemId.EMERALD.id(),
+				ItemId.RUBY.id(),
+				ItemId.DIAMOND.id(),
+				ItemId.DRAGONSTONE.id(),
+				ItemId.OPAL.id(),
+		};
+
+		// select gem
+		options = new String[]{
+				"Gold",
+				"Sapphire",
+				"Emerald",
+				"Ruby",
+				"Diamond"
+		};
+		if (player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+				options = new String[]{
+						"Gold",
+						"Sapphire",
+						"Emerald",
+						"Ruby",
+						"Diamond",
+						"Dragonstone",
+						"Opal"
+				};
+			} else {
+				options = new String[]{
+						"Gold",
+						"Sapphire",
+						"Emerald",
+						"Ruby",
+						"Diamond",
+						"Dragonstone"
+				};
+			}
+		}
+		if (player.getInventory().countId(moulds[type]) < 1) {
+			player.message("You need a " + player.getWorld().getServer().getEntityHandler().getItemDef(moulds[type]).getName() + " to make a " + reply.get());
+			return;
+		}
+		player.message("What type of " + reply.get() + " would you like to make?");
+
+		int gem = showMenu(player, options);
+
+		if (player.isBusy() || gem < 0 || gem > (player.getWorld().getServer().getConfig().MEMBER_WORLD ? 5 + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? 1 : 0) : 4)) {
+			return;
+		}
+		reply.set(options[gem]);
+
+		ItemCraftingDef def = player.getWorld().getServer().getEntityHandler().getCraftingDef((gem * 3) + type);
+		if (def == null) {
+			// No definition found
+			player.message("Nothing interesting happens");
+			return;
+		}
+
+		if (def.itemID == ItemId.NOTHING.id())
+		{
+			player.message("You have no reason to make that item.");
+			return;
+		}
+
+		int retrytimes = player.getInventory().countId(item.getID());
+		if (gem != 0) {
+			retrytimes = player.getInventory().countId(gems[gem]) < retrytimes ? player.getInventory().countId(gems[gem]) : retrytimes;
+		}
+		if (retrytimes <= 0) {
+			if (gem != 0 && player.getInventory().countId(gems[gem]) < 1) {
+				player.message("You don't have a " + reply.get() + ".");
+			}
+			return;
+		}
+
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1200, "Craft Gold Jewelry", retrytimes, false) {
+			@Override
+			public void action() {
+				if (getOwner().getSkills().getLevel(Skills.CRAFTING) < def.getReqLevel()) {
+					getOwner().message("You need a crafting skill of level " + def.getReqLevel() + " to make this");
+					interrupt();
+					return;
+				}
+				if (gem != 0 && getOwner().getInventory().countId(gems[gem]) < 1) {
+					getOwner().message("You don't have a " + reply.get() + ".");
+					interrupt();
+					return;
+				}
+				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+						getOwner().message("You are too tired to craft");
+						interrupt();
+						return;
+					}
+				}
+				if (getOwner().getInventory().remove(item) > -1 && (gem == 0 || getOwner().getInventory().remove(gems[gem], 1) > -1)) {
+					showBubble(getOwner(), item);
+					Item result;
+					if (item.getID() == ItemId.GOLD_BAR_FAMILYCREST.id() && gem == 3 && type == 0) {
+						result = new Item(ItemId.RUBY_RING_FAMILYCREST.id(), 1);
+					} else if (item.getID() == ItemId.GOLD_BAR_FAMILYCREST.id() && gem == 3 && type == 1) {
+						result = new Item(ItemId.RUBY_NECKLACE_FAMILYCREST.id(), 1);
+					} else {
+						result = new Item(def.getItemID(), 1);
+					}
+					getOwner().message("You make a " + result.getDef(getWorld()).getName());
+					getOwner().getInventory().add(result);
+					getOwner().incExp(Skills.CRAFTING, def.getExp(), true);
+				} else {
+					getOwner().message("You don't have a " + reply.get() + ".");
+					interrupt();
+				}
+			}
+		});
+	}
+
+	private void doSilverJewelry(final Item item, final Player player) {
+		AtomicReference<String> reply = new AtomicReference<String>();
+
+		// select type
+		String[] options = new String[]{
+				"Holy Symbol of Saradomin",
+				"Unholy symbol of Zamorak"
+		};
+		int type = showMenu(player, options);
+		if (player.isBusy() || type < 0 || type > 1) {
+			return;
+		}
+		reply.set(options[type]);
+
+		int[] moulds = {
+				ItemId.HOLY_SYMBOL_MOULD.id(),
+				ItemId.UNHOLY_SYMBOL_MOULD.id(),
+		};
+		final int[] results = {
+				ItemId.UNSTRUNG_HOLY_SYMBOL_OF_SARADOMIN.id(),
+				ItemId.UNSTRUNG_UNHOLY_SYMBOL_OF_ZAMORAK.id()
+		};
+		if (player.getInventory().countId(moulds[type]) < 1) {
+			player.message("You need a " + player.getWorld().getServer().getEntityHandler().getItemDef(moulds[type]).getName() + " to make a " + reply.get() + "!");
+			return;
+		}
+		
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1200, "Craft Silver Jewelry", player.getInventory().countId(item.getID()), false) {
+			@Override
+			public void action() {
+				if (getOwner().getSkills().getLevel(Skills.CRAFTING) < 16) {
+					getOwner().message("You need a crafting skill of level 16 to make this");
+					interrupt();
+					return;
+				}
+				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+						getOwner().message("You are too tired to craft");
+						interrupt();
+						return;
+					}
+				}
+				if (getOwner().getInventory().remove(item) > -1) {
+					showBubble(getOwner(), item);
+					Item result = new Item(results[type]);
+					getOwner().message("You make a " + result.getDef(getWorld()).getName());
+					getOwner().getInventory().add(result);
+					getOwner().incExp(Skills.CRAFTING, 200, true);
+				} else {
+					interrupt();
+				}
+			}
+		});
+	}
+	
+	private void doPotteryMolding(final Item item, final Player player) {
+		String[] options = new String[]{"Pie dish", "Pot", "Bowl"};
+		int type = showMenu(player, options);
+		if (player.isBusy() || type < 0 || type > 2) {
+			return;
+		}
+		
+		int reqLvl, exp;
+		Item result;
+		AtomicReference<String> msg = new AtomicReference<String>();
+		switch (type) {
+			case 1:
+				result = new Item(ItemId.UNFIRED_POT.id(), 1);
+				reqLvl = 1;
+				exp = 25;
+				// should not use this, as pot is made at level 1
+				msg.set("a pot");
+				break;
+			case 0:
+				result = new Item(ItemId.UNFIRED_PIE_DISH.id(), 1);
+				reqLvl = 4;
+				exp = 60;
+				msg.set("pie dishes");
+				break;
+			case 2:
+				result = new Item(ItemId.UNFIRED_BOWL.id(), 1);
+				reqLvl = 7;
+				exp = 40;
+				msg.set("a bowl");
+				break;
+			default:
+				player.message("Nothing interesting happens");
+				return;
+		}
+		
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Craft Clay", player.getInventory().countId(item.getID()), false) {
+			@Override
+			public void action() {
+				if (getOwner().getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
+					getOwner().message("You need to have a crafting of level " + reqLvl + " or higher to make " + msg.get());
+					interrupt();
+					return;
+				}
+				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+						getOwner().message("You are too tired to craft");
+						interrupt();
+						return;
+					}
+				}
+				if (getOwner().getInventory().remove(item) > -1) {
+					showBubble(getOwner(), item);
+					getOwner().message("you make the clay into a " + potteryItemName(result.getDef(getWorld()).getName()));
+					getOwner().getInventory().add(result);
+					getOwner().incExp(Skills.CRAFTING, exp, true);
+				} else {
+					interrupt();
+				}
+			}
+		});
+	}
+	
+	private void doPotteryFiring(final Item item, final Player player) {
+		int reqLvl, xp;
+		Item result;
+		AtomicReference<String> msg = new AtomicReference<String>();
+		switch (ItemId.getById(item.getID())) {
+			case UNFIRED_POT:
+				result = new Item(ItemId.POT.id(), 1);
+				reqLvl = 1;
+				xp = 25;
+				// should not use this, as pot is made at level 1
+				msg.set("a pot");
+				break;
+			case UNFIRED_PIE_DISH:
+				result = new Item(ItemId.PIE_DISH.id(), 1);
+				reqLvl = 4;
+				xp = 40;
+				msg.set("pie dishes");
+				break;
+			case UNFIRED_BOWL:
+				result = new Item(ItemId.BOWL.id(), 1);
+				reqLvl = 7;
+				xp = 60;
+				msg.set("a bowl");
+				break;
+			default:
+				player.message("Nothing interesting happens");
+				return;
+		}
+		
+		final int exp = xp;
+		final boolean fail = Formulae.crackPot(reqLvl, player.getSkills().getLevel(Skills.CRAFTING));
+		
+		showBubble(player, item);
+		String potteryItem = potteryItemName(item.getDef(player.getWorld()).getName());
+		player.message("You put the " + potteryItem + " in the oven");
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1800, "Craft Clay", player.getInventory().countId(item.getID()), false) {
+			@Override
+			public void action() {
+				if (getOwner().getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
+					getOwner().message("You need to have a crafting of level " + reqLvl + " or higher to make " + msg.get());
+					interrupt();
+					return;
+				}
+				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+						getOwner().message("You are too tired to craft");
+						interrupt();
+						return;
+					}
+				}
+				showBubble(getOwner(), item);
+				if (getOwner().getInventory().remove(item) > -1) {
+					if (fail) {
+						getOwner().message("The " // TODO: Check if is authentic message
+							+ potteryItem + " cracks in the oven, you throw it away.");
+					} else {
+						getOwner().message("the "
+							+ potteryItem + " hardens in the oven");
+						getWorld().getServer().getGameEventHandler().add(new SingleEvent(getWorld(), getOwner(), 1800, "Remove Clay From Oven") {
+							@Override
+							public void action() {
+								getOwner().message("You remove a "
+									+ result.getDef(getWorld()).getName().toLowerCase()
+									+ " from the oven");
+								getOwner().getInventory().add(result);
+								getOwner().incExp(Skills.CRAFTING, exp, true);
+							}
+
+						});
+					}
+				} else {
+					interrupt();
+				}
+			}
+		});
+	}
+	
+	private void doGlassMaking(final Item item, final Player player) {
+		int otherItem = item.getID() == ItemId.SAND.id() ? ItemId.SODA_ASH.id() : ItemId.SAND.id();
+		int repeatTimes = player.getInventory().countId(item.getID());
+		repeatTimes = player.getInventory().countId(otherItem) < repeatTimes ? player.getInventory().countId(otherItem) : repeatTimes;
+
+		showBubble(player, item);
+		player.message("you heat the sand and soda ash in the furnace to make glass");
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Craft Molten Glass", repeatTimes, false) {
+			public void action() {
+				if (getOwner().getInventory().countId(otherItem) < 1 ||
+						getOwner().getInventory().countId(item.getID()) < 1) {
+					interrupt();
+					return;
+				}
+				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+						getOwner().message("You are too tired to craft");
+						interrupt();
+						return;
+					}
+				}
+				if (getOwner().getInventory().remove(otherItem, 1) > -1
+						&& getOwner().getInventory().remove(item) > -1) {
+					getOwner().getInventory().add(new Item(ItemId.MOLTEN_GLASS.id(), 1));
+					getOwner().getInventory().add(new Item(ItemId.BUCKET.id(), 1));
+					getOwner().incExp(Skills.CRAFTING, 80, true);
+				} else {
+					interrupt();
+					return;
+				}
+
+				if (!isCompleted()) {
+					showBubble(getOwner(), item);
+					getOwner().message("you heat the sand and soda ash in the furnace to make glass");
+				}
+			}
+		});
+	}
+
+	private void doCutGem(Player player, final Item chisel, final Item gem) {
 		final ItemGemDef gemDef = player.getWorld().getServer().getEntityHandler().getItemGemDef(gem.getID());
 		if (gemDef == null) {
-			return false;
+			return;
 		}
 
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Cut Gem", player.getInventory().countId(gem.getID()), false) {
-
+			@Override
 			public void action() {
 				if (getOwner().getSkills().getLevel(Skills.CRAFTING) < gemDef.getReqLevel()) {
 					boolean pluralize = gemDef.getGemID() <= ItemId.UNCUT_DRAGONSTONE.id();
 					getOwner().message(
 						"you need a crafting level of " + gemDef.getReqLevel()
-							+ " to cut " + (gem.getDef(getOwner().getWorld()).getName().contains("ruby") ? "rubies" : gem.getDef(getWorld()).getName().replaceFirst("(?i)uncut ", "") + (pluralize ? "s" : "")));
+							+ " to cut " + (gem.getDef(getWorld()).getName().contains("ruby") ? "rubies" : gem.getDef(getWorld()).getName().replaceFirst("(?i)uncut ", "") + (pluralize ? "s" : "")));
 					interrupt();
 					return;
 				}
@@ -490,161 +550,158 @@ public class Crafting implements InvUseOnItemListener,
 				}
 			}
 		});
-		return true;
 	}
 
-	private boolean doGlassBlowing(Player player, final Item pipe, final Item glass) {
+	private void doGlassBlowing(Player player, final Item pipe, final Item glass) {
 		if (glass.getID() != ItemId.MOLTEN_GLASS.id()) {
-			return false;
+			return;
 		}
 		player.message("what would you like to make?");
-		player.getWorld().getServer().getGameEventHandler().add(new MiniEvent(player.getWorld(), player, "Craft Glass Blowing") {
+		
+		String[] options = new String[]{
+				"Vial",
+				"orb",
+				"Beer glass"
+		};
+		
+		int type = showMenu(player, options);
+		if (player.isBusy() || type < 0 || type > 2) {
+			return;
+		}
+		
+		Item result;
+		int reqLvl, exp;
+		String resultGen;
+		switch (type) {
+			case 0:
+				result = new Item(ItemId.EMPTY_VIAL.id(), 1);
+				reqLvl = 33;
+				exp = 140;
+				resultGen = "vials";
+				break;
+			case 1:
+				result = new Item(ItemId.UNPOWERED_ORB.id(), 1);
+				reqLvl = 46;
+				exp = 210;
+				resultGen = "orbs";
+				break;
+			case 2:
+				result = new Item(ItemId.BEER_GLASS.id(), 1);
+				reqLvl = 1;
+				exp = 70;
+				// should not use this, as beer glass is made at level 1
+				resultGen = "beer glasses";
+				break;
+			default:
+				return;
+		}
+		
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Craft Glass Blowing", player.getInventory().countId(glass.getID()), false) {
+			@Override
 			public void action() {
-				String[] options = new String[]{
-					"Vial",
-					"orb",
-					"Beer glass"
-				};
-				getOwner().setMenuHandler(new MenuOptionListener(options) {
-					public void handleReply(final int option, final String reply) {
-						Item result;
-						int reqLvl, exp;
-						String resultGen;
-						switch (option) {
-							case 0:
-								result = new Item(ItemId.EMPTY_VIAL.id(), 1);
-								reqLvl = 33;
-								exp = 140;
-								resultGen = "vials";
-								break;
-							case 1:
-								result = new Item(ItemId.UNPOWERED_ORB.id(), 1);
-								reqLvl = 46;
-								exp = 210;
-								resultGen = "orbs";
-								break;
-							case 2:
-								result = new Item(ItemId.BEER_GLASS.id(), 1);
-								reqLvl = 1;
-								exp = 70;
-								// should not use this, as beer glass is made at level 1
-								resultGen = "beer glasses";
-								break;
-							default:
-								return;
-						}
-						if (owner.getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
-							owner.message(
-								"You need a crafting level of " + reqLvl + " to make " + resultGen);
-							return;
-						}
-						player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Craft Glass Blowing", player.getInventory().countId(glass.getID()), false) {
-							@Override
-							public void action() {
-								if (owner.getWorld().getServer().getConfig().WANT_FATIGUE) {
-									if (owner.getFatigue() >= owner.MAX_FATIGUE) {
-										owner.message("You are too tired to craft");
-										interrupt();
-										return;
-									}
-								}
-								if (owner.getInventory().remove(glass) > -1) {
-									owner.message("You make a " + result.getDef(getWorld()).getName());
-									owner.getInventory().add(result);
-									owner.incExp(Skills.CRAFTING, exp, true);
-								}
-							}
-						});
+				if (getOwner().getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
+					getOwner().message(
+						"You need a crafting level of " + reqLvl + " to make " + resultGen);
+					interrupt();
+					return;
+				}
+				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+						getOwner().message("You are too tired to craft");
+						interrupt();
+						return;
 					}
-				});
-				ActionSender.sendMenu(getOwner(), options);
+				}
+				if (getOwner().getInventory().remove(glass) > -1) {
+					getOwner().message("You make a " + result.getDef(getWorld()).getName());
+					getOwner().getInventory().add(result);
+					getOwner().incExp(Skills.CRAFTING, exp, true);
+				}
 			}
 		});
-		return true;
 	}
 
-	private boolean makeLeather(Player player, final Item needle, final Item leather) {
+	private void makeLeather(Player player, final Item needle, final Item leather) {
 		if (leather.getID() != ItemId.LEATHER.id()) {
-			return false;
+			return;
 		}
 		if (player.getInventory().countId(ItemId.THREAD.id()) < 1) {
 			player.message("You need some thread to make anything out of leather");
-			return true;
+			return;
 		}
-		player.getWorld().getServer().getGameEventHandler().add(new MiniEvent(player.getWorld(), player, "Craft Leather") {
+		
+		String[] options = new String[]{
+				"Armour",
+				"Gloves",
+				"Boots",
+				"Cancel"
+		};
+		
+		int type = showMenu(player, options);
+		if (player.isBusy() || type < 0 || type > 3) {
+			return;
+		}
+		
+		Item result;
+		int reqLvl, exp;
+		switch (type) {
+			case 0:
+				result = new Item(ItemId.LEATHER_ARMOUR.id(), 1);
+				reqLvl = 14;
+				exp = 100;
+				break;
+			case 1:
+				result = new Item(ItemId.LEATHER_GLOVES.id(), 1);
+				reqLvl = 1;
+				exp = 55;
+				break;
+			case 2:
+				result = new Item(ItemId.BOOTS.id(), 1);
+				reqLvl = 7;
+				exp = 65;
+				break;
+			default:
+				return;
+		}
+		
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Craft Leather", player.getInventory().countId(leather.getID()), false) {
+			@Override
 			public void action() {
-				String[] options = new String[]{
-					"Armour",
-					"Gloves",
-					"Boots",
-					"Cancel"
-				};
-				getOwner().setMenuHandler(new MenuOptionListener(options) {
-					public void handleReply(final int option, final String reply) {
-						Item result;
-						int reqLvl, exp;
-						switch (option) {
-							case 0:
-								result = new Item(ItemId.LEATHER_ARMOUR.id(), 1);
-								reqLvl = 14;
-								exp = 100;
-								break;
-							case 1:
-								result = new Item(ItemId.LEATHER_GLOVES.id(), 1);
-								reqLvl = 1;
-								exp = 55;
-								break;
-							case 2:
-								result = new Item(ItemId.BOOTS.id(), 1);
-								reqLvl = 7;
-								exp = 65;
-								break;
-							default:
-								return;
-						}
-						if (owner.getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
-							owner.message("You need to have a crafting of level " + reqLvl + " or higher to make " + result.getDef(getWorld()).getName());
-							return;
-						}
-						player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Craft Leather", player.getInventory().countId(leather.getID()), false) {
-							@Override
-							public void action() {
-								if (owner.getWorld().getServer().getConfig().WANT_FATIGUE) {
-									if (owner.getFatigue() >= owner.MAX_FATIGUE) {
-										owner.message("You are too tired to craft");
-										interrupt();
-										return;
-									}
-								}
-								if (owner.getInventory().remove(leather) > -1) {
-									owner.message("You make some " + result.getDef(getWorld()).getName());
-									owner.getInventory().add(result);
-									owner.incExp(Skills.CRAFTING, exp, true);
-									//a reel of thread accounts for 5 uses
-									if (!owner.getCache().hasKey("part_reel_thread")) {
-										owner.getCache().set("part_reel_thread", 1);
-									} else {
-										int parts = owner.getCache().getInt("part_reel_thread");
-										if (parts >= 4) {
-											owner.message("You use up one of your reels of thread");
-											owner.getInventory().remove(ItemId.THREAD.id(), 1);
-											owner.getCache().remove("part_reel_thread");
-										} else {
-											owner.getCache().put("part_reel_thread", parts + 1);
-										}
-									}
-								}
-							}
-						});
+				if (getOwner().getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
+					getOwner().message("You need to have a crafting of level " + reqLvl + " or higher to make " + result.getDef(player.getWorld()).getName());
+					interrupt();
+					return;
+				}
+				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+						getOwner().message("You are too tired to craft");
+						interrupt();
+						return;
 					}
-				});
-				ActionSender.sendMenu(getOwner(), options);
+				}
+				if (getOwner().getInventory().remove(leather) > -1) {
+					getOwner().message("You make some " + result.getDef(getWorld()).getName());
+					getOwner().getInventory().add(result);
+					getOwner().incExp(Skills.CRAFTING, exp, true);
+					//a reel of thread accounts for 5 uses
+					if (!getOwner().getCache().hasKey("part_reel_thread")) {
+						getOwner().getCache().set("part_reel_thread", 1);
+					} else {
+						int parts = getOwner().getCache().getInt("part_reel_thread");
+						if (parts >= 4) {
+							getOwner().message("You use up one of your reels of thread");
+							getOwner().getInventory().remove(ItemId.THREAD.id(), 1);
+							getOwner().getCache().remove("part_reel_thread");
+						} else {
+							getOwner().getCache().put("part_reel_thread", parts + 1);
+						}
+					}
+				}
 			}
 		});
-		return true;
 	}
 
-	private boolean useWool(Player player, final Item woolBall, final Item item) {
+	private void useWool(Player player, final Item woolBall, final Item item) {
 		int newID;
 		switch (ItemId.getById(item.getID())) {
 			case UNSTRUNG_HOLY_SYMBOL_OF_SARADOMIN:
@@ -672,7 +729,7 @@ public class Crafting implements InvUseOnItemListener,
 				newID = ItemId.UNENCHANTED_DRAGONSTONE_AMULET.id();
 				break;
 			default:
-				return false;
+				return;
 		}
 		final int newId = newID;
 		int woolAmount = player.getInventory().countId(woolBall.getID());
@@ -695,7 +752,6 @@ public class Crafting implements InvUseOnItemListener,
 				}
 			}
 		});
-		return true;
 	}
 
 	private boolean useWater(Player player, final Item water, final Item item) {
@@ -756,20 +812,6 @@ public class Crafting implements InvUseOnItemListener,
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		int[] blockItemsFurnance = new int[]{
-			ItemId.SILVER_BAR.id(),
-			ItemId.GOLD_BAR.id(),
-			ItemId.SODA_ASH.id(),
-			ItemId.SAND.id(),
-			ItemId.GOLD_BAR_FAMILYCREST.id(),
-		};
-		int[] blockItemsOven = new int[]{
-			ItemId.UNFIRED_POT.id(),
-			ItemId.UNFIRED_PIE_DISH.id(),
-			ItemId.UNFIRED_BOWL.id()
-		};
-		return ((obj.getID() == 118 || obj.getID() == 813) && DataConversions.inArray(blockItemsFurnance, item.getID()))
-			|| (obj.getID() == 178 && DataConversions.inArray(blockItemsOven, item.getID()))
-			|| (obj.getID() == 179 && item.getID() == ItemId.SOFT_CLAY.id());
+		return craftingChecks(obj, item, player);
 	}
 }

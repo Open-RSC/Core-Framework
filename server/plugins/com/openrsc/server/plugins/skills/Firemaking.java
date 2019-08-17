@@ -77,29 +77,29 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 				new SingleEvent(player.getWorld(), null, 1200, "Light Logs") {
 					@Override
 					public void action() {
-						player.message("The fire catches and the logs begin to burn");
-						player.getWorld().unregisterItem(gItem);
+						getOwner().message("The fire catches and the logs begin to burn");
+						getWorld().unregisterItem(gItem);
 
-						final GameObject fire = new GameObject(player.getWorld(), gItem.getLocation(), 97, 0, 0);
-						player.getWorld().registerGameObject(fire);
+						final GameObject fire = new GameObject(getWorld(), gItem.getLocation(), 97, 0, 0);
+						getWorld().registerGameObject(fire);
 
-						player.getWorld().getServer().getGameEventHandler().add(
-							new SingleEvent(player.getWorld(), null, def.getLength(), "Light Logs Fire Removal") {
+						getWorld().getServer().getGameEventHandler().add(
+							new SingleEvent(getWorld(), null, def.getLength(), "Light Logs Fire Removal") {
 								@Override
 								public void action() {
 									if (fire != null) {
-										player.getWorld().registerItem(new GroundItem(
-											player.getWorld(),
-											181,
+										getWorld().registerItem(new GroundItem(
+											getWorld(),
+											ItemId.ASHES.id(),
 											fire.getX(),
 											fire.getY(),
 											1, (Player) null));
-										player.getWorld().unregisterGameObject(fire);
+										getWorld().unregisterGameObject(fire);
 									}
 								}
 							}
 						);
-						player.incExp(Skills.FIREMAKING, getExp(player.getSkills().getMaxStat(Skills.FIREMAKING), 25), true);
+						getOwner().incExp(Skills.FIREMAKING, getExp(player.getSkills().getMaxStat(Skills.FIREMAKING), 25), true);
 					}
 				}
 			);
@@ -130,28 +130,27 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 		player.getUpdateFlags().setActionBubble(new Bubble(player, TINDERBOX));
 		player.message("You attempt to light the logs");
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1200, "Firemaking Logs Lit", Formulae.getRepeatTimes(player, Skills.FIREMAKING), false) {
-
 			@Override
 			public void action() {
 				if (Formulae.lightCustomLogs(def, getOwner().getSkills().getLevel(Skills.FIREMAKING))) {
 					getOwner().message("The fire catches and the logs begin to burn");
-					getOwner().getWorld().unregisterItem(gItem);
+					getWorld().unregisterItem(gItem);
 
-					final GameObject fire = new GameObject(player.getWorld(), gItem.getLocation(), 97, 0, 0);
-					getOwner().getWorld().registerGameObject(fire);
+					final GameObject fire = new GameObject(getWorld(), gItem.getLocation(), 97, 0, 0);
+					getWorld().registerGameObject(fire);
 
-					getOwner().getWorld().getServer().getGameEventHandler().add(
-						new SingleEvent(getOwner().getWorld(), null, def.getLength(), "Firemaking Logs Lit") {
+					getWorld().getServer().getGameEventHandler().add(
+						new SingleEvent(getWorld(), null, def.getLength(), "Firemaking Logs Lit") {
 							@Override
 							public void action() {
 								if (fire != null) {
-									getOwner().getWorld().registerItem(new GroundItem(
+									getWorld().registerItem(new GroundItem(
 										player.getWorld(),
 										ItemId.ASHES.id(),
 										fire.getX(),
 										fire.getY(),
 										1, (Player) null));
-									getOwner().getWorld().unregisterGameObject(fire);
+									getWorld().unregisterGameObject(fire);
 								}
 							}
 						});
@@ -179,7 +178,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 		}
 	}
 
-	public static int getExp(int level, int baseExp) {
+	public int getExp(int level, int baseExp) {
 		return (int) ((baseExp + (level * 1.75)) * 4);
 	}
 }

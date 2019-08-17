@@ -55,6 +55,11 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 				player.setBatchEvent(new BatchEvent(player.getWorld(), player, 3000, "Cook Wine", 1, false) {
 					@Override
 					public void action() {
+						if (getOwner().getSkills().getLevel(Skills.COOKING) < 35) {
+							getOwner().message("You need level 35 cooking to do this");
+							interrupt();
+							return;
+						}
 						if (Formulae.goodWine(getOwner().getSkills().getLevel(Skills.COOKING))) {
 							getOwner().message("You make some nice wine");
 							getOwner().getInventory().add(new Item(ItemId.WINE.id()));
