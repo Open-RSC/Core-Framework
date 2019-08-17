@@ -1701,7 +1701,7 @@ public final class Player extends Mob {
 		removeSkull(); // destroy
 		resetCombatEvent();
 		this.setLastOpponent(null);
-		getWorld().registerItem(new GroundItem(player.getWorld(), ItemId.BONES.id(), getX(), getY(), 1, player));
+		getWorld().registerItem(new GroundItem(getWorld(), ItemId.BONES.id(), getX(), getY(), 1, player));
 		if ((!getCache().hasKey("death_location_x") && !getCache().hasKey("death_location_y"))) {
 			setLocation(Point.location(122, 647), true);
 		} else {
