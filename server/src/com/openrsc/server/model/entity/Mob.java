@@ -979,7 +979,7 @@ public abstract class Mob extends Entity {
 			pathFinder.feedPath(new Path(this, PathType.WALK_TO_ENTITY));
 			Path newPath = pathFinder.findPath();
 			if (newPath == null)
-				return;
+				walkToEntity(x,y);
 			else
 				getWalkingQueue().setPath(newPath);
 	}
