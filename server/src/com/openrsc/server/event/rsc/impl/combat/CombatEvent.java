@@ -152,11 +152,7 @@ public class CombatEvent extends GameTickEvent {
 					combatSound = damage > 0 ? "combat1b" : "combat1a";
 				}
 			}
-			for (Player p : getWorld().getPlayers()) {
-				if (((Player) target).getParty() == p.getParty() && ((Player) target).getParty() != null) {
-					ActionSender.sendParty(p);
-				}
-			}
+			((Player) target).getParty().sendParty();
 			Player opponentPlayer = ((Player) target);
 			ActionSender.sendSound(opponentPlayer, combatSound);
 		}

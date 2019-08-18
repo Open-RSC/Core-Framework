@@ -171,6 +171,15 @@ public class Party {
 		}
 	}
 
+	public void sendParty() {
+		for (PartyPlayer cMember : getPlayers()) {
+			if (cMember.getPlayerReference() != null) {
+				Player partyPlayer = cMember.getPlayerReference();
+				ActionSender.sendParty(cMember.getPlayerReference());
+			}
+		}
+	}
+
 	public String getPartyName() {
 		return name;
 	}
