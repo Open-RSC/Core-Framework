@@ -672,7 +672,8 @@ public class SpellHandler implements PacketHandler {
 				}
 				break;
 			case 30: // Enchant lvl-4 diamond amulet
-				if (affectedItem.getID() == com.openrsc.server.constants.ItemId.DIAMOND_AMULET.id()){
+				if (affectedItem.getID() == com.openrsc.server.constants.ItemId.DIAMOND_AMULET.id()
+						|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && affectedItem.getID() == com.openrsc.server.constants.ItemId.DIAMOND_RING.id())){
 					if (!checkAndRemoveRunes(player, spell)) {
 						return;
 					}
