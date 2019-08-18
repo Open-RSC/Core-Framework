@@ -119,7 +119,8 @@ public class Smelting implements InvUseOnObjectListener,
 		if (!p.getInventory().contains(item)) {
 			return;
 		}
-		if (!p.withinRange(obj, 1)) {
+		// some furnaces the player is 2 spaces away
+		if (!p.withinRange(obj, 1) && !p.withinRange90Deg(obj, 2)) {
 			return;
 		}
 		showBubble(p, item);

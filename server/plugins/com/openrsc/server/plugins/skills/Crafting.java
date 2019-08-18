@@ -95,6 +95,11 @@ public class Crafting implements InvUseOnItemListener,
 		// allowed item on crafting game objects
 		if (!craftingTypeChecks(obj, item, player)) return false;
 		
+		// some furnaces the player is 2 spaces away
+		if (!player.withinRange(obj, 1) && !player.withinRange90Deg(obj, 2)) {
+			return false;
+		}
+		
 		if (item.getID() == ItemId.SODA_ASH.id() || item.getID() == ItemId.SAND.id()) { // Soda Ash or Sand (Glass)
 			if (player.getInventory().countId(ItemId.SODA_ASH.id()) < 1) {
 				player.message("You need some soda ash to make glass");
@@ -812,6 +817,6 @@ public class Crafting implements InvUseOnItemListener,
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		return craftingChecks(obj, item, player);
+		return craftingTypeChecks(obj, item, player);
 	}
 }
