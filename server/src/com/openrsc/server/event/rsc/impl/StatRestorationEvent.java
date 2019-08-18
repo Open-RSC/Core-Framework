@@ -57,9 +57,9 @@ public class StatRestorationEvent extends GameTickEvent {
 				restored = true;
 				if(getOwner().isPlayer() && ((Player) getOwner()).getParty() != null){
 					getOwner().getUpdateFlags().setHpUpdate(new HpUpdate(getOwner(), 0));
-					for (Player p : getWorld().getPlayers()) {
-						if(((Player) getOwner()).getParty() == p.getParty()){
-							ActionSender.sendParty(p);
+					if (((Player) getOwner()).getWorld().getServer().getConfig().WANT_PARTIES) {
+						if(((Player) getOwner()).getParty() != null){
+							((Player) getOwner()).getParty().sendParty();
 						}
 					}
 				}

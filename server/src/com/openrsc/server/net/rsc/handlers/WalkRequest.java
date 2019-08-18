@@ -44,6 +44,16 @@ public class WalkRequest implements PacketHandler {
 					player.setLastCombatState(CombatState.RUNNING);
 					opponent.setLastCombatState(CombatState.WAITING);
 					player.resetCombatEvent();
+					if (player.getWorld().getServer().getConfig().WANT_PARTIES) {
+						if(player.getParty() != null){
+							player.getParty().sendParty();
+						}
+					}
+					if (opponent.isPlayer() && opponent.getWorld().getServer().getConfig().WANT_PARTIES) {
+						if(((Player) opponent).getParty() != null){
+							((Player) opponent).getParty().sendParty();
+						}
+					}
 
 					if (opponent.isNpc()) {
 						if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("PlayerNpcRun",
