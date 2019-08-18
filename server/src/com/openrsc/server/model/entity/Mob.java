@@ -174,13 +174,6 @@ public abstract class Mob extends Entity {
 			return true;
 		} else if (mob.isNpc()) {
 			Npc victim = (Npc) mob;
-			if (victim.getID() == 236 && victim.getCombatTimer() > 3000) {
-				//setSuspiciousPlayer(true);
-				return true;
-			} else if (victim.getID() == 236) {
-				//setSuspiciousPlayer(true);
-				return false;
-			}
 			if (!victim.getDef().isAttackable()) {
 				//setSuspiciousPlayer(true);
 				return false;

@@ -582,8 +582,6 @@ public class PacketHandler {
 		int actionType = packetsIncoming.getByte();
 		switch (actionType) {
 			case 0: // Send party
-				mc.party.setPartyName(packetsIncoming.readString());
-				mc.party.setPartyTag(packetsIncoming.readString());
 				mc.party.setPartyLeaderUsername(packetsIncoming.readString());
 				boolean isLeader = packetsIncoming.getByte() == 1;
 				mc.party.setPartyLeader(isLeader);
@@ -598,6 +596,8 @@ public class PacketHandler {
 					mc.party.skull[id] = packetsIncoming.getByte();
 					mc.party.pMemD[id] = packetsIncoming.getByte();
 					mc.party.shareLoot[id] = packetsIncoming.getByte();
+					mc.party.partyMembersTotal[id] = packetsIncoming.getByte();
+					mc.party.inCombat[id] = packetsIncoming.getByte();
 				}
 				mc.party.putParty(true);
 
@@ -621,13 +621,11 @@ public class PacketHandler {
 				int partyCount = packetsIncoming.getShort();
 				for (int i = 0; i < partyCount; i++) {
 					int partyID = packetsIncoming.getShort();
-					String partyName = packetsIncoming.readString();
-					String partyTag = packetsIncoming.readString();
 					int members = packetsIncoming.getByte();
 					int canJoin = packetsIncoming.getByte();
 					int partyPoints = packetsIncoming.get32();
 					int partyRank = packetsIncoming.getShort();
-					mc.party.getPartyInterface().addParty(partyID, partyName, partyTag, members, canJoin, partyPoints, partyRank);
+					mc.party.getPartyInterface().addParty(partyID, members, canJoin, partyPoints, partyRank);
 				}
 				break;
 		}

@@ -9,7 +9,9 @@ import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.states.Action;
+import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
+import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 
@@ -40,13 +42,6 @@ public class AttackHandler implements PacketHandler {
 			player.resetPath();
 			return;
 		}
-		if (affectedMob.getID() == 236 && affectedMob.isNpc() && !player.checkAttack(affectedMob, true)) {
-			return;
-		}
-
-		/*if (System.currentTimeMillis() - player.getLastRun() < 600) {
-			return;
-		}*/
 		if (affectedMob.isPlayer()) {
 			if (affectedMob.getLocation().inBounds(220, 108, 225, 111)) { // mage arena block real rsc.
 				player.message("Here kolodion protects all from your attack");
@@ -61,11 +56,6 @@ public class AttackHandler implements PacketHandler {
 		}
 		if (affectedMob.isNpc()) {
 			Npc n = (Npc) affectedMob;
-			if (n.getLocation().inWilderness() && !player.getLocation().inWilderness() && (n.getID() == NpcId.ADVENTURER_ARCHER.id() || n.getID() == NpcId.DONNY_THE_LAD.id())) {
-				player.message("You must be in the wilderness to attack this NPC");
-				player.resetPath();
-				return;
-			}
 			if (n.getX() == 0 && n.getY() == 0)
 				return;
 			if (n.getID() == NpcId.OGRE_TRAINING_CAMP.id() && player.getRangeEquip() < 0 && player.getThrowingEquip() < 0) {
@@ -103,6 +93,13 @@ public class AttackHandler implements PacketHandler {
 						}
 					}
 					player.startCombat(mob);
+					if (player.getParty() != null) {
+						for (Player p : getWorld().getPlayers()) {
+							if (player.getParty() == p.getParty()) {
+								ActionSender.sendParty(p);
+							}
+						}
+					}
 				}
 			});
 		} else {

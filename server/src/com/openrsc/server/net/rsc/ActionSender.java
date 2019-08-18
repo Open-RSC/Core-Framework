@@ -22,14 +22,16 @@ import com.openrsc.server.util.rsc.CaptchaGenerator;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFutureListener;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFutureListener;
 
 /**
  * @author n0m
@@ -1329,8 +1331,6 @@ public class ActionSender {
 	public static void sendParty(Player p) {
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
 		pb.writeByte(0);
-		pb.writeString(p.getParty().getPartyName());
-		pb.writeString(p.getParty().getPartyTag());
 		pb.writeString(p.getParty().getLeader().getUsername());
 		pb.writeByte(p.getParty().getLeader().getUsername().equalsIgnoreCase(p.getUsername()) ? 1 : 0);
 		pb.writeByte(p.getParty().getPlayers().size());
@@ -1344,6 +1344,8 @@ public class ActionSender {
 			pb.writeByte(m.getSkull());
 			pb.writeByte(m.getPartyMemberDead());
 			pb.writeByte(m.getShareLoot());
+			pb.writeByte(m.getPartyMembersTotal());
+			pb.writeByte(m.getInCombat());
 		}
 		p.write(pb.toPacket());
 	}
@@ -1374,8 +1376,6 @@ public class ActionSender {
 		p.getWorld().getPartyManager().parties.sort(PartyManager.PARTY_COMPERATOR);
 		for (Party c : p.getWorld().getPartyManager().parties) {
 			pb.writeShort(c.getPartyID());
-			pb.writeString(c.getPartyName());
-			pb.writeString(c.getPartyTag());
 			pb.writeByte(c.getPlayers().size());
 			pb.writeByte(c.getAllowSearchJoin());
 			pb.writeInt(c.getPartyPoints());

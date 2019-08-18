@@ -20,7 +20,7 @@ public class Party {
 
 	private final World world;
 
-	public Party (World world) {
+	public Party(World world) {
 		this.world = world;
 	}
 
@@ -157,7 +157,7 @@ public class Party {
 		for (PartyPlayer cMember : getPlayers()) {
 			if (cMember.getPlayerReference() != null) {
 				Player partyPlayer = cMember.getPlayerReference();
-				ActionSender.sendMessage(partyPlayer, player, 1, MessageType.GAME, "" + string, player.getIcon());
+				ActionSender.sendMessage(partyPlayer, player, 1, MessageType.CLAN_CHAT, "" + string, player.getIcon());
 			}
 		}
 	}

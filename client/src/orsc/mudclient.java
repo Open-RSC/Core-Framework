@@ -13,12 +13,63 @@ import com.openrsc.data.DataFileDecrypter;
 import com.openrsc.data.DataOperations;
 import com.openrsc.interfaces.NComponent;
 import com.openrsc.interfaces.NCustomComponent;
-import com.openrsc.interfaces.misc.*;
+import com.openrsc.interfaces.misc.AchievementGUI;
+import com.openrsc.interfaces.misc.AuctionHouse;
+import com.openrsc.interfaces.misc.BankPinInterface;
+import com.openrsc.interfaces.misc.CustomBankInterface;
+import com.openrsc.interfaces.misc.DoSkillInterface;
+import com.openrsc.interfaces.misc.ExperienceConfigInterface;
+import com.openrsc.interfaces.misc.FishingTrawlerInterface;
+import com.openrsc.interfaces.misc.IronManInterface;
+import com.openrsc.interfaces.misc.LostOnDeathInterface;
+import com.openrsc.interfaces.misc.OnlineListInterface;
+import com.openrsc.interfaces.misc.ProgressBarInterface;
+import com.openrsc.interfaces.misc.QuestGuideInterface;
+import com.openrsc.interfaces.misc.SkillGuideInterface;
+import com.openrsc.interfaces.misc.TerritorySignupInterface;
 import com.openrsc.interfaces.misc.clan.Clan;
 import com.openrsc.interfaces.misc.party.Party;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineEvent;
+
 import orsc.buffers.RSBufferUtils;
-import orsc.enumerations.*;
-import orsc.graphics.gui.*;
+import orsc.enumerations.GameMode;
+import orsc.enumerations.InputXAction;
+import orsc.enumerations.MenuItemAction;
+import orsc.enumerations.MessageTab;
+import orsc.enumerations.MessageType;
+import orsc.enumerations.ORSCharacterDirection;
+import orsc.enumerations.PasswordChangeMode;
+import orsc.enumerations.SocialPopupMode;
+import orsc.graphics.gui.InputXPrompt;
+import orsc.graphics.gui.KillAnnouncer;
+import orsc.graphics.gui.KillAnnouncerQueue;
+import orsc.graphics.gui.Menu;
+import orsc.graphics.gui.MessageHistory;
+import orsc.graphics.gui.Panel;
+import orsc.graphics.gui.SocialLists;
 import orsc.graphics.three.CollisionFlag;
 import orsc.graphics.three.RSModel;
 import orsc.graphics.three.Scene;
@@ -32,17 +83,98 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
 
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineEvent;
-import java.io.*;
-import java.security.SecureRandom;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-
-import static orsc.Config.*;
+import static orsc.Config.CLIENT_VERSION;
+import static orsc.Config.C_BATCH_PROGRESS_BAR;
+import static orsc.Config.C_EXPERIENCE_CONFIG_SUBMENU;
+import static orsc.Config.C_EXPERIENCE_COUNTER;
+import static orsc.Config.C_EXPERIENCE_COUNTER_COLOR;
+import static orsc.Config.C_EXPERIENCE_COUNTER_MODE;
+import static orsc.Config.C_EXPERIENCE_DROPS;
+import static orsc.Config.C_EXPERIENCE_DROP_SPEED;
+import static orsc.Config.C_FIGHT_MENU;
+import static orsc.Config.C_HIDE_FOG;
+import static orsc.Config.C_HIDE_ROOFS;
+import static orsc.Config.C_HOLD_AND_CHOOSE;
+import static orsc.Config.C_INV_COUNT;
+import static orsc.Config.C_KILL_FEED;
+import static orsc.Config.C_LAST_ZOOM;
+import static orsc.Config.C_LONG_PRESS_TIMER;
+import static orsc.Config.C_MENU_SIZE;
+import static orsc.Config.C_MESSAGE_TAB_SWITCH;
+import static orsc.Config.C_NAME_CLAN_TAG_OVERLAY;
+import static orsc.Config.C_PARTY_INV;
+import static orsc.Config.C_SHOW_GROUND_ITEMS;
+import static orsc.Config.C_SIDE_MENU_OVERLAY;
+import static orsc.Config.C_SWIPE_TO_ROTATE;
+import static orsc.Config.C_SWIPE_TO_SCROLL;
+import static orsc.Config.C_SWIPE_TO_ZOOM;
+import static orsc.Config.C_VOLUME_TO_ROTATE;
+import static orsc.Config.DEBUG;
+import static orsc.Config.DISPLAY_LOGO_SPRITE;
+import static orsc.Config.F_CACHE_DIR;
+import static orsc.Config.F_SHOWING_KEYBOARD;
+import static orsc.Config.MEMBER_WORLD;
+import static orsc.Config.Remember;
+import static orsc.Config.SERVER_NAME;
+import static orsc.Config.SERVER_NAME_WELCOME;
+import static orsc.Config.S_AUTO_MESSAGE_SWITCH_TOGGLE;
+import static orsc.Config.S_BATCH_PROGRESSION;
+import static orsc.Config.S_CUSTOM_FIREMAKING;
+import static orsc.Config.S_EXPERIENCE_COUNTER_TOGGLE;
+import static orsc.Config.S_EXPERIENCE_DROPS_TOGGLE;
+import static orsc.Config.S_FIGHTMODE_SELECTOR_TOGGLE;
+import static orsc.Config.S_FOG_TOGGLE;
+import static orsc.Config.S_GROUND_ITEM_TOGGLE;
+import static orsc.Config.S_INVENTORY_COUNT_TOGGLE;
+import static orsc.Config.S_ITEMS_ON_DEATH_MENU;
+import static orsc.Config.S_MAX_WALKING_SPEED;
+import static orsc.Config.S_MENU_COMBAT_STYLE_TOGGLE;
+import static orsc.Config.S_PLAYER_INVENTORY_SLOTS;
+import static orsc.Config.S_PLAYER_LEVEL_LIMIT;
+import static orsc.Config.S_PLAYER_SLOT_COUNT;
+import static orsc.Config.S_RIGHT_CLICK_BANK;
+import static orsc.Config.S_SHOW_FLOATING_NAMETAGS;
+import static orsc.Config.S_SHOW_ROOF_TOGGLE;
+import static orsc.Config.S_SIDE_MENU_TOGGLE;
+import static orsc.Config.S_SPAWN_AUCTION_NPCS;
+import static orsc.Config.S_SPAWN_IRON_MAN_NPCS;
+import static orsc.Config.S_WANT_BANK_NOTES;
+import static orsc.Config.S_WANT_BANK_PINS;
+import static orsc.Config.S_WANT_BANK_PRESETS;
+import static orsc.Config.S_WANT_CERTS_TO_BANK;
+import static orsc.Config.S_WANT_CERT_DEPOSIT;
+import static orsc.Config.S_WANT_CLANS;
+import static orsc.Config.S_WANT_CUSTOM_BANKS;
+import static orsc.Config.S_WANT_CUSTOM_LANDSCAPE;
+import static orsc.Config.S_WANT_CUSTOM_RANK_DISPLAY;
+import static orsc.Config.S_WANT_DECANTING;
+import static orsc.Config.S_WANT_DROP_X;
+import static orsc.Config.S_WANT_EQUIPMENT_TAB;
+import static orsc.Config.S_WANT_EXPERIENCE_ELIXIRS;
+import static orsc.Config.S_WANT_EXP_INFO;
+import static orsc.Config.S_WANT_FIXED_OVERHEAD_CHAT;
+import static orsc.Config.S_WANT_GLOBAL_CHAT;
+import static orsc.Config.S_WANT_HIDE_IP;
+import static orsc.Config.S_WANT_KEYBOARD_SHORTCUTS;
+import static orsc.Config.S_WANT_KILL_FEED;
+import static orsc.Config.S_WANT_PARTIES;
+import static orsc.Config.S_WANT_PLAYER_COMMANDS;
+import static orsc.Config.S_WANT_QUEST_MENUS;
+import static orsc.Config.S_WANT_REMEMBER;
+import static orsc.Config.S_WANT_RUNECRAFTING;
+import static orsc.Config.S_WANT_SKILL_MENUS;
+import static orsc.Config.S_WANT_WOODCUTTING_GUILD;
+import static orsc.Config.S_ZOOM_VIEW_TOGGLE;
+import static orsc.Config.WELCOME_TEXT;
+import static orsc.Config.getFPS;
+import static orsc.Config.getServerName;
+import static orsc.Config.getServerNameWelcome;
+import static orsc.Config.getWelcomeText;
+import static orsc.Config.initConfig;
+import static orsc.Config.isAndroid;
+import static orsc.Config.isLenientContactDetails;
+import static orsc.Config.wantEmail;
+import static orsc.Config.wantMembers;
 import static orsc.multiclient.ClientPort.saveHideIp;
 
 public final class mudclient implements Runnable {
@@ -1249,11 +1381,43 @@ public final class mudclient implements Runnable {
 					"@whi@" + name + level);
 				this.menuCommon.addCharacterItem(player.serverIndex, MenuItemAction.PLAYER_FOLLOW, "Follow",
 					"@whi@" + name + level);
-				if (S_WANT_PARTIES)
-					this.menuCommon.addCharacterItem(player.serverIndex, MenuItemAction.PLAYER_PARTY_INVITE, "Invite to party",
-						"@whi@" + name + level);
-				this.menuCommon.addItem_With2Strings("Report abuse", "@whi@" + name + level, player.getStaffName(),
-					MenuItemAction.REPORT_ABUSE, player.accountName);
+				if (S_WANT_PARTIES) {
+					if (party.inParty()) {
+						String dn = StringUtil.displayNameToKey(player.displayName);
+						String v0 = StringUtil.displayNameToKey(party.username[0]);
+						String v1 = StringUtil.displayNameToKey(party.username[1]);
+						String v2 = StringUtil.displayNameToKey(party.username[2]);
+						String v3 = StringUtil.displayNameToKey(party.username[3]);
+						String v4 = StringUtil.displayNameToKey(party.username[4]);
+						if (dn.equals(StringUtil.displayNameToKey(v0)) && party.partyMembersTotal[0] > 1) {
+							this.menuCommon.addItem_With2Strings("Report abuse", "@whi@" + name + level, player.getStaffName(),
+								MenuItemAction.REPORT_ABUSE, player.accountName);
+						} else if (dn.equals(StringUtil.displayNameToKey(v1)) && party.partyMembersTotal[0] > 1) {
+							this.menuCommon.addItem_With2Strings("Report abuse", "@whi@" + name + level, player.getStaffName(),
+								MenuItemAction.REPORT_ABUSE, player.accountName);
+						} else if (dn.equals(StringUtil.displayNameToKey(v2)) && party.partyMembersTotal[0] > 2) {
+							this.menuCommon.addItem_With2Strings("Report abuse", "@whi@" + name + level, player.getStaffName(),
+								MenuItemAction.REPORT_ABUSE, player.accountName);
+						} else if (dn.equals(StringUtil.displayNameToKey(v3)) && party.partyMembersTotal[0] > 3) {
+							this.menuCommon.addItem_With2Strings("Report abuse", "@whi@" + name + level, player.getStaffName(),
+								MenuItemAction.REPORT_ABUSE, player.accountName);
+						} else if (dn.equals(StringUtil.displayNameToKey(v4)) && party.partyMembersTotal[0] > 4) {
+							this.menuCommon.addItem_With2Strings("Report abuse", "@whi@" + name + level, player.getStaffName(),
+								MenuItemAction.REPORT_ABUSE, player.accountName);
+						} else {
+							this.menuCommon.addCharacterItem(player.serverIndex, MenuItemAction.PLAYER_PARTY_INVITE, "Invite to party",
+								"@whi@" + name + level);
+							this.menuCommon.addItem_With2Strings("Report abuse", "@whi@" + name + level, player.getStaffName(),
+								MenuItemAction.REPORT_ABUSE, player.accountName);
+						}
+					} else {
+						this.menuCommon.addItem_With2Strings("Report abuse", "@whi@" + name + level, player.getStaffName(),
+							MenuItemAction.REPORT_ABUSE, player.accountName);
+					}
+				} else {
+					this.menuCommon.addItem_With2Strings("Report abuse", "@whi@" + name + level, player.getStaffName(),
+						MenuItemAction.REPORT_ABUSE, player.accountName);
+				}
 				if (modMenu) {
 					this.menuCommon.addItem_With2Strings("Summon", "@whi@" + name, player.displayName,
 						MenuItemAction.MOD_SUMMON_PLAYER, player.accountName);
@@ -4951,7 +5115,11 @@ public final class mudclient implements Runnable {
 										}
 									}
 									if (party.skull[0] > 0) {
-										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 84,
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 85,
+											38, 14, 14, 5924);
+									}
+									if (party.inCombat[0] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.EQUIPSLOT_SWORD.id())), 72,
 											38, 14, 14, 5924);
 									}
 									if (party.pMemD[0] > 0) {
@@ -4962,7 +5130,7 @@ public final class mudclient implements Runnable {
 											38, 14, 14, 5924);
 									}
 									this.getSurface().drawBoxAlpha(5, 38, 108, 20, var777, 128);
-									this.getSurface().drawString("" + party.username[0] + "@whi@-" + party.cbLvl[0], 7, 50, 0xffffff, 1);
+									this.getSurface().drawString("@yel@" + party.username[0] + "@whi@-" + party.cbLvl[0], 7, 50, 0xffffff, 0);
 									if (party.partyRank[0] == 1) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 38, 14, 14, 5924);
 									}
@@ -4990,14 +5158,14 @@ public final class mudclient implements Runnable {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 38, 14, 14, 5924);
 									}
 									if (party.partyRank[1] == 1) {
-										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 53, 14, 14, 5924);
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 58, 14, 14, 5924);
 									}
 									if (party.skull[0] > 0) {
-										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 84,
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 85,
 											38, 14, 14, 5924);
 									}
 									if (party.skull[1] > 0) {
-										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 85,
 											57, 14, 14, 5924);
 									}
 									if (party.pMemD[0] > 0) {
@@ -5014,7 +5182,15 @@ public final class mudclient implements Runnable {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.DAMAGETAKEN.id())), 78,
 											58, 14, 14, 5924);
 									}
-									this.getSurface().drawString("@yel@" + party.username[0] + "@whi@-" + party.cbLvl[0], 7, 50, 0xffffff, 1);
+									if (party.inCombat[0] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.EQUIPSLOT_SWORD.id())), 72,
+											38, 14, 14, 5924);
+									}
+									if (party.inCombat[1] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.EQUIPSLOT_SWORD.id())), 72,
+											58, 14, 14, 5924);
+									}
+									this.getSurface().drawString("@yel@" + party.username[0] + "@whi@-" + party.cbLvl[0], 7, 50, 0xffffff, 0);
 									int hpMissing = 0;
 									double prog1 = 0;
 									double prog2 = 0;
@@ -5026,7 +5202,7 @@ public final class mudclient implements Runnable {
 									if (party.pMemDTimeout[0] < 1) {
 										this.getSurface().drawBox(7, 52, 100 - prog3, 4, 0x00FF00);
 									}
-									this.getSurface().drawString("@yel@" + party.username[1] + "@whi@-" + party.cbLvl[1], 7, 70, 0xffffff, 1);
+									this.getSurface().drawString("@yel@" + party.username[1] + "@whi@-" + party.cbLvl[1], 7, 70, 0xffffff, 0);
 									int hpMissing1 = 0;
 									double prog11 = 0;
 									double prog22 = 0;
@@ -5105,26 +5281,38 @@ public final class mudclient implements Runnable {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 38, 14, 14, 5924);
 									}
 									if (party.partyRank[1] == 1) {
-										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 53, 14, 14, 5924);
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 58, 14, 14, 5924);
 									}
 									if (party.partyRank[2] == 1) {
-										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 68, 14, 14, 5924);
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 78, 14, 14, 5924);
 									}
 									if (party.skull[0] > 0) {
-										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 84,
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 85,
 											38, 14, 14, 5924);
 									}
 									if (party.skull[1] > 0) {
-										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 85,
 											57, 14, 14, 5924);
 									}
 									if (party.skull[2] > 0) {
-										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 85,
 											76, 14, 14, 5924);
 									}
-									this.getSurface().drawString("" + party.username[0] + "@whi@-" + party.cbLvl[0], 7, 50, 0xffffff, 1);
-									this.getSurface().drawString("" + party.username[1] + "@whi@-" + party.cbLvl[1], 7, 70, 0xffffff, 1);
-									this.getSurface().drawString("" + party.username[2] + "@whi@-" + party.cbLvl[2], 7, 90, 0xffffff, 1);
+									if (party.inCombat[0] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.EQUIPSLOT_SWORD.id())), 72,
+											38, 14, 14, 5924);
+									}
+									if (party.inCombat[1] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.EQUIPSLOT_SWORD.id())), 72,
+											58, 14, 14, 5924);
+									}
+									if (party.inCombat[2] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.EQUIPSLOT_SWORD.id())), 72,
+											78, 14, 14, 5924);
+									}
+									this.getSurface().drawString("@yel@" + party.username[0] + "@whi@-" + party.cbLvl[0], 7, 50, 0xffffff, 0);
+									this.getSurface().drawString("@yel@" + party.username[1] + "@whi@-" + party.cbLvl[1], 7, 70, 0xffffff, 0);
+									this.getSurface().drawString("@yel@" + party.username[2] + "@whi@-" + party.cbLvl[2], 7, 90, 0xffffff, 0);
 								} else if (SocialLists.partyListCount == 4) {
 									if (this.mouseX > 4 && this.mouseX < 109 && this.mouseY > 37 && this.mouseY < 119) {
 										if (getMouseClick() == 2) {
@@ -5210,34 +5398,50 @@ public final class mudclient implements Runnable {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 38, 14, 14, 5924);
 									}
 									if (party.partyRank[1] == 1) {
-										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 53, 14, 14, 5924);
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 58, 14, 14, 5924);
 									}
 									if (party.partyRank[2] == 1) {
-										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 68, 14, 14, 5924);
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 78, 14, 14, 5924);
 									}
 									if (party.partyRank[3] == 1) {
-										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 83, 14, 14, 5924);
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 98, 14, 14, 5924);
 									}
 									if (party.skull[0] > 0) {
-										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 84,
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 85,
 											38, 14, 14, 5924);
 									}
 									if (party.skull[1] > 0) {
-										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 85,
 											57, 14, 14, 5924);
 									}
 									if (party.skull[2] > 0) {
-										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 85,
 											76, 14, 14, 5924);
 									}
 									if (party.skull[3] > 0) {
-										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 85,
 											95, 14, 14, 5924);
 									}
-									this.getSurface().drawString("" + party.username[0] + "@whi@-" + party.cbLvl[0], 7, 50, 0xffffff, 1);
-									this.getSurface().drawString("" + party.username[1] + "@whi@-" + party.cbLvl[1], 7, 70, 0xffffff, 1);
-									this.getSurface().drawString("" + party.username[2] + "@whi@-" + party.cbLvl[2], 7, 90, 0xffffff, 1);
-									this.getSurface().drawString("" + party.username[3] + "@whi@-" + party.cbLvl[3], 7, 110, 0xffffff, 1);
+									if (party.inCombat[0] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.EQUIPSLOT_SWORD.id())), 72,
+											38, 14, 14, 5924);
+									}
+									if (party.inCombat[1] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.EQUIPSLOT_SWORD.id())), 72,
+											58, 14, 14, 5924);
+									}
+									if (party.inCombat[2] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.EQUIPSLOT_SWORD.id())), 72,
+											78, 14, 14, 5924);
+									}
+									if (party.inCombat[3] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.EQUIPSLOT_SWORD.id())), 72,
+											98, 14, 14, 5924);
+									}
+									this.getSurface().drawString("@yel@" + party.username[0] + "@whi@-" + party.cbLvl[0], 7, 50, 0xffffff, 0);
+									this.getSurface().drawString("@yel@" + party.username[1] + "@whi@-" + party.cbLvl[1], 7, 70, 0xffffff, 0);
+									this.getSurface().drawString("@yel@" + party.username[2] + "@whi@-" + party.cbLvl[2], 7, 90, 0xffffff, 0);
+									this.getSurface().drawString("@yel@" + party.username[3] + "@whi@-" + party.cbLvl[3], 7, 110, 0xffffff, 0);
 								} else if (SocialLists.partyListCount == 5) {
 									if (party.pMemD[0] > 0) {
 										party.pMemDTimeout[0] = 500;
@@ -5341,42 +5545,62 @@ public final class mudclient implements Runnable {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 38, 14, 14, 5924);
 									}
 									if (party.partyRank[1] == 1) {
-										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 53, 14, 14, 5924);
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 58, 14, 14, 5924);
 									}
 									if (party.partyRank[2] == 1) {
-										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 68, 14, 14, 5924);
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 78, 14, 14, 5924);
 									}
 									if (party.partyRank[3] == 1) {
-										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 83, 14, 14, 5924);
-									}
-									if (party.partyRank[4] == 1) {
 										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 98, 14, 14, 5924);
 									}
+									if (party.partyRank[4] == 1) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.crowns.get(1)), 98, 118, 14, 14, 5924);
+									}
 									if (party.skull[0] > 0) {
-										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 84,
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 85,
 											38, 14, 14, 5924);
 									}
 									if (party.skull[1] > 0) {
-										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 85,
 											57, 14, 14, 5924);
 									}
 									if (party.skull[2] > 0) {
-										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 85,
 											76, 14, 14, 5924);
 									}
 									if (party.skull[3] > 0) {
-										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 85,
 											95, 14, 14, 5924);
 									}
 									if (party.skull[4] > 0) {
-										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 92,
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.SKULL.id())), 85,
 											114, 14, 14, 5924);
 									}
-									this.getSurface().drawString("" + party.username[0] + "@whi@-" + party.cbLvl[0], 7, 50, 0xffffff, 1);
-									this.getSurface().drawString("" + party.username[1] + "@whi@-" + party.cbLvl[1], 7, 70, 0xffffff, 1);
-									this.getSurface().drawString("" + party.username[2] + "@whi@-" + party.cbLvl[2], 7, 90, 0xffffff, 1);
-									this.getSurface().drawString("" + party.username[3] + "@whi@-" + party.cbLvl[3], 7, 110, 0xffffff, 1);
-									this.getSurface().drawString("" + party.username[4] + "@whi@-" + party.cbLvl[4], 7, 130, 0xffffff, 1);
+									if (party.inCombat[0] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.EQUIPSLOT_SWORD.id())), 72,
+											38, 14, 14, 5924);
+									}
+									if (party.inCombat[1] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.EQUIPSLOT_SWORD.id())), 72,
+											58, 14, 14, 5924);
+									}
+									if (party.inCombat[2] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.EQUIPSLOT_SWORD.id())), 72,
+											78, 14, 14, 5924);
+									}
+									if (party.inCombat[3] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.EQUIPSLOT_SWORD.id())), 72,
+											98, 14, 14, 5924);
+									}
+									if (party.inCombat[4] > 0) {
+										this.getSurface().drawSprite(spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.EQUIPSLOT_SWORD.id())), 72,
+											118, 14, 14, 5924);
+									}
+									this.getSurface().drawString("@yel@" + party.username[0] + "@whi@-" + party.cbLvl[0], 7, 50, 0xffffff, 0);
+									this.getSurface().drawString("@yel@" + party.username[1] + "@whi@-" + party.cbLvl[1], 7, 70, 0xffffff, 0);
+									this.getSurface().drawString("@yel@" + party.username[2] + "@whi@-" + party.cbLvl[2], 7, 90, 0xffffff, 0);
+									this.getSurface().drawString("@yel@" + party.username[3] + "@whi@-" + party.cbLvl[3], 7, 110, 0xffffff, 0);
+									this.getSurface().drawString("@yel@" + party.username[4] + "@whi@-" + party.cbLvl[4], 7, 130, 0xffffff, 0);
 								}
 							}
 						}
@@ -5673,7 +5897,7 @@ public final class mudclient implements Runnable {
 					}
 				} else if (this.inputX_Action == InputXAction.BANK_DEPOSIT) {
 					try {
-						if ((Config.S_WANT_CUSTOM_BANKS && this.bank.selectedInventorySlot >= 0) || 
+						if ((Config.S_WANT_CUSTOM_BANKS && this.bank.selectedInventorySlot >= 0) ||
 							(!Config.S_WANT_CUSTOM_BANKS && this.bank.selectedBankSlot >= 0)) {
 							if (str.length() > 10) {
 								str = str.substring(str.length() - 10);
@@ -9358,7 +9582,7 @@ public final class mudclient implements Runnable {
 			//Handle online list click
 			yFromTopDistance += 25;
 			if (this.mouseX > var6 && this.mouseX < var6 + var5
-				&& yFromTopDistance - 12 < this.mouseY && this.mouseY < yFromTopDistance + 4 && this.mouseButtonClick == 1) {
+				&& yFromTopDistance - 6 < this.mouseY && this.mouseY < yFromTopDistance + 9 && this.mouseButtonClick == 1) {
 				this.sendCommandString("onlinelist");
 			}
 		}
