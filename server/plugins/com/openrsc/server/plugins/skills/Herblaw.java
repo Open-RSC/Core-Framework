@@ -53,8 +53,19 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 		}
 
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Herblaw Identify Herb", player.getInventory().countId(item.getID()), false) {
-
+			@Override
 			public void action() {
+				if (getOwner().getSkills().getLevel(Skills.HERBLAW) < herb.getLevelRequired()) {
+					getOwner().message("You cannot identify this herb");
+					getOwner().message("you need a higher herblaw level");
+					interrupt();
+					return;
+				}
+				if (getOwner().getQuestStage(Quests.DRUIDIC_RITUAL) != -1) {
+					getOwner().message("You need to complete Druidic ritual quest first");
+					interrupt();
+					return;
+				}
 				ItemUnIdentHerbDef herb = item.getUnIdentHerbDef(getWorld());
 				Item newItem = new Item(herb.getNewId());
 				if (getOwner().getInventory().remove(item.getID(),1,false) > -1) {
@@ -282,7 +293,6 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 		int repeatTimes = player.getInventory().countId(com.openrsc.server.constants.ItemId.VIAL.id());
 		repeatTimes = player.getInventory().countId(herb.getID()) < repeatTimes ? player.getInventory().countId(herb.getID()): repeatTimes;
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1200, "Herblaw Make Potion", repeatTimes, false) {
-
 			@Override
 			public void action() {
 				if (getOwner().getSkills().getLevel(Skills.HERBLAW) < herbDef.getReqLevel()) {
@@ -291,8 +301,9 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 					interrupt();
 					return;
 				}
-				if (player.getQuestStage(Quests.DRUIDIC_RITUAL) != -1) {
-					player.message("You need to complete Druidic ritual quest first");
+				if (getOwner().getQuestStage(Quests.DRUIDIC_RITUAL) != -1) {
+					getOwner().message("You need to complete Druidic ritual quest first");
+					interrupt();
 					return;
 				}
 				if (getOwner().getInventory().hasItemId(vial.getID())
@@ -339,7 +350,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 		int repeatTimes = player.getInventory().countId(unfinished.getID());
 		repeatTimes = player.getInventory().countId(second.getID()) < repeatTimes ? player.getInventory().countId(second.getID()) : repeatTimes;
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1200, "Herblaw Make Potion", player.getInventory().countId(unfinished.getID()), false) {
-
+			@Override
 			public void action() {
 				if (getOwner().getSkills().getLevel(Skills.HERBLAW) < def.getReqLevel()) {
 					getOwner().message("You need a herblaw level of "
@@ -347,8 +358,9 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 					interrupt();
 					return;
 				}
-				if (player.getQuestStage(Quests.DRUIDIC_RITUAL) != -1) {
-					player.message("You need to complete Druidic ritual quest first");
+				if (getOwner().getQuestStage(Quests.DRUIDIC_RITUAL) != -1) {
+					getOwner().message("You need to complete Druidic ritual quest first");
+					interrupt();
 					return;
 				}
 				if (getOwner().getInventory().hasItemId(second.getID())
@@ -458,17 +470,17 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Herblaw Grind", player.getInventory().countId(item.getID()), false) {
 			@Override
 			public void action() {
-				if (player.getInventory().remove(item) > -1) {
+				if (getOwner().getInventory().remove(item) > -1) {
 					if (item.getID() != com.openrsc.server.constants.ItemId.A_LUMP_OF_CHARCOAL.id()) {
-						player.message("You grind the " + item.getDef(getWorld()).getName()
+						getOwner().message("You grind the " + item.getDef(getWorld()).getName()
 							+ " to dust");
 					}
-					showBubble(player, new Item(ItemId.PESTLE_AND_MORTAR.id()));
-					player.getInventory().add(new Item(newID, 1));
+					showBubble(getOwner(), new Item(ItemId.PESTLE_AND_MORTAR.id()));
+					getOwner().getInventory().add(new Item(newID, 1));
 
 				}
 			}
-			});
+		});
 		return true;
 	}
 }

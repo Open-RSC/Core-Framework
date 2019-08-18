@@ -184,12 +184,6 @@ public class Smithing implements InvUseOnObjectListener,
 			return;
 		}
 
-		if (player.getSkills().getLevel(Skills.SMITHING) < def.getRequiredLevel()) {
-			player.message("You need to be at least level "
-				+ def.getRequiredLevel() + " smithing to do that");
-			return;
-		}
-
 		int makeCount = getCount(def, item, player);
 
 		if (makeCount == -1) return;
@@ -197,34 +191,40 @@ public class Smithing implements InvUseOnObjectListener,
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Smithing", makeCount, false) {
 			@Override
 			public void action() {
-				if (player.getInventory().countId(item.getID()) < def.getRequiredBars()) {
-					player.message("You need " + def.getRequiredBars() + " bars of metal to make this item");
+				if (getOwner().getSkills().getLevel(Skills.SMITHING) < def.getRequiredLevel()) {
+					getOwner().message("You need to be at least level "
+						+ def.getRequiredLevel() + " smithing to do that");
 					interrupt();
 					return;
 				}
-				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (player.getFatigue() >= player.MAX_FATIGUE) {
-						player.message("You are too tired to smith");
+				if (getOwner().getInventory().countId(item.getID()) < def.getRequiredBars()) {
+					getOwner().message("You need " + def.getRequiredBars() + " bars of metal to make this item");
+					interrupt();
+					return;
+				}
+				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+						getOwner().message("You are too tired to smith");
 						interrupt();
 						return;
 					}
 				}
-				player.playSound("anvil");
+				getOwner().playSound("anvil");
 				for (int x = 0; x < def.getRequiredBars(); x++) {
-					player.getInventory().remove(new Item(item.getID(), 1));
+					getOwner().getInventory().remove(new Item(item.getID(), 1));
 				}
 
-				showBubble(player, item);
-				if (player.getWorld().getServer().getEntityHandler().getItemDef(def.getItemID()).isStackable()) {
-					player.message("You hammer the metal and make " + def.getAmount() + " "
-						+ player.getWorld().getServer().getEntityHandler().getItemDef(def.getItemID()).getName().toLowerCase());
-					player.getInventory().add(
+				showBubble(getOwner(), item);
+				if (getWorld().getServer().getEntityHandler().getItemDef(def.getItemID()).isStackable()) {
+					getOwner().message("You hammer the metal and make " + def.getAmount() + " "
+						+ getWorld().getServer().getEntityHandler().getItemDef(def.getItemID()).getName().toLowerCase());
+					getOwner().getInventory().add(
 						new Item(def.getItemID(), def.getAmount()));
 				} else {
-					player.message("You hammer the metal and make a "
-						+ player.getWorld().getServer().getEntityHandler().getItemDef(def.getItemID()).getName().toLowerCase());
+					getOwner().message("You hammer the metal and make a "
+						+ getWorld().getServer().getEntityHandler().getItemDef(def.getItemID()).getName().toLowerCase());
 					for (int x = 0; x < def.getAmount(); x++) {
-						player.getInventory().add(new Item(def.getItemID(), 1));
+						getOwner().getInventory().add(new Item(def.getItemID(), 1));
 					}
 				}
 				player.incExp(Skills.SMITHING, getSmithingExp(item.getID(), def.getRequiredBars()), true);
@@ -494,7 +494,7 @@ public class Smithing implements InvUseOnObjectListener,
 	/**
 	 * Gets the smithing exp for the given amount of the right bars
 	 */
-	public static int getSmithingExp(int barID, int barCount) {
+	public int getSmithingExp(int barID, int barCount) {
 		int[] exps = {50, 100, 150, 200, 250, 300};
 		int type = getBarType(barID);
 		if (type < 0) {
@@ -506,7 +506,7 @@ public class Smithing implements InvUseOnObjectListener,
 	/**
 	 * Gets the min level required to smith a bar
 	 */
-	public static int minSmithingLevel(int barID) {
+	public int minSmithingLevel(int barID) {
 		int[] levels = {1, 15, 30, 50, 70, 85};
 		int type = getBarType(barID);
 		if (type < 0) {
@@ -518,7 +518,7 @@ public class Smithing implements InvUseOnObjectListener,
 	/**
 	 * Gets the type of bar we have
 	 */
-	public static int getBarType(int barID) {
+	public int getBarType(int barID) {
 		switch (ItemId.getById(barID)) {
 			case BRONZE_BAR:
 				return 0;
