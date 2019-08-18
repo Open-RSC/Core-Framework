@@ -16,6 +16,8 @@ public class PartyPlayer {
 	private int deaths;
 	private int partyMemberDead = 0;
 	private int shareLoot;
+	private int partyMembersTotal;
+	private int inCombat;
 
 	PartyPlayer(String player) {
 		this.username = player;
@@ -61,8 +63,26 @@ public class PartyPlayer {
 		return shareLoot;
 	}
 
+	public int getInCombat() {
+		if (playerReference.inCombat()) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
+
 	public void setShareLoot(int shareLoot) {
 		this.shareLoot = shareLoot;
+	}
+
+	public int getPartyMembersTotal() {
+		int o = playerReference.getParty().getPlayers().size();
+		return o;
+	}
+
+	public void setPartyMembersTotal(int partyMembersTotal) {
+		int o = playerReference.getParty().getPlayers().size();
+		o = partyMembersTotal;
 	}
 
 	public int getCbLvl() {
