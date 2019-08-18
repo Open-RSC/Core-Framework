@@ -22,7 +22,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
-import com.openrsc.server.model.entity.update.HpUpdate;
 import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
@@ -470,6 +469,19 @@ public final class Player extends Mob {
 			}
 		}
 		knownPlayersAppearanceIDs.put(p.getUsernameHash(), p.getAppearanceID());
+		return true;
+	}
+
+	public boolean requiresAppearanceUpdateForPeek(Player p) {
+		for (Entry<Long, Integer> entry : knownPlayersAppearanceIDs.entrySet()) {
+			if (entry.getKey() == p.getUsernameHash()) {
+				if (entry.getValue() != p.getAppearanceID()) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
 		return true;
 	}
 
@@ -1707,7 +1719,6 @@ public final class Player extends Mob {
 		} else {
 			setLocation(Point.location(getCache().getInt("death_location_x"), getCache().getInt("death_location_y")), true);
 		}
-		setTeleporting(true);
 		ActionSender.sendWorldInfo(this);
 		ActionSender.sendEquipmentStats(this);
 		ActionSender.sendInventory(this);
@@ -1721,12 +1732,15 @@ public final class Player extends Mob {
 		this.cure();
 		prayers.resetPrayers();
 		skills.normalize();
-		getUpdateFlags().setHpUpdate(new HpUpdate(this, 0));
 		for (Player p : getWorld().getPlayers()) {
 			if (this.getParty() == p.getParty() && this.getParty() != null) {
 				ActionSender.sendParty(p);
 			}
 		}
+
+		//getUpdateFlags().setHpUpdate(new HpUpdate(this, 0));
+		getUpdateFlags().reset();
+		//getUpdateFlags().setAppearanceChanged(true);
 	}
 
 	private int getEquippedWeaponID() {
@@ -2181,10 +2195,16 @@ public final class Player extends Mob {
 
 	@Override
 	public void setLocation(Point p, boolean teleported) {
-		if (getSkullType() == 2)
+		if(!teleported) {
+			if (getSkullType() == 2)
+				getUpdateFlags().setAppearanceChanged(true);
+			else if (getSkullType() == 0)
+				getUpdateFlags().setAppearanceChanged(true);
+		}
+		else {
+			setTeleporting(true);
 			getUpdateFlags().setAppearanceChanged(true);
-		else if (getSkullType() == 0)
-			getUpdateFlags().setAppearanceChanged(true);
+		}
 
 		super.setLocation(p, teleported);
 
@@ -2680,7 +2700,7 @@ public final class Player extends Mob {
 	}
 
 	public boolean isInvisible(Mob m) {
-		return stateIsInvisible() && m.isMobInvisible(this);
+		return stateIsInvisible() && m.rankCheckInvisible(this);
 	}
 
 	private boolean cacheIsInvisible() {
@@ -2701,7 +2721,7 @@ public final class Player extends Mob {
 	}
 
 	public boolean isInvulnerable(Mob m) {
-		return stateIsInvulnerable() && m.isMobInvulnerable(this);
+		return stateIsInvulnerable() && m.rankCheckInvulnerable(this);
 	}
 
 	private boolean cacheIsInvulnerable() {

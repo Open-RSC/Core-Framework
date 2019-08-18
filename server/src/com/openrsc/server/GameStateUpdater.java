@@ -202,7 +202,7 @@ public final class GameStateUpdater {
 				if (playerToUpdate.getLocalPlayers().contains(otherPlayer) || otherPlayer.equals(playerToUpdate)
 					|| !otherPlayer.withinRange(playerToUpdate) || !otherPlayer.loggedIn()
 					|| otherPlayer.isRemoved() || otherPlayer.isInvisible(playerToUpdate)
-					|| !visibleConditionOverride) {
+					|| !visibleConditionOverride || otherPlayer.isTeleporting()) {
 					continue;
 				}
 				byte[] offsets = DataConversions.getMobPositionOffsets(otherPlayer.getLocation(),
@@ -322,6 +322,11 @@ public final class GameStateUpdater {
 		for (Player otherPlayer : player.getLocalPlayers()) {
 
 			UpdateFlags updateFlags = otherPlayer.getUpdateFlags();
+
+			if(otherPlayer.getUsername().trim().equalsIgnoreCase("kenix") && player.getUsername().trim().equalsIgnoreCase("kenix")) {
+				LOGGER.info("UF: " + updateFlags + ", isTeleporting: " + otherPlayer.isTeleporting() + ", Override: " + player.requiresAppearanceUpdateForPeek(otherPlayer));
+			}
+
 			if (updateFlags.hasBubble()) {
 				Bubble bubble = updateFlags.getActionBubble().get();
 				bubblesNeedingDisplayed.add(bubble);
@@ -345,7 +350,6 @@ public final class GameStateUpdater {
 			}
 			if (player.requiresAppearanceUpdateFor(otherPlayer))
 				playersNeedingAppearanceUpdate.add(otherPlayer);
-
 		}
 		issuePlayerAppearanceUpdatePacket(player, bubblesNeedingDisplayed, chatMessagesNeedingDisplayed,
 			projectilesNeedingDisplayed, playersNeedingDamageUpdate, playersNeedingHpUpdate, playersNeedingAppearanceUpdate);

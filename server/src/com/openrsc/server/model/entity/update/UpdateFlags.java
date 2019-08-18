@@ -129,4 +129,17 @@ public class UpdateFlags {
 
 		appearanceChanged.set(false);
 	}
+
+	@Override
+	public String toString() {
+		return "UpdateFlags{" +
+			"actionBubble=" + actionBubble +
+			", actionBubbleNpc=" + actionBubbleNpc +
+			", appearanceChanged=" + appearanceChanged +
+			", chatMessage=" + chatMessage +
+			", damage=" + damage +
+			", hpUpdate=" + hpUpdate +
+			", projectile=" + projectile +
+			'}';
+	}
 }

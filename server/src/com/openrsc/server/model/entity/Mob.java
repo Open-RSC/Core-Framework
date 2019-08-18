@@ -1040,28 +1040,34 @@ public abstract class Mob extends Entity {
 		return false;
 	}
 
-	public boolean isMobInvisible(Mob m) {
-		return !(this instanceof Player) ||
-			(
-				this instanceof Player &&
-					(
-						(m instanceof Player) ?
-							((Player) m).getGroupID() < ((Player) this).getGroupID() :
-							((Player) this).isAdmin()
-					)
-			);
+	public boolean rankCheckInvisible(Mob m) {
+		if(!(this instanceof Player) || !(m instanceof Player)) {
+			return false;
+		}
+
+		Player visionPlayer = (Player) this;
+		Player playerToTest = (Player) m;
+
+		if(visionPlayer.isAdmin()) {
+			return false;
+		}
+
+		return visionPlayer.getGroupID() >= playerToTest.getGroupID();
 	}
 
-	public boolean isMobInvulnerable(Mob m) {
-		return !(this instanceof Player) ||
-			(
-				this instanceof Player &&
-					(
-						(m instanceof Player) ?
-							((Player) m).getGroupID() < ((Player) this).getGroupID() :
-							((Player) this).isAdmin()
-					)
-			);
+	public boolean rankCheckInvulnerable(Mob m) {
+		if(!(this instanceof Player) || !(m instanceof Player)) {
+			return false;
+		}
+
+		Player visionPlayer = (Player) this;
+		Player playerToTest = (Player) m;
+
+		if(visionPlayer.isAdmin()) {
+			return false;
+		}
+
+		return visionPlayer.getGroupID() >= playerToTest.getGroupID();
 	}
 
 	public int getWalkingTick() {
