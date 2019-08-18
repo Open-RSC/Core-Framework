@@ -501,7 +501,7 @@ public class Npc extends Mob {
 				}
 
 
-				owner = handleLootAndXpDistribution(((Player) mob));
+				//owner = handleLootAndXpDistribution(((Player) mob));
 
 				//Determine if the RDT is hit first
 				boolean rdtHit = false;
