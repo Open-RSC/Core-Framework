@@ -24,6 +24,7 @@ public class Curator implements TalkToNpcExecutiveListener, TalkToNpcListener, I
 	public void onTalkToNpc(final Player p, final Npc n) {
 		npcTalk(p, n, "Welcome to the museum of Varrock");
 		if (p.getInventory().hasItemId(ItemId.BROKEN_SHIELD_ARRAV_1.id()) && p.getInventory().hasItemId(ItemId.BROKEN_SHIELD_ARRAV_2.id())) {
+			// curator authentically does not check if you already have a certificate in your inventory before triggering this
 			if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5) {
 				playerTalk(p, n,
 					"I have retrieved the shield of Arrav and I would like to claim my reward");
@@ -53,6 +54,21 @@ public class Curator implements TalkToNpcExecutiveListener, TalkToNpcListener, I
 				npcTalk(p, n, "Take these to the king",
 					"And he'll pay you both handsomely");
 
+				return;
+			} else if (p.getInventory().hasItemId(ItemId.BROKEN_SHIELD_ARRAV_1.id()) || p.getInventory().hasItemId(ItemId.BROKEN_SHIELD_ARRAV_2.id())) {
+				
+			}
+		} else if (p.getInventory().hasItemId(ItemId.BROKEN_SHIELD_ARRAV_1.id()) || p.getInventory().hasItemId(ItemId.BROKEN_SHIELD_ARRAV_2.id())) {
+			if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5 || p.getQuestStage(Quests.SHIELD_OF_ARRAV) < 0) {
+				// possible this triggers always, but confirmed that it does occur authentically after the quest is complete. (state < 0)
+				playerTalk(p, n,
+						"I have half the shield of Arrav here",
+						"Can I get a reward");
+				npcTalk(p, n, "Well it might be worth a small reward",
+						"The entire shield would me worth much much more");
+				playerTalk(p, n,
+						"Ok I'll hang onto it",
+						"And see if I can find the other half");
 				return;
 			}
 		}
