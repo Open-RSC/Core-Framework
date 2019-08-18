@@ -16,12 +16,13 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnGroundItemExecutiv
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 import com.openrsc.server.util.rsc.Formulae;
 
+import static com.openrsc.server.plugins.Functions.compareItemsIds;
 import static com.openrsc.server.plugins.Functions.inArray;
 import static com.openrsc.server.plugins.Functions.message;
 
 public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundItemExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener {
 
-	private final static int TINDERBOX = 166;
+	private final static int TINDERBOX = ItemId.TINDERBOX.id();
 	/**
 	 * LOG IDs
 	 **/
@@ -168,7 +169,8 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 
 	@Override
 	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
-		return item1.getID() == TINDERBOX && inArray(item2.getID(), LOGS) || item2.getID() == TINDERBOX && inArray(item1.getID(), LOGS);
+		return compareItemsIds(item1, item2, TINDERBOX, ItemId.LOGS.id()) || (player.getWorld().getServer().getConfig().CUSTOM_FIREMAKING &&
+		(item1.getID() == TINDERBOX && inArray(item2.getID(), LOGS) || item2.getID() == TINDERBOX && inArray(item1.getID(), LOGS)));
 	}
 
 	@Override
