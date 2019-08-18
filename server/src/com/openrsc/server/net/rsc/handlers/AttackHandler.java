@@ -9,7 +9,6 @@ import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.states.Action;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
@@ -94,7 +93,7 @@ public class AttackHandler implements PacketHandler {
 					}
 					player.startCombat(mob);
 					if (player.getParty() != null) {
-						for (Player p : getWorld().getPlayers()) {
+						for (Player p : player.getWorld().getPlayers()) {
 							if (player.getParty() == p.getParty()) {
 								ActionSender.sendParty(p);
 							}
