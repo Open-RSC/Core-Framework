@@ -1771,6 +1771,7 @@ public class PacketHandler {
 		mc.setHideInventoryCount(packetsIncoming.getUnsignedByte() == 1); // 34
 		mc.setHideNameTag(packetsIncoming.getUnsignedByte() == 1); // 35
 		mc.setBlockPartyInv(packetsIncoming.getUnsignedByte() == 1); // 36
+		mc.setAndroidInvToggle(packetsIncoming.getUnsignedByte() == 1); // 37
 	}
 
 	private void togglePrayer(int length) {

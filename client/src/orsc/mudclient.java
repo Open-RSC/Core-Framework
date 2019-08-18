@@ -9038,6 +9038,15 @@ public final class mudclient implements Runnable {
 				"@whi@Volume buttons to Rotate - @gre@On", 6, null, null);
 		}
 
+		// inventory close
+		if (!C_ANDROID_INV_TOGGLE) {
+			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+				"@whi@Close inventory with menu - @red@Off", 7, null, null);
+		} else {
+			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+				"@whi@Close inventory with menu - @gre@On", 7, null, null);
+		}
+
 		// logout text
 		y += 199;
 		this.getSurface().drawString("Always logout when you finish", x, y, 0, 1);
@@ -9468,6 +9477,15 @@ public final class mudclient implements Runnable {
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(16);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(C_VOLUME_TO_ROTATE ? 1 : 0);
+			this.packetHandler.getClientStream().finishPacket();
+		}
+
+		// android inventory toggle
+		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 7 && this.mouseButtonClick == 1) {
+			C_ANDROID_INV_TOGGLE = !C_ANDROID_INV_TOGGLE;
+			this.packetHandler.getClientStream().newPacket(111);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(37);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(C_ANDROID_INV_TOGGLE ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -11803,14 +11821,14 @@ public final class mudclient implements Runnable {
 				}
 				case ITEM_USE: {
 					this.selectedItemInventoryIndex = indexOrX;
-					if (!isAndroid())
+					if (!isAndroid() || C_ANDROID_INV_TOGGLE)
 						this.showUiTab = 0;
 					this.m_ig = EntityHandler.getItemDef(this.inventoryItemID[this.selectedItemInventoryIndex]).getName();
 					break;
 				}
 				case ITEM_USE_EQUIPTAB:
 					this.selectedItemInventoryIndex = indexOrX + S_PLAYER_INVENTORY_SLOTS;
-					if (!isAndroid())
+					if (!isAndroid() || C_ANDROID_INV_TOGGLE)
 						this.showUiTab = 0;
 					this.m_ig = equippedItems[indexOrX].getName();
 					break;
@@ -11820,7 +11838,7 @@ public final class mudclient implements Runnable {
 					int amount = this.inventoryItemSize[indexOrX];
 					this.packetHandler.getClientStream().writeBuffer1.putInt(amount);
 					this.packetHandler.getClientStream().finishPacket();
-					if (!isAndroid())
+					if (!isAndroid() || C_ANDROID_INV_TOGGLE)
 						this.showUiTab = 0;
 					this.selectedItemInventoryIndex = -1;
 					this.showMessage(false, null,
@@ -11840,7 +11858,7 @@ public final class mudclient implements Runnable {
 					this.packetHandler.getClientStream().writeBuffer1.putShort(dropInventorySlot);
 					this.packetHandler.getClientStream().writeBuffer1.putInt(dropQuantity);
 					this.packetHandler.getClientStream().finishPacket();
-					if (!isAndroid())
+					if (!isAndroid() || C_ANDROID_INV_TOGGLE)
 						this.showUiTab = 0;
 					this.selectedItemInventoryIndex = this.dropInventorySlot = -1;
 					if (dropQuantity == 1)
@@ -16289,6 +16307,10 @@ public final class mudclient implements Runnable {
 
 	public void setBlockPartyInv(boolean b) {
 		Config.C_PARTY_INV = b;
+	}
+
+	public void setAndroidInvToggle(boolean b) {
+		C_ANDROID_INV_TOGGLE = b;
 	}
 
 	public void setHideNameTag(boolean b) {

@@ -70,6 +70,8 @@ public final class GameSettingHandler implements PacketHandler {
 				player.getCache().store("setting_floating_nametags", p.readByte() == 1);
 			} else if (idx == 36) {
 				player.getCache().store("party_block_invites", p.readByte() == 1);
+			} else if (idx == 37) {
+				player.getCache().store("android_inv_toggle", p.readByte() == 1);
 			}
 			return;
 		}

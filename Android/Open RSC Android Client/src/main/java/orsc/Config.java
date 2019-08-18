@@ -38,6 +38,7 @@ public class Config {
 	public static int C_FIGHT_MENU = 1;
 	public static boolean C_INV_COUNT = false;
 	public static boolean C_PARTY_INV = false;
+	public static boolean C_ANDROID_INV_TOGGLE = false;
 	public static int C_ZOOM;
 
 	/* Android: */
