@@ -61,7 +61,7 @@ public final class SleepHandler implements PacketHandler {
 
 	private void handleExpToggle(Player player) {
 		player.toggleFreezeXp();
-		ActionSender.sendExperienceToggle(player, player.isExperienceFrozen());
+		ActionSender.sendExperienceToggle(player);
 		if (player.isExperienceFrozen())
 			player.message("You have @red@DISABLED@whi@ experience gain!");
 		else

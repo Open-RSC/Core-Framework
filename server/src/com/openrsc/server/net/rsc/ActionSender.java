@@ -896,10 +896,10 @@ public class ActionSender {
 		p.write(s.toPacket());
 	}
 
-	public static void sendExperienceToggle(Player p, boolean expOff) {
+	public static void sendExperienceToggle(Player p) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_EXPERIENCE_TOGGLE.opcode);
-		s.writeByte((byte) (expOff ? 1 : 0));
+		s.writeByte((byte) (p.isExperienceFrozen() ? 1 : 0));
 		p.write(s.toPacket());
 	}
 
@@ -1238,6 +1238,9 @@ public class ActionSender {
 
 				if (p.getWorld().getServer().getConfig().WANT_BANK_PRESETS)
 					sendBankPresets(p);
+
+				if (!p.getWorld().getServer().getConfig().WANT_FATIGUE)
+					sendExperienceToggle(p);
 
 				/*if (!getServer().getConfig().MEMBER_WORLD) {
 					p.unwieldMembersItems();
