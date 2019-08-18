@@ -7659,7 +7659,7 @@ public final class mudclient implements Runnable {
 				this.getSurface().drawLineVert(xOffset + 122, yOffset - 24, 0, 24);
 
 				//Handle ui clicks
-				if (this.mouseButtonClick == 1) {
+				if (this.mouseButtonClick == 1 && !this.topMouseMenuVisible) {
 					if (this.mouseX >= xOffset) {
 						if (this.mouseY <= yOffset) {
 							if (this.mouseY >= yOffset - 24) {
