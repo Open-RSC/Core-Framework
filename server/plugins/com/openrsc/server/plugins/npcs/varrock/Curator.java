@@ -55,8 +55,6 @@ public class Curator implements TalkToNpcExecutiveListener, TalkToNpcListener, I
 					"And he'll pay you both handsomely");
 
 				return;
-			} else if (p.getInventory().hasItemId(ItemId.BROKEN_SHIELD_ARRAV_1.id()) || p.getInventory().hasItemId(ItemId.BROKEN_SHIELD_ARRAV_2.id())) {
-				
 			}
 		} else if (p.getInventory().hasItemId(ItemId.BROKEN_SHIELD_ARRAV_1.id()) || p.getInventory().hasItemId(ItemId.BROKEN_SHIELD_ARRAV_2.id())) {
 			if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5 || p.getQuestStage(Quests.SHIELD_OF_ARRAV) < 0) {
