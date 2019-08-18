@@ -74,7 +74,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 		if (Formulae.lightLogs(player.getSkills().getLevel(Skills.FIREMAKING))) {
 
 			player.getWorld().getServer().getGameEventHandler().add(
-				new SingleEvent(player.getWorld(), null, 1200, "Light Logs") {
+				new SingleEvent(player.getWorld(), player, 1200, "Light Logs") {
 					@Override
 					public void action() {
 						getOwner().message("The fire catches and the logs begin to burn");

@@ -84,6 +84,7 @@ import orsc.util.GenUtil;
 import orsc.util.StringUtil;
 
 import static orsc.Config.CLIENT_VERSION;
+import static orsc.Config.C_ANDROID_INV_TOGGLE;
 import static orsc.Config.C_BATCH_PROGRESS_BAR;
 import static orsc.Config.C_EXPERIENCE_CONFIG_SUBMENU;
 import static orsc.Config.C_EXPERIENCE_COUNTER;
