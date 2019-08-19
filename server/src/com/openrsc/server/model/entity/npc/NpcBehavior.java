@@ -149,7 +149,7 @@ public class NpcBehavior {
 
 				lastMovement = System.currentTimeMillis();
 				if (!checkTargetCombatTimer()) {
-					if (true)
+					if (false)
 						npc.walkToEntityAStar(target.getX(), target.getY());
 					else
 						npc.walkToEntity(target.getX(), target.getY());
