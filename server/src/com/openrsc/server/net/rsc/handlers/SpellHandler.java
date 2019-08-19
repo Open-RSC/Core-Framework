@@ -1120,9 +1120,9 @@ public class SpellHandler implements PacketHandler {
 									affectedMob.getSkills().subtractLevel(3, secondAdditionalDamage, false);
 									affectedMob.getUpdateFlags().setDamage(new Damage(affectedMob, secondAdditionalDamage));
 									if (affectedMob.isPlayer()) {
-										for (Player p : getWorld().getPlayers()) {
-											if (player.getParty() == p.getParty()) {
-												ActionSender.sendParty(p);
+										if (player.getWorld().getServer().getConfig().WANT_PARTIES) {
+											if(player.getParty() != null){
+												player.getParty().sendParty();
 											}
 										}
 									}

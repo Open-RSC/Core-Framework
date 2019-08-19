@@ -563,9 +563,9 @@ public final class Player extends Mob {
 				@Override
 				public void run() {
 					removeSkull();
-					for (Player p : getWorld().getPlayers()) {
-						if (getParty() == p.getParty() && getParty() != null) {
-							ActionSender.sendParty(p);
+					if (getWorld().getServer().getConfig().WANT_PARTIES) {
+						if(getParty() != null){
+							//getParty().sendParty();
 						}
 					}
 				}
@@ -573,9 +573,9 @@ public final class Player extends Mob {
 			getWorld().getServer().getGameEventHandler().add(skullEvent);
 			getUpdateFlags().setAppearanceChanged(true);
 		}
-		for (Player p : getWorld().getPlayers()) {
-			if (getParty() == p.getParty() && getParty() != null) {
-				ActionSender.sendParty(p);
+		if (getWorld().getServer().getConfig().WANT_PARTIES) {
+			if(getParty() != null){
+				getParty().sendParty();
 			}
 		}
 	}
@@ -1736,17 +1736,17 @@ public final class Player extends Mob {
 		ActionSender.sendInventory(this);
 
 		resetPath();
-		for (Player p : getWorld().getPlayers()) {
-			if (this.getParty() == p.getParty() && this.getParty() != null) {
-				ActionSender.sendParty(p);
+		if (getWorld().getServer().getConfig().WANT_PARTIES) {
+			if(this.getParty() != null){
+				this.getParty().sendParty();
 			}
 		}
 		this.cure();
 		prayers.resetPrayers();
 		skills.normalize();
-		for (Player p : getWorld().getPlayers()) {
-			if (this.getParty() == p.getParty() && this.getParty() != null) {
-				ActionSender.sendParty(p);
+		if (getWorld().getServer().getConfig().WANT_PARTIES) {
+			if(getParty() != null){
+				this.getParty().sendParty();
 			}
 		}
 

@@ -93,12 +93,8 @@ public class AttackHandler implements PacketHandler {
 					}
 					player.startCombat(mob);
 					if (player.getWorld().getServer().getConfig().WANT_PARTIES) {
-						if (player.getParty() != null) {
-							for (Player p : player.getWorld().getPlayers()) {
-								if (player.getParty() == p.getParty()) {
-									ActionSender.sendParty(p);
-								}
-							}
+						if(player.getParty() != null){
+							player.getParty().sendParty();
 						}
 					}
 				}

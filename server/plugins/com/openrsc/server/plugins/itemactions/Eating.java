@@ -175,12 +175,10 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 			sleep(325);
 			if (heals && !isKebabVariant) {
 				player.message("It heals some health");
-				for (Player p : player.getWorld().getPlayers()) {
+				if (player.getWorld().getServer().getConfig().WANT_PARTIES) {
 					if(player.getParty() != null){
 						player.getUpdateFlags().setHpUpdate(new HpUpdate(player, 0));
-						if(player.getParty() == p.getParty()){
-							ActionSender.sendParty(p);
-						}
+						player.getParty().sendParty();
 					}
 				}
 			}
