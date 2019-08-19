@@ -71,7 +71,6 @@ public class WalkRequest implements PacketHandler {
 		} else if (player.isBusy()) {
 			return;
 		}
-		player.checkAndInterruptBatchEvent();
 
 		player.resetAll();
 		player.resetPath();

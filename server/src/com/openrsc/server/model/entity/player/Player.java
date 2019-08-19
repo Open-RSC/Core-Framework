@@ -1909,6 +1909,7 @@ public final class Player extends Mob {
 	}
 
 	public void resetAll() {
+		checkAndInterruptBatchEvent();
 		resetAllExceptTradeOrDuel(true);
 		getTrade().resetAll();
 		getDuel().resetAll();
