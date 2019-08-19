@@ -173,7 +173,7 @@ public final class GameStateUpdater {
 
 				if (!playerToUpdate.withinRange(otherPlayer) || !otherPlayer.loggedIn() || otherPlayer.isRemoved()
 					|| otherPlayer.isTeleporting() || otherPlayer.isInvisible(playerToUpdate)
-					|| !visibleConditionOverride) {
+					|| !visibleConditionOverride || otherPlayer.inCombat()) {
 					positionBuilder.writeBits(1, 1); //Needs Update
 					positionBuilder.writeBits(1, 1); //Update Type
 					positionBuilder.writeBits(3, 2); //???
@@ -202,7 +202,7 @@ public final class GameStateUpdater {
 				if (playerToUpdate.getLocalPlayers().contains(otherPlayer) || otherPlayer.equals(playerToUpdate)
 					|| !otherPlayer.withinRange(playerToUpdate) || !otherPlayer.loggedIn()
 					|| otherPlayer.isRemoved() || otherPlayer.isInvisible(playerToUpdate)
-					|| !visibleConditionOverride || otherPlayer.isTeleporting()) {
+					|| !visibleConditionOverride || (otherPlayer.isTeleporting() && !otherPlayer.inCombat())) {
 					continue;
 				}
 				byte[] offsets = DataConversions.getMobPositionOffsets(otherPlayer.getLocation(),

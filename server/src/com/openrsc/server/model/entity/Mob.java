@@ -905,8 +905,7 @@ public abstract class Mob extends Entity {
 				}
 			}
 
-			setLocation(victim.getLocation(), true);
-			victim.setTeleporting(true);
+			setLocation(victim.getLocation(), false);
 
 			setBusy(true);
 			setSprite(ourSprite);

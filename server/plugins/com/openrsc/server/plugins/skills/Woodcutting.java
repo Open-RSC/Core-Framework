@@ -120,8 +120,8 @@ public class Woodcutting implements ObjectActionListener,
 					}
 				}
 				if (!isCompleted()) {
-					showBubble(getOwner(), new Item(axeID));
 					getOwner().message("You swing your " + getWorld().getServer().getEntityHandler().getItemDef(axeID).getName().toLowerCase() + " at the tree...");
+					showBubble(getOwner(), new Item(axeID));
 				}
 			}
 		});

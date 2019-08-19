@@ -4,13 +4,6 @@ import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
 import com.openrsc.client.model.Sprite;
 import com.openrsc.interfaces.misc.CustomBankInterface;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.util.Properties;
-
 import orsc.buffers.RSBufferUtils;
 import orsc.buffers.RSBuffer_Bits;
 import orsc.enumerations.MessageType;
@@ -23,6 +16,12 @@ import orsc.net.Network_Socket;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.Properties;
 public class PacketHandler {
 
 	private final RSBuffer_Bits packetsIncoming = new RSBuffer_Bits(30000);
@@ -75,7 +74,7 @@ public class PacketHandler {
 	private void handlePacket1(int opcode, int length) {
 		try {
 			if (Config.DEBUG) {
-				System.out.println("Opcode: " + opcode + " Length: " + length);
+				System.out.println("Frame: " + mc.getFrameCounter() + ", Opcode: " + opcode + ", Length: " + length);
 			}
 
 			// Unhandled Opcodes Received...
@@ -1019,7 +1018,7 @@ public class PacketHandler {
 					"\nS_WANT_BANK_PRESETS  "   + wantEquipmentTab + // 63
 					"\nS_WANT_PARTIES " + wantClans + // 64
 					"\nS_MINING_ROCKS_EXTENDED " + miningRocksExtended +// 65
-					"\nS_MOVE_PER_FRAME " + movePerFrame// 66
+					"\nC_MOVE_PER_FRAME " + movePerFrame// 66
 					);
 		}
 
@@ -1090,9 +1089,8 @@ public class PacketHandler {
 		props.setProperty("S_WANT_BANK_PRESETS", wantBankPresets == 1 ? "true" : "false"); //63
 		props.setProperty("S_WANT_PARTIES", wantParties == 1 ? "true" : "false"); //64
 		props.setProperty("S_MINING_ROCKS_EXTENDED", miningRocksExtended == 1 ? "true" : "false"); //65
+		props.setProperty("C_MOVE_PER_FRAME", String.valueOf(movePerFrame)); //66
 		Config.updateServerConfiguration(props);
-
-		Config.S_MOVE_PER_FRAME = movePerFrame; //66
 
 		mc.authenticSettings = !(
 			Config.isAndroid() ||
