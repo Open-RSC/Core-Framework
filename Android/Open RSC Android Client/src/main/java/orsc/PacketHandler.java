@@ -812,7 +812,7 @@ public class PacketHandler {
 		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank, wantPlayerCommands;
 		int getFPS, wantEmail, wantRegistrationLimit, allowResize, lenientContactDetails, wantFatigue, wantCustomSprites;
 		int fishingSpotsDepletable, properMagicTreeName, wantRunecrafting, wantCustomLandscape, wantEquipmentTab;
-		int wantBankPresets, wantParties, miningRocksExtended;
+		int wantBankPresets, wantParties, miningRocksExtended, movePerFrame;
 		String logoSpriteID;
 
 		if (!mc.gotInitialConfigs) {
@@ -881,6 +881,7 @@ public class PacketHandler {
 			wantBankPresets = this.getClientStream().getUnsignedByte(); //63
 			wantParties = this.getClientStream().getUnsignedByte(); // 64
 			miningRocksExtended = this.getClientStream().getUnsignedByte(); //65
+			movePerFrame = this.getClientStream().getUnsignedByte(); //66
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -947,6 +948,7 @@ public class PacketHandler {
 			wantBankPresets = packetsIncoming.getUnsignedByte(); //63
 			wantParties = packetsIncoming.getUnsignedByte(); // 64
 			miningRocksExtended = packetsIncoming.getUnsignedByte(); //65
+			movePerFrame = packetsIncoming.getUnsignedByte(); //66
 		}
 
 		if (Config.DEBUG) {
@@ -1086,6 +1088,8 @@ public class PacketHandler {
 		props.setProperty("S_WANT_BANK_PRESETS", wantBankPresets == 1 ? "true" : "false"); //63
 		props.setProperty("S_WANT_PARTIES", wantParties == 1 ? "true" : "false"); //64
 		props.setProperty("S_MINING_ROCKS_EXTENDED", miningRocksExtended == 1 ? "true" : "false"); //65
+		props.setProperty("C_MOVE_PER_FRAME", String.valueOf(movePerFrame)); //66
+
 		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(

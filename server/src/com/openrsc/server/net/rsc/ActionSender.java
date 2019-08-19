@@ -532,6 +532,12 @@ public class ActionSender {
 
 	private static com.openrsc.server.net.PacketBuilder prepareServerConfigs(Server server) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+		int stepsPerFrame;
+		if (server.getConfig().WANT_CUSTOM_WALK_SPEED)
+			stepsPerFrame = (int)Math.round(4.0f * 640.0f / (double)server.getConfig().WALKING_TICK);
+		else
+			stepsPerFrame = (int)Math.round(4.0f * 640.0f / (double)server.getConfig().GAME_TICK);
+
 		s.setID(Opcode.SEND_SERVER_CONFIGS.opcode);
 		s.writeString(server.getConfig().SERVER_NAME); // 1
 		s.writeString(server.getConfig().SERVER_NAME_WELCOME); // 2
@@ -598,7 +604,7 @@ public class ActionSender {
 		s.writeByte((byte) (server.getConfig().WANT_BANK_PRESETS ? 1 : 0)); //63
 		s.writeByte((byte) (server.getConfig().WANT_PARTIES ? 1 : 0)); //64
 		s.writeByte((byte) (server.getConfig().MINING_ROCKS_EXTENDED ? 1 : 0)); //65
-		s.writeByte((byte) Math.round(4.0 * 640.0 / server.getConfig().GAME_TICK)); //66
+		s.writeByte((byte) stepsPerFrame); //66
 		return s;
 	}
 

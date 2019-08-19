@@ -1018,7 +1018,7 @@ public class PacketHandler {
 					"\nS_WANT_BANK_PRESETS  "   + wantEquipmentTab + // 63
 					"\nS_WANT_PARTIES " + wantClans + // 64
 					"\nS_MINING_ROCKS_EXTENDED " + miningRocksExtended +// 65
-					"\nS_MOVE_PER_FRAME " + movePerFrame// 66
+					"\nC_MOVE_PER_FRAME " + movePerFrame// 66
 					);
 		}
 
@@ -1089,9 +1089,8 @@ public class PacketHandler {
 		props.setProperty("S_WANT_BANK_PRESETS", wantBankPresets == 1 ? "true" : "false"); //63
 		props.setProperty("S_WANT_PARTIES", wantParties == 1 ? "true" : "false"); //64
 		props.setProperty("S_MINING_ROCKS_EXTENDED", miningRocksExtended == 1 ? "true" : "false"); //65
+		props.setProperty("C_MOVE_PER_FRAME", String.valueOf(movePerFrame)); //66
 		Config.updateServerConfiguration(props);
-
-		Config.S_MOVE_PER_FRAME = movePerFrame; //66
 
 		mc.authenticSettings = !(
 			Config.isAndroid() ||
