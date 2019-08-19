@@ -116,13 +116,14 @@ public class Smelting implements InvUseOnObjectListener,
 			smelt = Smelt.valueOf(formattedName);
 		}
 
-		showBubble(p, item);
 		if (!p.getInventory().contains(item)) {
 			return;
 		}
-		if (!p.withinRange(obj, 1)) {
+		// some furnaces the player is 2 spaces away
+		if (!p.withinRange(obj, 1) && !p.withinRange90Deg(obj, 2)) {
 			return;
 		}
+		showBubble(p, item);
 		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
 			if (p.getFatigue() >= p.MAX_FATIGUE) {
 				p.message("You are too tired to smelt this ore");

@@ -571,7 +571,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 									player.message(invited2.getUsername() + " is already in your party");
 									return;
 								} else {
-									invited2.message("@yel@" + player.getUsername() + " tried to send you a party invite, but you are already in a party");
+									invited2.message("@yel@" + player.getUsername() + "@whi@ tried to send you a party invite, but you are already in a party");
 									ActionSender.sendBox(player,
 										"@lre@Party: %"
 											+ " %"

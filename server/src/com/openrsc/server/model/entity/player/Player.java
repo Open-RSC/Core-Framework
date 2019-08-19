@@ -10,9 +10,18 @@ import com.openrsc.server.content.party.Party;
 import com.openrsc.server.content.party.PartyInvite;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.event.rsc.impl.*;
+import com.openrsc.server.event.rsc.impl.FireCannonEvent;
+import com.openrsc.server.event.rsc.impl.PoisonEvent;
+import com.openrsc.server.event.rsc.impl.PrayerDrainEvent;
+import com.openrsc.server.event.rsc.impl.ProjectileEvent;
+import com.openrsc.server.event.rsc.impl.RangeEvent;
+import com.openrsc.server.event.rsc.impl.ThrowingEvent;
 import com.openrsc.server.login.LoginRequest;
-import com.openrsc.server.model.*;
+import com.openrsc.server.model.Cache;
+import com.openrsc.server.model.MenuOptionListener;
+import com.openrsc.server.model.Point;
+import com.openrsc.server.model.PrivateMessage;
+import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.Equipment;
@@ -22,7 +31,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
-import com.openrsc.server.model.entity.update.HpUpdate;
 import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
@@ -41,15 +49,27 @@ import com.openrsc.server.sql.query.logs.LiveFeedLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
-import io.netty.channel.Channel;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.ListIterator;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
+
+import io.netty.channel.Channel;
 
 import static com.openrsc.server.plugins.Functions.sleep;
 
@@ -473,6 +493,19 @@ public final class Player extends Mob {
 		return true;
 	}
 
+	public boolean requiresAppearanceUpdateForPeek(Player p) {
+		for (Entry<Long, Integer> entry : knownPlayersAppearanceIDs.entrySet()) {
+			if (entry.getKey() == p.getUsernameHash()) {
+				if (entry.getValue() != p.getAppearanceID()) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
 	public HashMap<Long, Integer> getKnownPlayerAppearanceIDs() {
 		return knownPlayersAppearanceIDs;
 	}
@@ -639,15 +672,6 @@ public final class Player extends Mob {
 			if (!victim.getDef().isAttackable()) {
 				setSuspiciousPlayer(true);
 				return false;
-			}
-			if (getRangeEquip() < 0 && victim.getID() == 236 && System.currentTimeMillis() - victim.getCombatTimer() < (victim.getCombatState() == CombatState.RUNNING || victim.getCombatState() == CombatState.WAITING ? 3000 : 500)) {
-				return false;
-			}
-			if (getRangeEquip() < 0 && victim.getID() == 210) {
-				if (System.currentTimeMillis() - victim.getCombatTimer() > 3000) {
-					return true;
-				} else
-					return false;
 			}
 			return true;
 		}
@@ -1707,7 +1731,6 @@ public final class Player extends Mob {
 		} else {
 			setLocation(Point.location(getCache().getInt("death_location_x"), getCache().getInt("death_location_y")), true);
 		}
-		setTeleporting(true);
 		ActionSender.sendWorldInfo(this);
 		ActionSender.sendEquipmentStats(this);
 		ActionSender.sendInventory(this);
@@ -1721,12 +1744,15 @@ public final class Player extends Mob {
 		this.cure();
 		prayers.resetPrayers();
 		skills.normalize();
-		getUpdateFlags().setHpUpdate(new HpUpdate(this, 0));
 		for (Player p : getWorld().getPlayers()) {
 			if (this.getParty() == p.getParty() && this.getParty() != null) {
 				ActionSender.sendParty(p);
 			}
 		}
+
+		//getUpdateFlags().setHpUpdate(new HpUpdate(this, 0));
+		getUpdateFlags().reset();
+		//getUpdateFlags().setAppearanceChanged(true);
 	}
 
 	private int getEquippedWeaponID() {
@@ -2181,10 +2207,16 @@ public final class Player extends Mob {
 
 	@Override
 	public void setLocation(Point p, boolean teleported) {
-		if (getSkullType() == 2)
+		if(!teleported) {
+			if (getSkullType() == 2)
+				getUpdateFlags().setAppearanceChanged(true);
+			else if (getSkullType() == 0)
+				getUpdateFlags().setAppearanceChanged(true);
+		}
+		else {
+			setTeleporting(true);
 			getUpdateFlags().setAppearanceChanged(true);
-		else if (getSkullType() == 0)
-			getUpdateFlags().setAppearanceChanged(true);
+		}
 
 		super.setLocation(p, teleported);
 
@@ -2542,6 +2574,12 @@ public final class Player extends Mob {
 		//}
 	}
 
+	public boolean getAndroidInvToggle() {
+		if (getCache().hasKey("android_inv_toggle")) {
+			return getCache().getBoolean("android_inv_toggle");
+		}
+		return false;
+	}
 	public boolean getPartyLootSetting() {
 		return getPartyInviteSetting();
 	}
@@ -2680,7 +2718,7 @@ public final class Player extends Mob {
 	}
 
 	public boolean isInvisible(Mob m) {
-		return stateIsInvisible() && m.isMobInvisible(this);
+		return stateIsInvisible() && m.rankCheckInvisible(this);
 	}
 
 	private boolean cacheIsInvisible() {
@@ -2701,7 +2739,7 @@ public final class Player extends Mob {
 	}
 
 	public boolean isInvulnerable(Mob m) {
-		return stateIsInvulnerable() && m.isMobInvulnerable(this);
+		return stateIsInvulnerable() && m.rankCheckInvulnerable(this);
 	}
 
 	private boolean cacheIsInvulnerable() {
@@ -2877,7 +2915,7 @@ public final class Player extends Mob {
 
 		return true;
 	}
-	
+
 	public boolean checkRingOfLife(Mob hitter) {
 		if (this.isPlayer() && Functions.isWielding(this, ItemId.RING_OF_LIFE.id())
 			&& (!this.getLocation().inWilderness()

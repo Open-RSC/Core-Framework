@@ -152,10 +152,8 @@ public class CombatEvent extends GameTickEvent {
 					combatSound = damage > 0 ? "combat1b" : "combat1a";
 				}
 			}
-			for (Player p : getWorld().getPlayers()) {
-				if (((Player) target).getParty() == p.getParty() && ((Player) target).getParty() != null) {
-					ActionSender.sendParty(p);
-				}
+			if (getWorld().getServer().getConfig().WANT_PARTIES) {
+				((Player) target).getParty().sendParty();
 			}
 			Player opponentPlayer = ((Player) target);
 			ActionSender.sendSound(opponentPlayer, combatSound);
@@ -201,6 +199,17 @@ public class CombatEvent extends GameTickEvent {
 				defenderMob.setHitsMade(0);
 				defenderMob.setSprite(4);
 				defenderMob.setCombatTimer(delayedAggro);
+				if(defenderMob.isPlayer()){
+					Player p1;
+					p1 = ((Player) defenderMob);
+					if (p1.getParty() != null){
+						for (Player p : getWorld().getPlayers()) {
+							if(p1.getParty() == p.getParty()){
+								ActionSender.sendParty(p);
+							}
+						}
+					}
+				}
 			}
 			if (attackerMob != null) {
 				int delayedAggro = 0;
@@ -219,6 +228,17 @@ public class CombatEvent extends GameTickEvent {
 				attackerMob.setHitsMade(0);
 				attackerMob.setSprite(4);
 				attackerMob.setCombatTimer(delayedAggro);
+				if(attackerMob.isPlayer()){
+					Player p2;
+					p2 = ((Player) attackerMob);
+					if (p2.getParty() != null){
+						for (Player p : getWorld().getPlayers()) {
+							if(p2.getParty() == p.getParty()){
+								ActionSender.sendParty(p);
+							}
+						}
+					}
+				}
 			}
 		}
 		stop();

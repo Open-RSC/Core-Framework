@@ -173,6 +173,16 @@ public abstract class Entity {
 		int yDiff = Math.abs(getLocation().getY() - p.getY());
 		return xDiff <= radius && yDiff <= radius;
 	}
+	
+	public final boolean withinRange90Deg(Entity e, int radius) {
+		return withinRange90Deg(e.getLocation(), radius);
+	}
+	
+	public final boolean withinRange90Deg(Point p, int radius) {
+		int xDiff = Math.abs(getLocation().getX() - p.getX());
+		int yDiff = Math.abs(getLocation().getY() - p.getY());
+		return xDiff <= radius && yDiff == 0 || xDiff == 0 && yDiff <= radius;
+	}
 
 	public void addVisibleCondition(VisibleCondition statement) {
 		visibleConditions.add(statement);

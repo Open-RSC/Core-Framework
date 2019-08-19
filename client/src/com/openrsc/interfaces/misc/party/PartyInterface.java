@@ -1,5 +1,10 @@
 package com.openrsc.interfaces.misc.party;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+
 import orsc.Config;
 import orsc.enumerations.InputXAction;
 import orsc.enumerations.MenuItemAction;
@@ -9,11 +14,6 @@ import orsc.graphics.gui.Panel;
 import orsc.graphics.gui.SocialLists;
 import orsc.graphics.two.GraphicsController;
 import orsc.mudclient;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
 
 public final class PartyInterface {
 	public int partyGUIScroll;
@@ -41,7 +41,7 @@ public final class PartyInterface {
 	private boolean visible;
 	private boolean menu_visible = false;
 	private String invitationBy = null;
-	private String[] partyMateTable = {"Username", "Rank", "HP", "Deaths", "Ratio"};
+	private String[] partyMateTable = {"Username", "Rank", "HP", "Cb Lvl", "Ratio"};
 	private Menu rightClickMenu;
 
 	PartyInterface(mudclient mc) {
@@ -168,14 +168,14 @@ public final class PartyInterface {
 			graphics.drawColoredString(newX + 3, newY + 16, mc.party.username[i], 2, 0xffffff, 0);
 			graphics.drawColoredString(newX + 3 + 137, newY + 16, "" + mc.party.getPartyRankNames(mc.party.partyRank[i]), 2, 0xffffff, 0);
 			graphics.drawColoredString(newX + 3 + 135 + 67, newY + 16, "" + mc.party.curHp[i] + "/" + mc.party.maxHp[i], 2, 0xffffff, 0);
-			graphics.drawColoredString(newX + 3 + 135 + 67 + 67, newY + 16, "" + mc.party.getPlayerDeaths(i), 2, 0xffffff, 0);
+			graphics.drawColoredString(newX + 3 + 135 + 67 + 67, newY + 16, "" + mc.party.getCbLvl(i), 2, 0xffffff, 0);
 			graphics.drawColoredString(newX + 3 + 135 + 67 + 67 + 67, newY + 16, "" + mc.party.getKDR(i), 2, 0xffffff, 0);
 			newY += boxHeight - 1;
 		}
 
 
 		graphics.drawString("Total partymates: (" + showing + " / 5)", newX, y + 55, 0xEFB063, 0);
-		if(mc.party.shareLoot[0] == 0){
+		if (mc.party.shareLoot[0] == 0) {
 			graphics.drawString("Share Loot: @red@OFF", newX + 175, y + 55, 0xEFB063, 0);
 		} else {
 			graphics.drawString("Share Loot: @gre@ON", newX + 175, y + 55, 0xEFB063, 0);
@@ -226,8 +226,8 @@ public final class PartyInterface {
 		graphics.drawColoredStringCentered(width / 2 + x, invitationBy, 0xf1f1f1, 0, 1, y + 28);
 		//graphics.drawColoredStringCentered(width / 2 + x, "" + SocialLists.partyListCount, 0xffffff, 0, 5, y + 58);
 		graphics.drawColoredStringCentered(width / 2 + x, "Would you like to join this party?", 0xf1f1f1, 0, 1, y + 90);
-		
-		drawSubmitButton(graphics, x + 133, y + 40, 142, 28, 18, 1, "Ignore this player", false, new ButtonHandler() {
+
+		drawSubmitButton(graphics, x + 133, y + 40, 142, 28, 18, 1, "Ignore for 2.5 min", false, new ButtonHandler() {
 			@Override
 			void handle() {
 				getClient().addDelayedIgnore(invitationBy);
@@ -235,7 +235,7 @@ public final class PartyInterface {
 				setVisible(false);
 			}
 		});
-		
+
 		drawSubmitButton(graphics, x + 55, y + 110, 142, 28, 18, 1, "Accept", false, new ButtonHandler() {
 			@Override
 			void handle() {
@@ -310,6 +310,13 @@ public final class PartyInterface {
 					partyActivePanel = 1;
 				}
 			});
+		} else {
+			drawButton(graphics, x + 280, y + 18, 125, 22, "Party Options", partyActivePanel == 4, new ButtonHandler() {
+				@Override
+				void handle() {
+					partyActivePanel = 4;
+				}
+			});
 		}
 
 		switch (partyActivePanel) {
@@ -327,6 +334,9 @@ public final class PartyInterface {
 				if (!mc.party.inParty()) {
 					drawPartySearch(graphics);
 				}
+				break;
+			case 4:
+				drawPartySetup2(graphics);
 				break;
 		}
 
@@ -540,25 +550,6 @@ public final class PartyInterface {
 				}
 			});
 
-			/*drawSelectButton(graphics, x + 9, y + 131 + 39, 184, 32, 14, 14, 1, 1, "Accept party requests?", mc.party.getPartySearchSettingByName(), new ButtonHandler() {
-				@Override
-				void handle() {
-					menuY = mc.mouseY - 7;
-					menuX = mc.mouseX - x / 2;
-					menu_visible = true;
-					rightClickMenu.recalculateSize(0);
-					rightClickMenu.addCharacterItem_WithID(0,
-						"", MenuItemAction.PARTY_ACCEPT_REQUESTS,
-						"Anyone can join", 0);
-					rightClickMenu.addCharacterItem_WithID(0,
-						"", MenuItemAction.PARTY_ACCEPT_REQUESTS,
-						"Invite only", 1);
-					rightClickMenu.addCharacterItem_WithID(0,
-						"", MenuItemAction.PARTY_ACCEPT_REQUESTS,
-						"Closed", 2);
-				}
-			});*/
-
 			graphics.drawWrappedCenteredString("Right-click on a box to change options.", x + 101, y + 214, 175, 0, 0xD9CD98, false);
 
 			drawSubmitButton(graphics, x + 235, y + 54, 146, 28, 18, 1, "Invite to Party", false, new ButtonHandler() {
@@ -577,6 +568,50 @@ public final class PartyInterface {
 				}
 			});
 			graphics.drawLineHoriz(x + 210, y + 125, 194, 0x5F5147);
+		} else {
+			partySetupPanel.show(partyName_field);
+			partySetupPanel.show(partyTag_field);
+			graphics.drawBoxAlpha(x + 2, y + 48, width - 5, height - 37, 0x1D1915, 192); //5F5147
+			graphics.drawBoxBorder(x + 2, width - 5, y + 48, height - 37, 0x5F5147);
+			graphics.drawColoredStringCentered(width / 2 + x, "Choose a Party Name between 2-16 characters in length.", 0xf1f1f1, 0, 2, y + 64);
+			drawInputButton(graphics, x + 14, y + 75, 380, 42, 14, 1, "Party Name:", false, new ButtonHandler() {
+				@Override
+				void handle() {
+					partySetupPanel.setFocus(partyName_field);
+				}
+			});
+			graphics.drawColoredStringCentered(width / 2 + x, "Enter your Party Tag between 2-5 characters in length.", 0xf1f1f1, 0, 2, y + 64 + 72);
+			drawInputButton(graphics, x + 14, y + 147, 380, 42, 14, 1, "Party Tag:", false, new ButtonHandler() {
+				@Override
+				void handle() {
+					partySetupPanel.setFocus(partyTag_field);
+				}
+			});
+			drawSubmitButton(graphics, x + 132, y + 196, 142, 28, 18, 1, "Submit", false, new ButtonHandler() {
+				@Override
+				void handle() {
+					sendCreateParty(partySetupPanel.getControlText(partyName_field), partySetupPanel.getControlText(partyTag_field));
+				}
+			});
+		}
+		partySetupPanel.drawPanel();
+	}
+
+	private void drawPartySetup2(GraphicsController graphics) {
+		int leftBoxW = 196;
+		int leftBoxH = 184;
+		if (mc.party.inParty()) {
+			graphics.drawBoxAlpha(x + 3 + 196 + 10, y + 48, leftBoxW, leftBoxH, 0x1D1915, 192); //5F5147
+			graphics.drawBoxBorder(x + 3 + 196 + 10, leftBoxW, y + 48, leftBoxH, 0x5F5147);
+			drawSubmitButton(graphics, x + 235, y + 54, 146, 28, 18, 1, "Leave Party", false, new ButtonHandler() {
+				@Override
+				void handle() {
+					getClient().sendCommandString("leaveparty");
+					setVisible(false);
+				}
+			});
+			graphics.drawLineHoriz(x + 210, y + 87, 194, 0x5F5147);
+			//graphics.drawLineHoriz(x + 210, y + 125, 194, 0x5F5147);
 		} else {
 			partySetupPanel.show(partyName_field);
 			partySetupPanel.show(partyTag_field);
@@ -860,8 +895,8 @@ public final class PartyInterface {
 		readPartys.clear();
 	}
 
-	public void addParty(int partyID, String partyName, String partyTag, int members, int canJoin, int partyPoints, int partyRank) {
-		readPartys.add(new PartyResult(partyID, partyName, partyTag, members, canJoin, partyPoints, partyRank));
+	public void addParty(int partyID, int members, int canJoin, int partyPoints, int partyRank) {
+		readPartys.add(new PartyResult(partyID, members, canJoin, partyPoints, partyRank));
 	}
 
 	abstract static class ButtonHandler {
@@ -873,10 +908,8 @@ public final class PartyInterface {
 		private int membersTotal, partyPoints, canJoin, partyID, partyRank;
 		private String[] partySearchSettings = {"@gr2@Anyone can join", "@yel@Invite only", "@red@Closed"};
 
-		PartyResult(int partyID, String partyName, String partyTag, int members, int canJoin, int partyPoints, int partyRank) {
+		PartyResult(int partyID, int members, int canJoin, int partyPoints, int partyRank) {
 			this.partyID = partyID;
-			this.partyName = partyName;
-			this.partyTag = partyTag;
 			this.membersTotal = members;
 			this.canJoin = canJoin;
 			this.partyPoints = partyPoints;

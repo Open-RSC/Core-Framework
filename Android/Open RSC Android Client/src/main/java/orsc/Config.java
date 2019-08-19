@@ -38,6 +38,7 @@ public class Config {
 	public static int C_FIGHT_MENU = 1;
 	public static boolean C_INV_COUNT = false;
 	public static boolean C_PARTY_INV = false;
+	public static boolean C_ANDROID_INV_TOGGLE = false;
 	public static int C_ZOOM;
 
 	/* Android: */
@@ -45,7 +46,7 @@ public class Config {
 	public static final String DL_URL = "androidcheck.openrsc.com"; // needs to be set as public for the Android client to use
 	public static final String ANDROID_DOWNLOAD_PATH = "https://" + DL_URL + "/downloads/";
 	public static final String CACHE_URL = "https://" + DL_URL + "/downloads/cache/";
-	public static final int ANDROID_CLIENT_VERSION = 60; // Important! Depends on web server android_version.txt to check for an updated version
+	public static final int ANDROID_CLIENT_VERSION = 62; // Important! Depends on web server android_version.txt to check for an updated version
 	public static boolean F_SHOWING_KEYBOARD = false;
 	public static boolean C_HOLD_AND_CHOOSE = true;
 	public static int C_LONG_PRESS_TIMER = 5; // default hold timer setting

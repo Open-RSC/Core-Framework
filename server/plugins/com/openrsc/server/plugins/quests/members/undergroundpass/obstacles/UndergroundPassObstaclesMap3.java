@@ -26,6 +26,9 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 	public static int ZAMORAKIAN_TEMPLE_DOOR = 869;
 	public static final int DEMONS_CHEST_OPEN = 911;
 	public static final int DEMONS_CHEST_CLOSED = 912;
+	
+	public static final int [] PIT_COORDS = {802, 3469};
+	public static final Area boundArea = new Area(PIT_COORDS[0] - 24, PIT_COORDS[0] + 24, PIT_COORDS[1] - 24, PIT_COORDS[1] + 24);
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
@@ -133,14 +136,15 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 						try {
 							while (true) {
 								/* Time-out fail, handle appropriately */
-								if (System.currentTimeMillis() - start > 1000 * 60 * 2 && p.getLocation().inBounds(794, 799, 3467, 3471)) {
+								if (System.currentTimeMillis() - start > 1000 * 60 * 2 && p.getLocation().inBounds(794, 3467, 799, 3471)) {
 									p.message("you're blasted out of the temple");
 									p.message("@yel@Iban: and stay out");
 									p.teleport(790, 3469);
 									break;
 								}
-								/* If player has logged out or removed for whatever reason TODO */
-								if (p.isRemoved()) {
+								/* If player has logged out or not region area */
+								if (p.isRemoved() || !p.getLocation().inBounds(boundArea.getMinX(), boundArea.getMinY(),
+										boundArea.getMaxX(), boundArea.getMaxY())) {
 									break;
 								}
 								/* ends it */

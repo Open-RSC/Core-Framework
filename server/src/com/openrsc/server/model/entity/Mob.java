@@ -174,13 +174,6 @@ public abstract class Mob extends Entity {
 			return true;
 		} else if (mob.isNpc()) {
 			Npc victim = (Npc) mob;
-			if (victim.getID() == 236 && victim.getCombatTimer() > 3000) {
-				//setSuspiciousPlayer(true);
-				return true;
-			} else if (victim.getID() == 236) {
-				//setSuspiciousPlayer(true);
-				return false;
-			}
 			if (!victim.getDef().isAttackable()) {
 				//setSuspiciousPlayer(true);
 				return false;
@@ -1049,28 +1042,34 @@ public abstract class Mob extends Entity {
 		return false;
 	}
 
-	public boolean isMobInvisible(Mob m) {
-		return !(this instanceof Player) ||
-			(
-				this instanceof Player &&
-					(
-						(m instanceof Player) ?
-							((Player) m).getGroupID() < ((Player) this).getGroupID() :
-							((Player) this).isAdmin()
-					)
-			);
+	public boolean rankCheckInvisible(Mob m) {
+		if(!(this instanceof Player) || !(m instanceof Player)) {
+			return false;
+		}
+
+		Player visionPlayer = (Player) this;
+		Player playerToTest = (Player) m;
+
+		if(visionPlayer.isAdmin()) {
+			return false;
+		}
+
+		return visionPlayer.getGroupID() >= playerToTest.getGroupID();
 	}
 
-	public boolean isMobInvulnerable(Mob m) {
-		return !(this instanceof Player) ||
-			(
-				this instanceof Player &&
-					(
-						(m instanceof Player) ?
-							((Player) m).getGroupID() < ((Player) this).getGroupID() :
-							((Player) this).isAdmin()
-					)
-			);
+	public boolean rankCheckInvulnerable(Mob m) {
+		if(!(this instanceof Player) || !(m instanceof Player)) {
+			return false;
+		}
+
+		Player visionPlayer = (Player) this;
+		Player playerToTest = (Player) m;
+
+		if(visionPlayer.isAdmin()) {
+			return false;
+		}
+
+		return visionPlayer.getGroupID() >= playerToTest.getGroupID();
 	}
 
 	public int getWalkingTick() {

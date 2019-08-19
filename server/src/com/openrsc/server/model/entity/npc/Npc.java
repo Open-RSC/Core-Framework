@@ -28,6 +28,7 @@ import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.GoldDrops;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -460,17 +461,11 @@ public class Npc extends Mob {
 	}
 
 	public int getWeaponAimPoints() {
-		if (this.getID() == 236) {
-			return 71;
-		} else
-			return weaponAimPoints;
+		return weaponAimPoints;
 	}
 
 	public int getWeaponPowerPoints() {
-		/*if (this.getID() == 236) {
-			return 81;
-		} else*/
-			return weaponPowerPoints;
+		return weaponPowerPoints;
 	}
 
 	@Override
@@ -501,16 +496,16 @@ public class Npc extends Mob {
 				}
 
 
-				owner = handleLootAndXpDistribution(((Player) mob));
+				//owner = handleLootAndXpDistribution(((Player) mob));
 
 				//Determine if the RDT is hit first
 				boolean rdtHit = false;
 				Item rare = null;
 				if (getWorld().getServer().getConfig().WANT_NEW_RARE_DROP_TABLES && mob.isPlayer()) {
-					if (getWorld().standardTable.rollAccess(this.id,Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
+					if (getWorld().standardTable.rollAccess(this.id, Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
 						rdtHit = true;
 						rare = getWorld().standardTable.rollItem(Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), ((Player) mob));
-					} else if (getWorld().gemTable.rollAccess(this.id,Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
+					} else if (getWorld().gemTable.rollAccess(this.id, Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
 						rdtHit = true;
 						rare = getWorld().gemTable.rollItem(Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), ((Player) mob));
 					}
@@ -630,10 +625,10 @@ public class Npc extends Mob {
 									getWorld().getServer().getConfig().VALUABLE_DROP_MESSAGES &&
 									(
 										currentRatio > getWorld().getServer().getConfig().VALUABLE_DROP_RATIO ||
-										(
-											getWorld().getServer().getConfig().VALUABLE_DROP_EXTRAS &&
-											getWorld().getServer().getConfig().valuableDrops.contains(temp.getDef(getWorld()).getName())
-										)
+											(
+												getWorld().getServer().getConfig().VALUABLE_DROP_EXTRAS &&
+													getWorld().getServer().getConfig().valuableDrops.contains(temp.getDef(getWorld()).getName())
+											)
 									)
 								) {
 									if (amount > 1) {
@@ -681,17 +676,17 @@ public class Npc extends Mob {
 				boolean rdtHit = false;
 				Item rare = null;
 				if (getWorld().getServer().getConfig().WANT_NEW_RARE_DROP_TABLES && mob.isPlayer()) {
-					if (getWorld().standardTable.rollAccess(this.id,Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
+					if (getWorld().standardTable.rollAccess(this.id, Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
 						rdtHit = true;
 						rare = getWorld().standardTable.rollItem(Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), ((Player) mob));
-					} else if (getWorld().gemTable.rollAccess(this.id,Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
+					} else if (getWorld().gemTable.rollAccess(this.id, Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
 						rdtHit = true;
 						rare = getWorld().gemTable.rollItem(Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), ((Player) mob));
 					}
 				}
 
 				if (rare != null) {
-					if (!handleRingOfAvarice((Player)mob, rare)) {
+					if (!handleRingOfAvarice((Player) mob, rare)) {
 						GroundItem groundItem = new GroundItem(owner.getWorld(), rare.getID(), getX(), getY(), rare.getAmount(), owner);
 						groundItem.setAttribute("npcdrop", true);
 						getWorld().registerItem(groundItem);
@@ -707,7 +702,7 @@ public class Npc extends Mob {
 					total += drop.getWeight();
 					weightTotal += drop.getWeight();
 					if (drop.getWeight() == 0 && drop.getID() != -1) {
-						if (!handleRingOfAvarice((Player)mob, new Item(drop.getID(), drop.getAmount()))) {
+						if (!handleRingOfAvarice((Player) mob, new Item(drop.getID(), drop.getAmount()))) {
 							GroundItem groundItem = new GroundItem(owner.getWorld(), drop.getID(), getX(), getY(), drop.getAmount(), owner);
 							groundItem.setAttribute("npcdrop", true);
 							getWorld().registerItem(groundItem);
@@ -760,7 +755,7 @@ public class Npc extends Mob {
 										if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id() && getWorld().getServer().getEntityHandler().getItemDef(dropID).isMembersOnly() && !getWorld().getServer().getConfig().MEMBER_WORLD) {
 											continue;
 										} else if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id()) {
-											if (!handleRingOfAvarice((Player)mob, new Item(drop.getID(), drop.getAmount()))) {
+											if (!handleRingOfAvarice((Player) mob, new Item(drop.getID(), drop.getAmount()))) {
 												groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), 1, owner);
 												groundItem.setAttribute("npcdrop", true);
 												getWorld().registerItem(groundItem);
@@ -1004,6 +999,7 @@ public class Npc extends Mob {
 		}
 		return npcWithMostDamage;
 	}
+
 	private Player handleLootAndXpDistribution(Player attacker) {
 
 		Player playerWithMostDamage = attacker;
@@ -1200,15 +1196,10 @@ public class Npc extends Mob {
 
 	@Override
 	public String toString() {
-		if (this.getID() == 210 || this.getID() == 236) {
-			return "Warning! @yel@" + getWorld().getServer().getEntityHandler().getNpcDef(id).getName() + "@red@WILD@whi@";
-		} else {
-			return "Warning! @yel@" + getWorld().getServer().getEntityHandler().getNpcDef(id).getName() + "@whi@";
-		}
+		return "Warning! @yel@" + getWorld().getServer().getEntityHandler().getNpcDef(id).getName() + "@whi@";
 	}
 
 	public void updatePosition() {
-
 		npcBehavior.tick();
 		super.updatePosition();
 	}

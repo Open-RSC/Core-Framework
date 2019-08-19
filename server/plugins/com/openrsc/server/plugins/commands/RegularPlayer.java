@@ -12,6 +12,7 @@ import com.openrsc.server.plugins.listeners.action.CommandListener;
 import com.openrsc.server.sql.query.logs.ChatLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,10 +35,10 @@ public final class RegularPlayer implements CommandListener {
 	public void onCommand(String cmd, String[] args, Player player) {
 		if (isCommandAllowed(player, cmd)) {
 
-			if(messagePrefix == null) {
+			if (messagePrefix == null) {
 				messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
 			}
-			if(badSyntaxPrefix == null) {
+			if (badSyntaxPrefix == null) {
 				badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
 			}
 
@@ -209,7 +210,7 @@ public final class RegularPlayer implements CommandListener {
 				return;
 			}
 			player.teleport(player.getWorld().EVENT_X, player.getWorld().EVENT_Y);
-		} else if (cmd.equalsIgnoreCase("g") || cmd.equalsIgnoreCase("p")) {
+		} else if (cmd.equalsIgnoreCase("g") || cmd.equalsIgnoreCase("pk")) {
 			if (!player.getWorld().getServer().getConfig().WANT_GLOBAL_CHAT) return;
 			if (player.isMuted()) {
 				player.message(messagePrefix + "You are muted, you cannot send messages");
@@ -272,8 +273,7 @@ public final class RegularPlayer implements CommandListener {
 				player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getWorld(), player.getUsername(), "(PKing) " + newStr));
 				player.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(PKing) " + newStr));
 			}
-		} else if (cmd.equalsIgnoreCase("party")) {
-			if (!player.getWorld().getServer().getConfig().WANT_GLOBAL_CHAT) return;
+		} else if (cmd.equalsIgnoreCase("p")) {
 			if (player.isMuted()) {
 				player.message(messagePrefix + "You are muted, you cannot send messages");
 				return;
@@ -320,8 +320,7 @@ public final class RegularPlayer implements CommandListener {
 				if (p.getSocial().isIgnoring(player.getUsernameHash()))
 					continue;
 				if (p.getParty() == player.getParty()) {
-					//ActionSender.sendMessage(p, player, 1, MessageType.GAME, "@whi@" + newStr, player.getIcon());
-					p.message(channelPrefix + "" + player.getStaffName() + ": @or1@" + newStr);
+					ActionSender.sendMessage(p, player, 1, MessageType.CLAN_CHAT, channelPrefix + "" + player.getUsername() + ": @or1@" + newStr, player.getIcon());
 				}
 			}
 			if (cmd.equalsIgnoreCase("g")) {

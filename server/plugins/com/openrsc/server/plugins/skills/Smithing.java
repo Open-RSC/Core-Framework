@@ -52,6 +52,10 @@ public class Smithing implements InvUseOnObjectListener,
 
 		// Not an anvil or Doric's Anvil...
 		if (!(obj.getID() == 50 || obj.getID() == 177)) return false;
+		
+		if (!player.withinRange(obj, 1)) {
+			return false;
+		}
 
 		// Using hammer with anvil.
 		if (item.getID() == ItemId.HAMMER.id()) {

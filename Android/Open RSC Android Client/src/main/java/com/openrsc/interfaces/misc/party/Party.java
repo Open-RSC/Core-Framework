@@ -13,6 +13,8 @@ public class Party {
 	public int[] skull = new int[99];
 	public int[] maxHp = new int[99];
 	public int[] pMemDTimeout = new int[99];
+	public int[] partyMembersTotal = new int[99];
+	public int[] inCombat = new int[99];
 	public boolean[] allowed = new boolean[2];
 	private boolean inParty;
 	private String partyName;
@@ -39,6 +41,10 @@ public class Party {
 
 	public int getPlayerKills(int user) {
 		return playerKills[user];
+	}
+
+	int getCbLvl(int user) {
+		return cbLvl[user];
 	}
 
 	public void setPlayerKills(int user, int kills) {
