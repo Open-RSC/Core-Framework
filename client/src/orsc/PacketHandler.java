@@ -4,13 +4,6 @@ import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
 import com.openrsc.client.model.Sprite;
 import com.openrsc.interfaces.misc.CustomBankInterface;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.util.Properties;
-
 import orsc.buffers.RSBufferUtils;
 import orsc.buffers.RSBuffer_Bits;
 import orsc.enumerations.MessageType;
@@ -23,6 +16,12 @@ import orsc.net.Network_Socket;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.Properties;
 public class PacketHandler {
 
 	private final RSBuffer_Bits packetsIncoming = new RSBuffer_Bits(30000);
@@ -75,7 +74,7 @@ public class PacketHandler {
 	private void handlePacket1(int opcode, int length) {
 		try {
 			if (Config.DEBUG) {
-				System.out.println("Opcode: " + opcode + " Length: " + length);
+				System.out.println("Frame: " + mc.getFrameCounter() + ", Opcode: " + opcode + ", Length: " + length);
 			}
 
 			// Unhandled Opcodes Received...
