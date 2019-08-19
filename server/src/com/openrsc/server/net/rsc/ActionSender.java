@@ -598,6 +598,7 @@ public class ActionSender {
 		s.writeByte((byte) (server.getConfig().WANT_BANK_PRESETS ? 1 : 0)); //63
 		s.writeByte((byte) (server.getConfig().WANT_PARTIES ? 1 : 0)); //64
 		s.writeByte((byte) (server.getConfig().MINING_ROCKS_EXTENDED ? 1 : 0)); //65
+		s.writeByte((byte) Math.round(4.0 * 640.0 / server.getConfig().GAME_TICK)); //66
 		return s;
 	}
 
