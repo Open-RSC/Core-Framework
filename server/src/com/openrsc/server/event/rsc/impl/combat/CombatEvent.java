@@ -75,6 +75,11 @@ public class CombatEvent extends GameTickEvent {
 		}
 		killer.setKillType(0);
 		killed.killedBy(killer);
+		if (((Player) killer).getWorld().getServer().getConfig().WANT_PARTIES) {
+			if(((Player) killer).getParty() != null){
+				((Player) killer).getParty().sendParty();
+			}
+		}
 	}
 
 	public final void run() {
@@ -153,7 +158,9 @@ public class CombatEvent extends GameTickEvent {
 				}
 			}
 			if (getWorld().getServer().getConfig().WANT_PARTIES) {
-				((Player) target).getParty().sendParty();
+				if(((Player) target).getParty() != null){
+					((Player) target).getParty().sendParty();
+				}
 			}
 			Player opponentPlayer = ((Player) target);
 			ActionSender.sendSound(opponentPlayer, combatSound);
@@ -167,6 +174,11 @@ public class CombatEvent extends GameTickEvent {
 					combatSound = damage > 0 ? "combat3b" : "combat3a";
 				} else {
 					combatSound = damage > 0 ? "combat1b" : "combat1a";
+				}
+			}
+			if (getWorld().getServer().getConfig().WANT_PARTIES) {
+				if(((Player) hitter).getParty() != null){
+					((Player) hitter).getParty().sendParty();
 				}
 			}
 			Player attackerPlayer = (Player) hitter;
@@ -205,7 +217,7 @@ public class CombatEvent extends GameTickEvent {
 					if (p1.getParty() != null){
 						for (Player p : getWorld().getPlayers()) {
 							if(p1.getParty() == p.getParty()){
-								ActionSender.sendParty(p);
+								//ActionSender.sendParty(p);
 							}
 						}
 					}
@@ -234,7 +246,7 @@ public class CombatEvent extends GameTickEvent {
 					if (p2.getParty() != null){
 						for (Player p : getWorld().getPlayers()) {
 							if(p2.getParty() == p.getParty()){
-								ActionSender.sendParty(p);
+								//ActionSender.sendParty(p);
 							}
 						}
 					}

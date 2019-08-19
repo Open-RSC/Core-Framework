@@ -131,6 +131,7 @@ public class Config {
 	public static boolean S_PROPER_MAGIC_TREE_NAME = false;
 	public static boolean S_WANT_PARTIES = false;
 	public static boolean S_MINING_ROCKS_EXTENDED = false;
+	public static int S_MOVE_PER_FRAME = 4;
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());

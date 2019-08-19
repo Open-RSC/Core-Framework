@@ -27,7 +27,7 @@ public class WalkingQueue {
 
 	private Mob mob;
 
-	private Path path;
+	public Path path;
 
 	public WalkingQueue(Mob entity) {
 		this.mob = entity;
@@ -43,6 +43,9 @@ public class WalkingQueue {
 			reset();
 			return;
 		}
+		if (mob.isNpc() && ((Npc)mob).isChasing())
+			System.out.println("chasing hahahhaa");
+
 		Point walkPoint = path.poll();
 
 		if (mob.getAttribute("blink", false)) {

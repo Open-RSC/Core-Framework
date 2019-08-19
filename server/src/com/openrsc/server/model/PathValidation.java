@@ -21,7 +21,7 @@ public class PathValidation {
 	 * - Dueling
 	 */
 
-	private static boolean DEBUG = false;
+	public static boolean DEBUG = false;
 
 	public static boolean checkPath(World world, Point src, Point dest) {
 		final Deque<Point> path = new LinkedList<>();
@@ -169,7 +169,7 @@ public class PathValidation {
 		return isBlocking(t.traversalMask, (byte) bit, isCurrentTile);
 	}
 
-	static boolean isBlocking(int objectValue, byte bit, boolean isCurrentTile) {
+	public static boolean isBlocking(int objectValue, byte bit, boolean isCurrentTile) {
 		if ((objectValue & bit) != 0) { // There is a wall in the way
 			return true;
 		}
