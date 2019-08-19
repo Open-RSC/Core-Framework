@@ -251,8 +251,8 @@ public class PlayerDuelHandler implements PacketHandler {
 						player.resetAllExceptDueling();
 						affectedPlayer.resetAllExceptDueling();
 
-						player.setLocation(affectedPlayer.getLocation(), true);
-						affectedPlayer.setTeleporting(true);
+						player.setLocation(affectedPlayer.getLocation(), false);
+
 						// player.teleport(affectedPlayer.getX(),
 						// affectedPlayer.getY());
 
