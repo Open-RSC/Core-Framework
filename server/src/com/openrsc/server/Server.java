@@ -10,7 +10,6 @@ import com.openrsc.server.event.custom.MonitoringEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScriptLoader;
 import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -24,7 +23,6 @@ import com.openrsc.server.net.RSCProtocolEncoder;
 import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.GameLogger;
-
 import com.openrsc.server.util.NamedThreadFactory;
 import com.openrsc.server.util.rsc.CollisionFlag;
 import io.netty.bootstrap.ServerBootstrap;
@@ -39,8 +37,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -76,6 +74,7 @@ public final class Server implements Runnable {
 	private Boolean running = false;
 	private boolean initialized = false;
 
+	private long serverStartedTime = 0;
 	private long lastIncomingPacketsDuration = 0;
 	private long lastGameStateDuration = 0;
 	private long lastEventsDuration = 0;
@@ -236,8 +235,6 @@ public final class Server implements Runnable {
 			LOGGER.catching(t);
 			System.exit(1);
 		}
-
-		lastClientUpdate = System.currentTimeMillis();
 	}
 
 	public void start() {
@@ -245,6 +242,9 @@ public final class Server implements Runnable {
 			if (!isInitialized()) {
 				initialize();
 			}
+
+			lastClientUpdate = System.currentTimeMillis();
+			serverStartedTime = System.currentTimeMillis();
 
 			running = true;
 			scheduledExecutor.scheduleAtFixedRate(this, 0, 1, TimeUnit.MILLISECONDS);
@@ -650,6 +650,14 @@ public final class Server implements Runnable {
 
 	public final long getTimeLate() {
 		return timeLate;
+	}
+
+	public final long getServerStartedTime() {
+		return serverStartedTime;
+	}
+
+	public final long getCurrentTick() {
+		return (System.currentTimeMillis() - getServerStartedTime()) / getConfig().GAME_TICK;
 	}
 
 	public void skipTicks(final long ticks) {
