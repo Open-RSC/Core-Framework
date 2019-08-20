@@ -4,6 +4,7 @@ import com.openrsc.server.Server;
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.content.DropTable;
 import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.content.market.Market;
@@ -599,6 +600,11 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 				throw new IllegalArgumentException("Quest ID must be unique");
 			}
 		}
+
+		if (!getServer().getConfig().WANT_CUSTOM_QUESTS
+		&& quest.getQuestId() > Quests.LEGENDS_QUEST)
+			return;
+
 		getQuests().add(quest);
 	}
 

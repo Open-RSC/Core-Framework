@@ -515,8 +515,9 @@ public class ActionSender {
 			LOGGER.info(server.getConfig().WANT_BANK_PRESETS + " 63");
 			LOGGER.info(server.getConfig().WANT_PARTIES + " 64");
 			LOGGER.info(server.getConfig().MINING_ROCKS_EXTENDED + " 65");
-			LOGGER.info(server.getConfig().WANT_NEW_RARE_DROP_TABLES + " 66");
-
+			LOGGER.info(server.getConfig().WANT_NEW_RARE_DROP_TABLES + "");
+			LOGGER.info(server.getConfig().WANT_LEFTCLICK_WEBS + " 67");
+			LOGGER.info(server.getConfig().WANT_CUSTOM_QUESTS + "");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs(server);
 		ConnectionAttachment attachment = new ConnectionAttachment();
