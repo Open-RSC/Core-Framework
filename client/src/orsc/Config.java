@@ -56,6 +56,7 @@ public class Config {
 	public static boolean C_VOLUME_TO_ROTATE = false;
 	public static boolean C_ANDROID_INV_TOGGLE = false;
 	public static int C_LAST_ZOOM = 75;
+	public static int C_MOVE_PER_FRAME = 4;
 
 	/* Experience Config Menu */
 	public static int C_EXPERIENCE_COUNTER = 1;
@@ -131,7 +132,6 @@ public class Config {
 	public static boolean S_PROPER_MAGIC_TREE_NAME = false;
 	public static boolean S_WANT_PARTIES = false;
 	public static boolean S_MINING_ROCKS_EXTENDED = false;
-	public static int S_MOVE_PER_FRAME = 4;
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());

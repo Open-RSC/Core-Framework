@@ -718,7 +718,13 @@ public final class Event implements CommandListener {
 
 				p.checkEquipment();
 				player.message(messagePrefix + "You have set " + p.getUsername() + "'s stats to level " + level);
+				if(player.getParty() != null){
+					player.getParty().sendParty();
+				}
 				if(p.getUsernameHash() != player.getUsernameHash()) {
+					if(p.getParty() != null){
+						p.getParty().sendParty();
+					}
 					p.message(messagePrefix + "All of your stats have been set to level " + level + " by a staff member");
 				}
 			}
