@@ -158,11 +158,14 @@ public class AStarPathfinder {
 			next.selectNode();
 			if (debug) {
 				panel.repaint();
+
+				/*
+				// We should no longer put threads to sleep
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException a) {
 					a.printStackTrace();
-				}
+				}*/
 
 			}
 		}
