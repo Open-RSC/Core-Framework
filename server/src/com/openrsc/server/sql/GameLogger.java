@@ -1,5 +1,6 @@
 package com.openrsc.server.sql;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.Server;
 import com.openrsc.server.sql.query.Query;
 import com.openrsc.server.sql.query.ResultQuery;
@@ -7,8 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.SQLException;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public final class GameLogger implements Runnable {
@@ -20,15 +20,13 @@ public final class GameLogger implements Runnable {
 
 	private final BlockingQueue<Query> queries;
 	private final AtomicBoolean running;
-	private final Object lock;
-	private final Thread thread;
 	private final Server server;
+	private final ScheduledExecutorService scheduledExecutor;
 
 	public GameLogger(Server server) {
 		this.server = server;
 
-		thread = new Thread(this, getServer().getName()+" : DatabaseLogging");
-		lock = new Object();
+		scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getServer().getName()+" : DatabaseLogging").build());
 		running = new AtomicBoolean(false);
 		queries = new ArrayBlockingQueue<Query>(10000);
 	}
@@ -40,7 +38,7 @@ public final class GameLogger implements Runnable {
 	public void start() {
 		synchronized(running) {
 			running.set(true);
-			thread.start();
+			scheduledExecutor.scheduleAtFixedRate(this, 0, 50, TimeUnit.MILLISECONDS);
 		}
 	}
 
@@ -57,11 +55,6 @@ public final class GameLogger implements Runnable {
 				if (queries.size() > 0 && getServer().getDatabaseConnection().isConnected()) {
 					pollNextQuery();
 				}
-			}
-
-			try {
-				Thread.sleep(50);
-			} catch (InterruptedException e) {
 			}
 		}
 		LOGGER.info("Shutting down database thread.. executing remaining queries");
