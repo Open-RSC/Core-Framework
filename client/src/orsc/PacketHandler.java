@@ -811,7 +811,7 @@ public class PacketHandler {
 		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank, wantPlayerCommands;
 		int getFPS, wantEmail, wantRegistrationLimit, allowResize, lenientContactDetails, wantFatigue, wantCustomSprites;
 		int fishingSpotsDepletable, properMagicTreeName, wantRunecrafting, wantCustomLandscape, wantEquipmentTab;
-		int wantBankPresets, wantParties, miningRocksExtended, movePerFrame;
+		int wantBankPresets, wantParties, miningRocksExtended, movePerFrame, wantLeftclickWebs;
 
 		String logoSpriteID;
 
@@ -882,6 +882,7 @@ public class PacketHandler {
 			wantParties = this.getClientStream().getUnsignedByte(); // 64
 			miningRocksExtended = this.getClientStream().getUnsignedByte(); //65
 			movePerFrame = this.getClientStream().getByte(); //66
+			wantLeftclickWebs = this.getClientStream().getByte(); //67
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -949,6 +950,7 @@ public class PacketHandler {
 			wantParties = packetsIncoming.getUnsignedByte(); // 64
 			miningRocksExtended = packetsIncoming.getUnsignedByte(); //65
 			movePerFrame = packetsIncoming.getByte(); //66
+			wantLeftclickWebs = packetsIncoming.getByte(); //67
 		}
 
 		if (Config.DEBUG) {
@@ -1018,7 +1020,8 @@ public class PacketHandler {
 					"\nS_WANT_BANK_PRESETS  "   + wantEquipmentTab + // 63
 					"\nS_WANT_PARTIES " + wantClans + // 64
 					"\nS_MINING_ROCKS_EXTENDED " + miningRocksExtended +// 65
-					"\nC_MOVE_PER_FRAME " + movePerFrame// 66
+					"\nC_MOVE_PER_FRAME " + movePerFrame +// 66
+					"\nS_WANT_LEFTCLICK_WEBS " + wantLeftclickWebs// 67
 					);
 		}
 
@@ -1090,6 +1093,7 @@ public class PacketHandler {
 		props.setProperty("S_WANT_PARTIES", wantParties == 1 ? "true" : "false"); //64
 		props.setProperty("S_MINING_ROCKS_EXTENDED", miningRocksExtended == 1 ? "true" : "false"); //65
 		props.setProperty("C_MOVE_PER_FRAME", String.valueOf(movePerFrame)); //66
+		props.setProperty("S_WANT_LEFTCLICK_WEBS", wantLeftclickWebs == 1 ? "true" : "false"); //67
 		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(

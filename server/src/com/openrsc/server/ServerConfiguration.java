@@ -235,6 +235,7 @@ public class ServerConfiguration {
 	public boolean WANT_PARTIES = false;
 	public boolean MINING_ROCKS_EXTENDED = false;
 	public boolean WANT_NEW_RARE_DROP_TABLES = false;
+	public boolean WANT_LEFTCLICK_WEBS = false;
 	public boolean WANT_CUSTOM_WALK_SPEED = false;
 	public int MAX_TICKS_UNTIL_FULL_WALKING_SPEED = 5;
 	//strict check on level requirements for "glitched" validations on rsc
@@ -257,11 +258,11 @@ public class ServerConfiguration {
 	public boolean WANT_BLURBERRY_BADGE = false;
 	public boolean WANT_SHOW_KITTENS_CIVILLIAN = false;
 	public boolean WANT_BARTER_WORMBRAINS = false;
+
 	public final int RING_OF_RECOIL_LIMIT = 40;
 	public final int RING_OF_FORGING_USES = 75;
 	public final int DWARVEN_RING_USES = 29;
 	public final int DWARVEN_RING_BONUS = 3;
-
 	public List<String> valuableDrops;
 
 
@@ -380,6 +381,7 @@ public class ServerConfiguration {
 		WANT_PARTIES = Boolean.parseBoolean(props.getProperty("want_parties"));
 		MINING_ROCKS_EXTENDED = Boolean.parseBoolean(props.getProperty("mining_rocks_extended"));
 		WANT_NEW_RARE_DROP_TABLES = Boolean.parseBoolean(props.getProperty("want_new_rare_drop_tables"));
+		WANT_LEFTCLICK_WEBS = Boolean.parseBoolean(props.getProperty("want_leftclick_webs"));
 
 		NPC_KILL_LIST = Boolean.parseBoolean(props.getProperty("npc_kill_list"));
 		NPC_KILL_MESSAGES = Boolean.parseBoolean(props.getProperty("npc_kill_messages"));

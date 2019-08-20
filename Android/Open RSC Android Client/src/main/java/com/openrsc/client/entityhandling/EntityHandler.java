@@ -5062,7 +5062,7 @@ public class EntityHandler {
 				192, 2, 2, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
 				1, 192, 0, 0, i++));
-		doors.add(new DoorDef("web", "A spider's web", "WalkTo", "Examine", 1,
+		doors.add(new DoorDef("web", "A spider's web", Config.S_WANT_LEFTCLICK_WEBS ? "Slice" : "WalkTo", Config.S_WANT_LEFTCLICK_WEBS ? "WalkTo" : "Examine", 1,
 				1, 192, 26, 26, i++));
 		doors.add(new DoorDef("Door", "The door is shut", "Open", "Examine", 1,
 				1, 192, 0, 0, i++));
