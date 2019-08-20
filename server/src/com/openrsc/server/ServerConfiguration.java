@@ -221,6 +221,7 @@ public class ServerConfiguration {
 	public int MAX_WALKING_SPEED = 1;
 	public boolean SHOW_UNIDENTIFIED_HERB_NAMES = false;
 	public boolean WANT_QUEST_STARTED_INDICATOR = false;
+	public boolean WANT_CUSTOM_QUESTS = false;
 	public boolean FISHING_SPOTS_DEPLETABLE = false;
 	public boolean PROPER_MAGIC_TREE_NAME = false;
 	public boolean CRYSTAL_KEY_GIVES_XP = false;
@@ -382,6 +383,7 @@ public class ServerConfiguration {
 		MINING_ROCKS_EXTENDED = Boolean.parseBoolean(props.getProperty("mining_rocks_extended"));
 		WANT_NEW_RARE_DROP_TABLES = Boolean.parseBoolean(props.getProperty("want_new_rare_drop_tables"));
 		WANT_LEFTCLICK_WEBS = Boolean.parseBoolean(props.getProperty("want_leftclick_webs"));
+		WANT_CUSTOM_QUESTS = Boolean.parseBoolean(props.getProperty("want_custom_quests"));
 
 		NPC_KILL_LIST = Boolean.parseBoolean(props.getProperty("npc_kill_list"));
 		NPC_KILL_MESSAGES = Boolean.parseBoolean(props.getProperty("npc_kill_messages"));
