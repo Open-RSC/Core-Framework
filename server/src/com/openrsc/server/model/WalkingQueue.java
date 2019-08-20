@@ -43,9 +43,6 @@ public class WalkingQueue {
 			reset();
 			return;
 		}
-		if (mob.isNpc() && ((Npc)mob).isChasing())
-			System.out.println("chasing hahahhaa");
-
 		Point walkPoint = path.poll();
 
 		if (mob.getAttribute("blink", false)) {
