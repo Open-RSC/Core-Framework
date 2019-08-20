@@ -605,6 +605,7 @@ public class ActionSender {
 		s.writeByte((byte) (server.getConfig().WANT_PARTIES ? 1 : 0)); //64
 		s.writeByte((byte) (server.getConfig().MINING_ROCKS_EXTENDED ? 1 : 0)); //65
 		s.writeByte((byte) stepsPerFrame); //66
+		s.writeByte((byte) (server.getConfig().WANT_LEFTCLICK_WEBS ? 1 : 0)); //67
 		return s;
 	}
 

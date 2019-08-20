@@ -1022,7 +1022,7 @@ INSERT INTO `openrsc_itemdef` (`id`, `bankNoteID`, `originalItemID`, `name`, `de
 (9, 1299, -1, 'Iron Plate Mail Legs', 'These look pretty heavy', '', 0, 0, 0, 0, 1, 38, 644, 2, 1, 1, 10, 0, 0, 0, 0, 280),
 (10, 0, -1, 'Coins', 'Lovely money!', '', 0, 0, 1, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1),
 (11, 0, -1, 'Bronze Arrows', 'Arrows with bronze heads', '', 0, 0, 1, 0, 1, 0, 1000, 12, 1, 4, 0, 0, 0, 0, 0, 2),
-(12, 1300, -1, 'Iron Axe', 'A woodcutters axe', '', 0, 0, 0, 0, 1, 110, 16, 4, 1, 0, 0, 5, 7, 0, 0, 56),
+(12, 1300, -1, 'Iron Axe', 'A woodcutters axe', '', 0, 0, 0, 0, 1, 231, 16, 4, 1, 0, 0, 5, 7, 0, 0, 56),
 (13, 1301, -1, 'Knife', 'A dangerous looking knife', '', 0, 0, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 6),
 (14, 1302, -1, 'Logs', 'A number of wooden logs', '', 0, 0, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 4),
 (15, 1303, -1, 'Leather Armour', 'Better than no armour!', '', 0, 0, 0, 0, 1, 46, 64, 6, 1, 1, 6, 0, 0, 0, 0, 21),
