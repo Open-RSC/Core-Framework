@@ -6,7 +6,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
 import com.openrsc.server.model.entity.update.HpUpdate;
 import com.openrsc.server.model.world.World;
-import com.openrsc.server.net.rsc.ActionSender;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -57,7 +56,7 @@ public class StatRestorationEvent extends GameTickEvent {
 				restored = true;
 				if(getOwner().isPlayer() && ((Player) getOwner()).getParty() != null){
 					getOwner().getUpdateFlags().setHpUpdate(new HpUpdate(getOwner(), 0));
-					if (((Player) getOwner()).getWorld().getServer().getConfig().WANT_PARTIES) {
+					if (getWorld().getServer().getConfig().WANT_PARTIES) {
 						if(((Player) getOwner()).getParty() != null){
 							((Player) getOwner()).getParty().sendParty();
 						}
@@ -72,9 +71,9 @@ public class StatRestorationEvent extends GameTickEvent {
 				}
 			}
 		}
-		if (restored)
+		if (restored) {
 			this.lastRestoration = System.currentTimeMillis();
-		getOwner().getSkills().sendUpdateAll();
+		}
 	}
 
 	/**

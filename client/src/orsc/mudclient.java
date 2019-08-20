@@ -1453,13 +1453,9 @@ public final class mudclient implements Runnable {
 			}
 
 			// TODO: Inauthentic to loop through packets like this.
-			int len = 0;
-			do {
-				len = this.packetHandler.getClientStream().readIncomingPacket(packetHandler.getPacketsIncoming());
+			int len = this.packetHandler.getClientStream().readIncomingPacket(packetHandler.getPacketsIncoming());
 				if (len > 0)
 					this.packetHandler.handlePacket(packetHandler.getPacketsIncoming().getUnsignedByte(), len);
-			} while(len > 0);
-
 		} catch (RuntimeException var6) {
 			throw GenUtil.makeThrowable(var6, "client.SB(" + "dummy" + ')');
 		}

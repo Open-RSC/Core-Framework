@@ -582,7 +582,7 @@ public final class Event implements CommandListener {
 			player.setAccessingBank(true);
 			ActionSender.showBank(player);
 		}
-		else if (cmd.equalsIgnoreCase("stat") ||cmd.equalsIgnoreCase("stats") || cmd.equalsIgnoreCase("setstat") || cmd.equalsIgnoreCase("setstats")) {
+		else if (cmd.equalsIgnoreCase("stat") || cmd.equalsIgnoreCase("stats") || cmd.equalsIgnoreCase("setstat") || cmd.equalsIgnoreCase("setstats")) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [level] OR ");
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [level] OR ");
@@ -706,7 +706,7 @@ public final class Event implements CommandListener {
 
 				p.getSkills().setLevelTo(stat, level);
 				p.checkEquipment();
-				player.message(messagePrefix + "You have set " + p.getUsername() + "'s " + statName + "  to level " + level);
+				player.message(messagePrefix + "You have set " + p.getUsername() + "'s " + statName + " to level " + level);
 				if(p.getUsernameHash() != player.getUsernameHash()) {
 					p.message(messagePrefix + "Your " + statName + " has been set to level " + level + " by a staff member");
 				}
