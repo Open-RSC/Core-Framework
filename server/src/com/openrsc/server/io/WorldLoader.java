@@ -81,7 +81,7 @@ public class WorldLoader {
 					tile.traversalMask |= 0x40; // 64
 				}
 
-				byte verticalWall = sectorTile.verticalWall;
+				int verticalWall = sectorTile.verticalWall & 0xFF;
 				if (verticalWall > 0
 					&& getWorld().getServer().getEntityHandler().getDoorDef(verticalWall - 1)
 					.getUnknown() == 0
@@ -96,7 +96,7 @@ public class WorldLoader {
 					}
 				}
 
-				byte horizontalWall = sectorTile.horizontalWall;
+				int horizontalWall = sectorTile.horizontalWall & 0xFF;
 				if (horizontalWall > 0
 					&& getWorld().getServer().getEntityHandler().getDoorDef(horizontalWall - 1)
 					.getUnknown() == 0
