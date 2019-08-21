@@ -13,63 +13,12 @@ import com.openrsc.data.DataFileDecrypter;
 import com.openrsc.data.DataOperations;
 import com.openrsc.interfaces.NComponent;
 import com.openrsc.interfaces.NCustomComponent;
-import com.openrsc.interfaces.misc.AchievementGUI;
-import com.openrsc.interfaces.misc.AuctionHouse;
-import com.openrsc.interfaces.misc.BankPinInterface;
-import com.openrsc.interfaces.misc.CustomBankInterface;
-import com.openrsc.interfaces.misc.DoSkillInterface;
-import com.openrsc.interfaces.misc.ExperienceConfigInterface;
-import com.openrsc.interfaces.misc.FishingTrawlerInterface;
-import com.openrsc.interfaces.misc.IronManInterface;
-import com.openrsc.interfaces.misc.LostOnDeathInterface;
-import com.openrsc.interfaces.misc.OnlineListInterface;
-import com.openrsc.interfaces.misc.ProgressBarInterface;
-import com.openrsc.interfaces.misc.QuestGuideInterface;
-import com.openrsc.interfaces.misc.SkillGuideInterface;
-import com.openrsc.interfaces.misc.TerritorySignupInterface;
+import com.openrsc.interfaces.misc.*;
 import com.openrsc.interfaces.misc.clan.Clan;
 import com.openrsc.interfaces.misc.party.Party;
-
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-
-//import javax.sound.sampled.AudioSystem;
-//import javax.sound.sampled.Clip;
-//import javax.sound.sampled.LineEvent;
-
 import orsc.buffers.RSBufferUtils;
-import orsc.enumerations.GameMode;
-import orsc.enumerations.InputXAction;
-import orsc.enumerations.MenuItemAction;
-import orsc.enumerations.MessageTab;
-import orsc.enumerations.MessageType;
-import orsc.enumerations.ORSCharacterDirection;
-import orsc.enumerations.PasswordChangeMode;
-import orsc.enumerations.SocialPopupMode;
-import orsc.graphics.gui.InputXPrompt;
-import orsc.graphics.gui.KillAnnouncer;
-import orsc.graphics.gui.KillAnnouncerQueue;
-import orsc.graphics.gui.Menu;
-import orsc.graphics.gui.MessageHistory;
-import orsc.graphics.gui.Panel;
-import orsc.graphics.gui.SocialLists;
+import orsc.enumerations.*;
+import orsc.graphics.gui.*;
 import orsc.graphics.three.CollisionFlag;
 import orsc.graphics.three.RSModel;
 import orsc.graphics.three.Scene;
@@ -83,8 +32,17 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
 
-import static orsc.Config.*;
+//import javax.sound.sampled.AudioSystem;
+//import javax.sound.sampled.Clip;
+//import javax.sound.sampled.LineEvent;
+import java.io.*;
+import java.security.SecureRandom;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
+import static orsc.Config.*;
 import static orsc.multiclient.ClientPort.saveHideIp;
 
 public final class mudclient implements Runnable {
@@ -1493,6 +1451,8 @@ public final class mudclient implements Runnable {
 				this.lostConnection(123);
 				return;
 			}
+
+			// TODO: Inauthentic to loop through packets like this.
 			int len = this.packetHandler.getClientStream().readIncomingPacket(packetHandler.getPacketsIncoming());
 			if (len > 0)
 				this.packetHandler.handlePacket(packetHandler.getPacketsIncoming().getUnsignedByte(), len);
@@ -5808,8 +5768,7 @@ public final class mudclient implements Runnable {
 				} else if (this.inputX_Action == InputXAction.BANK_DEPOSIT) {
 					try {
 						if ((Config.S_WANT_CUSTOM_BANKS && this.bank.selectedInventorySlot >= 0) ||
-							(!Config.S_WANT_CUSTOM_BANKS && this.bank.selectedBankSlot >= 0)) {
-
+								(!Config.S_WANT_CUSTOM_BANKS && this.bank.selectedBankSlot >= 0)) {
 							if (str.length() > 10) {
 								str = str.substring(str.length() - 10);
 							}
@@ -5995,7 +5954,7 @@ public final class mudclient implements Runnable {
 			this.welcomeScreenShown = false;
 			this.getSurface().blackScreen(true);
 			if (this.loginScreenNumber == 0 || this.loginScreenNumber == 2 || this.loginScreenNumber == 3) {
-				int var2 = this.frameCounter * 2 % 3072;
+				int var2 = this.getFrameCounter() * 2 % 3072;
 				if (var2 < 1024) {
 					this.getSurface().drawSprite(getSurface().spriteVerts[0], 0, isAndroid() ? 140 : 10);
 					if (var2 > 768) {
@@ -6178,13 +6137,13 @@ public final class mudclient implements Runnable {
 				var13 = 5;
 				x -= overlayMovement * def.getCombatSprite() / 100;
 				var11 = 2;
-				var14 = var13 * 3 + this.animFrameToSprite_CombatA[this.frameCounter / (def.getCombatModel() - 1) % 8];
+				var14 = var13 * 3 + this.animFrameToSprite_CombatA[this.getFrameCounter() / (def.getCombatModel() - 1) % 8];
 			} else if (npc.direction == ORSCharacterDirection.COMBAT_B) {
 				var13 = 5;
 				var11 = 2;
 				var12 = true;
 				x += def.getCombatSprite() * overlayMovement / 100;
-				var14 = this.animFrameToSprite_CombatB[this.frameCounter / def.getCombatModel() % 8] + var13 * 3;
+				var14 = this.animFrameToSprite_CombatB[this.getFrameCounter() / def.getCombatModel() % 8] + var13 * 3;
 			}
 
 			int var15;
@@ -6316,13 +6275,13 @@ public final class mudclient implements Runnable {
 					actualAnimDir = 5;
 					x += overlayMovement * 5 / 100;
 					mirrorX = true;
-					spriteOffset = this.animFrameToSprite_CombatB[this.frameCounter / 6 % 8] + actualAnimDir * 3;
+					spriteOffset = this.animFrameToSprite_CombatB[this.getFrameCounter() / 6 % 8] + actualAnimDir * 3;
 				} else if (player.direction == ORSCharacterDirection.COMBAT_A) {
 					x -= overlayMovement * 5 / 100;
 					actualAnimDir = 5;
 					mirrorX = false;
 					wantedAnimDir = 2;
-					spriteOffset = this.animFrameToSprite_CombatA[this.frameCounter / 5 % 8] + actualAnimDir * 3;
+					spriteOffset = this.animFrameToSprite_CombatA[this.getFrameCounter() / 5 % 8] + actualAnimDir * 3;
 				}
 
 				for (int lay = 0; lay < 12; ++lay) {
@@ -9176,10 +9135,10 @@ public final class mudclient implements Runnable {
 		// inventory close
 		if (!C_ANDROID_INV_TOGGLE) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Close inventory with menu - @red@Off", 7, null, null);
+					"@whi@Close inventory with menu - @red@Off", 7, null, null);
 		} else {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Close inventory with menu - @gre@On", 7, null, null);
+					"@whi@Close inventory with menu - @gre@On", 7, null, null);
 		}
 
 		// logout text
@@ -13571,15 +13530,13 @@ public final class mudclient implements Runnable {
 					return;
 				try {
 					// PC sound code:
-					/*
-					final Clip clip = AudioSystem.getClip();
+					/*final Clip clip = AudioSystem.getClip();
 					clip.addLineListener(myLineEvent -> {
 						if (myLineEvent.getType() == LineEvent.Type.STOP)
 							clip.close();
 					});
 					clip.open(AudioSystem.getAudioInputStream(sound));
-					clip.start();
-					 */
+					clip.start();*/
 					// Android sound code:
 					//int dataLength = DataOperations.getDataFileLength(key + ".pcm", soundData);
 					//int offset = DataOperations.getDataFileOffset(key + ".pcm", soundData);
@@ -15674,7 +15631,7 @@ public final class mudclient implements Runnable {
 					if (!this.errorLoadingData) {
 
 						try {
-							++this.frameCounter;
+							this.frameCounter = this.getFrameCounter() + 1;
 							if (this.currentViewMode == GameMode.LOGIN) {
 								this.lastMouseAction = 0;
 								this.handleLoginScreenInput(2);
@@ -16463,6 +16420,10 @@ public final class mudclient implements Runnable {
 			if (spell == spellID)
 				return true;
 		return false;
+	}
+
+	public int getFrameCounter() {
+		return frameCounter;
 	}
 
 	class XPNotification {
