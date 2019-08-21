@@ -9145,10 +9145,10 @@ public final class mudclient implements Runnable {
 		// inventory close
 		if (!C_ANDROID_INV_TOGGLE) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Close inventory with menu - @red@Off", 7, null, null);
+					"@whi@Close inventory with menu - @red@Off", 7, null, null);
 		} else {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Close inventory with menu - @gre@On", 7, null, null);
+					"@whi@Close inventory with menu - @gre@On", 7, null, null);
 		}
 
 		// logout text
@@ -13549,15 +13549,13 @@ public final class mudclient implements Runnable {
 					return;
 				try {
 					// PC sound code:
-					/*
-					final Clip clip = AudioSystem.getClip();
+					/*final Clip clip = AudioSystem.getClip();
 					clip.addLineListener(myLineEvent -> {
 						if (myLineEvent.getType() == LineEvent.Type.STOP)
 							clip.close();
 					});
 					clip.open(AudioSystem.getAudioInputStream(sound));
-					clip.start();
-					 */
+					clip.start();*/
 					// Android sound code:
 					//int dataLength = DataOperations.getDataFileLength(key + ".pcm", soundData);
 					//int offset = DataOperations.getDataFileOffset(key + ".pcm", soundData);
