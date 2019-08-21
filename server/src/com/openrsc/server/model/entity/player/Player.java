@@ -2575,6 +2575,13 @@ public final class Player extends Mob {
 		//}
 	}
 
+	public boolean getShowNPCKC() {
+		if (getCache().hasKey("show_npc_kc")) {
+			return getCache().getBoolean("show_npc_kc");
+		}
+		return false;
+	}
+
 	public boolean getAndroidInvToggle() {
 		if (getCache().hasKey("android_inv_toggle")) {
 			return getCache().getBoolean("android_inv_toggle");

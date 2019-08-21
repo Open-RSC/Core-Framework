@@ -22,6 +22,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isPhoenixGang;
@@ -394,21 +396,14 @@ public final class RegularPlayer implements CommandListener {
 			player.message(messagePrefix + " the current time/date is:@gre@ " + new java.util.Date().toString());
 		} else if (player.getWorld().getServer().getConfig().NPC_KILL_LIST && cmd.equalsIgnoreCase("kills")) {
 			StringBuilder kills = new StringBuilder("NPC Kill List for " + player.getUsername() + " % %");
-			try {
-				PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement(
-					"SELECT * FROM `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "npckills` WHERE playerID = ? ORDER BY killCount DESC LIMIT 16");
-				statement.setInt(1, player.getDatabaseID());
-				ResultSet result = statement.executeQuery();
-				while (result.next()) {
-					int npcID = result.getInt("npcID");
-					int killCount = result.getInt("killCount");
-					kills.append("NPC: ").append(player.getWorld().getServer().getEntityHandler().getNpcDef(npcID).getName()).append(" - Kill Count: ").append(killCount).append("%");
+				//PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement(
+				//	"SELECT * FROM `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "npckills` WHERE playerID = ? ORDER BY killCount DESC LIMIT 16");
+				//statement.setInt(1, player.getDatabaseID());
+				//ResultSet result = statement.executeQuery();
+				for (Map.Entry<Integer, Integer> entry : player.getKillCache().entrySet()) {
+					kills.append("NPC: ").append(player.getWorld().getServer().getEntityHandler().getNpcDef(entry.getKey()).getName()).append(" - Kill Count: ").append(entry.getValue()).append("%");
 				}
-				result.close();
 				ActionSender.sendBox(player, kills.toString(), true);
-			} catch (SQLException e) {
-				LOGGER.catching(e);
-			}
 		} else if (cmd.equalsIgnoreCase("commands")) {
 			ActionSender.sendBox(player, ""
 				+ "@yel@Commands available: %"

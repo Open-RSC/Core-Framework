@@ -8883,6 +8883,16 @@ public final class mudclient implements Runnable {
 			}
 		}
 
+		// npc kill count messages
+		if (S_NPC_KILL_MESSAGES) {
+			if (!C_NPC_KC) {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+					"@whi@Show NPC killcount - @red@Off", 38, null, null);
+			} else {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+					"@whi@Show NPC killcount - @gre@On", 38, null, null);
+			}
+		}
 		// show roof
 		if (S_SHOW_ROOF_TOGGLE) {
 			if (!C_HIDE_ROOFS) {
@@ -9352,6 +9362,15 @@ public final class mudclient implements Runnable {
 				this.packetHandler.getClientStream().writeBuffer1.putByte(25);
 				boolean optionExperienceDrops = C_EXPERIENCE_DROPS;
 				this.packetHandler.getClientStream().writeBuffer1.putByte(optionExperienceDrops ? 1 : 0);
+				this.packetHandler.getClientStream().finishPacket();
+			}
+
+			// npc killcount shows
+			if (settingIndex == 38 && this.mouseButtonClick == 1 && S_NPC_KILL_MESSAGES) {
+				C_NPC_KC = !C_NPC_KC;
+				this.packetHandler.getClientStream().newPacket(111);
+				this.packetHandler.getClientStream().writeBuffer1.putByte(38);
+				this.packetHandler.getClientStream().writeBuffer1.putByte(C_NPC_KC ? 1 : 0);
 				this.packetHandler.getClientStream().finishPacket();
 			}
 		}
@@ -16405,6 +16424,10 @@ public final class mudclient implements Runnable {
 
 	public void setAndroidInvToggle(boolean b) {
 		C_ANDROID_INV_TOGGLE = b;
+	}
+
+	public void setShowNPCKC(boolean b) {
+		C_NPC_KC = b;
 	}
 
 	public void setHideNameTag(boolean b) {

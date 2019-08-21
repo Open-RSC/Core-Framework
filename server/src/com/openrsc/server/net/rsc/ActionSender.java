@@ -443,6 +443,7 @@ public class ActionSender {
 		s.writeByte((byte) (player.getHideNameTag() ? 1 : 0)); // 35
 		s.writeByte((byte) (player.getPartyInviteSetting() ? 1 : 0)); // 36
 		s.writeByte((byte) (player.getAndroidInvToggle() ? 1 : 0)); //37
+		s.writeByte((byte) (player.getShowNPCKC() ? 1 : 0)); //38
 		player.write(s.toPacket());
 	}
 
@@ -607,6 +608,7 @@ public class ActionSender {
 		s.writeByte((byte) (server.getConfig().MINING_ROCKS_EXTENDED ? 1 : 0)); //65
 		s.writeByte((byte) stepsPerFrame); //66
 		s.writeByte((byte) (server.getConfig().WANT_LEFTCLICK_WEBS ? 1 : 0)); //67
+		s.writeByte((byte) ((server.getConfig().NPC_KILL_LOGGING && server.getConfig().NPC_KILL_MESSAGES) ? 1 : 0)); //68
 		return s;
 	}
 

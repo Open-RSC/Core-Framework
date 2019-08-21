@@ -484,17 +484,13 @@ public class Npc extends Mob {
 				//otherwise we will display the message for all NPCs if NPC kill messages are enabled if there is no filter.
 				//Also, if we don't have NPC kill logging enabled, we can't have NPC kill messages.
 				if (getWorld().getServer().getConfig().NPC_KILL_LOGGING) {
-					if (getWorld().getServer().getConfig().NPC_KILL_MESSAGES && getWorld().getServer().getConfig().NPC_KILL_MESSAGES_FILTER) {
-						if (getWorld().getServer().getConfig().NPC_KILL_MESSAGES_NPCs.contains(this.getDef().getName())) {
-							owner.addNpcKill(this, true);
-						} else {
-							owner.addNpcKill(this, false);
-						}
-					} else {
-						owner.addNpcKill(this, getWorld().getServer().getConfig().NPC_KILL_MESSAGES);
-					}
+					if (owner.getCache().hasKey("show_npc_kc") && owner.getCache().getBoolean("show_npc_kc")
+						&& getWorld().getServer().getConfig().NPC_KILL_MESSAGES) {
+							owner.addNpcKill(this,!getWorld().getServer().getConfig().NPC_KILL_MESSAGES_FILTER
+								|| getWorld().getServer().getConfig().NPC_KILL_MESSAGES_NPCs.contains(this.getDef().getName()));
+					} else
+						owner.addNpcKill(this, false);
 				}
-
 
 				//owner = handleLootAndXpDistribution(((Player) mob));
 

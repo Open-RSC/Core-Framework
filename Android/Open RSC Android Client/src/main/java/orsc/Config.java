@@ -27,6 +27,7 @@ public class Config {
 
 	/* Configurable: */
 	public static boolean C_EXPERIENCE_DROPS = false;
+	public static boolean C_NPC_KC = false;
 	public static boolean C_BATCH_PROGRESS_BAR = false;
 	public static boolean C_HIDE_ROOFS = false;
 	public static boolean C_HIDE_FOG = false;
@@ -91,6 +92,7 @@ public class Config {
 	public static boolean S_WANT_EQUIPMENT_TAB = false;
 	public static boolean S_WANT_BANK_PRESETS = false;
 	public static boolean S_WANT_LEFTCLICK_WEBS = false;
+	public static boolean S_NPC_KILL_MESSAGES = false;
 	// if you change these, and the config file,
 	// they will also change the options menu to
 	// 2-tabs (3 on android). (Not enough room for

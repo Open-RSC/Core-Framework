@@ -811,7 +811,7 @@ public class PacketHandler {
 		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank, wantPlayerCommands;
 		int getFPS, wantEmail, wantRegistrationLimit, allowResize, lenientContactDetails, wantFatigue, wantCustomSprites;
 		int fishingSpotsDepletable, properMagicTreeName, wantRunecrafting, wantCustomLandscape, wantEquipmentTab;
-		int wantBankPresets, wantParties, miningRocksExtended, movePerFrame, wantLeftclickWebs;
+		int wantBankPresets, wantParties, miningRocksExtended, movePerFrame, wantLeftclickWebs, npcKillMessages;
 
 		String logoSpriteID;
 
@@ -883,6 +883,7 @@ public class PacketHandler {
 			miningRocksExtended = this.getClientStream().getUnsignedByte(); //65
 			movePerFrame = this.getClientStream().getByte(); //66
 			wantLeftclickWebs = this.getClientStream().getByte(); //67
+			npcKillMessages = this.getClientStream().getByte(); //68
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -951,6 +952,7 @@ public class PacketHandler {
 			miningRocksExtended = packetsIncoming.getUnsignedByte(); //65
 			movePerFrame = packetsIncoming.getByte(); //66
 			wantLeftclickWebs = packetsIncoming.getByte(); //67
+			npcKillMessages = packetsIncoming.getByte(); //68
 		}
 
 		if (Config.DEBUG) {
@@ -1021,7 +1023,8 @@ public class PacketHandler {
 					"\nS_WANT_PARTIES " + wantClans + // 64
 					"\nS_MINING_ROCKS_EXTENDED " + miningRocksExtended +// 65
 					"\nC_MOVE_PER_FRAME " + movePerFrame +// 66
-					"\nS_WANT_LEFTCLICK_WEBS " + wantLeftclickWebs// 67
+					"\nS_WANT_LEFTCLICK_WEBS " + wantLeftclickWebs +// 67
+					"\nS_NPC_KILL_MESSAGES " + npcKillMessages// 68
 			);
 		}
 
@@ -1094,6 +1097,7 @@ public class PacketHandler {
 		props.setProperty("S_MINING_ROCKS_EXTENDED", miningRocksExtended == 1 ? "true" : "false"); //65
 		props.setProperty("C_MOVE_PER_FRAME", String.valueOf(movePerFrame)); //66
 		props.setProperty("S_WANT_LEFTCLICK_WEBS", wantLeftclickWebs == 1 ? "true" : "false"); //67
+		props.setProperty("S_NPC_KILL_MESSAGES", npcKillMessages == 1 ? "true" : "false"); //68
 		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(
@@ -1779,6 +1783,7 @@ public class PacketHandler {
 		mc.setHideNameTag(packetsIncoming.getUnsignedByte() == 1); // 35
 		mc.setBlockPartyInv(packetsIncoming.getUnsignedByte() == 1); // 36
 		mc.setAndroidInvToggle(packetsIncoming.getUnsignedByte() == 1); // 37
+		mc.setShowNPCKC(packetsIncoming.getUnsignedByte() == 1); // 38
 	}
 
 	private void togglePrayer(int length) {
