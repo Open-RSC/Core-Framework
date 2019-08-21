@@ -14,7 +14,7 @@ public class CollisionFlag {
 	public static final int FULL_BLOCK_A = 16;
 	public static final int FULL_BLOCK_B = 32;
 	public static final int FULL_BLOCK_C = 64;
-	private static final int FULL_BLOCK = FULL_BLOCK_A | FULL_BLOCK_B | FULL_BLOCK_C;
+	public static final int FULL_BLOCK = FULL_BLOCK_A | FULL_BLOCK_B | FULL_BLOCK_C;
 
 	public static final int OBJECT = 128;
 

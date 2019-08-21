@@ -5,15 +5,18 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.FiremakingDef;
+import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.Bubble;
+import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.plugins.listeners.action.InvUseOnGroundItemListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnGroundItemExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
+import com.openrsc.server.util.rsc.CollisionFlag;
 import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.compareItemsIds;
@@ -159,6 +162,41 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 					getOwner().incExp(Skills.FIREMAKING, def.getExp(), true);
 					interrupt();
 
+					//Determine which direction to move
+					int xPos = getOwner().getX();
+					int yPos = getOwner().getY();
+					TileValue tile = getOwner().getWorld().getTile(xPos, yPos);
+					TileValue tileNear;
+
+					if ((tile.traversalMask & CollisionFlag.WEST_BLOCKED) == 0) {
+						tileNear = getOwner().getWorld().getTile(xPos + 1, yPos);
+						if (tileNear != null && (tileNear.traversalMask & CollisionFlag.FULL_BLOCK) == 0
+						&& getOwner().getViewArea().getGameObject(new Point(xPos + 1, yPos)) == null) {
+							getOwner().walk(getOwner().getX() + 1, getOwner().getY());
+							return;
+						}
+					} if ((tile.traversalMask & CollisionFlag.EAST_BLOCKED) == 0) {
+						tileNear = getOwner().getWorld().getTile(xPos - 1, yPos);
+						if (tileNear != null && (tileNear.traversalMask & CollisionFlag.FULL_BLOCK) == 0
+							&& getOwner().getViewArea().getGameObject(new Point(xPos - 1, yPos)) == null) {
+							getOwner().walk(getOwner().getX() - 1, getOwner().getY());
+							return;
+						}
+					} if ((tile.traversalMask & CollisionFlag.NORTH_BLOCKED) == 0) {
+						tileNear = getOwner().getWorld().getTile(xPos, yPos - 1);
+						if (tileNear != null && (tileNear.traversalMask & CollisionFlag.FULL_BLOCK) == 0
+							&& getOwner().getViewArea().getGameObject(new Point(xPos, yPos - 1)) == null) {
+							getOwner().walk(getOwner().getX(), getOwner().getY() - 1);
+							return;
+						}
+					} if ((tile.traversalMask & CollisionFlag.SOUTH_BLOCKED) == 0) {
+						tileNear = getOwner().getWorld().getTile(xPos, yPos + 1);
+						if (tileNear != null && (tileNear.traversalMask & CollisionFlag.FULL_BLOCK) == 0
+							&& getOwner().getViewArea().getGameObject(new Point(xPos, yPos + 1)) == null) {
+							getOwner().walk(getOwner().getX(), getOwner().getY() + 1);
+							return;
+						}
+					}
 				} else {
 					getOwner().message("You fail to light a fire");
 					getOwner().getUpdateFlags().setActionBubble(new Bubble((getOwner()), TINDERBOX));
