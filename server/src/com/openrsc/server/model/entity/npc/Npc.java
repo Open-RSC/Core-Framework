@@ -492,7 +492,8 @@ public class Npc extends Mob {
 						owner.addNpcKill(this, false);
 				}
 
-				//owner = handleLootAndXpDistribution(((Player) mob));
+
+				owner = handleLootAndXpDistribution(((Player) mob));
 
 				//Determine if the RDT is hit first
 				boolean rdtHit = false;
@@ -1021,20 +1022,20 @@ public class Npc extends Mob {
 			switch (p.getCombatStyle()) {
 				case 0: //CONTROLLED
 					for (int x = 0; x < 3; x++) {
-						p.incExp(x, totalXP, true);
+						//p.incExp(x, totalXP, true);
 					}
 					break;
 				case 1: //AGGRESSIVE
-					p.incExp(Skills.STRENGTH, totalXP * 3, true);
+					//p.incExp(Skills.STRENGTH, totalXP * 3, true);
 					break;
 				case 2: //ACCURATE
-					p.incExp(Skills.ATTACK, totalXP * 3, true);
+					//p.incExp(Skills.ATTACK, totalXP * 3, true);
 					break;
 				case 3: //DEFENSIVE
-					p.incExp(Skills.DEFENSE, totalXP * 3, true);
+					//p.incExp(Skills.DEFENSE, totalXP * 3, true);
 					break;
 			}
-			p.incExp(Skills.HITS, totalXP, true);
+			//p.incExp(Skills.HITS, totalXP, true);
 		}
 
 		// Ranged damagers
@@ -1050,7 +1051,7 @@ public class Npc extends Mob {
 				currentHighestDamage = dmgDoneByPlayer;
 			}
 			newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByPlayer));
-			p.incExp(Skills.RANGED, newXP * 4, true);
+			//p.incExp(Skills.RANGED, newXP * 4, true);
 			ActionSender.sendStat(p, Skills.RANGED);
 		}
 
