@@ -66,7 +66,7 @@ Before you submit your merge request consider the following guidelines:
     git push origin my-fix-branch
     ```
 
-* In GitLab, send a merge request to `Game:2.0.0`.
+* In GitLab, send a merge request to `Game:3.0.0`.
 
 
 * If we suggest changes, then:
@@ -118,9 +118,9 @@ from the main (upstream) repository:
 
 **IntelliJ IDEA Community** https://www.jetbrains.com/idea/download/
 
-**Git Kraken** https://www.gitkraken.com/download
+**Git Fork** https://git-fork.com/
 
-**Visual Studio Code** https://code.visualstudio.com/
+**MariaDB** https://mariadb.org/download/
 
 **Sublime Text Editor** https://www.sublimetext.com/
 
@@ -130,7 +130,7 @@ You will need to either use the set up script for Windows or Linux/Mac that come
 
 If you choose to install everything manually and not use the set up scripts, the following are required to be installed to ensure we are all using the same development environment tools:
 
-**MariaDB**, **OpenJDK 11**, **PHPMyAdmin**, **NGINX** or **Apache web server**, **PHP 7.2+**, **Git Kraken** or **git**
+**MariaDB**, **OpenJDK**, **PHPMyAdmin**, **NGINX** or **Apache web server**, **PHP+**, **Git Fork** or **git**
 
 ## <a name="pre"></a> Before You Start:
 
@@ -144,7 +144,3 @@ If you choose to install everything manually and not use the set up scripts, the
 - Claim or make tickets before working on features
 - Make PRs from your local fork into the main repo
 - Squash merge commits by using git pull --rebase before making your PR
-
-## <a name="manual"></a> Manual Install Script for Ubuntu Linux by Christofosho:
-
-https://gitlab.openrsc.com/open-rsc/Game/blob/2.0.0/scripts/archived/Installing-ORSC.txt
