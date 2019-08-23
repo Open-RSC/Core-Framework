@@ -10,6 +10,9 @@ run:
 run-game:
 	`pwd`/scripts/run.sh
 
+ufw-import:
+	`pwd`/scripts/ufw-import.sh
+
 hard-reset:
 	`pwd`/scripts/hard-reset.sh
 
@@ -154,7 +157,7 @@ backup-openpk:
 	@mkdir -p $(MYSQL_DUMPS_DIR)
 	sudo chmod -R 777 $(MYSQL_DUMPS_DIR)
 	sudo chmod 644 etc/mariadb/innodb.cnf
-	docker exec mysql mysqldump -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} openpk --single-transaction --quick --lock-tables=false | sudo zip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d-%H%M-%Z"`-openpk.zip	
+	docker exec mysql mysqldump -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} openpk --single-transaction --quick --lock-tables=false | sudo zip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d-%H%M-%Z"`-openpk.zip
 
 backup-wk:
 	@mkdir -p $(MYSQL_DUMPS_DIR)
