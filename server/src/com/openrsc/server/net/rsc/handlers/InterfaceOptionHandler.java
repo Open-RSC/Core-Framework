@@ -549,6 +549,17 @@ public class InterfaceOptionHandler implements PacketHandler {
 					case 9:
 						String playerInvited2 = p.readString();
 						Player invited2 = player.getWorld().getPlayer(DataConversions.usernameToHash(playerInvited2));
+						
+						if(player.getParty() != null){
+							if (player.getParty().getInviteSetting() == 1 && !player.getParty().getLeader().getUsername().equalsIgnoreCase(player.getUsername())) {
+								player.message("Only the party owner can invite players to this party");
+								return;
+							}
+							if (player.getParty().getInviteSetting() == 2 && !player.getParty().getPlayer(player.getUsername()).getRank().equals(PartyRank.GENERAL) && !player.getParty().getPlayer(player.getUsername()).getRank().equals(PartyRank.LEADER)) {
+								player.message("Only the party owner can invite players to this party");
+								return;
+							}
+						}
 						if (player.getParty() == null) {
 							if (invited2 == null) {
 								ActionSender.sendBox(player,
