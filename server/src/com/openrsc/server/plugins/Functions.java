@@ -399,10 +399,11 @@ public class Functions {
 	 * @param y
 	 * @param owner
 	 */
+
+
 	public static void createGroundItem(int id, int amount, int x, int y, Player owner) {
 		owner.getWorld().registerItem(new GroundItem(owner.getWorld(), id, x, y, amount, owner));
 	}
-
 
 	/**
 	 * Creates a new ground item
@@ -412,8 +413,8 @@ public class Functions {
 	 * @param x
 	 * @param y
 	 */
-	public static void createGroundItem(int id, int amount, int x, int y) {
-		createGroundItem(id, amount, x, y, null);
+	public static void createGroundItem(World world, int id, int amount, int x, int y) {
+		world.registerItem(new GroundItem(world, id, x, y, amount, (Player)null));
 	}
 
 	public static void createGroundItemDelayedRemove(final GroundItem i, int time) {

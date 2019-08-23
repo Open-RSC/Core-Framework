@@ -2,7 +2,6 @@
 exec 0</dev/tty
 source .env
 
-
 # Check for any updates to the game server
 clear
 echo "Fetching recent updates from the Open-RSC Game repository."
