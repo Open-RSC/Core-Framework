@@ -5,6 +5,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.content.achievement.Achievement;
 import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanInvite;
+import com.openrsc.server.content.party.PartyPlayer;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.content.party.Party;
 import com.openrsc.server.content.party.PartyInvite;
@@ -1479,9 +1480,18 @@ public final class Player extends Mob {
 				}
 			}
 		}
-
 		skillXP *= getExperienceRate(skill);
-		skills.addExperience(skill, (int) skillXP);
+		if(this.getParty() != null){
+			if(skill > 6){
+				for (PartyPlayer p : this.getParty().getPlayers()) {
+					p.getPlayerReference().getSkills().addExperience(skill, (int) skillXP / this.getParty().getPlayers().size());
+				}
+			} else {
+				skills.addExperience(skill, (int) skillXP);
+			}
+		} else {
+			skills.addExperience(skill, (int) skillXP);
+		}
 		// ActionSender.sendExperience(this, skill);
 	}
 
