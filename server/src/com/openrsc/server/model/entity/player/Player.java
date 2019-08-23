@@ -1482,11 +1482,16 @@ public final class Player extends Mob {
 		}
 		skillXP *= getExperienceRate(skill);
 		if(this.getParty() != null){
-			if(skill > 6){
-				for (PartyPlayer p : this.getParty().getPlayers()) {
-					if(p.getPlayerReference().getFatigue() < p.getPlayerReference().MAX_FATIGUE){
-						p.getPlayerReference().getSkills().addExperience(skill, (int) skillXP / p.getPartyMembersNotTired());
+			PartyPlayer partyLeader = this.getParty().getLeader();
+			if(partyLeader.getShareExp() > 0){
+				if(skill > 6){
+					for (PartyPlayer p : this.getParty().getPlayers()) {
+						if(p.getPlayerReference().getFatigue() < p.getPlayerReference().MAX_FATIGUE){
+							p.getPlayerReference().getSkills().addExperience(skill, (int) skillXP / p.getPartyMembersNotTired());
+						}
 					}
+				} else {
+					skills.addExperience(skill, (int) skillXP);
 				}
 			} else {
 				skills.addExperience(skill, (int) skillXP);

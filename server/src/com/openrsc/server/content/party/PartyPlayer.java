@@ -16,6 +16,7 @@ public class PartyPlayer {
 	private int deaths;
 	private int partyMemberDead = 0;
 	private int shareLoot;
+	private int shareExp;
 	private int partyMembersTotal;
 	private int inCombat;
 
@@ -62,6 +63,9 @@ public class PartyPlayer {
 	public int getShareLoot() {
 		return shareLoot;
 	}
+	public int getShareExp() {
+		return shareExp;
+	}
 
 	public int getInCombat() {
 		if (playerReference.inCombat()) {
@@ -73,6 +77,9 @@ public class PartyPlayer {
 
 	public void setShareLoot(int shareLoot) {
 		this.shareLoot = shareLoot;
+	}
+	public void setShareExp(int shareExp) {
+		this.shareExp = shareExp;
 	}
 
 	public int getPartyMembersTotal() {
