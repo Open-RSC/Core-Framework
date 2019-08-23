@@ -1,8 +1,8 @@
 #!/bin/bash
 exec 0</dev/tty
-RED=`tput setaf 1`
-GREEN=`tput setaf 2`
-NC=`tput sgr0` # No Color
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+NC=$(tput sgr0) # No Color
 
 # Open RSC: A replica RSC private server framework
 #
@@ -30,14 +30,14 @@ echo ""
 read action
 
 if [ "$action" == "1" ]; then
-    sudo apt install make -y
-    make combined-install
+  sudo apt install make -y
+  make combined-install
 elif [ "$action" == "2" ]; then
-    make get-updates
+  make get-updates
 elif [ "$action" == "3" ]; then
-    make run-game
+  make run-game
 elif [ "$action" == "4" ]; then
-    make hard-reset
+  make hard-reset
 elif [ "$action" == "5" ]; then
-    exit
+  exit
 fi
