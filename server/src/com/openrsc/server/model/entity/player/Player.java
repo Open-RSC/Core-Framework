@@ -1485,7 +1485,7 @@ public final class Player extends Mob {
 			if(skill > 6){
 				for (PartyPlayer p : this.getParty().getPlayers()) {
 					if(p.getPlayerReference().getFatigue() < p.getPlayerReference().MAX_FATIGUE){
-						p.getPlayerReference().getSkills().addExperience(skill, (int) skillXP / this.getParty().getPlayers().size());
+						p.getPlayerReference().getSkills().addExperience(skill, (int) skillXP / p.getPartyMembersNotTired());
 					}
 				}
 			} else {

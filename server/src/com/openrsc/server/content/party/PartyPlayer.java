@@ -79,6 +79,15 @@ public class PartyPlayer {
 		int o = playerReference.getParty().getPlayers().size();
 		return o;
 	}
+	public int getPartyMembersNotTired() {
+		int o = playerReference.getParty().getPlayers().size();
+		for (PartyPlayer p : playerReference.getParty().getPlayers()) {
+			if(p.getPlayerReference().getFatigue() >= p.getPlayerReference().MAX_FATIGUE){
+				o--;
+			}
+		}
+		return o;
+	}
 
 	public void setPartyMembersTotal(int partyMembersTotal) {
 		int o = playerReference.getParty().getPlayers().size();
