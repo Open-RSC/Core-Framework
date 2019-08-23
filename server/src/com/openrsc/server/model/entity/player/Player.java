@@ -631,6 +631,10 @@ public final class Player extends Mob {
 	public boolean checkAttack(Mob mob, boolean missile) {
 		if (mob.isPlayer()) {
 			Player victim = (Player) mob;
+			if (getParty() != null && ((Player) mob).getParty() != null && getParty() == ((Player) mob).getParty()) {
+				message("You can't attack your party members");
+					return false;
+			}
 			if ((inCombat() && getDuel().isDuelActive()) && (victim.inCombat() && victim.getDuel().isDuelActive())) {
 				Player opponent = (Player) getOpponent();
 				if (opponent != null && victim.equals(opponent)) {
