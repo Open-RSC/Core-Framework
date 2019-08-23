@@ -1,7 +1,7 @@
 #!/bin/bash
-RED=`tput setaf 1`
-GREEN=`tput setaf 2`
-NC=`tput sgr0` # No Color
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+NC=$(tput sgr0) # No Color
 
 echo ""
 echo "${RED}Open RSC Hard Reset:${NC}
@@ -15,40 +15,40 @@ Choices:
 echo ""
 echo "Which of the above do you wish to do? Type the choice number and press enter."
 echo ""
-read reset
+read -r reset
 
 if [ "$reset" == "2" ]; then
-    make go
+  make go
 else
 
-    # Docker or native install mode?
-    echo ""
-    echo "Which are you using?
+  # Docker or native install mode?
+  echo ""
+  echo "Which are you using?
 
     Choices:
       ${RED}1${NC} - Docker Containers
       ${RED}2${NC} - Native Installation"
-    echo ""
-    echo "Which of the above do you wish to do? Type the choice number and press enter."
-    echo ""
-    read installmode
+  echo ""
+  echo "Which of the above do you wish to do? Type the choice number and press enter."
+  echo ""
+  read -r installmode
 
-    if [ "$installmode" == "direct" ]; then
-        sudo service nginx stop
-        sudo rm -rf /var/www/http
-        sudo service mariadb stop
-        sudo rm -rf /etc/mysql/
-        sudo git reset HEAD --hard
-        sudo git pull
-        echo "Done!"
-        make go
-    else
-        sudo make stop
-        sudo rm -rf Website
-        sudo rm -rf data/db/mysql
-        sudo git reset HEAD --hard
-        sudo git pull
-        echo "Done!"
-        make go
-    fi
+  if [ "$installmode" == "direct" ]; then
+    sudo service nginx stop
+    sudo rm -rf /var/www/http
+    sudo service mariadb stop
+    sudo rm -rf /etc/mysql/
+    sudo git reset HEAD --hard
+    sudo git pull
+    echo "Done!"
+    make go
+  else
+    sudo make stop
+    sudo rm -rf Website
+    sudo rm -rf data/db/mysql
+    sudo git reset HEAD --hard
+    sudo git pull
+    echo "Done!"
+    make go
+  fi
 fi
