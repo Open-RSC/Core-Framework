@@ -57,6 +57,10 @@ public abstract class GameStateEvent extends GameTickEvent {
 		});
 	}
 
+	public StateEventContext nextState(int delay) {
+		return new StateEventContext(++eventState, delay);
+	}
+
 	public StateEventContext invoke(int state, int delay) {
 		return new StateEventContext(state, delay);
 	}

@@ -130,23 +130,31 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 						addState(1, () -> {
 							if (passObstacle) {
 								movePlayer(getPlayerOwner(), 489, 563);
-								sleep(650);
-								movePlayer(getPlayerOwner(), 490, 563);
-								sleep(650);
-								getPlayerOwner().message("and walk across");
-								movePlayer(getPlayerOwner(), 492, 563);
-								getPlayerOwner().incExp(Skills.AGILITY, 50, true);
-								AgilityUtils.completedObstacle(getPlayerOwner(), obj.getID(), obstacles, lastObstacle, 300);
+								return invoke(2, 1);
 							} else {
 								int slipDamage = (int) Math.round((p.getSkills().getLevel(Skills.HITS)) * 0.1D);
 								getPlayerOwner().message("Your lose your footing and land in the water");
 								movePlayer(getPlayerOwner(), 490, 561);
 								getPlayerOwner().message("Something in the water bites you");
 								getPlayerOwner().damage(slipDamage);
+								getPlayerOwner().setBusy(false);
+								return null;
 							}
+						});
+						addState(2, () -> {
+							movePlayer(getPlayerOwner(), 490, 563);
+							return invoke(3,1);
+						});
+						addState(3, () -> {
+							getPlayerOwner().message("and walk across");
+							movePlayer(getPlayerOwner(), 492, 563);
+							getPlayerOwner().incExp(Skills.AGILITY, 50, true);
+							AgilityUtils.completedObstacle(getPlayerOwner(), obj.getID(), obstacles, lastObstacle, 300);
+							getPlayerOwner().face(495,563);
 							getPlayerOwner().setBusy(false);
 							return null;
 						});
+
 					}
 				});
 				break;
