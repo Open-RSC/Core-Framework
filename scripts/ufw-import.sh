@@ -4,4 +4,4 @@ sudo cp user.rules /etc/ufw/user.rules
 sudo cp user6.rules /etc/ufw/user6.rules
 sudo chown root user.rules
 sudo chown root user6.rules
- sudo ufw reload
+sudo ufw reload

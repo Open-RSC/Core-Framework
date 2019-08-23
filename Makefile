@@ -11,7 +11,7 @@ run-game:
 	`pwd`/scripts/run.sh
 
 ufw-import:
-	`pwd`/scripts/ufw-import.sh
+	cd scripts && `pwd`/ufw-import.sh
 
 hard-reset:
 	`pwd`/scripts/hard-reset.sh
