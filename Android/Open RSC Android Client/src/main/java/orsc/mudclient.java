@@ -4963,8 +4963,7 @@ public final class mudclient implements Runnable {
 							this.showUiWildWarn = 1;
 						}
 					}
-					if (S_SIDE_MENU_TOGGLE && C_SIDE_MENU_OVERLAY) {
-						int i2 = 75;
+											int i2 = 75;
 						int index;
 						int var12;
 						if (party.inParty()) {
@@ -5474,7 +5473,7 @@ public final class mudclient implements Runnable {
 								}
 							}
 						}
-
+					if (S_SIDE_MENU_TOGGLE && C_SIDE_MENU_OVERLAY) {
 						int i = 130;
 						if (localPlayer.isDev()) {
 							this.getSurface().drawString("Tile: @gre@(@whi@" + (playerLocalX + midRegionBaseX)
