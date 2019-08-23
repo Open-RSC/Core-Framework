@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.misc;
 
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.event.rsc.GameStateEvent;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
@@ -17,9 +18,20 @@ public class DeadTree implements ObjectActionListener, ObjectActionExecutiveList
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player player) {
-		player.message("The tree seems to lash out at you!");
-		sleep(500);
-		player.damage((int) (player.getSkills().getLevel(Skills.HITS) * 0.2D));
-		player.message("You are badly scratched by the tree");
+		player.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(player.getWorld(), player, 0,"Dead Tree") {
+			public void init() {
+				addState(0, () -> {
+					getPlayerOwner().setBusy(true);
+					getPlayerOwner().message("The tree seems to lash out at you!");
+					return invoke(1,1);
+				});
+				addState(1, () -> {
+					getPlayerOwner().damage((int) (getPlayerOwner().getSkills().getLevel(Skills.HITS) * 0.2D));
+					getPlayerOwner().message("You are badly scratched by the tree");
+					getPlayerOwner().setBusy(false);
+					return null;
+				});
+			}
+		});
 	}
 }
