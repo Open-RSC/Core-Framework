@@ -354,12 +354,12 @@ public final class RegularPlayer implements CommandListener {
 				for (PartyPlayer m : player.getParty().getPlayers()) {
 					if (m.getShareLoot() > 0) {
 						m.setShareLoot(0);
-						m.getPlayerReference().message("@whi@[@blu@Party@whi@] - @whi@LOOT SHARING is now @red@OFF");
+						m.getPlayerReference().message("@whi@[@blu@Party@whi@] - @whi@Loot Sharing has been @red@Disabled");
 						ActionSender.sendParty(m.getPlayerReference());
 					} else {
 						m.setShareLoot(1);
 						ActionSender.sendParty(m.getPlayerReference());
-						m.getPlayerReference().message("@whi@[@blu@Party@whi@] - @whi@LOOT SHARING is now @gre@ON");
+						m.getPlayerReference().message("@whi@[@blu@Party@whi@] - @whi@Loot Sharing has been @gre@Enabled");
 
 					}
 				}
@@ -369,12 +369,12 @@ public final class RegularPlayer implements CommandListener {
 				for (PartyPlayer m : player.getParty().getPlayers()) {
 					if (m.getShareExp() > 0) {
 						m.setShareExp(0);
-						m.getPlayerReference().message("@whi@[@blu@Party@whi@] - @whi@EXP SHARING is now @red@OFF");
+						m.getPlayerReference().message("@whi@[@blu@Party@whi@] - @whi@Exp Sharing has been @red@Disabled");
 						ActionSender.sendParty(m.getPlayerReference());
 					} else {
 						m.setShareExp(1);
 						ActionSender.sendParty(m.getPlayerReference());
-						m.getPlayerReference().message("@whi@[@blu@Party@whi@] - @whi@EXP SHARING is now @gre@ON");
+						m.getPlayerReference().message("@whi@[@blu@Party@whi@] - @whi@Exp Sharing has been @gre@Enabled");
 
 					}
 				}
