@@ -1262,9 +1262,11 @@ public class DoorAction {
 
 			case 626: // Gnome Stronghold Gate (703, 531)
 				if (player.getY() <= 531 && player.getQuestStage(Quests.GRAND_TREE) == 8) {
+					boolean spawned = false;
 					Npc n = getNearestNpc(player, NpcId.GNOME_GUARD.id(), 15);
 					if (n == null) {
 						n = spawnNpc(player.getWorld(), NpcId.GNOME_GUARD.id(), 705, 530, 30000);
+						spawned = true;
 					}
 					npcTalk(player, n, "halt human");
 					playerTalk(player, n, "what?, why?");
@@ -1276,6 +1278,9 @@ public class DoorAction {
 					playerTalk(player, n, "that's ridiculous");
 					npcTalk(player, n, "maybe, but that's the orders, I'm sorry");
 					message(player, "the gnome refuses to open the gate");
+					if (spawned) {
+						n.remove();
+					}
 					return;
 
 				} else if (player.getY() >= 532 && player.getQuestStage(Quests.GRAND_TREE) == 10) {
