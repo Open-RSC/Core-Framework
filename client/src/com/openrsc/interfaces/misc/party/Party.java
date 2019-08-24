@@ -9,6 +9,7 @@ public class Party {
 	public int[] curHp = new int[99];
 	public int[] pMemD = new int[99];
 	public int[] shareLoot = new int[99];
+	public int[] shareExp = new int[99];
 	public int[] cbLvl = new int[99];
 	public int[] skull = new int[99];
 	public int[] maxHp = new int[99];

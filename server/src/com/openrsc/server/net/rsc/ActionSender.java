@@ -1361,6 +1361,7 @@ public class ActionSender {
 			pb.writeByte(m.getShareLoot());
 			pb.writeByte(m.getPartyMembersTotal());
 			pb.writeByte(m.getInCombat());
+			pb.writeByte(m.getShareExp());
 		}
 		p.write(pb.toPacket());
 	}

@@ -597,6 +597,7 @@ public class PacketHandler {
 					mc.party.shareLoot[id] = packetsIncoming.getByte();
 					mc.party.partyMembersTotal[id] = packetsIncoming.getByte();
 					mc.party.inCombat[id] = packetsIncoming.getByte();
+					mc.party.shareExp[id] = packetsIncoming.getByte();
 				}
 				mc.party.putParty(true);
 
