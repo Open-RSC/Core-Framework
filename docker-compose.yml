@@ -1,21 +1,24 @@
-version: '3.1'
+version: '3'
 services:
 
   nginx:
     image: nginx:latest
     container_name: nginx
+    restart: always
+    hostname: ${HOSTNAME}
+    environment:
+      VIRTUAL_HOST: ${HOSTNAME}
+      LETSENCRYPT_HOST: ${HOSTNAME}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+      NGINX_HOST: ${HOSTNAME}
+    expose:
+      - 80
+      - 443
     volumes:
       - "./etc/nginx:/etc/nginx/conf.d"
       - "./Website:/var/www/html"
-      - "./etc/nginx/logs:/var/log/nginx"
-      - "./etc/letsencrypt:/etc/letsencrypt"
+      - "/var/log/nginx:/var/log/nginx"
       - "./server/avatars:/var/www/html/avatars"
-    ports:
-      - "80:80"
-      - "443:443"
-    environment:
-      - NGINX_HOST=${NGINX_HOST}
-    restart: always
 
   php:
     build:
@@ -59,4 +62,9 @@ services:
     volumes:
       - "./data/db/mysql:/var/lib/mysql"
       - "./etc/mariadb/innodb.cnf:/etc/mysql/conf.d/innodb.cnf:ro"
-      - "./etc/logs/mariadb:/var/log/mysql"
+      - "/var/log/mysql:/var/log/mysql"
+
+networks:
+  default:
+    external:
+      name: nginx-proxy
