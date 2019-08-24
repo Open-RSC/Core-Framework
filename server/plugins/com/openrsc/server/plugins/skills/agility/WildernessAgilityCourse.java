@@ -47,6 +47,9 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 				public void init() {
 					addState(0, () -> {
 						movePlayer(getPlayerOwner(), 298, 130);
+						return nextState(2);
+					});
+					addState(1, () -> {
 						if (failRate == 1) {
 							message(getPlayerOwner(), "you lose your footing and fall into the wolf pit");
 							movePlayer(getPlayerOwner(), 300, 129);
