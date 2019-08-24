@@ -364,6 +364,21 @@ public final class RegularPlayer implements CommandListener {
 					}
 				}
 			}
+		} else if (cmd.equalsIgnoreCase("shareexp")) {
+			if (player.getParty().getPlayer(player.getUsername()).getRank().equals(PartyRank.LEADER)) {
+				for (PartyPlayer m : player.getParty().getPlayers()) {
+					if (m.getShareExp() > 0) {
+						m.setShareExp(0);
+						m.getPlayerReference().message("@whi@[@blu@Party@whi@] - @whi@EXP SHARING is now @red@OFF");
+						ActionSender.sendParty(m.getPlayerReference());
+					} else {
+						m.setShareExp(1);
+						ActionSender.sendParty(m.getPlayerReference());
+						m.getPlayerReference().message("@whi@[@blu@Party@whi@] - @whi@EXP SHARING is now @gre@ON");
+
+					}
+				}
+			}
 		} else if (cmd.equals("onlinelist")) { // modern onlinelist display using ActionSender.SendOnlineList()
 			ActionSender.sendOnlineList(player);
 		/*} else if (cmd.equalsIgnoreCase("onlinelist")) { // this is the old onlinelist display using ActionSender.sendBox()

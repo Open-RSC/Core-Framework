@@ -180,6 +180,11 @@ public final class PartyInterface {
 		} else {
 			graphics.drawString("Share Loot: @gre@ON", newX + 175, y + 55, 0xEFB063, 0);
 		}
+		if (mc.party.shareExp[0] == 0) {
+			graphics.drawString("Share Exp: @red@OFF", newX + 310, y + 55, 0xEFB063, 0);
+		} else {
+			graphics.drawString("Share Exp: @gre@ON", newX + 310, y + 55, 0xEFB063, 0);
+		}
 		if (selectedPartyMate != -1 && mc.party.isAllowed(0)) {
 			graphics.drawString("Settings for: " + mc.party.username[selectedPartyMate], newX, y + 180, 0xB39684, 0);
 			drawSubmitButton(graphics, newX + 250, y + 194, 130, 28, 18, 1, "Kick user", false, new ButtonHandler() {
@@ -549,6 +554,17 @@ public final class PartyInterface {
 							"General+", 2);
 				}
 			});
+			drawSubmitButton(graphics, x + 9, y + 170, 184, 32, 14, 1, "Share Exp", false, new ButtonHandler() {
+				@Override
+				void handle() {
+					getClient().sendCommandString("shareexp");
+				}
+			});
+			if (mc.party.shareExp[0] > 0) {
+				graphics.drawWrappedCenteredString("Yes ", x + 98, y + 197, 184, 1, 0xD9CD98, false);
+			} else {
+				graphics.drawWrappedCenteredString("No", x + 98, y + 197, 184, 1, 0xD9CD98, false);
+			}
 
 			graphics.drawWrappedCenteredString("Right-click on a box to change options.", x + 101, y + 214, 175, 0, 0xD9CD98, false);
 
