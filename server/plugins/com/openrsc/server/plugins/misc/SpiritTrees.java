@@ -24,11 +24,10 @@ public class SpiritTrees implements ObjectActionListener, ObjectActionExecutiveL
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		/** STRONGHOLD SPIRIT TREE
-		 *  NOTE: Only spirit tree that does not teleport you back to tree gnome village unless you have completed Grand Tree quest
-		 *  NOTE: If you complete Tree gnome village quest you can use all spirit trees without completing grand tree quest.
+		 *  NOTE: does not teleport you back to tree gnome village unless you have completed Grand Tree quest
 		 * **/
 		if (obj.getID() == STRONGHOLD_SPIRIT_TREE) {
-			if (p.getQuestStage(Quests.TREE_GNOME_VILLAGE) == -1 || p.getQuestStage(Quests.GRAND_TREE) == -1) {
+			if (p.getQuestStage(Quests.GRAND_TREE) == -1) {
 				message(p, "The tree talks in an old tired voice...",
 					"@yel@Spirit Tree: You friend of gnome people, you friend of mine",
 					"@yel@Spirit Tree: Would you like me to take you somewhere?");
@@ -58,7 +57,9 @@ public class SpiritTrees implements ObjectActionListener, ObjectActionExecutiveL
 				p.message("the tree doesn't feel like talking");
 			}
 		}
-		/** GRAND SPIRIT TREE - TREE GNOME VILLAGE **/
+		/** GRAND SPIRIT TREE - TREE GNOME VILLAGE 
+		 *  NOTE: may be reached by completing Grand Tree but does not teleport you back there unless you have completed Tree Gnome Village quest
+		 *  **/
 		else if (obj.getID() == TREE_GNOME_VILLAGE_SPIRIT_TREE) {
 			if (p.getQuestStage(Quests.TREE_GNOME_VILLAGE) == -1) {
 				message(p,

@@ -799,7 +799,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 								"if the orders going to be finished in time");
 							playerTalk(p, HUT_FOREMAN, "ok i'll tell glough");
 							message(p, "the foreman hands you the invoice");
-							addItem(p, 922, 1);
+							addItem(p, ItemId.INVOICE.id(), 1);
 							p.updateQuestStage(this, 10);
 						}
 					}
