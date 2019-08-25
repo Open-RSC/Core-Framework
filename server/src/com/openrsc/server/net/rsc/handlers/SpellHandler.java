@@ -491,7 +491,8 @@ public class SpellHandler implements PacketHandler {
 				}
 				player.message("@gre@You feel charged with magic power");
 				player.addCharge(6 * 60000);
-				godSpellObject(null, player, 47);
+				// charge is on self
+				godSpellObject(player, player, 47);
 				finalizeSpell(player, spell);
 				return;
 		}
@@ -1023,8 +1024,8 @@ public class SpellHandler implements PacketHandler {
 						finalizeSpell(player, spell);
 						break;
 					case 33: // Guthix cast
-					case 34:
-					case 35:
+					case 34: // Saradomin cast
+					case 35: // Zamorak cast
 						if (!player.getInventory().wielding(com.openrsc.server.constants.ItemId.STAFF_OF_GUTHIX.id()) && spellID == 33) {
 							player.message("you must weild the staff of guthix to cast this spell");
 							return;
