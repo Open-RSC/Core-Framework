@@ -16,8 +16,7 @@ public class PartyGUI {
 
 	public PartyGUI(final mudclient graphics) {
 		partyGuiComponent = new NComponent(graphics);
-		partyGuiComponent.setSize(142, 55);
-		partyGuiComponent.setSize(142, 55);
+		partyGuiComponent.setSize(130, 37);
 		//partyGuiComponent.setBackground(0xFFFFFF, 0xFFFFFF, 128);
 		partyGuiComponent.setLocation((graphics.getGameWidth() - 175) / 20, graphics.getGameHeight() - 310);
 
@@ -30,6 +29,17 @@ public class PartyGUI {
 				int var12;
 				if (graphics.party.inParty()) {
 					for (index = 0; index < SocialLists.partyListCount; ++index) {
+						if (SocialLists.partyListCount == 1) {
+							partyGuiComponent.setSize(130, 37);
+						} else if (SocialLists.partyListCount == 2) {
+							partyGuiComponent.setSize(130, 57);
+						} else if (SocialLists.partyListCount == 3) {
+							partyGuiComponent.setSize(130, 77);
+						} else if (SocialLists.partyListCount == 4) {
+							partyGuiComponent.setSize(130, 97);
+						} else if (SocialLists.partyListCount == 5) {
+							partyGuiComponent.setSize(130, 117);
+						}
 						String partyIsh = graphics.party.username[index];
 						var12 = 100;
 						int var777;
