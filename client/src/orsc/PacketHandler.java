@@ -598,13 +598,16 @@ public class PacketHandler {
 					mc.party.partyMembersTotal[id] = packetsIncoming.getByte();
 					mc.party.inCombat[id] = packetsIncoming.getByte();
 					mc.party.shareExp[id] = packetsIncoming.getByte();
+					mc.party.expShared[id] = packetsIncoming.readString();
 				}
 				mc.party.putParty(true);
+				mc.showPartyMenu();
 
 				break;
 			case 1: // Leave party
 				mc.party.putParty(false);
 				mc.party.update();
+				mc.hidePartyMenu();
 				break;
 			case 2: // Sent invitation
 				mc.party.getPartyInterface().initializeInvite(packetsIncoming.readString(), packetsIncoming.readString());
