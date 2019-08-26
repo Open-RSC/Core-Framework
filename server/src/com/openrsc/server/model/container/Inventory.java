@@ -3,6 +3,7 @@ package com.openrsc.server.model.container;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.external.Gauntlets;
+import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
@@ -649,13 +650,23 @@ public class Inventory {
 	}
 
 	public void dropOnDeath(Mob opponent) {
-		ArrayList<Item> deathItems = new ArrayList<>();
+		// temporary map to sort - ideally should be comparator for item
+		TreeMap<Integer, ArrayList<Item>> deathItemsMap = new TreeMap<>(Collections.reverseOrder());
+		ArrayList<Item> deathItemsList = new ArrayList<>();
+		Integer key;
+		ArrayList<Item> value;
+		ItemDefinition def;
 
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			for (int i = 0; i < Equipment.slots; i++) {
 				Item equipped = player.getEquipment().get(i);
 				if (equipped != null) {
-					deathItems.add(equipped);
+					def = equipped.getDef(player.getWorld());
+					// stackable always lost
+					key = def.isStackable() ? -1 : def.getDefaultPrice();
+					value = deathItemsMap.getOrDefault(key, new ArrayList<Item>());
+					value.add(equipped);
+					deathItemsMap.put(key, value);
 					player.updateWornItems(equipped.getDef(player.getWorld()).getWieldPosition(),
 						player.getSettings().getAppearance().getSprite(equipped.getDef(player.getWorld()).getWieldPosition()),
 						equipped.getDef(player.getWorld()).getWearableId(), false);
@@ -664,15 +675,22 @@ public class Inventory {
 			}
 		}
 		for (Item invItem : list) {
-			deathItems.add(invItem);
+			def = invItem.getDef(player.getWorld());
+			// stackable always lost
+			key = def.isStackable() ? -1 : def.getDefaultPrice();
+			value = deathItemsMap.getOrDefault(key, new ArrayList<Item>());
+			value.add(invItem);
+			deathItemsMap.put(key, value);
 		}
 
-		Collections.sort(deathItems);
-		ListIterator<Item> iterator = deathItems.listIterator();
+		deathItemsMap.values().forEach(elem -> deathItemsList.addAll(elem));
+		deathItemsMap.clear();
+		ListIterator<Item> iterator = deathItemsList.listIterator();
+		
 		if (!player.isIronMan(2)) {
 			if (!player.isSkulled()) {
-				for (int i = 0; i < 3 && iterator.hasNext(); i++) {
-					if ((iterator.next()).getDef(player.getWorld()).isStackable()) {
+				for (int items = 1; items <= 3 && iterator.hasNext(); items++) {
+					if (iterator.next().getDef(player.getWorld()).isStackable()) {
 						iterator.previous();
 						break;
 					}
@@ -694,7 +712,7 @@ public class Inventory {
 				item.setWielded(false);
 			}
 			iterator.remove();
-
+			
 			log.addDroppedItem(item);
 			if (item.getDef(player.getWorld()).isUntradable()) {
 				player.getWorld().registerItem(new GroundItem(player.getWorld(), item.getID(), player.getX(), player.getY(), item.getAmount(), player));
@@ -732,7 +750,7 @@ public class Inventory {
 		}
 		//Add the remaining items to the players inventory
 		list.clear();
-		for (Item returnItem : deathItems) {
+		for (Item returnItem : deathItemsList) {
 			add(returnItem, false);
 		}
 		if (player.getQuestStage(Quests.FAMILY_CREST) == -1 && !player.getBank().hasItemId(fam_gloves)

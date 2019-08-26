@@ -607,7 +607,7 @@ public final class Admins implements CommandListener {
 			}
 
 			if (player.getWorld().getServer().getEntityHandler().getItemDef(id).isStackable()) {
-				player.getInventory().add(new Item(id, amount));
+				p.getInventory().add(new Item(id, amount));
 			} else {
 				for (int i = 0; i < amount; i++) {
 					if (!player.getWorld().getServer().getEntityHandler().getItemDef(id).isStackable()) {
