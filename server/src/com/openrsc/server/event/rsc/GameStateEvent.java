@@ -2,11 +2,19 @@ package com.openrsc.server.event.rsc;
 
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.world.World;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
 public abstract class GameStateEvent extends GameTickEvent {
+
+	/**
+	 * The asynchronous logger.
+	 */
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	private int eventState = 0;
 	private Map<Integer, StateEventTask> tasks = new HashMap<>();
@@ -38,7 +46,7 @@ public abstract class GameStateEvent extends GameTickEvent {
 		try {
 			result = tasks.get(this.eventState).call();
 		} catch (Exception a) {
-			a.printStackTrace();
+			LOGGER.error("action() for Event \"" + getDescriptor() + "\": " + a.getMessage());
 		}
 		return result;
 	}
@@ -50,7 +58,7 @@ public abstract class GameStateEvent extends GameTickEvent {
 				try {
 					return block.call();
 				} catch (Exception a) {
-					a.printStackTrace();
+					LOGGER.error("addState() for Event \"" + getDescriptor() + "\": " + a.getMessage());
 				}
 				return null;
 			}
