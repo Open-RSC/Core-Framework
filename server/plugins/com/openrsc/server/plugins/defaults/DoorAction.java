@@ -1261,32 +1261,25 @@ public class DoorAction {
 				return;
 
 			case 626: // Gnome Stronghold Gate (703, 531)
-				if (player.getY() != 532 && player.getQuestStage(Quests.GRAND_TREE) == 8) {
+				if (player.getY() <= 531 && player.getQuestStage(Quests.GRAND_TREE) == 8) {
+					boolean spawned = false;
 					Npc n = getNearestNpc(player, NpcId.GNOME_GUARD.id(), 15);
-					if (n != null) {
-						npcTalk(player, n, "halt human");
-						playerTalk(player, n, "what?, why?");
-						npcTalk(player, n, "from order of the head tree guardian...",
-							"..you cannot leave");
-						playerTalk(player, n, "that's crazy, why?");
-						npcTalk(player, n, "humans are planning to attack our stronghold",
-							"you could be a spy");
-						playerTalk(player, n, "that's ridiculous");
-						npcTalk(player, n, "maybe, but that's the orders, I'm sorry");
-						message(player, "the gnome refuses to open the gate");
-					} else {
-						Npc newN = spawnNpc(player.getWorld(), NpcId.GNOME_GUARD.id(), 705, 530, 30000);
-						npcTalk(player, newN, "halt human");
-						playerTalk(player, newN, "what?, why?");
-						npcTalk(player, newN, "from order of the head tree guardian...",
-							"..you cannot leave");
-						playerTalk(player, newN, "that's crazy, why?");
-						npcTalk(player, newN, "humans are planning to attack our stronghold",
-							"you could be a spy");
-						playerTalk(player, newN, "that's ridiculous");
-						npcTalk(player, newN, "maybe, but that's the orders, I'm sorry");
-						message(player, "the gnome refuses to open the gate");
-						newN.remove();
+					if (n == null) {
+						n = spawnNpc(player.getWorld(), NpcId.GNOME_GUARD.id(), 705, 530, 30000);
+						spawned = true;
+					}
+					npcTalk(player, n, "halt human");
+					playerTalk(player, n, "what?, why?");
+					npcTalk(player, n, "from order of the head tree guardian...",
+						"..you cannot leave");
+					playerTalk(player, n, "that's crazy, why?");
+					npcTalk(player, n, "humans are planning to attack our stronghold",
+						"you could be a spy");
+					playerTalk(player, n, "that's ridiculous");
+					npcTalk(player, n, "maybe, but that's the orders, I'm sorry");
+					message(player, "the gnome refuses to open the gate");
+					if (spawned) {
+						n.remove();
 					}
 					return;
 

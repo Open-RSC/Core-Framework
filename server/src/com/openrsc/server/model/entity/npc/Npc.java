@@ -9,7 +9,6 @@ import com.openrsc.server.event.custom.NpcLootEvent;
 import com.openrsc.server.event.rsc.ImmediateEvent;
 import com.openrsc.server.event.rsc.impl.BankEventNpc;
 import com.openrsc.server.event.rsc.impl.RangeEventNpc;
-import com.openrsc.server.event.rsc.impl.StrPotEventNpc;
 import com.openrsc.server.event.rsc.impl.ThrowingEvent;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.ItemDropDef;
@@ -47,20 +46,6 @@ public class Npc extends Mob {
 	 * The current status of the player
 	 */
 	private Action status = Action.IDLE;
-
-	private StrPotEventNpc strPotEventNpc;
-
-	public StrPotEventNpc getStrPotEventNpc() {
-		return strPotEventNpc;
-	}
-
-	public void setStrPotEventNpc(StrPotEventNpc event) {
-		if (strPotEventNpc != null) {
-			strPotEventNpc.stop();
-		}
-		strPotEventNpc = event;
-		getWorld().getServer().getGameEventHandler().add(strPotEventNpc);
-	}
 
 	/**
 	 * RANGED
