@@ -3,42 +3,12 @@
 We'd love for you to contribute to our source code and to make Open RSC even better than it is
 today! Here are the guidelines we'd like you to follow:
 
-* [Code of Conduct](#coc)
-* [Issues and Bugs](#issue)
-* [Issue Submission Guidelines](#submit)
 * [Merge Request Submission Guidelines](#submit-pr)
 * [Suggested Developer Software](#software)
 * [Developer Installation Process](#install)
 * [Before You Start](#pre)
 * [Code Standards](#standards)
 * [Manual Install Script](#manual)
-
-## <a name="coc"></a> Code of Conduct
-
-Help us keep Open RSC both open and inclusive. Please read and follow our [Code of Conduct](https://gitlab.openrsc.com/open-rsc/Game/blob/2.0.0/CODE_OF_CONDUCT.md).
-
-## <a name="issue"></a> Found an Issue or Bug?
-
-If you find a bug in the source code, you can help us by submitting an issue to our
-[GitLab Repository](https://gitlab.openrsc.com/open-rsc/Game). Even better, you can submit a Pull Request with a fix.
-
-**Please see the [Submission Guidelines](#submit) below.**
-
-## <a name="submit"></a> Issue Submission Guidelines
-Before you submit your issue search the archive, maybe your question or bug report was already answered.
-
-The "[new issue](https://gitlab.openrsc.com/open-rsc/Game/issues)" form contains a number of prompts that you should fill out to
-make it easier to understand and categorize the issue.
-
-In general, providing the following information will increase the chances of your issue being dealt
-with quickly:
-
-* **Overview of the Issue** - if an error is being thrown a non-minified stack trace helps
-* **Motivation for or Use Case** - explain why this is a bug for you
-* **Reproduce the Error** - provide a live example or an unambiguous set of steps.
-* **Related Issues** - has a similar issue been reported before?
-* **Suggest a Fix** - if you can't fix the bug yourself, perhaps you can point to what might be
-  causing the problem (line of code or commit)
 
 ## <a name="submit-pr"></a> Merge Request Submission Guidelines
 Before you submit your merge request consider the following guidelines:
@@ -66,7 +36,7 @@ Before you submit your merge request consider the following guidelines:
     git push origin my-fix-branch
     ```
 
-* In GitLab, send a merge request to `Game:3.0.0`.
+* In GitLab, send a merge request to `Game`.
 
 
 * If we suggest changes, then:
@@ -130,7 +100,7 @@ You will need to either use the set up script for Windows or Linux/Mac that come
 
 If you choose to install everything manually and not use the set up scripts, the following are required to be installed to ensure we are all using the same development environment tools:
 
-**MariaDB**, **OpenJDK**, **PHPMyAdmin**, **NGINX** or **Apache web server**, **PHP+**, **Git Fork** or **git**
+**MariaDB**, **OpenJDK**, **PHPMyAdmin**, **NGINX** or **Apache web server**, **PHP**, **Git Fork** or **git**
 
 ## <a name="pre"></a> Before You Start:
 
@@ -143,4 +113,4 @@ If you choose to install everything manually and not use the set up scripts, the
 - Use single TABs, coupled with <tabspace>
 - Claim or make tickets before working on features
 - Make PRs from your local fork into the main repo
-- Squash merge commits by using git pull --rebase before making your PR
+- Squash merge commits by using git pull --rebase before making your PRs

@@ -163,7 +163,7 @@ public final class Server implements Runnable {
 
 	private void initialize() {
 		try {
-			// TODO: We need an uninitialize process. Unloads all of these classes.
+			// TODO: We need an uninitialize process. Unloads all of these classes. When this is written the initialize() method should synchronize on initialized like run does with running.
 
 			/*Used for pathfinding view debugger
 			if (PathValidation.DEBUG) {
@@ -283,6 +283,7 @@ public final class Server implements Runnable {
 	}
 
 	public void submitTask(Runnable r) {
+		// TODO: This should be used very sparingly. Use outside of Commands is essentially unwarranted.
 		scheduledExecutor.submit(r);
 	}
 
