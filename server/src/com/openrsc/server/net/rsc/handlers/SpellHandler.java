@@ -774,7 +774,7 @@ public class SpellHandler implements PacketHandler {
 							return;
 						}
 
-						if (player.getWorld().isTelegrabEnabled()) {
+						if (!player.getWorld().isTelegrabEnabled()) {
 							player.message("Telegrab has been disabled");
 							return;
 						}
