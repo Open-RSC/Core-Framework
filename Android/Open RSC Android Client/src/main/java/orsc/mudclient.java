@@ -3335,16 +3335,22 @@ public final class mudclient implements Runnable {
 					}
 				}
 				if (mouseButtonClick != 0) {
+					boolean nullOption = true;
 					for (int i = 0; i < optionsMenuCount; i++) {
 						if (mouseX > startX && mouseX < startX + highest && mouseY > startY + i * spread - 15
 							&& mouseY < startY + i * spread) {
 							this.packetHandler.getClientStream().newPacket(116);
 							this.packetHandler.getClientStream().writeBuffer1.putByte(i);
 							this.packetHandler.getClientStream().finishPacket();
+							nullOption = false;
 							break;
 						}
 					}
-
+					if (nullOption) {
+						this.packetHandler.getClientStream().newPacket(116);
+						this.packetHandler.getClientStream().writeBuffer1.putByte(-1);
+						this.packetHandler.getClientStream().finishPacket();
+					}
 					mouseButtonClick = 0;
 					optionsMenuShow = false;
 					return;
@@ -3378,16 +3384,23 @@ public final class mudclient implements Runnable {
 					}
 				} else {
 					// Click
+					boolean nullOption = true;
 					for (var2 = 0; var2 < this.optionsMenuCount; ++var2) {
 						if (this.getSurface().stringWidth(1, this.optionsMenuText[var2]) + 9 > this.mouseX
 							&& 2 + var2 * 12 < this.mouseY && 2 + 12 + var2 * 12 > this.mouseY) {
 							this.packetHandler.getClientStream().newPacket(116);
 							this.packetHandler.getClientStream().writeBuffer1.putByte(var2);
 							this.packetHandler.getClientStream().finishPacket();
+							nullOption = false;
 							break;
 						}
 					}
 
+					if (nullOption) {
+						this.packetHandler.getClientStream().newPacket(116);
+						this.packetHandler.getClientStream().writeBuffer1.putByte(-1);
+						this.packetHandler.getClientStream().finishPacket();
+					}
 					this.optionsMenuShow = false;
 					this.mouseButtonClick = 0;
 				}

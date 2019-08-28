@@ -20,6 +20,10 @@ public class MenuReplyHandler implements PacketHandler {
 					if (player.getMenu() != null) {
 						player.getMenu().handleReply(player, option);
 					} else if (menuHandler != null) {
+						if (option == -1) {
+							menuHandler.handleReply(option, null);
+							return 1;
+						}
 						final String reply = option == 30 ? ""
 							: menuHandler.getOption(option);
 						player.resetMenuHandler();

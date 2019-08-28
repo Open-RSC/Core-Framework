@@ -44,31 +44,26 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 		if (obj.getID() == BACK_PIPE || obj.getID() == PIPE) {
 			if (getCurrentLevel(p, Skills.AGILITY) < 35) {
 				p.message("You need an agility level of 35 to attempt to squeeze through the pipe");
-				p.setBusy(false);
 				return;
 			}
 			if (obj.getWorld().getServer().getConfig().WANT_FATIGUE) {
 				if (p.getFatigue() >= p.MAX_FATIGUE) {
 					p.message("You are too tired to squeeze through the pipe");
-					p.setBusy(false);
 					return;
 				}
 			}
-			p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "BarAGIPipe") {
+			p.setBusy(true);
+			p.message("You squeeze through the pipe");
+			p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 3, "BarAGIPipe") {
 				public void init() {
 					addState(0, () -> {
-						message(getPlayerOwner(), "You squeeze through the pipe");
-						getPlayerOwner().setBusy(true);
-						return invoke(1, 4);
-					});
-					addState(1, () -> {
-						getPlayerOwner().setBusy(false);
 						if (getPlayerOwner().getY() <= 551) {
 							movePlayer(getPlayerOwner(), 487, 554);
 						} else {
 							movePlayer(getPlayerOwner(), 487, 551);
 						}
 						getPlayerOwner().incExp(Skills.AGILITY, 20, true);
+						getPlayerOwner().setBusy(false);
 						return null;
 					});
 				}
@@ -85,49 +80,45 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 		final boolean passObstacle = succeed(p);
 		switch (obj.getID()) {
 			case SWING:
-				p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "BarAGISwing") {
+				p.message("You grab the rope and try and swing across");
+				p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 3, "BarAGISwing") {
 					public void init() {
 						addState(0, () -> {
-							getPlayerOwner().setBusy(true);
-							message(getPlayerOwner(), "You grab the rope and try and swing across");
-							return invoke(1, 2);
-						});
-
-						addState(1, () -> {
 							if (passObstacle) {
-								message(getPlayerOwner(), "You skillfully swing across the hole");
-								movePlayer(getPlayerOwner(), 486, 559);
-								getPlayerOwner().incExp(Skills.AGILITY, 80, true);
-								AgilityUtils.completedObstacle(getPlayerOwner(), obj.getID(), obstacles, lastObstacle, 300);
-								p.setBusy(false);
-								return null;
+								getPlayerOwner().message("You skillfully swing across the hole");
+								return invoke(1, 3);
 							} else {
-								message(getPlayerOwner(), "Your hands slip and you fall to the level below");
-								return invoke(2, 2);
+								getPlayerOwner().message("Your hands slip and you fall to the level below");
+								return invoke(2, 3);
 							}
 						});
-
+						addState(1, () -> {
+							movePlayer(getPlayerOwner(), 486, 559);
+							getPlayerOwner().incExp(Skills.AGILITY, 80, true);
+							AgilityUtils.completedObstacle(getPlayerOwner(), obj.getID(), obstacles, lastObstacle, 300);
+							getPlayerOwner().setBusy(false);
+							return null;
+						});
 						addState(2, () -> {
-							int swingDamage = (int) Math.round((getPlayerOwner().getSkills().getLevel(Skills.HITS)) * 0.15D);
 							movePlayer(getPlayerOwner(), 486, 3389);
-							message(getPlayerOwner(), "You land painfully on the spikes");
+							getPlayerOwner().message("You land painfully on the spikes");
+							return invoke(3, 3);
+						});
+						addState(3, () -> {
+							int swingDamage = (int) Math.round((getPlayerOwner().getSkills().getLevel(Skills.HITS)) * 0.15D);
 							getPlayerOwner().damage(swingDamage);
-							playerTalk(getPlayerOwner(), null, "ouch");
-							p.setBusy(false);
+							playerTalk(getPlayerOwner(), "ouch");
+							getPlayerOwner().setBusy(false);
 							return null;
 						});
 					}
 				});
 				break;
 			case LOG:
-				p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "BarAGILog") {
+				p.message("you stand on the slippery log");
+				p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 3, "BarAGILog") {
 					public void init() {
 						addState(0, () -> {
-							getPlayerOwner().setBusy(true);
-							getPlayerOwner().message("you stand on the slippery log");
-							return invoke(1, 3);
-						});
-						addState(1, () -> {
 							if (passObstacle) {
 								movePlayer(getPlayerOwner(), 489, 563);
 								return invoke(2, 1);
@@ -141,16 +132,16 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 								return null;
 							}
 						});
-						addState(2, () -> {
+						addState(1, () -> {
 							movePlayer(getPlayerOwner(), 490, 563);
-							return invoke(3,1);
+							return invoke(3, 1);
 						});
-						addState(3, () -> {
+						addState(2, () -> {
 							getPlayerOwner().message("and walk across");
 							movePlayer(getPlayerOwner(), 492, 563);
 							getPlayerOwner().incExp(Skills.AGILITY, 50, true);
 							AgilityUtils.completedObstacle(getPlayerOwner(), obj.getID(), obstacles, lastObstacle, 300);
-							getPlayerOwner().face(495,563);
+							getPlayerOwner().face(495, 563);
 							getPlayerOwner().setBusy(false);
 							return null;
 						});
@@ -171,7 +162,6 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 							if (obj.getX() != 498) {
 								return null;
 							}
-							getPlayerOwner().setBusy(true);
 							getPlayerOwner().message("You put your foot on the ledge and try to edge across");
 							return invoke(1, 2);
 						});
@@ -225,7 +215,7 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 					}
 					getPlayerOwner().setBusy(true);
 					getPlayerOwner().message("You jump over the wall");
-					return invoke(1,2);
+					return invoke(1, 2);
 				});
 				addState(1, () -> {
 					movePlayer(getPlayerOwner(),

@@ -2970,4 +2970,26 @@ public final class Player extends Mob {
 		}
 		return false;
 	}
+
+	public boolean shouldBreakMenu(Npc npc) {
+		if (npc != null) {
+			if (npc.isRemoved()) {
+				this.resetMenuHandler();
+				this.setOption(-1);
+				this.setBusy(false);
+				return true;
+			}
+			npc.setBusy(true);
+		}
+
+		if (this.checkUnderAttack())
+		{
+			this.releaseUnderAttack();
+			if (npc != null) {
+				npc.setBusy(false);
+			}
+			return true;
+		}
+		return false;
+	}
 }

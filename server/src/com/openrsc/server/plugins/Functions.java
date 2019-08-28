@@ -1412,6 +1412,9 @@ public class Functions {
 		}
 	}
 
+	public static void playerTalk(final Player player, final String message) {
+		player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, player));
+	}
 	/**
 	 * Removes an item from players inventory.
 	 *
@@ -1481,6 +1484,19 @@ public class Functions {
 		final Bubble bubble = new Bubble(player, item.getID());
 		player.getUpdateFlags().setActionBubble(bubble);
 	}
+
+	public static void showPlayerMenu(final Player player, final Npc npc, final String... options) {
+		player.resetMenuHandler();
+		player.setOption(-5);
+		player.setMenuHandler(new MenuOptionListener(options) {
+			@Override
+			public void handleReply(final int option, final String reply) {
+				player.setOption(option);
+			}
+		});
+		ActionSender.sendMenu(player, options);
+	}
+
 
 	public static int showMenu(final Player player, final String... options) {
 		return showMenu(player, null, true, options);
