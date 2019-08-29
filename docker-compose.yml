@@ -7,8 +7,8 @@ services:
     restart: always
     hostname: ${HOSTNAME}
     environment:
-      VIRTUAL_HOST: ${HOSTNAME}
-      LETSENCRYPT_HOST: ${HOSTNAME}
+      VIRTUAL_HOST: ${HOSTNAME},${HOSTNAME2},${HOSTNAME3}
+      LETSENCRYPT_HOST: ${HOSTNAME},${HOSTNAME2},${HOSTNAME3}
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
       NGINX_HOST: ${HOSTNAME}
     expose:
@@ -17,7 +17,7 @@ services:
     volumes:
       - "./etc/nginx:/etc/nginx/conf.d"
       - "./Website:/var/www/html"
-      - "/var/log/nginx:/var/log/nginx"
+#      - "/var/log/nginx:/var/log/nginx"
       - "./server/avatars:/var/www/html/avatars"
 
   php:
@@ -62,7 +62,7 @@ services:
     volumes:
       - "./data/db/mysql:/var/lib/mysql"
       - "./etc/mariadb/innodb.cnf:/etc/mysql/conf.d/innodb.cnf:ro"
-      - "/var/log/mysql:/var/log/mysql"
+ #     - "/var/log/mysql:/var/log/mysql"
 
 networks:
   default:
