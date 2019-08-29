@@ -3,7 +3,6 @@ package com.openrsc.server.plugins.quests.members.watchtower;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.event.rsc.GameStateEvent;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
@@ -53,596 +52,579 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		final QuestInterface plugin = this;
-		p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "Watch Tower Dialogues") {
-			public void init() {
-				addState(0, () -> {
-					if (n.getID() == NpcId.SKAVID_FINALQUIZ.id()) {
-						if (p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Quests.WATCHTOWER) == -1) {
-							npcTalk(p, n, "What, you gots the crystal...");
-							int lastMenu = showMenu(p, n, "But I've lost it!", "Oh okay then");
-							if (lastMenu == 0) {
-								if (hasItem(p, ItemId.POWERING_CRYSTAL2.id()) || p.getQuestStage(Quests.WATCHTOWER) == -1) {
-									npcTalk(p, n, "I have no more for you!");
-								} else {
-									npcTalk(p, n, "All right, take this one then...");
-									p.message("The skavid gives you a crystal");
-									addItem(p, ItemId.POWERING_CRYSTAL2.id(), 1);
-								}
-							} else if (lastMenu == 1) {
-								npcTalk(p, n, "I'll be on my way then");
-							}
-						} else if (p.getCache().hasKey("language_cur")
+		if (n.getID() == NpcId.SKAVID_FINALQUIZ.id()) {
+			if (p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Quests.WATCHTOWER) == -1) {
+				npcTalk(p, n, "What, you gots the crystal...");
+				int lastMenu = showMenu(p, n, "But I've lost it!", "Oh okay then");
+				if (lastMenu == 0) {
+					if (hasItem(p, ItemId.POWERING_CRYSTAL2.id()) || p.getQuestStage(Quests.WATCHTOWER) == -1) {
+						npcTalk(p, n, "I have no more for you!");
+					} else {
+						npcTalk(p, n, "All right, take this one then...");
+						p.message("The skavid gives you a crystal");
+						addItem(p, ItemId.POWERING_CRYSTAL2.id(), 1);
+					}
+				} else if (lastMenu == 1) {
+					npcTalk(p, n, "I'll be on my way then");
+				}
+			} else if (p.getCache().hasKey("language_cur")
+				&& p.getCache().hasKey("language_ar")
+				&& p.getCache().hasKey("language_ig")
+				&& p.getCache().hasKey("language_nod")) {
+				String[] sayChat = {"Cur tanath...", "Ar cur...", "Bidith Ig...", "Gor nod..."};
+				int randomizeChat = DataConversions.random(0, sayChat.length - 1);
+				npcTalk(p, n, sayChat[randomizeChat]);
+				int menu = showMenu(p, n, "Cur", "Ar", "Bidith", "Tanath", "Gor");
+				boolean correctAnswer = false;
+				if (menu == 0) {
+					if (randomizeChat == 2)
+						correctAnswer = true;
+				} else if (menu == 2) {
+					if (randomizeChat == 0)
+						correctAnswer = true;
+				} else if (menu == 3) {
+					if (randomizeChat == 3)
+						correctAnswer = true;
+				} else if (menu == 4) {
+					if (randomizeChat == 1)
+						correctAnswer = true;
+				}
+				if (menu != -1) {
+					if (correctAnswer) {
+						npcTalk(p, n, "Heh-heh! So you speak a little skavid eh?",
+							"I'm impressed, here take this prize...");
+						p.message("The skavid gives you a large crystal");
+						addItem(p, ItemId.POWERING_CRYSTAL2.id(), 1);
+						if (p.getCache().hasKey("language_cur")
 							&& p.getCache().hasKey("language_ar")
 							&& p.getCache().hasKey("language_ig")
 							&& p.getCache().hasKey("language_nod")) {
-							String[] sayChat = {"Cur tanath...", "Ar cur...", "Bidith Ig...", "Gor nod..."};
-							int randomizeChat = DataConversions.random(0, sayChat.length - 1);
-							npcTalk(p, n, sayChat[randomizeChat]);
-							int menu = showMenu(p, n, "Cur", "Ar", "Bidith", "Tanath", "Gor");
-							boolean correctAnswer = false;
-							if (menu == 0) {
-								if (randomizeChat == 2)
-									correctAnswer = true;
-							} else if (menu == 2) {
-								if (randomizeChat == 0)
-									correctAnswer = true;
-							} else if (menu == 3) {
-								if (randomizeChat == 3)
-									correctAnswer = true;
-							} else if (menu == 4) {
-								if (randomizeChat == 1)
-									correctAnswer = true;
+							p.getCache().remove("language_cur");
+							p.getCache().remove("language_ar");
+							p.getCache().remove("language_ig");
+							p.getCache().remove("language_nod");
+							p.getCache().remove("skavid_started_language");
+							p.getCache().store("skavid_completed_language", true);
+						}
+					} else if (menu == 1) {
+						npcTalk(p, n, "Grrr!");
+						p.message("It seems your response has upset the skavid");
+					} else {
+						npcTalk(p, n, "???");
+						p.message("The response was wrong");
+					}
+				}
+			} else {
+				npcTalk(p, n, "Tanath Gor Ar Bidith ?");
+				playerTalk(p, n, "???");
+				p.message("You cannot communicate with the skavid");
+				p.message("It seems you haven't learned enough of thier language yet...");
+			}
+		}
+		else if (inArray(n.getID(), NpcId.SKAVID_IG.id(), NpcId.SKAVID_AR.id(), NpcId.SKAVID_CUR.id(), NpcId.SKAVID_NOD.id())) {
+			if (n.getID() == NpcId.SKAVID_IG.id()) {
+				if (p.getCache().hasKey("language_ig") || p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Quests.WATCHTOWER) == -1) {
+					npcTalk(p, n, "Bidith Ig...");
+					p.message("You have already talked to this skavid");
+					return;
+				}
+				npcTalk(p, n, "Cur bidith...");
+			} else if (n.getID() == NpcId.SKAVID_AR.id()) {
+				if (p.getCache().hasKey("language_ar") || p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Quests.WATCHTOWER) == -1) {
+					npcTalk(p, n, "Ar cur...");
+					p.message("You have already talked to this skavid");
+					return;
+				}
+				npcTalk(p, n, "Gor cur...");
+			} else if (n.getID() == NpcId.SKAVID_CUR.id()) {
+				if (p.getCache().hasKey("language_cur") || p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Quests.WATCHTOWER) == -1) {
+					npcTalk(p, n, "Cur tanath...");
+					p.message("You have already talked to this skavid");
+					return;
+				}
+				npcTalk(p, n, "Bidith tanath...");
+			} else if (n.getID() == NpcId.SKAVID_NOD.id()) {
+				if (p.getCache().hasKey("language_nod") || p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Quests.WATCHTOWER) == -1) {
+					npcTalk(p, n, "Gor nod...");
+					p.message("You have already talked to this skavid");
+					return;
+				}
+				npcTalk(p, n, "Tanath gor...");
+			}
+			if (p.getCache().hasKey("skavid_started_language")) {
+				p.message("The skavid is trying to communicate...");
+				boolean correctWord = false;
+				int learnMenu = showMenu(p, n, "Cur", "Ar", "Ig", "Nod", "Gor");
+				if (learnMenu == 0) {
+					if (n.getID() == NpcId.SKAVID_CUR.id()) {
+						npcTalk(p, n, "Cur",
+							"Cur tanath");
+						p.getCache().store("language_cur", true);
+						correctWord = true;
+					}
+				} else if (learnMenu == 1) {
+					if (n.getID() == NpcId.SKAVID_AR.id()) {
+						npcTalk(p, n, "Ar",
+							"Ar cur");
+						p.getCache().store("language_ar", true);
+						correctWord = true;
+					}
+				} else if (learnMenu == 2) {
+					if (n.getID() == NpcId.SKAVID_IG.id()) {
+						npcTalk(p, n, "Ig",
+							"Bidith Ig");
+						p.getCache().store("language_ig", true);
+						correctWord = true;
+					}
+				} else if (learnMenu == 3) {
+					if (n.getID() == NpcId.SKAVID_NOD.id()) {
+						npcTalk(p, n, "Nod",
+							"Gor nod");
+						p.getCache().store("language_nod", true);
+						correctWord = true;
+					}
+				}
+
+				if (learnMenu != -1) {
+					if (correctWord) {
+						p.message("It seems the skavid understood you");
+					} else {
+						npcTalk(p, n, "???");
+						message(p, "It seems that was the wrong reply");
+					}
+				}
+			} else {
+				playerTalk(p, n, "???");
+				p.message("The skavid is trying to communicate...");
+				p.message("You don't know any skavid words yet!");
+			}
+		}
+
+		else if (n.getID() == NpcId.SKAVID_INITIAL.id()) {
+			if (p.getQuestStage(Quests.WATCHTOWER) == -1) {
+				npcTalk(p, n, "Ah master...",
+					"You did well to master our language...");
+				return;
+			}
+			if ((p.getCache().hasKey("language_cur")
+				&& p.getCache().hasKey("language_ar")
+				&& p.getCache().hasKey("language_ig")
+				&& p.getCache().hasKey("language_nod")) || p.getCache().hasKey("skavid_completed_language")) {
+				npcTalk(p, n, "Master, my kinsmen tell me you have learned skavid",
+					"You should speak to the mad ones in their cave...");
+				return;
+			} else if (p.getCache().hasKey("skavid_started_language")) {
+				npcTalk(p, n, "Master, how are you doing learning our language ?");
+				playerTalk(p, n, "I am studying the speech of your kind...");
+			} else {
+				npcTalk(p, n, "Tanath cur, tanath cur");
+				playerTalk(p, n, "???");
+				npcTalk(p, n, "Don't hurt me, don't hurt me!");
+				playerTalk(p, n, "Stop moaning creature",
+					"I know about you skavids",
+					"You serve those monsters the ogres");
+				npcTalk(p, n, "Please dont touch me!");
+				playerTalk(p, n, "You have something that belongs to me...");
+				npcTalk(p, n, "I don't have anything, please believe me!");
+				playerTalk(p, n, "Somehow I find your words hard to believe");
+				npcTalk(p, n, "I'm begging your kindness, I don't have it!");
+				int menu = showMenu(p, n, false, //do not send over
+					"I don't believe you hand it over!",
+					"Okay okay i'm not going to hurt you");
+				if (menu == 0) {
+					playerTalk(p, n, "I don't believe you, hand it over!");
+					npcTalk(p, n, "Ahhhhh, help!");
+					p.message("The skavid runs away...");
+					temporaryRemoveNpc(n);
+					playerTalk(p, n, "Oh great...I've scared it off!");
+				} else if (menu == 1) {
+					playerTalk(p, n, "Okay, okay i'm not going to hurt you");
+					npcTalk(p, n, "Thank you kind " + (p.isMale() ? "sir" : "madam"),
+						"I'll tells you where that things you wants is...",
+						"The mad skavids have it in their cave in the city",
+						"You will have to learn skavid",
+						"Otherwise they will not talks to you",
+						"Make sure you remembers all that you hear",
+						"Let me tells you the most common skavid words...",
+						"Ar",
+						"Nod",
+						"Gor",
+						"Ig",
+						"Cur",
+						"That will gets you started...");
+					p.getCache().store("skavid_started_language", true);
+					p.updateQuestStage(Quests.WATCHTOWER, 5);
+				}
+			}
+		}
+
+		else if (n.getID() == NpcId.WATCHTOWER_WIZARD.id()) {
+			watchtowerWizardDialogue(p, n, -1);
+		}
+		else if (n.getID() == NpcId.OGRE_CITIZEN.id()) {
+			npcTalk(p, n, "Uh ? what are you doing here ?");
+		}
+		else if (n.getID() == NpcId.OGRE_TRADER_FOOD.id()) {
+			npcTalk(p, n, "Grrr, little animal.. I shall destroy you!");
+			n.startCombat(p);
+		}
+		else if (n.getID() == NpcId.OGRE_GUARD_CAVE_ENTRANCE.id()) {
+			if (p.getQuestStage(Quests.WATCHTOWER) != -1) {
+				npcTalk(p, n, "What do you want ?");
+				int menu = showMenu(p, n,
+					"I want to go in there",
+					"I want to rid the world of ogres");
+				if (menu == 0) {
+					npcTalk(p, n, "Oh you do, do you ?",
+						"How about no ?");
+					n.startCombat(p);
+				} else if (menu == 1) {
+					npcTalk(p, n, "You dare mock me creature!!!");
+					n.startCombat(p);
+				}
+			} else {
+				p.message("The guard is occupied at the moment");
+			}
+		}
+		else if (n.getID() == NpcId.OGRE_TRADER_ROCKCAKE.id()) {
+			npcTalk(p, n, "Arr, small thing wants my food does it ?",
+				"I'll teach you to deal with ogres!");
+			n.startCombat(p);
+		}
+		else if (n.getID() == NpcId.CITY_GUARD.id()) {
+			if (p.getCache().hasKey("city_guard_riddle")) {
+				npcTalk(p, n, "What is it ?");
+				int menu = showMenu(p, n,
+					"Do you have any other riddles for me ?",
+					"I have lost the map you gave me");
+				if (menu == 0) {
+					npcTalk(p, n, "Yes, what looks good on a plate with salad ?");
+					int subMenu = showMenu(p, n,
+						"I don't know...",
+						"A nice pizza ?");
+					if (subMenu == 0) {
+						npcTalk(p, n, "You!!!",
+							"Now go and bother me no more...");
+					} else if (subMenu == 1) {
+						npcTalk(p, n, "Grr.. think you are a comedian eh ?",
+							"Get lost!");
+					}
+				} else if (menu == 1) {
+					if (hasItem(p, ItemId.SKAVID_MAP.id())) {
+						npcTalk(p, n, "Are you blind ? what is that you are carrying ?");
+						playerTalk(p, n, "Oh, that map....");
+					} else {
+						npcTalk(p, n, "What's the point ? take this copy and bother me no more!");
+						addItem(p, ItemId.SKAVID_MAP.id(), 1);
+					}
+				}
+			} else {
+				npcTalk(p, n, "Grrrr, what business have you here ?");
+				playerTalk(p, n, "I am on an errand...");
+				npcTalk(p, n, "So what do you want with me ?");
+				int menu = showMenu(p, n, "I am an ogre killer come to destroy you!",
+					"I seek passage into the skavid caves");
+				if (menu == 0) {
+					npcTalk(p, n, "I would like to see you try!");
+					n.startCombat(p);
+				} else if (menu == 1) {
+					npcTalk(p, n, "Is that so...",
+						"You humour me small thing, answer this riddle and I will help you...",
+						"I want you to bring me an item",
+						"I will give you all the letters of this item, you work out what it is...",
+						"My first is in days, but not in years",
+						"My second is in evil, and also in tears",
+						"My third is in all, but not in none",
+						"My fourth is in hot, but not in sun",
+						"My fifth is in heaven, and also in hate",
+						"My sixth is in fearing, but not in fate",
+						"My seventh is in plush, but not in place",
+						"My eighth is in nine, but not in eight",
+						"My last is in earth, and also in in great",
+						"My whole is an object, that magic will make",
+						"It brings wrack and ruin to all in it's wake...",
+						"Now how long I wonder, will this riddle take ?");
+				}
+			}
+		}
+		else if (n.getID() == NpcId.GREW.id()) {
+			switch (p.getQuestStage(this)) {
+				case -1:
+					p.message("The ogre is not interested in you anymore");
+					break;
+				case 0:
+				case 1:
+					p.message("The ogre has nothing to say at the moment...");
+					break;
+				case 2:
+				case 3:
+				case 4:
+				case 5:
+				case 6:
+				case 7:
+				case 8:
+				case 9:
+					if (p.getCache().hasKey("ogre_grew_p1")) {
+						npcTalk(p, n, "What are you doing here morsel ?");
+						int menu = showMenu(p, n,
+							"Can I do anything else for you ?",
+							"I've lost the relic part you gave me",
+							"I've lost the crystal you gave me");
+						if (menu == 0) {
+							npcTalk(p, n, "I have nothing left for you but the cooking pot!");
+						} else if (menu == 1) {
+							if (!hasItem(p, ItemId.OGRE_RELIC_PART_BASE.id())) {
+								npcTalk(p, n, "Stupid morsel, I have another",
+									"Take it and go now before I lose my temper");
+								addItem(p, ItemId.OGRE_RELIC_PART_BASE.id(), 1);
+							} else {
+								npcTalk(p, n, "You lie to me morsel!");
 							}
-							if (menu != -1) {
-								if (correctAnswer) {
-									npcTalk(p, n, "Heh-heh! So you speak a little skavid eh?",
-										"I'm impressed, here take this prize...");
-									p.message("The skavid gives you a large crystal");
-									addItem(p, ItemId.POWERING_CRYSTAL2.id(), 1);
-									if (p.getCache().hasKey("language_cur")
-										&& p.getCache().hasKey("language_ar")
-										&& p.getCache().hasKey("language_ig")
-										&& p.getCache().hasKey("language_nod")) {
-										p.getCache().remove("language_cur");
-										p.getCache().remove("language_ar");
-										p.getCache().remove("language_ig");
-										p.getCache().remove("language_nod");
-										p.getCache().remove("skavid_started_language");
-										p.getCache().store("skavid_completed_language", true);
+						} else if (menu == 2) {
+							if (!hasItem(p, ItemId.POWERING_CRYSTAL1.id())) {
+								npcTalk(p, n, "I suppose you want another ?",
+									"I suppose just this once I could give you my copy...");
+								addItem(p, ItemId.POWERING_CRYSTAL1.id(), 1);
+							} else {
+								npcTalk(p, n, "How dare you lie to me Morsel!",
+									"I will finish you now!");
+							}
+						}
+					} else {
+						if (p.getCache().hasKey("ogre_grew")) {
+							npcTalk(p, n, "The morsel is back",
+								"Does it have our tooth for us ?");
+							if (hasItem(p, ItemId.OGRE_TOOTH.id())) {
+								playerTalk(p, n, "I have it");
+								npcTalk(p, n, "It's got it, good good",
+									"That should annoy gorad wonderfully",
+									"Heheheheh!");
+								removeItem(p, ItemId.OGRE_TOOTH.id(), 1);
+								npcTalk(p, n, "Heres a token of my gratitude");
+								addItem(p, ItemId.OGRE_RELIC_PART_BASE.id(), 1);
+								npcTalk(p, n, "Some old gem I stole from Gorad...",
+									"And an old part of a statue",
+									"Heheheheh!");
+								p.message("The ogre hands you a large crystal");
+								p.message("The ogre gives you part of a statue");
+								addItem(p, ItemId.POWERING_CRYSTAL1.id(), 1);
+								p.getCache().remove("ogre_grew");
+								p.getCache().store("ogre_grew_p1", true);
+							} else {
+								playerTalk(p, n, "Err, I don't have it");
+								npcTalk(p, n, "Morsel, you dare to return without the tooth!",
+									"Either you are a fool, or want to be eaten!");
+							}
+						} else {
+							npcTalk(p, n, "What do you want tiny morsel ?",
+								"You would look good on my plate");
+							playerTalk(p, n, "I want to enter the city of ogres");
+							npcTalk(p, n, "Perhaps I should eat you instead ?");
+							int menu = showMenu(p, n,
+								"Don't eat me, I can help you",
+								"You will have to kill me first");
+							if (menu == 0) {
+								npcTalk(p, n, "What can a morsel like you do for me ?");
+								playerTalk(p, n, "I am a mighty adventurer",
+									"Slayer of monsters and user of magic powers");
+								npcTalk(p, n, "Well well, perhaps the morsel can help after all...",
+									"If you think you're tough",
+									"Find Gorad my enemy in the south east settlement",
+									"And knock one of his teeth out!",
+									"Heheheheh!");
+								p.getCache().store("ogre_grew", true);
+							} else if (menu == 1) {
+								npcTalk(p, n, "That can be arranged - guards!!");
+								ogreSpawnAndAttack(p, n);
+							}
+						}
+					}
+					break;
+			}
+		}
+		else if (n.getID() == NpcId.OG.id()) {
+			switch (p.getQuestStage(this)) {
+				case -1:
+					p.message("The ogre is not interested in you anymore");
+					break;
+				case 0:
+				case 1:
+					p.message("He's busy, try him later");
+					break;
+				case 2:
+				case 3:
+				case 4:
+				case 5:
+				case 6:
+				case 7:
+				case 8:
+				case 9:
+					if (p.getCache().hasKey("ogre_relic_part_3")) {
+						npcTalk(p, n, "It's the little rat again");
+						int menu = showMenu(p, n,
+							"Do you have any other tasks for me ?",
+							"I have lost the relic part you gave me");
+						if (menu == 0) {
+							npcTalk(p, n, "No, I have no more tasks for you, now go away");
+						} else if (menu == 1) {
+							if (!hasItem(p, ItemId.OGRE_RELIC_PART_HEAD.id())) {
+								npcTalk(p, n, "Grrr, why do I bother ?",
+									"It's a good job I have another part!");
+								addItem(p, ItemId.OGRE_RELIC_PART_HEAD.id(), 1);
+							} else {
+								npcTalk(p, n, "Are you blind! I can see you have it even from here!");
+							}
+						}
+					} else {
+						if (p.getCache().hasKey("ogre_og")) {
+							npcTalk(p, n, "Where is my gold from that traitor toban?");
+							int subMenu = showMenu(p, n,
+								"I have your gold",
+								"I haven't got it yet",
+								"I have lost the key!");
+							if (subMenu == 0) {
+								if (hasItem(p, ItemId.STOLEN_GOLD.id(), 1)) {
+									npcTalk(p, n, "Well well, the little rat has got it!",
+										"take this to show the little rat is a friend to the ogres",
+										"Hahahahaha!");
+									removeItem(p, ItemId.STOLEN_GOLD.id(), 1);
+									p.message("The ogre gives you part of a horrible statue");
+									addItem(p, ItemId.OGRE_RELIC_PART_HEAD.id(), 1);
+									p.getCache().remove("ogre_og");
+									/** Very strange setup of quest tbh, but that's what it is **/
+									p.getCache().store("ogre_relic_part_3", true);
+								} else {
+									npcTalk(p, n, "That is not what I want rat!",
+										"If you want to impress me",
+										"Then get the gold I asked for!");
+								}
+							} else if (subMenu == 1) {
+								npcTalk(p, n, "Don't come back until you have it",
+									"Unless you want to be on tonight's menu!");
+							} else if (subMenu == 2) {
+								if (hasItem(p, ItemId.KEY.id())) {
+									npcTalk(p, n, "Oh yeah! what's that then ?");
+									p.message("It seems you still have the key...");
+								} else {
+									npcTalk(p, n, "Idiot! take another and don't lose it!");
+									addItem(p, ItemId.KEY.id(), 1);
+								}
+							}
+						} else {
+							npcTalk(p, n, "Why are you here little rat ?");
+							int menu = showMenu(p, n,
+								"I seek entrance to the city of ogres",
+								"I have come to kill you");
+							if (menu == 0) {
+								npcTalk(p, n, "You have no business there!",
+									"Just a minute...maybe if you did something for me I might help you get in...");
+								playerTalk(p, n, "What can I do to help an ogre ?");
+								npcTalk(p, n, "South East of here there is another settlement",
+									"The name of the chieftan is Toban",
+									"He stole some gold from me",
+									"And I want it back!",
+									"Here is a key to the chest it's in",
+									"If you bring it here",
+									"I may reward you...");
+								addItem(p, ItemId.KEY.id(), 1);
+								p.getCache().store("ogre_og", true);
+							} else if (menu == 1) {
+								npcTalk(p, n, "Kill me eh ?",
+									"you shall be crushed like the vermin you are!",
+									"Guards!!");
+								ogreSpawnAndAttack(p, n);
+							}
+						}
+					}
+					break;
+			}
+		}
+		else if (n.getID() == NpcId.TOBAN.id()) {
+			switch (p.getQuestStage(this)) {
+				case -1:
+					p.message("The ogre is not interested in you anymore");
+					break;
+				case 0:
+				case 1:
+					p.message("He is busy at the moment...");
+					break;
+				case 2:
+				case 3:
+				case 4:
+				case 5:
+				case 6:
+				case 7:
+				case 8:
+				case 9:
+					if (p.getCache().hasKey("ogre_relic_part_1")) {
+						npcTalk(p, n, "The small thing returns, what do you want now ?");
+						int subMenu = showMenu(p, n,
+							"I seek another task",
+							"I can't find the relic part you gave me");
+						if (subMenu == 0) {
+							npcTalk(p, n, "Have you arrived for dinner ?",
+								"Ha ha ha! begone small thing!");
+						} else if (subMenu == 1) {
+							if (!hasItem(p, ItemId.OGRE_RELIC_PART_BODY.id())) {
+								npcTalk(p, n, "Small thing, how could you be so careless ?",
+									"Here, take this one");
+								addItem(p, ItemId.OGRE_RELIC_PART_BODY.id(), 1);
+							} else {
+								npcTalk(p, n, "Small thing, you lie to me!",
+									"I always says that small things are big trouble...");
+							}
+						}
+					} else {
+						if (p.getCache().hasKey("ogre_toban")) {
+							npcTalk(p, n, "Ha ha ha! small thing returns",
+								"Did you bring the dragon bone ?");
+							if (hasItem(p, ItemId.DRAGON_BONES.id())) {
+								playerTalk(p, n, "When I say I will get something I get it!");
+								removeItem(p, ItemId.DRAGON_BONES.id(), 1);
+								npcTalk(p, n, "Ha ha ha! small thing has done it",
+									"Toban is glad, take this...");
+								p.message("The ogre gives you part of a statue");
+								addItem(p, ItemId.OGRE_RELIC_PART_BODY.id(), 1);
+								p.getCache().remove("ogre_toban");
+								p.getCache().store("ogre_relic_part_1", true);
+							} else {
+								playerTalk(p, n, "I have nothing for you");
+								npcTalk(p, n, "Then you shall get nothing from me!");
+							}
+						} else {
+							if (p.getCache().hasKey("ogre_og")) {
+								npcTalk(p, n, "What do you want small thing ?");
+								int menu = showMenu(p, n,
+									"I seek entrance to the city of ogres",
+									"Die creature");
+								if (menu == 0) {
+									npcTalk(p, n, "Ha ha ha! you'll never get in there");
+									playerTalk(p, n, "I fear not for that city");
+									npcTalk(p, n, "Bold words for a thing so small");
+									int subMenu = showMenu(p, n,
+										"I could do something for you...",
+										"Die creature");
+									if (subMenu == 0) {
+										npcTalk(p, n, "Ha ha ha! this creature thinks it can help me!",
+											"I would eat you now, but for your puny size",
+											"Prove to me your might",
+											"Bring me the bones of a dragon to chew on",
+											"And I may spare you from a painful death");
+										p.getCache().store("ogre_toban", true);
+									} else if (subMenu == 1) {
+										npcTalk(p, n, "Ha ha ha! it thinks it's a match for toban does it ?");
+										n.startCombat(p);
 									}
 								} else if (menu == 1) {
-									npcTalk(p, n, "Grrr!");
-									p.message("It seems your response has upset the skavid");
-								} else {
-									npcTalk(p, n, "???");
-									p.message("The response was wrong");
+									npcTalk(p, n, "Ha ha ha! it thinks it's a match for toban does it ?");
+									n.startCombat(p);
 								}
-							}
-						} else {
-							npcTalk(p, n, "Tanath Gor Ar Bidith ?");
-							playerTalk(p, n, "???");
-							p.message("You cannot communicate with the skavid");
-							p.message("It seems you haven't learned enough of thier language yet...");
-						}
-					}
-					else if (inArray(n.getID(), NpcId.SKAVID_IG.id(), NpcId.SKAVID_AR.id(), NpcId.SKAVID_CUR.id(), NpcId.SKAVID_NOD.id())) {
-						if (n.getID() == NpcId.SKAVID_IG.id()) {
-							if (p.getCache().hasKey("language_ig") || p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Quests.WATCHTOWER) == -1) {
-								npcTalk(p, n, "Bidith Ig...");
-								p.message("You have already talked to this skavid");
-								return null;
-							}
-							npcTalk(p, n, "Cur bidith...");
-						} else if (n.getID() == NpcId.SKAVID_AR.id()) {
-							if (p.getCache().hasKey("language_ar") || p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Quests.WATCHTOWER) == -1) {
-								npcTalk(p, n, "Ar cur...");
-								p.message("You have already talked to this skavid");
-								return null;
-							}
-							npcTalk(p, n, "Gor cur...");
-						} else if (n.getID() == NpcId.SKAVID_CUR.id()) {
-							if (p.getCache().hasKey("language_cur") || p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Quests.WATCHTOWER) == -1) {
-								npcTalk(p, n, "Cur tanath...");
-								p.message("You have already talked to this skavid");
-								return null;
-							}
-							npcTalk(p, n, "Bidith tanath...");
-						} else if (n.getID() == NpcId.SKAVID_NOD.id()) {
-							if (p.getCache().hasKey("language_nod") || p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Quests.WATCHTOWER) == -1) {
-								npcTalk(p, n, "Gor nod...");
-								p.message("You have already talked to this skavid");
-								return null;
-							}
-							npcTalk(p, n, "Tanath gor...");
-						}
-						if (p.getCache().hasKey("skavid_started_language")) {
-							p.message("The skavid is trying to communicate...");
-							boolean correctWord = false;
-							int learnMenu = showMenu(p, n, "Cur", "Ar", "Ig", "Nod", "Gor");
-							if (learnMenu == 0) {
-								if (n.getID() == NpcId.SKAVID_CUR.id()) {
-									npcTalk(p, n, "Cur",
-										"Cur tanath");
-									p.getCache().store("language_cur", true);
-									correctWord = true;
-								}
-							} else if (learnMenu == 1) {
-								if (n.getID() == NpcId.SKAVID_AR.id()) {
-									npcTalk(p, n, "Ar",
-										"Ar cur");
-									p.getCache().store("language_ar", true);
-									correctWord = true;
-								}
-							} else if (learnMenu == 2) {
-								if (n.getID() == NpcId.SKAVID_IG.id()) {
-									npcTalk(p, n, "Ig",
-										"Bidith Ig");
-									p.getCache().store("language_ig", true);
-									correctWord = true;
-								}
-							} else if (learnMenu == 3) {
-								if (n.getID() == NpcId.SKAVID_NOD.id()) {
-									npcTalk(p, n, "Nod",
-										"Gor nod");
-									p.getCache().store("language_nod", true);
-									correctWord = true;
-								}
-							}
-
-							if (learnMenu != -1) {
-								if (correctWord) {
-									p.message("It seems the skavid understood you");
-								} else {
-									npcTalk(p, n, "???");
-									message(p, "It seems that was the wrong reply");
-								}
-							}
-						} else {
-							playerTalk(p, n, "???");
-							p.message("The skavid is trying to communicate...");
-							p.message("You don't know any skavid words yet!");
-						}
-					}
-
-					else if (n.getID() == NpcId.SKAVID_INITIAL.id()) {
-						if (p.getQuestStage(Quests.WATCHTOWER) == -1) {
-							npcTalk(p, n, "Ah master...",
-								"You did well to master our language...");
-							return null;
-						}
-						if ((p.getCache().hasKey("language_cur")
-							&& p.getCache().hasKey("language_ar")
-							&& p.getCache().hasKey("language_ig")
-							&& p.getCache().hasKey("language_nod")) || p.getCache().hasKey("skavid_completed_language")) {
-							npcTalk(p, n, "Master, my kinsmen tell me you have learned skavid",
-								"You should speak to the mad ones in their cave...");
-							return null;
-						} else if (p.getCache().hasKey("skavid_started_language")) {
-							npcTalk(p, n, "Master, how are you doing learning our language ?");
-							playerTalk(p, n, "I am studying the speech of your kind...");
-						} else {
-							npcTalk(p, n, "Tanath cur, tanath cur");
-							playerTalk(p, n, "???");
-							npcTalk(p, n, "Don't hurt me, don't hurt me!");
-							playerTalk(p, n, "Stop moaning creature",
-								"I know about you skavids",
-								"You serve those monsters the ogres");
-							npcTalk(p, n, "Please dont touch me!");
-							playerTalk(p, n, "You have something that belongs to me...");
-							npcTalk(p, n, "I don't have anything, please believe me!");
-							playerTalk(p, n, "Somehow I find your words hard to believe");
-							npcTalk(p, n, "I'm begging your kindness, I don't have it!");
-							int menu = showMenu(p, n, false, //do not send over
-								"I don't believe you hand it over!",
-								"Okay okay i'm not going to hurt you");
-							if (menu == 0) {
-								playerTalk(p, n, "I don't believe you, hand it over!");
-								npcTalk(p, n, "Ahhhhh, help!");
-								p.message("The skavid runs away...");
-								temporaryRemoveNpc(n);
-								playerTalk(p, n, "Oh great...I've scared it off!");
-							} else if (menu == 1) {
-								playerTalk(p, n, "Okay, okay i'm not going to hurt you");
-								npcTalk(p, n, "Thank you kind " + (p.isMale() ? "sir" : "madam"),
-									"I'll tells you where that things you wants is...",
-									"The mad skavids have it in their cave in the city",
-									"You will have to learn skavid",
-									"Otherwise they will not talks to you",
-									"Make sure you remembers all that you hear",
-									"Let me tells you the most common skavid words...",
-									"Ar",
-									"Nod",
-									"Gor",
-									"Ig",
-									"Cur",
-									"That will gets you started...");
-								p.getCache().store("skavid_started_language", true);
-								p.updateQuestStage(Quests.WATCHTOWER, 5);
 							}
 						}
 					}
-
-					else if (n.getID() == NpcId.WATCHTOWER_WIZARD.id()) {
-						watchtowerWizardDialogue(p, n, -1);
-					}
-					else if (n.getID() == NpcId.OGRE_CITIZEN.id()) {
-						npcTalk(p, n, "Uh ? what are you doing here ?");
-					}
-					else if (n.getID() == NpcId.OGRE_TRADER_FOOD.id()) {
-						npcTalk(p, n, "Grrr, little animal.. I shall destroy you!");
-						n.startCombat(p);
-					}
-					else if (n.getID() == NpcId.OGRE_GUARD_CAVE_ENTRANCE.id()) {
-						if (p.getQuestStage(Quests.WATCHTOWER) != -1) {
-							npcTalk(p, n, "What do you want ?");
-							int menu = showMenu(p, n,
-								"I want to go in there",
-								"I want to rid the world of ogres");
-							if (menu == 0) {
-								npcTalk(p, n, "Oh you do, do you ?",
-									"How about no ?");
-								n.startCombat(p);
-							} else if (menu == 1) {
-								npcTalk(p, n, "You dare mock me creature!!!");
-								n.startCombat(p);
-							}
-						} else {
-							p.message("The guard is occupied at the moment");
-						}
-					}
-					else if (n.getID() == NpcId.OGRE_TRADER_ROCKCAKE.id()) {
-						npcTalk(p, n, "Arr, small thing wants my food does it ?",
-							"I'll teach you to deal with ogres!");
-						n.startCombat(p);
-					}
-					else if (n.getID() == NpcId.CITY_GUARD.id()) {
-						if (p.getCache().hasKey("city_guard_riddle")) {
-							npcTalk(p, n, "What is it ?");
-							int menu = showMenu(p, n,
-								"Do you have any other riddles for me ?",
-								"I have lost the map you gave me");
-							if (menu == 0) {
-								npcTalk(p, n, "Yes, what looks good on a plate with salad ?");
-								int subMenu = showMenu(p, n,
-									"I don't know...",
-									"A nice pizza ?");
-								if (subMenu == 0) {
-									npcTalk(p, n, "You!!!",
-										"Now go and bother me no more...");
-								} else if (subMenu == 1) {
-									npcTalk(p, n, "Grr.. think you are a comedian eh ?",
-										"Get lost!");
-								}
-							} else if (menu == 1) {
-								if (hasItem(p, ItemId.SKAVID_MAP.id())) {
-									npcTalk(p, n, "Are you blind ? what is that you are carrying ?");
-									playerTalk(p, n, "Oh, that map....");
-								} else {
-									npcTalk(p, n, "What's the point ? take this copy and bother me no more!");
-									addItem(p, ItemId.SKAVID_MAP.id(), 1);
-								}
-							}
-						} else {
-							npcTalk(p, n, "Grrrr, what business have you here ?");
-							playerTalk(p, n, "I am on an errand...");
-							npcTalk(p, n, "So what do you want with me ?");
-							int menu = showMenu(p, n, "I am an ogre killer come to destroy you!",
-								"I seek passage into the skavid caves");
-							if (menu == 0) {
-								npcTalk(p, n, "I would like to see you try!");
-								n.startCombat(p);
-							} else if (menu == 1) {
-								npcTalk(p, n, "Is that so...",
-									"You humour me small thing, answer this riddle and I will help you...",
-									"I want you to bring me an item",
-									"I will give you all the letters of this item, you work out what it is...",
-									"My first is in days, but not in years",
-									"My second is in evil, and also in tears",
-									"My third is in all, but not in none",
-									"My fourth is in hot, but not in sun",
-									"My fifth is in heaven, and also in hate",
-									"My sixth is in fearing, but not in fate",
-									"My seventh is in plush, but not in place",
-									"My eighth is in nine, but not in eight",
-									"My last is in earth, and also in in great",
-									"My whole is an object, that magic will make",
-									"It brings wrack and ruin to all in it's wake...",
-									"Now how long I wonder, will this riddle take ?");
-							}
-						}
-					}
-					else if (n.getID() == NpcId.GREW.id()) {
-						switch (p.getQuestStage(plugin)) {
-							case -1:
-								p.message("The ogre is not interested in you anymore");
-								break;
-							case 0:
-							case 1:
-								p.message("The ogre has nothing to say at the moment...");
-								break;
-							case 2:
-							case 3:
-							case 4:
-							case 5:
-							case 6:
-							case 7:
-							case 8:
-							case 9:
-								if (p.getCache().hasKey("ogre_grew_p1")) {
-									npcTalk(p, n, "What are you doing here morsel ?");
-									int menu = showMenu(p, n,
-										"Can I do anything else for you ?",
-										"I've lost the relic part you gave me",
-										"I've lost the crystal you gave me");
-									if (menu == 0) {
-										npcTalk(p, n, "I have nothing left for you but the cooking pot!");
-									} else if (menu == 1) {
-										if (!hasItem(p, ItemId.OGRE_RELIC_PART_BASE.id())) {
-											npcTalk(p, n, "Stupid morsel, I have another",
-												"Take it and go now before I lose my temper");
-											addItem(p, ItemId.OGRE_RELIC_PART_BASE.id(), 1);
-										} else {
-											npcTalk(p, n, "You lie to me morsel!");
-										}
-									} else if (menu == 2) {
-										if (!hasItem(p, ItemId.POWERING_CRYSTAL1.id())) {
-											npcTalk(p, n, "I suppose you want another ?",
-												"I suppose just this once I could give you my copy...");
-											addItem(p, ItemId.POWERING_CRYSTAL1.id(), 1);
-										} else {
-											npcTalk(p, n, "How dare you lie to me Morsel!",
-												"I will finish you now!");
-										}
-									}
-								} else {
-									if (p.getCache().hasKey("ogre_grew")) {
-										npcTalk(p, n, "The morsel is back",
-											"Does it have our tooth for us ?");
-										if (hasItem(p, ItemId.OGRE_TOOTH.id())) {
-											playerTalk(p, n, "I have it");
-											npcTalk(p, n, "It's got it, good good",
-												"That should annoy gorad wonderfully",
-												"Heheheheh!");
-											removeItem(p, ItemId.OGRE_TOOTH.id(), 1);
-											npcTalk(p, n, "Heres a token of my gratitude");
-											addItem(p, ItemId.OGRE_RELIC_PART_BASE.id(), 1);
-											npcTalk(p, n, "Some old gem I stole from Gorad...",
-												"And an old part of a statue",
-												"Heheheheh!");
-											p.message("The ogre hands you a large crystal");
-											p.message("The ogre gives you part of a statue");
-											addItem(p, ItemId.POWERING_CRYSTAL1.id(), 1);
-											p.getCache().remove("ogre_grew");
-											p.getCache().store("ogre_grew_p1", true);
-										} else {
-											playerTalk(p, n, "Err, I don't have it");
-											npcTalk(p, n, "Morsel, you dare to return without the tooth!",
-												"Either you are a fool, or want to be eaten!");
-										}
-									} else {
-										npcTalk(p, n, "What do you want tiny morsel ?",
-											"You would look good on my plate");
-										playerTalk(p, n, "I want to enter the city of ogres");
-										npcTalk(p, n, "Perhaps I should eat you instead ?");
-										int menu = showMenu(p, n,
-											"Don't eat me, I can help you",
-											"You will have to kill me first");
-										if (menu == 0) {
-											npcTalk(p, n, "What can a morsel like you do for me ?");
-											playerTalk(p, n, "I am a mighty adventurer",
-												"Slayer of monsters and user of magic powers");
-											npcTalk(p, n, "Well well, perhaps the morsel can help after all...",
-												"If you think you're tough",
-												"Find Gorad my enemy in the south east settlement",
-												"And knock one of his teeth out!",
-												"Heheheheh!");
-											p.getCache().store("ogre_grew", true);
-										} else if (menu == 1) {
-											npcTalk(p, n, "That can be arranged - guards!!");
-											spawnNpc(p.getWorld(), NpcId.OGRE_GENERAL.id(), p.getX(), p.getY(), 60000 * 3);
-											return invoke(1, 3);
-										}
-									}
-								}
-								break;
-						}
-					}
-					else if (n.getID() == NpcId.OG.id()) {
-						switch (p.getQuestStage(plugin)) {
-							case -1:
-								p.message("The ogre is not interested in you anymore");
-								break;
-							case 0:
-							case 1:
-								p.message("He's busy, try him later");
-								break;
-							case 2:
-							case 3:
-							case 4:
-							case 5:
-							case 6:
-							case 7:
-							case 8:
-							case 9:
-								if (p.getCache().hasKey("ogre_relic_part_3")) {
-									npcTalk(p, n, "It's the little rat again");
-									int menu = showMenu(p, n,
-										"Do you have any other tasks for me ?",
-										"I have lost the relic part you gave me");
-									if (menu == 0) {
-										npcTalk(p, n, "No, I have no more tasks for you, now go away");
-									} else if (menu == 1) {
-										if (!hasItem(p, ItemId.OGRE_RELIC_PART_HEAD.id())) {
-											npcTalk(p, n, "Grrr, why do I bother ?",
-												"It's a good job I have another part!");
-											addItem(p, ItemId.OGRE_RELIC_PART_HEAD.id(), 1);
-										} else {
-											npcTalk(p, n, "Are you blind! I can see you have it even from here!");
-										}
-									}
-								} else {
-									if (p.getCache().hasKey("ogre_og")) {
-										npcTalk(p, n, "Where is my gold from that traitor toban?");
-										int subMenu = showMenu(p, n,
-											"I have your gold",
-											"I haven't got it yet",
-											"I have lost the key!");
-										if (subMenu == 0) {
-											if (hasItem(p, ItemId.STOLEN_GOLD.id(), 1)) {
-												npcTalk(p, n, "Well well, the little rat has got it!",
-													"take this to show the little rat is a friend to the ogres",
-													"Hahahahaha!");
-												removeItem(p, ItemId.STOLEN_GOLD.id(), 1);
-												p.message("The ogre gives you part of a horrible statue");
-												addItem(p, ItemId.OGRE_RELIC_PART_HEAD.id(), 1);
-												p.getCache().remove("ogre_og");
-												/** Very strange setup of quest tbh, but that's what it is **/
-												p.getCache().store("ogre_relic_part_3", true);
-											} else {
-												npcTalk(p, n, "That is not what I want rat!",
-													"If you want to impress me",
-													"Then get the gold I asked for!");
-											}
-										} else if (subMenu == 1) {
-											npcTalk(p, n, "Don't come back until you have it",
-												"Unless you want to be on tonight's menu!");
-										} else if (subMenu == 2) {
-											if (hasItem(p, ItemId.KEY.id())) {
-												npcTalk(p, n, "Oh yeah! what's that then ?");
-												p.message("It seems you still have the key...");
-											} else {
-												npcTalk(p, n, "Idiot! take another and don't lose it!");
-												addItem(p, ItemId.KEY.id(), 1);
-											}
-										}
-									} else {
-										npcTalk(p, n, "Why are you here little rat ?");
-										int menu = showMenu(p, n,
-											"I seek entrance to the city of ogres",
-											"I have come to kill you");
-										if (menu == 0) {
-											npcTalk(p, n, "You have no business there!",
-												"Just a minute...maybe if you did something for me I might help you get in...");
-											playerTalk(p, n, "What can I do to help an ogre ?");
-											npcTalk(p, n, "South East of here there is another settlement",
-												"The name of the chieftan is Toban",
-												"He stole some gold from me",
-												"And I want it back!",
-												"Here is a key to the chest it's in",
-												"If you bring it here",
-												"I may reward you...");
-											addItem(p, ItemId.KEY.id(), 1);
-											p.getCache().store("ogre_og", true);
-										} else if (menu == 1) {
-											npcTalk(p, n, "Kill me eh ?",
-												"you shall be crushed like the vermin you are!",
-												"Guards!!");
-											spawnNpc(p.getWorld(), NpcId.OGRE_GENERAL.id(), p.getX(), p.getY(), 60000 * 3);
-											return invoke(1, 3);
-										}
-									}
-								}
-								break;
-						}
-					}
-					else if (n.getID() == NpcId.TOBAN.id()) {
-						switch (p.getQuestStage(plugin)) {
-							case -1:
-								p.message("The ogre is not interested in you anymore");
-								break;
-							case 0:
-							case 1:
-								p.message("He is busy at the moment...");
-								break;
-							case 2:
-							case 3:
-							case 4:
-							case 5:
-							case 6:
-							case 7:
-							case 8:
-							case 9:
-								if (p.getCache().hasKey("ogre_relic_part_1")) {
-									npcTalk(p, n, "The small thing returns, what do you want now ?");
-									int subMenu = showMenu(p, n,
-										"I seek another task",
-										"I can't find the relic part you gave me");
-									if (subMenu == 0) {
-										npcTalk(p, n, "Have you arrived for dinner ?",
-											"Ha ha ha! begone small thing!");
-									} else if (subMenu == 1) {
-										if (!hasItem(p, ItemId.OGRE_RELIC_PART_BODY.id())) {
-											npcTalk(p, n, "Small thing, how could you be so careless ?",
-												"Here, take this one");
-											addItem(p, ItemId.OGRE_RELIC_PART_BODY.id(), 1);
-										} else {
-											npcTalk(p, n, "Small thing, you lie to me!",
-												"I always says that small things are big trouble...");
-										}
-									}
-								} else {
-									if (p.getCache().hasKey("ogre_toban")) {
-										npcTalk(p, n, "Ha ha ha! small thing returns",
-											"Did you bring the dragon bone ?");
-										if (hasItem(p, ItemId.DRAGON_BONES.id())) {
-											playerTalk(p, n, "When I say I will get something I get it!");
-											removeItem(p, ItemId.DRAGON_BONES.id(), 1);
-											npcTalk(p, n, "Ha ha ha! small thing has done it",
-												"Toban is glad, take this...");
-											p.message("The ogre gives you part of a statue");
-											addItem(p, ItemId.OGRE_RELIC_PART_BODY.id(), 1);
-											p.getCache().remove("ogre_toban");
-											p.getCache().store("ogre_relic_part_1", true);
-										} else {
-											playerTalk(p, n, "I have nothing for you");
-											npcTalk(p, n, "Then you shall get nothing from me!");
-										}
-									} else {
-										if (p.getCache().hasKey("ogre_og")) {
-											npcTalk(p, n, "What do you want small thing ?");
-											int menu = showMenu(p, n,
-												"I seek entrance to the city of ogres",
-												"Die creature");
-											if (menu == 0) {
-												npcTalk(p, n, "Ha ha ha! you'll never get in there");
-												playerTalk(p, n, "I fear not for that city");
-												npcTalk(p, n, "Bold words for a thing so small");
-												int subMenu = showMenu(p, n,
-													"I could do something for you...",
-													"Die creature");
-												if (subMenu == 0) {
-													npcTalk(p, n, "Ha ha ha! this creature thinks it can help me!",
-														"I would eat you now, but for your puny size",
-														"Prove to me your might",
-														"Bring me the bones of a dragon to chew on",
-														"And I may spare you from a painful death");
-													p.getCache().store("ogre_toban", true);
-												} else if (subMenu == 1) {
-													npcTalk(p, n, "Ha ha ha! it thinks it's a match for toban does it ?");
-													n.startCombat(p);
-												}
-											} else if (menu == 1) {
-												npcTalk(p, n, "Ha ha ha! it thinks it's a match for toban does it ?");
-												n.startCombat(p);
-											}
-										}
-									}
-								}
-								break;
-						}
-					}
-					return null;
-				});
-				addState(1, () -> {
-					Npc ogre = getNearestNpc(p, NpcId.OGRE_GENERAL.id(), 4);
-					if (ogre != null) {
-						ogre.startCombat(p);
-					}
-					return null;
-				});
+					break;
 			}
-		});
+		}
 	}
 
 	private void watchtowerWizardDialogue(Player p, Npc n, int cID) {
@@ -984,6 +966,15 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 					}
 					break;
 			}
+		}
+	}
+
+	private void ogreSpawnAndAttack(Player p, Npc n) {
+		spawnNpc(p.getWorld(), NpcId.OGRE_GENERAL.id(), p.getX(), p.getY(), 60000 * 3);
+		sleep(1600);
+		Npc ogre = getNearestNpc(p, NpcId.OGRE_GENERAL.id(), 4);
+		if (ogre != null) {
+			ogre.startCombat(p);
 		}
 	}
 
