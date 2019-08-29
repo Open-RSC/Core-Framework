@@ -1043,7 +1043,7 @@ public abstract class Mob extends Entity {
 
 	public boolean rankCheckInvisible(Mob m) {
 		if(!(this instanceof Player) || !(m instanceof Player)) {
-			return false;
+			return true;
 		}
 
 		Player visionPlayer = (Player) this;
@@ -1058,7 +1058,7 @@ public abstract class Mob extends Entity {
 
 	public boolean rankCheckInvulnerable(Mob m) {
 		if(!(this instanceof Player) || !(m instanceof Player)) {
-			return false;
+			return true;
 		}
 
 		Player visionPlayer = (Player) this;
