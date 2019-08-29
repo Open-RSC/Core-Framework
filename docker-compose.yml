@@ -7,8 +7,8 @@ services:
     restart: always
     hostname: ${HOSTNAME}
     environment:
-      VIRTUAL_HOST: ${HOSTNAME}
-      LETSENCRYPT_HOST: ${HOSTNAME}
+      VIRTUAL_HOST: ${HOSTNAME},${HOSTNAME2}
+      LETSENCRYPT_HOST: ${HOSTNAME},${HOSTNAME2}
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
       NGINX_HOST: ${HOSTNAME}
     expose:
