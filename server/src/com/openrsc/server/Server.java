@@ -578,16 +578,9 @@ public final class Server implements Runnable {
 		List list = new LinkedList(eventsDuration.entrySet());
 		Collections.sort(list, new Comparator() {
 			public int compare(Object o1, Object o2) {
-				int o1EventCount = eventsCount.get(((Map.Entry) (o1)).getKey());
-				int o2EventCount = eventsCount.get(((Map.Entry) (o2)).getKey());
-				long o1EventDuration = eventsDuration.get(((Map.Entry) (o1)).getKey());
-				long o2EventDuration = eventsDuration.get(((Map.Entry) (o2)).getKey());
-
-				if(o1EventDuration == o2EventDuration) {
-					return o1EventCount < o2EventCount ? 1 : -1;
-				} else {
-					return o1EventDuration < o2EventDuration ? 1 : -1;
-				}
+				return
+					String.format("%025d%025d", eventsDuration.get(((Map.Entry) (o2)).getKey()), eventsCount.get(((Map.Entry) (o2)).getKey()))
+						.compareTo(String.format("%025d%025d", eventsDuration.get(((Map.Entry) (o1)).getKey()), eventsCount.get(((Map.Entry) (o1)).getKey())));
 			}
 		});
 		HashMap sortedHashMap = new LinkedHashMap();
