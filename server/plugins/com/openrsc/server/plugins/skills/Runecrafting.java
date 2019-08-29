@@ -4,6 +4,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.custom.BatchEvent;
+import com.openrsc.server.event.rsc.GameStateEvent;
 import com.openrsc.server.external.ObjectRunecraftingDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -116,54 +117,63 @@ public class Runecrafting implements ObjectActionListener, ObjectActionExecutive
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+		p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "RC Use Talisman") {
+			public void init() {
+				addState(0, () -> {
+					if (p.getQuestStage(Quests.RUNE_MYSTERIES) != -1)
+					{
+						p.message("You need to complete Rune Mysteries first.");
+						return null;
+					}
+					p.message("You feel a powerful force take hold of you...");
 
-		if (p.getQuestStage(Quests.RUNE_MYSTERIES) != -1)
-		{
-			p.message("You need to complete Rune Mysteries first.");
-			return;
-		}
-		p.message("You feel a powerful force take hold of you...");
-		sleep(500);
+					return nextState(1);
+				});
+				addState(1, () -> {
+					switch(ItemId.getById(item.getID()))
+					{
+						case AIR_TALISMAN:
+							p.teleport(985,19,false);
+							break;
+						case MIND_TALISMAN:
+							p.teleport(934,14,false);
+							break;
+						case WATER_TALISMAN:
+							p.teleport(986,63,false);
+							break;
+						case EARTH_TALISMAN:
+							p.teleport(934,70,false);
+							break;
+						case FIRE_TALISMAN:
+							p.teleport(887,26,false);
+							break;
+						case BODY_TALISMAN:
+							p.teleport(893,71,false);
+							break;
+						case COSMIC_TALISMAN:
+							p.teleport(839,26,false);
+							break;
+						case CHAOS_TALISMAN:
+							p.teleport(826,90,false);
+							break;
+						case NATURE_TALISMAN:
+							p.teleport(787,29,false);
+							break;
+						case LAW_TALISMAN:
+							p.teleport(790,69,false);
+							break;
+						case DEATH_TALISMAN:
+							p.teleport(934,14,false);
+							break;
+						case BLOOD_TALISMAN:
+							p.teleport(743,22,false);
+							break;
+					}
 
-		switch(ItemId.getById(item.getID()))
-		{
-			case AIR_TALISMAN:
-				p.teleport(985,19,false);
-				break;
-			case MIND_TALISMAN:
-				p.teleport(934,14,false);
-				break;
-			case WATER_TALISMAN:
-				p.teleport(986,63,false);
-				break;
-			case EARTH_TALISMAN:
-				p.teleport(934,70,false);
-				break;
-			case FIRE_TALISMAN:
-				p.teleport(887,26,false);
-				break;
-			case BODY_TALISMAN:
-				p.teleport(893,71,false);
-				break;
-			case COSMIC_TALISMAN:
-				p.teleport(839,26,false);
-				break;
-			case CHAOS_TALISMAN:
-				p.teleport(826,90,false);
-				break;
-			case NATURE_TALISMAN:
-				p.teleport(787,29,false);
-				break;
-			case LAW_TALISMAN:
-				p.teleport(790,69,false);
-				break;
-			case DEATH_TALISMAN:
-				p.teleport(934,14,false);
-				break;
-			case BLOOD_TALISMAN:
-				p.teleport(743,22,false);
-				break;
-		}
+					return null;
+				});
+			}
+		});
 	}
 
 	public int getRuneMultiplier(Player p, int runeId) {
