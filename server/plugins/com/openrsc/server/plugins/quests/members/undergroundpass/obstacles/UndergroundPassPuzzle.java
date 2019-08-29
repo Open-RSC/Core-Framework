@@ -1,10 +1,10 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 
-import com.openrsc.server.constants.Skills;
-import com.openrsc.server.event.rsc.GameStateEvent;
 import com.openrsc.server.model.Point;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 
@@ -31,71 +31,67 @@ public class UndergroundPassPuzzle implements ObjectActionListener, ObjectAction
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
-		p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "Underground Pass Puzzle") {
-			public void init() {
-				addState(0, () -> {
-					if (inArray(obj.getID(), WORKING_GRILLS)) {
-						getPlayerOwner().message("you step onto the metal grill");
-						getPlayerOwner().message("you tread carefully as you move forward");
-						if (obj.getID() == 777) {
-							getPlayerOwner().teleport(681, 3446);
-						} else if (obj.getID() == 785) {
-							getPlayerOwner().teleport(683, 3446);
-						} else if (obj.getID() == 786) {
-							getPlayerOwner().teleport(683, 3448);
-						} else if (obj.getID() == 787) {
-							getPlayerOwner().teleport(685, 3448);
-						} else if (obj.getID() == 788) {
-							getPlayerOwner().teleport(687, 3448);
-						} else if (obj.getID() == 789) {
-							getPlayerOwner().teleport(687, 3450);
-						} else if (obj.getID() == 790) {
-							getPlayerOwner().teleport(687, 3452);
-						} else if (obj.getID() == 791) {
-							getPlayerOwner().teleport(689, 3452);
-						}
-					}
-					else if (obj.getID() == FAIL_GRILL) {
-						message(p, "you step onto the metal grill");
-						getPlayerOwner().message("it's a trap");
-						getPlayerOwner().teleport(711, 3464);
-						return invoke(1, 3);
-					}
-					else if (obj.getID() == WALK_HERE_ROCK_EAST) {
-						getPlayerOwner().teleport(679, 3447);
-					}
-					else if (obj.getID() == WALK_HERE_ROCK_WEST) {
-						getPlayerOwner().walkToEntity(689, 3452);
-					}
-					else if (obj.getID() == LEVER) {
-						message(getPlayerOwner(), "you pull on the lever",
-							"you hear a loud mechanical churning");
-						GameObject cage_closed = new GameObject(getPlayerOwner().getWorld(), Point.location(690, 3449), CAGE, 6, 0);
-						GameObject cage_open = new GameObject(getPlayerOwner().getWorld(), Point.location(690, 3449), CAGE + 1, 6, 0);
-						getPlayerOwner().getWorld().registerGameObject(cage_open);
-						getPlayerOwner().getWorld().delayedSpawnObject(cage_closed.getLoc(), 5000);
-						getPlayerOwner().message("as the huge railing raises to the cave roof");
-						getPlayerOwner().message("the cage lowers behind you");
-						getPlayerOwner().teleport(690, 3451);
-					}
-					return null;
-				});
-				addState(1, () -> {
-					message(p, "you fall onto a pit of spikes");
-					getPlayerOwner().teleport(679, 3448);
-					getPlayerOwner().damage((int) (getCurrentLevel(getPlayerOwner(), Skills.HITS) * 0.2D));
-					getPlayerOwner().message("you crawl out of the pit");
-					getPlayerOwner().getWorld().replaceGameObject(obj,
-						new GameObject(obj.getWorld(), obj.getLocation(), 778, obj.getDirection(), obj
-							.getType()));
-					getPlayerOwner().getWorld().delayedSpawnObject(obj.getLoc(), 1000);
-					return invoke(2, 3);
-				});
-				addState(2, () -> {
-					getPlayerOwner().message("and off the metal grill");
-					return null;
-				});
-			}
-		});
+		if (inArray(obj.getID(), WORKING_GRILLS)) {
+			moveForward(p, obj);
+		}
+		else if (obj.getID() == FAIL_GRILL) {
+			trap(p, obj);
+		}
+		else if (obj.getID() == WALK_HERE_ROCK_EAST) {
+			p.teleport(679, 3447);
+		}
+		else if (obj.getID() == WALK_HERE_ROCK_WEST) {
+			p.walkToEntity(689, 3452);
+		}
+		else if (obj.getID() == LEVER) {
+			message(p, "you pull on the lever",
+				"you hear a loud mechanical churning");
+			GameObject cage_closed = new GameObject(p.getWorld(), Point.location(690, 3449), CAGE, 6, 0);
+			GameObject cage_open = new GameObject(p.getWorld(), Point.location(690, 3449), CAGE + 1, 6, 0);
+			p.getWorld().registerGameObject(cage_open);
+			p.getWorld().delayedSpawnObject(cage_closed.getLoc(), 5000);
+			p.message("as the huge railing raises to the cave roof");
+			p.message("the cage lowers behind you");
+			p.teleport(690, 3451);
+		}
+	}
+
+	private void trap(Player p, GameObject obj) {
+		message(p, "you step onto the metal grill");
+		p.message("it's a trap");
+		p.teleport(711, 3464);
+		sleep(1600);
+		message(p, "you fall onto a pit of spikes");
+		p.teleport(679, 3448);
+		p.damage((int) (getCurrentLevel(p, Skills.HITS) * 0.2D));
+		p.message("you crawl out of the pit");
+		p.getWorld().replaceGameObject(obj,
+			new GameObject(obj.getWorld(), obj.getLocation(), 778, obj.getDirection(), obj
+				.getType()));
+		p.getWorld().delayedSpawnObject(obj.getLoc(), 1000);
+		sleep(1600);
+		p.message("and off the metal grill");
+	}
+
+	private void moveForward(Player p, GameObject obj) {
+		p.message("you step onto the metal grill");
+		p.message("you tread carefully as you move forward");
+		if (obj.getID() == 777) {
+			p.teleport(681, 3446);
+		} else if (obj.getID() == 785) {
+			p.teleport(683, 3446);
+		} else if (obj.getID() == 786) {
+			p.teleport(683, 3448);
+		} else if (obj.getID() == 787) {
+			p.teleport(685, 3448);
+		} else if (obj.getID() == 788) {
+			p.teleport(687, 3448);
+		} else if (obj.getID() == 789) {
+			p.teleport(687, 3450);
+		} else if (obj.getID() == 790) {
+			p.teleport(687, 3452);
+		} else if (obj.getID() == 791) {
+			p.teleport(689, 3452);
+		}
 	}
 }
