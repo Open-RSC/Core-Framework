@@ -5,7 +5,6 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.event.rsc.GameStateEvent;
 import com.openrsc.server.external.ObjectMiningDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -109,21 +108,25 @@ public final class Mining implements ObjectActionListener,
 	}
 
 	private void handleMining(final GameObject object, Player player, int click) {
+		if (player.isBusy()) {
+			return;
+		}
+		if (!player.withinRange(object, 1)) {
+			return;
+		}
+
 		final ObjectMiningDef def = player.getWorld().getServer().getEntityHandler().getObjectMiningDef(object.getID());
 		final int axeId = getAxe(player);
-		final int retrytimes;
+		int retrytimes = -1;
 		final int mineLvl = player.getSkills().getLevel(com.openrsc.server.constants.Skills.MINING);
 		final int mineXP = player.getSkills().getExperience(Skills.MINING);
-		final int reqlvl;
+		int reqlvl = 1;
 		switch (ItemId.getById(axeId)) {
-			default:
 			case BRONZE_PICKAXE:
 				retrytimes = 1;
-				reqlvl = 1;
 				break;
 			case IRON_PICKAXE:
 				retrytimes = 2;
-				reqlvl = 1;
 				break;
 			case STEEL_PICKAXE:
 				retrytimes = 3;
@@ -141,126 +144,112 @@ public final class Mining implements ObjectActionListener,
 				retrytimes = 12;
 				reqlvl = 41;
 				break;
+			default:
+				retrytimes = 1;
+				break;
 		}
 
-		player.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(player.getWorld(), player, 0, "Mining") {
-			public void init() {
-				addState(0, () -> {
-					if (getPlayerOwner().isBusy()) {
-						return null;
-					}
-					if (!getPlayerOwner().withinRange(object, 1)) {
-						return null;
-					}
-
-					if (getPlayerOwner().click == 0 && (def == null || (def.getRespawnTime() < 1 && object.getID() != 496) || (def.getOreId() == 315 && getPlayerOwner().getQuestStage(Quests.FAMILY_CREST) < 6))) {
-						if (axeId < 0 || reqlvl > mineLvl) {
-							message(getPlayerOwner(), "You need a pickaxe to mine this rock",
-								"You do not have a pickaxe which you have the mining level to use");
-							return null;
-						}
-						getPlayerOwner().setBusyTimer(getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK * 3);
-						getPlayerOwner().message("You swing your pick at the rock...");
-						return invoke(1, 3);
-					}
-					if (getPlayerOwner().click == 1) {
-						getPlayerOwner().playSound("prospect");
-						getPlayerOwner().setBusyTimer(getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK * 3);
-						getPlayerOwner().message("You examine the rock for ores...");
-						return invoke(2, 3);
-					}
-					if (axeId < 0 || reqlvl > mineLvl) {
-						message(getPlayerOwner(), "You need a pickaxe to mine this rock",
-							"You do not have a pickaxe which you have the mining level to use");
-						return null;
-					}
-					if (getPlayerOwner().getFatigue() >= getPlayerOwner().MAX_FATIGUE) {
-						getPlayerOwner().message("You are too tired to mine this rock");
-						return null;
-					}
-					if (object.getID() == 496 && mineXP >= 210) {
-						getPlayerOwner().message("Thats enough mining for now");
-						return null;
-					}
-					getPlayerOwner().playSound("mine");
-					showBubble(getPlayerOwner(), new Item(ItemId.IRON_PICKAXE.id()));
-					getPlayerOwner().message("You swing your pick at the rock...");
-					getPlayerOwner().setBatchEvent(new BatchEvent(getPlayerOwner().getWorld(), getPlayerOwner(), getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK * 3, "Mining", retrytimes, true) {
-						@Override
-						public void action() {
-							final Item ore = new Item(def.getOreId());
-							if (getOre(getWorld().getServer(), def, getOwner().getSkills().getLevel(com.openrsc.server.constants.Skills.MINING), axeId) && mineLvl >= def.getReqLevel()) {
-								if (DataConversions.random(1, 200) <= (getOwner().getInventory().wielding(ItemId.CHARGED_DRAGONSTONE_AMULET.id()) ? 2 : 1)) {
-									getOwner().playSound("foundgem");
-									Item gem = new Item(getGem(), 1);
-									getOwner().getInventory().add(gem);
-									getOwner().message("You just found a" + gem.getDef(getWorld()).getName().toLowerCase().replaceAll("uncut", "") + "!");
-									interrupt();
-								} else {
-									//check if there is still ore at the rock
-									GameObject obj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
-									if (obj == null) {
-										getOwner().message("You only succeed in scratching the rock");
-									} else {
-										getOwner().getInventory().add(ore);
-										getOwner().message("You manage to obtain some " + ore.getDef(getWorld()).getName().toLowerCase());
-										getOwner().incExp(com.openrsc.server.constants.Skills.MINING, def.getExp(), true);
-									}
-									if (object.getID() == 496 && getOwner().getCache().hasKey("tutorial") && getOwner().getCache().getInt("tutorial") == 51)
-										getOwner().getCache().set("tutorial", 52);
-									if (!getWorld().getServer().getConfig().MINING_ROCKS_EXTENDED || DataConversions.random(1, 100) <= def.getDepletion()) {
-										interrupt();
-										if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
-											GameObject newObject = new GameObject(getWorld(), object.getLocation(), 98, object.getDirection(), object.getType());
-											getWorld().replaceGameObject(object, newObject);
-											getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
-										}
-									}
-								}
-							} else {
-								if (object.getID() == 496) {
-									getOwner().message("You fail to make any real impact on the rock");
-								} else {
-									getOwner().message("You only succeed in scratching the rock");
-									if (getRepeatFor() > 1) {
-										GameObject checkObj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
-										if (checkObj == null) {
-											interrupt();
-										}
-									}
-								}
-							}
-							if (!isCompleted()) {
-								showBubble(getOwner(), new Item(ItemId.IRON_PICKAXE.id()));
-								getOwner().message("You swing your pick at the rock...");
-							}
-						}
-					});
-
-					return null;
-				});
-				addState(1, () -> {
-					getPlayerOwner().message("There is currently no ore available in this rock");
-					return null;
-				});
-				addState(2, () -> {
-					if (getPlayerOwner().getID() == 496) {
-						// Tutorial Island rock handler
-						message(getPlayerOwner(), "This rock contains " + new Item(def.getOreId()).getDef(getPlayerOwner().getWorld()).getName(),
-							"Sometimes you won't find the ore but trying again may find it",
-							"If a rock contains a high level ore",
-							"You will not find it until you increase your mining level");
-						if (getPlayerOwner().getCache().hasKey("tutorial") && getPlayerOwner().getCache().getInt("tutorial") == 49)
-							getPlayerOwner().getCache().set("tutorial", 50);
+		if (player.click == 0 && (def == null || (def.getRespawnTime() < 1 && object.getID() != 496) || (def.getOreId() == 315 && player.getQuestStage(Quests.FAMILY_CREST) < 6))) {
+			if (axeId < 0 || reqlvl > mineLvl) {
+				message(player, "You need a pickaxe to mine this rock",
+					"You do not have a pickaxe which you have the mining level to use");
+				return;
+			}
+			player.setBusyTimer(1800);
+			player.message("You swing your pick at the rock...");
+			sleep(1800);
+			player.message("There is currently no ore available in this rock");
+			return;
+		}
+		if (player.click == 1) {
+			player.playSound("prospect");
+			player.setBusyTimer(1800);
+			player.message("You examine the rock for ores...");
+			sleep(1800);
+			if (object.getID() == 496) {
+				// Tutorial Island rock handler
+				message(player, "This rock contains " + new Item(def.getOreId()).getDef(player.getWorld()).getName(),
+						"Sometimes you won't find the ore but trying again may find it",
+						"If a rock contains a high level ore",
+						"You will not find it until you increase your mining level");
+				if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 49)
+					player.getCache().set("tutorial", 50);
+			} else {
+				if (def == null || def.getRespawnTime() < 1) {
+					player.message("There is currently no ore available in this rock");
+				} else {
+					player.message("This rock contains " + new Item(def.getOreId()).getDef(player.getWorld()).getName());
+				}
+			}
+			return;
+		}
+		if (axeId < 0 || reqlvl > mineLvl) {
+			message(player, "You need a pickaxe to mine this rock",
+				"You do not have a pickaxe which you have the mining level to use");
+			return;
+		}
+		if (player.getFatigue() >= player.MAX_FATIGUE) {
+			player.message("You are too tired to mine this rock");
+			return;
+		}
+		if (object.getID() == 496 && mineXP >= 210) {
+			player.message("Thats enough mining for now");
+			return;
+		}
+		player.playSound("mine");
+		showBubble(player, new Item(ItemId.IRON_PICKAXE.id()));
+		player.message("You swing your pick at the rock...");
+		retrytimes = player.getWorld().getServer().getConfig().BATCH_PROGRESSION ? Formulae.getRepeatTimes(player, com.openrsc.server.constants.Skills.MINING) : retrytimes + 1000;
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1800, "Mining", retrytimes, true) {
+			@Override
+			public void action() {
+				final Item ore = new Item(def.getOreId());
+				if (getOre(getWorld().getServer(), def, getOwner().getSkills().getLevel(com.openrsc.server.constants.Skills.MINING), axeId) && mineLvl >= def.getReqLevel()) {
+					if (DataConversions.random(1, 200) <= (getOwner().getInventory().wielding(ItemId.CHARGED_DRAGONSTONE_AMULET.id()) ? 2 : 1)) {
+						getOwner().playSound("foundgem");
+						Item gem = new Item(getGem(), 1);
+						getOwner().getInventory().add(gem);
+						getOwner().message("You just found a" + gem.getDef(getWorld()).getName().toLowerCase().replaceAll("uncut", "") + "!");
+						interrupt();
 					} else {
-						if (def == null || def.getRespawnTime() < 1) {
-							getPlayerOwner().message("There is currently no ore available in this rock");
+						//check if there is still ore at the rock
+						GameObject obj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+						if (obj == null) {
+							getOwner().message("You only succeed in scratching the rock");
 						} else {
-							getPlayerOwner().message("This rock contains " + new Item(def.getOreId()).getDef(getPlayerOwner().getWorld()).getName());
+							getOwner().getInventory().add(ore);
+							getOwner().message("You manage to obtain some " + ore.getDef(getWorld()).getName().toLowerCase());
+							getOwner().incExp(com.openrsc.server.constants.Skills.MINING, def.getExp(), true);
+						}
+						if (object.getID() == 496 && getOwner().getCache().hasKey("tutorial") && getOwner().getCache().getInt("tutorial") == 51)
+							getOwner().getCache().set("tutorial", 52);
+						if (!getWorld().getServer().getConfig().MINING_ROCKS_EXTENDED || DataConversions.random(1, 100) <= def.getDepletion()) {
+							interrupt();
+							if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
+								GameObject newObject = new GameObject(getWorld(), object.getLocation(), 98, object.getDirection(), object.getType());
+								getWorld().replaceGameObject(object, newObject);
+								getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
+							}
 						}
 					}
-					return null;
-				});
+				} else {
+					if (object.getID() == 496) {
+						getOwner().message("You fail to make any real impact on the rock");
+					} else {
+						getOwner().message("You only succeed in scratching the rock");
+						if (getRepeatFor() > 1) {
+							GameObject checkObj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+							if (checkObj == null) {
+								interrupt();
+							}
+						}
+					}
+				}
+				if (!isCompleted()) {
+					showBubble(getOwner(), new Item(ItemId.IRON_PICKAXE.id()));
+					getOwner().message("You swing your pick at the rock...");
+				}
+
 			}
 		});
 	}
