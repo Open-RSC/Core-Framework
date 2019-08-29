@@ -5,7 +5,6 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
-import com.openrsc.server.event.rsc.GameStateEvent;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -69,337 +68,327 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
-		p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "Watch Tower Obstacles") {
-			public void init() {
-				addState(0, () -> {
-					if (obj.getID() == COMPLETED_QUEST_LADDER) {
-						p.teleport(636, 1684);
-					}
-					else if (obj.getID() == TOWER_SECOND_FLOOR_LADDER) {
-						if (p.getQuestStage(Quests.WATCHTOWER) == -1) {
-							p.teleport(492, 3524);
-						} else {
-							p.teleport(636, 2628);
-						}
-					}
-					else if (obj.getID() == TOWER_FIRST_FLOOR_LADDER) {
-						Npc t_guard = getNearestNpc(p, NpcId.TOWER_GUARD.id(), 5);
-						switch (p.getQuestStage(Quests.WATCHTOWER)) {
-							case 0:
-								if (t_guard != null) {
-									npcTalk(p, t_guard, "You can't go up there",
-										"That's private that is");
-								}
-								break;
-							case 1:
-							case 2:
-							case 3:
-							case 4:
-							case 5:
-							case 6:
-							case 7:
-							case 8:
-							case 9:
-							case 10:
-							case -1:
-								npcTalk(p, t_guard, "It is the wizards helping hand",
-									"Let 'em up");
-								int[] coords = coordModifier(p, true, obj);
-								p.teleport(coords[0], coords[1], false);
-								break;
-						}
-					}
-					else if (obj.getID() == OGRE_ENCLAVE_EXIT) {
-						p.teleport(662, 788);
-					}
-					else if (obj.getID() == WATCHTOWER_LEVER_DOWNPOSITION) {
-						p.message("The lever is stuck in the down position");
-					}
-					else if (obj.getID() == WATCHTOWER_LEVER) {
-						replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), 1015, obj.getDirection(), obj.getType()));
-						delayedSpawnObject(obj.getWorld(), obj.getLoc(), 2000);
-						p.message("You pull the lever");
-						if (p.getQuestStage(Quests.WATCHTOWER) == 10) {
-							p.message("The magic forcefield activates");
-							p.teleport(492, 3521);
-							removeItem(p, ItemId.POWERING_CRYSTAL1.id(), 1);
-							removeItem(p, ItemId.POWERING_CRYSTAL2.id(), 1);
-							removeItem(p, ItemId.POWERING_CRYSTAL3.id(), 1);
-							removeItem(p, ItemId.POWERING_CRYSTAL4.id(), 1);
-							Npc wizard = getNearestNpc(p, NpcId.WATCHTOWER_WIZARD.id(), 6);
-							if (wizard != null) {
-								p.message("@gre@You haved gained 4 quest points!");
-								incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.WATCHTOWER), true);
-								npcTalk(p, wizard, "Marvellous! it works!",
-									"The town will now be safe",
-									"Your help was invaluable",
-									"Take this payment as a token of my gratitude...");
-								p.message("The wizard gives you 5000 pieces of gold");
-								addItem(p, ItemId.COINS.id(), 5000);
-								npcTalk(p, wizard, "Also, let me improve your magic level for you");
-								p.message("The wizard lays his hands on you...");
-								p.message("You feel magic power increasing");
-								npcTalk(p, wizard, "Here is a special item for you...");
-								addItem(p, ItemId.SPELL_SCROLL.id(), 1);
-								npcTalk(p, wizard, "It's a new spell",
-									"Read the scroll and you will be able",
-									"To teleport yourself to here magically...");
-								p.message("Congratulations, you have finished the watchtower quest");
-								p.sendQuestComplete(Quests.WATCHTOWER);
-								/* TODO REMOVE ALL CACHES AND USE QUEST -1 */
-							} else {
-								p.message("Seems like the wizards were busy, please go back and complete again");
-							}
-						} else {
-							p.message("It had no effect");
-						}
-					}
-					else if (inArray(obj.getID(), WRONG_BUSHES)) {
-						if (p.getQuestStage(Quests.WATCHTOWER) == 0) {
-							playerTalk(p, null, "I am not sure why I am searching this bush...");
-							return null;
-						}
-						playerTalk(p, null, "Hmmm, nothing here");
-					}
-					else if (inArray(obj.getID(), CORRECT_BUSHES)) {
-						if (p.getQuestStage(Quests.WATCHTOWER) == 0) {
-							playerTalk(p, null, "I am not sure why I am searching this bush...");
-							return null;
-						}
-						if (obj.getID() == CORRECT_BUSHES[0]) {
-							playerTalk(p, null, "Here's Some armour, it could be evidence...");
-							addItem(p, ItemId.ARMOUR.id(), 1);
-						} else if (obj.getID() == CORRECT_BUSHES[1]) {
-							if (!hasItem(p, ItemId.FINGERNAILS.id())) {
-								playerTalk(p, null, "What's this ?",
-									"Disgusting! some fingernails",
-									"They may be a clue though... I'd better take them");
-								addItem(p, ItemId.FINGERNAILS.id(), 1);
-							} else {
-								playerTalk(p, null, "I have already searched this place");
-							}
-						} else if (obj.getID() == CORRECT_BUSHES[2]) {
-							if (!hasItem(p, ItemId.WATCH_TOWER_EYE_PATCH.id())) {
-								playerTalk(p, null, "I've found an eyepatch, I better show this to the wizards");
-								addItem(p, ItemId.WATCH_TOWER_EYE_PATCH.id(), 1);
-							} else {
-								playerTalk(p, null, "I have already searched this place");
-							}
-						} else if (obj.getID() == CORRECT_BUSHES[3]) {
-							if (!hasItem(p, ItemId.ROBE.id())) {
-								playerTalk(p, null, "Aha! a robe");
-								addItem(p, ItemId.ROBE.id(), 1);
-								playerTalk(p, null, "This could be a clue...");
-							} else {
-								playerTalk(p, null, "I have already searched this place");
-							}
-						} else if (obj.getID() == CORRECT_BUSHES[4]) {
-							playerTalk(p, null, "Aha a dagger");
-							addItem(p, ItemId.DAGGER.id(), 1);
-							playerTalk(p, null, "I wonder if this is evidence...");
-						}
-					}
-
-					else if (inArray(obj.getID(), TELEPORT_CAVES)) {
-						if (hasItem(p, ItemId.SKAVID_MAP.id())) {
-							//a light source
-							if (hasItem(p, ItemId.LIT_CANDLE.id()) || hasItem(p, ItemId.LIT_BLACK_CANDLE.id()) || hasItem(p, ItemId.LIT_TORCH.id())) {
-								p.message("You enter the cave");
-								if (obj.getID() == TELEPORT_CAVES[0]) {
-									p.teleport(650, 3555);
-								} else if (obj.getID() == TELEPORT_CAVES[1]) {
-									p.teleport(626, 3564);
-								} else if (obj.getID() == TELEPORT_CAVES[2]) {
-									p.teleport(627, 3591);
-								} else if (obj.getID() == TELEPORT_CAVES[3]) {
-									p.teleport(638, 3564);
-								} else if (obj.getID() == TELEPORT_CAVES[4]) {
-									p.teleport(629, 3574);
-								} else if (obj.getID() == TELEPORT_CAVES[5]) {
-									p.teleport(647, 3596);
-								}
-							} else {
-								p.teleport(629, 3558);
-								playerTalk(p, null, "Oh my! It's dark!",
-									"All I can see are lots of rocks on the floor",
-									"I suppose I better search them for a way out");
-							}
-						} else {
-							p.message("There's no way I can find my way through without a map of some kind");
-							if (obj.getID() == TELEPORT_CAVES[0] || obj.getID() == TELEPORT_CAVES[4]) {
-								p.teleport(629, 777);
-							} else if (obj.getID() == TELEPORT_CAVES[1]) {
-								p.teleport(624, 807);
-							} else if (obj.getID() == TELEPORT_CAVES[2]) {
-								p.teleport(648, 769);
-							} else if (obj.getID() == TELEPORT_CAVES[3]) {
-								p.teleport(631, 789);
-							} else if (obj.getID() == TELEPORT_CAVES[5]) {
-								p.teleport(638, 777);
-							}
-						}
-					}
-					else if (obj.getID() == TUNNEL_CAVE) {
-						p.message("You enter the cave");
-						p.teleport(605, 803);
-						playerTalk(p, null, "Wow! that tunnel went a long way");
-					}
-					else if (obj.getID() == TOBAN_CHEST_CLOSED) {
-						if (hasItem(p, ItemId.KEY.id(), 1)) {
-							p.message("You use the key Og gave you");
-							removeItem(p, ItemId.KEY.id(), 1);
-							openChest(obj, 2000, TOBAN_CHEST_OPEN);
-							if (hasItem(p, ItemId.STOLEN_GOLD.id())) {
-								message(p, "You have already got the stolen gold");
-							} else {
-								p.message("You find a stash of gold inside");
-								message(p, "You take the gold");
-								addItem(p, ItemId.STOLEN_GOLD.id(), 1);
-							}
-							p.message("The chest springs shut");
-						} else {
-							p.message("The chest is locked");
-							playerTalk(p, null, "I think I need a key of some sort...");
-						}
-					}
-					else if (obj.getID() == ISLAND_LADDER) {
-						p.message("You climb down the ladder");
-						p.teleport(669, 826);
-					}
-					else if (obj.getID() == WRONG_STEAL_COUNTER) {
-						p.message("You find nothing to steal");
-					}
-					else if (obj.getID() == OGRE_CAVE_ENCLAVE) {
-						if (p.getQuestStage(Quests.WATCHTOWER) == -1) {
-							p.message("The ogres have blocked this entrance now");
-							// TODO should we sell this entrance for 100,000 coins or etc?
-							return null;
-						}
-						Npc ogre_guard = getNearestNpc(p, NpcId.OGRE_GUARD_CAVE_ENTRANCE.id(), 5);
-						if (ogre_guard != null) {
-							npcTalk(p, ogre_guard, "No you don't!");
-							ogre_guard.startCombat(p);
-						}
-					}
-					else if (obj.getID() == ROCK_CAKE_COUNTER) {
-						Npc ogre_trader = getNearestNpc(p, NpcId.OGRE_TRADER_ROCKCAKE.id(), 5);
-						if (ogre_trader != null) {
-							npcTalk(p, ogre_trader, "Grr! get your hands off those cakes");
-							ogre_trader.startCombat(p);
-						} else {
-							if (getCurrentLevel(p, Skills.THIEVING) < 15) {
-								p.message("You need a thieving level of 15 to steal from this stall");
-								return null;
-							}
-							p.message("You cautiously grab a cake from the stall");
-							addItem(p, ItemId.ROCK_CAKE.id(), 1);
-							p.incExp(Skills.THIEVING, 64, true);
-							replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), ROCK_CAKE_COUNTER_EMPTY, obj.getDirection(), obj.getType()));
-							delayedSpawnObject(obj.getWorld(), obj.getLoc(), 5000);
-						}
-					}
-					else if (obj.getID() == ROCK_CAKE_COUNTER_EMPTY) {
-						p.message("The stall is empty at the moment");
-					}
-					else if (obj.getID() == CHEST_WEST) {
-						randomizedChest(p, obj);
-					}
-					else if (obj.getID() == CHEST_EAST) {
-						p.message("You open the chest");
-						openChest(obj, 2000, 1002);
-						p.message("Ahh! there is a poison spider inside");
-						p.message("Someone's idea of a joke...");
-						Npc spider = spawnNpc(p.getWorld(), NpcId.POISON_SPIDER.id(), obj.getX(), obj.getY() + 1, 60000 * 5);
-						spider.startCombat(p);
-						return invoke(1, 3);
-					}
-					else if (obj.getID() == ROCK_OVER || obj.getID() == ROCK_BACK) {
-						if (command.equalsIgnoreCase("look at")) {
-							p.message("The bridge has collapsed");
-							p.message("It seems this rock is placed here to jump from");
-						} else if (command.equalsIgnoreCase("jump over")) {
-							if (getCurrentLevel(p, Skills.AGILITY) < 30) {
-								p.message("You need agility level of 30 to attempt this jump");
-								return null;
-							}
-							if (obj.getID() == ROCK_BACK) {
-								p.teleport(646, 805);
-								playerTalk(p, null, "I'm glad that was easier on the way back!");
-							} else {
-								Npc ogre_guard = getNearestNpc(p, NpcId.OGRE_GUARD_BRIDGE.id(), 5);
-								if (ogre_guard != null) {
-									npcTalk(p, ogre_guard, "Oi! Little thing, if you want to cross here",
-										"You can pay me first - 20 gold pieces!");
-									playerTalk(p, ogre_guard, "20 gold pieces to jump off a bridge!!?");
-									npcTalk(p, ogre_guard, "That's what I said, like it or lump it");
-									int menu = showMenu(p, ogre_guard,
-										"Okay i'll pay it",
-										"Forget it, i'm not paying");
-									if (menu == 0) {
-										npcTalk(p, ogre_guard, "A wise choice little thing");
-										if (!hasItem(p, ItemId.COINS.id(), 20)) {
-											npcTalk(p, ogre_guard, "And where is your money ? Grrrr!",
-												"Do you want to get hurt or something ?");
-										} else {
-											removeItem(p, ItemId.COINS.id(), 20);
-											if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-												if (p.getFatigue() >= 7500) {
-													p.message("You are too tired to attempt this jump");
-													return null;
-												}
-											}
-											p.message("You daringly jump across the chasm");
-											p.teleport(647, 799);
-											p.incExp(Skills.AGILITY, 50, true);
-											playerTalk(p, null, "Phew! I just made it");
-										}
-									} else if (menu == 1) {
-										npcTalk(p, ogre_guard, "In that case you're not crossing");
-										p.message("The guard blocks your path");
-									}
-								} else {
-									if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-										if (p.getFatigue() >= 7500) {
-											p.message("You are too tired to attempt this jump");
-											return null;
-										}
-									}
-									p.message("You daringly jump across the chasm");
-									p.teleport(647, 799);
-									p.incExp(Skills.AGILITY, 50, true);
-									playerTalk(p, null, "Phew! I just made it");
-								}
-							}
-						}
-					}
-					else if (obj.getID() == DARK_PLACE_ROCKS) {
-						p.message("You search the rock");
-						p.message("There's nothing here");
-					}
-					else if (obj.getID() == DARK_PLACE_TELEPORT_ROCK) {
-						p.message("You search the rock");
-						p.message("You uncover a tunnel entrance");
-						p.teleport(638, 776);
-						playerTalk(p, null, "Phew! At last i'm out...",
-							"Next time I will take some light!");
-					}
-					else if (obj.getID() == YANILLE_HOLE) {
-						playerTalk(p, null, "I can't get through this way",
-							"This hole must lead to somewhere...");
-					}
-					else if (obj.getID() == SKAVID_HOLE) {
-						p.playerServerMessage(MessageType.QUEST, "You enter the tunnel");
-						p.message("So that's how the skavids are getting into yanille!");
-						p.teleport(609, 742);
-					}
-					return null;
-				});
-				addState(1, () -> {
-					p.message("The chest snaps shut");
-					return null;
-				});
+		if (obj.getID() == COMPLETED_QUEST_LADDER) {
+			p.teleport(636, 1684);
+		}
+		else if (obj.getID() == TOWER_SECOND_FLOOR_LADDER) {
+			if (p.getQuestStage(Quests.WATCHTOWER) == -1) {
+				p.teleport(492, 3524);
+			} else {
+				p.teleport(636, 2628);
 			}
-		});
+		}
+		else if (obj.getID() == TOWER_FIRST_FLOOR_LADDER) {
+			Npc t_guard = getNearestNpc(p, NpcId.TOWER_GUARD.id(), 5);
+			switch (p.getQuestStage(Quests.WATCHTOWER)) {
+				case 0:
+					if (t_guard != null) {
+						npcTalk(p, t_guard, "You can't go up there",
+							"That's private that is");
+					}
+					break;
+				case 1:
+				case 2:
+				case 3:
+				case 4:
+				case 5:
+				case 6:
+				case 7:
+				case 8:
+				case 9:
+				case 10:
+				case -1:
+					npcTalk(p, t_guard, "It is the wizards helping hand",
+						"Let 'em up");
+					int[] coords = coordModifier(p, true, obj);
+					p.teleport(coords[0], coords[1], false);
+					break;
+			}
+		}
+		else if (obj.getID() == OGRE_ENCLAVE_EXIT) {
+			p.teleport(662, 788);
+		}
+		else if (obj.getID() == WATCHTOWER_LEVER_DOWNPOSITION) {
+			p.message("The lever is stuck in the down position");
+		}
+		else if (obj.getID() == WATCHTOWER_LEVER) {
+			replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), 1015, obj.getDirection(), obj.getType()));
+			delayedSpawnObject(obj.getWorld(), obj.getLoc(), 2000);
+			p.message("You pull the lever");
+			if (p.getQuestStage(Quests.WATCHTOWER) == 10) {
+				p.message("The magic forcefield activates");
+				p.teleport(492, 3521);
+				removeItem(p, ItemId.POWERING_CRYSTAL1.id(), 1);
+				removeItem(p, ItemId.POWERING_CRYSTAL2.id(), 1);
+				removeItem(p, ItemId.POWERING_CRYSTAL3.id(), 1);
+				removeItem(p, ItemId.POWERING_CRYSTAL4.id(), 1);
+				Npc wizard = getNearestNpc(p, NpcId.WATCHTOWER_WIZARD.id(), 6);
+				if (wizard != null) {
+					p.message("@gre@You haved gained 4 quest points!");
+					incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.WATCHTOWER), true);
+					npcTalk(p, wizard, "Marvellous! it works!",
+						"The town will now be safe",
+						"Your help was invaluable",
+						"Take this payment as a token of my gratitude...");
+					p.message("The wizard gives you 5000 pieces of gold");
+					addItem(p, ItemId.COINS.id(), 5000);
+					npcTalk(p, wizard, "Also, let me improve your magic level for you");
+					p.message("The wizard lays his hands on you...");
+					p.message("You feel magic power increasing");
+					npcTalk(p, wizard, "Here is a special item for you...");
+					addItem(p, ItemId.SPELL_SCROLL.id(), 1);
+					npcTalk(p, wizard, "It's a new spell",
+						"Read the scroll and you will be able",
+						"To teleport yourself to here magically...");
+					p.message("Congratulations, you have finished the watchtower quest");
+					p.sendQuestComplete(Quests.WATCHTOWER);
+					/* TODO REMOVE ALL CACHES AND USE QUEST -1 */
+				} else {
+					p.message("Seems like the wizards were busy, please go back and complete again");
+				}
+			} else {
+				p.message("It had no effect");
+			}
+		}
+		else if (inArray(obj.getID(), WRONG_BUSHES)) {
+			if (p.getQuestStage(Quests.WATCHTOWER) == 0) {
+				playerTalk(p, null, "I am not sure why I am searching this bush...");
+				return;
+			}
+			playerTalk(p, null, "Hmmm, nothing here");
+		}
+		else if (inArray(obj.getID(), CORRECT_BUSHES)) {
+			if (p.getQuestStage(Quests.WATCHTOWER) == 0) {
+				playerTalk(p, null, "I am not sure why I am searching this bush...");
+				return;
+			}
+			if (obj.getID() == CORRECT_BUSHES[0]) {
+				playerTalk(p, null, "Here's Some armour, it could be evidence...");
+				addItem(p, ItemId.ARMOUR.id(), 1);
+			} else if (obj.getID() == CORRECT_BUSHES[1]) {
+				if (!hasItem(p, ItemId.FINGERNAILS.id())) {
+					playerTalk(p, null, "What's this ?",
+						"Disgusting! some fingernails",
+						"They may be a clue though... I'd better take them");
+					addItem(p, ItemId.FINGERNAILS.id(), 1);
+				} else {
+					playerTalk(p, null, "I have already searched this place");
+				}
+			} else if (obj.getID() == CORRECT_BUSHES[2]) {
+				if (!hasItem(p, ItemId.WATCH_TOWER_EYE_PATCH.id())) {
+					playerTalk(p, null, "I've found an eyepatch, I better show this to the wizards");
+					addItem(p, ItemId.WATCH_TOWER_EYE_PATCH.id(), 1);
+				} else {
+					playerTalk(p, null, "I have already searched this place");
+				}
+			} else if (obj.getID() == CORRECT_BUSHES[3]) {
+				if (!hasItem(p, ItemId.ROBE.id())) {
+					playerTalk(p, null, "Aha! a robe");
+					addItem(p, ItemId.ROBE.id(), 1);
+					playerTalk(p, null, "This could be a clue...");
+				} else {
+					playerTalk(p, null, "I have already searched this place");
+				}
+			} else if (obj.getID() == CORRECT_BUSHES[4]) {
+				playerTalk(p, null, "Aha a dagger");
+				addItem(p, ItemId.DAGGER.id(), 1);
+				playerTalk(p, null, "I wonder if this is evidence...");
+			}
+		}
+
+		else if (inArray(obj.getID(), TELEPORT_CAVES)) {
+			if (hasItem(p, ItemId.SKAVID_MAP.id())) {
+				//a light source
+				if (hasItem(p, ItemId.LIT_CANDLE.id()) || hasItem(p, ItemId.LIT_BLACK_CANDLE.id()) || hasItem(p, ItemId.LIT_TORCH.id())) {
+					p.message("You enter the cave");
+					if (obj.getID() == TELEPORT_CAVES[0]) {
+						p.teleport(650, 3555);
+					} else if (obj.getID() == TELEPORT_CAVES[1]) {
+						p.teleport(626, 3564);
+					} else if (obj.getID() == TELEPORT_CAVES[2]) {
+						p.teleport(627, 3591);
+					} else if (obj.getID() == TELEPORT_CAVES[3]) {
+						p.teleport(638, 3564);
+					} else if (obj.getID() == TELEPORT_CAVES[4]) {
+						p.teleport(629, 3574);
+					} else if (obj.getID() == TELEPORT_CAVES[5]) {
+						p.teleport(647, 3596);
+					}
+				} else {
+					p.teleport(629, 3558);
+					playerTalk(p, null, "Oh my! It's dark!",
+						"All I can see are lots of rocks on the floor",
+						"I suppose I better search them for a way out");
+				}
+			} else {
+				p.message("There's no way I can find my way through without a map of some kind");
+				if (obj.getID() == TELEPORT_CAVES[0] || obj.getID() == TELEPORT_CAVES[4]) {
+					p.teleport(629, 777);
+				} else if (obj.getID() == TELEPORT_CAVES[1]) {
+					p.teleport(624, 807);
+				} else if (obj.getID() == TELEPORT_CAVES[2]) {
+					p.teleport(648, 769);
+				} else if (obj.getID() == TELEPORT_CAVES[3]) {
+					p.teleport(631, 789);
+				} else if (obj.getID() == TELEPORT_CAVES[5]) {
+					p.teleport(638, 777);
+				}
+			}
+		}
+		else if (obj.getID() == TUNNEL_CAVE) {
+			p.message("You enter the cave");
+			p.teleport(605, 803);
+			playerTalk(p, null, "Wow! that tunnel went a long way");
+		}
+		else if (obj.getID() == TOBAN_CHEST_CLOSED) {
+			if (hasItem(p, ItemId.KEY.id(), 1)) {
+				p.message("You use the key Og gave you");
+				removeItem(p, ItemId.KEY.id(), 1);
+				openChest(obj, 2000, TOBAN_CHEST_OPEN);
+				if (hasItem(p, ItemId.STOLEN_GOLD.id())) {
+					message(p, "You have already got the stolen gold");
+				} else {
+					p.message("You find a stash of gold inside");
+					message(p, "You take the gold");
+					addItem(p, ItemId.STOLEN_GOLD.id(), 1);
+				}
+				p.message("The chest springs shut");
+			} else {
+				p.message("The chest is locked");
+				playerTalk(p, null, "I think I need a key of some sort...");
+			}
+		}
+		else if (obj.getID() == ISLAND_LADDER) {
+			p.message("You climb down the ladder");
+			p.teleport(669, 826);
+		}
+		else if (obj.getID() == WRONG_STEAL_COUNTER) {
+			p.message("You find nothing to steal");
+		}
+		else if (obj.getID() == OGRE_CAVE_ENCLAVE) {
+			if (p.getQuestStage(Quests.WATCHTOWER) == -1) {
+				p.message("The ogres have blocked this entrance now");
+				// TODO should we sell this entrance for 100,000 coins or etc?
+				return;
+			}
+			Npc ogre_guard = getNearestNpc(p, NpcId.OGRE_GUARD_CAVE_ENTRANCE.id(), 5);
+			if (ogre_guard != null) {
+				npcTalk(p, ogre_guard, "No you don't!");
+				ogre_guard.startCombat(p);
+			}
+		}
+		else if (obj.getID() == ROCK_CAKE_COUNTER) {
+			Npc ogre_trader = getNearestNpc(p, NpcId.OGRE_TRADER_ROCKCAKE.id(), 5);
+			if (ogre_trader != null) {
+				npcTalk(p, ogre_trader, "Grr! get your hands off those cakes");
+				ogre_trader.startCombat(p);
+			} else {
+				if (getCurrentLevel(p, Skills.THIEVING) < 15) {
+					p.message("You need a thieving level of 15 to steal from this stall");
+					return;
+				}
+				p.message("You cautiously grab a cake from the stall");
+				addItem(p, ItemId.ROCK_CAKE.id(), 1);
+				p.incExp(Skills.THIEVING, 64, true);
+				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), ROCK_CAKE_COUNTER_EMPTY, obj.getDirection(), obj.getType()));
+				delayedSpawnObject(obj.getWorld(), obj.getLoc(), 5000);
+			}
+		}
+		else if (obj.getID() == ROCK_CAKE_COUNTER_EMPTY) {
+			p.message("The stall is empty at the moment");
+		}
+		else if (obj.getID() == CHEST_WEST) {
+			randomizedChest(p, obj);
+		}
+		else if (obj.getID() == CHEST_EAST) {
+			p.message("You open the chest");
+			openChest(obj, 2000, 1002);
+			p.message("Ahh! there is a poison spider inside");
+			p.message("Someone's idea of a joke...");
+			Npc spider = spawnNpc(p.getWorld(), NpcId.POISON_SPIDER.id(), obj.getX(), obj.getY() + 1, 60000 * 5);
+			spider.startCombat(p);
+			sleep(1600);
+			p.message("The chest snaps shut");
+		}
+		else if (obj.getID() == ROCK_OVER || obj.getID() == ROCK_BACK) {
+			if (command.equalsIgnoreCase("look at")) {
+				p.message("The bridge has collapsed");
+				p.message("It seems this rock is placed here to jump from");
+			} else if (command.equalsIgnoreCase("jump over")) {
+				if (getCurrentLevel(p, Skills.AGILITY) < 30) {
+					p.message("You need agility level of 30 to attempt this jump");
+					return;
+				}
+				if (obj.getID() == ROCK_BACK) {
+					p.teleport(646, 805);
+					playerTalk(p, null, "I'm glad that was easier on the way back!");
+				} else {
+					Npc ogre_guard = getNearestNpc(p, NpcId.OGRE_GUARD_BRIDGE.id(), 5);
+					if (ogre_guard != null) {
+						npcTalk(p, ogre_guard, "Oi! Little thing, if you want to cross here",
+							"You can pay me first - 20 gold pieces!");
+						playerTalk(p, ogre_guard, "20 gold pieces to jump off a bridge!!?");
+						npcTalk(p, ogre_guard, "That's what I said, like it or lump it");
+						int menu = showMenu(p, ogre_guard,
+							"Okay i'll pay it",
+							"Forget it, i'm not paying");
+						if (menu == 0) {
+							npcTalk(p, ogre_guard, "A wise choice little thing");
+							if (!hasItem(p, ItemId.COINS.id(), 20)) {
+								npcTalk(p, ogre_guard, "And where is your money ? Grrrr!",
+									"Do you want to get hurt or something ?");
+							} else {
+								removeItem(p, ItemId.COINS.id(), 20);
+								if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
+									if (p.getFatigue() >= 7500) {
+										p.message("You are too tired to attempt this jump");
+										return;
+									}
+								}
+								p.message("You daringly jump across the chasm");
+								p.teleport(647, 799);
+								p.incExp(Skills.AGILITY, 50, true);
+								playerTalk(p, null, "Phew! I just made it");
+							}
+						} else if (menu == 1) {
+							npcTalk(p, ogre_guard, "In that case you're not crossing");
+							p.message("The guard blocks your path");
+						}
+					} else {
+						if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
+							if (p.getFatigue() >= 7500) {
+								p.message("You are too tired to attempt this jump");
+								return;
+							}
+						}
+						p.message("You daringly jump across the chasm");
+						p.teleport(647, 799);
+						p.incExp(Skills.AGILITY, 50, true);
+						playerTalk(p, null, "Phew! I just made it");
+					}
+				}
+			}
+		}
+		else if (obj.getID() == DARK_PLACE_ROCKS) {
+			p.message("You search the rock");
+			p.message("There's nothing here");
+		}
+		else if (obj.getID() == DARK_PLACE_TELEPORT_ROCK) {
+			p.message("You search the rock");
+			p.message("You uncover a tunnel entrance");
+			p.teleport(638, 776);
+			playerTalk(p, null, "Phew! At last i'm out...",
+				"Next time I will take some light!");
+		}
+		else if (obj.getID() == YANILLE_HOLE) {
+			playerTalk(p, null, "I can't get through this way",
+				"This hole must lead to somewhere...");
+		}
+		else if (obj.getID() == SKAVID_HOLE) {
+			p.playerServerMessage(MessageType.QUEST, "You enter the tunnel");
+			p.message("So that's how the skavids are getting into yanille!");
+			p.teleport(609, 742);
+		}
 	}
 
 	@Override
