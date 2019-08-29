@@ -214,7 +214,7 @@ public class LoginPacketHandler {
 					//Update the stats based on their StatDef-----------------------------------------------
 					statement = server.getDatabaseConnection().prepareStatement(server.getDatabaseConnection().getGameQueries().updateExperience);
 					statement.setInt(server.getConstants().getSkills().getSkillsCount() + 1, playerID);
-					Skills newGuy = new Skills(null);
+					Skills newGuy = new Skills(server.getWorld(),null);
 
 					for (int index = 0; index < server.getConstants().getSkills().getSkillsCount(); index++)
 						statement.setInt(index + 1, newGuy.getExperience(index));

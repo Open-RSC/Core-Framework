@@ -103,7 +103,7 @@ public abstract class Mob extends Entity {
 	}
 
 	private static final Logger LOGGER = LogManager.getLogger();
-	protected final Skills skills = new Skills(this);
+	protected final Skills skills = new Skills(this.getWorld(), this);
 	/**
 	 * Used to block new requests when we are in the middle of one
 	 */
