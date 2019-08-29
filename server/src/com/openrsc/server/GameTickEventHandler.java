@@ -15,8 +15,11 @@ public class GameTickEventHandler {
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
-	private ConcurrentHashMap<String, GameTickEvent> events = new ConcurrentHashMap<String, GameTickEvent>();
-	private ConcurrentHashMap<String, GameTickEvent> toAdd = new ConcurrentHashMap<String, GameTickEvent>();
+	private final ConcurrentHashMap<String, GameTickEvent> events = new ConcurrentHashMap<String, GameTickEvent>();
+	private final ConcurrentHashMap<String, GameTickEvent> toAdd = new ConcurrentHashMap<String, GameTickEvent>();
+
+	private final HashMap<String, Integer> eventsCounts = new HashMap<String, Integer>();
+	private final HashMap<String, Long> eventsDurations = new HashMap<String, Long>();
 
 	private final Server server;
 	public final Server getServer() { return server; }
@@ -58,6 +61,10 @@ public class GameTickEventHandler {
 
 	public long doGameEvents() {
 		final long eventsStart	= System.currentTimeMillis();
+
+		eventsCounts.clear();
+		eventsDurations.clear();
+
 		if (toAdd.size() > 0) {
 			for(Iterator<Map.Entry<String, GameTickEvent>> iter = toAdd.entrySet().iterator(); iter.hasNext(); ) {
 			    Map.Entry<String, GameTickEvent> e = iter.next();
@@ -81,6 +88,19 @@ public class GameTickEventHandler {
 				LOGGER.catching(e);
 				event.stop();
 			}
+
+			if (!eventsCounts.containsKey(event.getDescriptor())) {
+				eventsCounts.put(event.getDescriptor(), 1);
+			} else {
+				eventsCounts.put(event.getDescriptor(), eventsCounts.get(event.getDescriptor()) + 1);
+			}
+
+			if (!eventsDurations.containsKey(event.getDescriptor())) {
+				eventsDurations.put(event.getDescriptor(), event.getLastEventDuration());
+			} else {
+				eventsDurations.put(event.getDescriptor(), eventsDurations.get(event.getDescriptor()) + event.getLastEventDuration());
+			}
+
 			if (event.shouldRemove()) {
 				it.remove();
 			}
@@ -109,5 +129,13 @@ public class GameTickEventHandler {
 		} catch (Exception e) {
 			LOGGER.catching(e);
 		}
+	}
+
+	public HashMap<String, Integer> getEventsCounts() {
+		return new LinkedHashMap<String, Integer> (eventsCounts);
+	}
+
+	public HashMap<String, Long> getEventsDurations() {
+		return new LinkedHashMap<String, Long> (eventsDurations);
 	}
 }
