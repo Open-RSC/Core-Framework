@@ -91,7 +91,7 @@ public abstract class GameTickEvent {
 	}
 
 	public long timeTillNextRun() {
-		return System.currentTimeMillis() + (ticksBeforeRun * getWorld().getServer().getConfig().GAME_TICK);
+		return ticksBeforeRun * getWorld().getServer().getConfig().GAME_TICK;
 	}
 
 	public final long getLastEventDuration() {
