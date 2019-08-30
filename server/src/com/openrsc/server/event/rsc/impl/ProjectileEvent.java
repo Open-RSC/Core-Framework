@@ -60,8 +60,8 @@ public class ProjectileEvent extends SingleTickEvent {
 			// out on death.
 			projectileDamage();
 			if (opponent.isPlayer()) {
-				if (Functions.isWielding((Player)opponent, ItemId.RING_OF_RECOIL.id())) {
-					recoilDamage((Player)opponent, caster, damage);
+				if (Functions.isWielding((Player) opponent, ItemId.RING_OF_RECOIL.id())) {
+					recoilDamage((Player) opponent, caster, damage);
 				} else if (opponent.getSkills().getLevel(3) > 0) {
 					if (((Player) opponent).checkRingOfLife(caster))
 						return;
@@ -75,20 +75,23 @@ public class ProjectileEvent extends SingleTickEvent {
 	}
 
 	private void recoilDamage(Player opponent, Mob caster, int damage) {
-			int reflectedDamage = damage/10 + 1;
-			if (opponent.getCache().hasKey("ringofrecoil")) {
-				int ringCheck = opponent.getCache().getInt("ringofrecoil");
-				if (getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck <= reflectedDamage) {
-					reflectedDamage = getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck;
-					opponent.getCache().remove("ringofrecoil");
-					opponent.getInventory().shatter(ItemId.RING_OF_RECOIL.id());
-				} else {
-					opponent.getCache().set("ringofrecoil", ringCheck + reflectedDamage);
-				}
+		int reflectedDamage = damage / 10 + ((damage > 0) ? 1 : 0);
+		if (reflectedDamage == 0)
+			return;
+
+		if (opponent.getCache().hasKey("ringofrecoil")) {
+			int ringCheck = opponent.getCache().getInt("ringofrecoil");
+			if (getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck <= reflectedDamage) {
+				reflectedDamage = getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck;
+				opponent.getCache().remove("ringofrecoil");
+				opponent.getInventory().shatter(ItemId.RING_OF_RECOIL.id());
 			} else {
-				opponent.getCache().put("ringofrecoil", reflectedDamage);
-				opponent.message("You start a new ring of recoil");
+				opponent.getCache().set("ringofrecoil", ringCheck + reflectedDamage);
 			}
+		} else {
+			opponent.getCache().put("ringofrecoil", reflectedDamage);
+			opponent.message("You start a new ring of recoil");
+		}
 
 		caster.getSkills().subtractLevel(3, reflectedDamage, false);
 		caster.getUpdateFlags().setDamage(new Damage(caster, reflectedDamage));
@@ -109,7 +112,7 @@ public class ProjectileEvent extends SingleTickEvent {
 			caster.killedBy(opponent);
 		} else {
 			if (caster.isPlayer()) {
-				((Player)caster).checkRingOfLife(opponent);
+				((Player) caster).checkRingOfLife(opponent);
 			}
 		}
 	}
@@ -138,7 +141,7 @@ public class ProjectileEvent extends SingleTickEvent {
 			Player affectedPlayer = (Player) opponent;
 			ActionSender.sendStat(affectedPlayer, 3);
 			if (affectedPlayer.getWorld().getServer().getConfig().WANT_PARTIES) {
-				if(affectedPlayer.getParty() != null){
+				if (affectedPlayer.getParty() != null) {
 					affectedPlayer.getParty().sendParty();
 				}
 			}

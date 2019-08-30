@@ -104,7 +104,10 @@ public class CombatEvent extends GameTickEvent {
 			inflictDamage(hitter, target, damage);
 			if (target.isPlayer()) {
 				if (Functions.isWielding((Player) target, ItemId.RING_OF_RECOIL.id())) {
-					int reflectedDamage = damage/10 + 1;
+					int reflectedDamage = damage/10 + ((damage > 0) ? 1 : 0);
+					if (reflectedDamage == 0)
+						return;
+
 					if (((Player) target).getCache().hasKey("ringofrecoil")) {
 						int ringCheck = ((Player) target).getCache().getInt("ringofrecoil");
 						if (getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck <= reflectedDamage) {
