@@ -14,10 +14,13 @@ public abstract class GameStateEvent extends GameTickEvent {
 	/**
 	 * The asynchronous logger.
 	 */
+	private final int STATE_WAITING_FOR_NOTIFY = -1;
+
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private int eventState = 0;
 	private Map<Integer, StateEventTask> tasks = new HashMap<>();
+	private GameNotifyEvent child = null;
 
 	public GameStateEvent(World world, Mob owner, int initTickDelay, String descriptor) {
 		super(world, owner, initTickDelay, descriptor);
@@ -32,12 +35,17 @@ public abstract class GameStateEvent extends GameTickEvent {
 
 	@Override
 	public void run() {
+		if (eventState == STATE_WAITING_FOR_NOTIFY)
+			return;
+
 		StateEventContext result = action();
 		if (result == null)
 			stop();
 		else {
 			this.eventState = result.getState();
 			this.setDelayTicks(result.getDelay());
+			if (result.getDelay() == 0)
+				this.run();
 		}
 	}
 
@@ -73,9 +81,23 @@ public abstract class GameStateEvent extends GameTickEvent {
 		return new StateEventContext(state, delay);
 	}
 
+	public StateEventContext invokeOnNotify(int state, int delay) {
+		this.child.returnState = state;
+		this.child.returnDelay = delay;
+		return new StateEventContext(STATE_WAITING_FOR_NOTIFY, 1);
+	}
+
 	public int getState() {
 		return this.eventState;
 	}
+
+	public void setState(int state) { this.eventState = state; }
+
+	public void setNotifyEvent(GameNotifyEvent event) {
+		this.child = event;
+	}
+
+	public GameNotifyEvent getNotifyEvent() { return this.child; }
 
 	public class StateEventContext {
 		private int delay;

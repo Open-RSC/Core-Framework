@@ -5,6 +5,8 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.UndergroundPassMessages;
+import com.openrsc.server.event.rsc.GameNotifyEvent;
+import com.openrsc.server.event.rsc.GameStateEvent;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.model.MenuOptionListener;
 import com.openrsc.server.model.Path;
@@ -57,6 +59,37 @@ public class Functions {
 			return null;
 		}
 		return enteredPin;
+	}
+
+
+	public static void getBankPinInput(Player player, GameStateEvent parent) {
+		ActionSender.sendBankPinInterface(player);
+		player.setAttribute("bank_pin_entered", null);
+		ArrayList<String> pincheck = new ArrayList<>();
+		player.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(player.getWorld(), player, 0, "Get Bank Pin Input") {
+			public void init() {
+				GameNotifyEvent notifier = new GameNotifyEvent(parent);
+				player.getWorld().getServer().getGameEventHandler().add(notifier);
+				addState(0, () -> {
+					String enteredPin = player.getAttribute("bank_pin_entered", null);
+					if (enteredPin != null) {
+						pincheck.add(enteredPin);
+						return invoke(1, 0);
+					}
+					return invoke(0, 1);
+				});
+				addState(1, () -> {
+					String enteredPin = pincheck.get(0);
+					notifier.setTriggered(true);
+					if (enteredPin.equals("cancel")) {
+						ActionSender.sendCloseBankPinInterface(player);
+						return null;
+					}
+					notifier.addReturn(enteredPin);
+					return null;
+				});
+			}
+		});
 	}
 
 	public static int getWoodcutAxe(Player p) {
@@ -178,6 +211,7 @@ public class Functions {
 	public static int getMaxLevel(Player p, int i) {
 		return p.getSkills().getMaxStat(i);
 	}
+
 	public static int getMaxLevel(Mob n, int i) {
 		return n.getSkills().getMaxStat(i);
 	}
@@ -414,7 +448,7 @@ public class Functions {
 	 * @param y
 	 */
 	public static void createGroundItem(World world, int id, int amount, int x, int y) {
-		world.registerItem(new GroundItem(world, id, x, y, amount, (Player)null));
+		world.registerItem(new GroundItem(world, id, x, y, amount, (Player) null));
 	}
 
 	public static void createGroundItemDelayedRemove(final GroundItem i, int time) {
@@ -981,7 +1015,7 @@ public class Functions {
 	public static void delayedSpawnObject(final World world, final GameObjectLoc loc, final int time) {
 		world.getServer().post(() -> world.delayedSpawnObject(loc, time), "Delayed Add Game Object");
 	}
-	
+
 	public static void doGate(final Player p, final GameObject object, int replaceID) {
 		doGate(p, object, replaceID, null);
 	}
@@ -1219,6 +1253,7 @@ public class Functions {
 
 		return true;
 	}
+
 	/**
 	 * Checks if player has an item, and returns true/false.
 	 *
@@ -1244,13 +1279,13 @@ public class Functions {
 		int amount = p.getInventory().countId(id);
 		int equipslot = -1;
 		if (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			if ((equipslot = p.getEquipment().hasEquipped(id))!=-1) {
+			if ((equipslot = p.getEquipment().hasEquipped(id)) != -1) {
 				amount += p.getEquipment().get(equipslot).getAmount();
 			}
 		}
 		return amount >= amt;
 	}
-	
+
 	/**
 	 * Checks if player has an item in bank, and returns true/false.
 	 *
@@ -1261,7 +1296,7 @@ public class Functions {
 	public static boolean hasItemInBank(final Player p, final int item) {
 		return p.getBank().hasItemId(item);
 	}
-	
+
 	/**
 	 * Checks if player has an item including bank, and returns true/false.
 	 *
@@ -1415,6 +1450,7 @@ public class Functions {
 	public static void playerTalk(final Player player, final String message) {
 		player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, player));
 	}
+
 	/**
 	 * Removes an item from players inventory.
 	 *
@@ -1469,6 +1505,7 @@ public class Functions {
 		final Bubble bubble = new Bubble(player, item.getID());
 		player.getUpdateFlags().setActionBubble(bubble);
 	}
+
 	public static void showBubble2(final Npc npc, final Item item) {
 		final BubbleNpc bubble = new BubbleNpc(npc, item.getID());
 		npc.getUpdateFlags().setActionBubbleNpc(bubble);

@@ -1,6 +1,7 @@
 package com.openrsc.server;
 
 import com.openrsc.server.event.DelayedEvent;
+import com.openrsc.server.event.rsc.GameNotifyEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.entity.player.Player;
 import org.apache.logging.log4j.LogManager;
@@ -15,17 +16,28 @@ public class GameTickEventHandler {
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
+	private final Vector<GameNotifyEvent> notifiers = new Vector<>();
+	private final Vector<GameNotifyEvent> addNotifier = new Vector<>();
+
 	private final ConcurrentHashMap<String, GameTickEvent> events = new ConcurrentHashMap<String, GameTickEvent>();
 	private final ConcurrentHashMap<String, GameTickEvent> toAdd = new ConcurrentHashMap<String, GameTickEvent>();
+
 
 	private final HashMap<String, Integer> eventsCounts = new HashMap<String, Integer>();
 	private final HashMap<String, Long> eventsDurations = new HashMap<String, Long>();
 
 	private final Server server;
-	public final Server getServer() { return server; }
+
+	public final Server getServer() {
+		return server;
+	}
 
 	public GameTickEventHandler(Server server) {
 		this.server = server;
+	}
+
+	public void add(GameNotifyEvent event) {
+		addNotifier.add(event);
 	}
 
 	public void add(GameTickEvent event) {
@@ -59,17 +71,38 @@ public class GameTickEventHandler {
 		return false;
 	}
 
+	private void checkNotifiers() {
+		if (addNotifier.size() > 0) {
+			for (Iterator<GameNotifyEvent> iter = addNotifier.iterator(); iter.hasNext(); ) {
+				GameNotifyEvent e = iter.next();
+				notifiers.add(e);
+				iter.remove();
+			}
+		}
+
+		Iterator<GameNotifyEvent> it = notifiers.iterator();
+		while (it.hasNext()) {
+			GameNotifyEvent next = it.next();
+			if (next.getTriggered()) {
+				next.restoreParent();
+				it.remove();
+			}
+		}
+	}
+
 	public long doGameEvents() {
-		final long eventsStart	= System.currentTimeMillis();
+		checkNotifiers();
+
+		final long eventsStart = System.currentTimeMillis();
 
 		eventsCounts.clear();
 		eventsDurations.clear();
 
 		if (toAdd.size() > 0) {
-			for(Iterator<Map.Entry<String, GameTickEvent>> iter = toAdd.entrySet().iterator(); iter.hasNext(); ) {
-			    Map.Entry<String, GameTickEvent> e = iter.next();
-			    events.merge(e.getKey(), e.getValue(), (oldEvent, newEvent) -> newEvent);
-			    iter.remove();
+			for (Iterator<Map.Entry<String, GameTickEvent>> iter = toAdd.entrySet().iterator(); iter.hasNext(); ) {
+				Map.Entry<String, GameTickEvent> e = iter.next();
+				events.merge(e.getKey(), e.getValue(), (oldEvent, newEvent) -> newEvent);
+				iter.remove();
 			}
 		}
 		for (Iterator<Map.Entry<String, GameTickEvent>> it = events.entrySet().iterator(); it.hasNext(); ) {
@@ -105,7 +138,7 @@ public class GameTickEventHandler {
 				it.remove();
 			}
 		}
-		final long eventsEnd		= System.currentTimeMillis();
+		final long eventsEnd = System.currentTimeMillis();
 		return eventsEnd - eventsStart;
 	}
 
@@ -132,10 +165,10 @@ public class GameTickEventHandler {
 	}
 
 	public HashMap<String, Integer> getEventsCounts() {
-		return new LinkedHashMap<String, Integer> (eventsCounts);
+		return new LinkedHashMap<String, Integer>(eventsCounts);
 	}
 
 	public HashMap<String, Long> getEventsDurations() {
-		return new LinkedHashMap<String, Long> (eventsDurations);
+		return new LinkedHashMap<String, Long>(eventsDurations);
 	}
 }
