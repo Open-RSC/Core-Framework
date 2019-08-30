@@ -11,9 +11,9 @@ import java.util.ArrayList;
 public class AStarPathfinder {
 
 	boolean debug = false;
-	JPanel2 panel = new JPanel2();
-	JFrame frame = new JFrame();
-	javax.swing.GroupLayout layout = new javax.swing.GroupLayout(panel);
+	//JPanel2 panel = new JPanel2();
+	//JFrame frame = new JFrame();
+	//javax.swing.GroupLayout layout = new javax.swing.GroupLayout(panel);
 	final static int basicCost = 10;
 	final static int diagCost = 14;
 	private int depth;
@@ -35,12 +35,14 @@ public class AStarPathfinder {
 		this.pointEnd = new Point((start.getX()+depth)-end.getX(), end.getY() - (start.getY() - depth));
 		this.depth = depth;
 		this.generateTraversalInfo(world, start, depth);
+		/*
 		if (debug) {
 			panel.setLayout(layout);
 			frame.add(panel);
 			frame.setSize(600, 600);
 			frame.setVisible(true);
 		}
+		 */
 	}
 
 	public void feedPath(Path path) {
@@ -157,7 +159,7 @@ public class AStarPathfinder {
 
 			next.selectNode();
 			if (debug) {
-				panel.repaint();
+			//	panel.repaint();
 
 				/*
 				// We should no longer put threads to sleep
