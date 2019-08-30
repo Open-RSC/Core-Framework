@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.npcs;
 
-import com.openrsc.server.event.rsc.GameNotifyEvent;
 import com.openrsc.server.event.rsc.GameStateEvent;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -16,7 +15,6 @@ import org.apache.logging.log4j.Logger;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -267,10 +265,10 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 					return invoke(2, 0);
 				});
 				addState(1, () -> {
-					if (this.getNotifyEvent().returnValues.isEmpty()) {
+					if (!getNotifyEvent().hasReturnValues()) {
 						return null;
 					}
-					String pin = (String) this.getNotifyEvent().returnValues.get(0);
+					String pin = (String) getNotifyEvent().getReturnValue(0);
 					try {
 						PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 						statement.setString(1, player.getUsername());
