@@ -566,7 +566,7 @@ public final class Player extends Mob {
 					removeSkull();
 					if (getWorld().getServer().getConfig().WANT_PARTIES) {
 						if(getParty() != null){
-							//getParty().sendParty();
+							getParty().sendParty();
 						}
 					}
 				}
