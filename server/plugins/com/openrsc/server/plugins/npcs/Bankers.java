@@ -265,10 +265,10 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 					return invoke(2, 0);
 				});
 				addState(1, () -> {
-					if (this.getNotifyEvent().getReturnValues().isEmpty()) {
+					if (!getNotifyEvent().hasReturnValues()) {
 						return null;
 					}
-					String pin = (String) this.getNotifyEvent().getReturnValues().get(0);
+					String pin = (String) getNotifyEvent().getReturnValue(0);
 					try {
 						PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 						statement.setString(1, player.getUsername());

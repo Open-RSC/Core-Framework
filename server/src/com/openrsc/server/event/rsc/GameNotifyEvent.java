@@ -27,10 +27,12 @@ public class GameNotifyEvent {
 	public boolean isTriggered() { return this.triggered; }
 
 	public void addReturn(Object item) {
-		getReturnValues().add(item);
+		returnValues.add(item);
 	}
 
-	public Vector<Object> getReturnValues() { return new Vector<Object> (returnValues); }
+	public Object getReturnValue(int index) { return returnValues.get(index); }
+
+	public boolean hasReturnValues() { return !returnValues.isEmpty(); }
 
 	public int getReturnState() {
 		return returnState;
