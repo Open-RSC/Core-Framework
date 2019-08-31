@@ -62,13 +62,13 @@ public class Functions {
 	}
 
 
-	public static void getBankPinInput(Player player, GameStateEvent parent) {
+	public static GameNotifyEvent getBankPinInput(Player player, GameStateEvent parent) {
 		ActionSender.sendBankPinInterface(player);
 		player.setAttribute("bank_pin_entered", null);
 		ArrayList<String> pincheck = new ArrayList<>();
+		final GameNotifyEvent notifier = new GameNotifyEvent();
 		player.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(player.getWorld(), player, 0, "Get Bank Pin Input") {
 			public void init() {
-				GameNotifyEvent notifier = new GameNotifyEvent(parent);
 				player.getWorld().getServer().getGameEventHandler().add(notifier);
 				addState(0, () -> {
 					String enteredPin = player.getAttribute("bank_pin_entered", null);
@@ -85,11 +85,12 @@ public class Functions {
 						ActionSender.sendCloseBankPinInterface(player);
 						return null;
 					}
-					notifier.addReturn(enteredPin);
+					notifier.addObjectOut("string_pin",enteredPin);
 					return null;
 				});
 			}
 		});
+		return notifier;
 	}
 
 	public static int getWoodcutAxe(Player p) {

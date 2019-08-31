@@ -1,18 +1,20 @@
 package com.openrsc.server.event.rsc;
 
+import java.util.Map;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GameNotifyEvent {
 
-	private final GameStateEvent parentEvent;
-	private final Vector<Object> returnValues = new Vector<>();
+	private GameStateEvent parentEvent;
+	private final Map<String, Object> inObjects = new ConcurrentHashMap<>();
+	private final Map<String, Object> outObjects = new ConcurrentHashMap<>();
 	private int returnState;
 	private int returnDelay;
 	private boolean triggered = false;
 
-	public GameNotifyEvent(GameStateEvent parent) {
-		this.parentEvent = parent;
-		this.getParentEvent().setNotifyEvent(this);
+	public void setParentEvent(GameStateEvent event) {
+		this.parentEvent = event;
 	}
 
 	public void setTriggered(boolean val) {
@@ -26,13 +28,21 @@ public class GameNotifyEvent {
 
 	public boolean isTriggered() { return this.triggered; }
 
-	public void addReturn(Object item) {
-		returnValues.add(item);
+	public void addObjectOut(String name, Object item) {
+		outObjects.put(name, item);
 	}
 
-	public Object getReturnValue(int index) { return returnValues.get(index); }
+	public void addObjectIn(String name, Object item) {
+		inObjects.put(name, item);
+	}
 
-	public boolean hasReturnValues() { return !returnValues.isEmpty(); }
+	public Object getObjectOut(String name) {
+		return this.outObjects.get(name);
+	}
+
+	public Object getObjectIn(String name) {
+		return this.inObjects.get(name);
+	}
 
 	public int getReturnState() {
 		return returnState;
