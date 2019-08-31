@@ -1,7 +1,6 @@
 package com.openrsc.server.event.rsc;
 
 import java.util.Map;
-import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GameNotifyEvent {
