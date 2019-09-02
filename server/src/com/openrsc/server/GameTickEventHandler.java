@@ -83,6 +83,7 @@ public class GameTickEventHandler {
 		Iterator<GameNotifyEvent> it = notifiers.iterator();
 		while (it.hasNext()) {
 			GameNotifyEvent next = it.next();
+			next.poll();
 			if (next.isTriggered()) {
 				next.restoreParent();
 				it.remove();
