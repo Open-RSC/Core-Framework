@@ -1455,31 +1455,21 @@ public class Functions {
 	public static GameNotifyEvent getBankPinInput(Player player, GameStateEvent parent) {
 		ActionSender.sendBankPinInterface(player);
 		player.setAttribute("bank_pin_entered", null);
-		ArrayList<String> pincheck = new ArrayList<>();
-		final GameNotifyEvent notifier = new GameNotifyEvent();
-		player.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(player.getWorld(), player, 0, "Get Bank Pin Input") {
-			public void init() {
-				player.getWorld().getServer().getGameEventHandler().add(notifier);
-				addState(0, () -> {
-					String enteredPin = player.getAttribute("bank_pin_entered", null);
-					if (enteredPin != null) {
-						pincheck.add(enteredPin);
-						return invoke(1, 0);
-					}
-					return invoke(0, 1);
-				});
-				addState(1, () -> {
-					String enteredPin = pincheck.get(0);
-					notifier.setTriggered(true);
+		final GameNotifyEvent notifier = new GameNotifyEvent() {
+			@Override
+			public void poll() {
+				String enteredPin = player.getAttribute("bank_pin_entered", null);
+				if (enteredPin != null) {
+					setTriggered(true);
 					if (enteredPin.equals("cancel")) {
 						ActionSender.sendCloseBankPinInterface(player);
-						return null;
+						return;
 					}
-					notifier.addObjectOut("string_pin",enteredPin);
-					return null;
-				});
+					addObjectOut("string_pin",enteredPin);
+				}
 			}
-		});
+		};
+		player.getWorld().getServer().getGameEventHandler().add(notifier);
 		return notifier;
 	}
 
@@ -1530,6 +1520,26 @@ public class Functions {
 			sleep(3 * player.getWorld().getServer().getConfig().GAME_TICK);
 		}
 		player.setBusyTimer(0);
+	}
+
+	public static void npcSpeakLine(final Player player, final Npc npc, final String message) {
+		if (!message.equalsIgnoreCase("null")) {
+			if (npc.isRemoved()) {
+				player.setBusy(false);
+				return;
+			}
+			player.getWorld().getServer().post(() -> {
+				npc.resetPath();
+				player.resetPath();
+
+				npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, message, player));
+
+				npc.face(player);
+				if (!player.inCombat()) {
+					player.face(npc);
+				}
+			}, "NPC Talk");
+		}
 	}
 
 	/**
@@ -1608,6 +1618,28 @@ public class Functions {
 		}
 	}
 
+	public static GameNotifyEvent showPlayerMenu(final Player player, final Npc npc, final String... options) {
+		player.resetMenuHandler();
+		GameNotifyEvent event = new GameNotifyEvent() {
+			@Override public void poll(){
+				if (player.shouldBreakMenu(npc)) {
+					player.setBusy(false);
+					setTriggered(true);
+					getParentEvent().stop();
+				}
+			}};
+		player.getWorld().getServer().getGameEventHandler().add(event);
+		player.setMenuHandler(new MenuOptionListener(options) {
+			@Override
+			public void handleReply(final int option, final String reply) {
+				event.addObjectOut("int_option", option);
+				event.setTriggered(true);
+			}
+		});
+		ActionSender.sendMenu(player, options);
+		return event;
+	}
+	
 	public static int showMenu(final Player player, final String... options) {
 		return showMenu(player, null, true, options);
 	}

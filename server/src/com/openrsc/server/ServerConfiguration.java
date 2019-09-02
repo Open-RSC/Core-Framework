@@ -239,6 +239,7 @@ public class ServerConfiguration {
 	public boolean WANT_LEFTCLICK_WEBS = false;
 	public boolean WANT_CUSTOM_WALK_SPEED = false;
 	public int MAX_TICKS_UNTIL_FULL_WALKING_SPEED = 5;
+	public boolean WANT_IMPROVED_PATHFINDING = false;
 	//strict check on level requirements for "glitched" validations on rsc
 	public boolean STRICT_CHECK_ALL = false;
 	public boolean STRICT_PDART_CHECK = false;
@@ -384,6 +385,8 @@ public class ServerConfiguration {
 		WANT_NEW_RARE_DROP_TABLES = Boolean.parseBoolean(props.getProperty("want_new_rare_drop_tables"));
 		WANT_LEFTCLICK_WEBS = Boolean.parseBoolean(props.getProperty("want_leftclick_webs"));
 		WANT_CUSTOM_QUESTS = Boolean.parseBoolean(props.getProperty("want_custom_quests"));
+		WANT_IMPROVED_PATHFINDING = Boolean.parseBoolean(props.getProperty("want_improved_pathfinding"));
+
 
 		NPC_KILL_LIST = Boolean.parseBoolean(props.getProperty("npc_kill_list"));
 		NPC_KILL_MESSAGES = Boolean.parseBoolean(props.getProperty("npc_kill_messages"));
