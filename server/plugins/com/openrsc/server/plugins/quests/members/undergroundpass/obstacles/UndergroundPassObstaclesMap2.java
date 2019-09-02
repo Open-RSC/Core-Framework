@@ -3,9 +3,9 @@ package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.event.rsc.GameStateEvent;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
@@ -243,48 +243,60 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 
 	@Override
 	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
-		if (inArray(obj.getID(), RAILINGS)) {
-			if (click == 0) {
-				if (obj.getID() == 168) {
-					message(p, "the cage door has been sealed shut");
-					p.message("the poor unicorn can't escape");
-					return;
-				}
-				p.message("you attempt to pick the lock");
-				if (obj.getID() == 169 && getCurrentLevel(p, Skills.THIEVING) < 50) {
-					p.message("you need a level of 50 thieving to pick this lock");
-					return;
-				}
-				p.setBusyTimer(1600);
-				p.message("You manage to pick the lock");
-				p.message("you walk through");
-				if (obj.getDirection() == 0) {
-					if (obj.getY() == p.getY())
-						p.teleport(obj.getX(), obj.getY() - 1);
-					else
-						p.teleport(obj.getX(), obj.getY());
-				}
-				if (obj.getDirection() == 1) {
-					if (obj.getX() == p.getX())
-						p.teleport(obj.getX() - 1, obj.getY());
-					else
-						p.teleport(obj.getX(), obj.getY());
-				}
-				p.incExp(Skills.THIEVING, 15, true);
-				sleep(1600);
-				p.message("the cage slams shut behind you");
-			} else if (click == 1) {
-				if (obj.getID() == 168) {
-					message(p, "you search the cage");
-					if (!hasItem(p, ItemId.RAILING.id())) {
-						p.message("you find a loose railing lying on the floor");
-						addItem(p, ItemId.RAILING.id(), 1);
-					} else
-						p.message("but you find nothing");
-					return;
-				}
-				p.message("the cage has been locked");
+		p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "Underground Pass Obstacles 2") {
+			public void init() {
+				addState(0, () -> {
+					if (inArray(obj.getID(), RAILINGS)) {
+						if (click == 0) {
+							if (obj.getID() == 168) {
+								message(p, "the cage door has been sealed shut");
+								p.message("the poor unicorn can't escape");
+								return null;
+							}
+							p.message("you attempt to pick the lock");
+							if (obj.getID() == 169 && getCurrentLevel(p, Skills.THIEVING) < 50) {
+								p.message("you need a level of 50 thieving to pick this lock");
+								return null;
+							}
+							p.setBusyTimer(1600);
+							p.message("You manage to pick the lock");
+							p.message("you walk through");
+							if (obj.getDirection() == 0) {
+								if (obj.getY() == p.getY())
+									p.teleport(obj.getX(), obj.getY() - 1);
+								else
+									p.teleport(obj.getX(), obj.getY());
+							}
+							if (obj.getDirection() == 1) {
+								if (obj.getX() == p.getX())
+									p.teleport(obj.getX() - 1, obj.getY());
+								else
+									p.teleport(obj.getX(), obj.getY());
+							}
+							p.incExp(Skills.THIEVING, 15, true);
+							sleep(1600);
+							return invoke(1, 3);
+						} else if (click == 1) {
+							if (obj.getID() == 168) {
+								message(p, "you search the cage");
+								if (!hasItem(p, ItemId.RAILING.id())) {
+									p.message("you find a loose railing lying on the floor");
+									addItem(p, ItemId.RAILING.id(), 1);
+								} else
+									p.message("but you find nothing");
+								return null;
+							}
+							p.message("the cage has been locked");
+						}
+					}
+
+					return null;
+				});
+				addState(1, () -> {
+					p.message("the cage slams shut behind you");
+					return null;
+				});
 			}
-		}
+		});
 	}
 }
