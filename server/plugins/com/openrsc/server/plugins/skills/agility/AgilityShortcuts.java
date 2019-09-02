@@ -87,7 +87,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 						});
 						addState(1, () -> {
 							getPlayerOwner().message("Would you like to try?");
-							showPlayerMenu(getPlayerOwner(), null,
+							showMenu(getPlayerOwner(),
 								"No thanks! It looks far too dangerous!",
 								"Yes, I'm totally brave and quite agile!");
 							return invoke(2, 1);
