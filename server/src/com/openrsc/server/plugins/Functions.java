@@ -35,6 +35,56 @@ import java.util.Optional;
  */
 public class Functions {
 
+	public static String getBankPinInput(Player player) {
+		ActionSender.sendBankPinInterface(player);
+		player.setAttribute("bank_pin_entered", null);
+		String enteredPin = null;
+		while (true) {
+			enteredPin = player.getAttribute("bank_pin_entered", null);
+			if (enteredPin != null) {
+				break;
+			}
+			Functions.sleep(100);
+		}
+		if (enteredPin.equals("cancel")) {
+			ActionSender.sendCloseBankPinInterface(player);
+			return null;
+		}
+		return enteredPin;
+	}
+
+
+	public static GameNotifyEvent getBankPinInput(Player player, GameStateEvent parent) {
+		ActionSender.sendBankPinInterface(player);
+		player.setAttribute("bank_pin_entered", null);
+		ArrayList<String> pincheck = new ArrayList<>();
+		final GameNotifyEvent notifier = new GameNotifyEvent();
+		player.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(player.getWorld(), player, 0, "Get Bank Pin Input") {
+			public void init() {
+				player.getWorld().getServer().getGameEventHandler().add(notifier);
+				addState(0, () -> {
+					String enteredPin = player.getAttribute("bank_pin_entered", null);
+					if (enteredPin != null) {
+						pincheck.add(enteredPin);
+						return invoke(1, 0);
+					}
+					return invoke(0, 1);
+				});
+				addState(1, () -> {
+					String enteredPin = pincheck.get(0);
+					notifier.setTriggered(true);
+					if (enteredPin.equals("cancel")) {
+						ActionSender.sendCloseBankPinInterface(player);
+						return null;
+					}
+					notifier.addObjectOut("string_pin",enteredPin);
+					return null;
+				});
+			}
+		});
+		return notifier;
+	}
+
 	public static int getWoodcutAxe(Player p) {
 		int axeId = -1;
 		for (final int a : Formulae.woodcuttingAxeIDs) {
@@ -939,20 +989,16 @@ public class Functions {
 		}
 	}
 
-	public static void removeObject(final GameObject o) {
-		removeObject(o, 0);
+	public static void doGate(final Player p, final GameObject object) {
+		doGate(p, object, 181);
 	}
 
-	public static void removeObject(final GameObject o, final int delay) {
-		o.getWorld().getServer().post(() -> o.getWorld().unregisterGameObject(o), delay, "Remove Game Object");
+	public static void removeObject(final GameObject o) {
+		o.getWorld().getServer().post(() -> o.getWorld().unregisterGameObject(o), "Remove Game Object");
 	}
 
 	public static void registerObject(final GameObject o) {
-		registerObject(o, 0);
-	}
-
-	public static void registerObject(final GameObject o, final int delay) {
-		o.getWorld().getServer().post(() -> o.getWorld().registerGameObject(o), delay, "Register Game Object");
+		o.getWorld().getServer().post(() -> o.getWorld().registerGameObject(o), "Add Game Object");
 	}
 
 	public static void replaceObject(final GameObject o, final GameObject newObject) {
@@ -961,6 +1007,59 @@ public class Functions {
 
 	public static void delayedSpawnObject(final World world, final GameObjectLoc loc, final int time) {
 		world.getServer().post(() -> world.delayedSpawnObject(loc, time), "Delayed Add Game Object");
+	}
+
+	public static void doGate(final Player p, final GameObject object, int replaceID) {
+		doGate(p, object, replaceID, null);
+	}
+
+	public static void doGate(final Player p, final GameObject object, int replaceID, Point destination) {
+		p.setBusyTimer(650);
+		// 0 - East
+		// 1 - Diagonal S- NE
+		// 2 - South
+		// 3 - Diagonal S-NW
+		// 4- West
+		// 5 - Diagonal N-NE
+		// 6 - North
+		// 7 - Diagonal N-W
+		// 8 - N->S
+		p.playSound("opendoor");
+		removeObject(object);
+		registerObject(new GameObject(object.getWorld(), object.getLocation(), replaceID, object.getDirection(), object.getType()));
+
+		int dir = object.getDirection();
+		if (destination != null && Math.abs(p.getX() - destination.getX()) <= 5 && Math.abs(p.getY() - destination.getY()) <= 5) {
+			movePlayer(p, destination.getX(), destination.getY());
+		} else if (dir == 0) {
+			if (p.getX() >= object.getX()) {
+				movePlayer(p, object.getX() - 1, object.getY());
+			} else {
+				movePlayer(p, object.getX(), object.getY());
+			}
+		} else if (dir == 2) {
+			if (p.getY() <= object.getY()) {
+				movePlayer(p, object.getX(), object.getY() + 1);
+			} else {
+				movePlayer(p, object.getX(), object.getY());
+			}
+		} else if (dir == 4) {
+			if (p.getX() > object.getX()) {
+				movePlayer(p, object.getX(), object.getY());
+			} else {
+				movePlayer(p, object.getX() + 1, object.getY());
+			}
+		} else if (dir == 6) {
+			if (p.getY() >= object.getY()) {
+				movePlayer(p, object.getX(), object.getY() - 1);
+			} else {
+				movePlayer(p, object.getX(), object.getY());
+			}
+		} else {
+			p.message("Failure - Contact an administrator");
+		}
+		sleep(1000);
+		registerObject(new GameObject(object.getWorld(), object.getLoc()));
 	}
 
 	/**
@@ -1203,287 +1302,6 @@ public class Functions {
 	}
 
 	/**
-	 * Npc chat method not blocking
-	 *
-	 * @param player
-	 * @param npc
-	 * @param messages - String array of npc dialogue lines.
-	 */
-	public static void npcYell(final Player player, final Npc npc, final String... messages) {
-		for (final String message : messages) {
-			if (!message.equalsIgnoreCase("null")) {
-				player.getWorld().getServer().post(() -> npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, message, player)), "NPC Yell");
-			}
-		}
-	}
-
-	public static void playerTalk(final Player player, final String message) {
-		player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, player));
-	}
-
-	/**
-	 * Removes an item from players inventory.
-	 *
-	 * @param p
-	 * @param id
-	 * @param amt
-	 */
-	public static boolean removeItem(final Player p, final int id, final int amt) {
-
-		if (!hasItem(p, id, amt)) {
-			return false;
-		}
-		p.getWorld().getServer().post(() -> {
-			final Item item = new Item(id, 1);
-			if (!item.getDef(p.getWorld()).isStackable()) {
-				p.getInventory().remove(new Item(id, 1));
-			} else {
-				p.getInventory().remove(new Item(id, amt));
-			}
-		}, "Remove Ground Item");
-		return true;
-	}
-
-	/**
-	 * Removes an item from players inventory.
-	 *
-	 * @param p
-	 * @param items
-	 * @return
-	 */
-	public static boolean removeItem(final Player p, final Item... items) {
-		for (Item i : items) {
-			if (!p.getInventory().contains(i)) {
-				return false;
-			}
-		}
-		p.getWorld().getServer().post(() -> {
-			for (Item ir : items) {
-				p.getInventory().remove(ir);
-			}
-		}, "Remove Multi Ground Item");
-		return true;
-	}
-
-	/**
-	 * Displays item bubble above players head.
-	 *
-	 * @param player
-	 * @param item
-	 */
-	public static void showBubble(final Player player, final Item item) {
-		final Bubble bubble = new Bubble(player, item.getID());
-		player.getUpdateFlags().setActionBubble(bubble);
-	}
-
-	public static void showBubble2(final Npc npc, final Item item) {
-		final BubbleNpc bubble = new BubbleNpc(npc, item.getID());
-		npc.getUpdateFlags().setActionBubbleNpc(bubble);
-	}
-
-	/**
-	 * Displays item bubble above players head.
-	 *
-	 * @param player
-	 * @param item
-	 */
-	public static void showBubble(final Player player, final GroundItem item) {
-		final Bubble bubble = new Bubble(player, item.getID());
-		player.getUpdateFlags().setActionBubble(bubble);
-	}
-
-	public static void resetGnomeCooking(Player p) {
-		String[] caches = {
-			"cheese_on_batta", "tomato_on_batta", "tomato_cheese_batta", "leaves_on_batta",
-			"complete_dish", "chocolate_on_bowl", "leaves_on_bowl", "chocolate_bomb", "cream_on_bowl",
-			"choco_dust_on_bowl", "aqua_toad_legs", "gnomespice_toad_legs", "toadlegs_on_batta",
-			"kingworms_on_bowl", "onions_on_bowl", "gnomespice_on_bowl", "wormhole", "gnomespice_on_dough",
-			"toadlegs_on_dough", "gnomecrunchie_dough", "gnome_crunchie_cooked", "gnomespice_on_worm",
-			"worm_on_batta", "worm_batta", "onion_on_batta", "cabbage_on_batta", "dwell_on_batta",
-			"veg_batta_no_cheese", "veg_batta_with_cheese", "chocolate_on_dough", "choco_dust_on_crunchies",
-			"potato_on_bowl", "vegball", "toadlegs_on_bowl", "cheese_on_bowl", "dwell_on_bowl", "kingworm_on_dough",
-			"leaves_on_dough", "spice_over_crunchies", "batta_cooked_leaves", "diced_orange_on_batta", "lime_on_batta",
-			"pine_apple_batta", "spice_over_batta"
-		};
-		for (String s : caches) {
-			if (p.getCache().hasKey(s)) {
-				p.getCache().remove(s);
-			}
-		}
-	}
-
-	public static boolean checkAndRemoveBlurberry(Player p, boolean reset) {
-		String[] caches = {
-			"lemon_in_shaker", "orange_in_shaker", "pineapple_in_shaker", "lemon_slices_to_drink",
-			"drunk_dragon_base", "diced_pa_to_drink", "cream_into_drink", "dwell_in_shaker",
-			"gin_in_shaker", "vodka_in_shaker", "fruit_blast_base", "lime_in_shaker", "sgg_base",
-			"leaves_into_drink", "lime_slices_to_drink", "whisky_in_shaker", "milk_in_shaker",
-			"leaves_in_shaker", "choco_bar_in_drink", "chocolate_saturday_base", "heated_choco_saturday",
-			"choco_dust_into_drink", "brandy_in_shaker", "diced_orange_in_drink", "blurberry_special_base",
-			"diced_lemon_in_drink", "pineapple_punch_base", "diced_lime_in_drink", "wizard_blizzard_base"
-		};
-		for (String s : caches) {
-			if (p.getCache().hasKey(s)) {
-				if (reset) {
-					p.getCache().remove(s);
-					continue;
-				}
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Transforms npc into another please note that you will need to unregister
-	 * the transformed npc after using this method.
-	 *
-	 * @param n
-	 * @param newID
-	 * @return
-	 */
-	public static Npc transform(final Npc n, final int newID, boolean onlyShift) {
-		final Npc newNpc = new Npc(n.getWorld(), newID, n.getX(), n.getY());
-		n.getWorld().getServer().post(() -> {
-			newNpc.setShouldRespawn(false);
-			n.getWorld().registerNpc(newNpc);
-			if (onlyShift) {
-				n.setShouldRespawn(false);
-			}
-			n.remove();
-		}, "Transform NPC to NPC");
-		return newNpc;
-	}
-
-	public static void temporaryRemoveNpc(final Npc n) {
-		n.getWorld().getServer().post(() -> {
-			n.setShouldRespawn(true);
-			n.remove();
-		}, "Temporary Remove NPC");
-	}
-
-	public static void sleep(final int delay) {
-		// TODO: This should not exist.
-		try {
-			if (Thread.currentThread().getName().toLowerCase().contains("gamethread"))
-				return;
-			// System.out.println("Sleeping on " +
-			// Thread.currentThread().getName().toLowerCase());
-			Thread.sleep(delay);
-		} catch (final InterruptedException e) {
-		}
-	}
-
-	public static void doGate(final Player p, final GameObject object) {
-		doGate(p, object, 181);
-	}
-
-
-	public static void doGate(final Player p, final GameObject object, int replaceID) {
-		doGate(p, object, replaceID, null);
-	}
-
-	public static void doGate(final Player p, final GameObject object, int replaceID, Point destination) {
-		p.setBusyTimer(650);
-		// 0 - East
-		// 1 - Diagonal S- NE
-		// 2 - South
-		// 3 - Diagonal S-NW
-		// 4- West
-		// 5 - Diagonal N-NE
-		// 6 - North
-		// 7 - Diagonal N-W
-		// 8 - N->S
-		p.playSound("opendoor");
-		removeObject(object);
-		registerObject(new GameObject(object.getWorld(), object.getLocation(), replaceID, object.getDirection(), object.getType()));
-
-		int dir = object.getDirection();
-		if (destination != null && Math.abs(p.getX() - destination.getX()) <= 5 && Math.abs(p.getY() - destination.getY()) <= 5) {
-			movePlayer(p, destination.getX(), destination.getY());
-		} else if (dir == 0) {
-			if (p.getX() >= object.getX()) {
-				movePlayer(p, object.getX() - 1, object.getY());
-			} else {
-				movePlayer(p, object.getX(), object.getY());
-			}
-		} else if (dir == 2) {
-			if (p.getY() <= object.getY()) {
-				movePlayer(p, object.getX(), object.getY() + 1);
-			} else {
-				movePlayer(p, object.getX(), object.getY());
-			}
-		} else if (dir == 4) {
-			if (p.getX() > object.getX()) {
-				movePlayer(p, object.getX(), object.getY());
-			} else {
-				movePlayer(p, object.getX() + 1, object.getY());
-			}
-		} else if (dir == 6) {
-			if (p.getY() >= object.getY()) {
-				movePlayer(p, object.getX(), object.getY() - 1);
-			} else {
-				movePlayer(p, object.getX(), object.getY());
-			}
-		} else {
-			p.message("Failure - Contact an administrator");
-		}
-
-		sleep(1200);
-
-		registerObject(new GameObject(object.getWorld(), object.getLoc()));
-	}
-
-	public static String getBankPinInput(Player player) {
-		ActionSender.sendBankPinInterface(player);
-		player.setAttribute("bank_pin_entered", null);
-		String enteredPin = null;
-		while (true) {
-			enteredPin = player.getAttribute("bank_pin_entered", null);
-			if (enteredPin != null) {
-				break;
-			}
-			Functions.sleep(100);
-		}
-		if (enteredPin.equals("cancel")) {
-			ActionSender.sendCloseBankPinInterface(player);
-			return null;
-		}
-		return enteredPin;
-	}
-
-	public static GameNotifyEvent getBankPinInput(Player player, GameStateEvent parent) {
-		ActionSender.sendBankPinInterface(player);
-		player.setAttribute("bank_pin_entered", null);
-		ArrayList<String> pincheck = new ArrayList<>();
-		final GameNotifyEvent notifier = new GameNotifyEvent();
-		player.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(player.getWorld(), player, 0, "Get Bank Pin Input") {
-			public void init() {
-				player.getWorld().getServer().getGameEventHandler().add(notifier);
-				addState(0, () -> {
-					String enteredPin = player.getAttribute("bank_pin_entered", null);
-					if (enteredPin != null) {
-						pincheck.add(enteredPin);
-						return invoke(1, 0);
-					}
-					return invoke(0, 1);
-				});
-				addState(1, () -> {
-					String enteredPin = pincheck.get(0);
-					notifier.setTriggered(true);
-					if (enteredPin.equals("cancel")) {
-						ActionSender.sendCloseBankPinInterface(player);
-						return null;
-					}
-					notifier.addObjectOut("string_pin",enteredPin);
-					return null;
-				});
-			}
-		});
-		return notifier;
-	}
-
-	/**
 	 * Displays server message(s) with 2.2 second delay.
 	 *
 	 * @param player
@@ -1572,6 +1390,21 @@ public class Functions {
 	}
 
 	/**
+	 * Npc chat method not blocking
+	 *
+	 * @param player
+	 * @param npc
+	 * @param messages - String array of npc dialogue lines.
+	 */
+	public static void npcYell(final Player player, final Npc npc, final String... messages) {
+		for (final String message : messages) {
+			if (!message.equalsIgnoreCase("null")) {
+				player.getWorld().getServer().post(() -> npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, message, player)), "NPC Yell");
+			}
+		}
+	}
+
+	/**
 	 * Player message(s), each message has 2.2s delay between.
 	 *
 	 * @param player
@@ -1607,6 +1440,94 @@ public class Functions {
 		}
 	}
 
+	public static void playerTalk(final Player player, final String message) {
+		player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, player));
+	}
+
+	/**
+	 * Removes an item from players inventory.
+	 *
+	 * @param p
+	 * @param id
+	 * @param amt
+	 */
+	public static boolean removeItem(final Player p, final int id, final int amt) {
+
+		if (!hasItem(p, id, amt)) {
+			return false;
+		}
+		p.getWorld().getServer().post(() -> {
+			final Item item = new Item(id, 1);
+			if (!item.getDef(p.getWorld()).isStackable()) {
+				p.getInventory().remove(new Item(id, 1));
+			} else {
+				p.getInventory().remove(new Item(id, amt));
+			}
+		}, "Remove Ground Item");
+		return true;
+	}
+
+	/**
+	 * Removes an item from players inventory.
+	 *
+	 * @param p
+	 * @param items
+	 * @return
+	 */
+	public static boolean removeItem(final Player p, final Item... items) {
+		for (Item i : items) {
+			if (!p.getInventory().contains(i)) {
+				return false;
+			}
+		}
+		p.getWorld().getServer().post(() -> {
+			for (Item ir : items) {
+				p.getInventory().remove(ir);
+			}
+		}, "Remove Multi Ground Item");
+		return true;
+	}
+
+	/**
+	 * Displays item bubble above players head.
+	 *
+	 * @param player
+	 * @param item
+	 */
+	public static void showBubble(final Player player, final Item item) {
+		final Bubble bubble = new Bubble(player, item.getID());
+		player.getUpdateFlags().setActionBubble(bubble);
+	}
+
+	public static void showBubble2(final Npc npc, final Item item) {
+		final BubbleNpc bubble = new BubbleNpc(npc, item.getID());
+		npc.getUpdateFlags().setActionBubbleNpc(bubble);
+	}
+
+	/**
+	 * Displays item bubble above players head.
+	 *
+	 * @param player
+	 * @param item
+	 */
+	public static void showBubble(final Player player, final GroundItem item) {
+		final Bubble bubble = new Bubble(player, item.getID());
+		player.getUpdateFlags().setActionBubble(bubble);
+	}
+
+	public static void showPlayerMenu(final Player player, final Npc npc, final String... options) {
+		player.resetMenuHandler();
+		player.setOption(-5);
+		player.setMenuHandler(new MenuOptionListener(options) {
+			@Override
+			public void handleReply(final int option, final String reply) {
+				player.setOption(option);
+			}
+		});
+		ActionSender.sendMenu(player, options);
+	}
+
+
 	public static int showMenu(final Player player, final String... options) {
 		return showMenu(player, null, true, options);
 	}
@@ -1616,53 +1537,138 @@ public class Functions {
 	}
 
 	public static int showMenu(final Player player, final Npc npc, final boolean sendToClient, final String... options) {
-		final long start = System.currentTimeMillis();
-		if (npc != null) {
-			if (npc.isRemoved()) {
-				player.resetMenuHandler();
-				player.setOption(-1);
-				player.setBusy(false);
-				return -1;
-			}
-			npc.setBusy(true);
-		}
-		player.resetMenuHandler();
-		player.setOption(-1);
-		player.setMenuHandler(new MenuOptionListener(options) {
-			@Override
-			public void handleReply(final int option, final String reply) {
-				player.setOption(option);
-			}
-		});
-		ActionSender.sendMenu(player, options);
-
-		synchronized (player.getMenuHandler()) {
-			while (!player.checkUnderAttack()) {
-				if (player.getOption() != -1) {
-					if (npc != null && options[player.getOption()] != null) {
-						npc.setBusy(false);
-						if (sendToClient)
-							playerTalk(player, npc, options[player.getOption()]);
-					}
-					return player.getOption();
-				} else if (System.currentTimeMillis() - start > 90000 || player.getMenuHandler() == null) {
-					player.setOption(-1);
+			final long start = System.currentTimeMillis();
+			if (npc != null) {
+				if (npc.isRemoved()) {
 					player.resetMenuHandler();
-					if (npc != null) {
-						npc.setBusy(false);
-						player.setBusyTimer(0);
-					}
+					player.setOption(-1);
+					player.setBusy(false);
 					return -1;
 				}
-				sleep(1);
+				npc.setBusy(true);
 			}
-			player.releaseUnderAttack();
-			player.notify();
-			//player got busy (combat), free npc if any
-			if (npc != null) {
-				npc.setBusy(false);
+			player.resetMenuHandler();
+			player.setOption(-1);
+			player.setMenuHandler(new MenuOptionListener(options) {
+				@Override
+				public void handleReply(final int option, final String reply) {
+					player.setOption(option);
+				}
+			});
+			ActionSender.sendMenu(player, options);
+			
+			synchronized (player.getMenuHandler()) {
+				while (!player.checkUnderAttack()) {
+					if (player.getOption() != -1) {
+						if (npc != null && options[player.getOption()] != null) {
+							npc.setBusy(false);
+							if (sendToClient)
+								playerTalk(player, npc, options[player.getOption()]);
+						}
+						return player.getOption();
+					} else if (System.currentTimeMillis() - start > 90000 || player.getMenuHandler() == null) {
+						player.setOption(-1);
+						player.resetMenuHandler();
+						if (npc != null) {
+							npc.setBusy(false);
+							player.setBusyTimer(0);
+						}
+						return -1;
+					}
+					sleep(1);
+				}
+				player.releaseUnderAttack();
+				player.notify();
+				//player got busy (combat), free npc if any
+				if (npc != null) {
+					npc.setBusy(false);
+				}
+				return -1;
 			}
-			return -1;
+	}
+
+	public static void resetGnomeCooking(Player p) {
+		String[] caches = {
+			"cheese_on_batta", "tomato_on_batta", "tomato_cheese_batta", "leaves_on_batta",
+			"complete_dish", "chocolate_on_bowl", "leaves_on_bowl", "chocolate_bomb", "cream_on_bowl",
+			"choco_dust_on_bowl", "aqua_toad_legs", "gnomespice_toad_legs", "toadlegs_on_batta",
+			"kingworms_on_bowl", "onions_on_bowl", "gnomespice_on_bowl", "wormhole", "gnomespice_on_dough",
+			"toadlegs_on_dough", "gnomecrunchie_dough", "gnome_crunchie_cooked", "gnomespice_on_worm",
+			"worm_on_batta", "worm_batta", "onion_on_batta", "cabbage_on_batta", "dwell_on_batta",
+			"veg_batta_no_cheese", "veg_batta_with_cheese", "chocolate_on_dough", "choco_dust_on_crunchies",
+			"potato_on_bowl", "vegball", "toadlegs_on_bowl", "cheese_on_bowl", "dwell_on_bowl", "kingworm_on_dough",
+			"leaves_on_dough", "spice_over_crunchies", "batta_cooked_leaves", "diced_orange_on_batta", "lime_on_batta",
+			"pine_apple_batta", "spice_over_batta"
+		};
+		for (String s : caches) {
+			if (p.getCache().hasKey(s)) {
+				p.getCache().remove(s);
+			}
 		}
 	}
+
+	public static boolean checkAndRemoveBlurberry(Player p, boolean reset) {
+		String[] caches = {
+			"lemon_in_shaker", "orange_in_shaker", "pineapple_in_shaker", "lemon_slices_to_drink",
+			"drunk_dragon_base", "diced_pa_to_drink", "cream_into_drink", "dwell_in_shaker",
+			"gin_in_shaker", "vodka_in_shaker", "fruit_blast_base", "lime_in_shaker", "sgg_base",
+			"leaves_into_drink", "lime_slices_to_drink", "whisky_in_shaker", "milk_in_shaker",
+			"leaves_in_shaker", "choco_bar_in_drink", "chocolate_saturday_base", "heated_choco_saturday",
+			"choco_dust_into_drink", "brandy_in_shaker", "diced_orange_in_drink", "blurberry_special_base",
+			"diced_lemon_in_drink", "pineapple_punch_base", "diced_lime_in_drink", "wizard_blizzard_base"
+		};
+		for (String s : caches) {
+			if (p.getCache().hasKey(s)) {
+				if (reset) {
+					p.getCache().remove(s);
+					continue;
+				}
+				return true;
+			}
+		}
+		return false;
+	}
+
+
+	public static void sleep(final int delay) {
+		// TODO: This should not exist.
+		try {
+			if (Thread.currentThread().getName().toLowerCase().contains("gamethread"))
+				return;
+			// System.out.println("Sleeping on " +
+			// Thread.currentThread().getName().toLowerCase());
+			Thread.sleep(delay);
+		} catch (final InterruptedException e) {
+		}
+	}
+
+	/**
+	 * Transforms npc into another please note that you will need to unregister
+	 * the transformed npc after using this method.
+	 *
+	 * @param n
+	 * @param newID
+	 * @return
+	 */
+	public static Npc transform(final Npc n, final int newID, boolean onlyShift) {
+		final Npc newNpc = new Npc(n.getWorld(), newID, n.getX(), n.getY());
+		n.getWorld().getServer().post(() -> {
+			newNpc.setShouldRespawn(false);
+			n.getWorld().registerNpc(newNpc);
+			if (onlyShift) {
+				n.setShouldRespawn(false);
+			}
+			n.remove();
+		}, "Transform NPC to NPC");
+		return newNpc;
+	}
+
+	public static void temporaryRemoveNpc(final Npc n) {
+		n.getWorld().getServer().post(() -> {
+			n.setShouldRespawn(true);
+			n.remove();
+		}, "Temporary Remove NPC");
+	}
+
+
 }

@@ -287,8 +287,8 @@ public final class Server implements Runnable {
 		scheduledExecutor.submit(r);
 	}
 
-	public void post(Runnable r, int delay, String descriptor) {
-		getGameEventHandler().add(new PluginsUseThisEvent(getWorld(), delay, descriptor) {
+	public void post(Runnable r, String descriptor) {
+		getGameEventHandler().add(new PluginsUseThisEvent(getWorld(), descriptor) {
 			@Override
 			public void action() {
 				try {
@@ -298,10 +298,6 @@ public final class Server implements Runnable {
 				}
 			}
 		});
-	}
-
-	public void post(Runnable r, String descriptor) {
-		post(r, 0, descriptor);
 	}
 
 	public void run() {
