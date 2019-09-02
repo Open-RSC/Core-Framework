@@ -108,7 +108,7 @@ public class StrangeBarrels implements ObjectActionListener, ObjectActionExecuti
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if (obj.getID() == STRANGE_BARREL) {
-			p.setBusyTimer(1);
+			p.setBusyTimer(600);
 			int action = DataConversions.random(0, 4);
 			if (action != 0) {
 				p.message("You smash the barrel open.");

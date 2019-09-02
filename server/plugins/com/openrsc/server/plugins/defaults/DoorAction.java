@@ -1341,12 +1341,12 @@ public class DoorAction {
 	private void replaceGameObject(GameObject obj, Player owner, int newID,
 								   boolean open) {
 		if (!owner.cantConsume()) {
-			owner.setConsumeTimer(1);
+			owner.setConsumeTimer(1000);
 			if (open) {
 				owner.message("The " + (obj.getGameObjectDef().getName().equalsIgnoreCase("gate") ? "gate" : "door") + " swings open");
 			} else {
 				owner.message("The " + (obj.getGameObjectDef().getName().equalsIgnoreCase("gate") ? "gate" : "door") + " creaks shut");
-				owner.setBusyTimer(1);
+				owner.setBusyTimer(650);
 			}
 			owner.playSound(open ? "opendoor" : "closedoor");
 			owner.getWorld().replaceGameObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), newID, obj.getDirection(), obj.getType()));

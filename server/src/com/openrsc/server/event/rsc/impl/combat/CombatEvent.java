@@ -205,7 +205,7 @@ public class CombatEvent extends GameTickEvent {
 					player.setStatus(Action.IDLE);
 					player.resetAll();
 				} else {
-					delayedAggro = 27; // 17 + 3 second aggro timer for npds running
+					delayedAggro = 17000; // 17 + 3 second aggro timer for npds running
 				}
 
 				defenderMob.setBusy(false);
@@ -234,7 +234,7 @@ public class CombatEvent extends GameTickEvent {
 					player.resetAll();
 				} else {
 					if (attackerMob.getCombatState() == CombatState.RUNNING)
-						delayedAggro = 27; // 17 + 3 second timer for npcs running
+						delayedAggro = 17000; // 17 + 3 second timer for npcs running
 				}
 
 				attackerMob.setBusy(false);

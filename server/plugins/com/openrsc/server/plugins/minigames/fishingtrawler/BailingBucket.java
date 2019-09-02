@@ -18,7 +18,7 @@ public class BailingBucket implements InvActionExecutiveListener, InvActionListe
 		FishingTrawler trawler = player.getWorld().getFishingTrawler(player);
 		if (trawler != null && (trawler.getShipAreaWater().inBounds(player.getLocation())
 			|| trawler.getShipArea().inBounds(player.getLocation()))) {
-			player.setBusyTimer(1);
+			player.setBusyTimer(650);
 			// 1st stage boat
 			if(player.getY() >= 741 && player.getY() <= 743) {
 				player.message("you bail a little water...");

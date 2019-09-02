@@ -24,7 +24,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 			return;
 		}
 		int id = item.getID();
-		player.setConsumeTimer(1); // drink speed is same as tick speed setting
+		player.setConsumeTimer(player.getWorld().getServer().getConfig().GAME_TICK); // drink speed is same as tick speed setting
 		if (id == ItemId.GUJUO_POTION.id())
 			handleGujouPotion(player);
 

@@ -368,8 +368,8 @@ public class Thieving extends Functions
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1200, "Thieving Pickpocket", Formulae.getRepeatTimes(player, Skills.THIEVING), true) {
 			@Override
 			public void action() {
-				getOwner().setBusyTimer(2);
-				npc.setBusyTimer(2 * 2);
+				getOwner().setBusyTimer(1200);
+				npc.setBusyTimer(1200 * 2);
 				if (npc.inCombat()) {
 					interrupt();
 					return;
@@ -453,7 +453,7 @@ public class Thieving extends Functions
 			if (command.equalsIgnoreCase("Open")) {
 				player.message("This chest is locked");
 			} else {
-				player.setBusyTimer(5);
+				player.setBusyTimer(3000);
 				player.message("you attempt to pick the lock");
 				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (player.getFatigue() >= player.MAX_FATIGUE) {

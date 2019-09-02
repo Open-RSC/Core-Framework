@@ -25,7 +25,7 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 		switch (object.getID()) {
 			case 79:
 				if (command.equals("close")) {
-					owner.setBusyTimer(1);
+					owner.setBusyTimer(600);
 					owner.playerServerMessage(MessageType.QUEST, "You slide the cover back over the manhole");
 					replaceObject(object, new GameObject(object.getWorld(), object.getLocation(), 78, object.getDirection(), object.getType()));
 				} else {
@@ -34,7 +34,7 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 				break;
 			case 78:
 				if (command.equals("open")) {
-					owner.setBusyTimer(1);
+					owner.setBusyTimer(600);
 					owner.playerServerMessage(MessageType.QUEST, "You slide open the manhole cover");
 					replaceObject(object, new GameObject(object.getWorld(), object.getLocation(), 79, object.getDirection(), object.getType()));
 				}

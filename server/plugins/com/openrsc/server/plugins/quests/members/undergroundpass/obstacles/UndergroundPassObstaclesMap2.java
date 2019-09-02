@@ -157,7 +157,7 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 			}
 		}
 		else if (obj.getID() == HIJACK_ROCK) {
-			p.setBusyTimer(1);
+			p.setBusyTimer(650);
 			p.message("you climb onto the rock");
 			if (DataConversions.getRandom().nextInt(5) == 4) {
 				p.message("but you slip");
@@ -258,7 +258,7 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 								getPlayerOwner().message("you need a level of 50 thieving to pick this lock");
 								return null;
 							}
-							getPlayerOwner().setBusyTimer(3);
+							getPlayerOwner().setBusyTimer(1600);
 							getPlayerOwner().message("You manage to pick the lock");
 							getPlayerOwner().message("you walk through");
 							if (obj.getDirection() == 0) {

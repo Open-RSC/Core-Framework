@@ -89,7 +89,7 @@ public class ItemActionHandler implements PacketHandler {
 					}
 				});
 			} else {
-				player.setBusyTimer(1);
+				player.setBusyTimer(650);
 				player.message("You dig a hole in the ground");
 				player.getWorld().getServer().getGameEventHandler()
 					.add(new MiniEvent(player.getWorld(), player, "Bury Bones") {

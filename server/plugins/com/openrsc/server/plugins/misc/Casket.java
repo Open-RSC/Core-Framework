@@ -20,7 +20,7 @@ public class Casket implements InvActionListener, InvActionExecutiveListener {
 	@Override
 	public void onInvAction(Item item, Player p, String command) {
 		if (item.getID() == ItemId.CASKET.id()) {
-			p.setBusyTimer(2);
+			p.setBusyTimer(1300);
 
 			int randomChanceOpen = DataConversions.random(0, 1081);
 

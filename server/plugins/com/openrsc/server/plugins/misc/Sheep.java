@@ -28,12 +28,12 @@ public class Sheep implements InvUseOnNpcListener, InvUseOnNpcExecutiveListener 
 		player.face(npc);
 		showBubble(player, item);
 		player.message("You attempt to shear the sheep");
-		npc.setBusyTimer(2);
+		npc.setBusyTimer(1600);
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1200, "Crafting Shear Wool", player.getInventory().getFreeSlots(), true) {
 
 			@Override
 			public void action() {
-				npc.setBusyTimer(2);
+				npc.setBusyTimer(1600);
 				if (random(0, 4) != 0) {
 					player.message("You get some wool");
 					addItem(player, ItemId.WOOL.id(), 1);

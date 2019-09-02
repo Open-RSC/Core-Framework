@@ -88,7 +88,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					"It slowly congeals into the shape of a body...");
 				echned = spawnNpcWithRadius(p, NpcId.ECHNED_ZEKIN.id(), p.getX(), p.getY(), 0, 60000 * 3);
 				if (echned != null) {
-					p.setBusyTimer(5);
+					p.setBusyTimer(3000);
 					sleep(1300);
 					message(p, echned, 1300, "Which slowly floats towards you.");
 					echned.initializeTalkScript(p);
