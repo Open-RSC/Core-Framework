@@ -313,6 +313,7 @@ public class Npc extends Mob {
 		if (newStat > this.getSkills().getLevel(affectedStat)) {
 			this.getSkills().setLevel(affectedStat, newStat);
 		}
+		//sleep(1200);
 		if (left <= 0) {
 			//player.message("You have finished your potion");
 		} else {

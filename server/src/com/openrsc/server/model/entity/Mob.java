@@ -18,6 +18,7 @@ import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.util.rsc.CollisionFlag;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -26,6 +27,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static com.openrsc.server.plugins.Functions.sleep;
 
 public abstract class Mob extends Entity {
 
@@ -779,6 +782,7 @@ public abstract class Mob extends Entity {
 		if (newStat > this.getSkills().getLevel(affectedStat)) {
 			this.getSkills().setLevel(affectedStat, newStat);
 		}
+		sleep(1200);
 		if (left <= 0) {
 			//player.message("You have finished your potion");
 		} else {
@@ -842,6 +846,7 @@ public abstract class Mob extends Entity {
 					((Npc) victim).produceUnderAttack();
 				}
 			}
+			Functions.sleep(1);
 
 			resetPath();
 			resetRange();
