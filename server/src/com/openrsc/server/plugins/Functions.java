@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.event.SingleEvent;
@@ -26,8 +25,6 @@ import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,11 +34,6 @@ import java.util.Optional;
  * @author n0m
  */
 public class Functions {
-
-	/**
-	 * The asynchronous logger.
-	 */
-	private static final Logger LOGGER = LogManager.getLogger();
 
 	public static String getBankPinInput(Player player) {
 		ActionSender.sendBankPinInterface(player);
@@ -1637,13 +1629,6 @@ public class Functions {
 		return false;
 	}
 
-	/**
-	 * Sleeps for one tick
-	 */
-	public static void sleep(Server server) {
-		// TODO: This should not exist.
-		sleep(server.getConfig().GAME_TICK);
-	}
 
 	public static void sleep(final int delay) {
 		// TODO: This should not exist.
