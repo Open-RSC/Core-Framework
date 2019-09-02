@@ -268,7 +268,7 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 				n.face(p);
 				sleep(600);
 				n.remove();
-				p.setBusyTimer(1200);
+				p.setBusyTimer(2);
 				sleep(1200);
 				//possibly non kosher
 				message(p, 1800, "...and quickly gobbles it up",
@@ -281,7 +281,7 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 			n.face(p);
 			sleep(600);
 			n.remove();
-			p.setBusyTimer(1200);
+			p.setBusyTimer(2);
 			sleep(1200);
 			message(p, 1800, "...and quickly gobbles it up",
 					"it returns to your satchel licking it's paws");

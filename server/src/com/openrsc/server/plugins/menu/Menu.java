@@ -67,7 +67,7 @@ public class Menu {
 		while (System.currentTimeMillis() - start <= 19500
 			&& player.getMenu() != null) {
 			if (player.getInteractingNpc() != null)
-				player.getInteractingNpc().setBusyTimer(3000);
+				player.getInteractingNpc().setBusyTimer(5);
 			Functions.sleep(100);
 		}
 	}

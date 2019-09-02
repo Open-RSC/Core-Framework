@@ -29,7 +29,7 @@ public class AceArcher implements InvUseOnNpcListener, InvUseOnNpcExecutiveListe
 			player.face(npc);
 			showBubble(player, item);
 			player.message("You attempt to put the baby blue dragon in the crystal.");
-			npc.setBusyTimer(1600);
+			npc.setBusyTimer(3);
 
 			player.getWorld().getServer().getGameEventHandler().add(new ShortEvent(player.getWorld(), player, "Ace Archer Pet") {
 				public void action() {

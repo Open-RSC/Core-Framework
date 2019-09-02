@@ -99,7 +99,7 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 		} else if (playerZone == Zone.ZONE_1XP_OUTER || playerZone == Zone.ZONE_1XP_INNER) {
 			player.setSyncAttribute("throwing_ball_game", true);
 			Npc goalie = getNearestNpc(player, GnomeNpcs.GOALIE, 15);
-			player.setBusyTimer(600);
+			player.setBusyTimer(1);
 			player.getWorld().getServer().getGameEventHandler().add(new BallProjectileEvent(player.getWorld(), player, goalie, 3) {
 				@Override
 				public void doSpell() {
@@ -128,7 +128,7 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 		} else if (playerZone == Zone.ZONE_2XP_OUTER || playerZone == Zone.ZONE_2XP_INNER) {
 			player.setSyncAttribute("throwing_ball_game", true);
 			Npc goalie = getNearestNpc(player, GnomeNpcs.GOALIE, 15);
-			player.setBusyTimer(600);
+			player.setBusyTimer(1);
 			player.getWorld().getServer().getGameEventHandler().add(new BallProjectileEvent(player.getWorld(), player, goalie, 3) {
 				@Override
 				public void doSpell() {

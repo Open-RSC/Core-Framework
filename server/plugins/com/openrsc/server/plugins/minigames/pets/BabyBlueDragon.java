@@ -29,7 +29,7 @@ public class BabyBlueDragon implements InvUseOnNpcListener, InvUseOnNpcExecutive
 			player.face(npc);
 			showBubble(player, item);
 			player.message("You attempt to put the baby blue dragon in the crystal.");
-			npc.setBusyTimer(1600);
+			npc.setBusyTimer(3);
 
 			player.getWorld().getServer().getGameEventHandler().add(new ShortEvent(player.getWorld(), player, "Baby Blue Dragon Pet") {
 				public void action() {

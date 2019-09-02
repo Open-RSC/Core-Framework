@@ -730,12 +730,12 @@ public abstract class Mob extends Entity {
 	}
 
 	/**
-	 * Sets the time when player should be freed from the busy mode.
+	 * Sets the number of ticks in the future when player should be freed from the busy mode.
 	 *
 	 * @param i
 	 */
 	public void setBusyTimer(int i) {
-		this.busyTimer = System.currentTimeMillis() + i;
+		this.busyTimer = System.currentTimeMillis() + (i * getWorld().getServer().getConfig().GAME_TICK);
 	}
 
 	public void setCombatTimer() {
