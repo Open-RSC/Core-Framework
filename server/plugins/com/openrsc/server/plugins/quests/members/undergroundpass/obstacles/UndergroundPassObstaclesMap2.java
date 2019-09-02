@@ -249,50 +249,51 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 					if (inArray(obj.getID(), RAILINGS)) {
 						if (click == 0) {
 							if (obj.getID() == 168) {
-								message(getPlayerOwner(), "the cage door has been sealed shut");
-								getPlayerOwner().message("the poor unicorn can't escape");
+								message(p, "the cage door has been sealed shut");
+								p.message("the poor unicorn can't escape");
 								return null;
 							}
-							getPlayerOwner().message("you attempt to pick the lock");
-							if (obj.getID() == 169 && getCurrentLevel(getPlayerOwner(), Skills.THIEVING) < 50) {
-								getPlayerOwner().message("you need a level of 50 thieving to pick this lock");
+							p.message("you attempt to pick the lock");
+							if (obj.getID() == 169 && getCurrentLevel(p, Skills.THIEVING) < 50) {
+								p.message("you need a level of 50 thieving to pick this lock");
 								return null;
 							}
-							getPlayerOwner().setBusyTimer(1600);
-							getPlayerOwner().message("You manage to pick the lock");
-							getPlayerOwner().message("you walk through");
+							p.setBusyTimer(1600);
+							p.message("You manage to pick the lock");
+							p.message("you walk through");
 							if (obj.getDirection() == 0) {
-								if (obj.getY() == getPlayerOwner().getY())
-									getPlayerOwner().teleport(obj.getX(), obj.getY() - 1);
+								if (obj.getY() == p.getY())
+									p.teleport(obj.getX(), obj.getY() - 1);
 								else
-									getPlayerOwner().teleport(obj.getX(), obj.getY());
+									p.teleport(obj.getX(), obj.getY());
 							}
 							if (obj.getDirection() == 1) {
-								if (obj.getX() == getPlayerOwner().getX())
-									getPlayerOwner().teleport(obj.getX() - 1, obj.getY());
+								if (obj.getX() == p.getX())
+									p.teleport(obj.getX() - 1, obj.getY());
 								else
-									getPlayerOwner().teleport(obj.getX(), obj.getY());
+									p.teleport(obj.getX(), obj.getY());
 							}
-							getPlayerOwner().incExp(Skills.THIEVING, 15, true);
+							p.incExp(Skills.THIEVING, 15, true);
+							sleep(1600);
 							return invoke(1, 3);
 						} else if (click == 1) {
 							if (obj.getID() == 168) {
-								message(getPlayerOwner(), "you search the cage");
-								if (!hasItem(getPlayerOwner(), ItemId.RAILING.id())) {
-									getPlayerOwner().message("you find a loose railing lying on the floor");
-									addItem(getPlayerOwner(), ItemId.RAILING.id(), 1);
+								message(p, "you search the cage");
+								if (!hasItem(p, ItemId.RAILING.id())) {
+									p.message("you find a loose railing lying on the floor");
+									addItem(p, ItemId.RAILING.id(), 1);
 								} else
-									getPlayerOwner().message("but you find nothing");
+									p.message("but you find nothing");
 								return null;
 							}
-							getPlayerOwner().message("the cage has been locked");
+							p.message("the cage has been locked");
 						}
 					}
 
 					return null;
 				});
 				addState(1, () -> {
-					getPlayerOwner().message("the cage slams shut behind you");
+					p.message("the cage slams shut behind you");
 					return null;
 				});
 			}
