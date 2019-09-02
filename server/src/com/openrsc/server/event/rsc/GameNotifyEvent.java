@@ -12,6 +12,9 @@ public class GameNotifyEvent {
 	private int returnDelay;
 	private boolean triggered = false;
 
+	public void poll() {}
+
+
 	public void setParentEvent(GameStateEvent event) {
 		this.parentEvent = event;
 	}

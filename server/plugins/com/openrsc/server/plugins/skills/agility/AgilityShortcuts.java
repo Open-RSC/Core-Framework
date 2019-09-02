@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.skills.agility;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.event.rsc.GameNotifyEvent;
 import com.openrsc.server.event.rsc.GameStateEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -87,22 +88,13 @@ public class AgilityShortcuts implements ObjectActionListener,
 						});
 						addState(1, () -> {
 							getPlayerOwner().message("Would you like to try?");
-							showMenu(getPlayerOwner(),
+							GameNotifyEvent event = showPlayerMenu(getPlayerOwner(), null,
 								"No thanks! It looks far too dangerous!",
 								"Yes, I'm totally brave and quite agile!");
-							return invoke(2, 1);
-						});
-						addState(2, () -> {
-							if (getPlayerOwner().shouldBreakMenu(null)) {
-								getPlayerOwner().setBusy(false);
-								return null;
-							}
-							if (getPlayerOwner().getOption() == -5)
-								return invoke(2, 1);
-							return invoke(3, 0);
+							return invokeOnNotify(event,3, 0);
 						});
 						addState(3, () -> {
-							int jumpMenu = getPlayerOwner().getOption();
+							int jumpMenu = (int)getNotifyEvent().getObjectOut("int_option");
 							if (jumpMenu == 0) {
 								getPlayerOwner().message("You decide that common sense is the better part of valour.");
 								return invoke(4, 3);
