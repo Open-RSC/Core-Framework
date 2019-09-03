@@ -131,11 +131,12 @@ public class NpcBehavior {
 			// Target is not in range.
 			else if (target.getX() < (npc.getLoc().minX() - 4) || target.getX() > (npc.getLoc().maxX() + 4)
 				|| target.getY() < (npc.getLoc().minY() - 4) || target.getY() > (npc.getLoc().maxY() + 4)) {
-				//TODO: Player has exited their leash range - reset the npc
-				Point origin = new Point(npc.getLoc().startX(), npc.getLoc().startY());
-				npc.walkToEntityAStar(origin.getX(), origin.getY());
-				npc.getSkills().normalize();
-				npc.cure();
+				if (npc.getWorld().getServer().getConfig().WANT_IMPROVED_PATHFINDING) {
+					Point origin = new Point(npc.getLoc().startX(), npc.getLoc().startY());
+					npc.walkToEntityAStar(origin.getX(), origin.getY());
+					npc.getSkills().normalize();
+					npc.cure();
+				}
 				setRoaming();
 			}
 
@@ -149,7 +150,7 @@ public class NpcBehavior {
 
 				lastMovement = System.currentTimeMillis();
 				if (!checkTargetCombatTimer()) {
-					if (false)
+					if (npc.getWorld().getServer().getConfig().WANT_IMPROVED_PATHFINDING)
 						npc.walkToEntityAStar(target.getX(), target.getY());
 					else
 						npc.walkToEntity(target.getX(), target.getY());

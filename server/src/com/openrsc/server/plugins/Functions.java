@@ -573,7 +573,7 @@ public class Functions {
 	}
 
 	public static void doTentDoor(final GameObject object, final Player p) {
-		p.setBusyTimer(650);
+		p.setBusyTimer(1);
 		if (object.getDirection() == 0) {
 			if (object.getLocation().equals(p.getLocation())) {
 				movePlayer(p, object.getX(), object.getY() - 1);
@@ -628,7 +628,7 @@ public class Functions {
 	}
 
 	public static void doWallMovePlayer(final GameObject object, final Player p, int replaceID, int delay, boolean removeObject) {
-		p.setBusyTimer(650);
+		p.setBusyTimer(1);
 		/* For the odd looking walls. */
 		if (removeObject) {
 			GameObject newObject = new GameObject(object.getWorld(), object.getLocation(), replaceID, object.getDirection(), object.getType());
@@ -700,7 +700,7 @@ public class Functions {
 
 	public static void doDoor(final GameObject object, final Player p, int replaceID) {
 
-		p.setBusyTimer(650);
+		p.setBusyTimer(1);
 		/* For the odd looking walls. */
 		GameObject newObject = new GameObject(object.getWorld(), object.getLocation(), replaceID, object.getDirection(), object.getType());
 		if (object.getID() == replaceID) {
@@ -799,7 +799,7 @@ public class Functions {
 	}
 
 	public static void doLedge(final GameObject object, final Player p, int damage) {
-		p.setBusyTimer(650);
+		p.setBusyTimer(1);
 		p.message("you climb the ledge");
 		boolean failLedge = false;
 		int random = DataConversions.getRandom().nextInt(10);
@@ -845,7 +845,7 @@ public class Functions {
 
 	public static void doRock(final GameObject object, final Player p, int damage, boolean eventMessage,
 							  int spikeLocation) {
-		p.setBusyTimer(650);
+		p.setBusyTimer(1);
 		p.message("you climb onto the rock");
 		boolean failRock = false;
 		int random = DataConversions.getRandom().nextInt(5);
@@ -1384,7 +1384,7 @@ public class Functions {
 	}
 
 	public static void doGate(final Player p, final GameObject object, int replaceID, Point destination) {
-		p.setBusyTimer(650);
+		p.setBusyTimer(1);
 		// 0 - East
 		// 1 - Diagonal S- NE
 		// 2 - South
@@ -1484,6 +1484,7 @@ public class Functions {
 	}
 
 	public static void message(final Player player, final Npc npc, int delay, final String... messages) {
+		int delayTicks = (int)Math.ceil((double)delay / (double)player.getWorld().getServer().getConfig().GAME_TICK);
 		for (final String message : messages) {
 			if (!message.equalsIgnoreCase("null")) {
 				if (npc != null) {
@@ -1491,12 +1492,12 @@ public class Functions {
 						player.setBusy(false);
 						return;
 					}
-					npc.setBusyTimer(delay);
+					npc.setBusyTimer(delayTicks);
 				}
 				player.setBusy(true);
 				player.getWorld().getServer().post(() -> player.message(message), "Message Player");
 			}
-			sleep(delay);
+			sleep(delayTicks);
 		}
 		player.setBusy(false);
 	}
@@ -1514,9 +1515,9 @@ public class Functions {
 					player.getInteractingNpc().setBusyTimer(1900);
 				}
 				player.getWorld().getServer().post(() -> player.message("@que@" + message), "Multi Message Player");
-				player.setBusyTimer(1900);
+				player.setBusyTimer(3);
 			}
-			sleep(1900);
+			sleep(3 * player.getWorld().getServer().getConfig().GAME_TICK);
 		}
 		player.setBusyTimer(0);
 	}
@@ -1600,20 +1601,20 @@ public class Functions {
 				player.getWorld().getServer().post(() -> {
 					if (npc != null) {
 						npc.resetPath();
-						npc.setBusyTimer(2500);
+						npc.setBusyTimer(4);
 					}
 					if (!player.inCombat()) {
 						if (npc != null) {
 							npc.face(player);
 							player.face(npc);
 						}
-						player.setBusyTimer(2500);
+						player.setBusyTimer(4);
 						player.resetPath();
 					}
 					player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, (npc == null ? player : npc)));
 				}, "Talk as Player");
 			}
-			sleep(1900);
+			sleep(4 * player.getWorld().getServer().getConfig().GAME_TICK);
 		}
 	}
 

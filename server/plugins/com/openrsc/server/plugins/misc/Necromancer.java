@@ -3,7 +3,6 @@ package com.openrsc.server.plugins.misc;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.PlayerAttackNpcListener;
 import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
 import com.openrsc.server.plugins.listeners.action.PlayerMageNpcListener;
@@ -31,7 +30,7 @@ public class Necromancer implements PlayerAttackNpcListener, PlayerAttackNpcExec
 			Npc zombie = getNearestNpc(p, NpcId.ZOMBIE_INVOKED.id(), 10);
 			if (!p.getCache().hasKey("necroSpawn") || (p.getCache().hasKey("necroSpawn") && p.getCache().getInt("necroSpawn") < 7) || (p.getCache().hasKey("killedZomb") && p.getCache().getInt("killedZomb") != 0 && zombie == null)) {
 				npcTalk(p, necromancer, "I summon the undead to smite you down");
-				p.setBusyTimer(3000);
+				p.setBusyTimer(5);
 				zombie = p.getWorld().registerNpc(new Npc(necromancer.getWorld(), NpcId.ZOMBIE_INVOKED.id(), necromancer.getX(), necromancer.getY()));
 				zombie.setShouldRespawn(false);
 				sleep(1600);
@@ -51,7 +50,7 @@ public class Necromancer implements PlayerAttackNpcListener, PlayerAttackNpcExec
 				}
 			} else if (p.getCache().getInt("necroSpawn") > 6 && p.getCache().hasKey("necroSpawn") && zombie != null && p.getCache().getInt("killedZomb") != 0) {
 				npcTalk(p, zombie, "Raargh");
-				p.setBusyTimer(3000);
+				p.setBusyTimer(5);
 				zombie.startCombat(p);
 			} else if (p.getCache().getInt("killedZomb") == 0 && p.getCache().hasKey("killedZomb")) {
 				p.startCombat(necromancer);

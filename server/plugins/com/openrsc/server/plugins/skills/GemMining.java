@@ -78,7 +78,7 @@ public class GemMining implements ObjectActionListener,
 
 					if (getPlayerOwner().click == 1) {
 						getPlayerOwner().playSound("prospect");
-						getPlayerOwner().setBusyTimer(getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK * 3);
+						getPlayerOwner().setBusyTimer(3);
 						getPlayerOwner().message("You examine the rock for ores...");
 						return invoke(1, 3);
 					}

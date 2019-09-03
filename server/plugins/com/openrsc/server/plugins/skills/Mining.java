@@ -65,7 +65,7 @@ public final class Mining implements ObjectActionListener,
 			}
 		} else if (object.getID() == 770) {
 			if (hasItem(player, getAxe(player))) {
-				player.setBusyTimer(1600);
+				player.setBusyTimer(3);
 				message(player, "you mine the rock", "and break of several large chunks");
 				addItem(player, ItemId.ROCKS.id(), 1);
 			} else {
@@ -159,13 +159,13 @@ public final class Mining implements ObjectActionListener,
 								"You do not have a pickaxe which you have the mining level to use");
 							return null;
 						}
-						getPlayerOwner().setBusyTimer(getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK * 3);
+						getPlayerOwner().setBusyTimer(3);
 						getPlayerOwner().message("You swing your pick at the rock...");
 						return invoke(1, 3);
 					}
 					if (getPlayerOwner().click == 1) {
 						getPlayerOwner().playSound("prospect");
-						getPlayerOwner().setBusyTimer(getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK * 3);
+						getPlayerOwner().setBusyTimer(3);
 						getPlayerOwner().message("You examine the rock for ores...");
 						return invoke(2, 3);
 					}
