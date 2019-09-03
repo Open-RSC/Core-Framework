@@ -66,6 +66,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 							GameNotifyEvent pinevent = getBankPinInput(getPlayerOwner(), this);
 							return invokeOnNotify(pinevent, 3, 0);
 						}
+						return invoke(4, 0);
 					} else if (menu == 1) {
 						npcSpeakLine(getPlayerOwner(), npc, "This is a branch of the bank of Runescape");
 						return invoke(6, 3);
@@ -112,11 +113,11 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 				});
 				addState(4, () -> {
 					npcSpeakLine(getPlayerOwner(), npc, "Certainly " + (getPlayerOwner().isMale() ? "Sir" : "Miss"));
-					getPlayerOwner().setAccessingBank(true);
-					ActionSender.showBank(getPlayerOwner());
-					return invoke(5,1);
+					return invoke(5,3);
 				});
 				addState(5, () -> {
+					ActionSender.showBank(getPlayerOwner());
+					getPlayerOwner().setAccessingBank(true);
 					getPlayerOwner().setBusy(false);
 					npc.setBusy(false);
 					return null;
