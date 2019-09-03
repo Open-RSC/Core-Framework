@@ -21,9 +21,7 @@ services:
       - "./server/avatars:/var/www/html/avatars"
 
   php:
-    build:
-      context: .
-      dockerfile: etc/php/Dockerfile
+    image: openrsc/php-laravel:latest
     container_name: php
     ports:
       - "127.0.0.1:9000:9000"
