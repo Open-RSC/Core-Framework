@@ -14,6 +14,8 @@ services:
     expose:
       - 80
       - 443
+#    ports:
+#      - '80:80'
     volumes:
       - "./etc/nginx:/etc/nginx/conf.d"
       - "./Website:/var/www/html"
