@@ -11,11 +11,11 @@ import java.util.concurrent.Callable;
 
 public abstract class GameStateEvent extends GameTickEvent {
 
+	private final int STATE_WAITING_FOR_NOTIFY = -1;
+
 	/**
 	 * The asynchronous logger.
 	 */
-	private final int STATE_WAITING_FOR_NOTIFY = -1;
-
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private int eventState = 0;
@@ -74,16 +74,17 @@ public abstract class GameStateEvent extends GameTickEvent {
 	}
 
 	public StateEventContext nextState(int delay) {
-		return new StateEventContext(++eventState, delay);
+		return invoke(++eventState, delay);
 	}
 
 	public StateEventContext invoke(int state, int delay) {
 		return new StateEventContext(state, delay);
 	}
 
-	public StateEventContext invokeOnNotify(int state, int delay) {
-		this.child.returnState = state;
-		this.child.returnDelay = delay;
+	public StateEventContext invokeOnNotify(GameNotifyEvent child, int state, int delay) {
+		linkNotifier(child);
+		this.child.setReturnState(state);
+		this.child.setReturnDelay(delay);
 		return new StateEventContext(STATE_WAITING_FOR_NOTIFY, 1);
 	}
 

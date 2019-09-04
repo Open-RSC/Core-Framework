@@ -16,7 +16,6 @@ import org.apache.logging.log4j.Logger;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -267,10 +266,10 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 					return invoke(2, 0);
 				});
 				addState(1, () -> {
-					if (this.getNotifyEvent().returnValues.isEmpty()) {
+					if (this.getNotifyEvent().getReturnValues().isEmpty()) {
 						return null;
 					}
-					String pin = (String) this.getNotifyEvent().returnValues.get(0);
+					String pin = (String) this.getNotifyEvent().getReturnValues().get(0);
 					try {
 						PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 						statement.setString(1, player.getUsername());
