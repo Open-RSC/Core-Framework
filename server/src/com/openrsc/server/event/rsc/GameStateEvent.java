@@ -103,10 +103,7 @@ public abstract class GameStateEvent extends GameTickEvent {
 	private void linkNotifier(GameNotifyEvent child) {
 		child.setParentEvent(this);
 		this.child = child;
-	}
 
-	public void unlinkNotifier() {
-		this.child = null;
 	}
 
 	public class StateEventContext {
