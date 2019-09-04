@@ -27,21 +27,11 @@ public class GameNotifyEvent {
 
 	public boolean isTriggered() { return this.triggered; }
 
-	public void addObjectOut(String name, Object item) {
-		outObjects.put(name, item);
+	public void addReturn(Object item) {
+		getReturnValues().add(item);
 	}
 
-	public void addObjectIn(String name, Object item) {
-		inObjects.put(name, item);
-	}
-
-	public Object getObjectOut(String name) {
-		return this.outObjects.get(name);
-	}
-
-	public Object getObjectIn(String name) {
-		return this.inObjects.get(name);
-	}
+	public Vector<Object> getReturnValues() { return new Vector<Object> (returnValues); }
 
 	public int getReturnState() {
 		return returnState;
