@@ -545,29 +545,43 @@ public final class Server implements Runnable {
 	}
 
 	public final String buildProfilingDebugInformation(boolean forInGame) {
-		int countAllEvents = 0;
-		long durationAllEvents = 0;
+		final HashMap<String, Integer> eventsCount = new HashMap<String, Integer>();
+		final HashMap<String, Long> eventsDuration = new HashMap<String, Long>();
+		int countEvents = 0;
+		long durationEvents = 0;
 		String newLine = forInGame ? "%" : "\r\n";
 
-		final HashMap<String, Integer> eventsCounts = getGameEventHandler().getEventsCounts();
-		final HashMap<String, Long> eventsDurations = getGameEventHandler().getEventsDurations();
+		// Show info for game tick events
+		for (Map.Entry<String, GameTickEvent> eventEntry : getGameEventHandler().getEvents().entrySet()) {
+			GameTickEvent e = eventEntry.getValue();
+			String eventName = e.getDescriptor();
+			//if (e.getOwner() != null && e.getOwner().isUnregistering()) {
+			if (!eventsCount.containsKey(eventName)) {
+				eventsCount.put(eventName, 1);
+			} else {
+				eventsCount.put(eventName, eventsCount.get(eventName) + 1);
+			}
 
-		// Calculate Totals
-		for (Map.Entry<String, Integer> eventEntry : eventsCounts.entrySet()) {
-			countAllEvents += eventEntry.getValue();
-		}
-		for (Map.Entry<String, Long> eventEntry : eventsDurations.entrySet()) {
-			durationAllEvents += eventEntry.getValue();
+			if (!eventsDuration.containsKey(eventName)) {
+				eventsDuration.put(eventName, e.getLastEventDuration());
+			} else {
+				eventsDuration.put(eventName, eventsDuration.get(eventName) + e.getLastEventDuration());
+			}
+			//}
+
+			// Update Totals
+			++countEvents;
+			durationEvents += e.getLastEventDuration();
 		}
 
 		// Sort the Events Hashmap
-		List list = new LinkedList(eventsDurations.entrySet());
+		List list = new LinkedList(eventsDuration.entrySet());
 		Collections.sort(list, new Comparator() {
 			public int compare(Object o1, Object o2) {
-				int o1EventCount = eventsCounts.get(((Map.Entry) (o1)).getKey());
-				int o2EventCount = eventsCounts.get(((Map.Entry) (o2)).getKey());
-				long o1EventDuration = eventsDurations.get(((Map.Entry) (o1)).getKey());
-				long o2EventDuration = eventsDurations.get(((Map.Entry) (o2)).getKey());
+				int o1EventCount = eventsCount.get(((Map.Entry) (o1)).getKey());
+				int o2EventCount = eventsCount.get(((Map.Entry) (o2)).getKey());
+				long o1EventDuration = eventsDuration.get(((Map.Entry) (o1)).getKey());
+				long o2EventDuration = eventsDuration.get(((Map.Entry) (o2)).getKey());
 
 				if(o1EventDuration == o2EventDuration) {
 					return o1EventCount < o2EventCount ? 1 : -1;
@@ -581,18 +595,18 @@ public final class Server implements Runnable {
 			Map.Entry entry = (Map.Entry) it.next();
 			sortedHashMap.put(entry.getKey(), entry.getValue());
 		}
-		eventsDurations.clear();
-		eventsDurations.putAll(sortedHashMap);
+		eventsDuration.clear();
+		eventsDuration.putAll(sortedHashMap);
 
 		int i = 0;
 		StringBuilder s = new StringBuilder();
-		for (Map.Entry<String, Long> entry : eventsDurations.entrySet()) {
+		for (Map.Entry<String, Long> entry : eventsDuration.entrySet()) {
 			if (forInGame && i >= 17) // Only display first 17 elements of the hashmap
 				break;
 
 			String name = entry.getKey();
 			Long duration = entry.getValue();
-			Integer count = eventsCounts.get(entry.getKey());
+			Integer count = eventsCount.get(entry.getKey());
 			s.append(name).append(" : ").append(duration).append("ms").append(" : ").append(count).append(newLine);
 			++i;
 		}
@@ -600,7 +614,7 @@ public final class Server implements Runnable {
 		return
 			"Tick: " + getConfig().GAME_TICK + "ms, Server: " + getLastTickDuration() + "ms " + getLastIncomingPacketsDuration() + "ms " + getLastEventsDuration() + "ms " + getLastGameStateDuration() + "ms " + getLastOutgoingPacketsDuration() + "ms" + newLine +
 			"Game Updater: " + getGameUpdater().getLastProcessPlayersDuration() + "ms " + getGameUpdater().getLastProcessNpcsDuration() + "ms " + getGameUpdater().getLastProcessMessageQueuesDuration() + "ms " + getGameUpdater().getLastUpdateClientsDuration() + "ms " + getGameUpdater().getLastDoCleanupDuration() + "ms " + getGameUpdater().getLastExecuteWalkToActionsDuration() + "ms " + newLine +
-			"Events: " + countAllEvents + ", NPCs: " + getWorld().getNpcs().size() + ", Players: " + getWorld().getPlayers().size() + ", Shops: " + getWorld().getShops().size() + newLine +
+			"Events: " + countEvents + ", NPCs: " + getWorld().getNpcs().size() + ", Players: " + getWorld().getPlayers().size() + ", Shops: " + getWorld().getShops().size() + newLine +
 			/*"Player Atk Map: " + getWorld().getPlayersUnderAttack().size() + ", NPC Atk Map: " + getWorld().getNpcsUnderAttack().size() + ", Quests: " + getWorld().getQuests().size() + ", Mini Games: " + getWorld().getMiniGames().size() + newLine +*/
 			s;
 
