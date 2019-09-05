@@ -1,5 +1,5 @@
 include .env
-MYSQL_DUMPS_DIR=./data
+MYSQL_DUMPS_DIR=./backups
 
 go:
 	`pwd`/Go-Linux.sh
@@ -9,21 +9,6 @@ run:
 
 run-game:
 	`pwd`/scripts/run.sh
-
-ufw-import:
-	cd scripts && `pwd`/ufw-import.sh
-
-hard-reset:
-	`pwd`/scripts/hard-reset.sh
-
-certbot-native:
-	`pwd`/scripts/certbot-native.sh
-
-certbot-docker:
-	`pwd`/scripts/certbot-docker.sh
-
-rank:
-	`pwd`/scripts/rank.sh
 
 combined-install:
 	`pwd`/scripts/combined-install.sh
@@ -37,9 +22,6 @@ docker-install:
 get-updates:
 	`pwd`/scripts/get-updates.sh
 
-single-player:
-	`pwd`/scripts/single-player.sh
-
 start:
 	docker-compose up -d
 
@@ -52,6 +34,9 @@ restart:
 
 ps:
 	docker-compose ps
+
+logs:
+	@docker-compose logs -f
 
 compile:
 	sudo ant -f server/build.xml compile_core
@@ -76,6 +61,9 @@ create-database-wk:
 
 create-database-dev:
 	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} -e "create database dev;"
+
+create-database-website:
+	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} -e "create database website;"
 
 import-database-openrsc:
 	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} openrsc < Databases/openrsc_game_server.sql
@@ -119,22 +107,6 @@ upgrade-database-wk:
 upgrade-database-dev:
 	docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} dev < Databases/openrsc_game_server.sql
 
-clone-website:
-	@$(shell sudo rm -rf Website && git clone -b 2.0.0 https://gitlab.openrsc.com/open-rsc/Website.git)
-	sudo chmod 644 Website/sql/config.inc.php
-
-flush-website-avatars-windows:
-	rmdir "Website/avatars"
-
-pull-website:
-	@cd Website && git pull
-
-fix-mariadb-permissions-windows:
-	icacls.exe etc/mariadb/innodb.cnf /GRANT:R "$($env:USERNAME):(R)"
-
-logs:
-	@docker-compose logs -f
-
 backup-openrsc:
 	@mkdir -p $(MYSQL_DUMPS_DIR)
 	sudo chmod -R 777 $(MYSQL_DUMPS_DIR)
@@ -171,54 +143,11 @@ backup-dev:
 	sudo chmod 644 etc/mariadb/innodb.cnf
 	docker exec mysql mysqldump -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} dev --single-transaction --quick --lock-tables=false | sudo zip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d-%H%M-%Z"`-dev.zip
 
-init-laravel:
-	cp Website/openrsc_web/.env.example Website/openrsc_web/.env
-
-update-laravel:
-	docker exec -i php bash -c "cd /var/www/html/openrsc_web && composer install && composer update && php artisan key:generate && php artisan optimize && npm install && npm update && npm audit fix"
-
-migrate-laravel:
-	docker exec -i php bash -c "cd /var/www/html/openrsc_web && php artisan migrate --seed"
-
-make-laravel:
-	docker exec -i php bash -c "cd /var/www/html/openrsc_web && php artisan make:controller MyController"
-
-list-route:
-	docker exec -i php bash -c "cd /var/www/html/openrsc_web && php artisan route:list"
-
-clear-views:
-	docker exec -i php bash -c "cd /var/www/html/openrsc_web && php artisan view:clear"
-
-clear-route:
-	docker exec -i php bash -c "cd /var/www/html/openrsc_web && php artisan route:clear"
-
-migrate:
-	docker exec -i php bash -c "cd /var/www/html/openrsc_web && php artisan migrate"
-
-migrate-refresh:
-	docker exec -i php bash -c "cd /var/www/html/openrsc_web && php artisan migrate:refresh"
-
-clear-config:
-	docker exec -i php bash -c "cd /var/www/html/openrsc_web && php artisan config:cache"
-
-publish-pagination:
-	docker exec -i php bash -c "cd /var/www/html/openrsc_web && php artisan vendor:publish --tag=laravel-pagination"
-
-version:
-	docker exec -i php bash -c "cd /var/www/html/openrsc_web && php artisan --version"
-
-npm-install:
-	docker exec -i php bash -c "cd /var/www/html/openrsc_web && npm install"
-
-npm-run-dev:
-	docker exec -i php bash -c "cd /var/www/html/openrsc_web && npm run dev"
-
-npm-run-prod:
-	docker exec -i php bash -c "cd /var/www/html/openrsc_web && npm run prod"
-
-npm-run-watch:
-	docker exec -i php bash -c "cd /var/www/html/openrsc_web && npm run watch"
+backup-website:
+	@mkdir -p $(MYSQL_DUMPS_DIR)
+	sudo chmod -R 777 $(MYSQL_DUMPS_DIR)
+	sudo chmod 644 etc/mariadb/innodb.cnf
+	docker exec mysql mysqldump -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} website --single-transaction --quick --lock-tables=false | sudo zip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d-%H%M-%Z"`-website.zip
 
 clear-old-backups:
 	sudo find $(MYSQL_DUMPS_DIR)/*.zip -mtime +90 -exec rm -f {} \;
-
