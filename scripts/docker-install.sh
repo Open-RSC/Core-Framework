@@ -30,7 +30,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
   echo ""
   echo "Setting Docker to have the correct storage driver and restarting the service."
   echo '{
-    "storage-driver": "devicemapper"
+    "storage-driver": "overlay2"
     }' | sudo tee /etc/docker/daemon.json
   sudo chown root:root /etc/docker/daemon.json
   sudo service docker restart
