@@ -139,7 +139,7 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 							}
 						});
 						addState(1, () -> {
-							int damage = (int) Math.round((getPlayerOwner().getSkills().getLevel(Skills.AGILITY)) * 0.15D);
+							int damage = (int) Math.round((getPlayerOwner().getSkills().getLevel(Skills.HITS)) * 0.15D);
 							movePlayer(getPlayerOwner(), 293, 2942);
 							getPlayerOwner().message("You land painfully on the spikes");
 							playerTalk(getPlayerOwner(), null, "ouch");
@@ -161,7 +161,7 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 							} else {
 								getPlayerOwner().message("Your lose your footing and land in the lava");
 								movePlayer(getPlayerOwner(), 292, 104);
-								int lavaDamage = (int) Math.round((p.getSkills().getLevel(Skills.AGILITY)) * 0.21D);
+								int lavaDamage = (int) Math.round((p.getSkills().getLevel(Skills.HITS)) * 0.21D);
 								getPlayerOwner().damage(lavaDamage);
 								getPlayerOwner().setBusy(false);
 								return null;
@@ -228,7 +228,7 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 							return null;
 						});
 						addState(6, () -> {
-							int ledgeDamage = (int) Math.round((getPlayerOwner().getSkills().getLevel(Skills.AGILITY)) * 0.25D);
+							int ledgeDamage = (int) Math.round((getPlayerOwner().getSkills().getLevel(Skills.HITS)) * 0.25D);
 							movePlayer(getPlayerOwner(), 298, 2945);
 							getPlayerOwner().message("You land painfully on the spikes");
 							playerTalk(getPlayerOwner(), null, "ouch");

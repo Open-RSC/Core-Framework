@@ -249,6 +249,7 @@ public class Thieving extends Functions
 
 					message(getPlayerOwner(), "You open the chest");
 					if (!makeChestStuck && (tempChest = new GameObject(getPlayerOwner().getWorld(), obj.getLocation(), 340, obj.getDirection(), obj.getType())) != null) {
+						tempChest.setLocation(obj.getLocation());
 						openChest(tempChest);
 					} else {
 						replaceObjectDelayed(obj, respawnTime, 339);

@@ -6,6 +6,7 @@ import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ItemCraftingDef;
 import com.openrsc.server.external.ItemGemDef;
+import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -95,9 +96,16 @@ public class Crafting implements InvUseOnItemListener,
 		// allowed item on crafting game objects
 		if (!craftingTypeChecks(obj, item, player)) return false;
 		
-		// some furnaces the player is 2 spaces away
-		if (!player.withinRange(obj, 1) && !player.withinRange90Deg(obj, 2)) {
-			return false;
+		if (obj.getLocation().equals(Point.location(399, 840))) {
+			// furnace in shilo village
+			if ((player.getLocation().getY() == 841 && !player.withinRange(obj, 2)) && !player.withinRange90Deg(obj, 2)) {
+				return false;
+			}
+		} else {
+			// some furnaces the player is 2 spaces away
+			if (!player.withinRange(obj, 1) && !player.withinRange90Deg(obj, 2)) {
+				return false;
+			}
 		}
 		
 		if (item.getID() == ItemId.SODA_ASH.id() || item.getID() == ItemId.SAND.id()) { // Soda Ash or Sand (Glass)

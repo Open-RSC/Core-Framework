@@ -4,6 +4,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.custom.BatchEvent;
+import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -115,14 +116,23 @@ public class Smelting implements InvUseOnObjectListener,
 		} else {
 			smelt = Smelt.valueOf(formattedName);
 		}
-
+		
 		if (!p.getInventory().contains(item)) {
 			return;
 		}
-		// some furnaces the player is 2 spaces away
-		if (!p.withinRange(obj, 1) && !p.withinRange90Deg(obj, 2)) {
-			return;
+		
+		if (obj.getLocation().equals(Point.location(399, 840))) {
+			// furnace in shilo village
+			if ((p.getLocation().getY() == 841 && !p.withinRange(obj, 2)) && !p.withinRange90Deg(obj, 2)) {
+				return;
+			}
+		} else {
+			// some furnaces the player is 2 spaces away
+			if (!p.withinRange(obj, 1) && !p.withinRange90Deg(obj, 2)) {
+				return;
+			}
 		}
+		
 		showBubble(p, item);
 		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
 			if (p.getFatigue() >= p.MAX_FATIGUE) {

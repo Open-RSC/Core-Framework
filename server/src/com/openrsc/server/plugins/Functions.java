@@ -3,6 +3,7 @@ package com.openrsc.server.plugins;
 import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.UndergroundPassMessages;
 import com.openrsc.server.event.rsc.GameNotifyEvent;
@@ -859,13 +860,7 @@ public class Functions {
 	public static void doLedge(final GameObject object, final Player p, int damage) {
 		p.setBusyTimer(650);
 		p.message("you climb the ledge");
-		boolean failLedge = false;
-		int random = DataConversions.getRandom().nextInt(10);
-		if (random == 5) {
-			failLedge = true;
-		} else {
-			failLedge = false;
-		}
+		boolean failLedge = !Formulae.calcProductionSuccessful(1, p.getSkills().getLevel(Skills.AGILITY), false, 71);
 		if (object != null && !failLedge) {
 			if (object.getDirection() == 2 || object.getDirection() == 6) {
 				if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) { // X
@@ -905,13 +900,7 @@ public class Functions {
 							  int spikeLocation) {
 		p.setBusyTimer(650);
 		p.message("you climb onto the rock");
-		boolean failRock = false;
-		int random = DataConversions.getRandom().nextInt(5);
-		if (random == 4) {
-			failRock = true;
-		} else {
-			failRock = false;
-		}
+		boolean failRock = !Formulae.calcProductionSuccessful(1, p.getSkills().getLevel(Skills.AGILITY), false, 71);
 		if (object != null && !failRock) {
 			if (object.getDirection() == 1 || object.getDirection() == 2 || object.getDirection() == 4
 				|| object.getDirection() == 3) {

@@ -142,7 +142,7 @@ public class Smithing implements InvUseOnObjectListener,
 			if (player.getInventory().countId(ItemId.GOLD_BAR.id()) < 2) {
 				player.message("You need two bars of gold to make this item.");
 			} else {
-				if (Formulae.failCalculation(player, Skills.SMITHING, 50)) {
+				if (Formulae.breakGoldenItem(50, player.getSkills().getLevel(Skills.SMITHING))) {
 					for (int x = 0; x < 2; x++) {
 						player.getInventory().remove(ItemId.GOLD_BAR.id(), 1);
 					}

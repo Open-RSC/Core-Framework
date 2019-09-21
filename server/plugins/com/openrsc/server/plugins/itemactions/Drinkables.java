@@ -439,7 +439,8 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 
 	private void handleFruitCocktail(Player player, Item item) {
 		if (player.getSkills().getLevel(Skills.HITS) < player.getSkills().getMaxStat(Skills.HITS)) {
-			int newHp = player.getSkills().getLevel(Skills.HITS) + 8;
+			int newHp = player.getSkills().getLevel(Skills.HITS) + 8
+					+ (item.getID() == ItemId.PINEAPPLE_PUNCH.id() ? 1 : 0);
 			if (newHp > player.getSkills().getMaxStat(Skills.HITS)) {
 				newHp = player.getSkills().getMaxStat(Skills.HITS);
 			}

@@ -309,7 +309,9 @@ public class Point {
 	}
 
 	public boolean isAroundBoulderRock() {
-		return inBounds(407, 3719, 421, 3733);
+		return inBounds(404, 3730, 418, 3744)
+				|| inBounds(407, 3718, 421, 3732)
+				|| inBounds(417, 3716, 431, 3730);
 	}
 
 	public boolean isAroundTotemPole() {

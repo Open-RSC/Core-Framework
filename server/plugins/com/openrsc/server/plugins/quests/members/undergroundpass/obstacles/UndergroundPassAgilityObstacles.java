@@ -10,6 +10,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -117,19 +118,7 @@ public class UndergroundPassAgilityObstacles implements ObjectActionListener, Ob
 	}
 
 	boolean succeed(Player player, int req) {
-		int level_difference = getCurrentLevel(player, Skills.AGILITY) - req;
-		int percent = random(1, 100);
-
-		if (level_difference < 0)
-			return true;
-		if (level_difference >= 15)
-			level_difference = 70;
-		if (level_difference >= 20)
-			level_difference = 80;
-		else
-			level_difference = 40 + level_difference;
-
-		return percent <= level_difference;
+		return Formulae.calcProductionSuccessful(req, player.getSkills().getLevel(Skills.AGILITY), false, req + 70);
 	}
 
 	private void failBlackAreaObstacle(Player p, GameObject obj) {

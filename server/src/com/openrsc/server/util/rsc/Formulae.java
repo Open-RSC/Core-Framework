@@ -488,6 +488,14 @@ public final class Formulae {
 		int levelStopFail = requiredLvl + 8;
 		return !Formulae.calcProductionSuccessful(requiredLvl, craftingLvl, true, levelStopFail);
 	}
+	
+	/**
+	 * Should the golden item (bowl) break?
+	 */
+	public static boolean breakGoldenItem(int requiredLvl, int smithingLvl) {
+		int levelStopFail = requiredLvl + 30;
+		return !Formulae.calcProductionSuccessful(requiredLvl, smithingLvl, true, levelStopFail);
+	}
 
 	/**
 	 * Should the gem be smashed?
