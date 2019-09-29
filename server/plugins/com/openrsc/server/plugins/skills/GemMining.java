@@ -11,6 +11,7 @@ import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.plugins.Functions.showBubble;
@@ -79,7 +80,7 @@ public class GemMining implements ObjectActionListener,
 					if (getPlayerOwner().click == 1) {
 						getPlayerOwner().playSound("prospect");
 						getPlayerOwner().setBusyTimer(getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK * 3);
-						getPlayerOwner().message("You examine the rock for ores...");
+						getPlayerOwner().playerServerMessage(MessageType.QUEST, "You examine the rock for ores...");
 						return invoke(1, 3);
 					}
 
@@ -91,14 +92,14 @@ public class GemMining implements ObjectActionListener,
 
 					if (getPlayerOwner().getWorld().getServer().getConfig().WANT_FATIGUE) {
 						if (getPlayerOwner().getFatigue() >= getPlayerOwner().MAX_FATIGUE) {
-							getPlayerOwner().message("You are too tired to mine this rock");
+							getPlayerOwner().playerServerMessage(MessageType.QUEST, "You are too tired to mine this rock");
 							return null;
 						}
 					}
 
 					getPlayerOwner().playSound("mine");
 					showBubble(getPlayerOwner(), new Item(ItemId.IRON_PICKAXE.id()));
-					getPlayerOwner().message("You have a swing at the rock!");
+					getPlayerOwner().playerServerMessage(MessageType.QUEST, "You have a swing at the rock!");
 					getPlayerOwner().setBatchEvent(new BatchEvent(getPlayerOwner().getWorld(), getPlayerOwner(), getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK * 3, "Gem Mining", getPlayerOwner().getWorld().getServer().getConfig().BATCH_PROGRESSION ? Formulae.getRepeatTimes(getPlayerOwner(), com.openrsc.server.constants.Skills.MINING) : retrytimes + 1000, true) {
 						@Override
 						public void action() {
@@ -107,7 +108,7 @@ public class GemMining implements ObjectActionListener,
 								//check if there is still gem at the rock
 								GameObject object = getOwner().getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
 								if (object == null) {
-									getOwner().message("You only succeed in scratching the rock");
+									getOwner().playerServerMessage(MessageType.QUEST, "You only succeed in scratching the rock");
 								} else {
 									getOwner().message(minedString(gem.getID()));
 									getOwner().incExp(com.openrsc.server.constants.Skills.MINING, 200, true); // always 50XP
@@ -123,7 +124,7 @@ public class GemMining implements ObjectActionListener,
 									}
 								}
 							} else {
-								getOwner().message("You only succeed in scratching the rock");
+								getOwner().playerServerMessage(MessageType.QUEST, "You only succeed in scratching the rock");
 								if (getRepeatFor() > 1) {
 									GameObject checkObj = getOwner().getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
 									if (checkObj == null) {
@@ -133,7 +134,7 @@ public class GemMining implements ObjectActionListener,
 							}
 							if (!isCompleted()) {
 								showBubble(getOwner(), new Item(ItemId.IRON_PICKAXE.id()));
-								getOwner().message("You have a swing at the rock!");
+								getOwner().playerServerMessage(MessageType.QUEST, "You have a swing at the rock!");
 							}
 						}
 					});
@@ -142,12 +143,12 @@ public class GemMining implements ObjectActionListener,
 				});
 				addState(1, () -> {
 					if (obj.getID() == GEM_ROCK) {
-						getPlayerOwner().message("You fail to find anything interesting");
+						getPlayerOwner().playerServerMessage(MessageType.QUEST, "You fail to find anything interesting");
 						return null;
 					}
 					//should not get into the else, just a fail-safe
 					else {
-						getPlayerOwner().message("There is currently no ore available in this rock");
+						getPlayerOwner().playerServerMessage(MessageType.QUEST, "There is currently no ore available in this rock");
 						return null;
 					}
 				});

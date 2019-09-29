@@ -11,6 +11,7 @@ import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.hasItem;
 import static com.openrsc.server.plugins.Functions.showBubble;
@@ -60,12 +61,12 @@ public class Woodcutting implements ObjectActionListener,
 			}
 		}
 		if (axeId < 0) {
-			player.message("You need an axe to chop this tree down");
+			player.playerServerMessage(MessageType.QUEST, "You need an axe to chop this tree down");
 			return;
 		}
 
 		final int axeID = axeId;
-		player.message("You swing your " + player.getWorld().getServer().getEntityHandler().getItemDef(axeId).getName().toLowerCase() + " at the tree...");
+		player.playerServerMessage(MessageType.QUEST, "You swing your " + player.getWorld().getServer().getEntityHandler().getItemDef(axeId).getName().toLowerCase() + " at the tree...");
 		showBubble(player, new Item(axeId));
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1800, "Woodcutting", Formulae.getRepeatTimes(player, Skills.WOODCUT), true) {
 			@Override
@@ -73,7 +74,7 @@ public class Woodcutting implements ObjectActionListener,
 				final Item log = new Item(def.getLogId());
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
-						getOwner().message("You are too tired to cut the tree");
+						getOwner().playerServerMessage(MessageType.QUEST, "You are too tired to cut the tree");
 						interrupt();
 						return;
 					}
@@ -88,11 +89,11 @@ public class Woodcutting implements ObjectActionListener,
 					//check if the tree is still up
 					GameObject obj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 					if (obj == null) {
-						getOwner().message("You slip and fail to hit the tree");
+						getOwner().playerServerMessage(MessageType.QUEST, "You slip and fail to hit the tree");
 						interrupt();
 					} else {
 						getOwner().getInventory().add(log);
-						getOwner().message("You get some wood");
+						getOwner().playerServerMessage(MessageType.QUEST, "You get some wood");
 						getOwner().incExp(Skills.WOODCUT, def.getExp(), true);
 					}
 					if (DataConversions.random(1, 100) <= def.getFell()) {
@@ -111,7 +112,7 @@ public class Woodcutting implements ObjectActionListener,
 						}
 					}
 				} else {
-					getOwner().message("You slip and fail to hit the tree");
+					getOwner().playerServerMessage(MessageType.QUEST, "You slip and fail to hit the tree");
 					if (getRepeatFor() > 1) {
 						GameObject checkObj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 						if (checkObj == null) {
@@ -120,7 +121,7 @@ public class Woodcutting implements ObjectActionListener,
 					}
 				}
 				if (!isCompleted()) {
-					getOwner().message("You swing your " + getWorld().getServer().getEntityHandler().getItemDef(axeID).getName().toLowerCase() + " at the tree...");
+					getOwner().playerServerMessage(MessageType.QUEST, "You swing your " + getWorld().getServer().getEntityHandler().getItemDef(axeID).getName().toLowerCase() + " at the tree...");
 					showBubble(getOwner(), new Item(axeID));
 				}
 			}

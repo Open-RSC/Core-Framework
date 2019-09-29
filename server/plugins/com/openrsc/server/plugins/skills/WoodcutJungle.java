@@ -11,6 +11,7 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -46,7 +47,7 @@ public class WoodcutJungle implements ObjectActionListener,
 
 	private void handleJungleWoodcut(GameObject obj, Player p) {
 		if (p.getFatigue() >= p.MAX_FATIGUE) {
-			p.message("You are too tired to cut the " + (obj.getID() == JUNGLE_VINE ? "jungle vines" : "tree"));
+			p.playerServerMessage(MessageType.QUEST, "You are too tired to cut the " + (obj.getID() == JUNGLE_VINE ? "jungle vines" : "tree"));
 
 			// Shilo side of the jungle
 			if (p.getY() < 866) {
@@ -83,7 +84,7 @@ public class WoodcutJungle implements ObjectActionListener,
 				}
 			}
 			if (axeId < 0) {
-				p.message("You need an axe to chop this tree down");
+				p.playerServerMessage(MessageType.QUEST, "You need an axe to chop this tree down");
 				return;
 			}
 		} else {
@@ -92,7 +93,7 @@ public class WoodcutJungle implements ObjectActionListener,
 
 		p.setBusy(true);
 		showBubble(p, new Item(axeId));
-		message(p, 1300, "You swing your " + p.getWorld().getServer().getEntityHandler().getItemDef(axeId).getName().toLowerCase() + " at the " + (obj.getID() == JUNGLE_VINE ? "jungle vines" : "tree") + "...");
+		p.playerServerMessage(MessageType.QUEST, "You swing your " + p.getWorld().getServer().getEntityHandler().getItemDef(axeId).getName().toLowerCase() + " at the " + (obj.getID() == JUNGLE_VINE ? "jungle vines" : "tree") + "...");
 		if (p.getFatigue() >= 74920) {
 			if (p.getFatigue() < p.MAX_FATIGUE) {
 				p.message("You are getting very tired, you may get stuck if you continue into the jungle.");
@@ -110,6 +111,7 @@ public class WoodcutJungle implements ObjectActionListener,
 					p.getWorld().unregisterGameObject(jungleObject);
 					p.getWorld().delayedSpawnObject(obj.getLoc(), 5500); // 5.5 seconds.
 					if (!force)
+						// authentic does not send to quest tab
 						message(p, 1200, "You hack your way through the jungle.");
 				} else {
 					p.getWorld().replaceGameObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), JUNGLE_TREE_STUMP, obj.getDirection(), obj.getType()));
@@ -122,7 +124,7 @@ public class WoodcutJungle implements ObjectActionListener,
 			if (DataConversions.random(0, 10) == 8) {
 				final Item log = new Item(ItemId.LOGS.id());
 				p.getInventory().add(log);
-				p.message("You get some wood");
+				p.playerServerMessage(MessageType.QUEST, "You get some wood");
 			}
 			p.teleport(obj.getX(), obj.getY());
 			if (p.getY() > 871) {
@@ -131,7 +133,7 @@ public class WoodcutJungle implements ObjectActionListener,
 				p.message("You manage to hack your way into the Kharazi Jungle.");
 			}
 		} else {
-			p.message("You slip and fail to hit the " + (obj.getID() == JUNGLE_VINE ? "jungle vines" : "tree"));
+			p.playerServerMessage(MessageType.QUEST, "You slip and fail to hit the " + (obj.getID() == JUNGLE_VINE ? "jungle vines" : "tree"));
 		}
 		p.setBusy(false);
 	}

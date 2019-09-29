@@ -6,6 +6,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.addItem;
 
@@ -30,7 +31,7 @@ public final class Pick implements ObjectActionExecutiveListener,
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, delaytime, "Pick Vegetal", 30, true) {
 			@Override
 			public void action() {
-				getOwner().message(pickMessage);
+				getOwner().playerServerMessage(MessageType.QUEST, pickMessage);
 				addItem(getOwner(), objID, 1);
 				getOwner().playSound("potato");
 				if (getOwner().getInventory().full())
