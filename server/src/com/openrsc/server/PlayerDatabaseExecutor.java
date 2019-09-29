@@ -5,6 +5,7 @@ import com.openrsc.server.event.rsc.ImmediateEvent;
 import com.openrsc.server.login.CharacterCreateRequest;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.login.LoginTask;
+import com.openrsc.server.login.RecoveryAttemptRequest;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.sql.DatabasePlayerLoader;
 import com.openrsc.server.util.rsc.LoginResponse;
@@ -34,7 +35,7 @@ public class PlayerDatabaseExecutor implements Runnable {
 
 	private Queue<CharacterCreateRequest> characterCreateRequests = new ConcurrentLinkedQueue<CharacterCreateRequest>();
 
-	private Queue<Player> recoveryAttemptRequests = new ConcurrentLinkedQueue<Player>();
+	private Queue<RecoveryAttemptRequest> recoveryAttemptRequests = new ConcurrentLinkedQueue<RecoveryAttemptRequest>();
 
 	private Queue<Player> passwordChangeRequests = new ConcurrentLinkedQueue<Player>();
 
@@ -95,6 +96,11 @@ public class PlayerDatabaseExecutor implements Runnable {
 				while ((characterCreateRequest = characterCreateRequests.poll()) != null) {
 					characterCreateRequest.process();
 				}
+
+				RecoveryAttemptRequest recoveryAttemptRequest = null;
+				while ((recoveryAttemptRequest = recoveryAttemptRequests.poll()) != null) {
+					recoveryAttemptRequest.process();
+				}
 			} catch (Throwable e) {
 				LOGGER.catching(e);
 			}
@@ -119,6 +125,10 @@ public class PlayerDatabaseExecutor implements Runnable {
 
 	public void addCharacterCreateRequest(CharacterCreateRequest request) {
 		characterCreateRequests.add(request);
+	}
+
+	public void addRecoveryAttemptRequest(RecoveryAttemptRequest request) {
+		recoveryAttemptRequests.add(request);
 	}
 
 	public void start() {

@@ -137,11 +137,17 @@ public final class DataConversions {
 	}
 
 	public static final String hashPassword(final String password, final String salt) {
+		if(password == null || password.isEmpty())
+			return null;
+
 		final String passwordCompatHashed = hashPasswordCompatibility(password, salt);
 		return BCrypt.hashpw(passwordCompatHashed, BCrypt.gensalt(10, secureRandom));
 	}
 
 	public static final boolean checkPassword(final String plainText, final String salt, final String hashed) {
+		if(plainText == null || plainText.isEmpty() || hashed == null || hashed.isEmpty())
+			return false;
+
 		final String plainTextCompatHashed = hashPasswordCompatibility(plainText, salt);
 		return BCrypt.checkpw(plainTextCompatHashed, hashed);
 	}

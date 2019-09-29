@@ -3,15 +3,13 @@ package com.openrsc.server.net.rsc;
 import com.openrsc.server.Server;
 import com.openrsc.server.login.CharacterCreateRequest;
 import com.openrsc.server.login.LoginRequest;
+import com.openrsc.server.login.RecoveryAttemptRequest;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.ConnectionAttachment;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.PacketBuilder;
 import com.openrsc.server.net.RSCConnectionHandler;
-import com.openrsc.server.sql.query.logs.SecurityChangeLog;
-import com.openrsc.server.sql.query.logs.SecurityChangeLog.ChangeEvent;
-import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.LoginResponse;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
@@ -160,103 +158,18 @@ public class LoginPacketHandler {
 			
 			/* Attempt recover */
 			case 7:
-				try {
-					user = getString(p.getBuffer()).trim();
-					user = user.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ");
-					String oldPass = getString(p.getBuffer()).trim();
-					String newPass = getString(p.getBuffer()).trim();
-					Long uid = p.getBuffer().readLong();
-					String answers[] = new String[5];
-					for (int j=0; j<5; j++) {
-						answers[j] = normalize(getString(p.getBuffer()).trim(), 50);
-					}
-					
-					int pid = -1;
-					
-					PreparedStatement statement = server.getDatabaseConnection().prepareStatement("SELECT id, pass, salt FROM " + server.getConfig().MYSQL_TABLE_PREFIX + "players WHERE username=?");
-					statement.setString(1, user);
-					ResultSet res = statement.executeQuery();
-					ResultSet res2 = null;
-					boolean foundAndHasRecovery = false;
-					
-					if (res.next()) {
-						pid = res.getInt("id");
-						statement = server.getDatabaseConnection().prepareStatement("SELECT * FROM " + server.getConfig().MYSQL_TABLE_PREFIX + "player_recovery WHERE playerID=?");
-						statement.setInt(1, pid);
-						res2 = statement.executeQuery();
-						if (res2.next()) {
-							foundAndHasRecovery = true;
-						}
-					}
-					
-					if (!foundAndHasRecovery) {
-						channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
-						channel.close();
-					} else {
-						String salt = res.getString("salt");
-						String currDBPass = res.getString("pass");
-						newPass = DataConversions.hashPassword(newPass, salt);
-						/*oldPass = DataConversions.hashPassword(oldPass, salt);
-						for (int j=0; j<5; j++) {
-							answers[j] = DataConversions.hashPassword(answers[j], salt);
-						}*/
-						
-						int numCorrect = (
-							DataConversions.checkPassword(oldPass, salt, res2.getString("previous_pass")) ||
-								DataConversions.checkPassword(oldPass, salt, res2.getString("earlier_pass"))
-						) ? 1 : 0;
-						for (int j=0; j<5; j++) {
-							numCorrect += DataConversions.checkPassword(answers[j], salt, res2.getString("answer"+(j+1))) ? 1 : 0;
-						}
-						
-						PreparedStatement attempt = server.getDatabaseConnection().prepareStatement("INSERT INTO `" + server.getConfig().MYSQL_TABLE_PREFIX
-						+ "recovery_attempts`(`playerID`, `username`, `time`, `ip`) VALUES(?, ?, ?, ?)", new String[]{"dbid"});
-						attempt.setInt(1, pid);
-						attempt.setString(2, user);
-						attempt.setLong(3, System.currentTimeMillis() / 1000);
-						attempt.setString(4, IP);
-						attempt.executeUpdate();
-						ResultSet set = attempt.getGeneratedKeys();
-
-						int tryID = -1;
-						if (set.next()) {
-							tryID = set.getInt(1);
-						}
-						
-						PreparedStatement innerStatement;
-						
-						//enough treshold to allow pass change for recovery
-						if (numCorrect >= 4) {
-							innerStatement = server.getDatabaseConnection().prepareStatement(
-									"UPDATE `" + server.getConfig().MYSQL_TABLE_PREFIX + "players` SET `pass`=?, `lastRecoveryTryId`=? WHERE `id`=?");
-							innerStatement.setString(1, newPass);
-							innerStatement.setInt(2, tryID);
-							innerStatement.setInt(3, pid);
-							innerStatement.executeUpdate();
-							
-							//log password change
-							server.getGameLogger().addQuery(new SecurityChangeLog(server.getWorld().getPlayer(pid), ChangeEvent.PASSWORD_CHANGE,
-								"(@Recovery) From: " + currDBPass + ", To: " + newPass));
-							
-							channel.writeAndFlush(new PacketBuilder().writeByte((byte) 1).toPacket());
-							channel.close();
-						} else {
-							innerStatement = server.getDatabaseConnection().prepareStatement(
-									"UPDATE `" + server.getConfig().MYSQL_TABLE_PREFIX + "players` SET `lastRecoveryTryId`=? WHERE `id`=?");
-							innerStatement.setInt(1, tryID);
-							innerStatement.setInt(2, pid);
-							innerStatement.executeUpdate();
-							
-							channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
-							channel.close();
-						}
-					}
-					
-				} catch (Exception e) {
-					LOGGER.catching(e);
-					channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
-					channel.close();
+				user = getString(p.getBuffer()).trim();
+				user = user.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ");
+				String oldPass = getString(p.getBuffer()).trim();
+				String newPass = getString(p.getBuffer()).trim();
+				Long uid = p.getBuffer().readLong();
+				String answers[] = new String[5];
+				for (int j=0; j<5; j++) {
+					answers[j] = normalize(getString(p.getBuffer()).trim(), 50);
 				}
+
+				RecoveryAttemptRequest recoveryAttemptRequest = new RecoveryAttemptRequest(server, user, oldPass, newPass, answers, channel);
+				server.getPlayerDataProcessor().addRecoveryAttemptRequest(recoveryAttemptRequest);
 				break;
 		}
 	}
