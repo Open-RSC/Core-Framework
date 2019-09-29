@@ -35,7 +35,7 @@ public class CharacterCreateRequest {
 		this.setEmail(email);
 		this.setUsername(username);
 		this.setPassword(password);
-		this.setIpAddress(channel.remoteAddress().toString());
+		this.setIpAddress(getChannel().remoteAddress().toString());
 		this.setChannel(channel);
 	}
 
@@ -96,21 +96,21 @@ public class CharacterCreateRequest {
 	public void process() {
 		try {
 			if (getUsername().length() < 2 || getUsername().length() > 12) {
-				channel.writeAndFlush(new PacketBuilder().writeByte((byte) 7).toPacket());
-				channel.close();
+				getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 7).toPacket());
+				getChannel().close();
 				return;
 			}
 
 			if (getPassword().length() < 4 || getPassword().length() > 64) {
-				channel.writeAndFlush(new PacketBuilder().writeByte((byte) 8).toPacket());
-				channel.close();
+				getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 8).toPacket());
+				getChannel().close();
 				return;
 			}
 
 			if (getServer().getConfig().WANT_EMAIL) {
 				if (!isValidEmailAddress(email)) {
-					channel.writeAndFlush(new PacketBuilder().writeByte((byte) 6).toPacket());
-					channel.close();
+					getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 6).toPacket());
+					getChannel().close();
 					return;
 				}
 			}
@@ -123,8 +123,8 @@ public class CharacterCreateRequest {
 				if (set.next()) {
 					set.close();
 					LOGGER.info(getIpAddress() + " - Registration failed: Registered recently.");
-					channel.writeAndFlush(new PacketBuilder().writeByte((byte) 5).toPacket());
-					channel.close();
+					getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 5).toPacket());
+					getChannel().close();
 					return;
 				}
 			}
@@ -133,8 +133,8 @@ public class CharacterCreateRequest {
 			if (set.next()) {
 				set.close();
 				LOGGER.info(getIpAddress() + " - Registration failed: Forum Username already in use.");
-				channel.writeAndFlush(new PacketBuilder().writeByte((byte) 2).toPacket());
-				channel.close();
+				getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 2).toPacket());
+				getChannel().close();
 				return;
 			}
 
@@ -142,8 +142,8 @@ public class CharacterCreateRequest {
 			if (set.next()) {
 				set.close();
 				LOGGER.info(getIpAddress() + " - Android registration failed: Character Username already in use.");
-				channel.writeAndFlush(new PacketBuilder().writeByte((byte) 2).toPacket());
-				channel.close();
+				getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 2).toPacket());
+				getChannel().close();
 				return;
 			}
 
@@ -165,7 +165,7 @@ public class CharacterCreateRequest {
 			set = statement.executeQuery();
 
 			if (!set.next()) {
-				channel.writeAndFlush(new PacketBuilder().writeByte((byte) 6).toPacket());
+				getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 6).toPacket());
 				LOGGER.info(getIpAddress() + " - Registration failed: Player id not found.");
 				return;
 			}
@@ -198,11 +198,11 @@ public class CharacterCreateRequest {
 			//---------------------------------------------------------------------------------------
 
 			LOGGER.info(getIpAddress() + " - Registration successful");
-			channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
+			getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
 		} catch (Exception e) {
 			LOGGER.catching(e);
-			channel.writeAndFlush(new PacketBuilder().writeByte((byte) 5).toPacket());
-			channel.close();
+			getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 5).toPacket());
+			getChannel().close();
 		}
 	}
 }
