@@ -1,9 +1,9 @@
 package com.openrsc.server.net.rsc;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.login.CharacterCreateRequest;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.ConnectionAttachment;
 import com.openrsc.server.net.Packet;
@@ -32,16 +32,6 @@ public class LoginPacketHandler {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private static boolean isValidEmailAddress(String email) {
-		boolean stricterFilter = true;
-		String stricterFilterString = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
-		String laxString = ".+@.+\\.[A-Za-z]{2}[A-Za-z]*";
-		String emailRegex = stricterFilter ? stricterFilterString : laxString;
-		java.util.regex.Pattern p = java.util.regex.Pattern.compile(emailRegex);
-		java.util.regex.Matcher m = p.matcher(email);
-		return m.matches();
-	}
-
 	public String getString(ByteBuf payload) {
 		StringBuilder bldr = new StringBuilder();
 		byte b;
@@ -50,7 +40,7 @@ public class LoginPacketHandler {
 		return bldr.toString();
 	}
 
-	public void processLogin(Packet p, Channel channel, Server server) throws Exception {
+	public void processLogin(Packet p, Channel channel, Server server) {
 		String IP = ((InetSocketAddress) channel.remoteAddress()).getAddress().getHostAddress();
 		switch (p.getID()) {
 
@@ -121,119 +111,8 @@ public class LoginPacketHandler {
 
 				String email = getString(p.getBuffer()).trim();
 
-				if (user.length() < 2 || user.length() > 12) {
-					channel.writeAndFlush(new PacketBuilder().writeByte((byte) 7).toPacket());
-					channel.close();
-					return;
-				}
-
-				if (pass.length() < 4 || pass.length() > 64) {
-					channel.writeAndFlush(new PacketBuilder().writeByte((byte) 8).toPacket());
-					channel.close();
-					return;
-				}
-
-				if (server.getConfig().WANT_EMAIL) {
-					if (!isValidEmailAddress(email)) {
-						channel.writeAndFlush(new PacketBuilder().writeByte((byte) 6).toPacket());
-						channel.close();
-						return;
-					}
-				}
-
-
-				ResultSet set = server.getDatabaseConnection().executeQuery("SELECT 1 FROM " + server.getConfig().MYSQL_TABLE_PREFIX + "players WHERE creation_ip='" + IP
-					+ "' AND creation_date>'" + ((System.currentTimeMillis() / 1000) - 60) + "'"); // Checks to see if the player has been registered by the same IP address in the past 1 minute
-
-				if (server.getConfig().WANT_REGISTRATION_LIMIT) {
-					if (set.next()) {
-						set.close();
-						LOGGER.info(IP + " - Registration failed: Registered recently.");
-						channel.writeAndFlush(new PacketBuilder().writeByte((byte) 5).toPacket());
-						channel.close();
-						return;
-					}
-				}
-
-				set = server.getDatabaseConnection().executeQuery("SELECT 1 FROM " + server.getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`='" + user + "'");
-				if (set.next()) {
-					set.close();
-					LOGGER.info(IP + " - Registration failed: Forum Username already in use.");
-					channel.writeAndFlush(new PacketBuilder().writeByte((byte) 2).toPacket());
-					channel.close();
-					return;
-				}
-
-				set = server.getDatabaseConnection().executeQuery("SELECT 1 FROM " + server.getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`='" + user + "'");
-				if (set.next()) {
-					set.close();
-					LOGGER.info(IP + " - Android registration failed: Character Username already in use.");
-					channel.writeAndFlush(new PacketBuilder().writeByte((byte) 2).toPacket());
-					channel.close();
-					return;
-				}
-
-				String newSalt = DataConversions.generateSalt();
-
-				/* Create the game character */
-				try {
-					PreparedStatement statement = server.getDatabaseConnection().prepareStatement(
-						"INSERT INTO `" + server.getConfig().MYSQL_TABLE_PREFIX + "players` (`username`, email, `pass`, `salt`, `creation_date`, `creation_ip`) VALUES (?, ?, ?, ?, ?, ?)");
-					statement.setString(1, user);
-					statement.setString(2, email);
-					statement.setString(3, DataConversions.hashPassword(pass, newSalt));
-					statement.setString(4, newSalt);
-					statement.setLong(5, System.currentTimeMillis() / 1000);
-					statement.setString(6, IP);
-					statement.executeUpdate();
-					statement = null;
-
-					/* PlayerID of the player account */
-					statement = server.getDatabaseConnection().prepareStatement("SELECT id FROM " + server.getConfig().MYSQL_TABLE_PREFIX + "players WHERE username=?");
-					statement.setString(1, user);
-
-					set = statement.executeQuery();
-
-					if (!set.next()) {
-						channel.writeAndFlush(new PacketBuilder().writeByte((byte) 6).toPacket());
-						LOGGER.info(IP + " - Registration failed: Player id not found.");
-						return;
-					}
-
-					int playerID = set.getInt("id");
-
-					statement = server.getDatabaseConnection().prepareStatement("INSERT INTO `" + server.getConfig().MYSQL_TABLE_PREFIX + "curstats` (`playerID`) VALUES (?)");
-					statement.setInt(1, playerID);
-					statement.executeUpdate();
-
-					statement = server.getDatabaseConnection().prepareStatement("INSERT INTO `" + server.getConfig().MYSQL_TABLE_PREFIX + "experience` (`playerID`) VALUES (?)");
-					statement.setInt(1, playerID);
-					statement.executeUpdate();
-
-					//Don't rely on the default values of the database.
-					//Update the stats based on their StatDef-----------------------------------------------
-					statement = server.getDatabaseConnection().prepareStatement(server.getDatabaseConnection().getGameQueries().updateExperience);
-					statement.setInt(server.getConstants().getSkills().getSkillsCount() + 1, playerID);
-					Skills newGuy = new Skills(server.getWorld(),null);
-
-					for (int index = 0; index < server.getConstants().getSkills().getSkillsCount(); index++)
-						statement.setInt(index + 1, newGuy.getExperience(index));
-					statement.executeUpdate();
-
-					statement = server.getDatabaseConnection().prepareStatement(server.getDatabaseConnection().getGameQueries().updateStats);
-					statement.setInt(server.getConstants().getSkills().getSkillsCount() + 1, playerID);
-					for (int index = 0; index < server.getConstants().getSkills().getSkillsCount(); index++)
-						statement.setInt(index + 1, newGuy.getLevel(index));
-					statement.executeUpdate();
-					//---------------------------------------------------------------------------------------
-
-					LOGGER.info(IP + " - Registration successful");
-					channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
-				} catch (Exception e) {
-					LOGGER.catching(e);
-					channel.writeAndFlush(new PacketBuilder().writeByte((byte) 5).toPacket());
-					channel.close();
-				}
+				CharacterCreateRequest characterCreateRequest = new CharacterCreateRequest(server, user, pass, email, channel);
+				server.getPlayerDataProcessor().addCharacterCreateRequest(characterCreateRequest);
 				break;
 				
 			/* Forgot password */
@@ -337,7 +216,7 @@ public class LoginPacketHandler {
 						attempt.setLong(3, System.currentTimeMillis() / 1000);
 						attempt.setString(4, IP);
 						attempt.executeUpdate();
-						set = attempt.getGeneratedKeys();
+						ResultSet set = attempt.getGeneratedKeys();
 
 						int tryID = -1;
 						if (set.next()) {

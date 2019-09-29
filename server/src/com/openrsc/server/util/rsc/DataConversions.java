@@ -119,6 +119,7 @@ public final class DataConversions {
 	}
 
 	public static String generateSalt() {
+		// This is legacy code since we moved to bcrypt
 		int len = 30;
 		StringBuilder sb = new StringBuilder(len);
 		for (int i = 0; i < len; i++) {
@@ -131,16 +132,17 @@ public final class DataConversions {
 	}
 
 	private static String hashPasswordCompatibility(final String password, final String salt) {
-		return DataConversions.sha512(salt + DataConversions.md5(password));
+		boolean doCompatibility = salt != null && !salt.isEmpty();
+		return doCompatibility ? DataConversions.sha512(salt + DataConversions.md5(password)) : password;
 	}
 
 	public static final String hashPassword(final String password, final String salt) {
-		return BCrypt.hashpw(hashPasswordCompatibility(password, salt), BCrypt.gensalt(12, secureRandom));
+		final String passwordCompatHashed = hashPasswordCompatibility(password, salt);
+		return BCrypt.hashpw(passwordCompatHashed, BCrypt.gensalt(10, secureRandom));
 	}
 
 	public static final boolean checkPassword(final String plainText, final String salt, final String hashed) {
 		final String plainTextCompatHashed = hashPasswordCompatibility(plainText, salt);
-
 		return BCrypt.checkpw(plainTextCompatHashed, hashed);
 	}
 

@@ -2,10 +2,10 @@ package com.openrsc.server;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.event.rsc.ImmediateEvent;
+import com.openrsc.server.login.CharacterCreateRequest;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.login.LoginTask;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.ThrottleFilter;
 import com.openrsc.server.sql.DatabasePlayerLoader;
 import com.openrsc.server.util.rsc.LoginResponse;
 import org.apache.logging.log4j.LogManager;
@@ -17,20 +17,28 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class PlayerDatabaseExecutor extends ThrottleFilter implements Runnable {
+public class PlayerDatabaseExecutor implements Runnable {
 
 	/**
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private final ScheduledExecutorService scheduledExecutor;
+	private final ScheduledExecutorService loginThreadExecutor;
 
 	private Queue<LoginRequest> loadRequests = new ConcurrentLinkedQueue<LoginRequest>();
 
 	private Queue<Player> saveRequests = new ConcurrentLinkedQueue<Player>();
 
 	private Queue<Player> removeRequests = new ConcurrentLinkedQueue<Player>();
+
+	private Queue<CharacterCreateRequest> characterCreateRequests = new ConcurrentLinkedQueue<CharacterCreateRequest>();
+
+	private Queue<Player> recoveryAttemptRequests = new ConcurrentLinkedQueue<Player>();
+
+	private Queue<Player> passwordChangeRequests = new ConcurrentLinkedQueue<Player>();
+
+	private Queue<Player> recoveryChangeRequests = new ConcurrentLinkedQueue<Player>();
 
 	private DatabasePlayerLoader database;
 
@@ -44,7 +52,7 @@ public class PlayerDatabaseExecutor extends ThrottleFilter implements Runnable {
 	public PlayerDatabaseExecutor(Server server) {
 		this.server = server;
 		this.database = new DatabasePlayerLoader(getServer());
-		scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getServer().getName()+" : PlayerDataProcessorThread").build());
+		loginThreadExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getServer().getName()+" : LoginThread").build());
 	}
 
 	@Override
@@ -67,7 +75,7 @@ public class PlayerDatabaseExecutor extends ThrottleFilter implements Runnable {
 						});
 
 					}
-					//LOGGER.info("Processed login request for " + loginRequest.getUsername() + " response: " + loginResponse);
+					LOGGER.info("Processed login request for " + loginRequest.getUsername() + " response: " + loginResponse);
 				}
 
 				Player playerToSave = null;
@@ -80,7 +88,12 @@ public class PlayerDatabaseExecutor extends ThrottleFilter implements Runnable {
 				while ((playerToRemove = removeRequests.poll()) != null) {
 					playerToRemove.remove();
 					getServer().getWorld().getPlayers().remove(playerToRemove);
-					//LOGGER.info("Removed player " + playerToRemove.getUsername() + "");
+					LOGGER.info("Removed player " + playerToRemove.getUsername() + "");
+				}
+
+				CharacterCreateRequest characterCreateRequest = null;
+				while ((characterCreateRequest = characterCreateRequests.poll()) != null) {
+					characterCreateRequest.process();
 				}
 			} catch (Throwable e) {
 				LOGGER.catching(e);
@@ -88,16 +101,13 @@ public class PlayerDatabaseExecutor extends ThrottleFilter implements Runnable {
 		}
 	}
 
-
 	public DatabasePlayerLoader getDatabase() {
 		return database;
 	}
 
-
 	public void addLoginRequest(LoginRequest request) {
 		loadRequests.add(request);
 	}
-
 
 	public void addSaveRequest(Player player) {
 		saveRequests.add(player);
@@ -107,17 +117,21 @@ public class PlayerDatabaseExecutor extends ThrottleFilter implements Runnable {
 		removeRequests.add(player);
 	}
 
+	public void addCharacterCreateRequest(CharacterCreateRequest request) {
+		characterCreateRequests.add(request);
+	}
+
 	public void start() {
 		synchronized (running) {
 			running = true;
-			scheduledExecutor.scheduleAtFixedRate(this, 0, 50, TimeUnit.MILLISECONDS);
+			loginThreadExecutor.scheduleAtFixedRate(this, 0, 50, TimeUnit.MILLISECONDS);
 		}
 	}
 
 	public void stop() {
 		synchronized (running) {
 			running = false;
-			scheduledExecutor.shutdown();
+			loginThreadExecutor.shutdown();
 		}
 	}
 
