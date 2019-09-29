@@ -83,16 +83,6 @@ public class CharacterCreateRequest {
 		return server;
 	}
 
-	private static boolean isValidEmailAddress(String email) {
-		boolean stricterFilter = true;
-		String stricterFilterString = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
-		String laxString = ".+@.+\\.[A-Za-z]{2}[A-Za-z]*";
-		String emailRegex = stricterFilter ? stricterFilterString : laxString;
-		java.util.regex.Pattern p = java.util.regex.Pattern.compile(emailRegex);
-		java.util.regex.Matcher m = p.matcher(email);
-		return m.matches();
-	}
-
 	public void process() {
 		try {
 			if (getUsername().length() < 2 || getUsername().length() > 12) {
@@ -108,7 +98,7 @@ public class CharacterCreateRequest {
 			}
 
 			if (getServer().getConfig().WANT_EMAIL) {
-				if (!isValidEmailAddress(email)) {
+				if (!DataConversions.isValidEmailAddress(email)) {
 					getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 6).toPacket());
 					getChannel().close();
 					return;

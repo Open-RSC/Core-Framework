@@ -10,6 +10,7 @@ import com.openrsc.server.net.ConnectionAttachment;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.PacketBuilder;
 import com.openrsc.server.net.RSCConnectionHandler;
+import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.LoginResponse;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
@@ -165,43 +166,12 @@ public class LoginPacketHandler {
 				Long uid = p.getBuffer().readLong();
 				String answers[] = new String[5];
 				for (int j=0; j<5; j++) {
-					answers[j] = normalize(getString(p.getBuffer()).trim(), 50);
+					answers[j] = DataConversions.normalize(getString(p.getBuffer()).trim(), 50);
 				}
 
 				RecoveryAttemptRequest recoveryAttemptRequest = new RecoveryAttemptRequest(server, user, oldPass, newPass, answers, channel);
 				server.getPlayerDataProcessor().addRecoveryAttemptRequest(recoveryAttemptRequest);
 				break;
 		}
-	}
-	
-	private static String normalize(String s, int len) {
-		String res = addCharacters(s, len);
-		res = res.replaceAll("[\\s_]+","_");
-		char[] chars = res.trim().toCharArray();
-		if (chars.length > 0 && chars[0] == '_')
-			chars[0] = ' ';
-		if (chars.length > 0 && chars[chars.length-1] == '_')
-			chars[chars.length-1] = ' ';
-	    return String.valueOf(chars).toLowerCase().trim();  
-	}
-	
-	public static String addCharacters(String s, int i) {
-		String s1 = "";
-		for (int j = 0; j < i; j++)
-			if (j >= s.length()) {
-				s1 = s1 + " ";
-			} else {
-				char c = s.charAt(j);
-				if (c >= 'a' && c <= 'z')
-					s1 = s1 + c;
-				else if (c >= 'A' && c <= 'Z')
-					s1 = s1 + c;
-				else if (c >= '0' && c <= '9')
-					s1 = s1 + c;
-				else
-					s1 = s1 + '_';
-			}
-
-		return s1;
 	}
 }

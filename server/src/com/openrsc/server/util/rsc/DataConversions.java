@@ -19,6 +19,7 @@ import java.security.SecureRandom;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Locale;
 import java.util.Random;
 
@@ -155,6 +156,65 @@ public final class DataConversions {
 	private static String toHex(byte[] bytes) {
 		// change below to lower or uppercase X to control case of output
 		return String.format("%0" + (bytes.length << 1) + "x", new BigInteger(1, bytes));
+	}
+
+	public static boolean isValidEmailAddress(String email) {
+		boolean stricterFilter = true;
+		String stricterFilterString = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
+		String laxString = ".+@.+\\.[A-Za-z]{2}[A-Za-z]*";
+		String emailRegex = stricterFilter ? stricterFilterString : laxString;
+		java.util.regex.Pattern p = java.util.regex.Pattern.compile(emailRegex);
+		java.util.regex.Matcher m = p.matcher(email);
+		return m.matches();
+	}
+
+	public static String updateIfEmpty(String checkedS, String otherS) {
+		return (checkedS == null || checkedS.length() < 2) ? otherS : checkedS;
+	}
+
+	public static String normalize(String s, int len) {
+		String res = addCharacters(s, len);
+		res = res.replaceAll("[\\s_]+","_");
+		char[] chars = res.trim().toCharArray();
+		if (chars.length > 0 && chars[0] == '_')
+			chars[0] = ' ';
+		if (chars.length > 0 && chars[chars.length-1] == '_')
+			chars[chars.length-1] = ' ';
+		return String.valueOf(chars).toLowerCase().trim();
+	}
+
+	public static String maxLenString(String s, int len, boolean trim) {
+		String res = s;
+		if (trim) res = s.trim();
+		if (res.length() > len) {
+			res = res.substring(0, len);
+		}
+		return res;
+	}
+
+	public static String addCharacters(String s, int i) {
+		String s1 = "";
+		for (int j = 0; j < i; j++)
+			if (j >= s.length()) {
+				s1 = s1 + " ";
+			} else {
+				char c = s.charAt(j);
+				if (c >= 'a' && c <= 'z')
+					s1 = s1 + c;
+				else if (c >= 'A' && c <= 'Z')
+					s1 = s1 + c;
+				else if (c >= '0' && c <= '9')
+					s1 = s1 + c;
+				else
+					s1 = s1 + '_';
+			}
+
+		return s1;
+	}
+
+	public static int getDaysSinceTime(Long time) {
+		long now = Calendar.getInstance().getTimeInMillis() / 1000;
+		return (int) ((now - time) / 86400);
 	}
 
 	public static String formatString(String str, int length) {
