@@ -316,16 +316,18 @@ public class LoginPacketHandler {
 					} else {
 						String salt = res.getString("salt");
 						String currDBPass = res.getString("pass");
-						oldPass = DataConversions.hashPassword(oldPass, salt);
 						newPass = DataConversions.hashPassword(newPass, salt);
+						/*oldPass = DataConversions.hashPassword(oldPass, salt);
 						for (int j=0; j<5; j++) {
 							answers[j] = DataConversions.hashPassword(answers[j], salt);
-						}
+						}*/
 						
-						int numCorrect = (oldPass.equals(res2.getString("previous_pass"))
-								|| oldPass.equals(res2.getString("earlier_pass"))) ? 1 : 0;
+						int numCorrect = (
+							DataConversions.checkPassword(oldPass, salt, res2.getString("previous_pass")) ||
+								DataConversions.checkPassword(oldPass, salt, res2.getString("earlier_pass"))
+						) ? 1 : 0;
 						for (int j=0; j<5; j++) {
-							numCorrect += (answers[j].equals(res2.getString("answer"+(j+1))) ? 1 : 0);
+							numCorrect += DataConversions.checkPassword(answers[j], salt, res2.getString("answer"+(j+1))) ? 1 : 0;
 						}
 						
 						PreparedStatement attempt = server.getDatabaseConnection().prepareStatement("INSERT INTO `" + server.getConfig().MYSQL_TABLE_PREFIX

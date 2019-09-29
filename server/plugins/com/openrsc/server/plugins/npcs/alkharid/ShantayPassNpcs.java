@@ -392,6 +392,7 @@ public class ShantayPassNpcs implements ShopInterface,
 			if (p.getCache().hasKey("bank_pin")
 				&& !p.getAttribute("bankpin", false)) {
 				String pin = Functions.getBankPinInput(p);
+				boolean isPinValid = false;
 				if (pin == null) {
 					return;
 				}
@@ -400,12 +401,12 @@ public class ShantayPassNpcs implements ShopInterface,
 					statement.setString(1, p.getUsername());
 					ResultSet result = statement.executeQuery();
 					if (result.next()) {
-						pin = DataConversions.hashPassword(pin, result.getString("salt"));
+						isPinValid = DataConversions.checkPassword(pin, result.getString("salt"), p.getCache().getString("bank_pin"));
 					}
 				} catch (SQLException e) {
 					LOGGER.catching(e);
 				}
-				if (!p.getCache().getString("bank_pin").equals(pin)) {
+				if (!isPinValid) {
 					ActionSender.sendBox(p, "Incorrect bank pin", false);
 					return;
 				}

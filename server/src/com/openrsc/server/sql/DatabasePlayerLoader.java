@@ -883,12 +883,7 @@ public class DatabasePlayerLoader {
 			if (!playerSet.next()) {
 				return (byte) LoginResponse.INVALID_CREDENTIALS;
 			}
-			String hashedPassword = DataConversions.hashPassword(request.getPassword(), playerSet.getString("salt"));
-			//System.out.println("Request Password: " + request.getPassword());
-			//System.out.println("Stored Salt: " + playerSet.getString("salt"));
-			//System.out.println("Stored Pass: " + playerSet.getString("pass"));
-			//System.out.println("Hashed Pass: " + hashedPassword);
-			if (!hashedPassword.equals(playerSet.getString("pass"))) {
+			if (!DataConversions.checkPassword(request.getPassword(), playerSet.getString("salt"), playerSet.getString("pass"))) {
 				return (byte) LoginResponse.INVALID_CREDENTIALS;
 			}
 			if (getServer().getWorld().getPlayer(request.getUsernameHash()) != null) {

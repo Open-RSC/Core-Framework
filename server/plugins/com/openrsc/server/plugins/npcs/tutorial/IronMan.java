@@ -35,6 +35,7 @@ public class IronMan implements TalkToNpcExecutiveListener,
 				if (p.getCache().hasKey("bank_pin")) {
 					message(p, n, 1000, "Enter your Bank PIN to downgrade your Iron Man status.");
 					String pin = getBankPinInput(p);
+					boolean isPinValid = false;
 					if (pin == null) {
 						return;
 					}
@@ -43,12 +44,12 @@ public class IronMan implements TalkToNpcExecutiveListener,
 						statement.setString(1, p.getUsername());
 						ResultSet result = statement.executeQuery();
 						if (result.next()) {
-							pin = DataConversions.hashPassword(pin, result.getString("salt"));
+							isPinValid = DataConversions.checkPassword(pin, result.getString("salt"), p.getCache().getString("bank_pin"));
 						}
 					} catch (SQLException e) {
 						LOGGER.catching(e);
 					}
-					if (!p.getCache().getString("bank_pin").equals(pin)) {
+					if (!isPinValid) {
 						ActionSender.sendBox(p, "Incorrect bank pin", false);
 						p.setAttribute("ironman_delete", false);
 						ActionSender.sendIronManInterface(p);
@@ -85,16 +86,16 @@ public class IronMan implements TalkToNpcExecutiveListener,
 								ResultSet result = statement.executeQuery();
 								if (result.next()) {
 									bankPin = DataConversions.hashPassword(bankPin, result.getString("salt"));
+									p.getCache().store("bank_pin", bankPin);
+									p.message("Your new PIN is now in effect.");
+									p.setIronManRestriction(0);
+									p.setAttribute("ironman_pin", false);
+									ActionSender.sendIronManMode(p);
+									ActionSender.sendIronManInterface(p);
 								}
 							} catch (SQLException e) {
 								LOGGER.catching(e);
 							}
-							p.getCache().store("bank_pin", bankPin);
-							p.message("Your new PIN is now in effect.");
-							p.setIronManRestriction(0);
-							p.setAttribute("ironman_pin", false);
-							ActionSender.sendIronManMode(p);
-							ActionSender.sendIronManInterface(p);
 						}
 					} else if (menu == 1) {
 						ActionSender.sendIronManInterface(p);

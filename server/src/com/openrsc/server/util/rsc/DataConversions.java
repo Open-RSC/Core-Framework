@@ -2,6 +2,7 @@ package com.openrsc.server.util.rsc;
 
 import com.openrsc.server.model.Point;
 import com.openrsc.server.net.Packet;
+import com.openrsc.server.util.BCrypt;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -129,8 +130,18 @@ public final class DataConversions {
 		return sb.toString();
 	}
 
-	public static String hashPassword(String password, String salt) {
+	private static String hashPasswordCompatibility(final String password, final String salt) {
 		return DataConversions.sha512(salt + DataConversions.md5(password));
+	}
+
+	public static final String hashPassword(final String password, final String salt) {
+		return BCrypt.hashpw(hashPasswordCompatibility(password, salt), BCrypt.gensalt(12, secureRandom));
+	}
+
+	public static final boolean checkPassword(final String plainText, final String salt, final String hashed) {
+		final String plainTextCompatHashed = hashPasswordCompatibility(plainText, salt);
+
+		return BCrypt.checkpw(plainTextCompatHashed, hashed);
 	}
 
 	private static String toHex(byte[] bytes) {

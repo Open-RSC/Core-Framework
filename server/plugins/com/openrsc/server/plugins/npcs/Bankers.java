@@ -65,6 +65,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 			}
 			if (player.getCache().hasKey("bank_pin") && !player.getAttribute("bankpin", false)) {
 				String pin = getBankPinInput(player);
+				boolean isPinValid = false;
 				if (pin == null) {
 					return;
 				}
@@ -73,12 +74,12 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 					statement.setString(1, player.getUsername());
 					ResultSet result = statement.executeQuery();
 					if (result.next()) {
-						pin = DataConversions.hashPassword(pin, result.getString("salt"));
+						isPinValid = DataConversions.checkPassword(pin, result.getString("salt"), player.getCache().getString("bank_pin"));
 					}
 				} catch (SQLException e) {
 					LOGGER.catching(e);
 				}
-				if (!player.getCache().getString("bank_pin").equals(pin)) {
+				if (!isPinValid) {
 					ActionSender.sendBox(player, "Incorrect bank pin", false);
 					return;
 				}
@@ -127,6 +128,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 			} else if (bankPinMenu == 1) {
 				if (player.getCache().hasKey("bank_pin")) {
 					String bankPin = getBankPinInput(player);
+					boolean isPinValid = false;
 					if (bankPin == null) {
 						return;
 					}
@@ -135,12 +137,12 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 						statement.setString(1, player.getUsername());
 						ResultSet result = statement.executeQuery();
 						if (result.next()) {
-							bankPin = DataConversions.hashPassword(bankPin, result.getString("salt"));
+							isPinValid = DataConversions.checkPassword(bankPin, result.getString("salt"), player.getCache().getString("bank_pin"));
 						}
 					} catch (SQLException e) {
 						LOGGER.catching(e);
 					}
-					if (!player.getCache().getString("bank_pin").equals(bankPin)) {
+					if (!isPinValid) {
 						ActionSender.sendBox(player, "Incorrect bank pin", false);
 						return;
 					}
@@ -165,6 +167,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 			} else if (bankPinMenu == 2) {
 				if (player.getCache().hasKey("bank_pin")) {
 					String bankPin = getBankPinInput(player);
+					boolean isPinValid = false;
 					if (bankPin == null) {
 						return;
 					}
@@ -173,12 +176,12 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 						statement.setString(1, player.getUsername());
 						ResultSet result = statement.executeQuery();
 						if (result.next()) {
-							bankPin = DataConversions.hashPassword(bankPin, result.getString("salt"));
+							isPinValid = DataConversions.checkPassword(bankPin, result.getString("salt"), player.getCache().getString("bank_pin"));
 						}
 					} catch (SQLException e) {
 						LOGGER.catching(e);
 					}
-					if (!player.getCache().getString("bank_pin").equals(bankPin)) {
+					if (!isPinValid) {
 						ActionSender.sendBox(player, "Incorrect bank pin", false);
 						return;
 					}
@@ -209,6 +212,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 		} else if ((menu == 2 || menu == 3) && player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS) {
 			if (player.getCache().hasKey("bank_pin") && !player.getAttribute("bankpin", false)) {
 				String pin = getBankPinInput(player);
+				boolean isPinValid = false;
 				if (pin == null) {
 					return;
 				}
@@ -217,12 +221,12 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 					statement.setString(1, player.getUsername());
 					ResultSet result = statement.executeQuery();
 					if (result.next()) {
-						pin = DataConversions.hashPassword(pin, result.getString("salt"));
+						isPinValid = DataConversions.checkPassword(pin, result.getString("salt"), player.getCache().getString("bank_pin"));
 					}
 				} catch (SQLException e) {
 					LOGGER.catching(e);
 				}
-				if (!player.getCache().getString("bank_pin").equals(pin)) {
+				if (!isPinValid) {
 					ActionSender.sendBox(player, "Incorrect bank pin", false);
 					return;
 				}
@@ -267,6 +271,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 				});
 				addState(1, () -> {
 					String pin;
+					boolean isPinValid = false;
 					if ((pin=(String)getNotifyEvent().getObjectOut("string_pin")) == null) {
 						return null;
 					}
@@ -275,12 +280,12 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 						statement.setString(1, player.getUsername());
 						ResultSet result = statement.executeQuery();
 						if (result.next()) {
-							pin = DataConversions.hashPassword(pin, result.getString("salt"));
+							isPinValid = DataConversions.checkPassword(pin, result.getString("salt"), player.getCache().getString("bank_pin"));
 						}
 					} catch (SQLException e) {
 						LOGGER.catching(e);
 					}
-					if (!player.getCache().getString("bank_pin").equals(pin)) {
+					if (!isPinValid) {
 						ActionSender.sendBox(player, "Incorrect bank pin", false);
 						return null;
 					}

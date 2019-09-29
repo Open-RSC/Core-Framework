@@ -12,7 +12,6 @@ import com.openrsc.server.plugins.listeners.action.CommandListener;
 import com.openrsc.server.sql.query.logs.ChatLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,7 +21,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
@@ -79,12 +77,12 @@ public final class RegularPlayer implements CommandListener {
 				ResultSet result = statement.executeQuery();
 				if (result.next()) {
 					bankPin = DataConversions.hashPassword(bankPin, result.getString("salt"));
+					p.getCache().store("bank_pin", bankPin);
+					//ActionSender.sendBox(p, messagePrefix + "Your new bank pin is " + bankPin, false);
 				}
 			} catch (SQLException e) {
 				LOGGER.catching(e);
 			}
-			p.getCache().store("bank_pin", bankPin);
-			//ActionSender.sendBox(p, messagePrefix + "Your new bank pin is " + bankPin, false);
 			player.message(messagePrefix + p.getUsername() + "'s bank pin has been changed");
 		} else if (cmd.equalsIgnoreCase("wilderness")) {
 			int TOTAL_PLAYERS_IN_WILDERNESS = 0;

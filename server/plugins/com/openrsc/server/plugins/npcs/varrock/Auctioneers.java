@@ -52,6 +52,7 @@ public class Auctioneers implements TalkToNpcExecutiveListener, TalkToNpcListene
 			if (player.getWorld().getServer().getConfig().WANT_BANK_PINS) {
 				if (player.getCache().hasKey("bank_pin") && !player.getAttribute("bankpin", false)) {
 					String pin = getBankPinInput(player);
+					boolean isPinValid = false;
 					if (pin == null) {
 						return;
 					}
@@ -60,12 +61,12 @@ public class Auctioneers implements TalkToNpcExecutiveListener, TalkToNpcListene
 						statement.setString(1, player.getUsername());
 						ResultSet result = statement.executeQuery();
 						if (result.next()) {
-							pin = DataConversions.hashPassword(pin, result.getString("salt"));
+							isPinValid = DataConversions.checkPassword(pin, result.getString("salt"), player.getCache().getString("bank_pin"));
 						}
 					} catch (SQLException e) {
 						LOGGER.catching(e);
 					}
-					if (!player.getCache().getString("bank_pin").equals(pin)) {
+					if (!isPinValid) {
 						ActionSender.sendBox(player, "Incorrect bank pin", false);
 						return;
 					}
@@ -113,6 +114,7 @@ public class Auctioneers implements TalkToNpcExecutiveListener, TalkToNpcListene
 				if (p.getWorld().getServer().getConfig().WANT_BANK_PINS) {
 					if (p.getCache().hasKey("bank_pin") && !p.getAttribute("bankpin", false)) {
 						String pin = getBankPinInput(p);
+						boolean isPinValid = false;
 						if (pin == null) {
 							return;
 						}
@@ -121,12 +123,12 @@ public class Auctioneers implements TalkToNpcExecutiveListener, TalkToNpcListene
 							statement.setString(1, p.getUsername());
 							ResultSet result = statement.executeQuery();
 							if (result.next()) {
-								pin = DataConversions.hashPassword(pin, result.getString("salt"));
+								isPinValid = DataConversions.checkPassword(pin, result.getString("salt"), p.getCache().getString("bank_pin"));
 							}
 						} catch (SQLException e) {
 							LOGGER.catching(e);
 						}
-						if (!p.getCache().getString("bank_pin").equals(pin)) {
+						if (!isPinValid) {
 							ActionSender.sendBox(p, "Incorrect bank pin", false);
 							return;
 						}
@@ -147,6 +149,7 @@ public class Auctioneers implements TalkToNpcExecutiveListener, TalkToNpcListene
 				if (p.getWorld().getServer().getConfig().WANT_BANK_PINS) {
 					if (p.getCache().hasKey("bank_pin") && !p.getAttribute("bankpin", false)) {
 						String pin = getBankPinInput(p);
+						boolean isPinValid = false;
 						if (pin == null) {
 							return;
 						}
@@ -155,12 +158,12 @@ public class Auctioneers implements TalkToNpcExecutiveListener, TalkToNpcListene
 							statement.setString(1, p.getUsername());
 							ResultSet result = statement.executeQuery();
 							if (result.next()) {
-								pin = DataConversions.hashPassword(pin, result.getString("salt"));
+								isPinValid = DataConversions.checkPassword(pin, result.getString("salt"), p.getCache().getString("bank_pin"));
 							}
 						} catch (SQLException e) {
 							LOGGER.catching(e);
 						}
-						if (!p.getCache().getString("bank_pin").equals(pin)) {
+						if (!isPinValid) {
 							ActionSender.sendBox(p, "Incorrect bank pin", false);
 							return;
 						}

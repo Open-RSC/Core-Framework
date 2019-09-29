@@ -42,7 +42,7 @@ public class SecuritySettingsHandler implements PacketHandler {
 			String DBsalt = result.getString("salt");
 			String newDBPass;
 			int playerID = result.getInt("id");
-			if (!DataConversions.hashPassword(oldPass, DBsalt).equals(lastDBPass)) {
+			if (!DataConversions.checkPassword(oldPass, DBsalt, lastDBPass)) {
 				LOGGER.info(player.getCurrentIP() + " - Pass change failed: The current password did not match players record.");
 				ActionSender.sendMessage(player, "No changes made, your current password did not match");
 				return;
