@@ -5,6 +5,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 import static com.openrsc.server.plugins.Functions.getMaxLevel;
@@ -18,9 +19,9 @@ public class Prayer implements ObjectActionExecutiveListener, ObjectActionListen
 		if (command.equalsIgnoreCase("recharge at")) {
 			int maxPray = getMaxLevel(player, Skills.PRAYER) + (object.getID() == 200 ? 2 : 0);
 			if (getCurrentLevel(player, Skills.PRAYER) == maxPray) {
-				player.message("You already have full prayer points");
+				player.playerServerMessage(MessageType.QUEST, "You already have full prayer points");
 			} else {
-				player.message("You recharge your prayer points");
+				player.playerServerMessage(MessageType.QUEST, "You recharge your prayer points");
 				player.playSound("recharge");
 				if (getCurrentLevel(player, Skills.PRAYER) < maxPray) {
 					player.getSkills().setLevel(Skills.PRAYER, maxPray);

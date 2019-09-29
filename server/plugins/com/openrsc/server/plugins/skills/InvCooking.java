@@ -9,6 +9,7 @@ import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -28,15 +29,15 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 				&& player.getInventory().remove(new Item(ItemId.CAKE_TIN.id())) > -1) {
 				player.getInventory().add(new Item(ItemId.POT.id()));
 				player.getInventory().add(new Item(ItemId.UNCOOKED_CAKE.id()));
-				player.message("You mix some milk, flour, and egg together into a cake mixture");
+				player.playerServerMessage(MessageType.QUEST, "You mix some milk, flour, and egg together into a cake mixture");
 				return;
 			} else {
 				if (!player.getInventory().hasItemId(ItemId.EGG.id()))  // Egg
-					player.message("I also need an egg to make a cake");
+					player.playerServerMessage(MessageType.QUEST, "I also need an egg to make a cake");
 				else if (!player.getInventory().hasItemId(ItemId.MILK.id()))  // Milk
-					player.message("I also need some milk to make a cake");
+					player.playerServerMessage(MessageType.QUEST, "I also need some milk to make a cake");
 				else if (!player.getInventory().hasItemId(ItemId.POT_OF_FLOUR.id())) // Flour
-					player.message("I also need some flour to make a cake");
+					player.playerServerMessage(MessageType.QUEST, "I also need some flour to make a cake");
 				return;
 			}
 		}
@@ -48,7 +49,7 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 			}
 			if (player.getInventory().contains(item1)
 				&& player.getInventory().contains(item2)) {
-				player.message("You squeeze the grapes into the jug");
+				player.playerServerMessage(MessageType.QUEST, "You squeeze the grapes into the jug");
 				player.getInventory().remove(ItemId.JUG_OF_WATER.id(), 1);
 				player.getInventory().remove(ItemId.GRAPES.id(), 1);
 
@@ -56,16 +57,16 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 					@Override
 					public void action() {
 						if (getOwner().getSkills().getLevel(Skills.COOKING) < 35) {
-							getOwner().message("You need level 35 cooking to do this");
+							getOwner().playerServerMessage(MessageType.QUEST, "You need level 35 cooking to do this");
 							interrupt();
 							return;
 						}
 						if (Formulae.goodWine(getOwner().getSkills().getLevel(Skills.COOKING))) {
-							getOwner().message("You make some nice wine");
+							getOwner().playerServerMessage(MessageType.QUEST, "You make some nice wine");
 							getOwner().getInventory().add(new Item(ItemId.WINE.id()));
 							getOwner().incExp(Skills.COOKING, 440, true);
 						} else {
-							getOwner().message("You accidentally make some bad wine");
+							getOwner().playerServerMessage(MessageType.QUEST, "You accidentally make some bad wine");
 							getOwner().getInventory().add(new Item(ItemId.BAD_WINE.id()));
 						}
 					}
@@ -102,7 +103,7 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 				addItem(player, emptyContainer, 1);
 				addItem(player, productID, 1);
 
-				player.message("You mix the water and flour to make some " + new Item(productID, 1).getDef(player.getWorld()).getName().toLowerCase());
+				player.playerServerMessage(MessageType.QUEST, "You mix the water and flour to make some " + new Item(productID, 1).getDef(player.getWorld()).getName().toLowerCase());
 			}
 		} else if (isValidCooking(item1, item2)) {
 			handleCombineCooking(player, item1, item2);
@@ -115,7 +116,7 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 		// Pizza order matters!
 		if ((itemOne.getID() == ItemId.PIZZA_BASE.id() || itemTwo.getID() == ItemId.PIZZA_BASE.id())
 			&& (itemOne.getID() == ItemId.CHEESE.id() || itemTwo.getID() == ItemId.CHEESE.id())) {
-			p.message("I should add the tomato first");
+			p.playerServerMessage(MessageType.QUEST, "I should add the tomato first");
 			return;
 		}
 
@@ -125,7 +126,7 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 			}
 		}
 		if (p.getSkills().getLevel(Skills.COOKING) < combine.requiredLevel) {
-			p.message("You need level " + combine.requiredLevel + " cooking to do this");
+			p.playerServerMessage(MessageType.QUEST, "You need level " + combine.requiredLevel + " cooking to do this");
 			return;
 		}
 		if (combine.resultItem == ItemId.TOMATO_MIXTURE.id() || combine.resultItem == ItemId.ONION_MIXTURE.id()
@@ -141,7 +142,7 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 			// Check for tasty kebab failure
 			if (combine.resultItem == ItemId.TASTY_UGTHANKI_KEBAB.id() && DataConversions.random(0, 31) < 1) {
 				addItem(p, ItemId.UGTHANKI_KEBAB.id(), 1);
-				p.message("You make a dodgy looking ugthanki kebab");
+				p.playerServerMessage(MessageType.QUEST, "You make a dodgy looking ugthanki kebab");
 				return;
 			}
 
@@ -154,9 +155,9 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 			p.incExp(Skills.COOKING, combine.experience, true);
 
 			if (combine.messages.length > 1)
-				p.message(combine.messages[1]);
+				p.playerServerMessage(MessageType.QUEST, combine.messages[1]);
 			if (combine.messages.length > 2)
-				p.message(combine.messages[2]);
+				p.playerServerMessage(MessageType.QUEST, combine.messages[2]);
 		}
 	}
 

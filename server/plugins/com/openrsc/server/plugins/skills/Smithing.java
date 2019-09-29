@@ -13,6 +13,7 @@ import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.util.rsc.Formulae;
+import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -79,7 +80,7 @@ public class Smithing implements InvUseOnObjectListener,
 		}
 
 		if (player.getInventory().countId(ItemId.HAMMER.id()) < 1) {
-			player.message("You need a hammer to work the metal with.");
+			player.playerServerMessage(MessageType.QUEST, "You need a hammer to work the metal with.");
 			return false;
 		}
 
@@ -220,12 +221,12 @@ public class Smithing implements InvUseOnObjectListener,
 
 				showBubble(getOwner(), item);
 				if (getWorld().getServer().getEntityHandler().getItemDef(def.getItemID()).isStackable()) {
-					getOwner().message("You hammer the metal and make " + def.getAmount() + " "
+					getOwner().playerServerMessage(MessageType.QUEST, "You hammer the metal and make " + def.getAmount() + " "
 						+ getWorld().getServer().getEntityHandler().getItemDef(def.getItemID()).getName().toLowerCase());
 					getOwner().getInventory().add(
 						new Item(def.getItemID(), def.getAmount()));
 				} else {
-					getOwner().message("You hammer the metal and make a "
+					getOwner().playerServerMessage(MessageType.QUEST, "You hammer the metal and make a "
 						+ getWorld().getServer().getEntityHandler().getItemDef(def.getItemID()).getName().toLowerCase());
 					for (int x = 0; x < def.getAmount(); x++) {
 						getOwner().getInventory().add(new Item(def.getItemID(), 1));
@@ -347,12 +348,12 @@ public class Smithing implements InvUseOnObjectListener,
 			return;
 		}
 		if (player.getInventory().countId(ItemId.STEEL_BAR.id()) < 1) {
-			player.message("You need 1 bar of metal to make this item");
+			player.playerServerMessage(MessageType.QUEST, "You need 1 bar of metal to make this item");
 			return;
 		}
 		showBubble(player, item);
 		player.getInventory().remove(ItemId.STEEL_BAR.id(), 1);
-		player.message("You hammer the metal and make some nails");
+		player.playerServerMessage(MessageType.QUEST, "You hammer the metal and make some nails");
 		player.getInventory().add(new Item(ItemId.NAILS.id(), 2));
 		player.incExp(Skills.SMITHING, 70, true);
 	}
@@ -363,14 +364,18 @@ public class Smithing implements InvUseOnObjectListener,
 		if (player.isBusy()) {
 			return;
 		}
+		if (player.getSkills().getLevel(Skills.SMITHING) < 4) {
+			player.message("You need to be at least level 4 smithing to do that");
+			return;
+		}
 		if (player.getInventory().countId(ItemId.BRONZE_BAR.id()) < 1) {
-			player.message("You need 1 bar of metal to make this item");
+			player.playerServerMessage(MessageType.QUEST, "You need 1 bar of metal to make this item");
 			return;
 		}
 		if (bronzeWireOption == 0) {
 			showBubble(player, item);
 			player.getInventory().remove(ItemId.BRONZE_BAR.id(), 1);
-			player.message("You hammer the Bronze Bar and make some bronze wire");
+			player.playerServerMessage(MessageType.QUEST, "You hammer the Bronze Bar and make some bronze wire");
 			player.getInventory().add(new Item(ItemId.BRONZE_WIRE.id(), 1));
 			player.incExp(Skills.SMITHING, 50, true);
 		}

@@ -6,6 +6,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
+import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.message;
@@ -32,7 +33,7 @@ public class BattlestaffCrafting implements InvUseOnItemListener,
 			}
 		}
 		if (p.getSkills().getLevel(Skills.CRAFTING) < combine.requiredLevel) {
-			p.message("You need a crafting level of " + combine.requiredLevel + " to make " + resultItemString(combine));
+			p.playerServerMessage(MessageType.QUEST, "You need a crafting level of " + combine.requiredLevel + " to make " + resultItemString(combine));
 			return;
 		}
 		if (removeItem(p, combine.itemID, 1) && removeItem(p, combine.itemIDOther, 1)) {

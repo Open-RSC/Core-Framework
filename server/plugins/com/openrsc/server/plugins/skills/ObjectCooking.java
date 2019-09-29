@@ -13,6 +13,7 @@ import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Arrays;
 
@@ -40,9 +41,9 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 				p.setBusy(true);
 				showBubble(p, item);
 				p.playSound("cooking");
-				p.message("You cook the meat on the stove...");
+				p.playerServerMessage(MessageType.QUEST, "You cook the meat on the stove...");
 				if(p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 25) {
-					p.message("You accidentally burn the meat");
+					p.playerServerMessage(MessageType.QUEST, "You accidentally burn the meat");
 					p.getInventory().replace(ItemId.RAW_RAT_MEAT.id(), ItemId.BURNTMEAT.id());
 					message(p, "sometimes you will burn food",
 							"As your cooking level increases this will happen less",
@@ -50,7 +51,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 					p.getCache().set("tutorial", 30);
 				} else if (p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 30) {
 					final ItemCookingDef cookingDef = item.getCookingDef(p.getWorld());
-					p.message("The meat is now nicely cooked");
+					p.playerServerMessage(MessageType.QUEST, "The meat is now nicely cooked");
 					message(p, "Now speak to the cooking instructor again");
 					p.incExp(Skills.COOKING, cookingDef.getExp(), true);
 					p.getCache().set("tutorial", 31);
@@ -58,7 +59,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 
 				} else {
 					//per-wiki says rest of meats are burned
-					p.message("You accidentally burn the meat");
+					p.playerServerMessage(MessageType.QUEST, "You accidentally burn the meat");
 					p.getInventory().replace(ItemId.RAW_RAT_MEAT.id(), ItemId.BURNTMEAT.id());
 				}
 				p.setBusy(false);
@@ -101,7 +102,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 				message(p, 1800, cookingOnMessage(p, item, object, false));
 				removeItem(p, ItemId.COOKEDMEAT.id(), 1);
 				addItem(p, ItemId.BURNTMEAT.id(), 1);
-				p.message("you burn the meat");
+				p.playerServerMessage(MessageType.QUEST, "you burn the meat");
 			} else {
 				p.message("Nothing interesting happens");
 			}
@@ -115,7 +116,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 				String itemName = item.getDef(p.getWorld()).getName().toLowerCase();
 				itemName = itemName.startsWith("raw ") ? itemName.substring(4) :
 					itemName.startsWith("uncooked ") ? itemName.substring(9) : itemName;
-				p.message("You need a cooking level of " + cookingDef.getReqLevel() + " to cook " + itemName);
+				p.playerServerMessage(MessageType.QUEST, "You need a cooking level of " + cookingDef.getReqLevel() + " to cook " + itemName);
 				return;
 			}
 			if(object.getID() == 11){
@@ -135,7 +136,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 				timeToCook = 3000;
 			}
 			if ((object.getID() == 97 || object.getID() == 274) && needOven) {
-				p.message("You need a proper oven to cook this");
+				p.playerServerMessage(MessageType.QUEST, "You need a proper oven to cook this");
 				return;
 			}
 
@@ -151,7 +152,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 						String itemName = item.getDef(getWorld()).getName().toLowerCase();
 						itemName = itemName.startsWith("raw ") ? itemName.substring(4) :
 							itemName.startsWith("uncooked ") ? itemName.substring(9) : itemName;
-						getOwner().message("You need a cooking level of " + cookingDef.getReqLevel() + " to cook " + itemName);
+						getOwner().playerServerMessage(MessageType.QUEST, "You need a cooking level of " + cookingDef.getReqLevel() + " to cook " + itemName);
 						interrupt();
 						return;
 					}
@@ -166,18 +167,20 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 					showBubble(getOwner(), item);
 					getOwner().playSound("cooking");
 					if (getOwner().getInventory().remove(item) > -1) {
-						if (!Formulae.burnFood(getOwner(), item.getID(), getOwner().getSkills().getLevel(Skills.COOKING)) || item.getID() == ItemId.RAW_LAVA_EEL.id()) {
+						if (!Formulae.burnFood(getOwner(), item.getID(), getOwner().getSkills().getLevel(Skills.COOKING))
+								|| item.getID() == ItemId.RAW_LAVA_EEL.id()
+								|| (item.getID() == ItemId.UNCOOKED_PITTA_BREAD.id() && getOwner().getSkills().getLevel(Skills.COOKING) >= 58)) {
 							getOwner().getInventory().add(cookedFood);
 							getOwner().message(cookedMessage(p, cookedFood, isOvenFood(item)));
 							getOwner().incExp(Skills.COOKING, cookingDef.getExp(), true);
 						} else {
 							getOwner().getInventory().add(new Item(cookingDef.getBurnedId()));
 							if (cookedFood.getID() == ItemId.COOKEDMEAT.id()) {
-								getOwner().message("You accidentally burn the meat");
+								getOwner().playerServerMessage(MessageType.QUEST, "You accidentally burn the meat");
 							} else {
 								String food = cookedFood.getDef(p.getWorld()).getName().toLowerCase();
 								food = food.contains("pie") ? "pie" : food;
-								getOwner().message("You accidentally burn the " + food);
+								getOwner().playerServerMessage(MessageType.QUEST, "You accidentally burn the " + food);
 							}
 						}
 					} else {
@@ -263,6 +266,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 	}
 
 	private boolean isGeneralMeat(Item item) {
-		return DataConversions.inArray(new int[]{132, 133, 502, 503, 504}, item.getID());
+		return DataConversions.inArray(new int[]{ItemId.COOKEDMEAT.id(), ItemId.RAW_CHICKEN.id(),
+				ItemId.RAW_BEAR_MEAT.id(), ItemId.RAW_RAT_MEAT.id(), ItemId.RAW_BEEF.id()}, item.getID());
 	}
 }

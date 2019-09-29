@@ -48,7 +48,7 @@ public class Thieving extends Functions
 		String objectName = object.getGameObjectDef().getName().toLowerCase();
 
 		if (stall.equals(Stall.BAKERS_STALL))
-			player.message("You attempt to steal some cake from the " + objectName);
+			player.playerServerMessage(MessageType.QUEST, "You attempt to steal some cake from the " + objectName);
 		else if (stall.equals(Stall.TEA_STALL)) {
 			int chance_player_caught = 60;
 			Npc teaseller = Functions.getNearestNpc(player, stall.getOwnerID(), 8);
@@ -58,11 +58,11 @@ public class Thieving extends Functions
 				player.setBusy(false);
 				return;
 			} else
-				player.message("You attempt to steal a cup of tea...");
+				player.playerServerMessage(MessageType.QUEST, "You attempt to steal a cup of tea...");
 		} else if (stall.equals(Stall.GEMS_STALL))
-			player.message("You attempt to steal gem from the " + objectName);
+			player.playerServerMessage(MessageType.QUEST, "You attempt to steal gem from the " + objectName);
 		else
-			player.message("You attempt to steal some " + objectName.replaceAll("stall", "").trim() + " from the " + objectName);
+			player.playerServerMessage(MessageType.QUEST, "You attempt to steal some " + objectName.replaceAll("stall", "").trim() + " from the " + objectName);
 
 		player.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(player.getWorld(), player, 2, "Stall Thieving") {
 			public void init() {
@@ -359,7 +359,7 @@ public class Thieving extends Functions
 			player.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(player.getWorld(), player, 3, "Pickpocket Check") {
 				public void init() {
 					addState(0, () -> {
-						getPlayerOwner().message("You need to be a level " + pickpocket.getRequiredLevel() + " thief to pick the " + thievedMobSt + "'s pocket");
+						getPlayerOwner().playerServerMessage(MessageType.QUEST, "You need to be a level " + pickpocket.getRequiredLevel() + " thief to pick the " + thievedMobSt + "'s pocket");
 						return null;
 					});
 				}
@@ -376,7 +376,7 @@ public class Thieving extends Functions
 					return;
 				}
 				if (getOwner().getSkills().getLevel(Skills.THIEVING) < pickpocket.getRequiredLevel()) {
-					getOwner().message("You need to be a level " + pickpocket.getRequiredLevel() + " thief to pick the " + thievedMobSt + "'s pocket");
+					getOwner().playerServerMessage(MessageType.QUEST, "You need to be a level " + pickpocket.getRequiredLevel() + " thief to pick the " + thievedMobSt + "'s pocket");
 					interrupt();
 					return;
 				}
@@ -402,7 +402,7 @@ public class Thieving extends Functions
 						}
 						if (hit >= total && hit < (total + loot.getChance())) {
 							if (loot.getId() == -1) {
-								getOwner().message("You find nothing to steal");
+								getOwner().playerServerMessage(MessageType.QUEST, "You find nothing to steal");
 								return;
 							}
 							selectedLoot = (new Item(loot.getId(), loot.getAmount()));
@@ -410,7 +410,7 @@ public class Thieving extends Functions
 						}
 						total += loot.getChance();
 					}
-					getOwner().message("You pick the " + thievedMobSt + "'s pocket");
+					getOwner().playerServerMessage(MessageType.QUEST, "You pick the " + thievedMobSt + "'s pocket");
 					if (selectedLoot != null) {
 						getOwner().getInventory().add(selectedLoot);
 					}
@@ -447,15 +447,15 @@ public class Thieving extends Functions
 			if (command.contains("trap")) {
 				handleChestThieving(player, obj);
 			} else {
-				player.message("You have activated a trap on the chest");
+				player.playerServerMessage(MessageType.QUEST, "You have activated a trap on the chest");
 				player.damage(DataConversions.random(0, 8));
 			}
 		} else if (obj.getID() == 379) { // HEMENSTER CHEST HARDCODE
 			if (command.equalsIgnoreCase("Open")) {
-				player.message("This chest is locked");
+				player.playerServerMessage(MessageType.QUEST, "This chest is locked");
 			} else {
 				player.setBusyTimer(3000);
-				player.message("you attempt to pick the lock");
+				player.playerServerMessage(MessageType.QUEST, "you attempt to pick the lock");
 				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (player.getFatigue() >= player.MAX_FATIGUE) {
 						player.message("You are too tired to thieve here");
@@ -464,16 +464,16 @@ public class Thieving extends Functions
 					}
 				}
 				if (player.getSkills().getLevel(Skills.THIEVING) < 47) {
-					player.message("You are not a high enough level to pick this lock");
+					player.playerServerMessage(MessageType.QUEST, "You are not a high enough level to pick this lock");
 					player.setBusyTimer(0);
 					return;
 				}
 				if (!hasItem(player, ItemId.LOCKPICK.id())) {
-					player.message("You need a lockpick for this lock");
+					player.playerServerMessage(MessageType.QUEST, "You need a lockpick for this lock");
 					player.setBusyTimer(0);
 					return;
 				}
-				message(player, "You manage to pick the lock");
+				player.playerServerMessage(MessageType.QUEST, "You manage to pick the lock");
 
 				openChest(obj);
 				message(player, "You open the chest");
@@ -632,18 +632,18 @@ public class Thieving extends Functions
 				player.message("You have already unlocked the door");
 				return;
 			}
-			message(player, 1200, "you attempt to pick the lock");
+			player.playerServerMessage(MessageType.QUEST, "you attempt to pick the lock");
 
 			if (getCurrentLevel(player, Skills.THIEVING) < req) {
-				player.message("You are not a high enough level to pick this lock");
+				player.playerServerMessage(MessageType.QUEST, "You are not a high enough level to pick this lock");
 				return;
 			}
 			if (!hasItem(player, ItemId.LOCKPICK.id()) && requiresLockpick) {
-				player.message("You need a lockpick for this lock");
+				player.playerServerMessage(MessageType.QUEST, "You need a lockpick for this lock");
 				return;
 			}
 			if (succeedPickLockThieving(player, req) && !goThrough) {
-				player.message("You manage to pick the lock");
+				player.playerServerMessage(MessageType.QUEST, "You manage to pick the lock");
 				doDoor(obj, player);
 				player.message("You go through the door");
 				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
@@ -654,7 +654,7 @@ public class Thieving extends Functions
 				}
 				player.incExp(Skills.THIEVING, (int) exp, true);
 			} else {
-				player.message("You fail to pick the lock");
+				player.playerServerMessage(MessageType.QUEST, "You fail to pick the lock");
 			}
 		}
 	}
