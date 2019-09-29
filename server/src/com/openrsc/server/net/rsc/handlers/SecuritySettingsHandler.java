@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.login.PasswordChangeRequest;
 import com.openrsc.server.login.RecoveryChangeRequest;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
@@ -28,63 +29,16 @@ public class SecuritySettingsHandler implements PacketHandler {
 		
 		switch (p.getID()) {
 		case 25: //change pass
-			LOGGER.info("Password change attempt from: " + player.getCurrentIP());
 			String oldPass = p.readString().trim();
 			String newPass = p.readString().trim();
-			statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT id, pass, salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE username=?");
-			statement.setString(1, player.getUsername());
-			result = statement.executeQuery();
-			if (!result.next()) {
-				LOGGER.info(player.getCurrentIP() + " - Pass change failed: Could not find player info in database.");
-				return;
-			}
-			String lastDBPass = result.getString("pass");
-			String DBsalt = result.getString("salt");
-			String newDBPass;
-			int playerID = result.getInt("id");
-			if (!DataConversions.checkPassword(oldPass, DBsalt, lastDBPass)) {
-				LOGGER.info(player.getCurrentIP() + " - Pass change failed: The current password did not match players record.");
-				ActionSender.sendMessage(player, "No changes made, your current password did not match");
-				return;
-			}
-			newDBPass = DataConversions.hashPassword(newPass, DBsalt);
-			
-			statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement(
-					"UPDATE `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players` SET `pass`=? WHERE `id`=?");
-			statement.setString(1, newDBPass);
-			statement.setInt(2, playerID);
-			statement.executeUpdate();
-			
-			statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT previous_pass FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery WHERE playerID=?");
-			statement.setInt(1, playerID);
-			result = statement.executeQuery();
-			String lastPw, earlierPw;
-			if (result.next()) {
-				//move passwords one step down and update table
-				try {
-					earlierPw = result.getString("previous_pass");
-				} catch(Exception e) {
-					earlierPw = "";
-				}
-				lastPw = lastDBPass;
-				
-				statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement(
-						"UPDATE `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery` SET `previous_pass`=?, `earlier_pass`=? WHERE `playerID`=?");
-				statement.setString(1, lastPw);
-				statement.setString(2, earlierPw);
-				statement.setInt(3, playerID);
-				statement.executeUpdate();
-			}
 
-			player.getWorld().getServer().getGameLogger().addQuery(new SecurityChangeLog(player, ChangeEvent.PASSWORD_CHANGE,
-					"From: " + lastDBPass + ", To: " + newDBPass));
-			ActionSender.sendMessage(player, "Your password was successfully changed!");
-			LOGGER.info(player.getCurrentIP() + " - Password change successful");
+			PasswordChangeRequest passwordChangeRequest = new PasswordChangeRequest(player.getWorld().getServer(), player, oldPass, newPass);
+			player.getWorld().getServer().getPlayerDataProcessor().addPasswordChangeRequest(passwordChangeRequest);
 			
 			break;
 		case 196: //cancel recovery request
 			LOGGER.info("Cancel recovery request from: " + player.getCurrentIP());
-			playerID = player.getDatabaseID();
+			int playerID = player.getDatabaseID();
 			if (playerID == -1) {
 				LOGGER.info(player.getCurrentIP() + " - Cancel recovery failed: Could not find player info in database.");
 				return;

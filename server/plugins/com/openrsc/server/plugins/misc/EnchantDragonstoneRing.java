@@ -38,7 +38,7 @@ public class EnchantDragonstoneRing implements PlayerMageItemListener, PlayerMag
 			SpellHandler.checkAndRemoveRunes(p,spellDef);
 			p.getInventory().remove(ItemId.DRAGONSTONE_RING.id(),1, false);
 			p.getInventory().add(new Item(item));
-			SpellHandler.finalizeSpell(p, spellDef);
+			SpellHandler.finalizeSpell(p, spellDef, null);
 		}
 	}
 	/*@Override

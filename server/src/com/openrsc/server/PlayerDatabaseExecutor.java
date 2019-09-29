@@ -34,7 +34,7 @@ public class PlayerDatabaseExecutor implements Runnable {
 
 	private Queue<RecoveryAttemptRequest> recoveryAttemptRequests = new ConcurrentLinkedQueue<RecoveryAttemptRequest>();
 
-	private Queue<Player> passwordChangeRequests = new ConcurrentLinkedQueue<Player>();
+	private Queue<PasswordChangeRequest> passwordChangeRequests = new ConcurrentLinkedQueue<PasswordChangeRequest>();
 
 	private Queue<RecoveryChangeRequest> recoveryChangeRequests = new ConcurrentLinkedQueue<RecoveryChangeRequest>();
 
@@ -99,6 +99,11 @@ public class PlayerDatabaseExecutor implements Runnable {
 					recoveryAttemptRequest.process();
 				}
 
+				PasswordChangeRequest passwordChangeRequest = null;
+				while ((passwordChangeRequest = passwordChangeRequests.poll()) != null) {
+					passwordChangeRequest.process();
+				}
+
 				RecoveryChangeRequest recoveryChangeRequest = null;
 				while ((recoveryChangeRequest = recoveryChangeRequests.poll()) != null) {
 					recoveryChangeRequest.process();
@@ -131,6 +136,10 @@ public class PlayerDatabaseExecutor implements Runnable {
 
 	public void addRecoveryAttemptRequest(RecoveryAttemptRequest request) {
 		recoveryAttemptRequests.add(request);
+	}
+
+	public void addPasswordChangeRequest(PasswordChangeRequest request) {
+		passwordChangeRequests.add(request);
 	}
 
 	public void addRecoveryChangeRequest(RecoveryChangeRequest request) {
