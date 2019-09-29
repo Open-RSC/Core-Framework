@@ -35,8 +35,8 @@ public class CharacterCreateRequest {
 		this.setEmail(email);
 		this.setUsername(username);
 		this.setPassword(password);
-		this.setIpAddress(getChannel().remoteAddress().toString());
 		this.setChannel(channel);
+		this.setIpAddress(getChannel().remoteAddress().toString());
 	}
 
 	public String getIpAddress() {
