@@ -1,1 +1,0 @@
-java -jar Landscape_Editor.jar
