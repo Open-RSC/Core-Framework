@@ -3,20 +3,19 @@
 export installmode=docker
 
 # Ubuntu Linux Docker installation
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
   echo ""
   echo "Installing Docker Community Edition"
   echo ""
   sudo apt-get update
   sudo apt-get install -y \
-    linux-image-extra-"$(uname -r)" \
-    linux-image-extra-virtual
+  linux-image-extra-"$(uname -r)" \
+  linux-image-extra-virtual
   sudo apt-get update
   sudo apt-get install -y \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    software-properties-common
+  apt-transport-https \
+  ca-certificates \
+  curl \
+  software-properties-common
   sudo apt install docker docker-compose -y
   # Adds instance user to docker group so it can execute commands.
   sudo usermod -a -G docker ubuntu
@@ -24,7 +23,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
   sudo setfacl -m user:"$USER:rw" /var/run/docker.sock
   # 4.5  - Ensures Content trust for Docker is Enabled
   echo "DOCKER_CONTENT_TRUST=1" | sudo tee -a /etc/environment
-  echo "DOCKER_OPTS="--iptables=false" | sudo tee -a /etc/default/docker"
+  echo "DOCKER_OPTS='--iptables=false' | sudo tee -a /etc/default/docker"
   # Config to implement changes for 2.1 - 2.15
   sudo mv /tmp/daemon.json /etc/docker/daemon.json
   echo ""
@@ -38,37 +37,3 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
 
   # Start Docker and pull containers
   sudo make start
-
-# Apple MacOS Docker installation
-elif [[ "$OSTYPE" == "darwin"* ]]; then
-  echo "Apple MacOS detected."
-  echo ""
-  echo "Downloading Docker Community Edition for MacOS."
-  echo ""
-  wget https://download.docker.com/mac/stable/Docker.dmg
-  hdiutil attach Docker.dmg
-  echo ""
-  echo "Please drag Docker as instructed in the popup."
-  echo ""
-  echo "Press enter back here when finished to continue."
-  read -r
-  echo ""
-  open /Applications/Docker.app
-  echo ""
-  echo "Docker is launching. Please follow the directions that it gives you."
-  echo ""
-  echo "Press enter back here when finished to continue."
-  read -r
-fi
-
-# Database imports
-echo ""
-echo "Waiting 10 seconds then importing the databases."
-echo ""
-sleep 10
-sudo chmod 644 etc/mariadb/innodb.cnf
-sudo create-database-openrsc
-sudo create-database-cabbage
-sudo make import-openrsc
-sudo make import-cabbage
-sudo make clone-website
