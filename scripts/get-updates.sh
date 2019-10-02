@@ -1,21 +1,11 @@
 #!/bin/bash
-exec 0</dev/tty
+
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 NC=$(tput sgr0) # No Color
+
+exec 0</dev/tty
 source .env
-
-# System Updates
-echo ""
-echo "Checking for system updates and upgrading if found."
-echo ""
-sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get autoremove -y
-
-# Game Repository
-echo ""
-echo "Checking for updates to the game code."
-echo ""
-sudo git pull
 
 # Permissions
 echo ""
@@ -27,63 +17,25 @@ echo ""
 echo "Compiling all code now."
 echo ""
 echo ""
-make compile
+sudo make compile
 
-# Docker or native install mode?
-echo ""
-echo "Which are you using?
+# Client
+yes | sudo cp -rf client/*.jar Website/downloads/cache/
+sudo chmod +x Website/downloads/cache/*.jar
+sudo chmod 777 Website/downloads/cache/*.jar
 
-Choices:
-  ${RED}1${NC} - Docker Containers
-  ${RED}2${NC} - Native Installation"
-echo ""
-echo "Which of the above do you wish to do? Type the choice number and press enter."
-echo ""
-read -r installmode
+# Launcher
+yes | sudo cp -rf Launcher/*.jar Website/downloads/
+sudo chmod +x Website/downloads/*.jar
+sudo chmod 777 Website/downloads/*.jar
 
-if [ "$installmode" == "2" ]; then
-  sudo chmod 644 Website/sql/config.inc.php
-
-  # Client
-  yes | sudo cp -rf client/*.jar /var/www/html/downloads/cache
-  sudo chmod +x /var/www/html/downloads/cache/*.jar
-  sudo chmod 777 /var/www/html/downloads/cache/*.jar
-
-  # Launcher
-  yes | sudo cp -rf Launcher/*.jar /var/www/html/downloads/
-  sudo chmod +x /var/www/html/downloads/*.jar
-  sudo chmod 777 /var/www/html/downloads/*.jar
-
-  # Cache
-  yes | sudo cp -a -rf "client/Cache/." "/var/www/html/downloads/cache/"
-  sudo rm /var/www/html/downloads/cache/MD5CHECKSUM
-  sudo touch /var/www/html/downloads/cache/MD5CHECKSUM && sudo chmod 777 /var/www/html/downloads/cache/MD5CHECKSUM
-  md5sum /var/www/html/downloads/cache/* | sed 's/\/var\/www\/html\/downloads\/cache\///g' | grep "^[a-zA-Z0-9]*" | awk '{print $2"="$1}' | tee /var/www/html/downloads/cache/MD5CHECKSUM
-  sudo sed -i 's/MD5CHECKSUM=/#MD5CHECKSUM=/g' "/var/www/html/downloads/cache/MD5CHECKSUM"
-
-elif [ "$installmode" == "1" ]; then
-  sudo chmod 644 etc/mariadb/innodb.cnf
-  sudo chmod 644 Website/sql/config.inc.php
-  sudo setfacl -m user:"$USER:rw" /var/run/docker.sock
-
-  # Client
-  yes | sudo cp -rf client/*.jar Website/downloads/cache/
-  sudo chmod +x Website/downloads/cache/*.jar
-  sudo chmod 777 Website/downloads/cache/*.jar
-
-  # Launcher
-  yes | sudo cp -rf Launcher/*.jar Website/downloads/
-  sudo chmod +x Website/downloads/*.jar
-  sudo chmod 777 Website/downloads/*.jar
-
-  # Cache
-  yes | sudo cp -a -rf "client/Cache/." "Website/downloads/cache/"
-  sudo rm Website/downloads/cache/MD5CHECKSUM
-  sudo touch Website/downloads/cache/MD5CHECKSUM && sudo chmod 777 Website/downloads/cache/MD5CHECKSUM
-  md5sum Website/downloads/cache/* | sed 's/Website\/downloads\/cache\///g' | grep "^[a-zA-Z0-9]*" | awk '{print $2"="$1}' | tee Website/downloads/cache/MD5CHECKSUM
-  sudo sed -i 's/MD5CHECKSUM=/#MD5CHECKSUM=/g' "Website/downloads/cache/MD5CHECKSUM"
-  sudo sed -i 's/index=/#index=/g' "Website/downloads/cache/MD5CHECKSUM"
-fi
+# Cache
+yes | sudo cp -a -rf "client/Cache/." "Website/downloads/cache/"
+sudo rm Website/downloads/cache/MD5CHECKSUM
+sudo touch Website/downloads/cache/MD5CHECKSUM && sudo chmod 777 Website/downloads/cache/MD5CHECKSUM
+md5sum Website/downloads/cache/* | sed 's/Website\/downloads\/cache\///g' | grep "^[a-zA-Z0-9]*" | awk '{print $2"="$1}' | tee Website/downloads/cache/MD5CHECKSUM
+sudo sed -i 's/MD5CHECKSUM=/#MD5CHECKSUM=/g' "Website/downloads/cache/MD5CHECKSUM"
+sudo sed -i 's/index=/#index=/g' "Website/downloads/cache/MD5CHECKSUM"
 
 # Finished
 echo ""
