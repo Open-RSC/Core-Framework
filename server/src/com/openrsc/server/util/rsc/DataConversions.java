@@ -49,6 +49,8 @@ public final class DataConversions {
 		'%', '"', '[', ']', '{', '}', '~', 'A', 'B', 'C', 'D', 'E', 'F', 'G',
 		'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
 		'U', 'V', 'W', 'X', 'Y', 'Z', '<', '>', '^', '_',};
+	private static final int bcryptWorkFactor = 10;
+	private static final String bcryptTest = "$2y$"+bcryptWorkFactor+"$";
 	private static SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss dd-MM-yy");
 	private static MessageDigest md5, sha1, sha512;
 	private static Random rand = new Random();
@@ -137,20 +139,30 @@ public final class DataConversions {
 		return doCompatibility ? DataConversions.sha512(salt + DataConversions.md5(password)) : password;
 	}
 
-	public static final String hashPassword(final String password, final String salt) {
-		if(password == null || password.isEmpty())
+	public static final String hashPassword(final String passwordPlainText, final String salt) {
+		if(passwordPlainText == null || passwordPlainText.isEmpty())
 			return null;
 
-		final String passwordCompatHashed = hashPasswordCompatibility(password, salt);
-		return BCrypt.hashpw(passwordCompatHashed, BCrypt.gensalt(10, secureRandom));
+		final String passwordCompatHashed = hashPasswordCompatibility(passwordPlainText, salt);
+		return BCrypt.hashpw(passwordCompatHashed, BCrypt.gensalt(bcryptWorkFactor, secureRandom));
 	}
 
-	public static final boolean checkPassword(final String plainText, final String salt, final String hashed) {
-		if(plainText == null || plainText.isEmpty() || hashed == null || hashed.isEmpty())
+	public static final boolean checkPassword(final String passwordPlainText, final String salt, final String passwordHashed) {
+		if(passwordPlainText == null || passwordPlainText.isEmpty() || passwordHashed == null || passwordHashed.isEmpty())
 			return false;
 
-		final String plainTextCompatHashed = hashPasswordCompatibility(plainText, salt);
-		return BCrypt.checkpw(plainTextCompatHashed, hashed);
+		final String plainTextCompatHashed = hashPasswordCompatibility(passwordPlainText, salt);
+
+		// Password is in old DB format.
+		if(passwordNeedsRehash(passwordHashed)) {
+			return plainTextCompatHashed.equals(passwordHashed);
+		}
+
+		return BCrypt.checkpw(plainTextCompatHashed, passwordHashed);
+	}
+
+	public static final boolean passwordNeedsRehash(final String passwordHashed) {
+		return !passwordHashed.substring(0, bcryptTest.length()).equals(bcryptTest);
 	}
 
 	private static String toHex(byte[] bytes) {
