@@ -25,38 +25,23 @@ import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.GameLogger;
 import com.openrsc.server.util.NamedThreadFactory;
 import com.openrsc.server.util.rsc.CollisionFlag;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import javax.swing.JPanel;
-
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.util.List;
+import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static org.apache.logging.log4j.util.Unbox.box;
 
@@ -292,24 +277,8 @@ public final class Server implements Runnable {
 		try {
 			serverChannel.channel().disconnect();
 		} catch (Exception exception) {
+			LOGGER.catching(exception);
 		}
-	}
-
-	public void submitTask(Runnable r) {
-		scheduledExecutor.submit(r);
-	}
-
-	public void post(Runnable r, String descriptor) {
-		getGameEventHandler().add(new PluginsUseThisEvent(getWorld(), descriptor) {
-			@Override
-			public void action() {
-				try {
-					r.run();
-				} catch (Throwable e) {
-					LOGGER.catching(e);
-				}
-			}
-		});
 	}
 
 	public void run() {
@@ -352,6 +321,23 @@ public final class Server implements Runnable {
 			//if (PathValidation.DEBUG)
 			//	panel.repaint();
 		}
+	}
+
+	public void submitTask(Runnable r) {
+		scheduledExecutor.submit(r);
+	}
+
+	public void post(Runnable r, String descriptor) {
+		getGameEventHandler().add(new PluginsUseThisEvent(getWorld(), descriptor) {
+			@Override
+			public void action() {
+				try {
+					r.run();
+				} catch (Throwable e) {
+					LOGGER.catching(e);
+				}
+			}
+		});
 	}
 
 	class JPanel2 extends JPanel {

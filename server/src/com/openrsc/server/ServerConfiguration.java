@@ -240,6 +240,7 @@ public class ServerConfiguration {
 	public boolean WANT_CUSTOM_WALK_SPEED = false;
 	public int MAX_TICKS_UNTIL_FULL_WALKING_SPEED = 5;
 	public boolean WANT_IMPROVED_PATHFINDING = false;
+	public boolean WANT_PASSWORD_MASSAGE = true;
 	//strict check on level requirements for "glitched" validations on rsc
 	public boolean STRICT_CHECK_ALL = false;
 	public boolean STRICT_PDART_CHECK = false;
@@ -434,6 +435,9 @@ public class ServerConfiguration {
 		// Walking/running related
 		MAX_WALKING_SPEED = Integer.parseInt(props.getProperty("max_walking_speed"));
 		MAX_TICKS_UNTIL_FULL_WALKING_SPEED = Integer.parseInt(props.getProperty("max_ticks_until_full_walking_speed"));
+
+		String wantPasswordMassage = props.getProperty("want_password_massage");
+		WANT_PASSWORD_MASSAGE = wantPasswordMassage != null ? Boolean.parseBoolean(props.getProperty("want_password_massage")) : WANT_PASSWORD_MASSAGE;
 
 		// Make sure config doesn't exceed max values
 		if (VIEW_DISTANCE > 4)

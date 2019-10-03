@@ -139,12 +139,16 @@ public final class DataConversions {
 		return doCompatibility ? DataConversions.sha512(salt + DataConversions.md5(password)) : password;
 	}
 
+	private static String bcryptHashPassword(final String passwordPlainText) {
+		return BCrypt.hashpw(passwordPlainText, BCrypt.gensalt(bcryptWorkFactor, secureRandom));
+	}
+
 	public static final String hashPassword(final String passwordPlainText, final String salt) {
 		if(passwordPlainText == null || passwordPlainText.isEmpty())
 			return null;
 
 		final String passwordCompatHashed = hashPasswordCompatibility(passwordPlainText, salt);
-		return BCrypt.hashpw(passwordCompatHashed, BCrypt.gensalt(bcryptWorkFactor, secureRandom));
+		return bcryptHashPassword(passwordCompatHashed);
 	}
 
 	public static final boolean checkPassword(final String passwordPlainText, final String salt, final String passwordHashed) {
@@ -162,7 +166,7 @@ public final class DataConversions {
 	}
 
 	public static final boolean passwordNeedsRehash(final String passwordHashed) {
-		return !passwordHashed.substring(0, bcryptTest.length()).equals(bcryptTest);
+		return passwordHashed.length() < bcryptTest.length() || !passwordHashed.substring(0, bcryptTest.length()).equals(bcryptTest);
 	}
 
 	private static String toHex(byte[] bytes) {
