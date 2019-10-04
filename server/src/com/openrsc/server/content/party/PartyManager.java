@@ -120,7 +120,7 @@ public class PartyManager {
 	}
 
 	/*private void loadParties() throws SQLException {
-		PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement("SELECT `id`, `name`, `tag`, `kick_setting`, `invite_setting`, `allow_search_join`, `party_points` FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "party`");
+		PreparedStatement statement = DatabaseConnection.getDatabaseConnection().prepareStatement("SELECT `id`, `name`, `tag`, `kick_setting`, `invite_setting`, `allow_search_join`, `party_points` FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "party`");
 		ResultSet result = statement.executeQuery();
 		while (result.next()) {
 			Party party = new Party();
@@ -132,7 +132,7 @@ public class PartyManager {
 			party.setAllowSearchJoin(result.getInt("allow_search_join"));
 			party.setPartyPoints(result.getInt("party_points"));
 
-			PreparedStatement fetchPlayers = DatabaseConnection.getDatabase()
+			PreparedStatement fetchPlayers = DatabaseConnection.getDatabaseConnection()
 				.prepareStatement("SELECT `username`, `rank`, `kills`, `deaths` FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "party_players` WHERE `party_id`=?");
 			fetchPlayers.setInt(1, party.getPartyID());
 			ResultSet playersResult = fetchPlayers.executeQuery();
@@ -159,7 +159,7 @@ public class PartyManager {
 	}*/
 
 	/*private void databaseCreateParty(Party party) throws SQLException {
-		PreparedStatement statement = DatabaseConnection.getDatabase().getConnection().prepareStatement(
+		PreparedStatement statement = DatabaseConnection.getDatabaseConnection().getConnection().prepareStatement(
 			"INSERT INTO `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "party`(`name`, `tag`, `leader`) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
 		statement.setString(1, party.getPartyName());
 		statement.setString(2, party.getPartyTag());
@@ -173,7 +173,7 @@ public class PartyManager {
 
 		statement.close();
 
-		statement = DatabaseConnection.getDatabase()
+		statement = DatabaseConnection.getDatabaseConnection()
 			.prepareStatement("INSERT INTO `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "party_players`(`party_id`, `username`, `rank`) VALUES (?,?,?)");
 		for (PartyPlayer member : party.getPlayers()) {
 			statement.setInt(1, party.getPartyID());
@@ -185,8 +185,8 @@ public class PartyManager {
 	}*/
 
 	/*private void databaseDeleteParty(Party party) throws SQLException {
-		PreparedStatement deleteParty = DatabaseConnection.getDatabase().prepareStatement("DELETE FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "party` WHERE `id`=?");
-		PreparedStatement deletePartyPlayers = DatabaseConnection.getDatabase()
+		PreparedStatement deleteParty = DatabaseConnection.getDatabaseConnection().prepareStatement("DELETE FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "party` WHERE `id`=?");
+		PreparedStatement deletePartyPlayers = DatabaseConnection.getDatabaseConnection()
 			.prepareStatement("DELETE FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "party_players` WHERE `party_id`=?");
 
 		deleteParty.setInt(1, party.getPartyID());
@@ -197,7 +197,7 @@ public class PartyManager {
 
 	/*private void savePartyPlayer(Party party) {
 		try {
-			PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement(
+			PreparedStatement statement = DatabaseConnection.getDatabaseConnection().prepareStatement(
 				"INSERT INTO `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "party_players`(`party_id`, `username`, `rank`, `kills`, `deaths`) VALUES (?,?,?,?,?)");
 			for (PartyPlayer member : party.getPlayers()) {
 				statement.setInt(1, party.getPartyID());
@@ -216,7 +216,7 @@ public class PartyManager {
 
 	/*private void deletePartyPlayer(Party party) {
 		try {
-			PreparedStatement statement = DatabaseConnection.getDatabase()
+			PreparedStatement statement = DatabaseConnection.getDatabaseConnection()
 				.prepareStatement("DELETE FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "party_players` WHERE `party_id`=?");
 			statement.setInt(1, party.getPartyID());
 			statement.executeUpdate();
@@ -228,7 +228,7 @@ public class PartyManager {
 
 	/*private void updateParty(Party party) {
 		try {
-			PreparedStatement statement = DatabaseConnection.getDatabase()
+			PreparedStatement statement = DatabaseConnection.getDatabaseConnection()
 				.prepareStatement("UPDATE `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "party` SET `name`=?, `tag`=?, `leader`=?, `kick_setting`=?, `invite_setting`=?, `allow_search_join`=?, `party_points`=? WHERE `id`=?");
 			statement.setString(1, party.getPartyName());
 			statement.setString(2, party.getPartyTag());

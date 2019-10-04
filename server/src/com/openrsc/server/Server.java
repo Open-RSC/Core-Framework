@@ -56,7 +56,7 @@ public final class Server implements Runnable {
 	private final GameTickEventHandler tickEventHandler;
 	private final DiscordService discordService;
 	private final GameTickEvent monitoring;
-	private final PlayerDatabaseExecutor playerDataProcessor;
+	private final LoginExecutor loginExecutor;
 	private final ServerConfiguration config;
 	private final ScheduledExecutorService scheduledExecutor;
 	private final PluginHandler pluginHandler;
@@ -149,7 +149,7 @@ public final class Server implements Runnable {
 		databaseConnection = new DatabaseConnection(this, "Database Connection");
 
 		discordService = new DiscordService(this);
-		playerDataProcessor = new PlayerDatabaseExecutor(this);
+		loginExecutor = new LoginExecutor(this);
 		world = new World(this);
 		tickEventHandler = new GameTickEventHandler(this);
 		gameUpdater = new GameStateUpdater(this);
@@ -247,7 +247,7 @@ public final class Server implements Runnable {
 			running = true;
 			scheduledExecutor.scheduleAtFixedRate(this, 0, 1, TimeUnit.MILLISECONDS);
 
-			playerDataProcessor.start();
+			loginExecutor.start();
 			discordService.start();
 			gameLogger.start();
 		}
@@ -258,7 +258,7 @@ public final class Server implements Runnable {
 			running = false;
 			scheduledExecutor.shutdown();
 
-			playerDataProcessor.stop();
+			loginExecutor.stop();
 			discordService.stop();
 			gameLogger.stop();
 		}
@@ -615,8 +615,8 @@ public final class Server implements Runnable {
 		return tickEventHandler;
 	}
 
-	public PlayerDatabaseExecutor getPlayerDataProcessor() {
-		return playerDataProcessor;
+	public LoginExecutor getLoginExecutor() {
+		return loginExecutor;
 	}
 
 	public final long getLastGameStateDuration() {

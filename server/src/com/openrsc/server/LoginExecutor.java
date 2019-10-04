@@ -3,19 +3,24 @@ package com.openrsc.server;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.event.rsc.ImmediateEvent;
 import com.openrsc.server.login.*;
+import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.sql.DatabasePlayerLoader;
+import com.openrsc.server.sql.PlayerDatabase;
+import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.LoginResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class PlayerDatabaseExecutor implements Runnable {
+public class LoginExecutor implements Runnable {
 
 	/**
 	 * The asynchronous logger.
@@ -38,7 +43,7 @@ public class PlayerDatabaseExecutor implements Runnable {
 
 	private Queue<RecoveryChangeRequest> recoveryChangeRequests = new ConcurrentLinkedQueue<RecoveryChangeRequest>();
 
-	private DatabasePlayerLoader database;
+	private PlayerDatabase playerDatabase;
 
 	private Boolean running	= false;
 
@@ -47,9 +52,9 @@ public class PlayerDatabaseExecutor implements Runnable {
 		return server;
 	}
 
-	public PlayerDatabaseExecutor(Server server) {
+	public LoginExecutor(Server server) {
 		this.server = server;
-		this.database = new DatabasePlayerLoader(getServer());
+		this.playerDatabase = new PlayerDatabase(getServer());
 		loginThreadExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getServer().getName()+" : LoginThread").build());
 	}
 
@@ -59,10 +64,10 @@ public class PlayerDatabaseExecutor implements Runnable {
 			try {
 				LoginRequest loginRequest = null;
 				while ((loginRequest = loadRequests.poll()) != null) {
-					int loginResponse = database.validateLogin(loginRequest);
+					int loginResponse = validateLogin(loginRequest);
 					loginRequest.loginValidated(loginResponse);
 					if ((loginResponse & 0x40) != LoginResponse.LOGIN_INSUCCESSFUL) {
-						final Player loadedPlayer = database.loadPlayer(loginRequest);
+						final Player loadedPlayer = playerDatabase.loadPlayer(loginRequest);
 
 						LoginTask loginTask = new LoginTask(loginRequest, loadedPlayer);
 						getServer().getGameEventHandler().add(new ImmediateEvent(getServer().getWorld(), "Login Player") {
@@ -78,7 +83,7 @@ public class PlayerDatabaseExecutor implements Runnable {
 
 				Player playerToSave = null;
 				while ((playerToSave = saveRequests.poll()) != null) {
-					getDatabase().savePlayer(playerToSave);
+					getPlayerDatabase().savePlayer(playerToSave);
 					//LOGGER.info("Saved player " + playerToSave.getUsername() + "");
 				}
 
@@ -114,8 +119,40 @@ public class PlayerDatabaseExecutor implements Runnable {
 		}
 	}
 
-	public DatabasePlayerLoader getDatabase() {
-		return database;
+	public byte validateLogin(LoginRequest request) {
+		PreparedStatement statement = null;
+		ResultSet playerSet = null;
+		int groupId = Group.USER;
+		try {
+			statement = getPlayerDatabase().getDatabaseConnection().prepareStatement(getPlayerDatabase().getDatabaseConnection().getGameQueries().playerLoginData);
+			statement.setString(1, request.getUsername());
+			playerSet = statement.executeQuery();
+			if (!playerSet.next()) {
+				return (byte) LoginResponse.INVALID_CREDENTIALS;
+			}
+			if (!DataConversions.checkPassword(request.getPassword(), playerSet.getString("salt"), playerSet.getString("pass"))) {
+				return (byte) LoginResponse.INVALID_CREDENTIALS;
+			}
+			if (getServer().getWorld().getPlayer(request.getUsernameHash()) != null) {
+				return (byte) LoginResponse.ACCOUNT_LOGGEDIN;
+			}
+			long banExpires = playerSet.getLong("banned");
+			if (banExpires == -1) {
+				return (byte) LoginResponse.ACCOUNT_PERM_DISABLED;
+			}
+			double timeBanLeft = (double) (banExpires - System.currentTimeMillis());
+			if (timeBanLeft >= 1) {
+				return (byte) LoginResponse.ACCOUNT_TEMP_DISABLED;
+			}
+			groupId = playerSet.getInt("group_id");
+		} catch (SQLException e) {
+			LOGGER.catching(e);
+		}
+		return (byte) LoginResponse.LOGIN_SUCCESSFUL[groupId];
+	}
+
+	public PlayerDatabase getPlayerDatabase() {
+		return playerDatabase;
 	}
 
 	public void addLoginRequest(LoginRequest request) {

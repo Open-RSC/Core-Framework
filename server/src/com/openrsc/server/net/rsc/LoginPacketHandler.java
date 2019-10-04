@@ -95,7 +95,7 @@ public class LoginPacketHandler {
 						ActionSender.sendLogin(loadedPlayer);
 					}
 				};
-				server.getPlayerDataProcessor().addLoginRequest(request);
+				server.getLoginExecutor().addLoginRequest(request);
 				break;
 
 			/* Registering */
@@ -111,7 +111,7 @@ public class LoginPacketHandler {
 				String email = getString(p.getBuffer()).trim();
 
 				CharacterCreateRequest characterCreateRequest = new CharacterCreateRequest(server, user, pass, email, channel);
-				server.getPlayerDataProcessor().addCharacterCreateRequest(characterCreateRequest);
+				server.getLoginExecutor().addCharacterCreateRequest(characterCreateRequest);
 				break;
 				
 			/* Forgot password */
@@ -170,7 +170,7 @@ public class LoginPacketHandler {
 				}
 
 				RecoveryAttemptRequest recoveryAttemptRequest = new RecoveryAttemptRequest(server, user, oldPass, newPass, answers, channel);
-				server.getPlayerDataProcessor().addRecoveryAttemptRequest(recoveryAttemptRequest);
+				server.getLoginExecutor().addRecoveryAttemptRequest(recoveryAttemptRequest);
 				break;
 		}
 	}

@@ -33,7 +33,7 @@ public class SecuritySettingsHandler implements PacketHandler {
 			String newPass = p.readString().trim();
 
 			PasswordChangeRequest passwordChangeRequest = new PasswordChangeRequest(player.getWorld().getServer(), player, oldPass, newPass);
-			player.getWorld().getServer().getPlayerDataProcessor().addPasswordChangeRequest(passwordChangeRequest);
+			player.getWorld().getServer().getLoginExecutor().addPasswordChangeRequest(passwordChangeRequest);
 			
 			break;
 		case 196: //cancel recovery request
@@ -85,7 +85,7 @@ public class SecuritySettingsHandler implements PacketHandler {
 			}
 
 			RecoveryChangeRequest recoveryChangeRequest = new RecoveryChangeRequest(player.getWorld().getServer(), player, questions, answers);
-			player.getWorld().getServer().getPlayerDataProcessor().addRecoveryChangeRequest(recoveryChangeRequest);
+			player.getWorld().getServer().getLoginExecutor().addRecoveryChangeRequest(recoveryChangeRequest);
 			break;
 		case 253: //change/set contact details
 			LOGGER.info("Contact details change from: " + player.getCurrentIP());

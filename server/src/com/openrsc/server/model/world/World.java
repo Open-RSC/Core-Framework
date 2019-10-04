@@ -574,7 +574,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 			getPlayers().add(player);
 			player.updateRegion();
-			if (getServer().getPlayerDataProcessor() != null) {
+			if (getServer().getLoginExecutor() != null) {
 				getServer().getGameLogger().addQuery(new PlayerOnlineFlagQuery(getServer(), player.getDatabaseID(), player.getCurrentIP(), true));
 				getServer().getGameLogger().addQuery(new LoginLog(player.getWorld(), player.getDatabaseID(), player.getCurrentIP()));
 			}
@@ -743,7 +743,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	 */
 	public void unregisterPlayer(final Player player) {
 		try {
-			if (getServer().getPlayerDataProcessor() != null) {
+			if (getServer().getLoginExecutor() != null) {
 				getServer().getGameLogger().addQuery(new PlayerOnlineFlagQuery(getServer(), player.getDatabaseID(), false));
 				if (getServer().getConfig().AVATAR_GENERATOR)
 					avatarGenerator.generateAvatar(player.getDatabaseID(), player.getSettings().getAppearance(), player.getWornItems());

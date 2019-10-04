@@ -2018,7 +2018,7 @@ public final class Player extends Mob {
 	}
 
 	public void save() {
-		getWorld().getServer().getPlayerDataProcessor().addSaveRequest(this);
+		getWorld().getServer().getLoginExecutor().addSaveRequest(this);
 	}
 
 	public void logout() {
@@ -2066,7 +2066,7 @@ public final class Player extends Mob {
 		getWorld().getClanManager().checkAndUnattachFromClan(this);
 		getWorld().getPartyManager().checkAndUnattachFromParty(this);
 
-		getWorld().getServer().getPlayerDataProcessor().addRemoveRequest(this);
+		getWorld().getServer().getLoginExecutor().addRemoveRequest(this);
 	}
 
 	public void sendMemberErrorMessage() {
