@@ -54,9 +54,9 @@ public class BankInterface {
 			currentBankIDs.add(bankItem.itemID);
 			currentBankCounts.add(bankItem.amount);
 		}
-		for (int i : mc.getInventoryItems()) {
-			if (currentBankIDs.contains(i)) continue;
-			currentBankIDs.add(i);
+		for (int i = 0; i < mc.getInventoryItemCount(); i++) {
+			if (currentBankIDs.contains(mc.getInventoryItemID(i))) continue;
+			currentBankIDs.add(mc.getInventoryItemID(i));
 			currentBankCounts.add(0);
 		}
 
