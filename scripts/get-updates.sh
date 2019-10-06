@@ -34,7 +34,7 @@ yes | sudo cp -a -rf "client/Cache/." "/opt/Website/downloads/"
 cd ..
 sudo rm Website/downloads/MD5CHECKSUM
 sudo touch Website/downloads/MD5CHECKSUM && sudo chmod 777 Website/downloads/MD5CHECKSUM
-md5sum Website/downloads/* | sed 's/Website\/downloads\\///g' | grep "^[a-zA-Z0-9]*" | awk '{print $2"="$1}' | tee Website/downloads/MD5CHECKSUM
+md5sum Website/downloads/* | sed 's/Website\/downloads\///g' | grep "^[a-zA-Z0-9]*" | awk '{print $2"="$1}' | tee Website/downloads/MD5CHECKSUM
 sudo sed -i 's/MD5CHECKSUM=/#MD5CHECKSUM=/g' "Website/downloads/MD5CHECKSUM"
 sudo sed -i 's/index=/#index=/g' "Website/downloads/MD5CHECKSUM"
 cd Game
