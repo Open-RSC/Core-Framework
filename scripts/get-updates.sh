@@ -20,17 +20,17 @@ echo ""
 sudo make compile
 
 # Client
-yes | sudo cp -rf client/*.jar /opt/Website/openrsc_web/public/downloads/cache/
-sudo chmod +x /opt/Website/openrsc_web/public/downloads/cache/*.jar
-sudo chmod 777 /opt/Website/openrsc_web/public/downloads/cache/*.jar
+yes | sudo cp -rf client/*.jar /opt/Website/downloads/cache/
+sudo chmod +x /opt/Website/downloads/cache/*.jar
+sudo chmod 777 /opt/Website/downloads/cache/*.jar
 
 # Launcher
-yes | sudo cp -rf Launcher/*.jar /opt/Website/openrsc_web/public/downloads/
-sudo chmod +x /opt/Website/openrsc_web/public/downloads/*.jar
-sudo chmod 777 /opt/Website/openrsc_web/public/downloads/*.jar
+yes | sudo cp -rf Launcher/*.jar /opt/Website/downloads/
+sudo chmod +x /opt/Website/downloads/*.jar
+sudo chmod 777 /opt/Website/downloads/*.jar
 
 # Cache
-yes | sudo cp -a -rf "client/Cache/." "/opt/Website/openrsc_web/public/downloads/cache/"
+yes | sudo cp -a -rf "client/Cache/." "/opt/Website/downloads/cache/"
 cd ..
 sudo rm Website/downloads/cache/MD5CHECKSUM
 sudo touch Website/downloads/cache/MD5CHECKSUM && sudo chmod 777 Website/downloads/cache/MD5CHECKSUM
