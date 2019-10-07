@@ -16,10 +16,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.TileValue;
-import com.openrsc.server.net.DiscordService;
-import com.openrsc.server.net.RSCConnectionHandler;
-import com.openrsc.server.net.RSCProtocolDecoder;
-import com.openrsc.server.net.RSCProtocolEncoder;
+import com.openrsc.server.net.*;
 import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.GameLogger;
@@ -65,6 +62,7 @@ public final class Server implements Runnable {
 	private final EntityHandler entityHandler;
 	private final DatabaseConnection databaseConnection;
 	private final AchievementSystem achievementSystem;
+	private final RSCPacketFilter packetFilter;
 
 	private final World world;
 
@@ -142,6 +140,8 @@ public final class Server implements Runnable {
 		LOGGER.info("Server configuration loaded: " + configFile);
 
 		name = getConfig().SERVER_NAME;
+
+		packetFilter = new RSCPacketFilter(this);
 
 		pluginHandler = new PluginHandler(this);
 		combatScriptLoader = new CombatScriptLoader(this);
@@ -702,4 +702,9 @@ public final class Server implements Runnable {
 	public AchievementSystem getAchievementSystem() {
 		return achievementSystem;
 	}
+
+	public RSCPacketFilter getPacketFilter() {
+		return packetFilter;
+	}
+
 }
