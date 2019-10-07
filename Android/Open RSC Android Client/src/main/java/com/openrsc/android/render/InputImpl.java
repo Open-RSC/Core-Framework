@@ -95,8 +95,6 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
                     // Keep C_LAST_ZOOM aka the zoom increments on the range of [0, 255]
                     if (newZoom >= 0 && newZoom <= 255) {
                         C_LAST_ZOOM = newZoom;
-                        // We probably want to send this on the client tick rather than each time a button is pressed
-                        mudclient.saveZoomDistance();
                     }
                 }
             } else if (mudclient.cameraAllowPitchModification) {

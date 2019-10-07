@@ -252,6 +252,7 @@ public final class mudclient implements Runnable {
 	private int cameraAutoMoveX = 0;
 	private int cameraAutoMoveZ = 0;
 	public int cameraZoom = 750;
+	public int lastSavedCameraZoom = 0;
 	public int minCameraZoom = 500;
 	private int characterBubbleCount = 0;
 	private int[] characterBubbleID = new int[150];
@@ -10557,8 +10558,6 @@ public final class mudclient implements Runnable {
 							// Don't want to go over 255
 							if (C_LAST_ZOOM < 254) {
 								C_LAST_ZOOM += 2;
-								// We probably want to send this on the client tick rather than each time a button is pressed
-								saveZoomDistance();
 							}
 						} else {
 							if (this.cameraAllowPitchModification) {
@@ -10577,8 +10576,6 @@ public final class mudclient implements Runnable {
 							// Don't want to go under 0
 							if (C_LAST_ZOOM > 1) {
 								C_LAST_ZOOM -= 2;
-								// We probably want to send this on the client tick rather than each time a button is pressed
-								saveZoomDistance();
 							}
 						} else {
 							if (this.cameraAllowPitchModification) {
@@ -10699,12 +10696,14 @@ public final class mudclient implements Runnable {
 	}
 
 	public void saveZoomDistance() {
-		// Saves last zoom distance
-		this.packetHandler.getClientStream().newPacket(111);
-		this.packetHandler.getClientStream().writeBuffer1.putByte(23);
-		this.packetHandler.getClientStream().writeBuffer1.putByte(Config.C_LAST_ZOOM);
-		this.packetHandler.getClientStream().finishPacket();
-		//System.out.println(cameraZoom);
+		if(lastSavedCameraZoom != Config.C_LAST_ZOOM) {
+			// Saves last zoom distance
+			this.packetHandler.getClientStream().newPacket(111);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(23);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(Config.C_LAST_ZOOM);
+			this.packetHandler.getClientStream().finishPacket();
+			lastSavedCameraZoom = Config.C_LAST_ZOOM;
+		}
 	}
 
 	public final void handleKeyPress(byte var1, int key) {
@@ -15190,6 +15189,9 @@ public final class mudclient implements Runnable {
 								if ((var2 & 1) == 1) {
 									this.cameraAutoMoveX += this.cameraAutoMoveAmountX;
 								}
+
+								// Saves zoom every 10 seconds
+								saveZoomDistance();
 							}
 
 							if (this.cameraAutoMoveX < -50) {

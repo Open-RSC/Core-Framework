@@ -61,17 +61,18 @@ public class RSCPacketFilter {
 			return false;
 		}
 
+		ConnectionAttachment att = ctx.channel().attr(RSCConnectionHandler.attachment).get();
+		Player player = null;
+		if (att != null) {
+			player = att.player.get();
+		}
+
 		final int pps = getServer().getPacketFilter().getPPS(connection);
-		final boolean allowPacket = pps <= getServer().getConfig().MAX_PACKETS_PER_SECOND;
+		final boolean allowPacket = pps <= getServer().getConfig().MAX_PACKETS_PER_SECOND || (player != null && player.isAdmin());
 
 		//LOGGER.info("Channel Read: " + hostAddress + ", Allowed: " + allowPacket + ", PPS: " + pps);
 
 		if(!allowPacket) {
-			ConnectionAttachment att = ctx.channel().attr(RSCConnectionHandler.attachment).get();
-			Player player = null;
-			if (att != null) {
-				player = att.player.get();
-			}
 			LOGGER.info(hostAddress + " (" + player + ") filtered for reaching the PPS limit: " + pps);
 			ipBanHost(hostAddress, System.currentTimeMillis() + getServer().getConfig().NETWORK_FLOOD_IP_BAN_MINUTES*60*1000);
 		}
@@ -85,17 +86,18 @@ public class RSCPacketFilter {
 			return false;
 		}
 
+		ConnectionAttachment att = ctx.channel().attr(RSCConnectionHandler.attachment).get();
+		Player player = null;
+		if (att != null) {
+			player = att.player.get();
+		}
+
 		final int cps = getCPS(hostAddress);
-		final boolean allowConnection = cps <= getServer().getConfig().MAX_CONNECTIONS_PER_SECOND;
+		final boolean allowConnection = cps <= getServer().getConfig().MAX_CONNECTIONS_PER_SECOND || (player != null && player.isAdmin());
 
 		//LOGGER.info("Channel Registered: " + hostAddress + ", Allowed: " + allowConnection + ", CPS: " + cps);
 
 		if(!allowConnection) {
-			ConnectionAttachment att = ctx.channel().attr(RSCConnectionHandler.attachment).get();
-			Player player = null;
-			if (att != null) {
-				player = att.player.get();
-			}
 			LOGGER.info(hostAddress + " (" + player + ") filtered for reaching the connections per second limit: " + cps);
 			ipBanHost(hostAddress, System.currentTimeMillis() + getServer().getConfig().NETWORK_FLOOD_IP_BAN_MINUTES*60*1000);
 		}
