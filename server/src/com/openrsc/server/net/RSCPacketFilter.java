@@ -127,7 +127,7 @@ public class RSCPacketFilter {
 		}
 	}
 
-	public final int getPPS(final RSCConnectionHandler connection) {
+	private final int getPPS(final RSCConnectionHandler connection) {
 		final long now = System.currentTimeMillis();
 		int pps = 0;
 
@@ -147,7 +147,7 @@ public class RSCPacketFilter {
 		return pps;
 	}
 
-	public final int getCPS(final String hostAddress) {
+	private final int getCPS(final String hostAddress) {
 		final long now = System.currentTimeMillis();
 		int cps = 0;
 
