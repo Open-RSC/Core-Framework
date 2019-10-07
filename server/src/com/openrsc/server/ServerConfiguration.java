@@ -451,9 +451,7 @@ public class ServerConfiguration {
 		MAX_CONNECTIONS_PER_SECOND = Integer.parseInt(props.getProperty("max_connections_per_second"));
 		MAX_PACKETS_PER_SECOND = Integer.parseInt(props.getProperty("max_packets_per_second"));
 		NETWORK_FLOOD_IP_BAN_MINUTES = Integer.parseInt(props.getProperty("network_flood_ip_ban_minutes"));
-
-		MAX_PACKETS_PER_SECOND=5;
-
+		
 		String wantPasswordMassage = props.getProperty("want_password_massage");
 		WANT_PASSWORD_MASSAGE = wantPasswordMassage != null ? Boolean.parseBoolean(props.getProperty("want_password_massage")) : WANT_PASSWORD_MASSAGE;
 
