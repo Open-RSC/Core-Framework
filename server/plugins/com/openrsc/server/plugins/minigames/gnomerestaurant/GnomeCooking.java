@@ -8,7 +8,7 @@ import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -39,7 +39,11 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 		if (p.getInventory().remove(item) > -1) {
 			message(p, 3000, gc.messages[0]);
 			if (!burnFood(p, gc.requiredLevel, p.getSkills().getLevel(Skills.COOKING))) {
-				if (gc.cookedID == ItemId.GNOMEBATTA.id()) {
+				if (inArray(item.getID(), ItemId.GNOMEBATTA_DOUGH.id(), ItemId.GNOMEBOWL_DOUGH.id(),
+						ItemId.GNOMECRUNCHIE_DOUGH.id())) {
+					p.message(gc.messages[1]);
+					p.incExp(Skills.COOKING, gc.experience, true);
+				} else if (gc.cookedID == ItemId.GNOMEBATTA.id()) {
 					// stop tomato cheese batta when doing veg batta.
 					if (p.getCache().hasKey("cheese_on_batta") && p.getCache().hasKey("tomato_on_batta") && !p.getCache().hasKey("onion_on_batta")) {
 						p.getCache().store("tomato_cheese_batta", true);
@@ -195,18 +199,7 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 	}
 
 	private boolean burnFood(Player p, int reqLvl, int myCookingLvl) {
-		int levelDiff;
-		if (p.getInventory().wielding(ItemId.GAUNTLETS_OF_COOKING.id()))
-			levelDiff = (myCookingLvl += 10) - reqLvl;
-		else
-			levelDiff = myCookingLvl - reqLvl;
-		if (levelDiff < 0) {
-			return true;
-		}
-		if (levelDiff >= 20) {
-			return false;
-		}
-		return DataConversions.random(0, levelDiff - DataConversions.random(0, levelDiff) + 1) == 0;
+		return Formulae.burnFood(p, ItemId.GIANNE_DOUGH.id(), myCookingLvl);
 	}
 
 	enum GnomeCook {

@@ -302,7 +302,9 @@ public abstract class Mob extends Entity {
 			if (o.getGameObjectDef().getType() == 2 || o.getGameObjectDef().getType() == 3) {
 				return getX() >= low.getX() && getX() <= high.getX() && getY() >= low.getY() && getY() <= high.getY();
 			} else {
-				return canReach(low.getX(), high.getX(), low.getY(), high.getY()) || closeSpecObject(o);
+				return canReach(low.getX(), high.getX(), low.getY(), high.getY())
+						|| (finishedPath() && canReachDiagonal(low.getX(), high.getX(), low.getY(), high.getY())) 
+						|| closeSpecObject(o);
 			}
 		} else if (o.getType() == 1) {
 			return getX() >= low.getX() && getX() <= high.getX() && getY() >= low.getY() && getY() <= high.getY();
@@ -349,6 +351,29 @@ public abstract class Mob extends Entity {
 			&& (CollisionFlag.WALL_SOUTH & getWorld().getTile(getX(), getY() - 1).traversalMask) == 0) {
 			return true;
 		}
+		return false;
+	}
+	
+	private boolean canReachx(int minX, int maxX, int minY, int maxY) {
+		if (getX() >= minX && getX() <= maxX && getY() >= minY && getY() <= maxY) {
+			return true;
+		}
+		if (minX <= getX() - 1 && maxX >= getX() - 1 && minY <= getY() && maxY >= getY()
+			&& (getWorld().getTile(getX() - 1, getY()).traversalMask & CollisionFlag.WALL_WEST) == 0) {
+			return true;
+		}
+		if (1 + getX() >= minX && getX() + 1 <= maxX && getY() >= minY && maxY >= getY()
+			&& (CollisionFlag.WALL_EAST & getWorld().getTile(getX() + 1, getY()).traversalMask) == 0) {
+			return true;
+		}
+		if (minX <= getX() && maxX >= getX() && getY() - 1 >= minY && maxY >= getY() - 1
+			&& (CollisionFlag.WALL_SOUTH & getWorld().getTile(getX(), getY() - 1).traversalMask) == 0) {
+			return true;
+		}
+		return false;
+	}
+
+	private boolean canReachDiagonal(int minX, int maxX, int minY, int maxY) {
 		if (minX <= getX() && getX() <= maxX && minY <= getY() + 1 && maxY >= getY() + 1
 			&& (CollisionFlag.WALL_NORTH & getWorld().getTile(getX(), getY() + 1).traversalMask) == 0) {
 			return true;
@@ -370,26 +395,6 @@ public abstract class Mob extends Entity {
 			return true;
 		}
 		return false;
-	}
-
-	private boolean canReachx(int minX, int maxX, int minY, int maxY) {
-		if (getX() >= minX && getX() <= maxX && getY() >= minY && getY() <= maxY) {
-			return true;
-		}
-		if (minX <= getX() - 1 && maxX >= getX() - 1 && minY <= getY() && maxY >= getY()
-			&& (getWorld().getTile(getX() - 1, getY()).traversalMask & CollisionFlag.WALL_WEST) == 0) {
-			return true;
-		}
-		if (1 + getX() >= minX && getX() + 1 <= maxX && getY() >= minY && maxY >= getY()
-			&& (CollisionFlag.WALL_EAST & getWorld().getTile(getX() + 1, getY()).traversalMask) == 0) {
-			return true;
-		}
-		if (minX <= getX() && maxX >= getX() && getY() - 1 >= minY && maxY >= getY() - 1
-			&& (CollisionFlag.WALL_SOUTH & getWorld().getTile(getX(), getY() - 1).traversalMask) == 0) {
-			return true;
-		}
-		return minX <= getX() && getX() <= maxX && minY <= getY() + 1 && maxY >= getY() + 1
-			&& (CollisionFlag.WALL_NORTH & getWorld().getTile(getX(), getY() + 1).traversalMask) == 0;
 	}
 
 	public final boolean canReach(Entity e) {

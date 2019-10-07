@@ -20,22 +20,24 @@ echo ""
 sudo make compile
 
 # Client
-yes | sudo cp -rf client/*.jar Website/downloads/cache/
-sudo chmod +x Website/downloads/cache/*.jar
-sudo chmod 777 Website/downloads/cache/*.jar
+yes | sudo cp -rf client/*.jar /opt/Website/downloads/
+sudo chmod +x /opt/Website/downloads/*.jar
+sudo chmod 777 /opt/Website/downloads/*.jar
 
 # Launcher
-yes | sudo cp -rf Launcher/*.jar Website/downloads/
-sudo chmod +x Website/downloads/*.jar
-sudo chmod 777 Website/downloads/*.jar
+yes | sudo cp -rf Launcher/*.jar /opt/Website/downloads/
+sudo chmod +x /opt/Website/downloads/*.jar
+sudo chmod 777 /opt/Website/downloads/*.jar
 
 # Cache
-yes | sudo cp -a -rf "client/Cache/." "Website/downloads/cache/"
-sudo rm Website/downloads/cache/MD5CHECKSUM
-sudo touch Website/downloads/cache/MD5CHECKSUM && sudo chmod 777 Website/downloads/cache/MD5CHECKSUM
-md5sum Website/downloads/cache/* | sed 's/Website\/downloads\/cache\///g' | grep "^[a-zA-Z0-9]*" | awk '{print $2"="$1}' | tee Website/downloads/cache/MD5CHECKSUM
-sudo sed -i 's/MD5CHECKSUM=/#MD5CHECKSUM=/g' "Website/downloads/cache/MD5CHECKSUM"
-sudo sed -i 's/index=/#index=/g' "Website/downloads/cache/MD5CHECKSUM"
+yes | sudo cp -a -rf "client/Cache/." "/opt/Website/downloads/"
+cd ..
+sudo rm Website/downloads/MD5CHECKSUM
+sudo touch Website/downloads/MD5CHECKSUM && sudo chmod 777 Website/downloads/MD5CHECKSUM
+md5sum Website/downloads/* | sed 's/Website\/downloads\///g' | grep "^[a-zA-Z0-9]*" | awk '{print $2"="$1}' | tee Website/downloads/MD5CHECKSUM
+sudo sed -i 's/MD5CHECKSUM=/#MD5CHECKSUM=/g' "Website/downloads/MD5CHECKSUM"
+sudo sed -i 's/index=/#index=/g' "Website/downloads/MD5CHECKSUM"
+cd Game
 
 # Finished
 echo ""
