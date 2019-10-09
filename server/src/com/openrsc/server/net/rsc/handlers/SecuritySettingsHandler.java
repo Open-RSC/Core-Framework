@@ -29,10 +29,13 @@ public class SecuritySettingsHandler implements PacketHandler {
 		
 		switch (p.getID()) {
 		case 25: //change pass
+			player.getWorld().getServer().getPacketFilter().addLoginAttempt(player.getCurrentIP());
+			player.getWorld().getServer().getPacketFilter().shouldAllowLogin(player.getCurrentIP());
+
 			String oldPass = p.readString().trim();
 			String newPass = p.readString().trim();
 
-			PasswordChangeRequest passwordChangeRequest = new PasswordChangeRequest(player.getWorld().getServer(), player, oldPass, newPass);
+			PasswordChangeRequest passwordChangeRequest = new PasswordChangeRequest(player.getWorld().getServer(), player.getChannel(), player, oldPass, newPass);
 			player.getWorld().getServer().getLoginExecutor().addPasswordChangeRequest(passwordChangeRequest);
 			
 			break;
@@ -77,6 +80,9 @@ public class SecuritySettingsHandler implements PacketHandler {
 			
 			break;
 		case 208: //change/set recovery questions
+			player.getWorld().getServer().getPacketFilter().addLoginAttempt(player.getCurrentIP());
+			player.getWorld().getServer().getPacketFilter().shouldAllowLogin(player.getCurrentIP());
+
 			String questions[] = new String[5];
 			String answers[] = new String[5];
 			for (int i=0; i<5; i++) {
@@ -84,7 +90,7 @@ public class SecuritySettingsHandler implements PacketHandler {
 				answers[i] = DataConversions.normalize(p.readString(), 50);
 			}
 
-			RecoveryChangeRequest recoveryChangeRequest = new RecoveryChangeRequest(player.getWorld().getServer(), player, questions, answers);
+			RecoveryChangeRequest recoveryChangeRequest = new RecoveryChangeRequest(player.getWorld().getServer(), player.getChannel(), player, questions, answers);
 			player.getWorld().getServer().getLoginExecutor().addRecoveryChangeRequest(recoveryChangeRequest);
 			break;
 		case 253: //change/set contact details

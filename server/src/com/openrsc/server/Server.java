@@ -62,9 +62,11 @@ public final class Server implements Runnable {
 	private final EntityHandler entityHandler;
 	private final DatabaseConnection databaseConnection;
 	private final AchievementSystem achievementSystem;
+	private final Constants constants;
 	private final RSCPacketFilter packetFilter;
 
 	private final World world;
+	private final String name;
 
 	private DelayedEvent updateEvent;
 	private ChannelFuture serverChannel;
@@ -80,15 +82,11 @@ public final class Server implements Runnable {
 	private long timeLate = 0;
 	private long lastClientUpdate = 0;
 
-	private String name;
-
 	/*Used for pathfinding view debugger
 	JPanel2 panel = new JPanel2();
 	JFrame frame = new JFrame();
 	javax.swing.GroupLayout layout = new javax.swing.GroupLayout(panel);
 	*/
-
-	private Constants constants;
 
 	static {
 		try {

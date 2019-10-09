@@ -41,15 +41,26 @@ public class LoginPacketHandler {
 
 	public void processLogin(Packet p, Channel channel, Server server) {
 		String IP = ((InetSocketAddress) channel.remoteAddress()).getAddress().getHostAddress();
+
 		switch (p.getID()) {
 
 			/* Logging in */
 			case 0:
+				server.getPacketFilter().addLoginAttempt(IP);
+
 				boolean reconnecting = p.readByte() == 1;
 				int clientVersion = p.readInt();
 
 				final String username = getString(p.getBuffer()).trim();
 				final String password = getString(p.getBuffer()).trim();
+
+				// TODO: Need LoginResponse.IP_IN_USE
+
+				if(!server.getPacketFilter().shouldAllowLogin(IP)) {
+					channel.writeAndFlush(new PacketBuilder().writeByte((byte) LoginResponse.LOGIN_ATTEMPTS_EXCEEDED).toPacket());
+					channel.close();
+					return;
+				}
 
 				if (clientVersion != server.getConfig().CLIENT_VERSION) {
 					channel.writeAndFlush(new PacketBuilder().writeByte((byte) LoginResponse.CLIENT_UPDATED).toPacket());
@@ -66,7 +77,7 @@ public class LoginPacketHandler {
 				ConnectionAttachment attachment = new ConnectionAttachment();
 				channel.attr(RSCConnectionHandler.attachment).set(attachment);
 
-				final LoginRequest request = new LoginRequest(username, password, clientVersion, channel) {
+				final LoginRequest request = new LoginRequest(server, channel, username, password, clientVersion) {
 					@Override
 					public void loginValidated(int response) {
 						Channel channel = getChannel();
@@ -78,7 +89,7 @@ public class LoginPacketHandler {
 
 					@Override
 					public void loadingComplete(Player loadedPlayer) {
-						ConnectionAttachment attachment = (ConnectionAttachment) channel.attr(RSCConnectionHandler.attachment).get();
+						ConnectionAttachment attachment = channel.attr(RSCConnectionHandler.attachment).get();
 						// attachment.ISAAC.set(new ISAACContainer(incomingCipher,
 						// outgoingCipher));
 						attachment.player.set(loadedPlayer);
@@ -101,6 +112,12 @@ public class LoginPacketHandler {
 			/* Registering */
 			case 78:
 				LOGGER.info("Registration attempt from: " + IP);
+				server.getPacketFilter().addLoginAttempt(IP);
+
+				if(server.getPacketFilter().shouldAllowLogin(IP)) {
+					channel.writeAndFlush(new PacketBuilder().writeByte((byte) 5).toPacket());
+					channel.close();
+				}
 
 				String user = getString(p.getBuffer()).trim();
 				String pass = getString(p.getBuffer()).trim();
@@ -110,7 +127,7 @@ public class LoginPacketHandler {
 
 				String email = getString(p.getBuffer()).trim();
 
-				CharacterCreateRequest characterCreateRequest = new CharacterCreateRequest(server, user, pass, email, channel);
+				CharacterCreateRequest characterCreateRequest = new CharacterCreateRequest(server, channel, user, pass, email);
 				server.getLoginExecutor().addCharacterCreateRequest(characterCreateRequest);
 				break;
 				
@@ -159,6 +176,13 @@ public class LoginPacketHandler {
 			
 			/* Attempt recover */
 			case 7:
+				server.getPacketFilter().addLoginAttempt(IP);
+
+				if(server.getPacketFilter().shouldAllowLogin(IP)) {
+					channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
+					channel.close();
+				}
+
 				user = getString(p.getBuffer()).trim();
 				user = user.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ");
 				String oldPass = getString(p.getBuffer()).trim();
@@ -169,7 +193,7 @@ public class LoginPacketHandler {
 					answers[j] = DataConversions.normalize(getString(p.getBuffer()).trim(), 50);
 				}
 
-				RecoveryAttemptRequest recoveryAttemptRequest = new RecoveryAttemptRequest(server, user, oldPass, newPass, answers, channel);
+				RecoveryAttemptRequest recoveryAttemptRequest = new RecoveryAttemptRequest(server, channel, user, oldPass, newPass, answers);
 				server.getLoginExecutor().addRecoveryAttemptRequest(recoveryAttemptRequest);
 				break;
 		}

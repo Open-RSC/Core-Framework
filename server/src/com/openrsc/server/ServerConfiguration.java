@@ -154,6 +154,10 @@ public class ServerConfiguration {
 	 */
 	public int NPC_BLOCKING = 2;
 	/**
+	 * The maximum amount of connections allowed at any one time per IP
+	 */
+	public static int MAX_CONNECTIONS_PER_IP = 10;
+	/**
 	 * The maximum amount of connection attempts per second for each IP address
 	 */
 	public static int MAX_CONNECTIONS_PER_SECOND = 2;
@@ -161,6 +165,10 @@ public class ServerConfiguration {
 	 * The maximum amount of packets per second for each IP address
 	 */
 	public static int MAX_PACKETS_PER_SECOND = 20;
+	/**
+	 * The maximum amount of login attempts allowed per IP per second
+	 */
+	public static int MAX_LOGINS_PER_SECOND = 1;
 	/**
 	 * The amount of time in minutes that users who network flood the server will be IP banned for
 	 */
@@ -448,10 +456,12 @@ public class ServerConfiguration {
 		MAX_WALKING_SPEED = Integer.parseInt(props.getProperty("max_walking_speed"));
 		MAX_TICKS_UNTIL_FULL_WALKING_SPEED = Integer.parseInt(props.getProperty("max_ticks_until_full_walking_speed"));
 
+		MAX_CONNECTIONS_PER_IP = Integer.parseInt(props.getProperty("max_connections_per_ip"));
 		MAX_CONNECTIONS_PER_SECOND = Integer.parseInt(props.getProperty("max_connections_per_second"));
 		MAX_PACKETS_PER_SECOND = Integer.parseInt(props.getProperty("max_packets_per_second"));
+		MAX_LOGINS_PER_SECOND = Integer.parseInt(props.getProperty("max_logins_per_second"));
 		NETWORK_FLOOD_IP_BAN_MINUTES = Integer.parseInt(props.getProperty("network_flood_ip_ban_minutes"));
-		
+
 		String wantPasswordMassage = props.getProperty("want_password_massage");
 		WANT_PASSWORD_MASSAGE = wantPasswordMassage != null ? Boolean.parseBoolean(props.getProperty("want_password_massage")) : WANT_PASSWORD_MASSAGE;
 

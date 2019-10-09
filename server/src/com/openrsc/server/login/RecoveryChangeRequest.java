@@ -5,6 +5,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.sql.query.logs.SecurityChangeLog;
 import com.openrsc.server.util.rsc.DataConversions;
+import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,12 +25,14 @@ public class RecoveryChangeRequest {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private final Server server;
+	private final Channel channel;
 	private Player player;
 	private String[] questions;
 	private String[] answers;
 
-	public RecoveryChangeRequest(final Server server, final Player player, final String[] questions, final String[] answers) {
+	public RecoveryChangeRequest(final Server server, final Channel channel, final Player player, final String[] questions, final String[] answers) {
 		this.server = server;
+		this.channel = channel;
 		this.setPlayer(player);
 		this.setAnswers(answers);
 		this.setQuestions(questions);
@@ -61,6 +64,10 @@ public class RecoveryChangeRequest {
 
 	public Server getServer() {
 		return server;
+	}
+
+	public Channel getChannel() {
+		return channel;
 	}
 
 	public void process() {

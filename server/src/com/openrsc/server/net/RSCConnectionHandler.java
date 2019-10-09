@@ -38,9 +38,9 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 
 	@Override
 	public void channelRead(final ChannelHandlerContext ctx, final Object message) {
-		getServer().getPacketFilter().addPacket(this);
+		getServer().getPacketFilter().addPacket(ctx.channel());
 
-		if (!getServer().getPacketFilter().shouldAllowPacket(ctx, this)) {
+		if (!getServer().getPacketFilter().shouldAllowPacket(ctx.channel())) {
 			ctx.channel().close();
 
 			return;
@@ -77,9 +77,9 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 	public void channelRegistered(final ChannelHandlerContext ctx) {
 		final String hostAddress = ((InetSocketAddress) ctx.channel().remoteAddress()).getAddress().getHostAddress();
 
-		getServer().getPacketFilter().addConnectionAttempt(hostAddress);
+		getServer().getPacketFilter().addConnectionAttempt(hostAddress, ctx.channel());
 
-		if(!getServer().getPacketFilter().shouldAllowConnection(ctx, hostAddress)) {
+		if(!getServer().getPacketFilter().shouldAllowConnection(ctx.channel(), hostAddress)) {
 			ctx.channel().close();
 
 			return;
@@ -91,8 +91,11 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 
 	@Override
 	public void channelUnregistered(final ChannelHandlerContext ctx) {
+		final String hostAddress = ((InetSocketAddress) ctx.channel().remoteAddress()).getAddress().getHostAddress();
 		final Channel channel = ctx.channel();
 		final ConnectionAttachment conn_attachment = channel.attr(attachment).get();
+
+		getServer().getPacketFilter().removeConnection(hostAddress, channel);
 
 		Player player = null;
 		if (conn_attachment != null) {

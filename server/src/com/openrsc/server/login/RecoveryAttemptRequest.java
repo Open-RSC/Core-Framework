@@ -25,21 +25,21 @@ public class RecoveryAttemptRequest {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private final Server server;
+	private final Channel channel;
 	private String ipAddress;
 	private String username;
 	private String newPassword;
 	private String oldPassword;
 	private String[] answers;
-	private Channel channel;
 
-	public RecoveryAttemptRequest(final Server server, final String username, final String oldPassword, final String newPassword, final String[] answers, final Channel channel) {
+	public RecoveryAttemptRequest(final Server server, final Channel channel, final String username, final String oldPassword, final String newPassword, final String[] answers) {
 		this.server = server;
+		this.channel = channel;
 		this.setUsername(username);
 		this.setNewPassword(newPassword);
 		this.setOldPassword(oldPassword);
 		this.setAnswers(answers);
 		this.setIpAddress(channel.remoteAddress().toString());
-		this.setChannel(channel);
 	}
 
 	public String getIpAddress() {
@@ -76,10 +76,6 @@ public class RecoveryAttemptRequest {
 
 	public Channel getChannel() {
 		return channel;
-	}
-
-	private void setChannel(final Channel channel) {
-		this.channel = channel;
 	}
 
 	public String[] getAnswers() {

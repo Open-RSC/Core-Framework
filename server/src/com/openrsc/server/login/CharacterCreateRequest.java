@@ -30,7 +30,7 @@ public class CharacterCreateRequest {
 	private String email;
 	private Channel channel;
 
-	public CharacterCreateRequest(final Server server, final String username, final String password, final String email, final Channel channel) {
+	public CharacterCreateRequest(final Server server, final Channel channel, final String username, final String password, final String email) {
 		this.server = server;
 		this.setEmail(email);
 		this.setUsername(username);

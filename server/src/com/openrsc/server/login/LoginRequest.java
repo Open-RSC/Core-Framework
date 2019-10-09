@@ -1,5 +1,6 @@
 package com.openrsc.server.login;
 
+import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.util.rsc.DataConversions;
 import io.netty.channel.Channel;
@@ -11,22 +12,24 @@ import io.netty.channel.Channel;
  */
 public abstract class LoginRequest {
 
+	private final Server server;
+	private final Channel channel;
 	protected Player loadedPlayer;
 	private String ipAddress;
 	private String username;
 	private String password;
 	private long usernameHash;
-	private Channel channel;
 	private int clientVersion;
 
 
-	protected LoginRequest(String username, String password, int clientVersion, Channel channel) {
+	protected LoginRequest(final Server server, final Channel channel, final String username, final String password, final int clientVersion) {
+		this.server = server;
+		this.channel = channel;
 		this.setUsername(username);
 		this.setPassword(password);
 		this.setIpAddress(channel.remoteAddress().toString());
 		this.setClientVersion(clientVersion);
 		this.setUsernameHash(DataConversions.usernameToHash(username));
-		this.setChannel(channel);
 	}
 
 	public String getIpAddress() {
@@ -65,8 +68,8 @@ public abstract class LoginRequest {
 		return channel;
 	}
 
-	public void setChannel(Channel channel) {
-		this.channel = channel;
+	public Server getServer() {
+		return server;
 	}
 
 	public int getClientVersion() {
