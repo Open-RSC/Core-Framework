@@ -362,12 +362,9 @@ public class NpcBehavior {
 
 	private boolean shouldRetreat(Npc npc) {
 		if (!npc.getWorld().getServer().getConfig().NPC_DONT_RETREAT) {
-			if (DataConversions.inArray(npc.getWorld().getServer().getConstants().NPCS_THAT_RETREAT_NORM, npc.getID())) {
+			if (npc.getWorld().getServer().getConstants().getRetreats().npcData.containsKey(npc.getID())) {
 				return npc.getSkills().getLevel(Skills.HITS) <=
-					Math.ceil(npc.getSkills().getMaxStat(Skills.HITS) * 0.20);
-			} else if (DataConversions.inArray(npc.getWorld().getServer().getConstants().NPCS_THAT_RETREAT_LOW, npc.getID())) {
-				return npc.getSkills().getLevel(Skills.HITS) <=
-					Math.ceil(npc.getSkills().getMaxStat(Skills.HITS) * 0.05);
+						npc.getWorld().getServer().getConstants().getRetreats().npcData.get(npc.getID());
 			}
 		}
 
