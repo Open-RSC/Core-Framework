@@ -222,6 +222,30 @@ public class RSCPacketFilter {
 		}
 	}
 
+	public void addAdminHost(final String hostAddress) {
+		synchronized(adminHosts) {
+			adminHosts.add(hostAddress);
+		}
+	}
+
+	public void removeLoggedInPlayer(final String hostAddress) {
+		synchronized(loggedInCount) {
+			if(loggedInCount.containsKey(hostAddress)) {
+				loggedInCount.put(hostAddress, loggedInCount.get(hostAddress) - 1);
+			}
+		}
+	}
+
+	public void addLoggedInPlayer(final String hostAddress) {
+		synchronized(loggedInCount) {
+			if(!loggedInCount.containsKey(hostAddress)) {
+				loggedInCount.put(hostAddress, 1);
+			} else {
+				loggedInCount.put(hostAddress, loggedInCount.get(hostAddress) + 1);
+			}
+		}
+	}
+
 	private final int getPPS(final Channel connection) {
 		final long now = System.currentTimeMillis();
 		int pps = 0;
@@ -293,33 +317,9 @@ public class RSCPacketFilter {
 		return lps;
 	}
 
-	public void addAdminHost(final String hostAddress) {
-		synchronized(adminHosts) {
-			adminHosts.add(hostAddress);
-		}
-	}
-
 	private final boolean hostIsAdmin(final String hostAddress) {
 		synchronized(adminHosts) {
 			return adminHosts.contains(hostAddress);
-		}
-	}
-
-	public void removeLoggedInPlayer(final String hostAddress) {
-		synchronized(loggedInCount) {
-			if(loggedInCount.containsKey(hostAddress)) {
-				loggedInCount.put(hostAddress, loggedInCount.get(hostAddress) - 1);
-			}
-		}
-	}
-
-	public void addLoggedInPlayer(final String hostAddress) {
-		synchronized(loggedInCount) {
-			if(!loggedInCount.containsKey(hostAddress)) {
-				loggedInCount.put(hostAddress, 1);
-			} else {
-				loggedInCount.put(hostAddress, loggedInCount.get(hostAddress) + 1);
-			}
 		}
 	}
 
