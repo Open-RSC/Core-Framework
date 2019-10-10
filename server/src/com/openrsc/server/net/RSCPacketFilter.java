@@ -107,7 +107,7 @@ public class RSCPacketFilter {
 			player = att.player.get();
 		}
 
-		final int pps = getServer().getPacketFilter().getPPS(connection);
+		final int pps = getServer().getPacketFilter().getPacketsPerSecond(connection);
 		final boolean allowPacket = hostIsAdmin(hostAddress) || pps <= getServer().getConfig().MAX_PACKETS_PER_SECOND;
 
 		//LOGGER.info("Channel Read: " + hostAddress + ", Allowed: " + allowPacket + ", PPS: " + pps);
@@ -138,7 +138,7 @@ public class RSCPacketFilter {
 			player = att.player.get();
 		}
 
-		final int cps = getCPS(hostAddress);
+		final int cps = getConnectionsPerSecond(hostAddress);
 		final int connectionCount = getConnectionCount(hostAddress);
 		final boolean allowConnection = hostIsAdmin(hostAddress) || (
 			(connectionCount <= getServer().getConfig().MAX_CONNECTIONS_PER_IP) &&
@@ -167,7 +167,7 @@ public class RSCPacketFilter {
 			return false;
 		}
 
-		final int lps = getLPS(hostAddress);
+		final int lps = getLoginsPerSecond(hostAddress);
 		final boolean allowConnection = hostIsAdmin(hostAddress) || lps <= getServer().getConfig().MAX_LOGINS_PER_SECOND;
 
 		//LOGGER.info("Login, lps: " + lps + ", isHostIpBanned: " + isHostIpBanned(hostAddress) + ", hostIsAdmin: " + hostIsAdmin(hostAddress));
@@ -266,7 +266,7 @@ public class RSCPacketFilter {
 		}
 	}
 
-	private final int getPPS(final Channel connection) {
+	private final int getPacketsPerSecond(final Channel connection) {
 		final long now = System.currentTimeMillis();
 		int pps = 0;
 
@@ -286,7 +286,7 @@ public class RSCPacketFilter {
 		return pps;
 	}
 
-	private final int getCPS(final String hostAddress) {
+	private final int getConnectionsPerSecond(final String hostAddress) {
 		final long now = System.currentTimeMillis();
 		int cps = 0;
 
@@ -338,7 +338,7 @@ public class RSCPacketFilter {
 		}
 	}
 
-	private final int getLPS(final String hostAddress) {
+	private final int getLoginsPerSecond(final String hostAddress) {
 		final long now = System.currentTimeMillis();
 		int lps = 0;
 

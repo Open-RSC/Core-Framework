@@ -37,14 +37,12 @@ public class LoginPacketHandler {
 	}
 
 	public void processLogin(Packet p, Channel channel, Server server) {
-		String IP = ((InetSocketAddress) channel.remoteAddress()).getAddress().getHostAddress();
+		final String IP = ((InetSocketAddress) channel.remoteAddress()).getAddress().getHostAddress();
 
 		switch (p.getID()) {
 
 			/* Logging in */
 			case 0:
-				server.getPacketFilter().addPasswordAttempt(IP);
-
 				boolean reconnecting = p.readByte() == 1;
 				int clientVersion = p.readInt();
 
@@ -158,8 +156,6 @@ public class LoginPacketHandler {
 			
 			/* Attempt recover */
 			case 7:
-				server.getPacketFilter().addPasswordAttempt(IP);
-
 				user = getString(p.getBuffer()).trim();
 				user = user.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ");
 				String oldPass = getString(p.getBuffer()).trim();

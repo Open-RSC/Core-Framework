@@ -128,6 +128,8 @@ public class LoginExecutor implements Runnable {
 		ResultSet playerSet = null;
 		int groupId = Group.USER;
 		try {
+			server.getPacketFilter().addPasswordAttempt(request.getIpAddress());
+
 			if(!getServer().getPacketFilter().shouldAllowLogin(request.getIpAddress(), false)) {
 				return (byte) LoginResponse.LOGIN_ATTEMPTS_EXCEEDED;
 			}

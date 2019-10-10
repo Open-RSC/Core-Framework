@@ -93,6 +93,8 @@ public class RecoveryAttemptRequest {
 
 	public void process() {
 		try {
+			server.getPacketFilter().addPasswordAttempt(getIpAddress());
+
 			if(getServer().getPacketFilter().shouldAllowLogin(getIpAddress(), false)) {
 				getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
 				getChannel().close();
