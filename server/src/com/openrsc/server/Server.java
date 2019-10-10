@@ -102,7 +102,7 @@ public final class Server implements Runnable {
 		}
 	}
 
-	public static final Server run(final String confName) throws Exception {
+	public static final Server run(final String confName) throws IOException {
 		final long startTime = System.currentTimeMillis();
 		Server server = new Server(confName);
 
@@ -118,9 +118,8 @@ public final class Server implements Runnable {
 		return server;
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args){
 		LOGGER.info("Launching Game Server...");
-
 
 		if (args.length == 0) {
 			LOGGER.info("Server Configuration file not provided. Loading from default.conf or local.conf.");
