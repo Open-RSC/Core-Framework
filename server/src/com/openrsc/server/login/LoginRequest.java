@@ -130,7 +130,7 @@ public abstract class LoginRequest {
 			boolean isAdmin = getServer().getPacketFilter().isHostAdmin(getIpAddress());
 			if(playerSet.first()) {
 				groupId = playerSet.getInt("group_id");
-				isAdmin = groupId == Group.OWNER || groupId == Group.ADMIN;
+				isAdmin = isAdmin || groupId == Group.OWNER || groupId == Group.ADMIN;
 			}
 
 			if(getServer().getPacketFilter().getPasswordAttemptsCount(getIpAddress()) >= getServer().getConfig().MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES && !isAdmin) {
