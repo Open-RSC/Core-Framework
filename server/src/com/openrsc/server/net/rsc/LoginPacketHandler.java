@@ -46,33 +46,11 @@ public class LoginPacketHandler {
 
 			/* Logging in */
 			case 0:
-				server.getPacketFilter().addLoginAttempt(IP);
-
 				boolean reconnecting = p.readByte() == 1;
 				int clientVersion = p.readInt();
 
 				final String username = getString(p.getBuffer()).trim();
 				final String password = getString(p.getBuffer()).trim();
-
-				// TODO: Need LoginResponse.IP_IN_USE
-
-				if(!server.getPacketFilter().shouldAllowLogin(IP)) {
-					channel.writeAndFlush(new PacketBuilder().writeByte((byte) LoginResponse.LOGIN_ATTEMPTS_EXCEEDED).toPacket());
-					channel.close();
-					return;
-				}
-
-				if (clientVersion != server.getConfig().CLIENT_VERSION) {
-					channel.writeAndFlush(new PacketBuilder().writeByte((byte) LoginResponse.CLIENT_UPDATED).toPacket());
-					channel.close();
-					return;
-				}
-				long i = server.timeTillShutdown();
-				if (i > 0 && i < 30000) {
-					channel.writeAndFlush(new PacketBuilder().writeByte((byte) LoginResponse.WORLD_DOES_NOT_ACCEPT_NEW_PLAYERS).toPacket());
-					channel.close();
-					return;
-				}
 
 				ConnectionAttachment attachment = new ConnectionAttachment();
 				channel.attr(RSCConnectionHandler.attachment).set(attachment);
@@ -112,9 +90,8 @@ public class LoginPacketHandler {
 			/* Registering */
 			case 78:
 				LOGGER.info("Registration attempt from: " + IP);
-				server.getPacketFilter().addLoginAttempt(IP);
 
-				if(server.getPacketFilter().shouldAllowLogin(IP)) {
+				if(server.getPacketFilter().shouldAllowLogin(IP, true)) {
 					channel.writeAndFlush(new PacketBuilder().writeByte((byte) 5).toPacket());
 					channel.close();
 				}
@@ -134,6 +111,12 @@ public class LoginPacketHandler {
 			/* Forgot password */
 			case 5:
 				try {
+					if (!server.getPacketFilter().shouldAllowPacket(channel, true)) {
+						channel.close();
+
+						return;
+					}
+
 					user = getString(p.getBuffer()).trim();
 					user = user.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ");
 					
@@ -176,9 +159,7 @@ public class LoginPacketHandler {
 			
 			/* Attempt recover */
 			case 7:
-				server.getPacketFilter().addLoginAttempt(IP);
-
-				if(server.getPacketFilter().shouldAllowLogin(IP)) {
+				if(server.getPacketFilter().shouldAllowLogin(IP, false)) {
 					channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
 					channel.close();
 				}

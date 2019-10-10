@@ -38,18 +38,11 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 
 	@Override
 	public void channelRead(final ChannelHandlerContext ctx, final Object message) {
-		getServer().getPacketFilter().addPacket(ctx.channel());
-
-		if (!getServer().getPacketFilter().shouldAllowPacket(ctx.channel())) {
-			ctx.channel().close();
-
-			return;
-		}
-
 		try {
 			final Channel channel = ctx.channel();
 
 			if(message instanceof Packet) {
+
 				final Packet packet = (Packet) message;
 				Player player = null;
 				ConnectionAttachment att = channel.attr(attachment).get();
@@ -58,11 +51,23 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 				}
 				if (player == null) {
 					if (packet.getID() == 19) {
+						if (!getServer().getPacketFilter().shouldAllowPacket(ctx.channel(), false)) {
+							ctx.channel().close();
+
+							return;
+						}
+
 						ActionSender.sendInitialServerConfigs(getServer(), channel);
 					} else {
 						loginHandler.processLogin(packet, channel, getServer());
 					}
 				} else {
+					if (!getServer().getPacketFilter().shouldAllowPacket(ctx.channel(), true)) {
+						ctx.channel().close();
+
+						return;
+					}
+
 					player.addToPacketQueue(packet);
 				}
 			}
@@ -77,9 +82,8 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 	public void channelRegistered(final ChannelHandlerContext ctx) {
 		final String hostAddress = ((InetSocketAddress) ctx.channel().remoteAddress()).getAddress().getHostAddress();
 
-		getServer().getPacketFilter().addConnectionAttempt(hostAddress, ctx.channel());
-
-		if(!getServer().getPacketFilter().shouldAllowConnection(ctx.channel(), hostAddress)) {
+		if(!getServer().getPacketFilter().shouldAllowConnection(ctx.channel(), hostAddress, false)) {
+			getServer().getPacketFilter().ipBanHost(hostAddress, System.currentTimeMillis() + getServer().getConfig().NETWORK_FLOOD_IP_BAN_MINUTES * 60 * 1000);
 			ctx.channel().close();
 
 			return;

@@ -29,8 +29,7 @@ public class SecuritySettingsHandler implements PacketHandler {
 		
 		switch (p.getID()) {
 		case 25: //change pass
-			player.getWorld().getServer().getPacketFilter().addLoginAttempt(player.getCurrentIP());
-			player.getWorld().getServer().getPacketFilter().shouldAllowLogin(player.getCurrentIP());
+			player.getWorld().getServer().getPacketFilter().shouldAllowLogin(player.getCurrentIP(), true);
 
 			String oldPass = p.readString().trim();
 			String newPass = p.readString().trim();
@@ -80,8 +79,7 @@ public class SecuritySettingsHandler implements PacketHandler {
 			
 			break;
 		case 208: //change/set recovery questions
-			player.getWorld().getServer().getPacketFilter().addLoginAttempt(player.getCurrentIP());
-			player.getWorld().getServer().getPacketFilter().shouldAllowLogin(player.getCurrentIP());
+			player.getWorld().getServer().getPacketFilter().shouldAllowLogin(player.getCurrentIP(), true);
 
 			String questions[] = new String[5];
 			String answers[] = new String[5];

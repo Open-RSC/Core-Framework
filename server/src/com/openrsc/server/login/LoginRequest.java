@@ -5,6 +5,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.util.rsc.DataConversions;
 import io.netty.channel.Channel;
 
+import java.net.InetSocketAddress;
+
 /**
  * Container for all the login data which will be used to construct a player
  *
@@ -27,7 +29,7 @@ public abstract class LoginRequest {
 		this.channel = channel;
 		this.setUsername(username);
 		this.setPassword(password);
-		this.setIpAddress(channel.remoteAddress().toString());
+		this.setIpAddress(((InetSocketAddress) channel.remoteAddress()).getAddress().getHostAddress());
 		this.setClientVersion(clientVersion);
 		this.setUsernameHash(DataConversions.usernameToHash(username));
 	}

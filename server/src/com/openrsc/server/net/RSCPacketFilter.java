@@ -68,10 +68,12 @@ public class RSCPacketFilter {
 		}
 	}
 
-	public final boolean shouldAllowPacket(final Channel connection) {
+	public final boolean shouldAllowPacket(final Channel connection, boolean doIpBans) {
 		final String hostAddress = ((InetSocketAddress) connection.remoteAddress()).getAddress().getHostAddress();
 
-		if(isHostIpBanned(hostAddress)) {
+		addPacket(connection);
+
+		if(doIpBans && isHostIpBanned(hostAddress)) {
 			//LOGGER.info("Packet Received from " + hostAddress + " is IP Banned until " + DateFormat.getInstance().format(ipBans.get(hostAddress)));
 			return false;
 		}
@@ -89,14 +91,20 @@ public class RSCPacketFilter {
 
 		if(!allowPacket) {
 			LOGGER.info(hostAddress + " (" + player + ") filtered for reaching the PPS limit: " + pps);
-			ipBanHost(hostAddress, System.currentTimeMillis() + getServer().getConfig().NETWORK_FLOOD_IP_BAN_MINUTES*60*1000);
+			if(doIpBans) {
+				ipBanHost(hostAddress, System.currentTimeMillis() + getServer().getConfig().NETWORK_FLOOD_IP_BAN_MINUTES * 60 * 1000);
+			}
 		}
+
+		LOGGER.info("Packet, pps: " + pps + ", isHostIpBanned: " + isHostIpBanned(hostAddress) + ", hostIsAdmin: " + hostIsAdmin(hostAddress));
 
 		return allowPacket;
 	}
 
-	public final boolean shouldAllowConnection(final Channel channel, final String hostAddress) {
-		if(isHostIpBanned(hostAddress)) {
+	public final boolean shouldAllowConnection(final Channel channel, final String hostAddress, boolean doIpBans) {
+		addConnectionAttempt(hostAddress, channel);
+
+		if(doIpBans && isHostIpBanned(hostAddress)) {
 			//LOGGER.info("Connection Attempt from " + hostAddress + " is IP Banned until " + DateFormat.getInstance().format(ipBans.get(hostAddress)));
 			return false;
 		}
@@ -118,14 +126,20 @@ public class RSCPacketFilter {
 
 		if(!allowConnection) {
 			LOGGER.info(hostAddress + " (" + player + ") filtered for reaching the connections per second limit: " + cps);
-			ipBanHost(hostAddress, System.currentTimeMillis() + getServer().getConfig().NETWORK_FLOOD_IP_BAN_MINUTES*60*1000);
+			if(doIpBans) {
+				ipBanHost(hostAddress, System.currentTimeMillis() + getServer().getConfig().NETWORK_FLOOD_IP_BAN_MINUTES * 60 * 1000);
+			}
 		}
+
+		LOGGER.info("Connect, cps: " + cps + ", isHostIpBanned: " + isHostIpBanned(hostAddress) + ", hostIsAdmin: " + hostIsAdmin(hostAddress));
 
 		return allowConnection;
 	}
 
-	public final boolean shouldAllowLogin(final String hostAddress) {
-		if(isHostIpBanned(hostAddress)) {
+	public final boolean shouldAllowLogin(final String hostAddress, boolean doIpBans) {
+		addLoginAttempt(hostAddress);
+
+		if(doIpBans && isHostIpBanned(hostAddress)) {
 			//LOGGER.info("Login Attempt from " + hostAddress + " is IP Banned until " + DateFormat.getInstance().format(ipBans.get(hostAddress)));
 			return false;
 		}
@@ -133,10 +147,12 @@ public class RSCPacketFilter {
 		final int lps = getLPS(hostAddress);
 		final boolean allowConnection = hostIsAdmin(hostAddress) || lps <= getServer().getConfig().MAX_LOGINS_PER_SECOND;
 
+		LOGGER.info("Login, lps: " + lps + ", isHostIpBanned: " + isHostIpBanned(hostAddress) + ", hostIsAdmin: " + hostIsAdmin(hostAddress));
+
 		return allowConnection;
 	}
 
-	public void addPacket(final Channel connection) {
+	private void addPacket(final Channel connection) {
 		synchronized (packets) {
 			ArrayList<Long> packetTimes = packets.get(connection);
 			if (packetTimes == null) {
@@ -147,7 +163,7 @@ public class RSCPacketFilter {
 		}
 	}
 
-	public void addConnectionAttempt(final String hostAddress, final Channel channel) {
+	private void addConnectionAttempt(final String hostAddress, final Channel channel) {
 		addConnection(hostAddress, channel);
 
 		synchronized (connectionAttempts) {
@@ -181,7 +197,7 @@ public class RSCPacketFilter {
 		}
 	}
 
-	public void addLoginAttempt(final String hostAddress) {
+	private void addLoginAttempt(final String hostAddress) {
 		synchronized (loginAttempts) {
 			ArrayList<Long> loginTimes = loginAttempts.get(hostAddress);
 			if (loginTimes == null) {

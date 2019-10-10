@@ -61,11 +61,16 @@ public class ServerConfiguration {
 	 */
 	public int MAX_PLAYERS = 100;
 	/**
+	 * the maximum allowed players per IP to connect
+	 */
+	public int MAX_PLAYERS_PER_IP = 5;
+	/**
 	 * the port the server is hosted on
 	 */
 	public int SERVER_PORT = 43594;
 	/**
 	 * idle timer to force a player logout for standing in the same spot
+	 *
 	 */
 	public int IDLE_TIMER = 300000; // 5 minutes
 	/**
@@ -160,7 +165,7 @@ public class ServerConfiguration {
 	/**
 	 * The maximum amount of connection attempts per second for each IP address
 	 */
-	public static int MAX_CONNECTIONS_PER_SECOND = 2;
+	public static int MAX_CONNECTIONS_PER_SECOND = 5;
 	/**
 	 * The maximum amount of packets per second for each IP address
 	 */
@@ -320,7 +325,8 @@ public class ServerConfiguration {
 		SERVER_NAME_WELCOME = props.getProperty("server_name_welcome");
 		WELCOME_TEXT = props.getProperty("welcome_text");
 		SERVER_LOCATION = props.getProperty("server_location");
-		MAX_PLAYERS = Integer.parseInt(props.getProperty("maxplayers"));
+		MAX_PLAYERS = Integer.parseInt(props.getProperty("max_players"));
+		MAX_PLAYERS_PER_IP = Integer.parseInt(props.getProperty("max_players_per_ip"));
 		MYSQL_USER = props.getProperty("mysql_user");
 		MYSQL_PASS = props.getProperty("mysql_pass");
 		MYSQL_DB = props.getProperty("mysql_db");

@@ -124,29 +124,58 @@ public class LoginExecutor implements Runnable {
 		ResultSet playerSet = null;
 		int groupId = Group.USER;
 		try {
+			if(getServer().getPacketFilter().isHostIpBanned(request.getIpAddress())) {
+				return (byte) LoginResponse.ACCOUNT_TEMP_DISABLED;
+			}
+
+			if(!getServer().getPacketFilter().shouldAllowLogin(request.getIpAddress(), false)) {
+				return (byte) LoginResponse.LOGIN_ATTEMPTS_EXCEEDED;
+			}
+
 			statement = getPlayerDatabase().getDatabaseConnection().prepareStatement(getPlayerDatabase().getDatabaseConnection().getGameQueries().playerLoginData);
 			statement.setString(1, request.getUsername());
 			playerSet = statement.executeQuery();
+
+			// TODO: Need LoginResponse.IP_IN_USE
+
+			// TODO: Need LoginResponse.WORLD_IS_FULL
+
+			if (request.getClientVersion() != getServer().getConfig().CLIENT_VERSION) {
+				return (byte) LoginResponse.CLIENT_UPDATED;
+			}
+
+			long i = getServer().timeTillShutdown();
+			if (i > 0 && i < 30000) {
+				return (byte) LoginResponse.WORLD_DOES_NOT_ACCEPT_NEW_PLAYERS;
+			}
+
 			if (!playerSet.next()) {
 				return (byte) LoginResponse.INVALID_CREDENTIALS;
 			}
-			if (!DataConversions.checkPassword(request.getPassword(), playerSet.getString("salt"), playerSet.getString("pass"))) {
-				return (byte) LoginResponse.INVALID_CREDENTIALS;
-			}
+
+			groupId = playerSet.getInt("group_id");
+
 			if (getServer().getWorld().getPlayer(request.getUsernameHash()) != null) {
 				return (byte) LoginResponse.ACCOUNT_LOGGEDIN;
 			}
+
 			long banExpires = playerSet.getLong("banned");
 			if (banExpires == -1) {
 				return (byte) LoginResponse.ACCOUNT_PERM_DISABLED;
 			}
+
 			double timeBanLeft = (double) (banExpires - System.currentTimeMillis());
 			if (timeBanLeft >= 1) {
 				return (byte) LoginResponse.ACCOUNT_TEMP_DISABLED;
 			}
-			groupId = playerSet.getInt("group_id");
+
+			if (!DataConversions.checkPassword(request.getPassword(), playerSet.getString("salt"), playerSet.getString("pass"))) {
+				return (byte) LoginResponse.INVALID_CREDENTIALS;
+			}
+
 		} catch (SQLException e) {
 			LOGGER.catching(e);
+			return (byte) LoginResponse.LOGIN_INSUCCESSFUL;
 		}
 		return (byte) LoginResponse.LOGIN_SUCCESSFUL[groupId];
 	}
