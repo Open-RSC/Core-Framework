@@ -132,6 +132,10 @@ public class LoginExecutor implements Runnable {
 				return (byte) LoginResponse.LOGIN_ATTEMPTS_EXCEEDED;
 			}
 
+			if(getServer().getPacketFilter().getPasswordAttemptsCount(request.getIpAddress()) >= getServer().getConfig().MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES) {
+				return (byte) LoginResponse.LOGIN_ATTEMPTS_EXCEEDED;
+			}
+
 			statement = getPlayerDatabase().getDatabaseConnection().prepareStatement(getPlayerDatabase().getDatabaseConnection().getGameQueries().playerLoginData);
 			statement.setString(1, request.getUsername());
 			playerSet = statement.executeQuery();
@@ -144,8 +148,6 @@ public class LoginExecutor implements Runnable {
 			if (getServer().getPacketFilter().isHostIpBanned(request.getIpAddress()) && !isAdmin) {
 				return (byte) LoginResponse.ACCOUNT_TEMP_DISABLED;
 			}
-
-			// TODO: Need LoginResponse.LOGIN_ATTEMPTS_EXCEEDED for 5 minute attempts
 
 			if (request.getClientVersion() != getServer().getConfig().CLIENT_VERSION && !isAdmin) {
 				return (byte) LoginResponse.CLIENT_UPDATED;

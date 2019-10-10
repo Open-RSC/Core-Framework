@@ -9,6 +9,7 @@ import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.net.InetSocketAddress;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -39,7 +40,7 @@ public class RecoveryAttemptRequest {
 		this.setNewPassword(newPassword);
 		this.setOldPassword(oldPassword);
 		this.setAnswers(answers);
-		this.setIpAddress(channel.remoteAddress().toString());
+		this.setIpAddress(((InetSocketAddress) channel.remoteAddress()).getAddress().getHostAddress());
 	}
 
 	public String getIpAddress() {
@@ -92,6 +93,11 @@ public class RecoveryAttemptRequest {
 
 	public void process() {
 		try {
+			if(getServer().getPacketFilter().shouldAllowLogin(getIpAddress(), false)) {
+				getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
+				getChannel().close();
+			}
+
 			int pid = -1;
 
 			PreparedStatement statement = getServer().getDatabaseConnection().prepareStatement("SELECT id, pass, salt FROM " + getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE username=?");

@@ -43,6 +43,8 @@ public class LoginPacketHandler {
 
 			/* Logging in */
 			case 0:
+				server.getPacketFilter().addPasswordAttempt(IP);
+
 				boolean reconnecting = p.readByte() == 1;
 				int clientVersion = p.readInt();
 
@@ -156,10 +158,7 @@ public class LoginPacketHandler {
 			
 			/* Attempt recover */
 			case 7:
-				if(server.getPacketFilter().shouldAllowLogin(IP, false)) {
-					channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
-					channel.close();
-				}
+				server.getPacketFilter().addPasswordAttempt(IP);
 
 				user = getString(p.getBuffer()).trim();
 				user = user.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ");

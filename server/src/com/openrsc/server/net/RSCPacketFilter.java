@@ -11,6 +11,10 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/****
+ * Author: Kenix
+ */
+
 public class RSCPacketFilter {
 	/**
 	 * The asynchronous Logger
@@ -48,6 +52,10 @@ public class RSCPacketFilter {
 	 * Holds counts of logged in players per IP address
 	 */
 	private final HashMap<String, Integer> loggedInCount;
+	/**
+	 * Holds host address and it's password guess attempt times
+	 */
+	private final HashMap<String, ArrayList<Long>> passwordAttempts;
 
 	public RSCPacketFilter(final Server server) {
 		this.server = server;
@@ -58,6 +66,7 @@ public class RSCPacketFilter {
 		packets = new HashMap<Channel, ArrayList<Long>>();
 		ipBans = new HashMap<String, Long>();
 		loggedInCount = new HashMap<String, Integer>();
+		passwordAttempts = new HashMap<String, ArrayList<Long>>();
 	}
 
 	public void ipBanHost(final String hostAddress, final long until) {
@@ -164,6 +173,17 @@ public class RSCPacketFilter {
 		//LOGGER.info("Login, lps: " + lps + ", isHostIpBanned: " + isHostIpBanned(hostAddress) + ", hostIsAdmin: " + hostIsAdmin(hostAddress));
 
 		return allowConnection;
+	}
+
+	public void addPasswordAttempt(final String hostAddress) {
+		synchronized (passwordAttempts) {
+			ArrayList<Long> attempts = passwordAttempts.get(hostAddress);
+			if (attempts == null) {
+				attempts = new ArrayList<Long>();
+			}
+			attempts.add(System.currentTimeMillis());
+			passwordAttempts.put(hostAddress, attempts);
+		}
 	}
 
 	private void addPacket(final Channel connection) {
@@ -284,6 +304,27 @@ public class RSCPacketFilter {
 			connectionTimes.removeAll(connectionsToRemove);
 		}
 		return cps;
+	}
+
+	public final int getPasswordAttemptsCount(final String hostAddress) {
+		final long now = System.currentTimeMillis();
+		int countAttempts = 0;
+
+		synchronized (passwordAttempts) {
+			ArrayList<Long> attempts = passwordAttempts.get(hostAddress);
+			ArrayList<Long> attemptsToRemove = new ArrayList<Long>();
+
+			for (Long connectionCreationTime : attempts) {
+				// 5 minutes
+				if (now - connectionCreationTime < 5*60*1000) {
+					countAttempts++;
+				} else {
+					attemptsToRemove.add(connectionCreationTime);
+				}
+			}
+			attempts.removeAll(attemptsToRemove);
+		}
+		return countAttempts;
 	}
 
 	private final int getConnectionCount(final String hostAddress) {

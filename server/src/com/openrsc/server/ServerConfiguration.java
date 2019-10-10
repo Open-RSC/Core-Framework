@@ -175,6 +175,10 @@ public class ServerConfiguration {
 	 */
 	public static int MAX_LOGINS_PER_SECOND = 1;
 	/**
+	 * The maximum amount of password/recovery attempts allowed per IP per 5 minutes
+	 */
+	public static int MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES = 10;
+	/**
 	 * The amount of time in minutes that users who network flood the server will be IP banned for
 	 */
 	public static int NETWORK_FLOOD_IP_BAN_MINUTES = 15;
@@ -466,6 +470,7 @@ public class ServerConfiguration {
 		MAX_CONNECTIONS_PER_SECOND = Integer.parseInt(props.getProperty("max_connections_per_second"));
 		MAX_PACKETS_PER_SECOND = Integer.parseInt(props.getProperty("max_packets_per_second"));
 		MAX_LOGINS_PER_SECOND = Integer.parseInt(props.getProperty("max_logins_per_second"));
+		MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES = Integer.parseInt(props.getProperty("max_password_guesses_per_five_minutes"));
 		NETWORK_FLOOD_IP_BAN_MINUTES = Integer.parseInt(props.getProperty("network_flood_ip_ban_minutes"));
 
 		String wantPasswordMassage = props.getProperty("want_password_massage");
