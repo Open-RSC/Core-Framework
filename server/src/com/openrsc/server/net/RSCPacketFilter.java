@@ -44,6 +44,7 @@ public class RSCPacketFilter {
 	 * Holds host address and it's packet send times
 	 */
 	private final HashMap<Channel, ArrayList<Long>> packets;
+
 	/**
 	 * Holds host address list that have been IP banned
 	 */
@@ -381,6 +382,10 @@ public class RSCPacketFilter {
 		}
 
 		return 0;
+	}
+
+	public HashMap<String, Long> getIpBans() {
+		return ipBans;
 	}
 
 	public final Server getServer() {
