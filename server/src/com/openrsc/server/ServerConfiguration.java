@@ -161,7 +161,7 @@ public class ServerConfiguration {
 	/**
 	 * The maximum amount of connections allowed at any one time per IP
 	 */
-	public static int MAX_CONNECTIONS_PER_IP = 10;
+	public static int MAX_CONNECTIONS_PER_IP = 6;
 	/**
 	 * The maximum amount of connection attempts per second for each IP address
 	 */

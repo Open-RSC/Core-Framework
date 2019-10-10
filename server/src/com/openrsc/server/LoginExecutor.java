@@ -69,6 +69,8 @@ public class LoginExecutor implements Runnable {
 					if ((loginResponse & 0x40) != LoginResponse.LOGIN_INSUCCESSFUL) {
 						final Player loadedPlayer = playerDatabase.loadPlayer(loginRequest);
 
+						getServer().getPacketFilter().addLoggedInPlayer(loadedPlayer.getCurrentIP());
+
 						LoginTask loginTask = new LoginTask(loginRequest, loadedPlayer);
 						getServer().getGameEventHandler().add(new ImmediateEvent(getServer().getWorld(), "Login Player") {
 							@Override
@@ -89,6 +91,8 @@ public class LoginExecutor implements Runnable {
 
 				Player playerToRemove = null;
 				while ((playerToRemove = removeRequests.poll()) != null) {
+					getServer().getPacketFilter().removeLoggedInPlayer(playerToRemove.getCurrentIP());
+
 					playerToRemove.remove();
 					getServer().getWorld().getPlayers().remove(playerToRemove);
 					LOGGER.info("Removed player " + playerToRemove.getUsername() + "");
@@ -141,11 +145,9 @@ public class LoginExecutor implements Runnable {
 				return (byte) LoginResponse.ACCOUNT_TEMP_DISABLED;
 			}
 
-			// TODO: Need LoginResponse.IP_IN_USE
-
 			// TODO: Need LoginResponse.LOGIN_ATTEMPTS_EXCEEDED for 5 minute attempts
 
-			if (request.getClientVersion() != getServer().getConfig().CLIENT_VERSION) {
+			if (request.getClientVersion() != getServer().getConfig().CLIENT_VERSION && !isAdmin) {
 				return (byte) LoginResponse.CLIENT_UPDATED;
 			}
 
@@ -164,6 +166,10 @@ public class LoginExecutor implements Runnable {
 
 			if (getServer().getWorld().getPlayer(request.getUsernameHash()) != null) {
 				return (byte) LoginResponse.ACCOUNT_LOGGEDIN;
+			}
+
+			if(getServer().getPacketFilter().getPlayersCount(request.getIpAddress()) >= getServer().getConfig().MAX_PLAYERS_PER_IP && !isAdmin) {
+				return (byte) LoginResponse.IP_IN_USE;
 			}
 
 			long banExpires = playerSet.getLong("banned");

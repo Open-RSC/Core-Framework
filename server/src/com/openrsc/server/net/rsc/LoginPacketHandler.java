@@ -21,9 +21,6 @@ import java.net.InetSocketAddress;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-/**
- * @author n0m
- */
 public class LoginPacketHandler {
 
 	/**

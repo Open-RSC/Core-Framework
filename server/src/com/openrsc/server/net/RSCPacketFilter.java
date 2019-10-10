@@ -44,15 +44,20 @@ public class RSCPacketFilter {
 	 * Holds host address list that have been IP banned
 	 */
 	private final HashMap<String, Long> ipBans;
+	/**
+	 * Holds counts of logged in players per IP address
+	 */
+	private final HashMap<String, Integer> loggedInCount;
 
 	public RSCPacketFilter(final Server server) {
 		this.server = server;
 		connectionAttempts = new HashMap<String, ArrayList<Long>>();
 		loginAttempts = new HashMap<String, ArrayList<Long>>();
 		connections = new HashMap<String, ArrayList<Channel>>();
+		adminHosts = new ArrayList<String>();
 		packets = new HashMap<Channel, ArrayList<Long>>();
 		ipBans = new HashMap<String, Long>();
-		adminHosts = new ArrayList<String>();
+		loggedInCount = new HashMap<String, Integer>();
 	}
 
 	public void ipBanHost(final String hostAddress, final long until) {
@@ -298,6 +303,34 @@ public class RSCPacketFilter {
 		synchronized(adminHosts) {
 			return adminHosts.contains(hostAddress);
 		}
+	}
+
+	public void removeLoggedInPlayer(final String hostAddress) {
+		synchronized(loggedInCount) {
+			if(loggedInCount.containsKey(hostAddress)) {
+				loggedInCount.put(hostAddress, loggedInCount.get(hostAddress) - 1);
+			}
+		}
+	}
+
+	public void addLoggedInPlayer(final String hostAddress) {
+		synchronized(loggedInCount) {
+			if(!loggedInCount.containsKey(hostAddress)) {
+				loggedInCount.put(hostAddress, 1);
+			} else {
+				loggedInCount.put(hostAddress, loggedInCount.get(hostAddress) + 1);
+			}
+		}
+	}
+
+	public final int getPlayersCount(final String hostAddress) {
+		synchronized(loggedInCount) {
+			if (loggedInCount.containsKey(hostAddress)) {
+				return loggedInCount.get(hostAddress);
+			}
+		}
+
+		return 0;
 	}
 
 	public final Server getServer() {
