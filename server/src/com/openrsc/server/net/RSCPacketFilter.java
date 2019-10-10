@@ -72,11 +72,20 @@ public class RSCPacketFilter {
 	public void ipBanHost(final String hostAddress, final long until) {
 		// Do not IP ban afmans!
 		if(isHostAdmin(hostAddress)) {
+			String time = (until == -1) ? "permanently" : "until " + DateFormat.getInstance().format(until);
+			if (until != 0)
+				LOGGER.info("Won't IP ban Afman " + hostAddress + ", would have been banned " + time);
+			else
+				LOGGER.info("Won't un-IP ban Afman " + hostAddress);
 			return;
 		}
 
 		synchronized(ipBans) {
-			LOGGER.info("IP Banned " + hostAddress + " until " + DateFormat.getInstance().format(until));
+			String time = (until == -1) ? " permanently" : " until " + DateFormat.getInstance().format(until);
+			if (until != 0)
+				LOGGER.info("IP Banned " + hostAddress + time);
+			else
+				LOGGER.info("un-IP Banned " + hostAddress + time);
 			ipBans.put(hostAddress, until);
 		}
 	}
@@ -87,7 +96,7 @@ public class RSCPacketFilter {
 		}
 
 		synchronized(ipBans) {
-			return ipBans.containsKey(hostAddress) && ipBans.get(hostAddress) >= System.currentTimeMillis();
+			return ipBans.containsKey(hostAddress) && (ipBans.get(hostAddress) >= System.currentTimeMillis() || ipBans.get(hostAddress) == -1);
 		}
 	}
 
