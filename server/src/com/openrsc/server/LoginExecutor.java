@@ -143,8 +143,6 @@ public class LoginExecutor implements Runnable {
 
 			// TODO: Need LoginResponse.IP_IN_USE
 
-			// TODO: Need LoginResponse.WORLD_IS_FULL
-
 			// TODO: Need LoginResponse.LOGIN_ATTEMPTS_EXCEEDED for 5 minute attempts
 
 			if (request.getClientVersion() != getServer().getConfig().CLIENT_VERSION) {
@@ -158,6 +156,10 @@ public class LoginExecutor implements Runnable {
 
 			if (!playerSet.first()) {
 				return (byte) LoginResponse.INVALID_CREDENTIALS;
+			}
+
+			if(getServer().getWorld().getPlayers().size() >= getServer().getConfig().MAX_PLAYERS && !isAdmin) {
+				return (byte) LoginResponse.WORLD_IS_FULL;
 			}
 
 			if (getServer().getWorld().getPlayer(request.getUsernameHash()) != null) {
