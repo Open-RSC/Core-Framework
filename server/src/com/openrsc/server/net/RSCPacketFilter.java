@@ -71,7 +71,7 @@ public class RSCPacketFilter {
 
 	public void ipBanHost(final String hostAddress, final long until) {
 		// Do not IP ban afmans!
-		if(hostIsAdmin(hostAddress)) {
+		if(isHostAdmin(hostAddress)) {
 			return;
 		}
 
@@ -82,7 +82,7 @@ public class RSCPacketFilter {
 	}
 
 	public final boolean isHostIpBanned(final String hostAddress) {
-		if(hostIsAdmin(hostAddress)) {
+		if(isHostAdmin(hostAddress)) {
 			return false;
 		}
 
@@ -108,7 +108,7 @@ public class RSCPacketFilter {
 		}
 
 		final int pps = getServer().getPacketFilter().getPacketsPerSecond(connection);
-		final boolean allowPacket = hostIsAdmin(hostAddress) || pps <= getServer().getConfig().MAX_PACKETS_PER_SECOND;
+		final boolean allowPacket = isHostAdmin(hostAddress) || pps <= getServer().getConfig().MAX_PACKETS_PER_SECOND;
 
 		//LOGGER.info("Channel Read: " + hostAddress + ", Allowed: " + allowPacket + ", PPS: " + pps);
 
@@ -119,7 +119,7 @@ public class RSCPacketFilter {
 			}
 		}
 
-		//LOGGER.info("Packet, pps: " + pps + ", isHostIpBanned: " + isHostIpBanned(hostAddress) + ", hostIsAdmin: " + hostIsAdmin(hostAddress));
+		//LOGGER.info("Packet, pps: " + pps + ", isHostIpBanned: " + isHostIpBanned(hostAddress) + ", isHostAdmin: " + isHostAdmin(hostAddress));
 
 		return allowPacket;
 	}
@@ -140,7 +140,7 @@ public class RSCPacketFilter {
 
 		final int cps = getConnectionsPerSecond(hostAddress);
 		final int connectionCount = getConnectionCount(hostAddress);
-		final boolean allowConnection = hostIsAdmin(hostAddress) || (
+		final boolean allowConnection = isHostAdmin(hostAddress) || (
 			(connectionCount <= getServer().getConfig().MAX_CONNECTIONS_PER_IP) &&
 			(cps <= getServer().getConfig().MAX_CONNECTIONS_PER_SECOND)
 		);
@@ -154,7 +154,7 @@ public class RSCPacketFilter {
 			}
 		}
 
-		//LOGGER.info("Connect, cps: " + cps + ", isHostIpBanned: " + isHostIpBanned(hostAddress) + ", hostIsAdmin: " + hostIsAdmin(hostAddress));
+		//LOGGER.info("Connect, cps: " + cps + ", isHostIpBanned: " + isHostIpBanned(hostAddress) + ", isHostAdmin: " + isHostAdmin(hostAddress));
 
 		return allowConnection;
 	}
@@ -168,9 +168,9 @@ public class RSCPacketFilter {
 		}
 
 		final int lps = getLoginsPerSecond(hostAddress);
-		final boolean allowConnection = hostIsAdmin(hostAddress) || lps <= getServer().getConfig().MAX_LOGINS_PER_SECOND;
+		final boolean allowConnection = isHostAdmin(hostAddress) || lps <= getServer().getConfig().MAX_LOGINS_PER_SECOND;
 
-		//LOGGER.info("Login, lps: " + lps + ", isHostIpBanned: " + isHostIpBanned(hostAddress) + ", hostIsAdmin: " + hostIsAdmin(hostAddress));
+		//LOGGER.info("Login, lps: " + lps + ", isHostIpBanned: " + isHostIpBanned(hostAddress) + ", isHostAdmin: " + isHostAdmin(hostAddress));
 
 		return allowConnection;
 	}
@@ -358,7 +358,7 @@ public class RSCPacketFilter {
 		return lps;
 	}
 
-	private final boolean hostIsAdmin(final String hostAddress) {
+	public final boolean isHostAdmin(final String hostAddress) {
 		synchronized(adminHosts) {
 			return adminHosts.contains(hostAddress);
 		}

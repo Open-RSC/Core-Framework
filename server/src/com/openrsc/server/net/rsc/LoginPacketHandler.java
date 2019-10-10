@@ -64,6 +64,8 @@ public class LoginPacketHandler {
 
 					@Override
 					public void loadingComplete(Player loadedPlayer) {
+						getServer().getPacketFilter().addLoggedInPlayer(loadedPlayer.getCurrentIP());
+
 						ConnectionAttachment attachment = channel.attr(RSCConnectionHandler.attachment).get();
 						// attachment.ISAAC.set(new ISAACContainer(incomingCipher,
 						// outgoingCipher));

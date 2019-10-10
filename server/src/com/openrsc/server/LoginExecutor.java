@@ -1,19 +1,12 @@
 package com.openrsc.server;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.openrsc.server.event.rsc.ImmediateEvent;
 import com.openrsc.server.login.*;
-import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.sql.PlayerDatabase;
-import com.openrsc.server.util.rsc.DataConversions;
-import com.openrsc.server.util.rsc.LoginResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
@@ -21,7 +14,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class LoginExecutor implements Runnable {
-
 	/**
 	 * The asynchronous logger.
 	 */
@@ -64,23 +56,7 @@ public class LoginExecutor implements Runnable {
 			try {
 				LoginRequest loginRequest = null;
 				while ((loginRequest = loadRequests.poll()) != null) {
-					int loginResponse = validateLogin(loginRequest);
-					loginRequest.loginValidated(loginResponse);
-					if ((loginResponse & 0x40) != LoginResponse.LOGIN_INSUCCESSFUL) {
-						final Player loadedPlayer = playerDatabase.loadPlayer(loginRequest);
-
-						getServer().getPacketFilter().addLoggedInPlayer(loadedPlayer.getCurrentIP());
-
-						LoginTask loginTask = new LoginTask(loginRequest, loadedPlayer);
-						getServer().getGameEventHandler().add(new ImmediateEvent(getServer().getWorld(), "Login Player") {
-							@Override
-							public void action() {
-								loginTask.run();
-							}
-						});
-
-					}
-					LOGGER.info("Processed login request for " + loginRequest.getUsername() + " response: " + loginResponse);
+					loginRequest.process();
 				}
 
 				Player playerToSave = null;
@@ -121,85 +97,6 @@ public class LoginExecutor implements Runnable {
 				LOGGER.catching(e);
 			}
 		}
-	}
-
-	public byte validateLogin(LoginRequest request) {
-		PreparedStatement statement = null;
-		ResultSet playerSet = null;
-		int groupId = Group.USER;
-		try {
-			server.getPacketFilter().addPasswordAttempt(request.getIpAddress());
-
-			if(!getServer().getPacketFilter().shouldAllowLogin(request.getIpAddress(), false)) {
-				return (byte) LoginResponse.LOGIN_ATTEMPTS_EXCEEDED;
-			}
-
-			if(getServer().getPacketFilter().getPasswordAttemptsCount(request.getIpAddress()) >= getServer().getConfig().MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES) {
-				return (byte) LoginResponse.LOGIN_ATTEMPTS_EXCEEDED;
-			}
-
-			statement = getPlayerDatabase().getDatabaseConnection().prepareStatement(getPlayerDatabase().getDatabaseConnection().getGameQueries().playerLoginData);
-			statement.setString(1, request.getUsername());
-			playerSet = statement.executeQuery();
-
-			boolean isAdmin = false;
-			if(playerSet.first()) {
-				groupId = playerSet.getInt("group_id");
-				isAdmin = groupId == Group.OWNER || groupId == Group.ADMIN;
-			}
-			if (getServer().getPacketFilter().isHostIpBanned(request.getIpAddress()) && !isAdmin) {
-				return (byte) LoginResponse.ACCOUNT_TEMP_DISABLED;
-			}
-
-			if (request.getClientVersion() != getServer().getConfig().CLIENT_VERSION && !isAdmin) {
-				return (byte) LoginResponse.CLIENT_UPDATED;
-			}
-
-			long i = getServer().timeTillShutdown();
-			if (i > 0 && i < 30000 && !isAdmin) {
-				return (byte) LoginResponse.WORLD_DOES_NOT_ACCEPT_NEW_PLAYERS;
-			}
-
-			if (!playerSet.first()) {
-				return (byte) LoginResponse.INVALID_CREDENTIALS;
-			}
-
-			if(getServer().getWorld().getPlayers().size() >= getServer().getConfig().MAX_PLAYERS && !isAdmin) {
-				return (byte) LoginResponse.WORLD_IS_FULL;
-			}
-
-			if (getServer().getWorld().getPlayer(request.getUsernameHash()) != null) {
-				return (byte) LoginResponse.ACCOUNT_LOGGEDIN;
-			}
-
-			if(getServer().getPacketFilter().getPlayersCount(request.getIpAddress()) >= getServer().getConfig().MAX_PLAYERS_PER_IP && !isAdmin) {
-				return (byte) LoginResponse.IP_IN_USE;
-			}
-
-			long banExpires = playerSet.getLong("banned");
-			if (banExpires == -1 && !isAdmin) {
-				return (byte) LoginResponse.ACCOUNT_PERM_DISABLED;
-			}
-
-			double timeBanLeft = (double) (banExpires - System.currentTimeMillis());
-			if (timeBanLeft >= 1 && !isAdmin) {
-				return (byte) LoginResponse.ACCOUNT_TEMP_DISABLED;
-			}
-
-			if (!DataConversions.checkPassword(request.getPassword(), playerSet.getString("salt"), playerSet.getString("pass"))) {
-				return (byte) LoginResponse.INVALID_CREDENTIALS;
-			}
-
-			// Doing this at end because we only want to flag the host as an admin _IF_ they know the password.
-			if(isAdmin) {
-				getServer().getPacketFilter().addAdminHost(request.getIpAddress());
-			}
-
-		} catch (SQLException e) {
-			LOGGER.catching(e);
-			return (byte) LoginResponse.LOGIN_INSUCCESSFUL;
-		}
-		return (byte) LoginResponse.LOGIN_SUCCESSFUL[groupId];
 	}
 
 	public PlayerDatabase getPlayerDatabase() {
