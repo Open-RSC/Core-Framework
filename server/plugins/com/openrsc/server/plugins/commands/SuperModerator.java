@@ -4,14 +4,18 @@ import com.openrsc.server.external.ItemDropDef;
 import com.openrsc.server.external.NPCDef;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
 import com.openrsc.server.sql.query.logs.StaffLog;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.StringUtil;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Random;
 
 import static com.openrsc.server.plugins.commands.Event.LOGGER;
@@ -469,7 +473,76 @@ public final class SuperModerator implements CommandListener {
 				player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 11, p, player.getUsername() + " was banned by " + player.getUsername() + " " + (time == -1 ? "permanently" : " for " + time + " minutes")));
 			}
 
-			player.message(messagePrefix + player.getWorld().getServer().getLoginExecutor().getPlayerDatabase().banPlayer(usernameToBan, time)); // Disabled as it doesn't compile with LoginExecutor extending ThrottleFilter
+			player.message(messagePrefix + player.getWorld().getServer().getLoginExecutor().getPlayerDatabase().banPlayer(usernameToBan, time));
+		} else if (cmd.equalsIgnoreCase("viewipbans")) {
+			StringBuilder bans = new StringBuilder("Banned IPs % %");
+			for (Map.Entry<String, Long> entry : player.getWorld().getServer().getPacketFilter().getIpBans().entrySet()) {
+				bans.append("IP: ").append(entry.getKey()).append(" - Unban Date: ").append((entry.getValue() == -1) ? "Never" : DateFormat.getInstance().format(entry.getValue())).append("%");
+			}
+			ActionSender.sendBox(player, bans.toString(), true);
+
+		} else if (cmd.equalsIgnoreCase("ipban")) {
+			if (args.length < 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] [time in minutes, -1 for permanent, 0 to unban]");
+				return;
+			}
+
+			long userToBan = DataConversions.usernameToHash(args[0]);
+			Player p = player.getWorld().getPlayer(userToBan);
+			String ipToBan = (p != null) ? p.getCurrentIP() : "";
+			int time;
+			if (StringUtil.isIPv4Address(args[0]) || StringUtil.isIPv6Address(args[0])) {
+				ipToBan = args[0];
+			}
+			if (ipToBan.equals("")) {
+				player.message(messagePrefix + "You must enter an IP address to ban.");
+				return;
+			}
+			if (args.length >= 2) {
+				try {
+					time = Integer.parseInt(args[1]);
+				} catch (NumberFormatException ex) {
+					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] (time in minutes, -1 for permanent, 0 to unban)");
+					return;
+				}
+			} else {
+				time = player.isAdmin() ? -1 : 60;
+			}
+
+			if (time == 0 && !player.isAdmin()) {
+				player.message(messagePrefix + "You are not allowed to unban users.");
+				return;
+			}
+
+			if (time == -1 && !player.isAdmin()) {
+				player.message(messagePrefix + "You are not allowed to permanently ban users.");
+				return;
+			}
+
+			if (time > 1440 && !player.isAdmin()) {
+				player.message(messagePrefix + "You are not allowed to ban for more than a day.");
+				return;
+			}
+
+			if (p != null && p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+				player.message(messagePrefix + "You can not ban a staff member of equal or greater rank.");
+				return;
+			}
+
+			if (p != null) {
+				p.unregister(true, "You have been banned by " + player.getUsername() + " " + (time == -1 ? "permanently" : " for " + time + " minutes"));
+			}
+
+			if (time == 0) {
+				player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 11, p, player.getUsername() + " was unbanned by " + player.getUsername()));
+			} else {
+				player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 11, p, player.getUsername() + " was banned by " + player.getUsername() + " " + (time == -1 ? "permanently" : " for " + time + " minutes")));
+			}
+
+
+			//player.message(messagePrefix + player.getWorld().getServer().getLoginExecutor().getPlayerDatabase().banPlayer(usernameToBan, time));
+
+			player.getWorld().getServer().getPacketFilter().ipBanHost(ipToBan, (time == -1 || time == 0) ? time : (System.currentTimeMillis() + (time * 60 * 1000)));
 		} else if (cmd.equalsIgnoreCase("ipcount")) {
 			Player p = args.length > 0 ?
 				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :

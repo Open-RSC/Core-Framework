@@ -183,6 +183,10 @@ public class ServerConfiguration {
 	 */
 	public static int NETWORK_FLOOD_IP_BAN_MINUTES = 15;
 	/**
+	 * The amount of time in minutes that users who are suspicious will be IP banned for
+	 */
+	public static int SUSPICIOUS_PLAYER_IP_BAN_MINUTES = 15;
+	/**
 	 * where the server will look for other configuration files
 	 */
 	public String CONFIG_DIR = "conf" + File.separator + "server";
@@ -472,6 +476,7 @@ public class ServerConfiguration {
 		MAX_LOGINS_PER_SECOND = Integer.parseInt(props.getProperty("max_logins_per_second"));
 		MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES = Integer.parseInt(props.getProperty("max_password_guesses_per_five_minutes"));
 		NETWORK_FLOOD_IP_BAN_MINUTES = Integer.parseInt(props.getProperty("network_flood_ip_ban_minutes"));
+		SUSPICIOUS_PLAYER_IP_BAN_MINUTES = Integer.parseInt(props.getProperty("suspicious_player_ip_ban_minutes"));
 
 		String wantPasswordMassage = props.getProperty("want_password_massage");
 		WANT_PASSWORD_MASSAGE = wantPasswordMassage != null ? Boolean.parseBoolean(props.getProperty("want_password_massage")) : WANT_PASSWORD_MASSAGE;
