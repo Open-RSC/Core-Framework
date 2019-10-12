@@ -1671,9 +1671,10 @@ public final class Player extends Mob {
 
 	public void setSuspiciousPlayer(boolean suspicious) {
 		suspiciousPlayer = suspicious;
-		if (suspicious) {
+		// Disabled because this is currently overzealous
+		/*if (suspicious) {
 			getWorld().getServer().getPacketFilter().ipBanHost(getCurrentIP(), System.currentTimeMillis() + ServerConfiguration.SUSPICIOUS_PLAYER_IP_BAN_MINUTES * 60 * 1000);
-		}
+		}*/
 	}
 
 	@Override
