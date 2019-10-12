@@ -27,7 +27,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 
 		final Shop shop = player.getShop();
 		if (shop == null) {
-			player.setSuspiciousPlayer(true);
+			player.setSuspiciousPlayer(true, "shop is null");
 			player.resetShop();
 			return;
 		}
@@ -92,7 +92,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 			if (totalBought <= 0 && totalMoneySpent <= 0) {
 				return;
 			}
-			
+
 			shop.removeShopItem(new Item(itemID, totalBought));
 			player.getInventory().remove(ItemId.COINS.id(), totalMoneySpent);
 			int correctItemsBought = totalBought;
@@ -101,7 +101,7 @@ public final class InterfaceShopHandler implements PacketHandler {
     			// TODO: Does the authentic code send an update per item?
     			ActionSender.sendInventory(player);
 			}
-			
+
 			player.playSound("coins");
 			player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getWorld(), player.getUsername() + " bought " + def.getName() + " x" + correctItemsBought + " for " + totalMoneySpent + "gp" + " at " + player.getLocation().toString()));
 
@@ -137,21 +137,21 @@ public final class InterfaceShopHandler implements PacketHandler {
 					} else {
 						sellAmount += shop.getItemSellPrice(itemID, def.getDefaultPrice(), 1);
 					}
-					
+
 					totalMoney += sellAmount;
 				}
 				if (sellAmount > 0) {
 					player.getInventory().add(new Item(ItemId.COINS.id(), sellAmount));
 				}
-				
+
 				// Determine if we are selling a Noted item
 				Item originalItem = null;
 				if (def.getOriginalItemID() != -1) {
 					originalItem = new Item(def.getOriginalItemID(), 1);
 				}
-				
+
 				shop.addShopItem(originalItem != null ? originalItem : new Item(itemID, 1));
-				
+
     			// TODO: Does the authentic code send an update per item?
     			ActionSender.sendInventory(player);
 			}

@@ -11,7 +11,7 @@ public final class GameSettingHandler implements PacketHandler {
 
 		int idx = (int) p.readByte();
 		if (idx < 0 || idx > 99) {
-			player.setSuspiciousPlayer(true);
+			player.setSuspiciousPlayer(true, "game setting idx < 0 or idx > 99");
 			return;
 		}
 

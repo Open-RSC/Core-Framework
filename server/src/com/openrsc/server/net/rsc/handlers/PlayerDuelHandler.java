@@ -132,7 +132,7 @@ public class PlayerDuelHandler implements PacketHandler {
 			affectedPlayer = player.getDuel().getDuelRecipient();
 			if (affectedPlayer == null || busy(affectedPlayer) || !player.getDuel().isDuelActive()
 				|| !affectedPlayer.getDuel().isDuelActive()) {
-				player.setSuspiciousPlayer(true);
+				player.setSuspiciousPlayer(true, "duel accepted null or busy player");
 				player.getDuel().resetAll();
 
 				return;
@@ -152,7 +152,7 @@ public class PlayerDuelHandler implements PacketHandler {
 				|| !affectedPlayer.getDuel().isDuelAccepted()) { // This
 				// shouldn't
 				// happen
-				player.setSuspiciousPlayer(true);
+				player.setSuspiciousPlayer(true, "duel confirmed null or busy player");
 				player.getDuel().resetAll();
 				return;
 			}
@@ -294,7 +294,7 @@ public class PlayerDuelHandler implements PacketHandler {
 			affectedPlayer = player.getDuel().getDuelRecipient();
 			if (affectedPlayer == null || busy(affectedPlayer) || !player.getDuel().isDuelActive()
 				|| !affectedPlayer.getDuel().isDuelActive()) {
-				player.setSuspiciousPlayer(true);
+				player.setSuspiciousPlayer(true, "duel player null or not duel active");
 				player.getDuel().resetAll();
 				return;
 			}
@@ -306,7 +306,7 @@ public class PlayerDuelHandler implements PacketHandler {
 				|| !affectedPlayer.getDuel().isDuelActive()
 				|| (player.getDuel().isDuelAccepted() && affectedPlayer.getDuel().isDuelAccepted())
 				|| player.getDuel().isDuelConfirmAccepted() || affectedPlayer.getDuel().isDuelConfirmAccepted()) {
-				player.setSuspiciousPlayer(true);
+				player.setSuspiciousPlayer(true, "receive offered item duel player null or not duel active");
 				player.getDuel().resetAll();
 				return;
 			}
@@ -325,7 +325,7 @@ public class PlayerDuelHandler implements PacketHandler {
 			for (int slot = 0; slot < count; slot++) {
 				Item tItem = new Item(p.readShort(), p.readInt());
 				if (tItem.getAmount() < 1) {
-					player.setSuspiciousPlayer(true);
+					player.setSuspiciousPlayer(true, "duel item amount < 1");
 					continue;
 				}
 				if (tItem.getDef(player.getWorld()).isUntradable()) {
@@ -344,7 +344,7 @@ public class PlayerDuelHandler implements PacketHandler {
 				}
 				if (tItem.getAmount() > player.getInventory().countId(tItem.getID())) {
 					if (!(player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && tItem.getAmount() == 1 && Functions.isWielding(player, tItem.getID()))) {
-						player.setSuspiciousPlayer(true);
+						player.setSuspiciousPlayer(true, "not want equipment and duel trade item amount 1 and isweilding item");
 						return;
 					}
 				}
@@ -360,7 +360,7 @@ public class PlayerDuelHandler implements PacketHandler {
 				|| player.getDuel().isDuelConfirmAccepted() || affectedPlayer.getDuel().isDuelConfirmAccepted()) { // This
 				// shouldn't
 				// happen
-				player.setSuspiciousPlayer(true);
+				player.setSuspiciousPlayer(true, "set duel options not confirmed or null player");
 				player.getDuel().resetAll();
 				return;
 			}

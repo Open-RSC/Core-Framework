@@ -28,7 +28,7 @@ public class MenuReplyHandler implements PacketHandler {
 							: menuHandler.getOption(option);
 						player.resetMenuHandler();
 						if (reply == null) {
-							player.setSuspiciousPlayer(true);
+							player.setSuspiciousPlayer(true, "menu reply with null reply");
 						} else {
 							menuHandler.handleReply(option, reply);
 						}

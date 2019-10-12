@@ -22,7 +22,7 @@ public class WalkRequest implements PacketHandler {
 			if (packetOpcode == OpcodeIn.WALK_TO_POINT.getOpcode()) {
 				Mob opponent = player.getOpponent();
 				if (opponent == null) {
-					player.setSuspiciousPlayer(true);
+					player.setSuspiciousPlayer(true, "walk request null opponent");
 					return;
 				}
 				if (opponent.getHitsMade() >= 3) {

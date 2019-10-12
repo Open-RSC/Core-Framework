@@ -13,7 +13,7 @@ public class PlayerAppearanceUpdater implements PacketHandler {
 	public void handlePacket(Packet p, Player player) throws Exception {
 
 		if (!player.isChangingAppearance()) {
-			player.setSuspiciousPlayer(true);
+			player.setSuspiciousPlayer(true, "player update packet without changing appearance");
 			return;
 		}
 		player.setChangingAppearance(false);
@@ -34,7 +34,7 @@ public class PlayerAppearanceUpdater implements PacketHandler {
 		PlayerAppearance appearance = new PlayerAppearance(hairColour,
 			topColour, trouserColour, skinColour, headSprite, bodySprite);
 		if (!appearance.isValid()) {
-			player.setSuspiciousPlayer(true);
+			player.setSuspiciousPlayer(true, "player invalid appearance");
 			return;
 		}
 

@@ -542,7 +542,7 @@ public final class SuperModerator implements CommandListener {
 
 			//player.message(messagePrefix + player.getWorld().getServer().getLoginExecutor().getPlayerDatabase().banPlayer(usernameToBan, time));
 
-			player.getWorld().getServer().getPacketFilter().ipBanHost(ipToBan, (time == -1 || time == 0) ? time : (System.currentTimeMillis() + (time * 60 * 1000)));
+			player.getWorld().getServer().getPacketFilter().ipBanHost(ipToBan, (time == -1 || time == 0) ? time : (System.currentTimeMillis() + (time * 60 * 1000)), "by ipban command");
 		} else if (cmd.equalsIgnoreCase("ipcount")) {
 			Player p = args.length > 0 ?
 				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :

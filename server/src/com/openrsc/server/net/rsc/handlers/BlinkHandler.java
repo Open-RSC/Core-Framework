@@ -13,7 +13,7 @@ public class BlinkHandler implements PacketHandler {
 		if (player.isMod())
 			player.teleport(coordX, coordY);
 		else
-			player.setSuspiciousPlayer(true);
+			player.setSuspiciousPlayer(true, "non mod player tried to blink");
 	}
 
 }

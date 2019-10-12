@@ -1,6 +1,5 @@
 package com.openrsc.server.model.entity.player;
 
-import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.content.achievement.Achievement;
@@ -655,7 +654,7 @@ public final class Player extends Mob {
 		} else if (mob.isNpc()) {
 			Npc victim = (Npc) mob;
 			if (!victim.getDef().isAttackable()) {
-				setSuspiciousPlayer(true);
+				setSuspiciousPlayer(true, "NPC isn't attackable");
 				return false;
 			}
 			return true;
@@ -1669,11 +1668,12 @@ public final class Player extends Mob {
 		return suspiciousPlayer;
 	}
 
-	public void setSuspiciousPlayer(boolean suspicious) {
+	public void setSuspiciousPlayer(boolean suspicious, String reason) {
 		suspiciousPlayer = suspicious;
+		LOGGER.info("player " + getUsername() + " suspicious for " + reason);
 		// Disabled because this is currently overzealous
 		/*if (suspicious) {
-			getWorld().getServer().getPacketFilter().ipBanHost(getCurrentIP(), System.currentTimeMillis() + ServerConfiguration.SUSPICIOUS_PLAYER_IP_BAN_MINUTES * 60 * 1000);
+			getWorld().getServer().getPacketFilter().ipBanHost(getCurrentIP(), System.currentTimeMillis() + ServerConfiguration.SUSPICIOUS_PLAYER_IP_BAN_MINUTES * 60 * 1000, reason);
 		}*/
 	}
 
@@ -1843,7 +1843,7 @@ public final class Player extends Mob {
 						p.message("@red@Server@whi@: " + string);
 					}
 				}
-				setSuspiciousPlayer(true);
+				setSuspiciousPlayer(true, "mouse movement check");
 			}
 		} else {
 			actionsMouseStill = 0;

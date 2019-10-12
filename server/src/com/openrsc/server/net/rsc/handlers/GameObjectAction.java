@@ -24,7 +24,7 @@ public class GameObjectAction implements PacketHandler {
 		final int click = pID == OpcodeIn.OBJECT_COMMAND1.getOpcode() ? 0 : 1;
 		player.click = click;
 		if (object == null) {
-			player.setSuspiciousPlayer(true);
+			player.setSuspiciousPlayer(true, "game object action null object");
 			return;
 		}
 		player.setStatus(Action.USING_OBJECT);

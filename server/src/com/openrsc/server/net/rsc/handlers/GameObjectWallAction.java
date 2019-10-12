@@ -26,7 +26,7 @@ public class GameObjectWallAction implements PacketHandler {
 		final GameObject object = player.getViewArea().getWallObjectWithDir(Point.location(p.readShort(), p.readShort()), p.readByte());
 		final int click = pID == packetTwo ? 0 : 1;
 		if (object == null) {
-			player.setSuspiciousPlayer(true);
+			player.setSuspiciousPlayer(true, "game object wall has null object");
 			return;
 		}
 		player.setStatus(Action.USING_DOOR);

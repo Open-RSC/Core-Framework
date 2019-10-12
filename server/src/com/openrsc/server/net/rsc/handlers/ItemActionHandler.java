@@ -23,7 +23,7 @@ public class ItemActionHandler implements PacketHandler {
 		}
 
 		if (idx < -1 || idx >= player.getInventory().size()) {
-			player.setSuspiciousPlayer(true);
+			player.setSuspiciousPlayer(true, "item idx < -1 or idx >= inv size");
 			return;
 		}
 		Item tempitem = null;
@@ -44,7 +44,7 @@ public class ItemActionHandler implements PacketHandler {
 		final Item item = tempitem;
 		if (item == null || item.getDef(player.getWorld()).getCommand() == null
 		|| commandIndex < 0 || commandIndex >= item.getDef(player.getWorld()).getCommand().length) {
-			player.setSuspiciousPlayer(true);
+			player.setSuspiciousPlayer(true, "item action item null or null item def");
 			return;
 		}
 

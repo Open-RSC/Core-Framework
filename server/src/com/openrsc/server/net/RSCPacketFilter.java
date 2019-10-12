@@ -70,23 +70,23 @@ public class RSCPacketFilter {
 		passwordAttempts = new HashMap<String, ArrayList<Long>>();
 	}
 
-	public void ipBanHost(final String hostAddress, final long until) {
+	public void ipBanHost(final String hostAddress, final long until, String reason) {
 		// Do not IP ban afmans!
 		if(isHostAdmin(hostAddress)) {
 			String time = (until == -1) ? "permanently" : "until " + DateFormat.getInstance().format(until);
 			if (until != 0)
-				LOGGER.info("Won't IP ban Afman " + hostAddress + ", would have been banned " + time);
+				LOGGER.info("Won't IP ban Afman " + hostAddress + ", would have been banned " + time + " for " + reason);
 			else
-				LOGGER.info("Won't un-IP ban Afman " + hostAddress);
+				LOGGER.info("Won't un-IP ban Afman " + hostAddress + " for " + reason);
 			return;
 		}
 
 		synchronized(ipBans) {
 			String time = (until == -1) ? " permanently" : " until " + DateFormat.getInstance().format(until);
 			if (until != 0)
-				LOGGER.info("IP Banned " + hostAddress + time);
+				LOGGER.info("IP Banned " + hostAddress + time + " for " + reason);
 			else
-				LOGGER.info("un-IP Banned " + hostAddress + time);
+				LOGGER.info("un-IP Banned " + hostAddress + time + " for " + reason);
 			ipBans.put(hostAddress, until);
 		}
 	}
@@ -125,7 +125,7 @@ public class RSCPacketFilter {
 		if(!allowPacket) {
 			LOGGER.info(hostAddress + " (" + player + ") filtered for reaching the PPS limit: " + pps);
 			if(doIpBans) {
-				ipBanHost(hostAddress, System.currentTimeMillis() + getServer().getConfig().NETWORK_FLOOD_IP_BAN_MINUTES * 60 * 1000);
+				ipBanHost(hostAddress, System.currentTimeMillis() + getServer().getConfig().NETWORK_FLOOD_IP_BAN_MINUTES * 60 * 1000, "reaching the PPS limit");
 			}
 		}
 
@@ -160,7 +160,7 @@ public class RSCPacketFilter {
 		if(!allowConnection) {
 			LOGGER.info(hostAddress + " (" + player + ") filtered for reaching the connections per second limit: " + cps);
 			if(doIpBans) {
-				ipBanHost(hostAddress, System.currentTimeMillis() + getServer().getConfig().NETWORK_FLOOD_IP_BAN_MINUTES * 60 * 1000);
+				ipBanHost(hostAddress, System.currentTimeMillis() + getServer().getConfig().NETWORK_FLOOD_IP_BAN_MINUTES * 60 * 1000, "connections per second limit");
 			}
 		}
 

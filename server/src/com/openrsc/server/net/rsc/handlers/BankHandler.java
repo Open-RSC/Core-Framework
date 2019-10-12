@@ -35,7 +35,7 @@ public final class BankHandler implements PacketHandler {
 			return;
 		}
 		if (!player.accessingBank()) {
-			player.setSuspiciousPlayer(true);
+			player.setSuspiciousPlayer(true, "bank handler packet player not accessing bank");
 			player.resetBank();
 			return;
 		}
@@ -57,7 +57,7 @@ public final class BankHandler implements PacketHandler {
 			itemID = p.readShort();
 			amount = p.readInt();
 			if (amount < 1 || bank.countId(itemID) < amount) {
-				player.setSuspiciousPlayer(true);
+				player.setSuspiciousPlayer(true, "in banking item amount < 0 or bank item count < amount");
 				return;
 			}
 
@@ -122,7 +122,7 @@ public final class BankHandler implements PacketHandler {
 			amount = p.readInt();
 
 			if (amount < 1 || inventory.countId(itemID) < amount) {
-				player.setSuspiciousPlayer(true);
+				player.setSuspiciousPlayer(true, "bank deposit item amount < 0 or inventory count < amount");
 				return;
 			}
 
@@ -162,7 +162,7 @@ public final class BankHandler implements PacketHandler {
 		} else if (pID == packetSix && player.getWorld().getServer().getConfig().WANT_BANK_PRESETS) {
 			int presetSlot = p.readShort();
 			if (presetSlot < 0 || presetSlot >= Bank.PRESET_COUNT) {
-				player.setSuspiciousPlayer(true);
+				player.setSuspiciousPlayer(true, "packet six bank preset slot < 0 or preset slot >= preset count");
 				return;
 			}
 			for (int k = 0; k < Inventory.MAX_SIZE; k++) {
@@ -182,7 +182,7 @@ public final class BankHandler implements PacketHandler {
 		} else if (pID == packetSeven && player.getWorld().getServer().getConfig().WANT_BANK_PRESETS) {
 			int presetSlot = p.readShort();
 			if (presetSlot < 0 || presetSlot >= Bank.PRESET_COUNT) {
-				player.setSuspiciousPlayer(true);
+				player.setSuspiciousPlayer(true, "packet seven bank preset slot < 0 or preset slot >= preset count");
 				return;
 			}
 			player.getBank().attemptPresetLoadout(presetSlot);
