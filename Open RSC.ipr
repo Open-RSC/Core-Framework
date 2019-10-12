@@ -4,7 +4,6 @@
     <buildFile url="file://$PROJECT_DIR$/Launcher/build.xml" />
     <buildFile url="file://$PROJECT_DIR$/server/build.xml" />
     <buildFile url="file://$PROJECT_DIR$/client/build.xml" />
-    <buildFile url="file://$PROJECT_DIR$/Tools/Sprite Editor/build.xml" />
   </component>
   <component name="CheckStyle-IDEA">
     <option name="configuration">
@@ -232,7 +231,6 @@
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Website" vcs="Git" />
   </component>
   <component name="libraryTable">
     <library name="jsoup-1.11.3">
