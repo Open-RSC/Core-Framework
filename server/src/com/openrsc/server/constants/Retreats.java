@@ -19,7 +19,7 @@ public class Retreats {
 			put(NpcId.UNICORN.id(), 8);
 			put(NpcId.BLACK_UNICORN.id(), 8);
 			put(NpcId.ROGUE.id(), 8);
-			put(NpcId.FORESTER.id(), 5); //unknown if higher
+			put(NpcId.FORESTER.id(), 8); //observed 5 but believed to be 8 since is guardian similar to rogue
 			put(NpcId.GOBLIN_OBSERVATORY.id(), 5);
 			put(NpcId.BEAR_LVL24.id(), 5);
 			put(NpcId.BEAR_LVL26.id(), 5);
