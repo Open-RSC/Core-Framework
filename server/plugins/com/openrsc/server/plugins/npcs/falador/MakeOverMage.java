@@ -21,7 +21,7 @@ public class MakeOverMage implements TalkToNpcListener,
 			"Yes change my looks please");
 		if (opt == 1) {
 			if (!hasItem(p, ItemId.COINS.id(), 3000)) {
-				playerTalk(p, n, "I'll just go get the cash");
+				playerTalk(p, n, "I'll just go and get the cash");
 			} else {
 				removeItem(p, ItemId.COINS.id(), 3000);
 				p.setChangingAppearance(true);
