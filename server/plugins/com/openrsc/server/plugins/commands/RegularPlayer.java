@@ -7,7 +7,6 @@ import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.snapshot.Chatlog;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
 import com.openrsc.server.sql.query.logs.ChatLog;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -16,9 +15,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -59,31 +55,6 @@ public final class RegularPlayer implements CommandListener {
 			} else {
 				player.message(messagePrefix + "You are not in a gang - you need to start the shield of arrav quest");
 			}
-		} else if (cmd.equalsIgnoreCase("bankpin")) {
-			Player p = args.length > 0 && player.isAdmin() ? player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
-			if (p == null) {
-				player.message(messagePrefix + "Invalid name or player is not online");
-				return;
-			}
-
-			String bankPin = Functions.getBankPinInput(p);
-			if (bankPin == null) {
-				player.message(messagePrefix + "Invalid bank pin");
-				return;
-			}
-			try {
-				PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
-				statement.setString(1, player.getUsername());
-				ResultSet result = statement.executeQuery();
-				if (result.next()) {
-					bankPin = DataConversions.hashPassword(bankPin, result.getString("salt"));
-					p.getCache().store("bank_pin", bankPin);
-					//ActionSender.sendBox(p, messagePrefix + "Your new bank pin is " + bankPin, false);
-				}
-			} catch (SQLException e) {
-				LOGGER.catching(e);
-			}
-			player.message(messagePrefix + p.getUsername() + "'s bank pin has been changed");
 		} else if (cmd.equalsIgnoreCase("wilderness")) {
 			int TOTAL_PLAYERS_IN_WILDERNESS = 0;
 			int PLAYERS_IN_F2P_WILD = 0;
