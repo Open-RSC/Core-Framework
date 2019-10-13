@@ -281,17 +281,19 @@ public class RSCPacketFilter {
 		int pps = 0;
 
 		synchronized (packets) {
-			ArrayList<Long> packetTimes = packets.get(connection);
-			ArrayList<Long> packetsToRemove = new ArrayList<Long>();
+			if(packets.containsKey(connection)) {
+				ArrayList<Long> packetTimes = packets.get(connection);
+				ArrayList<Long> packetsToRemove = new ArrayList<Long>();
 
-			for (Long packetCreationTime : packetTimes) {
-				if (now - packetCreationTime < 1000) {
-					pps++;
-				} else {
-					packetsToRemove.add(packetCreationTime);
+				for (Long packetCreationTime : packetTimes) {
+					if (now - packetCreationTime < 1000) {
+						pps++;
+					} else {
+						packetsToRemove.add(packetCreationTime);
+					}
 				}
+				packetTimes.removeAll(packetsToRemove);
 			}
-			packetTimes.removeAll(packetsToRemove);
 		}
 		return pps;
 	}
@@ -301,17 +303,19 @@ public class RSCPacketFilter {
 		int cps = 0;
 
 		synchronized (connectionAttempts) {
-			ArrayList<Long> connectionTimes = connectionAttempts.get(hostAddress);
-			ArrayList<Long> connectionsToRemove = new ArrayList<Long>();
+			if(connectionAttempts.containsKey(hostAddress)) {
+				ArrayList<Long> connectionTimes = connectionAttempts.get(hostAddress);
+				ArrayList<Long> connectionsToRemove = new ArrayList<Long>();
 
-			for (Long connectionCreationTime : connectionTimes) {
-				if (now - connectionCreationTime < 1000) {
-					cps++;
-				} else {
-					connectionsToRemove.add(connectionCreationTime);
+				for (Long connectionCreationTime : connectionTimes) {
+					if (now - connectionCreationTime < 1000) {
+						cps++;
+					} else {
+						connectionsToRemove.add(connectionCreationTime);
+					}
 				}
+				connectionTimes.removeAll(connectionsToRemove);
 			}
-			connectionTimes.removeAll(connectionsToRemove);
 		}
 		return cps;
 	}
@@ -321,18 +325,20 @@ public class RSCPacketFilter {
 		int countAttempts = 0;
 
 		synchronized (passwordAttempts) {
-			ArrayList<Long> attempts = passwordAttempts.get(hostAddress);
-			ArrayList<Long> attemptsToRemove = new ArrayList<Long>();
+			if(passwordAttempts.containsKey(hostAddress)) {
+				ArrayList<Long> attempts = passwordAttempts.get(hostAddress);
+				ArrayList<Long> attemptsToRemove = new ArrayList<Long>();
 
-			for (Long connectionCreationTime : attempts) {
-				// 5 minutes
-				if (now - connectionCreationTime < 5*60*1000) {
-					countAttempts++;
-				} else {
-					attemptsToRemove.add(connectionCreationTime);
+				for (Long connectionCreationTime : attempts) {
+					// 5 minutes
+					if (now - connectionCreationTime < 5 * 60 * 1000) {
+						countAttempts++;
+					} else {
+						attemptsToRemove.add(connectionCreationTime);
+					}
 				}
+				attempts.removeAll(attemptsToRemove);
 			}
-			attempts.removeAll(attemptsToRemove);
 		}
 		return countAttempts;
 	}
@@ -353,17 +359,19 @@ public class RSCPacketFilter {
 		int lps = 0;
 
 		synchronized (loginAttempts) {
-			ArrayList<Long> loginTimes = loginAttempts.get(hostAddress);
-			ArrayList<Long> loginsToRemove = new ArrayList<Long>();
+			if(loginAttempts.containsKey(hostAddress)) {
+				ArrayList<Long> loginTimes = loginAttempts.get(hostAddress);
+				ArrayList<Long> loginsToRemove = new ArrayList<Long>();
 
-			for (Long loginTime : loginTimes) {
-				if (now - loginTime < 1000) {
-					lps++;
-				} else {
-					loginsToRemove.add(loginTime);
+				for (Long loginTime : loginTimes) {
+					if (now - loginTime < 1000) {
+						lps++;
+					} else {
+						loginsToRemove.add(loginTime);
+					}
 				}
+				loginTimes.removeAll(loginsToRemove);
 			}
-			loginTimes.removeAll(loginsToRemove);
 		}
 		return lps;
 	}
@@ -378,10 +386,10 @@ public class RSCPacketFilter {
 		synchronized(loggedInCount) {
 			if (loggedInCount.containsKey(hostAddress)) {
 				return loggedInCount.get(hostAddress);
+			} else {
+				return 0;
 			}
 		}
-
-		return 0;
 	}
 
 	public HashMap<String, Long> getIpBans() {
