@@ -95,8 +95,6 @@ public class GameTickEventHandler {
 
 		final long eventsStart = System.currentTimeMillis();
 
-		eventsCounts.clear();
-		eventsDurations.clear();
 
 		if (toAdd.size() > 0) {
 			for (Iterator<Map.Entry<String, GameTickEvent>> iter = toAdd.entrySet().iterator(); iter.hasNext(); ) {
@@ -121,7 +119,13 @@ public class GameTickEventHandler {
 				LOGGER.catching(e);
 				event.stop();
 			}
-
+		}
+		
+		eventsCounts.clear();
+		eventsDurations.clear();
+		
+		for (Iterator<Map.Entry<String, GameTickEvent>> it = events.entrySet().iterator(); it.hasNext(); ) {
+			GameTickEvent event = it.next().getValue();
 			if (!eventsCounts.containsKey(event.getDescriptor())) {
 				eventsCounts.put(event.getDescriptor(), 1);
 			} else {
