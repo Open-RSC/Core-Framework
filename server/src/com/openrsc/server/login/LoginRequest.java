@@ -115,8 +115,6 @@ public abstract class LoginRequest {
 		ResultSet playerSet = null;
 		int groupId = Group.USER;
 		try {
-			server.getPacketFilter().addPasswordAttempt(getIpAddress());
-
 			if(!getServer().getPacketFilter().shouldAllowLogin(getIpAddress(), false)) {
 				return (byte) LoginResponse.LOGIN_ATTEMPTS_EXCEEDED;
 			}
@@ -151,6 +149,7 @@ public abstract class LoginRequest {
 			}
 
 			if (!playerSet.first()) {
+				server.getPacketFilter().addPasswordAttempt(getIpAddress());
 				return (byte) LoginResponse.INVALID_CREDENTIALS;
 			}
 
@@ -177,6 +176,7 @@ public abstract class LoginRequest {
 			}
 
 			if (!DataConversions.checkPassword(getPassword(), playerSet.getString("salt"), playerSet.getString("pass"))) {
+				server.getPacketFilter().addPasswordAttempt(getIpAddress());
 				return (byte) LoginResponse.INVALID_CREDENTIALS;
 			}
 
