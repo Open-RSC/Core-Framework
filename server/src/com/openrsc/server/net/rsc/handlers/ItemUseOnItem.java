@@ -21,7 +21,7 @@ public final class ItemUseOnItem implements PacketHandler {
 		Item item2 = player.getInventory().get(itemIndex2);
 
 		if (item1 == null || item2 == null) {
-			player.setSuspiciousPlayer(true);
+			player.setSuspiciousPlayer(true, "use item on item has null item1 or item2");
 			return;
 		}
 		if (itemIndex1 == itemIndex2) {

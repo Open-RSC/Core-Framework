@@ -23,7 +23,7 @@ public final class ReportHandler implements PacketHandler {
 		}
 
 		if (reason < 0 || reason > 13) {
-			player.setSuspiciousPlayer(true);
+			player.setSuspiciousPlayer(true, "report reason < 0 or reason > 13");
 		}
 		if (reason != 4 && reason != 6) {
 			Iterator<Snapshot> i = player.getWorld().getSnapshots().iterator();
@@ -58,12 +58,12 @@ public final class ReportHandler implements PacketHandler {
 		player.message("Thank-you, your abuse report has been received.");
 		player.getWorld().getServer().getGameLogger().addQuery(new GameReport(player, hash, reason, suggestsOrMutes != 0, player.isMod()));
 		player.setLastReport();
-		
+
 		if (suggestsOrMutes != 0 && player.isMod()) {
 			muteCommand(player, "mute " + hash + " -1");
 		}
 	}
-	
+
 	private void muteCommand(Player player, String s) {
 		int firstSpace = s.indexOf(" ");
 		String cmd = s;

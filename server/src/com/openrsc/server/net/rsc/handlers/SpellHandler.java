@@ -90,7 +90,7 @@ public class SpellHandler implements PacketHandler {
 				continue;
 			}
 			if (player.getInventory().countId(e.getKey()) < e.getValue()) {
-				player.setSuspiciousPlayer(true);
+				player.setSuspiciousPlayer(true, "player not all reagents for spell");
 				player.message("You don't have all the reagents you need for this spell");
 				return false;
 			}
@@ -150,7 +150,7 @@ public class SpellHandler implements PacketHandler {
 		player.resetAllExceptDueling();
 		int idx = p.readShort();
 		if (idx < 0 || idx >= 49) {
-			player.setSuspiciousPlayer(true);
+			player.setSuspiciousPlayer(true, "idx < 0 or idx >= 49");
 			return;
 		}
 		SpellDef spell = player.getWorld().getServer().getEntityHandler().getSpellDef(idx);
@@ -165,7 +165,7 @@ public class SpellHandler implements PacketHandler {
 		// player.getLocation()));
 
 		if (player.getSkills().getLevel(com.openrsc.server.constants.Skills.MAGIC) < spell.getReqLevel()) {
-			player.setSuspiciousPlayer(true);
+			player.setSuspiciousPlayer(true, "player magic ability not high enough");
 			player.message("Your magic ability is not high enough for this spell.");
 			player.resetPath();
 			return;

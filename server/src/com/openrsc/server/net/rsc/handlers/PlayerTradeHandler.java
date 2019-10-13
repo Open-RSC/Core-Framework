@@ -63,7 +63,7 @@ public class PlayerTradeHandler implements PacketHandler {
 				return;
 			}
 			if (player.equals(affectedPlayer)) {
-				player.setSuspiciousPlayer(true);
+				player.setSuspiciousPlayer(true, "player trading themselves");
 				player.getTrade().resetAll();
 				return;
 			}
@@ -110,7 +110,7 @@ public class PlayerTradeHandler implements PacketHandler {
 			affectedPlayer = player.getTrade().getTradeRecipient();
 			if (affectedPlayer == null || busy(affectedPlayer) || !player.getTrade().isTradeActive()
 				|| !affectedPlayer.getTrade().isTradeActive()) {
-				player.setSuspiciousPlayer(true);
+				player.setSuspiciousPlayer(true, "accepted trade isn't active or affected player is null or busy");
 				player.getTrade().resetAll();
 				return;
 			}
@@ -127,7 +127,7 @@ public class PlayerTradeHandler implements PacketHandler {
 			if (affectedPlayer == null || busy(affectedPlayer) || !player.getTrade().isTradeActive()
 				|| !affectedPlayer.getTrade().isTradeActive() || !player.getTrade().isTradeAccepted()
 				|| !affectedPlayer.getTrade().isTradeAccepted()) {
-				player.setSuspiciousPlayer(true);
+				player.setSuspiciousPlayer(true, "confirm trade isn't active or affected player is null or busy");
 				player.getTrade().resetAll();
 				return;
 			}
@@ -161,7 +161,7 @@ public class PlayerTradeHandler implements PacketHandler {
 				for (Item item : myOffer) {
 					Item affectedItem = player.getInventory().get(item);
 					if (affectedItem == null) {
-						player.setSuspiciousPlayer(true);
+						player.setSuspiciousPlayer(true, "trade item is null");
 						player.getTrade().resetAll();
 						return;
 					}
@@ -173,7 +173,7 @@ public class PlayerTradeHandler implements PacketHandler {
 				for (Item item : theirOffer) {
 					Item affectedItem = affectedPlayer.getInventory().get(item);
 					if (affectedItem == null) {
-						affectedPlayer.setSuspiciousPlayer(true);
+						affectedPlayer.setSuspiciousPlayer(true, "other trade item is null");
 						player.getTrade().resetAll();
 						return;
 					}
@@ -203,7 +203,7 @@ public class PlayerTradeHandler implements PacketHandler {
 			affectedPlayer = player.getTrade().getTradeRecipient();
 			if (affectedPlayer == null || busy(affectedPlayer) || !player.getTrade().isTradeActive()
 				|| !affectedPlayer.getTrade().isTradeActive()) {
-				player.setSuspiciousPlayer(true);
+				player.setSuspiciousPlayer(true, "declined trade isn't active or affected player is null or busy");
 				player.getTrade().resetAll();
 				return;
 			}
@@ -217,7 +217,7 @@ public class PlayerTradeHandler implements PacketHandler {
 				|| (player.getTrade().isTradeAccepted() && affectedPlayer.getTrade().isTradeAccepted())
 				|| player.getTrade().isTradeConfirmAccepted()
 				|| affectedPlayer.getTrade().isTradeConfirmAccepted()) { // This
-				player.setSuspiciousPlayer(true);
+				player.setSuspiciousPlayer(true, "offered item player isn't active or affected player is null or busy");
 				player.getTrade().resetAll();
 				return;
 			}
@@ -234,7 +234,7 @@ public class PlayerTradeHandler implements PacketHandler {
 				Item tItem = new Item(p.readShort(), p.readInt());
 
 				if (tItem.getAmount() < 1) {
-					player.setSuspiciousPlayer(true);
+					player.setSuspiciousPlayer(true, "item less than 0");
 					player.setRequiresOfferUpdate(true);
 					continue;
 				}
@@ -249,7 +249,7 @@ public class PlayerTradeHandler implements PacketHandler {
 				}
 
 				if (tItem.getAmount() > player.getInventory().countId(tItem.getID())) {
-					player.setSuspiciousPlayer(true);
+					player.setSuspiciousPlayer(true, "trade item amount greater than inventory countid");
 					player.getTrade().resetAll();
 					return;
 				}

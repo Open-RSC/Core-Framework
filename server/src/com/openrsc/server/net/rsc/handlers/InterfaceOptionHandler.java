@@ -72,7 +72,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 				if (secondary == 0) {
 					int mode = (int) p.readByte();
 					if (mode < 0 || mode > 3) {
-						player.setSuspiciousPlayer(true);
+						player.setSuspiciousPlayer(true, "mode < 0 or mode > 3");
 						return;
 					}
 					if (mode > -1) {
@@ -150,7 +150,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 				} else if (secondary == 1) {
 					int setting = (int) p.readByte();
 					if (setting < 0 || setting > 1) {
-						player.setSuspiciousPlayer(true);
+						player.setSuspiciousPlayer(true, "setting < 0 or setting > 1");
 						return;
 					}
 					if (!player.getLocation().onTutorialIsland()) {
@@ -549,7 +549,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 					case 9:
 						String playerInvited2 = p.readString();
 						Player invited2 = player.getWorld().getPlayer(DataConversions.usernameToHash(playerInvited2));
-						
+
 						if(player.getParty() != null){
 							if (player.getParty().getInviteSetting() == 1 && !player.getParty().getLeader().getUsername().equalsIgnoreCase(player.getUsername())) {
 								player.message("Only the party owner can invite players to this party");

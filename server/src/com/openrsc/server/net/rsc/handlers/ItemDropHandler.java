@@ -26,7 +26,7 @@ public final class ItemDropHandler implements PacketHandler {
 		int amount = p.readInt();
 
 		if (idx < -1 || idx >= player.getInventory().size()) {
-			player.setSuspiciousPlayer(true);
+			player.setSuspiciousPlayer(true, "item drop item idx < -1 or idx >= inv size");
 			return;
 		}
 		Item tempitem = null;
@@ -44,7 +44,7 @@ public final class ItemDropHandler implements PacketHandler {
 		final Item item = tempitem;
 
 		if (item == null) {
-			player.setSuspiciousPlayer(true);
+			player.setSuspiciousPlayer(true, "item drop null item");
 			return;
 		}
 		if (amount <= 0) {

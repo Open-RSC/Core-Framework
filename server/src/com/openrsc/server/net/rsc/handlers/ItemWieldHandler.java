@@ -46,7 +46,7 @@ public final class ItemWieldHandler implements PacketHandler {
 			}
 		} else if (pID != packetThree && p.getID() != packetFour){
 			if (idx < 0 || idx >= 30) {
-				player.setSuspiciousPlayer(true);
+				player.setSuspiciousPlayer(true, "idx < 0 or idx >= 30");
 				return;
 			}
 			item = player.getInventory().get(idx);
@@ -62,7 +62,7 @@ public final class ItemWieldHandler implements PacketHandler {
 		}
 
 		if (item == null || !item.isWieldable(player.getWorld())) {
-			player.setSuspiciousPlayer(true);
+			player.setSuspiciousPlayer(true, "item null or not wieldable");
 			return;
 		}
 		/*if (!player.getLocation().isMembersWild() && item.getDef().isMembersOnly()) { //Not authentic behavior

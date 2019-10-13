@@ -102,7 +102,7 @@ public class ItemUseOnObject implements PacketHandler {
 		if (pID == packetOne) { // Use Item on Door
 			object = player.getViewArea().getWallObjectWithDir(Point.location(p.readShort(), p.readShort()), p.readByte());
 			if (object == null) {
-				player.setSuspiciousPlayer(true);
+				player.setSuspiciousPlayer(true, "item on null door");
 				player.resetPath();
 				return;
 			}
@@ -121,14 +121,14 @@ public class ItemUseOnObject implements PacketHandler {
 			} else
 				item = player.getInventory().get(slotID);
 			if (object == null || object.getType() == 0 || item == null) { // This
-				player.setSuspiciousPlayer(true);
+				player.setSuspiciousPlayer(true, "item on null equipment slot or something");
 				return;
 			}
 			handleDoor(player, object.getLocation(), object, dir, item);
 		} else if (pID == packetTwo) { // Use Item on GameObject
 			object = player.getViewArea().getGameObject(Point.location(p.readShort(), p.readShort()));
 			if (object == null) {
-				player.setSuspiciousPlayer(true);
+				player.setSuspiciousPlayer(true, "item on null GameObject");
 				player.resetPath();
 				return;
 			}
@@ -138,7 +138,7 @@ public class ItemUseOnObject implements PacketHandler {
 			} else
 				item = player.getInventory().get(slotID);
 			if (object == null || object.getType() == 1 || item == null) { // This
-				player.setSuspiciousPlayer(true);
+				player.setSuspiciousPlayer(true, "null item or object");
 				return;
 			}
 			handleObject(player, object.getLocation(), object, item);

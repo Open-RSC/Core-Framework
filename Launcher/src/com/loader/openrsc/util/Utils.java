@@ -1,17 +1,13 @@
 package com.loader.openrsc.util;
 
-import java.awt.Desktop;
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.awt.GraphicsEnvironment;
+import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
-
-import javax.swing.ImageIcon;
 
 public class Utils {
 	private static DateFormat df;
@@ -25,10 +21,10 @@ public class Utils {
 			genv.registerFont(font);
 			font = font.deriveFont(type, size);
 			return font;
-		} catch (FontFormatException | IOException ex2) {
-			((Exception) null).printStackTrace();
-			return null;
+		} catch (IOException | FontFormatException e) {
+			e.printStackTrace();
 		}
+		return null;
 	}
 
 	public static void openWebpage(final String url) {

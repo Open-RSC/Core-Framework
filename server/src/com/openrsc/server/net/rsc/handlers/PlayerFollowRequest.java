@@ -10,7 +10,7 @@ public final class PlayerFollowRequest implements PacketHandler {
 
 		Player affectedPlayer = player.getWorld().getPlayer(p.readShort());
 		if (affectedPlayer == null) {
-			player.setSuspiciousPlayer(true);
+			player.setSuspiciousPlayer(true, "tried following null player");
 			return;
 		}
 		if (player.isBusy()) {

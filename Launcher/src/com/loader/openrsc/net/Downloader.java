@@ -47,10 +47,6 @@ public class Downloader {
 		"prayeroff.wav", "prayeron.wav", "prospect.wav", "shoot.wav", // 4
 		"retreat.wav", "secretdoor.wav", "sounds.mem"}; // 3
 
-	public Downloader() {
-
-	}
-
 	private static byte[] createChecksum(File file) throws Exception {
 		InputStream fis = new FileInputStream(file);
 

@@ -61,7 +61,7 @@ public class PrayerHandler implements PacketHandler {
 		int pID = p.getID();
 		int prayerID = (int) p.readByte();
 		if (prayerID < 0 || prayerID >= 14) {
-			player.setSuspiciousPlayer(true);
+			player.setSuspiciousPlayer(true, "prayer id < 0 or prayer id >= 14");
 //			ActionSender.sendPrayers(player);TODO
 			return;
 		}
@@ -81,7 +81,7 @@ public class PrayerHandler implements PacketHandler {
 		int packetTwo = OpcodeIn.PRAYER_DEACTIVATED.getOpcode();
 		if (pID == packetOne) {
 			if (player.getSkills().getMaxStat(5) < prayer.getReqLevel()) {
-				player.setSuspiciousPlayer(true);
+				player.setSuspiciousPlayer(true, "max stat prayer < req level");
 				player.message("Your prayer ability is not high enough to use this prayer");
 			}
 			if (player.getSkills().getLevel(5) <= 0) {

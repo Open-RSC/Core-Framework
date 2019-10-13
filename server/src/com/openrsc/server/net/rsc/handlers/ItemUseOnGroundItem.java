@@ -44,7 +44,7 @@ public class ItemUseOnGroundItem implements PacketHandler {
 		final GroundItem item = getItem(groundItemId, location, player);
 
 		if (item == null || myItem == null) {
-			player.setSuspiciousPlayer(true);
+			player.setSuspiciousPlayer(true, "item use on ground item null item");
 			player.resetPath();
 			return;
 		}

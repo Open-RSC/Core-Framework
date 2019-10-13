@@ -18,7 +18,7 @@ public class ModeratorDeleteAuctionTask extends MarketTask {
 	public void doTask() {
 		boolean updateDiscord = false;
 		if (!player.isMod()) {
-			player.setSuspiciousPlayer(true);
+			player.setSuspiciousPlayer(true, "tried mod delete auction when not mod");
 			ActionSender.sendBox(player, "@red@[Auction House - Error] % @whi@ Unable to remove auction", false);
 		} else {
 			MarketItem item = player.getWorld().getMarket().getMarketDatabase().getAuctionItem(auctionID);
