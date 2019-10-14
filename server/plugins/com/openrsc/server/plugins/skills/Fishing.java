@@ -59,8 +59,9 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 			return;
 		}
 		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getFatigue() >= player.MAX_FATIGUE) {
-				player.message("You are too tired to catch this fish");
+			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+				&& player.getFatigue() >= player.MAX_FATIGUE) {
+				player.playerServerMessage(MessageType.QUEST,"You are too tired to catch this fish");
 				return;
 			}
 		}
@@ -124,7 +125,8 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 					}
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
 						getOwner().playerServerMessage(MessageType.QUEST, "You are too tired to catch this fish");
 						interrupt();
 						return;
@@ -190,7 +192,7 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 							getWorld().replaceGameObject(object, newObject);
 							getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000, true);
 						}
-					}					
+					}
 				} else {
 					getOwner().playerServerMessage(MessageType.QUEST, "You fail to catch anything");
 					if (object.getID() == 493 && getOwner().getCache().hasKey("tutorial") && getOwner().getCache().getInt("tutorial") == 41) {
@@ -210,7 +212,7 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 			}
 		});
 	}
-	
+
 	private int bigNetRand() {
 		int roll = DataConversions.random(0, 30);
 		if (roll <= 23) {

@@ -44,8 +44,9 @@ public class Woodcutting implements ObjectActionListener,
 			return;
 		}
 		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getFatigue() >= player.MAX_FATIGUE) {
-				player.message("You are too tired to cut the tree");
+			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+				&& player.getFatigue() >= player.MAX_FATIGUE) {
+				player.playerServerMessage(MessageType.QUEST, "You are too tired to cut the tree");
 				return;
 			}
 		}
@@ -73,7 +74,8 @@ public class Woodcutting implements ObjectActionListener,
 			public void action() {
 				final Item log = new Item(def.getLogId());
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
 						getOwner().playerServerMessage(MessageType.QUEST, "You are too tired to cut the tree");
 						interrupt();
 						return;
@@ -84,7 +86,7 @@ public class Woodcutting implements ObjectActionListener,
 					interrupt();
 					return;
 				}
-				
+
 				if (getLog(def.getReqLevel(), getOwner().getSkills().getLevel(Skills.WOODCUT), axeID)) {
 					//check if the tree is still up
 					GameObject obj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());

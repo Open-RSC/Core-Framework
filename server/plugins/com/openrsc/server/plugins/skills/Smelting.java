@@ -82,7 +82,8 @@ public class Smelting implements InvUseOnObjectListener,
 								return;
 							}
 							if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-								if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+								if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+									&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
 									getOwner().message("You are too tired to smelt cannon ball");
 									interrupt();
 									return;
@@ -117,11 +118,11 @@ public class Smelting implements InvUseOnObjectListener,
 		} else {
 			smelt = Smelt.valueOf(formattedName);
 		}
-		
+
 		if (!p.getInventory().contains(item)) {
 			return;
 		}
-		
+
 		if (obj.getLocation().equals(Point.location(399, 840))) {
 			// furnace in shilo village
 			if ((p.getLocation().getY() == 841 && !p.withinRange(obj, 2)) && !p.withinRange90Deg(obj, 2)) {
@@ -133,10 +134,11 @@ public class Smelting implements InvUseOnObjectListener,
 				return;
 			}
 		}
-		
+
 		showBubble(p, item);
 		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (p.getFatigue() >= p.MAX_FATIGUE) {
+			if (p.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+				&& p.getFatigue() >= p.MAX_FATIGUE) {
 				p.message("You are too tired to smelt this ore");
 				return;
 			}
@@ -168,7 +170,8 @@ public class Smelting implements InvUseOnObjectListener,
 			@Override
 			public void action() {
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
 						getOwner().message("You are too tired to smelt this ore");
 						interrupt();
 						return;

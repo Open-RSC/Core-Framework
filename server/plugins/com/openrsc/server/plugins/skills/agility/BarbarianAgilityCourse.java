@@ -47,7 +47,8 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 				return;
 			}
 			if (obj.getWorld().getServer().getConfig().WANT_FATIGUE) {
-				if (p.getFatigue() >= p.MAX_FATIGUE) {
+				if (obj.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+					&& p.getFatigue() >= p.MAX_FATIGUE) {
 					p.message("You are too tired to squeeze through the pipe");
 					return;
 				}
@@ -71,7 +72,8 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 			return;
 		}
 		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (p.getFatigue() >= p.MAX_FATIGUE && !inArray(obj.getID(), SWING, LOG, NET)) {
+			if (p.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+				&& p.getFatigue() >= p.MAX_FATIGUE && !inArray(obj.getID(), LEDGE)) {
 				p.message("you are too tired to train");
 				return;
 			}
@@ -208,7 +210,8 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 			public void init() {
 				addState(0, () -> {
 					if (getPlayerOwner().getWorld().getServer().getConfig().WANT_FATIGUE) {
-						if (getPlayerOwner().getFatigue() >= getPlayerOwner().MAX_FATIGUE && !inArray(obj.getID(), LOW_WALL, LOW_WALL2)) {
+						if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+							&& getPlayerOwner().getFatigue() >= getPlayerOwner().MAX_FATIGUE) {
 							getPlayerOwner().message("you are too tired to train");
 							return null;
 						}

@@ -91,7 +91,8 @@ public class GemMining implements ObjectActionListener,
 					}
 
 					if (getPlayerOwner().getWorld().getServer().getConfig().WANT_FATIGUE) {
-						if (getPlayerOwner().getFatigue() >= getPlayerOwner().MAX_FATIGUE) {
+						if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+							&& p.getFatigue() >= p.MAX_FATIGUE) {
 							getPlayerOwner().playerServerMessage(MessageType.QUEST, "You are too tired to mine this rock");
 							return null;
 						}
@@ -103,6 +104,14 @@ public class GemMining implements ObjectActionListener,
 					getPlayerOwner().setBatchEvent(new BatchEvent(getPlayerOwner().getWorld(), getPlayerOwner(), getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK * 3, "Gem Mining", getPlayerOwner().getWorld().getServer().getConfig().BATCH_PROGRESSION ? Formulae.getRepeatTimes(getPlayerOwner(), com.openrsc.server.constants.Skills.MINING) : retrytimes + 1000, true) {
 						@Override
 						public void action() {
+							if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+								if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+									&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+									getOwner().playerServerMessage(MessageType.QUEST, "You are too tired to mine this rock");
+									interrupt();
+									return;
+								}
+							}
 							if (getGem(getPlayerOwner(), 40, getOwner().getSkills().getLevel(com.openrsc.server.constants.Skills.MINING), axeId) && mineLvl >= 40) { // always 40 required mining.
 								Item gem = new Item(getGemFormula(getPlayerOwner().getInventory().wielding(ItemId.CHARGED_DRAGONSTONE_AMULET.id())), 1);
 								//check if there is still gem at the rock

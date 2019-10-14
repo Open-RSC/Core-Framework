@@ -186,7 +186,8 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 
 			if (p.getQuestStage(Quests.DIGSITE) >= 4 && getLevel2Digsite(p)) {
 				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (p.getFatigue() >= 69750) {
+					if (p.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+						&& p.getFatigue() >= p.MAX_FATIGUE) {
 						p.message("You are too tired to do any more digging");
 						return;
 					}
@@ -248,7 +249,8 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					return;
 				}
 				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (p.getFatigue() >= 69750) {
+					if (p.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+						&& p.getFatigue() >= p.MAX_FATIGUE) {
 						p.message("You are too tired to do any more digging");
 						return;
 					}

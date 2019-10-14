@@ -37,7 +37,8 @@ public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExe
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (p.getFatigue() >= p.MAX_FATIGUE && !inArray(obj.getID(), WATCH_TOWER, ROPE_SWING, LANDING)) {
+			if (p.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+				&& p.getFatigue() >= p.MAX_FATIGUE && !inArray(obj.getID(), WATCH_TOWER, ROPE_SWING, LANDING)) {
 				p.message("you are too tired to train");
 				return;
 			}

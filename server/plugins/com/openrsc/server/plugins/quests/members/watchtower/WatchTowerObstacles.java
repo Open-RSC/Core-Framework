@@ -340,7 +340,8 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 							} else {
 								removeItem(p, ItemId.COINS.id(), 20);
 								if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-									if (p.getFatigue() >= 7500) {
+									if (p.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+										&& p.getFatigue() >= p.MAX_FATIGUE) {
 										p.message("You are too tired to attempt this jump");
 										return;
 									}
@@ -356,7 +357,8 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 						}
 					} else {
 						if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-							if (p.getFatigue() >= 7500) {
+							if (p.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+								&& p.getFatigue() >= p.MAX_FATIGUE) {
 								p.message("You are too tired to attempt this jump");
 								return;
 							}

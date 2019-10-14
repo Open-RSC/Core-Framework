@@ -158,7 +158,8 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 					}
 					Item cookedFood = new Item(cookingDef.getCookedId());
 					if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-						if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+						if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+							&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
 							getOwner().message("You are too tired to cook this food");
 							interrupt();
 							return;

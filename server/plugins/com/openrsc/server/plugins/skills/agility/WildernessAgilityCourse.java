@@ -97,7 +97,8 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 			return;
 		}
 		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (p.getFatigue() >= p.MAX_FATIGUE && !inArray(obj.getID(), WILD_PIPE, WILD_ROPESWING, STONE, LEDGE)) {
+			if (p.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+				&& p.getFatigue() >= p.MAX_FATIGUE && !inArray(obj.getID(), VINE)) {
 				p.message("you are too tired to train");
 				return;
 			}

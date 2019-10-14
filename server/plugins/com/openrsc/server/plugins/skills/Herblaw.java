@@ -66,6 +66,14 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 					interrupt();
 					return;
 				}
+				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+						getOwner().message("You are too tired to identify this herb");
+						interrupt();
+						return;
+					}
+				}
 				ItemUnIdentHerbDef herb = item.getUnIdentHerbDef(getWorld());
 				Item newItem = new Item(herb.getNewId());
 				if (getOwner().getInventory().remove(item.getID(),1,false) > -1) {
@@ -362,6 +370,14 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 					getOwner().message("You need to complete Druidic ritual quest first");
 					interrupt();
 					return;
+				}
+				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+						getOwner().message("You are too tired to make this potion");
+						interrupt();
+						return;
+					}
 				}
 				if (getOwner().getInventory().hasItemId(second.getID())
 					&& getOwner().getInventory().hasItemId(unfinished.getID())) {

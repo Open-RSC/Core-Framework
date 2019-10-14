@@ -46,7 +46,7 @@ public class Crafting implements InvUseOnItemListener,
 		ItemId.UNFIRED_PIE_DISH.id(),
 		ItemId.UNFIRED_BOWL.id()
 	};
-	
+
 	@Override
 	public void onInvUseOnItem(Player player, Item item1, Item item2) {
 		if (item1.getID() == ItemId.CHISEL.id()) {
@@ -84,7 +84,7 @@ public class Crafting implements InvUseOnItemListener,
 		}
 		player.message("Nothing interesting happens");
 	}
-	
+
 	@Override
 	public void onInvUseOnObject(GameObject obj, final Item item, final Player player) {
 
@@ -92,11 +92,11 @@ public class Crafting implements InvUseOnItemListener,
 
 		beginCrafting(item, player);
 	}
-	
+
 	private boolean craftingChecks(final GameObject obj, final Item item, final Player player) {
 		// allowed item on crafting game objects
 		if (!craftingTypeChecks(obj, item, player)) return false;
-		
+
 		if (obj.getLocation().equals(Point.location(399, 840))) {
 			// furnace in shilo village
 			if ((player.getLocation().getY() == 841 && !player.withinRange(obj, 2)) && !player.withinRange90Deg(obj, 2)) {
@@ -108,7 +108,7 @@ public class Crafting implements InvUseOnItemListener,
 				return false;
 			}
 		}
-		
+
 		if (item.getID() == ItemId.SODA_ASH.id() || item.getID() == ItemId.SAND.id()) { // Soda Ash or Sand (Glass)
 			if (player.getInventory().countId(ItemId.SODA_ASH.id()) < 1) {
 				player.playerServerMessage(MessageType.QUEST, "You need some soda ash to make glass");
@@ -118,16 +118,16 @@ public class Crafting implements InvUseOnItemListener,
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
-	
+
 	private boolean craftingTypeChecks(final GameObject obj, final Item item, final Player player) {
 		return ((obj.getID() == 118 || obj.getID() == 813) && DataConversions.inArray(itemsFurnance, item.getID()))
 				|| (obj.getID() == 178 && DataConversions.inArray(itemsOven, item.getID()))
 				|| (obj.getID() == 179 && item.getID() == ItemId.SOFT_CLAY.id());
 	}
-	
+
 	private void beginCrafting(final Item item, final Player player) {
 		if (item.getID() == ItemId.SODA_ASH.id() || item.getID() == ItemId.SAND.id()) {
 			doGlassMaking(item, player);
@@ -136,9 +136,9 @@ public class Crafting implements InvUseOnItemListener,
 			doPotteryFiring(item, player);
 			return;
 		}
-		
+
 		player.message("What would you like to make?");
-		
+
 		if (item.getID() == ItemId.GOLD_BAR.id() || item.getID() == ItemId.GOLD_BAR_FAMILYCREST.id()) {
 			doGoldJewelry(item, player);
 		} else if (item.getID() == ItemId.SILVER_BAR.id()) {
@@ -147,10 +147,10 @@ public class Crafting implements InvUseOnItemListener,
 			doPotteryMolding(item, player);
 		}
 	}
-	
+
 	private void doGoldJewelry(final Item item, final Player player) {
 		AtomicReference<String> reply = new AtomicReference<String>();
-		
+
 		// select type
 		String[] options = new String[]{
 				"Ring",
@@ -259,7 +259,8 @@ public class Crafting implements InvUseOnItemListener,
 					return;
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
 						getOwner().message("You are too tired to craft");
 						interrupt();
 						return;
@@ -312,7 +313,7 @@ public class Crafting implements InvUseOnItemListener,
 			player.message("You need a " + player.getWorld().getServer().getEntityHandler().getItemDef(moulds[type]).getName() + " to make a " + reply.get() + "!");
 			return;
 		}
-		
+
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1200, "Craft Silver Jewelry", player.getInventory().countId(item.getID()), false) {
 			@Override
 			public void action() {
@@ -322,7 +323,8 @@ public class Crafting implements InvUseOnItemListener,
 					return;
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
 						getOwner().message("You are too tired to craft");
 						interrupt();
 						return;
@@ -340,14 +342,14 @@ public class Crafting implements InvUseOnItemListener,
 			}
 		});
 	}
-	
+
 	private void doPotteryMolding(final Item item, final Player player) {
 		String[] options = new String[]{"Pie dish", "Pot", "Bowl"};
 		int type = showMenu(player, options);
 		if (player.isBusy() || type < 0 || type > 2) {
 			return;
 		}
-		
+
 		int reqLvl, exp;
 		Item result;
 		AtomicReference<String> msg = new AtomicReference<String>();
@@ -375,7 +377,7 @@ public class Crafting implements InvUseOnItemListener,
 				player.message("Nothing interesting happens");
 				return;
 		}
-		
+
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Craft Clay", player.getInventory().countId(item.getID()), false) {
 			@Override
 			public void action() {
@@ -385,7 +387,8 @@ public class Crafting implements InvUseOnItemListener,
 					return;
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
 						getOwner().message("You are too tired to craft");
 						interrupt();
 						return;
@@ -402,7 +405,7 @@ public class Crafting implements InvUseOnItemListener,
 			}
 		});
 	}
-	
+
 	private void doPotteryFiring(final Item item, final Player player) {
 		int reqLvl, xp;
 		Item result;
@@ -431,10 +434,10 @@ public class Crafting implements InvUseOnItemListener,
 				player.message("Nothing interesting happens");
 				return;
 		}
-		
+
 		final int exp = xp;
 		final boolean fail = Formulae.crackPot(reqLvl, player.getSkills().getLevel(Skills.CRAFTING));
-		
+
 		showBubble(player, item);
 		String potteryItem = potteryItemName(item.getDef(player.getWorld()).getName());
 		player.playerServerMessage(MessageType.QUEST, "You put the " + potteryItem + " in the oven");
@@ -447,7 +450,8 @@ public class Crafting implements InvUseOnItemListener,
 					return;
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
 						getOwner().message("You are too tired to craft");
 						interrupt();
 						return;
@@ -479,7 +483,7 @@ public class Crafting implements InvUseOnItemListener,
 			}
 		});
 	}
-	
+
 	private void doGlassMaking(final Item item, final Player player) {
 		int otherItem = item.getID() == ItemId.SAND.id() ? ItemId.SODA_ASH.id() : ItemId.SAND.id();
 		int repeatTimes = player.getInventory().countId(item.getID());
@@ -495,7 +499,8 @@ public class Crafting implements InvUseOnItemListener,
 					return;
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
 						getOwner().message("You are too tired to craft");
 						interrupt();
 						return;
@@ -530,7 +535,7 @@ public class Crafting implements InvUseOnItemListener,
 			public void action() {
 				if (getOwner().getSkills().getLevel(Skills.CRAFTING) < gemDef.getReqLevel()) {
 					boolean pluralize = gemDef.getGemID() <= ItemId.UNCUT_DRAGONSTONE.id();
-					getOwner().playerServerMessage(MessageType.QUEST, 
+					getOwner().playerServerMessage(MessageType.QUEST,
 						"you need a crafting level of " + gemDef.getReqLevel()
 							+ " to cut " + (gem.getDef(getWorld()).getName().contains("ruby") ? "rubies" : gem.getDef(getWorld()).getName().replaceFirst("(?i)uncut ", "") + (pluralize ? "s" : "")));
 					interrupt();
@@ -571,18 +576,18 @@ public class Crafting implements InvUseOnItemListener,
 			return;
 		}
 		player.message("what would you like to make?");
-		
+
 		String[] options = new String[]{
 				"Vial",
 				"orb",
 				"Beer glass"
 		};
-		
+
 		int type = showMenu(player, options);
 		if (player.isBusy() || type < 0 || type > 2) {
 			return;
 		}
-		
+
 		Item result;
 		int reqLvl, exp;
 		String resultGen;
@@ -609,7 +614,7 @@ public class Crafting implements InvUseOnItemListener,
 			default:
 				return;
 		}
-		
+
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Craft Glass Blowing", player.getInventory().countId(glass.getID()), false) {
 			@Override
 			public void action() {
@@ -620,7 +625,8 @@ public class Crafting implements InvUseOnItemListener,
 					return;
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
 						getOwner().message("You are too tired to craft");
 						interrupt();
 						return;
@@ -643,19 +649,19 @@ public class Crafting implements InvUseOnItemListener,
 			player.message("You need some thread to make anything out of leather");
 			return;
 		}
-		
+
 		String[] options = new String[]{
 				"Armour",
 				"Gloves",
 				"Boots",
 				"Cancel"
 		};
-		
+
 		int type = showMenu(player, options);
 		if (player.isBusy() || type < 0 || type > 3) {
 			return;
 		}
-		
+
 		Item result;
 		int reqLvl, exp;
 		switch (type) {
@@ -677,7 +683,7 @@ public class Crafting implements InvUseOnItemListener,
 			default:
 				return;
 		}
-		
+
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Craft Leather", player.getInventory().countId(leather.getID()), false) {
 			@Override
 			public void action() {
@@ -687,7 +693,8 @@ public class Crafting implements InvUseOnItemListener,
 					return;
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
 						getOwner().message("You are too tired to craft");
 						interrupt();
 						return;

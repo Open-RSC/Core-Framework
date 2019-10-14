@@ -46,7 +46,8 @@ public class WoodcutJungle implements ObjectActionListener,
 	}
 
 	private void handleJungleWoodcut(GameObject obj, Player p) {
-		if (p.getFatigue() >= p.MAX_FATIGUE) {
+		if (p.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+			&& p.getFatigue() >= p.MAX_FATIGUE) {
 			p.playerServerMessage(MessageType.QUEST, "You are too tired to cut the " + (obj.getID() == JUNGLE_VINE ? "jungle vines" : "tree"));
 
 			// Shilo side of the jungle

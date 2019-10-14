@@ -189,7 +189,8 @@ public final class Mining implements ObjectActionListener,
 				"You do not have a pickaxe which you have the mining level to use");
 			return;
 		}
-		if (player.getFatigue() >= player.MAX_FATIGUE) {
+		if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+			&& player.getFatigue() >= player.MAX_FATIGUE) {
 			player.playerServerMessage(MessageType.QUEST, "You are too tired to mine this rock");
 			return;
 		}
@@ -205,6 +206,14 @@ public final class Mining implements ObjectActionListener,
 			@Override
 			public void action() {
 				final Item ore = new Item(def.getOreId());
+				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+						getOwner().playerServerMessage(MessageType.QUEST, "You are too tired to mine this rock");
+						interrupt();
+						return;
+					}
+				}
 				if (getOre(getWorld().getServer(), def, getOwner().getSkills().getLevel(com.openrsc.server.constants.Skills.MINING), axeId) && mineLvl >= def.getReqLevel()) {
 					if (DataConversions.random(1, 200) <= (getOwner().getInventory().wielding(ItemId.CHARGED_DRAGONSTONE_AMULET.id()) ? 2 : 1)) {
 						getOwner().playSound("foundgem");

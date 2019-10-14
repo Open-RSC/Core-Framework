@@ -53,7 +53,7 @@ public class Smithing implements InvUseOnObjectListener,
 
 		// Not an anvil or Doric's Anvil...
 		if (!(obj.getID() == 50 || obj.getID() == 177)) return false;
-		
+
 		if (!player.withinRange(obj, 1)) {
 			return false;
 		}
@@ -208,7 +208,8 @@ public class Smithing implements InvUseOnObjectListener,
 					return;
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
 						getOwner().message("You are too tired to smith");
 						interrupt();
 						return;
@@ -289,7 +290,7 @@ public class Smithing implements InvUseOnObjectListener,
 			int option = showMenu(player, "Helmet", "Shield", "Armour");
 			// Cancel
 			if (option < 0) return -1;
-			
+
 			return offset + option;
 		}
 

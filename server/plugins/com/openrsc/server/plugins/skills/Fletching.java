@@ -18,7 +18,7 @@ import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemListener {
-	
+
 	private static final int[] logIds = {
 			ItemId.LOGS.id(),
 			ItemId.OAK_LOGS.id(),
@@ -99,6 +99,14 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 					interrupt();
 					return;
 				}
+				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+						getOwner().message("You are too tired to train");
+						interrupt();
+						return;
+					}
+				}
 				if (getOwner().getInventory().remove(feathers.getID(), 1) > -1
 					&& getOwner().getInventory().remove(item.getID(), 1) > -1) {
 					addItem(getOwner(), itemID, 1);
@@ -122,7 +130,7 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 		if (headDef == null) {
 			return false;
 		}
-		
+
 		if (player.getSkills().getLevel(Skills.FLETCHING) < headDef.getReqLevel()) {
 			player.message("You need a fletching skill of "
 				+ headDef.getReqLevel() + " or above to do that");
@@ -154,6 +162,14 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 						|| getOwner().getInventory().countId(headlessArrows.getID()) < 1) {
 					interrupt();
 					return;
+				}
+				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+						getOwner().message("You are too tired to train");
+						interrupt();
+						return;
+					}
 				}
 				if (getOwner().getInventory().remove(headlessArrows.getID(), 1) > -1
 					&& getOwner().getInventory().remove(arrowHeads.getID(), 1) > -1) {
@@ -196,6 +212,14 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 					interrupt();
 					return;
 				}
+				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+						getOwner().message("You are too tired to train");
+						interrupt();
+						return;
+					}
+				}
 				if (getOwner().getInventory().remove(bowString) > -1
 					&& getOwner().getInventory().remove(bow) > -1) {
 					getOwner().message("You add a string to the bow");
@@ -219,17 +243,17 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 			return;
 		}
 		player.message("What would you like to make?");
-		
+
 		String[] options = log.getID() == ItemId.LOGS.id() ? new String[]{"Make arrow shafts",
 				"Make shortbow", "Make longbow"} : new String[]{"Make shortbow", "Make longbow"};
-		
+
 		int type = showMenu(player, options);
 		if (player.isBusy() || type < 0 || type > options.length) {
 			return;
 		}
-		
+
 		if (options.length == 2 && type >= 0) type += 1;
-		
+
 		int reqLvl, exp, amount;
 		reqLvl = exp = amount = 0;
 		int id = ItemId.NOTHING.id();
@@ -262,7 +286,7 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 		final int itemID = id;
 		final int amt = amount;
 		final String cutMessages = cutMessage;
-		
+
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Fletching Make Bow",
 				player.getInventory().countId(log.getID()), false) {
 			@Override
@@ -273,6 +297,14 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 					interrupt();
 					return;
 				}
+				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+						getOwner().message("You are too tired to train");
+						interrupt();
+						return;
+					}
+				}
 				if (getOwner().getInventory().remove(log) > -1) {
 					getOwner().message(cutMessages);
 					addItem(getOwner(), itemID, amt);
@@ -280,7 +312,7 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 				} else
 					interrupt();
 			}
-		});		
+		});
 	}
 
 	private boolean doPearlCut(final Player player, final Item chisel, final Item pearl) {
@@ -310,6 +342,14 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 					getOwner().message("You need a fletching skill of 34 to do that");
 					interrupt();
 					return;
+				}
+				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+						getOwner().message("You are too tired to train");
+						interrupt();
+						return;
+					}
 				}
 				if (getOwner().getInventory().remove(pearlID, 1) > -1) {
 					getOwner().message("");
@@ -352,6 +392,14 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 						|| getOwner().getInventory().countId(tip) < 1) {
 					interrupt();
 					return;
+				}
+				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+						getOwner().message("You are too tired to train");
+						interrupt();
+						return;
+					}
 				}
 				if (getOwner().getInventory().remove(bolt, 1) > -1
 					&& getOwner().getInventory().remove(tip, 1) > -1) {

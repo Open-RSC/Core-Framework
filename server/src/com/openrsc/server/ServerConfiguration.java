@@ -245,6 +245,7 @@ public class ServerConfiguration {
 	public boolean RIGHT_CLICK_BANK = false;
 	public boolean FIX_OVERHEAD_CHAT = false;
 	public boolean WANT_FATIGUE = true;
+	public int STOP_SKILLING_FATIGUED = 1; //0 - No skills, 1 - Gathering, 2 - All non combat skills
 	public boolean WANT_CUSTOM_SPRITES = false;
 	public boolean WANT_CUSTOM_LANDSCAPE = false;
 	public boolean PLAYER_COMMANDS = false;
@@ -399,6 +400,7 @@ public class ServerConfiguration {
 		FIX_OVERHEAD_CHAT = Boolean.parseBoolean(props.getProperty("want_fixed_overhead_chat"));
 		MESSAGE_FULL_INVENTORY = Boolean.parseBoolean(props.getProperty("message_full_inventory"));
 		WANT_FATIGUE = Boolean.parseBoolean(props.getProperty("want_fatigue"));
+		STOP_SKILLING_FATIGUED = Integer.parseInt(props.getProperty("stop_skilling_fatigued"));
 		WANT_CUSTOM_SPRITES = Boolean.parseBoolean(props.getProperty("custom_sprites"));
 		WANT_CUSTOM_LANDSCAPE = Boolean.parseBoolean(props.getProperty("custom_landscape"));
 		WANT_PETS = Boolean.parseBoolean(props.getProperty("want_pets"));

@@ -123,8 +123,12 @@ public class Thieving extends Functions
 						return null;
 					}
 					if (getPlayerOwner().getWorld().getServer().getConfig().WANT_FATIGUE) {
-						if (getPlayerOwner().getFatigue() >= getPlayerOwner().MAX_FATIGUE)
-							getPlayerOwner().message("@gre@You are too tired to gain experience, get some rest");
+						if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+							&& getPlayerOwner().getFatigue() >= getPlayerOwner().MAX_FATIGUE) {
+							getPlayerOwner().message("You are too tired to thieve here");
+							getPlayerOwner().setBusy(false);
+							return null;
+						}
 					}
 
 					getPlayerOwner().getInventory().add(selectedLoot);
@@ -221,7 +225,8 @@ public class Thieving extends Functions
 						return null;
 					}
 					if (getPlayerOwner().getWorld().getServer().getConfig().WANT_FATIGUE) {
-						if (getPlayerOwner().getFatigue() >= getPlayerOwner().MAX_FATIGUE) {
+						if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+							&& getPlayerOwner().getFatigue() >= getPlayerOwner().MAX_FATIGUE) {
 							getPlayerOwner().message("You are too tired to thieve here");
 							getPlayerOwner().setBusy(false);
 							return null;
@@ -383,8 +388,12 @@ public class Thieving extends Functions
 				boolean succeededPickpocket = succeedThieving(getOwner(), pickpocket.getRequiredLevel());
 				if (succeededPickpocket) {
 					if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-						if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE)
-							getOwner().message("@gre@You are too tired to gain experience, get some rest");
+						if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+							&& getPlayerOwner().getFatigue() >= getPlayerOwner().MAX_FATIGUE) {
+							getPlayerOwner().message("You are too tired to pickpocket this mob");
+							interrupt();
+							return;
+						}
 					}
 
 					getOwner().incExp(Skills.THIEVING, pickpocket.getXp(), true);
@@ -457,8 +466,9 @@ public class Thieving extends Functions
 				player.setBusyTimer(3000);
 				player.playerServerMessage(MessageType.QUEST, "you attempt to pick the lock");
 				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (player.getFatigue() >= player.MAX_FATIGUE) {
-						player.message("You are too tired to thieve here");
+					if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+						&& player.getFatigue() >= player.MAX_FATIGUE) {
+						player.message("You are too tired to pick the lock");
 						player.setBusyTimer(0);
 						return;
 					}
@@ -642,16 +652,17 @@ public class Thieving extends Functions
 				player.playerServerMessage(MessageType.QUEST, "You need a lockpick for this lock");
 				return;
 			}
+			if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+				if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+					&& player.getFatigue() >= player.MAX_FATIGUE) {
+					player.message("You are too tired to pick the lock");
+					return;
+				}
+			}
 			if (succeedPickLockThieving(player, req) && !goThrough) {
 				player.playerServerMessage(MessageType.QUEST, "You manage to pick the lock");
 				doDoor(obj, player);
 				player.message("You go through the door");
-				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (player.getFatigue() >= player.MAX_FATIGUE) {
-						player.message("@gre@You are too tired to gain experience, get some rest");
-						return;
-					}
-				}
 				player.incExp(Skills.THIEVING, (int) exp, true);
 			} else {
 				player.playerServerMessage(MessageType.QUEST, "You fail to pick the lock");
