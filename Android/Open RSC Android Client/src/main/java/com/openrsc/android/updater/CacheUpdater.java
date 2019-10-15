@@ -25,6 +25,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -67,17 +68,14 @@ public class CacheUpdater extends Activity {
     public void setStatus(String s) {
         tv1.setText(s);
     }
-    
+
     @SuppressLint("StaticFieldLeak")
     class UpdateTask extends AsyncTask<String, String, String> {
 
-        private Properties oldChecksum;
-        private Properties newChecksum;
-
         @Override
         protected String doInBackground(String... aurl) {
-            oldChecksum = new Properties();
-            newChecksum = new Properties();
+            Properties oldChecksum = new Properties();
+            Properties newChecksum = new Properties();
             try {
                 downloadFile("MD5CHECKSUM");
                 File f = new File(getFilesDir().getPath() + File.separator + "MD5CHECKSUM.old");
@@ -188,9 +186,10 @@ public class CacheUpdater extends Activity {
                     realPath.set(getFilesDir().getPath() + File.separator);
                 } catch (Exception e2) {
                     try {
-                        fos = new FileOutputStream(getExternalFilesDir(null).getPath() + File.separator + "test.txt");
-                        realPath.set(getExternalFilesDir(null).getPath() + File.separator);
-                    } catch (Exception e3) {}
+                        fos = new FileOutputStream(Objects.requireNonNull(getExternalFilesDir(null)).getPath() + File.separator + "test.txt");
+                        realPath.set(Objects.requireNonNull(getExternalFilesDir(null)).getPath() + File.separator);
+                    } catch (Exception ignored) {
+                    }
                 }
             } finally {
                 GenUtil.close(fos);
@@ -362,7 +361,7 @@ public class CacheUpdater extends Activity {
 
         void downloadFile(String filename) {
             Log.d("Updater", "Downloading file: " + filename + " - " + getNiceName(filename));
-            HttpURLConnection connection = null;
+            HttpURLConnection connection;
             try {
                 connection = (HttpURLConnection) new URL(Config.CACHE_URL + filename).openConnection();
                 connection.connect();
@@ -372,7 +371,7 @@ public class CacheUpdater extends Activity {
                     InputStream in = connection.getInputStream();
                     byte[] buffer = new byte[1024];
                     int total = 0;
-                    int len = 0;
+                    int len;
                     while ((len = in.read(buffer)) > 0) {
                         total += len;
                         if (fileLength > 0) {
@@ -419,8 +418,8 @@ public class CacheUpdater extends Activity {
         }
     }
 
-    private final String nicename[] = {"Checksum", "3D models", "Application Icon", "Graphics", "Landscape", "library"};
-    private final String normalName[] = {"MD5CHECKSUM", "models.orsc", "RuneScape.png", "Sprites.orsc", "Landscape.orsc", "library.orsc"};
+    private final String[] nicename = {"Checksum", "3D models", "Application Icon", "Graphics", "Landscape", "library"};
+    private final String[] normalName = {"MD5CHECKSUM", "models.orsc", "RuneScape.png", "Sprites.orsc", "Landscape.orsc", "library.orsc"};
 
     public String getNiceName(String s) {
         for (int i = 0; i < normalName.length; i++) {
