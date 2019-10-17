@@ -4,18 +4,14 @@ GREEN=$(tput setaf 2)
 NC=$(tput sgr0) # No Color
 
 # Ubuntu or CentOS Linux?
-echo ""
-echo "${RED}Open RSC:${NC}
-An easy to use RSC private server framework.
-
-Which Linux distribution are you using?
+echo "Which Linux distribution are you using?
 
 Choices:
   ${RED}1${NC} - Ubuntu
   ${RED}2${NC} - CentOS
   ${RED}3${NC} - Return to main menu"
 echo ""
-echo "Which of the above do you wish to do? Type the choice number and press enter."
+echo "Type the choice number and press enter."
 read -r installmode
 
 if [ "$installmode" == "1" ]; then

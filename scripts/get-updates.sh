@@ -18,39 +18,50 @@ echo ""
 echo ""
 sudo make compile
 
-# Client
-yes | sudo cp -rf client/*.jar /opt/Website/downloads/
-sudo chmod +x /opt/Website/downloads/*.jar
-sudo chmod 777 /opt/Website/downloads/*.jar
-
 # Launcher
-yes | sudo cp -rf Launcher/*.jar /opt/Website/downloads/
-sudo chmod +x /opt/Website/downloads/*.jar
-sudo chmod 777 /opt/Website/downloads/*.jar
+echo ""
+echo "Compiling for development or production use?
 
-# Cache
-yes | sudo cp -a -rf "client/Cache/." "/opt/Website/downloads/"
-cd ..
-sudo rm Website/downloads/MD5CHECKSUM
-sudo touch Website/downloads/MD5CHECKSUM && sudo chmod 777 Website/downloads/MD5CHECKSUM
-md5sum Website/downloads/* | sed 's/Website\/downloads\///g' | grep "^[a-zA-Z0-9]*" | awk '{print $2"="$1}' | tee Website/downloads/MD5CHECKSUM
-sudo sed -i 's/MD5CHECKSUM=/#MD5CHECKSUM=/g' "Website/downloads/MD5CHECKSUM" # disables a bad line
-sudo sed -i 's/index=/#index=/g' "Website/downloads/MD5CHECKSUM" # disables a bad line
-sudo sed -i 's/OpenRSC=/#OpenRSC=/g' "Website/downloads/MD5CHECKSUM" # disables a bad line
-cd Game
+Choices:
+  ${RED}1${NC} - Development
+  ${RED}2${NC} - Production"
+echo ""
+echo "Type the choice number and press enter."
+echo ""
+read -r compiling
+
+if [ "$compiling" == "1" ]; then
+  echo ""
+elif [ "$compiling" == "2" ]; then
+  # Client
+  yes | sudo cp -rf client/*.jar ../Website/downloads/
+  sudo chmod +x ../Website/downloads/*.jar
+  sudo chmod 777 ../Website/downloads/*.jar
+
+  # Launcher
+  yes | sudo cp -rf Launcher/*.jar ../Website/downloads/
+  sudo chmod +x ../Website/downloads/*.jar
+  sudo chmod 777 ../Website/downloads/*.jar
+
+  # Cache
+  yes | sudo cp -a -rf "client/Cache/." "../Website/downloads/"
+  sudo rm ../Website/downloads/MD5CHECKSUM
+  sudo touch ../Website/downloads/MD5CHECKSUM && sudo chmod 777 ../Website/downloads/MD5CHECKSUM
+  md5sum ../Website/downloads/* | sed 's/Website\/downloads\///g' | grep "^[a-zA-Z0-9]*" | awk '{print $2"="$1}' | tee ../Website/downloads/MD5CHECKSUM
+  sudo sed -i 's/MD5CHECKSUM=/#MD5CHECKSUM=/g' "../Website/downloads/MD5CHECKSUM" # disables a bad line
+  sudo sed -i 's/index=/#index=/g' "../Website/downloads/MD5CHECKSUM" # disables a bad line
+  sudo sed -i 's/OpenRSC=/#OpenRSC=/g' "../Website/downloads/MD5CHECKSUM" # disables a bad line
+fi
 
 # Finished
 echo ""
-echo "${RED}Open RSC:${NC}
-An easy to use RSC private server framework.
-
-What would you like to do next?
+echo "What would you like to do next?
 
 Choices:
-  ${RED}1${NC} - Run Open RSC
+  ${RED}1${NC} - Run game server
   ${RED}2${NC} - Return to the main menu"
 echo ""
-echo "Which of the above do you wish to do? Type the choice number and press enter."
+echo "Type the choice number and press enter."
 echo ""
 read -r finished
 
