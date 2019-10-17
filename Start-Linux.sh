@@ -28,7 +28,7 @@ if [ "$action" == "1" ]; then
 elif [ "$action" == "2" ]; then
   make get-updates
 elif [ "$action" == "3" ]; then
-  make run-game
+  make run-server
 elif [ "$action" == "4" ]; then
   exit
 fi
