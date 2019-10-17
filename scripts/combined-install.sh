@@ -4,6 +4,8 @@ GREEN=$(tput setaf 2)
 NC=$(tput sgr0) # No Color
 
 # Ubuntu or CentOS Linux?
+clear
+echo ""
 echo "Which Linux distribution are you using?
 Note: Raspberry Pi 3B+ needs a manual installation. Don't use this installer as it uses Docker and there is not enough RAM on the Raspberry Pi to use Docker.
 

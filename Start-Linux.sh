@@ -3,6 +3,7 @@ exec 0</dev/tty
 RED=$(tput setaf 1)
 NC=$(tput sgr0) # No Color
 
+clear
 echo ""
 echo "${RED}Open RSC${NC}
 Striving for a replica RSC game and more.

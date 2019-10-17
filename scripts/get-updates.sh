@@ -6,6 +6,8 @@ NC=$(tput sgr0) # No Color
 exec 0</dev/tty
 source .env
 
+clear
+
 # Permissions
 echo ""
 echo "Verifying file and user permissions are set correctly"
