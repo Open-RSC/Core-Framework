@@ -76,8 +76,6 @@ if [ "$installmode" == "1" ]; then
 
   make docker-install
 elif [ "$installmode" == "2" ]; then
-
-
   make docker-install
 elif [ "$installmode" == "3" ]; then
   make start

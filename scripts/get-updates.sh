@@ -66,7 +66,7 @@ echo ""
 read -r finished
 
 if [ "$finished" == "1" ]; then
-  make run-game
+  make run-server
 elif [ "$finished" == "2" ]; then
   make start-linux
 fi
