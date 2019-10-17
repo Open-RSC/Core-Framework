@@ -60,7 +60,7 @@ backup:
 	sudo chmod -R 777 $(MYSQL_DUMPS_DIR)
 	sudo docker exec mysql mysqldump -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} --single-transaction --quick --lock-tables=false | sudo zip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d-%H%M-%Z"`-${db}.zip
 
-# Call via "make restore 20191017-0226-EDT-cabbage.zip db=cabbage"
+# Call via "make restore name=20191017-0226-EDT-cabbage.zip db=cabbage"
 restore:
 	sudo unzip -p Backups/${name} | sudo docker exec -i mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db}
 
