@@ -5,10 +5,11 @@ NC=$(tput sgr0) # No Color
 
 # Ubuntu or CentOS Linux?
 echo "Which Linux distribution are you using?
+Note: Raspberry Pi 3B+ needs a manual installation. Don't use this installer as it uses Docker and there is not enough RAM on the Raspberry Pi to use Docker.
 
 Choices:
-  ${RED}1${NC} - Ubuntu
-  ${RED}2${NC} - CentOS
+  ${RED}1${NC} - Ubuntu 18.04 or newer
+  ${RED}2${NC} - CentOS 7 or newer
   ${RED}3${NC} - Return to main menu"
 echo ""
 echo "Type the choice number and press enter."
@@ -73,9 +74,52 @@ if [ "$installmode" == "1" ]; then
   filter    = sshd' | sudo tee /etc/fail2ban/jail.local
   sudo systemctl enable fail2ban
   sudo systemctl restart fail2ban
-
   make docker-install
 elif [ "$installmode" == "2" ]; then
+  # Needed software
+  sudo yum update -y && sudo yum install git wget ant screen -y
+
+  # Firewall configuration
+  firewall-cmd --zone=public --add-port=80/tcp --permanent
+  firewall-cmd --zone=public --add-port=443/tcp --permanent
+  firewall-cmd --zone=public --add-port=43594/tcp --permanent
+  firewall-cmd --zone=public --add-port=43595/tcp --permanent
+  firewall-cmd --zone=public --add-port=43596/tcp --permanent
+  firewall-cmd --zone=public --add-port=43597/tcp --permanent
+  firewall-cmd --zone=public --add-port=43598/tcp --permanent
+  firewall-cmd --zone=public --add-port=43599/tcp --permanent
+  firewall-cmd --zone=public --add-port=55555/tcp --permanent
+  firewall-cmd --reload
+
+  # Configures and secures SSH access
+  sudo sed -i 's/#ClientAliveInterval 0/ClientAliveInterval 720/g' /etc/ssh/sshd_config
+  sudo sed -i 's/#ClientAliveCountMax 3/ClientAliveCountMax 720/g' /etc/ssh/sshd_config
+  sudo sed -i 's/#MaxAuthTries/MaxAuthTries/g' /etc/ssh/sshd_config
+  sudo sed -i 's/#PubkeyAuthentication/PubkeyAuthentication/g' /etc/ssh/sshd_config
+  sudo sed -i 's/#Port 22/Port 55555/g' /etc/ssh/sshd_config
+  sudo service ssh restart
+  systemctl restart sshd
+
+  # Configures Fail2Ban
+  sudo echo '[sshd]
+  enabled = true
+  banaction = iptables-multiport
+  maxretry = 10
+  findtime = 43200
+  bantime = 86400
+
+  [sshlongterm]
+  port      = ssh
+  logpath   = %(sshd_log)s
+  banaction = iptables-multiport
+  maxretry  = 35
+  findtime  = 259200
+  bantime   = 608400
+  enabled   = true
+  filter    = sshd' | sudo tee /etc/fail2ban/jail.local
+  sudo systemctl enable fail2ban
+  sudo systemctl restart fail2ban
+
   make docker-install
 elif [ "$installmode" == "3" ]; then
   make start

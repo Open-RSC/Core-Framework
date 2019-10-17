@@ -54,9 +54,11 @@ elif [ "$compiling" == "2" ]; then
   sudo sed -i 's/..\///g' "../Website/downloads/MD5CHECKSUM" # Removes ../
 fi
 
+clear
+
 # Finished
 echo ""
-echo "What would you like to do next?
+echo "What would you like to do?
 
 Choices:
   ${RED}1${NC} - Run game server
