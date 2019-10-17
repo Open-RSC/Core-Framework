@@ -51,6 +51,7 @@ elif [ "$compiling" == "2" ]; then
   sudo sed -i 's/MD5CHECKSUM=/#MD5CHECKSUM=/g' "../Website/downloads/MD5CHECKSUM" # disables a bad line
   sudo sed -i 's/index=/#index=/g' "../Website/downloads/MD5CHECKSUM" # disables a bad line
   sudo sed -i 's/OpenRSC=/#OpenRSC=/g' "../Website/downloads/MD5CHECKSUM" # disables a bad line
+  sudo sed -i 's/..\///g' "../Website/downloads/MD5CHECKSUM" # Removes ../
 fi
 
 # Finished
