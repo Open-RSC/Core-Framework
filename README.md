@@ -20,15 +20,17 @@ Download <a href="https://www.jetbrains.com/idea/download/#section=mac">IntelliJ
 
 It is strongly recommended that before hosting a public server, you learn the ins and outs of everything by running the game locally first.
 
+Feel free to join our Discord if you need help: <a href="https://discord.gg/KGvudZ9">https://discord.gg/KGvudZ9</a>
+
 
 [Return to top](#top)
 
 
 ## Minimum Requirements<a name="requirements"></a>
 
-* Windows XP, MacOS, or Linux
+* Windows XP, MacOS, Ubuntu 18.04 Linux, or CentOS 7 Linux (or newer)
 
-* 2GB RAM (in order to run both server and client)
+* 2GB RAM in order to run both server and client or 1GB RAM to just run the game server
 
 * Java 8 (JDK 1.8) or newer (Preferably OpenJDK - <a href="https://adoptopenjdk.net">https://adoptopenjdk.net</a>)
 
