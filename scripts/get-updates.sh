@@ -57,5 +57,5 @@ read -r finished
 if [ "$finished" == "1" ]; then
   make run-game
 elif [ "$finished" == "2" ]; then
-  make go
+  make start
 fi
