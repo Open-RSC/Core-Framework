@@ -1,7 +1,6 @@
 #!/bin/bash
 
 RED=$(tput setaf 1)
-GREEN=$(tput setaf 2)
 NC=$(tput sgr0) # No Color
 
 exec 0</dev/tty
@@ -35,8 +34,9 @@ cd ..
 sudo rm Website/downloads/MD5CHECKSUM
 sudo touch Website/downloads/MD5CHECKSUM && sudo chmod 777 Website/downloads/MD5CHECKSUM
 md5sum Website/downloads/* | sed 's/Website\/downloads\///g' | grep "^[a-zA-Z0-9]*" | awk '{print $2"="$1}' | tee Website/downloads/MD5CHECKSUM
-sudo sed -i 's/MD5CHECKSUM=/#MD5CHECKSUM=/g' "Website/downloads/MD5CHECKSUM"
-sudo sed -i 's/index=/#index=/g' "Website/downloads/MD5CHECKSUM"
+sudo sed -i 's/MD5CHECKSUM=/#MD5CHECKSUM=/g' "Website/downloads/MD5CHECKSUM" # disables a bad line
+sudo sed -i 's/index=/#index=/g' "Website/downloads/MD5CHECKSUM" # disables a bad line
+sudo sed -i 's/OpenRSC=/#OpenRSC=/g' "Website/downloads/MD5CHECKSUM" # disables a bad line
 cd Game
 
 # Finished
