@@ -1,7 +1,7 @@
 include .env
 MYSQL_DUMPS_DIR=./Backups
 
-start:
+start-linux:
 	`pwd`/Start-Linux.sh
 
 run-game:
