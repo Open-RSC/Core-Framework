@@ -30,7 +30,7 @@ It is strongly recommended that before hosting a public server, you learn the in
 
 * 2GB RAM (in order to run both server and client)
 
-* Jave 8 (JDK 1.8) or newer (Preferably OpenJDK - <a href="https://adoptopenjdk.net">https://adoptopenjdk.net</a>)
+* Java 8 (JDK 1.8) or newer (Preferably OpenJDK - <a href="https://adoptopenjdk.net">https://adoptopenjdk.net</a>)
 
 [Return to top](#top)
 
