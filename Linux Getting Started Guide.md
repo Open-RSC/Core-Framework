@@ -1,4 +1,4 @@
-## Guide for running Open RSC Single Player on Linux:
+## Guide for running Open RSC on Linux:
 
 # Using the built in installation script with Docker
 

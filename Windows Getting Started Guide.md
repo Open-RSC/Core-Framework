@@ -1,4 +1,4 @@
-## Guide for running Open RSC Single Player on Windows:
+## Guide for running Open RSC on Windows:
 
 # Installing Java
 

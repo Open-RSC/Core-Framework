@@ -1,4 +1,5 @@
-# Open-Pi-Scape
+## Guide for running Open RSC on a Raspberry Pi 3b+ or newer:
+
 The Raspberry Pi 3B+ (and earlier editions) do not have enough memory to run the game client and the game server at the same time. Raspberry Pi 4 and above with 2GB or more RAM are capable of running both.
 
 This project is design for the Raspberry Pi 3B+ with 1GB of RAM to act as a home LAN game server for Android and PC game clients to connect to at home. Due to limited memory and processor speeds, it is not advisable to host a public server with a Raspberry Pi 3B+, nor have more than 2 or 3 online players at a time due to in-game slow downs.

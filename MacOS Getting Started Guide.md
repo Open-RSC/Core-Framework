@@ -1,4 +1,4 @@
-## Guide for running Open RSC Single Player on MacOS
+## Guide for running Open RSC on MacOS:
 
 # Step 1
 
