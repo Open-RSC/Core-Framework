@@ -14,7 +14,8 @@ Choices:
   ${RED}1${NC} - Install
   ${RED}2${NC} - Update and compile code
   ${RED}3${NC} - Run game server
-  ${RED}4${NC} - Exit"
+  ${RED}4${NC} - Run game client
+  ${RED}5${NC} - Exit"
 echo ""
 echo "Type the choice number and press enter."
 echo ""
@@ -31,5 +32,7 @@ elif [ "$action" == "2" ]; then
 elif [ "$action" == "3" ]; then
   make run-server
 elif [ "$action" == "4" ]; then
+  make run-client
+elif [ "$action" == "5" ]; then
   exit
 fi

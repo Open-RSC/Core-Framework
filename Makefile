@@ -60,10 +60,14 @@ backup:
 	sudo chmod -R 777 $(MYSQL_DUMPS_DIR)
 	sudo docker exec mysql mysqldump -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} --single-transaction --quick --lock-tables=false | sudo zip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d-%H%M-%Z"`-${db}.zip
 
+# Call via "make restore 20191017-0226-EDT-cabbage.zip db=cabbage"
+restore:
+	sudo unzip -p Backups/${name} | sudo docker exec -i mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db}
+
 # Call via clear-backups days=90
 clear-backups:
 	sudo find $(MYSQL_DUMPS_DIR)/*.zip -mtime +${days} -exec rm -f {} \;
 
-# Call via "sudo make rank db=cabbage group=0 username=wolf"
+# Call via "make rank db=cabbage group=0 username=wolf"
 rank:
 	sudo docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} -e "USE ${db}; UPDATE openrsc_players SET group_id = '${group}' WHERE openrsc_players.username = '${username}';"
