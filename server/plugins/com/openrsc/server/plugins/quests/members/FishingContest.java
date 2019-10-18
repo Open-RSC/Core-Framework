@@ -196,7 +196,7 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 	}
 
 	private void bonzoTimesUpDialogue(final Player p, final Npc n) {
-		String catches[] = null;
+		String catches[] = {};
 		boolean hadCarp = false;
 
 		if (p.getCache().hasKey("contest_catches")) {
