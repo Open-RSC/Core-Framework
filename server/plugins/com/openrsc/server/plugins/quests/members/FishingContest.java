@@ -36,12 +36,12 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 	public String getQuestName() {
 		return "Fishing contest (members)";
 	}
-	
+
 	@Override
 	public boolean isMembers() {
 		return true;
 	}
-	
+
 	@Override
 	public void handleReward(final Player p) {
 		p.updateQuestStage(Quests.FISHING_CONTEST, -1);
@@ -56,7 +56,7 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 			incQuestReward(p, questData, true);
 		}
 	}
-	
+
 	private void addCatchCache(final Player p, int catchId) {
 		String catchString = "";
 		if (p.getCache().hasKey("contest_catches")) {
@@ -107,7 +107,7 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 				break;
 			default: // EVERY OTHER QUEST STAGE
 				if (p.getCache().hasKey("paid_contest_fee")) {
-					String catches[] = null;
+					String catches[] = {};
 					boolean hasCarp = false;
 
 					if (p.getCache().hasKey("contest_catches")) {
@@ -481,16 +481,24 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 			addItem(player, ItemId.RED_VINE_WORMS.id(), 1);
 		}
 		else if (obj.getID() == 350 && item.getID() == ItemId.GARLIC.id()) {
+			Npc sinister = getNearestNpc(player, NpcId.SINISTER_STRANGER.id(), 10);
+			Npc bonzo = getNearestNpc(player , NpcId.BONZO.id(), 15);
+
 			//stashing garlics in pipes should not check if other
 			//garlics have been stashed
-			if (!player.getCache().hasKey("paid_contest_fee")) {
-				message(player, "You stash the garlic in the pipe");
-				player.getInventory().remove(ItemId.GARLIC.id(), 1);
-				if (!player.getCache().hasKey("garlic_activated")) {
-					player.getCache().store("garlic_activated", true);
-				}
-			} else {
-				player.message("Nothing interesting happens");
+			message(player, "You stash the garlic in the pipe");
+			player.getInventory().remove(ItemId.GARLIC.id(), 1);
+			if (player.getCache().hasKey("paid_contest_fee") && !player.getCache().hasKey("garlic_activated")) {
+				npcTalk(player, sinister,
+					"Arrgh what is that ghastly smell",
+					"I think I will move over here instead");
+				sinister.teleport(570, 495);
+				npcTalk(player, bonzo,
+					"Hmm you'd better go and take the area by the pipes then");
+				player.message("Your fishing competition spot has been moved to beside the pipes");
+			}
+			if (!player.getCache().hasKey("garlic_activated")) {
+				player.getCache().store("garlic_activated", true);
 			}
 		}
 	}

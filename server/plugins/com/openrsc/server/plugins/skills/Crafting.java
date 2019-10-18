@@ -541,6 +541,14 @@ public class Crafting implements InvUseOnItemListener,
 					interrupt();
 					return;
 				}
+				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+						getOwner().message("You are too tired to craft");
+						interrupt();
+						return;
+					}
+				}
 				if (getOwner().getInventory().remove(gem.getID(), 1, false) > -1) {
 					Item cutGem = new Item(gemDef.getGemID(), 1);
 					// Jade, Opal and red topaz fail handler - 25% chance to fail

@@ -228,7 +228,8 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
-		if (obj.getID() == 352)
+		//special hemenster fishing spots
+		if (obj.getID() == 351 || obj.getID() == 352 || obj.getID() == 353 || obj.getID() == 354)
 			return false;
 		if (command.equals("lure") || command.equals("bait") || command.equals("net") || command.equals("harpoon")
 			|| command.equals("cage")) {

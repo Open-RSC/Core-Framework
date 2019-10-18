@@ -69,6 +69,14 @@ public class SpinningWheel implements InvUseOnObjectListener,
 					interrupt();
 					return;
 				}
+				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+						getOwner().message("You are too tired to craft");
+						interrupt();
+						return;
+					}
+				}
 				if (getOwner().getInventory().remove(item.getID(), 1) > -1) {
 					showBubble(getOwner(), item);
 					getOwner().playSound("mechanical");
