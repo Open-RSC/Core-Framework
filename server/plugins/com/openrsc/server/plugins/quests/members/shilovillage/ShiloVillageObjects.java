@@ -197,7 +197,8 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 			}
 		}
 		else if (obj.getID() == SEARCH_TREE_FOR_ENTRANCE) {
-			if (p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
+			if (p.getQuestStage(Quests.SHILO_VILLAGE) == -1 &&
+				!p.getWorld().getServer().getConfig().LOCKED_POST_QUEST_REGIONS_ACCESSIBLE) {
 				p.message("You find nothing significant.");
 				return;
 			}

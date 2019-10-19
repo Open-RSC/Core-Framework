@@ -266,15 +266,19 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 			p.message("You find nothing to steal");
 		}
 		else if (obj.getID() == OGRE_CAVE_ENCLAVE) {
-			if (p.getQuestStage(Quests.WATCHTOWER) == -1) {
+			if (p.getQuestStage(Quests.WATCHTOWER) == -1 &&
+				!p.getWorld().getServer().getConfig().LOCKED_POST_QUEST_REGIONS_ACCESSIBLE) {
 				p.message("The ogres have blocked this entrance now");
-				// TODO should we sell this entrance for 100,000 coins or etc?
 				return;
 			}
 			Npc ogre_guard = getNearestNpc(p, NpcId.OGRE_GUARD_CAVE_ENTRANCE.id(), 5);
 			if (ogre_guard != null) {
 				npcTalk(p, ogre_guard, "No you don't!");
 				ogre_guard.startCombat(p);
+			}
+			else {
+				// player must use nightshade on ogre
+				p.message("Nothing interesting happens");
 			}
 		}
 		else if (obj.getID() == ROCK_CAKE_COUNTER) {

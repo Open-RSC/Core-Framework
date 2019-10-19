@@ -238,7 +238,9 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 			}
 		}
 		else if (npc.getID() == NpcId.OGRE_GUARD_CAVE_ENTRANCE.id() && item.getID() == ItemId.NIGHTSHADE.id()) {
-			if (p.getQuestStage(Quests.WATCHTOWER) < 5) {
+			if ((p.getQuestStage(Quests.WATCHTOWER) >= 0 && p.getQuestStage(Quests.WATCHTOWER) < 5) ||
+				(p.getQuestStage(Quests.WATCHTOWER) == -1 &&
+				!p.getWorld().getServer().getConfig().LOCKED_POST_QUEST_REGIONS_ACCESSIBLE)) {
 				p.message("The guard is occupied at the moment");
 			} else {
 				p.playerServerMessage(MessageType.QUEST, "You give the guard some nightshade");

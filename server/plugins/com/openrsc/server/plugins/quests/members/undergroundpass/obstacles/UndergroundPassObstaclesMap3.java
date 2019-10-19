@@ -26,7 +26,7 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 	public static int ZAMORAKIAN_TEMPLE_DOOR = 869;
 	public static final int DEMONS_CHEST_OPEN = 911;
 	public static final int DEMONS_CHEST_CLOSED = 912;
-	
+
 	public static final int [] PIT_COORDS = {802, 3469};
 	public static final Area boundArea = new Area(PIT_COORDS[0] - 24, PIT_COORDS[0] + 24, PIT_COORDS[1] - 24, PIT_COORDS[1] + 24);
 
@@ -99,7 +99,8 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 		}
 		else if (obj.getID() == ZAMORAKIAN_TEMPLE_DOOR) {
 			if (p.getX() <= 792) {
-				if (p.getQuestStage(Quests.UNDERGROUND_PASS) == -1) {
+				if (p.getQuestStage(Quests.UNDERGROUND_PASS) == -1 &&
+					!p.getWorld().getServer().getConfig().LOCKED_POST_QUEST_REGIONS_ACCESSIBLE) {
 					message(p, "the temple is in ruins...");
 					p.message("...you cannot enter");
 					return;

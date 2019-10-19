@@ -120,10 +120,10 @@ public class GameTickEventHandler {
 				event.stop();
 			}
 		}
-		
+
 		eventsCounts.clear();
 		eventsDurations.clear();
-		
+
 		for (Iterator<Map.Entry<String, GameTickEvent>> it = events.entrySet().iterator(); it.hasNext(); ) {
 			GameTickEvent event = it.next().getValue();
 			if (!eventsCounts.containsKey(event.getDescriptor())) {
@@ -150,8 +150,18 @@ public class GameTickEventHandler {
 		return new LinkedHashMap<String, GameTickEvent>(events);
 	}
 
-	public void remove(GameTickEvent event) {
-		events.remove(event);
+	public void remove(GameTickEvent eventRemove) {
+		try {
+			Iterator<Map.Entry<String, GameTickEvent>> iterator = events.entrySet().iterator();
+			while (iterator.hasNext()) {
+				GameTickEvent event = iterator.next().getValue();
+				if (event.equals(eventRemove)) {
+					iterator.remove();
+				}
+			}
+		} catch (Exception e) {
+			LOGGER.catching(e);
+		}
 	}
 
 	public void removePlayersEvents(Player player) {

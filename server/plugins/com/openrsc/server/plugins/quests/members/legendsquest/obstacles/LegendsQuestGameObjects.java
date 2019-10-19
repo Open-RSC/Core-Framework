@@ -106,7 +106,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					p.message("You enter the dark cave...");
 					p.teleport(395, 3725);
 				} else {
-					if (p.getCache().hasKey("cavernous_opening")) {
+					if (p.getCache().hasKey("cavernous_opening") || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
 						message(p, 1300, "You walk carefully into the darkness of the cavern..");
 						p.teleport(395, 3733);
 					} else {
@@ -145,7 +145,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 			p.teleport(471, 3707);
 		}
 		else if (obj.getID() == WOODEN_BEAM + 1) {
-			if (p.getQuestStage(Quests.LEGENDS_QUEST) >= 9 || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
+			if (p.getQuestStage(Quests.LEGENDS_QUEST) >= 9 || blockDescendBeamPostQuest(p)) {
 				message(p, 1300, "The rope snaps as you're about to climb down it.",
 					"Perhaps you need a new rope.");
 				return;
@@ -159,7 +159,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				message(p, 1300, "You prepare to climb down the rope...");
 				playerTalk(p, null, "! Gulp !");
 				sleep(1100);
-				if (!p.getCache().hasKey("gujuo_potion")) {
+				if ((p.getQuestStage(Quests.LEGENDS_QUEST) >= 0 && !p.getCache().hasKey("gujuo_potion")) || blockDescendBeamPostQuest(p)) {
 					message(p, 1300, "...but a terrible fear grips you...");
 					p.message("And you can go no further.");
 				} else {
@@ -230,7 +230,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				gem = "Jade";
 				attached = p.getCache().hasKey("legends_attach_7");
 			}
-			
+
 			if (!gem.equals("") && attached) {
 				message(p, 1300, "A barely visible " + gem + " becomes clear again, spinning above the rock.",
 						"And then fades again...");
@@ -925,7 +925,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 						"The cut reed is soaked through with water and is now all soggy.");
 				return;
 			}
-			
+
 			int emptyID = -1;
 			int refilledID = -1;
 			for (int i = 0; i < REFILLABLE.length; i++) {
@@ -979,5 +979,10 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 		} else {
 			p.message("I shall replace it with the Totem pole");
 		}
+	}
+
+	private boolean blockDescendBeamPostQuest(Player p) {
+		return p.getQuestStage(Quests.LEGENDS_QUEST) == -1 &&
+			!p.getWorld().getServer().getConfig().LOCKED_POST_QUEST_REGIONS_ACCESSIBLE;
 	}
 }

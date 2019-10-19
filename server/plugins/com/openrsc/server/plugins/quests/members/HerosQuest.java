@@ -4,6 +4,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -13,6 +14,8 @@ import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
@@ -25,7 +28,9 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 	private static final int GRIPS_CUPBOARD_CLOSED = 263;
 	private static final int CANDLESTICK_CHEST_OPEN = 265;
 	private static final int CANDLESTICK_CHEST_CLOSED = 266;
-	
+
+	private static final AtomicReference<SingleEvent> gripReturnEvent = new AtomicReference<>();
+
 	@Override
 	public int getQuestId() {
 		return Quests.HEROS_QUEST;
@@ -452,9 +457,24 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 		}
 		else if (obj.getID() == 77 && obj.getX() == 463 && obj.getY() == 676) {
 			if (p.getCache().hasKey("talked_grip") || p.getQuestStage(this) == -1) {
+				Npc grip = getNearestNpc(p, NpcId.GRIP.id(), 15);
+				// grip exits if he is not in combat and player opens from inside the room
+				boolean moveGrip = (p.getY() <= 675 && grip != null && grip.getY() <= 675 && !grip.inCombat());
 				p.message("you open the door");
 				p.message("You go through the door");
+				if (moveGrip) {
+					grip.walk(463, 675);
+				}
 				doDoor(obj, p);
+				if (moveGrip) {
+					removeReturnEventIfPresent(p);
+					p.getWorld().getServer().getGameEventHandler().add(new SingleEvent(p.getWorld(), null, 1000, "Heroes Quest Grip through door", true) {
+						@Override
+						public void action() {
+							grip.teleport(463, 676);
+						}
+					});
+				}
 			} else {
 				p.message("You can't get through the door");
 				p.message("You need to speak to grip first");
@@ -521,7 +541,21 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 						"Ok I'll leave it");
 					if (menu == 0) {
 						if (grip != null) {
-							grip.teleport(463, 673);
+							if (grip.getY() <= 675) {
+								grip.walk(463, 673);
+							}
+							else {
+								grip.teleport(463, 673);
+								// delayed event to prevent grip being trapped if player had invoked him
+								gripReturnEvent.set(new SingleEvent(p.getWorld(), null, 60000 * 10, "Heroes Quest Delayed Return Grip", true) {
+									@Override
+									public void action() {
+										if (grip != null && grip.getY() <= 675)
+											grip.teleport(463, 677);
+									}
+								});
+								p.getWorld().getServer().getGameEventHandler().add(gripReturnEvent.get());
+							}
 							npcTalk(p, grip, "Hey what are you doing there",
 								"That's my drinks cabinet get away from it");
 						} else {
@@ -561,16 +595,24 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 		}
 
 	}
-	
+
+	private void removeReturnEventIfPresent(Player p) {
+		if (gripReturnEvent.get() != null) {
+			p.getWorld().getServer().getGameEventHandler().remove(gripReturnEvent.get());
+			gripReturnEvent.set(null);
+		}
+	}
+
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.GRIP.id()) {
 			p.getWorld().registerItem(
 					new GroundItem(p.getWorld(), ItemId.BUNCH_OF_KEYS.id(), n.getX(), n.getY(), 1, (Player) null));
+			removeReturnEventIfPresent(p);
 		}
 		n.killedBy(p);
 	}
-	
+
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
 		return n.getID() == NpcId.GRIP.id();
