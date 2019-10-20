@@ -459,7 +459,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 			if (p.getCache().hasKey("talked_grip") || p.getQuestStage(this) == -1) {
 				Npc grip = getNearestNpc(p, NpcId.GRIP.id(), 15);
 				// grip exits if he is not in combat and player opens from inside the room
-				boolean moveGrip = (p.getY() <= 675 && grip != null && grip.getY() <= 675 && !grip.inCombat());
+				boolean moveGrip = (p.getY() <= 675 && grip != null && grip.getY() <= 675 && !grip.isChasing());
 				p.message("you open the door");
 				p.message("You go through the door");
 				if (moveGrip) {
