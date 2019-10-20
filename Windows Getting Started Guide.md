@@ -1,14 +1,20 @@
-## Guide for running Open RSC on Windows:
+### Guide for running Open RSC on Windows
 
-# Installing Java
+## Single Player
 
-First, download Open JDK 12 for Windows (MSI installer version) and if you already have Java installed (ex: Oracle Java 8), then it is highly suggested that you first uninstall it. Oracle will not be supporting non-enterprise Java much longer and Open JDK is the future.
+First, download the latest release of Open RSC Single Player as this is designed for Windows with virtually zero set up required:
+
+https://gitlab.openrsc.com/open-rsc/Single-Player/-/releases
+
+## Installing Java
+
+Download Open JDK 12 for Windows (MSI installer version) and if you already have Java installed (ex: Oracle Java 8), then it is highly suggested that you first uninstall it. Oracle will not be supporting non-enterprise Java much longer and Open JDK is the future.
 <a href="https://cdn.azul.com/zulu/bin/zulu12.2.3-ca-jdk12.0.1-win_x64.msi">https://cdn.azul.com/zulu/bin/zulu12.2.3-ca-jdk12.0.1-win_x64.msi</a>
 
 For the latest version of Open JDK: (pick the MSI installer version!)
 <a href="https://www.azul.com/downloads/zulu/">https://www.azul.com/downloads/zulu/</a>
 
-# Starting the game
+## Starting the game
 
 You are now ready to double click on "Start-Windows.cmd"
 
@@ -18,7 +24,7 @@ A new window will open stating that the game will start up in 10 seconds. When t
 
 If you become stuck on Tutorial Island or just wish to skip it, there is a link in the in-game options menu above the log out that reads "skip tutorial".
 
-# Changing game features and configuration
+## Changing game features and configuration
 
 At this point, you may wish to use different game features than the default RSC ones. This requires you to fully exit the game client and the game server (use choice #2 to exit in the command prompt window) to fully shut it down.
 
@@ -37,10 +43,10 @@ It is strongly suggested that you do not edit "default.conf" and instead make a 
 
 Last but not least, always restart the game server after fully exiting it when you have made changes to your "local.conf" in order to have them be applied. An already running server will not read any changes to the file.
 
-# Changing a player's role
+## Changing a player's role
 
 Are you ready to set a player role as an admin, moderator, or back to a player? It is possible to set the role / group ID while in-game using a command but you can also use the main menu option of "Change a player's in-game role"
 
-# Upgrading Single Player
+## Upgrading
 
-The most efficient way to upgrade is to use the main menu option of "Backup game database" to create a database backup export file. Download and extract from the .zip the latest Single Player release and copy your database backup export file over to there. Run the "Start-Windows.cmd" script and from the main menu, select "Restore game database". Lastly, you will want to select "Upgrade the database" from the main menu to ensure the database has been fully upgraded.
+If you opt to not use git for pulling updated code from the repository, then the most efficient way to upgrade is to use the main menu option of "Backup game database" to create a database backup export file. Download and extract from the .zip the latest Single Player release and copy your database backup export file over to there. Run the "Start-Windows.cmd" script and from the main menu, select "Restore game database". Lastly, you will want to select "Upgrade the database" from the main menu to ensure the database has been fully upgraded.

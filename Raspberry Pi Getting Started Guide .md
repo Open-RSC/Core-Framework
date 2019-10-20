@@ -1,4 +1,4 @@
-## Guide for running Open RSC on a Raspberry Pi 3b+ or newer:
+### Guide for running Open RSC on a Raspberry Pi 3b+ or newer
 
 The Raspberry Pi 3B+ (and earlier editions) do not have enough memory to run the game client and the game server at the same time. Raspberry Pi 4 and above with 2GB or more RAM are capable of running both.
 

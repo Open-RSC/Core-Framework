@@ -1,14 +1,14 @@
-## Guide for running Open RSC on Linux:
+### Guide for running Open RSC on Linux
 
-# Using the built in installation script with Docker
+## Using the built in installation script with Docker
 
 If you are okay with Docker running on your Linux OS, the installation script that is used in "Start-Linux.sh" can obtain Docker for you, download the MariaDB SQL server container, configure your firewall, SSH permissions and port, as well as install other packages that are used when hosting a public game server. It is not recommended unless you are okay with these changes. Example: port 22 for SSH is changed to port 55555 and the firewall modified to allow entry for all game server ports and the new SSH port. If in question, open "scripts/combined-install.sh" and "scripts/docker-install.sh" to get a better idea about what the built-in installer does.
 
-# Installing Java
+## Installing Java
 
 You will need to have Java 1.8 or above installed in order to run the game server and client. We recommend the latest version of OpenJDK.
 
-# Database Server
+## Database Server
 
 The game operates using MySQL. We recommend MariaDB for the SQL server with username "root" and password "root". If you wish to use a different username and password for your SQL server, you will need to edit ".env" and set the variables in there accordingly.
 
@@ -28,7 +28,7 @@ If you need to upgrade a database due to changes in the repository, utilize:
 make upgrade db=openrsc
 ```
 
-# Starting the game
+## Starting the game
 
 You are now ready to run "./Start-Linux.sh"
 
@@ -36,7 +36,7 @@ You must have the game server fully running before the game client. You can veri
 
 Once you open the game client, you will need to click "New User" to create a player. If you become stuck on Tutorial Island or just wish to skip it, there is a link in the in-game options menu above the log out that reads "skip tutorial".
 
-# Changing game features and configuration
+## Changing game features and configuration
 
 At this point, you may wish to use different game features than the default RSC ones. This requires you to fully exit the game client and the game server (use choice #2 to exit in the command prompt window) to fully shut it down.
 
@@ -55,16 +55,16 @@ It is strongly suggested that you do not edit "default.conf" and instead make a 
 
 Last but not least, always restart the game server after fully exiting it when you have made changes to your "local.conf" in order to have them be applied. An already running server will not read any changes to the file.
 
-# Changing a player's role
+## Changing a player's role
 
 Are you ready to set a player role as an admin, moderator, or back to a player? It is possible to set the role / group ID while in-game using a command but you can also use the make command of:
 ```
 make rank db=cabbage group=0 username=wolf
 ```
 
-# Upgrading Single Player
+## Upgrading
 
-The most efficient way to upgrade is to use the make command as shown below. It will create a timestamp-database name.sql.zip file in the "Backups" folder.
+If you opt to not use git for pulling updated code from the repository, then the most efficient way to upgrade is to use the make command as shown below. It will create a timestamp-database name.sql.zip file in the "Backups" folder.
 ```
 make backup db=openrsc
 ```
