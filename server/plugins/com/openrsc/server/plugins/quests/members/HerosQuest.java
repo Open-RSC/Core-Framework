@@ -135,7 +135,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 			} else if (sub_menu2 == 1) {
 				npcTalk(p, n, "Yeah I'll give you time to settle in");
 			} else if (sub_menu2 == 2) {
-				if (!hasItem(p, ItemId.MISCELLANEOUS_KEY.id()) && p.getQuestStage(this) != -1) {
+				if (!hasItem(p, ItemId.MISCELLANEOUS_KEY.id()) ) {
 					npcTalk(p, n, "Hmm well you could find out what this key does",
 						"Apparantly it's to something in this building",
 						"Though I don't for the life of me know what");
