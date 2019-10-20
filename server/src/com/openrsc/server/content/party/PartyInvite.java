@@ -17,6 +17,14 @@ public class PartyInvite {
 
 	public static void createPartyInvite(Player player, Player invited) {
 
+		if (invited.isIronMan(1) || invited.isIronMan(2) || invited.isIronMan(3)) {
+			player.message(invited.getUsername() + " is an Iron Man. He stands alone.");
+			return;
+		}
+		if (player.isIronMan(1) || player.isIronMan(2) || player.isIronMan(3)) {
+			player.message("You are an Iron Man. You stand alone.");
+			return;
+		}
 		if (player.getParty() == null) {
 			return;
 		}
