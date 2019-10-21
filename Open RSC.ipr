@@ -18,78 +18,7 @@
       </map>
     </option>
   </component>
-  <component name="FrameworkDetectionExcludesConfiguration">
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/bundle_manifest/debug/processDebugManifest/bundle-manifest/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/bundle_manifest/release/processReleaseManifest/bundle-manifest/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/incremental/ir_dep/debug/dependencies/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/incremental/ir_slices/debug/slice_0/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/incremental/ir_slices/debug/slice_1/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/incremental/ir_slices/debug/slice_2/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/incremental/ir_slices/debug/slice_3/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/incremental/ir_slices/debug/slice_4/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/incremental/ir_slices/debug/slice_5/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/incremental/ir_slices/debug/slice_6/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/incremental/ir_slices/debug/slice_7/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/incremental/ir_slices/debug/slice_8/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/incremental/ir_slices/debug/slice_9/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/instant_app_manifest/debug/processDebugManifest/instant-app-manifest/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/instant_app_manifest/release/processReleaseManifest/instant-app-manifest/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/instant_run_merged_manifests/debug/processDebugManifest/instant-run/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/instant_run_split_apk_resources/debug/instantRunSplitApkResourcesDebug/out/slice_0/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/instant_run_split_apk_resources/debug/instantRunSplitApkResourcesDebug/out/slice_1/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/instant_run_split_apk_resources/debug/instantRunSplitApkResourcesDebug/out/slice_2/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/instant_run_split_apk_resources/debug/instantRunSplitApkResourcesDebug/out/slice_3/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/instant_run_split_apk_resources/debug/instantRunSplitApkResourcesDebug/out/slice_4/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/instant_run_split_apk_resources/debug/instantRunSplitApkResourcesDebug/out/slice_5/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/instant_run_split_apk_resources/debug/instantRunSplitApkResourcesDebug/out/slice_6/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/instant_run_split_apk_resources/debug/instantRunSplitApkResourcesDebug/out/slice_7/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/instant_run_split_apk_resources/debug/instantRunSplitApkResourcesDebug/out/slice_8/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/instant_run_split_apk_resources/debug/instantRunSplitApkResourcesDebug/out/slice_9/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/manifests/full/debug/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/manifests/instant-run/debug/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/merged_manifests/debug/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/merged_manifests/release/AndroidManifest.xml" />
-    <file type="android" url="file://$PROJECT_DIR$/iOS/Open RSC Android Client/build/intermediates/split-apk/debug/resources/AndroidManifest.xml" />
-  </component>
   <component name="GradleMigrationSettings" migrationVersion="1" />
-  <component name="GradleSettings">
-    <option name="linkedExternalProjectsSettings">
-      <GradleProjectSettings>
-        <option name="delegatedBuild" value="false" />
-        <option name="testRunner" value="PLATFORM" />
-        <option name="distributionType" value="DEFAULT_WRAPPED" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/Android/Open RSC Android Client" />
-        <option name="gradleHome" value="/usr/local/opt/gradle/libexec" />
-        <option name="modules">
-          <set>
-            <option value="$PROJECT_DIR$/Android" />
-            <option value="$PROJECT_DIR$/Android/Open RSC Android Client" />
-          </set>
-        </option>
-        <option name="useQualifiedModuleNames" value="true" />
-      </GradleProjectSettings>
-      <GradleProjectSettings>
-        <option name="delegatedBuild" value="false" />
-        <option name="testRunner" value="PLATFORM" />
-        <option name="distributionType" value="WRAPPED" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/android" />
-        <option name="modules">
-          <set>
-            <option value="$PROJECT_DIR$/Android" />
-            <option value="$PROJECT_DIR$/Android/Open RSC Android Client" />
-          </set>
-        </option>
-        <option name="resolveModulePerSourceSet" value="false" />
-      </GradleProjectSettings>
-      <GradleProjectSettings>
-        <option name="delegatedBuild" value="false" />
-        <option name="testRunner" value="PLATFORM" />
-        <option name="distributionType" value="WRAPPED" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/ios" />
-        <option name="resolveModulePerSourceSet" value="false" />
-      </GradleProjectSettings>
-    </option>
-  </component>
   <component name="InspectionProjectProfileManager">
     <profile version="1.0">
       <option name="myName" value="Project Default" />
@@ -220,13 +149,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/client/Client.iml" filepath="$PROJECT_DIR$/client/Client.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Android/Game.Android.iml" filepath="$PROJECT_DIR$/Android/Game.Android.iml" />
       <module fileurl="file://$PROJECT_DIR$/Launcher/Launcher.iml" filepath="$PROJECT_DIR$/Launcher/Launcher.iml" />
       <module fileurl="file://$PROJECT_DIR$/server/Server.iml" filepath="$PROJECT_DIR$/server/Server.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Tools/Sprite Editor/Sprite Editor.iml" filepath="$PROJECT_DIR$/Tools/Sprite Editor/Sprite Editor.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" project-jdk-name="12" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" project-jdk-name="13" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="VcsDirectoryMappings">
@@ -253,46 +180,6 @@
         <root url="jar://$PROJECT_DIR$/server/lib/netty-all-4.1.33.Final.jar!/" />
         <root url="jar://$PROJECT_DIR$/server/lib/netty-3.4.6.final.jar!/" />
         <root url="jar://$PROJECT_DIR$/server/lib/guava-25.0-jre.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
-    <library name="lib1">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/Tools/Sprite Editor/lib/xpp3.jar!/" />
-        <root url="jar://$PROJECT_DIR$/Tools/Sprite Editor/lib/hex-string.jar!/" />
-        <root url="jar://$PROJECT_DIR$/Tools/Sprite Editor/lib/xstream.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
-    <library name="lib3">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/Tools/2D Landscape Editor/lib/xstream.jar!/" />
-        <root url="jar://$PROJECT_DIR$/Tools/2D Landscape Editor/lib/xpp3.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
-    <library name="lib4">
-      <CLASSES>
-        <root url="file://$PROJECT_DIR$/Tools/Sprite Editor/lib" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-      <jarDirectory url="file://$PROJECT_DIR$/Tools/Sprite Editor/lib" recursive="false" />
-    </library>
-    <library name="Open_RSC_Client">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/client/Open_RSC_Client.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
-    <library name="Server">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/server/core.jar!/" />
-        <root url="jar://$PROJECT_DIR$/server/plugins.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

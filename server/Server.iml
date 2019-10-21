@@ -6,11 +6,8 @@
       <sourceFolder url="file://$MODULE_DIR$/plugins" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="13" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Server" level="project" />
-    <orderEntry type="library" name="lib3" level="project" />
-    <orderEntry type="library" name="lib1" level="project" />
     <orderEntry type="library" name="lib" level="project" />
   </component>
 </module>

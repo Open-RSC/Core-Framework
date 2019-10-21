@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AndroidGradleBuildConfiguration">
-    <option name="SYNC_PROJECT_BEFORE_BUILD" value="true" />
-  </component>
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
       <artifact name="Launcher" />
     </artifacts-to-build>
+  </component>
+  <component name="AutomaticModuleUnloader">
+    <loaded-modules>
+      <module name="Client" />
+      <module name="Server" />
+      <module name="Launcher" />
+    </loaded-modules>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aac60d61-673a-4ad4-8ee5-46e19413f987" name="Default Changelist" comment="">
@@ -34,35 +38,6 @@
     <option name="MAKE_PROJECT_ON_SAVE" value="true" />
     <option name="PARALLEL_COMPILATION" value="true" />
   </component>
-  <component name="ExternalProjectsData">
-    <projectState path="$PROJECT_DIR$/Android">
-      <ProjectState />
-    </projectState>
-    <projectState path="$PROJECT_DIR$/Android/Open RSC Android Client">
-      <ProjectState />
-    </projectState>
-  </component>
-  <component name="ExternalProjectsManager">
-    <system id="GRADLE">
-      <state>
-        <task path="$PROJECT_DIR$/iOS">
-          <activation />
-        </task>
-        <task path="$PROJECT_DIR$/iOS/Open RSC Android Client">
-          <activation />
-        </task>
-        <task path="$PROJECT_DIR$/Android/Open RSC Android Client">
-          <activation />
-        </task>
-        <projects_view>
-          <tree_state>
-            <expand />
-            <select />
-          </tree_state>
-        </projects_view>
-      </state>
-    </system>
-  </component>
   <component name="FavoritesManager">
     <favorites_list name="Open RSC" />
   </component>
@@ -73,100 +48,20 @@
       </list>
     </option>
   </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>npcid</find>
-      <find>Leela</find>
-      <find>ashes</find>
-      <find>water</find>
-      <find>flour</find>
-      <find>rescue</find>
-      <find>osman</find>
-      <find>wutwut</find>
-      <find>drunk</find>
-      <find>joe_is_drunk</find>
-      <find>key_sent</find>
-      <find>leela</find>
-      <find>getSwipeToScroll</find>
-      <find>redber</find>
-      <find>keyup</find>
-      <find>out</find>
-      <find>system.out</find>
-      <find>saveZoomDistance</find>
-      <find>mudclient.java</find>
-      <find>zoom</find>
-      <find>500</find>
-      <find>C_LAST_ZOOM</find>
-      <find>Config.C_LAST_ZOOM</find>
-      <find>amountToZoom</find>
-      <find>saveZoom</find>
-      <find>amounttoZoom</find>
-      <find>Zoom</find>
-      <find>SIDE_MENU</find>
-      <find>C_ZOOM</find>
-      <find>UP</find>
-    </findStrings>
-    <replaceStrings>
-      <replace />
-    </replaceStrings>
-    <dirStrings>
-      <dir>$PROJECT_DIR$/Launcher/src</dir>
-      <dir>$PROJECT_DIR$/server/src/com/openrsc/server</dir>
-      <dir>$PROJECT_DIR$/client/src</dir>
-      <dir>$PROJECT_DIR$/client</dir>
-      <dir>$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/npcs</dir>
-      <dir>$PROJECT_DIR$/server/plugins</dir>
-      <dir>$PROJECT_DIR$/server/src</dir>
-      <dir>$PROJECT_DIR$/server</dir>
-    </dirStrings>
-  </component>
-  <component name="GenerateSignedApkSettings">
-    <option name="KEY_STORE_PATH" value="$USER_HOME$/ORSC_Android_Key" />
-    <option name="KEY_ALIAS" value="key0" />
-    <option name="REMEMBER_PASSWORDS" value="true" />
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
-  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
-  <component name="JsGulpfileManager">
-    <detection-done>true</detection-done>
-    <sorting>DEFINITION_ORDER</sorting>
-  </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="52" />
-    <option name="y" value="23" />
-    <option name="width" value="1628" />
-    <option name="height" value="1027" />
   </component>
   <component name="ProjectId" id="1OyetdliBeYLylYjtdKiIZ6eEpS" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
   </component>
   <component name="PropertiesComponent">
-    <property name="ExportApk.ApkPath" value="$PROJECT_DIR$/Android/Open RSC Android Client" />
-    <property name="ExportApk.BuildType" value="release" />
-    <property name="ExportApk.Flavors" value="" />
-    <property name="ExportApk.SignV1" value="true" />
-    <property name="ExportApk.SignV2" value="true" />
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://E:/GitHub/Kenix3/Game/server/src/com/openrsc/server/plugins/listeners/action/CommandListener.java" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="android.project.structure.last.selected" value="Open RSC Android Client" />
-    <property name="android.project.structure.proportion" value="0.15" />
-    <property name="android.sdk.path" value="$USER_HOME$/Library/Android/sdk" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1553027355330" />
-    <property name="device.picker.selection" value="Pixel_2_API_28" />
-    <property name="editor.config.ad.shown" value="true" />
-    <property name="external.system.task.project.file.to.start" value="$PROJECT_DIR$/iOS/Open RSC Android Client" />
-    <property name="go.gopath.indexing.explicitly.defined" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/Tools/Map Generator/build.xml" />
+    <property name="jdk.selected.JAVA_MODULE" value="13" />
     <property name="project.structure.last.edited" value="Project" />
-    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="gradle.compiler" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -188,45 +83,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Ant Target.PC Client">
-    <configuration default="true" type="AndroidJUnit">
-      <option name="TEST_OBJECT" value="class" />
-      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="AndroidRunConfigurationType">
-      <module name="Android Client" />
-      <option name="DEPLOY" value="true" />
-      <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
-      <option name="DEPLOY_AS_INSTANT" value="false" />
-      <option name="ARTIFACT_NAME" value="" />
-      <option name="PM_INSTALL_OPTIONS" value="" />
-      <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
-      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
-      <option name="MODE" value="default_activity" />
-      <option name="CLEAR_LOGCAT" value="false" />
-      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
-      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
-      <option name="FORCE_STOP_RUNNING_APP" value="true" />
-      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
-      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
-      <option name="PREFERRED_AVD" value="" />
-      <option name="DEBUGGER_TYPE" value="Java" />
-      <Java />
-      <Profilers>
-        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
-        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
-        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Sample Java Methods" />
-      </Profilers>
-      <option name="DEEP_LINK" value="" />
-      <option name="ACTIVITY_CLASS" value="" />
-      <method v="2">
-        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="Ant Target.Run Server">
     <configuration name="Game Launcher" type="AntRunConfiguration" singleton="false">
       <antsettings antfile="file://$PROJECT_DIR$/Launcher/build.xml" target="compile-and-run" />
       <method v="2">
@@ -245,31 +102,10 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Sprite Editor" type="AntRunConfiguration" singleton="false">
-      <antsettings antfile="file://$PROJECT_DIR$/Tools/Sprite Editor/build.xml" target="compile-and-run" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Sprite Packer" type="AntRunConfiguration" singleton="false">
-      <antsettings antfile="file://$PROJECT_DIR$/Tools/Sprite Editor/build.xml" target="compile-and-run-packer" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Sprite Unpacker" type="AntRunConfiguration" singleton="false">
-      <antsettings antfile="file://$PROJECT_DIR$/Tools/Sprite Editor/build.xml" target="compile-and-run-unpacker" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <list>
       <item itemvalue="Ant Target.PC Client" />
       <item itemvalue="Ant Target.Game Launcher" />
       <item itemvalue="Ant Target.Run Server" />
-      <item itemvalue="Ant Target.Sprite Editor" />
-      <item itemvalue="Ant Target.Sprite Packer" />
-      <item itemvalue="Ant Target.Sprite Unpacker" />
     </list>
   </component>
   <component name="StructureViewFactory">
@@ -289,11 +125,13 @@
       <workItem from="1542657251488" duration="25000" />
       <workItem from="1542657317963" duration="155000" />
       <workItem from="1542659209624" duration="911000" />
+      <workItem from="1571675065657" duration="615000" />
+      <workItem from="1571675684009" duration="476000" />
+      <workItem from="1571676163920" duration="104000" />
+      <workItem from="1571676372012" duration="263000" />
+      <workItem from="1571676715063" duration="45000" />
     </task>
     <servers />
-  </component>
-  <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2209000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -322,7 +160,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
@@ -343,8 +183,5 @@
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
-  </component>
-  <component name="gradleExecuteTaskHistory">
-    <option value="$PROJECT_DIR$/Android/Open RSC Android Client" />
   </component>
 </project>
