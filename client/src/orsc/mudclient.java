@@ -2323,7 +2323,7 @@ public final class mudclient implements Runnable {
 							this.packetHandler.getClientStream().writeBuffer1.putShort(this.m_Cg);
 							this.packetHandler.getClientStream().finishPacket();
 						} else {
-							this.handleMenuItemClicked(false, 0);
+							this.handleMenuItemClicked(0);
 						}
 
 						this.mouseButtonClick = 0;
@@ -5529,7 +5529,7 @@ public final class mudclient implements Runnable {
 			} else {
 				int var2 = this.menuCommon.handleClick(this.mouseX, this.menuX, this.menuY, this.mouseY);
 				if (var2 >= 0) {
-					this.handleMenuItemClicked(false, var2);
+					this.handleMenuItemClicked(var2);
 				}
 
 				this.topMouseMenuVisible = false;
@@ -11208,7 +11208,7 @@ public final class mudclient implements Runnable {
 
 	}
 
-	private void handleMenuItemClicked(boolean var1, int item) {
+	private void handleMenuItemClicked(int item) {
 		try {
 
 			MenuItemAction var3 = this.menuCommon.getItemAction(item);
@@ -11823,7 +11823,7 @@ public final class mudclient implements Runnable {
 					break;
 			}
 		} catch (RuntimeException var13) {
-			throw GenUtil.makeThrowable(var13, "client.KA(" + var1 + ',' + item + ')');
+			throw GenUtil.makeThrowable(var13, "client.KA(" + false + ',' + item + ')');
 		}
 	}
 
@@ -13764,7 +13764,7 @@ public final class mudclient implements Runnable {
 	public final void resetBatchProgressBar() {
 		batchProgressBar.resetProgressBar();
 	}
-	
+
 	public final void hidePartyMenu() {
 		partyMenu.hide();
 	}
@@ -14822,7 +14822,7 @@ public final class mudclient implements Runnable {
 
 				fishingTrawlerInterface = new FishingTrawlerInterface(this);
 				mainComponent.addComponent(fishingTrawlerInterface);
-				
+
 				partyMenu = new PartyGUI(this);
 				mainComponent.addComponent(partyMenu.getComponent());
 

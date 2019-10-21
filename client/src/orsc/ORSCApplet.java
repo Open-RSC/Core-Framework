@@ -22,7 +22,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	private static final long serialVersionUID = 1L;
 	public static int globalLoadingPercent = 0;
 	public static String globalLoadingState = "";
-	static mudclient mudclient;
+	private static mudclient mudclient;
 	static PacketHandler packetHandler;
 	private final boolean m_hb = false;
 	protected int resizeWidth;
@@ -34,7 +34,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	private Image loadingLogo;
 	private String loadingState = "Loading";
 	boolean m_N = false;
-	String m_p = null;
+	private String m_p = null;
 	private int loadingPercent = 0;
 	private int height = 384;
 	private int width = 512;
@@ -49,7 +49,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 		}
 	}
 
-	private void drawCenteredString(Font var1, String str, int y, boolean var4, int x, Graphics g) {
+	private void drawCenteredString(Font var1, String str, int y, int x, Graphics g) {
 		try {
 			FontMetrics metrics = getFontMetrics(var1);
 			g.setFont(var1);
@@ -105,22 +105,22 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 				this.loadingGraphics.setColor(new Color(198, 198, 198));
 				if (this.m_hb) this.loadingGraphics.setColor(new Color(255, 255, 255));
 
-				this.drawCenteredString(this.loadingFont, state, 10 + y, true, 138 + x, this.loadingGraphics);
+				this.drawCenteredString(this.loadingFont, state, 10 + y, 138 + x, this.loadingGraphics);
 
 				if (!this.m_hb) {
-					this.drawCenteredString(this.createdbyFont, "Powered by Open RSC", 30 + y, true,
+					this.drawCenteredString(this.createdbyFont, "Powered by Open RSC", 30 + y,
 						x + 138, this.loadingGraphics);
-					this.drawCenteredString(this.createdbyFont, "We support open source development.", y + 44, true, x + 138,
+					this.drawCenteredString(this.createdbyFont, "We support open source development.", y + 44, x + 138,
 						this.loadingGraphics);
 				} else {
 					this.loadingGraphics.setColor(new Color(132, 132, 152));
-					this.drawCenteredString(this.copyrightFont2, "We support open source development.", this.height - 20, true,
+					this.drawCenteredString(this.copyrightFont2, "We support open source development.", this.height - 20,
 						138 + x, this.loadingGraphics);
 				}
 
 				if (null != this.m_p) {
 					this.loadingGraphics.setColor(Color.white);
-					this.drawCenteredString(this.createdbyFont, this.m_p, y - 120, true, x + 138, this.loadingGraphics);
+					this.drawCenteredString(this.createdbyFont, this.m_p, y - 120, x + 138, this.loadingGraphics);
 				}
 			} catch (Exception ignored) {
 			}
@@ -408,7 +408,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 				this.loadingGraphics.fillRect(progress + x, y, 277 - progress, 20);
 				this.loadingGraphics.setColor(new Color(198, 198, 198));
 				if (this.m_hb) this.loadingGraphics.setColor(new Color(255, 255, 255));
-				this.drawCenteredString(this.loadingFont, state, 10 + y, true, 138 + x, this.loadingGraphics);
+				this.drawCenteredString(this.loadingFont, state, 10 + y, 138 + x, this.loadingGraphics);
 			} catch (Exception ignored) {
 			}
 		} catch (RuntimeException var8) {
@@ -437,14 +437,14 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 		// Leaving this blank
 	}
 
-	private void startApplet(int width, int height, int clientversion, int var4) {
+	private void startApplet() {
 		try {
 			System.out.println("Started applet");
-			this.width = width;
-			this.height = height;
+			this.width = 512;
+			this.height = 346;
 			mudclient.startMainThread();
 		} catch (RuntimeException var12) {
-			throw GenUtil.makeThrowable(var12, "e.OE(" + height + ',' + clientversion + ',' + var4 + ',' + width + ')');
+			throw GenUtil.makeThrowable(var12, "e.OE(" + 346 + ',' + Config.CLIENT_VERSION + ',' + 12 + ',' + 512 + ')');
 		}
 	}
 
@@ -489,7 +489,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			if (mudclient.threadState >= 0) {
 				mudclient.threadState = 0;
 			}
-			startApplet(512, 334 + 12, Config.CLIENT_VERSION, 12);
+			startApplet();
 		} catch (RuntimeException var2) {
 			throw GenUtil.makeThrowable(var2, "e.start()");
 		}
@@ -578,8 +578,8 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			g.fillRect(width / 2 - 140, height / 2 - 25, 280, 50);
 			g.setColor(Color.white);
 			g.drawRect(width / 2 - 140, height / 2 - 25, 280, 50);
-			this.drawCenteredString(font, line1, height / 2 - 10, true, width / 2, g);
-			this.drawCenteredString(font, line2, 10 + height / 2, true, width / 2, g);
+			this.drawCenteredString(font, line1, height / 2 - 10, width / 2, g);
+			this.drawCenteredString(font, line2, 10 + height / 2, width / 2, g);
 		}
 	}
 
